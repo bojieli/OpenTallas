@@ -1,5 +1,5 @@
 {
-  "status": "SOURCE_REPAIR_PENDING_PROOF_AND_NATIVE_GATE",
+  "status": "SOURCE_FUNCTIONAL_PASS_NATIVE_PHYSICAL_GATES_LIVE",
   "predecessor_source": "4733c83d8",
   "failed_gate": "hbm_sfucore_k11b-20261021-211544",
   "actual_params": {
@@ -28,7 +28,7 @@
   "main_gen": "PASS",
   "main_freeze": "38d99f00f177a9f7cc09ed5ec3853da0d546f35f",
   "main_gate_controller": 2716352,
-  "fallback_gen": "LIVE",
+  "fallback_gen": "PASS",
   "operand_proof": {
     "status": "PASS",
     "commit": "82bb981ef",
@@ -38,5 +38,9 @@
       "RANGE",
       "SCALAR"
     ]
-  }
+  },
+  "fallback_freeze": "c1979dd67739770bccecacedf7672a9c4c2310d4",
+  "fallback_gate_controller": 2779068,
+  "r24_proof": "PASS",
+  "r24_receipt": "r24/receipt.json"
 }

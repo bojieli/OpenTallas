@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "source": "b2a07db8c",
+  "physical_freezes": {
+    "main": "38d99f00f",
+    "fallback": "c1979dd67"
+  },
+  "scope": "Canonical full Qswiglu SFU component, exact LG_PATH 24 / CORE3L / FPIPE1 repaired generic source; not selected die LG15 or full-token execution.",
+  "controller": 2570433,
+  "unit": "Gold1 4130872-1792647368",
+  "exit": 0,
+  "params": {
+    "SFU_LG_R": 24,
+    "CORE3": 1,
+    "CORE3L": 1,
+    "SYNC_RST": 1,
+    "K9X_BTREE": 3,
+    "K9X_BRING": 0,
+    "NATIVE32": 1,
+    "FPIPE": 1
+  },
+  "compared_edges": 6687,
+  "active_output_edges": 6519,
+  "committed_vm_words": 3072,
+  "io_rows": 850,
+  "arithmetic_rows": 368,
+  "delay_core": 3,
+  "delay_status": 2,
+  "diagnostic_fault_only_extra_edges": 5,
+  "guard": {
+    "enabled": true,
+    "wrapper_exit": 0,
+    "policy": "Installed canonical wrapper refuses any surviving in-place NBA finding before simulation; overall exit 0 and actual simulation establish guard acceptance."
+  },
+  "source_hash_audit": {
+    "compared": 58,
+    "missing": [],
+    "mismatches": []
+  },
+  "simulation_wall_seconds": 275.674,
+  "objects_retained": "Gold1 and EP7 /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out",
+  "files": {
+    "sources.sha256": "fd1197afc0978de8db95f626ce3043d1bd2511175d0050c6288966bd33d04732",
+    "io_manifest.json": "3d55876dbabac6320feb37a3a459b06a44d66e2366246b838fc2fa5446786792",
+    "build.log": "8d4815b21ab9817fd29804f370aad16292e57846543856a5596b7a108e493962",
+    "run.log": "7f1222a5c3751f549492b388cc010a4219d3ee187399fac3e665d8bdab37cb77",
+    "launcher.log": "97c50082c00e368a9c08b8ba444f0104dfb4809a85e4c349afd236e77bc78ae0"
+  }
+}

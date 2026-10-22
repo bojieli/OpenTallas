@@ -1,0 +1,1181 @@
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'idle'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:10:31: ... Location of port declaration
+   10 |     output wire               idle,
+      |                               ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'cr_seq'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:40:31: ... Location of port declaration
+   40 |     output wire  [7:0]        cr_seq, cr_dseq, cr_rseq,
+      |                               ^~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'cr_dseq'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:40:39: ... Location of port declaration
+   40 |     output wire  [7:0]        cr_seq, cr_dseq, cr_rseq,
+      |                                       ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'cr_rseq'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:40:48: ... Location of port declaration
+   40 |     output wire  [7:0]        cr_seq, cr_dseq, cr_rseq,
+      |                                                ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'cr_cnt'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:41:30: ... Location of port declaration
+   41 |     output wire [15:0]       cr_cnt,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'kv_we'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:46:30: ... Location of port declaration
+   46 |     output wire [N-1:0]      kv_we,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'kv_waddr'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:47:30: ... Location of port declaration
+   47 |     output wire [N*AW-1:0]   kv_waddr,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'kv_wdata'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:48:30: ... Location of port declaration
+   48 |     output wire [N*32-1:0]   kv_wdata,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'res_we'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:50:30: ... Location of port declaration
+   50 |     output wire [N/8-1:0]    res_we,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'res_addr'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:51:30: ... Location of port declaration
+   51 |     output wire [N/8*AW-1:0] res_addr,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'res_data'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:52:30: ... Location of port declaration
+   52 |     output wire [N/8*32-1:0] res_data,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'fault'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:54:31: ... Location of port declaration
+   54 |     output wire               fault,           
+      |                               ^~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'order_fault'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:55:31: ... Location of port declaration
+   55 |     output wire               order_fault,     
+      |                               ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'emitted'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:56:31: ... Location of port declaration
+   56 |     output wire  [15:0]       emitted,         
+      |                               ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'retire_o'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:57:31: ... Location of port declaration
+   57 |     output wire               retire_o,        
+      |                               ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'dbg_emit'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:58:30: ... Location of port declaration
+   58 |     output wire              dbg_emit,        
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'dbg_eseq'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:59:30: ... Location of port declaration
+   59 |     output wire [7:0]        dbg_eseq,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'dbg_ret'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:60:30: ... Location of port declaration
+   60 |     output wire              dbg_ret,         
+      |                              ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'dbg_rseq'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:61:30: ... Location of port declaration
+   61 |     output wire [7:0]        dbg_rseq,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'dbg_res'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:62:30: ... Location of port declaration
+   62 |     output wire              dbg_res,         
+      |                              ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'dbg_sseq'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:63:30: ... Location of port declaration
+   63 |     output wire [7:0]        dbg_sseq,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'rd_src'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:73:25: ... Location of port declaration
+   73 |     output wire [127:0] rd_src,
+      |                         ^~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'lane_fault'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:74:24: ... Location of port declaration
+   74 |     output wire [15:0] lane_fault, lane_coll
+      |                        ^~~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:77:76: Instance has missing pin: 'lane_coll'
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_native_quarter.sv:74:36: ... Location of port declaration
+   74 |     output wire [15:0] lane_fault, lane_coll
+      |                                    ^~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'ready'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:214:30: ... Location of port declaration
+  214 |     output wire              ready,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'idle'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:215:30: ... Location of port declaration
+  215 |     output reg               idle,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'cr_seq'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:245:30: ... Location of port declaration
+  245 |     output reg  [7:0]        cr_seq, cr_dseq, cr_rseq,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'cr_dseq'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:245:38: ... Location of port declaration
+  245 |     output reg  [7:0]        cr_seq, cr_dseq, cr_rseq,
+      |                                      ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'cr_rseq'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:245:47: ... Location of port declaration
+  245 |     output reg  [7:0]        cr_seq, cr_dseq, cr_rseq,
+      |                                               ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'cr_cnt'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:246:30: ... Location of port declaration
+  246 |     output wire [15:0]       cr_cnt,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'rd_src'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:253:30: ... Location of port declaration
+  253 |     output wire [8*N-1:0]    rd_src,         
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'kv_we'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:259:30: ... Location of port declaration
+  259 |     output wire [N-1:0]      kv_we,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'kv_waddr'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:260:30: ... Location of port declaration
+  260 |     output wire [N*AW-1:0]   kv_waddr,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'kv_wdata'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:261:30: ... Location of port declaration
+  261 |     output wire [N*32-1:0]   kv_wdata,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'res_we'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:263:30: ... Location of port declaration
+  263 |     output wire [N/8-1:0]    res_we,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'res_addr'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:264:30: ... Location of port declaration
+  264 |     output wire [N/8*AW-1:0] res_addr,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'res_data'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:265:30: ... Location of port declaration
+  265 |     output wire [N/8*32-1:0] res_data,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'fault'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:267:30: ... Location of port declaration
+  267 |     output reg               fault,           
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'order_fault'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:268:30: ... Location of port declaration
+  268 |     output reg               order_fault,     
+      |                              ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'emitted'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:269:30: ... Location of port declaration
+  269 |     output reg  [15:0]       emitted,         
+      |                              ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'retire_o'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:270:30: ... Location of port declaration
+  270 |     output reg               retire_o,        
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'dbg_emit'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:271:30: ... Location of port declaration
+  271 |     output wire              dbg_emit,        
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'dbg_eseq'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:272:30: ... Location of port declaration
+  272 |     output wire [7:0]        dbg_eseq,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'dbg_ret'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:273:30: ... Location of port declaration
+  273 |     output wire              dbg_ret,         
+      |                              ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'dbg_rseq'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:274:30: ... Location of port declaration
+  274 |     output wire [7:0]        dbg_rseq,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'dbg_res'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:275:30: ... Location of port declaration
+  275 |     output wire              dbg_res,         
+      |                              ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_quarter_phase.sv:79:183: Instance has missing pin: 'dbg_sseq'
+                     /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:276:30: ... Location of port declaration
+  276 |     output wire [7:0]        dbg_sseq
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'programme_active'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:22:14: ... Location of port declaration
+   22 |  output wire programme_active,programme_done,
+      |              ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'programme_done'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:22:31: ... Location of port declaration
+   22 |  output wire programme_active,programme_done,
+      |                               ^~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'programme_ordinal'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:23:21: ... Location of port declaration
+   23 |  output wire [31:0] programme_ordinal,
+      |                     ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'io_active'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:32:14: ... Location of port declaration
+   32 |  output wire io_active,io_done,
+      |              ^~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'io_ordinal'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:33:21: ... Location of port declaration
+   33 |  output wire [31:0] io_ordinal,
+      |                     ^~~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'vi_re'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:38:21: ... Location of port declaration
+   38 |  output wire [15:0] vi_re,
+      |                     ^~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'vi_addr'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:39:22: ... Location of port declaration
+   39 |  output wire [383:0] vi_addr,
+      |                      ^~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'ro_v'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:41:21: ... Location of port declaration
+   41 |  output wire [15:0] ro_v,kv_we,
+      |                     ^~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'kv_we'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:41:26: ... Location of port declaration
+   41 |  output wire [15:0] ro_v,kv_we,
+      |                          ^~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'ro_x'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:42:22: ... Location of port declaration
+   42 |  output wire [511:0] ro_x,kv_wdata,
+      |                      ^~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'kv_wdata'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:42:27: ... Location of port declaration
+   42 |  output wire [511:0] ro_x,kv_wdata,
+      |                           ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:61:36: Instance has missing pin: 'kv_waddr'
+   61 |  ot_hgi_sfu_split_engine #(.R(24)) dut(
+      |                                    ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_split_engine.sv:43:22: ... Location of port declaration
+   43 |  output wire [383:0] kv_waddr,
+      |                      ^~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:268:64: Instance has missing pin: 'far_rr'
+  268 |  ot_hbm_vm_lg_static_tap #(.READ_RETURN(14),.WRITE_RETURN(11)) mid(.clk(clk),.rst_n(rst_n),.local_rq(readback?136'd0:rq),.far_rq(136'd0),
+      |                                                                ^~~
+                     rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv:25:35: ... Location of port declaration
+   25 |     output wire [2055:0] local_rr,far_rr,
+      |                                   ^~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:268:64: Instance has missing pin: 'far_w_done'
+  268 |  ot_hbm_vm_lg_static_tap #(.READ_RETURN(14),.WRITE_RETURN(11)) mid(.clk(clk),.rst_n(rst_n),.local_rq(readback?136'd0:rq),.far_rq(136'd0),
+      |                                                                ^~~
+                     rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv:26:35: ... Location of port declaration
+   26 |     output reg [7:0] local_w_done,far_w_done,
+      |                                   ^~~~~~~~~~
+%Warning-PINMISSING: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:274:26: Instance has missing pin: 'local_w_done'
+  274 |  ot_hbm_vm_lg_static_tap near_tap(.clk(clk),.rst_n(rst_n),.local_rq(observer_rq),.far_rq(nrq1),.local_wq(2248'd0),.far_wq(nwq1),
+      |                          ^~~~~~~~
+                     rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv:26:22: ... Location of port declaration
+   26 |     output reg [7:0] local_w_done,far_w_done,
+      |                      ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv:80:98: Instance has missing pin: 'stage_lo_replicas'
+   80 |  ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LG_PATH),.WRITE_RETURN(11+2*LG_PATH)) u_vm(
+      |                                                                                                  ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:50:27: ... Location of port declaration
+   50 |  output wire [8*16*4-1:0] stage_lo_replicas,    
+      |                           ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv:80:98: Instance has missing pin: 'scalar_load_leaves'
+   80 |  ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LG_PATH),.WRITE_RETURN(11+2*LG_PATH)) u_vm(
+      |                                                                                                  ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:54:21: ... Location of port declaration
+   54 |  output wire [31:0] scalar_load_leaves,      
+      |                     ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_programmed_engine.sv:57:43: Instance has missing pin: 'stage_lo_replicas'
+   57 |  ot_hgi_sfu_vm_static_bridge #(.LWB(LWB)) u_vm(
+      |                                           ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:50:27: ... Location of port declaration
+   50 |  output wire [8*16*4-1:0] stage_lo_replicas,    
+      |                           ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_programmed_engine.sv:57:43: Instance has missing pin: 'scalar_load_leaves'
+   57 |  ot_hgi_sfu_vm_static_bridge #(.LWB(LWB)) u_vm(
+      |                                           ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:54:21: ... Location of port declaration
+   54 |  output wire [31:0] scalar_load_leaves,      
+      |                     ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv:53:40: Instance has missing pin: 'clk_grp'
+   53 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:33:19: ... Location of port declaration
+   33 |  input wire [4:0] clk_grp,
+      |                   ^~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv:53:40: Instance has missing pin: 'scalar_load_leaves'
+   53 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:37:20: ... Location of port declaration
+   37 |  input wire [31:0] scalar_load_leaves,scalar_enable_leaves,    
+      |                    ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv:53:40: Instance has missing pin: 'scalar_enable_leaves'
+   53 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:37:39: ... Location of port declaration
+   37 |  input wire [31:0] scalar_load_leaves,scalar_enable_leaves,    
+      |                                       ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv:53:40: Instance has missing pin: 'stage_lo_replicas'
+   53 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:45:26: ... Location of port declaration
+   45 |  input wire [8*16*4-1:0] stage_lo_replicas,
+      |                          ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv:53:40: Instance has missing pin: 'drain_v_leaves'
+   53 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:47:24: ... Location of port declaration
+   47 |  input wire [2*16-1:0] drain_v_leaves,
+      |                        ^~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv:53:40: Instance has missing pin: 'drain_addr_leaves'
+   53 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:48:28: ... Location of port declaration
+   48 |  input wire [2*16*LWB-1:0] drain_addr_leaves,
+      |                            ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:370:94: Instance has missing pin: 'sr_v_leaf'
+  370 |    .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(8),.WROT(WROT),.NATIVE32(NATIVE32),.PRESEL(PS),.PNC(8)) u_group(
+      |                                                                                              ^~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:636:27: ... Location of port declaration
+  636 |     input wire [NS*N-1:0] sr_v_leaf,
+      |                           ^~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:370:94: Instance has missing pin: 'sr_addr_leaf'
+  370 |    .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(8),.WROT(WROT),.NATIVE32(NATIVE32),.PRESEL(PS),.PNC(8)) u_group(
+      |                                                                                              ^~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:637:31: ... Location of port declaration
+  637 |     input wire [NS*N*LWB-1:0] sr_addr_leaf,
+      |                               ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:418:82: Instance has missing pin: 'swr_d'
+  418 |   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(2),.NATIVE32(NATIVE32),.PRESEL(PSO),.PNC(2)) u_output(
+      |                                                                                  ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:646:31: ... Location of port declaration
+  646 |     input  wire [NS*N*32-1:0] swr_d,                 
+      |                               ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:418:82: Instance has missing pin: 'swr_m'
+  418 |   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(2),.NATIVE32(NATIVE32),.PRESEL(PSO),.PNC(2)) u_output(
+      |                                                                                  ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:647:30: ... Location of port declaration
+  647 |     input  wire [NS*N-1:0]   swr_m,                  
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:418:82: Instance has missing pin: 'swr_w'
+  418 |   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(2),.NATIVE32(NATIVE32),.PRESEL(PSO),.PNC(2)) u_output(
+      |                                                                                  ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:648:30: ... Location of port declaration
+  648 |     input  wire [NS*N-1:0]   swr_w,                  
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:418:82: Instance has missing pin: 'swr_r0'
+  418 |   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(2),.NATIVE32(NATIVE32),.PRESEL(PSO),.PNC(2)) u_output(
+      |                                                                                  ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:649:42: ... Location of port declaration
+  649 |     input  wire [NS*(LWB-$clog2(N))-1:0] swr_r0, swr_r1,
+      |                                          ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:418:82: Instance has missing pin: 'swr_r1'
+  418 |   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(2),.NATIVE32(NATIVE32),.PRESEL(PSO),.PNC(2)) u_output(
+      |                                                                                  ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:649:50: ... Location of port declaration
+  649 |     input  wire [NS*(LWB-$clog2(N))-1:0] swr_r0, swr_r1,
+      |                                                  ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'pw_we'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:627:30: ... Location of port declaration
+  627 |     input  wire [N-1:0]      pw_we,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'pw_coll'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:628:30: ... Location of port declaration
+  628 |     input  wire              pw_coll,
+      |                              ^~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'pw_sd0'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:30: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'pw_sd1'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:38: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                                      ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'pw_sa0'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:46: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                                              ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'pw_sa1'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:54: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                                                      ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'pw_d'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:630:32: ... Location of port declaration
+  630 |     input  wire [N*PNC*32-1:0] pw_d,
+      |                                ^~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'pw_r0'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:631:45: ... Location of port declaration
+  631 |     input  wire [N*PNC*(LWB-$clog2(N))-1:0] pw_r0, pw_r1,
+      |                                             ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'pw_r1'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:631:52: ... Location of port declaration
+  631 |     input  wire [N*PNC*(LWB-$clog2(N))-1:0] pw_r0, pw_r1,
+      |                                                    ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'sr_v_leaf'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:636:27: ... Location of port declaration
+  636 |     input wire [NS*N-1:0] sr_v_leaf,
+      |                           ^~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'sr_addr_leaf'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:637:31: ... Location of port declaration
+  637 |     input wire [NS*N*LWB-1:0] sr_addr_leaf,
+      |                               ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'swr_d'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:646:31: ... Location of port declaration
+  646 |     input  wire [NS*N*32-1:0] swr_d,                 
+      |                               ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'swr_m'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:647:30: ... Location of port declaration
+  647 |     input  wire [NS*N-1:0]   swr_m,                  
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'swr_w'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:648:30: ... Location of port declaration
+  648 |     input  wire [NS*N-1:0]   swr_w,                  
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'swr_r0'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:649:42: ... Location of port declaration
+  649 |     input  wire [NS*(LWB-$clog2(N))-1:0] swr_r0, swr_r1,
+      |                                          ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1124:127: Instance has missing pin: 'swr_r1'
+ 1124 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(GB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_g (
+      |                                                                                                                               ^~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:649:50: ... Location of port declaration
+  649 |     input  wire [NS*(LWB-$clog2(N))-1:0] swr_r0, swr_r1,
+      |                                                  ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'pw_we'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:627:30: ... Location of port declaration
+  627 |     input  wire [N-1:0]      pw_we,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'pw_coll'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:628:30: ... Location of port declaration
+  628 |     input  wire              pw_coll,
+      |                              ^~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'pw_sd0'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:30: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'pw_sd1'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:38: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                                      ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'pw_sa0'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:46: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                                              ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'pw_sa1'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:54: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                                                      ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'pw_d'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:630:32: ... Location of port declaration
+  630 |     input  wire [N*PNC*32-1:0] pw_d,
+      |                                ^~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'pw_r0'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:631:45: ... Location of port declaration
+  631 |     input  wire [N*PNC*(LWB-$clog2(N))-1:0] pw_r0, pw_r1,
+      |                                             ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'pw_r1'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:631:52: ... Location of port declaration
+  631 |     input  wire [N*PNC*(LWB-$clog2(N))-1:0] pw_r0, pw_r1,
+      |                                                    ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'sr_v_leaf'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:636:27: ... Location of port declaration
+  636 |     input wire [NS*N-1:0] sr_v_leaf,
+      |                           ^~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'sr_addr_leaf'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:637:31: ... Location of port declaration
+  637 |     input wire [NS*N*LWB-1:0] sr_addr_leaf,
+      |                               ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'swr_d'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:646:31: ... Location of port declaration
+  646 |     input  wire [NS*N*32-1:0] swr_d,                 
+      |                               ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'swr_m'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:647:30: ... Location of port declaration
+  647 |     input  wire [NS*N-1:0]   swr_m,                  
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'swr_w'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:648:30: ... Location of port declaration
+  648 |     input  wire [NS*N-1:0]   swr_w,                  
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'swr_r0'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:649:42: ... Location of port declaration
+  649 |     input  wire [NS*(LWB-$clog2(N))-1:0] swr_r0, swr_r1,
+      |                                          ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1134:124: Instance has missing pin: 'swr_r1'
+ 1134 |     ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(LGO), .AW(AW), .NLW(N), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT), .NS(NS)) u_go (
+      |                                                                                                                            ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:649:50: ... Location of port declaration
+  649 |     input  wire [NS*(LWB-$clog2(N))-1:0] swr_r0, swr_r1,
+      |                                                  ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'pw_we'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:627:30: ... Location of port declaration
+  627 |     input  wire [N-1:0]      pw_we,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'pw_coll'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:628:30: ... Location of port declaration
+  628 |     input  wire              pw_coll,
+      |                              ^~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'pw_sd0'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:30: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                              ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'pw_sd1'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:38: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                                      ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'pw_sa0'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:46: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                                              ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'pw_sa1'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:629:54: ... Location of port declaration
+  629 |     input  wire [N*PNC-1:0]  pw_sd0, pw_sd1, pw_sa0, pw_sa1,
+      |                                                      ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'pw_d'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:630:32: ... Location of port declaration
+  630 |     input  wire [N*PNC*32-1:0] pw_d,
+      |                                ^~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'pw_r0'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:631:45: ... Location of port declaration
+  631 |     input  wire [N*PNC*(LWB-$clog2(N))-1:0] pw_r0, pw_r1,
+      |                                             ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'pw_r1'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:631:52: ... Location of port declaration
+  631 |     input  wire [N*PNC*(LWB-$clog2(N))-1:0] pw_r0, pw_r1,
+      |                                                    ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'sr_v_leaf'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:636:27: ... Location of port declaration
+  636 |     input wire [NS*N-1:0] sr_v_leaf,
+      |                           ^~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'sr_addr_leaf'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:637:31: ... Location of port declaration
+  637 |     input wire [NS*N*LWB-1:0] sr_addr_leaf,
+      |                               ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'swr_d'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:646:31: ... Location of port declaration
+  646 |     input  wire [NS*N*32-1:0] swr_d,                 
+      |                               ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'swr_m'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:647:30: ... Location of port declaration
+  647 |     input  wire [NS*N-1:0]   swr_m,                  
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'swr_w'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:648:30: ... Location of port declaration
+  648 |     input  wire [NS*N-1:0]   swr_w,                  
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'swr_r0'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:649:42: ... Location of port declaration
+  649 |     input  wire [NS*(LWB-$clog2(N))-1:0] swr_r0, swr_r1,
+      |                                          ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1152:119: Instance has missing pin: 'swr_r1'
+ 1152 |         ot_hgi_su_lgroup2 #(.N(N), .M(M), .LWB(SLB), .AW(AW), .NLW(0), .MACRO(MACRO), .MUT_XBAR(MUT_XBAR), .LAT(LAT)) u_gs (
+      |                                                                                                                       ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:649:50: ... Location of port declaration
+  649 |     input  wire [NS*(LWB-$clog2(N))-1:0] swr_r0, swr_r1,
+      |                                                  ^~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv:86:90: Instance has missing pin: 'stage_lo_replicas'
+   86 |  ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LGB),.WRITE_RETURN(11+2*LGB)) u_vm(
+      |                                                                                          ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:50:27: ... Location of port declaration
+   50 |  output wire [8*16*4-1:0] stage_lo_replicas,    
+      |                           ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv:86:90: Instance has missing pin: 'scalar_load_leaves'
+   86 |  ot_hgi_sfu_vm_static_bridge #(.LWB(LWB),.READ_RETURN(14+2*LGB),.WRITE_RETURN(11+2*LGB)) u_vm(
+      |                                                                                          ^~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:54:21: ... Location of port declaration
+   54 |  output wire [31:0] scalar_load_leaves,      
+      |                     ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv:93:40: Instance has missing pin: 'clk_grp'
+   93 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:33:19: ... Location of port declaration
+   33 |  input wire [4:0] clk_grp,
+      |                   ^~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv:93:40: Instance has missing pin: 'scalar_load_leaves'
+   93 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:37:20: ... Location of port declaration
+   37 |  input wire [31:0] scalar_load_leaves,scalar_enable_leaves,    
+      |                    ^~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv:93:40: Instance has missing pin: 'scalar_enable_leaves'
+   93 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:37:39: ... Location of port declaration
+   37 |  input wire [31:0] scalar_load_leaves,scalar_enable_leaves,    
+      |                                       ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv:93:40: Instance has missing pin: 'stage_lo_replicas'
+   93 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:45:26: ... Location of port declaration
+   45 |  input wire [8*16*4-1:0] stage_lo_replicas,
+      |                          ^~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv:93:40: Instance has missing pin: 'drain_v_leaves'
+   93 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:47:24: ... Location of port declaration
+   47 |  input wire [2*16-1:0] drain_v_leaves,
+      |                        ^~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv:93:40: Instance has missing pin: 'drain_addr_leaves'
+   93 |  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
+      |                                        ^~~~~~~~
+                     rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:48:28: ... Location of port declaration
+   48 |  input wire [2*16*LWB-1:0] drain_addr_leaves,
+      |                            ^~~~~~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv:23:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PIN_RST' generates 32 bits.
+                                                                                 : ... note: In instance 'tb_hgi_sfu_split_equiv.dut.g_pair[3].u_leaf'
+   23 |  generate if(PIN_RST) begin:g_rst_pin
+      |           ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv:161:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                                                : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core'
+  161 |  if(NATIVE32)begin:g_drain_copies
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv:190:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                                                : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core'
+  190 |  if(NATIVE32)begin:g_se_copies
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:71:14: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_hgi_sfu_split_equiv.dut.u_core.u_vm'
+   71 |  if(NATIVE32 && DRAIN_PIPE!=0)begin:g_drain_region_copies
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:162:35: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_hgi_sfu_split_equiv.dut.u_core.u_vm'
+  162 |  localparam integer SLC=(NATIVE32 && BRING==0 && READ_RETURN>0)?1:0;
+      |                                   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:164:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SLC' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_hgi_sfu_split_equiv.dut.u_core.u_vm'
+  164 |  if(SLC)begin:g_sl_leaves
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:201:16: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_hgi_sfu_split_equiv.dut.u_core.u_vm'
+  201 |    if(NATIVE32 && READ_RETURN>0)begin:g_scalar_meta_copies
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:213:16: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_hgi_sfu_split_equiv.dut.u_core.u_vm'
+  213 |    if(NATIVE32 && READ_RETURN>0)begin:g_lo_copies
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:233:6: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_hgi_sfu_split_equiv.dut.u_core.u_vm'
+  233 |   if(!NATIVE32 || BRING!=0 || READ_RETURN==0)begin:g_lo_original
+      |      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:259:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_hgi_sfu_split_equiv.dut.u_core.u_vm'
+  259 |   if(NATIVE32)begin:g_native_drain_write
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv:86:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FPIPE' generates 32 bits.
+                                                                                  : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine'
+   86 |  generate if(FPIPE)begin:g_lane_fault_tree
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:91:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+   91 |  generate if(NATIVE32)begin:g_scalar_native
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:140:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'FPIPE' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  140 |  generate if(FPIPE)begin:g_fault_pipe
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:170:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'WPIPE' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  170 |  generate if(WPIPE)begin:g_wpipe
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:192:23: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  192 |  generate if(NATIVE32 && WPIPE && WROT)begin:g_rotate_copies
+      |                       ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:192:23: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'WPIPE' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  192 |  generate if(NATIVE32 && WPIPE && WROT)begin:g_rotate_copies
+      |                       ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:192:32: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'WROT' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  192 |  generate if(NATIVE32 && WPIPE && WROT)begin:g_rotate_copies
+      |                                ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:216:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'WROT' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  216 |  generate if(WROT)begin:g_wrot
+      |           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:253:34: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  253 |  localparam integer PS=(NATIVE32 && WPIPE && WROT)?1:0, PSO=(NATIVE32 && WPIPE)?1:0;
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:253:34: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'WPIPE' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  253 |  localparam integer PS=(NATIVE32 && WPIPE && WROT)?1:0, PSO=(NATIVE32 && WPIPE)?1:0;
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:253:43: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'WROT' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  253 |  localparam integer PS=(NATIVE32 && WPIPE && WROT)?1:0, PSO=(NATIVE32 && WPIPE)?1:0;
+      |                                           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:253:71: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  253 |  localparam integer PS=(NATIVE32 && WPIPE && WROT)?1:0, PSO=(NATIVE32 && WPIPE)?1:0;
+      |                                                                       ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:253:71: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'WPIPE' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  253 |  localparam integer PS=(NATIVE32 && WPIPE && WROT)?1:0, PSO=(NATIVE32 && WPIPE)?1:0;
+      |                                                                       ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:256:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PS' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  256 |  if(PS)begin:g_presel_hits
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:279:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  279 |   if(NATIVE32)begin:g_scalar_leaf
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:313:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PS' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  313 |   if(PS)begin:g_presel
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:385:2: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PSO' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  385 |  if(PSO)begin:g_presel_out
+      |  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:674:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  674 |     generate if(NATIVE32 && NLW>0 && NS==2 && N==16)begin:g_native_readsel
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:704:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  704 |     end else if(NATIVE32 && NLW==0)begin:g_native_lane_readsel
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:773:21: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  773 |         if(NATIVE32 && NLW>0 && LAT==0)begin:g_native
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:811:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  811 |         if (NATIVE32 && NLW==0 && LAT==0 && N==16) begin : g_native_read
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:848:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  848 |             if(NATIVE32 && NLW>0 && LAT==0)begin:g_native
+      |                         ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:866:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PRESEL' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  866 |     generate if(PRESEL)begin:g_presel_wsel
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:880:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  880 |     end else if(NATIVE32 && NLW>0)begin:g_native_wsel
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:982:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  982 |         if (NATIVE32) begin:g_on
+      |         ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:803:36: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's EQ generates 1 bits.
+                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  803 |                             allowed=(lane_==0);
+      |                                    ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:664:29: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  664 |         if (k < NROT) cbank = (l + k * M) % N;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:665:58: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  665 |         else if (k < 2 * NROT) begin j = k - NROT; cbank = ((l ^ 1) + j * M) % N; end
+      |                                                          ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:666:44: Operator ASSIGN expects 4 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  666 |         else begin j = k - 2 * NROT; cbank = ((l >> 1) + j * HM) % N; end
+      |                                            ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:805:42: Operator EQ expects 32 bits on the RHS, but RHS's FUNCREF 'cbank' generates 4 bits.
+                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  805 |                                 if(bank__==cbank(lane_,k_))allowed=1;
+      |                                          ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:820:21: Logical operator GENIF expects 1 bit on the If, but If's FUNCREF 'allowed' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  820 |                     if(allowed(gl,bank_))begin:g_candidate
+      |                     ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:509:26: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output.g_bank[15].u_b'
+  509 |     generate if(NATIVE32 && MACRO)begin:g_native_ks
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:509:26: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'MACRO' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output.g_bank[15].u_b'
+  509 |     generate if(NATIVE32 && MACRO)begin:g_native_ks
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:520:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'MACRO' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output.g_bank[15].u_b'
+  520 |     generate if (MACRO && RB == 13) begin : g_m
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:532:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'MACRO' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output.g_bank[15].u_b'
+  532 |     end else if (MACRO && RB == 12) begin : g_m12        
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:544:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'MACRO' generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output.g_bank[15].u_b'
+  544 |     end else if (MACRO && RB == 11) begin : g_m11
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:549:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output.g_bank[15].u_b'
+  549 |         if(NATIVE32)begin:g_native_read
+      |         ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:147:23: Operator VAR 'H1_DIV' expects 16 bits on the Initial value, but Initial value's ADD generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  147 |     localparam [15:0] H1_DIV = D_DIV + OPR, H1_M = MLAT + OPR;       
+      |                       ^~~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:147:45: Operator VAR 'H1_M' expects 16 bits on the Initial value, but Initial value's ADD generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  147 |     localparam [15:0] H1_DIV = D_DIV + OPR, H1_M = MLAT + OPR;       
+      |                                             ^~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:23: Operator VAR 'H_DIV' expects 16 bits on the Initial value, but Initial value's VARREF 'D_DIV' generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                       ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:38: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                      ^~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:50: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:65: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:80: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                ^~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:95: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                               ^~~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:149:23: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  149 |                       H_SP = D_SP, H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:149:36: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                                                                                                            : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  149 |                       H_SP = D_SP, H_EG = D_EG;
+      |                                    ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:150:24: Operator VAR 'HAS_SFU' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                                                                                             : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  150 |     localparam integer HAS_SFU = (KIND != 0);
+      |                        ^~~~~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:151:24: Operator VAR 'FULL' expects 32 bits on the Initial value, but Initial value's EQ generates 1 bits.
+                                                                                                                                             : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u'
+  151 |     localparam integer FULL = (KIND == 2);
+      |                        ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_dsrom_su_f12.sv:486:32: Operator VAR 'TWO' expects 32 bits on the Initial value, but Initial value's LTS generates 1 bits.
+                                                                                                                                    : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu..g_s21.u_div'
+  486 |             localparam integer TWO = (2 * j + 1 < QB);
+      |                                ^~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:775:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_m1s.u_l1'
+  775 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p) canbe = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:814:40: Operator VAR 'DK' expects 32 bits on the Initial value, but Initial value's SEL generates 16 bits.
+                                                                                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu.g_vec.u_l4'
+  814 |                     localparam integer DK = DEPTHS[16*k +: 16];
+      |                                        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:834:44: Operator VAR 'DK' expects 32 bits on the Initial value, but Initial value's SEL generates 16 bits.
+                                                                                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu.g_vec.u_l4'
+  834 |                         localparam integer DK = DEPTHS[16*k +: 16];
+      |                                            ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6b' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '7'h6b' generates 7 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                                                                                             : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu.u_exp.g_h[6].u_m....g_l6.u.u.u_k1'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:768:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu.g_vec.u_l4'
+  768 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p && s[k]) has = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:394:79: Input port connection 'b' expects 32 bits on the pin connection, but pin connection's REPLICATE generates 46 bits.
+                                                                                                                                       : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu.u_exp'
+  394 |     ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
+      |                                                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_dsrom_su_f12.sv:408:47: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                                                                                    : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu..g_s21.u_div'
+  408 |             if (e != 8'd0) norm = {1'b1, f, e - 10'sd127};
+      |                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_dsrom_su_f12.sv:441:48: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                                                                                    : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu..g_s21.u_div'
+  441 |             if (e != 8'd0) normp = {1'b1, f, e - 10'sd127};
+      |                                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_dsrom_su_f12.sv:491:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu..g_s21.u_div'
+  491 |                                 TWO ? {r_rem[j-1][24:0], 2'b0} : {1'b0, r_rem[j-1][24:0], 1'b0};
+      |                                     ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/frozen/rtl/hdc/v41x/ot_dsrom_su_f12.sv:502:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15].u_sfu.u.u.g_sfu..g_s21.u_div'
+  502 |                 r_q[j]    <= TWO ? {qin[QB-3:0], q} : {qin[QB-2:0], q[0]};
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:202:21: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'iv1' generates 24 bits.
+                                                                               : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_tree4.u_tree4'
+  202 |             24'(iv1 + (24'(JJ)&((24'd1<<ls1)-1)) - (24'd5&((24'd1<<ls1)-1))),
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:202:31: Operator AND expects 32 bits on the LHS, but LHS's EXTEND generates 24 bits.
+                                                                               : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_tree4.u_tree4'
+  202 |             24'(iv1 + (24'(JJ)&((24'd1<<ls1)-1)) - (24'd5&((24'd1<<ls1)-1))),
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:202:39: Operator SHIFTL expects 32 bits on the LHS, but LHS's CONST '24'h1' generates 24 bits.
+                                                                               : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_tree4.u_tree4'
+  202 |             24'(iv1 + (24'(JJ)&((24'd1<<ls1)-1)) - (24'd5&((24'd1<<ls1)-1))),
+      |                                       ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:202:58: Operator AND expects 32 bits on the LHS, but LHS's CONST '24'h5' generates 24 bits.
+                                                                               : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_tree4.u_tree4'
+  202 |             24'(iv1 + (24'(JJ)&((24'd1<<ls1)-1)) - (24'd5&((24'd1<<ls1)-1))),
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:202:66: Operator SHIFTL expects 32 bits on the LHS, but LHS's CONST '24'h1' generates 24 bits.
+                                                                               : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_tree4.u_tree4'
+  202 |             24'(iv1 + (24'(JJ)&((24'd1<<ls1)-1)) - (24'd5&((24'd1<<ls1)-1))),
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:41:19: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'iv0' generates 24 bits.
+                                                                              : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15]..g_mono.u_map'
+   41 |           24'(iv0 + (24'(j0)&((24'd1<<ls0)-1)) - (24'd5&((24'd1<<ls0)-1))),
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:41:29: Operator AND expects 32 bits on the LHS, but LHS's EXTEND generates 24 bits.
+                                                                              : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15]..g_mono.u_map'
+   41 |           24'(iv0 + (24'(j0)&((24'd1<<ls0)-1)) - (24'd5&((24'd1<<ls0)-1))),
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:41:37: Operator SHIFTL expects 32 bits on the LHS, but LHS's CONST '24'h1' generates 24 bits.
+                                                                              : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15]..g_mono.u_map'
+   41 |           24'(iv0 + (24'(j0)&((24'd1<<ls0)-1)) - (24'd5&((24'd1<<ls0)-1))),
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:41:56: Operator AND expects 32 bits on the LHS, but LHS's CONST '24'h5' generates 24 bits.
+                                                                              : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15]..g_mono.u_map'
+   41 |           24'(iv0 + (24'(j0)&((24'd1<<ls0)-1)) - (24'd5&((24'd1<<ls0)-1))),
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv:41:64: Operator SHIFTL expects 32 bits on the LHS, but LHS's CONST '24'h1' generates 24 bits.
+                                                                              : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid.g_lane[15]..g_mono.u_map'
+   41 |           24'(iv0 + (24'(j0)&((24'd1<<ls0)-1)) - (24'd5&((24'd1<<ls0)-1))),
+      |                                                                ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:839:77: Operator ADD expects 32 bits on the LHS, but LHS's FUNCREF 'cbank' generates 4 bits.
+                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output'
+  839 |                     if (lb_s[gl] == cbank(gl, kk)) dv = b_rd[(cbank(gl, kk) + MUT_XBAR) % N];
+      |                                                                             ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:442:26: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'group_id' generates 2 bits.
+                                                                                           : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].g_presel.g_gv[7].u_decode'
+  442 |  assign hit=v && group_id==GROUP;
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:719:50: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 15 bits.
+                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  719 |                     sa = sr_addr[sl_*LWB +: LWB] + rj_;
+      |                                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:719:24: Operator ASSIGN expects 15 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  719 |                     sa = sr_addr[sl_*LWB +: LWB] + rj_;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:727:77: Operator EQ expects 32 bits on the LHS, but LHS's FUNCREF 'cbank' generates 4 bits.
+                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  727 |                     for (kk = 0; kk < NCAND; kk = kk + 1) if (cbank(ll, kk) == bb) cand = 1'b1;
+      |                                                                             ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:728:59: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.g_operand[3].u_group'
+  728 |                     if (cand && rr[ll] && ra[ll*AW +: LN] == bb) begin
+      |                                                           ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:748:50: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 15 bits.
+                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output'
+  748 |                     sa = sr_addr[sl_*LWB +: LWB] + rj_;
+      |                                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:748:24: Operator ASSIGN expects 15 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output'
+  748 |                     sa = sr_addr[sl_*LWB +: LWB] + rj_;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:949:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 15 bits.
+                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output'
+  949 |                 sb = sw_addr[ws_*LWB +: LWB] + wj_;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:949:20: Operator ASSIGN expects 15 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output'
+  949 |                 sb = sw_addr[ws_*LWB +: LWB] + wj_;
+      |                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:938:9: Logical operator IF expects 1 bit on the If, but If's VARREF 'WROT' generates 32 bits.
+                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory.u_output'
+  938 |         if (WROT) begin
+      |         ^~
+%Warning-WIDTHCONCAT: rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv:88:68: Replication of more that --replication-limit 8192 is suspect: 27872
+                                                                                     : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_arithmetic.u_grid'
+   88 |   assign {t4_ld_c,t4_ov,t4_iv,t4_row,t4_ls,t4_lvw,t4_emit,t4_pass}='0;
+      |                                                                    ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:86:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE32' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+   86 |    assign se_l[4*l+g]=NATIVE32?scalar_enable_leaves[8*g+l/2]:scalar_enable[g];
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:247:21: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'GCLK' generates 32 bits.
+                                                                                          : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  247 |   assign gck[g]=GCLK?clk_grp[g]:clk;
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:390:37: Operator NEQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                           : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  390 |     if(vm_we[l] && vm_waddr[24*l+:4]!=l)coll_d=1;
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:392:34: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                           : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  392 |     if(vm_we[0] && vm_waddr[0+:4]==b)begin we_d[b]=1;sel_d[2*b]=1;end
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:393:45: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                           : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  393 |     if(b!=0 && vm_we[b] && vm_waddr[24*b+:4]==b)begin
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:142:114: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_vm'
+  142 |       if(scalar_meta_copies[7*(8*b+n)+6] && scalar_meta_copies[7*(8*b+n)+3] && scalar_meta_copies[7*(8*b+n)+4+:2]==sg)
+      |                                                                                                                  ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:137:15: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_vm'
+  137 |   if(NATIVE32 && BRING==0 && READ_RETURN>0)begin
+      |               ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:291:17: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's SHIFTR generates 281 bits.
+                                                                                      : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_vm'
+  291 |         selected=({1'b1,drain_sector_q[16*sl+:16],rounded_data[256*sl+:256],8'hff} >> (16*c));
+      |                 ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:291:17: Operator ASSIGN expects 9 bits on the Assign RHS, but Assign RHS's SHIFTR generates 281 bits.
+                                                                                      : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_vm'
+  291 |         selected=({1'b1,drain_sector_q[16*sl+:16],rounded_data[256*sl+:256],8'hff} >> (16*c));
+      |                 ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv:315:58: Operator NEQ expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                                                       : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_vm'
+  315 |      if(prefetch_v[2*g+b]&&prefetch_sector[16*(2*g+b)+:3]!=(2*g+b))fault_q<=1;
+      |                                                          ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv:163:13: Operator CASE expects 32 bits on the Case expression, but Case expression's VARREF 'wslot_d' generates 3 bits.
+                                                                                  : ... note: In instance 'tb_hgi_sfu_split_equiv.bank[7].memory'
+  163 |             case (wslot_d)
+      |             ^~~~
+%Warning-CMPCONST: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:231:29: Comparison is constant due to limited range
+                                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  231 |     assign swr_w[16*s+b]=(B4<lo);
+      |                             ^
+                   ... For warning description see https://verilator.org/warn/CMPCONST?v=5.050
+                   ... Use "/* verilator lint_off CMPCONST */" and lint_on around source to disable this message.
+%Warning-CMPCONST: rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv:267:31: Comparison is constant due to limited range
+                                                                                        : ... note: In instance 'tb_hgi_sfu_split_equiv.eq_core.u_s3.u_core.u_engine.u_memory'
+  267 |     assign ps_wrap[16*s+b]=(B4<lo);
+      |                               ^
+make: Entering directory '/srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_hgi_sfu_split_equiv__pch.h -o Vtb_hgi_sfu_split_equiv__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_hgi_sfu_split_equiv__pch.h -o Vtb_hgi_sfu_split_equiv__pch.h.slow.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.slow -c Vtb_hgi_sfu_split_equiv_vm_classes_Slow_0.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.slow -c Vtb_hgi_sfu_split_equiv_vm_classes_Slow_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.slow -c Vtb_hgi_sfu_split_equiv_vm_classes_Slow_2.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.slow -c Vtb_hgi_sfu_split_equiv_vm_classes_Slow_3.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.slow -c Vtb_hgi_sfu_split_equiv_vm_classes_Slow_4.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.slow -c Vtb_hgi_sfu_split_equiv_vm_classes_Slow_5.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.slow -c Vtb_hgi_sfu_split_equiv_vm_classes_Slow_6.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.slow -c Vtb_hgi_sfu_split_equiv_vm_classes_Slow_7.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.slow -c Vtb_hgi_sfu_split_equiv__Syms__Slow.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.fast -c Vtb_hgi_sfu_split_equiv_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.fast -c Vtb_hgi_sfu_split_equiv_vm_classes_1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.fast -c Vtb_hgi_sfu_split_equiv_vm_classes_2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.fast -c Vtb_hgi_sfu_split_equiv_vm_classes_3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.fast -c Vtb_hgi_sfu_split_equiv_vm_classes_4.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.fast -c Vtb_hgi_sfu_split_equiv_vm_classes_5.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.fast -c Vtb_hgi_sfu_split_equiv_vm_classes_6.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O0 -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_hgi_sfu_split_equiv__pch.h.fast -c Vtb_hgi_sfu_split_equiv_vm_classes_7.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_hgi_sfu_split_equiv__ALL.a    -pthread -lpthread -latomic   -o Vtb_hgi_sfu_split_equiv
+rm Vtb_hgi_sfu_split_equiv__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 24.771 MB sources in 158 modules, into 954.228 MB in 897 C++ files needing 0.547 MB
+- Verilator: Walltime 1589.640 s (elab=14.812, cvt=1033.100, bld=480.231); cpu 776.402 s on 8 threads; allocated 18821.734 MB

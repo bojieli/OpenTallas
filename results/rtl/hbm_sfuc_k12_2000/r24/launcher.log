@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       admits     6 GB (avail 592, growth 589, headroom 0, waiters 1/48 GB) load 54/128 running 34 disk 812 GB 
+ot-run: ot-epyc7       admits   114 GB (avail 325, growth 245, headroom 0, waiters 1/96 GB) load 238/96 running 63 disk 4153 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc7 at 2.73 x cores
+ot-run: -> ot-epyc7
+ot-heavy: waiting for memory on ot-epyc7: need 0.7 x 64 = 45 GB, admissible -26 GB: available 323 GB, growth charged 341 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 321 GB at x1), young 93 GB, floor 50 GB
+ot-heavy: NOT RUN: no memory on ot-epyc7 within 120 s (need 0.7 x 64 = 45 GB, admissible -80 GB: available 331 GB, growth charged 386 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 366 GB at x1), young 95 GB, floor 50 GB): bash -lc cd /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/src && OUT=/srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000/out SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc7 within 120 s; placing again
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-sfuc-native-repair-2000 (0.3 GB) ot-epyc7 -> ot-gold1 (no host with --dir admits 64 GB now)
+ot-run: SPILL: copied 14232 changed entries in 8 s; running on ot-gold1; written files go back to ot-epyc7 after the run
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-4130872-1792647368 after 1 s
+SFU_SPLIT_EQUIV PASS edges=6687 active_output_edges=6519 delay_core=3 delay_status=2 lg_path=24 wq_extra=1
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:368: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 275.674 s; speed 20.342 ns/s
+- Verilator: cpu 181.868 s on 1 threads; allocated 155 MB
+SFU_SPLIT_GATE POSITIVE PASS
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-4130872-1792647368): exit 0
+ot-run: SPILL: outputs copied back ot-gold1 -> ot-epyc7; RAN on ot-gold1: exit 0
