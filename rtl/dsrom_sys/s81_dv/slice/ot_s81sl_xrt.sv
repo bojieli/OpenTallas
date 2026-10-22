@@ -185,16 +185,17 @@ module ot_s81sl_xrt #(
     // 160 rwr_c kept copies, 578 paths): the kind / owner predicates are decoded from the input PINS into kept flags at
     // the SAME edge as eb / wb / vb (input-to-reg slack +365 ps).  sid_oh is a static strap, so mine_* from dl_* equals
     // mine_* from the registered words; the flags reset with ev / wv / vv (rs_c).  Same values, same edges.
-    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd, pq_vrdc, pq_me, pq_mw, pq_mv;
+    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd, pq_vrdc, pq_vrdm, pq_me, pq_mw, pq_mv;
     // own strap capture for the predecode (sid_c reached 44 loads when shared): sid is static from reset
-    (* keep *) reg [3:0] sid_p; (* keep *) reg [15:0] sid_ohp;
-    always @(posedge clk) begin sid_p <= sid; sid_ohp <= 16'd1 << sid_p; end
+    (* keep *) reg [3:0] sid_p, sid_p2; (* keep *) reg [15:0] sid_ohp;
+    always @(posedge clk) begin sid_p <= sid; sid_p2 <= sid; sid_ohp[7:0] <= 8'(16'd1 << sid_p); sid_ohp[15:8] <= 8'((16'd1 << sid_p2) >> 8); end
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) begin pq_ectl <= 1'b0; pq_wctl <= 1'b0; pq_vctl <= 1'b0; pq_erd <= 1'b0; pq_wrd <= 1'b0; pq_vrd <= 1'b0; pq_vrdc <= 1'b0; end
+        if (!rs_c) begin pq_ectl <= 1'b0; pq_wctl <= 1'b0; pq_vctl <= 1'b0; pq_erd <= 1'b0; pq_wrd <= 1'b0; pq_vrd <= 1'b0; pq_vrdc <= 1'b0; pq_vrdm <= 1'b0; end
         else begin
             pq_ectl <= dl_ev && dl_e[3:1] == K_CTL; pq_wctl <= dl_wv && dl_w[3:1] == K_CTL; pq_vctl <= dl_vv && dl_vb[3:1] == K_CTL;
             pq_erd <= dl_ev && (dl_e[3:1] == K_RD || dl_e[3:1] == K_CL); pq_wrd <= dl_wv && (dl_w[3:1] == K_RD || dl_w[3:1] == K_CL);
             pq_vrd <= dl_vv && dl_vb[3:1] == K_RD; pq_vrdc <= dl_vv && dl_vb[3:1] == K_RD;   // copy for the 32 rsv_c
+            pq_vrdm <= dl_vv && dl_vb[3:1] == K_RD;   // copy for the rl0 / rnp / rrow selects
         end
     always @(posedge clk) begin
         pq_me <= |(dl_e[36:21] & sid_ohp); pq_mw <= |(dl_w[36:21] & sid_ohp); pq_mv <= |(dl_vb[36:21] & sid_ohp);
@@ -228,7 +229,11 @@ module ot_s81sl_xrt #(
     wire local_rd = ci_v && s_local && ci_dir == 3'd0 && ci_r[2:0] == K_RD;
     wire rdv0 = re || rw_ || b_rd || v_rd || local_rd;
     wire [W-1:0] rdb0 = local_rd ? {ci_r, ci_v} : re ? eb : rw_ ? wb : bb;
+`ifdef OT_S81SL_XR_PDC
+    wire [2:0] rl0 = pq_vrdm ? vb[6:4] : rdb0[37 +: 3];
+`else
     wire [2:0] rl0 = v_rd ? vb[6:4] : rdb0[37 +: 3];
+`endif
     reg [2:0] nlo0; reg [255:0] lo_sel0;
     always @(*) begin
         nlo0 = 3'd0; lo_sel0 = 256'd0;
@@ -296,7 +301,11 @@ module ot_s81sl_xrt #(
         // RD in one cycle are the two-RD fault).  C1 (HB = 0) has no B port: bb2 is the local word only.
         for (k = 0; k < 1024; k = k + 1)
             bb2[k] <= lcl_c[k / LCG] ? ci_r[51 + k] : (HB != 0) ? bb[52 + k] : 1'b0;
+`ifdef OT_S81SL_XR_PDC
+        lmask <= lmask0; rnp <= pq_vrdm ? 2'd0 : rdb0[50 +: 2]; rrow <= pq_vrdm ? vb[16:7] : rdb0[40 +: 10];
+`else
         lmask <= lmask0; rnp <= v_rd ? 2'd0 : rdb0[50 +: 2]; rrow <= v_rd ? vb[16:7] : rdb0[40 +: 10];
+`endif
         lo_sel <= lo_sel0;
     end
     reg [1023:0] rdat; reg [159:0] body; reg [V-2:0] cix;
