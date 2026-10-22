@@ -1,0 +1,5598 @@
+{
+ "schema": "opentallas.hbm.reserve_homes.v1",
+ "pitch_um": 216.0,
+ "mode": "need",
+ "stats": {
+  "lattice": 18240,
+  "no_home_even_without_relays": 820,
+  "home_in_reach": 17221,
+  "need": 199,
+  "radius_um": 160.1,
+  "budget_um": 320.2,
+  "overflown_relays": 82485,
+  "area_mm2": 0.2089,
+  "die_mm2": 857.19,
+  "full_area_mm2": 19.1476,
+  "nw_root_box": {
+   "box": [
+    9300,
+    28300,
+    15000,
+    32983
+   ],
+   "pitch": 108,
+   "need_radius": 54,
+   "added": 63
+  },
+  "nw_corridor": {
+   "added": 60,
+   "pitch": 216,
+   "band": "y 30889 x 3.0-15.4k + 5 svg-gap columns",
+   "area_mm2": 0.063
+  },
+  "sw_corridor": {
+   "added": 75,
+   "area_mm2": 0.0787
+  }
+ },
+ "sites": [
+  {
+   "name": "rhl_031_002",
+   "x": 6818.8,
+   "y": 448.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    6822.2,
+    599.36
+   ]
+  },
+  {
+   "name": "rhl_088_002",
+   "x": 19138.8,
+   "y": 448.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    19134.2,
+    599.36
+   ]
+  },
+  {
+   "name": "rhl_043_008",
+   "x": 9418.8,
+   "y": 1978.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 80 um without)",
+   "lattice_xy": [
+    9414.2,
+    1895.36
+   ]
+  },
+  {
+   "name": "rhl_069_008",
+   "x": 15028.8,
+   "y": 1768.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 130 um without)",
+   "lattice_xy": [
+    15030.2,
+    1895.36
+   ]
+  },
+  {
+   "name": "rhl_042_009",
+   "x": 9158.8,
+   "y": 2108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 290 um with relays, 40 um without)",
+   "lattice_xy": [
+    9198.2,
+    2111.36
+   ]
+  },
+  {
+   "name": "rhl_049_009",
+   "x": 10708.8,
+   "y": 2108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 0 um without)",
+   "lattice_xy": [
+    10710.2,
+    2111.36
+   ]
+  },
+  {
+   "name": "rhl_050_009",
+   "x": 10928.8,
+   "y": 2108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 300 um with relays, 0 um without)",
+   "lattice_xy": [
+    10926.2,
+    2111.36
+   ]
+  },
+  {
+   "name": "rhl_051_009",
+   "x": 11138.8,
+   "y": 2108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 0 um without)",
+   "lattice_xy": [
+    11142.2,
+    2111.36
+   ]
+  },
+  {
+   "name": "rhl_068_009",
+   "x": 14818.8,
+   "y": 2108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 0 um without)",
+   "lattice_xy": [
+    14814.2,
+    2111.36
+   ]
+  },
+  {
+   "name": "rhl_069_009",
+   "x": 15028.8,
+   "y": 2108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 280 um with relays, 0 um without)",
+   "lattice_xy": [
+    15030.2,
+    2111.36
+   ]
+  },
+  {
+   "name": "rhl_070_009",
+   "x": 15248.8,
+   "y": 2108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 230 um with relays, 0 um without)",
+   "lattice_xy": [
+    15246.2,
+    2111.36
+   ]
+  },
+  {
+   "name": "rhl_077_009",
+   "x": 16758.8,
+   "y": 2108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 260 um with relays, 0 um without)",
+   "lattice_xy": [
+    16758.2,
+    2111.36
+   ]
+  },
+  {
+   "name": "rhl_049_010",
+   "x": 10598.8,
+   "y": 2328.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    2327.36
+   ]
+  },
+  {
+   "name": "rhl_057_010",
+   "x": 12578.8,
+   "y": 2328.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 140 um without)",
+   "lattice_xy": [
+    12438.2,
+    2327.36
+   ]
+  },
+  {
+   "name": "rhl_087_010",
+   "x": 18758.8,
+   "y": 2328.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    2327.36
+   ]
+  },
+  {
+   "name": "rhl_049_012",
+   "x": 10598.8,
+   "y": 2758.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    2759.36
+   ]
+  },
+  {
+   "name": "rhl_087_012",
+   "x": 18758.8,
+   "y": 2758.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    2759.36
+   ]
+  },
+  {
+   "name": "rhl_062_014",
+   "x": 13368.8,
+   "y": 3188.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 150 um without)",
+   "lattice_xy": [
+    13518.2,
+    3191.36
+   ]
+  },
+  {
+   "name": "rhl_087_014",
+   "x": 18758.8,
+   "y": 3188.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    3191.36
+   ]
+  },
+  {
+   "name": "rhl_049_016",
+   "x": 10598.8,
+   "y": 3618.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    3623.36
+   ]
+  },
+  {
+   "name": "rhl_062_016",
+   "x": 13368.8,
+   "y": 3618.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    13518.2,
+    3623.36
+   ]
+  },
+  {
+   "name": "rhl_062_018",
+   "x": 13368.8,
+   "y": 4058.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    13518.2,
+    4055.36
+   ]
+  },
+  {
+   "name": "rhl_087_018",
+   "x": 18758.8,
+   "y": 4058.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    4055.36
+   ]
+  },
+  {
+   "name": "rhl_093_018",
+   "x": 20338.8,
+   "y": 4058.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 120 um without)",
+   "lattice_xy": [
+    20214.2,
+    4055.36
+   ]
+  },
+  {
+   "name": "rhl_049_020",
+   "x": 10598.8,
+   "y": 4488.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    4487.36
+   ]
+  },
+  {
+   "name": "rhl_049_024",
+   "x": 10598.8,
+   "y": 5348.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    5351.36
+   ]
+  },
+  {
+   "name": "rhl_049_026",
+   "x": 10598.8,
+   "y": 5778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    5783.36
+   ]
+  },
+  {
+   "name": "rhl_087_026",
+   "x": 18758.8,
+   "y": 5778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    5783.36
+   ]
+  },
+  {
+   "name": "rhl_049_028",
+   "x": 10598.8,
+   "y": 6218.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    6215.36
+   ]
+  },
+  {
+   "name": "rhl_087_028",
+   "x": 18758.8,
+   "y": 6218.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    6215.36
+   ]
+  },
+  {
+   "name": "rhl_049_030",
+   "x": 10598.8,
+   "y": 6648.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    6647.36
+   ]
+  },
+  {
+   "name": "rhl_062_030",
+   "x": 13368.8,
+   "y": 6648.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    13518.2,
+    6647.36
+   ]
+  },
+  {
+   "name": "rhl_018_037",
+   "x": 4018.8,
+   "y": 8278.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 120 um without)",
+   "lattice_xy": [
+    4014.2,
+    8159.36
+   ]
+  },
+  {
+   "name": "rhl_022_037",
+   "x": 4878.8,
+   "y": 8278.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 120 um without)",
+   "lattice_xy": [
+    4878.2,
+    8159.36
+   ]
+  },
+  {
+   "name": "rhl_076_038",
+   "x": 16538.8,
+   "y": 8378.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 0 um without)",
+   "lattice_xy": [
+    16542.2,
+    8375.36
+   ]
+  },
+  {
+   "name": "rhl_018_039",
+   "x": 4018.8,
+   "y": 8708.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 120 um without)",
+   "lattice_xy": [
+    4014.2,
+    8591.36
+   ]
+  },
+  {
+   "name": "rhl_100_039",
+   "x": 21648.8,
+   "y": 8588.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 80 um without)",
+   "lattice_xy": [
+    21726.2,
+    8591.36
+   ]
+  },
+  {
+   "name": "rhl_049_040",
+   "x": 10598.8,
+   "y": 8808.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    8807.36
+   ]
+  },
+  {
+   "name": "rhl_049_041",
+   "x": 10708.8,
+   "y": 9098.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 80 um without)",
+   "lattice_xy": [
+    10710.2,
+    9023.36
+   ]
+  },
+  {
+   "name": "rhl_098_042",
+   "x": 21298.8,
+   "y": 9098.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 280 um with relays, 140 um without)",
+   "lattice_xy": [
+    21294.2,
+    9239.36
+   ]
+  },
+  {
+   "name": "rhl_023_043",
+   "x": 5098.8,
+   "y": 9528.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 70 um without)",
+   "lattice_xy": [
+    5094.2,
+    9455.36
+   ]
+  },
+  {
+   "name": "rhl_098_043",
+   "x": 21298.8,
+   "y": 9528.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 70 um without)",
+   "lattice_xy": [
+    21294.2,
+    9455.36
+   ]
+  },
+  {
+   "name": "rhl_013_044",
+   "x": 2938.8,
+   "y": 9518.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    2934.2,
+    9671.36
+   ]
+  },
+  {
+   "name": "rhl_026_044",
+   "x": 5638.8,
+   "y": 9668.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 100 um without)",
+   "lattice_xy": [
+    5742.2,
+    9671.36
+   ]
+  },
+  {
+   "name": "rhl_028_044",
+   "x": 6178.8,
+   "y": 9518.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    6174.2,
+    9671.36
+   ]
+  },
+  {
+   "name": "rhl_079_044",
+   "x": 17088.8,
+   "y": 9668.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 100 um without)",
+   "lattice_xy": [
+    17190.2,
+    9671.36
+   ]
+  },
+  {
+   "name": "rhl_087_044",
+   "x": 18918.8,
+   "y": 9668.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 0 um without)",
+   "lattice_xy": [
+    18918.2,
+    9671.36
+   ]
+  },
+  {
+   "name": "rhl_093_044",
+   "x": 20218.8,
+   "y": 9518.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    20214.2,
+    9671.36
+   ]
+  },
+  {
+   "name": "rhl_108_044",
+   "x": 23458.8,
+   "y": 9518.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    23454.2,
+    9671.36
+   ]
+  },
+  {
+   "name": "rhl_026_048",
+   "x": 5638.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 100 um without)",
+   "lattice_xy": [
+    5742.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_027_048",
+   "x": 5998.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 40 um without)",
+   "lattice_xy": [
+    5958.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_029_048",
+   "x": 6368.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 20 um without)",
+   "lattice_xy": [
+    6390.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_030_048",
+   "x": 6738.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 130 um without)",
+   "lattice_xy": [
+    6606.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_031_048",
+   "x": 6738.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 80 um without)",
+   "lattice_xy": [
+    6822.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_032_048",
+   "x": 7108.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 70 um without)",
+   "lattice_xy": [
+    7038.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_033_048",
+   "x": 7108.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 150 um without)",
+   "lattice_xy": [
+    7254.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_088_048",
+   "x": 19278.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 140 um without)",
+   "lattice_xy": [
+    19134.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_089_048",
+   "x": 19278.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 70 um without)",
+   "lattice_xy": [
+    19350.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_090_048",
+   "x": 19648.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 80 um without)",
+   "lattice_xy": [
+    19566.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_091_048",
+   "x": 19648.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 130 um without)",
+   "lattice_xy": [
+    19782.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_092_048",
+   "x": 20018.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 220 um with relays, 20 um without)",
+   "lattice_xy": [
+    19998.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_110_048",
+   "x": 24018.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 130 um without)",
+   "lattice_xy": [
+    23886.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_111_048",
+   "x": 24018.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 80 um without)",
+   "lattice_xy": [
+    24102.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_113_048",
+   "x": 24388.8,
+   "y": 10538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    24534.2,
+    10535.36
+   ]
+  },
+  {
+   "name": "rhl_055_050",
+   "x": 12008.8,
+   "y": 10878.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 90 um without)",
+   "lattice_xy": [
+    12006.2,
+    10967.36
+   ]
+  },
+  {
+   "name": "rhl_055_051",
+   "x": 12008.8,
+   "y": 11138.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 40 um without)",
+   "lattice_xy": [
+    12006.2,
+    11183.36
+   ]
+  },
+  {
+   "name": "rhl_055_052",
+   "x": 12008.8,
+   "y": 11398.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 0 um without)",
+   "lattice_xy": [
+    12006.2,
+    11399.36
+   ]
+  },
+  {
+   "name": "rhl_056_052",
+   "x": 12208.8,
+   "y": 11378.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 30 um without)",
+   "lattice_xy": [
+    12222.2,
+    11399.36
+   ]
+  },
+  {
+   "name": "rhl_057_052",
+   "x": 12468.8,
+   "y": 11378.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 50 um without)",
+   "lattice_xy": [
+    12438.2,
+    11399.36
+   ]
+  },
+  {
+   "name": "rhl_034_055",
+   "x": 7478.8,
+   "y": 12048.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 10 um without)",
+   "lattice_xy": [
+    7470.2,
+    12047.36
+   ]
+  },
+  {
+   "name": "rhl_026_056",
+   "x": 5638.8,
+   "y": 12258.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 100 um without)",
+   "lattice_xy": [
+    5742.2,
+    12263.36
+   ]
+  },
+  {
+   "name": "rhl_028_056",
+   "x": 6178.8,
+   "y": 12388.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 130 um without)",
+   "lattice_xy": [
+    6174.2,
+    12263.36
+   ]
+  },
+  {
+   "name": "rhl_093_056",
+   "x": 20218.8,
+   "y": 12388.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 130 um without)",
+   "lattice_xy": [
+    20214.2,
+    12263.36
+   ]
+  },
+  {
+   "name": "rhl_108_056",
+   "x": 23458.8,
+   "y": 12388.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 130 um without)",
+   "lattice_xy": [
+    23454.2,
+    12263.36
+   ]
+  },
+  {
+   "name": "rhl_048_058",
+   "x": 10378.8,
+   "y": 12698.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 120 um without)",
+   "lattice_xy": [
+    10494.2,
+    12695.36
+   ]
+  },
+  {
+   "name": "rhl_050_058",
+   "x": 10928.8,
+   "y": 12558.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 140 um without)",
+   "lattice_xy": [
+    10926.2,
+    12695.36
+   ]
+  },
+  {
+   "name": "rhl_013_059",
+   "x": 2938.8,
+   "y": 12808.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 100 um without)",
+   "lattice_xy": [
+    2934.2,
+    12911.36
+   ]
+  },
+  {
+   "name": "rhl_025_059",
+   "x": 5598.8,
+   "y": 12858.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 340 um with relays, 120 um without)",
+   "lattice_xy": [
+    5526.2,
+    12911.36
+   ]
+  },
+  {
+   "name": "rhl_098_059",
+   "x": 21298.8,
+   "y": 12848.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 60 um without)",
+   "lattice_xy": [
+    21294.2,
+    12911.36
+   ]
+  },
+  {
+   "name": "rhl_025_060",
+   "x": 5528.8,
+   "y": 13288.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 260 um with relays, 160 um without)",
+   "lattice_xy": [
+    5526.2,
+    13127.36
+   ]
+  },
+  {
+   "name": "rhl_048_060",
+   "x": 10378.8,
+   "y": 13128.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 120 um without)",
+   "lattice_xy": [
+    10494.2,
+    13127.36
+   ]
+  },
+  {
+   "name": "rhl_087_060",
+   "x": 18918.8,
+   "y": 13128.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 0 um without)",
+   "lattice_xy": [
+    18918.2,
+    13127.36
+   ]
+  },
+  {
+   "name": "rhl_050_064",
+   "x": 10768.8,
+   "y": 13988.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    10926.2,
+    13991.36
+   ]
+  },
+  {
+   "name": "rhl_071_064",
+   "x": 15458.8,
+   "y": 14148.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    15462.2,
+    13991.36
+   ]
+  },
+  {
+   "name": "rhl_038_069",
+   "x": 8338.8,
+   "y": 14908.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    8334.2,
+    15071.36
+   ]
+  },
+  {
+   "name": "rhl_083_069",
+   "x": 18058.8,
+   "y": 14988.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 80 um without)",
+   "lattice_xy": [
+    18054.2,
+    15071.36
+   ]
+  },
+  {
+   "name": "rhl_036_070",
+   "x": 7898.8,
+   "y": 15288.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 290 um with relays, 0 um without)",
+   "lattice_xy": [
+    7902.2,
+    15287.36
+   ]
+  },
+  {
+   "name": "rhl_083_070",
+   "x": 17908.8,
+   "y": 15288.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 230 um with relays, 150 um without)",
+   "lattice_xy": [
+    18054.2,
+    15287.36
+   ]
+  },
+  {
+   "name": "rhl_084_070",
+   "x": 18428.8,
+   "y": 15288.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 160 um without)",
+   "lattice_xy": [
+    18270.2,
+    15287.36
+   ]
+  },
+  {
+   "name": "rhl_095_070",
+   "x": 20758.8,
+   "y": 15288.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 110 um without)",
+   "lattice_xy": [
+    20646.2,
+    15287.36
+   ]
+  },
+  {
+   "name": "rhl_063_071",
+   "x": 13858.8,
+   "y": 15498.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 120 um without)",
+   "lattice_xy": [
+    13734.2,
+    15503.36
+   ]
+  },
+  {
+   "name": "rhl_064_071",
+   "x": 13858.8,
+   "y": 15498.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 90 um without)",
+   "lattice_xy": [
+    13950.2,
+    15503.36
+   ]
+  },
+  {
+   "name": "rhl_106_071",
+   "x": 22908.8,
+   "y": 15498.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 110 um without)",
+   "lattice_xy": [
+    23022.2,
+    15503.36
+   ]
+  },
+  {
+   "name": "rhl_063_072",
+   "x": 13588.8,
+   "y": 15718.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 150 um without)",
+   "lattice_xy": [
+    13734.2,
+    15719.36
+   ]
+  },
+  {
+   "name": "rhl_003_073",
+   "x": 778.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    774.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_006_073",
+   "x": 1418.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    1422.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_008_073",
+   "x": 1858.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    1854.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_009_073",
+   "x": 2068.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    2070.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_012_073",
+   "x": 2718.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 160 um without)",
+   "lattice_xy": [
+    2718.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_013_073",
+   "x": 2938.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 160 um without)",
+   "lattice_xy": [
+    2934.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_014_073",
+   "x": 3148.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    3150.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_110_073",
+   "x": 23888.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    23886.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_111_073",
+   "x": 24098.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    24102.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_113_073",
+   "x": 24538.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    24534.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_115_073",
+   "x": 24968.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    24966.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_116_073",
+   "x": 25178.8,
+   "y": 15778.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 160 um without)",
+   "lattice_xy": [
+    25182.2,
+    15935.36
+   ]
+  },
+  {
+   "name": "rhl_036_081",
+   "x": 7838.8,
+   "y": 17658.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 270 um with relays, 60 um without)",
+   "lattice_xy": [
+    7902.2,
+    17663.36
+   ]
+  },
+  {
+   "name": "rhl_037_081",
+   "x": 8118.8,
+   "y": 17658.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 0 um without)",
+   "lattice_xy": [
+    8118.2,
+    17663.36
+   ]
+  },
+  {
+   "name": "rhl_057_081",
+   "x": 12368.8,
+   "y": 17658.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 230 um with relays, 70 um without)",
+   "lattice_xy": [
+    12438.2,
+    17663.36
+   ]
+  },
+  {
+   "name": "rhl_058_081",
+   "x": 12768.8,
+   "y": 17658.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 110 um without)",
+   "lattice_xy": [
+    12654.2,
+    17663.36
+   ]
+  },
+  {
+   "name": "rhl_059_081",
+   "x": 12778.8,
+   "y": 17658.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 90 um without)",
+   "lattice_xy": [
+    12870.2,
+    17663.36
+   ]
+  },
+  {
+   "name": "rhl_063_081",
+   "x": 13588.8,
+   "y": 17658.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    13734.2,
+    17663.36
+   ]
+  },
+  {
+   "name": "rhl_083_081",
+   "x": 17908.8,
+   "y": 17658.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 230 um with relays, 150 um without)",
+   "lattice_xy": [
+    18054.2,
+    17663.36
+   ]
+  },
+  {
+   "name": "rhl_084_081",
+   "x": 18428.8,
+   "y": 17658.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    18270.2,
+    17663.36
+   ]
+  },
+  {
+   "name": "rhl_027_082",
+   "x": 5818.8,
+   "y": 17878.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 230 um with relays, 140 um without)",
+   "lattice_xy": [
+    5958.2,
+    17879.36
+   ]
+  },
+  {
+   "name": "rhl_071_082",
+   "x": 15458.8,
+   "y": 17718.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    15462.2,
+    17879.36
+   ]
+  },
+  {
+   "name": "rhl_027_084",
+   "x": 5818.8,
+   "y": 18308.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 140 um without)",
+   "lattice_xy": [
+    5958.2,
+    18311.36
+   ]
+  },
+  {
+   "name": "rhl_087_090",
+   "x": 18918.8,
+   "y": 19608.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 0 um without)",
+   "lattice_xy": [
+    18918.2,
+    19607.36
+   ]
+  },
+  {
+   "name": "rhl_106_090",
+   "x": 22908.8,
+   "y": 19608.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 110 um without)",
+   "lattice_xy": [
+    23022.2,
+    19607.36
+   ]
+  },
+  {
+   "name": "rhl_087_091",
+   "x": 18918.8,
+   "y": 19818.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 330 um with relays, 0 um without)",
+   "lattice_xy": [
+    18918.2,
+    19823.36
+   ]
+  },
+  {
+   "name": "rhl_008_092",
+   "x": 1858.8,
+   "y": 20148.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 110 um without)",
+   "lattice_xy": [
+    1854.2,
+    20039.36
+   ]
+  },
+  {
+   "name": "rhl_015_092",
+   "x": 3368.8,
+   "y": 20148.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 110 um without)",
+   "lattice_xy": [
+    3366.2,
+    20039.36
+   ]
+  },
+  {
+   "name": "rhl_027_092",
+   "x": 5958.8,
+   "y": 20148.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 230 um with relays, 110 um without)",
+   "lattice_xy": [
+    5958.2,
+    20039.36
+   ]
+  },
+  {
+   "name": "rhl_029_092",
+   "x": 6388.8,
+   "y": 20148.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 110 um without)",
+   "lattice_xy": [
+    6390.2,
+    20039.36
+   ]
+  },
+  {
+   "name": "rhl_034_092",
+   "x": 7468.8,
+   "y": 20148.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 220 um with relays, 110 um without)",
+   "lattice_xy": [
+    7470.2,
+    20039.36
+   ]
+  },
+  {
+   "name": "rhl_087_092",
+   "x": 18918.8,
+   "y": 20038.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 230 um with relays, 0 um without)",
+   "lattice_xy": [
+    18918.2,
+    20039.36
+   ]
+  },
+  {
+   "name": "rhl_093_092",
+   "x": 20238.8,
+   "y": 20148.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 130 um without)",
+   "lattice_xy": [
+    20214.2,
+    20039.36
+   ]
+  },
+  {
+   "name": "rhl_098_092",
+   "x": 21298.8,
+   "y": 20108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 70 um without)",
+   "lattice_xy": [
+    21294.2,
+    20039.36
+   ]
+  },
+  {
+   "name": "rhl_036_093",
+   "x": 7838.8,
+   "y": 20258.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 260 um with relays, 60 um without)",
+   "lattice_xy": [
+    7902.2,
+    20255.36
+   ]
+  },
+  {
+   "name": "rhl_037_093",
+   "x": 8118.8,
+   "y": 20108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    8118.2,
+    20255.36
+   ]
+  },
+  {
+   "name": "rhl_082_093",
+   "x": 17838.8,
+   "y": 20108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 150 um without)",
+   "lattice_xy": [
+    17838.2,
+    20255.36
+   ]
+  },
+  {
+   "name": "rhl_083_093",
+   "x": 18058.8,
+   "y": 20108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    18054.2,
+    20255.36
+   ]
+  },
+  {
+   "name": "rhl_015_095",
+   "x": 3368.8,
+   "y": 20558.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 250 um with relays, 130 um without)",
+   "lattice_xy": [
+    3366.2,
+    20687.36
+   ]
+  },
+  {
+   "name": "rhl_067_095",
+   "x": 14598.8,
+   "y": 20818.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 130 um without)",
+   "lattice_xy": [
+    14598.2,
+    20687.36
+   ]
+  },
+  {
+   "name": "rhl_108_095",
+   "x": 23458.8,
+   "y": 20558.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 130 um without)",
+   "lattice_xy": [
+    23454.2,
+    20687.36
+   ]
+  },
+  {
+   "name": "rhl_027_096",
+   "x": 5818.8,
+   "y": 20898.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 270 um with relays, 140 um without)",
+   "lattice_xy": [
+    5958.2,
+    20903.36
+   ]
+  },
+  {
+   "name": "rhl_026_097",
+   "x": 5848.8,
+   "y": 21118.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 280 um with relays, 110 um without)",
+   "lattice_xy": [
+    5742.2,
+    21119.36
+   ]
+  },
+  {
+   "name": "rhl_027_099",
+   "x": 5958.8,
+   "y": 21528.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 20 um without)",
+   "lattice_xy": [
+    5958.2,
+    21551.36
+   ]
+  },
+  {
+   "name": "rhl_027_100",
+   "x": 5818.8,
+   "y": 21768.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 140 um without)",
+   "lattice_xy": [
+    5958.2,
+    21767.36
+   ]
+  },
+  {
+   "name": "rhl_079_100",
+   "x": 17188.8,
+   "y": 21618.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 150 um without)",
+   "lattice_xy": [
+    17190.2,
+    21767.36
+   ]
+  },
+  {
+   "name": "rhl_081_100",
+   "x": 17618.8,
+   "y": 21618.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 150 um without)",
+   "lattice_xy": [
+    17622.2,
+    21767.36
+   ]
+  },
+  {
+   "name": "rhl_083_100",
+   "x": 18058.8,
+   "y": 21618.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    18054.2,
+    21767.36
+   ]
+  },
+  {
+   "name": "rhl_088_100",
+   "x": 19278.8,
+   "y": 21768.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 140 um without)",
+   "lattice_xy": [
+    19134.2,
+    21767.36
+   ]
+  },
+  {
+   "name": "rhl_091_100",
+   "x": 19648.8,
+   "y": 21768.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 130 um without)",
+   "lattice_xy": [
+    19782.2,
+    21767.36
+   ]
+  },
+  {
+   "name": "rhl_008_101",
+   "x": 1728.8,
+   "y": 21978.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 130 um without)",
+   "lattice_xy": [
+    1854.2,
+    21983.36
+   ]
+  },
+  {
+   "name": "rhl_027_102",
+   "x": 5818.8,
+   "y": 22198.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 140 um without)",
+   "lattice_xy": [
+    5958.2,
+    22199.36
+   ]
+  },
+  {
+   "name": "rhl_106_103",
+   "x": 22908.8,
+   "y": 22418.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 110 um without)",
+   "lattice_xy": [
+    23022.2,
+    22415.36
+   ]
+  },
+  {
+   "name": "rhl_088_104",
+   "x": 19138.8,
+   "y": 22758.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 130 um without)",
+   "lattice_xy": [
+    19134.2,
+    22631.36
+   ]
+  },
+  {
+   "name": "rhl_008_105",
+   "x": 1728.8,
+   "y": 22848.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 130 um without)",
+   "lattice_xy": [
+    1854.2,
+    22847.36
+   ]
+  },
+  {
+   "name": "rhl_087_106",
+   "x": 18918.8,
+   "y": 23058.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 0 um without)",
+   "lattice_xy": [
+    18918.2,
+    23063.36
+   ]
+  },
+  {
+   "name": "rhl_008_107",
+   "x": 1728.8,
+   "y": 23278.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 130 um without)",
+   "lattice_xy": [
+    1854.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_010_107",
+   "x": 2288.8,
+   "y": 23428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    2286.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_015_107",
+   "x": 3368.8,
+   "y": 23428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    3366.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_079_107",
+   "x": 17188.8,
+   "y": 23428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 200 um with relays, 150 um without)",
+   "lattice_xy": [
+    17190.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_081_107",
+   "x": 17618.8,
+   "y": 23428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 220 um with relays, 150 um without)",
+   "lattice_xy": [
+    17622.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_083_107",
+   "x": 18058.8,
+   "y": 23428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    18054.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_085_107",
+   "x": 18488.8,
+   "y": 23428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 150 um without)",
+   "lattice_xy": [
+    18486.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_086_107",
+   "x": 18698.8,
+   "y": 23278.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 270 um with relays, 0 um without)",
+   "lattice_xy": [
+    18702.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_087_107",
+   "x": 18918.8,
+   "y": 23278.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 360 um with relays, 0 um without)",
+   "lattice_xy": [
+    18918.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_108_107",
+   "x": 23458.8,
+   "y": 23428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 150 um without)",
+   "lattice_xy": [
+    23454.2,
+    23279.36
+   ]
+  },
+  {
+   "name": "rhl_022_108",
+   "x": 4878.8,
+   "y": 23428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 70 um without)",
+   "lattice_xy": [
+    4878.2,
+    23495.36
+   ]
+  },
+  {
+   "name": "rhl_023_108",
+   "x": 5098.8,
+   "y": 23428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 70 um without)",
+   "lattice_xy": [
+    5094.2,
+    23495.36
+   ]
+  },
+  {
+   "name": "rhl_072_108",
+   "x": 15778.8,
+   "y": 23498.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 100 um without)",
+   "lattice_xy": [
+    15678.2,
+    23495.36
+   ]
+  },
+  {
+   "name": "rhl_087_108",
+   "x": 18918.8,
+   "y": 23498.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 230 um with relays, 0 um without)",
+   "lattice_xy": [
+    18918.2,
+    23495.36
+   ]
+  },
+  {
+   "name": "rhl_093_108",
+   "x": 20218.8,
+   "y": 23578.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 80 um without)",
+   "lattice_xy": [
+    20214.2,
+    23495.36
+   ]
+  },
+  {
+   "name": "rhl_022_109",
+   "x": 4778.8,
+   "y": 23708.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 100 um without)",
+   "lattice_xy": [
+    4878.2,
+    23711.36
+   ]
+  },
+  {
+   "name": "rhl_023_109",
+   "x": 5098.8,
+   "y": 23858.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 150 um without)",
+   "lattice_xy": [
+    5094.2,
+    23711.36
+   ]
+  },
+  {
+   "name": "rhl_098_109",
+   "x": 21298.8,
+   "y": 23858.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 300 um with relays, 150 um without)",
+   "lattice_xy": [
+    21294.2,
+    23711.36
+   ]
+  },
+  {
+   "name": "rhl_018_112",
+   "x": 4018.8,
+   "y": 24238.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 120 um without)",
+   "lattice_xy": [
+    4014.2,
+    24359.36
+   ]
+  },
+  {
+   "name": "rhl_022_112",
+   "x": 4878.8,
+   "y": 24238.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 220 um with relays, 120 um without)",
+   "lattice_xy": [
+    4878.2,
+    24359.36
+   ]
+  },
+  {
+   "name": "rhl_100_112",
+   "x": 21648.8,
+   "y": 24358.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 80 um without)",
+   "lattice_xy": [
+    21726.2,
+    24359.36
+   ]
+  },
+  {
+   "name": "rhl_018_114",
+   "x": 4018.8,
+   "y": 24668.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 120 um without)",
+   "lattice_xy": [
+    4014.2,
+    24791.36
+   ]
+  },
+  {
+   "name": "rhl_022_114",
+   "x": 4878.8,
+   "y": 24668.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 190 um with relays, 120 um without)",
+   "lattice_xy": [
+    4878.2,
+    24791.36
+   ]
+  },
+  {
+   "name": "rhl_049_119",
+   "x": 10598.8,
+   "y": 25868.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    25871.36
+   ]
+  },
+  {
+   "name": "rhl_062_119",
+   "x": 13368.8,
+   "y": 25868.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    13518.2,
+    25871.36
+   ]
+  },
+  {
+   "name": "rhl_087_121",
+   "x": 18758.8,
+   "y": 26298.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    26303.36
+   ]
+  },
+  {
+   "name": "rhl_087_123",
+   "x": 18758.8,
+   "y": 26738.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    26735.36
+   ]
+  },
+  {
+   "name": "rhl_057_125",
+   "x": 12578.8,
+   "y": 27168.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 140 um without)",
+   "lattice_xy": [
+    12438.2,
+    27167.36
+   ]
+  },
+  {
+   "name": "rhl_087_125",
+   "x": 18758.8,
+   "y": 27168.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    27167.36
+   ]
+  },
+  {
+   "name": "rhl_062_127",
+   "x": 13368.8,
+   "y": 27598.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    13518.2,
+    27599.36
+   ]
+  },
+  {
+   "name": "rhl_087_127",
+   "x": 18758.8,
+   "y": 27598.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    27599.36
+   ]
+  },
+  {
+   "name": "rhl_057_129",
+   "x": 12578.8,
+   "y": 28028.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 140 um without)",
+   "lattice_xy": [
+    12438.2,
+    28031.36
+   ]
+  },
+  {
+   "name": "rhl_087_129",
+   "x": 18758.8,
+   "y": 28028.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    28031.36
+   ]
+  },
+  {
+   "name": "rhl_087_131",
+   "x": 18758.8,
+   "y": 28458.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    28463.36
+   ]
+  },
+  {
+   "name": "rhl_062_133",
+   "x": 13368.8,
+   "y": 28898.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 150 um without)",
+   "lattice_xy": [
+    13518.2,
+    28895.36
+   ]
+  },
+  {
+   "name": "rhl_057_135",
+   "x": 12578.8,
+   "y": 29328.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 140 um without)",
+   "lattice_xy": [
+    12438.2,
+    29327.36
+   ]
+  },
+  {
+   "name": "rhl_087_135",
+   "x": 18758.8,
+   "y": 29328.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    29327.36
+   ]
+  },
+  {
+   "name": "rhl_049_137",
+   "x": 10598.8,
+   "y": 29758.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 110 um without)",
+   "lattice_xy": [
+    10710.2,
+    29759.36
+   ]
+  },
+  {
+   "name": "rhl_087_137",
+   "x": 18758.8,
+   "y": 29758.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    29759.36
+   ]
+  },
+  {
+   "name": "rhl_057_139",
+   "x": 12578.8,
+   "y": 30188.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 140 um without)",
+   "lattice_xy": [
+    12438.2,
+    30191.36
+   ]
+  },
+  {
+   "name": "rhl_087_141",
+   "x": 18758.8,
+   "y": 30618.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 160 um without)",
+   "lattice_xy": [
+    18918.2,
+    30623.36
+   ]
+  },
+  {
+   "name": "rhl_042_142",
+   "x": 9158.8,
+   "y": 30848.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 270 um with relays, 50 um without)",
+   "lattice_xy": [
+    9198.2,
+    30839.36
+   ]
+  },
+  {
+   "name": "rhl_050_142",
+   "x": 10928.8,
+   "y": 30848.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 170 um with relays, 10 um without)",
+   "lattice_xy": [
+    10926.2,
+    30839.36
+   ]
+  },
+  {
+   "name": "rhl_068_142",
+   "x": 14818.8,
+   "y": 30848.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 10 um without)",
+   "lattice_xy": [
+    14814.2,
+    30839.36
+   ]
+  },
+  {
+   "name": "rhl_069_142",
+   "x": 15028.8,
+   "y": 30848.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 240 um with relays, 10 um without)",
+   "lattice_xy": [
+    15030.2,
+    30839.36
+   ]
+  },
+  {
+   "name": "rhl_077_142",
+   "x": 16758.8,
+   "y": 30848.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 240 um with relays, 10 um without)",
+   "lattice_xy": [
+    16758.2,
+    30839.36
+   ]
+  },
+  {
+   "name": "rhl_031_144",
+   "x": 6818.8,
+   "y": 31208.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 180 um with relays, 60 um without)",
+   "lattice_xy": [
+    6822.2,
+    31271.36
+   ]
+  },
+  {
+   "name": "rhl_090_144",
+   "x": 19568.8,
+   "y": 31208.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 210 um with relays, 60 um without)",
+   "lattice_xy": [
+    19566.2,
+    31271.36
+   ]
+  },
+  {
+   "name": "rhl_058_146",
+   "x": 12658.8,
+   "y": 31698.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "need-only reset home: no free home within 160.1 um (lane relays filled it; 230 um with relays, 0 um without)",
+   "lattice_xy": [
+    12654.2,
+    31703.36
+   ]
+  },
+  {
+   "name": "rhn_098_268",
+   "x": 10658.8,
+   "y": 29098.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
+   "lattice_xy": [
+    10656.2,
+    29057.36
+   ]
+  },
+  {
+   "name": "rhn_098_276",
+   "x": 10658.8,
+   "y": 29968.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 50 um without)",
+   "lattice_xy": [
+    10656.2,
+    29921.36
+   ]
+  },
+  {
+   "name": "rhn_090_278",
+   "x": 9748.8,
+   "y": 30138.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
+   "lattice_xy": [
+    9792.2,
+    30137.36
+   ]
+  },
+  {
+   "name": "rhn_094_278",
+   "x": 10268.8,
+   "y": 30138.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
+   "lattice_xy": [
+    10224.2,
+    30137.36
+   ]
+  },
+  {
+   "name": "rhn_090_279",
+   "x": 9748.8,
+   "y": 30248.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
+   "lattice_xy": [
+    9792.2,
+    30245.36
+   ]
+  },
+  {
+   "name": "rhn_094_279",
+   "x": 10268.8,
+   "y": 30248.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 40 um without)",
+   "lattice_xy": [
+    10224.2,
+    30245.36
+   ]
+  },
+  {
+   "name": "rhn_090_281",
+   "x": 9748.8,
+   "y": 30458.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 40 um without)",
+   "lattice_xy": [
+    9792.2,
+    30461.36
+   ]
+  },
+  {
+   "name": "rhn_086_284",
+   "x": 9408.8,
+   "y": 30788.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 140 um with relays, 50 um without)",
+   "lattice_xy": [
+    9360.2,
+    30785.36
+   ]
+  },
+  {
+   "name": "rhn_093_284",
+   "x": 10118.8,
+   "y": 30788.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "lattice_xy": [
+    10116.2,
+    30785.36
+   ]
+  },
+  {
+   "name": "rhn_101_284",
+   "x": 10998.8,
+   "y": 30788.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 20 um without)",
+   "lattice_xy": [
+    10980.2,
+    30785.36
+   ]
+  },
+  {
+   "name": "rhn_138_284",
+   "x": 14958.8,
+   "y": 30788.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 140 um with relays, 20 um without)",
+   "lattice_xy": [
+    14976.2,
+    30785.36
+   ]
+  },
+  {
+   "name": "rhn_086_285",
+   "x": 9358.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 230 um with relays, 0 um without)",
+   "lattice_xy": [
+    9360.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_087_285",
+   "x": 9468.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
+   "lattice_xy": [
+    9468.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_088_285",
+   "x": 9578.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
+   "lattice_xy": [
+    9576.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_089_285",
+   "x": 9688.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
+   "lattice_xy": [
+    9684.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_090_285",
+   "x": 9788.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
+   "lattice_xy": [
+    9792.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_091_285",
+   "x": 9898.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
+   "lattice_xy": [
+    9900.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_096_285",
+   "x": 10438.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
+   "lattice_xy": [
+    10440.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_098_285",
+   "x": 10658.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 150 um with relays, 0 um without)",
+   "lattice_xy": [
+    10656.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_099_285",
+   "x": 10768.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 130 um with relays, 0 um without)",
+   "lattice_xy": [
+    10764.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_100_285",
+   "x": 10868.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 230 um with relays, 0 um without)",
+   "lattice_xy": [
+    10872.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_101_285",
+   "x": 10978.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 170 um with relays, 0 um without)",
+   "lattice_xy": [
+    10980.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_102_285",
+   "x": 11088.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 110 um with relays, 0 um without)",
+   "lattice_xy": [
+    11088.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_103_285",
+   "x": 11198.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
+   "lattice_xy": [
+    11196.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_104_285",
+   "x": 11318.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 10 um without)",
+   "lattice_xy": [
+    11304.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_106_285",
+   "x": 11518.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
+   "lattice_xy": [
+    11520.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_113_285",
+   "x": 12278.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "lattice_xy": [
+    12276.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_114_285",
+   "x": 12358.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 100 um with relays, 30 um without)",
+   "lattice_xy": [
+    12384.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_115_285",
+   "x": 12488.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "lattice_xy": [
+    12492.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_132_285",
+   "x": 14328.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
+   "lattice_xy": [
+    14328.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_133_285",
+   "x": 14438.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
+   "lattice_xy": [
+    14436.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_134_285",
+   "x": 14548.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "lattice_xy": [
+    14544.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_135_285",
+   "x": 14628.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 130 um with relays, 20 um without)",
+   "lattice_xy": [
+    14652.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_136_285",
+   "x": 14748.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 150 um with relays, 10 um without)",
+   "lattice_xy": [
+    14760.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_137_285",
+   "x": 14868.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 170 um with relays, 0 um without)",
+   "lattice_xy": [
+    14868.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_138_285",
+   "x": 14978.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 240 um with relays, 0 um without)",
+   "lattice_xy": [
+    14976.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_086_286",
+   "x": 9408.8,
+   "y": 30998.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 50 um without)",
+   "lattice_xy": [
+    9360.2,
+    31001.36
+   ]
+  },
+  {
+   "name": "rhn_087_286",
+   "x": 9468.8,
+   "y": 30998.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
+   "lattice_xy": [
+    9468.2,
+    31001.36
+   ]
+  },
+  {
+   "name": "rhn_089_286",
+   "x": 9678.8,
+   "y": 30998.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 10 um without)",
+   "lattice_xy": [
+    9684.2,
+    31001.36
+   ]
+  },
+  {
+   "name": "rhn_100_286",
+   "x": 10858.8,
+   "y": 30998.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 10 um without)",
+   "lattice_xy": [
+    10872.2,
+    31001.36
+   ]
+  },
+  {
+   "name": "rhn_107_286",
+   "x": 11678.8,
+   "y": 30998.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 50 um without)",
+   "lattice_xy": [
+    11628.2,
+    31001.36
+   ]
+  },
+  {
+   "name": "rhn_132_286",
+   "x": 14278.8,
+   "y": 30998.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 100 um with relays, 50 um without)",
+   "lattice_xy": [
+    14328.2,
+    31001.36
+   ]
+  },
+  {
+   "name": "rhn_137_286",
+   "x": 14838.8,
+   "y": 30998.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 30 um without)",
+   "lattice_xy": [
+    14868.2,
+    31001.36
+   ]
+  },
+  {
+   "name": "rhn_086_287",
+   "x": 9358.8,
+   "y": 31158.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 50 um without)",
+   "lattice_xy": [
+    9360.2,
+    31109.36
+   ]
+  },
+  {
+   "name": "rhn_100_287",
+   "x": 10858.8,
+   "y": 31108.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 10 um without)",
+   "lattice_xy": [
+    10872.2,
+    31109.36
+   ]
+  },
+  {
+   "name": "rhn_107_287",
+   "x": 11628.8,
+   "y": 31158.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 50 um without)",
+   "lattice_xy": [
+    11628.2,
+    31109.36
+   ]
+  },
+  {
+   "name": "rhn_132_287",
+   "x": 14328.8,
+   "y": 31158.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 50 um without)",
+   "lattice_xy": [
+    14328.2,
+    31109.36
+   ]
+  },
+  {
+   "name": "rhn_109_288",
+   "x": 11848.8,
+   "y": 31258.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 40 um without)",
+   "lattice_xy": [
+    11844.2,
+    31217.36
+   ]
+  },
+  {
+   "name": "rhn_132_288",
+   "x": 14328.8,
+   "y": 31218.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "lattice_xy": [
+    14328.2,
+    31217.36
+   ]
+  },
+  {
+   "name": "rhn_098_289",
+   "x": 10638.8,
+   "y": 31348.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 110 um with relays, 40 um without)",
+   "lattice_xy": [
+    10656.2,
+    31325.36
+   ]
+  },
+  {
+   "name": "rhn_100_289",
+   "x": 10888.8,
+   "y": 31328.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 20 um without)",
+   "lattice_xy": [
+    10872.2,
+    31325.36
+   ]
+  },
+  {
+   "name": "rhn_119_289",
+   "x": 12928.8,
+   "y": 31328.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "lattice_xy": [
+    12924.2,
+    31325.36
+   ]
+  },
+  {
+   "name": "rhn_100_290",
+   "x": 10858.8,
+   "y": 31428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 10 um without)",
+   "lattice_xy": [
+    10872.2,
+    31433.36
+   ]
+  },
+  {
+   "name": "rhn_132_290",
+   "x": 14278.8,
+   "y": 31428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 100 um with relays, 50 um without)",
+   "lattice_xy": [
+    14328.2,
+    31433.36
+   ]
+  },
+  {
+   "name": "rhn_086_291",
+   "x": 9408.8,
+   "y": 31538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 50 um without)",
+   "lattice_xy": [
+    9360.2,
+    31541.36
+   ]
+  },
+  {
+   "name": "rhn_118_291",
+   "x": 12818.8,
+   "y": 31538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
+   "lattice_xy": [
+    12816.2,
+    31541.36
+   ]
+  },
+  {
+   "name": "rhn_132_291",
+   "x": 14278.8,
+   "y": 31538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 50 um without)",
+   "lattice_xy": [
+    14328.2,
+    31541.36
+   ]
+  },
+  {
+   "name": "rhn_137_291",
+   "x": 14838.8,
+   "y": 31538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 30 um without)",
+   "lattice_xy": [
+    14868.2,
+    31541.36
+   ]
+  },
+  {
+   "name": "rhn_116_292",
+   "x": 12618.8,
+   "y": 31648.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 160 um with relays, 20 um without)",
+   "lattice_xy": [
+    12600.2,
+    31649.36
+   ]
+  },
+  {
+   "name": "rhn_117_292",
+   "x": 12688.8,
+   "y": 31648.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 180 um with relays, 20 um without)",
+   "lattice_xy": [
+    12708.2,
+    31649.36
+   ]
+  },
+  {
+   "name": "rhn_128_292",
+   "x": 13948.8,
+   "y": 31648.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 50 um without)",
+   "lattice_xy": [
+    13896.2,
+    31649.36
+   ]
+  },
+  {
+   "name": "rhn_116_293",
+   "x": 12618.8,
+   "y": 31748.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 200 um with relays, 30 um without)",
+   "lattice_xy": [
+    12600.2,
+    31757.36
+   ]
+  },
+  {
+   "name": "rhn_117_293",
+   "x": 12688.8,
+   "y": 31748.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 190 um with relays, 30 um without)",
+   "lattice_xy": [
+    12708.2,
+    31757.36
+   ]
+  },
+  {
+   "name": "rhc_3000_30889",
+   "x": 2983.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    3000.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_3216_30889",
+   "x": 3199.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    3216.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_3432_30889",
+   "x": 3415.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    3432.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_3648_30889",
+   "x": 3631.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    3648.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_3864_30889",
+   "x": 3847.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    3864.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_4080_30889",
+   "x": 4063.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    4080.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_4296_30889",
+   "x": 4279.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    4296.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_4512_30889",
+   "x": 4495.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    4512.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_4728_30889",
+   "x": 4711.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    4728.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_4944_30889",
+   "x": 4927.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    4944.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_5160_30889",
+   "x": 5143.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    5160.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_5376_30889",
+   "x": 5359.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    5376.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_5592_30889",
+   "x": 5575.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    5592.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_5808_30889",
+   "x": 5791.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    5808.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_6024_30889",
+   "x": 6007.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    6024.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_6240_30889",
+   "x": 6223.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    6240.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_6456_30889",
+   "x": 6439.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    6456.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_6672_30889",
+   "x": 6655.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    6672.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_6888_30889",
+   "x": 6871.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    6888.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_7104_30889",
+   "x": 7087.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    7104.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_7320_30889",
+   "x": 7303.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    7320.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_7536_30889",
+   "x": 7519.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    7536.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_7752_30889",
+   "x": 7735.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    7752.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_7968_30889",
+   "x": 7951.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    7968.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_8184_30889",
+   "x": 8167.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    8184.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_8400_30889",
+   "x": 8383.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    8400.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_8616_30889",
+   "x": 8599.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    8616.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_8832_30889",
+   "x": 8815.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    8832.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_9048_30889",
+   "x": 9031.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    9048.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_9264_30889",
+   "x": 9247.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    9264.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_10128_30889",
+   "x": 10111.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    10128.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_10344_30889",
+   "x": 10327.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    10344.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_10560_30889",
+   "x": 10543.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    10560.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_11424_30889",
+   "x": 11407.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    11424.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_11640_30889",
+   "x": 11623.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    11640.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_11856_30889",
+   "x": 11839.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    11856.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_12072_30889",
+   "x": 12055.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    12072.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_12720_30889",
+   "x": 12703.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    12720.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_12936_30889",
+   "x": 12919.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    12936.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_13152_30889",
+   "x": 13135.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    13152.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_13368_30889",
+   "x": 13351.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    13368.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_13584_30889",
+   "x": 13567.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    13584.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_13800_30889",
+   "x": 13783.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    13800.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_14016_30889",
+   "x": 13999.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    14016.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_14232_30889",
+   "x": 14215.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    14232.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_15312_30889",
+   "x": 15295.8,
+   "y": 30872.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): channel y 30.84-30.94k",
+   "lattice_xy": [
+    15312.0,
+    30889
+   ]
+  },
+  {
+   "name": "rhc_9562_31060",
+   "x": 9545.8,
+   "y": 31043.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    9562,
+    31060
+   ]
+  },
+  {
+   "name": "rhc_9562_31276",
+   "x": 9545.8,
+   "y": 31259.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    9562,
+    31276
+   ]
+  },
+  {
+   "name": "rhc_9562_31492",
+   "x": 9545.8,
+   "y": 31475.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    9562,
+    31492
+   ]
+  },
+  {
+   "name": "rhc_10699_31060",
+   "x": 10682.8,
+   "y": 31043.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    10699,
+    31060
+   ]
+  },
+  {
+   "name": "rhc_10699_31276",
+   "x": 10682.8,
+   "y": 31259.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    10699,
+    31276
+   ]
+  },
+  {
+   "name": "rhc_10699_31492",
+   "x": 10682.8,
+   "y": 31475.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    10699,
+    31492
+   ]
+  },
+  {
+   "name": "rhc_11857_31060",
+   "x": 11840.8,
+   "y": 31043.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    11857,
+    31060
+   ]
+  },
+  {
+   "name": "rhc_11857_31492",
+   "x": 11840.8,
+   "y": 31475.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    11857,
+    31492
+   ]
+  },
+  {
+   "name": "rhc_12994_31060",
+   "x": 12977.8,
+   "y": 31043.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    12994,
+    31060
+   ]
+  },
+  {
+   "name": "rhc_12994_31276",
+   "x": 12977.8,
+   "y": 31259.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    12994,
+    31276
+   ]
+  },
+  {
+   "name": "rhc_12994_31492",
+   "x": 12977.8,
+   "y": 31475.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    12994,
+    31492
+   ]
+  },
+  {
+   "name": "rhc_14131_31060",
+   "x": 14114.8,
+   "y": 31043.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    14131,
+    31060
+   ]
+  },
+  {
+   "name": "rhc_14131_31276",
+   "x": 14114.8,
+   "y": 31259.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    14131,
+    31276
+   ]
+  },
+  {
+   "name": "rhc_14131_31492",
+   "x": 14114.8,
+   "y": 31475.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW corridor (r18h S8 NW: reset-stage homes along the sm/svg channel and svg gaps, pitch 216): svg gap column",
+   "lattice_xy": [
+    14131,
+    31492
+   ]
+  },
+  {
+   "name": "rhs_3000_2084",
+   "x": 2983.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    3000.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_3216_2084",
+   "x": 3199.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    3216.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_3432_2084",
+   "x": 3415.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    3432.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_3648_2084",
+   "x": 3631.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    3648.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_3864_2084",
+   "x": 3847.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    3864.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_4080_2084",
+   "x": 4063.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    4080.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_4296_2084",
+   "x": 4279.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    4296.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_4512_2084",
+   "x": 4495.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    4512.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_4728_2084",
+   "x": 4711.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    4728.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_4944_2084",
+   "x": 4927.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    4944.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_5160_2084",
+   "x": 5143.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    5160.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_5376_2084",
+   "x": 5359.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    5376.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_5592_2084",
+   "x": 5575.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    5592.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_5808_2084",
+   "x": 5791.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    5808.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_6024_2084",
+   "x": 6007.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    6024.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_6240_2084",
+   "x": 6223.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    6240.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_6456_2084",
+   "x": 6439.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    6456.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_6672_2084",
+   "x": 6655.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    6672.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_6888_2084",
+   "x": 6871.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    6888.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_7104_2084",
+   "x": 7087.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    7104.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_7320_2084",
+   "x": 7303.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    7320.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_7536_2084",
+   "x": 7519.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    7536.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_7752_2084",
+   "x": 7735.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    7752.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_7968_2084",
+   "x": 7951.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    7968.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_8184_2084",
+   "x": 8167.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    8184.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_8400_2084",
+   "x": 8383.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    8400.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_8616_2084",
+   "x": 8599.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    8616.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_8832_2084",
+   "x": 8815.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    8832.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_9048_2084",
+   "x": 9031.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    9048.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_9264_2084",
+   "x": 9247.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    9264.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_9480_2084",
+   "x": 9463.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    9480.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_9696_2084",
+   "x": 9679.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    9696.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_9912_2084",
+   "x": 9895.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    9912.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_10128_2084",
+   "x": 10111.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    10128.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_10344_2084",
+   "x": 10327.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    10344.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_10560_2084",
+   "x": 10543.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    10560.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_10776_2084",
+   "x": 10759.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    10776.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_10992_2084",
+   "x": 10975.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    10992.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_11208_2084",
+   "x": 11191.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    11208.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_11424_2084",
+   "x": 11407.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    11424.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_11640_2084",
+   "x": 11623.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    11640.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_11856_2084",
+   "x": 11839.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    11856.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_12072_2084",
+   "x": 12055.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    12072.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_12288_2084",
+   "x": 12271.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    12288.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_12504_2084",
+   "x": 12487.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    12504.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_12720_2084",
+   "x": 12703.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    12720.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_12936_2084",
+   "x": 12919.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    12936.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_13152_2084",
+   "x": 13135.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    13152.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_13368_2084",
+   "x": 13351.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    13368.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_13584_2084",
+   "x": 13567.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    13584.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_13800_2084",
+   "x": 13783.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    13800.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_14016_2084",
+   "x": 13999.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    14016.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_14232_2084",
+   "x": 14215.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    14232.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_14448_2084",
+   "x": 14431.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    14448.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_14664_2084",
+   "x": 14647.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    14664.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_14880_2084",
+   "x": 14863.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    14880.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_15096_2084",
+   "x": 15079.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    15096.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_15312_2084",
+   "x": 15295.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): channel y 2.03-2.14k pitch 216",
+   "lattice_xy": [
+    15312.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_14600_2084",
+   "x": 14583.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): sm_SW4 bottom pocket pitch 108",
+   "lattice_xy": [
+    14600.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_14816_2084",
+   "x": 14799.8,
+   "y": 2067.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): sm_SW4 bottom pocket pitch 108",
+   "lattice_xy": [
+    14816.0,
+    2084
+   ]
+  },
+  {
+   "name": "rhs_9562_1490",
+   "x": 9545.8,
+   "y": 1473.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    9562,
+    1490
+   ]
+  },
+  {
+   "name": "rhs_9562_1706",
+   "x": 9545.8,
+   "y": 1689.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    9562,
+    1706
+   ]
+  },
+  {
+   "name": "rhs_9562_1922",
+   "x": 9545.8,
+   "y": 1905.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    9562,
+    1922
+   ]
+  },
+  {
+   "name": "rhs_10699_1490",
+   "x": 10682.8,
+   "y": 1473.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    10699,
+    1490
+   ]
+  },
+  {
+   "name": "rhs_10699_1706",
+   "x": 10682.8,
+   "y": 1689.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    10699,
+    1706
+   ]
+  },
+  {
+   "name": "rhs_10699_1922",
+   "x": 10682.8,
+   "y": 1905.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    10699,
+    1922
+   ]
+  },
+  {
+   "name": "rhs_11857_1490",
+   "x": 11840.8,
+   "y": 1473.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    11857,
+    1490
+   ]
+  },
+  {
+   "name": "rhs_11857_1706",
+   "x": 11840.8,
+   "y": 1689.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    11857,
+    1706
+   ]
+  },
+  {
+   "name": "rhs_11857_1922",
+   "x": 11840.8,
+   "y": 1905.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    11857,
+    1922
+   ]
+  },
+  {
+   "name": "rhs_12994_1490",
+   "x": 12977.8,
+   "y": 1473.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    12994,
+    1490
+   ]
+  },
+  {
+   "name": "rhs_12994_1706",
+   "x": 12977.8,
+   "y": 1689.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    12994,
+    1706
+   ]
+  },
+  {
+   "name": "rhs_12994_1922",
+   "x": 12977.8,
+   "y": 1905.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    12994,
+    1922
+   ]
+  },
+  {
+   "name": "rhs_14131_1490",
+   "x": 14114.8,
+   "y": 1473.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    14131,
+    1490
+   ]
+  },
+  {
+   "name": "rhs_14131_1706",
+   "x": 14114.8,
+   "y": 1689.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    14131,
+    1706
+   ]
+  },
+  {
+   "name": "rhs_14131_1922",
+   "x": 14114.8,
+   "y": 1905.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "SW corridor (r18h C replay: SW leaf at (14963,2225) in sm_SW4 ft column, no home within reach): svg gap column",
+   "lattice_xy": [
+    14131,
+    1922
+   ]
+  }
+ ]
+}
