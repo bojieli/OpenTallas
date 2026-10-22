@@ -7,3 +7,5 @@ ROOT independently inspected q10a floorplan/density PNGs, the raw gate JSON, nat
 Exact-source validation materialized every consumed source path. The remaining normal submit blocker is the captured textbook_lint helper ancestry. The existing verified frozen-helper recovery validates the complete original source snapshot, original script and original log, but its helper verifier cannot accept the three executed gate overlay entries outside the separate route-only plan: native_census.py, native_census.tcl and ref_route.sh. They are present in the immutable full source manifest. The original plan and source have not been altered. Integration has this bounded recovery defect; no new physical gate, threshold change or waiver is requested.
 
 Final routed SS/FF and die timing remain open. These are TT pathfinding gates.
+
+ROOT subsequently approved q10b independently. Normal submit_exact automatically used current main tools and passed ordinary source qualification for q10a. The old branch-local checker was stale; frozen recovery is unnecessary. q10a was submitted normally as qfd_coll_split_q10a-q10a-3ecbc6e75. No recovery helper change or rule waiver was used.
