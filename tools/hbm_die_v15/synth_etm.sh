@@ -30,7 +30,7 @@ for c, C in (('tt', 'TT'), ('ff', 'FF')):
           # write_timing_model emits NO arcs (die STA silently untimed every relay hop).  Input ports only (lh ck_o is
           # the forwarded-clock OUTPUT).
           'set fck {}',
-          'foreach p [get_ports -quiet {ck ckf ck_* ckf_*}] { if {[get_property $p direction] == "input"} { lappend ck $p; lappend fck $p } }',
+          'foreach p [get_ports -quiet {ck ckf}] { if {[get_property $p direction] == "input"} { lappend ck $p; lappend fck $p } }',
           # forwarded-clock outputs (lh ck_o = ~ck) must stay COMBINATIONAL clock pass-through arcs so the die clock
           # propagates hop to hop: write the clock-less model first; etm_fck_merge.py keeps its ck/ckf-related
           # combinational output arcs in place of the clocked model's edge arcs for those pins.
