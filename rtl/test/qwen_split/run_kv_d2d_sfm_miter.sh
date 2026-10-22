@@ -8,6 +8,11 @@
 # variable of both ends starts random: copy-convergence proof via OT_FO_CHECK), VERILATOR (default: verilator on PATH).
 # Prints SFO_MITER_PASS and exits 0, or SFO_MITER_FAIL (mismatch / coverage / FO_COPY_MISMATCH) and exits 1.
 set -u
+# Current OVL SFM3 uses the audited exact-predecessor reference adapter.
+# Keep the established caller, all stimulus and all MUTFO selections.
+if [ "${SFM3:-0}" = 1 ] && [ "${OVLM:-0}" = 1 ]; then
+  exec bash "$(dirname "$0")/run_kv_ovl_native_fix_2000.sh" "$@"
+fi
 OUT=$1
 W=$(cd "$(dirname "$0")/../.." && pwd); R=$(cd "$W/.." && pwd)
 V=${VERILATOR:-verilator}
