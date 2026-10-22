@@ -1,0 +1,6 @@
+GATE WARN clock_span: 907.2 x 907.2 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE WARN fill: fill 11% = (macros/children 82232 + std 7208) / outline 823012 um2 (pin-bound: P source5 gate measured 2321 logical signal/clock pins and actual physical pin demand over 100% of each W/E edge (W1300 and E1403 including generated physical pin geometry). The 6-macro body is perimeter-limited; retain the outline and broad regional landing channels. Measured post-floorplan standard-cell area7207.9um2; failed placement area10744.1um2 is separately preserved, not used to claim dense fill.)
+GATE FAIL pin_regs: conflicting kit ORFS variable: MACRO_PLACEMENT_TCL
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: skipped: local FAIL first
+PRE_ROUTE_GATE: FAIL (1 fail, 2 warn)

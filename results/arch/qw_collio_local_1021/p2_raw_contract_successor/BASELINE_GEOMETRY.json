@@ -12,5 +12,5 @@
     "place.tcl": "physical/ref_tile/qfd_coll_face_p_p2bind_main/p2_geometry/place.tcl",
     "pdn.tcl": "physical/ref_tile/qfd_coll_face_p_p2bind_main/p2_geometry/pdn.tcl"
   },
-  "scope": "one MAIN successor; exact original P2 place/PDN/preGPL/preDPL bytes, ordinary supported final orfs_vars overrides preserve frozen place/PDN. Canonical ownership validation requires replacing macro-selector globs by the six actual exact instance names; the frozen successful place hook still places exactly those same instances at original coordinates. Only raw ownership timing-contract and kit namespace change."
+  "scope": "one MAIN successor; exact original P2 place/PDN/preGPL/preDPL bytes at ordinary canonical kit paths. Typed raw ownership requires exact macro instance names in spec; frozen successful placer still selects those exact instances at unchanged coordinates. Duplicate generator overrides were refused locally and removed. Re-generation must preserve/reapply the two explicit frozen physical outputs before a new source-bound gate."
 }
