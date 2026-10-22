@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.qwen.current-profile-obligations.v1",
-  "updated": "2026-10-21 22:47 PT",
+  "updated": "2026-10-21 23:02 PT",
   "status": "COMPONENTS_ONLY_NO_FULL_CURRENT_TOKEN_OR_PHYSICAL_QUALIFICATION",
   "compute": {
     "source": "ca282f1e9",
@@ -55,7 +55,7 @@
     "geometry_delta": "Native59 south/east service channels 108 to 216 um, native59 y +108 um and embedding/system-face x +108 um; no transport age inferred"
   },
   "kv": {
-    "source": "16a35bc82",
+    "source": "de062539e",
     "profile": [
       "S6C",
       "ROPE",
@@ -69,7 +69,7 @@
     "next_job": {
       "name": "tok_qw_s6c_parent_boot_token_current",
       "owner": "/root/token/qwen",
-      "status": "WAITING_ACTUAL_GEN_INPUTS_HARNESS_PREPARATION",
+      "status": "IMPLEMENTED_INPUT_REFUSALS_PASS_AWAITING_COMPLETE_GEN",
       "inputs": [
         "actual selected GEN boot images",
         "exact full flags and source frame receipt",
@@ -80,14 +80,16 @@
         "cold SRAM start and token data with actual programme",
         "real admission before first kind12 context"
       ],
-      "source": "16a35bc82",
-      "preserved_preparation_name": "tok_qw_s6c_parent_boot_token_65cb"
+      "source": "de062539e",
+      "preserved_preparation_name": "tok_qw_s6c_parent_boot_token_65cb",
+      "implementation": "tools/qwen_tokfunc/s6c_parent_minimum.py at 3b25132d4"
     },
     "physical": "cm1/cf1 diagnostic frames; no hardened OVL view",
     "previous_source": "65cb1678b; unchanged PC/SRAM/chain and attention/EMB component identities",
     "current_gen_jobs": {
       "MAIN": "R19 EP5 oth-ubuntu-1059661-1792647892",
-      "ALT": "R20 EP5 oth-ubuntu-1059978-1792647892"
+      "ALT": "R20 EP5 oth-ubuntu-1059978-1792647892",
+      "state": "R19/R20 master-pin failures preserved; graph-corrected successors reach station-placement failure, no complete GEN images"
     },
     "ovl_phase_copy_component": {
       "source": "523b795d6",
@@ -101,12 +103,18 @@
     "unit": "oth-ubuntu-4059818-1792647000",
     "host": "EP5",
     "memory_gib": 384,
-    "state": "FRONTEND_RUNNING",
+    "state": "TERMINAL_MEMCG_OOM",
     "scope": "selected r17/rv5 attention vehicle; not new S6C SRAM-parent or full die qualification",
     "prior_oom_gib": [
       64,
       192
     ],
-    "old_r16": "46 expected outcomes and 288 exact handoffs complete; predecessor only"
+    "old_r16": "46 expected outcomes and 288 exact handoffs complete; predecessor only",
+    "terminal": "2026-10-21 22:59:41 PT",
+    "peak_gib": 384,
+    "anon_rss_kib": 401844720,
+    "exit": 143,
+    "journal": "../r17_frontend_phase_readset/r17_384gb_terminal.journal",
+    "successor": "NONE; new measured limit reported to ROOT before any further increase"
   }
 }

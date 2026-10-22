@@ -1,0 +1,18 @@
+2026-10-21T22:31:41-07:00 ot-epyc5 systemd[5784]: Started oth-ubuntu-4059818-1792647000.scope - [systemd-run] /usr/bin/python3 r17_incremental.py.
+2026-10-21T22:33:18-07:00 ot-epyc5 sudo[828641]: ubuntu :  PWD=/srv/opentallas-scratch2/claude/closure-loop/qfd_coll_split_q10b-q10b-b25e2bab6/src ; USER=root ; COMMAND=/usr/bin/journalctl -u earlyoom --since @1792645332 --no-pager -q -o json
+2026-10-21T22:36:50-07:00 ot-epyc5 sudo[974460]: ubuntu :  PWD=/srv/opentallas-scratch2/claude/closure-loop/qfd_coll_split_q10b-q10b-b25e2bab6/src ; USER=root ; COMMAND=/usr/bin/journalctl -u earlyoom --since @1792646494 --no-pager -q -o json
+2026-10-21T22:53:34-07:00 ot-epyc5 sudo[1296363]: ubuntu :  PWD=/srv/opentallas-scratch2/claude/closure-loop/qfd_coll_split_q10b-q10b-b25e2bab6/src ; USER=root ; COMMAND=/usr/bin/journalctl -u earlyoom --since @1792647490 --no-pager -q -o json
+2026-10-21T22:59:25-07:00 ot-epyc5 systemd[5784]: oth-ubuntu-4059818-1792647000.scope: The kernel OOM killer killed some processes in this unit.
+2026-10-21T22:59:41-07:00 ot-epyc5 systemd[5784]: oth-ubuntu-4059818-1792647000.scope: Failed with result 'oom-kill'.
+2026-10-21T22:59:41-07:00 ot-epyc5 systemd[5784]: oth-ubuntu-4059818-1792647000.scope: Consumed 27min 59.639s CPU time over 27min 59.745s wall clock time, 384G memory peak.
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel: verilator_bin invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel: CPU: 90 UID: 1000 PID: 813936 Comm: verilator_bin Not tainted 7.0.0-34-generic #34-Ubuntu PREEMPT(lazy) 
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel:  oom_kill_process.cold+0x8/0xac
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-4059818-1792647000.scope:
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel: Memory cgroup min protection 0kB -- low protection 0kB
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel: [4059818]  1000 4059818     7677     4977     1968     3009         0    98304        0             0 python3
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel: [ 813936]  1000 813936 100534964 100465045 100461180     3865         0 805883904        0             0 verilator_bin
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-4059818-1792647000.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-4059818-1792647000.scope,task=verilator_bin,pid=813936,uid=1000
+2026-10-21T22:59:25-07:00 ot-epyc5 kernel: Memory cgroup out of memory: Killed process 813936 (verilator_bin) total-vm:402139856kB, anon-rss:401844720kB, file-rss:15460kB, shmem-rss:0kB, UID:1000 pgtables:786996kB oom_score_adj:0
+2026-10-21T22:59:41-07:00 ot-epyc5 kernel: oom_reaper: reaped process 813936 (verilator_bin), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB

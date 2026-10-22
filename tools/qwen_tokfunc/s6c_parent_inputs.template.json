@@ -37,35 +37,263 @@
       "sha256": "5292c0d1631cd60f5a3dd2a76370b0e40fbb10cf5310b6c85f975835f37ac606"
     },
     {
-      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv",
-      "sha256": "b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00"
-    },
-    {
       "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv",
       "sha256": "6e1b7fd0daf74439afac1064ace66c91cb1836bf17635575aa46d3287ecacdb1"
     },
     {
-      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv",
-      "sha256": "11d27a69443b998136e424f93bbac4c5f986734f20c262c31f41b1087b54702e"
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv",
+      "sha256": "b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00"
+    },
+    {
+      "path": "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v",
+      "sha256": "a5df15a74b5bd382f5201f227174238fbb4b60337872ed216d1b8bf0cf037352"
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv",
+      "sha256": "5d02427174bd61db0d145cb204ad8cc3226c4a46ddb29dcd5d5d043a3d5632a7"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+      "sha256": "dcf2a7b68d228286c776fda2333ef5d9aae8baabb04b9c233a9db8c3ae05b464"
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv",
+      "sha256": "220bcad45658820d5684585ad4362c4cfd49bc5a53fc833ef3475a8bc25ed95a"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv",
+      "sha256": "2d3e8cc31807b8d404fd076125ba6d22433cc1a52c0a66b09126a5b57c37347d"
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv",
+      "sha256": "89c4e228be739c474f62fff5738e5c0b51dafc7afd9a19e028a2c2f048bb04a7"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+      "sha256": "9f9a016fcf25162786b6660b2cbb3aec8b2af3caa20a2bc15e02f3bc6991ac2e"
+    },
+    {
+      "path": "rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv",
+      "sha256": "8cc5ef117227577678fee0f487b44b31d3a4a59a50dbca0fe09e12075c99faea"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+      "sha256": "36b8433daf480bcaaacce9b36c56afbc09974dbdf449f4fbc2e8fe9ee0968efb"
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv",
+      "sha256": "3c73919c5e52ed017dda4ef93dd42e83b9f9429de1dde58137fa7bcd61cb9b33"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+      "sha256": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453"
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv",
+      "sha256": "d7804a6609afb16ec2641dc6d482fc06971fa3d6c356c965fa82b3463196c735"
+    },
+    {
+      "path": "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+      "sha256": "5211b852aed6049fdf8793e151ed5eb4061002bced26a25728c9e28b8476ca12"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+      "sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+      "sha256": "43dbe53dbaf8aef2a2051ed6b2f27edfd48af8dfde379eb59b7f101288aadd7e"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "path": "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_service_root_b.sv",
+      "sha256": "156f10c8b7857c5ba7572898a4c6ebe3014c145f87e5f68756572ab406babf93"
+    },
+    {
+      "path": "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_result_face_sb.sv",
+      "sha256": "0c7d8895ffda7ddcb6b4a65a4e6d019e2c2bd3dfe01fae479da5f640311b0b10"
+    },
+    {
+      "path": "rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv",
+      "sha256": "6bd41c4aea6b90fc02faf31878ce8f4cd609ab6679e789474ea2e244e17fa2d8"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv",
+      "sha256": "a0db1639e4fb5448e3bcbe91761933a5c2b990733058ee5eaa1fd6877debf983"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_attn_fault_root.sv",
+      "sha256": "fd39915dbb763e020efe704a168b132d60227f5e79fe1ab59ec7d47e2bac460f"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv",
+      "sha256": "f60cafbb806ceff8b24b84a1c4bc10f97343ac60afcfcfed17236e6690e5cc9e"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+      "sha256": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv",
+      "sha256": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv",
+      "sha256": "0b2f67cac099b0793473aec31e40a7e76eef2047b2e64ad8c75a8739036edfab"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv",
+      "sha256": "c6031bb92dce5c170894b53f4933ff151f5b35c8b5c3fb880a10733c5425916c"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv",
+      "sha256": "48a79c1749349f5770224996c07dfae6d7685eff6f51e3a60b2eb7458ad62eb4"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv",
+      "sha256": "16ac2306ab9b5e707c276042080c03225ab04773f43169d376905c05b0508f0f"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge_b.sv",
+      "sha256": "f1840155fd8b51c18f5a478106eb3df3e9ea985bcd29c7d729769546d208139a"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv",
+      "sha256": "e10ff78a43fdcd55594163f251ea78b1c9a3cdc5cd6b0a99e38eb438da18530b"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv",
+      "sha256": "8c82269c06a3adf622b9664f3ee1095cffd44f8eca9dc069d41441516f1c44ae"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv",
+      "sha256": "14d5d335fc805eb6a39850b05d827001dbca31091c3e9e5758b4ee5db7e0d7b8"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv",
+      "sha256": "b493741925fa2d36dd5172fbc9ec40e174b995a7b319cddf829f3639bf25e4ef"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv",
+      "sha256": "10ab85b1ad30ed29941a8c28e17f61c7acef9cb3e8bd9a966ca33c727a817d48"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv",
+      "sha256": "f2e0c196a67d053ebf125d20b98d274b59ccbebdc1a3cbd92b30faa551671197"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv",
+      "sha256": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv",
+      "sha256": "7b857785e3b64469b3d6fa74f72c303960b56c6277344fddf530181cd982b78b"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv",
+      "sha256": "f1447f7011da1da58835db48cb2dd7323d6afd0ea58a91b5384d0d3b83a3fccb"
+    },
+    {
+      "path": "rtl/qwen_sys/q5_20261009/ot_qfd_kv_landing_ecc.sv",
+      "sha256": "13c418c84138997b139dcb98ebd8ec3e93d1c6961d9e41a49ddb92ebf01bc851"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv",
+      "sha256": "b86f14f5e7e007e5e07b3d80ebd3787f5cbae669e94b984f887d4bef29cd06ca"
+    },
+    {
+      "path": "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+      "sha256": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv",
+      "sha256": "54e84274ca2b982444f2665c98cf01bd0842559c0a79f92e7543ba63ec8a76ad"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+      "sha256": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b"
+    },
+    {
+      "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv",
+      "sha256": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503"
+    },
+    {
+      "path": "rtl/lib/ot_async_fifo.sv",
+      "sha256": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv",
+      "sha256": "ed202e8000388e48b7feda209c38382b5991386bf6d209b5a03ec88dd2abbce4"
+    },
+    {
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv",
+      "sha256": "ff824c5232e654f5af107c54416778a79481c30e420d8934801c3800033e61ea"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx.sv",
+      "sha256": "65847ac6834b4f06334bd8d636f789031acb3c9fec4cee440a2a5cd032313412"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+      "sha256": "c4caf36391cbf7b6c3eb660984508b6721765a469b0446d553bbd0f4af1d28d4"
+    },
+    {
+      "path": "rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv",
+      "sha256": "7fe7271c1a14fc320e3b647bee4a8534c5417e0543778eea108e037a14bddae8"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+      "sha256": "e1a3bbdd455fb984a96df8463844e351613e5bbb6f6e3c417766097c5d17b211"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.v",
+      "sha256": "fd3ad8c97191d4482473bd761a19c34d2067696f840b42db4fa68bc977ec94db"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_land.sv",
+      "sha256": "7fded0aa5be4bdf94f73d83ef307c0480e65c5c740cb97de5ba097c547c3a0bd"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp/ot_sram_1r1w_4x32_m1_p192_grp_rsp.v",
+      "sha256": "94c0b7a1c85e2975132b94ede7de84afb26dfe985f97f69766b9f715664729e0"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+      "sha256": "8c582d0e44734e4277c2036a8130ea16deea003aea5bb52dd483a25ffc139dae"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv",
+      "sha256": "230690d5d0acf1cf561290e0a7262c79aa28ea19aeea346d7b86d535be304dfc"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_rope.sv",
+      "sha256": "4d2499531347d60a73b3a8e94e6784a24c98872caf4648315b9d28829ec7ab55"
+    },
+    {
+      "path": "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv",
+      "sha256": "d07896d059e87a1de2fb1f54cdd8e8ccfc737f1b8947f8cc77d2a511f5e92d54"
     },
     {
       "path": "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv",
       "sha256": "f5b97a6e1a23b855cc4cf4f6c52973ba6d5d117f9da85cea275a2d6cfa8bdf53"
     },
     {
-      "path": "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv",
-      "sha256": "19e590cef6129070a76516580cab9e1d7d27686224e257b9f081cc4e43036614"
-    },
-    {
-      "path": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_ovl_rope.sv",
-      "sha256": "438fac1cac5cf76a3b2c7bf81613f96e97904e0932864632c07c7fb9f6aad25a"
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv",
+      "sha256": "11d27a69443b998136e424f93bbac4c5f986734f20c262c31f41b1087b54702e"
     },
     {
       "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
       "sha256": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e"
     }
   ],
-  "source_readset_status": "Known authentic assets frozen; complete ordered source/include/model readset must come from actual current GEN",
+  "source_readset_status": "All 65 actual ordered Yosys source blobs verified against de062; hierarchy incomplete, not a functional or GEN qualification",
   "instances": [],
   "clocks": [],
   "parameters": {
@@ -75,5 +303,9 @@
     "PC_SRAM": 1,
     "PC_RLAND": 1,
     "DOMSPLIT": 1
-  }
+  },
+  "hierarchy_defines_only": [
+    "SYNTHESIS"
+  ],
+  "simulation_defines": []
 }

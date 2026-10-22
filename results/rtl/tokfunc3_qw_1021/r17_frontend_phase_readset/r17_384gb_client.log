@@ -1,0 +1,78 @@
+ot-run: ot-epyc5       admits    71 GB (avail 423, growth 374, headroom 0, waiters 0/0 GB) load 53/128 running 36 disk 890 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/codex-tok-qw-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch2/claude/codex-tok-qw-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch2/claude/codex-tok-qw-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch2/claude/codex-tok-qw-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/codex-tok-qw-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/codex-tok-qw-2000
+ot-run: SPILL not possible: no spill host admits it now
+ot-run: -> ot-epyc5 (will queue: admits 71 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 79 GB: available 430 GB, growth charged 375 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 352 GB at x1), young 87 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 105 GB: available 393 GB, growth charged 320 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 297 GB at x1), young 76 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 107 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 110 GB: available 397 GB, growth charged 320 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 298 GB at x1), young 77 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 111 GB: available 407 GB, growth charged 330 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 307 GB at x1), young 106 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 193 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 228 GB: available 420 GB, growth charged 260 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 237 GB at x1), young 63 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 253 GB: available 435 GB, growth charged 258 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 235 GB at x1), young 0 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 241 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 143 GB: available 441 GB, growth charged 341 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 319 GB at x1), young 52 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 152 GB: available 443 GB, growth charged 337 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 314 GB at x1), young 32 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 152 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 153 GB: available 437 GB, growth charged 330 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 307 GB at x1), young 32 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 108 GB: available 411 GB, growth charged 335 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 312 GB at x1), young 55 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 95 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible -10 GB: available 401 GB, growth charged 408 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 385 GB at x1), young 59 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 17 GB: available 326 GB, growth charged 314 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 292 GB at x1), young 51 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 23 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 96 GB: available 308 GB, growth charged 241 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 218 GB at x1), young 44 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 21 GB: available 364 GB, growth charged 349 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 326 GB at x1), young 83 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 22 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 32 GB: available 364 GB, growth charged 342 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 319 GB at x1), young 79 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible -102 GB: available 418 GB, growth charged 489 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 466 GB at x1), young 142 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -33 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible -33 GB: available 418 GB, growth charged 441 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 418 GB at x1), young 92 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 167 GB: available 434 GB, growth charged 317 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 294 GB at x1), young 48 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 31 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 16 GB: available 429 GB, growth charged 417 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 395 GB at x1), young 144 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible -2 GB: available 426 GB, growth charged 428 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 405 GB at x1), young 80 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -4 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible -38 GB: available 434 GB, growth charged 461 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 438 GB at x1), young 74 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 4 GB: available 555 GB, growth charged 552 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 530 GB at x1), young 121 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 3 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 1 GB: available 551 GB, growth charged 551 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 528 GB at x1), young 118 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 284 GB: available 573 GB, growth charged 374 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 351 GB at x1), young 186 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 195 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 109 GB: available 583 GB, growth charged 507 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 484 GB at x1), young 198 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 12 GB: available 533 GB, growth charged 524 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 502 GB at x1), young 185 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 12 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 75 GB: available 530 GB, growth charged 477 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 454 GB at x1), young 137 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 15 GB: available 496 GB, growth charged 485 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 463 GB at x1), young 85 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 14 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 25 GB: available 497 GB, growth charged 479 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 456 GB at x1), young 81 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 83 GB: available 511 GB, growth charged 453 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 430 GB at x1), young 252 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 83 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 46 GB: available 527 GB, growth charged 495 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 472 GB at x1), young 300 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 384 = 269 GB, admissible 78 GB: available 514 GB, growth charged 459 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 436 GB at x1), young 236 GB, floor 57 GB): python3 r17_incremental.py
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 94 GB < 384 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 384 = 269 GB, admissible 279 GB: available 513 GB, growth charged 318 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 295 GB at x1), young 128 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-4059818-1792647000 after 101 s
+['/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator', '-f', '/srv/opentallas-scratch2/claude/codex-tok-qw-2000/r17_incremental/top_r17.f']
+Terminated                 /usr/local/bin/ot-heavy --mem 384 --tag otrun-ubuntu-1959148-646994302 --max-wait 120 -- python3 r17_incremental.py
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-4059818-1792647000): exit 143
