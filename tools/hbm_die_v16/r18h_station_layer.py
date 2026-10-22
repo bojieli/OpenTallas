@@ -29,6 +29,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools' / 'hbm_die_v15'))
 import full_die_v16 as F  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import contract_lockstep as CL  # noqa: E402
 
 ROW = re.compile(r'^(rf\d+)_')
 SRC = 'rtl/hbm_accel/die_glue/hbfd_rly_masters.sv'
@@ -415,6 +417,63 @@ def stations(c, L, fails, reach, rep):
                     group_list=groups)
 
 
+def equalize(c, L, base_trace, rep):
+    """Lockstep post-pass: every load port (non-relay instance input) must move by ONE depth delta vs the base contract.
+    Bits that lag the port's max delta get pad stations on their last hop (at the load), so the word keeps one age.
+    PHY row_v is exempt (part A moves it to age 0 on purpose: its delta differs per bit, its new age is uniform)."""
+    tn = CL.trace(c)
+    port = collections.defaultdict(dict)
+    for k, (r0, d0) in base_trace.items():
+        v = tn.get(k)
+        if v is not None:
+            port[(k[0], k[1])][k[2]] = v[1] - d0
+    drv_edge = {}
+    for e in c['edges']:
+        di, dp, dlo, dhi = e['sink']
+        for j in range(dhi - dlo):
+            drv_edge[(di, dp, dlo + j)] = (id(e), e['source'][0], e['source'][1], e['source'][2] + j, e.get('clock'))
+    eid = {id(e): e for e in c['edges']}
+    pl = L.manifest; fixed = []; drop = set(); newE = []; gid = 9000
+    for (di, dp), bits in sorted(port.items()):
+        if len(set(bits.values())) < 2 or (di.startswith('phy_') and dp == 'row_v'):
+            continue
+        M = max(bits.values())
+        grp = collections.defaultdict(list)
+        for b, d in sorted(bits.items()):
+            if d < M:
+                ei, si, sp, sb, clk = drv_edge[(di, dp, b)]
+                grp[(si, sp, M - d, clk)].append(((si, sp, sb), (di, dp, b), ei))
+        v = pl.get(di); cxy = (v['x'] + v['w'] / 2, v['y'] + v['h'] / 2) if v else None
+        for (si, sp, k, clk), lst in sorted(grp.items(), key=lambda t: str(t[0])):
+            gid += 1
+            sv = pl.get(si); sxy = (sv['x'] + sv['w'] / 2, sv['y'] + sv['h'] / 2) if sv else cxy
+            path = (sxy or cxy, sxy or cxy)
+            newE.extend(L.insert(gid, [(a, b) for a, b, _ in lst], k, path, clk or 'stream', f'lockstep pad {di}.{dp} +{k}', pads_at_driver=k))
+            for a, b, ei in lst:
+                drop.add((ei, b))
+            fixed.append(dict(port=f'{di}.{dp}', source=f'{si}.{sp}', bits=len(lst), pads=k))
+    if fixed:
+        E2 = []
+        cut = collections.defaultdict(set)
+        for ei, b in drop:
+            cut[ei].add(b)
+        for e in c['edges']:
+            if id(e) not in cut:
+                E2.append(e); continue
+            si, sp, slo, shi = e['source']; di, dp, dlo, dhi = e['sink']
+            keep = [j for j in range(dhi - dlo) if (di, dp, dlo + j) not in cut[id(e)]]
+            run = []
+            for j in keep + [None]:
+                if run and (j is None or j != run[-1] + 1):
+                    a0, a1 = run[0], run[-1] + 1
+                    E2.append(dict(e, name=f"{e['name']}_k{a0}", bits=a1 - a0, source=[si, sp, slo + a0, slo + a1], sink=[di, dp, dlo + a0, dlo + a1]))
+                    run = []
+                if j is not None:
+                    run.append(j)
+        c['edges'] = E2 + newE
+    rep['lockstep_pads'] = dict(ports=len({f['port'] for f in fixed}), groups=len(fixed), stages=sum(f['pads'] for f in fixed), list=fixed)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('contract'); ap.add_argument('out')
@@ -433,8 +492,10 @@ def main():
         sfu_extend(c, L, a.sfu_r, rep)
     if a.phy_rowv_direct:
         phy_rowv_direct(c, rep)
+    base_trace = CL.trace(json.loads(Path(a.contract).read_text()))
     if not a.no_stations:
         stations(c, L, json.loads(Path(a.reach_all).read_text()), a.reach, rep)
+    equalize(c, L, base_trace, rep)
     c['summary']['instances'] = len(c['instances'])
     note = f"r18h station layer (r18h_station_layer.py): {json.dumps({k: v for k, v in rep.items() if k in ('B1', 'A')})}"
     if isinstance(c.get('notes'), list):
