@@ -623,6 +623,12 @@ proc ot_ce_apply {} {
   foreach name $::ot_ce_cts_roots {
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
     lassign [ot_cf_pins $clock] pins ot_ce_family_owners
+    set ot_ce_mr_keep {}
+    foreach pin $pins {
+      if {[lsearch -exact $::ot_ce_multi_root_children [get_full_name [get_cells -of_objects $pin]]] >= 0 && [ot_ce_net_root_port $pin] ne $name} continue
+      lappend ot_ce_mr_keep $pin
+    }
+    set pins $ot_ce_mr_keep
     set ot_ce_pin_seen [dict create]
     foreach pin $pins {dict set ot_ce_pin_seen [get_full_name $pin] 1}
     foreach cell [get_cells -quiet -hierarchical *] {
@@ -645,7 +651,6 @@ proc ot_ce_apply {} {
       set arrival [ot_ce_clock_wire $pin $clock]
       if {[dict exists $::ot_ce_counts $master]} {
         # landed cluster: a hard child on its region root, judged at its flops (entry wire + routed child insertion)
-        if {[lsearch -exact $::ot_ce_multi_root_children [get_full_name $cell]] >= 0 && [ot_ce_net_root_port $pin] ne $name} continue
         set key "$master/[get_property $pin lib_pin_name]"
         if {![dict exists $::ot_ce_refs $key]} { error "OT_LANDED: CTS root $name reaches unbound hard-child pin [get_full_name $pin]" }
         set cname [get_full_name $cell]

@@ -2318,16 +2318,22 @@ def multi_root_children(spec, root):
 # all_registers -clock <root> -clock_pins returns EVERY clock pin of a multi-root child's ETM for each of its roots
 # (u_blk/ck_lk and u_blk/ck_sq under both ck_lk and ck_sq), so each band pin was measured and counted on both roots.  A
 # declared multi-root child's pin is a sink ONLY of the root its net is structurally wired to (ot_ce_net_root_port, the
-# same walk the check-only pins use); the other roots skip it.  Only multi_root_children instances are filtered.
-MULTI_ROOT_SINK = ('      if {[dict exists $::ot_ce_counts $master]} {\n'
-                   '        # landed cluster: a hard child on its region root, judged at its flops (entry wire + routed child insertion)\n')
+# same walk the check-only pins use); the other roots drop it from their sink list BEFORE measuring (a `continue` in
+# the measure loop left it in $pins and the boundary pass then missed its arrival: b1m gate 14:30 'key "u_blk/ck_sq" not
+# known in dictionary').  Only multi_root_children instances are filtered.
+MULTI_ROOT_SINK = '    set ot_ce_pin_seen [dict create]\n'
+MULTI_ROOT_FILTER = ('    set ot_ce_mr_keep {}\n'
+                     '    foreach pin $pins {\n'
+                     '      if {[lsearch -exact $::ot_ce_multi_root_children [get_full_name [get_cells -of_objects $pin]]] >= 0'
+                     ' && [ot_ce_net_root_port $pin] ne $name} continue\n'
+                     '      lappend ot_ce_mr_keep $pin\n'
+                     '    }\n'
+                     '    set pins $ot_ce_mr_keep\n')
 
 
 def multi_root_body(body):
     if body.count(MULTI_ROOT_OWNER) != 1 or body.count(MULTI_ROOT_SINK) != 1:
         raise ValueError("landed body changed; revalidate multi_root_children")
-    body = body.replace(MULTI_ROOT_SINK, MULTI_ROOT_SINK +
-                        '        if {[lsearch -exact $::ot_ce_multi_root_children [get_full_name $cell]] >= 0'
-                        ' && [ot_ce_net_root_port $pin] ne $name} continue\n')
+    body = body.replace(MULTI_ROOT_SINK, MULTI_ROOT_FILTER + MULTI_ROOT_SINK)
     return body.replace(MULTI_ROOT_OWNER, MULTI_ROOT_OWNER[:-3] +
                         ' && [lsearch -exact $::ot_ce_multi_root_children $cname] < 0} {')
