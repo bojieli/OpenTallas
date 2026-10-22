@@ -2,13 +2,14 @@
 # KV-PEER12 10-20: synthesis (ORFS Yosys, the PEER leaf census flow of ../synth_main7.sh) of the MU 1 PEER composition
 # qkd_hr_core_peer_sram_mu (sources.txt) -> synth_mu/results/asap7/peer_mu_census/base/1_2_yosys.v + native census.
 # usage (repo root): bash rtl/test/host_peer_main_fixture_1020/mu_sram/synth_mu.sh
+# QE3-HROOT-PEER 10-21: SOURCES=sources_rq.txt selects the registered-head SRAM queue (host_peer_mu_sram_1021rq)
 set -eu
 R=$PWD;D=rtl/test/host_peer_main_fixture_1020;SYN=${SYN:-synth_mu};mkdir -p $SYN;export SYN
 python3 - <<'PYS'
 from pathlib import Path
 import shlex
 D='rtl/test/host_peer_main_fixture_1020';n='ot_sram_1r1w_32x546_m1_p192_mir'
-srcs=[l for l in Path(D+'/mu_sram/sources.txt').read_text().split() if l]
+srcs=[l for l in Path(D+'/mu_sram/'+__import__('os').environ.get('SOURCES','sources.txt')).read_text().split() if l]
 c='export DESIGN_NICKNAME = peer_mu_census\nexport DESIGN_NAME = qkd_hr_core_peer_sram_mu\nexport PLATFORM = asap7\nexport VERILOG_FILES = '+' '.join('/src/'+f for f in srcs)+'\nexport SDC_FILE = /src/'+D+'/recipe4_legacy/clock.sdc\nexport CORNER = WC\nexport ASAP7_USE_VT = RVT\nexport SYNTH_HIERARCHICAL = 0\nexport SYNTH_CANONICALIZE_TCL = /src/physical/common_flow/ot_keep_regs.tcl\nexport SYNTH_REPEATABLE_BUILD = 1\nexport SYNTH_MEMORY_MAX_BITS = 65536\nexport NUM_CORES = 4\nexport LEC_CHECK = 0\n'
 line=next(x for x in Path(D+'/recipe4_legacy/kit.env').read_text().splitlines() if x.startswith('EXTRA=('));args=shlex.split(line[len('EXTRA=('):-1]);i=0;v={}
 while i<len(args):

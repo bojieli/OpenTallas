@@ -1,0 +1,30 @@
+Verilator 5.050 2026-07-01 rev v5.050
+COUNTS n=22438 pr=27960 pt=18705
+PASS samecycle checks=100000 normal=22438 peer_rx=27960 peer_tx=18705
+- rtl/test/host_peer_main_fixture_1020/mechanism/tb.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 0.069 s; speed 14.477 ms/s
+- Verilator: cpu 0.069 s on 1 threads; allocated 6 MB
+COUNTS n=22438 pr=27960 pt=18705
+PASS samecycle checks=100000 normal=22438 peer_rx=27960 peer_tx=18705
+- rtl/test/host_peer_main_fixture_1020/mechanism/tb.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 0.273 s; speed 3.669 ms/s
+- Verilator: cpu 0.273 s on 1 threads; allocated 6 MB
+FAIL cycle=5 tx_d
+[66000] %Fatal: tb.sv:27: Assertion failed in tb.fail
+%Error: rtl/test/host_peer_main_fixture_1020/mechanism/tb.sv:27: Verilog $stop
+Aborting...
+FAIL cycle=8 tx_d
+[96000] %Fatal: tb.sv:27: Assertion failed in tb.fail
+%Error: rtl/test/host_peer_main_fixture_1020/mechanism/tb.sv:27: Verilog $stop
+Aborting...
+FAIL cycle=5 tx_d
+[66000] %Fatal: tb.sv:27: Assertion failed in tb.fail
+%Error: rtl/test/host_peer_main_fixture_1020/mechanism/tb.sv:27: Verilog $stop
+Aborting...
+FAIL cycle=6 tx_d
+[76000] %Fatal: tb.sv:27: Assertion failed in tb.fail
+%Error: rtl/test/host_peer_main_fixture_1020/mechanism/tb.sv:27: Verilog $stop
+Aborting...
+rc=0
