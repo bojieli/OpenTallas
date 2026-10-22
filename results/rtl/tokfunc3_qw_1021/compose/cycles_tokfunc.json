@@ -29,7 +29,7 @@
       "end": 275,
       "cycles": 248,
       "priced_cycles": 85,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "die edge @pre_qkv: ctlm8 hr output landing +6 (qfd_tt_ctlm_dv_np_lp lp record: hr 6, was CTLM3 +4) on each matvec go",
@@ -93,7 +93,7 @@
       "end": 1056,
       "cycles": 544,
       "priced_cycles": 235,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "die edge @pre_attn: native59 hardened split service +5 (N59-4 landed parent)",
@@ -189,7 +189,7 @@
       "end": 4688,
       "cycles": 583,
       "priced_cycles": 411,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "die edge @pre_gu: ctlm8 hr output landing +6 (qfd_tt_ctlm_dv_np_lp lp record: hr 6, was CTLM3 +4) on each matvec go",
@@ -229,7 +229,7 @@
       "end": 5634,
       "cycles": 374,
       "priced_cycles": 114,
-      "grade": "DIAG"
+      "grade": "REL"
      },
      {
       "stage": "die edge @pre_down: ctlm8 hr output landing +6 (qfd_tt_ctlm_dv_np_lp lp record: hr 6, was CTLM3 +4) on each matvec go",
@@ -277,14 +277,14 @@
       "end": 7701,
       "cycles": 583,
       "priced_cycles": 411,
-      "grade": "DIAG"
+      "grade": "REL"
      }
     ],
     "critical_path_cycles_by_grade": {
-     "DIAG": 2293,
-     "REL": 4525,
+     "REL": 6720,
      "PLAN_GAP": 36,
      "PRICED": 599,
+     "DIAG": 98,
      "NEWEST": 221
     },
     "tile": [
@@ -355,7 +355,7 @@
       "rel_cycles": 248,
       "base_cycles": 209,
       "delta": 39,
-      "grade": "DIAG",
+      "grade": "REL",
       "replaces": "DIAG"
      },
      {
@@ -363,15 +363,7 @@
       "rel_cycles": 544,
       "base_cycles": 362,
       "delta": 182,
-      "grade": "DIAG",
-      "replaces": "DIAG"
-     },
-     {
-      "stage": "attention return: dr words land (PORTS dd windows) + o_proj x stream (DV)",
-      "rel_cycles": 98,
-      "base_cycles": 98,
-      "delta": 0,
-      "grade": "DIAG",
+      "grade": "REL",
       "replaces": "DIAG"
      },
      {
@@ -379,7 +371,7 @@
       "rel_cycles": 583,
       "base_cycles": 505,
       "delta": 78,
-      "grade": "DIAG",
+      "grade": "REL",
       "replaces": "DIAG"
      },
      {
@@ -387,7 +379,7 @@
       "rel_cycles": 374,
       "base_cycles": 250,
       "delta": 124,
-      "grade": "DIAG",
+      "grade": "REL",
       "replaces": "DIAG"
      },
      {
@@ -395,7 +387,7 @@
       "rel_cycles": 583,
       "base_cycles": 505,
       "delta": 78,
-      "grade": "DIAG",
+      "grade": "REL",
       "replaces": "DIAG"
      }
     ],
@@ -446,14 +438,14 @@
     }
    ],
    "token_cycles_by_grade": {
-    "DIAG": 82632,
-    "REL": 158803,
+    "REL": 237904,
     "PLAN_GAP": 1297,
     "PRICED": 29256,
+    "DIAG": 3532,
     "NEWEST": 7742
    },
-   "pct_measured": 59.5,
-   "pct_rel": 56.8,
+   "pct_measured": 87.8,
+   "pct_rel": 85.0,
    "pct_newest": 2.8,
    "price_of_record": {
     "tok_s": 4810.9,
@@ -526,13 +518,13 @@
    "cycles_per_token": 272207,
    "tok_s": 4410.2,
    "token_cycles_by_grade": {
-    "DIAG": 82635,
-    "REL": 158808,
+    "REL": 237911,
     "PLAN_GAP": 1297,
     "PRICED": 21725,
+    "DIAG": 3532,
     "NEWEST": 7742
    },
-   "pct_rel": 58.3,
+   "pct_rel": 87.4,
    "vs_price_pct": -8.33,
    "chained": 7458,
    "sched_added_per_layer": 934,
@@ -542,13 +534,13 @@
    "cycles_per_token": 268877,
    "tok_s": 4464.8,
    "token_cycles_by_grade": {
-    "DIAG": 72360,
-    "REL": 166053,
+    "REL": 234881,
     "PLAN_GAP": 1297,
     "PRICED": 21425,
+    "DIAG": 3532,
     "NEWEST": 7742
    },
-   "pct_rel": 61.8,
+   "pct_rel": 87.4,
    "vs_price_pct": -7.19,
    "chained": 7366,
    "sched_added_per_layer": 842,

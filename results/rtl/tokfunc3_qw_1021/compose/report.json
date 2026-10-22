@@ -41,7 +41,7 @@
   }
  },
  "stages": {
-  "stg": "FAIL",
+  "stg": "PASS",
   "xt1": "PASS",
   "xdie": "PASS",
   "tp8": "PASS",
@@ -53,14 +53,13 @@
  },
  "missing_stages": [],
  "diagnostic_stages": [
-  "stg",
   "kv",
   "chain"
  ],
  "stage_sources": {
   "stg": {
    "src_commit": "c0f8097f3",
-   "grade": "DIAG (local evidence fold; binary/source binding requires its separate build receipt)",
+   "grade": "RTL-functional (source assembly) + origin/main aef1d694e RTL overlay rtl/qwen_dv/qfd_dv_redstn2.sv; build receipt verified",
    "source_note": null
   },
   "xt1": {
@@ -105,31 +104,28 @@
   }
  },
  "applied": [
+  "dv ages ['slice', 'stn', 'vec'] <- stg",
   "tile ops near + far 61 <- xt1",
   "attention c2k 32 kv_service 1779 roundtrip 1842 -> plan 1827 <- xdie",
   "kv_service 1782 (max of 36 real-token layers) <- chain",
   "allreduce E 286 LS 378 <- tp8",
   "4u frame 4026800 tokens [16, 15, 8, 7] <- ovl4u",
-  "head 3135 <- head",
-  "dv: not re-measured -> DIAG"
+  "head 3135 <- head"
  ],
- "problems": [
-  "stg: verdict FAIL -> not composed",
-  "stg: current MAT delivery age UNKNOWN; functional cut checks and legacy schedule anchors do not qualify current token pricing; baseline DV remains historical/DIAG"
- ],
+ "problems": [],
  "token": {
   "cycles": 279731,
   "tok_s": 4291.6,
   "chained": 7667,
   "l0_cold": 8201,
-  "pct_measured": 59.5,
-  "pct_rel": 56.8,
+  "pct_measured": 87.8,
+  "pct_rel": 85.0,
   "vs_price": -10.8,
   "by": {
-   "DIAG": 82632,
-   "REL": 158803,
+   "REL": 237904,
    "PLAN_GAP": 1297,
    "PRICED": 29256,
+   "DIAG": 3532,
    "NEWEST": 7742
   },
   "die_edges_per_layer": 934,
@@ -171,9 +167,6 @@
  "current_token_price": {
   "status": "HELD",
   "reasons": [
-   "stg: verdict FAIL -> not composed",
-   "stg: current MAT delivery age UNKNOWN; functional cut checks and legacy schedule anchors do not qualify current token pricing; baseline DV remains historical/DIAG",
-   "diagnostic stage: stg",
    "diagnostic stage: kv",
    "diagnostic stage: chain"
   ]

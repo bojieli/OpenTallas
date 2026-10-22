@@ -22,3 +22,13 @@ Without `--collect-only` it launches the stages, and `--die-netlist C:K` reruns 
   - The normalized stg verdict is FAIL because of the original pos MAT calibration.
   - The MAT VM-delivery ages are UNKNOWN because tb_qfd_dv2 had no VM-write probe.
 - Both are fixed in the STG4 rerun (branch claude/tok-func3-qw-stg4-1021, gold1 RUNROOT/stg4). Collect it with `--stage-dir stg=stg4`.
+
+## STG4 collected (STEWARD-TOKb-QW 10-21 19:55)
+
+Command: the one above with `--stage-dir stg=stg4` (gold1 RUNROOT/stg4, unit oth-ubuntu-3860252, exit 0).
+- **stg: PASS**, ISA 1,032,336/1,032,336, 527/527 numeric cases, calibration gate PASS (rel + pos nominal, mut diagnostic), delivery ages qualified (0 unknown). Evidence `stg4/`.
+- **Grade now "RTL-functional (source assembly)"**: `normalize_collected_stg.py` verifies the build receipt it now fetches (`collect_files.py`).
+  - Per config (rel / pos = ARF1 RP1 release / mut): identity log SNAPSHOT + BIND OK, `build_identity.json` source == `<cfg>.build_source.json`, its binary sha == the run binary (`vtb.sha256`), flags == `vflags.txt`.
+  - All 36 inputs equal the c0f8097f3 assembly except `rtl/qwen_dv/qfd_dv_redstn2.sv` (== origin/main, the merged LM-head tail fix a4cf9a360) and the bench `tb_qfd_dv2.sv` (VM-write probe + cal prearm).
+- Composed token (`compose/report.json`): 1u 279,731 cycles = 4,291.6 tok/s (-2.53% vs model), 4u 11,750.6 tok/s. **Price still HELD** on two diagnostic stages only: `kv` and `chain` ran on the historical KV vehicle 0e597ed1c, not the assembly.
+- NEXT: stage kv rerun on the assembly (launched 19:47, ot-run --mem 700), then chain with `--kv-obj` = that build, then re-collect.
