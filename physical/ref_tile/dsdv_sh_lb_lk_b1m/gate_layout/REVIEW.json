@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "dsdv_sh_lb_lk_b1m",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T10:25:00-07:00",
+ "geometry_sha256": "487ffb28c18bcc60dd91799c4858ae5a07393b181c6c63860b4edbe3dff73168",
+ "checklist": {
+  "lattice": "no macros (landing-band leaf)",
+  "std_cell_band": "single central logic band, density <=~0.6, no red bins",
+  "pin_spread": "N/S faces full-width bus spread ~3.1 pins/um (<=4), M4/M5",
+  "clock_entry": "2 local roots (ck_lk/ck_sq or ck_sq/ck_vc) on E face, band <=389x216 um",
+  "shape": "388.8 wide, fits the gap between closed seq children; outline unchanged"
+ },
+ "notes": "COORD 10-22 10:25: seq (B) verbatim regroup of the landed parent's landings into hard bands; earlier non-CLOSED routes were intake refusals only (missing extra_path), no physical verdict. Gates WARN 0 FAIL. MAIN PNGs viewed; FB same design narrower gap.",
+ "gate_commit": "c473c00b48cc5a859c0b3bdafb1a8946915ca310"
+}

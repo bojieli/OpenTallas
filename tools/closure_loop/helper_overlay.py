@@ -197,6 +197,12 @@ RULE_COMMITS = {
     "ded87247b93bc390636bc661eaec6ecbdcb198d7": dict(
         kind="neutral",
         what="closure_loop die oom_score_adj -1000 -> -999; process protection only, no gate check"),
+    # STW-S81c-COLLA2 10-22 (STEWARD-S81c decision (A), seq (B) parents): clock_entry_constraints multi_root_children is
+    # opt-in through the spec key (absent = byte-identical SDC: 34/34 landed specs on origin/main regenerate identical);
+    # it only lifts the one-child-one-root ownership assertion for declared CLOSED children -> no older gate changes.
+    "522f365238e6aac3090324d750c1c6f323979b34": dict(
+        kind="neutral",
+        what="seq (B): opt-in multi_root_children in clock_entry_constraints; default SDC identical"),
     # ROOT-MERGE-1022 10-22: 0c6c603fa (same branch): clock_entry_constraints landed_band record type + half-landing port
     # multicycles, only through a spec's landed_band key (absent = lp-record SDC sha identical) -> no older gate changes.
     "0c6c603fa825799b1ffaf8c66292016122daed92": dict(

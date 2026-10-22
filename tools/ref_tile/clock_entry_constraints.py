@@ -1112,6 +1112,9 @@ def _generate(spec, root):
         domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
     body = (landed_raw_body(LANDED_BODY, bool(cotimed)) if raw else LANDED_BODY) if landed else LEAF_BODY if native_leaf(spec) else BODY
+    mrc = multi_root_children(spec, root) if landed else []
+    if mrc:
+        body = multi_root_body(body)
     fwd = forwarded_clock_ports(spec)
     if fwd:
         body = forwarded_body(body)
@@ -1130,6 +1133,7 @@ def _generate(spec, root):
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
             + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '')
             + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '')
+            + ('set ::ot_ce_multi_root_children {' + ' '.join('{' + c + '}' for c in mrc) + '}\n' if landed and mrc else '')
             + ('set ::ot_ce_fwd_ports {' + ' '.join('{' + p + '}' for p in fwd) + '}\n' if fwd else '')
             + ('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
                 '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
@@ -2250,3 +2254,68 @@ def forwarded_soft_body(body):
             raise ValueError('forwarded soft clock body changed; revalidate extension')
         body = body.replace(old, new)
     return FORWARDED_SOFT_PROCS + body
+
+
+# STW-S81c-COLLA2 10-22 (STEWARD-S81c decision (A), seq (B) parents): a landed cluster may DECLARE closed hard children
+# that own clock pins on SEVERAL region roots (the seq (B) landing bands: lk+sq / sq+vc).  Opt-in spec key
+# "multi_root_children": [{"inst": <child inst>, "job": <its CLOSED daemon job>}]; absent = byte-identical SDC.  Only the
+# landed_body "one hard child = one region root" ownership assertion is lifted for the declared instances; every pin is
+# still a sink of the root it is wired to, judged at ITS OWN child insertion (refs <master>/<pin>, per corner), and the
+# per-root 80 ps TT+FF pin-flop spread / neighbour-matched boundary rules are unchanged.  A declared child must be a
+# CLOSED record (results/closure_loop/<job>/verdict.json status CLOSED) whose views record is this child's view dir and
+# whose routed sign-off SDC names exactly the child's measured clock pins as its CTS roots (>= 2): no stand-ins.
+MULTI_ROOT_OWNER = ('if {[dict exists $::ot_ce_landed_owner $cname] && [dict get $::ot_ce_landed_owner $cname] ne '
+                    '[dict get $::ot_ce_source_domains $name]} {')
+
+
+def multi_root_children(spec, root):
+    decl = spec.get("multi_root_children")
+    if decl is None:
+        return []
+    if not landed_cluster(spec):
+        raise ValueError("multi_root_children: only a landed cluster (kind cluster + multiple_cts_roots) declares them")
+    if not isinstance(decl, list) or not decl:
+        raise ValueError("multi_root_children: a nonempty list of {inst, job}")
+    kids = {c.get("inst"): c for c in spec.get("children", [])}
+    out = []
+    for d in decl:
+        if not isinstance(d, dict) or set(d) != {"inst", "job"} or not all(isinstance(d[k], str) and d[k] for k in d):
+            raise ValueError(f"multi_root_children: entry {d!r} must be exactly {{inst, job}}")
+        inst, job = d["inst"], d["job"]
+        child = kids.get(inst)
+        if child is None or int(child.get("count", 1)) != 1 or inst in out:
+            raise ValueError(f"multi_root_children: {inst} is not one unique hard child of this parent")
+        view = Path(root) / child["view"]
+        where = f"multi_root_children {inst} ({child['view']})"
+        cm = json.loads((view / "insertion.json").read_text()).get("clock_measurements") or {}
+        if len(cm) < 2:
+            raise ValueError(f"{where}: fewer than two measured clock pins; declare only multi-root children")
+        try:
+            verdict = json.loads((Path(root) / "results/closure_loop" / job / "verdict.json").read_text())
+        except (OSError, ValueError) as e:
+            raise ValueError(f"{where}: CLOSED record of {job} unreadable ({e})")
+        if verdict.get("status") != "CLOSED" or verdict.get("job") != job:
+            raise ValueError(f"{where}: {job} is not a CLOSED record")
+        recs = (verdict.get("job_spec") or {}).get("record") or []
+        views = [r.get("to") for r in recs if isinstance(r, dict) and str(r.get("from", "")).endswith("/record/views")]
+        routes = [r.get("to") for r in recs if isinstance(r, dict) and str(r.get("from", "")).endswith("/record/route")]
+        if views != [str(Path(child["view"]).parent)]:
+            raise ValueError(f"{where}: {job} record views {views} are not this child's view dir")
+        if len(routes) != 1:
+            raise ValueError(f"{where}: {job} names no unique record route directory")
+        try:
+            sdc = (Path(root) / routes[0] / "signoff.sdc").read_text()
+        except OSError as e:
+            raise ValueError(f"{where}: record sign-off SDC missing ({e})")
+        if sorted(_tcl_words(sdc, "ot_ce_cts_roots")) != sorted(cm):
+            raise ValueError(f"{where}: record CTS roots {_tcl_words(sdc, 'ot_ce_cts_roots')} differ from the measured "
+                             f"clock pins {sorted(cm)}")
+        out.append(inst)
+    return out
+
+
+def multi_root_body(body):
+    if body.count(MULTI_ROOT_OWNER) != 1:
+        raise ValueError("landed body changed; revalidate multi_root_children")
+    return body.replace(MULTI_ROOT_OWNER, MULTI_ROOT_OWNER[:-3] +
+                        ' && [lsearch -exact $::ot_ce_multi_root_children $cname] < 0} {')
