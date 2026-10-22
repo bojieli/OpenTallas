@@ -18,6 +18,8 @@
 #   --stage-dir S=D collect stage S from RUNROOT/D (or from the absolute dir D on any staged/KV host) instead of
 #                  RUNROOT/S (repeatable; e.g. stg=stg3 = the STG rerun on the
 #                  LAST-K tail-fixed rebuild, stage_stg.sh --stage stg3 --overlay ...)
+#   --stage-local S=DIR  take stage S from a committed local receipt dir (DIR/result.json; e.g. the terminal KV-MU7 job4b
+#                  kv=results/rtl/tokfunc2_qw_1021/kv) instead of a fleet RUNROOT
 #   --kvroot DIR   (TOK-FUNC3-QW) root of stage "chain" on the host that holds the KV attention vehicle binary (default
 #                  /srv/opentallas-scratch2/claude/tokfunc3-qw-1021, only on ot-epyc5 -> ot-run --dir selects it by data
 #                  locality).  Before launch the stg fixtures + P8191 KV windows are relayed there from the stg host.
@@ -28,11 +30,11 @@ ASM=$(python3 -c "import json;print(json.load(open('$HERE/asm_recipe.json'))['co
 RUNROOT=/srv/opentallas-scratch/claude/tokfunc-qw-1021
 HOSTS=${TOKFUNC_HOSTS:-"ot-gold1 ot-gold2"}     # staging targets only (ot-run picks among hosts that have RUNROOT)
 KVROOT=/srv/opentallas-scratch2/claude/tokfunc3-qw-1021; KVHOSTS=${TOKFUNC_KVHOSTS:-ot-epyc5}   # stage chain
-STAGES=""; DIE=""; COLLECT=0; NOWAIT=0; OUT=""; declare -A SDIR=()
+STAGES=""; DIE=""; COLLECT=0; NOWAIT=0; OUT=""; declare -A SDIR=() SLOCAL=()
 while [ $# -gt 0 ]; do case $1 in
   --asm) ASM=$2; shift;; --die-netlist) DIE=$2; shift;; --stages) STAGES=$2; shift;; --runroot) RUNROOT=$2; shift;;
   --collect-only) COLLECT=1;; --no-wait) NOWAIT=1;; --out) OUT=$2; shift;;
-  --stage-dir) SDIR[${2%%=*}]=${2#*=}; shift;; --kvroot) KVROOT=$2; shift;; *) echo "unknown $1"; exit 2;; esac; shift; done
+  --stage-dir) SDIR[${2%%=*}]=${2#*=}; shift;; --kvroot) KVROOT=$2; shift;; --stage-local) SLOCAL[${2%%=*}]=${2#*=}; shift;; *) echo "unknown $1"; exit 2;; esac; shift; done
 ASM=$(git -C "$REPO" rev-parse --short=9 "$ASM^{commit}") || { echo "asm commit not found"; exit 2; }
 GRADE="RTL-functional (source assembly)"; [ -n "$DIE" ] && GRADE="die-netlist"
 OUT=${OUT:-$HOME/scratch/tokfunc-qw-1021/run_$ASM${DIE:+_die}}
@@ -93,6 +95,11 @@ install_collection() {
   mv "$incoming" "$OUT/results/$stage"
 }
 for s in ${STAGES//,/ }; do
+  if [ -n "${SLOCAL[$s]:-}" ]; then        # a committed terminal stage receipt (e.g. kv=results/rtl/tokfunc2_qw_1021/kv)
+    incoming=$(mktemp -d "$OUT/results/.collect_${s}.XXXXXX"); cp -a "${SLOCAL[$s]}/." "$incoming/" &&
+      install_collection "$incoming" "$s" && echo "$s from committed ${SLOCAL[$s]}" || exit 4
+    continue
+  fi
   best=""; bt=0; sd=${SDIR[$s]:-$s}; CH=$HOSTS; RR=$RUNROOT
   [ "$s" = chain ] && { CH=$KVHOSTS; RR=$KVROOT; }
   # --stage-dir S=/ABS/DIR: collect from an absolute run dir (e.g. the preserved KV-MU7 job4b out dir on the KV host)
