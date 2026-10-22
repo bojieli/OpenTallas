@@ -115,14 +115,17 @@ def native_job(directory, job_index=0):
 
 # Source-selected capability from the matched nativeA/B receiver proof, not
 # caller-advertised limits. Original fixed417 source remains the fallback.
-RECEIVER_CAPABILITY_SHA256 = '6f412d849bba44378b24ffa5e72fed96f256ab33806a6a3da05aa53d1017493f'
+RECEIVER_CAPABILITY_SHA256 = {
+    '6f412d849bba44378b24ffa5e72fed96f256ab33806a6a3da05aa53d1017493f',  # matched component/native A/B
+    '7a19861e4bd7874cd82e04892030668bbefe306bd81276c297164f30438333a9',  # same receiver plus elaborated R4D assembly
+}
 
 
 def receiver_capability(contract, root):
     if not contract.get('capability_receipt'):
         return None
     receipt = Path(root) / contract['capability_receipt']
-    if sha(receipt) != RECEIVER_CAPABILITY_SHA256:
+    if sha(receipt) not in RECEIVER_CAPABILITY_SHA256:
         raise ValueError('receiver capability is not the qualified source-selected receipt')
     cap = json.loads(receipt.read_text())
     if cap['schema'] != 'opentallas.s81.hostb.receiver_capability.v1':
