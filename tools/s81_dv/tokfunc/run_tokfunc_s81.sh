@@ -9,6 +9,9 @@ CAL_AR=; CAL_MTP=; MU_LINK_JSON=
 FOLD_JSON=
 KV_BASELINE=; KV_JSON=; DENSE_VECTORS=; DENSE_JSON=
 ENTRY_NORM_JSON=; AGGREGATE_SOURCE_JSON=; ENTRY_PRODUCER_JSON=
+# Native entry HOST jobs on a BUILT u_seqhost cut (cut_3S_ctl): kit, obj (with sim), idle run, replay progs, fixture meta.
+ENTRY_KIT=; ENTRY_OBJ=; ENTRY_IDLE=; ENTRY_PROGS=; ENTRY_META=; ENTRY_USER=0; ENTRY_REPLAY_JSON=
+LADDER_JSON=$(cd "$(dirname "$0")/../../.." && pwd)/results/token_pass/tokfunc3_s81_1021/ladder.json
 while (($#)); do
   case "$1" in
     --ref) REF=$2; shift 2;; --work) WORK=$2; shift 2;;
@@ -78,6 +81,13 @@ if [ "$REPORT" = 0 ]; then
       > "$WORK/dense_source.log" 2>&1 || true
     DENSE_JSON=$WORK/dense_source/check.json
   fi
+  if [ -n "$ENTRY_OBJ" ] && [ -n "$ENTRY_PROGS" ]; then
+    # Consumes an existing cut binary; never builds (a live build is not duplicated).  Mutant: corrupted host header.
+    python3 "$H/run_entry_replay.py" --src "$SRC" --die-v "$WORK/tree/results/arch/s81_dv_1016/bind9/die.v.gz" --cut "$WORK/cuts/cut_3S_ctl" --kit "$ENTRY_KIT" \
+      --obj "$ENTRY_OBJ" --idle-run "$ENTRY_IDLE" --progs "$ENTRY_PROGS" --fixture-meta "$ENTRY_META" \
+      --ks-user "$ENTRY_USER" --out "$WORK/entry_replay" --mutant 15:corrupt:hf_7N_l0:13 > "$WORK/entry_replay.log" 2>&1 || true
+    ENTRY_REPLAY_JSON=$WORK/entry_replay/entry_replay.json
+  fi
   # These component benches use their source-pinned RTL, even in netlist mode.
   if [ -n "$HEAD_PREP" ] && [ -n "$HEAD_FIX" ]; then
     (cd "$SRC"; bash "$H/head_mtp_fleet.sh" "$HEAD_PREP" "$HEAD_FIX" "$WORK/head") > "$WORK/head.log" 2>&1 || true
@@ -109,5 +119,7 @@ ARGS=(--work "$WORK" --out "$WORK/token.json" --grade "$GRADE" --ref "$REF")
 [ -z "$ENTRY_NORM_JSON" ] || ARGS+=(--entry-norm "$ENTRY_NORM_JSON")
 [ -z "$AGGREGATE_SOURCE_JSON" ] || ARGS+=(--aggregate-source "$AGGREGATE_SOURCE_JSON")
 [ -z "$ENTRY_PRODUCER_JSON" ] || ARGS+=(--entry-producer "$ENTRY_PRODUCER_JSON")
+[ -z "$ENTRY_REPLAY_JSON" ] || ARGS+=(--entry-replay "$ENTRY_REPLAY_JSON")
+[ ! -f "$LADDER_JSON" ] || ARGS+=(--ladder "$LADDER_JSON")
 [ -z "$DIE" ] || ARGS+=(--die-v "$DIE")
 python3 "$H/token_report.py" "${ARGS[@]}"
