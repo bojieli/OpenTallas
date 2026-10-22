@@ -1,0 +1,5 @@
+KDCALOVL_ERR cyc3342 mode3 fault dut1 ref1 col0 run0 stale0 early0
+KDCALOVL_FAIL mode3
+[2788000] %Fatal: tb_kv_dcal_ovl_rope.sv:54: Assertion failed in tb_kv_dcal_ovl_rope
+%Error: rtl/test/qwen_split/tb_kv_dcal_ovl_rope.sv:54: Verilog $stop
+Aborting...

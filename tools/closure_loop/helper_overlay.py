@@ -192,6 +192,18 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: 0c6c603fa (same branch): clock_entry_constraints landed_band record type + half-landing port
+    # multicycles, only through a spec's landed_band key (absent = lp-record SDC sha identical) -> no older gate changes.
+    "0c6c603fa825799b1ffaf8c66292016122daed92": dict(
+        kind="neutral",
+        what="frame: opt-in landed_band record in clock_entry_constraints; default SDC identical"),
+    # ROOT-MERGE-1022 10-22: claude/s81c-frame-1022 7fa6e9622 (STW-S81c-DIE-FRAME). pre_route_gate cross_region_links
+    # now ACCEPTS an ot_reset_sync reset landing into a forwarded clock (net only on async_rst_n, all other members on one
+    # root) that it used to report as unlanded -> a FAIL can only become a PASS.  lp.py landing_vector_group and the
+    # landed_band record are opt-in (absent = byte-identical output).
+    "7fa6e96222a7fedc6b29534becc713e96910463e": dict(
+        kind="relaxing",
+        what="frame: reset-sync landing into a forwarded clock accepted; lp/clock-entry additions opt-in"),
     # ROOT-MERGE-1022 10-22: claude/hbm-pslice-lp15-1021 b6940eee2 (HBMb/IDXSU-PS15). Its child_centre_tap.tcl r15 was
     # resolved to main's copy (58622b026, Gate-Rule: neutral), which already carries the r15 child-scoped corner fix
     # and the per-mode propagation; the rest are NEW pgcol_l r6a/r6b and pslice_c5_r15 kit files.

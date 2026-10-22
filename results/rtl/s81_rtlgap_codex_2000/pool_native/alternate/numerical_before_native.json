@@ -1,0 +1,46 @@
+{
+  "variant": "alternate",
+  "source_sha256": {
+    "pool_native_alternate.sv": "192f80ff4a820ee911f60fb91dc777d9110b30bb65f6cc284b88f1dbe91d9635",
+    "tb_pool_native.sv": "a1e12bffeda93872b954befe180a1352b729ecb24a8c9dabc846c6811fe7895d",
+    "pool_native_run.py": "81b19783ab1066e8ad7d8c60f0292483e0bd3cd1056a706e0c43a7b8792808e3"
+  },
+  "numerical": {
+    "positive": {
+      "returncode": 0,
+      "ok": true,
+      "lines": [
+        "POOL_RESULT cycles 391 reads 256 writes 64 groups 64 bad 0 fault 0",
+        "POOL_NATIVE_PASS"
+      ]
+    },
+    "swap_kv": {
+      "returncode": 1,
+      "ok": true,
+      "lines": [
+        "POOL_MISMATCH feature 0 actual 3e77065c expected bcf60450",
+        "POOL_MISMATCH feature 1 actual 3e2540ea expected 3e5b1e54",
+        "POOL_MISMATCH feature 2 actual bd902a36 expected bd4b36dc",
+        "POOL_MISMATCH feature 3 actual be7b8c02 expected be2fa7c3",
+        "POOL_MISMATCH feature 4 actual bf1a30e5 expected bebc88f7",
+        "POOL_MISMATCH feature 5 actual bec59ff5 expected bf664a70",
+        "POOL_RESULT cycles 391 reads 256 writes 64 groups 64 bad 1022 fault 0"
+      ]
+    }
+  },
+  "native": null,
+  "build_returncode": 0,
+  "binary_sha256": "99e69212caec5f98fc4e4fd856a171b5560baaa1ee7056442f53f519da117c17",
+  "runtime_images_sha256": {
+    "positive": {
+      "img_main.mem": "4a30990c2e2dbc4392112743eef318097cc2ca8e7e01545cf2d28fc3ee30e148",
+      "exp_cp.mem": "7ff3085d40a64c111e996ead74493b57b69fed23f32e60be432472d88fda08e3",
+      "exp_cp32.mem": "6545ea9526b6112fc7fc6053f7bb40e12d25bf046a1b183502913e023e16d026"
+    },
+    "swap_kv": {
+      "img_main.mem": "4a30990c2e2dbc4392112743eef318097cc2ca8e7e01545cf2d28fc3ee30e148",
+      "exp_cp.mem": "7ff3085d40a64c111e996ead74493b57b69fed23f32e60be432472d88fda08e3",
+      "exp_cp32.mem": "6545ea9526b6112fc7fc6053f7bb40e12d25bf046a1b183502913e023e16d026"
+    }
+  }
+}

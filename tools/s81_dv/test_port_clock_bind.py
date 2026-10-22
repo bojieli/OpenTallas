@@ -24,8 +24,9 @@ class PortClockBind(unittest.TestCase):
  def link(self,port,source=True):
   ends=[[0,port,0,0,'box'],[1,'i',100,0,'box']] if source else [[1,'o',100,0,'box'],[0,port,0,0,'box']]
   return dict(i='clock_probe',e=ends)
- def emitted(self,wrong=False,zero=False,forwarded=False,prune=None,force_zero=False,quantized=False):
+ def emitted(self,wrong=False,zero=False,forwarded=False,prune=None,force_zero=False,quantized=False,kit_rl=None):
   table=copy.deepcopy(self.table)
+  if kit_rl is not None:table['kit_reset_landing_stages']=kit_rl
   table.setdefault('clock_regions', {'mode':'logical'})
   table['landing_reset_stages']={'dsfd_dvland_276':2}
   blocks=[dict(name='lep',master='regional',group='clC',x=100,y=100,w=100,h=100),
@@ -127,6 +128,16 @@ class PortClockBind(unittest.TestCase):
    self.assertRegex(text,rf'fwdi_lo{i} \(\.A\({root}\)')
  def test_production_forwarded_and_explicit_clock_refused(self):
   with self.assertRaisesRegex(ValueError,'forwarded-clock output is unsupported'):self.emitted(forwarded=True)
+ def test_kit_reset_landing_books_block_release_depth(self):
+  self.emitted()
+  self.assertEqual(self.last_reset['summary']['block_release_depth'],{'lep':3,'other':7})
+  self.assertNotIn('kit_reset_landing',self.last_reset['summary'])
+  self.emitted(kit_rl={'legacy':2})
+  s=self.last_reset['summary']
+  self.assertEqual(s['block_release_depth'],{'lep':3,'other':9})
+  self.assertEqual(s['kit_reset_landing'],{'other':2})
+  self.assertEqual(s['max_release_depth'],9)
+  with self.assertRaisesRegex(SystemExit,'use landing_reset_stages'):self.emitted(kit_rl={'dsfd_dvland_276':2})
  def test_production_unused_reset_pruning_is_opt_in(self):
   text=self.emitted(prune=False)
   self.assertIn('reset_relay st_rs_9_0 (',text)

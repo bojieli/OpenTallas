@@ -38,6 +38,7 @@ endmodule
 module ot_s81sl_leaf #(
     parameter integer AQ_XMEM = 2,
     parameter integer KV_ENABLE = 0, // one production D512 bank in designated die slice/leaf only
+    parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
     parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: KV_ENABLE leaf also runs CN 12 / IK 13 on its bank (opt-in)
     parameter integer KV_CP = 0,     // RTLGAP-SUKV: KV_ENABLE leaf also has the compressor pool CP 14 (opt-in)
     parameter integer VS_MUT = 0       // bench negative controls only (ot_s81sl_vs MUT); 0 in every build
@@ -91,7 +92,7 @@ module ot_s81sl_leaf #(
     always @(posedge clk or negedge rst_n)if(!rst_n)kv_conflict<=0;
       else if(kvbusy && (vs_xrv || vs_xwv || (s_v && !kv_cmd)))kv_conflict<=1;
     generate if(KV_ENABLE)begin:g_kv
-      ot_s81sl_kv_leaf #(.CNIK(KV_CNIK),.CP(KV_CP)) u_kv(.clk(clk),.rst_n(rst_n),.c_v(s_v),.c_d(s_d),
+      ot_s81sl_kv_leaf #(.CNIK(KV_CNIK),.CP(KV_CP),.HARD_RQ(KV_HARD_RQ)) u_kv(.clk(clk),.rst_n(rst_n),.c_v(s_v),.c_d(s_d),
        .busy(kvbusy),.done(kvdone),.fault(kvfault),.x_rv(kv_xrv),.x_ra(kv_xra),
        .x_qv(x_qv && kvbusy),.x_qd(x_qd),.x_wv(kv_xwv),.x_wa(kv_xwa),.x_wm(kv_xwm),.x_wd(kv_xwd));
     end else begin:g_no_kv
@@ -156,6 +157,7 @@ module ot_s81sl_slice #(
     parameter integer DX = 6,        // x streamer -> x-chain heads (centre to the bottom face)
     parameter integer VQ_XMEM = 2,   // vq's x wait line: 2 = the one-macro sub-beat SRAM ring (the s81sl_vq kit), 0 = flops
     parameter integer KV_ENABLE = 0, // opt-in production KV bank on leaf0; no view alias
+    parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
     parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: leaf0 bank also runs CN / IK (needs KV_ENABLE)
     parameter integer KV_CP = 0,     // RTLGAP-SUKV: leaf0 also hosts the compressor pool (needs KV_ENABLE)
     parameter integer VS_MUT = 0     // bench negative controls only (ot_s81sl_vs MUT through the leaves); 0 in every build
@@ -194,7 +196,7 @@ module ot_s81sl_slice #(
     wire [4:0] ev_l, ev_x, gv_l; wire [9:0] ec_l, ec_x, gc_l; wire [479:0] ed_l, ed_x; wire [159:0] gd_l;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
-        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
+        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
             .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
             .sw_v(sw_v_l[k]), .sw_a(sw_a_l[10 * k +: 10]), .sw_m(sw_m_l[8 * k +: 8]), .sw_d(sw_d_l[256 * k +: 256]),
             .cw_v(cw_v_l[2 * k +: 2]), .cw_a(cw_a_l[24 * k +: 24]), .cw_d(cw_d_l[64 * k +: 64]),

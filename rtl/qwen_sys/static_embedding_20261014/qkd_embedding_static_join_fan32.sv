@@ -57,7 +57,7 @@ module qkd_embedding_static_join_fan32(
    word_v<=slot_q&&(scale_q||half_q);
    if(slot_q!=valid_q)fault<=1;
    if(slot_q)begin
-    if(token_q>=151936||(scale_q&&half_q))fault<=1;
+    if(token_q>=152960||(scale_q&&half_q))fault<=1;
     if(scale_q)begin if(low_valid)fault<=1;end
     else if(!half_q)begin if(low_valid)fault<=1;low_valid<=1;end
     else begin low_valid<=0;
