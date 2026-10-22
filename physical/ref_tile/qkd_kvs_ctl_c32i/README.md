@@ -13,3 +13,5 @@ Safe design review before the gate:
 8. Schedule/reset: +1 boot-write edge, zero production edges; controls/valid reset, new payload pipeline unreset. Fault/sequence checks retain original edge. Independent reference delays full original write interface; real compiler boot and causal mutant run in parallel.
 
 See results/arch/codex_k_ctl_dstg_1021/model.json. Native/gate results remain pending.
+
+Functional results: independent legacy-interface +1-edge reference PASS199930 compared edges; real471-word MU image PASS2660 compiled event edges/10 tokens; layer slice mutant caught at cycle1895. Verilator5.050; receipt in results/arch/codex_k_ctl_dstg_1021/receipt.json. Physical/native pending.
