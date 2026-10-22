@@ -8,7 +8,7 @@ for pair in 115:0 815:0 115:700; do
  vvp -n "$O/sim" +N=0 +DH="$d" +LR="$r" +K=17 +R0=12 +G=12 +RL=2 +IR=2 +GS=4 +CYC=256 > "$O/p_${d}_${r}.log"
 done
 vvp -n "$O/sim" +N=0 +DH=115 +LR=0 +K=16 +R0=12 +G=12 +RL=2 +IR=2 +GS=4 +CYC=256 > "$O/invalid_k.log"
-python3 - "$O" <<'PY'
+python3 - "$O" "${2:-suite}" <<'PY'
 import sys,re,json
 from pathlib import Path
 p=Path(sys.argv[1]);rows=[]
@@ -19,4 +19,6 @@ for f in sorted(p.glob('*.log')):
  else:assert d['fault']==1 and d['mism']>0,d
  rows.append(dict(file=f.name,result=d))
 (p/'receipt.json').write_text(json.dumps(dict(verdict='PASS',kit_reset=2,internal_reset=2,total_reset=4,K=17,cases=rows),indent=2)+'\n');print('PV_LOCAL_D32_N32_PASS',len(rows))
+if sys.argv[2]=='invalid_k':
+ print('PV_LOCAL_INVALID_K_CAUGHT');sys.exit(1)
 PY
