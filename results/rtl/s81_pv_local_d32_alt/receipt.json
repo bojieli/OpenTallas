@@ -81,5 +81,20 @@
         "fault": 0
       }
     }
-  ]
+  ],
+  "executed_source_commit": "08db94995",
+  "execution": {
+    "host": "ot-epyc9",
+    "unit": "1711218-1792647351",
+    "run": "/srv/opentallas-scratch2/claude/codex-s81-d32-alt-2235/out",
+    "scope": "component-relative age and invalid-K only; no physical closure"
+  },
+  "actual_readback_hashes": {
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv": "6c8d60d1f1d6a9b91a8a6a39015fe94811a14fb5f59f7bba17b0934678c68b71",
+    "rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_alt.sv": "bb3f9ca16414df4faa7ab6e4335def27ceab85468a07264a0289dff85ffcf55b",
+    "tools/s81_dv/pv_local_d32_n32/tb.sv": "f9aae2f07e141625839687be0bb3092481d69c5eb97cd9f5418d67ede0980a52",
+    "tools/s81_dv/pv_local_d32_n32/run.sh": "83daf90c3267edf8f0abfb15256aa9aa36bc4a3054f10d350a00d4cf34a72830"
+  },
+  "runner_note": "Executed runner precedes job-only invalid_k mode metadata addition; hardware and bench hashes match current files."
 }
