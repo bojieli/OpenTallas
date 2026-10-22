@@ -104,19 +104,20 @@
     "diagnostic_source_ref": "57cd9d54d",
     "source_owners": {
       "native_gather_and_IDX": "/root/hbm/idxsu",
-      "GSC_native_arrival": "/root/hbm/coll",
+      "GSC_native_arrival": "/root/token/hbm",
       "final_route_age_composition": "/root/hbm/chain",
-      "calendar_implementation": "/root/s81_kv_lower"
+      "calendar_implementation": "/root/token/hbm",
+      "GSC_source_contract_audit": "/root/hbm/coll"
     },
     "producer_tp": null,
     "programme_tp": 96,
     "diagnostic_selected_source_tp": 192,
     "layer_id": 0,
     "functional_endpoint_component": {
-      "receipt_commit": "19073f245",
-      "receipt_path": "results/arch/hbm_indexed_gather_binding_2000/segmented_native/receipt.json",
-      "receipt_sha256": "8e243e4d2f29c7d61d9892bbc72b5ac2c0edcf86c4eb48bc7165e9e4e56ff8d4",
-      "source_commit": "383b0af36",
+      "receipt_commit": "cd00064ef",
+      "receipt_path": "results/arch/hbm_indexed_gather_binding_2000/segmented_native_final/receipt.json",
+      "receipt_sha256": "73aead87d43b02cb2a7d5e6e300d3b03014a88d9f67e615654d098ceba96d503",
+      "source_commit": "0c55c33fc",
       "profile": {
         "read_sample": 10,
         "write_commit": 5,
@@ -160,13 +161,35 @@
         ],
         "programme_done_observed_cycle": 1112
       },
-      "scope": "Controlled preload component proof with actual SEGMENTED96 production address layout and 32 current native faces banks / 96 SRAMs. Whole host transport, producer readiness and physical qualification remain open.",
+      "positive": {
+        "authentic_cases": 18,
+        "masked_checks": 144,
+        "six_row_bundles": 3
+      },
+      "mutants": {
+        "index": 18,
+        "address": 18,
+        "phase": 18
+      },
       "mapping": {
+        "endpoint": "PASS",
         "selector": "PASS",
-        "endpoint": "FAIL",
-        "endpoint_max_loads": 85,
-        "violating_driver_count": 3
-      }
+        "max_dynamic_loads": 32,
+        "violations": 0,
+        "role_errors": [],
+        "endpoint_area_um2": 4676.47668,
+        "selector_area_um2": 115.2549,
+        "functional_pin_contract": "NOT_EVALUATED",
+        "pin_registration_contract": "NOT_EVALUATED",
+        "scope": "Actual mapped dynamic-load census; no physical timing or boundary pin-registration qualification."
+      },
+      "default_target_regression": {
+        "result": "PASS",
+        "unit": "oth-ubuntu-995547-1792647516",
+        "source_commit": "0c55c33fc",
+        "scope": "Existing actual two1024x256 SRAM install/readiness benchmark, default parameters."
+      },
+      "qualification": "Component only. Actual final die source/epoch, producer arrival, launch and owner calendar ages remain unbound."
     },
     "bank_calendars": {
       "SW": {
@@ -237,6 +260,19 @@
           null
         ]
       }
+    },
+    "actual_router_input_inventory": {
+      "path": "results/token_pass/hbm_router_caller_2305/receipt.json",
+      "status": "SOURCE_BYTES_VERIFIED",
+      "actual_pre_operation_records": 288,
+      "source_tp": 96,
+      "readiness_qualified": false
+    },
+    "functional_topk_component": {
+      "receipt_commit": "fba6e1bf1",
+      "receipt_path": "results/token_pass/hbm_su_gather_lower_2000/topk_native_commit/receipt.json",
+      "source_scope": "Exact selected d76 source preserved; six readset files differ main. Three384-score component inputs with controlled RR64 support and native shared-hub commit/readback. No upstream, whole-host clock epoch or production row-lease qualification.",
+      "readiness_qualified": false
     }
   },
   "obligations": [
