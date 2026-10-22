@@ -87,3 +87,6 @@ it is not mapped die-netlist evidence. Only actual simulated netlist coverage ea
       That mode rebuilds source children and retains the GEN-composition grade. `MODE=netlist`
       must fail closed until the frozen mapped hierarchy and libraries can actually be simulated.
       SU-only programmes and format-open/unsupported operations leave layer/token coverage incomplete.
+      Closure one-liner (TOK-FUNC3-HBM 10-21): `tok_func_hbm.sh --die-netlist <GEN-die.v>` (same as MODE=gen_rtl).
+      Re-running already-emitted frozen sets on an existing binary: `tok_func_hbm.sh --reuse` with FROZEN/BIN_HOST/BIN_ROOT
+      (TB+slice sha must equal the binary's; report.json carries per-layer/chain rungs and measured cycles).
