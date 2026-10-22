@@ -1,0 +1,80 @@
+ot-run: ot-epyc5       admits    19 GB (avail 324, growth 310, headroom 0, waiters 9/1114 GB) load 66/128 running 36 disk 1448 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000
+ot-run: SPILL not possible: no spill host admits it now
+ot-run: -> ot-epyc5 (will queue: admits 19 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 16 GB: available 321 GB, growth charged 310 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 288 GB at x1), young 34 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible 45 GB: available 392 GB, growth charged 360 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 338 GB at x1), young 65 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 45 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 13 GB: available 391 GB, growth charged 382 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 359 GB at x1), young 74 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible 37 GB: available 387 GB, growth charged 362 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 339 GB at x1), young 50 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 37 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 35 GB: available 386 GB, growth charged 361 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 338 GB at x1), young 49 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible 18 GB: available 337 GB, growth charged 325 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 302 GB at x1), young 58 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 18 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 19 GB: available 339 GB, growth charged 325 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 302 GB at x1), young 58 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible 37 GB: available 361 GB, growth charged 335 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 312 GB at x1), young 36 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 52 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 6 GB: available 364 GB, growth charged 360 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 337 GB at x1), young 54 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible -12 GB: available 380 GB, growth charged 389 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 366 GB at x1), young 40 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -12 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible -11 GB: available 382 GB, growth charged 390 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 367 GB at x1), young 41 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible -11 GB: available 293 GB, growth charged 301 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 279 GB at x1), young 35 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -12 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible -17 GB: available 288 GB, growth charged 299 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 277 GB at x1), young 21 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible -29 GB: available 254 GB, growth charged 275 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 252 GB at x1), young 0 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -29 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible -39 GB: available 250 GB, growth charged 278 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 255 GB at x1), young 0 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible -31 GB: available 250 GB, growth charged 272 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 249 GB at x1), young 31 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -31 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible -34 GB: available 253 GB, growth charged 277 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 254 GB at x1), young 29 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible 8 GB: available 279 GB, growth charged 274 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 251 GB at x1), young 54 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 8 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 7 GB: available 281 GB, growth charged 276 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 253 GB at x1), young 54 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible -10 GB: available 283 GB, growth charged 291 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 268 GB at x1), young 59 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -11 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible -15 GB: available 283 GB, growth charged 294 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 271 GB at x1), young 61 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible -15 GB: available 335 GB, growth charged 346 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 323 GB at x1), young 6 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -14 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible -12 GB: available 337 GB, growth charged 345 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 323 GB at x1), young 5 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible -36 GB: available 357 GB, growth charged 382 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 359 GB at x1), young 46 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -36 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible -31 GB: available 364 GB, growth charged 386 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 363 GB at x1), young 46 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible -2 GB: available 412 GB, growth charged 414 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 391 GB at x1), young 73 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -2 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 20 GB: available 413 GB, growth charged 399 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 376 GB at x1), young 58 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible 17 GB: available 468 GB, growth charged 456 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 433 GB at x1), young 117 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits 19 GB < 96 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 96 = 67 GB, admissible 20 GB: available 474 GB, growth charged 460 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 437 GB at x1), young 116 GB, floor 57 GB
+ot-heavy: NOT RUN: no memory on ot-epyc5 within 120 s (need 0.7 x 96 = 67 GB, admissible 37 GB: available 425 GB, growth charged 399 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 376 GB at x1), young 177 GB, floor 57 GB): bash -lc cd src; OUT=/srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000/out SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh
+ot-run: REBALANCE: not admitted on ot-epyc5 within 120 s; placing again
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-2000 (0.1 GB) ot-epyc5 -> ot-gold1 (no host with --dir admits 96 GB now)
+ot-run: SPILL: copied 1897 changed entries in 106 s; running on ot-gold1; written files go back to ot-epyc5 after the run
+ot-heavy: waiting for memory on ot-gold1: need 0.7 x 96 = 67 GB, admissible -66 GB: available 671 GB, growth charged 717 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 697 GB at x1), young 145 GB, floor 50 GB
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-752967-1792641166 after 81 s
+SFU_SPLIT_EQUIV PASS edges=6679 active_output_edges=6511 delay_core=3 delay_status=2 lg_path=23 wq_extra=1
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:368: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 107.830 s; speed 51.944 ns/s
+- Verilator: cpu 107.821 s on 1 threads; allocated 154 MB
+SFU_SPLIT_GATE POSITIVE PASS
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-752967-1792641166): exit 0
+ot-run: SPILL: outputs copied back ot-gold1 -> ot-epyc5; RAN on ot-gold1: exit 0
