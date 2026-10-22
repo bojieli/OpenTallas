@@ -1,5 +1,5 @@
 {
- "name": "s81sl_xgr3_b-xgr3_b-909f8fe6b",
+ "name": "s81sl_xgr3_b-xgr3_b-COMMIT",
  "block": "ot_s81sl_xgr3",
  "ref_tile": true,
  "owner": "Claude:STW-S81c-COLLA-FRAME",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/s81-xgr3-1021",
-  "commit": "909f8fe6b",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/lib",
@@ -308,7 +308,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81sl_xgr3_b/s81sl_xgr3_b-xgr3_b-909f8fe6b"
+   "to": "results/rtl/ref_tile/s81sl_xgr3_b/s81sl_xgr3_b-xgr3_b-COMMIT"
   }
  ],
  "cycles_added": 0,
