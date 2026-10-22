@@ -61,10 +61,26 @@
     "M11": "EXPECTED_REJECTION unavailable expected bank granted"
   },
   "native": {
-    "status": "RUNNING_NO_VERDICT",
-    "host": "ot-epyc9",
-    "unit": "oth-ubuntu-698662-1792640248",
-    "root": "/srv/opentallas-scratch2/claude/codex-wbk-rv-native-2036-1021/run"
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 49,
+    "violations": 512,
+    "role_errors": [],
+    "actual_census_host": "ot-epyc5",
+    "actual_census_unit": "oth-ubuntu-1598580-1792643955",
+    "netlist_sha256": "afea9e6eb6196501e319bd6b851b4036fbf5e1c552e6fb1526a29500a520aa1c",
+    "evidence": "native_451",
+    "original_scope": "oth-ubuntu-698662-1792640248 remains preserved; original floorplan hook verdict is pending"
   },
-  "physical_qualification": "OPEN; no native/layout/timing/CDC-adoption claim"
+  "physical_qualification": "OPEN. Source 451867fe3 is refused by the native census. Repaired source 630245fe5 requires its own actual generation, native and behavioral results.",
+  "repair": {
+    "source": "630245fe5",
+    "release_group": 4,
+    "capture_toggle_copies": "one same-edge copy per fragment, shared by its data mux and valid selector",
+    "hbm_reset_group": "two slices per leaf",
+    "interface_edges_added": 0,
+    "gen_native_session": 80339,
+    "bench_session": 39450,
+    "status": "PENDING"
+  }
 }
