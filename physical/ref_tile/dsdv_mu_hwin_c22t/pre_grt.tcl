@@ -4,3 +4,7 @@ source /src/physical/qwen_die_masters/pre_ref_skew.tcl
 source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
 source /src/physical/common_flow/grt_macro_top_layer.tcl
 source /src/physical/qwen_die_masters/sram_edge_guard.tcl
+
+# c21q: skip ORFS post-GRT vt_swap/reroute WNS pass (EST-0104 class)
+set ::env(OPT_POST_GRT_WNS) 0
+puts "HWIN_OPT_POST_GRT_WNS=0"
