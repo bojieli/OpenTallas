@@ -22,11 +22,13 @@ def main():
     p.add_argument('--entry-norm')
     p.add_argument('--aggregate-source')
     p.add_argument('--entry-producer')
+    p.add_argument('--entry-replay', help='run_entry_replay.py entry_replay.json (native HOST jobs on the u_seqhost cut)')
+    p.add_argument('--ladder', help='rung/gap ledger (results/token_pass/tokfunc3_s81_1021/ladder.json)')
     p.add_argument('--die-v')
     a = p.parse_args()
     evidence = {}
     for name in ('head', 'mu', 'mu_link', 'layers', 'owner_fold', 'kv_consumer', 'dense_source',
-                 'entry_norm', 'aggregate_source', 'entry_producer'):
+                 'entry_norm', 'aggregate_source', 'entry_producer', 'entry_replay'):
         path = getattr(a, name)
         f = Path(path) if path else None
         evidence[name] = dict(path=path, status='PENDING')
@@ -88,6 +90,24 @@ def main():
             'LM head and MTP draft body/sequence',
             'AR50 and MTP10 calendar traffic with all required hops'],
         netlist_coverage='PENDING: every required component must consume the exact GEN netlist; source-only component benches remain source evidence')
+    # Ladder: per-layer -> chained -> token (1 user) -> MU, each rung with real cycles and named blocking gaps.
+    if a.ladder and Path(a.ladder).is_file():
+        lad = json.loads(Path(a.ladder).read_text())
+        er = evidence['entry_replay'].get('receipt')
+        if er:
+            jobs = er.get('jobs', [])
+            lad['rungs']['entry']['native_host_replay'] = dict(
+                verdict=er.get('verdict'), jobs=[(j['job'], j['verdict']) for j in jobs],
+                mutants=[(m['mutant'], m['verdict']) for m in er.get('mutants', [])],
+                line_faces={j['job']: {f: (v['verdict'], v['observed'], v['offsets']) for f, v in (j.get('line') or {}).items()}
+                            for j in jobs},
+                bench_cycles={j['job']: (j.get('bench') or {}).get('cycles') for j in jobs})
+            if er.get('verdict') == 'PASS_CUT_COMPONENT':
+                lad['gaps'].pop('G-HOSTCUT-BUILD', None)
+                lad['rungs']['entry']['blocked_by'] = [g for g in lad['rungs']['entry']['blocked_by'] if g != 'G-HOSTCUT-BUILD']
+        record['ladder'] = lad
+        record['highest_rung_pass'] = next((r for r in ('multi_user_50AR', 'token_1user', 'chained', 'per_layer')
+                                            if lad['rungs'].get(r, {}).get('status') == 'PASS'), None)
     if a.die_v:
         f = Path(a.die_v)
         record['die_v'] = dict(path=str(f), sha256=hashlib.sha256(f.read_bytes()).hexdigest())

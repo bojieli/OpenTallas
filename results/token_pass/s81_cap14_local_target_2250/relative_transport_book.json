@@ -1,0 +1,962 @@
+{
+ "source": "6c6821c87",
+ "die_sha256": "629c0209bb0f1247ce9b6738e34918427822a4bfd622947a6067f83d75c403a8",
+ "strict_verdict": "PASS",
+ "physical_epoch_qualified": false,
+ "reset_reach_gate": {
+  "reach_um": 405.0,
+  "sinks": 20411,
+  "errors": 0,
+  "kinds": {},
+  "first": [],
+  "over_reach_hops": 0,
+  "reach_gate": "PASS"
+ },
+ "local_pv_pin_availability_edges": 18,
+ "local_pv_half_join_sampled_edges": 19,
+ "source_reset_external": 2,
+ "source_reset_internal": 2,
+ "source_reset_total": 4,
+ "local_master": "dsdv_pv_local_land_n32_source4_276",
+ "body_um": [
+  129.6,
+  194.4
+ ],
+ "boundaries": "producer departure -> local ring output pin availability18 -> half_join sampled19; boot/reset padding not per-word flight",
+ "peer_ages_measured": false,
+ "private_cfg_capture_edge": null,
+ "final_parameter_pin_edge": null,
+ "landings": [
+  {
+   "link": "xrE_2N_l0",
+   "inst": "s_3N",
+   "master": "dsfd_dvland_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 2,
+   "K": 2,
+   "D": 4,
+   "age": 3,
+   "bundle": null,
+   "K_source": "Selected CAP seam: exact <=405um routed path, no relay, D4K2 with actual reset2 gate/read epoch alignment",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 98,
+   "src": "s_2N",
+   "hop0_gate": "fwd_xrE_2N_l0",
+   "gate_en": "rsg_rsleaf_rs_37_33_ck_sl_s_2N_C_xrE_2N_l0_src_sl_s_2N_C_x14984992y13386385_2",
+   "land_rs": "rsleaf_rs_37_34_3_ck_b_s_3N_xrE_2N_l0_dst",
+   "release_src": 61,
+   "release_dst": 64,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 3
+   }
+  },
+  {
+   "link": "xrE_2N_l1",
+   "inst": "s_3N",
+   "master": "dsfd_dvland_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 2,
+   "K": 2,
+   "D": 4,
+   "age": 3,
+   "bundle": null,
+   "K_source": "Selected CAP seam: exact <=405um routed path, no relay, D4K2 with actual reset2 gate/read epoch alignment",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 99,
+   "src": "s_2N",
+   "hop0_gate": "fwd_xrE_2N_l1",
+   "gate_en": "rsg_rsleaf_rs_37_33_2_ck_sl_s_2N_C_xrE_2N_l1_src_sl_s_2N_C_x14984992y13509982_1",
+   "land_rs": "rsleaf_rs_37_34_3_ck_b_s_3N_xrE_2N_l1_dst",
+   "release_src": 62,
+   "release_dst": 64,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 2
+   }
+  },
+  {
+   "link": "xrE_2N_l2",
+   "inst": "s_3N",
+   "master": "dsfd_dvland_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 2,
+   "K": 2,
+   "D": 4,
+   "age": 3,
+   "bundle": null,
+   "K_source": "Selected CAP seam: exact <=405um routed path, no relay, D4K2 with actual reset2 gate/read epoch alignment",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 100,
+   "src": "s_2N",
+   "hop0_gate": "fwd_xrE_2N_l2",
+   "gate_en": "rsg_rsleaf_rs_37_34_1_ck_sl_s_2N_C_xrE_2N_l2_src_sl_s_2N_C_x14984992y13633578_1",
+   "land_rs": "rsleaf_rs_37_34_3_ck_b_s_3N_xrE_2N_l2_dst",
+   "release_src": 62,
+   "release_dst": 64,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 2
+   }
+  },
+  {
+   "link": "xrE_2N_l3",
+   "inst": "s_3N",
+   "master": "dsfd_dvland_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 2,
+   "K": 2,
+   "D": 4,
+   "age": 3,
+   "bundle": null,
+   "K_source": "Selected CAP seam: exact <=405um routed path, no relay, D4K2 with actual reset2 gate/read epoch alignment",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 101,
+   "src": "s_2N",
+   "hop0_gate": "fwd_xrE_2N_l3",
+   "gate_en": "rsg_rsleaf_rs_37_34_ck_sl_s_2N_C_xrE_2N_l3_src_sl_s_2N_C_x14984992y13757175_1",
+   "land_rs": "rsleaf_rs_37_34_3_ck_b_s_3N_xrE_2N_l3_dst",
+   "release_src": 62,
+   "release_dst": 64,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 2
+   }
+  },
+  {
+   "link": "pvso_W_local_l0",
+   "inst": "rsv_05",
+   "master": "dsdv_pv_local_land_n32_source4_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 17,
+   "K": 17,
+   "D": 32,
+   "age": 18,
+   "bundle": "pvso_W",
+   "K_source": "Actual matched age18, N0/K17 retained in32 slots; direct D32 bench qualified, physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 293,
+   "src": "rsv_05",
+   "hop0_gate": "fwd_pvso_W_local_l0",
+   "gate_en": "rsg_rsleaf_rs_34_26_3_ck_g4_2_pvso_W_local_l0_src_g4_2_x13713600y10413800_4",
+   "land_rs": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l0_dst",
+   "release_src": 49,
+   "release_dst": 54,
+   "land_reset_stages": 4,
+   "calendar_stations": {
+    "side": "source",
+    "n": 5
+   }
+  },
+  {
+   "link": "pvso_W_local_l1",
+   "inst": "rsv_05",
+   "master": "dsdv_pv_local_land_n32_source4_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 17,
+   "K": 17,
+   "D": 32,
+   "age": 18,
+   "bundle": "pvso_W",
+   "K_source": "Actual matched age18, N0/K17 retained in32 slots; direct D32 bench qualified, physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 294,
+   "src": "rsv_05",
+   "hop0_gate": "fwd_pvso_W_local_l1",
+   "gate_en": "rsg_rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l1_src_g4_2_x13756800y10413800_3",
+   "land_rs": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l1_dst",
+   "release_src": 50,
+   "release_dst": 54,
+   "land_reset_stages": 4,
+   "calendar_stations": {
+    "side": "source",
+    "n": 4
+   }
+  },
+  {
+   "link": "pvso_W_local_l2",
+   "inst": "rsv_05",
+   "master": "dsdv_pv_local_land_n32_source4_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 17,
+   "K": 17,
+   "D": 32,
+   "age": 18,
+   "bundle": "pvso_W",
+   "K_source": "Actual matched age18, N0/K17 retained in32 slots; direct D32 bench qualified, physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 295,
+   "src": "rsv_05",
+   "hop0_gate": "fwd_pvso_W_local_l2",
+   "gate_en": "rsg_rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l2_src_g4_2_x13800000y10413800_3",
+   "land_rs": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l2_dst",
+   "release_src": 50,
+   "release_dst": 54,
+   "land_reset_stages": 4,
+   "calendar_stations": {
+    "side": "source",
+    "n": 4
+   }
+  },
+  {
+   "link": "pvso_E_peer_l0",
+   "inst": "rsv_05",
+   "master": "dsfd_dvland_276l",
+   "bits": 276,
+   "stages": 16,
+   "E": 9,
+   "K": 9,
+   "D": 8,
+   "age": 18,
+   "bundle": "pvso_E",
+   "K_source": "Actual routed station count; all three local and three peer lanes at one producer age; pilot physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 296,
+   "src": "rsv_11",
+   "hop0_gate": "fwd_pvso_E_peer_l0",
+   "gate_en": "rsg_rsleaf_rs_48_26_3_ck_g7_2_pvso_E_peer_l0_src_g7_2_x19286400y10413800_1",
+   "land_rs": "rsleaf_rs_34_26_3_ck_g4_2_pvso_E_peer_l0_dst",
+   "release_src": 49,
+   "release_dst": 51,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 2
+   }
+  },
+  {
+   "link": "pvso_E_peer_l1",
+   "inst": "rsv_05",
+   "master": "dsfd_dvland_276l",
+   "bits": 276,
+   "stages": 16,
+   "E": 9,
+   "K": 9,
+   "D": 8,
+   "age": 18,
+   "bundle": "pvso_E",
+   "K_source": "Actual routed station count; all three local and three peer lanes at one producer age; pilot physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 297,
+   "src": "rsv_11",
+   "hop0_gate": "fwd_pvso_E_peer_l1",
+   "gate_en": "rsg_rsleaf_rs_48_26_3_ck_g7_2_pvso_E_peer_l1_src_g7_2_x19329600y10413800_2",
+   "land_rs": "rsleaf_rs_34_26_1_ck_g4_2_pvso_E_peer_l1_dst",
+   "release_src": 49,
+   "release_dst": 52,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 3
+   }
+  },
+  {
+   "link": "pvso_E_peer_l2",
+   "inst": "rsv_05",
+   "master": "dsfd_dvland_276l",
+   "bits": 276,
+   "stages": 16,
+   "E": 9,
+   "K": 9,
+   "D": 8,
+   "age": 18,
+   "bundle": "pvso_E",
+   "K_source": "Actual routed station count; all three local and three peer lanes at one producer age; pilot physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 298,
+   "src": "rsv_11",
+   "hop0_gate": "fwd_pvso_E_peer_l2",
+   "gate_en": "rsg_rsleaf_rs_48_26_3_ck_g7_2_pvso_E_peer_l2_src_g7_2_x19372800y10413800_2",
+   "land_rs": "rsleaf_rs_34_26_1_ck_g4_2_pvso_E_peer_l2_dst",
+   "release_src": 49,
+   "release_dst": 52,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 3
+   }
+  },
+  {
+   "link": "pvso_W_peer_l0",
+   "inst": "rsv_11",
+   "master": "dsfd_dvland_276l",
+   "bits": 276,
+   "stages": 16,
+   "E": 9,
+   "K": 9,
+   "D": 8,
+   "age": 18,
+   "bundle": "pvso_W",
+   "K_source": "Actual routed station count; all three local and three peer lanes at one producer age; pilot physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 346,
+   "src": "rsv_05",
+   "hop0_gate": "fwd_pvso_W_peer_l0",
+   "gate_en": "rsg_rsleaf_rs_34_26_3_ck_g4_2_pvso_W_peer_l0_src_g4_2_x13713600y10413800_1",
+   "land_rs": "rsleaf_rs_48_26_3_ck_g7_2_pvso_W_peer_l0_dst",
+   "release_src": 49,
+   "release_dst": 51,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 2
+   }
+  },
+  {
+   "link": "pvso_W_peer_l1",
+   "inst": "rsv_11",
+   "master": "dsfd_dvland_276l",
+   "bits": 276,
+   "stages": 16,
+   "E": 9,
+   "K": 9,
+   "D": 8,
+   "age": 18,
+   "bundle": "pvso_W",
+   "K_source": "Actual routed station count; all three local and three peer lanes at one producer age; pilot physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 347,
+   "src": "rsv_05",
+   "hop0_gate": "fwd_pvso_W_peer_l1",
+   "gate_en": "rsg_rsleaf_rs_34_26_1_ck_g4_2_pvso_W_peer_l1_src_g4_2_x13756800y10413800_0",
+   "land_rs": "rsleaf_rs_48_26_3_ck_g7_2_pvso_W_peer_l1_dst",
+   "release_src": 50,
+   "release_dst": 51,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 1
+   }
+  },
+  {
+   "link": "pvso_W_peer_l2",
+   "inst": "rsv_11",
+   "master": "dsfd_dvland_276l",
+   "bits": 276,
+   "stages": 16,
+   "E": 9,
+   "K": 9,
+   "D": 8,
+   "age": 18,
+   "bundle": "pvso_W",
+   "K_source": "Actual routed station count; all three local and three peer lanes at one producer age; pilot physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 348,
+   "src": "rsv_05",
+   "hop0_gate": "fwd_pvso_W_peer_l2",
+   "gate_en": "rsg_rsleaf_rs_34_26_1_ck_g4_2_pvso_W_peer_l2_src_g4_2_x13800000y10413800_0",
+   "land_rs": "rsleaf_rs_48_26_3_ck_g7_2_pvso_W_peer_l2_dst",
+   "release_src": 50,
+   "release_dst": 51,
+   "land_reset_stages": 2,
+   "calendar_stations": {
+    "side": "source",
+    "n": 1
+   }
+  },
+  {
+   "link": "pvso_E_local_l0",
+   "inst": "rsv_11",
+   "master": "dsdv_pv_local_land_n32_source4_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 17,
+   "K": 17,
+   "D": 32,
+   "age": 18,
+   "bundle": "pvso_E",
+   "K_source": "Actual matched age18, N0/K17 retained in32 slots; direct D32 bench qualified, physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 349,
+   "src": "rsv_11",
+   "hop0_gate": "fwd_pvso_E_local_l0",
+   "gate_en": "rsg_rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l0_src_g7_2_x19286400y10413800_3",
+   "land_rs": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l0_dst",
+   "release_src": 49,
+   "release_dst": 53,
+   "land_reset_stages": 4,
+   "calendar_stations": {
+    "side": "source",
+    "n": 4
+   }
+  },
+  {
+   "link": "pvso_E_local_l1",
+   "inst": "rsv_11",
+   "master": "dsdv_pv_local_land_n32_source4_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 17,
+   "K": 17,
+   "D": 32,
+   "age": 18,
+   "bundle": "pvso_E",
+   "K_source": "Actual matched age18, N0/K17 retained in32 slots; direct D32 bench qualified, physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 350,
+   "src": "rsv_11",
+   "hop0_gate": "fwd_pvso_E_local_l1",
+   "gate_en": "rsg_rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l1_src_g7_2_x19329600y10413800_3",
+   "land_rs": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l1_dst",
+   "release_src": 49,
+   "release_dst": 53,
+   "land_reset_stages": 4,
+   "calendar_stations": {
+    "side": "source",
+    "n": 4
+   }
+  },
+  {
+   "link": "pvso_E_local_l2",
+   "inst": "rsv_11",
+   "master": "dsdv_pv_local_land_n32_source4_276",
+   "bits": 276,
+   "stages": 0,
+   "E": 17,
+   "K": 17,
+   "D": 32,
+   "age": 18,
+   "bundle": "pvso_E",
+   "K_source": "Actual matched age18, N0/K17 retained in32 slots; direct D32 bench qualified, physical window owed",
+   "calendar_G_minus_R0": 0,
+   "fault_bit": 351,
+   "src": "rsv_11",
+   "hop0_gate": "fwd_pvso_E_local_l2",
+   "gate_en": "rsg_rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l2_src_g7_2_x19372800y10413800_3",
+   "land_rs": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l2_dst",
+   "release_src": 49,
+   "release_dst": 53,
+   "land_reset_stages": 4,
+   "calendar_stations": {
+    "side": "source",
+    "n": 4
+   }
+  }
+ ],
+ "endpoint_clock_reset_book": [
+  {
+   "endpoint": [
+    "xrE_2N_l0",
+    true
+   ],
+   "consumer": "fwd_xrE_2N_l0",
+   "street": "rs_37_33",
+   "leaf": "rsleaf_rs_37_33_ck_sl_s_2N_C_xrE_2N_l0_src",
+   "clock": "ck_sl_s_2N_C",
+   "xy": [
+    14984.992,
+    13386.3852
+   ],
+   "minimum_block_epoch": 51,
+   "release_epoch": 61
+  },
+  {
+   "endpoint": [
+    "xrE_2N_l0",
+    false
+   ],
+   "consumer": "ld_xrE_2N_l0",
+   "street": "rs_37_34_3",
+   "leaf": "rsleaf_rs_37_34_3_ck_b_s_3N_xrE_2N_l0_dst",
+   "clock": "ck_b_s_3N",
+   "xy": [
+    15114.592,
+    13641.1719
+   ],
+   "minimum_block_epoch": 55,
+   "release_epoch": 62
+  },
+  {
+   "endpoint": [
+    "xrE_2N_l1",
+    true
+   ],
+   "consumer": "fwd_xrE_2N_l1",
+   "street": "rs_37_33_2",
+   "leaf": "rsleaf_rs_37_33_2_ck_sl_s_2N_C_xrE_2N_l1_src",
+   "clock": "ck_sl_s_2N_C",
+   "xy": [
+    14984.992,
+    13509.9818
+   ],
+   "minimum_block_epoch": 51,
+   "release_epoch": 62
+  },
+  {
+   "endpoint": [
+    "xrE_2N_l1",
+    false
+   ],
+   "consumer": "ld_xrE_2N_l1",
+   "street": "rs_37_34_3",
+   "leaf": "rsleaf_rs_37_34_3_ck_b_s_3N_xrE_2N_l1_dst",
+   "clock": "ck_b_s_3N",
+   "xy": [
+    15114.592,
+    13690.9834
+   ],
+   "minimum_block_epoch": 55,
+   "release_epoch": 62
+  },
+  {
+   "endpoint": [
+    "xrE_2N_l2",
+    true
+   ],
+   "consumer": "fwd_xrE_2N_l2",
+   "street": "rs_37_34_1",
+   "leaf": "rsleaf_rs_37_34_1_ck_sl_s_2N_C_xrE_2N_l2_src",
+   "clock": "ck_sl_s_2N_C",
+   "xy": [
+    14984.992,
+    13633.5783
+   ],
+   "minimum_block_epoch": 51,
+   "release_epoch": 62
+  },
+  {
+   "endpoint": [
+    "xrE_2N_l2",
+    false
+   ],
+   "consumer": "ld_xrE_2N_l2",
+   "street": "rs_37_34_3",
+   "leaf": "rsleaf_rs_37_34_3_ck_b_s_3N_xrE_2N_l2_dst",
+   "clock": "ck_b_s_3N",
+   "xy": [
+    15114.592,
+    13740.7949
+   ],
+   "minimum_block_epoch": 55,
+   "release_epoch": 62
+  },
+  {
+   "endpoint": [
+    "xrE_2N_l3",
+    true
+   ],
+   "consumer": "fwd_xrE_2N_l3",
+   "street": "rs_37_34",
+   "leaf": "rsleaf_rs_37_34_ck_sl_s_2N_C_xrE_2N_l3_src",
+   "clock": "ck_sl_s_2N_C",
+   "xy": [
+    14984.992,
+    13757.1748
+   ],
+   "minimum_block_epoch": 51,
+   "release_epoch": 62
+  },
+  {
+   "endpoint": [
+    "xrE_2N_l3",
+    false
+   ],
+   "consumer": "ld_xrE_2N_l3",
+   "street": "rs_37_34_3",
+   "leaf": "rsleaf_rs_37_34_3_ck_b_s_3N_xrE_2N_l3_dst",
+   "clock": "ck_b_s_3N",
+   "xy": [
+    15114.592,
+    13790.6063
+   ],
+   "minimum_block_epoch": 55,
+   "release_epoch": 62
+  },
+  {
+   "endpoint": [
+    "pvso_W_local_l0",
+    true
+   ],
+   "consumer": "fwd_pvso_W_local_l0",
+   "street": "rs_34_26_3",
+   "leaf": "rsleaf_rs_34_26_3_ck_g4_2_pvso_W_local_l0_src",
+   "clock": "ck_g4_2",
+   "xy": [
+    13713.6,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_W_local_l0",
+    false
+   ],
+   "consumer": "ld_pvso_W_local_l0",
+   "street": "rs_34_26_1",
+   "leaf": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l0_dst",
+   "clock": "ck_g4_2",
+   "xy": [
+    13800.0,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 50
+  },
+  {
+   "endpoint": [
+    "pvso_W_local_l1",
+    true
+   ],
+   "consumer": "fwd_pvso_W_local_l1",
+   "street": "rs_34_26_1",
+   "leaf": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l1_src",
+   "clock": "ck_g4_2",
+   "xy": [
+    13756.800000000001,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 50
+  },
+  {
+   "endpoint": [
+    "pvso_W_local_l1",
+    false
+   ],
+   "consumer": "ld_pvso_W_local_l1",
+   "street": "rs_34_26_1",
+   "leaf": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l1_dst",
+   "clock": "ck_g4_2",
+   "xy": [
+    13843.2,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 50
+  },
+  {
+   "endpoint": [
+    "pvso_W_local_l2",
+    true
+   ],
+   "consumer": "fwd_pvso_W_local_l2",
+   "street": "rs_34_26_1",
+   "leaf": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l2_src",
+   "clock": "ck_g4_2",
+   "xy": [
+    13800.0,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 50
+  },
+  {
+   "endpoint": [
+    "pvso_W_local_l2",
+    false
+   ],
+   "consumer": "ld_pvso_W_local_l2",
+   "street": "rs_34_26_1",
+   "leaf": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_local_l2_dst",
+   "clock": "ck_g4_2",
+   "xy": [
+    13886.4,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 50
+  },
+  {
+   "endpoint": [
+    "pvso_E_peer_l0",
+    true
+   ],
+   "consumer": "fwd_pvso_E_peer_l0",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_peer_l0_src",
+   "clock": "ck_g7_2",
+   "xy": [
+    19286.4,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_peer_l0",
+    false
+   ],
+   "consumer": "ld_pvso_E_peer_l0",
+   "street": "rs_34_26_3",
+   "leaf": "rsleaf_rs_34_26_3_ck_g4_2_pvso_E_peer_l0_dst",
+   "clock": "ck_g4_2",
+   "xy": [
+    13713.6,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_peer_l1",
+    true
+   ],
+   "consumer": "fwd_pvso_E_peer_l1",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_peer_l1_src",
+   "clock": "ck_g7_2",
+   "xy": [
+    19329.600000000002,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_peer_l1",
+    false
+   ],
+   "consumer": "ld_pvso_E_peer_l1",
+   "street": "rs_34_26_1",
+   "leaf": "rsleaf_rs_34_26_1_ck_g4_2_pvso_E_peer_l1_dst",
+   "clock": "ck_g4_2",
+   "xy": [
+    13756.800000000001,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 50
+  },
+  {
+   "endpoint": [
+    "pvso_E_peer_l2",
+    true
+   ],
+   "consumer": "fwd_pvso_E_peer_l2",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_peer_l2_src",
+   "clock": "ck_g7_2",
+   "xy": [
+    19372.800000000003,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_peer_l2",
+    false
+   ],
+   "consumer": "ld_pvso_E_peer_l2",
+   "street": "rs_34_26_1",
+   "leaf": "rsleaf_rs_34_26_1_ck_g4_2_pvso_E_peer_l2_dst",
+   "clock": "ck_g4_2",
+   "xy": [
+    13800.0,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 50
+  },
+  {
+   "endpoint": [
+    "pvso_W_peer_l0",
+    true
+   ],
+   "consumer": "fwd_pvso_W_peer_l0",
+   "street": "rs_34_26_3",
+   "leaf": "rsleaf_rs_34_26_3_ck_g4_2_pvso_W_peer_l0_src",
+   "clock": "ck_g4_2",
+   "xy": [
+    13713.6,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_W_peer_l0",
+    false
+   ],
+   "consumer": "ld_pvso_W_peer_l0",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_W_peer_l0_dst",
+   "clock": "ck_g7_2",
+   "xy": [
+    19286.4,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_W_peer_l1",
+    true
+   ],
+   "consumer": "fwd_pvso_W_peer_l1",
+   "street": "rs_34_26_1",
+   "leaf": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_peer_l1_src",
+   "clock": "ck_g4_2",
+   "xy": [
+    13756.800000000001,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 50
+  },
+  {
+   "endpoint": [
+    "pvso_W_peer_l1",
+    false
+   ],
+   "consumer": "ld_pvso_W_peer_l1",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_W_peer_l1_dst",
+   "clock": "ck_g7_2",
+   "xy": [
+    19329.600000000002,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_W_peer_l2",
+    true
+   ],
+   "consumer": "fwd_pvso_W_peer_l2",
+   "street": "rs_34_26_1",
+   "leaf": "rsleaf_rs_34_26_1_ck_g4_2_pvso_W_peer_l2_src",
+   "clock": "ck_g4_2",
+   "xy": [
+    13800.0,
+    10413.8
+   ],
+   "minimum_block_epoch": 37,
+   "release_epoch": 50
+  },
+  {
+   "endpoint": [
+    "pvso_W_peer_l2",
+    false
+   ],
+   "consumer": "ld_pvso_W_peer_l2",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_W_peer_l2_dst",
+   "clock": "ck_g7_2",
+   "xy": [
+    19372.800000000003,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_local_l0",
+    true
+   ],
+   "consumer": "fwd_pvso_E_local_l0",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l0_src",
+   "clock": "ck_g7_2",
+   "xy": [
+    19286.4,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_local_l0",
+    false
+   ],
+   "consumer": "ld_pvso_E_local_l0",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l0_dst",
+   "clock": "ck_g7_2",
+   "xy": [
+    19372.800000000003,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_local_l1",
+    true
+   ],
+   "consumer": "fwd_pvso_E_local_l1",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l1_src",
+   "clock": "ck_g7_2",
+   "xy": [
+    19329.600000000002,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_local_l1",
+    false
+   ],
+   "consumer": "ld_pvso_E_local_l1",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l1_dst",
+   "clock": "ck_g7_2",
+   "xy": [
+    19416.000000000004,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_local_l2",
+    true
+   ],
+   "consumer": "fwd_pvso_E_local_l2",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l2_src",
+   "clock": "ck_g7_2",
+   "xy": [
+    19372.800000000003,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  },
+  {
+   "endpoint": [
+    "pvso_E_local_l2",
+    false
+   ],
+   "consumer": "ld_pvso_E_local_l2",
+   "street": "rs_48_26_3",
+   "leaf": "rsleaf_rs_48_26_3_ck_g7_2_pvso_E_local_l2_dst",
+   "clock": "ck_g7_2",
+   "xy": [
+    19459.200000000004,
+    10413.8
+   ],
+   "minimum_block_epoch": 38,
+   "release_epoch": 49
+  }
+ ],
+ "qualification": "Exact unclosed source4 selection with native32 core; future CLOSED kit replaces whole source4 assembly. Physical placed reach/clock epoch and production dates remain open."
+}

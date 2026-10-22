@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.grt183_resume.v1",
+ "reason": "incremental GRT-0183 inside 5_1_grt repair; same-process recovery is unsafe (measured), so stage 5_1_grt re-runs once in a fresh process from the saved resized design with every repair re-run",
+ "attempt1_log": "logs/5_1_grt.grt183_attempt1.log",
+ "attempt1_lines": [
+  "[ERROR GRT-0183] Net net18000: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages.",
+  "OT_GRT183_RESUME_SAVED helper=repair_timing_helper odb=/work/results/asap7/opentallas_dsdv_idx_tx_n32_asap7_ref_gate/base/5_1_grt.grt183_resume.odb hook_shapes_dropped=25: incremental GRT-0183 inside repair_timing_helper; the runner re-runs 5_1_grt once in a fresh process from this resized design",
+  "Error: global_route.tcl, 175 GRT-0183"
+ ],
+ "cts_odb_sha256": "faef6fb6a9b0639ab583d41ad9244290d1fa3c255b15a8f3b0d4a18db3ceb7b0",
+ "resume_odb_sha256": "e334e6a2891d39a0ed25d5ba87f34702707d9ef9e00819ef61d9570af54af349"
+}

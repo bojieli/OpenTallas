@@ -20,6 +20,7 @@ module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter int
     input  wire          rst_n,
     input  wire [298:0]  up0, up1, up2, up3,
     input  wire          start,
+    input wire rope_sweep,
     input  wire          cfg_we,
     input  wire [7:0]    cfg_addr,
     input  wire [63:0]   cfg_data,
@@ -41,6 +42,8 @@ module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter int
     end else begin:g_legacy_reset
         assign reset_root={3{rst_n}};assign reset_bank={8{rst_n}};assign reset_main={2{rst_n}};
     end endgenerate
+    reg rope_mode;
+    always @(posedge ck or negedge rst_n)if(!rst_n)rope_mode<=0;else if(start)rope_mode<=(rope_sweep===1'b1);
     reg ss, cw; reg [7:0] ca; reg [63:0] cd;
     always @(posedge ck) begin ca <= cfg_addr; cd <= cfg_data; end
     always @(posedge ck or negedge reset_main[0])
@@ -114,7 +117,7 @@ module qkd_embedding_static_join4_cal #(parameter integer MUT = 0, parameter int
             end
             if (ss) begin if (act) cf <= 1'b1; act <= 1'b1; cnt <= 16'd0; end
             else if (act) begin cnt <= cnt + 16'd1; if (cnt == last) act <= 1'b0; end
-            slot <= act && (|hit);
+            slot <= act && (|(hit & (rope_mode?8'h01:8'hff)));
         end
     wire jf;
     qkd_embedding_static_join4 #(.NATIVE32(NATIVE32), .PIPE_JOIN(PIPE_JOIN)) u_join4 (.ck(ck), .rst_n(reset_root[2]), .up0(up0), .up1(up1), .up2(up2), .up3(up3),

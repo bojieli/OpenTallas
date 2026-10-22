@@ -135,16 +135,27 @@ if [ "${OT_KV_DCAL:-0}" = 1 ]; then
     B4D=qkd_d2d_cal_seq_pin_bc4; [ -n "${OT_KV_EMB_WIN:-}" ] && B4D=qkd_d2d_cal_seq_pin_bc4_ew$OT_KV_EMB_WIN
     # KV-PROG17 10-20: OT_KV_ATTN_R16=1 -> the r16 pair image tile (kit suffix _r16)
     [ "${OT_KV_ATTN_R16:-0}" = 1 ] && B4D=${B4D}_r16
+    [ "${OT_KV_ROPE:-0}" = 1 ] && B4D=${B4D}_rope
     B4K=${OT_KV_DCAL_BC4_KIT:-$B4D}; B4V=physical/ref_tile/$B4K/views/qkd_d2d_cal_seq_pin_bc4; DCV=
     if [ -f $B4V/qkd_d2d_cal_seq_pin_bc4.lef ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_tt.lib ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_ff.lib ]; then
       DCV=$B4V; echo "OT_KV_DCAL_BC4: qkd_dcal -> $B4V (safe K22)"
     else echo "OT_KV_DCAL_BC4 FRAME: no view at $B4V yet; qkd_dcal stays an ASSUMED frame (kit $B4K not closed)"; fi
   fi
+  if [ "${OT_KV_ROPE_OVL:-0}" = 1 ]; then
+    DCV=
+    OVV=physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_rope/views/qkd_d2d_cal_seq_pin_ovl_rope
+    if [ -f "$OVV/qkd_d2d_cal_seq_pin_ovl_rope.lef" ] && [ -f "$OVV/qkd_d2d_cal_seq_pin_ovl_rope_tt.lib" ] && [ -f "$OVV/qkd_d2d_cal_seq_pin_ovl_rope_ff.lib" ]; then
+      DCV=$OVV; echo "OT_KV_ROPE_OVL: actual independent K TX/RX list player binds $OVV"
+    else echo "OT_KV_ROPE_OVL FRAME: actual list-player view absent; no old BC4 view alias"; fi
+  fi
   [ -z "$DCV" ] || BV="$BV --view qkd_dcal=$DCV"
 fi
 # OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view
 # when the kit has closed (OT_KV_KVNC_KIT, default qkd_kvn_ctx_cal_r2); without a view the frame stays ASSUMED (diagnostic)
-if [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
+# SQC-KDIE4 10-22: under OT_KV_ROPE_OVL the leaf is qkd_kvn_ctx_ovl_rope (CLOSED kits qkd_kvn_ctx_ovl_rope_cm4 / cf4)
+if [ "${OT_KV_KVNC:-0}" = 1 ] && [ "${OT_KV_ROPE_OVL:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_ovl_rope_cm4}/views/qkd_kvn_ctx_ovl_rope
+  [ -f $KVV/qkd_kvn_ctx_ovl_rope.lef ] && BV="$BV --view qkd_kvnc=$KVV" || echo "OT_KV_KVNC (ROPE_OVL): no closed view at $KVV (frame ASSUMED)"
+elif [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
   [ -f $KVV/qkd_kvn_ctx_cal.lef ] && BV="$BV --view qkd_kvnc=$KVV" || echo "OT_KV_KVNC: no closed view at $KVV (frame ASSUMED)"; fi
 # OT_KV_SEQ_STATIC=1 (Q-KVSYS PVJOIN 10-16, needs DCAL + KVNC): qkd_seq_static in slot seq (cluster frame, as qkd_seq) and
 # the compile-time-image layer programme lprg on its closed view when available (OT_KV_LPRG_KIT, default qkd_layer_prog_img_r3)
@@ -270,12 +281,7 @@ if [ "${OT_KV_RLY_STD:-0}" = 1 ]; then
   EXP="--expanded $O/expand.json"
 fi
 [ "${OT_KV_RLY_STD_NETLIST_ONLY:-0}" = 1 ] || kv_orient prefwd
-# KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
-# half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
-# RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
-if [ "${OT_KV_FWD:-0}" = 1 ]; then
-  python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
-  EXP="--expanded $O/expand.json"
+kv_land_lag() {
   # KVR-LANDLAG 10-19: every forwarded-clock landed crossing of the laned netlist (qkd_landsh* / qkd_landsh0*) checked
   # against its compiled age, FAIL CLOSED: lane traced on die.v == fwd_lanes.json row, K straps from the landing's own
   # tie cells == (E + cal + h0(n)) mod 8, the strap age inside the ring window, and the latency the hardware delivers
@@ -288,6 +294,14 @@ if [ "${OT_KV_FWD:-0}" = 1 ]; then
     if [ "${OT_KV_LAND_LAG_DIAG:-0}" = 1 ]; then tail -1 $O/land_lag.log > $O/LAND_LAG_DIAGNOSTIC
     else tail -4 $O/land_lag.log; echo "LAND_LAG_KV FAIL: landed crossings vs compiled ages ($O/case_kv/land_lag.json)"; exit 9; fi; }
   tail -1 $O/land_lag.log | cut -c1-400
+}
+# KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
+# half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
+# RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
+if [ "${OT_KV_FWD:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
+  EXP="--expanded $O/expand.json"
+  [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ] || kv_land_lag
 fi
 # KV-HEALTH 10-19 (OT_KV_HEALTH=1; kvs14r default ON = MU release): the continuous registered health plane -- every
 # landing / KC / DCAL fault source -> no-reset OR joins + relay pipes per clock root, cross-root on spare bits of the
@@ -300,6 +314,16 @@ if [ "${OT_KV_HEALTH:-0}" = 1 ]; then
     || { tail -5 $O/health_plane.log; echo "KV_HEALTH install FAILED ($O/health_plane.log)"; exit 11; }
   grep '^KV_HEALTH' $O/health_plane.log | cut -c1-900
   EXP="--expanded $O/expand.json"
+fi
+# Opt-in actual source-preserving reset stations after all lane/health placements.
+# The existing land-lag check below consumes the recompiled G-R0/K calendar once.
+if [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_final_reset_stations.py --run "$O" > "$O/final_reset_stations.log" 2>&1 \
+    || { tail -5 "$O/final_reset_stations.log"; echo "KV_FINAL_RESET_STATIONS source generation failed"; exit 6; }
+  export OT_KV_FINAL_RESET_CALENDAR="$O/final_reset_stations/calendar.json"
+fi
+if [ "${OT_KV_FWD:-0}" = 1 ] && [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ]; then
+  kv_land_lag
 fi
 [ "${OT_KV_FWD_NETLIST_ONLY:-0}" = 1 ] || kv_orient final --check-only
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)

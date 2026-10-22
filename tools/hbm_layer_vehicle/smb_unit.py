@@ -104,6 +104,64 @@ RES_LINE_DEN = int(os.environ.get("SMB_RES_LINE_DEN", 8))
 assert RES_LINE_NUM > 0 and RES_LINE_DEN > 0
 RESMODEL = os.environ.get("SMB_RESMODEL", "1") == "1"
 
+# TOKc-HBM2 10-22 (ds_l14_sm): refresh-aware residency bound.  The h9b PC controller
+# (ot_hbm_r14_stream_pc_strap_h9_m73 REF_MODE 1) issues one REFpb every T_REFIPB 118 hbm edges from its reset release
+# (first one refresh_reload(p) edges after it), 32 banks a round (refreshed mask), and picks the bank by key: the bank set
+# a stream is reading (and an idle controller's set 0, idle rank 6) is deferred to round slots 24..31.  A REFpb blocks its
+# bank from LEAD (T_RAS+T_RP+4 = 48) edges before the due edge to T_RFCPB 196 after it (+T_RCD to re-open); the in-order
+# stream (j over the 4 bank groups) stalls while any bank of its set is blocked.  The bank chosen inside slots 24..31
+# depends on the controller state, so the static bound is the union window of slots 24..31 of every PC of the channel
+# group, padded by REF_PAD for the reset-release estimate: a block whose fetch overlaps a window is ready only after the
+# fetch time lost inside it.  The window times are absolute (die reset), so the caller (sm_slice_lower) supplies them via
+# REFRESH = dict(rc0_abs=<stream edge of issuer rc 0>, r0_hbm=<hbm edge of the PC reset release>, pcs=[...]).
+# Measured on ds_l14_sm (FIRST_GO 520, launch 50165): PCs 5..8 stall 237 hbm edges at hbm 40901 inside slot 24..31 of
+# round 10 -> svg_SW1/SW2 FIXED-go fault @50697.  SMB_REFRESH=0 restores the refresh-blind model (diagnostic only).
+T_REFIPB, T_RFCPB, REF_LEAD, T_RCD_H, REF_ROUND = 118, 196, 48, 19, 32
+REF_HOT = (24, 32)                                   # round slots that may refresh the streaming / idle-set-0 banks
+HBM_PER_STREAM = float(os.environ.get("SMB_HBM_PER_STREAM", "0.81378"))   # measured hbm/stream edge ratio (smsl runs)
+REF_PAD = int(os.environ.get("SMB_REF_PAD", 32))   # hbm edges, both sides
+REFRESH_ON = os.environ.get("SMB_REFRESH", "1") == "1"
+REFRESH = None
+
+
+def refresh_reload(p):
+    """die per-PC refresh phase (tools/hbm_die_v15/full_die_v16.py _pc_refresh_reload; refcfg boot row)."""
+    rp = (p * 118 // 32) % 118
+    return 118 + rp + ((rp + 118 + p) % 2)
+
+
+def refresh_windows(rc_hi, cfg=None):
+    """merged refresh hazard windows [lo, hi) in the issuer rc domain (stream edges) up to rc_hi."""
+    cfg = cfg or REFRESH
+    if not cfg or not REFRESH_ON:
+        return []
+    r0, rc0 = cfg["r0_hbm"], cfg["rc0_abs"]
+    h_hi = (rc0 + rc_hi) * HBM_PER_STREAM + T_REFIPB * REF_ROUND
+    out = []
+    rnd = 0
+    while True:
+        lo = hi = None
+        for p in cfg["pcs"]:
+            base = r0 + refresh_reload(p) + T_REFIPB * REF_ROUND * rnd
+            a = base + T_REFIPB * REF_HOT[0] - REF_LEAD - REF_PAD
+            b = base + T_REFIPB * (REF_HOT[1] - 1) + T_RFCPB + T_RCD_H + REF_PAD
+            lo = a if lo is None else min(lo, a)
+            hi = b if hi is None else max(hi, b)
+        if lo > h_hi:
+            break
+        out.append((int(lo / HBM_PER_STREAM) - rc0, int(hi / HBM_PER_STREAM) + 1 - rc0))
+        rnd += 1
+    return [w for w in out if w[1] > 0]
+
+
+def refresh_ready(rs, rd, wins):
+    """ready edge of a fetch that starts at rs and would be ready at rd: the fetch makes no progress inside a window."""
+    for lo, hi in wins:
+        if hi <= rs or lo >= rd:
+            continue
+        rd += hi - max(lo, rs)
+    return rd
+
 
 def _drain_edges(lines):
     sec = ((lines * 136 + 127) // 128) * 4
@@ -404,6 +462,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
         install_end = desc_install_t + 2 * len(descs) + 4
         flat = [b for r_ in recs for b in r_["blocks"]]          # issue order of the kind's blocks
         rm = dict(res=[], rdy=[], opn=[], dend=[], ret=[])       # residency model (rc domain), by issue index
+        ref_wins = refresh_windows(1 << 20)                       # refresh hazard windows (rc domain), [] when blind
         for r in recs:
             fp = len(r["xw"])
             raw = prev_r is None or (prod[r["k"]] is not None and prod[r["k"]] > _fk(prev_r))
@@ -487,6 +546,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                     rs = max(rm["res"][n - 1] + 3 if n else 0, rm["dend"][n - LANDING] + 2 if n >= LANDING else 0,
                              (ids_rc + 2) if (kd["exp"] and n_after and ids_rc is not None) else 0)
                     rd = max(rs + FLAT, (rm["rdy"][n - 1] if n else 0) + -(-L_ * RES_LINE_NUM // RES_LINE_DEN))
+                    rd = refresh_ready(max(rs, rm["rdy"][n - 1] if n else 0), rd, ref_wins)   # this block's fetch interval
                     op_ = max(rd, rm["ret"][n - 2] if n >= 2 else 0, rm["dend"][n - 1] if n else 0) + 1
                     de = op_ + _drain_edges(L_) + 2
                     lo = max(lo, de + RMARGIN)
@@ -540,7 +600,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
     assert len({e[0] for e in ing}) == len(ing), "two ingress words on one edge"
     assert len({e[0] for e in xw_ev}) == len(xw_ev), "two x beats on one edge"
     n_end = last_cmd_abs + DRAIN
-    budget = dict(static_schedule=dict(pace_num=PACE_NUM, head_pace_num=HEAD_PACE_NUM, pace_den=PACE_DEN, pace_add=PACE_ADD, first_go=FIRST_GO, residency_model=RESMODEL, fetch_bound=FLAT, ready_line_num=RES_LINE_NUM, ready_line_den=RES_LINE_DEN), descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
+    budget = dict(static_schedule=dict(pace_num=PACE_NUM, head_pace_num=HEAD_PACE_NUM, pace_den=PACE_DEN, pace_add=PACE_ADD, first_go=FIRST_GO, residency_model=RESMODEL, fetch_bound=FLAT, ready_line_num=RES_LINE_NUM, ready_line_den=RES_LINE_DEN, refresh_bound=(dict(REFRESH, pad=REF_PAD, hot=list(REF_HOT), hbm_per_stream=HBM_PER_STREAM) if (REFRESH and REFRESH_ON) else None)), descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
                   attention_reserved=ATT_RESERVED, store_top=store.top, store_words=PSTORE,
                   distinct_programmes=len(store.progs),
                   per_kind=[dict(name=k["name"], layer=k["layer"], descriptors=k["d1"] - k["d0"], nonexpert_blocks=k["nonexp_blocks"],

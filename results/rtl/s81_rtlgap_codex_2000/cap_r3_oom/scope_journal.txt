@@ -1,0 +1,8 @@
+ActiveState=failed
+Result=oom-kill
+RuntimeMaxUSec=infinity
+MemoryPeak=34359738368
+MemoryMax=34359738368
+Oct 21 23:10:06 ot-gold1 systemd[12300]: oth-ubuntu-3409076-1792646082.scope: The kernel OOM killer killed some processes in this unit.
+Oct 21 23:10:11 ot-gold1 systemd[12300]: oth-ubuntu-3409076-1792646082.scope: Failed with result 'oom-kill'.
+Oct 21 23:10:11 ot-gold1 systemd[12300]: oth-ubuntu-3409076-1792646082.scope: Consumed 44min 43.318s CPU time over 55min 28.164s wall clock time, 32G memory peak.

@@ -14,7 +14,8 @@ module ot_sram_showahead_1r1w #(
 )(input wire clk, input wire [NS-1:0] rst_n,
  input wire we, input wire [AW-1:0] wa, input wire [W-1:0] wd,
  input wire [AW-1:0] ra, output wire [W-1:0] q,
- input wire advance_a,advance_b);
+ // advance_a/b feed ONLY the opt-in LOCAL_RA read pointer; callers without LOCAL_RA may omit them (default 0, unused).
+ input wire advance_a=1'b0, input wire advance_b=1'b0);
  localparam integer NB=(W+127)/128;
  wire [NB*AW-1:0] read_addr_local;
  generate for(genvar ar=0;ar<NB;ar=ar+1) begin:g_read_region
@@ -66,7 +67,13 @@ module ot_sram_showahead_1r1w #(
   end else begin:g_shared_wd
    assign bank_wd=padded[b*128+:128];
   end
-  ot_sram_1r1w_32x128_m1 u_m(.clk(clk),.r_ce_in(1'b1),.r_addr_in(5'(read_addr_local[b*AW+:AW])),
+`ifdef OT_SRAM_P192
+  // pitch-192 pin-limited 32x128 (51.408x39.960, W/E 4.98/4.95 pins/um); same ports/timing contract (a87cecc1e)
+  ot_sram_1r1w_32x128_m1_p192_rc u_m(.clk(clk),
+`else
+  ot_sram_1r1w_32x128_m1 u_m(.clk(clk),
+`endif
+   .r_ce_in(1'b1),.r_addr_in(5'(read_addr_local[b*AW+:AW])),
    .rd_out(raw[b*128+:128]),.w_ce_in(bank_we),.w_addr_in(5'(bank_wa)),
    .wd_in(bank_wd),.w_mask_in({128{1'b1}}));
  end

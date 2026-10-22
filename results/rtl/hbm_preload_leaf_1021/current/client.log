@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-preload-2133
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-preload-2133
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-preload-2133
+ot-run: ot-gold2       admits    24 GB (avail 432, growth 416, headroom 0, waiters 0/0 GB) load 35/112 running 20 disk 2734 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-preload-2133
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-preload-2133
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-preload-2133
+ot-run: -> ot-gold2
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-740544-1792643541 after 0 s
+[97000] %Fatal: tb_preload.sv:12: Assertion failed in tb_preload: PRELOAD_READBACK q0 pc0 actualdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef
+PRELOAD_FOUR_INSTANCE_READBACK_PASS instances4 sectors8 checks8
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-740544-1792643541): exit 0

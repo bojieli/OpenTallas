@@ -1,0 +1,20 @@
+{
+  "status": "COMPLETE_SERVICE_LOCAL_COMPARISON_PASS",
+  "unit": "oth-ubuntu-1106526-1792643788",
+  "tool": "Verilator 5.050",
+  "edge_count": 215,
+  "complete_32beat_transactions": 2,
+  "early_completion_rejected": true,
+  "frozen_reference": "0e64aa8f3:rtl/qwen_split/qfd_native59_static_service_obs1.sv",
+  "selected_params": {
+    "LOCAL32": 1,
+    "FANOUT_LOCAL": 1
+  },
+  "source_sha256": {
+    "rtl/qwen_split/qfd_native59_static_service_obs1.sv": "ed7ffd0cb244af014fc988d282af4ef51be860406e0f7a0994cfdaae25bbb7e3",
+    "rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv": "0af22a5efed16e6e752ea80c548475119a89995802c284c6e16de47bba53a068",
+    "results/arch/n59_fanout_1021/tb_n59_local_complete.sv": "20ea61b7a92e260212fe70323d43e32b46dd8dbf840fab18ee9dc0e8f615196f",
+    "results/arch/n59_fanout_1021/qfd_n59_static_service_frozen.sv": "104dbd9908e8dea3713eb0c6f0e3903939c430328a49bad44ac2f9ad977c2d33"
+  },
+  "scope": "Minimum service component; all output lockstep, two real completions, completion tag retention and early refusal. No full die or physical claim."
+}

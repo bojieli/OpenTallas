@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_issuer_m256v8",
+ "enable": false,
+ "reason": "Safe256v8 has kept input cfg/start/start_pc registers, segmented registered uop masks and1536 output data flops,54 regional kept reset release leaves. No added externaledge; exactselected256ISA miter required."
+}

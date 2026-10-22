@@ -21,8 +21,14 @@
 #   absolute or relative to DIR) replaces the RTL list; the tb / golden / runs are unchanged; grade = die-netlist.
 set -euo pipefail
 RUNROOT=$(readlink -f "$1"); shift
-NET=""
-while [ $# -gt 0 ]; do case "$1" in --die-netlist) NET=$(readlink -f "$2"); shift 2;; *) echo "bad arg $1"; exit 2;; esac; done
+NET=""; EXPL=""
+# --explicit-r17 OBJDIR (TOKc-QW2 10-22, coordinator decision (a)): the CURRENT r17 attention vehicle (qkd_kvs_attn_r17 /
+#   qkd_kvs_attn_fl_r17 of the assembly, RETIRE_STATIC 1 STATUS_DELAY 213 = tb defaults) built on the assembly tree with the
+#   ROOT-approved explicit genuine-archive binding (b0cc8cdca, kv_explicit_r17/): top-only frontend (~1 s / ~100 MB instead
+#   of the ~590 GB implicit hierarchical top) + the 35 child archives of OBJDIR, admitted only when their sha256 and their
+#   whole child source readset match the approved table / the assembly bytes (kv_explicit_build.py).  Memory ~16 GB.
+while [ $# -gt 0 ]; do case "$1" in --die-netlist) NET=$(readlink -f "$2"); shift 2;;
+  --explicit-r17) EXPL=$(readlink -f "$2"); shift 2;; *) echo "bad arg $1"; exit 2;; esac; done
 SRC=$RUNROOT/src; S=$RUNROOT/kv; FX=$S/fx; T=$S/tree; O=$S/out; HERE=$(dirname "$(readlink -f "$0")")
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 verilator --version | grep -q '5.050'
@@ -41,7 +47,17 @@ if [ -n "$NET" ]; then
   cp "$O/net_sources.txt" "$T/tools/qwen_layerbench/kvattn_rel/sources.txt"
 fi
 echo "$(cat $SRC/ASM_COMMIT) assembly + bench 0e597ed1c (tb sha $(sha256sum $T/rtl/test/qwen_kv_die/kvattn_rel_1019/tb_kvattn_rel.sv | cut -c1-16))" > "$O/SOURCE_COMMIT.txt"
+if [ -n "$EXPL" ]; then
+  [ -z "$NET" ] || { echo "--explicit-r17 and --die-netlist are exclusive"; exit 2; }
+  E=$HERE/kv_explicit_r17; BD=$T/rtl/test/qwen_kv_die/kvattn_rel_1019; SL=$T/tools/qwen_layerbench/kvattn_rel/sources.txt
+  rm -f "$BD/kvattn_rel_dp.sv"; cp "$E/kvattn_rel_dp.sv" "$E/kvattn_rel_pv_bound.sv" "$BD/"
+  sed -i 's#qkd_kvs_attn_r16\.sv#qkd_kvs_attn_r17.sv#; s#qkd_kvs_attn_fl_r16\.sv#qkd_kvs_attn_fl_r17.sv#' "$SL"
+  echo rtl/test/qwen_kv_die/kvattn_rel_1019/kvattn_rel_pv_bound.sv >> "$SL"
+  echo "$(cat $SRC/ASM_COMMIT) assembly: current r17 KV attention (qkd_kvs_attn_r17/fl_r17) + bench 0e597ed1c + explicit genuine-archive binding b0cc8cdca (tb sha $(sha256sum $BD/tb_kvattn_rel.sv | cut -c1-16))" > "$O/SOURCE_COMMIT.txt"
+  python3 "$HERE/kv_explicit_build.py" --tree "$T" --out "$O" --archives "$EXPL" > "$O/build.out" 2>&1 || { echo BUILD_FAIL; tail -30 "$O/build.out"; exit 1; }
+else
 VJOBS=${VJOBS:-2} JOBS=${JOBS:-6} bash "$T/tools/qwen_layerbench/kvattn_rel/build.sh" "$T" "$O" > "$O/build.out" 2>&1 || { echo BUILD_FAIL; tail -30 "$O/build.log"; exit 1; }
+fi
 bash "$T/tools/qwen_layerbench/kvattn_rel/run.sh" "$T" "$O" > "$O/run.out" 2>&1 || true
 python3 "$T/tools/qwen_layerbench/kvattn_rel/collect.py" "$O" "$O/record.json" > "$O/collect.out" 2>&1 || true
 python3 "$HERE/stage_kv.collect.py" "$RUNROOT" --out "$O" --grade "$GRADE"

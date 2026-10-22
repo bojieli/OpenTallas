@@ -1,0 +1,174 @@
+{
+ "netlist": "routes/gate/work/orfs/results/asap7/opentallas_dsdv_bksel_q_asap7_ref_gate/base/1_2_yosys.v",
+ "declared_copy_nets": 27,
+ "distinct_flop_driven_copies": 27,
+ "copies": {
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[0].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044694_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 1
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[10].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044684_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 4
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[11].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044683_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 3
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[12].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044682_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 1
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[13].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044681_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 1
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[14].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044680_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 3
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[15].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044679_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 2
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[16].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044678_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 5
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[17].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044677_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 2
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[18].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044676_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 2
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[19].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044675_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 5
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[1].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044693_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 1
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[20].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044674_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 8
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[21].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044673_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 3
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[22].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044672_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 3
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[23].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044671_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 4
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[24].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044670_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 1
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[25].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044669_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 3
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[26].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044668_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 5
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[2].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044692_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 2
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[3].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044691_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 1
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[4].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044690_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 4
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[5].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044689_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 4
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[6].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044688_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 1
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[7].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044687_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 3
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[8].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044686_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 4
+  },
+  "\\u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[9].g_on.f[0]$_DFF_P_": {
+   "q_net": "_044685_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "q_fanout": 1
+  }
+ },
+ "flag_wire_loads": {
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[0].g_on.f[0][0]": 0,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[10].g_on.f[0][0]": 2,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[11].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[12].g_on.f[0][0]": 0,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[13].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[14].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[15].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[16].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[17].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[18].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[19].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[1].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[20].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[21].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[22].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[23].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[24].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[25].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[26].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[2].g_on.f[0][0]": 4,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[3].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[4].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[5].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[6].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[7].g_on.f[0][0]": 9,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[8].g_on.f[0][0]": 2,
+  "u_ot_pr_core.u_q.u_q.u_in.g_indexed_format[9].g_on.f[0][0]": 9
+ },
+ "max_flag_wire_loads": 9,
+ "max_q_loads": 8,
+ "pass_": true
+}

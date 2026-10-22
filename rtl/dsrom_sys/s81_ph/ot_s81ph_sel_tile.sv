@@ -54,15 +54,48 @@ module ot_s81ph_sel_mem2 (
     genvar b, w;
     generate for (b = 0; b < 2; b = b + 1) begin : g_b
         for (w = 0; w < 3; w = w + 1) begin : g_w
+`ifdef OT_SRAM_P192
+            // successor: same compiler shape, pitch-192 pin-limited outline (W/E faces 5.09/5.08 pins/um)
+            ot_sram_1r1w_128x256_m1_r2c2_p192_mir u_m (.clk(clk), .r_ce_in(re && raddr[7] == b), .r_addr_in(raddr[6:0]),
+`else
             ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(re && raddr[7] == b), .r_addr_in(raddr[6:0]),
+`endif
                 .rd_out(rd[b][256*w +: 256]), .w_ce_in(we && waddr[7] == b), .w_addr_in(waddr[6:0]),
                 .wd_in(wd[256*w +: 256]), .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00),
                 .cr_sel(16'd0));
         end
         always @(posedge clk) q[b] <= rd[b];
     end endgenerate
+`ifdef OT_S81PH_SEL_SUCC
+    // S81-TOPK successor (10-19): the bank select is a REGISTERED ONE-HOT pair per 16-bit group. Three KEPT b1
+    // copies (<=26 loads each) feed 37 KEPT {oh1,oh0} pairs (16 AND-OR loads each); same edge as b2, exact.
+    localparam integer NG = 37;
+    wire [2:0] b1c;
+    wire [591:0] rsel;
+    genvar c, g;
+    for (c = 0; c < 3; c = c + 1) begin : g_b1c
+        (* keep = "true" *) reg r;
+        always @(posedge clk) if (re) r <= raddr[7];
+        assign b1c[c] = r;
+    end
+    for (g = 0; g < NG; g = g + 1) begin : g_oh
+        (* keep = "true" *) reg oh0, oh1;
+        `ifdef OT_S81PH_SEL_SUCC_MUT_OH
+        // mutant witness only: group 0 selects bank 1 forever (stale one-hot)
+        always @(posedge clk) begin oh0 <= (g == 0) ? 1'b0 : ~b1c[g / 13]; oh1 <= (g == 0) ? 1'b1 : b1c[g / 13]; end
+`elsif OT_S81PH_SEL_SUCC_MUT_OH0
+        // mutant probe only: group 0 selects bank 0 forever (shows whether a stimulus reads bank 1 at all)
+        always @(posedge clk) begin oh0 <= (g == 0) ? 1'b1 : ~b1c[g / 13]; oh1 <= (g == 0) ? 1'b0 : b1c[g / 13]; end
+`else
+        always @(posedge clk) begin oh0 <= ~b1c[g / 13]; oh1 <= b1c[g / 13]; end
+`endif
+        assign rsel[16*g +: 16] = (q[0][16*g +: 16] & {16{oh0}}) | (q[1][16*g +: 16] & {16{oh1}});
+    end
+    assign rdata = rsel;
+`else
     always @(posedge clk) begin if (re) b1 <= raddr[7]; b2 <= b1; end
     assign rdata = b2 ? q[1][591:0] : q[0][591:0];
+`endif
 endmodule
 
 module dsfd_selt_q #(
@@ -93,9 +126,21 @@ module dsfd_selt_q #(
 );
     localparam integer W = 16, IW = 20, K = 512, AW = 8, KW = 10, CB = 11, EW = 37, GW = CB + 4;
     localparam integer CW = $clog2(DM + 1);
+`ifdef OT_S81PH_SEL_RST64
+    // Same two-edge release as rst_s, with 64 identical KEPT last-stage
+    // registers. ot_rst_copies partitions the flattened reset loads <=256/copy.
+    (* keep = "true" *) reg rst_a;
+    (* keep = "true" *) reg [63:0] quarter_rst__ot_rlv;
+    always @(posedge ck[0] or negedge rst[0]) begin
+        if (!rst[0]) begin rst_a <= 1'b0; quarter_rst__ot_rlv <= 64'd0; end
+        else begin rst_a <= 1'b1; quarter_rst__ot_rlv <= {64{rst_a}}; end
+    end
+    wire rst_n = quarter_rst__ot_rlv[0];
+`else
     reg [1:0] rst_s;
     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rst_n = rst_s[1];
+`endif
     // lane: pin flop (inside ot_s81ph_sel_in, STG 0) + decode
     wire b_v, b_last, h_v, act, e_fmt, e_orphan, e_link;
     wire [15:0] b_lv; wire [255:0] b_val; wire [319:0] b_idx; wire [1:0] b_q, h_q, act_q; wire [9:0] h_k; wire [7:0] h_tag;

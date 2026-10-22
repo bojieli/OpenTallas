@@ -20,6 +20,7 @@ contract.  Any change refuses.  No fault, clock, reset or status output is in RO
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from collections import defaultdict
@@ -46,14 +47,15 @@ SOURCES = {
     'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv': 'b2b1d1e72368059e32aedc071824779dcc68425284b53122fde623dae604511c',
     'rtl/qwen_sys/split_20261014/qkd_host_pc_slice.sv': '5a1cc9d9cab3dead2768d934999f938de75d3e96281328c5a1e4dc36fff2e1fa',
     'rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv': '28931dd981edaf460f2be7d928e3bea62ca8ea2cff8fa3ee72f78c36e96b460c',
-    'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv': '1214151aa45994195dc498fa0d1e3932b75f0004f4a6aa3e1a7a7248e4f61a80',
+    'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv': 'c74e71552631c487426980953cd4b803e6455b8eb671c538f1ba3c578f3f63d0',
     'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv': '713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a',
     'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv': 'c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42',
+    'rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv': 'a0db1639e4fb5448e3bcbe91761933a5c2b990733058ee5eaa1fd6877debf983',
     # KV-BIND4 10-19: the d2ds successor master qkd_d2d_static_sfm (CLOSED r7w_sfm2 view) + the attention RX codec that
     # recomputes the Z17 reserved-zero predicates from rx_payload (z17_dup)
-    SFM: 'e17a16804b4125e5c171dc92e78366edb3d73a933195b3c0a4b619477ffb50d3',
+    SFM: '2a19cdb5dd60035e51c916ae1f96617ed8d35a03f3a0778ca4e5e41644109331',
     ACTL: 'f60cafbb806ceff8b24b84a1c4bc10f97343ac60afcfcfed17236e6690e5cc9e',
-    SFM3: 'd60d50cc5bdc8495ccb001beb89b20ad6960dfadc6457d8cd3b2afa31fa71db0',   # KV-BIND7 10-20 (claude/kv-d2d3-1020 3802573e7)
+    SFM3: '7a9aaca0a003102582b3308b4491dc9e2a6445a2b7b930cb2439168f13d75443',   # KV-BIND7 10-20 (claude/kv-d2d3-1020 3802573e7)
 }
 # the generator is a tool of the GEN7 tree (not of the binder's tools dir): pinned separately, checked by this prover only
 # KV-BIND3 10-19: re-pinned (was a7063e6b..., 60ff34e3d).  Changes since: default-off OT_KV_GRP_PRIVATE0 / OT_KV_DCAL_FLT
@@ -84,7 +86,11 @@ SOURCES = {
 # kv_static_die --check RTL current at route A (d22bu), HROOT_LAND (d22hl2), and both + N32/PJ.  GEN_ASSERT below re-checked.
 # SQK-DIE 10-21: re-pin after 8c06b1180/dc3a6373f/8ed15aacb (default-off OT_KV_KRT_ES6_HOME placement block only;
 # no instance, port or chain-end text changed).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '8fb31acbf5e49cffa597fee3e8501e089d6f03942c054ed7bfa0d377d9ee68bd')
+# CODEX-K-DIE 10-21: QKC-GRP adds opt-in S6C masters/slots; legacy chain strings below stay asserted.
+# Central CTL/corridor successor changes geometry only; all admitted chain-end assertions remain checked.
+# SQC-KDIE4 10-22: re-pin after merging codex/kdie-2000-1021 (RoPE OVL / S6C, opt-in) into the sqk2 variant-C line
+# (KC_INNER / PC_SR13 / STRIP_EXTRA / SEAM_LAND_MIN1, opt-in): conflict only in the PC slot size switch (either knob).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '451274ba0c2a4384c3afe1b9085d2dcdafac999996eb04529b7bcbe1933204dd')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -249,7 +255,10 @@ if __import__('os').environ.get('OT_KV_HROOT_LAND', '0') == '1' and __import__('
 # KV-EMB4 10-20: OT_KV_EMB_N32=1 (route A base point only): the die tile file is qkd_kvs_tiles_hroot_ff_k_mu_ba_n32.sv,
 # identical to _k_mu_ba except the kvs_emb u_join #(.NATIVE32(1)) (native32 join/cal: kept per-segment controls, six-edge
 # regional reset release, 0 active cycles).  Same roles, same chain ends.
-if __import__('os').environ.get('OT_KV_EMB_N32', '0') == '1':
+# The composed S6C/SRAM point is pinned as one generated source below.
+if __import__('os').environ.get('OT_KV_EMB_N32', '0') == '1' and not (
+        __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1' and
+        __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1'):
     # KV-EMBWIN16 10-20: also on the HROOT_LAND point (_k_hl_mu_ba -> _k_hl_mu_ba_n32[_pj], kv_static_die --rtl at d22hl2
     # flags + N32 [+ PJ]; differs from _k_hl_mu_ba only in the kvs_emb u_join NATIVE32 / PIPE_JOIN parameters)
     _N32 = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv': (
@@ -291,6 +300,80 @@ if __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
         ('rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv', 'ot_qkvd_kcmd_tap', ['o_v <= i_v;', 'o_d <= i_d;'])]
 
 
+# CODEX-K-DIE 10-21: source-pinned DS/S6C point. The private group ABI DELETES
+# the duplicate token/epoch faces and the terminal o_dn face. It creates no new
+# spare output: remove those legacy roles; every surviving group output must
+# have a real reader in strict bind. PC tails/duplicates keep their source and
+# exact chain-end checks, now on the DS wrapper actually selected by bindings().
+DS_GROUP_SOURCES = {}
+if __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1':
+    import kv_static_die as _D
+    # SQ-KATTN2 10-21: the RoPE OVL point (OT_KV_ROPE=1 OT_KV_ROPE_OVL=1) is its own pinned S6C tiles file
+    _S6C_TILES = {
+        'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv':
+            'a99ef537a41999fc21b12346cda7aae28a807ee13253db504664b55ec23152fb',
+        'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c_rope_ovl.sv':
+            'ca747bcbd9d21bd27de68042e0ceb539d8e5ab54ed9f87be1d26e520c64fe04f',
+        'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_rl_sr_gs2_g6c_rope_ovl.sv':
+            '5292c0d1631cd60f5a3dd2a76370b0e40fbb10cf5310b6c85f975835f37ac606'}
+    _expected = _D.RTL_FILE
+    if _expected not in _S6C_TILES:
+        raise ValueError('open-tail DS/S6C recipe unproved: ' + _D.RTL_FILE)
+    _T0 = TILES
+    TILES = _expected
+    SOURCES.pop(_T0)
+    SOURCES[TILES] = _S6C_TILES[_expected]
+    DS_GROUP_SOURCES = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv': 'b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00', 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv': '6e1b7fd0daf74439afac1064ace66c91cb1836bf17635575aa46d3287ecacdb1'}
+    SOURCES.update(DS_GROUP_SOURCES)
+    if _D.PC_SRAM:
+        SOURCES['rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv'] = 'f5b97a6e1a23b855cc4cf4f6c52973ba6d5d117f9da85cea275a2d6cfa8bdf53'
+        SOURCES['rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv'] = '11d27a69443b998136e424f93bbac4c5f986734f20c262c31f41b1087b54702e'
+    GRP = ()
+    for _role in ('tok_dup', 'odn_tail'):
+        ASSERT.pop(_role)
+        GEN_ASSERT.pop(_role)
+    ROLES = {key: value for key, value in ROLES.items()
+             if value[0] not in ('tok_dup', 'odn_tail')}
+    for _role, _items in ASSERT.items():
+        ASSERT[_role] = [(TILES if rel == _T0 else rel, mod, list(subs))
+                         for rel, mod, subs in _items]
+    # SQ-KATTN2 10-21 (captured998 strict report): the private ABI DOES leave two exact faces without a die reader.
+    # emb_tok_dead: qkd_kvs_emb px_tok / px_tep are pure wire copies of its own d2d__svc input (its row TX consumes the
+    #   same bits itself); their only die reader was the deleted group x__tok / x__tep pass (DS_GROUP_SOURCES check) and
+    #   the D2D end reads engine_result_token / _tag from the hsvc trunk directly.
+    # odn_h_slice: the four chain-end s6c groups feed an H group whose private i_ctl is [193:0]; the generator plans that
+    #   o_dn transport at 194 b (kv_static_die GRP_H_CTL_PRIVATE), so o_dn[270:194] of exactly those instances is the
+    #   control word's private tail (a wire rotation of i_ctl, no logic): declared, every other o_dn bit must be read.
+    ASSERT['emb_tok_dead'] = [(TILES, 'qkd_kvs_emb', ['assign px_tok = d2d__svc[109:92];',
+                                                      'assign px_tep = d2d__svc[89:74];',
+                                                      '.fill_token(d2d__svc[109:92])', '.fill_epoch(d2d__svc[89:74])'])]
+    GEN_ASSERT['emb_tok_dead'] = []
+    ASSERT['odn_h_slice'] = [
+        ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv', 'qkd_kvs_grp_h_s6c', ['input wire [193:0] i_ctl;']),
+        ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv', 'qkd_kvs_grp_s6c',
+         ['input wire [270:0] i_ctl;', 'output wire [270:0] o_dn;'])]
+    GEN_ASSERT['odn_h_slice'] = ['GRP_H_CTL_PRIVATE = 194', "m.setdefault('narrow_src', {})[bid] = (dinst, dport, bits)"]
+    _emb_master = _D.KIND_MASTER['emb']
+    if _D.ROPE:
+        # RoPE exports the same token and epoch twice: dedicated PC-pass faces
+        # and the context service consumed by CTL. S6C removes the PC passes.
+        ASSERT['emb_tok_dead'] = [(TILES, _emb_master, [
+            'assign px_tok = w_rope_token;', 'assign px_tep = w_rope_epoch;',
+            'assign o_ctx_svc = {d2d__svc[173:110],w_rope_token,d2d__svc[91:90],w_rope_epoch,d2d__svc[73:25],w_rope_start,d2d__svc[23:0]};'])]
+        GEN_ASSERT['emb_tok_dead'] = ["ctl['ports']['d2d__svc'].update(cls='bundle', peer='kvs_emb')"]
+    ROLES[(_emb_master, 'px_tok')] = ('emb_tok_dead', 'DUP')
+    ROLES[(_emb_master, 'px_tep')] = ('emb_tok_dead', 'DUP')
+    ROLES[('qkd_kvs_grp_s6c', 'o_dn')] = ('odn_h_slice', 'SLICE')
+    WHY['emb_tok_dead'] = ('qkd_kvs_emb px_tok/px_tep = d2d__svc[109:92]/[89:74] wire copies of its own input (u_rowtx '
+                           'consumes the same bits); the DS private group ABI deleted their only reader (x__tok/x__tep); '
+                           'the D2D end reads engine_result_token/_tag from the hsvc trunk')
+    if _D.ROPE:
+        WHY['emb_tok_dead'] = ('RoPE px_tok/px_tep duplicate w_rope_token/w_rope_epoch in o_ctx_svc; '
+                               'CTL consumes that service word; S6C removed only the redundant PC-pass faces')
+    WHY['odn_h_slice'] = ('o_dn[270:194] of a chain-end s6c group: the H group reads the private i_ctl[193:0] only; '
+                          'the generator plans that transport at 194 b (wire rotation tail, no logic)')
+
+
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -316,6 +399,13 @@ def check_sources(root, pins=None):
     gtext = (Path(root) / GENERATOR[0]).read_text()
     if sha(Path(root) / GENERATOR[0]) != gwant:
         raise ValueError('generator changed; re-prove chain ends: ' + GENERATOR[0])
+    for rel in DS_GROUP_SOURCES:
+        body = module_body((Path(root) / rel).read_text(), Path(rel).stem)
+        for port in ('x__tok', 'x__tep', 'y__tok', 'y__tep'):
+            if re.search(r'\b' + port + r'\b', body):
+                raise ValueError('DS private group face reappeared: ' + port)
+        if Path(rel).stem == 'qkd_kvs_grp_h_s6c' and re.search(r'\bo_dn\b', body):
+            raise ValueError('DS terminal group o_dn reappeared')
     for role, items in ASSERT.items():
         for rel, mod, subs in items:
             body = module_body((Path(root) / rel).read_text(), mod)
@@ -375,7 +465,11 @@ def derive(die_v, root=ROOT, existing=None, pins=None):
 
     def tail_name_ok(inst, prefix):
         mt = re.fullmatch(prefix + r'_(WS|WN|ES|EN)_(\d+)', inst)
-        return bool(mt) and int(mt.group(2)) == (31 if mt.group(1)[1] == 'S' else 0)
+        # SQC-KDIE2 10-22: OT_KV_KC_INNER=1 wires the S-stack kc kick chain like the N stacks (kick pc31 -> pc0): every
+        # kvpc ko chain ends at pc0.  SQC-KDIE3 10-22: ONLY the kc chain (prefix kvpc); the HOST slice boot / ingest chains
+        # (hsl bgo / fo) are wired by the HOST generator and keep their S-stack end at slice 31 (sqcpcm PREP refused hsl_tail)
+        kc_inner = prefix == 'kvpc' and os.environ.get('OT_KV_KC_INNER', '0') == '1'
+        return bool(mt) and int(mt.group(2)) == (31 if (mt.group(1)[1] == 'S' and not kc_inner) else 0)
 
     def traces_to(net_bits, master, port):
         """every bit follows same-index relay payload edges back to master.port"""
@@ -416,6 +510,43 @@ def derive(die_v, root=ROOT, existing=None, pins=None):
             ok = bool(rows) and all(c.get(port_x) and traces_to(P.expr_bits(c[port_x], nets), 'qkd_kvs_emb', src)
                                     for _, _, c in rows)
             why = 'x input does not trace through relays to qkd_kvs_emb.' + src
+        elif role == 'emb_tok_dead':
+            ok = bool(rows) and not others and \
+                not any(c.get(x) for r_ in ('qkd_kvs_grp_s6c', 'qkd_kvs_grp_h_s6c') for _, _, c in by_master.get(r_, [])
+                        for x in ('x__tok', 'x__tep'))
+            why = 'a qkd_kvs_emb px_tok/px_tep face is read on the die, or a group still takes x__tok/x__tep'
+        elif role == 'odn_h_slice':
+            hmod = width_mods.get('qkd_kvs_grp_h_s6c')
+            hw = hmod.width('i_ctl', hmod.env({})) if hmod else None
+            nh = len(by_master.get('qkd_kvs_grp_h_s6c', []))
+            tails, bad = [], []
+            for inst, _p, c in rows:
+                bits = P.expr_bits(c.get(pn, ''), nets) if c.get(pn) else None
+                if not bits or len(bits) != 271:
+                    bad.append(inst)
+                    continue
+                lsb = list(reversed(bits))                  # lsb[i] = o_dn[i]
+                rd_ = [b[0] == 'CONST' or uses[tuple(b)] >= 2 for b in lsb]
+                if all(rd_):
+                    continue
+                if hw == 194 and all(rd_[:194]) and not any(rd_[194:]):
+                    tails.append(inst)
+                else:
+                    bad.append(inst)
+            ok = hw == 194 and not bad and len(tails) == nh == 4
+            why = f'o_dn read pattern is not exactly [193:0] on the {nh} H-feeding chain ends (tails {len(tails)}, bad {bad[:4]})'
+            if ok:
+                for inst in tails:
+                    ent = entries.setdefault(inst, dict(master=m, reason='', ports={}))
+                    if ent.get('master') != m:
+                        raise ValueError(f'{inst}: existing pad entry names another master')
+                    ent['ports'][pn] = [[194, 270]]
+                    ent['reason'] = ((ent['reason'] + '; ') if ent['reason'] else '') + \
+                        f'KV-FUNC-OPENS SLICE {pn}[270:194]: ' + WHY[role]
+                    declared[f'{m}.{pn}'].append(inst)
+            else:
+                refused[f'{m}.{pn}'] = why
+            continue
         elif role in ('z17_dup', 'z17_dup_sfm3'):
             # the duplicated source word itself must leave the d2d end and be read on the die
             ok = bool(rows) and all(connected_read(c, 'rx_payload') for _, _, c in rows)
