@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "scope": "Source/API construction and refusal checks only; no DUT runtime or measured phase authority",
+  "helper_sha256": "7bfd2080368d10951f52d0979961ba5709a4489874e7c7a360a1675ee174ec5f",
+  "checks": [
+    {
+      "name": "aliased_rows",
+      "refused": true,
+      "reason": "distinct actual nine-bit pinned rows required"
+    },
+    {
+      "name": "source_outside16",
+      "refused": true,
+      "reason": "only low-half G0 sixteen-word staging supported"
+    },
+    {
+      "name": "rf_overflow",
+      "refused": true,
+      "reason": "RF address is exactly eight bits"
+    },
+    {
+      "name": "destination_outside_sector",
+      "refused": true,
+      "reason": "one dense eight-word destination sector per book"
+    },
+    {
+      "name": "missing_actual_phasebook",
+      "refused": true,
+      "reason": "actual caller phase book required"
+    },
+    {
+      "name": "actual_compiler_pack_and_reducer_fields",
+      "pass": true
+    },
+    {
+      "name": "existing_Prog_reducer_RF_drain_packers_and_native_lane_addresses",
+      "pass": true
+    }
+  ],
+  "compiler_top_sha256": "4a423adb15c29316a53fae23ee6baa2ec384cbd46fb80f064e952c8e83018fee"
+}
