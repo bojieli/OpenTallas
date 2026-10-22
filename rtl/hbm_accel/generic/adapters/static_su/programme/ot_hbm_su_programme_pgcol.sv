@@ -35,7 +35,8 @@
 // one command column: packed index (INDEX_PACK 16) + DB dictionary banks + 256 command bits
 module ot_hbm_su_programme_pgcol #(
   parameter integer DB=3, EDGES=7111, CFGR=1, MUT=0, PMUT=0,
-  parameter integer CPIN=0, RRLY=0, FADV=1   // NATIVE-FIX3 (S/L masters: 1, 1, 2); defaults = the r5 leaf
+  parameter integer CPIN=0, RRLY=0, FADV=1,  // NATIVE-FIX3 (S/L masters: 1, 1, 2); defaults = the r5 leaf
+  parameter integer NCX=0                    // HBMb/IDXSU-PS15: 1 = ot_hbm_su_programme_nc producer (native census); 0 = r5
 )(input logic clk, rst_n,
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
@@ -44,11 +45,13 @@ module ot_hbm_su_programme_pgcol #(
   localparam integer MAC=IB+DB;
   initial if(MAC>31) $fatal(1,"pgcol: local bank space is 5 bits (31 = reject)");
   // reset: RRLY 1 = the port drives only the relay; region 0 = pin stages, region 1 = the producer
-  wire [1:0] rl;
+  // NCX 1: regions 1..5 = the producer's five equal-age reset groups (ot_hbm_su_programme_nc rst_x)
+  localparam integer NRL=(NCX!=0)?6:2;
+  wire [NRL-1:0] rl;
   generate if(RRLY!=0) begin:g_rr
-    ot_rst_relay #(.REGIONS(2),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rl));
+    ot_rst_relay #(.REGIONS(NRL),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rl));
   end else begin:g_nrr
-    assign rl={2{rst_n}};
+    assign rl={NRL{rst_n}};
   end endgenerate
   wire rst_c=rl[0];
   // configuration pin stage (CPIN 1, +1 configuration edge) on the control pins cfg_we/cfg_any/cfg_bank. cfg_row/
@@ -77,11 +80,19 @@ module ot_hbm_su_programme_pgcol #(
   // single-producer rule): present it to this producer as an out-of-range write (sets fault, writes nothing)
   wire p_we=q_we | (q_any & s_in);
   wire [15:0] p_bank=q_we ? {11'd0,q_bank} : 16'hffff;
+  generate if(NCX==0) begin:g_p
   ot_hbm_su_programme #(.LINE_BITS(256),.EDGES(EDGES),.COLS(1),.INDEX_PACK(16),.DICT_BANKS(DB),.MACROS(MAC),
     .PIPE(2),.CFGR(CFGR),.FADV(FADV),.MUT(MUT)) u_p(
     .clk(clk),.rst_n(rl[1]),.clk_macro({MAC{clk}}),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
     .start(s_in),.length(l_in),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),
     .command(command));
+  end else begin:g_pn
+  ot_hbm_su_programme_nc #(.EDGES(EDGES),.INDEX_PACK(16),.DICT_BANKS(DB),.MACROS(MAC),.CFGR(CFGR),.FADV(FADV),.MUT(MUT),
+    .IOG(4),.DOG(2),.RS(16),.NAI(4),.NAD(16),.NRX(5)) u_p(
+    .clk(clk),.rst_x(rl[NRL-1:1]),.clk_macro({MAC{clk}}),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
+    .start(s_in),.length(l_in),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),
+    .command(command));
+  end endgenerate
 endmodule
 
 // the S and L leaf masters (hardened once each)
@@ -97,7 +108,7 @@ module ot_hbm_su_programme_pgcol_l(
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
   output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [255:0] command);
-  ot_hbm_su_programme_pgcol #(.DB(13),.CFGR(2),.CPIN(1),.RRLY(1),.FADV(2)) u_c(.*);
+  ot_hbm_su_programme_pgcol #(.DB(13),.CFGR(2),.CPIN(1),.RRLY(1),.FADV(2),.NCX(1)) u_c(.*);   // PS15: NCX producer
 endmodule
 
 // head: configuration pin stage + column decode, sticky fault OR (+ leaf valid lockstep check)
@@ -181,7 +192,8 @@ endmodule
 module ot_hbm_su_programme_pslice_c5 #(
   parameter integer SB=2422, NC=(SB+255)/256,
   parameter [32*NC-1:0] DICT_CAP={32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3},
-  parameter integer MUT=0, MUT_COL=1
+  parameter integer MUT=0, MUT_COL=1,
+  parameter integer NCX=0   // PS15 bench switch: 1 = the L columns (DB 13) use the NCX producer as pgcol_l does
   // MUT (bench) 4: leaf reset relay bypassed; 5: leaf configuration pin stage dropped; 6: head export registers
   // dropped (o_we combinational); 7: head l_fault pin registers dropped; 8: head reset relay bypassed
 )(input logic clk, rst_n,
@@ -200,7 +212,7 @@ module ot_hbm_su_programme_pslice_c5 #(
     // MUT 1: column MUT_COL one start edge late (phase); MUT 3: that column's final dictionary mux on the live hit
     // CPIN/RRLY/FADV = the S/L leaf masters' values
     ot_hbm_su_programme_pgcol #(.DB((CAP<=3)?3:13),.CFGR((CAP<=3)?1:2),.PMUT(MUT==1 && c==MUT_COL),
-      .CPIN(MUT!=5),.RRLY(MUT!=4),.FADV(2),
+      .CPIN(MUT!=5),.RRLY(MUT!=4),.FADV(2),.NCX((CAP>3)?NCX:0),
       .MUT((MUT==3 && c==MUT_COL)?1:0)) u_c(
       .clk(clk),.rst_n(rst_n),.cfg_we(we[c]),.cfg_any(any),.cfg_bank(bank),.cfg_row(row),.cfg_data(data),
       .start(start),.length(length),.busy(l_busy[c]),.valid(l_valid[c]),.done(l_done[c]),.fault(l_fault[c]),
@@ -208,4 +220,218 @@ module ot_hbm_su_programme_pslice_c5 #(
   end
   assign busy=l_busy[0]; assign valid=l_valid[0]; assign done=l_done[0]; assign edge_index=l_edge[15:0];
   assign command=cmd[SB-1:0];
+endmodule
+
+// =====================================================================================================================
+// HBMb/IDXSU-PS15 2026-10-21 NCX (native-census successor of the PIPE 2 packed leaf producer; opt-in, pgcol NCX 1 only;
+// NCX 0 = every module above unchanged).  The closed pgcol_l r5 RTL refuses the mapped native census (limit 32 loads,
+// ep9 hbm_su_pgcol_l_r6a-20261021-191331: max 257, 76 drivers): mem_r4 select copies sl drive 256/RS x OG mux pins
+// (129-257), hit copies h2 64, the packed word select ea 257/129, the command valid copies vd_c 64-98, the dictionary
+// read enable vi_c 61 (+ its decode nets 33-52) and the producer reset 34.  Cycle-identical restructure:
+//   * ot_hbm_su_programme_mem_r5 = mem_r4 GRP 0 with ONE-HOT select registers per (output register, RS slice) (each
+//     bit drives 256/RS AND pins) and the read address / read enable taken from NA KEPT COPIES of their source
+//     registers (each copy serves its share of the slots and macros);
+//   * ot_hbm_su_programme_nc = ot_hbm_su_programme PIPE 2 packed (one column) with kept copies of pc/issue (index
+//     address/enable), of the registered index word ixw (dictionary address) and of its valid vi, one ea copy per
+//     index-word bit, and NRX equal-age reset inputs (pgcol's ot_rst_relay regions) spread over the reset flops.
+// Every copy is loaded with exactly the value of its master on the same edge, so busy/valid/done/fault/edge_index/
+// command are cycle-identical to ot_hbm_su_programme #(PIPE 2) (benches: pgcol_run.sh NCX=1, flat14 == pslice_c5).
+module ot_hbm_su_programme_mem_r5 #(
+  parameter integer BANKS=1, OG=2, RS=16, NA=4, MUT=0
+)(input logic clk, input logic [BANKS-1:0] clk_macro, input logic [NA-1:0] ren_c, input logic [16*NA-1:0] addr_c,
+  input logic [BANKS-1:0] w_ce, input logic [7*BANKS-1:0] w_row, input logic [256*BANKS-1:0] w_data,
+  output logic [255:0] data);
+  localparam integer LOG=(OG<=1)?0:$clog2(OG);
+  localparam integer NOG=(BANKS+OG-1)/OG;
+  localparam integer SW=256/RS;
+`ifndef SYNTHESIS
+  initial if((1<<LOG)!=OG || SW*RS!=256 || BANKS<1 || NA<1) $fatal(1,"mem_r5: OG power of two, RS divides 256");
+`endif
+  wire [256*BANKS-1:0] q;
+  logic [255:0] og_q [0:NOG-1];
+  (* keep *) logic [RS-1:0] h1 [0:NOG-1];
+  (* keep *) logic [RS-1:0] h2 [0:NOG-1];
+  genvar o, r, bank;
+  generate for(o=0;o<NOG;o=o+1) begin:og
+    localparam integer NB=((o+1)*OG<=BANKS)?OG:(BANKS-o*OG);
+    for(r=0;r<RS;r=r+1) begin:rs
+      localparam integer K=((o*RS+r)*NA)/(NOG*RS);
+      wire ren_k=ren_c[K];
+      wire [8:0] ba=addr_c[16*K+7+:9];
+      if(LOG>0) begin:lsel
+        (* keep *) logic [NB-1:0] oh;
+        integer b;
+        always_ff @(posedge clk) if(ren_k) for(b=0;b<NB;b=b+1) oh[b] <= (ba[LOG-1:0]==b[LOG-1:0]);
+        logic [SW-1:0] m;
+        integer bb;
+        always_comb begin
+          m='0;
+          for(bb=0;bb<NB;bb=bb+1) m=m | (q[256*(o*OG+bb)+SW*r+:SW] & {SW{oh[bb]}});
+        end
+        always_ff @(posedge clk) og_q[o][SW*r+:SW] <= m;
+      end else begin:nsel
+        always_ff @(posedge clk) og_q[o][SW*r+:SW] <= q[256*o+SW*r+:SW];
+      end
+      always_ff @(posedge clk) if(ren_k) h1[o][r] <= (ba>>LOG)==o && ba<BANKS;
+      always_ff @(posedge clk) h2[o][r] <= h1[o][r];
+    end
+  end endgenerate
+  integer mo, rr;
+  always_comb begin
+    data='0;
+    for(mo=0;mo<NOG;mo=mo+1) for(rr=0;rr<RS;rr=rr+1)
+      data[SW*rr+:SW]=data[SW*rr+:SW] | (og_q[mo][SW*rr+:SW] & {SW{(MUT==1)?h1[mo][rr]:h2[mo][rr]}});
+  end
+  generate for(bank=0;bank<BANKS;bank=bank+1) begin:g
+    localparam integer KB=(bank*NA)/BANKS;
+    wire [255:0] bank_q;
+    assign q[256*bank+:256]=bank_q;
+    ot_sram_1r1w_128x256_m1_r2c2 mem(
+      .clk(clk_macro[bank]), .r_ce_in(ren_c[KB] && addr_c[16*KB+7+:9]==bank), .r_addr_in(addr_c[16*KB+:7]),
+      .rd_out(bank_q), .w_ce_in(w_ce[bank]), .w_addr_in(w_row[7*bank+:7]),
+      .wd_in(w_data[256*bank+:256]), .w_mask_in({256{1'b1}}),
+      .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
+  end endgenerate
+endmodule
+
+module ot_hbm_su_programme_nc #(
+  parameter integer EDGES=7111, INDEX_PACK=16, DICT_BANKS=13,
+  parameter integer INDEX_BANKS=(EDGES+128*INDEX_PACK-1)/(128*INDEX_PACK),
+  parameter integer MACROS=INDEX_BANKS+DICT_BANKS,
+  parameter integer MUT=0, IOG=4, DOG=2, RS=16, CFGR=4, FADV=0,
+  parameter integer NAI=4, NAD=16, NRX=5
+)(input logic clk, input logic [NRX-1:0] rst_x, input logic [MACROS-1:0] clk_macro,
+  input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
+  input logic [255:0] cfg_data,
+  input logic start, input logic [15:0] length,
+  output logic busy, valid, done, fault,
+  output logic [15:0] edge_index,
+  output logic [255:0] command);
+  localparam integer TOTAL_BANKS=INDEX_BANKS+DICT_BANKS;
+  localparam integer INDEX_SHIFT=$clog2(INDEX_PACK);
+  localparam integer XP=4;   // PIPE 2 packed: index +3 (og reg, word select, indices) + dictionary +1
+`ifndef SYNTHESIS
+  initial if(MACROS!=TOTAL_BANKS || INDEX_PACK<2 || INDEX_PACK>16 || NRX!=5 || FADV<0 || FADV>XP-1)
+    $fatal(1,"programme_nc: packed one-column PIPE 2 leaf only, NRX 5");
+`endif
+  // reset groups (equal-age copies): 0 main control, 1 valid chain + index copies, 2 dictionary read-enable copies,
+  // 3 command valid copies, 4 per-bank write enables
+  wire rst_n=rst_x[0];
+  logic issue,v1,v2;
+  logic [15:0] pc, count, e1,e2;
+  logic busy_i, fault_i;
+  wire [255:0] index_rows;
+  logic nb;
+  logic c_v; logic [15:0] c_e;
+  always_comb begin
+    nb=busy_i;
+    if(start && !(busy_i || length==0 || length>EDGES || cfg_we)) nb=1;
+    if(c_v && c_e==count-1) nb=0;
+  end
+  wire [255:0] templates;
+  wire write_enable=cfg_we && !busy_i && cfg_bank<TOTAL_BANKS;
+  wire accept=start && !(busy_i || length==0 || length>EDGES || cfg_we);
+  wire last=(pc==count-1);
+  // kept copies of the index read address / enable (pc / issue)
+  (* keep *) logic [15:0] pc_k [0:NAI-1];
+  (* keep *) logic [NAI-1:0] issue_k;
+  wire [16*NAI-1:0] ia_c; 
+  genvar k;
+  generate for(k=0;k<NAI;k=k+1) begin:g_ik
+    always_ff @(posedge clk) begin
+      if(!rst_x[1]) issue_k[k]<=0;
+      else begin
+        if(accept) begin issue_k[k]<=1; pc_k[k]<=0; end
+        if(issue) begin if(last) issue_k[k]<=0; else pc_k[k]<=pc_k[k]+1; end
+      end
+    end
+    assign ia_c[16*k+:16]=pc_k[k] >> INDEX_SHIFT;
+  end endgenerate
+  // configuration write port (as ot_hbm_su_programme PIPE 2)
+  logic [TOTAL_BANKS-1:0] wce_r;
+  (* keep *) logic [6:0] wrow_r [0:CFGR-1];
+  (* keep *) logic [255:0] wdat_r [0:CFGR-1];
+  logic [6:0] row_late;
+  always_ff @(posedge clk) row_late <= cfg_row;
+  integer wb, wk;
+  always_ff @(posedge clk) begin
+    if(!rst_x[4]) wce_r<='0;
+    else for(wb=0;wb<TOTAL_BANKS;wb=wb+1) wce_r[wb] <= write_enable && cfg_bank==wb;
+    for(wk=0;wk<CFGR;wk=wk+1) begin
+      wrow_r[wk] <= (MUT==3 && wk==CFGR-1) ? row_late : cfg_row;
+      wdat_r[wk] <= cfg_data;
+    end
+  end
+  wire [7*TOTAL_BANKS-1:0] w_row; wire [256*TOTAL_BANKS-1:0] w_data;
+  genvar wbg;
+  generate for(wbg=0;wbg<TOTAL_BANKS;wbg=wbg+1) begin:wmap
+    assign w_row[7*wbg+:7]=wrow_r[(wbg*CFGR)/TOTAL_BANKS];
+    assign w_data[256*wbg+:256]=wdat_r[(wbg*CFGR)/TOTAL_BANKS];
+  end endgenerate
+  ot_hbm_su_programme_mem_r5 #(.BANKS(INDEX_BANKS),.OG(IOG),.RS(RS),.NA(NAI),.MUT(MUT==1)) u_ix(
+    .clk(clk),.clk_macro(clk_macro[0+:INDEX_BANKS]),.ren_c(issue_k),.addr_c(ia_c),
+    .w_ce(wce_r[0+:INDEX_BANKS]),.w_row(w_row[0+:7*INDEX_BANKS]),.w_data(w_data[0+:256*INDEX_BANKS]),.data(index_rows));
+  // index path: v1 -> va (og registers) -> vb (word select ixw) -> vi (dictionary read) ; vd = command stage
+  logic va, vb, vi, vd; logic [15:0] ea, eb, ei, ed;
+  logic [15:0] ixw;
+  (* keep *) logic [INDEX_SHIFT-1:0] ea_k [0:15];
+  (* keep *) logic [15:0] ix_k [0:NAD-1];
+  (* keep *) logic [NAD-1:0] vi_k;
+  (* keep *) logic [RS-1:0] vd_c;
+  genvar j;
+  generate for(j=0;j<16;j=j+1) begin:g_ea
+    always_ff @(posedge clk) begin ea_k[j]<=e1[INDEX_SHIFT-1:0]; ixw[j]<=index_rows[16*ea_k[j]+j]; end
+  end endgenerate
+  integer kd;
+  always_ff @(posedge clk) for(kd=0;kd<NAD;kd=kd+1) ix_k[kd]<=ixw;
+  always_ff @(posedge clk) begin ea<=e1; eb<=ea; ei<=eb; ed<=e2; end
+  always_ff @(posedge clk) if(!rst_x[1]) begin va<=0; vb<=0; vi<=0; vd<=0; end
+    else begin va<=v1; vb<=va; vi<=vb; vd<=v2; end
+  always_ff @(posedge clk) if(!rst_x[2]) vi_k<='0; else vi_k<={NAD{vb}};
+  always_ff @(posedge clk) if(!rst_x[3]) vd_c<='0; else vd_c<={RS{v2}};
+  wire [16*NAD-1:0] da_c;
+  generate for(k=0;k<NAD;k=k+1) begin:g_dk
+    assign da_c[16*k+:16]=ix_k[k];
+  end endgenerate
+  ot_hbm_su_programme_mem_r5 #(.BANKS(DICT_BANKS),.OG(DOG),.RS(RS),.NA(NAD),.MUT(MUT==1)) u_dt(
+    .clk(clk),.clk_macro(clk_macro[INDEX_BANKS+:DICT_BANKS]),.ren_c(vi_k),.addr_c(da_c),
+    .w_ce(wce_r[INDEX_BANKS+:DICT_BANKS]),.w_row(w_row[7*INDEX_BANKS+:7*DICT_BANKS]),
+    .w_data(w_data[256*INDEX_BANKS+:256*DICT_BANKS]),.data(templates));
+  wire d_ren=vi; wire [15:0] d_e=ei;
+  assign c_v=vd; assign c_e=ed;
+  logic [XP-1:0] busy_d, fault_d; logic busy_q;
+  always_ff @(posedge clk) if(!rst_x[1]) begin busy_d<='0; fault_d<='0; busy_q<=0; end
+    else begin
+      busy_d<={busy_d[XP-2:0],busy_i}; fault_d<={fault_d[XP-2:0],fault_i};
+      busy_q<=(MUT==2)?nb:(nb && busy_d[XP-2]);
+    end
+  assign busy=busy_q;
+  assign fault=fault_d[XP-1-FADV];
+  always_ff @(posedge clk) begin
+    if(!rst_n) begin
+      busy_i<=0; issue<=0; valid<=0; done<=0; fault_i<=0;
+      v1<=0; v2<=0; edge_index<=0;
+    end else begin
+      valid<=c_v; v1<=issue; v2<=d_ren; done<=0;
+      if(cfg_we && (busy_i || cfg_bank>=TOTAL_BANKS)) fault_i<=1;
+      busy_i<=nb;
+      if(start) begin
+        if(busy_i || length==0 || length>EDGES || cfg_we) fault_i<=1;
+        else begin issue<=1; pc<=0; count<=length; end
+      end
+      if(issue) begin
+        e1<=pc;
+        if(pc==count-1) issue<=0; else pc<=pc+1;
+      end
+      if(d_ren) e2<=d_e;
+      if(c_v) begin
+        edge_index<=c_e;
+        if(c_e==count-1) done<=1;
+      end
+    end
+  end
+  genvar cb;
+  generate for(cb=0;cb<256;cb=cb+1) begin:cbit
+    always_ff @(posedge clk) command[cb] <= vd_c[cb/(256/RS)] & templates[cb];
+  end endgenerate
 endmodule
