@@ -84,7 +84,10 @@
   },
   "source_files": {
     "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee",
-    "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991"
+    "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv": "a60a2419fdf85e3f684effb0f0a850afe895dd2f8dfddaf9b2cc393ee11c8870"
   },
   "native_shard_contract": {
     "logical_programme_tp": 96,
@@ -153,5 +156,37 @@
     "Compiled fixture commit_serial as observed native commit",
     "RF register commit as VM macro commit"
   ],
-  "next_action": "Bind exact selected caller configuration and observed native write/readable edges from token/hbm producer minimum; require explicit per-shard ownership and retained-through edge before aggregation readiness."
+  "next_action": "Bind exact selected caller configuration and observed native write/readable edges from token/hbm producer minimum; require explicit per-shard ownership and retained-through edge before aggregation readiness.",
+  "selected_local_vm_path": {
+    "source_edges": [
+      "su_SW0.lg_wq[0:281] -> vmb_SW0.wq0",
+      "su_SW0.lg_wq[281:562] -> vmb_SW1.wq0"
+    ],
+    "echo_edges": [
+      "vmb_SW0.wq_done0 -> su_SW0.lg_w_done[0]",
+      "vmb_SW1.wq_done0 -> su_SW0.lg_w_done[1]"
+    ],
+    "selected_bank_master": "hfd_vms_bank_native_q0_faces",
+    "local_su_owner_slot": 0,
+    "packet_owner_slot": 4,
+    "native_stage_model": {
+      "scope": "Source-derived expectation only, under aligned stream face/core/macro clocks; no observed or routed age.",
+      "external_wq0_face_sample": 0,
+      "body_input_sample": 1,
+      "S1": 2,
+      "macro_pins": 3,
+      "actual_macro_commit": 4
+    },
+    "actual_observer_requirements": [
+      "source and slot identity",
+      "legal sector/address",
+      "exact nonzero word/byte mask",
+      "no competing active write source or sticky fault",
+      "actual u_a/u_c data macro write enable and u_b check macro write enable, matching data/masks",
+      "actual clock epoch and corresponding macro edge",
+      "subsequent overwrite ownership/retention calendar"
+    ],
+    "readable_edge": null,
+    "warning": "Done pipeline validity alone does not prove a physical word write: illegal addresses can suppress all masks. Same-edge read/write collision semantics are not credited; earliest readable edge requires actual minimum observer."
+  }
 }
