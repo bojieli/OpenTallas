@@ -140,8 +140,30 @@ def test_ingress_order_and_guard():
     assert RL.guard_floor([0, 1], eff, lambda s: s == 'hs') == {}
 
 
+def test_equal_age_land():
+    """HBMc/TOKEN 10-22: r18 pgp_NE.command (rf0076) stations N 55/44/25/14 got station-equal pads 0/11/30/41 -> landed
+    edge ages 30/35/45/50 (spread 20).  EQUAL-AGE-LAND: every sink at the deepest sink's zero-pad age (30)."""
+    sdep = {'su_NE0': 55, 'su_NE2': 44, 'su_NE3': 25, 'su_NE1': 14}
+    st = RL.equal_age_land_stages(sdep, lambda s: None)
+    assert st == {'su_NE0': 1, 'su_NE2': 7, 'su_NE3': 16, 'su_NE1': 22}, st   # pads 0/6/15/21
+    land = {s: -(-n // 2) + 1 + 1 + (st[s] - 1) for s, n in sdep.items()}
+    assert set(land.values()) == {30}, land
+    # legacy station-equal pads reproduce the r18 ages and are flagged
+    legacy = {('rf0076', s): -(-n // 2) + 1 + 1 + p for (s, n), p in zip(sdep.items(), (0, 11, 30, 41))}
+    assert sorted(legacy.values()) == [30, 35, 45, 50]
+    ages, probs = RL.equal_age_land_check(legacy, {'rf0076'})
+    assert len(probs) == 1 and probs[0].startswith('EQUAL-AGE-LAND rf0076'), probs
+    ages, probs = RL.equal_age_land_check({('rf0076', s): v for s, v in land.items()}, {'rf0076'})
+    assert probs == [] and set(ages['rf0076'].values()) == {30}
+    # a known land-plan E enters the age: E 2 on the deepest sink raises every other sink by one
+    st2 = RL.equal_age_land_stages(sdep, lambda s: 2 if s == 'su_NE0' else None)
+    assert st2 == {'su_NE0': 1, 'su_NE2': 8, 'su_NE3': 17, 'su_NE1': 23}, st2
+    # odd/even station parity: N 3 and N 4 land on the same edge (ceil), N 5 one later
+    assert RL.equal_age_land_stages({'a': 3, 'b': 4, 'c': 5}, lambda s: None) == {'a': 2, 'b': 2, 'c': 1}
+
+
 if __name__ == '__main__':
     for t in (test_classes, test_port_key, test_cfg_launch_order, test_launch_floor, test_ingress_obs,
-              test_ingress_order_and_guard):
+              test_ingress_order_and_guard, test_equal_age_land):
         t()
     print('CFG_LEAF_NO_PAD tests PASS')

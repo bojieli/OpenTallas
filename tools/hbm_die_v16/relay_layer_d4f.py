@@ -123,6 +123,27 @@ def guard_floor(words, eff, is_guard):
     return out
 
 
+def equal_age_land_stages(sdep, e_of):
+    """HBMc/TOKEN 10-22 EQUAL-AGE-LAND: sink-root stages (landing + pads) of a LANDED equal_age_pad bus.  A landed sink with
+    N half-cycle stations sees ceil(N/2) + 1 + E + pads edges; every sink gets the deepest sink's zero-pad age.
+    sdep {sink: N}; e_of(sink) -> E or None (NO_E: the diagnostic E 1 model).  Returns {sink: stages >= 1}."""
+    lat0 = {s_: -(-n_ // 2) + 1 + (e_of(s_) if e_of(s_) is not None else 1) for s_, n_ in sdep.items()}
+    tgt = max(lat0.values())
+    return {s_: 1 + tgt - v_ for s_, v_ in lat0.items()}
+
+
+def equal_age_land_check(model, buses):
+    """{bus: {sink: age}} of the checked buses and one EQUAL-AGE-LAND problem per bus whose landed sink ages differ.
+    model {(bus, sink): age} (relay layer _model)."""
+    ages = collections.defaultdict(dict)
+    for (b_, s_), v_ in model.items():
+        if b_ in buses:
+            ages[b_][s_] = v_
+    probs = [f'EQUAL-AGE-LAND {b_}: unequal landed sink ages {sorted(v_.items(), key=lambda t: t[1])[:6]}'
+             for b_, v_ in sorted(ages.items()) if len(set(v_.values())) > 1]
+    return dict(ages), probs
+
+
 def launch_floor(words, launches, eff):
     """uniform pad (equal age kept) each launch row needs so that its age >= the cfg word age at every shared sink.
     eff(row, sink) -> age or None (row does not reach the sink / not this transport).  Returns {launch row: deficit}"""
@@ -194,6 +215,8 @@ def main():
     ap.add_argument('--land', action='store_true', help='HBM-LANDING 10-18: half-cycle lane stations + LANDINGS (module doc)')
     ap.add_argument('--port-age-land', action='store_true', help='land every row sharing a functional port with a forwarded row; align sink ages, retain unknown E as diagnostic')
     ap.add_argument('--land-plan', help="--land: per-link E / K JSON {links: [{link: '<driver row>-><sink>', E, K?}]}")
+    ap.add_argument('--eq-land-legacy', action='store_true',
+                    help='DIAGNOSTIC ONLY (reproduces r18): station-equal pads on landed equal_age_pad buses (unequal edge ages)')
     ap.add_argument('--land-fault', choices=('pins', 'open'), default='pins',
                     help='--land: landing fault outputs -> die status pins (default) or left open (diagnostic only)')
     a = ap.parse_args()
@@ -203,6 +226,7 @@ def main():
     if a.land and a.land_plan:
         LP = {x['link']: x for x in load(a.land_plan).get('links', [])}
     land_rows, straps, die_pins = [], [], []
+    eq_land, eq_check = set(), set()   # landed equal_age_pad buses equalised / checked (EQUAL-AGE-LAND)
     st = load(a.stations); c = load(a.contract); man = load(a.manifest)
     R = st['reach_um']; pl = man['placement']; inst = c['instances']
     sites = load(a.root_sites)['sites']
@@ -460,7 +484,17 @@ def main():
         # sink-root stages
         pads_list = {p['sink']: p['stages'] for p in r.get('pads', [])}
         if inter:
-            if cls == 'equal_age_pad':
+            if cls == 'equal_age_pad' and a.land and not a.eq_land_legacy:
+                # HBMc/TOKEN 10-22 EQUAL-AGE-LAND: an inter-region bus is always landed under --land (kind != 'old'), and a
+                # landed sink sees ceil(N/2) + 1 + E + pads edges (half-cycle stations: 2 per edge).  Station-equal pads
+                # (tgt - sdep) gave every sink a different EDGE age (r18: 42 buses, spread 3..58 edges; ingress strobe vs
+                # payload torn cfg writes at hleaf_SE).  Equalise the landed age instead, at the deepest sink's zero-pad age
+                # (that sink unchanged, every other sink waits for it: equal age = the contract every consumer assumes).
+                stages = equal_age_land_stages(sdep, lambda s_: (LP.get(f'{r["driver"]}->{s_}') or {}).get('E'))
+                eq_land.add(f'rf{bi:04d}'); eq_check.add(f'rf{bi:04d}')
+            elif cls == 'equal_age_pad':
+                if a.land:
+                    eq_check.add(f'rf{bi:04d}')   # --eq-land-legacy: reported, not equalised
                 tgt = max(sdep.values()) + 1
                 stages = {s_: tgt - sdep[s_] for s_ in sinks}
             else:
@@ -659,6 +693,8 @@ def main():
             bis = port_rows.get(key, set()) | port_mixed.get(key, set())
             if len(bis) > 1 and bis & forced_land:
                 groups.append([(f'rf{bi:04d}', key[0]) for bi in bis])
+        # EQUAL-AGE-LAND: a port-age pad on one sink of an equal-age bus re-equalises the whole bus (same fixpoint)
+        groups += [[k_ for k_ in land_by_key if k_[0] == t_] for t_ in sorted(eq_land)]
         extra = collections.Counter()
         def age(key):
             lr = land_by_key[key]
@@ -721,6 +757,12 @@ def main():
                                       transport='landed', diagnostic_E=lr['E'] is None))
     _model = {(x['bus'], x['sink']): -(-x['stations'] // 2) + 1 + (x['E'] if x['E'] is not None else 1) + x['pads']
               for x in land_rows} if a.land else None
+    if _model is not None:   # EQUAL-AGE-LAND: every landed equal_age_pad bus delivers ONE edge age to all its sinks
+        _eqa, _p = equal_age_land_check(_model, eq_check)
+        _bad = [x for x in _p]
+        problems += _p
+        notes.append(f'EQUAL-AGE-LAND: {len(_eqa)} landed equal_age_pad buses, {len(_bad)} unequal'
+                     + (' (--eq-land-legacy DIAGNOSTIC)' if a.eq_land_legacy else ''))
     cl_probs, cl_rows = cfg_launch_order(consts, {k: v.get('master') for k, v in inst.items()}, _model)
     problems += cl_probs
     notes.append(f'CFG-LAUNCH-ORDER: {len(cl_rows)} leaf copy sinks checked, {len(cl_probs)} launch-before-word / guard-before-target')
