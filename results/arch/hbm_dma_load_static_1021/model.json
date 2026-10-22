@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.hbm_dma_load_static.v1",
+  "status": "SOURCE_UNQUALIFIED",
+  "required_formats": {
+    "0": "FP32",
+    "1": "BF16",
+    "2": "FP8E4M3",
+    "4": "INT8",
+    "5": "U32",
+    "6": "UE8M0"
+  },
+  "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv",
+  "capacity": {
+    "NPC": 2,
+    "double_buffer_banks": 2,
+    "sectors_per_PC_per_bank": 64,
+    "bytes_per_sector": 32,
+    "bytes_per_lane": 8192,
+    "macros_per_lane": 2
+  },
+  "per_cycle": {
+    "read_commands": 1,
+    "source_bits_read": 256,
+    "destination_words_max": 8,
+    "destination_bits": 256,
+    "destination_packet_bits": 281,
+    "command_bits": 62,
+    "boundary_bits": 286
+  },
+  "latency": {
+    "load_pin_to_output_edges_expected": 3,
+    "measurement": "PENDING",
+    "HBM_window_latency": "real vmks CDC and drain dependent; not104"
+  },
+  "replicas": {
+    "lanes_per_quadrant": 8,
+    "quadrants": 4,
+    "conversion_words_per_lane": 8
+  },
+  "routing": {
+    "route": "registered source8->1 gather per quadrant,4->8 destination scatter owned by die lead",
+    "source_lane_not_destination_bank": true,
+    "crossquadrant_required": true,
+    "collision_policy": "fault, compiler reserves fixed slots",
+    "tracks_and_area": "PENDING synthesis/native and dieGEN/GRT; no physical qualification"
+  },
+  "ownership": "source bank+epoch+full checked before read; release final read; invalid schedule faults",
+  "schedule": "compiler lowers real MOVE descriptors to vmfc89 window and static62 read/convert commands; no lease, credit or ready",
+  "safe_review": {
+    "storage": "same existing SRAM payload, no new large flop storage",
+    "pins": "same landing input/output registerband",
+    "reach": "new fixed registered route required; die lead owns actual geometry",
+    "fanout": "PENDING native mapped census",
+    "depth": "read then selected payload capture then conversion output; PENDING synthesis",
+    "floorplan": "reuse NPC2 macroinventory; syntharea pending",
+    "clock": "one local streamclock; external crossings landed by die",
+    "reset": "new pipeline valid reset only; datapath unreset"
+  }
+}
