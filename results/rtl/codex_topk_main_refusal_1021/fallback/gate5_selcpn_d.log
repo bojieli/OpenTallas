@@ -1,0 +1,26 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: Source-registered: dsfd_selt_c lands every quarter bundle in its pin flops (sq / oq) and launches t_c / t_cr / vd from flops.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81dvbk_selcpn_d_20261021-132442.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81dvbk_selcpn_d_20261021-132442.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81dvbk_selcpn_d-20261021-132442
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 600 s (gate total 12165 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 6072, 'pin_rectangles': 6072, 'pin_track_checked': 6072, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 ce71905533a892706ecca9e6a1c626164284eb61834d82c1533672fa2128c947
+GATE INFO util: synthesized std area 25637 um2 + macros 24651 in core 140360: util 23% (std-cell density 23.1% of placeable 110748 um2; total fill 35.8%)
+GATE INFO textbook: WARN dsdv_bksel_c_pa_n32 cells 229,074 flops 30,470 depth 533.4 ps util 0.3067 reach 0.0 um (6.6 s)
+GATE WARN textbook.clock_domain: clock root port ck: 30,470 flops > 15,000 on one root (+0 ICGs, 12 macro clock pins; e.g. u_c.act[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_guidance: clock root port:ck: 30,482 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 30,482 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE INFO cts_calibration: ss insertion all 577.6..776.0 ps (spread 198.4), boundary mean 673.2; tt insertion all 429.9..626.3 ps (spread 196.4), boundary mean 529.8; ff insertion all 341.5..533.9 ps (spread 192.4), boundary mean 440.8; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81dvbk_selcpn_d/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      387 paths, worst slack 10.2 ps (e.g. u_c.g_packet[11].u/state[18]$_DFF_PN0_/D)
+GATE INFO path_classes: reg->macro      3 paths, worst slack 65.8 ps (e.g. u_c.g_l[3].u_q/u_mem.g_bank[0].u_m/r_addr_in[1])
+GATE INFO path_classes: in->reg       210 paths, worst slack 246.4 ps (e.g. u_c.g_rst[119].u/q$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 1.0167200414912259e-11 hold WNS 8.210598867464114e-12
+GATE FAIL clock_rule: 30,482 sinks on the largest root; measured TT insertion 626.3 ps, FF insertion 533.9 ps, TT pin-flop spread 148.2 ps, FF pin-flop spread 142.2 ps; TT pin-flop spread 148.2 ps > 80 and FF pin-flop spread 142.2 ps > 80 (declared clock 'cts' does not waive it)  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/claude-s81-topk-n32-kit-1021/physical/ref_tile/s81dvbk_selcpn_d/gate_layout/floorplan.png; density /home/ubuntu/wt/claude-s81-topk-n32-kit-1021/physical/ref_tile/s81dvbk_selcpn_d/gate_layout/density.png
+GATE FAIL fill: fill 30% = (hard macros 24651.2 + synthesized std cells 18391.1) / outline 143700.5 um2; pin demand per face: S 2605 pins over 473.0/475.2 um (100%), N 2604 pins over 473.0/475.2 um (100%), W 469 pins over 258.6/302.4 um (86%), E 570 pins over 107.9/302.4 um (36%) (< 35%)  -> FIX: shrink the outline / regroup the macros, or record "fill_reason": {"pin_bound": "<why the perimeter, not the area, sets the outline>"} if the pin demand above shows the edges are full
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 41.92% used; GRT 2698 s
+PRE_ROUTE_GATE: FAIL (2 fail, 3 warn)
+GATE: s81dvbk_selcpn_d/gate_result.json written (exact staged source binding; commit it with the kit)

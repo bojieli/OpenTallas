@@ -1,0 +1,10 @@
+# TOPK fallback independent terminal failure
+
+1. Identity: actual cb73b3e99 source, master dsdv_bksel_c_pa_n32, params{} and same11 defines as MAIN. Archive21461ae9cf4801cac4de73999d25ff1b376cb98d8eeec9df4ea45d83512b6615, manifest1b511577fd92f689656a904e51ef3c7bf69c1c57164e887d014fc58db2ee9c8a. Exact raw geometry and all packet hashes are in IDENTITY.json. No source/view alias or approval.
+2. Actual gate outcome FAIL: clock TT/FF pin-flop spread148.2/142.2ps exceed80; fill30% lacks recorded pin-bound justification. All-internal196.4/192.4ps is diagnostic, not blanket80ps criterion. Insertion alone and30482 root sinks are guidance. TT boundarymean529.8/max626.3; FFmean440.8/max533.9ps.
+3. Actual footprint475.2x302.4=143700.48um2. Twelve SRAMs in4x3 grid, macro area24651.2 plus placed std18391.1=43042.3um2 (29.95%). Synth std25637 differs from post-place area and is retained separately.
+4. Pin geometry PASS/ontrack/inbounds6072 functional+clock pins;6248 including176 supplies. Functional S2573/N2572/W413/E514. S/N5.41pins/um exceed4 even though global perimeter capacity is sufficient; current faces fail policy.
+5. Native PASS32, actual cb73 source and original73beat/landing causal proof unchanged. Placement-RC TT setup+10.2/hold+8.21ps diagnostic; no routed closure claim. TwelveSRAM allocations remain source-bound.
+6. TrialGRT independently PASS0overflow/M2usage41.92%,2698s. MAIN's GRT-0183 failure does not apply to this fallback. Both results remain immutable; no retry or route resume admitted.
+7. Both attached PNGs personally viewed: regular4x3 grey SRAM grid, blue outer density and green middle horizontal corridor, localized orange near central-right crossing, no broad red stripe. Dense N/S boundary pins remain measurable despite open-looking floorplan. These images are evidence, not approval.
+8. Disposition: preserve this independent fallback failure alongside MAIN16d4520e0. SOURCE/MODEL square388.8 fca983/f521 exists, no heavy gate, actual complete parent/TX/VMUX body/clock/fence fit remains blocked. No inherited review or selfapproval.
