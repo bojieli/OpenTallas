@@ -197,6 +197,8 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
           set actual {}
           foreach p [all_registers -clock [get_full_name $clk] -clock_pins] {dict set actual [get_full_name $p] 1}
           foreach pin [get_fanout -flat -endpoints_only -from $src] {
+            set output [get_ports -quiet [get_full_name $pin]]
+            if {[llength $output] == 1 && [ot_ce_check_forwarded_output $output $pname]} continue
             set cell [get_cells -quiet -of_objects $pin]
             if {[llength $cell] != 1} {error "OT_FORWARDED_SOFT: non-cell endpoint $pname"}
             set name [get_full_name $cell]
