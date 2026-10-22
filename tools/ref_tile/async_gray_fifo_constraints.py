@@ -241,7 +241,7 @@ def extend(body, spec, root):
         raise ValueError('async_gray_fifo ownership gate changed; revalidate extension')
     body = body.replace(marker, '  ot_ag_complete\n' + marker)
     body = body.replace('  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}',
-                        '  set ::ot_ag_seen {}\n  set ::ot_ag_pending {}\n  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}')
+                        '  set ::ot_ag_seen {}\n  set ::ot_ag_pending {}\n  set ::ot_ag_tie_memo {}\n  set ::ot_ag_tie_stats {}\n  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}')
     return bindings(record) + TCL + '\n' + body
 
 
@@ -256,6 +256,8 @@ set ::ot_ag_reset_seen {}
 # (hdie_svc_vm_kshare: >10k pairs, 11+ h in synth_odb and again at every hook re-source).  The checks, the error and
 # PATH_DEFERRED messages are identical; a BOUNDED line is printed only after that pair's proof passed.
 set ::ot_ag_pending {}
+set ::ot_ag_tie_memo {}
+set ::ot_ag_tie_stats {}
 proc ot_ag_verify {} {
   set pending $::ot_ag_pending
   set ::ot_ag_pending {}
@@ -378,6 +380,27 @@ proc ot_ag_reset_bound {start pin bound {done {}}} {
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $pin
   lappend ::ot_ag_pending [list reset $launch $pin [get_full_name $start] [get_full_name $pin] $done]
 }
+proc ot_ag_tie_driven {nets} {
+  # 1 iff every driver (output pin) on the pin's actual net(s) is a TIEHI/TIELO cell (vacuously 1 without a net).
+  # TOKc-GRAY 10-22: the verdict is a function of the net alone, so it is computed once per net per SDC read and
+  # shared by every async pin on that net.  hdie_svc_vm_kshare_r4 ties thousands of DFFASRHQNx1 SET/RESET pins to a
+  # few tie nets; re-scanning the whole tie net for each pin was O(pins x net fanout) (~0.12 s per async pin, hours).
+  # The memo is cleared at the start of every ownership pass (the netlist is fixed while the SDC is read).
+  set key {}
+  foreach n $nets {lappend key [get_full_name $n]}
+  if {[dict exists $::ot_ag_tie_memo $key]} {
+    dict incr ::ot_ag_tie_stats reused
+    return [dict get $::ot_ag_tie_memo $key]
+  }
+  set tied 1
+  foreach d [get_pins -quiet -of_objects $nets] {
+    if {[get_property $d direction] ne "output"} continue
+    if {![regexp {^TIE(HI|LO)x} [get_property [get_cells -quiet -of_objects $d] ref_name]]} {set tied 0}
+  }
+  dict set ::ot_ag_tie_memo $key $tied
+  dict incr ::ot_ag_tie_stats scanned
+  return $tied
+}
 proc ot_ag_async_control {pin cells inputs} {
   # Reset recovery/removal stays timed within a domain. A FIFO data/pointer publication must
   # never acquire an async-control exception by sharing a legitimate D target.  A cross-domain asynchronous control
@@ -390,12 +413,9 @@ proc ot_ag_async_control {pin cells inputs} {
     # the pin itself as its only startpoint (HBMA-SVC 10-17, hdie_svc_stack_fault SETN of u_ca.u_status.rd_bin[2]).
     # Admit exactly that case, and only when every driver of the pin's net is a tie cell.
     if {[get_full_name $start] eq [get_full_name $pin]} {
-      set tied 1
-      foreach d [get_pins -quiet -of_objects [get_nets -quiet -of_objects $pin]] {
-        if {[get_property $d direction] ne "output"} continue
-        if {![regexp {^TIE(HI|LO)x} [get_property [get_cells -quiet -of_objects $d] ref_name]]} {set tied 0}
+      if {![ot_ag_tie_driven [get_nets -quiet -of_objects $pin]]} {
+        error "OT_ASYNC_GRAY: asynchronous control without a register or tie driver [get_full_name $pin]"
       }
-      if {!$tied} {error "OT_ASYNC_GRAY: asynchronous control without a register or tie driver [get_full_name $pin]"}
       continue
     }
     set name [get_full_name $start]
@@ -502,6 +522,9 @@ proc ot_ag_complete {} {
     }
   }
   if {$::ot_ag_primitive && ![dict exists $::ot_ag_seen [list {} payload]]} {error "OT_ASYNC_GRAY: missing primitive payload crossing"}
+  set scanned [expr {[dict exists $::ot_ag_tie_stats scanned] ? [dict get $::ot_ag_tie_stats scanned] : 0}]
+  set reused [expr {[dict exists $::ot_ag_tie_stats reused] ? [dict get $::ot_ag_tie_stats reused] : 0}]
+  puts "OT_ASYNC_GRAY TIE_DRIVER_DEDUP nets_scanned=$scanned pins_covered=[expr {$scanned + $reused}]"
   puts "OT_ASYNC_GRAY STRUCTURAL_PASS $::ot_ag_seen reset_sync_inputs=$::ot_ag_reset_seen (bounded CDC; no physical closure claim)"
 }
 '''
