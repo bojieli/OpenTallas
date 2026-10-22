@@ -1,0 +1,73 @@
+{
+  "status": "RECIPE_REVIEW_ONLY_NOT_LAUNCHED",
+  "purpose": "ONE same-RTL normal ORFS production synthesis-only mapping discriminator after standalone mapping omitted existing register keeper; no admission waiver",
+  "published_tools_commit": "e217a58d6587742cdce7f6ce43b9883826532a4e",
+  "source_readset": [
+    {
+      "path": "tools/run_abi3_physical.py",
+      "sha256": "250623f82b99ecff19c927c2a2e0e4bf114345376eb6ebf09ced791918b633a5",
+      "published_commit": "e217a58d6587742cdce7f6ce43b9883826532a4e"
+    },
+    {
+      "path": "tools/orfs_hold_mm.py",
+      "sha256": "a6f23785798709adcf733fbfffb2e9cbe39930a469b0a931d8c5f6ed0d5bdd3b",
+      "published_commit": "e217a58d6587742cdce7f6ce43b9883826532a4e"
+    },
+    {
+      "path": "tools/orfs_allcorner_spef.py",
+      "sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
+      "published_commit": "e217a58d6587742cdce7f6ce43b9883826532a4e"
+    },
+    {
+      "path": "tools/ref_tile/native_census.py",
+      "sha256": "4e7a7a425a8669a5f586ed3aa2873038e727293a9128aabae360fcbaa2cd61e0",
+      "published_commit": "e217a58d6587742cdce7f6ce43b9883826532a4e"
+    },
+    {
+      "path": "tools/textbook_lint.py",
+      "sha256": "eb9a92d6a29332d4c9774c89a08a405385c8530613399e8987e771532ea44c8b",
+      "published_commit": "e217a58d6587742cdce7f6ce43b9883826532a4e"
+    },
+    {
+      "path": "physical/common_flow/ot_keep_regs.tcl",
+      "sha256": "8a19ec58c67bb276f7fd8ab2d472aa54e27712b26eb81246850ad73f3a8c88f7",
+      "published_commit": "e217a58d6587742cdce7f6ce43b9883826532a4e"
+    },
+    {
+      "path": "physical/common_flow/ot_pin_regs.tcl",
+      "sha256": "824052ac4c661520b0b428386e948f55ef750acc79db94ea89ebb790b282c2ec",
+      "published_commit": "e217a58d6587742cdce7f6ce43b9883826532a4e"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+      "sha256": "1b2d00fd1193a4343f38145e370649457468e0364b11276173a19933c6f86887",
+      "source_commit": "6c9b2dbf3"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_tile_e86_v5.sv",
+      "sha256": "b52d71989e6d8d86ed5c90f4bbd4099d9824aa50285ebdeae6a9a8ee9a1c19c7",
+      "source_commit": "6c9b2dbf3"
+    }
+  ],
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "image_identity_basis": "Actual Col8R1 route/audit image, new execution only; no historical E86 image identity claim",
+  "liberty_expected": "image_libs.json: actual image RVT TT five production libraries plus three actual fake sequential libraries; verify before mapping and retain effective make dryrun/logs",
+  "resources": {
+    "memory_GiB": 64,
+    "threads": 8,
+    "disk_GiB": 30,
+    "placement": "unpinned ot-run",
+    "basis": "same-shape original E86 production gate completed under actual48GiB cap; standalone same-source64GiB completed, no full TP192 extrapolation"
+  },
+  "execution_boundary": "EXACT ORFS run_pnr phase1 make absolute1_2_yosys.v goal only; never floorplan/place/CTS/GRT/route",
+  "source_unchanged": "two RTL exact6c9; fixed unique top LT_GROUP5 GCFOLD1 FAN322 SEAM1; no edge/layout change",
+  "original_failure": {
+    "root": "/srv/opentallas-scratch/claude/codex-e86-v5-native-aefb9c8c7",
+    "status": "FAIL",
+    "violations": 2573,
+    "max_dynamic_loads": 2064,
+    "mapped_sha256": "bb4a7dd927e7516e3889b03bd8e90774888962146e678119be7eae3108d9e2db",
+    "classification": "standalone omitted production keeper; original FAIL immutable, not PASS or exemption"
+  },
+  "judgment": "Actual normal mapped census strict <=32 with role_errors empty; any surviving LT42/48 actual source failure requires bounded structural repair. No constant exemption. M0/fourstate/M1/M3 observed; M4/5/6 OPEN independent live job. No physical gate/adoption."
+}

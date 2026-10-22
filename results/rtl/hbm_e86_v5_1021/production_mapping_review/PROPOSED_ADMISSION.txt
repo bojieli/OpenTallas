@@ -1,0 +1,4 @@
+REVIEW ONLY — DO NOT EXECUTE before ROOT authorization
+Stage exact new committed archive with published_overlay applied to original paths; verify every PACKET source SHA, archive SHA and effective runtime tool identities before admission.
+Proposed admission: ot-run --mem 64 --threads 8 --disk 30 --dir /srv/opentallas-scratch/claude/codex-e86-v5-production-map-1021 -- bash src/results/rtl/hbm_e86_v5_1021/production_mapping_review/run.sh
+No hosts pin. No wall timeout. No floorplan target. Native result, runtime Yosys/ABC identities, platform config/map/dont_use files and effective synthesis script/Lib readset must be captured in actual new receipt.
