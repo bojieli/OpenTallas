@@ -13,6 +13,19 @@ os.environ['OT_QWEN_HEAD_PREP']='1'
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import record_bundles as RB
 
+def face_boundaries(root, case, master):
+    if master != 'qfd_sys_face_lctx3_wrapped':
+        return None
+    from qwen_split.sysface_lctx_source import wrapper_contract
+    contract=wrapper_contract(root)
+    params=Path(case)/'die.v.params.json'
+    actual=json.loads(params.read_text())['masters'][master]
+    expected=dict(L_CONTEXTS=1,MU=1,MU_HEAD=1,ROPE=1,MUT=0,GO_OFS=3,START_ADJ=0)
+    if any(actual.get(k)!=v for k,v in expected.items()):
+        raise ValueError('actual wrapped sysface GEN parameters differ from qualified boundary profile')
+    contract['params_sha256']=hashlib.sha256(params.read_bytes()).hexdigest()
+    return contract
+
 def measure(case, tt_source_receipt=None):
     case=Path(case)
     die=case/'die.v'
@@ -58,9 +71,12 @@ def measure(case, tt_source_receipt=None):
                        source_to_output_edges=source_to_output,
                        receipt_sha256=hashlib.sha256(receipt.read_bytes()).hexdigest(),
                        rtl_sha256=row['rtl_sha256'],lp_record_sha256=row['lp_record_sha256'])
+    root=(case.parents[1]/'src').resolve()
     selected=[]
     for base in ('qfd_native59_dv_headprep','qfd_sys_face_ovl','qfd_d2d_static_ovl_sf7'):
-        names=set(re.findall(r'\b'+base+r'(?:_obs1|_fault1|_lctx1)?\b',text))
+        pattern=(r'(?:qfd_sys_face_ovl(?:_fault1|_lctx1)?|qfd_sys_face_lctx3_wrapped)' if base=='qfd_sys_face_ovl'
+                 else base+r'(?:_obs1|_fault1|_lctx1)?')
+        names=set(re.findall(r'\b'+pattern+r'\b',text))
         if len(names)!=1:
             raise ValueError('selected GEN must have one exact head-prepare master for '+base+': '+str(sorted(names)))
         selected.append(next(iter(names)))
@@ -73,8 +89,10 @@ def measure(case, tt_source_receipt=None):
         if row is None or len(row['members'])!=n or not row['consistent'] or len(row['cycles'])!=1:
             raise ValueError('incomplete or unequal actual bundle '+name)
         ages[name]=int(row['cycles'][0])
-    total=tt_local+ages['TT.head_prepare']+3+ages['SF.head_descriptor']+1
-    return dict(schema='opentallas.qwen.head_prepare_age.v1',
+    face=face_boundaries(root,case,selected[1])
+    face_input=face['input_capture_edges'] if face else 0
+    total=tt_local+ages['TT.head_prepare']+3+ages['SF.head_descriptor']+face_input+1
+    result=dict(schema='opentallas.qwen.head_prepare_age.v1',
       source='actual CTLM c_emb stored token/position/user; source epoch from per-user prepare or matching HOST',
       die_sha256=hashlib.sha256(die.read_bytes()).hexdigest(),
       selected_masters=selected,
@@ -85,6 +103,11 @@ def measure(case, tt_source_receipt=None):
       host_user0_contract='HOST O61 token/position/epoch must match actual prepare before publication; compiler must price actual HOST availability',
       scope='GEN-derived fixed schedule age; physical timing and final sole calendar qualification remain separate',
       bundles={k:audit['bundles'][k] for k in ages})
+    if face:
+        result['source_intrinsic_edges'].update(face_input_capture=face_input,face_output_capture=face['output_capture_edges'])
+        result['sysface_wrapper']=face
+        result['head_prepare_edges_scope']='internal held-bank availability; face output capture belongs to later published head-TX/codec-wire ledger'
+    return result
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('case');p.add_argument('--out',required=True)

@@ -49,7 +49,7 @@ HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
 STATUS_OBS = os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1'
 FAULT_FACE = os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1'
 SF_MASTER = 'qfd_sys_face_ovl_fault1' if FAULT_FACE else 'qfd_sys_face_ovl'
-from qwen_split.sysface_lctx_source import select as select_lctx_source, enabled as lctx_enabled
+from qwen_split.sysface_lctx_source import select as select_lctx_source, enabled as lctx_enabled, wrapper_enabled, wrapper_contract
 SF_MASTER, _SF_SOURCE = select_lctx_source((SF_MASTER,'rtl/qwen_split/'+SF_MASTER+'.sv'),ROOT)
 if STATUS_OBS and not HEAD_PREP:
     raise ValueError('STATUS observer v1 requires coherent head-prepare source')
@@ -223,6 +223,9 @@ def gen_params(insts, hr_rows, image=IMAGE):
         if lctx_enabled():
             out[SF_MASTER]['L_CONTEXTS'] = 1
             rec['sysface_l_contexts'] = dict(master=SF_MASTER,L_CONTEXTS=1,scope='source candidate; final image and physical qualification required')
+        if wrapper_enabled():
+            out[SF_MASTER].update(MUT=0,GO_OFS=3,START_ADJ=0)
+            rec['sysface_wrapper'] = wrapper_contract(ROOT)
         rec['head_prepare'] = dict(source='c_emb stored token/position/user, never RESULT',
                                   transport='derive both bundle ages from actual GEN; no zero default')
     if D2D_MASTER in masters:
