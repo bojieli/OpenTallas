@@ -1,5 +1,5 @@
 import pathlib,subprocess,json
-r=pathlib.Path(__file__).resolve().parent;o=r.parent/'svc_current';o.mkdir(exist_ok=True)
+r=pathlib.Path(__file__).resolve().parent;o=r.parent/'svc_current2';o.mkdir(exist_ok=True)
 cs=[]
 for n in ['s1','s2','m_hpseq','m_ret']:
  with (o/(n+'.log')).open('w') as f:p=subprocess.run(['bash','results/arch/sqc2_n59_1021/bench.sh',n,str(o/n)],cwd=r,stdout=f,stderr=subprocess.STDOUT)
