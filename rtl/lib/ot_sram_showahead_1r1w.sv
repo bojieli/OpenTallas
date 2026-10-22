@@ -42,10 +42,16 @@ module ot_sram_showahead_1r1w #(
  // so q is identical.  Write enables decode from per-slice kept copies of wv / waddr (same D, same edge, same reset).
  for(s=0;s<NS;s=s+1) begin:g_fs
   localparam integer LO=s*16, SW=(W-LO<16)?W-LO:16;
-  (* keep="true" *) reg [AW-1:0] rap_s, wa_s; (* keep="true" *) reg wv_s;
+  // per-slice copies live in keep_hierarchy instances (plain keep regs were merged by synthesis: 1432 loads)
+  wire [AW-1:0] rap_s, wa_s; wire wv_s;
+  ot_sa_copy #(.W(2*AW),.ID(s)) u_ac (.clk(clk),.d({ra,wa}),.q({rap_s,wa_s}));
+  if (s % 2 == 0) begin : g_wv
+   ot_sa_rcopy #(.ID(s)) u_vc (.clk(clk),.rst_n(rst_n[s]),.d(we),.q(wv_s));   // one landing-write copy per 2 slices
+  end else begin : g_wvs
+   assign wv_s = g_fs[s-1].wv_s;
+  end
   reg [SW-1:0] mfs [0:(1<<AW)-1];
-  always @(posedge clk or negedge rst_n[s]) if(!rst_n[s]) wv_s<=1'b0; else wv_s<=we;
-  always @(posedge clk) begin rap_s<=ra; wa_s<=wa; if(wv_s) mfs[wa_s]<=wdata[LO+:SW]; end
+  always @(posedge clk) if(wv_s) mfs[wa_s]<=wdata[LO+:SW];
   assign raw[LO+:SW]=mfs[rap_s];
  end
 `endif
@@ -63,3 +69,15 @@ module ot_sram_showahead_1r1w #(
  end
 `endif
 endmodule
+
+`ifdef OT_SHOWAHEAD_FLOP
+// distinct-ID same-D copies behind module boundaries (synthesis may not merge them)
+(* keep_hierarchy="yes" *)
+module ot_sa_copy #(parameter integer W=1, ID=0)(input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
+ (* keep *) reg [W-1:0] r; always @(posedge clk) r<=d; assign q=r;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_sa_rcopy #(parameter integer ID=0)(input wire clk, rst_n, d, output wire q);
+ (* keep *) reg r; always @(posedge clk or negedge rst_n) if(!rst_n) r<=1'b0; else r<=d; assign q=r;
+endmodule
+`endif
