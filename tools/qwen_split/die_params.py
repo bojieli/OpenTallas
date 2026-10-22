@@ -207,6 +207,13 @@ def gen_params(insts, hr_rows, image=IMAGE):
         if qa == '1':
             out[NATIVE_MASTER]['QB_ALIGN'] = 1
             rec['native_qbank_alignment'] = dict(QB_ALIGN=1, scope='source qualification candidate; matching physical view and booking required')
+        qlocal = os.environ.get('OT_QWEN_NATIVE_QB_LOCAL32', '0')
+        if qlocal not in ('0', '1') or (qlocal == '1' and qa != '1'):
+            raise ValueError('QB_LOCAL32 candidate requires value 0/1 and QB_ALIGN 1 when enabled')
+        if qlocal == '1':
+            out[NATIVE_MASTER]['QB_LOCAL32'] = 1
+            rec['native_qbank_local32'] = dict(QB_ALIGN=1, QB_LOCAL32=1,
+                scope='exact 32x512 source candidate; matching physical view and tuple-specific booking required')
         # SQ-C2-N59 svc5/5b harden the existing receive-first/local-decode
         # implementation. Carry the selected child's parameters into its parent.
         if os.environ.get('OT_QWEN_NATIVE_SVC5', '0') == '1':
@@ -299,6 +306,8 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
                 fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} != {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")}')
         if mst == NATIVE_MASTER and os.environ.get('OT_QWEN_NATIVE_QB_ALIGN', '0') == '1' and prm.get(mst, {}).get('QB_ALIGN') != 1:
             fails.append(f'{mst}: selected aligned qbank candidate requires explicit QB_ALIGN 1')
+        if mst == NATIVE_MASTER and os.environ.get('OT_QWEN_NATIVE_QB_LOCAL32', '0') == '1' and (prm.get(mst, {}).get('QB_LOCAL32'), prm.get(mst, {}).get('QB_ALIGN')) != (1, 1):
+            fails.append(f'{mst}: local qbank candidate requires explicit QB_LOCAL32 1 and QB_ALIGN 1')
         if mst == SF_MASTER and lctx_enabled() and prm.get(mst, {}).get('L_CONTEXTS') != 1:
             fails.append(f'{mst}: L-context candidate requires explicit L_CONTEXTS 1')
         tp = trapped_params(mods[mst])
