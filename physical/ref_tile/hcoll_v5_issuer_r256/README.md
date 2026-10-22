@@ -11,7 +11,7 @@ programme constraints). Cycle-exact to ot_hgi_coll_static_issuer_v6 #(ROWS 256) 
    busy_c | start_q, as closed); rst_n loads one synchroniser; reset_landing 2 stages in the kit.
 2. Reach: PASS. Longest single-cycle wires: data-stack W face -> bank data regs -> uop_d1 W pins ~175 um; metadata column
    <-> stack channel 63 um; all < 405 um.
-3. Fanout: PASS (gate-checked). The decision `take` (comb, from flops) selects ~170 bits (4 x 8-b addresses, CT/CN
+3. Fanout: UNQUALIFIED: mandatory mapped native census pending (old unsupported PASS claim corrected). The decision `take` (comb, from flops) selects ~170 bits (4 x 8-b addresses, CT/CN
    records, L1 data); it arrives ~150 ps before the macro data it selects, so its buffer tree is off the critical path.
    start -> L1 reset (32 x 32 enables) is a registered start, not a critical cone.
 4. Depth: PASS by construction. Loop paths: macro Q (1rw 256x64 TT ~340 ps) -> 2:1 -> macro address (~450 ps);
@@ -23,10 +23,13 @@ programme constraints). Cycle-exact to ot_hgi_coll_static_issuer_v6 #(ROWS 256) 
    (43.2,172.8) abutted pitch 17.856); >= 20 um channels / core-edge margins (ref_tile gen PASS); W face uop_d1 1,536 b
    over 345.6 um = 4.4/um; aspect 1.08; one connected std-cell band. Outline is macro/pin-bound (6 data SRAMs + 1,536 W
    pins); std-cell util from the gate synthesis is recorded below.
-7. Clock: one clock (clk_control) for logic and all ten macros; TT/FF pin-flop spread <= 80 from the gate; route
+7. Clock: one clock (clk_control) for logic and all ten macros; TT/FF pin-flop spread <= 80 required; no gate evidence exists; route
    io_hold_margin 0.03.
 8. Schedule: no added edge on any port (cycle-exact to v6); the two constraints are met by the F20 programme target
    (start_pc at descriptor accept, 53-edge drain) and the compilers (dense loop ids); cost 0 cycles.
 
 ## Gate
 (see gate_result.json; summary appended by the lane after the --cts gate)
+
+## 10-21 selected r15 recovery
+Exact source from a4843ffdd: ot_hgi_coll_static_issuer_v7.sv blob aa7373e4b910fd67b1be9344a05b9ff40831e278. Existing token ROWS256 functional receipts retained upstream. No physical closure or native32 PASS claimed. First synth/native gate determines actual structural fanout defects before layout. Existing macro storage plan6x256x256+4x256x64 retained, actual outline372.6x345.6. SAFE: pins inherited registered cfg/uop, longest planning reach175um, fanout UNQUALIFIED, depth pending mapped gate, storage SRAM, connected cell band, local spine+0.03IOhold required, no schedule change.

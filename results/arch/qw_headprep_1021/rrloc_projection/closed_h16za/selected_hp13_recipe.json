@@ -1,0 +1,198 @@
+{
+  "top": "qfd_tt_ctlm_dv_lpf_hp13",
+  "why": "SOURCE CANDIDATE ONLY: exact safe11 minimal dependency assembly plus true c_emb bank export9add and actual H16X3 generated3. No old LP/view alias. All crossings single-cycle STA; physical qualification remains owed. Exact published H16ZA CLOSED child bound at u_hr; parent view/placed RRloc and selected GEN transport ages remain unqualified.",
+  "sources": [
+    "rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13.sv"
+  ],
+  "child_sources": [
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
+    "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_qwen_w12_arith.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_qwen_w12_matvec.sv",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+    "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+    "rtl/hdc/ot_hdc_cg.sv",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_pw_observer_p.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
+    "rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule_p.sv",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/lib/ot_ks_add.sv",
+    "rtl/qwen_dv/qfd_dv_hr_pack.sv",
+    "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser.sv",
+    "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv",
+    "rtl/qwen_dv/qfd_mu_context_guard.sv",
+    "rtl/qwen_dv/qfd_dv_calendar_rom.sv",
+    "rtl/common/landed_parent/ot_pl_land.sv",
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+    "rtl/common/landed_parent/ot_pl_land_n32.sv",
+    "rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv",
+    "rtl/qwen_dv/qfd_dv_typed_witness_control.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+    "calr/ot_rom_4096x266_m8_calrbench.v",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+    "rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13_parts.sv",
+    "rtl/qwen_dv/headprep13/h16za/native32_1r_param.v",
+    "rtl/qwen_dv/headprep13/h16za/native32_helpers.sv"
+  ],
+  "params": {
+    "XPF_TRANSPORT_EDGES": 21,
+    "STAGE_ME": 1,
+    "LAST_STAGE": 37,
+    "NU": 4,
+    "OPSEG": 1,
+    "CTX_SRC": 1,
+    "FCTX": 1,
+    "OPSEG_EXPANDED": 1,
+    "INIT_U0": 1,
+    "INIT_FIRST": 52,
+    "INIT_CNT": 3,
+    "OPSEG_PINREG": 1,
+    "PRIVATE_CALR": 1,
+    "F16WTN": 1
+  },
+  "out_dir": "rtl/qwen_dv/headprep13/lp",
+  "record_dir": "results/arch/qw_headprep_1021/tt_lp_recipe/generated",
+  "clock_ports": [
+    "ck"
+  ],
+  "clock_pins": [
+    "ck",
+    "clk",
+    "ck_head",
+    "ck_pm0",
+    "ck_pm1"
+  ],
+  "reset_port": "rst_n",
+  "reset_pins": [
+    "rst_n"
+  ],
+  "regions": [
+    {
+      "name": "core",
+      "insts": [
+        "u_gi"
+      ],
+      "centre": [
+        194.4,
+        172.8
+      ]
+    },
+    {
+      "name": "hr",
+      "insts": [
+        "u_hr",
+        "u_go",
+        "u_thru"
+      ],
+      "centre": [
+        604.8,
+        172.8
+      ]
+    }
+  ],
+  "port_regions": {
+    "pw": "core",
+    "dh": "hr",
+    "dh_user": "hr",
+    "kok": "hr",
+    "kwd": "hr",
+    "fab": "hr",
+    "native_ret": "hr",
+    "ss5": "hr",
+    "ag5": "hr",
+    "ctx_x": "hr",
+    "mu_fault": "hr",
+    "init_u0": "hr",
+    "f16_auth": "hr",
+    "f16_obs": "hr"
+  },
+  "bench": {
+    "cycles": 3000,
+    "reset_cycles": 16,
+    "sim": "verilator"
+  },
+  "mut_child": "u_gi",
+  "landing_direct_timing": false,
+  "landing_chunk_bits": 24,
+  "residual_ps": 150,
+  "synthesis_hard_instances": [
+    "u_hr"
+  ],
+  "D": 4,
+  "E": 2,
+  "landing_reset_lead": true,
+  "landing_mcp": false,
+  "mut_landing_net": "dh",
+  "out_regs": {
+    "control_stores_ready": 2
+  },
+  "landing_reset_forest": false,
+  "landing_writer": "n32",
+  "_spec_path": "tools/landed_parent/specs/qfd_tt_ctlm_dv_lpf_hp13_rrloc.json",
+  "top_lp": "qfd_tt_ctlm_dv_lpf_hp13_lp",
+  "hard_child_bindings": {
+    "u_hr": {
+      "instance": "u_hr",
+      "module": "ot_qfd_tt_ctlm_static_hr_safe32_native32_1r",
+      "view": "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r",
+      "spec": "physical/ref_tile/qfd_tt_head_static_h16za/spec.json",
+      "effective_params": {
+        "SEGCAL": 1,
+        "STAGE_ME": 1
+      },
+      "spec_overrides": {},
+      "parameter_binding_sha256": "7c4cb0467b6efaad33a491f977fd6e4be4548159bd8e12e065bfc96f466f640c",
+      "published_main": "9803869c2",
+      "closure_record": "results/closure_loop/qfd_tt_head_static_h16za-h16za-4934271d7/verdict.json",
+      "record_commit": "9ee76be7fa6397b9a93c42324d727c9226d87455",
+      "source_and_view_hashes": {
+        "results/rtl/qw_head_safe32_1020/h16z/net/native32_1r_param.v": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
+        "results/rtl/qw_head_safe32_1020/h16z/net/native32_helpers.sv": "1e021ff33742ef24529373bfab456eeb95f90c693f597963cd8c2f368c3bec88",
+        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v": "4c8422bb160b8860bb3037d833502deb35d578439e8b13d004f8b5712eb84989",
+        "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+        "physical/ref_tile/qfd_tt_head_static_h16za/spec.json": "1d0f118b0e25c6294fdb9924f69e9d171170fd4a20e28b6c1b108eda01d0d324",
+        "physical/ref_tile/qfd_tt_head_static_h16za/macro_identity.json": "88527a483ac211af6d20b72ed16583a575af8fcb5592ec617bcf00e107e8ad98",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/abstract.json": "4fd7563d61631dfc2ddcab9c1376f5f72aa3b7f96f2c1844df8466131bc1d964",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/child_lint.json": "6b2afe0e5bf975115892f0194441f6be0310248b2a9908ff0e409e787097575c",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/export_ff.log": "042756417979d7e21907dbb4992cf0924915dffe02a5a9c7db19d52f3a8939cf",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/export_ff.tcl": "b479e61da65441231085f0cc85ab24a0ec18e31fca78315b91936b45de8c626a",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/export_ss.log": "e1d6e6a6005be64d97823d8cc4a88df2f0117a45b379049763e7f710d32b956c",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/export_ss.tcl": "5c2ccf6d832a49e50400758d8f333d803a710630d3cca7ce5615bb9ef512680d",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/export_tt.log": "6550969b8108c26b8a2c8b44d33a87711aa4c50a5160e06a1f7c1f74195d6693",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/export_tt.tcl": "d6b913de407e14aea5c8ff30d9af92c15af067344a108b118d367100908e9afd",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/insertion.json": "6f6bb0752303c29843ad2f18ba7a5a1af7aac04ba49da67827c59c31be84cf50",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r.lef": "61201ebb8c656dfc9dbdc386e4217ee03872c1f39d53e47d93c5319ead62b455",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r_ff.lib": "9de6c5a307b260dffd10019261139d179c797d911f7302bc41096152bc33828c",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r_ss.lib": "771973085d6e236824fb83abaeb19c33836d13c457b75b4f46fbf4fd9bc25419",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r_tt.lib": "e396eaa2f5c082a8eb593f74f0d33f57d10f520a21493a3cf1e1ead86af35df6",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/port_latency.json": "26165c2d17023d2e9f3def6aa10d635f792fed64b424c18ee01bd920347fdaa6",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/provenance/abstract_pin_stub.json": "a8cf81ee722747e2e2304a2327550436a61c13086e9d7dd6edd076092847da09",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/provenance/raw/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r.lef": "262f34a73bf7bb007f78232c788d8ec3c69047f129dbfc3a4f0e01cedc7dec86",
+        "physical/ref_tile/qfd_tt_head_static_h16za/views/ot_qfd_tt_ctlm_static_hr_safe32_native32_1r/provenance/view_export.abstract.json": "f3ecb555380434643ea38fa5037a162e82f8658ae4d14dbde235dc84eab11135"
+      },
+      "source_binding": "EXACT_SAME_NATIVE_AND_HELPERS",
+      "child_status": "TT_PATHFINDING_CLOSED",
+      "parent_status": "SOURCE_ONLY_NO_PARENT_VIEW_OR_RRLOC_OR_GEN_AGES"
+    }
+  }
+}

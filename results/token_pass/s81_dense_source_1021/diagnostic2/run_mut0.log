@@ -1,0 +1,56 @@
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e13w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e13w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e13e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e13e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e8w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e8w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e8e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e8e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e4w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e4w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e4e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e4e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e1b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e1b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e1_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e1_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e0b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e0b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e0_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_calibrated/f_e0_0.viamap.hex:0: $readmem file not found
+XCTRL 390 cfg=1 go=0
+FRAME_CC 395000 tb_dense_xs_cap.u_frame.u_f.u_cf.u_dense_probe cfg=1 go=0 ph=0
+XCTRL 453 cfg=0 go=1
+FRAME_CC 458000 tb_dense_xs_cap.u_frame.u_f.u_cf.u_dense_probe cfg=0 go=1 ph=0
+ELEMENT_GO 467000 tb_dense_xs_cap.u_frame.u_f.u_e3.u_dense_probe
+ELEMENT_GO 467000 tb_dense_xs_cap.u_frame.u_f.u_e2.u_dense_probe
+ELEMENT_GO 474000 tb_dense_xs_cap.u_frame.u_f.u_e6.u_dense_probe
+ELEMENT_GO 474000 tb_dense_xs_cap.u_frame.u_f.u_e5.u_dense_probe
+ELEMENT_GO 476000 tb_dense_xs_cap.u_frame.u_f.u_e9.u_dense_probe
+ELEMENT_GO 476000 tb_dense_xs_cap.u_frame.u_f.u_e7.u_dense_probe
+ELEMENT_GO 483000 tb_dense_xs_cap.u_frame.u_f.u_e11.u_dense_probe
+ELEMENT_GO 483000 tb_dense_xs_cap.u_frame.u_f.u_e10.u_dense_probe
+ELEMENT_GO 485000 tb_dense_xs_cap.u_frame.u_f.u_e14.u_dense_probe
+ELEMENT_GO 485000 tb_dense_xs_cap.u_frame.u_f.u_e12.u_dense_probe
+RET 731 17952b6741050820b
+RET 732 07957c7e01050c20b
+RET 734 179e0713e1050088b
+RET 735 176a4d5601050488b
+RET 736 179b704ac1050440b
+RET 738 17a2b97b41050800b
+RET 739 0796959161050c00b
+RET 742 17a67ae121050844b
+RET 743 079aed8001050c44b
+RET 749 0763ed8701050888b
+RET 750 079a6233e1050c88b
+RET 751 17a9b2f541050004b
+RET 752 0763080101050404b
+RET 754 07639a9101050060b
+RET 755 17a6a4ae01050460b
+CAP S 822 0 11 3dc30000
+CAP S 838 0 9 bd930000
+DENSE_SOURCE_END cycles=2905 events=85 consumed=85 xs_fault=0 frame_fault=1 cap_fault=1 mutant=0
+- tools/s81_dv/tokfunc/tb_dense_xs_cap.sv:90: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 17.732 s; speed 163.854 ns/s
+- Verilator: cpu 17.731 s on 1 threads; allocated 55 MB

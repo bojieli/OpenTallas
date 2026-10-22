@@ -108,7 +108,6 @@ class Die:
 
     def __init__(self, tree):
         self.tree = Path(tree)
-        self.timing_contract = source_contract(tree, ROOT)
         b = self.tree / 'results/arch/s81_dv_1016/bind9'
         raw = gzip.decompress((b / 'die.v.gz').read_bytes()).decode()
         self.die_sha = hashlib.sha256(raw.encode()).hexdigest()
@@ -122,6 +121,7 @@ class Die:
             for c in CONN_RE.finditer(body):
                 conns[c.group(1)] = c.group(2).strip()
             self.inst[name] = dict(master=master, params=params or '', conns=conns)
+        self.timing_contract = source_contract(tree, ROOT, self.inst)
         self.plan = json.loads((self.tree / 'results/arch/s81_dv_1016/p4l/plan.json').read_text())
         self.land = json.loads((self.tree / 'results/arch/s81_dv_1016/landing/p4l/land_plan.json').read_text())
         self.E = {l['link']: l for l in self.land['links']}
@@ -180,6 +180,20 @@ class Die:
             self.links[lk] = dict(stations=n, landing=ld.get(lk), internal_landing=internal, K=k, E=e,
                                   src=src, dst=dst, age_edges=age,
                                   land_master=self.inst[ld[lk]]['master'] if lk in ld else None)
+        # TOK-FUNC-S81 (10-21): the 72-frame die abuts neighbour slices (plan links with 0 stations, no landing): the
+        # sink port names the source wire w_<link>_src directly -> age 0 edges; endpoints from the plan's block pair.
+        B = self.plan['blocks']
+        for pl in self.plan['links']:
+            lk = pl['i'].replace('-', '_')
+            if lk in self.links or pl.get('s', 0) > 0:
+                continue
+            a, b = 'u_' + B[pl['e'][0][0]]['name'], 'u_' + B[pl['e'][1][0]]['name']
+            us = users.get((lk, 'src'), []) + users.get((lk, 'dst'), []) + users.get((lk, 'lnd'), [])
+            src = [u for u in us if u[0] == a]
+            dst = [u for u in us if u[0] == b]
+            if src and dst:
+                self.links[lk] = dict(stations=0, landing=None, internal_landing=None, K=None, E=None, src=src, dst=dst,
+                                      age_edges=0, land_master=None, abutted=True)
 
     def unlanded(self):
         """land-plan lanes (an E is planned) that bind9 die.v leaves WITHOUT a landing tile; x_frame lanes land inside
@@ -528,6 +542,8 @@ class Prog:
         self.mu_ctx = False          # MU-S81/TOK: the layer's first V command carries the user context (context 1)
         self.files = {}
         self.port_valid = []         # [{inst, ports, bit}]: the valid bit of a lane bundle (LB2-S81/EVENTS strict check)
+        self.retire_fences = []      # static END minima; never change real per-command ACK edges
+        self.retire_not_before = 0
 
     def template(self, name, payload):
         if payload in self.templates:
@@ -545,12 +561,23 @@ class Prog:
         """merge one family lowering into the die programme: CTL templates are re-indexed into the shared table and
         V-row args re-pointed (arg[6:0] = the family's template index), gunit job args likewise (arg[6:0])"""
         remap = {i: self.template(f'{fam}.{n}', p) for i, (n, p) in enumerate(r.get('templates', []))}
+        if 'retire_not_before' in r:
+            edge = r['retire_not_before']
+            if type(edge) is not int or edge < 0 or not r.get('rows'):
+                raise ValueError('native static END floor requires actual rows and an integer source minimum')
+            self.retire_fences.append(dict(op=op['id'], edge=edge,
+                                          lifetime_qualified=bool(r.get('lifetime_qualified', False))))
+            self.retire_not_before = max(self.retire_not_before, edge)
         for row in r.get('rows', []):
             row = dict(row)
             if row['eng'] in (ENG['VN'], ENG['VS'], ENG['GUNIT']) and remap and not row.get('raw_arg'):
                 row['tix'] = remap[row['arg'] & 0x7F]
                 row['arg'] = (row['arg'] & ~0x7F) | (row['tix'] & 0x7F)
             row.setdefault('done', row['issue'] + SEQ['done_v'])
+            if r.get('atomic'):
+                row['grp'] = op['id']           # MU-DIE-S81/HOP: the op's rows stay in one issuer job (split_jobs)
+            if 'retire_not_before' in r:
+                row['lifetime_id'] = op['id']
             row['what'] = f"{op['id']}: {row.get('what', '')}"
             self.rows.append(row)
         self.gunit_rows += [tuple(x) for x in r.get('gunit_rows', [])]
@@ -753,22 +780,18 @@ def split_jobs(prog, cap=NOPS - 2):
     rows cut in issue order, each job's issue / done rebased to its first issue (the host re-boots the next calendar
     after END: the reload is a host-lane cost the price must carry, reported in calendar.json)"""
     rows = sorted(prog.rows, key=lambda r: (r['issue'], r['eng']))
-    jobs, chunks, cur, used = [], [], [], set()
-    for r in rows:                    # cut on the row budget AND the per-job template budget (TOK-S81-GAPS)
-        t = {r['tix']} if 'tix' in r else set()
-        if cur and (len(cur) >= cap or len(used | t) > NOPS):
-            chunks.append(cur)
-            cur, used = [], set()
-        cur.append(r)
-        used |= t
-    if cur:
-        chunks.append(cur)
+    from layer_prog.aproj_native import atomic_chunks
+    chunks = atomic_chunks(rows, cap, NOPS)
+    jobs = []
     for k, ch in enumerate(chunks):
         t0 = ch[0]['issue']
         jp = Prog(prog.die)
         jp.templates, jp.tnames, jp.gunit_rows = prog.templates, prog.tnames, (prog.gunit_rows if k == 0 else [])
         jp.virtual = True
         jp.rows = [dict(r, issue=r['issue'] - t0, done=(r['done'] - t0) if r['done'] else 0) for r in ch]
+        ids = {r.get('lifetime_id') for r in ch}
+        jp.retire_fences = [dict(f, edge=f['edge']-t0) for f in prog.retire_fences if f['op'] in ids]
+        jp.retire_not_before = max((f['edge'] for f in jp.retire_fences), default=0)
         jobs.append((t0, jp))
     return jobs
 
@@ -781,7 +804,7 @@ def finish(prog, stage=0, kit_lead=20):
         key = (r['eng'], r['issue'])
         assert key not in seen, f'duplicate issue engine {r["eng"]} at {r["issue"]}'
         seen[key] = 1
-    endage = max(r['done'] for r in rows) + 4
+    endage = max(max(r['done'] for r in rows) + 4, prog.retire_not_before)
     # S81-SAFE-FIX/SH 10-19 (ot_dsdv_walk_issue, the dsdv_sh_sq ordered SRAM walker; its seal scan refuses anything else,
     # code 3): rows in non-decreasing issue order (KIT included; END last, alone), at most TWO rows on one edge, one row
     # per engine per edge, per-engine done strictly increasing, <= 8 commands of an engine outstanding.  KIT moves to the
@@ -833,18 +856,62 @@ def finish(prog, stage=0, kit_lead=20):
     return rows, hs, endage
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False):
+def dense_stage_schedule(sched, half):
+    """Select actual split-stage operations; preserve external dependency obligations.
+
+    A owns only its a_proj subset. B owns the remaining subset and reachable
+    downstream operations. These are source compilation schedules; inherited
+    model ages do not establish a measured stage completion time.
+    """
+    assert half in ('A', 'B')
+    ap = [o for o in sched['ops'] if o['op'] == 'attn.a_proj']
+    if len(ap) != 1:
+        raise ValueError('DENSE2 stage selection requires exactly one attn.a_proj')
+    ids = {ap[0]['id']}
+    if half == 'B':
+        while True:
+            nxt = ids | {d['dst'] for d in sched['deps'] if d['src'] in ids}
+            if nxt == ids:
+                break
+            ids = nxt
+    t0 = ap[0]['start']
+    ops = [dict(o, start=round(o['start']-t0, 1), end=round(o['end']-t0, 1))
+           for o in sched['ops'] if o['id'] in ids]
+    boundary = dict(half=half, full_stage_qualified=False, date_status='INHERITED_MODEL_ONLY',
+                    original_aproj_start=t0,
+                    incoming=[d for d in sched['deps'] if d['dst'] in ids and d['src'] not in ids],
+                    outgoing=[d for d in sched['deps'] if d['src'] in ids and d['dst'] not in ids],
+                    excluded=[o['id'] for o in sched['ops'] if o['id'] not in ids],
+                    obligation='actual input arrival, A-to-B row carriage, source capture completion and local static dates remain required')
+    return dict(sched, ops=ops, deps=[d for d in sched['deps'] if d['src'] in ids and d['dst'] in ids],
+                span=max(o['end'] for o in ops), crit=sum(o['cycles'] for o in ops if o['critical']),
+                dense_stage=boundary)
+
+
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None):
+    if dense_stage is not None and mu_ctx:
+        raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
+    if svc_owner_epoch is not None and mu_ctx:
+        raise ValueError('SO source-owner fields require per-user MU remapping before admission')
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
     wl = workload or ('mtp' if layer == 'mtp_draft' else 'ar')
     sched = layer_schedule(tree, layer, wl)
+    if dense_stage is not None:
+        required = dict(OT_XS_DENSE_SPLIT2=dense_stage, OT_XS_APROJ_TOPO='1',
+                        OT_XS_APROJ_ALIGN4='1', OT_XS_APROJ_RANK_TAGS='1', OT_XS_APROJ_CAP_PLAN='1')
+        if any(os.environ.get(k) != v for k, v in required.items()):
+            raise ValueError('configured DENSE2 stage requires explicit aligned topology/rank/capture options: '+str(required))
+        sched = dense_stage_schedule(sched, dense_stage)
+        (out / 'prog/dense_stage_boundary.json').write_text(json.dumps(sched['dense_stage'], indent=1)+'\n')
     sl = sl if sl.startswith('u_') else f'u_{sl}'
     prog = Prog(die)
     prog.mu_ctx = mu_ctx
     low = []
     fams = family_lowerings()
-    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag)
+    ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag,
+               svc_owner_epoch=svc_owner_epoch)
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -860,6 +927,10 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     st, r['gap'] = 'PARTIAL', dict(module=f'lower_{fam}', port='bench', missing=why)
             rec.update(unit=r.get('unit', unit), status=st, family=fam, insts=r.get('insts', []), bench=r.get('bench'),
                        gap=r.get('gap') if st != 'LOWERED' else None)
+            if r.get('native_programme'):
+                rec.update(native_rows=len(r['rows']), sealed_programme_held=True,
+                           lifetime_qualified=bool(r.get('lifetime_qualified', False)),
+                           retire_not_before=r['retire_not_before'])
             prog.absorb(fam, o, r)
             break
         low.append(rec)
@@ -893,6 +964,9 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             for r in prog.rows:
                 r['issue'] -= t0s
                 r['done'] -= t0s
+            if prog.retire_fences:
+                prog.retire_not_before -= t0s
+            prog.retire_fences = [dict(f, edge=f['edge']-t0s) for f in prog.retire_fences]
         try:
             jobs = [(t0s, prog, finish(prog))]
         except CalendarFull:
@@ -900,6 +974,9 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                 for r in prog.rows:
                     r['issue'] += t0s
                     r['done'] += t0s
+                if prog.retire_fences:
+                    prog.retire_not_before += t0s
+                prog.retire_fences = [dict(f, edge=f['edge']+t0s) for f in prog.retire_fences]
             jobs = [(t0, jp, finish(jp)) for t0, jp in split_jobs(prog)]
         # TOK-S81-GAPS/CTL (10-19): the svc job tag is {issuer context slot, calendar row index} (dsdv_seq_host j_o =
         # {v, arg, cd[83] slot, cd[6:0] op}; ot_dsdv_fixed_issue OP_BASE 0), known only once the calendar is sorted;
@@ -910,7 +987,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
-                                 svc_tag=need.pop())
+                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -918,12 +995,15 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             (out / f'prog/{jd}host_boot.memh').write_text(memh(hs, 515))
             files[f'prog/{jd}host_boot.memh'] = len(hs)
             cal.append(dict(job=k, layer_issue0=t0, nops=len(rows), end_age=endage, host_words=len(hs),
+                            retire_not_before=jp.retire_not_before, retire_fences=jp.retire_fences,
+                            sealed_programme_held=any(not f['lifetime_qualified'] for f in jp.retire_fences),
                             templates=list(jp.job_templates),
                             reload_edges=len(hs) * HOST_SLOT,
                             rows=[dict(i=i, issue=r['issue'], done=r['done'], engine=r['eng'], arg=r['arg'],
                                        row76=f"{r['row76']:019x}", what=r['what']) for i, r in enumerate(rows)]))
         (out / 'prog/calendar.json').write_text(json.dumps(dict(
             schema='opentallas.s81_dv.calendar.v2', jobs=len(cal), stage=0, rows_total=len(prog.rows),
+            sealed_programme_held=any(not f['lifetime_qualified'] for f in prog.retire_fences),
             note='one ot_dsdv_fixed_issue job holds NOPS = 128 rows incl. KIT / END; more rows = consecutive jobs, '
                  'each re-booted over the host lane after the previous END (reload_edges = host words x HOST_SLOT)',
             nops=cal[0]['nops'], end_age=cal[0]['end_age'], rows=cal[0]['rows'], job=cal), indent=1) + '\n')
@@ -942,6 +1022,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
              or k.startswith(('tvS_seqhost', 'tvN_seqhost', 'tvS_bk_sel'))}
     (out / 'schedule.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.layer_schedule.v1', layer=layer, workload=wl, slice=sl,
+        dense_stage=sched.get('dense_stage'),
         timing_contract=die.timing_contract,
         composition='the layer = the slowest (critical) slice under the fixed schedule: every slice runs the same '
                     'calendar shifted by its CTL arrival; the layer span is max over slices and units of the last '
@@ -1021,7 +1102,15 @@ def main(argv=None):
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
     ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
+    ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
+                    help='Opt-in static SO launch-owner fields in CFG; source binding required')
+    ap.add_argument('--dense-stage', choices=('A', 'B'),
+                    help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
     a = ap.parse_args(argv)
+    if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
+        ap.error('--dense-stage MU requires corrected per-position static stage graph binding')
+    if a.svc_owner_epoch is not None and a.mu_cal:
+        ap.error('--svc-owner-epoch requires per-user owner remapping before --mu-cal')
     if a.mu_cal:
         t = mu_slot_tables(json.loads(Path(a.mu_cal).read_text()), a.layer)
         Path(a.out, 'prog').mkdir(parents=True, exist_ok=True)
@@ -1031,7 +1120,8 @@ def main(argv=None):
         if a.layer not in LAYERS:
             return
     tree = die_tree(a.die_ref, a.die_src)
-    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx)
+    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
+                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']

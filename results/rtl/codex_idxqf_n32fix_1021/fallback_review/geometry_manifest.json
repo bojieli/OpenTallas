@@ -1,0 +1,54 @@
+{
+  "files": {
+    "clock.sdc": {
+      "bytes": 753,
+      "sha256": "9fc28db922affe67199f34ac471a8e9cafe6ea4f706beca7d720c810649c59cb"
+    },
+    "floorplan.json": {
+      "bytes": 2006,
+      "sha256": "97ac2d8137aba3d3f6f668818d19d658f3ccef2c9b80dc61b92425a1a93ab4fd"
+    },
+    "gate_dump.json": {
+      "bytes": 1315236,
+      "sha256": "67671249133b97e42e32825367824f9453919822f9476171cfa427d6d9ca700e"
+    },
+    "gate_layout/density.png": {
+      "bytes": 29918,
+      "sha256": "786e6425a1a947d3508620a85687f4afe8d7471207bdd50e647e552b76312571"
+    },
+    "gate_layout/floorplan.png": {
+      "bytes": 23619,
+      "sha256": "c81e6db96317c02ddcbe801e29e81f92fa2b80d21853e530084b8a5afee07279"
+    },
+    "gate_layout_floorplan.json": {
+      "bytes": 1298732,
+      "sha256": "411fc460e2072aedef32dc1ca59d035ea9dfc83ddf79b51dc8c5e1af488e954e"
+    },
+    "gate_layout_placed.json": {
+      "bytes": 2033570,
+      "sha256": "8ae1c8dd1937bcea538935673a12cd4620cb796b6b76321fed654259a307c5a1"
+    },
+    "pin_regs.json": {
+      "bytes": 325,
+      "sha256": "1a84a0fdd47c0550b23a723bcee6c0e1029e392bb96287bd1fd4061dca80b6c4"
+    },
+    "signoff.sdc": {
+      "bytes": 14828,
+      "sha256": "a90ac4d386de4fe4064320e6cc3cf85c79c77444b1d3a023695a8418621df1b7"
+    },
+    "spec.json": {
+      "bytes": 3791,
+      "sha256": "965f6a184fe6a70c226e7d176f1bcea403c0981ffffc4a41dee316b9f9c3d7fc"
+    }
+  },
+  "outline_um": [
+    259.2,
+    432.0
+  ],
+  "pin_count": {
+    "including_supplies": 2675,
+    "signal_clock": 2579
+  },
+  "schema": "opentallas.s81.qf.fallback.geometry.freeze.v1",
+  "source": "ed9c179a2fbee72e877ca8595f1eae9368a6de45"
+}

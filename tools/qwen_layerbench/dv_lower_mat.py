@@ -215,7 +215,7 @@ def btab_stream(lay, scales, mutant=None):
     return out
 
 
-def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=LM_PERIOD, mutant=None):
+def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=LM_PERIOD, mutant=None, running_k=False):
     """the STN commands of one matvec op + the tile-delivery contract + the expected results.
     t0: AR destinations -> the edge AR word 0 leaves dvs_W5 (S0AR); otherwise the first round's far-word edge."""
     own = own or D.ownership()
@@ -227,6 +227,11 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
     amax = int(name == 'lm_head')
     LAR = ages['l8_ar']
     rv = LAR + (7 if lv == 9 else 0) - (7 if lv == 7 else 0)   # far word -> own AR word (L8 measured; L9 +1 add, L7 -1)
+    kc = STN_KC[name]
+    prefix_edges = (kc - 1) * 8 if running_k else 0
+    if running_k and dst != DST_AR:
+        # All input k blocks must follow cfg, after the previous round drains.
+        period = max(period, prefix_edges + rv + RV_SLACK + STN_LEAD + 8)
     deliveries, stn, exp_ar, exp_vm, last_far = [], [], [], {}, {}
     for r, rl in enumerate(rounds_of(own, name)):
         for s, bl, role in rl:
@@ -238,7 +243,7 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
             else:
                 far = [t0 + r * period + j for j in range(sum(words_of(b) for b in bl) if lv != 7 else words_of(bl[0]))]
             nw = sum(words_of(b) for b in bl)
-            land = far[0] - STN_LEAD
+            land = far[0] - prefix_edges - STN_LEAD
             lo = last_far.get(s, -10 ** 9) + rv + RV_SLACK
             if land < lo:
                 raise LowerError(f'{name} round {r} slice {s}: STN window empty (land {land} < previous results {lo})')
@@ -270,7 +275,9 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
             deliveries.append(dict(slice=s, round=r, role=role, far=far, blocks=[b['block'] for b in bl],
                                    words=[words_of(b) for b in bl]))
             last_far[s] = far[-1]
-    return dict(name=name, level=lv, mode=MODE[lv], dst=dst, stn=stn, deliveries=deliveries, expected_ar=exp_ar,
+    return dict(name=name, level=lv, mode=MODE[lv], dst=dst, kc=kc, running_k=running_k,
+                k_block_words=8, period=period, prefix_edges=prefix_edges,
+                stn=stn, deliveries=deliveries, expected_ar=exp_ar,
                 expected_vm=exp_vm, btab=lay)
 
 
@@ -299,8 +306,31 @@ def lower_xc(chain, ages, word0_at_w5, words, tag, mode=0, mutant=None):
     return dict(entry=entry, cc_edge=x, cmd=f'{c:029x}', cc_word=(1 << 49) | (mode << 48) | (words << 32) | tag, dst=dst)
 
 
+def ar_framed(expected_ar, xc):
+    """QW-LAYERGAP 10-20: the AR words of one message as the qfd_dv_slice2 ARF 1 framer stamps them at dvs_W5 (the
+    io_collective in-pin contract): tag = the XC tag on every word, last only on the message's last word.  Fails closed
+    unless the XC (cc edge) precedes word 0 by XC_TO_WORD0 and the message has exactly `words` words."""
+    words = (xc['cc_word'] >> 32) & 0xFFFF
+    tag = xc['cc_word'] & 0xFFFFFFFF
+    ex = sorted(expected_ar, key=lambda e: e['edge'])
+    if len(ex) != words:
+        raise LowerError(f'XC tag {tag:#x}: {len(ex)} AR words, XC says {words}')
+    if ex and ex[0]['edge'] - xc['cc_edge'] < XC_TO_WORD0:
+        raise LowerError(f'XC tag {tag:#x}: cc edge {xc["cc_edge"]} not {XC_TO_WORD0} edges before word 0 ({ex[0]["edge"]})')
+    return [dict(e, tag=tag, last=int(i == len(ex) - 1)) for i, e in enumerate(ex)]
+
+
+def ar_framer_order(messages):
+    """messages [(xc, expected_ar)]: the single-message framer needs XC n + 1 at / after the last word of message n"""
+    m = sorted(messages, key=lambda t: t[0]['cc_edge'])
+    for (xa, ea), (xb, _) in zip(m, m[1:]):
+        if xb['cc_edge'] < max(e['edge'] for e in ea):
+            raise LowerError(f'XC {xb["cc_word"] & 0xFFFFFFFF:#x} arms before the last word of the previous message')
+    return True
+
+
 # ------------------------------------------------------------------------------------------------ LM head (DV side)
-def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None):
+def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None, running_k=False):
     """the LM-head DV schedule: clear / ROOT / ARX before the rounds, the amax STN rounds from t0 (first far word),
     collision-free emits, the token, ARX + XC gather, GATHER, the 8 rank returns' edges."""
     own = D.ownership()
@@ -315,7 +345,7 @@ def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None)
                        k=rt['k'] if s == 0 else 0, amnb=(AMNB - (1 if mutant == 'amnb5' else 0)) if s == 0 else 0)
         chain.put(pre + 8 + s, s, c, f'ROOT s{s}' + (' (root, amnb 6)' if s == 0 else ''))
     chain.put(pre + 30, 0, D.cmd_amax(0, arx=1), 'AMAX ARX arm (root)')
-    mv = lower_matvec('lm_head', t0, ages, chain, own=own, row0=row0, period=period, mutant=mutant)
+    mv = lower_matvec('lm_head', t0, ages, chain, own=own, row0=row0, period=period, mutant=mutant, running_k=running_k)
     rv = ages['l8_ar'] + 7
     last = {d['slice']: d['far'][-1] for d in mv['deliveries'] if d['role'] == 'fin'}
     recv = sorted(last)

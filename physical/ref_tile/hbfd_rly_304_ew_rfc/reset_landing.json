@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "hbfd_rly_304_EW_rfc",
+ "enable": false,
+ "reason": "rfi (the new reset-forest carrier input) lands in exactly 2 registered stages in the RTL (ot_hbm_rly_rfc: 2 sinks); rs is the UNCHANGED station reset of hbfd_rly_304_ew (4 sinks: stage async clear, as the closed kit) -- a kit landing on rs would add release edges the relay-row / stage schedule does not price"
+}

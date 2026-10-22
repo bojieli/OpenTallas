@@ -1,0 +1,7 @@
+RSTOP_XO R1 egress 80 (bad 0) gather min 80 other_out 0
+RSTOP_XO R2 egress 0 gather min 80 other_out 0
+PASS rstop_xo 138 checks
+- /srv/opentallas-scratch/claude/tokfunc-s81-headmtp/run_1021_0906/egress/tb_s81sl_rstop_xo_txo_none.sv:215: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 25.390 s; speed 260.260 ns/s
+- Verilator: cpu 23.855 s on 1 threads; allocated 11 MB

@@ -72,7 +72,10 @@ def main():
     ap.add_argument("--nev", type=int, default=6309)
     ap.add_argument("--rank", default="0")
     ap.add_argument("--pre-events", type=Path)
+    ap.add_argument("--contract", type=Path, help="die functional contract: hcollgi_SW VM_RT (default 0 = GEN2)")
+    ap.add_argument("--lane", default="VEH-FMT-COLL2")
     a = ap.parse_args()
+    vm_rt = CI.vm_rt_from_contract(a.contract) if a.contract else 0
     meta, z, recs = CI.load_fixture_records(a.fixtures, a.rank)
     L = int(meta["layer"]) if str(meta["layer"]).isdigit() else meta["layer"]
     prefix = f"ds_l{L}" if isinstance(L, int) else f"ds_{L}"
@@ -97,7 +100,7 @@ def main():
             man.append(ent)
             continue
         O = np.asarray(z[x["outputs"]["O"]["array"]], np.uint32)
-        g = CI.gather_record(O, i_rec, R=a.R, t_start=a.t_start)
+        g = CI.gather_record(O, i_rec, R=a.R, t_start=a.t_start, vm_rt=vm_rt)
         if g["status"] != "emitted":
             ent.update(g)
             man.append(ent)
@@ -112,7 +115,8 @@ def main():
                     assert e["port"] in outs, e["port"]
             evs = sorted(evs, key=lambda e: (e["dom"], e["cyc"], e["k"]))
             rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design="ds",
-                       layer=str(L), record=i_rec, tag=x["tag"], op=x["op"], lane="VEH-FMT-COLL2",
+                       layer=str(L), record=i_rec, tag=x["tag"], op=x["op"], lane=a.lane, scope="component_probe",
+                       vm_rt=vm_rt,
                        assumptions=["on-die multicast phase only: the cross-die o-group reduce has landed quadrant q's "
                                     "quarter of O in its own banks (VM preload); quadrant q holds contiguous quarter q",
                                     "O = BF16 results one per VM word (fixture u32 words), moved bit-exact",
