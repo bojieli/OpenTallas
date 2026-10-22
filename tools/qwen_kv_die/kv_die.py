@@ -4314,7 +4314,8 @@ def masters(m, k=1, port_bits=None):
                 # cfg), so the MX origin only meets the M4 / M5 grids, as the rhead's W-face M4 clock does
                 mm.face(p, 1, 'E', 'M4', 88.0 if p == 'ck' else 95.0, 1)
                 continue
-            if bits == 1 and (p in ('ck', 'clk', 'rst_n', 'rsi', 'c_arst_n', 'rs') or p.startswith(('pll', 'rso'))) and not (
+            # pll_locked is a status input, not a clock entry: keep it on a routable face.
+            if bits == 1 and p != 'pll_locked' and (p in ('ck', 'clk', 'rst_n', 'rsi', 'c_arst_n', 'rs') or p.startswith(('pll', 'rso'))) and not (
                     KSD.ON and KSD.KITS and mst in KSD.KIT_FACE):     # KITS-B: kit tiles draw clock / reset on a face
                 j = len([q for q in mm.order if mm.ports[q][0] == 'area'])
                 mm.area(p, 1, min(mm.w - 1.0, max(1.0, mm.w / 2 + ((j % 12) - 6) * 1.6)),
