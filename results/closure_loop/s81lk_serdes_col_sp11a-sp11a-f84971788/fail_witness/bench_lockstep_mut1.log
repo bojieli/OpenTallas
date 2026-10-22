@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81lk_serdes_col_sp11a-sp11a-f84971788 bench bench_lockstep_mut1 host ot-gold2 run /srv/opentallas-scratch/claude/closure-loop/s81lk_serdes_col_sp11a-sp11a-f84971788 log cl/bench_lockstep_mut1.a1b1.log captured 2026-10-22T01:16:15-07:00
+# fail_regex 'LP_LOCKSTEP FAIL'
+LP_MISMATCH port=st cycle=59 flat=0 landed=2
+LP_MISMATCH port=st cycle=60 flat=0 landed=2
+LP_MISMATCH port=st cycle=61 flat=0 landed=2
+LP_MISMATCH port=rx cycle=114 flat=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002 landed=db6ab1c0d3bf526fe034d52da974aebba349ecbcd3a4f3408ecebc6d074a3db75b0ee9df7a81f9148c0df79174b8e3febd409ea58d21ff19f3d78e4fd7264dc3
+LP_MISMATCH port=rx cycle=115 flat=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002 landed=ceebf6059d100dab56c169bcad24d322f4761d8716f3abc833d9a429ef077b5fd976fa78290851696a5b5a48abe61448ba46958f05cf81073d038f79ba73be2e
+LP_LOCKSTEP FAIL MUT=1 mismatches=2889 of 8880
+- rtl/dsrom_sys/s81_link/col/lp8b/tb_ot_pdie_serdes_col_lp8b.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.678 s; speed 4.425 us/s
+- Verilator: cpu 0.678 s on 1 threads; allocated 13 MB

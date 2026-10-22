@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/s81lk_serdes_col_sp11a-sp11a-f84971788/record/views/ot_pdie_serdes_col_lp8b/provenance/ot_pdie_serdes_col_lp8b.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_pdie_serdes_col_lp8b 604.8 x 3844.8: PG M7 VDD 56 stripes (98% spread, 100% cov) / VSS 56 stripes (98% spread, 100% cov); strap M8; face pins 2125 blocked-above 0 blocked-same 0; clock ck_dec insertion 539 ps; clock ck_prx insertion 432 ps; clock ck_rxo insertion 486 ps; clock ck_sr insertion 250 ps; clock ck_tx insertion 500 ps; pockets M7 0 (closed)",
+ "info": {
+  "cell": "ot_pdie_serdes_col_lp8b",
+  "W": 604.8,
+  "H": 3844.8,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M7",
+     "stripes": 56,
+     "dir": "V",
+     "spread": 0.982,
+     "coverage": 1.0,
+     "shapes_on_top": 56
+    },
+    "VSS": {
+     "top_layer": "M7",
+     "stripes": 56,
+     "dir": "V",
+     "spread": 0.982,
+     "coverage": 1.0,
+     "shapes_on_top": 56
+    }
+   },
+   "top_layer": "M7",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M7",
+  "strap_layer": "M8",
+  "cap": null,
+  "face": {
+   "face_pins": 2125,
+   "blocked_above": 0,
+   "covered_below": 324,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "ck_dec": {
+    "max_ps": 539.44,
+    "min_ps": 331.86
+   },
+   "ck_prx": {
+    "max_ps": 431.93,
+    "min_ps": 347.32
+   },
+   "ck_rxo": {
+    "max_ps": 486.36,
+    "min_ps": 366.65
+   },
+   "ck_sr": {
+    "max_ps": 249.59,
+    "min_ps": 187.92
+   },
+   "ck_tx": {
+    "max_ps": 499.82,
+    "min_ps": 111.87
+   }
+  },
+  "pockets": {
+   "layer": "M7",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M7",
+    "d_um": 2.048,
+    "added": 1230
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  },
+  "pin_access_violations": 0
+ }
+}
