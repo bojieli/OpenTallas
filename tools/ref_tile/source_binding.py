@@ -38,13 +38,15 @@ def reviewed_bench_wrapper_change(path, old, new):
 # Helpers that only NEW gates execute (pre_route_gate.ship_tar ships them beside the route-plan overlays, captured at the
 # same main head), never members of a frozen route plan.  validate() must resolve their current effective bytes the
 # same way, or a byte-identical gate-only helper reads as "blob unknown" and every post-native32 gate is refused.
-GATE_ONLY_HELPERS = ("tools/ref_tile/ref_route.sh", "tools/ref_tile/native_census.py", "tools/ref_tile/native_census.tcl")
+GATE_ONLY_HELPERS = ("tools/ref_tile/ref_route.sh", "tools/ref_tile/native_census.py", "tools/ref_tile/native_census.tcl",
+                     "tools/orfs_allcorner_spef.py")
 # working-tree tools the remote gate script runs itself (REMOTE_SH), besides the daemon overlays (SHIP_HELPERS)
 GATE_TOOLS = ("tools/ref_tile/ref_route.sh", "tools/textbook_lint.py", "tools/closure_loop/ck_insertion.py",
               "tools/ref_tile/path_classes.tcl", "tools/ref_tile/keep_module_audit.py",
               "tools/ref_tile/measured_band_fill.py")
 # Non-Python source read by an imported generator and embedded in its kit.
-PY_DATA = {"tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",),
+PY_DATA = {"tools/run_abi3_physical.py": ("tools/orfs_allcorner_spef.py",),
+           "tools/ref_tile/direct_macro_clock_entries.py": ("tools/ref_tile/sta_scene_binding.cc",),
            "tools/ref_tile/clock_entry_constraints.py": ("physical/common_flow/clock_family.tcl",),
            "tools/closure_loop/ck_insertion.py": ("physical/common_flow/clock_family.tcl",)}
 PY_DIRS = ("tools", "tools/ref_tile", "tools/closure_loop", "tools/w18")
