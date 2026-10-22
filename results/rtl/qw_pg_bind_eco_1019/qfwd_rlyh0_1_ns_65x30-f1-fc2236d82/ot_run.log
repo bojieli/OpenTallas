@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_1_ns_65x30-f1-fc2236d82
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_1_ns_65x30-f1-fc2236d82
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_1_ns_65x30-f1-fc2236d82
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_1_ns_65x30-f1-fc2236d82
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_1_ns_65x30-f1-fc2236d82
+ot-run: ot-agidock128  admits    57 GB (avail 52, growth 13, headroom 0, waiters 0/0 GB) load 6/64 running 6 disk 320 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1488293-1792470947 after 0 s
+OT_PG_ECO bound_terminals=20 instances=10 dont_touch_instances=10
+OT_PG_ECO_POST_PASS checked=10758
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_GRID_VDD PASS 1
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_GRID_VSS PASS 1
+SIGNAL_IDENTICAL
+bd5c11316e1e048173cee725779c7d53cb23d56d1f0a6a084b7e6bd34923322a  6_final_pgbound.odb
+0351a1fa9e87b3860c4640ed6b479b2adc289df7e5e36ef7e6df7b55d73cfd50  pre_signal.txt
+0351a1fa9e87b3860c4640ed6b479b2adc289df7e5e36ef7e6df7b55d73cfd50  post_signal.txt
+f6309f0520938f1b9c2ed31c18397b4154205168bc953ad7a4b7ce9a657cd536  /srv/opentallas-scratch/claude/closure-loop/qfwd_rlyh0_1_ns_65x30-f1-fc2236d82/routes/qfwd_rlyh0_1_ns_65x30_f1_fc2236d82/work/orfs/results/asap7/opentallas_qfd_rlyh0_1_NS_65x30_asap7_ref_qfwd_rlyh0_1_ns_65x30_f1_fc2236d82/base/6_final.odb
+RC=0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1488293-1792470947): exit 0

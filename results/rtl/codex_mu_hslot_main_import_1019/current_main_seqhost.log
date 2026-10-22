@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-main-import-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-main-import-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-main-import-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-main-import-1019
+ot-run: ot-epyc8       admits  1255 GB (avail 958, growth 80, headroom 0, waiters 0/0 GB) load 23/128 running 21 disk 283 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-main-import-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mu-hslot-main-import-1019
+ot-run: -> ot-epyc8
+ot-heavy: request 16G is charged 13G (class 'run_seq_host_mu_bench.sh:seqhost' measured peak 4.6G, n=4+0 proved); the cap stays 16G
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-288023-1792430662 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+SEQHOST_MU FAIL starts=None users=None user0_identical=None zero_latency_vs_plain=None kd_tagged=None/None events=None max_outstanding=None plain run incomplete (no PROG END); single run incomplete (no PROG END); multi run incomplete (no PROG END)
+SEQHOST_MU FAIL starts=None users=None user0_identical=None zero_latency_vs_plain=None kd_tagged=None/None events=None max_outstanding=None plain run incomplete (no PROG END); single run incomplete (no PROG END); multi run incomplete (no PROG END)
+SEQHOST_MU FAULT1 FAIL t_mf=None first=[] issuer=[('330', '3')]
+SEQHOST_MU FAULT1 FAIL t_mf=None first=[] issuer=[('330', '3')]
+SEQHOST_MU FAULT1 FAIL t_mf=None first=[] issuer=[('330', '3')]
+SEQHOST_MU FAULT0 FAIL t_mf=None first=[] issuer=[('330', '3')]
+SEQHOST_MU FAULT2 FAIL t_mf=None first=[] issuer=[('330', '3')]
+SEQHOST_MU FAIL starts=None users=None user0_identical=None zero_latency_vs_plain=None kd_tagged=None/None events=None max_outstanding=None plain run incomplete (no PROG END); single run incomplete (no PROG END); multi run incomplete (no PROG END)
+mutant 1 (user field dropped) detected (FAIL as required)
+SEQHOST_MU FAULT0 FAIL t_mf=None first=[] issuer=[('330', '3')]
+mutant 2 (collision check dropped) detected (FAIL as required)
+SEQHOST_MU FAIL starts=None users=None user0_identical=None zero_latency_vs_plain=None kd_tagged=None/None events=None max_outstanding=None plain run incomplete (no PROG END); single run incomplete (no PROG END); multi run incomplete (no PROG END)
+mutant 5 (gap index stuck) detected (FAIL as required)
+lint dsdv_mu_hslot clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)
+lint dsdv_mu_hwin clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)
+lint dsdv_seq_host_mux clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)

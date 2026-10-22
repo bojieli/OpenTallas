@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+H273_HOLD_SHORT held 17 < 273
+H273_FAIL errors=1
+[675000] %Fatal: tb_qkd_rst_region_pr_h273.sv:35: Assertion failed in tb_qkd_rst_region_pr_h273
+%Error: rtl/test/qwen_split/tb_qkd_rst_region_pr_h273.sv:35: Verilog $stop
+Aborting...

@@ -22,7 +22,9 @@ RX, kind 'rs' (reduce step): per frame two reduce inputs (reduce_static: in_v ==
 Constants measured by the co-sim itself (stage logs, as tools/xdie_hbm_coll_compile.py): K1, K2, gcL, READY.
 
   xdie_hbm_step_compile.py OUT --kind ag|rs --frames P [--from LOG|-] [--guard G] [--release-early N]
-                           [--mut vmstep|flip|rsrc]
+                           [--mut vmstep|flip|rsrc|arstep|nogap] [--blocks N]
+XDIE-HBM5 (10-19): P > 64 = several RX pingpong blocks (default ceil(P / 64) equal blocks; DS P = 144 -> 3 x 48), see
+mb_plan / compile_die_mb; P <= 64 programmes are unchanged.  Stage logs also feed XDIE2_LAND / XDIE2_RDY / XDIE5_TXROWS.
 """
 import argparse, json, pathlib, random, re, struct, sys
 
@@ -212,6 +214,131 @@ def compile_die(d, C, kind, P, rel_w, early=0, mut='', ar_iter=False, del_edge=0
     return dict(S=Sd, end=end, tx=tx, rx=rx, pub=pub, rel_w=rel_w, cal=cal)
 
 
+# ---------------------------------------------------------------- multi-block RX (XDIE-HBM5): P > 64 = several pingpong blocks
+FLG, AM = 8, 6          # release / re-arm after a drained block's last slot (pingpong FLUSH 4 + pins); arm -> first landing margin
+
+
+def mb_plan(Cs, kind, bw, LM, guard, nogap_die=None):
+    """Static schedule of a multi-block step, per direction (TX die t -> RX die r).
+    TX: the producer stream (VM request, capture, sink, link wr) runs back to back over all P frames (rows p_f - 21 .. p_f - 8,
+    p_f = the f-th valid beat from row 22); only the link READ reservations of block b > 0 wait (rd_f = p_f + 5 k_b, the
+    replay store holds the frames written ahead) until r's arm of block b precedes its first landing.  5 k_b keeps every
+    frame on the same beat phase, so the gap costs loop entries, not an unrolled pipeline drain/fill.
+    RX on r: arm block b (bank b % 2) after block b-1 is ready (and bank b % 2 drained + flushed), static release at
+    ready + guard (not before block b-1's last drain slot + FLG), drain slots one per c = 1 (ag) / 2 (rs) words; rs bubbles
+    rounded to a multiple of 8 words (the 8-row VM-pair / tag period).  Times in rel units (launch-relative edges).
+    LM[r] = dict(lmin, lmax, rdl): landing rel on r - rd row on t (min / max over frames), READY - last landing (r)."""
+    c = 1 if kind == 'ag' else 2
+    P = sum(bw)
+    tx, rx = {}, {}
+    for t in (0, 1):
+        r = 1 - t; L = LM[r]; K1t, gcl = Cs[t]['K1'], Cs[t]['gcL']
+        p, u = [], 22
+        while len(p) < P:
+            if beat_ok(K1t + u + 18, gcl):
+                p.append(u)
+            u += 1
+        rd, arm, rel, slots, ready = [], [0], [], [], []
+        f0 = 0
+        for b, n in enumerate(bw):
+            k = 0
+            if b:
+                a = ready[b - 1] + guard
+                if b >= 2:
+                    a = max(a, slots[b - 2][-1] + FLG)
+                arm.append(a)
+                need = max(a + AM - L['lmin'], rd[-1] + 1)
+                k = max(0, -(-(need - p[f0]) // 5))
+            if t == nogap_die:            # MUTANT nogap: block b's link reads not held back (lands before r arms it)
+                k = 0
+            blk = [x + 5 * k for x in p[f0:f0 + n]]
+            assert all(beat_ok(K1t + x + 18, gcl) for x in blk), 'rd off the beat calendar (IDLE beat inside the step)'
+            rd += blk; f0 += n
+            ready.append(blk[-1] + L['lmax'] + L['rdl'])
+            rl = ready[b] + guard
+            if b:
+                lo = slots[b - 1][-1] + FLG
+                if rl < lo:
+                    rl = lo
+                if kind == 'rs':          # bubble (first slot - steady next slot) a multiple of 8 words
+                    bub = rl + 1 - (slots[b - 1][-1] + c)
+                    rl += (-bub) % 8
+            rel.append(rl)
+            slots.append([rl + 1 + c * i for i in range(n)])
+        ahead = max(sum(1 for f in range(P) if p[f] - 8 <= u < rd[f]) for u in range(rd[-1] + 1))
+        assert ahead <= 48, ('link reads held past the replay store', t, ahead)   # 64-deep replay, keep a margin
+        tx[t] = dict(p=p, rd=rd)
+        rx[r] = dict(arm=arm, rel=rel, slots=slots, ready=ready)
+    return tx, rx
+
+
+def compile_die_mb(d, C, kind, bw, rd, rxp, mut='', ar_iter=False, del_edge=0):
+    """compile_die for several RX blocks: TX on the given beat rows rd, RX arm / release / drain slots from mb_plan"""
+    K1, K2 = C['K1'], C['K2']
+    P = sum(bw)
+    Sd = Sched()
+    Sd.s(0, 'lk_epoch_begin', 1); Sd.s(0, 'lk_epoch', EPOCH)
+    sec = lambda f: SB + f // 4
+    tx = []
+    for f, ur in enumerate(rd['rd']):
+        w = rd['p'][f] - 8; v = w - 13
+        Sd.vm(v, f, d, sec)
+        Sd.s(v + VM_CAP, 'capture_slot', 1 << SRC_VM0)
+        Sd.s(v + VM_CAP + 1, 'sink_slot', 1 << DST_RAIL0); Sd.s(v + VM_CAP + 1, 'sink_select', SRC_VM0 << (4 * DST_RAIL0))
+        Sd.s(w, 'lk_wr_v', 1); Sd.seq(w, 'wr', f)
+        Sd.s(ur, 'lk_rd_v', 1); Sd.seq(ur, 'rd', f)
+        tx.append(dict(f=f, vm=v, wr=w, rd=ur))
+    cal = {}
+    cw = lambda rl: rl - K2
+    for b, n in enumerate(bw):
+        assert 1 <= n <= 64, n
+        w = 0 if b == 0 else cw(rxp['arm'][b]); assert b == 0 or w >= 1, (b, w)
+        cal[w] = cal.get(w, 0) | 1 | ((b & 1) << 1) | (n << 2)
+        w = cw(rxp['rel'][b]); cal[w] = cal.get(w, 0) | (1 << 9) | ((b & 1) << 10)
+    rx, pub = [], []
+    f = 0
+    for b, n in enumerate(bw):
+        for i in range(n):
+            sl = rxp['slots'][b][i]; w = cw(sl); ux = sl + 16 - K1
+            cal[w] = cal.get(w, 0) | (1 << 11) | ((b & 1) << 12) | (i << 13)
+            Sd.s(ux, 'lk_rx_expect', 1); Sd.seq(ux, 'rx', f)
+            Sd.s(ux + RX_CAP, 'capture_slot', 1 << SRC_RAIL0)
+            if kind == 'ag':
+                Sd.s(ux + RX_CAP + 1, 'sink_slot', 1 << DST_DEL0); Sd.s(ux + RX_CAP + 1, 'sink_select', SRC_RAIL0 << (4 * DST_DEL0))
+                Sd.i(ux + RX_CAP + 1 + del_edge, 'del', DB + 64 * f)
+                rx.append(dict(f=f, w=w, ux=ux)); pub.append(ux + RX_CAP + 1)
+            else:
+                assert ar_iter, 'multi-block reduce needs --ar-iter (frame tags > 8 in flight across a block bubble)'
+                R = ux + 5
+                # local operand load in lockstep with the peer frame (as compile_die: RL = R).  XDIE-HBM5 tried a back to
+                # back local stream (RL = first slot + 2 f) to save rows, but a block bubble puts R - RL past the reducer's
+                # 16-row operand window (assert below) -> RS(144) never compiled; at ROWS 256 the rows are affordable.
+                RL = R
+                assert RL <= R and (R - RL) % 2 == 0 and R - RL <= 16, (f, RL, R)
+                fl = f + 4 if (mut == 'rsrc' and d == 1 and f == 1) else f
+                Sd.vm(RL - 13, f, d, lambda _f, fl=fl: sec(fl))
+                Sd.s(RL - 3, 'capture_slot', 1 << SRC_VM0)
+                Sd.s(RL - 2, 'sink_slot', 1 << DST_RED); Sd.s(RL - 2, 'sink_select', SRC_VM0 << (4 * DST_RED))
+                Sd.s(RL, 'load_v', 1)
+                tg = lambda u, k, ff=f: Sd.ar(u, k, ff)
+                tg(RL, 'load_tag')
+                Sd.s(R - 1, 'sink_slot', 1 << DST_RED); Sd.s(R - 1, 'sink_select', SRC_RAIL0 << (4 * DST_RED))
+                Sd.s(R + 1, 'add_read', 1); tg(R + 1, 'read_tag')
+                Sd.s(R + 2, 'add_issue', 1)
+                Sd.s(R + 11, 'pub_read', 1); tg(R + 11, 'pub_tag_a'); Sd.s(R + 11, 'pub_release', 1)
+                Sd.s(R + 11, 'pub_src', d)
+                Sd.ar(R + 11, 'pub_index', f)
+                Sd.s(R + 12, 'pub_issue', 1)
+                Sd.s(R + 13, 'capture_slot', 1 << SRC_RED)
+                Sd.s(R + 14, 'sink_slot', 1 << DST_DEL0); Sd.s(R + 14, 'sink_select', SRC_RED << (4 * DST_DEL0))
+                Sd.i(R + 14 + del_edge, 'del', DB + 64 * f)
+                rx.append(dict(f=f, w=w, ux=ux, R=R)); pub.append(R + 14)
+            f += 1
+    assert f == P
+    end = max(max(Sd.S), max(Sd.I)) + 3
+    return dict(S=Sd, end=end, tx=tx, rx=rx, pub=pub, rel_w=cw(rxp['rel'][0]), cal=cal)
+
+
 # ---------------------------------------------------------------- lowering with loops
 SEQK = ('wr', 'rd', 'rx')
 
@@ -252,6 +379,10 @@ def steps_between(a, b):
         if not 0 <= sa < 16:
             return None
     return (k, sv, dv, sa)
+
+
+NL_256 = 32                                 # ot_hgi_coll_static_issuer_v7 #(.NL)
+DENSE_LIDS = [False]                        # --dense-lids: v7 dense loop ids also at ROWS 64/128 (issuer_m_r128 = v7r128 core, NL 32)
 
 
 def lower(Sd, end, cap=64):
@@ -300,23 +431,40 @@ def lower(Sd, end, cap=64):
     lower.nrows = len(rows)
     assert len(rows) <= cap, ('programme capacity', len(rows), cap)
     # metadata: next | target << 6 | count << 12 | halt << 44 | lid << 45; ROWS 128 (cap > 64): pc bit 6 of
-    # next / target / lid at 51 / 52 / 53 (ot_hgi_coll_static_issuer_v6 #(ROWS 128))
-    pm = 127 if cap > 64 else 63
-    pc7 = lambda v, lo, hi: ((v & 63) << lo) | (((v >> 6) & 1) << hi)
+    # next / target / lid at 51 / 52 / 53 (ot_hgi_coll_static_issuer_v6 #(ROWS 128)); ROWS 256 (cap > 128): pc bit 7 at
+    # 54 / 55 / 56 (v6 ROWS 256 positions, ot_hgi_coll_static_issuer_v7) and DENSE loop ids < NL 32 (issuer v7 keeps one
+    # counter per loop id): lid 0 stays the id of the non-loop rows, loop bodies take 1, 2, ... in row order (an
+    # injective rename; the independent unroll below runs on the renamed ids)
+    pm = 255 if cap > 128 else 127 if cap > 64 else 63
+    if cap > 128:
+        pc7 = lambda v, lo, hi: ((v & 63) << lo) | (((v >> 6) & 1) << hi) | (((v >> 7) & 1) << (hi + 3))
+    else:
+        pc7 = lambda v, lo, hi: ((v & 63) << lo) | (((v >> 6) & 1) << hi)
+    lids = {}
+    def lid_of(last):
+        if cap <= 128 and not DENSE_LIDS[0]:
+            return last
+        if last not in lids:
+            lids[last] = len(lids) + 1
+        assert lids[last] < NL_256, ('issuer v7 loop ids', len(lids), NL_256)
+        return lids[last]
     meta, words = [], []
     for r, row in enumerate(rows):
         m = pc7((r + 1) & pm, 0, 51)
         if row['body_start'] is not None:
             last = row['body_start'] + row['T'] - 1
-            m |= pc7(last, 45, 53)
+            m |= pc7(lid_of(last), 45, 53)
             if r == last:
                 m |= pc7(row['body_start'], 6, 52) | (row['n'] << 12)
         meta.append(m)
         words.append(encode(Sd, row['u'], row['step']))
     meta[-1] |= 1 << 44
     # independent unroll of the issuer_v6 metadata/counter ISA + the ctl_v5 iteration offsets -> compare every cycle
-    pc, cnt = 0, [0] * 128
-    fld = lambda m, lo, hi: ((m >> lo) & 63) | (((m >> hi) & 1) << 6)
+    pc, cnt = 0, [0] * 256
+    if cap > 128:
+        fld = lambda m, lo, hi: ((m >> lo) & 63) | (((m >> hi) & 1) << 6) | (((m >> (hi + 3)) & 1) << 7)
+    else:
+        fld = lambda m, lo, hi: ((m >> lo) & 63) | (((m >> hi) & 1) << 6)
     for c in range(end + 1):
         m = meta[pc]
         it = cnt[fld(m, 45, 53)]
@@ -414,6 +562,11 @@ def measure(log):
             M[d]['K2'] = arm[0][0]
         if rdy:
             M[d]['READY'] = rdy[0][0]
+    for d in (0, 1):
+        M[d]['LAND'] = [int(x) for x in re.findall(r'XDIE2_LAND d=%d rel=(-?\d+)' % d, txt)]
+        M[d]['RDYS'] = [int(x) for x in re.findall(r'XDIE2_RDY d=%d bank=\d rel=(-?\d+)' % d, txt)]
+    tr = re.search(r'^XDIE5_TXROWS (.*)$', txt, re.M)
+    M['txrows'] = {int(k): v for k, v in json.loads(tr[1]).items()} if tr else None
     pi = re.search(r'XDIE3_FIRSTWR (\d+) (\d+)', txt)
     M['first_wr_row'] = [int(pi[1]), int(pi[2])] if pi else None
     M['pass'] = bool(re.search(r'^XDIE2 .* PASS$', txt, re.M))
@@ -434,18 +587,46 @@ def main():
     ap.add_argument('--swd', type=int, default=4)
     ap.add_argument('--guard', type=int, default=8)
     ap.add_argument('--release-early', type=int, default=0)
-    ap.add_argument('--mut', default='', choices=['', 'vmstep', 'flip', 'rsrc', 'arstep'])
+    ap.add_argument('--mut', default='', choices=['', 'vmstep', 'flip', 'rsrc', 'arstep', 'nogap'])
     ap.add_argument('--ar-iter', action='store_true', help='iterated reduce tags (v8g AR_ITER=1, iter_ar_tag_step)')
     ap.add_argument('--del-edge', type=int, default=0, help='XDIE-HBM4 item 3: del_obase row = sink row + N (1: the '
                     'ctl_v5 delivery_obase pin then lands on the DEL0 valid edge; 0 = XDIE-HBM3 programmes)')
-    ap.add_argument('--rows', type=int, default=64, choices=[64, 128], help='issuer ROWS (v8g #(.ROWS))')
+    ap.add_argument('--dense-lids', action='store_true', help='TOK-FUNC-HBM-XDIE: dense loop ids (1, 2, ... < 32) at every ROWS: the SAFE successor issuer_m_r128 (v7r128 core, NL 32) faults on lid >= 32; injective rename, v6 behaviour identical')
+    ap.add_argument('--rows', type=int, default=64, choices=[64, 128, 256], help='issuer ROWS (v8g #(.ROWS); 256 = issuer v7)')
+    ap.add_argument('--blocks', type=int, default=0, help='RX pingpong blocks (0: 1 if P <= 64 else ceil(P / 64), equal sizes)')
     a = ap.parse_args()
+    DENSE_LIDS[0] = a.dense_lids
     check_layout()
     a.out.mkdir(parents=True, exist_ok=True)
     M = measure(a.frm) if a.frm != '-' else {0: {}, 1: {}, 'first_wr_row': None}
     P = a.frames
     xs = [operands(0, P), operands(1, P)]
     plan = {}
+    nb = a.blocks or (1 if P <= 64 else -(-P // 64))
+    mb = None
+    if nb > 1:
+        bw = [P // nb + (1 if i < P % nb else 0) for i in range(nb)]
+        Cs, LM = {}, {}
+        for d in (0, 1):
+            m = M[d]; fw = M.get('first_wr_row')
+            Cs[d] = dict(K1=(m['WR_rel'] - fw[d]) if ('WR_rel' in m and fw) else a.k1, K2=m.get('K2', a.k2), gcL=m.get('gcL', a.gcl))
+        for r in (0, 1):
+            t = 1 - r; lr = M[r].get('LAND', []); tr = (M.get('txrows') or {}).get(t)
+            if lr and tr and len(lr) == len(tr):
+                ds_ = [x - y for x, y in zip(lr, tr)]
+                # READY of block k follows the landing of its last frame (the measured programme had the same blocks)
+                rd_ = M[r].get('RDYS', []); ends = [sum(bw[:k + 1]) - 1 for k in range(nb)]
+                rdl = max(y - lr[e] for y, e in zip(rd_, ends)) if len(rd_) >= nb else 8
+                LM[r] = dict(lmin=min(ds_), lmax=max(ds_), rdl=rdl)
+            else:
+                LM[r] = dict(lmin=440, lmax=462, rdl=8) if a.swd > 100 else dict(lmin=20, lmax=200, rdl=8)
+        tx, rxp = mb_plan(Cs, a.kind, bw, LM, a.guard, nogap_die=1 if a.mut == 'nogap' else None)
+        mb = dict(bw=bw, LM=LM, tx=tx, rx=rxp)
+        print('XDIE5_TXROWS ' + json.dumps({str(d): tx[d]['rd'] for d in (0, 1)}))
+        print('XDIE5_MB ' + json.dumps(dict(bw=bw, LM={str(r): LM[r] for r in (0, 1)},
+              arm={str(r): rxp[r]['arm'] for r in (0, 1)}, rel={str(r): rxp[r]['rel'] for r in (0, 1)},
+              ready={str(r): rxp[r]['ready'] for r in (0, 1)},
+              slot_last={str(r): [s_[-1] for s_ in rxp[r]['slots']] for r in (0, 1)})))
     for d in (0, 1):
         m = M[d]
         fw = M.get('first_wr_row')
@@ -453,7 +634,11 @@ def main():
         C = dict(K1=K1, K2=m.get('K2', a.k2), gcL=m.get('gcL', a.gcl))
         ready = m.get('READY') or a.ready or (480 + 2 * P + 60 if a.swd > 100 else 150 + 2 * P + 60)
         rel_w = ready + a.guard - C['K2']
-        c = compile_die(d, C, a.kind, P, rel_w, early=a.release_early if d == 1 else 0, mut=a.mut, ar_iter=a.ar_iter, del_edge=a.del_edge)
+        if mb:
+            C = Cs[d]
+            c = compile_die_mb(d, C, a.kind, mb['bw'], mb['tx'][d], mb['rx'][d], mut=a.mut, ar_iter=a.ar_iter, del_edge=a.del_edge)
+        else:
+            c = compile_die(d, C, a.kind, P, rel_w, early=a.release_early if d == 1 else 0, mut=a.mut, ar_iter=a.ar_iter, del_edge=a.del_edge)
         words, meta = lower(c['S'], c['end'], cap=a.rows)
         rows = lower.rowmap
         if a.mut == 'vmstep' and d == 1:          # TX loop body: VM sector step off by one (wrong frames read)

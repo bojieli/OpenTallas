@@ -1,0 +1,1080 @@
+{
+ "schema": "opentallas.qcluster.region_audit.v1",
+ "master": "qfd_c_b16_dv",
+ "regions": 16,
+ "rule": "single registered hop per seam crossing, neighbouring regions only; fixed one-edge latency (added edges 0 vs the 8-region fabric) between regional clocks the die delivers phase-aligned (+/-60 ps, contract obligation 2); Q-CL16-LAND: a crossing whose in-cluster skew does not fit one edge is LANDED (ring on the source root, read slot (rc - K) mod D on the destination root, added E + 1 edges, multicycle -setup E -hold D-1; R5)",
+ "landed": 1,
+ "register_edges_checked": 374,
+ "crossings": 77,
+ "crossing_bits": 28316,
+ "communicating_pairs": {
+  "c0r0-c0r1": {
+   "links": 2,
+   "bits": 517,
+   "diagonal": false
+  },
+  "c0r0-c1r0": {
+   "links": 5,
+   "bits": 2057,
+   "diagonal": false
+  },
+  "c0r1-c0r2": {
+   "links": 2,
+   "bits": 517,
+   "diagonal": false
+  },
+  "c0r1-c1r1": {
+   "links": 2,
+   "bits": 1028,
+   "diagonal": false
+  },
+  "c0r2-c0r3": {
+   "links": 2,
+   "bits": 517,
+   "diagonal": false
+  },
+  "c0r2-c1r2": {
+   "links": 2,
+   "bits": 1028,
+   "diagonal": false
+  },
+  "c0r3-c1r3": {
+   "links": 2,
+   "bits": 1028,
+   "diagonal": false
+  },
+  "c1r0-c1r1": {
+   "links": 3,
+   "bits": 1544,
+   "diagonal": false
+  },
+  "c1r0-c2r0": {
+   "links": 4,
+   "bits": 517,
+   "diagonal": false
+  },
+  "c1r1-c1r2": {
+   "links": 2,
+   "bits": 1030,
+   "diagonal": false
+  },
+  "c1r1-c2r1": {
+   "links": 3,
+   "bits": 516,
+   "diagonal": false
+  },
+  "c1r2-c1r3": {
+   "links": 3,
+   "bits": 1544,
+   "diagonal": false
+  },
+  "c1r2-c2r2": {
+   "links": 3,
+   "bits": 516,
+   "diagonal": false
+  },
+  "c1r3-c2r3": {
+   "links": 3,
+   "bits": 516,
+   "diagonal": false
+  },
+  "c2r0-c2r1": {
+   "links": 3,
+   "bits": 1031,
+   "diagonal": false
+  },
+  "c2r0-c3r0": {
+   "links": 3,
+   "bits": 1029,
+   "diagonal": false
+  },
+  "c2r0-c3r1": {
+   "links": 1,
+   "bits": 514,
+   "diagonal": true
+  },
+  "c2r1-c2r2": {
+   "links": 4,
+   "bits": 1545,
+   "diagonal": false
+  },
+  "c2r1-c3r1": {
+   "links": 4,
+   "bits": 2056,
+   "diagonal": false
+  },
+  "c2r2-c2r3": {
+   "links": 3,
+   "bits": 1031,
+   "diagonal": false
+  },
+  "c2r2-c3r2": {
+   "links": 4,
+   "bits": 1543,
+   "diagonal": false
+  },
+  "c2r2-c3r3": {
+   "links": 3,
+   "bits": 1029,
+   "diagonal": true
+  },
+  "c2r3-c3r3": {
+   "links": 4,
+   "bits": 2056,
+   "diagonal": false
+  },
+  "c3r0-c3r1": {
+   "links": 3,
+   "bits": 1031,
+   "diagonal": false
+  },
+  "c3r1-c3r2": {
+   "links": 4,
+   "bits": 1545,
+   "diagonal": false
+  },
+  "c3r2-c3r3": {
+   "links": 3,
+   "bits": 1031,
+   "diagonal": false
+  }
+ },
+ "fails": [
+  "R1 u_land_leg_3_1b_0_r clocked by ck_c3r3 but sits in {'c2r2'} at [1711.348, 3899.6]",
+  "R5 landing leg_3_1b_0: ring on ck_c3r3 / read on ck_c3r3, contract c3r3 -> c2r2",
+  "R5 landing leg_3_1b_0: 1 other c3r3 -> c2r2 crossings (the multicycle SDC would cover them): ['land_leg_3_1b_0']"
+ ],
+ "crossing_list": [
+  {
+   "net": "rst_pin_q",
+   "src": "u_rst_pin",
+   "src_region": "c2r0",
+   "dst": "u_rst_L_1",
+   "dst_region": "c1r0",
+   "bits": 1,
+   "hop_um": 294.8,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_L_2_q",
+   "src": "u_rst_L_2",
+   "src_region": "c1r0",
+   "dst": "u_rst_L_3",
+   "dst_region": "c0r0",
+   "bits": 1,
+   "hop_um": 294.8,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_L_8_q",
+   "src": "u_rst_L_8",
+   "src_region": "c0r0",
+   "dst": "u_rst_L_9",
+   "dst_region": "c0r1",
+   "bits": 1,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_L_12_q",
+   "src": "u_rst_L_12",
+   "src_region": "c0r1",
+   "dst": "u_rst_L_13",
+   "dst_region": "c0r2",
+   "bits": 1,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_L_16_q",
+   "src": "u_rst_L_16",
+   "src_region": "c0r2",
+   "dst": "u_rst_L_17",
+   "dst_region": "c0r3",
+   "bits": 1,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_T_22_q",
+   "src": "u_rst_T_22",
+   "src_region": "c2r0",
+   "dst": "u_rst_T_23",
+   "dst_region": "c2r1",
+   "bits": 1,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_T_26_q",
+   "src": "u_rst_T_26",
+   "src_region": "c2r1",
+   "dst": "u_rst_T_27",
+   "dst_region": "c2r2",
+   "bits": 1,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_T_30_q",
+   "src": "u_rst_T_30",
+   "src_region": "c2r2",
+   "dst": "u_rst_T_31",
+   "dst_region": "c2r3",
+   "bits": 1,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_R_34_q",
+   "src": "u_rst_R_34",
+   "src_region": "c2r0",
+   "dst": "u_rst_R_35",
+   "dst_region": "c3r0",
+   "bits": 1,
+   "hop_um": 294.8,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_R_40_q",
+   "src": "u_rst_R_40",
+   "src_region": "c3r0",
+   "dst": "u_rst_R_41",
+   "dst_region": "c3r1",
+   "bits": 1,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_R_44_q",
+   "src": "u_rst_R_44",
+   "src_region": "c3r1",
+   "dst": "u_rst_R_45",
+   "dst_region": "c3r2",
+   "bits": 1,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rst_R_48_q",
+   "src": "u_rst_R_48",
+   "src_region": "c3r2",
+   "dst": "u_rst_R_49",
+   "dst_region": "c3r3",
+   "bits": 1,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn0_rly2",
+   "src": "u_dn0_rly2",
+   "src_region": "c0r0",
+   "dst": "u_dn0_rly3",
+   "dst_region": "c0r1",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn0_rly5",
+   "src": "u_dn0_rly5",
+   "src_region": "c0r1",
+   "dst": "u_dn0_rly6",
+   "dst_region": "c0r2",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn0_rly8",
+   "src": "u_dn0_rly8",
+   "src_region": "c0r2",
+   "dst": "u_dn0_rly9",
+   "dst_region": "c0r3",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn1_rly2",
+   "src": "u_dn1_rly2",
+   "src_region": "c1r0",
+   "dst": "u_dn1_rly3",
+   "dst_region": "c1r1",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn1_rly5",
+   "src": "u_dn1_rly5",
+   "src_region": "c1r1",
+   "dst": "u_dn1_rly6",
+   "dst_region": "c1r2",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn1_rly8",
+   "src": "u_dn1_rly8",
+   "src_region": "c1r2",
+   "dst": "u_dn1_rly9",
+   "dst_region": "c1r3",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn2_rly2",
+   "src": "u_dn2_rly2",
+   "src_region": "c2r0",
+   "dst": "u_dn2_rly3",
+   "dst_region": "c2r1",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn2_rly5",
+   "src": "u_dn2_rly5",
+   "src_region": "c2r1",
+   "dst": "u_dn2_rly6",
+   "dst_region": "c2r2",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn2_rly8",
+   "src": "u_dn2_rly8",
+   "src_region": "c2r2",
+   "dst": "u_dn2_rly9",
+   "dst_region": "c2r3",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn3_rly2",
+   "src": "u_dn3_rly2",
+   "src_region": "c3r0",
+   "dst": "u_dn3_rly3",
+   "dst_region": "c3r1",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn3_rly5",
+   "src": "u_dn3_rly5",
+   "src_region": "c3r1",
+   "dst": "u_dn3_rly6",
+   "dst_region": "c3r2",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "dn3_rly8",
+   "src": "u_dn3_rly8",
+   "src_region": "c3r2",
+   "dst": "u_dn3_rly9",
+   "dst_region": "c3r3",
+   "bits": 516,
+   "hop_um": 324.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_2_0a_2",
+   "src": "u_leg_2_0a_2",
+   "src_region": "c1r0",
+   "dst": "u_leg_2_0a_3",
+   "dst_region": "c1r1",
+   "bits": 514,
+   "hop_um": 228.2,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_2_0",
+   "src": "u_t_2_0",
+   "src_region": "c2r0",
+   "dst": "u_leg_2_1a_0",
+   "dst_region": "c3r0",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_2_1a_2",
+   "src": "u_leg_2_1a_2",
+   "src_region": "c3r0",
+   "dst": "u_leg_2_1a_3",
+   "dst_region": "c3r1",
+   "bits": 514,
+   "hop_um": 228.2,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_0_2",
+   "src": "u_t_0_2",
+   "src_region": "c0r2",
+   "dst": "u_leg_2_2a_0",
+   "dst_region": "c1r2",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_2_2a_2",
+   "src": "u_leg_2_2a_2",
+   "src_region": "c1r2",
+   "dst": "u_leg_2_2a_3",
+   "dst_region": "c1r3",
+   "bits": 514,
+   "hop_um": 228.2,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_2_3a_2",
+   "src": "u_leg_2_3a_2",
+   "src_region": "c3r2",
+   "dst": "u_leg_2_3a_3",
+   "dst_region": "c3r3",
+   "bits": 514,
+   "hop_um": 228.2,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_3_0a_3",
+   "src": "u_leg_3_0a_3",
+   "src_region": "c1r1",
+   "dst": "u_leg_3_0a_4",
+   "dst_region": "c2r1",
+   "bits": 514,
+   "hop_um": 335.8,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_2_1",
+   "src": "u_t_2_1",
+   "src_region": "c2r1",
+   "dst": "u_leg_3_0b_0",
+   "dst_region": "c3r1",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_3_0b_4",
+   "src": "u_leg_3_0b_4",
+   "src_region": "c3r1",
+   "dst": "u_leg_3_0b_5",
+   "dst_region": "c3r2",
+   "bits": 514,
+   "hop_um": 177.4,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_3_1a_1",
+   "src": "u_leg_3_1a_1",
+   "src_region": "c1r3",
+   "dst": "u_leg_3_1a_2",
+   "dst_region": "c1r2",
+   "bits": 514,
+   "hop_um": 218.1,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_2_3",
+   "src": "u_t_2_3",
+   "src_region": "c2r3",
+   "dst": "u_leg_3_1b_0",
+   "dst_region": "c3r3",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "lrs_leg_3_1b_0_0_q",
+   "src": "u_lrs_leg_3_1b_0_0",
+   "src_region": "c3r2",
+   "dst": "u_lrs_leg_3_1b_0_1",
+   "dst_region": "c2r2",
+   "bits": 1,
+   "hop_um": 354.9,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "land_leg_3_1b_0",
+   "src": "u_land_leg_3_1b_0_r",
+   "src_region": "c3r3",
+   "dst": "u_leg_3_1b_1",
+   "dst_region": "c2r2",
+   "bits": 514,
+   "hop_um": 56.6,
+   "diagonal": true,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_3_1b_2",
+   "src": "u_leg_3_1b_2",
+   "src_region": "c2r2",
+   "dst": "u_leg_3_1b_3",
+   "dst_region": "c1r2",
+   "bits": 514,
+   "hop_um": 356.7,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_2_2",
+   "src": "u_t_2_2",
+   "src_region": "c2r2",
+   "dst": "u_leg_4_0a_0",
+   "dst_region": "c3r2",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_4_0a_1",
+   "src": "u_leg_4_0a_1",
+   "src_region": "c3r2",
+   "dst": "u_leg_4_0a_2",
+   "dst_region": "c3r1",
+   "bits": 514,
+   "hop_um": 250.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_4_0a_6",
+   "src": "u_leg_4_0a_6",
+   "src_region": "c3r1",
+   "dst": "u_leg_4_0a_7",
+   "dst_region": "c2r0",
+   "bits": 514,
+   "hop_um": 250.0,
+   "diagonal": true,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_4_0a_8",
+   "src": "u_leg_4_0a_8",
+   "src_region": "c2r0",
+   "dst": "u_leg_4_0a_9",
+   "dst_region": "c1r0",
+   "bits": 514,
+   "hop_um": 250.0,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_4_0b_0",
+   "src": "u_leg_4_0b_0",
+   "src_region": "c1r2",
+   "dst": "u_leg_4_0b_1",
+   "dst_region": "c1r1",
+   "bits": 514,
+   "hop_um": 367.5,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_4_0b_4",
+   "src": "u_leg_4_0b_4",
+   "src_region": "c1r1",
+   "dst": "u_leg_4_0b_5",
+   "dst_region": "c1r0",
+   "bits": 514,
+   "hop_um": 367.5,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_0_0",
+   "src": "u_t_0_0",
+   "src_region": "c0r0",
+   "dst": "u_rs_0",
+   "dst_region": "c1r0",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "ft_1",
+   "src": "u_ft_1",
+   "src_region": "c1r3",
+   "dst": "u_ft_2",
+   "dst_region": "c2r3",
+   "bits": 514,
+   "hop_um": 359.1,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "ft_5",
+   "src": "u_ft_5",
+   "src_region": "c2r3",
+   "dst": "u_ft_6",
+   "dst_region": "c2r2",
+   "bits": 514,
+   "hop_um": 359.1,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "ft_8",
+   "src": "u_ft_8",
+   "src_region": "c2r2",
+   "dst": "u_ft_9",
+   "dst_region": "c2r1",
+   "bits": 514,
+   "hop_um": 359.1,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "ft_12",
+   "src": "u_ft_12",
+   "src_region": "c2r1",
+   "dst": "u_ft_13",
+   "dst_region": "c2r0",
+   "bits": 514,
+   "hop_um": 359.1,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rpad_T_0_15_q",
+   "src": "u_rpad_T_0_15",
+   "src_region": "c2r0",
+   "dst": "u_x_1_0",
+   "dst_region": "c1r0",
+   "bits": 1,
+   "hop_um": 79.1,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rpad_T_1_11_q",
+   "src": "u_rpad_T_1_11",
+   "src_region": "c2r1",
+   "dst": "u_x_1_1",
+   "dst_region": "c1r1",
+   "bits": 1,
+   "hop_um": 79.1,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rpad_T_2_7_q",
+   "src": "u_rpad_T_2_7",
+   "src_region": "c2r2",
+   "dst": "u_x_1_2",
+   "dst_region": "c1r2",
+   "bits": 1,
+   "hop_um": 79.1,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rpad_T_3_3_q",
+   "src": "u_rpad_T_3_3",
+   "src_region": "c2r3",
+   "dst": "u_x_1_3",
+   "dst_region": "c1r3",
+   "bits": 1,
+   "hop_um": 79.1,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "lrs_leg_3_1b_0_1_q",
+   "src": "u_lrs_leg_3_1b_0_1",
+   "src_region": "c2r2",
+   "dst": "u_land_leg_3_1b_0_w",
+   "dst_region": "c3r3",
+   "bits": 1,
+   "hop_um": 219.4,
+   "diagonal": true,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "lrs_leg_3_1b_0_1_q",
+   "src": "u_lrs_leg_3_1b_0_1",
+   "src_region": "c2r2",
+   "dst": "u_land_leg_3_1b_0_r",
+   "dst_region": "c3r3",
+   "bits": 514,
+   "hop_um": 118.3,
+   "diagonal": true,
+   "added_edges": 3,
+   "landed": true,
+   "landing": "leg_3_1b_0",
+   "ring_wires": 1,
+   "D": 4,
+   "E": 2,
+   "K": 2,
+   "crossing": "u_fab.u_leg_3_1b_0 (c3r3) -> u_fab.u_leg_3_1b_1 (c2r2)"
+  },
+  {
+   "net": "rpad_T_0_15_q",
+   "src": "u_rpad_T_0_15",
+   "src_region": "c2r0",
+   "dst": "u_t_1_0.rst_n",
+   "dst_region": "c1r0",
+   "bits": 1,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rpad_T_1_11_q",
+   "src": "u_rpad_T_1_11",
+   "src_region": "c2r1",
+   "dst": "u_t_1_1.rst_n",
+   "dst_region": "c1r1",
+   "bits": 1,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rpad_T_2_7_q",
+   "src": "u_rpad_T_2_7",
+   "src_region": "c2r2",
+   "dst": "u_t_1_2.rst_n",
+   "dst_region": "c1r2",
+   "bits": 1,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "rpad_T_3_3_q",
+   "src": "u_rpad_T_3_3",
+   "src_region": "c2r3",
+   "dst": "u_t_1_3.rst_n",
+   "dst_region": "c1r3",
+   "bits": 1,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "t_out_0_0",
+   "src": "u_t_0_0",
+   "src_region": "c0r0",
+   "dst": "u_t_1_0.n_a",
+   "dst_region": "c1r0",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "t_out_1_1",
+   "src": "u_t_1_1",
+   "src_region": "c1r1",
+   "dst": "u_t_0_1.n_b",
+   "dst_region": "c0r1",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "t_out_3_0",
+   "src": "u_t_3_0",
+   "src_region": "c3r0",
+   "dst": "u_t_2_0.n_b",
+   "dst_region": "c2r0",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "t_out_2_1",
+   "src": "u_t_2_1",
+   "src_region": "c2r1",
+   "dst": "u_t_3_1.n_a",
+   "dst_region": "c3r1",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "t_out_1_2",
+   "src": "u_t_1_2",
+   "src_region": "c1r2",
+   "dst": "u_t_0_2.n_b",
+   "dst_region": "c0r2",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "t_out_1_3",
+   "src": "u_t_1_3",
+   "src_region": "c1r3",
+   "dst": "u_t_0_3.n_b",
+   "dst_region": "c0r3",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "t_out_2_2",
+   "src": "u_t_2_2",
+   "src_region": "c2r2",
+   "dst": "u_t_3_2.n_a",
+   "dst_region": "c3r2",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "t_out_2_3",
+   "src": "u_t_2_3",
+   "src_region": "c2r3",
+   "dst": "u_t_3_3.n_a",
+   "dst_region": "c3r3",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_0_1",
+   "src": "u_t_0_1",
+   "src_region": "c0r1",
+   "dst": "u_t_1_1.n_b",
+   "dst_region": "c1r1",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_2_1a_3",
+   "src": "u_leg_2_1a_3",
+   "src_region": "c3r1",
+   "dst": "u_t_2_1.n_a",
+   "dst_region": "c2r1",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_3_1",
+   "src": "u_t_3_1",
+   "src_region": "c3r1",
+   "dst": "u_t_2_1.n_b",
+   "dst_region": "c2r1",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_0_3",
+   "src": "u_t_0_3",
+   "src_region": "c0r3",
+   "dst": "u_t_1_3.n_b",
+   "dst_region": "c1r3",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_2_3a_3",
+   "src": "u_leg_2_3a_3",
+   "src_region": "c3r3",
+   "dst": "u_t_2_3.n_a",
+   "dst_region": "c2r3",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "n_y_3_3",
+   "src": "u_t_3_3",
+   "src_region": "c3r3",
+   "dst": "u_t_2_3.n_b",
+   "dst_region": "c2r3",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_3_0a_5",
+   "src": "u_leg_3_0a_5",
+   "src_region": "c2r1",
+   "dst": "u_t_2_2.n_a",
+   "dst_region": "c2r2",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_3_0b_5",
+   "src": "u_leg_3_0b_5",
+   "src_region": "c3r2",
+   "dst": "u_t_2_2.n_b",
+   "dst_region": "c2r2",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "pad_4_0a_2",
+   "src": "u_pad_4_0a_2",
+   "src_region": "c1r0",
+   "dst": "u_t_0_0.n_a",
+   "dst_region": "c0r0",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  },
+  {
+   "net": "leg_4_0b_6",
+   "src": "u_leg_4_0b_6",
+   "src_region": "c1r0",
+   "dst": "u_t_0_0.n_b",
+   "dst_region": "c0r0",
+   "bits": 514,
+   "hop_um": null,
+   "diagonal": false,
+   "added_edges": 0,
+   "landed": false
+  }
+ ],
+ "mutate": "landclk"
+}

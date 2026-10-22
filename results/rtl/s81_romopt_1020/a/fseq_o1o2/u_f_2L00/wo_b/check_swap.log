@@ -1,0 +1,25 @@
+MISMATCH edge 368 row 0 lo 0 k 1 got 3cbbd8a7/0 want 3b8e3674/0
+MISMATCH edge 369 row 1 lo 0 k 1 got 3d0317e3/0 want 3b757570/0
+MISMATCH edge 373 row 8 lo 0 k 1 got bd24c1da/0 want bcb138aa/0
+MISMATCH edge 374 row 9 lo 0 k 1 got bbbeb1a0/0 want 3cb7d4b0/0
+PLAN_MISMATCH predicted 11 words, got 11; first diff ((368, 0, (0, 1, 2), 999175796, 0), (368, 0, (0, 1, 2), 1018943655, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wo_b phase 1 mutant=None rows=11 fixture_rows=0 errors=5 END edges=2452 ret_words=42 xo_checked=2450 fault=0
+MISMATCH edge 368 row 0 lo 0 k 1 got 3d97d92f/0 want 3d10cda0/0
+MISMATCH edge 369 row 1 lo 0 k 1 got bd3008a0/0 want 3ca5aaeb/0
+MISMATCH edge 373 row 8 lo 0 k 1 got 3c9bd00a/0 want 3d6cccc3/0
+MISMATCH edge 374 row 9 lo 0 k 1 got bbbe29e4/0 want bd8d51a9/0
+PLAN_MISMATCH predicted 11 words, got 11; first diff ((368, 0, (0, 1, 2), 1024511392, 0), (368, 0, (0, 1, 2), 1033361711, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wo_b phase 2 mutant=None rows=11 fixture_rows=0 errors=5 END edges=2452 ret_words=42 xo_checked=2450 fault=0
+MISMATCH edge 368 row 6 lo 0 k 1 got 3de51e62/0 want 3d4c4dfa/0
+MISMATCH edge 369 row 7 lo 0 k 1 got 3c9ffdaa/0 want bce2333d/0
+MISMATCH edge 372 row 4 lo 0 k 1 got 3ca73b02/0 want 3da8c626/0
+MISMATCH edge 373 row 5 lo 0 k 1 got 3be19f9c/0 want 3d5d4c67/0
+PLAN_MISMATCH predicted 10 words, got 10; first diff ((368, 6, (0, 1, 2), 1028410874, 0), (368, 6, (0, 1, 2), 1038425698, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wo_b phase 3 mutant=None rows=10 fixture_rows=0 errors=5 END edges=2452 ret_words=42 xo_checked=2450 fault=0
+MISMATCH edge 368 row 6 lo 0 k 1 got 3d850185/0 want 3d7ca4f1/0
+MISMATCH edge 369 row 7 lo 0 k 1 got 3c1bb8e0/0 want bc89cd80/0
+MISMATCH edge 372 row 4 lo 0 k 1 got 3d8b1428/0 want 3d91c334/0
+MISMATCH edge 373 row 5 lo 0 k 1 got bcfe6dde/0 want bb9b0fb8/0
+PLAN_MISMATCH predicted 10 words, got 10; first diff ((368, 6, (0, 1, 2), 1031578865, 0), (368, 6, (0, 1, 2), 1032126853, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 attn.wo_b phase 4 mutant=None rows=10 fixture_rows=0 errors=5 END edges=2452 ret_words=42 xo_checked=2450 fault=0
+TOKSIM_FGU_SEQ FAIL op attn.wo_b PER 127 phases 4 rows 42 fixture_rows 0 go0 63 last_ret 762 span 699 errors 4 ["PHASE_FAIL p1: ['MISMATCH edge 368 row 0 lo 0 k 1 got 3cbbd8a7/0 want 3b8e3674/0', 'MISMATCH edge 369 row 1 lo 0 k 1 got 3d0317e3/0 want 3b757570/0']", "PHASE_FAIL p2: ['MISMATCH edge 368 row 0 lo 0 k 1 got 3d97d92f/0 want 3d10cda0/0', 'MISMATCH edge 369 row 1 lo 0 k 1 got bd3008a0/0 want 3ca5aaeb/0']", "PHASE_FAIL p3: ['MISMATCH edge 368 row 6 lo 0 k 1 got 3de51e62/0 want 3d4c4dfa/0', 'MISMATCH edge 369 row 7 lo 0 k 1 got 3c9ffdaa/0 want bce2333d/0']"]

@@ -3,7 +3,7 @@
 // ref_tile.py gen (spec "face_land").  Face landing standard (HKV-RSTCAP 2026-10-19):
 //   reset rst_n: rtl/lib/ot_rst_relay.sv (async assert, release +3 ck edges, zero steady-state cycles)
 //   landed buses: - (rtl/lib/ot_pin_land.sv, one capture flop per bit at the face)
-//   reason: closed r1 native capture rst_n 277.4 ps > 190 (the reset pin is the async clear of all 296 relay flops)
+//   reason: closed r1 native capture rst_n 277.4 ps > 190 (the reset pin is the async clear of all 296 relay flops); KV-PARAMS2 rc1: 296 async-clear loads split over 10 KEPT relay copies (<=30 each, safe checklist 3)
 // MUT bit0 = reset relay bypassed, bit1 = landing bypassed (bench mutants only).
 module qkd_astk_rly_296_fl #(parameter integer MUT=0) (
     input wire ck,
@@ -15,7 +15,9 @@ module qkd_astk_rly_296_fl #(parameter integer MUT=0) (
     generate if (MUT % 2) begin : g_rbyp_rst_n
         assign fl_rst__rst_n = rst_n;
     end else begin : g_rrel_rst_n
-        ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_fl_rst_rst_n (.clk(ck), .rst_n_in(rst_n), .rst_n(fl_rst__rst_n));
+        wire [9:0] fl_rstc__rst_n;  // KV-RELAYGEN: 10 kept relay copies (ot_rst_copies.tcl)
+        ot_rst_relay #(.REGIONS(10), .SYNC_STAGES(2), .TREE_STAGES(1)) u_fl_rst_rst_n (.clk(ck), .rst_n_in(rst_n), .rst_n(fl_rstc__rst_n));
+        assign fl_rst__rst_n = fl_rstc__rst_n[0];
     end endgenerate
     qkd_astk_rly_296 u_core (
         .ck(ck),

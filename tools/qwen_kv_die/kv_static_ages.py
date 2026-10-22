@@ -222,7 +222,9 @@ def lane_bid(station):
 
 
 def fwd_overlay(src, fl):
-    """KV-CLOCK: stage counts of the landed buses -> their landed latency (static: a fixed number of core edges)"""
+    """KV-CLOCK: stage counts of the landed buses -> their landed latency (static: a fixed number of core edges).
+    KVR-FWDAGE 10-19: the landed age REPLACES the relay stage count in both directions (a forwarded half-cycle lane is
+    usually FASTER than its n-relay plan: L = E + 1 < n); a static schedule must charge exactly what the landing delivers"""
     import copy
     worst = {}
     for L in fl['lanes']:
@@ -231,9 +233,16 @@ def fwd_overlay(src, fl):
         worst[b] = max(worst.get(b, 0), lat)
     out, landed = copy.deepcopy(src), {}
     for b in out['buses']:
-        if b['bid'] in worst and worst[b['bid']] > b['stages']:
+        if b['bid'] in worst and worst[b['bid']] != b['stages']:
             landed[b['bid']] = (b['stages'], worst[b['bid']])
             b['stages'] = worst[b['bid']]
+    # HKV-STATIONS 10-19: relay stages kv_lane_stations inserted OUTSIDE a lane (plain replicas) are fixed edges too
+    plain = fl.get('plain_added_stages') or {}
+    for b in out['buses']:
+        k = plain.get(b['bid'], 0)
+        if k and b['bid'] not in worst:
+            landed[b['bid']] = (b['stages'], b['stages'] + k)
+            b['stages'] += k
     return out, landed
 
 
@@ -243,7 +252,7 @@ def main():
     ap.add_argument('--out', type=Path, default=ROOT / OUT_DIR / 'die_ages.json')
     ap.add_argument('--template-out', type=Path, help='also write the priced static-join template here')
     ap.add_argument('--fwd-lanes', type=Path, help='KV-CLOCK 10-18: RUN/fwd_lanes.json (kv_fwd_lanes.py); every landed bus '
-                    'takes its landed latency (worst lane of the bus: 1 + (n-2)/2 + 1 + E stages, the block flop excluded)')
+                    'takes its landed latency (worst lane of the bus: ceil(landed - 1) = E + 1 (+ post stages), the block flop excluded)')
     a = ap.parse_args()
     src = json.loads(a.source.read_text())
     if a.fwd_lanes:

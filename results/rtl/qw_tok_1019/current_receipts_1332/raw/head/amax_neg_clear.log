@@ -1,0 +1,15 @@
+# case amax_neg_clear top tb_amax_mu MUT=0 plusargs '+seed=1 +neg' host ot-epyc7 2026-10-19T12:29:13-07:00
+# sources: rtl/qwen_dv/mu/qfd_dv_amax_mu.sv results/rtl/mu_qwen_1018/head/amax_today_ref.sv results/rtl/mu_qwen_1018/head/tb_amax_mu.sv
+8b697749c017cbe8ebb647702590314c71d3713b7259842f203d5ae713ed2b04  rtl/qwen_dv/mu/qfd_dv_amax_mu.sv
+d4ecd5db465376782cf9365e306e3a189af78585e1c2d2e62ceea84e195dfddf  results/rtl/mu_qwen_1018/head/amax_today_ref.sv
+cd0eb8eb66fb8b8a5efd57003d1ad3b4d951b66799d366564741833e8158e7d1  results/rtl/mu_qwen_1018/head/tb_amax_mu.sv
+phase A: 60000 edges compared, 0 mismatches
+MISMATCH user 3 head 0 mode 0: got v 1 idx 03046e val 7dbf0dbd, single-shot idx 0303b8 val 7f8392e8
+phase B: users 4 heads/user 120 chunks/head 8 rows/head 512 emits 480 mismatches 1
+phase B: cross-chunk-tie heads 362, chunk-boundary-tie heads 124, permuted-order heads 223, back-to-back other-op 1934, mu_fault 1, emit_empty 0
+TB_AMAX_MU FAIL MUT=0 NEG=1 seed=1 (eq 0, mismatches 1, mu_fault 1, emit_empty 0)
+- results/rtl/mu_qwen_1018/head/tb_amax_mu.sv:188: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 191us; walltime 0.349 s; speed 546.544 us/s
+- Verilator: cpu 0.139 s on 1 threads; allocated 7 MB
+# exit 0

@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.qwen.xpf-check.v1",
+ "log": "/srv/opentallas-scratch/claude/q-xpf-1018/bi_zero/post/smoke/ctl/run_m0_s1.log",
+ "slice": "/srv/opentallas-scratch/claude/q-xpf-1018/bi_zero/post/c_ctl",
+ "lanes": "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/out/case/fwd_lanes.json",
+ "params": "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/out/case/die.v.params.json",
+ "measured_hr_lane_edges": 15,
+ "elaborated": 20,
+ "sidecar": 20,
+ "derived": 20,
+ "hr_lane": {
+  "n": 25,
+  "E": 18,
+  "E_sta": 7,
+  "K": 2
+ },
+ "ctlm_land_faults": [
+  "rly_dvw_ag_wo_21",
+  "rly_dvw_cmd_wi_24",
+  "rly_dvw_hr_wi_24",
+  "rly_dvw_ss_wo_21"
+ ],
+ "lag_hist": {
+  "0": 84
+ },
+ "fails": [
+  "slice is the zero-delay netlist (land_lag_sim annotate --zero): lane ages alias by the ring depth",
+  "XPF_TRANSPORT_EDGES sidecar 20 / elaborated 20 / 1 + measured 16 / 1 + lane_cycles(fwd_lanes) 20 disagree",
+  "tt_ctlm lane landings faulted (read slot epoch != rc - K): ['rly_dvw_ag_wo_21', 'rly_dvw_cmd_wi_24', 'rly_dvw_hr_wi_24', 'rly_dvw_ss_wo_21']"
+ ],
+ "verdict": "FAIL"
+}

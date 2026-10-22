@@ -1,0 +1,134 @@
+{
+ "design_point": {
+  "ports_dir": "results/arch/qwen_kv_domsplit_1019/base_ports",
+  "rtl_file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu.sv"
+ },
+ "fields": {
+  "grp": {
+   "bcdc0.applied_hbm[0+:1]": "hck",
+   "bcdc0.fault_core[0+:1]": "ck",
+   "bcdc0.fault_hbm[0+:1]": "hck",
+   "bcdc0.sink_addr[0+:5]": "hck",
+   "bcdc0.sink_data[0+:64]": "hck",
+   "bcdc0.sink_seal[0+:1]": "hck",
+   "bcdc0.sink_we[0+:1]": "hck",
+   "bcdc1.applied_hbm[0+:1]": "hck",
+   "bcdc1.fault_core[0+:1]": "ck",
+   "bcdc1.fault_hbm[0+:1]": "hck",
+   "bcdc1.sink_addr[0+:5]": "hck",
+   "bcdc1.sink_data[0+:64]": "hck",
+   "bcdc1.sink_seal[0+:1]": "hck",
+   "bcdc1.sink_we[0+:1]": "hck",
+   "bcdc2.applied_hbm[0+:1]": "hck",
+   "bcdc2.fault_core[0+:1]": "ck",
+   "bcdc2.fault_hbm[0+:1]": "hck",
+   "bcdc2.sink_addr[0+:5]": "hck",
+   "bcdc2.sink_data[0+:64]": "hck",
+   "bcdc2.sink_seal[0+:1]": "hck",
+   "bcdc2.sink_we[0+:1]": "hck",
+   "bcdc3.applied_hbm[0+:1]": "hck",
+   "bcdc3.fault_core[0+:1]": "ck",
+   "bcdc3.fault_hbm[0+:1]": "hck",
+   "bcdc3.sink_addr[0+:5]": "hck",
+   "bcdc3.sink_data[0+:64]": "hck",
+   "bcdc3.sink_seal[0+:1]": "hck",
+   "bcdc3.sink_we[0+:1]": "hck",
+   "bcdcf.applied_hbm[0+:1]": "hck",
+   "bcdcf.fault_core[0+:1]": "ck",
+   "bcdcf.fault_hbm[0+:1]": "hck",
+   "cf1.fault[0+:1]": "ck",
+   "drain.drained[0+:1]": "ck",
+   "drain.fault[0+:1]": "ck",
+   "fcal.blk_go[0+:1]": "hck",
+   "fcal.blk_go[1+:1]": "hck",
+   "fcal.blk_go[2+:1]": "hck",
+   "fcal.blk_go[3+:1]": "hck",
+   "lcal.r_epoch[0+:16]": "ck",
+   "lcal.r_layer[0+:6]": "ck",
+   "lcal.r_put[0+:1]": "ck",
+   "lcal.r_put[1+:1]": "ck",
+   "lcal.r_put[2+:1]": "ck",
+   "lcal.r_put[3+:1]": "ck",
+   "lcal.r_sector[0+:10]": "ck",
+   "lcal.r_sector[10+:10]": "ck",
+   "lcal.r_sector[20+:10]": "ck",
+   "lcal.r_sector[30+:10]": "ck",
+   "phase.ctrl_go_h[0+:1]": "hck",
+   "phase.epoch_h[0+:16]": "hck",
+   "phase.layer_h[0+:6]": "hck"
+  },
+  "pc": {
+   "pc.actual_data[0+:256]": "ck",
+   "pc.actual_epoch[0+:16]": "ck",
+   "pc.actual_layer[0+:6]": "ck",
+   "pc.actual_sector[0+:10]": "ck",
+   "pc.actual_valid[0+:1]": "ck",
+   "pc.cal_fault_hbm[0+:1]": "hck",
+   "pc.completion_fault[0+:1]": "ck",
+   "pc.drain_fault_core[0+:1]": "ck",
+   "pc.drain_fault_hbm[0+:1]": "hck",
+   "pc.er[260+:1]": "ck",
+   "pc.fo[0+:1]": "hck",
+   "pc.front_fault_go_hbm[0+:1]": "hck",
+   "pc.front_fault_overflow_hbm[0+:1]": "hck",
+   "pc.front_hold[0+:1]": "hck",
+   "pc.front_idle_hbm[0+:1]": "hck",
+   "pc.idle_core[0+:1]": "ck",
+   "pc.idle_hbm[0+:1]": "hck",
+   "pc.return_fault_core[0+:1]": "ck",
+   "pc.return_fault_hbm[0+:1]": "hck",
+   "pc.return_idle_core[0+:1]": "ck",
+   "pc.return_idle_hbm[0+:1]": "hck"
+  }
+ },
+ "measured_ports": [
+  [
+   "grp",
+   "o_ctl"
+  ],
+  [
+   "grp",
+   "o_pc0"
+  ],
+  [
+   "grp",
+   "o_pc1"
+  ],
+  [
+   "grp",
+   "o_pc2"
+  ],
+  [
+   "grp",
+   "o_pc3"
+  ],
+  [
+   "grp_h",
+   "o_ctl"
+  ],
+  [
+   "grp_h",
+   "o_pc0"
+  ],
+  [
+   "grp_h",
+   "o_pc1"
+  ],
+  [
+   "grp_h",
+   "o_pc2"
+  ],
+  [
+   "grp_h",
+   "o_pc3"
+  ],
+  [
+   "pc",
+   "o_grp"
+  ],
+  [
+   "pc_h",
+   "o_grp"
+  ]
+ ]
+}

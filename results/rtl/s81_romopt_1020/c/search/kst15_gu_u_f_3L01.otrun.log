@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       admits  1136 GB (avail 903, growth 108, headroom 0, waiters 0/0 GB) load 75/128 running 20 disk 326 GB 
+ot-run: ot-epyc6       admits   573 GB (avail 514, growth 113, headroom 0, waiters 0/0 GB) load 140/128 running 27 disk 3711 GB 
+ot-run: ot-epyc7       admits   889 GB (avail 698, growth 76, headroom 0, waiters 0/0 GB) load 46/96 running 23 disk 5268 GB 
+ot-run: ot-epyc9       admits   966 GB (avail 727, growth 38, headroom 0, waiters 0/0 GB) load 81/128 running 18 disk 103 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2780547-1792519293 after 0 s
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12|st1.5 round 0 best faults 1 root words 24 cfg (9000007, 80000, 40, 10) time 155
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12|st1.5 round 1 best faults 1 root words 24 cfg (9000007, 80000, 40, 10) time 309
+ot-run: interrupted (signal 15 from pid 737402 (python3 /home/ubuntu/bin/ot-run --cancel ffn.experts_gu:1.5; parent 737399 (452096603-di0ioy.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && { \builtin unalias -- 'unsetenv'; \builtin unset -f -- 'unsetenv'; } >/dev/null 2>&1 || true && eval '/home/ubuntu/bin/ot-run --cancel "ffn.experts_gu:1.5" 2>&1 | tail -5' < /dev/null && pwd -P >| /tmp/claude-524e-cwd))); the command is STILL RUNNING on ot-epyc9 (unit oth-ubuntu-2780547-1792519293): NOT COMPLETED

@@ -1,0 +1,57 @@
+ISSUE e=246 input=70001 pos=0 owner=91e3/1
+ALLOC e=255 tag=00000088b880000 gen=1
+ENGINE_RESULT e=304 step=0 tag=00004a88b880000 next=70002
+RAW_DONE time=3425000 e=339 native=1 unready=0 needed=0
+POST e=344 tag=00004a88b880000
+MALFORMED_REAL_CERTIFICATE_ATTEMPT time=7615000 step=0 key=48f180200012a22e200000 actual=48f180200012a22e200001 mirror=0/0/0 normal=0
+RETAINED_BAD time=7625000 e=759 raw=1 errorCQ=0
+PIN_FIRST_AW_ACCEPT e=764 addr=0000000000002008
+PIN_FIRST_W_ACCEPT e=764 data=0000000000000000
+BRIDGE_AW_CAPTURE_ACK e=764 n=1 out_valid=1
+BRIDGE_W_CAPTURE_ACK e=764 n=1 out_valid=1
+PIN_RETURNED_AW_ACK e=766 source_valid=1 out_valid=0
+PIN_RETURNED_W_ACK e=766 source_valid=1 out_valid=0
+PIN_AW_OUTPUT_VALID_DROP e=766
+PIN_W_OUTPUT_VALID_DROP e=766
+PIN_AW_SOURCE_VALID_DROP e=767
+PIN_W_SOURCE_VALID_DROP e=767
+PIN_FIRST_AW_ACCEPT e=774 addr=0000000000002000
+PIN_FIRST_W_ACCEPT e=774 data=0000000091e30077
+BRIDGE_AW_CAPTURE_ACK e=774 n=2 out_valid=1
+BRIDGE_W_CAPTURE_ACK e=774 n=2 out_valid=1
+CQ_PACKET time=7780000 edge=778 entry=1 w0=0000000091e30077 w1=0000000000000000
+PIN_RETURNED_AW_ACK e=776 source_valid=1 out_valid=0
+PIN_RETURNED_W_ACK e=776 source_valid=1 out_valid=0
+PIN_AW_OUTPUT_VALID_DROP e=776
+PIN_W_OUTPUT_VALID_DROP e=776
+PIN_AW_SOURCE_VALID_DROP e=777
+PIN_W_SOURCE_VALID_DROP e=777
+REAL_CQB time=7835000 e=780 native=1
+NATIVE_JOIN_PASS FUNCTIONAL_ONLY case=11 errors=1 raw=1 allocations=1 NO_NATIVE_conditional=0
+- bench/native_join_bench.sv:476: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.005 s; speed 1.844 ms/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 8 MB
+	Command being timed: "obj/Vnative_join_bench +CASE=11"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 87%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4512
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 196
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.s81.capture_clock_bridge.v1",
+  "unit": "oth-ubuntu-3122420-1792193542",
+  "exit": 0,
+  "unit_tests": 11,
+  "actual_candidate4_packet": "/home/ubuntu/wt/codex-s81-die-1552/physical/s81_die_pins/capture_rehome_1552/candidate4_packet.json.gz",
+  "packet_sha256": "10dae87429b1f228c941c2101a03f3fd067b394c939e08b96eff593e44985ad6",
+  "entries": 86,
+  "masters": 17,
+  "master_pins": 19,
+  "verdict": "PASS_PACKET_CLOCK_BRIDGE_ONLY",
+  "reference": "R_ps SS/FF/TT boundary means; ETM early/late normalization remains distinct",
+  "negative_checks": [
+    "missing corner mean",
+    "inconsistent repeated master/pin mean",
+    "missing graph entry",
+    "missing actual child",
+    "duplicate literal entry"
+  ],
+  "normalization": "single-bit [i:i] canonicalized to literal [i] for source pins/names, planned sink keys, latencies and pin-master maps; real source graph unchanged",
+  "remaining": "actual corrected full generation and routed physical clocks/TT setup/FF hold/SS sensitivity/reset epoch source remain unqualified"
+}

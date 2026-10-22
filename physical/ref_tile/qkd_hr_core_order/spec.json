@@ -160,10 +160,10 @@
   "reason": "literal async reset roles only (data levels such as native_link_reset_seen are registered)"
  },
  "job": {
-  "owner": "Claude:KV-HOSTCL",
-  "branch": "claude/kv-hrorder-1018",
-  "tag": "r3",
-  "purpose": "HOST root cluster r2 child qkd_hr_core_order (pre-route gate + route; parent qkd_host_root is CRITICAL)",
+  "owner": "Claude:HKV-RSTCAP2",
+  "branch": "claude/kv-rstcap2-ord-1019",
+  "tag": "r4",
+  "purpose": "HKV-RSTCAP2: native capture re-route of closed qkd_hr_core_order r3 (host_rst_n capture 386.9 > 190) with main's reset_landing kit option (2 registered face stages)",
   "benches": [
    {
     "name": "cluster_lockstep",
@@ -364,5 +364,15 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "reroute_reason": {
+  "kind": "native_capture",
+  "source": "results/arch/qwen_kv_die/rstcap_1019/native_receipts.json",
+  "cell": "qkd_hr_core_order",
+  "fix": "input side: host_rst_n lands at the face in main's reset_landing (ROOT-RST 10-19: 2 registered stages <port>__ot_rl0 -> __ot_rl1, then equal-depth fan-out) instead of the raw pin clearing every member flop tile-wide; reset assert and release +2 tile-clock edges (scheduled constant), data latency unchanged; RTL, outline and pin faces unchanged"
+ }
 }

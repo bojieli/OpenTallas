@@ -1,0 +1,39 @@
+{
+  "baseline": {
+    "failed": 150,
+    "passed": 1564,
+    "skipped": 21,
+    "subtests": 350
+  },
+  "candidate_raw": {
+    "failed": 133,
+    "passed": 1584,
+    "skipped": 21,
+    "subtests": 354
+  },
+  "added": [
+    "FAILED tools/ref_tile/test_literal_bit_pin_plan.py::LiteralPinPlan::test_synthesized_gate_uses_actual_index_bounds"
+  ],
+  "removed": [
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_bench_relocation_preserves_executed_helpers_after_main_changes",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_bench_relocation_refuses_changed_original_helpers",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_daemon_only_snapshot_cannot_gain_committed_recovery_identity",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_explicit_gate_recovery_preserves_old_identity_but_new_submission_stays_current",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_fleet_run_helper_drift_to_main_is_sanctioned_and_recorded",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_frozen_replay_ships_gate_bytes_after_any_main_drift",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_gate_original_helper_missing_bytes_mode_and_forged_receipt_refuse",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_gate_recovery_does_not_waive_changed_producer_source",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_installed_run_non_publish_drift_keeps_frozen_bytes",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_interrupted_publish_refresh_is_adopted",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_later_main_drift_reuses_exact_committed_execution_without_writes",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_lint_only_drift_ships_frozen_bytes",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_missing_directory_reinstalls_exact_committed_bytes",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_mode_drift_and_tampered_plan_are_refused",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_negative_metrics_are_still_rejected_after_honest_recovery",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_publish_helper_drift_refreshes_installed_run",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_publish_refresh_ignores_unrelated_route_helper_drift",
+    "FAILED tools/closure_loop/test_helper_overlay.py::HelperOverlay::test_valid_digest_does_not_hide_committed_tree_mismatch"
+  ],
+  "order": "Exact232baselinecollectedfilelist, sortedfileorder; standalone CLItest_pair_check.py is not a pytest testcase and exitsduringblanketdirectoryimport.",
+  "classification": "18 inherited helper fixture mode failures resolved. One literal fixture failure diagnosed with actualfunction globals differing from reloaded PG module: io_tcl lookup used repo instead of temporary fixture. Productioncoremodules unchanged6213. Fixture corrected to patch importedfunction globals; samewrongboundsnegative retained. Full raw + focusedprefix retained, no gate thresholds orsourceguards altered."
+}

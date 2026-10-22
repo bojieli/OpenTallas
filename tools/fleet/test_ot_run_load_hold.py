@@ -222,5 +222,45 @@ class PickEligibility(unittest.TestCase):
         self.assertEqual(result['host'],'b',result)
         self.assertIn('will queue',result['log'])
 
+
+class LoadSpill(unittest.TestCase):
+    """v11 LOAD SPILL (REFILL-0325 2026-10-20): a CPU-heavy job whose only --dir host is past 1.25 x cores spills to a host
+    that admits it at <= 0.85 x cores; when it cannot spill it runs on the loaded host (never held)."""
+    def go(self, plan, threads='16'):
+        import tempfile
+        module = load(Path(__file__).with_name('ot-run'))
+        rows = dict(e6=row(300, 289, 128))
+        run = Mock(return_value=(0, True)); srun = Mock(return_value=0); splan = Mock(return_value=plan)
+        neg = tempfile.mkdtemp()
+        with patch.object(module, 'HOSTS', ['e6', 'e5']), patch.object(module, 'probe', side_effect=lambda h, d: (h, rows[h]) if h in rows else (h, None)), \
+             patch.object(module, 'run', run), patch.object(module, 'spill_plan', splan), patch.object(module, 'spill_run', srun), \
+             patch.object(module, 'LOAD_SPILL_NEG', neg), patch.object(module, 'trigger_sweep', lambda: None), \
+             patch.object(module.sys, 'argv', ['ot-run', '--mem', '32', '--threads', threads, '--dir', '/srv/opentallas-scratch/claude/x/src', '--', 'true']), \
+             patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(io.StringIO()) as err:
+            try:
+                module.main()
+            except SystemExit:
+                pass
+        return run, srun, splan, err.getvalue(), os.listdir(neg)
+
+    def test_overloaded_dir_host_spills_to_idle_host(self):
+        run, srun, splan, log, _ = self.go((('e5', ['/srv/opentallas-scratch/claude/x'], 1.0), '', False))
+        self.assertTrue(srun.called, log)
+        self.assertEqual(srun.call_args.args[:2], ('e6', 'e5'))
+        self.assertLessEqual(splan.call_args.kwargs['max_ratio'], 0.85)
+        self.assertFalse(run.called)
+        self.assertIn('LOAD SPILL', log)
+
+    def test_unspillable_lane_runs_on_loaded_host_and_is_remembered(self):
+        run, srun, splan, log, neg = self.go((None, 'command names /srv/x outside a scratch lane', True))
+        self.assertFalse(srun.called)
+        self.assertEqual(run.call_args.args[0], 'e6', log)
+        self.assertEqual(len(neg), 1)
+
+    def test_few_thread_job_does_not_spill(self):
+        run, srun, splan, log, _ = self.go((('e5', [], 1.0), '', False), threads='2')
+        self.assertFalse(splan.called)
+        self.assertEqual(run.call_args.args[0], 'e6')
+
 if __name__ == '__main__':
     unittest.main()

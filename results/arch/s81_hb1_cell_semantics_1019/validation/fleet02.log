@@ -1,0 +1,246 @@
+ot-run: ot-epyc4       admits  1120 GB (avail 840, growth 50, headroom 0, waiters 0/0 GB) load 49/128 running 15 disk 412 GB 
+ot-run: ot-epyc5       admits   563 GB (avail 451, growth 47, headroom 0, waiters 0/0 GB) load 46/128 running 7 disk 562 GB 
+ot-run: ot-epyc6       admits  1250 GB (avail 931, growth 55, headroom 0, waiters 0/0 GB) load 23/128 running 17 disk 559 GB 
+ot-run: ot-epyc7       admits   998 GB (avail 756, growth 58, headroom 0, waiters 0/0 GB) load 27/96 running 20 disk 502 GB 
+ot-run: ot-epyc8       admits  1193 GB (avail 919, growth 84, headroom 0, waiters 0/0 GB) load 26/128 running 16 disk 565 GB 
+ot-run: ot-pve1        admits    99 GB (avail 81, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1212 GB 
+ot-run: ot-agidock128  admits   100 GB (avail 82, growth 12, headroom 0, waiters 0/0 GB) load 9/64 running 6 disk 46 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-1113509-1792447291 after 1 s
+ot-epyc6
+               total        used        free      shared  buff/cache   available
+Mem:     1216751276032 216429543424 340041465856  7244378112 675113975808 1000321732608
+Swap:    146028879872     1798144 146027081728
+Filesystem        1B-blocks       Used    Available Use% Mounted on
+tmpfs          608375640064 7239303168 601136336896   2% /tmp
+/usr/bin/iverilog
+Icarus Verilog version 12.0 (stable) ()
+
+Copyright (c) 2000-2021 Stephen Williams (steve@icarus.com)
+
+a6681e0b577dcfc4ea83d1591a5714710b0b3535ebb36491ee8177553bab9631  /usr/bin/iverilog
+e0a087a4906d5a9cd1b0b85c9b4c2081704c2c9bcd94f224437fc56b15fc440d  /usr/bin/vvp
+validation/official_reference.v:14654: warning: UDP primitive already exists.
+validation/official_reference.v:14697: warning: UDP primitive already exists.
+validation/official_reference.v:14707: warning: UDP primitive already exists.
+functional_projection.v:4: warning: UDP primitive already exists.
+	Command being timed: "iverilog -g2012 -s tb -o run02/positive.vvp validation/official_reference.v functional_projection.v validation/tb.v"
+	User time (seconds): 0.07
+	System time (seconds): 0.02
+	Percent of CPU this job got: 119%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.08
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 21628
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 4429
+	Voluntary context switches: 56
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+positive exit 1
+FATAL: validation/tb.v:163: ASR_MISMATCH clk=0 d=0 resetn=1 setn=1 projection=x official=1
+       Time: 511000  Scope: tb.check
+Command exited with non-zero status 1
+	Command being timed: "vvp run02/positive.vvp"
+	User time (seconds): 0.01
+	System time (seconds): 0.00
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.02
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7308
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 850
+	Voluntary context switches: 0
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+validation/official_reference.v:14654: warning: UDP primitive already exists.
+validation/official_reference.v:14697: warning: UDP primitive already exists.
+validation/official_reference.v:14707: warning: UDP primitive already exists.
+validation/mut_polarity.v:4: warning: UDP primitive already exists.
+	Command being timed: "iverilog -g2012 -s tb -o run02/mut_polarity.vvp validation/official_reference.v validation/mut_polarity.v validation/tb.v"
+	User time (seconds): 0.05
+	System time (seconds): 0.02
+	Percent of CPU this job got: 135%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.05
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 21764
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 4436
+	Voluntary context switches: 50
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+mut_polarity exit 1
+FATAL: validation/tb.v:163: ASR_MISMATCH clk=0 d=0 resetn=1 setn=1 projection=x official=1
+       Time: 511000  Scope: tb.check
+Command exited with non-zero status 1
+	Command being timed: "vvp run02/mut_polarity.vvp"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 90%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7316
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 848
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+validation/official_reference.v:14654: warning: UDP primitive already exists.
+validation/official_reference.v:14697: warning: UDP primitive already exists.
+validation/official_reference.v:14707: warning: UDP primitive already exists.
+validation/mut_priority.v:4: warning: UDP primitive already exists.
+	Command being timed: "iverilog -g2012 -s tb -o run02/mut_priority.vvp validation/official_reference.v validation/mut_priority.v validation/tb.v"
+	User time (seconds): 0.05
+	System time (seconds): 0.01
+	Percent of CPU this job got: 139%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.05
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 21716
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 4431
+	Voluntary context switches: 51
+	Involuntary context switches: 2
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+mut_priority exit 1
+FATAL: validation/tb.v:163: ASR_MISMATCH clk=0 d=0 resetn=1 setn=1 projection=x official=1
+       Time: 511000  Scope: tb.check
+Command exited with non-zero status 1
+	Command being timed: "vvp run02/mut_priority.vvp"
+	User time (seconds): 0.01
+	System time (seconds): 0.00
+	Percent of CPU this job got: 91%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.02
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7344
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 850
+	Voluntary context switches: 0
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+validation/official_reference.v:14654: warning: UDP primitive already exists.
+validation/official_reference.v:14697: warning: UDP primitive already exists.
+validation/official_reference.v:14707: warning: UDP primitive already exists.
+validation/mut_comb.v:4: warning: UDP primitive already exists.
+	Command being timed: "iverilog -g2012 -s tb -o run02/mut_comb.vvp validation/official_reference.v validation/mut_comb.v validation/tb.v"
+	User time (seconds): 0.05
+	System time (seconds): 0.02
+	Percent of CPU this job got: 134%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.05
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 21624
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 4430
+	Voluntary context switches: 54
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+mut_comb exit 1
+FATAL: validation/tb.v:168: COMB_MISMATCH AND2x2_ASAP7_75t_R i=0
+       Time: 5000  Scope: tb
+Command exited with non-zero status 1
+	Command being timed: "vvp run02/mut_comb.vvp"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7272
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 848
+	Voluntary context switches: 1
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+validation/official_reference.v:14654: warning: UDP primitive already exists.
+validation/official_reference.v:14697: warning: UDP primitive already exists.
+validation/official_reference.v:14707: warning: UDP primitive already exists.
+functional_projection.v:4: warning: UDP primitive already exists.
+validation/tb_fourstate.v:163: error: 'a0' has already been declared in this scope.
+validation/tb_fourstate.v:3:      : It was declared here as a variable.
+VALIDATION_EXIT 1
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-1113509-1792447291): exit 1

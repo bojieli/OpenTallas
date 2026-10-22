@@ -1,0 +1,277 @@
+{
+ "schema": "opentallas.token_pass.measured_qwen.link.v1",
+ "lane": "TOKSIM-QW/LINK",
+ "date": "2026-10-19",
+ "release_rtl": {
+  "branch": "origin/claude/qw-gen3-1019",
+  "brief_commit": "221cf90b7",
+  "head_checked": "e9879afda",
+  "note": "221cf90b7..e9879afda touches only tools/qwen_split/dv_case.py (GEN tool); every link/collective file is identical at both"
+ },
+ "clock_ghz": 1.2,
+ "stages": [
+  {
+   "stage": "d2d_1u_pair (compute<->KV, per layer, 35 layers)",
+   "grade": "REL",
+   "rerun": false,
+   "source": "extracted from origin/claude/qw-tok-1019 results/rtl/qw_tok_1019/xdie_dh2 (job xdie_txdp_job.sh, ep6 /srv/opentallas-scratch/claude/qw-tok/xdie_dh2)",
+   "cycles_start_to_retire": {
+    "C2K_q_first_issue_to_last_land": 63,
+    "C2K_cmd_issue_to_land": 30,
+    "K2C_r_first_issue_to_last_land": 62,
+    "KVN_k3_issue_to_land": 20,
+    "K2C_status_issue_to_land": 27,
+    "roundtrip_cmd_issue_to_r31_land": 1840,
+    "kv_service_cmd_land_to_r31_issue": 1779,
+    "compute_done_after_r31_land": 14,
+    "X": 7,
+    "period_per_layer": 6842,
+    "phy9_period_per_layer": 6850,
+    "T8192_period_per_layer": 6842
+   },
+   "verdict": "PASS: pair/pair_gen_txdp/pair_l0/pair_l0_phy9/pair_phy9/pair_t8192 PASS 35 layers bit-exact, every landing on its compiled cycle",
+   "golden_words_checked": "per layer 32 Q + 32 RESULT + 4 KVN + 1 STATUS beats bit-exact vs the bench reference, x35 layers, every config",
+   "mutants": "FAIL as required: kseam_rx_torn, kseam_tx_torn, phy_bit, result_bit, status_done, txdp_c_off1; old C TXDP [8,3,1,9] and old K TXDP 24 GEN FAIL",
+   "rtl_source_sha256": "d2d_1u/source.sha256.run (34 files); d2d_1u/source.sha256.gen3_e9879afda: 34/34 byte-identical to qw-gen3",
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "host": "ot-epyc6 (QW-TOK run)",
+   "stand_ins": [
+    "KV side = rtl/test/qwen_split/xdie_kvs14c/qkd_kvs_attn_kvs14c.sv (kvs14c kvs_attn, LAND=0, test-dir stand-in) + d2ds frame: NOT the KV kvs14 GEN9 release die; kv_service 1779 is that stand-in's",
+    "PHY = ot_qkvd_ucie_x64_phy_model (declared model, LAT 5; phy9 variant LAT 9)",
+    "compute seam stages from the dv2f18dh2 GEN netlist (die_dv2f18dh2.v, C 2,2,2,3,2,2); the qw-gen3 die dv2f19g3 GEN has not finished, its seam is not yet extracted",
+    "tb_xdie_qwen_exchange: per-layer diagnostic calendars from tools/qwen_split/xdie_exchange_cal.py, scalar EP/TOK/GEN, host record_tx tied 0, programme authority as outer stimulus (no die-named production calendar sequencer), native59 NU1 only"
+   ]
+  },
+  {
+   "stage": "d2d_4u_ovl_pair (4 users, overlapping segments, codec2, F16 frame)",
+   "grade": "NEWEST",
+   "why_not_rel": "the OVL link hardware (ot_qwen_d2d_static.sv OVL form, ot_qwen_d2d_ovl_seq.sv) is NOT in the qw-gen3 release RTL (gen3 ot_qwen_d2d_static.sv has no OVL parameter, no ovl_seq); the gen3 compiler cannot build any OVL frame (d2d_link_calendar.producer_txd has no kv_codec)",
+   "rtl": "qw-gen3 link files crc/slot_link/llr/SRAM/PHY model/cal_seq (GEN3_IDENTICAL) + overlay ot_qwen_d2d_static.sv 82bb11f1 + ot_qwen_d2d_ovl_seq.sv 4c8e4aea + tb_d2d_ovl_mu.sv from codex/sysface-ovl-1019 e794853e1 (d2d_4u_ovl/gen3_identity.txt)",
+   "calendars": "compiled in the job by tools/qwen_static_schedule/mu_d2d_ovl.py --kv-codec 2 --kv-prog (gen3 tools + sysface-ovl mu_calendar.py/d2d_link_calendar.py); output byte-identical to rtl/qwen_sys/d2d_static_20261015/ovl_release (1a73e1e7a lists)",
+   "cycles_start_to_retire": {
+    "H_frame": 4026800,
+    "tokens_per_frame": {
+     "0": 16,
+     "1": 15,
+     "2": 8,
+     "3": 7
+    },
+    "cycles_per_token_per_user": {
+     "0": 251675.0,
+     "1": 268453.3,
+     "2": 503350.0,
+     "3": 575257.1
+    },
+    "aggregate_cycles_per_token": 87539.1,
+    "aggregate_tok_s": 13708.2,
+    "per_user_tok_s": [
+     4768.1,
+     4470.1,
+     2384.0,
+     2086.0
+    ],
+    "exchanges_per_frame": {
+     "0": 576,
+     "1": 540,
+     "2": 288,
+     "3": 252
+    },
+    "overlap_segments_rel_to_segment_anchor": {
+     "req": {
+      "C_tx": {
+       "start": -1,
+       "occ": [
+        -1,
+        41
+       ],
+       "events": 38,
+       "entries": 4
+      },
+      "K_rx": {
+       "start": 19,
+       "occ": [
+        19,
+        59
+       ],
+       "events": 38,
+       "entries": 4
+      }
+     },
+     "rsp": {
+      "C_rx": {
+       "start": 1805,
+       "occ": [
+        1805,
+        1840
+       ],
+       "events": 33,
+       "entries": 2
+      },
+      "K_tx": {
+       "start": 1771,
+       "occ": [
+        1771,
+        1806
+       ],
+       "events": 33,
+       "entries": 2
+      }
+     },
+     "tok_tx": {
+      "C_tx": {
+       "start": 1,
+       "occ": [
+        1,
+        31
+       ],
+       "events": 2,
+       "entries": 2
+      },
+      "K_rx": {
+       "start": 14,
+       "occ": [
+        14,
+        46
+       ],
+       "events": 2,
+       "entries": 2
+      }
+     },
+     "tok_rx": {
+      "C_rx": {
+       "start": 18,
+       "occ": [
+        18,
+        271
+       ],
+       "events": 66,
+       "entries": 4
+      },
+      "K_tx": {
+       "start": 2,
+       "occ": [
+        2,
+        256
+       ],
+       "events": 66,
+       "entries": 4
+      }
+     }
+    },
+    "attn_extra_X": 8,
+    "txdp": {
+     "C": [
+      8,
+      3,
+      1,
+      10
+     ],
+     "K": [
+      22,
+      4,
+      3,
+      3
+     ]
+    },
+    "compiler_single_playhead_tok_s_estimate": 9834.1
+   },
+   "verdict": "PASS (OVL=1): no end/sequencer fault for a whole frame + wrap; every frame bit-exact on its compiled port/kind/beat/user",
+   "golden_words_checked": "frames C->K 63098, K->C 57783 (548-bit payload each) bit-exact vs sender capture; per-user exchanges and tokens == compiler counts",
+   "mutants": "FAIL as required: asbuilt_one_playhead (OVL=0), mut_collide, mut_slot, mut_user",
+   "variants": {
+    "codec1": "--kv-codec 1 (release K seam 21): same H 4026800 / 13708.2 tok/s, mutants FAIL",
+    "codec2_cyclic_seq": "ot_qwen_d2d_ovl_seq a1be7be2 from codex/sysface-cyclic-1019: identical result"
+   },
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "host": "ot-epyc9 unit oth-ubuntu-69370-1792459739 (codec2+codec1), oth-ubuntu-69222-1792459739 (cyclic seq)",
+   "stand_ins": [
+    "producers/consumers modelled (every TX port answers its slot TXD_p edges later; scoreboard consumers): link-only co-sim, no compute/KV arithmetic",
+    "UCIe PHY pair = ot_qkvd_ucie_x64_phy_model",
+    "admission ADM=0 (unchanged ot_qwen_d2d_cal_seq path)",
+    "per-user rates are unequal because the F16 frame of record gives users 16/15/8/7 tokens; it is a link schedule rate, not a full-token measurement"
+   ]
+  },
+  {
+   "stage": "d2d_4u_ctx_real_link (MU context transport, release serial MU image)",
+   "grade": "REL",
+   "rtl": "qw-gen3 e9879afda production sources (13 files + d2d_cal_image_mu.svh b68b9fb8 = the release MU image, QW-TOK3 975074bdd) + tb_mu_context_real_link.sv (c92c2be9d, bench f8f2d2f9a); re-run here because qkd_context_records.sv and qfd_mu_ctx_rx.sv differ between c92c2be9d's frozen dedf4c794 and gen3",
+   "cycles_start_to_retire": {
+    "native_slot_to_HOST_TX": 2,
+    "HOST_TX_to_compute_wire": 16,
+    "native_slot_to_compute": 18,
+    "filler_decode_after_wire": 1,
+    "token_period_spacing": 249600,
+    "first_pair": {
+     "slot": [
+      203,
+      204
+     ],
+     "host_tx": [
+      205,
+      206
+     ],
+     "wire": [
+      221,
+      222
+     ],
+     "load": 222
+    }
+   },
+   "verdict": "PASS mut0: four distinct contexts, three filler loads, user0 restored, SU-reference 548-bit records identical x3; full-stream diagnostic native fault retained (expected, later producers absent)",
+   "golden_words_checked": "6 full O61 wire tuples vs independent expectation + 3 full 548-bit SU-reference comparisons",
+   "mutants": "FAIL as required: mut1..mut5 (wrong filler owner, dropped filler producer, PHY bit, generation bit, RX calendar shift)",
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "host": "ot-epyc9 unit oth-ubuntu-79613-1792459799",
+   "stand_ins": [
+    "component diagnostic: allocation-shaped stimuli, no KV arithmetic / EMB row / full-token programme",
+    "PHY model LAT 5"
+   ]
+  },
+  {
+   "stage": "tp8_allreduce (8 dies: 4 packages x 2, UCIe pair + SerDes mesh)",
+   "grade": "REL",
+   "rtl": "all 30 RTL files the bench reads byte-identical to qw-gen3 e9879afda (tp8/gen3_identity.txt). Prior records are NOT gen3: fed8119c7 (E 284) differs in 4 files, a863465c6 / f15r 5a789562d (E 286) differ in qfd_fwd_lane.sv (gen3 adds RLYH0-EN/QK-LANDEN hop-0 en register, K+1) -> re-run",
+   "lanes": "real qfd_fwd_lane instances from the dv2f18dh2 GEN coll_lane_latency.json (sha 4da1b108, K values +1 vs f15r, LX 11/0/10 unchanged; the gen3 dv2f19g3 GEN has not produced one yet)",
+   "cycles_start_to_retire": {
+    "AR256": {
+     "span": 797,
+     "E_meas": 286,
+     "first_in_to_first_out": 541
+    },
+    "AR256x2_back_to_back_span": 1537,
+    "argmax_gather_1w": {
+     "span": 446,
+     "E_meas": 438
+    },
+    "layer_2xAR_plus_argmax_span": 1545,
+    "token_tp_allreduce_cycles_E": 20592,
+    "token_E_exposed_cycles_incl_argmax": 21030,
+    "token_span_cycles": 57830,
+    "multi_user_4": {
+     "span": 38138,
+     "E_meas": 286,
+     "words_out": "61440",
+     "user0_alone_span": 35227,
+     "user0_alone_E": 286
+    },
+    "calendar": {
+     "LS": 378,
+     "LU": 53
+    }
+   },
+   "verdict": "PASS g3_cal + g3_cal_seqsu (AR256, 2xAR, argmax, layer) and g3_mu (4-user window + user0 reference): every output word exact at its compiled cycle, zero faults",
+   "golden_words_checked": "AR256 2048 words, 2xAR 4096, argmax 64, layer 4160; 4-user window 61440 words, user0 ref 22528 (tools/hdc_golden tree order)",
+   "mutants": "FAIL as required (12/12 verdicts OK): cal_minus1 (LS 377), lx707, ktv2skew, OT_LCAL_MUT_RX_EARLY, OT_TP8S_MUT_RANK, OT_TP8S_MUT_GATHER, mu_neg_overlap, mu OT_TP8S_MUT_RLAT, mu OT_TP8S_MUT_RANK",
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "host": "ot-epyc8 (12 units oth-ubuntu-2157xx..2178xx-1792459739)",
+   "stand_ins": [
+    "PHY frame pipes modelled: UCIe 20 core edges, SerDes 339 core cycles (results/arch/qwen_tp8_1012/SPEC.md); E split ~96 RTL / ~190 PHY per AR (path share, as XDIE-QTP8-2)",
+    "O_meas = 0: no compiled compute schedule overlaps the collective (serial token path)"
+   ]
+  }
+ ],
+ "pending": [
+  "4u REL link rate on the release serial MU calendar: no paired 4-user D2D TB with the release MU image exists (QW-TOK3/takeover3 gap); OVL is not in the release RTL",
+  "1u/4u pair on the KV kvs14 GEN9 release die and on the gen3 dv2f19g3 GEN seam/lanes once those GENs finish"
+ ]
+}

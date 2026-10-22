@@ -1,0 +1,4 @@
+DV_LOWER_VEC qk FAIL 2/4 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=0 q heads 4 / k / v, d2d words=96 span_cycles=1047 isa_gold=none
+    q: 512/512 mismatches, first (0, 0) got 0xbd94e559 want 0x3e17671e
+    k: 104/128 mismatches, first (1, 0) got 0x3ee00000 want 0xbf000000
+rc=1

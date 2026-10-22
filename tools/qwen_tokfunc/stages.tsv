@@ -1,0 +1,10 @@
+# stage  script          mem_GB  prep (run once on the coordinator before launch; inputs staged under RUNROOT/<stage>/)
+stg      stage_stg.sh    240     fixtures from the TP4 36-layer gold (stage_stg.sh header)
+xt1      stage_xt1.sh    320     RUNROOT/xt1/in (ROM masks, QW-REALSTG fx) + xt1/bin (stage_xt1.sh header)
+xdie     stage_xdie.sh   64      none (assembly only; fix de2280f53 overlay until merged)
+tp8      stage_tp8.sh    64      stage_link_fixtures.sh (coll_lane_latency.json of the newest complete GEN)
+ovl4u    stage_ovl4u.sh  64      stage_link_fixtures.sh (OVL bench + compiler patch f98fd830f until merged)
+ctx4u    stage_ctx4u.sh  32      stage_link_fixtures.sh
+head     stage_head.sh   16      head fixtures (stage_head.sh header)
+kv       stage_kv.sh     700     reuse KV-MU7 job4b when its source matches (stage_kv.collect.py)
+chain    stage_chain.sh  160     run_tok_func_qw.sh relays RUNROOT/stg/fx + stg/fx_in/P8191 to --kvroot (KV vehicle binary host)

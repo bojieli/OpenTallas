@@ -1,3 +1,17 @@
+# KV-HROOT-PROMPT 10-18 (gate p4 3056516b0 FAIL: boundary TT 368.3..493.5 = 125.2 ps, FF 117.5).  Per-flop dump of the p4
+# 4_1_cts.odb (placement RC; reproduces the gate within 3 ps): intra-leaf spread <= 4 ps, so the spread is BETWEEN leaves,
+# from two causes.  (a) The widest-gap split (made for dsdv_sh_vc's two pin bands) on this tile's pin-flop RING cuts at
+# arbitrary ring gaps: leaves of 4..199 sinks (27-sink leaves 368 ps, 110-sink leaves 435-450, one 110-sink leaf spanning
+# the NE corner y133..277 at 444-493).  (b) With balanced 64/65-sink leaves (count-median split) the rest is wire length:
+# leaf arrival tracks the Manhattan distance from the S-face stem (corr 0.80), 377..458 = 81 ps, because path padding
+# equalises buffer COUNT, not delay (padding buffers sit at the leaf with no wire).
+# Fix: count-median split only (ot_sv_gap_um 1e6), and a measured equalisation pass (ot_sv_equalize below): after the tree,
+# with propagated placement-RC clocks, every leaf whose latest sink arrives earlier than (latest leaf - 30 ps) gets
+# BUFx4 delay pads at the leaf (step measured, ~23 ps).  Probe on the p4 placement (ripping the p4 branch and rebuilding):
+# gap-split depth 6 122.7 ps (= gate); median 81.4; median 7-level 80.0; ring-order split 84.7; median + equalise
+# window 30: boundary TT 414.7..458.3 = 43.7 ps (73 pads), window 40: 54.0, ring + window 30: 37.1 (but mean +20 ps).
+# Max (the NW/N corner leaves, ~400 um Manhattan from the S-face clock pin) is unchanged at 458 ps; the mean rises
+# 405 -> 432 (mass mean 390).
 # KV-PROMPT4 10-18: boundary clock branch of qkd_hr_core_prompt (coordinator decision 3, gate p3 FAIL: pin-flop spread
 # 114.9 ps TT > 80, 17,538 sinks, insertion 438.7, leaf spread 122.4).  Copy of physical/ref_tile/dsdv_sh_vc/bnd_branch.tcl
 # (NATIVE-FIX3/shvc, closed dsdv_sh_vc; same class as qkd_kv_grp_ctl_p) with the clock port ck_core and depth 6 (this
@@ -29,7 +43,7 @@
 # 5/80 287.6, 22.2 (chosen: keeps the boundary mean beside the closed R 274.3 and the mass); 5/110 281.2, 18.8.
 if {![info exists ::ot_sv_depth]}  { set ::ot_sv_depth 6 }
 if {![info exists ::ot_sv_port]}   { set ::ot_sv_port ck_core }
-if {![info exists ::ot_sv_gap_um]} { set ::ot_sv_gap_um 20 }
+if {![info exists ::ot_sv_gap_um]} { set ::ot_sv_gap_um 1000000 }
 if {![info exists ::ot_sv_rep_um]} { set ::ot_sv_rep_um 80 }
 if {![info exists ::ot_sv_master]} { set ::ot_sv_master BUFx24_ASAP7_75t_R }
 
@@ -159,6 +173,11 @@ proc ot_sv_bnd_tree {port clkname} {
 proc ot_sv_emit_root {t net x y} {
   ot_sv_emit $t $net $x $y [ot_sv_stages $t $x $y]
 }
+# KV-HROOT-PROMPT: leaf-delay equalization: after the geometric tree, pad every leaf that arrives earlier than (latest leaf - window)
+# with buffers at the leaf (measured step), so leaf arrivals differ by <= window instead of by the wire-length spread.
+if {![info exists ::ot_sv_eq_window_ps]} { set ::ot_sv_eq_window_ps 35 }
+if {![info exists ::ot_sv_eq_master]}    { set ::ot_sv_eq_master BUFx4_ASAP7_75t_R }
+if {![info exists ::ot_sv_eq_iters]}     { set ::ot_sv_eq_iters 4 }
 proc ot_sv_emit {t pnet px py budget} {
   lassign $t kind x y
   lassign [ot_sv_wire $pnet $px $py $x $y] pnet k
@@ -168,16 +187,65 @@ proc ot_sv_emit {t pnet px py budget} {
       lassign [ot_sv_buf $x $y] b net; [$b findITerm A] connect $pnet; set pnet $net
     }
     lassign [ot_sv_buf $x $y] b net; [$b findITerm A] connect $pnet
+    lappend ::ot_sv_leaves $b
     foreach s [lindex $t 3] { set it [lindex $s 0]; $it disconnect; $it connect $net; incr ::ot_sv_ns }
     return
   }
   lassign [ot_sv_buf $x $y] b net; [$b findITerm A] connect $pnet
   foreach c [lrange $t 3 4] { ot_sv_emit $c $net $x $y $budget }
 }
+# latest sink clock-pin arrival of a leaf (the sinks are what the gate measures)
+proc ot_sv_leaf_arr {b} {
+  set mx ""
+  foreach p [get_pins -of_objects [get_nets [[[$b findITerm Y] getNet] getName]]] {
+    if {[get_property $p direction] ne "input"} continue
+    set a [get_property $p arrival_max_rise]
+    if {$mx eq "" || $a > $mx} { set mx $a }
+  }
+  return $mx
+}
+proc ot_sv_equalize {} {
+  set keep $::ot_sv_m
+  set ::ot_sv_m [[ord::get_db] findMaster $::ot_sv_eq_master]
+  set step 20.0; set pad {}; set npad 0
+  for {set it 0} {$it <= $::ot_sv_eq_iters} {incr it} {
+    estimate_parasitics -placement
+    set arr {}
+    foreach b $::ot_sv_leaves { dict set arr [$b getName] [ot_sv_leaf_arr $b] }
+    set v [dict values $arr]; set mx [tcl::mathfunc::max {*}$v]; set mn [tcl::mathfunc::min {*}$v]
+    if {[dict size $pad]} {
+      set d {}
+      dict for {n e} $pad { lassign $e a0 k; lappend d [expr {([dict get $arr $n] - $a0) / $k}] }
+      set s [expr {[tcl::mathfunc::max {*}$d] > 0 ? ([::tcl::mathop::+ {*}$d] / [llength $d]) : $step}]
+      if {$s > 1.0} { set step $s }
+    }
+    puts "OT_SV_EQ iter $it: leaf Y arrival [format %.1f $mn]..[format %.1f $mx] (spread [format %.1f [expr {$mx - $mn}]]), step [format %.1f $step] ps, $npad pads"
+    if {$it == $::ot_sv_eq_iters} break
+    set tgt [expr {$mx - $::ot_sv_eq_window_ps}]
+    set pad {}
+    foreach b $::ot_sv_leaves {
+      set a [dict get $arr [$b getName]]
+      set k [expr {int(floor(($tgt - $a) / $step + 0.5))}]
+      if {$k < 1} continue
+      set ia [$b findITerm A]; set pnet [$ia getNet]; $ia disconnect
+      set loc [$b getLocation]
+      for {set i 0} {$i < $k} {incr i} {
+        lassign [ot_sv_buf [lindex $loc 0] [lindex $loc 1]] nb net; [$nb findITerm A] connect $pnet; set pnet $net
+      }
+      $ia connect $pnet
+      dict set pad [$b getName] [list $a $k]; incr npad $k
+    }
+    if {![dict size $pad]} break
+  }
+  set ::ot_sv_m $keep
+}
 
 rename clock_tree_synthesis ::ot_sv_bnd_cts_orig
 proc clock_tree_synthesis {args} {
   ::ot_sv_bnd_cts_orig {*}$args
   estimate_parasitics -placement
+  set ::ot_sv_leaves {}
+  set_propagated_clock [all_clocks]
   ot_sv_bnd_tree $::ot_sv_port core_clk
+  ot_sv_equalize
 }

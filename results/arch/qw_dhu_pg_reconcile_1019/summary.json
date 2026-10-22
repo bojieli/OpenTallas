@@ -1,0 +1,35 @@
+{
+  "status": "PG_HOLD",
+  "scope": "native master MTerm to actual ITerm and expected domain only; no routed conductor connectivity qualification",
+  "main_snapshot": "aae57a4e3e0cccf45d98358e41fa8129b9abdaa8",
+  "observed_at": "2026-10-19T15:11:05.008244-07:00",
+  "checked": 26394,
+  "counts": {
+    "bound_correct": 26340,
+    "unbound": 54
+  },
+  "failure_master_terminals": {
+    "BUFx16f_ASAP7_75t_R": 18,
+    "BUFx24_ASAP7_75t_R": 36
+  },
+  "instance_count": 13197,
+  "pg_master_count": 65,
+  "old_timing_status": "CLOSED TT setup +172.82 ps / FF hold +29.59 ps / DRC 0; SS sensitivity -129.91 ps retained",
+  "gen_bound": false,
+  "gen_actual_dh_user_producer": "qfd_sys_face_mu_dhobs mu_dhobs",
+  "original_snapshot_source_files": "removed/empty src directory; Git source declaration and retained generated kit identity preserved, no retrospective executed source hash claim",
+  "admission": {
+    "host": "ot-epyc7",
+    "unpinned": true,
+    "mem_gb": 4,
+    "threads": 1,
+    "disk_gb": 2,
+    "odb_size": "7.5 MiB",
+    "spef_size": "2.8 MiB",
+    "available_mem_gb": 780,
+    "admitted_gb": 1028,
+    "disk_free_gb": 6272,
+    "unit": "oth-ubuntu-144274-1792447794"
+  },
+  "measurement_limit": "time -v measures Docker client RSS, not container OpenROAD peak"
+}

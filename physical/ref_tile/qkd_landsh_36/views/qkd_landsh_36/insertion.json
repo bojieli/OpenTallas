@@ -4,11 +4,12 @@
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
+ "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
  "parasitics": "spef",
  "raw_source": true,
  "ss": {
   "boundary": {
-   "n": 41,
+   "n": 38,
    "mean": 82.6,
    "min": 81.2,
    "max": 83.9
@@ -25,7 +26,7 @@
  },
  "tt": {
   "boundary": {
-   "n": 41,
+   "n": 38,
    "mean": 57.5,
    "min": 56.2,
    "max": 58.5
@@ -42,7 +43,7 @@
  },
  "ff": {
   "boundary": {
-   "n": 41,
+   "n": 38,
    "mean": 43.1,
    "min": 41.9,
    "max": 44.0
@@ -95,11 +96,12 @@
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
+   "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
    "parasitics": "spef",
    "raw_source": true,
    "ss": {
     "boundary": {
-     "n": 41,
+     "n": 38,
      "mean": 82.6,
      "min": 81.2,
      "max": 83.9
@@ -116,7 +118,7 @@
    },
    "tt": {
     "boundary": {
-     "n": 41,
+     "n": 38,
      "mean": 57.5,
      "min": 56.2,
      "max": 58.5
@@ -133,7 +135,7 @@
    },
    "ff": {
     "boundary": {
-     "n": 41,
+     "n": 38,
      "mean": 43.1,
      "min": 41.9,
      "max": 44.0
@@ -186,10 +188,16 @@
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "lane_ckf",
+   "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
    "parasitics": "spef",
    "raw_source": true,
    "ss": {
-    "boundary": null,
+    "boundary": {
+     "n": 144,
+     "mean": 124.5,
+     "min": 122.5,
+     "max": 127.8
+    },
     "all": {
      "n": 163,
      "mean": 124.5,
@@ -201,7 +209,12 @@
     "macro_libs": 0
    },
    "tt": {
-    "boundary": null,
+    "boundary": {
+     "n": 144,
+     "mean": 84.7,
+     "min": 82.9,
+     "max": 87.9
+    },
     "all": {
      "n": 163,
      "mean": 84.8,
@@ -213,7 +226,12 @@
     "macro_libs": 0
    },
    "ff": {
-    "boundary": null,
+    "boundary": {
+     "n": 144,
+     "mean": 62.7,
+     "min": 60.9,
+     "max": 66.0
+    },
     "all": {
      "n": 163,
      "mean": 62.9,

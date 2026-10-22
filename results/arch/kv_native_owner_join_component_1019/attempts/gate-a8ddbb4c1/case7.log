@@ -1,0 +1,105 @@
+ISSUE e=246 input=70001 pos=0 owner=91e3/1
+ALLOC e=255 tag=00000088b880000 gen=1
+PIN_FIRST_AW_ACCEPT e=283 addr=0000000000002008
+PIN_FIRST_W_ACCEPT e=283 data=0000000000000000
+BRIDGE_AW_CAPTURE_ACK e=283 n=1 out_valid=1
+BRIDGE_W_CAPTURE_ACK e=283 n=1 out_valid=1
+PIN_RETURNED_AW_ACK e=285 source_valid=1 out_valid=0
+PIN_RETURNED_W_ACK e=285 source_valid=1 out_valid=0
+PIN_AW_OUTPUT_VALID_DROP e=285
+PIN_W_OUTPUT_VALID_DROP e=285
+PIN_AW_SOURCE_VALID_DROP e=286
+PIN_W_SOURCE_VALID_DROP e=286
+PIN_FIRST_AW_ACCEPT e=293 addr=0000000000002000
+PIN_FIRST_W_ACCEPT e=293 data=0000000091e30057
+BRIDGE_AW_CAPTURE_ACK e=293 n=2 out_valid=1
+BRIDGE_W_CAPTURE_ACK e=293 n=2 out_valid=1
+CQ_PACKET time=2970000 edge=297 entry=1 w0=0000000091e30057 w1=0000000000000000
+PIN_RETURNED_AW_ACK e=295 source_valid=1 out_valid=0
+PIN_RETURNED_W_ACK e=295 source_valid=1 out_valid=0
+PIN_AW_OUTPUT_VALID_DROP e=295
+PIN_W_OUTPUT_VALID_DROP e=295
+PIN_AW_SOURCE_VALID_DROP e=296
+PIN_W_SOURCE_VALID_DROP e=296
+REAL_CQB time=3025000 e=299 native=0
+ENGINE_RESULT e=304 step=0 tag=00004a88b880000 next=70002
+RAW_DONE time=3425000 e=339 native=1 unready=0 needed=0
+POST e=344 tag=00004a88b880000
+ISSUE e=767 input=70003 pos=1 owner=91e3/1
+ALLOC e=776 tag=00008088b980040 gen=2
+PIN_FIRST_AW_ACCEPT e=806 addr=0000000000002018
+PIN_FIRST_W_ACCEPT e=806 data=0000000000000000
+BRIDGE_AW_CAPTURE_ACK e=806 n=3 out_valid=1
+BRIDGE_W_CAPTURE_ACK e=806 n=3 out_valid=1
+PIN_RETURNED_AW_ACK e=808 source_valid=1 out_valid=0
+PIN_RETURNED_W_ACK e=808 source_valid=1 out_valid=0
+PIN_AW_OUTPUT_VALID_DROP e=808
+PIN_W_OUTPUT_VALID_DROP e=808
+PIN_AW_SOURCE_VALID_DROP e=809
+PIN_W_SOURCE_VALID_DROP e=809
+PIN_FIRST_AW_ACCEPT e=816 addr=0000000000002010
+PIN_FIRST_W_ACCEPT e=816 data=0000000091e30037
+BRIDGE_AW_CAPTURE_ACK e=816 n=4 out_valid=1
+BRIDGE_W_CAPTURE_ACK e=816 n=4 out_valid=1
+CQ_PACKET time=8200000 edge=820 entry=2 w0=0000000091e30037 w1=0000000000000000
+PIN_RETURNED_AW_ACK e=818 source_valid=1 out_valid=0
+PIN_RETURNED_W_ACK e=818 source_valid=1 out_valid=0
+PIN_AW_OUTPUT_VALID_DROP e=818
+PIN_W_OUTPUT_VALID_DROP e=818
+RETAINED_BAD time=8225000 e=819 raw=1 errorCQ=2
+PIN_AW_SOURCE_VALID_DROP e=819
+PIN_W_SOURCE_VALID_DROP e=819
+REAL_CQB time=8255000 e=822 native=0
+ENGINE_RESULT e=825 step=1 tag=0000ca88b980040 next=80001
+RAW_DONE time=8425000 e=839 native=1 unready=0 needed=1
+PIN_FIRST_AW_ACCEPT e=1285 addr=0000000000002028
+PIN_FIRST_W_ACCEPT e=1285 data=0001000000000000
+BRIDGE_AW_CAPTURE_ACK e=1285 n=5 out_valid=1
+BRIDGE_W_CAPTURE_ACK e=1285 n=5 out_valid=1
+PIN_RETURNED_AW_ACK e=1287 source_valid=1 out_valid=0
+PIN_RETURNED_W_ACK e=1287 source_valid=1 out_valid=0
+PIN_AW_OUTPUT_VALID_DROP e=1287
+PIN_W_OUTPUT_VALID_DROP e=1287
+PIN_AW_SOURCE_VALID_DROP e=1288
+PIN_W_SOURCE_VALID_DROP e=1288
+PIN_FIRST_AW_ACCEPT e=1295 addr=0000000000002020
+PIN_FIRST_W_ACCEPT e=1295 data=1172000191e30077
+BRIDGE_AW_CAPTURE_ACK e=1295 n=6 out_valid=1
+BRIDGE_W_CAPTURE_ACK e=1295 n=6 out_valid=1
+CQ_PACKET time=12990000 edge=1299 entry=3 w0=1172000191e30077 w1=0001000000000000
+PIN_RETURNED_AW_ACK e=1297 source_valid=1 out_valid=0
+PIN_RETURNED_W_ACK e=1297 source_valid=1 out_valid=0
+PIN_AW_OUTPUT_VALID_DROP e=1297
+PIN_W_OUTPUT_VALID_DROP e=1297
+PIN_AW_SOURCE_VALID_DROP e=1298
+PIN_W_SOURCE_VALID_DROP e=1298
+REAL_CQB time=13045000 e=1301 native=1
+POST e=1306 tag=0000ca88b980040
+NATIVE_JOIN_PASS FUNCTIONAL_ONLY case=7 errors=3 raw=2 allocations=2 NO_NATIVE_conditional=0
+- bench/native_join_bench.sv:476: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 0.008 s; speed 1.811 ms/s
+- Verilator: cpu 0.008 s on 1 threads; allocated 8 MB
+	Command being timed: "obj/Vnative_join_bench +CASE=7"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 90%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4292
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 197
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

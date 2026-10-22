@@ -1,0 +1,11 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+INFO first fault_core t=3086336000 phase=2 np=1075 nc=1072
+INFO first fault_hbm t=4671488000 phase=3 np=1811 nc=1805 ncs=1803
+INFO first fault_core t=9286656000 phase=2 np=1113 nc=1109
+INFO first fault_hbm t=10849280000 phase=3 np=1840 nc=1835 ncs=1832
+KVPC_RETURN PASS edges=12000 checks=26734 consumed=9128 errors=0 mut=0
+- rtl/test/qwen_static_kv/kvpc_sram/tb_kvpc_return.sv:117: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.008 s; speed 1.455 ms/s
+- Verilator: cpu 0.008 s on 1 threads; allocated 7 MB
+

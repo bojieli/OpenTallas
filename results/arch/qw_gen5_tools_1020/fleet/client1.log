@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-gen5-tools-coupons-1020
+ot-run: ot-epyc6       admits   796 GB (avail 670, growth 113, headroom 0, waiters 0/0 GB) load 46/128 running 28 disk 3912 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-gen5-tools-coupons-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-gen5-tools-coupons-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-gen5-tools-coupons-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-gen5-tools-coupons-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3150733-1792507798 after 0 s
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.14-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /srv/opentallas-scratch/claude/codex-qw-gen5-tools-coupons-1020/testenv/bin/python3
+
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3150733-1792507798): exit 1

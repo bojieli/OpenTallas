@@ -13,6 +13,11 @@
  "reset_ports": [
   "rst_n"
  ],
+ "reset_landing": {
+  "enable": false,
+  "clock": "clk",
+  "reason": "the RTL lands it: rst_n drives one kept async-clear flop rp1 at the S face + 2 plain release flops (ELEM-GAPS/HBMN1 n2/n3, native audit of q1 rst_n capture 455.7 ps); kit landing would add 2 more reset edges"
+ },
  "children": [],
  "inter": [],
  "recipe": 4,
@@ -179,9 +184,9 @@
   "cts_sink": {
    "size": 16,
    "diameter_um": 30,
-   "extra": "-balance_levels"
+   "extra": "-balance_levels -no_obstruction_aware -sink_clustering_levels 2"
   },
-  "io_hold_margin_ns": 0.0
+  "io_hold_margin_ns": 0.025
  },
  "io_flop_at_pins": {
   "cols": 4,
@@ -191,7 +196,7 @@
  "outhold": false,
  "keep_pin_regs": true,
  "orfs_vars": {
-  "OT_OFLOP_HOPS": "2"
+  "OT_OFLOP_HOPS": "3"
  },
  "pin_regs": {
   "enable": false,

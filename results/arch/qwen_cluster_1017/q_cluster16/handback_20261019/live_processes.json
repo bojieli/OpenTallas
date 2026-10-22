@@ -1,0 +1,127 @@
+[
+  {
+    "pid": 3396018,
+    "argv": [
+      "python3",
+      "tools/qwen_cluster/qc_cp_place.py",
+      "--step",
+      "777.6",
+      "--core",
+      "--out",
+      "out_safe/cp_place_core_777_outer172.json"
+    ],
+    "cwd": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src",
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-3396018-1792423314.scope",
+    "session": 59881,
+    "host": "ot-epyc4",
+    "out_path": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src/out_safe/cp_place_core_777_outer172.json",
+    "verdict": "PENDING, live at collection; no feasible parent claim",
+    "code_provenance": "3d9077ff5 qc_cp_place.py for relaxed-domains; legacy processes started with earlier live copies, exact loaded legacy tool hash not retained. Do not bind them to current on-disk tool solely by path."
+  },
+  {
+    "pid": 3447415,
+    "argv": [
+      "python3",
+      "tools/qwen_cluster/qc_cp_place.py",
+      "--step",
+      "864",
+      "--out",
+      "out_safe/cp_place_864_outer172.json"
+    ],
+    "cwd": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src",
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-3447415-1792423711.scope",
+    "session": 38482,
+    "host": "ot-epyc4",
+    "out_path": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src/out_safe/cp_place_864_outer172.json",
+    "verdict": "PENDING, live at collection; no feasible parent claim",
+    "code_provenance": "3d9077ff5 qc_cp_place.py for relaxed-domains; legacy processes started with earlier live copies, exact loaded legacy tool hash not retained. Do not bind them to current on-disk tool solely by path."
+  },
+  {
+    "pid": 3619282,
+    "argv": [
+      "python3",
+      "tools/qwen_cluster/qc_cp_place.py",
+      "--step",
+      "777.6",
+      "--full-land",
+      "--out",
+      "out_safe/cp_place_full_777.json"
+    ],
+    "cwd": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src",
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-3619282-1792424076.scope",
+    "session": 44842,
+    "host": "ot-epyc4",
+    "out_path": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src/out_safe/cp_place_full_777.json",
+    "verdict": "PENDING, live at collection; no feasible parent claim",
+    "code_provenance": "3d9077ff5 qc_cp_place.py for relaxed-domains; legacy processes started with earlier live copies, exact loaded legacy tool hash not retained. Do not bind them to current on-disk tool solely by path."
+  },
+  {
+    "pid": 3777249,
+    "argv": [
+      "python3",
+      "tools/qwen_cluster/qc_cp_place.py",
+      "--step",
+      "777.6",
+      "--zones",
+      "--out",
+      "out_safe/cp_place_zones_777.json"
+    ],
+    "cwd": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src",
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-3777249-1792426269.scope",
+    "session": 2069,
+    "host": "ot-epyc4",
+    "out_path": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src/out_safe/cp_place_zones_777.json",
+    "verdict": "PENDING, live at collection; no feasible parent claim",
+    "code_provenance": "3d9077ff5 qc_cp_place.py for relaxed-domains; legacy processes started with earlier live copies, exact loaded legacy tool hash not retained. Do not bind them to current on-disk tool solely by path."
+  },
+  {
+    "pid": 4023764,
+    "argv": [
+      "python3",
+      "tools/qwen_cluster/qc_cp_place.py",
+      "--step",
+      "777.6",
+      "--zones",
+      "--native-pins",
+      "out_safe/safe_endpoint_plan_xstn.json",
+      "--soft-reach",
+      "--placement-hint",
+      "out_safe/cp_swapped1.json",
+      "--out",
+      "out_safe/cp_place_swapnative_777.json"
+    ],
+    "cwd": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src",
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-4023764-1792429660.scope",
+    "session": 82325,
+    "host": "ot-epyc4",
+    "out_path": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src/out_safe/cp_place_swapnative_777.json",
+    "verdict": "PENDING, live at collection; no feasible parent claim",
+    "code_provenance": "3d9077ff5 qc_cp_place.py for relaxed-domains; legacy processes started with earlier live copies, exact loaded legacy tool hash not retained. Do not bind them to current on-disk tool solely by path."
+  },
+  {
+    "pid": 4162810,
+    "argv": [
+      "python3",
+      "tools/qwen_cluster/qc_cp_place.py",
+      "--step",
+      "777.6",
+      "--zones",
+      "--native-pins",
+      "out_safe/safe_endpoint_plan_actual_master.json",
+      "--relax-unknown",
+      "--anchor-bounds",
+      "--grid-domains",
+      "--placement-hint",
+      "out_safe/cp_swapped1.json",
+      "--out",
+      "out_safe/cp_place_relaxed_domains_777.json"
+    ],
+    "cwd": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src",
+    "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-4162810-1792432685.scope",
+    "session": 98223,
+    "host": "ot-epyc4",
+    "out_path": "/srv/opentallas-scratch/claude/safe-qw-cb16-1019/src/out_safe/cp_place_relaxed_domains_777.json",
+    "verdict": "PENDING, live at collection; no feasible parent claim",
+    "code_provenance": "3d9077ff5 qc_cp_place.py for relaxed-domains; legacy processes started with earlier live copies, exact loaded legacy tool hash not retained. Do not bind them to current on-disk tool solely by path."
+  }
+]

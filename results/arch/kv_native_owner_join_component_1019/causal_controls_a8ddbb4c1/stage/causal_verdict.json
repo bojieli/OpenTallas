@@ -1,0 +1,17 @@
+{
+  "name": "stage",
+  "verdict": "CAUGHT",
+  "baseline_exit": 0,
+  "mutant_exit": 1,
+  "baseline_application_pass": true,
+  "mutant_named_invariant_failed": true,
+  "mutant_application_pass": false,
+  "extra_witness_present": true,
+  "source_delta": [
+    "private/qkd_host_native_owner_join_rc.sv"
+  ],
+  "baseline_log_sha256": "78a2b262ff0ec9a77bf0d08a4f1a01badb69a236a39c1f4419d0847596a9ed72",
+  "mutant_log_sha256": "2570e2e001c8ac573c9f073128b5f19a4a7209699207a4901b66b7ca220b5631",
+  "required_regex": "MALFORMED_CERTIFICATE_ADVANCED_COMMITTED_OR_EVENT|MISSING_ATOMIC_CERTIFICATE_VETO",
+  "scope": "minimum native seam COMPONENT source control, no production/native/physical qualification"
+}

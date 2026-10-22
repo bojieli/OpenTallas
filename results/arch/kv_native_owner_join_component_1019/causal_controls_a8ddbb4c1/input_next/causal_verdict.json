@@ -1,0 +1,17 @@
+{
+  "name": "input_next",
+  "verdict": "CAUGHT",
+  "baseline_exit": 0,
+  "mutant_exit": 1,
+  "baseline_application_pass": true,
+  "mutant_named_invariant_failed": true,
+  "mutant_application_pass": false,
+  "extra_witness_present": true,
+  "source_delta": [
+    "private/qkd_host_native_owner_join_rc.sv"
+  ],
+  "baseline_log_sha256": "6af87a9a7f558e5f1ab47a8b50f2921a85b4e4b3c253026894e6f46f8e4281d9",
+  "mutant_log_sha256": "1160ad851dcd8922d5d3fa14ae48ca194417655f9e4201c923a9c09164ce0dc0",
+  "required_regex": "MALFORMED_CERTIFICATE_ADVANCED_COMMITTED_OR_EVENT|MISSING_ATOMIC_CERTIFICATE_VETO",
+  "scope": "minimum native seam COMPONENT source control, no production/native/physical qualification"
+}

@@ -1,0 +1,41 @@
+{
+ "jobs": [
+  {
+   "layer": "L0",
+   "tag": 93,
+   "arg": 1025,
+   "j_word": "10004015d",
+   "s_j": 1779,
+   "j_pin": {
+    "u_rsv_05": 1813,
+    "u_rsv_11": 1804
+   },
+   "frames": {
+    "CFG": 1817,
+    "OWN_ROW": 1818,
+    "WIN_LOAD": 1835,
+    "ATTN_Q0": 3023,
+    "ATTN_Q1": 3152,
+    "SMJ": 3281,
+    "GO": 3284,
+    "PV": 3785
+   },
+   "go": 3284,
+   "pvs": 501,
+   "po": 538,
+   "pvo": 625,
+   "pv_first": 3965,
+   "pv_last": 4124,
+   "done_pin": {
+    "u_rsv_05": 3959,
+    "u_rsv_11": 4125
+   },
+   "ls": 2371,
+   "hbm_sectors": 2096,
+   "q_words": 346,
+   "q_image": "prog/svc/L0/qwd.hex",
+   "tag_rule": "q headers carry {issuer slot, calendar row index}: re-emit with the final row index / per-slot header rows"
+  }
+ ],
+ "note": "1 jobs"
+}

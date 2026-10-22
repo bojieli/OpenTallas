@@ -27,7 +27,7 @@ def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
     fields=[{} for _ in range(rows)];events=[]
     first_calendar=host_launch+host_publication
     for e,word in enumerate(commands):
-        if not 0<=word<1<<2422: raise ValueError('quarter word overflow')
+        if not 0<=word<1<<2470: raise ValueError('quarter word overflow')
         for b in range(8):
             for kind,base,width,vbit,lag,sel,owner in (
                 ('read',440,30,29,0,'lg_local_read','rslot_v'),
@@ -52,7 +52,7 @@ def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
                                    lg_sample=lg,vm_pin_sample=lg+2+lane_edges))
     words=[prog_row(i,cal_word(**f),187) for i,f in enumerate(fields)]
     return words,dict(schema='opentallas.native_su_calendar.v1',qualified=False,
-        first_serial=first_serial,bridge_serial=bridge_serial,bridge_stream=bridge_stream,
+        quarter_command_bits=2470,first_serial=first_serial,bridge_serial=bridge_serial,bridge_stream=bridge_stream,
         host_launch=host_launch,host_publication=host_publication,rows=rows,
         calendar_row0_consumer=first_calendar,owner=0,lg_to_vm_pin_edges=2+request_lane_edges if request_lane_edges_by_bank is None else [2+x for x in request_lane_edges_by_bank],request_lane_edges=request_lane_edges,
         **({} if request_lane_edges_by_bank is None else dict(request_lane_edges_by_bank=request_lane_edges_by_bank)),
@@ -100,7 +100,7 @@ def add_host_replay(source,boundary,output,words,meta, *, stream_limit=3700,
                 policy='all original drives and numeric checks in the observation window retained byte-for-byte; only later events omitted')
     (output/'calendar_model.json').write_text(json.dumps(meta,indent=2)+'\n')
 
-def reserve_component(replay, boundary):
+def reserve_component(replay, boundary, *, finite=False):
     """Reserve all SW banks for the isolated SU component probe.
 
     Grants are a static resident calendar, including idle slots. Bank owner0
@@ -132,6 +132,12 @@ def reserve_component(replay, boundary):
                        lg_local_read=255, lg_local_write=255)
     words = [prog_row(i, payload, 187) for i in range(rows)]
     cp, launch, _ = cp_frames(96, words, 3, loops=65535)
+    loops = 65535
+    if finite:
+        loops = max(1, (stream_end - launch + 64 + rows - 1)//rows)
+        if loops > 65535:
+            raise ValueError("finite SU epoch exceeds loop field")
+        cp, launch, _ = cp_frames(96, words, 3, loops=loops)
     missing = {e['port'] for e in cp} - ports
     if missing:
         raise ValueError(f'calendar ingress missing from slice: {sorted(missing)}')
@@ -141,14 +147,16 @@ def reserve_component(replay, boundary):
     # fixed guard beyond host publication before allowing that start.
     if (4*first_start)//3 <= launch + 32:
         raise ValueError('SU starts before calendar publication; increase load gap')
-    if stream_end >= launch + rows*65535:
+    if stream_end >= launch + rows*loops:
         raise ValueError('calendar reservation ends before final observation')
     result = dict(replay)
     result.update(scope='component_probe', qualifies_native_layer=False, qualifies_native_chain=False)
     result['events'] = sorted(events + cp, key=lambda e:(e['dom'],e['cyc'],e['k']))
     result['su_owner_calendar'] = dict(
         schema='opentallas.su_component_reservation.v1', target=96,
-        owner=0, banks=list(range(8)), rows=rows, loops=65535,
+        owner=0, banks=list(range(8)), rows=rows, loops=loops,
+        end_reservation_stream=launch + 10 + rows*loops,
+        finite_epoch=finite,
         host_launch_stream=launch, end_observation_stream=stream_end,
         first_su_start_serial=first_start,
         calendar_sha256=hashlib.sha256(''.join(f'{w:064x}\n' for w in words).encode()).hexdigest(),

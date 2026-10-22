@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits  1117 GB (avail 839, growth 50, headroom 0, waiters 0/0 GB) load 33/128 running 15 disk 433 GB 
+ot-run: ot-epyc5       admits   650 GB (avail 512, growth 20, headroom 0, waiters 0/0 GB) load 41/128 running 7 disk 910 GB 
+ot-run: ot-epyc6       admits  1251 GB (avail 935, growth 60, headroom 0, waiters 0/0 GB) load 33/128 running 16 disk 5719 GB 
+ot-run: ot-epyc7       admits  1080 GB (avail 806, growth 47, headroom 0, waiters 0/0 GB) load 23/96 running 14 disk 6275 GB 
+ot-run: ot-epyc8       admits  1190 GB (avail 932, growth 99, headroom 0, waiters 0/0 GB) load 17/128 running 17 disk 65 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-reset-halfcycle-source-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-reset-halfcycle-source-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-975833-1792449389 after 0 s
+[{"name": "baseline", "returncode": 0, "witness_sha256": "8f7ae70a3b134129593fff22c1ac09dece09eba99582d4470150155f55aa04d4"}, {"name": "mut_missing_clock_inv", "returncode": 1, "witness_sha256": "4e0c21fa62bece62f5932b93228f9b1678b818a23f92ed9aa43af6157c1c0da4"}, {"name": "mut_raw_ff2_reset", "returncode": 1, "witness_sha256": "c97b593d4162eea2428b1167c4935025adc69756ec0fceb4a9b73847d30cbe5a"}, {"name": "mut_ownership", "returncode": 1, "witness_sha256": "200f452bd967bfbfb8e7addb430a9da08524690066f2f955c0d15d48305d8478"}, {"name": "mut_wrong_output_polarity", "returncode": 1, "witness_sha256": "200f452bd967bfbfb8e7addb430a9da08524690066f2f955c0d15d48305d8478"}]
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-975833-1792449389): exit 0

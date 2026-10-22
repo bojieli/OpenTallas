@@ -1,0 +1,17 @@
+{
+ "reviewer": "claude KV-HEALTH (LEAD2-KV sub-lane)",
+ "time": "2026-10-19 16:55 PT",
+ "gate_commit": "e08ee9e87",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "no macros",
+  "std_cell_band": "full band, PG stripes full height",
+  "pin_spread": "pins on W/E/S(/N) faces, single pins per face",
+  "clock_entry": "ck on S face, spread <= 1.2 ps TT/FF",
+  "shape": "square, inherited die slot"
+ },
+ "pngs": [
+  "physical/ref_tile/qkd_rst_region_pr_h273/gate_layout/floorplan.png",
+  "physical/ref_tile/qkd_rst_region_pr_h273/gate_layout/density.png"
+ ]
+}

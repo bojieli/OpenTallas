@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hnx_su_bank6_ws_1019-r2-d324a1771 bench bench_hnx_bank_ws_wmut3 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hnx_su_bank6_ws_1019-r2-d324a1771 log cl/bench_hnx_bank_ws_wmut3.a1b1.log captured 2026-10-19T06:37:02-07:00
+# fail_regex 'HNX_SU_BANK_WS FAIL WMUT=3 '
+ERR P1 row=256 replica=5 data=13343de2 exp=13341f01
+ERR P1 row=257 replica=5 data=13343dc3 exp=13341f20
+ERR P1 row=258 replica=5 data=13343da4 exp=13341f3f
+ERR P1 row=259 replica=5 data=13343d85 exp=13341f5e
+ERR P1 row=260 replica=5 data=13343d66 exp=13341f7d
+ERR P1 row=261 replica=5 data=13343d47 exp=13341f9c
+[31000000] %Fatal: tb_hnx_su_bank6_ws.sv:88: Assertion failed in tb_hnx_su_bank6_ws: HNX_SU_BANK_WS FAIL WMUT=3 checks=10760 errors=1536
+%Error: rtl/hbm_next/su/tb/tb_hnx_su_bank6_ws.sv:88: Verilog $stop
+Aborting...

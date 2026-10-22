@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_s81sl_cap_p1.lef",
+    "sha256": "5fef18bf780f36ca245a4fc1d71a0ae5d4c66877028756d230b00e73f209d656"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/s81sl_capc_p1_die_rc_order-s81capc_die_rc_order-a62cd1284/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/s81sl_capc_p1_die_rc_order-s81capc_die_rc_order-a62cd1284/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/s81sl_capc_p1_die_rc_order-s81capc_die_rc_order-a62cd1284/record/views/ot_s81sl_cap_p1/provenance/raw/ot_s81sl_cap_p1.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/s81sl_capc_p1_die_rc_order-s81capc_die_rc_order-a62cd1284/record/views/ot_s81sl_cap_p1/provenance/ot_s81sl_cap_p1.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 1181 OBS rects moved into 1174 pins: cfg_d[0], cfg_d[100], cfg_d[101], cfg_d[102], cfg_d[103], cfg_d[104], cfg_d[105], cfg_d[106], cfg_d[107], cfg_d[108], cfg_d[109], cfg_d[10]; pockets: 232 OBS rects added on M7 (gaps < 2.048 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/s81sl_capc_p1_die_rc_order-s81capc_die_rc_order-a62cd1284/record/views/ot_s81sl_cap_p1/provenance/ot_s81sl_cap_p1.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_s81sl_cap_p1 345.6 x 345.6: PG M7 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M8; face pins 1174 blocked-above 0 blocked-same 0; clock clk insertion 801 ps; pockets M7 0 (closed)",
+    "info": {
+      "cell": "ot_s81sl_cap_p1",
+      "W": 345.6,
+      "H": 345.6,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M7",
+            "stripes": 32,
+            "dir": "V",
+            "spread": 0.969,
+            "coverage": 1.0,
+            "shapes_on_top": 32
+          },
+          "VSS": {
+            "top_layer": "M7",
+            "stripes": 32,
+            "dir": "V",
+            "spread": 0.969,
+            "coverage": 1.0,
+            "shapes_on_top": 32
+          }
+        },
+        "top_layer": "M7",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M7",
+      "strap_layer": "M8",
+      "cap": null,
+      "face": {
+        "face_pins": 1174,
+        "blocked_above": 0,
+        "covered_below": 2,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 800.69,
+          "min_ps": 405.33
+        }
+      },
+      "pockets": {
+        "layer": "M7",
+        "d_um": 2.048,
+        "marker": {
+          "layer": "M7",
+          "d_um": 2.048,
+          "added": 232
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      },
+      "pin_access_violations": 0
+    }
+  },
+  "output": {
+    "path": "ot_s81sl_cap_p1.lef",
+    "sha256": "70bfa929dd3577208512c305a0cc1535db9ad8477a5eb18d24b6b20e262d1455"
+  }
+}

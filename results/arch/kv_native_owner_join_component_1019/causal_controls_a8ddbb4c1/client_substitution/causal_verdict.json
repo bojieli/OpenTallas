@@ -1,0 +1,17 @@
+{
+  "name": "client_substitution",
+  "verdict": "CAUGHT",
+  "baseline_exit": 0,
+  "mutant_exit": 1,
+  "baseline_application_pass": true,
+  "mutant_named_invariant_failed": true,
+  "mutant_application_pass": false,
+  "extra_witness_present": true,
+  "source_delta": [
+    "private/qkd_host_native_owner_join_rc.sv"
+  ],
+  "baseline_log_sha256": "466e7499b25fbbbb28217dd739cba2d32228fe0709428cee5cd26e08bb575691",
+  "mutant_log_sha256": "fd7e45eabb10d48f3f2db1d0d3b0c8ef3bd676cd4372ca577c2e986eb15adf2d",
+  "required_regex": "BOUND_KEY_IS_NATIVE_TAG59",
+  "scope": "minimum native seam COMPONENT source control, no production/native/physical qualification"
+}

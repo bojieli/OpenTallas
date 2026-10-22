@@ -1,0 +1,7 @@
+#!/usr/bin/python3
+import sys,os,json
+from pathlib import Path
+if sys.argv[1]=="tools/run_abi3_physical.py":
+ Path(os.environ["PG_ARGV_CAPTURE"]).write_text(json.dumps(dict(argv=sys.argv[2:],strict=os.environ.get("OT_PG_STRICT"))))
+ raise SystemExit(47)
+os.execv(sys.executable,[sys.executable]+sys.argv[1:])

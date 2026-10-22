@@ -1,0 +1,200 @@
+{
+  "verdict": "PASS_BOUNDED_DEFAULT_COMPARISON",
+  "freeze_commit": "7501d513a",
+  "candidate_revision": "833713954",
+  "baseline_revision": "60bb2c145",
+  "feature_settings": {
+    "ENABLE_RETAINED_COMMIT": 1,
+    "ENABLE_NATIVE_OWNER_JOIN": 0
+  },
+  "scheduler": {
+    "original_outputs": 70,
+    "cases": 26,
+    "post_fixture_edges_summed": 2977,
+    "pass_logs": [
+      "scheduler_case0.log",
+      "scheduler_case1.log",
+      "scheduler_case2.log",
+      "scheduler_case3.log",
+      "scheduler_case4.log",
+      "scheduler_case5.log",
+      "scheduler_case6.log",
+      "scheduler_case7.log",
+      "scheduler_case8.log",
+      "scheduler_case9.log",
+      "scheduler_case10.log",
+      "scheduler_case11.log",
+      "scheduler_case12.log",
+      "scheduler_case13.log",
+      "scheduler_case14.log",
+      "scheduler_case15.log",
+      "scheduler_case16.log",
+      "scheduler_case17.log",
+      "scheduler_case18.log",
+      "scheduler_case19.log",
+      "scheduler_case20.log",
+      "scheduler_case21.log",
+      "scheduler_case22.log",
+      "scheduler_case23.log",
+      "scheduler_case24.log",
+      "scheduler_case25.log"
+    ]
+  },
+  "rank_codec": {
+    "old_outputs": 28,
+    "scenarios": 24,
+    "compared_edges": 455,
+    "rank_parameter": 0
+  },
+  "coordinator_codec": {
+    "old_outputs": 51,
+    "scenarios": 24,
+    "compared_edges": 455,
+    "receive_lane": 0
+  },
+  "fleet": {
+    "host": "ot-epyc8",
+    "unit": "oth-ubuntu-2270331-1792449586",
+    "verilator": "5.050",
+    "exit": 0,
+    "mem_gb": 4,
+    "threads": 2,
+    "max_build_rss_kb": 370952
+  },
+  "limitations": [
+    "Not formal equivalence or four-state startup proof; Verilator two-state default initialization.",
+    "Codecs bounded reset/opcode traffic includes rejected/illegal scenarios; no complete distributed ownership lifecycle, no valid traffic for every opcode/field/state, no ranks 1 through 7.",
+    "Scheduler original descriptor fixture uses driven native inputs absent/unconnected with default feature disabled; original outputs only, no new join exports qualified.",
+    "No comparison of TP8 coordinator/service/lifecycle wrappers, no public die/root activation, timing/physical/CDC or production health calendar qualification."
+  ],
+  "logs": [
+    {
+      "path": "coordinator_build.log",
+      "sha256": "ffbdfd12ff8d38809f300baa82ff436314fc210a5097f1b822598aa31225d53c"
+    },
+    {
+      "path": "coordinator_run.log",
+      "sha256": "094f4609f66418f0c43254e5d6c3aee8dd5220ffa99a7a38c8177ce97ac4f092"
+    },
+    {
+      "path": "rank_build.log",
+      "sha256": "cdcbdf7d0cd37431a4c0ac6748baf35e5cca2f53342e9f72ce8d400d4374d479"
+    },
+    {
+      "path": "rank_run.log",
+      "sha256": "95fde2bb0ccf178fbacfa1f13c5c4dc8539c8ad10d59cf55cee4265c51be6f54"
+    },
+    {
+      "path": "scheduler_build.log",
+      "sha256": "4298037c2e4b722bd85393032e1bd8c92b07770027b7b01f9a681bcbba85eeda"
+    },
+    {
+      "path": "scheduler_case0.log",
+      "sha256": "f7fa25cb01a1291dc3164c3066ca0f2142d8f749f9b44bbee0a15ed4dd64cbf3"
+    },
+    {
+      "path": "scheduler_case1.log",
+      "sha256": "a05bd5c24f8f1a7b9eeb3d7ab5e2f37d72d4a0e4cf5f3098a3546d6104e91981"
+    },
+    {
+      "path": "scheduler_case10.log",
+      "sha256": "d8c2b27ac66612d8c8a0adeb543b8f4015c3a83271e84bc43319857a5e3a70a9"
+    },
+    {
+      "path": "scheduler_case11.log",
+      "sha256": "fafda7b5681d57e5772c8023946e1b03f30f7abbf67b0025bb5dded707f3fffc"
+    },
+    {
+      "path": "scheduler_case12.log",
+      "sha256": "c08eb3ce4ccc2e15cb0e3e35d81e7be44576a648708e4c922ba6bf0666b2ff98"
+    },
+    {
+      "path": "scheduler_case13.log",
+      "sha256": "3946091f37988d0972325e0c609e0ae0c041154952446194d641ecb1699f0272"
+    },
+    {
+      "path": "scheduler_case14.log",
+      "sha256": "8cad184a6512e13044a5576be50ae14fd6c4ff7eef1443c3b5aa4131e177858f"
+    },
+    {
+      "path": "scheduler_case15.log",
+      "sha256": "8ebdd2aa2f7ad553e715ca137e05ea3b02384ab35f6c88d68c3f7f5ff0f50e02"
+    },
+    {
+      "path": "scheduler_case16.log",
+      "sha256": "580c992b3c99312f611007c04019e6e5a4f7074a02b863d8ea43d09b4e19cb13"
+    },
+    {
+      "path": "scheduler_case17.log",
+      "sha256": "1eca0d09ed122b6f8aa9ebff06c0ed48165c2c5ec63c9e876e146c34f95680f7"
+    },
+    {
+      "path": "scheduler_case18.log",
+      "sha256": "4742ab12c3e9760ea29d93ee38d3f9b7df4f20566debdfb4ce75586f3ac4cba5"
+    },
+    {
+      "path": "scheduler_case19.log",
+      "sha256": "8ea1eb3d1c8741cb1ec6c188aa1d122b117b56041ecb6616e647a425f7ebca88"
+    },
+    {
+      "path": "scheduler_case2.log",
+      "sha256": "374c0929c7880e7ac63727ca49d2e6746890656985e58f20c0a9692628b2008b"
+    },
+    {
+      "path": "scheduler_case20.log",
+      "sha256": "affe61cbf17fa7d06eb9aa4b3549bf238621b64dd238b1b243476e0e1b0fe3fb"
+    },
+    {
+      "path": "scheduler_case21.log",
+      "sha256": "c99b6e64370d807514dbb238a0461f9ff9c74aea971850ec05049839caafd6e2"
+    },
+    {
+      "path": "scheduler_case22.log",
+      "sha256": "cb0fd4f99b10eae80d6eb31319208dfd83944b27877f7a7dc800a12507aee79e"
+    },
+    {
+      "path": "scheduler_case23.log",
+      "sha256": "aebaab28c040638bc25f4f6103954555f8b3b545d2c5f4f90aaa75d0bc1efab4"
+    },
+    {
+      "path": "scheduler_case24.log",
+      "sha256": "d5118b4ed5cf03007856870958eeccb30d7f375ada038034aac4a662d6a35460"
+    },
+    {
+      "path": "scheduler_case25.log",
+      "sha256": "056cae16fdc5620c12dc4d56b9aa51fd0a7ad627df7d109e744c7dbcc0d0ab39"
+    },
+    {
+      "path": "scheduler_case3.log",
+      "sha256": "f3cf764118215ac8f1da130d47c92deea9065a0f27ebc4dc76e92fefa5ad458c"
+    },
+    {
+      "path": "scheduler_case4.log",
+      "sha256": "2a12712922ea19040450ac50fb1011bd127dc9e512d38728a2ed9a197fb5a93c"
+    },
+    {
+      "path": "scheduler_case5.log",
+      "sha256": "fcbdef5c679aa69e930aaf44406385948c86d243eb0a8785ef21dace226f686b"
+    },
+    {
+      "path": "scheduler_case6.log",
+      "sha256": "8bdeb43cab1f17659ac32573dae2d2850a871f9a4467744c2de70b281dee9c95"
+    },
+    {
+      "path": "scheduler_case7.log",
+      "sha256": "fe2f3af158fd48774385c539e17a40758f442ca41777f9a0b31383ac4651684e"
+    },
+    {
+      "path": "scheduler_case8.log",
+      "sha256": "cc658db28b4c50c0d9a27fc71a9ee16991d3b1553ce9fc16d326f0fb9131d7fe"
+    },
+    {
+      "path": "scheduler_case9.log",
+      "sha256": "aa881ab8d0e1f6e4d56a6fc7cda99b1ccd4a78756472d7b11793178d7badf927"
+    },
+    {
+      "path": "version.log",
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    }
+  ]
+}

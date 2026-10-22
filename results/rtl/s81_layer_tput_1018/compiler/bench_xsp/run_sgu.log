@@ -1,0 +1,16 @@
+RET 403 07cafa18c1000008b
+RET 404 17a287c0c1000408b
+RET 407 07715eab01000804b
+RET 408 07b237c381000c04b
+RET 413 07b5b8bd01000844b
+RET 414 17a6991961000c44b
+RET 420 17a7c9fec1000888b
+RET 421 17accc83a1000c88b
+RET 423 07b82a1101000088b
+RET 424 078474f9c1000488b
+END edges=1087 ret_words=10 xo_checked=1085 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 3.482 s; speed 313.725 ns/s
+- Verilator: cpu 3.480 s on 1 threads; allocated 46 MB
+XS_PLACE_CHECK PASS sgu

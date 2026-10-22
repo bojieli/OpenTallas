@@ -1,0 +1,18 @@
+COLD_UNPROGRAMMED_GAP fault=0 (no table-valid protection)
+PROGRAMMED_DATA_PASS words=96 back_to_back_launches=8
+WRITE_LAUNCH gap=0 fault=0 expected=1
+CAUSAL_SAME_EDGE_MISS
+WRITE_LAUNCH gap=1 fault=1 expected=1
+WRITE_LAUNCH gap=2 fault=1 expected=1
+WRITE_LAUNCH gap=3 fault=1 expected=1
+WRITE_LAUNCH gap=4 fault=1 expected=1
+WRITE_LAUNCH gap=5 fault=0 expected=0
+WRITE_LAUNCH gap=6 fault=0 expected=0
+SELECTOR_SWITCH_WRITE gap=3 fault=0 expected=1
+CAUSAL_SELECTOR_HISTORY_MISS
+RESET_ABORT_RECOVERY_PASS
+LIFETIME_SOURCE_CHARACTERIZATION checks=307 gaps=7 missing_guards=2 physical_contact_density=206/32=6.4375
+- tb.sv:45: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.001 s; speed 1.568 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 6 MB

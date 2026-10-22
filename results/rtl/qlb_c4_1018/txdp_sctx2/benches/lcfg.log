@@ -1,0 +1,10 @@
+image: compile == committed d2d_cal_image.svh
+scn0 (must PASS): PASS kv_link_cfg_boot scn0 mut0 writes66 events72
+scn1 (must PASS): PASS kv_link_cfg_boot scn1 mut0 writes0 events0
+scn2 (must PASS): PASS kv_link_cfg_boot scn2 mut0 writes7 events0
+scn3 (must PASS): PASS kv_link_cfg_boot scn3 mut0 writes0 events0
+mut5 (must FAIL): FAIL kv_link_cfg_boot scn0 mut5 errors6479
+mut6 (must FAIL): FAIL kv_link_cfg_boot scn0 mut6 errors8003
+regression FAIL (see /srv/opentallas-scratch/claude/qlb-c4-1018/out_txdp/lcfg/regress.log)
+FAIL link_cfg_boot
+rc=1

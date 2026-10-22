@@ -1,0 +1,44 @@
+{
+  "scope": "MODEL ONLY; geometric points are not legal placement",
+  "source_commit": "3ebb699a9bd3564837e84e018e4c2c7c1e3cae8c",
+  "odb_sha256": "00150f2fb15c550a1b5996031874102edfd5bbd677c98aef31bd87b9b3c38ad2",
+  "graph_sha256": "607693bf615bb64d38cfdf482aa73c936345403c7f70b37b65c9329e757a8344",
+  "all_roots": 59632,
+  "assigned_nonmacro_endpoints": 139755,
+  "all_expanded_endpoints": 142090,
+  "round_totals": [
+    826,
+    861,
+    861
+  ],
+  "added": {
+    "ff": 236,
+    "comb": 625,
+    "tie": 0
+  },
+  "added_area_um2": 154.83959999999985,
+  "clock_increment": {
+    "TT": {
+      "masters_fF": {
+        "DFFHQNx1_ASAP7_75t_R": 0.474736,
+        "DFFASRHQNx1_ASAP7_75t_R": 0.462899
+      },
+      "added_fF": 109.56376299999982
+    },
+    "FF": {
+      "masters_fF": {
+        "DFFHQNx1_ASAP7_75t_R": 0.52201,
+        "DFFASRHQNx1_ASAP7_75t_R": 0.503152
+      },
+      "added_fF": 119.25303799999999
+    }
+  },
+  "input_max": 1,
+  "point_model_max_over405": 468.80950000000007,
+  "extra_data_edges_capacity_model": 0,
+  "regional_edges": null,
+  "physical_qualification": false
+}
+FF_FAMILIES {"u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_wr": 4, "u_ot_pr_core.u_h.host.u_hi.u_eng.ra_wp": 28, "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_wr": 1, "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.cq_rd": 17, "u_ot_pr_core.u_h.fence.g_on.rp": 13, "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.fq_rh": 36, "u_ot_pr_core.u_h.host.u_hi.u_eng.dq_rdc": 23, "u_ot_pr_core.u_h.host.u_hi.u_cx.g_rcopy.rbin_c": 21, "u_ot_pr_core.u_h.host.u_hi.u_eng.st_d": 4, "u_ot_pr_core.u_h.host.u_hi.u_eng.ap0_pitch": 6, "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_kind": 17, "u_ot_pr_core.u_h.host.u_hi.u_rsc.reset_pipe": 1, "u_ot_pr_core.u_h.host.u_hi.mk_d2$_DFF_PN0_": 3, "u_ot_pr_core.u_h.host.u_hi.u_eng.g_sp.p_wv$_DFF_PN0_": 2, "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_okb$_DFF_PN0_": 5, "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_okx$_DFF_PN0_": 6, "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_ok1$_DFF_PN0_": 7, "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_ok0$_DFF_PN0_": 10, "u_ot_pr_core.u_h.host.u_hi.u_eng.ap_ok$_DFF_PN0_": 6, "u_ot_pr_core.u_h.host.u_hi.u_eng.sr_hold$_DFF_PN0_": 3, "u_ot_pr_core.u_h.host.u_hi.u_eng.st_act$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsh_g_regions_reset_regions__ot_rlv__c4$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c11$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c12$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c13$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c14$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c15$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c16$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c17$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c18$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c19$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c27$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c28$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c29$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c30$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c31$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c32$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c33$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c35$_DFF_PN0_": 1, "ot_rrs___pr_core_u_h_host_u_hi_u_rsi_g_regions_reset_regions__ot_rlv__c38$_DFF_PN0_": 1, "ot_rrs__u_ot_pr_core_rr__ot_rlv__c8$_DFF_PN0_": 1, "ot_rrs__u_ot_pr_core_rr__ot_rlv__c10$_DFF_PN0_": 2}
+PASS full recursive graph capacity including source-D/reset/set/tie loads and parity
+REJECT firstpass 826 vs 861

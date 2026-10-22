@@ -1,0 +1,3840 @@
+[
+  {
+    "file": "rtl/physical/ot_qfd_link_adp512_split.sv",
+    "sha256": "8be3cedde8628ae73e7db2d6452d079e660acc4703dbc1721af23d05cb543443",
+    "lines": [
+      {
+        "line": 7,
+        "text": " input wire ck,rst_n,c_v, input wire [127:0] c_d,"
+      },
+      {
+        "line": 10,
+        "text": " input wire rx_v, input wire [146:0] rx_flit, output wire fault);"
+      },
+      {
+        "line": 12,
+        "text": " (.clk(ck),.rst_n(rst_n),.c_v(c_v),.c_d(c_d),.c_cr(c_cr),.r_v(r_v),.r_d(r_d),.r_cr(r_cr),"
+      },
+      {
+        "line": 13,
+        "text": " .tx_up(tx_up),.tx_v(tx_v),.tx_flit(tx_flit),.rx_v(rx_v),.rx_flit(rx_flit),.fault(fault));"
+      },
+      {
+        "line": 16,
+        "text": " input wire [7:0] ck, input wire rst_n,c_v, input wire [1023:0] c_d,"
+      },
+      {
+        "line": 19,
+        "text": " input wire rx_v, input wire [1042:0] rx_flit, output wire fault);"
+      },
+      {
+        "line": 27,
+        "text": "  (.ck(ck[g]),.rst_n(rst_n),.c_v(c_v),.c_d(c_d[128*g+:128]),.c_cr(cc[g]),"
+      },
+      {
+        "line": 29,
+        "text": "   .tx_v(tv[g]),.tx_flit(tf),.rx_v(rx_v),.rx_flit(rf),.fault(ff[g]));"
+      },
+      {
+        "line": 34,
+        "text": " assign c_cr=cc[0]; assign r_v=rv[0]; assign tx_v=tv[0]; assign fault=ff[0];"
+      }
+    ]
+  },
+  {
+    "file": "rtl/physical/ot_qwen_die_cdc_ch.sv",
+    "sha256": "67825778cf6b71b7c6cef6a30fba297d44ebd2426b1fe952a4beb444196f5a60",
+    "lines": [
+      {
+        "line": 9,
+        "text": "// Faults (sticky, flop-launched): w_fault = a word arrived with the receive buffer full (sender ignored credits);"
+      },
+      {
+        "line": 10,
+        "text": "// r_fault = more credits returned than OCRED.  Order and values are preserved exactly; latency is not cycle-fixed."
+      },
+      {
+        "line": 19,
+        "text": "    // Order, values, credits and faults unchanged."
+      },
+      {
+        "line": 22,
+        "text": "    // with it (+1 rclk; +3 rclk total vs PIPE = 0 on the read face).  Order, values, credits and faults unchanged."
+      },
+      {
+        "line": 35,
+        "text": "    // Cost: +2 wclk latency per word; full rate; order, values, credits and faults unchanged."
+      },
+      {
+        "line": 42,
+        "text": "    input  wire         wrst_n,"
+      },
+      {
+        "line": 46,
+        "text": "    output wire         w_fault,"
+      },
+      {
+        "line": 48,
+        "text": "    input  wire         rrst_n,"
+      },
+      {
+        "line": 52,
+        "text": "    output wire         r_fault"
+      },
+      {
+        "line": 57,
+        "text": "    ot_reset_sync u_wrs (.clk(wclk), .async_rst_n(wrst_n), .sync_rst_n(wr_n));"
+      },
+      {
+        "line": 58,
+        "text": "    ot_reset_sync u_rrs (.clk(rclk), .async_rst_n(rrst_n), .sync_rst_n(rr_n));"
+      },
+      {
+        "line": 67,
+        "text": "        always @(posedge wclk or negedge wr_n) if (!wr_n) pv <= 1'b0; else pv <= i_v;"
+      },
+      {
+        "line": 68,
+        "text": "        always @(posedge wclk) pd <= i_d;"
+      },
+      {
+        "line": 73,
+        "text": "    always @(posedge wclk or negedge wr_n) if (!wr_n) iv_q <= 1'b0; else iv_q <= i_v_p;"
+      },
+      {
+        "line": 74,
+        "text": "    always @(posedge wclk) id_q <= i_d_p;"
+      },
+      {
+        "line": 82,
+        "text": "    reg         cr_q, wf_q;"
+      },
+      {
+        "line": 94,
+        "text": "        always @(posedge wclk or negedge wr_n)"
+      },
+      {
+        "line": 97,
+        "text": "        always @(posedge wclk) if (x_wr && (iw[IA-1:0] == next_head)) bypass_data <= id_q;"
+      },
+      {
+        "line": 117,
+        "text": "            always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;"
+      },
+      {
+        "line": 130,
+        "text": "        // one-hot pointer copies (one per slice) and one-hot writes (counters iw / ir still give empty / full / faults)"
+      },
+      {
+        "line": 132,
+        "text": "            always @(posedge wclk or negedge wr_n)"
+      },
+      {
+        "line": 140,
+        "text": "                always @(posedge wclk) if (x_wr && woh[gs][gk]) ib[gk][HI-1:gs*G] <= id_q[HI-1:gs*G];"
+      },
+      {
+        "line": 164,
+        "text": "        always @(posedge wclk) begin"
+      },
+      {
+        "line": 181,
+        "text": "        always @(posedge wclk) if (v2) st[sw] <= d2;"
+      },
+      {
+        "line": 182,
+        "text": "        always @(posedge wclk or negedge wr_n)"
+      },
+      {
+        "line": 191,
+        "text": "    always @(posedge wclk or negedge wr_n)"
+      },
+      {
+        "line": 192,
+        "text": "        if (!wr_n) begin iw <= 0; ir <= 0; cr_q <= 1'b0; wf_q <= 1'b0; end"
+      },
+      {
+        "line": 197,
+        "text": "            wf_q <= wf_q | (iv_q && ib_full);"
+      },
+      {
+        "line": 200,
+        "text": "    assign w_fault = wf_q;"
+      },
+      {
+        "line": 210,
+        "text": "            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib_head), .wr_overflow(),"
+      },
+      {
+        "line": 211,
+        "text": "            .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());"
+      },
+      {
+        "line": 217,
+        "text": "            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib_head), .wr_overflow(),"
+      },
+      {
+        "line": 218,
+        "text": "            .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());"
+      },
+      {
+        "line": 224,
+        "text": "    reg          ocr_q, ov_q, rf_q;"
+      },
+      {
+        "line": 228,
+        "text": "    always @(posedge rclk or negedge rr_n)"
+      },
+      {
+        "line": 229,
+        "text": "        if (!rr_n) begin ocr_q <= 1'b0; ov_q <= 1'b0; cred <= OCRED[CB-1:0]; rf_q <= 1'b0; end"
+      },
+      {
+        "line": 234,
+        "text": "            rf_q <= rf_q | (cred - {{(CB-1){1'b0}}, send} + {{(CB-1){1'b0}}, ocr_q} > OCRED[CB-1:0]);"
+      },
+      {
+        "line": 239,
+        "text": "        always @(posedge rclk or negedge rr_n) if (!rr_n) ovd <= 1'b0; else ovd <= ov_q;"
+      },
+      {
+        "line": 240,
+        "text": "        always @(posedge rclk) od_q <= af_d;            // enable-free: o_d is meaningful only with o_v"
+      },
+      {
+        "line": 243,
+        "text": "        always @(posedge rclk or negedge rr_n) if (!rr_n) ovp <= 1'b0; else ovp <= ovd;"
+      },
+      {
+        "line": 244,
+        "text": "        always @(posedge rclk) odp <= od_q;"
+      },
+      {
+        "line": 247,
+        "text": "        always @(posedge rclk) od_q <= af_d;            // enable-free: o_d is meaningful only with o_v"
+      },
+      {
+        "line": 250,
+        "text": "        always @(posedge rclk or negedge rr_n) if (!rr_n) ovp <= 1'b0; else ovp <= ov_q;"
+      },
+      {
+        "line": 251,
+        "text": "        always @(posedge rclk) odp <= od_q;"
+      },
+      {
+        "line": 254,
+        "text": "        always @(posedge rclk) if (send) od_q <= af_d;"
+      },
+      {
+        "line": 257,
+        "text": "    assign r_fault = rf_q;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+    "sha256": "c5592a70fd70235272ef5d1c1f07cf9396722b43ec8cde80f64fd58c8e1d5282",
+    "lines": [
+      {
+        "line": 3,
+        "text": "// edge. Slots come from the assigned calendar; missing source/arrival faults,"
+      },
+      {
+        "line": 7,
+        "text": " input wire ck,rst_n,send_slot,"
+      },
+      {
+        "line": 12,
+        "text": " output reg tx_v,tx_observed_v,output reg[547:0]tx_record,output reg fault"
+      },
+      {
+        "line": 15,
+        "text": " wire source_ok=!fault&&held&&epoch_valid_q&&tag[58:43]==epoch_q&&program_ready;"
+      },
+      {
+        "line": 17,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 18,
+        "text": "  if(!rst_n)begin held<=0;epoch_valid_q<=0;epoch_q<=0;tag<=0;gen<=0;tx_v<=0;tx_observed_v<=0;tx_record<=0;fault<=0;end"
+      },
+      {
+        "line": 23,
+        "text": "    if(!epoch_valid_q||request_tag[58:43]!=epoch_q||request_tag[42:37]!=0||request_tag[5:0]!=0||request_token>=151936||request_position>=8192||request_tag[36:19]!=request_token||request_tag[18:6]!=request_position[12:0])fault<=1;"
+      },
+      {
+        "line": 28,
+        "text": "    if(source_ok!==1'b1)fault<=1;"
+      },
+      {
+        "line": 35,
+        "text": " input wire ck,rst_n,receive_slot,rx_v,input wire[547:0]rx_record,"
+      },
+      {
+        "line": 43,
+        "text": " output reg fault"
+      },
+      {
+        "line": 49,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 50,
+        "text": "  if(!rst_n)begin host_epoch_valid<=0;host_tag<=0;host_gen<=0;host_fusedcap<=0;host_image_epoch<=0;host_image_digest<=0;fault<=0;end"
+      },
+      {
+        "line": 52,
+        "text": "   if(program_begin_v)begin host_epoch_valid<=0;if(native_active)fault<=1;end"
+      },
+      {
+        "line": 53,
+        "text": "   if(rx_v!==receive_slot)begin fault<=1;host_epoch_valid<=0;end"
+      },
+      {
+        "line": 55,
+        "text": "    if(rx_v!==1'b1||structure_ok!==1'b1||image_ok!==1'b1||native_active!==1'b0||program_begin_v!==1'b0||fault)begin fault<=1;host_epoch_valid<=0;end"
+      },
+      {
+        "line": 58,
+        "text": "   if(host_epoch_valid&&(!program_ready||program_epoch!=host_image_epoch||program_digest!=host_image_digest||installed_fusedcap!=host_fusedcap))begin host_epoch_valid<=0;if(native_active)fault<=1;end"
+      },
+      {
+        "line": 60,
+        "text": "    if(!host_epoch_valid||!host_fusedcap||head_token!=host_tag[36:19]||head_position>=8192||head_position[12:0]!=host_tag[18:6])fault<=1;"
+      },
+      {
+        "line": 66,
+        "text": " input wire ck,rst_n,send_slot,input wire[1:0]send_type,"
+      },
+      {
+        "line": 69,
+        "text": " output reg tx_v,tx_observed_v,output reg[547:0]tx_record,output reg fault"
+      },
+      {
+        "line": 73,
+        "text": " wire source_ok=!fault&&(choose_begin?bp:(send_type==2&&ap&&begin_sent&&ae==be));"
+      },
+      {
+        "line": 75,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 76,
+        "text": "  if(!rst_n)begin bp<=0;ap<=0;begin_sent<=0;be<=0;ae<=0;np<=0;nd<=0;digest<=0;tx_v<=0;tx_observed_v<=0;tx_record<=0;fault<=0;end"
+      },
+      {
+        "line": 80,
+        "text": "    if(bp||ap||expected_pw!=1024||expected_dw!=8)fault<=1;"
+      },
+      {
+        "line": 83,
+        "text": "   if(auth_v)begin if(ap)fault<=1;ap<=1;ae<=auth_epoch;digest<=auth_digest;end"
+      },
+      {
+        "line": 86,
+        "text": "    if(source_ok!==1'b1)fault<=1;"
+      },
+      {
+        "line": 94,
+        "text": " input wire ck,rst_n,receive_slot,rx_v,input wire[547:0]rx_record,"
+      },
+      {
+        "line": 96,
+        "text": " output reg auth_v,output reg[15:0]auth_epoch,output reg[63:0]auth_digest,output reg fault"
+      },
+      {
+        "line": 101,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 102,
+        "text": "  if(!rst_n)begin begin_v<=0;begin_epoch<=0;expected_pw<=0;expected_dw<=0;auth_v<=0;auth_epoch<=0;auth_digest<=0;fault<=0;end"
+      },
+      {
+        "line": 105,
+        "text": "   if(rx_v!==receive_slot)fault<=1;"
+      },
+      {
+        "line": 107,
+        "text": "    if(rx_v!==1'b1||common_ok!==1'b1||(begin_ok!==1'b1&&auth_ok!==1'b1))fault<=1;"
+      },
+      {
+        "line": 116,
+        "text": " input wire ck,rst_n,send_slot,commit_v,program_ready,installed_fusedcap,program_fault,"
+      },
+      {
+        "line": 118,
+        "text": " output reg tx_v,tx_observed_v,output reg[547:0]tx_record,output reg fault"
+      },
+      {
+        "line": 121,
+        "text": " wire source_ok=!program_ready||(!fault&&held&&!program_fault&&epoch==program_epoch&&digest==program_digest&&cap==installed_fusedcap);"
+      },
+      {
+        "line": 122,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 123,
+        "text": "  if(!rst_n)begin held<=0;cap<=0;epoch<=0;digest<=0;tx_v<=0;tx_observed_v<=0;tx_record<=0;fault<=0;end"
+      },
+      {
+        "line": 126,
+        "text": "   if(commit_v)begin if(!program_ready||program_fault)fault<=1;held<=1;cap<=installed_fusedcap;epoch<=program_epoch;digest<=program_digest;end"
+      },
+      {
+        "line": 128,
+        "text": "    tx_record<={5'd0,4'd14,6'd63,(program_ready?epoch:program_epoch),5'd0,445'd0,program_fault,program_ready,(program_ready?cap:1'b0),(program_ready?digest:program_digest)};"
+      },
+      {
+        "line": 129,
+        "text": "    if(source_ok!==1'b1)fault<=1;"
+      },
+      {
+        "line": 136,
+        "text": " input wire ck,rst_n,program_begin_v,receive_slot,rx_v,input wire[547:0]rx_record,"
+      },
+      {
+        "line": 140,
+        "text": " output reg program_installed_valid,output reg installed_fusedcap,output reg fault"
+      },
+      {
+        "line": 145,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 146,
+        "text": "  if(!rst_n)begin program_commit_v<=0;program_commit_epoch<=0;program_commit_digest<=0;program_installed_valid<=0;installed_fusedcap<=0;fault<=0;end"
+      },
+      {
+        "line": 150,
+        "text": "   if(rx_v!==receive_slot)begin fault<=1;program_installed_valid<=0;installed_fusedcap<=0;end"
+      },
+      {
+        "line": 152,
+        "text": "    if(rx_v!==1'b1||structural_ok!==1'b1||program_begin_v)begin fault<=1;program_installed_valid<=0;installed_fusedcap<=0;end"
+      },
+      {
+        "line": 154,
+        "text": "     program_installed_valid<=0;installed_fusedcap<=0;if(rx_record[64]!==1'b0||rx_record[66])fault<=1;"
+      },
+      {
+        "line": 155,
+        "text": "    end else if(record_ok!==1'b1)begin fault<=1;program_installed_valid<=0;installed_fusedcap<=0;end"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv",
+    "sha256": "39e1500710f2a1bd3f2a24f9e19678b25f2ff35d53ec271a7bb5856a28847051",
+    "lines": [
+      {
+        "line": 6,
+        "text": " input wire ck,rst_n,input wire[1:0]send_kind,"
+      },
+      {
+        "line": 17,
+        "text": " output reg tx_v,tx_observed_v,output reg[547:0]tx_record,output wire fault"
+      },
+      {
+        "line": 20,
+        "text": " qkd_program_auth_tx u_auth(.ck(ck),.rst_n(rst_n),.send_slot(send_kind==1||send_kind==2),.send_type(send_kind),"
+      },
+      {
+        "line": 22,
+        "text": " .auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),.tx_v(av),.tx_observed_v(ao),.tx_record(ar),.fault(af));"
+      },
+      {
+        "line": 23,
+        "text": " qkd_host_native_context_tx u_context(.ck(ck),.rst_n(rst_n),.send_slot(send_kind==3),"
+      },
+      {
+        "line": 26,
+        "text": " .program_epoch(program_epoch),.program_digest(program_digest),.tx_v(cv),.tx_observed_v(co),.tx_record(cr),.fault(cf));"
+      },
+      {
+        "line": 27,
+        "text": " qkd_program_witness_rx u_witness(.ck(ck),.rst_n(rst_n),.program_begin_v(begin_v),.receive_slot(witness_slot),.rx_v(rx_v),.rx_record(rx_record),"
+      },
+      {
+        "line": 30,
+        "text": " .program_installed_valid(installed_valid),.installed_fusedcap(installed_fusedcap),.fault(wf));"
+      },
+      {
+        "line": 31,
+        "text": " assign fault=af|cf|wf;"
+      },
+      {
+        "line": 32,
+        "text": " always @(posedge ck or negedge rst_n)"
+      },
+      {
+        "line": 33,
+        "text": " if(!rst_n)begin tx_v<=0;tx_observed_v<=0;tx_record<=0;end"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv",
+    "sha256": "0c05ae5b59d242b4a99c937e47683224fe4e25d802b6543b8717e3d677c60767",
+    "lines": [
+      {
+        "line": 5,
+        "text": "// initially), not ready/valid; ignored credits latch fault and stop issuance."
+      },
+      {
+        "line": 7,
+        "text": " input wire ck,rst_n,"
+      },
+      {
+        "line": 10,
+        "text": " output reg fault,"
+      },
+      {
+        "line": 41,
+        "text": " always @(posedge ck)begin"
+      },
+      {
+        "line": 50,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 51,
+        "text": "  if(!rst_n)begin s_awready_q<=0;s_wready_q<=0;s_bvalid_q<=0;s_arready_q<=0;s_rvalid_q<=0;m_arvalid_q<=0;m_rready_q<=0;m_awvalid_q<=0;m_wvalid_q<=0;m_bready_q<=0; end"
+      },
+      {
+        "line": 65,
+        "text": " wire consume=count!=0&&!fault&&("
+      },
+      {
+        "line": 69,
+        "text": " wire emit=!fault&&credits!=0&&!tx_v;"
+      },
+      {
+        "line": 76,
+        "text": " always @(posedge ck)begin rd<=rx_d; if(rv&&count<(PA+1)'(RX_DEPTH))q[wp]<=rd;end"
+      },
+      {
+        "line": 77,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 78,
+        "text": "  if(!rst_n)begin"
+      },
+      {
+        "line": 79,
+        "text": "   rv<=0;tc<=0;wp<=0;rp<=0;count<=0;credits<=TX_CRED;fault<=0;rx_cr<=0;tx_v<=0;tx_d<=0;"
+      },
+      {
+        "line": 94,
+        "text": "   if(rv&&!fault)begin"
+      },
+      {
+        "line": 95,
+        "text": "    if(count==(PA+1)'(RX_DEPTH))fault<=1;"
+      },
+      {
+        "line": 99,
+        "text": "   case({rv&&!fault&&count<(PA+1)'(RX_DEPTH),consume})"
+      },
+      {
+        "line": 100,
+        "text": "    2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;"
+      },
+      {
+        "line": 102,
+        "text": "   if(tc)begin if(credits==TX_CRED)fault<=1;else credits<=credits+1'b1;end"
+      },
+      {
+        "line": 103,
+        "text": "   if(capture_ar&&!fault)begin dr<=1;ar_pending<=1;read_addr<=m_araddr_q;m_arready<=1;end"
+      },
+      {
+        "line": 104,
+        "text": "   if(capture_aw&&!fault)begin ba<=1;dma_addr<=m_awaddr_q;m_awready<=1;end"
+      },
+      {
+        "line": 105,
+        "text": "   if(capture_w&&!fault)begin bd<=1;dma_data<=m_wdata_q;dma_strb<=m_wstrb_q;m_wready<=1;end"
+      },
+      {
+        "line": 107,
+        "text": "    if(!valid_header)fault<=1;"
+      },
+      {
+        "line": 110,
+        "text": "      if(h[95:45]!=0||h[159:132]!=0)fault<=1;"
+      },
+      {
+        "line": 115,
+        "text": "      if(h[159:45]!=0)fault<=1;"
+      },
+      {
+        "line": 119,
+        "text": "      if(!dr||h[31:16]!=0||h[95:35]!=0)fault<=1;"
+      },
+      {
+        "line": 121,
+        "text": "       if(!h[34])fault<=1;end"
+      },
+      {
+        "line": 124,
+        "text": "      if(!dw||h[31:16]!=0||h[159:34]!=0)fault<=1;"
+      },
+      {
+        "line": 127,
+        "text": "     default:fault<=1;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch_debt.sv",
+    "sha256": "6c704cfb61b18a4190b65eadc7c67222e9c5dda24a31de5fd9129eb4fc372620",
+    "lines": [
+      {
+        "line": 6,
+        "text": " input wire ck,ck_order,rst_n,boot_release,input wire[289:0]ing,output reg ing_cr,"
+      },
+      {
+        "line": 10,
+        "text": " output reg[31:0]issued,output wire fault,output reg dispatch_quiet,output wire order_quiet);"
+      },
+      {
+        "line": 11,
+        "text": " always @(posedge ck or negedge rst_n)"
+      },
+      {
+        "line": 12,
+        "text": "  if(!rst_n)dispatch_quiet<=0;"
+      },
+      {
+        "line": 14,
+        "text": "   !boot_hold&&!issue_v&&!ing_cr&&!kv_cr&&!hb_cr&&!kcr_q&&!hcr_q&&!fault;"
+      },
+      {
+        "line": 32,
+        "text": " wire send=count!=0&&!fault&&(!boot_hold||MUT==2)&&good&&(marker?(issued==landed&&kc!=0&&(!image_dirty||hc!=0)):(oc!=0&&(embed?hc!=0:kc!=0)));"
+      },
+      {
+        "line": 33,
+        "text": " reg issue_v;reg[6:0]issue_pc;wire order_fault;"
+      },
+      {
+        "line": 34,
+        "text": " qkd_host_commit_order_debt #(.MUT(MUT))u_order(.ck(ck_order),.rst_n(rst_n),.issue_v(issue_v),.issue_pc(issue_pc),.acks(acks),.prefix_v(prefix_v),.prefix_count(landed),.fault(order_fault),.order_quiet(order_quiet));"
+      },
+      {
+        "line": 35,
+        "text": " assign fault=ff|order_fault;"
+      },
+      {
+        "line": 37,
+        "text": " always @(posedge ck)begin"
+      },
+      {
+        "line": 42,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 43,
+        "text": "  if(!rst_n)begin wp<=0;rp<=0;count<=0;kc<=8;hc<=4;oc<=256;iv_q<=0;kcr_q<=0;hcr_q<=0;ff<=0;boot_hold<=0;image_dirty<=0;image_check<=0;ing_cr<=0;kv<=0;hb<=0;issued<=0;issue_v<=0;issue_pc<=0;end"
+      },
+      {
+        "line": 58,
+        "text": "   case({iv_q&&!(count==8&&!send),send})2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;endcase"
+      },
+      {
+        "line": 59,
+        "text": "   case({kcr_q,send&&(marker||!embed)})2'b10:begin if(kc==8)ff<=1;else kc<=kc+1'b1;end 2'b01:kc<=kc-1'b1;default:;endcase"
+      },
+      {
+        "line": 60,
+        "text": "   case({hcr_q,send&&((marker&&image_dirty)||embed)})2'b10:begin if(hc==4)ff<=1;else hc<=hc+1'b1;end 2'b01:hc<=hc-1'b1;default:;endcase"
+      },
+      {
+        "line": 61,
+        "text": "   case({prefix_v,send&&!marker})2'b10:begin if(oc==256)ff<=1;else oc<=oc+1'b1;end 2'b01:oc<=oc-1'b1;default:;endcase"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+    "sha256": "34cab8a8298d4bf055a5649406563c70bb04e272fa107c09b40994a93defe275",
+    "lines": [
+      {
+        "line": 8,
+        "text": " input wire ck,rst_n,input wire issue_v,input wire[6:0]issue_pc,input wire[127:0]acks,"
+      },
+      {
+        "line": 9,
+        "text": " output reg prefix_v,output reg[31:0]prefix_count,output reg fault"
+      },
+      {
+        "line": 16,
+        "text": " wire fetch=unread!=0&&read_credit!=0&&!fault;"
+      },
+      {
+        "line": 25,
+        "text": " wire pop=fc!=0&&!fault&&((|head_ready)||MUT==1);"
+      },
+      {
+        "line": 28,
+        "text": " always @(posedge ck)head_oh<=pop?(128'd1<<head_adv):(128'd1<<head_hold);"
+      },
+      {
+        "line": 29,
+        "text": " wire take=iqv&&!fault&&total<256;"
+      },
+      {
+        "line": 30,
+        "text": " always @(posedge ck)begin"
+      },
+      {
+        "line": 38,
+        "text": "  always @(posedge ck)begin"
+      },
+      {
+        "line": 45,
+        "text": "  always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 46,
+        "text": "   if(!rst_n)begin outstanding[k]<=0;pending[k]<=0;end"
+      },
+      {
+        "line": 48,
+        "text": "    case({add,physical})2'b10:outstanding[k]<=outstanding[k]+1'b1;2'b01:if(outstanding[k]!=0)outstanding[k]<=outstanding[k]-1'b1;default:;endcase"
+      },
+      {
+        "line": 49,
+        "text": "    case({physical,consume})2'b10:pending[k]<=pending[k]+1'b1;2'b01:if(pending[k]!=0)pending[k]<=pending[k]-1'b1;default:;endcase"
+      },
+      {
+        "line": 57,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 58,
+        "text": "  if(!rst_n)begin"
+      },
+      {
+        "line": 60,
+        "text": "   prefix_v<=0;prefix_count<=0;fault<=0;"
+      },
+      {
+        "line": 63,
+        "text": "   if(iqv&&total==256)fault<=1;"
+      },
+      {
+        "line": 64,
+        "text": "   if(|bad_ack)fault<=1;"
+      },
+      {
+        "line": 67,
+        "text": "   case({take,fetch})2'b10:unread<=unread+1'b1;2'b01:unread<=unread-1'b1;default:;endcase"
+      },
+      {
+        "line": 68,
+        "text": "   case({take,pop})2'b10:total<=total+1'b1;2'b01:total<=total-1'b1;default:;endcase"
+      },
+      {
+        "line": 69,
+        "text": "   case({pop,fetch})2'b10:read_credit<=read_credit+1'b1;2'b01:read_credit<=read_credit-1'b1;default:;endcase"
+      },
+      {
+        "line": 70,
+        "text": "   if(v3)begin if(fc==8&&!pop)fault<=1;fw<=fw+1'b1;end"
+      },
+      {
+        "line": 71,
+        "text": "   if(pop)begin fr<=fr1;prefix_count<=prefix_count+1'b1;if(prefix_count==32'hffffffff)fault<=1;end"
+      },
+      {
+        "line": 72,
+        "text": "   case({v3,pop})2'b10:fc<=fc+1'b1;2'b01:fc<=fc-1'b1;default:;endcase"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_emb_boot_barrier.sv",
+    "sha256": "e49893d71224a047e61fd8b1bf04c8defe5ef5dc8e4f3257933c2958bb1248b5",
+    "lines": [
+      {
+        "line": 5,
+        "text": " input wire ck,rst_n,input wire in_v,input wire[65:0]in_d,output reg in_cr,"
+      },
+      {
+        "line": 7,
+        "text": " input wire out_cr,output reg fault);"
+      },
+      {
+        "line": 9,
+        "text": " always @(posedge ck)word<=in_v?in_d:word;"
+      },
+      {
+        "line": 10,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 11,
+        "text": "  if(!rst_n)begin pending<=0;delivered<=0;saw_not_ready<=0;iv_q<=0;cr_q<=0;est_q<=0;in_cr<=0;out_v<=0;out_d<=0;fault<=0;end"
+      },
+      {
+        "line": 14,
+        "text": "   if(est_q[1])fault<=1;"
+      },
+      {
+        "line": 15,
+        "text": "   if(iv_q)begin if(pending||delivered)fault<=1;else begin pending<=1;saw_not_ready<=!require_fresh||!est_q[0];end end"
+      },
+      {
+        "line": 17,
+        "text": "   if(pending&&((saw_not_ready&&est_q[0]&&!est_q[1])||MUT==1)&&!fault)begin out_d<=word;out_v<=1;pending<=0;delivered<=1;end"
+      },
+      {
+        "line": 18,
+        "text": "   if(cr_q)begin if(!delivered)fault<=1;else begin delivered<=0;in_cr<=1;end end"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+    "sha256": "d78cf6765e16f58be973e84d6e70067f77ed53ae72fbf518d21307bb5becb8eb",
+    "lines": [
+      {
+        "line": 7,
+        "text": "// all previously emitted sectors. Host QPIPE is write-only; RMW faults."
+      },
+      {
+        "line": 9,
+        "text": " input wire ck,rst_n,"
+      },
+      {
+        "line": 14,
+        "text": " output reg fault,output reg[31:0]issued,landed,"
+      },
+      {
+        "line": 34,
+        "text": " always @*begin"
+      },
+      {
+        "line": 55,
+        "text": " wire emit=pending&&good&&!fault&&credits[{stack,pc}]!=0&&(!ORDERED||ord_credit!=0);"
+      },
+      {
+        "line": 56,
+        "text": " wire emit_marker=mark&&!fault&&issued==landed&&marker_credit;"
+      },
+      {
+        "line": 58,
+        "text": " // Credit-overflow fault, restructured (HRORDER 10-18 gate: hd -> 128:1 credit mux -> emit -> per-k spend -> 128-input OR"
+      },
+      {
+        "line": 59,
+        "text": " // -> fault was 15 levels, -32 ps est): OR_k(crq[k]&&credits[k]==4&&!(emit&&sel==k)) =="
+      },
+      {
+        "line": 68,
+        "text": "  always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 69,
+        "text": "   if(!rst_n)credits[k]<=4;"
+      },
+      {
+        "line": 72,
+        "text": "    2'b01:credits[k]<=credits[k]-1'b1;default:;"
+      },
+      {
+        "line": 79,
+        "text": " always @(posedge ck)begin"
+      },
+      {
+        "line": 84,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 85,
+        "text": "  if(!rst_n)begin"
+      },
+      {
+        "line": 87,
+        "text": "   fault<=0;issued<=0;landed<=0;marker_credit<=1;ocq<=0;ord_credit<=256;issue_v<=0;issue_pc<=0;"
+      },
+      {
+        "line": 91,
+        "text": "   if(ORDERED)case({ocq,emit})2'b10:begin if(ord_credit==256)fault<=1;else ord_credit<=ord_credit+1'b1;end 2'b01:ord_credit<=ord_credit-1'b1;default:;endcase"
+      },
+      {
+        "line": 94,
+        "text": "   if(ovf_other||ovf_sel)fault<=1;"
+      },
+      {
+        "line": 95,
+        "text": "   if(sum[32]||sum[31:0]>issued)fault<=1;else landed<=sum[31:0];"
+      },
+      {
+        "line": 96,
+        "text": "   if(iq[0]&&!fault)begin if(count==8)fault<=1;else wp<=wp+1'b1;end"
+      },
+      {
+        "line": 98,
+        "text": "   case({iq[0]&&!fault&&count<8,adv})"
+      },
+      {
+        "line": 99,
+        "text": "    2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;endcase"
+      },
+      {
+        "line": 100,
+        "text": "   if(pending&&!good&&!mark)fault<=1;"
+      },
+      {
+        "line": 103,
+        "text": "    issued<=issued+1'b1;if(issued==32'hffffffff)fault<=1;ing_cr<=1;"
+      },
+      {
+        "line": 105,
+        "text": "   if(mcq)begin if(marker_credit)fault<=1;else marker_credit<=1;end"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv",
+    "sha256": "d96721095b99b8bbe37fc7d3ee00121c76c7f3a37e683d5476fa074006889836",
+    "lines": [
+      {
+        "line": 28,
+        "text": "//   class 3 reserved   (fault)."
+      },
+      {
+        "line": 31,
+        "text": "//   {8'hFF, 48'b0, code[7:0]} once, on the first fault."
+      },
+      {
+        "line": 34,
+        "text": "//   in request order on i_rv / i_rd.  RMW_EN 0: the read path is absent and an rmw descriptor is a fault."
+      },
+      {
+        "line": 35,
+        "text": "// Fault codes (sticky, fail closed: after a fault the host stream is drained and dropped): 1 QKV descriptor with"
+      },
+      {
+        "line": 45,
+        "text": "    parameter integer QKV_EN = 1,      // 0: ROWS / IKEY / RAW only (V4.1 dies), a QKV descriptor is a fault"
+      },
+      {
+        "line": 65,
+        "text": "    input  wire              rst_n,"
+      },
+      {
+        "line": 87,
+        "text": "    output wire              fault,"
+      },
+      {
+        "line": 92,
+        "text": "    always @(posedge clk_h or negedge rn_h)"
+      },
+      {
+        "line": 93,
+        "text": "     if(!rn_h)quiet_h<=0;"
+      },
+      {
+        "line": 94,
+        "text": "     else quiet_h<=!h_v&&!hv_q&&hx_freed==0&&!t_v&&cx_empty&&tcr==TCRED&&!t_cr&&!tcr_q&&!fault;"
+      },
+      {
+        "line": 95,
+        "text": "    always @(posedge clk_i or negedge rn_i)"
+      },
+      {
+        "line": 96,
+        "text": "     if(!rn_i)quiet_i<=0;"
+      },
+      {
+        "line": 98,
+        "text": "      !ox_wr&&outst==0&&rx_empty&&!rx_pop&&!cx_wr&&!f_any&&!hx_ovf_i&&!rx_ovf_i;"
+      },
+      {
+        "line": 99,
+        "text": "    always @(posedge ck or negedge rn_c)"
+      },
+      {
+        "line": 100,
+        "text": "     if(!rn_c)quiet_c<=0;"
+      },
+      {
+        "line": 101,
+        "text": "     else quiet_c<=ox_empty&&!ox_pop&&!o_v&&ocr==OCRED&&!o_cr&&!ocr_q&&!i_rv&&!irv_q&&!fault;"
+      },
+      {
+        "line": 102,
+        "text": "    wire rn_h, rn_i, rn_c;"
+      },
+      {
+        "line": 103,
+        "text": "    ot_reset_sync u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));"
+      },
+      {
+        "line": 104,
+        "text": "    ot_reset_sync u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rn_i));"
+      },
+      {
+        "line": 105,
+        "text": "    ot_reset_sync u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rn_c));"
+      },
+      {
+        "line": 117,
+        "text": "    always @(posedge clk_h) begin hc_q <= h_cls; hd_q <= h_d; end"
+      },
+      {
+        "line": 118,
+        "text": "    always @(posedge clk_h or negedge rn_h) if (!rn_h) hv_q <= 1'b0; else hv_q <= h_v;"
+      },
+      {
+        "line": 124,
+        "text": "        .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),"
+      },
+      {
+        "line": 125,
+        "text": "        .rclk(clk_i), .rrst_n(rn_i), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_head), .rcount(hx_cnt));"
+      },
+      {
+        "line": 126,
+        "text": "    always @(posedge clk_h or negedge rn_h) if (!rn_h) h_crn <= 0; else h_crn <= hx_freed;"
+      },
+      {
+        "line": 131,
+        "text": "    reg  [7:0]   f_code;                    // first fault (sticky)"
+      },
+      {
+        "line": 132,
+        "text": "    wire         f_any = f_code != 8'd0;"
+      },
+      {
+        "line": 160,
+        "text": "    wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw && !bad_native;"
+      },
+      {
+        "line": 161,
+        "text": "    wire         take_p = hv_i && !f_any && hcl == 2'd2;"
+      },
+      {
+        "line": 164,
+        "text": "        .clk(clk_i),.clk_bank(clk_i_bank),.clk_out(clk_i_out), .rst_n(rn_i),"
+      },
+      {
+        "line": 170,
+        "text": "    always @(*) begin"
+      },
+      {
+        "line": 173,
+        "text": "            if (f_any) hx_pop = 1'b1;                                   // fail closed: drain and drop"
+      },
+      {
+        "line": 178,
+        "text": "                default: hx_pop = 1'b1;"
+      },
+      {
+        "line": 193,
+        "text": "    wire         csr_mark = hv_i && !f_any && hcl == 2'd0 && hx_head[7:0] == 8'd2;"
+      },
+      {
+        "line": 214,
+        "text": "    always @(posedge clk_i or negedge rn_i) begin"
+      },
+      {
+        "line": 215,
+        "text": "        if (!rn_i) begin"
+      },
+      {
+        "line": 216,
+        "text": "            f_code <= 0; share_i <= 0; csr_tgl <= 1'b0; all_done <= 1'b0; pcnt <= 0; outst <= 0;"
+      },
+      {
+        "line": 219,
+        "text": "            if (hv_i && !f_any && hcl == 2'd0) begin"
+      },
+      {
+        "line": 224,
+        "text": "            // faults: the first one wins"
+      },
+      {
+        "line": 225,
+        "text": "            if (!f_any) begin"
+      },
+      {
+        "line": 226,
+        "text": "                if (hv_i && hcl == 2'd1 && bad_qkv)      f_code <= 8'd1;"
+      },
+      {
+        "line": 227,
+        "text": "                else if (hv_i && hcl == 2'd1 && bad_rmw) f_code <= 8'd2;"
+      },
+      {
+        "line": 228,
+        "text": "                else if (hv_i && hcl == 2'd1 && bad_native) f_code <= 8'd7;"
+      },
+      {
+        "line": 229,
+        "text": "                else if (hv_i && hcl == 2'd3)            f_code <= 8'd3;"
+      },
+      {
+        "line": 230,
+        "text": "                else if (hx_ovf_i)                        f_code <= 8'd4;"
+      },
+      {
+        "line": 231,
+        "text": "                else if (cx_ovf)                          f_code <= 8'd5;"
+      },
+      {
+        "line": 232,
+        "text": "                else if (rx_ovf_i)                        f_code <= 8'd6;"
+      },
+      {
+        "line": 238,
+        "text": "            // completions: done words, then the fault word once"
+      },
+      {
+        "line": 243,
+        "text": "            end else if (f_any && !f_sent) begin"
+      },
+      {
+        "line": 244,
+        "text": "                cx_wr <= 1'b1; cx_w <= {8'hFF, 48'd0, f_code}; f_sent <= 1'b1;"
+      },
+      {
+        "line": 252,
+        "text": "    always @(posedge clk_i or negedge rn_i)"
+      },
+      {
+        "line": 253,
+        "text": "        if (!rn_i) begin hov_s <= 0; rov_s <= 0; end"
+      },
+      {
+        "line": 257,
+        "text": "        .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr), .wdata(ox_w), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),"
+      },
+      {
+        "line": 258,
+        "text": "        .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));"
+      },
+      {
+        "line": 260,
+        "text": "        .wclk(ck), .wrst_n(rn_c), .wr(irv_q), .wdata(ird_q), .wfull(rx_full), .wfreed(rx_freed), .ovf(rx_ovf),"
+      },
+      {
+        "line": 261,
+        "text": "        .rclk(clk_i), .rrst_n(rn_i), .rd(rx_pop), .rempty(rx_empty), .rdata(rx_head), .rcount(rx_cnt));"
+      },
+      {
+        "line": 263,
+        "text": "        .wclk(clk_i), .wrst_n(rn_i), .wr(cx_wr), .wdata(cx_w), .wfull(cx_full), .wfreed(cx_freed), .ovf(cx_ovf),"
+      },
+      {
+        "line": 264,
+        "text": "        .rclk(clk_h), .rrst_n(rn_h), .rd(cx_pop), .rempty(cx_empty), .rdata(cx_head), .rcount(cx_cnt));"
+      },
+      {
+        "line": 272,
+        "text": "    always @(posedge clk_h or negedge rn_h) begin"
+      },
+      {
+        "line": 273,
+        "text": "        if (!rn_h) begin t_v <= 1'b0; t_d <= 0; tcr <= TCRED; tcr_q <= 1'b0; end"
+      },
+      {
+        "line": 287,
+        "text": "    always @(posedge ck or negedge rn_c)"
+      },
+      {
+        "line": 288,
+        "text": "        if (!rn_c) begin tg_s <= 0; share_c <= 0; end"
+      },
+      {
+        "line": 299,
+        "text": "    always @(posedge ck or negedge rn_c) begin"
+      },
+      {
+        "line": 300,
+        "text": "        if (!rn_c) begin"
+      },
+      {
+        "line": 311,
+        "text": "    always @(posedge ck) ird_q <= i_rd;"
+      },
+      {
+        "line": 312,
+        "text": "    always @(posedge ck or negedge rn_c) if (!rn_c) irv_q <= 1'b0; else irv_q <= i_rv && (RMW_EN != 0);"
+      },
+      {
+        "line": 313,
+        "text": "    // sticky fault, seen in the die domain"
+      },
+      {
+        "line": 315,
+        "text": "    reg         fault_c;"
+      },
+      {
+        "line": 316,
+        "text": "    always @(posedge ck or negedge rn_c)"
+      },
+      {
+        "line": 317,
+        "text": "        if (!rn_c) begin fs <= 0; fault_c <= 1'b0; end"
+      },
+      {
+        "line": 318,
+        "text": "        else begin fs <= {fs[0], f_any}; fault_c <= fault_c | fs[1]; end   // ox_ovf cannot happen (writes need !ox_full)"
+      },
+      {
+        "line": 319,
+        "text": "    assign fault = fault_c;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_phy_cdc5.sv",
+    "sha256": "777dd2634771a7d72f2db4c144e76056c9c57eb17ff4c638b433cbe2c56bfcef",
+    "lines": [
+      {
+        "line": 8,
+        "text": " input wire ck_pad,rx_wck,rx_rck,tx_wck,tx_rck,rst_n,"
+      },
+      {
+        "line": 13,
+        "text": " output wire[4:0]faults"
+      },
+      {
+        "line": 16,
+        "text": " qkd_host_rx_pad5 #(.MUT(MUT))u_pad(.clk(ck_pad),.rst_n(rst_n),.in_v(phy_rx_v),.in_d(phy_rx_d),.in_cr(phy_rx_cr),"
+      },
+      {
+        "line": 17,
+        "text": " .out_v(pad_v),.out_d(pad_d),.out_cr(pad_cr),.fault(faults[0]));"
+      },
+      {
+        "line": 18,
+        "text": " ot_qwen_die_cdc_ch #(.W(546),.PIPE(2))u_rx(.wclk(rx_wck),.wrst_n(rst_n),.i_v(pad_v),.i_d(pad_d),.i_cr(pad_cr),.w_fault(faults[1]),"
+      },
+      {
+        "line": 19,
+        "text": " .rclk(rx_rck),.rrst_n(rst_n),.o_v(core_rx_v),.o_d(rx_d),.o_cr(core_rx_cr),.r_fault(faults[2]));"
+      },
+      {
+        "line": 21,
+        "text": " ot_qwen_die_cdc_ch #(.W(546),.PIPE(2))u_tx(.wclk(tx_wck),.wrst_n(rst_n),.i_v(core_tx_v),"
+      },
+      {
+        "line": 22,
+        "text": " .i_d({18'd0,core_tx_d}^{{545{1'b0}},(MUT==3)}),.i_cr(core_tx_cr),.w_fault(faults[3]),"
+      },
+      {
+        "line": 23,
+        "text": " .rclk(tx_rck),.rrst_n(rst_n),.o_v(phy_tx_v),.o_d(tx_d),.o_cr(phy_tx_cr),.r_fault(faults[4]));"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv",
+    "sha256": "9302f420f0af51876c704795e5aa45cb7621f55676af353a894979ab45142159",
+    "lines": [
+      {
+        "line": 16,
+        "text": " input wire ck,rst_n,begin_image,input wire[15:0]image_epoch,"
+      },
+      {
+        "line": 22,
+        "text": " output reg[142:0]pr,output reg program_ready,fault,"
+      },
+      {
+        "line": 25,
+        "text": " // Non-ISA image lengths are part of the external boot ABI, never defaults."
+      },
+      {
+        "line": 33,
+        "text": "   10:target_words=77;11:target_words=66;12:target_words=1024;13:target_words=8;default:target_words=0;endcase"
+      },
+      {
+        "line": 43,
+        "text": " wire p_wr=rst_n&&!begin_image&&!fault&&word_v&&!word_desc&&state==LOAD&&!execution_active&&!p_bad;"
+      },
+      {
+        "line": 44,
+        "text": " wire p_rd=rst_n&&!begin_image&&!fault&&state==REPLAY_P&&!execution_active;"
+      },
+      {
+        "line": 54,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 55,
+        "text": "  if(!rst_n)begin authorized_footer_valid<=0;authorized_footer<=0;footer_staged<=0;replay_target<=0;state<=IDLE;pr<=0;program_ready<=0;fault<=0;digest<=0;program_epoch<=0;np<=0;nd<=0;got_p<=0;got_d<=0;index_p<=0;index_d<=0;rv_q<=0;ri_q<=0;end"
+      },
+      {
+        "line": 58,
+        "text": "   // registered macro read: the program write of the read issued last edge (suppressed by a fault this edge)"
+      },
+      {
+        "line": 60,
+        "text": "   if(rv_q&&!fault&&!begin_image&&!execution_active&&MUT!=1)pr[74:0]<={1'b1,ri_q,p_q[ri_q[9:8]]};"
+      },
+      {
+        "line": 63,
+        "text": "    if(execution_active||state==LOAD||state==SEALED||state==REPLAY_P||state==REPLAY_W||state==REPLAY_D||pw_count==0||pw_count>1024||target_bad)begin fault<=1;state<=IDLE;end"
+      },
+      {
+        "line": 64,
+        "text": "    else if(!fault)begin state<=LOAD;np<=pw_count;nd<=dw_count;got_p<=0;got_d<=0;digest<=64'h51484f5354505247 ^ {60'b0,image_target};program_epoch<=image_epoch;replay_target<=image_target;end"
+      },
+      {
+        "line": 65,
+        "text": "   end else if(!fault)begin"
+      },
+      {
+        "line": 67,
+        "text": "     if(state!=LOAD||execution_active||p_bad)begin fault<=1;program_ready<=0;state<=IDLE;end"
+      },
+      {
+        "line": 76,
+        "text": "     if(state!=LOAD||word_v||got_p!=np||got_d!=nd)begin fault<=1;state<=IDLE;end"
+      },
+      {
+        "line": 80,
+        "text": "     if(state!=SEALED||(MUT!=3&&auth_target!=replay_target)||auth_epoch!=program_epoch||auth_digest!=digest||execution_active)begin fault<=1;state<=IDLE;program_ready<=0;end"
+      },
+      {
+        "line": 84,
+        "text": "     if(execution_active)begin fault<=1;state<=IDLE;end"
+      },
+      {
+        "line": 90,
+        "text": "     if(execution_active)begin fault<=1;state<=IDLE;end else state<=(nd==0)?READY:REPLAY_D;"
+      },
+      {
+        "line": 93,
+        "text": "     if(execution_active)begin fault<=1;state<=IDLE;end"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_qm_clock_bridge_service_debt.sv",
+    "sha256": "a19977030679ac5fe0846785e502359c55fa21be88c7bb545208adeccb67a374",
+    "lines": [
+      {
+        "line": 1,
+        "text": "// DEFAULT_OFF separately named warm epoch permission profile."
+      },
+      {
+        "line": 9,
+        "text": " input wire cq,qw,qr,qp,ccw,ccr,rst_n,"
+      },
+      {
+        "line": 14,
+        "text": " output wire[5:0]faults,output wire queue_quiet"
+      },
+      {
+        "line": 16,
+        "text": " wire qv,qcr,return_cr;wire[545:0]qd,hd,cd;"
+      },
+      {
+        "line": 17,
+        "text": " qkd_host_qm_ingress16_service_debt #(.ENABLE_SERVICE(ENABLE_SERVICE),.MUT(MUT==4?3:(MUT==1?1:(MUT==2?2:0))))u_queue(.ck(cq),.rst_n(rst_n),.in_v(ing_v),.allow(ingest_permission),.in_cls(ing_cls),.in_d(ing_d),.in_crn(ing_crn),.out_v(qv),.out_d(qd),.out_cr(qcr),.fault(faults[0]),.queue_quiet(queue_quiet));"
+      },
+      {
+        "line": 18,
+        "text": " ot_qwen_die_cdc_ch #(.W(546),.PIPE(2))u_ing(.wclk(qw),.wrst_n(rst_n),.i_v(qv),.i_d(qd),.i_cr(qcr),.w_fault(faults[1]),.rclk(qr),.rrst_n(rst_n),.o_v(qm_v),.o_d(hd),.o_cr(return_cr),.r_fault(faults[2]));"
+      },
+      {
+        "line": 20,
+        "text": " qkd_host_qm_credit_pacer #(.MUT(MUT==3?1:0))u_pacer(.clk_h(qp),.rst_n(rst_n),.in_v(qm_v),.in_crn(qm_crn),.out_cr(return_cr),.fault(faults[3]));"
+      },
+      {
+        "line": 21,
+        "text": " ot_qwen_die_cdc_ch #(.W(546),.PIPE(2))u_done(.wclk(ccw),.wrst_n(rst_n),.i_v(done_v),.i_d({482'd0,done_d}),.i_cr(done_cr),.w_fault(faults[4]),.rclk(ccr),.rrst_n(rst_n),.o_v(packet_done_v),.o_d(cd),.o_cr(packet_done_cr),.r_fault(faults[5]));"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv",
+    "sha256": "6c1e788ccd0cc5422f3e57d33c4db74fa8ca5dcf63abca7527489b6574a67c7f",
+    "lines": [
+      {
+        "line": 7,
+        "text": " input wire clk_h,rst_n,in_v,input wire[4:0]in_crn,"
+      },
+      {
+        "line": 8,
+        "text": " output reg out_cr,output reg fault"
+      },
+      {
+        "line": 11,
+        "text": " wire pulse=!fault&&pending!=0;"
+      },
+      {
+        "line": 14,
+        "text": " always @(posedge clk_h or negedge rst_n)begin"
+      },
+      {
+        "line": 15,
+        "text": "  if(!rst_n)begin vq<=0;cq<=0;owed<=0;pending<=0;out_cr<=0;fault<=0;end"
+      },
+      {
+        "line": 18,
+        "text": "   if((cq>{1'b0,owed}+5'(vq))||next_pending>4||next_owed>4)fault<=1;"
+      },
+      {
+        "line": 20,
+        "text": "   if(MUT==1)out_cr<=!fault&&cq!=0; // loses all but one of batched returns"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service_debt.sv",
+    "sha256": "90cf36442021cc2017f15012d4a1ad75556e6aaf00d4646edcb6a66ec9295d69",
+    "lines": [
+      {
+        "line": 1,
+        "text": "// DEFAULT_OFF epoch permission profile. All16 entries remain actual storage;"
+      },
+      {
+        "line": 8,
+        "text": "// RP_REPL (KVJ-A9, opt-in, default 0 = original structure): 1 replicates the"
+      },
+      {
+        "line": 15,
+        "text": " input wire ck,rst_n,in_v,allow,input wire[1:0]in_cls,input wire[511:0]in_d,"
+      },
+      {
+        "line": 17,
+        "text": " input wire out_cr,output reg fault,output reg queue_quiet"
+      },
+      {
+        "line": 19,
+        "text": " always @(posedge ck or negedge rst_n)"
+      },
+      {
+        "line": 20,
+        "text": "  if(!rst_n)queue_quiet<=0;"
+      },
+      {
+        "line": 21,
+        "text": "  else queue_quiet<=count==0&&credits==4&&!in_v&&!vq&&!read_v&&!out_v&&!out_cr&&!cq&&!fault;"
+      },
+      {
+        "line": 25,
+        "text": " wire issue=!fault&&count!=0&&credits!=0&&(!ENABLE_SERVICE||allow_q||MUT==3);"
+      },
+      {
+        "line": 26,
+        "text": " wire take=vq&&!fault&&(count<16||issue);"
+      },
+      {
+        "line": 27,
+        "text": " always @(posedge ck)begin"
+      },
+      {
+        "line": 39,
+        "text": "   if(s<8)begin:g_d always @(posedge ck)if(issue)begin r0[s*64+:64]<=w0[s*64+:64];r1[s*64+:64]<=w1[s*64+:64];end end"
+      },
+      {
+        "line": 40,
+        "text": "   else begin:g_c always @(posedge ck)if(issue)begin r0[513:512]<=w0[513:512];r1[513:512]<=w1[513:512];end end"
+      },
+      {
+        "line": 41,
+        "text": "   always @(posedge ck or negedge rst_n)"
+      },
+      {
+        "line": 42,
+        "text": "    if(!rst_n)rpr[3*s+:3]<=0;"
+      },
+      {
+        "line": 50,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 51,
+        "text": "  if(!rst_n)begin vq<=0;cq<=0;allow_q<=0;wp<=0;rp<=0;count<=0;credits<=4;read_v<=0;bank<=0;in_crn<=0;out_v<=0;fault<=0;end"
+      },
+      {
+        "line": 54,
+        "text": "   if(vq&&count==16&&!issue)fault<=1;"
+      },
+      {
+        "line": 55,
+        "text": "   if(cq&&credits==4&&!issue)fault<=1;"
+      },
+      {
+        "line": 59,
+        "text": "   case({take,issue})2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;endcase"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
+    "sha256": "99c4995462015346850f04a7d3a09aa12505748ec5ea14730ccab2756a46df66",
+    "lines": [
+      {
+        "line": 6,
+        "text": "// IR_REPL (KVJ-A8, opt-in, default 0 = original structure): 1 replicates the"
+      },
+      {
+        "line": 12,
+        "text": " input wire ck,rst_n,input wire[2:0]die_id,input wire rx_v,input wire[527:0]rx_d,output wire rx_cr,"
+      },
+      {
+        "line": 17,
+        "text": " output wire[23:0]credit_return,peer_credit,output wire fault,"
+      },
+      {
+        "line": 20,
+        "text": " wire hv,iv,base_fault;wire[511:0]hd,id;wire[1:0]ic;"
+      },
+      {
+        "line": 23,
+        "text": " reg hcq;reg[4:0]icq;reg queue_fault;"
+      },
+      {
+        "line": 25,
+        "text": " wire hp=permit&&!fault&&hn!=0&&hcredits!=0;"
+      },
+      {
+        "line": 26,
+        "text": " wire ip=permit&&!fault&&in_count!=0&&icredits!=0;"
+      },
+      {
+        "line": 27,
+        "text": " assign fault=base_fault|queue_fault;"
+      },
+      {
+        "line": 30,
+        "text": "  .ck(ck),.rst_n(rst_n),.die_id(die_id),.rx_v(rx_v),.rx_d(rx_d),.rx_cr(rx_cr),"
+      },
+      {
+        "line": 33,
+        "text": "  .credit_return(credit_return),.peer_credit(peer_credit),.fault(base_fault));"
+      },
+      {
+        "line": 34,
+        "text": " always @(posedge ck)begin"
+      },
+      {
+        "line": 46,
+        "text": "   if(s<8)begin:g_d always @(posedge ck)if(ip)ing_d[s*64+:64]<=w[s*64+:64];end"
+      },
+      {
+        "line": 47,
+        "text": "   else begin:g_c always @(posedge ck)if(ip)ing_cls<=w[513:512];end"
+      },
+      {
+        "line": 48,
+        "text": "   always @(posedge ck or negedge rst_n)"
+      },
+      {
+        "line": 49,
+        "text": "    if(!rst_n)irr[4*s+:4]<=0;"
+      },
+      {
+        "line": 57,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 58,
+        "text": "  if(!rst_n)begin reserved_q<=1;valid_q<=0;admission_open<=0;launch_quiet<=0;"
+      },
+      {
+        "line": 60,
+        "text": "   hcq<=0;icq<=0;host_v<=0;ing_v<=0;queue_fault<=0;"
+      },
+      {
+        "line": 63,
+        "text": "   admission_open<=permit&&!fault;host_v<=hp;ing_v<=ip;"
+      },
+      {
+        "line": 66,
+        "text": "   launch_quiet<=!hp&&!ip&&!host_v&&!ing_v&&!fault;"
+      },
+      {
+        "line": 67,
+        "text": "   if(hv&&hn==4&&!hp)queue_fault<=1;"
+      },
+      {
+        "line": 68,
+        "text": "   if(iv&&in_count==16&&!ip)queue_fault<=1;"
+      },
+      {
+        "line": 71,
+        "text": "   case({hv,hp})2'b10:hn<=hn+1'b1;2'b01:hn<=hn-1'b1;default:;endcase"
+      },
+      {
+        "line": 72,
+        "text": "   case({iv,ip})2'b10:in_count<=in_count+1'b1;2'b01:in_count<=in_count-1'b1;default:;endcase"
+      },
+      {
+        "line": 73,
+        "text": "   if({1'b0,hcredits}+4'(hcq)-4'(hp)>4)queue_fault<=1;"
+      },
+      {
+        "line": 75,
+        "text": "   if({1'b0,icredits}+6'(icq)-6'(ip)>16)queue_fault<=1;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv",
+    "sha256": "b2f029fe7a387566e102086f659531b0093048e6326541dc0ec025b671ba7194",
+    "lines": [
+      {
+        "line": 8,
+        "text": " input wire clk,rst_n,input wire in_v,input wire[1023:0]in_d,output reg in_cr,"
+      },
+      {
+        "line": 9,
+        "text": " output reg out_v,output reg[545:0]out_d,input wire out_cr,output reg fault"
+      },
+      {
+        "line": 13,
+        "text": " wire pop=!fault&&count!=0&&credits!=0;"
+      },
+      {
+        "line": 15,
+        "text": " wire take=vq&&!fault&&padding_ok&&(count<5||pop);"
+      },
+      {
+        "line": 16,
+        "text": " always @(posedge clk)begin"
+      },
+      {
+        "line": 21,
+        "text": " always @(posedge clk or negedge rst_n)begin"
+      },
+      {
+        "line": 22,
+        "text": "  if(!rst_n)begin vq<=0;crq<=0;wp<=0;rp<=0;count<=0;credits<=4;in_cr<=0;out_v<=0;fault<=0;end"
+      },
+      {
+        "line": 25,
+        "text": "   if(vq&&(!padding_ok||(count==5&&!pop)))fault<=1;"
+      },
+      {
+        "line": 26,
+        "text": "   if(crq&&credits==4&&!pop)fault<=1;"
+      },
+      {
+        "line": 30,
+        "text": "   case({take,pop})2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;endcase"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv",
+    "sha256": "4cf2002bf0feb8f315598827eab527799289c9ae5f68fc52e91e9e188a6f7045",
+    "lines": [
+      {
+        "line": 1,
+        "text": "// Separate candidate. Raw fault sources are sticky asynchronous single bits;"
+      },
+      {
+        "line": 4,
+        "text": " input wire ck_guard,rst_n,input wire[24:0]raw_faults,"
+      },
+      {
+        "line": 5,
+        "text": " input wire[2:0]die_id,input wire[7:0]physical_faults,transport_faults,"
+      },
+      {
+        "line": 16,
+        "text": " input wire service_protocol_fault"
+      },
+      {
+        "line": 23,
+        "text": " always @(posedge ck_guard or negedge rst_n)if(!rst_n)begin"
+      },
+      {
+        "line": 27,
+        "text": " protocol_pin_q<=service_protocol_fault;fm<=raw_faults;fs<=fm;role_sampled<=1;role_q<=die_id;pf_q<=physical_faults;tf_q<=transport_faults;tk_q<=local_tk;"
+      },
+      {
+        "line": 32,
+        "text": " reg[24:0]sticky;reg protocol_fault,wait_advert,epoch_dirty;"
+      },
+      {
+        "line": 50,
+        "text": " qkd_host_guard_fifo #(.W(8))fenced(ck_guard,rst_n,fp,ih[15:8],dt,ftv,ft,fc,fo,fu);"
+      },
+      {
+        "line": 51,
+        "text": " qkd_host_guard_fifo #(.W(64))markers(ck_guard,rst_n,mp,{activity_gen,nadmit},mb,mtv,mt,mc,mo,mu);"
+      },
+      {
+        "line": 59,
+        "text": " wire bad=protocol_fault||internal_bad||(|next_sticky);"
+      },
+      {
+        "line": 64,
+        "text": " always @(posedge ck_guard or negedge rst_n)if(!rst_n)begin"
+      },
+      {
+        "line": 65,
+        "text": " role<=0;role_valid<=0;sticky<=0;protocol_fault<=0;wait_advert<=0;epoch_dirty<=0;"
+      },
+      {
+        "line": 72,
+        "text": " sticky<=next_sticky;protocol_fault<=protocol_fault||internal_bad;"
+      },
+      {
+        "line": 88,
+        "text": " abort<=bad;diag_raw<={protocol_fault||internal_bad,next_sticky};groups<=g;"
+      },
+      {
+        "line": 90,
+        "text": " physical_diag<=pf_q|((g[0]||protocol_fault||internal_bad)?(8'b1<<role):8'b0);"
+      },
+      {
+        "line": 92,
+        "text": " status<={mc,quiet,fc,2'b0,wait_advert,((nadmit!=nclosed)||(activity_gen!=activity_closed)),protocol_fault||internal_bad,bad,service_ready,clean};"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_tx_class.sv",
+    "sha256": "a1ea3c3a40853034e0582d7312423d61b2b414a9f7b23bb4b13ffafd5db1c9c2",
+    "lines": [
+      {
+        "line": 6,
+        "text": " input wire ck,rst_n,"
+      },
+      {
+        "line": 12,
+        "text": " output reg fault"
+      },
+      {
+        "line": 18,
+        "text": " always @*begin"
+      },
+      {
+        "line": 25,
+        "text": " wire send=!fault&&physical!=0;"
+      },
+      {
+        "line": 27,
+        "text": " always @(posedge ck)begin"
+      },
+      {
+        "line": 33,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 34,
+        "text": "  if(!rst_n)begin hv<=0;cv<=0;iv<=0;tc<=0;irq_q<=0;irq_sent<=0;rc<=0;pc<=0;physical<=4;rr<=0;"
+      },
+      {
+        "line": 35,
+        "text": "   tx_v<=0;tx_d<=0;host_cr<=0;ctrl_cr<=0;ing_cr<=0;fault<=0;"
+      },
+      {
+        "line": 41,
+        "text": "   if(tc&&physical==4&&!(send&&(free_credit||irq_q!=irq_sent||appsend)))fault<=1;"
+      },
+      {
+        "line": 45,
+        "text": "    if(push)begin if(count[k]==4)fault<=1;else wp[k]<=wp[k]+1'b1;end"
+      },
+      {
+        "line": 47,
+        "text": "    case({push&&count[k]<4,pop})2'b10:count[k]<=count[k]+1'b1;2'b01:count[k]<=count[k]-1'b1;default:;endcase"
+      },
+      {
+        "line": 48,
+        "text": "    if(9'(peer[k])+9'(pc[k*8+:8])-9'(pop)>4)fault<=1;"
+      },
+      {
+        "line": 52,
+        "text": "     if(9'(acc[k])+9'(rc[k*8+:8])>255)fault<=1;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv",
+    "sha256": "dd41029c8ccf60bc8ead02389ab9cdae2bd6c359ebb18a983695863372c18491",
+    "lines": [
+      {
+        "line": 7,
+        "text": " input wire rst_n,ck,clk_h,input wire[7:0] ack_n,"
+      },
+      {
+        "line": 10,
+        "text": " output wire fault,output wire[31:0] landed_debug"
+      },
+      {
+        "line": 13,
+        "text": "  assign fault=0;assign landed_debug=0;"
+      },
+      {
+        "line": 14,
+        "text": "  always @(*)begin in_cr=0;out_v=0;out_d=0;end"
+      },
+      {
+        "line": 20,
+        "text": " reg[7:0]ack_q;reg iv_q,ocr_q,fault_q;reg[63:0]id_q;"
+      },
+      {
+        "line": 21,
+        "text": " always @(posedge ck or negedge rst_n)if(!rst_n)ack_q<=0;else ack_q<=ack_n;"
+      },
+      {
+        "line": 22,
+        "text": " always @(posedge clk_h)id_q<=in_d;"
+      },
+      {
+        "line": 23,
+        "text": " always @(posedge clk_h or negedge rst_n)if(!rst_n)begin iv_q<=0;ocr_q<=0;fault_q<=0;end"
+      },
+      {
+        "line": 24,
+        "text": " else begin iv_q<=in_v;ocr_q<=out_cr;fault_q<=fc2|fh;end"
+      },
+      {
+        "line": 26,
+        "text": "  always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 27,
+        "text": "   if(!rst_n)begin commits<=0;snapshot<=0;req<=0;ac1<=0;ac2<=0;fc<=0;end"
+      },
+      {
+        "line": 42,
+        "text": "  assign fault=fault_q;assign landed_debug=landed;"
+      },
+      {
+        "line": 44,
+        "text": "  always @(posedge clk_h or negedge rst_n)begin"
+      },
+      {
+        "line": 45,
+        "text": "   if(!rst_n)begin rc1<=0;rc2<=0;ack_host<=0;fc1<=0;fc2<=0;landed<=0;fh<=0;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_integrated_20261014/qkd_host_ctrl_token_service_packet_collected.sv",
+    "sha256": "544639e6add23a4f106f6ff67960c7f02496d8835f06d860b4bdde1f1dc7c470",
+    "lines": [
+      {
+        "line": 2,
+        "text": "// Separate DEFAULT_OFF token transport candidate. Token epoch0 is valid."
+      },
+      {
+        "line": 5,
+        "text": "// Separate DEFAULT_OFF service candidate. OFF keeps strict original CTRLv1."
+      },
+      {
+        "line": 17,
+        "text": " input wire ck,rst_n,input wire[2:0]die_id,"
+      },
+      {
+        "line": 24,
+        "text": " output reg fault,"
+      },
+      {
+        "line": 32,
+        "text": " input wire por_n,token_wrap_fence_valid,token_wrap_drained,token_wrap_link_reset_seen,token_wrap_retraining_done,"
+      },
+      {
+        "line": 33,
+        "text": " input wire token_allocator_fault,"
+      },
+      {
+        "line": 44,
+        "text": " output reg cancel_done,cancel_fault,output reg[3:0]cancel_drained,input wire terminal_accepted"
+      },
+      {
+        "line": 60,
+        "text": " reg allocator_fault_q,local_emitted;reg allocator_sampled;reg wrap_vq,wrap_dq,wrap_rq,wrap_tq;reg peer_epoch_seen;reg[15:0]peer_last_epoch;"
+      },
+      {
+        "line": 64,
+        "text": " wire peer_token_accept=rst_n&&take&&hdr&&sequence_ok&&peer_token_frame&&peer_epoch_fresh&&peer_service_fresh&&!(abort_seen||abort_q||reset_abort_seen);"
+      },
+      {
+        "line": 65,
+        "text": " always @(posedge ck or negedge por_n)begin"
+      },
+      {
+        "line": 66,
+        "text": "  if(!por_n)begin retained_request<=0;retained_allocated_seen<=0;reset_abort_seen<=0;job_token<=0;job_position<=0;job_generation<=0;end"
+      },
+      {
+        "line": 68,
+        "text": "   if(!rst_n&&retained_request)reset_abort_seen<=1;"
+      },
+      {
+        "line": 74,
+        "text": "   if((retained_allocated_seen&&rst_n&&allocator_sampled&&!allocated_vq)||(cancel_valid&&terminal_ack_q))begin"
+      },
+      {
+        "line": 79,
+        "text": " always @(posedge ck or negedge por_n)begin"
+      },
+      {
+        "line": 80,
+        "text": "  if(!por_n)begin peer_epoch_seen<=0;peer_last_epoch<=0;end"
+      },
+      {
+        "line": 93,
+        "text": " wire take=count!=0&&!fault;"
+      },
+      {
+        "line": 96,
+        "text": " wire send=!fault&&credits!=0&&!tx_v;"
+      },
+      {
+        "line": 97,
+        "text": " wire load_begin=ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&!permit_busy&&cn==0&&!cv&&begin_pending&&!fault;"
+      },
+      {
+        "line": 98,
+        "text": " wire load_permit=ENABLE_TOKEN&&ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&!permit_busy&&!load_begin&&permit_pending&&!fault;"
+      },
+      {
+        "line": 99,
+        "text": " wire load_cmd=(role==0)&&!busy&&!begin_busy&&!permit_busy&&!load_begin&&!load_permit&&cn!=0&&!fault;"
+      },
+      {
+        "line": 101,
+        "text": " always @(posedge ck)begin"
+      },
+      {
+        "line": 106,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 107,
+        "text": "  if(!rst_n)begin"
+      },
+      {
+        "line": 115,
+        "text": "   allocator_fault_q<=0;local_emitted<=0;allocator_sampled<=0;wrap_vq<=0;wrap_dq<=0;wrap_rq<=0;wrap_tq<=0;abort_q<=0;abort_seen<=0;request_ready_q<=0;grant_valid_q<=0;grant_low<=0;allocated_vq<=0;allocated_dq<=0;terminal_ack_q<=0;"
+      },
+      {
+        "line": 119,
+        "text": "   token_grant_ready<=0;token_epoch_valid<=0;token_epoch<=0;cancel_valid<=0;cancel_tag<=0;cancel_generation<=0;cancel_done<=0;cancel_fault<=0;cancel_drained<=0;"
+      },
+      {
+        "line": 120,
+        "text": "   hc<=0;tk8<=0;kst8<=0;boot8<=0;seen<=0;fault<=0;"
+      },
+      {
+        "line": 122,
+        "text": "   allocator_fault_q<=token_allocator_fault;if(ENABLE_TOKEN&&allocator_fault_q&&MUT!=17)fault<=1;allocator_sampled<=1;wrap_vq<=token_wrap_fence_valid;wrap_dq<=token_wrap_drained;wrap_rq<=token_wrap_link_reset_seen;wrap_tq<=token_wrap_retraining_done;"
+      },
+      {
+        "line": 123,
+        "text": "   if(ENABLE_TOKEN&&wrap_vq&&!(wrap_dq&&wrap_rq&&wrap_tq))fault<=1;"
+      },
+      {
+        "line": 125,
+        "text": "    if(cancel_valid||retained_request||allocated_vq)fault<=1;"
+      },
+      {
+        "line": 126,
+        "text": "    else begin fault<=0;abort_seen<=0;abort_q<=0;cancel_consumed<=0;active_epoch_valid<=0;end"
+      },
+      {
+        "line": 138,
+        "text": "   ingest_permission<=ENABLE_SERVICE&&epoch_active&&!fault&&(!ENABLE_TOKEN?(&pending_ack8):(role==0?(&pending_ack8):(pending_ack8[role]&&(peer_permit||MUT==21))));"
+      },
+      {
+        "line": 148,
+        "text": "    if(role!=0||!begin_available||busy||cn!=0||cv||begin_pending||begin_busy||(epoch_active&&!(&service_ready8))||bepoch<=epoch)fault<=1;"
+      },
+      {
+        "line": 157,
+        "text": "   if(role_valid&&STRAPPED&&die_capture!=did_q)fault<=1;rv<=rx_v;tc<=tx_cr;cv<=cmd_v;lt<=local_tk;lk<=local_kst;lb<=local_boot;rx_cr<=take;cmd_cr<=0;tx_v<=0;"
+      },
+      {
+        "line": 161,
+        "text": "   if(tc)begin if(credits==4)fault<=1;else credits<=credits+1'b1;end"
+      },
+      {
+        "line": 162,
+        "text": "   if(rv&&!fault)begin if(count==4)fault<=1;else wp<=wp+1'b1;end"
+      },
+      {
+        "line": 164,
+        "text": "   case({rv&&!fault&&count<4,take})2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;endcase"
+      },
+      {
+        "line": 165,
+        "text": "   if(cv&&!fault)begin if(role!=0||cn==4)fault<=1;else cw<=cw+1'b1;end"
+      },
+      {
+        "line": 169,
+        "text": "   if(ENABLE_TOKEN&&grant_wait&&request_accepted&&grant_valid_q&&grant_low&&!fault&&(MUT==12||!(abort_seen||abort_q||reset_abort_seen)))begin"
+      },
+      {
+        "line": 170,
+        "text": "    if(MUT!=10&&(!tuple_ok||!allocated_vq||allocated_dq||!allocated_match||allocated_epoch_q!=grant_epoch_q))fault<=1;"
+      },
+      {
+        "line": 179,
+        "text": "    if(!allocated_match)fault<=1;"
+      },
+      {
+        "line": 182,
+        "text": "     cancel_generation<=allocated_generation_q;cancel_done<=0;cancel_fault<=1;cancel_drained<=drain_q;"
+      },
+      {
+        "line": 205,
+        "text": "      if(cq[cr][17:13]!=0||cq[cr][35:18]>=18'd151936)fault<=1;"
+      },
+      {
+        "line": 211,
+        "text": "   case({cv&&!fault&&role==0&&cn<4,load_cmd})2'b10:cn<=cn+1'b1;2'b01:cn<=cn-1'b1;default:;endcase"
+      },
+      {
+        "line": 213,
+        "text": "    if(!hdr)fault<=1;"
+      },
+      {
+        "line": 219,
+        "text": "    end else if(MUT!=5&&!sequence_ok)fault<=1;"
+      },
+      {
+        "line": 236,
+        "text": "      if(MUT!=22&&(!epoch_active||h[63:48]!=epoch||lepoch!=epoch||!pending_ack8[role]||peer_permit))fault<=1;"
+      },
+      {
+        "line": 238,
+        "text": "     end else if(h[63:48]<=epoch)fault<=1;"
+      },
+      {
+        "line": 247,
+        "text": "     if(ENABLE_TOKEN&&h[86]&&((abort_seen||abort_q||reset_abort_seen)||!peer_epoch_fresh||!peer_service_fresh))fault<=1;"
+      },
+      {
+        "line": 250,
+        "text": "    end else fault<=1;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_integrated_20261014/qkd_host_fullcontrol_observed.sv",
+    "sha256": "dae8b9d0b549478d54953c22a819e5ead96fc84d34552be303b18f8749b1e574",
+    "lines": [
+      {
+        "line": 29,
+        "text": "    input  wire               por_n,"
+      },
+      {
+        "line": 77,
+        "text": "    output wire               host_rst_n,"
+      },
+      {
+        "line": 78,
+        "text": "    output wire               link_rst_n,"
+      },
+      {
+        "line": 79,
+        "text": "    output wire               hbm_rst_n,"
+      },
+      {
+        "line": 81,
+        "text": "    output wire               die_rst_n,"
+      },
+      {
+        "line": 89,
+        "text": "    input wire [7:0] transport_fault, physical_fault,"
+      },
+      {
+        "line": 90,
+        "text": "    input  wire               crom_fault,"
+      },
+      {
+        "line": 91,
+        "text": "    output wire [31:0]        fault_src,"
+      },
+      {
+        "line": 96,
+        "text": "    input wire pb_fault,"
+      },
+      {
+        "line": 107,
+        "text": "input wire  service_fault,"
+      },
+      {
+        "line": 112,
+        "text": "output wire  begin_fault,"
+      },
+      {
+        "line": 119,
+        "text": " output wire host_idle,host_observer_fault,"
+      },
+      {
+        "line": 122,
+        "text": "    wire [31:0] c_fault_vec;"
+      },
+      {
+        "line": 125,
+        "text": "        assign c_fault_vec[d*4+:4]={physical_fault[d],transport_fault[d],kst8[d*10+9],tk8[d*93+88]};"
+      },
+      {
+        "line": 129,
+        "text": "    wire boot_fault, soft_rst;"
+      },
+      {
+        "line": 131,
+        "text": " always @(posedge ck_rst or negedge por_n)if(!por_n)recovery_reset_q<=0;else recovery_reset_q<=peer_reset_request;"
+      },
+      {
+        "line": 136,
+        "text": "        .clk(ck_rst), .die_id(die_id), .por_n(por_n), .soft_rst(soft_rst||recovery_soft_pulse), .link_up(link_up), .boot_done(boot_done), .boot_ok(boot_ok),"
+      },
+      {
+        "line": 137,
+        "text": "        .host_rst_n(host_rst_n), .link_rst_n(link_rst_n), .hbm_rst_n(hbm_rst_n), .boot_go(boot_go),"
+      },
+      {
+        "line": 138,
+        "text": "        .die_rst_n(die_rst_n), .sys_ready(sys_ready), .boot_fault(boot_fault), .boot_state(boot_state),"
+      },
+      {
+        "line": 146,
+        "text": "    wire eng_start, eng_done, eng_fault;"
+      },
+      {
+        "line": 158,
+        "text": "                 .KVW(KVW), .FMT(MUT_FMT?0:1), .MU_OUT(MU)) u_host (.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),"
+      },
+      {
+        "line": 159,
+        "text": "        .clk(ck_host), .rst_n(host_rst_n), .die_id(die_id),"
+      },
+      {
+        "line": 173,
+        "text": "        .eng_done(eng_done), .eng_next_token(eng_next_token), .eng_cycles(eng_cycles), .eng_fault(eng_fault),"
+      },
+      {
+        "line": 175,
+        "text": "        .arr_rst_n(), .cfg_users(), .cfg_prompt_len(), .cfg_gen_len(),"
+      },
+      {
+        "line": 178,
+        "text": "        .arr_fault(1'b0));"
+      },
+      {
+        "line": 180,
+        "text": "    wire disagree, wdog_fault, start_unready, die_fault;"
+      },
+      {
+        "line": 184,
+        "text": "        .ck(ck_ctl),.rst_n(host_rst_n),.sys_ready(sys_ready),.pb_fault(pb_fault),.die_id(die_id),"
+      },
+      {
+        "line": 185,
+        "text": "        .service_abort(service_abort),.service_ready(service_ready),.service_ready8(service_ready8),.begin_block(epoch_busy),.epoch_fault(begin_fault),"
+      },
+      {
+        "line": 187,
+        "text": "    assign package_abort=eng_fault;"
+      },
+      {
+        "line": 190,
+        "text": "    always @(posedge ck_ctl or negedge host_rst_n)"
+      },
+      {
+        "line": 191,
+        "text": "        if (!host_rst_n) mu_out_n <= 0;"
+      },
+      {
+        "line": 194,
+        "text": "    assign eng_done=ctl_res[0]; assign eng_fault=ctl_res[1];"
+      },
+      {
+        "line": 197,
+        "text": "    assign wdog_fault=ctl_res[85];assign start_unready=ctl_res[86];"
+      },
+      {
+        "line": 198,
+        "text": "    assign die_fault=ctl_res[87];assign n_steps=ctl_res[119:88];"
+      },
+      {
+        "line": 204,
+        "text": "    // ---- CSRs, faults, interrupt ----"
+      },
+      {
+        "line": 205,
+        "text": "    assign fault_src = {9'd0, pb_fault, crom_fault, die_fault, boot_fault, start_unready, wdog_fault, disagree,"
+      },
+      {
+        "line": 206,
+        "text": "                        16'(c_fault_vec)};"
+      },
+      {
+        "line": 208,
+        "text": "    always @(*) begin"
+      },
+      {
+        "line": 218,
+        "text": "        .clk(ck_csr), .rst_n(host_rst_n),.por_n(por_n),.service_ready8(service_ready8),"
+      },
+      {
+        "line": 219,
+        "text": ".begin_tx_cr(begin_tx_cr),.begin_tx_available(begin_tx_available),.pending_ack8(pending_ack8),.service_epoch8(service_epoch8),.service_fault(service_fault),.ingest_permission(ingest_permission),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_available(begin_available),.begin_fault(begin_fault),"
+      },
+      {
+        "line": 230,
+        "text": "        .sys_ready(sys_ready), .boot_fault(boot_fault), .boot_state(boot_state), .boot_err(boot_err),"
+      },
+      {
+        "line": 231,
+        "text": "        .soft_rst(soft_rst), .fault_src(fault_src), .die_fault_vec(c_fault_vec),.die_kst(kst8), .cnt(cnt), .irq(irq));"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_integrated_20261014/qkd_host_marker_consumer.sv",
+    "sha256": "2336f8a9b31d7727f39ed87a12400491215d56c1b5fdee588263c4600488cd3a",
+    "lines": [
+      {
+        "line": 6,
+        "text": " input wire ck,rst_n,input wire marker_v,input wire[65:0]marker,"
+      },
+      {
+        "line": 7,
+        "text": " input wire[31:0]issued,landed,input wire[12:0]est,input wire source_fault,"
+      },
+      {
+        "line": 9,
+        "text": " output reg[31:0]certificate_prefix,output reg fault);"
+      },
+      {
+        "line": 11,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 12,
+        "text": "  if(!rst_n)begin marker_cr<=0;certificate_v<=0;certificate<=0;certificate_prefix<=0;fault<=0;pending<=0;word<=0;target<=0;completed<=0;ready_image<=0;bad<=0;end"
+      },
+      {
+        "line": 16,
+        "text": "    if(pending)fault<=1;"
+      },
+      {
+        "line": 17,
+        "text": "    else begin pending<=1;word<=marker;target<=issued;completed<=landed;ready_image<=est[0]&&!est[1];bad<=source_fault;end"
+      },
+      {
+        "line": 21,
+        "text": "    if(!bad&&ready_image&&(target==completed||MUT==1)&&!fault)begin"
+      },
+      {
+        "line": 23,
+        "text": "    end else fault<=1;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv",
+    "sha256": "8216a88b0850a74747cc2402775e9189414182aa0178895caa930b79c7b766c8",
+    "lines": [
+      {
+        "line": 8,
+        "text": " input wire ck_rx,ck_tx,ck_axi,ck_ctrl,rst_n,por_n,input wire[2:0]die_id,"
+      },
+      {
+        "line": 15,
+        "text": " input wire ing_t_v,input wire[63:0]ing_t_d,output wire ing_t_cr,output wire[3:0]faults,"
+      },
+      {
+        "line": 31,
+        "text": " input wire token_allocator_fault,"
+      },
+      {
+        "line": 43,
+        "text": " output wire cancel_done,cancel_fault,output wire[3:0]cancel_drained,input wire terminal_accepted"
+      },
+      {
+        "line": 48,
+        "text": " qkd_host_rx_class_admission #(.STRAPPED(1))u_rx(.native_reserved(native_reserved),.ownership_valid(ownership_valid),.admission_open(host_admission_open),.launch_quiet(host_launch_quiet),.deferred(host_deferred),.ck(ck_rx),.rst_n(rst_n),.die_id(die_id),"
+      },
+      {
+        "line": 51,
+        "text": "  .credit_return(credit_return),.peer_credit(peer_credit),.fault(faults[0]));"
+      },
+      {
+        "line": 52,
+        "text": " qkd_host_tx_class u_tx(.ck(ck_tx),.rst_n(rst_n),.host_v(ht),.host_d(htd),.host_cr(htc),"
+      },
+      {
+        "line": 54,
+        "text": "  .credit_return(credit_return),.peer_credit(peer_credit),.irq(irq),.tx_v(tx_v),.tx_d(tx_d),.tx_cr(tx_cr),.fault(faults[1]));"
+      },
+      {
+        "line": 55,
+        "text": " qkd_host_ctrl_token_service_packet_collected #(.STRAPPED(1),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN),.MUT(TOKEN_MUT))u_ctrl(.ck(ck_ctrl),.rst_n(rst_n),.die_id(die_id),"
+      },
+      {
+        "line": 56,
+        "text": "  .por_n(por_n),.token_allocator_fault(token_allocator_fault),.token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),.package_abort(package_abort),.abort_drained(abort_drained),.token_request_valid(token_request_valid),.token_request_ready(token_request_ready),.token_request_token(token_request_token),.token_request_position(token_request_position),.token_request_generation(token_request_generation),.token_grant_valid(token_grant_valid),.token_grant_ready(token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_generation(token_grant_generation),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_epoch(allocated_epoch),.allocated_token(allocated_token),.allocated_position(allocated_position),.allocated_generation(allocated_generation),.token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),.cancel_valid(cancel_valid),.cancel_tag(cancel_tag),.cancel_generation(cancel_generation),.cancel_done(cancel_done),.cancel_fault(cancel_fault),.cancel_drained(cancel_drained),.terminal_accepted(terminal_accepted),"
+      },
+      {
+        "line": 63,
+        "text": "  .hc(hc),.tk8(tk8),.kst8(kst8),.boot8(boot8),.seen(seen),.fault(faults[2]));"
+      },
+      {
+        "line": 64,
+        "text": " qkd_host_axi_packet u_axi(.ck(ck_axi),.rst_n(rst_n),.rx_v(hv),.rx_d(hd),.rx_cr(hr),"
+      },
+      {
+        "line": 65,
+        "text": "  .tx_v(ht),.tx_d(htd),.tx_cr(htc),.fault(faults[3]),"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_rank_codec.sv",
+    "sha256": "e66a6dabed4e5a9e19ddabe6e0179df58053834697127118cadde9d891cbdae7",
+    "lines": [
+      {
+        "line": 7,
+        "text": " input wire ck,por_n,"
+      },
+      {
+        "line": 12,
+        "text": " input wire cancel_valid,input wire[58:0]cancel_tag,input wire[1:0]cancel_gen,input wire cancel_done,cancel_fault,input wire[3:0]cancel_drained,"
+      },
+      {
+        "line": 14,
+        "text": " output reg result_v,output reg[58:0]result_tag,output reg[1:0]result_gen,output reg result_done,result_fault,"
+      },
+      {
+        "line": 23,
+        "text": " output reg reset_request,retrain_request,recovery_clear,output reg fault);"
+      },
+      {
+        "line": 32,
+        "text": " assign rx_ready=!fault;"
+      },
+      {
+        "line": 33,
+        "text": " assign tx_valid=choice!=0&&!fault;"
+      },
+      {
+        "line": 34,
+        "text": " always @*begin"
+      },
+      {
+        "line": 47,
+        "text": " always @(posedge ck or negedge por_n)begin"
+      },
+      {
+        "line": 48,
+        "text": "  if(!por_n)begin"
+      },
+      {
+        "line": 53,
+        "text": "   result_v<=0;result_tag<=0;result_gen<=0;result_done<=0;result_fault<=0;result_cause<=0;result_token<=0;result_value<=0;result_cycles<=0;reset_request<=0;retrain_request<=0;fault<=0;"
+      },
+      {
+        "line": 58,
+        "text": "    if(req_pending)fault<=1;"
+      },
+      {
+        "line": 62,
+        "text": "    if(cancel_pending)fault<=1;"
+      },
+      {
+        "line": 64,
+        "text": "     cancel_word<=0;cancel_word[88:30]<=cancel_tag;cancel_word[90:89]<=cancel_gen;cancel_word[91]<=cancel_done;cancel_word[92]<=cancel_fault;cancel_word[96:93]<=cancel_drained;end"
+      },
+      {
+        "line": 66,
+        "text": "   if(cancel_released)begin if(release_pending||!barrier_wait)fault<=1;else begin release_pending<=1;barrier_wait<=0;end end"
+      },
+      {
+        "line": 68,
+        "text": "    if(!result_busy||credit_pending)fault<=1;"
+      },
+      {
+        "line": 72,
+        "text": "    if(RANK!=0||step_pending)fault<=1;else begin step_pending<=1;step_word<=0;step_word[45:30]<=step_client_tag;step_word[53:46]<=step_slot;step_word[71:54]<=step_pos;end"
+      },
+      {
+        "line": 75,
+        "text": "    if(RANK!=0||retire_pending)fault<=1;else begin retire_pending<=1;retire_word<=0;retire_word[45:30]<=step_retire_client_tag;retire_word[53:46]<=step_retire_slot;retire_word[71:54]<=step_retire_pos;retire_word[89:72]<=step_retire_token;retire_word[90]<=step_retire_cq;end"
+      },
+      {
+        "line": 78,
+        "text": "    if(RANK!=0||cq_pending)fault<=1;else begin cq_pending<=1;cq_word<=0;cq_word[45:30]<=cq_client_tag;cq_word[53:46]<=cq_slot;cq_word[71:54]<=cq_pos;cq_word[89:72]<=cq_token;end"
+      },
+      {
+        "line": 81,
+        "text": "    if(cert_pending)fault<=1;else begin cert_pending<=1;cert_word<=0;cert_word[95:30]<=certificate;cert_word[127:96]<=certificate_prefix;cert_word[143:128]<=service_epoch;end"
+      },
+      {
+        "line": 87,
+        "text": "     4:credit_pending<=0;5:step_pending<=0;6:retire_pending<=0;7:cq_pending<=0;8:release_pending<=0;9:cert_pending<=0;default:fault<=1;"
+      },
+      {
+        "line": 91,
+        "text": "    if(rx_data[10:8]!=0||rx_data[13:11]!=RANK||rx_data[29:14]!=rx_seq)fault<=1;"
+      },
+      {
+        "line": 96,
+        "text": "       if(!req_pending||!req_sent||rx_data[88:30]!=req_word[88:30]||rx_data[90:89]!=req_word[90:89]||rx_data[511:92]!=0)fault<=1;"
+      },
+      {
+        "line": 100,
+        "text": "       if(!cancel_pending||!cancel_sent||rx_data[88:30]!=cancel_word[88:30]||rx_data[90:89]!=cancel_word[90:89]||rx_data[511:91]!=0)fault<=1;"
+      },
+      {
+        "line": 104,
+        "text": "       if(result_busy||credit_pending||rx_data[511:179]!=0||(!rx_data[91]&&!rx_data[92]))fault<=1;"
+      },
+      {
+        "line": 106,
+        "text": "        result_busy<=1;result_v<=1;result_tag<=rx_data[88:30];result_gen<=rx_data[90:89];result_done<=rx_data[91];result_fault<=rx_data[92];result_cause<=rx_data[96:93];result_token<=rx_data[114:97];result_value<=rx_data[146:115];result_cycles<=rx_data[178:147];last_result_tag<=rx_data[88:30];last_result_gen<=rx_data[90:89];"
+      },
+      {
+        "line": 110,
+        "text": "       if(rx_data[511:32]!=0)fault<=1;"
+      },
+      {
+        "line": 120,
+        "text": "         (cancel_pending&&(rx_data[88:30]!=cancel_word[88:30]||rx_data[90:89]!=cancel_word[90:89])))fault<=1;"
+      },
+      {
+        "line": 124,
+        "text": "       if(rx_data[511:111]!=0)fault<=1;"
+      },
+      {
+        "line": 127,
+        "text": "      default:fault<=1;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_integrated_20261014/qkd_host_peer_root_mux.sv",
+    "sha256": "244d1343057d33c5c08b3d9fa7d6f0734508480e3b7e4ef8eb53874cb00a58be",
+    "lines": [
+      {
+        "line": 6,
+        "text": " input wire ck,por_n,"
+      },
+      {
+        "line": 13,
+        "text": " output reg fault);"
+      },
+      {
+        "line": 16,
+        "text": " assign physical_rx_ready=!fault&&(shape?coordinator_rx_ready[source]:1'b1);"
+      },
+      {
+        "line": 17,
+        "text": " assign local_tx_ready=coordinator_rx_ready[0]&&!fault;"
+      },
+      {
+        "line": 18,
+        "text": " assign local_rx_valid=coordinator_tx_valid[0]&&!fault;"
+      },
+      {
+        "line": 21,
+        "text": " always @*begin"
+      },
+      {
+        "line": 23,
+        "text": "  coordinator_rx_valid[0]=local_tx_valid&&!fault;coordinator_rx_data[0+:512]=local_tx_data;"
+      },
+      {
+        "line": 25,
+        "text": "   coordinator_rx_valid[r]=physical_rx_valid&&shape&&source==3'(r)&&!fault;"
+      },
+      {
+        "line": 28,
+        "text": "  coordinator_tx_ready[0]=local_rx_ready&&!fault;"
+      },
+      {
+        "line": 32,
+        "text": "  if(!physical_tx_valid&&chosen>=0&&!fault)coordinator_tx_ready[chosen]=1;"
+      },
+      {
+        "line": 34,
+        "text": " always @(posedge ck or negedge por_n)begin"
+      },
+      {
+        "line": 35,
+        "text": "  if(!por_n)begin rr<=0;physical_tx_valid<=0;physical_tx_data<=0;fault<=0;end"
+      },
+      {
+        "line": 37,
+        "text": "   if(physical_rx_valid&&physical_rx_ready&&!shape)fault<=1;"
+      },
+      {
+        "line": 39,
+        "text": "   if(!physical_tx_valid&&chosen>=0&&!fault)begin"
+      },
+      {
+        "line": 40,
+        "text": "    if(coordinator_tx_data[chosen*512+8+:3]!=0||coordinator_tx_data[chosen*512+11+:3]!=3'(chosen)||!coordinator_tx_data[chosen*512+7])fault<=1;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_integrated_20261014/qkd_host_program_rx_target.sv",
+    "sha256": "08de102d75b29d978396b1e7e018e29cc106a53ecf9431826c4cb4357b732cee",
+    "lines": [
+      {
+        "line": 13,
+        "text": " input wire ck,rst_n,input wire rx_v,input wire[527:0]rx_d,output reg rx_cr,"
+      },
+      {
+        "line": 19,
+        "text": " output reg fault);"
+      },
+      {
+        "line": 25,
+        "text": " always @(posedge ck)begin rd<=rx_d;normal_d<=rd;end"
+      },
+      {
+        "line": 26,
+        "text": " always @(posedge ck or negedge rst_n)begin"
+      },
+      {
+        "line": 27,
+        "text": "  if(!rst_n)begin rv<=0;ncq<=0;returns<=0;rx_cr<=0;normal_v<=0;begin_image<=0;image_epoch<=0;image_target<=0;auth_target<=0;pw_count<=0;dw_count<=0;word_v<=0;word_desc<=0;word_addr<=0;word_data<=0;seal<=0;auth_v<=0;auth_epoch<=0;auth_digest<=0;fault<=0;end"
+      },
+      {
+        "line": 29,
+        "text": "   rv<=rx_v;ncq<=normal_cr;rx_cr<=emit;returns<=next_returns[6:0];if(next_returns[7])fault<=1;"
+      },
+      {
+        "line": 30,
+        "text": "   normal_v<=rv&&!is_program&&!fault;begin_image<=0;word_v<=0;seal<=0;auth_v<=0;"
+      },
+      {
+        "line": 31,
+        "text": "   if(pop&&!fault)begin"
+      },
+      {
+        "line": 32,
+        "text": "    if(!clean)fault<=1;"
+      },
+      {
+        "line": 38,
+        "text": "     default:fault<=1;"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/host_integrated_20261014/qkd_host_tp8_coordinator.sv",
+    "sha256": "3ef013ca6db4c5358c7eff2a1f6a9c41d6c16995af1386889368197149dab657",
+    "lines": [
+      {
+        "line": 6,
+        "text": " input wire ck_codec,ck_lifecycle,ck_post,por_n,"
+      },
+      {
+        "line": 14,
+        "text": " input wire engine_result_v,input wire[58:0]engine_result_tag,input wire[1:0]engine_result_gen,input wire engine_result_done,engine_result_fault,"
+      },
+      {
+        "line": 18,
+        "text": " output wire wrap_locked,identity_fault,recovery_complete,post_pending,output wire fault);"
+      },
+      {
+        "line": 19,
+        "text": " wire[7:0]participant_valid,participant_accepted,cancel_valid,cancel_done,cancel_fault,cancel_accepted;"
+      },
+      {
+        "line": 23,
+        "text": " wire codec_fault,post_fault,lifecycle_fault,result_transport_idle;"
+      },
+      {
+        "line": 36,
+        "text": " assign fault=codec_fault||post_fault||identity_fault||lifecycle_fault;"
+      },
+      {
+        "line": 38,
+        "text": " wire request_admission=!wrap_locked&&!recovery_active&&!recovery_required&&!identity_fault;"
+      },
+      {
+        "line": 40,
+        "text": " wire warm_ready=(&service_ready)&&(&current_certificate)&&program_consensus&&!codec_fault;"
+      },
+      {
+        "line": 42,
+        "text": " always @(posedge ck_lifecycle or negedge por_n)begin"
+      },
+      {
+        "line": 43,
+        "text": "  if(!por_n)begin recovery_active<=0;recovery_required<=0;recovery_start<=0;end"
+      },
+      {
+        "line": 46,
+        "text": "   if((engine_result_v&&engine_result_fault)||(|(cancel_valid&cancel_fault)))recovery_required<=1;"
+      },
+      {
+        "line": 47,
+        "text": "   if(!recovery_active&&(wrap_locked||identity_fault||recovery_required)&&!allocated_valid&&!post_pending&&result_transport_idle&&"
+      },
+      {
+        "line": 53,
+        "text": " .ck(ck_codec),.por_n(por_n),.rx_valid(peer_rx_valid),.rx_data(peer_rx_data),.rx_ready(peer_rx_ready),.tx_valid(peer_tx_valid),.tx_data(peer_tx_data),.tx_ready(peer_tx_ready),"
+      },
+      {
+        "line": 56,
+        "text": " .cancel_valid(cancel_valid),.cancel_done(cancel_done),.cancel_fault(cancel_fault),.cancel_tag(cancel_tag),.cancel_gen(cancel_gen),.cancel_accepted(cancel_accepted),"
+      },
+      {
+        "line": 59,
+        "text": " .result_v(engine_result_v),.result_tag(engine_result_tag),.result_gen(engine_result_gen),.result_done(engine_result_done),.result_fault(engine_result_fault),.result_cause(engine_result_cause),.result_token(engine_result_token),.result_value(engine_result_value),.result_cycles(engine_result_cycles),.result_cr(engine_result_cr),"
+      },
+      {
+        "line": 62,
+        "text": " .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.certificate_valid(certificate_valid),.certificate(certificate),.certificate_prefix(certificate_prefix),.fault(codec_fault));"
+      },
+      {
+        "line": 64,
+        "text": " .clk(ck_lifecycle),.ck_post(ck_post),.por_n(por_n),.warm_ready(warm_ready),"
+      },
+      {
+        "line": 68,
+        "text": " .result_valid(engine_result_v),.result_done(engine_result_done),.result_fault(engine_result_fault),.result_tag(engine_result_tag),.result_generation(engine_result_gen),"
+      },
+      {
+        "line": 69,
+        "text": " .cancel_valid(cancel_valid),.cancel_done(cancel_done),.cancel_fault(cancel_fault),.cancel_tag(cancel_tag),.cancel_generation(cancel_gen),.cancel_accepted(cancel_accepted),"
+      },
+      {
+        "line": 72,
+        "text": " .recovery_start(recovery_start),.links_drained(links_drained),.link_reset_seen(link_reset_seen),.retraining_done(retrained),.link_reset_request(link_reset_request),.retraining_request(retraining_request),.recovery_complete(recovery_complete),.wrap_locked(wrap_locked),.identity_fault(identity_fault),.terminal_accepted(terminal_accepted),.lifecycle_fault(lifecycle_fault),"
+      },
+      {
+        "line": 74,
+        "text": " .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cancel_released(terminal_released),.cancel_release_required(8'hff),.result_transport_idle(result_transport_idle),.host_observer_fault(codec_fault),.post_fault(post_fault));"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv",
+    "sha256": "84cdc01c1382edbca0b7c9e26e60a487401ec31dbcd9004e8f2e4d91f77ef38f",
+    "lines": [
+      {
+        "line": 12,
+        "text": " output wire boot_image_ready,boot_image_fault,output wire[15:0]boot_image_epoch,output wire[63:0]boot_image_digest,"
+      },
+      {
+        "line": 24,
+        "text": " input wire token_allocator_fault,"
+      },
+      {
+        "line": 37,
+        "text": " output wire cancel_done,cancel_fault,output wire[3:0]cancel_drained,input wire token_cancel_accepted,"
+      },
+      {
+        "line": 42,
+        "text": " input wire native_result_done,native_result_fault,input wire[3:0]native_result_cause,"
+      },
+      {
+        "line": 48,
+        "text": " input wire[2:0]die_id,input wire por_n,pll_locked,phy_up,phy_rx_v,input wire[1042:0]phy_rx_flit,"
+      },
+      {
+        "line": 50,
+        "text": " input wire[NL-1:0]link_up,input wire[7:0]transport_fault,physical_fault,input wire crom_fault,"
+      },
+      {
+        "line": 57,
+        "text": " output wire host_rst_n,link_rst_n,hbm_rst_n,boot_go,die_rst_n,sys_ready,"
+      },
+      {
+        "line": 58,
+        "text": " output wire[31:0]fault_src,output wire source_cr,available,"
+      },
+      {
+        "line": 60,
+        "text": " output wire[1163:0]chain_f,input wire[127:0]chain_c,chain_a,input wire[3:0]chain_fault_i,input wire[127:0]slice_ack,slice_boot_done,slice_boot_ok,slice_boot_fault,"
+      },
+      {
+        "line": 61,
+        "text": " input wire ctrl_completion_fault,   // KVJ-G2b 10-17: the registered OR of the 128 pc_path completion faults (qkd_kv_cfault_tree root); only its OR was used"
+      },
+      {
+        "line": 65,
+        "text": " output wire[24:0]service_faults,"
+      },
+      {
+        "line": 69,
+        "text": " output wire host_idle,host_observer_fault"
+      },
+      {
+        "line": 74,
+        "text": " assign boot_pr=raw_pr;assign boot_image_target=replay_target;assign boot_image_ready=replay_done&&!program_fault&&!ingress_fault&&!begin_image;assign boot_image_fault=program_fault|ingress_fault;assign boot_image_epoch=program_epoch;assign boot_image_digest=program_digest;wire[1:0]local_boot;"
+      },
+      {
+        "line": 75,
+        "text": " wire[127:0]boot_done_pc=slice_boot_done,boot_ok_pc=slice_boot_ok,boot_fault_pc=slice_boot_fault;"
+      },
+      {
+        "line": 78,
+        "text": " wire ingress_fault,program_fault;wire begin_image,word_v,word_desc,seal,auth_v;"
+      },
+      {
+        "line": 82,
+        "text": " reg committed,commit_fault;"
+      },
+      {
+        "line": 83,
+        "text": " always @(posedge ck_program_loader or negedge host_rst_n)begin"
+      },
+      {
+        "line": 84,
+        "text": "  if(!host_rst_n)begin committed<=0;commit_fault<=0;end"
+      },
+      {
+        "line": 88,
+        "text": "    if(!replay_done||program_commit_epoch!=program_epoch||program_commit_digest!=program_digest)commit_fault<=1;"
+      },
+      {
+        "line": 93,
+        "text": " assign program_ready=static_setup_ready&&replay_target==0&&program_installed_valid&&replay_done&&committed&&!program_fault&&!ingress_fault&&!commit_fault&&!begin_image;"
+      },
+      {
+        "line": 94,
+        "text": " qkd_host_program_loader_target u_program(.ck(ck_program_loader),.rst_n(host_rst_n),.begin_image(begin_image),.image_epoch(image_epoch),.pw_count(pw_count),.dw_count(dw_count),"
+      },
+      {
+        "line": 96,
+        "text": " .image_target(image_target),.auth_target(auth_target),.replay_target(replay_target),.execution_active(execution_active),.pr(raw_pr),.program_ready(replay_done),.fault(program_fault),.digest(program_digest),.program_epoch(program_epoch),.authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64));"
+      },
+      {
+        "line": 97,
+        "text": " wire[7:0]observed_physical_faults=physical_fault|((8'((|boot_fault_pc)||(|ctrl_completion_fault)||ingress_fault||program_fault||commit_fault||host_observer_fault||peer_link_fault))<<die_id);"
+      },
+      {
+        "line": 98,
+        "text": " wire d_rv,d_rcr,d_cv,d_ccr;wire[1023:0]d_rd,d_cd;wire adapter_fault;"
+      },
+      {
+        "line": 100,
+        "text": " wire physical_tx_v,physical_tx_cr,peer_link_fault;wire[527:0]physical_tx_d;"
+      },
+      {
+        "line": 101,
+        "text": " qkd_host_peer_link u_peer(.ck(ck_peer),.rst_n(host_rst_n),.rx_v(raw_rx_v),.rx_d(raw_rx_d),.rx_cr(raw_rx_cr),.normal_rx_v(program_rx_v),.normal_rx_d(program_rx_d),.normal_rx_cr(program_rx_cr),"
+      },
+      {
+        "line": 102,
+        "text": " .peer_rx_valid(peer_rx_valid),.peer_rx_data(peer_rx_data),.peer_rx_ready(peer_rx_ready),.normal_tx_v(tx_v),.normal_tx_d(tx_d),.normal_tx_cr(tx_cr),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.peer_tx_ready(peer_tx_ready),.tx_v(physical_tx_v),.tx_d(physical_tx_d),.tx_cr(physical_tx_cr),.drained(peer_link_drained),.fault(peer_link_fault));"
+      },
+      {
+        "line": 103,
+        "text": " wire rx_v,rx_cr,tx_v,tx_cr;wire[527:0]rx_d,tx_d;wire[4:0]phy_faults;"
+      },
+      {
+        "line": 104,
+        "text": " qfd_link_adp512_split #(.MUT(PHY_MUT))u_adapter(.ck(ck_phy),.rst_n(host_rst_n),"
+      },
+      {
+        "line": 106,
+        "text": " .tx_up(phy_up),.tx_v(phy_tx_v),.tx_flit(phy_tx_flit),.rx_v(phy_rx_v),.rx_flit(phy_rx_flit),.fault(adapter_fault));"
+      },
+      {
+        "line": 107,
+        "text": " qkd_host_phy_cdc5 u_phy(.ck_pad(ck_pad),.rx_wck(ck_phy_rx_w),.rx_rck(ck_phy_rx_r),.tx_wck(ck_phy_tx_w),.tx_rck(ck_phy_tx_r),.rst_n(host_rst_n),"
+      },
+      {
+        "line": 109,
+        "text": " .core_rx_v(raw_rx_v),.core_rx_d(raw_rx_d),.core_rx_cr(raw_rx_cr),.core_tx_v(physical_tx_v),.core_tx_d(physical_tx_d),.core_tx_cr(physical_tx_cr),.faults(phy_faults));"
+      },
+      {
+        "line": 110,
+        "text": " qkd_host_program_rx_target u_program_rx(.ck(ck_program_rx),.rst_n(host_rst_n),.rx_v(program_rx_v),.rx_d(program_rx_d),.rx_cr(program_rx_cr),"
+      },
+      {
+        "line": 112,
+        "text": " .word_v(word_v),.word_desc(word_desc),.word_addr(word_addr),.word_data(word_data),.seal(seal),.auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),.fault(ingress_fault));"
+      },
+      {
+        "line": 114,
+        "text": " wire source_fault;wire[3:0]packet_faults;"
+      },
+      {
+        "line": 115,
+        "text": " wire[92:0]native_tk,guarded_tk;wire native_protocol_fault;"
+      },
+      {
+        "line": 117,
+        "text": " wire service_begin_v,pending_advertised,begin_fault;wire[15:0]service_begin_epoch,pending_epoch;"
+      },
+      {
+        "line": 118,
+        "text": " qkd_host_control_packet_admission #(.NL(NL),.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(.native_reserved(native_reserved),.ownership_valid(ownership_valid),.host_admission_open(host_admission_open),.host_launch_quiet(host_launch_quiet),.host_deferred(host_deferred),.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),"
+      },
+      {
+        "line": 119,
+        "text": " .token_allocator_fault(token_allocator_fault),"
+      },
+      {
+        "line": 126,
+        "text": " .cancel_valid(cancel_valid),.cancel_tag(cancel_tag),.cancel_generation(cancel_generation),.cancel_done(cancel_done),.cancel_fault(cancel_fault),.cancel_drained(cancel_drained),.terminal_accepted(token_cancel_accepted),"
+      },
+      {
+        "line": 129,
+        "text": " .die_id(die_id),.por_n(por_n&&pll_locked),.link_up(link_up),.transport_fault(ENABLE_SERVICE?guarded_transport:transport_fault),.physical_fault(ENABLE_SERVICE?guarded_physical:observed_physical_faults),.crom_fault(crom_fault),.pr(pr),"
+      },
+      {
+        "line": 130,
+        "text": " .irq(irq),.host_rst_n(host_rst_n),.link_rst_n(link_rst_n),.hbm_rst_n(hbm_rst_n),.boot_go(boot_go),.die_rst_n(die_rst_n),.sys_ready(sys_ready),.fault_src(fault_src),"
+      },
+      {
+        "line": 133,
+        "text": " .source_cr(source_cr),.available(available),.source_fault(source_fault),.packet_faults(packet_faults),"
+      },
+      {
+        "line": 140,
+        "text": " .ingest_permission(ingest_permission),.begin_fault(begin_fault));"
+      },
+      {
+        "line": 141,
+        "text": " wire marker_cr,marker_consumer_fault;"
+      },
+      {
+        "line": 142,
+        "text": " qkd_host_marker_consumer u_marker_consumer(.ck(ck_bootbarrier),.rst_n(host_rst_n),.marker_v(marker_v),.marker(marker),.issued(issued),.landed(landed),.est(est),.source_fault(source_fault),.marker_cr(marker_cr),.certificate_v(certificate_v),.certificate(certificate),.certificate_prefix(certificate_prefix),.fault(marker_consumer_fault));"
+      },
+      {
+        "line": 143,
+        "text": " wire qm_v,qm_t_v,qm_t_cr,fenced_v,fenced_cr;wire[1:0]qm_cls;wire[511:0]qm_d;wire[4:0]qm_crn;wire[63:0]qm_t_d,fenced_d;wire[5:0]bridge_faults;"
+      },
+      {
+        "line": 144,
+        "text": " qkd_host_qm_clock_bridge_service_debt #(.ENABLE_SERVICE(ENABLE_SERVICE),.MUT(BRIDGE_MUT))u_bridge(.cq(ck_qm_queue),.qw(ck_qm_ing_w),.qr(ck_qm_ing_r),.qp(ck_qm_credit),.ccw(ck_qm_done_w),.ccr(ck_qm_done_r),.rst_n(host_rst_n),"
+      },
+      {
+        "line": 146,
+        "text": " .done_v(fenced_v),.done_d(fenced_d),.done_cr(fenced_cr),.packet_done_v(done_v),.packet_done_d(done_d),.packet_done_cr(done_cr),.faults(bridge_faults),.queue_quiet(host_upstream_quiet[0]));"
+      },
+      {
+        "line": 147,
+        "text": " wire ov,owe,ocr,qm_fault;wire[31:0]oa;wire[255:0]od;"
+      },
+      {
+        "line": 149,
+        "text": " .rst_n(host_rst_n),.clk_h(ck_qm_host),.h_v(qm_v),.h_cls(qm_cls),.h_d(qm_d),.h_crn(qm_crn),.t_v(qm_t_v),.t_d(qm_t_d),.t_cr(qm_t_cr),"
+      },
+      {
+        "line": 151,
+        "text": " .o_v(ov),.o_we(owe),.o_addr(oa),.o_d(od),.o_cr(ocr),.i_rv(1'b0),.i_rd(256'd0),.fault(qm_fault),.quiet_h(host_upstream_quiet[1]),.quiet_i(host_upstream_quiet[2]),.quiet_c(host_upstream_quiet[3]));"
+      },
+      {
+        "line": 152,
+        "text": " wire[289:0]kv_ing;wire kv_ing_cr;wire[127:0]all_acks;wire global_prefix_v,dispatch_fault;"
+      },
+      {
+        "line": 153,
+        "text": " wire[31:0]kv_issued,kv_landed;wire local_marker_v,local_marker_cr,bootbarrier_fault,image_check;wire[65:0]local_marker;"
+      },
+      {
+        "line": 154,
+        "text": " qkd_host_emb_boot_barrier u_bootbarrier(.ck(ck_bootbarrier),.rst_n(host_rst_n),.in_v(local_marker_v),.in_d(local_marker),.in_cr(local_marker_cr),.est(est),.require_fresh(image_check),.out_v(marker_v),.out_d(marker),.out_cr(marker_cr),.fault(bootbarrier_fault));"
+      },
+      {
+        "line": 155,
+        "text": " qkd_host_boot_dispatch_debt u_dispatch(.ck(ck_dispatch),.ck_order(ck_retire),.rst_n(host_rst_n),.boot_release(local_marker_cr),"
+      },
+      {
+        "line": 157,
+        "text": " .acks(all_acks),.prefix_v(global_prefix_v),.issued(issued),.landed(landed),.fault(dispatch_fault),.dispatch_quiet(host_upstream_quiet[4]),.order_quiet(host_upstream_quiet[5]));"
+      },
+      {
+        "line": 158,
+        "text": " wire map_fault,order_fault,fence_fault;wire[3:0]chain_fault;wire[7:0]prefix_ack_n;wire[31:0]fence_landed;"
+      },
+      {
+        "line": 159,
+        "text": " qkd_host_ingest_chain_pt #(.ORDER_MUT(ORDER_MUT))u_chain(.ck_map(ck_map),.ck_sum(ck_sum),.ck_order(ck_order),.rst_n(host_rst_n),"
+      },
+      {
+        "line": 160,
+        "text": " .ing(kv_ing),.ing_cr(kv_ing_cr),.all_acks(all_acks),.chain_f(chain_f),.chain_c(chain_c),.chain_a(chain_a),.chain_fault_i(chain_fault_i),.slice_ack(slice_ack),"
+      },
+      {
+        "line": 161,
+        "text": " .marker_v(local_marker_v),.marker(local_marker),.marker_cr(local_marker_cr),.issued(kv_issued),.landed(kv_landed),.map_fault(map_fault),.chain_fault(chain_fault),.ack_n(prefix_ack_n),.physical_ack_n(physical_ack_n),.order_fault(order_fault));"
+      },
+      {
+        "line": 162,
+        "text": " qkd_host_visibility_fence u_fence(.rst_n(host_rst_n),.ck(ck_fence_core),.clk_h(ck_fence_host),.ack_n({7'd0,global_prefix_v}),"
+      },
+      {
+        "line": 163,
+        "text": " .in_v(qm_t_v),.in_d(qm_t_d),.in_cr(qm_t_cr),.out_v(fenced_v),.out_d(fenced_d),.out_cr(fenced_cr),.fault(fence_fault),.landed_debug(fence_landed));"
+      },
+      {
+        "line": 165,
+        "text": " .ck(ck_native),.por_n(por_n&&pll_locked),.rst_n(host_rst_n),.hc(hc),.legacy_tk(local_tk),"
+      },
+      {
+        "line": 171,
+        "text": " .result_done(native_result_done),.result_fault(native_result_fault),.result_cause(native_result_cause),"
+      },
+      {
+        "line": 174,
+        "text": " .collective_busy(native_collective_busy),.kv_flush(native_kv_flush),.local_tk(native_tk),.protocol_fault(native_protocol_fault));"
+      },
+      {
+        "line": 175,
+        "text": " qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),"
+      },
+      {
+        "line": 176,
+        "text": " .die_id(die_id),.physical_faults(observed_physical_faults),.transport_faults(transport_fault),"
+      },
+      {
+        "line": 182,
+        "text": " .physical_diag(guarded_physical),.transport_diag(guarded_transport),.service_protocol_fault(begin_fault));"
+      },
+      {
+        "line": 184,
+        "text": " assign service_faults={source_fault|dispatch_fault|bootbarrier_fault|marker_consumer_fault|est[1]|(ENABLE_NATIVE&&native_protocol_fault),packet_faults,chain_fault,fence_fault,order_fault,map_fault,qm_fault,bridge_faults,phy_faults,adapter_fault};"
+      },
+      {
+        "line": 199,
+        "text": " output wire boot_image_ready,boot_image_fault,output wire[15:0]boot_image_epoch,output wire[63:0]boot_image_digest,"
+      },
+      {
+        "line": 260,
+        "text": " input wire por_n,"
+      },
+      {
+        "line": 268,
+        "text": " input wire[7:0] transport_fault,"
+      },
+      {
+        "line": 269,
+        "text": " // kvsys v1.4.2 HOST owner = KV die lead 2026-10-15: the typed die-local PHYSICAL fault source is the static D2D link"
+      },
+      {
+        "line": 270,
+        "text": " // end sticky fault qkd_d2d_static.fault = link end + KVN + service faults, placed on this die bit die_id.  HBM"
+      },
+      {
+        "line": 271,
+        "text": " // controller faults reach the root through the landing fault chain to the embedding gateway est, host SerDes PHY and"
+      },
+      {
+        "line": 272,
+        "text": " // adapter faults are root-internal phy_faults + adapter_fault, and peer die bits arrive through the peer service guard."
+      },
+      {
+        "line": 273,
+        "text": " input wire link_physical_fault,"
+      },
+      {
+        "line": 274,
+        "text": " input wire crom_fault,"
+      },
+      {
+        "line": 284,
+        "text": " output wire record_fault,"
+      },
+      {
+        "line": 301,
+        "text": " output wire host_rst_n,"
+      },
+      {
+        "line": 302,
+        "text": " output wire link_rst_n,"
+      },
+      {
+        "line": 303,
+        "text": " output wire hbm_rst_n,"
+      },
+      {
+        "line": 305,
+        "text": " output wire die_rst_n,"
+      },
+      {
+        "line": 307,
+        "text": " output wire[31:0] fault_src,"
+      },
+      {
+        "line": 313,
+        "text": " output wire[1163:0]chain_f,input wire[127:0]chain_c,chain_a,input wire[3:0]chain_fault_i,input wire[127:0]slice_ack,slice_boot_done,slice_boot_ok,slice_boot_fault,"
+      },
+      {
+        "line": 314,
+        "text": " input wire ctrl_completion_fault,   // KVJ-G2b 10-17: 1 b = qkd_kv_cfault_tree root (the 128-b per-PC vector was only ORed)"
+      },
+      {
+        "line": 320,
+        "text": " output wire[24:0] service_faults,"
+      },
+      {
+        "line": 325,
+        "text": " output wire peer_protocol_fault,"
+      },
+      {
+        "line": 329,
+        "text": " input wire engine_result_v,input wire[58:0]engine_result_tag,input wire[1:0]engine_result_gen,input wire engine_result_done,engine_result_fault,"
+      },
+      {
+        "line": 331,
+        "text": " output wire program_consensus,output wire coordinator_fault,output wire recovery_complete,"
+      },
+      {
+        "line": 340,
+        "text": " wire[7:0] physical_fault=8'(link_physical_fault)<<die_id;"
+      },
+      {
+        "line": 344,
+        "text": " wire token_allocator_fault;"
+      },
+      {
+        "line": 369,
+        "text": " qkd_host_record_port u_records(.ck(ck_records),.rst_n(host_rst_n),.send_kind(record_send_kind),"
+      },
+      {
+        "line": 380,
+        "text": " .tx_v(record_tx_v),.tx_observed_v(record_tx_observed_v),.tx_record(record_tx),.fault(record_fault));"
+      },
+      {
+        "line": 401,
+        "text": " wire cancel_fault;"
+      },
+      {
+        "line": 415,
+        "text": " wire native_result_fault;"
+      },
+      {
+        "line": 443,
+        "text": " wire host_observer_fault;"
+      },
+      {
+        "line": 447,
+        "text": " .static_setup_ready(static_setup_ready),.boot_pr(boot_pr),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),.boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),"
+      },
+      {
+        "line": 499,
+        "text": " .token_allocator_fault(token_allocator_fault),"
+      },
+      {
+        "line": 535,
+        "text": " .cancel_fault(cancel_fault),"
+      },
+      {
+        "line": 550,
+        "text": " .native_result_fault(native_result_fault),"
+      },
+      {
+        "line": 569,
+        "text": " .por_n(por_n),"
+      },
+      {
+        "line": 577,
+        "text": " .transport_fault(transport_fault),"
+      },
+      {
+        "line": 578,
+        "text": " .physical_fault(physical_fault| (8'(record_fault)<<die_id) |(8'(peer_protocol_fault||coordinator_fault||root_mux_fault)<<die_id)),"
+      },
+      {
+        "line": 579,
+        "text": " .crom_fault(crom_fault),"
+      },
+      {
+        "line": 600,
+        "text": " .host_rst_n(host_rst_n),"
+      },
+      {
+        "line": 601,
+        "text": " .link_rst_n(link_rst_n),"
+      },
+      {
+        "line": 602,
+        "text": " .hbm_rst_n(hbm_rst_n),"
+      },
+      {
+        "line": 604,
+        "text": " .die_rst_n(die_rst_n),"
+      },
+      {
+        "line": 606,
+        "text": " .fault_src(fault_src),"
+      },
+      {
+        "line": 612,
+        "text": " .chain_f(chain_f),.chain_c(chain_c),.chain_a(chain_a),.chain_fault_i(chain_fault_i),.slice_ack(slice_ack),.slice_boot_done(slice_boot_done),.slice_boot_ok(slice_boot_ok),.slice_boot_fault(slice_boot_fault),"
+      },
+      {
+        "line": 613,
+        "text": " .ctrl_completion_fault(ctrl_completion_fault),"
+      },
+      {
+        "line": 622,
+        "text": " .service_faults(service_faults),"
+      },
+      {
+        "line": 641,
+        "text": " .host_observer_fault(host_observer_fault));"
+      },
+      {
+        "line": 644,
+        "text": " .por_n(por_n&&pll_locked),"
+      },
+      {
+        "line": 663,
+        "text": " .cancel_fault(cancel_fault),"
+      },
+      {
+        "line": 674,
+        "text": " .result_fault(native_result_fault),"
+      },
+      {
+        "line": 699,
+        "text": " .fault(peer_protocol_fault),"
+      },
+      {
+        "line": 720,
+        "text": " wire root_mux_fault,coordinator_wrap_locked,coordinator_identity_fault,coordinator_post_pending;"
+      },
+      {
+        "line": 724,
+        "text": " assign token_allocator_fault=coordinator_identity_fault;"
+      },
+      {
+        "line": 728,
+        "text": " qkd_host_peer_root_mux u_root_mux(.ck(ck_root_mux),.por_n(por_n),.physical_rx_valid(peer_rx_valid),.physical_rx_data(peer_rx_data),.physical_rx_ready(peer_rx_ready),.physical_tx_valid(peer_tx_valid),.physical_tx_data(peer_tx_data),.physical_tx_ready(peer_tx_ready),"
+      },
+      {
+        "line": 730,
+        "text": " .coordinator_rx_valid(coordinator_rx_valid),.coordinator_rx_data(coordinator_rx_data),.coordinator_rx_ready(coordinator_rx_ready),.coordinator_tx_valid(coordinator_tx_valid),.coordinator_tx_data(coordinator_tx_data),.coordinator_tx_ready(coordinator_tx_ready),.fault(root_mux_fault));"
+      },
+      {
+        "line": 731,
+        "text": " qkd_host_tp8_coordinator u_coordinator(.ck_codec(ck_coordinator_codec),.ck_lifecycle(ck_coordinator_lifecycle),.ck_post(ck_coordinator_post),.por_n(por_n),"
+      },
+      {
+        "line": 736,
+        "text": " .engine_result_v(engine_result_v),.engine_result_tag(engine_result_tag),.engine_result_gen(engine_result_gen),.engine_result_done(engine_result_done),.engine_result_fault(engine_result_fault),.engine_result_cause(engine_result_cause),.engine_result_token(engine_result_token),.engine_result_value(engine_result_value),.engine_result_cycles(engine_result_cycles),.engine_result_cr(engine_result_cr),"
+      },
+      {
+        "line": 738,
+        "text": " .wrap_locked(coordinator_wrap_locked),.identity_fault(coordinator_identity_fault),.recovery_complete(recovery_complete),.post_pending(coordinator_post_pending),.fault(coordinator_fault));"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+    "sha256": "b7a1a282eb02f00dd0b7e70a7a633f59aec7fdcf3f1c961b0e6eeb560b1291f2",
+    "lines": [
+      {
+        "line": 8,
+        "text": " input wire ck_map,ck_sum,ck_order,input wire rst_n,"
+      },
+      {
+        "line": 10,
+        "text": " output wire[1163:0]chain_f,input wire[127:0]chain_c,chain_a,input wire[3:0]chain_fault_i,input wire[127:0]slice_ack,"
+      },
+      {
+        "line": 12,
+        "text": " output wire[31:0]issued,landed,output wire map_fault,output wire[3:0]chain_fault,output wire[7:0]ack_n,physical_ack_n,output wire order_fault"
+      },
+      {
+        "line": 16,
+        "text": " qkd_host_ack_sum u_sum(.ck(ck_sum),.rst_n(rst_n),.acks(acks),.ack_n(physical_ack_n));"
+      },
+      {
+        "line": 17,
+        "text": " qkd_host_commit_order #(.MUT(ORDER_MUT))u_order(.ck(ck_order),.rst_n(rst_n),.issue_v(issue_v),.issue_pc(issue_pc),.acks(acks),.prefix_v(prefix_v),.prefix_count(prefix_count),.fault(order_fault));"
+      },
+      {
+        "line": 18,
+        "text": " qkd_host_ingest_map #(.ORDERED(1))u_map(.ck(ck_map),.rst_n(rst_n),.ing(ing),.ing_cr(ing_cr),.out(map_out),.out_cr(credits),.ack_n(ack_n),"
+      },
+      {
+        "line": 19,
+        "text": " .marker_v(marker_v),.marker(marker),.marker_cr(marker_cr),.fault(map_fault),.issued(issued),.landed(landed),.ord_cr(prefix_v),.issue_v(issue_v),.issue_pc(issue_pc));"
+      },
+      {
+        "line": 20,
+        "text": " assign chain_f=map_out;assign credits=chain_c;assign acks=chain_a;assign chain_fault=chain_fault_i;assign all_acks=slice_ack;"
+      },
+      {
+        "line": 38,
+        "text": " input wire token_allocator_fault,"
+      },
+      {
+        "line": 51,
+        "text": " output wire cancel_done,cancel_fault,output wire[3:0]cancel_drained,input wire token_cancel_accepted,"
+      },
+      {
+        "line": 56,
+        "text": " input wire native_result_done,native_result_fault,input wire[3:0]native_result_cause,"
+      },
+      {
+        "line": 62,
+        "text": " input wire[2:0]die_id,input wire por_n,pll_locked,phy_up,phy_rx_v,input wire[1042:0]phy_rx_flit,"
+      },
+      {
+        "line": 64,
+        "text": " input wire[NL-1:0]link_up,input wire[7:0]transport_fault,physical_fault,input wire crom_fault,"
+      },
+      {
+        "line": 71,
+        "text": " output wire host_rst_n,link_rst_n,hbm_rst_n,boot_go,die_rst_n,sys_ready,"
+      },
+      {
+        "line": 72,
+        "text": " output wire[31:0]fault_src,output wire source_cr,available,"
+      },
+      {
+        "line": 74,
+        "text": " output wire[1163:0]chain_f,input wire[127:0]chain_c,chain_a,input wire[3:0]chain_fault_i,input wire[127:0]slice_ack,slice_boot_done,slice_boot_ok,slice_boot_fault,"
+      },
+      {
+        "line": 75,
+        "text": " input wire[127:0]ctrl_completion_fault,"
+      },
+      {
+        "line": 79,
+        "text": " output wire[24:0]service_faults,"
+      },
+      {
+        "line": 83,
+        "text": " output wire host_idle,host_observer_fault"
+      },
+      {
+        "line": 86,
+        "text": " wire[127:0]boot_done_pc=slice_boot_done,boot_ok_pc=slice_boot_ok,boot_fault_pc=slice_boot_fault;"
+      },
+      {
+        "line": 89,
+        "text": " wire ingress_fault,program_fault;wire begin_image,word_v,word_desc,seal,auth_v;"
+      },
+      {
+        "line": 93,
+        "text": " reg committed,commit_fault;"
+      },
+      {
+        "line": 94,
+        "text": " always @(posedge ck_program_loader or negedge host_rst_n)begin"
+      },
+      {
+        "line": 95,
+        "text": "  if(!host_rst_n)begin committed<=0;commit_fault<=0;end"
+      },
+      {
+        "line": 99,
+        "text": "    if(!replay_done||program_commit_epoch!=program_epoch||program_commit_digest!=program_digest)commit_fault<=1;"
+      },
+      {
+        "line": 104,
+        "text": " assign program_ready=program_installed_valid&&replay_done&&committed&&!program_fault&&!commit_fault&&!begin_image;"
+      },
+      {
+        "line": 105,
+        "text": " qkd_host_program_loader u_program(.ck(ck_program_loader),.rst_n(host_rst_n),.begin_image(begin_image),.image_epoch(image_epoch),.pw_count(pw_count),.dw_count(dw_count),"
+      },
+      {
+        "line": 107,
+        "text": " .execution_active(execution_active),.pr(pr),.program_ready(replay_done),.fault(program_fault),.digest(program_digest),.program_epoch(program_epoch),.authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64));"
+      },
+      {
+        "line": 108,
+        "text": " wire[7:0]observed_physical_faults=physical_fault|((8'((|boot_fault_pc)||(|ctrl_completion_fault)||ingress_fault||program_fault||commit_fault||host_observer_fault||peer_link_fault))<<die_id);"
+      },
+      {
+        "line": 109,
+        "text": " wire d_rv,d_rcr,d_cv,d_ccr;wire[1023:0]d_rd,d_cd;wire adapter_fault;"
+      },
+      {
+        "line": 111,
+        "text": " wire physical_tx_v,physical_tx_cr,peer_link_fault;wire[527:0]physical_tx_d;"
+      },
+      {
+        "line": 112,
+        "text": " qkd_host_peer_link u_peer(.ck(ck_peer),.rst_n(host_rst_n),.rx_v(raw_rx_v),.rx_d(raw_rx_d),.rx_cr(raw_rx_cr),.normal_rx_v(program_rx_v),.normal_rx_d(program_rx_d),.normal_rx_cr(program_rx_cr),"
+      },
+      {
+        "line": 113,
+        "text": " .peer_rx_valid(peer_rx_valid),.peer_rx_data(peer_rx_data),.peer_rx_ready(peer_rx_ready),.normal_tx_v(tx_v),.normal_tx_d(tx_d),.normal_tx_cr(tx_cr),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.peer_tx_ready(peer_tx_ready),.tx_v(physical_tx_v),.tx_d(physical_tx_d),.tx_cr(physical_tx_cr),.drained(peer_link_drained),.fault(peer_link_fault));"
+      },
+      {
+        "line": 114,
+        "text": " wire rx_v,rx_cr,tx_v,tx_cr;wire[527:0]rx_d,tx_d;wire[4:0]phy_faults;"
+      },
+      {
+        "line": 115,
+        "text": " qfd_link_adp512_split #(.MUT(PHY_MUT))u_adapter(.ck(ck_phy),.rst_n(host_rst_n),"
+      },
+      {
+        "line": 117,
+        "text": " .tx_up(phy_up),.tx_v(phy_tx_v),.tx_flit(phy_tx_flit),.rx_v(phy_rx_v),.rx_flit(phy_rx_flit),.fault(adapter_fault));"
+      },
+      {
+        "line": 118,
+        "text": " qkd_host_phy_cdc5 u_phy(.ck_pad(ck_pad),.rx_wck(ck_phy_rx_w),.rx_rck(ck_phy_rx_r),.tx_wck(ck_phy_tx_w),.tx_rck(ck_phy_tx_r),.rst_n(host_rst_n),"
+      },
+      {
+        "line": 120,
+        "text": " .core_rx_v(raw_rx_v),.core_rx_d(raw_rx_d),.core_rx_cr(raw_rx_cr),.core_tx_v(physical_tx_v),.core_tx_d(physical_tx_d),.core_tx_cr(physical_tx_cr),.faults(phy_faults));"
+      },
+      {
+        "line": 121,
+        "text": " qkd_host_program_rx u_program_rx(.ck(ck_program_rx),.rst_n(host_rst_n),.rx_v(program_rx_v),.rx_d(program_rx_d),.rx_cr(program_rx_cr),"
+      },
+      {
+        "line": 123,
+        "text": " .word_v(word_v),.word_desc(word_desc),.word_addr(word_addr),.word_data(word_data),.seal(seal),.auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),.fault(ingress_fault));"
+      },
+      {
+        "line": 125,
+        "text": " wire source_fault;wire[3:0]packet_faults;"
+      },
+      {
+        "line": 126,
+        "text": " wire[92:0]native_tk,guarded_tk;wire native_protocol_fault;"
+      },
+      {
+        "line": 128,
+        "text": " wire service_begin_v,pending_advertised,begin_fault;wire[15:0]service_begin_epoch,pending_epoch;"
+      },
+      {
+        "line": 129,
+        "text": " qkd_host_control_packet_observed #(.NL(NL),.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),"
+      },
+      {
+        "line": 130,
+        "text": " .token_allocator_fault(token_allocator_fault),"
+      },
+      {
+        "line": 137,
+        "text": " .cancel_valid(cancel_valid),.cancel_tag(cancel_tag),.cancel_generation(cancel_generation),.cancel_done(cancel_done),.cancel_fault(cancel_fault),.cancel_drained(cancel_drained),.terminal_accepted(token_cancel_accepted),"
+      },
+      {
+        "line": 140,
+        "text": " .die_id(die_id),.por_n(por_n&&pll_locked),.link_up(link_up),.transport_fault(ENABLE_SERVICE?guarded_transport:transport_fault),.physical_fault(ENABLE_SERVICE?guarded_physical:observed_physical_faults),.crom_fault(crom_fault),.pr(pr),"
+      },
+      {
+        "line": 141,
+        "text": " .irq(irq),.host_rst_n(host_rst_n),.link_rst_n(link_rst_n),.hbm_rst_n(hbm_rst_n),.boot_go(boot_go),.die_rst_n(die_rst_n),.sys_ready(sys_ready),.fault_src(fault_src),"
+      },
+      {
+        "line": 144,
+        "text": " .source_cr(source_cr),.available(available),.source_fault(source_fault),.packet_faults(packet_faults),"
+      },
+      {
+        "line": 151,
+        "text": " .ingest_permission(ingest_permission),.begin_fault(begin_fault));"
+      },
+      {
+        "line": 152,
+        "text": " wire marker_cr,marker_consumer_fault;"
+      },
+      {
+        "line": 153,
+        "text": " qkd_host_marker_consumer u_marker_consumer(.ck(ck_bootbarrier),.rst_n(host_rst_n),.marker_v(marker_v),.marker(marker),.issued(issued),.landed(landed),.est(est),.source_fault(source_fault),.marker_cr(marker_cr),.certificate_v(certificate_v),.certificate(certificate),.certificate_prefix(certificate_prefix),.fault(marker_consumer_fault));"
+      },
+      {
+        "line": 154,
+        "text": " wire qm_v,qm_t_v,qm_t_cr,fenced_v,fenced_cr;wire[1:0]qm_cls;wire[511:0]qm_d;wire[4:0]qm_crn;wire[63:0]qm_t_d,fenced_d;wire[5:0]bridge_faults;"
+      },
+      {
+        "line": 155,
+        "text": " qkd_host_qm_clock_bridge_service #(.ENABLE_SERVICE(ENABLE_SERVICE),.MUT(BRIDGE_MUT))u_bridge(.cq(ck_qm_queue),.qw(ck_qm_ing_w),.qr(ck_qm_ing_r),.qp(ck_qm_credit),.ccw(ck_qm_done_w),.ccr(ck_qm_done_r),.rst_n(host_rst_n),"
+      },
+      {
+        "line": 157,
+        "text": " .done_v(fenced_v),.done_d(fenced_d),.done_cr(fenced_cr),.packet_done_v(done_v),.packet_done_d(done_d),.packet_done_cr(done_cr),.faults(bridge_faults));"
+      },
+      {
+        "line": 158,
+        "text": " wire ov,owe,ocr,qm_fault;wire[31:0]oa;wire[255:0]od;"
+      },
+      {
+        "line": 160,
+        "text": " .rst_n(host_rst_n),.clk_h(ck_qm_host),.h_v(qm_v),.h_cls(qm_cls),.h_d(qm_d),.h_crn(qm_crn),.t_v(qm_t_v),.t_d(qm_t_d),.t_cr(qm_t_cr),"
+      },
+      {
+        "line": 162,
+        "text": " .o_v(ov),.o_we(owe),.o_addr(oa),.o_d(od),.o_cr(ocr),.i_rv(1'b0),.i_rd(256'd0),.fault(qm_fault));"
+      },
+      {
+        "line": 163,
+        "text": " wire[289:0]kv_ing;wire kv_ing_cr;wire[127:0]all_acks;wire global_prefix_v,dispatch_fault;"
+      },
+      {
+        "line": 164,
+        "text": " wire[31:0]kv_issued,kv_landed;wire local_marker_v,local_marker_cr,bootbarrier_fault,image_check;wire[65:0]local_marker;"
+      },
+      {
+        "line": 165,
+        "text": " qkd_host_emb_boot_barrier u_bootbarrier(.ck(ck_bootbarrier),.rst_n(host_rst_n),.in_v(local_marker_v),.in_d(local_marker),.in_cr(local_marker_cr),.est(est),.require_fresh(image_check),.out_v(marker_v),.out_d(marker),.out_cr(marker_cr),.fault(bootbarrier_fault));"
+      },
+      {
+        "line": 166,
+        "text": " qkd_host_boot_dispatch u_dispatch(.ck(ck_dispatch),.ck_order(ck_retire),.rst_n(host_rst_n),.boot_release(local_marker_cr),"
+      },
+      {
+        "line": 168,
+        "text": " .acks(all_acks),.prefix_v(global_prefix_v),.issued(issued),.landed(landed),.fault(dispatch_fault));"
+      },
+      {
+        "line": 169,
+        "text": " wire map_fault,order_fault,fence_fault;wire[3:0]chain_fault;wire[7:0]prefix_ack_n;wire[31:0]fence_landed;"
+      },
+      {
+        "line": 170,
+        "text": " qkd_host_ingest_chain_pt #(.ORDER_MUT(ORDER_MUT))u_chain(.ck_map(ck_map),.ck_sum(ck_sum),.ck_order(ck_order),.rst_n(host_rst_n),"
+      },
+      {
+        "line": 171,
+        "text": " .ing(kv_ing),.ing_cr(kv_ing_cr),.all_acks(all_acks),.chain_f(chain_f),.chain_c(chain_c),.chain_a(chain_a),.chain_fault_i(chain_fault_i),.slice_ack(slice_ack),"
+      },
+      {
+        "line": 172,
+        "text": " .marker_v(local_marker_v),.marker(local_marker),.marker_cr(local_marker_cr),.issued(kv_issued),.landed(kv_landed),.map_fault(map_fault),.chain_fault(chain_fault),.ack_n(prefix_ack_n),.physical_ack_n(physical_ack_n),.order_fault(order_fault));"
+      },
+      {
+        "line": 173,
+        "text": " qkd_host_visibility_fence u_fence(.rst_n(host_rst_n),.ck(ck_fence_core),.clk_h(ck_fence_host),.ack_n({7'd0,global_prefix_v}),"
+      },
+      {
+        "line": 174,
+        "text": " .in_v(qm_t_v),.in_d(qm_t_d),.in_cr(qm_t_cr),.out_v(fenced_v),.out_d(fenced_d),.out_cr(fenced_cr),.fault(fence_fault),.landed_debug(fence_landed));"
+      },
+      {
+        "line": 176,
+        "text": " .ck(ck_native),.por_n(por_n&&pll_locked),.rst_n(host_rst_n),.hc(hc),.legacy_tk(local_tk),"
+      },
+      {
+        "line": 182,
+        "text": " .result_done(native_result_done),.result_fault(native_result_fault),.result_cause(native_result_cause),"
+      },
+      {
+        "line": 185,
+        "text": " .collective_busy(native_collective_busy),.kv_flush(native_kv_flush),.local_tk(native_tk),.protocol_fault(native_protocol_fault));"
+      },
+      {
+        "line": 186,
+        "text": " qkd_host_service_guard u_guard(.ck_guard(ck_guard),.rst_n(host_rst_n),.raw_faults(service_faults),"
+      },
+      {
+        "line": 187,
+        "text": " .die_id(die_id),.physical_faults(observed_physical_faults),.transport_faults(transport_fault),"
+      },
+      {
+        "line": 193,
+        "text": " .physical_diag(guarded_physical),.transport_diag(guarded_transport),.service_protocol_fault(begin_fault));"
+      },
+      {
+        "line": 195,
+        "text": " assign service_faults={source_fault|dispatch_fault|bootbarrier_fault|marker_consumer_fault|est[1]|(ENABLE_NATIVE&&native_protocol_fault),packet_faults,chain_fault,fence_fault,order_fault,map_fault,qm_fault,bridge_faults,phy_faults,adapter_fault};"
+      },
+      {
+        "line": 262,
+        "text": " input wire por_n,"
+      },
+      {
+        "line": 270,
+        "text": " input wire[7:0] transport_fault,"
+      },
+      {
+        "line": 271,
+        "text": " // kvsys v1.4.2 HOST owner = KV die lead 2026-10-15: the typed die-local PHYSICAL fault source is the static D2D link"
+      },
+      {
+        "line": 272,
+        "text": " // end sticky fault qkd_d2d_static.fault = link end + KVN + service faults, placed on this die bit die_id.  HBM"
+      },
+      {
+        "line": 273,
+        "text": " // controller faults reach the root through the landing fault chain to the embedding gateway est, host SerDes PHY and"
+      },
+      {
+        "line": 274,
+        "text": " // adapter faults are root-internal phy_faults + adapter_fault, and peer die bits arrive through the peer service guard."
+      },
+      {
+        "line": 275,
+        "text": " input wire link_physical_fault,"
+      },
+      {
+        "line": 276,
+        "text": " input wire crom_fault,"
+      },
+      {
+        "line": 286,
+        "text": " output wire record_fault,"
+      },
+      {
+        "line": 303,
+        "text": " output wire host_rst_n,"
+      },
+      {
+        "line": 304,
+        "text": " output wire link_rst_n,"
+      },
+      {
+        "line": 305,
+        "text": " output wire hbm_rst_n,"
+      },
+      {
+        "line": 307,
+        "text": " output wire die_rst_n,"
+      },
+      {
+        "line": 309,
+        "text": " output wire[31:0] fault_src,"
+      },
+      {
+        "line": 315,
+        "text": " output wire[1163:0]chain_f,input wire[127:0]chain_c,chain_a,input wire[3:0]chain_fault_i,input wire[127:0]slice_ack,slice_boot_done,slice_boot_ok,slice_boot_fault,"
+      },
+      {
+        "line": 316,
+        "text": " input wire[127:0] ctrl_completion_fault,"
+      },
+      {
+        "line": 322,
+        "text": " output wire[24:0] service_faults,"
+      },
+      {
+        "line": 327,
+        "text": " output wire peer_protocol_fault,"
+      },
+      {
+        "line": 331,
+        "text": " input wire engine_result_v,input wire[58:0]engine_result_tag,input wire[1:0]engine_result_gen,input wire engine_result_done,engine_result_fault,"
+      },
+      {
+        "line": 333,
+        "text": " output wire program_consensus,output wire coordinator_fault,output wire recovery_complete,"
+      },
+      {
+        "line": 342,
+        "text": " wire[7:0] physical_fault=8'(link_physical_fault)<<die_id;"
+      },
+      {
+        "line": 346,
+        "text": " wire token_allocator_fault;"
+      },
+      {
+        "line": 371,
+        "text": " qkd_host_record_port u_records(.ck(ck_records),.rst_n(host_rst_n),.send_kind(record_send_kind),"
+      },
+      {
+        "line": 382,
+        "text": " .tx_v(record_tx_v),.tx_observed_v(record_tx_observed_v),.tx_record(record_tx),.fault(record_fault));"
+      },
+      {
+        "line": 403,
+        "text": " wire cancel_fault;"
+      },
+      {
+        "line": 417,
+        "text": " wire native_result_fault;"
+      },
+      {
+        "line": 445,
+        "text": " wire host_observer_fault;"
+      },
+      {
+        "line": 498,
+        "text": " .token_allocator_fault(token_allocator_fault),"
+      },
+      {
+        "line": 534,
+        "text": " .cancel_fault(cancel_fault),"
+      },
+      {
+        "line": 549,
+        "text": " .native_result_fault(native_result_fault),"
+      },
+      {
+        "line": 568,
+        "text": " .por_n(por_n),"
+      },
+      {
+        "line": 576,
+        "text": " .transport_fault(transport_fault),"
+      },
+      {
+        "line": 577,
+        "text": " .physical_fault(physical_fault| (8'(record_fault)<<die_id) |(8'(peer_protocol_fault||coordinator_fault||root_mux_fault)<<die_id)),"
+      },
+      {
+        "line": 578,
+        "text": " .crom_fault(crom_fault),"
+      },
+      {
+        "line": 599,
+        "text": " .host_rst_n(host_rst_n),"
+      },
+      {
+        "line": 600,
+        "text": " .link_rst_n(link_rst_n),"
+      },
+      {
+        "line": 601,
+        "text": " .hbm_rst_n(hbm_rst_n),"
+      },
+      {
+        "line": 603,
+        "text": " .die_rst_n(die_rst_n),"
+      },
+      {
+        "line": 605,
+        "text": " .fault_src(fault_src),"
+      },
+      {
+        "line": 611,
+        "text": " .chain_f(chain_f),.chain_c(chain_c),.chain_a(chain_a),.chain_fault_i(chain_fault_i),.slice_ack(slice_ack),.slice_boot_done(slice_boot_done),.slice_boot_ok(slice_boot_ok),.slice_boot_fault(slice_boot_fault),"
+      },
+      {
+        "line": 612,
+        "text": " .ctrl_completion_fault(ctrl_completion_fault),"
+      },
+      {
+        "line": 621,
+        "text": " .service_faults(service_faults),"
+      },
+      {
+        "line": 640,
+        "text": " .host_observer_fault(host_observer_fault));"
+      },
+      {
+        "line": 643,
+        "text": " .por_n(por_n&&pll_locked),"
+      },
+      {
+        "line": 662,
+        "text": " .cancel_fault(cancel_fault),"
+      },
+      {
+        "line": 673,
+        "text": " .result_fault(native_result_fault),"
+      },
+      {
+        "line": 698,
+        "text": " .fault(peer_protocol_fault),"
+      },
+      {
+        "line": 719,
+        "text": " wire root_mux_fault,coordinator_wrap_locked,coordinator_identity_fault,coordinator_post_pending;"
+      },
+      {
+        "line": 723,
+        "text": " assign token_allocator_fault=coordinator_identity_fault;"
+      },
+      {
+        "line": 727,
+        "text": " qkd_host_peer_root_mux u_root_mux(.ck(ck_root_mux),.por_n(por_n),.physical_rx_valid(peer_rx_valid),.physical_rx_data(peer_rx_data),.physical_rx_ready(peer_rx_ready),.physical_tx_valid(peer_tx_valid),.physical_tx_data(peer_tx_data),.physical_tx_ready(peer_tx_ready),"
+      },
+      {
+        "line": 729,
+        "text": " .coordinator_rx_valid(coordinator_rx_valid),.coordinator_rx_data(coordinator_rx_data),.coordinator_rx_ready(coordinator_rx_ready),.coordinator_tx_valid(coordinator_tx_valid),.coordinator_tx_data(coordinator_tx_data),.coordinator_tx_ready(coordinator_tx_ready),.fault(root_mux_fault));"
+      },
+      {
+        "line": 730,
+        "text": " qkd_host_tp8_coordinator u_coordinator(.ck_codec(ck_coordinator_codec),.ck_lifecycle(ck_coordinator_lifecycle),.ck_post(ck_coordinator_post),.por_n(por_n),"
+      },
+      {
+        "line": 735,
+        "text": " .engine_result_v(engine_result_v),.engine_result_tag(engine_result_tag),.engine_result_gen(engine_result_gen),.engine_result_done(engine_result_done),.engine_result_fault(engine_result_fault),.engine_result_cause(engine_result_cause),.engine_result_token(engine_result_token),.engine_result_value(engine_result_value),.engine_result_cycles(engine_result_cycles),.engine_result_cr(engine_result_cr),"
+      },
+      {
+        "line": 737,
+        "text": " .wrap_locked(coordinator_wrap_locked),.identity_fault(coordinator_identity_fault),.recovery_complete(recovery_complete),.post_pending(coordinator_post_pending),.fault(coordinator_fault));"
+      }
+    ]
+  },
+  {
+    "file": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "sha256": "9dc960a01a40d7a4a873599bce8eeb11c12c16d454332e27dcc2533caad9b962",
+    "lines": [
+      {
+        "line": 11,
+        "text": "//   * the dies must agree on {token, logit}; any die fault, a disagreement, an out-of-time step (WDOG) or a start"
+      },
+      {
+        "line": 12,
+        "text": "//     before sys_ready completes the step at once with a fault (fail closed)."
+      },
+      {
+        "line": 19,
+        "text": "    // drive-0158 '-cl' (default 0 = reviewed form): DONE_REG=1 registers the D-die reductions (all done for the current"
+      },
+      {
+        "line": 20,
+        "text": "    // generation, any fault, token/value agreement) one edge before use; cleared at a start so a stale previous-"
+      },
+      {
+        "line": 27,
+        "text": "    // die has reported it, with a ONE-EDGE eng_done pulse carrying that step's token/value/cycles.  Faults stay"
+      },
+      {
+        "line": 28,
+        "text": "    // sticky; while one is set every outstanding step retires (one per edge, eng_fault high) so the host drains all"
+      },
+      {
+        "line": 30,
+        "text": "    // token/value disagreement for one generation, or an oldest step older than WDOG is a fault."
+      },
+      {
+        "line": 34,
+        "text": "    input  wire            rst_n,"
+      },
+      {
+        "line": 45,
+        "text": "    output wire            eng_fault,"
+      },
+      {
+        "line": 57,
+        "text": "    input  wire [D-1:0]    d_fault,"
+      },
+      {
+        "line": 59,
+        "text": "    output reg             wdog_fault,"
+      },
+      {
+        "line": 61,
+        "text": "    output reg             die_fault,"
+      },
+      {
+        "line": 67,
+        "text": "    reg agree_c, all_done_c, any_fault_c;"
+      },
+      {
+        "line": 68,
+        "text": "    reg agree_q, all_done_q, any_fault_q;"
+      },
+      {
+        "line": 71,
+        "text": "    wire any_fault = DONE_REG ? any_fault_q : any_fault_c;"
+      },
+      {
+        "line": 72,
+        "text": "    always @(*) begin"
+      },
+      {
+        "line": 73,
+        "text": "        agree_c = 1'b1; all_done_c = 1'b1; any_fault_c = 1'b0;"
+      },
+      {
+        "line": 78,
+        "text": "            if (d_done[k] && d_done_gen[k*2 +: 2] == d_gen && d_fault[k]) any_fault_c = 1'b1;"
+      },
+      {
+        "line": 81,
+        "text": "    assign eng_fault = die_fault || disagree || wdog_fault || start_unready;"
+      },
+      {
+        "line": 83,
+        "text": "    always @(posedge clk or negedge rst_n)"
+      },
+      {
+        "line": 84,
+        "text": "        if (!rst_n) begin agree_q <= 1'b1; all_done_q <= 1'b0; any_fault_q <= 1'b0; end"
+      },
+      {
+        "line": 85,
+        "text": "        else if (eng_start || !busy) begin agree_q <= 1'b1; all_done_q <= 1'b0; any_fault_q <= 1'b0; end"
+      },
+      {
+        "line": 86,
+        "text": "        else begin agree_q <= agree_c; all_done_q <= all_done_c; any_fault_q <= any_fault_c; end"
+      },
+      {
+        "line": 87,
+        "text": "    always @(posedge clk or negedge rst_n) begin"
+      },
+      {
+        "line": 88,
+        "text": "        if (!rst_n) begin"
+      },
+      {
+        "line": 91,
+        "text": "            disagree <= 1'b0; wdog_fault <= 1'b0; start_unready <= 1'b0; die_fault <= 1'b0; wd <= 0; n_steps <= 0;"
+      },
+      {
+        "line": 99,
+        "text": "            end else if (busy && any_fault) begin"
+      },
+      {
+        "line": 100,
+        "text": "                die_fault <= 1'b1; busy <= 1'b0; eng_done <= 1'b1;"
+      },
+      {
+        "line": 101,
+        "text": "            end else if (busy && wdog_fault) begin"
+      },
+      {
+        "line": 106,
+        "text": "                if (wd >= WDOG) wdog_fault <= 1'b1;"
+      },
+      {
+        "line": 134,
+        "text": "    //   A (edge of the report): new-generation detect, m_last, the in-order/outstanding check and d_fault (f_die, as"
+      },
+      {
+        "line": 140,
+        "text": "    // Cost: +1 edge from a die's report to its seen bit, so every retire (and a disagreement fault) is 1 edge later;"
+      },
+      {
+        "line": 141,
+        "text": "    // the in-order / unknown-generation / die-fault checks keep their edge.  Static, no backpressure: a die may still"
+      },
+      {
+        "line": 150,
+        "text": "    wire         fault_any = die_fault || disagree || wdog_fault || start_unready;"
+      },
+      {
+        "line": 151,
+        "text": "    always @(posedge clk or negedge rst_n) begin"
+      },
+      {
+        "line": 152,
+        "text": "        if (!rst_n) begin"
+      },
+      {
+        "line": 155,
+        "text": "            disagree <= 1'b0; wdog_fault <= 1'b0; start_unready <= 1'b0; die_fault <= 1'b0; wd <= 0; n_steps <= 0;"
+      },
+      {
+        "line": 174,
+        "text": "                        if (d_fault[d]) f_die = 1'b1;"
+      },
+      {
+        "line": 192,
+        "text": "            // retire the oldest: every die reported it, or flush under a fault"
+      },
+      {
+        "line": 193,
+        "text": "            if (m_v[m_old] && (fault_any || &m_seen[m_old])) begin"
+      },
+      {
+        "line": 196,
+        "text": "                if (!fault_any) n_steps <= n_steps + 1;"
+      },
+      {
+        "line": 199,
+        "text": "            if (m_v[m_old] && m_now - m_t0[m_old] >= WDOG) wdog_fault <= 1'b1;"
+      },
+      {
+        "line": 200,
+        "text": "            // start: the next generation must be free; a refused start is still queued so it retires (with fault)"
+      },
+      {
+        "line": 214,
+        "text": "            if (f_die) die_fault <= 1'b1;"
+      }
+    ]
+  }
+]

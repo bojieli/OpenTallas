@@ -1,0 +1,25 @@
+KV_FWD_LANE n=40 E=21 K=5 L_hw=22 L_compiled=42 checking L=42
+KV_FWD_LANE n=15 E=8 K=0 L_hw=9 L_compiled=17 checking L=17
+KV_FWD_LANE n=5 E=3 K=3 L_hw=4 L_compiled=7 checking L=7
+KV_FWD_LANE n=2 E=2 K=2 L_hw=3 L_compiled=4 checking L=4
+KV_FWD_LANE n=1 E=2 K=2 L_hw=2 L_compiled=3 checking L=3
+KV_FWD_LANE MISMATCH n=15 ed=31 o=0000cfa8c exp=0000808d3
+KV_FWD_LANE MISMATCH n=5 ed=31 o=0001011a0 exp=0000e36fa
+KV_FWD_LANE MISMATCH n=2 ed=31 o=00010afd7 exp=0001011a0
+KV_FWD_LANE MISMATCH n=1 ed=31 o=000114e0e exp=00010afd7
+KV_FWD_LANE MISMATCH n=15 ed=32 o=0000d98c3 exp=00008a70a
+KV_FWD_LANE MISMATCH n=5 ed=32 o=00010afd7 exp=0000ed532
+KV_FWD_LANE MISMATCH n=2 ed=32 o=000114e0e exp=00010afd7
+KV_FWD_LANE MISMATCH n=1 ed=32 o=00011ec45 exp=000114e0e
+KV_FWD_LANE MISMATCH n=40 ed=33 o=000062e2e exp=000000000
+KV_FWD_LANE MISMATCH n=40 ed=34 o=00006cc65 exp=000000000
+KV_FWD_LANE lane 0 errors 269 checks 269 fault 0
+KV_FWD_LANE lane 1 errors 269 checks 269 fault 0
+KV_FWD_LANE lane 2 errors 269 checks 269 fault 0
+KV_FWD_LANE lane 3 errors 269 checks 269 fault 0
+KV_FWD_LANE lane 4 errors 267 checks 269 fault 0
+KV_FWD_BENCH FAIL 1343 errors in 1345 checks (faults 0)
+- /srv/opentallas-scratch/claude/kvr-fwdage/out/oldgen/tb.sv:88: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.107 s; speed 28.105 us/s
+- Verilator: cpu 0.107 s on 1 threads; allocated 7 MB

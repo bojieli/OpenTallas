@@ -1,0 +1,151 @@
+TIMING bridge release ps=3111376 st=3566 qt=2674
+CMD e=0 serial=2675 stream=3566 delta=9 ps=3112000
+CMD e=1 serial=2676 stream=3568 delta=10 ps=3113000
+CAL cycle=3569 ord=60 lr=0000ff lw=000000 rv=00 wv=00
+CMD e=2 serial=2677 stream=3569 delta=11 ps=3114000
+REQ b=          0 st=       3569 local=10108 near=00000 lr=1 rv=0
+REQ b=          1 st=       3569 local=10109 near=00000 lr=1 rv=0
+REQ b=          2 st=       3569 local=1010a near=00000 lr=1 rv=0
+REQ b=          3 st=       3569 local=1010b near=00000 lr=1 rv=0
+REQ b=          4 st=       3569 local=1010c near=00000 lr=1 rv=0
+REQ b=          5 st=       3569 local=1010d near=00000 lr=1 rv=0
+REQ b=          6 st=       3569 local=1010e near=00000 lr=1 rv=0
+REQ b=          7 st=       3569 local=1010f near=00000 lr=1 rv=0
+CAL cycle=3570 ord=61 lr=0000ff lw=000000 rv=00 wv=00
+CMD e=3 serial=2678 stream=3570 delta=12 ps=3115000
+REQ b=          0 st=       3570 local=10110 near=00000 lr=1 rv=0
+REQ b=          1 st=       3570 local=10111 near=00000 lr=1 rv=0
+REQ b=          2 st=       3570 local=10112 near=00000 lr=1 rv=0
+REQ b=          3 st=       3570 local=10113 near=00000 lr=1 rv=0
+REQ b=          4 st=       3570 local=10114 near=00000 lr=1 rv=0
+REQ b=          5 st=       3570 local=10115 near=00000 lr=1 rv=0
+REQ b=          6 st=       3570 local=10116 near=00000 lr=1 rv=0
+REQ b=          7 st=       3570 local=10117 near=00000 lr=1 rv=0
+CAL cycle=3571 ord=62 lr=000000 lw=000000 rv=ff wv=00
+REQ b=          0 st=       3571 local=00000 near=10108 lr=0 rv=1
+REQ b=          1 st=       3571 local=00000 near=10109 lr=0 rv=1
+REQ b=          2 st=       3571 local=00000 near=1010a lr=0 rv=1
+REQ b=          3 st=       3571 local=00000 near=1010b lr=0 rv=1
+REQ b=          4 st=       3571 local=00000 near=1010c lr=0 rv=1
+REQ b=          5 st=       3571 local=00000 near=1010d lr=0 rv=1
+REQ b=          6 st=       3571 local=00000 near=1010e lr=0 rv=1
+REQ b=          7 st=       3571 local=00000 near=1010f lr=0 rv=1
+CAL cycle=3572 ord=63 lr=000000 lw=000000 rv=ff wv=00
+CMD e=4 serial=2679 stream=3572 delta=13 ps=3116000
+REQ b=          0 st=       3572 local=00000 near=10110 lr=0 rv=1
+REQ b=          1 st=       3572 local=00000 near=10111 lr=0 rv=1
+REQ b=          2 st=       3572 local=00000 near=10112 lr=0 rv=1
+REQ b=          3 st=       3572 local=00000 near=10113 lr=0 rv=1
+REQ b=          4 st=       3572 local=00000 near=10114 lr=0 rv=1
+REQ b=          5 st=       3572 local=00000 near=10115 lr=0 rv=1
+REQ b=          6 st=       3572 local=00000 near=10116 lr=0 rv=1
+REQ b=          7 st=       3572 local=00000 near=10117 lr=0 rv=1
+CMD e=5 serial=2680 stream=3573 delta=14 ps=3117000
+CMD e=6 serial=2681 stream=3574 delta=15 ps=3119000
+CMD e=7 serial=2682 stream=3576 delta=16 ps=3120000
+CMD e=8 serial=2683 stream=3577 delta=17 ps=3121000
+CMD e=9 serial=2684 stream=3578 delta=18 ps=3122000
+CMD e=10 serial=2685 stream=3580 delta=19 ps=3123000
+DUE st=       3580 read_due=1 rr_v=1 write_due=0 done_d=0
+CMD e=11 serial=2686 stream=3581 delta=20 ps=3124000
+DUE st=       3581 read_due=1 rr_v=1 write_due=0 done_d=0
+CMD e=12 serial=2687 stream=3582 delta=21 ps=3125000
+CMD e=13 serial=2688 stream=3584 delta=22 ps=3126000
+CMD e=14 serial=2689 stream=3585 delta=23 ps=3128000
+CMD e=15 serial=2690 stream=3586 delta=24 ps=3129000
+CMD e=16 serial=2691 stream=3588 delta=25 ps=3130000
+CMD e=17 serial=2692 stream=3589 delta=26 ps=3131000
+CMD e=18 serial=2693 stream=3590 delta=27 ps=3132000
+CMD e=19 serial=2694 stream=3592 delta=28 ps=3133000
+CMD e=20 serial=2695 stream=3593 delta=29 ps=3134000
+CMD e=21 serial=2696 stream=3594 delta=30 ps=3135000
+CMD e=22 serial=2697 stream=3596 delta=31 ps=3136000
+CMD e=23 serial=2698 stream=3597 delta=32 ps=3138000
+CMD e=24 serial=2699 stream=3598 delta=33 ps=3139000
+CMD e=25 serial=2700 stream=3600 delta=34 ps=3140000
+CMD e=26 serial=2701 stream=3601 delta=35 ps=3141000
+CMD e=27 serial=2702 stream=3602 delta=36 ps=3142000
+CMD e=28 serial=2703 stream=3604 delta=37 ps=3143000
+CMD e=29 serial=2704 stream=3605 delta=38 ps=3144000
+CMD e=30 serial=2705 stream=3606 delta=39 ps=3145000
+CMD e=31 serial=2706 stream=3608 delta=40 ps=3146000
+CMD e=32 serial=2707 stream=3609 delta=41 ps=3148000
+CMD e=33 serial=2708 stream=3610 delta=42 ps=3149000
+CMD e=34 serial=2709 stream=3612 delta=43 ps=3150000
+CMD e=35 serial=2710 stream=3613 delta=44 ps=3151000
+CMD e=36 serial=2711 stream=3614 delta=45 ps=3152000
+CMD e=37 serial=2712 stream=3616 delta=46 ps=3153000
+CMD e=38 serial=2713 stream=3617 delta=47 ps=3154000
+CMD e=39 serial=2714 stream=3618 delta=48 ps=3155000
+CMD e=40 serial=2715 stream=3620 delta=49 ps=3156000
+CMD e=41 serial=2716 stream=3621 delta=50 ps=3158000
+CMD e=42 serial=2717 stream=3622 delta=51 ps=3159000
+CMD e=43 serial=2718 stream=3624 delta=52 ps=3160000
+CMD e=44 serial=2719 stream=3625 delta=53 ps=3161000
+CMD e=45 serial=2720 stream=3626 delta=54 ps=3162000
+CMD e=46 serial=2721 stream=3628 delta=55 ps=3163000
+CMD e=47 serial=2722 stream=3629 delta=56 ps=3164000
+CAL cycle=3630 ord=121 lr=000000 lw=0000ff rv=00 wv=00
+CMD e=48 serial=2723 stream=3630 delta=57 ps=3165000
+CAL cycle=3631 ord=122 lr=000000 lw=0000ff rv=00 wv=00
+CAL cycle=3632 ord=123 lr=000000 lw=000000 rv=00 wv=ff
+CMD e=49 serial=2724 stream=3632 delta=58 ps=3166000
+CAL cycle=3633 ord=124 lr=000000 lw=000000 rv=00 wv=ff
+CMD e=50 serial=2725 stream=3633 delta=59 ps=3168000
+CMD e=51 serial=2726 stream=3634 delta=60 ps=3169000
+CMD e=52 serial=2727 stream=3636 delta=61 ps=3170000
+CMD e=53 serial=2728 stream=3637 delta=62 ps=3171000
+CMD e=54 serial=2729 stream=3638 delta=63 ps=3172000
+DUE st=       3638 read_due=0 rr_v=0 write_due=1 done_d=1
+DUE st=       3639 read_due=0 rr_v=0 write_due=1 done_d=1
+CMD e=55 serial=2730 stream=3640 delta=64 ps=3173000
+CMD e=56 serial=2731 stream=3641 delta=65 ps=3174000
+CMD e=57 serial=2732 stream=3642 delta=66 ps=3175000
+CMD e=58 serial=2733 stream=3644 delta=67 ps=3176000
+CMD e=59 serial=2734 stream=3645 delta=68 ps=3178000
+CMD e=60 serial=2735 stream=3646 delta=69 ps=3179000
+CMD e=61 serial=2736 stream=3648 delta=70 ps=3180000
+CAL cycle=3649 ord=140 lr=0000ff lw=000000 rv=00 wv=00
+REQ b=          0 st=       3649 local=10118 near=00000 lr=1 rv=0
+REQ b=          1 st=       3649 local=10119 near=00000 lr=1 rv=0
+REQ b=          2 st=       3649 local=1011a near=00000 lr=1 rv=0
+REQ b=          3 st=       3649 local=1011b near=00000 lr=1 rv=0
+REQ b=          4 st=       3649 local=1011c near=00000 lr=1 rv=0
+REQ b=          5 st=       3649 local=1011d near=00000 lr=1 rv=0
+REQ b=          6 st=       3649 local=1011e near=00000 lr=1 rv=0
+REQ b=          7 st=       3649 local=1011f near=00000 lr=1 rv=0
+CAL cycle=3650 ord=141 lr=0000ff lw=000000 rv=00 wv=00
+REQ b=          0 st=       3650 local=10120 near=00000 lr=1 rv=0
+REQ b=          1 st=       3650 local=10121 near=00000 lr=1 rv=0
+REQ b=          2 st=       3650 local=10122 near=00000 lr=1 rv=0
+REQ b=          3 st=       3650 local=10123 near=00000 lr=1 rv=0
+REQ b=          4 st=       3650 local=10124 near=00000 lr=1 rv=0
+REQ b=          5 st=       3650 local=10125 near=00000 lr=1 rv=0
+REQ b=          6 st=       3650 local=10126 near=00000 lr=1 rv=0
+REQ b=          7 st=       3650 local=10127 near=00000 lr=1 rv=0
+CAL cycle=3651 ord=142 lr=000000 lw=000000 rv=ff wv=00
+REQ b=          0 st=       3651 local=00000 near=10118 lr=0 rv=1
+REQ b=          1 st=       3651 local=00000 near=10119 lr=0 rv=1
+REQ b=          2 st=       3651 local=00000 near=1011a lr=0 rv=1
+REQ b=          3 st=       3651 local=00000 near=1011b lr=0 rv=1
+REQ b=          4 st=       3651 local=00000 near=1011c lr=0 rv=1
+REQ b=          5 st=       3651 local=00000 near=1011d lr=0 rv=1
+REQ b=          6 st=       3651 local=00000 near=1011e lr=0 rv=1
+REQ b=          7 st=       3651 local=00000 near=1011f lr=0 rv=1
+CAL cycle=3652 ord=143 lr=000000 lw=000000 rv=ff wv=00
+REQ b=          0 st=       3652 local=00000 near=10120 lr=0 rv=1
+REQ b=          1 st=       3652 local=00000 near=10121 lr=0 rv=1
+REQ b=          2 st=       3652 local=00000 near=10122 lr=0 rv=1
+REQ b=          3 st=       3652 local=00000 near=10123 lr=0 rv=1
+REQ b=          4 st=       3652 local=00000 near=10124 lr=0 rv=1
+REQ b=          5 st=       3652 local=00000 near=10125 lr=0 rv=1
+REQ b=          6 st=       3652 local=00000 near=10126 lr=0 rv=1
+REQ b=          7 st=       3652 local=00000 near=10127 lr=0 rv=1
+DUE st=       3660 read_due=1 rr_v=1 write_due=0 done_d=0
+DUE st=       3661 read_due=1 rr_v=1 write_due=0 done_d=0
+COUNTS reads=         32 writes=         16 bridge=00 tap=00 target=0 cal=0 release=0
+NATIVE_CALENDAR PASS commands=62 reads=32 writes=16 startup=9
+- readback_tb.sv:70: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.042 s; speed 77.673 us/s
+- Verilator: cpu 0.042 s on 1 threads; allocated 11 MB

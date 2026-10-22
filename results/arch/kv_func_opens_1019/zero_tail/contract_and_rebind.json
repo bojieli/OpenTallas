@@ -1,0 +1,57 @@
+{
+ "die_sha256": "7006cbd0d11ffb755902c588eec474a1a7c27d7ad77212cebe3be1fcae5aae7e",
+ "source_sha256": {
+  "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+  "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv": "a40160aeeb388dd333b6495f9ce01175bd2117d4086822db1ccd9f46d68af849",
+  "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+  "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "f6e02fd59762f27329eeb539efbfdfd427043faa11721a741d818ecf102a142c",
+  "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+ },
+ "rule": "relay width padding: unread relay b bit whose same-index relay-only provenance is literal 0, the origin zeros form the contiguous MSB tail of the origin word over a live low payload, and the net bit has no other connection",
+ "admitted_bits": 36120,
+ "admitted_instances": 327,
+ "refused_unread_candidates": {
+  "dynamic_or_nonzero_origin": 6452
+ },
+ "by_master": {
+  "qkd_astk_rly_296_fl": 22776,
+  "qkd_rlys_296": 12560,
+  "qkd_rlys_36": 784
+ },
+ "landing_tie_contract": {
+  "die_sha256": "7006cbd0d11ffb755902c588eec474a1a7c27d7ad77212cebe3be1fcae5aae7e",
+  "source_sha256": {
+   "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv": "a40160aeeb388dd333b6495f9ce01175bd2117d4086822db1ccd9f46d68af849"
+  },
+  "rule": "unread tie_hi/tie_lo of a pinned landing master whose source drives it from a literal",
+  "admitted_bits": 73
+ },
+ "pad_file_sha256": "8218e62bce70fc94916c91c0279a15cb44ce81e0f5d595c4c75fec0e7f944ea1",
+ "rebind_summary": {
+  "masters": 68,
+  "instances": 44903,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "unread_net_bits": 9670,
+  "output_open_ports": 69,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 36,
+  "pad_bits": 212103,
+  "spare_out_bits": 608270,
+  "unresolved_children": 0,
+  "ambiguous_children": 0,
+  "variant_children": 12
+ },
+ "rebind_verdict": "FAIL"
+}

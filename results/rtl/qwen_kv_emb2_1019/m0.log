@@ -1,0 +1,10 @@
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1191257-1792453294 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PASS tb_qkd_embedding_ctx_start: 4 steps, 4 fills, header owner = context owner, 4 negatives faulted
+- /srv/opentallas-scratch/claude/kv-emb2-1019/src/rtl/qwen_sys/static_embedding_20261014/test/tb_qkd_embedding_ctx_start.sv:132: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.001 s; speed 2.337 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1191257-1792453294): exit 0
+rc=0

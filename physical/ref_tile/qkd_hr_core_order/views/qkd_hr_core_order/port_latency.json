@@ -4,7 +4,10 @@
       "ck_core"
     ],
     "excluded_data_ports": [],
-    "reset_meaning": "source RTL polarity and reset semantics preserved by direct wiring",
+    "reset_landing": {
+      "host_rst_n": 2
+    },
+    "reset_meaning": "source RTL polarity and reset semantics preserved: direct wiring, or a landed reset (plain registers copy the value; assertion and release delayed by the stage count)",
     "resets": [
       "host_rst_n"
     ],
@@ -12,9 +15,9 @@
   },
   "evidence": {
     "ot_pin_regs.tsv": "2b68fd65628653c5d0573397613cbfd95259bf7cd7a9436fa9189713e1779c35",
-    "ot_pin_regs_wrapper.v": "b130145688d089b4844395676876e9a2bf00ff989a9d3b396e43b3deb194de08"
+    "ot_pin_regs_wrapper.v": "7e0f280a542df18382b16bc7f1fce0c5b444d89ee4c857a37fdea0ce2ce337da"
   },
-  "job": "qkd_hr_core_order-r3-aea9dd896",
+  "job": "qkd_hr_core_order-r4-d9e4f6a44",
   "ports": {
     "chain_a": {
       "dir": "input",
@@ -169,6 +172,6 @@
   },
   "schema": "opentallas.ref_tile.port_latency.v1",
   "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
-  "source_commit": "aea9dd89645c21b99400df198ea700f6f5e91d83",
+  "source_commit": "d9e4f6a44df815fbdda64435ab0e94cd137671ee",
   "top": "qkd_hr_core_order"
 }

@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.rtl_change_receipt.v1",
+ "lane": "HBM-BANKLAT",
+ "date": "2026-10-19",
+ "decision": "Coordinator decision on the VEH-TOPKFIX2 audit (lanes/COORD-REVIEW-QUEUE.md 01:40 entry; results/rtl/hbm_ds_layer_tput_1018/veh_cuts_1019/topkfix/vm_client_audit.json): the d4g VM banks hfd_vms_bank_native_q0_faces register every input pin (read answer n+7, commit n+4 at the bank ports instead of ot_vms_bank_static n+6 / n+3); the bank tile is NOT changed; every fixed-latency bank client gets a compile-time latency parameter derived from the bank contract plus the die lanes, checked by the d4g functional bind LAT class (tools/hbm_die_v16/d4g_bank_latency.py, main 01636549a).",
+ "contract_change": "bank-client round trip RT_b = bank read 6 / commit 3 + pin 1 + lane(rq) + lane(rr); GEN2c values results/arch/hbm_banklat_1019/gen2c_client_table.json",
+ "why_route": "a closed client view is timed for the old n+6/n+3 bank and zero die lanes; on the d4g faces banks and GEN2c lanes it captures the wrong edge (measured on the idxtk cut: TOPK wrote wrong ids, veh_cuts_1019/topk_finding.json). The client RTL changes (latency parameter / per-bank stagger), so the closed view cannot be reused for d4g; the closed view stands for its original non-face use.",
+ "applies_to": {
+  "hgi_sm_xl2_ctlx_bl": {"vs_closed": "hgi_sm_xl2_ctlx-q1-7af6f4406", "block": "ot_hgi_sm_xload_cl2_ctlx", "change": "RD_LAT per-bank vector [37,39,27,29,53,55,43,45] + per-bank request stagger line (HBM-BANKLAT-XL dcd8f08b4)"},
+  "hbm_su_pg_lgtap_rt18_1019": {"change": "READ/WRITE_RETURN 10/7 -> 18/15 (HBM-BANKLAT-SU)"},
+  "hbm_sfu_lg_pair_tap_leaf_rt24_1019": {"change": "READ/WRITE_RETURN 14/11 -> 24/21 (HBM-BANKLAT-SU)"},
+  "hbm_hc_lg_pair_tap_leaf_term_rt32_1019": {"change": "READ/WRITE_RETURN 18/15 -> 32/29 (HBM-BANKLAT-SU)"},
+  "hbm_argmax_swvm_r2_g2c_1019": {"vs_closed": "hbm_argmax_swvm_r2_1017-r3-3ba44f68e", "change": "VMX 5 -> 77, ACK 13 -> 52 (HBM-BANKLAT-IDX)"},
+  "hidx_op_n12_g2c_1019": {"vs_closed": "hidx_op_n12_1018-n12-7bfb8c78c", "change": "VM_RT_EXTRA 4 -> 171 (HBM-BANKLAT-IDX)"},
+  "hidx_rootctl_am_g2c_1019": {"vs_closed": "hidx_rootctl_am_1018-r4-49a5acb8f", "change": "VM_RT 65, CR_RT 36, SEL_LAT 30 (HBM-BANKLAT-IDX)"},
+  "hv16_dbk_vp4_ctl_rt80": {"vs_closed": "hv15_dbk_vp4_ctl-h7-5d0290cd1", "change": "RR_RT 7 -> 80 (HBM-BANKLAT-DMA)"}
+ }
+}

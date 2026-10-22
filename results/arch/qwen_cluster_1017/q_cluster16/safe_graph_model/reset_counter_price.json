@@ -1,0 +1,660 @@
+{
+ "schema": "opentallas.cb16.reset_counter_price.v1",
+ "diagnostic_only": true,
+ "reset_plan_source": "ac8e4c483",
+ "forward_hops_unchanged": 713,
+ "serial_padding_ff": 1076,
+ "counter_padding_ff": 443,
+ "padding_ff_saved": 633,
+ "forward_plus_counter_ff": 1869,
+ "added_reset_ff_vs_original": 1322,
+ "A0_xstn_release_edges": 60,
+ "latest_landing_epoch": 78,
+ "rows": [
+  {
+   "inst": "u_x_0_0",
+   "release_edges": 18,
+   "serial_padding_ff": 18,
+   "counter_ff": 7,
+   "save_ff": 11,
+   "source_reset_driver": "u_rr_x_0_0_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_dn0_rly3_r",
+   "release_edges": 6,
+   "serial_padding_ff": 6,
+   "counter_ff": 5,
+   "save_ff": 1,
+   "source_reset_driver": "u_rr_l_dn0_rly3_r_0",
+   "aligned_new_pin_depth": 30
+  },
+  {
+   "inst": "u_x_0_1",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rr_x_0_1_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_dn0_rly6_r",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_dn0_rly6_r_0",
+   "aligned_new_pin_depth": 34
+  },
+  {
+   "inst": "u_x_0_2",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rr_x_0_2_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_dn0_rly9_w",
+   "release_edges": 4,
+   "serial_padding_ff": 4,
+   "counter_ff": 4,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_dn0_rly9_w_1",
+   "aligned_new_pin_depth": 46
+  },
+  {
+   "inst": "u_x_0_3",
+   "release_edges": 16,
+   "serial_padding_ff": 16,
+   "counter_ff": 7,
+   "save_ff": 9,
+   "source_reset_driver": "u_rr_x_0_3_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_x_1_0",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rr_x_1_0_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_dn1_rly3_w",
+   "release_edges": 16,
+   "serial_padding_ff": 16,
+   "counter_ff": 7,
+   "save_ff": 9,
+   "source_reset_driver": "u_rr_l_dn1_rly3_w_1",
+   "aligned_new_pin_depth": 34
+  },
+  {
+   "inst": "u_land_dn1_rly6_r",
+   "release_edges": 4,
+   "serial_padding_ff": 4,
+   "counter_ff": 4,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_dn1_rly6_r_1",
+   "aligned_new_pin_depth": 48
+  },
+  {
+   "inst": "u_land_dn1_rly9_r",
+   "release_edges": 20,
+   "serial_padding_ff": 20,
+   "counter_ff": 8,
+   "save_ff": 12,
+   "source_reset_driver": "u_rr_l_dn1_rly9_r_1",
+   "aligned_new_pin_depth": 56
+  },
+  {
+   "inst": "u_x_1_3",
+   "release_edges": 16,
+   "serial_padding_ff": 16,
+   "counter_ff": 7,
+   "save_ff": 9,
+   "source_reset_driver": "u_rr_x_1_3_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_x_2_0",
+   "release_edges": 18,
+   "serial_padding_ff": 18,
+   "counter_ff": 7,
+   "save_ff": 11,
+   "source_reset_driver": "u_rr_x_2_0_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_dn2_rly3_w",
+   "release_edges": 20,
+   "serial_padding_ff": 20,
+   "counter_ff": 8,
+   "save_ff": 12,
+   "source_reset_driver": "u_rr_l_dn2_rly3_w_2",
+   "aligned_new_pin_depth": 38
+  },
+  {
+   "inst": "u_land_dn2_rly6_w",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_dn2_rly6_w_2",
+   "aligned_new_pin_depth": 46
+  },
+  {
+   "inst": "u_land_dn2_rly9_r",
+   "release_edges": 18,
+   "serial_padding_ff": 18,
+   "counter_ff": 7,
+   "save_ff": 11,
+   "source_reset_driver": "u_rr_l_dn2_rly9_r_0",
+   "aligned_new_pin_depth": 52
+  },
+  {
+   "inst": "u_x_2_3",
+   "release_edges": 20,
+   "serial_padding_ff": 20,
+   "counter_ff": 8,
+   "save_ff": 12,
+   "source_reset_driver": "u_rr_x_2_3_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_x_3_0",
+   "release_edges": 18,
+   "serial_padding_ff": 18,
+   "counter_ff": 7,
+   "save_ff": 11,
+   "source_reset_driver": "u_rr_x_3_0_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_dn3_rly3_r",
+   "release_edges": 6,
+   "serial_padding_ff": 6,
+   "counter_ff": 5,
+   "save_ff": 1,
+   "source_reset_driver": "u_rr_l_dn3_rly3_r_0",
+   "aligned_new_pin_depth": 30
+  },
+  {
+   "inst": "u_x_3_1",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rr_x_3_1_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_dn3_rly6_r",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_dn3_rly6_r_0",
+   "aligned_new_pin_depth": 34
+  },
+  {
+   "inst": "u_x_3_2",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rr_x_3_2_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_dn3_rly9_r",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_dn3_rly9_r_0",
+   "aligned_new_pin_depth": 42
+  },
+  {
+   "inst": "u_x_3_3",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rr_x_3_3_0",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_leg_1_0a_y_r",
+   "release_edges": 4,
+   "serial_padding_ff": 4,
+   "counter_ff": 4,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_leg_1_0a_y_r_2",
+   "aligned_new_pin_depth": 16
+  },
+  {
+   "inst": "u_land_leg_1_1b_y_r",
+   "release_edges": 28,
+   "serial_padding_ff": 28,
+   "counter_ff": 8,
+   "save_ff": 20,
+   "source_reset_driver": "u_rr_l_leg_1_1b_y_r_3",
+   "aligned_new_pin_depth": 54
+  },
+  {
+   "inst": "u_land_leg_1_3a_y_r",
+   "release_edges": 24,
+   "serial_padding_ff": 24,
+   "counter_ff": 8,
+   "save_ff": 16,
+   "source_reset_driver": "u_rr_l_leg_1_3a_y_r_2",
+   "aligned_new_pin_depth": 54
+  },
+  {
+   "inst": "u_land_leg_1_4b_y_r",
+   "release_edges": 28,
+   "serial_padding_ff": 28,
+   "counter_ff": 8,
+   "save_ff": 20,
+   "source_reset_driver": "u_rr_l_leg_1_4b_y_r_3",
+   "aligned_new_pin_depth": 62
+  },
+  {
+   "inst": "u_land_leg_1_5b_y_r",
+   "release_edges": 6,
+   "serial_padding_ff": 6,
+   "counter_ff": 5,
+   "save_ff": 1,
+   "source_reset_driver": "u_rr_l_leg_1_5b_y_r_3",
+   "aligned_new_pin_depth": 54
+  },
+  {
+   "inst": "u_land_leg_1_6a_y_r",
+   "release_edges": 24,
+   "serial_padding_ff": 24,
+   "counter_ff": 8,
+   "save_ff": 16,
+   "source_reset_driver": "u_rr_l_leg_1_6a_y_r_2",
+   "aligned_new_pin_depth": 62
+  },
+  {
+   "inst": "u_land_leg_1_7a_y_r",
+   "release_edges": 4,
+   "serial_padding_ff": 4,
+   "counter_ff": 4,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_leg_1_7a_y_r_2",
+   "aligned_new_pin_depth": 50
+  },
+  {
+   "inst": "u_land_leg_2_0a_3_w",
+   "release_edges": 16,
+   "serial_padding_ff": 16,
+   "counter_ff": 7,
+   "save_ff": 9,
+   "source_reset_driver": "u_rq_l_leg_2_0a_3_w_0",
+   "aligned_new_pin_depth": 38
+  },
+  {
+   "inst": "u_land_leg_2_0b_y_w",
+   "release_edges": 28,
+   "serial_padding_ff": 28,
+   "counter_ff": 8,
+   "save_ff": 20,
+   "source_reset_driver": "u_rr_l_leg_2_0b_y_w_0",
+   "aligned_new_pin_depth": 56
+  },
+  {
+   "inst": "u_land_leg_2_1a_0_w",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rq_l_leg_2_1a_0_w_1",
+   "aligned_new_pin_depth": 24
+  },
+  {
+   "inst": "u_land_leg_2_1a_3_r",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_leg_2_1a_3_r_0",
+   "aligned_new_pin_depth": 30
+  },
+  {
+   "inst": "u_land_leg_2_1a_y_w",
+   "release_edges": 24,
+   "serial_padding_ff": 24,
+   "counter_ff": 8,
+   "save_ff": 16,
+   "source_reset_driver": "u_rr_l_leg_2_1a_y_w_0",
+   "aligned_new_pin_depth": 52
+  },
+  {
+   "inst": "u_land_leg_2_1b_y_w",
+   "release_edges": 24,
+   "serial_padding_ff": 24,
+   "counter_ff": 8,
+   "save_ff": 16,
+   "source_reset_driver": "u_rr_l_leg_2_1b_y_w_0",
+   "aligned_new_pin_depth": 56
+  },
+  {
+   "inst": "u_land_leg_2_2a_0_w",
+   "release_edges": 28,
+   "serial_padding_ff": 28,
+   "counter_ff": 8,
+   "save_ff": 20,
+   "source_reset_driver": "u_rr_l_leg_2_2a_0_w_0",
+   "aligned_new_pin_depth": 64
+  },
+  {
+   "inst": "u_land_leg_2_2a_3_r",
+   "release_edges": 18,
+   "serial_padding_ff": 18,
+   "counter_ff": 7,
+   "save_ff": 11,
+   "source_reset_driver": "u_rr_l_leg_2_2a_3_r_0",
+   "aligned_new_pin_depth": 68
+  },
+  {
+   "inst": "u_land_leg_2_2b_y_w",
+   "release_edges": 6,
+   "serial_padding_ff": 6,
+   "counter_ff": 5,
+   "save_ff": 1,
+   "source_reset_driver": "u_rr_l_leg_2_2b_y_w_0",
+   "aligned_new_pin_depth": 56
+  },
+  {
+   "inst": "u_land_leg_2_3a_3_r",
+   "release_edges": 8,
+   "serial_padding_ff": 8,
+   "counter_ff": 6,
+   "save_ff": 2,
+   "source_reset_driver": "u_rr_l_leg_2_3a_3_r_0",
+   "aligned_new_pin_depth": 52
+  },
+  {
+   "inst": "u_land_leg_2_3a_y_w",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_leg_2_3a_y_w_0",
+   "aligned_new_pin_depth": 48
+  },
+  {
+   "inst": "u_land_leg_2_3b_y_w",
+   "release_edges": 4,
+   "serial_padding_ff": 4,
+   "counter_ff": 4,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_leg_2_3b_y_w_0",
+   "aligned_new_pin_depth": 52
+  },
+  {
+   "inst": "u_land_leg_3_0a_y_w",
+   "release_edges": 4,
+   "serial_padding_ff": 4,
+   "counter_ff": 4,
+   "save_ff": 0,
+   "source_reset_driver": "u_rq_l_leg_3_0a_y_w_0",
+   "aligned_new_pin_depth": 52
+  },
+  {
+   "inst": "u_land_leg_3_0b_0_r",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rr_l_leg_3_0b_0_r_0",
+   "aligned_new_pin_depth": 56
+  },
+  {
+   "inst": "u_land_leg_3_0b_5_r",
+   "release_edges": 6,
+   "serial_padding_ff": 6,
+   "counter_ff": 5,
+   "save_ff": 1,
+   "source_reset_driver": "u_rr_l_leg_3_0b_5_r_0",
+   "aligned_new_pin_depth": 44
+  },
+  {
+   "inst": "u_land_leg_3_0b_y_w",
+   "release_edges": 26,
+   "serial_padding_ff": 26,
+   "counter_ff": 8,
+   "save_ff": 18,
+   "source_reset_driver": "u_rr_l_leg_3_0b_y_w_3",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_land_leg_3_1a_2_w",
+   "release_edges": 20,
+   "serial_padding_ff": 20,
+   "counter_ff": 8,
+   "save_ff": 12,
+   "source_reset_driver": "u_rr_l_leg_3_1a_2_w_0",
+   "aligned_new_pin_depth": 70
+  },
+  {
+   "inst": "u_land_leg_3_1b_0_r",
+   "release_edges": 8,
+   "serial_padding_ff": 8,
+   "counter_ff": 6,
+   "save_ff": 2,
+   "source_reset_driver": "u_rr_l_leg_3_1b_0_r_3",
+   "aligned_new_pin_depth": 50
+  },
+  {
+   "inst": "u_land_leg_3_1b_1_w",
+   "release_edges": 36,
+   "serial_padding_ff": 36,
+   "counter_ff": 9,
+   "save_ff": 27,
+   "source_reset_driver": "u_rr_l_leg_3_1b_1_w_0",
+   "aligned_new_pin_depth": 76
+  },
+  {
+   "inst": "u_land_leg_3_1b_3_r",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_leg_3_1b_3_r_2",
+   "aligned_new_pin_depth": 54
+  },
+  {
+   "inst": "u_land_leg_4_0a_0_r",
+   "release_edges": 26,
+   "serial_padding_ff": 26,
+   "counter_ff": 8,
+   "save_ff": 18,
+   "source_reset_driver": "u_rr_l_leg_4_0a_0_r_1",
+   "aligned_new_pin_depth": 62
+  },
+  {
+   "inst": "u_land_leg_4_0a_2_w",
+   "release_edges": 10,
+   "serial_padding_ff": 10,
+   "counter_ff": 6,
+   "save_ff": 4,
+   "source_reset_driver": "u_rr_l_leg_4_0a_2_w_0",
+   "aligned_new_pin_depth": 44
+  },
+  {
+   "inst": "u_land_leg_4_0a_9_w",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_leg_4_0a_9_w_2",
+   "aligned_new_pin_depth": 18
+  },
+  {
+   "inst": "u_land_leg_4_0b_1_w",
+   "release_edges": 4,
+   "serial_padding_ff": 4,
+   "counter_ff": 4,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_leg_4_0b_1_w_0",
+   "aligned_new_pin_depth": 64
+  },
+  {
+   "inst": "u_land_leg_4_0b_5_r",
+   "release_edges": 16,
+   "serial_padding_ff": 16,
+   "counter_ff": 7,
+   "save_ff": 9,
+   "source_reset_driver": "u_rr_l_leg_4_0b_5_r_0",
+   "aligned_new_pin_depth": 40
+  },
+  {
+   "inst": "u_land_ft_6_w",
+   "release_edges": 18,
+   "serial_padding_ff": 18,
+   "counter_ff": 7,
+   "save_ff": 11,
+   "source_reset_driver": "u_rr_l_ft_6_w_1",
+   "aligned_new_pin_depth": 52
+  },
+  {
+   "inst": "u_land_ft_9_r",
+   "release_edges": 2,
+   "serial_padding_ff": 2,
+   "counter_ff": 2,
+   "save_ff": 0,
+   "source_reset_driver": "u_rr_l_ft_9_r_0",
+   "aligned_new_pin_depth": 46
+  },
+  {
+   "inst": "u_land_ft_13_r",
+   "release_edges": 16,
+   "serial_padding_ff": 16,
+   "counter_ff": 7,
+   "save_ff": 9,
+   "source_reset_driver": "u_rr_l_ft_13_r_0",
+   "aligned_new_pin_depth": 34
+  },
+  {
+   "inst": "u_t_0_0",
+   "release_edges": 18,
+   "serial_padding_ff": 18,
+   "counter_ff": 7,
+   "save_ff": 11,
+   "source_reset_driver": "u_rq_t_0_0_15",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_0_1",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rq_t_0_1_16",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_0_2",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rq_t_0_2_16",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_0_3",
+   "release_edges": 16,
+   "serial_padding_ff": 16,
+   "counter_ff": 7,
+   "save_ff": 9,
+   "source_reset_driver": "u_rq_t_0_3_14",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_1_0",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rq_t_1_0_14",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_1_3",
+   "release_edges": 16,
+   "serial_padding_ff": 16,
+   "counter_ff": 7,
+   "save_ff": 9,
+   "source_reset_driver": "u_rq_t_1_3_14",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_2_0",
+   "release_edges": 18,
+   "serial_padding_ff": 18,
+   "counter_ff": 7,
+   "save_ff": 11,
+   "source_reset_driver": "u_rq_t_2_0_15",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_2_3",
+   "release_edges": 20,
+   "serial_padding_ff": 20,
+   "counter_ff": 8,
+   "save_ff": 12,
+   "source_reset_driver": "u_rq_t_2_3_14",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_3_0",
+   "release_edges": 18,
+   "serial_padding_ff": 18,
+   "counter_ff": 7,
+   "save_ff": 11,
+   "source_reset_driver": "u_rq_t_3_0_15",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_3_1",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rq_t_3_1_16",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_3_2",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rq_t_3_2_16",
+   "aligned_new_pin_depth": 60
+  },
+  {
+   "inst": "u_t_3_3",
+   "release_edges": 22,
+   "serial_padding_ff": 22,
+   "counter_ff": 8,
+   "save_ff": 14,
+   "source_reset_driver": "u_rq_t_3_3_13",
+   "aligned_new_pin_depth": 60
+  }
+ ],
+ "blockers": [
+  "release-only equivalence requires long reset transactions and matching clock epochs",
+  "counter asserts reset within3edges unlike long shift padding; full cancel/MUT8 semantics unproved",
+  "forward relay placement and315um routes are mapped targets, not legalized",
+  "counter native timing/clock/reset fanout not physically qualified"
+ ]
+}

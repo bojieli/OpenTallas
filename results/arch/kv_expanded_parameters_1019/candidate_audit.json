@@ -1,0 +1,78 @@
+{
+  "ot_qwen_tp8_pv_slice_t": {
+    "native_qualified": false,
+    "status": "MISSING_FROZEN_MATCHING_NATIVE_PROFILE",
+    "kit_spec": {
+      "path": "physical/ref_tile/qkd_pv_slice_rstpin_r5/spec.json",
+      "sha256": "352a5b05ce1397b48a45d28de4b9750ce958c6af2f1a0d82f67e4e35f2180f39"
+    },
+    "candidate_parameter_intent": {
+      "RESET_PIN": 1
+    },
+    "source_sha256": {
+      "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+      "rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv": "9baa5bf9bfdf0e4655ad4d940ae08bc6dd2d6e6ed942be1794854168a4de00e9",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb"
+    },
+    "old_gate_receipt": {
+      "path": "physical/ref_tile/qkd_pv_slice_rstpin_r5/gate_result.json",
+      "sha256": "f1522eb17d6d62d8b256e1fdd642752e145d8b24a09362fca811975b393e3714"
+    },
+    "reason": "Mutable spec and historical gate receipt do not establish exact frozen routed parameter identity"
+  },
+  "ot_qwen_tp8_pv_join_t": {
+    "native_qualified": false,
+    "status": "MISSING_FROZEN_MATCHING_NATIVE_PROFILE",
+    "kit_spec": {
+      "path": "physical/ref_tile/qkd_pv_join_sfe_r6/spec.json",
+      "sha256": "f45e100f983147590227661121a8f95dc1e13128739959b83c47ccbb01a9b26f"
+    },
+    "candidate_parameter_intent": {
+      "MUT": 0,
+      "RESET_PIN": 1
+    },
+    "source_sha256": {
+      "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+      "rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv": "9baa5bf9bfdf0e4655ad4d940ae08bc6dd2d6e6ed942be1794854168a4de00e9",
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv": "8dc05c472144984e9b0498caba8bc8d3f98270e4cd540bcd5e197f01be775eb8",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+      "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+      "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "old_gate_receipt": {
+      "path": "physical/ref_tile/qkd_pv_join_sfe_r6/gate_result.json",
+      "sha256": "623f8a8630ed9382dfa9935b3b38a0bddbc9a2f20e746781f3773f3c4cc09cbd"
+    },
+    "reason": "Mutable spec and historical gate receipt do not establish exact frozen routed parameter identity"
+  },
+  "ot_qwen_tp8_pv_wide_ctl_tb": {
+    "native_qualified": false,
+    "status": "MISSING_FROZEN_MATCHING_NATIVE_PROFILE",
+    "kit_spec": {
+      "path": "physical/ref_tile/qkd_pv_ctl_tb1/spec.json",
+      "sha256": "462fd906e0981af3ebe67860ac5abedc3f4eec97d8939740e16a934e7b559878"
+    },
+    "candidate_parameter_intent": {
+      "FIRST_INPUT_AGE": 127,
+      "RESET_PIN": 1,
+      "MUT": 0,
+      "TRUNK_D": 54,
+      "FLAG_D": 58
+    },
+    "source_sha256": {
+      "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6",
+      "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv": "707680841087a2a7ef3871e47541843863a1eaa60a9a23e144af266077ed4bba"
+    },
+    "old_gate_receipt": {
+      "path": "physical/ref_tile/qkd_pv_ctl_tb1/gate_result.json",
+      "sha256": "e48775d733c82b0a3a51cf1e9dbb6319a99a4d3f257e09949d7000fa45ddc58c"
+    },
+    "reason": "Mutable spec and historical gate receipt do not establish exact frozen routed parameter identity"
+  }
+}

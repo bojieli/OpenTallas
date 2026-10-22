@@ -1,0 +1,26 @@
+{
+  "helper_base": "6279dd8fa",
+  "input_source_commit": "593176b58",
+  "contract": {
+    "die_sha256": "37779a7cd65c0c2d749c0809c96ddc8c082e50af3180374721f8c6ea6e5c87aa",
+    "source_pad_input_bits": 117064,
+    "new_unused_output_bits": 117064,
+    "affected_replicas": 2710,
+    "source_sha256": {
+      "rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv": "4601aa6d6ccb8b201d2f991a028a972d77f505506bc1ea87d5495738f0a7064d",
+      "tools/qwen_kv_die/pv_trunk_gen.py": "85e6bb225c010e1758b0dbcf8e24ebb20e1ab562b304c3f159ade8c787ba9458",
+      "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+      "tools/qwen_kv_die/kv_bootage.py": "bc8a613dadec056a89d72a50082c3d03c3b440093f0780cae4a667615d101d46",
+      "rtl/qwen_sys/split_20261014/qkd_pvw_die_t_ba.sv": "b15daa62c06da889ee7e0db600b08079e45862397208329b9d2e886b26ba5dad"
+    },
+    "parents": {
+      "pvw_0": "qkd_pvw_s",
+      "pvw_1": "qkd_pvw_n"
+    },
+    "expand_sha256": "9501b7a4628e1381ead0b2bcd4a3b66c764cf9e1222055d6b35878fa8d146d10",
+    "preexpand_sha256": "f150c74da6cda7858daebe47fd1f32926a6d35e397d32f8fb6ee2fd5e1ab4c89"
+  },
+  "pads_sha256": "865ba1aa13c3faa1f0868712b8dfb469584a6937f820c5173bfbd4ab3dbd83fc",
+  "exact_bootage_transform_checked": true,
+  "status": "EXACT_PADDING_DERIVATION_PASS_NOT_DIE_CLOSURE"
+}

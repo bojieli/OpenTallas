@@ -1,0 +1,1409 @@
+{
+ "pads": {},
+ "instances": {
+  "u_s_0S": {
+   "master": "ot_s81sl_slice_lepw",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_0N": {
+   "master": "ot_s81sl_slice_lepw",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_1S": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_1N": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_2S": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ],
+    "rt": [
+     [
+      490,
+      559
+     ]
+    ]
+   }
+  },
+  "u_s_2N": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_3S": {
+   "master": "ot_s81sl_slice",
+   "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant).",
+   "ports": {
+    "rt": [
+     [
+      420,
+      559
+     ]
+    ]
+   }
+  },
+  "u_s_3N": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_4S": {
+   "master": "ot_s81sl_slice",
+   "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant).",
+   "ports": {
+    "rt": [
+     [
+      420,
+      559
+     ]
+    ]
+   }
+  },
+  "u_s_4N": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_5S": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ],
+    "rt": [
+     [
+      490,
+      559
+     ]
+    ]
+   }
+  },
+  "u_s_5N": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_6S": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_6N": {
+   "master": "ot_s81sl_slice",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_7S": {
+   "master": "ot_s81sl_slice_lepe_nh",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_s_7N": {
+   "master": "ot_s81sl_slice_lepe",
+   "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)",
+   "ports": {
+    "bi": [
+     [
+      0,
+      1103
+     ]
+    ]
+   }
+  },
+  "u_phy_hbm": {
+   "master": "ot_hbm3e_phy_v41x_aw30_e8p5",
+   "reason": "PHY W port = the QE weight region; unused on S81 (weights in the ROM field), as dsfd_ctrl tied it (S81-CTRL bind_entry phy_unused)",
+   "ports": {
+    "w_v": [
+     [
+      0,
+      0
+     ]
+    ],
+    "w_addr": [
+     [
+      0,
+      23
+     ]
+    ],
+    "w_len": [
+     [
+      0,
+      5
+     ]
+    ],
+    "w_tag": [
+     [
+      0,
+      9
+     ]
+    ],
+    "wr_rdy": [
+     [
+      0,
+      7
+     ]
+    ]
+   }
+  },
+  "u_rsv_00": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      805,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      3
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      8527
+     ]
+    ],
+    "si_v": [
+     [
+      1,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      1076,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_01": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      0,
+      804
+     ],
+     [
+      1610,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      31
+     ],
+     [
+      48,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      1027
+     ],
+     [
+      1542,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      1
+     ],
+     [
+      3,
+      3
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      4263
+     ],
+     [
+      6396,
+      8527
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      1075
+     ],
+     [
+      2152,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_02": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      805,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      1,
+      3
+     ]
+    ],
+    "gi_d": [
+     [
+      2132,
+      8527
+     ]
+    ],
+    "si_v": [
+     [
+      1,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      1076,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_03": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      0,
+      804
+     ],
+     [
+      1610,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      31
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      1027
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      1
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      4263
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      0
+     ],
+     [
+      3,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      1075
+     ],
+     [
+      3228,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_04": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      805,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      2,
+      3
+     ]
+    ],
+    "gi_d": [
+     [
+      4264,
+      8527
+     ]
+    ],
+    "si_v": [
+     [
+      2,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      2152,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_05": {
+   "master": "dsdv_svc_rs_entry",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      0,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      15
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      513
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      1
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      4263
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      0
+     ],
+     [
+      3,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      1075
+     ],
+     [
+      3228,
+      4303
+     ]
+    ],
+    "q": [
+     [
+      513,
+      514
+     ]
+    ]
+   }
+  },
+  "u_rsv_06": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      805,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      1,
+      2
+     ]
+    ],
+    "gi_d": [
+     [
+      2132,
+      6395
+     ]
+    ],
+    "si_v": [
+     [
+      1,
+      2
+     ]
+    ],
+    "si_d": [
+     [
+      1076,
+      3227
+     ]
+    ]
+   }
+  },
+  "u_rsv_07": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      0,
+      2414
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      31
+     ],
+     [
+      48,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      1027
+     ],
+     [
+      1542,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      1
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      4263
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      0
+     ],
+     [
+      3,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      1075
+     ],
+     [
+      3228,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_08": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      805,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      1,
+      3
+     ]
+    ],
+    "gi_d": [
+     [
+      2132,
+      8527
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      1075
+     ],
+     [
+      2152,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_09": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      0,
+      804
+     ],
+     [
+      1610,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      31
+     ],
+     [
+      48,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      1027
+     ],
+     [
+      1542,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      2131
+     ],
+     [
+      4264,
+      6395
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      1
+     ],
+     [
+      3,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      2151
+     ],
+     [
+      3228,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_10": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      805,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      2131
+     ],
+     [
+      4264,
+      6395
+     ]
+    ],
+    "si_v": [
+     [
+      2,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      2152,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_11": {
+   "master": "dsdv_svc_rs_entry",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      0,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      15
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      513
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      0
+     ],
+     [
+      3,
+      3
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      2131
+     ],
+     [
+      6396,
+      8527
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      1075
+     ],
+     [
+      2152,
+      3227
+     ]
+    ],
+    "q": [
+     [
+      513,
+      514
+     ]
+    ]
+   }
+  },
+  "u_rsv_12": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      805,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      2
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      6395
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      2
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      3227
+     ]
+    ]
+   }
+  },
+  "u_rsv_13": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      0,
+      2414
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      15
+     ],
+     [
+      48,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      513
+     ],
+     [
+      1542,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      2131
+     ],
+     [
+      4264,
+      6395
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      2
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      1075
+     ],
+     [
+      2152,
+      3227
+     ]
+    ]
+   }
+  },
+  "u_rsv_14": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      805,
+      3219
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      1,
+      3
+     ]
+    ],
+    "gi_d": [
+     [
+      2132,
+      8527
+     ]
+    ],
+    "si_v": [
+     [
+      1,
+      3
+     ]
+    ],
+    "si_d": [
+     [
+      1076,
+      4303
+     ]
+    ]
+   }
+  },
+  "u_rsv_15": {
+   "master": "dsdv_svc_rs",
+   "reason": "p4k svc_rs face not on this slice's stream tree / score-exchange embedding (svc_rs_tree.py role ROM, svc_rs_embed.py): a stream valid, P.V word or score on a face that is not a tree edge is a sticky fault (never delivered), so the face is tied 0 (no die lane)",
+   "ports": {
+    "dn_i": [
+     [
+      0,
+      2414
+     ]
+    ],
+    "up_i": [
+     [
+      0,
+      31
+     ],
+     [
+      48,
+      63
+     ]
+    ],
+    "ri": [
+     [
+      0,
+      1027
+     ],
+     [
+      1542,
+      2055
+     ]
+    ],
+    "gi_v": [
+     [
+      0,
+      1
+     ]
+    ],
+    "gi_d": [
+     [
+      0,
+      4263
+     ]
+    ],
+    "si_v": [
+     [
+      0,
+      1
+     ]
+    ],
+    "si_d": [
+     [
+      0,
+      2151
+     ]
+    ]
+   }
+  },
+  "st_q_W_l1_0": {
+   "master": "dsfd_dvrlyh_276_NS",
+   "reason": "lane quantisation: 237-b RTL payload on a 276-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      237,
+      275
+     ]
+    ]
+   }
+  },
+  "st_pv_W_0": {
+   "master": "dsfd_dvrlyh_562_SN",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_q_E_l1_0": {
+   "master": "dsfd_dvrlyh_276_NS",
+   "reason": "lane quantisation: 237-b RTL payload on a 276-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      237,
+      275
+     ]
+    ]
+   }
+  },
+  "st_pv_E_0": {
+   "master": "dsfd_dvrlyh_562_SN",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_lr_lk_WS0_0": {
+   "master": "dsfd_dvrlyh_562_WE",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_lr_lk_WS1_0": {
+   "master": "dsfd_dvrlyh_562_WE",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_lr_lk_WN0_0": {
+   "master": "dsfd_dvrlyh_562_WE",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_lr_lk_WN1_0": {
+   "master": "dsfd_dvrlyh_562_WE",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_lr_lk_ES0_0": {
+   "master": "dsfd_dvrlyh_562_EW",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_lr_lk_ES1_0": {
+   "master": "dsfd_dvrlyh_562_EW",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_lr_lk_EN0_0": {
+   "master": "dsfd_dvrlyh_562_EW",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_lr_lk_EN1_0": {
+   "master": "dsfd_dvrlyh_562_EW",
+   "reason": "lane quantisation: 514-b RTL payload on a 562-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      514,
+      561
+     ]
+    ]
+   }
+  },
+  "st_cw_seqhost_0": {
+   "master": "dsfd_dvrlyh_276_SN",
+   "reason": "lane quantisation: 267-b RTL payload on a 276-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      267,
+      275
+     ]
+    ]
+   }
+  },
+  "st_jw_E_l1_0": {
+   "master": "dsfd_dvrlyh_276_NS",
+   "reason": "lane quantisation: 49-b RTL payload on a 276-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      49,
+      275
+     ]
+    ]
+   }
+  },
+  "st_jw_W_l1_0": {
+   "master": "dsfd_dvrlyh_276_NS",
+   "reason": "lane quantisation: 49-b RTL payload on a 276-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      49,
+      275
+     ]
+    ]
+   }
+  },
+  "st_jd_E_0": {
+   "master": "dsfd_dvrlyh_276_SN",
+   "reason": "lane quantisation: 13-b RTL payload on a 276-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      13,
+      275
+     ]
+    ]
+   }
+  },
+  "st_hf_7N_l2_0": {
+   "master": "dsfd_dvrlyh_276_SN",
+   "reason": "lane quantisation: 20-b RTL payload on a 276-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      20,
+      275
+     ]
+    ]
+   }
+  },
+  "st_ht_7N_0": {
+   "master": "dsfd_dvrlyh_276_SN",
+   "reason": "lane quantisation: 131-b RTL payload on a 276-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      131,
+      275
+     ]
+    ]
+   }
+  },
+  "st_jd_W_0": {
+   "master": "dsfd_dvrlyh_276_SN",
+   "reason": "lane quantisation: 13-b RTL payload on a 276-b relay master (spare top bits)",
+   "ports": {
+    "i": [
+     [
+      13,
+      275
+     ]
+    ]
+   }
+  }
+ }
+}

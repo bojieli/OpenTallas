@@ -1,0 +1,20 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_dv_s5_xhead3b-xh3b-afb6ff347 bench bench_xh3_mut_rot host ot-gold2 run /srv/opentallas-scratch/claude/closure-loop/qfd_dv_s5_xhead3b-xh3b-afb6ff347 log cl/bench_xh3_mut_rot.a1b1.log captured 2026-10-21T08:13:53-07:00
+# fail_regex 'S5_XH3_EQ FAIL'
+S5_XH3_EQ MISMATCH cyc 40
+  highest differing output bit 2241 (o_all index; n_d at top)
+  lw_d differs
+S5_XH3_EQ MISMATCH cyc 56
+  highest differing output bit 1921 (o_all index; n_d at top)
+  lw_d differs
+S5_XH3_EQ MISMATCH cyc 57
+  highest differing output bit 1729 (o_all index; n_d at top)
+  lw_d differs
+S5_XH3_EQ MISMATCH cyc 58
+  highest differing output bit 2015 (o_all index; n_d at top)
+  lw_d differs
+S5_XH3_COVER ops 839 lw_v 7278 en 15754 lr_v 74392 go 932 xvalid 74344 xnz 74344 fault 133167 resets 15
+S5_XH3_EQ FAIL 7208 mismatches of 149375 compares seed 7 cid 22
+[1500040000] %Fatal: tb_xhead3.sv:244: Assertion failed in tb_xhead3: S5_XH3_EQ FAIL
+%Error: rtl/test/qwen_dv/s5/xhead3/tb_xhead3.sv:244: Verilog $stop
+Aborting...

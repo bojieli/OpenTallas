@@ -4,14 +4,15 @@
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
+ "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
  "parasitics": "spef",
  "raw_source": true,
  "ss": {
   "boundary": {
-   "n": 6,
-   "mean": 52.0,
+   "n": 3,
+   "mean": 51.6,
    "min": 51.1,
-   "max": 52.9
+   "max": 52.7
   },
   "all": {
    "n": 6,
@@ -25,10 +26,10 @@
  },
  "tt": {
   "boundary": {
-   "n": 6,
-   "mean": 35.6,
+   "n": 3,
+   "mean": 35.4,
    "min": 35.0,
-   "max": 36.2
+   "max": 36.1
   },
   "all": {
    "n": 6,
@@ -42,10 +43,10 @@
  },
  "ff": {
   "boundary": {
-   "n": 6,
-   "mean": 26.3,
+   "n": 3,
+   "mean": 26.1,
    "min": 25.8,
-   "max": 26.8
+   "max": 26.7
   },
   "all": {
    "n": 6,
@@ -72,7 +73,7 @@
   "CK_SS_ALL_MIN": 51,
   "CK_SS_MAX": 53,
   "CK_SS_ALL_MAX": 53,
-  "CK_TT_MEAN": 36,
+  "CK_TT_MEAN": 35,
   "CK_TT_ALL_MEAN": 36,
   "CK_TT_MIN": 35,
   "CK_TT_ALL_MIN": 35,
@@ -95,14 +96,15 @@
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
+   "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
    "parasitics": "spef",
    "raw_source": true,
    "ss": {
     "boundary": {
-     "n": 6,
-     "mean": 52.0,
+     "n": 3,
+     "mean": 51.6,
      "min": 51.1,
-     "max": 52.9
+     "max": 52.7
     },
     "all": {
      "n": 6,
@@ -116,10 +118,10 @@
    },
    "tt": {
     "boundary": {
-     "n": 6,
-     "mean": 35.6,
+     "n": 3,
+     "mean": 35.4,
      "min": 35.0,
-     "max": 36.2
+     "max": 36.1
     },
     "all": {
      "n": 6,
@@ -133,10 +135,10 @@
    },
    "ff": {
     "boundary": {
-     "n": 6,
-     "mean": 26.3,
+     "n": 3,
+     "mean": 26.1,
      "min": 25.8,
-     "max": 26.8
+     "max": 26.7
     },
     "all": {
      "n": 6,
@@ -163,7 +165,7 @@
     "CK_SS_ALL_MIN": 51,
     "CK_SS_MAX": 53,
     "CK_SS_ALL_MAX": 53,
-    "CK_TT_MEAN": 36,
+    "CK_TT_MEAN": 35,
     "CK_TT_ALL_MEAN": 36,
     "CK_TT_MIN": 35,
     "CK_TT_ALL_MIN": 35,
@@ -186,10 +188,16 @@
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "lane_ckf",
+   "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
    "parasitics": "spef",
    "raw_source": true,
    "ss": {
-    "boundary": null,
+    "boundary": {
+     "n": 4,
+     "mean": 68.8,
+     "min": 68.5,
+     "max": 69.1
+    },
     "all": {
      "n": 23,
      "mean": 68.9,
@@ -201,7 +209,12 @@
     "macro_libs": 0
    },
    "tt": {
-    "boundary": null,
+    "boundary": {
+     "n": 4,
+     "mean": 46.8,
+     "min": 46.5,
+     "max": 47.1
+    },
     "all": {
      "n": 23,
      "mean": 46.9,
@@ -213,7 +226,12 @@
     "macro_libs": 0
    },
    "ff": {
-    "boundary": null,
+    "boundary": {
+     "n": 4,
+     "mean": 34.4,
+     "min": 34.1,
+     "max": 34.8
+    },
     "all": {
      "n": 23,
      "mean": 34.5,

@@ -1,0 +1,53 @@
+ot-run: -> ot-epyc8
+KVS_RVPAIR build mut=6  verilator Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc=1884 tx_payload
+MISMATCH cyc=1885 tx_payload
+MISMATCH cyc=1886 tx_payload
+MISMATCH cyc=1887 tx_payload
+MISMATCH cyc=1888 tx_payload
+MISMATCH cyc=1889 tx_payload
+MISMATCH cyc=1890 tx_payload
+MISMATCH cyc=1891 tx_payload
+MISMATCH cyc=1892 tx_payload
+MISMATCH cyc=1893 tx_payload
+KVS_RVPAIR FAIL mode=0 mut=6 checks=38766 errors=96 cmds=3 req=3 Q=96 TX=99 faultA=0 faultB=0
+KVS_RVPAIR PASS mode=1 mut=6 checks=12824 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=2 mut=6 checks=12863 errors=0 cmds=1 req=1 Q=6 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=3 mut=6 checks=12866 errors=0 cmds=1 req=1 Q=9 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=4 mut=6 checks=12889 errors=0 cmds=1 req=1 Q=32 TX=0 faultA=1 faultB=1
+MISMATCH cyc=1884 tx_payload
+MISMATCH cyc=1885 tx_payload
+MISMATCH cyc=1886 tx_payload
+KVS_RVPAIR FAIL mode=5 mut=6 checks=12892 errors=3 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1
+MISMATCH cyc=1884 tx_payload
+MISMATCH cyc=1885 tx_payload
+MISMATCH cyc=1886 tx_payload
+MISMATCH cyc=1887 tx_payload
+MISMATCH cyc=1888 tx_payload
+MISMATCH cyc=1889 tx_payload
+MISMATCH cyc=1890 tx_payload
+KVS_RVPAIR FAIL mode=6 mut=6 checks=12896 errors=7 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+MISMATCH cyc=1884 tx_payload
+MISMATCH cyc=1885 tx_payload
+MISMATCH cyc=1886 tx_payload
+MISMATCH cyc=1887 tx_payload
+MISMATCH cyc=1888 tx_payload
+MISMATCH cyc=1889 tx_payload
+MISMATCH cyc=1890 tx_payload
+MISMATCH cyc=1891 tx_payload
+MISMATCH cyc=1892 tx_payload
+MISMATCH cyc=1893 tx_payload
+KVS_RVPAIR FAIL mode=7 mut=6 checks=12900 errors=12 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=8 mut=6 checks=12861 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1
+MISMATCH cyc=1884 tx_payload
+MISMATCH cyc=1885 tx_payload
+MISMATCH cyc=1886 tx_payload
+MISMATCH cyc=1887 tx_payload
+MISMATCH cyc=1888 tx_payload
+MISMATCH cyc=1889 tx_payload
+MISMATCH cyc=1890 tx_payload
+KVS_RVPAIR FAIL mode=9 mut=6 checks=12896 errors=7 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=10 mut=6 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR_ALL FAIL mut=6 modes=11 checks=64674 fails=5
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-144266-1792453690): exit 1
+EXIT 1

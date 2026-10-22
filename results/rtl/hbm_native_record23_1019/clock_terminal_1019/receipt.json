@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.hbm.native-record23.clock-terminal.v1",
+  "source": "17bfe96d5",
+  "host": "ot-epyc6",
+  "unit": "2433180-1792431879",
+  "remote": "/srv/opentallas-scratch/claude/hbm-native-record23-clock-1019",
+  "clock_causal": "PASS417/556ps halfperiod; lock/resetrelease; NO_CLOCK/NO_LOCK expectedFAIL200ns",
+  "arithmetic": "FAIL first original b0/n0 allZERO; originalgold/calendar/3800acceptance unchanged",
+  "fill_observed": "nonzero originalFP32 VM FILL atserial2695/2696; consumer/load/arithmetic/drain stillunresolved",
+  "old_fill_mutant": "NOT_RUN becausebaselinefatal stoppeddriver",
+  "qualification": "No numeric/component/token/diePASS; GEN2eactual18/15 notinstalled; plannedsourcebasis only",
+  "inputs": {
+    "native_record23_tb.sv": "a3f24f56433f85431e274315cb59f0014d12e35b48fc376d697d55fd6e1789a3",
+    "pll_functional_model.sv": "fda83db255023005ce82a501d56b88ea2c45081a80af2a3d5373c00e0f9c0b11",
+    "calendar.mem": "e5e4f355207e7e880bce37b10a4b8fa2e55235f7edc29e3ed22137b9b2d931a9",
+    "calendar_model.json": "ef8310d99a8cf84a6c23dbe9696b8166df45b3ead3fcce0421cb29ad941177d2",
+    "run_arithmetic.sh": "b969e786b415dea95086e91193412f8f538b3fe9e647ac8600565c754a3f612f"
+  }
+}

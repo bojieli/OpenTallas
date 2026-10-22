@@ -1,0 +1,35 @@
+{
+  "scope": "Proposed actual reusable PCH/largest-TU compile only; no compilation yet",
+  "frontend_inventory_path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_frontend02_result/frontend_inventory.json",
+  "frontend_inventory_sha256": "61266a524556f969b8579cd9679549fbcda7fb0458bacb242b6a7abaa256d5fb",
+  "all_generated_inputs": 1977,
+  "all_generated_bytes": 2970592285,
+  "largest_CPP": {
+    "path": "obj/Vtb_fullsix_trace___024root__131__Slow.cpp",
+    "bytes": 5149328,
+    "sha256": "6ab2f934fcf307918526cb54f402137fca789e395501c8495f2d5b1fd7725b27"
+  },
+  "PCH": "obj/Vtb_fullsix_trace__pch.h.slow.gch",
+  "PCH_includes": "pch.h\u2192__Syms.h\u2192128817531-byte root.h; actual fullsix state/header, no reduced numeric operator",
+  "source_settings": "Existing OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0 (same previous input04 build)",
+  "compiler_actual": "g++ (Ubuntu15.2.0-16ubuntu1)15.2.0",
+  "compiler_sha256": "e6718f7e0c7d057c3ff77b550c603da9bc4030e3ede3c053705acce1293dbe4d",
+  "make_sha256": "27c9f6d806aee15882b01c2c61848f7aa75caa14bc7b6f608ba422f9e46a7d49",
+  "verilated_mk_sha256": "bd0d8c21debce6afe65db69b9b8721711ff3422f985617e8fce0bc5a2ac809e0",
+  "compiler_per_TU_RSS": null,
+  "whole_build_parallelism": null,
+  "reservation": {
+    "GB": 256,
+    "threads": 1,
+    "disk_GB": 80,
+    "meaning": "Fleet capacity reservation, not measured compiler need or hard memory/address/wall limit; same capacity as frontend while GCC128MB-header cost unknown"
+  },
+  "actual_preflight": {
+    "UTC": "2026-10-19T22:36:16Z",
+    "MemAvailable_bytes": 900434386944,
+    "scratch_available_bytes": 465966870528
+  },
+  "output_policy": "Preserve real PCH/object and all generated inputs; make dependency graph reuses them in later full build. No duplicate frontend/restart or link/sim.",
+  "native_phase": null,
+  "numerical_PASS": null
+}

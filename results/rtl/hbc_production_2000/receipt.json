@@ -1,0 +1,29 @@
+{
+  "source": "3451ef67d",
+  "fleet_host": "ot-gold2",
+  "unit": "oth-ubuntu-437326-1792639650",
+  "exit_code": 0,
+  "tool": "Verilator 5.050 2026-07-01 rev v5.050",
+  "source_hashes": {
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_source.sv": "792f588ad90d481cd70edbc91a0a18b486194d5e4e63e4d08f6d2840bc50d200",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost_mux.sv": "b3a5534a2f452b613fd89534772b930a85cb8c14133dcb750ec687d8b9d914c4",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage_hbc.sv": "a4a4928001358fd2c7b35b476a9d29268df3edea6db7328e61ed6121ffa68391",
+    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_hbc_prod_mu_72.sv": "054dc8912d7cffdb9cee7d17f75c29b68a1c1da529d317c98db754c65faf1262",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv": "758c0d32743231c626a0d8c774ca21d533757cbaf65cef84c003bf1c0001ef5c",
+    "tools/s81_dv/hbc_production_2000/run.sh": "bfb6829172a7dfac8b442e94ea1649394872b812bffbe6c172f1abaac03de73c",
+    "tools/s81_dv/hbc_production_2000/tb_hostb_source.sv": "256adcc0f73cd486191bf0904f12723d16b4df944a12e7c4f8fa3ab7bb5d4381",
+    "tools/s81_dv/hbc_production_2000/tb_hostb_local_return.sv": "6e1122aea09860eed8151338bb7a72736506165622bba864857b6c1cfd8d3672"
+  },
+  "qualified_scope": [
+    "real landing plus unchanged existing KS6 bounded64-edge fixture,6descriptors/5causal negatives",
+    "raw external booked HOST/KS passthrough,one landing edge,real armed remains false",
+    "loaded HBC context plus actual sampled test status/token -> one local return with explicit test deadline8100; wrong KIT token refused"
+  ],
+  "not_qualified": [
+    "full production s0N wrapper elaboration",
+    "current8020 emitted programme/profile",
+    "multi-context HBC lifecycle",
+    "physical native/gate/route/clock closure",
+    "full token/MTP"
+  ]
+}

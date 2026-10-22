@@ -1,0 +1,36 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019
+ot-run: ot-epyc9       admits  1269 GB (avail 959, growth 70, headroom 0, waiters 0/0 GB) load 80/128 running 15 disk 720 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-191135-1792460258 after 1 s
+OK  lint expect=pass rc=0
+OK  kvpc_front expect=pass rc=0
+OK  kvpc_front_mut1 expect=fail rc=1
+OK  kvpc_front_mut4 expect=fail rc=1
+OK  kvpc_front_mut5 expect=fail rc=1
+OK  kvpc_return expect=pass rc=0
+OK  kvpc_return_mut1 expect=fail rc=1
+OK  kvpc_return_mut2 expect=fail rc=1
+OK  kvpc_cdc expect=pass rc=0
+OK  kvpc_cdc_mut1 expect=fail rc=1
+OK  kvpc_cdc_mut2 expect=fail rc=1
+OK  kvpc_tq expect=pass rc=0
+OK  kvpc_tq_mut1 expect=fail rc=1
+OK  kvpc_sched expect=pass rc=0
+OK  kvpc_sched_mut5 expect=fail rc=1
+OK  kvpc_ctrl expect=pass rc=0
+OK  kvpc_ctrl_mut1 expect=fail rc=1
+OK  kvpc_ctrl_mut2 expect=fail rc=1
+OK  kvpc_ctrl_mut5 expect=fail rc=1
+OK  kvpc_path expect=pass rc=0
+OK  kvpc_path_mut2 expect=fail rc=1
+OK  kvpc_path_mut5 expect=fail rc=1
+OK  kvpc_tile_pc_h expect=pass rc=0
+OK  kvpc_tile_pc_h_mut4 expect=fail rc=1
+OK  kvpc_tile_pc_h_mut5 expect=fail rc=1
+MRGBENCH qkd_kvs_pc_h_sr6: 25 stages, 0 unexpected (Verilator 5.050 2026-07-01 rev v5.050)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-191135-1792460258): exit 0

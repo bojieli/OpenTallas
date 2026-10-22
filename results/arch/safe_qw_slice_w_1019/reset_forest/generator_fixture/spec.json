@@ -1,0 +1,50 @@
+{
+  "top": "forest_top",
+  "out_dir": "results/arch/safe_qw_slice_w_1019/reset_forest/generator_fixture",
+  "sources": [
+    "results/arch/safe_qw_slice_w_1019/reset_forest/generator_fixture/top.sv"
+  ],
+  "child_sources": [
+    "results/arch/safe_qw_slice_w_1019/reset_forest/generator_fixture/child.sv"
+  ],
+  "clock_ports": [
+    "clk"
+  ],
+  "clock_pins": [
+    "clk"
+  ],
+  "reset_port": "rst_n",
+  "reset_pins": [
+    "rst_n"
+  ],
+  "landing_chunk_bits": 24,
+  "landing_direct_timing": true,
+  "landing_reset_forest": true,
+  "port_regions": {
+    "i": "core",
+    "o": "far"
+  },
+  "regions": [
+    {
+      "name": "core",
+      "insts": [
+        "u0"
+      ],
+      "centre": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "far",
+      "insts": [
+        "u1"
+      ],
+      "centre": [
+        1050,
+        0
+      ]
+    }
+  ],
+  "_spec_path": "results/arch/safe_qw_slice_w_1019/reset_forest/generator_fixture/spec.json"
+}

@@ -75,3 +75,23 @@ Mutants (each applied to a copy of one RTL file by `run_host_mu.sh`; all FAIL; w
    - The KV writer and calendar must hold the user for the stage.
    - This is part of R1–R5 in `../README.md` §3.
 3. **Wire `qkd_kv_mu_wrow` and `qkd_kv_mu_rrow`** into the KV die parents (KV-PLAN lane).
+
+## MU-KV-HCTL2 (10-19): pkgctl MU two-stage die reports
+
+- **Why.** Route `qkd_host_ctl-mu1-50169ecef` ended NEEDS_RTL at TT −48.75 ps (FF +20.55, DRC 0).
+  - The only TT-failing path ran `tk_q` → `u_pkg.disagree` through 21 levels.
+  - The cause is logic depth: the 8 dies were handled one after another in a single cycle (capture the first token, compare each later die).
+  - Fan-out and IO were not the problem: input→reg had +317 ps and outputs +343 ps.
+  - The pin registers stay opted out: the RTL already registers every pin.
+- **Fix (`ot_qfd_pkgctl` MU only; MU 0 is unchanged).**
+  - Stage A, on the report edge, keeps the new-generation detect, `m_last`, the in-order/outstanding check and `d_fault`. It registers each accepted report (`r_v`/`r_g`/`r_tok`/`r_val`, 8 × 52 flops).
+  - Stage B, on the next edge, sets `seen`, captures the first token and checks for disagreement, in parallel over the dies.
+  - A disagreement is a reporter that differs from the captured value, or two same-edge reporters of one generation that differ. That gives the same verdict as the serial chain.
+- **Cost: +1 edge from a die's report to retire.**
+  - This applies to `eng_done`, `eng_cycles` (+1) and the disagree fault.
+  - The die-skip, unknown-generation and die-fault checks keep their edge.
+  - Throughput is unchanged: a die may still report every edge, with no backpressure.
+- **Benches (Verilator 5.050, ot-epyc7), `runs_hctl2/`.**
+  - `tb_qkd_host_ctl_mu` PASS, `tb_qkd_host_mu_out` PASS, `tb_qkd_kv_mu_rowoff` PASS.
+  - cm1–cm5, hm1–hm4 and rm1–rm2 all FAIL. The new cm5 drops the compare against the captured token, and its witness is `ERR fault mode 2 bit 84 first 0000`.
+  - The 13 MU 0 host benches give logs identical to origin/main.

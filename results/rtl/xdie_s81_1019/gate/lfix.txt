@@ -1,0 +1,12 @@
+min LFIX_PASS beats 12096 min_latency 563 lfix 563
+min_err LFIX_PASS beats 12096 min_latency 563 lfix 563
+chb0 LFIX_PASS beats 12096 min_latency 563 lfix 563
+late LFIX_PASS beats 1380 min_latency 563 lfix 563
+asbound LFIX_PASS beats 12096 min_latency 563 lfix 563
+landsel LFIX_FAIL beats 1380 min_latency 561 lfix 563
+noleg LFIX_PASS beats 12096 min_latency 553 lfix 553
+mu_real LFIX_PASS beats 18132 min_latency 563 lfix 563
+mu_dense LFIX_PASS beats 18132 min_latency 563 lfix 563
+mu_dense_err LFIX_PASS beats 18132 min_latency 563 lfix 563
+wrongcopy LFIX_PASS beats 1304 min_latency 563 lfix 563
+tagdrop LFIX_PASS beats 2584 min_latency 563 lfix 563

@@ -48,6 +48,7 @@ import math
 import re
 import sys
 from pathlib import Path
+import os
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lane_groups as LG  # noqa: E402
@@ -78,6 +79,17 @@ BUNDLES = {
                                    'result_cause', 'result_tag', 'result_gen', 'result_token', 'result_value',
                                    'result_cycles')),
 }
+# These ports exist only on the source-complete head-prepare successor. Match by actual endpoint pins.
+if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
+    BUNDLES['TT.head_prepare'] = [('tt_ctlm',p,N59,q) for p,q in (
+        ('emb_start','head_prepare_v'),('emb_token','head_prepare_token'),
+        ('emb_position','head_prepare_position'),('emb_user','head_prepare_user'))]
+    BUNDLES['SF.head_descriptor'] = _same(N59,SF,('head_descriptor_v','head_descriptor_tag','head_descriptor_generation'))
+    BUNDLES['C.tx_slot'] += [(D2D,'tx_user',N59,'tx_user')]
+    BUNDLES['C.rx_record'] += [(D2D,'rx_user',N59,'rx_user')]
+    BUNDLES['SF.head_slot'] = [(D2D,'prog_head_context_slot',SF,'prog_head_context_slot'),
+                               (D2D,'tx_user',SF,'prog_head_context_user')]
+    BUNDLES['SF.cal'] += _same(SF,D2D,('cal_start_rx','cal_seg_rx','cal_user_tx','cal_user_rx'))
 # the compiler's own bundle names (layer_compile.py BUNDLES, compute side): every one of them is a bundle here
 COMPILER_BUNDLES = ('C.tx_slot', 'C.rx_record', 'C.tx_record', 'C.x3_record')
 INDEX = {(s, sp, d): b for b, mem in BUNDLES.items() for s, sp, d, _ in mem}
@@ -232,11 +244,11 @@ def _insts(text, names):
     return out
 
 
-def netlist_members(die_v_text):
+def netlist_members(die_v_text, bundles=None):
     """-> ({bid: bundle}, {bid: dict(src_net, dst_net, key)}, problems) from the seam instances' pin nets."""
     ins = _insts(die_v_text, {D2D, N59, SF})
     bmap, info, problems = {}, {}, []
-    for b, mem in BUNDLES.items():
+    for b, mem in (bundles or BUNDLES).items():
         have = []
         for s, sp, d, dp in mem:
             if s not in ins or d not in ins:
@@ -254,12 +266,12 @@ def netlist_members(die_v_text):
     return bmap, info, problems
 
 
-def rows_from_netlist(die_v, lanes=None):
+def rows_from_netlist(die_v, lanes=None, bundles=None):
     """-> (bmap, info, rows, problems): the lane rows of every bundle member as BUILT in die.v (direct members have no
     row); forwarded lanes carry n, K (straps) and E (fwd_lanes.json when given, else E = K: G = R0, E < 8)."""
     import lane_latency_audit as LLA
     text = Path(die_v).read_text()
-    bmap, info, problems = netlist_members(text)
+    bmap, info, problems = netlist_members(text, bundles)
     net = LLA.parse(die_v)
     fl = {r['bid']: r for r in (json.loads(Path(lanes).read_text()).get('lanes', []) if lanes else [])}
     rows = {}
@@ -299,6 +311,45 @@ def audit_netlist(die_v, lanes=None):
         rec['fails'] = problems + rec['fails']
         rec['verdict'] = 'FAIL'
     return rec
+
+
+# ------------------------------------------------------------------------------------------- compute D2D seam stages
+# MU-DQ-TXDP 10-19 (COORD 0ki): the compute die's D2D seam STAGES as built (d2d_link_calendar.STAGE_NAMES, compute part),
+# from THIS die.v + fwd_lanes.json: the compiler's TXD for the compute master (producer_txd C + PINREG_EXT) and the image's
+# RX calendar are functions of them, so the bound TXDP / image are checked against these, never against a hand constant.
+# CS_X3S is the d2d_rom.kv_x3_slot -> native59 strobe (one lane, not a record bundle; dv2f18mu lands it E 2 -> 3 cycles).
+SEAM_SINGLE = {'C.x3_slot': [(D2D, 'kv_x3_slot', N59, 'kv_x3_slot')]}
+SEAM_STAGE_OF = (('CS_TXS', 'C.tx_slot'), ('CS_RXV', 'C.rx_record'), ('CS_RXP', 'C.rx_record'), ('CS_X3S', 'C.x3_slot'),
+                 ('SC_TX', 'C.tx_record'), ('SC_X3', 'C.x3_record'))
+
+
+def seam_stages(die_v, lanes=None):
+    """-> (stages {CS_TXS..SC_X3: lane cycles} or None, record, problems).  Fail closed: a missing seam member, a member
+    whose lane cannot be read, or a bundle whose members disagree is a problem (no stage is guessed)."""
+    bset = {b: BUNDLES[b] for b in COMPILER_BUNDLES}
+    bset.update(SEAM_SINGLE)
+    bmap, info, rows, problems = rows_from_netlist(die_v, lanes, bset)
+    by = {}
+    for bid, b in bmap.items():
+        by.setdefault(b, []).append(bid)
+    per = {}
+    for b in bset:
+        if b not in by:
+            problems.append(f'{b}: no member on the die (compute D2D seam {D2D} / {N59} not found)')
+            continue
+        cyc = {bid: cycles(rows.get(bid)) for bid in sorted(by[b])}
+        if len(set(cyc.values())) != 1:
+            problems.append(f'{b}: members arrive on different edges {cyc}')
+            continue
+        per[b] = dict(cycles=next(iter(cyc.values())), members=cyc)
+    st = None if problems else {s: per[b]['cycles'] for s, b in SEAM_STAGE_OF}
+    return st, dict(stages=st, bundles=per, source=str(die_v) + (f' + {lanes}' if lanes else ''),
+                    rule='record_bundles.seam_stages: lane cycles per seam bundle as built (fwd E + 1, plain n, direct 0)'), problems
+
+
+def seam_stages_str(st):
+    """compute part of a d2d_link_calendar --die-stages string"""
+    return ','.join(str(st[s]) for s, _ in SEAM_STAGE_OF)
 
 
 # ----------------------------------------------------------------------------------------------- GEN lanes record side
@@ -514,6 +565,10 @@ def main():
     a4 = sp.add_parser('fix-die', help='the GEN fix applied to the lanes of a built die.v -> lanes record (slice input)')
     a4.add_argument('die_v', type=Path)
     a4.add_argument('--out', required=True, type=Path)
+    a5 = sp.add_parser('seam-stages', help='MU-DQ-TXDP: compute D2D seam stages of DIE_V (the C part of --die-stages)')
+    a5.add_argument('die_v', type=Path)
+    a5.add_argument('--lanes', type=Path)
+    a5.add_argument('--out', type=Path)
     a3 = sp.add_parser('slice')
     a3.add_argument('die_v', type=Path, nargs='?')
     a3.add_argument('--lanes', type=Path, help='a (fixed) lanes record: emit the GEN form of its lanes')
@@ -531,6 +586,18 @@ def main():
                                          D=4, lanes=rows, audit=rec), indent=1) + '\n')
         print(f"FIX_DIE {rec['verdict']} lanes={len(rows)}")
         return 0 if rec['verdict'] == 'PASS' else 1
+    if a.cmd == 'seam-stages':
+        lanes = a.lanes or (a.die_v.parent / 'fwd_lanes.json' if (a.die_v.parent / 'fwd_lanes.json').exists() else None)
+        st, rec, problems = seam_stages(a.die_v, lanes)
+        rec['problems'] = problems
+        if a.out:
+            a.out.write_text(json.dumps(rec, indent=1) + '\n')
+        for p_ in problems:
+            print('FAIL ' + p_, file=sys.stderr)
+        if st is None:
+            return 1
+        print(seam_stages_str(st))
+        return 0
     if a.cmd == 'audit':
         lanes = a.lanes or (a.die_v.parent / 'fwd_lanes.json' if (a.die_v.parent / 'fwd_lanes.json').exists() else None)
         rec = audit_netlist(a.die_v, lanes)

@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc7       admits   927 GB (avail 749, growth 101, headroom 0, waiters 0/0 GB) load 51/96 running 36 disk 6319 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4120406-1792438136 after 1 s
+nhp_s5: PASS lep_nh: H->A 400 + A->H 459 ring beats bit-exact in order, no host-plane frame sent; HOST and KS frames into the HOST_EN 0 endpoint flagged (fault), not delivered
+LEP_MU_GATE PASS
+nhr_s7: PASS lep: 1000 + 1000 beats bit-exact in order across 2 x 2 UCIe lanes (lane skew 7 PMA cycles, SRAM landing wrapped); overflow flagged
+LEP_MU_GATE PASS
+LEG lep_nh rc=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120406-1792438136): exit 0

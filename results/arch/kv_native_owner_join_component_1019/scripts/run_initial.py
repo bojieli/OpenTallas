@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+"""Fleet-only reviewed initial cohort; one build, four runtime cases."""
+import hashlib,json,os,pathlib,subprocess,sys,time
+root=pathlib.Path.cwd();version=subprocess.check_output([os.environ.get('VERILATOR','verilator'),'--version'],text=True).strip()
+if '5.050' not in version:raise SystemExit('requires exact Verilator5.050; got '+version)
+manifest=json.loads((root/'source_manifest.json').read_text())
+for r in manifest['sources']:
+ if hashlib.sha256((root/r['path']).read_bytes()).hexdigest()!=r['sha256']:raise SystemExit('source hash mismatch '+r['path'])
+if (root/'compile.log').exists():raise SystemExit('preserve earlier compile.log; use new run directory')
+cmd=[os.environ.get('VERILATOR','verilator'),'--binary','--timing','--top-module','native_join_bench','-j','4','--Mdir','obj','--x-initial','unique','--x-assign','unique','-DOT_MEM_NO_INIT','-Wno-fatal','-f','sources.f']
+fixture_wdog=int(os.environ.get('FIXTURE_WDOG',str(1<<22)))
+if fixture_wdog not in (1<<22,512):raise SystemExit('unfrozen watchdog fixture')
+if fixture_wdog==512:cmd.append('-GFIXTURE_WDOG=512')
+fixture_h=int(os.environ.get('FIXTURE_H','512'));fixture_deadline=int(os.environ.get('FIXTURE_DEADLINE','384'))
+if (fixture_h,fixture_deadline) not in ((512,384),(93,93)):raise SystemExit('unfrozen H/deadline fixture')
+if fixture_h==93:cmd.extend(['-GFIXTURE_H=93','-GFIXTURE_DEADLINE=93'])
+(root/'command.json').write_text(json.dumps({'command':cmd,'verilator':version,'mem_GB':16,'threads':4,'disk_GB':20,'fixture_wdog':fixture_wdog,'fixture_h':fixture_h,'fixture_deadline':fixture_deadline,'age_bits':(fixture_h+1-1).bit_length(),'declared_added_bits':1830 if fixture_h==512 else 1827,'scope':'FUNCTIONAL_ONLY common-clock fixture; no production calendar'},indent=2)+'\n')
+with (root/'compile.log').open('wb') as log:rc=subprocess.run(['/usr/bin/time','-v']+cmd,stdout=log,stderr=subprocess.STDOUT).returncode
+(root/'compile.rc').write_text(str(rc)+'\n')
+if rc:raise SystemExit(rc)
+receipts=[]
+for case in [int(x) for x in os.environ.get("NATIVE_JOIN_CASES","0,1,2,3").split(",")]:
+ with (root/f'case{case}.log').open('wb') as log:rc=subprocess.run(['/usr/bin/time','-v','obj/Vnative_join_bench',f'+CASE={case}'],stdout=log,stderr=subprocess.STDOUT).returncode
+ content=(root/f'case{case}.log').read_text(errors='replace')
+ passed=rc==0 and 'NATIVE_JOIN_PASS FUNCTIONAL_ONLY' in content and '%Error' not in content
+ receipts.append({'case':case,'exit':rc,'application_pass':passed,'log_sha256':hashlib.sha256((root/f'case{case}.log').read_bytes()).hexdigest()})
+ (root/'initial_receipt.json').write_text(json.dumps({'kind':'FUNCTIONAL_ONLY','cases':receipts,'production_H':None,'remaining':'NO_NATIVE, health failure, cancellation, duplicate client errors and nine causal categories pending'},indent=2)+'\n')
+ if not passed:raise SystemExit(rc or 1)
+print('COHORT_PASS cases='+str(len(receipts))+'; remaining source/causal requirements OPEN')

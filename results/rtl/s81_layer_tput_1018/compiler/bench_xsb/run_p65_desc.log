@@ -1,0 +1,27 @@
+FAULT edge 166 status 11 lx 0
+FAULT edge 167 status 11 lx 0
+FAULT edge 168 status 11 lx 0
+FAULT edge 169 status 11 lx 0
+RET 404 179020c8600004009
+RET 407 075e9cdc000000009
+RET 413 0792c32540000c009
+RET 415 0793f771400008009
+RET 418 1789d438800014009
+RET 421 07a19180800010009
+END edges=1084 ret_words=6 xo_checked=1082 fault=4 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 10.206 s; speed 106.756 ns/s
+- Verilator: cpu 8.083 s on 1 threads; allocated 46 MB
+CHECK MISMATCH edge 404 row 1 lo 0 k 0 got bc810643/0 want bcac1a54/0
+CHECK MISMATCH edge 407 row 0 lo 0 k 0 got 3af4e6e0/0 want bb801a5a/0
+CHECK PLAN_MISMATCH predicted 6 words, got 6; first diff ((405, 1, (0, 0, 4), 3165395540, 0), (404, 1, (0, 0, 4), 3162572355, 0))
+CHECK FAULT edge 166 status 11 lx 0
+CHECK FAULT edge 167 status 11 lx 0
+CHECK FAULT edge 168 status 11 lx 0
+CHECK FAULT edge 169 status 11 lx 0
+CHECK BFP_BAD tb_s81dv_frame.dut.u_f.u_e4.u_view.g_hc.u_front.u_bft edge 154
+CHECK BFP_BAD tb_s81dv_frame.dut.u_f.u_e4.u_view.g_hc.u_front.u_bft edge 162
+CHECK BFP_BAD tb_s81dv_frame.dut.u_f.u_e4.u_view.g_hc.u_front.u_bft edge 170
+CHECK BFP_BAD tb_s81dv_frame.dut.u_f.u_e4.u_view.g_hc.u_front.u_bft edge 178
+XS_PLACE_CHECK FAIL p65_desc

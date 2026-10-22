@@ -1,0 +1,282 @@
+{
+  "schema": "opentallas.native_su_calendar.v1",
+  "qualified": false,
+  "first_serial": 2675,
+  "bridge_serial": 2675,
+  "bridge_stream": 3567,
+  "host_launch": 3500,
+  "host_publication": 10,
+  "rows": 128,
+  "calendar_row0_consumer": 3510,
+  "owner": 0,
+  "lg_to_vm_pin_edges": 2,
+  "events": [
+    {
+      "kind": "read",
+      "bank": 0,
+      "command": 0,
+      "serial_capture": 2675,
+      "lg_sample": 3570,
+      "vm_pin_sample": 3572
+    },
+    {
+      "kind": "read",
+      "bank": 1,
+      "command": 0,
+      "serial_capture": 2675,
+      "lg_sample": 3570,
+      "vm_pin_sample": 3572
+    },
+    {
+      "kind": "read",
+      "bank": 2,
+      "command": 0,
+      "serial_capture": 2675,
+      "lg_sample": 3570,
+      "vm_pin_sample": 3572
+    },
+    {
+      "kind": "read",
+      "bank": 3,
+      "command": 0,
+      "serial_capture": 2675,
+      "lg_sample": 3570,
+      "vm_pin_sample": 3572
+    },
+    {
+      "kind": "read",
+      "bank": 4,
+      "command": 0,
+      "serial_capture": 2675,
+      "lg_sample": 3570,
+      "vm_pin_sample": 3572
+    },
+    {
+      "kind": "read",
+      "bank": 5,
+      "command": 0,
+      "serial_capture": 2675,
+      "lg_sample": 3570,
+      "vm_pin_sample": 3572
+    },
+    {
+      "kind": "read",
+      "bank": 6,
+      "command": 0,
+      "serial_capture": 2675,
+      "lg_sample": 3570,
+      "vm_pin_sample": 3572
+    },
+    {
+      "kind": "read",
+      "bank": 7,
+      "command": 0,
+      "serial_capture": 2675,
+      "lg_sample": 3570,
+      "vm_pin_sample": 3572
+    },
+    {
+      "kind": "read",
+      "bank": 0,
+      "command": 1,
+      "serial_capture": 2676,
+      "lg_sample": 3571,
+      "vm_pin_sample": 3573
+    },
+    {
+      "kind": "read",
+      "bank": 1,
+      "command": 1,
+      "serial_capture": 2676,
+      "lg_sample": 3571,
+      "vm_pin_sample": 3573
+    },
+    {
+      "kind": "read",
+      "bank": 2,
+      "command": 1,
+      "serial_capture": 2676,
+      "lg_sample": 3571,
+      "vm_pin_sample": 3573
+    },
+    {
+      "kind": "read",
+      "bank": 3,
+      "command": 1,
+      "serial_capture": 2676,
+      "lg_sample": 3571,
+      "vm_pin_sample": 3573
+    },
+    {
+      "kind": "read",
+      "bank": 4,
+      "command": 1,
+      "serial_capture": 2676,
+      "lg_sample": 3571,
+      "vm_pin_sample": 3573
+    },
+    {
+      "kind": "read",
+      "bank": 5,
+      "command": 1,
+      "serial_capture": 2676,
+      "lg_sample": 3571,
+      "vm_pin_sample": 3573
+    },
+    {
+      "kind": "read",
+      "bank": 6,
+      "command": 1,
+      "serial_capture": 2676,
+      "lg_sample": 3571,
+      "vm_pin_sample": 3573
+    },
+    {
+      "kind": "read",
+      "bank": 7,
+      "command": 1,
+      "serial_capture": 2676,
+      "lg_sample": 3571,
+      "vm_pin_sample": 3573
+    },
+    {
+      "kind": "write",
+      "bank": 0,
+      "command": 42,
+      "serial_capture": 2721,
+      "lg_sample": 3631,
+      "vm_pin_sample": 3633
+    },
+    {
+      "kind": "write",
+      "bank": 1,
+      "command": 42,
+      "serial_capture": 2721,
+      "lg_sample": 3631,
+      "vm_pin_sample": 3633
+    },
+    {
+      "kind": "write",
+      "bank": 2,
+      "command": 42,
+      "serial_capture": 2721,
+      "lg_sample": 3631,
+      "vm_pin_sample": 3633
+    },
+    {
+      "kind": "write",
+      "bank": 3,
+      "command": 42,
+      "serial_capture": 2721,
+      "lg_sample": 3631,
+      "vm_pin_sample": 3633
+    },
+    {
+      "kind": "write",
+      "bank": 4,
+      "command": 42,
+      "serial_capture": 2721,
+      "lg_sample": 3631,
+      "vm_pin_sample": 3633
+    },
+    {
+      "kind": "write",
+      "bank": 5,
+      "command": 42,
+      "serial_capture": 2721,
+      "lg_sample": 3631,
+      "vm_pin_sample": 3633
+    },
+    {
+      "kind": "write",
+      "bank": 6,
+      "command": 42,
+      "serial_capture": 2721,
+      "lg_sample": 3631,
+      "vm_pin_sample": 3633
+    },
+    {
+      "kind": "write",
+      "bank": 7,
+      "command": 42,
+      "serial_capture": 2721,
+      "lg_sample": 3631,
+      "vm_pin_sample": 3633
+    },
+    {
+      "kind": "write",
+      "bank": 0,
+      "command": 43,
+      "serial_capture": 2722,
+      "lg_sample": 3632,
+      "vm_pin_sample": 3634
+    },
+    {
+      "kind": "write",
+      "bank": 1,
+      "command": 43,
+      "serial_capture": 2722,
+      "lg_sample": 3632,
+      "vm_pin_sample": 3634
+    },
+    {
+      "kind": "write",
+      "bank": 2,
+      "command": 43,
+      "serial_capture": 2722,
+      "lg_sample": 3632,
+      "vm_pin_sample": 3634
+    },
+    {
+      "kind": "write",
+      "bank": 3,
+      "command": 43,
+      "serial_capture": 2722,
+      "lg_sample": 3632,
+      "vm_pin_sample": 3634
+    },
+    {
+      "kind": "write",
+      "bank": 4,
+      "command": 43,
+      "serial_capture": 2722,
+      "lg_sample": 3632,
+      "vm_pin_sample": 3634
+    },
+    {
+      "kind": "write",
+      "bank": 5,
+      "command": 43,
+      "serial_capture": 2722,
+      "lg_sample": 3632,
+      "vm_pin_sample": 3634
+    },
+    {
+      "kind": "write",
+      "bank": 6,
+      "command": 43,
+      "serial_capture": 2722,
+      "lg_sample": 3632,
+      "vm_pin_sample": 3634
+    },
+    {
+      "kind": "write",
+      "bank": 7,
+      "command": 43,
+      "serial_capture": 2722,
+      "lg_sample": 3632,
+      "vm_pin_sample": 3634
+    }
+  ],
+  "unused_fields": "hub/router client/response/ring paths unused by native SU face",
+  "original_events_kept": 244,
+  "added_events": 266,
+  "window_limits": [
+    3700,
+    2774,
+    3010
+  ],
+  "capacity": 6309,
+  "preload_sha256": "d6fe35126a15e4796e9330d07f5cc1bd8e2300eb5a14c829c6d8f8dcead80ae7",
+  "policy": "all original drives and numeric checks in the observation window retained byte-for-byte; only later events omitted"
+}

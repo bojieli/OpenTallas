@@ -1,0 +1,26 @@
+{
+ "cell": "ot_s81sl_cap_p1",
+ "view": "results/rtl/s81_slice_1017/capc_nativep1_1019/routed_a62/views/ot_s81sl_cap_p1",
+ "lib_cell": "ot_s81sl_cap_p1",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean"
+ ],
+ "R_ps": 679.6,
+ "spread_ps": 41.9,
+ "outputs": 451,
+ "inputs": 722,
+ "launch_ps": 114.7,
+ "launch_pin": "cw_s_d[148]",
+ "capture_ps": 113.2,
+ "capture_pin": "rt_w[43]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 30.0,
+ "ff_launch_min_ps": 54.7,
+ "ff_hold_need_ps": -25.4,
+ "pass": true,
+ "fail_why": ""
+}

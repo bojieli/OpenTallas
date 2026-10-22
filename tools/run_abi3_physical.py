@@ -63,9 +63,9 @@ timeouts respectively. ``none`` is an alias. The corresponding environment
 variables are ``OT_SYNTH_TIMEOUT_SECONDS`` and ``OT_FLOW_TIMEOUT_SECONDS``.
 Python callers may use ``main(argv, synth_timeout=None, flow_timeout=None)``
 or ``run(command, timeout=None)``. CLI overrides take precedence over Python
-overrides; both are scoped to the invocation. Omitted options retain the
-existing numeric defaults. Tool identity and platform probes keep their own
-timeouts; this policy does not change inherited operating-system limits.
+overrides; both are scoped to the invocation. Synthesis/STA has no default wall
+cap; route retains its numeric default. Tool identity and platform probes keep
+their own timeouts; this policy does not change inherited operating-system limits.
 """
 
 from __future__ import annotations
@@ -365,21 +365,21 @@ def tns_end_percent() -> int:
 
 
 def synth_timeout_seconds() -> int | None:
-    """Synthesis/STA wall timeout: legacy two-hour default, or none/unlimited."""
+    """Synthesis/STA wall timeout: unlimited unless a positive cap is explicit."""
     import os
 
     raw = os.environ.get("OT_SYNTH_TIMEOUT_SECONDS")
     if not raw:
-        return 7200
+        return None
     if raw.strip().lower() in {"none", "unlimited"}:
         return None
     try:
         value = int(raw)
     except ValueError as exc:
         raise SystemExit(f"OT_SYNTH_TIMEOUT_SECONDS is not an integer: {raw!r}") from exc
-    if value <= 0:
-        raise SystemExit("OT_SYNTH_TIMEOUT_SECONDS must be positive")
-    return value
+    if value < 0:
+        raise SystemExit("OT_SYNTH_TIMEOUT_SECONDS must be nonnegative")
+    return value or None
 
 
 def orfs_num_cores() -> int | None:
@@ -2113,6 +2113,59 @@ def grt183_resume_restore(results_dir: Path) -> None:
         kept_cts.unlink()
 
 
+def gate_trial_grt(case: Path, results_dir: Path, source: Path, image: str,
+                   log: Path, container: str, make_args: str = "", resume_saved: bool = False) -> int:
+    """Run the gate trial with the existing one-shot fresh-process GRT183 recovery.
+
+    The explicit saved-artifact entry requires an actual preserved failure and
+    uses the same prepare/restore functions as orfs_make. No success is inferred
+    from a saved checkpoint or its congestion table.
+    """
+    case, results_dir, source, log = (p.resolve() for p in (case, results_dir, source, log))
+    relative = results_dir.relative_to(case)
+    logs = case / "logs" / relative.relative_to("results")
+    def invoke(recovering=False):
+        goal = (f"-o /work/{relative}/4_cts.odb " if recovering else "") + make_args.strip() + " grt"
+        cmd = ["docker", "run", "--rm", "--name", container,
+               "-v", f"{source}:/src:ro", "-v", f"{case}:/work",
+               "-w", "/OpenROAD-flow-scripts/flow", image, "bash", "-lc",
+               "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
+               "python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && "
+               "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base "
+               "GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 " + goal]
+        with log.open("w") as stream:
+            return subprocess.run(cmd, stdout=stream, stderr=subprocess.STDOUT).returncode
+    # prepare() preserves the case-relative original trial log as well as the
+    # ORFS stage log and original CTS. It also refuses a second recovery.
+    def prepare():
+        return grt183_resume_prepare(results_dir, logs, log.parent, log.name)
+    if not resume_saved:
+        rc = invoke()
+        if not rc:
+            return rc
+    else:
+        rc = 1
+    if not prepare():
+        return rc
+    try:
+        return invoke(recovering=True)
+    finally:
+        grt183_resume_restore(results_dir)
+
+
+def gate_trial_grt_main(argv):
+    parser = argparse.ArgumentParser(description="Gate trial GRT with canonical one-shot GRT183 recovery")
+    for name in ("case", "results", "source", "log"):
+        parser.add_argument("--" + name, type=Path, required=True)
+    parser.add_argument("--image", required=True)
+    parser.add_argument("--container", required=True)
+    parser.add_argument("--make-args", default="")
+    parser.add_argument("--resume-saved", action="store_true")
+    args = parser.parse_args(argv)
+    return gate_trial_grt(args.case, args.results, args.source, args.image,
+                          args.log, args.container, args.make_args, args.resume_saved)
+
+
 def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = False,
                        die_area_um: list[float] | None = None) -> str:
     """set_io_pin_constraint per region; ports are matched by Tcl regexp on the
@@ -2733,7 +2786,7 @@ def run_pnr(
     # blocks, both killed at exactly 7,200 s having produced nothing:
     # ``ot_a3_engine_array`` and ``ot_a3_fp32_transcendental_cr_rne``, the latter
     # the widest-fan-in leaf in the datapath at eight parents.  The default is
-    # unchanged, so no existing route moves.
+    # now unlimited unless an operator explicitly supplies a positive cap.
     proc = orfs_make(
         f"{mapped_container} && chmod a+w {mapped_container}",
         "orfs_synth.log",
@@ -3316,7 +3369,7 @@ def _max_fanout_arg(text: str) -> int | str:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--synth-timeout-seconds", default=argparse.SUPPRESS,
-                        help="synthesis/STA seconds or unlimited (alias: none); otherwise env/default 7200")
+                        help="synthesis/STA seconds (0 = unlimited, alias: none); otherwise env/default unlimited")
     parser.add_argument("--flow-timeout-seconds", default=argparse.SUPPRESS,
                         help="route seconds or unlimited (alias: none); otherwise env/default 21600")
     parser.add_argument("--view", required=True, choices=sorted(VIEWS))
@@ -4339,4 +4392,4 @@ def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(gate_trial_grt_main(sys.argv[2:]) if sys.argv[1:2] == ["gate-trial-grt"] else main())

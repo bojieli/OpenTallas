@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hgi_qdq_tsplit_ctl_r3-ctlr3-14e6fe3a2 bench bench_QDQ_SPLIT_R2_mutant2 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hgi_qdq_tsplit_ctl_r3-ctlr3-14e6fe3a2 log cl/bench_QDQ_SPLIT_R2_mutant2.a1b1.log captured 2026-10-18T23:09:39-07:00
+# fail_regex 'LOCKSTEP_FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+[3020000] %Fatal: tb_hgi_qdq_host_split_r2_lockstep.sv:127: Assertion failed in tb_hgi_qdq_host_split_r2_lockstep: LOCKSTEP_FAIL split unexpected static fault cycle52
+%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_host_split_r2_lockstep.sv:127: Verilog $stop
+Aborting...
+PASS QDQ_HOST_SPLIT_R2_LOCKSTEP_GATE cases 2: split r2 == monolith (rq +3+XR, wq/done +9+3XR) golden writes; mutants killed (LOCKSTEP_FAIL)
+[3020000] %Fatal: tb_hgi_qdq_host_split_r2_lockstep.sv:127: Assertion failed in tb_hgi_qdq_host_split_r2_lockstep: LOCKSTEP_FAIL split unexpected static fault cycle52
+%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_host_split_r2_lockstep.sv:127: Verilog $stop
+Aborting...

@@ -1,0 +1,23 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/root-reset-forest-native-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/root-reset-forest-native-1019
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/root-reset-forest-native-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/root-reset-forest-native-1019
+ot-run: ot-epyc8       admits  1193 GB (avail 946, growth 110, headroom 0, waiters 0/0 GB) load 45/128 running 31 disk 208 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/root-reset-forest-native-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/root-reset-forest-native-1019
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-63802-1792432998 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+p-80_m0 PASS
+p-80_m1 MUTANT_REJECTED
+p0_m0 PASS
+p0_m1 MUTANT_REJECTED
+p80_m0 PASS
+p80_m1 MUTANT_REJECTED
+p-80_m0 PASS
+p-80_m1 MUTANT_REJECTED
+p0_m0 PASS
+p0_m1 MUTANT_REJECTED
+p80_m0 PASS
+p80_m1 MUTANT_REJECTED
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-63802-1792432998): exit 0

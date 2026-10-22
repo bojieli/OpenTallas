@@ -43,3 +43,43 @@ def test_value_above_recorded():
 
 def test_other_pair_over():
     assert run(W, pairs=PAIRS + [{"corner": "ff", "a": "u_chn", "b": "u_out", "ps": 80.2}])["severity"] == "FAIL"
+
+
+# COORD 10-20 19:25: SCOPED_CLOCK_WAIVER_CAPS (qkd_pv_fin_s32 only, TT 88.4 / FF 84.6)
+PV = {"pair": "port:ck-root", "tt_ps": 88.4, "ff_ps": 84.6, "limit_ps": 80, "by": "COORD 10-20 19:25",
+      "scope": "qkd_pv_fin_s32"}
+
+
+def run_pv(waiver, block="qkd_pv_fin_s32", tt=88.4, ff=84.6):
+    g = PRG.Gate()
+    g.clock = {"evidence": {"tt_pin_spread_ps": tt, "ff_pin_spread_ps": ff}}
+    g.add("FAIL", "clock_rule", "pin-flop spread > 80")
+    PRG.apply_clock_rule_waiver(g, {"block": block, "clock_rule_waiver": waiver})
+    return [i for i in g.items if i["check"] == "clock_rule"][0]
+
+
+def test_scoped_cap_applies_to_its_tile():
+    assert run_pv(PV)["severity"] == "WARN"
+
+
+def test_scoped_cap_refused_on_other_tile():
+    assert run_pv(PV, block="qkd_pv_fin_s33")["severity"] == "FAIL"
+
+
+def test_scoped_cap_exceeded():
+    assert run_pv(dict(PV, tt_ps=88.6), tt=88.6)["severity"] == "FAIL"
+
+
+def test_unscoped_large_excess_still_fails():
+    w = {k: v for k, v in PV.items() if k != "scope"}
+    assert run_pv(w)["severity"] == "FAIL"
+
+
+# ROOT takeover: svc4 cap stays tied to the exact gated block and measured TT limit.
+def test_native59_scoped_cap_and_causal_refusals():
+    w = dict(PV, scope="qfd_native59_svc", tt_ps=84.6, ff_ps=77.5)
+    assert run_pv(w, block="qfd_native59_svc", tt=84.6, ff=77.5)["severity"] == "WARN"
+    assert run_pv(w, block="qfd_native59_other", tt=84.6, ff=77.5)["severity"] == "FAIL"
+    assert run_pv(dict(w, tt_ps=84.7), block="qfd_native59_svc", tt=84.7, ff=77.5)["severity"] == "FAIL"
+    assert run_pv(dict(w, ff_ps=82.1), block="qfd_native59_svc", tt=84.6, ff=82.1)["severity"] == "FAIL"
+    assert run_pv({k: v for k, v in w.items() if k != "scope"}, block="qfd_native59_svc", tt=84.6, ff=77.5)["severity"] == "FAIL"

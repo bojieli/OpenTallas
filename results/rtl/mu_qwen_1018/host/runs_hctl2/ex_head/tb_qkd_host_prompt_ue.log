@@ -1,0 +1,9 @@
+TRACE request cycle=        541 addr=0000
+TRACE fault cycle=        545 q=00000
+TRACE host-start cycle=        547 qualified-ready=0
+TRACE sampled-request cycle=        548 qualified-ready=0
+PASS actual HOST packet double-ECC prompt fail-closed: q3 fault4 stickyIRQ no-controller-start CQfault=00000000cafe0075
+- rtl/test/qwen_host/tb_qkd_host_prompt_ue.sv:199: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 570ns; walltime 0.002 s; speed 318.542 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

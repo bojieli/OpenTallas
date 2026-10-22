@@ -1,0 +1,885 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv -lib macro_bb.v; read_verilog -sv -DSYNTHESIS hbfd_pad.sv delay.sv; chparam -set W 136 -set N 28 -set SAFE_STORAGE 1 hbfd_pad; hierarchy -top hbfd_pad; synth -top hbfd_pad; write_json synth_136_28.json; stat' --
+
+1. Executing Verilog-2005 frontend: macro_bb.v
+Parsing SystemVerilog input from `macro_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: hbfd_pad.sv
+Parsing SystemVerilog input from `hbfd_pad.sv' to AST representation.
+Generating RTLIL representation for module `\hbfd_pad'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: delay.sv
+Parsing SystemVerilog input from `delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+Parameter \W = 136
+Parameter \N = 28
+Parameter \SAFE_STORAGE = 1
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\hbfd_pad'.
+Parameter \W = 136
+Parameter \N = 28
+Parameter \SAFE_STORAGE = 1
+Generating RTLIL representation for module `$paramod$8cd390fd7352e99d13ccd15dc80324c02896862d\hbfd_pad'.
+Warning: Replacing memory \g_ring.age with list of registers. See hbfd_pad.sv:20
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+
+5.2. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+Removing unused module `\ot_hdc_delay'.
+Removed 1 unused modules.
+
+6. Executing SYNTH pass.
+
+6.1. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1.1. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+
+6.1.2. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+Removed 0 unused modules.
+
+6.2. Executing PROC pass (convert processes to netlists).
+
+6.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$hbfd_pad.sv:19$10 in module hbfd_pad.
+Marked 1 switch rules as full_case in process $proc$hbfd_pad.sv:19$15 in module hbfd_pad.
+Marked 1 switch rules as full_case in process $proc$hbfd_pad.sv:19$20 in module hbfd_pad.
+Marked 1 switch rules as full_case in process $proc$hbfd_pad.sv:19$25 in module hbfd_pad.
+Marked 1 switch rules as full_case in process $proc$hbfd_pad.sv:19$30 in module hbfd_pad.
+Marked 1 switch rules as full_case in process $proc$hbfd_pad.sv:24$35 in module hbfd_pad.
+Marked 1 switch rules as full_case in process $proc$hbfd_pad.sv:43$45 in module hbfd_pad.
+Removed a total of 0 dead cases.
+
+6.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 2 redundant assignments.
+Promoted 2 assignments to connections.
+
+6.2.4. Executing PROC_INIT pass (extract init attributes).
+
+6.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:19$10'.
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:19$15'.
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:19$20'.
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:19$25'.
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:19$30'.
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:24$35'.
+Found async reset \rs in `\hbfd_pad.$proc$hbfd_pad.sv:43$45'.
+
+6.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~5 debug messages>
+
+6.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:19$10'.
+     1/1: $0\g_ring.age[0][4:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:19$15'.
+     1/1: $0\g_ring.age[1][4:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:19$20'.
+     1/1: $0\g_ring.age[2][4:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:19$25'.
+     1/1: $0\g_ring.age[3][4:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:19$30'.
+     1/1: $0\g_ring.age[4][4:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:24$35'.
+     1/1: $0\g_ring.ptr[4:0]
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:28$40'.
+Creating decoders for process `\hbfd_pad.$proc$hbfd_pad.sv:43$45'.
+     1/137: $1\g_ring.g_macro.$fordecl_block$3.k[31:0]$48
+     2/137: $0\g_ring.capture[135:0] [135]
+     3/137: $0\g_ring.capture[135:0] [134]
+     4/137: $0\g_ring.capture[135:0] [133]
+     5/137: $0\g_ring.capture[135:0] [132]
+     6/137: $0\g_ring.capture[135:0] [131]
+     7/137: $0\g_ring.capture[135:0] [130]
+     8/137: $0\g_ring.capture[135:0] [129]
+     9/137: $0\g_ring.capture[135:0] [128]
+    10/137: $0\g_ring.capture[135:0] [127]
+    11/137: $0\g_ring.capture[135:0] [126]
+    12/137: $0\g_ring.capture[135:0] [125]
+    13/137: $0\g_ring.capture[135:0] [124]
+    14/137: $0\g_ring.capture[135:0] [123]
+    15/137: $0\g_ring.capture[135:0] [122]
+    16/137: $0\g_ring.capture[135:0] [121]
+    17/137: $0\g_ring.capture[135:0] [120]
+    18/137: $0\g_ring.capture[135:0] [119]
+    19/137: $0\g_ring.capture[135:0] [118]
+    20/137: $0\g_ring.capture[135:0] [117]
+    21/137: $0\g_ring.capture[135:0] [116]
+    22/137: $0\g_ring.capture[135:0] [115]
+    23/137: $0\g_ring.capture[135:0] [114]
+    24/137: $0\g_ring.capture[135:0] [113]
+    25/137: $0\g_ring.capture[135:0] [112]
+    26/137: $0\g_ring.capture[135:0] [111]
+    27/137: $0\g_ring.capture[135:0] [110]
+    28/137: $0\g_ring.capture[135:0] [109]
+    29/137: $0\g_ring.capture[135:0] [108]
+    30/137: $0\g_ring.capture[135:0] [107]
+    31/137: $0\g_ring.capture[135:0] [106]
+    32/137: $0\g_ring.capture[135:0] [105]
+    33/137: $0\g_ring.capture[135:0] [104]
+    34/137: $0\g_ring.capture[135:0] [103]
+    35/137: $0\g_ring.capture[135:0] [102]
+    36/137: $0\g_ring.capture[135:0] [101]
+    37/137: $0\g_ring.capture[135:0] [100]
+    38/137: $0\g_ring.capture[135:0] [99]
+    39/137: $0\g_ring.capture[135:0] [98]
+    40/137: $0\g_ring.capture[135:0] [97]
+    41/137: $0\g_ring.capture[135:0] [96]
+    42/137: $0\g_ring.capture[135:0] [95]
+    43/137: $0\g_ring.capture[135:0] [94]
+    44/137: $0\g_ring.capture[135:0] [93]
+    45/137: $0\g_ring.capture[135:0] [92]
+    46/137: $0\g_ring.capture[135:0] [91]
+    47/137: $0\g_ring.capture[135:0] [90]
+    48/137: $0\g_ring.capture[135:0] [89]
+    49/137: $0\g_ring.capture[135:0] [88]
+    50/137: $0\g_ring.capture[135:0] [87]
+    51/137: $0\g_ring.capture[135:0] [86]
+    52/137: $0\g_ring.capture[135:0] [85]
+    53/137: $0\g_ring.capture[135:0] [84]
+    54/137: $0\g_ring.capture[135:0] [83]
+    55/137: $0\g_ring.capture[135:0] [82]
+    56/137: $0\g_ring.capture[135:0] [81]
+    57/137: $0\g_ring.capture[135:0] [80]
+    58/137: $0\g_ring.capture[135:0] [79]
+    59/137: $0\g_ring.capture[135:0] [78]
+    60/137: $0\g_ring.capture[135:0] [77]
+    61/137: $0\g_ring.capture[135:0] [76]
+    62/137: $0\g_ring.capture[135:0] [75]
+    63/137: $0\g_ring.capture[135:0] [74]
+    64/137: $0\g_ring.capture[135:0] [73]
+    65/137: $0\g_ring.capture[135:0] [72]
+    66/137: $0\g_ring.capture[135:0] [71]
+    67/137: $0\g_ring.capture[135:0] [70]
+    68/137: $0\g_ring.capture[135:0] [69]
+    69/137: $0\g_ring.capture[135:0] [68]
+    70/137: $0\g_ring.capture[135:0] [67]
+    71/137: $0\g_ring.capture[135:0] [66]
+    72/137: $0\g_ring.capture[135:0] [65]
+    73/137: $0\g_ring.capture[135:0] [64]
+    74/137: $0\g_ring.capture[135:0] [63]
+    75/137: $0\g_ring.capture[135:0] [62]
+    76/137: $0\g_ring.capture[135:0] [61]
+    77/137: $0\g_ring.capture[135:0] [60]
+    78/137: $0\g_ring.capture[135:0] [59]
+    79/137: $0\g_ring.capture[135:0] [58]
+    80/137: $0\g_ring.capture[135:0] [57]
+    81/137: $0\g_ring.capture[135:0] [56]
+    82/137: $0\g_ring.capture[135:0] [55]
+    83/137: $0\g_ring.capture[135:0] [54]
+    84/137: $0\g_ring.capture[135:0] [53]
+    85/137: $0\g_ring.capture[135:0] [52]
+    86/137: $0\g_ring.capture[135:0] [51]
+    87/137: $0\g_ring.capture[135:0] [50]
+    88/137: $0\g_ring.capture[135:0] [49]
+    89/137: $0\g_ring.capture[135:0] [48]
+    90/137: $0\g_ring.capture[135:0] [47]
+    91/137: $0\g_ring.capture[135:0] [46]
+    92/137: $0\g_ring.capture[135:0] [45]
+    93/137: $0\g_ring.capture[135:0] [44]
+    94/137: $0\g_ring.capture[135:0] [43]
+    95/137: $0\g_ring.capture[135:0] [42]
+    96/137: $0\g_ring.capture[135:0] [41]
+    97/137: $0\g_ring.capture[135:0] [40]
+    98/137: $0\g_ring.capture[135:0] [39]
+    99/137: $0\g_ring.capture[135:0] [38]
+   100/137: $0\g_ring.capture[135:0] [37]
+   101/137: $0\g_ring.capture[135:0] [36]
+   102/137: $0\g_ring.capture[135:0] [35]
+   103/137: $0\g_ring.capture[135:0] [34]
+   104/137: $0\g_ring.capture[135:0] [33]
+   105/137: $0\g_ring.capture[135:0] [32]
+   106/137: $0\g_ring.capture[135:0] [31]
+   107/137: $0\g_ring.capture[135:0] [30]
+   108/137: $0\g_ring.capture[135:0] [29]
+   109/137: $0\g_ring.capture[135:0] [28]
+   110/137: $0\g_ring.capture[135:0] [27]
+   111/137: $0\g_ring.capture[135:0] [26]
+   112/137: $0\g_ring.capture[135:0] [25]
+   113/137: $0\g_ring.capture[135:0] [24]
+   114/137: $0\g_ring.capture[135:0] [23]
+   115/137: $0\g_ring.capture[135:0] [22]
+   116/137: $0\g_ring.capture[135:0] [21]
+   117/137: $0\g_ring.capture[135:0] [20]
+   118/137: $0\g_ring.capture[135:0] [19]
+   119/137: $0\g_ring.capture[135:0] [18]
+   120/137: $0\g_ring.capture[135:0] [17]
+   121/137: $0\g_ring.capture[135:0] [16]
+   122/137: $0\g_ring.capture[135:0] [15]
+   123/137: $0\g_ring.capture[135:0] [14]
+   124/137: $0\g_ring.capture[135:0] [13]
+   125/137: $0\g_ring.capture[135:0] [12]
+   126/137: $0\g_ring.capture[135:0] [11]
+   127/137: $0\g_ring.capture[135:0] [10]
+   128/137: $0\g_ring.capture[135:0] [9]
+   129/137: $0\g_ring.capture[135:0] [8]
+   130/137: $0\g_ring.capture[135:0] [7]
+   131/137: $0\g_ring.capture[135:0] [6]
+   132/137: $0\g_ring.capture[135:0] [5]
+   133/137: $0\g_ring.capture[135:0] [4]
+   134/137: $0\g_ring.capture[135:0] [3]
+   135/137: $0\g_ring.capture[135:0] [2]
+   136/137: $0\g_ring.capture[135:0] [1]
+   137/137: $0\g_ring.capture[135:0] [0]
+
+6.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\hbfd_pad.\g_ring.age[0]' using process `\hbfd_pad.$proc$hbfd_pad.sv:19$10'.
+  created $adff cell `$procdff$199' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.age[1]' using process `\hbfd_pad.$proc$hbfd_pad.sv:19$15'.
+  created $adff cell `$procdff$204' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.age[2]' using process `\hbfd_pad.$proc$hbfd_pad.sv:19$20'.
+  created $adff cell `$procdff$209' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.age[3]' using process `\hbfd_pad.$proc$hbfd_pad.sv:19$25'.
+  created $adff cell `$procdff$214' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.age[4]' using process `\hbfd_pad.$proc$hbfd_pad.sv:19$30'.
+  created $adff cell `$procdff$219' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.ptr' using process `\hbfd_pad.$proc$hbfd_pad.sv:24$35'.
+  created $adff cell `$procdff$224' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.ingress' using process `\hbfd_pad.$proc$hbfd_pad.sv:28$40'.
+  created $dff cell `$procdff$225' with positive edge clock.
+Creating register for signal `\hbfd_pad.\g_ring.capture' using process `\hbfd_pad.$proc$hbfd_pad.sv:43$45'.
+  created $adff cell `$procdff$230' with positive edge clock and positive level reset.
+Creating register for signal `\hbfd_pad.\g_ring.g_macro.$fordecl_block$3.k' using process `\hbfd_pad.$proc$hbfd_pad.sv:43$45'.
+  created $dff cell `$procdff$237' with positive edge clock.
+
+6.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:19$10'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:19$10'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:19$15'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:19$15'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:19$20'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:19$20'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:19$25'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:19$25'.
+Found and cleaned up 1 empty switch in `\hbfd_pad.$proc$hbfd_pad.sv:19$30'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:19$30'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:24$35'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:28$40'.
+Removing empty process `hbfd_pad.$proc$hbfd_pad.sv:43$45'.
+Cleaned up 5 empty switches.
+
+6.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+<suppressed ~16 debug messages>
+
+6.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 17 unused cells and 181 unused wires.
+<suppressed ~18 debug messages>
+
+6.5. Executing CHECK pass (checking for obvious problems).
+Checking module hbfd_pad...
+Found and reported 0 problems.
+
+6.6. Executing OPT pass (performing simple optimizations).
+
+6.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 172 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~286 debug messages>
+
+6.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 172 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.6.9. Finished fast OPT passes. (There is nothing left to do.)
+
+6.7. Executing FSM pass (extract and optimize FSM).
+
+6.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+6.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+6.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+6.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+6.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+6.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+6.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+6.8. Executing OPT pass (performing simple optimizations).
+
+6.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 172 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~286 debug messages>
+
+6.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 172 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$199 ($adff) from module hbfd_pad (D = $add$hbfd_pad.sv:21$13_Y, Q = \g_ring.age[0]).
+Adding EN signal on $procdff$219 ($adff) from module hbfd_pad (D = $add$hbfd_pad.sv:21$33_Y, Q = \g_ring.age[4]).
+Adding EN signal on $procdff$204 ($adff) from module hbfd_pad (D = $add$hbfd_pad.sv:21$18_Y, Q = \g_ring.age[1]).
+Adding EN signal on $procdff$214 ($adff) from module hbfd_pad (D = $add$hbfd_pad.sv:21$28_Y, Q = \g_ring.age[3]).
+Adding EN signal on $procdff$209 ($adff) from module hbfd_pad (D = $add$hbfd_pad.sv:21$23_Y, Q = \g_ring.age[2]).
+
+6.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 5 unused cells and 5 unused wires.
+<suppressed ~6 debug messages>
+
+6.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~276 debug messages>
+
+6.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 167 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 7) from port Y of cell hbfd_pad.$sub$hbfd_pad.sv:34$42 ($sub).
+Removed top 3 bits (of 5) from port B of cell hbfd_pad.$add$hbfd_pad.sv:34$43 ($add).
+Removed top 1 bits (of 7) from port Y of cell hbfd_pad.$add$hbfd_pad.sv:34$43 ($add).
+Removed top 1 bits (of 7) from wire hbfd_pad.$add$hbfd_pad.sv:34$43_Y.
+
+6.10. Executing PEEPOPT pass (run peephole optimizers).
+
+6.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+6.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module hbfd_pad:
+  creating $macc model for $add$hbfd_pad.sv:21$13 ($add).
+  creating $macc model for $add$hbfd_pad.sv:21$18 ($add).
+  creating $macc model for $add$hbfd_pad.sv:21$23 ($add).
+  creating $macc model for $add$hbfd_pad.sv:21$28 ($add).
+  creating $macc model for $add$hbfd_pad.sv:21$33 ($add).
+  creating $macc model for $add$hbfd_pad.sv:26$38 ($add).
+  creating $macc model for $sub$hbfd_pad.sv:34$42 ($sub).
+  creating $macc model for $add$hbfd_pad.sv:34$43 ($add).
+  creating $alu model for $macc $add$hbfd_pad.sv:34$43.
+  creating $alu model for $macc $sub$hbfd_pad.sv:34$42.
+  creating $alu model for $macc $add$hbfd_pad.sv:26$38.
+  creating $alu model for $macc $add$hbfd_pad.sv:21$33.
+  creating $alu model for $macc $add$hbfd_pad.sv:21$28.
+  creating $alu model for $macc $add$hbfd_pad.sv:21$23.
+  creating $alu model for $macc $add$hbfd_pad.sv:21$18.
+  creating $alu model for $macc $add$hbfd_pad.sv:21$13.
+  creating $alu model for $lt$hbfd_pad.sv:21$12 ($lt): new $alu
+  creating $alu model for $ge$hbfd_pad.sv:22$14 ($ge): new $alu
+  creating $alu model for $lt$hbfd_pad.sv:21$17 ($lt): new $alu
+  creating $alu model for $ge$hbfd_pad.sv:22$19 ($ge): new $alu
+  creating $alu model for $lt$hbfd_pad.sv:21$22 ($lt): new $alu
+  creating $alu model for $ge$hbfd_pad.sv:22$24 ($ge): new $alu
+  creating $alu model for $lt$hbfd_pad.sv:21$27 ($lt): new $alu
+  creating $alu model for $ge$hbfd_pad.sv:22$29 ($ge): new $alu
+  creating $alu model for $lt$hbfd_pad.sv:21$32 ($lt): new $alu
+  creating $alu model for $ge$hbfd_pad.sv:22$34 ($ge): new $alu
+  creating $alu model for $ge$hbfd_pad.sv:33$41 ($ge): merged with $sub$hbfd_pad.sv:34$42.
+  creating $alu cell for $ge$hbfd_pad.sv:22$34: $auto$alumacc.cc:548:replace_alu$254
+  creating $alu cell for $lt$hbfd_pad.sv:21$32: $auto$alumacc.cc:548:replace_alu$267
+  creating $alu cell for $ge$hbfd_pad.sv:22$29: $auto$alumacc.cc:548:replace_alu$272
+  creating $alu cell for $lt$hbfd_pad.sv:21$27: $auto$alumacc.cc:548:replace_alu$285
+  creating $alu cell for $ge$hbfd_pad.sv:22$24: $auto$alumacc.cc:548:replace_alu$290
+  creating $alu cell for $lt$hbfd_pad.sv:21$22: $auto$alumacc.cc:548:replace_alu$303
+  creating $alu cell for $ge$hbfd_pad.sv:22$19: $auto$alumacc.cc:548:replace_alu$308
+  creating $alu cell for $lt$hbfd_pad.sv:21$17: $auto$alumacc.cc:548:replace_alu$321
+  creating $alu cell for $ge$hbfd_pad.sv:22$14: $auto$alumacc.cc:548:replace_alu$326
+  creating $alu cell for $lt$hbfd_pad.sv:21$12: $auto$alumacc.cc:548:replace_alu$339
+  creating $alu cell for $add$hbfd_pad.sv:21$13: $auto$alumacc.cc:548:replace_alu$344
+  creating $alu cell for $add$hbfd_pad.sv:21$18: $auto$alumacc.cc:548:replace_alu$347
+  creating $alu cell for $add$hbfd_pad.sv:21$23: $auto$alumacc.cc:548:replace_alu$350
+  creating $alu cell for $add$hbfd_pad.sv:21$28: $auto$alumacc.cc:548:replace_alu$353
+  creating $alu cell for $add$hbfd_pad.sv:21$33: $auto$alumacc.cc:548:replace_alu$356
+  creating $alu cell for $add$hbfd_pad.sv:26$38: $auto$alumacc.cc:548:replace_alu$359
+  creating $alu cell for $sub$hbfd_pad.sv:34$42, $ge$hbfd_pad.sv:33$41: $auto$alumacc.cc:548:replace_alu$362
+  creating $alu cell for $add$hbfd_pad.sv:34$43: $auto$alumacc.cc:548:replace_alu$375
+  created 18 $alu and 0 $macc cells.
+
+6.13. Executing SHARE pass (SAT-based resource sharing).
+
+6.14. Executing OPT pass (performing simple optimizations).
+
+6.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+<suppressed ~5 debug messages>
+
+6.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 201 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~276 debug messages>
+
+6.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 201 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 5 unused cells and 16 unused wires.
+<suppressed ~6 debug messages>
+
+6.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~276 debug messages>
+
+6.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.14.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 196 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.14.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.14.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6.15. Executing MEMORY pass.
+
+6.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+6.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+6.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+6.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+6.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+6.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+6.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+6.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+6.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.17. Executing OPT pass (performing simple optimizations).
+
+6.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+<suppressed ~141 debug messages>
+
+6.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 206 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 10 unused cells and 10 unused wires.
+<suppressed ~11 debug messages>
+
+6.17.5. Finished fast OPT passes.
+
+6.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+6.19. Executing OPT pass (performing simple optimizations).
+
+6.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 196 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \hbfd_pad..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+6.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \hbfd_pad.
+Performed a total of 0 changes.
+
+6.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 196 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Removed a total of 0 cells.
+
+6.19.6. Executing OPT_SHARE pass.
+
+6.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+
+6.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.19.10. Finished fast OPT passes. (There is nothing left to do.)
+
+6.20. Executing TECHMAP pass (map to technology primitives).
+
+6.20.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+6.20.2. Continuing TECHMAP pass.
+Using template $paramod$fb7f6c42d84fe8fae89a359df55310f1e494c563\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$719aadea7a94d31a13cd25a777432aacb0e462b5\_90_alu for cells of type $alu.
+Using template $paramod$672a140277c71df8314410f22acc08d55222c3c7\_90_alu for cells of type $alu.
+Using template $paramod$78e969f2586efcf3a5b0b0440bcca0db83d5cca2\_90_alu for cells of type $alu.
+Using template $paramod$b18e16801adf491a64caa0542270798e5d4ac6b6\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000110 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000110 for cells of type $lcu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~1160 debug messages>
+
+6.21. Executing OPT pass (performing simple optimizations).
+
+6.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+<suppressed ~702 debug messages>
+
+6.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 728 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Computing hashes of 658 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Computing hashes of 650 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Computing hashes of 649 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+<suppressed ~237 debug messages>
+Removed a total of 79 cells.
+
+6.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 57 unused cells and 888 unused wires.
+<suppressed ~58 debug messages>
+
+6.21.5. Finished fast OPT passes.
+
+6.22. Executing ABC pass (technology mapping using ABC).
+
+6.22.1. Extracting gate netlist of module `\hbfd_pad' to `<abc-temp-dir>/input.blif'..
+
+6.22.1.1. Executed ABC.
+Extracted 289 gates and 456 wires to a netlist network with 166 inputs and 178 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled Aug 27 2026 23:31:10)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+6.22.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      172
+ABC RESULTS:            ANDNOT cells:        6
+ABC RESULTS:               MUX cells:        3
+ABC RESULTS:              NAND cells:       11
+ABC RESULTS:               NOT cells:        9
+ABC RESULTS:                OR cells:       10
+ABC RESULTS:              XNOR cells:        6
+ABC RESULTS:               XOR cells:       10
+ABC RESULTS:              ZERO cells:        2
+ABC RESULTS:        internal signals:      112
+ABC RESULTS:           input signals:      166
+ABC RESULTS:          output signals:      178
+Removing temp directory.
+Removing global temp directory.
+
+6.23. Executing OPT pass (performing simple optimizations).
+
+6.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module hbfd_pad.
+
+6.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\hbfd_pad'.
+Computing hashes of 530 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+Computing hashes of 529 cells of `\hbfd_pad'.
+Finding duplicate cells in `\hbfd_pad'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+6.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \hbfd_pad..
+Removed 0 unused cells and 412 unused wires.
+<suppressed ~2 debug messages>
+
+6.23.5. Finished fast OPT passes.
+
+6.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `hbfd_pad'. Setting top module to hbfd_pad.
+
+6.24.1. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+
+6.24.2. Analyzing design hierarchy..
+Top module:  \hbfd_pad
+Removed 0 unused modules.
+
+6.25. Printing statistics.
+
+=== hbfd_pad ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       84 wires
+     1359 wire bits
+       16 public wires
+     1102 public wire bits
+        4 ports
+      274 port bits
+      529 cells
+        6   $_ANDNOT_
+      172   $_AND_
+       25   $_DFFE_PN0N_
+      141   $_DFF_PN0_
+      136   $_DFF_P_
+        3   $_MUX_
+       11   $_NAND_
+        8   $_NOT_
+       10   $_OR_
+        6   $_XNOR_
+       10   $_XOR_
+        1   ot_sram_1r1w_128x256_m1_r2c2
+
+6.26. Executing CHECK pass (checking for obvious problems).
+Checking module hbfd_pad...
+Found and reported 0 problems.
+
+7. Executing JSON backend.
+
+8. Printing statistics.
+
+=== hbfd_pad ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       84 wires
+     1359 wire bits
+       16 public wires
+     1102 public wire bits
+        4 ports
+      274 port bits
+      529 cells
+        6   $_ANDNOT_
+      172   $_AND_
+       25   $_DFFE_PN0N_
+      141   $_DFF_PN0_
+      136   $_DFF_P_
+        3   $_MUX_
+       11   $_NAND_
+        8   $_NOT_
+       10   $_OR_
+        6   $_XNOR_
+       10   $_XOR_
+        1   ot_sram_1r1w_128x256_m1_r2c2
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: 4dc7cabea8, time: 0.21s, user: 0.14s, system: 0.01s, MEM: 32.45 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 32% 1x abc (0 sec), 13% 18x opt_clean (0 sec), ...

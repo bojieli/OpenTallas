@@ -1,0 +1,8 @@
+TOKSIM_GLU_SPAN words=3072 ninst=368 io_rows=464 ref_first_rq=20 ref_last_rq=211 ref_first_wq=264 ref_last_wq=455 ref_last_wdone=467 core_first_rq=10 core_last_wq=445 sector_writes=384 (edges after io_start_v)
+SFU_SPLIT_EQUIV PASS edges=5146 active_output_edges=5106 delay_core=5 delay_status=3 lg_path=15
+PASS canonical Qswiglu actual exp/div/multiply/BF16 16 C12 lanes 80 operand SRAMs 16 programme SRAMs 24 protected VM SRAMs 6 IOprogramme SRAMs actualtap14 real scalar-route capture words=3072 exact_VM_committed_words=3072 one_start=1 actual_IO_rows=464 actual_arithmetic_rows=368 no_manual_prefetch_drain=1 golden=actualcanonicalhgiMachine
+- tools/hbm_static/toksim_su/sfu/tb_toksim_glu_split.sv:335: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 104.503 s; speed 41.380 ns/s
+- Verilator: cpu 104.482 s on 1 threads; allocated 152 MB
+rc=0

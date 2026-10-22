@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.compiler.calendar_edge.v1",
+ "date": "2026-10-19",
+ "lane": "HH-2 (HOURLY-HBM / HF-5a)",
+ "element": "ot_hbm_accel_smh front_c: u_rw / u_re ot_hbm_accel_smh_fc_xr -> ot_hbm_accel_smh_fc_xr2 (OT_SMH_FC_HIER branch, ot_hbm_accel_smh.sv ~1095)",
+ "decision": "(a) compiler calendar offset",
+ "edge": {
+  "delayed_by_fc_xr2": ["xr_w", "xr_e", "lbr0", "lbr1", "fmr0", "fmr1"],
+  "delta_cycles": 1,
+  "rows_shifted": "front_c bout_l1/bout_r1, rout_l2/rout_r2, r3a/r3a_e (-> fc_bc fo_row3) issue +1 against rout_l1/rout_r1 and fo_row0; the row-1 x write issues +1 with them",
+  "fc_b_internal": "xi stays aligned with li/fi (all three +1 together): no change inside fc_b"
+ },
+ "why_not_b": "(b) = an fc_t variant with one more line pad: a new hard route of fc_t, whose exact-pin view 73093766f (smh_fct_ref_p45-r1-9214bae8b) is CLOSED and audits BINDABLE (results/arch/hf5_1018/native_fct_73093766f). Closure first: no new hardware, no re-route; (a) is a static offset the compiler owns.",
+ "latency": "+1 cycle per front pass on the x-write / PR1-line path (the fc_xr2 stage itself); the row 2/3 offset hides under it (no additional cycle on the single-user token critical path).",
+ "verify": "smn_native_sm_fch (CG_LOCKSTEP) under the swap with the +1 row 2/3 offset, once smn_fcxr2_ref_fa-r2-dd7fca4ca closes and the parent takes the swap"
+}

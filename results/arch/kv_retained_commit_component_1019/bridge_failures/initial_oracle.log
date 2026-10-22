@@ -1,0 +1,8 @@
+TX edge=24 op=14 id=0000
+TX edge=38 op=81 id=73a1
+TX edge=45 op=82 id=73a2
+TX edge=78 op=81 id=b231
+FAIL RAW_POR_CLEAR edge=80
+[800000] %Fatal: bridge_tb.sv:21: Assertion failed in bridge_tb.fail: RAW_POR_CLEAR
+%Error: bridge_tb.sv:21: Verilog $stop
+Aborting...

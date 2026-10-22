@@ -1,0 +1,20 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_d2d_cal_seq_pin_bc-bc2-569419a7d bench bench_mut1_sequencer_writes_dropped_todays_die host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc-bc2-569419a7d log cl/bench_mut1_sequencer_writes_dropped_todays_die.a1b1.log captured 2026-10-19T08:03:08-07:00
+# fail_regex 'token run would replay segment 9'
+Verilator 5.050 2026-07-01 rev v5.050
+target11: rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh SEG2 TX 9 RX 10
+BAD token start 1: DUT bases TX 9 RX 10, SEG1 2 / 4 (token run would replay segment 9)
+BAD event stream differs at t=63755000 (DUT 00 vs ref 10, phase 2)
+BAD event stream differs at t=63765000 (DUT 10 vs ref 10, phase 2)
+BAD event stream differs at t=63775000 (DUT 10 vs ref 00, phase 2)
+BAD event stream differs at t=63785000 (DUT 00 vs ref 00, phase 2)
+BAD event stream differs at t=63795000 (DUT 00 vs ref 00, phase 2)
+BAD event stream differs at t=63805000 (DUT 00 vs ref 00, phase 2)
+BAD event stream differs at t=63815000 (DUT 00 vs ref 00, phase 2)
+BAD token start 2: DUT bases TX 9 RX 10, SEG1 2 / 4 (token run would replay segment 9)
+BAD runtime cfg writes forwarded 0 (6 expected: 2 switches to SEG1 + 1 restore to SEG2, 2 words each)
+FAIL kv_dcal_bootcfg mut1 errors18080
+[2583310000] %Fatal: tb_kv_dcal_bootcfg.sv:157: Assertion failed in tb_kv_dcal_bootcfg
+%Error: rtl/test/qwen_static_kv/tb_kv_dcal_bootcfg.sv:157: Verilog $stop
+Aborting...
+DCALBC_FAIL mut1: BAD token start 1: DUT bases TX 9 RX 10, SEG1 2 / 4 (token run would replay segment 9)

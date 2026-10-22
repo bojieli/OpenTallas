@@ -1,0 +1,3 @@
+/usr/bin/x86_64-linux-gnu-ld.bfd: /srv/opentallas-scratch/claude/hbm-native-record23-clock-1019/obj_arithmetic_clock/Vtb__ALL.a(Vtb_vm_classes_5.o): in function `main':
+Vtb_vm_classes_5.cpp:(.text+0x4000d1): multiple definition of `main'; observe.o:observe.cpp:(.text+0x0): first defined here
+collect2: error: ld returned 1 exit status

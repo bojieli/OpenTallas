@@ -1,0 +1,161 @@
+{
+  "remote_host": "ot-epyc7",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/qkd_hr_core_peer-20261019-224011",
+  "native_textbook": {
+    "cells": 99711,
+    "flops": 24141,
+    "icgs": 0,
+    "macros": 0,
+    "findings": {
+      "clock_domain": [
+        "clock root port ck_core: 24,141 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. _157870_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+      ],
+      "util_channel": [
+        "utilisation 19.9% outside 45%-65% (std 15206 + macro 0 um2 in 76441 um2): shrink the outline (long wires / sparse placement)"
+      ],
+      "clock_guidance": [
+        "clock root port:ck_core: 24,141 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 24,141 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+      ]
+    },
+    "refuse": {},
+    "metrics": {
+      "core_um": [
+        276.5,
+        276.5
+      ],
+      "clock_roots": [
+        {
+          "root": "port:ck_core",
+          "ff": 24141,
+          "icg": 0,
+          "macro_pins": 0,
+          "example": "_157870_"
+        }
+      ],
+      "hier_subblocks": 0,
+      "clock_max_root_sinks": 24141,
+      "clock_max_root": "port:ck_core",
+      "high_fanout_top": [
+        {
+          "net": "u_ot_pr_core.u_rank__u_peer.u_m.nr[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+          "loads": 2113,
+          "flops": 0
+        },
+        {
+          "net": "u_ot_pr_core.u_rank__u_peer.u_m.pr[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+          "loads": 2036,
+          "flops": 0
+        },
+        {
+          "net": "_096968_/Y (OR2x2_ASAP7_75t_R)",
+          "loads": 1062,
+          "flops": 1
+        },
+        {
+          "net": "u_ot_pr_core.u_rank__u_peer.u_m.nr[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+          "loads": 1058,
+          "flops": 0
+        },
+        {
+          "net": "_101029_/Y (OR4x1_ASAP7_75t_R)",
+          "loads": 1056,
+          "flops": 0
+        },
+        {
+          "net": "_099856_/Y (OR4x1_ASAP7_75t_R)",
+          "loads": 1056,
+          "flops": 0
+        },
+        {
+          "net": "_098682_/Y (OR2x2_ASAP7_75t_R)",
+          "loads": 1056,
+          "flops": 0
+        },
+        {
+          "net": "_096981_/Y (OR2x2_ASAP7_75t_R)",
+          "loads": 1056,
+          "flops": 0
+        }
+      ],
+      "hf_max_port": 0,
+      "hf_max_reset": 0,
+      "hf_max_net": 2113,
+      "reset_landing": [
+        {
+          "port": "host_rst_n",
+          "sinks": 1,
+          "flops": 1,
+          "macros": 0
+        },
+        {
+          "port": "por_n",
+          "sinks": 1,
+          "flops": 1,
+          "macros": 0
+        }
+      ],
+      "in_to_out_bits": 0,
+      "in_to_reg_levels": 0,
+      "reg_to_out_levels": 0,
+      "icg_enable_from_port": 0,
+      "depth_ps": 545.1,
+      "depth_path": [
+        "u_ot_pr_core.root__u_coordinator.u_m.cancel_valid[1]$_DFF_PN0_",
+        "u_ot_pr_core.root__u_coordinator.u_m.u_lifecycle.u_lifecycle.allocator.terminal_done$_DFFE_PN0P_/D"
+      ],
+      "depth_levels": 13,
+      "reach_worst_um": 0.0,
+      "reach_violations": 0,
+      "util": 0.1989
+    },
+    "top": "qkd_hr_core_peer",
+    "netlist": "/srv/opentallas-scratch/claude/ref_gate/qkd_hr_core_peer-20261019-224011/routes/gate/work/orfs/results/asap7/opentallas_qkd_hr_core_peer_asap7_ref_gate/base/1_2_yosys.v",
+    "seconds": 4.0,
+    "thresholds": {
+      "clk_sinks_max": 15000,
+      "clk_span_um": 600.0,
+      "clk_span_sinks": 8000,
+      "clk_sinks_refuse": 110000,
+      "hf_report": 256,
+      "hf_max": 3000,
+      "hf_port_refuse": 2048,
+      "hf_reset_refuse": 8000,
+      "hf_refuse": 50000,
+      "rst_land_max": 2,
+      "bnd_levels": 3,
+      "bnd_in_levels_refuse": 9,
+      "bnd_out_levels_refuse": 3,
+      "bnd_in_to_out_refuse": 1,
+      "bnd_icg_port_refuse": 1,
+      "depth_scale": 1.667,
+      "depth_ps_warn": 600.0,
+      "depth_ps_max": 700.0,
+      "reach_um": 500.0,
+      "reach_min_count": 1,
+      "util_min": 0.45,
+      "util_max": 0.65,
+      "fill_max": 0.9,
+      "macro_halo_um": 2.16,
+      "channel_um": 20.0,
+      "reset_ports": "por_n,host_rst_n"
+    },
+    "clock_rule": {
+      "max_root_sinks": 24141,
+      "root": "port:ck_core",
+      "ok": true,
+      "text": "24,141 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 24,141 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+      "enforce": false,
+      "closed_stands": false,
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      }
+    },
+    "would_refuse": [],
+    "waived": [],
+    "verdict": "WARN",
+    "refusing_checks": [],
+    "summary": "clock_domain: clock root port ck_core: 24,141 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. _157870_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | util_channel: utilisation 19.9% outside 45%-65% (std 15206 + macro 0 um2 in 76441 um2): shrink the outline (long wires / sparse placement) | clock_guidance: clock root port:ck_core: 24,141 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 24,141 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+  }
+}

@@ -1,0 +1,190 @@
+{
+ "TT": {
+  "RESETN:recovery_rising:rise_constraint": [
+   -69.8242,
+   -13.5105
+  ],
+  "RESETN:removal_rising:rise_constraint": [
+   23.6533,
+   88.9908
+  ],
+  "RESETN:min_pulse_width:fall_constraint": [
+   25.6348,
+   321.045
+  ],
+  "D:setup_rising:rise_constraint": [
+   -2.84211,
+   47.3435
+  ],
+  "D:hold_rising:rise_constraint": [
+   -28.717,
+   8.58033
+  ],
+  "CLK:min_pulse_width:rise_constraint": [
+   32.959,
+   321.045
+  ],
+  "CLK:min_pulse_width:fall_constraint": [
+   28.0762,
+   321.045
+  ],
+  "DFFASRHQNx1:cell_rise": [
+   51.286,
+   283.54
+  ],
+  "DFFASRHQNx1:cell_fall": [
+   52.3163,
+   261.403
+  ],
+  "DFFASRHQNx1:rise_transition": [
+   19.0504,
+   408.017
+  ],
+  "DFFASRHQNx1:fall_transition": [
+   21.2132,
+   314.15
+  ],
+  "INVx1:cell_rise": [
+   6.90715,
+   305.864
+  ],
+  "INVx1:cell_fall": [
+   6.00518,
+   267.697
+  ],
+  "INVx1:rise_transition": [
+   8.76233,
+   437.925
+  ],
+  "INVx1:fall_transition": [
+   6.80847,
+   347.642
+  ],
+  "INVx6:cell_rise": [
+   7.6711,
+   369.891
+  ],
+  "INVx6:cell_fall": [
+   6.6843,
+   318.306
+  ],
+  "INVx6:rise_transition": [
+   10.4556,
+   584.493
+  ],
+  "INVx6:fall_transition": [
+   8.20212,
+   466.347
+  ],
+  "BUFx12f:cell_rise": [
+   15.1862,
+   181.874
+  ],
+  "BUFx12f:cell_fall": [
+   16.2531,
+   170.649
+  ],
+  "BUFx12f:rise_transition": [
+   9.35978,
+   312.284
+  ],
+  "BUFx12f:fall_transition": [
+   8.53623,
+   246.306
+  ]
+ },
+ "FF": {
+  "RESETN:recovery_rising:rise_constraint": [
+   -53.1152,
+   -9.72729
+  ],
+  "RESETN:removal_rising:rise_constraint": [
+   17.4588,
+   67.5064
+  ],
+  "RESETN:min_pulse_width:fall_constraint": [
+   20.1416,
+   321.045
+  ],
+  "D:setup_rising:rise_constraint": [
+   -0.235602,
+   28.0335
+  ],
+  "D:hold_rising:rise_constraint": [
+   -15.2991,
+   4.00975
+  ],
+  "CLK:min_pulse_width:rise_constraint": [
+   25.6348,
+   321.045
+  ],
+  "CLK:min_pulse_width:fall_constraint": [
+   20.1416,
+   321.045
+  ],
+  "DFFASRHQNx1:cell_rise": [
+   36.9439,
+   191.669
+  ],
+  "DFFASRHQNx1:cell_fall": [
+   36.5224,
+   183.41
+  ],
+  "DFFASRHQNx1:rise_transition": [
+   13.3636,
+   277.943
+  ],
+  "DFFASRHQNx1:fall_transition": [
+   14.3796,
+   231.318
+  ],
+  "INVx1:cell_rise": [
+   5.14806,
+   233.942
+  ],
+  "INVx1:cell_fall": [
+   4.69356,
+   207.424
+  ],
+  "INVx1:rise_transition": [
+   6.29858,
+   320.871
+  ],
+  "INVx1:fall_transition": [
+   5.3158,
+   276.932
+  ],
+  "INVx6:cell_rise": [
+   5.78069,
+   279.049
+  ],
+  "INVx6:cell_fall": [
+   5.25923,
+   248.183
+  ],
+  "INVx6:rise_transition": [
+   7.55825,
+   427.322
+  ],
+  "INVx6:fall_transition": [
+   6.4667,
+   369.081
+  ],
+  "BUFx12f:cell_rise": [
+   11.7695,
+   126.105
+  ],
+  "BUFx12f:cell_fall": [
+   12.252,
+   128.824
+  ],
+  "BUFx12f:rise_transition": [
+   7.01658,
+   228.139
+  ],
+  "BUFx12f:fall_transition": [
+   6.45765,
+   194.377
+  ]
+ }
+}

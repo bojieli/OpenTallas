@@ -186,7 +186,12 @@ def main():
         f = 'x_' + n + '.sv'
         files[f] = candify((ROOT / 'rtl/v41rom' / (n + '.sv')).read_text(), names)
         extra.append(f)
-    pair = 'cand_ot_v41_pair_w17w10.sv'
+    # the native wrapper (CPIN, 2026-10-18) instantiates ot_s81_bf_seam on the HCOL front->column interface (PIPE=CPIN,
+    # default 0 = pass-through); compile it whenever the wrapper names it
+    if re.search(r'(?<![\w$])ot_s81_bf_seam(?![\w$])', wrapper):
+        files['x_ot_s81_bf_seam.sv'] = (ROOT / 'rtl/s81/ot_s81_bf_seam.sv').read_text()
+        extra.append('x_ot_s81_bf_seam.sv')
+    pair ='cand_ot_v41_pair_w17w10.sv'
     src = files[pair]
     assert src.rstrip().endswith('endmodule') and src.count('ot_s81_bf_native #(') == 1
     if a.variant == 'half':

@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81engm_lkp_static14-st10-ckrd-428af274c bench bench_static14_element_mut10 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/s81engm_lkp_static14-st10-ckrd-428af274c log cl/bench_static14_element_mut10.a1b1.log captured 2026-10-18T03:20:41-07:00
+# fail_regex 'STATIC .*mismatch|STATIC coverage missing'
+[159000] %Fatal: tb_s81_engram_lkp_static14.sv:63: Assertion failed in tb_s81_engram_lkp_static14: STATIC beat mismatch cycle158 beat0
+%Error: /srv/opentallas-scratch2/claude/closure-loop/s81engm_lkp_static14-st10-ckrd-428af274c/bench_src_a1/rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_lkp_static14.sv:63: Verilog $stop
+Aborting...

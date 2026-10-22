@@ -1,0 +1,73 @@
+Source: fa7fe4ff9bcc90087b8e8939fd79ffd071ac6967, ot-epyc5 kvs14p real case
+Unused qkd_landsh0_1: closure record ddc26db784fce7ec3990867814609914361177a3
+OpenROAD image openroad/orfs:asap7lock; physical/common/ot_macro_track_snap.tcl rule, snap_origin, place, assert_on_track
+LANE_ORIENT qkd_landsh0_1 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_landsh0_1 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_landsh0_1 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_landsh0_1 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh0_1 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_landsh0_1 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh0_296 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_landsh0_296 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_landsh0_296 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_landsh0_296 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh0_296 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_landsh0_296 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh0_36 R0 PASS rule=x {48 0} y {48 0}
+LANE_ORIENT qkd_landsh0_36 MX PASS rule=x {48 0} y {48 24}
+LANE_ORIENT qkd_landsh0_36 MY PASS rule=x {48 24} y {48 0}
+LANE_ORIENT qkd_landsh0_36 R180 PASS rule=x {48 24} y {48 24}
+LANE_ORIENT qkd_landsh0_528 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_landsh0_528 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_landsh0_528 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_landsh0_528 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh0_528 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_landsh0_528 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh_1 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_landsh_1 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_landsh_1 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_landsh_1 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh_1 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_landsh_1 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh_296 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_landsh_296 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_landsh_296 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_landsh_296 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh_296 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_landsh_296 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh_36 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_landsh_36 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_landsh_36 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_landsh_36 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh_36 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_landsh_36 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh_528 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_landsh_528 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_landsh_528 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_landsh_528 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_landsh_528 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_landsh_528 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh0_1 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_rlysh0_1 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_rlysh0_1 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_rlysh0_1 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh0_1 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_rlysh0_1 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh0_296 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_rlysh0_296 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_rlysh0_296 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_rlysh0_296 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh0_296 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_rlysh0_296 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh0_36 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_rlysh0_36 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_rlysh0_36 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_rlysh0_36 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh0_36 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_rlysh0_36 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh0_528 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_rlysh0_528 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_rlysh0_528 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_rlysh0_528 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh0_528 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_rlysh0_528 R180 x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh_1 R0 PASS rule=x {36 0} y {48 0}
+LANE_ORIENT qkd_rlysh_1 MX PASS rule=x {36 0} y {48 24}
+LANE_ORIENT qkd_rlysh_1 MY PASS rule=x {36 18} y {48 0}
+LANE_ORIENT qkd_rlysh_1 R180 PASS rule=x {36 18} y {48 24}
+LANE_ORIENT qkd_rlysh_296 R0 PASS rule=x {36 0} y {48 0}
+LANE_ORIENT qkd_rlysh_296 MX PASS rule=x {36 0} y {48 24}
+LANE_ORIENT qkd_rlysh_296 MY PASS rule=x {36 18} y {48 0}
+LANE_ORIENT qkd_rlysh_296 R180 PASS rule=x {36 18} y {48 24}
+LANE_ORIENT qkd_rlysh_36 R0 PASS rule=x {36 0} y {48 0}
+LANE_ORIENT qkd_rlysh_36 MX PASS rule=x {36 0} y {48 24}
+LANE_ORIENT qkd_rlysh_36 MY PASS rule=x {36 18} y {48 0}
+LANE_ORIENT qkd_rlysh_36 R180 PASS rule=x {36 18} y {48 24}
+LANE_ORIENT qkd_rlysh_528 R0 PASS rule=x {144 0} y {48 0}
+LANE_ORIENT qkd_rlysh_528 MX PASS rule=x {144 0} y {48 24}
+LANE_ORIENT qkd_rlysh_528 MY FAIL rule=x {144 {}} y {48 0} reason=ot_mts: qkd_rlysh_528 MY x has no legal origin on this track grid
+LANE_ORIENT qkd_rlysh_528 R180 FAIL rule=x {144 {}} y {48 24} reason=ot_mts: qkd_rlysh_528 R180 x has no legal origin on this track grid
+
+Python exact pin-track-shape counterpart agrees on all 64 orientations.
+Actual failed case: 11101 forwarded instances, 198 MY->R0 changes, unchanged frames, max pin X displacement 51.84 um.
+lanes.lef SHA256 efecd5cc0db77096406706b59d17575d5fce0046d29eed3bdf5852f57175c178
+place.tcl SHA256 1de8fe6a4aab0b2ee717918f2edd1e0fcd26b172867b785e4a41f0f20c7fffe7
+die.v SHA256 ffa036a24d0d7df0c9c4d3c347439cf878a1583860846144984f7e7bc7fb115a

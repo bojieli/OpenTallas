@@ -43,7 +43,7 @@ def export_model(m, plan_id, commit=None, sources=(), reach=None, design='qwen_c
     insts = {it.name: dict(master=it.master, kind=it.kind, domain=getattr(it, 'domain', None)) for it in m['insts']}
     rec, problems = DRS.trace_model(insts, m['buses'], lambda n: insts.get(n, {}).get('kind') == 'relay',
                                     lambda _i, p: THRU.get(p), port_base, skip_cls=tuple(skip_cls),
-                                    relay_control=lambda _i, p: p in ('ck', 'rs', 'fck_a'))
+                                    relay_control=lambda _i, p: p in ('ck', 'rs', 'fck_a', 'ck_s', 'ckf', 'ea', 'eb', 'en', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo'))
     return _make(rec, problems, plan_id, commit, sources, 'generator model (after the relay plan)', reach, design, skip_cls,
                  relay_instances=sum(1 for v in insts.values() if v['kind'] == 'relay'))
 

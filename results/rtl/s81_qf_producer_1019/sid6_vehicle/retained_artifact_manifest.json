@@ -1,0 +1,146 @@
+{
+  "scope": "Minimal retained/reset artifact-only source/control/model/proof closure; reuse3254c1060 rawsource51/inputgold deps",
+  "commits": [
+    "855f79eba",
+    "ee834f351",
+    "acde242a9"
+  ],
+  "files": [
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_private_harness/retained_xs_program.py",
+      "sha256": "e1635e31ec07627e4090beb5b4cf17645aeaaae2a02f032f9a9294e1be39e432"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_private_harness/run_retained_xs_reinstall.sh",
+      "sha256": "fe6ce8aff1ccccf2900776fba17425269b89a34c4870d36e599c00dbf32e8c77"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_private_harness/run_retained_xs_source.sh",
+      "sha256": "ce03021dd784663097261e3339e062a180992b23cb9e1decded2747f8f386e27"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_private_harness/tb_retained_xs_reinstall.sv",
+      "sha256": "73d61a3cd129ab9da8dcb68b1cd97316fc87f76e6bd174c70c4757357a246c0a"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_private_harness/tb_retained_xs_source.sv",
+      "sha256": "533670399d2576f856f182fd90cd89e6fc0ecd5f372fce20025fa9db613693d0"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_reinstall_result/README.md",
+      "sha256": "7eb9efe27575c2c803bf205839b7415b95c8a83dcd29d0cd6c294cf55c130a77"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_reinstall_result/baseline.log",
+      "sha256": "cd775a5c9fd1e7ba7dc4d6dc7d57f429c7ece189dd6ce6ba4bc470ccafc5c87a"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_reinstall_result/build_time.log",
+      "sha256": "f6d70f40474f8ca7a270989a82dd123e79c796a05817a276e4831fc0459d118c"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_reinstall_result/inputs.sha256",
+      "sha256": "1eab1e4f7bf8734d1c01ed0c940b89505c9fa5a46ac44870f00a1df3427f99b0"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_reinstall_result/mut_4.log",
+      "sha256": "dd7a4c66f082f6a01b2a30654e32b541d2609d847b9a02f2654ba73988bd9775"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_reinstall_result/programme.json",
+      "sha256": "c26f60a695c3c8f6f095b18efe2f420d1515e3dfe0e5da28a328123b0502909f"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_reinstall_result/result.json",
+      "sha256": "17e1d2351fbeff6e6a126ffce86d7e3e0d386491a4d651bc9d5c74be47830ff9"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_reinstall_result/source_ctl.txt",
+      "sha256": "2b0896d3b9fa9837753ec18c72dc63eec012b9eed03e9884dcf3012ba51d6789"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/contract.json",
+      "sha256": "315b5e754485e10bb324dbe7668bfa7bdcf1ac314038a7337e3ad47727f65731"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/pq_calendar_action.viamap.hex",
+      "sha256": "fe17018c0fd871725d32d337b713c7bb2f584b815b5fcf57cb932f0970b6338a"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/pq_calendar_time.viamap.hex",
+      "sha256": "6b9a541e4845aff4622b448d00b6010f6b0fe037183c7e87a91c7f5ca66afef8"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/pq_phase0.viamap.hex",
+      "sha256": "44b0292ddb661c79d608273b8a24ffe10ca42852c9b4e39be02f8ea86e65df67"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/pq_stream0.viamap.hex",
+      "sha256": "f0280c08969c27c3e6cb3c90d553ec8c2fe8496a8b435b442e43840b8a42b0fe"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/pq_stream1.viamap.hex",
+      "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/pq_stream2.viamap.hex",
+      "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/pq_stream3.viamap.hex",
+      "sha256": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_program_model/source_ctl.txt",
+      "sha256": "ddcd5a459ce58b8467d6eb3f37e624560468a20c81aca918457858766b1a5aed"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_result/README.md",
+      "sha256": "ee4a0d53ec333b71952e4256a9c49febd4519d7dfd2c1820d2ec8d97a3c7d909"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_result/baseline.log",
+      "sha256": "8c866eca3bfdd8a79572431527aaff0c03f2865998608c924acf0e65e5300b1c"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_result/build_time.log",
+      "sha256": "aa96fc7207e1a75cf6c39b20bbdc6ef0259f5fa58b74d26000809bc13c60ce4f"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_result/inputs.sha256",
+      "sha256": "172dc6b8daa37884f1016d1182ccb5e8a2c0e63c9da912f348e08f6f0aff281a"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_result/mut_4.log",
+      "sha256": "35397f4a561e0060b765aac4ba0de1184dc7e3d5d1bdb3fa93899d3472e81975"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_result/mut_6.log",
+      "sha256": "c5f854597b102c5f9c1cd85f12a357c78dd43ae9057a1f1375d35d52ecc4b71b"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_result/result.json",
+      "sha256": "c81380217b812b3fb00d56b722b68621469e05d9bddbc39654d4b49ee4b892d9"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_result/source_receipt.json",
+      "sha256": "3de153406ffaf0ce5a4d2711a44fc24477eb048b8ad60d2f261057d39c2b8503"
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/retained_xs_result/verilator.version",
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    }
+  ],
+  "reused": [
+    "qnorm_source_bundle/manifest.json +files.f +src51",
+    "rawproof_artifact_dependencies_946/expected_xq.mem",
+    "rawproof_artifact_dependencies_946/sid6_fixture/ops/attn.q_norm.scale.bin",
+    "qnorm_program_model_corrected/program.json"
+  ],
+  "external_tools": [
+    "Verilator5.050",
+    "C++20 compiler/make"
+  ],
+  "external_optional_model_regeneration": "Original compiler helpers SHA-pinned in retained_xs_result/source_receipt.json; frozen model emits all7ROMs/source_CTL so no regeneration is required to compile/replay reader proof.",
+  "irreducible_external_executable": "None: useful binaries retained remotely, all functional source/control/gold inputs are artifacts"
+}

@@ -5,8 +5,8 @@ MISMATCH t=5 out o_next
 MISMATCH t=6 out o_next
 MISMATCH t=7 out o_next
 KVS_TILE FAIL tile=pc edges=4000 checks=195853 errors=3997 mut=3 (removed child u_embr)
-- /srv/opentallas-scratch/claude/kv-kits-par/out-82c1c8dc0/pc_m3/tb.sv:289: Verilog $finish
+- /srv/opentallas-scratch/claude/kv-kits-par/out-f985bf9d9/pc_m3/tb.sv:289: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 8us; walltime 0.091 s; speed 87.905 us/s
-- Verilator: cpu 0.091 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 8us; walltime 0.158 s; speed 50.698 us/s
+- Verilator: cpu 0.157 s on 1 threads; allocated 7 MB
 

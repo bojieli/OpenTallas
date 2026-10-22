@@ -1,0 +1,66 @@
+{
+"DMA.LOAD.INT8.HBM.p0": {
+"n": 1,
+"cost": 105.29346006884138,
+"bw": 3.099240237148294,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 4096
+},
+"DMA.LOAD.BF16.HBM.p0": {
+"n": 146,
+"cost": 15568.865632993338,
+"bw": 922.1707607383984,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 1218754
+},
+"DMA.LOAD.FP32.HBM.p0": {
+"n": 2,
+"cost": 208.16294565320365,
+"bw": 0.39043163143763593,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 516
+},
+"SM.MATVEC.INT8.HBM.p3": {
+"n": 145,
+"cost": 974155.0,
+"bw": 1431601.0503435412,
+"bytes16": 118251520.0,
+"bytes32": 59125760.0,
+"total_bytes": 1892024320
+},
+"DMA.STORE.FP32.VM.p0": {
+"n": 72,
+"cost": 2160.0,
+"bw": 0.0,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 73728
+},
+"DMA.FENCE.None.None.p0": {
+"n": 36,
+"cost": 2160.0,
+"bw": 0.0,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"err": "'NoneType' object has no attribute 'indexed'"
+},
+"ATT.QK.FP8E4M3.HBM.p0": {
+"n": 72,
+"cost": 47529.05598888429,
+"bw": 57125.19605111924,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 589824
+},
+"ATT.PV.FP8E4M3.HBM.p0": {
+"n": 72,
+"cost": 47529.05598888429,
+"bw": 57125.19605111924,
+"bytes16": 0.0,
+"bytes32": 0.0,
+"total_bytes": 589824
+}
+}

@@ -1,0 +1,11 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_PG_FINAL_PASS native_pg_terminals=196864
+ACTUAL_NATIVE_MASTER_CENSUS_PASS 196864 PG MTerms each has exact same-role ITerm
+EXPECTED_FAIL missing OT_PG_MISSING_ITERM _1013_/VDD
+EXPECTED_FAIL final_missing OT_PG_FINAL_FAIL count=1 checked=2 first=instance _1013_ master INVx1_ASAP7_75t_R pin VDD role POWER actual_net {} actual_role {} expected_net {} reason OT_PG_MISSING_ITERM
+EXPECTED_FAIL mismatch OT_PG_ITERM_TYPE_MISMATCH _1013_/VDD
+EXPECTED_FAIL final_mismatch OT_PG_FINAL_FAIL count=1 checked=2 first=instance _1013_ master INVx1_ASAP7_75t_R pin VDD role POWER actual_net {} actual_role {} expected_net {} reason OT_PG_ITERM_TYPE_MISMATCH
+MASTER_COMPLETENESS_PASS actual196864 missingITermREFUSE typeMismatchREFUSE finalCollectorFAIL

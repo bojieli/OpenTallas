@@ -6,6 +6,8 @@
 2. Negative controls (the checker must FAULT): 47 users (odd: one same-copy adjacency on a full-scan group), the
    latency user moved to copy B on S029 with its neighbour also on B, an MTP user squeezed into the filler gap.
 3. dv_layer_compile --mu-cal tables: one row a user, ctx body {user 10, pos 21, tok 21} at body[159:108].
+4. S81-L20SPLIT (0li): the split calendar keeps 46 AR / 10 + 1 MTP with the helper (S030) windows clean; the
+   committed *_l20split records reproduce; negative control: a helper window longer than the slot FAULTs.
 """
 import json
 import sys
@@ -19,6 +21,9 @@ import dv_layer_compile as C  # noqa: E402
 
 
 def main():
+    # 1-2 + 4 are the switched-leg (pre-10-21) controls: 46 AR / 10 + 1 MTP; the direct-cabling records (OWNER 10-21,
+    # 42 AR / 9 + 3 MTP, period -74,484 / -79,624) are checked by --check and the direct block below.
+    M.OFFCHIP = 'switched'
     m = M.load_model()
     st = M.stage_windows(m)
     d = M.design(m)
@@ -51,14 +56,37 @@ def main():
     u11 = [u for u in mt['users'] if u['kind'] != 'filler'] + [dict(user=10, shift=10 * mt['S'], kind='mtp')]
     col = {g: {**c, 10: 'A'} for g, c in mt['col'].items()}
     assert M.collisions(st, u11, mt['P'], col)[0]
-    # committed records reproduce
+    # committed records reproduce (main() selects the direct leg, the record default)
     assert M.main(['--check']) == 0
+    M.OFFCHIP = 'direct'
+    sv = M.offchip_saving()
+    assert sv['ar']['saved'] > 0 and sv['mtp']['saved'] > 0
+    dr = M.build('ar')
+    assert dr['users'] == 44 and dr['lemma']['brute_force']['result'] == 'PASS', dr['users']
+    assert dr['circuits']['hop_windows']['land'] == 0 and dr['offchip']['ar_tx_hold']['total'] > 0
+    M.HOLD_TX = False             # negative control: 44 users without the AR TX hold -> land FAULT at S005
+    assert M.build('ar')['circuits']['hop_windows']['land'] != 0
+    M.HOLD_TX = True
+    M.WINDOW_HOP_DIRECT = False   # 54b8de500 windows (switched hop inside every stage window) -> 42 users
+    assert M.build('ar')['users'] == 42
+    M.WINDOW_HOP_DIRECT = True
+    M.OFFCHIP = 'switched'
     # layer compiler tables
     cal = json.loads((M.OUT / 'calendar_ar.json').read_text())
     t = C.mu_slot_tables(cal, 'L20')
-    assert len(t['rows']) == 46 and t['users_per_copy'] == {'A': 23, 'B': 23}
+    assert len(t['rows']) == 44 and t['users_per_copy'] == {'A': 22, 'B': 22}
     r1 = [r for r in t['rows'] if r['user'] == 1][0]
     assert (int(r1['ctx_body'], 16) >> 108) >> 42 == 1 and r1['copy'] == 'B' and r1['local'] == 0
+    # L20 split: helper-die windows in the calendar check
+    M.OFFCHIP = 'switched'
+    for mode, n_users in (('ar', 46), ('mtp', 10)):
+        r = M.build(mode, split=M.split_config())
+        c = r['l20_split']['check']
+        assert r['users'] == n_users and c['result'] == 'PASS' and c['n_collisions'] == 0, (mode, r['users'], c)
+        assert r['lemma']['brute_force']['result'] == 'PASS'
+    bad_sp = dict(M.SPLIT_L20, helper_window_ar=int(ar['P'] / 46) + 1000)
+    assert M.build('ar', split=bad_sp)['l20_split']['check']['result'] == 'FAULT'
+    assert M.main(['--check', '--l20-split']) == 0
     print('PASS test_dv_mu_calendar')
 
 

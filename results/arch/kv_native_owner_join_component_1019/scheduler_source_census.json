@@ -1,0 +1,323 @@
+{
+  "baseline_sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2",
+  "emitted_sha256": "ce1aba4c204325f2f3c72caaa96aa9947685be17e9f72cca78702b38f573e8d8",
+  "original_ports_preserved": 115,
+  "original_output_ports_preserved": 70,
+  "new_ports": {
+    "native_issue_ready": {
+      "direction": "input",
+      "width": "1",
+      "kind": "wire"
+    },
+    "native_bound_valid": {
+      "direction": "input",
+      "width": "1",
+      "kind": "wire"
+    },
+    "native_bound_tag": {
+      "direction": "input",
+      "width": "[58:0]",
+      "kind": "wire"
+    },
+    "native_bound_gen": {
+      "direction": "input",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "native_bound_descgen": {
+      "direction": "input",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "native_bound_client": {
+      "direction": "input",
+      "width": "[15:0]",
+      "kind": "wire"
+    },
+    "native_bound_slot": {
+      "direction": "input",
+      "width": "[7:0]",
+      "kind": "wire"
+    },
+    "native_bound_pos": {
+      "direction": "input",
+      "width": "[17:0]",
+      "kind": "wire"
+    },
+    "native_join_fault": {
+      "direction": "input",
+      "width": "1",
+      "kind": "wire"
+    },
+    "health_native_valid": {
+      "direction": "input",
+      "width": "1",
+      "kind": "wire"
+    },
+    "health_native_tag": {
+      "direction": "input",
+      "width": "[58:0]",
+      "kind": "wire"
+    },
+    "health_native_gen": {
+      "direction": "input",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "issue_fire_v": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "issue_token": {
+      "direction": "output",
+      "width": "[17:0]",
+      "kind": "wire"
+    },
+    "issue_pos": {
+      "direction": "output",
+      "width": "[17:0]",
+      "kind": "wire"
+    },
+    "issue_client": {
+      "direction": "output",
+      "width": "[15:0]",
+      "kind": "wire"
+    },
+    "issue_slot": {
+      "direction": "output",
+      "width": "[7:0]",
+      "kind": "wire"
+    },
+    "issue_descgen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "event_insert_v": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "event_native_valid": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "event_native_tag": {
+      "direction": "output",
+      "width": "[58:0]",
+      "kind": "wire"
+    },
+    "event_native_gen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "event_descgen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "cq_offer_v": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "cq_native_valid": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "cq_native_tag": {
+      "direction": "output",
+      "width": "[58:0]",
+      "kind": "wire"
+    },
+    "cq_native_gen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "cq_descgen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "raw_done_v": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "raw_done_native_valid": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "raw_done_report_needed": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "native_certificate_v": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "raw_done_tag": {
+      "direction": "output",
+      "width": "[58:0]",
+      "kind": "wire"
+    },
+    "raw_done_gen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "raw_done_descgen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "raw_done_client": {
+      "direction": "output",
+      "width": "[15:0]",
+      "kind": "wire"
+    },
+    "raw_done_slot": {
+      "direction": "output",
+      "width": "[7:0]",
+      "kind": "wire"
+    },
+    "raw_done_pos": {
+      "direction": "output",
+      "width": "[17:0]",
+      "kind": "wire"
+    },
+    "native_certificate_tag": {
+      "direction": "output",
+      "width": "[58:0]",
+      "kind": "wire"
+    },
+    "native_certificate_gen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "native_certificate_descgen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "native_certificate_client": {
+      "direction": "output",
+      "width": "[15:0]",
+      "kind": "wire"
+    },
+    "native_certificate_slot": {
+      "direction": "output",
+      "width": "[7:0]",
+      "kind": "wire"
+    },
+    "event_client": {
+      "direction": "output",
+      "width": "[15:0]",
+      "kind": "wire"
+    },
+    "cq_offer_client": {
+      "direction": "output",
+      "width": "[15:0]",
+      "kind": "wire"
+    },
+    "report_drained_client": {
+      "direction": "output",
+      "width": "[15:0]",
+      "kind": "wire"
+    },
+    "event_slot": {
+      "direction": "output",
+      "width": "[7:0]",
+      "kind": "wire"
+    },
+    "cq_offer_slot": {
+      "direction": "output",
+      "width": "[7:0]",
+      "kind": "wire"
+    },
+    "report_drained_slot": {
+      "direction": "output",
+      "width": "[7:0]",
+      "kind": "wire"
+    },
+    "report_drained_v": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "report_drained_native_valid": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "report_drained_tag": {
+      "direction": "output",
+      "width": "[58:0]",
+      "kind": "wire"
+    },
+    "report_drained_gen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "report_drained_descgen": {
+      "direction": "output",
+      "width": "[1:0]",
+      "kind": "wire"
+    },
+    "native_cq_offer_ok": {
+      "direction": "input",
+      "width": "1",
+      "kind": "wire"
+    },
+    "native_cq_prospective_v": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "native_cq_prospective_native_valid": {
+      "direction": "output",
+      "width": "1",
+      "kind": "wire"
+    },
+    "native_cq_prospective_key": {
+      "direction": "output",
+      "width": "[86:0]",
+      "kind": "wire"
+    }
+  },
+  "added_reg_declarations": [
+    "reg event_native_valid_q [0:EQD-1];",
+    "reg [1:0] event_desc_gen [0:EQD-1];",
+    "reg cq_saved_native_valid;",
+    "reg [1:0] cq_saved_desc_gen;"
+  ],
+  "added_state_bits": 51,
+  "scheduler_added_state_H64": 1617,
+  "whole_component_added_state_H64": 1822,
+  "functional_event_row_bits": 182,
+  "functional_event_storage_bits": 2912,
+  "default_parameter": 0,
+  "source_review_default_paths": [
+    "new admission conjunct reduces true",
+    "bad_next native fault contribution reduces false",
+    "identity_bad uses original health_identity_i80 comparison",
+    "issue pending_identity uses original descriptor identity",
+    "word0_cut_ok uses original descriptor-tag lineage comparison",
+    "event lineage uses original descriptor identity",
+    "report_once ownership uses original descriptor-tag lineage comparison",
+    "new metadata writes cannot affect old branch",
+    "native_cq_offer_ok participates only in new native success branch"
+  ],
+  "verdict": "SOURCE_DECLARATION_CHECK_PASS; DEFAULT_BEHAVIOR_REQUIRES_PARENT_BENCH",
+  "compile_or_simulation_run": false
+}

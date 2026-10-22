@@ -20,6 +20,8 @@ case "$CASE" in
  cm1) TB=tb_qkd_host_ctl_mu; MF=$K; FROM='(fault_any || &m_seen[m_old])'; TO='(fault_any || |m_seen[m_old])';;
  # pkgctl MU: no in-order generation check per die
  cm2) TB=tb_qkd_host_ctl_mu; MF=$K; FROM='if (!m_v[gk] || gk != m_last[d*2 +: 2] + 2'"'"'d1) f_die'; TO='if (!m_v[gk]) f_die';;
+ # pkgctl MU (MU-KV-HCTL2 two-stage reports): a reporter is not compared with the captured token/value
+ cm5) TB=tb_qkd_host_ctl_mu; MF=$K; FROM='if (r_v[d] && m_tv[r_g[d]] && (r_tok[d] != m_tok[r_g[d]] || r_val[d] != m_val[r_g[d]])) f_dis = 1'"'"'b1;'; TO=';';;
  # qkd_host_ctl MU: the user is not put on hc pos[17:16]
  cm3) TB=tb_qkd_host_ctl_mu; MF=$C; FROM='{kv_base[11:10],pos[15:0]}'; TO='{2'"'"'b00,pos[15:0]}';;
  # pkgctl MU: eng_done is not a one-edge pulse (held)

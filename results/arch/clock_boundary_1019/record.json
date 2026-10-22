@@ -1,0 +1,29 @@
+{
+  "source_before": "ed7ba741f3eb6318659f4f9be25f3878f9568fe8",
+  "tool": "tools/closure_loop/ck_insertion.py",
+  "tool_sha256": "8029fafd77560e08d334e0c1951655ac3a12b5df58e849f994fc9d44d59fd68a",
+  "scope": "boundary clock membership only; no timing constraints or signoff thresholds changed",
+  "defect": "timed paths excluded physical data pin flops hidden by false paths",
+  "correction": "structural all-arc fanin/fanout; exclude asynchronous control pins; intersect selected-clock register cells",
+  "validation": {
+    "focused_pass": 6,
+    "broader_pass": 51,
+    "broader_inherited_failures": 7,
+    "new_broader_failures": 0,
+    "host": "ot-epyc8",
+    "unit": "oth-ubuntu-2235387-1792423145",
+    "tools": "Yosys0.68/OpenSTA be771a0",
+    "fixture": "synthesized 5-register two-clock graph plus generic test Liberty; not physical closure"
+  },
+  "historical_closures": "not rewritten; measurements using timed boundary selection retain their original source and scope",
+  "consumer_sha256": {
+    "tools/closure_loop/ck_insertion.py": "8029fafd77560e08d334e0c1951655ac3a12b5df58e849f994fc9d44d59fd68a",
+    "tools/ref_tile/clock_entry_constraints.py": "30a67263b902c5468bcdf2dbcba7924f448e11cee3d77583518ea47a66860657",
+    "physical/common_flow/io_ref_routed.sdc": "19d0fe6e3ff27d57cc527dff0ff4aabd47073e15ffe936d4bec70d2c1699a0b3"
+  },
+  "consumer_validation": {
+    "pass_count": 20,
+    "unit": "oth-ubuntu-3102009-1792423729",
+    "scope": "same synthesized false-path graph proves identical selected-clock membership for export, gate and routed IO reference; landed-root and entry regressions pass"
+  }
+}

@@ -1,0 +1,20 @@
+{
+ "summary": {
+  "words": 1,
+  "rows": 1,
+  "complete_rows_at_root": 1,
+  "partial_words": 0,
+  "plan_exact": false,
+  "end": "END edges=1071 ret_words=1 xo_checked=1069 fault=0"
+ },
+ "fixture_rows": 1,
+ "errors": [
+  "MISMATCH edge 408 row 0 lo 0 k 0 got 00000000/0 want be182dc8/0",
+  "PLAN_MISMATCH predicted 1 words, got 1; first diff ((408, 0, (0, 0, 1), 3189255624, 0), (408, 0, (0, 0, 1), 0, 0))"
+ ],
+ "frame": "u_f_0L00",
+ "op": "attn.cmp.wk",
+ "field_phase": 71,
+ "mutant": "swap",
+ "pass": false
+}

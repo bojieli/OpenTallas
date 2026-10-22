@@ -16,7 +16,7 @@
   105.84
  ],
  "why": "spec outline",
- "std_area_um2": 900.0,
+ "std_area_um2": null,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -48,22 +48,21 @@
  },
  "clock_port": "ck",
  "blocks": [],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 14% outside 45%-60% (std 900 + macro 0 in core 6271 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/physical/ot_qwen_host_ctl.sv",
   "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
   "physical/ref_tile/qkd_host_ctl/kit.env",
   "physical/ref_tile/qkd_host_ctl/clock.sdc",
   "physical/ref_tile/qkd_host_ctl/signoff.sdc",
+  "physical/ref_tile/qkd_host_ctl/signoff_ffrepair.sdc",
   "physical/ref_tile/qkd_host_ctl/pdn.tcl",
   "physical/ref_tile/qkd_host_ctl/pre_cts.tcl",
+  "physical/ref_tile/qkd_host_ctl/post_cts.tcl",
+  "physical/ref_tile/qkd_host_ctl/post_grt.tcl",
+  "physical/ref_tile/qkd_host_ctl/pre_drt.tcl",
+  "physical/ref_tile/qkd_host_ctl/pre_fill.tcl",
+  "physical/ref_tile/qkd_host_ctl/post_fill.tcl",
   "physical/ref_tile/qkd_host_ctl/pre_grt.tcl",
   "physical/ref_tile/qkd_host_ctl/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -82,6 +81,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/qkd_host_ctl/pre_gpl.tcl",
-  "physical/ref_tile/qkd_host_ctl/pre_dpl.tcl"
+  "physical/ref_tile/qkd_host_ctl/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

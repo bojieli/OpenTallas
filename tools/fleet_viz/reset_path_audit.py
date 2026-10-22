@@ -42,8 +42,17 @@ import glob, json, re, sys
 out = {}
 for run in sys.stdin.read().split():
     r = {}
+    # INF18-RST2 10-19: read the STA of the VERDICT's odb (record/route/corner_sta.json orfs_dir, e.g. cl/eco/pass2 after
+    # the hold ECO, with io_ref_routed.sdc), not the pre-ECO route log -- that one gave 3 false DEFECTs (sfu_exp/rsq,
+    # dsdv_bk_col) whose verdict FF input->reg was +47/+49/+24 ps.
+    od = None
+    try:
+        od = json.load(open(run + "/record/route/corner_sta.json")).get("orfs_dir")
+    except (OSError, ValueError, AttributeError):
+        pass
+    r["sta_dir"] = od or ""
     for c in ("tt", "ff"):
-        fs = glob.glob(run + "/routes/*/work/orfs/w18_sta_%s.log" % c)
+        fs = (glob.glob(od + "/w18_sta_%s.log" % c) if od else []) or glob.glob(run + "/routes/*/work/orfs/w18_sta_%s.log" % c)
         if not fs:
             continue
         try:
@@ -127,7 +136,7 @@ def audit(rows, by_view, sta=True):
     got = sta_probe(runs) if sta else {}
     for x in recs:
         s = got.get(x["run"]) if x["run"] else None
-        x["sta"] = s if s else None
+        x["sta"] = s if s and (s.get("tt") or s.get("ff")) else None
         why = []
         nat = x["native"] or {}
         if is_reset(nat.get("capture_pin")):

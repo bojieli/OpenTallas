@@ -1,0 +1,223 @@
+{
+  "scope": "Unvalidated simulation-only binary-control functional projection; no simulator executed",
+  "source_lib_decompressed_sha256": {
+    "SEQ_RVT_TT.lib.gz": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "projection_sha256": "1957f1306735c46754bfe4207ad14b37c85de0d730c381792ffeb27262596103",
+  "masters": {
+    "AND2x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A * B)"
+      }
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A * B * C)"
+      }
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A * B * C * D)"
+      }
+    },
+    "AND5x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A * B * C * D * E)"
+      }
+    },
+    "AO21x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * A2) + (B)"
+      }
+    },
+    "AO221x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * A2) + (B1 * B2) + (C)"
+      }
+    },
+    "AO222x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * A2) + (B1 * B2) + (C1 * C2)"
+      }
+    },
+    "AO22x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * A2) + (B1 * B2)"
+      }
+    },
+    "AO31x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * A2 * A3) + (B)"
+      }
+    },
+    "AO32x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * A2 * A3) + (B1 * B2)"
+      }
+    },
+    "AOI211x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(!A1 * !B * !C) + (!A2 * !B * !C)"
+      }
+    },
+    "AOI21x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(!A1 * !B) + (!A2 * !B)"
+      }
+    },
+    "AOI221x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(!A1 * !B1 * !C) + (!A1 * !B2 * !C) + (!A2 * !B1 * !C) + (!A2 * !B2 * !C)"
+      }
+    },
+    "BUFx12f_ASAP7_75t_R": {
+      "functions": {
+        "Y": "A"
+      }
+    },
+    "BUFx2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "A"
+      }
+    },
+    "BUFx3_ASAP7_75t_R": {
+      "functions": {
+        "Y": "A"
+      }
+    },
+    "BUFx4f_ASAP7_75t_R": {
+      "functions": {
+        "Y": "A"
+      }
+    },
+    "BUFx5_ASAP7_75t_R": {
+      "functions": {
+        "Y": "A"
+      }
+    },
+    "BUFx6f_ASAP7_75t_R": {
+      "functions": {
+        "Y": "A"
+      }
+    },
+    "BUFx8_ASAP7_75t_R": {
+      "functions": {
+        "Y": "A"
+      }
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "ff": "posedge CLK: QN=~D; SETN low wins QN=0; otherwise RESETN low QN=1",
+      "scope": "binary controls only; no UDP uncertain-edge/notifier semantics"
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "ff": "posedge CLK: QN=~D"
+    },
+    "INVx1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "!A"
+      }
+    },
+    "MAJx2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A * B) + (A * C) + (B * C)"
+      }
+    },
+    "NAND2x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(!A) + (!B)"
+      }
+    },
+    "NAND3x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(!A) + (!B) + (!C)"
+      }
+    },
+    "NOR2x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(!A * !B)"
+      }
+    },
+    "OA211x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * B * C) + (A2 * B * C)"
+      }
+    },
+    "OA21x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * B) + (A2 * B)"
+      }
+    },
+    "OA222x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * B1 * C1) + (A1 * B1 * C2) + (A1 * B2 * C1) + (A1 * B2 * C2) + (A2 * B1 * C1) + (A2 * B1 * C2) + (A2 * B2 * C1) + (A2 * B2 * C2)"
+      }
+    },
+    "OA22x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * B1) + (A1 * B2) + (A2 * B1) + (A2 * B2)"
+      }
+    },
+    "OA31x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A1 * B1) + (A2 * B1) + (A3 * B1)"
+      }
+    },
+    "OAI21x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(!A1 * !A2) + (!B)"
+      }
+    },
+    "OAI22x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(!A1 * !A2) + (!B1 * !B2)"
+      }
+    },
+    "OR2x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A) + (B)"
+      }
+    },
+    "OR3x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A) + (B) + (C)"
+      }
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A) + (B) + (C) + (D)"
+      }
+    },
+    "TIEHIx1_ASAP7_75t_R": {
+      "functions": {
+        "H": "1"
+      }
+    },
+    "TIELOx1_ASAP7_75t_R": {
+      "functions": {
+        "L": "0"
+      }
+    },
+    "XNOR2x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A * B) + (!A * !B)"
+      }
+    },
+    "XOR2x2_ASAP7_75t_R": {
+      "functions": {
+        "Y": "(A * !B) + (!A * B)"
+      }
+    }
+  },
+  "pending_checks": [
+    "Fleet exhaustive combinational truth tables against original official gate primitives",
+    "HQN both data polarities and between-edge hold",
+    "ASRHQN assert/release RESETN and SETN off-edge at both clock levels",
+    "Both controls low priority and reset release while SETN held low",
+    "Comparison with official UDP after separately approved delayed-net projection",
+    "Native/reference full mechanism miter and causal mutants"
+  ]
+}

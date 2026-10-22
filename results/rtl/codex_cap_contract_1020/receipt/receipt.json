@@ -1,0 +1,68 @@
+{
+  "scope": "CAP capture calibration only; no consumer runtime retirement/deadline qualification",
+  "full_stage_qualified": false,
+  "source_hashes": {
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/runs/l0_p126/model/contract.json": "0c7f33b5cbea66d9d14c0b5259ed5be17489747340cea0fae480d02f53582ee1",
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/runs/l0_p126/model/source_ctl.txt": "9d65d50cb99126e8ba6a5b63acb150dee4dbfb12b6cee9f6f75850a6ccb8c45d",
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/root/sid6_fixture/meta.json": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/wqbp_golden_check.py": "eeaff733e9d88b128ec8c23a523128c2245e9893dd41a41ceca145e33b9d9999",
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/root/tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/root/tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/root/tools/s81_slice/cap_model.py": "8c0b0acf544adf222a7a202f466d352d1796db8d865adc1cdd045b786a09e659",
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/root/tools/s81_dv/frame_return_plan.py": "643f930bdf1a64c6d27cc3d12975f77efebc228f81447d284976963bc87f86ba",
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/root/tools/s81_dv/layer_prog/qf_producer/head_local_contract.py": "6b5d751adbbd46ea2d9e5190cb9b44f0fdf0e31b380da3216ec5521646592708",
+    "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/root/tools/s81_dv/layer_prog/xs_calendar.py": "38129b91c063a0d76044d765690bf5dee978aee2d9f15230ec1a1b19c494677a"
+  },
+  "first_frame_return": 1773,
+  "last_frame_return": 3560,
+  "first_cw": 1829,
+  "last_cw": 3632,
+  "first_vp_capture": 1834,
+  "last_vp_capture": 3637,
+  "measured_frame_to_last_vp": 77,
+  "priced_tail": 195,
+  "priced_tail_slack_diagnostic": 118,
+  "priced_tail_is_consumer_deadline_proof": false,
+  "descriptor_commands": 15,
+  "added_hardware_edges": 0,
+  "qualification": {
+    "scope": "CAP and VP capture component; not full-stage/consumer qualification",
+    "matched_nominal_and_negatives_PASS": true,
+    "full_stage_qualified": false,
+    "runs": [
+      {
+        "name": "candidate",
+        "expected_capture_PASS": true,
+        "actual_capture_PASS": true,
+        "causal_fault_bit": "0x0",
+        "cw_words": 512,
+        "vp_words": 512,
+        "missing_rows": 0,
+        "matched_images": 1019,
+        "source_schedule_PASS": true
+      },
+      {
+        "name": "wrong_rbase",
+        "expected_capture_PASS": false,
+        "actual_capture_PASS": false,
+        "causal_fault_bit": "0x100",
+        "cw_words": 476,
+        "vp_words": 476,
+        "missing_rows": 36,
+        "matched_images": 1019,
+        "source_schedule_PASS": true
+      },
+      {
+        "name": "late_cfg",
+        "expected_capture_PASS": false,
+        "actual_capture_PASS": false,
+        "causal_fault_bit": "0x400",
+        "cw_words": 512,
+        "vp_words": 512,
+        "missing_rows": 0,
+        "matched_images": 1019,
+        "source_schedule_PASS": true
+      }
+    ]
+  }
+}

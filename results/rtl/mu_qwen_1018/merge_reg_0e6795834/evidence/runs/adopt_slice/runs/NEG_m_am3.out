@@ -1,0 +1,6 @@
+# case NEG_m_am3 env DV2_FACE=1 DV2_MU_NU=4 DV2_AM_MUT=3 args m --work /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/slice_w/NEG_am3 host ot-epyc7 2026-10-19T06:20:58-07:00 commit 0e6795834c4aeab9537216c77473df6f6cfe2198
+    bench2 (m): seed 21 gap 18 MU_NU 4 FACE 1 AM_MUT 3: 8 emits, 6 tie heads, end cycle 1680
+bench2 (m) MUT=0: FAIL 6/8
+    round 1 user 1: root token / broadcast / slice-1 token [558, 558, 558] users [1, 1, 1], golden argmax 436
+    round 1 user 0: root token / broadcast / slice-1 token [398, 398, 398] users [0, 0, 0], golden argmax 127
+# exit 1

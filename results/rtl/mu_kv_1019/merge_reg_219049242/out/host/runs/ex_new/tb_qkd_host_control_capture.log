@@ -1,0 +1,5 @@
+PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent
+- rtl/test/qwen_host/tb_qkd_host_control_capture.sv:231: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.029 s; speed 267.226 us/s
+- Verilator: cpu 0.029 s on 1 threads; allocated 8 MB

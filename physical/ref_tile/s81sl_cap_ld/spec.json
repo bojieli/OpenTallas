@@ -1,0 +1,132 @@
+{
+ "name": "s81sl_cap_ld",
+ "top": "ot_s81sl_cap_ld",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv"
+ ],
+ "params": {
+  "D": 16
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "i_w"
+  ],
+  "E": [
+   "o_w"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 12,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "LEAD2-S81/TOK2 10-19 TOK.DS.BENCH.1: NEW leaf ot_s81sl_cap_ld (static 70-b lane delay D=16 on W lane 3 = R01 before u_tw): the W tree carries four QF frames, so the E-only delay cannot pack; exact repack s_16_24 (W lane 3 +16, E +24) and the fullsix l16e24 rerun show no tree fault (only the expected reset-CAP F9). ot_hdc_delay_rf 70 x 14 = 980 b, primed valid. +16 edges on R01 words.",
+ "job": {
+  "owner": "Claude:LEAD2-S81/TOK2",
+  "branch": "claude/tok2-capld-1019",
+  "tag": "s81sl_cap_ld",
+  "purpose": "TOK.DS.BENCH.1: W lane-3 static delay leaf (D=16) before u_tw in ot_s81sl_cap; benched standalone (tb_s81sl_cap_ld base + D15/D17 RTL mutants).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_slice",
+   "results/rtl/s81_qf_producer_1019/cap_ed_calendar"
+  ],
+  "benches": [
+   {
+    "name": "capld_base",
+    "cmd": "bash tools/s81_slice/cap_ld_bench.sh {RUN}/capld_base 16",
+    "expect": "pass",
+    "pass_regex": "^TB_CAP_LD PASS checks [0-9]+ D 16$",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "capld_mut_d15",
+    "cmd": "bash tools/s81_slice/cap_ld_bench.sh {RUN}/capld_d15 15",
+    "expect": "fail",
+    "fail_regex": "^TB_CAP_LD FAIL checks [0-9]+ errs [0-9]+ D 16 DUT 15$",
+    "fail_witness": "results/rtl/s81_qf_producer_1019/cap_ed_calendar/bench_l16e24/ld_m15.run.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "capld_mut_d17",
+    "cmd": "bash tools/s81_slice/cap_ld_bench.sh {RUN}/capld_d17 17",
+    "expect": "fail",
+    "fail_regex": "^TB_CAP_LD FAIL checks [0-9]+ errs [0-9]+ D 16 DUT 17$",
+    "fail_witness": "results/rtl/s81_qf_producer_1019/cap_ed_calendar/bench_l16e24/ld_m17.run.log",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_cap_ld/views",
+  "record_to": "results/rtl/ref_tile/s81sl_cap_ld"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: ot_hdc_delay_rf lands the lane in its pin input register and drives it from its pin output register; recipe-3 pin_regs would add unpriced edges to the D=16 calendar."
+ },
+ "util": 0.5,
+ "outline": {
+  "w": 43.2,
+  "h": 43.2
+ },
+ "keep_pin_regs": true,
+ "pin_ranges": {
+  "i_w": [
+   6.48,
+   35.64
+  ],
+  "o_w": [
+   6.48,
+   35.64
+  ],
+  "clk": [
+   19.44,
+   21.6
+  ],
+  "rst_n": [
+   21.6,
+   23.76
+  ]
+ },
+ "why_floorplan": "43.2 x 43.2 (core 38.88^2 = 1,512 um2; ~1.12k flops + 14:1 x 70 read mux, est. ~730 um2 std from the cap_ed gate ratio -> ~48 % util, square): lane word in W face (70 pins / 29 um = 2.4/um, from the CAP lane-3 input), out E face (to u_tw lane 3), clk/rst_n S face mid; no macros, one band, one root.",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "children": [],
+ "inter": [],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

@@ -1,0 +1,22 @@
+{
+ "cell": "ot_hgi_sfu_core_split3",
+ "rounds": [
+  {
+   "round": 0,
+   "rc": 1,
+   "host": "ot-epyc6",
+   "extra": [
+    "v16w/v16w_ot_hgi_sfu_core_split3.sv",
+    "rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv"
+   ],
+   "prefer": [
+    "rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv"
+   ],
+   "errors": [
+    "rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv:6: ERROR: Re-definition of module `\\ot_hgi_sfu_arithmetic_grid__d4g_sfu'!"
+   ]
+  }
+ ],
+ "ok": false,
+ "host": "ot-epyc6"
+}

@@ -1,0 +1,8 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hidx_score_pair8_r0-zt0r-e774eeaa5 bench bench_chunk_rt_c_qlate1 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hidx_score_pair8_r0-zt0r-e774eeaa5 log cl/bench_chunk_rt_c_qlate1.a1b1.log captured 2026-10-21T19:04:06-07:00
+# fail_regex '^MISMATCH cyc'
+MISMATCH cyc864 on1/1 v1/1 kvf/f f0/0 sum 4823a4004200ec404416e3203f580180 / 4823a4004201138042f000003f590580
+MISMATCH cyc1218 on1/1 v1/1 kvf/f ff/f sum bc840000be5b6000c50477acbe2eec00 / bc840000be5b6000c529b7acbe2eec00
+CHUNK_RT_EQUIV checks 2339 outputs 1063 nonzero_sums 1063 errors 2 gapk 2 qlate 1
+[23440000] %Fatal: tb_idx_chunk_rt_equiv.sv:102: Assertion failed in tb_idx_chunk_rt_equiv: CHUNK_RT_EQUIV FAIL
+CHUNK_RT_MODE qlate1 rc=1

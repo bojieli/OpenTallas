@@ -84,7 +84,7 @@
 "links": {
 "dn": 14,
 "up": 14,
-"pr": 14,
+"pr": 15,
 "sg": 25,
 "ss": 25
 },
@@ -437,7 +437,7 @@
 "over_reach_bits": 0,
 "relays": 2836,
 "relay_bit_stages": 766814,
-"bit_mm": 364117,
+"bit_mm": 364174,
 "cut_windows_over_limit": 0,
 "slice_area_mm2": 4.37,
 "n_frames": 122
@@ -65489,6 +65489,41 @@
 ]
 ],
 "n": "svc P.V return tree child -> parent (E)"
+},
+{
+"i": "pr_09_07",
+"c": "attn",
+"b": 514,
+"d": 1,
+"s": 0,
+"L": 110.0,
+"sp": [],
+"e": [
+[
+164,
+"prW",
+15984.3,
+4137.8,
+"box"
+],
+[
+162,
+"prE",
+15874.3,
+4137.8,
+"box"
+]
+],
+"h": [
+[
+15984.3,
+4137.8,
+15874.3,
+4137.8,
+514
+]
+],
+"n": "svc P path: fold root PV frame across the centre (rs_pface pout W -> pin E)"
 },
 {
 "i": "sg_00_01",

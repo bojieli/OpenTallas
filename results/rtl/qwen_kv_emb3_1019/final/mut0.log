@@ -1,0 +1,5 @@
+PASS tb_qkd_embedding_ctx_owner_chain: 4 steps, 4 fills, header owner = context owner, early/sticky/row-open negatives faulted
+- inputs/tb_qkd_embedding_ctx_owner_chain.sv:203: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.003 s; speed 781.481 us/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

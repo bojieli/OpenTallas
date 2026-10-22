@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/kv-astk-wrapper-functional-1019/prove.py", line 98, in <module>
+    assert c['type']=='$adff',(mode,'unaccounted cell',n,c['type'])
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: ('default', 'unaccounted cell', 'g_rrel_rst_n.u_fl_rst_rst_n', '$scopeinfo')

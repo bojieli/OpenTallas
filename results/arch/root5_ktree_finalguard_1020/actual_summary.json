@@ -1,0 +1,34 @@
+[
+  {
+    "stamp": "031904",
+    "raw_sha256": "6d1d28a1d58ab5088166ffb25084c552ae7810b51ee401801a55fc3434fc7cea",
+    "raw_status": "FAIL",
+    "max": 34,
+    "nodes": 15,
+    "exit": 0,
+    "admission": {
+      "status": "PASS_WITH_SCOPED_WAIVER",
+      "authority": "coord-20261020-0330-ktree-15-library-adder-nodes",
+      "raw_status": "FAIL",
+      "waived_nodes": 15,
+      "global_limit": 32
+    },
+    "role_errors": []
+  },
+  {
+    "stamp": "041108",
+    "raw_sha256": "c53dd281eba6a845dff175c6e88876013eb106c5cd3cb6c52053c449f88a2368",
+    "raw_status": "FAIL",
+    "max": 34,
+    "nodes": 15,
+    "exit": 0,
+    "admission": {
+      "status": "PASS_WITH_SCOPED_WAIVER",
+      "authority": "coord-20261020-0330-ktree-15-library-adder-nodes",
+      "raw_status": "FAIL",
+      "waived_nodes": 15,
+      "global_limit": 32
+    },
+    "role_errors": []
+  }
+]

@@ -1,0 +1,1415 @@
+{
+ "max": 32,
+ "cells": 1022,
+ "over": [
+  {
+   "net": "_0840_",
+   "driver": "_1571_ (TIEHIx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 99,
+   "total": 101
+  }
+ ],
+ "top": [
+  {
+   "net": "_0840_",
+   "driver": "_1571_ (TIEHIx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 99,
+   "total": 101
+  },
+  {
+   "net": "_0027_",
+   "driver": "\\g_native32.admit_q[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_0276_",
+   "driver": "\\g_native32.admit_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_0277_",
+   "driver": "\\g_native32.admit_q[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_0279_",
+   "driver": "\\g_native32.admit_q[4]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_0280_",
+   "driver": "\\g_native32.admit_q[5]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_0299_",
+   "driver": "\\pending_valid[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_0290_",
+   "driver": "\\pending_valid[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_0300_",
+   "driver": "\\pending_valid[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 32,
+   "reset": 0,
+   "total": 32
+  },
+  {
+   "net": "_0282_",
+   "driver": "\\g_reset.u_leaf.rst_n[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 28,
+   "total": 28
+  },
+  {
+   "net": "_0278_",
+   "driver": "\\g_native32.admit_q[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 26,
+   "reset": 0,
+   "total": 26
+  },
+  {
+   "net": "_0301_",
+   "driver": "\\pending_valid[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 26,
+   "reset": 0,
+   "total": 26
+  },
+  {
+   "net": "_0433_",
+   "driver": "_1288_ (AO21x2_ASAP7_75t_R)",
+   "data": 16,
+   "reset": 0,
+   "total": 16
+  },
+  {
+   "net": "_0283_",
+   "driver": "\\g_reset.u_leaf.rst_n[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 16,
+   "total": 16
+  },
+  {
+   "net": "_0284_",
+   "driver": "\\g_reset.u_leaf.rst_n[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 16,
+   "total": 16
+  },
+  {
+   "net": "_0285_",
+   "driver": "\\g_reset.u_leaf.rst_n[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 16,
+   "total": 16
+  },
+  {
+   "net": "_0286_",
+   "driver": "\\g_reset.u_leaf.rst_n[4]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 13,
+   "total": 13
+  },
+  {
+   "net": "_0288_",
+   "driver": "\\g_reset.u_root.rst_n$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 0,
+   "reset": 7,
+   "total": 7
+  },
+  {
+   "net": "_0594_",
+   "driver": "_1002_ (NOR2x1_ASAP7_75t_R)",
+   "data": 5,
+   "reset": 0,
+   "total": 5
+  },
+  {
+   "net": "_0287_",
+   "driver": "\\g_reset.u_leaf.sync_q[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 5,
+   "reset": 0,
+   "total": 5
+  },
+  {
+   "net": "_0019_",
+   "driver": "\\gap[3]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 5,
+   "reset": 0,
+   "total": 5
+  },
+  {
+   "net": "_0025_",
+   "driver": "\\gap[9]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 5,
+   "reset": 0,
+   "total": 5
+  },
+  {
+   "net": "_0592_",
+   "driver": "_1000_ (AND5x1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0597_",
+   "driver": "_1006_ (NAND2x1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0429_",
+   "driver": "_1284_ (AND4x1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0036_",
+   "driver": "\\g_native32.admit_q[6]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0302_",
+   "driver": "\\gap[0]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0303_",
+   "driver": "\\gap[1]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0018_",
+   "driver": "\\gap[2]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0020_",
+   "driver": "\\gap[4]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0021_",
+   "driver": "\\gap[5]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0024_",
+   "driver": "\\gap[8]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0014_",
+   "driver": "\\qd[32]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0016_",
+   "driver": "\\qd[35]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 4,
+   "reset": 0,
+   "total": 4
+  },
+  {
+   "net": "_0827_",
+   "driver": "_1243_ (AND3x1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0017_",
+   "driver": "_1570_ (HAxp5_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0035_",
+   "driver": "\\fault_state$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0022_",
+   "driver": "\\gap[6]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0215_",
+   "driver": "\\pending_owner[58]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0159_",
+   "driver": "\\pending_result[0]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0149_",
+   "driver": "\\pending_result[10]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0148_",
+   "driver": "\\pending_result[11]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0147_",
+   "driver": "\\pending_result[12]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0146_",
+   "driver": "\\pending_result[13]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0145_",
+   "driver": "\\pending_result[14]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0144_",
+   "driver": "\\pending_result[15]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0143_",
+   "driver": "\\pending_result[16]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0142_",
+   "driver": "\\pending_result[17]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0141_",
+   "driver": "\\pending_result[18]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0140_",
+   "driver": "\\pending_result[19]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0158_",
+   "driver": "\\pending_result[1]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0139_",
+   "driver": "\\pending_result[20]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0138_",
+   "driver": "\\pending_result[21]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0137_",
+   "driver": "\\pending_result[22]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0136_",
+   "driver": "\\pending_result[23]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0135_",
+   "driver": "\\pending_result[24]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0134_",
+   "driver": "\\pending_result[25]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0133_",
+   "driver": "\\pending_result[26]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0132_",
+   "driver": "\\pending_result[27]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0131_",
+   "driver": "\\pending_result[28]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0130_",
+   "driver": "\\pending_result[29]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0157_",
+   "driver": "\\pending_result[2]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0129_",
+   "driver": "\\pending_result[30]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0128_",
+   "driver": "\\pending_result[31]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0127_",
+   "driver": "\\pending_result[32]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0156_",
+   "driver": "\\pending_result[3]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0155_",
+   "driver": "\\pending_result[4]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0154_",
+   "driver": "\\pending_result[5]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0153_",
+   "driver": "\\pending_result[6]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0152_",
+   "driver": "\\pending_result[7]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0151_",
+   "driver": "\\pending_result[8]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0150_",
+   "driver": "\\pending_result[9]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0213_",
+   "driver": "\\qd[0]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0198_",
+   "driver": "\\qd[15]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0196_",
+   "driver": "\\qd[17]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0212_",
+   "driver": "\\qd[1]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0187_",
+   "driver": "\\qd[26]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0186_",
+   "driver": "\\qd[27]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0011_",
+   "driver": "\\qd[28]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0012_",
+   "driver": "\\qd[29]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0211_",
+   "driver": "\\qd[2]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0013_",
+   "driver": "\\qd[30]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0185_",
+   "driver": "\\qd[31]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0184_",
+   "driver": "\\qd[33]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0015_",
+   "driver": "\\qd[34]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0183_",
+   "driver": "\\qd[36]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0182_",
+   "driver": "\\qd[37]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0181_",
+   "driver": "\\qd[38]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0180_",
+   "driver": "\\qd[39]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0210_",
+   "driver": "\\qd[3]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0179_",
+   "driver": "\\qd[40]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0178_",
+   "driver": "\\qd[41]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0177_",
+   "driver": "\\qd[42]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0176_",
+   "driver": "\\qd[43]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0175_",
+   "driver": "\\qd[44]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0174_",
+   "driver": "\\qd[45]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0173_",
+   "driver": "\\qd[46]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0172_",
+   "driver": "\\qd[47]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0171_",
+   "driver": "\\qd[48]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0170_",
+   "driver": "\\qd[49]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0209_",
+   "driver": "\\qd[4]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0169_",
+   "driver": "\\qd[50]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0168_",
+   "driver": "\\qd[51]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0167_",
+   "driver": "\\qd[52]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0166_",
+   "driver": "\\qd[53]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0165_",
+   "driver": "\\qd[54]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0164_",
+   "driver": "\\qd[55]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0163_",
+   "driver": "\\qd[56]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0162_",
+   "driver": "\\qd[57]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0161_",
+   "driver": "\\qd[58]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0208_",
+   "driver": "\\qd[5]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "_0206_",
+   "driver": "\\qd[7]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 3,
+   "reset": 0,
+   "total": 3
+  },
+  {
+   "net": "rst_n",
+   "driver": "rst_n (PORT)",
+   "data": 0,
+   "reset": 3,
+   "total": 3
+  },
+  {
+   "net": "_0595_",
+   "driver": "_1003_ (AND3x1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0598_",
+   "driver": "_1007_ (AND4x1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0599_",
+   "driver": "_1008_ (AND3x1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0601_",
+   "driver": "_1011_ (AND2x2_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0608_",
+   "driver": "_1018_ (OA21x2_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0613_",
+   "driver": "_1023_ (OA21x2_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0618_",
+   "driver": "_1028_ (OA21x2_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0621_",
+   "driver": "_1031_ (OA21x2_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0626_",
+   "driver": "_1036_ (OA21x2_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0717_",
+   "driver": "_1133_ (NOR3x1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0824_",
+   "driver": "_1240_ (AND4x1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0832_",
+   "driver": "_1248_ (AO21x1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0412_",
+   "driver": "_1267_ (AND5x1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0427_",
+   "driver": "_1282_ (AND4x1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0586_",
+   "driver": "_1566_ (AND5x1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0023_",
+   "driver": "\\gap[7]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0034_",
+   "driver": "\\have$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0275_",
+   "driver": "\\owner[0]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0046_",
+   "driver": "\\owner[10]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0047_",
+   "driver": "\\owner[11]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0048_",
+   "driver": "\\owner[12]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0049_",
+   "driver": "\\owner[13]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0050_",
+   "driver": "\\owner[14]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0281_",
+   "driver": "\\owner[15]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0051_",
+   "driver": "\\owner[16]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0052_",
+   "driver": "\\owner[17]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0053_",
+   "driver": "\\owner[18]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0054_",
+   "driver": "\\owner[19]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0037_",
+   "driver": "\\owner[1]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0055_",
+   "driver": "\\owner[20]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0056_",
+   "driver": "\\owner[21]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0057_",
+   "driver": "\\owner[22]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0058_",
+   "driver": "\\owner[23]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0059_",
+   "driver": "\\owner[24]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0060_",
+   "driver": "\\owner[25]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0061_",
+   "driver": "\\owner[26]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0062_",
+   "driver": "\\owner[27]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0063_",
+   "driver": "\\owner[28]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0064_",
+   "driver": "\\owner[29]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0038_",
+   "driver": "\\owner[2]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0065_",
+   "driver": "\\owner[30]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0028_",
+   "driver": "\\owner[31]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0066_",
+   "driver": "\\owner[32]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0067_",
+   "driver": "\\owner[33]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0068_",
+   "driver": "\\owner[34]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0069_",
+   "driver": "\\owner[35]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0070_",
+   "driver": "\\owner[36]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0071_",
+   "driver": "\\owner[37]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0072_",
+   "driver": "\\owner[38]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0073_",
+   "driver": "\\owner[39]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0039_",
+   "driver": "\\owner[3]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0074_",
+   "driver": "\\owner[40]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0075_",
+   "driver": "\\owner[41]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0076_",
+   "driver": "\\owner[42]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0077_",
+   "driver": "\\owner[43]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0078_",
+   "driver": "\\owner[44]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0079_",
+   "driver": "\\owner[45]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0080_",
+   "driver": "\\owner[46]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0029_",
+   "driver": "\\owner[47]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0081_",
+   "driver": "\\owner[48]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0082_",
+   "driver": "\\owner[49]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0040_",
+   "driver": "\\owner[4]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0083_",
+   "driver": "\\owner[50]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0084_",
+   "driver": "\\owner[51]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0085_",
+   "driver": "\\owner[52]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0086_",
+   "driver": "\\owner[53]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0087_",
+   "driver": "\\owner[54]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0088_",
+   "driver": "\\owner[55]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0089_",
+   "driver": "\\owner[56]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0090_",
+   "driver": "\\owner[57]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0091_",
+   "driver": "\\owner[58]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0092_",
+   "driver": "\\owner[59]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0041_",
+   "driver": "\\owner[5]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0030_",
+   "driver": "\\owner[60]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0042_",
+   "driver": "\\owner[6]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0043_",
+   "driver": "\\owner[7]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0044_",
+   "driver": "\\owner[8]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0045_",
+   "driver": "\\owner[9]$_DFFE_PN0P_ (DFFASRHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0240_",
+   "driver": "\\pending_owner[0]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0230_",
+   "driver": "\\pending_owner[10]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0229_",
+   "driver": "\\pending_owner[11]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0228_",
+   "driver": "\\pending_owner[12]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0227_",
+   "driver": "\\pending_owner[13]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0226_",
+   "driver": "\\pending_owner[14]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0225_",
+   "driver": "\\pending_owner[15]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0224_",
+   "driver": "\\pending_owner[16]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  },
+  {
+   "net": "_0223_",
+   "driver": "\\pending_owner[17]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R)",
+   "data": 2,
+   "reset": 0,
+   "total": 2
+  }
+ ]
+}

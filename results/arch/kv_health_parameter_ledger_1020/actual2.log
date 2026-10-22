@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p
+ot-run: ot-epyc6       admits   241 GB (avail 282, growth 113, headroom 0, waiters 0/0 GB) load 154/128 running 41 disk 4740 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2829851-1792485618 after 0 s
+{"schema": "opentallas.health_parameter_repair_actual.v1", "qualified": false, "source_commit": "54e9d9c39", "run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-54e9d9c39-gen9d5p", "source_root": "/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-54e9d9c39-gen9d5p", "added": 356, "masters": ["qkd_hp_or2"], "all_unqualified": true, "independent_enumerator": "PASS", "inputs": {"health_plane.json": "4aa2712456042c2873ffda77a5a0c144e8b23bb9f4f949aff9ec442cb8c4e2ff", "expand.json": "aec07146c897f484bcf2fac886178c54f8e58696801b8d4c2840fb037e94555c", "case_kv/die.v": "80e5c6dc8c15969f040ae15bbc076b5ad157dd72a5d52544541fb840c788bcf5", "case_kv/die.v.params.json": "3b36aa68782bd7da158f175b005c2ea2a3ecbb89058538ae286a88b9c3586897"}}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2829851-1792485618): exit 0

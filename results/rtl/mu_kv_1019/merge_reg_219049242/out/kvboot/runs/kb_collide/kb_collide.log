@@ -1,0 +1,12 @@
+%Warning: as-scratch/claude/refill-0725/MUKVREG2/out/kvboot/runs/kb_collide/src_kb_collide/results/rtl/mu_qwen_1018/kvboot/mut_collide.hex:0: $readmem file not found
+%Warning: claude/refill-0725/MUKVREG2/out/kvboot/runs/kb_collide/src_kb_collide/results/arch/qwen_kv_static_programme_1017/die/target2.hex:0: $readmem file not found
+%Warning: tallas-scratch/claude/refill-0725/MUKVREG2/out/kvboot/runs/kb_collide/src_kb_collide/results/rtl/mu_qwen_1018/kvboot/target3.hex:0: $readmem file not found
+FAIL MU_KV_BOOT: layer programme not configured by the boot path (configured 0, lprg fault 02, dispatcher fault 00)
+- rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv:80: Verilog $finish
+[2011000000] %Fatal: tb_mu_kv_boot.sv:81: Assertion failed in tb_mu_kv_boot: reference not configured
+FAIL MU_KV_BOOT: targets 2 / 3 not configured (writer 0, ownership 0)
+- rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv:83: Verilog $finish
+boot: 471 words through qkd_static_kv_boot_dispatch_mu, layer programme configured, GAP[1][1] 0
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.002 s; speed 1.171 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

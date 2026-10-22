@@ -1,0 +1,9 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-epyc9       admits   295 GB (avail 433, growth 227, headroom 0, waiters 0/0 GB) load 81/128 running 34 disk 164 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-464064-1792485159 after 0 s
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-464064-1792485159): exit 0

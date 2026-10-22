@@ -1,0 +1,730 @@
+{
+ "schema": "opentallas.s81_l20_split.v1",
+ "lane": "S81-L20SPLIT",
+ "date": "2026-10-19",
+ "decision": "coordinator 0li (HANDOFF 10-19 ~15:45): adopt the split of the L20 index scan over 2x the dies",
+ "fixtures": {
+  "dir": "/home/ubuntu/scratch/layerbench-s81/fixtures/L20",
+  "manifest_sha256": "a5df578e70759e458206001b64a42d48526e3a0d615099ecfab463e3992d2b7d"
+ },
+ "grade": "compiled static plan (lower_bk) + RTL bench of every bk_sel job shape (Verilator 5.050) + measured reader law (dsdv_idx_rg P=3) + measured cross-die leg 729; compositions on the models of record",
+ "rank_tree": {
+  "1": {
+   "tree": {
+    "0": []
+   },
+   "closure": true,
+   "chain_cycles": 50375,
+   "per_die": [
+    {
+     "die": 0,
+     "keys": 262144,
+     "first_in": 0,
+     "last_in": 49664,
+     "last_egress": 50375,
+     "t_q": 0,
+     "reader_done": 49663,
+     "children": [],
+     "golden_ok": true
+    }
+   ],
+   "keys_die": 262144,
+   "reader_cycles": 49663,
+   "helper_occupancy_max": null,
+   "root_occupancy": 50375
+  },
+  "3": {
+   "tree": {
+    "0": [
+     1,
+     2
+    ],
+    "1": [],
+    "2": []
+   },
+   "closure": true,
+   "chain_cycles": 22628,
+   "per_die": [
+    {
+     "die": 0,
+     "keys": 87382,
+     "first_in": 0,
+     "last_in": 21917,
+     "last_egress": 22628,
+     "t_q": 0,
+     "reader_done": 16896,
+     "children": [
+      1,
+      2
+     ],
+     "golden_ok": true
+    },
+    {
+     "die": 1,
+     "keys": 87382,
+     "first_in": 729,
+     "last_in": 17627,
+     "last_egress": 18338,
+     "t_q": 729,
+     "reader_done": 17625,
+     "children": [],
+     "golden_ok": true
+    },
+    {
+     "die": 2,
+     "keys": 87380,
+     "first_in": 729,
+     "last_in": 17627,
+     "last_egress": 18338,
+     "t_q": 729,
+     "reader_done": 17624,
+     "children": [],
+     "golden_ok": true
+    }
+   ],
+   "keys_die": 87382,
+   "reader_cycles": 16896,
+   "helper_occupancy_max": 17609,
+   "root_occupancy": 22628
+  },
+  "6": {
+   "tree": {
+    "0": [
+     1,
+     3
+    ],
+    "1": [
+     2
+    ],
+    "2": [],
+    "3": [
+     4,
+     5
+    ],
+    "4": [],
+    "5": []
+   },
+   "closure": true,
+   "chain_cycles": 19275,
+   "per_die": [
+    {
+     "die": 0,
+     "keys": 43691,
+     "first_in": 0,
+     "last_in": 18562,
+     "last_egress": 19275,
+     "t_q": 0,
+     "reader_done": 8704,
+     "children": [
+      1,
+      3
+     ],
+     "golden_ok": true
+    },
+    {
+     "die": 1,
+     "keys": 43691,
+     "first_in": 729,
+     "last_in": 12920,
+     "last_egress": 13631,
+     "t_q": 729,
+     "reader_done": 9433,
+     "children": [
+      2
+     ],
+     "golden_ok": true
+    },
+    {
+     "die": 2,
+     "keys": 43691,
+     "first_in": 1458,
+     "last_in": 10163,
+     "last_egress": 10874,
+     "t_q": 1458,
+     "reader_done": 10162,
+     "children": [],
+     "golden_ok": true
+    },
+    {
+     "die": 3,
+     "keys": 43691,
+     "first_in": 729,
+     "last_in": 14233,
+     "last_egress": 14944,
+     "t_q": 729,
+     "reader_done": 9433,
+     "children": [
+      4,
+      5
+     ],
+     "golden_ok": true
+    },
+    {
+     "die": 4,
+     "keys": 43691,
+     "first_in": 1458,
+     "last_in": 10163,
+     "last_egress": 10874,
+     "t_q": 1458,
+     "reader_done": 10162,
+     "children": [],
+     "golden_ok": true
+    },
+    {
+     "die": 5,
+     "keys": 43689,
+     "first_in": 1458,
+     "last_in": 10163,
+     "last_egress": 10874,
+     "t_q": 1458,
+     "reader_done": 10161,
+     "children": [],
+     "golden_ok": true
+    }
+   ],
+   "keys_die": 43691,
+   "reader_cycles": 8704,
+   "helper_occupancy_max": 14215,
+   "root_occupancy": 19275
+  }
+ },
+ "bench": {
+  "vehicle": "REAL dsdv_bk_sel (die.v u_bk_sel straps tap_k 0x11 sink_k 0x10 ik 4 ek 5 uid 0x5B), stimulus at the unit pins from lower_bk gen --job tree / topk_final (tools/s81_dv/layer_prog/bk/run_bk_layer.sh); every IDX / DONE egress beat checked at its compiled vo_s edge",
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "cases": {
+   "k1_final": {
+    "pass_": true,
+    "mismatches": 0,
+    "expected_beats": 73,
+    "mutant": null,
+    "t_first_in": 100,
+    "t_last_in": 6082,
+    "window": [
+     6722,
+     6797
+    ],
+    "golden_ok": true,
+    "shard": {
+     "k_dies": 1,
+     "candidates": [
+      512,
+      512,
+      512,
+      512
+     ],
+     "closure": null
+    },
+    "span_edges": 6698
+   },
+   "k3_d0_root": {
+    "pass_": true,
+    "mismatches": 0,
+    "expected_beats": 73,
+    "mutant": null,
+    "t_first_in": 100,
+    "t_last_in": 22017,
+    "window": [
+     22657,
+     22732
+    ],
+    "golden_ok": true,
+    "shard": {
+     "k_dies": 3,
+     "die": 0,
+     "rank": 0,
+     "base": 0,
+     "keys": 87382,
+     "children": [
+      1,
+      2
+     ],
+     "child_arrival": [
+      19167,
+      19167
+     ],
+     "t_q": 100,
+     "depth": 0
+    },
+    "span_edges": 22633
+   },
+   "k6_d0_root": {
+    "pass_": true,
+    "mismatches": 0,
+    "expected_beats": 75,
+    "mutant": null,
+    "t_first_in": 100,
+    "t_last_in": 18662,
+    "window": [
+     19302,
+     19377
+    ],
+    "golden_ok": true,
+    "shard": {
+     "k_dies": 6,
+     "die": 0,
+     "rank": 0,
+     "base": 0,
+     "keys": 43691,
+     "children": [
+      1,
+      3
+     ],
+     "child_arrival": [
+      14460,
+      15773
+     ],
+     "t_q": 100,
+     "depth": 0
+    },
+    "span_edges": 19278
+   },
+   "k6_d0_root_mut_corrupt": {
+    "pass_": false,
+    "mismatches": 6,
+    "expected_beats": 75,
+    "mutant": "corrupt",
+    "t_first_in": 100,
+    "t_last_in": 18662,
+    "window": [
+     19302,
+     19377
+    ],
+    "golden_ok": true,
+    "shard": {
+     "k_dies": 6,
+     "die": 0,
+     "rank": 0,
+     "base": 0,
+     "keys": 43691,
+     "children": [
+      1,
+      3
+     ],
+     "child_arrival": [
+      14460,
+      15773
+     ],
+     "t_q": 100,
+     "depth": 0
+    },
+    "span_edges": 19278
+   },
+   "k6_d0_root_mut_early": {
+    "pass_": false,
+    "mismatches": 148,
+    "expected_beats": 75,
+    "mutant": "early",
+    "t_first_in": 100,
+    "t_last_in": 18662,
+    "window": [
+     19302,
+     19377
+    ],
+    "golden_ok": true,
+    "shard": {
+     "k_dies": 6,
+     "die": 0,
+     "rank": 0,
+     "base": 0,
+     "keys": 43691,
+     "children": [
+      1,
+      3
+     ],
+     "child_arrival": [
+      14460,
+      15773
+     ],
+     "t_q": 100,
+     "depth": 0
+    },
+    "span_edges": 19278
+   },
+   "k6_d3_mid": {
+    "pass_": true,
+    "mismatches": 0,
+    "expected_beats": 73,
+    "mutant": null,
+    "t_first_in": 829,
+    "t_last_in": 14333,
+    "window": [
+     14973,
+     15048
+    ],
+    "golden_ok": true,
+    "shard": {
+     "k_dies": 6,
+     "die": 3,
+     "rank": 0,
+     "base": 131073,
+     "keys": 43691,
+     "children": [
+      4,
+      5
+     ],
+     "child_arrival": [
+      11703,
+      11703
+     ],
+     "t_q": 829,
+     "depth": 1
+    },
+    "span_edges": 14220
+   },
+   "k6_d5_leaf": {
+    "pass_": true,
+    "mismatches": 0,
+    "expected_beats": 73,
+    "mutant": null,
+    "t_first_in": 1558,
+    "t_last_in": 10263,
+    "window": [
+     10903,
+     10978
+    ],
+    "golden_ok": true,
+    "shard": {
+     "k_dies": 6,
+     "die": 5,
+     "rank": 0,
+     "base": 218455,
+     "keys": 43689,
+     "children": [],
+     "child_arrival": [],
+     "t_q": 1558,
+     "depth": 2
+    },
+    "span_edges": 9421
+   }
+  },
+  "result": "PASS 5/5 bit-exact at the compiled edges, mutants FAIL 2/2",
+  "pass_": true
+ },
+ "layer": {
+  "schema": "opentallas.s81_l20_split.layer.v1",
+  "compile": {
+   "cmd": "python3 tools/s81_dv/dv_layer_compile.py --layer L20 --die-src /home/ubuntu/scratch/tok-s81-int/tree_g8r (bind_p4m_g8r) --fixtures /home/ubuntu/scratch/layerbench-s81/fixtures/L20",
+   "die_ref": "bind_p4m_g8r@ef4e8d1a0b6bf5c2da57c88e49bcf0d0a080197a",
+   "schedule_last_event": 31383,
+   "schedule_last_event_before": 44284,
+   "price_span": 30635.4,
+   "bk_jobs": {
+    "attn.idx.topk_local": {
+     "t_first_in": 4865,
+     "t_last_in": 23427,
+     "window": [
+      24067,
+      24142
+     ],
+     "golden_ok": true,
+     "span_edges": 19276,
+     "price_cycles": 4225.0,
+     "shard": 6
+    },
+    "attn.idx.topk_final": {
+     "t_first_in": 24692,
+     "t_last_in": 30674,
+     "window": [
+      31314,
+      31387
+     ],
+     "golden_ok": true,
+     "span_edges": 6692,
+     "price_cycles": 178.0,
+     "shard": 1
+    }
+   },
+   "idx_chain": {
+    "start": "attn.idx.score start 4865.9",
+    "priced": 10891.0,
+    "compiled": 26521.1,
+    "compiled_without_final_rung": 20007.1,
+    "note": "compiled = the rank tree (query at the home die, measured reader pace, children merged on lane 3) + topk_merge window + the TP4 topk_final bk_sel job (4 x 512 sparse at the 276-b rung: 6,692 edges vs priced 178 -- the pre-existing TOK-S81-GAPS/IDX rate finding, unchanged by the split). The op schedule is the price: downstream ops are NOT shifted by the overrun (compiler limitation)"
+   }
+  },
+  "cut_replay": {
+   "cut": "cut_3S (G8R2 recut, /home/ubuntu/scratch/tok-s81-g8r2/cuts/cut_3S)",
+   "obj": "ot-epyc5 /srv/opentallas-scratch/claude/tok-s81-gaps/int/out_cut_3S_idle/obj (G8R2 build, reused)",
+   "verilator": "5.050",
+   "ncyc": 31481,
+   "in_events": 153,
+   "out_checks": 434,
+   "unencoded": 829,
+   "verdict": "PASS",
+   "sim_pass": true,
+   "trace_mismatches": 0,
+   "partial": true,
+   "before": {
+    "ncyc": 44580,
+    "schedule_last_event": 44256,
+    "run": "results/rtl/s81_layer_tput_1018/slice_bench/runs/l20_cut_3S_g8r2 (unsharded lower_bk)"
+   }
+  }
+ },
+ "single_user": {
+  "basis": "B3.compose on the 10-09 DS ROM DAG + 10-18 composition, L20 idx path = reader + 116 adders + topk_local + legs/merge (record D: 7,700 + 116 + 4,225 + 1,814 = 13855); compiled rows replace that path by the rank tree (query at the home die -> merged 512 out of the root, measured reader law + bk_sel rung + LEG 729 an edge) + 116; TP4 topk_merge 551 + topk_final 178 priced in every row",
+  "chains": {
+   "record_D": 13855.0,
+   "k3_measured_reader_priced": 23051.0,
+   "split_k6_priced": 18309.0,
+   "k3_compiled": 22744,
+   "split_k6_compiled": 19391,
+   "compiled_vs_priced_split_pct": 5.91,
+   "split_gain_compiled": 3353,
+   "split_gain_priced": 4742.0
+  },
+  "rows": {
+   "record_D": {
+    "ar_tok_s": 1224.1,
+    "mtp_tok_s": 3711.7,
+    "T_ar": 980312.6,
+    "T_mtp": 1344614.8,
+    "mtp_wave_per_position": 3693.0,
+    "mtp_wave_stage": "V.S029",
+    "vs_record": {
+     "ar_pct": 0.0,
+     "mtp_pct": 0.0
+    },
+    "l20_chain_cycles": 13855.0
+   },
+   "k3_measured_reader_priced": {
+    "ar_tok_s": 1212.7,
+    "mtp_tok_s": 3565.4,
+    "T_ar": 989508.6,
+    "T_mtp": 1399790.8,
+    "mtp_wave_per_position": 12889.0,
+    "mtp_wave_stage": "V.S029",
+    "vs_record": {
+     "ar_pct": -0.93,
+     "mtp_pct": -3.94
+    },
+    "l20_chain_cycles": 23051.0
+   },
+   "split_k6_priced (decision 0li)": {
+    "ar_tok_s": 1218.6,
+    "mtp_tok_s": 3639.4,
+    "T_ar": 984766.6,
+    "T_mtp": 1371338.8,
+    "mtp_wave_per_position": 8147.0,
+    "mtp_wave_stage": "V.S029",
+    "vs_record": {
+     "ar_pct": -0.45,
+     "mtp_pct": -1.95
+    },
+    "l20_chain_cycles": 18309.0
+   },
+   "k3_compiled_tree": {
+    "ar_tok_s": 1213.1,
+    "mtp_tok_s": 3570.1,
+    "T_ar": 989201.6,
+    "T_mtp": 1397948.8,
+    "mtp_wave_per_position": 12582.0,
+    "mtp_wave_stage": "V.S029",
+    "vs_record": {
+     "ar_pct": -0.9,
+     "mtp_pct": -3.81
+    },
+    "l20_chain_cycles": 22744.0
+   },
+   "split_k6_compiled_tree": {
+    "ar_tok_s": 1217.2,
+    "mtp_tok_s": 3622.2,
+    "T_ar": 985848.6,
+    "T_mtp": 1377830.8,
+    "mtp_wave_per_position": 9229.0,
+    "mtp_wave_stage": "V.S029",
+    "vs_record": {
+     "ar_pct": -0.56,
+     "mtp_pct": -2.41
+    },
+    "l20_chain_cycles": 19391.0
+   }
+  }
+ },
+ "multi_user": {
+  "no_split_measured_reader": {
+   "ar": {
+    "users": 40,
+    "fillers": 0,
+    "per_user_tok_s": 1210.8,
+    "aggregate_tok_s": 48432,
+    "period": 991076,
+    "slot": 24776.9,
+    "lemma": "PASS",
+    "helper": null,
+    "vs_record_agg_pct": -13.98
+   },
+   "mtp": {
+    "users": 10,
+    "fillers": 1,
+    "per_user_tok_s": 3814.1,
+    "aggregate_tok_s": 39058,
+    "period": 1308504,
+    "slot": 124524,
+    "lemma": "PASS",
+    "helper": null,
+    "vs_record_agg_pct": -0.39
+   }
+  },
+  "split_model_windows": {
+   "ar": {
+    "users": 46,
+    "fillers": 0,
+    "per_user_tok_s": 1223.9,
+    "aggregate_tok_s": 56297,
+    "period": 980512,
+    "slot": 21315.5,
+    "lemma": "PASS",
+    "helper": {
+     "result": "PASS",
+     "helper_window": 11521,
+     "helper_own_window": 289,
+     "helper_busy_pct": 55.4,
+     "n_collisions": 0,
+     "own_offset_first_feasible": 0,
+     "own_offset_any": false,
+     "keys_die": 52429,
+     "collisions": []
+    },
+    "vs_record_agg_pct": -0.01
+   },
+   "mtp": {
+    "users": 10,
+    "fillers": 1,
+    "per_user_tok_s": 3830.4,
+    "aggregate_tok_s": 39225,
+    "period": 1302944,
+    "slot": 124524,
+    "lemma": "PASS",
+    "helper": {
+     "result": "PASS",
+     "helper_window": 17414,
+     "helper_own_window": 1731,
+     "helper_busy_pct": 16.2,
+     "n_collisions": 0,
+     "own_offset_first_feasible": 0,
+     "own_offset_any": false,
+     "keys_die": 52429,
+     "collisions": []
+    },
+    "vs_record_agg_pct": 0.04
+   }
+  },
+  "split_compiled_windows": {
+   "ar": {
+    "users": 46,
+    "fillers": 0,
+    "per_user_tok_s": 1223.9,
+    "aggregate_tok_s": 56297,
+    "period": 980512,
+    "slot": 21315.5,
+    "lemma": "PASS",
+    "helper": {
+     "result": "PASS",
+     "helper_window": 15854,
+     "helper_own_window": 289,
+     "helper_busy_pct": 75.7,
+     "n_collisions": 0,
+     "own_offset_first_feasible": 0,
+     "own_offset_any": false,
+     "keys_die": 52429,
+     "collisions": []
+    },
+    "vs_record_agg_pct": -0.01
+   },
+   "mtp": {
+    "users": 10,
+    "fillers": 1,
+    "per_user_tok_s": 3830.4,
+    "aggregate_tok_s": 39225,
+    "period": 1302944,
+    "slot": 124524,
+    "lemma": "PASS",
+    "helper": {
+     "result": "PASS",
+     "helper_window": 43414,
+     "helper_own_window": 1731,
+     "helper_busy_pct": 38.1,
+     "n_collisions": 0,
+     "own_offset_first_feasible": 5332,
+     "own_offset_any": false,
+     "keys_die": 52429,
+     "collisions": []
+    },
+    "vs_record_agg_pct": 0.04
+   }
+  },
+  "split_compiled_no_shared_read": {
+   "ar": {
+    "users": 46,
+    "fillers": 0,
+    "per_user_tok_s": 1223.9,
+    "aggregate_tok_s": 56297,
+    "period": 980512,
+    "slot": 21315.5,
+    "lemma": "PASS",
+    "helper": {
+     "result": "PASS",
+     "helper_window": 15854,
+     "helper_own_window": 289,
+     "helper_busy_pct": 75.7,
+     "n_collisions": 0,
+     "own_offset_first_feasible": 0,
+     "own_offset_any": false,
+     "keys_die": 52429,
+     "collisions": []
+    },
+    "vs_record_agg_pct": -0.01
+   },
+   "mtp": {
+    "users": 10,
+    "fillers": 1,
+    "per_user_tok_s": 3830.4,
+    "aggregate_tok_s": 39225,
+    "period": 1302944,
+    "slot": 124524,
+    "lemma": "FAULT",
+    "helper": {
+     "result": "FAULT",
+     "helper_window": 95124,
+     "helper_own_window": 1731,
+     "helper_busy_pct": 81.8,
+     "n_collisions": 1,
+     "own_offset_first_feasible": null,
+     "own_offset_any": false,
+     "keys_die": 52429,
+     "collisions": [
+      {
+       "resource": "svc.S030.scan",
+       "users": [
+        10,
+        0
+       ],
+       "overlap": 37420
+      }
+     ]
+    },
+    "vs_record_agg_pct": 0.04
+   }
+  }
+ },
+ "mu_helper_windows": {
+  "ar": 15854,
+  "mtp": 43414,
+  "source": "split.json rank_tree.6.helper_occupancy_max (+ reader time for the MU shard: 52429 keys a die vs 43691); MTP = one shared key read + 6 x (select + merge) -- the B3 shared read the record MU calendar assumes for S029 itself"
+ },
+ "ledger": {
+  "group": "S81.L20_SPLIT",
+  "price": 13855.0,
+  "decision_price": 18309.0,
+  "measured": 19391,
+  "e2e_loss_pct": {
+   "ar": 0.56,
+   "mtp": 2.41
+  },
+  "mu_loss_pct": {
+   "ar": 0.01,
+   "mtp": 0.0
+  }
+ }
+}

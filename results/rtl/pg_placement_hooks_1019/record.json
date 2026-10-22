@@ -1,0 +1,155 @@
+{
+  "scope": "SOURCE_ONLY_NATIVE_HOOK_MECHANISM_NOT_PRODUCTION_CLOSURE",
+  "base": "dada71d19",
+  "core_dependency": "eac067114",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "native_version": "OpenROAD 26Q3-1510-g6cb3f2b704",
+  "fixture_odb_sha256": "d57b1ea74ef14cbf8f89d66337c35938edc0847afed4bfeb87b3ab3fb419d3d2",
+  "fixture_sdc_sha256": "57fd71118384ab7fde5cca4dc0600242e780c25cc130e0a88b384f495b545764",
+  "source_sha256": {
+    "physical/common_flow/clock_spine.tcl": "681c311b474c42e3ae789af35c8ca3a2fcca51f5bb5f39b6d1adc5a020c5ff76",
+    "physical/common_flow/landed_raw_tap.tcl": "b7fa37ed9957d30ac2a2627b6cdeaa1243f1b1d5096008209c0d556d5a302bbb",
+    "physical/common_flow/icg_dont_touch.tcl": "9326050ddee11cd3d661c5265ca9ce84c96ed596972022bddd7961d21f584270",
+    "physical/common_flow/out_pin_driver.tcl": "90f31e96c9d93228660a55f24b7400b4b48f90165e1b07d951c674e536bdd08b",
+    "physical/common_flow/native_pg_binding.tcl": "8ad756ed0de259c930f227824cbd78ddfeeadc628ed689daa14159ef60e9f2f3",
+    "physical/common_flow/clk_net_protect.tcl": "94cc061d8ce0705457b239ea7422d233e8c06c9cddce7272be1ea3ca329cc902"
+  },
+  "test_sha256": {
+    "tests/native_pg_placement/cts.tcl": "01b93ceea020a70428a9f4119bda9e9fcf7a960dd133209d40ce124ffc6d428b",
+    "tests/native_pg_placement/partial.spef": "faac6237ae91ac08d5d21f2bfbeec37f3be036b817c30746fbfc6e384a62c364",
+    "tests/native_pg_placement/tap.lef": "e558d98fc2a2c061c04132fb439c48d80d92b58b5f1616739fe6ed695461525f",
+    "tests/native_pg_placement/tap.lib": "e35a0b4da34d2fd2a33bd68bb6ead0d8275f2b40ef31e93aca43c27b0a830600",
+    "tests/native_pg_placement/README.md": "62f88924e35b914843504d12a4ef28e5f88a1023d475ebb291f99a7e3eb6c7ab"
+  },
+  "default_off_native_trace": {
+    "spine": {
+      "identical": true,
+      "base_trace": [
+        "CANARY_ESTIMATE index=1 checked=66 missing=66",
+        "OT_SPINE iter 0 (coarse) leaves 17 sinks 18 cells 33 leaf arrival 133.1..158.3 ps (spread 25.2) pad 60.0 / 14.0 ps",
+        "CANARY_ESTIMATE index=2 checked=66 missing=66",
+        "OT_SPINE done port clk buffers 33",
+        "CANARY_DONE buffers=33 missing=66 estimates=2 bad=132 rc_apply=1 rc_restore=1"
+      ],
+      "candidate_trace": [
+        "CANARY_ESTIMATE index=1 checked=66 missing=66",
+        "OT_SPINE iter 0 (coarse) leaves 17 sinks 18 cells 33 leaf arrival 133.1..158.3 ps (spread 25.2) pad 60.0 / 14.0 ps",
+        "CANARY_ESTIMATE index=2 checked=66 missing=66",
+        "OT_SPINE done port clk buffers 33",
+        "CANARY_DONE buffers=33 missing=66 estimates=2 bad=132 rc_apply=1 rc_restore=1"
+      ]
+    },
+    "tap": {
+      "identical": true,
+      "base_trace": [
+        "CANARY_ESTIMATE index=1 checked=0 missing=0",
+        "OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=0 raw-ref=-0.0 target=80.0",
+        "CANARY_ESTIMATE index=2 checked=2 missing=2",
+        "OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=1 raw-ref=44.2 target=80.0",
+        "CANARY_ESTIMATE index=3 checked=4 missing=4",
+        "OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=2 raw-ref=67.1 target=80.0",
+        "CANARY_ESTIMATE index=4 checked=6 missing=6",
+        "OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=3 raw-ref=89.0 target=80.0",
+        "OT_LRT DONE tt tap_canary/RAW buffers=3 raw-ref=89.0 target=80.0 residual=9.0",
+        "CANARY_ESTIMATE index=5 checked=6 missing=6",
+        "OT_LRT tapped 1 raw child clock pins",
+        "CANARY_DONE buffers=3 missing=6 estimates=5 bad=18 rc_apply=0 rc_restore=0"
+      ],
+      "candidate_trace": [
+        "CANARY_ESTIMATE index=1 checked=0 missing=0",
+        "OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=0 raw-ref=-0.0 target=80.0",
+        "CANARY_ESTIMATE index=2 checked=2 missing=2",
+        "OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=1 raw-ref=44.2 target=80.0",
+        "CANARY_ESTIMATE index=3 checked=4 missing=4",
+        "OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=2 raw-ref=67.1 target=80.0",
+        "CANARY_ESTIMATE index=4 checked=6 missing=6",
+        "OT_LRT tt tap_canary/RAW BUFx4_ASAP7_75t_R buffers=3 raw-ref=89.0 target=80.0",
+        "OT_LRT DONE tt tap_canary/RAW buffers=3 raw-ref=89.0 target=80.0 residual=9.0",
+        "CANARY_ESTIMATE index=5 checked=6 missing=6",
+        "OT_LRT tapped 1 raw child clock pins",
+        "CANARY_DONE buffers=3 missing=6 estimates=5 bad=18 rc_apply=0 rc_restore=0"
+      ]
+    }
+  },
+  "strict_spine": {
+    "buffers": 33,
+    "placement_estimates": 2,
+    "missing_at_any_estimate": 0,
+    "final_native_pg_terminals": 100,
+    "dirty": 0,
+    "rc_apply": 1,
+    "rc_restore": 1,
+    "unit": "oth-ubuntu-115710-1792445088"
+  },
+  "strict_tap": {
+    "buffers": 3,
+    "placement_estimates": 5,
+    "missing_at_any_estimate": 0,
+    "final_native_pg_terminals": 40,
+    "dirty": 0,
+    "unit": "oth-ubuntu-115758-1792445088"
+  },
+  "causal_old_source_failures": {
+    "spine": "first estimate has66 missing native PG terminals",
+    "tap": "second estimate has2 missing native PG terminals"
+  },
+  "preobserver_spef_controls": "both hooks refuse actual successful SPEF before any placement estimate: OT_PG_PARASITICS_EXISTING_ANNOTATION_REFUSED",
+  "inherited_composition_failure": "spine then tap refuses ODB-0372 on protected spine net; separate mechanism canaries used, no protection cleared",
+  "all_jobs_terminal": true,
+  "canonical_whole_orfs_stage_replayed": false,
+  "production_activation": false,
+  "preserves_original_closed_pg_hold_history": true,
+  "strict_padded_spine": {
+    "unit": "oth-ubuntu-118140-1792445183",
+    "iteration_buffer_counts": [
+      33,
+      93,
+      99
+    ],
+    "placement_estimates": 4,
+    "missing_at_any_estimate": 0,
+    "final_native_pg_terminals": 232,
+    "dirty": 0,
+    "rc_apply": 1,
+    "rc_restore": 1,
+    "scope": "forced 1ps tolerance/5ps initial pad estimate exercises new trial batches; no closure claim"
+  },
+  "historical_source_sha256_before_9d66082a2": {
+    "physical/common_flow/clock_spine.tcl": "f24866ec595145ac2003edff210a26fb4930c98136422b1712f8ca63f5ace6fe",
+    "physical/common_flow/landed_raw_tap.tcl": "b7fa37ed9957d30ac2a2627b6cdeaa1243f1b1d5096008209c0d556d5a302bbb",
+    "physical/common_flow/icg_dont_touch.tcl": "9326050ddee11cd3d661c5265ca9ce84c96ed596972022bddd7961d21f584270",
+    "physical/common_flow/out_pin_driver.tcl": "90f31e96c9d93228660a55f24b7400b4b48f90165e1b07d951c674e536bdd08b",
+    "physical/common_flow/native_pg_binding.tcl": "8ad756ed0de259c930f227824cbd78ddfeeadc628ed689daa14159ef60e9f2f3"
+  },
+  "final_source_order_fix": "9d66082a2",
+  "final_padded_spine_global_dirty": {
+    "unit": "oth-ubuntu-119776-1792445274",
+    "source_order_fix": "9d66082a2",
+    "iteration_buffer_counts": [
+      33,
+      93,
+      99
+    ],
+    "placement_estimates": 5,
+    "missing_at_every_estimate": 0,
+    "unrelated_nonclock_native_rule_api_dirty": 2,
+    "explicit_binder_returns": 0,
+    "clock_hook_new_buffers": 0,
+    "clock_hook_new_nets": 0,
+    "clock_hook_placement_refresh_count": 1,
+    "dirty_after_refresh": 0,
+    "final_native_pg_terminals": 234,
+    "rc_apply": 1,
+    "rc_restore": 1,
+    "result": "PASS"
+  },
+  "global_dirty_old_clock_guard_negative": {
+    "unit": "oth-ubuntu-119326-1792445254",
+    "old_hook": "dada71d19:physical/common_flow/clk_net_protect.tcl",
+    "dirty": 2,
+    "explicit_binder_returns": 0,
+    "clock_hook_new_buffers": 0,
+    "clock_hook_placement_refresh_count": 0,
+    "result": "EXPECTED_CANARY_GLOBAL_DIRTY_REFRESH_REFUSAL"
+  }
+}

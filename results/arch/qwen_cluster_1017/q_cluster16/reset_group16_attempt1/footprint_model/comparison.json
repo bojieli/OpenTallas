@@ -1,0 +1,314 @@
+{
+  "scope": "Read-only immutable GRT database dump model; no new gate or reroute; no minimum routing footprint proof",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/qfd_c_reset_group16_safe-20261019-103745",
+  "host": "ot-epyc7",
+  "source_commit": "7bfdf944ee3b43a7a4cc2fd037fd1073d76154d7",
+  "inputs": [
+    {
+      "file": "gate_dump.json",
+      "sha256": "effe42d9df8f69cefefa389b5bc22554a7cb766d56af3aa315e2deb1b3ff83e2",
+      "odb_stage": "3_2_place_iop (geometry only)"
+    },
+    {
+      "file": "gate_layout_placed.json",
+      "sha256": "7da4c5efd8355818873538aad0ffc9b856958f343c625bd00c56d9bbb467f854",
+      "odb_stage": "5_1_grt"
+    }
+  ],
+  "actual_non_tap_area_um2": 18.0792,
+  "actual_non_tap_sites": 1240,
+  "cell_widths_in_0p054_sites": [
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      110
+    ],
+    [
+      7,
+      6
+    ],
+    [
+      20,
+      32
+    ]
+  ],
+  "core_margin_each_edge_um": 2.16,
+  "row_height_um": 0.27,
+  "site_width_um": 0.054,
+  "models": [
+    {
+      "w_um": 8.64,
+      "h_um": 8.64,
+      "die_area_um2": 74.6496,
+      "rows": 16,
+      "sites_per_row": 80,
+      "tap_sites_per_row": 4,
+      "non_tap_sites_available": 1216,
+      "non_tap_sites_required": 1240,
+      "area_with_current_netlist_and_modeled_taps_um2": 19.01232,
+      "core_occupancy": 1.0187499999999998,
+      "current_cell_width_row_packing_pass": false,
+      "outline_8p64_grid": true,
+      "routed_or_timing_qualified": false,
+      "unchanged_pdn_generator_model": {
+        "layer": "M5",
+        "minimum_stripes_per_net": 1,
+        "minimum_spread_fraction": 0.0,
+        "pass_": false
+      }
+    },
+    {
+      "w_um": 8.64,
+      "h_um": 10.8,
+      "die_area_um2": 93.31200000000001,
+      "rows": 24,
+      "sites_per_row": 80,
+      "tap_sites_per_row": 4,
+      "non_tap_sites_available": 1824,
+      "non_tap_sites_required": 1240,
+      "area_with_current_netlist_and_modeled_taps_um2": 19.478880000000004,
+      "core_occupancy": 0.6958333333333334,
+      "current_cell_width_row_packing_pass": true,
+      "outline_8p64_grid": false,
+      "routed_or_timing_qualified": false,
+      "unchanged_pdn_generator_model": {
+        "layer": "M5",
+        "minimum_stripes_per_net": 1,
+        "minimum_spread_fraction": 0.0,
+        "pass_": false
+      }
+    },
+    {
+      "w_um": 8.64,
+      "h_um": 12.96,
+      "die_area_um2": 111.97440000000002,
+      "rows": 32,
+      "sites_per_row": 80,
+      "tap_sites_per_row": 4,
+      "non_tap_sites_available": 2432,
+      "non_tap_sites_required": 1240,
+      "area_with_current_netlist_and_modeled_taps_um2": 19.94544,
+      "core_occupancy": 0.534375,
+      "current_cell_width_row_packing_pass": true,
+      "outline_8p64_grid": false,
+      "routed_or_timing_qualified": false,
+      "unchanged_pdn_generator_model": {
+        "layer": "M5",
+        "minimum_stripes_per_net": 1,
+        "minimum_spread_fraction": 0.0,
+        "pass_": false
+      }
+    },
+    {
+      "w_um": 10.8,
+      "h_um": 10.8,
+      "die_area_um2": 116.64000000000001,
+      "rows": 24,
+      "sites_per_row": 120,
+      "tap_sites_per_row": 4,
+      "non_tap_sites_available": 2784,
+      "non_tap_sites_required": 1240,
+      "area_with_current_netlist_and_modeled_taps_um2": 19.478880000000004,
+      "core_occupancy": 0.4638888888888889,
+      "current_cell_width_row_packing_pass": true,
+      "outline_8p64_grid": false,
+      "routed_or_timing_qualified": false,
+      "unchanged_pdn_generator_model": {
+        "layer": "M5",
+        "minimum_stripes_per_net": 2,
+        "minimum_spread_fraction": 0.49999999999999994,
+        "pass_": false
+      }
+    },
+    {
+      "w_um": 8.64,
+      "h_um": 17.28,
+      "die_area_um2": 149.2992,
+      "rows": 48,
+      "sites_per_row": 80,
+      "tap_sites_per_row": 4,
+      "non_tap_sites_available": 3648,
+      "non_tap_sites_required": 1240,
+      "area_with_current_netlist_and_modeled_taps_um2": 20.878560000000004,
+      "core_occupancy": 0.3729166666666667,
+      "current_cell_width_row_packing_pass": true,
+      "outline_8p64_grid": true,
+      "routed_or_timing_qualified": false,
+      "unchanged_pdn_generator_model": {
+        "layer": "M5",
+        "minimum_stripes_per_net": 1,
+        "minimum_spread_fraction": 0.0,
+        "pass_": false
+      }
+    },
+    {
+      "w_um": 17.28,
+      "h_um": 8.64,
+      "die_area_um2": 149.2992,
+      "rows": 16,
+      "sites_per_row": 240,
+      "tap_sites_per_row": 4,
+      "non_tap_sites_available": 3776,
+      "non_tap_sites_required": 1240,
+      "area_with_current_netlist_and_modeled_taps_um2": 19.01232,
+      "core_occupancy": 0.33958333333333324,
+      "current_cell_width_row_packing_pass": true,
+      "outline_8p64_grid": true,
+      "routed_or_timing_qualified": false,
+      "unchanged_pdn_generator_model": {
+        "layer": "M5",
+        "minimum_stripes_per_net": 3,
+        "minimum_spread_fraction": 0.625,
+        "pass_": true
+      }
+    },
+    {
+      "w_um": 17.28,
+      "h_um": 17.28,
+      "die_area_um2": 298.5984,
+      "rows": 48,
+      "sites_per_row": 240,
+      "tap_sites_per_row": 4,
+      "non_tap_sites_available": 11328,
+      "non_tap_sites_required": 1240,
+      "area_with_current_netlist_and_modeled_taps_um2": 20.878560000000004,
+      "core_occupancy": 0.12430555555555556,
+      "current_cell_width_row_packing_pass": true,
+      "outline_8p64_grid": true,
+      "routed_or_timing_qualified": false,
+      "unchanged_pdn_generator_model": {
+        "layer": "M5",
+        "minimum_stripes_per_net": 3,
+        "minimum_spread_fraction": 0.625,
+        "pass_": true
+      }
+    },
+    {
+      "w_um": 12.96,
+      "h_um": 8.64,
+      "die_area_um2": 111.97440000000002,
+      "rows": 16,
+      "sites_per_row": 160,
+      "tap_sites_per_row": 4,
+      "non_tap_sites_available": 2496,
+      "non_tap_sites_required": 1240,
+      "area_with_current_netlist_and_modeled_taps_um2": 19.01232,
+      "core_occupancy": 0.5093749999999999,
+      "current_cell_width_row_packing_pass": true,
+      "outline_8p64_grid": false,
+      "routed_or_timing_qualified": false,
+      "unchanged_pdn_generator_model": {
+        "layer": "M5",
+        "minimum_stripes_per_net": 2,
+        "minimum_spread_fraction": 0.4166666666666666,
+        "pass_": false
+      }
+    },
+    {
+      "w_um": 17.28,
+      "h_um": 6.48,
+      "die_area_um2": 111.97440000000002,
+      "rows": 8,
+      "sites_per_row": 240,
+      "tap_sites_per_row": 4,
+      "non_tap_sites_available": 1888,
+      "non_tap_sites_required": 1240,
+      "area_with_current_netlist_and_modeled_taps_um2": 18.545759999999998,
+      "core_occupancy": 0.6624999999999999,
+      "current_cell_width_row_packing_pass": true,
+      "outline_8p64_grid": false,
+      "routed_or_timing_qualified": false,
+      "unchanged_pdn_generator_model": {
+        "layer": "M5",
+        "minimum_stripes_per_net": 3,
+        "minimum_spread_fraction": 0.625,
+        "pass_": true
+      }
+    }
+  ],
+  "pg_rule": {
+    "source": "tools/ref_tile/ref_tile.py",
+    "sha256": "5985c6d174e2cd23208146f2357a6e2e7a350738569f1890834525971f243647",
+    "minimum_stripes_per_net": 2,
+    "export_minimum_spread": 0.5,
+    "generator_spread_margin": 0.02,
+    "current_m5_pitch_um": 5.4
+  },
+  "pg_width_and_pitch_comparisons": [
+    {
+      "w_um": 6.48,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 1,
+      "spread": 0.0,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 8.64,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 1,
+      "spread": 0.0,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 10.8,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 2,
+      "spread": 0.49999999999999994,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 12.96,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 2,
+      "spread": 0.4166666666666666,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 15.12,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 2,
+      "spread": 0.35714285714285715,
+      "generator_eligible": false,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 17.28,
+      "m5_pitch_um": 5.4,
+      "stripes_per_net": 3,
+      "spread": 0.625,
+      "generator_eligible": true,
+      "unchanged_pdn": true,
+      "adopted": false
+    },
+    {
+      "w_um": 12.96,
+      "m5_pitch_um": 2.7,
+      "stripes_per_net": 4,
+      "spread": 0.6249999999999998,
+      "generator_eligible": true,
+      "unchanged_pdn": false,
+      "adopted": false
+    },
+    {
+      "w_um": 10.8,
+      "m5_pitch_um": 1.44,
+      "stripes_per_net": 5,
+      "spread": 0.5333333333333332,
+      "generator_eligible": true,
+      "unchanged_pdn": false,
+      "adopted": false
+    }
+  ]
+}

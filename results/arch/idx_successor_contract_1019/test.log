@@ -1,0 +1,15 @@
+test_actual_files_missing_refuse (test_idx_metadata_successor.ContractTests) ... ok
+test_all_policy_widening_and_unapproved_action_refuse (test_idx_metadata_successor.ContractTests) ... ok
+test_exact_artifact_and_source_hashes_refuse (test_idx_metadata_successor.ContractTests) ... ok
+test_export_cannot_start_without_exact_root_approval (test_idx_metadata_successor.ContractTests) ... ok
+test_missing_any_lineage_refuses (test_idx_metadata_successor.ContractTests) ... ok
+test_pre_gate_snapshot_cannot_be_relabelled_routed_source (test_idx_metadata_successor.ContractTests) ... ok
+test_result_cannot_reuse_original_or_shared_view_directory (test_idx_metadata_successor.ContractTests) ... ok
+test_schema_only_never_authorizes_execution (test_idx_metadata_successor.ContractTests) ... ok
+test_stale_or_symbolic_file_binding_refuses (test_idx_metadata_successor.ContractTests) ... ok
+test_view_inventory_and_traversal_refuse (test_idx_metadata_successor.ContractTests) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.004s
+
+OK

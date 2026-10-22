@@ -1,0 +1,114 @@
+{
+  "schema": "opentallas.s81.measured_wqb_return_contract.v1",
+  "source_files": {
+    "healthy_wqb_frame_p1.log": "a0e845cb5e5ac4afe88fbd5d3bc76886f6132491ede6b8909a3ce03873cbe8a2",
+    "actual_wqb_meta.json": "5bc86f002dde391afd3981654f17811338abc24d7b23ec383288a8360a69471c"
+  },
+  "actual_numeric_trace": true,
+  "frame": "u_f_0L00",
+  "semantic_rows": 6,
+  "ret_words": 8,
+  "measured_frame_edges": [
+    350,
+    359
+  ],
+  "relative_cap_write_edges": [
+    397,
+    410
+  ],
+  "writes": [
+    [
+      397,
+      0,
+      0,
+      0,
+      3180068864,
+      16384,
+      0,
+      [
+        "actual_RET_353"
+      ],
+      0
+    ],
+    [
+      398,
+      0,
+      0,
+      1,
+      1062010880,
+      16385,
+      0,
+      [
+        "actual_RET_354"
+      ],
+      0
+    ],
+    [
+      402,
+      0,
+      1,
+      4,
+      3216113664,
+      16388,
+      0,
+      [
+        "actual_RET_358"
+      ],
+      0
+    ],
+    [
+      403,
+      0,
+      1,
+      5,
+      3202875392,
+      16389,
+      0,
+      [
+        "actual_RET_359"
+      ],
+      0
+    ],
+    [
+      409,
+      0,
+      0,
+      2,
+      1050935296,
+      16386,
+      0,
+      [
+        "actual_RET_350",
+        "actual_RET_355"
+      ],
+      1
+    ],
+    [
+      410,
+      0,
+      0,
+      3,
+      3212312576,
+      16387,
+      0,
+      [
+        "actual_RET_351",
+        "actual_RET_356"
+      ],
+      1
+    ]
+  ],
+  "faults": [],
+  "original_bf16_gold_rows_equal": 6,
+  "causal_missing_payload_rejected": true,
+  "causal_wrong_flag_rejected": true,
+  "causal_cfg_while_partial_open_rejected": true,
+  "cfg_busy_edge": 391,
+  "source_tag_flags_preserved": true,
+  "production_binding_changed": false,
+  "selected_die_arr_edges": null,
+  "selected_capture_clock_phase": null,
+  "actual_122_frame_calendar": null,
+  "actual_retire_deadline": null,
+  "qualification": "ONE_MEASURED_FRAME_RELATIVE_CAP_MODEL_ONLY; not selected source/calendar/token proof"
+}

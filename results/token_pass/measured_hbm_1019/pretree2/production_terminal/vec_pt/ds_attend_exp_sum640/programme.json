@@ -1,0 +1,55 @@
+{
+ "schema": "toksim.hbm.su_vop_record.v1",
+ "record": "ds_attend_exp_sum640",
+ "design": "ds_ar",
+ "N": 640,
+ "rows": 1,
+ "roles": {
+  "A": "vm",
+  "B": "rf"
+ },
+ "mods": {
+  "cp_m1": 3,
+  "cm_m1": 3,
+  "cp_imm1": 1026891283,
+  "cm_imm1": 1026891283,
+  "ca_ad": 3,
+  "ci_sfu": 1,
+  "cs_sfu": 1
+ },
+ "red": "sum",
+ "sfu_lanes": true,
+ "lanes_per_quarter": 32,
+ "issues": 20,
+ "emissions": 20,
+ "issue_to_write": 84,
+ "RR": 12,
+ "WR": 10,
+ "fill_slack": 1,
+ "drain_slack": 2,
+ "dispatch_edge": 114,
+ "first_emit": 130,
+ "last_emit": 149,
+ "last_lg_write": 412,
+ "retire_edge": 422,
+ "cycles_serial": 308,
+ "cycles_stream_833ps": 410.67,
+ "edges": 430,
+ "expected_vm_writes": 81,
+ "expected_scalars": 2,
+ "reduction": {
+  "rows": 1,
+  "finals": {
+   "0": "45295522"
+  },
+  "model_check": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)"
+ },
+ "golden": "hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT); reduction = the MODEL order (hdc_golden_v41.csum chunk8 / ordered canonical max), asserted on the lowered tree",
+ "pretree": {
+  "on": true,
+  "qpr": 1,
+  "quarter_run_words": 640,
+  "blocks_per_row": 20,
+  "pt_red": 80
+ }
+}

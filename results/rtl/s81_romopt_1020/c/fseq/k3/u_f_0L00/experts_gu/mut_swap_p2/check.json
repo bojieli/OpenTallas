@@ -1,0 +1,24 @@
+{
+ "summary": {
+  "words": 19,
+  "rows": 9,
+  "complete_rows_at_root": 2,
+  "partial_words": 17,
+  "plan_exact": false,
+  "end": "END edges=1072 ret_words=19 xo_checked=1070 fault=0"
+ },
+ "fixture_rows": 9,
+ "errors": [
+  "MISMATCH edge 388 row 4 lo 0 k 2 got 3e10620c/0 want 3d114340/0",
+  "MISMATCH edge 389 row 5 lo 0 k 2 got bef00fc0/0 want be78283c/0",
+  "MISMATCH edge 392 row 2 lo 0 k 3 got be67daf4/0 want bdadfa68/0",
+  "MISMATCH edge 393 row 3 lo 0 k 3 got be7c383c/0 want be6b93f4/0",
+  "MISMATCH edge 395 row 8 lo 4 k 2 got bc0ef500/0 want 3b239c00/0",
+  "PLAN_MISMATCH predicted 19 words, got 19; first diff ((388, 4, (0, 2, 5), 1024541504, 0), (388, 4, (0, 2, 5), 1041261068, 0))"
+ ],
+ "frame": "u_f_0L00",
+ "op": "ffn.experts_gu",
+ "field_phase": 2,
+ "mutant": "swap",
+ "pass": false
+}

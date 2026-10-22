@@ -1,231 +1,229 @@
 {
-  "name": "dsdv_sh_lk",
-  "top": "dsdv_sh_lk",
-  "kind": "tile",
-  "sources": [
-    "rtl/lib/ot_rst_relay.sv",
-    "rtl/lib/ot_async_fifo.sv",
-    "rtl/lib/ot_reset_sync.sv",
-    "rtl/link/ot_link_afifo.sv",
-    "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
-    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
-    "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
-    "rtl/hdc/ingest/ot_rom_host_ingest.sv",
-    "physical/rom_host_ingest/rtl/dsfd_host.sv",
-    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
-    "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
-    "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
-    "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv"
+ "name": "dsdv_sh_lk",
+ "top": "dsdv_sh_lk",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/link/ot_link_afifo.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+  "physical/rom_host_ingest/rtl/dsfd_host.sv",
+  "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "S": [
+   "vi_s",
+   "vo_s",
+   "s_jd_e",
+   "s_hw_e",
+   "s_hc_e",
+   "st_rg_e"
   ],
-  "params": {},
-  "clock_port": "ck",
-  "reset_ports": [
-    "rst_n"
+  "N": [
+   "rn_o",
+   "rs_i",
+   "pw_o",
+   "pl_o",
+   "tw_o",
+   "cf_o",
+   "ks_o",
+   "kd_i",
+   "j_i",
+   "jd_o",
+   "sq_i",
+   "vf_i"
   ],
-  "macros": [],
-  "pins": {
-    "S": [
-      "vi_s",
-      "vo_s"
-    ],
-    "N": [
-      "rn_o",
-      "rs_i",
-      "pw_o",
-      "pl_o",
-      "tw_o",
-      "cf_o",
-      "ks_o",
-      "kd_i",
-      "j_i",
-      "jd_o",
-      "sq_i",
-      "vf_i"
-    ],
-    "W": [
-      "f_host",
-      "t_host",
-      "f_lf"
-    ],
-    "E": [
-      "ck",
-      "ck_ih",
-      "ck_ic",
-      "rst_n",
-      "f_ks",
-      "t_kd",
-      "s_j",
-      "s_jd",
-      "s_hw",
-      "s_hc",
-      "st_rg"
-    ]
-  },
-  "recipe": 4,
-  "hold_budget": "die",
-  "inhold": false,
-  "outhold": false,
-  "clock": "multiple_cts_roots",
-  "layer_cap": "M5",
-  "route": {
-    "pd": 0.5,
-    "threads": 8,
-    "peak_ram_gb": 24,
-    "hold_margin_ns": 0.03
-  },
-  "structural_change": "S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L0 link leaf of dsdv_seq_host: host lane port + host ingest (dsfd_host_native, unchanged) + host write decode (dsfd_host_sd STATIC) + svc / kit ports + regional status fold + one rung hop each way; flop-first / flop-last pins, die hold budget. S81U-SEQ3 (gate 8940e10e9 clock_rule FAIL: 24,085 sinks on one root, TT ins 306.7): the host ingest's own Gray-FIFO clock domains (dsfd_host_native clk_h / clk_i, ot_link_afifo crossings) get their own CTS roots ck_ih / ck_ic (same stream clock, related phase-0 roots, ordinary STA across them), as the S81 host tile dsfd_host_c DSFD_HOST_PQ_BOOT (ck_ingest roots); estimated roots ~8.8k / ~10.3k / ~5.5k sinks, each < 15k. A two-leaf split cannot reach < 15k: dsfd_host_native alone is ~19.2k flops (u_hx 16 x 514 + u_ox 16 x 289 + engine). Ingest engine APIPE 2 -> 4 (26-level ap1_local -> ap_raddr stage registered; ROWS / IKEY +1 bubble edge a row, RAW unchanged); pin-flop payloads off the reset net (891 loads). S81U-SEQ4 (gate4 df8031f2c WARN: 3 roots max 9,551 sinks, TT ins 239.9 / sp 33.2; reg->reg -69.7 ps at u_eng.ap1_rbase = base + stk * stride in one stage): ingest APIPE 5 (stack x stride partial products formed in stage A0, stage A1 a four-operand add; same values / bubble edges as APIPE 4). Reset WARNs u_hi.u_rsc / u_rsi reset_pipe 472 / 438 loads are inside the reused ot_rom_host_ingest (shared with closed dsfd_host views; not edited): below the 8,000 refuse bound, reset in->reg slack +409 ps.",
-  "job": {
-    "owner": "Claude:S81U-SEQ",
-    "branch": "claude/s81u-seq-1017",
-    "tag": "dsdv_sh_lk",
-    "purpose": "S81-DV seq_host leaf dsdv_sh_lk to closure (TT setup / FF hold / DRC 0 + native audit).",
-    "extra_paths": [
-      "rtl/dsrom_sys/s81_dv/unit",
-      "results/rtl/s81_dv_unit_1017/seqhost",
-      "physical/dsdv_seq_host_pins"
-    ],
-    "benches": [
-      {
-        "name": "seqhost_exact",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_exact '1 2'",
-        "expect": "pass",
-        "pass_regex": "^SEQHOST_GATE PASS$",
-        "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/",
-        "threads": 8,
-        "peak_ram_gb": 8
-      },
-      {
-        "name": "seqhost_mutctx",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut1 1 1",
-        "expect": "fail",
-        "fail_regex": "^SEQHOST FAIL$",
-        "fail_witness": "results/rtl/s81_dv_unit_1017/seqhost/run_mut1.log",
-        "threads": 8,
-        "peak_ram_gb": 8
-      },
-      {
-        "name": "seqhost_mutsvctag",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut2 1 2",
-        "expect": "fail",
-        "fail_regex": "^SEQHOST FAIL$",
-        "fail_witness": "results/rtl/s81_dv_unit_1017/seqhost/run_mut2.log",
-        "threads": 8,
-        "peak_ram_gb": 8
-      },
-      {
-        "name": "seqhost_mutrunghop",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut3 1 3",
-        "expect": "fail",
-        "fail_regex": "^SEQHOST FAIL$",
-        "fail_witness": "results/rtl/s81_dv_unit_1017/seqhost/run_mut3.log",
-        "threads": 8,
-        "peak_ram_gb": 8
-      },
-      {
-        "name": "seqhost_mutdonelate",
-        "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut4 1 4",
-        "expect": "fail",
-        "fail_regex": "^SEQHOST FAIL$",
-        "fail_witness": "results/rtl/s81_dv_unit_1017/seqhost/run_mut4.log",
-        "threads": 8,
-        "peak_ram_gb": 8
-      }
-    ],
-    "views_to": "physical/ref_tile/dsdv_sh_lk/views",
-    "record_to": "results/rtl/ref_tile/dsdv_sh_lk"
-  },
-  "pin_regs": {
-    "enable": false,
-    "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
-  },
-  "outline": {
-    "w": 254.88,
-    "h": 136.08
-  },
-  "io_flop_at_pins": {
-    "cols": 4,
-    "allow_none": true
-  },
-  "keep_pin_regs": true,
-  "std_area_um2": 16781,
-  "fill_reason": {
-    "pin_bound": "S81U-SEQ3: common leaf width 254.88 (vc needs 2 SRAMs side by side with 20 um channels: 3 x 20 + 2 x 94.824 + core margins); N face 1,207 pin bits = 4.7/um, W 596 / H 136.08 = 4.4/um, E 449 = 3.3/um. Std 16,781 um2 (gate 8940e10e9) -> H 136.08, util 51%."
-  },
-  "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_lk.tcl",
-  "clock_ports": [
-    "ck",
-    "ck_ih",
-    "ck_ic"
+  "W": [
+   "f_host",
+   "t_host",
+   "f_lf"
   ],
-  "clock_data_paths": "related_same_frequency",
-  "clock_relationship": {
-    "kind": "same_pll_fixed_phase",
-    "ratio": [
-      1,
-      1
-    ],
-    "phase_ps": 0
-  },
-  "clock_entry_domains": {
-    "core": {
-      "ratio": [
-        1,
-        1
-      ],
-      "ports": [
-        "ck"
-      ],
-      "inputs": [
-        "rst_n",
-        "f_host",
-        "f_lf",
-        "f_ks",
-        "s_jd",
-        "s_hc",
-        "st_rg",
-        "vi_s",
-        "rs_i",
-        "kd_i",
-        "j_i",
-        "sq_i",
-        "vf_i"
-      ],
-      "outputs": [
-        "t_host",
-        "t_kd",
-        "s_j",
-        "s_hw",
-        "vo_s",
-        "rn_o",
-        "pw_o",
-        "pl_o",
-        "tw_o",
-        "cf_o",
-        "ks_o",
-        "jd_o"
-      ]
-    },
-    "ingest_host": {
-      "ratio": [
-        1,
-        1
-      ],
-      "ports": [
-        "ck_ih"
-      ],
-      "inputs": [],
-      "outputs": []
-    },
-    "ingest_core": {
-      "ratio": [
-        1,
-        1
-      ],
-      "ports": [
-        "ck_ic"
-      ],
-      "inputs": [],
-      "outputs": []
-    }
+  "E": [
+   "ck",
+   "rst_n",
+   "f_ks",
+   "t_kd",
+   "s_j",
+   "s_jd_w",
+   "s_hw_w",
+   "s_hc_w",
+   "st_rg_w"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 20,
+   "diameter_um": 40,
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 60 -clustering_unbalance_ratio 0.5",
+   "why": "S81-SHLK2 10-18: re-CTS on the APIPE-7 gate placement (3_place.odb, placement RC, before repair), ONE root ck over all 25,456 sinks: boundary (2,536 pin flops) TT 244.4..261.9 ps = spread 17.5 (default clustering 257.6..280.9 = 23.4; size 30 / dia 60 / dbb 100 23.1; size 12 / dia 24 / dbb 40 22.5). Three roots ck / ck_ih / ck_ic default: ck boundary 229.5..275.1 = 45.7, and the 100-ps hold / 150..210-ps setup inter-root reserve gave 20,461 FF hold endpoints at the APIPE-7 gate."
   }
+ },
+ "structural_change": "S81-SAFE-FIX/SH 10-19 (SAFE-DESIGN items 4/1/7): ingest APIPE 8 -- the IKEY address stage B (ap1_gs -> a2_blk + offsets -> ap_kcode, 22 levels / 775-787 ps in the route lint of 65df312e3) split in two: B0 registers the block base rbase + sb * 2176 and the bit-disjoint IKEY offsets, B adds them (two-operand adds); one more row-start bubble edge, same values (host_native_pipe pos8 PASS, apbskip8 / apstale8 caught; seq_host bench unchanged edges). reset_landing 2 stages (rst_n release +2 edges, scheduled constant), io_hold_margin 0.03 (was 0.025). History: S81U-SEQ (S81-DV p4f..p4i, owner-approved DV plan): L0 link leaf of dsdv_seq_host: host lane port + host ingest (dsfd_host_native, unchanged) + host write decode (dsfd_host_sd STATIC) + svc / kit ports + regional status fold + one rung hop each way; flop-first / flop-last pins, die hold budget. S81U-SEQ3 (gate 8940e10e9 clock_rule FAIL: 24,085 sinks on one root, TT ins 306.7): the host ingest's own Gray-FIFO clock domains (dsfd_host_native clk_h / clk_i, ot_link_afifo crossings) get their own CTS roots ck_ih / ck_ic (same stream clock, related phase-0 roots, ordinary STA across them), as the S81 host tile dsfd_host_c DSFD_HOST_PQ_BOOT (ck_ingest roots); estimated roots ~8.8k / ~10.3k / ~5.5k sinks, each < 15k. A two-leaf split cannot reach < 15k: dsfd_host_native alone is ~19.2k flops (u_hx 16 x 514 + u_ox 16 x 289 + engine). Ingest engine APIPE 2 -> 4 (26-level ap1_local -> ap_raddr stage registered; ROWS / IKEY +1 bubble edge a row, RAW unchanged); pin-flop payloads off the reset net (891 loads). S81U-SEQ4 (gate4 df8031f2c WARN: 3 roots max 9,551 sinks, TT ins 239.9 / sp 33.2; reg->reg -69.7 ps at u_eng.ap1_rbase = base + stk * stride in one stage): ingest APIPE 5 (stack x stride partial products formed in stage A0, stage A1 a four-operand add; same values / bubble edges as APIPE 4). Reset WARNs u_hi.u_rsc / u_rsi reset_pipe 472 / 438 loads are inside the reused ot_rom_host_ingest (shared with closed dsfd_host views; not edited): below the 8,000 refuse bound, reset in->reg slack +409 ps. RTL-BUILD-S81 10-18 (bind5 residual (b)/(c)): two svc halves -- s_jd/s_hc/st_rg/s_hw become per-half s_jd_w/_e (merged in-leaf: done when both halves reported, same pin->jd_o edges), s_hw_w/_e + s_hc_w/_e (dsfd_host_sd NS 2 HALF 1: sector -> PC-owner half, markers to both), st_rg_w/_e (fault OR, live AND); _w set on the E face, _e set on the S face (E 449 -> 454 bits, S 552 -> 857 bits = 3.4/um). S81-SHLK 10-18 (route dsdv_sh_lk-ef442ffba NEEDS_RTL TT -36.2 / FF +8.14 / DRC 0, 173 endpoints: 86 u_hx.mem (ck_ih) -> head decode -> hx_pop -> rbin_c / ofree (ck_ic, 150-ps root-pair uncertainty), 73 u_hx.rbin_c -> 16:1 x 514-b read mux -> u_eng.dq, 11 u_eng.ra_rp[5] -> 512-b realigner select/shift -> ox_w_q / sc_acc): ingest APIPE 7 = registered FWFT host-FIFO head in clk_i (every head decode and the descriptor queue start at a ck_ic flop; host words +1 ck_ic edge, rate unchanged: host_native_pipe pos7 ck 1068/8473/532/633/1353 vs APIPE 6 1068/8472/532/630/1353) + 8 kept copies of the realigner pointer ra_rp (one per 32-b head slice; no cycle change). Host path f_host -> s_hw / t_host = golden + 2 edges (tb HSH 2); token path and every other port unchanged. S81-SHLK2 10-18 (APIPE-6 view 743e0021b native audit FAIL, receipt results/closure/shlk_pick_1018/native_audit.json: launch 254.9 > 220 vo_s[251], capture 201.0 > 190 st_rg_e[1], pin-flop spread TT 94.0 / FF 88.3 > 80): BOUNDARY STRUCTURE. (1) The single-flop rung hop (rn_o <= vi_s, vo_s <= rs_i) joined the S face to the N face 136 um apart with ONE flop: io_flop_at_pins anchored all 552 rung flops at N (y 131-134), so vo_s carried 136 um of output wire (S-face outputs x 75-175 launch 129-255) and vi_s 136 um of input wire (capture 87-188).  RL 1: the rung is LANDED at both faces, capture flop beside the input pin and launch flop beside the output pin (vi_s -> vi_q S -> rn_o N; rs_i -> rs_q N -> vo_s S), +1 edge each way (rung 6 -> 7 in dsdv_seq_host, V south command -> vo_s 7 -> 8; compiler dv_layer_compile SEQ vo_s_land 1).  (2) st_rg_w (NE corner) and st_rg_e (SE corner) folded into ONE flop between them (130 um from st_rg_e): each now lands in its own pin flop before the fold (+1 edge on the region status word). (3) Clock: ONE CTS root ck for the whole leaf (clock cts; ck_ih / ck_ic ports and pins removed, ingest clk_h = clk_i = ck as in dsdv_seq_host). The three related roots existed only for the retired 15k sinks-per-root cap (S81U-SEQ3) and cost the die-skew reserve (hold 100 / setup 150..210 ps) on every ck <-> ingest crossing: 20,461 FF hold endpoints and ~20k hold buffers at the APIPE-7 gate, and the post-repair boundary tail (APIPE-6 routed TT 230.3..321.6).  Re-CTS sweep on the APIPE-7 gate placement: one root, boundary spread TT 17.5 ps (route.cts_sink size 20 / dia 40 / levels 2 / dbb 60 / unbalance 0.5) vs 45.7 ps for the three-root ck tree; insertion 252 mean. Clock pin ck stays at E (254.88, 67.76), beside the tile centroid row (flop centroid 124, 66). Benches (ot-epyc5, Verilator 5.050): seeds 1-8 PASS, collide / stdrop fault, mutants 1-9 FAIL (9 = landing dropped), lint clean; witnesses results/rtl/s81_shlk_1018/rl1/.",
+ "job": {
+  "owner": "Claude:S81-SAFE-FIX/SH",
+  "branch": "claude/s81sf-sh-1019",
+  "tag": "dsdv_sh_lk",
+  "purpose": "S81-DV seq_host leaf dsdv_sh_lk to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/dsdv_seq_host_pins",
+   "results/rtl/rtl_build_s81_1018/seq",
+   "results/rtl/s81_dv_unit_1017/seqhost",
+   "results/rtl/s81_shlk_1018",
+   "results/rtl/s81sf_sh_1019/seqhost",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv"
+  ],
+  "benches": [
+   {
+    "name": "seqhost_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_exact '1 2'",
+    "expect": "pass",
+    "pass_regex": "^SEQHOST_GATE PASS$",
+    "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutctx",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut1 1 1",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut1.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutsvctag",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut2 1 2",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut2.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutrunghop",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut3 1 3",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut3.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutdonelate",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut4 1 4",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut4.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutwhalf",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut5 1 5",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut5.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutroute",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut6 1 6",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut6.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_muthregv",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut7 1 7",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut7.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutrac",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut8 1 8",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut8.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "seqhost_mutrland",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_bench.sh {RUN}/seqhost_mut9 1 9",
+    "expect": "fail",
+    "fail_regex": "^SEQHOST FAIL$",
+    "fail_witness": "results/rtl/s81sf_sh_1019/seqhost/run_mut9.log",
+    "threads": 8,
+    "peak_ram_gb": 8
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_sh_lk/views",
+  "record_to": "results/rtl/ref_tile/dsdv_sh_lk"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (dsdv_seq_host header): every leaf input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every leaf seam."
+ },
+ "outline": {
+  "w": 254.88,
+  "h": 151.2
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "std_area_um2": 20230,
+ "fill_reason": {
+  "pin_bound": "S81-GUSEQ 10-18 (COORD 13:45 FLOORPLAN_MARGIN on 9de9eb2d6, util 61.3% = std 20,230 um2 in core 33,014): outline 254.88 x 136.08 -> 254.88 x 151.20 (3.5 x 43.2 lattice rows). Width kept = the common seq_host leaf width (lk N face abuts sq S face pin-for-pin; vc 2-SRAM width), so N/S pin x positions are unchanged; W/E pins rescaled along their faces (x 151.2/136.08, M4 tracks), ck stays at E mid. Core 250.56 x 146.88 = 36,802 um2 -> util 55.0%. N 1,207 bits = 4.7/um, W 596 / 151.2 = 3.9/um, E 447 = 3.0/um."
+ },
+ "io_tcl": "physical/dsdv_seq_host_pins/dsdv_sh_lk.tcl",
+ "children": [],
+ "inter": [],
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "closed_job": "dsdv_sh_lk-dsdv_sh_lk-ef442ffba",
+  "change": "ingest APIPE 7 -> 8 (IKEY address stage split, 775-ps / 22-level stage over the 600-ps rule) + reset_landing 2 + io_hold 0.03; the closed view ef442ffba fails its routed own-R audit (pin-flop spread TT 94.0 / FF 88.3 > 80) and its successor 65df312e3 (outline 254.88 x 151.2, one CTS root) carries the 787-ps stage"
+ },
+ "pin_reg_split": true,
+ "pin_reg_split_why": "S81-GUSEQ 10-18 gate 424f904dd: OT_IOFLOP left 315 output ports unanchored (not single-flop): u_sd.hw[*] are load-enable DFFs whose Q also feeds their own enable-recirculation NOR2, so s_hw_w flops sat near the S face up to 100 um from their E pins (cts_native_probe launch s_hw_w[287] 235.2 > 220). pin_reg_split clones one dedicated launch flop per output pin (0 cycles, same function).",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
 }

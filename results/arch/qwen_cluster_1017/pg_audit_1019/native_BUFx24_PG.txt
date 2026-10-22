@@ -1,0 +1,74 @@
+4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1  /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef
+8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1  /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+  cell (BUFx24_ASAP7_75t_R) {
+area : 0.4374
+    pg_pin (VDD) {
+      direction : input;
+      pg_type : primary_power;
+      voltage_name : "VDD";
+    }
+    pg_pin (VSS) {
+      direction : input;
+      pg_type : primary_ground;
+      voltage_name : "VSS";
+    }
+    leakage_power () {
+      value : 1475.78;
+MACRO BUFx24_ASAP7_75t_R
+  CLASS CORE ;
+  ORIGIN 0 0 ;
+  FOREIGN BUFx24_ASAP7_75t_R 0 0 ;
+  SIZE 1.62 BY 0.27 ;
+  SYMMETRY X Y ;
+  SITE asap7sc7p5t ;
+  PIN A
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M1 ;
+        RECT 0.018 0.126 0.078 0.144 ;
+        RECT 0.018 0.225 0.055 0.243 ;
+        RECT 0.018 0.027 0.055 0.045 ;
+        RECT 0.018 0.027 0.036 0.243 ;
+    END
+  END A
+  PIN VDD
+    DIRECTION INOUT ;
+    USE POWER ;
+    SHAPE ABUTMENT ;
+    PORT
+      LAYER M1 ;
+        RECT 0 0.261 1.62 0.279 ;
+    END
+  END VDD
+  PIN VSS
+    DIRECTION INOUT ;
+    USE GROUND ;
+    SHAPE ABUTMENT ;
+    PORT
+      LAYER M1 ;
+        RECT 0 -0.009 1.62 0.009 ;
+    END
+  END VSS
+  PIN Y
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M1 ;
+        RECT 0.31 0.225 1.602 0.243 ;
+        RECT 1.584 0.027 1.602 0.243 ;
+        RECT 0.31 0.027 1.602 0.045 ;
+    END
+  END Y
+  OBS
+    LAYER M1 ;
+      RECT 0.094 0.225 0.252 0.243 ;
+      RECT 0.234 0.027 0.252 0.243 ;
+      RECT 0.234 0.126 1.553 0.144 ;
+      RECT 0.094 0.027 0.252 0.045 ;
+		LAYER RVTN ;
+			RECT 0 0 1.62 0.135 ;
+		LAYER RVTP ;
+			RECT 0 0.135 1.62 0.27 ;
+  END
+END BUFx24_ASAP7_75t_R

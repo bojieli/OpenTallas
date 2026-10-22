@@ -1,0 +1,181 @@
+{
+ "layer": "l24_sm_xslot_i8w",
+ "changed": 48,
+ "instances": {
+  "svg_NW0": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_NW1": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_NW2": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_NW3": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_NW4": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_NW5": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_NW6": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_NW7": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_SW0": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_SW1": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_SW2": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_SW3": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_SW4": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_SW5": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_SW6": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "svg_SW7": {
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "xc_NW0": {
+   "XSLOT": 1
+  },
+  "xc_NW1": {
+   "XSLOT": 1
+  },
+  "xc_NW2": {
+   "XSLOT": 1
+  },
+  "xc_NW3": {
+   "XSLOT": 1
+  },
+  "xc_NW4": {
+   "XSLOT": 1
+  },
+  "xc_NW5": {
+   "XSLOT": 1
+  },
+  "xc_NW6": {
+   "XSLOT": 1
+  },
+  "xc_NW7": {
+   "XSLOT": 1
+  },
+  "xc_SW0": {
+   "XSLOT": 1
+  },
+  "xc_SW1": {
+   "XSLOT": 1
+  },
+  "xc_SW2": {
+   "XSLOT": 1
+  },
+  "xc_SW3": {
+   "XSLOT": 1
+  },
+  "xc_SW4": {
+   "XSLOT": 1
+  },
+  "xc_SW5": {
+   "XSLOT": 1
+  },
+  "xc_SW6": {
+   "XSLOT": 1
+  },
+  "xc_SW7": {
+   "XSLOT": 1
+  },
+  "sm_NW0": {
+   "INT8W": 1
+  },
+  "sm_NW1": {
+   "INT8W": 1
+  },
+  "sm_NW2": {
+   "INT8W": 1
+  },
+  "sm_NW3": {
+   "INT8W": 1
+  },
+  "sm_NW4": {
+   "INT8W": 1
+  },
+  "sm_NW5": {
+   "INT8W": 1
+  },
+  "sm_NW6": {
+   "INT8W": 1
+  },
+  "sm_NW7": {
+   "INT8W": 1
+  },
+  "sm_SW0": {
+   "INT8W": 1
+  },
+  "sm_SW1": {
+   "INT8W": 1
+  },
+  "sm_SW2": {
+   "INT8W": 1
+  },
+  "sm_SW3": {
+   "INT8W": 1
+  },
+  "sm_SW4": {
+   "INT8W": 1
+  },
+  "sm_SW5": {
+   "INT8W": 1
+  },
+  "sm_SW6": {
+   "INT8W": 1
+  },
+  "sm_SW7": {
+   "INT8W": 1
+  }
+ },
+ "sources": {
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv": "9100756cc4ed61b5bed9963c41409f246013f3cfcfb9056362bd1a663c70b459",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_id.sv": "455a762fa939251e2c9db7c993c9b6803e93e4f69be6d62d7247eddb2a08aaa8",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_id.sv": "f11a3701413de90d536e8456f6435b93e9ddda8a443037e380f45f3335ed9fe3",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel.sv": "dabf791b9bf120c5c46d3b2334ea93479ef89aa1d927aa3b400ba8ed1c69ce45",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv": "e15753b14489d76d6b4e8e254540cb7be6f8b2dbaff254f902f066b3d2adf4b7",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "f06fc1118b435ef275bf52bcd152c33fa8dab4bf56bf8659afab372c8dd20fc5",
+  "rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv": "82263a7f30a44cce7e100600b8e5eda60c551a5a16901cc976e2d94cad848c88",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_i8w_front.sv": "091d4517a7714cea7df8393a653e0da18e155cf39273ffcaf6a3a22cc757fb43",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv": "ddecde3c9c9aab3fde5fe49c5510238f4ba3571b85c1cec2fdc1ed70a7788349",
+  "rtl/hbm_accel/sm/static/ot_smh_int8_tile.sv": "d836c60eb2b38ebf4941c5610fee0309ef09de21051b47298ecddfa51600be7a"
+ },
+ "ports_changed": 0,
+ "edges_changed": 0
+}

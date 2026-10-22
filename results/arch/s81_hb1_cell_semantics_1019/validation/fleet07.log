@@ -1,0 +1,49 @@
+ot-run: ot-epyc4       admits  1117 GB (avail 839, growth 50, headroom 0, waiters 0/0 GB) load 33/128 running 15 disk 412 GB 
+ot-run: ot-epyc5       admits   562 GB (avail 450, growth 49, headroom 0, waiters 0/0 GB) load 49/128 running 7 disk 562 GB 
+ot-run: ot-epyc6       admits  1244 GB (avail 930, growth 59, headroom 0, waiters 0/0 GB) load 29/128 running 18 disk 559 GB 
+ot-run: ot-epyc7       admits   996 GB (avail 755, growth 58, headroom 0, waiters 0/0 GB) load 27/96 running 20 disk 502 GB 
+ot-run: ot-epyc8       admits  1187 GB (avail 919, growth 88, headroom 0, waiters 1/4 GB) load 20/128 running 15 disk 565 GB 
+ot-run: ot-pve1        admits    92 GB (avail 76, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1212 GB 
+ot-run: ot-agidock128  admits   108 GB (avail 85, growth 10, headroom 0, waiters 0/0 GB) load 5/64 running 5 disk 46 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1999556-1792447545 after 0 s
+vm-xry57mhfyn
+               total        used        free      shared  buff/cache   available
+Mem:     134974369792 43310460928 24149409792 12704342016 81487319040 91663908864
+Swap:    68719472640  4993953792 63725518848
+Filesystem       1B-blocks        Used   Available Use% Mounted on
+tmpfs          67487186944 17522368512 49964818432  26% /tmp
+Icarus Verilog version 12.0 (stable) ()
+
+Copyright (c) 2000-2021 Stephen Williams (steve@icarus.com)
+
+f5036494e3adabe20f064adbcf1717f6de65c4688773899ae08534d09dd80bf1  /usr/bin/iverilog
+2c7fc73b524a3f08958a0ddffc0578771620fd2e9d7a92d83ca2a9c19579367f  /usr/bin/vvp
+udp_init exit 0
+INIT_REFERENCE_PASS ASR_cases=512 HQ_cases=32 unknown_unreset_startups=32
+validation/init_tb.v:2308: $finish called at 300 (1ps)
+	Command being timed: "vvp run07/udp_init.vvp"
+	User time (seconds): 0.08
+	System time (seconds): 0.00
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.08
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 14008
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2370
+	Voluntary context switches: 1
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+VALIDATION_EXIT 0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1999556-1792447545): exit 0

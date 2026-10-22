@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       admits    48 GB (avail 350, growth 316, headroom 0, waiters 3/560 GB) load 246/128 running 54 disk 636 GB 
+ot-run: ot-epyc5       admits  -148 GB (avail 222, growth 325, headroom 0, waiters 14/649 GB) load 197/128 running 41 disk 1725 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qcb16rst-1019/src
+ot-run: ot-agidock128  admits    15 GB (avail 48, growth 38, headroom 0, waiters 16/429 GB) load 27/64 running 10 disk 174 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1288885-1792395749 after 0 s
+EXIT 0
+regular-crane
+RESULT MUT 0 FAR 0: PASS (expected PASS) LOCKSTEP_PASS MUT 0 FAR 0 cycles 6000
+RESULT MUT 0 FAR 1: PASS (expected PASS) LOCKSTEP_PASS MUT 0 FAR 1 cycles 6000
+RESULT MUT 1 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 1 FAR 0 mismatching cycles 5817
+RESULT MUT 2 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 2 FAR 0 mismatching cycles 5983
+RESULT MUT 3 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 3 FAR 0 mismatching cycles 5817
+RESULT MUT 4 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 4 FAR 0 mismatching cycles 5817
+RESULT MUT 5 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 5 FAR 0 mismatching cycles 2886
+RESULT MUT 6 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 6 FAR 0 mismatching cycles 5817
+RESULT MUT 7 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 7 FAR 0 mismatching cycles 5817
+RESULT MUT 8 FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 8 FAR 0 mismatching cycles 5820
+RESULT MUT S FAR 0: FAIL (expected FAIL) LOCKSTEP_FAIL MUT 0 FAR 0 mismatching cycles 5817
+RESULT REGION_AUDIT none: PASS (expected PASS) REGION_AUDIT_PASS
+RESULT REGION_AUDIT station: FAIL (expected FAIL) REGION_AUDIT_FAIL 5
+RESULT REGION_AUDIT tile: FAIL (expected FAIL) REGION_AUDIT_FAIL 1
+RESULT REGION_AUDIT landclk: FAIL (expected FAIL) REGION_AUDIT_FAIL 4
+RESULT REGION_AUDIT unland: FAIL (expected FAIL) REGION_AUDIT_FAIL 3
+RESULT REGION_AUDIT rsthop: FAIL (expected FAIL) REGION_AUDIT_FAIL 2
+LOCKSTEP_EXIT 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1288885-1792395749): exit 0

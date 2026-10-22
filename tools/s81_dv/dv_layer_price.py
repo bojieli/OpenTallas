@@ -4,7 +4,10 @@
 dv_price.py prices the whole token (joint longest path of results/arch/token_path_20261009/ds_rom{,_mtp}.json with the
 DV per-node deltas + the p4l land plan, half-cycle hops).  This tool re-uses exactly that machinery (same g facts, same
 dv_deltas, same solve) and reports, for each representative layer, the priced layer on the solved DV schedule:
-  span   = max(end) - min(start) over the layer's nodes (layer entry to layer exit, what a layer bench measures)
+  span   = max(end) - entry, entry = the first start of the layer's token-critical nodes (layer entry to layer exit,
+           what a layer bench measures); off-path prefetches that start earlier (the Engram E<L>.* chain, run during
+           earlier layers) are excluded and reported as prefetch_lead (S81-L20 10-19: they made AR L14 / L1 / L21
+           spans 318k / 34k / 30k)
   crit   = sum of (cycles + delta) of the layer's nodes on the token's critical path (its share of the token)
   hub    = the same two numbers on the hub DAG without DV deltas (the 10-09 price the 10-13 vehicle was compared to)
 Status COMPOSED_NOT_NATIVE: a price, not a measurement.
@@ -33,6 +36,14 @@ def facts(plan_p, land_p, half):
              worst_slice_to_gunit_um=max(man(cen(s), cen(B['gunit'])) for s in sl),
              worst_slice_to_edge_um=max(min(man(cen(s), cen(B[c])) for c in (('coll_WS', 'coll_WN', 'coll_ES', 'coll_EN')
                                         if 'coll_WS' in B else ('s_0S', 's_0N', 's_7S', 's_7N'))) for s in sl))
+    # G8/G9 floorplanners (dv_floorplan72_g8 / plan72_g8) record the um facts but not the derived stage counts that
+    # dv_plan.geometry_facts adds: derive them with the same formulas (TOKc-S81 10-22, G9 tree compile KeyError)
+    hop = g['hop_um']
+    if 'scalar_exchange_stages' not in g and 'worst_slice_to_slice_um' in g:
+        g['scalar_exchange_stages'] = math.ceil(g['worst_slice_to_slice_um'] / hop)
+    if 'phase_path_stages' not in g and 'worst_allgather_slice_to_frame_um' in g and 'worst_local_return_um' in g:
+        g['phase_path_stages'] = math.ceil(g['worst_allgather_slice_to_frame_um'] / hop) + \
+            math.ceil(g['worst_local_return_um'] / hop)
     hl = {l['i']: l['s'] for l in plan['links'] if l['i'].startswith(('hrq_', 'hrd_'))}
     if hl:
         g['hbm_rt_stages'] = max(hl.get(f'hrq_{k}', 0) + hl.get(f'hrd_{k}', 0) for k in {i[4:] for i in hl})
@@ -57,7 +68,9 @@ def layer_table(doc, delta, keys):
         row = {}
         for tag, end, dl in (('hub', e0, {}), ('dv', e1, delta)):
             st = {i: end[i] - by[i]['cycles'] - dl.get(i, 0.0) for i in ids}
-            row[f'{tag}_span'] = round(max(end[i] for i in ids) - min(st.values()), 1)
+            entry = min((st[i] for i in ids if i in crit), default=min(st.values()))
+            row[f'{tag}_span'] = round(max(end[i] for i in ids) - entry, 1)
+            row[f'{tag}_prefetch_lead'] = round(max(0.0, entry - min(st.values())), 1)
             row[f'{tag}_crit'] = round(sum(by[i]['cycles'] + dl.get(i, 0.0) for i in ids if i in crit), 1)
         row['nodes'] = len(ids)
         row['delta_cycles'] = round(sum(delta.get(i, 0.0) for i in ids), 1)
@@ -83,7 +96,10 @@ def main():
         keys = {f'L{L}': lay(L) for L in layers}
         keys['head'] = lambda n: str(n.get('group', '')).startswith('S0') and any(
             gg['id'] == n.get('group') and gg['kind'] == 'head' for gg in doc['groups'])
-        keys['mtp_draft'] = lambda n: 'mtp' in str(n.get('cls', '')).lower() or str(n.get('op', '')).startswith(('mtp', 'draft'))
+        # the draft layer = every node of the DAG's draft phase: the three DSpark stages (groups D0..D2, ids mtp.<s>.*),
+        # the draft head / Markov chain (DH) and the draft block charges (MC.draft).  (10-18 LB2-S81/MTP: the earlier
+        # cls/op test matched only the 11 DH nodes -- 42,457.5 of the phase's 163,508 cycles.)
+        keys['mtp_draft'] = lambda n: n.get('phase') == 'draft'
         tab, tot = layer_table(doc, delta, keys)
         res['workloads'][wl] = dict(token_cycles_dv=round(tot, 1), layers=tab)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)

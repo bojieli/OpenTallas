@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job ot_qkh_ktree_lk_nc32c-g1-1c272f08e bench bench_kt32c_ktree_mut1 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/ot_qkh_ktree_lk_nc32c-g1-1c272f08e log cl/bench_kt32c_ktree_mut1.a1b1.log captured 2026-10-20T05:59:20-07:00
+# fail_regex 'TB_QKH_KT32C FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH ktree.sc_d cycle 73 ref 00000000768f9061 nc 0000000075d4379c
+MISMATCH ktree.sc_d cycle 75 ref 00000000be01bf65 nc 00000000bda8fc50
+MISMATCH ktree.sc_d cycle 76 ref 0000000059655c3b nc 00000000564582e5
+TB_QKH_KT32C FAIL ktree errors 97050 of 300256 checks
+- /srv/opentallas-scratch/claude/closure-loop/ot_qkh_ktree_lk_nc32c-g1-1c272f08e/bench_src_a1/results/rtl/kv_params4_qkh_1020/tb_qkh_kt32c.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 12.240 s; speed 32.687 us/s
+- Verilator: cpu 12.238 s on 1 threads; allocated 10 MB

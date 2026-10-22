@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_hr_cdc_host-c3-53973e6bc bench bench_cluster_child_mutant host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_hr_cdc_host-c3-53973e6bc log cl/bench_cluster_child_mutant.a1b1.log captured 2026-10-19T06:45:45-07:00
+# fail_regex 'CLUSTER_GATE FAIL mutant'
+mutant: u_cdc_host.u_rank__u_bridge__qv inverted at the parent
+flat reference: 13 member instance(s) wrapped per flat_wraps.json [('qkd_host_axi_packet', 'qkd_host_axi_packet_rr'), ('qkd_host_control_prompt_observed', 'qkd_host_control_prompt_observed_rr'), ('qkd_host_hc_station', 'qkd_host_hc_station_rr'), ('qkd_host_program_loader_target', 'qkd_host_program_loader_target_rr'), ('qkd_host_program_rx_target', 'qkd_host_program_rx_target_rr'), ('qkd_host_record_port', 'qkd_host_record_port_rr'), ('qkd_host_rx_class_admission', 'qkd_host_rx_class_admission_rr'), ('qkd_host_tx_class', 'qkd_host_tx_class_rr')]
+seed=1 mode=0: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=1 mode=1: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=2 mode=0: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=2 mode=1: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=3 mode=0: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+seed=3 mode=1: MISMATCH host_upstream_quiet t=29720357 fs core=35 flat=f clu=e
+CLUSTER_GATE FAIL mutant child=cdc_host port=u_rank__u_bridge__qv runs_pass=0/6 core_cycles=20000

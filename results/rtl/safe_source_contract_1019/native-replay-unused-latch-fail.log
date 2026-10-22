@@ -1,0 +1,21 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-int8-raw-export-1019/t1
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/hbm-int8-raw-export-1019/t1
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-int8-raw-export-1019/t1
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-int8-raw-export-1019/t1
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-int8-raw-export-1019/t1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-int8-raw-export-1019/t1
+ot-run: ot-agidock128  admits    93 GB (avail 78, growth 13, headroom 0, waiters 0/0 GB) load 21/64 running 11 disk 284 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1930966-1792439452 after 0 s
+REPLAY_TOOL_ROOT /tmp/safe-source-contract-native-1019-real-libs-81qerdvz
+Traceback (most recent call last):
+  File "/tmp/safe-source-contract-native-1019-real-libs-81qerdvz/results/rtl/safe_source_contract_1019/replay_native_int8.py", line 49, in <module>
+    start=time.monotonic(); native=S.native_cells(parsed_libs); result=S.census(raw,'ot_smh_int8_tile',native)
+                                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/tmp/safe-source-contract-native-1019-real-libs-81qerdvz/tools/closure_loop/safe_source_contract.py", line 60, in native_cells
+    require(kind not in ('bus', 'bundle', 'latch', 'statetable'), f'unsupported {kind} in {master}')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/safe-source-contract-native-1019-real-libs-81qerdvz/tools/closure_loop/safe_source_contract.py", line 29, in require
+    raise ContractError(message)
+safe_source_contract.ContractError: unsupported latch in DHLx1_ASAP7_75t_R
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1930966-1792439452): exit 1

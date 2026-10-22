@@ -1,0 +1,9 @@
+MISMATCH rel 23 got 057e2ba2f1583c52cf exp 0680d2862cccaf2fc8
+MISMATCH rel 24 got 02486f04e96acd405c exp 057e2ba2f1583c52cf
+MISMATCH rel 26 got 017e6d3b3ea52f45c3 exp 0238f3b4f7c6f3cf1c
+MISMATCH rel 27 got 0516bcc8c914c14ce8 exp 017e6d3b3ea52f45c3
+TB_CAP_LD FAIL checks 0 errs 283 D 16 DUT 15
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_cap_ld.sv:31: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 353ns; walltime 0.000 s; speed 2.147 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

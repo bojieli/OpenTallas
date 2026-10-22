@@ -1,0 +1,374 @@
+{
+  "source_commit": "ceaed19c4",
+  "source_path": "results/arch/s81_dv_1016/bind/bind_table_p4l3_mu.json",
+  "scope": "Inventory only. Referenced records are not verified current adopted physical views. Every entry needs exact selected final ODB identity before terminal PG audit. Runtime selected HSLOT closure adb53b6fe has RTL blob8e9b03d6; it differs from old table28a8118d5.",
+  "groups": {
+    "child_views": {
+      "ot_s81_su_smq": {
+        "reference": {
+          "view": "s81su_smq-s81su_smq-342decba7 (CLOSED TT +147.55 / FF +8.13; native PASS L 106.8 / C 79.8 / R 199.3 / sp 43.4)",
+          "parent": "ot_s81_su_smh -> dsdv_svc_rs (open binding, S81U-1)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81_kp4_enc": {
+        "reference": {
+          "view": "s81lk_kp4_enc-k4-10153956e (CLOSED TT +0.72 / FF +20.62; native PASS L 122.3 / C 103.5 / R 286.4 / sp 57.2)",
+          "parent": "ot_pdie_serdes_col (u_enc)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_rly_38_WN": {
+        "reference": {
+          "view": "s81_rly_38_wn-x1-e3cbf17fa (CLOSED TT +410.65 / FF +26.70; native PASS L 108.4 / C 60.0 / R 52.8 / sp 0.8)",
+          "parent": "col_h9 / col_h10 (exact-width f_prog relay, 3 per frame)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81_kp4_ddly": {
+        "reference": {
+          "view": "s81lk_kp4_ddly-t2-5f0b4a343 (CLOSED, origin/main record)",
+          "parent": "kp4 2x2 parent (link)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81_kp4_dout": {
+        "reference": {
+          "view": "s81lk_kp4_dout-t2-cef44c405 (CLOSED, origin/main record)",
+          "parent": "kp4 2x2 parent (link)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_gunit_l0": {
+        "reference": {
+          "view": "dsdv_gunit_l0-g3-30d12242b (CLOSED, origin/main record)",
+          "parent": "dsdv_gunit"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_gunit_l0r": {
+        "reference": {
+          "view": "dsdv_gunit_l0r-g3-30d12242b (CLOSED, origin/main record)",
+          "parent": "dsdv_gunit"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_gunit_l2": {
+        "reference": {
+          "view": "dsdv_gunit_l2-n3-4ad138b2f (CLOSED, origin/main record)",
+          "parent": "dsdv_gunit"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_gunit_l3": {
+        "reference": {
+          "view": "dsdv_gunit_l3-n3-4970bda9a (CLOSED, origin/main record)",
+          "parent": "dsdv_gunit"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_gunit_l4": {
+        "reference": {
+          "view": "dsdv_gunit_l4-nf3-14b48ae73 (CLOSED, closure_loop state 10-18)",
+          "parent": "dsdv_gunit"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_gunit_l4r": {
+        "reference": {
+          "view": "dsdv_gunit_l4r-g3-0d82e340b (CLOSED, origin/main record)",
+          "parent": "dsdv_gunit"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_gunit_l5f": {
+        "reference": {
+          "view": "dsdv_gunit_l5f-g3-0d82e340b (CLOSED, origin/main record)",
+          "parent": "dsdv_gunit"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_sh_vc": {
+        "reference": {
+          "view": "dsdv_sh_vc-nf3bt-ce989b78c (CLOSED, closure_loop state 10-18)",
+          "parent": "dsdv_seq_host"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_svc_sx_hrow": {
+        "reference": {
+          "view": "dsdv_svc_sx_hrow-dsdv_svc_sx_hrow-c5a8d5b10 (CLOSED, origin/main record)",
+          "parent": "dsdv_svc_rs (u_sx = 8 x hrow)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81_kp4_dsyn": {
+        "reference": {
+          "view": "s81lk_kp4_dsyn-t2-e3dea7351 (CLOSED, origin/main record)",
+          "parent": "kp4 2x2 parent (link)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81_kp4_dchn": {
+        "reference": {
+          "view": "s81lk_kp4_dchn-t2-5f0b4a343 (CLOSED, origin/main record)",
+          "parent": "kp4 2x2 parent (link)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81sl_vq": {
+        "reference": {
+          "view": "s81sl_vq-n3-8eea202c0 (CLOSED, closure_loop state 10-18)",
+          "parent": "ot_s81sl_slice"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_gunit_l1": {
+        "reference": {
+          "view": "dsdv_gunit_l1-gl1-ecad968d3 (CLOSED, closure_loop state 10-18)",
+          "parent": "dsdv_gunit"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_gunit_l1c": {
+        "reference": {
+          "view": "dsdv_gunit_l1c-gl1-ecad968d3 (CLOSED, closure_loop state 10-18)",
+          "parent": "dsdv_gunit"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81sl_cap_tr": {
+        "reference": {
+          "view": "s81sl_cap_tr-s81sl_cap_tr-0ecc0c258 (CLOSED, closure_loop state 10-18)",
+          "parent": "ot_s81sl_slice (capture root)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81sl_hcpl": {
+        "reference": {
+          "view": "s81sl_hcpl-s81sl_hcpl-31155b373 (CLOSED, closure_loop state 10-18)",
+          "parent": "ot_s81sl_vp (16 x hcpl)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_bk_cm": {
+        "reference": {
+          "view": "s81dvbk_cm-m1-8c2850345 (CLOSED, closure_loop state 10-18)",
+          "parent": "dsfd_bk_collector"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81sl_xfin": {
+        "reference": {
+          "view": "s81dv_xfin-x5-06cb91161 (CLOSED, closure_loop state 10-18)",
+          "parent": "ot_s81sl_slice"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "ot_s81_rate_match": {
+        "reference": {
+          "view": "s81lk_rate_match-ec1-bc3912b42 (CLOSED, closure_loop state 10-18)",
+          "parent": "ot_pdie_ucie / serdes"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_mu_hslot": {
+        "reference": {
+          "view": "dsdv_mu_hslot-28a8118d5 (CLOSED TT +70.22 / FF +27.30, DRC 0; native PASS L 124.5 / C 88.3 / sp 10.7/11.0; main ccf787d45, audit 7aa582c7a)",
+          "parent": "dsdv_seq_host_mux -> dsdv_seq_host_mu (u_hs, NSLOT 47 MUT 0; source byte-identical to the view)"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsdv_mu_land": {
+        "reference": {
+          "view": "dsdv_mu_land-dsdv_mu_land-263e13fc3 (CLOSED TT +68.25 / FF +24.02, DRC 0; native PASS L 104.8 / C 79.1 / sp 32.6/27.2; main 9b80ceb82, audit be45f0660)",
+          "parent": "ot_s81sl_slice_lep_mux (u_land, W 1104 NB 80 NS 1 SRAM 1) in every MU end slice"
+        },
+        "terminal_pg": "UNKNOWN"
+      }
+    },
+    "relay_views": {
+      "dsfd_dvrly_276_EW": {
+        "reference": "dv4c-33a9d31b4 (native PASS)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_276_WE": {
+        "reference": "dv4-cfe2c1cf4 (native PASS)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_276_NS": {
+        "reference": "dv4-cfe2c1cf4 (native PASS)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_276_SN": {
+        "reference": "dv4-cfe2c1cf4 (native PASS)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_rly_1_WN": {
+        "reference": "g18-8a9388ce8 (native PASS; regional reset station master, all directions by orientation)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_512_EW": {
+        "reference": "s81dv_rly_512_ew-w1-c5a69dc05 (CLOSED TT +410.05 / FF +28.38; native PASS L 109.0 / C 68.8 / R 82.5 / sp 6.8)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_512_WE": {
+        "reference": "s81dv_rly_512_we-w1-c5a69dc05 (CLOSED TT +366.14 / FF +21.96; native PASS L 107.2 / C 66.9 / R 80.9 / sp 7.4)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_562_EW": {
+        "reference": "s81dv_rly_562_ew-w1-c5a69dc05 (CLOSED TT +326.66 / FF +26.96; native PASS L 110.8 / C 69.3 / R 84.3 / sp 8.8)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_562_WE": {
+        "reference": "s81dv_rly_562_we-w1-c5a69dc05 (CLOSED TT +333.30 / FF +20.78; native PASS L 107.5 / C 68.0 / R 83.2 / sp 8.0)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_562_SN": {
+        "reference": "s81dv_rly_562_sn-w2-6e188c155 (CLOSED TT +370.44 / FF +26.10; native PASS L 149.2 / C 74.4 / R 90.1 / sp 13.4)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_682_EW": {
+        "reference": "s81dv_rly_682_ew-w1-c5a69dc05 (CLOSED TT +276.73 / FF +20.83; native PASS L 112.2 / C 72.0 / R 89.1 / sp 11.1)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_682_WE": {
+        "reference": "s81dv_rly_682_we-w1-c5a69dc05 (CLOSED TT +278.14 / FF +25.92; native PASS L 107.7 / C 68.0 / R 87.3 / sp 6.3)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_682_NS": {
+        "reference": "s81dv_rly_682_ns-w2-6e188c155 (CLOSED TT +390.83 / FF +27.96; native PASS L 128.8 / C 72.5 / R 93.6 / sp 9.2)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_70_NS": {
+        "reference": "s81dv_rly_70_ns-w1-1e6f9a9d6 (CLOSED TT +409.29 / FF +29.49; native PASS L 110.2 / C 63.1 / R 61.8 / sp 1.5)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrly_70_SN": {
+        "reference": "s81dv_rly_70_sn-w1-1e6f9a9d6 (CLOSED TT +409.20 / FF +29.16; native PASS L 110.3 / C 63.4 / R 62.4 / sp 1.8)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_276_EW": {
+        "reference": "s81dv_rlyh_276_ew-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_276_WE": {
+        "reference": "s81dv_rlyh_276_we-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_276_NS": {
+        "reference": "s81dv_rlyh_276_ns-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_276_SN": {
+        "reference": "s81dv_rlyh_276_sn-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_512_EW": {
+        "reference": "s81dv_rlyh_512_ew-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_512_WE": {
+        "reference": "s81dv_rlyh_512_we-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_562_EW": {
+        "reference": "s81dv_rlyh_562_ew-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_562_SN": {
+        "reference": "s81dv_rlyh_562_sn-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_562_WE": {
+        "reference": "s81dv_rlyh_562_we-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_682_EW": {
+        "reference": "s81dv_rlyh_682_ew-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_682_NS": {
+        "reference": "s81dv_rlyh_682_ns-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_682_WE": {
+        "reference": "s81dv_rlyh_682_we-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_70_NS": {
+        "reference": "s81dv_rlyh_70_ns-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvrlyh_70_SN": {
+        "reference": "s81dv_rlyh_70_sn-h1-41e90080d (CLOSED, half-cycle ck_o)",
+        "terminal_pg": "UNKNOWN"
+      }
+    },
+    "land_views": {
+      "dsfd_dvland_276": {
+        "reference": {
+          "ref": "codex/closure-record-s81dv_land_276-po2-df5c2d585",
+          "commit": "4e4a509e266ac84a0ac9f77552936342956f7b21",
+          "kit": "physical/ref_tile/s81dv_land_276",
+          "job": "s81dv_land_276-po2-df5c2d585"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvland_276l": {
+        "reference": {
+          "ref": "codex/closure-record-s81dv_land_276l-po2-df5c2d585",
+          "commit": "c1f2495df9e5c32462adc0d2a2c0c66d0af76562",
+          "kit": "physical/ref_tile/s81dv_land_276l",
+          "job": "s81dv_land_276l-po2-df5c2d585"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvland_70": {
+        "reference": {
+          "ref": "codex/closure-record-s81dv_land_70-po2-df5c2d585",
+          "commit": "e676a75d23d7f728746c3d225dc54c58eab9f00a",
+          "kit": "physical/ref_tile/s81dv_land_70",
+          "job": "s81dv_land_70-po2-df5c2d585"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvland_562": {
+        "reference": {
+          "ref": "codex/closure-record-s81dv_land_562-po2-df5c2d585",
+          "commit": "23d9cbb8cfecf6303a8b3afe1e51d5127640faa6",
+          "kit": "physical/ref_tile/s81dv_land_562",
+          "job": "s81dv_land_562-po2-df5c2d585"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvland_512": {
+        "reference": {
+          "ref": "codex/closure-record-s81dv_land_512-po2-df5c2d585",
+          "commit": "306a99997b1bfc28ebc33ea7948003a6a62e1860",
+          "kit": "physical/ref_tile/s81dv_land_512",
+          "job": "s81dv_land_512-po2-df5c2d585"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvland_682": {
+        "reference": {
+          "ref": "codex/closure-record-s81dv_land_682-l1-1da4d6aae",
+          "commit": "ff575a79ee8ef4f584b625c7b1dfd732aec483ce",
+          "kit": "physical/ref_tile/s81dv_land_682",
+          "job": "s81dv_land_682-l1-1da4d6aae"
+        },
+        "terminal_pg": "UNKNOWN"
+      },
+      "dsfd_dvland_pvrd": {
+        "reference": {
+          "ref": "codex/closure-record-s81dv_land_pvrd-p3-b15a4ddad",
+          "commit": "3b83f2255f8e17caa8eb4ff7e6354214440b817b",
+          "kit": "physical/ref_tile/s81dv_land_pvrd",
+          "job": "s81dv_land_pvrd-p3-b15a4ddad"
+        },
+        "terminal_pg": "UNKNOWN"
+      }
+    }
+  }
+}

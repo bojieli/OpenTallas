@@ -1,0 +1,21 @@
+RET 403 07d45e6de1000008b
+RET 404 07b98ed1a1000408b
+RET 407 07a1735961000804b
+RET 408 0798a79701000c04b
+RET 413 07b5b8bd01000844b
+RET 414 17a6991961000c44b
+RET 420 17a7c9fec1000888b
+RET 421 17accc83a1000c88b
+RET 423 07b82a1101000088b
+RET 424 078474f9c1000488b
+END edges=1087 ret_words=10 xo_checked=1085 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 3.601 s; speed 303.416 ns/s
+- Verilator: cpu 3.600 s on 1 threads; allocated 46 MB
+CHECK MISMATCH edge 403 row 0 lo 0 k 2 got 3ea2f36f/0 want 3e57d0c6/0
+CHECK MISMATCH edge 404 row 1 lo 0 k 2 got 3dcc768d/0 want bd143e06/0
+CHECK MISMATCH edge 407 row 2 lo 0 k 1 got 3d0b9acb/0 want 3b8af558/0
+CHECK MISMATCH edge 408 row 3 lo 0 k 1 got 3cc53cb8/0 want 3d91be1c/0
+CHECK PLAN_MISMATCH predicted 10 words, got 10; first diff ((403, 0, (0, 2, 5), 1045942470, 0), (403, 0, (0, 2, 5), 1050866543, 0))
+XS_PLACE_CHECK FAIL sgu_swap

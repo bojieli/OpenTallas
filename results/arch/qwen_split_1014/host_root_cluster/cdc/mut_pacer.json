@@ -1,0 +1,8 @@
+[
+ {
+  "mutant": "unfix qkd_host_qm_credit_pacer (1 instance(s) of qkd_hr_qm_credit_pacer_cdc bind the original)",
+  "refusal": "reviewed_gray_fifos cross-family asynchronous control host_rst_n (core) -> u_rank__u_bridge__u_pacer.cq[0] (host); only an ot_reset_sync pipe may take it",
+  "top": "qkd_hr_cdc_host",
+  "verdict": "REFUSED"
+ }
+]

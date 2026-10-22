@@ -1,0 +1,906 @@
+('ot-epyc4', 0, '')
+('ot-epyc5', 0, '')
+('ot-epyc6', 0, '')
+('ot-epyc7', 0, '')
+('ot-epyc8', 0, '')
+ot-run: ot-epyc4       admits  1117 GB (avail 838, growth 50, headroom 0, waiters 0/0 GB) load 34/128 running 15 disk 433 GB 
+ot-run: ot-epyc5       admits   647 GB (avail 509, growth 19, headroom 0, waiters 0/0 GB) load 48/128 running 7 disk 910 GB 
+ot-run: ot-epyc6       admits  1251 GB (avail 935, growth 60, headroom 0, waiters 0/0 GB) load 37/128 running 16 disk 5719 GB 
+ot-run: ot-epyc7       admits  1076 GB (avail 803, growth 50, headroom 0, waiters 0/0 GB) load 32/96 running 14 disk 6274 GB 
+ot-run: ot-epyc8       admits  1250 GB (avail 957, growth 82, headroom 0, waiters 0/0 GB) load 22/128 running 15 disk 62 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/sram-a4-owned-metal-1019/original
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/sram-a4-owned-metal-1019/original
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2268551-1792449503 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ODB-0227] LEF file: /work/input/asap7_tech.lef, created 30 layers, 9 vias
+[INFO ODB-0127] Reading DEF file: /work/qwen/empty.def
+[INFO ODB-0128] Design: a4_qwen
+[INFO ODB-0134] Finished DEF file: /work/qwen/empty.def
+NATIVE_INPUT_READY 1582 objects
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     0
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   a4_qwen
+Die area:                 ( 0 0 ) ( 52440 21192 )
+Number of track patterns: 5
+Number of DEF vias:       0
+Number of components:     0
+Number of terminals:      0
+Number of snets:          0
+Number of nets:           208
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 0.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 0.
+[INFO DRT-0033] V1 shape region query size = 0.
+[INFO DRT-0033] M2 shape region query size = 0.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 0.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 0.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 0.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 54 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 23 STEP 1000 ;
+NATIVE_ORIGINAL_CHECK_COMPLETE
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 54 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 23 STEP 1000 ;
+CASE_COMPLETE 0 qwen
+	Command being timed: "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -python /work/run_native.py"
+	User time (seconds): 0.54
+	System time (seconds): 0.17
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.72
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 249672
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 59885
+	Voluntary context switches: 1
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 4528
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ODB-0227] LEF file: /work/input/asap7_tech.lef, created 30 layers, 9 vias
+[INFO ODB-0127] Reading DEF file: /work/sc2/empty.def
+[INFO ODB-0128] Design: a4_sc2
+[INFO ODB-0134] Finished DEF file: /work/sc2/empty.def
+NATIVE_INPUT_READY 3669 objects
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     0
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   a4_sc2
+Die area:                 ( 0 0 ) ( 216840 43800 )
+Number of track patterns: 5
+Number of DEF vias:       0
+Number of components:     0
+Number of terminals:      0
+Number of snets:          0
+Number of nets:           439
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 0.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 0.
+[INFO DRT-0033] V1 shape region query size = 0.
+[INFO DRT-0033] M2 shape region query size = 0.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 0.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 0.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 0.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 218 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 45 STEP 1000 ;
+NATIVE_ORIGINAL_CHECK_COMPLETE
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 218 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 45 STEP 1000 ;
+CASE_COMPLETE 0 sc2
+	Command being timed: "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -python /work/run_native.py"
+	User time (seconds): 0.78
+	System time (seconds): 0.22
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 249728
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 71778
+	Voluntary context switches: 1
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8704
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ODB-0227] LEF file: /work/input/asap7_tech.lef, created 30 layers, 9 vias
+[INFO ODB-0127] Reading DEF file: /work/controls/empty.def
+[INFO ODB-0128] Design: coupon_a2
+[INFO ODB-0134] Finished DEF file: /work/controls/empty.def
+NATIVE_INPUT_READY 7 objects
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     0
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   coupon_a2
+Die area:                 ( 0 0 ) ( 12500 12500 )
+Number of track patterns: 2
+Number of DEF vias:       0
+Number of components:     0
+Number of terminals:      0
+Number of snets:          0
+Number of nets:           5
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 0.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 0.
+[INFO DRT-0033] V1 shape region query size = 0.
+[INFO DRT-0033] M2 shape region query size = 0.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 0.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 0.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 0.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 14 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 14 STEP 1000 ;
+NATIVE_ORIGINAL_CHECK_COMPLETE
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 14 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 14 STEP 1000 ;
+CASE_COMPLETE 0 aligned_rectangle
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 14 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 14 STEP 1000 ;
+CASE_COMPLETE 1 original_9nm_step
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 14 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 14 STEP 1000 ;
+CASE_COMPLETE 2 spacing_23nm
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 14 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 14 STEP 1000 ;
+CASE_COMPLETE 3 disconnected_contact
+	Command being timed: "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -python /work/run_native.py"
+	User time (seconds): 0.38
+	System time (seconds): 0.15
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.54
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 248736
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 55850
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1088
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ODB-0227] LEF file: /work/input/asap7_tech.lef, created 30 layers, 9 vias
+[INFO ODB-0127] Reading DEF file: /work/missing_bridge/empty.def
+[INFO ODB-0128] Design: a4_qwen
+[INFO ODB-0134] Finished DEF file: /work/missing_bridge/empty.def
+NATIVE_INPUT_READY 1581 objects
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     0
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   a4_qwen
+Die area:                 ( 0 0 ) ( 52440 21192 )
+Number of track patterns: 5
+Number of DEF vias:       0
+Number of components:     0
+Number of terminals:      0
+Number of snets:          0
+Number of nets:           208
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 0.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 0.
+[INFO DRT-0033] V1 shape region query size = 0.
+[INFO DRT-0033] M2 shape region query size = 0.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 0.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 0.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 0.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 54 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 23 STEP 1000 ;
+NATIVE_ORIGINAL_CHECK_COMPLETE
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 54 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 23 STEP 1000 ;
+CASE_COMPLETE 0 missing_bridge
+	Command being timed: "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -python /work/run_native.py"
+	User time (seconds): 0.52
+	System time (seconds): 0.17
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.70
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 248996
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 59877
+	Voluntary context switches: 1
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 4528
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+[INFO ODB-0227] LEF file: /work/input/asap7_tech.lef, created 30 layers, 9 vias
+[INFO ODB-0127] Reading DEF file: /work/short_bridge/empty.def
+[INFO ODB-0128] Design: a4_qwen
+[INFO ODB-0134] Finished DEF file: /work/short_bridge/empty.def
+NATIVE_INPUT_READY 1583 objects
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'std::vector< int,std::allocator< int > > *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+swig/python detected a memory leak of type 'dbTechLayerMinStepType *', no destructor found.
+[INFO ORD-0030] Using 1 thread(s).
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     0
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   a4_qwen
+Die area:                 ( 0 0 ) ( 52440 21192 )
+Number of track patterns: 5
+Number of DEF vias:       0
+Number of components:     0
+Number of terminals:      0
+Number of snets:          0
+Number of nets:           208
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 0.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 0.
+[INFO DRT-0033] V1 shape region query size = 0.
+[INFO DRT-0033] M2 shape region query size = 0.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 0.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 0.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 0.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 54 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 23 STEP 1000 ;
+NATIVE_ORIGINAL_CHECK_COMPLETE
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+
+[INFO DRT-0157] Number of guides:     0
+
+[INFO DRT-0176] GCELLGRID X 0 DO 54 STEP 1000 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 23 STEP 1000 ;
+CASE_COMPLETE 0 short_bridge
+	Command being timed: "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -python /work/run_native.py"
+	User time (seconds): 0.52
+	System time (seconds): 0.18
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.70
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 249988
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 59887
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 4560
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2268551-1792449503): exit 0

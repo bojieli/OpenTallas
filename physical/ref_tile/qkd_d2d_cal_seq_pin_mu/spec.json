@@ -1,0 +1,162 @@
+{
+ "name": "qkd_d2d_cal_seq_pin_mu",
+ "top": "qkd_d2d_cal_seq_pin",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv"
+ ],
+ "params": {
+  "EP_SKEW": 3,
+  "GO_OFS": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 18.792,
+  "h": 28.08,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "epoch_go",
+   "halt"
+  ],
+  "E": [
+   "cal_ready",
+   "running",
+   "layer",
+   "adm_done",
+   "tok_start",
+   "fault"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "reload"
+  ]
+ },
+ "io_tcl": "results/arch/qwen_native_static_endpoint_1015/calendar_compact18_pins_0253/qkd_d2d_cal_seq.tcl",
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Explicit source captures every active functional input once; actual qkd_d2d_cal_seq output FFs are the output pin FFs. Local epoch capture compensated by raw EP_SKEW-1. No generic extra stage permitted. Source exact72-layer two-token proof plus failing anchor mutant; AUTO tok_go is internally0 and no physical input remains."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:KV-DCAL-MU",
+  "branch": "claude/kv-dcal-mu-1019",
+  "tag": "mu1",
+  "purpose": "KV-side MU d2d calendar sequencer (MU-DIE-KV2 / KV-DCAL-MU 10-19): qkd_d2d_cal_seq_pin built from ot_qwen_d2d_cal_seq_dies_mu.sv + d2d_cal_image_mu.svh (D2D_MU=1 d2d_cal_image_production.sh on the MU release pair seam 2,2,2,3,2,2/11,11,9,9,9,9,9: TXDP_C 0x0a010308, TXDP_K 0x03030415 [21,4,3,3] = production d2d_cal_image.svh; MU context slot = +1 K TX / C RX entry, SEG2 8->9). Same ports/outline/pins as _ep3 (die slot DCAL_WH 18.792x28.08); replaces the ep3 labelled stand-in when OT_KV_MU=1. Static calendar, no credits/backpressure; reset landing 2 stages (boot constant).",
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/test/qwen_split/run_cal_pin.sh",
+   "rtl/test/qwen_split/tb_qkd_cal_pin.sv",
+   "results/arch/qwen_native_static_endpoint_1015/calendar_compact18_pins_0253",
+   "results/rtl/qkd_d2d_cal_seq_pin_mu_1019"
+  ],
+  "benches": [
+   {
+    "name": "mu_compiled_timeline_and_exception_deadlines",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_mu 0 1",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "expect": "pass",
+    "pass_regex": "CALPIN_PASS starts74 layers72 token3start1 bootwords66 reloadwords66 resetwords66 halt_capture1 reset_release2"
+   },
+   {
+    "name": "mu_anchor_one_edge_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_mu_m1 1 1",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "expect": "fail",
+    "fail_regex": "CALPIN_FAIL compiled start",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_mu_1019/run_cal_pin_mu_m1.log"
+   },
+   {
+    "name": "mu_production_image_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_mu_m2 2 1",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "expect": "fail",
+    "fail_regex": "CALPIN_FAIL boot control word",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_mu_1019/run_cal_pin_mu_m2.log"
+   },
+   {
+    "name": "mu_stale_txdp_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_mu_m3 3 1",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "expect": "fail",
+    "fail_regex": "CALPIN_FAIL txdp",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_mu_1019/run_cal_pin_mu_m3.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_cal_seq_pin_mu/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_mu"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "local_home_grant": "physical/ref_tile/qkd_d2d_cal_seq_pin_mu/local_home_grant.json",
+ "structural_change": "Copy of the CLOSED _ep3 kit (TT/FF closed 10-16, synth 156 um2, 45% std util in 18.792x28.08) with the MU calendar image: one more K TX image word (constant), SEG2 9; no RTL structure, pin, outline or cycle change. Recipe 3 kept; reset_landing 2 stages added (ROOT-RST 10-19); io_hold_margin 0.03.",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: every functional input captured once in RTL (reload_q/epoch_go_q/halt_q), outputs are the sequencer output FFs (pin_regs off with reason); reset lands in 2 registered stages (reset_landing) + RTL release_q",
+  "2_reach": "PASS: tile 18.8x28.1 um, longest wire << 405 um",
+  "3_fanout": "PASS: ~200-flop leaf, no register > 32 loads in a critical cone at ep3 route (closed TT/FF)",
+  "4_depth": "PASS: ep3 closed at 770 ps route / 833 ps signoff with the same logic; image is constants",
+  "5_storage": "PASS: calendar images are compile-time constants (no runtime-indexed flop arrays, no delay lines)",
+  "6_floorplan": "PASS: no macros; outline = die slot 18.792x28.08 (aspect 1.49), ~45% std util from synthesis area, full std-cell band",
+  "7_clock": "PASS: single centred S clock entry on a ~200-flop leaf; spread checked at gate (TT/FF <=80); io_hold_margin 0.03",
+  "8_schedule": "PASS: static compiled calendar; MU context slot is placed by the compiler image (d2d_link_calendar --mu); reset landing +2 edges is a boot constant before epoch_go"
+ }
+}

@@ -1,0 +1,155 @@
+{
+ "schema": "opentallas.hgi_sim.ds_native.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-18T19:30:27Z",
+ "host": "ot-epyc5",
+ "context": 1048576,
+ "position": 1048575,
+ "layers": "14",
+ "head": false,
+ "results": [
+  {
+   "layer": 14,
+   "kind": "engram+ratio2+compressor+indexer",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L14.engram",
+     "bit_exact": true,
+     "ranks_checked": 192,
+     "first_bad": []
+    },
+    {
+     "region": "L14.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 192,
+     "first_bad": []
+    },
+    {
+     "region": "win14",
+     "bit_exact": true,
+     "ranks_checked": 192,
+     "first_bad": []
+    },
+    {
+     "region": "L14.attn",
+     "bit_exact": true,
+     "ranks_checked": 192,
+     "first_bad": []
+    },
+    {
+     "region": "L14.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 192,
+     "first_bad": []
+    },
+    {
+     "region": "L14.router",
+     "bit_exact": true,
+     "ranks_checked": 192,
+     "first_bad": []
+    },
+    {
+     "region": "L14.ffn",
+     "bit_exact": true,
+     "ranks_checked": 192,
+     "first_bad": []
+    },
+    {
+     "region": "block14",
+     "bit_exact": true,
+     "ranks_checked": 192,
+     "first_bad": []
+    },
+    {
+     "region": "pre14",
+     "bit_exact": true,
+     "ranks_checked": 192,
+     "first_bad": []
+    },
+    {
+     "region": "ckv14",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "ik14",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L14.index_scores",
+     "bit_exact": true,
+     "ranks_checked": 1,
+     "first_bad": []
+    },
+    {
+     "region": "L14.index_select",
+     "bit_exact": true,
+     "ranks_checked": 192
+    },
+    {
+     "region": "L14.experts",
+     "bit_exact": true,
+     "ranks_checked": 192
+    }
+   ],
+   "records_per_die": 154,
+   "image_bytes_all_dies": 2636224,
+   "unit_ops": {
+    "DMA.LOAD": 10,
+    "CTL.NOP": 36,
+    "COLL.ROW_GATHER": 2,
+    "CTL.FENCE": 2,
+    "SU.VOP": 45,
+    "COLL.ALL_GATHER": 19,
+    "SM.MATVEC": 23,
+    "DMA.FENCE": 3,
+    "HC.HC_MIX_POST": 2,
+    "FUSED.HC_PRE_NORM": 2,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.KVWB_DS": 1,
+    "IDX.INDEX": 1,
+    "COLL.TOPK_MERGE": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.TOPK": 1
+   },
+   "schedule": null,
+   "row_gather": [
+    {
+     "tag": "selected compressed-KV rows to the head dies",
+     "k": 512,
+     "G": 192,
+     "max_owned": 7,
+     "mean_owned": 2.667
+    }
+   ],
+   "wall_s": 9.5
+  }
+ ],
+ "spec": "HGI-1 1.0 (owner-approved encoding; records.py decodes from hbm_generic_iface D_* tables)",
+ "open_items": [
+  "G15 IDX.TOPK ascending-id order (param[12], provisional reading)",
+  "G16 DS indexer engines' operands / fields (engine-internal buffers)",
+  "G17 DS head uniform 1,347-row shards for ARGMAX imm_a",
+  "Engram ids host-provided (IDX.EHASH not modelled: G13 bring-up path)",
+  "program images compiled for the token's position (compressor append address, selection count), as the w19 compiler emits them",
+  "compressed KV rows stored as FP32 values on the FP4 grid (the shipped 9-channel FP4 layout is the gather readers' concern, spec 6.10)"
+ ],
+ "wall_s": 32.3,
+ "model_init_sha256": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+ "source_sha256": {
+  "hgi_sim/ds_native.py": "9a6b70de82186ad36fdc6c0a024c5978ab43bd8157d659815529152c93e38dfe",
+  "hgi_sim/machine.py": "3afa99805a7ca0fdf0a006f84b73802f074646599f5046a23a1a8cd2e7788877",
+  "hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
+  "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+  "w19_hbm_tp96_isa.py": "ae84fe8db48d381a55f89486b67da993c6f2ba05a2c5092e4e772e359a4527fc",
+  "hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+ }
+}

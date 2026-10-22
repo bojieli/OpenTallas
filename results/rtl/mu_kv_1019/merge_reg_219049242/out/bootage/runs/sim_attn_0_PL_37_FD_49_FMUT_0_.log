@@ -1,0 +1,11 @@
+DBG fault t=2415000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=273 c_age=290 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=4879000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=217 c_age=234 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=7631000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=233 c_age=250 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=9913000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=215 c_age=232 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=12119000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=255 c_age=272 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+DBG fault t=14273000 {a_lf,a_if,c_lf,c_if,a_rf}=00001 a_age=178 c_age=195 run 0/1 rr 1/0 rv 0 qv 0 qr 0
+KVBA_ATTN PASS PL=37 FD=49 mut=0 fmut=0 checks=6651 cmds=24 clean=18
+- /srv/opentallas-scratch/claude/refill-0725/MUKVREG2/src/rtl/test/kv_bootage_1019/tb_kvba_attn.sv:124: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 0.009 s; speed 1.760 ms/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB

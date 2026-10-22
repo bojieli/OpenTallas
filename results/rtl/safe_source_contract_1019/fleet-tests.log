@@ -1,0 +1,34 @@
+ot-run: ot-epyc4       admits  1003 GB (avail 781, growth 79, headroom 0, waiters 0/0 GB) load 40/128 running 24 disk 412 GB 
+ot-run: ot-epyc5       admits   635 GB (avail 529, growth 84, headroom 0, waiters 0/0 GB) load 55/128 running 10 disk 562 GB 
+ot-run: ot-epyc6       admits   992 GB (avail 807, growth 113, headroom 0, waiters 0/0 GB) load 133/128 running 42 disk 559 GB 
+ot-run: ot-epyc7       admits   434 GB (avail 405, growth 101, headroom 0, waiters 0/0 GB) load 352/96 running 72 disk 502 GB 
+ot-run: ot-epyc8       admits  1132 GB (avail 906, growth 113, headroom 0, waiters 0/0 GB) load 56/128 running 34 disk 565 GB 
+ot-run: ot-pve1        admits   141 GB (avail 111, growth 2, headroom 0, waiters 0/0 GB) load 10/28 running 1 disk 1209 GB 
+ot-run: ot-agidock128  admits    97 GB (avail 80, growth 13, headroom 0, waiters 0/0 GB) load 21/64 running 11 disk 46 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3549016-1792439226 after 0 s
+FLEET_TEST_ROOT /tmp/safe-source-contract-1019-snapshot-29r46xee
+SOURCE_SHA256 8239c4276f0abd34d5ceaf3463a9ebd2a5a208ee54ba387f752ccb653618a61a tools/closure_loop/safe_source_contract.py
+SOURCE_SHA256 aca5a84601ade82d0ed3b7502d91414f767fa71992d9e25462532cd47d3252b4 tools/closure_loop/test_safe_source_contract.py
+SOURCE_SHA256 debb83069aa0b0461e326e20ad191c3bbd432615829357e94fb8d5227f9a5c99 tools/dft/liberty.py
+test_clock_names_do_not_exempt_data (test_safe_source_contract.CensusTests.test_clock_names_do_not_exempt_data) ... ok
+test_clock_only_native_role (test_safe_source_contract.CensusTests.test_clock_only_native_role) ... ok
+test_duplicate_library_and_unsupported_bus_fail_closed (test_safe_source_contract.CensusTests.test_duplicate_library_and_unsupported_bus_fail_closed) ... ok
+test_exact_contract_hashes_and_opt_in_guards (test_safe_source_contract.CensusTests.test_exact_contract_hashes_and_opt_in_guards) ... ok
+test_merged_kept_copy_detected (test_safe_source_contract.CensusTests.test_merged_kept_copy_detected) ... ok
+test_mixed_clock_data_net_counts_data (test_safe_source_contract.CensusTests.test_mixed_clock_data_net_counts_data) ... ok
+test_multilevel_inversion_and_exact_pin_count (test_safe_source_contract.CensusTests.test_multilevel_inversion_and_exact_pin_count) ... ok
+test_native_macro_static_and_literal_roles (test_safe_source_contract.CensusTests.test_native_macro_static_and_literal_roles) ... ok
+test_no_names_only_buffer_collapse (test_safe_source_contract.CensusTests.test_no_names_only_buffer_collapse) ... ok
+test_opposite_polarity_forks_count_distinct_native_pins (test_safe_source_contract.CensusTests.test_opposite_polarity_forks_count_distinct_native_pins) ... ok
+test_pin_count_not_cell_count (test_safe_source_contract.CensusTests.test_pin_count_not_cell_count) ... ok
+test_registered_input_output_ownership_and_output_sharing (test_safe_source_contract.CensusTests.test_registered_input_output_ownership_and_output_sharing) ... ok
+test_rejects_multidriver_x_and_buffer_cycle (test_safe_source_contract.CensusTests.test_rejects_multidriver_x_and_buffer_cycle) ... ok
+test_rejects_unknown_master_pin_direction_and_undriven (test_safe_source_contract.CensusTests.test_rejects_unknown_master_pin_direction_and_undriven) ... ok
+test_reported_max_cannot_override_recomputation (test_safe_source_contract.CensusTests.test_reported_max_cannot_override_recomputation) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.007s
+
+OK
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3549016-1792439226): exit 0

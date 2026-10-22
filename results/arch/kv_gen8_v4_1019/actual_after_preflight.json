@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.kv_place_orient.v1",
+ "checked": 34045,
+ "changes": [],
+ "refused": [],
+ "per_master": {},
+ "verdict": "PASS",
+ "rule": "keep Y sense and frame; drop only an X mirror the closed LEF pin lattice cannot take (as kv_lane_orientation)",
+ "note": "Adapted instances have their pins on the opposite X face (<= macro width); reach/route/STA measure them.",
+ "case": "/tmp/kv-gen8v4-orient-QCTyxl",
+ "instances_placed": 34045,
+ "masters_with_lef": 129,
+ "masters_without_lef": []
+}

@@ -1,0 +1,188 @@
+[
+  {
+    "actual_DUT_mismatch": {
+      "actual_input_net_values": {
+        "_14821_": "0",
+        "a0_reset_leaf_00_qn": "0"
+      },
+      "mutant": "0",
+      "original": "1",
+      "terminal": "_31858_/B"
+    },
+    "case": "_31855__wrong_master",
+    "comparisons_until_mismatch": 1,
+    "master": "AND2x2_ASAP7_75t_R",
+    "pins": {
+      "A": "a0_reset_leaf_00_qn",
+      "B": "_14821_",
+      "Y": "a0_private_comb__31855__0_out"
+    },
+    "source_sha256": "66bb3976d5b55b0ef0def4f3a1e9df61c06e454ecdeb2b077976c7ce1d788987"
+  },
+  {
+    "actual_DUT_mismatch": {
+      "actual_input_net_values": {
+        "_14821_": "0",
+        "a0_reset_leaf_00_qn": "1"
+      },
+      "mutant": "1",
+      "original": "0",
+      "terminal": "_31858_/B"
+    },
+    "case": "_31855__wrong_input_net",
+    "comparisons_until_mismatch": 5,
+    "master": "NOR2x1_ASAP7_75t_R",
+    "pins": {
+      "A": "_14821_",
+      "B": "_14821_",
+      "Y": "a0_private_comb__31855__0_out"
+    },
+    "source_sha256": "e11dd1331778ccbe8d2f259c1815908c0150e5ea86dc3dbb192e7e9562d7c460"
+  },
+  {
+    "actual_DUT_mismatch": {
+      "actual_input_net_values": {
+        "_14821_": "0",
+        "a0_reset_leaf_00_qn": "0"
+      },
+      "mutant": "0",
+      "original": "1",
+      "terminal": "_31858_/B"
+    },
+    "case": "_31855__wrong_polarity",
+    "comparisons_until_mismatch": 1,
+    "master": "OR2x2_ASAP7_75t_R",
+    "pins": {
+      "A": "a0_reset_leaf_00_qn",
+      "B": "_14821_",
+      "Y": "a0_private_comb__31855__0_out"
+    },
+    "source_sha256": "d85e62ab6ed8977f37f45261330269e0057f61d803b15263962a5b006b75670b"
+  },
+  {
+    "actual_DUT_mismatch": {
+      "actual_input_net_values": {
+        "_14821_": "1",
+        "a0_reset_leaf_00_qn": "0"
+      },
+      "mutant": "0",
+      "original": "1",
+      "terminal": "_31859_/A2"
+    },
+    "case": "_31850__wrong_master",
+    "comparisons_until_mismatch": 2,
+    "master": "AND2x2_ASAP7_75t_R",
+    "pins": {
+      "A": "a0_reset_leaf_00_qn",
+      "B": "_14821_",
+      "Y": "a0_private_comb__31850__0_out"
+    },
+    "source_sha256": "1cff6ff865479931238a8241b3c1784c5e409e3fdd91d895c1fcdd05c9988922"
+  },
+  {
+    "actual_DUT_mismatch": {
+      "actual_input_net_values": {
+        "_14821_": "0",
+        "a0_reset_leaf_00_qn": "1"
+      },
+      "mutant": "0",
+      "original": "1",
+      "terminal": "_31859_/A2"
+    },
+    "case": "_31850__wrong_input_net",
+    "comparisons_until_mismatch": 5,
+    "master": "OR2x2_ASAP7_75t_R",
+    "pins": {
+      "A": "_14821_",
+      "B": "_14821_",
+      "Y": "a0_private_comb__31850__0_out"
+    },
+    "source_sha256": "eeeb6006ef4624e595dc313a1f3581643fb19500780dda55b9ad9c3005070fee"
+  },
+  {
+    "actual_DUT_mismatch": {
+      "actual_input_net_values": {
+        "_14821_": "0",
+        "a0_reset_leaf_00_qn": "0"
+      },
+      "mutant": "1",
+      "original": "0",
+      "terminal": "_31859_/A2"
+    },
+    "case": "_31850__wrong_polarity",
+    "comparisons_until_mismatch": 1,
+    "master": "NOR2x1_ASAP7_75t_R",
+    "pins": {
+      "A": "a0_reset_leaf_00_qn",
+      "B": "_14821_",
+      "Y": "a0_private_comb__31850__0_out"
+    },
+    "source_sha256": "025bd2ec0ffb1286117acc77f819e7e8599c2646de2034db7238af2b6484bdb9"
+  },
+  {
+    "actual_DUT_mismatch": {
+      "actual_input_net_values": {
+        "_12924_": "0",
+        "_14780_": "0",
+        "a0_reset_leaf_03_q": "1"
+      },
+      "mutant": "1",
+      "original": "0",
+      "terminal": "_31811_/B"
+    },
+    "case": "_31808__wrong_master",
+    "comparisons_until_mismatch": 2,
+    "master": "OR3x1_ASAP7_75t_R",
+    "pins": {
+      "A": "_12924_",
+      "B": "_14780_",
+      "C": "a0_reset_leaf_03_q",
+      "Y": "a0_private_comb__31808__0_out"
+    },
+    "source_sha256": "f6916fcbcb73d7361207a10cc2504ff33184c5fd17a49ceb652cd021c568a2b9"
+  },
+  {
+    "actual_DUT_mismatch": {
+      "actual_input_net_values": {
+        "_12924_": "0",
+        "_14780_": "1",
+        "a0_reset_leaf_03_q": "1"
+      },
+      "mutant": "1",
+      "original": "0",
+      "terminal": "_31811_/B"
+    },
+    "case": "_31808__wrong_input_net",
+    "comparisons_until_mismatch": 6,
+    "master": "AND3x1_ASAP7_75t_R",
+    "pins": {
+      "A": "_14780_",
+      "B": "_14780_",
+      "C": "a0_reset_leaf_03_q",
+      "Y": "a0_private_comb__31808__0_out"
+    },
+    "source_sha256": "f82abfa709226826b523f85ab3a07f1a5476ac7ca8fddcd96be6b67612b1cee0"
+  },
+  {
+    "actual_DUT_mismatch": {
+      "actual_input_net_values": {
+        "_12924_": "0",
+        "_14780_": "0",
+        "a0_reset_leaf_03_q": "0"
+      },
+      "mutant": "1",
+      "original": "0",
+      "terminal": "_31811_/B"
+    },
+    "case": "_31808__wrong_polarity",
+    "comparisons_until_mismatch": 1,
+    "master": "NAND3x1_ASAP7_75t_R",
+    "pins": {
+      "A": "_12924_",
+      "B": "_14780_",
+      "C": "a0_reset_leaf_03_q",
+      "Y": "a0_private_comb__31808__0_out"
+    },
+    "source_sha256": "3fd25f94f433c1a26ff8b887fd0735128cfd66f7251fbebf7d82038eb9358195"
+  }
+]

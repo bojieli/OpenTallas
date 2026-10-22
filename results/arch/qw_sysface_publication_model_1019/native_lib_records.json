@@ -1,0 +1,3381 @@
+{
+  "provenance": "Exact pin/area records from pinned TT merged all.lib and all five matching FF native Liberty files. Finite parser extraction, no synthetic values.",
+  "source_hashes": {
+    "input/libs/all.lib": "7110a7a75b4d2802053266c170bed511640a53d1c85ba9e43939fd4cb8dfe817",
+    "input/ff/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99",
+    "input/ff/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+    "input/ff/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+    "input/ff/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38",
+    "input/ff/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+  },
+  "TT": {
+    "A2O1A1Ixp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B) + (!A2 * !B) + (!C)"
+        },
+        "A1": {
+          "capacitance": "0.531958",
+          "rise_capacitance": "0.52218",
+          "fall_capacitance": "0.531958",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.534015",
+          "rise_capacitance": "0.524539",
+          "fall_capacitance": "0.534015",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.567829",
+          "rise_capacitance": "0.567829",
+          "fall_capacitance": "0.559778",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.550993",
+          "rise_capacitance": "0.550727",
+          "fall_capacitance": "0.550993",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AND2x2_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A * B)"
+        },
+        "A": {
+          "capacitance": "0.483326",
+          "rise_capacitance": "0.483326",
+          "fall_capacitance": "0.470103",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.526322",
+          "rise_capacitance": "0.526025",
+          "fall_capacitance": "0.526322",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A * B * C)"
+        },
+        "A": {
+          "capacitance": "0.589755",
+          "rise_capacitance": "0.589102",
+          "fall_capacitance": "0.589755",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.553015",
+          "rise_capacitance": "0.553015",
+          "fall_capacitance": "0.541101",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.55229",
+          "rise_capacitance": "0.55229",
+          "fall_capacitance": "0.539277",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A * B * C * D)"
+        },
+        "A": {
+          "capacitance": "0.59462",
+          "rise_capacitance": "0.593463",
+          "fall_capacitance": "0.59462",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.552521",
+          "rise_capacitance": "0.552521",
+          "fall_capacitance": "0.541169",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.549304",
+          "rise_capacitance": "0.549304",
+          "fall_capacitance": "0.53609",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.567779",
+          "rise_capacitance": "0.567779",
+          "fall_capacitance": "0.554802",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AND5x1_ASAP7_75t_R": {
+      "area": 0.11664,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "368.64",
+          "direction": "output",
+          "function": "(A * B * C * D * E)"
+        },
+        "A": {
+          "capacitance": "0.515454",
+          "rise_capacitance": "0.513543",
+          "fall_capacitance": "0.515454",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.467662",
+          "rise_capacitance": "0.467662",
+          "fall_capacitance": "0.45698",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.466734",
+          "rise_capacitance": "0.466734",
+          "fall_capacitance": "0.454886",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.468173",
+          "rise_capacitance": "0.468173",
+          "fall_capacitance": "0.455267",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "E": {
+          "capacitance": "0.505024",
+          "rise_capacitance": "0.505024",
+          "fall_capacitance": "0.491115",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AO21x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A1 * A2) + (B)"
+        },
+        "A1": {
+          "capacitance": "0.556025",
+          "rise_capacitance": "0.556025",
+          "fall_capacitance": "0.547479",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.57002",
+          "rise_capacitance": "0.57002",
+          "fall_capacitance": "0.56961",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.570737",
+          "rise_capacitance": "0.56451",
+          "fall_capacitance": "0.570737",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AO22x1_ASAP7_75t_R": {
+      "area": 0.13122,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A1 * A2) + (B1 * B2)"
+        },
+        "A1": {
+          "capacitance": "0.373286",
+          "rise_capacitance": "0.373286",
+          "fall_capacitance": "0.372736",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.408576",
+          "rise_capacitance": "0.404259",
+          "fall_capacitance": "0.408576",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.396932",
+          "rise_capacitance": "0.396932",
+          "fall_capacitance": "0.391589",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.423442",
+          "rise_capacitance": "0.423442",
+          "fall_capacitance": "0.423239",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI211xp5_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B * !C) + (!A2 * !B * !C)"
+        },
+        "A1": {
+          "capacitance": "0.483351",
+          "rise_capacitance": "0.483351",
+          "fall_capacitance": "0.478514",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.518337",
+          "rise_capacitance": "0.518337",
+          "fall_capacitance": "0.517449",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.465489",
+          "rise_capacitance": "0.458951",
+          "fall_capacitance": "0.465489",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.468446",
+          "rise_capacitance": "0.460494",
+          "fall_capacitance": "0.468446",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI21xp33_ASAP7_75t_R": {
+      "area": 0.0729,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B) + (!A2 * !B)"
+        },
+        "A1": {
+          "capacitance": "0.402303",
+          "rise_capacitance": "0.397682",
+          "fall_capacitance": "0.402303",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.37126",
+          "rise_capacitance": "0.37126",
+          "fall_capacitance": "0.371235",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.442337",
+          "rise_capacitance": "0.442337",
+          "fall_capacitance": "0.441475",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI221xp5_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B1 * !C) + (!A1 * !B2 * !C) + (!A2 * !B1 * !C) + (!A2 * !B2 * !C)"
+        },
+        "A1": {
+          "capacitance": "0.470587",
+          "rise_capacitance": "0.462611",
+          "fall_capacitance": "0.470587",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.434934",
+          "rise_capacitance": "0.432989",
+          "fall_capacitance": "0.434934",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.515721",
+          "rise_capacitance": "0.515721",
+          "fall_capacitance": "0.515114",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.485874",
+          "rise_capacitance": "0.485874",
+          "fall_capacitance": "0.479906",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.480492",
+          "rise_capacitance": "0.474125",
+          "fall_capacitance": "0.480492",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI222xp33_ASAP7_75t_R": {
+      "area": 0.1458,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B1 * !C1) + (!A1 * !B1 * !C2) + (!A1 * !B2 * !C1) + (!A1 * !B2 * !C2) + (!A2 * !B1 * !C1) + (!A2 * !B1 * !C2) + (!A2 * !B2 * !C1) + (!A2 * !B2 * !C2)"
+        },
+        "A1": {
+          "capacitance": "0.516625",
+          "rise_capacitance": "0.516625",
+          "fall_capacitance": "0.516616",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.486119",
+          "rise_capacitance": "0.486119",
+          "fall_capacitance": "0.480059",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.471579",
+          "rise_capacitance": "0.464536",
+          "fall_capacitance": "0.471579",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.438893",
+          "rise_capacitance": "0.436707",
+          "fall_capacitance": "0.438893",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C1": {
+          "capacitance": "0.474108",
+          "rise_capacitance": "0.466324",
+          "fall_capacitance": "0.474108",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C2": {
+          "capacitance": "0.438877",
+          "rise_capacitance": "0.436338",
+          "fall_capacitance": "0.438877",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI22xp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B1) + (!A1 * !B2) + (!A2 * !B1) + (!A2 * !B2)"
+        },
+        "A1": {
+          "capacitance": "0.365922",
+          "rise_capacitance": "0.365922",
+          "fall_capacitance": "0.364909",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.397804",
+          "rise_capacitance": "0.393581",
+          "fall_capacitance": "0.397804",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.402577",
+          "rise_capacitance": "0.402577",
+          "fall_capacitance": "0.396969",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.423806",
+          "rise_capacitance": "0.423806",
+          "fall_capacitance": "0.422832",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI31xp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B) + (!A2 * !B) + (!A3 * !B)"
+        },
+        "A1": {
+          "capacitance": "0.495155",
+          "rise_capacitance": "0.490944",
+          "fall_capacitance": "0.495155",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.41641",
+          "rise_capacitance": "0.41641",
+          "fall_capacitance": "0.413276",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A3": {
+          "capacitance": "0.431599",
+          "rise_capacitance": "0.431599",
+          "fall_capacitance": "0.427618",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.471515",
+          "rise_capacitance": "0.471515",
+          "fall_capacitance": "0.471113",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "area": 0.37908,
+      "pins": {
+        "QN": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "IQN"
+        },
+        "CLK": {
+          "capacitance": "0.462899",
+          "rise_capacitance": "0.462899",
+          "fall_capacitance": "0.461096",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.561679",
+          "rise_capacitance": "0.561679",
+          "fall_capacitance": "0.558755",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "RESETN": {
+          "capacitance": "0.73979",
+          "rise_capacitance": "0.73979",
+          "fall_capacitance": "0.737324",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "SETN": {
+          "capacitance": "1.07945",
+          "rise_capacitance": "1.07724",
+          "fall_capacitance": "1.07945",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "INVx1_ASAP7_75t_R": {
+      "area": 0.04374,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "!A"
+        },
+        "A": {
+          "capacitance": "0.619928",
+          "rise_capacitance": "0.619928",
+          "fall_capacitance": "0.619647",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NAND2xp33_ASAP7_75t_R": {
+      "area": 0.05832,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A) + (!B)"
+        },
+        "A": {
+          "capacitance": "0.336683",
+          "rise_capacitance": "0.336683",
+          "fall_capacitance": "0.328332",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.346682",
+          "rise_capacitance": "0.346637",
+          "fall_capacitance": "0.346682",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NAND3xp33_ASAP7_75t_R": {
+      "area": 0.0729,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A) + (!B) + (!C)"
+        },
+        "A": {
+          "capacitance": "0.516831",
+          "rise_capacitance": "0.516279",
+          "fall_capacitance": "0.516831",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.469713",
+          "rise_capacitance": "0.469713",
+          "fall_capacitance": "0.45856",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.483617",
+          "rise_capacitance": "0.483617",
+          "fall_capacitance": "0.470837",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NAND4xp25_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A) + (!B) + (!C) + (!D)"
+        },
+        "A": {
+          "capacitance": "0.515684",
+          "rise_capacitance": "0.514591",
+          "fall_capacitance": "0.515684",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.469431",
+          "rise_capacitance": "0.469431",
+          "fall_capacitance": "0.458185",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.467194",
+          "rise_capacitance": "0.467194",
+          "fall_capacitance": "0.454344",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.480696",
+          "rise_capacitance": "0.480696",
+          "fall_capacitance": "0.467238",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NAND5xp2_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(!A) + (!B) + (!C) + (!D) + (!E)"
+        },
+        "A": {
+          "capacitance": "0.510535",
+          "rise_capacitance": "0.509663",
+          "fall_capacitance": "0.510535",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.467657",
+          "rise_capacitance": "0.467657",
+          "fall_capacitance": "0.456257",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.467696",
+          "rise_capacitance": "0.467696",
+          "fall_capacitance": "0.455442",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.465357",
+          "rise_capacitance": "0.465357",
+          "fall_capacitance": "0.452873",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "E": {
+          "capacitance": "0.480736",
+          "rise_capacitance": "0.480736",
+          "fall_capacitance": "0.467504",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NOR2xp33_ASAP7_75t_R": {
+      "area": 0.05832,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A * !B)"
+        },
+        "A": {
+          "capacitance": "0.338541",
+          "rise_capacitance": "0.330191",
+          "fall_capacitance": "0.338541",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.348828",
+          "rise_capacitance": "0.348828",
+          "fall_capacitance": "0.348153",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NOR3xp33_ASAP7_75t_R": {
+      "area": 0.0729,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A * !B * !C)"
+        },
+        "A": {
+          "capacitance": "0.518188",
+          "rise_capacitance": "0.518188",
+          "fall_capacitance": "0.516577",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.470956",
+          "rise_capacitance": "0.459681",
+          "fall_capacitance": "0.470956",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.485094",
+          "rise_capacitance": "0.471782",
+          "fall_capacitance": "0.485094",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NOR4xp25_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A * !B * !C * !D)"
+        },
+        "A": {
+          "capacitance": "0.51618",
+          "rise_capacitance": "0.51618",
+          "fall_capacitance": "0.514891",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.470407",
+          "rise_capacitance": "0.459552",
+          "fall_capacitance": "0.470407",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.468678",
+          "rise_capacitance": "0.456267",
+          "fall_capacitance": "0.468678",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.482009",
+          "rise_capacitance": "0.468741",
+          "fall_capacitance": "0.482009",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NOR5xp2_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A * !B * !C * !D * !E)"
+        },
+        "A": {
+          "capacitance": "0.514149",
+          "rise_capacitance": "0.514149",
+          "fall_capacitance": "0.51304",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.469437",
+          "rise_capacitance": "0.459048",
+          "fall_capacitance": "0.469437",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.468596",
+          "rise_capacitance": "0.457151",
+          "fall_capacitance": "0.468596",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.467558",
+          "rise_capacitance": "0.454996",
+          "fall_capacitance": "0.467558",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "E": {
+          "capacitance": "0.484328",
+          "rise_capacitance": "0.470739",
+          "fall_capacitance": "0.484328",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "O2A1O1Ixp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2 * !C) + (!B * !C)"
+        },
+        "A1": {
+          "capacitance": "0.539229",
+          "rise_capacitance": "0.53136",
+          "fall_capacitance": "0.539229",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.535746",
+          "rise_capacitance": "0.528926",
+          "fall_capacitance": "0.535746",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.551569",
+          "rise_capacitance": "0.551569",
+          "fall_capacitance": "0.541049",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.545408",
+          "rise_capacitance": "0.545408",
+          "fall_capacitance": "0.544051",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OA211x2_ASAP7_75t_R": {
+      "area": 0.11664,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A1 * B * C) + (A2 * B * C)"
+        },
+        "A1": {
+          "capacitance": "0.488092",
+          "rise_capacitance": "0.483123",
+          "fall_capacitance": "0.488092",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.516908",
+          "rise_capacitance": "0.516651",
+          "fall_capacitance": "0.516908",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.393812",
+          "rise_capacitance": "0.393812",
+          "fall_capacitance": "0.387549",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.404454",
+          "rise_capacitance": "0.404454",
+          "fall_capacitance": "0.395856",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OA21x2_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A1 * B) + (A2 * B)"
+        },
+        "A1": {
+          "capacitance": "0.554684",
+          "rise_capacitance": "0.547145",
+          "fall_capacitance": "0.554684",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.584891",
+          "rise_capacitance": "0.583924",
+          "fall_capacitance": "0.584891",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.572654",
+          "rise_capacitance": "0.572654",
+          "fall_capacitance": "0.565111",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OA222x2_ASAP7_75t_R": {
+      "area": 0.17496,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A1 * B1 * C1) + (A1 * B1 * C2) + (A1 * B2 * C1) + (A1 * B2 * C2) + (A2 * B1 * C1) + (A2 * B1 * C2) + (A2 * B2 * C1) + (A2 * B2 * C2)"
+        },
+        "A1": {
+          "capacitance": "0.589071",
+          "rise_capacitance": "0.588953",
+          "fall_capacitance": "0.589071",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.54543",
+          "rise_capacitance": "0.538624",
+          "fall_capacitance": "0.54543",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.544597",
+          "rise_capacitance": "0.544597",
+          "fall_capacitance": "0.538149",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.498912",
+          "rise_capacitance": "0.497985",
+          "fall_capacitance": "0.498912",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C1": {
+          "capacitance": "0.548482",
+          "rise_capacitance": "0.548482",
+          "fall_capacitance": "0.541228",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C2": {
+          "capacitance": "0.515187",
+          "rise_capacitance": "0.515187",
+          "fall_capacitance": "0.514814",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OA22x2_ASAP7_75t_R": {
+      "area": 0.1458,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A1 * B1) + (A1 * B2) + (A2 * B1) + (A2 * B2)"
+        },
+        "A1": {
+          "capacitance": "0.547235",
+          "rise_capacitance": "0.540577",
+          "fall_capacitance": "0.547235",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.585863",
+          "rise_capacitance": "0.585863",
+          "fall_capacitance": "0.585277",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.500152",
+          "rise_capacitance": "0.500072",
+          "fall_capacitance": "0.500152",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.554659",
+          "rise_capacitance": "0.554659",
+          "fall_capacitance": "0.547861",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI211xp5_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B) + (!C)"
+        },
+        "A1": {
+          "capacitance": "0.481946",
+          "rise_capacitance": "0.477735",
+          "fall_capacitance": "0.481946",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.516368",
+          "rise_capacitance": "0.516368",
+          "fall_capacitance": "0.51621",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.464919",
+          "rise_capacitance": "0.464919",
+          "fall_capacitance": "0.457827",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.467275",
+          "rise_capacitance": "0.467275",
+          "fall_capacitance": "0.459073",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI21xp33_ASAP7_75t_R": {
+      "area": 0.0729,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B)"
+        },
+        "A1": {
+          "capacitance": "0.401083",
+          "rise_capacitance": "0.396337",
+          "fall_capacitance": "0.401083",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.424052",
+          "rise_capacitance": "0.424052",
+          "fall_capacitance": "0.422859",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.412629",
+          "rise_capacitance": "0.412629",
+          "fall_capacitance": "0.407687",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI221xp5_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B1 * !B2) + (!C)"
+        },
+        "A1": {
+          "capacitance": "0.468856",
+          "rise_capacitance": "0.468856",
+          "fall_capacitance": "0.461964",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.433628",
+          "rise_capacitance": "0.433628",
+          "fall_capacitance": "0.430571",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.514196",
+          "rise_capacitance": "0.514196",
+          "fall_capacitance": "0.514068",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.483638",
+          "rise_capacitance": "0.478415",
+          "fall_capacitance": "0.483638",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.479601",
+          "rise_capacitance": "0.479601",
+          "fall_capacitance": "0.471993",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI222xp33_ASAP7_75t_R": {
+      "area": 0.1458,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B1 * !B2) + (!C1 * !C2)"
+        },
+        "A1": {
+          "capacitance": "0.590449",
+          "rise_capacitance": "0.590449",
+          "fall_capacitance": "0.590372",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.545827",
+          "rise_capacitance": "0.538472",
+          "fall_capacitance": "0.545827",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.544288",
+          "rise_capacitance": "0.544288",
+          "fall_capacitance": "0.536927",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.498641",
+          "rise_capacitance": "0.498641",
+          "fall_capacitance": "0.49859",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C1": {
+          "capacitance": "0.548498",
+          "rise_capacitance": "0.548498",
+          "fall_capacitance": "0.539169",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C2": {
+          "capacitance": "0.506828",
+          "rise_capacitance": "0.506828",
+          "fall_capacitance": "0.506523",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI22xp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B1 * !B2)"
+        },
+        "A1": {
+          "capacitance": "0.422545",
+          "rise_capacitance": "0.41824",
+          "fall_capacitance": "0.422545",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.446505",
+          "rise_capacitance": "0.446505",
+          "fall_capacitance": "0.445705",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.381401",
+          "rise_capacitance": "0.381401",
+          "fall_capacitance": "0.380851",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.413211",
+          "rise_capacitance": "0.413211",
+          "fall_capacitance": "0.408344",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI31xp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2 * !A3) + (!B)"
+        },
+        "A1": {
+          "capacitance": "0.496462",
+          "rise_capacitance": "0.496462",
+          "fall_capacitance": "0.491902",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.418443",
+          "rise_capacitance": "0.415294",
+          "fall_capacitance": "0.418443",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A3": {
+          "capacitance": "0.432846",
+          "rise_capacitance": "0.42926",
+          "fall_capacitance": "0.432846",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.471348",
+          "rise_capacitance": "0.471348",
+          "fall_capacitance": "0.471027",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OR3x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A) + (B) + (C)"
+        },
+        "A": {
+          "capacitance": "0.591509",
+          "rise_capacitance": "0.591509",
+          "fall_capacitance": "0.589412",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.553062",
+          "rise_capacitance": "0.541743",
+          "fall_capacitance": "0.553062",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.553348",
+          "rise_capacitance": "0.540973",
+          "fall_capacitance": "0.553348",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A) + (B) + (C) + (D)"
+        },
+        "A": {
+          "capacitance": "0.596175",
+          "rise_capacitance": "0.596175",
+          "fall_capacitance": "0.592498",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.551855",
+          "rise_capacitance": "0.541074",
+          "fall_capacitance": "0.551855",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.547777",
+          "rise_capacitance": "0.537029",
+          "fall_capacitance": "0.547777",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.567232",
+          "rise_capacitance": "0.554792",
+          "fall_capacitance": "0.567232",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OR5x1_ASAP7_75t_R": {
+      "area": 0.11664,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A) + (B) + (C) + (D) + (E)"
+        },
+        "A": {
+          "capacitance": "0.516661",
+          "rise_capacitance": "0.516661",
+          "fall_capacitance": "0.515297",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.469667",
+          "rise_capacitance": "0.458156",
+          "fall_capacitance": "0.469667",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.468006",
+          "rise_capacitance": "0.456165",
+          "fall_capacitance": "0.468006",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.468636",
+          "rise_capacitance": "0.457041",
+          "fall_capacitance": "0.468636",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "E": {
+          "capacitance": "0.505944",
+          "rise_capacitance": "0.493509",
+          "fall_capacitance": "0.505944",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "XNOR2xp5_ASAP7_75t_R": {
+      "area": 0.13122,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(A * B) + (!A * !B)"
+        },
+        "A": {
+          "capacitance": "0.969466",
+          "rise_capacitance": "0.969466",
+          "fall_capacitance": "0.966489",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.96727",
+          "rise_capacitance": "0.879088",
+          "fall_capacitance": "0.96727",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "XOR2xp5_ASAP7_75t_R": {
+      "area": 0.13122,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(A * !B) + (!A * B)"
+        },
+        "A": {
+          "capacitance": "0.981861",
+          "rise_capacitance": "0.979716",
+          "fall_capacitance": "0.981861",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.981333",
+          "rise_capacitance": "0.981333",
+          "fall_capacitance": "0.886516",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    }
+  },
+  "FF": {
+    "A2O1A1Ixp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B) + (!A2 * !B) + (!C)"
+        },
+        "A1": {
+          "capacitance": "0.596102",
+          "rise_capacitance": "0.584988",
+          "fall_capacitance": "0.596102",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.598108",
+          "rise_capacitance": "0.587423",
+          "fall_capacitance": "0.598108",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.631737",
+          "rise_capacitance": "0.631737",
+          "fall_capacitance": "0.623319",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.605014",
+          "rise_capacitance": "0.605014",
+          "fall_capacitance": "0.604794",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AND2x2_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A * B)"
+        },
+        "A": {
+          "capacitance": "0.565527",
+          "rise_capacitance": "0.565527",
+          "fall_capacitance": "0.554236",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.577011",
+          "rise_capacitance": "0.576139",
+          "fall_capacitance": "0.577011",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A * B * C)"
+        },
+        "A": {
+          "capacitance": "0.653322",
+          "rise_capacitance": "0.652422",
+          "fall_capacitance": "0.653322",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.612447",
+          "rise_capacitance": "0.612447",
+          "fall_capacitance": "0.601276",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.645417",
+          "rise_capacitance": "0.645417",
+          "fall_capacitance": "0.633478",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A * B * C * D)"
+        },
+        "A": {
+          "capacitance": "0.65759",
+          "rise_capacitance": "0.656388",
+          "fall_capacitance": "0.65759",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.613859",
+          "rise_capacitance": "0.613859",
+          "fall_capacitance": "0.603316",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.612111",
+          "rise_capacitance": "0.612111",
+          "fall_capacitance": "0.600632",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.630056",
+          "rise_capacitance": "0.630056",
+          "fall_capacitance": "0.617848",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AND5x1_ASAP7_75t_R": {
+      "area": 0.11664,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "368.64",
+          "direction": "output",
+          "function": "(A * B * C * D * E)"
+        },
+        "A": {
+          "capacitance": "0.565781",
+          "rise_capacitance": "0.563914",
+          "fall_capacitance": "0.565781",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.521039",
+          "rise_capacitance": "0.521039",
+          "fall_capacitance": "0.510908",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.519626",
+          "rise_capacitance": "0.519626",
+          "fall_capacitance": "0.508592",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.519304",
+          "rise_capacitance": "0.519304",
+          "fall_capacitance": "0.507665",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "E": {
+          "capacitance": "0.560405",
+          "rise_capacitance": "0.560405",
+          "fall_capacitance": "0.547897",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AO21x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A1 * A2) + (B)"
+        },
+        "A1": {
+          "capacitance": "0.620008",
+          "rise_capacitance": "0.620008",
+          "fall_capacitance": "0.611597",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.634173",
+          "rise_capacitance": "0.634173",
+          "fall_capacitance": "0.634001",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.634463",
+          "rise_capacitance": "0.626818",
+          "fall_capacitance": "0.634463",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AO22x1_ASAP7_75t_R": {
+      "area": 0.13122,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A1 * A2) + (B1 * B2)"
+        },
+        "A1": {
+          "capacitance": "0.415121",
+          "rise_capacitance": "0.415121",
+          "fall_capacitance": "0.414887",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.451093",
+          "rise_capacitance": "0.445555",
+          "fall_capacitance": "0.451093",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.439486",
+          "rise_capacitance": "0.439486",
+          "fall_capacitance": "0.434294",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.466129",
+          "rise_capacitance": "0.466129",
+          "fall_capacitance": "0.465552",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI211xp5_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B * !C) + (!A2 * !B * !C)"
+        },
+        "A1": {
+          "capacitance": "0.536466",
+          "rise_capacitance": "0.536466",
+          "fall_capacitance": "0.53065",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.570767",
+          "rise_capacitance": "0.570767",
+          "fall_capacitance": "0.570065",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.517828",
+          "rise_capacitance": "0.510567",
+          "fall_capacitance": "0.517828",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.521401",
+          "rise_capacitance": "0.512516",
+          "fall_capacitance": "0.521401",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI21xp33_ASAP7_75t_R": {
+      "area": 0.0729,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B) + (!A2 * !B)"
+        },
+        "A1": {
+          "capacitance": "0.444413",
+          "rise_capacitance": "0.439657",
+          "fall_capacitance": "0.444413",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.413842",
+          "rise_capacitance": "0.413842",
+          "fall_capacitance": "0.413585",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.485004",
+          "rise_capacitance": "0.485004",
+          "fall_capacitance": "0.484286",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI221xp5_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B1 * !C) + (!A1 * !B2 * !C) + (!A2 * !B1 * !C) + (!A2 * !B2 * !C)"
+        },
+        "A1": {
+          "capacitance": "0.523171",
+          "rise_capacitance": "0.515126",
+          "fall_capacitance": "0.523171",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.488105",
+          "rise_capacitance": "0.484402",
+          "fall_capacitance": "0.488105",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.568478",
+          "rise_capacitance": "0.568297",
+          "fall_capacitance": "0.568478",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.538106",
+          "rise_capacitance": "0.538106",
+          "fall_capacitance": "0.532535",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.533113",
+          "rise_capacitance": "0.525263",
+          "fall_capacitance": "0.533113",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI222xp33_ASAP7_75t_R": {
+      "area": 0.1458,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B1 * !C1) + (!A1 * !B1 * !C2) + (!A1 * !B2 * !C1) + (!A1 * !B2 * !C2) + (!A2 * !B1 * !C1) + (!A2 * !B1 * !C2) + (!A2 * !B2 * !C1) + (!A2 * !B2 * !C2)"
+        },
+        "A1": {
+          "capacitance": "0.570074",
+          "rise_capacitance": "0.569555",
+          "fall_capacitance": "0.570074",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.538474",
+          "rise_capacitance": "0.538474",
+          "fall_capacitance": "0.533665",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.524211",
+          "rise_capacitance": "0.517117",
+          "fall_capacitance": "0.524211",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.491027",
+          "rise_capacitance": "0.488658",
+          "fall_capacitance": "0.491027",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C1": {
+          "capacitance": "0.526854",
+          "rise_capacitance": "0.518787",
+          "fall_capacitance": "0.526854",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C2": {
+          "capacitance": "0.491997",
+          "rise_capacitance": "0.488419",
+          "fall_capacitance": "0.491997",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI22xp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B1) + (!A1 * !B2) + (!A2 * !B1) + (!A2 * !B2)"
+        },
+        "A1": {
+          "capacitance": "0.407744",
+          "rise_capacitance": "0.407744",
+          "fall_capacitance": "0.407445",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.440195",
+          "rise_capacitance": "0.435503",
+          "fall_capacitance": "0.440195",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.444734",
+          "rise_capacitance": "0.444734",
+          "fall_capacitance": "0.439413",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.465792",
+          "rise_capacitance": "0.465588",
+          "fall_capacitance": "0.465792",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "AOI31xp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !B) + (!A2 * !B) + (!A3 * !B)"
+        },
+        "A1": {
+          "capacitance": "0.548161",
+          "rise_capacitance": "0.542955",
+          "fall_capacitance": "0.548161",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.469314",
+          "rise_capacitance": "0.469314",
+          "fall_capacitance": "0.467059",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A3": {
+          "capacitance": "0.484641",
+          "rise_capacitance": "0.484641",
+          "fall_capacitance": "0.480807",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.514025",
+          "rise_capacitance": "0.514025",
+          "fall_capacitance": "0.513143",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "area": 0.37908,
+      "pins": {
+        "QN": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "IQN"
+        },
+        "CLK": {
+          "capacitance": "0.503152",
+          "rise_capacitance": "0.503152",
+          "fall_capacitance": "0.502958",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.623429",
+          "rise_capacitance": "0.623429",
+          "fall_capacitance": "0.620511",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "RESETN": {
+          "capacitance": "0.802909",
+          "rise_capacitance": "0.802909",
+          "fall_capacitance": "0.800303",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "SETN": {
+          "capacitance": "1.16446",
+          "rise_capacitance": "1.16211",
+          "fall_capacitance": "1.16446",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "INVx1_ASAP7_75t_R": {
+      "area": 0.04374,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "!A"
+        },
+        "A": {
+          "capacitance": "0.683716",
+          "rise_capacitance": "0.683678",
+          "fall_capacitance": "0.683716",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NAND2xp33_ASAP7_75t_R": {
+      "area": 0.05832,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A) + (!B)"
+        },
+        "A": {
+          "capacitance": "0.36803",
+          "rise_capacitance": "0.36803",
+          "fall_capacitance": "0.36042",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.391247",
+          "rise_capacitance": "0.390825",
+          "fall_capacitance": "0.391247",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NAND3xp33_ASAP7_75t_R": {
+      "area": 0.0729,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A) + (!B) + (!C)"
+        },
+        "A": {
+          "capacitance": "0.568636",
+          "rise_capacitance": "0.567754",
+          "fall_capacitance": "0.568636",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.521801",
+          "rise_capacitance": "0.521801",
+          "fall_capacitance": "0.510679",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.535574",
+          "rise_capacitance": "0.535574",
+          "fall_capacitance": "0.523821",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NAND4xp25_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A) + (!B) + (!C) + (!D)"
+        },
+        "A": {
+          "capacitance": "0.565662",
+          "rise_capacitance": "0.564204",
+          "fall_capacitance": "0.565662",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.521797",
+          "rise_capacitance": "0.521797",
+          "fall_capacitance": "0.511288",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.518972",
+          "rise_capacitance": "0.518972",
+          "fall_capacitance": "0.50766",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.533814",
+          "rise_capacitance": "0.533814",
+          "fall_capacitance": "0.522034",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NAND5xp2_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(!A) + (!B) + (!C) + (!D) + (!E)"
+        },
+        "A": {
+          "capacitance": "0.564895",
+          "rise_capacitance": "0.563288",
+          "fall_capacitance": "0.564895",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.520913",
+          "rise_capacitance": "0.520913",
+          "fall_capacitance": "0.510617",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.519376",
+          "rise_capacitance": "0.519376",
+          "fall_capacitance": "0.508371",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.517741",
+          "rise_capacitance": "0.517741",
+          "fall_capacitance": "0.506358",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "E": {
+          "capacitance": "0.532172",
+          "rise_capacitance": "0.532172",
+          "fall_capacitance": "0.520036",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NOR2xp33_ASAP7_75t_R": {
+      "area": 0.05832,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A * !B)"
+        },
+        "A": {
+          "capacitance": "0.369231",
+          "rise_capacitance": "0.360854",
+          "fall_capacitance": "0.369231",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.392001",
+          "rise_capacitance": "0.392001",
+          "fall_capacitance": "0.391679",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NOR3xp33_ASAP7_75t_R": {
+      "area": 0.0729,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A * !B * !C)"
+        },
+        "A": {
+          "capacitance": "0.569459",
+          "rise_capacitance": "0.569459",
+          "fall_capacitance": "0.568183",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.522569",
+          "rise_capacitance": "0.511089",
+          "fall_capacitance": "0.522569",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.536952",
+          "rise_capacitance": "0.524152",
+          "fall_capacitance": "0.536952",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NOR4xp25_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A * !B * !C * !D)"
+        },
+        "A": {
+          "capacitance": "0.56649",
+          "rise_capacitance": "0.56649",
+          "fall_capacitance": "0.564525",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.522998",
+          "rise_capacitance": "0.511489",
+          "fall_capacitance": "0.522998",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.520216",
+          "rise_capacitance": "0.508161",
+          "fall_capacitance": "0.520216",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.535097",
+          "rise_capacitance": "0.521879",
+          "fall_capacitance": "0.535097",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "NOR5xp2_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A * !B * !C * !D * !E)"
+        },
+        "A": {
+          "capacitance": "0.566872",
+          "rise_capacitance": "0.566872",
+          "fall_capacitance": "0.565006",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.52191",
+          "rise_capacitance": "0.51094",
+          "fall_capacitance": "0.52191",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.520452",
+          "rise_capacitance": "0.508425",
+          "fall_capacitance": "0.520452",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.519574",
+          "rise_capacitance": "0.506868",
+          "fall_capacitance": "0.519574",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "E": {
+          "capacitance": "0.534853",
+          "rise_capacitance": "0.52117",
+          "fall_capacitance": "0.534853",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "O2A1O1Ixp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2 * !C) + (!B * !C)"
+        },
+        "A1": {
+          "capacitance": "0.60355",
+          "rise_capacitance": "0.594338",
+          "fall_capacitance": "0.60355",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.599824",
+          "rise_capacitance": "0.591963",
+          "fall_capacitance": "0.599824",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.614695",
+          "rise_capacitance": "0.614695",
+          "fall_capacitance": "0.605567",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.597836",
+          "rise_capacitance": "0.597836",
+          "fall_capacitance": "0.597337",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OA211x2_ASAP7_75t_R": {
+      "area": 0.11664,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A1 * B * C) + (A2 * B * C)"
+        },
+        "A1": {
+          "capacitance": "0.541166",
+          "rise_capacitance": "0.536639",
+          "fall_capacitance": "0.541166",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.570419",
+          "rise_capacitance": "0.570067",
+          "fall_capacitance": "0.570419",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.437017",
+          "rise_capacitance": "0.437017",
+          "fall_capacitance": "0.430291",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.447261",
+          "rise_capacitance": "0.447261",
+          "fall_capacitance": "0.439142",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OA21x2_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A1 * B) + (A2 * B)"
+        },
+        "A1": {
+          "capacitance": "0.618357",
+          "rise_capacitance": "0.61012",
+          "fall_capacitance": "0.618357",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.64849",
+          "rise_capacitance": "0.64849",
+          "fall_capacitance": "0.648421",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.636321",
+          "rise_capacitance": "0.636321",
+          "fall_capacitance": "0.629252",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OA222x2_ASAP7_75t_R": {
+      "area": 0.17496,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A1 * B1 * C1) + (A1 * B1 * C2) + (A1 * B2 * C1) + (A1 * B2 * C2) + (A2 * B1 * C1) + (A2 * B1 * C2) + (A2 * B2 * C1) + (A2 * B2 * C2)"
+        },
+        "A1": {
+          "capacitance": "0.652848",
+          "rise_capacitance": "0.652653",
+          "fall_capacitance": "0.652848",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.609361",
+          "rise_capacitance": "0.601483",
+          "fall_capacitance": "0.609361",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.608128",
+          "rise_capacitance": "0.608128",
+          "fall_capacitance": "0.601265",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.56258",
+          "rise_capacitance": "0.561227",
+          "fall_capacitance": "0.56258",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C1": {
+          "capacitance": "0.611638",
+          "rise_capacitance": "0.611638",
+          "fall_capacitance": "0.604465",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C2": {
+          "capacitance": "0.578249",
+          "rise_capacitance": "0.577228",
+          "fall_capacitance": "0.578249",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OA22x2_ASAP7_75t_R": {
+      "area": 0.1458,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "92.16",
+          "direction": "output",
+          "function": "(A1 * B1) + (A1 * B2) + (A2 * B1) + (A2 * B2)"
+        },
+        "A1": {
+          "capacitance": "0.610814",
+          "rise_capacitance": "0.603169",
+          "fall_capacitance": "0.610814",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.649591",
+          "rise_capacitance": "0.649288",
+          "fall_capacitance": "0.649591",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.563203",
+          "rise_capacitance": "0.563203",
+          "fall_capacitance": "0.562858",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.618206",
+          "rise_capacitance": "0.618206",
+          "fall_capacitance": "0.611621",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI211xp5_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B) + (!C)"
+        },
+        "A1": {
+          "capacitance": "0.535401",
+          "rise_capacitance": "0.529911",
+          "fall_capacitance": "0.535401",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.569796",
+          "rise_capacitance": "0.569528",
+          "fall_capacitance": "0.569796",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.517021",
+          "rise_capacitance": "0.517021",
+          "fall_capacitance": "0.51088",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.520705",
+          "rise_capacitance": "0.520705",
+          "fall_capacitance": "0.512026",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI21xp33_ASAP7_75t_R": {
+      "area": 0.0729,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B)"
+        },
+        "A1": {
+          "capacitance": "0.443023",
+          "rise_capacitance": "0.43791",
+          "fall_capacitance": "0.443023",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.465799",
+          "rise_capacitance": "0.465799",
+          "fall_capacitance": "0.465744",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.455311",
+          "rise_capacitance": "0.455311",
+          "fall_capacitance": "0.449981",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI221xp5_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B1 * !B2) + (!C)"
+        },
+        "A1": {
+          "capacitance": "0.522371",
+          "rise_capacitance": "0.522371",
+          "fall_capacitance": "0.514941",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.48674",
+          "rise_capacitance": "0.48674",
+          "fall_capacitance": "0.484145",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.567696",
+          "rise_capacitance": "0.567696",
+          "fall_capacitance": "0.567645",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.537842",
+          "rise_capacitance": "0.531704",
+          "fall_capacitance": "0.537842",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.532527",
+          "rise_capacitance": "0.532527",
+          "fall_capacitance": "0.524847",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI222xp33_ASAP7_75t_R": {
+      "area": 0.1458,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B1 * !B2) + (!C1 * !C2)"
+        },
+        "A1": {
+          "capacitance": "0.654788",
+          "rise_capacitance": "0.653765",
+          "fall_capacitance": "0.654788",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.60933",
+          "rise_capacitance": "0.601188",
+          "fall_capacitance": "0.60933",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.607688",
+          "rise_capacitance": "0.607688",
+          "fall_capacitance": "0.60054",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.562017",
+          "rise_capacitance": "0.561373",
+          "fall_capacitance": "0.562017",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C1": {
+          "capacitance": "0.611201",
+          "rise_capacitance": "0.611201",
+          "fall_capacitance": "0.602922",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C2": {
+          "capacitance": "0.569753",
+          "rise_capacitance": "0.569216",
+          "fall_capacitance": "0.569753",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI22xp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2) + (!B1 * !B2)"
+        },
+        "A1": {
+          "capacitance": "0.465453",
+          "rise_capacitance": "0.459791",
+          "fall_capacitance": "0.465453",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.489013",
+          "rise_capacitance": "0.488894",
+          "fall_capacitance": "0.489013",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B1": {
+          "capacitance": "0.423979",
+          "rise_capacitance": "0.422995",
+          "fall_capacitance": "0.423979",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B2": {
+          "capacitance": "0.45626",
+          "rise_capacitance": "0.45626",
+          "fall_capacitance": "0.450291",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OAI31xp33_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(!A1 * !A2 * !A3) + (!B)"
+        },
+        "A1": {
+          "capacitance": "0.549941",
+          "rise_capacitance": "0.549941",
+          "fall_capacitance": "0.544512",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A2": {
+          "capacitance": "0.471204",
+          "rise_capacitance": "0.467537",
+          "fall_capacitance": "0.471204",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "A3": {
+          "capacitance": "0.485927",
+          "rise_capacitance": "0.481792",
+          "fall_capacitance": "0.485927",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.514162",
+          "rise_capacitance": "0.513519",
+          "fall_capacitance": "0.514162",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OR3x1_ASAP7_75t_R": {
+      "area": 0.08748,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A) + (B) + (C)"
+        },
+        "A": {
+          "capacitance": "0.653695",
+          "rise_capacitance": "0.653695",
+          "fall_capacitance": "0.652467",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.613187",
+          "rise_capacitance": "0.60146",
+          "fall_capacitance": "0.613187",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.646268",
+          "rise_capacitance": "0.633163",
+          "fall_capacitance": "0.646268",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "area": 0.10206,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A) + (B) + (C) + (D)"
+        },
+        "A": {
+          "capacitance": "0.65693",
+          "rise_capacitance": "0.65693",
+          "fall_capacitance": "0.65538",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.613645",
+          "rise_capacitance": "0.602144",
+          "fall_capacitance": "0.613645",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.612334",
+          "rise_capacitance": "0.599666",
+          "fall_capacitance": "0.612334",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.630443",
+          "rise_capacitance": "0.61667",
+          "fall_capacitance": "0.630443",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "OR5x1_ASAP7_75t_R": {
+      "area": 0.11664,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "46.08",
+          "direction": "output",
+          "function": "(A) + (B) + (C) + (D) + (E)"
+        },
+        "A": {
+          "capacitance": "0.56734",
+          "rise_capacitance": "0.56734",
+          "fall_capacitance": "0.565436",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "0.522478",
+          "rise_capacitance": "0.511084",
+          "fall_capacitance": "0.522478",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "C": {
+          "capacitance": "0.520474",
+          "rise_capacitance": "0.508527",
+          "fall_capacitance": "0.520474",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "D": {
+          "capacitance": "0.52088",
+          "rise_capacitance": "0.508005",
+          "fall_capacitance": "0.52088",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "E": {
+          "capacitance": "0.561649",
+          "rise_capacitance": "0.547954",
+          "fall_capacitance": "0.561649",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "XNOR2xp5_ASAP7_75t_R": {
+      "area": 0.13122,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(A * B) + (!A * !B)"
+        },
+        "A": {
+          "capacitance": "1.07914",
+          "rise_capacitance": "1.07914",
+          "fall_capacitance": "1.07808",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "1.06559",
+          "rise_capacitance": "0.953143",
+          "fall_capacitance": "1.06559",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    },
+    "XOR2xp5_ASAP7_75t_R": {
+      "area": 0.13122,
+      "pins": {
+        "Y": {
+          "capacitance": null,
+          "rise_capacitance": null,
+          "fall_capacitance": null,
+          "max_capacitance": "23.04",
+          "direction": "output",
+          "function": "(A * !B) + (!A * B)"
+        },
+        "A": {
+          "capacitance": "1.09163",
+          "rise_capacitance": "1.08924",
+          "fall_capacitance": "1.09163",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        },
+        "B": {
+          "capacitance": "1.08689",
+          "rise_capacitance": "1.08689",
+          "fall_capacitance": "0.965173",
+          "max_capacitance": null,
+          "direction": "input",
+          "function": null
+        }
+      }
+    }
+  }
+}

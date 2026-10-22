@@ -1,0 +1,42 @@
+........................................................................ [ 77%]
+.................F...                                                    [100%]
+=================================== FAILURES ===================================
+______ SourceClosure.test_row_packer_is_consumed_with_the_anchoring_hook _______
+
+self = <test_anchor_row_packing.SourceClosure testMethod=test_row_packer_is_consumed_with_the_anchoring_hook>
+
+    def test_row_packer_is_consumed_with_the_anchoring_hook(self):
+        sys.path.insert(0,str(ROOT/'tools/ref_tile'))
+        import pre_route_gate as G
+        import source_binding as SB
+        hook='physical/qwen_die_masters/io_flop_at_pins.tcl'
+        helper='physical/common_flow/anchor_row_packing.tcl'
+>       files={p:(ROOT/p).read_bytes() for p in (hook,helper)}
+                 ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_anchor_row_packing.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.14/pathlib/__init__.py:778: in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/srv/opentallas-scratch/claude/root7-hc-binding-0720/base/physical/qwen_die_masters/io_flop_at_pins.tcl')
+mode = 'rb', buffering = 0, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/root7-hc-binding-0720/base/physical/qwen_die_masters/io_flop_at_pins.tcl'
+
+/usr/lib/python3.14/pathlib/__init__.py:772: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_anchor_row_packing.py::SourceClosure::test_row_packer_is_consumed_with_the_anchoring_hook
+1 failed, 92 passed in 16.19s

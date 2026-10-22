@@ -1,0 +1,20 @@
+{
+  "source_commit": "367d817b0",
+  "base": "60ff34e3d",
+  "host": "ot-agidock128",
+  "result_root": "/srv/opentallas-scratch/claude/codex-kv-codec2-1019",
+  "kv_codec": 2,
+  "die_stages": "2,2,2,3,2,2/11,11,9,9,9,9,9",
+  "txdp_k": "0x03030416",
+  "txdp_c": "0x0a010308",
+  "images": {
+    "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh": "e7d4d2d0f111661d72c5fd96864a18cbba580f5f9b103233f505d7f298dcb3ae",
+    "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh": "f9d7818c68fbb98300587bd0f5781de895aa432ab8cdede414188d5e30bfbff1"
+  },
+  "checks": {
+    "target11": "8 tests PASS; both66words exact; codec1+no-MU+stale-seam mutants refused",
+    "bootcfg_m0": "DCALBC_PASS mut0; CAL exact check enabled",
+    "bootcfg_m1": "DCALBC_FAIL mut1 token run would replay segment9; expected negative witness"
+  },
+  "physical_status": "COMPILED_AND_BEHAVIOURAL_PASS; ordinary bc2 .15 route retained historical; .16 OVL kits require own closure"
+}

@@ -1,0 +1,372 @@
+{
+ "schema": "opentallas.s81_dv.bench_xs_slice.v1",
+ "bench": "tools/s81_dv/layer_prog/xs/xs_slice_bench.sh",
+ "tb": "rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame_xs.sv",
+ "compiler": "tools/s81_dv/layer_prog/xs_calendar.py",
+ "host": "ot-epyc4",
+ "runs": [
+  {
+   "name": "p16",
+   "op": "ffn.shared_gu",
+   "field_phase": 16,
+   "mutant": null,
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 19,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 1023,
+    "mismatch": 0,
+    "valid_ref": 82,
+    "valid_xs": 82,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p16.log",
+   "pass": true
+  },
+  {
+   "name": "p13",
+   "op": "attn.wo_b",
+   "field_phase": 13,
+   "mutant": null,
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 0,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 980,
+    "mismatch": 0,
+    "valid_ref": 34,
+    "valid_xs": 34,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p13.log",
+   "pass": true
+  },
+  {
+   "name": "p1",
+   "op": "attn.wq_b",
+   "field_phase": 1,
+   "mutant": null,
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 0,
+   "words": 8,
+   "lockstep": {
+    "D": 321,
+    "compared": 958,
+    "mismatch": 0,
+    "valid_ref": 26,
+    "valid_xs": 26,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p1.log",
+   "pass": true
+  },
+  {
+   "name": "p44",
+   "op": "ffn.down",
+   "field_phase": 44,
+   "mutant": null,
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 0,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 965,
+    "mismatch": 0,
+    "valid_ref": 42,
+    "valid_xs": 42,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p44.log",
+   "pass": true
+  },
+  {
+   "name": "p24",
+   "op": "ffn.experts_gu",
+   "field_phase": 24,
+   "mutant": null,
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 19,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 1008,
+    "mismatch": 0,
+    "valid_ref": 82,
+    "valid_xs": 82,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p24.log",
+   "pass": true
+  },
+  {
+   "name": "p50",
+   "op": "ffn.down",
+   "field_phase": 50,
+   "mutant": null,
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 0,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 951,
+    "mismatch": 0,
+    "valid_ref": 42,
+    "valid_xs": 42,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p50.log",
+   "pass": true
+  },
+  {
+   "name": "p11_rank",
+   "op": "attn.wq_b",
+   "field_phase": 11,
+   "mutant": null,
+   "rtl_mutant": null,
+   "tags": "rank",
+   "D": 321,
+   "stall_edges": 0,
+   "words": 4,
+   "lockstep": {
+    "D": 321,
+    "compared": 956,
+    "mismatch": 0,
+    "valid_ref": 26,
+    "valid_xs": 26,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p11_rank.log",
+   "pass": true
+  },
+  {
+   "name": "p13_rank",
+   "op": "attn.wo_b",
+   "field_phase": 13,
+   "mutant": null,
+   "rtl_mutant": null,
+   "tags": "rank",
+   "D": 321,
+   "stall_edges": 0,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 980,
+    "mismatch": 0,
+    "valid_ref": 34,
+    "valid_xs": 34,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p13_rank.log",
+   "pass": true
+  },
+  {
+   "name": "p16_nostall",
+   "op": "ffn.shared_gu",
+   "field_phase": 16,
+   "mutant": "nostall",
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 0,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 1023,
+    "mismatch": 92,
+    "valid_ref": 82,
+    "valid_xs": 82,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [
+    "PLAN_MISMATCH predicted 10 words, got 10; first diff ((724, 0, (0, 2, 5), 1045942470, 0), (705, 0, (0, 2, 5), 1045942470, 0))",
+    "LOCKSTEP D=321 compared=1023 mismatch=92 valid_ref=82 valid_xs=82 first_ref=67 first_xs=388 xs_fault_at=-1",
+    "XSL_MISMATCH xs edge 464 ref edge 143 valid 1/0 cc 0040/0040"
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p16_nostall.log",
+   "pass": false
+  },
+  {
+   "name": "p16_shift",
+   "op": "ffn.shared_gu",
+   "field_phase": 16,
+   "mutant": "shift",
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 19,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 1023,
+    "mismatch": 86,
+    "valid_ref": 82,
+    "valid_xs": 82,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [
+    "PLAN_MISMATCH predicted 10 words, got 10; first diff ((724, 0, (0, 2, 5), 1045942470, 0), (725, 0, (0, 2, 5), 1045942470, 0))",
+    "LOCKSTEP D=321 compared=1023 mismatch=86 valid_ref=82 valid_xs=82 first_ref=67 first_xs=388 xs_fault_at=-1",
+    "XSL_MISMATCH xs edge 451 ref edge 130 valid 0/1 cc 0040/0041"
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p16_shift.log",
+   "pass": false
+  },
+  {
+   "name": "p13_offm1",
+   "op": "attn.wo_b",
+   "field_phase": 13,
+   "mutant": "offm1",
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 0,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 980,
+    "mismatch": 68,
+    "valid_ref": 34,
+    "valid_xs": 34,
+    "first_ref": 67,
+    "first_xs": 387,
+    "xs_fault_at": -1
+   },
+   "first_errors": [
+    "PLAN_MISMATCH predicted 10 words, got 10; first diff ((689, 2, (0, 1, 2), 1022292094, 0), (688, 2, (0, 1, 2), 1022292094, 0))",
+    "LOCKSTEP D=321 compared=980 mismatch=68 valid_ref=34 valid_xs=34 first_ref=67 first_xs=387 xs_fault_at=-1",
+    "XSL_MISMATCH xs edge 387 ref edge 66 valid 1/0 cc 0036/0000"
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p13_offm1.log",
+   "pass": false
+  },
+  {
+   "name": "p16_late",
+   "op": "ffn.shared_gu",
+   "field_phase": 16,
+   "mutant": "late",
+   "rtl_mutant": null,
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 19,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 1023,
+    "mismatch": 1,
+    "valid_ref": 82,
+    "valid_xs": 82,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": 455
+   },
+   "first_errors": [
+    "MISMATCH edge 724 row 0 lo 0 k 2 got 3e6bc396/0 want 3e57d0c6/0",
+    "MISMATCH edge 725 row 1 lo 0 k 2 got bd1334a6/0 want bd143e06/0",
+    "MISMATCH edge 728 row 2 lo 0 k 1 got 3b4cd4b0/0 want 3b8af558/0"
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p16_late.log",
+   "pass": false
+  },
+  {
+   "name": "p16_qswap",
+   "op": "ffn.shared_gu",
+   "field_phase": 16,
+   "mutant": null,
+   "rtl_mutant": "OT_S81SL_XS_MUT_QSWAP",
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 19,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 1023,
+    "mismatch": 80,
+    "valid_ref": 82,
+    "valid_xs": 82,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [
+    "MISMATCH edge 724 row 0 lo 0 k 2 got beffdc38/0 want 3e57d0c6/0",
+    "MISMATCH edge 725 row 1 lo 0 k 2 got 3d2a8b4c/0 want bd143e06/0",
+    "MISMATCH edge 728 row 2 lo 0 k 1 got 3da5c9ee/0 want 3b8af558/0"
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p16_qswap.log",
+   "pass": false
+  },
+  {
+   "name": "p13_qswap",
+   "op": "attn.wo_b",
+   "field_phase": 13,
+   "mutant": null,
+   "rtl_mutant": "OT_S81SL_XS_MUT_QSWAP",
+   "tags": "phase",
+   "D": 321,
+   "stall_edges": 0,
+   "words": 10,
+   "lockstep": {
+    "D": 321,
+    "compared": 980,
+    "mismatch": 32,
+    "valid_ref": 34,
+    "valid_xs": 34,
+    "first_ref": 67,
+    "first_xs": 388,
+    "xs_fault_at": -1
+   },
+   "first_errors": [
+    "MISMATCH edge 689 row 2 lo 0 k 1 got bc0b16ca/0 want 3ceef07e/0",
+    "MISMATCH edge 690 row 3 lo 0 k 1 got bd3cdde8/0 want bc858b0a/0",
+    "MISMATCH edge 692 row 8 lo 0 k 1 got bb9afd30/0 want 3c7b699c/0"
+   ],
+   "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xs_slice/run_p13_qswap.log",
+   "pass": false
+  }
+ ],
+ "base_pass": true,
+ "mutants_fail": true,
+ "pass": true
+}

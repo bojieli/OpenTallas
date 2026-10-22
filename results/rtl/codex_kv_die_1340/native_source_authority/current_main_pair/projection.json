@@ -1,0 +1,42 @@
+{
+  "base_commit": "5f43b44264ae01c39c9b0e42055d177e1fb94555",
+  "production_paths": {
+    "tools/qwen_kv_die/kv_static_die.py": {
+      "base_sha256": "b1284388572398f72ff036d24f5dc3962e40036fdf71a04b9c754bafeb843cc0",
+      "candidate_sha256": "3144ecd6cf4ed7239b20942512b63f2264b19d185df7d13ee8a3393e2cd0c76d"
+    },
+    "tools/qwen_kv_die/kv_bound_netlist.py": {
+      "base_sha256": "422476f3f18fbf246815f2eed960cf1f144e58eb886cb756c3f5df883ac52943",
+      "candidate_sha256": "3b8a8cff2d78442f8c0d93c24c64eccc68f6287994969a37e9e077f0eb9f0ba1"
+    },
+    "tools/qwen_kv_die/kv_port_bind_v2.sh": {
+      "base_sha256": "fd7a57ca4d937f8c6b2612fa59f1dcae683fd7160134e3df5f2c608499d28470",
+      "candidate_sha256": "20f29dd53095576a8a8d4c41a8457dd48f62e2d91ea64de6607ac383d6cf463b"
+    },
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv": {
+      "base_sha256": "5375388226c71629575cdae949047f85f7c39e55d4e117641b623669b4e9aa69",
+      "candidate_sha256": "a99ef537a41999fc21b12346cda7aae28a807ee13253db504664b55ec23152fb"
+    }
+  },
+  "scope": "minimal exact current-main projection, preserves evolved geometry and all surrounding source; no broad captured-file copying",
+  "source_authority_proof": "f36bb6cd5 / actual-source-index10PASS +defaultguard1PASS; q_class review accepted",
+  "qualified_library_recovery": "434046321 / exact accepted71f and published980 existing3models cover53leaves; no model invention",
+  "pair": {
+    "host": "ot-epyc5",
+    "unit": "oth-ubuntu-3416962-1792625929",
+    "exit_code": 0,
+    "memory_gb": 8,
+    "threads": 1,
+    "baseline_testcases": 506,
+    "final_testcases": 506,
+    "baseline_failure_elements": 14,
+    "final_failure_elements": 14,
+    "Counter_NEW": 0,
+    "same_testcase_Counter": true,
+    "same_fixture_paths": true
+  },
+  "no_fullGEN": true,
+  "no_physical": true,
+  "whole_die_bind": "NOTRUN",
+  "actual_pin_facts": "NOTRUN"
+}

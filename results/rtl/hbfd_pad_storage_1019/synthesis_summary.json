@@ -1,0 +1,473 @@
+[
+  {
+    "shape": "synth_136_28",
+    "cells": {
+      "$_NOT_": 8,
+      "$_AND_": 163,
+      "$_XOR_": 13,
+      "$_NAND_": 7,
+      "$_ANDNOT_": 4,
+      "$_XNOR_": 9,
+      "$_OR_": 8,
+      "$_DFFE_PN0N_": 25,
+      "$_DFF_PN0_": 141,
+      "$_DFF_P_": 136,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "max_register_fanout": [
+      [
+        5,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$684",
+        "$_DFF_PN0_"
+      ],
+      [
+        5,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$683",
+        "$_DFF_PN0_"
+      ],
+      [
+        4,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$681",
+        "$_DFF_PN0_"
+      ],
+      [
+        4,
+        "g_ring.age[0]",
+        "$auto$ff.cc:337:slice$542",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$685",
+        "$_DFF_PN0_"
+      ],
+      [
+        3,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$682",
+        "$_DFF_PN0_"
+      ],
+      [
+        3,
+        "g_ring.age[4]",
+        "$auto$ff.cc:337:slice$533",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[4]",
+        "$auto$ff.cc:337:slice$532",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[4]",
+        "$auto$ff.cc:337:slice$530",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[3]",
+        "$auto$ff.cc:337:slice$538",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[3]",
+        "$auto$ff.cc:337:slice$537",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[3]",
+        "$auto$ff.cc:337:slice$535",
+        "$_DFFE_PN0N_"
+      ]
+    ],
+    "warmup_registers": [
+      "g_ring.age[0]",
+      "g_ring.age[1]",
+      "g_ring.age[2]",
+      "g_ring.age[3]",
+      "g_ring.age[4]"
+    ]
+  },
+  {
+    "shape": "synth_17_115",
+    "cells": {
+      "$_NAND_": 2687,
+      "$_AND_": 1763,
+      "$_ANDNOT_": 43,
+      "$_NOR_": 41,
+      "$_MUX_": 300,
+      "$_OR_": 158,
+      "$_NOT_": 2,
+      "$_XOR_": 8,
+      "$_XNOR_": 8,
+      "$_ORNOT_": 2,
+      "$_DFFE_PP_": 2176,
+      "$_DFFE_PN0N_": 7,
+      "$_DFF_PN0_": 24,
+      "$_DFF_P_": 17
+    },
+    "max_register_fanout": [
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4394",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4393",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4392",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4391",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4390",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4389",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4388",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4387",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4386",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4385",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4384",
+        "$_DFF_P_"
+      ],
+      [
+        128,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$4383",
+        "$_DFF_P_"
+      ]
+    ],
+    "warmup_registers": [
+      "g_ring.age[0]"
+    ]
+  },
+  {
+    "shape": "synth_1_3",
+    "cells": {
+      "$_NOT_": 2,
+      "$_ANDNOT_": 2,
+      "$_AND_": 9,
+      "$_OR_": 1,
+      "$_NOR_": 1,
+      "$_XOR_": 1,
+      "$_NAND_": 5,
+      "$_DFFE_PP_": 4,
+      "$_DFFE_PN0N_": 2,
+      "$_DFF_PN0_": 3,
+      "$_DFF_P_": 1
+    },
+    "max_register_fanout": [
+      [
+        5,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$275",
+        "$_DFF_PN0_"
+      ],
+      [
+        4,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$276",
+        "$_DFF_PN0_"
+      ],
+      [
+        4,
+        "g_ring.ingress",
+        "$auto$ff.cc:337:slice$277",
+        "$_DFF_P_"
+      ],
+      [
+        3,
+        "g_ring.age[0]",
+        "$auto$ff.cc:337:slice$267",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[0]",
+        "$auto$ff.cc:337:slice$266",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        1,
+        "g_ring.g_small.mem[3]",
+        "$auto$ff.cc:337:slice$236",
+        "$_DFFE_PP_"
+      ],
+      [
+        1,
+        "g_ring.g_small.mem[2]",
+        "$auto$ff.cc:337:slice$237",
+        "$_DFFE_PP_"
+      ],
+      [
+        1,
+        "g_ring.g_small.mem[1]",
+        "$auto$ff.cc:337:slice$238",
+        "$_DFFE_PP_"
+      ],
+      [
+        1,
+        "g_ring.g_small.mem[0]",
+        "$auto$ff.cc:337:slice$239",
+        "$_DFFE_PP_"
+      ],
+      [
+        0,
+        "o",
+        "$auto$ff.cc:337:slice$279",
+        "$_DFF_PN0_"
+      ]
+    ],
+    "warmup_registers": [
+      "g_ring.age[0]"
+    ]
+  },
+  {
+    "shape": "synth_274_14",
+    "cells": {
+      "$_NOT_": 17,
+      "$_AND_": 311,
+      "$_NAND_": 10,
+      "$_XNOR_": 18,
+      "$_NOR_": 1,
+      "$_XOR_": 7,
+      "$_OR_": 15,
+      "$_DFF_PN0_": 278,
+      "$_DFF_P_": 274,
+      "$_DFFE_PN0N_": 36,
+      "ot_sram_1r1w_128x256_m1_r2c2": 2
+    },
+    "max_register_fanout": [
+      [
+        5,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$1142",
+        "$_DFF_PN0_"
+      ],
+      [
+        5,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$1140",
+        "$_DFF_PN0_"
+      ],
+      [
+        4,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$1143",
+        "$_DFF_PN0_"
+      ],
+      [
+        4,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$1141",
+        "$_DFF_PN0_"
+      ],
+      [
+        4,
+        "g_ring.age[6]",
+        "$auto$ff.cc:337:slice$851",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        4,
+        "g_ring.age[6]",
+        "$auto$ff.cc:337:slice$850",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        4,
+        "g_ring.age[2]",
+        "$auto$ff.cc:337:slice$839",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        4,
+        "g_ring.age[2]",
+        "$auto$ff.cc:337:slice$838",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        4,
+        "g_ring.age[0]",
+        "$auto$ff.cc:337:slice$855",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        4,
+        "g_ring.age[0]",
+        "$auto$ff.cc:337:slice$854",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[8]",
+        "$auto$ff.cc:337:slice$864",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[8]",
+        "$auto$ff.cc:337:slice$863",
+        "$_DFFE_PN0N_"
+      ]
+    ],
+    "warmup_registers": [
+      "g_ring.age[0]",
+      "g_ring.age[1]",
+      "g_ring.age[2]",
+      "g_ring.age[3]",
+      "g_ring.age[4]",
+      "g_ring.age[5]",
+      "g_ring.age[6]",
+      "g_ring.age[7]",
+      "g_ring.age[8]"
+    ]
+  },
+  {
+    "shape": "synth_34_73",
+    "cells": {
+      "$_NOT_": 4,
+      "$_NAND_": 4,
+      "$_XOR_": 14,
+      "$_AND_": 50,
+      "$_NOR_": 5,
+      "$_XNOR_": 7,
+      "$_OR_": 6,
+      "$_ANDNOT_": 2,
+      "$_ORNOT_": 2,
+      "$_DFFE_PN0N_": 14,
+      "$_DFF_PN0_": 41,
+      "$_DFF_P_": 34,
+      "ot_sram_1r1w_128x256_m1_r2c2": 1
+    },
+    "max_register_fanout": [
+      [
+        6,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$328",
+        "$_DFF_PN0_"
+      ],
+      [
+        6,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$327",
+        "$_DFF_PN0_"
+      ],
+      [
+        5,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$332",
+        "$_DFF_PN0_"
+      ],
+      [
+        5,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$331",
+        "$_DFF_PN0_"
+      ],
+      [
+        5,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$330",
+        "$_DFF_PN0_"
+      ],
+      [
+        4,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$329",
+        "$_DFF_PN0_"
+      ],
+      [
+        3,
+        "g_ring.ptr",
+        "$auto$ff.cc:337:slice$333",
+        "$_DFF_PN0_"
+      ],
+      [
+        3,
+        "g_ring.age[1]",
+        "$auto$ff.cc:337:slice$284",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[1]",
+        "$auto$ff.cc:337:slice$283",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[1]",
+        "$auto$ff.cc:337:slice$282",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[1]",
+        "$auto$ff.cc:337:slice$281",
+        "$_DFFE_PN0N_"
+      ],
+      [
+        3,
+        "g_ring.age[1]",
+        "$auto$ff.cc:337:slice$279",
+        "$_DFFE_PN0N_"
+      ]
+    ],
+    "warmup_registers": [
+      "g_ring.age[0]",
+      "g_ring.age[1]"
+    ]
+  }
+]

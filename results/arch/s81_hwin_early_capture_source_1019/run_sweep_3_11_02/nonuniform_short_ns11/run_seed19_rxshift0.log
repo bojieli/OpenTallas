@@ -1,0 +1,96 @@
+RX_MODEL input1562 born1354 boundary1562 shift0 user0 pos0
+KU c1563 user 0 pos 0
+RX_MODEL input1815 born1607 boundary1815 shift0 user1 pos0
+KU c1816 user 1 pos 0
+RX_MODEL input2071 born1863 boundary2071 shift0 user2 pos0
+KU c2072 user 2 pos 0
+RX_MODEL input2330 born2122 boundary2330 shift0 user3 pos0
+KU c2331 user 3 pos 0
+RX_MODEL input2583 born2375 boundary2583 shift0 user4 pos0
+KU c2584 user 4 pos 0
+RX_MODEL input2839 born2631 boundary2839 shift0 user5 pos0
+KU c2840 user 5 pos 0
+RX_MODEL input3098 born2890 boundary3098 shift0 user6 pos0
+KU c3099 user 6 pos 0
+RX_MODEL input3351 born3143 boundary3351 shift0 user7 pos0
+KU c3352 user 7 pos 0
+RX_MODEL input3607 born3399 boundary3607 shift0 user8 pos0
+KU c3608 user 8 pos 0
+RX_MODEL input3866 born3658 boundary3866 shift0 user9 pos0
+KU c3867 user 9 pos 0
+RX_MODEL input4119 born3911 boundary4119 shift0 user10 pos0
+KU c4120 user 10 pos 0
+RX_MODEL input4375 born4167 boundary4375 shift0 user0 pos1
+KU c4376 user 0 pos 1
+RX_MODEL input4628 born4420 boundary4628 shift0 user1 pos1
+KU c4629 user 1 pos 1
+RX_MODEL input4884 born4676 boundary4884 shift0 user2 pos1
+KU c4885 user 2 pos 1
+RX_MODEL input5143 born4935 boundary5143 shift0 user3 pos1
+KU c5144 user 3 pos 1
+RX_MODEL input5396 born5188 boundary5396 shift0 user4 pos1
+KU c5397 user 4 pos 1
+RX_MODEL input5652 born5444 boundary5652 shift0 user5 pos1
+KU c5653 user 5 pos 1
+RX_MODEL input5911 born5703 boundary5911 shift0 user6 pos1
+KU c5912 user 6 pos 1
+RX_MODEL input6164 born5956 boundary6164 shift0 user7 pos1
+KU c6165 user 7 pos 1
+RX_MODEL input6420 born6212 boundary6420 shift0 user8 pos1
+KU c6421 user 8 pos 1
+RX_MODEL input6679 born6471 boundary6679 shift0 user9 pos1
+KU c6680 user 9 pos 1
+RX_MODEL input6932 born6724 boundary6932 shift0 user10 pos1
+KU c6933 user 10 pos 1
+RX_MODEL input7188 born6980 boundary7188 shift0 user0 pos2
+KU c7189 user 0 pos 2
+RX_MODEL input7441 born7233 boundary7441 shift0 user1 pos2
+KU c7442 user 1 pos 2
+RX_MODEL input7697 born7489 boundary7697 shift0 user2 pos2
+KU c7698 user 2 pos 2
+RX_MODEL input7956 born7748 boundary7956 shift0 user3 pos2
+KU c7957 user 3 pos 2
+RX_MODEL input8209 born8001 boundary8209 shift0 user4 pos2
+KU c8210 user 4 pos 2
+RX_MODEL input8465 born8257 boundary8465 shift0 user5 pos2
+KU c8466 user 5 pos 2
+RX_MODEL input8724 born8516 boundary8724 shift0 user6 pos2
+KU c8725 user 6 pos 2
+RX_MODEL input8977 born8769 boundary8977 shift0 user7 pos2
+KU c8978 user 7 pos 2
+RX_MODEL input9233 born9025 boundary9233 shift0 user8 pos2
+KU c9234 user 8 pos 2
+RX_MODEL input9492 born9284 boundary9492 shift0 user9 pos2
+KU c9493 user 9 pos 2
+RX_MODEL input9745 born9537 boundary9745 shift0 user10 pos2
+KU c9746 user 10 pos 2
+RX_MODEL input10001 born9793 boundary10001 shift0 user0 pos3
+KU c10002 user 0 pos 3
+RX_MODEL input10254 born10046 boundary10254 shift0 user1 pos3
+KU c10255 user 1 pos 3
+RX_MODEL input10510 born10302 boundary10510 shift0 user2 pos3
+KU c10511 user 2 pos 3
+RX_MODEL input10769 born10561 boundary10769 shift0 user3 pos3
+KU c10770 user 3 pos 3
+RX_MODEL input11022 born10814 boundary11022 shift0 user4 pos3
+KU c11023 user 4 pos 3
+RX_MODEL input11278 born11070 boundary11278 shift0 user5 pos3
+KU c11279 user 5 pos 3
+RX_MODEL input11537 born11329 boundary11537 shift0 user6 pos3
+KU c11538 user 6 pos 3
+RX_MODEL input11790 born11582 boundary11790 shift0 user7 pos3
+KU c11791 user 7 pos 3
+RX_MODEL input12046 born11838 boundary12046 shift0 user8 pos3
+KU c12047 user 8 pos 3
+RX_MODEL input12305 born12097 boundary12305 shift0 user9 pos3
+KU c12306 user 9 pos 3
+RX_MODEL input12558 born12350 boundary12558 shift0 user10 pos3
+KU c12559 user 10 pos 3
+MUWIN starts 44 fires 584 expected 584 K 2 t_mf 0100 hslot 0000 hwin 01
+RX_MODEL first_fault1565 expected1565
+MUWIN RX_EXPIRED PASS
+- /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_rx06/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:398: Verilog $finish
+EARLY_MITER edges 12658
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 13us; walltime 1.049 s; speed 12.071 us/s
+- Verilator: cpu 1.049 s on 1 threads; allocated 8 MB

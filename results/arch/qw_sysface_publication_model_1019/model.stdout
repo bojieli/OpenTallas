@@ -1,0 +1,87 @@
+{
+  "old_cells": 1085,
+  "proposed_cells": 1109,
+  "old_native_area_um2": 131.30747999999997,
+  "proposed_native_area_um2": 133.34867999999997,
+  "new_nontransparent_gate_copies": 20,
+  "explicit_INV_cells": 260,
+  "original_unsafe_root_copy_counts": {
+    "1109": 5,
+    "1194": 5,
+    "1331": 5,
+    "1332": 5,
+    "1333": 5
+  },
+  "all_affected_roots": [
+    1109,
+    1194,
+    1331,
+    1332,
+    1333
+  ],
+  "unresolved_nonlogic_fanout": [
+    {
+      "identity": "pub_2_0",
+      "root_bit": 2,
+      "sink_count": 145,
+      "bounds": {
+        "TT": {
+          "known_direct_fF": 67.12035499999998,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        },
+        "FF": {
+          "known_direct_fF": 72.95704,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        }
+      }
+    },
+    {
+      "identity": "pub_3_0",
+      "root_bit": 3,
+      "sink_count": 145,
+      "bounds": {
+        "TT": {
+          "known_direct_fF": 107.26954999999991,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        },
+        "FF": {
+          "known_direct_fF": 116.42180499999996,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        }
+      }
+    },
+    {
+      "identity": "pub_1_0",
+      "root_bit": "1",
+      "sink_count": 145,
+      "bounds": {
+        "TT": {
+          "known_direct_fF": 156.52024999999995,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        },
+        "FF": {
+          "known_direct_fF": 168.8466999999999,
+          "known_inverted_fF": 0,
+          "root_max_fF": null,
+          "INV_max_fF": 46.08,
+          "known_internal_legal": true
+        }
+      }
+    }
+  ]
+}

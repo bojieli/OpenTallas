@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_xr1f-s81sl_xr1f-12b616b54 bench bench_slxr_muthops host ot-epyc9 run /srv/opentallas-scratch/claude/closure-loop/s81sl_xr1f-s81sl_xr1f-12b616b54 log cl/bench_slxr_muthops.a1b1.log captured 2026-10-19T18:48:25-07:00
+# fail_regex '^XRB hb=0 .* err=[1-9][0-9]*$'
+MISMATCH ci_b slot=1
+MISMATCH ci_b slot=17
+MISMATCH ci_b slot=18
+MISMATCH ci_b slot=19
+MISMATCH ci_b slot=30
+MISMATCH ci_b slot=46
+MISMATCH ci_b slot=54
+MISMATCH ci_b slot=55
+XRB hb=0 seed=1 sid=4 cycles=6016 ctl=1543 rd=1109 rowwr=228 lo=1990 sends=814 vreinj=815 screl=174 parts=254 err=784
+XRILL missed=0 of 13

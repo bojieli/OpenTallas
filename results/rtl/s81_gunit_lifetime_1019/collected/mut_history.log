@@ -1,0 +1,13 @@
+COLD_UNPROGRAMMED_GAP fault=0 (no table-valid protection)
+PROGRAMMED_DATA_PASS words=96 back_to_back_launches=8
+WRITE_LAUNCH gap=0 fault=1 expected=1
+WRITE_LAUNCH gap=1 fault=1 expected=1
+WRITE_LAUNCH gap=2 fault=1 expected=1
+WRITE_LAUNCH gap=3 fault=1 expected=1
+WRITE_LAUNCH gap=4 fault=1 expected=1
+WRITE_LAUNCH gap=5 fault=0 expected=0
+WRITE_LAUNCH gap=6 fault=0 expected=0
+SELECTOR_SWITCH_WRITE gap=3 fault=0 expected=1
+[1940000] %Fatal: tb.sv:44: Assertion failed in tb: SELECTOR_HISTORY_FAIL
+%Error: tb.sv:44: Verilog $stop
+Aborting...

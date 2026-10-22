@@ -1,0 +1,56 @@
+{
+ "evidence": {
+  "audit": "qkh_head_gather_stage.audit.json",
+  "audit_sha256": "77fc3adff97d1c8b429e4ec38819143ac4995215f2588e1270de017fe8332fdf",
+  "closed_commit": "8801fc34513da35acb6a411ef0d69025d0024bd2",
+  "closed_job": "qkh_head_gather_stage-n4r1-8801fc345",
+  "closed_lef_sha256": "f3510bbdd0885c3ae826c0f7c0f6a6b624f9050104c2972164ed3ad69d69444d",
+  "equiv_cells": 3150,
+  "equiv_log_sha256": "b3ace82965943b540c9b288bad57e481bda1ae7bca54f6f789b17c9d3334b03d",
+  "final_v_sha256": "35ee80ebaaff71ddc21fd7ab3fa5a314c2afdb8a50187c8e8dbeae0cb57842cd",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+  "observe_zero": null,
+  "reset_base": null,
+  "sources": {
+   "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv": "ac82a332b6d239f6b2029d86cddfc08919eb78c7a905c43b443ebb24d74b33b7",
+   "rtl/qwen_sys/split_20261014/qkh_head_stages.sv": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b"
+  },
+  "state": {
+   "gate_only": 0,
+   "gate_only_sample": [],
+   "gold_only": 0,
+   "gold_only_sample": [],
+   "gold_regs": 1575,
+   "paired": 1575
+  },
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "a60ba8e937ac6e104a815265609763f35728debce98b65a0865b72ff8bd0e69a",
+   "child_lint.json": "eb1284b1c88946dbf99a3accb58f4241400e35ea9022664e7dfc5d42b8acd5cc",
+   "export_ff.log": "df590f6da86ea1fb4f49ce72b3cb5ce44eb1ab200f41016f204ff9178f5b13d0",
+   "export_ff.tcl": "c2ba94da542fef0568f543579807f759cdc8042f7702687d4005acadc2ab3b6a",
+   "export_ss.log": "1a2314b9fde06479ff3a273995609a6ba5a14306e60f7242aa2c7ded5d0ea484",
+   "export_ss.tcl": "8844561c57b39494724eaec0cc991ee11a93e0ca4affc3324cb810451a94db76",
+   "export_tt.log": "1a2a4b943ada79ddf53426be84e6809bae174fbff5b1cd6d122bdb366ba83454",
+   "export_tt.tcl": "1927106804c51566005b8170269c0db2292bb70bc386de1ca258db6a43dd3210",
+   "insertion.json": "fba2ed6b5926ace7f12a622725778d66143151aa4a1fbc49aeec474fc4ac9f87",
+   "qkh_head_gather_stage.lef": "f3510bbdd0885c3ae826c0f7c0f6a6b624f9050104c2972164ed3ad69d69444d",
+   "qkh_head_gather_stage_ff.lib": "1857b859a67e6657b857eeccd3e2f0ba26b404b3516fe2e6d7079301766b41b9",
+   "qkh_head_gather_stage_ss.lib": "605075fbbb90836549128704e2fd09bf251e3af12a6eb3b421170df8f94af96e",
+   "qkh_head_gather_stage_tt.lib": "cc42955dc55ab1c102e566be1472aaa0bcfaafbb28e44ce99a1b4491d6d928d7"
+  },
+  "rtl": {
+   "path": "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+   "sha256": "ac82a332b6d239f6b2029d86cddfc08919eb78c7a905c43b443ebb24d74b33b7"
+  },
+  "view": "physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage"
+ },
+ "module": "qkh_head_gather_stage",
+ "native_qualified": true,
+ "parameters": {
+  "MUT": 0
+ },
+ "schema": "opentallas.native_parameter_profile.v1"
+}

@@ -1,0 +1,37 @@
+# gold == gate (same RTL), 3-deep unreset pipe; independent init must FAIL at step 3 after 1 reset edge,
+# paired init must PASS: proves the -set-at <sig_gold> <sig_gate> syntax and the formulation claim.
+read_verilog -sv selftest.v
+proc
+copy p gold
+copy p gate
+cd gate
+rename r0 g0
+rename r1 g1
+rename r2 g2
+cd
+cd gate
+add -wire S__r0 8
+connect -set S__r0 g0
+add -wire S__r1 8
+connect -set S__r1 g1
+add -wire S__r2 8
+connect -set S__r2 g2
+cd gold
+add -wire S__r0 8
+connect -set S__r0 r0
+add -wire S__r1 8
+connect -set S__r1 r1
+add -wire S__r2 8
+connect -set S__r2 r2
+cd
+setattr -set keep 1 w:S__*
+select -set keep w:S__* i:* o:*
+rename -hide w:* @keep %d
+async2sync
+expose gold/w:S__* gate/w:S__*
+miter -equiv -flatten -make_assert gold gate miter
+hierarchy -top miter
+opt_clean
+tee -o miter_wires.txt select -list w:*S__*
+tee -o selftest_indep.txt sat -seq 4 -prove-asserts -prove-skip 2 -set-def-inputs -set-at 1 in_rst_n 0 -set-at 2 in_rst_n 0 -show-inputs
+tee -o selftest_paired.txt sat -seq 4 -prove-asserts -prove-skip 2 -set-def-inputs -set-at 1 in_rst_n 0 -set-at 2 in_rst_n 0 -set-at 1 gold.S__r0 gate.S__r0 -set-at 1 gold.S__r1 gate.S__r1 -set-at 1 gold.S__r2 gate.S__r2 -verify

@@ -1,0 +1,20 @@
+VIEW_EXPORT exact-shape abstract published: default (closing-bloat) abstract leaves 6 signal pins without DRC-clean access (e.g. c_rq[11] M5 0.048, c_rq[25] M5 0.048, c_wq[245] M5 0.048, c_wq[357] M5 0.048); exact shapes in 2782 pin windows leave 0
+{"name": "ot_hgi_sfu_lg_pair_tap_leaf", "ok": true, "checked": true, "files": {"ot_hgi_sfu_lg_pair_tap_leaf.lef": "90810d499c41c6e8bed4f56fde31d4079c615c4d44aaf94fa60af65f943e290b", "ot_hgi_sfu_lg_pair_tap_leaf_ff.lib": "43b951c61438ac07cbbeac1dfb78d12a31ea8bfa14a3b1c090e7d9b4735dab9d", "ot_hgi_sfu_lg_pair_tap_leaf_ss.lib": "2c32566c615c4e6550304263e7a47a0006230d2cc3fd0a490f39748c824aa234", "ot_hgi_sfu_lg_pair_tap_leaf_tt.lib": "55bbbeccd1321e36fd53208fa607a8009104e4f7ece2987d406484721953c3a8"}}
+ss: clock insertion replay failed (125)
+
+docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: unable to apply cgroup configuration: unable to start unit "docker-32b29bf86259e48d399b93e146a184dde00359007ffbc06a03ed75afbf5b0d82.scope" (properties [{Name:Description Value:"libcontainer container 32b29bf86259e48d399b93e146a184dde00359007ffbc06a03ed75afbf5b0d82"} {Name:Slice Value:"system.slice"} {Name:Delegate Value:true} {Name:PIDs Value:@au [2114226]} {Name:MemoryAccounting Value:true} {Name:CPUAccounting Value:true} {Name:IOAccounting Value:true} {Name:TasksAccounting Value:true} {Name:DefaultDependencies Value:false}]): Message recipient disconnected from message bus without replying
+
+Run 'docker run --help' for more information
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1/src/tools/closure_loop/ck_insertion.py", line 438, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1/src/tools/closure_loop/ck_insertion.py", line 358, in main
+    subprocess.run(cmd, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/usr/bin/python3', '/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1/src/tools/closure_loop/ck_insertion.py', '--base', '/srv/opentallas-scratch/claude/closure-loop/hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1/routes/hbm_sfu_lg_pair_tap_leaf_rt24_1019_b1_72af5d8b1/work/orfs/results/asap7/opentallas_ot_hgi_sfu_lg_pair_tap_leaf_asap7_ref_hbm_sfu_lg_pair_tap_leaf_rt24_1019_b1_72af5d8b1/base', '--clock', 'core_clk', '--image', 'openroad/orfs:latest', '--route-corner', '', '--output', '/tmp/tmpm4ks5kdr/clock_0.json', '--routed', '--raw-source']' returned non-zero exit status 1.
+REF_TILE export ot_hgi_sfu_lg_pair_tap_leaf: views rc=0 child_lint PASS 

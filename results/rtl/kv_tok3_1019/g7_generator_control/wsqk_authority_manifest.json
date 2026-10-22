@@ -1,0 +1,379 @@
+{
+ "cut": "g7_wsqk/qwk_stk_WS.sv",
+ "cut_sha256": "eb75139931390368b0c74320092e5221851b6fe8b616f3f62d5b35251caa0c1f",
+ "top": "qwk_stk_WS",
+ "ng": 8,
+ "paths": [
+  {
+   "index": 0,
+   "role": "TX",
+   "observer": "n_ks_kvs_attn__attn__tx_valid__r6__beq3",
+   "producer": "kvs_attn",
+   "source": "kvs_attn.u_attn.ctl.g_txl.tx_v_l",
+   "effective_reset": "kvs_attn.u_attn.rst_n",
+   "clock": "n_clk_core_c[0]",
+   "depth": 9,
+   "assign_aliases": 0,
+   "end": [
+    "n_ks_kvs_attn__attn__tx_valid",
+    0
+   ]
+  },
+  {
+   "index": 1,
+   "role": "SEQ",
+   "observer": "n_ks_prg__r3__pinfix1",
+   "producer": "kvs_attn",
+   "source": "kvs_attn.u_attn.g_prg.prg_rv",
+   "effective_reset": "kvs_attn.u_attn.rst_n",
+   "clock": "n_clk_core_c[0]",
+   "depth": 5,
+   "assign_aliases": 0,
+   "end": [
+    "n_ks_prg",
+    0
+   ]
+  },
+  {
+   "index": 2,
+   "role": "K0",
+   "observer": "n_krq_WS_0__r2__beq66",
+   "producer": "ectl_WS_0",
+   "source": "ectl_WS_0.u_a.u_k.req_valid",
+   "effective_reset": "ectl_WS_0.u_a.u_k.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 69,
+   "assign_aliases": 0,
+   "end": [
+    "n_krq_WS_0",
+    0
+   ]
+  },
+  {
+   "index": 3,
+   "role": "K1",
+   "observer": "n_krq_WS_1__r2__pinfix1__beq66",
+   "producer": "ectl_WS_1",
+   "source": "ectl_WS_1.u_a.u_k.req_valid",
+   "effective_reset": "ectl_WS_1.u_a.u_k.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 69,
+   "assign_aliases": 0,
+   "end": [
+    "n_krq_WS_1",
+    0
+   ]
+  },
+  {
+   "index": 4,
+   "role": "K2",
+   "observer": "n_krq_WS_2__r3__pinfix3__beq61",
+   "producer": "ectl_WS_2",
+   "source": "ectl_WS_2.u_a.u_k.req_valid",
+   "effective_reset": "ectl_WS_2.u_a.u_k.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 67,
+   "assign_aliases": 0,
+   "end": [
+    "n_krq_WS_2",
+    0
+   ]
+  },
+  {
+   "index": 5,
+   "role": "K3",
+   "observer": "n_krq_WS_3__r6__pinfix3__beq54",
+   "producer": "ectl_WS_3",
+   "source": "ectl_WS_3.u_a.u_k.req_valid",
+   "effective_reset": "ectl_WS_3.u_a.u_k.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 63,
+   "assign_aliases": 0,
+   "end": [
+    "n_krq_WS_3",
+    0
+   ]
+  },
+  {
+   "index": 6,
+   "role": "K4",
+   "observer": "n_krq_WS_4__r14__pinfix3__beq39",
+   "producer": "ectl_WS_4",
+   "source": "ectl_WS_4.u_a.u_k.req_valid",
+   "effective_reset": "ectl_WS_4.u_a.u_k.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 56,
+   "assign_aliases": 0,
+   "end": [
+    "n_krq_WS_4",
+    0
+   ]
+  },
+  {
+   "index": 7,
+   "role": "K5",
+   "observer": "n_krq_WS_5__r23__beq24",
+   "producer": "ectl_WS_5",
+   "source": "ectl_WS_5.u_a.u_k.req_valid",
+   "effective_reset": "ectl_WS_5.u_a.u_k.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 47,
+   "assign_aliases": 0,
+   "end": [
+    "n_krq_WS_5",
+    0
+   ]
+  },
+  {
+   "index": 8,
+   "role": "K6",
+   "observer": "n_krq_WS_6__r29__pinfix3__beq1",
+   "producer": "ectl_WS_6",
+   "source": "ectl_WS_6.u_a.u_k.req_valid",
+   "effective_reset": "ectl_WS_6.u_a.u_k.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 34,
+   "assign_aliases": 0,
+   "end": [
+    "n_krq_WS_6",
+    0
+   ]
+  },
+  {
+   "index": 9,
+   "role": "K7",
+   "observer": "n_krq_WS_7__r17__pinfix3__beq30",
+   "producer": "ectl_WS_7",
+   "source": "ectl_WS_7.u_a.u_k.req_valid",
+   "effective_reset": "ectl_WS_7.u_a.u_k.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 51,
+   "assign_aliases": 0,
+   "end": [
+    "n_krq_WS_7",
+    0
+   ]
+  },
+  {
+   "index": 10,
+   "role": "V0",
+   "observer": "n_pvvq_WS_0_0__pinfix1__beq5",
+   "producer": "vport_WS_0",
+   "source": "vport_WS_0.vq0_valid",
+   "effective_reset": "vport_WS_0.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 6,
+   "assign_aliases": 0,
+   "end": [
+    "n_pvvq_WS_0_0",
+    0
+   ]
+  },
+  {
+   "index": 11,
+   "role": "V1",
+   "observer": "n_pvvq_WS_0_1__pinfix4",
+   "producer": "vport_WS_0",
+   "source": "vport_WS_0.vq1_valid",
+   "effective_reset": "vport_WS_0.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 4,
+   "assign_aliases": 0,
+   "end": [
+    "n_pvvq_WS_0_1",
+    0
+   ]
+  },
+  {
+   "index": 12,
+   "role": "V2",
+   "observer": "n_pvvq_WS_1_0__pinfix1__beq5",
+   "producer": "vport_WS_1",
+   "source": "vport_WS_1.vq0_valid",
+   "effective_reset": "vport_WS_1.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 6,
+   "assign_aliases": 0,
+   "end": [
+    "n_pvvq_WS_1_0",
+    0
+   ]
+  },
+  {
+   "index": 13,
+   "role": "V3",
+   "observer": "n_pvvq_WS_1_1__pinfix4",
+   "producer": "vport_WS_1",
+   "source": "vport_WS_1.vq1_valid",
+   "effective_reset": "vport_WS_1.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 4,
+   "assign_aliases": 0,
+   "end": [
+    "n_pvvq_WS_1_1",
+    0
+   ]
+  },
+  {
+   "index": 14,
+   "role": "V4",
+   "observer": "n_pvvq_WS_2_0__pinfix1__beq5",
+   "producer": "vport_WS_2",
+   "source": "vport_WS_2.vq0_valid",
+   "effective_reset": "vport_WS_2.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 6,
+   "assign_aliases": 0,
+   "end": [
+    "n_pvvq_WS_2_0",
+    0
+   ]
+  },
+  {
+   "index": 15,
+   "role": "V5",
+   "observer": "n_pvvq_WS_2_1__pinfix4",
+   "producer": "vport_WS_2",
+   "source": "vport_WS_2.vq1_valid",
+   "effective_reset": "vport_WS_2.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 4,
+   "assign_aliases": 0,
+   "end": [
+    "n_pvvq_WS_2_1",
+    0
+   ]
+  },
+  {
+   "index": 16,
+   "role": "V6",
+   "observer": "n_pvvq_WS_3_0__pinfix1__beq5",
+   "producer": "vport_WS_3",
+   "source": "vport_WS_3.vq0_valid",
+   "effective_reset": "vport_WS_3.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 6,
+   "assign_aliases": 0,
+   "end": [
+    "n_pvvq_WS_3_0",
+    0
+   ]
+  },
+  {
+   "index": 17,
+   "role": "V7",
+   "observer": "n_pvvq_WS_3_1__pinfix4",
+   "producer": "vport_WS_3",
+   "source": "vport_WS_3.vq1_valid",
+   "effective_reset": "vport_WS_3.rn",
+   "clock": "n_clk_core_WS[0]",
+   "depth": 4,
+   "assign_aliases": 0,
+   "end": [
+    "n_pvvq_WS_3_1",
+    0
+   ]
+  }
+ ],
+ "captures": 510,
+ "fault_probes": [
+  {
+   "index": 0,
+   "instance": "ectl_WS_0",
+   "probe": "dut.ectl_WS_0.fault",
+   "reset": "n_rrs_n_rst_die_t0__m_0__g0_s14[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 1,
+   "instance": "ectl_WS_1",
+   "probe": "dut.ectl_WS_1.fault",
+   "reset": "n_rrs_n_rst_die_t1__m_0__g0_s31[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 2,
+   "instance": "ectl_WS_2",
+   "probe": "dut.ectl_WS_2.fault",
+   "reset": "n_rrs_n_rst_die_t1__m_0__g0_s11[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 3,
+   "instance": "ectl_WS_3",
+   "probe": "dut.ectl_WS_3.fault",
+   "reset": "n_rrs_n_rst_die_t2__m_0__g2_s5[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 4,
+   "instance": "ectl_WS_4",
+   "probe": "dut.ectl_WS_4.fault",
+   "reset": "n_rrs_n_rst_die_t0__m_0__g0_s35[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 5,
+   "instance": "ectl_WS_5",
+   "probe": "dut.ectl_WS_5.fault",
+   "reset": "n_rrs_n_rst_die_t1__m_0__g0_s55[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 6,
+   "instance": "ectl_WS_6",
+   "probe": "dut.ectl_WS_6.fault",
+   "reset": "n_rrs_n_rst_die_t1__m_0__g0_s40[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 7,
+   "instance": "ectl_WS_7",
+   "probe": "dut.ectl_WS_7.fault",
+   "reset": "n_rrs_n_rst_die_t2__m_0__g2_s19[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 8,
+   "instance": "vport_WS_0",
+   "probe": "dut.vport_WS_0.fault",
+   "reset": "n_rrs_n_rst_die_t1__m_0__g0_s43[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 9,
+   "instance": "vport_WS_1",
+   "probe": "dut.vport_WS_1.fault",
+   "reset": "n_rrs_n_rst_die_t1__m_0__g0_s1[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 10,
+   "instance": "vport_WS_2",
+   "probe": "dut.vport_WS_2.fault",
+   "reset": "n_rrs_n_rst_die_t0__m_0__g0_s21[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 11,
+   "instance": "vport_WS_3",
+   "probe": "dut.vport_WS_3.fault",
+   "reset": "n_rrs_n_rst_die_t2__m_0__g2_s22[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 12,
+   "instance": "astk_WS__u_strip_u_strip_u_ctl",
+   "probe": "dut.n_astk_WS__af_s[0]",
+   "reset": "n_rrs_n_rst_die_t1__m_0__g1_s180[0]",
+   "clock": "n_clk_core_WS[0]"
+  },
+  {
+   "index": 13,
+   "instance": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner",
+   "probe": "dut.n_astk_WS__er_fault[0]",
+   "reset": "n_rrs_n_rst_die_t1__m_0__g1_s171[0]",
+   "clock": "n_clk_core_WS[0]"
+  }
+ ]
+}

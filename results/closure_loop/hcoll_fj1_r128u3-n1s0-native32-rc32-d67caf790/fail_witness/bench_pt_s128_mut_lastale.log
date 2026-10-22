@@ -1,0 +1,15 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hcoll_fj1_r128u3-n1s0-native32-rc32-d67caf790 bench bench_pt_s128_mut_lastale host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hcoll_fj1_r128u3-n1s0-native32-rc32-d67caf790 log cl/bench_pt_s128_mut_lastale.a1b1.log captured 2026-10-20T22:14:27-07:00
+# fail_regex 'PT_S128_MUTANT lastale REJECTED'
+Verilator 5.050 2026-07-01 rev v5.050
+PT_S128_MISMATCH cyc 504 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 505 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 506 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 507 ref cfg 0000000000 st 1 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 508 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 509 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 510 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_MISMATCH cyc 511 ref cfg 0000000000 st 0 spc 127 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 127 conf 0 ib 0 f 1
+PT_S128_COVER episodes 3000 cycles 956173 faults 2668 configured 300 starts 387 fwd_frames 8
+PT_S128_MITER FAIL mismatches 8159
+PT_S128_MUTANT lastale REJECTED

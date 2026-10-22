@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qfd_d2d_static.lef",
-    "sha256": "eabddcea65ba5bde5562193d9161d551ac96f7a6cc98a2eafbf53995cbdfbef0"
+    "sha256": "023dbeb5802bcf6bb47d7f50c8073eef743a3520a1bddc901f0adccecf0d45d1"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/qfd_d2d_static_r8c-r8c-021a205b1/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_static_r9j-r9j-7f431abe6/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/qfd_d2d_static_r8c-r8c-021a205b1/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/qfd_d2d_static_r8c-r8c-021a205b1/record/views/qfd_d2d_static/provenance/raw/qfd_d2d_static.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/qfd_d2d_static_r8c-r8c-021a205b1/record/views/qfd_d2d_static/provenance/qfd_d2d_static.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_static_r9j-r9j-7f431abe6/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_static_r9j-r9j-7f431abe6/record/views/qfd_d2d_static/provenance/raw/qfd_d2d_static.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_static_r9j-r9j-7f431abe6/record/views/qfd_d2d_static/provenance/qfd_d2d_static.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 1337 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 2201 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfd_d2d_static_r8c-r8c-021a205b1/record/views/qfd_d2d_static/provenance/qfd_d2d_static.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfd_d2d_static_r9j-r9j-7f431abe6/record/views/qfd_d2d_static/provenance/qfd_d2d_static.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qfd_d2d_static 475.2 x 280.8: PG M5 VDD 88 stripes (99% spread, 100% cov) / VSS 88 stripes (99% spread, 100% cov); strap M6; face pins 3658 blocked-above 0 blocked-same 0; clock ck insertion 590 ps; pockets M5 0 (closed)",
+    "summary": "qfd_d2d_static 475.2 x 280.8: PG M5 VDD 88 stripes (99% spread, 100% cov) / VSS 88 stripes (99% spread, 100% cov); strap M6; face pins 3658 blocked-above 0 blocked-same 0; clock ck insertion 462 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qfd_d2d_static",
       "W": 475.2,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 3658,
         "blocked_above": 0,
-        "covered_below": 137,
+        "covered_below": 77,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 589.99,
-          "min_ps": 406.02
+          "max_ps": 462.31,
+          "min_ps": 322.19
         }
       },
       "pockets": {
@@ -87,16 +87,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 1337
+          "added": 2201
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "qfd_d2d_static.lef",
-    "sha256": "556f96f79d07363337f49978303e76214f6282f7cebf72123558679e9f2855e2"
+    "sha256": "0e1399e9a017ae31b76a75bfc1f31c38a63669a32b5167220c3b2032aa08ea1d"
   }
 }

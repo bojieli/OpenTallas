@@ -1,0 +1,13 @@
+# Final prospective certificate gate: bounded default-OFF comparison
+
+**BOUNDED PASS** for candidate a8ddbb4c1f08b3a215243c8dfea704538e56b712 versus canonical retained scheduler 60bb2c145. Source/bench freeze e0b123989 preceded compilation. ENABLE_RETAINED_COMMIT=1; ENABLE_NATIVE_OWNER_JOIN is omitted and takes default0. No DUT changes.
+
+All 70 original scheduler outputs compare with case inequality every negative clock edge, including reset, with no output-valid mask. All existing 26 descriptor/CSR component cases and their original assertions pass, totaling 2977 compared edges. Every added native input receives deterministic changing fixture values. In particular, native_certificate_key_ok is 0 at nine actual cut_now cuts and 1 at 32 cuts across these cases. The enabled-only diagnostic is deliberately not used to count disabled behavior. This establishes bounded bypass of the prospective gate in the real retained scheduler.
+
+The same final disabled join core receives changing values on every input for 257 edges, including reset values; its certificate_key_ok and raw_cleanup_allow both remain exactly1. Wide inputs vary their lower32 bits under this stimulus; this is not exhaustive field or four-state coverage. The source body additionally retains unconditional `assign raw_cleanup_allow = 1'b1`. Scheduler identity_bad selects the old pending_identity expression with join0; native eligibility and native fault/admission/CQ conditions are guarded by the parameter. No new hardware state or latency is introduced by this evidence bench.
+
+Rank and coordinator private codec bodies are byte-identical to the earlier simulated candidate833713954. Their exact hashes appear in coverage.json. Prior results/arch/kv_native_join_default_compare_1019 remains the bounded evidence: rank0/lane0, all28/51 old outputs, 24 scenarios and455 edges each. No codec rerun or broader distributed-lifecycle claim is implied.
+
+Unpinned ot-run requested4GB/2threads/20GB, selected ot-epyc8 unit oth-ubuntu-2315007-1792451003, actual process exit0. Verilator5.050. Scheduler build6.93s/317888KiB peak RSS; core3.72s/318900KiB. receipt.json preserves exact commands, each actual compile/application exit, binarySHA and coverage counts. Sources are hash-guarded against manifest.json before build. Remote immutable run /srv/opentallas-scratch/claude/kv-native-join-final-default-1019/a8ddbb4c1; generated objects remain remote.
+
+This packet does not establish formal/four-state equivalence, TP8/services/lifecycle wrapper equivalence, enabled join correctness, token SU/MU behavior, native CDC/clocking, production H/calendar or physical closure. H12/deadline8 are existing conditional component fixture values. Public/main activation remains parent-owned.

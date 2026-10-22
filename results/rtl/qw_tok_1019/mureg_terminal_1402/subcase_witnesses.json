@@ -1,0 +1,542 @@
+[
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_neg_overlap.out",
+    "witness": "case mu_window_neg_overlap kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=58376 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=11111111 die_fault=11111111 words_out=59392 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_neg_overlap.out",
+    "witness": "COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_mu.out",
+    "witness": "OK   mu_m0: MU_CTLM_PASS mut 0"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_mu.out",
+    "witness": "OK   mu_m16: MU_CTLM_FAIL mut 16: mu4 C3 cmd words != compiled (missing 27 e.g. [(3039, 1, 77884452878022414430209536826542085), (4760, 2, 77884452878022414432461611518134277)]; extra 27 e.g. [(3039, 1, 77884452878022414427957737012856837), (4760, 2, 77884452878022414427958011890763781)])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_mu.out",
+    "witness": "OK   mu_m17: MU_CTLM_FAIL mut 17: C2 latency user sua differs mu4 vs solo1 (24/93; first diffs [(2836, 8), (2844, 9), (3902, 8), (6202, 9)])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_mu.out",
+    "witness": "OK   mu_m18: MU_CTLM_FAIL mut 18: mu4 C4 SEG base/tok/pos != compiled (missing 12 e.g. [(4302, 16, 4352, 512), (6024, 16, 4625, 528)]; extra 12 e.g. [(4302, 16, 4625, 528), (6024, 16, 4898, 544)]) | C5 mu4 head running stage wrong at 3 ME starts, e.g. [(9467, 0, 1, 2), (16353, 0, 2, 3), (23239, 0, 3, 37)]"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_mu.out",
+    "witness": "OK   mu_m19: MU_CTLM_FAIL mut 19: C2 latency user hd differs mu4 vs solo1 (1029/1033; first diffs [(2823, '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088000400000000000000000000001'), (3023, '0000000000000000000000) | C2 latency user mes differs mu4 vs solo1 (3/12; first diffs [(3023, 4625, 528), (4744, 4898, 544)]) | C2 latency user cst differs mu4 vs solo1 (1/5; first diffs [(2823, 0), (3023, 1)]) | mu4 C4 MES (ME programme start) != compiled (missing 0 e.g. []; extra 9 e.g. [(3023, 4625, 528), (4744, 4898, 544)])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_mu.out",
+    "witness": "OK   mu_m20: MU_CTLM_FAIL mut 20: C2 latency user hd differs mu4 vs solo1 (1029/1033; first diffs [(2823, '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088000400000000000000000000001'), (3023, '0000000000000000000000) | C2 latency user cst differs mu4 vs solo1 (1/5; first diffs [(2823, 0), (3023, 1)]) | C5 mu4 head running stage wrong at 3 ME starts, e.g. [(9467, 3, 2, 1), (16353, 3, 3, 2), (23239, 3, 37, 3)]"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_mu.out",
+    "witness": "MU_CTLM BENCHES: PASS"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   prog_m0: CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: PASS 84/84  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   prog_m0_landed: LANDED_LOCKSTEP PASS LMUT=0 compared=18071 mismatches=0 active=1198"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   prog_m1: CTLM_PROG MUT=1 BMUT=0 HARD_HR=1 HRA=0 DECODE=2: FAIL 40/84  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   lp_audit: AUDIT PASS"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   lp_unland: AUDIT-UNLAND FAIL (expected)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   lp_m0: MUT 0: LP_LOCKSTEP PASS"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   lp_m1: MUT 1: LP_LOCKSTEP FAIL"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   lp_m2: MUT 2: LP_LOCKSTEP FAIL"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "INFO lp_m4 (waived, not observable): MUT 4: LP_LOCKSTEP PASS"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   eq_m0_o0: LPF_EQ PASS DMUT=0 compared=3979"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   eq_m5_o0: LPF_EQ FAIL DMUT=5 mismatches=1983 of 3979"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   eq_m6_o0: LPF_EQ FAIL DMUT=6 mismatches=3979 of 3979"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   eq_m0_o1: LPF_EQ PASS DMUT=0 compared=3979"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   eq_m5_o1: LPF_EQ FAIL DMUT=5 mismatches=2017 of 3979"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   eq_m29_o1: LPF_EQ FAIL DMUT=29 mismatches=1366 of 3979"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "OK   seq: MU_SEQ BENCHES: PASS"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_rest.out",
+    "witness": "MU_CTLM BENCHES: PASS"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/kv.out",
+    "witness": "HOST_MU tb_qkd_kv_mu_rowoff rc=0 src: PASS users4 x stages36 x positions8192 identities1179648 sectors9437184 unique-addresses9437184 alias0 inverse{user,layer,pos,kind,dim}+raw256 exact; read rows 576/1728 commands, tag row[7:0]-64=layer, embedding/go/write unchanged; MU0 wires"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/kv.out",
+    "witness": "MU0 kvplan_ci_nc_gate rc=0: PASS KVPLAN_CI_NC_LOCKSTEP_EXACT_OBSERVED_MUTANTS_PARENT_ELABORATES"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/kv.out",
+    "witness": "MU_KV lint_mu_kv_tiles: PASS LINT_MU_KV_TILES qkd_kvs_ctl qkd_kvs_pc qkd_kvs_pc_h (tile file qkd_kvs_tiles_hroot_ff_k_mu.sv)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/kv.out",
+    "witness": "MU_KV mk1 rc=0: FAIL MU_KV_READ_ROWS act_bad=144 disjoint_bad=288 rest_mism=0 po_mism=0"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/kv.out",
+    "witness": "MU_KV mk2 rc=0: FAIL MU_KV_READ_ROWS act_bad=96 disjoint_bad=0 rest_mism=0 po_mism=0"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/kv.out",
+    "witness": "MU_KV mk3 rc=0: FAIL MU_KV_READ_ROWS act_bad=96 disjoint_bad=64 rest_mism=0 po_mism=0"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/kv.out",
+    "witness": "MU_KV tb_mu_kv_pc_path_rows rc=0: PASS MU_KV_READ_ROWS users4 layers3 pc13 acts 48/48/48/48 row=64+l+256u exact, users disjoint, all other outputs lockstep with MU0"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/kv.out",
+    "witness": "MU_KV tb_mu_kv_writer_rows rc=0: PASS MU_KV_WRITE_ROWS users4 x layers36 x positions8192 (stage-interleaved) words4718592 sectors9437184 unique alias0 inverse{user,layer,pos,kind,dim}+raw exact; MU1 == plain writer outside row[9:8]; MU0 wrapper == plain writer"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_mut_rlat.out",
+    "witness": "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RLAT FAIL (expected FAIL) mismatches=30720 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_mut_rlat.out",
+    "witness": "COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT al1 rc=0: FAIL MU_HROOT_E2E fails=165273 retires=0 requests=1 writer_stages=1"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT al2 rc=0: FAIL MU_HROOT_E2E fails=169370 retires=0 requests=1 writer_stages=1"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT ep1 rc=0: FAIL MU_HROOT_E2E fails=134994 retires=0 requests=1 writer_stages=145"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT ep2 rc=0: FAIL MU_HROOT_E2E fails=18 retires=12 requests=12 writer_stages=432"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT ex_endpoint rc=0: PASS HOST_NATIVE_CANCEL checks=146 requests=27 credits=18"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT ex_endpoint_mu0 rc=0: PASS HOST_NATIVE_CANCEL checks=146 requests=27 credits=18"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT ex_lifecycle rc=0: PASS collected lifecycle identity/drains/POST/latecancel/participant/wrap/recovery"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT ex_lifecycle_mu0 rc=0: PASS collected lifecycle identity/drains/POST/latecancel/participant/wrap/recovery"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT kp1 rc=0: FAIL MU_HROOT_E2E fails=141141 retires=0 requests=4 writer_stages=1"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT kp2 rc=0: FAIL MU_HROOT_E2E fails=128435 retires=2 requests=4 writer_stages=146"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT kp3 rc=0: FAIL MU_HROOT_COLLIDE: no collision fault (fault=0 code=00)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT lint_guard_mu: PASS LINT_GUARD_MU qkd_hr_core_guard (u_rank__u_native = qkd_host_native_token_endpoint_cancel_mu, MU 1)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT tb_mu_hroot_collide rc=0: PASS MU_HROOT_COLLIDE: user 1 on user 0's frame slot -> KV programme collision fault code 10"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT tb_mu_hroot_e2e rc=0: PASS MU_HROOT_E2E rounds=3 steps=12 writer_stages=432 rows=64+l+256u epochs={seq14,user2} retire=acceptance order"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT tb_mu_lprg_lockstep rc=0: PASS MU_LPRG_LOCKSTEP seed=7 mu0_cmp=5597 mu1_cmp=5593 events=804 (MU0 == original; MU1 user 0 gap 0 == original)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/hroot.out",
+    "witness": "MU_HROOT tb_mu_lprg_lockstep_s2 rc=0: PASS MU_LPRG_LOCKSTEP seed=1234 mu0_cmp=5102 mu1_cmp=5098 events=807 (MU0 == original; MU1 user 0 gap 0 == original)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m21: MU_OPSEG_FAIL mut 21: red C1 mu faulted: cal [(4394, '000001')] opf [] end (1, '000001', 0, 0, '0000') | red C4 command fires != compiled (got 4607 want 3677; missing 1110 e.g. [(5292, 2, 77884452878022414427957444938305587), (6207, 1, 77884452878022415006670306309834757)]; extra 2040 e.g. [(4826, 2, 77884452878022414427957444938305587), (5023, 1, 77884452878022415006670306309834757)]) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 280 want 205; missing [(5394, 2, 16, 8738, 8174), (10325, 3, 16, 9011, 8168)]; extra [(4928, 2, 16, 8738, 8174), (6854, 3, 16, 9011, 8168)]) | red C2 latency user dc differs mu vs solo (98/99; first diffs [(4395, '78000000000000'), (18381, '7c000300000051'), (18381, '74000300000051'), (35872, '70000300000051')])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m22: MU_OPSEG_FAIL mut 22: neg_coll: required fault not raised at ~6469 (opf log [])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m23: MU_OPSEG_FAIL mut 23: red C5 EMB (cycle, user, tok[, pos]) != compiled bank (got 102 want 102; missing [(27893, 1, 4099), (43478, 2, 8195)]; extra [(27893, 1, 8465), (43478, 2, 4099)]) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(28783, 1, 16, 4099, 8181), (40269, 1, 16, 4099, 8181)]; extra [(28783, 1, 16, 8465, 8180), (40269, 1, 16, 8465, 8180)]) | red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27893, 1, 8465), (43478, 2, 4099)])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m24: MU_OPSEG_FAIL mut 24: red C1 mu faulted: cal [(18332, '000010')] opf [] end (1, '000010', 0, 0, '0000') | red C3 u_cal starts != compiled playback (1481 vs 1481; missing [(2822, 1, 1, 1, 0, 9), (4393, 1, 1, 1, 12, 1), (4543, 2, 1, 1, 0, 2)]; extra [(2823, 1, 1, 1, 0, 9), (4394, 1, 1, 1, 12, 1), (4544, 2, 1, 1, 0, 2)]) | red C4 command fires != compiled (got 3650 want 3677; missing 1946 e.g. [(2831, 1, 77884452878022414427957444938303507), (2846, 1, 77884452878022418465434807245473797)]; extra 1919 e.g. [(2832, 1, 77884452878022414427957444938303507), (2847, 1, 77884452878022418465434807245473797)]) | red C5 EMB (cycle, user, tok[, pos]) != compiled bank (got 102 want 102; missing [(27893, 1, 4099), (43478, 2, 8195)]; extra [(27894, 1, 4099), (43479, 2, 8195)]) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3208, 1, 16, 8465, 8180), (5395, 2, 16, 8738, 8174)]) | red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27894, 1, 4099), (43479, 2, 8195)]) | red C2 latency user dc differs mu vs solo (98/99; first diffs [(18333, '78000000000000'), (18381, '7c000300000051'), (18381, '74000300000051'), (35872, '70000300000051')])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m25: MU_OPSEG_FAIL mut 25: red C3 u_cal starts != compiled playback (547 vs 1481; missing [(19153, 1, 2, 1, 24, 13), (20070, 2, 2, 1, 24, 5), (21448, 3, 1, 1, 24, 5)]; extra []) | red C4 command fires != compiled (got 1781 want 3677; missing 1896 e.g. [(19243, 1, 77884452878022432300492892592408581), (19875, 1, 77884452878022417312513336998365189)]; extra 0 e.g. []) | red C5 EMB (cycle, user, tok[, pos]) != compiled bank (got 48 want 102; missing [(27893, 1, 4099), (43478, 2, 8195)]; extra []) | red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 102 want 205; missing [(28783, 1, 16, 4099, 8181), (31008, 3, 16, 9011, 8168)]; extra []) | red C7 filler EMB != its just-computed token (0 of 0 wrong, want 54; e.g. [])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m26: MU_OPSEG_FAIL mut 26: neg_drift: required fault not raised at ~18651 (opf log [])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m27: MU_OPSEG_FAIL mut 27: red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 0, 0), (5394, 2, 16, 0, 0)])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m28: MU_OPSEG_FAIL mut 28: red C5 SEG (cycle, user, tok[, pos]) != compiled bank (got 205 want 205; missing [(3207, 1, 16, 8465, 8180), (5394, 2, 16, 8738, 8174)]; extra [(3207, 1, 16, 8738, 8174), (5394, 2, 16, 9011, 8168)])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m29: MU_OPSEG_FAIL mut 29: neg_ctx: required fault not raised at ~1035 (opf log [])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_m32: MU_OPSEG_FAIL mut 32: red C8 mu native_pos user carrier: (bad, starts u1, u2, u3) = (448431, 60, 30, 18)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_emb16: MU_OPSEG_FAIL mut 0_emb16: red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27805, 1, 8465), (43346, 2, 8738)])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "OK   opseg_skew1: MU_OPSEG_FAIL mut 0_skew1: red C7 filler EMB != its just-computed token (54 of 54 wrong, want 54; e.g. [(27893, 1, 8465), (43478, 2, 8738)])"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_mut.out",
+    "witness": "MU_OPSEG BENCHES: PASS"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "amax_mut1_ge want=FAIL OK :: TB_AMAX_MU FAIL MUT=1 NEG=0 seed=1 (eq 0, mismatches 338, mu_fault 0, emit_empty 0)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "amax_mut2_xtalk want=FAIL OK :: TB_AMAX_MU FAIL MUT=2 NEG=0 seed=1 (eq 0, mismatches 416, mu_fault 0, emit_empty 0)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "amax_mut3_clrall want=FAIL OK :: TB_AMAX_MU FAIL MUT=3 NEG=0 seed=1 (eq 0, mismatches 370, mu_fault 0, emit_empty 128)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "amax_mut4_emitu want=FAIL OK :: TB_AMAX_MU FAIL MUT=4 NEG=0 seed=1 (eq 0, mismatches 388, mu_fault 1, emit_empty 16)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "amax_neg_clear want=FAIL OK :: TB_AMAX_MU FAIL MUT=0 NEG=1 seed=1 (eq 0, mismatches 1, mu_fault 1, emit_empty 0)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "amax_pass_s1 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=1"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "amax_pass_s2 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=2"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "amax_pass_s3 want=PASS OK :: TB_AMAX_MU PASS MUT=0 NEG=0 seed=3"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "user_mut1_late want=FAIL OK :: TB_USER_EVENT FAIL MUT=1 seed=1"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "user_mut2_nochk want=FAIL OK :: TB_USER_EVENT FAIL MUT=2 seed=1"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "user_mut3_nu1 want=FAIL OK :: TB_USER_EVENT FAIL MUT=3 seed=1"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "user_pass_s1 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=1"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "user_pass_s2 want=PASS OK :: TB_USER_EVENT PASS MUT=0 seed=2"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/head.out",
+    "witness": "overall rc=0"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_ctrl8_composed rc=0 head: PASS CTRL8_COMPOSED checks=162 steps=40"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_ctrl8_composed rc=0 src: PASS CTRL8_COMPOSED checks=162 steps=40"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_capture rc=0 head: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_capture rc=0 src: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_composed rc=0 head: PASS actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_composed rc=0 src: PASS actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 follower7silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_prompt rc=0 head: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_prompt rc=0 src: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_role rc=0 head: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_role rc=0 src: PASS UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_service rc=0 head: PASS service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_service rc=0 src: PASS service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_token_service rc=0 head: PASS token service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_control_token_service rc=0 src: PASS token service epoch all8 pendingACK/actualBAR/barriers UNQUALIFIED capture256 q4/fault5 actual control/prompt/HOST+ND8CTRL FMT1ring12steps generationwrap3 die7undrained boot8 PW/DW4includingStartOverlap all7peer exact 15credits IRQ/CQ10 peer7localready_then_transportedexecution_pkgctl_silent"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_ctl rc=0 head: PASS qkd_host_ctl exact checks=1375 starts=43 tokens=40 stale=320 drain=320"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_ctl rc=0 src: PASS qkd_host_ctl exact checks=1375 starts=43 tokens=40 stale=320 drain=320"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_ctl_mu rc=0 src: PASS qkd_host_ctl MU users4 steps400 in-order one-edge retire after all 8 dies, hc user=pos[17:16], max outstanding 4; faults die-skip/disagree/overflow/watchdog/unknown-gen fail closed and flush"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_fullcontrol rc=0 head: PASS full host FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_fullcontrol rc=0 src: PASS full host FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_fullcontrol_packet rc=0 head: PASS full actual HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_fullcontrol_packet rc=0 src: PASS full actual HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_mu_out rc=0 src: PASS host MU_OUT users4 steps18 CQ entries12 per-user in order (slot/tag/pos/token/ngen/kind), hc user=pos[17:16], max outstanding 4, no fault"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_program_loader rc=0 head: PASS program loader production1024pw8dw fixed1032cycles actual HC authorization staleauth rejection"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_program_loader rc=0 src: PASS program loader production1024pw8dw fixed1032cycles actual HC authorization staleauth rejection"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_prompt_packet rc=0 head: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_prompt_packet rc=0 src: PASS actual pin-registered physical prompt SRAM HOST class0 packet path FMT1 descriptor/CQ, 18bit token feedback, prompt8192x18 external, TP8 boot,32bit diagnostic/raw80/W1C/IRQ starts=          4"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_prompt_ue rc=0 head: PASS actual HOST packet double-ECC prompt fail-closed: q3 fault4 stickyIRQ no-controller-start CQfault=00000000cafe0075"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_host_prompt_ue rc=0 src: PASS actual HOST packet double-ECC prompt fail-closed: q3 fault4 stickyIRQ no-controller-start CQfault=00000000cafe0075"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/host.out",
+    "witness": "HOST_MU tb_qkd_kv_mu_rowoff rc=0 src: PASS users4 x stages36 x positions8192 identities1179648 sectors9437184 unique-addresses9437184 alias0 inverse{user,layer,pos,kind,dim}+raw256 exact; read rows 576/1728 commands, tag row[7:0]-64=layer, embedding/go/write unchanged; MU0 wires"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_mut_rank.out",
+    "witness": "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=42288 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_mut_rank.out",
+    "witness": "COLL_TP8SL NEGATIVE-CONTROL PASS cases=1 latu=53 lats=378"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi.out",
+    "witness": "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi.out",
+    "witness": "case mu_window_ref_user0 kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=22528 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=35227"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi.out",
+    "witness": "COLL_TP8SL PASS cases=2 latu=53 lats=378"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_dv2f14bi_diagnostic.out",
+    "witness": "case mu_window kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL mismatches=61424 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=61440 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=38138"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_dv2f14bi_diagnostic.out",
+    "witness": "case mu_window_ref_user0 kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=- FAIL mismatches=22512 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=22528 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=35227"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/coll_mu_bi_dv2f14bi_diagnostic.out",
+    "witness": "COLL_TP8SL FAIL failed=mu_window,mu_window_ref_user0"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_pass.out",
+    "witness": "OK   opseg_m0: MU_OPSEG_PASS mut 0"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/opseg_pass.out",
+    "witness": "MU_OPSEG BENCHES: PASS"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/tok.out",
+    "witness": "MU_TOK_SMOKE_PASS mut 0"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/tok.out",
+    "witness": "MU_TOK_SMOKE_FAIL mut cal11: K3 solo: events != compiled (missing 2301 e.g. [(1108, 'CMD', 0, 77884452878022414427957444938301459), (1108, 'SUI', 0, 1)]; extra 2301 e.g. [(1108, 'CMD', 1, 77884452878022414427957444938302483), (1108, 'SUI', 1, 65)]) | K4 solo: 0 wrong argmax e.g. []; emits {0: 0} want {0: 3} | K3 pos2: events != compiled (missing 4486 e.g. [(1108, 'CMD', 0, 77884452878022414427957444938301459), (1108, 'SUI', 0, 1)]; extra 4486 e.g. [(1108, 'CMD', 1, 77884452878022414427957444938302483), (1108, 'SUI', 1, 65)]) | K4 pos2: 0 wrong argmax e.g. []; emits {0: 0, 1: 3} want {0: 3, 1: 2} | K6 pos2: measured token period != calendar {1: (251615.0, 265387.0)} | K3 pos4: events != compiled (missing 9045 e.g. [(1108, 'CMD', 0, 77884452878022414427957444938301459), (1108, 'SUI', 0, 1)]; extra 9045 e.g. [(1108, 'CMD', 1, 77884452878022414427957444938302483), (1108, 'SUI', 1, 65)]) | K4 pos4: 0 wrong argmax e.g. []; emits {0: 2, 1: 3, 2: 2, 3: 2} want {0: 3, 1: 2, 2: 2, 3: 2} | K6 pos4: measured token period != calendar {0: (256574.0, 251615.0), 1: (251615.0, 254604.0), 2: (254604.0, 255562.0), 3: (255562.0, 256574.0)}"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/tok.out",
+    "witness": "MU_TOK_SMOKE_FAIL mut amax1: K4 solo: 3 wrong argmax e.g. [(252452, 0, 0, 1954, 528482431, (146, 528482431)), (504067, 0, 1, 2020, 528482431, (0, 528482431))]; emits {0: 3} want {0: 3} | K4 pos2: 5 wrong argmax e.g. [(252452, 0, 0, 1954, 528482431, (146, 528482431)), (268409, 1, 0, 2006, 528482431, (323, 528482431))]; emits {0: 3, 1: 2} want {0: 3, 1: 2} | K4 pos4: 9 wrong argmax e.g. [(252452, 0, 0, 1954, 528482431, (146, 528482431)), (256060, 1, 0, 2006, 528482431, (323, 528482431))]; emits {0: 3, 1: 2, 2: 2, 3: 2} want {0: 3, 1: 2, 2: 2, 3: 2}"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/tok.out",
+    "witness": "MU_TOK_SMOKE_FAIL mut glue1: K5 pos2: 2 wrong KV rows e.g. [(267269, 0, 2, 322, 322, 322), (532656, 0, 4, 324, 324, 324)]; records 211 want 211 | K5 pos4: 79 wrong KV rows e.g. [(252807, 2, 35, 355, 355, 355), (252808, 3, 35, 355, 355, 355)]; records 426 want 426 | K2 user 0 events in pos2 differ from solo"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/tok.out",
+    "witness": "MU_TOK_SMOKE_FAIL mut glue2: K1 pos2: faults [] muf 0 rf 0 rcol 0 empty [(268409, 1), (533796, 1)] end (0, '000000', 0) | K4 pos2: 1 wrong argmax e.g. [(755682, 0, 2, 85, 528482431, (204, 528482431))]; emits {0: 3, 1: 0} want {0: 3, 1: 2} | K1 pos4: faults [] muf 0 rf 0 rcol 0 empty [(256060, 1), (263345, 2), (267787, 3)] end (0, '000000', 0) | K4 pos4: 1 wrong argmax e.g. [(755682, 0, 2, 85, 528482431, (204, 528482431))]; emits {0: 3, 1: 0, 2: 0, 3: 0} want {0: 3, 1: 2, 2: 2, 3: 2} | K2 user 0 events in pos2 differ from solo"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/tok.out",
+    "witness": "MU_TOK_SMOKE BENCHES: PASS"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_ABI_PASS MUT=0 256 vectors (ss5 107/ag5 10/dc nval/ME idle/coll clear/hr/ME start)"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_ABI_FAIL MUT=4 errors 255"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_ABI_FAIL MUT=5 errors 112"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_ABI_FAIL MUT=6 errors 255"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_ABI_FAIL MUT=7 errors 127"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_ABI_FAIL MUT=8 errors 69"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_CAL MUT=0 NSL=0: PASS 62/62"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_CAL MUT=1 NSL=0: FAIL 2/62"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_CAL MUT=2 NSL=0: FAIL 2/62"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_CAL MUT=3 NSL=0: FAIL 60/62"
+  },
+  {
+    "path": "/srv/opentallas-scratch/claude/refill-1225/QWREG/out/ctlm_nsl12/w/ctlm.out",
+    "witness": "CTLM_CAL MUT=0 NSL=12: PASS 74/74"
+  }
+]

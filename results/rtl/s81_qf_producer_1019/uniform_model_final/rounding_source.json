@@ -1,0 +1,11 @@
+{
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv": "68a1ae09050c3116dcb6b3bf6b861a8fad387d0851d3e255e8bd8262601abc5b",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv": "b4add20455f231ff8597ecf19bb9254ca608efbf0457ac6edeaf96c69e5a9a83"
+  },
+  "golden_source": "results/rtl/s81_qf_producer_1019/selected_source/hdc_golden.py",
+  "golden_source_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "proof": "all32bit patterns incl NaN/Inf/subnormals/ties; original function exact arithmetic",
+  "compaction_precondition": "actual qualified producer already wrote BF16-in-FP32; no new rounding here",
+  "missing_composition": "actual wq_b return and QR capture/read wiring not proved by isolated function"
+}

@@ -1,0 +1,6 @@
+AHUB_DW FAIL mut=10 first error cycle 605 pass 0: die hub fault hf
+AHUB_DW FAIL mut=10 errors=11761
+- rtl/test/qwen_kv_die/tb_qkd_ahub_static_dw_g2.sv:226: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 14us; walltime 1.347 s; speed 10.245 us/s
+- Verilator: cpu 1.209 s on 1 threads; allocated 11 MB

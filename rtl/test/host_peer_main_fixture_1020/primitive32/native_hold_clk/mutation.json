@@ -1,0 +1,6 @@
+{
+  "mutant": "hold_clk",
+  "old": "  qkd_hr_core_peer_n32_cell_45 u59981_c1 (.CLK(ck_core),.D(i6378_c0),.QN(n80934_c1),.RESETN(i49722_c0),.SETN(n82544_c0));",
+  "new": "  qkd_hr_core_peer_n32_cell_45 u59981_c1 (.CLK(1'b0),.D(i6378_c0),.QN(n80934_c1),.RESETN(i49722_c0),.SETN(n82544_c0));",
+  "sha256": "b109c389a4975d59e621181d4ed965aa0b046b8522149edb8db51427c91b6e3f"
+}

@@ -1,0 +1,23 @@
+{
+  "scope": "Real full-model PCH/largestTU compilation only, no link/simulation/numericPASS",
+  "unit": "oth-ubuntu-587511-1792449611",
+  "job": 587511,
+  "host": "ot-epyc4",
+  "exit_status": 0,
+  "PCH": {
+    "wall_seconds": 31.23,
+    "max_RSS_KiB": 1816688,
+    "bytes": 689794415,
+    "sha256": "e7a09566d9f5013a61f8fc3751a7014e234a4f670c9fc44cceab3ae7caa7b185"
+  },
+  "largest_TU": {
+    "wall_seconds": 1.94,
+    "max_RSS_KiB": 1090768,
+    "bytes": 893400,
+    "sha256": "46a6ea19cd54eb9534954681e1787994ea45ae8ea2915e26bef00a39a6b88860"
+  },
+  "guarded1977_sources_unchanged": true,
+  "output_objects_retained": true,
+  "numerical_PASS": null,
+  "nativephase": null
+}

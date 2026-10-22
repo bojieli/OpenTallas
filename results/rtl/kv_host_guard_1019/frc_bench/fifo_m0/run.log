@@ -1,0 +1,5 @@
+PASS cycles=100140 accepted=67057 retired=64730 full=3794 empty=4081 simultaneous=44379 full_simultaneous=512 resets=121 overflow=3238 underflow=6035 zero_added_edges=1
+- /srv/opentallas-scratch/claude/kv-host-guard-frc-bench-1019/src/results/rtl/kv_guard_fifo_sram_1019/tb_guard_fifo_sram.sv:80: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 0.129 s; speed 7.763 ms/s
+- Verilator: cpu 0.129 s on 1 threads; allocated 7 MB

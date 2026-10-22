@@ -1,0 +1,5 @@
+bench2 (k) MUT=14: FAIL 128/512
+    S0ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    L8 kc3 scaled: 128/128 mismatches, first [0] got 0x4035a8e7 exp 0xc0a68dd6
+    L7 gate/up kc2: 256/256 mismatches, first [0] got 0xbf7d9b88 exp 0x4217096f
+rc=1

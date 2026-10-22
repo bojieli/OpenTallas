@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_cp_svg_rel_pb_1019-r1-96082abd3 bench bench_run_mut2 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hdie_cp_svg_rel_pb_1019-r1-96082abd3 log cl/bench_run_mut2.a1b1.log captured 2026-10-19T08:57:53-07:00
+# fail_regex 'RUN_TARGET FAIL mut=2 errors=[1-9]'
+RUN_TARGET FAIL mut=2 errors=1 programme=2 descriptor=1 runs=1
+FATAL: rtl/test/hbm_accel/svg_rel/tb_static_run_target.sv:38: run target mismatch
+       Time: 410000  Scope: tb_static_run_target

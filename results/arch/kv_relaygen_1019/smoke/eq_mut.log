@@ -1,0 +1,29 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+[... trimmed ...]
+  init \gate.ot_rrs__ld_rst_n__ot_rlv__c1                                 0         0             0
+  init \gate.ot_rrs__ld_rst_n__ot_rlv__c2                                 0         0             0
+  init \gate.u_ot_pr_core.u_a.u_m.s                                       0         0      00000000
+  init \gate.u_ot_pr_core.u_b.rst_n                                       0         0             0
+  init \gate.u_ot_pr_core.u_b.s                                           0         0      00000000
+  init \gold.ld_rst_n__ot_rl0                                             0         0             0
+  init \gold.ld_rst_n__ot_rl1                                             0         0             0
+  init \gold.u_ot_pr_core.u_a.u_m.s [0]                                   0         0             0
+  init \gold.u_ot_pr_core.u_a.u_m.s [1]                                   0         0             0
+  init \gold.u_ot_pr_core.u_a.u_m.s [2]                                   0         0             0
+  init \gold.u_ot_pr_core.u_a.u_m.s [3]                                   0         0             0
+  init \gold.u_ot_pr_core.u_a.u_m.s [4]                                   0         0             0
+  init \gold.u_ot_pr_core.u_a.u_m.s [5]                                   0         0             0
+  init \gold.u_ot_pr_core.u_a.u_m.s [6]                                   0         0             0
+  init \gold.u_ot_pr_core.u_a.u_m.s [7]                                   0         0             0
+  init \gold.u_ot_pr_core.u_b.s [0]                                       0         0             0
+  init \gold.u_ot_pr_core.u_b.s [1]                                       0         0             0
+  init \gold.u_ot_pr_core.u_b.s [2]                                       0         0             0
+  init \gold.u_ot_pr_core.u_b.s [3]                                       0         0             0
+  init \gold.u_ot_pr_core.u_b.s [4]                                       0         0             0
+  init \gold.u_ot_pr_core.u_b.s [5]                                       0         0             0
+  init \gold.u_ot_pr_core.u_b.s [6]                                       0         0             0
+  init \gold.u_ot_pr_core.u_b.s [7]                                       0         0             0
+
+ERROR: Called with -verify and proof did fail!

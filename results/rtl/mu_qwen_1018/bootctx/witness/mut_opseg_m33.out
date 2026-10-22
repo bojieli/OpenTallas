@@ -1,0 +1,3 @@
+case neg_xcoll done: 1 fails so far
+MU_OPSEG_FAIL mut 33: neg_xcoll: required fault not raised at ~55727 (opf log [])
+{"mut": 33, "cases": ["neg_xcoll"], "emb_t": null, "res_skew": 0, "neg_xcoll": {"want_edge": 55727, "opf": [], "raised": false}, "verdict": "FAIL"}

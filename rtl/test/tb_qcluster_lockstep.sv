@@ -129,7 +129,22 @@ module tb;
         .ck_c3r1(ck),
         .ck_c3r2(ck),
         .ck_c3r3(ck),
-        .rst_n(rst_n),
+        .rst_c0r0(rst_n),
+        .rst_c0r1(rst_n),
+        .rst_c0r2(rst_n),
+        .rst_c0r3(rst_n),
+        .rst_c1r0(rst_n),
+        .rst_c1r1(rst_n),
+        .rst_c1r2(rst_n),
+        .rst_c1r3(rst_n),
+        .rst_c2r0(rst_n),
+        .rst_c2r1(rst_n),
+        .rst_c2r2(rst_n),
+        .rst_c2r3(rst_n),
+        .rst_c3r0(rst_n),
+        .rst_c3r1(rst_n),
+        .rst_c3r2(rst_n),
+        .rst_c3r3(rst_n),
         .far(far),
         .bc0(bc0),
         .bc1(bc1),
@@ -350,6 +365,103 @@ module tb;
         .trst_3_3(trst_3_3_r),
         .n_a_3_3(n_a_3_3_r),
         .n_b_3_3(n_b_3_3_r));
+    reg  [515:0] bco0_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin bco0_rd[1] <= bco0_r; bco0_rd[2] <= bco0_rd[1]; bco0_rd[3] <= bco0_rd[2]; bco0_rd[4] <= bco0_rd[3]; bco0_rd[5] <= bco0_rd[4]; bco0_rd[6] <= bco0_rd[5]; bco0_rd[7] <= bco0_rd[6]; bco0_rd[8] <= bco0_rd[7]; bco0_rd[9] <= bco0_rd[8]; end
+    reg  [515:0] bco1_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin bco1_rd[1] <= bco1_r; bco1_rd[2] <= bco1_rd[1]; bco1_rd[3] <= bco1_rd[2]; bco1_rd[4] <= bco1_rd[3]; bco1_rd[5] <= bco1_rd[4]; bco1_rd[6] <= bco1_rd[5]; bco1_rd[7] <= bco1_rd[6]; bco1_rd[8] <= bco1_rd[7]; bco1_rd[9] <= bco1_rd[8]; end
+    reg  [515:0] bco2_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin bco2_rd[1] <= bco2_r; bco2_rd[2] <= bco2_rd[1]; bco2_rd[3] <= bco2_rd[2]; bco2_rd[4] <= bco2_rd[3]; bco2_rd[5] <= bco2_rd[4]; bco2_rd[6] <= bco2_rd[5]; bco2_rd[7] <= bco2_rd[6]; bco2_rd[8] <= bco2_rd[7]; bco2_rd[9] <= bco2_rd[8]; end
+    reg  [515:0] bco3_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin bco3_rd[1] <= bco3_r; bco3_rd[2] <= bco3_rd[1]; bco3_rd[3] <= bco3_rd[2]; bco3_rd[4] <= bco3_rd[3]; bco3_rd[5] <= bco3_rd[4]; bco3_rd[6] <= bco3_rd[5]; bco3_rd[7] <= bco3_rd[6]; bco3_rd[8] <= bco3_rd[7]; bco3_rd[9] <= bco3_rd[8]; end
+    reg  [513:0] rs_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin rs_rd[1] <= rs_r; rs_rd[2] <= rs_rd[1]; rs_rd[3] <= rs_rd[2]; end
+    reg  [513:0] rs_o_rd [1:12];   // Q-CL16-LAND: reference delayed 12 edges
+    always @(posedge ck) begin rs_o_rd[1] <= rs_o_r; rs_o_rd[2] <= rs_o_rd[1]; rs_o_rd[3] <= rs_o_rd[2]; rs_o_rd[4] <= rs_o_rd[3]; rs_o_rd[5] <= rs_o_rd[4]; rs_o_rd[6] <= rs_o_rd[5]; rs_o_rd[7] <= rs_o_rd[6]; rs_o_rd[8] <= rs_o_rd[7]; rs_o_rd[9] <= rs_o_rd[8]; rs_o_rd[10] <= rs_o_rd[9]; rs_o_rd[11] <= rs_o_rd[10]; rs_o_rd[12] <= rs_o_rd[11]; end
+    reg  [513:0] n_a_0_0_rd [1:15];   // Q-CL16-LAND: reference delayed 15 edges
+    always @(posedge ck) begin n_a_0_0_rd[1] <= n_a_0_0_r; n_a_0_0_rd[2] <= n_a_0_0_rd[1]; n_a_0_0_rd[3] <= n_a_0_0_rd[2]; n_a_0_0_rd[4] <= n_a_0_0_rd[3]; n_a_0_0_rd[5] <= n_a_0_0_rd[4]; n_a_0_0_rd[6] <= n_a_0_0_rd[5]; n_a_0_0_rd[7] <= n_a_0_0_rd[6]; n_a_0_0_rd[8] <= n_a_0_0_rd[7]; n_a_0_0_rd[9] <= n_a_0_0_rd[8]; n_a_0_0_rd[10] <= n_a_0_0_rd[9]; n_a_0_0_rd[11] <= n_a_0_0_rd[10]; n_a_0_0_rd[12] <= n_a_0_0_rd[11]; n_a_0_0_rd[13] <= n_a_0_0_rd[12]; n_a_0_0_rd[14] <= n_a_0_0_rd[13]; n_a_0_0_rd[15] <= n_a_0_0_rd[14]; end
+    reg  [513:0] n_b_0_0_rd [1:12];   // Q-CL16-LAND: reference delayed 12 edges
+    always @(posedge ck) begin n_b_0_0_rd[1] <= n_b_0_0_r; n_b_0_0_rd[2] <= n_b_0_0_rd[1]; n_b_0_0_rd[3] <= n_b_0_0_rd[2]; n_b_0_0_rd[4] <= n_b_0_0_rd[3]; n_b_0_0_rd[5] <= n_b_0_0_rd[4]; n_b_0_0_rd[6] <= n_b_0_0_rd[5]; n_b_0_0_rd[7] <= n_b_0_0_rd[6]; n_b_0_0_rd[8] <= n_b_0_0_rd[7]; n_b_0_0_rd[9] <= n_b_0_0_rd[8]; n_b_0_0_rd[10] <= n_b_0_0_rd[9]; n_b_0_0_rd[11] <= n_b_0_0_rd[10]; n_b_0_0_rd[12] <= n_b_0_0_rd[11]; end
+    reg  [507:0] tap_0_1_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin tap_0_1_rd[1] <= tap_0_1_r; tap_0_1_rd[2] <= tap_0_1_rd[1]; tap_0_1_rd[3] <= tap_0_1_rd[2]; end
+    reg  [513:0] n_a_0_1_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_0_1_rd[1] <= n_a_0_1_r; n_a_0_1_rd[2] <= n_a_0_1_rd[1]; n_a_0_1_rd[3] <= n_a_0_1_rd[2]; end
+    reg  [513:0] n_b_0_1_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_0_1_rd[1] <= n_b_0_1_r; n_b_0_1_rd[2] <= n_b_0_1_rd[1]; n_b_0_1_rd[3] <= n_b_0_1_rd[2]; end
+    reg  [507:0] tap_0_2_rd [1:6];   // Q-CL16-LAND: reference delayed 6 edges
+    always @(posedge ck) begin tap_0_2_rd[1] <= tap_0_2_r; tap_0_2_rd[2] <= tap_0_2_rd[1]; tap_0_2_rd[3] <= tap_0_2_rd[2]; tap_0_2_rd[4] <= tap_0_2_rd[3]; tap_0_2_rd[5] <= tap_0_2_rd[4]; tap_0_2_rd[6] <= tap_0_2_rd[5]; end
+    reg  [513:0] n_a_0_2_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_0_2_rd[1] <= n_a_0_2_r; n_a_0_2_rd[2] <= n_a_0_2_rd[1]; n_a_0_2_rd[3] <= n_a_0_2_rd[2]; end
+    reg  [513:0] n_b_0_2_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_0_2_rd[1] <= n_b_0_2_r; n_b_0_2_rd[2] <= n_b_0_2_rd[1]; n_b_0_2_rd[3] <= n_b_0_2_rd[2]; end
+    reg  [507:0] tap_0_3_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin tap_0_3_rd[1] <= tap_0_3_r; tap_0_3_rd[2] <= tap_0_3_rd[1]; tap_0_3_rd[3] <= tap_0_3_rd[2]; tap_0_3_rd[4] <= tap_0_3_rd[3]; tap_0_3_rd[5] <= tap_0_3_rd[4]; tap_0_3_rd[6] <= tap_0_3_rd[5]; tap_0_3_rd[7] <= tap_0_3_rd[6]; tap_0_3_rd[8] <= tap_0_3_rd[7]; tap_0_3_rd[9] <= tap_0_3_rd[8]; end
+    reg  [513:0] n_a_0_3_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_0_3_rd[1] <= n_a_0_3_r; n_a_0_3_rd[2] <= n_a_0_3_rd[1]; n_a_0_3_rd[3] <= n_a_0_3_rd[2]; end
+    reg  [513:0] n_b_0_3_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_0_3_rd[1] <= n_b_0_3_r; n_b_0_3_rd[2] <= n_b_0_3_rd[1]; n_b_0_3_rd[3] <= n_b_0_3_rd[2]; end
+    reg  [513:0] n_a_1_0_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_1_0_rd[1] <= n_a_1_0_r; n_a_1_0_rd[2] <= n_a_1_0_rd[1]; n_a_1_0_rd[3] <= n_a_1_0_rd[2]; end
+    reg  [513:0] n_b_1_0_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_1_0_rd[1] <= n_b_1_0_r; n_b_1_0_rd[2] <= n_b_1_0_rd[1]; n_b_1_0_rd[3] <= n_b_1_0_rd[2]; end
+    reg  [507:0] tap_1_1_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin tap_1_1_rd[1] <= tap_1_1_r; tap_1_1_rd[2] <= tap_1_1_rd[1]; tap_1_1_rd[3] <= tap_1_1_rd[2]; end
+    reg  [513:0] n_a_1_1_rd [1:6];   // Q-CL16-LAND: reference delayed 6 edges
+    always @(posedge ck) begin n_a_1_1_rd[1] <= n_a_1_1_r; n_a_1_1_rd[2] <= n_a_1_1_rd[1]; n_a_1_1_rd[3] <= n_a_1_1_rd[2]; n_a_1_1_rd[4] <= n_a_1_1_rd[3]; n_a_1_1_rd[5] <= n_a_1_1_rd[4]; n_a_1_1_rd[6] <= n_a_1_1_rd[5]; end
+    reg  [513:0] n_b_1_1_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_1_1_rd[1] <= n_b_1_1_r; n_b_1_1_rd[2] <= n_b_1_1_rd[1]; n_b_1_1_rd[3] <= n_b_1_1_rd[2]; end
+    reg  [507:0] tap_1_2_rd [1:6];   // Q-CL16-LAND: reference delayed 6 edges
+    always @(posedge ck) begin tap_1_2_rd[1] <= tap_1_2_r; tap_1_2_rd[2] <= tap_1_2_rd[1]; tap_1_2_rd[3] <= tap_1_2_rd[2]; tap_1_2_rd[4] <= tap_1_2_rd[3]; tap_1_2_rd[5] <= tap_1_2_rd[4]; tap_1_2_rd[6] <= tap_1_2_rd[5]; end
+    reg  [513:0] n_a_1_2_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin n_a_1_2_rd[1] <= n_a_1_2_r; n_a_1_2_rd[2] <= n_a_1_2_rd[1]; n_a_1_2_rd[3] <= n_a_1_2_rd[2]; n_a_1_2_rd[4] <= n_a_1_2_rd[3]; n_a_1_2_rd[5] <= n_a_1_2_rd[4]; n_a_1_2_rd[6] <= n_a_1_2_rd[5]; n_a_1_2_rd[7] <= n_a_1_2_rd[6]; n_a_1_2_rd[8] <= n_a_1_2_rd[7]; n_a_1_2_rd[9] <= n_a_1_2_rd[8]; end
+    reg  [513:0] n_b_1_2_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin n_b_1_2_rd[1] <= n_b_1_2_r; n_b_1_2_rd[2] <= n_b_1_2_rd[1]; n_b_1_2_rd[3] <= n_b_1_2_rd[2]; n_b_1_2_rd[4] <= n_b_1_2_rd[3]; n_b_1_2_rd[5] <= n_b_1_2_rd[4]; n_b_1_2_rd[6] <= n_b_1_2_rd[5]; n_b_1_2_rd[7] <= n_b_1_2_rd[6]; n_b_1_2_rd[8] <= n_b_1_2_rd[7]; n_b_1_2_rd[9] <= n_b_1_2_rd[8]; end
+    reg  [507:0] tap_1_3_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin tap_1_3_rd[1] <= tap_1_3_r; tap_1_3_rd[2] <= tap_1_3_rd[1]; tap_1_3_rd[3] <= tap_1_3_rd[2]; tap_1_3_rd[4] <= tap_1_3_rd[3]; tap_1_3_rd[5] <= tap_1_3_rd[4]; tap_1_3_rd[6] <= tap_1_3_rd[5]; tap_1_3_rd[7] <= tap_1_3_rd[6]; tap_1_3_rd[8] <= tap_1_3_rd[7]; tap_1_3_rd[9] <= tap_1_3_rd[8]; end
+    reg  [513:0] n_a_1_3_rd [1:6];   // Q-CL16-LAND: reference delayed 6 edges
+    always @(posedge ck) begin n_a_1_3_rd[1] <= n_a_1_3_r; n_a_1_3_rd[2] <= n_a_1_3_rd[1]; n_a_1_3_rd[3] <= n_a_1_3_rd[2]; n_a_1_3_rd[4] <= n_a_1_3_rd[3]; n_a_1_3_rd[5] <= n_a_1_3_rd[4]; n_a_1_3_rd[6] <= n_a_1_3_rd[5]; end
+    reg  [513:0] n_b_1_3_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_1_3_rd[1] <= n_b_1_3_r; n_b_1_3_rd[2] <= n_b_1_3_rd[1]; n_b_1_3_rd[3] <= n_b_1_3_rd[2]; end
+    reg  [513:0] n_a_2_0_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_2_0_rd[1] <= n_a_2_0_r; n_a_2_0_rd[2] <= n_a_2_0_rd[1]; n_a_2_0_rd[3] <= n_a_2_0_rd[2]; end
+    reg  [513:0] n_b_2_0_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_2_0_rd[1] <= n_b_2_0_r; n_b_2_0_rd[2] <= n_b_2_0_rd[1]; n_b_2_0_rd[3] <= n_b_2_0_rd[2]; end
+    reg  [507:0] tap_2_1_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin tap_2_1_rd[1] <= tap_2_1_r; tap_2_1_rd[2] <= tap_2_1_rd[1]; tap_2_1_rd[3] <= tap_2_1_rd[2]; end
+    reg  [513:0] n_a_2_1_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin n_a_2_1_rd[1] <= n_a_2_1_r; n_a_2_1_rd[2] <= n_a_2_1_rd[1]; n_a_2_1_rd[3] <= n_a_2_1_rd[2]; n_a_2_1_rd[4] <= n_a_2_1_rd[3]; n_a_2_1_rd[5] <= n_a_2_1_rd[4]; n_a_2_1_rd[6] <= n_a_2_1_rd[5]; n_a_2_1_rd[7] <= n_a_2_1_rd[6]; n_a_2_1_rd[8] <= n_a_2_1_rd[7]; n_a_2_1_rd[9] <= n_a_2_1_rd[8]; end
+    reg  [513:0] n_b_2_1_rd [1:6];   // Q-CL16-LAND: reference delayed 6 edges
+    always @(posedge ck) begin n_b_2_1_rd[1] <= n_b_2_1_r; n_b_2_1_rd[2] <= n_b_2_1_rd[1]; n_b_2_1_rd[3] <= n_b_2_1_rd[2]; n_b_2_1_rd[4] <= n_b_2_1_rd[3]; n_b_2_1_rd[5] <= n_b_2_1_rd[4]; n_b_2_1_rd[6] <= n_b_2_1_rd[5]; end
+    reg  [507:0] tap_2_2_rd [1:6];   // Q-CL16-LAND: reference delayed 6 edges
+    always @(posedge ck) begin tap_2_2_rd[1] <= tap_2_2_r; tap_2_2_rd[2] <= tap_2_2_rd[1]; tap_2_2_rd[3] <= tap_2_2_rd[2]; tap_2_2_rd[4] <= tap_2_2_rd[3]; tap_2_2_rd[5] <= tap_2_2_rd[4]; tap_2_2_rd[6] <= tap_2_2_rd[5]; end
+    reg  [513:0] n_a_2_2_rd [1:12];   // Q-CL16-LAND: reference delayed 12 edges
+    always @(posedge ck) begin n_a_2_2_rd[1] <= n_a_2_2_r; n_a_2_2_rd[2] <= n_a_2_2_rd[1]; n_a_2_2_rd[3] <= n_a_2_2_rd[2]; n_a_2_2_rd[4] <= n_a_2_2_rd[3]; n_a_2_2_rd[5] <= n_a_2_2_rd[4]; n_a_2_2_rd[6] <= n_a_2_2_rd[5]; n_a_2_2_rd[7] <= n_a_2_2_rd[6]; n_a_2_2_rd[8] <= n_a_2_2_rd[7]; n_a_2_2_rd[9] <= n_a_2_2_rd[8]; n_a_2_2_rd[10] <= n_a_2_2_rd[9]; n_a_2_2_rd[11] <= n_a_2_2_rd[10]; n_a_2_2_rd[12] <= n_a_2_2_rd[11]; end
+    reg  [513:0] n_b_2_2_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin n_b_2_2_rd[1] <= n_b_2_2_r; n_b_2_2_rd[2] <= n_b_2_2_rd[1]; n_b_2_2_rd[3] <= n_b_2_2_rd[2]; n_b_2_2_rd[4] <= n_b_2_2_rd[3]; n_b_2_2_rd[5] <= n_b_2_2_rd[4]; n_b_2_2_rd[6] <= n_b_2_2_rd[5]; n_b_2_2_rd[7] <= n_b_2_2_rd[6]; n_b_2_2_rd[8] <= n_b_2_2_rd[7]; n_b_2_2_rd[9] <= n_b_2_2_rd[8]; end
+    reg  [507:0] tap_2_3_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin tap_2_3_rd[1] <= tap_2_3_r; tap_2_3_rd[2] <= tap_2_3_rd[1]; tap_2_3_rd[3] <= tap_2_3_rd[2]; tap_2_3_rd[4] <= tap_2_3_rd[3]; tap_2_3_rd[5] <= tap_2_3_rd[4]; tap_2_3_rd[6] <= tap_2_3_rd[5]; tap_2_3_rd[7] <= tap_2_3_rd[6]; tap_2_3_rd[8] <= tap_2_3_rd[7]; tap_2_3_rd[9] <= tap_2_3_rd[8]; end
+    reg  [513:0] n_a_2_3_rd [1:6];   // Q-CL16-LAND: reference delayed 6 edges
+    always @(posedge ck) begin n_a_2_3_rd[1] <= n_a_2_3_r; n_a_2_3_rd[2] <= n_a_2_3_rd[1]; n_a_2_3_rd[3] <= n_a_2_3_rd[2]; n_a_2_3_rd[4] <= n_a_2_3_rd[3]; n_a_2_3_rd[5] <= n_a_2_3_rd[4]; n_a_2_3_rd[6] <= n_a_2_3_rd[5]; end
+    reg  [513:0] n_b_2_3_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_2_3_rd[1] <= n_b_2_3_r; n_b_2_3_rd[2] <= n_b_2_3_rd[1]; n_b_2_3_rd[3] <= n_b_2_3_rd[2]; end
+    reg  [507:0] tap_3_1_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin tap_3_1_rd[1] <= tap_3_1_r; tap_3_1_rd[2] <= tap_3_1_rd[1]; tap_3_1_rd[3] <= tap_3_1_rd[2]; end
+    reg  [513:0] n_a_3_1_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_3_1_rd[1] <= n_a_3_1_r; n_a_3_1_rd[2] <= n_a_3_1_rd[1]; n_a_3_1_rd[3] <= n_a_3_1_rd[2]; end
+    reg  [513:0] n_b_3_1_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_3_1_rd[1] <= n_b_3_1_r; n_b_3_1_rd[2] <= n_b_3_1_rd[1]; n_b_3_1_rd[3] <= n_b_3_1_rd[2]; end
+    reg  [507:0] tap_3_2_rd [1:6];   // Q-CL16-LAND: reference delayed 6 edges
+    always @(posedge ck) begin tap_3_2_rd[1] <= tap_3_2_r; tap_3_2_rd[2] <= tap_3_2_rd[1]; tap_3_2_rd[3] <= tap_3_2_rd[2]; tap_3_2_rd[4] <= tap_3_2_rd[3]; tap_3_2_rd[5] <= tap_3_2_rd[4]; tap_3_2_rd[6] <= tap_3_2_rd[5]; end
+    reg  [513:0] n_a_3_2_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_3_2_rd[1] <= n_a_3_2_r; n_a_3_2_rd[2] <= n_a_3_2_rd[1]; n_a_3_2_rd[3] <= n_a_3_2_rd[2]; end
+    reg  [513:0] n_b_3_2_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_3_2_rd[1] <= n_b_3_2_r; n_b_3_2_rd[2] <= n_b_3_2_rd[1]; n_b_3_2_rd[3] <= n_b_3_2_rd[2]; end
+    reg  [507:0] tap_3_3_rd [1:9];   // Q-CL16-LAND: reference delayed 9 edges
+    always @(posedge ck) begin tap_3_3_rd[1] <= tap_3_3_r; tap_3_3_rd[2] <= tap_3_3_rd[1]; tap_3_3_rd[3] <= tap_3_3_rd[2]; tap_3_3_rd[4] <= tap_3_3_rd[3]; tap_3_3_rd[5] <= tap_3_3_rd[4]; tap_3_3_rd[6] <= tap_3_3_rd[5]; tap_3_3_rd[7] <= tap_3_3_rd[6]; tap_3_3_rd[8] <= tap_3_3_rd[7]; tap_3_3_rd[9] <= tap_3_3_rd[8]; end
+    reg  [513:0] n_a_3_3_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_a_3_3_rd[1] <= n_a_3_3_r; n_a_3_3_rd[2] <= n_a_3_3_rd[1]; n_a_3_3_rd[3] <= n_a_3_3_rd[2]; end
+    reg  [513:0] n_b_3_3_rd [1:3];   // Q-CL16-LAND: reference delayed 3 edges
+    always @(posedge ck) begin n_b_3_3_rd[1] <= n_b_3_3_r; n_b_3_3_rd[2] <= n_b_3_3_rd[1]; n_b_3_3_rd[3] <= n_b_3_3_rd[2]; end
+    wire land_mask = (cyc < 24 + 65) || (cyc >= 2500 && cyc < 2530 + 65);
     function automatic [1023:0] rnd1024(input integer dummy);
         integer k; begin for (k = 0; k < 32; k = k + 1) rnd1024[32*k +: 32] = $urandom; end
     endfunction
@@ -433,74 +545,74 @@ module tb;
         n_y_3_2 <= rnd1024(0);
         t_out_3_3 <= rnd1024(0);
         n_y_3_3 <= rnd1024(0);
-        if (cyc > 2 && ((bco0_h !== bco0_r) ||
-            (bco1_h !== bco1_r) ||
-            (bco2_h !== bco2_r) ||
-            (bco3_h !== bco3_r) ||
-            (rs_h !== rs_r) ||
-            (rs_o_h !== rs_o_r) ||
+        if (cyc > 2 + 15 && ((!land_mask && (bco0_h !== bco0_rd[9])) ||
+            (!land_mask && (bco1_h !== bco1_rd[9])) ||
+            (!land_mask && (bco2_h !== bco2_rd[9])) ||
+            (!land_mask && (bco3_h !== bco3_rd[9])) ||
+            (!land_mask && (rs_h !== rs_rd[3])) ||
+            (!land_mask && (rs_o_h !== rs_o_rd[12])) ||
             (tap_0_0_h !== tap_0_0_r) ||
             (trst_0_0_h !== trst_0_0_r) ||
-            (n_a_0_0_h !== n_a_0_0_r) ||
-            (n_b_0_0_h !== n_b_0_0_r) ||
-            (tap_0_1_h !== tap_0_1_r) ||
+            (!land_mask && (n_a_0_0_h !== n_a_0_0_rd[15])) ||
+            (!land_mask && (n_b_0_0_h !== n_b_0_0_rd[12])) ||
+            (!land_mask && (tap_0_1_h !== tap_0_1_rd[3])) ||
             (trst_0_1_h !== trst_0_1_r) ||
-            (n_a_0_1_h !== n_a_0_1_r) ||
-            (n_b_0_1_h !== n_b_0_1_r) ||
-            (tap_0_2_h !== tap_0_2_r) ||
+            (n_a_0_1_h !== n_a_0_1_rd[3]) ||
+            (!land_mask && (n_b_0_1_h !== n_b_0_1_rd[3])) ||
+            (!land_mask && (tap_0_2_h !== tap_0_2_rd[6])) ||
             (trst_0_2_h !== trst_0_2_r) ||
-            (n_a_0_2_h !== n_a_0_2_r) ||
-            (n_b_0_2_h !== n_b_0_2_r) ||
-            (tap_0_3_h !== tap_0_3_r) ||
+            (n_a_0_2_h !== n_a_0_2_rd[3]) ||
+            (!land_mask && (n_b_0_2_h !== n_b_0_2_rd[3])) ||
+            (!land_mask && (tap_0_3_h !== tap_0_3_rd[9])) ||
             (trst_0_3_h !== trst_0_3_r) ||
-            (n_a_0_3_h !== n_a_0_3_r) ||
-            (n_b_0_3_h !== n_b_0_3_r) ||
+            (n_a_0_3_h !== n_a_0_3_rd[3]) ||
+            (!land_mask && (n_b_0_3_h !== n_b_0_3_rd[3])) ||
             (tap_1_0_h !== tap_1_0_r) ||
             (trst_1_0_h !== trst_1_0_r) ||
-            (n_a_1_0_h !== n_a_1_0_r) ||
-            (n_b_1_0_h !== n_b_1_0_r) ||
-            (tap_1_1_h !== tap_1_1_r) ||
+            (!land_mask && (n_a_1_0_h !== n_a_1_0_rd[3])) ||
+            (n_b_1_0_h !== n_b_1_0_rd[3]) ||
+            (!land_mask && (tap_1_1_h !== tap_1_1_rd[3])) ||
             (trst_1_1_h !== trst_1_1_r) ||
-            (n_a_1_1_h !== n_a_1_1_r) ||
-            (n_b_1_1_h !== n_b_1_1_r) ||
-            (tap_1_2_h !== tap_1_2_r) ||
+            (!land_mask && (n_a_1_1_h !== n_a_1_1_rd[6])) ||
+            (!land_mask && (n_b_1_1_h !== n_b_1_1_rd[3])) ||
+            (!land_mask && (tap_1_2_h !== tap_1_2_rd[6])) ||
             (trst_1_2_h !== trst_1_2_r) ||
-            (n_a_1_2_h !== n_a_1_2_r) ||
-            (n_b_1_2_h !== n_b_1_2_r) ||
-            (tap_1_3_h !== tap_1_3_r) ||
+            (!land_mask && (n_a_1_2_h !== n_a_1_2_rd[9])) ||
+            (!land_mask && (n_b_1_2_h !== n_b_1_2_rd[9])) ||
+            (!land_mask && (tap_1_3_h !== tap_1_3_rd[9])) ||
             (trst_1_3_h !== trst_1_3_r) ||
-            (n_a_1_3_h !== n_a_1_3_r) ||
-            (n_b_1_3_h !== n_b_1_3_r) ||
+            (!land_mask && (n_a_1_3_h !== n_a_1_3_rd[6])) ||
+            (!land_mask && (n_b_1_3_h !== n_b_1_3_rd[3])) ||
             (tap_2_0_h !== tap_2_0_r) ||
             (trst_2_0_h !== trst_2_0_r) ||
-            (n_a_2_0_h !== n_a_2_0_r) ||
-            (n_b_2_0_h !== n_b_2_0_r) ||
-            (tap_2_1_h !== tap_2_1_r) ||
+            (n_a_2_0_h !== n_a_2_0_rd[3]) ||
+            (!land_mask && (n_b_2_0_h !== n_b_2_0_rd[3])) ||
+            (!land_mask && (tap_2_1_h !== tap_2_1_rd[3])) ||
             (trst_2_1_h !== trst_2_1_r) ||
-            (n_a_2_1_h !== n_a_2_1_r) ||
-            (n_b_2_1_h !== n_b_2_1_r) ||
-            (tap_2_2_h !== tap_2_2_r) ||
+            (!land_mask && (n_a_2_1_h !== n_a_2_1_rd[9])) ||
+            (!land_mask && (n_b_2_1_h !== n_b_2_1_rd[6])) ||
+            (!land_mask && (tap_2_2_h !== tap_2_2_rd[6])) ||
             (trst_2_2_h !== trst_2_2_r) ||
-            (n_a_2_2_h !== n_a_2_2_r) ||
-            (n_b_2_2_h !== n_b_2_2_r) ||
-            (tap_2_3_h !== tap_2_3_r) ||
+            (!land_mask && (n_a_2_2_h !== n_a_2_2_rd[12])) ||
+            (!land_mask && (n_b_2_2_h !== n_b_2_2_rd[9])) ||
+            (!land_mask && (tap_2_3_h !== tap_2_3_rd[9])) ||
             (trst_2_3_h !== trst_2_3_r) ||
-            (n_a_2_3_h !== n_a_2_3_r) ||
-            (n_b_2_3_h !== n_b_2_3_r) ||
+            (!land_mask && (n_a_2_3_h !== n_a_2_3_rd[6])) ||
+            (!land_mask && (n_b_2_3_h !== n_b_2_3_rd[3])) ||
             (tap_3_0_h !== tap_3_0_r) ||
             (trst_3_0_h !== trst_3_0_r) ||
-            (tap_3_1_h !== tap_3_1_r) ||
+            (!land_mask && (tap_3_1_h !== tap_3_1_rd[3])) ||
             (trst_3_1_h !== trst_3_1_r) ||
-            (n_a_3_1_h !== n_a_3_1_r) ||
-            (n_b_3_1_h !== n_b_3_1_r) ||
-            (tap_3_2_h !== tap_3_2_r) ||
+            (!land_mask && (n_a_3_1_h !== n_a_3_1_rd[3])) ||
+            (n_b_3_1_h !== n_b_3_1_rd[3]) ||
+            (!land_mask && (tap_3_2_h !== tap_3_2_rd[6])) ||
             (trst_3_2_h !== trst_3_2_r) ||
-            (n_a_3_2_h !== n_a_3_2_r) ||
-            (n_b_3_2_h !== n_b_3_2_r) ||
-            (tap_3_3_h !== tap_3_3_r) ||
+            (!land_mask && (n_a_3_2_h !== n_a_3_2_rd[3])) ||
+            (n_b_3_2_h !== n_b_3_2_rd[3]) ||
+            (!land_mask && (tap_3_3_h !== tap_3_3_rd[9])) ||
             (trst_3_3_h !== trst_3_3_r) ||
-            (n_a_3_3_h !== n_a_3_3_r) ||
-            (n_b_3_3_h !== n_b_3_3_r))) begin
+            (!land_mask && (n_a_3_3_h !== n_a_3_3_rd[3])) ||
+            (n_b_3_3_h !== n_b_3_3_rd[3]))) begin
             bad = bad + 1;
             if (bad <= 5) $display("MISMATCH cycle %0d", cyc);
         end

@@ -66,7 +66,8 @@ SOURCED = dict(
     embed_cycles=272,            # token_path_1018 embed xdie (priced): KV-die embedding row -> compute die
     kv_service=1555,             # measured-old-RTL KV-die static attention service (qwen_attention_rate_1015)
     d2d_record=32,               # 2 KB a KV die a layer over a 512-b lane (s81_balance_1018 section 2, modelled)
-    host_return=134,             # 133.5 cycles a token per user (rom_multiuser_1018 item 6)
+    host_return=135,             # 133.5 cycles a token per user (rom_multiuser_1018 item 6) + 1 edge pkgctl MU two-stage die
+                                 # reports (MU-KV-HCTL2 10-19: report -> retire +1 in qkd_host_ctl)
     ar_words=256,                # 4,096 FP32 = 256 x 512-b words an all-reduce (TP8 production shape)
     lu=53, ls=378,               # implemented UCIe / SerDes collective latencies (dv2f14bi calendar LS 378, qcollcal3_1018)
     users=4,
@@ -805,28 +806,33 @@ def kv_frame_params(rows):
     return p
 
 
-def kv_frame_of_record(rows, F=KV_FRAME_F, starts=KV_FRAME_STARTS):
+def kv_frame_of_record(rows, F=KV_FRAME_F, starts=KV_FRAME_STARTS, filler_tokens=None):
     """compile the periodic frame (mu_opcal.compile_frame) on the KV image's stage frame and its KV GAP table;
     check_kv_programme on the frame"""
     from . import mu_opcal as O
-    cal = O.compile_frame(F, p=kv_frame_params(rows), starts=list(starts) if starts else None)
+    cal = O.compile_frame(F, p=kv_frame_params(rows), starts=list(starts) if starts else None, filler_tokens=filler_tokens)
     gaps, per_user = kv_gap_table(cal)
     st = kv_frame_starts(cal)
     chk = check_kv_programme(rows, gaps, st, cal["H"])
     return cal, gaps, st, chk, per_user
 
 
-def kv_frame_search(rows, F=KV_FRAME_F, seed=1, tries=400, spread=3000):
-    """seeded search of filler first starts around round(k P / 4) whose frame passes kv_gap_table + check_kv_programme"""
+def kv_frame_search(rows, F=KV_FRAME_F, seed=1, tries=400, spread=3000, filler_tokens=None):
+    """seeded search of filler first starts around round(k P / 4) whose frame passes kv_gap_table + check_kv_programme.
+    KV-PROG17 10-20: F >= 3 with filler_tokens 1 = one filler token a frame, filler k starting in latency token k-1
+    (the fillers never overlap each other: u0 + one filler at a time, the r16 STATUS-tail frame)"""
     import random
     from . import mu_opcal as O
     rnd = random.Random(seed)
     fp = kv_frame_params(rows)
     base = [round(k * fp["layer_period"] / KV_USERS) for k in range(1, KV_USERS)]
+    if filler_tokens == 1 and F >= KV_USERS - 1:
+        T = single_user_period(dict(SOURCED, users=KV_USERS, occupancy="measured", head_chunks=8, head_tok_ofs=O.EMB_T, **fp))
+        base = [(k - 1) * T + b for k, b in enumerate(base, 1)]
     for i in range(tries):
         st = base if i == 0 else [b + rnd.randint(-spread, spread) for b in base]
         try:
-            cal = O.compile_frame(F, p=fp, starts=st)
+            cal = O.compile_frame(F, p=fp, starts=st, filler_tokens=filler_tokens)
             gaps, _ = kv_gap_table(cal)
             check_kv_programme(rows, gaps, kv_frame_starts(cal), cal["H"])
         except ScheduleError:

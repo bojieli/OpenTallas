@@ -1,0 +1,14 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_su_pretree_s_1018-p3-1dad69123 bench bench_pretree_mut4_padding host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hbm_su_pretree_s_1018-p3-1dad69123 log cl/bench_pretree_mut4_padding.a1b1.log captured 2026-10-19T07:33:43-07:00
+# fail_regex 'FAIL tb_hbm_su_red_pretree MUT=4'
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH 4: edge 684 (exp 684) tag 00000204 (exp 00000204) x f3d4d171 (exp 46548ea3)
+MISMATCH 5: edge 695 (exp 695) tag 00000205 (exp 00000205) x d4acc1b4 (exp 4515543f)
+MISMATCH 6: edge 706 (exp 706) tag 00000206 (exp 00000206) x 6e9e1e94 (exp c07b9bd9)
+MISMATCH 8: edge 738 (exp 738) tag 00000208 (exp 00000208) x 6d09a149 (exp 440a3da2)
+MISMATCH 9: edge 782 (exp 782) tag 00000209 (exp 00000209) x 593ba7f0 (exp 45f4e91e)
+FAIL tb_hbm_su_red_pretree MUT=4: 5 errors
+- rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.218 s; speed 7.439 us/s
+- Verilator: cpu 0.218 s on 1 threads; allocated 16 MB

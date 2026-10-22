@@ -1,0 +1,152 @@
+ot-run: ot-epyc5       admits   -18 GB (avail 505, growth 518, headroom 0, waiters 3/76 GB) load 56/128 running 32 disk 813 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg8-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg8-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg8-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg8-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg8-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg8-2000
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-hbm-gather-seg8-2000 (0.0 GB) ot-epyc5 -> ot-gold2 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 339 changed entries in 8 s; running on ot-gold2; written files go back to ot-epyc5 after the run
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-1654011-1792647188 after 0 s
+PROFILE launch cycle=908
+PROFILE local_edge0 cycle=912
+PROFILE engine_start cycle=920 local=8
+PROFILE engine_done_observed cycle=951 local=39
+PROFILE engine_start cycle=952 local=40
+PROFILE engine_done_observed cycle=983 local=71
+PROFILE engine_start cycle=984 local=72
+PROFILE engine_done_observed cycle=1015 local=103
+PROFILE engine_start cycle=1016 local=104
+PROFILE engine_done_observed cycle=1047 local=135
+PROFILE engine_start cycle=1048 local=136
+PROFILE engine_done_observed cycle=1079 local=167
+PROFILE engine_start cycle=1080 local=168
+PROFILE engine_done_observed cycle=1111 local=199
+BUNDLE layer_group=0 programme_cycles=204 target=180 rows=6
+PROFILE programme_done_observed cycle=1112
+BUNDLE layer_group=1 programme_cycles=204 target=180 rows=6
+BUNDLE layer_group=2 programme_cycles=204 target=180 rows=6
+GATHER_F20_CURRENT PASS authentic_cases=18 masked_word_checks=144 bundles=3 rows_per_bundle=6 banks=32 SRAMs=96 R=10 W=5 segmented96=1
+- rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv:130: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.277 s; speed 130.683 us/s
+- Verilator: cpu 0.277 s on 1 threads; allocated 13 MB
+PROFILE launch cycle=908
+PROFILE local_edge0 cycle=912
+PROFILE engine_start cycle=920 local=8
+PROFILE engine_done_observed cycle=951 local=39
+PROFILE engine_start cycle=952 local=40
+PROFILE engine_done_observed cycle=983 local=71
+PROFILE engine_start cycle=984 local=72
+PROFILE engine_done_observed cycle=1015 local=103
+PROFILE engine_start cycle=1016 local=104
+PROFILE engine_done_observed cycle=1047 local=135
+PROFILE engine_start cycle=1048 local=136
+PROFILE engine_done_observed cycle=1079 local=167
+PROFILE engine_start cycle=1080 local=168
+PROFILE engine_done_observed cycle=1111 local=199
+BUNDLE layer_group=0 programme_cycles=204 target=180 rows=6
+PROFILE programme_done_observed cycle=1112
+AUTHENTIC MISMATCH layer=0 scalar=0
+AUTHENTIC MISMATCH layer=0 scalar=1
+AUTHENTIC MISMATCH layer=0 scalar=2
+AUTHENTIC MISMATCH layer=0 scalar=3
+AUTHENTIC MISMATCH layer=0 scalar=4
+AUTHENTIC MISMATCH layer=0 scalar=5
+BUNDLE layer_group=1 programme_cycles=204 target=180 rows=6
+AUTHENTIC MISMATCH layer=1 scalar=0
+AUTHENTIC MISMATCH layer=1 scalar=1
+AUTHENTIC MISMATCH layer=1 scalar=2
+AUTHENTIC MISMATCH layer=1 scalar=3
+AUTHENTIC MISMATCH layer=1 scalar=4
+AUTHENTIC MISMATCH layer=1 scalar=5
+BUNDLE layer_group=2 programme_cycles=204 target=180 rows=6
+AUTHENTIC MISMATCH layer=2 scalar=0
+AUTHENTIC MISMATCH layer=2 scalar=1
+AUTHENTIC MISMATCH layer=2 scalar=2
+AUTHENTIC MISMATCH layer=2 scalar=3
+AUTHENTIC MISMATCH layer=2 scalar=4
+AUTHENTIC MISMATCH layer=2 scalar=5
+[36170000] %Fatal: tb_indexed_scalar_f20.sv:129: Assertion failed in tb_indexed_scalar_f20.run_authentic_bundle: GATHER_F20_CURRENT FAIL authentic18 checks=144 errors=18
+%Error: rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv:129: Verilog $stop
+Aborting...
+PROFILE launch cycle=908
+PROFILE local_edge0 cycle=912
+PROFILE engine_start cycle=920 local=8
+PROFILE engine_done_observed cycle=951 local=39
+PROFILE engine_start cycle=952 local=40
+PROFILE engine_done_observed cycle=983 local=71
+PROFILE engine_start cycle=984 local=72
+PROFILE engine_done_observed cycle=1015 local=103
+PROFILE engine_start cycle=1016 local=104
+PROFILE engine_done_observed cycle=1047 local=135
+PROFILE engine_start cycle=1048 local=136
+PROFILE engine_done_observed cycle=1079 local=167
+PROFILE engine_start cycle=1080 local=168
+PROFILE engine_done_observed cycle=1111 local=199
+BUNDLE layer_group=0 programme_cycles=204 target=180 rows=6
+PROFILE programme_done_observed cycle=1112
+AUTHENTIC MISMATCH layer=0 scalar=0
+AUTHENTIC MISMATCH layer=0 scalar=1
+AUTHENTIC MISMATCH layer=0 scalar=2
+AUTHENTIC MISMATCH layer=0 scalar=3
+AUTHENTIC MISMATCH layer=0 scalar=4
+AUTHENTIC MISMATCH layer=0 scalar=5
+BUNDLE layer_group=1 programme_cycles=204 target=180 rows=6
+AUTHENTIC MISMATCH layer=1 scalar=0
+AUTHENTIC MISMATCH layer=1 scalar=1
+AUTHENTIC MISMATCH layer=1 scalar=2
+AUTHENTIC MISMATCH layer=1 scalar=3
+AUTHENTIC MISMATCH layer=1 scalar=4
+AUTHENTIC MISMATCH layer=1 scalar=5
+BUNDLE layer_group=2 programme_cycles=204 target=180 rows=6
+AUTHENTIC MISMATCH layer=2 scalar=0
+AUTHENTIC MISMATCH layer=2 scalar=1
+AUTHENTIC MISMATCH layer=2 scalar=2
+AUTHENTIC MISMATCH layer=2 scalar=3
+AUTHENTIC MISMATCH layer=2 scalar=4
+AUTHENTIC MISMATCH layer=2 scalar=5
+[36170000] %Fatal: tb_indexed_scalar_f20.sv:129: Assertion failed in tb_indexed_scalar_f20.run_authentic_bundle: GATHER_F20_CURRENT FAIL authentic18 checks=144 errors=18
+%Error: rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv:129: Verilog $stop
+Aborting...
+PROFILE launch cycle=908
+PROFILE local_edge0 cycle=912
+PROFILE engine_start cycle=920 local=8
+PROFILE engine_done_observed cycle=951 local=39
+PROFILE engine_start cycle=952 local=40
+PROFILE engine_done_observed cycle=983 local=71
+PROFILE engine_start cycle=984 local=72
+PROFILE engine_done_observed cycle=1015 local=103
+PROFILE engine_start cycle=1016 local=104
+PROFILE engine_done_observed cycle=1047 local=135
+PROFILE engine_start cycle=1048 local=136
+PROFILE engine_done_observed cycle=1079 local=167
+PROFILE engine_start cycle=1080 local=168
+PROFILE engine_done_observed cycle=1111 local=199
+BUNDLE layer_group=0 programme_cycles=204 target=180 rows=6
+PROFILE programme_done_observed cycle=1112
+AUTHENTIC MISMATCH layer=0 scalar=0
+AUTHENTIC MISMATCH layer=0 scalar=1
+AUTHENTIC MISMATCH layer=0 scalar=2
+AUTHENTIC MISMATCH layer=0 scalar=3
+AUTHENTIC MISMATCH layer=0 scalar=4
+AUTHENTIC MISMATCH layer=0 scalar=5
+BUNDLE layer_group=1 programme_cycles=204 target=180 rows=6
+AUTHENTIC MISMATCH layer=1 scalar=0
+AUTHENTIC MISMATCH layer=1 scalar=1
+AUTHENTIC MISMATCH layer=1 scalar=2
+AUTHENTIC MISMATCH layer=1 scalar=3
+AUTHENTIC MISMATCH layer=1 scalar=4
+AUTHENTIC MISMATCH layer=1 scalar=5
+BUNDLE layer_group=2 programme_cycles=204 target=180 rows=6
+AUTHENTIC MISMATCH layer=2 scalar=0
+AUTHENTIC MISMATCH layer=2 scalar=1
+AUTHENTIC MISMATCH layer=2 scalar=2
+AUTHENTIC MISMATCH layer=2 scalar=3
+AUTHENTIC MISMATCH layer=2 scalar=4
+AUTHENTIC MISMATCH layer=2 scalar=5
+[36170000] %Fatal: tb_indexed_scalar_f20.sv:129: Assertion failed in tb_indexed_scalar_f20.run_authentic_bundle: GATHER_F20_CURRENT FAIL authentic18 checks=144 errors=18
+%Error: rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv:129: Verilog $stop
+Aborting...
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-1654011-1792647188): exit 0
+ot-run: SPILL: outputs copied back ot-gold2 -> ot-epyc5; RAN on ot-gold2: exit 0

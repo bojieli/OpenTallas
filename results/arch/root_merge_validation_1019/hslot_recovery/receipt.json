@@ -1,0 +1,73 @@
+{
+  "scope": "Bench-only recovery COMPLETE; native/physical adoption remains separate",
+  "rebind_id": "5ba832e896bff7e68937",
+  "route_commit": "adb53b6fe4c72c83aaad830b707a708c9e712997",
+  "route_attempt": 1,
+  "fixed_bench_commit": "389963f6e04e988b336b2f5688d52a9f8d8fc02d",
+  "helpers": {
+    "status": "verified_original",
+    "origin_main": "4d36c47f2b25ba664ad15368c0cdae13ab3011f7",
+    "content_sha256": "ef697196c215b82dbf3e80ce847fa911acfa4716787d7bffbc99f70ab8e60960",
+    "files": 48
+  },
+  "verification_after_all_benches": {
+    "route_files": {
+      "routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.odb": "a4f18ccc5ff3d01e9b1a66a4df3e0184c9eb6e57f8ef2b3c3e7c7949f68b1bcf",
+      "routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.sdc": "d73f25d2df7c99451dda26cc33421589cee4e1265b44b9bec50d6555684c131e",
+      "routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.spef": "03fbfbe1738a228066e385f4d2fe008f84da4bf402c0c966484875ed7faa584c",
+      "routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/5_route.odb": "02e8f4b02985688e6f2fb4bac30e4d60517696de9974f558d4efd22be51000a1"
+    },
+    "original_testbench_sha256": "62cf7b55ae0fc03a45c2be864858db7a24bdd6bbbb039d89f1c5bb02a74b3cd6",
+    "private_testbench_sha256": "566a6cde5dedc8af1aa7f6be28e2a598f72f52a10e8400b3392c1fbf86baf512",
+    "old_failure_output_preserved": true,
+    "old_failure_log_preserved": true
+  },
+  "benches": {
+    "bench_seqhost_mu_gate": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "', 66424, '2003fd00c0025e')); (b) 89 unexpected events (first ('KD', 66424, '2003fd00000000')); (c) fault line in the multi run: PROG MF 66361 bit 1\nmutant 5 (gap index stuck) detected (FAIL as required)\nlint dsdv_mu_hslot clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)\nlint dsdv_mu_hwin clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)\nlint dsdv_seq_host_mux clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)\nMU_HOST_GATE PASS\nMU_HWIN_GATE PASS\nSEQHOST_MU_GATE PASS\n",
+      "track": "parallel",
+      "source_commit": "389963f6e04e988b336b2f5688d52a9f8d8fc02d",
+      "bench_rebind_id": "5ba832e896bff7e68937"
+    },
+    "bench_seqhost_mu_mut1_userdrop": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "00000000000000000000000000000000000000000000000001ac31bde802000200801\nPROG FCODE 0 fault 0 jobs 92\nPROG STATUS 1944960 t_host 10000000000000000000\nPROG TMF 0000\nPROG END\n- /srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/bench_rebind/5ba832e896bff7e68937/source/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv:132: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2ms; walltime 83.570 s; speed 23.274 us/s\n- Verilator: cpu 83.557 s on 1 threads; allocated 9 MB\nSEQHOST_MU_MUT 1 detected (FAIL as required)\n",
+      "track": "parallel",
+      "source_commit": "389963f6e04e988b336b2f5688d52a9f8d8fc02d",
+      "bench_rebind_id": "5ba832e896bff7e68937"
+    },
+    "bench_seqhost_mu_mut2_nocollide": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "S 567 00000000000000000000000000000000000000000000000001ac31bde802000200801\nPROG FCODE 0 fault 0 jobs 2\nPROG STATUS 3488 t_host 10000000000000000000\nPROG TMF 1100\nPROG END\n- /srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/bench_rebind/5ba832e896bff7e68937/source/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv:132: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 3us; walltime 0.151 s; speed 23.131 us/s\n- Verilator: cpu 0.151 s on 1 threads; allocated 9 MB\nSEQHOST_MU_MUT 2 detected (FAIL as required)\n",
+      "track": "parallel",
+      "source_commit": "389963f6e04e988b336b2f5688d52a9f8d8fc02d",
+      "bench_rebind_id": "5ba832e896bff7e68937"
+    },
+    "bench_seqhost_mu_mut5_gapstuck": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "00000000000000000000000000000000000000000000000001ac31bde802000200801\nPROG FCODE 0 fault 0 jobs 92\nPROG STATUS 1944960 t_host 10000000000000000000\nPROG TMF 0110\nPROG END\n- /srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/bench_rebind/5ba832e896bff7e68937/source/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv:132: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2ms; walltime 83.552 s; speed 23.279 us/s\n- Verilator: cpu 83.542 s on 1 threads; allocated 9 MB\nSEQHOST_MU_MUT 5 detected (FAIL as required)\n",
+      "track": "parallel",
+      "source_commit": "389963f6e04e988b336b2f5688d52a9f8d8fc02d",
+      "bench_rebind_id": "5ba832e896bff7e68937"
+    }
+  },
+  "job_status_at_collection": "RUNNING",
+  "route_before": {
+    "routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.odb": "a4f18ccc5ff3d01e9b1a66a4df3e0184c9eb6e57f8ef2b3c3e7c7949f68b1bcf",
+    "routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.sdc": "d73f25d2df7c99451dda26cc33421589cee4e1265b44b9bec50d6555684c131e",
+    "routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/6_final.spef": "03fbfbe1738a228066e385f4d2fe008f84da4bf402c0c966484875ed7faa584c",
+    "routes/dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/work/orfs/results/asap7/opentallas_dsdv_mu_hslot_asap7_ref_dsdv_mu_hslot_dsdv_mu_hslot_adb53b6fe/base/5_route.odb": "02e8f4b02985688e6f2fb4bac30e4d60517696de9974f558d4efd22be51000a1"
+  },
+  "preserved_outputs": [
+    "/srv/opentallas-scratch/claude/closure-loop/dsdv_mu_hslot-dsdv_mu_hslot-adb53b6fe/bench_rebind/5ba832e896bff7e68937/previous_outputs/seqhost_mu_gate"
+  ]
+}

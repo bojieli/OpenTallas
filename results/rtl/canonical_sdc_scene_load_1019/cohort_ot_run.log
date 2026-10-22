@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits  1120 GB (avail 841, growth 51, headroom 0, waiters 0/0 GB) load 37/128 running 15 disk 430 GB 
+ot-run: ot-epyc5       admits   650 GB (avail 512, growth 19, headroom 0, waiters 0/0 GB) load 51/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1201 GB (avail 898, growth 57, headroom 0, waiters 0/0 GB) load 26/128 running 14 disk 5714 GB 
+ot-run: ot-epyc7       admits  1074 GB (avail 802, growth 50, headroom 0, waiters 0/0 GB) load 19/96 running 14 disk 6266 GB 
+ot-run: ot-epyc8       admits  1333 GB (avail 990, growth 50, headroom 0, waiters 0/0 GB) load 20/128 running 14 disk 47 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/canonical-sdc-scene-load-fix-1019/cohort
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/canonical-sdc-scene-load-fix-1019/cohort
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-187614-1792450290 after 0 s

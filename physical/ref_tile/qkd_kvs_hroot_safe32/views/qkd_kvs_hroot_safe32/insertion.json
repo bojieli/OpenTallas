@@ -1,0 +1,202 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_safe32-s32v3-e52c7bca5/routes/qkd_kvs_hroot_safe32_s32v3_e52c7bca5/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_safe32_asap7_ref_qkd_kvs_hroot_safe32_s32v3_e52c7bca5/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "clock_family": {
+   "core_clk": 5890
+  },
+  "boundary": {
+   "n": 3128,
+   "mean": 441.9,
+   "min": 429.6,
+   "max": 477.2
+  },
+  "all": {
+   "n": 5890,
+   "mean": 441.7,
+   "min": 427.5,
+   "max": 477.2
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "clock_family": {
+   "core_clk": 5890
+  },
+  "boundary": {
+   "n": 3128,
+   "mean": 342.7,
+   "min": 330.8,
+   "max": 377.6
+  },
+  "all": {
+   "n": 5890,
+   "mean": 342.3,
+   "min": 327.8,
+   "max": 377.6
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "clock_family": {
+   "core_clk": 5890
+  },
+  "boundary": {
+   "n": 3128,
+   "mean": 282.2,
+   "min": 270.3,
+   "max": 316.9
+  },
+  "all": {
+   "n": 5890,
+   "mean": 281.8,
+   "min": 267.4,
+   "max": 316.9
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 442,
+  "CK_SS_ALL_MEAN": 442,
+  "CK_SS_MIN": 430,
+  "CK_SS_ALL_MIN": 428,
+  "CK_SS_MAX": 477,
+  "CK_SS_ALL_MAX": 477,
+  "CK_TT_MEAN": 343,
+  "CK_TT_ALL_MEAN": 342,
+  "CK_TT_MIN": 331,
+  "CK_TT_ALL_MIN": 328,
+  "CK_TT_MAX": 378,
+  "CK_TT_ALL_MAX": 378,
+  "CK_FF_MEAN": 282,
+  "CK_FF_ALL_MEAN": 282,
+  "CK_FF_MIN": 270,
+  "CK_FF_ALL_MIN": 267,
+  "CK_FF_MAX": 317,
+  "CK_FF_ALL_MAX": 317,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "ck",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {ck}]",
+ "clock_measurements": {
+  "ck": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_hroot_safe32-s32v3-e52c7bca5/routes/qkd_kvs_hroot_safe32_s32v3_e52c7bca5/work/orfs/results/asap7/opentallas_qkd_kvs_hroot_safe32_asap7_ref_qkd_kvs_hroot_safe32_s32v3_e52c7bca5/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "core_clk": 5890
+    },
+    "boundary": {
+     "n": 3128,
+     "mean": 441.9,
+     "min": 429.6,
+     "max": 477.2
+    },
+    "all": {
+     "n": 5890,
+     "mean": 441.7,
+     "min": 427.5,
+     "max": 477.2
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "clock_family": {
+     "core_clk": 5890
+    },
+    "boundary": {
+     "n": 3128,
+     "mean": 342.7,
+     "min": 330.8,
+     "max": 377.6
+    },
+    "all": {
+     "n": 5890,
+     "mean": 342.3,
+     "min": 327.8,
+     "max": 377.6
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "clock_family": {
+     "core_clk": 5890
+    },
+    "boundary": {
+     "n": 3128,
+     "mean": 282.2,
+     "min": 270.3,
+     "max": 316.9
+    },
+    "all": {
+     "n": 5890,
+     "mean": 281.8,
+     "min": 267.4,
+     "max": 316.9
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 442,
+    "CK_SS_ALL_MEAN": 442,
+    "CK_SS_MIN": 430,
+    "CK_SS_ALL_MIN": 428,
+    "CK_SS_MAX": 477,
+    "CK_SS_ALL_MAX": 477,
+    "CK_TT_MEAN": 343,
+    "CK_TT_ALL_MEAN": 342,
+    "CK_TT_MIN": 331,
+    "CK_TT_ALL_MIN": 328,
+    "CK_TT_MAX": 378,
+    "CK_TT_ALL_MAX": 378,
+    "CK_FF_MEAN": 282,
+    "CK_FF_ALL_MEAN": 282,
+    "CK_FF_MIN": 270,
+    "CK_FF_ALL_MIN": 267,
+    "CK_FF_MAX": 317,
+    "CK_FF_ALL_MAX": 317,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "ck",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {ck}]"
+  }
+ }
+}

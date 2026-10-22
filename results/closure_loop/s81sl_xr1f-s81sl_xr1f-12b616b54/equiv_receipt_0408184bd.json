@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.closure_loop.equivalence_receipt.v1",
+ "lane": "ROOT4-S81POST",
+ "date": "2026-10-19",
+ "closed_job": "s81sl_xr1f-s81sl_xr1f-12b616b54",
+ "block": "ot_s81sl_xr1",
+ "params": {
+  "FOREG": 1
+ },
+ "gold": {
+  "commit": "12b616b54e19aacad0066dc55467fcf671b6e180",
+  "blobs": {
+   "rtl/lib/ot_rst_relay.sv": "0259a926697bf544c4456016d1d475a2ae542e34",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv": "dc0160a22c36833b7b3df5eab2884579dcf5b624"
+  }
+ },
+ "gate": {
+  "commit": "0408184bd",
+  "note": "main after the S81-SMWIRE merge (claude/root4-s81smwire-main-1019 @7499cc82a)",
+  "blobs": {
+   "rtl/lib/ot_rst_relay.sv": "0259a926697bf544c4456016d1d475a2ae542e34",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv": "a3caf7b30bdc6a2110fd2b635fb537c1f5d12138"
+  }
+ },
+ "method": "tools/s81_slice/rtl_equiv.sh (yosys 0.68): read_verilog -sv -DSYNTHESIS -DOT_S81SL_XR_FOREG, hierarchy -top ot_s81sl_xr1, proc/flatten/opt -full/opt_dff -sat/opt_clean -purge/async2sync per side; equiv_make gold gate; equiv_simple -seq 8; equiv_induct -seq 8; equiv_status -assert over every port and every name-matched register bit",
+ "result": "EQUIV_PROVEN: 22,867 $equiv cells, 0 unproven (FOREG 1, the closed kit's parameter); FOREG 0 also PROVEN; generic synth cell stat identical after the same opt pass",
+ "negative_control": "the same script on dsfd_dvland_pvrd closed b15a4ddad vs 0408184bd: EQUIV_NOT_PROVEN (39 unproven: the SMWIRE SO bypass) -- the proof is not vacuous",
+ "why_equal": "HB = 0 (C1): bb is tied 0 so b_so / f_bw / so_go are constant 0, sos_c is not generated, the SO / B-wide logic and the 513-b bo are dead; ci_r / ci_dir / fault reduce to the closed XR7 logic",
+ "evidence": "results/rtl/root4_s81post_1019/equiv/xr1_foreg1 (equiv.ys, equiv_status.txt, sources.sha256, stats, yosys version)",
+ "verdict": "CLOSURE STANDS for ot_s81sl_xr1 (FOREG 1) at main 0408184bd: logic identical to the routed source; physical/ref_tile/s81sl_xr1f/views remain valid",
+ "branch_note": "claude/root4-s81post-1019 @207ade2a7 (xr3 SO-enable fix, changes only inside generate HB != 0) vs the same closed gold: EQUIV_PROVEN FOREG 1 and 0, synth stat identical (results/rtl/root4_s81post_1019/equiv_branch): the closure also stands after this branch merges"
+}

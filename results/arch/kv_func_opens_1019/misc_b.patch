@@ -1,0 +1,26 @@
+# KV-FUNC-OPENS misc (b) ALTERNATIVE ONLY -- not required by the (a) classification in kv_misc_unused_roles.py.
+# If ROOT rejects KPV_LOCKSTEP as a duplicate-valid contract: fold per-lane kpv lockstep mismatch into the K-tree
+# lane-fault input (registered by ktree gf_r; +0 cycles, XOR16 + OR in front of an existing pin flop). This is a NEW fault
+# source -> KV-RETIRE fault-graph pricing. Real edit belongs in tools/qwen_kv_die/head_st_rtl.py (generator) + both r4_s/r4_ft_s.
+# Bench: tb lockstep head with one lane's kpv forced late by 1 edge -> g_f must rise; nominal stimulus unchanged.
+diff -ru a/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv b/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv
+--- a/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv	2026-10-19 11:42:56.925781490 -0700
++++ b/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv	2026-10-19 11:42:57.164785968 -0700
+@@ -35,7 +35,7 @@
+       .kp(kp_t[32*t +:32]),.kpv(kpv_t[t]),.nb(nb_t[64*t +:64]),.gf(gf_t[t]));
+   end endgenerate
+   wire [31:0] sc_k;wire sf_k,gf_kt,kt_rst_n;
+-  ot_qkh_ktree u_kt (.clk(ck_kt),.rst_n(kt_rst_n),.kp_in(kp_k),.kpv_in(kpv_k[0]),.gf_in(gf_k),
++  ot_qkh_ktree u_kt (.clk(ck_kt),.rst_n(kt_rst_n),.kp_in(kp_k),.kpv_in(kpv_k[0]),.gf_in(gf_k | ({16{kpv_k[0]}} ^ kpv_k)),
+     .sc_d(sc_k),.sc_f(sf_k),.g_f(gf_kt));
+   ot_qkh_head_score4_native #(.MUT(MUT)) u_score
+     (.clk(ck_score),.rst_n(rst_n),.sc_i(sc_k),.sf_i(sf_k),.gf_i(gf_kt),.pack_fault(pack_fault),
+@@ -80,7 +80,7 @@
+       .kp(kp_t[32*t +:32]),.kpv(kpv_t[t]),.nb(nb_t[64*t +:64]),.gf(gf_t[t]));
+   end endgenerate
+   wire [31:0] sc_k;wire sf_k,gf_kt,kt_rst_n;
+-  ot_qkh_ktree u_kt (.clk(ck_kt),.rst_n(kt_rst_n),.kp_in(kp_k),.kpv_in(kpv_k[0]),.gf_in(gf_k),
++  ot_qkh_ktree u_kt (.clk(ck_kt),.rst_n(kt_rst_n),.kp_in(kp_k),.kpv_in(kpv_k[0]),.gf_in(gf_k | ({16{kpv_k[0]}} ^ kpv_k)),
+     .sc_d(sc_k),.sc_f(sf_k),.g_f(gf_kt));
+   ot_qkh_head_score4_native #(.MUT(MUT)) u_score
+     (.clk(ck_score),.rst_n(rst_n),.sc_i(sc_k),.sf_i(sf_k),.gf_i(gf_kt),.pack_fault(pack_fault),

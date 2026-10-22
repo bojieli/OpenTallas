@@ -1,0 +1,138 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1.mucheck",
+ "replay": "/home/ubuntu/scratch/mu-die-s81/mureplay/R/R_cut_7_L0_mu012",
+ "run": "/home/ubuntu/scratch/mu-die-s81/mureplay/runs/out_R_cut_7_L0_mu012",
+ "verdict_kind": "SCHEDULE",
+ "mutant": null,
+ "window": 21312,
+ "check": {
+  "verdict": "FAIL",
+  "sim_pass": true,
+  "trace_mismatches": 3940,
+  "partial": false
+ },
+ "identity": {
+  "verdict": "PASS",
+  "rows": [
+   {
+    "user": 0,
+    "shift": 0,
+    "words": 3516,
+    "identical": 3516,
+    "ctx_only_diff": 0,
+    "other_diff": 0
+   },
+   {
+    "user": 1,
+    "shift": 21312,
+    "words": 3516,
+    "identical": 3516,
+    "ctx_only_diff": 0,
+    "other_diff": 0
+   },
+   {
+    "user": 2,
+    "shift": 42624,
+    "words": 3516,
+    "identical": 3516,
+    "ctx_only_diff": 0,
+    "other_diff": 0
+   }
+  ],
+  "why": "3 users vs user 0: u0 3516 same + 0 ctx-only, other 0; u1 3516 same + 0 ctx-only, other 0; u2 3516 same + 0 ctx-only, other 0"
+ },
+ "users": [
+  {
+   "user": 1,
+   "vs": 0,
+   "shift": 21312,
+   "changes": 1312,
+   "ref_changes": 1512,
+   "mismatch_cycles": 1300,
+   "first": {
+    "236": [
+     104,
+     238,
+     253,
+     280,
+     387
+    ],
+    "237": [
+     104,
+     238,
+     253,
+     280,
+     387
+    ],
+    "238": [
+     75,
+     209,
+     224,
+     251,
+     358
+    ],
+    "239": [
+     75,
+     209,
+     224,
+     251,
+     358
+    ]
+   },
+   "ok": false
+  },
+  {
+   "user": 2,
+   "vs": 0,
+   "shift": 42624,
+   "changes": 1312,
+   "ref_changes": 1512,
+   "mismatch_cycles": 1304,
+   "first": {
+    "236": [
+     120,
+     238,
+     269,
+     387,
+     418
+    ],
+    "237": [
+     120,
+     238,
+     269,
+     387,
+     418
+    ],
+    "238": [
+     91,
+     209,
+     240,
+     358,
+     389
+    ],
+    "239": [
+     91,
+     209,
+     240,
+     358,
+     389
+    ]
+   },
+   "ok": false
+  }
+ ],
+ "user0_vs_su": {
+  "run": "/home/ubuntu/scratch/mu-die-s81/mureplay/runs/out_R_cut_7_L0_su",
+  "changes": 1512,
+  "mu_changes": 1512,
+  "mismatch_cycles": 0,
+  "first": {},
+  "stimulus": {
+   "mu_lines": 213,
+   "su_lines": 213,
+   "identical": true
+  },
+  "ok": true
+ },
+ "verdict": "FAIL"
+}

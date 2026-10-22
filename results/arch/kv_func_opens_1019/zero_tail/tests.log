@@ -1,0 +1,215 @@
+test_dynamic_or_read_bits_refused (test_kv_relay_zero_tail.RelayZeroTail.test_dynamic_or_read_bits_refused) ... ok
+test_positive_tail_and_chain_head (test_kv_relay_zero_tail.RelayZeroTail.test_positive_tail_and_chain_head) ... ok
+test_source_change_refused (test_kv_relay_zero_tail.RelayZeroTail.test_source_change_refused) ... ok
+test_full_width_repair_stage_preserves_exact_zero_provenance (test_kv_replica_output_pads.ReplicaPads.test_full_width_repair_stage_preserves_exact_zero_provenance) ... ok
+test_lost_live_lane_on_wider_replica_still_fails (test_kv_replica_output_pads.ReplicaPads.test_lost_live_lane_on_wider_replica_still_fails) ... ok
+test_recovery_derives_only_paired_private_bits (test_kv_replica_output_pads.ReplicaPads.test_recovery_derives_only_paired_private_bits) ... ok
+test_tied_live_lane_and_tied_high_padding_still_fail (test_kv_replica_output_pads.ReplicaPads.test_tied_live_lane_and_tied_high_padding_still_fail) ... ok
+test_two_different_logical_widths_bind (test_kv_replica_output_pads.ReplicaPads.test_two_different_logical_widths_bind) ... ok
+test_ambiguous_literal_refused (test_kv_pvw_padding.PVPaddingTests.test_ambiguous_literal_refused) ... ok
+test_bootage_frame_requires_every_exact_source (test_kv_pvw_padding.PVPaddingTests.test_bootage_frame_requires_every_exact_source) ... ok
+test_dynamic_pad_position_refused (test_kv_pvw_padding.PVPaddingTests.test_dynamic_pad_position_refused) ... ok
+test_existing_permission_cannot_cover_live_field (test_kv_pvw_padding.PVPaddingTests.test_existing_permission_cannot_cover_live_field) ... ok
+test_global_output_allowance_is_not_preserved (test_kv_pvw_padding.PVPaddingTests.test_global_output_allowance_is_not_preserved) ... ok
+test_live_input_cannot_be_tied_under_old_global_minimum (test_kv_pvw_padding.PVPaddingTests.test_live_input_cannot_be_tied_under_old_global_minimum) ... ok
+test_live_output_alias_does_not_create_unused_permission (test_kv_pvw_padding.PVPaddingTests.test_live_output_alias_does_not_create_unused_permission) ... ok
+test_live_unread_low_bit_is_not_exempted (test_kv_pvw_padding.PVPaddingTests.test_live_unread_low_bit_is_not_exempted) ... ok
+test_padding_output_slice_change_refused (test_kv_pvw_padding.PVPaddingTests.test_padding_output_slice_change_refused) ... ok
+test_same_bit_zero_provenance_through_inserted_repair (test_kv_pvw_padding.PVPaddingTests.test_same_bit_zero_provenance_through_inserted_repair) ... ok
+test_source_rows_parse_generated_packed_wire_without_space (test_kv_pvw_padding.PVPaddingTests.test_source_rows_parse_generated_packed_wire_without_space) ... ok
+test_stale_pad_receipt_refused (test_kv_pvw_padding.PVPaddingTests.test_stale_pad_receipt_refused) ... ok
+test_unknown_expression_blocks_unused_permissions (test_kv_pvw_padding.PVPaddingTests.test_unknown_expression_blocks_unused_permissions) ... ok
+test_zero_bit_with_real_consumer_is_not_unused (test_kv_pvw_padding.PVPaddingTests.test_zero_bit_with_real_consumer_is_not_unused) ... ok
+test_alias_or_unparsed_expression_refused (test_kv_static_head_unused.StaticHeadTests.test_alias_or_unparsed_expression_refused) ... 
+  test_alias_or_unparsed_expression_refused (test_kv_static_head_unused.StaticHeadTests.test_alias_or_unparsed_expression_refused) (text='assign n_other=n_head__nb_t[63:0];') ... ERROR
+  test_alias_or_unparsed_expression_refused (test_kv_static_head_unused.StaticHeadTests.test_alias_or_unparsed_expression_refused) (text="consumer live(.a(n_head__nb_t ^ 1024'b0));") ... ERROR
+test_changed_source_refused (test_kv_static_head_unused.StaticHeadTests.test_changed_source_refused) ... ERROR
+test_dynamic_parent_role_refused (test_kv_static_head_unused.StaticHeadTests.test_dynamic_parent_role_refused) ... ERROR
+test_global_permission_removed (test_kv_static_head_unused.StaticHeadTests.test_global_permission_removed) ... ERROR
+test_only_exact_static_children_are_declared_unused (test_kv_static_head_unused.StaticHeadTests.test_only_exact_static_children_are_declared_unused) ... ERROR
+test_real_consumer_refused (test_kv_static_head_unused.StaticHeadTests.test_real_consumer_refused) ... ERROR
+test_slice_swap_refused (test_kv_static_head_unused.StaticHeadTests.test_slice_swap_refused) ... ERROR
+test_stale_relay_pad_receipt_refused (test_kv_static_head_unused.StaticHeadTests.test_stale_relay_pad_receipt_refused) ... ERROR
+test_top_face_consumer_refused (test_kv_static_head_unused.StaticHeadTests.test_top_face_consumer_refused) ... ERROR
+
+======================================================================
+ERROR: test_alias_or_unparsed_expression_refused (test_kv_static_head_unused.StaticHeadTests.test_alias_or_unparsed_expression_refused) (text='assign n_other=n_head__nb_t[63:0];')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 36, in test_alias_or_unparsed_expression_refused
+    with self.assertRaises(ValueError):H.derive(run,die)
+                                       ~~~~~~~~^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/kv_static_head_unused.py", line 26, in derive
+    if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+======================================================================
+ERROR: test_alias_or_unparsed_expression_refused (test_kv_static_head_unused.StaticHeadTests.test_alias_or_unparsed_expression_refused) (text="consumer live(.a(n_head__nb_t ^ 1024'b0));")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 36, in test_alias_or_unparsed_expression_refused
+    with self.assertRaises(ValueError):H.derive(run,die)
+                                       ~~~~~~~~^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/kv_static_head_unused.py", line 26, in derive
+    if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+======================================================================
+ERROR: test_changed_source_refused (test_kv_static_head_unused.StaticHeadTests.test_changed_source_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 57, in test_changed_source_refused
+    p=run/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text((H.ROOT/name).read_text()+'\n')
+                                                                       ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+======================================================================
+ERROR: test_dynamic_parent_role_refused (test_kv_static_head_unused.StaticHeadTests.test_dynamic_parent_role_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 27, in test_dynamic_parent_role_refused
+    with self.assertRaisesRegex(ValueError,'not the pinned static'):H.derive(run,die)
+                                                                    ~~~~~~~~^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/kv_static_head_unused.py", line 26, in derive
+    if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+======================================================================
+ERROR: test_global_permission_removed (test_kv_static_head_unused.StaticHeadTests.test_global_permission_removed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 47, in test_global_permission_removed
+    run=Path(d);die=self.fixture(run);doc=H.derive(run,die,existing=dict(pads=dict(ot_qkh_lane8=dict(nb=[[0,63]]))))
+                                          ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/kv_static_head_unused.py", line 26, in derive
+    if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+======================================================================
+ERROR: test_only_exact_static_children_are_declared_unused (test_kv_static_head_unused.StaticHeadTests.test_only_exact_static_children_are_declared_unused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 19, in test_only_exact_static_children_are_declared_unused
+    run=Path(d);die=self.fixture(run);doc=H.derive(run,die)
+                                          ~~~~~~~~^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/kv_static_head_unused.py", line 26, in derive
+    if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+======================================================================
+ERROR: test_real_consumer_refused (test_kv_static_head_unused.StaticHeadTests.test_real_consumer_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 31, in test_real_consumer_refused
+    with self.assertRaisesRegex(ValueError,'another driver/consumer'):H.derive(run,die)
+                                                                      ~~~~~~~~^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/kv_static_head_unused.py", line 26, in derive
+    if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+======================================================================
+ERROR: test_slice_swap_refused (test_kv_static_head_unused.StaticHeadTests.test_slice_swap_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 44, in test_slice_swap_refused
+    with self.assertRaisesRegex(ValueError,'identity/role changed'):H.derive(run,die)
+                                                                    ~~~~~~~~^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/kv_static_head_unused.py", line 26, in derive
+    if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+======================================================================
+ERROR: test_stale_relay_pad_receipt_refused (test_kv_static_head_unused.StaticHeadTests.test_stale_relay_pad_receipt_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 52, in test_stale_relay_pad_receipt_refused
+    with self.assertRaisesRegex(ValueError,'different die'):H.derive(run,die,existing=dict(source_contract=dict(die_sha256='0'*64)))
+                                                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/kv_static_head_unused.py", line 26, in derive
+    if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+======================================================================
+ERROR: test_top_face_consumer_refused (test_kv_static_head_unused.StaticHeadTests.test_top_face_consumer_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/test_kv_static_head_unused.py", line 40, in test_top_face_consumer_refused
+    with self.assertRaisesRegex(ValueError,'top face'):H.derive(run,die)
+                                                       ~~~~~~~~^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/tools/qwen_kv_die/kv_static_head_unused.py", line 26, in derive
+    if hashlib.sha256((root/name).read_bytes()).hexdigest()!=sha:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/kv-func-opens-1019/testroot/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv'
+
+----------------------------------------------------------------------
+Ran 31 tests in 0.048s
+
+FAILED (errors=10)

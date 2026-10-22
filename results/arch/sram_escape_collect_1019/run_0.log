@@ -1,0 +1,5 @@
+ESCAPE_COUPON_PASS words=32 bits=64 checks=1392 read_edges=1
+- rtl/test/sram_pin_access_1019/tb_escape.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 0.001 s; speed 14.664 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

@@ -1,0 +1,48 @@
+{
+ "status": "PASS_EXACT_BINARY_COMPONENT_REPLAY",
+ "controller_scope": "SAFE_PC+SVG_H source335754623; does not replace selected h9b model",
+ "compiler_source_commit": "53f5e2594",
+ "compiler_sha256": "10ccc96f92d133d8b41893dc32f101fc5384ca812fd14c26f6f525bb298310d5",
+ "binary_source_key": "dbdce3bb90dd",
+ "binary_sha256_file": "../final_66_fail/binary.sha256",
+ "effective_environment": {
+  "SMB_PACE_NUM": 200,
+  "SMB_HEAD_PACE_NUM": 320,
+  "SMB_RESMODEL": 1,
+  "SMB_FLAT": 400,
+  "SMB_RES_LINE_NUM": 300,
+  "SMB_RES_LINE_DEN": 64
+ },
+ "compiled_total_edges": 59827,
+ "prior_head_repair_edges": 59460,
+ "increment_edges": 367,
+ "increment_us": 0.305833211,
+ "per_kind_rc_end": {
+  "L00": 11366,
+  "L02": 12997,
+  "L14": 15280,
+  "head": 18310
+ },
+ "actual_pass_claim": true,
+ "actual_scope": "Current physical SVG component function and fixed programme only; no physical qualification or sourcebinding claim.",
+ "actual": {
+  "ops": 66,
+  "exact_go_slots": 154,
+  "runs": 4,
+  "results": 301,
+  "cycles": 59827,
+  "ingress": 624,
+  "xw": 25688,
+  "ids": 3,
+  "dram_reads": 35372,
+  "fault": null
+ },
+ "result_sha256": "4d94bc0ef192c418dec2c020407b3f53a5453206d9361d97ff8b8faee087ce8c",
+ "run_log_sha256": "92a7a8bd76bf4ea57dc609bb484e364d6e5343866112f1e338e830e86cb54608",
+ "preserved_prior_failure": "../final_66_fail/out/successor_head320.json",
+ "price_vs_failed_original": {
+  "original_edges": 53100,
+  "increment_edges": 6727,
+  "increment_percent": 12.668549905838042
+ }
+}

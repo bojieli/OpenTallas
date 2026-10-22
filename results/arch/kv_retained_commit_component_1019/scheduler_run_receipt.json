@@ -1,0 +1,961 @@
+{
+  "scope": "SU functional scheduler COMPONENT_FIXTURE_ONLY; no native health/production calendar or physical claim",
+  "final_source_sha256": "547f8188db0df993799272336b6745c1e2f56a8429107dc9d8d81d5d43bc4416",
+  "bench_sha256": "c149df720fb87b3e83bdc0aae8450006e806c39c90c8b29506a06a1fbbbdd32b",
+  "original_sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d",
+  "fleet_host": "ot-epyc6",
+  "fleet_unit": "oth-ubuntu-3659500-1792445966",
+  "admission_gb": 32,
+  "threads": 8,
+  "disk_admission_gb": 20,
+  "tool": "Verilator 5.050 2026-07-01 rev v5.050",
+  "fixture": {
+    "H": 12,
+    "deadline": 8,
+    "NSLOT": 1,
+    "ENG_CTX": 1,
+    "MODE": 0,
+    "MU_OUT": 0,
+    "NW": 18,
+    "PLB": 13,
+    "FMT": 1,
+    "health_identity_domain": "HOST_DESCRIPTOR_COMPONENT"
+  },
+  "cases": [
+    {
+      "case": 0,
+      "edges": 76,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 1,
+      "edges": 99,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 2,
+      "edges": 108,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 3,
+      "edges": 93,
+      "issues": 2,
+      "rawdone": 2,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 4,
+      "edges": 102,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 5,
+      "edges": 95,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 6,
+      "edges": 131,
+      "issues": 2,
+      "rawdone": 2,
+      "commits": 2,
+      "writes": 4
+    },
+    {
+      "case": 7,
+      "edges": 71,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 8,
+      "edges": 93,
+      "issues": 2,
+      "rawdone": 2,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 9,
+      "edges": 98,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 2,
+      "writes": 4
+    },
+    {
+      "case": 10,
+      "edges": 108,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 11,
+      "edges": 108,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 12,
+      "edges": 97,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 13,
+      "edges": 100,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 0,
+      "writes": 4
+    },
+    {
+      "case": 14,
+      "edges": 93,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 3
+    },
+    {
+      "case": 15,
+      "edges": 64,
+      "issues": 1,
+      "rawdone": 0,
+      "commits": 0,
+      "writes": 0
+    },
+    {
+      "case": 16,
+      "edges": 98,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 17,
+      "edges": 99,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 18,
+      "edges": 100,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 19,
+      "edges": 101,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 20,
+      "edges": 103,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 2,
+      "writes": 4
+    },
+    {
+      "case": 21,
+      "edges": 558,
+      "issues": 14,
+      "rawdone": 14,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 22,
+      "edges": 89,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 23,
+      "edges": 89,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 24,
+      "edges": 89,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 1,
+      "writes": 2
+    },
+    {
+      "case": 25,
+      "edges": 115,
+      "issues": 1,
+      "rawdone": 1,
+      "commits": 2,
+      "writes": 6
+    }
+  ],
+  "default_off_miter": {
+    "original_output_ports": 57,
+    "trace": "one complete healthy descriptor, prompt, engine, CQ and CSR counter read",
+    "verdict": "PASS"
+  },
+  "causal_mutants": [
+    {
+      "name": "word0",
+      "case": 4,
+      "exit": 1,
+      "fail_regex": "SCHED_WORD0_FAULT",
+      "caught": true
+    },
+    {
+      "name": "deadline",
+      "case": 5,
+      "exit": 1,
+      "fail_regex": "SCHED_DEADLINE",
+      "caught": true
+    },
+    {
+      "name": "rawdone",
+      "case": 1,
+      "exit": 1,
+      "fail_regex": "SCHED_RAWDONE_CLEANUP",
+      "caught": true
+    },
+    {
+      "name": "identity",
+      "case": 7,
+      "exit": 1,
+      "fail_regex": "SCHED_IDENTITY_REFUSAL",
+      "caught": true
+    },
+    {
+      "name": "counters",
+      "case": 4,
+      "exit": 1,
+      "fail_regex": "SCHED_FAULT_COUNTERS",
+      "caught": true
+    },
+    {
+      "name": "warm",
+      "case": 2,
+      "exit": 1,
+      "fail_regex": "SCHED_RETAIN_WARM",
+      "caught": true
+    }
+  ],
+  "contract_refusals": [
+    {
+      "case": 0,
+      "exit": 1,
+      "caught": true,
+      "fail_regex": "RC_COMPONENT_CONTRACT"
+    },
+    {
+      "case": 1,
+      "exit": 1,
+      "caught": true,
+      "fail_regex": "RC_COMPONENT_CONTRACT"
+    },
+    {
+      "case": 2,
+      "exit": 1,
+      "caught": true,
+      "fail_regex": "RC_COMPONENT_CONTRACT"
+    },
+    {
+      "case": 3,
+      "exit": 1,
+      "caught": true,
+      "fail_regex": "RC_COMPONENT_CONTRACT"
+    }
+  ],
+  "legal_queue_observed": 14,
+  "nominal_queue": 16,
+  "complete_reachability_bound_proven": false,
+  "open": [
+    "actual native TAG59 health/owner binding",
+    "production regional clocks, phase, H/deadline, full retirement plane",
+    "MU4",
+    "physical SRAM, reset, fanout and timing",
+    "exhaustive transaction/interleaving proof",
+    "raw POR in every DMA phase",
+    "exhaustive MSI payload/strobe checks",
+    "descriptor-error enqueue race between I_IDLE and real I_GO occupancy cut"
+  ],
+  "artifact_sha256": "96b180c7cb22a78afeadebd73f8921a38cb3afe28723e0f63a82b70ae941e9e8",
+  "files": [
+    {
+      "path": "private/ot_host_if_pb2_observed_rc.sv",
+      "bytes": 50433,
+      "sha256": "547f8188db0df993799272336b6745c1e2f56a8429107dc9d8d81d5d43bc4416"
+    },
+    {
+      "path": "scheduler_bench.sv",
+      "bytes": 15315,
+      "sha256": "c149df720fb87b3e83bdc0aae8450006e806c39c90c8b29506a06a1fbbbdd32b"
+    },
+    {
+      "path": "scheduler_bench_contract.sv",
+      "bytes": 391,
+      "sha256": "21132f324e16250c0656ad378c1fcd3544e118a3ea19fa5ba5e59034e5911165"
+    },
+    {
+      "path": "scheduler_bench_default.sv",
+      "bytes": 24936,
+      "sha256": "c08306567ea87fee45c11af3dae1a3855b57566ee03f505024ccc424d7e28a97"
+    },
+    {
+      "path": "scheduler_run.sh",
+      "bytes": 771,
+      "sha256": "6d09cf85946098395b77abbcfe758b3d5737ec06599d579f1a54d59f72c19935"
+    },
+    {
+      "path": "scheduler_run_2dfda/ot_host_if_pb2_observed_rc.sv",
+      "bytes": 50366,
+      "sha256": "2dfda19a79ae7bc1ac205b326868b96801f40020130b202934579e19a0a83c62"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_bench.sv",
+      "bytes": 15315,
+      "sha256": "c149df720fb87b3e83bdc0aae8450006e806c39c90c8b29506a06a1fbbbdd32b"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case0.log",
+      "bytes": 416,
+      "sha256": "c22fd1beeeaeb476e5a8fba087f105ca52dcb7c0525e19cb7d5470a14f83bdea"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case1.log",
+      "bytes": 415,
+      "sha256": "d2fe14523c59229a12f6aa3053e6f1a535f3187843f47200234da7c60092dfcf"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case10.log",
+      "bytes": 417,
+      "sha256": "68c5ab39160c78f4acea79c9289ac38d09238f74ac8e29c170d0e238764eb8b1"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case11.log",
+      "bytes": 416,
+      "sha256": "57aa35892a6e15b03346aefcc08207673b4f690d326a57ab7eca22dde1e324a1"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case12.log",
+      "bytes": 417,
+      "sha256": "9bdaff4f07ac7c8b0da9c988802166bbc34e7e5eb505f88b3d8cf4045cc5e6fc"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case13.log",
+      "bytes": 413,
+      "sha256": "434e63465fcd8dc46f0091f15ff918db3e5635868e2324a35293f923e23fe382"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case14.log",
+      "bytes": 417,
+      "sha256": "ac74e4d52e896977418d17c28c22dfadc604cf411a3a1754f61ea075b474bb6c"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case15.log",
+      "bytes": 342,
+      "sha256": "a421ab27010e9558c9be2042723d454a04b2613b95e05643e274ac0cdd72400e"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case16.log",
+      "bytes": 416,
+      "sha256": "7fa68711a089eb834cd509cf75a49cc0ee51f497019a3e7878f979362cb16164"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case17.log",
+      "bytes": 416,
+      "sha256": "f9bdf85a197fb07f440c7ab4bfb565d5beb52c2682290060fbbf044b8f578815"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case18.log",
+      "bytes": 416,
+      "sha256": "229af2391e645470f449bf32cbc88da56e5be156102f1ee40629ea775e78c678"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case19.log",
+      "bytes": 417,
+      "sha256": "ed16a8f63decb8368fbcd368650d68379f7e29f32dc47d68bbc8174dd525ee0b"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case2.log",
+      "bytes": 415,
+      "sha256": "b0158ca41d75616c858eb59dec49d15bdadd38e65a1fd67665f6b491f125e474"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case20.log",
+      "bytes": 491,
+      "sha256": "27d2e17aaa800481a7bc7beb36ce06f449cb50b2c0d6b4462a3fc4eaa37a41c1"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case21.log",
+      "bytes": 1129,
+      "sha256": "c805001d7c40d66dff7401ffe2dddf59e2701b039d40572d699b85a6fd25f96c"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case22.log",
+      "bytes": 416,
+      "sha256": "ab0d794ecebe320517f328cb8ca98683afb397eb233c13a712ee30b27d64804a"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case23.log",
+      "bytes": 416,
+      "sha256": "e682d68e63387b73720dc7fda5c8f40f0bf312d6d08e56be3fdda9f2e1a41e5b"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case24.log",
+      "bytes": 416,
+      "sha256": "6f37721854f86b6c10ac8cbda3323f7161b753996846f9f17023d7fa0ae2a1ec"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case25.log",
+      "bytes": 491,
+      "sha256": "82b7cd5d541176fd4e40ae502c42f068ddf367e86cad5b2dae900ab206120111"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case3.log",
+      "bytes": 466,
+      "sha256": "97ebe523da0af7b697f3d0325a85adf922589ab102e33d1b7c8c3fdb814d5e43"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case4.log",
+      "bytes": 416,
+      "sha256": "4aff5f0b6c6b17b91544bbcffaf67f4e426f4f81e96312207a5061b11055bd0a"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case5.log",
+      "bytes": 415,
+      "sha256": "33f9c30d72dac8e32d12eba13180e2c6342289daca884738a552246c3d11ee22"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case6.log",
+      "bytes": 544,
+      "sha256": "019d036af557026f3bb484e413e238721e70888a4c3bea9d2715a2f74f657a5b"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case7.log",
+      "bytes": 415,
+      "sha256": "b180e73c85d45b3bf972263b9155e35b52c512388b231b973503aac002ab9bc9"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case8.log",
+      "bytes": 466,
+      "sha256": "b77fee800ec32b65af342c4884bd5192a93a06417010e31aec7fb37e3a5a59bb"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_case9.log",
+      "bytes": 491,
+      "sha256": "a2dcda7ab891e52265105e6cd25d09588801df6309d4e9d98cf1c63fe4044bd0"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_contract.json",
+      "bytes": 407,
+      "sha256": "4d07c534d9d55a3a96bac0af2f2669c237ede1d3d63c057d4e34efa4987e7a15"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_default.log",
+      "bytes": 424,
+      "sha256": "1703d4cfab6562b5f24505507f6411353696068bc9eda4f1d2a93017b9f570f0"
+    },
+    {
+      "path": "scheduler_run_2dfda/scheduler_run_mutants.json",
+      "bytes": 730,
+      "sha256": "be0fa81ea5ccb4908b033084e0c4054ed4f6bdde4c06c655cc05035e589f64ab"
+    },
+    {
+      "path": "scheduler_run_56faaf/ot_host_if_pb2_observed_rc.sv",
+      "bytes": 50100,
+      "sha256": "56faafee7f299dd0fa9a226b1e6d732cc239460469364aae5ea1b550f38359b2"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_case0.log",
+      "bytes": 416,
+      "sha256": "877affdf1a847d33ee3c27be3b208cfd7e2cc76442f567d5cdce8cbcdd16bd33"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_case1.log",
+      "bytes": 415,
+      "sha256": "16830a9d19dc8ad997bd0352e6bf687f476eb59fe6dfcc0f45b3e663a1976fa4"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_case2.log",
+      "bytes": 416,
+      "sha256": "69061d4836055a13be97447e4369ecd58d02561c6f5f479d2480900bf3f5e911"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_case3.log",
+      "bytes": 416,
+      "sha256": "0bbd2d7993a525f469591937fd32d56fe7cb73f8db7beb20a322c48a1f71a299"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_case4.log",
+      "bytes": 417,
+      "sha256": "6956201c69ec1e2588c8ca51ed171102b0b798e545f45907dcffcd33eaedff9f"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_case5.log",
+      "bytes": 415,
+      "sha256": "fcdb1a81af3d5e839099541b3e0bd4b4a26649ae33bb39b51eef0b2f3d40bd58"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_case6.log",
+      "bytes": 544,
+      "sha256": "cb1aaf36983f14beac1a2a9f8c1044a3606766124e110d05c2b5fd10cb88eef3"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_case7.log",
+      "bytes": 341,
+      "sha256": "528b9924dd411c64280e9e21fc68de14b390e5df61834e09e2fcf3701661a5b5"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_case8.log",
+      "bytes": 466,
+      "sha256": "52a1f7b1b04ab139542dbe557e9b3b61ad3eb90d1128326a7b48f30146742328"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_contract.json",
+      "bytes": 407,
+      "sha256": "4d07c534d9d55a3a96bac0af2f2669c237ede1d3d63c057d4e34efa4987e7a15"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_default.log",
+      "bytes": 424,
+      "sha256": "f2f36b040bf3effc52d91c0453fc96193a1a8a6976e8e2208fb44d5f6e1a5f81"
+    },
+    {
+      "path": "scheduler_run_56faaf/scheduler_run_mutants.json",
+      "bytes": 480,
+      "sha256": "b61202aa89d10313121120778b74953e0744dfe9bf647a05143d99d339d3c36e"
+    },
+    {
+      "path": "scheduler_run_before_review/scheduler_bench_default.sv",
+      "bytes": 19709,
+      "sha256": "2952199649eb939ce76a97df2f2cc346f789b60ea7624ef0f6559f7d821bcf51"
+    },
+    {
+      "path": "scheduler_run_before_review/scheduler_run_default.log",
+      "bytes": 197,
+      "sha256": "e519c0c44d32b41ba99d8f2c22736f8c19e5097dd2e0555de2657381bd5cec36"
+    },
+    {
+      "path": "scheduler_run_build.log",
+      "bytes": 43704,
+      "sha256": "59cedf88d261bf94722e6cbfbb715b48df697834691f77ccfb15d6044391ff6f"
+    },
+    {
+      "path": "scheduler_run_case0.log",
+      "bytes": 416,
+      "sha256": "cd7ddf985e2499eec67e0b3f57de666a1167ef44c0c21fca391436a60e7f1550"
+    },
+    {
+      "path": "scheduler_run_case1.log",
+      "bytes": 415,
+      "sha256": "f61c1775f02b17965aa485b8592eb4b368bbc823c68852f71099efa1fadbbf67"
+    },
+    {
+      "path": "scheduler_run_case10.log",
+      "bytes": 417,
+      "sha256": "0365d581fca9a6c1d94eaf18d70e4ce7a3fe493b7aa322a103d5be2113561297"
+    },
+    {
+      "path": "scheduler_run_case11.log",
+      "bytes": 417,
+      "sha256": "82e00b5b116f09bee977935f82eda92a10110d815ae679768366e1cfd3d11af2"
+    },
+    {
+      "path": "scheduler_run_case12.log",
+      "bytes": 418,
+      "sha256": "5b0fc0821a2b974b1de7d73ab2e57ecc67aa309e9a6fbb68174d91ebe3888559"
+    },
+    {
+      "path": "scheduler_run_case13.log",
+      "bytes": 413,
+      "sha256": "c1dc469e8c36c4017432ef3c4da7798202eebea013bc27ec7f706027fc47c8df"
+    },
+    {
+      "path": "scheduler_run_case14.log",
+      "bytes": 417,
+      "sha256": "1f5bcfde39aca534bb26fa38ff6834ff332fceb6284d83727002d219227d539c"
+    },
+    {
+      "path": "scheduler_run_case15.log",
+      "bytes": 342,
+      "sha256": "22563bc56ba40ac5500ed34b4197e5d6399cf0ca3520aefbb33521b40e4632d5"
+    },
+    {
+      "path": "scheduler_run_case16.log",
+      "bytes": 417,
+      "sha256": "43e35c8b4eb441e7ddeec68d0be89a344d9dc71844d5e2b4853eec0560d22e16"
+    },
+    {
+      "path": "scheduler_run_case17.log",
+      "bytes": 417,
+      "sha256": "4943ee70ad75eafba8e1887fc3dc5140b8a3ac5dc46aa058bcd25605a80b501e"
+    },
+    {
+      "path": "scheduler_run_case18.log",
+      "bytes": 417,
+      "sha256": "938da3aa074128cee8b810ca95698bd1bdc0cde60699cf93c8bac3d92aee8ea6"
+    },
+    {
+      "path": "scheduler_run_case19.log",
+      "bytes": 417,
+      "sha256": "95ab44a40e961fa479d228818811cd30fdc1b6cdd68fe4003e3633cb4beb7834"
+    },
+    {
+      "path": "scheduler_run_case2.log",
+      "bytes": 416,
+      "sha256": "689c84c882558ce18947e153964b5ae5733752101b7a528bb3d8edb5f1adf675"
+    },
+    {
+      "path": "scheduler_run_case20.log",
+      "bytes": 491,
+      "sha256": "094553fadc9aeedb81e694b676eadbfb6bbc31182ca0ef8c2c771ba792004ade"
+    },
+    {
+      "path": "scheduler_run_case21.log",
+      "bytes": 1128,
+      "sha256": "3a60b23b04bd02c7c8f605b3c7946c4b1e2266cedd2bf638bdb98db09b90dd51"
+    },
+    {
+      "path": "scheduler_run_case22.log",
+      "bytes": 416,
+      "sha256": "e559af10a3843a826ea64cc8a7b503181048d67d620dae6a9bc3938c7f264c61"
+    },
+    {
+      "path": "scheduler_run_case23.log",
+      "bytes": 416,
+      "sha256": "656dd8bc4cee58750efa93d20068733489708581dea35d6a37f20ea97f85fa01"
+    },
+    {
+      "path": "scheduler_run_case24.log",
+      "bytes": 416,
+      "sha256": "5c7f8d29a7a894179cd5657e9f0c48ce05f8800c96d05d7b83e4b8a84ea6b187"
+    },
+    {
+      "path": "scheduler_run_case25.log",
+      "bytes": 492,
+      "sha256": "f1c04d253f740f25ddbaf924b9914d4f03db835a9d8175d89d88db665d2f90a8"
+    },
+    {
+      "path": "scheduler_run_case3.log",
+      "bytes": 466,
+      "sha256": "980b86b5434e7b2b7cbc346f4baf8171c92281031aa19336c7c90c84861ad603"
+    },
+    {
+      "path": "scheduler_run_case4.log",
+      "bytes": 416,
+      "sha256": "86ab3bf258667337de1044d71966e54262aa823c298e6bc0a4c4b2ba454427e9"
+    },
+    {
+      "path": "scheduler_run_case5.log",
+      "bytes": 415,
+      "sha256": "862e35071cecfc6fa2fb2f939a4ae46b0ea1a93ed6f230df22266cb43695ebc2"
+    },
+    {
+      "path": "scheduler_run_case6.log",
+      "bytes": 544,
+      "sha256": "75d543aa3e65237216ce50e89b41325c8d3d08bbd24c068e0505ab0027819032"
+    },
+    {
+      "path": "scheduler_run_case7.log",
+      "bytes": 415,
+      "sha256": "cdbd1be19391be17baa332bcb6f825ea5b63eff685f37a0e3d37594bbce0abf2"
+    },
+    {
+      "path": "scheduler_run_case8.log",
+      "bytes": 466,
+      "sha256": "3f535d1fcc72e1303fa4d1fbab6e2ea065acb2475b042704facd77d3b13c015d"
+    },
+    {
+      "path": "scheduler_run_case9.log",
+      "bytes": 491,
+      "sha256": "6d74e69a07e585a13bca607efc586a22a5cdd8c52514df81e65df577e33bfd4e"
+    },
+    {
+      "path": "scheduler_run_collect.py",
+      "bytes": 3204,
+      "sha256": "9070afe4d47b519d767b8792168affd1d9758b52064c6fe7f709786eef556614"
+    },
+    {
+      "path": "scheduler_run_contract.json",
+      "bytes": 407,
+      "sha256": "4d07c534d9d55a3a96bac0af2f2669c237ede1d3d63c057d4e34efa4987e7a15"
+    },
+    {
+      "path": "scheduler_run_contract.py",
+      "bytes": 1008,
+      "sha256": "ff3fefb7179165530d8f403f3f74b6755aa54ed784befc275cf65f264006867c"
+    },
+    {
+      "path": "scheduler_run_contract_0/build.log",
+      "bytes": 136385,
+      "sha256": "b0d6dbaf32af3e6212e8393fe6ccf05aa6fa2f04c9572718940a24de7a7b24a4"
+    },
+    {
+      "path": "scheduler_run_contract_0/fail.log",
+      "bytes": 266,
+      "sha256": "c6bdbdbef346649db168f413bdb4ff2eee85e3964e32b8e5c8753bfddc2c58a3"
+    },
+    {
+      "path": "scheduler_run_contract_1/build.log",
+      "bytes": 136385,
+      "sha256": "6ce7cb56372b71d6d9a2052cab1939d338bbafc3107e19b55d14b69fb9c25789"
+    },
+    {
+      "path": "scheduler_run_contract_1/fail.log",
+      "bytes": 266,
+      "sha256": "c6bdbdbef346649db168f413bdb4ff2eee85e3964e32b8e5c8753bfddc2c58a3"
+    },
+    {
+      "path": "scheduler_run_contract_2/build.log",
+      "bytes": 136385,
+      "sha256": "f4b69aa9052eb92a53a9d2dafa0c4b9eba885913cb2e443edb9af738b5e8ca21"
+    },
+    {
+      "path": "scheduler_run_contract_2/fail.log",
+      "bytes": 266,
+      "sha256": "c6bdbdbef346649db168f413bdb4ff2eee85e3964e32b8e5c8753bfddc2c58a3"
+    },
+    {
+      "path": "scheduler_run_contract_3/build.log",
+      "bytes": 136385,
+      "sha256": "7d5af2c6250d2377d970e995c76dc7f7bd156bfe36b8c57435832b3325c9c546"
+    },
+    {
+      "path": "scheduler_run_contract_3/fail.log",
+      "bytes": 266,
+      "sha256": "c6bdbdbef346649db168f413bdb4ff2eee85e3964e32b8e5c8753bfddc2c58a3"
+    },
+    {
+      "path": "scheduler_run_default.log",
+      "bytes": 424,
+      "sha256": "147e5f44cffec796af4e7fb52c61e7f416a5ca0317d37b24bbe9678af3e7cc4d"
+    },
+    {
+      "path": "scheduler_run_default.sh",
+      "bytes": 546,
+      "sha256": "cd28e936cd5c77bcbbbd3fdfb7a1a451c09639ff8eeffad824792ae5306b5739"
+    },
+    {
+      "path": "scheduler_run_default_build.log",
+      "bytes": 60726,
+      "sha256": "fb823db6effbe0a73e49abc15c1ab56470ad94e49dc423ceb6fe772c12eca7c8"
+    },
+    {
+      "path": "scheduler_run_first/ot_host_if_pb2_observed_rc.sv",
+      "bytes": 49859,
+      "sha256": "fc74f0e3457db9761d3dab70afe449c03180fc5218e42ec8bd5d48ec794509c1"
+    },
+    {
+      "path": "scheduler_run_first/scheduler_run_case0.log",
+      "bytes": 416,
+      "sha256": "50834df166e714e4f15d3026b716bf3932a8696330cf21849a54c54d16f9fa89"
+    },
+    {
+      "path": "scheduler_run_first/scheduler_run_case1.log",
+      "bytes": 416,
+      "sha256": "776eec8bb91c7e774fd99f4d13e6aeb6fc1c80b72cbab18608329ec8b5d02004"
+    },
+    {
+      "path": "scheduler_run_first/scheduler_run_case2.log",
+      "bytes": 416,
+      "sha256": "fcca3d3177f7edb42eab90cf5d2cd2e7eee8e48ba00b2bf94e5778120f9362ce"
+    },
+    {
+      "path": "scheduler_run_first/scheduler_run_case3.log",
+      "bytes": 416,
+      "sha256": "702ca81ab3be9dcfd587810605c47e50b32d832b80cd2a907dd290d9418c0011"
+    },
+    {
+      "path": "scheduler_run_first/scheduler_run_case4.log",
+      "bytes": 417,
+      "sha256": "d569e245beff59d9f2d465cb7b792082e6e226f86d5560d5641654485045ae10"
+    },
+    {
+      "path": "scheduler_run_first/scheduler_run_case5.log",
+      "bytes": 416,
+      "sha256": "aef27a66c84e91167a1934a158e28499a19983caed83a0ad7a6f104d4d569cf0"
+    },
+    {
+      "path": "scheduler_run_input_hashes.txt",
+      "bytes": 189,
+      "sha256": "04950d53aec3a365cd8d2ba0ff500e5917e289dbdc3a9c560cc738f629e397fa"
+    },
+    {
+      "path": "scheduler_run_mutant_counters/build.log",
+      "bytes": 44054,
+      "sha256": "f1010d2a8ca5743bd5e764c7ebc1f9e7c6dd3c680c7363d4368b5bb0046178f6"
+    },
+    {
+      "path": "scheduler_run_mutant_counters/fail.log",
+      "bytes": 303,
+      "sha256": "0b61c0ed2c2942732295c541c13775efb7a903f1d9554e99a5df963364df7ad0"
+    },
+    {
+      "path": "scheduler_run_mutant_counters/source.sv",
+      "bytes": 50419,
+      "sha256": "9a98bb9f99194c124e7f904e9d528b516cea7db9424109ed54a21c1991179ab9"
+    },
+    {
+      "path": "scheduler_run_mutant_deadline/build.log",
+      "bytes": 43613,
+      "sha256": "14fa87dcb1ec042fd8d533506743cde93d9eca464acbc249e51c90b4321948c0"
+    },
+    {
+      "path": "scheduler_run_mutant_deadline/fail.log",
+      "bytes": 201,
+      "sha256": "c78004c8211779dc19c4c7f47d0fb8595da2409b6437585de270c17bea5a8d38"
+    },
+    {
+      "path": "scheduler_run_mutant_deadline/source.sv",
+      "bytes": 50350,
+      "sha256": "38edc7654fd7b5d0bb88ee65623a166848d64f722aa09be1434145e026c9251d"
+    },
+    {
+      "path": "scheduler_run_mutant_identity/build.log",
+      "bytes": 44068,
+      "sha256": "a977a40326a27f8e5f822de6fc6706eade5a0dfe565409dd87e6dc83940c120a"
+    },
+    {
+      "path": "scheduler_run_mutant_identity/fail.log",
+      "bytes": 209,
+      "sha256": "05e40bd20efffd71e4e788fe360185ada718913c79d4fddc38e05fc673e95cec"
+    },
+    {
+      "path": "scheduler_run_mutant_identity/source.sv",
+      "bytes": 50333,
+      "sha256": "bd77d45796ff930db769b8c4b45df812fe34cdb2df5c7d9df9c68bb4dcc552a0"
+    },
+    {
+      "path": "scheduler_run_mutant_rawdone/build.log",
+      "bytes": 43900,
+      "sha256": "14debe2053ce9cba1383b2e9280b0a83323a608f5b3bdc7998c3da6814af09a9"
+    },
+    {
+      "path": "scheduler_run_mutant_rawdone/fail.log",
+      "bytes": 208,
+      "sha256": "ce00a97820c6cf485e4d6e58886236af47e4868350a83c1d334f3dce9a297901"
+    },
+    {
+      "path": "scheduler_run_mutant_rawdone/source.sv",
+      "bytes": 50436,
+      "sha256": "b5e403e910032ed2d3a36f4955243457e6c957b5aa61b84be3bf5d7418b9aff6"
+    },
+    {
+      "path": "scheduler_run_mutant_warm/build.log",
+      "bytes": 43396,
+      "sha256": "7f46498257f77a58fbe5ea8162d7a3a4d4dcd432e09553e51244efa7e8572859"
+    },
+    {
+      "path": "scheduler_run_mutant_warm/fail.log",
+      "bytes": 204,
+      "sha256": "a343e6a0502946f94bf2a89909289363e51aef9b223ee20b2791d9d92c87516a"
+    },
+    {
+      "path": "scheduler_run_mutant_warm/source.sv",
+      "bytes": 50389,
+      "sha256": "fea5c6d16cc494ec09ec084567d28bfb5d7c1aab9fe157502e8a9f0b0d3d727f"
+    },
+    {
+      "path": "scheduler_run_mutant_word0/build.log",
+      "bytes": 43564,
+      "sha256": "1aa4dc3123a756f9897a8f78cd2567f7ea25ba95fe949699ce57db228c851d3c"
+    },
+    {
+      "path": "scheduler_run_mutant_word0/fail.log",
+      "bytes": 224,
+      "sha256": "dbe92295ed53cbce6f7f68a80b4277b7d92664ba069512a933478f6e93b99f5c"
+    },
+    {
+      "path": "scheduler_run_mutant_word0/source.sv",
+      "bytes": 50241,
+      "sha256": "35c158d39792615e91f4c65aa0488ac043ab7b4def98cb41b9c8b1dc35d499d2"
+    },
+    {
+      "path": "scheduler_run_mutants.json",
+      "bytes": 730,
+      "sha256": "b2ef8bd6008eab4e2983b7d50a42c5fce3e531a0bb48713202049fd378540149"
+    },
+    {
+      "path": "scheduler_run_mutants.py",
+      "bytes": 2273,
+      "sha256": "c2c157bcd3b29828d3635644323bb0d3de759cfbb63578ee195a3c996d66226b"
+    },
+    {
+      "path": "scheduler_run_oracle_history/mutant_not_caught.log",
+      "bytes": 641,
+      "sha256": "0cfbc344ee70853e40432526d16850b10cc37a9cc3d5e5e2a5da6177db8e1338"
+    },
+    {
+      "path": "scheduler_run_oracle_history/scheduler_bench.sv",
+      "bytes": 10158,
+      "sha256": "67bcc1b79b3cfe871e090623722c1a7c21d428232a31253604e51d7a9673d0a7"
+    },
+    {
+      "path": "scheduler_run_oracle_history/scheduler_run_mutants.json",
+      "bytes": 122,
+      "sha256": "b331611ab70bc54c3b55b79ab58aac2e4ca762bd6e2a42b2dbefbd52c4f2a966"
+    },
+    {
+      "path": "scheduler_run_original.sv",
+      "bytes": 39228,
+      "sha256": "21e79b85eeb1d9c31fe7f89d928453e44e8516d8295c12299785767e2831a45d"
+    },
+    {
+      "path": "scheduler_run_reuse_oracle/scheduler_bench.sv",
+      "bytes": 10987,
+      "sha256": "709dbdeff998ccabb95efe8acda665104d62eda31cefb290c0bd591fdb0ebd3b"
+    },
+    {
+      "path": "scheduler_run_reuse_oracle/scheduler_run_case6.log",
+      "bytes": 408,
+      "sha256": "15fc6b53246b072168ed7940a8467a87a43f9ae1be8c2f393640f40fb71a97c7"
+    },
+    {
+      "path": "scheduler_run_version.log",
+      "bytes": 38,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    }
+  ],
+  "object_bytes": 1472538
+}

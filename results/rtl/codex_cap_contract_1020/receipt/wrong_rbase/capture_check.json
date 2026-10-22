@@ -1,0 +1,199 @@
+{
+  "scope": "CAP/CW/VP component only; consumer read/retirement/deadline proof OPEN",
+  "full_stage_qualified": false,
+  "component_capture_PASS": false,
+  "golden_self_check": {
+    "contract_cross_check": true,
+    "contract_rows": 512,
+    "contract_mismatch": [],
+    "shard_bf16_mismatch": []
+  },
+  "expected_rows": 512,
+  "cw_words": 476,
+  "vp_words": 476,
+  "missing": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      5
+    ],
+    [
+      0,
+      86
+    ],
+    [
+      0,
+      87
+    ],
+    [
+      0,
+      88
+    ],
+    [
+      0,
+      89
+    ],
+    [
+      0,
+      90
+    ],
+    [
+      0,
+      91
+    ],
+    [
+      1,
+      22
+    ],
+    [
+      1,
+      23
+    ],
+    [
+      1,
+      24
+    ],
+    [
+      1,
+      25
+    ],
+    [
+      1,
+      26
+    ],
+    [
+      1,
+      27
+    ],
+    [
+      1,
+      107
+    ],
+    [
+      1,
+      108
+    ],
+    [
+      1,
+      109
+    ],
+    [
+      1,
+      110
+    ],
+    [
+      1,
+      111
+    ],
+    [
+      1,
+      112
+    ],
+    [
+      2,
+      44
+    ],
+    [
+      2,
+      45
+    ],
+    [
+      2,
+      46
+    ],
+    [
+      2,
+      47
+    ],
+    [
+      2,
+      48
+    ],
+    [
+      2,
+      49
+    ],
+    [
+      4,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      3
+    ],
+    [
+      4,
+      4
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      4,
+      6
+    ]
+  ],
+  "extra": [],
+  "duplicates": [],
+  "bad_values": [],
+  "missing_commits": [],
+  "extra_commits": [],
+  "faults": [
+    "CAP_LIFETIME t=1829 fa=1/0b0b4043 fb=0/00000020 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1830 fa=1/0b0b6043 fb=0/0b0b0043 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1831 fa=1/0b004043 fb=0/0b0b2043 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1832 fa=1/0b006043 fb=0/00000020 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1833 fa=1/0b160043 fb=0/0b15c043 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1834 fa=1/0b162043 fb=0/0b15e043 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1835 fa=1/0b008043 fb=0/0b0ac063 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1836 fa=1/0b00a043 fb=0/0b0ae063 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1837 fa=1/0b0b0023 fb=0/0b158043 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1838 fa=1/0b0b2023 fb=0/0b15a043 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1839 fa=1/0b15c023 fb=0/0b0b4063 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1840 fa=1/0b15e023 fb=0/0b0b6063 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1841 fa=1/0b000043 fb=0/0b004063 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1842 fa=1/0b002043 fb=0/0b006063 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1843 fa=1/0b158023 fb=0/0b160063 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1844 fa=1/0b15a023 fb=0/0b162063 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1845 fa=1/0b206223 fb=0/0b008063 open=1 f5=0 f6=0 f7=0 f8=0 f9=01 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1846 fa=1/0b208223 fb=0/0b00a063 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1847 fa=1/0b20a043 fb=1/0b0b0043 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1848 fa=1/0b20c043 fb=1/0b0b2043 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1849 fa=0/0b206223 fb=1/0b15c043 open=1 f5=0 f6=0 f7=0 f8=0 f9=00 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1850 fa=1/0b2ac043 fb=1/0b15e043 open=1 f5=0 f6=0 f7=0 f8=0 f9=11 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1851 fa=1/0b2ae043 fb=0/0b000063 open=1 f5=0 f6=0 f7=0 f8=0 f9=11 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1852 fa=1/0b2b0043 fb=0/0b002063 open=1 f5=0 f6=0 f7=0 f8=0 f9=10 f11=0 causes=0100 rbase=1800 rcnt=828",
+    "CAP_LIFETIME t=1853 fa=1/0b2b2043 fb=1/0b158043 open=1 f5=0 f6=0 f7=0 f8=0 f9=11 f11=0 causes=0100 rbase=1800 rcnt=828"
+  ],
+  "fault_observations": 863,
+  "source_assertions": [
+    "RETAINED_CONTROL_MISMATCH gos15 ends1 gws1 macwrites40 lastcommit1260",
+    "FULLSIX_SOURCE_CHECK errors=3 rawwrites=320 gathers=20 epochs=15",
+    "FULLSIX_PREPARATORY_TRACE_END CAPfault=1 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL"
+  ],
+  "simulator_exit": 1
+}

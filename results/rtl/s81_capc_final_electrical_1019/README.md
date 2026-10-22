@@ -1,0 +1,9 @@
+# CAPC final routed electrical pickup
+
+Exact source 267b35821 and CLOSED record dfcfb2a7b. TT setup +312.97 ps, FF hold +21.86 ps, DRC0; SS +108.24 ps is sensitivity only. Actual final TT ODB/SPEF read-only probe reports zero max-slew, max-capacitance or max-fanout violations. Both VDD and VSS `check_power_grid` report all physical shapes connected, including actual routed-grid contacts. The prior a62 electrical failure/revocation remains preserved.
+
+The exported own-reference ETM native audit passes 451 outputs and722 inputs: launch107.5 ps, capture112.2 ps, no combinational pins/overages; TT/FF spread41.9/33.7 ps, FF earliestlaunch55.7 ps and holdneed−21.7 ps. Native values use exact record-view hashes in source_hashes.json. This is artifact-record acceptance only; parent placement, neighbor-matched references, PINPIPE +2 capture and reset obligations remain open.
+
+The daemon trimmed source snapshots after collecting the record. Two exact child view directories were reconstructed from source267b35821 in a separate `pickup_codex/src` mount. The final ODB/SPEF/SDC were mounted read-only. `electrical.tcl` is the archived w18_sta_tt.tcl with terminal exit removed and report_check_types/check_power_grid appended; it changes no constraints or design bytes. `remote_sha256.txt` independently hashes actual loaded ODB/SPEF/SDC/Tcl and child libraries/LEFs. Fleet run unit oth-ubuntu-4174628-1792438892 exits0 with CAPC_SUCCESSOR_ELECTRICAL_DONE; earlier missing-view probe and pre-exit probe are setup diagnostics, not passes.
+
+Record import must preserve four canonical conflicting files: lint_lep_mu_die.sh, dsdv_mu_hwin.sv, run_mu_hwin_bench.sh and tools/landed_parent/lp.py. No source-default change, parent adoption, new timing-rule approval, or gate rerun is included. NEXT.md records the remaining CTRL/XR6/SHLK/TOPK/C199 work.

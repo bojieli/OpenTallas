@@ -1,0 +1,190 @@
+{
+ "schema": "opentallas.s81_dv.xs_place.v1",
+ "op": {
+  "id": "L14.ffn.down",
+  "op": "ffn.down",
+  "cls": "field",
+  "start": 25205.2,
+  "end": 27329.5,
+  "cycles": 2124.2,
+  "delta": 96.0,
+  "critical": true
+ },
+ "slice": "u_s_0S",
+ "slice_index": 0,
+ "phases_die_wide": 21,
+ "mats": [
+  {
+   "mat": "shared.w2",
+   "fmt": "fp8",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 3,
+   "rows_per_frame": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp26.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 3,
+   "rows_per_frame": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp29.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 3,
+   "rows_per_frame": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp114.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 3,
+   "rows_per_frame": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp155.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 3,
+   "rows_per_frame": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp334.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 3,
+   "rows_per_frame": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  },
+  {
+   "mat": "exp352.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "phases": 3,
+   "rows_per_frame": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  }
+ ],
+ "bench": {
+  "name": "p44",
+  "op": "ffn.down",
+  "mat": "shared.w2",
+  "fmt": "fp8",
+  "field_phase": 44,
+  "nphases": 65,
+  "calendar": "measured_class",
+  "elem_class": [
+   "fp8",
+   1,
+   2
+  ],
+  "mutant": null,
+  "words": 10,
+  "fixture_rows": 4,
+  "value_errors": [],
+  "ret_edge_offsets_vs_plan": [
+   0
+  ],
+  "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp4/run_p44.log",
+  "pass": true,
+  "record": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp4"
+ },
+ "images": "python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (all phases of the frame field; gen --op OP for one phase's bench vectors)"
+}

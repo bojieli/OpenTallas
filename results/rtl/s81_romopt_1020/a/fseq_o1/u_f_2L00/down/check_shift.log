@@ -1,0 +1,85 @@
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [2, 3] of 5
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 2, (4, 2, 5), 3159662560, 0), (344, 3, (4, 2, 5), 3166706208, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 1 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [2, 3] of 5
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((344, 2, (4, 2, 5), 3153614285, 0), (344, 3, (4, 2, 5), 3170912386, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 2 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [0, 1] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 8 words, got 4; first diff ((346, 0, (4, 2, 5), 3170451920, 0), (346, 1, (4, 2, 5), 1018227584, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 3 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 1011664472, 0), (342, 1, (0, 1, 5), 3152162056, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 4 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 1012074696, 0), (342, 1, (0, 1, 5), 3149491120, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 5 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((342, 0, (0, 1, 5), 3135613856, 0), (342, 1, (0, 1, 5), 3154480264, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 6 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 991637924, 0), (342, 1, (0, 1, 5), 989656864, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 7 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 3143030272, 0), (342, 1, (0, 1, 5), 1007453914, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 8 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((342, 0, (0, 1, 5), 1002890816, 0), (342, 1, (0, 1, 5), 3152184232, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 9 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 1008724776, 0), (342, 1, (0, 1, 5), 991842646, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 10 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 3150920278, 0), (342, 1, (0, 1, 5), 1015011405, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 11 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((342, 0, (0, 1, 5), 3154888938, 0), (342, 1, (0, 1, 5), 3169857752, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 12 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 1004747976, 0), (342, 1, (0, 1, 5), 1007214320, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 13 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 1007086646, 0), (342, 1, (0, 1, 5), 3154579268, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 14 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((342, 0, (0, 1, 5), 1009127386, 0), (342, 1, (0, 1, 5), 1017362480, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 15 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 1003414848, 0), (342, 1, (0, 1, 5), 1011680076, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 16 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 1012776086, 0), (342, 1, (0, 1, 5), 3145808800, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 17 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((342, 0, (0, 1, 5), 990288064, 0), (342, 1, (0, 1, 5), 1023359581, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 18 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 997286188, 0), (342, 1, (0, 1, 5), 3120077696, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 19 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3, 4] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 10 words, got 8; first diff ((342, 0, (0, 1, 5), 990013864, 0), (342, 1, (0, 1, 5), 996659024, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 20 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+COVERAGE row 0 segments [2, 3] of 5
+COVERAGE row 2 segments [4] of 5
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((342, 0, (0, 1, 5), 1012886868, 0), (342, 1, (0, 1, 5), 968248512, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.down phase 21 mutant=None rows=3 fixture_rows=3 errors=3 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+TOKSIM_FGU_SEQ FAIL op ffn.down PER 130 phases 21 rows 77 fixture_rows 77 go0 63 last_ret 2950 span 2887 errors 75 ['UNASSIGNED_RET edge 343 178a93fc01000888b', 'UNASSIGNED_RET edge 351 0791642481000088b', 'UNASSIGNED_RET edge 355 078cabb281000804b']

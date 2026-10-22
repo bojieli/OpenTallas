@@ -1,0 +1,36 @@
+{
+  "forwarded_soft_clocks": [
+    {
+      "port": "xk[0]",
+      "domain": "core",
+      "cells": [
+        "u_xrl0.reset_pipe[0]$_DFF_PN0_",
+        "u_xrl0.reset_pipe[1]$_DFF_PN0_"
+      ]
+    },
+    {
+      "port": "xk[1]",
+      "domain": "core",
+      "cells": [
+        "u_xrl1.reset_pipe[0]$_DFF_PN0_",
+        "u_xrl1.reset_pipe[1]$_DFF_PN0_"
+      ]
+    },
+    {
+      "port": "xk[2]",
+      "domain": "core",
+      "cells": [
+        "u_xrl2.reset_pipe[0]$_DFF_PN0_",
+        "u_xrl2.reset_pipe[1]$_DFF_PN0_"
+      ]
+    },
+    {
+      "port": "xk[3]",
+      "domain": "core",
+      "cells": [
+        "u_xrl3.reset_pipe[0]$_DFF_PN0_",
+        "u_xrl3.reset_pipe[1]$_DFF_PN0_"
+      ]
+    }
+  ]
+}

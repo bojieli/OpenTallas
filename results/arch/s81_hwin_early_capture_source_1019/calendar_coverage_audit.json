@@ -1,0 +1,4976 @@
+{
+  "legal_positive_runs": 276,
+  "intentional_expired_negative_runs": 276,
+  "legal_positive_windows": 363768,
+  "intentional_expired_negative_windows": 363768,
+  "cases": [
+    {
+      "ns": 2,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 108,
+      "log": "run_sweep_ns2_01/uniform_ns2/run_seed1.log"
+    },
+    {
+      "ns": 2,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 108,
+      "log": "run_sweep_ns2_01/uniform_ns2/run_seed19.log"
+    },
+    {
+      "ns": 2,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 108,
+      "log": "run_sweep_ns2_01/uniform_ns2/run_seed313.log"
+    },
+    {
+      "ns": 2,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 108,
+      "log": "run_rx_fixture_ns2_02/nonuniform_short_ns2/run_seed1.log"
+    },
+    {
+      "ns": 2,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 108,
+      "log": "run_rx_fixture_ns2_02/nonuniform_short_ns2/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 2,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 108,
+      "log": "run_rx_fixture_ns2_02/nonuniform_short_ns2/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 2,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 108,
+      "log": "run_rx_fixture_ns2_02/nonuniform_short_ns2/run_seed19.log"
+    },
+    {
+      "ns": 2,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 108,
+      "log": "run_rx_fixture_ns2_02/nonuniform_short_ns2/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 2,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 108,
+      "log": "run_rx_fixture_ns2_02/nonuniform_short_ns2/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 2,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 108,
+      "log": "run_rx_fixture_ns2_02/nonuniform_short_ns2/run_seed313.log"
+    },
+    {
+      "ns": 2,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 108,
+      "log": "run_rx_fixture_ns2_02/nonuniform_short_ns2/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 2,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 108,
+      "log": "run_rx_fixture_ns2_02/nonuniform_short_ns2/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 3,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/uniform_ns3/run_seed1.log"
+    },
+    {
+      "ns": 3,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/uniform_ns3/run_seed19.log"
+    },
+    {
+      "ns": 3,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/uniform_ns3/run_seed313.log"
+    },
+    {
+      "ns": 3,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns3/run_seed1.log"
+    },
+    {
+      "ns": 3,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns3/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 3,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns3/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 3,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns3/run_seed19.log"
+    },
+    {
+      "ns": 3,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns3/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 3,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns3/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 3,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns3/run_seed313.log"
+    },
+    {
+      "ns": 3,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns3/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 3,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 152,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns3/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 4,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/uniform_ns4/run_seed1.log"
+    },
+    {
+      "ns": 4,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/uniform_ns4/run_seed19.log"
+    },
+    {
+      "ns": 4,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/uniform_ns4/run_seed313.log"
+    },
+    {
+      "ns": 4,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns4/run_seed1.log"
+    },
+    {
+      "ns": 4,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns4/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 4,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns4/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 4,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns4/run_seed19.log"
+    },
+    {
+      "ns": 4,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns4/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 4,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns4/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 4,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns4/run_seed313.log"
+    },
+    {
+      "ns": 4,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns4/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 4,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 216,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns4/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 5,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/uniform_ns5/run_seed1.log"
+    },
+    {
+      "ns": 5,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/uniform_ns5/run_seed19.log"
+    },
+    {
+      "ns": 5,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/uniform_ns5/run_seed313.log"
+    },
+    {
+      "ns": 5,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns5/run_seed1.log"
+    },
+    {
+      "ns": 5,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns5/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 5,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns5/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 5,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns5/run_seed19.log"
+    },
+    {
+      "ns": 5,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns5/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 5,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns5/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 5,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns5/run_seed313.log"
+    },
+    {
+      "ns": 5,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns5/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 5,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 260,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns5/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 6,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/uniform_ns6/run_seed1.log"
+    },
+    {
+      "ns": 6,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/uniform_ns6/run_seed19.log"
+    },
+    {
+      "ns": 6,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/uniform_ns6/run_seed313.log"
+    },
+    {
+      "ns": 6,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns6/run_seed1.log"
+    },
+    {
+      "ns": 6,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns6/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 6,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns6/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 6,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns6/run_seed19.log"
+    },
+    {
+      "ns": 6,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns6/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 6,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns6/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 6,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns6/run_seed313.log"
+    },
+    {
+      "ns": 6,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns6/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 6,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 324,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns6/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 7,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/uniform_ns7/run_seed1.log"
+    },
+    {
+      "ns": 7,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/uniform_ns7/run_seed19.log"
+    },
+    {
+      "ns": 7,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/uniform_ns7/run_seed313.log"
+    },
+    {
+      "ns": 7,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns7/run_seed1.log"
+    },
+    {
+      "ns": 7,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns7/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 7,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns7/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 7,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns7/run_seed19.log"
+    },
+    {
+      "ns": 7,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns7/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 7,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns7/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 7,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns7/run_seed313.log"
+    },
+    {
+      "ns": 7,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns7/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 7,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 368,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns7/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 8,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/uniform_ns8/run_seed1.log"
+    },
+    {
+      "ns": 8,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/uniform_ns8/run_seed19.log"
+    },
+    {
+      "ns": 8,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/uniform_ns8/run_seed313.log"
+    },
+    {
+      "ns": 8,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns8/run_seed1.log"
+    },
+    {
+      "ns": 8,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns8/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 8,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns8/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 8,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns8/run_seed19.log"
+    },
+    {
+      "ns": 8,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns8/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 8,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns8/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 8,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns8/run_seed313.log"
+    },
+    {
+      "ns": 8,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns8/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 8,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 432,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns8/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 9,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/uniform_ns9/run_seed1.log"
+    },
+    {
+      "ns": 9,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/uniform_ns9/run_seed19.log"
+    },
+    {
+      "ns": 9,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/uniform_ns9/run_seed313.log"
+    },
+    {
+      "ns": 9,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns9/run_seed1.log"
+    },
+    {
+      "ns": 9,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns9/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 9,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns9/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 9,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns9/run_seed19.log"
+    },
+    {
+      "ns": 9,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns9/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 9,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns9/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 9,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns9/run_seed313.log"
+    },
+    {
+      "ns": 9,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns9/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 9,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 476,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns9/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 10,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/uniform_ns10/run_seed1.log"
+    },
+    {
+      "ns": 10,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/uniform_ns10/run_seed19.log"
+    },
+    {
+      "ns": 10,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/uniform_ns10/run_seed313.log"
+    },
+    {
+      "ns": 10,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns10/run_seed1.log"
+    },
+    {
+      "ns": 10,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns10/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 10,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns10/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 10,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns10/run_seed19.log"
+    },
+    {
+      "ns": 10,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns10/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 10,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns10/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 10,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns10/run_seed313.log"
+    },
+    {
+      "ns": 10,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns10/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 10,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 540,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns10/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 11,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/uniform_ns11/run_seed1.log"
+    },
+    {
+      "ns": 11,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/uniform_ns11/run_seed19.log"
+    },
+    {
+      "ns": 11,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/uniform_ns11/run_seed313.log"
+    },
+    {
+      "ns": 11,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns11/run_seed1.log"
+    },
+    {
+      "ns": 11,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns11/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 11,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns11/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 11,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns11/run_seed19.log"
+    },
+    {
+      "ns": 11,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns11/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 11,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns11/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 11,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns11/run_seed313.log"
+    },
+    {
+      "ns": 11,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns11/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 11,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 584,
+      "log": "run_sweep_3_11_02/nonuniform_short_ns11/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 12,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/uniform_ns12/run_seed1.log"
+    },
+    {
+      "ns": 12,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/uniform_ns12/run_seed19.log"
+    },
+    {
+      "ns": 12,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/uniform_ns12/run_seed313.log"
+    },
+    {
+      "ns": 12,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns12/run_seed1.log"
+    },
+    {
+      "ns": 12,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns12/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 12,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns12/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 12,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns12/run_seed19.log"
+    },
+    {
+      "ns": 12,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns12/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 12,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns12/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 12,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns12/run_seed313.log"
+    },
+    {
+      "ns": 12,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns12/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 12,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 648,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns12/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 13,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/uniform_ns13/run_seed1.log"
+    },
+    {
+      "ns": 13,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/uniform_ns13/run_seed19.log"
+    },
+    {
+      "ns": 13,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/uniform_ns13/run_seed313.log"
+    },
+    {
+      "ns": 13,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns13/run_seed1.log"
+    },
+    {
+      "ns": 13,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns13/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 13,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns13/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 13,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns13/run_seed19.log"
+    },
+    {
+      "ns": 13,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns13/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 13,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns13/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 13,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns13/run_seed313.log"
+    },
+    {
+      "ns": 13,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns13/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 13,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 692,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns13/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 14,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/uniform_ns14/run_seed1.log"
+    },
+    {
+      "ns": 14,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/uniform_ns14/run_seed19.log"
+    },
+    {
+      "ns": 14,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/uniform_ns14/run_seed313.log"
+    },
+    {
+      "ns": 14,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns14/run_seed1.log"
+    },
+    {
+      "ns": 14,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns14/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 14,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns14/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 14,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns14/run_seed19.log"
+    },
+    {
+      "ns": 14,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns14/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 14,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns14/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 14,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns14/run_seed313.log"
+    },
+    {
+      "ns": 14,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns14/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 14,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 756,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns14/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 15,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/uniform_ns15/run_seed1.log"
+    },
+    {
+      "ns": 15,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/uniform_ns15/run_seed19.log"
+    },
+    {
+      "ns": 15,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/uniform_ns15/run_seed313.log"
+    },
+    {
+      "ns": 15,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns15/run_seed1.log"
+    },
+    {
+      "ns": 15,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns15/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 15,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns15/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 15,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns15/run_seed19.log"
+    },
+    {
+      "ns": 15,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns15/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 15,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns15/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 15,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns15/run_seed313.log"
+    },
+    {
+      "ns": 15,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns15/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 15,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 800,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns15/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 16,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/uniform_ns16/run_seed1.log"
+    },
+    {
+      "ns": 16,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/uniform_ns16/run_seed19.log"
+    },
+    {
+      "ns": 16,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/uniform_ns16/run_seed313.log"
+    },
+    {
+      "ns": 16,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns16/run_seed1.log"
+    },
+    {
+      "ns": 16,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns16/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 16,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns16/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 16,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns16/run_seed19.log"
+    },
+    {
+      "ns": 16,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns16/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 16,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns16/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 16,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns16/run_seed313.log"
+    },
+    {
+      "ns": 16,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns16/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 16,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 864,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns16/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 17,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/uniform_ns17/run_seed1.log"
+    },
+    {
+      "ns": 17,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/uniform_ns17/run_seed19.log"
+    },
+    {
+      "ns": 17,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/uniform_ns17/run_seed313.log"
+    },
+    {
+      "ns": 17,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns17/run_seed1.log"
+    },
+    {
+      "ns": 17,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns17/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 17,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns17/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 17,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns17/run_seed19.log"
+    },
+    {
+      "ns": 17,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns17/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 17,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns17/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 17,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns17/run_seed313.log"
+    },
+    {
+      "ns": 17,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns17/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 17,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 908,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns17/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 18,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/uniform_ns18/run_seed1.log"
+    },
+    {
+      "ns": 18,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/uniform_ns18/run_seed19.log"
+    },
+    {
+      "ns": 18,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/uniform_ns18/run_seed313.log"
+    },
+    {
+      "ns": 18,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns18/run_seed1.log"
+    },
+    {
+      "ns": 18,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns18/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 18,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns18/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 18,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns18/run_seed19.log"
+    },
+    {
+      "ns": 18,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns18/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 18,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns18/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 18,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns18/run_seed313.log"
+    },
+    {
+      "ns": 18,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns18/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 18,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 972,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns18/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 19,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/uniform_ns19/run_seed1.log"
+    },
+    {
+      "ns": 19,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/uniform_ns19/run_seed19.log"
+    },
+    {
+      "ns": 19,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/uniform_ns19/run_seed313.log"
+    },
+    {
+      "ns": 19,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns19/run_seed1.log"
+    },
+    {
+      "ns": 19,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns19/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 19,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns19/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 19,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns19/run_seed19.log"
+    },
+    {
+      "ns": 19,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns19/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 19,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns19/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 19,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns19/run_seed313.log"
+    },
+    {
+      "ns": 19,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns19/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 19,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1016,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns19/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 20,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/uniform_ns20/run_seed1.log"
+    },
+    {
+      "ns": 20,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/uniform_ns20/run_seed19.log"
+    },
+    {
+      "ns": 20,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/uniform_ns20/run_seed313.log"
+    },
+    {
+      "ns": 20,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns20/run_seed1.log"
+    },
+    {
+      "ns": 20,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns20/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 20,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns20/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 20,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns20/run_seed19.log"
+    },
+    {
+      "ns": 20,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns20/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 20,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns20/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 20,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns20/run_seed313.log"
+    },
+    {
+      "ns": 20,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns20/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 20,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1080,
+      "log": "run_sweep_12_20_02/nonuniform_short_ns20/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 21,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/uniform_ns21/run_seed1.log"
+    },
+    {
+      "ns": 21,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/uniform_ns21/run_seed19.log"
+    },
+    {
+      "ns": 21,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/uniform_ns21/run_seed313.log"
+    },
+    {
+      "ns": 21,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns21/run_seed1.log"
+    },
+    {
+      "ns": 21,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns21/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 21,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns21/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 21,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns21/run_seed19.log"
+    },
+    {
+      "ns": 21,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns21/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 21,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns21/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 21,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns21/run_seed313.log"
+    },
+    {
+      "ns": 21,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns21/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 21,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1124,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns21/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 22,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/uniform_ns22/run_seed1.log"
+    },
+    {
+      "ns": 22,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/uniform_ns22/run_seed19.log"
+    },
+    {
+      "ns": 22,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/uniform_ns22/run_seed313.log"
+    },
+    {
+      "ns": 22,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns22/run_seed1.log"
+    },
+    {
+      "ns": 22,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns22/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 22,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns22/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 22,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns22/run_seed19.log"
+    },
+    {
+      "ns": 22,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns22/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 22,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns22/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 22,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns22/run_seed313.log"
+    },
+    {
+      "ns": 22,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns22/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 22,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1188,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns22/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 23,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/uniform_ns23/run_seed1.log"
+    },
+    {
+      "ns": 23,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/uniform_ns23/run_seed19.log"
+    },
+    {
+      "ns": 23,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/uniform_ns23/run_seed313.log"
+    },
+    {
+      "ns": 23,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns23/run_seed1.log"
+    },
+    {
+      "ns": 23,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns23/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 23,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns23/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 23,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns23/run_seed19.log"
+    },
+    {
+      "ns": 23,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns23/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 23,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns23/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 23,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns23/run_seed313.log"
+    },
+    {
+      "ns": 23,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns23/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 23,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1232,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns23/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 24,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/uniform_ns24/run_seed1.log"
+    },
+    {
+      "ns": 24,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/uniform_ns24/run_seed19.log"
+    },
+    {
+      "ns": 24,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/uniform_ns24/run_seed313.log"
+    },
+    {
+      "ns": 24,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns24/run_seed1.log"
+    },
+    {
+      "ns": 24,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns24/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 24,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns24/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 24,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns24/run_seed19.log"
+    },
+    {
+      "ns": 24,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns24/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 24,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns24/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 24,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns24/run_seed313.log"
+    },
+    {
+      "ns": 24,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns24/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 24,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1296,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns24/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 25,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/uniform_ns25/run_seed1.log"
+    },
+    {
+      "ns": 25,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/uniform_ns25/run_seed19.log"
+    },
+    {
+      "ns": 25,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/uniform_ns25/run_seed313.log"
+    },
+    {
+      "ns": 25,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns25/run_seed1.log"
+    },
+    {
+      "ns": 25,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns25/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 25,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns25/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 25,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns25/run_seed19.log"
+    },
+    {
+      "ns": 25,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns25/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 25,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns25/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 25,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns25/run_seed313.log"
+    },
+    {
+      "ns": 25,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns25/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 25,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1340,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns25/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 26,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/uniform_ns26/run_seed1.log"
+    },
+    {
+      "ns": 26,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/uniform_ns26/run_seed19.log"
+    },
+    {
+      "ns": 26,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/uniform_ns26/run_seed313.log"
+    },
+    {
+      "ns": 26,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns26/run_seed1.log"
+    },
+    {
+      "ns": 26,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns26/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 26,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns26/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 26,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns26/run_seed19.log"
+    },
+    {
+      "ns": 26,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns26/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 26,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns26/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 26,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns26/run_seed313.log"
+    },
+    {
+      "ns": 26,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns26/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 26,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1404,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns26/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 27,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/uniform_ns27/run_seed1.log"
+    },
+    {
+      "ns": 27,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/uniform_ns27/run_seed19.log"
+    },
+    {
+      "ns": 27,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/uniform_ns27/run_seed313.log"
+    },
+    {
+      "ns": 27,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns27/run_seed1.log"
+    },
+    {
+      "ns": 27,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns27/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 27,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns27/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 27,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns27/run_seed19.log"
+    },
+    {
+      "ns": 27,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns27/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 27,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns27/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 27,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns27/run_seed313.log"
+    },
+    {
+      "ns": 27,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns27/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 27,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1448,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns27/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 28,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/uniform_ns28/run_seed1.log"
+    },
+    {
+      "ns": 28,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/uniform_ns28/run_seed19.log"
+    },
+    {
+      "ns": 28,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/uniform_ns28/run_seed313.log"
+    },
+    {
+      "ns": 28,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns28/run_seed1.log"
+    },
+    {
+      "ns": 28,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns28/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 28,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns28/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 28,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns28/run_seed19.log"
+    },
+    {
+      "ns": 28,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns28/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 28,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns28/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 28,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns28/run_seed313.log"
+    },
+    {
+      "ns": 28,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns28/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 28,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1512,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns28/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 29,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/uniform_ns29/run_seed1.log"
+    },
+    {
+      "ns": 29,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/uniform_ns29/run_seed19.log"
+    },
+    {
+      "ns": 29,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/uniform_ns29/run_seed313.log"
+    },
+    {
+      "ns": 29,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns29/run_seed1.log"
+    },
+    {
+      "ns": 29,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns29/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 29,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns29/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 29,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns29/run_seed19.log"
+    },
+    {
+      "ns": 29,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns29/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 29,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns29/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 29,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns29/run_seed313.log"
+    },
+    {
+      "ns": 29,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns29/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 29,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1556,
+      "log": "run_sweep_21_29_02/nonuniform_short_ns29/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 30,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/uniform_ns30/run_seed1.log"
+    },
+    {
+      "ns": 30,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/uniform_ns30/run_seed19.log"
+    },
+    {
+      "ns": 30,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/uniform_ns30/run_seed313.log"
+    },
+    {
+      "ns": 30,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns30/run_seed1.log"
+    },
+    {
+      "ns": 30,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns30/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 30,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns30/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 30,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns30/run_seed19.log"
+    },
+    {
+      "ns": 30,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns30/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 30,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns30/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 30,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns30/run_seed313.log"
+    },
+    {
+      "ns": 30,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns30/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 30,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1620,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns30/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 31,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/uniform_ns31/run_seed1.log"
+    },
+    {
+      "ns": 31,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/uniform_ns31/run_seed19.log"
+    },
+    {
+      "ns": 31,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/uniform_ns31/run_seed313.log"
+    },
+    {
+      "ns": 31,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns31/run_seed1.log"
+    },
+    {
+      "ns": 31,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns31/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 31,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns31/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 31,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns31/run_seed19.log"
+    },
+    {
+      "ns": 31,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns31/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 31,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns31/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 31,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns31/run_seed313.log"
+    },
+    {
+      "ns": 31,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns31/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 31,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1664,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns31/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 32,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/uniform_ns32/run_seed1.log"
+    },
+    {
+      "ns": 32,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/uniform_ns32/run_seed19.log"
+    },
+    {
+      "ns": 32,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/uniform_ns32/run_seed313.log"
+    },
+    {
+      "ns": 32,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns32/run_seed1.log"
+    },
+    {
+      "ns": 32,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns32/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 32,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns32/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 32,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns32/run_seed19.log"
+    },
+    {
+      "ns": 32,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns32/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 32,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns32/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 32,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns32/run_seed313.log"
+    },
+    {
+      "ns": 32,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns32/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 32,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1728,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns32/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 33,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/uniform_ns33/run_seed1.log"
+    },
+    {
+      "ns": 33,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/uniform_ns33/run_seed19.log"
+    },
+    {
+      "ns": 33,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/uniform_ns33/run_seed313.log"
+    },
+    {
+      "ns": 33,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns33/run_seed1.log"
+    },
+    {
+      "ns": 33,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns33/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 33,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns33/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 33,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns33/run_seed19.log"
+    },
+    {
+      "ns": 33,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns33/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 33,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns33/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 33,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns33/run_seed313.log"
+    },
+    {
+      "ns": 33,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns33/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 33,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1772,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns33/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 34,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/uniform_ns34/run_seed1.log"
+    },
+    {
+      "ns": 34,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/uniform_ns34/run_seed19.log"
+    },
+    {
+      "ns": 34,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/uniform_ns34/run_seed313.log"
+    },
+    {
+      "ns": 34,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns34/run_seed1.log"
+    },
+    {
+      "ns": 34,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns34/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 34,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns34/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 34,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns34/run_seed19.log"
+    },
+    {
+      "ns": 34,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns34/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 34,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns34/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 34,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns34/run_seed313.log"
+    },
+    {
+      "ns": 34,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns34/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 34,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1836,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns34/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 35,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/uniform_ns35/run_seed1.log"
+    },
+    {
+      "ns": 35,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/uniform_ns35/run_seed19.log"
+    },
+    {
+      "ns": 35,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/uniform_ns35/run_seed313.log"
+    },
+    {
+      "ns": 35,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns35/run_seed1.log"
+    },
+    {
+      "ns": 35,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns35/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 35,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns35/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 35,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns35/run_seed19.log"
+    },
+    {
+      "ns": 35,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns35/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 35,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns35/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 35,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns35/run_seed313.log"
+    },
+    {
+      "ns": 35,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns35/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 35,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1880,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns35/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 36,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/uniform_ns36/run_seed1.log"
+    },
+    {
+      "ns": 36,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/uniform_ns36/run_seed19.log"
+    },
+    {
+      "ns": 36,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/uniform_ns36/run_seed313.log"
+    },
+    {
+      "ns": 36,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns36/run_seed1.log"
+    },
+    {
+      "ns": 36,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns36/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 36,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns36/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 36,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns36/run_seed19.log"
+    },
+    {
+      "ns": 36,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns36/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 36,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns36/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 36,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns36/run_seed313.log"
+    },
+    {
+      "ns": 36,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns36/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 36,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1944,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns36/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 37,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/uniform_ns37/run_seed1.log"
+    },
+    {
+      "ns": 37,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/uniform_ns37/run_seed19.log"
+    },
+    {
+      "ns": 37,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/uniform_ns37/run_seed313.log"
+    },
+    {
+      "ns": 37,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns37/run_seed1.log"
+    },
+    {
+      "ns": 37,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns37/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 37,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns37/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 37,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns37/run_seed19.log"
+    },
+    {
+      "ns": 37,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns37/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 37,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns37/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 37,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns37/run_seed313.log"
+    },
+    {
+      "ns": 37,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns37/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 37,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 1988,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns37/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 38,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/uniform_ns38/run_seed1.log"
+    },
+    {
+      "ns": 38,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/uniform_ns38/run_seed19.log"
+    },
+    {
+      "ns": 38,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/uniform_ns38/run_seed313.log"
+    },
+    {
+      "ns": 38,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns38/run_seed1.log"
+    },
+    {
+      "ns": 38,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns38/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 38,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns38/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 38,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns38/run_seed19.log"
+    },
+    {
+      "ns": 38,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns38/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 38,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns38/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 38,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns38/run_seed313.log"
+    },
+    {
+      "ns": 38,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns38/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 38,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2052,
+      "log": "run_sweep_30_38_02/nonuniform_short_ns38/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 39,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/uniform_ns39/run_seed1.log"
+    },
+    {
+      "ns": 39,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/uniform_ns39/run_seed19.log"
+    },
+    {
+      "ns": 39,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/uniform_ns39/run_seed313.log"
+    },
+    {
+      "ns": 39,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns39/run_seed1.log"
+    },
+    {
+      "ns": 39,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns39/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 39,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns39/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 39,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns39/run_seed19.log"
+    },
+    {
+      "ns": 39,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns39/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 39,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns39/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 39,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns39/run_seed313.log"
+    },
+    {
+      "ns": 39,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns39/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 39,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2096,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns39/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 40,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/uniform_ns40/run_seed1.log"
+    },
+    {
+      "ns": 40,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/uniform_ns40/run_seed19.log"
+    },
+    {
+      "ns": 40,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/uniform_ns40/run_seed313.log"
+    },
+    {
+      "ns": 40,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns40/run_seed1.log"
+    },
+    {
+      "ns": 40,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns40/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 40,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns40/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 40,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns40/run_seed19.log"
+    },
+    {
+      "ns": 40,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns40/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 40,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns40/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 40,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns40/run_seed313.log"
+    },
+    {
+      "ns": 40,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns40/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 40,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2160,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns40/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 41,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/uniform_ns41/run_seed1.log"
+    },
+    {
+      "ns": 41,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/uniform_ns41/run_seed19.log"
+    },
+    {
+      "ns": 41,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/uniform_ns41/run_seed313.log"
+    },
+    {
+      "ns": 41,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns41/run_seed1.log"
+    },
+    {
+      "ns": 41,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns41/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 41,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns41/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 41,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns41/run_seed19.log"
+    },
+    {
+      "ns": 41,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns41/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 41,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns41/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 41,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns41/run_seed313.log"
+    },
+    {
+      "ns": 41,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns41/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 41,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2204,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns41/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 42,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/uniform_ns42/run_seed1.log"
+    },
+    {
+      "ns": 42,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/uniform_ns42/run_seed19.log"
+    },
+    {
+      "ns": 42,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/uniform_ns42/run_seed313.log"
+    },
+    {
+      "ns": 42,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns42/run_seed1.log"
+    },
+    {
+      "ns": 42,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns42/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 42,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns42/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 42,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns42/run_seed19.log"
+    },
+    {
+      "ns": 42,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns42/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 42,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns42/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 42,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns42/run_seed313.log"
+    },
+    {
+      "ns": 42,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns42/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 42,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2268,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns42/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 43,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/uniform_ns43/run_seed1.log"
+    },
+    {
+      "ns": 43,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/uniform_ns43/run_seed19.log"
+    },
+    {
+      "ns": 43,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/uniform_ns43/run_seed313.log"
+    },
+    {
+      "ns": 43,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns43/run_seed1.log"
+    },
+    {
+      "ns": 43,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns43/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 43,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns43/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 43,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns43/run_seed19.log"
+    },
+    {
+      "ns": 43,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns43/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 43,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns43/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 43,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns43/run_seed313.log"
+    },
+    {
+      "ns": 43,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns43/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 43,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2312,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns43/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 44,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/uniform_ns44/run_seed1.log"
+    },
+    {
+      "ns": 44,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/uniform_ns44/run_seed19.log"
+    },
+    {
+      "ns": 44,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/uniform_ns44/run_seed313.log"
+    },
+    {
+      "ns": 44,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns44/run_seed1.log"
+    },
+    {
+      "ns": 44,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns44/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 44,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns44/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 44,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns44/run_seed19.log"
+    },
+    {
+      "ns": 44,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns44/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 44,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns44/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 44,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns44/run_seed313.log"
+    },
+    {
+      "ns": 44,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns44/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 44,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2376,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns44/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 45,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/uniform_ns45/run_seed1.log"
+    },
+    {
+      "ns": 45,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/uniform_ns45/run_seed19.log"
+    },
+    {
+      "ns": 45,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/uniform_ns45/run_seed313.log"
+    },
+    {
+      "ns": 45,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns45/run_seed1.log"
+    },
+    {
+      "ns": 45,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns45/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 45,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns45/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 45,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns45/run_seed19.log"
+    },
+    {
+      "ns": 45,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns45/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 45,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns45/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 45,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns45/run_seed313.log"
+    },
+    {
+      "ns": 45,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns45/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 45,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2420,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns45/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 46,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/uniform_ns46/run_seed1.log"
+    },
+    {
+      "ns": 46,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/uniform_ns46/run_seed19.log"
+    },
+    {
+      "ns": 46,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/uniform_ns46/run_seed313.log"
+    },
+    {
+      "ns": 46,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns46/run_seed1.log"
+    },
+    {
+      "ns": 46,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns46/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 46,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns46/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 46,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns46/run_seed19.log"
+    },
+    {
+      "ns": 46,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns46/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 46,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns46/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 46,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns46/run_seed313.log"
+    },
+    {
+      "ns": 46,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns46/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 46,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2484,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns46/run_seed313_rxshift1.log"
+    },
+    {
+      "ns": 47,
+      "program": "uniform",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/uniform_ns47/run_seed1.log"
+    },
+    {
+      "ns": 47,
+      "program": "uniform",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/uniform_ns47/run_seed19.log"
+    },
+    {
+      "ns": 47,
+      "program": "uniform",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/uniform_ns47/run_seed313.log"
+    },
+    {
+      "ns": 47,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns47/run_seed1.log"
+    },
+    {
+      "ns": 47,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns47/run_seed1_rxshift0.log"
+    },
+    {
+      "ns": 47,
+      "program": "nonuniform_short",
+      "seed": 1,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns47/run_seed1_rxshift1.log"
+    },
+    {
+      "ns": 47,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns47/run_seed19.log"
+    },
+    {
+      "ns": 47,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns47/run_seed19_rxshift0.log"
+    },
+    {
+      "ns": 47,
+      "program": "nonuniform_short",
+      "seed": 19,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns47/run_seed19_rxshift1.log"
+    },
+    {
+      "ns": 47,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": -1,
+      "classification": "legal_positive",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns47/run_seed313.log"
+    },
+    {
+      "ns": 47,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 0,
+      "classification": "intentional_expired_negative",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns47/run_seed313_rxshift0.log"
+    },
+    {
+      "ns": 47,
+      "program": "nonuniform_short",
+      "seed": 313,
+      "rx_shift": 1,
+      "classification": "intentional_expired_negative",
+      "fires": 2528,
+      "log": "run_sweep_39_47_02/nonuniform_short_ns47/run_seed313_rxshift1.log"
+    }
+  ]
+}

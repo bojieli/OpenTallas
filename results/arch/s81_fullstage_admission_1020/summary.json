@@ -1,0 +1,282 @@
+{
+ "header_verify": {
+  "status": "PASS_AT_HEADER_METADATA_SCOPE",
+  "weights": 46080,
+  "scales": 46080,
+  "shards": 48,
+  "indexed_tensors": 96085,
+  "payload_read": false
+ },
+ "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+ "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+ "weight_scale_pairs": 46080,
+ "actual_experts": 15360,
+ "expert_shapes": [
+  {
+   "kind": "w1",
+   "rows": 2304,
+   "K": 5120,
+   "stored_dtype": "I8",
+   "scale_dtype": "F8_E8M0",
+   "count": 15360
+  },
+  {
+   "kind": "w3",
+   "rows": 2304,
+   "K": 5120,
+   "stored_dtype": "I8",
+   "scale_dtype": "F8_E8M0",
+   "count": 15360
+  },
+  {
+   "kind": "w2",
+   "rows": 5120,
+   "K": 2304,
+   "stored_dtype": "I8",
+   "scale_dtype": "F8_E8M0",
+   "count": 15360
+  }
+ ],
+ "physical_frames": 122,
+ "frame_count_histogram": {
+  "8": 12,
+  "7": 2,
+  "6": 2
+ },
+ "missing_owners": {
+  "cl2S": {
+   "physical_frames": 7,
+   "phantom_owners": 1,
+   "names": [
+    "f_2L00",
+    "f_2L01",
+    "f_2L02",
+    "f_2L03",
+    "f_2R01",
+    "f_2R02",
+    "f_2R03"
+   ]
+  },
+  "cl3S": {
+   "physical_frames": 6,
+   "phantom_owners": 2,
+   "names": [
+    "f_3L01",
+    "f_3L02",
+    "f_3L03",
+    "f_3R01",
+    "f_3R02",
+    "f_3R03"
+   ]
+  },
+  "cl4S": {
+   "physical_frames": 6,
+   "phantom_owners": 2,
+   "names": [
+    "f_4L01",
+    "f_4L02",
+    "f_4L03",
+    "f_4R01",
+    "f_4R02",
+    "f_4R03"
+   ]
+  },
+  "cl5S": {
+   "physical_frames": 7,
+   "phantom_owners": 1,
+   "names": [
+    "f_5L01",
+    "f_5L02",
+    "f_5L03",
+    "f_5R00",
+    "f_5R01",
+    "f_5R02",
+    "f_5R03"
+   ]
+  }
+ },
+ "old_compiler_row_loss": {
+  "wq_b_head": {
+   "rows_per_slice": 512,
+   "missing_rank_rows": 384,
+   "detail": [
+    {
+     "group": "cl2S",
+     "missing_rows": 64
+    },
+    {
+     "group": "cl3S",
+     "missing_rows": 128
+    },
+    {
+     "group": "cl4S",
+     "missing_rows": 128
+    },
+    {
+     "group": "cl5S",
+     "missing_rows": 64
+    }
+   ]
+  },
+  "gu_merged_per_expert_slice": {
+   "rows_per_slice": 72,
+   "missing_rank_rows": 54,
+   "detail": [
+    {
+     "group": "cl2S",
+     "missing_rows": 9
+    },
+    {
+     "group": "cl3S",
+     "missing_rows": 18
+    },
+    {
+     "group": "cl4S",
+     "missing_rows": 18
+    },
+    {
+     "group": "cl5S",
+     "missing_rows": 9
+    }
+   ]
+  },
+  "down_per_expert_slice": {
+   "rows_per_slice": 80,
+   "missing_rank_rows": 60,
+   "detail": [
+    {
+     "group": "cl2S",
+     "missing_rows": 10
+    },
+    {
+     "group": "cl3S",
+     "missing_rows": 20
+    },
+    {
+     "group": "cl4S",
+     "missing_rows": 20
+    },
+    {
+     "group": "cl5S",
+     "missing_rows": 10
+    }
+   ]
+  }
+ },
+ "legacy_map": {
+  "matrix_records": 46671,
+  "compiled_NP": [
+   2417
+  ],
+  "stage_expert_counts": {
+   "0": 204,
+   "1": 198,
+   "2": 214,
+   "3": 202,
+   "4": 214,
+   "5": 204,
+   "6": 214,
+   "7": 204,
+   "8": 214,
+   "9": 204,
+   "10": 214,
+   "11": 204,
+   "12": 198,
+   "13": 212,
+   "14": 202,
+   "15": 214,
+   "16": 204,
+   "17": 214,
+   "18": 204,
+   "19": 214,
+   "20": 204,
+   "21": 214,
+   "22": 204,
+   "23": 214,
+   "24": 204,
+   "25": 184,
+   "26": 208,
+   "27": 204,
+   "28": 214,
+   "29": 204,
+   "30": 214,
+   "31": 204,
+   "32": 214,
+   "33": 204,
+   "34": 214,
+   "35": 204,
+   "36": 214,
+   "37": 202,
+   "38": 204,
+   "39": 214,
+   "40": 204,
+   "41": 214,
+   "42": 204,
+   "43": 214,
+   "44": 203,
+   "45": 214,
+   "46": 204,
+   "47": 214,
+   "48": 204,
+   "49": 199,
+   "50": 212,
+   "51": 203,
+   "52": 214,
+   "53": 204,
+   "54": 214,
+   "55": 204,
+   "56": 214,
+   "57": 204,
+   "58": 214,
+   "59": 203,
+   "60": 214,
+   "61": 204,
+   "62": 204,
+   "63": 214,
+   "64": 204,
+   "65": 214,
+   "66": 203,
+   "67": 214,
+   "68": 204,
+   "69": 214,
+   "70": 204,
+   "71": 214,
+   "72": 204,
+   "73": 195
+  },
+  "unique_expert_identities": 15360,
+  "first_expert": {
+   "ECC": {
+    "extra_sidecar_bits": 0,
+    "secded_bits": 0,
+    "useful_bits": 272
+   },
+   "K": 5120,
+   "alias": "exp0.w1",
+   "compiled_NP": 2417,
+   "compute_MACs_per_cycle_per_pair": 128,
+   "conversion": "native",
+   "ecc_bit_base": null,
+   "expert": 0,
+   "format": "fp4",
+   "issue_cycles_LAT8_condition": 192,
+   "layer": 0,
+   "ordered_superrow_region": true,
+   "rows": 576,
+   "segments": [
+    [
+     0,
+     5120
+    ]
+   ],
+   "source_dtype": "I8",
+   "source_scale_tensor": "layers.0.ffn.experts.0.w1.scale",
+   "stage": 0,
+   "t_read_words_max": 160,
+   "tensor": "layers.0.ffn.experts.0.w1.weight"
+  },
+  "compatible_with_p4l": false
+ },
+ "payload_read": false,
+ "admission": false
+}

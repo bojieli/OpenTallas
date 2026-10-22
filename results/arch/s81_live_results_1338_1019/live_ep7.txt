@@ -1,0 +1,26 @@
+2026-10-19T13:36:39-07:00
+    PID     ELAPSED %CPU   RSS COMMAND
+2329250    06:45:53  107 48052872 openroad
+3654923    01:47:48 99.9 4938040 openroad
+3743357    01:42:04  105 31613576 yosys
+3743383    01:42:04  105 31766844 yosys
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz line 34, library asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 already exists.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib line 35, library asap7sc7p5t_SEQ_RVT_TT_nldm_220123 already exists.
+OT_DIE_REP pre instances=13067 masters=209
+dsdv_svc_rs_lp-20261019-115326
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+dsdv_svc_rs_lp_np-20261019-115323
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+/srv/opentallas-scratch/claude/mu-die-s81-hop/out_base
+build rc 0
+2026-10-19 13:36:33.938195520 -0700 495616 /srv/opentallas-scratch/claude/mu-die-s81-hop/out_base/trace.txt
+2026-10-19 13:11:02.007707268 -0700 8192 /srv/opentallas-scratch/claude/mu-die-s81-hop/out_base/ep.txt
+/srv/opentallas-scratch/claude/mu-die-s81-hop/out_rtl_tagdrop
+build rc 0
+2026-10-19 13:36:24.644637882 -0700 360448 /srv/opentallas-scratch/claude/mu-die-s81-hop/out_rtl_tagdrop/trace.txt
+2026-10-19 13:30:34.470856329 -0700 8192 /srv/opentallas-scratch/claude/mu-die-s81-hop/out_rtl_tagdrop/ep.txt

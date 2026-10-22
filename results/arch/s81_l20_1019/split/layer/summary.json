@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.s81_l20_split.layer.v1",
+ "compile": {
+  "cmd": "python3 tools/s81_dv/dv_layer_compile.py --layer L20 --die-src /home/ubuntu/scratch/tok-s81-int/tree_g8r (bind_p4m_g8r) --fixtures /home/ubuntu/scratch/layerbench-s81/fixtures/L20",
+  "die_ref": "bind_p4m_g8r@ef4e8d1a0b6bf5c2da57c88e49bcf0d0a080197a",
+  "schedule_last_event": 31383,
+  "schedule_last_event_before": 44284,
+  "price_span": 30635.4,
+  "bk_jobs": {
+   "attn.idx.topk_local": {
+    "t_first_in": 4865,
+    "t_last_in": 23427,
+    "window": [
+     24067,
+     24142
+    ],
+    "golden_ok": true,
+    "span_edges": 19276,
+    "price_cycles": 4225.0,
+    "shard": 6
+   },
+   "attn.idx.topk_final": {
+    "t_first_in": 24692,
+    "t_last_in": 30674,
+    "window": [
+     31314,
+     31387
+    ],
+    "golden_ok": true,
+    "span_edges": 6692,
+    "price_cycles": 178.0,
+    "shard": 1
+   }
+  },
+  "idx_chain": {
+   "start": "attn.idx.score start 4865.9",
+   "priced": 10891.0,
+   "compiled": 26521.1,
+   "compiled_without_final_rung": 20007.1,
+   "note": "compiled = the rank tree (query at the home die, measured reader pace, children merged on lane 3) + topk_merge window + the TP4 topk_final bk_sel job (4 x 512 sparse at the 276-b rung: 6,692 edges vs priced 178 -- the pre-existing TOK-S81-GAPS/IDX rate finding, unchanged by the split). The op schedule is the price: downstream ops are NOT shifted by the overrun (compiler limitation)"
+  }
+ },
+ "cut_replay": {
+  "cut": "cut_3S (G8R2 recut, /home/ubuntu/scratch/tok-s81-g8r2/cuts/cut_3S)",
+  "obj": "ot-epyc5 /srv/opentallas-scratch/claude/tok-s81-gaps/int/out_cut_3S_idle/obj (G8R2 build, reused)",
+  "verilator": "5.050",
+  "ncyc": 31481,
+  "in_events": 153,
+  "out_checks": 434,
+  "unencoded": 829,
+  "verdict": "PASS",
+  "sim_pass": true,
+  "trace_mismatches": 0,
+  "partial": true,
+  "before": {
+   "ncyc": 44580,
+   "schedule_last_event": 44256,
+   "run": "results/rtl/s81_layer_tput_1018/slice_bench/runs/l20_cut_3S_g8r2 (unsharded lower_bk)"
+  }
+ }
+}

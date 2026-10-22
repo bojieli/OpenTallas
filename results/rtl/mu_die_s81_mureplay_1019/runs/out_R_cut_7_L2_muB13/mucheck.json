@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1.mucheck",
+ "replay": "/home/ubuntu/scratch/mu-die-s81/mureplay/R/R_cut_7_L2_muB13",
+ "run": "/home/ubuntu/scratch/mu-die-s81/mureplay/runs/out_R_cut_7_L2_muB13",
+ "verdict_kind": "SCHEDULE",
+ "mutant": null,
+ "window": 42628,
+ "check": {
+  "verdict": "FAIL",
+  "sim_pass": true,
+  "trace_mismatches": 5248,
+  "partial": false
+ },
+ "identity": {
+  "verdict": "PASS",
+  "rows": [
+   {
+    "user": 1,
+    "shift": 0,
+    "words": 25030,
+    "identical": 25030,
+    "ctx_only_diff": 0,
+    "other_diff": 0
+   },
+   {
+    "user": 3,
+    "shift": 42628,
+    "words": 25030,
+    "identical": 25023,
+    "ctx_only_diff": 7,
+    "other_diff": 0
+   }
+  ],
+  "why": "2 users vs user 1: u1 25030 same + 0 ctx-only, other 0; u3 25023 same + 7 ctx-only, other 0"
+ },
+ "users": [
+  {
+   "user": 3,
+   "vs": 1,
+   "shift": 42628,
+   "changes": 2620,
+   "ref_changes": 2824,
+   "mismatch_cycles": 2616,
+   "first": {
+    "236": [
+     116,
+     238,
+     265,
+     387,
+     414
+    ],
+    "237": [
+     116,
+     238,
+     265,
+     387,
+     414
+    ],
+    "238": [
+     87,
+     209,
+     236,
+     358,
+     385
+    ],
+    "239": [
+     87,
+     209,
+     236,
+     358,
+     385
+    ]
+   },
+   "ok": false
+  }
+ ],
+ "user0_vs_su": null,
+ "verdict": "FAIL"
+}

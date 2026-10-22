@@ -4,11 +4,12 @@
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
+ "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
  "parasitics": "spef",
  "raw_source": true,
  "ss": {
   "boundary": {
-   "n": 301,
+   "n": 298,
    "mean": 110.4,
    "min": 105.2,
    "max": 115.4
@@ -25,7 +26,7 @@
  },
  "tt": {
   "boundary": {
-   "n": 301,
+   "n": 298,
    "mean": 82.1,
    "min": 77.2,
    "max": 86.8
@@ -42,8 +43,8 @@
  },
  "ff": {
   "boundary": {
-   "n": 301,
-   "mean": 66.1,
+   "n": 298,
+   "mean": 66.2,
    "min": 61.4,
    "max": 70.8
   },
@@ -95,11 +96,12 @@
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
+   "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
    "parasitics": "spef",
    "raw_source": true,
    "ss": {
     "boundary": {
-     "n": 301,
+     "n": 298,
      "mean": 110.4,
      "min": 105.2,
      "max": 115.4
@@ -116,7 +118,7 @@
    },
    "tt": {
     "boundary": {
-     "n": 301,
+     "n": 298,
      "mean": 82.1,
      "min": 77.2,
      "max": 86.8
@@ -133,8 +135,8 @@
    },
    "ff": {
     "boundary": {
-     "n": 301,
-     "mean": 66.1,
+     "n": 298,
+     "mean": 66.2,
      "min": 61.4,
      "max": 70.8
     },
@@ -186,10 +188,16 @@
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "lane_ckf",
+   "boundary_basis": "structural first/last sequential data cone, all arcs; selected clock domain",
    "parasitics": "spef",
    "raw_source": true,
    "ss": {
-    "boundary": null,
+    "boundary": {
+     "n": 1184,
+     "mean": 177.5,
+     "min": 175.0,
+     "max": 180.0
+    },
     "all": {
      "n": 1203,
      "mean": 177.5,
@@ -201,7 +209,12 @@
     "macro_libs": 0
    },
    "tt": {
-    "boundary": null,
+    "boundary": {
+     "n": 1184,
+     "mean": 125.6,
+     "min": 123.6,
+     "max": 127.5
+    },
     "all": {
      "n": 1203,
      "mean": 125.6,
@@ -213,7 +226,12 @@
     "macro_libs": 0
    },
    "ff": {
-    "boundary": null,
+    "boundary": {
+     "n": 1184,
+     "mean": 96.8,
+     "min": 94.9,
+     "max": 98.9
+    },
     "all": {
      "n": 1203,
      "mean": 96.8,

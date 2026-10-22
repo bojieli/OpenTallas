@@ -1,0 +1,242 @@
+{
+ "name": "dsdv_gunit_l1f",
+ "top": "dsdv_gunit_l1f",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_sel_n32.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    86.4
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    43.2,
+    127.488
+   ],
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "W": [
+   "sa_r",
+   "sa_d",
+   "sb_r",
+   "sb_d",
+   "we",
+   "c_go",
+   "c_fw",
+   "c_l",
+   "c_bn",
+   "c_lvn",
+   "re",
+   "ra",
+   "bw_e",
+   "bw_a",
+   "bw_d"
+  ],
+  "E": [
+   "g_go",
+   "g_hit",
+   "g_a",
+   "o_v",
+   "o_f",
+   "o_l",
+   "o_g",
+   "o_d",
+   "o_flt"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "outline": {
+  "w": 259.2,
+  "h": 302.4
+ },
+ "recipe": 4,
+ "clock": "cts",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  },
+  "synth_keep_modules": [
+   "dsdv_l1f_wdec8",
+   "dsdv_l1f_term8",
+   "dsdv_l1f_or8",
+   "dsdv_l1f_mux8",
+   "dsdv_l1f_dec64",
+   "dsdv_l1f_dec7",
+   "dsdv_seln_gt40",
+   "dsdv_seln_cmp4",
+   "dsdv_seln_mux1"
+  ],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "structural_change": "DRIVE-S81-GUNIT N32 (10-20, tree S81.STA.PAR.3): native census of the 10-18 RTL FAILED 1,046 drivers > 32 (max 2,110: wq write enables 2,110, beat number cbn 1,030, reset relay 639, gq2 431, SC data ad/bd 64, the f12 LAT-5 adder cut regs 56-69, y 33, cfw 33, 420 comb sort/merge selects 33-200). Restructured, same function / ports / edges: 9 kept wq/row copies + 4 kept SC data copies at the pins, per entry / half-word kept write decode (dsdv_l1f_wdec), 19 kept beat-number copies (one read slice each), ve-local NATIVE-32 adder (ot_s81sl_ve_qadd LAT 4) behind a kept twin operand register (= LAT 5), key from y (bits 0-15) / y2 (16-31), lane valid twice, dsdv_gunit_sel_n32 sort/merge (4 kept compare copies, one per record-bit slice), 4 kept gather request copies, 9 kept reply-select copies, 13 valid-only reset regions. W pins spread over the full W face (10-18 B gate: W pins in the upper third, GRT overflow 176 above the SRAM). | S81U-GUNIT-L1 (10-17): new E-side leaf L1f of dsdv_gunit (hardened once, 4 instances, q-agnostic: q-specific enables / hits on their own wires): SC store slice (112 x fp32), bias in 2 x ot_sram_1r1w_128x256_m1_r2c2 (read one beat ahead, no added edge), 16 bias adds, key, 2 x bitonic sort8 + merge8 at two compare-exchanges per registered stage (13,564 generic flops < 15k), gather of the chosen scores. Flop-first / flop-last; no ready / credit. | S81U-GUNIT-L1b (10-17): NATIVE-2 pin rules (relayed reset, pin flops) + one-compare-deep select stages + LAT-5 bias add (+1 edge) + registered gather decode; clk / rst_n pins at the S-face centre (pin_ranges; the gate put clk at the SW corner: TT spread 132.6 ps) | PL-GULEAF (10-18): route.cts_sink extra -no_obstruction_aware (s81 gather leaf 10-14 precedent): the gate @103f9cf73 measured boundary pin-flop spread TT 278.1..391.9 ps (113.8 > 80) with the H-tree detouring around the abutted 2-SRAM stack in the tile centre | S81-GUSEQ (10-18): -no_obstruction_aware fixed the spread (gate @712ed0fe8 boundary TT 284..329 = 45 / FF 41 ps) but trial GRT overflowed 117,519 (M2 89% / M3 91% / M4 83%): synth std area 27,193 um2 in a 216 x 216 core minus the 2-SRAM stack = ~71% std util. Outline -> 259.2 x 259.2 (6 x 6 lattice; = the dsdv_gunit_lp col-B pitch, so the four L1f tiles abut with no gap) -> ~46% util; clk / rst_n stay at the S-face centre; io_hold_margin 0.025 (kit rule 10-18). | variant B (S81-GUSEQ 10-18): 259.2 x 302.4 (~39% util) gated in parallel with 259.2 x 259.2; the cheaper one that clears GRT overflow 0 is submitted.",
+ "job": {
+  "owner": "Claude:DRIVE-S81-GUNIT",
+  "branch": "claude/drives81-l1f-1020",
+  "tag": "n32",
+  "purpose": "S81.STA.PAR.3: native-32 L1f (router select front, 4 per gunit) to closure (TT setup / FF hold / DRC 0 + native census).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/lib",
+   "rtl/hdc",
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "physical/ref_tile_specs/s81dv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv"
+  ],
+  "benches": [
+   {
+    "name": "gunit_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/bench 8 0",
+    "expect": "pass",
+    "pass_regex": "^MUT=0: GUNIT PASS cases=8 ",
+    "threads": 6,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "gunit_mut1",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh {RUN}/mut 4 1",
+    "expect": "fail",
+    "fail_regex": "^MUT=1: GUNIT FAIL ",
+    "threads": 6,
+    "peak_ram_gb": 24
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_gunit_l1f/views",
+  "record_to": "results/rtl/ref_tile/dsdv_gunit_l1f"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: every input lands in a flop at the pin and every output is a flop (dsdv_gunit_l* input/output flops, dsdv_gunit_pass feedthroughs, ot_dsdv_vstop's own flops); recipe pin_regs would add an unpriced stage on the router's critical path and on every rung hop."
+ },
+ "hold_budget": "die",
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_ranges": {
+  "clk": [
+   122.4,
+   136.8
+  ],
+  "rst_n": [
+   144.0,
+   158.4
+  ],
+  "sa_r": [
+   5.4,
+   8.0
+  ],
+  "sa_d": [
+   8.0,
+   95.0
+  ],
+  "sb_r": [
+   95.0,
+   97.6
+  ],
+  "sb_d": [
+   97.6,
+   184.0
+  ],
+  "we": [
+   184.0,
+   190.0
+  ],
+  "c_go": [
+   190.0,
+   191.0
+  ],
+  "c_fw": [
+   191.0,
+   192.0
+  ],
+  "c_l": [
+   192.0,
+   193.0
+  ],
+  "c_bn": [
+   193.0,
+   195.0
+  ],
+  "c_lvn": [
+   195.0,
+   198.0
+  ],
+  "re": [
+   198.0,
+   199.0
+  ],
+  "ra": [
+   199.0,
+   201.0
+  ],
+  "bw_e": [
+   201.0,
+   202.0
+  ],
+  "bw_a": [
+   202.0,
+   204.0
+  ],
+  "bw_d": [
+   204.0,
+   297.0
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

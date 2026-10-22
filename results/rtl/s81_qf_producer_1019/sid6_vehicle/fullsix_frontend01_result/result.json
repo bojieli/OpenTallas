@@ -1,0 +1,18 @@
+{
+  "scope": "Actual frontend01 failure retained; no generatedCPP/build/sim/numericPASS",
+  "job": 559647,
+  "unit": "oth-ubuntu-559647-1792448034",
+  "host": "ot-epyc4",
+  "exit_status": 1,
+  "wall_seconds": 9.62,
+  "max_RSS_KiB": 3387540,
+  "generated_obj": false,
+  "CPP_files": 0,
+  "generated_modules": null,
+  "errors": [
+    "MODMISSING ot_hdc_delay_rf at actual return-tree two instances"
+  ],
+  "source_packet": "17e22e6fd",
+  "inputmanifest_sha256": "4fe85ab8f1b568f3497382c204779b03bc63ce61675692ed5a2343c6f14c6495",
+  "preservation": "Original remote directory, frozen inputs, complete frontend log, version/toolhash, time remain unchanged; fresh corrected126source packet requires review"
+}

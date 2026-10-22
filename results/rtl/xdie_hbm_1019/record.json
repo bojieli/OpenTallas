@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.xdie_hbm.record.v2",
- "lane": "XDIE-HBM4",
+ "lane": "XDIE-HBM5",
  "date": "2026-10-19",
  "vehicle": "rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_step.sv + run_xdie_hbm_step.sh; compiler tools/xdie_hbm_step_compile.py",
  "rtl_commit": "26a9b51eb",
@@ -617,7 +617,8 @@
    },
    "ds": {
     "48": 600,
-    "144": 739.4
+    "144": 739.4,
+    "144_measured": 760.0
    }
   },
   "RS_minus_AG_at_4": {
@@ -628,7 +629,11 @@
    "P48": 583.5,
    "P144": 722.9
   },
-  "RS_rule": "RS(P) = AG(P) + [RS(4) - AG(4)] + (P - 4): reduce_static takes one input edge per load/add (in_v == load_v | add_read), so a reduce step drains 1 frame / 2 edges vs 1 / edge for a gather"
+  "RS_rule": "RS(P) = AG(P) + [RS(4) - AG(4)] + (P - 4): reduce_static takes one input edge per load/add (in_v == load_v | add_read), so a reduce step drains 1 frame / 2 edges vs 1 / edge for a gather",
+  "RS_ds_144": {
+   "composed_old": 918.0,
+   "measured": 872.0
+  }
  },
  "rows": {
   "x_proj qa+kvraw 2-record train": {
@@ -732,11 +737,11 @@
    "kind": "GROUP_REDUCE_MCAST",
    "P_link": 144,
    "crossings": 2,
-   "E_total": 1742.1,
+   "E_total": 1737.3,
    "parts": [
     [
      "measured-current-RTL",
-     970.8
+     966.0
     ],
     [
      "modelled-PHY",
@@ -748,7 +753,7 @@
     ]
    ],
    "priced_per_instance": 1326.4,
-   "form": "RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)",
+   "form": "RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)",
    "per_token_count": 40
   },
   "attn_out y / ffn_out yf": {
@@ -804,11 +809,11 @@
    "kind": "ALL_GATHER",
    "P_link": 144,
    "crossings": 1,
-   "E_total": 821.3,
+   "E_total": 841.9,
    "parts": [
     [
      "measured-current-RTL",
-     406.4
+     427.0
     ],
     [
      "modelled-PHY",
@@ -820,7 +825,7 @@
     ]
    ],
    "priced_per_instance": 872.1999999999999,
-   "form": "AG(144) composed: E_link(144) + measured on-die overhead at 48",
+   "form": "AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)",
    "per_token_count": 40
   },
   "indexer q iq": {
@@ -892,7 +897,11 @@
   "XDIE-HBM4: iterated tags alone do not fit 64 rows (rs16 96 -> 82, rs32..64 117 -> 95 rows): the RX fill (~27 rows: the 27-edge per-frame span VM re-read -> DEL0) + drain (~20) + TX (~41) exceed 64; the 128-row issuer is what makes RS(P >= 16) one programme. Issuer leaf (ot_hgi_coll_issuer_m: 3 -> 6 64x512 macros, 128:1 reads), fj programme target leaves and the v8g parent need re-gate at ROWS 128 / AR_ITER 1 (not submitted).",
   "XDIE-HBM4 item 3 (delivery-offset edge) CLOSED: the ctl_v5 delivery_obase pin lands on the DEL0 valid edge when the compiler programs del_obase ONE row after the sink row (--del-edge 1); with the offset CHECKED (+ADRCHK) qa_ag16 / qa_rs64 / qa_rs32 / qa_rs16 / da_rs48 / da_ag48 PASS with adr_bad 0/0 and the same E; the del-edge-0 programme FAILS under the check (m_adr0). Compiler fix, no RTL change (step_cosim4/adr).",
   "A production-P reduce step does not fit one 64-row static_issuer_v6 programme: AR fields (load/read/pub tags, pub_index) have no iteration step, so a loop body must span the tag lifetime (load -> pub_issue 12 edges -> >= 7 tags, 14+ rows) and prologue/epilogue are ~27 rows each: rs8 needs 70 rows, rs16 96, rs64 117 (compiler capacity assert). AG steps fit (64 frames: 50 rows) with iterated link seq / VM sector / delivery offset. Fix options: iterate reduce tags (tag + iteration mod 16) or a second programme bank.",
-  "reduce_static accepts one operand edge per frame operand: a 2-operand reduce step drains at 0.5 frame/edge while the link delivers 0.8 frame/beat -- the RS step is reduce-bound, not link-bound."
+  "reduce_static accepts one operand edge per frame operand: a 2-operand reduce step drains at 0.5 frame/edge while the link delivers 0.8 frame/beat -- the RS step is reduce-bound, not link-bound.",
+  "XDIE-HBM5: DS AG(144) MEASURED as one static programme with 3 RX pingpong blocks (48 each): E 760 cyc (d1 754) vs composed 739.4 (+20.6); bit-exact 144/144 both dies; mutants nogap / vmstep REJECTED. 96 issuer rows (ROWS 128).",
+  "XDIE-HBM5: RS(144) 3-block does NOT fit the 128-row issuer (~214 rows even with local loads back to back): every block bubble (pingpong FLUSH before the next release) unrolls ~33 rows of the 19-row peer pipeline. Needs ROWS 256 or a nested-loop ISA -> COORD decision. RS(144) now composed from the MEASURED AG(144): 918 = AG(144) + [RS(48) - AG(48)] + 96.",
+  "HBM-COLL256-RS144: DS RS(144) MEASURED as one static programme (218 rows, 12 loops) on the 256-row COLL issuer: E 872 cyc (d0 862) vs composed 918 (-46); bit-exact 144/144 both dies, +ADRCHK; mutants nogap / vmstep REJECTED; reg ds_ag48 600 / ds_ag144 760 unchanged at ROWS 256. o-group RS(144)+AG(144) re-composed: measured-current-RTL 1012 -> 966.",
+  "HBM-COLL256-RS144: mb_plan holds block b > 0 link reads by 5k beats and assumes no TX IDLE beat inside the step; the launch gearbox phase therefore matters (T0 16000 -> gc 163 -> IDLE beat at ~rel 205 -> TX calendar fault in the A stage). The bench launches at gc 116 (T0 = 9000 + 8 x 1021 edges); a production compiler must place the IDLE beat (or launch phase) explicitly."
  ],
  "token_compose": {
   "terms": [
@@ -904,7 +913,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -918,7 +927,7 @@
     "O": 582.27,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -976,7 +985,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -990,7 +999,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1048,7 +1057,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -1062,7 +1071,7 @@
     "O": 582.27,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1120,7 +1129,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -1134,7 +1143,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1192,7 +1201,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -1206,7 +1215,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1264,7 +1273,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -1278,7 +1287,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1336,7 +1345,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -1350,7 +1359,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1408,7 +1417,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -1422,7 +1431,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1480,7 +1489,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -1494,7 +1503,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1552,7 +1561,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -1566,7 +1575,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1624,7 +1633,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -1638,7 +1647,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1696,7 +1705,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -1710,7 +1719,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1768,7 +1777,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -1782,7 +1791,7 @@
     "O": 329.14,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1864,7 +1873,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -1878,7 +1887,7 @@
     "O": 0.0,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -1936,7 +1945,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -1950,7 +1959,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2008,7 +2017,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -2022,7 +2031,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2080,7 +2089,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -2094,7 +2103,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2152,7 +2161,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -2166,7 +2175,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2224,7 +2233,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -2238,7 +2247,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2296,7 +2305,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -2310,7 +2319,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2368,7 +2377,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -2382,7 +2391,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2440,7 +2449,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -2454,7 +2463,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2512,7 +2521,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -2526,7 +2535,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2584,7 +2593,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -2598,7 +2607,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2656,7 +2665,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -2670,7 +2679,7 @@
     "O": 316.15,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2752,7 +2761,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -2766,7 +2775,7 @@
     "O": 0.0,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2824,7 +2833,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -2838,7 +2847,7 @@
     "O": 316.16,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2920,7 +2929,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -2934,7 +2943,7 @@
     "O": 0.0,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -2992,7 +3001,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -3006,7 +3015,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3064,7 +3073,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -3078,7 +3087,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3136,7 +3145,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -3150,7 +3159,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3208,7 +3217,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -3222,7 +3231,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3280,7 +3289,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -3294,7 +3303,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3352,7 +3361,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -3366,7 +3375,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3424,7 +3433,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -3438,7 +3447,7 @@
     "O": 329.14,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3520,7 +3529,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -3534,7 +3543,7 @@
     "O": 0.0,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3592,7 +3601,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -3606,7 +3615,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3664,7 +3673,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -3678,7 +3687,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3736,7 +3745,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -3750,7 +3759,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3808,7 +3817,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -3822,7 +3831,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3880,7 +3889,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -3894,7 +3903,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -3952,7 +3961,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -3966,7 +3975,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4024,7 +4033,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -4038,7 +4047,7 @@
     "O": 329.14,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4120,7 +4129,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -4134,7 +4143,7 @@
     "O": 0.0,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4192,7 +4201,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -4206,7 +4215,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4264,7 +4273,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -4278,7 +4287,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4336,7 +4345,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -4350,7 +4359,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4408,7 +4417,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -4422,7 +4431,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4480,7 +4489,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -4494,7 +4503,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4552,7 +4561,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -4566,7 +4575,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4624,7 +4633,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -4638,7 +4647,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4696,7 +4705,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -4710,7 +4719,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4768,7 +4777,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -4782,7 +4791,7 @@
     "O": 329.14,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4864,7 +4873,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -4878,7 +4887,7 @@
     "O": 0.0,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -4936,7 +4945,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -4950,7 +4959,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5008,7 +5017,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -5022,7 +5031,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5080,7 +5089,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -5094,7 +5103,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5152,7 +5161,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -5166,7 +5175,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5224,7 +5233,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -5238,7 +5247,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5296,7 +5305,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -5310,7 +5319,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5368,7 +5377,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -5382,7 +5391,7 @@
     "O": 329.13,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5464,7 +5473,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -5478,7 +5487,7 @@
     "O": 0.0,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5536,7 +5545,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -5550,7 +5559,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5608,7 +5617,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -5622,7 +5631,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5680,7 +5689,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -5694,7 +5703,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5752,7 +5761,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -5766,7 +5775,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5824,7 +5833,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -5838,7 +5847,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5896,7 +5905,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -5910,7 +5919,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -5968,7 +5977,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -5982,7 +5991,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6040,7 +6049,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -6054,7 +6063,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6112,7 +6121,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -6126,7 +6135,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6184,7 +6193,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -6198,7 +6207,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6256,7 +6265,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -6270,7 +6279,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6328,7 +6337,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -6342,7 +6351,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6400,7 +6409,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -6414,7 +6423,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6472,7 +6481,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -6486,7 +6495,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6544,7 +6553,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -6558,7 +6567,7 @@
     "O": 316.15,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6640,7 +6649,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -6654,7 +6663,7 @@
     "O": 0.0,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6712,7 +6721,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 406.4
+      "E": 427.0
      },
      {
       "grade": "modelled-PHY",
@@ -6726,7 +6735,7 @@
     "O": 582.28,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.MoE expert_intermediate s0..s6 7-record train (dispatch/combine)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: AG(144) composed: E_link(144) + measured on-die overhead at 48"
+    "note": "XDIE-HBM5 VM-sourced step co-sim: AG(144) MEASURED (XDIE-HBM5 3-block step co-sim)"
    },
    {
     "design": "hbm_gen_ds",
@@ -6784,7 +6793,7 @@
     "E": [
      {
       "grade": "measured-current-RTL",
-      "E": 970.8
+      "E": 966.0
      },
      {
       "grade": "modelled-PHY",
@@ -6798,7 +6807,7 @@
     "O": 1145.63,
     "O_source": "S2 compiler schedule: cycles the COLL record(s) share with any non-COLL unit record of the layer (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 4020ae3e4) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main 756f2a6e2) (value as composed in results/arch/token_path_1018/hbm_gen_ds.json on main f60edb0fc)",
     "pointer": "rows.o-group reduce-mcast (8 contributors)",
-    "note": "XDIE-HBM4 VM-sourced step co-sim: RS(144) + AG(144); RS(144) = AG(144) + [RS(48) - AG(48)] + 96 with RS(48) MEASURED (XDIE-HBM4 iterated tags, 128-row issuer)"
+    "note": "HBM-COLL256-RS144 VM-sourced step co-sim: RS(144) + AG(144); both MEASURED 3-block (RS(144) 872 HBM-COLL256-RS144 on the 256-row issuer, AG(144) 760 XDIE-HBM5)"
    },
    {
     "design": "hbm_gen_ds",
@@ -8578,5 +8587,98 @@
    }
   ],
   "evidence": "results/rtl/xdie_hbm_1019/ (step logs, programmes, sources.sha256)"
+ },
+ "steps_hbm5": {
+  "ds_ag144": {
+   "blocks": [
+    48,
+    48,
+    48
+   ],
+   "E": [
+    760,
+    754
+   ],
+   "verdict": "PASS",
+   "adr_bad": [
+    0,
+    0
+   ],
+   "log": "step_cosim5/ds_ag144_pass.log",
+   "note": "3 RX pingpong blocks (far ot_hep_rx_store), static arm/release, bit-exact 144/144 both dies, +ADRCHK"
+  },
+  "reg_ds_ag48": {
+   "E": 600,
+   "verdict": "PASS",
+   "log": "step_cosim5/reg_ds_ag48_pass.log"
+  },
+  "mutants": {
+   "m_nogap": "REJECTED (block 1/2 link reads not held: far endpoint early-frame fault)",
+   "m_vmstep": "REJECTED (TX VM sector step +1: wrong frames)"
+  },
+  "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step5.sh (Verilator 5.050, ot-epyc6)"
+ },
+ "ag144_measured_vs_composed": {
+  "measured": 760.0,
+  "composed_old": 739.4,
+  "delta": 20.6,
+  "cause": "two block boundaries: far arm of block b only after block b-1 READY (+guard), link reads of block b held 5k beats, release after the previous block drain + pingpong FLUSH"
+ },
+ "steps_hbm6": {
+  "reg_ds_ag48": {
+   "E": [
+    600,
+    594
+   ],
+   "verdict": "PASS",
+   "log": "step_cosim6/reg_ds_ag48_pass.log",
+   "note": "= XDIE-HBM3/4/5 (600) on the ROWS 256 build"
+  },
+  "reg_ds_ag144": {
+   "E": [
+    760,
+    754
+   ],
+   "verdict": "PASS",
+   "log": "step_cosim6/reg_ds_ag144_pass.log",
+   "note": "= XDIE-HBM5 (760/754) on the ROWS 256 build"
+  },
+  "ds_rs144": {
+   "blocks": [
+    48,
+    48,
+    48
+   ],
+   "E": [
+    862,
+    872
+   ],
+   "verdict": "PASS",
+   "adr_bad": [
+    0,
+    0
+   ],
+   "issuer_rows": 218,
+   "loops": 12,
+   "log": "step_cosim6/ds_rs144_pass.log",
+   "note": "DS reduce-scatter RS(144) as ONE static programme on the 256-row COLL issuer (v8g #(.ROWS(256)) -> ot_hgi_coll_issuer_m256, core issuer_v7): 3 RX pingpong blocks of 48, bit-exact 144/144 both dies, +ADRCHK; local operand loads in lockstep with the peer frame (RL = R); launch +T0=15807 (same TX gearbox phase gc 116 as XDIE-HBM5; the 218-row programme loads past T0 9000)"
+  },
+  "mutants": {
+   "m_nogap": "REJECTED (die 1 block 1/2 link reads not held: die 0 far endpoint early-frame fault, 2074 faults, block NOT READY at release)",
+   "m_vmstep": "REJECTED (die 1 TX VM sector step +1: link frame 4 mismatch, rx_bad 1)"
+  },
+  "compiler": "tools/xdie_hbm_step_compile.py --rows 256 (pc bit 7 at meta 54/55/56, dense loop ids < 32); ROWS 64/128 output byte-identical on 28 XDIE-HBM4/5 programmes",
+  "bench": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_step6.sh (Verilator 5.050; reg ot-epyc5, rs/mut ot-epyc8)"
+ },
+ "rs144_measured_vs_composed": {
+  "measured": 872.0,
+  "measured_dies": [
+   862,
+   872
+  ],
+  "composed_old": 918.0,
+  "delta": -46.0,
+  "composed_form": "RS(144) = AG(144) + [RS(48) - AG(48)] + 96 = 760 + 62 + 96",
+  "cause": "the composition charged RS(144) the AG(144) block boundaries plus 1 edge per extra frame (reduce drain 1 frame / 2 edges); measured RS(144) - AG(144) = 112, not 158: the reduce drain of block b overlaps the far arm / link-read hold of block b+1"
  }
 }

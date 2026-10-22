@@ -1,0 +1,17 @@
+{
+  "name": "rank_masks",
+  "verdict": "CAUGHT",
+  "baseline_exit": 0,
+  "mutant_exit": 1,
+  "baseline_application_pass": true,
+  "mutant_named_invariant_failed": true,
+  "mutant_application_pass": false,
+  "extra_witness_present": true,
+  "source_delta": [
+    "private/qkd_host_peer_coordinator_codec_rc.sv"
+  ],
+  "baseline_log_sha256": "7bbb8df7c3c114542a97690985793e370d7f5ca08bff5a96c653beac57b8430a",
+  "mutant_log_sha256": "07c6bd3c2fd2e939a6210625a11d2e9199c01e9a500562710c1c592d1cc88b6f",
+  "required_regex": "ENGINE_CREDIT_BEFORE_ALL_RESULT_RETURNS",
+  "scope": "minimum native seam COMPONENT source control, no production/native/physical qualification"
+}

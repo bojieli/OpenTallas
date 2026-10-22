@@ -1,0 +1,172 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_ff.lib
+read_db /work/results/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/3_place.odb
+read_sdc /work/results/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pvm_cts_release.tcl
+PVM_CTS_RELEASE sequential_dont_touch=10064
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_levels 2 -distance_between_buffers 40 -no_obstruction_aware
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0011]  Clock net "clk" for macros has 1 sinks.
+[INFO CTS-0011]  Clock net "clk_regs" for registers has 16169 sinks.
+[INFO CTS-0008] TritonCTS found 2 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 1 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 1.
+[INFO CTS-0029]  Macro  sinks will be clustered in groups of up to 4 and with maximum cluster diameter of 342.6 um.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0021]  Distance between buffers: 14 units (40 um).
+[INFO CTS-0023]  Original sink region: [(257676, 196332), (257676, 196332)].
+[INFO CTS-0024]  Normalized sink region: [(190.871, 145.431), (190.871, 145.431)].
+[INFO CTS-0025]     Width:  0.0000.
+[INFO CTS-0026]     Height: 0.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 1
+    Sub-region size: 0.0000 X 0.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 1.
+[INFO CTS-0201] 1 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk_regs.
+[INFO CTS-0028]  Total number of sinks: 16169.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0021]  Distance between buffers: 14 units (40 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 116.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 751.
+[INFO CTS-0204] A clustering solution was found from clustering size of 6 and max clustering diameter of 44.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 137.
+[INFO CTS-0024]  Normalized sink region: [(19.3829, 51.3612), (247.994, 220.824)].
+[INFO CTS-0025]     Width:  228.6115.
+[INFO CTS-0026]     Height: 169.4628.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 69
+    Sub-region size: 114.3057 X 169.4628
+[INFO CTS-0034]     Segment length (rounded): 58.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 35
+    Sub-region size: 114.3057 X 84.7314
+[INFO CTS-0034]     Segment length (rounded): 42.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 18
+    Sub-region size: 57.1529 X 84.7314
+[INFO CTS-0034]     Segment length (rounded): 28.
+ Level 4
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 57.1529 X 42.3657
+[INFO CTS-0034]     Segment length (rounded): 22.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 137.
+[INFO CTS-0018]     Created 2 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 2 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 921 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 8.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 8.
+[INFO CTS-0015]     Created 921 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:4, 6:4, 7:4, 8:6, 9:5, 10:4, 11:5, 12:13, 13:6, 14:9, 15:16, 16:20, 17:27, 18:33, 19:45, 20:62, 21:73, 22:87, 23:88, 24:90, 25:65, 26:50, 27:25, 28:15, 29:6, 30:3, 31:1, 32:1..
+[INFO CTS-0017]     Max level of the clock tree: 4.
+[INFO CTS-0124] Clock net "clk"
+[INFO CTS-0125]  Sinks 1
+[INFO CTS-0098] Clock net "clk_regs"
+[INFO CTS-0099]  Sinks 16804
+[INFO CTS-0100]  Leaf buffers 888
+[INFO CTS-0101]  Average sink wire length 229.60 um
+[INFO CTS-0102]  Path depth 6 - 8
+[INFO CTS-0207]  Dummy loads inserted 635
+[INFO RSZ-0047] Found 1 long wires.
+[INFO RSZ-0048] Inserted 1 buffers in 1 nets.
+[INFO CTS-0033] Balancing latency for clock core_clk
+[INFO CTS-0036]  inserted 11 delay buffers
+[INFO CTS-0037] Total number of delay buffers: 11
+[INFO CTS-0500] Runtime: 10.80s
+QDM PINFLOP reference: 548 input pin flops (0 hard-child clock pins at +insertion), median arrival 401.534058 (range 367.657257 .. 406.265564)
+QDM reference pin sum1[335]$_DFF_P_/CLK clock arrival max 401.534058 min 317.174774 skew 90 hold 50
+OT_HOLD_BUDGET die: L_min 317.174774 C 25 U 25 relief 0
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_LINK_BUDGET clock core_clk T 770.000 L 383.6 (360.2..407.0 std_regs 16169 (macro pins excluded)) skew 150 link 114 -> S 223.0 R 223.0; in max 487.0 out max 487.0
+OT_LINK_BUDGET ports in:core_clk 540 out:core_clk 586 async_pins_excluded 2974
+PVM_CTS_RESTORE_PASS reprotected=10064 nonclock_bindings_identical
+Took 36 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_levels 2 -distance_between_buffers 40 -no_obstruction_aware
+estimate_parasitics -placement
+Took 5 seconds: estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 101728.74 um^2
+[INFO DPL-0007] Movable instances area: 10574.15 um^2
+[INFO DPL-0008] Fixed instances area within core: 26612.04 um^2
+[INFO DPL-0009] Utilization: 36.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 94477 cells
+[INFO DPL-0393]   height 571 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       7353 |       810 |      6431
+        1 |       7200 |       774 |      6314
+        2 |       7200 |       774 |      6314
+        3 |       7200 |       774 |      6314
+        4 |       7200 |       774 |      6314
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 7200 for 3 consecutive iterations.
+Using old diamond search for 774 remaining illegal cells.
+diamond recovery: recovered 774/774 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 5.06s
+Placement Analysis
+---------------------------------
+total displacement      19392.6 u
+average displacement        0.2 u
+max displacement           23.1 u
+original HPWL          591358.4 u
+legalized HPWL         603426.8 u
+delta HPWL                    2 %
+
+Took 5 seconds: detailed_placement
+estimate_parasitics -placement
+OT_PG_STANDARD_BIND protect_clock_tree rules=5
+OT_CLK_PROTECT dont_touch clock nets=937 clock buffers=936 pg_bound=5 scope=source_cts_before_protect
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose
+[ERROR EST-0104] inconsistent parasitics state
+Error: cts.tcl, 83 EST-0104
+Elapsed time: 0:57.71[h:]min:sec. CPU time: user 122.86 sys 32.15 (268%). Peak memory: 1780176KB.
+make: *** [Makefile:548: do-4_1_cts] Error 1

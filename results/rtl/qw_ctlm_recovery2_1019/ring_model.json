@@ -1,0 +1,67 @@
+{
+  "status": "MODEL_ONLY_HOLD",
+  "period_ps": 833.3333333333334,
+  "depth": 4,
+  "K": 2,
+  "assumptions": [
+    "same-rate clocks, fixed measured relative phase phi",
+    "source write_oh and destination read_oh epochs correspond",
+    "one reset epoch is established before first valid input",
+    "no clock stops or epoch slips in active execution"
+  ],
+  "ownership": "slot s is written only when write_oh[s]; selected only when read_oh[s]; each recurs every D edges",
+  "budget": "data slot q -> read o d only: cq+wire+comb+setup+uncertainty < (K+phi)*T; hold must precede next overwrite",
+  "rows": [
+    {
+      "phase_T": -0.75,
+      "write_to_capture_ps": 1041.6666666666667,
+      "capture_to_overwrite_ps": 2291.666666666667
+    },
+    {
+      "phase_T": -0.5,
+      "write_to_capture_ps": 1250.0,
+      "capture_to_overwrite_ps": 2083.3333333333335
+    },
+    {
+      "phase_T": -0.25,
+      "write_to_capture_ps": 1458.3333333333335,
+      "capture_to_overwrite_ps": 1875.0
+    },
+    {
+      "phase_T": 0.0,
+      "write_to_capture_ps": 1666.6666666666667,
+      "capture_to_overwrite_ps": 1666.6666666666667
+    },
+    {
+      "phase_T": 0.25,
+      "write_to_capture_ps": 1875.0,
+      "capture_to_overwrite_ps": 1458.3333333333335
+    },
+    {
+      "phase_T": 0.5,
+      "write_to_capture_ps": 2083.3333333333335,
+      "capture_to_overwrite_ps": 1250.0
+    },
+    {
+      "phase_T": 0.75,
+      "write_to_capture_ps": 2291.666666666667,
+      "capture_to_overwrite_ps": 1041.6666666666667
+    }
+  ],
+  "min_sample_age_ps": 1041.6666666666667,
+  "min_overwrite_gap_ps": 1041.6666666666667,
+  "sdc_scope_problem": "current wildcard endpoints include writer valid/selector/control; per-cone ownership and first-use proof missing",
+  "reset_problem": "writer rq adds one reset stage beyond record depth=3 flat reference; stopped-clock reset cannot be inferred from synchronous pads",
+  "storage": {
+    "crossings": 26,
+    "payload_bits": 952,
+    "bank_bits": 3808,
+    "read_output_bits": 952,
+    "chunks": 56,
+    "max_independent_ring_bits": 748,
+    "source_declared_state_bits": 6608,
+    "record_landing_flops": 5936,
+    "assertion_epoch_bits": 672,
+    "note": "logical crossing objects are <=748 bank bits; total3808 real bank bits must be charged, chunking is fanout implementation, not storage exemption"
+  }
+}

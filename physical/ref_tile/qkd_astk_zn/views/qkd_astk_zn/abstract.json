@@ -177,11 +177,24 @@
   },
   "macro_views": [],
   "files": {
-    "qkd_astk_zn.lef": "e91ad9cf37e0a9f29cee9a31fc7d5118e4c3f2e23ee8baea1cdd31cd3ce2b81f",
+    "qkd_astk_zn.lef": "fc39119f42af0eedf820540459e8d7e96d577d4432a70fc8503d0026ed1bd7b5",
     "qkd_astk_zn_ff.lib": "fc476dea9f292d86887de2b2dbe02cd31e4c29b0152ac5b5aed95fdc508e76f6",
     "qkd_astk_zn_ss.lib": "f6f872749c9dec49812967309db49164b8fe63ad6dd3177c55fb8a6c08700ecb",
     "qkd_astk_zn_tt.lib": "1d6d32736b5fe306dad33178fe60078781fc17379849ea12c1cfecdd9b2bfd5e"
   },
   "ok": true,
-  "checked": true
+  "checked": true,
+  "raw_lef_reconstructed": {
+    "reason": "view predates export provenance: exporter raw LEF not saved (closed_archive keeps only the finalized LEF); raw = committed finalized LEF minus its OT_OBS_CLOSED marker and the last <added>=463 M5 pocket-fill RECTs (abstract_pin_stub appends them after the last M5 RECT); pin stubs already moved stay moved (step 1 idempotent)",
+    "committed_lef_sha256": "234b9cc112e01923089a33315decefff17fad6e5c9a51ad4ef49985b2286cd1b",
+    "original_raw_manifest_lef_sha256": "e91ad9cf37e0a9f29cee9a31fc7d5118e4c3f2e23ee8baea1cdd31cd3ce2b81f",
+    "by": "KVR-VIEWS 2026-10-19"
+  },
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "a9ea99d0780531ab58b26504706e742fe4c6462e52ccc7654b9ee4811d782c46",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "fc664991b6719082262a689795f538e57c82a0bc10a32447ea0f5b9aecf49dd5"
+  }
 }

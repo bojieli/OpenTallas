@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_ahub_sdw-a7-c6c412b4c bench bench_ahub_dw_s4o_m1 host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/qkd_ahub_sdw-a7-c6c412b4c log cl/bench_ahub_dw_s4o_m1.a1b1.log captured 2026-10-19T07:39:36-07:00
+# fail_regex '^AHUB_DW FAIL mut=1 errors='
+Verilator 5.050 2026-07-01 rev v5.050
+AHUB_DW FAIL mut=1 first error cycle 1861 pass 0: fr not on pvfin's R slot
+AHUB_DW FAIL mut=1 errors=11936

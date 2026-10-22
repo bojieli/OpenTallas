@@ -1,0 +1,12 @@
+XDIE2_CFG MU 1 LEG 1 DMUT 0 NS 2584 NM 32 ERRP 0 LATE 0 CHB 1
+FAIL xdie_s81_2: unexpected beat at dp 0 from 13 pair 0 cycle 12996
+FAIL xdie_s81_2: unexpected beat at dp 1 from 4 pair 0 cycle 12996
+FAIL xdie_s81_2: unexpected beat at dp 2 from 11 pair 0 cycle 12996
+FAIL xdie_s81_2: unexpected beat at dp 3 from 10 pair 0 cycle 12996
+FAIL xdie_s81_2: unexpected beat at dp 4 from 1 pair 0 cycle 12996
+XDIE_LINK timeouts 0 retx_flits 0 (all 64 lanes; go-back-N ACK timeouts and replayed flits)
+XDIE_MU tagged_expected 2560 tagged_seen 2560 tag_errors 0
+XDIE_STATS beats 2584 landed 2584 mismatches 0 late 0 maxlate 0 extra 1280 faults 0000000000000000 live 64/64 last_cycle 15102
+FAIL xdie_s81: landed 2584/2584 mismatches 0 late 0 extra 1280 faults 0000000000000000 live 64/64 tags 2560/2560 tag_errors 0
+BENCH_FAIL wrongcopy
+EXIT 1

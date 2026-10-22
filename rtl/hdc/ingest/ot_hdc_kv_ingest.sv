@@ -86,6 +86,10 @@ module ot_hdc_kv_ingest #(
     //           stack bit k is set and the segment is unringed, captured with the other ap0 fields), so stage A1 is a
     //           four-operand add ap1_rbase = base + pp0 + pp1 + pp2 (= base + stk * stride mod 2^32, stk < 8).  Same
     //           bubble edges and values as APIPE 4, edge for edge.
+    //   APIPE = 8 (S81-SAFE-FIX/SH 2026-10-19, dsdv_sh_lk route lint: ap1_gs -> a2_blk + IKEY offsets -> ap_kcode 22
+    //           levels / 775-787 ps, over the 600-ps stage rule): as 7 with stage B split in two.  B0 (apb_*) registers
+    //           the block base a2_blk = rbase + sb * 2176, the IKEY code / scale offsets (bit-disjoint fields: no carry
+    //           chain) and a2_raddr; B adds them (two-operand adds).  One more bubble edge a row (four), same values.
     parameter integer QKV    = 1,
     parameter integer APIPE  = 0,
     // QPIPE = 1 (qwen-1010/c 2026-10-10; 0 = unchanged): qfd_io_host preroute -1.2 .. -2.3 ns at clk_i (135 k of 139 k
@@ -316,9 +320,27 @@ module ot_hdc_kv_ingest #(
     wire [2:0]  ra_w0 = ra_rp[7:5];
     wire [2:0]  ra_w1 = ra_w0 + 3'd1;          // mod 8 (a named 3-b net: some simulators widen an index sum)
     wire [2:0]  ra_wq = ra_wp + 3'd1;
-    wire [511:0] ra_pair = {ra[ra_w1], ra[ra_w0]};
-    wire [511:0] ra_sh = ra_pair >> {ra_rp[4:0], 3'b000};
-    wire [255:0] ra_head = ra_sh[255:0];      // the next 32 bytes
+    wire [255:0] ra_head;                      // the next 32 bytes
+    // APIPE >= 7 (S81-SHLK 2026-10-18, dsdv_sh_lk route ef442ffba: u_eng.ra_rp[5] -> word select + byte shift of all 512
+    // bits -> ox_w_q / sc_acc TT -22.4, 11 endpoints): RAC = 8 kept copies of ra_rp, loaded with it on every edge; copy
+    // s drives the select / shift of head bits [32 s +: 32] only.  Same value, same edge: no cycle or value change.
+    localparam integer RAC = (APIPE >= 7) ? 8 : 1;
+    (* keep *) reg [8*RAC-1:0] ra_rpc;           // RAC = 1: unused (the original single-pointer realigner below)
+    if (RAC > 1) begin : g_rac
+        genvar ras;
+        for (ras = 0; ras < 8; ras = ras + 1) begin : g_rah
+            wire [7:0]   rp = ra_rpc[8 * ras +: 8];
+            wire [2:0]   w0 = rp[7:5];
+            wire [2:0]   w1 = w0 + 3'd1;
+            wire [511:0] pr = {ra[w1], ra[w0]};
+            wire [511:0] sh = pr >> {rp[4:0], 3'b000};
+            assign ra_head[32 * ras +: 32] = sh[32 * ras +: 32];
+        end
+    end else begin : g_ra1
+        wire [511:0] ra_pair = {ra[ra_w1], ra[ra_w0]};
+        wire [511:0] ra_sh = ra_pair >> {ra_rp[4:0], 3'b000};
+        assign ra_head = ra_sh[255:0];
+    end
     reg         st_act, st_pad;
     reg  [3:0]  st_mode;
     reg  [255:0] st_d;
@@ -456,7 +478,7 @@ module ot_hdc_kv_ingest #(
         if (!rst_n) begin
             dq_n <= 0; dq_rd <= 0; dq_wr <= 0;
             s_full <= 2'b00; s_pre <= 2'b00; s_fill <= 2'b00; qi_act <= 1'b0; qi_slot <= 1'b0; qo_act <= 1'b0; qo_slot <= 1'b0;
-            pr_act <= 1'b0; pr_out <= 0; st_act <= 1'b0; st_pad <= 1'b0; ra_n <= 0; ra_rp <= 0; ra_wp <= 0;
+            pr_act <= 1'b0; pr_out <= 0; st_act <= 1'b0; st_pad <= 1'b0; ra_n <= 0; ra_rp <= 0; if (RAC > 1) ra_rpc <= 0; ra_wp <= 0;
             done_r <= 1'b0; dtag_r <= 0; nsec_r <= 0; n_beats <= 0;
             qi_t <= 0; qi_g <= 0; qi_d <= 0; qi_v <= 1'b0; qo_v <= 1'b0; qo_g <= 0; qo_s <= 0; qo_hb <= 0;
             pr_v <= 1'b0; pr_g <= 0; pr_s <= 0; pr_hb <= 0; pr_slot <= 1'b0;
@@ -580,7 +602,7 @@ module ot_hdc_kv_ingest #(
             if (ra_push || pad_take) st_beats <= st_beats - 16'd1;
             if (st_pad) begin
                 // the segment's last-beat padding (and any extra padding beats) is dropped
-                ra_n <= 0; ra_rp <= 0; ra_wp <= 0;
+                ra_n <= 0; ra_rp <= 0; if (RAC > 1) ra_rpc <= 0; ra_wp <= 0;
                 if (st_beats == 0 || (pad_take && st_beats == 16'd1)) begin
                     st_act <= 1'b0; st_pad <= 1'b0;
                     if (st_d[7]) begin done_r <= 1'b1; dtag_r <= st_d[15:8]; end
@@ -588,6 +610,11 @@ module ot_hdc_kv_ingest #(
             end else begin
                 ra_n <= ra_n + (ra_push ? 9'd64 : 9'd0) - (st_go ? {3'd0, st_pop} : 9'd0);
                 if (st_go) ra_rp <= ra_rp + {2'd0, st_pop};
+`ifdef OT_ING_MUT_RAC
+                if (st_go && RAC > 1) for (int k = 1; k < RAC; k++) ra_rpc[8 * k +: 8] <= ra_rp + {2'd0, st_pop};   // mutant: copy 0 stalls
+`else
+                if (st_go && RAC > 1) for (int k = 0; k < RAC; k++) ra_rpc[8 * k +: 8] <= ra_rp + {2'd0, st_pop};
+`endif
             end
             if (st_go) begin
                 case (st_mode)
@@ -631,7 +658,11 @@ module ot_hdc_kv_ingest #(
 `else
         else if (ap_inval) ap_ok <= 1'b0;
 `endif
-        else ap_ok <= (APIPE >= 2) ? (st_act && ap_ok1) : st_act;
+`ifdef OT_ING_MUT_APBSKIP
+        else ap_ok <= (APIPE >= 2) ? (st_act && ap_ok1) : st_act;               // mutant: APIPE 8 stage B0 not waited for
+`else
+        else ap_ok <= (APIPE >= 8) ? (st_act && ap_okb) : (APIPE >= 2) ? (st_act && ap_ok1) : st_act;
+`endif
     end
     // APIPE 2: stage A (ap1_*) registers the per-row decomposition, stage B (ap_*) the products / sums from it
     reg         ap_ok1;
@@ -685,8 +716,23 @@ module ot_hdc_kv_ingest #(
             ap1_rbase <= s_rbase; ap1_local <= s_local; ap1_gs <= s_gs; ap1_row <= st_row; ap1_pitch <= s_pitch; ap1_mine <= s_mine;
         end
     end
+    // APIPE 8: stage B0 (apb_*) = block base, IKEY offsets, row address; stage B = two-operand sums
+    reg         ap_okb, apb_mine;
+    reg  [31:0] apb_blk, apb_koff, apb_soff, apb_raddr;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) ap_okb <= 1'b0;
+        else if (ap_inval) ap_okb <= 1'b0;
+        else ap_okb <= st_act && ap_ok1;
+    end
+    always @(posedge clk) if (!ap_okb) begin
+        apb_blk  <= a2_blk;
+        apb_koff <= ((32'd1 + {28'd0, a2_q[5:2]}) << 7) + ({30'd0, a2_q[1:0]} << 5) + ((ap1_row & 32'd15) << 1);
+        apb_soff <= {26'd0, a2_q} << 1;
+        apb_raddr <= a2_raddr; apb_mine <= ap1_mine;
+    end
     always @(posedge clk) if (!ap_ok) begin
-        if (APIPE >= 2) begin ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1_mine; end
+        if (APIPE >= 8) begin ap_raddr <= apb_raddr; ap_kcode <= apb_blk + apb_koff; ap_kscal <= apb_blk + apb_soff; ap_mine <= apb_mine; end
+        else if (APIPE >= 2) begin ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1_mine; end
         else begin ap_raddr <= s_raddr; ap_kcode <= k_code; ap_kscal <= k_scal; ap_mine <= s_mine; end
     end
     // =============================================================================

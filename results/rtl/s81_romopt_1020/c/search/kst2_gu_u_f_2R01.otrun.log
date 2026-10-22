@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       admits  1154 GB (avail 907, growth 100, headroom 0, waiters 0/0 GB) load 27/128 running 19 disk 320 GB 
+ot-run: ot-epyc6       admits   583 GB (avail 521, growth 113, headroom 0, waiters 0/0 GB) load 138/128 running 27 disk 3712 GB 
+ot-run: ot-epyc7       admits   893 GB (avail 694, growth 69, headroom 0, waiters 0/0 GB) load 37/96 running 23 disk 5267 GB 
+ot-run: ot-epyc9       admits  1028 GB (avail 770, growth 50, headroom 0, waiters 0/0 GB) load 61/128 running 19 disk 94 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2778217-1792519120 after 0 s
+KSLOT_SEARCH col_h10|fp4|5120|5|5|3|r10|st2 round 0 best faults 0 root words 22 cfg (7000015, 60000, 40, 10) time 112
+KSLOT_SEARCH_DONE ['col_h10|fp4|5120|5|5|3|r10|st2']
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2778217-1792519120): exit 0

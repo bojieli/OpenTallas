@@ -1,0 +1,321 @@
+{
+ "schema": "opentallas.cb16.flat_fanout.v1",
+ "netlist_sha256": "a887903a7b425a4313982178cb99ad973f3f875c55969ab4bb5325469823355d",
+ "mapped_cells": 80,
+ "flops": 32,
+ "maximum_register_loads": 1,
+ "register_violations": [],
+ "top_register_loads": [
+  {
+   "inst": "first[0]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 39,
+   "loads": 1
+  },
+  {
+   "inst": "first[10]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 57,
+   "loads": 1
+  },
+  {
+   "inst": "first[11]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 59,
+   "loads": 1
+  },
+  {
+   "inst": "first[12]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 61,
+   "loads": 1
+  },
+  {
+   "inst": "first[13]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 63,
+   "loads": 1
+  },
+  {
+   "inst": "first[14]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 65,
+   "loads": 1
+  },
+  {
+   "inst": "first[15]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 67,
+   "loads": 1
+  },
+  {
+   "inst": "first[1]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 37,
+   "loads": 1
+  },
+  {
+   "inst": "first[2]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 41,
+   "loads": 1
+  },
+  {
+   "inst": "first[3]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 43,
+   "loads": 1
+  },
+  {
+   "inst": "first[4]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 45,
+   "loads": 1
+  },
+  {
+   "inst": "first[5]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 47,
+   "loads": 1
+  },
+  {
+   "inst": "first[6]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 49,
+   "loads": 1
+  },
+  {
+   "inst": "first[7]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 51,
+   "loads": 1
+  },
+  {
+   "inst": "first[8]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 53,
+   "loads": 1
+  },
+  {
+   "inst": "first[9]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 55,
+   "loads": 1
+  },
+  {
+   "inst": "q[0]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 69,
+   "loads": 1
+  },
+  {
+   "inst": "q[10]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 89,
+   "loads": 1
+  },
+  {
+   "inst": "q[11]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 91,
+   "loads": 1
+  },
+  {
+   "inst": "q[12]$_DFF_P_",
+   "type": "DFFHQNx1_ASAP7_75t_R",
+   "pin": "QN",
+   "bit": 93,
+   "loads": 1
+  }
+ ],
+ "flag_port_direction": "absent",
+ "flag_ports": 0,
+ "flag_max_loads": 0,
+ "flag_loads": {},
+ "input_port_loads": {
+  "d": {
+   "0": 1,
+   "1": 1,
+   "2": 1,
+   "3": 1,
+   "4": 1,
+   "5": 1,
+   "6": 1,
+   "7": 1,
+   "8": 1,
+   "9": 1,
+   "10": 1,
+   "11": 1,
+   "12": 1,
+   "13": 1,
+   "14": 1,
+   "15": 1
+  }
+ },
+ "input_port_max_loads": 1,
+ "scope": "native flattened mapped netlist; excludesclock/power; output flag pins require linked receiver loads",
+ "maximum_nonclock_driver_loads": 1,
+ "nonclock_driver_violations": [],
+ "top_nonclock_driver_loads": [
+  {
+   "inst": "_32_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 36,
+   "loads": 1
+  },
+  {
+   "inst": "_33_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 38,
+   "loads": 1
+  },
+  {
+   "inst": "_34_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 40,
+   "loads": 1
+  },
+  {
+   "inst": "_35_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 42,
+   "loads": 1
+  },
+  {
+   "inst": "_36_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 44,
+   "loads": 1
+  },
+  {
+   "inst": "_37_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 46,
+   "loads": 1
+  },
+  {
+   "inst": "_38_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 48,
+   "loads": 1
+  },
+  {
+   "inst": "_39_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 50,
+   "loads": 1
+  },
+  {
+   "inst": "_40_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 52,
+   "loads": 1
+  },
+  {
+   "inst": "_41_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 54,
+   "loads": 1
+  },
+  {
+   "inst": "_42_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 56,
+   "loads": 1
+  },
+  {
+   "inst": "_43_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 58,
+   "loads": 1
+  },
+  {
+   "inst": "_44_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 60,
+   "loads": 1
+  },
+  {
+   "inst": "_45_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 62,
+   "loads": 1
+  },
+  {
+   "inst": "_46_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 64,
+   "loads": 1
+  },
+  {
+   "inst": "_47_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 66,
+   "loads": 1
+  },
+  {
+   "inst": "_48_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 68,
+   "loads": 1
+  },
+  {
+   "inst": "_49_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 70,
+   "loads": 1
+  },
+  {
+   "inst": "_50_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 72,
+   "loads": 1
+  },
+  {
+   "inst": "_51_",
+   "type": "INVx3_ASAP7_75t_R",
+   "pin": "Y",
+   "bit": 74,
+   "loads": 1
+  }
+ ],
+ "clock_nets_excluded": 1
+}

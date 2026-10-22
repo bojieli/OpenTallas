@@ -1,0 +1,19 @@
+{
+  "setup_edge": 14,
+  "issue_edges": [
+    22
+  ],
+  "last_commit": 72,
+  "control_reservation": {
+    "first": 0,
+    "last": 72,
+    "policy": "exclusive_record",
+    "drain_extra_serial_edges": 1
+  },
+  "fixture": {
+    "matched": true,
+    "k_layer": 23,
+    "checked_words": 128,
+    "mismatched_words": 0
+  }
+}

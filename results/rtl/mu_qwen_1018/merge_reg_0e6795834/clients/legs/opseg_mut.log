@@ -1,0 +1,13 @@
+# leg opseg_mut mem 32 threads 8 2026-10-19T06:06:14-07:00
+# cmd: bash rtl/test/mu_qwen_seq/run_mu_opseg.sh /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/opseg_mut/w mut emb
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-0730/MUQWREG/src
+ot-run: ot-pve1        admits    39 GB (avail 82, growth 55, headroom 0, waiters 0/0 GB) load 15/28 running 8 disk 1227 GB 
+ot-run: ot-agidock128  admits    42 GB (avail 81, growth 52, headroom 0, waiters 0/0 GB) load 15/64 running 10 disk 310 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-624184-1792415175 after 0 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-624184-1792415175): exit 0
+# ot-run rc=0 2026-10-19T06:08:05-07:00

@@ -100,17 +100,51 @@ def main(argv=None):
     ap.add_argument('--repo', default=str(ROOT))
     ap.add_argument('--ref', required=True)
     ap.add_argument('--port-bind', required=True)
+    ap.add_argument('--bind-snapshot-bytes', action='store_true',
+                    help='with --bind-case: a bound file whose executed snapshot bytes differ from (or are absent at) --ref '
+                         'is taken from the snapshot (what the die was bound from), recorded in executed_bind_index.snapshot_overrides')
+    ap.add_argument('--bind-case', help='original executed bind_case.json: honor recorded index roots/final file precedence')
     ap.add_argument('--top-v', required=True)
     ap.add_argument('--top', default=None)
     ap.add_argument('--out', required=True)
     ap.add_argument('--prefer-list', action='append', default=None)
     ap.add_argument('--strip-param', action='append', default=[], help='MASTER:PARAM:VALUE')
     ap.add_argument('--extra-file', action='append', default=[], help='repo path (at the ref) added to the index')
+    ap.add_argument('--select', action='append', default=[], metavar='FILE[:SHA256]',
+                    help='pin EVERY module defined in FILE (a kit path: rtl/... at the ref or rtl_extra/<sha>/...) to that '
+                         'file, over any prefer list, e.g. the GEN-selected physical die source when the strict bind and '
+                         'the GEN case resolved a module differently (S81 G9 XS4); optional :SHA256 must match the file')
     a = ap.parse_args(argv)
     repo, ref, out = Path(a.repo), a.ref, Path(a.out).resolve()
     sha = git(repo, 'rev-parse', ref).strip()
     D = load_dpb(repo, ref)
     pb = json.loads(Path(a.port_bind).read_text())
+    bind_index = None
+    if a.bind_case:
+        case_path = Path(a.bind_case)
+        command = json.loads(case_path.read_text())['port_bind_cmd']
+        assert isinstance(command, list) and command[1].endswith('/tools/die_port_bind.py')
+        snapshot = Path(command[1]).parents[1]
+        def bind_path(path):
+            if not Path(path).is_absolute():
+                assert '..' not in Path(path).parts, ('bind path escapes source root', path)
+                return str(Path(path))
+            m = re.search(r'/rtl_extra/([0-9a-f]{7,40})/(.*)$', str(path))
+            if m:
+                return f'rtl_extra/{m[1]}/{m[2]}'
+            if Path(path).name == 'cells_used.v':
+                return 'cells_used.v'
+            return str(Path(path).relative_to(snapshot))
+        bound_files = [(bind_path(p), p) for p in pb['rtl_files']]
+        bound_roots = [bind_path(p).rstrip('/') for p in pb['rtl_roots']]
+        original_files = [command[i+1] for i,v in enumerate(command) if v == '--rtl-file']
+        assert all(p in pb['rtl_files'] for p in original_files)
+        assert [command[i+1] for i,v in enumerate(command) if v == '--define'] == pb.get('defines', [])
+        bind_index = dict(bind_case_sha256=hashlib.sha256(case_path.read_bytes()).hexdigest(),
+            port_bind_sha256=hashlib.sha256(Path(a.port_bind).read_bytes()).hexdigest(),
+            original_command=command, original_explicit_files=original_files,
+            recorded_roots=bound_roots, final_ordered_files=[p for p,f in bound_files],
+            precedence='actual die_port_bind final files preference: later entry wins; recorded roots only')
     defines = {d: '' for d in pb.get('defines', [])}
     prefer_lists = a.prefer_list if a.prefer_list is not None else DEFAULT_PREFER
     src = out / 'src'
@@ -130,6 +164,9 @@ def main(argv=None):
         elif any(p.startswith(d + '/') for d in MACRO_DIRS) or re.match(r'physical/.+/rtl/', p):
             cand.append(p)
     cand += a.extra_file
+    if bind_index:
+        allowed = set(bind_index['final_ordered_files'])
+        cand = [p for p in cand if p in allowed or any(p.startswith(r + '/') for r in bound_roots)]
     texts = {}
     # batch read
     proc = subprocess.run(['git', '-C', str(repo), 'cat-file', '--batch'], input='\n'.join(f'{sha}:{p}' for p in cand).encode(),
@@ -147,13 +184,31 @@ def main(argv=None):
     # rtl_extra (other commits) from the bind's file list
     extra = {}
     for f in pb.get('rtl_files', []):
-        m = re.search(r'/rtl_extra/([0-9a-f]{40})/(.*)$', f)
+        m = re.search(r'/rtl_extra/([0-9a-f]{7,40})/(.*)$', f)
         if m:
             key = f'rtl_extra/{m.group(1)}/{m.group(2)}'
             texts[key] = git(repo, 'show', f'{m.group(1)}:{m.group(2)}', binary=True)
             extra[key] = m.group(1)
     texts['cells_used.v'] = ('// ASAP7 standard cells used by the S81-DV bound die top (library function models)\n'
                              + '\n'.join(CELL_MODELS.values()) + '\n').encode()
+    if bind_index:
+        hashes = {}
+        for rel, path in bound_files:
+            body = Path(path).read_bytes()
+            hashes[rel] = hashlib.sha256(body).hexdigest()
+            if rel != 'cells_used.v':
+                if a.bind_snapshot_bytes and texts.get(rel) != body:
+                    # the executed bind read these bytes: the die IS this source (snapshot assembled from several
+                    # commits, e.g. cap14 6c6821c87 carries pre-edae62d7b selector files); record both identities
+                    bind_index.setdefault('snapshot_overrides', {})[rel] = dict(
+                        ref_sha256=hashlib.sha256(texts[rel]).hexdigest() if rel in texts else None,
+                        snapshot_sha256=hashlib.sha256(body).hexdigest())
+                    texts[rel] = body
+                    continue
+                assert rel in texts, ('recorded bind input absent at source ref', rel)
+                assert texts[rel] == body, ('recorded bind input differs from immutable ref', rel)
+        bind_index['original_snapshot_file_sha256'] = hashes
+        bind_index['cells_used_projection'] = 'existing functional ASAP7 library models; original bind declarations separately hashed'
 
     defs = defaultdict(list)         # module -> [(path, Module)]   (parse cache: per ref sha + defines, ~3 min cold)
     import pickle
@@ -183,16 +238,31 @@ def main(argv=None):
     for p, mod in parsed:
         defs[mod.name].append((p, mod))
 
+    selected, select_rec = set(), []
+    for sv in a.select:
+        f, _, want = sv.partition(':')
+        assert f in texts, ('--select file not in the index (rtl/... at the ref or a bind rtl_extra path)', f)
+        got = hashlib.sha256(texts[f]).hexdigest()
+        assert not want or got == want, ('--select sha256 mismatch', f, got, want)
+        mods = sorted(by_path_sel for by_path_sel, ds in defs.items() if any(q == f for q, _ in ds))
+        assert mods, ('--select file defines no module', f)
+        selected.add(f)
+        select_rec.append(dict(file=f, sha256=got, modules=mods))
     # ---- prefer sources, in priority order: --prefer-list files, the bind table's prefer / rtl_files, then the
     #      sources of every hardened tile (physical/ref_tile/*/spec.json `sources`) whose top is in the closure
     pref_order = []                  # [(path, label)]
+    if bind_index:
+        # The recorded final files include the actual prefer-list/ref-tile
+        # expansion. Do not widen its index with unrelated hardened snapshots.
+        pref_order += [(f, 'recorded executed bind final file order')
+                       for f in reversed(bind_index['final_ordered_files'])]
     bench_defines = {}
     for L in prefer_lists:
         for f, dfs in list_files(git(repo, 'show', f'{sha}:{L}'), L):
             pref_order.append((f, L))
         bench_defines[L] = list_files.defines
     for f in pb.get('rtl_files', []):
-        m = re.search(r'/rtl_extra/([0-9a-f]{40})/(.*)$', f)
+        m = re.search(r'/rtl_extra/([0-9a-f]{7,40})/(.*)$', f)
         if m:
             pref_order.append((f'rtl_extra/{m.group(1)}/{m.group(2)}', 'bind rtl_extra'))
     specs = defaultdict(list)        # tile top -> [(spec path, sources)]
@@ -239,13 +309,17 @@ def main(argv=None):
         (`begin : g_x  ot_v41_segtree6 #(...) u (...)`; the bind's child closure missed ot_v41_segtree6 / ot_s81sl_xr3 /
         ...), so also take every known module name followed by a parameter list or an instance name"""
         out = set()
-        for m in re.finditer(r'\b([A-Za-z_]\w*)\s*(?=#\s*\(|[A-Za-z_\\][\w\\]*\s*(?:\[[^\]]*\]\s*)?\()', body):
+        # (also `MASTER `MACRO inst (...)`: a parameter macro between master and instance, e.g. dsdv_gunit `DSDV_GU_MUT)
+        for m in re.finditer(r'\b([A-Za-z_]\w*)\s*(?=(?:`\w+\s*)?(?:#\s*\(|[A-Za-z_\\][\w\\]*\s*(?:\[[^\]]*\]\s*)?\())', body):
             if m.group(1) in defs:
                 out.add(m.group(1))
         return out
 
+    moddup_resolved = []
+
     def closure(pref_of):
         problems, choices = [], {}
+        moddup_resolved.clear()
         conflicts.clear()
 
         def pick(name):
@@ -254,6 +328,10 @@ def main(argv=None):
                 return None
             if len(ds) == 1:
                 return ds[0]
+            sel = [d for d in ds if d[0] in selected]
+            if sel:
+                choices[name] = dict(file=sel[0][0], by='explicit --select', others=[d[0] for d in ds if d[0] != sel[0][0]])
+                return sel[0]
             pd = [d for d in ds if d[0] in pref_of]
             if pd:
                 best = min(pd, key=lambda d: pref_of[d[0]][0])
@@ -302,10 +380,28 @@ def main(argv=None):
         for n, ps in sorted(unresolved.items()):
             problems.append(f'UNRESOLVED {n} (instantiated by {sorted(ps)})')
         owner, moddup_same = {}, []
+        # TOKc-S81 (10-22, cap14): two closure files may both define a helper (frozen_tap_modules.sv vs eng_rr.sv:
+        # dsdv_eng_tap_c).  When the kit's own per-module choice (bind precedence / --select / prefer) names one of
+        # them, order that file first (Verilator MODDUP keeps the first) and record it instead of failing.
+        files = list(files)
+        for _ in range(len(files)):
+            moved, first = False, {}
+            for i, f in enumerate(files):
+                for nm in by_path[f]:
+                    if nm in first and first[nm] != f and mtext(nm, first[nm]) != mtext(nm, f) \
+                            and choices.get(nm, {}).get('file') == f:
+                        files.remove(f); files.insert(files.index(first[nm]), f); moved = True
+                        moddup_resolved.append(dict(module=nm, kept=f, shadowed=first[nm]))
+                        break
+                    first.setdefault(nm, f)
+                if moved:
+                    break
+            if not moved:
+                break
         for f in files:                 # a helper module defined in two chosen files: Verilator MODDUP keeps the first
             for nm in by_path[f]:
                 if nm in owner and owner[nm] != f:
-                    if mtext(nm, owner[nm]) != mtext(nm, f):
+                    if mtext(nm, owner[nm]) != mtext(nm, f) and choices.get(nm, {}).get('file') != owner[nm]:
                         problems.append(f'MODDUP {nm}: {owner[nm]} and {f} define it differently, both in the closure')
                     else:
                         moddup_same.append(nm)
@@ -378,16 +474,45 @@ def main(argv=None):
         dst.write_bytes(texts[f])
         rec_files.append(dict(path=f, sha256=hashlib.sha256(texts[f]).hexdigest(),
                               origin=(extra[f] if f in extra else ('library-function' if f == 'cells_used.v' else sha))))
+    # `include files (LB2-S81 L0 10-18: dsdv_svc_rs.sv / dsdv_svc_sx_hrow.sv include *_roles.svh from their own
+    # directory; the kit copied only module files -> "Cannot find include file").  Written next to the includer (its
+    # directory is already an +incdir), never listed as a compile unit; a missing include is a kit problem.
+    includes = []
+    tree_names = None
+    for f in list(files):
+        if f not in texts:
+            continue
+        for inc in re.findall(r'`include\s+"([^"]+)"', texts[f].decode(errors='ignore')):
+            cand = str(Path(f).parent / inc)
+            if cand not in texts:
+                r_ = subprocess.run(['git', '-C', str(repo), 'show', f'{sha}:{cand}'], capture_output=True)
+                if r_.returncode:      # not beside the includer: the one file of that name in the tree (an +incdir)
+                    if tree_names is None:
+                        tree_names = git(repo, 'ls-tree', '-r', '--name-only', sha).split('\n')
+                    hits = [t for t in tree_names if t.endswith('/' + inc) and '/test/' not in t]
+                    if len(hits) != 1:
+                        problems.append(f'INCLUDE_MISSING {inc} (included by {f}; tree matches {hits[:4]})')
+                        continue
+                    cand = hits[0]
+                    r_ = subprocess.run(['git', '-C', str(repo), 'show', f'{sha}:{cand}'], capture_output=True)
+                texts[cand] = r_.stdout
+            if cand not in includes and cand not in files:
+                includes.append(cand)
+                d_ = src / cand
+                d_.parent.mkdir(parents=True, exist_ok=True)
+                d_.write_bytes(texts[cand])
+                rec_files.append(dict(path=cand, sha256=hashlib.sha256(texts[cand]).hexdigest(), origin=sha, include=True))
     tdst = src / 'top' / Path(a.top_v).name.replace('.gz', '')
     tdst.parent.mkdir(parents=True, exist_ok=True)
     tdst.write_text(top_text)
-    incs = sorted({str((Path('src') / f).parent) for f in files})
+    incs = sorted({str((Path('src') / f).parent) for f in list(files) + includes})
     fl = [f'+incdir+{d}' for d in incs] + [f'+define+{d}' for d in defines] + [f'src/{f}' for f in files] + \
          [str(tdst.relative_to(out))]
     (out / 'kit.f').write_text('\n'.join(fl) + '\n')
     rec = dict(schema='opentallas.s81_dv.rtl_kit.v1', ref=ref, sha=sha, port_bind=a.port_bind, top_v=a.top_v,
+               executed_bind_index=bind_index, moddup_resolved=moddup_resolved,
                top=a.top, top_sha256=hashlib.sha256(top_text.encode()).hexdigest(), masters=len(masters),
-               modules=len(seen), files=rec_files, prefer_lists=prefer_lists, variant_choices=choices, ref_tile_specs_used=used_specs, moddup_identical=sorted(set(moddup_same)), snapshot_differs=snapshot_differs, prefer_conflicts=conflicts, bench_defines_not_applied=bench_defines,
+               modules=len(seen), files=rec_files, prefer_lists=prefer_lists, variant_choices=choices, selected=select_rec, ref_tile_specs_used=used_specs, moddup_identical=sorted(set(moddup_same)), snapshot_differs=snapshot_differs, prefer_conflicts=conflicts, bench_defines_not_applied=bench_defines,
                stripped_params=dict(stripped), defines=sorted(defines), problems=problems,
                verdict='PASS' if not problems else 'FAIL')
     (out / 'kit.json').write_text(json.dumps(rec, indent=1) + '\n')

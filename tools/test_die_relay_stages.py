@@ -111,8 +111,34 @@ class Schema(unittest.TestCase):
         self.assertEqual(got, {'s.o -> t.d': (2, 8, 'b0'), 's.o -> u.d': (1, 8, 'b0')})
         self.assertEqual(prob, [])
 
+    def test_qwen_reset_reclassified_legs_and_real_open_data(self):
+        exporter = mod('qwen_split/relay_stages_export.py', 'reset_export_test')
+        model = dict(insts=[Inst('s', 'SRC', 'blk'), Inst('r0', 'RLY', 'relay'),
+                            Inst('r1', 'RLY', 'relay'), Inst('t', 'SNK', 'blk')], buses=[])
+        for i in range(2):
+            model['buses'] += [(f'rst{i}', 'data', 1, [('s', f'rst{i}'), (f'r{i}', 'a')]),
+                               (f'rst{i}__r1', 'reset', 1, [(f'r{i}', 'b'), ('t', f'rst{i}')])]
+        doc = exporter.export_model(model, 'reset', reach=425)
+        self.assertEqual(doc['problem_count'], 0, doc['problems'])
+        self.assertEqual(doc['bus_count'], 0)
+        model['buses'].pop()  # a genuinely open relay output must still fail
+        doc = exporter.export_model(model, 'open', reach=425)
+        self.assertEqual(doc['problem_count'], 1)
+        self.assertIn('drives nothing', doc['problems'][0])
+
 
 class Check(unittest.TestCase):
+    def test_effective_age_drift_cannot_hide_behind_equal_frame_digest(self):
+        p = plan([bus('a', 'x', 'b', 'y', 5, age_edges=4)])
+        sched = DRS.compiled(p, 'age-test')
+        self.assertEqual(CHK.check(p, sched)['verdict'], 'PASS')
+        for age in (3, None, '<absent>'):
+            run = plan([bus('a', 'x', 'b', 'y', 5, **({} if age == '<absent>' else dict(age_edges=age)))])
+            self.assertEqual(run['digest'], p['digest'])  # preserve historical frame-count digest contract
+            rep = CHK.check(run, sched)
+            self.assertEqual(rep['verdict'], 'FAIL')
+            self.assertEqual(len(rep['age_diffs']), 1)
+
     def setUp(self):
         self.p = plan([bus('a', 'x', 'b', 'y', 3), bus('a', 'x', 'c', 'y', 0)])
 

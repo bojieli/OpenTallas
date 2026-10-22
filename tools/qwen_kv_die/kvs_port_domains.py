@@ -6,6 +6,7 @@ Per port bit, traced through combinational cells only:
   input  -> the registers / memories it reaches (their clock = a top clock port) and any output port it reaches (feed-through);
   output -> the registers / memories / input ports it comes from.
 A port's domain = the set of clock ports of those registers ('ck', 'hck', ...); 'none' = pure feed-through / constant.
+A mixed-domain port also lists its per-bit domains ('bit_domains' runs [msb, lsb, domains], TW2-KVGRP 10-19).
 'depth' = the largest number of combinational cells between the pin and the first register (0 = the pin IS a register D / Q).
 
     # on a fleet host (yosys): elaborate + analyse
@@ -42,6 +43,20 @@ def elaborate(top, srcs, defines=()):
         if r.returncode:
             sys.exit('yosys failed:\n' + r.stdout[-3000:] + r.stderr[-3000:])
         return json.loads(js.read_text())
+
+
+def runs(bd):
+    """TW2-KVGRP 10-19: a MIXED-domain port gets its per-bit domains as runs {'bit_domains': [[msb, lsb, [domains]], ...]}
+    (LSB first), so the kit SDC can constrain each bit in its own launch / capture domain (a port-level 'ck' constraint on
+    the hck bits of o_pc* / o_ctl gave -490 ps of false output hold through the ignore-latency crossing min delay)"""
+    if len({tuple(x) for x in bd}) <= 1:
+        return {}
+    out, lo = [], 0
+    for i in range(1, len(bd) + 1):
+        if i == len(bd) or bd[i] != bd[lo]:
+            out.append([i - 1, lo, bd[lo]])
+            lo = i
+    return {'bit_domains': out}
 
 
 def analyse(top, J):
@@ -103,9 +118,13 @@ def analyse(top, J):
                 res[pn] = dict(dir='input', width=len(p['bits']), role='clock')
                 continue
             asy = False
+            bd = []
             for b0 in p['bits']:
                 if not isinstance(b0, int):
+                    bd.append(['none'])
                     continue
+                d0 = set(dom)
+                dom = set()
                 q, seen = deque([(b0, 0)]), {b0}
                 while q:
                     b, k = q.popleft()
@@ -125,13 +144,19 @@ def analyse(top, J):
                             if ob not in seen:
                                 seen.add(ob)
                                 q.append((ob, k + 1))
+                bd.append(sorted(dom) or ['none'])
+                dom |= d0
             res[pn] = dict(dir='input', width=len(p['bits']), domains=sorted(dom) or ['none'], feedthrough=sorted(thru),
-                           depth=depth, reg_sinks=regs, async_reset=asy)
+                           depth=depth, reg_sinks=regs, async_reset=asy, **runs(bd))
         else:
             src_in = set()
+            bd = []
             for b0 in p['bits']:
                 if not isinstance(b0, int):
+                    bd.append(['none'])
                     continue
+                d0 = set(dom)
+                dom = set()
                 q, seen = deque([(b0, 0)]), {b0}
                 while q:
                     b, k = q.popleft()
@@ -151,8 +176,10 @@ def analyse(top, J):
                         if ib not in seen:
                             seen.add(ib)
                             q.append((ib, k + 1))
+                bd.append(sorted(dom) or ['none'])
+                dom |= d0
             res[pn] = dict(dir='output', width=len(p['bits']), domains=sorted(dom) or ['none'], from_inputs=sorted(src_in),
-                           depth=depth, reg_sources=regs)
+                           depth=depth, reg_sources=regs, **runs(bd))
     return dict(top=top, registers=len(seq), clock_ports=sorted(clk_ports), ports=res)
 
 

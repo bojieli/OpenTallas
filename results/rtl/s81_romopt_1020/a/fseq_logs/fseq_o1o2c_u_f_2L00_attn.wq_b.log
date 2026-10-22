@@ -1,0 +1,17 @@
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 1/12 mat wq_b rows 7 nseg 3 faults 0 ret_words 10 calendar measured_class T 970 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 2/12 mat wq_b rows 7 nseg 3 faults 0 ret_words 10 calendar measured_class T 970 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 3/12 mat wq_b rows 7 nseg 3 faults 0 ret_words 10 calendar measured_class T 970 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 4/12 mat wq_b rows 7 nseg 3 faults 0 ret_words 10 calendar measured_class T 970 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 5/12 mat wq_b rows 7 nseg 3 faults 0 ret_words 10 calendar measured_class T 970 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 6/12 mat wq_b rows 7 nseg 3 faults 0 ret_words 10 calendar measured_class T 970 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 7/12 mat wq_b rows 7 nseg 3 faults 0 ret_words 10 calendar measured_class T 970 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 8/12 mat wq_b rows 7 nseg 3 faults 0 ret_words 10 calendar measured_class T 970 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 9/12 mat wq_b rows 6 nseg 3 faults 0 ret_words 8 calendar measured_class T 960 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 10/12 mat wq_b rows 6 nseg 3 faults 0 ret_words 10 calendar measured_class T 970 mutant None
+XS_PLACE_GEN u_f_2L00 op attn.wq_b phase 11/12 mat wq_b rows 6 nseg 3 faults 0 ret_words 10 calendar measured_class T 967 mutant None
+FSEQA u_f_2L00 attn.wq_b golden P 126 nph 11 PASS as_expected ows=6 fixture_rows=6 errors=0 END edges=4209 ret_words=108 xo_checked=4207 fault=0
+TOKSIM_FGU_SEQ PASS op attn.wq_b PER 126 phases 11 rows 74 fixture_rows 74 go0 63 last_ret 1627 span 1564 errors 0 []
+FSEQA u_f_2L00 attn.wq_b period_below_floor P 125 nph 11 FAIL as_expected  FAIL op attn.wq_b PER 125 phases 11 rows 74 fixture_rows 74 go0 63 last_ret 1617 span 1554 errors 4 ['FAULT edge 409 status 11 lx 0', 'FAULT edge 410 status 11 lx 0', 'FAULT edge 411 status 11 lx 0']
+FSEQA u_f_2L00 attn.wq_b shift P 126 nph 11 FAIL as_expected rows 74 fixture_rows 74 go0 63 last_ret 1627 span 1564 errors 56 ['UNASSIGNED_RET edge 343 17cec562810018447', 'UNASSIGNED_RET edge 353 07f897fd010000087', 'UNASSIGNED_RET edge 361 17f02d04010018047']
+FSEQA u_f_2L00 attn.wq_b swap P 126 nph 11 FAIL as_expected w 1 lo 0 k 2 got 3dabc148/0 want bf24441a/0']", "PHASE_FAIL p3: ['MISMATCH edge 353 row 0 lo 0 k 2 got 3e824a55/0 want 3f51e30c/0', 'MISMATCH edge 354 row 1 lo 0 k 2 got 40122962/0 want 4039982e/0']"]
+FSEQA_VERDICT u_f_2L00 attn.wq_b PASS span 1564

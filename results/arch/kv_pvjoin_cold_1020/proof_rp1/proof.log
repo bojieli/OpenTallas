@@ -1,0 +1,1285 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Executing script file `proof.ys' --
+
+1. Executing Verilog-2005 frontend: proof.v
+Parsing formal SystemVerilog input from `proof.v' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_tp8_pv_join_cold_t'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: adder_any.v
+Parsing formal SystemVerilog input from `adder_any.v' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat'.
+Successfully finished Verilog frontend.
+Parameter \MUT = 0
+Parameter \RESET_PIN = 1
+Parameter \COLD_INIT = 1
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_tp8_pv_join_cold_t'.
+Parameter \MUT = 0
+Parameter \RESET_PIN = 1
+Parameter \COLD_INIT = 1
+Generating RTLIL representation for module `$paramod$a465811a798972737f7f3156090f76aaffbfb88a\ot_qwen_tp8_pv_join_cold_t'.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_tp8_pv_join_cold_t
+Used module:     \ot_hdc_fp32_add_lat
+Parameter \LAT = 7
+Parameter \DRST = 0
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Generating RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+
+4.3. Analyzing design hierarchy..
+Top module:  \ot_qwen_tp8_pv_join_cold_t
+Used module:     $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat
+
+4.4. Analyzing design hierarchy..
+Top module:  \ot_qwen_tp8_pv_join_cold_t
+Used module:     $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat
+Removing unused module `\ot_hdc_fp32_add_lat'.
+Removed 1 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$proof.v:43$129 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 2 switch rules as full_case in process $proc$proof.v:55$137 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 2 switch rules as full_case in process $proc$proof.v:92$160 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$238 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$241 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$242 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$245 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$246 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$249 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$250 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$253 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$254 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$257 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$258 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$261 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$262 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$265 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$266 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$269 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$270 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$273 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$274 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$277 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$278 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$281 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$282 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$285 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$286 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$289 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$290 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$293 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$294 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$297 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:71$298 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:74$301 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$302 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$308 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$312 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$316 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$322 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$326 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$330 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$336 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$340 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$344 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$350 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$354 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$358 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$364 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$368 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$372 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$378 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$382 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$386 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$392 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$396 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$400 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$406 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$410 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$414 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$420 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$424 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$428 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$434 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$438 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$442 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$448 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$452 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$456 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$462 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$466 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$470 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$476 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$480 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$484 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$490 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$494 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$498 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$504 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$508 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:104$512 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:111$518 in module ot_qwen_tp8_pv_join_cold_t.
+Marked 1 switch rules as full_case in process $proc$proof.v:116$522 in module ot_qwen_tp8_pv_join_cold_t.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 19 redundant assignments.
+Promoted 109 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \ctl_rst_n in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:43$129'.
+Found async reset \ctl_rst_n in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:92$160'.
+Found async reset \lane_rst_n [0] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$238'.
+Found async reset \lane_rst_n [1] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$242'.
+Found async reset \lane_rst_n [2] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$246'.
+Found async reset \lane_rst_n [3] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$250'.
+Found async reset \lane_rst_n [4] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$254'.
+Found async reset \lane_rst_n [5] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$258'.
+Found async reset \lane_rst_n [6] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$262'.
+Found async reset \lane_rst_n [7] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$266'.
+Found async reset \lane_rst_n [8] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$270'.
+Found async reset \lane_rst_n [9] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$274'.
+Found async reset \lane_rst_n [10] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$278'.
+Found async reset \lane_rst_n [11] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$282'.
+Found async reset \lane_rst_n [12] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$286'.
+Found async reset \lane_rst_n [13] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$290'.
+Found async reset \lane_rst_n [14] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$294'.
+Found async reset \lane_rst_n [15] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$298'.
+Found async reset \data_rst_n [0] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$302'.
+Found async reset \data_rst_n [16] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$308'.
+Found async reset \data_rst_n [32] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$312'.
+Found async reset \data_rst_n [1] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$316'.
+Found async reset \data_rst_n [17] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$322'.
+Found async reset \data_rst_n [33] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$326'.
+Found async reset \data_rst_n [2] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$330'.
+Found async reset \data_rst_n [18] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$336'.
+Found async reset \data_rst_n [34] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$340'.
+Found async reset \data_rst_n [3] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$344'.
+Found async reset \data_rst_n [19] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$350'.
+Found async reset \data_rst_n [35] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$354'.
+Found async reset \data_rst_n [4] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$358'.
+Found async reset \data_rst_n [20] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$364'.
+Found async reset \data_rst_n [36] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$368'.
+Found async reset \data_rst_n [5] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$372'.
+Found async reset \data_rst_n [21] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$378'.
+Found async reset \data_rst_n [37] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$382'.
+Found async reset \data_rst_n [6] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$386'.
+Found async reset \data_rst_n [22] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$392'.
+Found async reset \data_rst_n [38] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$396'.
+Found async reset \data_rst_n [7] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$400'.
+Found async reset \data_rst_n [23] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$406'.
+Found async reset \data_rst_n [39] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$410'.
+Found async reset \data_rst_n [8] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$414'.
+Found async reset \data_rst_n [24] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$420'.
+Found async reset \data_rst_n [40] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$424'.
+Found async reset \data_rst_n [9] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$428'.
+Found async reset \data_rst_n [25] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$434'.
+Found async reset \data_rst_n [41] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$438'.
+Found async reset \data_rst_n [10] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$442'.
+Found async reset \data_rst_n [26] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$448'.
+Found async reset \data_rst_n [42] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$452'.
+Found async reset \data_rst_n [11] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$456'.
+Found async reset \data_rst_n [27] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$462'.
+Found async reset \data_rst_n [43] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$466'.
+Found async reset \data_rst_n [12] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$470'.
+Found async reset \data_rst_n [28] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$476'.
+Found async reset \data_rst_n [44] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$480'.
+Found async reset \data_rst_n [13] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$484'.
+Found async reset \data_rst_n [29] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$490'.
+Found async reset \data_rst_n [45] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$494'.
+Found async reset \data_rst_n [14] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$498'.
+Found async reset \data_rst_n [30] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$504'.
+Found async reset \data_rst_n [46] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$508'.
+Found async reset \data_rst_n [15] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$512'.
+Found async reset \data_rst_n [31] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$518'.
+Found async reset \data_rst_n [47] in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$522'.
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~70 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:42$128'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:43$129'.
+     1/2: $0\sf_r[7:0]
+     2/2: $0\go_r[0:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:55$137'.
+     1/2: $2\nsel[2:0]
+     2/2: $1\nsel[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:92$160'.
+     1/4: $0\y_valid[0:0]
+     2/4: $0\jage[4:0]
+     3/4: $0\jrun[0:0]
+     4/4: $0\fault[0:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:12$171'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:26$172'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$173'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$174'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$175'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$176'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$177'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$178'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$179'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$180'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$181'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$182'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$183'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$184'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$185'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$186'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$187'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$188'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$189'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$190'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$191'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$192'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$193'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$194'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$195'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$196'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$197'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$198'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$199'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$200'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$201'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$202'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$203'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$204'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$205'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$206'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$207'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$208'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$209'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$210'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$211'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$212'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$213'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$214'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$215'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$216'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$217'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$218'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$219'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$220'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$221'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$222'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$223'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$224'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$225'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$226'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$227'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$228'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$229'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$230'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$231'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$232'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$233'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$234'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$235'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$236'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$237'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$238'.
+     1/1: $0\g_join[0].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$241'.
+     1/2: $1\g_join[0].lb[31:0]
+     2/2: $1\g_join[0].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$242'.
+     1/1: $0\g_join[1].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$245'.
+     1/2: $1\g_join[1].lb[31:0]
+     2/2: $1\g_join[1].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$246'.
+     1/1: $0\g_join[2].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$249'.
+     1/2: $1\g_join[2].lb[31:0]
+     2/2: $1\g_join[2].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$250'.
+     1/1: $0\g_join[3].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$253'.
+     1/2: $1\g_join[3].lb[31:0]
+     2/2: $1\g_join[3].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$254'.
+     1/1: $0\g_join[4].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$257'.
+     1/2: $1\g_join[4].lb[31:0]
+     2/2: $1\g_join[4].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$258'.
+     1/1: $0\g_join[5].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$261'.
+     1/2: $1\g_join[5].lb[31:0]
+     2/2: $1\g_join[5].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$262'.
+     1/1: $0\g_join[6].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$265'.
+     1/2: $1\g_join[6].lb[31:0]
+     2/2: $1\g_join[6].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$266'.
+     1/1: $0\g_join[7].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$269'.
+     1/2: $1\g_join[7].lb[31:0]
+     2/2: $1\g_join[7].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$270'.
+     1/1: $0\g_join[8].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$273'.
+     1/2: $1\g_join[8].lb[31:0]
+     2/2: $1\g_join[8].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$274'.
+     1/1: $0\g_join[9].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$277'.
+     1/2: $1\g_join[9].lb[31:0]
+     2/2: $1\g_join[9].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$278'.
+     1/1: $0\g_join[10].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$281'.
+     1/2: $1\g_join[10].lb[31:0]
+     2/2: $1\g_join[10].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$282'.
+     1/1: $0\g_join[11].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$285'.
+     1/2: $1\g_join[11].lb[31:0]
+     2/2: $1\g_join[11].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$286'.
+     1/1: $0\g_join[12].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$289'.
+     1/2: $1\g_join[12].lb[31:0]
+     2/2: $1\g_join[12].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$290'.
+     1/1: $0\g_join[13].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$293'.
+     1/2: $1\g_join[13].lb[31:0]
+     2/2: $1\g_join[13].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$294'.
+     1/1: $0\g_join[14].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$297'.
+     1/2: $1\g_join[14].lb[31:0]
+     2/2: $1\g_join[14].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$298'.
+     1/1: $0\g_join[15].js[2:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$301'.
+     1/2: $1\g_join[15].lb[31:0]
+     2/2: $1\g_join[15].la[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$302'.
+     1/1: $0\xr[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$308'.
+     1/1: $0\yr[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$312'.
+     1/1: $0\y[31:0]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$316'.
+     1/1: $0\xr[63:32]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$322'.
+     1/1: $0\yr[63:32]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$326'.
+     1/1: $0\y[63:32]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$330'.
+     1/1: $0\xr[95:64]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$336'.
+     1/1: $0\yr[95:64]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$340'.
+     1/1: $0\y[95:64]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$344'.
+     1/1: $0\xr[127:96]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$350'.
+     1/1: $0\yr[127:96]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$354'.
+     1/1: $0\y[127:96]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$358'.
+     1/1: $0\xr[159:128]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$364'.
+     1/1: $0\yr[159:128]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$368'.
+     1/1: $0\y[159:128]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$372'.
+     1/1: $0\xr[191:160]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$378'.
+     1/1: $0\yr[191:160]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$382'.
+     1/1: $0\y[191:160]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$386'.
+     1/1: $0\xr[223:192]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$392'.
+     1/1: $0\yr[223:192]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$396'.
+     1/1: $0\y[223:192]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$400'.
+     1/1: $0\xr[255:224]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$406'.
+     1/1: $0\yr[255:224]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$410'.
+     1/1: $0\y[255:224]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$414'.
+     1/1: $0\xr[287:256]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$420'.
+     1/1: $0\yr[287:256]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$424'.
+     1/1: $0\y[287:256]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$428'.
+     1/1: $0\xr[319:288]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$434'.
+     1/1: $0\yr[319:288]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$438'.
+     1/1: $0\y[319:288]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$442'.
+     1/1: $0\xr[351:320]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$448'.
+     1/1: $0\yr[351:320]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$452'.
+     1/1: $0\y[351:320]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$456'.
+     1/1: $0\xr[383:352]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$462'.
+     1/1: $0\yr[383:352]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$466'.
+     1/1: $0\y[383:352]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$470'.
+     1/1: $0\xr[415:384]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$476'.
+     1/1: $0\yr[415:384]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$480'.
+     1/1: $0\y[415:384]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$484'.
+     1/1: $0\xr[447:416]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$490'.
+     1/1: $0\yr[447:416]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$494'.
+     1/1: $0\y[447:416]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$498'.
+     1/1: $0\xr[479:448]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$504'.
+     1/1: $0\yr[479:448]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$508'.
+     1/1: $0\y[479:448]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$512'.
+     1/1: $0\xr[511:480]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$518'.
+     1/1: $0\yr[511:480]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$522'.
+     1/1: $0\y[511:480]
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$526'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$527'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$528'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$529'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$530'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$531'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$532'.
+Creating decoders for process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$533'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\nsel' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:55$137'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[0].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$241'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[0].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$241'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[1].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$245'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[1].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$245'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[2].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$249'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[2].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$249'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[3].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$253'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[3].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$253'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[4].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$257'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[4].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$257'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[5].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$261'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[5].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$261'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[6].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$265'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[6].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$265'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[7].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$269'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[7].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$269'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[8].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$273'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[8].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$273'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[9].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$277'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[9].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$277'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[10].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$281'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[10].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$281'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[11].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$285'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[11].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$285'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[12].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$289'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[12].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$289'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[13].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$293'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[13].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$293'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[14].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$297'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[14].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$297'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[15].la' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$301'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[15].lb' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$301'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\tb[0]' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$526'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\tb[1]' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$527'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\tb[2]' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$528'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\tb[3]' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$529'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\tb[4]' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$530'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\tb[5]' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$531'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\tb[6]' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$532'.
+No latch inferred for signal `\ot_qwen_tp8_pv_join_cold_t.\tb[7]' from process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$533'.
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\t_r' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:42$128'.
+  created $dff cell `$procdff$918' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\go_r' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:43$129'.
+  created $adff cell `$procdff$923' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\sf_r' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:43$129'.
+  created $adff cell `$procdff$928' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y_valid' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:92$160'.
+  created $adff cell `$procdff$933' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\fault' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:92$160'.
+  created $adff cell `$procdff$938' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\jrun' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:92$160'.
+  created $adff cell `$procdff$943' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\jage' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:92$160'.
+  created $adff cell `$procdff$948' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_reset_pin.rst_q' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:12$171'.
+  created $dff cell `$procdff$949' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.root_q' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:26$172'.
+  created $dff cell `$procdff$950' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [0]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$173'.
+  created $dff cell `$procdff$951' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [1]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$174'.
+  created $dff cell `$procdff$952' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [2]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$175'.
+  created $dff cell `$procdff$953' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [3]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$176'.
+  created $dff cell `$procdff$954' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [4]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$177'.
+  created $dff cell `$procdff$955' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [5]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$178'.
+  created $dff cell `$procdff$956' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [6]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$179'.
+  created $dff cell `$procdff$957' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [7]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$180'.
+  created $dff cell `$procdff$958' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [8]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$181'.
+  created $dff cell `$procdff$959' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [9]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$182'.
+  created $dff cell `$procdff$960' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [10]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$183'.
+  created $dff cell `$procdff$961' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [11]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$184'.
+  created $dff cell `$procdff$962' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [12]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$185'.
+  created $dff cell `$procdff$963' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [13]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$186'.
+  created $dff cell `$procdff$964' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [14]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$187'.
+  created $dff cell `$procdff$965' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [15]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$188'.
+  created $dff cell `$procdff$966' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [16]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$189'.
+  created $dff cell `$procdff$967' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [17]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$190'.
+  created $dff cell `$procdff$968' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [18]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$191'.
+  created $dff cell `$procdff$969' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [19]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$192'.
+  created $dff cell `$procdff$970' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [20]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$193'.
+  created $dff cell `$procdff$971' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [21]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$194'.
+  created $dff cell `$procdff$972' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [22]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$195'.
+  created $dff cell `$procdff$973' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [23]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$196'.
+  created $dff cell `$procdff$974' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [24]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$197'.
+  created $dff cell `$procdff$975' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [25]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$198'.
+  created $dff cell `$procdff$976' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [26]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$199'.
+  created $dff cell `$procdff$977' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [27]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$200'.
+  created $dff cell `$procdff$978' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [28]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$201'.
+  created $dff cell `$procdff$979' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [29]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$202'.
+  created $dff cell `$procdff$980' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [30]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$203'.
+  created $dff cell `$procdff$981' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [31]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$204'.
+  created $dff cell `$procdff$982' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [32]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$205'.
+  created $dff cell `$procdff$983' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [33]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$206'.
+  created $dff cell `$procdff$984' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [34]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$207'.
+  created $dff cell `$procdff$985' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [35]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$208'.
+  created $dff cell `$procdff$986' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [36]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$209'.
+  created $dff cell `$procdff$987' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [37]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$210'.
+  created $dff cell `$procdff$988' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [38]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$211'.
+  created $dff cell `$procdff$989' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [39]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$212'.
+  created $dff cell `$procdff$990' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [40]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$213'.
+  created $dff cell `$procdff$991' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [41]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$214'.
+  created $dff cell `$procdff$992' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [42]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$215'.
+  created $dff cell `$procdff$993' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [43]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$216'.
+  created $dff cell `$procdff$994' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [44]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$217'.
+  created $dff cell `$procdff$995' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [45]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$218'.
+  created $dff cell `$procdff$996' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [46]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$219'.
+  created $dff cell `$procdff$997' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [47]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$220'.
+  created $dff cell `$procdff$998' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [48]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$221'.
+  created $dff cell `$procdff$999' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [49]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$222'.
+  created $dff cell `$procdff$1000' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [50]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$223'.
+  created $dff cell `$procdff$1001' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [51]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$224'.
+  created $dff cell `$procdff$1002' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [52]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$225'.
+  created $dff cell `$procdff$1003' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [53]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$226'.
+  created $dff cell `$procdff$1004' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [54]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$227'.
+  created $dff cell `$procdff$1005' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [55]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$228'.
+  created $dff cell `$procdff$1006' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [56]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$229'.
+  created $dff cell `$procdff$1007' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [57]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$230'.
+  created $dff cell `$procdff$1008' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [58]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$231'.
+  created $dff cell `$procdff$1009' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [59]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$232'.
+  created $dff cell `$procdff$1010' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [60]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$233'.
+  created $dff cell `$procdff$1011' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [61]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$234'.
+  created $dff cell `$procdff$1012' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [62]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$235'.
+  created $dff cell `$procdff$1013' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [63]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$236'.
+  created $dff cell `$procdff$1014' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_cold_rst.leaf_q [64]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$237'.
+  created $dff cell `$procdff$1015' with positive edge clock.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[0].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$238'.
+  created $adff cell `$procdff$1020' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[1].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$242'.
+  created $adff cell `$procdff$1025' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[2].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$246'.
+  created $adff cell `$procdff$1030' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[3].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$250'.
+  created $adff cell `$procdff$1035' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[4].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$254'.
+  created $adff cell `$procdff$1040' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[5].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$258'.
+  created $adff cell `$procdff$1045' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[6].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$262'.
+  created $adff cell `$procdff$1050' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[7].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$266'.
+  created $adff cell `$procdff$1055' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[8].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$270'.
+  created $adff cell `$procdff$1060' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[9].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$274'.
+  created $adff cell `$procdff$1065' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[10].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$278'.
+  created $adff cell `$procdff$1070' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[11].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$282'.
+  created $adff cell `$procdff$1075' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[12].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$286'.
+  created $adff cell `$procdff$1080' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[13].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$290'.
+  created $adff cell `$procdff$1085' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[14].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$294'.
+  created $adff cell `$procdff$1090' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\g_join[15].js' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$298'.
+  created $adff cell `$procdff$1095' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [31:0]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$302'.
+  created $adff cell `$procdff$1100' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [31:0]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$308'.
+  created $adff cell `$procdff$1105' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [31:0]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$312'.
+  created $adff cell `$procdff$1110' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [63:32]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$316'.
+  created $adff cell `$procdff$1115' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [63:32]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$322'.
+  created $adff cell `$procdff$1120' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [63:32]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$326'.
+  created $adff cell `$procdff$1125' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [95:64]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$330'.
+  created $adff cell `$procdff$1130' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [95:64]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$336'.
+  created $adff cell `$procdff$1135' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [95:64]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$340'.
+  created $adff cell `$procdff$1140' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [127:96]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$344'.
+  created $adff cell `$procdff$1145' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [127:96]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$350'.
+  created $adff cell `$procdff$1150' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [127:96]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$354'.
+  created $adff cell `$procdff$1155' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [159:128]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$358'.
+  created $adff cell `$procdff$1160' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [159:128]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$364'.
+  created $adff cell `$procdff$1165' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [159:128]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$368'.
+  created $adff cell `$procdff$1170' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [191:160]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$372'.
+  created $adff cell `$procdff$1175' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [191:160]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$378'.
+  created $adff cell `$procdff$1180' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [191:160]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$382'.
+  created $adff cell `$procdff$1185' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [223:192]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$386'.
+  created $adff cell `$procdff$1190' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [223:192]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$392'.
+  created $adff cell `$procdff$1195' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [223:192]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$396'.
+  created $adff cell `$procdff$1200' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [255:224]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$400'.
+  created $adff cell `$procdff$1205' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [255:224]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$406'.
+  created $adff cell `$procdff$1210' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [255:224]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$410'.
+  created $adff cell `$procdff$1215' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [287:256]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$414'.
+  created $adff cell `$procdff$1220' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [287:256]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$420'.
+  created $adff cell `$procdff$1225' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [287:256]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$424'.
+  created $adff cell `$procdff$1230' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [319:288]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$428'.
+  created $adff cell `$procdff$1235' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [319:288]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$434'.
+  created $adff cell `$procdff$1240' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [319:288]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$438'.
+  created $adff cell `$procdff$1245' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [351:320]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$442'.
+  created $adff cell `$procdff$1250' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [351:320]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$448'.
+  created $adff cell `$procdff$1255' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [351:320]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$452'.
+  created $adff cell `$procdff$1260' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [383:352]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$456'.
+  created $adff cell `$procdff$1265' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [383:352]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$462'.
+  created $adff cell `$procdff$1270' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [383:352]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$466'.
+  created $adff cell `$procdff$1275' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [415:384]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$470'.
+  created $adff cell `$procdff$1280' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [415:384]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$476'.
+  created $adff cell `$procdff$1285' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [415:384]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$480'.
+  created $adff cell `$procdff$1290' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [447:416]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$484'.
+  created $adff cell `$procdff$1295' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [447:416]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$490'.
+  created $adff cell `$procdff$1300' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [447:416]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$494'.
+  created $adff cell `$procdff$1305' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [479:448]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$498'.
+  created $adff cell `$procdff$1310' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [479:448]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$504'.
+  created $adff cell `$procdff$1315' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [479:448]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$508'.
+  created $adff cell `$procdff$1320' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\xr [511:480]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$512'.
+  created $adff cell `$procdff$1325' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\yr [511:480]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$518'.
+  created $adff cell `$procdff$1330' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_tp8_pv_join_cold_t.\y [511:480]' using process `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$522'.
+  created $adff cell `$procdff$1335' with positive edge clock and positive level reset.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:42$128'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:43$129'.
+Found and cleaned up 2 empty switches in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:55$137'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:55$137'.
+Found and cleaned up 4 empty switches in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:92$160'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:92$160'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:12$171'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:26$172'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$173'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$174'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$175'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$176'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$177'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$178'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$179'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$180'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$181'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$182'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$183'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$184'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$185'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$186'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$187'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$188'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$189'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$190'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$191'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$192'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$193'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$194'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$195'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$196'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$197'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$198'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$199'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$200'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$201'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$202'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$203'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$204'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$205'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$206'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$207'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$208'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$209'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$210'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$211'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$212'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$213'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$214'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$215'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$216'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$217'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$218'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$219'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$220'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$221'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$222'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$223'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$224'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$225'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$226'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$227'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$228'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$229'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$230'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$231'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$232'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$233'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$234'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$235'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$236'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:29$237'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$238'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$241'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$241'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$242'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$245'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$245'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$246'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$249'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$249'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$250'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$253'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$253'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$254'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$257'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$257'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$258'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$261'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$261'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$262'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$265'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$265'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$266'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$269'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$269'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$270'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$273'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$273'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$274'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$277'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$277'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$278'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$281'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$281'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$282'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$285'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$285'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$286'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$289'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$289'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$290'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$293'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$293'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$294'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$297'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$297'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:71$298'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$301'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:74$301'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$302'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$302'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$308'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$308'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$312'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$312'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$316'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$316'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$322'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$322'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$326'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$326'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$330'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$330'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$336'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$336'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$340'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$340'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$344'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$344'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$350'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$350'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$354'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$354'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$358'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$358'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$364'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$364'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$368'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$368'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$372'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$372'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$378'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$378'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$382'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$382'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$386'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$386'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$392'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$392'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$396'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$396'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$400'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$400'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$406'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$406'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$410'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$410'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$414'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$414'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$420'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$420'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$424'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$424'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$428'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$428'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$434'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$434'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$438'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$438'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$442'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$442'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$448'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$448'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$452'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$452'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$456'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$456'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$462'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$462'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$466'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$466'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$470'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$470'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$476'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$476'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$480'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$480'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$484'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$484'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$490'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$490'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$494'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$494'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$498'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$498'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$504'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$504'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$508'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$508'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$512'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:104$512'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$518'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:111$518'.
+Found and cleaned up 1 empty switch in `\ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$522'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:116$522'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$526'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$527'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$528'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$529'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$530'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$531'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$532'.
+Removing empty process `ot_qwen_tp8_pv_join_cold_t.$proc$proof.v:46$533'.
+Cleaned up 70 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat.
+Optimizing module ot_qwen_tp8_pv_join_cold_t.
+<suppressed ~160 debug messages>
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat.
+<suppressed ~16 debug messages>
+
+7. Executing ASYNC2SYNC pass.
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1215 ($adff): ARST=\g_cold_rst.leaf_q [39], D=$procmux$868_Y, Q=\y [255:224]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1295 ($adff): ARST=\g_cold_rst.leaf_q [13], D=$procmux$900_Y, Q=\xr [447:416]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1210 ($adff): ARST=\g_cold_rst.leaf_q [23], D=$procmux$866_Y, Q=\yr [255:224]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1205 ($adff): ARST=\g_cold_rst.leaf_q [7], D=$procmux$864_Y, Q=\xr [255:224]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1200 ($adff): ARST=\g_cold_rst.leaf_q [38], D=$procmux$862_Y, Q=\y [223:192]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1290 ($adff): ARST=\g_cold_rst.leaf_q [44], D=$procmux$898_Y, Q=\y [415:384]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1195 ($adff): ARST=\g_cold_rst.leaf_q [22], D=$procmux$860_Y, Q=\yr [223:192]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1320 ($adff): ARST=\g_cold_rst.leaf_q [46], D=$procmux$910_Y, Q=\y [479:448]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1190 ($adff): ARST=\g_cold_rst.leaf_q [6], D=$procmux$858_Y, Q=\xr [223:192]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1185 ($adff): ARST=\g_cold_rst.leaf_q [37], D=$procmux$856_Y, Q=\y [191:160]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1285 ($adff): ARST=\g_cold_rst.leaf_q [28], D=$procmux$896_Y, Q=\yr [415:384]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1180 ($adff): ARST=\g_cold_rst.leaf_q [21], D=$procmux$854_Y, Q=\yr [191:160]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1330 ($adff): ARST=\g_cold_rst.leaf_q [31], D=$procmux$914_Y, Q=\yr [511:480]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1175 ($adff): ARST=\g_cold_rst.leaf_q [5], D=$procmux$852_Y, Q=\xr [191:160]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1170 ($adff): ARST=\g_cold_rst.leaf_q [36], D=$procmux$850_Y, Q=\y [159:128]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1280 ($adff): ARST=\g_cold_rst.leaf_q [12], D=$procmux$894_Y, Q=\xr [415:384]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1165 ($adff): ARST=\g_cold_rst.leaf_q [20], D=$procmux$848_Y, Q=\yr [159:128]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1160 ($adff): ARST=\g_cold_rst.leaf_q [4], D=$procmux$846_Y, Q=\xr [159:128]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1155 ($adff): ARST=\g_cold_rst.leaf_q [35], D=$procmux$844_Y, Q=\y [127:96]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1275 ($adff): ARST=\g_cold_rst.leaf_q [43], D=$procmux$892_Y, Q=\y [383:352]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1150 ($adff): ARST=\g_cold_rst.leaf_q [19], D=$procmux$842_Y, Q=\yr [127:96]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1315 ($adff): ARST=\g_cold_rst.leaf_q [30], D=$procmux$908_Y, Q=\yr [479:448]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1145 ($adff): ARST=\g_cold_rst.leaf_q [3], D=$procmux$840_Y, Q=\xr [127:96]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1140 ($adff): ARST=\g_cold_rst.leaf_q [34], D=$procmux$838_Y, Q=\y [95:64]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1270 ($adff): ARST=\g_cold_rst.leaf_q [27], D=$procmux$890_Y, Q=\yr [383:352]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1135 ($adff): ARST=\g_cold_rst.leaf_q [18], D=$procmux$836_Y, Q=\yr [95:64]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1335 ($adff): ARST=\g_cold_rst.leaf_q [47], D=$procmux$916_Y, Q=\y [511:480]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1130 ($adff): ARST=\g_cold_rst.leaf_q [2], D=$procmux$834_Y, Q=\xr [95:64]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1125 ($adff): ARST=\g_cold_rst.leaf_q [33], D=$procmux$832_Y, Q=\y [63:32]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1265 ($adff): ARST=\g_cold_rst.leaf_q [11], D=$procmux$888_Y, Q=\xr [383:352]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1120 ($adff): ARST=\g_cold_rst.leaf_q [17], D=$procmux$830_Y, Q=\yr [63:32]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1115 ($adff): ARST=\g_cold_rst.leaf_q [1], D=$procmux$828_Y, Q=\xr [63:32]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1110 ($adff): ARST=\g_cold_rst.leaf_q [32], D=$procmux$826_Y, Q=\y [31:0]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1260 ($adff): ARST=\g_cold_rst.leaf_q [42], D=$procmux$886_Y, Q=\y [351:320]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1105 ($adff): ARST=\g_cold_rst.leaf_q [16], D=$procmux$824_Y, Q=\yr [31:0]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1310 ($adff): ARST=\g_cold_rst.leaf_q [14], D=$procmux$906_Y, Q=\xr [479:448]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1100 ($adff): ARST=\g_cold_rst.leaf_q [0], D=$procmux$822_Y, Q=\xr [31:0]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1095 ($adff): ARST=\g_cold_rst.leaf_q [63], D=$procmux$550_Y, Q=\g_join[15].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1255 ($adff): ARST=\g_cold_rst.leaf_q [26], D=$procmux$884_Y, Q=\yr [351:320]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1090 ($adff): ARST=\g_cold_rst.leaf_q [62], D=$procmux$550_Y, Q=\g_join[14].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1085 ($adff): ARST=\g_cold_rst.leaf_q [61], D=$procmux$550_Y, Q=\g_join[13].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1080 ($adff): ARST=\g_cold_rst.leaf_q [60], D=$procmux$550_Y, Q=\g_join[12].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1250 ($adff): ARST=\g_cold_rst.leaf_q [10], D=$procmux$882_Y, Q=\xr [351:320]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1075 ($adff): ARST=\g_cold_rst.leaf_q [59], D=$procmux$550_Y, Q=\g_join[11].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1070 ($adff): ARST=\g_cold_rst.leaf_q [58], D=$procmux$550_Y, Q=\g_join[10].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1065 ($adff): ARST=\g_cold_rst.leaf_q [57], D=$procmux$550_Y, Q=\g_join[9].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1245 ($adff): ARST=\g_cold_rst.leaf_q [41], D=$procmux$880_Y, Q=\y [319:288]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1060 ($adff): ARST=\g_cold_rst.leaf_q [56], D=$procmux$550_Y, Q=\g_join[8].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1305 ($adff): ARST=\g_cold_rst.leaf_q [45], D=$procmux$904_Y, Q=\y [447:416]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1055 ($adff): ARST=\g_cold_rst.leaf_q [55], D=$procmux$550_Y, Q=\g_join[7].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1050 ($adff): ARST=\g_cold_rst.leaf_q [54], D=$procmux$550_Y, Q=\g_join[6].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1240 ($adff): ARST=\g_cold_rst.leaf_q [25], D=$procmux$878_Y, Q=\yr [319:288]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1045 ($adff): ARST=\g_cold_rst.leaf_q [53], D=$procmux$550_Y, Q=\g_join[5].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1325 ($adff): ARST=\g_cold_rst.leaf_q [15], D=$procmux$912_Y, Q=\xr [511:480]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1040 ($adff): ARST=\g_cold_rst.leaf_q [52], D=$procmux$550_Y, Q=\g_join[4].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1035 ($adff): ARST=\g_cold_rst.leaf_q [51], D=$procmux$550_Y, Q=\g_join[3].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1235 ($adff): ARST=\g_cold_rst.leaf_q [9], D=$procmux$876_Y, Q=\xr [319:288]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1030 ($adff): ARST=\g_cold_rst.leaf_q [50], D=$procmux$550_Y, Q=\g_join[2].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1025 ($adff): ARST=\g_cold_rst.leaf_q [49], D=$procmux$550_Y, Q=\g_join[1].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1020 ($adff): ARST=\g_cold_rst.leaf_q [48], D=$procmux$550_Y, Q=\g_join[0].js
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1230 ($adff): ARST=\g_cold_rst.leaf_q [40], D=$procmux$874_Y, Q=\y [287:256]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$948 ($adff): ARST=\g_cold_rst.leaf_q [64], D=$procmux$555_Y, Q=\jage
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1300 ($adff): ARST=\g_cold_rst.leaf_q [29], D=$procmux$902_Y, Q=\yr [447:416]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$943 ($adff): ARST=\g_cold_rst.leaf_q [64], D=$procmux$562_Y, Q=\jrun
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$938 ($adff): ARST=\g_cold_rst.leaf_q [64], D=$procmux$564_Y, Q=\fault
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1225 ($adff): ARST=\g_cold_rst.leaf_q [24], D=$procmux$872_Y, Q=\yr [287:256]
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$933 ($adff): ARST=\g_cold_rst.leaf_q [64], D=$logic_and$proof.v:96$163_Y, Q=\y_valid
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$928 ($adff): ARST=\g_cold_rst.leaf_q [64], D=\sf, Q=\sf_r
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$923 ($adff): ARST=\g_cold_rst.leaf_q [64], D=\join_go, Q=\go_r
+Replacing ot_qwen_tp8_pv_join_cold_t.$procdff$1220 ($adff): ARST=\g_cold_rst.leaf_q [8], D=$procmux$870_Y, Q=\xr [287:256]
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_tp8_pv_join_cold_t..
+Removed 377 unused cells and 861 unused wires.
+<suppressed ~470 debug messages>
+
+9. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \join_go
+Import def constraint for this timestep: \sf
+Import def constraint for this timestep: \ts0
+Import def constraint for this timestep: \ts1
+Import def constraint for this timestep: \ts2
+Import def constraint for this timestep: \ts3
+Imported 500 cells to SAT database.
+No constraints for initial state found.
+
+
+Setting up time step 2:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \join_go
+Import def constraint for this timestep: \sf
+Import def constraint for this timestep: \ts0
+Import def constraint for this timestep: \ts1
+Import def constraint for this timestep: \ts2
+Import def constraint for this timestep: \ts3
+Imported 500 cells to SAT database.
+
+Setting up time step 3:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \join_go
+Import def constraint for this timestep: \sf
+Import def constraint for this timestep: \ts0
+Import def constraint for this timestep: \ts1
+Import def constraint for this timestep: \ts2
+Import def constraint for this timestep: \ts3
+Imported 500 cells to SAT database.
+
+Setting up time step 4:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \join_go
+Import def constraint for this timestep: \sf
+Import def constraint for this timestep: \ts0
+Import def constraint for this timestep: \ts1
+Import def constraint for this timestep: \ts2
+Import def constraint for this timestep: \ts3
+Imported 500 cells to SAT database.
+Import proof-constraint: \cold_zero = 1'1
+Final proof equation: \cold_zero = 1'1
+
+Setting up time step 5:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \join_go
+Import def constraint for this timestep: \sf
+Import def constraint for this timestep: \ts0
+Import def constraint for this timestep: \ts1
+Import def constraint for this timestep: \ts2
+Import def constraint for this timestep: \ts3
+Imported 500 cells to SAT database.
+Import proof-constraint: \cold_zero = 1'1
+Final proof equation: \cold_zero = 1'1
+
+Setting up time step 6:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \join_go
+Import def constraint for this timestep: \sf
+Import def constraint for this timestep: \ts0
+Import def constraint for this timestep: \ts1
+Import def constraint for this timestep: \ts2
+Import def constraint for this timestep: \ts3
+Imported 500 cells to SAT database.
+Import proof-constraint: \cold_zero = 1'1
+Final proof equation: \cold_zero = 1'1
+Import show expression: \clk
+Import show expression: \rst_n
+Import show expression: \ts0
+Import show expression: \ts1
+Import show expression: \ts2
+Import show expression: \ts3
+Import show expression: \join_go
+Import show expression: \sf
+Import show expression: \y
+Import show expression: \y_valid
+Import show expression: \fault
+Import show expression: \cold_zero
+
+Solving problem with 749986 variables and 1955806 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 708c7d856b, time: 2.99s, user: 2.57s, system: 0.42s, MEM: 532.26 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 94% 1x sat (2 sec), 1% 1x chparam (0 sec), ...

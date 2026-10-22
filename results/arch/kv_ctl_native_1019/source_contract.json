@@ -1,0 +1,204 @@
+{
+  "9105d74ed": {
+    "tile_file_sha256": "02c532d7d7fab6b3de8a50ecca1d8ac252db6185c829f4b807117b187502f67e",
+    "instances": {
+      "u_boot": {
+        "module": "qkd_static_kv_boot_dispatch",
+        "parameters": ".MUT(0), .DIECFG(1), .NRST(43), .LINKCFG(1), .ESCFG(1), .DIECAP(1), .SRQ(2)"
+      },
+      "u_lprg": {
+        "module": "qkd_static_kv_layer_programme",
+        "parameters": ".MUT(0)"
+      },
+      "u_own": {
+        "module": "qkd_static_kv_ownership_calendar",
+        "parameters": ".MUT(0), .PIPE(1)"
+      }
+    },
+    "kit": {
+      "reset_landing": {
+        "schema": "opentallas.ref_tile.reset_landing.v1",
+        "top": "qkd_kvs_ctl",
+        "enable": true,
+        "stages": 2,
+        "clock": "ck",
+        "reset_ports": [
+          "rst_n",
+          "por_n"
+        ],
+        "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
+        "reset_release_cycles": 2
+      },
+      "pin_regs": {
+        "schema": "opentallas.ref_tile.pin_regs.v1",
+        "top": "qkd_kvs_ctl",
+        "enable": true,
+        "clock": "ck",
+        "clock_ports": [
+          "ck"
+        ],
+        "reset_ports": [
+          "rst_n",
+          "por_n"
+        ],
+        "exclude": "",
+        "reset": "",
+        "reason": "",
+        "latency_cycles": {
+          "input": 1,
+          "output": 1
+        },
+        "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+        "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+      }
+    }
+  },
+  "4db097403": {
+    "tile_file_sha256": "eb7ffe102ba83365ec1b845fe7ef310912711b43829c49d58f96e22721b02a61",
+    "instances": {
+      "u_boot": {
+        "module": "qkd_static_kv_boot_dispatch_mu",
+        "parameters": ".MUT(0), .DIECFG(1), .NRST(43), .LINKCFG(1), .ESCFG(1), .DIECAP(1), .MU(1), .WMUT(0)"
+      },
+      "u_lprg": {
+        "module": "qkd_static_kv_layer_programme_mu",
+        "parameters": ".MUT(0), .MU(1)"
+      },
+      "u_own": {
+        "module": "qkd_static_kv_ownership_calendar_mu",
+        "parameters": ".MUT(0), .MU(1)"
+      }
+    }
+  },
+  "e00f75155": {
+    "tile_file_sha256": "4f453dca1c2f3505bf61d6142bd918edf65d5ec7890ef712717522a741ff0e7c",
+    "instances": {
+      "u_boot": {
+        "module": "qkd_static_kv_boot_dispatch_mu",
+        "parameters": ".MUT(0), .DIECFG(1), .NRST(43), .LINKCFG(1), .ESCFG(1), .DIECAP(1), .MU(1), .WMUT(0), .SRQ(2)"
+      },
+      "u_lprg": {
+        "module": "qkd_static_kv_layer_programme_mu",
+        "parameters": ".MUT(0), .MU(1)"
+      },
+      "u_own": {
+        "module": "qkd_static_kv_ownership_calendar_mu",
+        "parameters": ".MUT(0), .MU(1), .PIPE(1), .SAFE(1)"
+      }
+    },
+    "kit": {
+      "reset_landing": {
+        "schema": "opentallas.ref_tile.reset_landing.v1",
+        "top": "qkd_kvs_ctl",
+        "enable": true,
+        "stages": 2,
+        "clock": "ck",
+        "reset_ports": [
+          "rst_n",
+          "por_n"
+        ],
+        "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
+        "reset_release_cycles": 2,
+        "copies": {
+          "rst_n": 40,
+          "por_n": 16
+        }
+      },
+      "pin_regs": {
+        "schema": "opentallas.ref_tile.pin_regs.v1",
+        "top": "qkd_kvs_ctl",
+        "enable": true,
+        "clock": "ck",
+        "clock_ports": [
+          "ck"
+        ],
+        "reset_ports": [
+          "rst_n",
+          "por_n"
+        ],
+        "exclude": "",
+        "reset": "",
+        "reason": "",
+        "latency_cycles": {
+          "input": 1,
+          "output": 1
+        },
+        "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+        "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+      }
+    }
+  },
+  "HEAD": {
+    "tile_file_sha256": "eb7ffe102ba83365ec1b845fe7ef310912711b43829c49d58f96e22721b02a61",
+    "instances": {
+      "u_boot": {
+        "module": "qkd_static_kv_boot_dispatch_mu",
+        "parameters": ".MUT(0), .DIECFG(1), .NRST(43), .LINKCFG(1), .ESCFG(1), .DIECAP(1), .MU(1), .WMUT(0)"
+      },
+      "u_lprg": {
+        "module": "qkd_static_kv_layer_programme_mu",
+        "parameters": ".MUT(0), .MU(1)"
+      },
+      "u_own": {
+        "module": "qkd_static_kv_ownership_calendar_mu",
+        "parameters": ".MUT(0), .MU(1)"
+      }
+    }
+  },
+  "record": {
+    "source_commit": "9105d74edde715ab586cd2c40dcbc16d6fb95b80",
+    "source_branch": "claude/kv-ctl-1019",
+    "run_dir": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_ctl_mu2-mu2-9105d74ed",
+    "host": "ot-epyc8",
+    "metrics": {
+      "ss_ps": 24.38,
+      "ff_ps": 8.88,
+      "drc": 0,
+      "ss_tns_ps": 0.0,
+      "clock_periods_ps": {},
+      "setup_corner": "tt",
+      "ss_sensitivity_ps": -295.24,
+      "ss_sensitivity_tns_ps": -374734.8,
+      "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_ctl_mu2-mu2-9105d74ed/routes/qkd_kvs_ctl_mu2_mu2_9105d74ed/corner_sta.json",
+      "post_sdc": [
+        "physical/ref_tile/qkd_kvs_ctl_mu2/signoff.sdc",
+        "physical/common_flow/io_ref_routed.sdc"
+      ],
+      "corner_sta": [
+        "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_ctl_mu2-mu2-9105d74ed/routes/qkd_kvs_ctl_mu2_mu2_9105d74ed/corner_sta.json"
+      ],
+      "drc_metrics": [
+        "/srv/opentallas-scratch/claude/closure-loop/qkd_kvs_ctl_mu2-mu2-9105d74ed/routes/qkd_kvs_ctl_mu2_mu2_9105d74ed/work/orfs/logs/asap7/opentallas_qkd_kvs_ctl_asap7_ref_qkd_kvs_ctl_mu2_mu2_9105d74ed/base/5_2_route.json"
+      ],
+      "drc_skipped": null
+    },
+    "port_latency": {
+      "paths": [
+        "results/closure_loop/qkd_kvs_ctl_mu2-mu2-9105d74ed/port_latency.json"
+      ],
+      "sha256": "29ca340c64c457c9734ef9eb410bc78f783e956e6711abccc9706aa4415c74a8",
+      "schema": "opentallas.ref_tile.port_latency.v1"
+    }
+  },
+  "qualification": {
+    "release_qualified": false,
+    "mu_source_match": false,
+    "native_pass": false,
+    "parent_fit": false,
+    "actual_parent_source": "4db097403",
+    "parent_master_um": [
+      1123.176,
+      172.776
+    ],
+    "parent_instance": "kvs_ctl",
+    "parent_placement_um": [
+      6176.736,
+      26092.8
+    ],
+    "parent_orientation": "R0",
+    "routed_view_um": [
+      475.2,
+      475.2
+    ]
+  }
+}

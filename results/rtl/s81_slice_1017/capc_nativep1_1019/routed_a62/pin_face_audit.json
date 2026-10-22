@@ -1,0 +1,38 @@
+{
+ "scope": "Actual finalODB primary data/clock pin rectangles from driver_reach.tsv, supplies excluded because nondata rails",
+ "logical_data_plus_clock_ports": 1174,
+ "faces": {
+  "S": {
+   "ports": 273,
+   "axis_min": 2.8890000000000002,
+   "axis_max": 343.02,
+   "min_center_pitch_um": 0.7709999999999866,
+   "max_pins_in_1um_window": 2,
+   "max_center_distance_to_edge_um": 0.042
+  },
+  "N": {
+   "ports": 341,
+   "axis_min": 3.249,
+   "axis_max": 342.972,
+   "min_center_pitch_um": 0.8969999999999914,
+   "max_pins_in_1um_window": 2,
+   "max_center_distance_to_edge_um": 0.04200000000003001
+  },
+  "E": {
+   "ports": 280,
+   "axis_min": 2.748,
+   "axis_max": 342.828,
+   "min_center_pitch_um": 1.1999999999999886,
+   "max_pins_in_1um_window": 1,
+   "max_center_distance_to_edge_um": 0.04200000000003001
+  },
+  "W": {
+   "ports": 280,
+   "axis_min": 2.748,
+   "axis_max": 342.828,
+   "min_center_pitch_um": 1.1999999999999886,
+   "max_pins_in_1um_window": 1,
+   "max_center_distance_to_edge_um": 0.042
+  }
+ }
+}

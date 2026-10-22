@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/mu-dq-d2duser
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/mu-dq-d2duser
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/mu-dq-d2duser
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/mu-dq-d2duser
+ot-run: ot-epyc8       admits   825 GB (avail 912, growth 334, headroom 0, waiters 0/0 GB) load 28/128 running 12 disk 534 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/mu-dq-d2duser
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/mu-dq-d2duser
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1139610-1792415277 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+OK   d2du_m0: MU_OPSEG_PASS mut 0
+OK   d2du_m32: MU_OPSEG_FAIL mut 32: red C8 mu native_pos user carrier: (bad, starts u1, u2, u3) = (448431, 60, 30, 18)
+MU_OPSEG BENCHES: PASS
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1139610-1792415277): exit 0

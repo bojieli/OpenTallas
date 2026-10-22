@@ -1,0 +1,4 @@
+2beccb8e65b7a62733fd9265ce4a0397192de0315202ba1a912c257f8ec5ddf2 555
+REVIEWED_BITS 65066
+DIAGNOSTIC FAIL {'masters': 100, 'instances': 1223, 'unbound_masters': 0, 'stub_masters': 0, 'ambiguous_masters': 0, 'port_not_in_rtl': 0, 'width_mismatch': 0, 'input_unconnected': 0, 'input_tied': 0, 'unparsed_connections': 0, 'duplicate_port_connections': 0, 'undriven_net_bits': 0, 'multi_driven_net_bits': 0, 'unread_net_bits': 5254, 'output_open_ports': 0, 'top_assigns': 0, 'params_not_in_rtl': 0, 'strap_ports': 45, 'pad_bits': 0, 'spare_out_bits': 0}
+CHILD_CLOSURE 481 UNRESOLVED 0 MODELS {'ot_hbm_pll_bb': ['hfd_ckgen']}

@@ -1,0 +1,7 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+KVPC_CTRL PASS edges=20000 checks=580624 active_out=172341 outs=16 errors=0 mut=0
+- /srv/opentallas-scratch/claude/kv-pc2/out-edaed078e/w_ctrl_m0/tb.sv:154: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.373 s; speed 44.739 us/s
+- Verilator: cpu 0.370 s on 1 threads; allocated 7 MB
+

@@ -1,0 +1,305 @@
+{
+  "category_max": {
+    "a1p[": 32,
+    "a2p[": 32,
+    "g_s1[": 64,
+    "g_s2[": 32,
+    "g_sm[": 20
+  },
+  "top": "ot_hbm_accel_smh_xs",
+  "netlist_sha256": "83ed7568c1c415b781b30913a412c6b02f944f1de39349b4b43cb4cbb4c32111",
+  "strap_roots": 8388,
+  "max_strap_fanout": 64,
+  "strap_top": [
+    {
+      "net": "u_leaf.g_s1[346].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[347].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[348].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[349].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[350].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[351].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[352].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[353].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[354].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[355].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[356].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[357].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[358].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[359].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[360].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[361].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[362].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[363].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[364].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[365].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[366].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[367].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[368].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[369].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    }
+  ],
+  "all_signal_top": [
+    {
+      "net": "u_leaf.g_s1[346].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[347].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[348].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[349].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[350].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[351].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[352].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[353].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[354].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[355].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[356].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[357].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[358].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[359].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[360].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[361].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[362].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[363].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[364].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[365].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[366].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[367].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[368].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    },
+    {
+      "net": "u_leaf.g_s1[369].q[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+      "loads": 64,
+      "flops": 0,
+      "example": "None"
+    }
+  ]
+}

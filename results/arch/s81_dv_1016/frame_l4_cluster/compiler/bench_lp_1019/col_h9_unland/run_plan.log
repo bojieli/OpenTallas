@@ -1,0 +1,31 @@
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e13w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e13w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e13e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e13e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e8w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e8w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e8e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e8e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e4w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e4w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e4e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tw3-frame-1019/out2/col_h9_unland/vec_plan/f_e4e_0.viamap.hex:0: $readmem file not found
+RET 354 08dbf799a10008009
+RET 355 08e2c06061000c009
+RET 358 18ed287d610010049
+RET 359 08cf95f4e10014049
+RET 363 08e45e6fe10008449
+RET 364 0900862ee1000c449
+RET 368 18ea8aa2c10000049
+RET 369 18f63186e10004049
+RET 375 08f6c4b2010000449
+RET 376 18e03cdaa10004449
+RET 380 185fbb40010008209
+RET 381 08daa23661000c209
+RET 385 08f2cac0210010449
+RET 386 18f070cba10014449
+END edges=3063 ret_words=14 xo_checked=3061 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:122: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 14.622 s; speed 209.853 ns/s
+- Verilator: cpu 14.497 s on 1 threads; allocated 54 MB

@@ -1,0 +1,5 @@
+FAN32_PROFILES_PASS checks=98967 released32+native1 no-warm firstvalid/inflightreset
+- rtl/test/hdc/tb_fp32_add_fan32_profiles.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 30us; walltime 0.087 s; speed 346.611 us/s
+- Verilator: cpu 0.086 s on 1 threads; allocated 9 MB

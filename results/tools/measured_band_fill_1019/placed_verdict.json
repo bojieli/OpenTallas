@@ -1,0 +1,27 @@
+{
+  "valid": false,
+  "errors": [
+    "measured std-band density outside 40..60% or invalid band",
+    "missing coordinator approval/reason",
+    "unapproved standard cell outside full-width band"
+  ],
+  "std_area_um2": 6043.526639999039,
+  "band_area_um2": 0.7435799999999892,
+  "outside_area_um2": 6042.783059999039,
+  "band_density": 4.873853211009103e-05,
+  "exception_instances": [],
+  "actual_rows": 9396,
+  "actual_std_cells": 44791,
+  "stats": {
+    "fill": 0.186,
+    "std_area": 6043.5,
+    "block_area": 32063.2,
+    "die_area": 205286.4
+  },
+  "die": [
+    0.0,
+    0.0,
+    475.2,
+    432.0
+  ]
+}

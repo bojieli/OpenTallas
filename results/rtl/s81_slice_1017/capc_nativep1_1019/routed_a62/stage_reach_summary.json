@@ -1,0 +1,117 @@
+{
+ "scope": "All source/soft-register/hard-child boundary stages through conservative combinational all-input-to-all-output walk; actual final routed pin bounding-box Manhattan upper bounds, not routed pathlength. Child internals remain separately qualified. Clock pins excluded from data walk and retained in net census. Async reset pins are explicit endpoints.",
+ "starts": 2481,
+ "endpoints": 2509,
+ "stage_pairs": 2495,
+ "driver_roles": {
+  "clock": 1177,
+  "data": 1956,
+  "output": 1759,
+  "async": 26
+ },
+ "missing_pin_geometry": [],
+ "drivers_without_stage_sinks": [],
+ "worst": [
+  {
+   "driver": "g_pin.rst_l1$_DFF_PN0_/QN",
+   "sink": "u_core.g_hard.u_te/rst_n",
+   "bbox_manhattan_upper_um": 386.65100000000007
+  },
+  {
+   "driver": "g_pin.rst_l1$_DFF_PN0_/QN",
+   "sink": "cw_n_v[0]$_DFF_PN0_/RESETN",
+   "bbox_manhattan_upper_um": 348.70500000000004
+  },
+  {
+   "driver": "g_pin.rst_l1$_DFF_PN0_/QN",
+   "sink": "cw_n_v[1]$_DFF_PN0_/RESETN",
+   "bbox_manhattan_upper_um": 347.247
+  },
+  {
+   "driver": "g_pin.eq[0]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[0]",
+   "bbox_manhattan_upper_um": 345.829
+  },
+  {
+   "driver": "g_pin.rst_l1$_DFF_PN0_/QN",
+   "sink": "cw_n_v[3]$_DFF_PN0_/RESETN",
+   "bbox_manhattan_upper_um": 345.57300000000004
+  },
+  {
+   "driver": "g_pin.rst_l1$_DFF_PN0_/QN",
+   "sink": "cw_n_v[2]$_DFF_PN0_/RESETN",
+   "bbox_manhattan_upper_um": 345.08700000000005
+  },
+  {
+   "driver": "g_pin.eq[1]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[1]",
+   "bbox_manhattan_upper_um": 343.957
+  },
+  {
+   "driver": "g_pin.eq[4]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[4]",
+   "bbox_manhattan_upper_um": 342.349
+  },
+  {
+   "driver": "g_pin.eq[2]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[2]",
+   "bbox_manhattan_upper_um": 341.659
+  },
+  {
+   "driver": "g_pin.eq[3]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[3]",
+   "bbox_manhattan_upper_um": 340.48900000000003
+  },
+  {
+   "driver": "g_pin.eq[8]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[8]",
+   "bbox_manhattan_upper_um": 339.301
+  },
+  {
+   "driver": "g_pin.eq[6]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[6]",
+   "bbox_manhattan_upper_um": 338.98900000000003
+  },
+  {
+   "driver": "g_pin.eq[5]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[5]",
+   "bbox_manhattan_upper_um": 338.74899999999997
+  },
+  {
+   "driver": "g_pin.eq[9]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[9]",
+   "bbox_manhattan_upper_um": 336.83500000000004
+  },
+  {
+   "driver": "g_pin.eq[7]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[7]",
+   "bbox_manhattan_upper_um": 336.685
+  },
+  {
+   "driver": "g_pin.eq[12]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[12]",
+   "bbox_manhattan_upper_um": 334.957
+  },
+  {
+   "driver": "g_pin.eq[10]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[10]",
+   "bbox_manhattan_upper_um": 334.05100000000004
+  },
+  {
+   "driver": "g_pin.eq[11]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[11]",
+   "bbox_manhattan_upper_um": 332.881
+  },
+  {
+   "driver": "g_pin.eq[13]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[13]",
+   "bbox_manhattan_upper_um": 332.437
+  },
+  {
+   "driver": "g_pin.eq[14]$_DFF_P_/QN",
+   "sink": "u_core.g_hard.u_te/rt[14]",
+   "bbox_manhattan_upper_um": 331.381
+  }
+ ],
+ "over405": 0
+}

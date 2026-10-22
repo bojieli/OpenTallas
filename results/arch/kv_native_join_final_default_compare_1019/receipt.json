@@ -1,0 +1,245 @@
+{
+  "candidate_revision": "a8ddbb4c1f08b3a215243c8dfea704538e56b712",
+  "hostname": "ot-epyc8",
+  "version": "Verilator 5.050 2026-07-01 rev v5.050\n",
+  "started": 1792451003.4694545,
+  "builds": [
+    {
+      "family": "scheduler",
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-Wno-fatal",
+        "--top-module",
+        "scheduler_descriptor_baseline",
+        "--Mdir",
+        "obj_scheduler",
+        "-j",
+        "2",
+        "scheduler_compare.sv",
+        "scheduler_candidate.sv",
+        "scheduler_baseline.sv"
+      ],
+      "exit": 0
+    },
+    {
+      "family": "core",
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-Wno-fatal",
+        "--top-module",
+        "disabled_core_compare",
+        "--Mdir",
+        "obj_core",
+        "-j",
+        "2",
+        "disabled_core_compare.sv",
+        "core_candidate.sv"
+      ],
+      "exit": 0
+    }
+  ],
+  "cases": [
+    {
+      "family": "scheduler",
+      "case": 0,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 1,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 2,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 3,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 4,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 5,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 6,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 7,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 8,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 9,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 10,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 11,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 12,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 13,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 14,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 15,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 16,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 17,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 18,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 19,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 20,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 21,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 22,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 23,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 24,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "scheduler",
+      "case": 25,
+      "exit": 0,
+      "binary_sha256": "a903acc4c54584e2e7367a3aabf8402901d16ded72946eaeb22f5ffdac4ff717",
+      "expected_found": true
+    },
+    {
+      "family": "core",
+      "case": 0,
+      "exit": 0,
+      "binary_sha256": "d6e7d8aca264e4598a64bc8bd408e906214d2509177f6c763d4431d62f5916d6",
+      "expected_found": true
+    }
+  ],
+  "verdict": "BOUNDED_PASS",
+  "scheduler_compared_edges": 2977,
+  "certificate_attempt_eligibility_low": 9,
+  "certificate_attempt_eligibility_high": 32,
+  "finished": 1792451014.202059
+}

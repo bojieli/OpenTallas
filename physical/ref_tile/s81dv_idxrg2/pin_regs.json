@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_idx_rg",
+ "enable": false,
+ "reason": "Source-registered: dsdv_idx_rg lands every input in a flop at the pin and drives every output from a flop (header 'Pins'); the 2-edge chain hops (qi->qo, si->so) and the +1 station register on rq/rd are the priced static schedule, a recipe pin stage would shift every compiled beat."
+}

@@ -1,0 +1,49 @@
+{
+ "name": "kv_host2_post_uid_slot",
+ "stages": {
+  "bench": [
+   {
+    "name": "exact",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_post_uid_slot.sh {SRC} {RUN} exact",
+    "expect": "pass",
+    "pass_regex": "^POST_UID_SLOT PASS"
+   },
+   {
+    "name": "neg_slot4",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_post_uid_slot.sh {SRC} {RUN} neg_slot4",
+    "expect": "pass",
+    "pass_regex": "^POST_UID_SLOT PASS"
+   },
+   {
+    "name": "neg_poshi",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_post_uid_slot.sh {SRC} {RUN} neg_poshi",
+    "expect": "pass",
+    "pass_regex": "^POST_UID_SLOT PASS"
+   },
+   {
+    "name": "neg_uidx",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_post_uid_slot.sh {SRC} {RUN} neg_uidx",
+    "expect": "pass",
+    "pass_regex": "^POST_UID_SLOT PASS"
+   },
+   {
+    "name": "legacy_rawpos",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_post_uid_slot.sh {SRC} {RUN} legacy_rawpos",
+    "expect": "fail",
+    "fail_regex": "^POST_UID_SLOT FAIL (neg|fault)"
+   },
+   {
+    "name": "m2",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_post_uid_slot.sh {SRC} {RUN} m2",
+    "expect": "fail",
+    "fail_regex": "^POST_UID_SLOT FAIL (neg|fault)"
+   },
+   {
+    "name": "m3",
+    "cmd": "bash rtl/test/mu_qwen_1018/run_post_uid_slot.sh {SRC} {RUN} m3",
+    "expect": "fail",
+    "fail_regex": "^POST_UID_SLOT FAIL (neg|fault)"
+   }
+  ]
+ }
+}

@@ -1,0 +1,15 @@
+KU c1446 user 0 pos 0
+KU c1702 user 1 pos 0
+KU c1958 user 0 pos 1
+KU c2214 user 1 pos 1
+KU c2470 user 0 pos 2
+KU c2726 user 1 pos 2
+KU c2982 user 0 pos 3
+KU c3238 user 1 pos 3
+MUWIN starts 8 fires 108 expected 108 K 2 t_mf 0000 hslot 0000 hwin 00
+MUWIN PASS
+- /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_sweep37/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:336: Verilog $finish
+EARLY_MITER edges 3337
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.212 s; speed 15.760 us/s
+- Verilator: cpu 0.212 s on 1 threads; allocated 8 MB

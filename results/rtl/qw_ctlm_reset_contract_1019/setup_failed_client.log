@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits  1026 GB (avail 789, growth 71, headroom 0, waiters 0/0 GB) load 42/128 running 23 disk 390 GB 
+ot-run: ot-epyc5       admits   622 GB (avail 519, growth 83, headroom 0, waiters 0/0 GB) load 47/128 running 8 disk 896 GB 
+ot-run: ot-epyc6       admits  1004 GB (avail 816, growth 113, headroom 0, waiters 0/0 GB) load 131/128 running 36 disk 5804 GB 
+ot-run: ot-epyc7       admits   432 GB (avail 403, growth 101, headroom 0, waiters 0/0 GB) load 318/96 running 73 disk 6305 GB 
+ot-run: ot-epyc8       admits  1209 GB (avail 929, growth 83, headroom 0, waiters 0/0 GB) load 52/128 running 28 disk 95 GB 
+ot-run: ot-pve1        admits   139 GB (avail 109, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1209 GB 
+ot-run: ot-agidock128  admits    90 GB (avail 76, growth 13, headroom 0, waiters 0/0 GB) load 26/64 running 11 disk 284 GB 
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1214333-1792439553 after 0 s
+tar: This does not look like a tar archive
+tar: Exiting with failure status due to previous errors
+bash: run.sh: No such file or directory
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1214333-1792439553): exit 127

@@ -572,7 +572,8 @@ class PinRegs(unittest.TestCase):
         self.assertEqual(RT.pin_regs_vars(s), ["--orfs-var OT_PIN_REGS=1", "--orfs-var OT_PIN_REGS_CLOCK='clk'", "--orfs-var OT_PIN_REGS_RESET_PORTS=''"])
         self.assertIsNone(RT.pin_regs_plan({"kind": "tile", "clock_port": "clk"}))
         with self.assertRaises(RT.SpecError):
-            RT.pin_regs_plan({"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": False}})       # no reason
+            RT.pin_regs_plan({"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": False},       # no reason,
+                              "pin_regs_rule": "every_pin"})                                             # strict form
         self.assertEqual(RT.pin_regs_vars({"kind": "tile", "clock_port": "clk",
                                            "pin_regs": {"enable": False, "reason": "PHY timing owned by the parent"}}), [])
         with self.assertRaises(RT.SpecError):
@@ -606,8 +607,9 @@ class PinRegsGate(unittest.TestCase):
             (kd / "kit.env").write_text("EXTRA=(--orfs-var OT_KEEP_PIN_REGS=1)\n")
             early = dt.datetime.fromisoformat("2026-10-16T10:00:00-07:00")
             late = dt.datetime.fromisoformat("2026-10-17T10:00:00-07:00")
-            for now, spec, want in ((early, {}, "WARN"), (late, {}, "FAIL"), (late, {"auto_react_parent": "p"}, "WARN"),
-                                    (late, {"pin_regs": {"enable": False, "reason": "parent owns the boundary"}}, "INFO"),
+            S = {"pin_regs_rule": "every_pin"}       # the strict 10-15 form (owner 10-20 default: test_pin_rule_1020.py)
+            for now, spec, want in ((early, S, "WARN"), (late, S, "FAIL"), (late, dict(S, auto_react_parent="p"), "WARN"),
+                                    (late, dict(S, pin_regs={"enable": False, "reason": "parent owns the boundary"}), "INFO"),
                                     (late, {"kind": "cluster"}, None)):
                 g = PG.Gate()
                 PG.check_pin_regs(g, kd, spec, now=now)

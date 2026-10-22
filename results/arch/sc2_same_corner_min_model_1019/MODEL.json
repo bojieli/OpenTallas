@@ -1,0 +1,100 @@
+{
+  "conditional_scope": "Nonnegative additive analytical edge-triggered model with the identical 50-percent related/output reference convention. No claim of transistor minimum characterization. Noncausal/negative reference offset or out-of-domain slew/load refuses.",
+  "constraint_extrema_derivation": {
+    "hold_extra_global_upper_ps": 31.5,
+    "setup_extra_global_upper_ps": 78.75
+  },
+  "master": "ot_sram_1r1w_512x128_m4_r2c2_p192_sc2",
+  "roles": {
+    "FF-MIN": {
+      "added_clock_access_lower_ps": 0,
+      "added_output_access_lower_ps": 0,
+      "clock_lead_upper_ps": 7.89442888235239,
+      "corner": "ff",
+      "data_and_clock_slew_domain_ps": [
+        5,
+        320
+      ],
+      "hold_requirement_global_upper_ps": 59.06664942013017,
+      "input_lead_upper_ps": 11.043297635383507,
+      "intrinsic_cq_lower_ps": 0,
+      "load_domain_ff": [
+        0.72,
+        46.08
+      ],
+      "min_period_requirement_upper_ps": 355.90853043351626,
+      "min_pulse_requirement_upper_ps": 143.00208872392255,
+      "native_binding_authorized": false,
+      "output_slew_lower_ps": 0,
+      "output_slew_upper_ps": null,
+      "positive_intrinsic_cq_lower_ps": null,
+      "rejected_nominal_cq_as_min_ps": 346.0436643943168,
+      "setup_requirement_global_upper_ps": 122.38249759329146,
+      "total_cq_lower_ps": 0
+    },
+    "SS-MIN": {
+      "added_clock_access_lower_ps": 0,
+      "added_output_access_lower_ps": 0,
+      "clock_lead_upper_ps": 10.228102663170382,
+      "corner": "ss",
+      "data_and_clock_slew_domain_ps": [
+        5,
+        320
+      ],
+      "hold_requirement_global_upper_ps": 71.80212324775371,
+      "input_lead_upper_ps": 16.645043016009783,
+      "intrinsic_cq_lower_ps": 0,
+      "load_domain_ff": [
+        0.72,
+        46.08
+      ],
+      "min_period_requirement_upper_ps": 534.0794756908307,
+      "min_pulse_requirement_upper_ps": 212.58947905932894,
+      "native_binding_authorized": false,
+      "output_slew_lower_ps": 0,
+      "output_slew_upper_ps": null,
+      "positive_intrinsic_cq_lower_ps": null,
+      "rejected_nominal_cq_as_min_ps": 524.0724742442052,
+      "setup_requirement_global_upper_ps": 145.42368684834685,
+      "total_cq_lower_ps": 0
+    },
+    "TT-MIN": {
+      "added_clock_access_lower_ps": 0,
+      "added_output_access_lower_ps": 0,
+      "clock_lead_upper_ps": 8.559227049328268,
+      "corner": "tt",
+      "data_and_clock_slew_domain_ps": [
+        5,
+        320
+      ],
+      "hold_requirement_global_upper_ps": 61.659486434883824,
+      "input_lead_upper_ps": 13.012914961565286,
+      "intrinsic_cq_lower_ps": 0,
+      "load_domain_ff": [
+        0.72,
+        46.08
+      ],
+      "min_period_requirement_upper_ps": 424.03013047854034,
+      "min_pulse_requirement_upper_ps": 169.47279268135784,
+      "native_binding_authorized": false,
+      "output_slew_lower_ps": 0,
+      "output_slew_upper_ps": null,
+      "positive_intrinsic_cq_lower_ps": null,
+      "rejected_nominal_cq_as_min_ps": 415.19529909991155,
+      "setup_requirement_global_upper_ps": 128.57832078200465,
+      "total_cq_lower_ps": 0
+    }
+  },
+  "schema": "opentallas.sc2-same-corner-min-model.v1",
+  "source_commit": "19ccd29b9",
+  "source_generated_json_sha256": "9ab0372491401a5a193f7415ee21df63cd6a57ba352eb1faab4e28d49f4eee11",
+  "status": "MODEL_ONLY_CONDITIONAL_ZERO_BOUND_NO_LIBERTY_NO_ACTIVATION",
+  "superseded_claim": "All nominal positive CQ-as-MIN assignments in the prior planner, including FF346.043664 ps, are unqualified; retained only as historical model claims.",
+  "unknowns": [
+    "Positive intrinsic CQ earliest bound",
+    "Native downstream delay/constraint extrema under interval slew",
+    "Transition upper bound including full load and input slew",
+    "Generated LEF protection correction identity",
+    "Production integration of all 33 inventoried consumers plus ORFS external read_liberty and parent SDC"
+  ]
+}

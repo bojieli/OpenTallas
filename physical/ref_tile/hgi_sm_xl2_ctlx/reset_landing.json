@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hgi_sm_xload_cl2_ctlx",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n drives one kept async-clear flop rp1 at the S face + 2 plain release flops (ELEM-GAPS/HBMN1 n2/n3, native audit of q1 rst_n capture 455.7 ps); kit landing would add 2 more reset edges"
+}

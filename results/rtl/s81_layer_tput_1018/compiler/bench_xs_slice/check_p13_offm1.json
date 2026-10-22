@@ -1,0 +1,62 @@
+{
+ "summary": {
+  "words": 10,
+  "rows": 10,
+  "complete_rows_at_root": 10,
+  "partial_words": 0,
+  "plan_exact": false,
+  "end": "END edges=1302 ret_words=10 xo_checked=1300 fault=0"
+ },
+ "lockstep": {
+  "D": 321,
+  "compared": 980,
+  "mismatch": 68,
+  "valid_ref": 34,
+  "valid_xs": 34,
+  "first_ref": 67,
+  "first_xs": 387,
+  "xs_fault_at": -1
+ },
+ "errors": [
+  "PLAN_MISMATCH predicted 10 words, got 10; first diff ((689, 2, (0, 1, 2), 1022292094, 0), (688, 2, (0, 1, 2), 1022292094, 0))",
+  "LOCKSTEP D=321 compared=980 mismatch=68 valid_ref=34 valid_xs=34 first_ref=67 first_xs=387 xs_fault_at=-1",
+  "XSL_MISMATCH xs edge 387 ref edge 66 valid 1/0 cc 0036/0000",
+  "XSL_MISMATCH xs edge 388 ref edge 67 valid 0/1 cc 0034/0036",
+  "XSL_MISMATCH xs edge 450 ref edge 129 valid 1/0 cc 0035/0034",
+  "XSL_MISMATCH xs edge 451 ref edge 130 valid 0/1 cc 0034/0035"
+ ],
+ "xs": {
+  "D": 321,
+  "off": 37,
+  "off_load": 36,
+  "ts": 300,
+  "mutant": "offm1",
+  "tags": "phase",
+  "cal_rows": 70,
+  "stall_edges": 0,
+  "gather_slack": 234,
+  "nbeat_x": 32,
+  "fam": 0,
+  "K": 2048,
+  "nbeat_stream": 64,
+  "sbase": 848,
+  "end_iter": 585,
+  "launch_row": 103,
+  "cfg_row": 40,
+  "stream_rows": [
+   103,
+   166
+  ],
+  "is_d": {
+   "24": "0000000248000000000000000000000000000000",
+   "150": "0000000001000000000000000000000000000000",
+   "280": "0000000000023000200000000000000000000000",
+   "300": "0000000000023000400000000000000000000000",
+   "323": "000000000000000000000000000000000000001b"
+  },
+  "calendar": "pq_calendar_action/time.viamap.hex (75-b action ABI, tools/s81_static_control/pq_calendar)"
+ },
+ "op": "attn.wo_b",
+ "field_phase": 13,
+ "pass_": false
+}

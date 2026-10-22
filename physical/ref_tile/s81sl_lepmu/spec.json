@@ -14,7 +14,7 @@
  ],
  "outline": {
   "w": 475.2,
-  "h": 604.8
+  "h": 691.2
  },
  "macros": [
   {
@@ -58,7 +58,7 @@
    "inst": "*g_tx?2?.u_m.g_sram.g_t?2?.u_m",
    "at": [
     41.904,
-    157.68
+    179.28
    ],
    "orient": "R0"
   },
@@ -67,7 +67,7 @@
    "inst": "*g_tx?3?.u_m.g_sram.g_t?2?.u_m",
    "at": [
     259.2,
-    157.68
+    179.28
    ],
    "orient": "R0"
   },
@@ -76,7 +76,7 @@
    "inst": "*g_tx?2?.u_m.g_sram.g_t?3?.u_m",
    "at": [
     41.904,
-    209.52
+    231.12
    ],
    "orient": "R0"
   },
@@ -85,7 +85,7 @@
    "inst": "*g_tx?3?.u_m.g_sram.g_t?3?.u_m",
    "at": [
     259.2,
-    209.52
+    231.12
    ],
    "orient": "R0"
   },
@@ -94,7 +94,7 @@
    "inst": "*g_tx?2?.u_m.g_sram.g_t?4?.u_m",
    "at": [
     41.904,
-    261.36
+    304.56
    ],
    "orient": "R0"
   },
@@ -103,7 +103,7 @@
    "inst": "*g_tx?3?.u_m.g_sram.g_t?4?.u_m",
    "at": [
     259.2,
-    261.36
+    304.56
    ],
    "orient": "R0"
   },
@@ -112,7 +112,7 @@
    "inst": "*g_tx?0?.u_m.g_sram.g_t?0?.u_m",
    "at": [
     41.904,
-    313.2
+    356.4
    ],
    "orient": "R0"
   },
@@ -121,7 +121,7 @@
    "inst": "*g_tx?1?.u_m.g_sram.g_t?0?.u_m",
    "at": [
     259.2,
-    313.2
+    356.4
    ],
    "orient": "R0"
   },
@@ -130,7 +130,7 @@
    "inst": "*g_tx?0?.u_m.g_sram.g_t?1?.u_m",
    "at": [
     41.904,
-    365.04
+    429.84
    ],
    "orient": "R0"
   },
@@ -139,7 +139,7 @@
    "inst": "*g_tx?1?.u_m.g_sram.g_t?1?.u_m",
    "at": [
     259.2,
-    365.04
+    429.84
    ],
    "orient": "R0"
   },
@@ -148,7 +148,7 @@
    "inst": "*g_tx?0?.u_m.g_sram.g_t?2?.u_m",
    "at": [
     41.904,
-    416.88
+    481.68
    ],
    "orient": "R0"
   },
@@ -157,7 +157,7 @@
    "inst": "*g_tx?1?.u_m.g_sram.g_t?2?.u_m",
    "at": [
     259.2,
-    416.88
+    481.68
    ],
    "orient": "R0"
   },
@@ -166,7 +166,7 @@
    "inst": "*g_tx?0?.u_m.g_sram.g_t?3?.u_m",
    "at": [
     41.904,
-    468.72
+    555.12
    ],
    "orient": "R0"
   },
@@ -175,7 +175,7 @@
    "inst": "*g_tx?1?.u_m.g_sram.g_t?3?.u_m",
    "at": [
     259.2,
-    468.72
+    555.12
    ],
    "orient": "R0"
   },
@@ -184,7 +184,7 @@
    "inst": "*g_tx?0?.u_m.g_sram.g_t?4?.u_m",
    "at": [
     41.904,
-    520.56
+    606.96
    ],
    "orient": "R0"
   },
@@ -193,7 +193,7 @@
    "inst": "*g_tx?1?.u_m.g_sram.g_t?4?.u_m",
    "at": [
     259.2,
-    520.56
+    606.96
    ],
    "orient": "R0"
   }
@@ -270,14 +270,14 @@
   "macro_halo_um": 10.8,
   "io_hold_margin_ns": 0.025
  },
- "structural_change": "MU-S81/KIT 10-19: hardened master of the multi-user copy A/B end-slice link endpoint (MU-S81/LINK 0e11a04bb; new parameter-free top ot_s81sl_lep_mu_ab = ot_s81sl_lep_core MU_EN 1, AB_EN 1, HOST_EN 0, no host / l*_st ports, so no tied pad or constant output). = s81sl_lepnh + user-tag TX window / RX strip (spare XB/XQ bits, 0 wires, 0 cycles) + landing port to dsdv_mu_land + pair B (2 more lanes, 10 more TX SRAM). AB doubles the lane pins (4.46k): W alone would need >= 743 um at 6/um, so pair B goes on the S face (task option), landing on N, ring + mu_c / mu_rt on E. Outline 475.2 x 604.8 (aspect 1.27): 4 x 5 SRAM rows at the lep's 51.84 pitch (B rows at the S face, A rows above), >= 54 um N/S std-cell bands, the lep's 41.9 um W/E bands. Faces: W 2,228 (3.7/um), S 2,232 (4.7/um), N 2,211 (4.65/um), E 2,274 (3.8/um). Clock: 16 region roots by 2-D k-means (clock_split_km.tcl, the s81sl_lep fix of 10-19).",
+ "structural_change": "MU-S81/KIT 10-19: hardened master of the multi-user copy A/B end-slice link endpoint (MU-S81/LINK 0e11a04bb; new parameter-free top ot_s81sl_lep_mu_ab = ot_s81sl_lep_core MU_EN 1, AB_EN 1, HOST_EN 0, no host / l*_st ports, so no tied pad or constant output). = s81sl_lepnh + user-tag TX window / RX strip (spare XB/XQ bits, 0 wires, 0 cycles) + landing port to dsdv_mu_land + pair B (2 more lanes, 10 more TX SRAM). AB doubles the lane pins (4.46k): W alone would need >= 743 um at 6/um, so pair B goes on the S face (task option), landing on N, ring + mu_c / mu_rt on E. Outline 475.2 x 604.8 (aspect 1.27): 4 x 5 SRAM rows at the lep's 51.84 pitch (B rows at the S face, A rows above), >= 54 um N/S std-cell bands, the lep's 41.9 um W/E bands. Faces: W 2,228 (3.7/um), S 2,232 (4.7/um), N 2,211 (4.65/um), E 2,274 (3.8/um). Clock: 16 region roots by 2-D k-means (clock_split_km.tcl, the s81sl_lep fix of 10-19). MU-S81-2/RX 10-19 (CTS gates: setup into rid failed, lepmua -70.8 ps on 560 paths: rpc -> 8:1 RX row mux -> tag / land decode -> 1,103-bit select fanout; lepmu -575 ps on 600 paths: + pair-B mux and ~300 um): MU_EN 1 RX rebuilt with 0 added cycles -- show-ahead head register per RX lane (hd <= we[rp_nx] ? dq : mem[rp_nx], pointer copy + increment per column group, pop pair-local), a land bit pre-decoded per FIFO row at write (lane 0 XB/XQ ring beat, lane 1 tag && land), rid = one AO222 per bit {cut-through A, cut-through B, replay} with the selects duplicated per 69-bit column group (keep); rpb from nz flops only. MU_EN 0 logic untouched (lep / lep_nh generic netlists equal up to yosys auto-net numbering). Bench tb_s81sl_lep_mu gains a RETURN phase (dies A / B -> the A/B master over pairs A and B, cut-through + landed) and mutant STALEHD. Kit: lep c12b5663c fixes -- pin_reg_split, pin_ranges (l*_f, sl_f, fault at the SW corner beside the fault collector), reset_landing 2 stages; Outline 475.2 x 604.8 -> 475.2 x 691.2: the 20 SRAM rows go in 5 groups of 2 (in-group pitch 51.84, group pitch 125.28) so 4 REAL std-cell channels (22.1 um between halos) cross the full width (the old gates 20261018-234937 / 20261019-003639 sat in GRT congestion extra iterations with NDR disabling 2.5 h+: std cells only in the 21.6-um centre channel, the ~31-um W/E bands and the N/S bands, halos 10.8 closing every inter-row gap, M6 not routable); N band 43.7, S band 43.2 um; faces W 3.2/um, S 4.66/um, N 4.65/um, E 3.3/um.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered as s81sl_lep / s81sl_lepnh (ro / li / ml_rd land in pin flops, ri / lo / ml_wd / mu_rt / fault leave flops); recipe pin_regs would add an unpriced stage."
  },
  "job": {
-  "owner": "Claude:MU-S81",
-  "branch": "claude/mu-s81-kit-1019",
+  "owner": "Claude:MU-S81-2/RX",
+  "branch": "claude/mu-s81-2-rx-1019",
   "tag": "s81sl_lepmu",
   "purpose": "MU-S81/KIT: multi-user copy A/B end-slice link endpoint (HOST_EN 0, AB_EN 1) to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
@@ -293,7 +293,8 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/common_flow/clock_split_km.tcl",
-   "results/rtl/mu_s81_kit_1019"
+   "results/rtl/mu_s81_kit_1019",
+   "results/rtl/mu_s81_2_rx_1019"
   ],
   "benches": [
    {
@@ -320,7 +321,7 @@
     "threads": 8,
     "peak_ram_gb": 12,
     "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
-    "fail_witness": "results/rtl/mu_s81_kit_1019/witness_lepmu_tagdrop.log"
+    "fail_witness": "results/rtl/mu_s81_2_rx_1019/witness_lepmu_tagdrop.log"
    },
    {
     "name": "lepmu_mut_wrongcopy",
@@ -329,7 +330,25 @@
     "threads": 8,
     "peak_ram_gb": 12,
     "fail_regex": "^FAIL lep_mu: .* B 0/[1-9]",
-    "fail_witness": "results/rtl/mu_s81_kit_1019/witness_lepmu_wrongcopy.log"
+    "fail_witness": "results/rtl/mu_s81_2_rx_1019/witness_lepmu_wrongcopy.log"
+   },
+   {
+    "name": "lepmu_mut_landcut",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_landcut lepmu LANDCUT 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
+    "fail_witness": "results/rtl/mu_s81_2_rx_1019/witness_landcut.log"
+   },
+   {
+    "name": "lepmu_mut_stalehd",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_stalehd lepmu STALEHD 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
+    "fail_witness": "results/rtl/mu_s81_2_rx_1019/witness_stalehd.log"
    }
   ],
   "views_to": "physical/ref_tile/s81sl_lepmu/views",
@@ -350,5 +369,36 @@
  },
  "fill_reason": {
   "pin_bound": "Pin-bound: 8,945 signal pins on four faces (W lanes A, S lanes B, N landing, E ring); 20 TX SRAM (103.6k um2) set the height, the pin faces the width; fill well under 45% is the price of the faces, as s81sl_lep."
+ },
+ "pin_reg_split": true,
+ "pin_ranges": {
+  "l0_f": [
+   3.0,
+   20.0
+  ],
+  "l1_f": [
+   3.0,
+   20.0
+  ],
+  "l2_f": [
+   3.0,
+   20.0
+  ],
+  "l3_f": [
+   3.0,
+   20.0
+  ],
+  "sl_f": [
+   3.0,
+   20.0
+  ],
+  "fault": [
+   3.0,
+   20.0
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
  }
 }

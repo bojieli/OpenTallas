@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_su_pretree_s_1018-p3-1dad69123 bench bench_pretree_mut1024_join_pairing host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hbm_su_pretree_s_1018-p3-1dad69123 log cl/bench_pretree_mut1024_join_pairing.a1b1.log captured 2026-10-19T07:36:02-07:00
+# fail_regex 'FAIL tb_hbm_su_red_pretree MUT=1024'
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH 0: edge 232 (exp 232) tag 00000200 (exp 00000200) x 47293cd1 (exp 47293cd0)
+MISMATCH 9: edge 782 (exp 782) tag 00000209 (exp 00000209) x 45f4e921 (exp 45f4e91e)
+FAIL tb_hbm_su_red_pretree MUT=1024: 2 errors
+- rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.352 s; speed 4.614 us/s
+- Verilator: cpu 0.352 s on 1 threads; allocated 16 MB

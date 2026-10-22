@@ -28,10 +28,14 @@ proc ot_mm_read_libs {} {
   foreach c [list [ot_mm_sc] BC] { foreach l [ot_mm_libs $c] { log_cmd read_liberty $l } }
 }
 proc ot_mm_read_sdc {sdc} {
-  log_cmd read_sdc -mode ss $sdc
-  log_cmd read_sdc -mode ff $sdc
+  # Scene creation clears the mode's external pin/wire loads and fanout.
+  # Establish both scenes before evaluating the original SDC once per mode.
+  set_mode ss
+  set_mode ff
   define_scene [ot_mm_sc] -mode ss -liberty [ot_mm_libs [ot_mm_sc]]
   define_scene BC -mode ff -liberty [ot_mm_libs BC]
+  log_cmd read_sdc -mode ss $sdc
+  log_cmd read_sdc -mode ff $sdc
   # ff mode never checks setup; before CTS (ideal clocks) it checks nothing either, so placement repairs exactly as a
   # WC-only flow did.  Only the CTS (3_place.sdc) and global-route (4_cts.sdc) stages sync it before their repair.
   set_mode ff
@@ -98,6 +102,7 @@ proc ot_mm_scene_shim {on} {
 # Recreating the existing clock updates its waveform in place; IO constraints,
 # latency and uncertainty remain attached. Other virtual/window clocks stay put.
 proc ot_mm_sync_link_periods {} {
+  if {[llength [info commands ot_single_clock_check]]} { ot_single_clock_check }
   foreach c [all_clocks] {
     set vn [get_full_name $c]
     if {![regexp {^ot_lb_v_(.+)$} $vn -> rn] || [llength [get_property $c sources]]} continue
@@ -227,14 +232,26 @@ proc ot_rc_cal_restore {} {
   source $::env(PLATFORM_DIR)/setRC.tcl
   puts "OT_RC_CAL restored platform setRC.tcl"
 }
-# run BODY (a script, uplevel 1) with the calibrated hold RC, estimating parasitics before and after
+# Run BODY with calibrated hold RC. Numeric FF I/O references must be measured
+# with that same RC, and measured again after restoring platform RC. Unsync FIRST:
+# writing the SS SDC while its temporary hold exception is active would copy that
+# exception to FF and hide real hold paths. Never refresh a scene that was not
+# already synced by the caller; non-MM and setup-only behavior stays unchanged.
 proc ot_rc_cal_hold {body} {
   set on [ot_rc_cal_apply hold]
-  if {$on} { estimate_parasitics [ot_rc_cal_mode] }
+  set refresh [expr {$on && [info exists ::ot_mm_synced]}]
   try {
+    if {$on} {
+      estimate_parasitics [ot_rc_cal_mode]
+      if {$refresh} { ot_mm_unsync; ot_mm_sync }
+    }
     return [uplevel 1 $body]
   } finally {
-    if {$on} { ot_rc_cal_restore; estimate_parasitics [ot_rc_cal_mode] }
+    if {$on} {
+      ot_rc_cal_restore
+      estimate_parasitics [ot_rc_cal_mode]
+      if {$refresh} { ot_mm_unsync; ot_mm_sync }
+    }
   }
 }
 

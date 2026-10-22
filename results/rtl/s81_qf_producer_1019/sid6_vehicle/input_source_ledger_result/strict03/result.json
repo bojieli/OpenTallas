@@ -1,0 +1,107 @@
+{
+  "scope": "Diagnostic actual source\u2192input-boundary clock/data component only; no numericframe/native qualification",
+  "job": "535701",
+  "genuine_raw_input1280": true,
+  "real_gather20": true,
+  "source_event_words": 390,
+  "actual_epochs": 15,
+  "samples_per_frame": [
+    390,
+    390,
+    390,
+    390,
+    390,
+    390
+  ],
+  "reconstructed_CFIFO_xw_ages": [
+    10,
+    8,
+    11,
+    10,
+    8,
+    11
+  ],
+  "sticky_CFIFO_flt_zero": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "actual_registered_xa_xb_cc_x2_checked": false,
+  "registered_pin_ages": null,
+  "marker_origin": "actual XS xw_d visible after edge to actual CFIFO internal xw_ or registered pins visible after edge, matching full genuine source words",
+  "clock_reset_tuples": "All24 actualforwardedposedge edge timestamps/phase, actualLK/pre/post rsync/wc/rc/warm; NBA readback +4ps is observation only",
+  "controlled_assumptions": [
+    "Common logical root/regional diagnostic reset schedule, native25regionaldatesNULL",
+    "Actual ri/st0 return-status-only boundary; no consumerready/request/clear substitute"
+  ],
+  "causal_faults": [
+    "7:one actualforwardedclockedge missing",
+    "8:actualroutedpayload bitcorrupt",
+    "9:actualroutedlane0 replacedbyactualneighborlane1",
+    "10:actualsourceword boundary1edge late",
+    "11:actualforwardedclockwrongpolarity"
+  ],
+  "actual_first_class_CFG7_go_tag_trace": false,
+  "actual_CAP_VP_drain": false,
+  "native_physical_phase": null,
+  "whole_token_deadline_pass": null,
+  "new_production_RTL": false,
+  "executable_location": "ot-epyc4:/srv/opentallas-scratch/claude/s81-qf-producer-source-1019/qnorm_source_bundle/input_source_ledger_03/obj/Vtb_input_source_ledger",
+  "files": [
+    {
+      "path": "baseline.log",
+      "sha256": "6f6a37d8def4257e0e6a3cd747fd0143ee224065e83a9eb24849ce4f72746d58"
+    },
+    {
+      "path": "build.log",
+      "sha256": "d6e84808410a2a1eb95a9df3f83420ca8f44a9b8d5cda4c2d05a12d2a4c4bc5b"
+    },
+    {
+      "path": "build_time.log",
+      "sha256": "f66698d027cda25a538181632a54b904617900f9ea08e5a6077169c7aa8f5c0a"
+    },
+    {
+      "path": "inputs.sha256",
+      "sha256": "e53002b72fbe621ca9fd4de39e8a1d8c6622db8e6e7086ed21439eeaebaac4fe"
+    },
+    {
+      "path": "mut_10.log",
+      "sha256": "ddeaf48073d8036850285427a2845d377c6c040ab0304bf016563fe5ac329deb"
+    },
+    {
+      "path": "mut_11.log",
+      "sha256": "a6be561d84eac1867566b29feadaa115cf09ff769d5f0778c93afafa8a3aa2f3"
+    },
+    {
+      "path": "mut_7.log",
+      "sha256": "313b55f03d2eba9e6697e4e490f2fa60bafbddb562b510cbba898564a041fb6c"
+    },
+    {
+      "path": "mut_8.log",
+      "sha256": "fba09380eca60b1d37fbb83b07f6274dd24a3cef788dee4088721d5a9888f007"
+    },
+    {
+      "path": "mut_9.log",
+      "sha256": "39803362c556d99d76bdef614cb54a4f6e0ee9e3b9ebfb8ddf12e6c0fc45f20f"
+    },
+    {
+      "path": "run_input_source_ledger.sh",
+      "sha256": "64ca6c9471ff23c46160d2c2cf0ed726023c2d13fc1930f8b69ab90c2224b787"
+    },
+    {
+      "path": "selected_input_cone.sv",
+      "sha256": "1452b142894897b44938bb38e332c9a85baa2dd78456697c09d853f9fc3b2dfa"
+    },
+    {
+      "path": "tb_input_source_ledger.sv",
+      "sha256": "e30fc89d163ae5b317b8bfade884f27343a0288e5c02ff6a9deda784aaf71b59"
+    },
+    {
+      "path": "verilator.version",
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    }
+  ]
+}

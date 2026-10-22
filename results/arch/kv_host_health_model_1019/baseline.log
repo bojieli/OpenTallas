@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits   895 GB (avail 740, growth 113, headroom 0, waiters 0/0 GB) load 92/128 running 34 disk 412 GB 
+ot-run: ot-epyc5       admits  1081 GB (avail 814, growth 56, headroom 0, waiters 0/0 GB) load 93/128 running 10 disk 564 GB 
+ot-run: ot-epyc6       admits   793 GB (avail 668, growth 113, headroom 0, waiters 0/0 GB) load 41/128 running 12 disk 563 GB 
+ot-run: ot-epyc7       admits  1081 GB (avail 834, growth 78, headroom 0, waiters 0/0 GB) load 27/96 running 19 disk 502 GB 
+ot-run: ot-epyc8       admits  1232 GB (avail 951, growth 89, headroom 0, waiters 0/0 GB) load 38/128 running 27 disk 565 GB 
+ot-run: ot-pve1        admits   154 GB (avail 120, growth 6, headroom 0, waiters 0/0 GB) load 9/28 running 3 disk 1200 GB 
+ot-run: ot-agidock128  admits   101 GB (avail 84, growth 13, headroom 0, waiters 0/0 GB) load 11/64 running 7 disk 46 GB 
+ot-run: -> ot-pve1
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1144175-1792433405 after 0 s
+machine_sha256=a5b616b67126c9adec7bde90c8f881e0f8292fec56f2cb3153c6e7a027a55229
+{"source_model_only": true, "checks": 63, "mutant": null, "PASS": true}
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1144175-1792433405): exit 0

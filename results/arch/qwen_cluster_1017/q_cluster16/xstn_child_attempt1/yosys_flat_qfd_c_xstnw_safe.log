@@ -1,0 +1,68 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/out/flat_qfd_c_xstnw_safe.ys' --
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+Imported 42 cell types from liberty file.
+
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib
+Imported 3 cell types from liberty file.
+
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib
+Imported 3 cell types from liberty file.
+
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib
+Imported 3 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+Imported 37 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+Imported 34 cell types from liberty file.
+
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+Imported 33 cell types from liberty file.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+Imported 56 cell types from liberty file.
+
+9. Executing Verilog-2005 frontend: /in/1_2_yosys.v
+Parsing Verilog input from `/in/1_2_yosys.v' to AST representation.
+Generating RTLIL representation for module `\$paramod\qfd_c_xstn_safe_region\W=s32'00000000000000000000000000000100'.
+Generating RTLIL representation for module `\$paramod\qfd_c_xstn_safe_region\W=s32'00000000000000000000000000001100'.
+Generating RTLIL representation for module `\qfd_c_xstnw_safe'.
+Successfully finished Verilog frontend.
+
+10. Executing HIERARCHY pass (managing design hierarchy).
+
+10.1. Analyzing design hierarchy..
+Top module:  \qfd_c_xstnw_safe
+Used module:     \$paramod\qfd_c_xstn_safe_region\W=s32'00000000000000000000000000000100
+Used module:     \$paramod\qfd_c_xstn_safe_region\W=s32'00000000000000000000000000001100
+
+10.2. Analyzing design hierarchy..
+Top module:  \qfd_c_xstnw_safe
+Used module:     \$paramod\qfd_c_xstn_safe_region\W=s32'00000000000000000000000000000100
+Used module:     \$paramod\qfd_c_xstn_safe_region\W=s32'00000000000000000000000000001100
+Removed 0 unused modules.
+
+11. Executing FLATTEN pass (flatten design).
+Deleting now unused module \$paramod\qfd_c_xstn_safe_region\W=s32'00000000000000000000000000001100.
+Deleting now unused module \$paramod\qfd_c_xstn_safe_region\W=s32'00000000000000000000000000000100.
+<suppressed ~6 debug messages>
+
+12. Executing JSON backend.
+
+End of script. Logfile hash: cd9f0f2dfe, time: 0.57s, user: 0.50s, system: 0.07s, MEM: 76.12 MB peak
+Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 76% 16x read_liberty (0 sec), 18% 2x read_verilog (0 sec), ...

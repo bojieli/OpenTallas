@@ -1,0 +1,14 @@
+{
+  "unit": "oth-ubuntu-1735550-1792429847",
+  "host": "ot-epyc5",
+  "source_sha256": "d5b9d788c44dc839304690142363e25600030edbee2d38c79d66aa940b54eca6",
+  "shape": "fixedADD7/SCALE6 DRST0",
+  "tool": "Verilator5.050",
+  "cycles": 10000,
+  "resets": 2,
+  "add_valid_results": 8518,
+  "mul_valid_results": 8520,
+  "compared": "all32 result bits+2error bits+valid age; full directed signedzero/subnormal/Inf/NaN/RNE/cancellation/ties plus randomfullwidth",
+  "result": "PASS",
+  "scope": "two-kernel precursor; final output-consumer specialized six-kernel source still pending equivalence/native census"
+}

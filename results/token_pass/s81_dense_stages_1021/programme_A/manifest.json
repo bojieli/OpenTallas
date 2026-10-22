@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.s81_dv.layer_prog_manifest.v1",
+ "layer": "L0",
+ "die_ref": "origin/main",
+ "timing_contract": {
+  "xr_source_sha256": "e51bcf9e2cd5178ac5524865eecb9a8089cf20a7da919cbb49f342193181a9d2",
+  "v_ctl_inject": 7,
+  "basis": "rstop iv/dl_vb -> xr vb/classify/ci_r -> rstop ci_q/ro: 7 registered edges"
+ },
+ "die_ref_sha": "g7-46e46e17b",
+ "die_v_sha256": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+ "land_plan_sha256": "6f357f75b92df72493ea7954daf3dc07e2cf96481c40b9ef489e2a42d5acdd9b",
+ "plan_sha256": "28854ebce3fdd39f800acaa13a3a346d16998e7fef47b0e1fcde4c15890d80c0",
+ "compiler_sha256": "8176d7ab6dcff9fb49f54d7c7e4043b67f46598ec692020b0f977cf42fb255f4",
+ "files": {
+  "lowering.json": "4ea5703522fd27390c63e8bc2367acb4814f8d2c8182dec2d317b66b7e9daa72",
+  "prog/ctl_templates.json": "e9d2e2fed44c24e6aaec8ebf5a57764e4ae0f9bffda3473a8dec813e488601f9",
+  "prog/dense_stage_boundary.json": "0ddcf44ed8d570e20fdd06118368ecee0c8e75600e0fa3b39a3a61bb408fa9e6",
+  "prog/frame_cfg7/u_f_2L10.json": "8995be133c01cf33cf847a57c6ff59eac510c84cdd5e82d719e5744fa04e9922",
+  "prog/frame_cfg7/u_f_2L12.json": "40883a90c23cf7c78d0c7ddd802ba5d82d291503cab9215049811364af4d5aed",
+  "prog/frame_cfg7/u_f_2L13.json": "5a8755acd767d1bb2245d7f69ee7a36b747bf8ae46d86594339eba502b4ac938",
+  "prog/frame_cfg7/u_f_2R10.json": "7c8aa9f3d8572f506690e80886aed88cf6f2d38fc0d1623c62b3f87415f0a587",
+  "prog/frame_cfg7/u_f_2R12.json": "c5022dc91102dc78b4e296f8a3b5e6823c667c460437ac7891bf0d538040dd5e",
+  "prog/frame_cfg7/u_f_2R13.json": "1ee28508ffbb469ba9281a000aa470a2c639961d821295bd776a37509660f70a",
+  "prog/gunit_rows.json": "6c5f7be1e3621858bfd3c817235f4d95ab8a91e8a01abe0df36f2eedf9cefd89",
+  "prog/svc_jobs.json": "7a9d5e1a588a1e53e25c2ee9655d6b16eadfc1188df5b70d031d728a245ff9f9",
+  "prog/xs/L0.attn.a_proj.json": "523d247f0edecee0004c3773ba45cfe3e38ba899e15276bdbd6cb54841ba1ff4",
+  "schedule.json": "e3601f6ffacc6a542ef3718e323b5e43ce2ca45367ea39773666123e1e5bc0ee"
+ }
+}

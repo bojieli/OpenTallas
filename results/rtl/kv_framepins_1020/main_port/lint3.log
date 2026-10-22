@@ -1,0 +1,9 @@
+%Warning-SELRANGE: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv:391:64: Selection index out of range: 65:48 outside 63:0
+                                                                                          : ... note: In instance 'qkd_host_root_admission_obsx.g_mu.u_rank.g_mu.u_control.g_mu.u_control.u_control.u_host.u_core'
+  391 |     wire [NW-1:0] q_max  = (FMT != 0) ? NW'(dsc0[63:48]) : dsc0[48 +: NW];
+      |                                                                ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 25.293 MB sources in 120 modules, into 10.018 MB in 11 C++ files needing 0.000 MB
+- Verilator: Walltime 3.387 s (elab=0.521, cvt=2.447, bld=0.000); cpu 3.386 s on 1 threads; allocated 150.711 MB

@@ -1,0 +1,5 @@
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2387289-1792471013 after 0 s
+E2E rtlmut_OT_SMWIRE_MUT_ORDER expect=fail smwire=FAIL caught=NO -> OK | SMWIRE stats mut=0 route=1 gather s3=192 s4=192 s2=192 n3=0 lat(head0 beat -> port) s3=16 s4=18 s2=18 n3=-1 head1 +tree hop: s3=21 checks=589824 faults sot 00 gw 00 land 0 xr 0 rstop 0000
+E2E_DONE bad=0 define=OT_SMWIRE_MUT_ORDER
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2387289-1792471013): exit 0

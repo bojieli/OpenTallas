@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_cap_ld",
+ "enable": false,
+ "reason": "Source-registered: ot_hdc_delay_rf lands the lane in its pin input register and drives it from its pin output register; recipe-3 pin_regs would add unpriced edges to the D=16 calendar."
+}

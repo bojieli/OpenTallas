@@ -1,0 +1,77 @@
+{
+  "original_cells": 7608,
+  "original_by_type": {
+    "$_SDFF_PP0_": 35,
+    "$_DFF_P_": 681,
+    "$_SDFF_PN1_": 2,
+    "$_SDFF_PN0_": 33,
+    "$_SDFF_PP1_": 2,
+    "$_NOT_": 220,
+    "$_AND_": 3035,
+    "$_OR_": 1651,
+    "$_XOR_": 1279,
+    "$_MUX_": 668,
+    "$_QFD_RING_": 2
+  },
+  "final_by_type": {
+    "$_SDFF_PP0_": 35,
+    "$_DFF_P_": 688,
+    "$_SDFF_PN1_": 2,
+    "$_SDFF_PN0_": 33,
+    "$_SDFF_PP1_": 2,
+    "$_NOT_": 221,
+    "$_AND_": 3035,
+    "$_OR_": 1651,
+    "$_XOR_": 1279,
+    "$_MUX_": 668,
+    "$_QFD_RING_": 2
+  },
+  "unconsumed_cells_removed": 79,
+  "dropped_outputs": [
+    "valid_out"
+  ],
+  "unused_inputs_removed": [
+    "rst_n",
+    "valid_in"
+  ],
+  "holding_chain_count": 7,
+  "holding_ring_groups": [
+    {
+      "W": 4,
+      "D": 3,
+      "removed_flops": 12
+    },
+    {
+      "W": 3,
+      "D": 5,
+      "removed_flops": 15
+    }
+  ],
+  "actual_final_rings": [
+    {
+      "W": 4,
+      "D": 3
+    },
+    {
+      "W": 3,
+      "D": 5
+    }
+  ],
+  "ring_input_load_contract": "D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch",
+  "retention": "FF cells and added combinational cone copies retain distinct hierarchy identities; ordinary logic stays available for native technology mapping",
+  "final_cells": 7616,
+  "added_by_type": {
+    "$_DFF_P_": 7,
+    "$_NOT_": 1
+  },
+  "passes": 1,
+  "input_sha256": "7532e6a3b0e565143a02fd3610e2b9793dcccdd82a2dec584352ab7879e2e676",
+  "max_data_reset_loads": 32,
+  "clock_only_excluded": true,
+  "output_boundary_assumptions": {
+    "valid_rep_each": 16,
+    "valid_out": 5,
+    "data_error_each": 1
+  },
+  "qualification": "STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required"
+}

@@ -1,0 +1,6 @@
+SLEP_STATS A->B 200/200 B->A 200/200 mismatches 0 fault A 0 B 0
+PASS slice_lep: 200 + 200 line beats crossed W-end -> E-end and back through the slice ring stops + UCIe lanes bit-exact
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_lep.sv:75: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 272.192 s; speed 34.974 ns/s
+- Verilator: cpu 272.177 s on 1 threads; allocated 230 MB

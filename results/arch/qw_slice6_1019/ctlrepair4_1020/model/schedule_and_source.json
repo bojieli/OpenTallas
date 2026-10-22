@@ -1,0 +1,18 @@
+{
+  "shape": "opt-in HARD1/NU4/MUT0 repair4",
+  "fused_ao_pairs": 1313,
+  "constructed_cells": 21246,
+  "source_ff_count": 7207,
+  "steady_state_added_edges": 0,
+  "reset_assertion_added_edges": 1,
+  "reset_release_added_edges": 1,
+  "reason": "Fuse single-consumer boolean AND->OR /OR->AND into retained AO21/OA21 operator boundaries to recover TTstage depth without globalABC factoring or pipeline edges",
+  "pure_rtl": "PASS151677 values/8000edges+2midrunresetbursts; realMUT11 FAIL5",
+  "native_qualification": "NOTYETRUN",
+  "source_sha256": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv": "eee27f3def670be904a761b5b73a7c714582da7c5d35c8b2503a0543f7499db8",
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv": "87e4fbc799acee279e6a7826c326cc70e9654b01d370d35cef5be0ccb557b35a",
+    "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv": "43e4fdb1799703b377cc2bf1af9531b6d1af9405b60d97175f1fb28138181f6e",
+    "tools/qwen_dv/bound_math_netlist.py": "0e299b55c5202100d3c798d79eb477ee890b3b763ad374ba0676aaefd53262c8"
+  }
+}

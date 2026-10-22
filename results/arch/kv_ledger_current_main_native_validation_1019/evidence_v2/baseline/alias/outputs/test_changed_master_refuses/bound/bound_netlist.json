@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.qwen_kv_bound_netlist.v1",
+ "die_v": "/tmp/tmpup0mq5dl/run/case_kv/die.v",
+ "die_sha256": "351e48990857dd5cfdc9d21a46d848de5dc620e86975d8490e9e2c0725939eb3",
+ "top": "die",
+ "masters": {
+  "qkd_astk_rly_296": {
+   "instances": 1,
+   "how": "by_name",
+   "module": "qkd_astk_rly_296",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  }
+ },
+ "hard_model_dirs": {},
+ "off_chip_inputs": [],
+ "constant_bits": 0,
+ "constant_nets_by_class": {},
+ "straps": 0,
+ "expanded_parameter_qualification": {},
+ "diagnostic_parameter_profiles": true
+}

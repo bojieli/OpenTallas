@@ -44,5 +44,43 @@ function automatic [7:0] rs_pvslot(input [1:0] st, input [3:0] sid);
         default: rs_pvslot = 8'd255;
     endcase
 endfunction
+// P path faces (TOK-S81-GAPS/SVCP): {pin 4, pout 4}, bit = face N / E / S / W
+function automatic [7:0] rs_pface(input [3:0] sid);
+    case (sid)
+        4'd7: rs_pface = 8'h20;   // pin 0010 pout 0000
+        4'd9: rs_pface = 8'h08;   // pin 0000 pout 1000
+        default: rs_pface = 8'h00;
+    endcase
+endfunction
 localparam integer RS_ENTRY_W = 5, RS_ENTRY_E = 11, RS_CROOT_W = 7, RS_CROOT_E = 9, RS_FOLD = 9;
 localparam integer RS_HOP = 5, RS_DMAX = 3, RS_G0 = 1, RS_PVW = 40, RS_OFFMAX = 15;
+`ifdef OT_SVC_ALLQ
+// RTLGAP-SO (10-21, svc_rs_tree.py --allq): all-owner P.V drain slot (CFG [54] ALLQ: every slice drains its tile;
+// per half the 8 tiles in tile order, window k = 40 k: PVW * k + HOP * (DMAX - depth) + (OFFMAX - sx_off))
+function automatic [9:0] rs_pvslot_all(input [3:0] sid);
+    case (sid)
+        4'd0: rs_pvslot_all = 10'd170;   // tile 12 W
+        4'd1: rs_pvslot_all = 10'd210;   // tile 13 W
+        4'd2: rs_pvslot_all = 10'd290;   // tile 15 W
+        4'd3: rs_pvslot_all = 10'd260;   // tile 14 W
+        4'd4: rs_pvslot_all = 10'd20;   // tile 8 W
+        4'd5: rs_pvslot_all = 10'd70;   // tile 9 W
+        4'd6: rs_pvslot_all = 10'd140;   // tile 11 W
+        4'd7: rs_pvslot_all = 10'd100;   // tile 10 W
+        4'd8: rs_pvslot_all = 10'd85;   // tile 2 E
+        4'd9: rs_pvslot_all = 10'd135;   // tile 3 E
+`ifdef RTLGAP_MUT_ALLQ_SLOT
+        4'd10: rs_pvslot_all = 10'd45;   // RTL MUTANT: tiles 0 / 1 drain windows swapped
+        4'd12: rs_pvslot_all = 10'd15;
+`else
+        4'd10: rs_pvslot_all = 10'd15;   // tile 0 E
+        4'd12: rs_pvslot_all = 10'd45;   // tile 1 E
+`endif
+        4'd11: rs_pvslot_all = 10'd185;   // tile 4 E
+        4'd13: rs_pvslot_all = 10'd215;   // tile 5 E
+        4'd14: rs_pvslot_all = 10'd245;   // tile 6 E
+        4'd15: rs_pvslot_all = 10'd295;   // tile 7 E
+        default: rs_pvslot_all = 10'd1023;
+    endcase
+endfunction
+`endif

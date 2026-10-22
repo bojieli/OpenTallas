@@ -1,0 +1,72 @@
+{
+  "verdict": "BOUNDED_PRIVATE_COMPONENT_PASS",
+  "release_eligible": false,
+  "source_default_manifest_pre_edit_commit": "faca11827",
+  "source_shape": "selected scalar SU; actual ND8 package component",
+  "sources": {
+    "scheduler": {
+      "path": "results/arch/kv_retained_commit_component_1019/private/ot_host_if_pb2_observed_rc.sv",
+      "sha256": "acf1208a092735df94d7555f76b19c9971b9ae4701e9dcbdc96c02a8ab5b14c2",
+      "default": 0
+    },
+    "bridge": {
+      "path": "results/arch/kv_retained_commit_component_1019/private/qkd_host_axi_packet_rc.sv",
+      "sha256": "4fafb0a72ddc6e71d0d0d1d0e29ef842940baddff2033c679867ea8a65ba4bd1",
+      "default": 0
+    },
+    "endpoint": {
+      "path": "results/arch/kv_retained_commit_component_1019/private/qkd_host_native_token_endpoint_cancel_rc.sv",
+      "sha256": "56edccaf12a3dceea1072c884bd72700b31a88eabddb866a00aa3a9779a281b0",
+      "default": 0
+    }
+  },
+  "public_source_and_helper_changes": "NONE; allchangedpaths componentresults only",
+  "proposal_unchanged_hashes_verified": 81,
+  "scheduler": {
+    "positive_cases": 30,
+    "defaultoff_original_outputs": 57,
+    "causal_mutants": 7,
+    "contract_refusals": 4,
+    "receipt": "scheduler_descriptor_receipt.json"
+  },
+  "bridge": {
+    "positive_edges": 205,
+    "defaultoff_original_outputs": 22,
+    "defaultoff_edges": 2000,
+    "causal_mutants": 4,
+    "receipt": "bridge_validation.json"
+  },
+  "endpoint": {
+    "positive_edges": 106,
+    "defaultoff": "alloriginaloutputs on recorded trace",
+    "causal_mutants": 5,
+    "receipt": "endpoint_receipt.json"
+  },
+  "final_integration": {
+    "cases": 5,
+    "receipt": "integration_final/receipt.json",
+    "alternate_retained_controller_environment_cases": [
+      2,
+      4
+    ]
+  },
+  "actual_ingress": {
+    "receipt": "actual_receipt.json",
+    "existing_owned_reset_bug": "NOT_ESTABLISHED"
+  },
+  "production_calendar": null,
+  "production_H": null,
+  "production_response_deadline": null,
+  "native_TAG59_mapping": null,
+  "physical_SRAM": "HOLD 2864 indexedbits",
+  "open": [
+    "nativeidentity/healthproducer binding",
+    "fullproducercoverage/regionalphase/calendar",
+    "wholepacket/PHY/controllerretention andtrueexternaldrain",
+    "cachepoison lifetime/distribution",
+    "physicalpin/fanout/clock/reset/PG/storage/depth/reach/area",
+    "coherentMU4binding",
+    "exhaustivetransactionlanguageproof"
+  ],
+  "failure_evidence": "All historicalfailedbuilds/oracles/uncaughtcontrols and genuine descriptor regressions preserved."
+}

@@ -1,0 +1,18 @@
+SU record_D               AR   1224.1 (+0.00%)  MTP   3711.7 (+0.00%)  rd {'L2': 3724, 'L8': 3724, 'L14': 3724, 'L20': 7700}
+SU L20_measured           AR   1212.7 (-0.93%)  MTP   3565.4 (-3.94%)  rd {'L2': 3724, 'L8': 3724, 'L14': 3724, 'L20': 16895}
+SU all_scan_measured      AR   1194.7 (-2.40%)  MTP   3527.8 (-4.95%)  rd {'L2': 8702, 'L8': 8702, 'L14': 8702, 'L20': 16895}
+SU fix_P2_reader_L20      AR   1201.2 (-1.87%)  MTP   3611.4 (-2.70%)  rd {'L2': 8702, 'L8': 8702, 'L14': 8702, 'L20': 11434}
+SU fix_P2_reader_all      AR   1211.2 (-1.05%)  MTP   3632.9 (-2.12%)  rd {'L2': 5972, 'L8': 5972, 'L14': 5972, 'L20': 11434}
+SU fix_split_L20_k6       AR   1200.4 (-1.94%)  MTP   3600.2 (-3.00%)  rd {'L2': 8702, 'L8': 8702, 'L14': 8702, 'L20': 12153.0}
+SU L20only_fix_P2         AR   1219.5 (-0.38%)  MTP   3650.9 (-1.64%)  rd {'L2': 3724, 'L8': 3724, 'L14': 3724, 'L20': 11434}
+SU L20only_fix_split_k6   AR   1218.6 (-0.45%)  MTP   3639.4 (-1.95%)  rd {'L2': 3724, 'L8': 3724, 'L14': 3724, 'L20': 12153.0}
+MU record                     AR 46 x  1224.0 =  56302 (+0.00%) S029 occ 38900 | MTP 10+1 =  39211 (+0.00%) S029 step 191318 nonrep 124521 slot 124524 | 1u model AR 1224.0 MTP 3829.1
+MU L20_measured               AR 40 x  1210.8 =  48432 (-13.98%) S029 occ 49547 | MTP 10+1 =  39058 (-0.39%) S029 step 196422 nonrep 124521 slot 124524 | 1u model AR 1210.8 MTP 3814.1
+MU all_full_scan_measured     AR 40 x  1190.7 =  47628 (-15.41%) S029 occ 49547 | MTP 10+1 =  38565 (-1.65%) S029 step 196422 nonrep 124521 slot 124524 | 1u model AR 1190.7 MTP 3766.0
+MU fix_P2_reader_all          AR 46 x  1210.4 =  55677 (-1.11%) S029 occ 42993 | MTP 10+1 =  39005 (-0.53%) S029 step 191318 nonrep 124521 slot 124524 | 1u model AR 1210.4 MTP 3808.9
+MU fix_split_L20_shard20      AR 48 x  1203.3 =  57759 (+2.59%) S029 occ 38983 | MTP 10+1 =  38698 (-1.31%) S029 step 182188 nonrep 124521 slot 124524 | 1u model AR 1203.3 MTP 3778.9
+MU fix_split_L20_shard20_P2   AR 46 x  1219.3 =  56090 (-0.38%) S029 occ 35706 | MTP 10+1 =  39073 (-0.35%) S029 step 179381 nonrep 124521 slot 124524 | 1u model AR 1219.3 MTP 3815.5
+MU L20only_fix_P2             AR 44 x  1218.9 =  53630 (-4.75%) S029 occ 42993 | MTP 10+1 =  39211 (+0.00%) S029 step 191318 nonrep 124521 slot 124524 | 1u model AR 1218.9 MTP 3829.1
+MU L20only_fix_split_shard20  AR 46 x  1223.9 =  56297 (-0.01%) S029 occ 38983 | MTP 10+1 =  39225 (+0.04%) S029 step 182188 nonrep 124521 slot 124524 | 1u model AR 1223.9 MTP 3830.4
+MU S029 3 copies (+10 dies): {'users': 42, 'aggregate_tok_s': 50854, 'vs_record_agg_pct': -9.68, 'added_dies': 10, 'rule': 'N % 6 == 0 (3 copies of S029 x 2 copies of the other 7 groups), 3 P / N >= S029 occ, N <= P / non-replicated max'}
+L20 within rule (<= 5 % a unit, 1 user and MU): False

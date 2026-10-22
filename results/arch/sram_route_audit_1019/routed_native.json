@@ -1,0 +1,63 @@
+{
+  "launch": [
+    91.89238,
+    "rd_out[6]"
+  ],
+  "capture": [
+    74.69734,
+    "w_mask_in[59]"
+  ],
+  "launch_over220": [],
+  "capture_over190": [],
+  "clock_refs": {
+    "clk": {
+      "rise": 127.0,
+      "fall": 137.57075000000003,
+      "min": 111.05389,
+      "max": 134.83923,
+      "src": "insertion.json child_flop boundary mean",
+      "bmin": 117.6,
+      "bmax": 134.8,
+      "n": 204
+    }
+  },
+  "scope": "Exact final-routed TT exported library with SPEF and routed boundary reference. Diagnostic synchronous coupon only.",
+  "tt_spread_ps": 17.2,
+  "ff_spread_ps": 16.1,
+  "macro_clock_pins": {
+    "tt": [
+      {
+        "pin": "u_ot_pr_core.u_mem/wclk",
+        "arr": 117.7,
+        "slew": 13.4,
+        "late": -9.2,
+        "net": "clknet_1_0__leaf_clk"
+      },
+      {
+        "pin": "u_ot_pr_core.u_mem/rclk",
+        "arr": 117.9,
+        "slew": 13.5,
+        "late": -9.0,
+        "net": "clknet_1_1__leaf_clk"
+      }
+    ],
+    "ff": [
+      {
+        "pin": "u_ot_pr_core.u_mem/wclk",
+        "arr": 92.2,
+        "slew": 11.4,
+        "late": -11.6,
+        "net": "clknet_1_0__leaf_clk"
+      },
+      {
+        "pin": "u_ot_pr_core.u_mem/rclk",
+        "arr": 92.4,
+        "slew": 11.4,
+        "late": -11.4,
+        "net": "clknet_1_1__leaf_clk"
+      }
+    ]
+  },
+  "library_sha256": "b46c2d54fbab46dc0cad59cb755f37574f8d119fbfc943070e0553b7a3a2d855",
+  "insertion_sha256": "d838c6025bda62d631c9a120e751295c62934ef066213b1a4d3335bf61638da1"
+}

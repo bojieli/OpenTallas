@@ -1,0 +1,40 @@
+--- a/tools/qwen_layerbench/dv_lower_mat.py
++++ b/tools/qwen_layerbench/dv_lower_mat.py
+@@ -239,7 +239,7 @@
+             if land < lo:
+                 raise LowerError(f'{name} round {r} slice {s}: STN window empty (land {land} < previous results {lo})')
+             if role == 'snd':
+-                c = D.cmd_stn(s, 3, 0, nw, 0, 0, 0)
++                c = D.cmd_stn(s, 3, 0, nw, 0, 0, 0, kc=1)
+             else:
+                 k = [e['block'] for e in lay[s]].index(bl[0]['block'])
+                 sb = lay[s][k]['sbase'] + (1 if mutant == 'sbase1' else 0)
+@@ -250,7 +250,7 @@
+                     db = BLOCK * bl[0]['block']
+                 else:
+                     db = 0 if mutant == 'amax_local' else row0 + BLOCK * bl[0]['block']
+-                c = D.cmd_stn(s, MODE[lv], 0, nw, sb, dst, db, amax=amax)
++                c = D.cmd_stn(s, MODE[lv], 0, nw, sb, dst, db, kc=1, amax=amax)
+                 for j in range(nw):
+                     b = bl[j // 8] if lv == 7 else bl[0]
+                     jj = j % 8 if lv == 7 else j
+--- a/rtl/test/qwen_dv/dv_lower_mat_bench.py
++++ b/rtl/test/qwen_dv/dv_lower_mat_bench.py
+@@ -204,7 +204,7 @@
+     probes = {}
+     for s in (0, N - 1):                                   # L8 AR, unscaled
+         land = t
+-        ev.cmd(land - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1)))
++        ev.cmd(land - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1), kc=1))
+         far = land + 10
+         for j in range(8):
+             LB_pair(ev, s, v(), v(), v(), v(), far + j)
+@@ -219,7 +219,7 @@
+     ev.cmd(t + 2, D.cmd_amax(0, arx=1))
+     t += 30
+     for s in (0, 5):
+-        ev.cmd(t - 2 * s - 1, D.cmd_stn(s, 1, 1, 8, 0, 0, 0x40 * s, amax=1))
++        ev.cmd(t - 2 * s - 1, D.cmd_stn(s, 1, 1, 8, 0, 0, 0x40 * s, kc=1, amax=1))
+     for j in range(8):
+         for s in (0, 5):
+             LB_pair(ev, s, v(), v(), v(), v(), t + 10 + j)

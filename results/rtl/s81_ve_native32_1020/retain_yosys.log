@@ -1,0 +1,692 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `retain.ys' --
+
+1. Executing Liberty frontend: /work/AO.lib
+Imported 42 cell types from liberty file.
+
+2. Executing Liberty frontend: /work/INVBUF.lib
+Imported 37 cell types from liberty file.
+
+3. Executing Liberty frontend: /work/OA.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: /work/SEQ.lib
+Imported 33 cell types from liberty file.
+
+5. Executing Liberty frontend: /work/SIMPLE.lib
+Imported 56 cell types from liberty file.
+
+6. Executing Verilog-2005 frontend: /work/ve_native32_limit32.v
+Parsing SystemVerilog input from `/work/ve_native32_limit32.v' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_ve_native32'.
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \ot_s81sl_ve_native32
+
+7.2. Analyzing design hierarchy..
+Top module:  \ot_s81sl_ve_native32
+Removed 0 unused modules.
+
+8. Executing PROC pass (convert processes to netlists).
+
+8.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+8.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+8.4. Executing PROC_INIT pass (extract init attributes).
+
+8.5. Executing PROC_ARST pass (detect async resets in processes).
+
+8.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+8.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+8.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+8.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+8.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+8.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+9. Executing TECHMAP pass (map to technology primitives).
+
+9.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+9.2. Continuing TECHMAP pass.
+No more expansions possible.
+<suppressed ~77 debug messages>
+
+10. Executing SYNTH pass.
+
+10.1. Executing HIERARCHY pass (managing design hierarchy).
+
+10.1.1. Analyzing design hierarchy..
+Top module:  \ot_s81sl_ve_native32
+
+10.1.2. Analyzing design hierarchy..
+Top module:  \ot_s81sl_ve_native32
+Removed 0 unused modules.
+
+10.2. Executing PROC pass (convert processes to netlists).
+
+10.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+10.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+10.2.4. Executing PROC_INIT pass (extract init attributes).
+
+10.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+10.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+10.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+10.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+10.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+10.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+10.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.3. Executing CHECK pass (checking for obvious problems).
+Checking module ot_s81sl_ve_native32...
+Found and reported 0 problems.
+
+10.4. Executing FLATTEN pass (flatten design).
+
+10.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_s81sl_ve_native32...
+Found and reported 0 problems.
+
+10.8. Executing OPT pass (performing simple optimizations).
+
+10.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81sl_ve_native32..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+10.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81sl_ve_native32.
+Performed a total of 0 changes.
+
+10.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.8.9. Finished fast OPT passes. (There is nothing left to do.)
+
+10.9. Executing FSM pass (extract and optimize FSM).
+
+10.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+10.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+10.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+10.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+10.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+10.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+10.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+10.10. Executing OPT pass (performing simple optimizations).
+
+10.10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81sl_ve_native32..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+10.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81sl_ve_native32.
+Performed a total of 0 changes.
+
+10.10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.10.9. Finished fast OPT passes. (There is nothing left to do.)
+
+10.11. Executing WREDUCE pass (reducing word size of cells).
+
+10.12. Executing PEEPOPT pass (run peephole optimizers).
+
+10.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.14. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_s81sl_ve_native32:
+  created 0 $alu and 0 $macc cells.
+
+10.15. Executing SHARE pass (SAT-based resource sharing).
+
+10.16. Executing OPT pass (performing simple optimizations).
+
+10.16.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.16.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81sl_ve_native32..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+10.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81sl_ve_native32.
+Performed a total of 0 changes.
+
+10.16.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.16.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.16.9. Finished fast OPT passes. (There is nothing left to do.)
+
+10.17. Executing MEMORY pass.
+
+10.17.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+10.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+10.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+10.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+10.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+10.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+10.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+10.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+10.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.19. Executing OPT pass (performing simple optimizations).
+
+10.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.19.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.19.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.19.5. Finished fast OPT passes.
+
+10.20. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10.21. Executing OPT pass (performing simple optimizations).
+
+10.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.21.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_s81sl_ve_native32..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+10.21.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_s81sl_ve_native32.
+Performed a total of 0 changes.
+
+10.21.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.21.6. Executing OPT_SHARE pass.
+
+10.21.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.21.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.21.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.21.10. Finished fast OPT passes. (There is nothing left to do.)
+
+10.22. Executing TECHMAP pass (map to technology primitives).
+
+10.22.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+10.22.2. Continuing TECHMAP pass.
+No more expansions possible.
+<suppressed ~77 debug messages>
+
+10.23. Executing OPT pass (performing simple optimizations).
+
+10.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.23.5. Finished fast OPT passes.
+
+10.24. Executing ABC pass (technology mapping using ABC).
+
+10.24.1. Extracting gate netlist of module `\ot_s81sl_ve_native32' to `<abc-temp-dir>/input.blif'..
+
+10.24.1.1. Executed ABC.
+Extracted 0 gates and 0 wires to a netlist network with 0 inputs and 0 outputs.
+Don't call ABC as there is nothing to map.
+Removing temp directory.
+Removing global temp directory.
+
+10.25. Executing OPT pass (performing simple optimizations).
+
+10.25.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81sl_ve_native32.
+
+10.25.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_s81sl_ve_native32'.
+Computing hashes of 305983 cells of `\ot_s81sl_ve_native32'.
+Finding duplicate cells in `\ot_s81sl_ve_native32'.
+Removed a total of 0 cells.
+
+10.25.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.25.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81sl_ve_native32..
+
+10.25.5. Finished fast OPT passes.
+
+10.26. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_s81sl_ve_native32'. Setting top module to ot_s81sl_ve_native32.
+
+10.26.1. Analyzing design hierarchy..
+Top module:  \ot_s81sl_ve_native32
+
+10.26.2. Analyzing design hierarchy..
+Top module:  \ot_s81sl_ve_native32
+Removed 0 unused modules.
+
+10.27. Printing statistics.
+
+=== ot_s81sl_ve_native32 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+   306940 wires
+   308214 wire bits
+   306940 public wires
+   308214 public wire bits
+       21 ports
+     1295 port bits
+   305983 cells
+     3606   A2O1A1Ixp33_ASAP7_75t_R
+      367   A2O1A1O1Ixp25_ASAP7_75t_R
+     4488   AND2x2_ASAP7_75t_R
+     3024   AND3x1_ASAP7_75t_R
+      676   AND4x1_ASAP7_75t_R
+      188   AND5x1_ASAP7_75t_R
+        1   AO211x2_ASAP7_75t_R
+    11304   AO21x1_ASAP7_75t_R
+       27   AO221x1_ASAP7_75t_R
+       67   AO22x1_ASAP7_75t_R
+        8   AO31x2_ASAP7_75t_R
+       79   AO32x1_ASAP7_75t_R
+        1   AO33x2_ASAP7_75t_R
+     1941   AOI211xp5_ASAP7_75t_R
+    15309   AOI21xp33_ASAP7_75t_R
+      432   AOI221xp5_ASAP7_75t_R
+      342   AOI22xp33_ASAP7_75t_R
+      329   AOI311xp33_ASAP7_75t_R
+      647   AOI31xp33_ASAP7_75t_R
+       12   AOI321xp33_ASAP7_75t_R
+      177   AOI32xp33_ASAP7_75t_R
+        2   AOI33xp33_ASAP7_75t_R
+      286   DFFASRHQNx1_ASAP7_75t_R
+    47704   DFFHQNx1_ASAP7_75t_R
+    35568   INVx1_ASAP7_75t_R
+     3379   MAJIxp5_ASAP7_75t_R
+     1873   MAJx2_ASAP7_75t_R
+    28735   NAND2xp33_ASAP7_75t_R
+     2937   NAND3xp33_ASAP7_75t_R
+     1039   NAND4xp25_ASAP7_75t_R
+      556   NAND5xp2_ASAP7_75t_R
+    34508   NOR2xp33_ASAP7_75t_R
+     4788   NOR3xp33_ASAP7_75t_R
+     5427   NOR4xp25_ASAP7_75t_R
+      577   NOR5xp2_ASAP7_75t_R
+     4773   O2A1O1Ixp33_ASAP7_75t_R
+      658   OA211x2_ASAP7_75t_R
+     2038   OA21x2_ASAP7_75t_R
+      318   OA222x2_ASAP7_75t_R
+      166   OA22x2_ASAP7_75t_R
+       21   OA31x2_ASAP7_75t_R
+        3   OA33x2_ASAP7_75t_R
+     3192   OAI211xp5_ASAP7_75t_R
+    28239   OAI21xp33_ASAP7_75t_R
+     1188   OAI221xp5_ASAP7_75t_R
+     1013   OAI222xp33_ASAP7_75t_R
+    11192   OAI22xp33_ASAP7_75t_R
+      152   OAI311xp33_ASAP7_75t_R
+      617   OAI31xp33_ASAP7_75t_R
+       50   OAI321xp33_ASAP7_75t_R
+      264   OAI32xp33_ASAP7_75t_R
+       38   OAI33xp33_ASAP7_75t_R
+    13336   OR2x2_ASAP7_75t_R
+     1089   OR3x1_ASAP7_75t_R
+     3186   OR4x1_ASAP7_75t_R
+      161   OR5x1_ASAP7_75t_R
+    16460   XNOR2xp5_ASAP7_75t_R
+     7425   XOR2xp5_ASAP7_75t_R
+
+10.28. Executing CHECK pass (checking for obvious problems).
+Checking module ot_s81sl_ve_native32...
+Found and reported 0 problems.
+
+11. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+11.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\ot_s81sl_ve_native32':
+
+12. Executing ABC pass (technology mapping using ABC).
+
+12.1. Extracting gate netlist of module `\ot_s81sl_ve_native32' to `<abc-temp-dir>/input.blif'..
+
+12.1.1. Executed ABC.
+Extracted 0 gates and 0 wires to a netlist network with 0 inputs and 0 outputs.
+Don't call ABC as there is nothing to map.
+Removing temp directory.
+Removing global temp directory.
+
+13. Printing statistics.
+
+=== ot_s81sl_ve_native32 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+   306940 wires
+   308214 wire bits
+   306940 public wires
+   308214 public wire bits
+       21 ports
+     1295 port bits
+   305983 cells
+     3606   A2O1A1Ixp33_ASAP7_75t_R
+      367   A2O1A1O1Ixp25_ASAP7_75t_R
+     4488   AND2x2_ASAP7_75t_R
+     3024   AND3x1_ASAP7_75t_R
+      676   AND4x1_ASAP7_75t_R
+      188   AND5x1_ASAP7_75t_R
+        1   AO211x2_ASAP7_75t_R
+    11304   AO21x1_ASAP7_75t_R
+       27   AO221x1_ASAP7_75t_R
+       67   AO22x1_ASAP7_75t_R
+        8   AO31x2_ASAP7_75t_R
+       79   AO32x1_ASAP7_75t_R
+        1   AO33x2_ASAP7_75t_R
+     1941   AOI211xp5_ASAP7_75t_R
+    15309   AOI21xp33_ASAP7_75t_R
+      432   AOI221xp5_ASAP7_75t_R
+      342   AOI22xp33_ASAP7_75t_R
+      329   AOI311xp33_ASAP7_75t_R
+      647   AOI31xp33_ASAP7_75t_R
+       12   AOI321xp33_ASAP7_75t_R
+      177   AOI32xp33_ASAP7_75t_R
+        2   AOI33xp33_ASAP7_75t_R
+      286   DFFASRHQNx1_ASAP7_75t_R
+    47704   DFFHQNx1_ASAP7_75t_R
+    35568   INVx1_ASAP7_75t_R
+     3379   MAJIxp5_ASAP7_75t_R
+     1873   MAJx2_ASAP7_75t_R
+    28735   NAND2xp33_ASAP7_75t_R
+     2937   NAND3xp33_ASAP7_75t_R
+     1039   NAND4xp25_ASAP7_75t_R
+      556   NAND5xp2_ASAP7_75t_R
+    34508   NOR2xp33_ASAP7_75t_R
+     4788   NOR3xp33_ASAP7_75t_R
+     5427   NOR4xp25_ASAP7_75t_R
+      577   NOR5xp2_ASAP7_75t_R
+     4773   O2A1O1Ixp33_ASAP7_75t_R
+      658   OA211x2_ASAP7_75t_R
+     2038   OA21x2_ASAP7_75t_R
+      318   OA222x2_ASAP7_75t_R
+      166   OA22x2_ASAP7_75t_R
+       21   OA31x2_ASAP7_75t_R
+        3   OA33x2_ASAP7_75t_R
+     3192   OAI211xp5_ASAP7_75t_R
+    28239   OAI21xp33_ASAP7_75t_R
+     1188   OAI221xp5_ASAP7_75t_R
+     1013   OAI222xp33_ASAP7_75t_R
+    11192   OAI22xp33_ASAP7_75t_R
+      152   OAI311xp33_ASAP7_75t_R
+      617   OAI31xp33_ASAP7_75t_R
+       50   OAI321xp33_ASAP7_75t_R
+      264   OAI32xp33_ASAP7_75t_R
+       38   OAI33xp33_ASAP7_75t_R
+    13336   OR2x2_ASAP7_75t_R
+     1089   OR3x1_ASAP7_75t_R
+     3186   OR4x1_ASAP7_75t_R
+      161   OR5x1_ASAP7_75t_R
+    16460   XNOR2xp5_ASAP7_75t_R
+     7425   XOR2xp5_ASAP7_75t_R
+
+14. Executing Verilog backend.
+
+14.1. Executing BMUXMAP pass.
+
+14.2. Executing DEMUXMAP pass.
+Dumping module `\ot_s81sl_ve_native32'.
+
+15. Executing JSON backend.
+
+End of script. Logfile hash: f628717fb7, time: 55.41s, user: 77.00s, system: 2.05s, MEM: 3551.59 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 22% 13x opt_clean (17 sec), 19% 4x read_verilog (14 sec), ...

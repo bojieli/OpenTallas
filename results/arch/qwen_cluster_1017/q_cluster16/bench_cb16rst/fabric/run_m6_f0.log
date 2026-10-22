@@ -1,0 +1,18 @@
+NOTE node fault / leg misalignment at tile (1,2) cycle 168 (nf 0 mis 1)
+RS op 0 cycle 212 latency 122 (compiled 122) fault 1 match 0
+FAIL rs fault bit
+FAIL rs data op 0: 43d582fac3124440411722fb41c9110a42ad75e8c30f4e4841ab0f5c4225d703c3822bbcc12af3e941d9cbcec1f45a88c45e55d4404725593720000041200000 expected 43ccc6b7c380da8a4114a0db41ca0d32441fcfa9c3097576417e91ccc18188bec36a14d8c221821dc2f06928c229b1d1c48a38cac3514e203760000041600000
+RS op 1 cycle 260 latency 122 (compiled 122) fault 1 match 0
+FAIL rs fault bit
+FAIL rs data op 1: c34a3ad543d8104dc350b3a9c37dae7442c775c243afb051c32b54b3be4c34b0c07fe6f0c3083581c294d5af42ad1cdec20f6f84c13d46353720000041200000 expected c31143ae43d501eac0f8e2a0c36b225342c5ca9543a632afc3334e4943694f93c0a301d8c2ec0c48c28becec43278888c20a68cb43b713463760000041600000
+RS op 2 cycle 308 latency 122 (compiled 122) fault 1 match 0
+FAIL rs fault bit
+FAIL rs data op 2: c2b388564325d687c2118c7342df8a53c398d6b6427ecb9a428506df42cb90de4316f194429b1feec162bb0844014281c3ab40e2430d24063720000041200000 expected c2b59ed04335f300419056e442b61bbdc398d05a432d759e42bf01b242d038e042bcf82ec219a9c0c331fe01440665d5c3d0e36143344ba53760000041600000
+RS op 3 cycle 356 latency 122 (compiled 122) fault 1 match 0
+FAIL rs fault bit
+FAIL rs data op 3: c30a2ad8c39efee143e43f3a42bbc4d4c2a643ec429ac498c1e4b4484168bbc4c2864a28c28ab57d43be8564c2bdc57441b5e998c11f90803720000041200000 expected c359efd5c3ad24bf43baa9684412ef52c28a16b8c2d633f4429ada34c396b7e4c420785dc33ccafe43e4168ec2fb0743431bddd6c036198a3760000041600000
+QCLUSTER_FAIL MUT 6 FAR 0 errors 8
+- rtl/test/tb_qcluster_fabric.sv:267: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 416ns; walltime 0.067 s; speed 6.212 us/s
+- Verilator: cpu 0.067 s on 1 threads; allocated 18 MB

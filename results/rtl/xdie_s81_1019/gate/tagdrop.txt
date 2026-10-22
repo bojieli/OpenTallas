@@ -1,0 +1,12 @@
+XDIE2_CFG MU 1 LEG 1 DMUT 0 NS 2584 NM 32 ERRP 0 LATE 0 CHB 1
+TAGBAD dp 0 cyc 12662 mu_rt 00000000 exp 80001000
+TAGBAD dp 1 cyc 12662 mu_rt 00000000 exp 80001000
+TAGBAD dp 2 cyc 12662 mu_rt 00000000 exp 80001000
+TAGBAD dp 3 cyc 12662 mu_rt 00000000 exp 80001000
+TAGBAD dp 4 cyc 12662 mu_rt 00000000 exp 80001000
+XDIE_LINK timeouts 0 retx_flits 0 (all 64 lanes; go-back-N ACK timeouts and replayed flits)
+XDIE_MU tagged_expected 2560 tagged_seen 0 tag_errors 2560
+XDIE_STATS beats 2584 landed 2584 mismatches 0 late 0 maxlate 0 extra 0 faults 0000000000000000 live 64/64 last_cycle 15102
+FAIL xdie_s81: landed 2584/2584 mismatches 0 late 0 extra 0 faults 0000000000000000 live 64/64 tags 0/2560 tag_errors 2560
+BENCH_FAIL tagdrop
+EXIT 1

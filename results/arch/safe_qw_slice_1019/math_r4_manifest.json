@@ -1,0 +1,23 @@
+{
+  "shape": {
+    "add_LAT": 7,
+    "mul_LAT": 6,
+    "DRST": 0
+  },
+  "source_sha256": {
+    "rtl/qwen_dv/qfd_dv_redstn2_csafe.sv": "9ddab654a4f1200680b3cc44b5f1b5b74b61cd6d9191fb8590407ee8c014774b",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "tools/qwen_dv/bound_math_netlist.py": "1c39767f3668ec14718dff544928f79408689788b574a8bbf50975f397fd00a2",
+    "tools/qwen_dv/gen_station_math_input.py": "c321722873e3b249a1283d7caf5d8a226bfd7978056772f08916042cb8e69d6d",
+    "tools/qwen_dv/run_station_math_generate.sh": "32123ffef6251a7e7b74d92a238a576e07455df755258f256985cd642327a9ec"
+  },
+  "prepared_mul_sha256": "a50b5b3a53f0eaed49227eb812350ebf8688288673afd2d5823f3a32e1f084ed",
+  "mask_identity_cases": 3072,
+  "shc0_mutant_mismatches": 48,
+  "tool_version": "record actual yosys --version in tool_version.txt",
+  "scope": "source construction; exact simulation, native load retention and mapped area/timing required",
+  "emitted_source_sha256": "b5299be4446040607508593a63b1b537d6f25776e77fbe998e78fe8b1bf70648"
+}

@@ -89,10 +89,10 @@
    "h": "M4",
    "v": "M3 M5"
   },
-  "io_hold_margin_ns": 0.0,
+  "io_hold_margin_ns": 0.025,
   "macro_halo_um": 5.4
  },
- "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice; flop-first pins, die hold budget. S81-TILES5 10-17 (coordinator 0co ~17:55): E face y_v / y_i / y re-pinned from 6.5-349.9 to 6.48-73.44 (y 12.96-73.44, 4.2/um) = the vq W-face y span, so the vn -> vq y seam is a straight 60.5-um bus (vn and vq bottom-aligned in the beat leaf), no funnel.",
+ "structural_change": "S81-SLICE (stream 0cm, owner-approved DV p4): new beat sub-leaf of the distributed-vector slice; flop-first pins, die hold budget. S81-TILES5 10-17 (coordinator 0co ~17:55): E face y_v / y_i / y re-pinned from 6.5-349.9 to 6.48-73.44 (y 12.96-73.44, 4.2/um) = the vq W-face y span, so the vn -> vq y seam is a straight 60.5-um bus (vn and vq bottom-aligned in the beat leaf), no funnel. NATIVE-SWEEP/NS-VN 10-18 (reroute native_capture, closed fa3312cfc FAIL capture n_go 205.4 > 190, receipt results/arch/native_sweep_1018/native_audit_s81sl_vn_fa3312cfc_FAIL.json): n_go was the load-enable of the 128 pre_c flops (fanout 129 from the pin); now n_go -> go_c only, n_pre -> pre_in pin flops, pre_c <= pre_in under go_c (0 schedule cycles, mutant OT_S81SL_MUT_PRESTALE); io_hold_margin 0.025.",
  "job": {
   "owner": "Claude:S81-SLICE",
   "branch": "claude/s81slice-1017",
@@ -128,7 +128,7 @@
     "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37 L0 raw",
     "expect": "fail",
     "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
-    "fail_witness": "results/rtl/s81_slice_1017/beat/g_mt/run.log",
+    "fail_witness": "results/rtl/s81_slice_1017/beat/ns_vn_1018/muttree/run.log",
     "threads": 4,
     "peak_ram_gb": 6
    },
@@ -137,7 +137,16 @@
     "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutcoef mutcoef 37 L0 raw",
     "expect": "fail",
     "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
-    "fail_witness": "results/rtl/s81_slice_1017/beat/g_mc/run.log",
+    "fail_witness": "results/rtl/s81_slice_1017/beat/ns_vn_1018/mutcoef/run.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slbeat_mutpre",
+    "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutpre mutpre 37 L0 raw",
+    "expect": "fail",
+    "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+    "fail_witness": "results/rtl/s81_slice_1017/beat/ns_vn_1018/mutpre/run.log",
     "threads": 4,
     "peak_ram_gb": 6
    }

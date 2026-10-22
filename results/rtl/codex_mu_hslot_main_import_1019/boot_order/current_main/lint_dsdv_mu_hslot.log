@@ -1,0 +1,97 @@
+%Warning-DECLFILENAME: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv:22:8: Filename 'ot_s81_secded' does not match MODULE name: 'ot_s81_secded_enc72'
+   22 | module ot_s81_secded_enc72 #(parameter integer MUT = 0) (
+      |        ^~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.050
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-DECLFILENAME: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:56:8: Filename 'dsdv_seq_host' does not match MODULE name: 'dsdv_sh_ft'
+   56 | module dsdv_sh_ft #(parameter integer V = 276) (
+      |        ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:241:97: Instance pin connected by name with empty reference: 'job_rdy'
+  241 |         .job_v(ks_q[52]), .job_user(ks_q[51:42]), .job_pos(ks_q[20:0]), .job_tok(ks_q[41:21]), .job_rdy(), .busy(busy),
+      |                                                                                                 ^~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:244:44: Instance pin connected by name with empty reference: 'st_jobs'
+  244 |         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase(),
+      |                                            ^~~~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:244:56: Instance pin connected by name with empty reference: 'st_cmds'
+  244 |         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase(),
+      |                                                        ^~~~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:244:68: Instance pin connected by name with empty reference: 'phase'
+  244 |         .fault(fault), .fault_code(code), .st_jobs(), .st_cmds(), .phase(),
+      |                                                                    ^~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:375:36: Instance pin connected by name with empty reference: 'dl_nv'
+  375 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                    ^~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:375:46: Instance pin connected by name with empty reference: 'dl_n'
+  375 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                              ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:375:55: Instance pin connected by name with empty reference: 'dl_sv'
+  375 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                                       ^~~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:375:65: Instance pin connected by name with empty reference: 'dl_s'
+  375 |         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(), .dl_n(), .dl_sv(), .dl_s(), .in_nv(bnv), .in_n(bn), .in_sv(bsv), .in_s(bs),
+      |                                                                 ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:376:10: Instance pin connected by name with empty reference: 'ra_s'
+  376 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |          ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:376:19: Instance pin connected by name with empty reference: 'ra_n'
+  376 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |                   ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:376:28: Instance pin connected by name with empty reference: 'dk_n'
+  376 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |                            ^~~~
+%Warning-PINCONNECTEMPTY: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:376:37: Instance pin connected by name with empty reference: 'dk_s'
+  376 |         .ra_s(), .ra_n(), .dk_n(), .dk_s(), .fault(vsf));    
+      |                                     ^~~~
+%Warning-DECLFILENAME: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv:207:8: Filename 'dsdv_mu_hslot' does not match MODULE name: 'dsdv_seq_host_mu'
+  207 | module dsdv_seq_host_mu #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0,
+      |        ^~~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv:178:8: Filename 'dsdv_mu_hwin' does not match MODULE name: 'dsdv_seq_host_mux'
+  178 | module dsdv_seq_host_mux (
+      |        ^~~~~~~~~~~~~~~~~
+%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:122:13: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                               : ... Suggest assign a label with 'begin : gen_<label_name>'
+  122 |    if(fs==0)begin assign chk0[fe]=c;assign good0[fe]=c&&ok;assign bad0[fe]=c&&!ok;assign full0[fe]=fl;end
+      |             ^~~~~
+                     ... For warning description see https://verilator.org/warn/GENUNNAMED?v=5.050
+                     ... Use "/* verilator lint_off GENUNNAMED */" and lint_on around source to disable this message.
+%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:123:9: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                              : ... Suggest assign a label with 'begin : gen_<label_name>'
+  123 |    else begin assign chk1[fe]=c;assign good1[fe]=c&&ok;assign bad1[fe]=c&&!ok;assign full1[fe]=fl;end
+      |         ^~~~~
+%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:125:13: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                               : ... Suggest assign a label with 'begin : gen_<label_name>'
+  125 |    if(fs==0)begin assign chk0[fe]=0;assign good0[fe]=0;assign bad0[fe]=0;assign full0[fe]=0;end
+      |             ^~~~~
+%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv:126:9: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                                                              : ... Suggest assign a label with 'begin : gen_<label_name>'
+  126 |    else begin assign chk1[fe]=0;assign good1[fe]=0;assign bad1[fe]=0;assign full1[fe]=0;end
+      |         ^~~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv:43:26: Bits of signal are not used: 'f_ks'[41:21]
+                                                                                                                                           : ... note: In instance 'dsdv_mu_hslot'
+   43 |     input  wire [52:0]   f_ks,             
+      |                          ^~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv:44:26: Bits of signal are not used: 'f_kd'[52:0]
+                                                                                                                                           : ... note: In instance 'dsdv_mu_hslot'
+   44 |     input  wire [53:0]   f_kd,             
+      |                          ^~~~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv:93:26: Bits of signal are not used: 'rq'[20:0]
+                                                                                                                                           : ... note: In instance 'dsdv_mu_hslot'
+   93 |     reg rq_v; reg [30:0] rq;
+      |                          ^~
+%Warning-UNUSEDSIGNAL: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv:66:27: Bits of signal are not used: 'qp'[127:21]
+                                                                                                                                         : ... note: In instance 'dsdv_mu_hslot.u_pos'
+   66 |         wire [NT*128-1:0] qp;
+      |                           ^~
+%Warning-UNUSEDPARAM: /srv/opentallas-scratch/claude/codex-mu-hslot-current-boot-1019/src/rtl/lib/ot_rst_relay.sv:25:24: Parameter is not used: 'RELEASE_CYCLES'
+                                                                                                                       : ... note: In instance 'dsdv_mu_hslot.u_rr'
+   25 |     localparam integer RELEASE_CYCLES = SYNC_STAGES + TREE_STAGES;
+      |                        ^~~~~~~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050
+                      ... Use "/* verilator lint_off UNUSEDPARAM */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.423 MB sources in 34 modules, into 0.225 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.094 s (elab=0.015, cvt=0.031, bld=0.000); cpu 0.094 s on 1 threads; allocated 45.387 MB

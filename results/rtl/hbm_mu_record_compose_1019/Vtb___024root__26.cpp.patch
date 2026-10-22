@@ -1,0 +1,20 @@
+--- original/Vtb___024root__26.cpp
++++ candidate/Vtb___024root__26.cpp
+@@ -5546,7 +5546,7 @@
+         = vlSelfRef.tb__DOT__B__BRA__0__KET____DOT__vm__DOT__u_ot_pr_core__DOT__bank__DOT__s2r_p;
+     vlSelfRef.tb__DOT__B__BRA__0__KET____DOT__vm__DOT__u_ot_pr_core__DOT__bank__DOT__wslot_d 
+         = vlSelfRef.tb__DOT__B__BRA__0__KET____DOT__vm__DOT__wslot___05Fot_q;
+-    if (VL_GTS_III(32, 0x000000c8U, vlSelfRef.tb__DOT__st)) {
++    if ((vlSelfRef.tb__DOT__st < 200 || (vlSelfRef.tb__DOT__st >= 3800 && vlSelfRef.tb__DOT__st < 3900))) {
+         vlSelfRef.tb__DOT__B__BRA__1__KET____DOT__vm__DOT__wslot_v___05Fot_q 
+             = (1U & (0U != ((((((((vlSelfRef.tb__DOT__B__BRA__1__KET____DOT__hostw[0U] 
+                                    | vlSelfRef.tb__DOT__B__BRA__1__KET____DOT__hostw[1U]) 
+@@ -5595,7 +5595,7 @@
+         = vlSelfRef.tb__DOT__B__BRA__1__KET____DOT__vm__DOT__rslot___05Fot_q;
+     vlSelfRef.tb__DOT__B__BRA__0__KET____DOT__vm__DOT__u_ot_pr_core__DOT__bank__DOT__rslot_d 
+         = vlSelfRef.tb__DOT__B__BRA__0__KET____DOT__vm__DOT__rslot___05Fot_q;
+-    if (VL_LTES_III(32, 0x00000e9cU, vlSelfRef.tb__DOT__st)) {
++    if (((vlSelfRef.tb__DOT__st >= 3740 && vlSelfRef.tb__DOT__st < 3800) || vlSelfRef.tb__DOT__st >= 4140)) {
+         vlSelfRef.tb__DOT__B__BRA__1__KET____DOT__vm__DOT__rslot_v___05Fot_q 
+             = (1U & (vlSelfRef.tb__DOT__B__BRA__1__KET____DOT__hostr 
+                      >> 0x00000010U));

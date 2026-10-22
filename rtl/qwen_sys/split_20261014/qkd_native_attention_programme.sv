@@ -8,7 +8,7 @@
 // launch flops: +1 edge on K.tx_record) and prg_l = the die prg word {q_data, q_beat, q_valid, request_position,
 // request_valid} through a launch flop (+1 edge on ks_prg; request_valid is fault-gated combinationally, so the
 // unlaunched word left the tile through logic).  LAND=0: prg_l is that word unregistered (= the generated tile's prg).
-module qkd_native_attention_programme #(parameter integer MUT=0,parameter integer LAND=0)(
+module qkd_native_attention_programme #(parameter integer MUT=0,parameter integer LAND=0,parameter integer RETIRE_STATIC=0)(
  input wire ck,rst_n,
  input wire issue,run,
  input wire fused_program_capability,authority_valid,
@@ -55,7 +55,7 @@ module qkd_native_attention_programme #(parameter integer MUT=0,parameter intege
   .authority_position(authority_position),.authority_stage(authority_stage),
   .descriptor_valid(load),.descriptor(command),.tag(command_tag),.fault(producer_fault));
  end endgenerate
- qkd_native_attention_static_ctl #(.MUT(MUT),.LAND(LAND)) ctl(
+ qkd_native_attention_static_ctl #(.MUT(MUT),.LAND(LAND),.RETIRE_STATIC(RETIRE_STATIC)) ctl(
   .load(load),.command(command),.command_tag(command_tag),.fault(ctl_fault),
   .ck(ck),
   .rst_n(rst_n),

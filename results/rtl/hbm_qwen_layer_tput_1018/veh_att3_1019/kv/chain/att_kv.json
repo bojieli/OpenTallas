@@ -1,0 +1,331 @@
+{
+ "schema": "opentallas.hbm_qwen_att_kv.v1",
+ "lane": "VEH-ATT3",
+ "stage": "chain",
+ "position": 8191,
+ "ranks": [
+  0
+ ],
+ "records": [
+  {
+   "rank": 0,
+   "L": 0,
+   "op": "ATT.QK",
+   "tag": "attention_qk.kv0",
+   "lanes": 4,
+   "ring": {
+    "n": 8192,
+    "m": 1,
+    "on": false
+   },
+   "arrays": {
+    "A": {
+     "key": "d0.L0.ATT.QK.A",
+     "shape": [
+      4,
+      128
+     ],
+     "dtype": "float32",
+     "sha256": "c28b2785017df65979baec303ae471f311f123efaa192d305fe1ba28678849e0"
+    },
+    "K": {
+     "key": "d0.L0.ATT.QK.K",
+     "shape": [
+      8192,
+      128
+     ],
+     "dtype": "float32",
+     "sha256": "eb9c838e0474bded472628221f675f94a05d502a9ae99df0dcaa15a9adff36d3"
+    },
+    "Kc": {
+     "key": "d0.L0.ATT.QK.Kc",
+     "shape": [
+      8192,
+      128
+     ],
+     "dtype": "uint8",
+     "sha256": "31202e21d8acf76e253ce9d49bb81fa6a43eaf259cd8db0007d07a53a390fb54"
+    },
+    "O": {
+     "key": "d0.L0.ATT.QK.O",
+     "shape": [
+      4,
+      8192
+     ],
+     "dtype": "float32",
+     "sha256": "394647b7b0777457a590e4936caaed9181eb85856f289c068cce44064c7ccc38"
+    }
+   },
+   "priced_d4g8": [
+    {
+     "i": 14,
+     "start": 4484.4,
+     "end": 5465.2,
+     "cost": 980.8,
+     "base_cost": 980.8
+    }
+   ]
+  },
+  {
+   "rank": 0,
+   "L": 0,
+   "op": "ATT.PV",
+   "tag": "attention_pv.kv0",
+   "lanes": 4,
+   "ring": {
+    "n": 8192,
+    "m": 1,
+    "on": false
+   },
+   "arrays": {
+    "A": {
+     "key": "d0.L0.ATT.PV.A",
+     "shape": [
+      4,
+      8192
+     ],
+     "dtype": "float32",
+     "sha256": "69109bb27071404200efacac7179a7e58542c3b5fd36865874aedfa28cf42c87"
+    },
+    "K": {
+     "key": "d0.L0.ATT.PV.K",
+     "shape": [
+      8192,
+      128
+     ],
+     "dtype": "float32",
+     "sha256": "142ac41bae33748fa4e7affb420af552d79c8f65e9e17412c463b2820e26e51c"
+    },
+    "Kc": {
+     "key": "d0.L0.ATT.PV.Kc",
+     "shape": [
+      8192,
+      128
+     ],
+     "dtype": "uint8",
+     "sha256": "2fac9abffde4b4c45477e82daf7285692f7e8c6bea034d0cff91d00fc99dff58"
+    },
+    "O": {
+     "key": "d0.L0.ATT.PV.O",
+     "shape": [
+      4,
+      128
+     ],
+     "dtype": "float32",
+     "sha256": "3592296c53677a1ad1879cea15d8da2d91140e22d087873e806767697658e6b8"
+    }
+   },
+   "priced_d4g8": [
+    {
+     "i": 18,
+     "start": 6295.6,
+     "end": 7276.4,
+     "cost": 980.8,
+     "base_cost": 980.8
+    }
+   ]
+  },
+  {
+   "rank": 0,
+   "L": 1,
+   "op": "ATT.QK",
+   "tag": "attention_qk.kv0",
+   "lanes": 4,
+   "ring": {
+    "n": 8192,
+    "m": 1,
+    "on": false
+   },
+   "arrays": {
+    "A": {
+     "key": "d0.L1.ATT.QK.A",
+     "shape": [
+      4,
+      128
+     ],
+     "dtype": "float32",
+     "sha256": "7862eeb1bd3b6b86793721758bb4d86f453adc489a3736fa3a2a1d98a0eb7358"
+    },
+    "K": {
+     "key": "d0.L1.ATT.QK.K",
+     "shape": [
+      8192,
+      128
+     ],
+     "dtype": "float32",
+     "sha256": "f447cb6ee81b289971290bace93f5dd32a246bbfe2c2d989d477966f0e252314"
+    },
+    "Kc": {
+     "key": "d0.L1.ATT.QK.Kc",
+     "shape": [
+      8192,
+      128
+     ],
+     "dtype": "uint8",
+     "sha256": "92f1f2c4eeae322475e301bf18e67cc0f4c607276ba901ce0af59b009a9850f0"
+    },
+    "O": {
+     "key": "d0.L1.ATT.QK.O",
+     "shape": [
+      4,
+      8192
+     ],
+     "dtype": "float32",
+     "sha256": "c31edb3c06c10ff8c2e6f2959e2587df9b4361e4d7368b7fc5a6099098582106"
+    }
+   },
+   "priced_d4g8": [
+    {
+     "i": 45,
+     "start": 37428.8,
+     "end": 38409.6,
+     "cost": 980.8,
+     "base_cost": 980.8
+    }
+   ]
+  },
+  {
+   "rank": 0,
+   "L": 1,
+   "op": "ATT.PV",
+   "tag": "attention_pv.kv0",
+   "lanes": 4,
+   "ring": {
+    "n": 8192,
+    "m": 1,
+    "on": false
+   },
+   "arrays": {
+    "A": {
+     "key": "d0.L1.ATT.PV.A",
+     "shape": [
+      4,
+      8192
+     ],
+     "dtype": "float32",
+     "sha256": "d24c3a79aee1bb66442365977525eb45a4d76088c17d0c07db0ede7e91bcd44f"
+    },
+    "K": {
+     "key": "d0.L1.ATT.PV.K",
+     "shape": [
+      8192,
+      128
+     ],
+     "dtype": "float32",
+     "sha256": "3615895115f903296351e174792d6afa6227f85959c93407470ecb9fe480a785"
+    },
+    "Kc": {
+     "key": "d0.L1.ATT.PV.Kc",
+     "shape": [
+      8192,
+      128
+     ],
+     "dtype": "uint8",
+     "sha256": "816aed298e50892878312cc6be2b268120d96d755f8146d81739637ab31caed0"
+    },
+    "O": {
+     "key": "d0.L1.ATT.PV.O",
+     "shape": [
+      4,
+      128
+     ],
+     "dtype": "float32",
+     "sha256": "df1b56f87edcac20b3f62f3776f47cbd2d669e1bb41c8ac8225f56b8f5bd8912"
+    }
+   },
+   "priced_d4g8": [
+    {
+     "i": 49,
+     "start": 39239.9,
+     "end": 40220.7,
+     "cost": 980.8,
+     "base_cost": 980.8
+    }
+   ]
+  }
+ ],
+ "proof_pass": true,
+ "proof_families": {
+  "prenorm": {
+   "checks": 32,
+   "exact": 32
+  },
+  "qkv+row_scale_qkv": {
+   "checks": 16,
+   "exact": 16
+  },
+  "qknorm": {
+   "checks": 32,
+   "exact": 32
+  },
+  "rope": {
+   "checks": 16,
+   "exact": 16
+  },
+  "round_q": {
+   "checks": 16,
+   "exact": 16
+  },
+  "kv_append": {
+   "checks": 32,
+   "exact": 32
+  },
+  "attention_qk": {
+   "checks": 16,
+   "exact": 16
+  },
+  "softmax": {
+   "checks": 16,
+   "exact": 16
+  },
+  "attention_pv": {
+   "checks": 16,
+   "exact": 16
+  },
+  "pv_normalize": {
+   "checks": 16,
+   "exact": 16
+  },
+  "o": {
+   "checks": 16,
+   "exact": 16
+  },
+  "all_reduce_o+row_scale_o+residual": {
+   "checks": 16,
+   "exact": 16
+  },
+  "gu+row_scale_gu": {
+   "checks": 16,
+   "exact": 16
+  },
+  "swiglu": {
+   "checks": 16,
+   "exact": 16
+  },
+  "act_all_gather": {
+   "checks": 16,
+   "exact": 16
+  },
+  "down": {
+   "checks": 16,
+   "exact": 16
+  },
+  "all_reduce_down+row_scale_down+residual": {
+   "checks": 16,
+   "exact": 16
+  }
+ },
+ "proof_failures": [],
+ "image_sha256": "923df64d3cadd060464c91afb1d2437ff90e3e66080b25fbe26082caa560551f",
+ "npz_sha256": "4cc2a485223e62e1b89d8b0352f552b3c2ff545733de4768b6aae3420d8cf380",
+ "source_sha256": {
+  "hgi_sim/machine.py": "3afa99805a7ca0fdf0a006f84b73802f074646599f5046a23a1a8cd2e7788877",
+  "hgi_sim/qwen_compiler.py": "e31a03e5318f3aa9599a958014acf7f805dc3ff59d9a7613483bb0a5d49991c1",
+  "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+  "hbm_qwen_layer/qwen_d4g_proof.py": "570c8a8a22c4d5deac4f5955762691f634d92b3326c7f53cd071538929a68e50",
+  "qwen_r25_golden.py": "2a376d8a2c473efec9f62ba8b13ff75387cd8fde311e2ae1dcff2982e28f0867",
+  "hbm_layer_vehicle/qwen_att_kv.py": "0bd72cf1e05761ceb6de633a98af83d02cad94cea8bab6566b0721809b7a26bb"
+ },
+ "wall_s": 109.8,
+ "note": "captured at the ATT unit call of the D4G8 programme (qwen_d4g_proof.run_stage); every capture reproduces the unit's O bit for bit; K/V codes re-encoded from the decoded rows (decode-checked)"
+}

@@ -1,0 +1,38 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/coll256/src/am_q3_pass
+ot-run: ot-epyc5       admits    84 GB (avail 172, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 23 disk 1364 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/coll256/src/am_q3_pass
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/coll256/src/am_q3_pass
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/coll256/src/am_q3_pass
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/coll256/src/am_q3_pass
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/coll256/src/am_q3_pass
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1168860-1792418424 after 1 s
+MODE pass NLINK 3 TP 96 VM_RT 74 ROWS 256 expect pass
+ARGMAX_ROWS_COMPILE PASS P=1 rows=123 II=32 last_delivery_instr=121 halt=122
+ARGMAX_V8X config NLINK3 TP96 VM_RT74 VMLAT74 ROWS256 PW8 P1 NR123
+ARGMAX_V8X host drain 55+1 edges a row
+ARGMAX_ROWS_MEASURE P1 VM_RT74 ROWS256 NR123 launch_to_first_vm_rq12 launch_to_last_delivery132 done133 positions1/1 data_err0 addr_err0 stray0 fault_first-1
+ARGMAX_ROWS PASS P1 NLINK3 TP96 VM_RT74 ROWS256 rows123
+ARGMAX_ROWS_COMPILE PASS P=2 rows=155 II=32 last_delivery_instr=153 halt=154
+ARGMAX_V8X config NLINK3 TP96 VM_RT74 VMLAT74 ROWS256 PW8 P2 NR155
+ARGMAX_V8X host drain 55+1 edges a row
+ARGMAX_ROWS_MEASURE P2 VM_RT74 ROWS256 NR155 launch_to_first_vm_rq12 launch_to_last_delivery164 done165 positions2/2 data_err0 addr_err0 stray0 fault_first-1
+ARGMAX_ROWS PASS P2 NLINK3 TP96 VM_RT74 ROWS256 rows155
+ARGMAX_ROWS_COMPILE PASS P=3 rows=212 II=32 last_delivery_instr=185 halt=186
+ARGMAX_V8X config NLINK3 TP96 VM_RT74 VMLAT74 ROWS256 PW8 P3 NR212
+ARGMAX_V8X host drain 55+1 edges a row
+ARGMAX_ROWS_MEASURE P3 VM_RT74 ROWS256 NR212 launch_to_first_vm_rq12 launch_to_last_delivery196 done197 positions3/3 data_err0 addr_err0 stray0 fault_first-1
+ARGMAX_ROWS PASS P3 NLINK3 TP96 VM_RT74 ROWS256 rows212
+ARGMAX_ROWS_COMPILE PASS P=6 rows=212 II=32 last_delivery_instr=281 halt=282
+ARGMAX_V8X config NLINK3 TP96 VM_RT74 VMLAT74 ROWS256 PW8 P6 NR212
+ARGMAX_V8X host drain 55+1 edges a row
+ARGMAX_ROWS_MEASURE P6 VM_RT74 ROWS256 NR212 launch_to_first_vm_rq12 launch_to_last_delivery292 done293 positions6/6 data_err0 addr_err0 stray0 fault_first-1
+ARGMAX_ROWS PASS P6 NLINK3 TP96 VM_RT74 ROWS256 rows212
+ARGMAX_ROWS_COMPILE PASS P=16 rows=212 II=32 last_delivery_instr=601 halt=602
+ARGMAX_V8X config NLINK3 TP96 VM_RT74 VMLAT74 ROWS256 PW8 P16 NR212
+ARGMAX_V8X host drain 55+1 edges a row
+ARGMAX_ROWS_MEASURE P16 VM_RT74 ROWS256 NR212 launch_to_first_vm_rq12 launch_to_last_delivery612 done613 positions16/16 data_err0 addr_err0 stray0 fault_first-1
+ARGMAX_ROWS PASS P16 NLINK3 TP96 VM_RT74 ROWS256 rows212
+ARGMAX_V8X pass GATE PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1168860-1792418424): exit 0
+REMOTE_RC am_q3_pass 0

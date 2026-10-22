@@ -1,0 +1,18 @@
+{
+ "reviewer": "coordinator (LEAD2-KV delegated to KV-PARAMS2, brief 10-19 16:30)",
+ "time": "2026-10-19T17:05-07:00",
+ "gate_commit": "2042f2fca",
+ "geometry_sha256": "3d82f968cda544ee6804b213c275fe53d1259b6af978637c2b35adb481a18abf",
+ "verdict": "APPROVED",
+ "checklist": {
+  "lattice": "no macros",
+  "std_cell_band": "full-width band, flops at pin faces",
+  "pin_spread": "296 W / 296 E full faces 5.7 pins/um <= 6",
+  "clock_entry": "S centre ck, spread 2.6 ps TT/FF",
+  "shape": "25.92x51.84 2:1, pin-bound outline = closed fl1; util 15% waived (pin-bound)"
+ },
+ "pngs": [
+  "physical/ref_tile/qkd_astk_rly_296/gate_layout/floorplan.png",
+  "physical/ref_tile/qkd_astk_rly_296/gate_layout/density.png"
+ ]
+}

@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+I8T MISMATCH t=15000 ref_v=1 o_v=1 tag 00d/00d data[31:0] 42ecc2a6/42ec4234
+I8T MISMATCH t=17000 ref_v=1 o_v=1 tag 00d/00d data[31:0] c2f8c100/408042f0
+I8T MISMATCH t=19000 ref_v=1 o_v=1 tag 2d3/2d3 data[31:0] c160bf80/42e442fe
+I8T FAIL checked=19985 beats=13181 lines=6596 mismatches=13181
+- rtl/hbm_accel/sm/static/test/tb_smh_int8_tile.sv:50: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.914 s; speed 43.786 us/s
+- Verilator: cpu 0.914 s on 1 threads; allocated 7 MB

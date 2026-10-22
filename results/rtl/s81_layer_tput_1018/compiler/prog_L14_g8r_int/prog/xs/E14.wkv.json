@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.s81_dv.xs_place.v1",
+ "op": {
+  "id": "E14.wkv",
+  "op": "eng.wkv",
+  "cls": "field",
+  "start": -247737.2,
+  "end": -247207.2,
+  "cycles": 530.0,
+  "delta": 0.0,
+  "critical": false
+ },
+ "slice": "u_s_0S",
+ "slice_index": 0,
+ "phases_die_wide": 25,
+ "mats": [
+  {
+   "mat": "engram.wkv",
+   "fmt": "fp8",
+   "K": 6144,
+   "nseg": 6,
+   "rows_per_phase": 2,
+   "phases": 25,
+   "rows_per_frame": [
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50,
+    50
+   ],
+   "calendar": "calendar_unmeasured",
+   "tie": "fixture",
+   "note": null
+  }
+ ],
+ "bench": null,
+ "images": "python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (all phases of the frame field; gen --op OP for one phase's bench vectors)"
+}

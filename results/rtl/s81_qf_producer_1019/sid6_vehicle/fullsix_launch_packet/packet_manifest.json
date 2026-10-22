@@ -1,0 +1,58 @@
+{
+  "scope": "Frozen prelaunch packet; NOT a simulation/build receipt",
+  "files": [
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/LAUNCH.md",
+      "sha256": "e92b41cab342e352fefb66b63c5c212fcb2fd9860e482ea3fba8b0d11c59ec80",
+      "bytes": 4005
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/cells_used.v",
+      "sha256": "ab8261be2b30a1d059904a01c659207b0f5a225a0fa713355887622a33cba85b",
+      "bytes": 223
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/contract.json",
+      "sha256": "b39cbf09e80f499272919a28d30d5db72b38642a2443a9f3652c836644ae796f",
+      "bytes": 38214
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/frontend.sh",
+      "sha256": "f14a94737b77743a06e6cbecc0fc120e462b4d3e30a6594fcb186bb10c6db8f4",
+      "bytes": 1248
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/frozen_inputs.json",
+      "sha256": "4fe85ab8f1b568f3497382c204779b03bc63ce61675692ed5a2343c6f14c6495",
+      "bytes": 195584
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/selected_fullsix_cone.sv",
+      "sha256": "9e63ba89eb55b4142a42c20e706ab94426b46f7a9bb8320ae78d72c5eb85449b",
+      "bytes": 14409
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/source_files.f",
+      "sha256": "933668ff4a1be95caaef6876bff75b647631227ad02e1bb540d682f33c8e7789",
+      "bytes": 6048
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/structural_resource_inventory.json",
+      "sha256": "f3cea34ae548ce6e6af91f7b3a3421648fbae5f0cd78c0e501edbc69397ccfa1",
+      "bytes": 2007
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/tb_fullsix_trace.sv",
+      "sha256": "7f3d1ef9686d8998d664a9923dc4a3926a35ebb37e6e1b5475051df1fe24400f",
+      "bytes": 245289
+    },
+    {
+      "path": "results/rtl/s81_qf_producer_1019/sid6_vehicle/fullsix_launch_packet/trace_points.json",
+      "sha256": "1b583d16814cfdf95ad586ed8e19a2de4466b231589152ab84b0e8aa4c79a3e8",
+      "bytes": 16723
+    }
+  ],
+  "frontend_started": false,
+  "compiler_started": false,
+  "simulation_started": false
+}

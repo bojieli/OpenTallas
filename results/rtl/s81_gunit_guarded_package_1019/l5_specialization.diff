@@ -1,0 +1,97 @@
+--- 843_l5_comments_whitespace_normalized
++++ private_specialized_l5_comments_whitespace_normalized
+@@ -2,6 +2 @@
+-    parameter integer MUT = 0,
+-    parameter integer PIN_COPY = `OT_S81_GUNIT_PIN_COPY,
+-    parameter integer CONTROL_SAFE = `OT_S81_GUNIT_CONTROL_SAFE,
+-    parameter integer Q4 = `OT_S81_GUNIT_Q4,
+-    parameter integer FANOUT_SAFE = `OT_S81_GUNIT_FANOUT_SAFE,
+-    parameter integer TABLE_LIFETIME_SAFE = 0
++    parameter integer MUT = 0
+@@ -22,0 +18 @@
++    localparam integer PIN_COPY=1, CONTROL_SAFE=1, Q4=1, FANOUT_SAFE=1, TABLE_LIFETIME_SAFE=1;
+@@ -30 +26 @@
+-    generate if (FANOUT_SAFE) begin : g_rst16
++    generate begin : g_rst16
+@@ -33,3 +28,0 @@
+-    end else begin : g_rst4
+-        ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
+-        assign rr = 16'd0;
+@@ -51 +44 @@
+-    generate if (FANOUT_SAFE) begin : g_in_safe
++    generate begin : g_in_safe
+@@ -74,6 +66,0 @@
+-    end else begin : g_in_legacy
+-        always @(posedge clk) begin
+-            if (qm_v) mx[32 * qm_i +: 32] <= qm_y;
+-            if (ln) begin rj_row <= tj_row; rj_lm <= tj_lm; rj_sm <= tj_sm; end
+-        end
+-        assign ln_c = {3{ln}};
+@@ -82 +69 @@
+-    generate if (CONTROL_SAFE) begin : g_launch_first
++    generate begin : g_launch_first
+@@ -86 +73 @@
+-    end else assign launch_pre = {4{ln0}}; endgenerate
++    end endgenerate
+@@ -91 +78 @@
+-    generate if (FANOUT_SAFE) begin : g_tbl_safe
++    generate begin : g_tbl_safe
+@@ -133 +120 @@
+-        if (TABLE_LIFETIME_SAFE) begin : g_lifetime_safe
++        begin : g_lifetime_safe
+@@ -145,34 +132 @@
+-        end else begin : g_lifetime_legacy
+-        reg [2:0] hit;
+-        always @(posedge clk or negedge rr[3])
+-            if (!rr[3]) hit <= 3'd0;
+-            else if (wbase && wrow == {ss[24], sw[24]}) hit <= 3'd4;
+-            else if (hit != 3'd0) hit <= hit - 3'd1;
+-        assign tbl_f = ln_c[0] && hit != 3'd0;
+-        end
+-    end else begin : g_tbl_legacy
+-        reg [31:0] base_t [0:NSET*48-1];
+-        reg [95:0] scl_t  [0:NSET*2-1];
+-        always @(posedge clk) if (wv && !wa[9]) begin
+-            if (wa[5:0] >= 6'd56 && wa[5:0] < 6'd62)
+-                for (j = 0; j < 8; j = j + 1) base_t[48 * wa[8] + 8 * (wa[5:0] - 6'd56) + j] <= wd[32 * j +: 32];
+-            if (wa[5:0] == 6'd62) begin scl_t[2 * wa[8]] <= wd[95:0]; scl_t[2 * wa[8] + 1] <= wd[191:96]; end
+-        end
+-
+-
+-
+-
+-            for (g = 0; g < 8; g = g + 1) begin : g_tj1
+-                (* keep = "true" *) reg s, w;
+-                always @(posedge clk) begin s <= tj_set; w <= tj_w; end
+-            end
+-            for (g = 0; g < 108; g = g + 1) begin : g_tj2
+-                (* keep = "true" *) reg s, w;
+-                always @(posedge clk) begin s <= g_tj1[g % 8].s; w <= g_tj1[g % 8].w; end
+-                if (g < 96) begin : g_b
+-                    always @(posedge clk) bases[32 * (g / 4) + 8 * (g % 4) +: 8] <= base_t[48 * s + 24 * w + g / 4][8 * (g % 4) +: 8];
+-                end else begin : g_s
+-                    always @(posedge clk) scales[8 * (g - 96) +: 8] <= scl_t[2 * s + w][8 * (g - 96) +: 8];
+-                end
+-            end
+-        assign tbl_f = 1'b0;
++        end
+@@ -186 +140 @@
+-    generate if (FANOUT_SAFE) begin : g_tail_safe
++    generate begin : g_tail_safe
+@@ -201,5 +154,0 @@
+-    end else begin : g_tail_legacy
+-    dsdv_gunit_tail #(.PIN_COPY(PIN_COPY), .CONTROL_SAFE(CONTROL_SAFE), .Q4(Q4), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .launch_pre(launch_pre), .mixes(mx), .bases(bases), .scales(scales),
+-        .result_v(tl_v), .result(coef), .fault(tl_f),
+-        .xe_v(xe_v), .xe_x(xe_x), .xe_vo(qe_v), .xe_y(qe_y), .xe_f(qe_f),
+-        .xd_v(xd_v), .xd_b(xd_b), .xd_vo(qd_v), .xd_y(qd_y), .xd_f(qd_f));
+@@ -225 +174 @@
+-    generate if (FANOUT_SAFE) begin : g_ct_safe
++    generate begin : g_ct_safe
+@@ -252,7 +200,0 @@
+-    end else begin : g_ct_legacy
+-    reg [127:0] cq;
+-    always @(*) case (c_i)
+-        3'd0: cq = coef[127:0];   3'd1: cq = coef[255:128]; 3'd2: cq = coef[383:256];
+-        3'd3: cq = coef[511:384]; 3'd4: cq = coef[639:512]; default: cq = coef[767:640];
+-    endcase
+-    always @(posedge clk) ct_b <= c_on ? ctl(rj_row + {7'd0, c_i}, cq, rj_sm, rj_lm, sid_c) : {V{1'b0}};

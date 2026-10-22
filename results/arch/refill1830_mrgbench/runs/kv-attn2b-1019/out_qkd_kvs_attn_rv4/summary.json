@@ -1,0 +1,70 @@
+{
+ "job": "/srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-attn2b-1019/src/physical/ref_tile/qkd_kvs_attn_rv4/job.json",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "results": [
+  {
+   "name": "lint",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "rv_pair_ba5",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "rv_mut1_fields_early",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "rv_mut2_check_misaligned",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "rv_mut3_admission_no_check",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "rv_mut4_tx_shift0",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "rv_mut5_status_copy_early",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "rv_mut6_face_stale_beat",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "rv_mut7_fault_root_one_pin",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  }
+ ],
+ "unexpected": 0
+}

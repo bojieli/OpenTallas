@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_kvs_attn_fl",
+ "enable": false,
+ "reason": "Every public pin is registered IN THE SOURCE (checklist 1): each input pin lands first in a flop D pin and each output is driven by a flop (or a tie constant) -- tools/qwen_kv_die/attn_pinreg_1019/check_pinreg.py PASS on qkd_kvs_attn_safe_pr.v; io_flop_at_pins anchors those flops at the face. A kit recipe-3 pin register would add an unpriced edge to every crossing."
+}

@@ -1,0 +1,30 @@
+{
+  "scope": "private default-off actual packet component; no production binding or physical receipt",
+  "base": "faca11827",
+  "original_sha256": "0c05ae5b59d242b4a99c937e47683224fe4e25d802b6543b8717e3d677c60767",
+  "clone_sha256": "4fafb0a72ddc6e71d0d0d1d0e29ef842940baddff2033c679867ea8a65ba4bd1",
+  "added_state_bits": 27,
+  "added_state": {
+    "sticky_bad": 1,
+    "ever_armed": 1,
+    "csr_error_pending": 1,
+    "csr_error_id": 16,
+    "csr_error_opcode": 8
+  },
+  "rx_queue_bits": "512*RX_DEPTH = 2048 at selected RX_DEPTH4; unchanged logical organization",
+  "default_enabled": false,
+  "healthy_latency_edges_added": 0,
+  "bad_path_error_record_count": 1,
+  "retained_original_state": "all original resettable bridge transaction/input-control/queue-index/credit state uses rawPOR in opt-in; original nonreset data capture preserved",
+  "arbitration": [
+    "completed actual CSR write response",
+    "completed actual CSR read response",
+    "owned DMA read",
+    "assembled owned DMA write",
+    "reserved CSR error"
+  ],
+  "physical_clock_reset_cost": null,
+  "area": null,
+  "root_transport_retention": "OPEN; packet/PHY/CDC path outside clone is not retained by this component",
+  "observability": "health and restart inputs sampled on real bridge clock; pulses wholly between stopped edges remain unsupported"
+}

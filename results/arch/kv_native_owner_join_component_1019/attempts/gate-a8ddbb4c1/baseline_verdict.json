@@ -1,0 +1,29 @@
+{
+  "source": "a8ddbb4c1",
+  "verdict": "BOUNDED_FUNCTIONAL_COMPONENT_PASS",
+  "cases": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "old_source_failures": "../precert-48bde19a6",
+  "mirror_and_event": "cases10 and15 now veto at actual attempted certification edge; no advance",
+  "remaining": [
+    "D==H/current-event fixtures",
+    "WDOG512 cancellation fixtures",
+    "15 actual DUT causals"
+  ],
+  "host": "ot-epyc6",
+  "unit": "oth-ubuntu-166523-1792450988",
+  "scope": "private selected SU source only; no native health/CDC/physical/token qualification"
+}

@@ -1,0 +1,20 @@
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1580425-1792473716 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+== qkd_host_root_admission
+31
+rc=0
+      4 %Warning-CASEINCOMPLETE: rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv: Case values incompletely covered (example pattern 0x0)
+      2 %Warning-CASEINCOMPLETE: rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv: Case values incompletely covered (example pattern 0x0)
+      1 %Warning-TIMESCALEMOD: rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+      1 %Warning-SELRANGE: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv: Selection index out of range: 65:48 outside 63:0
+      1 %Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv: Instance has missing pin: 'startup_allowed'
+== qkd_host_root_admission_mu
+35
+rc=0
+      8 %Warning-CASEINCOMPLETE: rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv: Case values incompletely covered (example pattern 0x0)
+      2 %Warning-CASEINCOMPLETE: rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv: Case values incompletely covered (example pattern 0x0)
+      1 %Warning-TIMESCALEMOD: rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+      1 %Warning-SELRANGE: rtl/qwen_sys/host_integrated_20261014/ot_host_if_pb2_observed.sv: Selection index out of range: 65:48 outside 63:0
+      1 %Warning-PINMISSING: rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv: Instance has missing pin: 'startup_allowed'
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1580425-1792473716): exit 0

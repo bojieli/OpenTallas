@@ -1,0 +1,10 @@
+# case NEG_m_gap12_stnpend env DV2_FACE=0 DV2_MU_NU=4 DV2_GAP=12 args m --work /srv/opentallas-scratch/claude/refill-0730/MUQWREG/out/slice_w/NEG_g12 host regular-crane 2026-10-19T06:22:06-07:00 commit 0e6795834c4aeab9537216c77473df6f6cfe2198
+    bench2 (m): seed 21 gap 12 MU_NU 4 FACE 0 AM_MUT 0: 8 emits, 6 tie heads, end cycle 1488
+bench2 (m) MUT=0: FAIL 1/8
+    S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    round 0 user 2: root token / broadcast / slice-1 token [767, 767, 767] users [2, 2, 2], golden argmax 383
+    round 0 user 0: root token / broadcast / slice-1 token [128, 128, 128] users [0, 0, 0], golden argmax 127
+    round 0 user 3: root token / broadcast / slice-1 token [255, 255, 255] users [3, 3, 3], golden argmax 838
+    round 1 user 1: root token / broadcast / slice-1 token [383, 383, 383] users [1, 1, 1], golden argmax 436
+# exit 1

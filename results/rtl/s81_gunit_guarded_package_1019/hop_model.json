@@ -1,0 +1,53 @@
+{
+  "scope": "Six-leaf unit integration; not whole array/die",
+  "source": "current-main22f53e byte-identical public dependencies plus exact private candidate",
+  "wrapper_current_main_sha256": "1d6cc13202a130e0a8b00c71611801e18abf7028e6eb67a20a1090b11c7c692b",
+  "wrapper_reverse_two_identifier_substitutions_byte_identity": true,
+  "only_substitutions": [
+    "test top module name",
+    "L5 module selection"
+  ],
+  "source_model": {
+    "main_HOP_N": 759,
+    "main_HOP_S": 757,
+    "paid_core_edges": 256,
+    "candidate_HOP_N_hypothesis": 1015,
+    "candidate_HOP_S_hypothesis": 1013,
+    "actual_port_monitor_required": true,
+    "candidate_HOP_N_measured": 1015,
+    "candidate_HOP_S_measured": 1013
+  },
+  "resource_analogue": {
+    "commit": "f03c17fc9",
+    "verilator": "5.050",
+    "allocated_MB": 2246.258,
+    "emitted_CPP_MB": 186.773,
+    "CPP_files": 153,
+    "walltime_seconds": 101.126
+  },
+  "requested": {
+    "mem_GB": 64,
+    "threads": 8,
+    "placement": "unpinned ot-run"
+  },
+  "canonical_golden": "Original f03kit0 retained; ordered-walker replay stable-sorts only exact5calendar rows, proving rowmultiset/non-PW/header/template identity. Numeric outputs/stimuli/timestamps/deadline unchanged.",
+  "negative_observers": [
+    "main old759/757",
+    "candidate+1=1016/1014"
+  ],
+  "qualification": "PASS exact source/unit shape only, no physical/production adoption",
+  "actual": {
+    "N": 1015,
+    "S": 1013,
+    "HC_jobs": 2,
+    "total_jobs": 3,
+    "HP_SC_inputs": 1655,
+    "CTL_each_side": 15,
+    "roots": 50,
+    "rsqrt": 2,
+    "fault": false,
+    "core_delta_vs_actual_main": 256,
+    "sorted_exact_row_multiset_only": true,
+    "binary_sha256": "c6e45ee8d989b71d9f2eb8fdb73e508a607935af97733e20fe08be273ee00dec"
+  }
+}

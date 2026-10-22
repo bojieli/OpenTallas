@@ -1,0 +1,64 @@
+{
+  "status": "SOURCE_AND_NATIVE_PASS_STORAGE_REDESIGN_PENDING_NO_GATE",
+  "candidate": "ot_qkh_lane8_nc32c",
+  "default_off": true,
+  "native": {
+    "status": "PASS",
+    "max_dynamic_loads": 32,
+    "role_errors": [],
+    "netlist": {
+      "path": "/work/native_ot_qkh_lane8_nc32c/results/asap7/ot_qkh_lane8_nc32c/base/1_2_yosys.v",
+      "sha256": "dc078b29943c080c02b571dd2f9a06c074208cc3c470aedae4798bfaa5e3554e"
+    },
+    "liberty": [
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      },
+      {
+        "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+        "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+      }
+    ],
+    "constant_output_bits": [],
+    "tool_commit": "940af34287955689574cb1231ae8d7049a925235",
+    "tool_last_change": "b5b6a96d8",
+    "sequential_drivers": 17186
+  },
+  "source_sha256": {
+    "rtl/hdc/nearhbm/ot_qkh_lane8_nc32c.sv": "3599d656e818f2351353e5e7e41c11657426fe59101824785be0d9a219f09369",
+    "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv": "cb475b1db1547de3b9fc567b9131a5eae01012d752774cb5598c3d0076152e14"
+  },
+  "semantics": {
+    "add": "PASS900120",
+    "lane_warm0": "PASS600120",
+    "lane_random_warm256": "PASS600120",
+    "mutants": {
+      "1": "FAIL111891/900120",
+      "2": "FAIL37899/900120",
+      "4": "FAIL6647/900120",
+      "3": "FAIL99371/600120",
+      "5": "FAIL229985/800080 targetedprod_start770000"
+    },
+    "exhaustive_product": "PASS33554512 reuse identical R5 module",
+    "reset": "3seeds x4000 PASS,109 offphase assertions/108 firstvalid perseed; unreset independentstartup, valid-qualified data and immediate reset; copiedcontrols converge after capture"
+  },
+  "storage_hold": {
+    "adder_bypass_word": "16adders \u00d732bits \u00d75 unchanged s1/t/w/s2/u code stages, must become ring/SRAM",
+    "valid_metadata": "3delay16copies\u00d77edges, must become ring metadata",
+    "branching_control": "W12 2\u21928\u219232\u2192168; W3 2\u21928\u219232\u219264; complete physical fanout purpose declared, no blanket storage exception"
+  },
+  "schedule": "No added data or control cycles from closed lane; same PLAT4 ADD_LAT7. rst_y and rst_n separately distributed same-phase reset. NativePASS does not establish physical qualification."
+}

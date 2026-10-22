@@ -1,0 +1,14 @@
+ERR reference fault cause 100000000 cyc 2676
+ERR successor fault before the fault phase cyc 2676 layer 0 rel 676 kst 1100000000 (f_arr|f_tag = bit 8)
+ERR reference fault cause 100000000 cyc 2677
+ERR reference fault cause 100000000 cyc 2678
+ERR reference fault cause 100000000 cyc 2679
+ERR reference fault cause 100000000 cyc 2680
+ERR reference fault cause 100000000 cyc 2681
+ERR fault phase: first succ fault cyc 2676 kst 1100001000
+DIE_CR0 qkd_seq_static_p with kvn_<q>_cr=0: first fault cyc 2676 = layer 0 rel 676 kst 1100000000
+SEQ_KVN_DIE FAIL DRX=11 DPRG=5 LAND=1 DKW=16 (need DKW=17) first_succ_fault=2676 inj=248512 layers=36 aq=4752 kc=288 hs=36 errors=1001 mut=0
+- rtl/test/qwen_static_kv/tb_seq_kvn_die.sv:187: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 249us; walltime 0.516 s; speed 482.279 us/s
+- Verilator: cpu 0.516 s on 1 threads; allocated 7 MB

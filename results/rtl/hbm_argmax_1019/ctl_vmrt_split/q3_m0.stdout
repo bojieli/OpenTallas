@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/hbm-argmax/src/s1
+ot-run: ot-epyc5       admits  1200 GB (avail 922, growth 82, headroom 0, waiters 0/0 GB) load 83/128 running 16 disk 1429 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-argmax/src/s1
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/hbm-argmax/src/s1
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/hbm-argmax/src/s1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-argmax/src/s1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-argmax/src/s1
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-938359-1792416142 after 0 s
+COLL_VMRT PASS LAT74 VM_RT74 pairs1792 lanes_padded_to_budget
+COLL_VMRT GATE PASS LAT74
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-938359-1792416142): exit 0

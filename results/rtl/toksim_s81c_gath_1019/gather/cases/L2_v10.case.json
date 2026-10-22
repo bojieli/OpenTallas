@@ -1,0 +1,69 @@
+{
+ "schema": "opentallas.toksim_s81c.gath_case.v1",
+ "layer": "L2",
+ "kind": "ratio2+compressor+indexer",
+ "rank": 0,
+ "heads": [
+  0,
+  16
+ ],
+ "fixture": "/home/ubuntu/scratch/layerbench-s81/fixtures/L2",
+ "fixture_shard": {
+  "path": "/home/ubuntu/w17work/ref/ctx1048576_seed20260930/ctx1048576_L02.npz",
+  "sha256": "c7a427509f8caf071a1e39aee3c176c93b04b8d0b44a49f07178bf5708823135",
+  "input_sha256": "15e1920f142b1a5ed3cfd98ea09cd8f3e89511b7367dc08e0fef520c6f20dfa3",
+  "output_sha256": "b7ed0ae396d6aa47d0df7c3ac1c9f39247536c60c8bc0ca37c3b3c525a6c554f"
+ },
+ "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "view": {
+  "die": 1,
+  "stack": 0
+ },
+ "compressed_rows": 524287,
+ "n_sel": 512,
+ "T": 640,
+ "owned_rows": 37,
+ "owned_pc": [
+  17,
+  20
+ ],
+ "held_rows": 134,
+ "neighbour_rows": 2044,
+ "hbm_sectors": 23004,
+ "anchors": {
+  "window_rows": true,
+  "gathered_rows": true,
+  "rows_allgather": true,
+  "scores": true,
+  "pv": true,
+  "q_bf16": true
+ },
+ "counts": {
+  "NJOB": 1,
+  "NKV": 640,
+  "NP": 320,
+  "NSC": 640,
+  "NPV": 512
+ },
+ "expected": {
+  "scores": 10240,
+  "pv": 8192,
+  "score_faults": 0,
+  "pv_faults": 0,
+  "macs": 10485760
+ },
+ "golden": "fixture ops attn.gather / attn.window_load / attn.rows_allgather (stored rows, bitwise), attn.scores (x attn_scale) and attn.pv of heads 0..15 (bitwise)",
+ "images": {
+  "cfg.hex": "19947d3fa6c865bf33b2eaa9a644e7c1f44d3d5bd24d93168a8be8d05968e4a6",
+  "hdat.hex": "7586bbc0f51ef1984e5ef18104972695154ae74f46fa2fd42606b503ca3d6e7c",
+  "hkey.hex": "7fde1b2d8794abe3f8eb0aaf3ca96532701ef48b8cd56b4dadcc28cdd9c221fe",
+  "jobs.hex": "8a754202f63b32bcb40c54ceb1114d1ba874374c01ffad4aeb76b26ebc4d5e43",
+  "kv.hex": "22c5c13861544676dfb8239c2643b169343210c9e02bc3c9c596823e8b97380f",
+  "p.hex": "f87304be65bf35bbe56b9a7d992b993296956aca9ae85bb8e6f517650c250ae3",
+  "pv.hex": "3e312e48583a0d50785fd35bfcc3d10bd81bf4c645bc5619019956824679f3f3",
+  "q.hex": "2a60ef3225ff0fd13ea69b482dbce458cb50168653fb37b0448c289955287598",
+  "sc.hex": "814bc5f07e752e669af04e99c9cc3f73019d9467ec57ea62559aff0f676318e4",
+  "sel.hex": "49922199bf777e5ced35bdbf0544a34cbd1d7426a35e6f4923b6ecfa5784a7d1",
+  "win.hex": "5807295874aba74659b71ecdf5247fcaeb55b828f906c1f9608dcf1b9c1c254b"
+ }
+}

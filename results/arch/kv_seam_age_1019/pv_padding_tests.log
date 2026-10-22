@@ -1,0 +1,28 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-epyc5       admits   632 GB (avail 556, growth 113, headroom 0, waiters 0/0 GB) load 64/128 running 14 disk 1047 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-kvsys/codex-canonical-landlag
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1681257-1792427522 after 0 s
+test_ambiguous_literal_refused (test_kv_pvw_padding.PVPaddingTests.test_ambiguous_literal_refused) ... ok
+test_dynamic_pad_position_refused (test_kv_pvw_padding.PVPaddingTests.test_dynamic_pad_position_refused) ... ok
+test_existing_permission_cannot_cover_live_field (test_kv_pvw_padding.PVPaddingTests.test_existing_permission_cannot_cover_live_field) ... ok
+test_global_output_allowance_is_not_preserved (test_kv_pvw_padding.PVPaddingTests.test_global_output_allowance_is_not_preserved) ... ok
+test_live_input_cannot_be_tied_under_old_global_minimum (test_kv_pvw_padding.PVPaddingTests.test_live_input_cannot_be_tied_under_old_global_minimum) ... ok
+test_live_output_alias_does_not_create_unused_permission (test_kv_pvw_padding.PVPaddingTests.test_live_output_alias_does_not_create_unused_permission) ... ok
+test_live_unread_low_bit_is_not_exempted (test_kv_pvw_padding.PVPaddingTests.test_live_unread_low_bit_is_not_exempted) ... ok
+test_padding_output_slice_change_refused (test_kv_pvw_padding.PVPaddingTests.test_padding_output_slice_change_refused) ... ok
+test_same_bit_zero_provenance_through_inserted_repair (test_kv_pvw_padding.PVPaddingTests.test_same_bit_zero_provenance_through_inserted_repair) ... ok
+test_source_rows_parse_generated_packed_wire_without_space (test_kv_pvw_padding.PVPaddingTests.test_source_rows_parse_generated_packed_wire_without_space) ... ok
+test_stale_pad_receipt_refused (test_kv_pvw_padding.PVPaddingTests.test_stale_pad_receipt_refused) ... ok
+test_unknown_expression_blocks_unused_permissions (test_kv_pvw_padding.PVPaddingTests.test_unknown_expression_blocks_unused_permissions) ... ok
+test_zero_bit_with_real_consumer_is_not_unused (test_kv_pvw_padding.PVPaddingTests.test_zero_bit_with_real_consumer_is_not_unused) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.005s
+
+OK
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1681257-1792427522): exit 0

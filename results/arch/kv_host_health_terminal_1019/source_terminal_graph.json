@@ -1,0 +1,404 @@
+{
+  "schema": "opentallas.host_health_terminal_audit.v1",
+  "evidence_only": true,
+  "qualified_release": false,
+  "die_sha256": "7006cbd0d11ffb755902c588eec474a1a7c27d7ad77212cebe3be1fcae5aae7e",
+  "source_epoch": "4db097403",
+  "host_profile": {
+    "ENABLE_SERVICE": "1",
+    "ENABLE_NATIVE": "1",
+    "ENABLE_TOKEN": "1",
+    "NL": "2"
+  },
+  "clock_reset_connections": {
+    "ck_axi": "n_clk_core_c[0]",
+    "ck_bootbarrier": "n_clk_core_c[0]",
+    "ck_coordinator_codec": "n_clk_core_c[0]",
+    "ck_coordinator_lifecycle": "n_clk_core_c[0]",
+    "ck_coordinator_post": "n_clk_core_c[0]",
+    "ck_csr": "n_clk_core_c[0]",
+    "ck_ctl": "n_clk_core_c[0]",
+    "ck_ctrl": "n_clk_core_c[0]",
+    "ck_dispatch": "n_clk_core_c[0]",
+    "ck_fence_core": "n_clk_core_c[0]",
+    "ck_guard": "n_clk_core_c[0]",
+    "ck_hc": "n_clk_core_c[0]",
+    "ck_host": "n_clk_core_c[0]",
+    "ck_map": "n_clk_core_c[0]",
+    "ck_native": "n_clk_core_c[0]",
+    "ck_order": "n_clk_core_c[0]",
+    "ck_peer": "n_clk_core_c[0]",
+    "ck_phy_rx_r": "n_clk_core_c[0]",
+    "ck_phy_tx_w": "n_clk_core_c[0]",
+    "ck_program_loader": "n_clk_core_c[0]",
+    "ck_program_rx": "n_clk_core_c[0]",
+    "ck_prompt": "n_clk_core_c[0]",
+    "ck_qm_core": "n_clk_core_c[0]",
+    "ck_qm_done_r": "n_clk_core_c[0]",
+    "ck_qm_ing_w": "n_clk_core_c[0]",
+    "ck_qm_queue": "n_clk_core_c[0]",
+    "ck_records": "n_clk_core_c[0]",
+    "ck_retire": "n_clk_core_c[0]",
+    "ck_root_mux": "n_clk_core_c[0]",
+    "ck_rst": "n_clk_core_c[0]",
+    "ck_rx": "n_clk_core_c[0]",
+    "ck_sum": "n_clk_core_c[0]",
+    "ck_tx": "n_clk_core_c[0]",
+    "ck_fence_host": "n_clk_host[0]",
+    "ck_qm_credit": "n_clk_host[0]",
+    "ck_qm_done_w": "n_clk_host[0]",
+    "ck_qm_host": "n_clk_host[0]",
+    "ck_qm_ing_r": "n_clk_host[0]",
+    "ck_qm_bank": "{n_clk_ingest[0], n_clk_ingest[0]}",
+    "ck_qm_ingest": "n_clk_ingest[0]",
+    "ck_qm_out": "n_clk_ingest[0]",
+    "ck_pad": "n_clk_phy[0]",
+    "ck_phy": "{n_clk_phy[0], n_clk_phy[0], n_clk_phy[0], n_clk_phy[0], n_clk_phy[0], n_clk_phy[0], n_clk_phy[0], n_clk_phy[0]}",
+    "ck_phy_rx_w": "n_clk_phy[0]",
+    "ck_phy_tx_r": "n_clk_phy[0]",
+    "die_rst_n": "n_rst_die_t0[0]",
+    "hbm_rst_n": "n_rst_hbm_t0[0]",
+    "link_rst_n": "n_rst_link_t0[0]",
+    "host_rst_n": "n_rst_host_t0[0]",
+    "por_n": "pad_por_n[0]"
+  },
+  "selected_controller_profile": {
+    "MU": 0,
+    "ND": 8,
+    "DONE_REG": 1,
+    "WDOG": 4194304,
+    "note": "control_packet_admission does not expose/override MU; control_prompt_observed default MU=0"
+  },
+  "raw_service_bits": [
+    {
+      "bit": 0,
+      "predicate": "adapter_fault",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 1,
+      "predicate": "phy_faults[0]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 2,
+      "predicate": "phy_faults[1]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 3,
+      "predicate": "phy_faults[2]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 4,
+      "predicate": "phy_faults[3]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 5,
+      "predicate": "phy_faults[4]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 6,
+      "predicate": "bridge_faults[0]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 7,
+      "predicate": "bridge_faults[1]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 8,
+      "predicate": "bridge_faults[2]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 9,
+      "predicate": "bridge_faults[3]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 10,
+      "predicate": "bridge_faults[4]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 11,
+      "predicate": "bridge_faults[5]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 12,
+      "predicate": "qm_fault",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 13,
+      "predicate": "map_fault",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 14,
+      "predicate": "order_fault",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 15,
+      "predicate": "fence_fault",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 16,
+      "predicate": "chain_fault[0]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 17,
+      "predicate": "chain_fault[1]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 18,
+      "predicate": "chain_fault[2]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 19,
+      "predicate": "chain_fault[3]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 20,
+      "predicate": "packet_faults[0]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 21,
+      "predicate": "packet_faults[1]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 22,
+      "predicate": "packet_faults[2]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 23,
+      "predicate": "packet_faults[3]",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    },
+    {
+      "bit": 24,
+      "predicate": "source_fault|dispatch_fault|bootbarrier_fault|marker_consumer_fault|est[1]|native_protocol_fault",
+      "consumer": "u_rank.u_guard.fm -> fs -> sticky/bad -> abort and guarded_tk[88]",
+      "guard_observation_edges": 3,
+      "fixed_terminal_bound": null
+    }
+  ],
+  "physical_predicates": [
+    "link_physical_fault",
+    "record_fault=auth_tx.af|context_tx.cf|witness_rx.wf",
+    "peer_protocol_fault",
+    "coordinator_fault=codec_fault|post_fault|identity_fault|lifecycle_fault",
+    "root_mux_fault",
+    "any boot_fault_pc",
+    "ctrl_completion_fault",
+    "ingress_fault",
+    "program_fault",
+    "commit_fault",
+    "host_observer_fault",
+    "peer_link_fault"
+  ],
+  "physical_chain": [
+    "rank physical_fault OR local predicates shifted by die_id",
+    "observed_physical_faults",
+    "guard pf_q",
+    "guard physical_diag",
+    "fullcontrol c_fault_vec[d*4+3]",
+    "CSR pin_die_fault_vec -> diag_status/IRQ/readback"
+  ],
+  "physical_terminal_consumer": null,
+  "transport_chain": [
+    "rank transport_fault",
+    "guard tf_q",
+    "guard transport_diag",
+    "fullcontrol c_fault_vec[d*4+2]",
+    "CSR pin_die_fault_vec -> diag_status/IRQ/readback"
+  ],
+  "transport_terminal_consumer": null,
+  "service_chain": [
+    {
+      "from": "raw_faults",
+      "to": "fm",
+      "edges": 1
+    },
+    {
+      "from": "fm",
+      "to": "fs",
+      "edges": 1
+    },
+    {
+      "from": "fs|sticky|internal_bad|protocol_fault",
+      "to": "sticky/abort/guarded_tk[88]/!service_ready",
+      "edges": 1
+    },
+    {
+      "from": "guarded_tk",
+      "to": "collected.lt",
+      "edges": 1
+    },
+    {
+      "from": "collected.lt",
+      "to": "collected.tk8[role*93+:93]",
+      "edges": 1
+    },
+    {
+      "from": "tk8",
+      "to": "ctl_service.tk_q",
+      "edges": 1
+    },
+    {
+      "from": "ctl_service.tk_q",
+      "to": "qkd_host_ctl.tk_q",
+      "edges": 1
+    },
+    {
+      "from": "qkd_host_ctl.tk_q[88]",
+      "to": "pkgctl.any_fault_q",
+      "edges": 1,
+      "condition": "d_done && d_done_gen==d_gen; no fault solely from raw d_fault"
+    },
+    {
+      "from": "pkgctl.any_fault_q",
+      "to": "pkgctl.die_fault/eng_done",
+      "edges": 1,
+      "condition": "busy; MU=0"
+    },
+    {
+      "from": "pkgctl.eng_fault",
+      "to": "qkd_host_ctl.res[1]=package_abort",
+      "edges": 1
+    },
+    {
+      "from": "package_abort",
+      "to": "collected.abort_q",
+      "edges": 1
+    },
+    {
+      "from": "abort_q",
+      "to": "abort_seen",
+      "edges": 1
+    },
+    {
+      "from": "abort_seen|abort_q|reset_abort_seen",
+      "to": "cancel_valid/tag/fault/drained",
+      "edges": 1,
+      "condition": "retained_request && allocated_vq && exact allocated tuple && &drain_q && !cancel_consumed; not a fixed bounded completion"
+    }
+  ],
+  "admission_chain": [
+    {
+      "from": "abort/service_ready/guarded_tk[88]",
+      "to": "ctl_service captured ready expression",
+      "edges": 1
+    },
+    {
+      "from": "ready expression",
+      "to": "qkd_host_ctl.ready_q",
+      "edges": 1
+    },
+    {
+      "from": "ready_q",
+      "to": "pkgctl.start_unready",
+      "edges": 1,
+      "condition": "eng_start; no in-flight ready check"
+    }
+  ],
+  "cancel_chain": [
+    "collected.cancel_valid exact terminal stage37 identity",
+    "peer_rank_codec cancel_word and class9 opcode2",
+    "peer_root_mux and peer links/coordinator codec",
+    "coordinator_services cancellation acceptance/post-retirement",
+    "peer_rank_codec opcode85 release",
+    "native_endpoint release_pending -> release_fire only matching tag/gen plus genuine drains and request credit",
+    "opcode8 terminal released acknowledgment"
+  ],
+  "engine_terminal_chain": [
+    "engine_result from linked compute engine",
+    "coordinator peer codec transports opcode83 result_done/result_fault",
+    "rank codec result registers",
+    "native endpoint sampled result validates stage37/tag/gen",
+    "fault_q only from result_fault or protocol_fault",
+    "native endpoint local_tk",
+    "guarded_tk OR service bad",
+    "collected tk8",
+    "package controller",
+    "host eng_done/eng_fault and host retirement/CQ"
+  ],
+  "missing_predicate_consumers": [
+    "physical/transport summaries have no bad/abort/guarded_tk/ready dependency in this selected host source",
+    "no direct global host health input into compute engine fixed STATUS/result_fault shown by source",
+    "continuous service health is only terminal-qualified at current-generation DONE, not independently bounded",
+    "healthy terminal emitted before later health observation is not retroactively changed; overlap/subsequent healthy completion policy needs explicit observer graph"
+  ],
+  "obligations": [
+    "Include all continuous physical/transport/service/coordinator health at an explicitly reviewed terminal predicate; do not OR certificates",
+    "Price entire registered source -> observation -> join -> AFR -> TX/LAND -> compute/link consumer -> fixed STATUS and post retirement path",
+    "Prove all remote status/change snapshots and actual transport reservations/latencies; controller bench replicates one TK only as reduction fixture",
+    "Measure native loaded phase/skew and reset source roots; all graph edges logical, no physical timing qualification",
+    "Price fixed POR/admission/drain/counter widths only after exact source clear and AHUB hf relay drain34/37; no health masks or conditional wait",
+    "Preserve por_n retained_request/reset_abort_seen/coordinator state across warm host_rst_n; resetting guard alone cannot certify sources drained/cleared",
+    "DCAL fault lower bound357 and cal_ready/adm_done fixed-edge image prerequisites remain separate successor-owned obligations"
+  ]
+}

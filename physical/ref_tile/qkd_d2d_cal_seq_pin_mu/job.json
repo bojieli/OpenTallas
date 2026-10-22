@@ -1,0 +1,138 @@
+{
+ "name": "qkd_d2d_cal_seq_pin_mu-mu1-COMMIT",
+ "block": "qkd_d2d_cal_seq_pin",
+ "ref_tile": true,
+ "owner": "Claude:KV-DCAL-MU",
+ "purpose": "KV-side MU d2d calendar sequencer (MU-DIE-KV2 / KV-DCAL-MU 10-19): qkd_d2d_cal_seq_pin built from ot_qwen_d2d_cal_seq_dies_mu.sv + d2d_cal_image_mu.svh (D2D_MU=1 d2d_cal_image_production.sh on the MU release pair seam 2,2,2,3,2,2/11,11,9,9,9,9,9: TXDP_C 0x0a010308, TXDP_K 0x03030415 [21,4,3,3] = production d2d_cal_image.svh; MU context slot = +1 K TX / C RX entry, SEG2 8->9). Same ports/outline/pins as _ep3 (die slot DCAL_WH 18.792x28.08); replaces the ep3 labelled stand-in when OT_KV_MU=1. Static calendar, no credits/backpressure; reset landing 2 stages (boot constant).",
+ "threads": 4,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/kv-dcal-mu-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/test/qwen_split/run_cal_pin.sh",
+   "rtl/test/qwen_split/tb_qkd_cal_pin.sv",
+   "results/arch/qwen_native_static_endpoint_1015/calendar_compact18_pins_0253",
+   "results/rtl/qkd_d2d_cal_seq_pin_mu_1019"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_d2d_cal_seq_pin #(.EP_SKEW(3), .GO_OFS(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -Irtl/qwen_sys/d2d_static_20261015 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies_mu.sv rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mu_compiled_timeline_and_exception_deadlines",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_mu 0 1",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "expect": "pass",
+    "pass_regex": "CALPIN_PASS starts74 layers72 token3start1 bootwords66 reloadwords66 resetwords66 halt_capture1 reset_release2"
+   },
+   {
+    "name": "mu_anchor_one_edge_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_mu_m1 1 1",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "expect": "fail",
+    "fail_regex": "CALPIN_FAIL compiled start",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_mu_1019/run_cal_pin_mu_m1.log"
+   },
+   {
+    "name": "mu_production_image_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_mu_m2 2 1",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "expect": "fail",
+    "fail_regex": "CALPIN_FAIL boot control word",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_mu_1019/run_cal_pin_mu_m2.log"
+   },
+   {
+    "name": "mu_stale_txdp_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_cal_pin.sh {RUN}/calendar_mu_m3 3 1",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "expect": "fail",
+    "fail_regex": "CALPIN_FAIL txdp",
+    "fail_witness": "results/rtl/qkd_d2d_cal_seq_pin_mu_1019/run_cal_pin_mu_m3.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_d2d_cal_seq_pin_mu/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_d2d_cal_seq_pin_mu/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_d2d_cal_seq_pin_mu --out {RUN}/record/views/qkd_d2d_cal_seq_pin  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_d2d_cal_seq_pin_mu/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_d2d_cal_seq_pin_mu/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_mu/qkd_d2d_cal_seq_pin_mu-mu1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Copy of the CLOSED _ep3 kit (TT/FF closed 10-16, synth 156 um2, 45% std util in 18.792x28.08) with the MU calendar image: one more K TX image word (constant), SEG2 9; no RTL structure, pin, outline or cycle change. Recipe 3 kept; reset_landing 2 stages added (ROOT-RST 10-19); io_hold_margin 0.03."
+}

@@ -1,0 +1,31 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-epyc7       admits   927 GB (avail 749, growth 101, headroom 0, waiters 2/32 GB) load 51/96 running 36 disk 6319 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/refill-1225/S81REG/src_mu3_hs
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4120668-1792438136 after 2 s
+Verilator 5.050 2026-07-01 rev v5.050
+SEQHOST_MU PASS starts=92 users=46 user0_identical=True zero_latency_vs_plain=True kd_tagged=92/92 events=1444 max_outstanding=1 
+SEQHOST_MU PASS starts=22 users=11 user0_identical=True zero_latency_vs_plain=True kd_tagged=22/22 events=350 max_outstanding=1 
+SEQHOST_MU FAULT1 PASS (fault raised) t_mf=0110 first=[(66177, 1), (66242, 2)] issuer=[]
+SEQHOST_MU FAULT1 PASS (fault raised) t_mf=0110 first=[(66365, 1), (66430, 2)] issuer=[]
+SEQHOST_MU FAULT1 PASS (fault raised) t_mf=1110 first=[(449, 1), (489, 3)] issuer=[]
+SEQHOST_MU FAULT0 PASS (fault raised) t_mf=1101 first=[(489, 0), (489, 3)] issuer=[]
+SEQHOST_MU FAULT2 PASS (fault raised) t_mf=0100 first=[(2486, 2)] issuer=[]
+SEQHOST_MU FAIL starts=92 users=46 user0_identical=True zero_latency_vs_plain=True kd_tagged=92/92 events=1444 max_outstanding=1 (b) 90 expected events missing (first ('KD', 23796, '2003ef004000ce')); (b) 90 unexpected events (first ('KD', 23796, '2003ef000000ce'))
+mutant 1 (user field dropped) detected (FAIL as required)
+SEQHOST_MU FAULT0 FAIL t_mf=1100 first=[(489, 3), (554, 2)] issuer=[]
+mutant 2 (collision check dropped) detected (FAIL as required)
+SEQHOST_MU FAIL starts=92 users=46 user0_identical=True zero_latency_vs_plain=True kd_tagged=3/92 events=1444 max_outstanding=1 (b) 89 expected events missing (first ('KD', 66424, '2003fd00c0025e')); (b) 89 unexpected events (first ('KD', 66424, '2003fd00000000')); (c) fault line in the multi run: PROG MF 66361 bit 1
+mutant 5 (gap index stuck) detected (FAIL as required)
+lint dsdv_mu_hslot clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)
+lint dsdv_mu_hwin clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)
+lint dsdv_seq_host_mux clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)
+MU_HOST_GATE PASS
+MU_HWIN_GATE PASS
+SEQHOST_MU_GATE PASS
+LEG seqhost rc=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4120668-1792438136): exit 0

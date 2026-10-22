@@ -1,0 +1,303 @@
+ot-run: ot-epyc4       admits  1117 GB (avail 839, growth 49, headroom 0, waiters 0/0 GB) load 35/128 running 15 disk 412 GB 
+ot-run: ot-epyc5       admits   563 GB (avail 451, growth 47, headroom 0, waiters 0/0 GB) load 50/128 running 7 disk 562 GB 
+ot-run: ot-epyc6       admits  1245 GB (avail 931, growth 59, headroom 0, waiters 0/0 GB) load 31/128 running 18 disk 559 GB 
+ot-run: ot-epyc7       admits   997 GB (avail 755, growth 58, headroom 0, waiters 0/0 GB) load 24/96 running 20 disk 502 GB 
+ot-run: ot-epyc8       admits  1199 GB (avail 923, growth 84, headroom 0, waiters 0/0 GB) load 23/128 running 16 disk 565 GB 
+ot-run: ot-pve1        admits   100 GB (avail 82, growth 2, headroom 0, waiters 0/0 GB) load 5/28 running 1 disk 1212 GB 
+ot-run: ot-agidock128  admits   108 GB (avail 85, growth 10, headroom 0, waiters 0/0 GB) load 6/64 running 5 disk 46 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-136774-1792447423 after 0 s
+ot-epyc7
+               total        used        free      shared  buff/cache   available
+Mem:     1082007388160 270940049408 451675308032  1541509120 367494557696 811067338752
+Swap:    146028879872     2011136 146026868736
+Filesystem        1B-blocks       Used    Available Use% Mounted on
+tmpfs          541003694080 1534918656 539468775424   1% /tmp
+Icarus Verilog version 12.0 (stable) ()
+
+Copyright (c) 2000-2021 Stephen Williams (steve@icarus.com)
+
+a6681e0b577dcfc4ea83d1591a5714710b0b3535ebb36491ee8177553bab9631  /usr/bin/iverilog
+e0a087a4906d5a9cd1b0b85c9b4c2081704c2c9bcd94f224437fc56b15fc440d  /usr/bin/vvp
+binary exit 1
+FATAL: validation/tb.v:163: ASR_MISMATCH clk=0 d=0 resetn=1 setn=1 projection=0 official=1
+       Time: 532000  Scope: tb.check
+Command exited with non-zero status 1
+	Command being timed: "vvp run05/binary.vvp"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 92%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7832
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 850
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+fourstate exit 1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=2 seed=0 clk=0 d=0 resetn=0 setn=x ASR=1/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=3 seed=0 clk=0 d=0 resetn=0 setn=z ASR=1/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=9 seed=0 clk=0 d=0 resetn=x setn=1 ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=10 seed=0 clk=0 d=0 resetn=x setn=x ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=11 seed=0 clk=0 d=0 resetn=x setn=z ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=13 seed=0 clk=0 d=0 resetn=z setn=1 ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=14 seed=0 clk=0 d=0 resetn=z setn=x ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=15 seed=0 clk=0 d=0 resetn=z setn=z ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=18 seed=0 clk=0 d=1 resetn=0 setn=x ASR=1/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=19 seed=0 clk=0 d=1 resetn=0 setn=z ASR=1/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=25 seed=0 clk=0 d=1 resetn=x setn=1 ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=26 seed=0 clk=0 d=1 resetn=x setn=x ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=27 seed=0 clk=0 d=1 resetn=x setn=z ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=29 seed=0 clk=0 d=1 resetn=z setn=1 ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=30 seed=0 clk=0 d=1 resetn=z setn=x ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=31 seed=0 clk=0 d=1 resetn=z setn=z ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=34 seed=0 clk=0 d=x resetn=0 setn=x ASR=1/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=35 seed=0 clk=0 d=x resetn=0 setn=z ASR=1/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=41 seed=0 clk=0 d=x resetn=x setn=1 ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=42 seed=0 clk=0 d=x resetn=x setn=x ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=43 seed=0 clk=0 d=x resetn=x setn=z ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=45 seed=0 clk=0 d=x resetn=z setn=1 ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=46 seed=0 clk=0 d=x resetn=z setn=x ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=47 seed=0 clk=0 d=x resetn=z setn=z ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=50 seed=0 clk=0 d=z resetn=0 setn=x ASR=1/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=51 seed=0 clk=0 d=z resetn=0 setn=z ASR=1/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=57 seed=0 clk=0 d=z resetn=x setn=1 ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=58 seed=0 clk=0 d=z resetn=x setn=x ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=59 seed=0 clk=0 d=z resetn=x setn=z ASR=0/x HQ=1/1
+FOURSTATE_COUNTEREXAMPLE src=0 dst=61 seed=0 clk=0 d=z resetn=z setn=1 ASR=0/x HQ=1/1
+FOURSTATE_RESULT checks=262144 mismatches=193486
+FATAL: validation/tb_fourstate.v:174: FOURSTATE_PROJECTION_REJECTED
+       Time: 655363000  Scope: tb
+Command exited with non-zero status 1
+	Command being timed: "vvp run05/fourstate.vvp"
+	User time (seconds): 2.13
+	System time (seconds): 0.00
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.13
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7752
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 838
+	Voluntary context switches: 1
+	Involuntary context switches: 3
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+udp_binary exit 0
+CELL_PROJECTION_PASS comb_checks=506 seq_checks=2564 total=3072
+validation/tb.v:214: $finish called at 3078000 (1ps)
+	Command being timed: "vvp run05/udp_binary.vvp"
+	User time (seconds): 0.01
+	System time (seconds): 0.00
+	Percent of CPU this job got: 88%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7948
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 852
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+udp_fourstate exit 0
+FOURSTATE_RESULT checks=262144 mismatches=0
+validation/tb_fourstate.v:174: $finish called at 655363000 (1ps)
+	Command being timed: "vvp run05/udp_fourstate.vvp"
+	User time (seconds): 1.99
+	System time (seconds): 0.00
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7760
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 839
+	Voluntary context switches: 1
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+udp_init exit 1
+FATAL: validation/init_tb.v:48: INIT_ASYNC_OVERRIDE idx=12 q=x
+       Time: 300  Scope: init_tb
+Command exited with non-zero status 1
+	Command being timed: "vvp run05/udp_init.vvp"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 77%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7868
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 804
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+mut_polarity exit 1
+FATAL: validation/tb.v:163: ASR_MISMATCH clk=0 d=0 resetn=1 setn=1 projection=0 official=1
+       Time: 513000  Scope: tb.check
+Command exited with non-zero status 1
+	Command being timed: "vvp run05/mut_polarity.vvp"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 92%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7788
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 853
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+mut_priority exit 1
+FATAL: validation/tb.v:163: ASR_MISMATCH clk=0 d=0 resetn=0 setn=0 projection=1 official=0
+       Time: 516000  Scope: tb.check
+Command exited with non-zero status 1
+	Command being timed: "vvp run05/mut_priority.vvp"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7880
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 853
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+mut_comb exit 1
+FATAL: validation/tb.v:168: COMB_MISMATCH AND2x2_ASAP7_75t_R i=0
+       Time: 7000  Scope: tb
+Command exited with non-zero status 1
+	Command being timed: "vvp run05/mut_comb.vvp"
+	User time (seconds): 0.00
+	System time (seconds): 0.00
+	Percent of CPU this job got: 84%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.01
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7940
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 851
+	Voluntary context switches: 1
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+udp_comb4 exit 1
+COMB4_COUNTEREXAMPLE BUFx12f_ASAP7_75t_R tuple=3 projection=z official=x
+COMB4_COUNTEREXAMPLE BUFx2_ASAP7_75t_R tuple=3 projection=z official=x
+COMB4_COUNTEREXAMPLE BUFx3_ASAP7_75t_R tuple=3 projection=z official=x
+COMB4_COUNTEREXAMPLE BUFx4f_ASAP7_75t_R tuple=3 projection=z official=x
+COMB4_COUNTEREXAMPLE BUFx5_ASAP7_75t_R tuple=3 projection=z official=x
+COMB4_COUNTEREXAMPLE BUFx6f_ASAP7_75t_R tuple=3 projection=z official=x
+COMB4_COUNTEREXAMPLE BUFx8_ASAP7_75t_R tuple=3 projection=z official=x
+COMB4_RESULT checks=15234 mismatches=7
+FATAL: validation/comb4_tb.v:349: COMB4_REJECTED
+       Time: 15234000  Scope: comb4_tb
+Command exited with non-zero status 1
+	Command being timed: "vvp run05/udp_comb4.vvp"
+	User time (seconds): 0.10
+	System time (seconds): 0.00
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.11
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7908
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 844
+	Voluntary context switches: 1
+	Involuntary context switches: 1
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+VALIDATION_EXIT 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-136774-1792447423): exit 1

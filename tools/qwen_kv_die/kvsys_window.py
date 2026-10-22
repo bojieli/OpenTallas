@@ -213,9 +213,11 @@ def main(argv=None):
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--lef', type=Path, help='case elements.lef (post kv_expand): per-block top layer -> free tracks above it')
     ap.add_argument('--expand', type=Path, help='expand.json: flattened frames take their leaves\' top layer')
+    ap.add_argument('--reserve-native-astk', action='store_true', help='MU-DIE-KV 10-19: same plan geometry as kv_die case --reserve-native-astk (kvsys_prep passes $H14 to both)')
     a = ap.parse_args(argv)
     m = K.build(kv_wq_leaves=True, kv_wq_binary=True, kv_wq_leaf_s=True, kv_wq_wide=True, kv_wq_mirror=True, split=a.split, host_v14=a.host_v14, host_north=getattr(a, 'host_north', False) or None,
-                host_trees=getattr(a, 'host_trees', False) or None, v143=getattr(a, 'v143', False) or None)
+                host_trees=getattr(a, 'host_trees', False) or None, v143=getattr(a, 'v143', False) or None,
+                reserve_native_astk=a.reserve_native_astk)
     M = K.masters(m, 1)
     tops = block_tops(a.lef, a.expand) if a.lef else None
     rec = dict(schema='opentallas.qwen_kvsys_window.v1', split=a.split, die_um=[m['die']['w'], m['die']['h']],

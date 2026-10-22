@@ -1,0 +1,21 @@
+EARLY_RESET phase0 restart_start1086
+ERR c1092 ev0 start0 mu_c 000000000
+ERR c1156 ev0 start0 mu_c 000000000
+KU c1180 user 0 pos 0
+ERR c1220 ev0 start0 mu_c 000000000
+KU c1244 user 1 pos 0
+ERR c1284 ev0 start0 mu_c 000000000
+KU c1308 user 0 pos 1
+ERR c1348 ev0 start0 mu_c 000000000
+KU c1372 user 1 pos 1
+ERR c1412 ev0 start0 mu_c 000000000
+KU c1436 user 0 pos 2
+ERR c1476 ev0 start0 mu_c 000000000
+KU c1500 user 1 pos 2
+ERR c1540 ev0 start0 mu_c 000000000
+KU c1564 user 0 pos 3
+KU c1628 user 1 pos 3
+MUWIN starts 8 fires 0 expected 8 K 2 t_mf 0100 hslot 0000 hwin 01
+MUWIN FAIL errs 8
+/srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_pervector04/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:308: $finish called at 1727500 (1ps)
+EARLY_MITER edges 1727

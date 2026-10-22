@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_col_idx256r_a-ra1-f7ac00aab bench bench_idx256r_3 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/hdie_col_idx256r_a-ra1-f7ac00aab log cl/bench_idx256r_3.a1b1.log captured 2026-10-19T17:11:00-07:00
+# fail_regex 'IDX256R_FAIL'
+[11116000] %Fatal: tb_idx256r.sv:48: Assertion failed in tb_idx256r: IDX256R_FAIL control identity MUT3
+%Error: rtl/test/hbm_collar_idx256r/tb_idx256r.sv:48: Verilog $stop
+Aborting...

@@ -1,0 +1,312 @@
+{
+ "name": "qfd_sys_face_bc2l",
+ "top": "qfd_sys_face_control_safe",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/generated/qfd_sys_face_control_safe_bc2_1019.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 172.8,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "R0",
+   "inst": "*m13704"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    129.6,
+    86.4
+   ],
+   "orient": "R0",
+   "inst": "*m13438"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    216,
+    86.4
+   ],
+   "orient": "R0",
+   "inst": "*m13437"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13444"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    86.4,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13443"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13442"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13441"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13440"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "*m13439"
+  }
+ ],
+ "pins": {
+  "N": [
+   "fwd_epoch",
+   "d2d_fault",
+   "d2d_epoch_abort",
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "prog_rx_v",
+   "prog_witness_slot",
+   "prog_auth_slot",
+   "prog_context_slot",
+   "prog_tx_observed_v",
+   "prog_tx_record",
+   "ck",
+   "rst_n",
+   "rx_payload",
+   "emb_rx_v",
+   "emb_rx_slot",
+   "status_epoch16",
+   "vm_drained",
+   "collective_drained",
+   "collective_busy",
+   "crom_fault",
+   "execution_active",
+   "admit_ready",
+   "result_v",
+   "result_done",
+   "result_fault",
+   "result_cause",
+   "result_tag",
+   "result_gen",
+   "result_token",
+   "result_value",
+   "result_cycles",
+   "cal_start_rx",
+   "cal_seg_rx",
+   "cal_user_tx",
+   "cal_user_rx"
+  ],
+  "W": [
+   "tt_pw",
+   "tt_program_obs",
+   "tt_control_stores_ready",
+   "tt_kok",
+   "tt_kwd",
+   "tt_fab",
+   "tt_layer_context_v",
+   "tt_command_stage",
+   "tt_native_tok",
+   "tt_native_pos",
+   "native_fault",
+   "q_slot",
+   "q_slot_beat",
+   "kv_word_slot",
+   "kv_word_index",
+   "visibility_slot",
+   "complete_slot",
+   "host_epoch_valid",
+   "host_fused_capability",
+   "host_epoch",
+   "host_tag",
+   "host_generation",
+   "ctx_x",
+   "init_u0"
+  ],
+  "S": [
+   "emb_word_v",
+   "emb_word_data",
+   "emb_word_token",
+   "emb_word_index",
+   "emb_word_scale",
+   "emb_word_epoch",
+   "emb_expected_slot",
+   "emb_expected_token",
+   "emb_expected_word",
+   "emb_expected_scale",
+   "emb_expected_epoch",
+   "emb_fill_begin",
+   "emb_fill_token",
+   "emb_fill_epoch",
+   "emb_core_epoch",
+   "emb_prov_fault",
+   "io_cmd_free",
+   "io_fault",
+   "io_shared_fault",
+   "fault"
+  ],
+  "E": [
+   "seq_cfg_image_ready",
+   "seq_dc",
+   "seq_program_obs",
+   "seq_descriptor_obs",
+   "seq_dh"
+  ]
+ },
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "sink_clustering": false
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "Structural redesign after CS9 fd4 (83 roots>32) and N12 (transparent comb507/FFQ172) sizing FAILs: useful Boolean producer copies (413 useful copies, 492 same-edge equation copies, unique keep paramods, abstract max12 over 14144 roots, 0 BUF) and explicit paid wrapper input1/output1/reset2; source d8b39bd8 = codex/sysface-boolean-copies-1019 r2 cold. Same 9 macros/lattice/pin plan as N12; trial-route RAM 24->48 GB (N12 GRT rc137). Insurance rerun of bc2 with a long synthesis cap: 16.5k unique keep paramods make Yosys opt passes ~10 min each.",
+ "slot_change_request": "New scoped nine-macro diagnostic component302.4x172.8; proposed grow from276.48x172.8. Final die grant and production-source slot binding owed.",
+ "job": {
+  "owner": "Claude:QW-SYSFACE",
+  "branch": "claude/qw-sysface-bc2-1019",
+  "tag": "bc2l",
+  "cycles_added": 2,
+  "purpose": "Scoped diagnostic generated control-safe nine-macro FACE component; two generic pin landing edges, no production origin or full-token qualification.",
+  "extra_paths": [
+   "rtl/qwen_split",
+   "rtl/qwen_sys",
+   "rtl/test/qwen_split",
+   "tools/qwen_split",
+   "results/rtl/sysface_control_safe_1019",
+   "results/arch/sysface_control_safe_1019",
+   "results/arch/sysface_sram_players_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8"
+  ],
+  "benches": [
+   {
+    "name": "committed_control_safe_packet",
+    "cmd": "python3 tools/qwen_split/sysface_control_safe/verify_packet.py",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "python3"
+    ],
+    "pass_regex": "^SYSFACE_SAFE_COMMITTED_PACKET_PASS",
+    "pass_witness": "results/rtl/sysface_control_safe_1019/packet_verify.log"
+   },
+   {
+    "name": "control_safe_native_component_matrix",
+    "cmd": "bash tools/qwen_split/sysface_control_safe/run_all.sh",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "yosys",
+     "verilator"
+    ],
+    "pass_regex": "^SYSFACE_SAFE_EQUIV checks4807$",
+    "pass_witness": "results/rtl/sysface_control_safe_1019/cold/parent_two_epochs.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_sys_face_bc2l/views",
+  "record_to": "results/rtl/ref_tile/qfd_sys_face_bc2l"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: explicit generated wrapper (ot_explicit_pin_regs=1) captures every input once (+25 same-edge private copies) and every output once; receipt physical_wrapper=true sha d8b39bd8, cold/legacy/reset correspondence 77fc3afbc"
+ },
+ "hold_budget": "die",
+ "reset_landing": {
+  "enable": false,
+  "reason": "RTL lands rst_n in 2 registered synchronous stages (ot_explicit_reset_stages=2, wrapper reset2)"
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20"
+ },
+ "clock": "spine",
+ "safe_design_checklist": {
+  "1_pins": "fixed: explicit RTL wrapper registers every input (+1) and output (+1), rst_n landed in 2 stages; flow pin regs OFF to avoid double wrapping (verify_explicit_boundary_config)",
+  "2_reach": "PASS by construction: 302.4x172.8 outline, every path within one tile <405 um except corner-to-corner; gate wire_reach census",
+  "3_fanout": "fixed: useful Boolean producer copies, max12 abstract terminal loads, unique keep paramods (no merge); native max<=32 checked by gate textbook high_fanout + audit_native",
+  "4_depth": "PASS expected: original equations, depth 598.5 ps on N12; no comb in->out (wrapper regs)",
+  "5_storage": "PASS: 3x 4096x72 ROM + 6x 64x16 SRAM macros, no runtime-indexed flop arrays",
+  "6_floorplan": "macros on 43.2 lattice, >=20 um channels; fill ~28% WAIVED: outline is pin-perimeter bound (2788 pins use 99% of pin slots on every face at N12) and 38 um ROM width forces 86.4 pitch",
+  "7_clock": "local spine, macro own leaves, single clock; io_hold_margin 0.03; --cts gate measures TT/FF spread",
+  "8_schedule": "static; inherited input1/output1/reset2 edges unchanged (no new cycles vs N12 kit)"
+ },
+ "keep_pin_regs": true
+}

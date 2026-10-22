@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.qwen.qw-clayer2.v1",
+ "lane": "QW-CLAYER2 10-19 (TOK.QW.LAYER.1/.2; successor of QW-CLAYER / Codex recovery 9ec4606cc)",
+ "base": "claude/qw-clayer2-1018: 9ec4606cc + merges qlb-c4b-lmh bd61515bc + qlb-c4b-gen d8b6a157e (the recovery omitted both; dv_layer.py crashed on ctlm_image.HEAD_PLAN without them)",
+ "vehicle": "tb_qfd_dv2 N 12 (12 x qfd_dv_slice2 RTL; the DV slices of dv2f14bi), Verilator 5.050 on ot-epyc5, one build (reg_vec obj_n12) shared by every run; NOT the dv2f14bi die netlist (no land-plan seam inside this vehicle, so land_lag_sim annotate does not apply); operands synthetic (hdc_golden expected values) -- real-operand runs = QW-REALSTG",
+ "collected": {
+  "reg_mat (ot-run unit oth-ubuntu-2300053-1792390031, pre-takeover)": "calibrate OK, AGES MATCH (l8_ar 26, ar_hop 2, xc_cc 2, amax_ami 3, arx_after_amv 3; stn_ages == committed); PASS qkv 768/768, gu 3072/3072, od 515/515, lm 26/26 (token 10925), emb 4096/4096; mutants FAIL: qkv sbase1, gu sbase1, od nostagger (436 collisions), od xc_bc, lm amax_local, emb emb_late -- witnesses reg_mat/run_*.out",
+  "reg_vec (unit oth-ubuntu-2300048-1792390031, pre-takeover)": "calibrate PASS (vec_ages == committed); slice-order PASS resid 26/26, qk 4/4, silu 1/1; mutants FAIL resid arwin / xslot, qk ropesign, silu nor -- witnesses reg_vec/*.out",
+  "resid_row (unit oth-ubuntu-2593271-1792392717, this lane)": "residual landing in io_collective MESSAGE (row) order -- the order the production collective returns: PASS 26/26 (r 0x3f551336 all 12 slices, 64 x words, 160 PSUMs, 112 commands, 0 collisions); mutants FAIL arwin (r 0x3f51bb76) and xslot (22 collisions, stm faults) -- witnesses resid_row/*.out. Closes gap 'AR RETURN ORDER'"
+ },
+ "compiler_fix": "XC ORDER closed: dv_layer.py checks every lowered XC sits in the ONE spliced decode calendar at word0 - XC_TO_WORD0 - xc_cc (o 2469 / down 4454 vs word0 2473 / 4458); ctlm_image's XC-after-END is the priced plan only and is never emitted. test_dv_layer.py asserts it (fleet PASS unit oth-ubuntu-2582587-1792392666)",
+ "composition_layer_s1": {
+  "layer_latency": 5504, "chained_L1": 5471, "cold_L0": 5966, "calendar_entries": 390, "clashes": 0, "gaps": 6,
+  "rtl_verified_stage_spans": "DV families on their compiled edges (RTL bench PASS): SSQ+ROOT 209, QK-norm/RoPE/D2D 362, residual 1 / 2 505 each (row order), SiLU 250, matvec DV tails (STN / XC / AR stagger, od 515/515); AR = TP8 collective RTL bench E 284 / span 541 (TOKEN-XDIE-QTP8, separate vehicle)",
+  "analytic_or_priced": "attention 1681 (ctlm price; KV unit measured 1,561 @T8192 in QW-KVATTN, die step = QW-KVATTN2); column-tile matvec compute qkv 259 / o 367 / gu 562 / down 364 (tile_first PARAMETER 40 + ctlm ME price: no xhead / tile-delivery lowering); attention-return landing (QW-ATTNRET); per-layer table load (none: capacity gap)",
+  "status": "UNMEASURED as a layer: no native L0/L1 run on the die; stage spans above are RTL-verified compiled edges on synthetic operands"
+ },
+ "blockers": {
+  "IMAGE CAPACITY 13,910 PW vs 976": "RTL/GEN -> Q-DIE15 (table ROM + loader per QW-PROGSTORE draft AND calendar store >= 1,302 PW: meta 480 + calendar 822 alone exceed 976)",
+  "ATTENTION RETURN -> o_proj x stream": "compiler -> sub-lane QW-ATTNRET (claude/qw-attnret-1019)",
+  "COLUMN-HEAD x CONSUMER + TILE DELIVERY": "compiler (ME / xhead calendar lowering + column-slice bench) -- not started, next lane (QW-XHEAD)",
+  "PER-TOKEN RoPE ROW": "RTL (return-chain word -> st_wi CROM write at dvs_W5) + KV-die sender -> Q-DIE15 / KV lane",
+  "AR TAG / LAST contract": "RTL -> Q-DIE15 (AR message framer at dvs_W5 -> io_collective; spec in lanes/Q-DIE15.md 10-19 00:40)",
+  "XC ORDER": "CLOSED (compiler, this lane)",
+  "AR RETURN ORDER": "CLOSED (row-order landing benched, this lane)"
+ }
+}

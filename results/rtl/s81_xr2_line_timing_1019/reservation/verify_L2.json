@@ -1,0 +1,46 @@
+{
+ "prog": "out/prog_L2",
+ "line_slots": 1113,
+ "collisions": 0,
+ "witness": [],
+ "line_delay": {
+  "ffn.softplus_sqrt": 3
+ },
+ "span": {
+  "last_event": 26112,
+  "calendar_end": 26052
+ },
+ "ra_cmd": [
+  22258
+ ],
+ "old": {
+  "collisions": 0,
+  "span": {
+   "last_event": 26111,
+   "calendar_end": 26052
+  },
+  "ra_cmd": [
+   22258
+  ]
+ },
+ "cost_edges": {
+  "last_event": 1,
+  "calendar_end": 0
+ },
+ "mu": {
+  "A": {
+   "users": 23,
+   "min_shift_gap": 42624,
+   "prog_span": 26112,
+   "collisions": 0,
+   "witness": []
+  },
+  "B": {
+   "users": 23,
+   "min_shift_gap": 42624,
+   "prog_span": 26112,
+   "collisions": 0,
+   "witness": []
+  }
+ }
+}

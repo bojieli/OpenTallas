@@ -40,6 +40,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 import subprocess
 import sys
 import tempfile
@@ -51,6 +52,7 @@ for p in (ROOT, ROOT / 'tools', HERE, ROOT / 'tools/qwen_static_kv', ROOT / 'too
     sys.path.insert(0, str(p))
 
 import attn_calendar as AC                                  # noqa: E402
+import kv_qkh_safe32 as QKH32                               # noqa: E402
 import compile_native_endpoint as CNE                      # noqa: E402
 import controller_calendar_image as CCI                    # noqa: E402
 import layer_roots_from_link as LR                         # noqa: E402
@@ -62,15 +64,101 @@ from tools.qwen_kv_die import static_kv_calendar as SKC    # noqa: E402
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = SKC.GROUP_ORDER                                     # landing group order inside a stack strip
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
+# HKV-ASTK 2026-10-18: the expanded ASTK strip (OT_KV_ASTK_EXPAND=1, as kv_static_die: RL 3 die-relayed chain hops, closed
+# ctl Z stride 4, distributed e-read qkd_astk_er_chain_st ERL 42) moves the attention calendar by MEASURED shifts relative to
+# the RL 1 / ERL 7 strip the attn_calendar laws were measured on (astk_calendar_sweep.sh on the actual strip + mapped SRAM,
+# Verilator 5.050): LMAX / EXP / Z (+ the hub ages that follow them), the P.V e-read issue gap and the e-read latency.
+# KV-FLOOR1 10-20 (default off): the pair END FLOOR control (ot_qwen_tp8_pv_wide_ctl_tbf, kv_bootage OT_KV_PVFIN_FLOOR):
+# both pairs publish on pair 0's issue count, so the compiler law is P1 = P0 (die profile pv_floor)
+PV_FLOOR = os.environ.get('OT_KV_PVFIN_FLOOR', '0') == '1'
+ASTK_EXPAND = os.environ.get('OT_KV_ASTK_EXPAND', '1') == '1'   # HKV-DIE3 10-19: production default ON (= kv_static_die)
+ASTK_LAW = 'results/arch/qwen_kv_die/hkv_astk_calendar_1018/astk_calendar_law.json'
+
+
+def astk_law():
+    law = json.loads((ROOT / ASTK_LAW).read_text())
+    if law.get('schema') != 'opentallas.qwen_kv.astk_calendar_law.v1':
+        raise ValueError('kv_static_programme: unknown ASTK calendar law schema')
+    return law
+
+
+def astk_pv_gap_shift(T, law):
+    """P.V e-read issue gap shift at T: the larger of the measured neighbours (clamped at the measured range)"""
+    pts = sorted((int(t), v) for t, v in law['d_pv_gap'].items())
+    lo = [v for t, v in pts if t <= T] or [pts[0][1]]
+    hi = [v for t, v in pts if t >= T] or [pts[-1][1]]
+    return max(lo[-1], hi[0])
 # ROOT-QLINE 10-18: the SAME compile as the committed production image rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh
 # (tools/qwen_split/d2d_cal_image_production.sh, QXF-LINK 6ef1a097f): die seam stages + the LAYERBENCH compiled token path,
 # so target 11 (KV sequencer init) loads exactly the calendar the RTL image / D2D_TXDP_K were compiled from.  The old
 # '--txd-c 1,1,1,2 --txd-k 1,2,1,1' args predate the compiled TXDP and no longer match the image.
-LINK_DIE_STAGES = '2,2,2,2,0,2/11,11,9,9,9,11,11'
+# KV-LINKCFG-MU 10-19: ONE seam source.  The die seam stages are no longer a constant here (it was the stale dv2f14bq / kvs14p
+# seam 2,2,2,2,2,2/11,11,9,9,9,11,11 after the pair image moved to the MU release seam): they are read from the D2D_TXDP_C
+# record of the BOUND image (LINK_IMAGE), i.e. the stages the strict bind checks against the compute die.v
+# (die_params audit (e), record_bundles.seam_stages) and the KV die table (BUNDLE_EQ K.*) the image was compiled for.
+# OT_KV_MU=1 binds the MU image d2d_cal_image_mu.svh and compiles with --mu (the token run's MU context slot: K TX +1 entry,
+# K TX SEG2 8 -> 9), so the KV link end carries the slot.  link_image_check() proves target 11 == the bound image.
+LINK_IMAGE_SU = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+LINK_IMAGE_MU = 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu.svh'
+LINK_MU = os.environ.get('OT_KV_MU', '0') == '1'
+LINK_IMAGE = LINK_IMAGE_MU if LINK_MU else LINK_IMAGE_SU
+# KV-EMBWIN16 10-20 (DRIVE-KV decision, KV-CAL15 finding): OT_KV_EMB_WIN=<edges> grows the token-run embedding window
+# (d2d_link_calendar --emb-window; L0..L35 and the token period move with it) so the embedding fill meets the row header
+# slot on the die relays.  The pair image is the committed d2d_cal_image[_mu]_ew<N>.svh (d2d_cal_image_production.sh with
+# D2D_EMB_WINDOW=<N>); both link ends bind it (KV: target 11 + the dcal tile's START / period constants, compute: its
+# sequencer).  Default unset = the priced window (272), images unchanged.
+LINK_EMB_WIN = os.environ.get('OT_KV_EMB_WIN', '')
+if LINK_EMB_WIN:
+    if not LINK_EMB_WIN.isdigit():
+        raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN!r}: an integer edge count expected')
+    LINK_IMAGE = LINK_IMAGE.replace('.svh', f'_ew{int(LINK_EMB_WIN)}.svh')
+# KV-PROG17 10-20: the r16 attention tile (OT_KV_ATTN_R16=1, kv_static_die.ATTN_R16) moves the K RESULT burst +1 (TX_SHIFT)
+# and the K STATUS +213 (STATUS_DELAY) in every layer, so target 11 must load the r16 pair image
+# d2d_cal_image[_mu][_ew<N>]_r16.svh (d2d_cal_image_production.sh D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213); fail closed.
+LINK_R16 = os.environ.get('OT_KV_ATTN_R16', '0') == '1'
+if LINK_R16:
+    LINK_IMAGE = LINK_IMAGE.replace('.svh', '_r16.svh')
+# The OVL source uses the actual RoPE pair image, not an intermediate scalar variant.
+LINK_ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL', '0') == '1'
+if LINK_ROPE_OVL:
+    LINK_IMAGE = LINK_IMAGE.replace('.svh', '_rope.svh')
+if not (ROOT / LINK_IMAGE).is_file():
+    raise SystemExit(f'no committed selected pair image {LINK_IMAGE} '
+                     f'(MU={int(LINK_MU)}, EMB_WINDOW={LINK_EMB_WIN!r}, '
+                     f'R16={int(LINK_R16)}, ROPE_OVL={int(LINK_ROPE_OVL)})')
+
+
+def image_die_stages(img=None, root=None):
+    """the die seam stages a committed d2d_cal_seq_image.py image records (D2D_TXDP_C comment) as a --die-stages string"""
+    import ast
+    import re
+    txt = ((root or ROOT) / (img or LINK_IMAGE)).read_text()
+    m = re.search(r"D2D_TXDP_C = 32'h[0-9a-fA-F]+;.*die stages (\{[^}]*\})", txt)
+    if not m:
+        raise SystemExit(f'kv_static_programme: {img or LINK_IMAGE} records no die stages (recompile it with '
+                         'tools/qwen_split/d2d_cal_image_production.sh)')
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+    import d2d_link_calendar as _L
+    st = ast.literal_eval(m.group(1))
+    if set(st) != set(_L.STAGE_NAMES):
+        raise SystemExit(f'kv_static_programme: image die stages {sorted(st)} != {_L.STAGE_NAMES}')
+    v = [st[k] for k in _L.STAGE_NAMES]
+    return ','.join(map(str, v[:6])) + '/' + ','.join(map(str, v[6:]))
+
+
+def _link_kv_codec():
+    """the KV attention codec edges as instantiated in the KV tile source (.LAND(1) -> 2), as the production image"""
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_layerbench'))
+    import layer_compile as _LC
+    return str(_LC.kv_codec_edges((ROOT / 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read_text()))
+
+
+LINK_DIE_STAGES = image_die_stages()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
-LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES,
+LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg']                                    # + --token-path (decompressed in link_calendar)
+             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else []) + (['--rope'] if LINK_ROPE_OVL else [])
+#            + --token-path (decompressed in link_calendar)
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768
 XU_STRICT = CORE_U + 1          # phase launch: toggle 1 core edge after capture; first HBM edge strictly after it
@@ -101,13 +189,26 @@ def _sfi():
     return m
 
 
-def link_calendar(workdir):
+def attn_r16():
+    """KV-BIND4 10-19 (kv_static_die.ATTN_R16): (rx edges, tx shift, STATUS_DELAY) of the bound r16 attention tile"""
+    from tools.qwen_kv_die import kv_static_die as KSD
+    if not getattr(KSD, 'ATTN_R16', False):
+        return dict(on=False, rx_edges=0, tx_shift=0, status_delay=0)
+    return dict(on=True, rx_edges=KSD.ATTN_R16_RX_EDGES, tx_shift=KSD.ATTN_R16_TX_SHIFT,
+                status_delay=KSD.ATTN_R16_PARAMS['STATUS_DELAY'])
+
+
+def link_calendar(workdir, status_delay=0, attn_tx_shift=None):
+    """attn_tx_shift None = the bound attention tile's TX shift (KV-BIND4 r16: +1 on the K RESULT burst / STATUS)"""
     import gzip
+    if attn_tx_shift is None:
+        attn_tx_shift = attn_r16()['tx_shift']
     out = Path(workdir) / 'cal'
     tp = Path(workdir) / 'token_path_compiled.json'
     tp.write_bytes(gzip.decompress((ROOT / LINK_TOKEN_PATH).read_bytes()))
     p = subprocess.run([sys.executable, str(ROOT / 'tools/qwen_split/d2d_link_calendar.py'), '--out', str(out)] + LINK_ARGS
-                       + ['--token-path', str(tp)],
+                       + ['--token-path', str(tp), '--status-delay', str(status_delay)]
+                       + (['--attn-tx-shift', str(attn_tx_shift)] if attn_tx_shift else []),
                        cwd=ROOT, capture_output=True, text=True)
     if p.returncode:
         raise SystemExit('link calendar compile failed: ' + p.stderr[-2000:])
@@ -133,17 +234,52 @@ def link_cfg_words(caldir, end='K', base_seg=2):
     return words
 
 
+def image_link_cfg_words(img=None, end='K', root=None):
+    """the 66 target-11 words a committed sequencer image implies for the KV end (the qkd_d2d_cal_seq init stream with
+    ADM=1: TX i, RX i for i = 0..31, then the admission-segment TX / RX bases)"""
+    import re
+    txt = ((root or ROOT) / (img or LINK_IMAGE)).read_text()
+    val = lambda n: int(re.search(rf"{n} = \d+'h([0-9a-fA-F]+);", txt).group(1), 16)
+    tx, rx = val(f'D2D_CAL_{end}_TX_IMG'), val(f'D2D_CAL_{end}_RX_IMG')
+    return [w for i in range(32) for w in ((tx >> 32 * i) & 0xffffffff, (rx >> 32 * i) & 0xffffffff)] + \
+        [val(f'D2D_CAL_{end}_TX_SEG2'), val(f'D2D_CAL_{end}_RX_SEG2')]
+
+
+def link_image_check(words, cal=None, img=None, root=None):
+    """KV-LINKCFG-MU 10-19: target 11 must be the bound image's K calendar word for word (fail closed).  Also records the
+    KV TXDP the compile implies with the die's own attention codec against the image's D2D_TXDP_K (a codec disagreement
+    changes TXDP_K and the compute C RX image, never the K words: reported, not hidden)."""
+    import re
+    img = img or LINK_IMAGE
+    want = image_link_cfg_words(img, root=root)
+    diff = [i for i, (a, b) in enumerate(zip(words, want)) if a != b] + ([len(want)] if len(words) != len(want) else [])
+    if diff:
+        raise ValueError(f'target 11 differs from {img} at word(s) {diff[:8]} (MU {LINK_MU}, die stages {LINK_DIE_STAGES}): '
+                         'the link end would load another calendar than the bound sequencer image')
+    rec = dict(image=img, mu=LINK_MU, die_stages=LINK_DIE_STAGES, words=len(words), equal=True)
+    if cal is not None and cal.get('txd'):
+        sys.path.insert(0, str(ROOT / 'tools' / 'qwen_split'))
+        import d2d_link_calendar as _L
+        txt = ((root or ROOT) / img).read_text()
+        rec.update(txdp_k_image=int(re.search(r"D2D_TXDP_K = 32'h([0-9a-fA-F]+);", txt).group(1), 16),
+                   txdp_k_die_codec=_L.txdp_word(cal['txd']['K']), kv_codec=int(_link_kv_codec()))
+        rec['txdp_k_agree'] = rec['txdp_k_image'] == rec['txdp_k_die_codec']
+        if not rec['txdp_k_agree']:
+            raise ValueError(f"target 11 TXDP codec differs from {img}: image {rec['txdp_k_image']:#010x}, die {rec['txdp_k_die_codec']:#010x}; recompile both pair images for the die codec")
+    return rec
+
+
 ES_CFG_TARGETS, ES_CFG_WORDS = (12, 13), (1024, 8)
 ES_CFG_CTRL_LAT = 92          # KVJ-C3 bench model of the controller es -> er latency (open: measured per-PC value owed)
 
 
-def es_cfg_words(ctrl_lat=ES_CFG_CTRL_LAT, relay=(0, 0, 0, 0)):
+def es_cfg_words(ctrl_lat=ES_CFG_CTRL_LAT, relay=(0, 0, 0, 0), return_relay=(0, 0, 0, 0)):
     """KVJ-SMALL b2 10-17: boot dispatcher targets 12 / 13 (qkd_static_kv_boot_dispatch ESCFG=1) for the shared boot bus
     of qkd_kv_es_fan_root + qkd_embedding_static_join4_cal (KVJ-C3).  Image = kvjc3_pc_chain.boot_words.  Target 12 word
     a = {stack[1:0], pc[4:0], reg[2:0]} (the dispatcher's es_cfg_addr = a[7:0]; data[17:16] = stack is checked against
     a[9:8]); target 13 word a = beat segment a (8 words, unused segments {len 0, off 0} = never a slot)."""
     import kvjc3_pc_chain as C3
-    words = C3.boot_words(C3.emb_calendar(ctrl_lat, list(relay)))
+    words = C3.boot_words(C3.emb_calendar(ctrl_lat, list(relay), return_relay=return_relay))
     pc, beat = [None] * ES_CFG_WORDS[0], [(1 << 62)] * ES_CFG_WORDS[1]
     for addr, data in words:
         if data >> 62 == 0:
@@ -163,19 +299,202 @@ def es_cfg_words(ctrl_lat=ES_CFG_CTRL_LAT, relay=(0, 0, 0, 0)):
 
 
 # ---- profile: every age the compile uses -----------------------------------------------------------------------------
+def _face_land():
+    """HKV-RSTCAP 10-19: kvs_attn_fl lands i_ctl (+1: every lprg -> attention launch one edge earlier = att + 1) and fin
+    (+1: F_DLY + 1); every _fl tile releases reset +3 edges later (startup only; checked against the region hold budget).
+    HKV-DIE3 10-19: per tile -- only the SELECTED tiles (kv_static_die.FACE_LAND_SEL) add their edges."""
+    from tools.qwen_kv_die import kv_static_die as KSD
+    sel = sorted(getattr(KSD, 'FACE_LAND_SEL', set(KSD.FACE_LAND_TILES) if KSD.FACE_LAND else set()))
+    if not sel:
+        return dict(enabled=False, selected=[], i_ctl=0, fin=0, rst_release_max=0)
+    t = {k: KSD.FACE_LAND_TILES[k] for k in sel}
+    rr = max(v['rst_release'] for v in t.values())
+    if rr > KSD.FACE_LAND_RST_BUDGET:
+        raise ValueError(f'face_land reset release +{rr} exceeds the region hold budget {KSD.FACE_LAND_RST_BUDGET}')
+    a = t.get('kvs_attn', {})
+    return dict(enabled=True, selected=sel, i_ctl=a.get('i_ctl', 0), fin=a.get('fin', 0), rst_release_max=rr,
+                F_DLY_delta=a.get('fin', 0), tiles=sel,
+                rst_release={k: v['rst_release'] for k, v in t.items()})
+
+
+def hroot_landing(ksd=None):
+    """Increment over the unlanded HROOT, per actual selected RTL implementation.
+
+    Gather is an observer transport age, not an extra compute cycle. Its
+    boot/ownership qualification still requires the die observer deadline audit.
+    Do not use this delta model as proof of the unlanded die's absolute ages.
+    """
+    if ksd is None:
+        from tools.qwen_kv_die import kv_static_die as ksd
+    if not ksd.HROOT_LAND:
+        return dict(chain=0, fan=0, gather=0, embedding=0)
+    if ksd.HROOT_S32:
+        raise ValueError('HROOT safe32 is retired; no production calendar law')
+    if ksd.HROOT_ESH_MOD != 'qkd_kv_es_fan_stack_bl' or ksd.HROOT_RLY_MOD != 'qkd_kv_stack_relays_l':
+        raise ValueError('HROOT landing implementation has no executable calendar law')
+    return dict(chain=1, fan=1, gather=1, embedding=1)
+
+
+# ---- KV-CAL15 10-20: ONE registry of the per-tile cycle deltas the die schedule admits (route A GEN9 strict source) -----
+# Every flag below changes a tile's edge count; the compiler takes each delta exactly once, here, and the compile records
+# them (compile_all()['cal_deltas']).  DRIVE-KV 10-20: the structurally safe variant + its cycles, priced, instead of waivers.
+#   hroot     OT_KV_HROOT_LAND=1 (qkd_kv_es_fan_stack_bl / qkd_kv_stack_relays_l): chain +1 (es head h -> o_pc: PC players
+#             and the join beat calendar via es_cfg relay), fan +1 (group launch age: pr['groups']), gather +1 (observer
+#             transport only), embedding return +1 (es_cfg return_relay).  Law = hroot_landing (Codex 740bde993).
+#   emb_join  OT_KV_EMB_PJ=1 (qkd_embedding_static_join4_cal PIPE_JOIN=1, KV-EMB4 z3): every join word / fault +1 edge after
+#             the beat slot; the beat calendar (target 13) is unchanged, the row fill completes +1 later (emb_fill below).
+#   ctl_own   OT_KV_CTL_C32=1|2 (qkd_static_kv_ownership_calendar_mu_c32 PIPE 1 SAFE 1, KV-CTL10): the enter / leave
+#             drain guards sample &group_drained 2 edges earlier (guard at root - 2 on a one-edge-older AND) -> the
+#             leave root (target 3 word 1) moves +2 so the drain / quiet margin of the BA tile is preserved; enter stays 3
+#             (its guard samples the idle pre-token state; enter checks only the host -> native transition).
+#             u_boot SRQ 2: setup_ready +2 boot edges -- HOST boot boundary (elastic, off-die), no static consumer.
+#   ahub      OT_KV_AHUB_PAD=1 (+ OT_KV_AHUB_OFS): the hub view's fixed AP_OFS / FR_OFS; the generator pads ap_<st> /
+#             ks_ahfr up to them (kv_bundle_eq) and kv_static_params AHUB_OFS_BOUND proves table == binding == kit:
+#             0 compiler edges (the attention calendar already runs at the hub's offsets; fr_ofs read from the binding).
+#   seam      OT_KV_SEAM_PIN=1: the K seam is padded to the PAIR image (TXDP_K 22 by contract, KV-D2D3): 0 compiler edges;
+#             link_image_check stays fail-closed on the bound image.
+CTL_OWN_GUARD_LEAD = 2
+CAL_DELTAS_ZERO = dict(hroot=dict(chain=0, fan=0, gather=0, embedding=0), emb_join=0, ctl_own_leave=0, ctl_boot_setup_ready=0,
+                       ahub=dict(compiler_edges=0, pad=False), seam=dict(compiler_edges=0, pin=False))
+
+
+def final_reset_calendar():
+    path = os.environ.get('OT_KV_FINAL_RESET_CALENDAR')
+    if not path: return None
+    data = json.loads(Path(path).read_text())
+    if data.get('schema') != 'opentallas.kv_final_reset_stations.v1':
+        raise ValueError('unknown final reset station calendar')
+    return dict(data, ledger_path=path)
+
+
+def cal_deltas(ksd=None):
+    env = os.environ.get
+    ctl = env('OT_KV_CTL_C32', '0')
+    if ctl not in ('0', '1', '2'):
+        raise ValueError(f'OT_KV_CTL_C32={ctl!r}: no calendar law')
+    hl = hroot_landing(ksd)
+    deltas = dict(hroot=hl, emb_join=1 if env('OT_KV_EMB_PJ', '0') == '1' else 0,
+                ctl_own_leave=CTL_OWN_GUARD_LEAD if ctl != '0' else 0, ctl_boot_setup_ready=2 if ctl != '0' else 0,
+                ahub=dict(compiler_edges=0, pad=env('OT_KV_AHUB_PAD', '0') == '1', proof='kv_static_params AHUB_OFS_BOUND'),
+                seam=dict(compiler_edges=0, pin=env('OT_KV_SEAM_PIN', '0') == '1', proof='link_image_check (TXDP_K 22)'))
+    reset = final_reset_calendar()
+    if reset is not None: deltas['final_reset_stations'] = reset
+    return deltas
+
+
+# ---- KV-CAL15: embedding row fill deadline (RESULT -> the row_tx header slot) -----------------------------------------
+# row_tx needs the row resident (64 words + scale) at the kind-8 header slot (d2d_link_calendar emb_header_send); the
+# fill starts when the token-run RESULT start (svc[24]) is at the fan root.  Edge accounting (segment-1 edges):
+#   r        = hbm_embedding_budget.result_at_kv_host + svc relays d2d -> kvs_ctl (fan root emb_start)
+#   join     = svc relays d2d -> kvs_emb (join4_cal start); the calendar's beat slots count from the JOIN start, so a
+#              root/join start skew (ctl - emb relays) is one more return edge on every stack
+#   last     = r + emb_calendar(down, return)['last_word'] + PIPE_JOIN
+#   deadline = header slot + emb_tx_slot relays d2d -> kvs_emb (row_tx sees the slot that much later); last + 1 <= it
+# down[s] = die relays kvs_ctl.o_hroot_s -> hroot.i_ctl + hroot.o_pc -> kvpc_s_31 (+ hroot chain); return[s] = kvpc_s_31
+# -> hroot.i_r + hroot.o_emb -> kvs_emb (+ hroot embedding).  The die relays come from the plan's relay_stages.json.
+EMB_FILL_BUSES = dict(down=(('kvs_ctl', 'o_hroot_{s}', 'kvs_hroot_{s}', 'i_ctl'), ('kvs_hroot_{s}', 'o_pc', 'kvpc_{s}_31', 'i_next')),
+                      ret=(('kvpc_{s}_31', 'o_next', 'kvs_hroot_{s}', 'i_r'), ('kvs_hroot_{s}', 'o_emb', 'kvs_emb', 'i_hroot_{s}')),
+                      svc_root=('d2d_kv', 'svc', 'kvs_ctl', 'd2d__svc'), svc_join=('d2d_kv', 'svc', 'kvs_emb', 'd2d__svc'),
+                      slot=('d2d_kv', 'emb_tx_slot', 'kvs_emb', 'd2d__emb_tx_slot'))
+
+
+def die_emb_relays(relay_stages):
+    """{down, ret, svc_root, svc_join, slot} from a kv_die relay_stages.json (buses by src/dst inst.port)"""
+    doc = json.loads(Path(relay_stages).read_text()) if not isinstance(relay_stages, dict) else relay_stages
+    B = {(b['src']['inst'], b['src']['port'], b['dst']['inst'], b['dst']['port']): b['stages'] for b in doc['buses']}
+
+    def g(k, s=None):
+        k = tuple(x.format(s=s) for x in k)
+        if k not in B:
+            raise ValueError(f'kv_static_programme emb_fill: no die bus {".".join(k[:2])} -> {".".join(k[2:])}')
+        return B[k]
+    import kvjc3_pc_chain as C3
+    return dict(down=[sum(g(k, s) for k in EMB_FILL_BUSES['down']) for s in C3.STACKS],
+                ret=[sum(g(k, s) for k in EMB_FILL_BUSES['ret']) for s in C3.STACKS],
+                svc_root=g(EMB_FILL_BUSES['svc_root']), svc_join=g(EMB_FILL_BUSES['svc_join']), slot=g(EMB_FILL_BUSES['slot']),
+                source=str(relay_stages) if not isinstance(relay_stages, dict) else 'dict')
+
+
+# ---- KV-EMBWIN16 10-20: writer lanes on the die relays (shared es chain: writer KV words ride kvs_ctl.o_hroot -> hroot h ->
+# o_pc -> PC chain, the same DOWN path as the embedding issue words, so HROOT_LAND chain +1 delays them too) ---------------
+# On the GEN9 static die the native writer sits in kvs_ctl: its KVN words arrive over d2d_kv.{skw,srx,kvn_word_*} ->
+# kvs_ctl relays (die ages d2d_to_writer is the old colocated plan's 0).  writer_die() composes (a) that KVN relay depth
+# (OT_KV_WRITER_DIE=1: compile the writer start on it, pr['kvn']) and (b) every PC's writer word arrival age at its face /
+# controller es (kvjc3_pc_chain.writer_ages on the die down relays + the HROOT_LAND chain delta) for the consumers
+# (controller write readiness, K.STA.RETIRE); the record is written with every compile that names the die relays.
+WRITER_KVN_BUSES = (('d2d_kv', 'skw', 'kvs_ctl', 'd2d__skw'), ('d2d_kv', 'srx', 'kvs_ctl', 'd2d__srx'),
+                    ('d2d_kv', 'kvn_word_generation', 'kvs_ctl', 'd2d__kvn_word_generation'),
+                    ('d2d_kv', 'kvn_word_identity', 'kvs_ctl', 'd2d__kvn_word_identity'))
+
+
+def writer_die(relay_stages, deltas):
+    doc = json.loads(Path(relay_stages).read_text()) if not isinstance(relay_stages, dict) else relay_stages
+    B = {(b['src']['inst'], b['src']['port'], b['dst']['inst'], b['dst']['port']): b['stages'] for b in doc['buses']}
+    kv = {'.'.join(k[:2]) + '->' + '.'.join(k[2:]): B[k] for k in WRITER_KVN_BUSES if k in B}
+    if not kv:
+        raise ValueError('writer_die: no d2d_kv -> kvs_ctl KVN bus in the die relays')
+    if len(set(kv.values())) != 1:
+        raise ValueError(f'writer_die: KVN buses to the writer differ in relay depth {kv}: pad them to one age')
+    import kvjc3_pc_chain as C3
+    d = die_emb_relays(doc)
+    down = [x + deltas['hroot']['chain'] for x in d['down']]
+    wa = C3.writer_ages(down)
+    per = {st: dict(down=down[i], pc31_wes=wa[f'{st}_31']['wes_lane01'], pc0_ctrl_es=wa[f'{st}_0']['ctrl_es_lane23'])
+           for i, st in enumerate(C3.STACKS)}
+    return dict(kvn_relays=next(iter(kv.values())), kvn_buses=kv, land_chain=deltas['hroot']['chain'], per_stack=per,
+                worst_ctrl_es_age=max(v['pc0_ctrl_es'] for v in per.values()),
+                rule='writer word at PC p of stack s reaches its controller es kvjc3.writer_ages(down + LAND chain) edges after '
+                     'it leaves the writer; KVN words reach the writer kvn_relays edges after the d2d end')
+
+
+def emb_fill(layout, deltas, die=None, ctrl_lat=ES_CFG_CTRL_LAT):
+    """the fill deadline on the link calendar layout (+ die relays when given; None = the zero-relay model)"""
+    import kvjc3_pc_chain as C3
+    d = die or dict(down=[0] * 4, ret=[0] * 4, svc_root=0, svc_join=0, slot=0, source='zero-relay model')
+    hl = deltas['hroot']
+    skew = d['svc_root'] - d['svc_join']
+    if skew < 0:
+        raise ValueError(f'emb_fill: join start {-skew} edges after the fan root start: beat calendar has no law for it')
+    down = [x + hl['chain'] for x in d['down']]
+    ret = [x + hl['embedding'] + skew for x in d['ret']]
+    cal = C3.emb_calendar(ctrl_lat, down, return_relay=ret)
+    eb = layout['hbm_embedding_budget']
+    r = eb['result_at_kv_host'] + d['svc_root']
+    last = r + cal['last_word'] + deltas['emb_join']
+    hdr = layout['emb_header_send']
+    deadline = hdr + d['slot']
+    margin = deadline - (last + 1)
+    return dict(result_at_kv_host=eb['result_at_kv_host'], root_start=r, down=down, ret=ret, root_join_skew=skew,
+                last_word_rel=cal['last_word'], pipe_join=deltas['emb_join'], last_word=last, header_slot=hdr,
+                row_tx_slot=deadline, margin=margin, embed_window=layout['embed']['cycles'],
+                embed_window_needed=layout['embed']['cycles'] + max(0, -margin), token_period=layout.get('token_period'),
+                token_period_needed=(layout.get('token_period') or 0) + max(0, -margin), die_relays=d.get('source'),
+                status='PASS' if margin >= 0 else 'FAIL',
+                rule='last join word r + emb_calendar(down, return).last_word + PIPE_JOIN, + 1 (row_tx write) <= header slot '
+                     '+ emb_tx_slot relays; r = RESULT at the KV d2d + svc relays to the fan root')
+
+
 def profile(kind, ages=None):
     if kind == 'component':
         return dict(kind='component', start_relays=0, att=0, rx=0, writer=0, kvn=0, groups=0, crossing=False,
                     qk_age=KC.SOURCED['qk_consume_age'], qk_row_latency=KC.SOURCED['qk_row_latency'],
                     v_rl=19, d_rl=0, d_qk=0, phase=None, ld=1, rc=3, landing_uncertainty=0)
     L = ages['link']
-    return dict(kind='die', start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'],
+    fl = _face_land()
+    from tools.qwen_kv_die import kv_static_die as KSD
+    ofs = KSD.ahub_ofs_bound()
+    hl = hroot_landing(KSD)
+    return dict(kind='die', fr_ofs=ofs['FR_OFS'] if ofs else None, start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'] + fl['i_ctl'],
+                face_land=fl, hroot_landing=hl, cal_deltas=cal_deltas(KSD),
                 rx=L['d2d_to_attention_rx']['edges'], writer=L['programme_to_writer']['edges'], kvn=L['d2d_to_writer']['edges'],
-                groups=L['programme_to_groups']['edges'], crossing=True,
+                groups=L['programme_to_groups']['edges'] + hl['fan'], crossing=True,
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
-                v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=ages['qk']['QK_ISSUE_AGE'] - AC.QK_CONSUME,
+                v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
-                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V))
+                rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None,
+                # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)
+                f_dly=((ages.get('boot_ages') or {}).get('attn') or {}).get('F_DLY') or 1,
+                pv_floor=PV_FLOOR)
 
 
 def kv_params(pr):
@@ -184,6 +503,25 @@ def kv_params(pr):
 
 
 # ---- attention calendar (the N1 law) ----------------------------------------------------------------------------------
+# HKV-DIE3 10-19 (HKV-AHUB4 findings, coordinator (b)): ONE schedule for the hub export and the pvfin join.
+#  * the link's RESULT slot is fixed, so R stays stretched to it (R = service_end - 49 - PV_START); qkd_pv_fin_s (QXF-FACE
+#    F3, b6d08acc2) joins on max(P0, P1, R) through its 32-beat sum buffer, so a stretched R is legal there (the
+#    'R <= LASTP + ADD_LAT + 1' refusal HKV-AHUB4 hit is the pre-F3 pvfin of its bench base, not the die's RTL);
+#  * qkd_ahub_static_dw exports fr at io age PV_START + R + FR_OFS and faults unless that is after its rz_publish:
+#    PV_START + R + FR_OFS >= HUB_PUB + HUB_EXPORT_AFTER_PUB (3).  The minimal R / PV_START therefore use the margin
+#    max(RZ_MARGIN, 3 - FR_OFS) with the BOUND FR_OFS (pr['fr_ofs']; component profile / unbound: RZ_MARGIN 2);
+#  * qkd_pv_fin_s refuses |P0 - P1| > SKEW (die binding SKEW 1).  P0 - P1 is set by the PAIR hardware (w16_nq: pair 1
+#    has 0 / 16 / 32 fewer issue cycles when T <= 128 or T mod 256 in 1..128) -- no compiled field moves it; attention_checks
+#    reports those contexts and kv_static_params FAILS (ATTN_CALENDAR PVFIN_PAIR_SKEW) until the RTL absorbs the skew.
+HUB_EXPORT_AFTER_PUB = 3
+PVFIN_SKEW = 1            # kv_static_die bindings qkd_pvfin SKEW
+
+
+def rz_margin(pr):
+    fr = (pr or {}).get('fr_ofs')
+    return AC.RZ_MARGIN if fr is None else max(AC.RZ_MARGIN, HUB_EXPORT_AFTER_PUB - fr)
+
+
 def attention_calendar(T, pr, service_end=None):
     """attn_calendar.calendar_w16(T, head_g3s2=True) with the die's QK age shift (LMAX moves with the last consume)
     and V word latency shift (pair outputs move with RL); service_end stretches R so the last result beat lands on
@@ -192,17 +530,82 @@ def attention_calendar(T, pr, service_end=None):
     c = AC.calendar(T, lmax=lmax, pv='w1')
     for f in ('LMAX', 'EXP', 'Z', 'HUB_LMAX', 'HUB_Z', 'HUB_RECIP', 'HUB_PUB'):
         c[f] += AC.HEAD_G3S2_SHIFT
-    po = [AC.w16_pair_out(T, 0) + pr['d_rl'], AC.w16_pair_out(T, 1) + pr['d_rl']]
-    pv = max(c['EXP'] + AC.pv_after_exp_w16(T), c['HUB_PUB'] + AC.RZ_MARGIN - max(po))
-    r = max(max(po), c['HUB_PUB'] + AC.RZ_MARGIN - pv)
+    law = pr.get('astk_law')
+    d_gap = d_erl = 0
+    if law:
+        for f, k in (('LMAX', 'dLMAX'), ('HUB_LMAX', 'dLMAX'), ('EXP', 'dEXP'), ('Z', 'dZ'), ('HUB_Z', 'dZ'),
+                     ('HUB_RECIP', 'dZ'), ('HUB_PUB', 'dZ')):
+            c[f] += law[k]
+        d_gap, d_erl = astk_pv_gap_shift(T, law), law['dERL']
+    po = [AC.w16_pair_out(T, 0) + pr['d_rl'] + d_erl, AC.w16_pair_out(T, 1) + pr['d_rl'] + d_erl]
+    if pr.get('pv_floor'):
+        # KV-FLOOR1: ctl_tbf ends FEED / publishes out_age on pair 0's issue count for both pairs (pv_floor_bench: P1 = P0
+        # at every context, bit-exact).  Pair 0 has the most rows, so P0 = max(P0, P1): the join age is unchanged.
+        if po[1] > po[0]:
+            raise ValueError(f'T={T}: pair END FLOOR needs P0 >= P1 (P0 {po[0]}, P1 {po[1]})')
+        po[1] = po[0]
+    mg = rz_margin(pr)
+    pv = max(c['EXP'] + AC.pv_after_exp_w16(T) + d_gap, c['HUB_PUB'] + mg - max(po))
+    r = max(max(po), c['HUB_PUB'] + mg - pv)
     if service_end is not None:
-        r_link = service_end - 49 - pv                      # service_cycles = PV_START + max(P, R) + 16 + 33
+        # service_cycles = PV_START + max(P, R) + 16 + 32 + F_DLY (KV-BOOTAGE: the face's RESULT_AGE PV_START + R + 16 +
+        # F_DLY stays on the link slot service_end - 32; F_DLY 1 = the closed law service_end - 49 - PV_START)
+        r_link = service_end - 48 - pr.get('f_dly', 1) - pv
         if r_link < r:
             raise ValueError(f'T={T}: attention service needs {pv + r + 49} edges, the link slot gives {service_end}')
         r = r_link
     c.update(P0=po[0], P1=po[1], PV_START=pv, R=r)
     AC.check(c)
     return c
+
+
+def service_end_of(pr, workdir=None):
+    """the attention service end the link's fixed RESULT slot leaves (= compile_all's service_end for this profile)"""
+    with tempfile.TemporaryDirectory(dir=workdir) as td:
+        cal = link_calendar(td)
+    seg0 = [m for m in cal['messages'] if m.get('seg', 0) == 0]
+    cmd = [m for m in seg0 if m['src'] == 'C' and m['rx_port'] == 0 and m['kind'] == 1]
+    res = sorted((m for m in seg0 if m['src'] == 'K' and m['tx_port'] == 0 and m['kind'] == 3), key=lambda m: m['beat'])
+    run_ev = cmd[0]['rx_out'] + LR.D2D_OUT + pr['rx'] - LR.RX_CMD
+    tx_first = res[0]['cyc'] + LR.D2D_OUT - run_ev
+    return tx_first - LR.RX_CMD - 2 + 31 - attn_r16()['tx_shift']   # KV-BIND4: r16 TX_SHIFT keeps SERVICE_END 1777
+
+
+def attention_checks(pr, service_end, fr_ofs=None, pvfin_skew=PVFIN_SKEW, pair_delta=0, Ts=range(1, 8193)):
+    """HKV-DIE3: every context's emitted calendar against the BOUND hub / pvfin RTL refusals (fail-closed, no RTL
+    threshold touched).  pair_delta = D(pvw_0 -> pvfin.p0) - D(pvw_1 -> pvfin.p1) on the die table (0 when equalised).
+    -> dict(fails=[{id, contexts, examples}], ...)"""
+    pr = dict(pr, fr_ofs=fr_ofs)
+    bad = {}
+
+    def add(k, T, **kw):
+        b = bad.setdefault(k, dict(id=k, contexts=0, examples=[]))
+        b['contexts'] += 1
+        if len(b['examples']) < 8:
+            b['examples'].append(dict(T=T, **kw))
+    worst = dict(hub_export_margin=None, pvfin_skew=0)
+    for T in Ts:
+        try:
+            c = attention_calendar(T, pr, service_end)
+        except ValueError as e:
+            add('CALENDAR_UNMEETABLE', T, what=str(e)[:200])
+            continue
+        hm = c['PV_START'] + c['R'] + (fr_ofs or 0) - (c['HUB_PUB'] + HUB_EXPORT_AFTER_PUB)
+        worst['hub_export_margin'] = hm if worst['hub_export_margin'] is None else min(worst['hub_export_margin'], hm)
+        if fr_ofs is not None and hm < 0:
+            add('HUB_FR_EXPORT', T, PV_START=c['PV_START'], R=c['R'], FR_OFS=fr_ofs, HUB_PUB=c['HUB_PUB'], short=-hm)
+        p0, p1 = c['P0'] + pair_delta, c['P1']
+        sk = abs(p0 - p1)
+        worst['pvfin_skew'] = max(worst['pvfin_skew'], sk)
+        if sk > pvfin_skew:
+            add('PVFIN_PAIR_SKEW', T, P0=p0, P1=p1, skew=sk, limit=pvfin_skew)
+        if min(p0, p1, c['R']) < 1 or max(p0, p1, c['R']) + 64 + 13 > 0xffff:
+            add('PVFIN_CAL_RANGE', T, P0=p0, P1=p1, R=c['R'])
+    return dict(schema='opentallas.qwen_kv.attention_checks.v1', service_end=service_end, fr_ofs=fr_ofs,
+                pvfin_skew_limit=pvfin_skew, pair_delta=pair_delta, contexts=len(list(Ts)), worst=worst,
+                fails=sorted(bad.values(), key=lambda b: b['id']),
+                rule='hub: PV_START + R + FR_OFS >= HUB_PUB + 3 (qkd_ahub_static_dw emit after rz_publish); pvfin: '
+                     '|P0 - P1| <= SKEW, P/R >= 1, max + 77 <= 0xffff (qkd_pv_fin_s cal_bad); R stretched to the link slot')
 
 
 # ---- crossing: core-edge offset of an HBM event after a go capture -----------------------------------------------------
@@ -489,8 +892,46 @@ def pacing_of(put):
     return pacing([x - put[0] for x in put]) if put else (511, 0)
 
 
+# ---- KV-PROG17 10-20: the retirement contract of the r16 STATUS (K.STA.RETIRE), built from the DIE health plane ----------
+# OT_KV_RETIRE_SUCCESSOR=<run>/health_successor.json (kv_health_plane install: every source's measured plane edges on the
+# die netlist), OT_KV_RETIRE_RESET (default the committed GEN7 reset candidate), OT_KV_RETIRE_RESET_DEPTH (default the
+# die's rst_regional.json max_total_depth beside the successor: depth for sources the GEN7 candidate does not list).
+RETIRE_RESET_DEFAULT = 'results/arch/kv_fault_reset_1019/gen7_evidence.tar.gz:gen7/reset_branch_candidate.json'
+RETIRE_HOLD_BOUND = 273      # qkd_rst_region_pr_h273b HOLD (kvsys_prep OT_KV_RST_HOLD=273)
+
+
+def die_retirement_contract(rx_cmd, tx_first, tx_end, service_end, token_period):
+    import kv_retirement_contract as RC
+    succ = Path(os.environ['OT_KV_RETIRE_SUCCESSOR'])
+    rst = os.environ.get('OT_KV_RETIRE_RESET', str(ROOT / RETIRE_RESET_DEFAULT))
+    depth = os.environ.get('OT_KV_RETIRE_RESET_DEPTH')
+    if depth is None and (succ.parent / 'rst_regional.json').is_file():
+        depth = json.loads((succ.parent / 'rst_regional.json').read_text())['max_total_depth']
+    prog = dict(compiled_rx_cmd=rx_cmd, compiled_tx_first=tx_first, compiled_end=tx_end, service_end=service_end,
+                token_period=token_period)
+    c = RC.build(succ, rst, prog, 6 + 5, default_depth=None if depth is None else int(depth))   # link = --txl 6 --phy 5
+    need = c['reset']['required_sink_release_depth']
+    reset = final_reset_calendar()
+    if reset is not None:
+        # Budget the generated station delay against THIS die plane's whole-plane requirement (K.RST 10-21: never a
+        # constant from an older plane -- the 325 of PROG17/d22hl2 made every opt-in run read 414 > HOLD273).
+        need = need + int(reset['max_added_reset_edges'])
+        c['reset'].update(required_sink_release_depth=need,
+                          hold_counter_bits=max(8,math.ceil(math.log2(need))),
+                          final_reset_stations=reset)
+        for source in c['sources']: source['sink_release_age'] = need
+    c['reset'].update(bound_hold=RETIRE_HOLD_BOUND, fits_bound_hold=need <= RETIRE_HOLD_BOUND,
+                      default_depth=None if depth is None else int(depth))
+    return c
+
+
 # ---- the compile -------------------------------------------------------------------------------------------------------
-def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None):
+def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None, retirement_contract=None, status_delay=None):
+    r16 = attn_r16()
+    if status_delay is None:     # KV-BIND4: the bound r16 tile's STATUS_DELAY (213) is a die fact, not an option
+        status_delay = r16['status_delay']
+    elif r16['on'] and status_delay != r16['status_delay']:
+        raise ValueError(f"r16 attention tile binds STATUS_DELAY {r16['status_delay']}, compile asked for {status_delay}")
     # die_cfg_words: the pre-boot target-10 image (kv_static_kvjf_join.die_cfg_image from a die plan's ECTL cfg + reset
     # delays); without it the bundle carries targets 0..9, 11..13 and the die plan supplies target 10
     sfi = _sfi()
@@ -499,9 +940,16 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
         raise ValueError('HOST programme image must be PW1024 + DW8 words')
     digest = sfi.image_digest(prog)
     with tempfile.TemporaryDirectory(dir=workdir) as td:
-        cal = link_calendar(td)
+        cal = link_calendar(td, status_delay)
         link_words = link_cfg_words(Path(td) / 'cal')
-    es_pc, es_beat = es_cfg_words()
+    link_check = link_image_check(link_words, cal)        # KV-LINKCFG-MU: target 11 == the bound image (fail closed)
+    hl = pr.get('hroot_landing', dict(chain=0, fan=0, gather=0, embedding=0))
+    es_relay, es_return = [hl['chain']] * 4, [hl['embedding']] * 4
+    _die_rs = os.environ.get('OT_KV_EMB_FILL_RELAYS')     # KV-CAL15: compile targets 12/13 on the plan's real relays
+    if _die_rs and pr['kind'] == 'die':                   # (down / return per stack + root-join skew + LAND, emb_fill law)
+        _f = emb_fill(cal['program'], pr.get('cal_deltas') or CAL_DELTAS_ZERO, die_emb_relays(_die_rs))
+        es_relay, es_return = _f['down'], _f['ret']
+    es_pc, es_beat = es_cfg_words(relay=es_relay, return_relay=es_return)
     prog_cal = cal['program']
     lay = prog_cal['layers']
     starts = [l['start'] for l in lay]
@@ -517,12 +965,31 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     # ---- attention programme: link-fixed words ----
     cmd_ev = cmd[0]['rx_out'] + LR.D2D_OUT + pr['rx']           # CMD at the attention programme's rx pin (run-base)
     run_ev = cmd_ev - LR.RX_CMD
-    start_qk = run_ev + LR.RX_CMD + LR.Q_TO_START
+    start_qk = run_ev + LR.RX_CMD + LR.Q_TO_START + r16['rx_edges']   # KV-BIND4: r16 registered RX validation +1
     tx_first = res[0]['cyc'] + LR.D2D_OUT - run_ev              # att_tx_slot of RESULT beat 0 at the programme
-    tx_end = tx_first + 34
-    service_end = tx_first - LR.RX_CMD - 2 + 31
-    if res[-1]['cyc'] - res[0]['cyc'] != 31 or st[0]['cyc'] != res[0]['cyc'] + 33:   # static_ctl: STATUS at tx_first + 33
+    tx_end = tx_first + 34 + status_delay
+    service_end = tx_first - LR.RX_CMD - 2 + 31 - r16['tx_shift']   # r16: TX_SHIFT 1 -> tx_first 1751, SERVICE_END 1777
+    if res[-1]['cyc'] - res[0]['cyc'] != 31 or st[0]['cyc'] != res[0]['cyc'] + 33 + status_delay:   # static_ctl: STATUS at tx_first + 33
         raise ValueError('RESULT burst / STATUS not on consecutive link slots')
+
+    retirement = None
+    if status_delay:
+        if retirement_contract is None and os.environ.get('OT_KV_RETIRE_SUCCESSOR'):
+            retirement_contract = die_retirement_contract(LR.RX_CMD, tx_first, tx_end, service_end,
+                                                          cal['program']['token_period'])
+        if retirement_contract is None:
+            raise ValueError('delayed STATUS requires a complete retirement contract (OT_KV_RETIRE_SUCCESSOR=<run>/'
+                             'health_successor.json builds it from the die health plane)')
+        from kv_retirement import prove
+        retirement = prove(retirement_contract, tx_first, tx_end - 1)
+        retirement['reset'] = retirement_contract.get('reset')
+        retirement['inputs'] = {k: v for k, v in (retirement_contract.get('inputs') or {}).items() if k != 'programme'}
+        if not retirement['qualified']:
+            if os.environ.get('OT_KV_RETIRE_LOGICAL', '0') != '1':
+                raise ValueError('delayed production STATUS requires qualified deadline/path/reset evidence '
+                                 '(OT_KV_RETIRE_LOGICAL=1 compiles on the LOGICAL_ONLY contract, recorded NOT a release)')
+            retirement['release'] = ('NOT_RELEASE: LOGICAL_ONLY retirement (no measured native path / reset / cross-root '
+                                     'skew receipts); the frame and slots are final, the qualification is owed')
 
     # ---- K / V leads and the layer roots ----
     plans, P, lead_k, lead_v = pc_plans(pr)
@@ -542,7 +1009,12 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     else:
         kgo_ev = start_qk - lead_k - crossing_core(e_k + CAL_PIN_EDGES, pr) - 1 - pr['groups'] - 1
         d_v = att8192['PV_START'] + lead_k - lead_v - 2
-    writer_ev = kvn[0]['rx_out'] + LR.D2D_OUT + pr['kvn'] - LR.WRITER_T0 - pr['writer']
+    wdie = writer_die(_die_rs, pr.get('cal_deltas') or CAL_DELTAS_ZERO) if _die_rs and pr['kind'] == 'die' else None
+    kvn_age = pr['kvn']
+    if wdie and os.environ.get('OT_KV_WRITER_DIE', '0') == '1':   # KV-EMBWIN16: writer start on the die's KVN relays
+        kvn_age = wdie['kvn_relays']
+        wdie['writer_start_kvn_age'] = dict(ages_table=pr['kvn'], compiled=kvn_age)
+    writer_ev = kvn[0]['rx_out'] + LR.D2D_OUT + kvn_age - LR.WRITER_T0 - pr['writer']
     rel = dict(ctrl_go=kgo_ev, kgo=kgo_ev, vgo=kgo_ev + d_v, attention_issue=run_ev - LR.ISSUE_TO_RUN - pr['att'],
                attention_run=run_ev - pr['att'], writer_start=writer_ev, link_start=LR.LINK_START,
                expected_quiet=st[0]['cyc'] + 1)
@@ -582,7 +1054,9 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
 
     # ---- ownership (target 3): go = token start (programme internal start) ----
     quiet36 = max(e['token_cycle'] for e in img['events'] if e['kind'] == 'expected_quiet')
-    own = [3, quiet36 + 1, img['token_core_cycles'], OWN_SEAL]
+    cd = pr.get('cal_deltas') or CAL_DELTAS_ZERO
+    own_lead = cd['ctl_own_leave']                     # KV-CAL15: c32 drain guards 2 edges earlier -> leave +2
+    own = [3, quiet36 + 1 + own_lead, img['token_core_cycles'], OWN_SEAL]
     if not 3 <= own[0] < own[1] < own[2]:
         raise ValueError('ownership roots out of order')
 
@@ -681,10 +1155,12 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     att = dict(compiled_rx_cmd=LR.RX_CMD, compiled_tx_first=tx_first, compiled_end=tx_end, service_end=service_end,
                start_qk_run_age=start_qk - run_ev, law='calendar(T) = attention_calendar(T, profile, service_end): R stretched so '
                'PV_START + max(P0, P1, R) + 49 = service_end for every T in 1..8192',
-               samples={}, control=att_ctl)
+               samples={}, control=att_ctl, retirement=retirement)
     for T in (1, 128, 1000, 2048, 4096, 6144, 8192):
         c = attention_calendar(T, pr, service_end)
         att['samples'][str(T)] = dict(cal=AC.hexcal(c), fields=c)
+    if pr['kind'] == 'die':                                 # HKV-DIE3: every context vs the bound hub / pvfin refusals
+        att['checks'] = attention_checks(pr, service_end, pr.get('fr_ofs'), Ts=sorted(set(range(1, 8193, 16)) | {8192}))
 
     # ---- boot bundle ----
     sfi_pw = sfi.PW
@@ -699,14 +1175,21 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
              [dict(target=0, program=prog[:sfi_pw], descriptors=prog[sfi_pw:])]
     mu = None
     if MU:              # MU-KV-BOOT 10-19 (OT_KV_MU=1): target 1 MU form + target 3 MU ownership roots (mu_calendar)
-        mu = mu_images(layer_words, own)
+        mu = mu_images(layer_words, own, lead=own_lead, att_end=tx_end - LR.RX_CMD,
+                       phase=None if not pr['phase'] else dict(PH0=pr['phase']['PH0'], lo=pr['phase']['SAFE_LOW_U'],
+                                                               hi=pr['phase']['SAFE_HIGH_U'], groups=pr['groups']))
         layer_words, own = mu['layer'], mu['ownership']
         images[0] = dict(target=1, program=layer_words, descriptors=[])
         images[2] = dict(target=3, program=own, descriptors=[])
     bundle = PTF.encode_boot_bundle(epoch, images, mu=MU)
     if int(bundle['images'][-1]['digest'], 16) != digest:
         raise ValueError('HOST ISA image digest differs from the layer programme LP_DIGEST')
-    return dict(profile=pr, link=dict(cmd_event=cmd_ev, run_event=run_ev, start_qk=start_qk, result_first_slot=res[0]['cyc'],
+    die_rs = os.environ.get('OT_KV_EMB_FILL_RELAYS')      # KV-CAL15: the plan's relay_stages.json (case_kv/)
+    fill = emb_fill(prog_cal, cd, die_emb_relays(die_rs) if die_rs else None)
+    if os.environ.get('OT_KV_EMB_FILL_STRICT', '0') == '1' and fill['status'] != 'PASS':
+        raise ValueError(f'embedding fill deadline: margin {fill["margin"]} (last join word {fill["last_word"]} + 1 > row_tx '
+                         f'slot {fill["row_tx_slot"]}); embed window {fill["embed_window"]} -> {fill["embed_window_needed"]}')
+    return dict(profile=pr, cal_deltas=cd, emb_fill=fill, writer_die=wdie, mu_frame=(mu or {}).get('frame'), link=dict(cmd_event=cmd_ev, run_event=run_ev, start_qk=start_qk, result_first_slot=res[0]['cyc'],
                                       token_cycles=prog_cal['token_cycles_through_L35'], token_period=prog_cal.get('token_period'),
                                       token_period_unpadded=prog_cal.get('token_period_pad', {}).get('unpadded')),
                 leads=dict(k=lead_k, v=lead_v, kgo_event=kgo_ev, vgo_minus_kgo=d_v, e_k=e_k, e_v=e_v, start_lead=lead, law=law),
@@ -717,29 +1200,72 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
                 attention=att, phase=phase, images=images, bundle=bundle,
                 # dispatcher target 11 (LINKCFG=1, order 1..9, 11, 0); in the HOST class-8 bundle (KVJ-G2b: the HOST
                 # loader / program_target_frames accept targets 0..13; target 10 = pass 1 from the die plan)
-                link_cfg=dict(target=LINK_CFG_TARGET, program=link_words),
+                link_cfg=dict(target=LINK_CFG_TARGET, program=link_words, check=link_check),
                 # dispatcher targets 12 / 13 (ESCFG=1, order 1..9, 11, 12, 13, 0): the KVJ-C3 PC chain root + join4_cal
                 # calendar constants (kvjc3_pc_chain.boot_words at ctrl_lat ES_CFG_CTRL_LAT, relays 0); same HOST note
-                es_cfg=dict(targets=list(ES_CFG_TARGETS), pc=es_pc, beat=es_beat, ctrl_lat=ES_CFG_CTRL_LAT, relay=[0, 0, 0, 0]))
+                es_cfg=dict(targets=list(ES_CFG_TARGETS), pc=es_pc, beat=es_beat, ctrl_lat=ES_CFG_CTRL_LAT, relay=es_relay, return_relay=es_return))
 
 
 # ---- MU-KV-BOOT 10-19: the multi-user boot images (OT_KV_MU=1) ---------------------------------------------------------
 MU = __import__('os').environ.get('OT_KV_MU', '0') == '1'
 
 
-def mu_images(layer_words, own_words, receipt=False):
+def mu_images(layer_words, own_words, receipt=False, lead=0, att_end=None, phase=None):
+    """KV-PROG17 10-20: the frame compiler runs on THIS compile's attention busy end and phase-launch profile (PH0, SAFE
+    window, lprg -> group relay edges); mu_calendar's module defaults are the committed 10-17 die report (groups 67), so a
+    die whose relays moved got every user-0 launch judged on stale phases."""
+    from tools.qwen_static_schedule import mu_calendar as MC
+    keep = MC.KV_ATT_END, dict(MC.KV_PHASE)
+    try:
+        if phase is not None:
+            MC.KV_PHASE.update(phase)
+        return _mu_images(layer_words, own_words, receipt, lead, att_end)
+    finally:
+        MC.KV_ATT_END = keep[0]
+        MC.KV_PHASE.clear()
+        MC.KV_PHASE.update(keep[1])
+
+
+def _mu_images(layer_words, own_words, receipt=False, lead=0, att_end=None):
     """the 4-user forms of targets 1 and 3 from the single-user ones: target 1 = rows + digest + epoch + the GAP[4][36]
     block compiled by mu_calendar (kv_frame_of_record on these rows) + seal at 470 (qkd_static_kv_layer_programme_mu,
     loaded through qkd_static_kv_boot_dispatch_mu); target 3 = enter 3, leave / deadline = the max over users
     (qkd_static_kv_ownership_calendar_mu re-arms on every user's go).  The single-user roots must be the ones the
     rows imply (enter 3, leave = stage-36 quiet + 1, deadline = token cycles)."""
     from tools.qwen_static_schedule import mu_calendar as MC
+    # KV-PROG17 10-20: the attention busy run is run .. run + compiled_end - RX_CMD (qkd_native_attention_programme: a
+    # second user's issue inside it is a sticky fault); 1784 is the priced tile (compiled_end 1786).  The r16 tile's
+    # RETIRE_STATIC STATUS tail (+213) and TX shift (+1) extend it to 1998: the frame compiler must see the real span.
+    if att_end is not None and att_end != MC.KV_ATT_END:
+        if not attn_r16()['on']:
+            raise ValueError(f'attention busy end {att_end} != mu_calendar.KV_ATT_END {MC.KV_ATT_END} without the r16 tile')
+        MC.KV_ATT_END = att_end
     rows = MC.kv_rows_from_image(list(layer_words))
-    cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows)
+    if LINK_EMB_WIN or attn_r16()['on']:
+        # KV-EMBWIN16 10-20: the filler first starts KV_FRAME_STARTS were searched on the priced-window (272) frame; on a
+        # grown window the stage frame moves, so the same deterministic search (kv_frame_search seed 1) picks them here
+        # KV-PROG17 10-20: OT_KV_MU_FRAME_F=3 = the r16 frame (one filler token a frame, fillers never overlap): with the
+        # r16 STATUS tail the KV service window (2,003 edges) no longer fits beside u0 + a second filler (F 2 has no
+        # frame: kv_frame_search fails), priced 9,300.6 vs 11,982.4 tok/s aggregate (u0 unchanged) -- COORD decision.
+        F = int(os.environ.get('OT_KV_MU_FRAME_F', MC.KV_FRAME_F))
+        ft = 1 if F > MC.KV_FRAME_F else None
+        fs, _ = MC.kv_frame_search(rows, F, filler_tokens=ft)
+        cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows, F, tuple(fs), filler_tokens=ft)
+    else:
+        cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows)
     own, per = MC.kv_ownership_roots_mu(rows, gaps)
-    if list(own_words) != [3, per['leave_per_user'][0], per['deadline_per_user'][0], MC.KV_OWN_SEAL]:
+    if list(own_words) != [3, per['leave_per_user'][0] + lead, per['deadline_per_user'][0], MC.KV_OWN_SEAL]:
         raise ValueError(f'single-user ownership roots {own_words} differ from the layer rows')
+    if lead:                # KV-CAL15: the c32 guard lead on the MU leave root too (re-armed window: max over users + lead)
+        own = list(own)
+        own[1] += lead
+        if not own[0] < own[1] < own[2]:
+            raise ValueError(f'MU ownership roots {own} out of order with the c32 leave lead {lead}')
     out = dict(layer=MC.kv_layer_image_mu(list(layer_words), gaps), ownership=own, gaps=gaps, starts=starts, checks=chk)
+    out['frame'] = None if not isinstance(cal, dict) else dict(F=cal['frame_tokens'], H=cal['H'], T=cal['T'], tokens_per_frame=cal['tokens_per_frame'],
+                        aggregate_tok_s=round(cal['aggregate_tok_s'], 1), user_tok_s=[round(u['tok_s'], 1) for u in cal['users']],
+                        first_starts=[u['first_start'] for u in cal['users']], att_end=MC.KV_ATT_END,
+                        phase_groups=MC.KV_PHASE['groups'])
     if receipt:
         out['receipt'] = MC.kv_gap_receipt(list(layer_words))
     return out
@@ -885,8 +1411,8 @@ def write(r, out, root=ROOT):
         f"localparam [36*9*32-1:0] LP_ROOTS = {36*9*32}'h{vec};\n"
         f"localparam [63:0] LP_DIGEST = 64'h{r['layer']['digest']:016x};\n"
         f"localparam [15:0] LP_EPOCH = 16'd{r['layer']['epoch']};\n")
-    report = dict(schema='opentallas.qwen_kv_static.programme_report.v1', status='COMPILED_NOT_QUALIFIED',
-                  profile=r['profile'], link=r['link'], leads=r['leads'],
+    report = dict(schema='opentallas.qwen_kv_static.programme_report.v1', status='COMPILED_NOT_QUALIFIED', mu_frame=r.get('mu_frame'),
+                  profile=r['profile'], link=r['link'], leads=r['leads'], cal_deltas=r['cal_deltas'], emb_fill=r['emb_fill'],
                   layer_relative_roots=r['layer']['rows'][1]['roots'], stage1_roots=r['layer']['rows'][0]['roots'],
                   writer=dict(slots=r['writer']['slots'], stop=r['writer']['stop']), ownership=r['ownership'],
                   groups={k: {kk: vv for kk, vv in v.items() if kk not in ('landing_words', 'front_words')} for k, v in r['groups'].items()},
@@ -926,7 +1452,9 @@ def main():
     print(json.dumps(dict(status=rep['status'], profile=a.profile, leads=rep['leads'], stage1=rep['stage1_roots'],
                           attention={k: rep['attention'][k] for k in ('compiled_rx_cmd', 'compiled_tx_first', 'compiled_end')},
                           boot=rep['boot']['words'], frames=rep['boot']['frames'], operations=rep['operations'],
-                          phase_outside=None if rep['phase'] is None else len(rep['phase']['outside_window']))))
+                          phase_outside=None if rep['phase'] is None else len(rep['phase']['outside_window']),
+                          ownership=r['ownership']['words'][:3], cal_deltas=r['cal_deltas'],
+                          emb_fill={k: r['emb_fill'][k] for k in ('status', 'margin', 'last_word', 'row_tx_slot', 'embed_window_needed')})))
 
 
 if __name__ == '__main__':

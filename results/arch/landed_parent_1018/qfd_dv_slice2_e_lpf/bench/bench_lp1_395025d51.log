@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits  1221 GB (avail 912, growth 45, headroom 0, waiters 0/0 GB) load 48/128 running 14 disk 514 GB 
+ot-run: ot-epyc5       admits  1162 GB (avail 888, growth 74, headroom 0, waiters 0/0 GB) load 70/128 running 18 disk 1772 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ownq-slicee/src_395025d51
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ownq-slicee/src_395025d51
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-134043-1792387424 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+LP_MISMATCH port=cmd_wo cycle=49 flat=4576ab7bd38eea640447d5e1efa56 landed=f6c94c176f68d4ca2fc674882a960
+LP_MISMATCH port=cmd_wo cycle=50 flat=b9a0700786d86d8bc9174388425de landed=8dbb5879efa212b3b3acca27706d4
+LP_MISMATCH port=cmd_wo cycle=51 flat=65ee767c36be946e1df4a36862401 landed=401bf678b4c9da77ea779b253ce45
+LP MUT=1: LP_LOCKSTEP FAIL
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 6.503 MB sources in 100 modules, into 571.512 MB in 516 C++ files needing 0.151 MB
+- Verilator: Walltime 329.963 s (elab=1.063, cvt=130.106, bld=192.691); cpu 146.891 s on 16 threads; allocated 11163.406 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-134043-1792387424): exit 0

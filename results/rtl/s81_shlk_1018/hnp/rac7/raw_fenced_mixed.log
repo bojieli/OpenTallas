@@ -1,0 +1,16 @@
+WARNING: /srv/opentallas-scratch/claude/s81-shlk/hnp_rac7/tb.sv:48: $readmemh(desc.mem): Not enough words in the file for the requested range [0:15].
+WARNING: /srv/opentallas-scratch/claude/s81-shlk/hnp_rac7/tb.sv:49: $readmemh(pay.mem): Not enough words in the file for the requested range [0:31].
+WARNING: /srv/opentallas-scratch/claude/s81-shlk/hnp_rac7/tb.sv:50: $readmemh(nb.mem): Not enough words in the file for the requested range [0:15].
+DONEW cnt=9
+DONEW cnt=14
+DONEW cnt=31
+DONEW cnt=40
+DONEW cnt=55
+DONEW cnt=56
+MISMATCH sector=41 got=afe2096a7d7c92e14517f03103fa6dba88ce3ac3646866ff007686967f444abb exp=afe2096a7d7c92e14517f03103fa6dba88ce3ac3646866ff00768696654af82c
+MISMATCH sector=42 got=95d4230a6ac154e07d04adf705b4c69947cc268473495aeb047b9ad47f444abb exp=95d4230a6ac154e07d04adf705b4c69947cc268473495aeb047b9ad475b7e009
+MISMATCH sector=43 got=21df9db9affdf0f31e6b678130a3438c38506b2a537d8a583495cc6d7f444abb exp=21df9db9affdf0f31e6b678130a3438c38506b2a537d8a583495cc6d8144fcbb
+MISMATCH sector=44 got=653f69a433ab9737d314f05a216fafcd478c10783b8ae20af300ee5837e64c72 exp=653f69a433ab9737d314f05a216fafcd478c10783b8ae20af300ee58faf26bc0
+VIS errors=0
+HING descs=10 beats=31/31 sectors=56 reads=0 errors=42 oob=0 dones=6/6 tag_err=0 fault_words=0 fault=0 ck_cycles=633 timeout=0 share=0 first_o=56 last_o=220 marks=0 mark_bad=0
+/srv/opentallas-scratch/claude/s81-shlk/hnp_rac7/tb.sv:169: $finish called at 527072 (1ps)

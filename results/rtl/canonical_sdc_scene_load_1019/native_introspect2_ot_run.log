@@ -1,0 +1,62 @@
+ot-run: ot-epyc4       admits  1119 GB (avail 840, growth 51, headroom 0, waiters 0/0 GB) load 36/128 running 15 disk 430 GB 
+ot-run: ot-epyc5       admits   648 GB (avail 510, growth 19, headroom 0, waiters 0/0 GB) load 45/128 running 7 disk 908 GB 
+ot-run: ot-epyc6       admits  1220 GB (avail 910, growth 55, headroom 0, waiters 0/0 GB) load 23/128 running 14 disk 5714 GB 
+ot-run: ot-epyc7       admits  1063 GB (avail 802, growth 58, headroom 0, waiters 0/0 GB) load 18/96 running 15 disk 6266 GB 
+ot-run: ot-epyc8       admits  1339 GB (avail 994, growth 50, headroom 0, waiters 0/0 GB) load 18/128 running 14 disk 48 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/canonical-sdc-scene-load-fix-1019/native
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/canonical-sdc-scene-load-fix-1019/native
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-2291622-1792450224 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+OT_MACRO_CTS unavailable: /physical/common_flow/macro_cts_cluster.tcl missing
+[WARNING STA-0345] capacitance scale 1e-12 does not match library scale 1e-15.
+[WARNING STA-0345] capacitance scale 1e-12 does not match library scale 1e-15.
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /src/test/matrix.sdc
+CAP_COMMANDS:::sta::set_cell_capacitance_limit ::sta::report_net_cap ::sta::set_net_wire_cap ::sta::max_capacitance_check_slack_limit ::sta::set_port_ext_wire_cap ::sta::capacitances_str ::sta::report_net_caps ::sta::Net_pin_capacitance ::sta::set_max_capacitance ::sta::set_pin_capacitance_limit ::sta::report_capacitance_checks ::sta::format_capacitance ::sta::port_capacitance_str ::sta::capacitance_range_str ::sta::port_ext_wire_cap ::sta::max_capacitance_check_slack ::sta::max_capacitance_check_limit ::sta::Net_wire_capacitance ::sta::set_capacitance_limit ::sta::set_port_ext_pin_cap ::sta::set_port_capacitance_limit ::sta::capacitance_ui_sta ::sta::capacitance_sta_ui ::sta::Net_capacitance ::sta::port_ext_pin_cap ::sta::LibertyPort_capacitance ::sta::max_capacitance_violation_count ::sta::set_min_capacitance
+SDC_COMMANDS:::sta::sdc_filename ::sta::write_sdc_cmd ::sta::sdc_file_line ::sta::write_sdc ::sta::network_changed_non_sdc ::sta::read_sdc
+[WARNING STA-0160] no commands match 'report_port'.
+report_net [-scene scene] [-digits digits] net_path [> filename] [>> filename] 
+[ERROR STA-0562] report_net -verbose is not a known keyword or flag.
+READ_SCENES:ff 1 ss 1
+EVAL_COUNTS:ff 1 ss 1|ff 1 ss 1
+DIAGNOSTIC_NO_PLACEMENT_RC:-placement
+DIAGNOSTIC_NO_PLACEMENT_RC:-placement
+OT_HOLD_MM sync: SS setup ws 0.00 / FF hold ws 0.00 ps
+OT_HOLD_MM after repair: SS setup ws 0.00 / FF hold ws 0.00 ps
+SCENE_SENSITIVE:ss:1
+[WARNING STA-0486] -subtract_pin_load not allowed for port objects.
+NATIVE_INVALID:{set_load -subtract_pin_load 1 [get_ports {y[8]}]} 0 {}
+[WARNING STA-0464] -pin_load not allowed for net objects.
+NATIVE_INVALID:{set_load -pin_load 1 [get_nets {y[9]}]} 0 {}
+[WARNING STA-0465] -wire_load not allowed for net objects.
+NATIVE_INVALID:{set_load -wire_load 1 [get_nets {y[10]}]} 0 {}
+[WARNING STA-0466] -rise/-fall not allowed for net objects.
+NATIVE_INVALID:{set_load -rise 1 [get_nets {y[11]}]} 0 {}
+[ERROR STA-0562] set_load -bogus is not a known keyword or flag.
+NATIVE_INVALID:{set_load -bogus 1 [get_ports {y[12]}]} 1 STA-0562
+[ERROR STA-0572] capacitance '-1' is not a positive float.
+NATIVE_INVALID:{set_load -1 [get_ports {y[13]}]} 1 STA-0572
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-2291622-1792450224): exit 0

@@ -1,0 +1,14 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=1 hck pin u_pc.hrst
+MISMATCH t=1 hck pin u_pc.cal_rst_n
+MISMATCH t=1  ck pin u_pc.hrst
+MISMATCH t=1  ck pin u_pc.cal_rst_n
+MISMATCH t=3 hck pin u_pc.ko
+MISMATCH t=3 hck pin u_pc.fo
+MISMATCH t=3 hck out pc__fo
+KVPC_RLAND FAIL tile=pc_h edges=3000 checks=604284 errors=5664 active_out=22186 mut=1
+- ../runs/pc_h_m1/tb.sv:200: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.061 s; speed 41.189 us/s
+- Verilator: cpu 0.061 s on 1 threads; allocated 7 MB
+

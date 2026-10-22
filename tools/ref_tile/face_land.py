@@ -136,6 +136,10 @@ def check_cfg(fl: dict, plist, clock: str, spec_resets=()) -> None:
         raise FaceLandError(f"face_land: clock {clock!r} is not a port of {fl['core']}")
     if not fl.get("reset_ports") and not fl.get("land"):
         raise FaceLandError("face_land: nothing to land")
+    rc = fl.get("reset_copies")
+    if rc is not None and (not isinstance(rc, dict) or any(r not in fl.get("reset_ports", []) for r in rc)
+                           or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 64 for n in rc.values())):
+        raise FaceLandError("face_land: reset_copies must map face_land reset_ports to integers 1..64")
 
 
 def wrapper(fl: dict, plist, clock: str) -> str:
@@ -160,6 +164,14 @@ def wrapper(fl: dict, plist, clock: str) -> str:
               f"        ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_fl_rst_{r} (.clk({clock}), "
               f".rst_n_in({r}), .rst_n(fl_rst__{r}));",
               "    end endgenerate"]
+        nc = int((fl.get("reset_copies") or {}).get(r, 1))
+        if nc > 1:
+            # KV-RELAYGEN 2026-10-19: N KEPT identical relay copies; the core still takes copy 0 and synthesis
+            # (physical/common_flow/ot_rst_copies.tcl, kit "reset_relay_split") spreads its reset loads over all copies
+            L[-2:-1] = [f"        wire [{nc - 1}:0] fl_rstc__{r};  // KV-RELAYGEN: {nc} kept relay copies (ot_rst_copies.tcl)",
+                        f"        ot_rst_relay #(.REGIONS({nc}), .SYNC_STAGES(2), .TREE_STAGES(1)) u_fl_rst_{r} (.clk({clock}), "
+                        f".rst_n_in({r}), .rst_n(fl_rstc__{r}));",
+                        f"        assign fl_rst__{r} = fl_rstc__{r}[0];"]
         conn[r] = f"fl_rst__{r}"
     rng = {p[2]: p[1] for p in plist}
     for p, n in land.items():

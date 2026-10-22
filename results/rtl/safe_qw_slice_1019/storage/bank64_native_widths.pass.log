@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   981 GB (avail 800, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 33 disk 327 GB 
+ot-run: ot-epyc5       admits   786 GB (avail 663, growth 113, headroom 0, waiters 0/0 GB) load 53/128 running 13 disk 1048 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src_bank64r3
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1677916-1792427459 after 0 s
+NATIVE_BANK_WIDTH PASS W512/514/546 mask/readhold1200cycles exact1edge read clock37wrap
+- rtl/test/qwen_dv/safe_storage/tb_bank_width.sv:37: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.011 s; speed 1.133 ms/s
+- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1677916-1792427459): exit 0

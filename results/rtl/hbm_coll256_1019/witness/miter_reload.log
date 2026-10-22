@@ -1,0 +1,18 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_reload
+ot-run: ot-epyc5       admits   454 GB (avail 431, growth 113, headroom 0, waiters 0/0 GB) load 84/128 running 25 disk 1361 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_reload
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_reload
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_reload
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_reload
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/coll256/src/mit_reload
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1163837-1792418360 after 0 s
+MISMATCH t=150340000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 0/1 pc 182/116 uop_eq 0
+MISMATCH t=150360000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 1/0 pc 182/182 uop_eq 1
+MISMATCH t=150380000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 2/1 pc 182/182 uop_eq 1
+MISMATCH t=150400000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 3/2 pc 182/182 uop_eq 1
+MISMATCH t=150420000 busy 1/1 done 0/0 fault 0/0 uop_v 1/1 it 4/3 pc 182/182 uop_eq 1
+ISSUER_V7_MITER FAIL mismatches146112 checks750487
+ISSUER_V7_MUTANT_REJECTED reload
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1163837-1792418360): exit 1
+REMOTE_RC mit_reload 1

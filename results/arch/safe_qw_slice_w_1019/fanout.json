@@ -1,0 +1,48 @@
+{
+  "$paramod$1bc442f1c11bb8f1f65cfda995b1106f6433ebfa\\ot_pl_land_local_w": {
+    "target_max_loads": {
+      "rq": 15,
+      "valid": 1,
+      "vld": 1,
+      "write_oh": 3
+    },
+    "cells": 132
+  },
+  "$paramod$3f750c086111b0e49a7f3abbe9e290cac713ab31\\ot_pl_land_local_r": {
+    "target_max_loads": {
+      "read_oh": 19,
+      "rq": 8,
+      "vld": 1,
+      "warm": 1
+    },
+    "cells": 160
+  },
+  "$paramod$ab5003f35e73435a347c593540a46e08fa82022d\\ot_pl_land_local_r": {
+    "target_max_loads": {
+      "read_oh": 26,
+      "rq": 8,
+      "vld": 1,
+      "warm": 1
+    },
+    "cells": 216
+  },
+  "$paramod$c0e728b61bee177fbdbf5c8eaf40d0e78e91924f\\ot_pl_land_local_w": {
+    "target_max_loads": {
+      "rq": 15,
+      "valid": 1,
+      "vld": 1,
+      "write_oh": 3
+    },
+    "cells": 104
+  },
+  "land_synth_top": {
+    "writer": {
+      "chunks": 45,
+      "physical_valid_bits": 180
+    },
+    "reader": {
+      "chunks": 45,
+      "physical_valid_bits": 180
+    }
+  }
+}

@@ -78,23 +78,256 @@ def load_model():
     return m
 
 
-def stage_windows(m):
+# ------------------------------------------------------------------------------------------------ L20 split (0li)
+# S81-L20SPLIT (coordinator 0li, 10-19): the L20 index window (group S029) is split over 2x the dies: its keys sit on
+# the HBM stacks of S029's own 10 dies + 10 dies of the neighbouring non-scan group S030 (shard 20, no new silicon).
+# The S029 scan term is the MEASURED reader law (dsdv_idx_rg P = 3, S81-IDXRD sweep_1019: cycles = 3 N / 16 + 511) on
+# the per-die keys.  The helper dies' HBM / svc time is a NEW resource window per user on S030's svc (index reader +
+# bk_sel): it must not collide with any other user's helper window, nor with S030's own svc windows (its own HBM +
+# select, placed by the compiler at an offset inside S030's stage window: the check returns the feasible offsets).
+# Copies: both S029 copies use the same S030 dies (S030 is not duplicated).  Links: the query goes out on the S029 ->
+# S030 stage link (Q_WORDS edges), the helper top-512 comes back on the S030 -> S029 return link (2 beats a word).
+SPLIT_L20 = dict(group='S029', helper='S030', shard=20, helper_dies=10,
+                 reader_p=3, reader_t0=511, select_tail=286, q_words=64, topk_words=36)
+
+
+def reader_cycles(n, sp=SPLIT_L20):
+    return math.ceil(sp['reader_p'] * n / 16 + sp['reader_t0'])
+
+
+def apply_split(m, sp=SPLIT_L20):
+    """patch the stage model in place: S029 keys over sp['shard'] dies, its scan term = the measured reader law"""
+    m.sh_all = dict(m.sh_all, **{sp['group']: sp['shard']})
+    orig = m.group_occ
+    BPC = m.BPC_STACK
+
+    def occ(g, shard=4, stacks_per_die=1, **kw):
+        if g['id'] != sp['group'] or g['idx_score_cycles'] <= 0:
+            return orig(g, shard=shard, stacks_per_die=stacks_per_die, **kw)
+        keys_die = m.SCAN_BYTES[g['idx_score_cycles']] / m.IDX_B / (shard * stacks_per_die)
+        meas = reader_cycles(keys_die, sp) / m.K           # group_occ multiplies its classes by K
+        m.BPC_STACK = m.SCAN_BYTES[g['idx_score_cycles']] / (shard * stacks_per_die * meas)
+        try:
+            return orig(g, shard=shard, stacks_per_die=stacks_per_die, **kw)
+        finally:
+            m.BPC_STACK = BPC
+    m.group_occ = occ
+    m.split_l20 = sp
+    return m
+
+
+def helper_windows(m, st, sp=SPLIT_L20):
+    """per-user window lengths on the helper die's svc (AR / MTP step) and on the links, + the helper's own svc use"""
+    g = next(x for x in m.groups if x['id'] == sp['group'])
+    h = next(x for x in m.groups if x['id'] == sp['helper'])
+    idx = g['idx_score_cycles']
+    keys_die = math.ceil(m.D_CTX / sp['shard']) if idx == 5937.0 else m.SCAN_BYTES[idx] / m.IDX_B / sp['shard']
+    scan = reader_cycles(keys_die, sp)
+    score = idx * 4.0 / sp['shard'] * m.K
+    sel_local = g['by_class'].get('select', 0.0) * m.SELECT_LOCAL * 4.0 / sp['shard'] * m.K
+    own = (h['by_class'].get('hbm', 0.0) + h['by_class'].get('select', 0.0)) * m.K
+    sg = {x['id']: x for x in st}
+    ar = math.ceil(max(scan, score) + sel_local + sp['select_tail'])
+    mtp = math.ceil(max(scan, 6 * score) + 6 * sel_local + 6 * sp['select_tail'])
+    # a compiled helper occupancy (S81-L20SPLIT split.json: the rank-tree bk_sel jobs on RTL) overrides the model when
+    # it is longer: the helper die's svc + bk_sel are held from the query's arrival to its last egress word
+    ar = max(ar, sp.get('helper_window_ar') or 0)
+    mtp = max(mtp, sp.get('helper_window_mtp') or 0)
+    return dict(keys_die=keys_die, scan=scan, score=round(score, 1), sel_local=round(sel_local, 1), ar=ar, mtp=mtp,
+                own_ar=math.ceil(own), own_mtp=math.ceil(6 * own),
+                q_at=hop_cycles(m), helper_occ=sg[sp['helper']]['occ'], helper_step=sg[sp['helper']]['step'],
+                t_group=sg[sp['group']]['t'], t_helper=sg[sp['helper']]['t'], link_q=sp['q_words'],
+                link_topk=2 * sp['topk_words'])
+
+
+def _bad_offsets(starts_own, starts_help, Lo, Lh, P):
+    """o-space (mod P) intervals where an own window [so + o, + Lo) overlaps a helper window [sh, + Lh)"""
+    out = []
+    for so in starts_own:
+        for sh in starts_help:
+            a = (sh - so - Lo + 1) % P                         # o in [a, a + Lo + Lh - 1) collides
+            out.append((a, Lo + Lh - 1))
+    return out
+
+
+def split_check(m, st, users, P, col, mode, sp=SPLIT_L20):
+    """the helper-die HBM time in the calendar: (1) helper windows of all users never overlap each other; (2) the
+    feasible offsets for the helper's own svc window inside its stage window; (3) query / top-k link windows"""
+    hw = helper_windows(m, st, sp)
+    Lh = hw['ar'] if mode == 'ar' else hw['mtp']
+    Lo = hw['own_ar'] if mode == 'ar' else hw['own_mtp']
+    span_h = hw['helper_occ'] if mode == 'ar' else hw['helper_step']
+    hs, own_s, links = [], [], []
+    for u in users:
+        s0 = u['shift'] + hw['t_group'] + hw['q_at']
+        hs.append((s0, u['user']))
+        own_s.append(u['shift'] + hw['t_helper'])
+        cp = col.get(sp['group'], {}).get(u['user'], 'A')
+        links.append((f"link.{sp['group']}.{cp}.q", u['shift'] + hw['t_group'], hw['link_q']))
+        links.append((f"rlink.{sp['helper']}.{sp['group']}.{cp}", s0 + Lh, hw['link_topk']))
+    # (1) helper vs helper
+    bad = []
+    lst = sorted((s % P, u) for s, u in hs)
+    for i in range(len(lst)):
+        s, u = lst[i]
+        s2, u2 = lst[(i + 1) % len(lst)]
+        gap = (s2 - s) % P or (P if len(lst) == 1 else 0)
+        if len(lst) > 1 and gap < Lh:
+            bad.append(dict(resource=f"svc.{sp['helper']}.scan", users=[u, u2], overlap=Lh - gap))
+    # (3) link windows (q on the S029 -> S030 link next to the stage message; top-k on the return link)
+    base_links = {}
+    for u in users:
+        for r, a, e in windows(st, u['user'], u['shift'], u['kind'], col):
+            if r.startswith('link.'):
+                base_links.setdefault(r, []).append((a, e - a))
+    by = {}
+    for r, a, L in links:
+        key = r[:-2] if r.endswith('.q') else r
+        by.setdefault(key, []).append((a, L))
+    for r, lst2 in by.items():
+        allw = sorted(((a % P, L) for a, L in lst2 + base_links.get(r, [])))
+        for i in range(len(allw)):
+            a, L = allw[i]
+            a2, _ = allw[(i + 1) % len(allw)]
+            if len(allw) > 1 and (a2 - a) % P < L:
+                bad.append(dict(resource=r, overlap=L - (a2 - a) % P))
+    # (2) own-window offsets
+    iv = _bad_offsets(own_s, [s for s, _ in hs], Lo, Lh, P)
+    hi = max(0, span_h - Lo)
+    free, o = [], 0
+    marks = sorted(iv)
+    # sweep [0, hi] for the first feasible offset and the feasible measure (exact on the integer grid of interval ends)
+    pts = sorted({0, hi} | {a % P for a, _ in marks if 0 <= a % P <= hi} | {(a + L) % P for a, L in marks
+                                                                               if 0 <= (a + L) % P <= hi})
+
+    def blocked(x):
+        return any((x - a) % P < L for a, L in marks)
+    feas = [x for x in pts if not blocked(x)]
+    return dict(helper=sp['helper'], group=sp['group'], shard=sp['shard'], keys_die=round(hw['keys_die']),
+                helper_window=Lh, helper_own_window=Lo, helper_stage_window=span_h, period=P, users=len(users),
+                helper_busy_pct=round(100 * (len(users) * (Lh + Lo)) / P, 1), windows=hw,
+                collisions=bad[:20], n_collisions=len(bad),
+                own_offset_first_feasible=feas[0] if feas else None, own_offset_any=not any(blocked(x) for x in pts),
+                own_offset_feasible_points=len(feas),
+                result='PASS' if not bad and feas else 'FAULT',
+                note='own_offset: the compiler places the helper stage\'s own svc/HBM window (Lo) at an offset inside '
+                     'its stage window; PASS needs one feasible offset (first_feasible), any = every offset is free')
+
+
+SPLIT_JSON = ROOT / 'results/arch/s81_l20_1019/split/split.json'
+
+
+def split_config():
+    """SPLIT_L20 + the COMPILED helper windows (split.json mu_helper_windows, the rank-tree bk_sel occupancy on RTL)"""
+    sp = dict(SPLIT_L20)
+    if SPLIT_JSON.exists():
+        w = json.loads(SPLIT_JSON.read_text()).get('mu_helper_windows') or {}
+        sp.update(helper_window_ar=w.get('ar'), helper_window_mtp=w.get('mtp'),
+                  helper_window_source=f"{SPLIT_JSON.relative_to(ROOT)} mu_helper_windows: {w.get('source')}")
+    return sp
+
+
+# ------------------------------------------------------------------------------------------------ off-chip leg
+# OWNER 10-21 (S81 release = DIRECT CABLING, no switch): the off-chip leg of every circuit is its class's D_cycles_max
+# from results/arch/release_rack_1021/hop_latency.json (claude/rack-1021 @5a1c6dcea): TP4 mesh = board trace in one
+# tray, stage hops = passive DAC in a rack / AEC between racks (serpentine; the pipeline-turnaround circuits are the
+# longest, 265, inside stage_hop's max).  It replaces the 453-cycle switched leg (377.6 ns budget) that every crossing
+# of the composition of record carries (results/rtl/xdie_s81_1019/record.json token_compose, 'modelled-PHY' = 453 a
+# crossing).  OFFCHIP = 'switched' rebuilds the previous records (diagnostic).
+SWITCHED_LEG = 453
+D_CYCLES = dict(tp_mesh=251, stage_hop=265, head_hop=257, token_return=251, copyb_in=258, copyb_hop=265, copyb_out=257)
+D_SOURCE = 'results/arch/release_rack_1021/hop_latency.json @5a1c6dcea systems.S81.<class>.D_cycles_max'
+OFFCHIP = 'direct'
+XREC = ROOT / 'results/rtl/xdie_s81_1019/record.json'
+
+
+def leg(cls):
+    return D_CYCLES[cls] if OFFCHIP == 'direct' else SWITCHED_LEG
+
+
+def term_class(t):
+    if 'stage_hop' not in t['pointer']:
+        return 'tp_mesh'
+    return 'head_hop' if '.head.hop' in t['slot'] or t['slot'].endswith('head.hop') else 'stage_hop'
+
+
+def offchip_saving():
+    """per-token (AR) / per-step (MTP) cycles saved on the composition of record when every crossing's 453-cycle
+    switched leg becomes its class's direct leg: exposed = max(0, E - O) per term, E = measured + leg x crossings +
+    priced on-die (unchanged).  Draft-die hops take the stage_hop class (no draft class in hop_latency.json)."""
+    out = {}
+    terms = json.loads(XREC.read_text())['token_compose']['terms']
+    for wl in ('ar', 'mtp'):
+        old = new = 0.0
+        by = {}
+        for t in (x for x in terms if x['workload'] == wl):
+            e = {x['grade']: x['E'] for x in t['E']}
+            phy = e['modelled-PHY']
+            n_cross = phy / SWITCHED_LEG
+            cls = term_class(t)
+            rest = sum(t2 for g, t2 in e.items() if g != 'modelled-PHY')
+            eo = max(0.0, rest + phy - t['O'])
+            en = max(0.0, rest + n_cross * leg(cls) - t['O'])
+            old += eo
+            new += en
+            b = by.setdefault(cls, dict(crossings=0.0, saved=0.0))
+            b['crossings'] += n_cross if eo > 0 else 0
+            b['saved'] += eo - en
+        out[wl] = dict(T_xdie_switched=round(old, 1), T_xdie_now=round(new, 1), saved=round(old - new, 1),
+                       by_class={k: dict(crossings=round(v['crossings'], 1), saved=round(v['saved'], 1))
+                                 for k, v in by.items()})
+    return out
+
+
+def hop_cycles(m):
+    """stage-to-stage offset hop of the stage model (HOP = the 10-09 stage hop class incl. the switched leg)"""
+    return math.ceil(m.HOP) - (SWITCHED_LEG - leg('stage_hop'))
+
+
+def hop_window_saving(m, g):
+    """cycles (10-18 scale) a group's span / occ loses when its 'hop' class (HOP each, switched leg inside) takes the
+    direct stage_hop leg: (453 - 265) x K per HOP; x 6 on the MTP step (step1 = 6 (occ1 - hbm) + hbm_mtp_step)"""
+    if OFFCHIP != 'direct' or not WINDOW_HOP_DIRECT:
+        return 0.0
+    return g['by_class'].get('hop', 0.0) / m.HOP * (SWITCHED_LEG - leg('stage_hop')) * m.K
+
+
+WINDOW_HOP_DIRECT = True      # False rebuilds the 54b8de500 windows (switched hop inside every stage window)
+
+
+def stage_windows(m, hold=None):
     """per stage group: span (single-user, cycles), occ (one position held, 1 job context), step (one MTP step,
-    6 verify positions with the shared index read), start offset t in the reference pass, copies"""
+    6 verify positions with the shared index read), start offset t in the reference pass, copies.
+    hold {receiver id: cycles} (lead 10-21, MTP NS 1): the predecessor's h TX is held that long, so the receiver and
+    every later stage start that much later (hold_tx on the sender)."""
+    hold = hold or {}
     out, t = [], 0
-    for g in m.groups:
+    gs = list(m.groups)
+    for i, g in enumerate(gs):
         o = m.group_occ(g, shard=m.sh_all.get(g['id'], 4), mtp_share=True, expert_imb=m.IMB_BAL)
         # integer cycles (a calendar is integer): windows rounded UP, offsets accumulate rounded-up spans + hop
-        span, occ, step = (math.ceil(o[k]) for k in ('span', 'occ', 'step'))
+        # direct cabling (L5B-CAL 10-21): the stage group's own 'hop' class (10-09 HOP = 1006 incl. the 453 switched
+        # leg) is re-priced at the stage_hop leg like every other crossing; the period already carries this saving
+        # (offchip_saving stage_hop), the windows did not -> that kept 44 AR users out (S005-class occ 20,754 > 20,588)
+        dh = hop_window_saving(m, g)
+        span, occ, step = (math.ceil(o[k] - f * dh) for k, f in (('span', 1), ('occ', 1), ('step', 6)))
+        ht = hold.get(gs[i + 1]['id'], 0) if i + 1 < len(gs) else 0
         out.append(dict(id=g['id'], label=g['label'], t=t, span=span, occ=occ, step=step,
                         copies=2 if g['id'] in DUP else 1, idx=g['idx_score_cycles'] > 0))
-        t += span + math.ceil(m.HOP)
+        if ht:
+            out[-1]['hold_tx'] = ht
+        t += span + hop_cycles(m) + ht
     return out
 
 
 def design(m):
     d = m.s81_design('MU-S81 owner config: B3 + 8 duplicated index-attention groups', shard=m.sh_all,
                      expert_imb=m.IMB_BAL, mtp_share=True, repl={g: 2 for g in DUP})
+    sv = offchip_saving()
+    if OFFCHIP == 'direct':       # the period of record minus the direct-cabling saving of the composition
+        d = dict(d, T_ar_switched=d['T_ar'], T_mtp_switched=d['T_mtp'], T_ar=d['T_ar'] - sv['ar']['saved'],
+                 T_mtp=d['T_mtp'] - sv['mtp']['saved'])
+    d['offchip'] = dict(mode=OFFCHIP, switched_leg=SWITCHED_LEG, d_cycles=D_CYCLES, source=D_SOURCE, saving=sv)
     return d
 
 
@@ -137,16 +370,81 @@ def copy_ok(shifts, P, win, col):
     return True
 
 
+# ------------------------------------------------------------------------------------------------ S81-LINK5 circuits
+# Owner 10-21 06:00 (lane S81-LINK5): every S81 stage die has 10 SerDes = 5 lane-pair endpoints, 0 UCIe, + 2 reserved
+# SerDes slots (E column B link_1_4/1_5 = the copy-A/B pair, blockage).  Fixed static circuits, no destination field
+# (the lane tile's link layer is end-to-end per peer pair).  Die of TP rank r (mod 4), stage k:
+#   s_0S pair A <-> k.(r-1).s_7S A     TP d-1
+#   s_7S pair A <-> k.(r+1).s_0S A     TP d+1
+#   s_7N pair A <-> k.(r+2).s_7N A     TP d+2: ONE bidirectional circuit EN<->EN (was 2 one-way EN->WN circuits); the
+#                                      d+2 parts now land at the E end (s_7N RX), not at s_0N
+#   s_0N pair A  -> (k+1).r.s_0N B     stage NEXT: the h message TX (every stage-hop window opens with ab 0 = pair A;
+#                                      user 0 is forced to A in hardware); its RX direction carries link layer only
+#   s_0N pair B <-  (k-1).r.s_0N A     stage PREV: h RX, merged into ri (ot_s81sl_slice_lep.sv relp[1]); its TX
+#                                      direction carries link layer only (no ab 1 window is ever compiled on s_0N)
+# Calendar resources this adds to the brute force (each a lep port, a calendar resource by the lep contract):
+#   link.<g>.<cp>        s_0N pair A TX of group g copy cp (the h of every user g hands to copy A / a non-dup group)
+#   link.<g>.<cp>.rsv    the copy-B circuit TX (reserve pair) of a non-dup group g whose successor's user is on copy B
+#   rx.<n>.<cp>.s_0N.B   s_0N pair B RX of the receiving group n (h landing / cut-through into ri), +- RX_JIT
+#   rx.<n>.<cp>.rsv      the copy-B circuit RX of a non-dup group n fed by a copy-B predecessor
+# Pair-A / pair-B co-release on s_0N (a sticky fault) cannot happen: pair A RX of s_0N only ever sees the successor's
+# pair-B TX, which carries no ring beat (no ab 1 window on s_0N, asserted in record()).  The d+2 RX on s_7N has no
+# pair B (AB_EN 0), so no merge rule applies there; the TP endpoints s_0S / s_7S / s_7N carry no h window any more.
+# HOP_PORT = 'es' rebuilds the pre-LINK5 fold (h TX on the ES TP endpoint, TP lep ports held over the stage window)
+# for the delta report only (dv_mu_calendar.py --hop-port es; never written as a record).
+CIRCUITS = [
+    dict(ep='s_0S', pair='A', serdes='lk_WS0/lk_WS1', peer='stage k, rank r-1, s_7S pair A', use='TP d-1 (bidirectional)'),
+    dict(ep='s_7S', pair='A', serdes='lk_ES0/lk_ES1', peer='stage k, rank r+1, s_0S pair A', use='TP d+1 (bidirectional)'),
+    dict(ep='s_7N', pair='A', serdes='lk_EN0/lk_EN1', peer='stage k, rank r+2, s_7N pair A',
+         use='TP d+2 (ONE bidirectional circuit EN<->EN; d+2 parts land on s_7N RX) + host plane (open, see README)'),
+    dict(ep='s_0N', pair='A', serdes='lk_WN0/lk_WN1', peer='stage k+1, rank r, s_0N pair B',
+         use='stage NEXT: h TX, every window ab 0; RX = link layer only'),
+    dict(ep='s_0N', pair='B', serdes='lk_WN2/lk_WN3 (link_0_4/link_0_5)', peer='stage k-1, rank r, s_0N pair A',
+         use='stage PREV: h RX -> ri; TX = link layer only'),
+    dict(ep='(reserve)', pair='-', serdes='link_1_4/link_1_5 (E column B, blockage)', peer='copy-A/B pair (unpopulated)',
+         use='reserved: copy-B static circuit of the pre/post-group rank dies of the 8 duplicated groups'),
+]
+LANE_COUNT = dict(serdes=10, ucie=0, lane_pair_endpoints=5, circuits=5, reserved_serdes_slots=2,
+                  copy_a_pairs=4, pair_b=1, note='8 copy-A SerDes (4 endpoints x pair A) + 2 pair-B SerDes on s_0N')
+RX_JIT = 2             # fluid crossing model: every landing lies in [deadline - 2, deadline] (XDIE-S81-MU, win_check)
+X_FLAT = 563           # fixed crossing incl. the die lane legs (tb_xdie_s81_2 LEG 1), with the 453 switched leg
+
+
+def x_flat(cls):
+    return X_FLAT - SWITCHED_LEG + leg(cls)
+HOP_PORT = 's_0N'      # 'es' = pre-LINK5 fold (diagnostic only)
+TP_EPS = ('s_0S', 's_7S', 's_7N')
+
+
 # ------------------------------------------------------------------------------------------------ brute-force lemma
 def windows(st, user, shift, kind, col):
     """every resource window of one user in one period: (resource, start, end)"""
     ws = []
-    for g in st:
+    H = H_MSG * (6 if kind == 'mtp' else 1)
+    for i, g in enumerate(st):
         L = g['occ'] if kind in ('ar', 'latency', 'filler') else g['step']
         cp = col.get(g['id'], {}).get(user, 'A') if g['copies'] > 1 else 'A'
         s = shift + g['t']
         ws.append((f"{g['id']}.{cp}", s, s + L))
-        ws.append((f"link.{g['id']}.{cp}", s + g['span'], s + g['span'] + H_MSG * (6 if kind == 'mtp' else 1)))
+        h0 = s + g['span'] + g.get('hold_tx', 0)
+        if HOP_PORT == 'es':          # pre-LINK5: TP endpoints busy over the stage window, h folded onto ES (s_7S)
+            for ep in TP_EPS:
+                ws.append((f"ep.{g['id']}.{cp}.{ep}", s, s + L))
+            ws.append((f"ep.{g['id']}.{cp}.s_7S.h", h0, h0 + H))
+            continue
+        n = st[i + 1] if i + 1 < len(st) else None
+        cpn = (col.get(n['id'], {}).get(user, 'A') if n['copies'] > 1 else 'A') if n else 'A'
+        if n is not None and g['copies'] == 1 and cpn == 'B':
+            ws.append((f"link.{g['id']}.{cp}.rsv", h0, h0 + H))                 # copy-B circuit (reserve pair)
+        else:
+            ws.append((f"link.{g['id']}.{cp}", h0, h0 + H))                     # s_0N pair A, stage NEXT
+        if n is not None:
+            r0 = h0 + x_flat('copyb_in' if cpn == 'B' and n['copies'] > 1 else 'stage_hop')
+            if n['copies'] == 1 and g['copies'] > 1 and cp == 'B':
+                r0 = h0 + x_flat('copyb_out')
+                ws.append((f"rx.{n['id']}.{cpn}.rsv", r0 - RX_JIT, r0 + H))
+            else:
+                ws.append((f"rx.{n['id']}.{cpn}.s_0N.B", r0 - RX_JIT, r0 + H))  # s_0N pair B, stage PREV
     end = shift + st[-1]['t'] + st[-1]['span']
     ws.append(('host', end, end + HOST_TOK * (6 if kind == 'mtp' else 1)))
     return ws
@@ -271,6 +569,43 @@ def bases(st, users, col, svc=None):
     return tabs, sb
 
 
+NB_WIN = 80             # lead 10-21: s_0N keeps NB 80 (existing lep / land masters); h = 4 back-to-back tag windows
+H_BEATS = 320
+
+
+def hop_land_plan(st, cal, mode):
+    """the 320-beat h as 4 back-to-back 80-beat tag windows (4 mu_c a hop, 4 cycles before each window's first beat).
+    land bit: a window may cut through (land 0) iff its first beat reaches the receiving stage n after the previous
+    user's window on n has ended: per-copy spacing - occupancy(n) >= hop_cycles - crossing (the h's first beat leads
+    the receiver's stage start by that much).  Otherwise land 1, and with the landing leaf's NS = 1 slot (closed land
+    view 263e13fc3) the slot must drain / replay before the next window fills -- impossible for 4 back-to-back windows
+    of one h, so every such group is listed as a FAULT."""
+    if not cal['S']:
+        return None
+    lead = HOP_NOW - x_flat('stage_hop')
+    rows, bad = [], []
+    for i, g in enumerate(st[1:], 1):
+        L = g['occ'] if mode == 'ar' else g['step']
+        sp = cal['S'] * (2 if g['copies'] > 1 else 1)
+        margin = sp - L - lead + st[i - 1].get('hold_tx', 0)
+        rows.append((margin, g['id']))
+        if margin < 0:
+            bad.append(g['id'])
+    mn = min(rows)
+    return dict(windows_per_hop=H_BEATS // NB_WIN, beats_per_window=NB_WIN, mu_c_per_hop=H_BEATS // NB_WIN,
+                window_spacing_beats=NB_WIN, ab=0, land=0 if not bad else 'per group',
+                cut_through_margin_min=round(mn[0], 1), at=mn[1], groups_needing_land=bad,
+                tx_delay_fix=dict(per_group={g: round(-mg, 1) for mg, g in rows if mg < 0},
+                                  total=round(sum(-mg for mg, _ in rows if mg < 0), 1),
+                                  note='alternative to land 1: hold the h TX on the sender until n is free (each of '
+                                       'these groups\' stage start moves by its deficit; upper bound on the added '
+                                       'period); or a landing leaf with NS >= 4 (one whole 320-beat h)') if bad else None,
+                result='PASS (every hop window cuts through, land 0; NS 1 landing slot unused by stage hops)'
+                if not bad else 'FAULT (land 1 with NS 1 cannot hold 4 back-to-back windows)',
+                rule='land 0 iff spacing(n) - occ(n) >= hop - crossing; the 4 windows of one h are one user\'s, back '
+                     'to back on s_0N pair A (non-h beat inside a window / overlapping windows = lep sticky fault)')
+
+
 def record(mode, m, st, d, cal, svc=None):
     users = cal['users']
     bad, nres = collisions(st, users, cal['P'], cal['col'])
@@ -292,6 +627,8 @@ def record(mode, m, st, d, cal, svc=None):
     agg = n_main * per_user + (cal.get('fillers', 0) * m.F / cal['P'] if mode == 'mtp' else 0.0)
     rec = dict(schema=SCHEMA, lane='MU-S81', mode=mode, grade='modelled (exact calendar arithmetic on the S81-BALANCE '
                'stage model of record; measured by MU.TOK)',
+               offchip=dict(d['offchip'], T_switched=round(d.get(f'T_{mode}_switched', d[f'T_{mode}']), 1),
+                            T_now=round(d[f'T_{mode}'], 1)),
                config=dict(dup_groups=list(DUP), dup_layers=DUP_LAYER, dies=d['dies'], stacks=d['stacks'],
                            total_mm2=d['total_mm2'], model_users=cal['n_model'], model_agg_ar=d['agg_ar'],
                            model_agg_mtp=d['agg_mtp']),
@@ -307,6 +644,17 @@ def record(mode, m, st, d, cal, svc=None):
                         stride=6 if mode == 'mtp' else 1),
                bases=dict(units=f'HBM sectors ({SECTOR_B} B) relative to the group copy region base', **sb),
                tables=tabs, lemma=lemma,
+               circuits=dict(rule='S81-LINK5 (owner 10-21 06:00): 5 static circuits a stage die, stage hop on its own '
+                                  's_0N circuit (1 crossing), d+2 TP on one EN<->EN circuit', per_die=CIRCUITS,
+                             lanes=LANE_COUNT, hop_port='s_0N pair A TX -> successor s_0N pair B RX',
+                             hop_window_ab=0, crossing_flat={c: x_flat(c) for c in ('stage_hop', 'copyb_in', 'copyb_out')}, rx_jitter=RX_JIT,
+                             link_resources=sorted(r for r in nres if r.startswith(('link.', 'rx.'))).__len__(),
+                             ab_rule='every stage-hop TX window opens with ab 0 (pair A); no ab 1 window on any s_0N '
+                                     'endpoint -> s_0N pair A RX carries link layer only -> no pair-A / pair-B '
+                                     'co-release into ri (sticky fault) by construction',
+                             hop_windows=hop_land_plan(st, cal, mode),
+                             tp_ports='s_0S / s_7S / s_7N carry TP only (no h window): their lep ports are held by '
+                                      'the stage-group window (brute force on <g>.<cp>)'),
                stage_model=dict(source='results/arch/s81_balance_1018/compute.py group_occ (B3, IMB_BAL)',
                                 sha256=hashlib.sha256(BAL.read_bytes()).hexdigest(),
                                 stages=[{k: (round(v, 1) if isinstance(v, float) else v) for k, v in g.items()}
@@ -314,16 +662,86 @@ def record(mode, m, st, d, cal, svc=None):
     return rec
 
 
-def build(mode, users=None, fillers=None):
+HOLD_TX = True
+
+
+def mtp_hold(st):
+    """per receiving group: cycles the predecessor holds its h TX so the first beat reaches the receiver no earlier
+    than the previous user's MTP step there ends (land 0 cut-through; NS 1 never holds a stage hop)"""
+    S = qup(max(g['step'] for g in st if g['copies'] == 1))
+    lead = HOP_NOW - x_flat('stage_hop')
+    out = {}
+    for g in st[1:]:
+        sp = S * (2 if g['copies'] > 1 else 1)
+        deficit = g['step'] + lead - sp
+        if deficit > 0:
+            out[g['id']] = int(math.ceil(deficit))
+    return out
+
+
+def ar_hold(st, P, n):
+    """AR twin of mtp_hold at n users (L5B-CAL 10-21): the per-copy spacing is the calendar's smallest slot gap on the
+    phase grid ((P / 4) // n x 4), so every hop window cuts through (land 0) when the predecessor holds its h TX by the
+    receiver's deficit; computed at the unheld period (a held period only widens the slots -> margins >= 0)"""
+    S = (P // PHASE_Q) // n * PHASE_Q
+    lead = HOP_NOW - x_flat('stage_hop')
+    out = {}
+    for g in st[1:]:
+        sp = S * (2 if g['copies'] > 1 else 1)
+        deficit = g['occ'] + lead - sp
+        if deficit > 0:
+            out[g['id']] = int(math.ceil(deficit))
+    return out
+
+
+def build(mode, users=None, fillers=None, split=False):
+    """split: False | True (SPLIT_L20) | a SPLIT_L20-shaped dict (e.g. with compiled helper windows)"""
+    sp = (split if isinstance(split, dict) else SPLIT_L20) if split else None
     m = load_model()
+    if sp:
+        apply_split(m, sp)
     st = stage_windows(m)
+    global HOP_NOW
+    HOP_NOW = hop_cycles(m)
     d = design(m)
+    hold = mtp_hold(st) if mode == 'mtp' and OFFCHIP == 'direct' and HOLD_TX else {}
+    if hold:                      # lead 10-21: MTP NS 1 fault -> TX hold; the period grows by the total hold
+        st = stage_windows(m, hold)
+        d = dict(d, T_mtp_before_hold=d['T_mtp'], T_mtp=d['T_mtp'] + sum(hold.values()))
+        d['offchip'] = dict(d['offchip'], mtp_tx_hold=dict(per_receiver=hold, total=sum(hold.values()),
+                            decision='lead 10-21: hold the h TX on the sender (NS stays 1, closed land view)'))
     svc = None
     p = OUT / 'svc_bases.json'
     if p.exists():
         svc = {k: v for k, v in json.loads(p.read_text()).items() if k.endswith('_per_user')}
     cal = calendar_ar(m, st, d, users) if mode == 'ar' else calendar_mtp(m, st, d, users, fillers)
-    return record(mode, m, st, d, cal, svc)
+    if mode == 'ar' and OFFCHIP == 'direct' and HOLD_TX and cal['S']:
+        # L5B-CAL 10-21: 44 users (windows re-priced) leave the stage-hop h 408 cycles early at the 12 S005-class
+        # receivers -> the same sender TX hold as MTP (NS stays 1, closed land view); the period grows by the hold
+        hold = ar_hold(st, cal['P'], len(cal['users']))
+        if hold:
+            st = stage_windows(m, hold)
+            d = dict(d, T_ar_before_hold=d['T_ar'], T_ar=d['T_ar'] + sum(hold.values()))
+            d['offchip'] = dict(d['offchip'], ar_tx_hold=dict(per_receiver=hold, total=sum(hold.values()),
+                                users=len(cal['users']), decision='L5B-CAL 10-21: sender h TX hold as the lead\'s MTP '
+                                'pick (NS stays 1, closed land view); 44 users > 42 users net of the hold'))
+            n0, tried0 = len(cal['users']), cal['tried']
+            cal = calendar_ar(m, st, d, users or n0)
+            cal['tried'] = [dict(t, phase='windows, before the hold') for t in tried0] + \
+                [dict(t, phase=f"with the {sum(hold.values())}-cycle TX hold") for t in cal['tried']]
+    rec = record(mode, m, st, d, cal, svc)
+    if split:
+        chk = split_check(m, st, cal['users'], cal['P'], cal['col'], mode, sp)
+        # MTP fillers are placed without the helper windows: drop fillers (last first) until the helper check passes
+        # (direct cabling 10-21: the shorter period leaves 3 filler slots, the helper S030 holds only 1)
+        while mode == 'mtp' and fillers is None and chk['result'] != 'PASS' and cal.get('fillers', 0) > 0:
+            cal = calendar_mtp(m, st, d, users, cal['fillers'] - 1)
+            rec = record(mode, m, st, d, cal, svc)
+            chk = split_check(m, st, cal['users'], cal['P'], cal['col'], mode, sp)
+        rec['l20_split'] = dict(config=sp, decision='coordinator 0li (HANDOFF 10-19 ~15:45)', check=chk)
+        if rec['l20_split']['check']['result'] != 'PASS':
+            rec['lemma']['brute_force']['result'] = 'FAULT'
+    return rec
 
 
 def main(argv=None):
@@ -334,16 +752,32 @@ def main(argv=None):
     ap.add_argument('--out', default=str(OUT))
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--phase-q', type=int, default=4, help='shift / period quantum (4 = ot_dsdv_fixed_issue start phase)')
+    ap.add_argument('--hop-port', default='s_0N', choices=('s_0N', 'es'),
+                    help='es = the pre-LINK5 fold (h on the ES TP endpoint): delta report only, never written')
+    ap.add_argument('--offchip', default='direct', choices=('direct', 'switched'),
+                    help='switched = the pre-10-21 453-cycle switch leg (delta report only, never written)')
+    ap.add_argument('--l20-split', action='store_true', help='S81-L20SPLIT (0li): S029 keys over 20 dies (+ S030 '
+                    'helpers, measured reader) -> calendar_<mode>_l20split.json with the helper-die check')
     a = ap.parse_args(argv)
-    global PHASE_Q
+    global PHASE_Q, HOP_PORT, OFFCHIP
     PHASE_Q = a.phase_q
+    HOP_PORT = a.hop_port
+    OFFCHIP = a.offchip
     modes = [a.mode] if a.mode else ['ar', 'mtp']
     rc = 0
     for mode in modes:
-        rec = build(mode, a.users, a.fillers)
+        rec = build(mode, a.users, a.fillers, split=split_config() if a.l20_split else False)
         f = Path(a.out) / (f'calendar_{mode}.json' if PHASE_Q == 4 else f'calendar_{mode}_q{PHASE_Q}.json')
+        if a.l20_split:
+            f = f.with_name(f.stem + '_l20split.json')
         txt = json.dumps(rec, indent=1) + '\n'
-        if a.check:
+        if OFFCHIP != 'direct':
+            print(f"{mode} (switched 453-cycle leg, diagnostic, not written)")
+        elif HOP_PORT == 'es':
+            bf = rec['lemma']['brute_force']
+            print(f"{mode} (pre-LINK5 fold, diagnostic, not written): {bf['n_collisions']} collisions "
+                  f"{sorted({c['resource'] for c in bf['collisions']})[:8]}")
+        elif a.check:
             same = f.exists() and f.read_text() == txt
             print(f'{mode}: {"SAME" if same else "DIFFERS"} {f}')
             rc |= 0 if same else 1
@@ -356,6 +790,11 @@ def main(argv=None):
               f"{lm['brute_force']['result']} ({lm['brute_force']['windows']} windows, "
               f"{lm['brute_force']['n_collisions']} collisions), latency user {lm['latency_user']['result']}; "
               f"model said {rec['config']['model_users']}")
+        if 'l20_split' in rec:
+            c = rec['l20_split']['check']
+            print(f"  L20 split helper {c['helper']}: {c['result']} window {c['helper_window']} own {c['helper_own_window']}"
+                  f" busy {c['helper_busy_pct']}% collisions {c['n_collisions']} own offset first {c['own_offset_first_feasible']}"
+                  f" any {c['own_offset_any']}")
         if lm['brute_force']['result'] != 'PASS':
             rc = 2
     return rc

@@ -1,0 +1,25 @@
+[fail] attn 0 PL=37 FD=49 FMUT=6 :: rc=1 :: KVBA_ATTN FAIL PL=37 FD=49 mut=0 fmut=6 checks=6651 errors=4979 cmds=24 clean_ok=18/18 start_pv=24 invalid_caught=3/3
+[fail] attn 0 PL=37 FD=49 FMUT=7 :: rc=1 :: KVBA_ATTN FAIL PL=37 FD=49 mut=0 fmut=7 checks=6651 errors=0 cmds=24 clean_ok=18/18 start_pv=24 invalid_caught=1/3
+[fail] attn 4 PL=37 FD=49 FMUT=0 :: rc=1 :: KVBA_ATTN FAIL PL=37 FD=49 mut=4 fmut=0 checks=6651 errors=48 cmds=24 clean_ok=18/18 start_pv=24 invalid_caught=3/3
+[fail] attn 5 PL=37 FD=49 FMUT=0 :: rc=1 :: KVBA_ATTN FAIL PL=37 FD=49 mut=5 fmut=0 checks=6651 errors=0 cmds=24 clean_ok=18/18 start_pv=24 invalid_caught=2/3
+[fail] calgen 6 Q=57 R=87 F=49 :: rc=1 :: KVBA_CALGEN FAIL Q=57 R=87 F=49 mut=6 checks=8204 errors=8192 fault_errors=0 dones=8192 phase_c=3/3
+[fail] calgen 7 Q=57 R=87 F=49 :: rc=1 :: KVBA_CALGEN FAIL Q=57 R=87 F=49 mut=7 checks=8204 errors=8195 fault_errors=0 dones=8192 phase_c=3/3
+[fail] dcfg 6 :: rc=1 :: KVBA_DCFG FAIL mut=6 checks=20 errors=3 negatives=3/3
+[fail] dcfg 7 :: rc=1 :: KVBA_DCFG FAIL mut=7 checks=20 errors=16 negatives=3/3
+[fail] pvctl 1 A=108 :: rc=1 :: KVBA_PVCTL FAIL A=108 mut=1 L=107 checks=6266 errors=5035 ref_faults=0 cmds=12 invalid_caught=2/2
+[fail] pvctl 2 A=108 :: rc=1 :: KVBA_PVCTL FAIL A=108 mut=2 L=107 checks=6266 errors=0 ref_faults=0 cmds=12 invalid_caught=1/2
+[fail] vport 6 D=0 R=16 :: rc=1 :: KVBA_VPORT FAIL D=0 R=16 mut=6 checks=8000 errors=6961 ref_fault_cycles=0 words=1952 invalid_caught=3/3
+[fail] vport 7 D=3 R=17 :: rc=1 :: KVBA_VPORT FAIL D=3 R=17 mut=7 checks=8000 errors=7997 ref_fault_cycles=0 words=1944 invalid_caught=3/3
+[fail] vport 8 D=0 R=16 :: rc=1 :: KVBA_VPORT FAIL D=0 R=16 mut=8 checks=8000 errors=0 ref_fault_cycles=0 words=1952 invalid_caught=1/3
+[pass] attn 0 PL=0 FD=1 FMUT=0 :: rc=0 :: KVBA_ATTN PASS PL=0 FD=1 mut=0 fmut=0 checks=4777 cmds=24 clean=18
+[pass] attn 0 PL=37 FD=49 FMUT=0 :: rc=0 :: KVBA_ATTN PASS PL=37 FD=49 mut=0 fmut=0 checks=6651 cmds=24 clean=18
+[pass] calgen 0 Q=28 R=76 F=1 :: rc=0 :: KVBA_CALGEN PASS Q=28 R=76 F=1 mut=0 checks=8204 dones=8192 fault_from_T=0
+[pass] calgen 0 Q=57 R=87 F=49 :: rc=0 :: KVBA_CALGEN PASS Q=57 R=87 F=49 mut=0 checks=8204 dones=8192 fault_from_T=0
+[pass] dcfg 0 :: rc=0 :: KVBA_DCFG PASS mut=0 checks=20
+[pass] pvctl 0 A=108 :: rc=0 :: KVBA_PVCTL PASS A=108 mut=0 L=107 checks=6266 cmds=12
+[pass] pvctl 0 A=95 :: rc=0 :: KVBA_PVCTL PASS A=95 mut=0 L=94 checks=6347 cmds=12
+[pass] vport 0 D=0 R=16 :: rc=0 :: KVBA_VPORT PASS D=0 R=16 mut=0 checks=8000 words=1952
+[pass] vport 0 D=0 R=8 :: rc=0 :: KVBA_VPORT PASS D=0 R=8 mut=0 checks=8000 words=1968
+[pass] vport 0 D=15 R=31 :: rc=0 :: KVBA_VPORT PASS D=15 R=31 mut=0 checks=8000 words=1892
+[pass] vport 0 D=3 R=17 :: rc=0 :: KVBA_VPORT PASS D=3 R=17 mut=0 checks=8000 words=1944
+# exit 0

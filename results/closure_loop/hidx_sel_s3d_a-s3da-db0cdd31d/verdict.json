@@ -1,0 +1,931 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hidx_sel_s3d_a-s3da-db0cdd31d",
+ "block": "ot_hidx_s3_ctl",
+ "owner": "Claude HBM-IDX6/IDX6-SEL",
+ "source_branch": "codex/hbm-idx-e86-collect-1020",
+ "record_branch": "codex/closure-record-hidx_sel_s3d_a-s3da-db0cdd31d",
+ "source_commit": "db0cdd31da20bb8fc7ba0a97c21c360853c4c295",
+ "host": "ot-epyc6",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 54.87,
+  "ff_ps": 26.04,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -302.84,
+  "ss_sensitivity_tns_ps": -20708.6,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/routes/hidx_sel_s3d_a_s3da_db0cdd31d/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/routes/hidx_sel_s3d_a_s3da_db0cdd31d/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hidx_sel_s3d_a-s3da-db0cdd31d/routes/hidx_sel_s3d_a_s3da_db0cdd31d/work/orfs/logs/asap7/opentallas_ot_hidx_s3_ctl_asap7_ref_hidx_sel_s3d_a_s3da_db0cdd31d/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.076 MB sources in 4 modules, into 0.013 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.012 s (elab=0.002, cvt=0.005, bld=0.000); cpu 0.012 s on 1 threads; allocated 33.383 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "MUT0 MUT0 RT8 DRAIN4 frame0 checked512 errors0 fault0 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT0 MUT0 RT8 DRAIN4 frame1 checked512 errors0 fault0 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT0 MUT0 RT8 DRAIN4 frame2 checked512 errors0 fault0 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT0 MUT0 RT8 DRAIN4 frame3 checked512 errors0 fault0 edges877 firstsel695\n- rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 35us; walltime 0.129 s; speed 272.410 us/s\n- Verilator: cpu 0.129 s on 1 threads; allocated 9 MB\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_d1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "LECTOR_S3 DMUT1 MUT0 RT8 DRAIN4 frame0 checked514 errors5 fault0 edges877 firstsel695\nbad id5769 frame1\nbad id5772 frame1\nIDX_SELECTOR_S3 DMUT1 MUT0 RT8 DRAIN4 frame1 checked515 errors12 fault0 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT1 MUT0 RT8 DRAIN4 frame2 checked10928 errors20845 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT1 MUT0 RT8 DRAIN4 frame3 checked513 errors20848 fault1 edges877 firstsel695\n[35240000] %Fatal: tb_selector_s3.sv:70: Assertion failed in tb_selector_s3: fullshape exact selector mismatch\n%Error: rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_d3": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "AIN4 frame0 checked512 errors0 fault0 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT3 MUT0 RT8 DRAIN4 frame1 checked512 errors0 fault0 edges877 firstsel695\nbad id2376 frame2\nbad id8111 frame2\nbad id10613 frame2\nbad id512 frame2\nIDX_SELECTOR_S3 DMUT3 MUT0 RT8 DRAIN4 frame2 checked515 errors10 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT3 MUT0 RT8 DRAIN4 frame3 checked512 errors11 fault1 edges877 firstsel695\n[35240000] %Fatal: tb_selector_s3.sv:70: Assertion failed in tb_selector_s3: fullshape exact selector mismatch\n%Error: rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_d5": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "e0\nbad id5480 frame0\nIDX_SELECTOR_S3 DMUT5 MUT0 RT8 DRAIN4 frame0 checked3107 errors5191 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT5 MUT0 RT8 DRAIN4 frame1 checked4380 errors12928 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT5 MUT0 RT8 DRAIN4 frame2 checked10928 errors33761 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT5 MUT0 RT8 DRAIN4 frame3 checked1887 errors36512 fault1 edges877 firstsel695\n[35240000] %Fatal: tb_selector_s3.sv:70: Assertion failed in tb_selector_s3: fullshape exact selector mismatch\n%Error: rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_d6": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "e0\nbad id5480 frame0\nIDX_SELECTOR_S3 DMUT6 MUT0 RT8 DRAIN4 frame0 checked3107 errors5191 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT6 MUT0 RT8 DRAIN4 frame1 checked4380 errors12928 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT6 MUT0 RT8 DRAIN4 frame2 checked10928 errors33761 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT6 MUT0 RT8 DRAIN4 frame3 checked1887 errors36512 fault1 edges877 firstsel695\n[35240000] %Fatal: tb_selector_s3.sv:70: Assertion failed in tb_selector_s3: fullshape exact selector mismatch\n%Error: rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_rt7": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "026-07-01 rev v5.050\nIDX_SELECTOR_S3 DMUT0 MUT0 RT7 DRAIN4 frame0 checked511 errors2 fault0 edges874 firstsel692\nIDX_SELECTOR_S3 DMUT0 MUT0 RT7 DRAIN4 frame1 checked512 errors2 fault0 edges874 firstsel692\nbad id2736 frame2\nIDX_SELECTOR_S3 DMUT0 MUT0 RT7 DRAIN4 frame2 checked1 errors517 fault0 edges874 firstsel692\nIDX_SELECTOR_S3 DMUT0 MUT0 RT7 DRAIN4 frame3 checked512 errors517 fault0 edges874 firstsel692\n[35120000] %Fatal: tb_selector_s3.sv:70: Assertion failed in tb_selector_s3: fullshape exact selector mismatch\n%Error: rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_dr3": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "\nbad id9089 frame0\nbad id6967 frame0\nIDX_SELECTOR_S3 DMUT0 MUT0 RT8 DRAIN3 frame0 checked525 errors27 fault0 edges875 firstsel693\nIDX_SELECTOR_S3 DMUT0 MUT0 RT8 DRAIN3 frame1 checked512 errors27 fault0 edges875 firstsel693\nIDX_SELECTOR_S3 DMUT0 MUT0 RT8 DRAIN3 frame2 checked512 errors27 fault0 edges875 firstsel693\nIDX_SELECTOR_S3 DMUT0 MUT0 RT8 DRAIN3 frame3 checked512 errors27 fault0 edges875 firstsel693\n[35160000] %Fatal: tb_selector_s3.sv:70: Assertion failed in tb_selector_s3: fullshape exact selector mismatch\n%Error: rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_l1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "e0\nbad id44 frame0\nbad id50 frame0\nIDX_SELECTOR_S3 DMUT0 MUT1 RT8 DRAIN4 frame0 checked719 errors415 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT0 MUT1 RT8 DRAIN4 frame1 checked0 errors928 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT0 MUT1 RT8 DRAIN4 frame2 checked0 errors1441 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT0 MUT1 RT8 DRAIN4 frame3 checked288 errors1666 fault1 edges877 firstsel695\n[35240000] %Fatal: tb_selector_s3.sv:70: Assertion failed in tb_selector_s3: fullshape exact selector mismatch\n%Error: rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_l2": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "erilator 5.050 2026-07-01 rev v5.050\nIDX_SELECTOR_S3 DMUT0 MUT2 RT8 DRAIN4 frame0 checked0 errors513 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT0 MUT2 RT8 DRAIN4 frame1 checked0 errors1026 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT0 MUT2 RT8 DRAIN4 frame2 checked0 errors1539 fault1 edges877 firstsel695\nIDX_SELECTOR_S3 DMUT0 MUT2 RT8 DRAIN4 frame3 checked48 errors2004 fault1 edges877 firstsel695\n[35240000] %Fatal: tb_selector_s3.sv:70: Assertion failed in tb_selector_s3: fullshape exact selector mismatch\n%Error: rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_selector_s3_lp_lockstep": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "AUDIT PASS\nAUDIT-UNLAND FAIL (expected)\nMUT 0: LP_LOCKSTEP PASS\nMUT 1: LP_LOCKSTEP FAIL\nMUT 2: LP_LOCKSTEP FAIL\nMUT 4: LP_LOCKSTEP FAIL\nMUT 5: LP_LOCKSTEP FAIL\nBENCH_EXIT 0\n",
+   "track": "parallel"
+  },
+  "bench_s3_fan32_equiv": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "_hidx_s3_equiv.sv:71: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 400us; walltime 1.746 s; speed 229.149 us/s\n- Verilator: cpu 1.743 s on 1 threads; allocated 8 MB\nS3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 3 resets 30 selected_lines 29271 nonzero_hist_reads 59173 qfault_cycles 198898\n- rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:71: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 400us; walltime 1.760 s; speed 227.239 us/s\n- Verilator: cpu 1.760 s on 1 threads; allocated 8 MB\n",
+   "track": "parallel"
+  },
+  "bench_s3_fan32_equiv_d1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "Verilator 5.050 2026-07-01 rev v5.050\nS3_EQUIV MISMATCH quadrant cyc 63182 sv 1/1 ret 0838000/0838000 qf 1/1 line_eq 0\n[400001000] %Fatal: tb_hidx_s3_equiv.sv:70: Assertion failed in tb_hidx_s3_equiv: S3_EQUIV FAIL DMUT1 CMUT0 errors 1\n%Error: rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_s3_fan32_equiv_d3": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "\nS3_EQUIV MISMATCH quadrant cyc 245 sv 0/0 ret 01f4000/01f4000 qf 1/1 line_eq 0\nS3_EQUIV MISMATCH quadrant cyc 246 sv 0/0 ret 01b0000/01b0000 qf 1/1 line_eq 0\nS3_EQUIV MISMATCH quadrant cyc 247 sv 0/0 ret 0054008/0054008 qf 1/1 line_eq 0\nS3_EQUIV MISMATCH quadrant cyc 290 sv 0/0 ret 01d0000/01d0000 qf 1/1 line_eq 0\nS3_EQUIV MISMATCH quadrant cyc 291 sv 0/0 ret 01f4000/01f4000 qf 1/1 line_eq 0\n[400001000] %Fatal: tb_hidx_s3_equiv.sv:70: Assertion failed in tb_hidx_s3_equiv: S3_EQUIV FAIL DMUT3 CMUT0 errors 178387\n%Error: rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_s3_fan32_equiv_d5": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "v5.050\nS3_EQUIV MISMATCH quadrant cyc 32 sv 0/0 ret 0120000/0120001 qf 1/1 line_eq 1\nS3_EQUIV MISMATCH quadrant cyc 33 sv 0/0 ret 00c4001/00c4000 qf 1/1 line_eq 1\nS3_EQUIV MISMATCH quadrant cyc 34 sv 1/1 ret 010c000/010c001 qf 1/1 line_eq 1\nS3_EQUIV MISMATCH quadrant cyc 37 sv 0/0 ret 009c001/009c000 qf 1/1 line_eq 1\nS3_EQUIV MISMATCH quadrant cyc 40 sv 0/0 ret 0178000/0178001 qf 1/1 line_eq 1\n[400001000] %Fatal: tb_hidx_s3_equiv.sv:70: Assertion failed in tb_hidx_s3_equiv: S3_EQUIV FAIL DMUT5 CMUT0 errors 87802\n%Error: rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  },
+  "bench_s3_fan32_equiv_c6": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "Verilator 5.050 2026-07-01 rev v5.050\nS3_EQUIV MISMATCH ctl cyc 19\nS3_EQUIV MISMATCH ctl cyc 28\nS3_EQUIV MISMATCH ctl cyc 30\nS3_EQUIV MISMATCH ctl cyc 36\nS3_EQUIV MISMATCH ctl cyc 44\n[400001000] %Fatal: tb_hidx_s3_equiv.sv:70: Assertion failed in tb_hidx_s3_equiv: S3_EQUIV FAIL DMUT0 CMUT6 errors 54340\n%Error: rtl/test/hbm_idx_static/tb_hidx_s3_equiv.sv:70: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  }
+ },
+ "fail_witnesses": {
+  "bench_selector_s3_d1": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_d1.log",
+   "sha256": "615c7a6813bfa703ca88948d9267c8201396800bbd51916d675fef55688fdb2a",
+   "fail_regex": "fullshape exact selector mismatch",
+   "matched": "fullshape exact selector mismatch",
+   "captured_at": "2026-10-20T04:23:50-07:00",
+   "declared": null
+  },
+  "bench_selector_s3_d3": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_d3.log",
+   "sha256": "a3f8a2de6c49d2ad54ca700de00ea3fda4ff1030da1b60d4bdbcad25baf93049",
+   "fail_regex": "fullshape exact selector mismatch",
+   "matched": "fullshape exact selector mismatch",
+   "captured_at": "2026-10-20T04:24:50-07:00",
+   "declared": null
+  },
+  "bench_selector_s3_d5": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_d5.log",
+   "sha256": "5f7c96d7209f88ba469d3177ee2eb15dce16fb79df2353937af8c9d5b6366bbe",
+   "fail_regex": "fullshape exact selector mismatch",
+   "matched": "fullshape exact selector mismatch",
+   "captured_at": "2026-10-20T04:25:52-07:00",
+   "declared": null
+  },
+  "bench_selector_s3_d6": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_d6.log",
+   "sha256": "77aa55a8f11c11db41256e43a5e1d2a524e0531eb90ebc7c0374ab58a68fcdef",
+   "fail_regex": "fullshape exact selector mismatch",
+   "matched": "fullshape exact selector mismatch",
+   "captured_at": "2026-10-20T04:26:51-07:00",
+   "declared": null
+  },
+  "bench_selector_s3_rt7": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_rt7.log",
+   "sha256": "3cecdab0e86a929e2c6c070501991814652063894d2eb95a1dfdf14581855833",
+   "fail_regex": "fullshape exact selector mismatch",
+   "matched": "fullshape exact selector mismatch",
+   "captured_at": "2026-10-20T04:27:51-07:00",
+   "declared": null
+  },
+  "bench_selector_s3_dr3": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_dr3.log",
+   "sha256": "7e41aa2208aa4dbade5ebee2f2b135f39f26e5795577d658b74b5a3d92a9e9ef",
+   "fail_regex": "fullshape exact selector mismatch",
+   "matched": "fullshape exact selector mismatch",
+   "captured_at": "2026-10-20T04:28:52-07:00",
+   "declared": null
+  },
+  "bench_selector_s3_l1": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_l1.log",
+   "sha256": "95de2221041432966afb511658fc49981a99cf891ad59df6edb50924ee28e17a",
+   "fail_regex": "fullshape exact selector mismatch",
+   "matched": "fullshape exact selector mismatch",
+   "captured_at": "2026-10-20T04:29:53-07:00",
+   "declared": null
+  },
+  "bench_selector_s3_l2": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_selector_s3_l2.log",
+   "sha256": "e6b7295ea741c7326a802a40193e30855ec41ba58b4d5c30ef205ba5b9ba130c",
+   "fail_regex": "fullshape exact selector mismatch",
+   "matched": "fullshape exact selector mismatch",
+   "captured_at": "2026-10-20T04:32:52-07:00",
+   "declared": null
+  },
+  "bench_s3_fan32_equiv_d1": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_s3_fan32_equiv_d1.log",
+   "sha256": "fd403df4ae916dd558593dc68930bc35583d437393deb30df275794f3c51a101",
+   "fail_regex": "S3_EQUIV FAIL",
+   "matched": "S3_EQUIV FAIL",
+   "captured_at": "2026-10-20T04:37:40-07:00",
+   "declared": null
+  },
+  "bench_s3_fan32_equiv_d3": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_s3_fan32_equiv_d3.log",
+   "sha256": "cd98745517995c848679e514af976b92970b62a6e74de1a25f5fb0713f8dcc95",
+   "fail_regex": "S3_EQUIV FAIL",
+   "matched": "S3_EQUIV FAIL",
+   "captured_at": "2026-10-20T04:38:39-07:00",
+   "declared": null
+  },
+  "bench_s3_fan32_equiv_d5": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_s3_fan32_equiv_d5.log",
+   "sha256": "06d849429e98f8c36abb45ca424f0bf7415185ad2a0ea0b68a6b2c36fdbb2b6e",
+   "fail_regex": "S3_EQUIV FAIL",
+   "matched": "S3_EQUIV FAIL",
+   "captured_at": "2026-10-20T04:39:52-07:00",
+   "declared": null
+  },
+  "bench_s3_fan32_equiv_c6": {
+   "path": "results/closure_loop/hidx_sel_s3d_a-s3da-db0cdd31d/fail_witness/bench_s3_fan32_equiv_c6.log",
+   "sha256": "5c6c201aa06db41049cda9e5769537a6643ed55ac245afcd1955afae6bc7bc40",
+   "fail_regex": "S3_EQUIV FAIL",
+   "matched": "S3_EQUIV FAIL",
+   "captured_at": "2026-10-20T04:40:42-07:00",
+   "declared": null
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": "s_ot_hidx_s3_ctl_asap7_ref_hidx_sel_s3d_a_s3da_db0cdd31d/base/4_1_cts.log: (single)=TT\nok  routes/hidx_sel_s3d_a_s3da_db0cdd31d/work/orfs/logs/asap7/opentallas_ot_hidx_s3_ctl_asap7_ref_hidx_sel_s3d_a_s3da_db0cdd31d/base/5_1_grt.log: (single)=TT\nROUTE_CORNER OK (setup corners must read TT liberties)\n"
+  }
+ },
+ "submit_checks": {
+  "bench_lint": {
+   "errors": [],
+   "warnings": []
+  },
+  "bench_gate": {
+   "verdict": "PASS"
+  },
+  "ref_gate": {
+   "verdict": "WARN",
+   "mode": "refuse",
+   "message": "sources: 19 referenced file(s) do not exist: ['physical/common_flow/anchor_row_packing.tcl', 'physical/common_flow/cg_pushdown.tcl', 'physical/common_flow/clk_net_protect.tcl', 'physical/common_flow/grt_macro_top_layer.tcl', 'physical/common_flow/link_budget_consistent.sdc', 'physical/common_flow/link_budget_hook.tcl'] (fix: commit them / fix the path)"
+  }
+ },
+ "calibration": null,
+ "route_overlay_plan": {
+  "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
+  "origin_main": "68b9cad6c10b73be33ef4ccc83b24d2b4e7eeb30",
+  "content_sha256": "5b87a481c37d660435677effcce7c4a83aaf80103e1d3c98d009a50d92cc3a2a",
+  "files": [
+   {
+    "path": "physical/common_flow/cg_pushdown.tcl",
+    "sha256": "09575e679bdbf90f99dca1ba100e14f4d7d9b54111159377626cb079f9daf118",
+    "git_blob": "56b97adbe97449de95775f371ce64f3111705135",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "56b97adbe97449de95775f371ce64f3111705135"
+   },
+   {
+    "path": "physical/common_flow/clk_net_protect.tcl",
+    "sha256": "e74b6d2c1ee8f381086a2471561707d8f9f673a86c7deca8d9ac9aea329c2277",
+    "git_blob": "8760aa4a5d456a857c23a30ae5da7d2cd0170b54",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "8760aa4a5d456a857c23a30ae5da7d2cd0170b54"
+   },
+   {
+    "path": "physical/common_flow/clock_family.tcl",
+    "sha256": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78",
+    "git_blob": "0cb8020ba042edd32a4ddb8851585c9da8546e2c",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "0cb8020ba042edd32a4ddb8851585c9da8546e2c"
+   },
+   {
+    "path": "physical/common_flow/edge_sliver_block.tcl",
+    "sha256": "714d28eeea112f820044e3c11a32ece53a76e44fc3fb54b1ce8fa87cb1619a74",
+    "git_blob": "601cdc0c3a9fafb123d288ebaf9dfcc4c0960e44",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "601cdc0c3a9fafb123d288ebaf9dfcc4c0960e44"
+   },
+   {
+    "path": "physical/common_flow/grt_macro_top_layer.tcl",
+    "sha256": "dfd76e540035bce859d8f2f303996390abe276f20bc1057c28d5781a87982389",
+    "git_blob": "a1527e60338a69bf165ea3518f8eb1ab1e938b4e",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "a1527e60338a69bf165ea3518f8eb1ab1e938b4e"
+   },
+   {
+    "path": "physical/common_flow/grt_macro_top_layer_post.tcl",
+    "sha256": "c1b31d6f5b1f9bcf3e586f25b7eeaf792611f3f00e4914abe482672460a43f18",
+    "git_blob": "124affca42fe9de5664556fa6778e3e546791335",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "124affca42fe9de5664556fa6778e3e546791335"
+   },
+   {
+    "path": "physical/common_flow/io_ref_routed.sdc",
+    "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095",
+    "git_blob": "be6fccf2fcd5d9a35c6c02d63b9af7f53e878588",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "be6fccf2fcd5d9a35c6c02d63b9af7f53e878588"
+   },
+   {
+    "path": "physical/common_flow/link_budget_consistent.sdc",
+    "sha256": "3d298ce13f96c011e8dc089c7b6617f36ba781fd64e92d8778e525d36028343f",
+    "git_blob": "f1358db231d660a7af3ed4b11a47de6fc94797d8",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f1358db231d660a7af3ed4b11a47de6fc94797d8"
+   },
+   {
+    "path": "physical/common_flow/link_budget_hook.tcl",
+    "sha256": "af848b76a6a29c5facbbd64b396951707e9ba5935f5db53efc5e6d1c7ee5485a",
+    "git_blob": "20feda96cb386012dc737547a1835470557d1283",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "20feda96cb386012dc737547a1835470557d1283"
+   },
+   {
+    "path": "physical/common_flow/m6_pin_access.tcl",
+    "sha256": "b3e574b2e4c1a90814c24df2f5321e77f9d462aee06ea59855361f2260b0e023",
+    "git_blob": "d7511665b4bc7b6c9582702ecbcc5ac12ce5ab97",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d7511665b4bc7b6c9582702ecbcc5ac12ce5ab97"
+   },
+   {
+    "path": "physical/common_flow/macro_cts_cluster.tcl",
+    "sha256": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
+    "git_blob": "df5f3153fe62b2fce5c539f23fce9911472f1aa7",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "df5f3153fe62b2fce5c539f23fce9911472f1aa7"
+   },
+   {
+    "path": "physical/common_flow/macro_sliver_block.tcl",
+    "sha256": "837dd48a48603ea95ddaa12ba5e6a66e80d9fe2976908c8734889540231c10a2",
+    "git_blob": "f989c3c340b9615f4e72c7635a97de1ccbc8056b",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f989c3c340b9615f4e72c7635a97de1ccbc8056b"
+   },
+   {
+    "path": "physical/common_flow/native_pg_binding.tcl",
+    "sha256": "ecc2257f9b66cb0f6087712304151411efd1c51a7bf3c0635979c6878af13fb8",
+    "git_blob": "9cb2765d129e950a494486b9027df8ee22ec653d",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "9cb2765d129e950a494486b9027df8ee22ec653d"
+   },
+   {
+    "path": "physical/common_flow/nbr_clk_measured_ttb.sdc",
+    "sha256": "ce6df0a5101ca85c53598bd65a234b7fdcd6ff6f414d4b914904b54f1df62f52",
+    "git_blob": "4d441aac8ea0dee0f6775fe11bb866e58714fe4f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "4d441aac8ea0dee0f6775fe11bb866e58714fe4f"
+   },
+   {
+    "path": "physical/qwen_die_masters/pinflop_ref.tcl",
+    "sha256": "6224638ef915d329d900dbea0db93bf41493f91e51a72e17bc4a82e5d7283a92",
+    "git_blob": "7d00f765d2e2a8f166b23d6c2221bc8bc963b891",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "7d00f765d2e2a8f166b23d6c2221bc8bc963b891"
+   },
+   {
+    "path": "tools/closure_loop/cal_classify.sh",
+    "sha256": "773bfb8d964e3a55eafdfc6ccb610380ef41e3897eb5f4fedeeb6ab4392d0e87",
+    "git_blob": "076cd5cd03a6a7d73797c902f832ffa3d524e388",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "076cd5cd03a6a7d73797c902f832ffa3d524e388"
+   },
+   {
+    "path": "tools/closure_loop/ck_insertion.py",
+    "sha256": "0671fc9136f9cdb25d66b8397832a5ac1d5de76678ae10bf35d5797a3e73d53c",
+    "git_blob": "984dd76b29881f36dac9ecd2889175999ca27f49",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "984dd76b29881f36dac9ecd2889175999ca27f49"
+   },
+   {
+    "path": "tools/closure_loop/eco_recovery.py",
+    "sha256": "e53c1b932e3c8b57d0056a205feb95eb7f47e041af55773673cdee38e085dbdf",
+    "git_blob": "95ec2e19c2d81165f033212c125e6e3e7a65bbbb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "95ec2e19c2d81165f033212c125e6e3e7a65bbbb"
+   },
+   {
+    "path": "tools/closure_loop/h1_patch.py",
+    "sha256": "09c35b5d4e359eb3c1e0dd57f933ab92739962c6ac4df09ed8fc2fecdbbc2df1",
+    "git_blob": "d46106edd9daad6fd0476b4125af906b5fc1498f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d46106edd9daad6fd0476b4125af906b5fc1498f"
+   },
+   {
+    "path": "tools/closure_loop/hold_corners_patch.py",
+    "sha256": "3899d47b1e2b8101685dd627d63384385feb0b7574dc108bb9ed65a20686cfe9",
+    "git_blob": "72617e211054496b4b9a710462fbf052b904c2cb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "72617e211054496b4b9a710462fbf052b904c2cb"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco.sh",
+    "sha256": "3e362671e57a81d36234591883f48f73544b981b0ec371fb514ec3c48d088b7d",
+    "git_blob": "af8c55ce1c4628fd5ff7c7310b30cde28b5a0bb4",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "af8c55ce1c4628fd5ff7c7310b30cde28b5a0bb4"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco.tcl",
+    "sha256": "54124948665b04ce8e8b4aef076eeeabe7e8415ba5cfc1b81450f6654fa91e5b",
+    "git_blob": "033ac54b6e584db92e97c0362288b01a4f081f2a",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "033ac54b6e584db92e97c0362288b01a4f081f2a"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_corner.tcl",
+    "sha256": "58a7c443623e233abe36ef12cc93cead969035878cbba5257a952eea6dc8830e",
+    "git_blob": "f8ce5182e3b0720f408b43aa843235073b730ee0",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f8ce5182e3b0720f408b43aa843235073b730ee0"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_sdc.py",
+    "sha256": "81d7c403edb7899d96d88deb5b616d9821c066fefd6cbc6bc99328a1124ad9a7",
+    "git_blob": "7a7de573a4f1fe8eec1133c1a6eeee5d065e2b63",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "7a7de573a4f1fe8eec1133c1a6eeee5d065e2b63"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_window.tcl",
+    "sha256": "ad0d172d3b11952a27c22e11e02f6dd2158d200179faed87e58dbb953d99ac35",
+    "git_blob": "dfef049aac05beebdee3800806bae2add86a614e",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "dfef049aac05beebdee3800806bae2add86a614e"
+   },
+   {
+    "path": "tools/closure_loop/lane_kh_overlay.py",
+    "sha256": "d251933802ac6cdc6f3fe68c0a6b9bc58fda33bd72be1bb5b180015f1eb0df41",
+    "git_blob": "a063f6f72e788ab3f3756a75b7deb5b7ee4b3045",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "a063f6f72e788ab3f3756a75b7deb5b7ee4b3045"
+   },
+   {
+    "path": "tools/closure_loop/m6_stub_config.py",
+    "sha256": "f9b6c2eadae47304a2f6eba567b704acc9d356cf8b15d112d89be8cef53a8410",
+    "git_blob": "552407d50071b0dc995060ce124a765ab6df2ea5",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "552407d50071b0dc995060ce124a765ab6df2ea5"
+   },
+   {
+    "path": "tools/closure_loop/macro_views.py",
+    "sha256": "f36101f77b5d83d49ba81928bea7660920e4ac77931e2a4614738f677d306ea1",
+    "git_blob": "d4ed13e553ab0298839ccd973fc698d280bc1c0f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d4ed13e553ab0298839ccd973fc698d280bc1c0f"
+   },
+   {
+    "path": "tools/closure_loop/meas_resta.py",
+    "sha256": "ac1e0ee1d4fa3a12cff3f942de76e0a39ab85c7b55146f5e06339dec45f22839",
+    "git_blob": "6c3c8403f8045bf2b6b2061322ca9a1c7ca04eae",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "6c3c8403f8045bf2b6b2061322ca9a1c7ca04eae"
+   },
+   {
+    "path": "tools/closure_loop/path_summary.py",
+    "sha256": "5917b8f0263d52f0e15856549bb62ff97748b43fa8484cb98bc66885acf74a88",
+    "git_blob": "341e9a3da6d5561a5ca5717877fd2853f220ceda",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "341e9a3da6d5561a5ca5717877fd2853f220ceda"
+   },
+   {
+    "path": "tools/closure_loop/pinflop_overlay.py",
+    "sha256": "2654f6223d8a8bb4621b4d7ce6e92d36cb5c732fbafca0582bfd8c1a72fb59a9",
+    "git_blob": "2c721207626018eb2bef3ffa2b653e6bfa08b691",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "2c721207626018eb2bef3ffa2b653e6bfa08b691"
+   },
+   {
+    "path": "tools/closure_loop/resume_check.sh",
+    "sha256": "ff6cb4bd794dddd6a815c6f23b34bd72327a8af7e2e68a036fedf2d2914c31d5",
+    "git_blob": "fbdd0e40d18708183a3f6bc712fbe66bd84d91af",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "fbdd0e40d18708183a3f6bc712fbe66bd84d91af"
+   },
+   {
+    "path": "tools/closure_loop/resume_patch.py",
+    "sha256": "1a0284c4bfae8cf5545bd3987cb5320150737860f7fa5b85f8b992dda1063714",
+    "git_blob": "4d3590fc4339a349ded26432b3123cb2fb711355",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "4d3590fc4339a349ded26432b3123cb2fb711355"
+   },
+   {
+    "path": "tools/closure_loop/route_corner_check.py",
+    "sha256": "f7893aab46440460421b7e945f3be70ce9e509a61fba2fbfaccc162b8f9a94f4",
+    "git_blob": "c434d05a6c768738b5c540b1a6898cb34dce5a32",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "c434d05a6c768738b5c540b1a6898cb34dce5a32"
+   },
+   {
+    "path": "tools/closure_loop/tt_overlay.py",
+    "sha256": "66b89e45dffd27bab6d05fef4f7bd6ba7ea6ced606807bb01a6e57dc454ee153",
+    "git_blob": "638f64a9e6e2dcd4adb264956be021459df2e48b",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "638f64a9e6e2dcd4adb264956be021459df2e48b"
+   },
+   {
+    "path": "tools/closure_loop/tt_resta.sh",
+    "sha256": "4b663918cc4a82c8b9839b31062e377eca1134e3ed45729f2cb4dde9dc5dc49b",
+    "git_blob": "2ce64ca5cd0837c0dcc16597bc7b6f7852eee0d3",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "2ce64ca5cd0837c0dcc16597bc7b6f7852eee0d3"
+   },
+   {
+    "path": "tools/closure_loop/vtswap_eco.sh",
+    "sha256": "cd9eecf0221f4ee24770bfcd68dcfefe36b0c1befa005e7813904e023bf90af2",
+    "git_blob": "20be6fd44d65e83d0cb980ac7c4098c143592c4b",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "20be6fd44d65e83d0cb980ac7c4098c143592c4b"
+   },
+   {
+    "path": "tools/closure_loop/vtswap_eco.tcl",
+    "sha256": "469555a67f57f6dafa6529012e94414de6a70b9eab89a93748f4d5f80176a284",
+    "git_blob": "0a98d3ed44f0ddb7db50151e603de7f0e0cd8190",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "0a98d3ed44f0ddb7db50151e603de7f0e0cd8190"
+   },
+   {
+    "path": "tools/fp_margin_lint.py",
+    "sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8",
+    "git_blob": "50cd44004286545e51ff4f79bec3d6cac24c79aa",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "50cd44004286545e51ff4f79bec3d6cac24c79aa"
+   },
+   {
+    "path": "tools/fp_margin_lint.tcl",
+    "sha256": "43e9e7f2633bd55619f7f6b5b9fd71862a310e30ff68eab2ad123e5064635cf5",
+    "git_blob": "0a27c1b824e96143222337f0b467a79af17ac24b",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "0a27c1b824e96143222337f0b467a79af17ac24b"
+   },
+   {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890",
+    "git_blob": "013f81ad6dd73b277c2428858c5cae459efb116d",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "013f81ad6dd73b277c2428858c5cae459efb116d"
+   },
+   {
+    "path": "tools/hier_contract/child_lint.py",
+    "sha256": "8622591ab7b8a8b84e4858061086cbc6cc9c957d27877bf4057c22b066de0ac2",
+    "git_blob": "2edd5c6c8ef60c4158563e29e342e201d64ae2ac",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "2edd5c6c8ef60c4158563e29e342e201d64ae2ac"
+   },
+   {
+    "path": "tools/hier_contract/m6_pin_grant.py",
+    "sha256": "49cbb868ca6497ae1ab4add62c8d0bb8a3f0a75d931ca10f278629b5718ce928",
+    "git_blob": "2d189e2debb6b88a9d96cc4d8f16d5951387abf8",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "2d189e2debb6b88a9d96cc4d8f16d5951387abf8"
+   },
+   {
+    "path": "tools/orfs_hold_mm.py",
+    "sha256": "a6f23785798709adcf733fbfffb2e9cbe39930a469b0a931d8c5f6ed0d5bdd3b",
+    "git_blob": "ec6a94b243a23071875ba7b4c77fc5941ff5d6eb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "ec6a94b243a23071875ba7b4c77fc5941ff5d6eb"
+   },
+   {
+    "path": "tools/orfs_hold_mm.tcl",
+    "sha256": "e4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290",
+    "git_blob": "66e94dd7004247342685c7493bf6f0c8bd69a719",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "66e94dd7004247342685c7493bf6f0c8bd69a719"
+   },
+   {
+    "path": "tools/preroute_gate.py",
+    "sha256": "3acb3f5784563888aa984928dd992026c3767a0f890149f91d32c029bef458cf",
+    "git_blob": "558a8dad06b0d516fa089e498f12908c009bd901",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "558a8dad06b0d516fa089e498f12908c009bd901"
+   },
+   {
+    "path": "tools/preroute_gate.tcl",
+    "sha256": "cb26dd3c1faa53058290838dd53e53b2f6ba55a0cece82c0e833c6b0c3fcea68",
+    "git_blob": "f2ad9a44d8ea657526a074bf723d4554c0ebd09d",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f2ad9a44d8ea657526a074bf723d4554c0ebd09d"
+   },
+   {
+    "path": "tools/textbook_lint.py",
+    "sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+    "git_blob": "af4af4329aec67da97b0f5a79553a44d34c616e5",
+    "mode": 420,
+    "resolution": "same",
+    "literal_git_blob": "af4af4329aec67da97b0f5a79553a44d34c616e5"
+   },
+   {
+    "path": "tools/tt_views/view_export.py",
+    "sha256": "4b4e80e4f92876d795f867a2ddc385a418a8c63c81a07641e4c1aa3f59ae61e1",
+    "git_blob": "7ca5787732d1dabe3399ff4c0d15bc40c5eaf18d",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "7ca5787732d1dabe3399ff4c0d15bc40c5eaf18d"
+   },
+   {
+    "path": "tools/w18/corner_sta.py",
+    "sha256": "5c0649785baa7af8af2dcb8effdad69bfea0450ee478453de5f102a6c2e0a212",
+    "git_blob": "3d9972fe57195a3e2a29227621ad5fd565d3b8d0",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "3d9972fe57195a3e2a29227621ad5fd565d3b8d0"
+   }
+  ]
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-20T04:43:54-07:00",
+ "job_spec": {
+  "name": "hidx_sel_s3d_a-s3da-db0cdd31d",
+  "block": "ot_hidx_s3_ctl",
+  "ref_tile": true,
+  "owner": "Claude HBM-IDX6/IDX6-SEL",
+  "purpose": "HBM-IDX6 FAN32 s3 ctl tile (a: 29.16 x 29.16, util ~0.5 of the s3c synthesis area 306 um2) of the landed IDX selector cluster.",
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "codex/hbm-idx-e86-collect-1020",
+   "commit": "db0cdd31d",
+   "extra_paths": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+    "rtl/lib",
+    "rtl/common/landed_parent",
+    "rtl/hbm_accel/index/sel_s3",
+    "rtl/test/hbm_idx_static",
+    "tools/hbm_idx_s3_selector_vectors.py",
+    "tools/landed_parent",
+    "results/rtl/hbm_idx_static/selector_s3_fan32"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lint",
+     "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hidx_s3_ctl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "selector_s3_exact",
+     "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/m0 m0",
+     "expect": "pass",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "pass_regex": "IDX_SELECTOR_S3 DMUT0 MUT0 RT8 DRAIN4 frame3 checked512 errors0 fault0",
+     "pass_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/sel/vrun_m0.log"
+    },
+    {
+     "name": "selector_s3_d1",
+     "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/d1 d1",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "fullshape exact selector mismatch",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/sel/vrun_d1.log",
+     "why": "tie compare >="
+    },
+    {
+     "name": "selector_s3_d3",
+     "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/d3 d3",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "fullshape exact selector mismatch",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/sel/vrun_d3.log",
+     "why": "lane-5 SRAM write-data select copy one edge late"
+    },
+    {
+     "name": "selector_s3_d5",
+     "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/d5 d5",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "fullshape exact selector mismatch",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/sel/vrun_d5.log",
+     "why": "histogram read one edge later than its op tags"
+    },
+    {
+     "name": "selector_s3_d6",
+     "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/d6 d6",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "fullshape exact selector mismatch",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/sel/vrun_d6.log",
+     "why": "ctl takes the op tags one edge early"
+    },
+    {
+     "name": "selector_s3_rt7",
+     "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/rt7 rt7",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "fullshape exact selector mismatch",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/sel/vrun_rt7.log",
+     "why": "choose spacing one edge short (sel_choose_rt 7)"
+    },
+    {
+     "name": "selector_s3_dr3",
+     "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/dr3 dr3",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "fullshape exact selector mismatch",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/sel/vrun_dr3.log",
+     "why": "scan drain one edge short"
+    },
+    {
+     "name": "selector_s3_l1",
+     "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/l1 l1",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "fullshape exact selector mismatch",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/sel/vrun_l1.log",
+     "why": "lp landing 0 bypassed"
+    },
+    {
+     "name": "selector_s3_l2",
+     "cmd": "bash rtl/test/hbm_idx_static/run_selector_s3.sh {RUN}/l2 l2",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "fullshape exact selector mismatch",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/sel/vrun_l2.log",
+     "why": "lp landing 0 read K+1"
+    },
+    {
+     "name": "selector_s3_lp_lockstep",
+     "cmd": "LP_ROOT=$PWD SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp_bench.sh {RUN}/lp",
+     "expect": "pass",
+     "threads": 8,
+     "peak_ram_gb": 16,
+     "pass_regex": "BENCH_EXIT 0",
+     "pass_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/lp/bench.log"
+    },
+    {
+     "name": "s3_fan32_equiv",
+     "cmd": "bash rtl/test/hbm_idx_static/run_s3_equiv.sh {RUN}/eq_m0 m0",
+     "expect": "pass",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "pass_regex": "S3_EQUIV PASS DMUT0 CMUT0 cycles 200000 seed 3",
+     "pass_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/eq/vrun_m0_s3.log"
+    },
+    {
+     "name": "s3_fan32_equiv_d1",
+     "cmd": "bash rtl/test/hbm_idx_static/run_s3_equiv.sh {RUN}/eq_d1 d1",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "S3_EQUIV FAIL",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/eq/vrun_d1_s1.log",
+     "why": "tie compare >= (new quadrant only)"
+    },
+    {
+     "name": "s3_fan32_equiv_d3",
+     "cmd": "bash rtl/test/hbm_idx_static/run_s3_equiv.sh {RUN}/eq_d3 d3",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "S3_EQUIV FAIL",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/eq/vrun_d3_s1.log",
+     "why": "lane-5 SRAM write-data select one edge late (new quadrant only)"
+    },
+    {
+     "name": "s3_fan32_equiv_d5",
+     "cmd": "bash rtl/test/hbm_idx_static/run_s3_equiv.sh {RUN}/eq_d5 d5",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "S3_EQUIV FAIL",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/eq/vrun_d5_s1.log",
+     "why": "histogram read one edge later than its op tags (new quadrant only)"
+    },
+    {
+     "name": "s3_fan32_equiv_c6",
+     "cmd": "bash rtl/test/hbm_idx_static/run_s3_equiv.sh {RUN}/eq_c6 c6",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "fail_regex": "S3_EQUIV FAIL",
+     "fail_witness": "results/rtl/hbm_idx_static/selector_s3_fan32/eq/vrun_c6_s1.log",
+     "why": "ctl takes the op tags one edge early (new ctl only)"
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_sel_s3d_a/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_sel_s3d_a/kit.env {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_sel_s3d_a --out {RUN}/record/views/ot_hidx_s3_ctl  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/ref_tile/hidx_sel_s3d_a/signoff.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/ref_tile/hidx_sel_s3d_a/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/ref_tile/hidx_sel_s3d_a/hidx_sel_s3d_a-s3da-99938559c"
+   }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null,
+  "structural_change": "HBM-IDX6 FAN32 (10-20) successor of hidx_sel_s3c_a: same ports / timing / arithmetic (lockstep-equivalent to the s3 original), every register and combinational net <= 32 actual load pins by replicated state (kept P1 copies per consumer family, per-chunk kept flags, one-edge-ahead one-hot rotate selects from replicated fill state, per-chunk pack prefix copies, regional reset leaves). Predecessor failed the mandatory native32 census (s3q 497 drivers / max 1788; s3c d_go 61, reset leaf 115). L2H-IDXSEL s3 (LEAD3-HBM route B 10-19): the ctl child tile of the landed IDX selector cluster (control-word pin flops, reset landing, choose pipeline on the returned histogram stream, fault); 43.2 x 54.0; S face = die control ports, W/E = the W/E quadrants' landed ret/ties/qf, N = cw/thr rings."
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

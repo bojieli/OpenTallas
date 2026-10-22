@@ -1,0 +1,269 @@
+{
+ "state/kv.window.codes.bin": {
+  "dtype": "uint8",
+  "shape": [
+   127,
+   512
+  ],
+  "sha256": "fe6f888fd9113dcf7d30bcafa0fedabafbd0a83f845f2b274e9ea1cd8e653cb6",
+  "format": "F8_E4M3",
+  "rows": 127,
+  "note": "127 rows before this position"
+ },
+ "state/kv.window.scale.bin": {
+  "dtype": "uint8",
+  "shape": [
+   127,
+   16
+  ],
+  "sha256": "ee39a26cf7fbdd1355a5daa695779e3e2233d6f3d4073e6f163ed007dcc8d3c0",
+  "format": "F8_E8M0"
+ },
+ "state/kv.ckv20.codes.bin": {
+  "dtype": "uint8",
+  "shape": [
+   1048576,
+   256
+  ],
+  "sha256": "d672ae4d74768f8e712a4a77d13c90dd0aa53f3d836c1e8699aaa09772739e91",
+  "format": "E2M1 packed (low nibble first)",
+  "rows": 1048576,
+  "note": "L20 rows entering the layer incl. the L20 row of this token"
+ },
+ "state/kv.ckv20.scale.bin": {
+  "dtype": "uint8",
+  "shape": [
+   1048576,
+   32
+  ],
+  "sha256": "bfd5c535fc5a63ae3ec1da36e4134d778424489d4cab41aee3c2057d60894d98",
+  "format": "F8_E4M3 per 16",
+  "rows": 1048576,
+  "note": "L20 rows entering the layer incl. the L20 row of this token"
+ },
+ "ops/attn.a_proj.bin": {
+  "dtype": "float32",
+  "shape": [
+   1792
+  ],
+  "sha256": "e18dcaafed34b1a89dd146f2765c71b4704a0ec7d40849866971d1324a8f26b2",
+  "note": "wq_a out [1280] then wkv out [512] (BF16)"
+ },
+ "ops/attn.q_norm.sumsq.bin": {
+  "dtype": "float32",
+  "shape": [
+   1
+  ],
+  "sha256": "11da5c569bed5ea6e0ec02501de395cceafb332d2c1d9bd1da953d392ae7822d",
+  "note": null
+ },
+ "ops/attn.q_norm.rsqrt.bin": {
+  "dtype": "float32",
+  "shape": [
+   1
+  ],
+  "sha256": "7bd3edd22d8c5d830986dd439d2c4048b43e4f0ad94e2ed04b7f0cd2a311cbf7",
+  "note": null
+ },
+ "ops/attn.q_norm.scale.bin": {
+  "dtype": "float32",
+  "shape": [
+   1280
+  ],
+  "sha256": "b68ceab8877283db154a5eb4bd0820dcf390da20c33c52fe3428ac7671dc89ef",
+  "note": null
+ },
+ "ops/attn.wq_b.bin": {
+  "dtype": "float32",
+  "shape": [
+   32768
+  ],
+  "sha256": "d99d1bf0c86c27a3e4c66ac36d057cf949538c854751af57ce1b5a59c688f542",
+  "note": null
+ },
+ "ops/attn.q_rope.bin": {
+  "dtype": "float32",
+  "shape": [
+   64,
+   512
+  ],
+  "sha256": "7e0deb95b5577dbe2c8155949286c79e4c32d294cb7a37703675a85ce62e46af",
+  "note": null
+ },
+ "ops/attn.kv_norm.sumsq.bin": {
+  "dtype": "float32",
+  "shape": [
+   1
+  ],
+  "sha256": "facba2295f2cc526ec04d1b2b700e688fb85a04fa9512dbb59f0631be7dd1810",
+  "note": null
+ },
+ "ops/attn.kv_norm.rsqrt.bin": {
+  "dtype": "float32",
+  "shape": [
+   1
+  ],
+  "sha256": "26bc5f1706ec950424e8b63027386072ea6701cc235ba1ce579967367f9f7fd8",
+  "note": null
+ },
+ "ops/attn.kv_norm.scale.bin": {
+  "dtype": "float32",
+  "shape": [
+   512
+  ],
+  "sha256": "70b38c73c6f0fea485e6ee014f083fb7446bc6281ca398505f8afe89530fc47c",
+  "note": null
+ },
+ "ops/attn.kv_rope_qdq.bin": {
+  "dtype": "float32",
+  "shape": [
+   512
+  ],
+  "sha256": "cfbdce855a1e150ca2dfe23b9a19b761270bb11d17bb5095bbe8e66848277d93",
+  "note": null
+ },
+ "ops/attn.own_row_write.bin": {
+  "dtype": "float32",
+  "shape": [
+   512
+  ],
+  "sha256": "cfbdce855a1e150ca2dfe23b9a19b761270bb11d17bb5095bbe8e66848277d93",
+  "note": "the window row this position writes"
+ },
+ "ops/attn.window_load.bin": {
+  "dtype": "float32",
+  "shape": [
+   128,
+   512
+  ],
+  "sha256": "ca08000438af78648d635410fc08bdcd5fa6314e0fbcae6159f5b6293368bd93",
+  "note": "window rows oldest first (128 x 512)"
+ },
+ "ops/attn.idx.topk_final.bin": {
+  "dtype": "int64",
+  "shape": [
+   512
+  ],
+  "sha256": "d186f128332b694ec1cb222bd2c1a8ec090232e6ded373dfb4a49ab713624dfe",
+  "note": "ascending selected compressed positions (L20 rows)"
+ },
+ "ops/attn.gather.bin": {
+  "dtype": "float32",
+  "shape": [
+   512,
+   512
+  ],
+  "sha256": "75b41ba8c1daacf0696493108f5ed400487dcc79d7fe5058d6e152782341fffc",
+  "note": "selected compressed rows (512 x 512)"
+ },
+ "ops/attn.rows_allgather.bin": {
+  "dtype": "float32",
+  "shape": [
+   640,
+   512
+  ],
+  "sha256": "4120864c5293bfd9a1be3f2b8d5a57c8db3191040994c9fdd62d73c9fa74ffef",
+  "note": "the attended rows (window then selections)"
+ },
+ "ops/attn.scores.bin": {
+  "dtype": "float32",
+  "shape": [
+   64,
+   640
+  ],
+  "sha256": "c1fc3da06e3c91f59bdf0960278928dba88b4a9df1817b0417884861babaa683",
+  "note": "[heads, T] scaled scores (FP32)"
+ },
+ "ops/attn.max.bin": {
+  "dtype": "float32",
+  "shape": [
+   64
+  ],
+  "sha256": "92a313a95b0e232bd795c8dc10f4b2e01645fb26e882e9fa10ae9079653b98f4",
+  "note": null
+ },
+ "ops/attn.exp.bin": {
+  "dtype": "float32",
+  "shape": [
+   64,
+   640
+  ],
+  "sha256": "638404aa538100fd7255056a1685d52e690871c23a4363585a51c4fa87eb48fd",
+  "note": null
+ },
+ "ops/attn.pv.bin": {
+  "dtype": "float32",
+  "shape": [
+   64,
+   512
+  ],
+  "sha256": "cb6b6cef3e103dbfae570f5792a8ba1ac32db092592d500b99a38a54a7d917ca",
+  "note": "[heads, hd] sum of bf16(P) x V (FP32)"
+ },
+ "ops/attn.den.bin": {
+  "dtype": "float32",
+  "shape": [
+   64
+  ],
+  "sha256": "3e1784a0f153ca7017a1a844606418aef292749b2dda7d0787fc4fe91c8f293b",
+  "note": null
+ },
+ "ops/attn.sink.bin": {
+  "dtype": "float32",
+  "shape": [
+   64
+  ],
+  "sha256": "eac5506c37cf64523bd34995eae859ec554ec273c12b6241ab00b7b01a156b24",
+  "note": "den + exp(sink - max)"
+ },
+ "ops/attn.normalize.bin": {
+  "dtype": "float32",
+  "shape": [
+   64,
+   512
+  ],
+  "sha256": "9702f55d4352fd37811c79a31257f601a80ecf81af997858756e5a4e74bd1441",
+  "note": "o (BF16, before the inverse RoPE)"
+ },
+ "ops/attn.normalize.unrope.bin": {
+  "dtype": "float32",
+  "shape": [
+   64,
+   512
+  ],
+  "sha256": "968665cf278343978e1d76893f43e2ec5c35c5e6fcc2e722f43fd8fdb071f4e3",
+  "note": "o after the inverse RoPE (the wo_a operand)"
+ },
+ "ops/attn.wo_a.bin": {
+  "dtype": "float32",
+  "shape": [
+   8192
+  ],
+  "sha256": "e3134c2f832a9220025217c3c25f6adbab60325857ac6d24a250011a81dca6e9",
+  "note": null
+ },
+ "ops/attn.z_quant.bin": {
+  "dtype": "float64",
+  "shape": [
+   8448
+  ],
+  "sha256": "49d068ad227512f9c6ec812e8fcf540b0b61afe096044203682c4873fb3199fb",
+  "note": "E4M3 code values [8192] then block exps [256]"
+ },
+ "ops/attn.wo_b.bin": {
+  "dtype": "float32",
+  "shape": [
+   5120
+  ],
+  "sha256": "52a9f311c2bea8c03166778b91a86635589f98af5d786c6b8e3cc985f667c182",
+  "note": null
+ },
+ "ops/attn.out_allreduce.bin": {
+  "dtype": "float32",
+  "shape": [
+   5120
+  ],
+  "sha256": "52a9f311c2bea8c03166778b91a86635589f98af5d786c6b8e3cc985f667c182",
+  "note": "the all-reduced wo_b output (canonical fold, same bits)"
+ }
+}

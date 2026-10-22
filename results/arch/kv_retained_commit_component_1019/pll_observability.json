@@ -1,0 +1,37 @@
+{
+  "verdict": "UNSUPPORTED_RUNTIME_PLL_LOSS_PROTECTION",
+  "actual_selected_analog_model": "qkd_pll_analog_model: locked only rises after8refedges; never falls untilrawPOR; core oscillation gatedrawPOR only",
+  "actual_trace": "actual_receipt.json: postboot locked1 andhost_rst_n1 throughout genuineSYS_CTRLrestart",
+  "conditional_observability_counterexample": {
+    "scope": "alternate environment, not a source-reachable selected analog trace",
+    "sampled_core_edges": [
+      0,
+      4,
+      8
+    ],
+    "normal_locked_at_sample": [
+      1,
+      1,
+      1
+    ],
+    "missed_pulse_locked_at_sample": [
+      1,
+      1,
+      1
+    ],
+    "unsampled_low_interval": [
+      1,
+      2
+    ],
+    "raw_por_n": 1,
+    "external_other_inputs": "identical at each samplededge",
+    "conclusion": "All clocked retained state updates receive identical inputs at every edge. Observed-fault mode cannot distinguish the two histories."
+  },
+  "not_claimed": [
+    "actual analog runtime low-lock/resumed-edge contract",
+    "asynchronous PLL loss latch",
+    "independent always-running loss monitor",
+    "protection against an event wholly between sampled core edges"
+  ],
+  "production_clock_loss_contract": null
+}
