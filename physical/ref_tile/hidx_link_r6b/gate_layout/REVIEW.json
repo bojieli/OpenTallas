@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hidx_link_r6b",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T05:45:00-07:00",
+ "gate_commit": "668b71c9e",
+ "checklist": {
+  "lattice": "8 SRAMs in two lattice columns with halo channels",
+  "std_cell_band": "logic concentrated in centre-south band near S pin bus, no hotspots",
+  "pin_spread": "pin-bound N/S ~97-98% face demand (~2.2-2.4k pins each) -> outline justified",
+  "clock_entry": "pin-flop spread TT ~28 / FF ~25 ps; 31.6k sinks one root (guidance)",
+  "shape": "GRT ovf 0 (M2 ~14%), fill 21-25% pin-bound"
+ },
+ "notes": "COORD 10-22 05:45 APPROVED (H.STA.BLK.16.2); N-face buses travel ~600 um to the south logic band - if route NEEDS_RTL on N-face paths, successor = landing band at N face, not smaller outline; first CLOSED of r6a/r6b binds",
+ "geometry_sha256": "4a38993dc91c4d53ceb8f8698b4fa5ec6d2fab2c0b6656f0eecfce813e71a597"
+}
