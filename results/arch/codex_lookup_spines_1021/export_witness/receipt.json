@@ -1,0 +1,26 @@
+{
+ "recorded": "2026-10-21T22:24:39-07:00",
+ "source": "ff3e9a96e",
+ "compiled_sources_exact": 41,
+ "positive": {
+  "host": "ot-gold2",
+  "unit": "1617738-1792645973",
+  "windows": 6,
+  "checked": 288,
+  "errors": 0
+ },
+ "parity_mutant": {
+  "unit": "1617738-1792645973",
+  "numerical_errors": 18,
+  "causal_marker": "LOOKUP_CAUSAL_FAIL rpar"
+ },
+ "scale_mutant": {
+  "host": "ot-epyc7",
+  "unit": "4143696-1792646349",
+  "row_receiver_errors": 240,
+  "numerical_errors": 0,
+  "causal_marker": "LOOKUP_CAUSAL_FAIL onesc"
+ },
+ "classifier_repair": "Initial scale wrapper failed closed as unclassified. Final wrapper requires complete six-window / 288-row / 144-per-direction traffic and explicit row-receiver or numerical mismatch. RTL source and builds are unchanged.",
+ "scope": "Integrated lookup-profile behavioral exactness and two causal mutants only; physical gate results are pending."
+}

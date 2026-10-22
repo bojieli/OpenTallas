@@ -22,5 +22,11 @@ $W/obj/sim +OT_ROM_DIR=$W/rom "$@" > $W/run.log 2>&1
 python3 tools/s81_dv/eng_rr/check_eng_rr.py $W/run.log $PWD >> $W/run.log 2>&1
 grep -h 'TB_ENG_RR_STATS\|TB_ENG_RR PASS\|TB_ENG_RR FAIL\|ENG_RR_PY' $W/run.log | tail -6
 if grep -q 'TB_ENG_RR PASS' $W/run.log && grep -q 'ENG_RR_PY PASS' $W/run.log; then echo "LOOKUP_BENCH PASS $V"; exit 0; fi
-if grep -Eq "ENG_RR_PY windows [0-9]+ checked [0-9]+ errs [1-9][0-9]*" $W/run.log && grep -q "TB_ENG_RR FAIL" $W/run.log; then echo "LOOKUP_CAUSAL_FAIL $V"; exit 1; fi
+# The parity mutant changes downstream numerical values; the one-scale mutant is caught at the raw row receiver.
+# Both require the completed six-window traffic census and a real checker mismatch, rather than a build/run error.
+if grep -Eq "TB_ENG_RR_STATS .* windows 6 row_beats 288 xq 144/144 .*" $W/run.log && grep -q "TB_ENG_RR FAIL" $W/run.log; then
+  if grep -Eq "ENG_RR_PY windows 6 checked 288 errs [1-9][0-9]*" $W/run.log || grep -Eq "errs win 0 ob [1-9][0-9]* xq 0 rd 0 rung 0 flt 0$" $W/run.log; then
+    echo "LOOKUP_CAUSAL_FAIL $V"; exit 1
+  fi
+fi
 echo "LOOKUP_BENCH INFRASTRUCTURE_OR_UNCLASSIFIED $V"; exit 2
