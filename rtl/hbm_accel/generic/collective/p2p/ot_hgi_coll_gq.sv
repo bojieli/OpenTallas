@@ -667,21 +667,41 @@ module ot_hgi_coll_gq_issue #(
     // and fire causes (the quantiser / landing faults are already registered: +0). fault is sticky and diagnostic only
     // (off the token / VM path). MUT_FAULT_C (bench): the fire cause is dropped -> +fault=5 must ESCAPE.
     reg f_a, f_wv, f_ne0, f_ne1, f_cb;
+`ifdef OT_GQ_K16
+    // K16 (HBMc/TILES2 10-22, k14r route TT -52 cur_ohc -> rc -> f_bad compare -> OR5/AO221 -> f_cb): f_bad's causes are
+    // registered on their own (same edge as f_cb) and ORed after the registers; f_c / fault keep the same edges.
+    reg f_bz, f_bs, f_be, f_b0;
+    wire f_cbx = f_cb || f_bz || f_bs || (f_b0 && f_be);
+`else
+    wire f_cbx = f_cb;
+`endif
     wire f_fq = fire_qc[0];                           // == fire one edge earlier
     always @(posedge clk or negedge rn)
-        if (!rn) begin f_a <= 1'b0; f_wv <= 1'b0; f_ne0 <= 1'b0; f_ne1 <= 1'b0; f_cb <= 1'b0; end
+        if (!rn) begin f_a <= 1'b0; f_wv <= 1'b0; f_ne0 <= 1'b0; f_ne1 <= 1'b0; f_cb <= 1'b0;
+`ifdef OT_GQ_K16
+            f_bz <= 1'b0; f_bs <= 1'b0; f_be <= 1'b0; f_b0 <= 1'b0;
+`endif
+        end
         else begin
             f_a <= p_sv && (run || busy_any || p_sl > 9'd16 || per_rd_zero);
             f_wv <= !p_sv && run && tl_last_c[11];
             f_ne0 <= {1'b0, cur} != lim;
             f_ne1 <= {1'b0, cur} + 5'd1 != lim;
+`ifdef OT_GQ_K16
+            f_cb <= (IA == 0) ? busy : (iss || (live[f_slot] && MUT != 8));
+            f_bz <= rc[28:19] == 10'd0 || |rc[71:69] || f_sbad;
+            f_bs <= rc[0] && (rc[36:29] == 8'd0 || rc[36:29] > 8'd64);
+            f_be <= {2'b0, rc[28:19]} != {2'b0, rc[36:29]} + {4'b0, f_es};
+            f_b0 <= rc[0];
+`else
             f_cb <= (IA == 0) ? (busy || f_bad) : (iss || (live[f_slot] && MUT != 8) || f_bad);
+`endif
         end
     wire f_b = f_wv && (f_fq ? f_ne1 : f_ne0);        // a row never fired this period
 `ifdef OT_GQ_MUT_FAULT_C
     wire f_c = 1'b0;
 `else
-    wire f_c = f_fq && f_cb;                          // fire into a busy / live slot or a bad descriptor
+    wire f_c = f_fq && f_cbx;                          // fire into a busy / live slot or a bad descriptor
 `endif
     always @(posedge clk or negedge rn)
         if (!rn) fault <= 1'b0;
@@ -1183,6 +1203,11 @@ module ot_hgi_coll_gq_issue #(
             for (integer j = 0; j < 64; j = j + 1) if (pp_em[r][j]) ex_n[j*8 +: 8] = aq_ebc[r*2 + j/32];
     end
     reg [1:0] p_v; reg [255:0] p_d [0:1];
+`ifdef OT_GQ_K16
+    // K16 (k14r route TT -69 rb_lp_data[12] -> port: p_d[1] also feeds ld_p_d / b2_d, so io_flop_at_pins could not anchor
+    // it and the port net ran ~390 ps): rb_lp_data gets its own register (= p_d[1] every edge), anchored at its pins.
+    (* keep = "true" *) reg [255:0] rb_pin_d;
+`endif
     always @(posedge clk or negedge rn1)
         if (!rn1) p_v <= 2'd0;
         else p_v <= pp_v;
@@ -1199,6 +1224,11 @@ module ot_hgi_coll_gq_issue #(
             for (integer c = 0; c < 8; c = c + 1)
                 p_d[r][32*c +: 32] <= rdw_oh32(pp_rawc[r*8 + c], c) | (aq_q_q[r*256 + 32*c +: 32] & {32{pp_codec[r][c]}}) |
                                       (ex_n[32*c +: 32] & {32{pp_loc[r][c]}}) | (ex_n[256 + 32*c +: 32] & {32{pp_hic[r][c]}});
+`ifdef OT_GQ_K16
+        for (integer c = 0; c < 8; c = c + 1)
+            rb_pin_d[32*c +: 32] <= rdw_oh32(pp_rawc[8 + c], c) | (aq_q_q[256 + 32*c +: 32] & {32{pp_codec[1][c]}}) |
+                                    (ex_n[32*c +: 32] & {32{pp_loc[1][c]}}) | (ex_n[256 + 32*c +: 32] & {32{pp_hic[1][c]}});
+`endif
     end
     // ------------------------------------------------------------------ ring B commands (lp @24, read @25, inject @27, rx @27+2h)
     // and ring-A gather commands (same edges into A1, merge register one edge later)
@@ -1251,7 +1281,11 @@ module ot_hgi_coll_gq_issue #(
     always @(posedge clk or negedge rn3) if (!rn3) b2 <= '0; else b2 <= b1;
     always @(posedge clk) b2_d <= b1_d;
     wire [290:0] bo = (MUT == 5) ? b2 : b1;
+`ifdef OT_GQ_K16
+    wire [255:0] bo_d = (MUT == 5) ? b2_d : rb_pin_d;
+`else
     wire [255:0] bo_d = (MUT == 5) ? b2_d : b1_d;
+`endif
     always @* begin : nb_10
         {rb_lp_we, rb_lp_tag} = bo[290:287]; rb_lp_data = bo_d;
         {rb_state_read_tx, rb_state_tx_tag, rb_tx_inject, rb_tx_forward, rb_tx_tag, rb_tx_ttl, rb_rx_slot, rb_rx_kind,
