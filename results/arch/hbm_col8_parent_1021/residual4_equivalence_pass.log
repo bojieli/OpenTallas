@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       admits   660 GB (avail 597, growth 135, headroom 0, waiters 0/0 GB) load 57/128 running 32 disk 649 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-col8-hardmeta-1021/src4
+ot-run: ot-epyc9       admits   229 GB (avail 444, growth 283, headroom 0, waiters 0/0 GB) load 102/128 running 46 disk 1683 GB 
+ot-run: ot-gold2       admits     2 GB (avail 420, growth 419, headroom 0, waiters 0/0 GB) load 32/112 running 19 disk 2700 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-col8-hardmeta-1021/src4
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-col8-hardmeta-1021/src4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-col8-hardmeta-1021/src4
+ot-run: -> ot-epyc5
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/codex-col8-hardmeta-1021/bench4_pos/cells.v
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1836621-1792649355 after 0 s
+COL8_RESIDUAL_EQUIV_PASS checks=1600 valid=742 TP=192 real_controllers_no_array
+- rtl/test/hbm_idx_static/tb_col8_residual_equiv.sv:35: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 18us; walltime 0.149 s; speed 120.857 us/s
+- Verilator: cpu 0.149 s on 1 threads; allocated 11 MB
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1836621-1792649355): exit 0
