@@ -1,0 +1,10 @@
+test_default_preserves_both_existing_head_snapshots (test_kv_qkh_safe32.Safe32Selection) ... ok
+test_missing_profile_refuses_even_with_diagnostic_environment (test_kv_qkh_safe32.Safe32Selection) ... ok
+test_successor_preserves_all_connections_and_clock_homes (test_kv_qkh_safe32.Safe32Selection) ... ok
+test_unqualified_artifacts_refuse_diagnostic_bypass_and_stale_bytes (test_kv_qkh_safe32.Safe32Selection) ... ok
+test_wrong_unsigned_scale_refuses (test_kv_qkh_safe32.Safe32Selection) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.003s
+
+OK

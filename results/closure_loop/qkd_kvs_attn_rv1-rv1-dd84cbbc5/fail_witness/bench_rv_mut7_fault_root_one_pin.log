@@ -1,0 +1,27 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_attn_rv1-rv1-dd84cbbc5 bench bench_rv_mut7_fault_root_one_pin host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_attn_rv1-rv1-dd84cbbc5 log cl/bench_rv_mut7_fault_root_one_pin.a1b1.log captured 2026-10-19T17:46:05-07:00
+# fail_regex '^KVS_RVPAIR_ALL FAIL'
+KVS_RVPAIR build mut=7  verilator Verilator 5.050 2026-07-01 rev v5.050
+KVS_RVPAIR PASS mode=0 mut=7 checks=38766 errors=0 cmds=3 req=3 Q=96 TX=99 faultA=0 faultB=0
+KVS_RVPAIR PASS mode=1 mut=7 checks=12824 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=2 mut=7 checks=12863 errors=0 cmds=1 req=1 Q=6 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=3 mut=7 checks=12866 errors=0 cmds=1 req=1 Q=9 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=4 mut=7 checks=12889 errors=0 cmds=1 req=1 Q=32 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=5 mut=7 checks=12892 errors=0 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=6 mut=7 checks=12896 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=7 mut=7 checks=12900 errors=0 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=8 mut=7 checks=12861 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1
+MISMATCH cyc=1891 tx_valid
+MISMATCH cyc=1892 tx_valid
+MISMATCH cyc=1893 tx_valid
+MISMATCH cyc=1894 tx_valid
+MISMATCH cyc=1895 tx_valid
+MISMATCH cyc=1896 tx_valid
+MISMATCH cyc=1897 tx_valid
+MISMATCH cyc=1898 tx_valid
+MISMATCH cyc=1899 tx_valid
+MISMATCH cyc=1900 tx_valid
+MISMATCH B missed fault mode 9
+KVS_RVPAIR FAIL mode=9 mut=7 checks=12896 errors=27 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=0
+KVS_RVPAIR PASS mode=10 mut=7 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR_ALL FAIL mut=7 modes=11 checks=142128 fails=1

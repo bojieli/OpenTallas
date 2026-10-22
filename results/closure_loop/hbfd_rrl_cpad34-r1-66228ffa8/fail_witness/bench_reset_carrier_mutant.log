@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbfd_rrl_cpad34-r1-66228ffa8 bench bench_reset_carrier_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hbfd_rrl_cpad34-r1-66228ffa8 log cl/bench_reset_carrier_mutant.a1b1.log captured 2026-10-19T17:14:09-07:00
+# fail_regex 'RELEASE age pad'
+FATAL: /tmp/hbfd_rrlc_zpdo0qpj/tb.sv:272: RELEASE age pad cycle=3
+       Time: 45010  Scope: tb

@@ -1,0 +1,41 @@
+{
+  "status": "FUNCTIONAL_COMPONENT_PASS_NOT_SAFE_PHYSICAL_QUALIFICATION",
+  "optin": "OT_SMH_RING_LOCAL_ADDR",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "61e42bc9b8fca226d1a3c7a4b4c488e3be96ea5e1baaef65562c44b1d39d76cc",
+    "rtl/hbm_accel/sm/xs_ring/run_xs_ring_equiv.sh": "ef52d34b0787aa4e2a6f1f1ccd8044823aa788265fdfff41fac81703066787b3",
+    "rtl/hbm_accel/sm/xs_ring/tb_xs_ring_equiv.sv": "9019cec7a4789c42657fe3e67e3d1edf1ffbb3c912da9764f91c4c483ee9a18c"
+  },
+  "positive": {
+    "cycles": 5000,
+    "seed": 31,
+    "output_bits": 1615,
+    "operand_bits": 788,
+    "output_mismatches": 0,
+    "macroposedge_address_checks": 19496,
+    "macro_address_mismatches": 0,
+    "valid_cycles": 3416,
+    "tag_toggles": 4520,
+    "scope": "DUT localposedge vs originalnegedge SRAMring; all4actualmacro inputaddressports checked whenleafresetreleased, outputafterwarmup inclinvaliddata"
+  },
+  "mutant": {
+    "wrongslot_output_mismatches": 4520,
+    "wrongslot_macro_address_mismatches": 19416,
+    "macro_address_checks": 19496,
+    "real_otrun_exit": 1
+  },
+  "data_edges_added": 0,
+  "reset_startup_edges_added": 0,
+  "actual_cost_model": {
+    "old_mapped_read_address_ff": 2,
+    "new_kept_native_ff_expected": 8,
+    "new_ff_delta": 6,
+    "actual_mapping_required": true,
+    "native_cell_delta": "ASR-versusnegedge plus6newFF, not yet priced"
+  },
+  "blockers": [
+    "clockboundaryspread149.5TT/136.4FF remains independent",
+    "existingregionalreset33 plus8newASRloads=expected41, requiresparallelresetcopy redistribution atsameedge beforegate",
+    "actualmapped8keptcaptureFF count/area andsource-ownednativeclockpartition required"
+  ]
+}

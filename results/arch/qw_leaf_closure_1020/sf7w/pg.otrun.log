@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/qw-leaf-closure-1020/pg
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/qw-leaf-closure-1020/pg
+ot-run: ot-epyc7       admits   781 GB (avail 630, growth 84, headroom 0, waiters 0/0 GB) load 43/96 running 22 disk 5605 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/codex/qw-leaf-closure-1020/pg
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qw-leaf-closure-1020/pg
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qw-leaf-closure-1020/pg
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2972673-1792493883 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_PG_AUDIT_PASS 512698
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2972673-1792493883): exit 0

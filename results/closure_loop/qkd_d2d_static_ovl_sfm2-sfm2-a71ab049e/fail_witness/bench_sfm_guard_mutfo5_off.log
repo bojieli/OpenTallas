@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_d2d_static_ovl_sfm2-sfm2-a71ab049e bench bench_sfm_guard_mutfo5_off host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_static_ovl_sfm2-sfm2-a71ab049e log cl/bench_sfm_guard_mutfo5_off.a1b1.log captured 2026-10-19T19:51:24-07:00
+# fail_regex '^GUARD_FAIL A '
+GUARD_FAIL A tx_ran 1 rx_ran 1 txf 0 rxf 0 fault 0
+GUARD_FAIL

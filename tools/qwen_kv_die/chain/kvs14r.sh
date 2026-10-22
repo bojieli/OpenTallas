@@ -31,6 +31,11 @@ cd $W
 for c_ in $(python3 -c "import json,glob;print(' '.join(sorted({json.load(open(f)).get('source_binding',{}).get('start_commit','') for f in glob.glob('physical/ref_tile/qkd_astk*/gate_result.json')}-{''})))"); do
   git cat-file -e "$c_^{commit}" 2>/dev/null || git -C $M fetch -q $GH "$c_" || true
 done
+# KV-BIND4 10-19: kv_tile_views identifies a kvs_* tile view by its closure route's source commit (provenance orfs_dir
+# .../<kit>-<tag>-<sha9>/); a view hardened on another branch (attention r16 rv3 @6fdacf98c) needs that commit in the mirror
+for c_ in $(python3 -c "import glob,re;print(' '.join(sorted({m.group(1) for f in glob.glob('physical/ref_tile/qkd_kvs_*/views/*/provenance/view_export.abstract.json') for m in [re.search(r'closure-loop/[^/\"]+-([0-9a-f]{9})/', open(f).read())] if m})))"); do
+  git cat-file -e "$c_^{commit}" 2>/dev/null || { f_=$(git -C $M rev-parse -q --verify "$c_^{commit}" 2>/dev/null) || f_=; [ -n "$f_" ] || git -C $M fetch -q $GH claude/kv-attn2b-1019 || true; }
+done
 miss=
 while IFS=$'\t' read -r n rb sha; do
   case $n in qkd_d2d_static*) f=physical/ref_tile/qkd_d2d_static_r5_native/views/qkd_d2d_static/qkd_d2d_static.lef;;
@@ -54,7 +59,11 @@ export OT_KV_RST_PER_TREE=1 OT_KV_FWD=1 OT_KV_LANDSLOT=1 OT_KV_RST_PIN_REG=1 OT_
 #    (d2ds_view_select.py; fails closed on a mismatch; frame while absent)
 #  * OT_KV_HROOT_VIEW=auto (kvsys_prep): qkd_kvs_hroot binds the CLOSED k1 view as a stand-in (native FAIL)
 export OT_KV_FACE_LAND=${OT_KV_FACE_LAND:-astk_rly_296}
+# KV-BIND4 10-19: GEN9 d2ds kit = the CLOSED KV-SRAM-D2D successor qkd_d2d_static_r7w_sfm2 (sfm2-1c6c02ed7, TT +76.47 /
+#    FF +2.91; top qkd_d2d_static_sfm, TXDP 0x03030416 NTX 3 SAFE_RC 1 SRAMV 2 FEG 1): kv_die.d2ds_kit binds the sfm RTL
+#    with those params, d2ds_view_select its views/qkd_d2d_static_sfm (still fails closed on a TXDP / NTX mismatch)
 export OT_KV_D2DS_VIEW=${OT_KV_D2DS_VIEW:-auto} OT_KV_HROOT_VIEW=${OT_KV_HROOT_VIEW:-auto}
+export OT_KV_D2DS_KIT=${OT_KV_D2DS_KIT:-qkd_d2d_static_r7w_sfm2}
 # Clock evidence and legal landing reservations are mandatory even in diagnostics.
 unset OT_KV_FWD_UNLANDED_DIAG OT_KV_CLK_UNMEASURED_DIAG
 [ -f tools/qwen_kv_die/kv_lane_reach.py ] || {
@@ -119,10 +128,14 @@ unset OT_BIND_DIAGNOSTIC
 [ -s $R/RST_HOLD_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ "${OT_KV_PARAM_DIAG:-0}" = 1 ] && export OT_BIND_DIAGNOSTIC=1
 say "chain start (laned netlist; OT_BIND_DIAGNOSTIC=${OT_BIND_DIAGNOSTIC:-0})"
+if [ "${OT_KV_STRICT_CHAIN_ONLY:-0}" = 1 ] && [ -n "${OT_BIND_DIAGNOSTIC:-}" ]; then
+  say "STRICT CHAIN REFUSED: prep emitted diagnostic marker(s); no diagnostic fallback"
+  exit 1
+fi
 bash "$W/tools/qwen_kv_die/chain/die_chain.sh" kv "$R" "$W" > "$R/chain.log" 2>&1 || say "chain rc=$?"
 # a refused launch gate (native bind / RELAY_CHECK) stops die_chain before GRT: re-run once stamped DIAGNOSTIC so the GRT /
 # STA / DCC evidence of this floorplan still exists (NOT_A_DIE_RESULT names the failed gate; never a die result)
-if [ -z "${OT_BIND_DIAGNOSTIC:-}" ] && tail -3 $R/STATUS.log | grep -q 'no die job launched'; then
+if [ "${OT_KV_STRICT_CHAIN_ONLY:-0}" != 1 ] && [ -z "${OT_BIND_DIAGNOSTIC:-}" ] && tail -3 $R/STATUS.log | grep -q 'no die job launched'; then
   export OT_BIND_DIAGNOSTIC=1; say "launch gate refused: chain re-run DIAGNOSTIC (not a die result)"
   bash "$W/tools/qwen_kv_die/chain/die_chain.sh" kv "$R" "$W" > "$R/chain_diag.log" 2>&1 || say "chain (diagnostic) rc=$?"
 fi

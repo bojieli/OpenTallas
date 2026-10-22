@@ -1,0 +1,14 @@
+LK_AGE lag=0 checked=898 mism=898
+LK_AGE lag=1 checked=899 mism=899
+LK_AGE lag=2 checked=900 mism=0
+LK_AGE lag=3 checked=900 mism=900
+LK_AGE lag=4 checked=900 mism=900
+LK_AGE lag=5 checked=900 mism=900
+LK_AGE lag=6 checked=900 mism=900
+LK_AGE lag=7 checked=900 mism=900
+LK_AGE lag=8 checked=900 mism=900
+LK_AGE_PASS seed=-198373595 measured_lag=2 compared=900
+- /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020/tb_lk_wrapper_age_flags.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.956 s; speed 2.903 us/s
+- Verilator: cpu 0.956 s on 1 threads; allocated 35 MB

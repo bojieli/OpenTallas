@@ -1,0 +1,40 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootfix
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootfix
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootfix
+ot-run: ot-epyc9       admits  1042 GB (avail 810, growth 81, headroom 0, waiters 0/0 GB) load 63/128 running 30 disk 114 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootfix
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootfix
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3839462-1792506812 after 0 s
+XS_GEN u_f_0R03 (col_h9_l4, lk 492 E 2) slice u_s_0S g 0 rows [28, 29, 30, 31] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 10 beats 80 mutant None
+APROJ_FRAME u_f_0R03 col_h9_l4 8 None PASS 358 []
+XS_GEN u_f_0R03 (col_h9_l4, lk 492 E 2) slice u_s_0S g 0 rows [28, 29, 30, 31] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 10 beats 80 mutant swap
+APROJ_FRAME u_f_0R03 col_h9_l4 8 swap FAIL 358 ['MISMATCH edge 400 row 0 lo 0 k 2 got bc9a3bc6/0 want bd4d4f74/0']
+XS_GEN u_f_0R03 (col_h9_l4, lk 492 E 2) slice u_s_0S g 0 rows [28, 29, 30, 31] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 10 beats 80 mutant shift
+APROJ_FRAME u_f_0R03 col_h9_l4 8 shift FAIL 358 ['PLAN_MISMATCH predicted 10 words, got 10; first diff ((401, 0, (0, 2, 5), 3175960436, 0), (400, 0, (0, 2, 5), 3175960436, 0))']
+XS_GEN u_f_3L01 (col_h10_l4, lk 492 E 2) slice u_s_3S g 6 rows [188, 189, 190, 191] pairs [0, 2, 3, 4, 6, 7, 8, 9, 11, 12] nseg 5 faults 0 ret_words 10 beats 80 mutant None
+APROJ_FRAME u_f_3L01 col_h10_l4 6 None PASS 361 []
+XS_GEN u_f_3L01 (col_h10_l4, lk 492 E 2) slice u_s_3S g 6 rows [188, 189, 190, 191] pairs [0, 2, 3, 4, 6, 7, 8, 9, 11, 12] nseg 5 faults 0 ret_words 10 beats 80 mutant swap
+APROJ_FRAME u_f_3L01 col_h10_l4 6 swap FAIL 361 ['MISMATCH edge 398 row 0 lo 0 k 1 got ba991818/0 want 3c957760/0']
+XS_GEN u_f_3L01 (col_h10_l4, lk 492 E 2) slice u_s_3S g 6 rows [188, 189, 190, 191] pairs [0, 2, 3, 4, 6, 7, 8, 9, 11, 12] nseg 5 faults 0 ret_words 10 beats 80 mutant shift
+APROJ_FRAME u_f_3L01 col_h10_l4 6 shift FAIL 361 ['PLAN_MISMATCH predicted 10 words, got 10; first diff ((399, 0, (0, 1, 5), 1016428384, 0), (398, 0, (0, 1, 5), 1016428384, 0))']
+XS_GEN u_f_2L00 (col_h9_l4, lk b6d E 5) slice u_s_2S g 4 rows [128, 129, 130, 131] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 10 beats 80 mutant None
+APROJ_FRAME u_f_2L00 col_h9_l4 7 None PASS 361 []
+XS_GEN u_f_2L00 (col_h9_l4, lk b6d E 5) slice u_s_2S g 4 rows [128, 129, 130, 131] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 10 beats 80 mutant swap
+APROJ_FRAME u_f_2L00 col_h9_l4 7 swap FAIL 361 ['MISMATCH edge 403 row 0 lo 0 k 2 got 3d2873fd/0 want 3cf81038/0']
+XS_GEN u_f_2L00 (col_h9_l4, lk b6d E 5) slice u_s_2S g 4 rows [128, 129, 130, 131] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 10 beats 80 mutant shift
+APROJ_FRAME u_f_2L00 col_h9_l4 7 shift FAIL 361 ['PLAN_MISMATCH predicted 10 words, got 10; first diff ((404, 0, (0, 2, 5), 1022890040, 0), (403, 0, (0, 2, 5), 1022890040, 0))']
+XS_GEN u_f_0L02 (col_h9_MX_l4, lk 249 E 1) slice u_s_0S g 0 rows [8, 9, 10, 11] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 10 beats 80 mutant None
+APROJ_FRAME u_f_0L02 col_h9_MX_l4 8 None PASS 357 []
+XS_GEN u_f_0L02 (col_h9_MX_l4, lk 249 E 1) slice u_s_0S g 0 rows [8, 9, 10, 11] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 10 beats 80 mutant swap
+APROJ_FRAME u_f_0L02 col_h9_MX_l4 8 swap FAIL 357 ['MISMATCH edge 399 row 0 lo 0 k 2 got 3d062129/0 want 3d1c47d4/0']
+XS_GEN u_f_0L02 (col_h9_MX_l4, lk 249 E 1) slice u_s_0S g 0 rows [8, 9, 10, 11] pairs [0, 1, 2, 3, 5, 6, 7, 9, 10, 11] nseg 5 faults 0 ret_words 10 beats 80 mutant shift
+APROJ_FRAME u_f_0L02 col_h9_MX_l4 8 shift FAIL 357 ['PLAN_MISMATCH predicted 10 words, got 10; first diff ((400, 0, (0, 2, 5), 1025263572, 0), (399, 0, (0, 2, 5), 1025263572, 0))']
+XS_GEN u_f_5R11 (col_h10_l4, lk 492 E 2) slice u_s_5N g 11 rows [1280, 1281, 1282, 1283] pairs [0, 2, 3, 4, 6, 7, 8, 9, 11, 12] nseg 5 faults 0 ret_words 10 beats 80 mutant None
+APROJ_FRAME u_f_5R11 col_h10_l4 8 None PASS 361 []
+XS_GEN u_f_5R11 (col_h10_l4, lk 492 E 2) slice u_s_5N g 11 rows [1280, 1281, 1282, 1283] pairs [0, 2, 3, 4, 6, 7, 8, 9, 11, 12] nseg 5 faults 0 ret_words 10 beats 80 mutant swap
+APROJ_FRAME u_f_5R11 col_h10_l4 8 swap FAIL 361 ['MISMATCH edge 398 row 0 lo 0 k 1 got bd24c580/0 want bd4d97aa/0']
+XS_GEN u_f_5R11 (col_h10_l4, lk 492 E 2) slice u_s_5N g 11 rows [1280, 1281, 1282, 1283] pairs [0, 2, 3, 4, 6, 7, 8, 9, 11, 12] nseg 5 faults 0 ret_words 10 beats 80 mutant shift
+APROJ_FRAME u_f_5R11 col_h10_l4 8 shift FAIL 361 ['PLAN_MISMATCH predicted 10 words, got 10; first diff ((399, 0, (0, 1, 5), 3175978922, 0), (398, 0, (0, 1, 5), 3175978922, 0))']
+APROJ_MECHANISM_PASS 15 source/golden/frame only; consumer ownership unadmitted
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3839462-1792506812): exit 0

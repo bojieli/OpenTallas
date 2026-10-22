@@ -1,0 +1,42 @@
+[
+  {
+    "file": "solp2/run_full1m_s1_obj_m40000.log",
+    "so": "SVCRS_SO t_sot=2541 dso=5680 so_start=8221 pv_last=6509 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=8338 last_w=8600 gw_first=8645 gw_last=9123 verdict=PASS",
+    "svc": "SVCRS die=0 st=2 T=640 window=128 nsel=512 pairs_in=1454 go=4955 first_score=5104 last_score=5263 end=9129 root_beats=160 sc_checked=2448 sc_errors=0 order_errors=0 se_checked=2448 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=9430 verdict=PASS"
+  },
+  {
+    "file": "solp2/run_full1m_s2_obj_m40000.log",
+    "so": "SVCRS_SO t_sot=2532 dso=5680 so_start=8212 pv_last=6531 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=8329 last_w=8591 gw_first=8636 gw_last=9114 verdict=PASS",
+    "svc": "SVCRS die=0 st=2 T=640 window=128 nsel=512 pairs_in=1454 go=4977 first_score=5126 last_score=5285 end=9120 root_beats=160 sc_checked=2448 sc_errors=0 order_errors=0 se_checked=2448 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=9421 verdict=PASS"
+  },
+  {
+    "file": "solp2/run_short300_s1_obj_m40000.log",
+    "so": "SVCRS_SO t_sot=2530 dso=4085 so_start=6615 pv_last=5442 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=6732 last_w=6994 gw_first=7039 gw_last=7517 verdict=PASS",
+    "svc": "SVCRS die=0 st=2 T=428 window=128 nsel=300 pairs_in=856 go=4255 first_score=4404 last_score=4510 end=7523 root_beats=107 sc_checked=1536 sc_errors=0 order_errors=0 se_checked=1536 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=7824 verdict=PASS"
+  },
+  {
+    "file": "solp2/run_short300_s2_obj_m40000.log",
+    "so": "SVCRS_SO t_sot=2528 dso=4085 so_start=6613 pv_last=5411 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=6730 last_w=6992 gw_first=7037 gw_last=7515 verdict=PASS",
+    "svc": "SVCRS die=0 st=2 T=428 window=128 nsel=300 pairs_in=856 go=4224 first_score=4373 last_score=4479 end=7521 root_beats=107 sc_checked=1536 sc_errors=0 order_errors=0 se_checked=1536 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=7822 verdict=PASS"
+  },
+  {
+    "file": "solp2/run_skew1m_s1_obj_m40000.log",
+    "so": "SVCRS_SO t_sot=2544 dso=6322 so_start=8866 pv_last=6890 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=8983 last_w=9245 gw_first=9290 gw_last=9768 verdict=PASS",
+    "svc": "SVCRS die=0 st=2 T=640 window=128 nsel=512 pairs_in=1774 go=5336 first_score=5485 last_score=5644 end=9774 root_beats=160 sc_checked=2512 sc_errors=0 order_errors=0 se_checked=2512 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=10075 verdict=PASS"
+  },
+  {
+    "file": "solp2/run_skew1m_s2_obj_m40000.log",
+    "so": "SVCRS_SO t_sot=2549 dso=6322 so_start=8871 pv_last=6891 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=8988 last_w=9250 gw_first=9295 gw_last=9773 verdict=PASS",
+    "svc": "SVCRS die=0 st=2 T=640 window=128 nsel=512 pairs_in=1774 go=5337 first_score=5486 last_score=5645 end=9779 root_beats=160 sc_checked=2512 sc_errors=0 order_errors=0 se_checked=2512 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=10080 verdict=PASS"
+  },
+  {
+    "file": "solp2/run_tail46_s1_obj_m40000.log",
+    "so": "SVCRS_SO t_sot=769 dso=1697 so_start=2466 pv_last=2017 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2583 last_w=2845 gw_first=2890 gw_last=3368 verdict=PASS",
+    "svc": "SVCRS die=0 st=2 T=46 window=37 nsel=9 pairs_in=18 go=1498 first_score=1647 last_score=1658 end=3374 root_beats=12 sc_checked=144 sc_errors=0 order_errors=0 se_checked=144 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3675 verdict=PASS"
+  },
+  {
+    "file": "solp2/run_tail46_s2_obj_m40000.log",
+    "so": "SVCRS_SO t_sot=781 dso=1697 so_start=2478 pv_last=2025 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2595 last_w=2857 gw_first=2902 gw_last=3380 verdict=PASS",
+    "svc": "SVCRS die=0 st=2 T=46 window=37 nsel=9 pairs_in=18 go=1506 first_score=1655 last_score=1666 end=3386 root_beats=12 sc_checked=144 sc_errors=0 order_errors=0 se_checked=144 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3687 verdict=PASS"
+  }
+]

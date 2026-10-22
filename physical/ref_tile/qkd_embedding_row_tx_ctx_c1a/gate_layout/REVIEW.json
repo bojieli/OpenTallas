@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qkd_embedding_row_tx_ctx_c1a",
+ "reviewer": "KV-EMB4 sub-lane (not on critical_tiles.txt; 0 earlier failed routes)",
+ "verdict": "APPROVED",
+ "time": "2026-10-19T22:50:00-07:00",
+ "checklist": {
+  "lattice": "PASS: the closed r2 geometry: one 64x512 SRAM centred on the track grid, 6-um edge guard",
+  "std_cell_band": "PASS: W out-flop and E in-flop columns + S pin flops, sparse (fill 45%, std 5%)",
+  "pin_spread": "PASS: W/E full faces; S face ck/rst_n centre, new row_open at x 168 beside fault/row_ready; pin track check 1144/1144",
+  "clock_entry": "PASS: ck S centre; TT insertion 271.5 / pin-flop spread 70.2, FF 221.9 / 61.2 (<= 80)",
+  "shape": "PASS: 216 x 151.2 (1.43:1), GRT overflow 0, setup +249 / hold +36 ps"
+ },
+ "notes": "c1a = PD 0.50 base of the row_tx_ctx successor (row_tx r2 body + row_open). Gate PASS 0 fail 0 warn."
+}

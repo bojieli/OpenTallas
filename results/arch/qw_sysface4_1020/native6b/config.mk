@@ -1,0 +1,12 @@
+export PLATFORM = asap7
+export CORNER = TC
+export SDC_FILE = /work/input.sdc
+export DESIGN_NAME = qfd_sys_face_n32_bounded
+export VERILOG_FILES = /src/rtl/qwen_split/qfd_sys_face_n32_bounded.sv /src/rtl/qwen_split/qfd_sysface32_helpers.sv /src/rtl/qwen_sys/d2d_static_20261015/qfd_syscal_n32.sv /src/rtl/qwen_split/qfd_sys_face_record_port_n32.sv /src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sysface32.sv /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
+export ADDITIONAL_LEFS = /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef
+export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib
+export CLOCK_PORT = ck
+export CLOCK_PERIOD = 833.333
+export CORE_UTILIZATION = 40
+export DIE_AREA = 0 0 259.2 129.6
+export CORE_AREA = 1 1 258.2 128.6

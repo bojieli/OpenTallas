@@ -1,0 +1,1620 @@
+{
+  "schema": "opentallas.placed_net_diameter.v1",
+  "scope": "all non-PG non-CLOCK net terminal centers, all pairs Manhattan diameter; direct nets only, not full sequential cone path length",
+  "odb": "/frozen/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_dma_back_static_vp4_banks_cp_asap7_ref_gate/base/5_1_grt.odb",
+  "odb_sha256": "dcd7a3c60d0de647a8dfb786a9be8a13cf772c6fa1e47e77f5f3f73f79d8a6b3",
+  "limit_um": 405,
+  "net_type_counts": {
+    "SIGNAL": 14656,
+    "POWER": 1,
+    "CLOCK": 43,
+    "GROUND": 1
+  },
+  "checked_nets": 14656,
+  "missing_pin_geometry": [],
+  "max_um": 245.489,
+  "over_limit_count": 0,
+  "top": [
+    {
+      "net": "quiet",
+      "type": "SIGNAL",
+      "diameter_um": 245.489,
+      "a": [
+        364.75,
+        311.715,
+        "wire10330/Y"
+      ],
+      "z": [
+        606.918,
+        315.036,
+        "PORT/quiet"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1421]",
+      "type": "SIGNAL",
+      "diameter_um": 238.367,
+      "a": [
+        121.452,
+        542.118,
+        "PORT/wd[1421]"
+      ],
+      "z": [
+        83.788,
+        341.415,
+        "wire10609/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1412]",
+      "type": "SIGNAL",
+      "diameter_um": 229.805,
+      "a": [
+        117.372,
+        542.118,
+        "PORT/wd[1412]"
+      ],
+      "z": [
+        78.82,
+        350.865,
+        "wire10600/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1413]",
+      "type": "SIGNAL",
+      "diameter_um": 228.287,
+      "a": [
+        117.852,
+        542.118,
+        "PORT/wd[1413]"
+      ],
+      "z": [
+        83.788,
+        347.895,
+        "wire10601/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1415]",
+      "type": "SIGNAL",
+      "diameter_um": 223.535,
+      "a": [
+        118.716,
+        542.118,
+        "PORT/wd[1415]"
+      ],
+      "z": [
+        79.954,
+        357.345,
+        "wire10603/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1432]",
+      "type": "SIGNAL",
+      "diameter_um": 223.385,
+      "a": [
+        126.396,
+        542.118,
+        "PORT/wd[1432]"
+      ],
+      "z": [
+        80.494,
+        364.635,
+        "wire10620/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1418]",
+      "type": "SIGNAL",
+      "diameter_um": 219.473,
+      "a": [
+        120.108,
+        542.118,
+        "PORT/wd[1418]"
+      ],
+      "z": [
+        83.788,
+        358.965,
+        "wire10606/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1424]",
+      "type": "SIGNAL",
+      "diameter_um": 218.651,
+      "a": [
+        122.796,
+        542.118,
+        "PORT/wd[1424]"
+      ],
+      "z": [
+        83.788,
+        362.475,
+        "wire10612/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16830",
+      "type": "SIGNAL",
+      "diameter_um": 217.406,
+      "a": [
+        90.97,
+        429.435,
+        "wire16831/Y"
+      ],
+      "z": [
+        255.726,
+        482.085,
+        "place15018/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1427]",
+      "type": "SIGNAL",
+      "diameter_um": 216.485,
+      "a": [
+        124.14,
+        542.118,
+        "PORT/wd[1427]"
+      ],
+      "z": [
+        83.788,
+        365.985,
+        "wire10615/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wb_fill_epoch[1]",
+      "type": "SIGNAL",
+      "diameter_um": 215.537,
+      "a": [
+        406.476,
+        542.118,
+        "PORT/wb_fill_epoch[1]"
+      ],
+      "z": [
+        356.272,
+        376.785,
+        "wire10435/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16806",
+      "type": "SIGNAL",
+      "diameter_um": 215.408,
+      "a": [
+        72.718,
+        523.125,
+        "wire16807/Y"
+      ],
+      "z": [
+        256.536,
+        491.535,
+        "place15049/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1422]",
+      "type": "SIGNAL",
+      "diameter_um": 214.499,
+      "a": [
+        121.884,
+        542.118,
+        "PORT/wd[1422]"
+      ],
+      "z": [
+        82.978,
+        366.525,
+        "wire10610/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16821",
+      "type": "SIGNAL",
+      "diameter_um": 214.436,
+      "a": [
+        73.258,
+        516.915,
+        "wire16822/Y"
+      ],
+      "z": [
+        255.564,
+        484.785,
+        "place15033/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16820",
+      "type": "SIGNAL",
+      "diameter_um": 214.436,
+      "a": [
+        78.388,
+        524.745,
+        "wire16821/Y"
+      ],
+      "z": [
+        255.834,
+        487.755,
+        "place15034/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1420]",
+      "type": "SIGNAL",
+      "diameter_um": 214.127,
+      "a": [
+        120.972,
+        542.118,
+        "PORT/wd[1420]"
+      ],
+      "z": [
+        83.788,
+        365.175,
+        "wire10608/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1431]",
+      "type": "SIGNAL",
+      "diameter_um": 213.671,
+      "a": [
+        125.916,
+        542.118,
+        "PORT/wd[1431]"
+      ],
+      "z": [
+        83.788,
+        370.575,
+        "wire10619/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16808",
+      "type": "SIGNAL",
+      "diameter_um": 212.33,
+      "a": [
+        72.718,
+        519.615,
+        "wire16809/Y"
+      ],
+      "z": [
+        256.428,
+        490.995,
+        "place15047/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net6829",
+      "type": "SIGNAL",
+      "diameter_um": 211.952,
+      "a": [
+        6.028,
+        101.115,
+        "wire6830/Y"
+      ],
+      "z": [
+        186.12,
+        132.975,
+        "place15307/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16827",
+      "type": "SIGNAL",
+      "diameter_um": 211.034,
+      "a": [
+        81.844,
+        444.555,
+        "wire16828/Y"
+      ],
+      "z": [
+        255.078,
+        482.355,
+        "place15024/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1430]",
+      "type": "SIGNAL",
+      "diameter_um": 210.269,
+      "a": [
+        125.484,
+        542.118,
+        "PORT/wd[1430]"
+      ],
+      "z": [
+        83.788,
+        373.545,
+        "wire10618/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16833",
+      "type": "SIGNAL",
+      "diameter_um": 209.738,
+      "a": [
+        96.64,
+        429.705,
+        "wire16834/Y"
+      ],
+      "z": [
+        256.428,
+        479.655,
+        "place15015/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16789",
+      "type": "SIGNAL",
+      "diameter_um": 208.334,
+      "a": [
+        75.58,
+        523.125,
+        "wire16790/Y"
+      ],
+      "z": [
+        256.104,
+        495.315,
+        "place15066/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16798",
+      "type": "SIGNAL",
+      "diameter_um": 208.172,
+      "a": [
+        76.12,
+        522.045,
+        "wire16799/Y"
+      ],
+      "z": [
+        256.752,
+        494.505,
+        "place15057/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16797",
+      "type": "SIGNAL",
+      "diameter_um": 208.172,
+      "a": [
+        80.71,
+        524.205,
+        "wire16798/Y"
+      ],
+      "z": [
+        256.752,
+        492.075,
+        "place15058/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wb_reserve_v",
+      "type": "SIGNAL",
+      "diameter_um": 206.027,
+      "a": [
+        400.044,
+        542.118,
+        "PORT/wb_reserve_v"
+      ],
+      "z": [
+        353.14,
+        382.995,
+        "wire10453/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16659",
+      "type": "SIGNAL",
+      "diameter_um": 205.472,
+      "a": [
+        54.466,
+        129.735,
+        "wire16660/Y"
+      ],
+      "z": [
+        229.428,
+        99.225,
+        "place15523/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16836",
+      "type": "SIGNAL",
+      "diameter_um": 204.824,
+      "a": [
+        82.384,
+        450.765,
+        "wire16837/Y"
+      ],
+      "z": [
+        256.428,
+        481.545,
+        "place15011/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1429]",
+      "type": "SIGNAL",
+      "diameter_um": 204.713,
+      "a": [
+        125.004,
+        542.118,
+        "PORT/wd[1429]"
+      ],
+      "z": [
+        81.844,
+        380.565,
+        "wire10617/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wb_reserve_epoch[0]",
+      "type": "SIGNAL",
+      "diameter_um": 203.693,
+      "a": [
+        401.004,
+        542.118,
+        "PORT/wb_reserve_epoch[0]"
+      ],
+      "z": [
+        363.184,
+        376.245,
+        "wire10438/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16715",
+      "type": "SIGNAL",
+      "diameter_um": 203.384,
+      "a": [
+        86.686,
+        521.775,
+        "wire16716/Y"
+      ],
+      "z": [
+        232.83,
+        464.535,
+        "place15193/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1417]",
+      "type": "SIGNAL",
+      "diameter_um": 200.093,
+      "a": [
+        119.628,
+        542.118,
+        "PORT/wd[1417]"
+      ],
+      "z": [
+        83.788,
+        377.865,
+        "wire10605/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16694",
+      "type": "SIGNAL",
+      "diameter_um": 199.856,
+      "a": [
+        85.84,
+        133.785,
+        "wire16695/Y"
+      ],
+      "z": [
+        254.106,
+        102.195,
+        "place15305/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1436]",
+      "type": "SIGNAL",
+      "diameter_um": 198.917,
+      "a": [
+        128.172,
+        542.118,
+        "PORT/wd[1436]"
+      ],
+      "z": [
+        83.788,
+        387.585,
+        "wire10624/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16697",
+      "type": "SIGNAL",
+      "diameter_um": 198.794,
+      "a": [
+        87.226,
+        135.405,
+        "wire16698/Y"
+      ],
+      "z": [
+        249.03,
+        98.415,
+        "place15297/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16709",
+      "type": "SIGNAL",
+      "diameter_um": 198.362,
+      "a": [
+        99.214,
+        524.205,
+        "wire16710/Y"
+      ],
+      "z": [
+        240.876,
+        467.505,
+        "place15199/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16912",
+      "type": "SIGNAL",
+      "diameter_um": 197.858,
+      "a": [
+        8.89,
+        108.405,
+        "wire16913/Y"
+      ],
+      "z": [
+        182.178,
+        132.975,
+        "place15329/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16909",
+      "type": "SIGNAL",
+      "diameter_um": 197.696,
+      "a": [
+        7.702,
+        104.895,
+        "wire16910/Y"
+      ],
+      "z": [
+        177.318,
+        132.975,
+        "place15318/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16683",
+      "type": "SIGNAL",
+      "diameter_um": 197.426,
+      "a": [
+        87.514,
+        133.515,
+        "wire16684/Y"
+      ],
+      "z": [
+        256.05,
+        104.625,
+        "place15341/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16699",
+      "type": "SIGNAL",
+      "diameter_um": 197.372,
+      "a": [
+        83.788,
+        125.955,
+        "wire16700/Y"
+      ],
+      "z": [
+        253.08,
+        97.875,
+        "place15290/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16664",
+      "type": "SIGNAL",
+      "diameter_um": 197.336,
+      "a": [
+        74.104,
+        43.875,
+        "wire16665/Y"
+      ],
+      "z": [
+        245.25,
+        70.065,
+        "place15478/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16791",
+      "type": "SIGNAL",
+      "diameter_um": 197.066,
+      "a": [
+        77.56,
+        523.665,
+        "wire16792/Y"
+      ],
+      "z": [
+        243.846,
+        492.885,
+        "place15064/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net15843",
+      "type": "SIGNAL",
+      "diameter_um": 196.853,
+      "a": [
+        429.532,
+        286.605,
+        "wire15844/Y"
+      ],
+      "z": [
+        596.415,
+        316.575,
+        "place13338/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16926",
+      "type": "SIGNAL",
+      "diameter_um": 196.58,
+      "a": [
+        15.406,
+        68.715,
+        "wire16927/Y"
+      ],
+      "z": [
+        184.176,
+        40.905,
+        "place15469/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16932",
+      "type": "SIGNAL",
+      "diameter_um": 196.219,
+      "a": [
+        432.042,
+        86.652,
+        "u_ot_pr_core.u_dbk.L\\[2\\].u_bank/rr_data[236]"
+      ],
+      "z": [
+        596.518,
+        118.395,
+        "wire16933/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16811",
+      "type": "SIGNAL",
+      "diameter_um": 196.076,
+      "a": [
+        80.116,
+        510.705,
+        "wire16812/Y"
+      ],
+      "z": [
+        255.942,
+        490.455,
+        "place15044/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16657",
+      "type": "SIGNAL",
+      "diameter_um": 196.04,
+      "a": [
+        58.174,
+        132.705,
+        "wire16658/Y"
+      ],
+      "z": [
+        230.184,
+        108.675,
+        "place15528/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16825",
+      "type": "SIGNAL",
+      "diameter_um": 194.744,
+      "a": [
+        114.874,
+        428.895,
+        "wire16826/Y"
+      ],
+      "z": [
+        255.888,
+        482.625,
+        "place15026/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wb_reserve_bank",
+      "type": "SIGNAL",
+      "diameter_um": 194.591,
+      "a": [
+        400.38,
+        542.118,
+        "PORT/wb_reserve_bank"
+      ],
+      "z": [
+        370.582,
+        377.325,
+        "wire10436/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16711",
+      "type": "SIGNAL",
+      "diameter_um": 194.312,
+      "a": [
+        100.888,
+        524.745,
+        "wire16712/Y"
+      ],
+      "z": [
+        238.5,
+        468.045,
+        "place15197/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16818",
+      "type": "SIGNAL",
+      "diameter_um": 194.258,
+      "a": [
+        97.756,
+        525.285,
+        "wire16819/Y"
+      ],
+      "z": [
+        256.374,
+        489.645,
+        "place15037/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16834",
+      "type": "SIGNAL",
+      "diameter_um": 193.88,
+      "a": [
+        112.012,
+        429.165,
+        "wire16835/Y"
+      ],
+      "z": [
+        256.212,
+        478.845,
+        "place15014/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16775",
+      "type": "SIGNAL",
+      "diameter_um": 193.7,
+      "a": [
+        65.32,
+        518.535,
+        "wire16776/Y"
+      ],
+      "z": [
+        229.86,
+        489.375,
+        "place15080/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16828",
+      "type": "SIGNAL",
+      "diameter_um": 193.448,
+      "a": [
+        114.874,
+        429.165,
+        "wire16829/Y"
+      ],
+      "z": [
+        255.402,
+        482.085,
+        "place15021/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16835",
+      "type": "SIGNAL",
+      "diameter_um": 193.394,
+      "a": [
+        111.418,
+        429.705,
+        "wire16836/Y"
+      ],
+      "z": [
+        255.402,
+        479.115,
+        "place15013/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16890",
+      "type": "SIGNAL",
+      "diameter_um": 193.124,
+      "a": [
+        13.678,
+        453.465,
+        "wire16891/Y"
+      ],
+      "z": [
+        182.772,
+        429.435,
+        "place15140/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16831",
+      "type": "SIGNAL",
+      "diameter_um": 192.908,
+      "a": [
+        113.092,
+        429.705,
+        "wire16832/Y"
+      ],
+      "z": [
+        256.59,
+        479.115,
+        "place15017/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16822",
+      "type": "SIGNAL",
+      "diameter_um": 192.836,
+      "a": [
+        98.908,
+        521.775,
+        "wire16823/Y"
+      ],
+      "z": [
+        256.104,
+        486.135,
+        "place15031/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16724",
+      "type": "SIGNAL",
+      "diameter_um": 192.26,
+      "a": [
+        93.706,
+        429.165,
+        "wire16725/Y"
+      ],
+      "z": [
+        256.536,
+        458.595,
+        "place15182/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16770",
+      "type": "SIGNAL",
+      "diameter_um": 192.206,
+      "a": [
+        87.82,
+        525.285,
+        "wire16771/Y"
+      ],
+      "z": [
+        243.576,
+        488.835,
+        "place15087/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16716",
+      "type": "SIGNAL",
+      "diameter_um": 192.152,
+      "a": [
+        93.598,
+        429.435,
+        "wire16717/Y"
+      ],
+      "z": [
+        256.32,
+        458.865,
+        "place15191/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16815",
+      "type": "SIGNAL",
+      "diameter_um": 192.098,
+      "a": [
+        99.592,
+        524.745,
+        "wire16816/Y"
+      ],
+      "z": [
+        255.24,
+        488.295,
+        "place15040/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16819",
+      "type": "SIGNAL",
+      "diameter_um": 192.044,
+      "a": [
+        100.726,
+        525.015,
+        "wire16820/Y"
+      ],
+      "z": [
+        255.51,
+        487.755,
+        "place15036/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16727",
+      "type": "SIGNAL",
+      "diameter_um": 191.99,
+      "a": [
+        88.954,
+        428.895,
+        "wire16728/Y"
+      ],
+      "z": [
+        252.864,
+        456.975,
+        "place15178/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16720",
+      "type": "SIGNAL",
+      "diameter_um": 191.936,
+      "a": [
+        93.112,
+        429.705,
+        "wire16721/Y"
+      ],
+      "z": [
+        256.428,
+        458.325,
+        "place15186/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16730",
+      "type": "SIGNAL",
+      "diameter_um": 191.936,
+      "a": [
+        82.69,
+        431.865,
+        "wire16731/Y"
+      ],
+      "z": [
+        249.786,
+        456.705,
+        "place15171/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16656",
+      "type": "SIGNAL",
+      "diameter_um": 191.612,
+      "a": [
+        97.54,
+        135.405,
+        "wire16657/Y"
+      ],
+      "z": [
+        255.132,
+        101.385,
+        "place15531/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16804",
+      "type": "SIGNAL",
+      "diameter_um": 191.558,
+      "a": [
+        94.84,
+        523.665,
+        "wire16805/Y"
+      ],
+      "z": [
+        254.808,
+        492.075,
+        "place15051/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net15842",
+      "type": "SIGNAL",
+      "diameter_um": 191.291,
+      "a": [
+        428.236,
+        294.705,
+        "wire15843/Y"
+      ],
+      "z": [
+        598.467,
+        315.765,
+        "place13341/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16829",
+      "type": "SIGNAL",
+      "diameter_um": 191.126,
+      "a": [
+        118.006,
+        429.165,
+        "wire16830/Y"
+      ],
+      "z": [
+        256.752,
+        481.545,
+        "place15020/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16887",
+      "type": "SIGNAL",
+      "diameter_um": 190.91,
+      "a": [
+        22.264,
+        492.345,
+        "wire16888/Y"
+      ],
+      "z": [
+        183.744,
+        521.775,
+        "place15118/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16666",
+      "type": "SIGNAL",
+      "diameter_um": 190.316,
+      "a": [
+        89.494,
+        40.905,
+        "wire16667/Y"
+      ],
+      "z": [
+        251.46,
+        69.255,
+        "place15474/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16089",
+      "type": "SIGNAL",
+      "diameter_um": 190.316,
+      "a": [
+        117.574,
+        521.775,
+        "wire16090/Y"
+      ],
+      "z": [
+        252.27,
+        466.155,
+        "place15202/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16146",
+      "type": "SIGNAL",
+      "diameter_um": 190.046,
+      "a": [
+        41.542,
+        97.605,
+        "wire16147/Y"
+      ],
+      "z": [
+        229.698,
+        99.495,
+        "place15296/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16693",
+      "type": "SIGNAL",
+      "diameter_um": 189.884,
+      "a": [
+        71.296,
+        134.325,
+        "wire16694/Y"
+      ],
+      "z": [
+        229.59,
+        102.735,
+        "place15306/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16778",
+      "type": "SIGNAL",
+      "diameter_um": 189.866,
+      "a": [
+        83.788,
+        503.685,
+        "wire16779/Y"
+      ],
+      "z": [
+        255.294,
+        485.325,
+        "place15077/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16777",
+      "type": "SIGNAL",
+      "diameter_um": 189.776,
+      "a": [
+        89.44,
+        522.045,
+        "wire16778/Y"
+      ],
+      "z": [
+        244.386,
+        487.215,
+        "place15078/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net6747",
+      "type": "SIGNAL",
+      "diameter_um": 189.758,
+      "a": [
+        3.976,
+        124.605,
+        "wire6748/Y"
+      ],
+      "z": [
+        185.364,
+        132.975,
+        "place15389/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16721",
+      "type": "SIGNAL",
+      "diameter_um": 189.722,
+      "a": [
+        88.36,
+        429.705,
+        "wire16722/Y"
+      ],
+      "z": [
+        248.922,
+        458.865,
+        "place15185/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16673",
+      "type": "SIGNAL",
+      "diameter_um": 189.29,
+      "a": [
+        61.576,
+        132.705,
+        "wire16674/Y"
+      ],
+      "z": [
+        229.266,
+        111.105,
+        "place15360/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16893",
+      "type": "SIGNAL",
+      "diameter_um": 189.29,
+      "a": [
+        9.142,
+        454.815,
+        "wire16894/Y"
+      ],
+      "z": [
+        173.322,
+        429.705,
+        "place15153/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net13057",
+      "type": "SIGNAL",
+      "diameter_um": 189.219,
+      "a": [
+        339.373,
+        539.865,
+        "wire5497/A"
+      ],
+      "z": [
+        330.514,
+        359.505,
+        "place13058/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16002",
+      "type": "SIGNAL",
+      "diameter_um": 188.966,
+      "a": [
+        28.798,
+        485.325,
+        "wire16003/Y"
+      ],
+      "z": [
+        181.314,
+        521.775,
+        "place15083/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "wd[1398]",
+      "type": "SIGNAL",
+      "diameter_um": 188.849,
+      "a": [
+        111.084,
+        542.118,
+        "PORT/wd[1398]"
+      ],
+      "z": [
+        83.788,
+        380.565,
+        "wire10586/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16787",
+      "type": "SIGNAL",
+      "diameter_um": 188.732,
+      "a": [
+        73.258,
+        486.675,
+        "wire16788/Y"
+      ],
+      "z": [
+        255.78,
+        492.885,
+        "place15068/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16816",
+      "type": "SIGNAL",
+      "diameter_um": 188.678,
+      "a": [
+        102.364,
+        522.315,
+        "wire16817/Y"
+      ],
+      "z": [
+        256.482,
+        487.755,
+        "place15039/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16757",
+      "type": "SIGNAL",
+      "diameter_um": 188.588,
+      "a": [
+        69.568,
+        522.585,
+        "wire16758/Y"
+      ],
+      "z": [
+        229.806,
+        494.235,
+        "place15109/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16817",
+      "type": "SIGNAL",
+      "diameter_um": 188.516,
+      "a": [
+        83.788,
+        504.495,
+        "wire16818/Y"
+      ],
+      "z": [
+        256.374,
+        488.565,
+        "place15038/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16751",
+      "type": "SIGNAL",
+      "diameter_um": 188.48,
+      "a": [
+        66.706,
+        520.965,
+        "wire16752/Y"
+      ],
+      "z": [
+        229.806,
+        495.585,
+        "place15121/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net13212",
+      "type": "SIGNAL",
+      "diameter_um": 188.463,
+      "a": [
+        323.281,
+        539.865,
+        "wire5562/A"
+      ],
+      "z": [
+        317.068,
+        357.615,
+        "place13213/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16776",
+      "type": "SIGNAL",
+      "diameter_um": 188.264,
+      "a": [
+        72.43,
+        519.885,
+        "wire16777/Y"
+      ],
+      "z": [
+        230.184,
+        489.375,
+        "place15079/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16772",
+      "type": "SIGNAL",
+      "diameter_um": 188.192,
+      "a": [
+        71.584,
+        518.535,
+        "wire16773/Y"
+      ],
+      "z": [
+        229.806,
+        488.565,
+        "place15084/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16824",
+      "type": "SIGNAL",
+      "diameter_um": 188.084,
+      "a": [
+        83.248,
+        467.505,
+        "wire16825/Y"
+      ],
+      "z": [
+        256.752,
+        482.085,
+        "place15027/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16676",
+      "type": "SIGNAL",
+      "diameter_um": 188.03,
+      "a": [
+        60.19,
+        129.735,
+        "wire16677/Y"
+      ],
+      "z": [
+        229.05,
+        110.565,
+        "place15355/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16742",
+      "type": "SIGNAL",
+      "diameter_um": 187.994,
+      "a": [
+        63.304,
+        431.865,
+        "wire16743/Y"
+      ],
+      "z": [
+        229.428,
+        453.735,
+        "place15149/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16743",
+      "type": "SIGNAL",
+      "diameter_um": 187.94,
+      "a": [
+        83.932,
+        432.135,
+        "wire16744/Y"
+      ],
+      "z": [
+        250.002,
+        454.005,
+        "place15148/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net15941",
+      "type": "SIGNAL",
+      "diameter_um": 187.886,
+      "a": [
+        81.448,
+        469.935,
+        "wire15942/Y"
+      ],
+      "z": [
+        255.564,
+        483.705,
+        "place15022/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net15954",
+      "type": "SIGNAL",
+      "diameter_um": 187.778,
+      "a": [
+        82.744,
+        473.715,
+        "wire15955/Y"
+      ],
+      "z": [
+        256.752,
+        487.485,
+        "place15035/A"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net13188",
+      "type": "SIGNAL",
+      "diameter_um": 187.599,
+      "a": [
+        327.547,
+        539.865,
+        "wire5551/A"
+      ],
+      "z": [
+        319.498,
+        360.315,
+        "place13189/Y"
+      ],
+      "term_points": 2
+    },
+    {
+      "net": "net16663",
+      "type": "SIGNAL",
+      "diameter_um": 187.562,
+      "a": [
+        39.922,
+        70.335,
+        "wire16664/Y"
+      ],
+      "z": [
+        198.054,
+        40.905,
+        "place15480/A"
+      ],
+      "term_points": 2
+    }
+  ],
+  "over_limit": []
+}

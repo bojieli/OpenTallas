@@ -1,0 +1,1 @@
+IDXRD_CASE OK b3/pass_l2: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 43691 keys 43691 words 2732 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 8707 end_to_last 8642 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215596 wall=3:00.84

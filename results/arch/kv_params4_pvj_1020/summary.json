@@ -1,0 +1,17 @@
+{
+ "status": "S32_SOURCE_NATIVE32_PASS_BENCH_PASS_NO_GATE_YET",
+ "time": "2026-10-20 02:50 PT",
+ "lane": "KV-PARAMS4",
+ "master": "ot_qwen_tp8_pv_join_s32_t (new, default-off; ot_qwen_tp8_pv_join_t / ot_qwen_tp8_pv_join_cold_t untouched)",
+ "replaces_for_bind": "ot_qwen_tp8_pv_join_t #(MUT 0, J_LAT 7, RESET_PIN 1) view qkd_pv_join_sfe_r6 (critical tile)",
+ "source_sha256": {"rtl/hdc/nearhbm/ot_qwen_tp8_pv_join_s32_t.sv": "c721d94f7ce02b1cb0947959573b6190fac14ae68cca6ba621619e5b3cc1cbf7", "rtl/hdc/ot_hdc_fp32_qkh_ncr.sv": "ba7f1468df3bd772a4ddedcc824c24ea012f2dc0765a0233553cf42b005edb7a", "rtl/lib/ot_rst_relay_bounded32.sv": "d3ba9c38d47d5868efdec0e81dbba096732613299aba3a2b4f2e4d4498204785"},
+ "structure": {"reset": "ot_rst_relay_bounded32 #(101): async assert, release 3 edges after rst_n (legacy RESET_PIN 1: 1 edge) -> +2 boot reset-release edges, 0 token edges; xr/yr/y cleared (COLD_INIT semantics, no unreset datapath captured at the reset edge = the old base CEX class)",
+   "adders": "16 x ot_hdc_fp32_add_lat_ncr LAT 7 (lane8 R8 native-32 adder)",
+   "select": "one-hot operand select per lane/operand/16-bit half from 4 kept control-group copies of (go_r, jrun, jage)",
+   "write_enables": "xr/yr/y next-state enables registered per 16-bit half-word (32 copies each)",
+   "storage": "t_r 4096 b = registered input pins (item 1), xr/yr 1024 b = fixed-slot holding registers, no runtime-indexed array (item 5 n/a)"},
+ "native_census": {"status": "PASS", "max_dynamic_loads": 32, "violations": 0, "role_errors": 0, "roots_examined": 76263, "netlist_sha256": "65e9ba413baf93d8db89a3481ee975bffe8d769c30bdd5e25504b91a4836a497", "synth_area_um2": 13402.53, "util_in_172.8x172.8": 0.449, "report": "native_ot_qwen_tp8_pv_join_s32_t_census.json.gz", "was": "cold source 291 drivers >32, max 513 (generic census)"},
+ "benches_verilator_5050": {"m0": "PASS 3 seeds x 3 reset epochs (12003 checks, 300 valid joins each) vs ot_qwen_tp8_pv_join_t RESET_PIN 1 with ref reset +2 edges, random init", "mut1_operand_swap": "FAIL 342", "mut2_unreset_yr": "FAIL (cold-state check)", "mut3_out_written_at_xr_slot": "FAIL 300"},
+ "fleet_dir": "ot-epyc5:/srv/opentallas-scratch/claude/kv-params4-pvj-1020",
+ "next": "kit qkd_pv_join_s32 (172.8 sq, pins as sfe_r6) --cts gate; CRITICAL tile -> COORD-REVIEW-QUEUE packet, no submit; GEN9 boot calendar +2 reset-release edges; native param receipt after a CLOSED view"
+}

@@ -34,6 +34,17 @@ class Programme(unittest.TestCase):
             ep = C.CNE.compile_programme(1, 2, T - 1, 0, 2)
             self.assertEqual(C.AC.hexcal(c), ep['calendar_hex'])
 
+    def test_pair_end_floor_law(self):
+        # KV-FLOOR1 10-20: the component profile has no floor; the die profile follows OT_KV_PVFIN_FLOOR (default off);
+        # with pv_floor the pair law is P1 = P0 (ctl_tbf), every other calendar field identical
+        self.assertFalse(C.profile('component').get('pv_floor', False))
+        pr = C.profile('die', json.loads((ROOT / C.AGES).read_text()))
+        self.assertIs(pr['pv_floor'], C.PV_FLOOR)
+        for T in (1, 129, 300, 4097, 8192):
+            a, b = C.attention_calendar(T, dict(pr, pv_floor=False)), C.attention_calendar(T, dict(pr, pv_floor=True))
+            self.assertEqual(b['P1'], a['P0'])
+            self.assertEqual({k: v for k, v in b.items() if k != 'P1'}, {k: v for k, v in a.items() if k != 'P1'})
+
     def test_attention_words_follow_the_link_slot(self):
         for r in (self.comp, self.die):
             a = r['attention']

@@ -1,0 +1,12 @@
+R 46525 014 000000000000000000000000000000000000000000000000000000003f9e9375
+G 46527 1139 6576
+C 46598 00
+R 46731 015 000000000000000000000000000000000000000000000000000000004014bd5d
+S 46798 0
+B 46798 0001
+B 46799 0000
+FAULT svg cycle 46800 issuer 1 feed 0 (desc 0 cdc 0 cache 0 prog 0 s1 0 fl 0)
+ISSUER rc 6849 sq_n 3 gq_n 1 gh_at 6780 go_busy 0 cache_ready 00 block_ready 0000 a_v 1 p_v 1 st_v 1 s_blk 120856 rd_q 0
+[39007068000] %Fatal: tb_hbm_svg_rel_sm.sv:89: Assertion failed in tb_hbm_svg_rel_sm: svg fault
+%Error: /srv/opentallas-scratch/claude/tok-func-hbm/sm14/src/rtl/test/hbm_accel/svg_rel/tb_hbm_svg_rel_sm.sv:89: Verilog $stop
+Aborting...

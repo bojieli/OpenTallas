@@ -21,6 +21,14 @@
 //         position fields are untouched (this is a private decode inside the collector; no register, no edge).
 //         UID_SLOT 0 keeps the pos[17:16] decoding above (existing MU benches).  MUT 2 = legacy pos decode in slot mode,
 //         MUT 3 = slot range check removed (bench mutants).
+//   NEXT ISSUE (KV-MU7 10-20, full HOST root bench tb_mu_hroot_full): the scheduler issues a user's next step as soon
+//         as the package controller retires the previous one (it never waits for POST), while the lifecycle admits
+//         that user's next ALLOCATION only after its POST (request_ready && !pp[user]).  So the observer's step_issue
+//         of step k+1 can reach the collector between step k's retire and step k's POST (measured: 10 edges after the
+//         retire, the same edge as the POST).  A step_issue for a user whose owned step has RETIRED (and has no held
+//         issue) is held in a one-deep per-user register and becomes that user's issued step at its POST (directly,
+//         when it arrives on the POST edge).  Any other second issue is still a sticky fault.  No edge, no handshake
+//         added.  MUT 4 = no hold (the 10-19 behaviour; faults on the first such issue).
 module qkd_host_post_collector_mu #(parameter integer MUT=0, parameter integer MU=1, parameter integer UID_SLOT=0)(
  input wire ck,por_n,
  input wire allocated_valid,allocated_delivered,input wire[58:0]allocated_tag,input wire[1:0]allocated_gen,
@@ -48,6 +56,7 @@ end else begin:g_mu
  reg[58:0]last_alloc;reg last_alloc_v;
  reg[1:0]pq[0:3];reg[1:0]pw,pr;reg[2:0]pn;          // POST order: users in terminal-acceptance order
  reg pr_v;reg[58:0]pr_tag;reg[1:0]pr_gen;reg f;
+ reg[3:0]nx_v;reg[15:0]nx_client[0:3];reg[7:0]nx_slot[0:3];reg[17:0]nx_pos[0:3];   // held next issue (per user)
  assign post_retired=pr_v;assign post_tag=pr_tag;assign post_gen=pr_gen;assign fault=f;
  wire drains=(&kv_drained)&&(&vm_drained)&&(&collective_drained)&&(&host_drained);
  wire[1:0]ua=allocated_tag[44:43];
@@ -65,12 +74,14 @@ end else begin:g_mu
  wire exact_cq=cq_client_tag==client[uc]&&cq_slot==slot[uc]&&cq_pos==pos[uc]&&cq_token==token[uc];
  wire post_go=pn!=0&&owned[h]&&terminal_seen[h]&&result_transport_idle&&(drains||!alone)&&!source_fault&&!f&&
       ((release_seen&release_required[h])==release_required[h])&&issued[h]&&retired[h]&&(!cq_needed[h]||cq_seen[h]||MUT==1);
+ // next-issue hold: the user's owned step retired, no issue held yet, shape checks as a first issue
+ wire take_next=(MUT!=4)&&step_issue_v&&issued[ui]&&retired[ui]&&!nx_v[ui]&&step_pos[15:13]==0&&!bad_si;
  integer k;
  always @(posedge ck or negedge por_n)begin
   if(!por_n)begin
    owned<=0;issued<=0;retired<=0;cq_needed<=0;cq_seen<=0;terminal_seen<=0;release_seen<=0;last_alloc<=0;last_alloc_v<=0;
-   pw<=0;pr<=0;pn<=0;pr_v<=0;pr_tag<=0;pr_gen<=0;f<=0;
-   for(k=0;k<4;k=k+1)begin tag[k]<=0;gen[k]<=0;client[k]<=0;slot[k]<=0;pos[k]<=0;token[k]<=0;release_required[k]<=0;pq[k]<=0;end
+   pw<=0;pr<=0;pn<=0;pr_v<=0;pr_tag<=0;pr_gen<=0;f<=0;nx_v<=0;
+   for(k=0;k<4;k=k+1)begin nx_client[k]<=0;nx_slot[k]<=0;nx_pos[k]<=0;tag[k]<=0;gen[k]<=0;client[k]<=0;slot[k]<=0;pos[k]<=0;token[k]<=0;release_required[k]<=0;pq[k]<=0;end
   end else begin
    pr_v<=0;
    if(source_fault)f<=1;
@@ -80,7 +91,8 @@ end else begin:g_mu
     else begin owned[ua]<=1;tag[ua]<={allocated_tag[58:43],6'd37,allocated_tag[36:0]};gen[ua]<=allocated_gen;
      retired[ua]<=0;cq_needed[ua]<=0;cq_seen[ua]<=0;terminal_seen[ua]<=0;end
    end
-   if(step_issue_v)begin
+   if(take_next)begin nx_v[ui]<=1;nx_client[ui]<=step_client_tag;nx_slot[ui]<=step_slot;nx_pos[ui]<=step_pos;end
+   else if(step_issue_v)begin
     if(issued[ui]||step_pos[15:13]!=0||bad_si)f<=1;
     else begin issued[ui]<=1;client[ui]<=step_client_tag;slot[ui]<=step_slot;pos[ui]<=step_pos;end
    end
@@ -99,7 +111,11 @@ end else begin:g_mu
    end
    if(pn!=0)release_seen<=release_seen|cancel_released;
    if(post_go)begin
-    owned[h]<=0;issued[h]<=0;pr_v<=1;pr_tag<=tag[h];pr_gen<=gen[h];pr<=pr+1'b1;release_seen<=0;
+    owned[h]<=0;pr_v<=1;
+    if(take_next&&ui==h)begin issued[h]<=1;client[h]<=step_client_tag;slot[h]<=step_slot;pos[h]<=step_pos;nx_v[h]<=0;end
+    else if(nx_v[h])begin issued[h]<=1;client[h]<=nx_client[h];slot[h]<=nx_slot[h];pos[h]<=nx_pos[h];nx_v[h]<=0;end
+    else issued[h]<=0;
+    pr_tag<=tag[h];pr_gen<=gen[h];pr<=pr+1'b1;release_seen<=0;
    end
    pn<=pn+3'(terminal_accepted&&!(!owned[ut]||terminal_seen[ut]||terminal_tag!=tag[ut]||terminal_gen!=gen[ut]||pn==3'd4))-3'(post_go);
   end

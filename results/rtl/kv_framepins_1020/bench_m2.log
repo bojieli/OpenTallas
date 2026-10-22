@@ -1,0 +1,41 @@
+ERR it 0 ext got 0000000001f exp 01f7663b23a (adm/rdy/run 111 lay 3 rcy 00000000)
+ERR it 0 HOST bits changed
+ERR nb 00000000
+ERR it 1 ext got 000000000f6 exp 0f6a718c060 (adm/rdy/run 110 lay 30 rcy 00000000)
+ERR it 1 HOST bits changed
+ERR nb 00000000
+ERR it 2 ext got 0000000012b exp 12b7640f343 (adm/rdy/run 011 lay 37 rcy 00000000)
+ERR it 2 HOST bits changed
+ERR nb 00000000
+ERR it 3 ext got 00000000002 exp 0027d33b3f7 (adm/rdy/run 010 lay 0 rcy 00000000)
+ERR it 3 HOST bits changed
+ERR nb 00000000
+ERR it 4 ext got 0000000019a exp 19aa411d632 (adm/rdy/run 010 lay 51 rcy 00000000)
+ERR it 4 HOST bits changed
+ERR nb 00000000
+ERR it 5 ext got 00000000120 exp 1207dd3754b (adm/rdy/run 000 lay 36 rcy 00000000)
+ERR it 5 HOST bits changed
+ERR nb 00000000
+ERR it 6 ext got 000000001ed exp 1edb48efd43 (adm/rdy/run 101 lay 61 rcy 00000000)
+ERR it 6 HOST bits changed
+ERR nb 00000000
+ERR it 7 ext got 0000000008a exp 08a2d5fa42a (adm/rdy/run 010 lay 17 rcy 00000000)
+ERR it 7 HOST bits changed
+ERR nb 00000000
+ERR it 8 ext got 000000000c4 exp 0c47e1ec4f5 (adm/rdy/run 100 lay 24 rcy 00000000)
+ERR it 8 HOST bits changed
+ERR nb 00000000
+ERR it 9 ext got 00000000199 exp 199243d200b (adm/rdy/run 001 lay 51 rcy 00000000)
+ERR it 9 HOST bits changed
+ERR nb 00000000
+ERR it 10 ext got 000000001d3 exp 1d3cf455987 (adm/rdy/run 011 lay 58 rcy 00000000)
+ERR it 10 HOST bits changed
+ERR nb 00000000
+ERR it 11 ext got 00000000028 exp 028349447f5 (adm/rdy/run 000 lay 5 rcy 00000000)
+ERR it 11 HOST bits changed
+ERR nb 00000000
+TB_KV_OBSX_PATH FAIL errors=36
+- /srv/opentallas-scratch/claude/kv-framepins-1019/src/rtl/test/qwen_host/tb_kv_obsx_path.sv:178: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.001 s; speed 2.481 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 8 MB

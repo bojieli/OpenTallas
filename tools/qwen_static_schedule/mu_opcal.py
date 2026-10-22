@@ -386,8 +386,9 @@ def with_ctx(dw, ctx, mask=None, tag=CTX_TAG):
     return out
 
 
-def compile_frame(F=16, p=None, layers=36, starts=None):
-    """periodic NU-user op-granular calendar over a frame of F latency-user tokens; ScheduleError on any collision"""
+def compile_frame(F=16, p=None, layers=36, starts=None, filler_tokens=None):
+    """periodic NU-user op-granular calendar over a frame of F latency-user tokens; ScheduleError on any collision.
+    filler_tokens (KV-PROG17 10-20): at most this many whole tokens per filler a frame (None = as many as fit)"""
     p = M._need(dict(M.SOURCED, users=NU, occupancy="measured", head_chunks=8, **(p or {})))
     # the embedding request / host return / row fetch consume the NEW token: they start at the EMB edge (mu_calendar
     # head_blocks tok_ofs), so the token-start block is EMB_T longer than the pre-fix image's (single-user too)
@@ -418,7 +419,7 @@ def compile_frame(F=16, p=None, layers=36, starts=None):
         t = R.earliest(uf[0][1]["windows"], t, k)
         s_k = t
         sched[k], ntok[k] = [], 0
-        while True:
+        while filler_tokens is None or ntok[k] < filler_tokens:
             placed, tt = [], t
             for n, b in uf:
                 tt = R.earliest(b["windows"], tt, k)

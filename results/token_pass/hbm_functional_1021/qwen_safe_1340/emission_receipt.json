@@ -1,0 +1,481 @@
+{
+  "status": "PASS_EMISSION_ONLY",
+  "scope": "same partial Qwen SU nodes; actual RTL execution pending",
+  "reader_contract": "unused roles read live A own-bank; inactive scalar lane address identity; unchanged arithmetic",
+  "drain_guard_serial": 1,
+  "fixed_record_serialization": true,
+  "no_runtime_wait": true,
+  "capacity": 11651,
+  "hardware_executed": false,
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "qualifies_full_token": false,
+  "cases": [
+    {
+      "case": "L0/r0",
+      "preloads_identical": true,
+      "expectations_identical": true,
+      "math_nodes_unchanged": true,
+      "status_counts": {
+        "emitted": 6,
+        "format_open": 24,
+        "unsupported_lowering": 2,
+        "v1_unsupported": 2
+      },
+      "excluded_chain_stale": [],
+      "emitted_NEV": 7754,
+      "lossless_hold_compaction": null,
+      "required_NEV": 7754,
+      "sha256": "26ab69fa481cfe4e9b7967360dbe951f61bc2d5316c02a8f3068d6d5913c65db",
+      "replay": "/home/ubuntu/scratch/tok-func2-hbm/qwen_safe_1340/reserved/qw_l0_r0.json"
+    },
+    {
+      "case": "L0/r5",
+      "preloads_identical": true,
+      "expectations_identical": true,
+      "math_nodes_unchanged": true,
+      "status_counts": {
+        "emitted": 6,
+        "format_open": 24,
+        "unsupported_lowering": 2,
+        "v1_unsupported": 2
+      },
+      "excluded_chain_stale": [],
+      "emitted_NEV": 7754,
+      "lossless_hold_compaction": null,
+      "required_NEV": 7754,
+      "sha256": "005e857ccc442fd9a41cdc44e40d7265a5d248334018ac5b1dc97417c2c83ef8",
+      "replay": "/home/ubuntu/scratch/tok-func2-hbm/qwen_safe_1340/reserved/qw_l0_r5.json"
+    },
+    {
+      "case": "chain/r0",
+      "preloads_identical": true,
+      "expectations_identical": true,
+      "math_nodes_unchanged": true,
+      "status_counts": {
+        "chain_stale": 1,
+        "emitted": 11,
+        "format_open": 45,
+        "unsupported_lowering": 4,
+        "v1_unsupported": 4
+      },
+      "excluded_chain_stale": [
+        48
+      ],
+      "emitted_NEV": 11671,
+      "lossless_hold_compaction": {
+        "capacity": 11651,
+        "removed_drives": 20,
+        "original_events": 14390,
+        "compact_events": 14370,
+        "original_sha256": "83d2db2a13780f3f037aa9031ea136f4b1732b8c38e20236badccf62b652c5a8",
+        "removed": [
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2872,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2872,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2872,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2873,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2873,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2873,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2874,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2874,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2875,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2875,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2876,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2876,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2876,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2877,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2877,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2877,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2878,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2878,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2878,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2879,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          }
+        ],
+        "policy": "remove only redundant same-value D holds; all checks/preloads/transition edges preserved"
+      },
+      "required_NEV": 11651,
+      "sha256": "d18e6b06e356338cffe74e59490c626cf3c10fabaa63df174c85ef5ad499da99",
+      "replay": "/home/ubuntu/scratch/tok-func2-hbm/qwen_safe_1340/reserved/qw_chain_r0.json"
+    },
+    {
+      "case": "chain/r5",
+      "preloads_identical": true,
+      "expectations_identical": true,
+      "math_nodes_unchanged": true,
+      "status_counts": {
+        "chain_stale": 1,
+        "emitted": 11,
+        "format_open": 45,
+        "unsupported_lowering": 4,
+        "v1_unsupported": 4
+      },
+      "excluded_chain_stale": [
+        48
+      ],
+      "emitted_NEV": 11671,
+      "lossless_hold_compaction": {
+        "capacity": 11651,
+        "removed_drives": 20,
+        "original_events": 14390,
+        "compact_events": 14370,
+        "original_sha256": "408ca12d900c03cfd92acc1a311b7e3624912018f29d0eebbbcdf5ed220027fe",
+        "removed": [
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2872,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2872,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2872,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2873,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2873,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2873,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2874,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2874,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2875,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2875,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2876,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2876,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2876,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2877,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2877,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2877,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2878,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2878,
+            "port": "su_prog__r_bank",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2878,
+            "port": "su_prog__r_data",
+            "val": "0",
+            "src": "image:SU",
+            "prog": 0
+          },
+          {
+            "k": "D",
+            "dom": "serial",
+            "cyc": 2879,
+            "port": "su_prog__r_we",
+            "val": "1",
+            "src": "image:SU",
+            "prog": 0
+          }
+        ],
+        "policy": "remove only redundant same-value D holds; all checks/preloads/transition edges preserved"
+      },
+      "required_NEV": 11651,
+      "sha256": "a3f63dac4923c99ea218a3a2886c0a123d06b97451ef2304345d0b4b5576e257",
+      "replay": "/home/ubuntu/scratch/tok-func2-hbm/qwen_safe_1340/reserved/qw_chain_r5.json"
+    }
+  ],
+  "source_file_sha256": {
+    "tools/hbm_layer_vehicle/qwen_layer_images.py": "c463d0e203688bad024bb0f4d6acfb6b8ee62d4e0ae4ee0b3d9920cd6a04dfaa",
+    "tools/hbm_layer_vehicle/tok_func_hbm.sh": "2dcff2e238bf0ddae841e0164dfee99095aa777d4b543313e19d29258c20e57a",
+    "tools/hbm_layer_vehicle/verify_qwen_safe_calendar.py": "9aa2b6557f7d18c8cc3714c3e3721cff2c0fe0ad7a9bacfa00bc411d6b8efa77"
+  },
+  "compiled_TB_source_identical": true,
+  "tb_sha256": "2d514653142ffbb3170dc870479274d69961db26deee1b761b26127847099a9a",
+  "actual_RTL_execution": "INFRASTRUCTURE_TERMINAL_NO_BINARY conn_p40 hostearlyoom SIGTERM13:59:58; objects preserved; no retry; no DUT verdict",
+  "actual_executable_exists": false,
+  "tb_source_identity_is_only_emission_compatibility": true
+}

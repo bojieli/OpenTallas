@@ -1,0 +1,31 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: ot-epyc9       admits  1074 GB (avail 831, growth 79, headroom 0, waiters 0/0 GB) load 41/128 running 29 disk 116 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3821634-1792506311 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-rate3-admission-1020/default_compile_ab.py", line 11, in <module>
+    rec,field=X.compile_frame(die,out['frame'],'/srv/opentallas-scratch/claude/s81-calpipe/fixtures/L0',[out['op']],only=set())
+              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact/tools/s81_dv/layer_prog/xs_place.py", line 387, in compile_frame
+    mat = make_mat(fx, grp, sel, op)
+  File "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact/tools/s81_dv/layer_prog/xs_place.py", line 228, in make_mat
+    return FMat(n, f, fx.w(n), fx.sc(n), [grp['rows'][i] for i in sel], phase)
+  File "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact/tools/s81_dv/layer_prog/xs_place.py", line 69, in __init__
+    self.codes = arr[rows]
+                 ~~~^^^^^^
+IndexError: arrays used as indices must be of integer (or boolean) type
+DEFAULT_COMPILE {"source_root": "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact", "frame": "u_f_0R00", "op": "ffn.shared_gu", "scope": "default exact-input A/B", "xs_place_sha256": "1f2595d3b8dbe85bc534da74a87d381ee88f40466cabc58f8e66bb5ec4f0e673", "success": false, "type": "IndexError", "error": "arrays used as indices must be of integer (or boolean) type"}
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-rate3-admission-1020/default_compile_ab.py", line 11, in <module>
+    rec,field=X.compile_frame(die,out['frame'],'/srv/opentallas-scratch/claude/s81-calpipe/fixtures/L0',[out['op']],only=set())
+              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/s81-rate3-admission-1020/root/tools/s81_dv/layer_prog/xs_place.py", line 392, in compile_frame
+    assert sel, ('empty FP chunk on a frame', op, gi, c, frame)
+           ^^^
+AssertionError: ('empty FP chunk on a frame', 'ffn.shared_gu', 0, 1, 'u_f_0R00')
+DEFAULT_COMPILE {"source_root": "/srv/opentallas-scratch/codex/s81-rate3-admission-1020/root", "frame": "u_f_0R00", "op": "ffn.shared_gu", "scope": "default exact-input A/B", "xs_place_sha256": "539a611b9c076b4b0c8157e711f1e8a78b4adc88754e5ec72d277fb898d4bb90", "success": false, "type": "AssertionError", "error": "('empty FP chunk on a frame', 'ffn.shared_gu', 0, 1, 'u_f_0R00')"}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3821634-1792506311): exit 0

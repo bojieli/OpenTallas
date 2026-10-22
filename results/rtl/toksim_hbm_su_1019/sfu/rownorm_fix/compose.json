@@ -1,0 +1,45 @@
+{
+ "q_norm_1024": {
+  "serial": 368,
+  "stream": 490.7,
+  "terms": {
+   "fill": 16,
+   "lin_xx": 28,
+   "pt_ss_to_export": 91,
+   "rf_s": 45,
+   "rsqrt_issue": 9,
+   "rsqrt": 74,
+   "r_to_rf": 55,
+   "y_pass": 50
+  }
+ },
+ "k_norm_256": {
+  "serial": 358,
+  "stream": 477.3,
+  "terms": {
+   "fill": 16,
+   "lin_xx": 28,
+   "pt_ss_to_export": 90,
+   "rf_s": 45,
+   "rsqrt_issue": 3,
+   "rsqrt": 74,
+   "r_to_rf": 55,
+   "y_pass": 47
+  }
+ },
+ "prenorm_4096": {
+  "serial": 504,
+  "stream": 672.0,
+  "terms": {
+   "fill": 16,
+   "lin_xx": 28,
+   "pt_and_t32_to_export": 216,
+   "last_block_export": 97,
+   "rf_s": 45,
+   "rsqrt_issue": 2,
+   "rsqrt": 74,
+   "r_to_rf": 55,
+   "y_pass": 68
+  }
+ }
+}

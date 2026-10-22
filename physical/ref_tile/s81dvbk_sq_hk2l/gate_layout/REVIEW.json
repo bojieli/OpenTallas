@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "s81dvbk_sq_hk2l",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T04:34:00-07:00",
+ "gate_commit": "c5edeab67",
+ "checklist": {
+  "lattice": "macros on a regular 4-column grid with uniform channels; SRAM pairs aligned east",
+  "std_cell_band": "std cells centred between macro columns, peak density ~0.6, no islands",
+  "pin_spread": "pins on the top edge band, clustered by bus",
+  "clock_entry": "TT spread 80.4 ps accepted (COORD 16:11, rule guidance under freeze)",
+  "shape": "648x648 square, approved slot"
+ },
+ "notes": "COORD 10-21 04:40 APPROVED: bksel_q quarter successor hk2l",
+ "geometry_sha256": "53980ed4ec564fa705ad9ad80642cb88783af720daeb041f30f6b651de40c46e"
+}

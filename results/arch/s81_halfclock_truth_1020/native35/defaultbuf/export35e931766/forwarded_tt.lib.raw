@@ -1,0 +1,75 @@
+library (fc_coupon_tt_forwarded) {
+  comment                        : "";
+  delay_model                    : table_lookup;
+  simulation                     : false;
+  capacitive_load_unit (1,fF);
+  leakage_power_unit             : 1pW;
+  current_unit                   : "1mA";
+  pulling_resistance_unit        : "1kohm";
+  time_unit                      : "1ps";
+  voltage_unit                   : "1v";
+  library_features(report_delay_calculation);
+
+  input_threshold_pct_rise : 50;
+  input_threshold_pct_fall : 50;
+  output_threshold_pct_rise : 50;
+  output_threshold_pct_fall : 50;
+  slew_lower_threshold_pct_rise : 10;
+  slew_lower_threshold_pct_fall : 10;
+  slew_upper_threshold_pct_rise : 90;
+  slew_upper_threshold_pct_fall : 90;
+  slew_derate_from_library : 1.0;
+
+
+  nom_process                    : 1.0;
+  nom_temperature                : 25.0;
+  nom_voltage                    : 0.70;
+
+  lu_table_template(template_1) {
+    variable_1 : total_output_net_capacitance;
+    index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+  }
+
+  cell ("fc_coupon") {
+    area : 0.394 
+    is_macro_cell : true;
+    pin("clk_in") {
+      direction : input;
+      capacitance : 3.1988;
+    }
+    pin("clk_out") {
+      direction : output;
+      capacitance : 2.1180;
+      timing() {
+        related_pin : "clk_in";
+        timing_sense : positive_unate;
+        timing_type : combinational;
+        cell_rise(template_1) {
+          index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+          values("75.56421,79.37254,85.88722,97.84216,121.02689,167.04112,258.93597");
+        }
+        rise_transition(template_1) {
+          index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+          values("13.74710,19.82451,31.99331,56.88975,107.63873,210.18076,416.10889");
+        }
+        cell_fall(template_1) {
+          index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+          values("72.97852,76.61600,82.55767,92.84015,112.07217,149.79688,224.97792");
+        }
+        fall_transition(template_1) {
+          index_1("2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000,  184.32001");
+          values("13.16095,17.98103,27.33277,46.07262,84.28589,162.05775,318.91913");
+        }
+      }
+    }
+    pin("d") {
+      direction : input;
+      capacitance : 2.0930;
+    }
+    pin("q") {
+      direction : output;
+      capacitance : 1.4322;
+    }
+  }
+
+}

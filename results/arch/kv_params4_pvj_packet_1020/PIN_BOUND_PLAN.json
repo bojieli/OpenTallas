@@ -1,0 +1,109 @@
+{
+  "status": "MODEL_ONLY_NOT_GATE_AUTHORIZED",
+  "source": "2882c6196",
+  "pinplan_sha256": "4ecaebb58f29a545a3592a72a0b56479f8dbb7fda65e1b721cd9ea829c2171cf",
+  "rule": "<=6 total pins/um on every face, all layers combined",
+  "old": {
+    "outline_um": [
+      172.8,
+      172.8
+    ],
+    "faces": {
+      "S": {
+        "pins": 1024,
+        "layers": {
+          "M3": 512,
+          "M5": 512
+        },
+        "used_span_um": 163.99499999999998,
+        "density_total_per_um": 6.244092807707553
+      },
+      "W": {
+        "pins": 1031,
+        "layers": {
+          "M4": 1031
+        },
+        "used_span_um": 164.016,
+        "density_total_per_um": 6.285972100282899
+      },
+      "E": {
+        "pins": 1542,
+        "layers": {
+          "M4": 1542
+        },
+        "used_span_um": 166.848,
+        "density_total_per_um": 9.241944764096662
+      },
+      "N": {
+        "pins": 1024,
+        "layers": {
+          "M3": 512,
+          "M5": 512
+        },
+        "used_span_um": 163.99499999999998,
+        "density_total_per_um": 6.244092807707553
+      }
+    },
+    "density_status": "FAIL all four faces (E9.24,W6.29,NS6.24)"
+  },
+  "candidate": {
+    "outline_um": [
+      216,
+      280.8
+    ],
+    "margin_um": 4.32,
+    "face_density_total": {
+      "S": 4.938271604938271,
+      "W": 3.7882128159905935,
+      "E": 5.665784832451498,
+      "N": 4.938271604938271
+    },
+    "clock": "W-face midpoint y140.4, standard-cell mass centered; full contiguous std-cell core; CTS spread still owed",
+    "std_area_um2": 13799.8242,
+    "cts_placed_std_area_um2": 14127,
+    "core_um2": 58525.286400000005,
+    "cts_placed_utilization": 0.2413828426818258,
+    "utilization_status": "PIN_BOUND_EXCEPTION_REQUIRED: ~24%; 40-60% cannot fit fixed faces",
+    "max_outline_diagonal_um": 354.2663404841053,
+    "logic_cycles_added": 0,
+    "boot_edges_added_vs_legacy": 2,
+    "macro_count": 0,
+    "tile_area_delta_mm2_64_replicas": 1.9707494399999999
+  },
+  "composition": {
+    "replicas_per_pair": 32,
+    "pairs": 2,
+    "old_block_um": [
+      561.6,
+      561.6
+    ],
+    "new_block_um": [
+      604.8,
+      669.6
+    ],
+    "old_frame_um": [
+      1555.2,
+      12009.6
+    ],
+    "new_frame_um_geometric_lower_bound": [
+      1641.6,
+      13737.6
+    ],
+    "both_pair_envelope_area_delta_mm2": 7.748628479999997,
+    "fixed_origin_pvw0_top_um": 13793.76,
+    "ahub_origin_y_um": 12238.56,
+    "pvw0_intrusion_past_ahub_origin_um": 1555.2000000000007,
+    "current_gen9_slot_fit": "FAIL: cannot bind larger shape into current frame; die/trunk replan and relay/schedule pricing required",
+    "new_frame_warning": "Lower bound only: old side/CT channel widths and all row gaps held; actual safe relay reach and trunk depth must be regenerated; zero added token edges NOT claimed for composition"
+  },
+  "safe_checklist": {
+    "pins": "FIXED in proposed model, not generated/placed",
+    "reach": "outline diagonal354.3<405; parent newly moved relay reach unverified",
+    "fanout": "old in-gate native32PASS preserved; new geometry does not alter source; new gate census still required",
+    "depth": "old gate TTsetup+89.1ps; new geometry unmeasured",
+    "storage": "no macros/no new storage",
+    "floorplan": "PIN_BOUND ~24% util exception needed; no area hiding",
+    "clock": "W-center proposal; old fullspreadTT23.1FF22.9 only historical, new CTS owed",
+    "schedule": "leaf0 token/+2boot accepted; parent replan added stages unpriced"
+  }
+}

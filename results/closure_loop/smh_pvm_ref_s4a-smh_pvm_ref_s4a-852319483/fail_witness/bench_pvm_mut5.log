@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job smh_pvm_ref_s4a-smh_pvm_ref_s4a-852319483 bench bench_pvm_mut5 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/smh_pvm_ref_s4a-smh_pvm_ref_s4a-852319483 log cl/bench_pvm_mut5.a1b1.log captured 2026-10-19T17:58:29-07:00
+# fail_regex '^PVM FAIL mismatches=[1-9]'
+Verilator 5.050 2026-07-01 rev v5.050
+%Error: rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv:168: Verilog $stop
+Aborting...
+PVM FAIL mismatches=121 (pv 8, pub 112, done None)

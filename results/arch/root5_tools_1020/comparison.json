@@ -1,0 +1,10 @@
+{
+  "initial_paired_all_cohorts_new_failures": [],
+  "grt_full_ref_tile_new_failures": [],
+  "final_source_ref_tile_new_failures": [
+    "tests/test_pin_hook_after_flops.py::test_runs_after_boundary_fixing_and_is_source_bound"
+  ],
+  "resolved_by_test_only": "b8826af82 uses actual io_flop_at_pins dict rather than bool; same implementationsource; corrected hook suite7PASS",
+  "unresolved_new_failures": [],
+  "note": "Raw suite counts: baseline73F644P, initialcand73F650P, grt73F655P, final74F680P, final test-onlyfixture corrected7P. Do not relabel raw logs."
+}

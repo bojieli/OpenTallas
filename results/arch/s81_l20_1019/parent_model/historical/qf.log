@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_qf
+ot-run: ot-epyc5       admits   861 GB (avail 716, growth 113, headroom 0, waiters 0/0 GB) load 65/128 running 17 disk 873 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_qf
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_qf
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_qf
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_qf
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-l20die/src_qf
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2020769-1792436033 after 0 s
+QF_CASE BAD m0: TB_QF FAIL
+QF_CASE OK m1: TB_QF FAIL
+QF_BENCH FAIL
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2020769-1792436033): exit 1

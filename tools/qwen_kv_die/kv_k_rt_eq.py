@@ -135,6 +135,17 @@ def equalize_pv_start(K, m):
     if not all(x in by for x in ('kvs_attn', 'pvw_0', 'pvw_1')):
         return m
     members = [('kvs_attn', 'pvst', f'pvw_{p}') for p in (0, 1)]
+    # KV-D2D3 10-20: record the natural branch ages / hops before padding (d24* failed with pvw_1 a direct load of the
+    # ks_pvst source net, 39 pads short): the fork_stages / relay_stages and each branch's hop list
+    _r0 = BEQ._walk(m, by, ('kvs_attn', 'pvst'), with_path=True)
+    _dbg = {f'pvw_{p}': dict(age=_r0[(f'pvw_{p}', 'st')][0],
+                            hops=[m['buses'][bi][0] for bi, _ in _r0[(f'pvw_{p}', 'st')][3]][-3:])
+            for p in (0, 1) if (f'pvw_{p}', 'st') in _r0}
+    _M = K.masters(m, 1)
+    _pins = {p: K.pin_xy(by[p], _M[by[p].master], 'st') for p in ('pvw_0', 'pvw_1')}
+    _fs = {k: v for k, v in (m.get('fork_stages') or {}).items() if 'pvst' in k}
+    print('kv die PV_START natural', _dbg, 'fork_stages', _fs, 'relay_stages ks_pvst',
+          (m.get('relay_stages') or {}).get('ks_pvst'), 'st pins', _pins, file=__import__('sys').stderr)
     m = BEQ.equalize(K, m, bundles={'PV.start': members}, record_key='pv_start_eq',
                      rule='both PV start branches physically padded to their maximum age; one shared PV_LEAD')
     # Read the actual resulting relay graph. A fork starts at the source,

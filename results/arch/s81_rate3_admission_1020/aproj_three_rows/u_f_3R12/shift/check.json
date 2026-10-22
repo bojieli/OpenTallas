@@ -1,0 +1,26 @@
+{
+ "frame": "u_f_3R12",
+ "master": "col_h9_MX_l4",
+ "slice": "u_s_3N",
+ "physical_frames": 8,
+ "mutant": "shift",
+ "rows": [
+  236,
+  237,
+  238
+ ],
+ "PASS": false,
+ "expected_PASS": false,
+ "errors": [
+  "PLAN_MISMATCH predicted 8 words, got 8; first diff ((400, 2, (0, 2, 5), 3169356678, 0), (399, 2, (0, 2, 5), 3169356678, 0))"
+ ],
+ "summary": {
+  "words": 8,
+  "rows": 3,
+  "complete_rows_at_root": 0,
+  "partial_words": 8,
+  "plan_exact": false,
+  "end": "END edges=2063 ret_words=8 xo_checked=2061 fault=0"
+ },
+ "spine_go_to_last_ret": 356
+}

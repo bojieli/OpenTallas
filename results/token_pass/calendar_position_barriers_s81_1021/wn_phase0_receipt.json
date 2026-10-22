@@ -1,0 +1,447 @@
+{
+  "result": "PASS_COMPONENT_PHASE0_ONLY",
+  "grade": "isolated real WN rank; synthetic payload/tag provenance; not selected graph phase, full barrier or token",
+  "run": {
+    "host": "ot-gold1",
+    "unit": "oth-ubuntu-1781000-1792604368",
+    "exit": 0,
+    "wall_seconds": 4064.834
+  },
+  "stats": [
+    "WN_STATS beats 3840 landed 3840 mismatch 0 extra 0 late 0 tags 3840/3840 tagbad 0 fault 0 live 1111 minage 378 maxage 439 last_cycle 6315335"
+  ],
+  "clock": {
+    "graph_first": 18138,
+    "bench_first": 12000,
+    "constant_rebase": -6138,
+    "graph_phase": 2,
+    "actual_phase": 0,
+    "phase_quantum": 4,
+    "gaps_compressed": 0
+  },
+  "selected_phase_qualification": "NOT_QUALIFIED: distinct phase2 replay unit2084494 pending with actual graph deadlines; old firstT rebase changed phase",
+  "projection": {
+    "scope": "single real WN rank A/B circuit, four complete lanes; exact six-position schedule",
+    "excluded": "other independent ranks and orthogonal idle TP mesh; no required WN logic removed",
+    "source_input_sha256": {
+      "/srv/opentallas-scratch/claude/codex-tok-s81-calendar-causal-1021/out_full/golden/stim.hex": "18240be33a8873268f5f6a856a0b1e070e6e9d9aa09758c16c685d27d4cbb96e",
+      "/srv/opentallas-scratch/claude/codex-tok-s81-calendar-causal-1021/out_full/golden/mu.hex": "c9758b98efa7709efff6680ffd2ddb04410dd061bdcac971199fb8d0ea30862e"
+    },
+    "projected_sha256": {
+      "stim.hex": "19270aaf03b6a6378c97ffc12f3a586da51e7a8b950054dc3c98431d86c0f456",
+      "mu.hex": "b470aa491cf66503ba3526d80375346e254e9f429acb3e4c8337d52915157329"
+    },
+    "rank": 0,
+    "dp": 2,
+    "beats": 3840,
+    "commands": 48,
+    "capacity": {
+      "NSMAX": 3841,
+      "NMMAX": 49,
+      "QD": 3841,
+      "MAXCYC": 6315716
+    },
+    "exact_projection": "byte-identical original rows selected by dp2; original absolute issue/command/deadline cycles retained",
+    "date_first": 12000,
+    "date_last": 6312895
+  },
+  "source_manifest": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7  rtl/lib/ot_rst_relay_tree3.sv\n67df3246d6cb5648945ca87ef2fd2f46f6e631df622bc19f39432286f97a46f0  rtl/lib/ot_sram_oldread_wreg.sv\n71d2f165d8280107d143a15dd2728b11a88007ca9df0ea7c099f19469a67c864  rtl/lib/ot_sram_showahead_1r1w.sv\n9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa  physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v\n2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97  rtl/link/ot_link_crc32.sv\n6e5e8c9aea879aff955f58a93b3e8dc4346ee462fb2feece12ed29c8545a18e7  rtl/common/ot_link_credit.sv\n0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5  rtl/lib/ot_rst_relay.sv\n151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915  rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv\n346499f96e8800381d7c19fb8e1a816480643e3fd93518208e66fd415b1610f0  rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv\n1826102edf211742df583b4aa6a229c6ce410b30508a76e4f061fc2efcdadb9c  rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv\n4f5ad2b7a1192679753520f479e0727d429a7fafc73ecd50cacaa0d953214c70  rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv\n0801316e64a4ff11cb09707031fc1e3b68eac9aa5ac909ba70c2ebda6c0f8f1a  rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv\n767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b  rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv\n5e08764c7133b47750786567a47deb62419f114996b7641d2f36cc7e3d7159ee  rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv\n261a00d6db06bab0c3add28489c8f3e1bc6ddf3a0a6b8af1b4158068c05a1afb  rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv\n0caaa3a8048bce76f6dbe902824e570e563e9c39a006ca34d07d4f648419c1fd  rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv\nb2b76fcd25e601a1d9e02625e3f3524305df3ffd84c6a763b9b6dff322e54a98  rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv\n904afcf6c24331f77dbf55381ba3e574a4d1263eb5bc055068a62d7494e6fa76  rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv\nfb1160f86a33901a1ba0328dc296329fa53812145930817b633695fcb2e63b93  rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv\n83caa7fe35c87cc9178bc035da41dea02f3d6c552f3729e06722268299db0172  rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv\n198059532724f05fc47dafbfc122e5c6aaf42e14bec1866bc59c36251c4fc1bf  rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv\n69d23bb69dc1b2f4921afa17ceeab38f9cfbc897b8c15dfc841b7a6c94fc82bf  rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv\n467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41  rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv\ndf1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236  physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v\nc86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279  physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v\n6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828  physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v\n0ab696264db80f719031bc62d432c993d3aa1eb84f44461471302d280abca812  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv\n3106d0e1d6402b3212b05526e0ebbe5e636883caaf025820b0471e605aff82f2  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.g7.sv\n72d22c716680a647ba8fe263abf36c1ef3e04f0ae2111588607cc91072d41b5d  rtl/dsrom_sys/s81_glue/ot_s81_rly.sv\n314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc  rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv\nb4fbdbb34aabe27581cbd51408d0f7364d48f80db4fe900eaae5b6e6d90b9568  rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv\na8e2fd363c543e69e1fda36c6bd4658f285c51bf7ffec447d231ecc3e2e27e75  rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv\nd88411c7d04ed7dea33be877a2a72fd925f7ed4d9da04b4adf5aef38f3af5562  rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv\n565150329fbae49d0a1352cd8b31b6ebb07f5115b7a7c09b612ae585cae78d94  rtl/test/xdie_s81_2/xdie_s81_2.vlt\n7fe81ac1cf55c69e41ac7a1a727828dc1f8c8f26208f03ca733eac3433e972dc  rtl/test/xdie_s81_2/xdie_s81_2_ep.sv\n2ff22e7903c4abd8a59f5ec0351e39fea781ea2c945b7e33fbb778ded21a4870  rtl/test/xdie_s81_2/tb_mtp_wn_positions.sv\n",
+  "current_source_comparison": {
+    "current_revision": "c51a1bb96",
+    "matched": 30,
+    "total": 33,
+    "mismatches": [
+      {
+        "staged": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+        "current": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+        "sha256": "5e08764c7133b47750786567a47deb62419f114996b7641d2f36cc7e3d7159ee",
+        "current_sha256": "f994752aea85f9f78c5ab88f84aefb245b04313e8f48aeb7ed134c44d670e1bf",
+        "match": false
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+        "current": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+        "sha256": "0ab696264db80f719031bc62d432c993d3aa1eb84f44461471302d280abca812",
+        "current_sha256": "8b885d8021621ae9196b9dbd09a39ec265ce827a5d905db7c36a2f94c74b3dea",
+        "match": false
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+        "current": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+        "sha256": "b4fbdbb34aabe27581cbd51408d0f7364d48f80db4fe900eaae5b6e6d90b9568",
+        "current_sha256": "4564c83259a32bca2fb8006892fa75e83ce06a20a51b5b1b6f0b4165cba121c0",
+        "match": false
+      }
+    ],
+    "all": [
+      {
+        "staged": "rtl/lib/ot_rst_relay_tree3.sv",
+        "current": "rtl/lib/ot_rst_relay_tree3.sv",
+        "sha256": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7",
+        "current_sha256": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7",
+        "match": true
+      },
+      {
+        "staged": "rtl/lib/ot_sram_oldread_wreg.sv",
+        "current": "rtl/lib/ot_sram_oldread_wreg.sv",
+        "sha256": "67df3246d6cb5648945ca87ef2fd2f46f6e631df622bc19f39432286f97a46f0",
+        "current_sha256": "67df3246d6cb5648945ca87ef2fd2f46f6e631df622bc19f39432286f97a46f0",
+        "match": true
+      },
+      {
+        "staged": "rtl/lib/ot_sram_showahead_1r1w.sv",
+        "current": "rtl/lib/ot_sram_showahead_1r1w.sv",
+        "sha256": "71d2f165d8280107d143a15dd2728b11a88007ca9df0ea7c099f19469a67c864",
+        "current_sha256": "71d2f165d8280107d143a15dd2728b11a88007ca9df0ea7c099f19469a67c864",
+        "match": true
+      },
+      {
+        "staged": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+        "current": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+        "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+        "current_sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+        "match": true
+      },
+      {
+        "staged": "rtl/link/ot_link_crc32.sv",
+        "current": "rtl/link/ot_link_crc32.sv",
+        "sha256": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+        "current_sha256": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+        "match": true
+      },
+      {
+        "staged": "rtl/common/ot_link_credit.sv",
+        "current": "rtl/common/ot_link_credit.sv",
+        "sha256": "6e5e8c9aea879aff955f58a93b3e8dc4346ee462fb2feece12ed29c8545a18e7",
+        "current_sha256": "6e5e8c9aea879aff955f58a93b3e8dc4346ee462fb2feece12ed29c8545a18e7",
+        "match": true
+      },
+      {
+        "staged": "rtl/lib/ot_rst_relay.sv",
+        "current": "rtl/lib/ot_rst_relay.sv",
+        "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "current_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+        "current": "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+        "sha256": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+        "current_sha256": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+        "current": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+        "sha256": "346499f96e8800381d7c19fb8e1a816480643e3fd93518208e66fd415b1610f0",
+        "current_sha256": "346499f96e8800381d7c19fb8e1a816480643e3fd93518208e66fd415b1610f0",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+        "current": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+        "sha256": "1826102edf211742df583b4aa6a229c6ce410b30508a76e4f061fc2efcdadb9c",
+        "current_sha256": "1826102edf211742df583b4aa6a229c6ce410b30508a76e4f061fc2efcdadb9c",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv",
+        "current": "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv",
+        "sha256": "4f5ad2b7a1192679753520f479e0727d429a7fafc73ecd50cacaa0d953214c70",
+        "current_sha256": "4f5ad2b7a1192679753520f479e0727d429a7fafc73ecd50cacaa0d953214c70",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+        "current": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+        "sha256": "0801316e64a4ff11cb09707031fc1e3b68eac9aa5ac909ba70c2ebda6c0f8f1a",
+        "current_sha256": "0801316e64a4ff11cb09707031fc1e3b68eac9aa5ac909ba70c2ebda6c0f8f1a",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+        "current": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+        "sha256": "767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b",
+        "current_sha256": "767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+        "current": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+        "sha256": "5e08764c7133b47750786567a47deb62419f114996b7641d2f36cc7e3d7159ee",
+        "current_sha256": "f994752aea85f9f78c5ab88f84aefb245b04313e8f48aeb7ed134c44d670e1bf",
+        "match": false
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+        "current": "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+        "sha256": "261a00d6db06bab0c3add28489c8f3e1bc6ddf3a0a6b8af1b4158068c05a1afb",
+        "current_sha256": "261a00d6db06bab0c3add28489c8f3e1bc6ddf3a0a6b8af1b4158068c05a1afb",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+        "current": "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+        "sha256": "0caaa3a8048bce76f6dbe902824e570e563e9c39a006ca34d07d4f648419c1fd",
+        "current_sha256": "0caaa3a8048bce76f6dbe902824e570e563e9c39a006ca34d07d4f648419c1fd",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+        "current": "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+        "sha256": "b2b76fcd25e601a1d9e02625e3f3524305df3ffd84c6a763b9b6dff322e54a98",
+        "current_sha256": "b2b76fcd25e601a1d9e02625e3f3524305df3ffd84c6a763b9b6dff322e54a98",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+        "current": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+        "sha256": "904afcf6c24331f77dbf55381ba3e574a4d1263eb5bc055068a62d7494e6fa76",
+        "current_sha256": "904afcf6c24331f77dbf55381ba3e574a4d1263eb5bc055068a62d7494e6fa76",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+        "current": "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+        "sha256": "fb1160f86a33901a1ba0328dc296329fa53812145930817b633695fcb2e63b93",
+        "current_sha256": "fb1160f86a33901a1ba0328dc296329fa53812145930817b633695fcb2e63b93",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+        "current": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+        "sha256": "83caa7fe35c87cc9178bc035da41dea02f3d6c552f3729e06722268299db0172",
+        "current_sha256": "83caa7fe35c87cc9178bc035da41dea02f3d6c552f3729e06722268299db0172",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+        "current": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+        "sha256": "198059532724f05fc47dafbfc122e5c6aaf42e14bec1866bc59c36251c4fc1bf",
+        "current_sha256": "198059532724f05fc47dafbfc122e5c6aaf42e14bec1866bc59c36251c4fc1bf",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+        "current": "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+        "sha256": "69d23bb69dc1b2f4921afa17ceeab38f9cfbc897b8c15dfc841b7a6c94fc82bf",
+        "current_sha256": "69d23bb69dc1b2f4921afa17ceeab38f9cfbc897b8c15dfc841b7a6c94fc82bf",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+        "current": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+        "sha256": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+        "current_sha256": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+        "match": true
+      },
+      {
+        "staged": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+        "current": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+        "sha256": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+        "current_sha256": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+        "match": true
+      },
+      {
+        "staged": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+        "current": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+        "sha256": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+        "current_sha256": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+        "match": true
+      },
+      {
+        "staged": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+        "current": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+        "sha256": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+        "current_sha256": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+        "current": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv",
+        "sha256": "0ab696264db80f719031bc62d432c993d3aa1eb84f44461471302d280abca812",
+        "current_sha256": "8b885d8021621ae9196b9dbd09a39ec265ce827a5d905db7c36a2f94c74b3dea",
+        "match": false
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.g7.sv",
+        "current": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+        "sha256": "3106d0e1d6402b3212b05526e0ebbe5e636883caaf025820b0471e605aff82f2",
+        "current_sha256": "3106d0e1d6402b3212b05526e0ebbe5e636883caaf025820b0471e605aff82f2",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+        "current": "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+        "sha256": "72d22c716680a647ba8fe263abf36c1ef3e04f0ae2111588607cc91072d41b5d",
+        "current_sha256": "72d22c716680a647ba8fe263abf36c1ef3e04f0ae2111588607cc91072d41b5d",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+        "current": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+        "sha256": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+        "current_sha256": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+        "current": "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv",
+        "sha256": "b4fbdbb34aabe27581cbd51408d0f7364d48f80db4fe900eaae5b6e6d90b9568",
+        "current_sha256": "4564c83259a32bca2fb8006892fa75e83ce06a20a51b5b1b6f0b4165cba121c0",
+        "match": false
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv",
+        "current": "rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv",
+        "sha256": "a8e2fd363c543e69e1fda36c6bd4658f285c51bf7ffec447d231ecc3e2e27e75",
+        "current_sha256": "a8e2fd363c543e69e1fda36c6bd4658f285c51bf7ffec447d231ecc3e2e27e75",
+        "match": true
+      },
+      {
+        "staged": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+        "current": "rtl/dsrom_sys/s81_dv/land/dsfd_dvland.sv",
+        "sha256": "d88411c7d04ed7dea33be877a2a72fd925f7ed4d9da04b4adf5aef38f3af5562",
+        "current_sha256": "d88411c7d04ed7dea33be877a2a72fd925f7ed4d9da04b4adf5aef38f3af5562",
+        "match": true
+      }
+    ]
+  },
+  "active_wn_blobs": {
+    "confirmed_by": "/root/s81_lead/die_chain",
+    "current_source": "c51a1bb96",
+    "prior_source": "10788e421",
+    "unchanged_blobs": {
+      "ot_s81sl_slice_lep.sv": "a6775e6f9f7d2b32075233cc8e62dc6a7e55d66e",
+      "ot_s81sl_slice_lepw_mab_mu_72.sv": "c7dde653ec97ed3d688d49ae9b752845559709cd"
+    },
+    "scope": "active WN lep_mu_ab RX_SRAM1 IN_PIPE1 NATIVE321; G8 non-mab +1 source not active in isolated hop replay"
+  },
+  "source_conditionality": "c51a1bb96 active WN LEP/top matches; 30/33 wholefiles match, lane/relay append unused modules, RSTOP new CI branches inactive only for isolated K_XQ epoch with ci_dir/ci_b=0. Not whole current die/SMWIRE/source equivalence.",
+  "messages": [
+    {
+      "inst": 0,
+      "label": "x L0 pos 0",
+      "issue": 12000,
+      "first_land_age": 378,
+      "complete_age": 806,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 1,
+      "label": "partial L0 pos 0",
+      "issue": 15488,
+      "first_land_age": 378,
+      "complete_age": 804,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 2,
+      "label": "x L0 pos 1",
+      "issue": 1271408,
+      "first_land_age": 378,
+      "complete_age": 805,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 3,
+      "label": "partial L0 pos 1",
+      "issue": 1274896,
+      "first_land_age": 378,
+      "complete_age": 804,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 4,
+      "label": "x L0 pos 2",
+      "issue": 2530816,
+      "first_land_age": 378,
+      "complete_age": 804,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 5,
+      "label": "partial L0 pos 2",
+      "issue": 2534304,
+      "first_land_age": 379,
+      "complete_age": 805,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 6,
+      "label": "x L0 pos 3",
+      "issue": 3790224,
+      "first_land_age": 378,
+      "complete_age": 804,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 7,
+      "label": "partial L0 pos 3",
+      "issue": 3793712,
+      "first_land_age": 378,
+      "complete_age": 806,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 8,
+      "label": "x L0 pos 4",
+      "issue": 5049632,
+      "first_land_age": 378,
+      "complete_age": 805,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 9,
+      "label": "partial L0 pos 4",
+      "issue": 5053120,
+      "first_land_age": 379,
+      "complete_age": 805,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 10,
+      "label": "x L0 pos 5",
+      "issue": 6309040,
+      "first_land_age": 378,
+      "complete_age": 804,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    },
+    {
+      "inst": 11,
+      "label": "partial L0 pos 5",
+      "issue": 6312528,
+      "first_land_age": 378,
+      "complete_age": 806,
+      "model_first_floor": 374,
+      "model_complete_bound": 821,
+      "posthoc_relative_bounds_pass": true
+    }
+  ],
+  "run_log_sha256": "957fd80d9805240bed04ab776ad5b870c7fc2409b187058f872de60161911897",
+  "provenance": "Existing gen_golden deterministic payloads and diagnostic MU positions; no actual checkpoint token/position/HOST/PW provenance or KS programme anchor.",
+  "timing": "Zero deadlines in this calibration run. Relative arrival bounds checked posthoc only; phase0 conditional result retained, not graphphase2 qualification.",
+  "binary_sha256": "24cf4ded1df5372713bdaaeeef4373e7bc4a96b17a32dca08a86744477e8821a"
+}

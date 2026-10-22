@@ -46,7 +46,9 @@ D2D_MASTER = 'qfd_d2d_static'
 DHOBS_MASTER = 'qfd_sys_face_mu_dhobs'           # MU-DQ-DHUSER: the die's tt_ctlm.dh_user observer (dv_case.DHOBS)
 DHOBS_LISTS = ('NS', 'USER_SEQ', 'STG_SEQ', 'RES_SEQ')
 CTXRX_MASTER = 'qfd_mu_ctx_rx_die'               # MU-DQ-BOOTCTX: filler runtime context leaf (dv_case.CTXRX) -> tt_ctlm.ctx_x
-IMAGE = ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+# QW-GENPREP 10-21: OT_QWEN_D2D_IMAGE selects the ONE shared compute<->KV pair image (KV-PROG17
+# d2d_cal_image_mu_ew595_r16.svh; TXDP_C/K identical to d2d_cal_image.svh, so qfd_d2d_static.TXDP is unchanged)
+IMAGE = ROOT / os.environ.get('OT_QWEN_D2D_IMAGE', 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh')
 TRAP_BODY = re.compile(r'\$error|\$fatal|\w*NOT_COMPILED\w*|\w+__set_\w+')
 GEN_IF = re.compile(r'generate\s+if\s*\(', re.S)
 SENTINELS = (-1, 0)

@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-cal-prearm-portable-1021-1b29dcd28
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-cal-prearm-portable-1021-1b29dcd28
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-cal-prearm-portable-1021-1b29dcd28
+ot-run: ot-gold2       admits  -200 GB (avail 258, growth 398, headroom 0, waiters 1/12 GB) load 30/112 running 19 disk 2766 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-qw-cal-prearm-portable-1021-1b29dcd28
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-cal-prearm-portable-1021-1b29dcd28
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-cal-prearm-portable-1021-1b29dcd28
+ot-run: SPILL not possible: ot-gold2 lacks /srv/opentallas-scratch/claude/mu-die-qw (data not on the queue host)
+ot-run: -> ot-gold2 (will queue: admits -200 GB < 16 GB)
+ot-heavy: waiting for memory on ot-gold2: need 0.7 x 16 = 11 GB, admissible -214 GB: available 248 GB, growth charged 398 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 378 GB at x1), young 0 GB, floor 50 GB
+ot-run: interrupted (signal 15 from pid 3698168 (python3 /home/ubuntu/bin/ot-run --cancel codex-qw-cal-prearm-portable-1021-1b29dcd28; parent 3059848 (/app-server-daemon/releases/0.163.0-x86_64-unknown-linux-musl/bin/codex app-server --listen unix:// --analytics-default-enabled -c features.api_key_model_discovery=true -c features.auth_elicitation=true -c features.code_mode_host=true -c features.mcp_oauth_refresh_coordination=false --managed-daemon))) while waiting for memory on ot-gold2; waiter cancelled: NOT RUN

@@ -46,6 +46,8 @@ QTP8 = dict(E=284, span=795, words=256, ls_rec=376, ls_bi=378,
                    'AR 256 x 512 b, production LU 53 / LS 376, Verilator 5.050; bi LS 378 (Q-COLLCAL3 e1a641d23)')
 MARGIN = 2
 ATTNRET_REC = 'results/rtl/qw_attnret_1019/record.json'     # QW-ATTNRET: measured attention-return span (bench)
+# critical-path stage boundaries where compose(die_edges=...) inserts PRICED die edges (TOKSIM-QW2 10-20)
+EDGE_POINTS = ('pre_qkv', 'pre_qk', 'pre_attn', 'pre_o', 'pre_r1', 'pre_gu', 'pre_silu', 'pre_down', 'pre_r2')
 
 
 def ctlm_rec(stage, lane_ages=LANE_AGES):
@@ -84,11 +86,15 @@ def ssq_family():
 
 
 def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mode='priced', attn_cycles=None,
-            tile_meas=None, qtp8=None):
+            tile_meas=None, qtp8=None, die_edges=None):
     """TOKSIM-QW 10-19: attn_cycles = MEASURED attention round trip (q,k,v last D2D word at W5 -> first result dr word
     at the W5 return pin + 16, replaces the ctlm price); tile_mode 'measured' + tile_meas = {op: {first_rs, first_final,
     last_final, far}} edges from hr go at the slice pins (XT1 column-slice RTL run) replace the tile_first PARAMETER /
-    ME price; qtp8 = measured TP8 AR constants (E, ls_rec, ls_bi) overriding QTP8."""
+    ME price; qtp8 = measured TP8 AR constants (E, ls_rec, ls_bi) overriding QTP8.
+    TOKSIM-QW2 10-20 (TOK.QW.SCHED): die_edges = {boundary: [{label, cycles, grade, source}, ...]} PRICED die edges the
+    compiler must absorb (landings, native59, ctlm hr/tl, slice2 landed-parent lanes), inserted on the critical path at
+    the named stage boundary (EDGE_POINTS) as their own stage rows; everything after the boundary moves later, the
+    spliced calendar and the chained period / L0 cold see them. Default None = unchanged composition."""
     Q8 = dict(QTP8, **(qtp8 or {}))
     rec = ctlm_rec(stage, lane_ages)
     R, C = rec['relay'], rec['constants']
@@ -173,20 +179,33 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     gap = lambda a, b: P[b]['at'] - P[a]['done']                         # noqa: E731
     st = []
 
-    def stage_rec(name, pcs, start, end, p_start, p_end, src):
+    def stage_rec(name, pcs, start, end, p_start, p_end, src, **kw):
         st.append(dict(stage=name, pcs=pcs, start=start, end=end, cycles=end - start, priced_start=p_start,
-                       priced_end=p_end, priced_cycles=p_end - p_start, source=src))
+                       priced_end=p_end, priced_cycles=p_end - p_start, source=src, **kw))
         return end
+    DE = die_edges or {}
+    bad = sorted(set(DE) - set(EDGE_POINTS))
+    if bad:
+        raise ValueError(f'die_edges: unknown boundaries {bad} (known {EDGE_POINTS})')
+
+    def edge(point, t):
+        """insert the PRICED die edges of one stage boundary at t (one stage row each); returns the moved time"""
+        for e in DE.get(point, []):
+            if e['cycles']:
+                t = stage_rec(f'die edge @{point}: {e["label"]}', [], t, t + e['cycles'], t, t, e.get('source', ''),
+                              grade=e.get('grade', 'PRICED'), die_edge=True)
+        return t
     t_ssq = stage_rec('rmsnorm1 SSQ + fused ROOT r (DV)', [0, 2], P[0]['at'], P[0]['at'] + ssq_span, P[0]['at'],
                       P[0]['done'], 'dv_lower (slice_ages.json measured); r of PC2 = fused ROOT (no command)')
-    qkv_low, qkv_ch, qkv_t0, qkv_land = mv_land('qkv', P[1]['at'], P[1]['done'])
-    t_qkv = stage_rec('qkv matvec L9 -> VM QKV (column tiles + STN)', [1], P[1]['at'], qkv_land, P[1]['at'], P[1]['done'],
+    qkv_at = edge('pre_qkv', P[1]['at'])
+    qkv_low, qkv_ch, qkv_t0, qkv_land = mv_land('qkv', qkv_at, qkv_at + P[1]['done'] - P[1]['at'])
+    t_qkv = stage_rec('qkv matvec L9 -> VM QKV (column tiles + STN)', [1], qkv_at, qkv_land, P[1]['at'], P[1]['done'],
                       f'dv_lower_mat STN (stn_ages.json); tile_first {tile_first} = ME issue -> first far word '
                       '(PARAMETER: no tool compiles the xhead / ROM tile delivery)')
-    q0 = max(t_qkv, t_ssq) + MARGIN
+    q0 = edge('pre_qk', max(t_qkv, t_ssq) + MARGIN)
     t_qk = stage_rec('QK-norm / RoPE / v*r -> D2D q,k,v (DV)', list(range(3, 11)), q0, q0 + (qk_end - qk_c0),
                      P[3]['at'], P[10]['done'], 'dv_lower_vec qk (vec_ages.json measured)')
-    a0 = t_qk + gap(10, 11)
+    a0 = edge('pre_attn', t_qk + gap(10, 11))
     if attn_cycles is None:
         t_att = stage_rec('attention (KV die native, PRICED)', [11], a0, a0 + P[11]['done'] - P[11]['at'], P[11]['at'],
                           P[11]['done'], 'ctlm plan price: the KV die step is QW-KVATTN (not composed from a measurement here)')
@@ -199,29 +218,31 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
                       t_att + at_span, P[11]['done'] - 16, P[11]['done'],
                       f'dv_lower_vec attn (owners {at_lw["attn_owners"]}): MEASURED first dr word at the W5 pin -> '
                       f'last x word at E5 ({ATTNRET_REC}); priced = the plan landing tail (done - 16 .. done)')
-    o_at = t_ret + gap(11, 12)
+    o_at = edge('pre_o', t_ret + gap(11, 12))
     o_low, o_ch, o_xc, o_t0, o_first_out = mv_ar('o', o_at, o_at + P[12]['done'] - P[12]['at'])
     t_o = stage_rec('o_proj matvec L8 -> AR words + XC (column tiles + STN)', [12, 13], o_at, o_t0 + 255, P[12]['at'],
                     P[13]['done'], 'dv_lower_mat (stagger, XC dst 0)')
     t_ar1 = stage_rec('all-reduce 1 (TP8 collective)', [], o_t0, o_first_out, XCp[0]['at'], XCp[0]['done'] - 256,
                       Q8['source'] + ' : last in -> first out; priced = XC at -> done - 256')
+    o_first_out = edge('pre_r1', o_first_out)
     r1_end = o_first_out + (rs_xend - rs_r0)
     t_r1 = stage_rec('residual 1: AR landing + post-scale + add + SSQ + x stream (DV)', [14, 15], o_first_out, r1_end,
                      XCp[0]['done'] - 256, P[15]['done'],
                      f'dv_lower_vec resid ar_order={ar_order} (first AR return word -> last x word at E5)')
-    gu_at = t_r1 + gap(15, 16)
+    gu_at = edge('pre_gu', t_r1 + gap(15, 16))
     gu_low, gu_ch, gu_t0, gu_land = mv_land('gu', gu_at, gu_at + P[16]['done'] - P[16]['at'])
     t_gu = stage_rec('gate/up matvec L7 -> VM GU (column tiles + STN)', [16], gu_at, gu_land, P[16]['at'], P[16]['done'],
                      'dv_lower_mat STN; tile_first PARAMETER')
-    s0 = t_gu + MARGIN
+    s0 = edge('pre_silu', t_gu + MARGIN)
     t_sl = stage_rec('SiLU x up (GU*r, act stream) (DV)', [17, 18, 19], s0, s0 + (sl_end - sl_c0), P[18]['at'],
                      P[19]['done'], 'dv_lower_vec silu; r of PC17 = fused ROOT of PC15 (no command)')
-    d_at = t_sl + gap(19, 20)
+    d_at = edge('pre_down', t_sl + gap(19, 20))
     d_low, d_ch, d_xc, d_t0, d_first_out = mv_ar('down', d_at, d_at + P[20]['done'] - P[20]['at'])
     t_d = stage_rec('down matvec L8 -> AR words + XC (column tiles + STN)', [20, 21], d_at, d_t0 + 255, P[20]['at'],
                     P[21]['done'], 'dv_lower_mat (stagger, XC dst 0)')
     t_ar2 = stage_rec('all-reduce 2 (TP8 collective)', [], d_t0, d_first_out, XCp[1]['at'], XCp[1]['done'] - 256,
                       Q8['source'])
+    d_first_out = edge('pre_r2', d_first_out)
     r2_end = d_first_out + (rs_xend - rs_r0)
     p_end = P[23]['done']
     t_r2 = stage_rec('residual 2 + SSQ + x stream (DV)', [22, 23], d_first_out, r2_end, XCp[1]['done'] - 256, p_end,

@@ -85,6 +85,13 @@ def declare(lines, pads, root):
     base = Path(root) / 'results/arch/s81_dv_1016/svc_rs'
     tree = json.loads((base / 'tree.json').read_text())['slices']
     emb = json.loads((base / 'embed.json').read_text())['roles']
+    # TOK-S81-GAPS/SVCP P path (85340f61a): the fold root also drives `ro` on its rs_pface pout face (rsv_09 W ->
+    # rsv_07 E, lane pr_09_07); the role ROM of record is the generated roles header, not tree.json (S81-DIE9 10-20)
+    pout = {}
+    svh = Path(root) / 'rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_roles.svh'
+    if svh.exists():
+        for m in re.finditer(r"4'd(\d+): rs_pface = 8'h([0-9a-fA-F]{2});", svh.read_text()):
+            pout[int(m.group(1))] = {f for f in range(4) if int(m.group(2), 16) >> f & 1}
 
     def add(inst, master, reason, port, lo, hi, cls):
         e = pads.setdefault(inst, dict(master=master, reason=reason, ports={}))
@@ -101,7 +108,7 @@ def declare(lines, pads, root):
         t, r = tree[str(sid)], emb[str(sid)]
         active = {'dn_o': {f for f in range(4) if t['children'] >> f & 1},
                   'up_o': {t['parent'] - 1} if t['parent'] else set(),
-                  'ro': {t['parent'] - 1} if t['parent'] else set(),
+                  'ro': ({t['parent'] - 1} if t['parent'] else set()) | pout.get(sid, set()),
                   'go_v': {f for f in range(4) if r['go'][f]}, 'go_d': {f for f in range(4) if r['go'][f]},
                   'so_v': {f for f in range(4) if r['so'][f]}, 'so_d': {f for f in range(4) if r['so'][f]}}
         for port, fw in RS_FACE_W.items():

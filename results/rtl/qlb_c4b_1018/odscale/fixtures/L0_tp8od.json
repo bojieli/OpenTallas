@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.qwen.dv-layer-fixture-tp8od.v1",
+ "layer": 0,
+ "position": 8191,
+ "tp8_die": 0,
+ "gold": "/srv/opentallas-scratch/claude/qw-realstg/tp8gold/P8191/P8191",
+ "oracle_collective_profile": "production_tp8_two_level (rank 4*DIE+PKG, pair r[p]+r[p+4], ((P0+P1)+P2)+P3)",
+ "allreduce_segments": {
+  "o": 0,
+  "down": 1
+ },
+ "act_snapshot": "candidate_pc20_vm.npz (source PC24)",
+ "image_sha256": {
+  "program.hex": "44e0e715c33b14b6d630325e832c8fb94f7427c895c05df9b2be4207bd345dce",
+  "segments.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+  "crom.hex": "bbcb28143ffe62f1850ee5a5e05d87650c07271002baba5f520588fcd514a164",
+  "matrix_scale_bf16.hex": "fd7b94a8fa5ff9a34d66baeb901407257ee331e2abcbe64a938a930342fc43e0",
+  "layer0_rom.json": "56b77bcb4abfc27638205728650414be4a7806d87adc444c79910dd2cc213251"
+ },
+ "inputs_sha256": {
+  "ATTN_fp32.hex": "782063c5f734a61fde78414c11cc5a56b7adc2523879ae46928e0689ca3d0470",
+  "candidate_pc20_vm.npz": "8293c7254a7a5dd7f19d1418ea70a2ffad5e72b867f92749bae36eea3a810061",
+  "collective0_partial.hex": "4680335db57290d8d9e53a9f53bbe3a3875decd1bdebe89a31574f5cc304361e",
+  "collective1_partial.hex": "624b140018cf8b15e122201f7593a1b9c3f77c45c6f89e72672df7fe95ba7656",
+  "oracle.json": "e10fb57fab813f80d119b33e0cc5b6639b398e90ebb1ab5c5fe4e7dd2e8b7aaa"
+ },
+ "hdc_matvec_split256_equal_rows": {
+  "o": 4096,
+  "down": 4096
+ },
+ "file": "L0_mat_od_tp8.npz",
+ "sha256": "8719e83e8ea27e6d9f907515bc16e70dacb0288ada4176ec02d4bbf04e20958b",
+ "tool_sha256": "5ef298b4de308c5ad1c50ae92ba0c43251d72cdb703a9d3561210f59324b9534"
+}

@@ -1,0 +1,125 @@
+{
+  "status": "PASS",
+  "selected_commit": "a36c24de86d0dceaca2ae2dfb115ae486326d34d",
+  "selected_source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+  "selected_source_sha256": "f612ec8c28f9feed7f5c5cb22136962ac9d8e7fafbf5ab5e7d739ebffd0632bc",
+  "issuer_cfg_assignments_complete": [
+    {
+      "rhs": "0",
+      "bits35_34": 0
+    },
+    {
+      "rhs": "0",
+      "bits35_34": 0
+    },
+    {
+      "rhs": "{1'b1,4'd0,23'b0,row[PW-1],2'(step/17),row[5:0]}",
+      "tag": 0,
+      "bits35_34": 0
+    },
+    {
+      "rhs": "{1'b1,4'd1,assembly_word ^ ((MUT_DATA!=0 && step==1)?32'b1:32'b0)}",
+      "tag": 1,
+      "bits35_34": 0
+    },
+    {
+      "rhs": "{1'b1,4'd2,metadata[31:0]}",
+      "tag": 2,
+      "bits35_34": 0
+    },
+    {
+      "rhs": "{1'b1,4'd3,metadata[63:32]}",
+      "tag": 3,
+      "bits35_34": 0
+    }
+  ],
+  "bits": {
+    "issuer_cfg[35]": "all assignments give0: command tags0..3 tag[3]=0, reset/default0",
+    "issuer_cfg[34]": "all assignments give0: command tags0..3 tag[2]=0, reset/default0",
+    "fault_cause[15]": "cause_now[15]=0; reset0; next=old|0 preserves0",
+    "fault_cause[14]": "cause_now[14]=0; reset0; next=old|0 preserves0",
+    "fault_cause[8]": "both wrappers NPT2; k2>=2 =>link3[2]=0 =>cause_now[8]=0; reset0; next=old|0 preserves0"
+  },
+  "domain": "All configuration/descriptor/fault modes AFTER required reset. issuer_cfg upperbits also0 after firstedge. No claim for stickyfault arbitrary pre-reset retained state. No input constraint/mask is introduced.",
+  "induction": {
+    "reset_value": 0,
+    "next_if_invariant0": 0,
+    "all_current_cases": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "statement": "reset base0; preservation0 OR0=0; repeated asynchronous reset reestablishes0. Initial-state assumption is exactly required architectural reset, never arbitrary-state zeroing."
+  },
+  "excerpts": [
+    {
+      "line": 54,
+      "text": " ot_hgi_coll_fj_core_s128 #(.NPT(2),.SOLO(1),.NS(10),.NSL(18),.RC(32)) u(.clk(clk),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),"
+    },
+    {
+      "line": 78,
+      "text": " ot_hgi_coll_fj_core_s128 #(.NPT(2),.SOLO(0),.NS(9),.NSL(18),.RC(32)) u(.clk(clk),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),"
+    },
+    {
+      "line": 179,
+      "text": "   out_v<=0;fault_cause<=0;"
+    },
+    {
+      "line": 207,
+      "text": "   fault_cause<=fault_cause|nf;"
+    },
+    {
+      "line": 498,
+      "text": "            cv<=0;dv<=0;lv<=0;issuer_cfg<=0;issuer_start<=0;"
+    },
+    {
+      "line": 504,
+      "text": "            issuer_cfg<=0;issuer_start<=0;fw_q<=fw;"
+    },
+    {
+      "line": 522,
+      "text": "                    if(step%17==0)issuer_cfg<={1'b1,4'd0,23'b0,row[PW-1],2'(step/17),row[5:0]};"
+    },
+    {
+      "line": 523,
+      "text": "                    else issuer_cfg<={1'b1,4'd1,assembly_word ^ ((MUT_DATA!=0 && step==1)?32'b1:32'b0)};"
+    },
+    {
+      "line": 524,
+      "text": "                end else if(step==51)issuer_cfg<={1'b1,4'd2,metadata[31:0]};"
+    },
+    {
+      "line": 525,
+      "text": "                else if(step==52)issuer_cfg<={1'b1,4'd3,metadata[63:32]};"
+    },
+    {
+      "line": 639,
+      "text": "  if(k<NPT)begin:p assign link3[k]=lk_q[k]; end else begin:z assign link3[k]=1'b0; end"
+    },
+    {
+      "line": 654,
+      "text": " assign cause_now[8:6]=3'b000;"
+    },
+    {
+      "line": 656,
+      "text": " assign cause_now[8:6]=link3;"
+    },
+    {
+      "line": 667,
+      "text": " assign cause_now[15:14]=2'b00;"
+    },
+    {
+      "line": 669,
+      "text": "  if(!rst_q)begin fault<=1'b0;fault_cause<=16'd0;end"
+    },
+    {
+      "line": 670,
+      "text": "  else begin fault<=fault | (|cause_now);fault_cause<=fault_cause | cause_now;end"
+    }
+  ]
+}

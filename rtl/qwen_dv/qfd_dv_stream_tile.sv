@@ -1,30 +1,34 @@
 `timescale 1ns/1ps
 // =====================================================================================================================
-// qfd_dv_stream_tile -- the Q-DV slice stream face (qfd_dv_stream / static packer qfd_dv_stream_packer 9587da800) as a
-// structurally safe hard tile (QW-CLUSTER3/STREAM 2026-10-19, owner safe-design checklist).
-//
-// Function: exactly qfd_dv_stream (sw_i = {sw_v, sw_hi, sw_lo}, tw_data = {tw_data_hi, tw_data_lo}, ...) with (a) every input registered once at its face and (b) the two tap outputs (table
-// write tw_*, x tap xt_*) carried through one interior relay register.  Static schedule, no backpressure:
-//   stream side  sw_i / se_i / sid : +1 edge (the face register; it REPLACES the slice's sw_q / se_q capture -> net 0)
-//   SU side      cfg_*             : +1 edge (face register; the SU issues the STREAM cfg one edge earlier)
-//   SU own x     xw_*              : +3 edges (face register + packer P1/P2 stages, QW-STREAM2 10-19): the SU issues own
-//                                    x writes 3 edges earlier; II unchanged
-//   relay        so_e / so_w       : unchanged (face reg -> relay mux -> output reg, one word per edge per direction)
-//   taps         tw_* / xt_*       : +1 edge (interior relay: the tap mux sits between the W/E relay faces and the N/S
-//                                    tap faces; without it a tap bit crosses ~490 um in one cycle)
-//   reset                          : the kit lands rst_n in 2 registered stages (+2 edges assert/release, constant)
-// Exactness: tb_stream_tile.sv compares every output against qfd_dv_stream with all inputs delayed one edge (xw_* three) and the tap
-// outputs delayed one more edge, 10,000 edges, two resets, all lane subsets / duplicates / abandoned beats / conflicts.
-//
-// Fanout (safe item 3): every register that selects a wide word is a (* keep *) copy per 32-bit group, decoded at the face
-// from the pins (te/xe/pe and E-side twins, write-any, config enable, emit, direction); ot_keep_regs.tcl keeps the copies.
-// Reset is on control state only (valids, masks, config, faults); payload registers are overwritten every edge and carry
-// no reset (no reset on the datapath).
-// Storage (item 5): 1,024-bit assembly + 1,024-bit completed word + 64-bit mask, no runtime-indexed array > 2 kb, no
-// delay line >= 3 deep.
+// qfd_dv_stream_tile -- the Q-DV slice stream face (qfd_dv_stream) as a structurally safe hard tile.
+// QW-STREAM3 2026-10-20: native-32 successor of the QW-STREAM2 t2 packer (both CLOSED t2 / t2c routes failed the
+// actual mapped native census: 211 drivers > 32 loads, max 69, packet 0017710ea).  Every wide select is now a kept
+// LEAF copy that drives at most G = 14 bits (<= 28 mapped mux pins), and every leaf family is fed by a bank of kept
+// ROOT registers so that no root, pin or combinational predicate drives more than ~30 leaf pins:
+//   pass side  : pins -> face ROOT bank (v / kind / dst / sid copies) -> LEAF bank (pe/pw relay, te/tw table tap,
+//                xe/xw x tap, ubad) -> relay / tap registers.  The payload is carried one extra edge (sw_q0 -> sw_q1)
+//                so header and payload stay coherent.  (+1 edge on every pass / tap path against t2.)
+//   own writes : face (we / addr in four decoder copies / data / write-any root) -> P1 (BF16 RNE into 4 kept lane
+//                copies, registered slot x lane one-hot select, per-tree slot-hit copies, partial faults) -> P2: the
+//                beat assembly xb and NK = 9 independent "complete" trees, each on its own kept copy of the mask xm,
+//                the open bit op and the slot hit, each tree driving <= 27 kept P2 leaves (relay insertion E / W,
+//                eword enable groups, ebeat, x-tap emit).  Insertion reads the assembly xb directly on the edge after
+//                completion (eword only holds the x-tap fall-back), so the own path is ONE edge SHORTER than t2.
+// Static schedule against the unchanged reference qfd_dv_stream (no credits, no backpressure):
+//   sw_i / se_i / sid / cfg_* : reference inputs delayed DP = 2 edges (face root + leaf), relay outputs on the
+//                               reference edge, taps one more edge (interior tap relay)
+//   xw_* (SU own x writes)    : delayed DX = 2 edges (face + P1); the completion fault pbad is combinational at P2
+//   reset                     : the kit lands rst_n in 2 registered stages (+2 edges, constant)
+// Price vs t2 (DP 1, DX 3): pass relay / table tap / x tap +1 edge per tile, own write -> emitted word / own x tap /
+// beat fault -1 edge; cfg and sid follow the pass stream (+1).
+// Reset: roots, leaves and control state (op, directions, tag, valids, faults).  Derived pipeline words (selq, slot
+// hits, xm copies, P1 partial faults, payload, the held-word enables cm_e / cm_b) carry no reset: they are pure functions of reset roots one edge later
+// (op = 0 masks xm), and the 2-stage landing holds reset for >= 2 running clock edges.
+// Storage: 1,024-bit assembly + 1,024-bit held x-tap word + mask copies; no runtime-indexed array, no delay line >= 3.
 // MUT (negative controls, must FAIL the bench): 2 BF16 truncation, 21 no lane priority, 22 no duplicate fault,
-// 31 relay group 17 selects on the E valid copy, 32 table-tap group 5 ignores the SID match, 33 emit copy of relay group 9
-// stuck 0, 34 face copy of write-any for xb group 3 stuck 0.
+// 31 relay leaf 17 selects on the E valid, 32 table-tap leaf 5 drops the SID match, 33 insertion leaf E 9 stuck 0,
+// 34 tree 3 write-any copy stuck 0, 35 tree 5 mask copy never updates, 37 eword enable leaf 7 stuck 0,
+// 38 tag high-half config leaf never enables.
 // =====================================================================================================================
 module qfd_dv_stream_tile #(
     parameter integer MUT = 0
@@ -35,8 +39,6 @@ module qfd_dv_stream_tile #(
     input  wire           cfg_v,
     input  wire [1:0]     cfg_dir,
     input  wire [27:0]    cfg_tag,
-    // incoming stream words, split only for the pin plan (word = {v, hi, lo}): the valid bit sits mid-face so its
-    // kept select copies (anchored at the pin) reach every relay group within ~400 um
     input  wire [543:0]   sw_lo,
     input  wire           sw_v,
     input  wire [542:0]   sw_hi,
@@ -60,73 +62,97 @@ module qfd_dv_stream_tile #(
     output reg            xt_bad,
     output reg            fault
 );
-    localparam integer NR = 34;   // 1088-bit relay words: 34 groups of 32
-    localparam integer NT = 33;   // 1050-bit table tap / 1048-bit x tap: 33 groups of 32
-    localparam integer NB = 32;   // 1024-bit assembly / completed word: 32 groups of 32
+    localparam integer G   = 14;                 // bits per select leaf (2 mapped mux pins per bit -> <= 28 loads)
+    localparam integer NGR = 78;                 // relay groups: bits 0..1086 (bit 1087 = the valid leaf)
+    localparam integer NGT = 75;                 // table tap vector 1,050 b / x tap vector 1,048 b
+    localparam integer NGB = 74;                 // 1,024-bit word
+    localparam integer NRT = 3;                  // root copies per 79 / 76-leaf family (<= 27 leaves per root)
+    localparam integer NK  = 9;                  // complete trees
+    localparam integer NL2 = 2 * (NGR + 1) + NGB + 3;   // P2 leaves: ie_E 79, ie_W 79, cm_e 74, cm_b 2, cm_x 1 = 235
+    localparam integer LPT = (NL2 + NK - 1) / NK;      // P2 leaves per tree (27)
     wire [1087:0] sw_i = {sw_v, sw_hi, sw_lo};
     wire [1087:0] se_i = {se_v, se_hi, se_lo};
-    // ================================================================================================ face registers
-    reg [1086:0] sw_q, se_q;                       // payload + header (bit 1087 = valid lives in the copies)
-    reg [3:0]    sid_q;
+    integer gi, li, qi;
+    // ================================================================================================ face: roots
+    reg [1086:0] sw_q0, se_q0, sw_q1, se_q1;   // payload + header, carried two edges (no reset)
+    reg [3:0]    sid_q0, sid_q1;
     reg [1:0]    cdir_q;
-    reg [27:0]   ctag_q;
-    reg [7:0]    we_q;
-    reg [191:0]  wa_q;
-    reg [255:0]  wd_q;
-    (* keep = "true" *) reg [NR-1:0] pe_c, pw_c;  // valid copies (relay select)
-    (* keep = "true" *) reg [NT-1:0] te_c, tw_c;  // table-tap hit copies (valid, kind != 0, dst == sid or 15)
-    (* keep = "true" *) reg [NT-1:0] xe_c, xw_c;  // x-tap hit copies (valid, kind == 0)
-    (* keep = "true" *) reg [NB+3:0] wa_c;        // write-any copies: [31:0] xb/eword groups, [32] open+xbeat, [33]/[34] xm halves, [35] emit+ebeat
-    (* keep = "true" *) reg [4:0]    cv_c;        // config-enable copies: [3:0] direction groups, [4] tag
-    reg          ubad_q;                           // undefined kind 4..7 on a valid pass word
-    wire te_i = sw_i[1087] && sw_i[1086:1084] != 3'd0 && (sw_i[1083:1080] == sid || sw_i[1083:1080] == 4'hF);
-    wire tw_i = se_i[1087] && se_i[1086:1084] != 3'd0 && (se_i[1083:1080] == sid || se_i[1083:1080] == 4'hF);
-    wire te_m = sw_i[1087] && sw_i[1086:1084] != 3'd0;            // MUT 32: SID match dropped in one group
+    reg [27:0]   ctag_q, ctag_q1;
+    (* keep = "true" *) reg [NRT-1:0] vpe_r, vpw_r;          // relay valid roots
+    (* keep = "true" *) reg [8*NRT-1:0] hte_r;               // table tap roots E: {v, kind[2:0], dst[3:0]}
+    (* keep = "true" *) reg [4*NRT-1:0] ste_r;               // sid copies for hte_r
+    (* keep = "true" *) reg [7:0] htw_r;                     // table tap root W (only r_tw_we / fault)
+    (* keep = "true" *) reg [3:0] stw_r;
+    (* keep = "true" *) reg [4*NRT-1:0] hxe_r, hxw_r;        // x tap roots: {v, kind[2:0]}
+    (* keep = "true" *) reg       ub_r;                      // undefined kind 4..7 on a valid pass word
+    (* keep = "true" *) reg [2:0] cv_r;                      // config-enable roots: [0] east dirs, [1] west dirs, [2] tag
     always @(posedge ck) begin
-        sw_q <= sw_i[1086:0]; se_q <= se_i[1086:0]; sid_q <= sid;
-        cdir_q <= cfg_dir; ctag_q <= cfg_tag; wa_q <= xw_addr; wd_q <= xw_data;
+        sw_q0 <= sw_i[1086:0]; se_q0 <= se_i[1086:0]; sw_q1 <= sw_q0; se_q1 <= se_q0;
+        sid_q0 <= sid; sid_q1 <= sid_q0;
+        cdir_q <= cfg_dir; ctag_q <= cfg_tag; ctag_q1 <= ctag_q;
+        for (gi = 0; gi < NRT; gi = gi + 1) begin ste_r[4*gi +: 4] <= sid; end
+        stw_r <= sid;
     end
-    integer gi;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
-            pe_c <= 0; pw_c <= 0; te_c <= 0; tw_c <= 0; xe_c <= 0; xw_c <= 0; wa_c <= 0; cv_c <= 0; we_q <= 0; ubad_q <= 0;
+            vpe_r <= 0; vpw_r <= 0; hte_r <= 0; htw_r <= 0; hxe_r <= 0; hxw_r <= 0; ub_r <= 1'b0; cv_r <= 3'd0;
         end else begin
-            for (gi = 0; gi < NR; gi = gi + 1) begin
-                pe_c[gi] <= (MUT == 31 && gi == 17) ? se_i[1087] : sw_i[1087];
-                pw_c[gi] <= se_i[1087];
+            vpe_r <= {NRT{sw_i[1087]}}; vpw_r <= {NRT{se_i[1087]}};
+            for (gi = 0; gi < NRT; gi = gi + 1) begin
+                hte_r[8*gi +: 8] <= sw_i[1087:1080];
+                hxe_r[4*gi +: 4] <= sw_i[1087:1084];
+                hxw_r[4*gi +: 4] <= se_i[1087:1084];
             end
-            for (gi = 0; gi < NT; gi = gi + 1) begin
-                te_c[gi] <= (MUT == 32 && gi == 5) ? te_m : te_i;
-                tw_c[gi] <= tw_i;
-                xe_c[gi] <= sw_i[1087] && sw_i[1086:1084] == 3'd0;
-                xw_c[gi] <= se_i[1087] && se_i[1086:1084] == 3'd0;
+            htw_r <= se_i[1087:1080];
+            ub_r <= (sw_i[1087] && sw_i[1086]) || (se_i[1087] && se_i[1086]);
+            cv_r <= {3{cfg_v}};
+        end
+    // ================================================================================================ pass leaves
+    function automatic thit(input [7:0] h, input [3:0] s);   // valid, kind != 0, dst == sid or broadcast
+        thit = h[7] && h[6:4] != 3'd0 && (h[3:0] == s || h[3:0] == 4'hF);
+    endfunction
+    function automatic xhit(input [3:0] h);                  // valid x word
+        xhit = h[3] && h[2:0] == 3'd0;
+    endfunction
+    function automatic thit_nosid(input [7:0] h);            // MUT 32
+        thit_nosid = h[7] && h[6:4] != 3'd0;
+    endfunction
+    (* keep = "true" *) reg [NGR:0] pe_l, pw_l;              // [NGR] = valid leaf
+    (* keep = "true" *) reg [NGT:0] te_l, xe_l, xw_l;        // [NGT] = valid / fault leaf
+    (* keep = "true" *) reg         tw_x;
+    (* keep = "true" *) reg         ub_l;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin pe_l <= 0; pw_l <= 0; te_l <= 0; xe_l <= 0; xw_l <= 0; tw_x <= 1'b0; ub_l <= 1'b0; end
+        else begin
+            for (gi = 0; gi <= NGR; gi = gi + 1) begin
+                pe_l[gi] <= (MUT == 31 && gi == 17) ? vpw_r[gi * NRT / (NGR + 1)] : vpe_r[gi * NRT / (NGR + 1)];
+                pw_l[gi] <= vpw_r[gi * NRT / (NGR + 1)];
             end
-            for (gi = 0; gi < NB + 4; gi = gi + 1) wa_c[gi] <= (MUT == 34 && gi == 3) ? 1'b0 : (xw_we != 8'd0);
-            cv_c <= {5{cfg_v}};
-            we_q <= xw_we;
-            ubad_q <= (sw_i[1087] && sw_i[1086]) || (se_i[1087] && se_i[1086]);
+            for (gi = 0; gi <= NGT; gi = gi + 1) begin
+                te_l[gi] <= (MUT == 32 && gi == 5) ? thit_nosid(hte_r[8*(gi * NRT / (NGT + 1)) +: 8])
+                                                   : thit(hte_r[8*(gi * NRT / (NGT + 1)) +: 8], ste_r[4*(gi * NRT / (NGT + 1)) +: 4]);
+                xe_l[gi] <= xhit(hxe_r[4*(gi * NRT / (NGT + 1)) +: 4]);
+                xw_l[gi] <= xhit(hxw_r[4*(gi * NRT / (NGT + 1)) +: 4]);
+            end
+            tw_x <= thit(htw_r, stw_r);
+            ub_l <= ub_r;
         end
     // ================================================================================================ configuration
-    (* keep = "true" *) reg [NR-1:0] de_c, dw_c;  // direction copies (east / west armed)
+    (* keep = "true" *) reg [NK-1:0] de_k, dw_k;              // direction copies, one per complete tree
+    (* keep = "true" *) reg [1:0]    cv_l;                    // tag-enable leaves (14 bits each)
     reg [27:0] tag;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin de_c <= 0; dw_c <= 0; tag <= 28'd0; end
+        if (!rst_n) begin de_k <= 0; dw_k <= 0; cv_l <= 2'd0; tag <= 28'd0; end
         else begin
-            for (gi = 0; gi < NR; gi = gi + 1)
-                if (cv_c[gi % 4]) begin de_c[gi] <= cdir_q[0]; dw_c[gi] <= cdir_q[1]; end
-            if (cv_c[4]) tag <= ctag_q;
+            for (gi = 0; gi < NK; gi = gi + 1) begin
+                if (cv_r[0]) de_k[gi] <= cdir_q[0];
+                if (cv_r[1]) dw_k[gi] <= cdir_q[1];
+            end
+            cv_l <= {cv_r[2] && (MUT != 38), cv_r[2]};
+            if (cv_l[0]) tag[13:0] <= ctag_q1[13:0];
+            if (cv_l[1]) tag[27:14] <= ctag_q1[27:14];
         end
-    // ================================================================================================ static x packer
-    // qfd_dv_stream_packer STATIC_PACKER=1 equations: 64 independent BF16 slots, highest-lane priority, duplicate fault.
-    // QW-STREAM2 10-19 (route s1-2c97be786 TT -47.5 ps: wa_q -> decode -> priority -> 8-way OR -> &nm -> 1,024-bit eword
-    // enable in one edge, 17 levels + a ~1,100-load combinational enable) -- pipelined in three registered stages:
-    //   P1 (edge after the face): BF16 RNE of the 8 lanes, the slot x lane one-hot select (decode + highest-lane priority)
-    //      and the per-slot hit, the beat-consistency and duplicate partial faults -- all pure functions of the face regs;
-    //   P2 (state edge): assembly xb / mask xm / open op / beat xbeat from the registered one-hot select (AND-OR 8 + mux),
-    //      complete = &nm into KEPT copies cm_c (eword groups, emit groups, x tap, ebeat) and the beat fault pbad_r;
-    //   P3 (emit edge): eword[g] <= xb[g] on its own kept copy cm_c[g]; emit copies em_c / emx_c; ebeat.
-    // Net: the SU own-write path xw_* -> emitted beat / x tap / fault is +2 edges against the previous tile (+3 against
-    // qfd_dv_stream).  Static: the SU issues own x writes 2 edges earlier; II unchanged (one 8-lane write per edge).
+    // ================================================================================================ own x writes
     function automatic [15:0] bf16(input [31:0] b);
         reg [32:0] r;
         begin
@@ -134,24 +160,47 @@ module qfd_dv_stream_tile #(
             bf16 = (MUT == 2) ? b[31:16] : r[31:16];
         end
     endfunction
-    genvar l, d, s, b;
-    // ---------------------------------------------------------------------------------------------- P1
-    wire [63:0]  lo_hit, hi_hit;
-    wire [511:0] sel_n;                            // [8*s + l]: lane l writes slot s (highest lane wins)
+    // ---------------------------------------------------------------------------------------------- face
+    // decoder copy c = 2 * (s / 32) + (s % 8) / 4 serves 16 slots (each digit term -> 4 slots)
+    (* keep = "true" *) reg [31:0]  we_c;                    // lane enables per decoder copy: [8c + l]
+    (* keep = "true" *) reg [191:0] wd_c;                    // lane slot digits addr[5:0] per copy: [48c + 6l +: 6]
+    reg [127:0] wb_q;                                         // lane beat addresses addr[21:6]
+    reg [255:0] wd_q;
+    (* keep = "true" *) reg        wy_r;                     // write-any root
+    always @(posedge ck) begin
+        for (gi = 0; gi < 8; gi = gi + 1) begin
+            for (qi = 0; qi < 4; qi = qi + 1) wd_c[48*qi + 6*gi +: 6] <= xw_addr[24*gi +: 6];
+            wb_q[16*gi +: 16] <= xw_addr[24*gi + 6 +: 16];
+        end
+        wd_q <= xw_data;
+    end
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin we_c <= 32'd0; wy_r <= 1'b0; end
+        else begin we_c <= {4{xw_we}}; wy_r <= xw_we != 8'd0; end
+    // ---------------------------------------------------------------------------------------------- P1 (comb)
+    genvar l, d, s, b, k;
+    wire [511:0] sel_n;                                       // [8*s + l]: lane l writes slot s (highest lane wins)
     wire [63:0]  sh_n, dup_n;
     wire [7:0]   beat_bad;
+    wire [255:0] lo_c, hi_c;                                  // [64c + 8l + d]
     generate
-        for (l = 0; l < 8; l = l + 1) begin: g_decode
-            for (d = 0; d < 8; d = d + 1) begin: g_digit
-                assign lo_hit[8*l+d] = (wa_q[24*l +: 3] == d);
-                assign hi_hit[8*l+d] = we_q[l] && (wa_q[24*l+3 +: 3] == d);
+        for (l = 0; l < 8; l = l + 1) begin: g_bb
+            assign beat_bad[l] = we_c[l] && (!we_c[0] || wb_q[16*l +: 16] != wb_q[0 +: 16]);
+        end
+        // two-level decode per lane and per copy: low digit addr[2:0], high digit addr[5:3] with the lane enable;
+        // a copy uses 4 low and 4 high terms, each term -> 4 slots (x the ~4 priority / duplicate uses of a hit)
+        for (k = 0; k < 4; k = k + 1) begin: g_copy
+            for (l = 0; l < 8; l = l + 1) begin: g_decode
+                for (d = 0; d < 8; d = d + 1) begin: g_digit
+                    assign lo_c[64*k + 8*l + d] = (wd_c[48*k + 6*l +: 3] == d);
+                    assign hi_c[64*k + 8*l + d] = we_c[8*k + l] && (wd_c[48*k + 6*l + 3 +: 3] == d);
+                end
             end
-            assign beat_bad[l] = we_q[l] && (!we_q[0] || wa_q[24*l+6 +: 16] != wa_q[6 +: 16]);
         end
         for (s = 0; s < 64; s = s + 1) begin: g_slot1
             wire [7:0] hit;
             for (l = 0; l < 8; l = l + 1) begin: g_lane
-                assign hit[l] = lo_hit[8*l + (s % 8)] && hi_hit[8*l + (s / 8)];
+                assign hit[l] = lo_c[64*(2*(s/32) + (s%8)/4) + 8*l + s % 8] && hi_c[64*(2*(s/32) + (s%8)/4) + 8*l + s / 8];
                 if (l == 7) begin: g_top
                     assign sel_n[8*s+l] = hit[l];
                 end else begin: g_low
@@ -164,131 +213,145 @@ module qfd_dv_stream_tile #(
                               (hit[7] && |hit[6:0]);
         end
     endgenerate
-    reg [511:0] selq;                              // registered one-hot select (each bit -> 16 AND terms)
-    reg [63:0]  shq;                               // registered slot hit (each -> 16 mux + nm + fault = 18 loads)
-    (* keep = "true" *) reg [127:0] lane_c0;      // BF16 lane data, kept copy for slots 0..31 (32 loads per bit)
-    (* keep = "true" *) reg [127:0] lane_c1;      // kept copy for slots 32..63
-    (* keep = "true" *) reg [NB+3:0] wa1_c;       // write-any copies one edge on (same groups as wa_c)
+    // ---------------------------------------------------------------------------------------------- P1 (regs)
+    reg [511:0] selq;                                         // one-hot select, each bit -> 16 AND terms
+    (* keep = "true" *) reg [64*NK-1:0] shq_t;               // slot-hit copy per complete tree
+    (* keep = "true" *) reg [127:0] shq_b;                   // slot-hit copies for the xb write: [64*h + s], bits 8h..8h+7
+    (* keep = "true" *) reg [511:0] lane_c;                  // BF16 lane data, copy q serves slots 16q..16q+15
+    (* keep = "true" *) reg [NK+1:0] wa1;                    // write-any leaves: [k] tree k op update, [NK+h] xbeat half h
     reg         dupq, bbq, w0q;
-    reg [15:0]  abq;                               // beat address of lane 0
-    integer li;
+    reg [15:0]  abq;
+
     always @(posedge ck) begin
-        selq <= sel_n; shq <= sh_n; dupq <= |dup_n; bbq <= |beat_bad; w0q <= we_q[0]; abq <= wa_q[6 +: 16];
-        for (li = 0; li < 8; li = li + 1) begin
-            lane_c0[16*li +: 16] <= bf16(wd_q[32*li +: 32]);
-            lane_c1[16*li +: 16] <= bf16(wd_q[32*li +: 32]);
-        end
-        wa1_c <= wa_c;                             // copy-to-copy, one load each (no fanout)
+        selq <= sel_n; dupq <= |dup_n; bbq <= |beat_bad; w0q <= we_c[0]; abq <= wb_q[0 +: 16];
+        for (qi = 0; qi < NK; qi = qi + 1) shq_t[64*qi +: 64] <= sh_n;
+        shq_b <= {sh_n, sh_n};
+        for (qi = 0; qi < 4; qi = qi + 1)
+            for (li = 0; li < 8; li = li + 1)
+                lane_c[128*qi + 16*li +: 16] <= bf16(wd_q[32*li +: 32]);
     end
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) wa1 <= 0;
+        else for (gi = 0; gi < NK + 2; gi = gi + 1) wa1[gi] <= (MUT == 34 && gi == 3) ? 1'b0 : wy_r;
     // ---------------------------------------------------------------------------------------------- P2
-    reg [1023:0] xb;
-    reg [63:0]   xm;
+    reg [1023:0] xb;                                          // beat assembly (no reset; written only on slot hits)
     reg [15:0]   xbeat;
-    (* keep = "true" *) reg [3:0] op_c;           // open-beat copies, 16 slots each
-    wire [63:0]  nm;
+    reg [64*NK-1:0] xm_k;                                     // mask copy per tree (no reset: op = 0 masks it)
+    (* keep = "true" *) reg [3*NK-1:0] op_k;                 // open-beat copies per tree: [3k + j] slots 22j..
+    wire [NK-1:0] complete_k;
     wire [1023:0] nb;
-    wire [63:0]  slot_bad;
     generate
         for (s = 0; s < 64; s = s + 1) begin: g_slot
-            wire [127:0] lane = (s < 32) ? lane_c0 : lane_c1;
-            wire [15:0] packed_slot;
+            wire [127:0] lane = lane_c[128*(s / 16) +: 128];
             for (b = 0; b < 16; b = b + 1) begin: g_bit
                 wire [7:0] terms;
                 for (l = 0; l < 8; l = l + 1) begin: g_term
                     assign terms[l] = lane[16*l + b] && selq[8*s+l];
                 end
-                assign packed_slot[b] = |terms;
+                assign nb[16*s + b] = shq_b[64*(b / 8) + s] ? (|terms) : xb[16*s + b];
             end
-            assign nb[16*s +: 16] = shq[s] ? packed_slot : xb[16*s +: 16];
-            assign nm[s] = (op_c[s / 16] && xm[s]) || shq[s];
-            assign slot_bad[s] = op_c[s / 16] && xm[s] && shq[s];
+        end
+        for (k = 0; k < NK; k = k + 1) begin: g_tree
+            wire [63:0] xmk = xm_k[64*k +: 64];
+            wire [63:0] shk = shq_t[64*k +: 64];
+            wire [63:0] nmk;
+            for (s = 0; s < 64; s = s + 1) begin: g_nm
+                assign nmk[s] = (op_k[3*k + s / 22] && xmk[s]) || shk[s];
+            end
+            // &nm = op ? &(xm | sh) : &sh  (op drives one select instead of 64 AND terms)
+            assign complete_k[k] = op_k[3*k] ? &(xmk | shk) : &shk;
+            always @(posedge ck) xm_k[64*k +: 64] <= (MUT == 35 && k == 5) ? xmk : nmk;
+            always @(posedge ck or negedge rst_n)
+                if (!rst_n) op_k[3*k +: 3] <= 3'd0;
+                else if (wa1[k]) op_k[3*k +: 3] <= {3{!complete_k[k]}};
         end
     endgenerate
-    wire wany1 = wa1_c[NB+3];
-    wire complete = &nm;
-    wire sbad = (MUT == 22) ? 1'b0 : ((|slot_bad) || dupq);   // MUT 22: no duplicate / overwrite fault
-    wire pbad_n = sbad || bbq || (w0q && op_c[0] && abq != xbeat);
-    localparam integer NC = NB + NR + 3;           // complete copies: [NB-1:0] eword groups, [NB+NR-1:NB] emit groups,
-                                                   // [NB+NR] / [NB+NR+1] x tap, [NB+NR+2] ebeat
-    (* keep = "true" *) reg [NC-1:0] cm_c;
-    reg          pbad_r;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin op_c <= 4'd0; xm <= 64'd0; cm_c <= {NC{1'b0}}; pbad_r <= 1'b0; end
-        else begin
-            cm_c <= {NC{wany1 && complete}};
-            pbad_r <= pbad_n;
-            if (wa1_c[NB]) op_c <= {4{!complete}};
-            if (wa1_c[NB+1]) xm[31:0] <= complete ? 32'd0 : nm[31:0];
-            if (wa1_c[NB+2]) xm[63:32] <= complete ? 32'd0 : nm[63:32];
-        end
     always @(posedge ck) begin
-        for (gi = 0; gi < NB; gi = gi + 1)
-            if (wa1_c[gi]) xb[32*gi +: 32] <= nb[32*gi +: 32];
-        if (wa1_c[NB]) xbeat <= abq;
+        xb <= nb;
+        for (gi = 0; gi < 16; gi = gi + 1) if (wa1[NK + gi / 8]) xbeat[gi] <= abq[gi];
     end
-    wire pbad = pbad_r;                            // the beat fault, on the emit edge (bench compares it per edge)
-    // ---------------------------------------------------------------------------------------------- P3
-    (* keep = "true" *) reg [NR-1:0] em_c;        // emit copies: relay groups
-    (* keep = "true" *) reg [1:0]    emx_c;       // emit copies: x tap select / x tap valid + conflict
+    // completion fault (combinational on the P2 cycle = the reference's pbad cycle), from tree 0's copies
+    wire sbad = (MUT == 22) ? 1'b0 : ((op_k[0] && |(xm_k[63:0] & shq_t[63:0])) || dupq);
+    wire pbad = sbad || bbq || (w0q && op_k[0] && abq != xbeat);
+    // P2 leaves: complete is only ever 1 on a write edge (op = 1 holds a not-complete mask), so no write-any term
+    // The held-word enables cm_e / cm_b carry no reset: like the reference eword (captured on the completion edge
+    // itself, never reset), a word completed just before reset is still taken; complete is 0 under reset (op = 0).
+    (* keep = "true" *) reg [NL2-1:0] p2l;
+    localparam integer L2E0 = 2 * (NGR + 1);           // first cm_e leaf
+    localparam integer L2X  = NL2 - 1;                 // cm_x (x-tap emit valid, reset)
+    function automatic p2d(input integer i, input [NK-1:0] c, input [NK-1:0] de, input [NK-1:0] dw);
+        p2d = (MUT == 33 && i == 9) ? 1'b0 : (MUT == 37 && i == L2E0 + 7) ? 1'b0 :
+              c[i / LPT] && (i <= NGR ? de[i / LPT] : i < L2E0 ? dw[i / LPT] : 1'b1);
+    endfunction
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin p2l[L2E0-1:0] <= 0; p2l[L2X] <= 1'b0; end
+        else begin
+            for (gi = 0; gi < L2E0; gi = gi + 1) p2l[gi] <= p2d(gi, complete_k, de_k, dw_k);
+            p2l[L2X] <= p2d(L2X, complete_k, de_k, dw_k);
+        end
+    always @(posedge ck)
+        for (gi = L2E0; gi < L2X; gi = gi + 1) p2l[gi] <= p2d(gi, complete_k, de_k, dw_k);
+    wire [NGR:0] ie_e = p2l[NGR:0];
+    wire [NGR:0] ie_w = p2l[2*NGR+1:NGR+1];
+    wire [NGB-1:0] cm_e = p2l[2*NGR+1+NGB:2*NGR+2];
+    wire [1:0]   cm_b = p2l[2*NGR+3+NGB:2*NGR+2+NGB];
+    wire         cm_x = p2l[2*NGR+4+NGB];
+    // ---------------------------------------------------------------------------------------------- P3: held x-tap word
     reg [1023:0] eword;
     reg [15:0]   ebeat;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin em_c <= 0; emx_c <= 2'd0; end
-        else begin
-            for (gi = 0; gi < NR; gi = gi + 1) em_c[gi] <= (MUT == 33 && gi == 9) ? 1'b0 : cm_c[NB + gi];
-            emx_c <= cm_c[NB+NR+1 -: 2];
+    wire [1023:0] eword_n;
+    wire [15:0]   ebeat_n;
+    generate
+        for (b = 0; b < 1024; b = b + 1) begin: g_ew
+            assign eword_n[b] = cm_e[b / G] ? xb[b] : eword[b];
         end
-    always @(posedge ck) begin
-        for (gi = 0; gi < NB; gi = gi + 1)
-            if (cm_c[gi]) eword[32*gi +: 32] <= xb[32*gi +: 32];
-        if (cm_c[NB+NR+2]) ebeat <= xbeat;
-    end
-    wire [63:0]   own_ctl = {1'b1, 3'd0, 4'hF, sid_q, {2'b00, ebeat, 6'd0}, tag};
-    wire [1087:0] own = {own_ctl, eword};
+        for (b = 0; b < 16; b = b + 1) begin: g_eb
+            assign ebeat_n[b] = cm_b[b / 8] ? xbeat[b] : ebeat[b];
+        end
+    endgenerate
+    always @(posedge ck) begin eword <= eword_n; ebeat <= ebeat_n; end
     // ================================================================================================ relay + insertion
+    wire [1087:0] own = {1'b1, 3'd0, 4'hF, sid_q1, 2'b00, xbeat, 6'd0, tag, xb};
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin so_e[1087] <= 1'b0; so_w[1087] <= 1'b0; end
         else begin
-            so_e[1087] <= pe_c[NR-1] || (em_c[NR-1] && de_c[NR-1]);
-            so_w[1087] <= pw_c[NR-1] || (em_c[NR-1] && dw_c[NR-1]);
+            so_e[1087] <= pe_l[NGR] || ie_e[NGR];
+            so_w[1087] <= pw_l[NGR] || ie_w[NGR];
         end
     always @(posedge ck)
         for (gi = 0; gi < 1087; gi = gi + 1) begin
-            so_e[gi] <= pe_c[gi / 32] ? sw_q[gi] : (em_c[gi / 32] && de_c[gi / 32]) ? own[gi] : 1'b0;
-            so_w[gi] <= pw_c[gi / 32] ? se_q[gi] : (em_c[gi / 32] && dw_c[gi / 32]) ? own[gi] : 1'b0;
+            so_e[gi] <= pe_l[gi / G] ? sw_q1[gi] : ie_e[gi / G] ? own[gi] : 1'b0;
+            so_w[gi] <= pw_l[gi / G] ? se_q1[gi] : ie_w[gi / G] ? own[gi] : 1'b0;
         end
     // ================================================================================================ taps (interior relay)
-    // table tap: word bits {kind 1085:1084, eaddr 1075:1052, payload 1023:0} = 1,050 bits, select te ? sw : se
+    wire [1049:0] tv_e = {sw_q1[1085:1084], sw_q1[1075:1052], sw_q1[1023:0]};
+    wire [1049:0] tv_w = {se_q1[1085:1084], se_q1[1075:1052], se_q1[1023:0]};
+    wire [1047:0] xv_e = {sw_q1[1075:1052], sw_q1[1023:0]};
+    wire [1047:0] xv_w = {se_q1[1075:1052], se_q1[1023:0]};
+    wire [1047:0] xv_o = {2'b00, ebeat_n, 6'd0, eword_n};
     reg          r_tw_we, r_xt_v, r_xt_bad;
-    reg [1:0]    r_tw_kind;
-    reg [23:0]   r_tw_addr, r_xt_a;
-    reg [1023:0] r_tw_data, r_xt_d;
+    reg [1049:0] r_tw;
+    reg [1047:0] r_xt;
     always @(posedge ck) begin
-        for (gi = 0; gi < 1024; gi = gi + 1) begin
-            r_tw_data[gi] <= te_c[gi / 32] ? sw_q[gi] : se_q[gi];
-            r_xt_d[gi] <= xe_c[gi / 32] ? sw_q[gi] : xw_c[gi / 32] ? se_q[gi] : eword[gi];
-        end
-        r_tw_addr <= te_c[NT-1] ? sw_q[1075:1052] : se_q[1075:1052];
-        r_tw_kind <= te_c[NT-1] ? sw_q[1085:1084] : se_q[1085:1084];
-        r_xt_a <= xe_c[NT-1] ? sw_q[1075:1052] : xw_c[NT-1] ? se_q[1075:1052] : {2'b00, ebeat, 6'd0};
+        for (gi = 0; gi < 1050; gi = gi + 1) r_tw[gi] <= te_l[gi / G] ? tv_e[gi] : tv_w[gi];
+        for (gi = 0; gi < 1048; gi = gi + 1) r_xt[gi] <= xe_l[gi / G] ? xv_e[gi] : xw_l[gi / G] ? xv_w[gi] : xv_o[gi];
     end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin r_tw_we <= 1'b0; r_xt_v <= 1'b0; r_xt_bad <= 1'b0; end
         else begin
-            r_tw_we <= te_c[0] || tw_c[0];
-            r_xt_v <= xe_c[0] || xw_c[0] || emx_c[0];
-            r_xt_bad <= r_xt_bad | ((xe_c[0] ? 2'd1 : 2'd0) + (xw_c[0] ? 2'd1 : 2'd0) + (emx_c[1] ? 2'd1 : 2'd0) > 2'd1);
+            r_tw_we <= te_l[NGT] || tw_x;
+            r_xt_v <= xe_l[NGT] || xw_l[NGT] || cm_x;
+            r_xt_bad <= r_xt_bad | ((xe_l[NGT] ? 2'd1 : 2'd0) + (xw_l[NGT] ? 2'd1 : 2'd0) + (cm_x ? 2'd1 : 2'd0) > 2'd1);
         end
-    // output registers at the N / S tap faces
     always @(posedge ck) begin
-        tw_kind <= r_tw_kind; tw_addr <= r_tw_addr; tw_data_lo <= r_tw_data[511:0]; tw_data_hi <= r_tw_data[1023:512];
-        xt_a <= r_xt_a; xt_d_lo <= r_xt_d[511:0]; xt_d_hi <= r_xt_d[1023:512];
+        tw_kind <= r_tw[1049:1048]; tw_addr <= r_tw[1047:1024]; tw_data_lo <= r_tw[511:0]; tw_data_hi <= r_tw[1023:512];
+        xt_a <= r_xt[1047:1024]; xt_d_lo <= r_xt[511:0]; xt_d_hi <= r_xt[1023:512];
     end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin tw_we <= 1'b0; xt_v <= 1'b0; xt_bad <= 1'b0; end
         else begin tw_we <= r_tw_we; xt_v <= r_xt_v; xt_bad <= r_xt_bad; end
     // ================================================================================================ fault (sticky)
-    wire bad = pbad || (pe_c[0] && em_c[0] && de_c[0]) || (pw_c[0] && em_c[0] && dw_c[0]) || (te_c[0] && tw_c[0]) || ubad_q;
+    wire bad = pbad || (pe_l[NGR] && ie_e[NGR]) || (pw_l[NGR] && ie_w[NGR]) || (te_l[NGT] && tw_x) || ub_l;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) fault <= 1'b0;
         else fault <= fault | bad;

@@ -1,0 +1,1115 @@
+{
+ "schema": "opentallas.s81_dv.frame_return_plan.v1",
+ "master": "col_h9",
+ "win": 2,
+ "rst": 1,
+ "cf": 2,
+ "K": 5120,
+ "nseg": 5,
+ "super_rows": 2,
+ "rows": 4,
+ "topology": {
+  "nodes": {
+   "n0": {
+    "a": "e0.r0",
+    "link_a": 6,
+    "b": "e0.r1",
+    "link_b": 7
+   },
+   "n1": {
+    "a": "n0",
+    "link_a": 0,
+    "b": "n2",
+    "link_b": 0
+   },
+   "n10": {
+    "a": "e5.r0",
+    "link_a": 7,
+    "b": "e5.r1",
+    "link_b": 8
+   },
+   "n11": {
+    "a": "n9",
+    "link_a": 0,
+    "b": "n13",
+    "link_b": 0
+   },
+   "n12": {
+    "a": "e6.r0",
+    "link_a": 3,
+    "b": "e6.r1",
+    "link_b": 4
+   },
+   "n13": {
+    "a": "n12",
+    "link_a": 0,
+    "b": "n14",
+    "link_b": 0
+   },
+   "n14": {
+    "a": "e7.r0",
+    "link_a": 6,
+    "b": "e7.r1",
+    "link_b": 7
+   },
+   "n15": {
+    "a": "n7",
+    "link_a": 2,
+    "b": "n23",
+    "link_b": 2
+   },
+   "n16": {
+    "a": "e8w.r",
+    "link_a": 5,
+    "b": "e8e.r",
+    "link_b": 3
+   },
+   "n17": {
+    "a": "n16",
+    "link_a": 0,
+    "b": "n18",
+    "link_b": 0
+   },
+   "n18": {
+    "a": "e9.r0",
+    "link_a": 3,
+    "b": "e9.r1",
+    "link_b": 4
+   },
+   "n19": {
+    "a": "n17",
+    "link_a": 0,
+    "b": "n21",
+    "link_b": 0
+   },
+   "n2": {
+    "a": "e1.r0",
+    "link_a": 3,
+    "b": "e1.r1",
+    "link_b": 4
+   },
+   "n20": {
+    "a": "e10.r0",
+    "link_a": 7,
+    "b": "e10.r1",
+    "link_b": 8
+   },
+   "n21": {
+    "a": "n20",
+    "link_a": 0,
+    "b": "n22",
+    "link_b": 0
+   },
+   "n22": {
+    "a": "e11.r0",
+    "link_a": 4,
+    "b": "e11.r1",
+    "link_b": 5
+   },
+   "n23": {
+    "a": "n19",
+    "link_a": 1,
+    "b": "n27",
+    "link_b": 1
+   },
+   "n24": {
+    "a": "e12.r0",
+    "link_a": 7,
+    "b": "e12.r1",
+    "link_b": 8
+   },
+   "n25": {
+    "a": "n24",
+    "link_a": 0,
+    "b": "n26",
+    "link_b": 0
+   },
+   "n26": {
+    "a": "e13w.r",
+    "link_a": 6,
+    "b": "e13e.r",
+    "link_b": 3
+   },
+   "n27": {
+    "a": "n25",
+    "link_a": 0,
+    "b": "n28",
+    "link_b": 0
+   },
+   "n28": {
+    "a": "e14.r0",
+    "link_a": 3,
+    "b": "e14.r1",
+    "link_b": 4
+   },
+   "n3": {
+    "a": "n1",
+    "link_a": 0,
+    "b": "n5",
+    "link_b": 0
+   },
+   "n4": {
+    "a": "e2.r0",
+    "link_a": 6,
+    "b": "e2.r1",
+    "link_b": 7
+   },
+   "n5": {
+    "a": "n4",
+    "link_a": 0,
+    "b": "n6",
+    "link_b": 0
+   },
+   "n6": {
+    "a": "e3.r0",
+    "link_a": 3,
+    "b": "e3.r1",
+    "link_b": 4
+   },
+   "n7": {
+    "a": "n3",
+    "link_a": 1,
+    "b": "n11",
+    "link_b": 1
+   },
+   "n8": {
+    "a": "e4w.r",
+    "link_a": 4,
+    "b": "e4e.r",
+    "link_b": 1
+   },
+   "n9": {
+    "a": "n8",
+    "link_a": 0,
+    "b": "n10",
+    "link_b": 0
+   }
+  },
+  "root": "n15",
+  "root_link": 10,
+  "r1_skew": true
+ },
+ "frame_schedule": null,
+ "emission": {
+  "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+  "e0": 212,
+  "off": {
+   "0": 0,
+   "1": 0,
+   "2": 2,
+   "3": 2,
+   "5": 6,
+   "6": 6,
+   "7": 8,
+   "9": 8,
+   "10": 12,
+   "11": 12,
+   "12": 14,
+   "14": 14
+  },
+  "seg_extra": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "cfifo": "dsfd_cfifo_crs4",
+  "land_e": 5,
+  "x_shift": -1,
+  "last_beat": [
+   71,
+   73,
+   75,
+   77,
+   79
+  ],
+  "edges": {
+   "e2": 320,
+   "e3": 326,
+   "e5": 326,
+   "e6": 328,
+   "e7": 332,
+   "e9": 324,
+   "e10": 328,
+   "e11": 330,
+   "e12": 336,
+   "e14": 334
+  },
+  "elem_extra": 33,
+  "elem_class": [
+   2,
+   2
+  ]
+ },
+ "placement": [
+  {
+   "pair": 2,
+   "field_slot": 0,
+   "super_row": 1,
+   "seg": 1,
+   "nseg": 5,
+   "rows": [
+    2,
+    3
+   ]
+  },
+  {
+   "pair": 3,
+   "field_slot": 1,
+   "super_row": 0,
+   "seg": 4,
+   "nseg": 5,
+   "rows": [
+    0,
+    1
+   ]
+  },
+  {
+   "pair": 5,
+   "field_slot": 2,
+   "super_row": 1,
+   "seg": 2,
+   "nseg": 5,
+   "rows": [
+    2,
+    3
+   ]
+  },
+  {
+   "pair": 6,
+   "field_slot": 3,
+   "super_row": 1,
+   "seg": 3,
+   "nseg": 5,
+   "rows": [
+    2,
+    3
+   ]
+  },
+  {
+   "pair": 7,
+   "field_slot": 4,
+   "super_row": 1,
+   "seg": 4,
+   "nseg": 5,
+   "rows": [
+    2,
+    3
+   ]
+  },
+  {
+   "pair": 9,
+   "field_slot": 5,
+   "super_row": 1,
+   "seg": 0,
+   "nseg": 5,
+   "rows": [
+    2,
+    3
+   ]
+  },
+  {
+   "pair": 10,
+   "field_slot": 6,
+   "super_row": 0,
+   "seg": 0,
+   "nseg": 5,
+   "rows": [
+    0,
+    1
+   ]
+  },
+  {
+   "pair": 11,
+   "field_slot": 7,
+   "super_row": 0,
+   "seg": 1,
+   "nseg": 5,
+   "rows": [
+    0,
+    1
+   ]
+  },
+  {
+   "pair": 12,
+   "field_slot": 8,
+   "super_row": 0,
+   "seg": 3,
+   "nseg": 5,
+   "rows": [
+    0,
+    1
+   ]
+  },
+  {
+   "pair": 14,
+   "field_slot": 9,
+   "super_row": 0,
+   "seg": 2,
+   "nseg": 5,
+   "rows": [
+    0,
+    1
+   ]
+  }
+ ],
+ "assign_slots": [
+  [
+   0,
+   1,
+   1
+  ],
+  [
+   1,
+   0,
+   4
+  ],
+  [
+   2,
+   1,
+   2
+  ],
+  [
+   3,
+   1,
+   3
+  ],
+  [
+   4,
+   1,
+   4
+  ],
+  [
+   5,
+   1,
+   0
+  ],
+  [
+   6,
+   0,
+   0
+  ],
+  [
+   7,
+   0,
+   1
+  ],
+  [
+   8,
+   0,
+   3
+  ],
+  [
+   9,
+   0,
+   2
+  ]
+ ],
+ "nodes": {
+  "n0": {
+   "a": "e0.r0",
+   "b": "e0.r1",
+   "link_a": 6,
+   "link_b": 7,
+   "arrive_a": [],
+   "arrive_b": [],
+   "merges": 0,
+   "forwards": 0,
+   "exits": [],
+   "faults": []
+  },
+  "n10": {
+   "a": "e5.r0",
+   "b": "e5.r1",
+   "link_a": 7,
+   "link_b": 8,
+   "arrive_a": [
+    300
+   ],
+   "arrive_b": [
+    301
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    313,
+    314
+   ],
+   "faults": []
+  },
+  "n12": {
+   "a": "e6.r0",
+   "b": "e6.r1",
+   "link_a": 3,
+   "link_b": 4,
+   "arrive_a": [
+    298
+   ],
+   "arrive_b": [
+    299
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    311,
+    312
+   ],
+   "faults": []
+  },
+  "n14": {
+   "a": "e7.r0",
+   "b": "e7.r1",
+   "link_a": 6,
+   "link_b": 7,
+   "arrive_a": [
+    305
+   ],
+   "arrive_b": [
+    306
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    318,
+    319
+   ],
+   "faults": []
+  },
+  "n13": {
+   "a": "n12",
+   "b": "n14",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [
+    311,
+    312
+   ],
+   "arrive_b": [
+    318,
+    319
+   ],
+   "merges": 0,
+   "forwards": 4,
+   "exits": [
+    324,
+    325,
+    331,
+    332
+   ],
+   "faults": []
+  },
+  "n16": {
+   "a": "e8w.r",
+   "b": "e8e.r",
+   "link_a": 5,
+   "link_b": 3,
+   "arrive_a": [],
+   "arrive_b": [],
+   "merges": 0,
+   "forwards": 0,
+   "exits": [],
+   "faults": []
+  },
+  "n18": {
+   "a": "e9.r0",
+   "b": "e9.r1",
+   "link_a": 3,
+   "link_b": 4,
+   "arrive_a": [
+    294
+   ],
+   "arrive_b": [
+    295
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    307,
+    308
+   ],
+   "faults": []
+  },
+  "n17": {
+   "a": "n16",
+   "b": "n18",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [],
+   "arrive_b": [
+    307,
+    308
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    320,
+    321
+   ],
+   "faults": []
+  },
+  "n2": {
+   "a": "e1.r0",
+   "b": "e1.r1",
+   "link_a": 3,
+   "link_b": 4,
+   "arrive_a": [],
+   "arrive_b": [],
+   "merges": 0,
+   "forwards": 0,
+   "exits": [],
+   "faults": []
+  },
+  "n1": {
+   "a": "n0",
+   "b": "n2",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [],
+   "arrive_b": [],
+   "merges": 0,
+   "forwards": 0,
+   "exits": [],
+   "faults": []
+  },
+  "n20": {
+   "a": "e10.r0",
+   "b": "e10.r1",
+   "link_a": 7,
+   "link_b": 8,
+   "arrive_a": [
+    302
+   ],
+   "arrive_b": [
+    303
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    315,
+    316
+   ],
+   "faults": []
+  },
+  "n22": {
+   "a": "e11.r0",
+   "b": "e11.r1",
+   "link_a": 4,
+   "link_b": 5,
+   "arrive_a": [
+    301
+   ],
+   "arrive_b": [
+    302
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    314,
+    315
+   ],
+   "faults": []
+  },
+  "n21": {
+   "a": "n20",
+   "b": "n22",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [
+    315,
+    316
+   ],
+   "arrive_b": [
+    314,
+    315
+   ],
+   "merges": 2,
+   "forwards": 0,
+   "exits": [
+    327,
+    328
+   ],
+   "faults": []
+  },
+  "n19": {
+   "a": "n17",
+   "b": "n21",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [
+    320,
+    321
+   ],
+   "arrive_b": [
+    327,
+    328
+   ],
+   "merges": 0,
+   "forwards": 4,
+   "exits": [
+    333,
+    334,
+    340,
+    341
+   ],
+   "faults": []
+  },
+  "n24": {
+   "a": "e12.r0",
+   "b": "e12.r1",
+   "link_a": 7,
+   "link_b": 8,
+   "arrive_a": [
+    310
+   ],
+   "arrive_b": [
+    311
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    323,
+    324
+   ],
+   "faults": []
+  },
+  "n26": {
+   "a": "e13w.r",
+   "b": "e13e.r",
+   "link_a": 6,
+   "link_b": 3,
+   "arrive_a": [],
+   "arrive_b": [],
+   "merges": 0,
+   "forwards": 0,
+   "exits": [],
+   "faults": []
+  },
+  "n25": {
+   "a": "n24",
+   "b": "n26",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [
+    323,
+    324
+   ],
+   "arrive_b": [],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    336,
+    337
+   ],
+   "faults": []
+  },
+  "n28": {
+   "a": "e14.r0",
+   "b": "e14.r1",
+   "link_a": 3,
+   "link_b": 4,
+   "arrive_a": [
+    304
+   ],
+   "arrive_b": [
+    305
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    317,
+    318
+   ],
+   "faults": []
+  },
+  "n27": {
+   "a": "n25",
+   "b": "n28",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [
+    336,
+    337
+   ],
+   "arrive_b": [
+    317,
+    318
+   ],
+   "merges": 0,
+   "forwards": 4,
+   "exits": [
+    330,
+    331,
+    349,
+    350
+   ],
+   "faults": []
+  },
+  "n23": {
+   "a": "n19",
+   "b": "n27",
+   "link_a": 1,
+   "link_b": 1,
+   "arrive_a": [
+    334,
+    335,
+    341,
+    342
+   ],
+   "arrive_b": [
+    331,
+    332,
+    350,
+    351
+   ],
+   "merges": 0,
+   "forwards": 8,
+   "exits": [
+    344,
+    345,
+    347,
+    348,
+    354,
+    355,
+    363,
+    364
+   ],
+   "faults": []
+  },
+  "n4": {
+   "a": "e2.r0",
+   "b": "e2.r1",
+   "link_a": 6,
+   "link_b": 7,
+   "arrive_a": [
+    293
+   ],
+   "arrive_b": [
+    294
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    306,
+    307
+   ],
+   "faults": []
+  },
+  "n6": {
+   "a": "e3.r0",
+   "b": "e3.r1",
+   "link_a": 3,
+   "link_b": 4,
+   "arrive_a": [
+    296
+   ],
+   "arrive_b": [
+    297
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    309,
+    310
+   ],
+   "faults": []
+  },
+  "n5": {
+   "a": "n4",
+   "b": "n6",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [
+    306,
+    307
+   ],
+   "arrive_b": [
+    309,
+    310
+   ],
+   "merges": 0,
+   "forwards": 4,
+   "exits": [
+    319,
+    320,
+    322,
+    323
+   ],
+   "faults": []
+  },
+  "n3": {
+   "a": "n1",
+   "b": "n5",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [],
+   "arrive_b": [
+    319,
+    320,
+    322,
+    323
+   ],
+   "merges": 0,
+   "forwards": 4,
+   "exits": [
+    332,
+    333,
+    335,
+    336
+   ],
+   "faults": []
+  },
+  "n8": {
+   "a": "e4w.r",
+   "b": "e4e.r",
+   "link_a": 4,
+   "link_b": 1,
+   "arrive_a": [],
+   "arrive_b": [],
+   "merges": 0,
+   "forwards": 0,
+   "exits": [],
+   "faults": []
+  },
+  "n9": {
+   "a": "n8",
+   "b": "n10",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [],
+   "arrive_b": [
+    313,
+    314
+   ],
+   "merges": 0,
+   "forwards": 2,
+   "exits": [
+    326,
+    327
+   ],
+   "faults": []
+  },
+  "n11": {
+   "a": "n9",
+   "b": "n13",
+   "link_a": 0,
+   "link_b": 0,
+   "arrive_a": [
+    326,
+    327
+   ],
+   "arrive_b": [
+    324,
+    325,
+    331,
+    332
+   ],
+   "merges": 2,
+   "forwards": 2,
+   "exits": [
+    337,
+    338,
+    344,
+    345
+   ],
+   "faults": []
+  },
+  "n7": {
+   "a": "n3",
+   "b": "n11",
+   "link_a": 1,
+   "link_b": 1,
+   "arrive_a": [
+    333,
+    334,
+    336,
+    337
+   ],
+   "arrive_b": [
+    338,
+    339,
+    345,
+    346
+   ],
+   "merges": 0,
+   "forwards": 8,
+   "exits": [
+    346,
+    347,
+    349,
+    350,
+    351,
+    352,
+    358,
+    359
+   ],
+   "faults": []
+  },
+  "n15": {
+   "a": "n7",
+   "b": "n23",
+   "link_a": 2,
+   "link_b": 2,
+   "arrive_a": [
+    348,
+    349,
+    351,
+    352,
+    353,
+    354,
+    360,
+    361
+   ],
+   "arrive_b": [
+    346,
+    347,
+    349,
+    350,
+    356,
+    357,
+    365,
+    366
+   ],
+   "merges": 2,
+   "forwards": 12,
+   "exits": [
+    359,
+    360,
+    361,
+    362,
+    364,
+    365,
+    366,
+    367,
+    369,
+    370,
+    373,
+    374,
+    378,
+    379
+   ],
+   "faults": []
+  }
+ },
+ "faults": 0,
+ "ret": [
+  [
+   404,
+   134349317,
+   3171056720,
+   0
+  ],
+  [
+   405,
+   134357509,
+   1018845436,
+   0
+  ],
+  [
+   406,
+   134365221,
+   3151763284,
+   0
+  ],
+  [
+   407,
+   134373413,
+   3155678148,
+   0
+  ],
+  [
+   409,
+   134349893,
+   3167840168,
+   0
+  ],
+  [
+   410,
+   134358085,
+   1014690274,
+   0
+  ],
+  [
+   411,
+   134365733,
+   3155552680,
+   0
+  ],
+  [
+   412,
+   134373925,
+   3131388160,
+   0
+  ],
+  [
+   414,
+   134348837,
+   3181336568,
+   0
+  ],
+  [
+   415,
+   134357029,
+   3158789644,
+   0
+  ],
+  [
+   418,
+   134366277,
+   1008132038,
+   0
+  ],
+  [
+   419,
+   134374469,
+   1024702015,
+   0
+  ],
+  [
+   423,
+   134349573,
+   3171632938,
+   0
+  ],
+  [
+   424,
+   134357765,
+   3152779875,
+   0
+  ]
+ ],
+ "ret_words": 14,
+ "merges": 6,
+ "rows_vals": {
+  "16": [
+   3173209544,
+   3172686376,
+   3171056720,
+   3171632938,
+   3167840168
+  ],
+  "17": [
+   3147988432,
+   3152813640,
+   1018845436,
+   3152779875,
+   1014690274
+  ],
+  "18": [
+   993563192,
+   3155963960,
+   3141537858,
+   3150695216,
+   1008132038
+  ],
+  "19": [
+   3162262416,
+   1003024279,
+   3155842408,
+   1007005512,
+   1024702015
+  ]
+ },
+ "single_frame_cap_score": 0,
+ "single_frame_cap_scope": "logical FIN only; simultaneous frames and physical ages unadmitted"
+}

@@ -1,0 +1,282 @@
+{
+  "baseline_main": "08d715a32dc81f4574b40941682512824ed5dbb9",
+  "patch_commit": "14c536c0d",
+  "fixture_root_source": "c6520b2ee",
+  "scope": "required paired whole tools/qwen_kv_die helper regression; no physical run",
+  "variants": {
+    "baseline": {
+      "returncode": 1,
+      "elapsed_seconds": 83.86,
+      "counts": {
+        "tests": 506,
+        "failure_cases": 14
+      },
+      "failures": {
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_actual_die_native_rail_ladder_reaches_core_M9": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 2 thread(s).\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\n[WARNING ORD-2011] LEF master hard has no liberty cell.\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\n[INFO IFP-0102] Core area:                          850.306 um^2\n[INFO IFP-0103] Total instances area:                16.000 um^2\n[INFO IFP-0104] Effective utilization:                0.019\n[INFO IFP-0105] Number of instances:                      1\nError: run.tcl, 14 couldn't read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory"
+          }
+        ],
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_actual_pin_rail_contacts_and_connected_grid": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 2 thread(s).\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\n[WARNING ORD-2011] LEF master hard has no liberty cell.\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\n[INFO IFP-0102] Core area:                          850.306 um^2\n[INFO IFP-0103] Total instances area:                16.000 um^2\n[INFO IFP-0104] Effective utilization:                0.019\n[INFO IFP-0105] Number of instances:                      1\nError: run.tcl, 14 couldn't read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory"
+          }
+        ],
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_logical_pg_binding_cannot_replace_literal_supply_rails": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 'missing literal M1 rail contact' not found in 'OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\n[INFO IFP-0104] Effective utilization:                0.019\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn\\'t read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory\\n'"
+          }
+        ],
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_no_legal_gap_cannot_emit_an_unplaced_constant": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 'OT_CONST: no legal row gap' not found in 'OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:               850.306 um^2\\n[INFO IFP-0104] Effective utilization:                1.000\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn\\'t read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory\\n'"
+          }
+        ],
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_real_tie_cells_pass_pa_with_power_qualification_still_open": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 2 thread(s).\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\n[WARNING ORD-2011] LEF master hard has no liberty cell.\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\n[INFO IFP-0102] Core area:                          850.306 um^2\n[INFO IFP-0103] Total instances area:                16.000 um^2\n[INFO IFP-0104] Effective utilization:                0.019\n[INFO IFP-0105] Number of instances:                      1\nError: run.tcl, 14 couldn't read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory"
+          }
+        ],
+        "tools.qwen_kv_die.test_host_root_mu.HostRootMu::test_generated_current": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: '`tim[2558 chars]_mu\\n // KV-PEER13: g_mu declarations hoisted [92011 chars]le\\n' != '`tim[2558 chars]_mu\\n\\n (* ASYNC_REG=\"TRUE\" *)reg[24:0]fm,fs;\\[90571 chars]le\\n'"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_misc_unused_roles.T::test_negative_duplicate_owner_strap": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: \"owner_id straps\" does not match \"pinned source changed; re-prove roles: rtl/lib/face_land/qkd_astk_rly_296_fl.sv\""
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_misc_unused_roles.T::test_positive_exact_classes": [
+          {
+            "kind": "failure",
+            "message": "ValueError: pinned source changed; re-prove roles: rtl/lib/face_land/qkd_astk_rly_296_fl.sv"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_positive_chain_tail_and_duplicate": [
+          {
+            "kind": "failure",
+            "message": "FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_source_change_refused": [
+          {
+            "kind": "failure",
+            "message": "FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_wrong_chain_end_refused": [
+          {
+            "kind": "failure",
+            "message": "FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_seq_fan_pin::test_krs_top_lane_only_top_engine": [
+          {
+            "kind": "failure",
+            "message": "assert (1173.0 == (1000.0 + 259.2))"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_unsigned_parameters.UnsignedParameters::test_missing_profile_policy_unchanged": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: \"missing selected parameter profile\" does not match \"unused_view: missing mandatory LEF/TT/FF/insertion artifact\""
+          }
+        ],
+        "tools.qwen_kv_die.test_rs_hd_select::test_branch_today_is_r": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: assert 'f' == 'r'\n  \n  - r\n  + f"
+          }
+        ]
+      },
+      "failure_counter": {
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_actual_die_native_rail_ladder_reaches_core_M9\", \"failure\", \"AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\n[INFO IFP-0104] Effective utilization:                0.019\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn't read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\"]": 1,
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_actual_pin_rail_contacts_and_connected_grid\", \"failure\", \"AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\n[INFO IFP-0104] Effective utilization:                0.019\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn't read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\"]": 1,
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_logical_pg_binding_cannot_replace_literal_supply_rails\", \"failure\", \"AssertionError: 'missing literal M1 rail contact' not found in 'OpenROAD 26Q3-1510-g6cb3f2b704 \\\\nFeatures included (+) or not (-): +GPU +GUI +Python\\\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\\\n[INFO ORD-0030] Using 2 thread(s).\\\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\\\n[INFO IFP-0102] Core area:                          850.306 um^2\\\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\\\n[INFO IFP-0104] Effective utilization:                0.019\\\\n[INFO IFP-0105] Number of instances:                      1\\\\nError: run.tcl, 14 couldn\\\\'t read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\\\\n'\"]": 1,
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_no_legal_gap_cannot_emit_an_unplaced_constant\", \"failure\", \"AssertionError: 'OT_CONST: no legal row gap' not found in 'OpenROAD 26Q3-1510-g6cb3f2b704 \\\\nFeatures included (+) or not (-): +GPU +GUI +Python\\\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\\\n[INFO ORD-0030] Using 2 thread(s).\\\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\\\n[INFO IFP-0102] Core area:                          850.306 um^2\\\\n[INFO IFP-0103] Total instances area:               850.306 um^2\\\\n[INFO IFP-0104] Effective utilization:                1.000\\\\n[INFO IFP-0105] Number of instances:                      1\\\\nError: run.tcl, 14 couldn\\\\'t read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\\\\n'\"]": 1,
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_real_tie_cells_pass_pa_with_power_qualification_still_open\", \"failure\", \"AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\n[INFO IFP-0104] Effective utilization:                0.019\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn't read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\"]": 1,
+        "[\"tools.qwen_kv_die.test_host_root_mu.HostRootMu::test_generated_current\", \"failure\", \"AssertionError: '`tim[2558 chars]_mu\\\\n // KV-PEER13: g_mu declarations hoisted [92011 chars]le\\\\n' != '`tim[2558 chars]_mu\\\\n\\\\n (* ASYNC_REG=\\\"TRUE\\\" *)reg[24:0]fm,fs;\\\\[90571 chars]le\\\\n'\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_misc_unused_roles.T::test_negative_duplicate_owner_strap\", \"failure\", \"AssertionError: \\\"owner_id straps\\\" does not match \\\"pinned source changed; re-prove roles: rtl/lib/face_land/qkd_astk_rly_296_fl.sv\\\"\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_misc_unused_roles.T::test_positive_exact_classes\", \"failure\", \"ValueError: pinned source changed; re-prove roles: rtl/lib/face_land/qkd_astk_rly_296_fl.sv\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_positive_chain_tail_and_duplicate\", \"failure\", \"FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_source_change_refused\", \"failure\", \"FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_wrong_chain_end_refused\", \"failure\", \"FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_seq_fan_pin::test_krs_top_lane_only_top_engine\", \"failure\", \"assert (1173.0 == (1000.0 + 259.2))\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_unsigned_parameters.UnsignedParameters::test_missing_profile_policy_unchanged\", \"failure\", \"AssertionError: \\\"missing selected parameter profile\\\" does not match \\\"unused_view: missing mandatory LEF/TT/FF/insertion artifact\\\"\"]": 1,
+        "[\"tools.qwen_kv_die.test_rs_hd_select::test_branch_today_is_r\", \"failure\", \"AssertionError: assert 'f' == 'r'\\n  \\n  - r\\n  + f\"]": 1
+      }
+    },
+    "final": {
+      "returncode": 1,
+      "elapsed_seconds": 83.96,
+      "counts": {
+        "tests": 506,
+        "failure_cases": 14
+      },
+      "failures": {
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_actual_die_native_rail_ladder_reaches_core_M9": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 2 thread(s).\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\n[WARNING ORD-2011] LEF master hard has no liberty cell.\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\n[INFO IFP-0102] Core area:                          850.306 um^2\n[INFO IFP-0103] Total instances area:                16.000 um^2\n[INFO IFP-0104] Effective utilization:                0.019\n[INFO IFP-0105] Number of instances:                      1\nError: run.tcl, 14 couldn't read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory"
+          }
+        ],
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_actual_pin_rail_contacts_and_connected_grid": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 2 thread(s).\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\n[WARNING ORD-2011] LEF master hard has no liberty cell.\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\n[INFO IFP-0102] Core area:                          850.306 um^2\n[INFO IFP-0103] Total instances area:                16.000 um^2\n[INFO IFP-0104] Effective utilization:                0.019\n[INFO IFP-0105] Number of instances:                      1\nError: run.tcl, 14 couldn't read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory"
+          }
+        ],
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_logical_pg_binding_cannot_replace_literal_supply_rails": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 'missing literal M1 rail contact' not found in 'OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\n[INFO IFP-0104] Effective utilization:                0.019\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn\\'t read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory\\n'"
+          }
+        ],
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_no_legal_gap_cannot_emit_an_unplaced_constant": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 'OT_CONST: no legal row gap' not found in 'OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:               850.306 um^2\\n[INFO IFP-0104] Effective utilization:                1.000\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn\\'t read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory\\n'"
+          }
+        ],
+        "tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_real_tie_cells_pass_pa_with_power_qualification_still_open": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 2 thread(s).\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\n[WARNING ORD-2011] LEF master hard has no liberty cell.\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\n[INFO IFP-0102] Core area:                          850.306 um^2\n[INFO IFP-0103] Total instances area:                16.000 um^2\n[INFO IFP-0104] Effective utilization:                0.019\n[INFO IFP-0105] Number of instances:                      1\nError: run.tcl, 14 couldn't read file \"/src/physical/common_flow/die_constant_cells.tcl\": no such file or directory"
+          }
+        ],
+        "tools.qwen_kv_die.test_host_root_mu.HostRootMu::test_generated_current": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: '`tim[2558 chars]_mu\\n // KV-PEER13: g_mu declarations hoisted [92011 chars]le\\n' != '`tim[2558 chars]_mu\\n\\n (* ASYNC_REG=\"TRUE\" *)reg[24:0]fm,fs;\\[90571 chars]le\\n'"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_misc_unused_roles.T::test_negative_duplicate_owner_strap": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: \"owner_id straps\" does not match \"pinned source changed; re-prove roles: rtl/lib/face_land/qkd_astk_rly_296_fl.sv\""
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_misc_unused_roles.T::test_positive_exact_classes": [
+          {
+            "kind": "failure",
+            "message": "ValueError: pinned source changed; re-prove roles: rtl/lib/face_land/qkd_astk_rly_296_fl.sv"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_positive_chain_tail_and_duplicate": [
+          {
+            "kind": "failure",
+            "message": "FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_source_change_refused": [
+          {
+            "kind": "failure",
+            "message": "FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_wrong_chain_end_refused": [
+          {
+            "kind": "failure",
+            "message": "FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_seq_fan_pin::test_krs_top_lane_only_top_engine": [
+          {
+            "kind": "failure",
+            "message": "assert (1173.0 == (1000.0 + 259.2))"
+          }
+        ],
+        "tools.qwen_kv_die.test_kv_unsigned_parameters.UnsignedParameters::test_missing_profile_policy_unchanged": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: \"missing selected parameter profile\" does not match \"unused_view: missing mandatory LEF/TT/FF/insertion artifact\""
+          }
+        ],
+        "tools.qwen_kv_die.test_rs_hd_select::test_branch_today_is_r": [
+          {
+            "kind": "failure",
+            "message": "AssertionError: assert 'f' == 'r'\n  \n  - r\n  + f"
+          }
+        ]
+      },
+      "failure_counter": {
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_actual_die_native_rail_ladder_reaches_core_M9\", \"failure\", \"AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\n[INFO IFP-0104] Effective utilization:                0.019\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn't read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\"]": 1,
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_actual_pin_rail_contacts_and_connected_grid\", \"failure\", \"AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\n[INFO IFP-0104] Effective utilization:                0.019\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn't read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\"]": 1,
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_logical_pg_binding_cannot_replace_literal_supply_rails\", \"failure\", \"AssertionError: 'missing literal M1 rail contact' not found in 'OpenROAD 26Q3-1510-g6cb3f2b704 \\\\nFeatures included (+) or not (-): +GPU +GUI +Python\\\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\\\n[INFO ORD-0030] Using 2 thread(s).\\\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\\\n[INFO IFP-0102] Core area:                          850.306 um^2\\\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\\\n[INFO IFP-0104] Effective utilization:                0.019\\\\n[INFO IFP-0105] Number of instances:                      1\\\\nError: run.tcl, 14 couldn\\\\'t read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\\\\n'\"]": 1,
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_no_legal_gap_cannot_emit_an_unplaced_constant\", \"failure\", \"AssertionError: 'OT_CONST: no legal row gap' not found in 'OpenROAD 26Q3-1510-g6cb3f2b704 \\\\nFeatures included (+) or not (-): +GPU +GUI +Python\\\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\\\n[INFO ORD-0030] Using 2 thread(s).\\\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\\\n[INFO IFP-0102] Core area:                          850.306 um^2\\\\n[INFO IFP-0103] Total instances area:               850.306 um^2\\\\n[INFO IFP-0104] Effective utilization:                1.000\\\\n[INFO IFP-0105] Number of instances:                      1\\\\nError: run.tcl, 14 couldn\\\\'t read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\\\\n'\"]": 1,
+        "[\"tools.qwen_kv_die.chain.test_case_status.RealConstantMapping::test_real_tie_cells_pass_pa_with_power_qualification_still_open\", \"failure\", \"AssertionError: 1 != 0 : OpenROAD 26Q3-1510-g6cb3f2b704 \\nFeatures included (+) or not (-): +GPU +GUI +Python\\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\\nComponents of this program may be licensed under more restrictive licenses which must be honored.\\n[INFO ORD-0030] Using 2 thread(s).\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\\n[INFO ODB-0227] LEF file: /work/hard.lef, created 1 library cells\\n[WARNING ORD-2011] LEF master hard has no liberty cell.\\n[INFO IFP-0001] Added 108 rows of 540 site asap7sc7p5t.\\n[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 40.000 40.000 ) um\\n[INFO IFP-0101] Core BBox: (  5.400  5.400 ) ( 34.560 34.560 ) um\\n[INFO IFP-0102] Core area:                          850.306 um^2\\n[INFO IFP-0103] Total instances area:                16.000 um^2\\n[INFO IFP-0104] Effective utilization:                0.019\\n[INFO IFP-0105] Number of instances:                      1\\nError: run.tcl, 14 couldn't read file \\\"/src/physical/common_flow/die_constant_cells.tcl\\\": no such file or directory\"]": 1,
+        "[\"tools.qwen_kv_die.test_host_root_mu.HostRootMu::test_generated_current\", \"failure\", \"AssertionError: '`tim[2558 chars]_mu\\\\n // KV-PEER13: g_mu declarations hoisted [92011 chars]le\\\\n' != '`tim[2558 chars]_mu\\\\n\\\\n (* ASYNC_REG=\\\"TRUE\\\" *)reg[24:0]fm,fs;\\\\[90571 chars]le\\\\n'\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_misc_unused_roles.T::test_negative_duplicate_owner_strap\", \"failure\", \"AssertionError: \\\"owner_id straps\\\" does not match \\\"pinned source changed; re-prove roles: rtl/lib/face_land/qkd_astk_rly_296_fl.sv\\\"\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_misc_unused_roles.T::test_positive_exact_classes\", \"failure\", \"ValueError: pinned source changed; re-prove roles: rtl/lib/face_land/qkd_astk_rly_296_fl.sv\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_positive_chain_tail_and_duplicate\", \"failure\", \"FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_source_change_refused\", \"failure\", \"FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_open_tail_roles.OpenTailRoles::test_wrong_chain_end_refused\", \"failure\", \"FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_seq_fan_pin::test_krs_top_lane_only_top_engine\", \"failure\", \"assert (1173.0 == (1000.0 + 259.2))\"]": 1,
+        "[\"tools.qwen_kv_die.test_kv_unsigned_parameters.UnsignedParameters::test_missing_profile_policy_unchanged\", \"failure\", \"AssertionError: \\\"missing selected parameter profile\\\" does not match \\\"unused_view: missing mandatory LEF/TT/FF/insertion artifact\\\"\"]": 1,
+        "[\"tools.qwen_kv_die.test_rs_hd_select::test_branch_today_is_r\", \"failure\", \"AssertionError: assert 'f' == 'r'\\n  \\n  - r\\n  + f\"]": 1
+      }
+    }
+  },
+  "new_failure_cases": [],
+  "causals": {
+    "0": {
+      "returncode": 0,
+      "stdout": "{\"checks\": [\"actual selected master identity\", \"real selected private slice\", \"already private frame idempotent\", \"wrong frame refused\", \"missing frame port refused\", \"unsliced EST refused\", \"unsliced HCTL refused\", \"wrong private HCTL cut refused\", \"missing actual instance refused\", \"unselected/default master unchanged\"], \"count\": 10, \"verdict\": \"PASS\"}\n",
+      "stderr": ""
+    },
+    "1": {
+      "returncode": 0,
+      "stdout": "{\"checks\": [\"actual selected master identity\", \"real selected private slice\", \"already private frame idempotent\", \"wrong frame refused\", \"missing frame port refused\", \"unsliced EST refused\", \"unsliced HCTL refused\", \"wrong private HCTL cut refused\", \"missing actual instance refused\", \"unselected/default master unchanged\"], \"count\": 10, \"verdict\": \"PASS\"}\n",
+      "stderr": ""
+    }
+  },
+  "source_hashes": {
+    "baseline": {
+      "kv_die.py": "837a6ff583fec4994c651bfd5099cd3ea2db5c86ceab2fe3f8c30f97a2ee477e",
+      "kv_grp_safe2.py": "733b8cd88091824daddf305c6922fe05b24ad46896ee461167640470b0e2b2c2",
+      "bind_views.py": "9dd3b381359625eb2654b6eb10334d1d07a58f75cd659314af2bd9f8039aa51e"
+    },
+    "final": {
+      "kv_die.py": "cc2290195b0d53d2c77bca03e8acc20d4d877e4c1ceace21f230f980a3e29c56",
+      "kv_grp_safe2.py": "1afee0ea4db7eed980bd68087db7331850d15098baceae64f6b8907e1ff5a7e5",
+      "bind_views.py": "f1ecffec0d240cb2613276007315d4cb623818aff0f10a16a7892b458b156828"
+    }
+  },
+  "verdict": "PASS_NEW0",
+  "runtime_preflight": {
+    "pytest": {
+      "returncode": 0,
+      "stdout": "pytest 9.0.2\n",
+      "stderr": ""
+    },
+    "numpy": {
+      "returncode": 0,
+      "stdout": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]\n2.3.5\n",
+      "stderr": ""
+    }
+  },
+  "new_failure_occurrences": {},
+  "pytest_runtime": "ROOT runtime902 SHA db0143f7bfd98f8a7dc733594840ea8d445bfe6aacd6bc8f9036bbb61611e291 + py.py SHA b71675b5d9845ba0814e9e88767f88dac3b3cc0d3128da028bd45edbb523e871; identical isolated environment; system NumPy2.3.5 preflight PASS",
+  "execution": {
+    "host": "ot-epyc5",
+    "unit": "oth-ubuntu-3654046-1792618298",
+    "memory_gb": 8,
+    "threads": 1,
+    "admit_wait_seconds": 0,
+    "exit_code": 0
+  },
+  "qualification": "zero new regressions against existing baseline failures; not an all-tests-PASS or whole-die receipt",
+  "archive_sha256": {
+    "baseline.xml": "41857ef8a9927f02cb3193035fd5e684f6b5ef20ec2649301a68681051ca89a8",
+    "final.xml": "17cc2de20eb5e1be6dd6a58d792a125baf9759574f20bef3c9fa4fb8a05f52e1",
+    "runtime_preflight.json": "229c462f2f5254899d711b8ea78c914c6acad92f193c2cb556cddf361ab05f90"
+  }
+}

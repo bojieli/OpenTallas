@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.s81_dv.xs_kslot_check.v1",
+ "env": {
+  "OT_XS_QPAIRS": "12",
+  "OT_XS_GU_MERGE": "1",
+  "OT_XS_TOPO": "1",
+  "OT_XS_PROP": "1",
+  "OT_XS_CAL_SEGMENT": "1",
+  "OT_XS_KSLOT": "2",
+  "OT_XS_KSLOT_OPS": null
+ },
+ "slice": "u_s_0S",
+ "inject": null,
+ "periods": {
+  "ffn.down": 126
+ },
+ "layers": {
+  "L0": {
+   "layer": "L0",
+   "fault": "('ffn.down calendar compile fault', [('period_ge_measured_floor', ('ffn.down', 126, 127))])",
+   "PASS": false
+  }
+ }
+}

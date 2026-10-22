@@ -1,0 +1,84 @@
+{
+  "t242": {
+    "unbound_terms": 21198,
+    "categories": {
+      "io_hold": 2456,
+      "rebuffer": 48,
+      "hold": 16856,
+      "wire": 1596,
+      "load_slew": 240,
+      "clone": 2
+    },
+    "samples": {
+      "io_hold": [
+        "ot_inhold_00000/VDD",
+        "ot_inhold_00000/VSS",
+        "ot_inhold_00001/VDD"
+      ],
+      "rebuffer": [
+        "rebuffer18558/VDD",
+        "rebuffer18558/VSS",
+        "rebuffer18540/VDD"
+      ],
+      "hold": [
+        "hold11885/VDD",
+        "hold11885/VSS",
+        "hold11886/VDD"
+      ],
+      "wire": [
+        "wire17616/VDD",
+        "wire17616/VSS",
+        "wire17617/VDD"
+      ],
+      "load_slew": [
+        "load_slew17620/VDD",
+        "load_slew17620/VSS",
+        "load_slew17640/VDD"
+      ],
+      "clone": [
+        "clone18541/VDD",
+        "clone18541/VSS"
+      ]
+    },
+    "odb_sha256": "bf3f62e97d0c205104f978aec0c3a9730ed384f938f40ee1850309028be636fd",
+    "scope": "Null native PG net IDs; no DNT or conductor proof inferred."
+  },
+  "s350": {
+    "unbound_terms": 17048,
+    "categories": {
+      "io_hold": 2456,
+      "hold": 13762,
+      "wire": 674,
+      "load_slew": 154,
+      "rebuffer": 2
+    },
+    "samples": {
+      "io_hold": [
+        "ot_inhold_00000/VDD",
+        "ot_inhold_00000/VSS",
+        "ot_inhold_00001/VDD"
+      ],
+      "hold": [
+        "hold11667/VDD",
+        "hold11667/VSS",
+        "hold11668/VDD"
+      ],
+      "wire": [
+        "wire17501/VDD",
+        "wire17501/VSS",
+        "wire17502/VDD"
+      ],
+      "load_slew": [
+        "load_slew17519/VDD",
+        "load_slew17519/VSS",
+        "load_slew17524/VDD"
+      ],
+      "rebuffer": [
+        "rebuffer17915/VDD",
+        "rebuffer17915/VSS"
+      ]
+    },
+    "odb_sha256": "50d32cb2fe576011cf4c6cf945efdadd7e09546fe413dbd1b419703787c22c91",
+    "scope": "Null native PG net IDs; no DNT or conductor proof inferred."
+  }
+}

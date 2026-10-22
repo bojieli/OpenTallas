@@ -1,0 +1,27 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: ot-epyc9       admits   950 GB (avail 820, growth 155, headroom 0, waiters 0/0 GB) load 97/128 running 44 disk 87 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/root
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-878206-1792494130 after 0 s
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 1/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+ROM12_BENCH {'name': 'experts_gu1', 'mutant': None, 'run_rc': 0, 'check_rc': 0, 'PASS': True}
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 2/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1011 mutant None
+ROM12_BENCH {'name': 'experts_gu2', 'mutant': None, 'run_rc': 0, 'check_rc': 0, 'PASS': True}
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 3/19 mat exp61.w13 rows 1 nseg 5 faults 0 ret_words 2 calendar measured_class T 1010 mutant None
+ROM12_BENCH {'name': 'experts_gu3', 'mutant': None, 'run_rc': 0, 'check_rc': 0, 'PASS': True}
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 1/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant swap
+ROM12_BENCH {'name': 'experts_gu1swap', 'mutant': 'swap', 'run_rc': 0, 'check_rc': 1, 'PASS': True}
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 1/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1012 mutant shift
+ROM12_BENCH {'name': 'experts_gu1shift', 'mutant': 'shift', 'run_rc': 0, 'check_rc': 1, 'PASS': True}
+XS_PLACE_GEN u_f_0L00 op attn.wq_b phase 1/9 mat wq_b rows 8 nseg 3 faults 0 ret_words 12 calendar measured_class T 970 mutant None
+ROM12_BENCH {'name': 'wq_b1', 'mutant': None, 'run_rc': 0, 'check_rc': 0, 'PASS': True}
+XS_PLACE_GEN u_f_0L00 op attn.wq_b phase 2/9 mat wq_b rows 8 nseg 3 faults 0 ret_words 12 calendar measured_class T 970 mutant None
+ROM12_BENCH {'name': 'wq_b2', 'mutant': None, 'run_rc': 0, 'check_rc': 0, 'PASS': True}
+XS_PLACE_GEN u_f_0L00 op attn.wq_b phase 1/9 mat wq_b rows 8 nseg 3 faults 0 ret_words 12 calendar measured_class T 970 mutant swap
+ROM12_BENCH {'name': 'wq_b1swap', 'mutant': 'swap', 'run_rc': 0, 'check_rc': 1, 'PASS': True}
+XS_PLACE_GEN u_f_0L00 op attn.wq_b phase 1/9 mat wq_b rows 8 nseg 3 faults 0 ret_words 12 calendar measured_class T 971 mutant shift
+ROM12_BENCH {'name': 'wq_b1shift', 'mutant': 'shift', 'run_rc': 0, 'check_rc': 1, 'PASS': True}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-878206-1792494130): exit 0

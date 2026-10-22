@@ -1,0 +1,52 @@
+{
+ "cell": "ot_hgi_qdq_nw_program_leaf",
+ "view": "physical/ref_tile/hgi_qdq_program_nw48_r1/views/ot_hgi_qdq_nw_program_leaf",
+ "lib_cell": "ot_hgi_qdq_nw_program_leaf",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean -> relative C 232.2"
+ ],
+ "R_ps": 314.5,
+ "spread_ps": 42.3,
+ "relative_to": "neighbour physical/ref_tile/hgi_qdq_tsplit_ctl_r4s/views/ot_hgi_qdq_transport_ctl_r4/insertion.json boundary mean",
+ "outputs": 69,
+ "inputs": 321,
+ "launch_ps": 229.6,
+ "launch_pin": "ordinal[17]",
+ "capture_ps": 41.5,
+ "capture_pin": "cfg_data[166]",
+ "launch_over": 22,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pin_rule": "owner 10-20: registered at region crossings (none declared); same-region pins may connect directly (die / parent STA judges)",
+ "direct_pins": 22,
+ "direct_first": [
+  "command[16]",
+  "command[23]",
+  "command[27]"
+ ],
+ "ff_spread_ps": 26.6,
+ "ff_launch_min_ps": 157.7,
+ "ff_hold_need_ps": 9.4,
+ "relative": {
+  "tt": {
+   "clock_pin": "clk",
+   "rel_min_ps": 54.0,
+   "rel_max_ps": 96.3,
+   "mismatch_ps": 96.3,
+   "offset_ps": 82.3,
+   "comp_ps": 232.2
+  },
+  "ff": {
+   "clock_pin": "clk",
+   "rel_min_ps": 46.3,
+   "rel_max_ps": 72.9,
+   "mismatch_ps": 72.9,
+   "offset_ps": 63.6,
+   "comp_ps": 183.5
+  }
+ },
+ "pass": false,
+ "fail_why": "TT boundary vs neighbour 96.3 > 80 (pin flops 54.0..96.3 ps from C 232.2)"
+}

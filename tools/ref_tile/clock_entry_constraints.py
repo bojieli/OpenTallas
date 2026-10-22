@@ -17,6 +17,7 @@ import async_gray_fifo_constraints
 import cdc_sync_constraints
 import gray_fifo_cdc_constraints
 import single_clock_contract
+import forwarded_clock_outputs
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -828,6 +829,28 @@ def clocks(spec, period):
         value = period * d['ratio'][0] / d['ratio'][1]
         lines.append(f"create_clock -name {e['clock']} -period {value:.9f} [get_ports {{{e['port']}}}]")
     return '\n'.join(lines) + '\n'
+
+
+def forwarded_pre_cts_tcl(spec, entry_sdc):
+    """Restore the existing forwarded-clock contract in a fresh CTS process.
+
+    write_sdc preserves clocks, but not Tcl metadata.  The CTS wrapper needs
+    these exact generated dictionaries before it checks sink ownership; the
+    complete entry SDC is reapplied after CTS as before.  No clock, endpoint
+    policy or timing constraint is changed here.
+    """
+    if not forwarded_soft_clocks(spec):
+        return []
+    out = []
+    prefixes = ['set ::ot_ce_fwd_soft ', 'set ::ot_ce_refs ']
+    if forwarded_clock_outputs.contract(spec):
+        prefixes.append('set ::ot_ce_fwd_outputs ')
+    for prefix in prefixes:
+        matches = [line for line in entry_sdc.splitlines() if line.startswith(prefix)]
+        if len(matches) != 1:
+            raise ValueError('forwarded pre-CTS: missing or duplicate generated contract ' + prefix)
+        out.extend(matches)
+    return out
 
 
 

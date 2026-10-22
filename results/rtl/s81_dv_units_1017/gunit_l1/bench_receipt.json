@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.s81u.gunit2.bench.v1",
+ "lane": "S81U-GUNIT-L1",
+ "date": "2026-10-17",
+ "source": "branch claude/s81u-gunit-l1-1017 (this commit's rtl/dsrom_sys/s81_dv/unit)",
+ "top": "dsdv_gunit (stack L5 / L4 / L0 / L2 / L1 / L3 + E-side leaves L5f / L4r / L0r + router select leaves L1f x4 / L1c)",
+ "bench": "bash rtl/dsrom_sys/s81_dv/unit/test/run_gunit_bench.sh <dir> 8 (verilator 5.032, ot-run ot-epyc4)",
+ "verdict": "PASS",
+ "cases": 8,
+ "mutants_detected": [1, 4, 5, 6, 7, 8, 9, 10],
+ "mutant_10": "collector ascending-index order sort (3 compare-exchanges a stage) drops its last exchange",
+ "router_ids_latency_edges": {"stop_pins": 36, "unit_pins": 48, "gunit3": 56, "budget_select_only": 52.9,
+   "why": "-20: select at 2 compare-exchanges a stage (sort8 6->3, merge8 4->2), running top-8 accumulator instead of the 8-slot collector + second merge tree, order sort 6->2 stages, no separate tree input register; +2: the stack's registered per-front SC enables + the front input flop; bias SRAM read prefetched one beat ahead (+0)"},
+ "routing_weights": "L3 operand rows = renumbered ids row + ONE gathered score row (was 28 score rows): weights ~27 edges earlier, bit-identical (ot_s81_su_rw unchanged, PASS)",
+ "hc_latency_edges": {"stop_pins": 748, "unit_pins": 760, "unchanged": true},
+ "leaf_flops_yosys_generic_est": {"l1": 3910, "l1f": 13564, "l1c": 4800, "l1f_instances": 4,
+   "gunit2_l1_one_root_gate_sinks": 114054},
+ "bias_table": "8 x ot_sram_1r1w_128x256_m1_r2c2 (2 per front; row r -> front (r%8)/2, macro r%2, address {set, r/8}) replacing 28,672 flops"
+}

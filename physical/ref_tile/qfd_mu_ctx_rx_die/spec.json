@@ -1,0 +1,160 @@
+{
+ "name": "qfd_mu_ctx_rx_die",
+ "top": "qfd_mu_ctx_rx_die",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/mu/qfd_mu_ctx_rx.sv"
+ ],
+ "params": {
+  "NU": 4
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 97.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n"
+  ],
+  "S": [
+   "ctx_x",
+   "ctx_user",
+   "mu_fault"
+  ],
+  "W": [
+   "rx_payload",
+   "prog_context_slot",
+   "prog_rx_v"
+  ],
+  "E": []
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "QW-MU 10-20 (owner 10-20 09:05: pin registers only at region crossings / > 405 um): the leaf sits on the face's clock (clk_d2d) beside qfd_sys_face, on the same D2D RX nets; every output is a flop (ld_q / rec_q / ctx_user / mu_fault); inputs reach flops through the record-check compare (one cone, no in->out path). ctx_x crosses to tt_ctlm's ctx_q pin register (the die's crossing, landed by GEN). rx_payload[511:59] are unread (whole-port GEN endpoint)."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.025,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "structural_change": "NEW hard leaf QW-MU 10-20: qfd_mu_ctx_rx_die NU 4 (MU-DQ-BOOTCTX filler runtime context receiver, die inst mu_ctxrx); RTL QW-MU: reset only the control flops (load, ctx_user, mu_fault; owner 10-20 09:05), 128-b record = unreset un-enabled datapath register (no 128-load enable, no 132-load reset); same edges. Outline 43.2 x 97.2 and pins = the die generator's frame (dv2f20g5r2b out/pins/qfd_mu_ctx_rx_die.json); ctx_user / mu_fault (open in the die) on S.",
+ "slot_change_request": "none: die slot = dv_case.py CTXRX_WH 43.2 x 97.2 above sys_face's N face, pins = the GEN frame",
+ "job": {
+  "owner": "Claude:QW-MU",
+  "branch": "claude/qw-mu-1020",
+  "tag": "c1",
+  "cycles_added": 0,
+  "purpose": "Qwen compute MU die filler-context receiver (KV host plane kind-12 CONTEXT slot -> ctlm ctx_x); tb_ctxrx 983 slots / 741 loads PASS, bad record PASS, MUT 1 FAIL (Verilator 5.050, fleet oth-ubuntu-2362006-1792564029).",
+  "views_to": "physical/ref_tile/qfd_mu_ctx_rx_die/views",
+  "record_to": "results/rtl/ref_tile/qfd_mu_ctx_rx_die",
+  "extra_paths": [
+   "rtl/qwen_split/mu",
+   "results/rtl/qw_mu_1020/ctxrx"
+  ],
+  "benches": [
+   {
+    "name": "ctxrx_pass",
+    "cmd": "bash results/rtl/qw_mu_1020/ctxrx/run_ctxrx.sh {RUN}/ctxrx_pass",
+    "expect": "pass",
+    "pass_regex": "^TB_CTXRX PASS slots \\d+ loads \\d+ \\(record, user, mu_fault 0\\)",
+    "pass_witness": "results/rtl/qw_mu_1020/ctxrx/runs/pass.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ctxrx_bad_record",
+    "cmd": "bash results/rtl/qw_mu_1020/ctxrx/run_ctxrx.sh {RUN}/ctxrx_bad +bad=40",
+    "expect": "pass",
+    "pass_regex": "^TB_CTXRX PASS \\(bad record at slot 40 detected on its edge\\)",
+    "pass_witness": "results/rtl/qw_mu_1020/ctxrx/runs/bad.log",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wrong_user_mutant",
+    "cmd": "MUT=1 bash results/rtl/qw_mu_1020/ctxrx/run_ctxrx.sh {RUN}/ctxrx_m1",
+    "expect": "fail",
+    "fail_regex": "^TB_CTXRX FAIL errors [1-9]",
+    "fail_witness": "results/rtl/qw_mu_1020/ctxrx/runs/m1.log",
+    "note": "record loaded into the wrong user",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true,
+ "pin_ranges": {
+  "ck": [
+   21.2,
+   21.8
+  ],
+  "rst_n": [
+   24.7,
+   25.3
+  ],
+  "ctx_x": [
+   3.7,
+   16.7
+  ],
+  "ctx_user": [
+   30.0,
+   31.0
+  ],
+  "mu_fault": [
+   33.0,
+   33.6
+  ],
+  "rx_payload": [
+   3.6,
+   57.0
+  ],
+  "prog_context_slot": [
+   80.2,
+   80.9
+  ],
+  "prog_rx_v": [
+   81.4,
+   82.1
+  ]
+ }
+}

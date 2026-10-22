@@ -31,7 +31,7 @@ class RelayOwnershipTest(unittest.TestCase):
         # B's successful repair takes A's lifted site before A gets its turn.
         occupied[rect] = 'B'
         owner.mark('B')
-        ns = dict(hops_of=lambda pl: [100.], relay_frame=lambda bits, cl: (8., 8.),
+        ns = dict(hops_of=lambda pl: [100.], relay_frame=lambda bits, cl, bid=None: (8., 8.),
                   v=SimpleNamespace(SHAVE=.25), sites=lambda *args: ([], object()),
                   tight_stride=set(), GATE=True, reservations=owner, unplace=unplace,
                   rm_rect=lambda r: occupied.pop(r, None))

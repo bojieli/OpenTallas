@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_su_cx_ijq_1019t-t1-5a6486280 bench bench_cxijq_safe_mut6 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/hbm_su_cx_ijq_1019t-t1-5a6486280 log cl/bench_cxijq_safe_mut6.a2b1.log captured 2026-10-21T05:37:21-07:00
+# fail_regex 'CXIJQ_SAFE FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH age=17
+MISMATCH age=18
+MISMATCH age=19
+CXIJQ_SAFE FAIL checks=13365 errors=8843 SD=0 MUT=6
+[14929000] %Fatal: tb_hbm_cxijq_safe.sv:24: Assertion failed in tb_hbm_cxijq_safe: CXIJQ_SAFE FAIL
+%Error: rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_cxijq_safe.sv:24: Verilog $stop
+Aborting...

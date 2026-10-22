@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       admits  1038 GB (avail 840, growth 113, headroom 0, waiters 0/0 GB) load 34/128 running 19 disk 262 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc9       admits   999 GB (avail 771, growth 72, headroom 0, waiters 0/0 GB) load 167/128 running 29 disk 40 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-568328-1792516764 after 0 s
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3|st2 round 0 best faults 0 root words 23 cfg (1, 40000, 10, 10) time 48
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3|st2 round 0 best faults 2 root words 28 cfg (1, 40000, 10, 10) time 87
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3|st2 round 1 best faults 2 root words 28 cfg (1, 40000, 10, 10) time 120
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3|st2 round 2 best faults 1 root words 27 cfg (2009, 40000, 10, 10) time 152
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3|st2 round 3 best faults 1 root words 27 cfg (2009, 40000, 10, 10) time 183
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3|st2 round 4 best faults 1 root words 27 cfg (2009, 40000, 10, 10) time 214
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3|st2 round 5 best faults 1 root words 27 cfg (2009, 40000, 10, 10) time 239
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3|st2 round 6 best faults 1 root words 27 cfg (2009, 40000, 10, 10) time 264
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3|st2 round 7 best faults 1 root words 27 cfg (2009, 40000, 10, 10) time 286
+KSLOT_SEARCH_NO_LAYOUT col_h9|fp4|2304|5|6|3|st2 best faults 1
+KSLOT_SEARCH_DONE ['col_h9|fp8|2304|5|6|3|st2']
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-568328-1792516764): exit 0

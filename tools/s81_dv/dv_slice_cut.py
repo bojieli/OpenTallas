@@ -123,6 +123,8 @@ def main(argv=None):
                     'L3) is what makes the late first edge carry the calendar epoch.  Bench side only (wire flight), never '
                     'in the die netlist.  Within the window the landing output is independent of F (run both corners).')
     ap.add_argument('--corner', default='tt', choices=['tt', 'ff'])
+    ap.add_argument('--land-model', action='store_true', help='TOK-FUNC-S81: landings without a land-plan row / S1 '
+                    '(model rows, die.v K placeholders) get flight F = K - 1 instead of failing (recorded source model)')
     ap.add_argument('--flight-shift', type=int, default=0,
                     help='MUTANT ONLY: add this many cycles to every F (outside the window -> the landings must fault)')
     ap.add_argument('--rom-instance', action='store_true',
@@ -305,11 +307,19 @@ def main(argv=None):
             if not byname[i][0].startswith('dsfd_dvland'):
                 continue
             r = LP.get(i[3:] if i.startswith('ld_') else i)
-            if r is None:
-                raise SystemExit(f'dv_slice_cut: landing {i} has no land-plan row')
-            s1 = r['s1'].get(a.corner)
-            if s1 is None:
-                raise SystemExit(f'dv_slice_cut: landing {i} has no S1 at {a.corner}')
+            src = 'land_plan'
+            if r is None or r.get('s1', {}).get(a.corner) is None:
+                # TOK-FUNC-S81 (10-21, --land-model): an RTL-only source assembly has no routed flight for model rows
+                # (G7 MODEL K = F + 1) and the die.v K placeholder landings (no row): F = K - 1, the flight the strap assumes
+                if not a.land_model:
+                    raise SystemExit(f'dv_slice_cut: landing {i} has no land-plan row / S1 at {a.corner}')
+                km = re.fullmatch(r"(\d+)'[dh]([0-9a-fA-F]+)", byname[i][3].get('k', '').strip())
+                kk = int(r['K']) if r and r.get('K') else (int(km.group(2), 16 if "'h" in byname[i][3]['k'] else 10) if km else 1)
+                r = dict(r or {}, E=(r or {}).get('E') or kk, K=kk)
+                src = 'model'
+                s1 = -(kk - 1) * T_ps
+            else:
+                s1 = r['s1'].get(a.corner)
             E_, D_ = int(r['E']), int(r.get('D', LPJ.get('D', 4)))
             K_ = int(r.get('K') or E_)      # S81-LBGAP/G8: the landing reads at K (bundle age), the window is K's
             # whole periods the lane clock lags beyond the single-cycle hop, kept inside the window: with the hop-0
@@ -330,7 +340,7 @@ def main(argv=None):
             body.append(f'  dv_flight_sim #(.W({w}), .F({F})) {i}__flight (.ck_in({cm["ck_f"]}), .rs({cm["rs"]}), .i_in({cm["i"]}), .ck_out({i}__ckf_d), .i_out({i}__i_d));')
             lines[i] = ln
             lane_dl[i] = dict(F=F, F_raw=f_raw, clipped=F - a.flight_shift != f_raw, s1_ps=float(s1), E=E_, D=D_, K=K_,
-                              corner=a.corner, flight_shift=a.flight_shift)
+                              corner=a.corner, flight_shift=a.flight_shift, source=src)
     lost = sorted(S - set(lines))
     if lost:
         raise SystemExit(f'dv_slice_cut: instance line not found verbatim for {lost[:5]}')

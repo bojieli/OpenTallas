@@ -1,0 +1,12 @@
+{
+  "variant": "qfd_sys_face_n32ob",
+  "source": "rtl/qwen_split/qfd_sys_face_n32_opt_p192.sv",
+  "source_sha256": "2e121291a6797eba04b2a4305e04d866224327a6715b816e03cf2df246b4d4c4",
+  "simulation_sha256": "a357f262eba86de66d6f1dfdc764381dd93084982d29964d3b1ba0525f5b277f",
+  "adaptations": [
+    "module name",
+    "equivalent ROM functional model and INSTANCE"
+  ],
+  "actual_producer_clock_mutant": true,
+  "comparison": "exact complete source equality after the listed simulation adaptations"
+}
