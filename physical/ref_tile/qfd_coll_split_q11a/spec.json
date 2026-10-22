@@ -1,0 +1,304 @@
+{
+ "name": "qfd_coll_split_q11a",
+ "top": "ot_coll_split_q_native32",
+ "kind": "tile",
+ "sources": [
+  "rtl/rom/ot_coll_tp8_split_native32.sv",
+  "rtl/rom/ot_coll_fold_slice_safe3_native32.sv",
+  "rtl/rom/ot_coll_fold_slice_native32.sv",
+  "rtl/rom/ot_coll_sram_bank64_native32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v",
+  "rtl/rom/ot_coll_rst_leaf.sv",
+  "rtl/rom/ot_coll_fold_slice.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv"
+ ],
+ "params": {
+  "LU": 66,
+  "LS": 391,
+  "FAN32": 1,
+  "ADD_FAN32": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 248.4,
+  "h": 276.48
+ },
+ "std_area_um2": 10989,
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "pkg_s",
+   "die_ps",
+   "in_data",
+   "out_data"
+  ],
+  "W": [
+   "sx1_data",
+   "sx2_data",
+   "sr1_data",
+   "sr2_data"
+  ],
+  "E": [
+   "up_data",
+   "dp_data",
+   "ur_data",
+   "dr_data"
+  ],
+  "S": [
+   "sx0_data",
+   "sr0_data",
+   "c_tok",
+   "q_pe",
+   "q_xe"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sd*g_d?0?*g_c?0?*u_m",
+   "at": [
+    31.104,
+    23.76
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sd*g_d?0?*g_c?1?*u_m",
+   "at": [
+    31.104,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sd*g_d?1?*g_c?0?*u_m",
+   "at": [
+    31.104,
+    149.04
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "count": 1,
+   "inst": "*u_sd*g_d?1?*g_c?1?*u_m",
+   "at": [
+    31.104,
+    211.68
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_rring*g_b?0?*u_m",
+   "at": [
+    107.568,
+    23.76
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_rring*g_b?1?*u_m",
+   "at": [
+    107.568,
+    99.36
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_pring*g_b?0?*u_m",
+   "at": [
+    107.568,
+    149.04
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_pring*g_b?1?*u_m",
+   "at": [
+    107.568,
+    224.64
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_xf*g_st?2?*u_dr*g_b?0?*u_m",
+   "at": [
+    183.168,
+    23.76
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_xf*g_st?2?*u_dr*g_b?1?*u_m",
+   "at": [
+    183.168,
+    99.36
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_xf*g_st?3?*u_dr*g_b?0?*u_m",
+   "at": [
+    183.168,
+    149.04
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_xf*g_st?3?*u_dr*g_b?1?*u_m",
+   "at": [
+    183.168,
+    224.64
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin at the face: inputs land in exactly one flop (ir_q/dpr_q/drr_q/srr_q, u_tok c_tok, pk_q/di_q straps), outputs leave a flop (upd_q/urd_q/face sx regs/od_q/q_pe/q_xe); flow pin registers would add unpriced cycles"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it (r4): ONE ot_coll_rst_leaf u_rsf at the face (2-flop, async assert, sync release; port rst_n = 2 raw sinks); u_rsf drives only two registered relay copies u_rs/u_rs2 (ot_csp_rep_reg_native32, kept per ID), which feed relays and the folds own 2-flop leaves; every relay/leaf <= 32 sinks; all consumers release one edge later than r3, uniformly"
+ },
+ "keep_pin_regs": true,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "macro_halo_um": 2.16,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 3,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_x_um": 10.8
+ },
+ "children": [],
+ "inter": [],
+ "structural_change": "Same-edge source-owned SRAM/control/read-capture and existing stage-local reset clock neighborhoods. Exact q10 RTL, geometry, pin faces, macro placement and timing constraints unchanged. Ten ps is a balancing design target, not a changed signoff rule.",
+ "job": {
+  "owner": "CODEX-Q11-PAIR",
+  "branch": "codex/q11-clock-pair-2000",
+  "tag": "q11a",
+  "purpose": "Same-edge source-owned SRAM/control/read-capture and existing stage-local reset clock neighborhoods. Exact q10 RTL, geometry, pin faces, macro placement and timing constraints unchanged. Ten ps is a balancing design target, not a changed signoff rule.",
+  "extra_paths": [
+   "results/rtl/coll_native32_1020",
+   "rtl/test/tb_coll_tp8_native32.sv",
+   "tools/qwen_coll_tp8_native32_bench.py",
+   "tools/qwen_coll_tp8_bench.py",
+   "tools/hdc_golden.py",
+   "tools/prepare_fp32_fan32_models.py",
+   "results/rtl/fp32_add_native_clone_1020/final_packet",
+   "rtl/rom/ot_coll_tp8_static.sv",
+   "rtl/physical/ot_qfd_io_collective_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1"
+  ]
+ },
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_PORT": "clk",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_MACRO_LEAF": "1",
+  "OT_SPINE_SAFE_BALANCE": "1",
+  "OT_SPINE_TOL_PS": "10"
+ },
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qfd_coll_split_q10a/native_release_tie.tcl"
+ ],
+ "pin_ranges": {
+  "sx2_data": [
+   5.4,
+   71.82
+  ],
+  "sx1_data": [
+   71.82,
+   138.24
+  ],
+  "sr2_data": [
+   138.24,
+   204.66
+  ],
+  "sr1_data": [
+   204.66,
+   271.08
+  ],
+  "ur_data": [
+   5.4,
+   71.82
+  ],
+  "dp_data": [
+   71.82,
+   138.24
+  ],
+  "dr_data": [
+   138.24,
+   204.66
+  ],
+  "up_data": [
+   204.66,
+   271.08
+  ]
+ },
+ "pre_cts_extra": [
+  "tools/qwen_cluster/q11_pair/clock_pair.tcl"
+ ]
+}

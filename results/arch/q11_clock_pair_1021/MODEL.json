@@ -1,0 +1,28 @@
+{
+  "scope": "SAME_EDGE_PHYSICAL_CLOCK_CONSTRUCTION_ONLY",
+  "base": "b25e2bab6",
+  "RTL_source": "fd0d22f86",
+  "unchanged": [
+    "all RTL",
+    "LU66 LS391 FAN321 ADD_FAN321",
+    "248.4 by276.48um geometry",
+    "all12 SRAM placements/views",
+    "pin faces",
+    "period833.333ps",
+    "setup60ps/hold25ps uncertainty",
+    "reset and data edges"
+  ],
+  "construction": "Clocked first-neighbor connectivity components around each actual SRAM, plus existing stage-local reset release/capture pairs. Every component receives a common clock branch. Separate rclk/wclk leaves avoid mixed macro/stdcell loads. Stock measured balancing and strict endpoint coverage retained.",
+  "data_edges_added": 0,
+  "reset_edges_added": 0,
+  "FF_added": 0,
+  "SRAM_ports_added": 0,
+  "interface_bits_per_cycle": 128,
+  "throughput": "one128-bit word per original cycle",
+  "MACs_added": 0,
+  "buffer_and_routing_cost": "actual OpenDB smoke and normal physical gate required; no unmeasured area credit",
+  "pair_skew_design_target_ps": 10,
+  "signoff_rules_changed": false,
+  "diagnostic_scope": "per-component real sink arrival spread; no relaxed pass threshold",
+  "minimum_validation": "actual pre-CTS q10 ODB clock endpoint/macro/counter/capture/reset coverage and connectivity before normal gate"
+}
