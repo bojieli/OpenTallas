@@ -1,7 +1,10 @@
-"""TOKc-GRAY 10-22: the async_gray tie-driver verdict is computed once per actual net and applied to every async pin on
+"""TOKc-GRAY 10-22 (1): the async_gray tie-driver verdict is computed once per actual net and applied to every async pin on
 that net (hdie_svc_vm_kshare_r4: thousands of tied DFFASRHQNx1 SET/RESET pins, ~0.12 s per pin re-scanning the same
 tie net).  The verdict must equal the original per-pin scan for every pin; a different net is always scanned again; a
-failing net fails every pin on it and no pin elsewhere.  OpenSTA timing-graph fixture only (generic Liberty).
+failing net fails every pin on it and no pin elsewhere.
+(2): a bounded pair whose target's every fanin startpoint is the launch itself is proved with an unfiltered "-to target"
+query (same path set, no per-pair "-from" re-search); any other fanin keeps the filtered query, so a pair without an
+actual path still fails.  OpenSTA timing-graph fixture only (generic Liberty).
 """
 import os
 from pathlib import Path
@@ -24,9 +27,21 @@ cell(INVx1_ASAP7_75t_R) {
   timing() { related_pin : "A"; timing_sense : negative_unate; cell_rise(scalar){values("3");} cell_fall(scalar){values("3");} rise_transition(scalar){values("1");} fall_transition(scalar){values("1");} }
  }
 }
+cell(AND2x2_ASAP7_75t_R) {
+ area : 1;
+ pin(A) { direction : input; capacitance : 1; }
+ pin(B) { direction : input; capacitance : 1; }
+ pin(Y) {
+  direction : output;
+  function : "A & B";
+  timing() { related_pin : "A"; timing_sense : positive_unate; cell_rise(scalar){values("3");} cell_fall(scalar){values("3");} rise_transition(scalar){values("1");} fall_transition(scalar){values("1");} }
+  timing() { related_pin : "B"; timing_sense : positive_unate; cell_rise(scalar){values("3");} cell_fall(scalar){values("3");} rise_transition(scalar){values("1");} fall_transition(scalar){values("1");} }
+ }
+}
 cell(DFFR) {area : 1; ff(IQ,IQN){clocked_on : "C"; next_state : "D"; clear : "!R";}
  pin(C){direction : input; capacitance : 1; clock : true;}
- pin(D){direction : input; capacitance : 1; timing(){related_pin : "C"; timing_type : setup_rising; rise_constraint(scalar){values("2");}fall_constraint(scalar){values("2");}}}
+ pin(D){direction : input; capacitance : 1; timing(){related_pin : "C"; timing_type : setup_rising; rise_constraint(scalar){values("2");}fall_constraint(scalar){values("2");}}
+  timing(){related_pin : "C"; timing_type : hold_rising; rise_constraint(scalar){values("1");}fall_constraint(scalar){values("1");}}}
  pin(R){direction : input; capacitance : 1; timing(){related_pin : "C"; timing_type : recovery_rising; rise_constraint(scalar){values("2");}fall_constraint(scalar){values("2");}}}
  pin(Q){direction : output; function : "IQ"; timing(){related_pin : "C"; timing_type : rising_edge; timing_sense : positive_unate; cell_rise(scalar){values("3");}cell_fall(scalar){values("3");}rise_transition(scalar){values("1");}fall_transition(scalar){values("1");}}
   timing(){related_pin : "R"; timing_type : clear; timing_sense : positive_unate; cell_rise(scalar){values("3");}cell_fall(scalar){values("3");}rise_transition(scalar){values("1");}fall_transition(scalar){values("1");}}}}
@@ -126,6 +141,64 @@ class TieDriverDedup(unittest.TestCase):
         body = __import__('clock_entry_constraints').generate(spec(), ROOT)
         self.assertIn('set ::ot_ag_tie_memo {}\n  set ::ot_ag_tie_stats {}\n  set cells {}', body)
         self.assertIn('OT_ASYNC_GRAY TIE_DRIVER_DEDUP nets_scanned=', body)
+
+
+# l1 -> t1 alone (sole launch); l1 & l2 -> t2 (two launches); l2 never reaches t1.
+PAIRS = '''module top(input wclk, input rclk, input d, input rn, output q1, output q2);
+  wire a1, a2, x1, x2;
+  DFFR l1(.C(wclk), .D(d), .R(rn), .Q(a1));
+  DFFR l2(.C(wclk), .D(d), .R(rn), .Q(a2));
+  INVx1_ASAP7_75t_R i1(.A(a1), .Y(x1));
+  AND2x2_ASAP7_75t_R g2(.A(a1), .B(a2), .Y(x2));
+  DFFR t1(.C(rclk), .D(x1), .R(rn), .Q(q1));
+  DFFR t2(.C(rclk), .D(x2), .R(rn), .Q(q2));
+endmodule
+'''
+
+
+def finite_proc():
+    # the generator's own ot_ce_finite (clock_entry_constraints), not a copy
+    import re, clock_entry_constraints as C
+    text = Path(C.__file__).read_text()
+    m = re.search(r'proc ot_ce_finite \{value\} \{\n.*?\n\}\n', text, re.S)
+    return m.group(0)
+
+
+def verify(rows):
+    with tempfile.TemporaryDirectory() as tmp:
+        t = Path(tmp)
+        (t / 't.lib').write_text(LIB)
+        (t / 't.v').write_text(PAIRS)
+        tcl = [f'read_liberty {{{t}/t.lib}}', f'read_verilog {{{t}/t.v}}', 'link_design top',
+               'create_clock -name w -period 1000 [get_ports wclk]', 'create_clock -name r -period 1024 [get_ports rclk]',
+               A.TCL, finite_proc()]
+        for launch, target in rows:
+            tcl.append(f'puts "SOLE {launch} {target} [ot_ag_sole_launch [get_cells {launch}] [get_pins {target}/D]]"')
+            tcl.append(f'ot_ag_bound [get_pins {launch}/C] [get_pins {target}/D] "OT_ASYNC_GRAY BOUNDED {launch} -> {target}"')
+        tcl.append('if {[catch {ot_ag_verify} m]} {puts "VERIFY_FAIL $m"}')
+        (t / 't.tcl').write_text('\n'.join(tcl) + '\nexit 0\n')
+        p = subprocess.run([STA, '-exit', str(t / 't.tcl')], text=True, capture_output=True)
+        if p.returncode:
+            raise AssertionError(p.stdout + p.stderr)
+        return p.stdout
+
+
+@unittest.skipUnless(Path(STA).exists(), 'OpenSTA fixture tool required')
+class SoleLaunchProof(unittest.TestCase):
+    def test_sole_launch_unfiltered_other_fanin_filtered(self):
+        out = verify([('l1', 't1'), ('l1', 't2'), ('l2', 't2')])
+        self.assertIn('SOLE l1 t1 1', out)
+        self.assertIn('SOLE l1 t2 0', out)                   # second launch l2 in t2's fanin: filtered query kept
+        for line in ('BOUNDED l1 -> t1', 'BOUNDED l1 -> t2', 'BOUNDED l2 -> t2'):
+            self.assertIn('OT_ASYNC_GRAY ' + line, out)
+        self.assertIn('OT_ASYNC_GRAY VERIFY_DEDUP pairs=3 sole_launch_unfiltered=1 filtered=2', out)
+        self.assertNotIn('VERIFY_FAIL', out)
+
+    def test_pair_without_actual_path_still_fails(self):
+        out = verify([('l1', 't1'), ('l2', 't1')])           # l2 does not reach t1
+        self.assertIn('SOLE l2 t1 0', out)
+        self.assertIn('VERIFY_FAIL OT_ASYNC_GRAY: missing finite bounded max path l2/C -> t1/D', out)
+        self.assertIn('OT_ASYNC_GRAY BOUNDED l1 -> t1', out)
 
 
 if __name__ == '__main__':
