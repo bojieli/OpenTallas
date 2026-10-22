@@ -26,7 +26,7 @@ PY
  sha256sum "$out/ot_s81pa_ctl_mut.sv" > "$out/mutated_source.sha256"
 fi
 "$VL" --binary --timing --output-split 10000 --output-split-cfuncs 1000 -j "${J:-4}" -CFLAGS -O1 \
- -DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW -DOT_S81PH_SEL_ILD -DOT_S81PH_SEL_FRPR \
+ ${CTL_DEF:-} -DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_HQ -DOT_HARD_CHILDREN -DOT_S81PH_HQ_INPUT_RAW -DOT_S81PH_SEL_ILD -DOT_S81PH_SEL_FRPR \
  -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE \
  --top-module tb_control_miter "${src[@]}" --Mdir "$out/obj" -o sim > "$out/build.log" 2>&1 || { tail -25 "$out/build.log"; echo CONTROL_BUILD_FAIL;exit 2; }
 set +e

@@ -21,14 +21,23 @@ module ot_sram_showahead_1r1w #(
  wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},mwd}, raw;
  genvar b,s;
  generate for(b=0;b<NB;b=b+1) begin:g_bank
-`ifdef OT_SRAM_P192
+`ifdef OT_SHOWAHEAD_FLOP
+  // STW-S81c-COLLA 10-22 (TOPK control h NEEDS_RTL: SRAM rd_out 278 ps SS clk->q -> queue head -> packet done, TT -111):
+  // opt-in flop register file with the macro's exact contract (registered read of the OLD word, read-before-write,
+  // same write port timing), so the forwarding below is unchanged.  Depth 2**AW (<= 32) words.
+  reg [127:0] mf [0:(1<<AW)-1]; reg [127:0] rq;
+  always @(posedge clk) begin rq <= mf[ra]; if (mw) mf[mwa] <= padded[b*128+:128]; end
+  assign raw[b*128+:128] = rq;
+`elsif OT_SRAM_P192
   // pitch-192 pin-limited 32x128 (51.408x39.960, W/E 4.98/4.95 pins/um); same ports/timing contract
-  ot_sram_1r1w_32x128_m1_p192_rc u_m(.clk(clk),
-`else
-  ot_sram_1r1w_32x128_m1 u_m(.clk(clk),
-`endif.r_ce_in(1'b1),.r_addr_in(5'(ra)),
+  ot_sram_1r1w_32x128_m1_p192_rc u_m(.clk(clk),.r_ce_in(1'b1),.r_addr_in(5'(ra)),
    .rd_out(raw[b*128+:128]),.w_ce_in(mw),.w_addr_in(5'(mwa)),
    .wd_in(padded[b*128+:128]),.w_mask_in({128{1'b1}}));
+`else
+  ot_sram_1r1w_32x128_m1 u_m(.clk(clk),.r_ce_in(1'b1),.r_addr_in(5'(ra)),
+   .rd_out(raw[b*128+:128]),.w_ce_in(mw),.w_addr_in(5'(mwa)),
+   .wd_in(padded[b*128+:128]),.w_mask_in({128{1'b1}}));
+`endif
  end
  for(s=0;s<NS;s=s+1) begin:g_slice
   localparam integer LO=s*16, SW=(W-LO<16)?W-LO:16;
