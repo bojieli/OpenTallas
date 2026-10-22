@@ -1,0 +1,65 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "clock_span",
+   "message": "648.0 x 1555.2 um: one clock root over > 600 um",
+   "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: RTL registers every pin (g4: each port is a pin flop + reach relays, gen_vms_glue_tiles.py DB / DD / DC): bank-side inputs land on the tile landing flops (eg / pr / xq_done / xq2_done / status / flt) and bank-side outputs leave from the tile relay flops (xq / xq2 / pq); the hub captures cq / client_",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc9 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hfd_hgi_vms_glue_sw_g8r_20261021-223226.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hfd_hgi_vms_glue_sw_g8r_20261021-223226.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/hfd_hgi_vms_glue_sw_g8r-20261021-223226",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook_execution",
+   "message": "missing unique actual textbook verdict or failed lint execution; RC=[]",
+   "fix": "inspect original terminal log and canonical helper CLI; main/daemon sync required before re-gate"
+  },
+  {
+   "severity": "FAIL",
+   "check": "native_census",
+   "message": "list index out of range",
+   "fix": "run mapped native census before floorplan; repair dynamic/reset drivers to <=32 actual load pins"
+  },
+  {
+   "severity": "FAIL",
+   "check": "floorplan_run",
+   "message": "synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: 1_2_yosys.sdc, 798 OT_MULTI_ROOT: cross-domain data path bk_pq_s1[570]$_DFF_P_ -> b2_pq[0]$_DFF_P_ requires explicit related profile; Error: 1_2_yosys.sdc, 798 OT_MULTI_ROOT: cross-domain data path bk_pq_s1[570]$_DFF_P_ -> b2_pq[0]$_DFF_P_ requires explicit related profile",
+   "fix": "read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL"
+  },
+  {
+   "severity": "WARN",
+   "check": "layout_images",
+   "message": "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log",
+   "fix": ""
+  }
+ ]
+}

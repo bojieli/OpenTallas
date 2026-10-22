@@ -1,0 +1,22 @@
+{
+  "failed_kit_source": "989acb52f",
+  "corrected_declaration_source": "e58124307",
+  "source_origin": "gen_vms_glue_tiles.py defines hub, ring and replay clocks as the same stream clock on the same edge; regional positive bench ties clk_s, clk and clk_n to that clock.",
+  "phase_contract": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "hardware_changed": false,
+  "functional_rerun_required": false,
+  "timing_policy": "All registered cross-root data paths remain timed. No false or asynchronous data cuts.",
+  "actual_failures": {
+    "nw": "bk_pq_s1[285] -> b1_pq[0] requires explicit related profile",
+    "sw": "bk_pq_s1[570] -> b2_pq[0] requires explicit related profile"
+  },
+  "native_result": "Not reached; secondary missing-report index error is not a measured fanout failure.",
+  "layout": "Not reached."
+}
