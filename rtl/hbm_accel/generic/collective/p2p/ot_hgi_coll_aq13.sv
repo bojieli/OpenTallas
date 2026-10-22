@@ -409,10 +409,15 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
 endmodule
 
 `ifdef OT_COLLQ_SRAM
-// Nine-edge, II1 delay on a16-slot SRAM ring. Data sampled at negedge
-// after source edge; write next posedge. Read slot7 behind, then capture
-// macro output on the next edge: q[n]=d[n-9]. Distinct read
-// and write addresses avoid macro collision assumptions. No new reset on data.
+// Nine-edge, II1 delay on a16-slot SRAM ring: q[n]=d[n-9], distinct read
+// and write addresses (no macro collision assumptions), no new reset on data.
+// R11 (HBM-ELEM13/COLL-GQ 10-21): the write side is launched on posedge only
+// (R10 sampled at negedge: the reg->wd_in hop had a 416 ps half-cycle budget,
+// k9q TT -119). MAIN: one posedge stage {wa,wd,ra}, write lands one edge
+// later than the negedge version, so the read pointer moves one slot closer:
+// ra = slot-6 (q = d 9 edges back). OT_COLLQ_SRAM_WR2 (FALLBACK): two kept
+// posedge stages (relay near the source + register near the macro) on
+// wa/wd/ra, ra = slot-5, same nine edges.
 module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
     input wire clk, input wire rst_n, input wire [1023:0] d, output reg [1023:0] q
 );
@@ -424,13 +429,24 @@ module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
         else slot <= slot + 4'd1;
     genvar k;
     generate for(k=0;k<4;k=k+1) begin : g_sram
-        reg [3:0] wa_n,ra_n;
-        reg [255:0] wd_n;
-        always @(negedge clk) begin
-            wa_n <= slot;
-            ra_n <= slot - ((MUT != 0) ? 4'd6 : 4'd7);
-            wd_n <= d[256*k +: 256];
+`ifdef OT_COLLQ_SRAM_WR2
+        (* keep="true",dont_touch="true" *) reg [3:0] wa_r, ra_r, wa_p, ra_p;
+        (* keep="true",dont_touch="true" *) reg [255:0] wd_r, wd_p;
+        always @(posedge clk) begin
+            wa_r <= slot;
+            ra_r <= slot - ((MUT != 0) ? 4'd4 : 4'd5);
+            wd_r <= d[256*k +: 256];
+            wa_p <= wa_r; ra_p <= ra_r; wd_p <= wd_r;
         end
+`else
+        (* keep="true",dont_touch="true" *) reg [3:0] wa_p, ra_p;
+        (* keep="true",dont_touch="true" *) reg [255:0] wd_p;
+        always @(posedge clk) begin
+            wa_p <= slot;
+            ra_p <= slot - ((MUT != 0) ? 4'd5 : 4'd6);
+            wd_p <= d[256*k +: 256];
+        end
+`endif
         // HBM-COLL6 10-20 (gq k5): OT_GQ_P192 = the same 128x256 array with its M4 pins at 0.192 um pitch (80.472 um tall,
         // 5.1 pins/um faces instead of 10/um; identical ports and behavioural model). Default: the 41.04 um macro.
 `ifdef OT_GQ_P192
@@ -438,8 +454,8 @@ module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
 `else
         ot_sram_1r1w_128x256_m1_r2c2 u_mem (
 `endif
-            .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0,ra_n}), .rd_out(rd[256*k +: 256]),
-            .w_ce_in(1'b1), .w_addr_in({3'd0,wa_n}), .wd_in(wd_n),
+            .clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0,ra_p}), .rd_out(rd[256*k +: 256]),
+            .w_ce_in(1'b1), .w_addr_in({3'd0,wa_p}), .wd_in(wd_p),
             .w_mask_in(256'hffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate

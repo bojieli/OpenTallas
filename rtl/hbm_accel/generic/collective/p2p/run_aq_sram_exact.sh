@@ -7,6 +7,8 @@ P=rtl/hbm_accel/generic/collective/p2p
 MEM=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v; D=(-DOT_COLLQ_SRAM)
 # HBM-COLL6 10-20: OT_GQ_P192=1 = k5 leaf (p192 SRAM view)
 if [[ ${OT_GQ_P192:-0} == 1 ]]; then D+=(-DOT_GQ_P192); MEM=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v; fi
+# R11 (HBM-ELEM13/COLL-GQ 10-21): OT_GQ_XDEFS = extra -D defines (e.g. -DOT_COLLQ_SRAM_WR2 = FALLBACK two-stage write)
+if [[ -n ${OT_GQ_XDEFS:-} ]]; then read -r -a _xd <<< "$OT_GQ_XDEFS"; D+=("${_xd[@]}"); fi
 sed 's/ot_hbm_xp_aq_tree13 #(.MUT(MUT))/ot_hgi_coll_aq13 #(.LMUT(MUT))/' physical/hbm_xp_aq_tree13_1014/tb_aq_tree13.sv > "$OUT/tb.sv"
 verilator --binary --timing -j 4 "${D[@]}" -GMUT="$MUT" -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --top-module tb --Mdir "$OUT/obj" "$OUT/tb.sv" \
  "$P/ot_hgi_coll_aq13.sv" "$P/ot_hgi_coll_aq_scale13r.sv" rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_fpu.sv \
