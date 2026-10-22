@@ -52,6 +52,13 @@ python3 tools/s81_dv/head72/hd_land_plan.py "$P" "$LAND" > "$W/land_plan.log" 2>
 printf 'LAND_PLAN_RC 0 %s\n' "$(date)" >> "$S"
 python3 tools/s81_dv/head72/hd_bind.py --plan "$P" --base "$BASE/bind/bind_table_p4l3_mu.json" --ports results/arch/s81_head_1021/ports.json --land-plan "$LAND" --out "$T" > "$W/bind_table.log" 2>&1
 printf 'BIND_TABLE_RC 0 %s\n' "$(date)" >> "$S"
+# H11 r2: the merged 72-frame dv_bind defaults to GEOMETRIC clock regions (ck_g<i>_<j>), which cut the spine <-> first-tile
+# chain links of the head (H11 r1 gen_safety C1 69/196 unlanded). The head keeps its H10 LOGICAL (group) regions.
+python3 - "$T" "${H11_REGIONS:-logical}" <<'PY'
+import json, sys
+p, mode = sys.argv[1:]; t = json.load(open(p)); t.setdefault('clock_regions', {})['mode'] = mode; json.dump(t, open(p, 'w'), indent=1)
+print('H11_CLOCK_REGIONS', mode)
+PY
 set +e
 python3 tools/s81_dv/dv_diecase.py --plan "$P" --out "$W/bind" --bind real --bind-table "$T" --land-plan "$LAND" > "$W/bind.log" 2>&1
 RC=$?; echo "BIND_RC $RC $(date)" >> "$S"
