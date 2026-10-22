@@ -9,7 +9,8 @@ _bb.v), host, remote}.  Finds each cell on whichever fleet host built it.
 import argparse, hashlib, json, re, shlex, subprocess
 from pathlib import Path
 
-HOSTS = ['ot-epyc5', 'ot-epyc7', 'ot-epyc9', 'ot-pve1']   # HBMc/CHAIN 10-22: ot-epyc6 retired   # ot-epyc1tb retired 10-16 (its reusable views were copied to ot-epyc4)
+HOSTS = ['ot-epyc5', 'ot-epyc7', 'ot-epyc9', 'ot-pve1', 'ot-gold1', 'ot-gold2', 'ot-agidock128']   # HBMc/CHAIN 10-22: every fleet host (a relaunch wipes the drive receipts; gold-only results were missed: r18e FETCHED 980/1263)
+PREFER = ['ot-epyc5']   # the chain host: a complete copy there wins over a copy elsewhere   # HBMc/CHAIN 10-22: ot-epyc6 retired   # ot-epyc1tb retired 10-16 (its reusable views were copied to ot-epyc4)
 REMOTE_PY = r'''
 import hashlib, json, re, sys, os, shlex, subprocess
 root, src, cell, wrap = sys.argv[1:5]
@@ -245,23 +246,26 @@ def main():
         if record.get('ok') and record.get('host'):
             hosts.add(record['host'])
     for h in sorted(hosts):
-        out = subprocess.run(['ssh', h, f'cd {a.remote_root}/syn 2>/dev/null && ls -d */ | tr -d /'], capture_output=True,
+        out = subprocess.run(['ssh', '-o', 'ConnectTimeout=15', h, f'test ! -e {a.remote_root}/.ot-run-spill-copy && cd {a.remote_root}/syn 2>/dev/null && ls -d */ | tr -d /'], capture_output=True,
                              text=True).stdout.split()
         for c in out:
             w = V.get(c, {}).get('wrapper')
             if not w or (a.cells and c not in a.cells):
                 continue
-            ok = subprocess.run(['ssh', h, f'test -s {a.remote_root}/syn/{c}/{w}_synth_ff.lib && '
-                                f'grep -qx OT_ETM_DONE_ff {a.remote_root}/syn/{c}/etm.log && echo y'],
+            # HBMc/CHAIN 10-22: a COMPLETE build only (<cell>.ys + netlist + ff lib + ETM done): r18g S6 took a stale
+            # ETM-only partial on ot-pve1 (sorted last) over the complete ep5 copy -> FileNotFoundError <cell>.ys
+            ok = subprocess.run(['ssh', '-o', 'ConnectTimeout=15', h, f'd={a.remote_root}/syn/{c}; test -s $d/{c}.ys && '
+                                f'test -s $d/{c}.netlist.v && test -s $d/{w}_synth_ff.lib && '
+                                f'grep -qx OT_ETM_DONE_ff $d/etm.log && echo y'],
                                 capture_output=True, text=True).stdout.strip()
-            if ok == 'y':
+            if ok == 'y' and (c not in found or (h in PREFER and found[c][0] not in PREFER)):
                 found[c] = (h, w, False)
             elif a.allow_direct_master and V[c]['params'] == {}:
                 top = V[c]['master']
                 ok = subprocess.run(['ssh', h, f'test -s {a.remote_root}/syn/{c}/{top}_synth_ff.lib && '
                                      f'grep -qx OT_ETM_DONE_ff {a.remote_root}/syn/{c}/etm.log && echo y'],
                                      capture_output=True, text=True).stdout.strip()
-                if ok == 'y':
+                if ok == 'y' and (c not in found or (h in PREFER and found[c][0] not in PREFER)):
                     found[c] = (h, top, True)
     for c, (h, w, direct) in sorted(found.items()):
         meta = subprocess.run(['ssh', h, 'python3', '-', a.remote_root, src, c, w,
