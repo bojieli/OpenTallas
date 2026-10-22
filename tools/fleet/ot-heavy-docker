@@ -18,10 +18,14 @@ pre=("${args[@]:0:$((sub+1))}"); rest=("${args[@]:$((sub+1))}")
 out=(); have=; lim=
 to_gb() { local v=${1,,}; case "$v" in *g|*gb) echo "${v%%g*}";; *m|*mb) awk "BEGIN{print ${v%%m*}/1024}";; *k|*kb) awk "BEGIN{print ${v%%k*}/1048576}";; *b) awk "BEGIN{print ${v%b}/1073741824}";; *) awk "BEGIN{print $v/1073741824}";; esac; }
 cap() { local g; g=$(to_gb "$1"); awk "BEGIN{exit !($g > $MEM)}" && echo "${MEM}g" || echo "$1"; }
+# OOMADJ_999_1022: a non-die container never runs below oom_score_adj 0
+hadj=; oadj() { case "$1" in -*) echo 0;; *) echo "$1";; esac; }
 j=0; n=${#rest[@]}
 while [ $j -lt $n ]; do
   a=${rest[$j]}
   case "$a" in
+    --oom-score-adj=*) hadj=1; [ "${OT_HEAVY_PRIO:-}" = die ] || out+=("--oom-score-adj=$(oadj "${a#--oom-score-adj=}")");;
+    --oom-score-adj) hadj=1; [ "${OT_HEAVY_PRIO:-}" = die ] || out+=("$a" "$(oadj "${rest[$((j+1))]}")"); j=$((j+1));;
     --memory=*) have=1; lim=$(cap "${a#--memory=}"); out+=("--memory=$lim");;
     --memory|-m) have=1; j=$((j+1)); lim=$(cap "${rest[$j]}"); out+=("$a" "$lim");;
     --memory-swap=*|--memory-swap) [ "$a" = --memory-swap ] && j=$((j+1));;   # replaced below: no swap above the cap
@@ -37,4 +41,8 @@ while [ $j -lt $n ]; do
 done
 [ -z "$have" ] && lim="${MEM}g"
 [ -z "$have" ] && out=("--memory=$lim" "${out[@]}")
+# OOMADJ_999_1022: Docker daemon starts outside the caller scope, so the adjustment is explicit: a die container -999
+# (never -1000: that also exempts it from its own --memory cgroup OOM, a livelock at the cap), anything else >= 0.
+if [ "${OT_HEAVY_PRIO:-}" = die ]; then out=("--oom-score-adj=-999" "--label=opentallas.priority=die" "${out[@]}")
+elif [ -z "$hadj" ]; then out=("--oom-score-adj=0" "${out[@]}"); fi
 exec "$REAL" "${pre[@]}" "--memory-swap=$lim" "${out[@]}"
