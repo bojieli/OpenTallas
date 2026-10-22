@@ -150,7 +150,10 @@
     "kit_done_return_to_host_extra_edges": 2,
     "host_template_config_to_SQ_extra_edges": 2,
     "rung_direction_extra_edges": 2,
-    "SQ_VC_loop_extra_edges": 0
+    "SQ_VC_loop_extra_edges": 0,
+    "regional_boot_extra_edges": 4,
+    "total_release_edges": 7,
+    "earliest_rung_input_edge": 8
   },
   "limits": [
     "The canonical generated rescheduled reference proves landing hardware only. It does not prove the child calendar tolerates new feedback.",
