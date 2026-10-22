@@ -24,8 +24,9 @@ class PortClockBind(unittest.TestCase):
  def link(self,port,source=True):
   ends=[[0,port,0,0,'box'],[1,'i',100,0,'box']] if source else [[1,'o',100,0,'box'],[0,port,0,0,'box']]
   return dict(i='clock_probe',e=ends)
- def emitted(self,wrong=False,zero=False,forwarded=False,prune=None):
+ def emitted(self,wrong=False,zero=False,forwarded=False,prune=None,force_zero=False,quantized=False):
   table=copy.deepcopy(self.table)
+  table.setdefault('clock_regions', {'mode':'logical'})
   table['landing_reset_stages']={'dsfd_dvland_276':2}
   blocks=[dict(name='lep',master='regional',group='clC',x=100,y=100,w=100,h=100),
           dict(name='other',master='legacy',group='clL',x=600,y=100,w=100,h=100)]
@@ -46,6 +47,9 @@ class PortClockBind(unittest.TestCase):
   table['masters']['regional']['ports']['ri.o'].update(port='ri',lane=276,clock_port='clk')
   table['masters']['legacy']['ports']['ri.i']={'port':'ri','lane':276,'land':True}
   table['rtl_widths']['legacy']={}
+  if quantized:
+   table['masters']['regional']['ports']['lo0.o']['lanes']=[{'split':[['lo0',0,0,237]]}]
+   table['masters']['legacy']['ports']['i0.i']['lanes']=[{'split':[['i0',0,0,237]]}]
   if forwarded:table['masters']['regional']['ports']['lo0.o']['ck']='forwarded'
   if zero:
    for i in range(4):
@@ -55,9 +59,10 @@ class PortClockBind(unittest.TestCase):
   chains={l['i']:([] if zero else [(400,150)]) for l in links};dirs={(n,0):'WE' for n in chains}
   # Fixed tiny reset topology exercises both calendar branches; emit itself builds
   # all port wires, forwarding gates, landing cells and calendar stations.
-  reset=dict(verilog=[],depth={'rs0':2,'rs1':6},block_leaf={'lep':'rs0','other':'rs1'},
+  reset=dict(verilog=[],depth={'rs0':2,'rs1':6},net_clocks={'rs0':'ck_C','rs1':'ck_g0_0'},block_leaf={'lep':'rs0','other':'rs1'},
    block_parent={'lep':'rs0','other':'rs1'},block_pin={'lep':(200,150),'other':(600,150)},
-   station_leaf={(n,0):'rs0' for n in chains},place=[],summary={'stations':0,'root_xy':[400,0]})
+   station_leaf={(n,0):'rs0' for n in chains},place=[],summary={'stations':0,'root_xy':[400,0], 'release_crossings':0, 'crossings':[],
+    'max_release_depth':6, 'block_release_depth':{'lep':3,'other':7}})
   if prune is not None:
    table['prune_unused_reset_leaves']=prune
    reset['verilog']=[
@@ -71,7 +76,10 @@ class PortClockBind(unittest.TestCase):
   self.last_reset=reset
   with tempfile.TemporaryDirectory() as td:
    root=Path(td);tp=root/'table.json';tp.write_text(json.dumps(table))
-   with patch.object(D,'reset_tree',return_value=reset):D.emit(plan,root/'out',tp,dirs,chains,run_bind=False)
+   lp=None
+   if force_zero:
+    lp=root/'land.json';lp.write_text(json.dumps({'links':[{'link':l['i'],'E':2,'K':2,'D':4,'force_landing':True} for l in links]}))
+   with patch.object(D,'reset_tree',return_value=reset):D.emit(plan,root/'out',tp,dirs,chains,run_bind=False,land_plan=lp)
    return (root/'out/die.v').read_text()
  def test_production_emission_A_A_B_B_C(self):
   text=self.emitted()
@@ -83,6 +91,36 @@ class PortClockBind(unittest.TestCase):
   self.assertTrue(any('.ck(ck_A)' in line for line in calendars))
   self.assertTrue(any('.ck(ck_B)' in line for line in calendars))
   self.assertTrue(any('.ck(ck_C)' in line for line in calendars))
+ def test_zero_station_real_landing_uses_source_wire_and_gated_source_root(self):
+  text=self.emitted(zero=True,force_zero=True)
+  for i,root in enumerate(('ck_A','ck_A','ck_B','ck_B')):
+   self.assertRegex(text,rf'dsfd_dvland_276 ld_lo{i} .*\.i\(w_lo{i}_src\)')
+   self.assertRegex(text,rf'dsfd_dvland_276 ld_li{i} .*\.ck\({root}\)')
+   self.assertRegex(text,rf'fwd_lo{i} \(\.CLK\({root}\)')
+   self.assertIn(f'wire [0:0] nlo{i}_fck;',text)
+ def test_explicit_xc_lane_identity_is_invariant_under_physical_projection(self):
+  rule={'kind':'xc','port':'xc','lane':276,'ck':'ck_xc','lane_by_link':{'x_f_1L02_l0':8}}
+  e=('xf','o',276,'x_f_1L02_l0',10,5,'f_1L02')
+  for y in (0,10000):
+   moved=(*e[:5],y,e[6])
+   self.assertEqual(D.place_lane(rule,moved,[],{'y':0,'h':100}), (8,'xc',276,('ck_xc',8)))
+  with self.assertRaises(KeyError):D.place_lane(rule,(*e[:3],'missing',*e[4:]),[],{'y':0,'h':100})
+ def test_zero_station_quantized_payload_pads_ring_only_and_never_indexes_a_relay(self):
+  text=self.emitted(zero=True,force_zero=True,quantized=True)
+  self.assertIn(".i({39'd0, w_lo0_src[236:0]})",text)
+  self.assertNotIn('st_lo0_0 (',text)
+ def test_unhardened_landing_reset_contract_is_source_bound_and_cannot_alias_view(self):
+  import hashlib
+  body=(Path(__file__).resolve().parents[2]/'rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv').read_text()
+  name='dsdv_svc_busland_16'
+  row=dict(ref='source',path='rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv',sha256=hashlib.sha256(body.encode()).hexdigest(),reset_stages=0)
+  table={'landing_assemblies':{name:row},'landing_reset_stages':{name:0}}
+  good=D.landing_reset_check(table,{name},read=lambda ref,path:body)
+  self.assertEqual(good['verdict'],'PASS')
+  self.assertEqual(good['rows'][0]['qualification'],'UNHARDENED_RTL_ASSEMBLY')
+  self.assertEqual(D.landing_reset_check(table,{name},read=lambda ref,path:body+'//changed')['verdict'],'FAIL')
+  table['land_views']={name:{'ref':'fake'}}
+  with self.assertRaisesRegex(ValueError,'cannot alias'):D.landing_reset_check(table,{name},read=lambda ref,path:body)
  def test_production_zero_hop_forwarding_roots(self):
   text=self.emitted(zero=True)
   for i,root in enumerate(('ck_A','ck_A','ck_B','ck_B')):

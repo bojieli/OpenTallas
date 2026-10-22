@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.qwen.qbank-pin-edges.v1",
+  "status": "QUALIFIED_COMPONENT_SOURCE_PIN_EDGES_ONLY",
+  "qbank_sha256": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33",
+  "macro_sha256": "36d6c40d8ac6ea92330a01b30b92e08658b437c24d2f279065144ea5d3420f00",
+  "params": {
+    "QB_ALIGN": 1,
+    "QB_LOCAL32": 1
+  },
+  "slot_to_emit_edges": 4,
+  "last_dd_to_committed_edges": 4,
+  "source_revision": "1373ff861",
+  "unit": "oth-ubuntu-3948213-1792645977",
+  "positive_log_sha256": "430acb991bca505e4b3a81ab61450e73230d161c5375aa052406765d01df3fff",
+  "scope": "source-local qbank pin edges only; no GEN transport or service/codec/retirement age",
+  "binary_sha256": "3cefa51a1a86f7e06ff9ddfcd44b0a31e1e9871dd576bd39b787675aa6417368"
+}
