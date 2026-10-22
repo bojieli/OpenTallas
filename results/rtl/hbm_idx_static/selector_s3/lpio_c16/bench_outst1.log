@@ -1,0 +1,4 @@
+OUTST 1 MUT 0: LP_LOCKSTEP PASS LP_LOCKSTEP PASS MUT=0 compared=7839 cycles=901 warm=29 stimulus=idx s3 programme
+OUTST 1 MUT 9: LP_LOCKSTEP FAIL LP_LOCKSTEP FAIL MUT=9 mismatches=493 of 7839 stimulus=idx s3 programme
+OUTST 1 MUT 1: LP_LOCKSTEP FAIL LP_LOCKSTEP FAIL MUT=1 mismatches=1445 of 7839 stimulus=idx s3 programme
+BENCH_EXIT 0
