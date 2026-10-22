@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-event-adapter-2215
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-event-adapter-2215
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-event-adapter-2215
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-event-adapter-2215
+ot-run: ot-gold1       admits   279 GB (avail 492, growth 297, headroom 0, waiters 0/0 GB) load 207/112 running 58 disk 1565 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-event-adapter-2215
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-event-adapter-2215
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-3381820-1792646018 after 1 s
+PASS synthetic raw adapter; 5 causal refusals; no hardware replay or qualification
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-3381820-1792646018): exit 0

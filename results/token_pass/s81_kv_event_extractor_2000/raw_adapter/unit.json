@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "scope": "SYNTHETIC_ADAPTER_TEST_ONLY",
+  "normalizer_sha256": "c1d5d152428a824523fb40e1b03d879a8da984a6cf25c167f7b7a1989f420e7e",
+  "causal_refusals": [
+    {
+      "case": "missing_actual_GK_image",
+      "error": "actual compiler-generated GK runtime image is required"
+    },
+    {
+      "case": "missing_compiler_API_readset",
+      "error": "actual compiler API authority is absent or differs from the run readset"
+    },
+    {
+      "case": "wrong_native_encoder_readset",
+      "error": "native command encoder differs from the actual run readset"
+    },
+    {
+      "case": "changed_actual_binary",
+      "error": "actual simulator binary differs from the run identity"
+    },
+    {
+      "case": "missing_actual_finite_end",
+      "error": "actual finite end is absent or differs from the pinned source guard"
+    }
+  ],
+  "hardware_qualified": false,
+  "production_enabled": false
+}

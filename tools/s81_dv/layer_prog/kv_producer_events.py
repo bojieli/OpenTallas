@@ -235,6 +235,8 @@ def extract(header,events,source_root):
         context=header.get('context'),job_ids={owner:event['jid'] for (owner,job),event in dispatch.items()
             if event.get('command_kind')!='GK' and 'jid' in event},
         native_clock_domain=header['native_clock_domain'],source_sha256=header['source_sha256'],
+        native_commands=header.get('native_commands',[]),
+        evidence_identity={k:header.get(k) for k in ('raw_log_sha256','binary_sha256','runtime_image_sha256','normalization_issues','causal_control')},
         status='MEASURED_RELATIVE_COMPONENT',source_relative_only=True,physical_projection_applied=False,
         calendar_qualified=False,production_enabled=False,
         ranks_observed=sorted({e['rank'] for e in cap+carriage if 'rank' in e}),
