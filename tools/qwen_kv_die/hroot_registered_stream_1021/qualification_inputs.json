@@ -1,0 +1,20 @@
+{
+  "source_revision": "d106596d6",
+  "scope": "SPIPE6 legal engine stream and actual shell descriptor guard; architecture obligations P3 P4 P5 P6 subset only",
+  "files": {
+    "tools/qwen_kv_die/hroot_registered_stream_1021/qualification/kv_ingest_ref.py": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/qualification/check.py": "e0a33e1159f80f28710c7db939cade50778d31e130277d1269a28eff144d5233",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/qualification/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/qualification/generate_fixture.py": "69703ab25b29f159131bb935545e3c1278a0fef9ee434c8043cc2af65a1da056",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/qualification/qkd_host_native_engine.sv": "999bf9c27c1529cff7a48ccbd032a82be1d2e6088a2a6ad14b983eb13cc76529",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/qualification/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/qualification/tb_stream.sv": "dac9f0777e379ee0e37f5bbce8b2fb14b67ea55d7077905736b6a7c12549b290",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/qualification/run.sh": "138d92f91a79cc26855447af2776ca177a5ceac0f9d3f2791b74ab3c1110eae4",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/guard/ot_sram_1r1w2c_32x546_m1_p192_mir.v": "cf42d815879bb3635e92071f05ceb31a1004f64ebe1aa10e2a02c69288608841",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/guard/tb_guard.sv": "d9e3599cdae5cab16caa966f831b809958f1a9a9015bfa4a8f3be398afa674b8",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/guard/ot_host_reset_bank.sv": "308cfe7b2b856deb9ee10a287d6c23f193f154a9a4b9c772901e51d909e6ae76",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/guard/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/guard/qkd_hr_ingest_cdc_shell.sv": "b56ae297df9c1800d98775e9bd25c9bff14a29e0a5043d8c600de9cf5e127e1a",
+    "tools/qwen_kv_die/hroot_registered_stream_1021/guard/run.sh": "1277b19286b9ea75fe18955df3bb8a6dc89e9ddd57de2ebfc763f7667ccc80df"
+  }
+}
