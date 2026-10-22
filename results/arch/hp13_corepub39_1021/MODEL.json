@@ -31,5 +31,18 @@
   "TT_to_native_transport": "actual GEN required",
   "native_to_face_transport": "actual GEN required",
   "physical_root_relation": "explicit die clock construction required; no guessed phase/root merge",
-  "physical_area": "new39/78 publisher FFs; dead old cone may be removed, no unmeasured area credit"
+  "physical_area": "new39/78 publisher FFs; dead old cone may be removed, no unmeasured area credit",
+  "throughput": {
+    "required_tuples_per_core_cycle": 1,
+    "sustained_tuples_per_core_cycle": 1,
+    "input_bits_per_cycle": 39,
+    "output_bits_per_cycle": 39,
+    "measured_steady_state_checked_tuples_per_variant": 592,
+    "no_backpressure": true,
+    "scope": "bounded publisher component; full producer programme and die transport are separate"
+  },
+  "startup": {
+    "source_valid_reset": "retains actual GI source reset; publisher data registers have no new reset",
+    "required_warmup_after_source_valid_reset_core_edges": "publisher STAGES; no event is admitted before source reset and publisher warmup complete"
+  }
 }
