@@ -28,8 +28,9 @@ Checks (each names the offending nets / registers; thresholds in THRESHOLDS, cal
   wire_reach     a register whose combinational fan-in and fan-out reach FIXED terminals (placed IO pins, macro pins) that
                  no single point lies within reach_um (Manhattan) of, or a fixed-to-fixed combinational path longer than
                  reach_um: such a stage needs relay flops (504 um per stage at SS)
-  util_channel   (std + macro) / core outside util_min..util_max, and macro-to-macro channels narrower than channel_um
-                 that are not fully blocked for placement
+  util_channel   (std + macro) / core above util_max (enlarge the outline), and macro-to-macro channels narrower than
+                 channel_um that are not fully blocked for placement.  Below util_min is informational only (metric
+                 util_note "outline roomy; acceptable"): OWNER 10-19/10-21, target fill 40-60%, never shrink for area
 Mode: WARN (findings are logged to the job and the daemon log; the flow continues) until the validation set shows zero
 false positives, then REFUSE (the flow stops with "TEXTBOOK_LINT: ..." and the loop finishes the job FLOORPLAN_MARGIN).
 Per-check modes: REFUSE applies to the checks in refuse_checks only; the others stay WARN.
@@ -88,8 +89,9 @@ THRESHOLDS = {
     "reach_um": 500.0,             # REFUSE (504 um per stage at SS)
     "reach_min_count": 1,
     # util / channels: WARN only (closed blocks at 6-58% util and 0.07 / 17 um channels)
-    "util_min": 0.45,
-    "util_max": 0.65,              # std-cell density over the placeable area (core - macros - halos) when macros exist
+    "util_min": 0.40,              # below: informational "outline roomy; acceptable" (OWNER 10-21: never shrink for area)
+    "util_max": 0.60,              # above: WARN, enlarge the outline; std-cell density over the placeable area (core -
+                                   # macros - halos) when macros exist
     "fill_max": 0.90,              # total (std + macro) / core sanity bound, macros only
     "macro_halo_um": 2.16,
     "channel_um": 20.0,
@@ -245,6 +247,7 @@ CLOCK_WAIVER_MAX_PS = 2.0     # HANDOFF 0ga 2026-10-18: largest recorded per-pai
 # "scope" and its recorded tt_ps/ff_ps stay within the cap.  Never a general relaxation.
 SCOPED_CLOCK_WAIVER_CAPS = {
     "qkd_pv_fin_s32": {"tt": 88.4, "ff": 84.6},     # KV PVFIN R15c, 38k-sink single root, COORD 10-20 19:25
+    "qfd_native59_svc": {"tt": 84.6},               # Qwen N59 svc4 (TT 84.6 / FF 77.5), 21,950-sink root, COORD 10-20 17:33
 }
 
 
@@ -1385,10 +1388,12 @@ def util_findings(dump, T, F, M):
         if util > T["fill_max"]:
             bad.append(f"total fill {util:.1%} > {T['fill_max']:.0%} (std {std:.0f} + macro {mac:.0f} um2 in {core_area:.0f} um2): "
                        "grow the outline")
-    elif util < T["util_min"] or util > T["util_max"]:
-        bad.append(f"utilisation {util:.1%} outside {T['util_min']:.0%}-{T['util_max']:.0%} (std {std:.0f} + macro "
-                   f"{mac:.0f} um2 in {core_area:.0f} um2): " + ("shrink the outline (long wires / sparse placement)"
-                                                                if util < T["util_min"] else "grow the outline"))
+    elif util > T["util_max"]:
+        bad.append(f"utilisation {util:.1%} > {T['util_max']:.0%} (std {std:.0f} + macro {mac:.0f} um2 in "
+                   f"{core_area:.0f} um2; target {T['util_min']:.0%}-{T['util_max']:.0%}): enlarge the outline")
+    elif util < T["util_min"]:
+        # OWNER 10-19/10-21: never squeeze a tile for area; a roomy outline is acceptable (informational, no finding)
+        M["util_note"] = (f"utilisation {util:.1%} < {T['util_min']:.0%}: outline roomy; acceptable (do not shrink)")
     macros = dump.get("macros", [])
     if len(macros) > 1:
         try:

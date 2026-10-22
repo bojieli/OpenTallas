@@ -73,3 +73,13 @@ def test_scoped_cap_exceeded():
 def test_unscoped_large_excess_still_fails():
     w = {k: v for k, v in PV.items() if k != "scope"}
     assert run_pv(w)["severity"] == "FAIL"
+
+
+# ROOT takeover: svc4 cap stays tied to the exact gated block and measured TT limit.
+def test_native59_scoped_cap_and_causal_refusals():
+    w = dict(PV, scope="qfd_native59_svc", tt_ps=84.6, ff_ps=77.5)
+    assert run_pv(w, block="qfd_native59_svc", tt=84.6, ff=77.5)["severity"] == "WARN"
+    assert run_pv(w, block="qfd_native59_other", tt=84.6, ff=77.5)["severity"] == "FAIL"
+    assert run_pv(dict(w, tt_ps=84.7), block="qfd_native59_svc", tt=84.7, ff=77.5)["severity"] == "FAIL"
+    assert run_pv(dict(w, ff_ps=82.1), block="qfd_native59_svc", tt=84.6, ff=82.1)["severity"] == "FAIL"
+    assert run_pv({k: v for k, v in w.items() if k != "scope"}, block="qfd_native59_svc", tt=84.6, ff=77.5)["severity"] == "FAIL"
