@@ -387,8 +387,15 @@ module dsdv_svc_rs_c #(
             if (n > 3'd1) r_f <= 1'b1;                                      // two words in one cycle: a schedule fault
             rm_v <= n != 0;
         end
+    // PVSO source fence: each tile carries proof of its OWN real SE denominator
+    // in otherwise-unused P.V header bits. This is not compiler-asserted proof.
+    wire[512:0]a_pv_stamped;
+    dsdv_pv_den_stamp #(.ENABLE(PV_IDENTITY)) u_den_stamp(.clk(ck),.rst_n(rn),
+      .cfg_v(zt_cfg_v),.cfg_owner(zt_owner),.cfg_se_jid(zt_se),
+      .op_st(sm_st),.op_kind(sm_kind),.op_jid(sm_jid),.den(o_den),.result_jid(o_rjid),.error(o_fu||o_fo),
+      .pv_d(a_pv_d),.stamped(a_pv_stamped));
     always @(posedge ck) begin
-        rm_d <= gw_v ? gw_d : pp_v ? pp_d : a_pv_d;
+        rm_d <= gw_v ? gw_d : pp_v ? pp_d : a_pv_stamped;
         for (int i = 0; i < 4; i++) if (rfi[i][0] && chr[i]) rm_d <= rfi[i][RW-1:1];
     end
     generate for (f = 0; f < 4; f = f + 1) begin : g_ro
@@ -575,4 +582,30 @@ module dsdv_svc_rs_up #(parameter integer UW = 16, parameter integer UPMUT = 0) 
             else begin o0 <= (par == 3'(f + 1)) ? uc : '0; o1 <= o0; end
         assign up_o[UW*f +: UW] = o1;
     end endgenerate
+endmodule
+
+// The same source-owned SE fence instantiated on every real service tile.
+// Observe the current SE's denominator-low phase before accepting its completion;
+// a stale high denominator with a reused jid cannot authorize the next token.
+module dsdv_pv_den_stamp #(parameter integer ENABLE=0)(
+ input wire clk,rst_n,cfg_v,input wire[19:0]cfg_owner,input wire[7:0]cfg_se_jid,
+ input wire op_st,input wire[3:0]op_kind,input wire[7:0]op_jid,
+ input wire den,input wire[7:0]result_jid,input wire error,
+ input wire[512:0]pv_d,output wire[512:0]stamped
+);
+ generate if(ENABLE==0)begin:g_disabled assign stamped=pv_d;end else begin:g_enabled
+ reg seen,live,saw_low;reg[19:0]owner;reg[7:0]jid;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin seen<=0;live<=0;saw_low<=0;owner<=0;jid<=0;end
+  else if(cfg_v)begin seen<=0;live<=0;saw_low<=0;owner<=cfg_owner;jid<=cfg_se_jid;end
+  else if(op_st)begin
+   if(op_kind==4'd4)begin seen<=0;live<=op_jid==jid;saw_low<=0;end
+   else live<=0;
+  end else if(live)begin
+   if(!den)saw_low<=1;
+   if(den && saw_low && result_jid==jid && !error)seen<=1;
+  end
+ end
+ assign stamped=pv_d[512]?((pv_d & ~(513'h1ff<<120)) | (513'({jid,seen && owner==pv_d[91:72]})<<120)):pv_d;
+ end endgenerate
 endmodule

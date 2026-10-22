@@ -383,7 +383,7 @@ def pv_words(job, s, entry=None):
             d = (1 << 512) | (b << 64)
             if job.owner is not None:
                 # Opt-in identity stamped by the actual ATT producer at GO.
-                d |= (job.owner << 72) | (ST << 92) | (t << 94) | (1 << 98) | (job.pos << 99)
+                d |= (job.owner << 72) | (((t // 4) if job.allq else ST) << 92) | (t << 94) | (1 << 98) | (job.pos << 99)
             m = hm
         else:
             d = 0

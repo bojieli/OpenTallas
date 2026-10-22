@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.s81.rtlgap.source_progress.v1",
+  "SUKV_L2": {
+    "source_ref": "500cc5799",
+    "unit": "ot-epyc7/3774524-1792639495",
+    "status": "PASS",
+    "scope": "actual pool FP32 and BF16 outputs, CN/IK events and nativeVMpair readback; not die bound",
+    "finish_edges": {
+      "GK3": 1026,
+      "GK0": 1026,
+      "CP": 391,
+      "CN": 1219,
+      "IK": 1059
+    }
+  },
+  "program_and_ingress": {
+    "unit": "ot-gold1/617913-1792639920",
+    "status": "PASS",
+    "program": "existingq CFG1 PARAM5 LAUNCH1, default pass, wrongtag/wrongposition caught",
+    "ingress": "two2 transactions each8192values/534words, actual-header denominator mode, missingproof/wrongSEjid caught"
+  },
+  "den_stamp": {
+    "unit": "ot-gold1/650282-1792640162",
+    "status": "PASS",
+    "scope": "actual source helper SE low-to-high, owner,jid,reusedjid,reset,error,default0"
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv": "43842c7dd3766072479b0604ed9498a1003d8d8b4a02f51525371b906a2acffa",
+    "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_program.sv": "3ae17e7466551363b56c115ef2b4abd118589a16ebc7c002d0ca9c0d363eb888",
+    "rtl/dsrom_sys/s81_dv/pv_so/dsdv_pv_so_ingress.sv": "dd9639558eb3eac17d629409886b1c26b48541243778526318de2b688b992991",
+    "tools/s81_dv/layer_prog/pv_so_calendar.py": "2e6de6d3de996efb0b308d1a0de029a92649bb043f82f2b5071a9d4966062fb6",
+    "tools/s81_dv/layer_prog/kv_bank_contract.py": "cc7016c3b4212438befe2e9413c0189b7b9d6513258b19737397dc6bdd34e49f"
+  },
+  "die_binding_qualified": false,
+  "full_layer_qualified": false,
+  "pending": [
+    "ALLQ actual numerical run",
+    "composed hierarchy",
+    "current HARD_RQ1 positive run",
+    "pool mapped native census",
+    "actual route ages and source calendar integration"
+  ]
+}

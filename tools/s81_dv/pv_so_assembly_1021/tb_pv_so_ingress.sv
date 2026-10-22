@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
-module tb_pv_so_ingress;
+module tb_pv_so_ingress #(parameter integer HEADER_DEN=0);
  reg clk=0;always #0.5 clk=~clk;reg rst_n=0;
  reg cv=0,pv=0,pp=0,dv=0,launch=0;reg[19:0]owner=20'h92345,po,do_;reg[7:0]se=8'h31,so=8'h67,dj;
  reg[1:0]quarter;reg[512:0]pd;reg[511:0]par;reg[2:0]pr;reg[15:0]dm;
  wire qv,ready,done,fault;wire[511:0]qd;wire[11:0]fc;
- dsdv_pv_so_ingress #(.ENABLE(1)) dut(.clk(clk),.rst_n(rst_n),.cfg_v(cv),.cfg_owner(owner),.cfg_position(21'd777),.cfg_se_jid(se),.cfg_so_jid(so),
+ dsdv_pv_so_ingress #(.ENABLE(1),.HEADER_DEN(HEADER_DEN)) dut(.clk(clk),.rst_n(rst_n),.cfg_v(cv),.cfg_owner(owner),.cfg_position(21'd777),.cfg_se_jid(se),.cfg_so_jid(so),
  .pv_v(pv),.pv_quarter(quarter),.pv_d(pd),.param_v(pp),.param_row(pr),.param_owner(po),.param_position((mut==6)?21'd778:21'd777),.param_d(par),
  .den_v(dv),.den_mask(dm),.den_owner(do_),.den_jid(dj),.launch(launch),.q_v(qv),.q_d(qd),.ready(ready),.done(done),.fault(fault),.fault_code(fc));
  function automatic[31:0]val(input integer h,d);val=32'h3f000000^(32'(h)<<17)^32'(d*101);endfunction
@@ -36,7 +36,8 @@ module tb_pv_so_ingress;
  task fill;
  integer t,b,w,l;begin
   for(t=0;t<16;t=t+1)for(b=0;b<8;b=b+1)begin
-   tick();pv=1;quarter=2'(t/4);pd=0;pd[512]=1;pd[98]=1;pd[97:94]=4'(t);pd[93:92]=2'(t/4);pd[91:72]=owner;pd[119:99]=777;pd[71:64]=8'(b);
+   tick();pv=1;quarter=2'(t/4);pd=0;pd[512]=1;pd[98]=1;pd[97:94]=4'(t);pd[93:92]=2'(t/4);pd[91:72]=owner;pd[119:99]=777;pd[71:64]=8'(b);pd[120]=1;pd[128:121]=(HEADER_DEN!=0 && mut==3)?se+1:se;
+   if(HEADER_DEN!=0 && mut==8 && t==9)pd[120]=0;
    if(mut==1 && t==12 && b==0)pd[91:72]=owner^20'h40000;
    if(mut==5 && t==12 && b==0)pd[119:99]=778;
    if(mut==7 && t==12 && b==0)pd[0]=1;

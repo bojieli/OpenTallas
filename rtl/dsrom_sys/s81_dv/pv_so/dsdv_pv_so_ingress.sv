@@ -3,7 +3,7 @@
 // All-quarter FP32 transpose and SMJ9 serializer. No arithmetic or rescheduling.
 // ENABLE=0 removes the candidate. ENABLE=1 requires source-stamped PV_IDENTITY
 // headers from actual dsdv_svc_att producers and a statically reserved q window.
-module dsdv_pv_so_ingress #(parameter integer ENABLE=0)(
+module dsdv_pv_so_ingress #(parameter integer ENABLE=0,HEADER_DEN=0)(
  input wire clk,rst_n,
  input wire cfg_v,input wire[19:0]cfg_owner,input wire[20:0]cfg_position,input wire[7:0]cfg_se_jid,cfg_so_jid,
  input wire pv_v,input wire[1:0]pv_quarter,input wire[512:0]pv_d,
@@ -83,12 +83,18 @@ module dsdv_pv_so_ingress #(parameter integer ENABLE=0)(
     else if(header)begin
      if(|pd[63:0])fc[8]<=1;
      if(!header_ok)fc[2]<=1;
-     else begin headers[{ht,hc}]<=1;tile[pq]<=ht;col[pq]<=hc;wi[pq]<=1;end
+     else begin
+      headers[{ht,hc}]<=1;tile[pq]<=ht;col[pq]<=hc;wi[pq]<=1;
+      if(HEADER_DEN!=0)begin
+       if(!pd[120] || pd[128:121]!=se_jid)fc[6]<=1;
+       else den[ht]<=1;
+      end
+     end
     end else if(!data_ok)fc[3]<=1;
     else begin wi[pq]<=wi[pq]==4?3'd0:wi[pq]+1'b1;if(ndata==512)fc[4]<=1;else ndata<=ndata+1'b1;end
    end
    if(pp)begin if(!active || emitting || po!=owner || ppos!=position || pr>=5 || params[pr])fc[5]<=1;else params[pr]<=1;end
-   if(dv)begin if(!active || emitting || do_!=owner || dj!=se_jid || |(den&dm))fc[6]<=1;else den<=den|dm;end
+   if(dv && HEADER_DEN==0)begin if(!active || emitting || do_!=owner || dj!=se_jid || |(den&dm))fc[6]<=1;else den<=den|dm;end
    if(lv)begin if(!ready || pv || pp || dv)fc[7]<=1;else begin emitting<=1;phase<=0;pi<=0;head<=0;row<=0;end end
    if(emitting)case(phase)
     0:begin phase<=1;pi<=0;end

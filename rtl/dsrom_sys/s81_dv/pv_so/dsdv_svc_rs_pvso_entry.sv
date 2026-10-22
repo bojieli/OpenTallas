@@ -13,12 +13,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
     output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,
     input wire [561:0] local_pv_landed,peer_pv,
-    input wire so_cfg_v,input wire[15:0]so_local_first,so_peer_first,
-    input wire[19:0]so_owner,input wire[20:0]so_position,input wire[7:0]so_se_jid,so_jid,
-    input wire so_param_v,input wire[2:0]so_param_row,input wire[19:0]so_param_owner,
-    input wire[20:0]so_param_position,input wire[511:0]so_param_d,
-    input wire so_den_v,input wire[15:0]so_den_mask,input wire[19:0]so_den_owner,input wire[7:0]so_den_jid,
-    input wire so_launch,output wire so_ready,so_done,output wire[11:0]so_fault_code
+    output wire so_ready,so_done,output wire[11:0]so_fault_code
 
 `ifdef RS_OBS
     , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
@@ -29,13 +24,21 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
 `ifndef RS_OBS
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
+    wire so_cfg_v,so_param_v,so_launch,program_fault;
+    wire[19:0]so_owner,so_param_owner;wire[20:0]so_position,so_param_position;
+    wire[7:0]so_se_jid,so_jid;wire[15:0]so_local_first,so_peer_first;
+    wire[2:0]so_param_row;wire[511:0]so_param_d;wire[514:0]q_filtered;
+    dsdv_pv_so_program #(.ENABLE(PVSO_ENABLE)) u_program(.clk(ck),.rst_n(rst),.q(q),.q_pass(q_filtered),
+      .cfg_v(so_cfg_v),.owner(so_owner),.position(so_position),.se_jid(so_se_jid),.so_jid(so_jid),
+      .local_first(so_local_first),.peer_first(so_peer_first),.param_v(so_param_v),.param_row(so_param_row),
+      .param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),.launch(so_launch),.fault(program_fault));
     wire generated_v,ingress_fault,join_fault,entry_fault;
     wire[511:0]generated_d;wire[514:0]q_entry;
     wire joined_v;wire[1:0]joined_quarter;wire[512:0]joined_d;
     reg collision;
-    always @(posedge ck or negedge rst)if(!rst)collision<=0;else if(generated_v && q[0])collision<=1;
-    assign q_entry=generated_v?{2'd0,generated_d,1'b1}:q;
-    assign fault=entry_fault|ingress_fault|join_fault|collision;
+    always @(posedge ck or negedge rst)if(!rst)collision<=0;else if(generated_v && q_filtered[0])collision<=1;
+    assign q_entry=generated_v?{2'd0,generated_d,1'b1}:q_filtered;
+    assign fault=entry_fault|ingress_fault|join_fault|collision|program_fault;
     generate if(PVSO_ENABLE!=0)begin:g_join
       dsdv_pv_half_join u_join(.clk(ck),.rst_n(rst),.cfg_v(so_cfg_v),
        .local_first(so_local_first),.peer_first(so_peer_first),.local_pv(local_pv_landed),.peer_pv(peer_pv),
@@ -43,11 +46,11 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     end else begin:g_nojoin
       assign joined_v=0;assign joined_quarter=0;assign joined_d=0;assign join_fault=0;
     end endgenerate
-    dsdv_pv_so_ingress #(.ENABLE(PVSO_ENABLE)) u_ingress(.clk(ck),.rst_n(rst),
+    dsdv_pv_so_ingress #(.ENABLE(PVSO_ENABLE),.HEADER_DEN(1)) u_ingress(.clk(ck),.rst_n(rst),
       .cfg_v(so_cfg_v),.cfg_owner(so_owner),.cfg_position(so_position),.cfg_se_jid(so_se_jid),.cfg_so_jid(so_jid),
       .pv_v(joined_v),.pv_quarter(joined_quarter),.pv_d(joined_d),
       .param_v(so_param_v),.param_row(so_param_row),.param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),
-      .den_v(so_den_v),.den_mask(so_den_mask),.den_owner(so_den_owner),.den_jid(so_den_jid),.launch(so_launch),
+      .den_v(1'b0),.den_mask(16'd0),.den_owner(20'd0),.den_jid(8'd0),.launch(so_launch),
       .q_v(generated_v),.q_d(generated_d),.ready(so_ready),.done(so_done),.fault(ingress_fault),.fault_code(so_fault_code));
     dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PVSO_ENABLE!=0?1:PV_IDENTITY)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q_entry), .hw(hw), .hc(hc), .fault(entry_fault), .st_rg(st_rg), .dn_i(dn_i),
