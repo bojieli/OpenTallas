@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "s81sl_vp9",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T11:45:00-07:00",
+ "gate_commit": "b4a99198e5dd6380a7f6656b7fe6df619cef2962",
+ "geometry_sha256": "bdd59bb2c40f0a0cc439af4c5f4942d51a145a23f8210b826241af93291c87aa",
+ "checklist": {
+  "lattice": "4x4 hcpost lane hard macros on a regular lattice + 2 SRAMs centred N; uniform channels",
+  "std_cell_band": "logic in channels, density low (<0.5), no hotspots",
+  "pin_spread": "N/W/E faces ~98% span, 2,549 pins",
+  "clock_entry": "N-centre clock, 11.2k sinks TT/FF spread 15.0/26.9 ps (structural fix for vp8_fb spread)",
+  "shape": "734 x 864 um, GRT overflow 0, reg->reg +3.1, reg->macro +12.2"
+ },
+ "notes": "COORD 10-22 11:45 APPROVED (u_vp MAIN)"
+}
