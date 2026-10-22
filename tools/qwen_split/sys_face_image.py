@@ -124,20 +124,36 @@ def build(events, program, d2d_image=None):
     tr = [c for c, k, a in events.get('T', []) if k in (0, 5) and a & 128]
     if tr and tr[0] != GO_OFS:
         raise ValueError(f'T token-run flag at cycle {tr[0]}, the RTL D2D sequencer starts at GO_OFS {GO_OFS}')
+    dual_l = 'L0' in events or 'L1' in events
+    if dual_l and ('L0' not in events or 'L1' not in events or 'L' in events):
+        raise ValueError('dual L image requires explicit L0 and L1 patterns, with no ambiguous L alias')
     cal = {n: compile_cal(n, events.get(n, [])) for n in ('T', 'L', 'E')}
+    l_contexts = None
+    if dual_l:
+        l0, l1 = compile_cal('L', events['L0']), compile_cal('L', events['L1'])
+        if not l0 or not l1 or len(l0) + len(l1) > NE['L']:
+            raise ValueError('dual L patterns exceed the actual shared NE32 store or contain an empty programme')
+        cal['L'] = l0 + l1
+        l_contexts = dict(mode='STAGE1_L0_STAGE2_TO_36_L1', paired_to_source={'1': 0, '0': 1},
+                          L0_entries=len(l0), L1_entries=len(l1), segment1_base=len(l0))
     for n, img in cal.items():
         for i, v in enumerate(img):
             recs.append((TARGET[n], i, v))
+    if dual_l:
+        recs.append((TARGET['L'], 0x80, l_contexts['segment1_base']))
     for k, (t, a, d) in enumerate(recs):
         rows[BOOT_BASE + k] = (t << 68) | (a << 60) | d
         writes.append(dict(target=t, addr=a, data=d))
     rows[BOOT_BASE + len(recs)] = 15 << 68
     if BOOT_BASE + len(recs) >= 4096:
         raise ValueError('boot records overflow the ROM')
-    return rows, dict(schema='opentallas.qwen.sys-face-image.v1', boot_records=len(recs), cfg_writes=writes,
+    record = dict(schema='opentallas.qwen.sys-face-image.v1', boot_records=len(recs), cfg_writes=writes,
                       calendars={n: [f'{v:08x}' for v in img] for n, img in cal.items()},
                       program_digest=f'{image_digest(program):016x}', program_footer=f'{program[PW - 1]:016x}',
                       cal_out_edges=CAL_OUT_EDGES)
+    if dual_l:
+        record['l_contexts'] = l_contexts
+    return rows, record
 
 
 def main():
