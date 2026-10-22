@@ -4644,110 +4644,127 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             w, h = relay_frame(pl['bits'], pl['cl'], pl['bid'])
             x1, y1 = pl['P1']
             cc = corr_of(x1 - v.CORR / 2)
-            got = []
-            # the pads sit on the segment from the sink back to the bus's last relay (or its source): pad j at
-            # (j + 1) / (npad + 1) of the way, each at the nearest free spot (every hop ~ segment / (npad + 1))
-            fq = pl['frames'][-1] if pl['frames'] else None
-            Q = (fq[0] + fq[2] / 2, fq[1] + fq[3] / 2) if fq else pl['P0']
-            px, py = x1 - v.CORR / 2, y1
-            leg_c = None
-            # Q-DIEPLAN3 2026-10-16 (q2o2 GEN 'tree pads: no free spot for b2_status_f1 pad 17'): the corridor rule
-            # below is for sinks INSIDE a tile field (qfd_tile_nk area tree pins). A sink in the centre (b2 word
-            # status, 12-bus equal-age group, W of tt_ctlm) was snapped to the nearest ARRAY corridor ~4 mm away and
-            # its pads walked into the full array edge. A centre sink's pads take the nearest free centre site to the
-            # walk point (never over a tile body), so each pad hop stays a fraction of the sink -> last-relay segment.
-            sink_in_field = in_field(x1, y1)
-            cur_tight[0] = cur_gapok[0] = False
-            for j in range(npad):
-                # a walk from the sink toward Q: each pad nearest the point 1 / (pads left + 1) of the way from the
-                # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
-                fr = 1.0 / (npad - j + 1)
-                qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
-                sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None and bid not in _lc_bids else None
-                if sp is None and _xch and bid in _ew_bids and bid not in _lc_bids:
-                    _xb = _xchan_spot(qx, qy, w + v.SHAVE, h + v.SHAVE, Q, (x1, y1))
-                    sp = _xb[1] if _xb else None
-                    if _os.environ.get('OT_SPLIT_FWD_LAND_EW_TRACE'):
-                        print(f'EWPAD {bid} b{pl["bits"]} f{w:.1f}x{h:.1f} Q{Q[0]:.0f},{Q[1]:.0f} S{x1:.0f},{y1:.0f} sp{sp}', flush=True)
-                if sp is None and bid in _lc_bids:
-                    # Q-DIE12 LAND_CROSS: the landing station takes the free site that minimises its LONGER hop
-                    # (source -> station, station -> sink), not the site nearest the midpoint (first try: 17 hops > 405)
-                    best_ = None
-                    W_, H_ = w + v.SHAVE, h + v.SHAVE
-                    for ring in range(0, int(_os.environ.get('OT_SPLIT_LAND_CROSS_RINGS', '150'))):
-                        st = ring * 4 * v.GY
-                        if best_ is not None and st > best_[0]:
-                            break
-                        cands = [(0, 0)] if ring == 0 else \
-                            [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
-                            [(dx, dy) for dy in (-st, st) for dx in [i * 4 * v.GY for i in range(-ring + 1, ring)]]
-                        for dx, dy in cands:
-                            x0, y0 = v.dn(qx - W_ / 2 + dx, v.GX), v.dn(qy - H_ / 2 + dy, v.GY)
-                            cx_, cy_ = x0 + W_ / 2, y0 + H_ / 2
-                            sc_ = max(abs(cx_ - Q[0]) + abs(cy_ - Q[1]), abs(cx_ - x1) + abs(cy_ - y1))
-                            if best_ is not None and sc_ >= best_[0]:
-                                continue
-                            if in_field(cx_, cy_) and corr_of(cx_) is None and not contains_frame(legal_row_gaps, y0, H_) \
-                                    and not _in_xchan(x0, y0, W_, H_):
-                                continue
-                            if y0 >= g['y0'] and y0 + H_ <= die_top and free((x0, y0, x0 + W_, y0 + H_)):
-                                best_ = (sc_, (x0, y0))
-                    # QW-G5REACH 10-20: the ring grid above steps 4 * GY from the walk point, so in a 129.6-um slice channel it
-                    # only ever reached ONE 64.8-um station column (dv2f20g5r: every W0 landing at x 14894, stacked 1.3 mm,
-                    # 1-/32-b ar/rt stations 500-700 um off their pins); the channel scan adds the edge-aligned columns
-                    if _xch and bid in _ew_bids:
-                        _xb = _xchan_spot(qx, qy, W_, H_, Q, (x1, y1))
-                        # edge-aligned columns win whenever their longer hop stays well inside reach: a station centred in the
-                        # channel (ring grid) blocks BOTH columns for every later landing at that height
-                        if _xb is not None and (best_ is None or _xb[0] <= max(best_[0], 0.75 * RELAY_REACH_UM)):
-                            best_ = _xb
-                    sp = best_[1] if best_ else None
-                    if _os.environ.get('OT_SPLIT_FWD_LAND_EW_TRACE') and bid in _ew_bids:
-                        print(f'EWLC {bid} {pl["bits"]} {W_:.1f} {H_:.1f} {Q[0]:.0f} {Q[1]:.0f} {x1:.0f} {y1:.0f} '
-                              f'{sp} {best_[0] if best_ else None}', flush=True)
-                if sp is None and cc is None and not sink_in_field:
-                    sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, None)
-                if sp is None and cc is None and sink_in_field:
-                    # contract v2: qfd_tile_nk's tree pins are area pins inside the body (x 10-223 um), so the sink
-                    # is in no corridor: take the nearer of the two corridors flanking the walk point (y search
-                    # +-400 um), never the row gap ~650 um away (it1: 1,226 hops over reach)
-                    # one corridor per leg (v2g audit: alternating between the two flanking corridors zigzagged the
-                    # chain, 68 hops of 700-830 um): the first pad picks it, the rest walk along it
-                    best = None
-                    for c_ in ([leg_c] if leg_c is not None else
-                               sorted(range(COLS), key=lambda c: abs(cx_list[c] - qx))[:2]):
-                        s_ = place(cx_list[c_], qy, w + v.SHAVE, h + v.SHAVE, c_, 400.0)
-                        if s_ is not None:
-                            d_ = abs(s_[0] + w / 2 - qx) + abs(s_[1] + h / 2 - qy)
-                            if best is None or d_ < best[0]:
-                                best = (d_, s_, c_)
-                    sp = best[1] if best else None
-                    if best:
-                        leg_c = best[2]
-                if sp is None:
-                    sp = pad_spot(qx, qy, w + v.SHAVE, h + v.SHAVE)
-                if sp is None:
-                    if _os.environ.get('OT_RELAY_SITE_FAILURE'):
-                        # immutable local failure receipt (what occupies the walk point's neighbourhood), never a relaxed gate
-                        near = set()
-                        for gx_ in range(int((qx - 1000) // BK), int((qx + 1000) // BK) + 1):
-                            for gy_ in range(int((qy - 1000) // BK), int((qy + 1000) // BK) + 1):
-                                near.update(grid.get((gx_, gy_), ()))
-                        named = {(it.x, it.y, it.x + it.w, it.y + it.h): it.name for it in m['insts']}
-                        for pn_, pl_ in plans.items():
-                            for fk_, f_ in enumerate(pl_['frames']):
-                                named[(f_[0], f_[1], f_[0] + f_[2] + v.SHAVE, f_[1] + f_[3] + v.SHAVE)] = f"{pl_.get('bid', pn_)}:{fk_}"
-                        json.dump(dict(kind='tree_pad', bid=bid, npad=npad, pad=j, sink=[x1, y1], sink_in_field=sink_in_field,
-                                       corridor=cc, leg_corridor=leg_c, walk=[qx, qy], Q=list(Q), frame=[w, h], got=got,
-                                       nearby=[dict(rect=r_, owner=named.get(r_, 'pad')) for r_ in sorted(near)]),
-                                  open(_os.environ['OT_RELAY_SITE_FAILURE'], 'w'), indent=1)
-                    raise ValueError(f'tree pads: no free spot for {bid} pad {j}')
-                add_rect((sp[0], sp[1], sp[0] + w + v.SHAVE, sp[1] + h + v.SHAVE))
-                got.append((sp[0], sp[1], w, h))
-                px, py = sp[0] + w / 2, sp[1] + h / 2
-            got.reverse()          # chain order: the last pad placed (farthest along the walk) first, the sink's last
+            # SQC-QDIE3 10-22 (dv2f21g5r34cxc: flt_t_embed_prov_g0 landing station 408.2 um, the only net over reach):
+            # a zero-stage fault-edge landing (observation only) whose station has no free site within reach of both
+            # pins gets one more registered station on the same walk (<= 2 extra; +1 cycle on a fault-OR path) instead
+            # of a stretched hop.  OT_RELAY_FAULT_LAND_EXTRA=0 restores the single station.
+            _np = npad
+            _xtra = _os.environ.get('OT_RELAY_FAULT_LAND_EXTRA', '1') == '1' and str(bid).startswith('flt_') and bid in _lc_bids
+            for _try in range(3 if _xtra else 1):
+                got = []
+                # the pads sit on the segment from the sink back to the bus's last relay (or its source): pad j at
+                # (j + 1) / (npad + 1) of the way, each at the nearest free spot (every hop ~ segment / (npad + 1))
+                fq = pl['frames'][-1] if pl['frames'] else None
+                Q = (fq[0] + fq[2] / 2, fq[1] + fq[3] / 2) if fq else pl['P0']
+                px, py = x1 - v.CORR / 2, y1
+                leg_c = None
+                # Q-DIEPLAN3 2026-10-16 (q2o2 GEN 'tree pads: no free spot for b2_status_f1 pad 17'): the corridor rule
+                # below is for sinks INSIDE a tile field (qfd_tile_nk area tree pins). A sink in the centre (b2 word
+                # status, 12-bus equal-age group, W of tt_ctlm) was snapped to the nearest ARRAY corridor ~4 mm away and
+                # its pads walked into the full array edge. A centre sink's pads take the nearest free centre site to the
+                # walk point (never over a tile body), so each pad hop stays a fraction of the sink -> last-relay segment.
+                sink_in_field = in_field(x1, y1)
+                cur_tight[0] = cur_gapok[0] = False
+                for j in range(_np):
+                    # a walk from the sink toward Q: each pad nearest the point 1 / (pads left + 1) of the way from the
+                    # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
+                    fr = 1.0 / (_np - j + 1)
+                    qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
+                    sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None and bid not in _lc_bids else None
+                    if sp is None and _xch and bid in _ew_bids and bid not in _lc_bids:
+                        _xb = _xchan_spot(qx, qy, w + v.SHAVE, h + v.SHAVE, Q, (x1, y1))
+                        sp = _xb[1] if _xb else None
+                        if _os.environ.get('OT_SPLIT_FWD_LAND_EW_TRACE'):
+                            print(f'EWPAD {bid} b{pl["bits"]} f{w:.1f}x{h:.1f} Q{Q[0]:.0f},{Q[1]:.0f} S{x1:.0f},{y1:.0f} sp{sp}', flush=True)
+                    if sp is None and bid in _lc_bids:
+                        # Q-DIE12 LAND_CROSS: the landing station takes the free site that minimises its LONGER hop
+                        # (source -> station, station -> sink), not the site nearest the midpoint (first try: 17 hops > 405)
+                        best_ = None
+                        W_, H_ = w + v.SHAVE, h + v.SHAVE
+                        for ring in range(0, int(_os.environ.get('OT_SPLIT_LAND_CROSS_RINGS', '150'))):
+                            st = ring * 4 * v.GY
+                            if best_ is not None and st > best_[0]:
+                                break
+                            cands = [(0, 0)] if ring == 0 else \
+                                [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
+                                [(dx, dy) for dy in (-st, st) for dx in [i * 4 * v.GY for i in range(-ring + 1, ring)]]
+                            for dx, dy in cands:
+                                x0, y0 = v.dn(qx - W_ / 2 + dx, v.GX), v.dn(qy - H_ / 2 + dy, v.GY)
+                                cx_, cy_ = x0 + W_ / 2, y0 + H_ / 2
+                                sc_ = max(abs(cx_ - Q[0]) + abs(cy_ - Q[1]), abs(cx_ - x1) + abs(cy_ - y1)) if _np == 1 else \
+                                    max(abs(cx_ - px) + abs(cy_ - py), (abs(cx_ - Q[0]) + abs(cy_ - Q[1])) / (_np - j))
+                                if best_ is not None and sc_ >= best_[0]:
+                                    continue
+                                if in_field(cx_, cy_) and corr_of(cx_) is None and not contains_frame(legal_row_gaps, y0, H_) \
+                                        and not _in_xchan(x0, y0, W_, H_):
+                                    continue
+                                if y0 >= g['y0'] and y0 + H_ <= die_top and free((x0, y0, x0 + W_, y0 + H_)):
+                                    best_ = (sc_, (x0, y0))
+                        # QW-G5REACH 10-20: the ring grid above steps 4 * GY from the walk point, so in a 129.6-um slice channel it
+                        # only ever reached ONE 64.8-um station column (dv2f20g5r: every W0 landing at x 14894, stacked 1.3 mm,
+                        # 1-/32-b ar/rt stations 500-700 um off their pins); the channel scan adds the edge-aligned columns
+                        if _xch and bid in _ew_bids:
+                            _xb = _xchan_spot(qx, qy, W_, H_, Q, (x1, y1))
+                            # edge-aligned columns win whenever their longer hop stays well inside reach: a station centred in the
+                            # channel (ring grid) blocks BOTH columns for every later landing at that height
+                            if _xb is not None and (best_ is None or _xb[0] <= max(best_[0], 0.75 * RELAY_REACH_UM)):
+                                best_ = _xb
+                        sp = best_[1] if best_ else None
+                        if _os.environ.get('OT_SPLIT_FWD_LAND_EW_TRACE') and bid in _ew_bids:
+                            print(f'EWLC {bid} {pl["bits"]} {W_:.1f} {H_:.1f} {Q[0]:.0f} {Q[1]:.0f} {x1:.0f} {y1:.0f} '
+                                  f'{sp} {best_[0] if best_ else None}', flush=True)
+                    if sp is None and cc is None and not sink_in_field:
+                        sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, None)
+                    if sp is None and cc is None and sink_in_field:
+                        # contract v2: qfd_tile_nk's tree pins are area pins inside the body (x 10-223 um), so the sink
+                        # is in no corridor: take the nearer of the two corridors flanking the walk point (y search
+                        # +-400 um), never the row gap ~650 um away (it1: 1,226 hops over reach)
+                        # one corridor per leg (v2g audit: alternating between the two flanking corridors zigzagged the
+                        # chain, 68 hops of 700-830 um): the first pad picks it, the rest walk along it
+                        best = None
+                        for c_ in ([leg_c] if leg_c is not None else
+                                   sorted(range(COLS), key=lambda c: abs(cx_list[c] - qx))[:2]):
+                            s_ = place(cx_list[c_], qy, w + v.SHAVE, h + v.SHAVE, c_, 400.0)
+                            if s_ is not None:
+                                d_ = abs(s_[0] + w / 2 - qx) + abs(s_[1] + h / 2 - qy)
+                                if best is None or d_ < best[0]:
+                                    best = (d_, s_, c_)
+                        sp = best[1] if best else None
+                        if best:
+                            leg_c = best[2]
+                    if sp is None:
+                        sp = pad_spot(qx, qy, w + v.SHAVE, h + v.SHAVE)
+                    if sp is None:
+                        if _os.environ.get('OT_RELAY_SITE_FAILURE'):
+                            # immutable local failure receipt (what occupies the walk point's neighbourhood), never a relaxed gate
+                            near = set()
+                            for gx_ in range(int((qx - 1000) // BK), int((qx + 1000) // BK) + 1):
+                                for gy_ in range(int((qy - 1000) // BK), int((qy + 1000) // BK) + 1):
+                                    near.update(grid.get((gx_, gy_), ()))
+                            named = {(it.x, it.y, it.x + it.w, it.y + it.h): it.name for it in m['insts']}
+                            for pn_, pl_ in plans.items():
+                                for fk_, f_ in enumerate(pl_['frames']):
+                                    named[(f_[0], f_[1], f_[0] + f_[2] + v.SHAVE, f_[1] + f_[3] + v.SHAVE)] = f"{pl_.get('bid', pn_)}:{fk_}"
+                            json.dump(dict(kind='tree_pad', bid=bid, npad=_np, pad=j, sink=[x1, y1], sink_in_field=sink_in_field,
+                                           corridor=cc, leg_corridor=leg_c, walk=[qx, qy], Q=list(Q), frame=[w, h], got=got,
+                                           nearby=[dict(rect=r_, owner=named.get(r_, 'pad')) for r_ in sorted(near)]),
+                                      open(_os.environ['OT_RELAY_SITE_FAILURE'], 'w'), indent=1)
+                        raise ValueError(f'tree pads: no free spot for {bid} pad {j}')
+                    add_rect((sp[0], sp[1], sp[0] + w + v.SHAVE, sp[1] + h + v.SHAVE))
+                    got.append((sp[0], sp[1], w, h))
+                    px, py = sp[0] + w / 2, sp[1] + h / 2
+                got.reverse()          # chain order: the last pad placed (farthest along the walk) first, the sink's last
+                _pts = [Q] + [(f_[0] + f_[2] / 2, f_[1] + f_[3] / 2) for f_ in got] + [(x1, y1)]
+                _hop = max(abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) for a_, b_ in zip(_pts, _pts[1:]))
+                if _xtra and _try < 2 and _hop > RELAY_REACH_UM - 5:
+                    for f_ in got:
+                        rm_rect((f_[0], f_[1], f_[0] + w + v.SHAVE, f_[1] + h + v.SHAVE))
+                    print(f'FAULT_LAND_EXTRA {bid}: {_np} station(s) hop {_hop:.1f} > {RELAY_REACH_UM - 5:.0f} -> {_np + 1}', flush=True)
+                    _np += 1
+                    continue
+                break
             pl['frames'] = list(pl['frames']) + got
-            pad_done[bid] = npad
+            pad_done[bid] = _np
             if not sink_in_field:
                 # pad hop audit (centre sinks): centre to centre along last relay -> pads -> sink
                 pts_ = [Q] + [(f_[0] + f_[2] / 2, f_[1] + f_[3] / 2) for f_ in got] + [(x1, y1)]
