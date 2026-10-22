@@ -1,0 +1,32 @@
+{
+  "generated": "2026-10-21T21:22:06.534526-07:00",
+  "scope": "CLOSED VMUX component imported for parent construction; no parent closure or native claim",
+  "children": [
+    {
+      "instance": "u_vm",
+      "master": "dsdv_idx_vmux_n32",
+      "view": "physical/ref_tile/s81dv_vmxn32c/views/dsdv_idx_vmux_n32",
+      "source_commit": "54ee2a8f6",
+      "record_commit": "2c252e40a",
+      "main_commit": "81d9db4bb",
+      "job": "s81dv_vmxn32c-s81dv_vmxn32c-54ee2a8f6",
+      "tt_setup_ps": 353.43,
+      "ff_hold_ps": 19.53,
+      "drc": 0,
+      "ss_sensitivity_ps": 170.29,
+      "outline_um": [
+        172.8,
+        172.8
+      ],
+      "hashes": {
+        "dsdv_idx_vmux_n32.lef": "6a0fd7287ecffd35d14b1ea35213a786a48cfe2d1aa8015934dd260e43d6e62e",
+        "dsdv_idx_vmux_n32_tt.lib": "93a763e96ead94ce13f9db0524af831e8a6efe07f0fe5b8ad56c8259d6583f12",
+        "dsdv_idx_vmux_n32_ff.lib": "dfc9af67ed33d97e021c79493749f0c740fddd4e748f43c80fc499d47646d8a9",
+        "dsdv_idx_vmux_n32_ss.lib": "22991564632090768a5385e2b969c6f4d7008c1b7075bbf20b5fb586bc7191ae",
+        "insertion.json": "809515782540b6c313ddabc0f50456df3fc9be8213a1632d8e32745ebf77dea1",
+        "abstract.json": "2c42ccb279d4f913a8168f3f9efe6b7d508c0ded4dd91abf76188b557e1ed762",
+        "child_lint.json": "949e574e9a886458d243a3adeb035b44ee05a147dc5e55411580f7bc008eba03"
+      }
+    }
+  ]
+}
