@@ -1,0 +1,36 @@
+{
+  "production": {
+    "NSLOT": 4,
+    "ENG_CTX": 4,
+    "MU_OUT": 1,
+    "NW": 18,
+    "PLB": 11
+  },
+  "baseline_source": "0a41cae3e",
+  "baseline_depth_ps": 668,
+  "baseline_depth_levels": 17,
+  "mechanism": "One-edge MU return capture between queue/context select and generation/event arithmetic; eight-bit segmented event counters; stored tail and prompt increment lookahead; synchronous DATA reset and reset-free valid-protected context DATA.",
+  "latency_added_edges": {
+    "host_retire": 1,
+    "host_feedback": 1,
+    "host_event_generation": 1
+  },
+  "throughput_returns_per_edge": 1,
+  "extra_registers_estimate": 230,
+  "extra_cell_area_estimate_um2": 120,
+  "physical_plan": {
+    "main_outline_um": [
+      561.6,
+      518.4
+    ],
+    "fallback_outline_um": [
+      604.8,
+      561.6
+    ],
+    "macro_lattice_um": 43.2,
+    "minimum_macro_channel_um": 21.6,
+    "cell_band": "One full-width band between lower queue row and upper program/prompt row",
+    "clock": "Face anchored boundary flops and separate equalized boundary branch; stem beside central register mass"
+  },
+  "qualification": "SOURCE PLAN ONLY. Existing four-context lifecycle/protocol and causal mutant obligations retained; no physical PASS inferred."
+}
