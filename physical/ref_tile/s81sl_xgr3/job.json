@@ -1,0 +1,321 @@
+{
+ "name": "s81sl_xgr3-xgr3-909f8fe6b",
+ "block": "ot_s81sl_xgr3m",
+ "ref_tile": true,
+ "owner": "Claude:STW-S81c-COLLA-FRAME",
+ "purpose": "S81 end-slice u_xg master ot_s81sl_xgr3m (MAIN: xgr2 + output relay stage; xs6 kept q decodes + registered calendar fetch compares), 950.4 x 777.6, K32, sub-20-um channels blocked.",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/s81-xgr3-1021",
+  "commit": "909f8fe6b",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/v41rom",
+   "rtl/common",
+   "tools/s81_slice",
+   "tools/s81_static_control",
+   "tools/s81/pq_static_calendar_abi.json",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage0",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage3",
+   "results/rtl/s81_xgring_1021",
+   "results/rtl/s81_xgr3_1022"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_xgr3m u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/v41rom/ot_v41_kreg.sv rtl/common/ot_prefix.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopr.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs5.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs6.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgr.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgr3.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xgr3m_main_bench",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^XGR_BENCH PASS top=ot_s81sl_xgr3m$",
+    "pass_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_muttiercol",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_muttiercol L0_muttiercol",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_muttiercol FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_mutbank",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_mutbank L0_mutbank",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_mutbank FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_mutoff",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_mutoff L0_mutoff",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_mutoff FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_mutwcopy",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_mutwcopy L0_mutwcopy",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_mutwcopy FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_mutexp",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_mutexp L0_mutexp",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_mutexp FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "rstopr",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr none",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^BENCH_PASS rstopr",
+    "pass_witness": "results/rtl/s81_xgring_1021/bench/rstopr_none.log"
+   },
+   {
+    "name": "rstopr_mutxooff",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr xooff",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xooff$",
+    "fail_witness": "results/rtl/s81_xgring_1021/bench/rstopr_xooff.log"
+   },
+   {
+    "name": "rstopr_mutxoall",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr xoall",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xoall$",
+    "fail_witness": "results/rtl/s81_xgring_1021/bench/rstopr_xoall.log"
+   },
+   {
+    "name": "rstopr_mutxonoflag",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr xonoflag",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xonoflag$",
+    "fail_witness": "results/rtl/s81_xgring_1021/bench/rstopr_xonoflag.log"
+   },
+   {
+    "name": "rstopr_muttiercol",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr tiercol",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=tiercol$",
+    "fail_witness": "results/rtl/s81_xgring_1021/bench/rstopr_tiercol.log"
+   },
+   {
+    "name": "xs6_equiv",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^XS6_EQUIV_BENCH PASS$",
+    "pass_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_base.log"
+   },
+   {
+    "name": "xs6_equiv_mutbank",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_bank bank",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_bank.log"
+   },
+   {
+    "name": "xs6_equiv_mutoff",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_off off",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_off.log"
+   },
+   {
+    "name": "xs6_equiv_mutqswap",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_qswap qswap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_qswap.log"
+   },
+   {
+    "name": "xs6_equiv_mutwcopy",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_wcopy wcopy",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_wcopy.log"
+   },
+   {
+    "name": "xs6_equiv_muttpar",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_tpar tpar",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_tpar.log"
+   },
+   {
+    "name": "xs6_equiv_mutexp",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_exp exp",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_exp.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81sl_xgr3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_xgr3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_xgr3 --out {RUN}/record/views/ot_s81sl_xgr3m --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_xgr3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_xgr3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_xgr3/s81sl_xgr3-xgr3-909f8fe6b"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "STW-S81c-COLLA-FRAME (10-22): successor of s81sl_xgr (0397b9edc; standalone native census FAIL max 43: u_c.u_s.g_pb[a].s_q0 / s_q1 one-hot q decodes, 6 drivers 42-43 loads) with PD-AUDIT MUST-DO: (1) master ot_s81sl_xgr3m = ot_s81sl_xgr2 with ot_s81sl_xs6 (per-bank kept q-code copies + kept decode per line pair, <= 16 loads; calendar fetch compares registered as next-state compares: due5 -> fetch one AND-OR, no edge added), same ports / edges; (2) outline 734.4 -> 950.4 wide (N face 3,759 pins <= 4/um), macro columns re-spaced (>= 56 um bands), abutted 0.024-um stack seams + every sub-20-um macro channel hard-blocked (macro_channel_block.tcl at POST_IO_PLACEMENT); (3) k-means K 32 (gate measures pin-flop spread <= 80 per root TT+FF)."
+}
