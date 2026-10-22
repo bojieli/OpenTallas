@@ -15,6 +15,9 @@ import json
 from pathlib import Path
 
 
+KEEP_NAMES=False
+
+
 class ReplicationFrontier(AssertionError):
     def __init__(self, report):
         self.report=report
@@ -238,7 +241,9 @@ def emit(m,cells,inputs,outputs,newtop):
             conn=[edge(e) for e in inputs[n][p]] if p in inputs[n] else [bit(b) for b in bs]
             val=conn[0] if len(conn)==1 else '{'+','.join(reversed(conn))+'}'
             pins.append('.%s(%s)'%(p,val))
-        body.append('(* keep = 1, dont_touch = 1 *) %s c%d (%s);'%(c['type'],i,','.join(pins)))
+        # SVCATT: original instance names kept (escaped) so kit macro/child patterns still match; clones svc7_copy_N
+        iname='\\'+n.replace(' ','_')+' ' if KEEP_NAMES else 'c%d'%i
+        body.append('(* keep = 1, dont_touch = 1 *) %s %s (%s);'%(c['type'],iname,','.join(pins)))
     for p,bs in outputs.items():
         for i,e in enumerate(bs):
             pb=p if len(bs)==1 else '%s[%d]'%(p,i)
@@ -259,9 +264,12 @@ def main():
     a.add_argument('--clock-port',action='append',default=['clk'])
     a.add_argument('--incremental',action='store_true',help='update fanout worklist instead of rescanning every cell')
     a.add_argument('--budget-only',action='store_true',help='report resource/frontier only, emit no RTL')
+    a.add_argument('--keep-names',action='store_true')
     a.add_argument('--clone-cyclic',default='none',choices=['none','comb','reset','all'])
     a.add_argument('--collect-frontier',action='store_true',help='SVCATT: skip and list every frontier net (implies --incremental, budget only)')
     args=a.parse_args()
+    global KEEP_NAMES
+    KEEP_NAMES=args.keep_names
     raw=Path(args.mapped_json).read_bytes();d=json.loads(raw)
     if args.collect_frontier:
         mod=d['modules'][args.top]; names={}

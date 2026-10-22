@@ -185,7 +185,16 @@ module dsdv_svc_rs_attw1 #(parameter integer MUT = 0, parameter integer DIE_ID =
     input  wire [528:0]     tx_o0
 );
     wire rn; wire [21:0] role, role_local; wire [7:0] pvs, pvs_local;
+`ifdef OT_SVC_ROLE_PINREG
+    // SVCATT 10-21 (safe-design 1/3): role_i / pvs_i are static slot configuration from the parent; one plain pin
+    // register (held through reset, so equal to role_i from the first edge) gives the 294-load tile/gd/pvs cone a
+    // flop driver that the kept-copy graph can replicate (a bare port cannot be copied).
+    reg [21:0] role_q; reg [7:0] pvs_q;
+    always @(posedge ck) begin role_q <= role_i; pvs_q <= pvs_i; end
+    assign role=ROLE_EXT ? role_q : role_local; assign pvs=ROLE_EXT ? pvs_q : pvs_local;
+`else
     assign role=ROLE_EXT ? role_i : role_local; assign pvs=ROLE_EXT ? pvs_i : pvs_local;
+`endif
     dsdv_svc_rs_rl #(.ST(ST)) u_rl (.ck(ck), .rst(rst), .sid(sid), .rn(rn), .role(role_local), .pvs(pvs_local));
     wire [3:0] tile = role[3:0];
 `ifdef RS_MUT_GD

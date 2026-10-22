@@ -28,8 +28,21 @@ module ot_hdc_v41x_attn_staging #(
         for (l = 0; l < NL; l = l + 1) begin : g_lane
             wire [NB*256-1:0] padded_in;
             wire [NB*256-1:0] padded_out;
+`ifdef OT_SVC_STAGE_FMT2
+            // SVCATT 10-21 (safe-design 3): the word's format bit (ROWW-1, 50 mapped loads straight off an SRAM pin, which
+            // no kept copy can split) is stored twice -- in its own column and in the first free padding column -- and read
+            // as the AND of the two identical columns: one comb driver the kept-copy graph can replicate, same cycle, same
+            // value (both columns are written together with the same bit and read at the same address).
+            if (NB*256 < ROWW + 1) begin : g_fmt2_bad
+                initial $fatal(1, "OT_SVC_STAGE_FMT2 needs one padding column");
+            end
+            assign padded_in = {{(NB*256-ROWW-1){1'b0}}, wr_data[l*ROWW + ROWW-1], wr_data[l*ROWW +: ROWW]};
+            assign rd_data[l*ROWW +: ROWW-1] = padded_out[ROWW-2:0];
+            assign rd_data[l*ROWW + ROWW-1] = padded_out[ROWW-1] & padded_out[ROWW];
+`else
             assign padded_in = {{(NB*256-ROWW){1'b0}}, wr_data[l*ROWW +: ROWW]};
             assign rd_data[l*ROWW +: ROWW] = padded_out[ROWW-1:0];
+`endif
             for (b = 0; b < NB; b = b + 1) begin : g_slice
                 if (DEPTH <= 256) begin : g_256
                 ot_sram_1r1w_256x256_m2_r2c2 u_mem (
