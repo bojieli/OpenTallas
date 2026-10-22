@@ -19,7 +19,7 @@ def bind(graph, read_sample, write_commit):
     def ports(ins, outs):
         return {p:{'direction':d,'bits':b} for d,ps in [('input',ins),('output',outs)] for p,b in ps.items()}
     def inst(master, ps, params=None):
-        return dict(master=master,source=SRC,rtl_deps=[G+'ot_hbm_su_indexed_scalar.sv','rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv'],
+        return dict(master=master,source=SRC,rtl_deps=[G+'ot_hbm_su_indexed_scalar.sv','rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv',G+'ot_hbm_su_indexed_scalar_banked.sv','rtl/lib/ot_rst_relay.sv'],
                     params=params or {},ports=ps,slot=None,owner='CODEX-HBM-IDXSU-2000',region='su_indexed_gather',
                     note='Candidate explicit static VM RG0/WG0 reservation; no release or physical-age claim')
     def edge(label, src, dst, bits):
@@ -28,9 +28,9 @@ def bind(graph, read_sample, write_commit):
     def ep(n,p,b,lo=0): return [n,p,lo,lo+b]
     cfg={'cfg_v':1,'cfg_target':8,'cfg_addr':12,'cfg_data':256,'desc_v':1,'desc_base':12,'desc_limit':13,'desc_loops':16,'launch_v':1}
     out={'rq':32*17,'wq':32*281,'active':1,'done':1,'program_fault':1,'configured':1,'target_fault':1,'engine_fault':1,
-         'edge_index':16,'engine_busy':1,'engine_done':1,'engine_start':1,'descriptor':120}
+         'edge_index':16,'engine_busy':1,'engine_done':1,'engine_start':1,'descriptor':120,'active0':1,'active1':1,'reservation_active':1}
     I[name]=inst('ot_hbm_su_indexed_scalar_f20',ports({'clk':1,'rst_n':1,'rr':32*257,**cfg},out),
-                 {'READ_SAMPLE':read_sample,'WRITE_COMMIT':write_commit,'TARGET':180})
+                 {'READ_SAMPLE':read_sample,'WRITE_COMMIT':write_commit,'TARGET':180,'NATIVE_BANKED':1,'SEGMENTED96':1})
     for p,b in cfg.items():
         # Copy the actual released host-leaf producer, not a top-level test pin.
         original=[e for e in E if e['sink'][:2]==['calendar_SW',p]]
@@ -63,7 +63,7 @@ def bind(graph, read_sample, write_commit):
             for p,width in [('rq',17),('wq',281)]:
                 edge(n+'_'+p,ep(name,p,width,j*width),ep(n,'gather_'+p,width),width)
             edge(n+'_rr',ep(n,'gather_rr',257),ep(name,'rr',257,j*257),257)
-            edge(n+'_reserve',ep(name,'active',1),ep(n,'reserve',1),1)
+            edge(n+'_reserve',ep(name,'active0' if j<16 else 'active1',1),ep(n,'reserve',1),1)
             ck(n)
             inventory.append(dict(bank=bank,selector=n,read_owner=0,write_owner=0,preserved_sources=owners))
     c['clock_resets']+=clocks
@@ -76,7 +76,7 @@ def bind(graph, read_sample, write_commit):
     for p in ['t_ready','t_active']: hs['ports'][p]['bits']=nt+1
     hs['ports']['t_fault']['bits']=nf+35
     edge('target_ready',ep(name,'configured',1),ep('host_status','t_ready',1,nt),1)
-    edge('target_active',ep(name,'active',1),ep('host_status','t_active',1,nt),1)
+    edge('target_active',ep(name,'reservation_active',1),ep('host_status','t_active',1,nt),1)
     for j,p in enumerate(['target_fault','program_fault','engine_fault']):
         edge('target_'+p,ep(name,p,1),ep('host_status','t_fault',1,nf+j),1)
     for j,r in enumerate(inventory):
@@ -85,14 +85,18 @@ def bind(graph, read_sample, write_commit):
     ing=I['host_cp_ingress'];mw,mhex=ing['params']['TARGET_MASK'].split("'h")
     assert int(mw)==256
     ing['params']['TARGET_MASK']=f"256'h{int(mhex,16)|(1<<180):064x}"
+    for changed in ['host_status','host_cp_ingress']:
+        for key in ['physical_view','closed_record']:
+            I[changed].pop(key,None)
+        I[changed]['force_synth']=True
     for p,b in out.items():
-        if p not in ['rq','wq','active','configured','target_fault','program_fault','engine_fault']:
+        if p not in ['rq','wq','active0','active1','reservation_active','configured','target_fault','program_fault','engine_fault']:
             c['open_outputs'].append([name,p,b])
     c.setdefault('notes',[]).append('Indexed gather is opt-in candidate; all faults and target readiness join real host_status. Physical homes, source-ready dates, calendar drain guards and post-landing age proof remain required.')
     report=dict(schema='opentallas.hbm.indexed_gather.binding_candidate.v1',target=180,clock='stream',endpoint=name,
                 READ_SAMPLE=read_sample,WRITE_COMMIT=write_commit,banks=inventory,
-                descriptor_fields={'index_word':[0,24],'score_base':[24,24],'score_limit':[48,24],'dest_word':[72,24],'dyn_mul':[96,24],'start':[120,16],'release_exclusive':[136,16]},
-                required_release_gap=2*read_sample+write_commit+7,release_ready=False,
+                descriptor_fields={'index_word':[0,24],'score_base':[24,24],'score_limit':[48,24],'dest_word':[72,24],'dyn_mul':[96,24],'start':[120,16],'release_exclusive':[136,16],'rank1_base':[152,24],'rank2_base':[176,24],'rank3_base':[200,24]},
+                required_release_gap=2*read_sample+write_commit+7,selector_capture_edges=2,first_start_min=2,final_ownership_tail=2,SEGMENTED96=1,NATIVE_BANKED=1,release_ready=False,
                 open=['Measured source-ready dates','Exact F20 launch-to-local-edge-zero measurement','Actual mapped route/clock/reset qualification','Host readiness round-trip GUARD after route','All native client/calendar drain guards','Post-landing latency equality'])
     return c,report
 

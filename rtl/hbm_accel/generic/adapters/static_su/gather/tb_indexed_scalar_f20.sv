@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_indexed_scalar_f20;
- parameter MUT=0;
+ parameter MUT=0, NATIVE_BANKED=1, SEGMENTED96=1;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,start=0,preload=0,readback=0;
  reg[23:0]ix=0,base=0,limit=0,dst=0;
@@ -12,7 +12,7 @@ module tb_indexed_scalar_f20;
  wire active,configured,pf,tf,ef,es,eb,ed;wire[15:0]edge_index;wire[119:0]descriptor;
  wire[31:0]selector_fault;
  assign fault=pf|tf|ef|(|selector_fault);
- ot_hbm_su_indexed_scalar_f20 #(.READ_SAMPLE(9),.WRITE_COMMIT(5),.MUT_PHASE(MUT==3))dut(
+ ot_hbm_su_indexed_scalar_f20 #(.READ_SAMPLE(10),.WRITE_COMMIT(5),.NATIVE_BANKED(NATIVE_BANKED),.SEGMENTED96(SEGMENTED96),.MUT_PHASE(MUT==3))dut(
  .clk(clk),.rst_n(rst_n),.cfg_v(cfg_v),.cfg_target(8'd180),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .desc_v(desc_v),.desc_base(12'd0),.desc_limit(desc_limit),.desc_loops(16'd1),.launch_v(launch_v),
  .rr(rr),.rq(rq),.wq(wq),.active(active),.done(done),.program_fault(pf),.configured(configured),
@@ -42,7 +42,7 @@ module tb_indexed_scalar_f20;
    cfg_data=0;cfg_data[255:240]=16'hc7a1;
    cfg_data[23:0]=ix^(MUT==1?24'd1:24'd0);cfg_data[47:24]=base;cfg_data[71:48]=limit;
    cfg_data[95:72]=dst^(MUT==2?24'd8:24'd0);cfg_data[119:96]=24'd1;
-   cfg_data[135:120]=16'd8;cfg_data[151:136]=16'd38;
+   cfg_data[135:120]=16'd8;cfg_data[151:136]=16'd40;
    cfg_v=1;@(negedge clk);cfg_v=0;repeat(6)@(negedge clk);
    desc_v=1;@(negedge clk);desc_v=0;
    repeat(10)@(negedge clk);
@@ -81,15 +81,16 @@ module tb_indexed_scalar_f20;
    $readmemh({rows_dir,"/L14_6rows.mem"},row_mem,12,17);
    for(l=0;l<3;l=l+1)begin
     c=1;preload=1;verify_rq=0;
-    base=case_mem[l*6][135:112];
+    base=row_mem[l*6][47:24];
     for(n=0;n<48;n=n+1)begin
      for(t=0;t<8;t=t+1)data[t*32+:32]=score_mem[l*6*384+n*8+t];
-     load_sector(base+n*8,data);
+     wordadr=n<12?int'(base)+n*8:n<24?int'(row_mem[l*6][175:152])+(n-12)*8:n<36?int'(row_mem[l*6][199:176])+(n-24)*8:int'(row_mem[l*6][223:200])+(n-36)*8;
+     load_sector(wordadr,data);
     end
     for(n=0;n<6;n=n+1)begin
-     wordadr=case_mem[l*6+n][159:136];data={8{32'hdeadbeef}};
+     wordadr=row_mem[l*6+n][23:0];data={8{32'hdeadbeef}};
      for(t=0;t<6;t=t+1)begin
-      otheradr=case_mem[l*6+t][159:136];
+      otheradr=row_mem[l*6+t][23:0];
       if(otheradr/8==wordadr/8)data[(otheradr%8)*32+:32]=case_mem[l*6+t][63:32];
      end
      load_sector(wordadr,data);
@@ -126,7 +127,7 @@ module tb_indexed_scalar_f20;
     if(fault!==0||status!==0)begin errors=errors+1;$display("AUTHENTIC FAULT engine=%b banks=%h",fault,status);end
    end
    if(errors)$fatal(1,"GATHER_F20_CURRENT FAIL authentic18 checks=%0d errors=%0d",checks,errors);
-   $display("GATHER_F20_CURRENT PASS authentic_cases=18 masked_word_checks=%0d bundles=3 rows_per_bundle=6 banks=32 SRAMs=96 R=9 W=5",checks);$finish;
+   $display("GATHER_F20_CURRENT PASS authentic_cases=18 masked_word_checks=%0d bundles=3 rows_per_bundle=6 banks=32 SRAMs=96 R=10 W=5 segmented96=1",checks);$finish;
   end
  endtask
  initial begin

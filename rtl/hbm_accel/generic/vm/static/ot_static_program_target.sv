@@ -13,7 +13,7 @@
 // CAP_CLK=1 (H-NETLIST 0600): the F20 input-capture rung (cv/dv/lv, target/address/data/base/limit/loops, tgt) runs on
 // clk_cap, a related same-frequency phase-0 root kept short at the face; the body (bitmap, scan, outputs) stays on clk.
 module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer PCW=10,parameter integer TGT_PIN=0,
-                                  parameter integer CAP_CLK=0)(
+                                  parameter integer CAP_CLK=0,parameter integer INSTALLED_ROWS=0)(
     input wire clk,rst_n,
     input wire clk_cap,   // used only when CAP_CLK=1
     input wire [7:0] tgt,
@@ -36,8 +36,8 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     output reg [15:0] program_start_loops,
     output reg configured,fault
 );
-    localparam integer ROWS=1<<PCW;
-    initial if(PCW<8 || PCW>12)$fatal(1,"programme target PCW must be8..12");
+    localparam integer ROWS=INSTALLED_ROWS==0?(1<<PCW):INSTALLED_ROWS;
+    initial if(PCW<8 || PCW>12 || ROWS<1 || ROWS>(1<<PCW))$fatal(1,"programme target PCW must be8..12");
     // External reset reaches two synchronizer pins, not the entire valid bitmap.
     (* async_reg = "true" *) reg reset_meta,reset_live;
     always @(posedge clk or negedge rst_n)
@@ -85,13 +85,13 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
             end
             if(cv && target==tid)begin
                 armed<=0;validated<=0;configured<=0;
-                if(program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) ||
+                if(program_active || scanning || lv || {1'b0,address}>=ROWS ||
                    data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address})fault<=1;
                 else begin program_cfg_we<=1;program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end
             end
             if(dv && target==tid)begin
                 armed<=0;validated<=0;configured<=0;install_open<=0;
-                if(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW))fault<=1;
+                if(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>ROWS)fault<=1;
                 else begin
                     stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
                     armed<=1;missing<=0;
