@@ -1,0 +1,4 @@
+CONTROL_MISMATCH cycle=10 rn=1 command=0 valid=1 payload=0
+[106000] %Fatal: tb_control_miter.sv:25: Assertion failed in tb_control_miter: CONTROL_MITER_FAIL
+%Error: tools/s81_dv/control_export_1021/tb_control_miter.sv:25: Verilog $stop
+Aborting...
