@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hcoll_gq_issue_k16a_1022",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T01:45:00-07:00",
+ "gate_commit": "",
+ "checklist": {
+  "lattice": "8 p192 SRAMs on 43.2 lattice, two 4-high stacks, ~49 um channels",
+  "std_cell_band": "central cross std band, density <=~0.6, no hotspot",
+  "pin_spread": "pins spread on all faces",
+  "clock_entry": "CTS pin-flop spread TT 72.3 / FF 71.3 ps; 31.5k sinks one root (guidance)",
+  "shape": "475x562 near-square, fill 32%"
+ },
+ "notes": "REUSED by HBMc/TILES4 10-22 14:35: geometry_sha256 identical to the COORD-approved k14r REVIEW 01:45 (also reused for k15b, COORD 06:45 ruling); K16a = RTL-only OT_GQ_K16 (0 edges); gate WARN GRT0 M3 24.5%, census max32, reg->reg -136 pre-repair; PNGs viewed",
+ "geometry_sha256": "c769592cfab04675f101fd9d2214c6af8a78ff74a4f1cab9a9c13671e32656e7"
+}
