@@ -1,0 +1,136 @@
+{
+  "source_commit": "6b4c31384",
+  "actual_result": "All four original LP native gates failed; normal physical placement did not run. No PG or timing verdict inferred.",
+  "reports": [
+    {
+      "remote_path": "/srv/opentallas-scratch/claude/ref_gate/hcoll_q3_lp_ars256-20261021-211932/routes/gate/work/orfs/native_census.json",
+      "sha256": "cc975131794cacd8cf39d35684f686da482f105383c3ed654596ab08c7ca7afd",
+      "status": "FAIL",
+      "roots_examined": 189989,
+      "max_dynamic_loads": 6152,
+      "keys": [
+        "schema",
+        "kit",
+        "liberty",
+        "netlist",
+        "top",
+        "status",
+        "limit",
+        "roots_examined",
+        "max_dynamic_loads",
+        "driver_counts",
+        "constant_output_bits",
+        "physical_nonclock_driver_counts",
+        "constant_input_transparent_cells",
+        "constant_conflicts",
+        "functional_pin_contract",
+        "pin_registration_contract",
+        "storage_contract",
+        "independent_source_contract_audit_required",
+        "role_errors",
+        "violations"
+      ],
+      "violation_count": 248
+    },
+    {
+      "remote_path": "/srv/opentallas-scratch/claude/ref_gate/hcoll_q3_lp_ars256b-20261021-211904/routes/gate/work/orfs/native_census.json",
+      "sha256": "5a0c8e4131141c08a78b1d76ed3dcbdca379f2551f794dd6c0d2f574116d275c",
+      "status": "FAIL",
+      "roots_examined": 189989,
+      "max_dynamic_loads": 6152,
+      "keys": [
+        "schema",
+        "kit",
+        "liberty",
+        "netlist",
+        "top",
+        "status",
+        "limit",
+        "roots_examined",
+        "max_dynamic_loads",
+        "driver_counts",
+        "constant_output_bits",
+        "physical_nonclock_driver_counts",
+        "constant_input_transparent_cells",
+        "constant_conflicts",
+        "functional_pin_contract",
+        "pin_registration_contract",
+        "storage_contract",
+        "independent_source_contract_audit_required",
+        "role_errors",
+        "violations"
+      ],
+      "violation_count": 248
+    },
+    {
+      "remote_path": "/srv/opentallas-scratch/claude/ref_gate/hcoll_n1_lp_ars256-20261021-212641/routes/gate/work/orfs/native_census.json",
+      "sha256": "70b53b52a6a333727a3772458e9ec0408c1e113939ed7284b28281bf32860720",
+      "status": "FAIL",
+      "roots_examined": 162457,
+      "max_dynamic_loads": 6152,
+      "keys": [
+        "schema",
+        "kit",
+        "liberty",
+        "netlist",
+        "top",
+        "status",
+        "limit",
+        "roots_examined",
+        "max_dynamic_loads",
+        "driver_counts",
+        "constant_output_bits",
+        "physical_nonclock_driver_counts",
+        "constant_input_transparent_cells",
+        "constant_conflicts",
+        "functional_pin_contract",
+        "pin_registration_contract",
+        "storage_contract",
+        "independent_source_contract_audit_required",
+        "role_errors",
+        "violations"
+      ],
+      "violation_count": 241
+    },
+    {
+      "remote_path": "/srv/opentallas-scratch/claude/ref_gate/hcoll_n1_lp_ars256b-20261021-212659/routes/gate/work/orfs/native_census.json",
+      "sha256": "bae699d26f48dec13bada51bdfb29e3ce0c556e01c1a19ef0f8ea67b72ad3060",
+      "status": "FAIL",
+      "roots_examined": 162457,
+      "max_dynamic_loads": 6152,
+      "keys": [
+        "schema",
+        "kit",
+        "liberty",
+        "netlist",
+        "top",
+        "status",
+        "limit",
+        "roots_examined",
+        "max_dynamic_loads",
+        "driver_counts",
+        "constant_output_bits",
+        "physical_nonclock_driver_counts",
+        "constant_input_transparent_cells",
+        "constant_conflicts",
+        "functional_pin_contract",
+        "pin_registration_contract",
+        "storage_contract",
+        "independent_source_contract_audit_required",
+        "role_errors",
+        "violations"
+      ],
+      "violation_count": 241
+    }
+  ],
+  "structural_successors": {
+    "n1": [
+      2569988,
+      2569989
+    ],
+    "q3": [
+      2571613,
+      2571614
+    ]
+  }
+}
