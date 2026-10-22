@@ -37,6 +37,8 @@ if [ "${FRAME_LP:-0}" = 1 ]; then
   # place of <MASTER>_l4_lp.sv (same module name); its xk reset synchronisers need ot_reset_sync
   LPSV=${FRAME_LP_SV:-$FR/${MASTER}_l4_lp.sv}
   grep -q ot_reset_sync $LPSV && TOPF="$TOPF rtl/lib/ot_reset_sync.sv"
+  # STW-S81c-DIE-FRAME 10-22: vector landings with the native32-safe writer (lp landing_writer n32)
+  grep -q ot_pl_land_vector_n32_w $LPSV && TOPF="$TOPF rtl/common/landed_parent/ot_pl_land_n32.sv"
   VFLAGS="${VFLAGS:-} -DLP_MUT=$LM -DLK=${LK:-2} -DTB_FWD_GATE -DTB_LDLY=${LDLY:-0}"
   # STW-S81c-DIE-FRAME 10-22: FRAME_SCHED = the schedule of a re-cut LP variant (default: the committed one)
   LANDE="--land-e ${LK:-2} --frame-schedule ${FRAME_SCHED:-results/arch/s81_dv_1016/frame_l4_cluster/compiler/${MASTER}_schedule.json}"

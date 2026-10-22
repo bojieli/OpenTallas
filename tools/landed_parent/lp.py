@@ -128,6 +128,7 @@ LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
 # S81-CAPC4 10-20 opt-in "landing_writer": "n32": native32-safe ring writer (slot enable = kept write_oh only), same
 # contract as ot_pl_land_chunk_w; read by the unchanged ot_pl_land_chunk_r.  Absent = byte-identical output.
 LIB_PORTS['ot_pl_land_n32_chunk_w'] = dict(LIB_PORTS['ot_pl_land_w'])
+LIB_PORTS['ot_pl_land_vector_n32_w'] = dict(LIB_PORTS['ot_pl_land_w'])
 N32_RTL = "rtl/common/landed_parent/ot_pl_land_n32.sv"
 # S81-CAPC5 10-20 opt-in "regional_reset_copies": true -- a region's last reset stage as kept parallel copies (<= 32 loads
 # each, same reset age, no added edge).  Absent = byte-identical output.
@@ -523,8 +524,11 @@ class Parent:
         self.writer = spec.get("landing_writer", "default")
         if self.writer not in ("default", "n32"):
             raise SystemExit('landing_writer must be "default" or "n32"')
-        if self.writer == "n32" and (not spec.get("landing_chunk_bits") or spec.get("landing_reset_forest")):
-            raise SystemExit('landing_writer n32 requires landing_chunk_bits and excludes landing_reset_forest')
+        if self.writer == "n32" and (not spec.get("landing_chunk_bits") or spec.get("landing_reset_forest")
+                                     and not spec.get("landing_vector_group")):
+            # S81 frames 10-22: with landing_reset_forest the vector writer takes per-chunk forest leaves
+            # (ot_pl_land_vector_n32_w); only the vector-landed forest form is supported
+            raise SystemExit('landing_writer n32 requires landing_chunk_bits; with landing_reset_forest it needs landing_vector_group')
         # QW-CTLM3 10-19: landing_reset_lead -- the ring / read rq (their own re-registering flop) released at the SAME
         # edge as a t = 0 child (regional run RB - 2 stages + rq), not one edge after it.  Without it a ring misses the
         # first word its source (child or input port) presents on the first post-reset edge: the flat reference accepts
@@ -1184,7 +1188,8 @@ class Parent:
             if g == n:
                 w(f"    wire [{D}*{wt}-1:0] lpl_{n}_bank;  wire [{D * (AW + 1) - 1}:0] lpl_{n}_epo;  wire [{vld_hi}:0] lpl_{n}_vld;"
                   f"  wire {decl} {out}, lpl_{n}_o;")
-                wprim = "ot_pl_land_n32_chunk" if self.writer == "n32" else primitive
+                wprim = ("ot_pl_land_vector_n32" if primitive == "ot_pl_land_vector_reset" else "ot_pl_land_n32_chunk") \
+                    if self.writer == "n32" else primitive
                 w(f"    {wprim}_w #(.W({wt}), .D({D}){cp}) u_lpl_{n}_w (.ck(ck_{s}), .rsi({reset_input('w',s)}), .i({net}), "
                   f".bank(lpl_{n}_bank), .epo(lpl_{n}_epo), .vld(lpl_{n}_vld));")
             else:
@@ -1754,7 +1759,8 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_n32_chunk_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_n32_chunk_w",
+                                        "ot_pl_land_vector_n32_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):

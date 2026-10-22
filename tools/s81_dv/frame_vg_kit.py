@@ -117,6 +117,9 @@ def main():
     base = json.loads((ROOT / 'physical/ref_tile' / a.base_kit / 'spec.json').read_text())
     lps = json.loads((ROOT / (a.lp_spec or f'{REC}/rf3r/{m}_spec.json')).read_text())
     lps['landing_vector_group'] = True
+    # native census (limit 32): the default local ring writer fans its chunk reset rq into every slot data enable
+    # (col_h9 vg gate 10-22: 48..120 loads); the n32 vector writer enables slots from kept selector copies only
+    lps['landing_writer'] = 'n32'
     lps['out_dir'] = f'{LPDIR}/{tag}'
     lps['record_dir'] = f'{REC}/{tag}'
     if a.cuts:
@@ -171,6 +174,8 @@ def main():
     s['name'] = name
     old_kit = next(f for f in s['sources'] if '/kit/' in f and f.endswith('.sv') and '_l4_lp_kit' in f)
     s['sources'] = [kit if f == old_kit else f for f in s['sources']]
+    if 'rtl/common/landed_parent/ot_pl_land_n32.sv' not in s['sources']:
+        s['sources'].insert(s['sources'].index(kit), 'rtl/common/landed_parent/ot_pl_land_n32.sv')
     s['landed_record'] = f'{REC}/{tag}/{m}_l4_lp_record.json'
     s['frame']['lp_rtl'] = str(lpsv.relative_to(ROOT))
     s['frame']['lp_rtl_sha256'] = hashlib.sha256(t.encode()).hexdigest()

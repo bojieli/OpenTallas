@@ -101,4 +101,41 @@ module ot_pl_land_n32_chunk_w #(
     initial if (CHUNK_BITS < 1 || CHUNK_BITS > 24) $fatal(1, "ot_pl_land_n32_chunk_w: CHUNK_BITS must be 1..24");
 `endif
 endmodule
+
+// S81 frames (STW-S81c-DIE-FRAME 10-22): the n32 writer for VECTOR landings with a per-chunk reset forest leaf (same
+// ports / layout as ot_pl_land_vector_reset_w in ot_pl_land_reset_forest.sv, read by the unchanged
+// ot_pl_land_vector_reset_r).  Per chunk: ot_pl_land_n32_local_w on rsi[c] (rq resets only the kept selector copies and
+// valid; slot data enables = selector copies, <= 2 GB + 2 loads), so the mapped native census stays <= 32 loads where
+// the default local writer fanned rq out to every slot data / epoch mux (col_h9 vg gate 10-22: rq 48..120 loads).
+module ot_pl_land_vector_n32_w #(
+    parameter integer W = 1073, D = 4, CHUNK_BITS = 24,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D),
+    parameter integer CHUNKS = (W + CHUNK_BITS - 1) / CHUNK_BITS
+) (
+    input wire ck,
+    input wire [CHUNKS-1:0] rsi,
+    input wire [W-1:0] i,
+    output wire [D*W-1:0] bank,
+    output wire [D*(AW+1)-1:0] epo,
+    output wire [D*CHUNKS-1:0] vld
+);
+    genvar c, s;
+    generate for (c = 0; c < CHUNKS; c = c + 1) begin : g_chunk
+        localparam integer CW = (W - c*CHUNK_BITS < CHUNK_BITS) ? W - c*CHUNK_BITS : CHUNK_BITS;
+        wire [D*CW-1:0] cb;
+        wire [D*(AW+1)-1:0] ce;
+        (* keep_hierarchy = "yes" *) ot_pl_land_n32_local_w #(.W(CW), .D(D)) u_local (
+            .ck(ck), .rsi(rsi[c]), .i(i[c*CHUNK_BITS +: CW]), .bank(cb), .epo(ce), .vld(vld[c*D +: D]));
+        for (s = 0; s < D; s = s + 1) begin : g_slot
+            assign bank[s*W + c*CHUNK_BITS +: CW] = cb[s*CW +: CW];
+        end
+        if (c == 0) begin : g_tags
+            assign epo = ce;
+        end
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (W < 1 || CHUNK_BITS < 1 || CHUNK_BITS > 24 || CHUNKS != (W + CHUNK_BITS - 1) / CHUNK_BITS)
+        $fatal(1, "ot_pl_land_vector_n32_w: shape");
+`endif
+endmodule
 `default_nettype wire
