@@ -1,3 +1,4 @@
+// Frozen production p34 reference: mutation switch removed from reference only.
 // QE3-HROOT-PEER2 10-21: hand-edited successor of host_peer_mu_sram_1020/qkd_host_lifecycle_collected_mu.sv (KV-PEER12
 // generated copy; same module name and ports).  REGISTERED TERMINAL HEAD (0 added cycles): the p32i CTS odb showed
 // tr -> tq[tr] -> t_tag/t_gen/t_done/t_fault/t_coh of the head -> allocator / cohort / cancel_accepted / acknowledged_tag
@@ -176,13 +177,10 @@ module qkd_host_lifecycle_collected_mu_old #(parameter [15:0] INITIAL_EPOCH = 16
  // head flops: the entry at the current read pointer after this edge's writes (one capture per edge)
  wire sel_w = sel && tn != 3'd4;
  wire scoh = coh[su] || (begin_valid && cohort_begin_ready && ub == su);
-`ifdef QKD_HR_PE_LHD_MUTANT
- wire [1:0] e_n = tq[tr];
- wire e_new = 1'b0;
-`else
+
  wire [1:0] e_n = (sel_w && tw == tr) ? su : tq[tr];
  wire e_new = sel_w && su == e_n;
-`endif
+
  always @(posedge clk or negedge por_n) begin
   if (!por_n) begin h_r <= 0; hd_tag <= 0; hd_gen <= 0; hd_done <= 0; hd_fault <= 0; hd_coh <= 0; hc_tag <= 0; hc_gen <= 0; end
   else begin
