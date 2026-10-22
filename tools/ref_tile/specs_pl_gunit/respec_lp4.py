@@ -38,6 +38,10 @@ def make(name, chan):
                             "cw_v": [432.0, 433.0], "cw_a": [434.0, 444.0], "cw_d": [446.0, 590.0],
                             "sid": [592.0, 596.0], "fault": [598.0, 599.0]})
     s["diagnostic"] = diag
+    if "rtl/common/landed_parent/ot_pl_land_n32.sv" not in s["sources"]:
+        s["sources"].append("rtl/common/landed_parent/ot_pl_land_n32.sv")   # landing_writer n32
+    if "rtl/common/landed_parent/ot_pl_land_rst_copy.sv" not in s["sources"]:
+        s["sources"].append("rtl/common/landed_parent/ot_pl_land_rst_copy.sv")   # regional_reset_copies
     # 276-b rungs / 256-b cw_d on ranged faces need a defined bit order (gate pin_order); L1f precedent ea03a00de
     s["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
     s["route"]["peak_ram_gb"] = 300   # 10-18 lp gates died in GRT at 64 / 160 GB

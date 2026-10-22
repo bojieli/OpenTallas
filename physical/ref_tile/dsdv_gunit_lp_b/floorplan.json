@@ -256,6 +256,8 @@
  "referenced": [
   "rtl/dsrom_sys/s81_dv/unit/landed/dsdv_gunit_lp.sv",
   "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv",
+  "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
   "physical/ref_tile/dsdv_gunit_lp_b/kit.env",
   "physical/ref_tile/dsdv_gunit_lp_b/clock.sdc",
   "physical/ref_tile/dsdv_gunit_lp_b/signoff.sdc",
