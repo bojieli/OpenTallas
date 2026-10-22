@@ -35,3 +35,13 @@ adds the exact existing helper files. Raw monitor lines retain SRAM macro
 masks, row addresses and the actual observed clock edge. Token/S81 owns
 normalizing those events into row and gain lease manifests. Missing ranks,
 other operand rows and future gain consumers remain explicit gaps.
+
+The prepared single successor `run_r3` adds four actual `dsfd_dvland_276`
+D4/K2 modules at the adjacent inter-slice seam, using the die owner's declared
+G = R0 relationship at the landing core. Its bench reset calendar releases the
+external kit reset two edges before that core epoch. These are component
+clock and reset stimuli, not measured physical clock arrivals. Physical flight
+and absolute production epoch remain open. This successor also initializes all
+four GK descriptor rows (528 through 531), observes source VP `lo_v` read
+readiness and destination KV dispatch, and enforces positive and causal
+negative simulator outcomes. The preceding zero-wire `run_r2` remains intact.
