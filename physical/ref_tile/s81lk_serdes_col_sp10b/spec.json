@@ -1,0 +1,457 @@
+{
+ "name": "s81lk_serdes_col_sp10b",
+ "top": "ot_pdie_serdes_col_lp8b",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_link/col/lp8b/ot_pdie_serdes_col_lp8b.sv",
+  "rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land_regwe.sv",
+  "rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+  "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+  "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_bb.v",
+  "physical/asap7_memory_macros/ot_s81_pma_rxn/ot_s81_pma_rxn_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_link",
+  "OT_SPINE_LEAF_N": "4",
+  "OT_SPINE_BIN": "18",
+  "OT_SPINE_ITERS": "20",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_SAFE": "1",
+  "OT_SPINE_TOL": "8",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_RC_CAL": "0"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_tx",
+ "clock_ports": [
+  "ck_tx",
+  "ck_sr",
+  "ck_rxo",
+  "ck_dec",
+  "ck_prx"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_tx"
+   ],
+   "inputs": [
+    "rst_tx",
+    "tx"
+   ],
+   "outputs": [
+    "pma_tx",
+    "pma_tck"
+   ]
+  },
+  "sr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_sr"
+   ],
+   "inputs": [
+    "rst_sr"
+   ],
+   "outputs": []
+  },
+  "rxo": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rxo"
+   ],
+   "inputs": [
+    "rst_rxo"
+   ],
+   "outputs": [
+    "rx",
+    "st"
+   ]
+  },
+  "dec": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_dec"
+   ],
+   "inputs": [
+    "rst_dec"
+   ],
+   "outputs": []
+  },
+  "prx": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_prx"
+   ],
+   "inputs": [
+    "rst_prx",
+    "pma_rx"
+   ],
+   "outputs": []
+  }
+ },
+ "landed_record": "rtl/dsrom_sys/s81_link/col/lp8b/ot_pdie_serdes_col_lp8b_record.json",
+ "landed_note": "STW-S81-OWN7 10-21 lp8b: lp.py landed column from flat8s (spec tools/landed_parent/specs/ot_pdie_serdes_col_lp8b.json). S81-SERDES 10-19: lp.py landed column from the wires-only flat parent ot_pdie_serdes_col_flat (spec tools/landed_parent/specs/ot_pdie_serdes_col_lp4.json). Clock families (COORDINATOR LEAD-S81 10-19 11:53): clk -> ck_tx, ck_r0, ck_r1, ck_ptx, ck_rxo; pma_rck (recovered, NOT the core PLL) -> ck_syn, ck_dly, ck_chn, ck_out. The only rck->clk crossings are the CDC children u_rm (closed gray-FIFO rate matcher, elastic IDLE deletion) and u_sts (2-flop status syncs) plus the regional reset runs (>= 4 stages per region = synchronisers); no landing crosses the families. related_same_frequency is the landed-cluster STA convention (as the closed s81lk_rate_match tile); the CDC is structural, proven by tb_s81_pdie_col with die B 300 ppm slow.",
+ "reset_ports": [
+  "rst_tx",
+  "rst_sr",
+  "rst_rxo",
+  "rst_dec"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "lp6 regional_reset_ports: each region's reset port rst_<r> is landed by the lp.py regional reset forest (4 registered stages on that region's own clock, beside its pin); no plain fanout from a port, no cross-region reset path"
+ },
+ "outline": {
+  "w": 604.8,
+  "h": 3844.8,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_s81_pma_rxn",
+   "count": 1,
+   "inst": "u_prx",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "pg_layer": "M5"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_s81_pma_txm",
+   "count": 1,
+   "inst": "u_ptx",
+   "at": [
+    345.6,
+    43.2
+   ],
+   "pg_layer": "M5"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "count": 1,
+   "inst": "u_rmm",
+   "at": [
+    172.8,
+    3412.8
+   ]
+  }
+ ],
+ "children": [
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn",
+   "count": 1,
+   "inst": "u_syn",
+   "at": [
+    43.2,
+    2376.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly",
+   "count": 1,
+   "inst": "u_dly",
+   "at": [
+    43.2,
+    2635.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn",
+   "count": 1,
+   "inst": "u_chn",
+   "at": [
+    43.2,
+    2851.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout",
+   "count": 1,
+   "inst": "u_out",
+   "at": [
+    43.2,
+    3110.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc",
+   "count": 1,
+   "inst": "u_enc",
+   "at": [
+    345.6,
+    2332.8
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "rx",
+   "st"
+  ],
+  "S": [
+   "pma_rx",
+   "pma_tx",
+   "pma_tck"
+  ],
+  "W": [
+   "ck_dec",
+   "rst_dec",
+   "ck_rxo",
+   "rst_rxo",
+   "ck_prx",
+   "rst_prx"
+  ],
+  "E": [
+   "tx",
+   "ck_tx",
+   "rst_tx",
+   "ck_sr",
+   "rst_sr"
+  ]
+ },
+ "pin_ranges": {
+  "rx": [
+   45.0,
+   215.0
+  ],
+  "st": [
+   220.0,
+   221.0
+  ],
+  "pma_rx": [
+   45.0,
+   170.0
+  ],
+  "pma_tx": [
+   347.5,
+   472.0
+  ],
+  "pma_tck": [
+   473.0,
+   474.5
+  ],
+  "tx": [
+   2339.0,
+   2531.0
+  ],
+  "ck_tx": [
+   2570.0,
+   2570.5
+  ],
+  "rst_tx": [
+   2576.0,
+   2576.5
+  ],
+  "ck_sr": [
+   3070.0,
+   3070.5
+  ],
+  "rst_sr": [
+   3076.0,
+   3076.5
+  ],
+  "ck_dec": [
+   2860.0,
+   2860.5
+  ],
+  "rst_dec": [
+   2866.0,
+   2866.5
+  ],
+  "ck_rxo": [
+   3600.0,
+   3600.5
+  ],
+  "rst_rxo": [
+   3606.0,
+   3606.5
+  ],
+  "ck_prx": [
+   2296.0,
+   2296.5
+  ],
+  "rst_prx": [
+   2302.0,
+   2302.5
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "structural_change": "Replace raw-pin TritonCTS with separate real physical clock spines for all five named roots. Every hard macro clock pin is a distinct leaf; actual CLOSED child boundary insertion sets its target. Physical buffers pad early PMA and parent-register branches. Original geometry, RTL, six actual landings and all data/reset ages stay identical. No300ps decoder waiver.",
+ "job": {
+  "owner": "CODEX",
+  "branch": "codex/s81-serdes-pg-2327",
+  "tag": "sp10b",
+  "purpose": "Actual child-insertion-aware physical clock trees for exact lp8b RTL; all TT/FF80ps guards retained.",
+  "benches": [
+   {
+    "name": "link_m0",
+    "cmd": "mkdir -p {RUN}/lk && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_s81_pdie_col -GMODE=0 -GMUT=0 rtl/dsrom_sys/s81_link/col/tb_s81_pdie_col.sv rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_lpw8b.sv rtl/dsrom_sys/s81_link/col/lp8b/ot_pdie_serdes_col_lp8b.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v -Mdir {RUN}/lk/obj > {RUN}/lk/build.log 2>&1 && {RUN}/lk/obj/Vtb_s81_pdie_col > {RUN}/lk/run.log 2>&1; tail -20 {RUN}/lk/run.log; grep -q 'TB_S81_PDIE_COL PASS' {RUN}/lk/run.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_m0",
+    "cmd": "mkdir -p {RUN}/lp0 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp8b -GMUT=0 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat8s.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv rtl/dsrom_sys/s81_link/col/lp8b/ot_pdie_serdes_col_lp8b.sv rtl/dsrom_sys/s81_link/col/lp8b/tb_ot_pdie_serdes_col_lp8b.sv -Mdir {RUN}/lp0/obj > {RUN}/lp0/build.log 2>&1 && {RUN}/lp0/obj/Vtb_ot_pdie_serdes_col_lp8b > {RUN}/lp0/run.log 2>&1; cat {RUN}/lp0/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp0/run.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lockstep_mut1",
+    "cmd": "mkdir -p {RUN}/lp1 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp8b -GMUT=1 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat8s.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv rtl/dsrom_sys/s81_link/col/lp8b/ot_pdie_serdes_col_lp8b.sv rtl/dsrom_sys/s81_link/col/lp8b/tb_ot_pdie_serdes_col_lp8b.sv -Mdir {RUN}/lp1/obj > {RUN}/lp1/build.log 2>&1 && {RUN}/lp1/obj/Vtb_ot_pdie_serdes_col_lp8b > {RUN}/lp1/run.log 2>&1; cat {RUN}/lp1/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp1/run.log",
+    "expect": "fail",
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/s81_link/col_lp7b_1020/lp/mut1.log"
+   },
+   {
+    "name": "lockstep_mut2",
+    "cmd": "mkdir -p {RUN}/lp2 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp8b -GMUT=2 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat8s.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv rtl/dsrom_sys/s81_link/col/lp8b/ot_pdie_serdes_col_lp8b.sv rtl/dsrom_sys/s81_link/col/lp8b/tb_ot_pdie_serdes_col_lp8b.sv -Mdir {RUN}/lp2/obj > {RUN}/lp2/build.log 2>&1 && {RUN}/lp2/obj/Vtb_ot_pdie_serdes_col_lp8b > {RUN}/lp2/run.log 2>&1; cat {RUN}/lp2/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp2/run.log",
+    "expect": "fail",
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/s81_link/col_lp7b_1020/lp/mut2.log"
+   },
+   {
+    "name": "lockstep_mut4",
+    "cmd": "mkdir -p {RUN}/lp4 && verilator --binary -j 4 -I. -Irtl/dsrom_sys/s81_link -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 --top-module tb_ot_pdie_serdes_col_lp8b -GMUT=4 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat8s.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv rtl/dsrom_sys/s81_link/col/lp8b/ot_pdie_serdes_col_lp8b.sv rtl/dsrom_sys/s81_link/col/lp8b/tb_ot_pdie_serdes_col_lp8b.sv -Mdir {RUN}/lp4/obj > {RUN}/lp4/build.log 2>&1 && {RUN}/lp4/obj/Vtb_ot_pdie_serdes_col_lp8b > {RUN}/lp4/run.log 2>&1; cat {RUN}/lp4/run.log | tail -20; grep -q 'LP_LOCKSTEP PASS' {RUN}/lp4/run.log",
+    "expect": "fail",
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/s81_link/col_lp7b_1020/lp/mut4.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/common/landed_parent/ot_pl_land_regwe.sv",
+   "rtl/dsrom_sys/s81_link/col/lp8b/ot_pdie_serdes_col_lp8b_record.json",
+   "rtl/dsrom_sys/s81_link/col/lp8b/tb_ot_pdie_serdes_col_lp8b.sv",
+   "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_flat8s.sv",
+   "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col_lpw8b.sv",
+   "rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv",
+   "rtl/dsrom_sys/s81_link/col/ot_s81_pma_models.sv",
+   "rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv",
+   "rtl/dsrom_sys/s81_link/col/tb_s81_pdie_col.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "tools/landed_parent/lp.py",
+   "tools/landed_parent/specs/ot_pdie_serdes_col_lp8b.json"
+  ],
+  "mut_note": "lp8b pad is on the sticky rm_flt status flag only (never asserted in the error-free loopback, MUT 3 cannot be observed): mutants 1, 2, 4 + region audit",
+  "views_to": "physical/ref_tile/s81lk_serdes_col_sp10b/views",
+  "record_to": "results/rtl/ref_tile/s81lk_serdes_col_sp10b"
+ },
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "cdc_note": "STW-S81-OWN7 10-21: the status synchroniser is no longer a CDC child: its halves u_sts_r (ck_dec) / u_sts_t (ck_rxo) are joined by lp.py LANDINGS (lock_r / unc_r), the 2-flop stages stay behind the landing read. The rate matcher u_rm / u_rmm stays the only CDC child. lp6: rate matcher = control u_rm (ot_s81_rate_match_sr, soft CDC child: write side ck_dec, read side ck_rxo, 2-stage gray syncs) + storage u_rmm = dual-clock SRAM ot_sram_1r1w2c_16x546_m1 (raw macro sink of BOTH roots: wclk ck_dec, rclk ck_rxo; raw_macro_clocks dual form). Status sync u_sts soft CDC child (ck_r ck_dec, ck_t ck_rxo). lpk2: the landed-cluster gate refuses a HARD child whose clock pins sit on two region roots (lpk1 FAIL 'OT_LANDED: hard child u_rm clock pins on different region roots'), so the rate matcher u_rm (same RTL as the closed s81lk_rate_match tile: 8 x 512 gray-pointer elastic FIFO) and the status sync u_sts are SOFT CDC children synthesised in the parent: write side on ck_out, read side on ck_tx.",
+ "soft_root_macro_masters": [
+  "ot_s81_pma_rxn",
+  "ot_s81_pma_txm",
+  "ot_sram_1r1w2c_16x546_m1"
+ ],
+ "soft_root_macro_interface_masters": [
+  "ot_s81_pma_rxn",
+  "ot_s81_pma_txm"
+ ],
+ "soft_root_macro_bindings": {
+  "u_ptx": {
+   "master": "ot_s81_pma_txm",
+   "clock_pin": "ck",
+   "root": "ck_tx"
+  },
+  "u_prx": {
+   "master": "ot_s81_pma_rxn",
+   "clock_pin": "pma_rck",
+   "root": "ck_prx"
+  },
+  "u_rmm": {
+   "master": "ot_sram_1r1w2c_16x546_m1",
+   "clock_pins": {
+    "rclk": "ck_rxo",
+    "wclk": "ck_dec"
+   }
+  }
+ },
+ "clock_distribution": "spine",
+ "child_clock_ref": "boundary"
+}
