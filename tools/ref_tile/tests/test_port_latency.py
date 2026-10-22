@@ -108,7 +108,8 @@ source [lindex $argv 1]
             self.assertEqual(G.trial_grt_make_args(spec), "")
         sh = G.REMOTE_SH.format(R='r', COMMIT='c', CAP=1, KIT='k', IMG='i', RC='x', TBX='', BRP='', TOP='t', CTS=0, PGM=32, TRIAL=1,
                                 GRTX=G.trial_grt_make_args({}), CLKS='ck', CLK='ck', ARCHIVE_SHA256='s', STEP_CAP=1)
-        self.assertIn("GENERATE_ARTIFACTS_ON_FAILURE=1 SKIP_INCREMENTAL_REPAIR=1 grt", sh)
+        self.assertIn("gate-trial-grt --case", sh)
+        self.assertIn('--make-args "SKIP_INCREMENTAL_REPAIR=1 "', sh)
 
 
 GATE_STUB = '''
