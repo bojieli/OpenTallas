@@ -41,9 +41,9 @@ RESET_SYNC_SOURCE = 'rtl/lib/ot_reset_sync.sv'
 # declare it is checked exactly as before).  Control is the reviewed FIFO's verbatim; one Gray pair crosses; per-slice
 # wa/ra are same-domain copies; payload = g_s[s].mem[slot][b] -> rd_data[s*SW+b].
 SHP_SOURCE = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv'
-OPTIONAL_SOURCES = {SHP_SOURCE: ('d38c9ee20c03f54fe287e9a1216afb18b38bc5dceb1f898bc5bd1d745e274529',)}
+OPTIONAL_SOURCES = {SHP_SOURCE: ('258939975691e3c336a19e33ed02c7beb4d2660708bf0c5ff73825a33c50a593',)}
 FIFO_SRC_RANGE = {'ot_hbm_svc_async_fifo': (next(iter(SOURCES)), '6.1-51.10'),
-                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '28.1-113.10')}
+                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '32.1-121.10')}
 # destination period - 60 ps setup uncertainty (gray_fifo_cdc_constraints rule (c) reset bound)
 RESET_BOUND_PS = {'core': 773.333, 'hbm': 964.0}
 RELATIONSHIP = dict(kind='hbm_phy_async_gray_fifo', stream_period_ps=833.333,
@@ -108,6 +108,42 @@ def load(spec, root):
                 reset_aliases=['rd_reset','u_rd_reset.sync_rst_n','u_wr_reset.sync_rst_n','wr_reset'],payload_output_bits={'':{str(i):(['rd_data','rd_data[0]']if params.get('WIDTH',32)==1 else['rd_data['+str(i)+']'])for i in range(params.get('WIDTH',32))}},primitive=True)
 
 
+def _shp_reset_wiring(module):
+    """SHP v4 re-ack (COORD 10-22): every group / slice reset is driven by the kept leaf u_gw_leaf / u_gr_leaf, whose
+    rst_n_in is u_wr_reset / u_rd_reset.sync_rst_n, whose d is wr_online / rd_online and whose clk is wr_clk / rd_clk;
+    every g_s[*].wa flop resets from a u_gw_leaf output and every g_s[*].rs flop from a u_gr_leaf output.  Any other
+    wiring (e.g. an extra leaf stage, a group reset from a different sync) is refused."""
+    cells=module.get('cells',{});nets=module.get('netnames',{})
+    def bits(name):
+        if name not in nets:raise ValueError('async_gray_fifo shp reset wiring: missing net '+name)
+        return tuple(nets[name]['bits'])
+    con=lambda c,pin:tuple(cells[c]['connections'].get(pin,()))
+    for side,leaf,sync,online,clk in (('w','u_gw_leaf','u_wr_reset','wr_online','wr_clk'),('r','u_gr_leaf','u_rd_reset','rd_online','rd_clk')):
+        if (con(leaf,'rst_n_in')!=con(sync,'sync_rst_n') or not con(leaf,'rst_n_in') or con(leaf,'d')!=bits(online)
+                or con(leaf,'clk')!=bits(clk)):
+            raise ValueError('async_gray_fifo shp '+leaf+' is not the reviewed '+sync+' / '+online+' / '+clk+' leaf')
+    leaf_out={'w':set(con('u_gw_leaf','rst_n')),'r':set(con('u_gr_leaf','rst_n'))}
+    want={}
+    for name,net in nets.items():
+        m=re.fullmatch(r'g_s\[\d+\]\.(wa|rs)',name)
+        if m:
+            for b in net['bits']:
+                if isinstance(b,int):want[b]=('w' if m.group(1)=='wa' else 'r',name)
+    seen=set()
+    for cname,cell in cells.items():
+        conn=cell.get('connections',{})
+        if not cell.get('type','').startswith('$_DFF') or 'Q' not in conn or 'R' not in conn and 'S' not in conn:
+            continue
+        for q in conn['Q']:
+            if q in want:
+                side,name=want[q];rst=tuple(conn.get('R',[]))+tuple(conn.get('S',[]))
+                if not rst or not set(rst)<=leaf_out[side]:
+                    raise ValueError('async_gray_fifo shp '+name+' reset is not driven by its reviewed group leaf')
+                seen.add(q)
+    if set(want)-seen:
+        raise ValueError('async_gray_fifo shp slot-index flops without a reviewed async group reset: '+str(len(set(want)-seen)))
+
+
 @lru_cache(maxsize=16)
 def elaborate(root, top, sources, params):
     # The cache key includes every input byte hash. No caller-supplied graph or
@@ -167,6 +203,7 @@ def elaborate(root, top, sources, params):
                 if (set(syncs)!={'u_wr_reset','u_rd_reset'} or len(set(syncs.values()))!=1
                         or set(leaves)!={'u_gw_leaf','u_gr_leaf'}):
                     raise ValueError('async_gray_fifo shp reset structure differs from the reviewed one: '+json.dumps([syncs,leaves],sort_keys=True)[:600])
+                _shp_reset_wiring(module)
             values=module.get('parameter_default_values',{})
             if int(values.get('DEPTH','0'),2)not in (4,8) or int(values.get('WIDTH','0'),2)<1:
                 raise ValueError('async_gray_fifo actual instance exceeds reviewed parameter shape')

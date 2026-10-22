@@ -13,6 +13,10 @@
 // v4 (r5a gate 10-22, census max 57): a binary read index ra[AW-1:0] -> mem[ra] is flattened by abc into AOI terms that
 // reuse every ra bit up to 2 x DEPTH/2 x B times (ra[2] QN 57 loads at DEPTH 8, B 7); the read slot is now a kept
 // one-hot ring rs (rs == 1 << rd_bin[AW-1:0] every edge) and rd_data = OR_d (rs[d] & mem[d]).
+// Resets: gw_reset / gr_reset (u_gw_leaf / u_gr_leaf outputs) are FLOP-DRIVEN async resets of wa / rs: they assert
+// asynchronously with wr_reset / rd_reset and DEASSERT SYNCHRONOUSLY on a wr_clk / rd_clk edge (the leaf flop's D =
+// wr_online / rd_online), on the same edge as rd_online_w1 / wr_online_r1 capture; the first fire needs the _w2 / _r2
+// flag, i.e. >= 1 edge later (bench margin).  The tool admits this exact wiring only (COORD re-ack 10-22 (b)).
 // group reset sync -> GS slices x (AW + 1) <= 32.
 (* keep_hierarchy = "yes" *)
 module ot_hbm_svc_shp_and2(input wire a,b,output wire y); assign y=a&b; endmodule
@@ -105,7 +109,11 @@ module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)
   always @(posedge wr_clk or negedge gw_reset[s/GS]) if(!gw_reset[s/GS]) wa<=0; else if(wf) wa<=wa+1'b1;
   always @(posedge wr_clk) if(wf) mem[wa]<=wr_data[s*SW+:B];
   always @(posedge rd_clk or negedge gr_reset[s/GS]) if(!gr_reset[s/GS]) rs<={{(DEPTH-1){1'b0}},1'b1};
+`ifdef OT_SHP_MUT_RS_TWICE   // bench-only mutant (COORD re-ack (a)): slice 0's read ring rotates twice per fire
+   else if(rf) rs<=(s==0)?{rs[DEPTH-3:0],rs[DEPTH-1:DEPTH-2]}:{rs[DEPTH-2:0],rs[DEPTH-1]};
+`else
    else if(rf) rs<={rs[DEPTH-2:0],rs[DEPTH-1]};
+`endif
   reg [B-1:0] rdm; integer d;
   always @* begin rdm={B{1'b0}}; for(d=0;d<DEPTH;d=d+1) rdm=rdm|({B{rs[d]}}&mem[d]); end
   assign rd_data[s*SW+:B]=rdm;

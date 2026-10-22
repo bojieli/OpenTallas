@@ -10,6 +10,9 @@ w1: SHP_INVARIANT checks=445584 errors=0 release_to_first_fire_min_wr_edges=0
 w1: SHP_LOCKSTEP PASS WIDTH=1 DEPTH=8 SW=7 checks=445584 pops=143949
 mut1: SHP_INVARIANT checks=17823360 errors=214755 release_to_first_fire_min_wr_edges=0
 mut1: SHP_LOCKSTEP FAIL MUT=1 errors=480521 checks=445584 pops=143900
+mut_RS_TWICE: SHP_INVARIANT checks=17823360 errors=214755 release_to_first_fire_min_wr_edges=0
+mut_RS_TWICE: SHP_LOCKSTEP FAIL MUT=0 errors=480551 checks=445584 pops=143900
+RS_DEEP CAUGHT
 mut_RS_DEEP: SHP_INVARIANT checks=17823360 errors=3999640 release_to_first_fire_min_wr_edges=0
 mut_RS_DEEP: SHP_LOCKSTEP FAIL MUT=0 errors=4152401 checks=445584 pops=143900
 mut_RS_DEEP: SHP_INVARIANT checks=17823360 errors=3999640 release_to_first_fire_min_wr_edges=0
