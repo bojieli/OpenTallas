@@ -19,5 +19,16 @@
     "hardware_changed": false,
     "change": "Reference delay buffer and shift loop use DG depth.",
     "rerun": "codex-smh-r7-frame-sizefix-2220-1021"
+  },
+  "fallback_corrected": {
+    "source": "e7adbd0c3",
+    "hardware_source": "e8a4ce865",
+    "status": "PASS",
+    "comparisons": 12796,
+    "cycles": 4000,
+    "first_token_added_edges": 36,
+    "causal_pending": true,
+    "actual_host": "ot-gold1",
+    "unit": "3563433-1792646309"
   }
 }
