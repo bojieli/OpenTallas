@@ -16,7 +16,9 @@ def main():
   dst=B[l['e'][1][0]];rule=t['masters'][dst['master']].get('ports',{}).get(l['e'][1][1]+'.i',{})
   if not rule.get('land') or (l['b'] not in (70,276,512,562,682) and not rule.get('adapter')):continue
   n=l['i'].replace('-','_');N=l.get('s',0)
-  if n in rows and N:continue
+  # This step closes direct crossings only. Existing multi-hop lanes keep
+  # their recorded pilot window; missing long-width hardware is not guessed.
+  if N:continue
   E=max(2,math.ceil(.47*N)+1)
   if E>7 and l['b']!=276:raise ValueError(f'{n}: no existing long view for {l["b"]}b E{E}')
   r=dict(link=n,cls=l['c'],dst=dst['name'],bits=l['b'],stages=N,E=E,K=E,D=8 if E>7 else 4,
