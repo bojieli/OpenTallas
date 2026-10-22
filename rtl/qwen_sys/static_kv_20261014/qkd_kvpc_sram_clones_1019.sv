@@ -1147,6 +1147,9 @@ module qkd_kvpc_s_cdc_child #(
           pc_core_q!=es_expected_pc_q || stack_q!=es_expected_stack_q))native_intake_fault<=1;
       end
     always @(posedge ck or negedge rs_q) if (!rs_q) es_v_q <= 1'b0; else es_v_q <= es[0];
+    // QE3-PC2 (native32, gate 171639: es_v_q drove 35 pins): kept copy es_v_qb carries the CDC s_v + queue pushes
+    (* keep *) reg es_v_qb;
+    always @(posedge ck or negedge rs_q) if (!rs_q) es_v_qb <= 1'b0; else es_v_qb <= es[0];
     always @(posedge ck) es_d_q <= es[287:1];
     wire         e_v, e_v_k, s_credit, f_core;
     wire [257:0] e_d;
@@ -1154,7 +1157,7 @@ module qkd_kvpc_s_cdc_child #(
     wire [286:0] c_d_w;
     wire [61:0]  c_context_w;
     ot_qkd_static_emb_cdc_kvpc_s #(.ENABLE(1)) u_ecdc (
-        .clk(ck), .rst_n(rs_q), .hclk(hclk), .hrst_n(h_rn), .s_v(es_v_q), .s_d(es_d_q),.s_context(es_context_q[317:256]), .c_v(c_v_w), .c_d(c_d_w),.c_context(c_context_w),
+        .clk(ck), .rst_n(rs_q), .hclk(hclk), .hrst_n(h_rn), .s_v(es_v_qb), .s_d(es_d_q),.s_context(es_context_q[317:256]), .c_v(c_v_w), .c_d(c_d_w),.c_context(c_context_w),
         .h_credit(s_cr_q), .s_credit(s_credit), .h_v(em_v_q), .h_d(em_d_q), .e_v(e_v), .e_v_k(e_v_k), .e_d(e_d),
         .fault_core(f_core), .fault_hbm(f_ecdc));
     // down-FIFO output registers (the FIFO read mux never reaches a pin)
@@ -1176,9 +1179,9 @@ module qkd_kvpc_s_cdc_child #(
         .completion_v(completion_v),.completion_we(completion_we),.fault(completion_fault));
     // ---- actual outstanding work observations (not execution/admission gates) ----
     reg [15:0] drain_desc,drain_reads,drain_credits;
-    wire dc_push=es_v_q,dc_pop=completion_v;
-    wire dr_push=es_v_q&&!es_d_q[285],dr_pop=e_v;
-    wire dq_push=es_v_q,dq_pop=s_credit;
+    wire dc_push=es_v_qb,dc_pop=completion_v;
+    wire dr_push=es_v_qb&&!es_d_q[285],dr_pop=e_v;
+    wire dq_push=es_v_qb,dq_pop=s_credit;
     wire core_drain_activity_q=es_v_q||completion_v||e_v||er_v||s_credit||er_cr;   // all but the raw es[0] pin
     wire core_drain_activity=core_drain_activity_q;
     // cdc_s7c (Q-KVELEM2 2026-10-17): idle_core is ONE export flop. cdc_s7b exported idle_core_r && !es0_idle_q (an AND
@@ -2135,11 +2138,21 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     // the head write's bank/column are REGISTERED copies (hb_oh one-hot), kept off the queue index
     reg [4:0] hb, hc; reg [31:0] hb_oh;
     wire [5*WQ-1:0] wq_bq;                            // queued write banks, oldest first
+    // QE3-PC2 sr10e (native32, gate 171639: one wq_bq select net drove 38 mux pins via open[]/blk[]/aok_z[]): two more
+    // kept one-hot copies of wq_rp build distinct copies of the queued banks: wq_bq (open[] + rrdl/bsel + wab_n),
+    // wq_bq_b (blk[]), wq_bq_c (aok_z[]).  Identical values (same D every edge, same reset).
+    (* keep *) reg [3:0] wq_rpoh_b, wq_rpoh_c;
+    wire [5*WQ-1:0] wq_bq_b, wq_bq_c;
     wire [WQ-1:0] wq_in;                              // queue entry valid
     for (genvar i = 0; i < WQ; i = i + 1) begin : wqe
       wire [3:0] q_oh = wq_rot(wq_rpoh_qv[3:0], i);
+      wire [3:0] q_ob = wq_rot(wq_rpoh_b, i), q_oc = wq_rot(wq_rpoh_c, i);
       assign wq_bq[i*5 +: 5] = ({5{q_oh[0]}} & wq_bank[0]) | ({5{q_oh[1]}} & wq_bank[1]) |
                                ({5{q_oh[2]}} & wq_bank[2]) | ({5{q_oh[3]}} & wq_bank[3]);
+      assign wq_bq_b[i*5 +: 5] = ({5{q_ob[0]}} & wq_bank[0]) | ({5{q_ob[1]}} & wq_bank[1]) |
+                                 ({5{q_ob[2]}} & wq_bank[2]) | ({5{q_ob[3]}} & wq_bank[3]);
+      assign wq_bq_c[i*5 +: 5] = ({5{q_oc[0]}} & wq_bank[0]) | ({5{q_oc[1]}} & wq_bank[1]) |
+                                 ({5{q_oc[2]}} & wq_bank[2]) | ({5{q_oc[3]}} & wq_bank[3]);
       assign wq_in[i] = W && i < wq_n;
     end
     reg [31:0] hold_n, hold;                          // banks a queued write needs (never precharged;
@@ -2516,8 +2529,8 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
     wire [WQ-1:0] wq_act;
     for (genvar i = 0; i < WQ; i = i + 1) begin : wqa
-      wire [4:0] bq = wq_bq[i*5 +: 5];
-      assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
+      wire [4:0] bq = wq_bq[i*5 +: 5], bq_b = wq_bq_b[i*5 +: 5], bq_c = wq_bq_c[i*5 +: 5];
+      assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq_b] && aok_z[bq_c] && rrdl_z[bq[1:0]] &&
                          !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
     end
     // The candidate (oldest queued write whose bank can open) is REGISTERED and re-validated at use
@@ -2702,9 +2715,9 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire [3:0] wq_ws_m = (wq_n_m != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp1 + wq_n_m[WQW-1:0])) : 4'b0;
     wire [3:0] wq_wsoh_nx = wr_ok_c[14] ? wq_ws_m : wq_ws_p;
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) begin wq_rpoh_qv <= {4{4'b0001}}; wq_ne_qv <= {3{2'b10}}; wq_ws_qv <= {3{4'b0001}}; end
+      if (!rst_n) begin wq_rpoh_qv <= {4{4'b0001}}; wq_rpoh_b <= 4'b0001; wq_rpoh_c <= 4'b0001; wq_ne_qv <= {3{2'b10}}; wq_ws_qv <= {3{4'b0001}}; end
       else begin
-        wq_rpoh_qv <= {4{wq_rpoh_nx}}; wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}}; wq_ws_qv <= {3{wq_wsoh_nx}};
+        wq_rpoh_qv <= {4{wq_rpoh_nx}}; wq_rpoh_b <= wq_rpoh_nx; wq_rpoh_c <= wq_rpoh_nx; wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}}; wq_ws_qv <= {3{wq_wsoh_nx}};
       end
     wire [31:0] wq_dec = 32'b1 << wr_bank;
     always @(posedge clk) if (W) for (integer e = 0; e < WQ; e = e + 1) begin
