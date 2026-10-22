@@ -1,7 +1,7 @@
 """Joint station43.2 and ring-bay model; no multi-cycle bank data paths."""
 import json,pathlib,sys,collections,math,hashlib
 from ortools.sat.python import cp_model
-root=pathlib.Path('results/arch/qw_cb16_legal_bays_1020/grid43');name=sys.argv[1];inputpath=root/(name+'_bank_inputs.json');d=json.loads(inputpath.read_text());assert not d['unknown_writer_bits'];m=cp_model.CpModel();U=4320;R=405000;W,H=[round(x*1000/U) for x in d['outline']];hv={};bv={};hi=[];hj=[];bi=[];bj=[];motion=4
+root=pathlib.Path('results/arch/qw_cb16_legal_bays_1020/grid43');name=sys.argv[1];inputpath=root/(name+'_bank_inputs.json');d=json.loads(inputpath.read_text());assert not d['unknown_writer_bits'];m=cp_model.CpModel();U=4320;R=405000;W,H=[round(x*1000/U) for x in d['outline']];hv={};bv={};hi=[];hj=[];bi=[];bj=[];motion=int(__import__("os").environ.get("OT_JOINT_MOTION","4"))
 for n,p in d['hard'].items():
  w,h=[round(p[k]*1000/U) for k in ['width','height']];ox,oy=[round(p[k]*1000/U) for k in ['x','y']]
  if 'stn5' in p['kind']:

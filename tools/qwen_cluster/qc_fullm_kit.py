@@ -52,7 +52,7 @@ OUT_SDC = {v: f"physical/qcluster/{k}_regions.sdc" for v, k in KITS.items()}
 OUT_SITES = {v: f"physical/qcluster/{k}_sites.tsv" for v, k in KITS.items()}
 PLAN = "results/arch/qw_cb16_legal_bays_1020/grid43"
 REACH = 405.0
-A0_STANDIN = f"{RT}/qfd_c_b16_dv_diag/a0_standin"
+A0_STANDIN = f"{RT}/qfd_c_b16_dv_diag/" + __import__("os").environ.get("OT_CB16_A0", "a0_standin")   # SQC-CB16: a0_rc14face = live A0 faces
 VIEW = {
     "qfd_c_stn514": f"{RT}/qfd_c_stn514/views/qfd_c_stn514",
     "qfd_c_stn516": f"{RT}/qfd_c_stn516/views/qfd_c_stn516",
@@ -292,6 +292,12 @@ GEOM = {  # widened channels (um); tile bands keep their width.  Sized by fit (p
     "softk":  dict(L=172.8, A=319.68, T=276.48, B=276.48, R=172.8, m0=129.6, g0=172.8, g1=172.8, g2=172.8, m1=129.6),
     "softkb": dict(L=172.8, A=319.68, T=276.48, B=276.48, R=172.8, m0=129.6, g0=172.8, g1=172.8, g2=172.8, m1=129.6),
 }
+
+# SQC-CB16 10-22: the A0 tile bands follow the bound A0 abstract (live A0 820.8 x 907.2 vs the c1 stand-in 457.92 x 1166.4);
+# corridor / row-gap widths unchanged.  Both are multiples of the 43.2 lattice.
+_A0W, _A0H, _ = LEFS["qfd_tile_nk_rp2_romleaf_rr"]
+for _g in ("softk", "softkb"):
+    GEOM[_g].update({f"c{i}": _A0W for i in range(4)}); GEOM[_g].update({f"r{i}": _A0H for i in range(4)}); GEOM[_g].update(A=432.0, B=432.0, T=345.6)   # W-face corridors A / B carry two A0 W pin bands (2 x 2,056 pins in 413 um) + stations
 
 def orient_xy(kind, orient, x, y):
     w, h, _ = LEFS[kind]
