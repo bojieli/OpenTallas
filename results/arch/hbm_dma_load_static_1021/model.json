@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hbm_dma_load_static.v1",
-  "status": "COMPONENT_V8_PASS_NATIVE4_RUNNING",
+  "status": "COMPONENT_V9_PASS_NATIVE5_RUNNING",
   "required_formats": {
     "0": "FP32",
     "1": "BF16",
@@ -36,7 +36,7 @@
   },
   "latency": {
     "load_pin_to_output_edges_expected": 5,
-    "measurement": "Gold2 unit710376-1792642633, Verilator5.050, source d70845a2b: both banks1480 commands each, zero mismatches, II1, five local edges; release-only/reuse, mutant rejection, raw lockstep, actual384 and independent raw/converted overlap pass.",
+    "measurement": "EP5 unit1581780-1792643894, Verilator5.050, source db8c16103: both banks 1480 commands each, zero mismatches, II 1, five local edges; release/reuse, mutant, raw lockstep, checkpoint subset and independent outputs pass.",
     "HBM_window_latency": "real vmks CDC and drain dependent; not104",
     "load_pin_to_output_edges_measured": 5,
     "route_extra_edges": 5,
@@ -80,11 +80,11 @@
     "storage": "same existing SRAM payload, no new large flop storage",
     "pins": "same landing input/output registerband",
     "reach": "new fixed registered route required; die lead owns actual geometry",
-    "fanout": "Native3 max38: only lstart38/start_ok37/rawfinal33 remain; d708 local window decoders and local bank captures address these; native4 MAIN+FB running.",
-    "depth": "Five local registered edges measured; native4 depth and CTS pending.",
-    "floorplan": "Native3 mapped total21954.202um2 (includes7789um2 SRAM); MAIN302.4x151.2 about48% fill. M4 macros explicitly on43.2um lattice with34.776um channel; FB77.976um channel. Native4 area/CTS pending.",
+    "fanout": "Native4 max 34, five violations: four local epoch/status bank selectors and shared ownership release. db8 uses three same-edge bank captures per decoder and locally computes ownership release. Native5 MAIN and fallback are running.",
+    "depth": "Five local registered edges measured; native5 depth and CTS pending.",
+    "floorplan": "Native4 mapped total 21987.633960 um2 including 7789 um2 SRAM. MAIN 302.4 x 151.2; fallback 345.6 x 172.8. Actual macro channels 34.776 / 77.976 um. Native5 area and CTS pending.",
     "clock": "one local streamclock; external crossings landed by die",
     "reset": "new pipeline valid reset only; datapath unreset"
   },
-  "source_commit": "d70845a2b"
+  "source_commit": "db8c16103"
 }
