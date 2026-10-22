@@ -190,7 +190,7 @@ module qkd_host_link_services #(parameter integer NL = 2) (
     input  wire          d2d_links_drained, d2d_link_reset_seen, d2d_retrained,
     // HOST-record port slots from the KV end (TX port 1 / RX port 1)
     input  wire          rec_tx_slot, input wire [3:0] rec_tx_kind, input wire [4:0] rec_tx_beat,
-    input  wire          rec_rx_event, rec_rx_slot, input wire [547:0] rx_payload,
+    input  wire          rec_rx_event, rec_rx_slot, input wire [3:0] rec_rx_kind, input wire [547:0] rx_payload,
     // kind-15 decoded compute status
     input  wire          c_vm_drained, c_collective_drained, c_collective_busy, c_crom_fault, c_execution_active,
     input  wire          c_admit_ready, c_status_fresh,
@@ -227,7 +227,7 @@ module qkd_host_link_services #(parameter integer NL = 2) (
     assign record_send_kind = !rec_tx_slot ? 2'd0 : rec_tx_kind == 4'd12 ? 2'd3 :
                               rec_tx_kind == 4'd13 && rec_tx_beat == 5'd1 ? 2'd1 :
                               rec_tx_kind == 4'd13 && rec_tx_beat == 5'd2 ? 2'd2 : 2'd0;
-    assign record_witness_slot = rec_rx_slot;
+    assign record_witness_slot = rec_rx_slot && rec_rx_kind==4'd14;
     assign record_rx_v = rec_rx_event;
     assign record_rx = rx_payload;
 endmodule

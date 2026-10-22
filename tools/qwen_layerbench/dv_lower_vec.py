@@ -554,5 +554,26 @@ def main():
     return 0
 
 
+def rope_words(pos):
+    """QW-LAYERGAP 10-20: the token's RoPE row as the 8 group-1 D2D return words the RP 1 slice lands in CROM ROPE:
+    word k = {v 1, em 1, beat k, data 512}, data lane l (64 b) = {hi sin, lo cos} of pair 8 k + l (= crom_table's
+    kind-1 payload split per bank, bit-exact hdc_golden.rope_tables)."""
+    import numpy as np
+    sys.path.insert(0, str(ROOT / 'tools'))
+    import hdc_golden as G
+    cos, sin, half = G.rope_tables(pos, HD, ROPE_THETA)
+    if half != HD // 2:
+        raise LowerError('RoPE half != 64')
+    lb, hb = np.asarray(cos, np.float32).view(np.uint32), np.asarray(sin, np.float32).view(np.uint32)
+    out = []
+    for k in range(HD // 16):
+        pay = 0
+        for l in range(8):
+            pay |= (int(lb[8 * k + l]) | (int(hb[8 * k + l]) << 32)) << (64 * l)
+        out.append((1 << 519) | (1 << 518) | (k << 512) | pay)
+    return out
+
+
+
 if __name__ == '__main__':
     raise SystemExit(main())

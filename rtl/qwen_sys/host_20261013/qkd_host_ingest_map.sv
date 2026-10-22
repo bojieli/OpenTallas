@@ -40,9 +40,10 @@ module qkd_host_ingest_map #(parameter integer MUT=0,ORDERED=0,BOOT_SCRATCH_ROW=
    sec=addr[23:7];j={sec[10:8],sec[6:0]};d_bank={j[9:7],j[1:0]};d_col=j[6:2];d_row=19'd64+{13'd0,sec[16:11]};
    d_good=d_good&&addr[30:24]==0&&!sec[7]&&sec[16:11]<36;
   end else begin
-   d_good=d_good&&addr[30:25]==0&&e<25'd19457304;
+   d_good=d_good&&addr[30:25]==0&&e<25'd19588376;
    if(e<25'd19447808)begin d_stack=e[6:5];d_pc=e[4:0];p=t[9:0];d_row=19'd24427+{11'd0,t[17:10]};end
-   else begin d_stack=s[6:5];d_pc=s[4:0];p=10'd384+10'(s[13:7]);d_row=19'd24575;end
+   else if(e<25'd19457304)begin d_stack=s[6:5];d_pc=s[4:0];p=10'd384+10'(s[13:7]);d_row=19'd24575;end
+   else begin s=e-25'd19457304;d_stack=s[6:5];d_pc=s[4:0];p=10'(s>>7);d_row=19'd24576;end
    d_bank={p[9:7],p[1:0]};d_col=p[6:2];
   end
   // Cold boot checker owns this scratch row on all PCs. Even a future address
