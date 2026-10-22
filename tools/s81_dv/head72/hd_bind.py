@@ -24,6 +24,7 @@ Head masters retain source views unless a plan explicitly selects a CLOSED peer 
 import argparse
 import copy
 import json
+import os
 import re
 from pathlib import Path
 
@@ -115,6 +116,13 @@ def main():
                              clk='ck', rst=['rst_n', 'low'],
                              ports={'i.i': busb('i', land=True), 'iw.i': busb('iw', land=True), 'ie.i': busb('ie', land=True),
                                     'o.o': busb('o')})
+    # H10b (STW-S81-HEAD 10-21): spo CLOSED s81hd_spo_m-6398c44bc (record aff1c1ca8, TT/FF/DRC0); source ot_s81hd_spo.sv
+    # blob 805e128f identical to this die's source, 216 x 648 body = the plan reserve, ports ck/rst_n/i/o/ow/oe x 565 = busb.
+    spo_view = 'physical/ref_tile/s81hd_spo_m/views/ot_s81hd_spo'
+    if os.environ.get('HD_BIND_SPO_CLOSED', '1') == '1':  # view files resolve from --view-refs like the SPR view
+        M['ot_s81hd_spo']['view'] = spo_view
+        M['ot_s81hd_spo']['view_note'] = ('CLOSED s81hd_spo_m-6398c44bc (record aff1c1ca8) source 6398c44bc spo blob 805e128f = die source; '
+                                          'exact 216x648 body in the 216x648 reserve; actual parent timing pending')
     if facts.get('spr_closed'):
         selected=facts['spr_closed']
         M['ot_s81hd_spr']['view']=selected['view']
