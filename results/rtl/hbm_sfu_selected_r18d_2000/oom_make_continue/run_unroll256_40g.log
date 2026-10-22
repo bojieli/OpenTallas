@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000
+ot-run: ot-epyc9       admits   128 GB (avail 454, growth 364, headroom 0, waiters 0/0 GB) load 105/128 running 43 disk 1704 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc9 at 1.51 x cores
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2158176-1792648524 after 1 s
+Terminated                 /usr/local/bin/ot-heavy --mem 40 --tag otrun-ubuntu-2686797-648524479 --max-wait 120 -- bash -lc 'cd /srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000/src && env -u SYNC_RST -u OT_SFU_SYNC_RST -u OT_SU_RST_RELAY -u EQ_MUT OUT=/srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000/out SFU_LG_R=15 CORE2=1 bash results/rtl/hbm_sfu_selected_r18d_2000/run_selected.sh'
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2158176-1792648524): exit 143

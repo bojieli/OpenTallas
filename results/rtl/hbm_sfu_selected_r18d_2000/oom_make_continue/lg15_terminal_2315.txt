@@ -1,0 +1,18 @@
+ActiveState=failed
+SubState=failed
+Result=oom-kill
+RuntimeMaxUSec=infinity
+MemoryPeak=42949672960
+MemoryMax=42949672960
+2026-10-21T22:55:25-07:00 ot-epyc9 systemd[9851]: Started oth-ubuntu-2158176-1792648524.scope - [systemd-run] /usr/bin/bash -lc "cd /srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000/src && env -u SYNC_RST -u OT_SFU_SYNC_RST -u OT_SU_RST_RELAY -u EQ_MUT OUT=/srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000/out SFU
+2026-10-21T23:11:55-07:00 ot-epyc9 systemd[9851]: oth-ubuntu-2158176-1792648524.scope: The kernel OOM killer killed some processes in this unit.
+2026-10-21T23:11:56-07:00 ot-epyc9 systemd[9851]: oth-ubuntu-2158176-1792648524.scope: Failed with result 'oom-kill'.
+2026-10-21T23:11:56-07:00 ot-epyc9 systemd[9851]: oth-ubuntu-2158176-1792648524.scope: Consumed 27min 53.568s CPU time over 16min 30.925s wall clock time, 40G memory peak.
+2026-10-21T23:11:55-07:00 ot-epyc9 kernel: Memory cgroup out of memory: Killed process 2686687 (cc1plus) total-vm:6846784kB, anon-rss:5701520kB, file-rss:24704kB, shmem-rss:0kB, UID:1000 pgtables:12100kB oom_score_adj:0
+2026-10-21T23:11:55-07:00 ot-epyc9 kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0-1,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2158176-1792648524.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2158176-1792648524.scope,task=cc1plus,pid=2686687,uid=1000
+2026-10-21T23:11:55-07:00 ot-epyc9 kernel: [2158176]  1000 2158176     2019      963       92      871         0    57344        0             0 bash
+2026-10-21T23:11:55-07:00 ot-epyc9 kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2158176-1792648524.scope:
+2026-10-21T23:11:55-07:00 ot-epyc9 kernel: Memory cgroup out of memory: Killed process 2686693 (cc1plus) total-vm:7140144kB, anon-rss:5998616kB, file-rss:24276kB, shmem-rss:0kB, UID:1000 pgtables:12688kB oom_score_adj:0
+2026-10-21T23:11:55-07:00 ot-epyc9 kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0-1,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2158176-1792648524.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2158176-1792648524.scope,task=cc1plus,pid=2686693,uid=1000
+2026-10-21T23:11:55-07:00 ot-epyc9 kernel: [2158176]  1000 2158176     2019      963       92      871         0    57344        0             0 bash
+2026-10-21T23:11:55-07:00 ot-epyc9 kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-2158176-1792648524.scope:

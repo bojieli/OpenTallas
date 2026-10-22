@@ -15,7 +15,7 @@
     "TAP_WR": 11
   },
   "vehicle": "Existing d76 canonical full-Qswiglu split-equivalence component vehicle, with a wires-only bus slicing adapter into exact selected split3. Reference lane sources retain the normal closed ae589 manifest. The target is the exact full scoped source closure, not generic peers or the predecessor tap parameters.",
-  "status": "EXACT_SOURCE_UNROLL_RERUN_ADMITTED",
+  "status": "UNROLL_FRONTEND_DONE_CPP_OOM_MAKE_J2_ADMITTED",
   "selected_view_manifest": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r18d_2000_1021/plansM/vplan_r17/views.json",
   "selected_view_manifest_sha256": "d26d70363a593e13192681f3bd1f5442fa9f18f1bbbd1617e59bd9e748dd9ade",
   "selected_view_env": {},
@@ -35,7 +35,7 @@
   "first_unit": "Gold1 3644453-1792646390",
   "first_exit": 86,
   "first_guard": "16 surviving 100-trip rd loops; no simulation run or PASS",
-  "replacement_controller": 2686797,
+  "replacement_controller": 2801384,
   "replacement_tool_flags": [
     "--unroll-count",
     "256",
@@ -43,12 +43,18 @@
     "100000"
   ],
   "guard_policy": "Required zero surviving in-place NBA loops before execution; guard remains fully enabled.",
-  "replacement_unit": "EP9 2158176-1792648524",
+  "replacement_unit": "EP9 3062967-1792649848",
   "replacement_mem_gib": 40,
   "replacement_root": "/srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000",
-  "memory_basis": "First exact selected build allocated 19.1 GiB; source and simulated design are unchanged; only test compiler unroll capacity increased.",
+  "memory_basis": "Prior 19.1 GiB described frontend allocation only and underestimated eight C++ compiler workers. The make-only two-worker continuation uses actual approximately 5.7 GiB compiler victims plus retained PCH as its basis; no frontend regeneration or live cap change.",
   "unadmitted_replacements": [
     2644203,
     2670647
-  ]
+  ],
+  "unroll_controller": 2686797,
+  "unroll_unit": "EP9 2158176-1792648524",
+  "unroll_exit": 143,
+  "unroll_terminal_cause": "MEMCG OOM, MemoryPeak=MemoryMax=42949672960 bytes; kernel cc1plus victims approximately 5.44 and 5.72 GiB anon RSS.",
+  "replacement_action": "Resume existing generated makefile with -j2, then installed canonical NBA guard CLI; require zero findings before unchanged executable.",
+  "replacement_threads": 2
 }
