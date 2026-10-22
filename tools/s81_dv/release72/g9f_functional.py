@@ -72,6 +72,8 @@ def prepare(plan,table,manifest,wrapper_ref):
     qpath='rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv'
     table['rtl_refs'].setdefault(frame_ref,[]).append(qpath)
     table['prefer']=[v for v in table['prefer'] if not v.endswith('/'+qpath)]+[frame_ref+'/'+qpath]
+    for member in table.get('frame_members',[]):
+        if member.get('master')=='ot_v41_rom_elem_q_qxpq_w10':member['ref']=frame_ref
     table['functional_successor']={'so_source':SO,'sukv_raw_source':KV,'sukv_wrapper_ref':wrapper_ref,
         'pv_layout':'{pv_x48,pv_d513,pv_v1}','added_ingress_sram_macros':272,'added_ingress_sram_bits':557056,
         'frame_element_source':{'ref':frame_ref,'path':qpath,'CPR':0,'authority':'Exact frozen CPR0 frame/schedule; no CPR1 view alias'},'new_parent_views_qualified':False,'body_area':'stand-in pending mapped logic and ingress placement; not inherited closure',
