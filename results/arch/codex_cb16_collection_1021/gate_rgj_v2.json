@@ -1,0 +1,197 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M8 stripes as pins, signals M2-M7, parent strap M9; children PG {'qfd_tile_nk_rp2_romleaf_rr': 'M7', 'qfd_tile_nl_rp2_romleaf_rr': 'M7', 'qfd_c_xstn_safe': 'M5', 'qfd_c_xstnw_safe': 'M5', 'qfd_c_stn516': 'M5', 'qfd_c_stn514': 'M5', 'qfd_c_ring516': 'M5', 'qfd_c_ring514': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nl_rp2_romleaf_rr: (h) pockets: 244 open own-layer pocket rects on M7 (38879.4 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_tile_nk_rp2_romleaf_rr: (h) pockets: 238 open own-layer pocket rects on M7 (38741.7 um2; gaps < 2.048 um between the child's own obstacles; largest (265.4,0.5)-(265.6,1165.9), (265.888,0.5)-(266.088,1165.9), (292.4,0.5)-(292.6,1165.9)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc7 for 192 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_c_b16_rgj_20261021-203541.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_c_b16_rgj_20261021-203541.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qfd_c_b16_rgj-20261021-203541",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=16",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc7 in 858 s (gate total 1471 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 5717, 'pin_rectangles': 5717, 'pin_track_checked': 5717, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 65c12014d8d24eeab059c5abf44812847be9523038f11284f460fc13bd09415a",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 219 um2 + macros 9421414 in core 16790953: util 0% (std-cell density 0.0% of placeable 6758182 um2; total fill 56.1%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS qfd_c_b16_rgx cells 1,549 flops 653 depth 11.7 ps util 0.5611 reach 0.0 um (167.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "cross_clock",
+   "message": "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)",
+   "fix": "fix the signoff SDC read and re-gate with --cts"
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck_c2r2: 117 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-cb16-local-tree-2000/physical/ref_tile/qfd_c_b16_rgj/gate_layout/floorplan.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "fill",
+   "message": "fill 56% = (hard macros 9421414.0 + synthesized std cells 219.2) / outline 16827886.1 um2; pin demand per face: S 3469 pins over 2936.7/3067.2 um (96%), N 2941 pins over 2936.7/3067.2 um (96%), W 288 pins over 2678.0/5486.4 um (49%), E 288 pins over 2678.0/5486.4 um (49%)",
+   "fix": ""
+  }
+ ]
+}
