@@ -65,5 +65,8 @@
       "witness": "qkd_kvpc_s_return pll_hbm_data declaration unused; selected SRAM write pll_hbm and read ck"
     }
   },
-  "warning": "Use selected SRAM clones rather than old qkd_static_kv_pc_path_nc storage bodies. The old bodies used per-bank PHY storage clocks; current selected SRAM source explicitly removed that clock usage. Confirm current generated netlist has no active sink before removing legacy fh/rh data checks. A multi-clock tile has no blanket root."
+  "warning": "Use selected SRAM clones rather than old qkd_static_kv_pc_path_nc storage bodies. The old bodies used per-bank PHY storage clocks; current selected SRAM source explicitly removed that clock usage. Confirm current generated netlist has no active sink before removing legacy fh/rh data checks. A multi-clock tile has no blanket root.",
+  "applies_to_current_selected_assembly": false,
+  "status": "RETRACTED_FOR_CURRENT_SELECTION",
+  "scope_correction": "This describes only dormant qkd_kvs_tiles_hroot_ff_k_mu_ds_rl_sr.sv. Current flags PC_SRAM=0/PC_RLAND=0 select the g6c emitted source, whose front/return per-bank clocks remain active. Do not use this artifact for current clock metadata."
 }

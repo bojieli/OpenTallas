@@ -1,0 +1,88 @@
+{
+  "assembly_source": "880b247a9",
+  "status": "SELECTED_SOURCE_FACTS_ONLY",
+  "flags": {
+    "DOMSPLIT": 1,
+    "GRP_SAFE2": 1,
+    "GRP_S6C": 1,
+    "PC_SRAM": 0,
+    "PC_RLAND": 0
+  },
+  "sha256": {
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c_rope_ovl.sv": "ca747bcbd9d21bd27de68042e0ceb539d8e5ab54ed9f87be1d26e520c64fe04f",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv": "0b2f67cac099b0793473aec31e40a7e76eef2047b2e64ad8c75a8739036edfab",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_pc_path_nc.sv": "16ac2306ab9b5e707c276042080c03225ab04773f43169d376905c05b0508f0f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_nc.sv": "14d5d335fc805eb6a39850b05d827001dbca31091c3e9e5758b4ee5db7e0d7b8"
+  },
+  "supersedes_for_current_selection": "af64361ee dormant _sr artifact receipt",
+  "no_metadata_applied_from_retracted_receipt": true,
+  "metadata_only_no_timing_exception": true,
+  "selected_chain": [
+    "qkd_kvs_pc / qkd_kvs_pc_h",
+    "qkd_static_kv_pc_path_fan_nc_b",
+    "qkd_static_kv_pc_path_nc",
+    "qkd_kv_hbm_elastic_front_mc_nc / qkd_static_kv_return_slots_mc_nc"
+  ],
+  "ports": {
+    "pc__pi[288:0]": {
+      "direction": "input",
+      "capture_clock": "hck"
+    },
+    "pc__po[327:0]": {
+      "direction": "output",
+      "launch_clock": "hck"
+    },
+    "i_grp[32:0]": {
+      "direction": "input",
+      "capture_clock": "ck"
+    },
+    "i_grp_h[94:0]": {
+      "direction": "input",
+      "capture_clock": "hck"
+    },
+    "o_grp[294:0]": {
+      "direction": "output",
+      "launch_clock": "ck"
+    },
+    "o_grp_h[9:0]": {
+      "direction": "output",
+      "launch_clock": "hck"
+    },
+    "o_next": {
+      "direction": "output",
+      "launch_clock": "ck"
+    },
+    "o_prev (normal PC only)": {
+      "direction": "output",
+      "launch_clock": "ck"
+    },
+    "pc__front_hbm_data[3:0]": {
+      "direction": "input",
+      "classification": "ACTIVE CLOCK ENTRIES",
+      "clock_roots": [
+        "pc__front_hbm_data[0]",
+        "pc__front_hbm_data[1]",
+        "pc__front_hbm_data[2]",
+        "pc__front_hbm_data[3]"
+      ],
+      "witness": "selected front g_storage bank_mem writes on posedge pll_hbm_data[bank]; land_v/land_d produced on hck, output/read control on hck"
+    },
+    "pc__return_hbm_data[3:0]": {
+      "direction": "input",
+      "classification": "ACTIVE CLOCK ENTRIES",
+      "clock_roots": [
+        "pc__return_hbm_data[0]",
+        "pc__return_hbm_data[1]",
+        "pc__return_hbm_data[2]",
+        "pc__return_hbm_data[3]"
+      ],
+      "witness": "selected return bank_mem writes on posedge pll_hbm_data[bank], with controller metadata landed on hck and output sampling on ck"
+    }
+  },
+  "phase_requirement": "Do not infer same phase from the historical source comment. These active per-bank roots require actual selected die clock/Liberty pin-root provenance. They are not data captured by hck and are not the unused ports in the optional SRAM successor. No blanket hck alias or CDC waiver is authorized.",
+  "emb_correspondence": {
+    "selected_module": "qkd_kvs_emb_rope_ovl",
+    "matches_c5_c6_physical_module_exactly": true,
+    "module_sha256": "1cb7560d8170eff9d702960457367c98b70b6d925943ac2c4e0c5ae5a7e4eb50"
+  }
+}
