@@ -123,5 +123,33 @@
       "VM_write_mask": 8
     },
     "physical_native_and_clock_status": "Unqualified; both ordinary synth/native chains live; no slot-fit or native limit credit"
+  },
+  "regional_clock_implementation": {
+    "status": "OPEN: current raw75 and private pool source use one generic clk",
+    "native_fanout_is_not_regional_clock_qualification": true,
+    "current_IK_half_clocks": "ot_s81sl_kv_bank g_iks ties ck_half to {2{sk}}, with same sk for final reduce",
+    "required_pool_successor_ports": {
+      "control_clocks": 1,
+      "lane_clocks": 8,
+      "landed_control_to_each_lane_bits": 35,
+      "control_to_lane_fields": [
+        "valid",
+        "role2",
+        "FP32_operand32"
+      ],
+      "landed_each_lane_to_control_bits": 34,
+      "lane_to_control_fields": [
+        "valid",
+        "BF16_widened32",
+        "fault"
+      ],
+      "all_eight_functional_result_arrivals_must_equal_age": true
+    },
+    "required_IK_successor": "Two independently delivered half clocks plus final reduce clock, with landed partial-sum and publish/control crossings",
+    "actual_crossing_data_edges": null,
+    "additional_arithmetic_latency": null,
+    "physical_clock_and_phase_authority": null,
+    "source_port_aliasing_is_not_a_successor": true,
+    "next": "Keep current native repairs as single-clock engineering components. Implement real landed regional leaf and caller ABI before assigning multiple root timing or token credit."
   }
 }
