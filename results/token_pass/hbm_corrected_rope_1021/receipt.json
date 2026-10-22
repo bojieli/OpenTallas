@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "scope": "Preserved corrected RoPE reserved_finite component probe; released checkpoint fixture. No selected d76 or full-token equivalence.",
+  "source_commit": "6503218ac",
+  "build_unit": "oth-ubuntu-3233716-1792634887",
+  "runtime_unit": "oth-ubuntu-1975600-1792650094",
+  "host": "ot-epyc7",
+  "binary_sha256": "cc74bea5fb4b2d3d74ae549ffee1553b14ec68566fc48aa67323f5e08d8bddc3",
+  "slice_sha256": "21ed527ca56477909621d5a594e199a52c7614012216d5e2135db42fd7c98760",
+  "tb_sha256": "0adaed3fc1f5c896f08c1cd0d15b8647149c9fdd1522513dbaee5951fd557cca",
+  "compiled_event_capacity": 4168,
+  "runtime_cycles": 12000,
+  "source_change": "Corrected generated TB event capacity 2513 to 4168; slice RTL unchanged.",
+  "runtime_correction": "Original default cycle limit stopped at stream133 before serial7106. Same binary rerun with explicit12000 cycles; no frontend or object changes.",
+  "actual_drives": 4124,
+  "actual_checks": 43,
+  "record_commit_checks": 24,
+  "failures": 0,
+  "fault_observer_source_bound": true,
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "files": {
+    "tb_slice.sv": "0adaed3fc1f5c896f08c1cd0d15b8647149c9fdd1522513dbaee5951fd557cca",
+    "acceptance.json": "1f8d5ae9828a19169922e429f98673dee0082b92c6142e429099c54449340b18",
+    "boundary.json": "cf80aefdfee1120f67a26bd9b03c0e04bb57ad54dad438512dfc8e431ed41fc5",
+    "original_short_run.log": "121bd5504ace2d2214c7d1cb700772356f1f24c4d752c8fd2a8111e4f4b7b718",
+    "run.log": "eb3c3ff17debf24377ff61e9c82f36e3b21e3b9625dc759d9933a4e510552b61",
+    "binary.sha256": "4c3d14a9b2cc79171ef88809885e384e327b97e5721c1ed3073fb7bff4e93162",
+    "launcher.log": "a5edb4b8af81a09f79ce4aa6f188a6a98e4c042a9af6632029659a39b37c2b76"
+  }
+}

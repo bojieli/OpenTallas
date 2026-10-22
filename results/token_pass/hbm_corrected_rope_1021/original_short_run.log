@@ -1,0 +1,87 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/steward-tokb-hbm/rope4168
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/steward-tokb-hbm/rope4168
+ot-run: ot-epyc9       admits     8 GB (avail 446, growth 440, headroom 0, waiters 0/0 GB) load 98/128 running 42 disk 2034 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/steward-tokb-hbm/rope4168
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/steward-tokb-hbm/rope4168
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/steward-tokb-hbm/rope4168
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/steward-tokb-hbm/rope4168
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/steward-tokb-hbm (0.0 GB) ot-epyc9 -> ot-epyc7 (no host with --dir admits 96 GB now)
+ot-run: SPILL: copied 463 changed entries in 3 s; running on ot-epyc7; written files go back to ot-epyc9 after the run
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3233716-1792634887 after 1 s
+{"build_rc": 0, "run_rc": 0, "build_s": 14691, "run_s": 6, "build_peak_rss_kb": 68083028, "run_peak_rss_kb": 178076, "host": "ot-epyc7", "jobs": 8, "replay": "/srv/opentallas-scratch/claude/steward-tokb-hbm/rope4168/slice/replay/reserved_finite"}
+SLICE_SUMMARY drives=161 checks=0 fails=1 rec_commit_ok=0 rec_fail=0 stream_edges=133 serial_edges=99 hbm_edges=107
+SLICE_FAIL
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3233716-1792634887): exit 0
+ot-run: SPILL: outputs copied back ot-epyc7 -> ot-epyc9; RAN on ot-epyc7: exit 0
+RC 0
+{
+  "schema": "opentallas.hbm_slice_run_check.v1",
+  "scope": "component_probe",
+  "requested_scope": "component_probe",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "state_seed_provenance": [
+    "released_checkpoint_fixture"
+  ],
+  "passed": false,
+  "errors": [
+    "missing unique SLICE_PASS or explicit failure",
+    "drives: executed 161, expected 4124",
+    "checks: executed 0, expected 43",
+    "fails: 1",
+    "serial_edges: stopped at 99, last scheduled event 7106",
+    "per-record commit checks differ from the complete replay schedule"
+  ],
+  "expected": {
+    "drives": 4124,
+    "checks": 43
+  },
+  "last_scheduled_cycles": {
+    "stream_edges": 69,
+    "serial_edges": 7106,
+    "hbm_edges": -1
+  },
+  "summary": {
+    "drives": 161,
+    "checks": 0,
+    "fails": 1,
+    "rec_commit_ok": 0,
+    "rec_fail": 0,
+    "stream_edges": 133,
+    "serial_edges": 99,
+    "hbm_edges": 107
+  },
+  "expected_record_checks": 24,
+  "replay_hdr_sha256": "b7f9f0e5e5e27f37f1c9f753e736cac1cf8531beeea66d88c89998ba25b2abde",
+  "run_log_sha256": "a8f8f113ee025c6be905960c3f6730c0266f78894453dfb5b218aa6caeefd198",
+  "fault_observation": {
+    "source_bound": true,
+    "boundary_sha256": "cf80aefdfee1120f67a26bd9b03c0e04bb57ad54dad438512dfc8e431ed41fc5",
+    "tb_source_sha256": "0adaed3fc1f5c896f08c1cd0d15b8647149c9fdd1522513dbaee5951fd557cca",
+    "declared_fault_outputs": [
+      "cp_svg_SW4__fault",
+      "cp_svg_SW5__fault",
+      "cp_svg_SW6__fault",
+      "cp_svg_SW7__fault",
+      "hleaf_SW__s_fault",
+      "pgp_SW__fault",
+      "su_SW0__fault",
+      "su_SW0__lg_fault",
+      "su_SW1__fault",
+      "su_SW1__lg_fault",
+      "su_SW2__fault",
+      "su_SW2__lg_fault",
+      "su_SW3__fault",
+      "su_SW3__lg_fault",
+      "subr_SW__fault",
+      "sucore_NE__fault",
+      "sucore_NW__fault",
+      "sucore_SE__fault",
+      "sucore_SW__fault"
+    ],
+    "observed_activity": [],
+    "absence_claim": "no stronger native/arithmetic proof from missing activity alone"
+  }
+}
+CHECK_RC 1
+2026-10-21T23:14:11-07:00 DONE

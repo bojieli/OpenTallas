@@ -1,0 +1,177 @@
+SLICE_START slice=hbm_v16_die_slice_custom replay=replay cycles=12000
+SLICE_VM_PRELOAD words=16
+SLICE_REC rec=15 cyc=7007 COMMIT_OK
+SLICE_REC rec=15 cyc=7007 COMMIT_OK
+SLICE_REC rec=15 cyc=7007 COMMIT_OK
+SLICE_REC rec=15 cyc=7007 COMMIT_OK
+SLICE_REC rec=15 cyc=7007 COMMIT_OK
+SLICE_REC rec=15 cyc=7007 COMMIT_OK
+SLICE_REC rec=15 cyc=7007 COMMIT_OK
+SLICE_REC rec=15 cyc=7007 COMMIT_OK
+SLICE_REC rec=15 cyc=7008 COMMIT_OK
+SLICE_REC rec=15 cyc=7008 COMMIT_OK
+SLICE_REC rec=15 cyc=7008 COMMIT_OK
+SLICE_REC rec=15 cyc=7008 COMMIT_OK
+SLICE_REC rec=15 cyc=7008 COMMIT_OK
+SLICE_REC rec=15 cyc=7008 COMMIT_OK
+SLICE_REC rec=15 cyc=7008 COMMIT_OK
+SLICE_REC rec=15 cyc=7008 COMMIT_OK
+SLICE_REC rec=15 cyc=7090 COMMIT_OK
+SLICE_REC rec=15 cyc=7090 COMMIT_OK
+SLICE_REC rec=15 cyc=7090 COMMIT_OK
+SLICE_REC rec=15 cyc=7090 COMMIT_OK
+SLICE_REC rec=15 cyc=7090 COMMIT_OK
+SLICE_REC rec=15 cyc=7090 COMMIT_OK
+SLICE_REC rec=15 cyc=7090 COMMIT_OK
+SLICE_REC rec=15 cyc=7090 COMMIT_OK
+SLICE_OUT calendar_SW__calendar_v first=78 last=9613 changes=2
+SLICE_OUT calendar_SW__done first=9612 last=9613 changes=2
+SLICE_OUT calendar_SW__lg_local_read first=78 last=9613 changes=2
+SLICE_OUT calendar_SW__lg_local_write first=78 last=9613 changes=2
+SLICE_OUT cp_svg_SW0__a_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW0__a_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW0__b_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW0__b_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW0__run_base first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW0__run_count first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW1__a_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW1__a_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW1__b_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW1__b_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW1__run_base first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW1__run_count first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW2__a_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW2__a_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW2__b_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW2__b_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW2__run_base first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW2__run_count first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW3__a_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW3__a_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW3__b_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW3__b_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW3__run_base first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW3__run_count first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW4__a_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW4__a_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW4__b_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW4__b_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW4__run_base first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW4__run_count first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW5__a_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW5__a_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW5__b_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW5__b_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW5__run_base first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW5__run_count first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW6__a_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW6__a_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW6__b_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW6__b_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW6__run_base first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW6__run_count first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW7__a_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW7__a_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW7__b_addr first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW7__b_data first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW7__run_base first=0 last=0 changes=1
+SLICE_OUT cp_svg_SW7__run_count first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__pll_hbm first=0 last=11998 changes=4469
+SLICE_OUT hb_ckgen__pll_serial first=2 last=12000 changes=6000
+SLICE_OUT hb_ckgen__pll_stream first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__por_hbm first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__por_serial first=0 last=0 changes=1
+SLICE_OUT hb_ckgen__por_stream first=0 last=0 changes=1
+SLICE_OUT hleaf_SW__a_cfg_data first=51 last=51 changes=1
+SLICE_OUT hleaf_SW__a_cfg_target first=51 last=51 changes=1
+SLICE_OUT hleaf_SW__a_cfg_v first=51 last=52 changes=2
+SLICE_OUT hleaf_SW__a_desc_limit first=61 last=61 changes=1
+SLICE_OUT hleaf_SW__a_desc_loops first=61 last=61 changes=1
+SLICE_OUT hleaf_SW__a_desc_v first=61 last=62 changes=2
+SLICE_OUT hleaf_SW__a_launch_v first=71 last=72 changes=2
+SLICE_OUT hleaf_SW__b_cfg_data first=51 last=51 changes=1
+SLICE_OUT hleaf_SW__b_cfg_target first=51 last=51 changes=1
+SLICE_OUT hleaf_SW__b_cfg_v first=51 last=52 changes=2
+SLICE_OUT hleaf_SW__b_desc_limit first=61 last=61 changes=1
+SLICE_OUT hleaf_SW__b_desc_loops first=61 last=61 changes=1
+SLICE_OUT hleaf_SW__b_desc_v first=61 last=62 changes=2
+SLICE_OUT hleaf_SW__b_launch_v first=71 last=72 changes=2
+SLICE_OUT hleaf_SW__s_active first=78 last=9615 changes=2
+SLICE_OUT hleaf_SW__s_ready first=67 last=75 changes=2
+SLICE_OUT pgp_SW__busy first=4002 last=9454 changes=2
+SLICE_OUT pgp_SW__command first=4006 last=9455 changes=401
+SLICE_OUT pgp_SW__done first=9454 last=9455 changes=2
+SLICE_OUT pgp_SW__edge_index first=4007 last=9454 changes=4086
+SLICE_OUT pgp_SW__valid first=4006 last=9455 changes=2
+SLICE_OUT su_SW0__far_rr first=0 last=9371 changes=12
+SLICE_OUT su_SW0__inj_q first=0 last=9431 changes=4
+SLICE_OUT su_SW1__far_rr first=0 last=9371 changes=4
+SLICE_OUT su_SW1__inj_q first=0 last=9431 changes=5
+SLICE_OUT su_SW2__far_rr first=0 last=9371 changes=4
+SLICE_OUT su_SW2__inj_q first=0 last=9431 changes=4
+SLICE_OUT su_SW3__far_rr first=0 last=9371 changes=4
+SLICE_OUT su_SW3__inj_q first=0 last=9431 changes=4
+SLICE_OUT subr_SW__bridge_rst_n first=4007 last=4007 changes=1
+SLICE_OUT sucore_NE__red_tag first=0 last=0 changes=1
+SLICE_OUT sucore_NE__red_x first=0 last=0 changes=1
+SLICE_OUT sucore_NW__red_tag first=0 last=0 changes=1
+SLICE_OUT sucore_NW__red_x first=0 last=0 changes=1
+SLICE_OUT sucore_SE__red_tag first=0 last=0 changes=1
+SLICE_OUT sucore_SE__red_x first=0 last=0 changes=1
+SLICE_OUT sucore_SW__red_sv first=4113 last=5271 changes=16
+SLICE_OUT sucore_SW__red_tag first=0 last=5270 changes=65
+SLICE_OUT sucore_SW__red_x first=0 last=5270 changes=65
+SLICE_OUT vmb_SW0__eg first=9331 last=9442 changes=5
+SLICE_OUT vmb_SW0__pr first=0 last=0 changes=1
+SLICE_OUT vmb_SW0__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW0__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW0__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW0__rr4 first=0 last=0 changes=1
+SLICE_OUT vmb_SW1__eg first=9331 last=9442 changes=5
+SLICE_OUT vmb_SW1__pr first=0 last=0 changes=1
+SLICE_OUT vmb_SW1__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW1__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW1__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW1__rr4 first=0 last=0 changes=1
+SLICE_OUT vmb_SW2__eg first=9331 last=9442 changes=5
+SLICE_OUT vmb_SW2__pr first=0 last=0 changes=1
+SLICE_OUT vmb_SW2__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW2__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW2__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW2__rr4 first=0 last=0 changes=1
+SLICE_OUT vmb_SW3__eg first=9331 last=9442 changes=5
+SLICE_OUT vmb_SW3__pr first=0 last=0 changes=1
+SLICE_OUT vmb_SW3__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW3__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW3__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW3__rr4 first=0 last=0 changes=1
+SLICE_OUT vmb_SW4__eg first=9331 last=9442 changes=5
+SLICE_OUT vmb_SW4__pr first=0 last=0 changes=1
+SLICE_OUT vmb_SW4__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW4__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW4__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW4__rr4 first=0 last=0 changes=1
+SLICE_OUT vmb_SW5__eg first=9331 last=9442 changes=5
+SLICE_OUT vmb_SW5__pr first=0 last=0 changes=1
+SLICE_OUT vmb_SW5__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW5__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW5__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW5__rr4 first=0 last=0 changes=1
+SLICE_OUT vmb_SW6__eg first=9331 last=9442 changes=5
+SLICE_OUT vmb_SW6__pr first=0 last=0 changes=1
+SLICE_OUT vmb_SW6__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW6__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW6__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW6__rr4 first=0 last=0 changes=1
+SLICE_OUT vmb_SW7__eg first=9331 last=9442 changes=5
+SLICE_OUT vmb_SW7__pr first=0 last=0 changes=1
+SLICE_OUT vmb_SW7__rr1 first=0 last=0 changes=1
+SLICE_OUT vmb_SW7__rr2 first=0 last=0 changes=1
+SLICE_OUT vmb_SW7__rr3 first=0 last=0 changes=1
+SLICE_OUT vmb_SW7__rr4 first=0 last=0 changes=1
+SLICE_SUMMARY drives=4124 checks=43 fails=0 rec_commit_ok=24 rec_fail=0 stream_edges=12000 serial_edges=8999 hbm_edges=9765
+SLICE_PASS
+- slice/tb_slice.sv:2496: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 173.064 s; speed 58.574 ns/s
+- Verilator: cpu 166.169 s on 1 threads; allocated 178 MB

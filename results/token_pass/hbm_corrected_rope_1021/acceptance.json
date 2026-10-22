@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.hbm_slice_run_check.v1",
+  "scope": "component_probe",
+  "requested_scope": "component_probe",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "state_seed_provenance": [
+    "released_checkpoint_fixture"
+  ],
+  "passed": true,
+  "errors": [],
+  "expected": {
+    "drives": 4124,
+    "checks": 43
+  },
+  "last_scheduled_cycles": {
+    "stream_edges": 69,
+    "serial_edges": 7106,
+    "hbm_edges": -1
+  },
+  "summary": {
+    "drives": 4124,
+    "checks": 43,
+    "fails": 0,
+    "rec_commit_ok": 24,
+    "rec_fail": 0,
+    "stream_edges": 12000,
+    "serial_edges": 8999,
+    "hbm_edges": 9765
+  },
+  "expected_record_checks": 24,
+  "replay_hdr_sha256": "b7f9f0e5e5e27f37f1c9f753e736cac1cf8531beeea66d88c89998ba25b2abde",
+  "run_log_sha256": "eb3c3ff17debf24377ff61e9c82f36e3b21e3b9625dc759d9933a4e510552b61",
+  "fault_observation": {
+    "source_bound": true,
+    "boundary_sha256": "cf80aefdfee1120f67a26bd9b03c0e04bb57ad54dad438512dfc8e431ed41fc5",
+    "tb_source_sha256": "0adaed3fc1f5c896f08c1cd0d15b8647149c9fdd1522513dbaee5951fd557cca",
+    "declared_fault_outputs": [
+      "cp_svg_SW4__fault",
+      "cp_svg_SW5__fault",
+      "cp_svg_SW6__fault",
+      "cp_svg_SW7__fault",
+      "hleaf_SW__s_fault",
+      "pgp_SW__fault",
+      "su_SW0__fault",
+      "su_SW0__lg_fault",
+      "su_SW1__fault",
+      "su_SW1__lg_fault",
+      "su_SW2__fault",
+      "su_SW2__lg_fault",
+      "su_SW3__fault",
+      "su_SW3__lg_fault",
+      "subr_SW__fault",
+      "sucore_NE__fault",
+      "sucore_NW__fault",
+      "sucore_SE__fault",
+      "sucore_SW__fault"
+    ],
+    "observed_activity": [],
+    "absence_claim": "no stronger native/arithmetic proof from missing activity alone"
+  }
+}
