@@ -245,7 +245,27 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
     // elements, from S0 to S8 (nine registers: S1, S2, S2b, S3-S7, S8)
     wire [1023:0] x8;
 `ifdef OT_COLLQ_SRAM
+`ifdef OT_GQ_S9P
+    // R14 S9P (HBMb/COLL-GQ 10-21, PD-AUDIT C7: 658 ps / 17 levels u_aq1.u_x.q -> s9_g): the SRAM line reads ONE edge
+    // earlier (EARLY 1: ra slot offset -1, residence 8 instead of 9) into x7, and a new register stage S8p holds x8 and
+    // the per-element unbiased exponent eun8 (fld == 0 ? -126 : fld - 127) and nonzero flag nz8, so S9 starts from
+    // registered exponents (ev = eun8 - ec). x8 keeps its edge (q[n] = d[n-9]): 0 latency change on every port.
+    wire [1023:0] x7;
+    ot_hgi_coll_aq_sramdelay #(.MUT(LMUT), .EARLY(1)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x7));
+    reg [1023:0] x8r;
+    reg signed [10:0] eun8 [0:31];
+    reg [31:0] nz8;
+    always @(posedge clk) begin
+        x8r <= x7;
+        for (i = 0; i < 32; i = i + 1) begin
+            eun8[i] <= (x7[32*i+23 +: 8] == 8'd0) ? -11'sd126 : ($signed({3'b000, x7[32*i+23 +: 8]}) - 11'sd127);
+            nz8[i] <= x7[32*i +: 31] != 31'd0;
+        end
+    end
+    assign x8 = x8r;
+`else
     ot_hgi_coll_aq_sramdelay #(.MUT(LMUT)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x8));
+`endif
 `else
     ot_hdc_delay_hc #(.W(1024), .D(9), .MUT(LMUT), .GATED(0), .WG(16)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x8));
 `endif
@@ -307,8 +327,21 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
             else gq_shift=fp4?5'd22:5'd20;
         end
     endfunction
+    function automatic[4:0]gq_shift_e(input signed[10:0]eu,input signed[9:0]e,input fp4);
+        reg signed[10:0]ee,mm,dd;
+        begin
+            ee=eu-e;
+            mm=fp4?11'sd0:-11'sd6;dd=mm-ee;
+            if(dd>0)gq_shift_e=(dd>(fp4?11'sd4:11'sd6))?5'd26:((fp4?5'd22:5'd20)+dd[4:0]);
+            else gq_shift_e=fp4?5'd22:5'd20;
+        end
+    endfunction
     generate for(genvar lane=0;lane<32;lane=lane+1)begin:g_shift_controls
+`ifdef OT_GQ_S9P
+        wire[4:0]d=gq_shift_e(eun8[lane],s8_ec[lane/EC8_GROUP],s8_fp4_shift[lane/EC8_GROUP]);
+`else
         wire[4:0]d=gq_shift(x8[32*lane+23+:8],s8_ec[lane/EC8_GROUP],s8_fp4_shift[lane/EC8_GROUP]);
+`endif
         wire[50:0]shift_stage[0:5];
         assign shift_stage[0]={s9_sig[lane],27'd0};
         for(genvar stage=0;stage<5;stage=stage+1)begin:g_stage
@@ -349,11 +382,19 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
             fld = x8[32*i + 23 +: 8];
             man = x8[32*i +: 23];
             //: a subnormal element has exponent -126 and no leading one
+`ifdef OT_GQ_S9P
+            ev = eun8[i] - s8_ec[i/EC8_GROUP];
+`else
             ev = ((fld == 8'd0) ? -11'sd126 : ($signed({3'b000, fld}) - 11'sd127)) - s8_ec[i/EC8_GROUP];
+`endif
             mine = s8_fp4c[i/EC8_GROUP] ? 11'sd0 : -11'sd6;
             dd = mine - ev;
             s9_sig[i] <= {(fld != 8'd0), man};
+`ifdef OT_GQ_S9P
+            s9_sgn[i] <= x8[32*i + 31] && nz8[i];
+`else
             s9_sgn[i] <= x8[32*i + 31] && (x8[32*i +: 31] != 31'd0);
+`endif
             if (dd > 11'sd0) begin
                 s9_g[i] <= mine[4:0];
                 //: past 26 every bit of the 24-bit significand is below the guard
@@ -461,7 +502,7 @@ endmodule
 // ra = slot-6 (q = d 9 edges back). OT_COLLQ_SRAM_WR2 (FALLBACK): two kept
 // posedge stages (relay near the source + register near the macro) on
 // wa/wd/ra, ra = slot-5, same nine edges.
-module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
+module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0, parameter integer EARLY=0) (
     input wire clk, input wire rst_n, input wire [1023:0] d, output reg [1023:0] q
 );
     wire [1023:0] rd;
@@ -477,7 +518,7 @@ module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
         (* keep="true",dont_touch="true" *) reg [255:0] wd_r, wd_p;
         always @(posedge clk) begin
             wa_r <= slot;
-            ra_r <= slot - ((MUT != 0) ? 4'd4 : 4'd5);
+            ra_r <= slot - ((MUT != 0) ? 4'd4 : 4'd5) + 4'(EARLY);   // R14 EARLY: one edge less SRAM residence
             wd_r <= d[256*k +: 256];
             wa_p <= wa_r; ra_p <= ra_r; wd_p <= wd_r;
         end
@@ -486,7 +527,7 @@ module ot_hgi_coll_aq_sramdelay #(parameter integer MUT=0) (
         (* keep="true",dont_touch="true" *) reg [255:0] wd_p;
         always @(posedge clk) begin
             wa_p <= slot;
-            ra_p <= slot - ((MUT != 0) ? 4'd5 : 4'd6);
+            ra_p <= slot - ((MUT != 0) ? 4'd5 : 4'd6) + 4'(EARLY);   // R14 EARLY: one edge less SRAM residence
             wd_p <= d[256*k +: 256];
         end
 `endif
