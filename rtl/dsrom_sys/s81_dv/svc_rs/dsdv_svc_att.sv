@@ -172,9 +172,6 @@ module dsdv_svc_att #(
         if (!rst_n) allq_r <= 1'b0;
         else if (hdr_mine && h_type == 4'd12) allq_r <= q_d[54];
     assign allq_o = allq_r;
-    wire allq = allq_r;
-`else
-    wire allq = 1'b0;
 `endif
     reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst; reg [9:0] wuser;
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
@@ -331,7 +328,11 @@ module dsdv_svc_att #(
             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
             if (row < 32'(tjob)) begin
                 kc_m[j] = 1'b1;
-                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r || allq;
+`ifdef OT_SVC_ALLQ
+                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r || allq_r;
+`else
+                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r;
+`endif
                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
                 kc_w[265*j +: 265] = rowword(row, land[row], wsc, wcount, wfirst, need);
                 rel_bad[j] = need && !ok;
@@ -345,15 +346,19 @@ module dsdv_svc_att #(
     wire [PFW:0] pcnt = pw - pr;
     reg [15:0] p_left;
     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
-    wire pvown = tile[3:2] == st_r || allq;
+`ifdef OT_SVC_ALLQ
+    wire pvown = tile[3:2] == st_r || allq_r;
+`else
+    wire pvown = tile[3:2] == st_r;
+`endif
     wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
     wire ep_ready;
 `ifdef RTLGAP_MUT_ALLQ_NOP
-    wire pvown_p = tile[3:2] == st_r;                           // RTL MUTANT: ALLQ drains, but P stays gated to quarter ST
+    // RTL MUTANT (bench only): ALLQ drains every slice, but P stays gated to quarter ST -> 12 tiles of zero P.V
+    wire [2*TD*16-1:0] ep_w = (tile[3:2] == st_r) ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
 `else
-    wire pvown_p = pvown;
+    wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
 `endif
-    wire [2*TD*16-1:0] ep_w = pvown_p ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
 
     // ------------------------------------------------------------------ engine (unchanged, D = 32: S = 1, LS = 0)
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
