@@ -1,4 +1,11 @@
 `timescale 1ns/1ps
+// R13 (HBMb/COLL-GQ 10-21): the S2 kept-winner structure needs the N32 S1 winner copies (s1_m_d); R13N without N32
+// (the plain aq exact bench) keeps the flat S2.
+`ifdef OT_GQ_N32
+`ifdef OT_GQ_R13N
+`define OT_GQ_R13S2
+`endif
+`endif
 // ---------------------------------------------------------------------------
 // ot_hgi_coll_aq13: the COLL gather master's quantiser = physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv
 // (the CLOSED tree13 body: same stages, same 13-edge latency, II 1, same numerics) with ONE change: the 1,024-bit x
@@ -144,7 +151,7 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
         if (!rst_n) s2a_v <= 1'b0;
         else s2a_v <= s1_v;
     end
-`ifdef OT_GQ_R13N
+`ifdef OT_GQ_R13S2
     // R13 (HBMb/COLL-GQ 10-21, k12q native census: u_aq1.s1_m[1][30] / s1_m[2][30] QN 38 loads each = the FLAT S2 mx4,
     // whose 31-bit select ABC rebuilt around the two magnitude MSBs (28 OR3 select terms)). S2 now has the S1 structure:
     // two kept winner-decode copies per 4:1 max (lo / hi half of the select), each reading its OWN kept register copy of
@@ -178,7 +185,7 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
 `endif
     always @(posedge clk) begin
         s2a_fp4 <= s1_fp4; s2a_nf <= s1_nf;
-`ifdef OT_GQ_R13N
+`ifdef OT_GQ_R13S2
         for (i = 0; i < 2; i = i + 1) s2a_m[i] <= s2a_m_d[i];
 `else
         for (i = 0; i < 2; i = i + 1)
@@ -535,7 +542,7 @@ module ot_hgi_coll_aq_mx4_win(input wire [30:0] a, b, c, d, output wire [3:0] w)
 `endif
 endmodule
 `endif
-`ifdef OT_GQ_R13N
+`ifdef OT_GQ_R13S2
 // R13: one kept register copy of an S1 31-bit magnitude (fixed width: no paramod rename, so the copies stay distinct).
 (* keep_hierarchy = "yes" *)
 module ot_hgi_coll_aq_mag_ff(input wire clk, input wire [30:0] d, output wire [30:0] q);

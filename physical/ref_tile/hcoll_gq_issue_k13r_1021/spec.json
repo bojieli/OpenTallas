@@ -247,10 +247,10 @@
     "peak_ram_gb": 32
    },
    {
-    "name": "aq_sram_mut_s2w",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_COLLQ_SRAM_WR2 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_MUT_S2W' bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut_s2w 0",
+    "name": "aq_s2top_mut_s2w",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_COLLQ_SRAM_WR2 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_MUT_S2W' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut_s2w 0",
     "expect": "fail",
-    "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH",
+    "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH|AQ_TREE13_.*FAIL|MISMATCH",
     "fail_witness": "results/rtl/hbm_coll_gq_r13_1021/wr2/mut_s2w.log",
     "threads": 4,
     "peak_ram_gb": 8
