@@ -13,7 +13,7 @@ module ot_hbm_su_indexed_scalar_banked #(
  localparam PW=$clog2(END+2);
  reg[PW-1:0]phase;reg[23:0]ix,base,limit,dst,mul,score_address;reg[71:0]bases;
  wire[31:0]index_value;wire[31:0]value[0:1];wire[1023:0]bank_words;wire[31:0]return_valid;
- wire[31:0]returned_word;wire[4:0]ix_expected,score_expected;
+ wire[31:0]returned_word;wire[4:0]ix_expected;wire[4:0]score_expected[0:1];
  wire[23:0]segmented_address;
  for(genvar c=0;c<3;c=c+1)begin:segment_chunk
   ot_hbm_gather_segment_byte #(.N(c)) addr(.index_value(index_value),.base(base),.bases(bases),.q(segmented_address[c*8+:8]));
@@ -22,7 +22,7 @@ module ot_hbm_su_indexed_scalar_banked #(
  function automatic[4:0]bank_of(input[23:0]a);bank_of={a[17:16],a[5:3]};endfunction
  wire[PW-1:0]local_phase[0:5];
  for(genvar c=0;c<6;c=c+1)begin:phasecopy
-  ot_hbm_gather_phase_copy #(.PW(PW)) counter(.clk(clk),.rst_n(rrst[1+c]),.clear(start&&!busy),.q(local_phase[c]));
+  ot_hbm_gather_phase_copy #(.PW(PW)) counter(.clk(clk),.rst_n(rrst[1+c]),.start(start),.busy(busy),.q(local_phase[c]));
  end
  wire rd_fire,wr_fire;
  ot_hbm_gather_phase_fire #(.SI(SI),.WI(WI)) fire(.phase(16'(local_phase[0])),.busy(busy),.rd(rd_fire),.wr(wr_fire));
@@ -55,7 +55,9 @@ module ot_hbm_su_indexed_scalar_banked #(
   score_address<=product[23:0];
  end
  ot_hbm_gather_bank_identity_copy ix_copy(.clk(clk),.d(bank_of(index_word)),.q(ix_expected));
- ot_hbm_gather_bank_identity_copy score_copy(.clk(clk),.d(bank_of(product[23:0])),.q(score_expected));
+ for(genvar c=0;c<2;c=c+1)begin:scorecopy
+  ot_hbm_gather_bank_identity_copy score_copy(.clk(clk),.d(bank_of(product[23:0])),.q(score_expected[c]));
+ end
  integer k;
  always @(posedge clk or negedge rrst[0])begin
   if(!rrst[0])begin busy<=0;done<=0;fault<=0;phase<=0;end
@@ -73,7 +75,7 @@ module ot_hbm_su_indexed_scalar_banked #(
    end
    if(busy)begin
     for(k=0;k<32;k=k+1)
-     if(return_valid[k]!==((phase==READ_SAMPLE&&k==ix_expected)||(phase==SS&&k==score_expected)))fault<=1;
+     if(return_valid[k]!==((phase==READ_SAMPLE&&k==ix_expected)||(phase==SS&&k==score_expected[k/16])))fault<=1;
     if(phase==READ_SAMPLE+1)begin
      if(product>=56'(limit)||product>=262144 || (SEGMENTED96==0&&product<56'(base)) ||
         (SEGMENTED96!=0&&index_value>=384))fault<=1;
@@ -151,9 +153,9 @@ endmodule
  wire[31:0]address={8'b0,selected}+offset;
  assign q=address[N*8+:8];
 endmodule
-(* keep_hierarchy *) module ot_hbm_gather_phase_copy #(parameter PW=5)(input wire clk,rst_n,clear,output wire[PW-1:0]q);
+(* keep_hierarchy *) module ot_hbm_gather_phase_copy #(parameter PW=5)(input wire clk,rst_n,start,busy,output wire[PW-1:0]q);
  (* keep *) reg[PW-1:0]held;
- always @(posedge clk or negedge rst_n)if(!rst_n)held<=0;else if(clear)held<=0;else held<=held+1'b1;
+ always @(posedge clk or negedge rst_n)if(!rst_n)held<=0;else if(start&&!busy)held<=0;else held<=held+1'b1;
  assign q=held;
 endmodule
 `default_nettype wire
