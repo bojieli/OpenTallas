@@ -1,0 +1,14 @@
+module string constants 11 differ []
+landed_raw_body identical: True
+multi_root_body diff: ['+        if {[lsearch -exact $::ot_ce_multi_root_children [get_full_name $cell]] >= 0 && [ot_ce_net_root_port $pin] ne $name} continue']
+
+# rev2 14:50 (b1m/b1f2 regate 14:30 failed: key "u_blk/ck_sq" not known in dictionary -> filter pins before measuring)
+module string constants identical vs origin/main: 11 differ: []
+landed_raw_body identical: True
+multi_root_body diff vs origin/main:
++    set ot_ce_mr_keep {}
++    foreach pin $pins {
++      if {[lsearch -exact $::ot_ce_multi_root_children [get_full_name [get_cells -of_objects $pin]]] >= 0 && [ot_ce_net_root_port $pin] ne $name} continue
++      lappend ot_ce_mr_keep $pin
++    }
++    set pins $ot_ce_mr_keep
