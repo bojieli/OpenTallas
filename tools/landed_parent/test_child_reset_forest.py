@@ -47,6 +47,24 @@ def main():
         except SystemExit as e:assert 'requires landing_reset_forest' in str(e)
         else:raise AssertionError('private leaves without same-age forest accepted')
         print('CHILD_RESET_REQUIRES_EXISTING_FOREST PASS')
+        # Current main also supports independently landed regional reset ports.
+        regional=dict(safe,regional_reset_ports={'stages':3,'why':'child-leaf regression'})
+        rp=lp.Parent(regional);rplan=rp.plan();rr,rt=rp.emit(rplan,'cr_top_lp')
+        rf=rp.reset_forest_plan(rplan)
+        assert rf['regional_stages']==3 and rf['root_D_loads']==0
+        assert 'u_lpr_root' not in rr and '.d(rst_n_core)' in rr
+        assert len([b for row in rf['regions'].values() for b in row['child_bindings']])==37
+        assert lp.audit(regional,rr)['ok']
+        print('CHILD_RESET_REGIONAL_PORTS_PRESERVE_DEPTH_AND_ROOT PASS')
+        (d/'vector_child.sv').write_text('module vc(input wire clk,rst_n,input wire[1:0] clocks,resets,input wire i,output wire o); assign o=i; endmodule\n')
+        (d/'vector_top.sv').write_text('module vt(input wire clk,rst_n,input wire i,output wire o); vc u0(.clk(clk),.rst_n(rst_n),.clocks({2{clk}}),.resets({2{rst_n}}),.i(i),.o(o)); endmodule\n')
+        vs=dict(top='vt',out_dir=str(rel),sources=[str(rel/'vector_top.sv')],child_sources=[str(rel/'vector_child.sv')],clock_ports=['clk'],clock_pins=['clk','clocks'],reset_port='rst_n',reset_pins=['rst_n','resets'],landing_chunk_bits=24,landing_reset_forest=True,landing_child_reset_forest=True,regional_reset_ports={'stages':3},regions=[dict(name='core',insts=['u0'],centre=[0,0]),dict(name='lane0',insts=[],centre=[216,0]),dict(name='lane1',insts=[],centre=[432,0])],regional_child_clocks=[dict(inst='u0',pin='clocks',regions=['lane0','lane1'])],regional_child_resets=[dict(inst='u0',pin='resets',regions=['lane0','lane1'])])
+        vp=lp.Parent(vs);vplan=vp.plan();vr,vt=vp.emit(vplan,'vt_lp');vf=vp.reset_forest_plan(vplan)
+        vb=[(r,b) for r,row in vf['regions'].items() for b in row['child_bindings']]
+        assert len(vb)==3 and {(r,b['pin'],b['bit']) for r,b in vb}=={('core',None,None),('lane0','resets',0),('lane1','resets',1)}
+        for r,b in vb:assert f'.d(lpr_{r}_leaves[({b["first_expr"]})])' in vr
+        assert lp.audit(vs,vr)['ok']
+        print('CHILD_RESET_VECTOR_BITS_USE_EXACT_REGIONAL_PRIVATE_LEAVES PASS')
         if a.baseline_module:
             loader=importlib.util.spec_from_file_location('before',a.baseline_module);old=importlib.util.module_from_spec(loader);loader.loader.exec_module(old);old.ROOT=lp.ROOT
             q=old.Parent(spec);qp=q.plan();qr,qt=q.emit(qp,'cr_top_lp')

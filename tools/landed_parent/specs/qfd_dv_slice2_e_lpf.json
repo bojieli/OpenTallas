@@ -1,0 +1,191 @@
+{
+ "top": "qfd_dv_slice2_e_lpf",
+ "why": "OWN-QWEN/SLICE-E 10-18 (landed-regions-standard-1018): the Qwen DV slice E master qfd_dv_slice2_e (slot 2462.376 x 2591.976, SU_LT 1 / HD_W130 1) as a LANDED parent instead of one balanced tree over 2.5 mm. Regions: core (pin registers -> decode, SU with the 8 hard lane groups, VM 22 SRAM, station, scalar, stream, status), hd (the heads: 4 column heads + 32 x leaves), ef / wf (W/E face pin groups: every face input lands from its face root, every face output lands into it), nw/nc/ne + sw/sc/se (N/S pin groups rs_n*/rs_s*, cw_n*/cw_s*). Residual: the 8 SU lane groups share the core root (the su8 read loop lane -> VM -> lane must stay in one region; landing it needs the su8 RD relays re-cut as landings, priced in cycles_dv.py -- next step).",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_slice2_e_lpf.sv"
+ ],
+ "child_sources": [
+  "rtl/qwen_dv/qfd_dv_slice2_lpf_parts.sv",
+  "rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+  "rtl/qwen_dv/qfd_dv_redstn2.sv",
+  "rtl/qwen_dv/qfd_dv_scalar2.sv",
+  "rtl/qwen_dv/qfd_dv_vm.sv",
+  "rtl/qwen_dv/qfd_dv_stream.sv",
+  "rtl/qwen_dv/qfd_dv_su8_entries.sv",
+  "rtl/qwen_dv/qfd_dv_heads.sv",
+  "rtl/hdc/ot_hdc_vstream_lane.sv",
+  "rtl/hdc/ot_hdc_vreduce.sv",
+  "rtl/physical/ot_hdc_vred_pending_guard.sv",
+  "rtl/hdc/ot_hdc_sfu_q.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/lib/ot_rst_pipe.sv",
+  "rtl/qwen_dv/qfd_dv_su_lane.sv",
+  "rtl/test/full_sm_service/sram_models.sv",
+  "rtl/test/hbm_rf_visibility/scale_sram_model.sv",
+  "rtl/hdc/ot_hdc_vstream_lane_t.sv",
+  "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv"
+ ],
+ "defines": [],
+ "params": {
+  "SU_TLS": 1,
+  "SU_LT": 1,
+  "MU_NU": 4
+ },
+ "out_dir": "rtl/qwen_dv/lp",
+ "record_dir": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "regions": [
+  {
+   "name": "core",
+   "insts": [
+    "u_c",
+    "u_s"
+   ],
+   "centre": [
+    1242.0,
+    540.0
+   ]
+  },
+  {
+   "name": "hd",
+   "insts": [
+    "u_hd"
+   ],
+   "centre": [
+    1231.2,
+    1728.0
+   ]
+  },
+  {
+   "name": "ef",
+   "insts": [
+    "u_te",
+    "u_tes"
+   ],
+   "centre": [
+    2410.0,
+    640.0
+   ]
+  },
+  {
+   "name": "wf",
+   "insts": [
+    "u_tw"
+   ],
+   "centre": [
+    52.0,
+    640.0
+   ]
+  },
+  {
+   "name": "nw",
+   "insts": [
+    "u_tnw"
+   ],
+   "centre": [
+    350.0,
+    2550.0
+   ]
+  },
+  {
+   "name": "nc",
+   "insts": [
+    "u_tnc"
+   ],
+   "centre": [
+    1222.0,
+    2550.0
+   ]
+  },
+  {
+   "name": "ne",
+   "insts": [
+    "u_tne"
+   ],
+   "centre": [
+    2354.0,
+    2550.0
+   ]
+  },
+  {
+   "name": "sw",
+   "insts": [
+    "u_tsw"
+   ],
+   "centre": [
+    350.0,
+    40.0
+   ]
+  },
+  {
+   "name": "sc",
+   "insts": [
+    "u_tsc"
+   ],
+   "centre": [
+    1222.0,
+    40.0
+   ]
+  },
+  {
+   "name": "se",
+   "insts": [
+    "u_tse"
+   ],
+   "centre": [
+    2354.0,
+    40.0
+   ]
+  }
+ ],
+ "port_regions": {
+  "cmd_ei": "ef",
+  "hr_ei": "ef",
+  "st_ei": "ef",
+  "sc_ei": "ef",
+  "rv_ei": "ef",
+  "re_ei": "ef",
+  "rr_ei": "ef",
+  "rl_ei": "ef",
+  "rd_ei": "ef",
+  "dr_ei": "ef",
+  "st_wi": "wf",
+  "sc_wi": "wf",
+  "arv_wi": "wf",
+  "art_wi": "wf",
+  "arm_wi": "wf",
+  "arl_wi": "wf",
+  "ard_wi": "wf",
+  "dd_wi": "wf",
+  "ag_wi": "wf",
+  "l9_wi": "wf",
+  "rs_n0": "nw",
+  "rs_n1": "nc",
+  "rs_s0": "sw",
+  "rs_s1": "sc"
+ },
+ "bench": {
+  "cycles": 1500,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ },
+ "mut_child": "u_hd"
+}
