@@ -1,0 +1,16 @@
+{
+  "status": "DIAGNOSTIC_SOURCE_ASSEMBLY",
+  "production_gather_release": false,
+  "production_gather_blocker": "Actual GSC score placement is four 96-word segments with gaps; exact SEGMENTED96 repair and fixtures are pending. Flat base+I evidence remains scoped.",
+  "instances": 1369,
+  "source_sha256": {
+    "rtl/hbm_accel/die_glue/ot_hbm_kqs_fault_or4.sv": "7bbcf0879bfd6fb037306429d2a9fdfd75383059f272ff15405364202bee5812",
+    "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv": "ed728bddae2547bbf37a95682e66019f4459b6637af9206fe2e2566204759b8f",
+    "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar_f20.sv": "0e567cc8d74290678e0918ae95d76b72b9b93404ac1cb90d6ec22b111a19f495",
+    "rtl/hbm_accel/loader/service_native/split/ot_hbm_dma_load_route_static.sv": "11815d2cd797223ee7f87e82fdd99e0d8bbe3fc303ca6ab93945eb8b3f039608"
+  },
+  "contract_sha256": "2f6a4b5bbb36e454db8b88798050510304e1a9958ef9e3eee34e522574bf27b3",
+  "structural_result": "All structural classes zero; unread 65098 retained from base, diagnostic only. Physical flags changed after bind, while all edges and clock/reset bindings are byte-identical.",
+  "placement": "32 local selector face locations inventoried. Actual corrected native source, grants and access/PG/relay corridor proof pending.",
+  "closed_ijs": "Exact QID0 SAFE_STREAM1 only; other QIDs use explicit source synthesis until collected views."
+}
