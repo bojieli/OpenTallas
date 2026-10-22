@@ -30,6 +30,10 @@ HBM-ELEMOWN3/COLLQ3 (10-19): --safe (with --ar-iter --rows 128 --suffix _ars) = 
   (ot_hgi_coll_reduce_static_ctl, soft: tags / faults / writeback pipe / out_flit) + u_rdl0..15 (ot_hgi_coll_reduce_lane,
   hard: 16 x 32 b state + LAT-8 add, clk = clk_reduce[1+l]).  Exact: the same lockstep vs the v8g/v8x reference
   (tb_hfd_coll_<v>_lpf_ars_eq, the _ar scripted programme stim_<v>_lp_ar.vh).
+
+STEWARD-HBM/COLL-LP (10-21): --safe --ar-iter --rows 256 --suffix _ars256 = the ROWS-256 SAFE flat parent (die hb_coll_* are
+  v8x/v8g #(AR_ITER 1, ROWS 256): RS(144) = 218 rows): u_issuer = ot_hgi_coll_issuer_m256v8 (CLOSED grid-95a231167),
+  u_fj = <fj>_r256 (ot_hgi_coll_safe_leaves_r256.sv); lockstep tb_hfd_coll_<v>_lpf_ars256_eq vs #(AR_ITER 1, ROWS 256).
 """
 from pathlib import Path
 
@@ -103,10 +107,14 @@ def flat(v="q2", ar=False, rows=64, suffix="", safe=False) -> str:
     SOLO, NS = VV["SOLO"], VV["NS"]
     NPT = VV.get("NPT", 2)      # HBM-COLLQ6: n1s0 = 1 link; q2 / q3 = 2 (the generated text is unchanged for them)
     ND = NPT + 13
-    PW = 7 if rows > 64 else 6
+    PW = 8 if rows > 128 else 7 if rows > 64 else 6
     rp = f" #(.ROWS({rows}))" if rows != 64 else ""
-    if safe and not (ar and rows == 128):
-        raise SystemExit("--safe is the AR_ITER 1 / ROWS 128 successor: use --ar-iter --rows 128")
+    if safe and not (ar and rows in (128, 256)):
+        raise SystemExit("--safe is the AR_ITER 1 / ROWS 128|256 successor: use --ar-iter --rows 128|256")
+    # STEWARD-HBM/COLL-LP 10-21: --safe --rows 256 = ROWS-256 issuer leaf ot_hgi_coll_issuer_m256v8 (CLOSED grid-95a231167) +
+    # ROWS-256 fj leaves <fj>_r256 (ot_hgi_coll_safe_leaves_r256.sv); 8-bit uop_pc / hgi_start_pc.
+    ISS = "ot_hgi_coll_issuer_m256v8" if rows == 256 else "ot_hgi_coll_issuer_m_r128"
+    FJS = "_r256" if rows == 256 else "_r128"
     L = []
     w = L.append
     w("`timescale 1ns/1ps")
@@ -134,7 +142,7 @@ def flat(v="q2", ar=False, rows=64, suffix="", safe=False) -> str:
     w(" wire issue_busy_raw,issue_done_raw,start_d2;wire [31:0] tap_iteration;wire [87:0] tap_steps;")
     if safe:
         w("// HBM-ELEMOWN3/COLLQ3 --safe: issuer / fj / link_e / reduce lanes are hard children (ot_hgi_coll_safe_leaves.sv).")
-    w(f" {'ot_hgi_coll_issuer_m_r128' if safe else 'ot_hgi_coll_issuer_m' + rp} u_issuer(.clk_control(clk_issue),.rst_n(rst_n),")
+    w(f" {ISS if safe else 'ot_hgi_coll_issuer_m' + rp} u_issuer(.clk_control(clk_issue),.rst_n(rst_n),")
     w("  .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),")
     w("  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),")
     w("  .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));")
@@ -253,7 +261,7 @@ def flat(v="q2", ar=False, rows=64, suffix="", safe=False) -> str:
         w(f" assign tkx_del_flit=dest_d[{(NPT + 8) * PWT}+:{4 * PWT}];")
     else:
         w(" wire [9:0] tkm_dest_v_w;")
-    w(f" {VV['fj'] + '_r128' if safe else VV['fj'] + rp} u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),")
+    w(f" {VV['fj'] + FJS if safe else VV['fj'] + rp} u_fj(.clk(clk_program),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),")
     w("  .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),")
     w("  .desc_loops(desc_loops),.launch_v(launch_v),.program_active(issue_busy_raw),.issuer_busy(issue_busy_raw),")
     w("  .issuer_fault(issue_fault),.issuer_uop_v(uop_v),.issuer_uop_pc(uop_pc),")
@@ -515,7 +523,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("variants", nargs="*", default=["q2", "q3"])
     ap.add_argument("--ar-iter", action="store_true", help="v8g AR_ITER=1: u_ariter leaf + inst_ctl")
-    ap.add_argument("--rows", type=int, default=64, choices=[64, 128], help="issuer / fj ROWS")
+    ap.add_argument("--rows", type=int, default=64, choices=[64, 128, 256], help="issuer / fj ROWS")
     ap.add_argument("--suffix", default="", help="module / file suffix (required with --ar-iter or --rows 128)")
     ap.add_argument("--safe", action="store_true", help="COLLQ3 SAFE successor: hard issuer / fj / link_e1 / reduce lanes")
     ap.add_argument("--stim-suffix", default=None, help="stimulus file suffix (default = --suffix)")

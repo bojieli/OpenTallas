@@ -9,14 +9,17 @@
 # (2) LP: the generated landed-parent bench (flat lpf_ars vs lp_ars, MUT 1/2/4, audit, unland).
 # (3) RS: tb_hgi_coll_reduce_split_eq (reduce_static vs control + 16 lanes, random) + mutants SMUT_TAG / SMUT_BF16 / RLANE_MUT_EXT.
 set -u
+# STEWARD-HBM/COLL-LP 10-21: LP_SFX=ars256 selects the ROWS-256 parents (spec_<v>_ars256.json, tb_hfd_coll_<v>_lpf_ars256_eq,
+#   stim_<v>_lp_ar256.vh, ot_hfd_coll_<v>_lp_ars256_bench.sh); default ars = the ROWS-128 parents, unchanged.
+SFX=${LP_SFX:-ars}; STS=${SFX#ars}; STS=_ar$STS
 cd "${LP_ROOT:?LP_ROOT}"
 VAR=${1:?q3|q2}; OUT=$(realpath -m "${2:?OUT}"); WHICH=${3:-all}; mkdir -p "$OUT"; rc=0
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; [ -x "$V" ] || V=verilator; export VERILATOR=$V
 "$V" --version | tee "$OUT/verilator.version"
 p=rtl/hbm_accel/generic/collective/p2p
-SRC=$(python3 -c "import json;s=json.load(open('results/arch/landed_parent_1018/collq/spec_${VAR}_ars.json'));print(' '.join(s['sources']+s['child_sources']))")
-TB=tb_hfd_coll_${VAR}_lpf_ars_eq
-sha256sum $p/ot_hfd_coll_q_hard_v8g.sv $SRC $p/$TB.sv $p/landed/stim_${VAR}_lp_ar.vh $p/tb_hgi_coll_reduce_split_eq.sv > "$OUT/sources.sha256"
+SRC=$(python3 -c "import json;s=json.load(open('results/arch/landed_parent_1018/collq/spec_${VAR}_${SFX}.json'));print(' '.join(s['sources']+s['child_sources']))")
+TB=tb_hfd_coll_${VAR}_lpf_${SFX}_eq
+sha256sum $p/ot_hfd_coll_q_hard_v8g.sv $SRC $p/$TB.sv $p/landed/stim_${VAR}_lp${STS}.vh $p/tb_hgi_coll_reduce_split_eq.sv > "$OUT/sources.sha256"
 eq() {  # name defines...
   local n=$1; shift
   "$V" --binary -j ${VL_JOBS:-16} -O1 -I. -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT "$@" \
@@ -89,7 +92,7 @@ if [ "$WHICH" = rsmut ]; then
   echo "COLL_LP_ARS_RSMUT_EXIT $rc"; exit $rc
 fi
 if [ "$WHICH" = all ] || [ "$WHICH" = lp ]; then
-  SIM=verilator VL_JOBS=${VL_JOBS:-16} bash $p/landed/ot_hfd_coll_${VAR}_lp_ars_bench.sh "$OUT/lp" > "$OUT/lp_bench.log" 2>&1; brc=$?
+  SIM=verilator VL_JOBS=${VL_JOBS:-16} bash $p/landed/ot_hfd_coll_${VAR}_lp_${SFX}_bench.sh "$OUT/lp" > "$OUT/lp_bench.log" 2>&1; brc=$?
   cat "$OUT/lp_bench.log"; grep -h 'LP_ACTIVITY' "$OUT"/lp/mut0.log 2>/dev/null | sed 's/^/lp mut0 /'
   [ $brc -eq 0 ] || rc=1
   rm -rf "$OUT"/lp/obj*
