@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-fb912-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-fb912-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-fb912-1021
+ot-run: ot-gold2       admits    -5 GB (avail 428, growth 431, headroom 0, waiters 0/0 GB) load 26/112 running 20 disk 2720 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-fb912-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-fb912-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-fb912-1021
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-dma-producer-fb912-1021 (0.3 GB) ot-gold2 -> ot-gold1 (no host with --dir admits 24 GB now)
+ot-run: SPILL: copied 220 changed entries in 4 s; running on ot-gold1; written files go back to ot-gold2 after the run
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-3161623-1792645642 after 1 s
+DMA_PRODUCER_INTEGRATED_PASS words384 packets48 routed48 commits48 SRAM_readback48 source_windows2 command_sample_to_bank_packet10/10 command_drive_to_bank_packet11/11 native_read_return7
+[241000] %Fatal: tb_dma_integrated.sv:70: Assertion failed in tb_dma_integrated.unnamedblk3.unnamedblk4: ROUTE_DATA packet0 word0
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-3161623-1792645642): exit 0
+ot-run: SPILL: outputs copied back ot-gold1 -> ot-gold2; RAN on ot-gold1: exit 0

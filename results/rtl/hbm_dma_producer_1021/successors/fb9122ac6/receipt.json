@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "observed_at": "2026-10-21T22:18:36.998086-07:00",
+  "fleet_host": "ot-gold1",
+  "unit": "oth-ubuntu-3161623-1792645642",
+  "converter_rev": "fb9122ac6444ca6c0a29512a4d14a45e89500a13",
+  "route_rev": "394f2083a",
+  "service_rev": "d76bf51b4",
+  "vmks_parameters": {
+    "MUT": 0,
+    "KRL1": 1
+  },
+  "hbm_clock_period_ns": 1.4,
+  "stream_clock_period_ns": 2.0,
+  "vmks_instances": 8,
+  "converter_lanes": 16,
+  "actual_native_vm_banks": 8,
+  "source_windows": 2,
+  "input_format": "BF16",
+  "source_bank": 0,
+  "destination_quadrant": 0,
+  "words": 384,
+  "packets": 48,
+  "actual_native_vm_commits": 48,
+  "physical_sram_readbacks": 48,
+  "command_sample_to_bank_packet_edges": 10,
+  "preceding_negedge_drive_to_bank_packet_cycles": 11,
+  "native_read_return_edges": 7,
+  "same_binary_negative_controls": {
+    "destination_bank": "ROUTE_MISMATCH packet0 bank1",
+    "hbm_source_bytes": "ROUTE_DATA packet0 word0"
+  },
+  "binary_sha256": "1974768b7157423e8937673a13ef4d2246e7c5b431871799c4fb7952c03176a0",
+  "scope": "384/1280 actual q_norm.gain subset. Real vmks fixed-window requests and KRL1 response acceptance, true source-byte HBM boundary model, real asynchronous service CDC, converter, static route, native VM commit and SRAM readback. Group/WB traffic idle. HBM controller/PHY is a boundary model, source producer launch/physical distribution and native admission are not qualified. No full tensor/full token/release die claim.",
+  "evidence_sha256": {
+    "current/binary.sha256": "b16efa51610330e01b3112f127ff6e637c2dea8f19665de6ea84a4f7cf2223eb",
+    "current/build.log": "19bd804a5c9832b4d2363114541a0e3a8b59783e22b77e5845291df25bef5fda",
+    "current/client.log": "3d17b7c0ffbfd02a1880466faf36c829d980360f4e4d5cac091e6b7b9e88677b",
+    "current/hbm_mutant.log": "7209b911aa8318ce16281c486af1e63d9c07221b642ea0bc22d17ddd25c34a3d",
+    "current/mutant.log": "3cb88d8e7c61b0cbe4a86e20d62f028b4f3bf18c64b8e5dd69c4c973fc5e8a99",
+    "current/positive.log": "d582482b03672408b754009226ce9b970bbff5126c9e882d3b8a8591e59af254",
+    "current/tool_version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+  },
+  "copied_back_host": "ot-gold2",
+  "native_status": "Native6 MAIN and fallback mapped census PASS max32, zero violations, 78,733 roots; physical layout/CTS/timing remain open.",
+  "vectors_from": "25b66179f:results/rtl/hbm_dma_producer_1021/vectors.json"
+}

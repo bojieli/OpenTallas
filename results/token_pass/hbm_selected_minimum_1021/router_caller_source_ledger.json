@@ -1,0 +1,51 @@
+{
+  "observed_at": "2026-10-21T22:19:41.582185-07:00",
+  "status": "INCOMPLETE",
+  "owner": "/root/token/hbm",
+  "logical_programme_tp": 96,
+  "expert_words": 384,
+  "router_words_per_logical_rank": 4,
+  "router_operator": "SPSQRT",
+  "selected_collective_tp": 192,
+  "selected_su_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+  },
+  "logical_runs": "Four 96-word intervals; 24 logical TP96 ranks each. This is not physical quadrant/rank authority.",
+  "row_split": {
+    "metadata": "row_split_halves_on_dies_2r_2r+1",
+    "metadata_source": "tools/hbm_layer_vehicle/ds_layer_fixtures.py",
+    "executable_su_transform_proven": false,
+    "inspected_placement_pass": "tools/hgi_sim/d4g_quadrant_1017.py place_programme only reports class census/capacity, not descriptor transformation",
+    "physical_binding": null
+  },
+  "source_ledger": "input_identity.json and /home/ubuntu/scratch/codex-hbm-idxsu-2000/r18_selected_su_router_inventory.json",
+  "actual_source_inputs": "Recovered rank0 router A from native fixture input, never full GSC fixture O",
+  "required_receipt": {
+    "producer_tp": null,
+    "layer_id": null,
+    "source_sha256": null,
+    "die_sha256": null,
+    "clock_epoch_identity": null,
+    "source_shards": null,
+    "physical_column": null,
+    "ready_edge": null,
+    "release_edge": null
+  },
+  "aggregation_requirement": "Each native 96-word run references all real shard receipts: 24x4 at TP96, or 48x2 at TP192 only after actual transform/config authority.",
+  "gaps": [
+    "Executable logical TP96 to native TP192 transform/configuration unproven",
+    "Actual all-rank producer operands and native commit/retention receipts missing",
+    "Actual masked two-word shard transport and physical rank/group binding missing",
+    "GSC existing 92 imaged local words and 36 fixture-O far flits do not establish producer readiness"
+  ]
+}

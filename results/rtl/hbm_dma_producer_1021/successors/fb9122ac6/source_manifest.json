@@ -1,0 +1,85 @@
+[
+  {
+    "rev": "fb9122ac6444ca6c0a29512a4d14a45e89500a13",
+    "path": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv",
+    "file": "src/ot_hbm_svc_vmdel_lane_load_static.sv",
+    "sha256": "dfe72e5087fe981a767f09b63299c29622267c3767ed14e3c44778138149faad"
+  },
+  {
+    "rev": "394f2083a9a5be9a40197803b3fb8535a8725b3c",
+    "path": "rtl/hbm_accel/loader/service_native/split/ot_hbm_dma_load_route_static.sv",
+    "file": "src/ot_hbm_dma_load_route_static.sv",
+    "sha256": "11815d2cd797223ee7f87e82fdd99e0d8bbe3fc303ca6ab93945eb8b3f039608"
+  },
+  {
+    "rev": "d5cf7a03a8e5816bdd603431c4783a6cc6814cf1",
+    "path": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+    "file": "src/hfd_vms_bank_native_q0_faces.sv",
+    "sha256": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4"
+  },
+  {
+    "rev": "d5cf7a03a8e5816bdd603431c4783a6cc6814cf1",
+    "path": "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "file": "src/ot_vms_bank_q0_faces_core.sv",
+    "sha256": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621"
+  },
+  {
+    "rev": "d5cf7a03a8e5816bdd603431c4783a6cc6814cf1",
+    "path": "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+    "file": "src/ot_vms_bank_q0_faces_body.sv",
+    "sha256": "a60a2419fdf85e3f684effb0f0a850afe895dd2f8dfddaf9b2cc393ee11c8870"
+  },
+  {
+    "rev": "d5cf7a03a8e5816bdd603431c4783a6cc6814cf1",
+    "path": "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+    "file": "src/ot_vms_ce_counter_pipe.sv",
+    "sha256": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa"
+  },
+  {
+    "rev": "d5cf7a03a8e5816bdd603431c4783a6cc6814cf1",
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "file": "src/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  {
+    "rev": "d5cf7a03a8e5816bdd603431c4783a6cc6814cf1",
+    "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "file": "src/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "sha256": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  },
+  {
+    "rev": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+    "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+    "file": "src/ot_hbm_svc_vm_kshare_splitstrap.sv",
+    "sha256": "acb135a98c2ba055dfe801fe0bb5b4b940b3a175f5faacb93505b5e546865758"
+  },
+  {
+    "rev": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+    "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+    "file": "src/ot_hbm_svc_async_fifo.sv",
+    "sha256": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b"
+  },
+  {
+    "rev": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+    "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+    "file": "src/ot_hbm_svc_pc_ctrl_leaf.sv",
+    "sha256": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15"
+  },
+  {
+    "rev": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+    "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+    "file": "src/ot_hbm_svc_ring_h9b_ff.sv",
+    "sha256": "1c7ba5548eff11256723104b6a6efb361c80114264997930eb20bbcf281be4ce"
+  },
+  {
+    "rev": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+    "path": "rtl/lib/ot_reset_sync.sv",
+    "file": "src/ot_reset_sync.sv",
+    "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  {
+    "path": "tb_dma_integrated.sv",
+    "file": "tb_dma_integrated.sv",
+    "sha256": "6cf8e895bf082047c13e1cfde5190cf1d48b52ca014c436c1751e879dda4968c"
+  }
+]
