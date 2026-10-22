@@ -250,6 +250,7 @@ else
   # HBM-DIE17 RESUME_S4: staged remote root + A/P/Q GEN of this run kept (S3 verdicts above in this log); re-stage only the
   # tool files changed since that staging (hardlinks broken first), then rerun S4..S11.
   echo "RESUME_S4 from staged $B (S3 A/P/Q of this run reused) HEAD $H $(date -Is)"
+  H=$(ssh $HOST "basename \$(readlink $B/src)" | sed "s/^src_//"); [ -n "$H" ] && ssh $HOST "test -d $B/src_$H" || { echo RESUME_NO_STAGED_SRC; exit 14; }; echo "RESUME_STAGED_SRC src_$H (tool overlay below)"
   for f in ${RESUME_TOOLS:-tools/hbm_die_v15/die_relay_stations.py}; do
     git -C $W show HEAD:$f | ssh $HOST "rm -f $B/src/$f && cat > $B/src/$f" || { echo RESUME_RESTAGE_FAIL $f; exit 14; }
     [ "$(ssh $HOST sha256sum $B/src/$f | cut -d' ' -f1)" = "$(git -C $W show HEAD:$f | sha256sum | cut -d' ' -f1)" ] || { echo RESUME_SHA_FAIL $f; exit 14; }
