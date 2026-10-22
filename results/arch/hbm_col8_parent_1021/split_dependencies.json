@@ -1,6 +1,6 @@
 {
   "source_commit": "b056ec205",
-  "split_contract_sha256": "63715876deee7ebcb0d486843ae5deea3cb3229a6d5f07ad30cb375373d4cc75",
+  "split_contract_sha256": "1929ead1e4dfa8b864cebc8c57bce9eff5373887d3c679e4815d38c330678ed3",
   "production_RTL": [
     "rtl/hdc/v41x/ot_hbm_idx_chunk_col8_control.sv",
     "rtl/common/landed_parent/ot_pl_land_physical.sv",
@@ -88,5 +88,14 @@
     "rtl/hdc/v41x/ot_hbm_idx_col8_sram_landed.sv": "2ce6212fb8984428ada4008b1e45b0b04d07ad98bc4fd077350341f319dfbbb6",
     "rtl/hdc/v41x/ot_hbm_idx_col8_landed.sv": "84cdc16f177696bee6f2fd276e1b66ab43c7733e707326882f9f7c851f975569",
     "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_col8_split.sv": "997d62268f9be0cd4635ccb116a195cb9eba430b7e3ea002429c6adc78c158a9"
+  },
+  "closed_hard_views": {
+    "ot_hidx_meta_sram146": {
+      "view": "physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146",
+      "record": "06d0f5e44",
+      "main": "6a5b95375",
+      "count": 8,
+      "D": 146
+    }
   }
 }
