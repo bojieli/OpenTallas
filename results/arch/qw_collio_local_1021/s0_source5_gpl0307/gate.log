@@ -1,0 +1,21 @@
+GATE WARN clock_span: 907.2 x 907.2 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO pin_regs: pin registers opted out: SAFE/TOK_REG registered owning roots; exact calendar neutral. PHY-up captured; no extra automatic data stages.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-gold1 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_coll_face_s0_regional_main_20261021-212511.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_coll_face_s0_regional_main_20261021-212511.log; host dir ot-gold1:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s0_regional_main-20261021-212511
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-gold1 in 545 s (gate total 2418 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2321, 'pin_rectangles': 2321, 'pin_track_checked': 2321, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 583751af9d390e6a7e95066588ee4deaae9c9c2809c90a46de1d56d8a02b2e71
+GATE INFO util: synthesized std area 7705 um2 + macros 82232 in core 815192: util 1% (std-cell density 1.1% of placeable 697425 um2; total fill 11.0%)
+GATE INFO textbook: PASS qfd_coll_face_s0_pl cells 50,904 flops 14,509 depth 483.4 ps util 0.1106 reach 0.0 um (4.8 s)
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR GPL-0307] RePlAce divergence detected: Current overflow is low and increasing relative to minimum,and the HPWL has significantly worsened. Consider re-running with a smaller max_phi_cof value.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55
+GATE WARN cross_clock: multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)  -> FIX: fix the signoff SDC read and re-gate with --cts
+GATE FAIL clock_rule: actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-qw-collio-native-2000-1021/physical/ref_tile/qfd_coll_face_s0_regional_main/gate_layout/floorplan.png
+GATE FAIL fill: fill 11% = (hard macros 82232.2 + synthesized std cells 7949.8) / outline 823011.8 um2; pin demand per face: S 2 pins over 452.6/907.2 um (50%), N 0 pins over 0.0/907.2 um (0%), W 1276 pins over 904.4/907.2 um (100%), E 1379 pins over 904.5/907.2 um (100%) (< 35%)  -> FIX: do not shrink for area: regroup the macros / children so links stay short, or record "fill_reason": {"pin_bound": "<why the perimeter, not the area, sets the outline>"} if the pin demand above shows the edges are full
+PRE_ROUTE_GATE: FAIL (3 fail, 4 warn)
+GATE: qfd_coll_face_s0_regional_main/gate_result.json written (exact staged source binding; commit it with the kit)

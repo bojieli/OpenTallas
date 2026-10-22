@@ -1,0 +1,198 @@
+{
+ "name": "qfd_coll_face_s0_regional2_fb-reg2fb-COMMIT",
+ "block": "qfd_coll_face_s0_pl",
+ "ref_tile": true,
+ "owner": "CODEX-QW-COLLIO-2000",
+ "purpose": "S0 structural successor for measured GPL0307 east codec fence crowding; retain independent clocks and payload381",
+ "threads": 8,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "codex/qw-collio-native-2000-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile/qfd_coll_bank137/views",
+   "physical/ref_tile/qfd_static_ch546/views",
+   "results/rtl/qwen_coll_face_1018",
+   "rtl/test/run_coll_static_face.sh",
+   "rtl/test/tb_coll_static_face.sv",
+   "rtl/physical/qwen_coll_safe_1019",
+   "results/rtl/qwen_coll_safe_1019",
+   "tools/orfs_allcorner_spef.py",
+   "results/rtl/qw_collio_1020",
+   "results/arch/qw_collio_local_1021/native_source5"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_coll_face_s0_pl #(.PLD(2), .PLK(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLL_BANK_LOCAL -DOT_COLL_REGIONAL --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s0_pl.sv rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv rtl/physical/ot_qfd_coll_static_face.sv rtl/physical/ot_qfd_static_transport.sv rtl/rom/ot_coll_static_linkcal.sv rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_face_pass",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=350 FACE_R=0 FACE_PR=5 FACE_L=381 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/s0_m0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_STATIC_FACE_BENCH PASS MUT=0$",
+    "pass_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_s0_m0.log",
+    "min_count_regex": "^MUT=0 PHI=1 COLL_FACE_BENCH .* got (\\d+) "
+   },
+   {
+    "name": "coll_face_mut_rx_early",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=350 FACE_R=0 FACE_PR=5 FACE_L=381 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/s0_m1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=1$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_s0_m1.log"
+   },
+   {
+    "name": "coll_face_mut_cdc_latency",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=350 FACE_R=0 FACE_PR=5 FACE_L=381 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/s0_m2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=2$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_s0_m2.log"
+   },
+   {
+    "name": "coll_face_mut_phy_long",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=350 FACE_R=0 FACE_PR=5 FACE_L=381 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/s0_m3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=3$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_s0_m3.log"
+   },
+   {
+    "name": "coll_face_mut_bank_hit",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=350 FACE_R=0 FACE_PR=5 FACE_L=381 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/s0_m4 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_s0_m4.log"
+   },
+   {
+    "name": "coll_face_mut_ring_early",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=350 FACE_R=0 FACE_PR=5 FACE_L=381 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/s0_m5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=5$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_s0_m5.log"
+   },
+   {
+    "name": "coll_face_mut_land_unlanded",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=350 FACE_R=0 FACE_PR=5 FACE_L=381 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/s0_m6 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=6$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_s0_m6.log"
+   },
+   {
+    "name": "coll_face_mut_phyland_short",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=350 FACE_R=0 FACE_PR=5 FACE_L=381 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/s0_m7 7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=7$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_s0_m7.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_coll_face_s0_regional2_fb/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_coll_face_s0_regional2_fb/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_coll_face_s0_regional2_fb --out {RUN}/record/views/qfd_coll_face_s0_pl --macro-view physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_coll_face_s0_regional2_fb/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_coll_face_s0_regional2_fb/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_coll_face_s0_regional2_fb/qfd_coll_face_s0_regional2_fb-reg2fb-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Native regional-tree production S0 face, six actual SRAM macros and explicit roots for calendar, two-clock channels, four banks and PHY. Removes hybrid hard-entry purity restriction by implementing the real sequential regions, not replacing a hard-child timing model. Local bank landing shares the bank SRAM tree; sticky fault returns use actual fixed-slot4/K2 rings. Larger frame and10.8um macro halos reserve landing and routing bands. Existing phase/calendar/CRC/data protocol maintained; status visibility is3edges later and must be measured. No threshold change/timing exception. Native source2 failure explicitly repaired: collision controls14groups, publication resets8bytegroups, write/version4groups, read-select4groups, eight final face-reset copies, all original stages retained. Source5 separates publication and seen address-select registers; source4 actually mapped33loads after aliasing the raw SRAM address. Identical capture edge, no extra stage."
+}

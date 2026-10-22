@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s0_regional_main-20261021-212511
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s0_regional_main-20261021-212511
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s0_regional_main-20261021-212511
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s0_regional_main-20261021-212511
+ot-run: ot-gold1       admits    26 GB (avail 470, growth 452, headroom 0, waiters 2/96 GB) load 214/112 running 60 disk 1574 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s0_regional_main-20261021-212511
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s0_regional_main-20261021-212511
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-3136977-1792645618 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_LAYOUT_DUMP /work/failed_layout_analysis.json blocks 6 pins 2657 pg 336 fill 0.113
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-3136977-1792645618): exit 0

@@ -1,0 +1,23 @@
+{
+  "failed_run": "ot-gold1:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s0_regional_main-20261021-212511",
+  "dump_sha256": "96e6428369f12fd3fb522fc438c25d48955510a778f699dff35e5ec74a0013cd",
+  "density_max": 1.878,
+  "density_max_center_um": [
+    602.4375,
+    531.5625
+  ],
+  "original_codec_east_edge_um": 604.8,
+  "failed_std_area_um2": 10517.7,
+  "floorplan_std_area_um2": 7949.8,
+  "long_wires": 5895,
+  "inserted_buffers": 13371,
+  "resized": 5009,
+  "timing_area_added_percent": 29.09,
+  "routability_inflation_percent": 0,
+  "successor_scope": [
+    "S0 MAIN",
+    "S0 fallback"
+  ],
+  "repair": "widen east codec landing band, combine overlapping TX and RX placement groups, correct cleanup group count; same as independently observed P edge crowding",
+  "unchanged": "RTL, twelve clock roots, six real macros, outline, PD0.55, clock limits, payload381"
+}
