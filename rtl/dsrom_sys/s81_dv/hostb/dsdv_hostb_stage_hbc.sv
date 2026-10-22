@@ -27,6 +27,8 @@
 // static dates (next_forward_slot, source_return_TX_slot = return_send_slot+1, the
 // edge on which a dsdv_hostb_return return_ring registered at return_send_slot is
 // presented), no longer external pins: nothing outside may tie them.
+// The book reads the loader's kept same-edge copies context_valid_bk / receiver_edge_bk
+// (native census: context_valid 35 loads, receiver_edge bits 33-38 loads > 32).
 module dsdv_hostb_stage_hbc #(
  parameter integer ENABLE=0, LOCAL_STAGE=255, LOCAL_RANK=4, PHASE_BOUND=0,
  parameter [63:0] CLOCK_RESET_ID=64'd0,
@@ -50,16 +52,17 @@ module dsdv_hostb_stage_hbc #(
    .f_host(f_host),.ks_descriptor(ks_descriptor),.ks_slot(ks_slot),.arm_mask(arm_mask),.arm_commit(arm_commit),.fault(fault));
   assign context_valid=0;assign receiver_edge=0;assign boot_edge=0;assign hbc_fault=0;
  end else begin:g_hbc
-  wire [1103:0] after_hbc;wire [511:0] active_fields;
+  wire [1103:0] after_hbc;wire [511:0] active_fields;wire context_valid_bk;wire [47:0] receiver_edge_bk;
   (* keep_hierarchy="yes" *) dsdv_hbc1_loader #(.ENABLE(1),.LOCAL_STAGE(LOCAL_STAGE),.LOCAL_RANK(LOCAL_RANK),
    .PHASE_BOUND(PHASE_BOUND),.CLOCK_RESET_ID(CLOCK_RESET_ID),.BOOT_HEADER_EDGE(BOOT_HEADER_EDGE),
    .BOOT_COMMIT_EDGE(BOOT_COMMIT_EDGE)) u_loader(.ck(ck),.rst_n(rst_n),.ring_i(from_prev),.job_active(job_active),
    .local_ring(after_hbc),.active_fields(active_fields),.context_valid(context_valid),
-   .receiver_edge(receiver_edge),.boot_edge(boot_edge),.fault(hbc_fault));
+   .receiver_edge(receiver_edge),.boot_edge(boot_edge),.fault(hbc_fault),
+   .context_valid_bk(context_valid_bk),.receiver_edge_bk(receiver_edge_bk));
   wire [15:0] tid;wire [9:0] user_id;wire [20:0] position,token;wire [31:0] epoch_id;wire [63:0] programme_id;
   wire [7:0] data_stage;wire [1:0] data_rank;wire next_header_slot,next_forward_slot,source_return_tx_slot;wire [47:0] transit_body_edge;
-  (* keep_hierarchy="yes" *) dsdv_hbc1_affine_book u_book(.ck(ck),.rst_n(rst_n),.context_valid(context_valid),
-   .fields(active_fields),.receiver_edge(receiver_edge),.tid(tid),.user_id(user_id),.position(position),.token(token),
+  (* keep_hierarchy="yes" *) dsdv_hbc1_affine_book u_book(.ck(ck),.rst_n(rst_n),.context_valid(context_valid_bk),
+   .fields(active_fields),.receiver_edge(receiver_edge_bk),.tid(tid),.user_id(user_id),.position(position),.token(token),
    .epoch_id(epoch_id),.programme_id(programme_id),.expected_data_stage(data_stage),.expected_data_rank(data_rank),
    .next_header_slot(next_header_slot),.next_forward_slot(next_forward_slot),.prev_header_slot(),.prev_forward_slot(),
    .status_sample_slot(),.return_send_slot(),.source_return_TX_slot(source_return_tx_slot),.transit_body_edge(transit_body_edge));

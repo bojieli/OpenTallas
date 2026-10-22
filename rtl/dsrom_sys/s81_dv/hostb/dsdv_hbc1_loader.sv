@@ -11,10 +11,13 @@ module dsdv_hbc1_loader #(
 )(input wire ck,rst_n,input wire[1103:0] ring_i,input wire job_active,
  output wire[1103:0] local_ring,output wire[511:0] active_fields,
  output wire context_valid,output wire[47:0] receiver_edge,boot_edge,
- output wire[7:0] fault);
+ output wire[7:0] fault,
+ // COLLB-HOST 10-21 native census (max 32 loads): kept same-edge copies for the affine book
+ output wire context_valid_bk,output wire[47:0] receiver_edge_bk);
  generate if(ENABLE==0)begin:g_original
   assign local_ring=ring_i;assign active_fields=0;assign context_valid=0;
   assign receiver_edge=0;assign boot_edge=0;assign fault=0;
+  assign context_valid_bk=0;assign receiver_edge_bk=0;
  end else begin:g_hbc
   localparam[47:0] BODY_EDGE=BOOT_HEADER_EDGE+48'd4;
   localparam[47:0] COMMIT_DELTA=BOOT_COMMIT_EDGE-BODY_EDGE;
@@ -22,8 +25,14 @@ module dsdv_hbc1_loader #(
    CLOCK_RESET_ID!=0&&BOOT_HEADER_EDGE!=48'hffffffffffff&&BOOT_COMMIT_EDGE!=48'hffffffffffff&&BOOT_COMMIT_EDGE>BODY_EDGE+2;
   wire[3:0] pending,ready,shadow_date,active_date;wire[511:0] shadow;
   wire rn;(* keep_hierarchy="yes" *)ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
-  reg valid;reg[7:0] f;reg body_seen;
-  assign fault=f;assign context_valid=valid&&f==0;
+  reg valid;reg[7:0] f;reg body_seen;reg valid_n;reg[7:0] f_n;
+  assign fault=f;
+  // context_valid = valid&&f==0 had 35 loads (book slot compares + RX configured + port): it is now two kept
+  // flop copies of the SAME function registered from the next state (valid_n, f_n) -> identical value on the
+  // same edge, one copy for RX/port, one for the book.
+  wire ctx_n=valid_n&&f_n==0;
+  (* keep_hierarchy="yes" *)dsdv_hbc_ctx_copy #(.ID(0)) u_ctx_a(.ck(ck),.rst_n(rst_n),.d(ctx_n),.q(context_valid));
+  (* keep_hierarchy="yes" *)dsdv_hbc_ctx_copy #(.ID(1)) u_ctx_b(.ck(ck),.rst_n(rst_n),.d(ctx_n),.q(context_valid_bk));
   wire hv=ring_i[0]&&ring_i[3:1]==6;
   wire[511:0] p=ring_i[532:21];
   wire command=hv&&p[31:0]==32'h31434248&&!(|pending); // Never inspect raw-body magic.
@@ -58,24 +67,28 @@ module dsdv_hbc1_loader #(
    p[289:242]==BOOT_COMMIT_EDGE&&boot_edge==BOOT_COMMIT_EDGE&&p[113:82]==expected_crc&&
    p[241:178]==expected_programme&&(&ready)&&!valid&&!job_active&&f==0&&VALID_PROFILE;
   wire commit_good=commit_header&&commit_permit;
+  always @* begin
+   valid_n=valid;f_n=f;
+   begin
+    if(load_header&&!load_good)f_n[0]=1;
+    if(VALID_PROFILE&&boot_edge==BOOT_HEADER_EDGE&&!load_good)f_n[0]=1;
+    if(command&&addressed&&p[39:36]>1)f_n[1]=1;
+    if(boot_edge==BODY_EDGE&&(|pending)&&!hv)f_n[2]=1;
+    if(hv&&(|pending)&&boot_edge!=BODY_EDGE)f_n[2]=1;
+    if(body_check&&!body_good)f_n[3]=1;
+    if(commit_header&&!commit_good)f_n[4]=1;
+    if(boot_edge==BOOT_COMMIT_EDGE&&!commit_good)f_n[5]=1;
+    if(command&&addressed&&(valid||job_active))f_n[6]=1;
+    if(job_active&&((|pending)||(|ready)))f_n[6]=1;
+    if(command&&addressed&&!VALID_PROFILE)f_n[7]=1;
+    if(commit_good)valid_n=1;
+   end
+  end
   always @(posedge ck or negedge rn)begin
    if(!rn)begin valid<=0;f<=0;body_seen<=0;end
    else begin
-    if(load_header&&!load_good)f[0]<=1;
-    if(VALID_PROFILE&&boot_edge==BOOT_HEADER_EDGE&&!load_good)f[0]<=1;
-    if(command&&addressed&&p[39:36]>1)f[1]<=1;
-    if(boot_edge==BODY_EDGE&&(|pending))begin
-     body_seen<=hv;
-     if(!hv)f[2]<=1;
-    end
-    if(hv&&(|pending)&&boot_edge!=BODY_EDGE)f[2]<=1;
-    if(body_check&&!body_good)f[3]<=1;
-    if(commit_header&&!commit_good)f[4]<=1;
-    if(boot_edge==BOOT_COMMIT_EDGE&&!commit_good)f[5]<=1;
-    if(command&&addressed&&(valid||job_active))f[6]<=1;
-    if(job_active&&((|pending)||(|ready)))f[6]<=1;
-    if(command&&addressed&&!VALID_PROFILE)f[7]<=1;
-    if(commit_good)valid<=1;
+    valid<=valid_n;f<=f_n;
+    if(boot_edge==BODY_EDGE&&(|pending))body_seen<=hv;
    end
   end
   genvar k;
@@ -87,6 +100,13 @@ module dsdv_hbc1_loader #(
    wire[47:0] epoch_at_next=seed+COMMIT_DELTA+1;
    (* keep_hierarchy="yes" *)dsdv_hbc_epoch12 #(.ID(k)) u_epoch(.ck(ck),.commit_request(commit_header),.commit_permit(commit_permit),.valid(valid),.fault_clear(f==0),.carry(carry_epoch),
     .d(epoch_at_next[12*k+:12]),.q(receiver_edge[12*k+:12]));
+   // receiver_edge bits had 33-38 loads: the book reads its own kept same-edge copy of the epoch counter
+   // (same load/run enables, same commit date, carry from its own bits).
+   wire carry_epoch_bk;
+   if(k==0)begin:g_first_bk assign carry_epoch_bk=1'b1;end
+   else begin:g_carry_bk assign carry_epoch_bk=&receiver_edge_bk[k*12-1:0];end
+   (* keep_hierarchy="yes" *)dsdv_hbc_epoch12 #(.ID(k+4)) u_epoch_bk(.ck(ck),.commit_request(commit_header),.commit_permit(commit_permit),.valid(valid),.fault_clear(f==0),.carry(carry_epoch_bk),
+    .d(epoch_at_next[12*k+:12]),.q(receiver_edge_bk[12*k+:12]));
    (* keep_hierarchy="yes" *)dsdv_hbc_owner #(.ID(k),.BODY_EDGE(BODY_EDGE),.COMMIT_EDGE(BOOT_COMMIT_EDGE)) u_owner(
     .ck(ck),.rst_n(rst_n),.load_header(load_good),.body_good(body_good),.edge_now(boot_edge),.pending(pending[k]),.ready(ready[k]));
   end
@@ -108,6 +128,10 @@ module dsdv_hbc1_loader #(
     .ck(ck),.owner(ready[k/11]),.date_match(active_date[k/11]),.d(shadow[LO+:W]),.q(active_fields[LO+:W]));
   end
  end endgenerate
+endmodule
+module dsdv_hbc_ctx_copy #(parameter integer ID=0)(input wire ck,rst_n,d,output reg q);
+ wire rn;(* keep_hierarchy="yes" *)ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
+ always @(posedge ck or negedge rn)if(!rn)q<=0;else q<=d;
 endmodule
 module dsdv_hbc_boot12 #(parameter integer ID=0)(input wire ck,rst_n,carry,output reg[11:0]q);
  wire rn;(* keep_hierarchy="yes" *)ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
