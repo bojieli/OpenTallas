@@ -494,7 +494,14 @@ module ot_qwen_w12_matvec_part #(
             end
         end
         if (REGROOT >= 7) begin : g_ktc
-            wire [NW-1:0] ktot_nx = ((REGROOT >= 8) ? ldv[NLDD+5] : ld_go) ? i_k : ktot_r;
+            wire [NW-1:0] ktot_nx;
+            for (genvar ks=0; ks<NW; ks=ks+6) begin : g_kmux_slice
+                localparam integer KW = (NW-ks < 6) ? NW-ks : 6;
+                ot_qwen_a0_mux_slice #(.W(KW)) u_mux (
+                    .sel((REGROOT >= 8) ? ldv[NLDD+5] : ld_go),
+                    .a(i_k[ks +: KW]), .b(ktot_r[ks +: KW]),
+                    .y(ktot_nx[ks +: KW]));
+            end
             for (sc = 0; sc < 5; sc = sc + 1) begin : g_kt
                 (* keep *) reg [NW-1:0] q;
                 always @(posedge clk) q <= ktot_nx;
@@ -2474,4 +2481,12 @@ module ot_qwen_kfirst_local #(parameter integer W = 16) (
     // A 32-bit one shifted by >=32 is zero, not an unbounded integer.
     wire shifted_fit = split_i[5] ? (k_i == {W{1'b0}}) : fits[split_i[4:0]];
     assign first_o = wsrc_i ? shifted_fit : (k_i == {{(W-1){1'b0}},1'b1});
+endmodule
+
+// Kept combinational slices bound the existing hold/load select pin fanout.
+(* keep_hierarchy = "yes" *)
+module ot_qwen_a0_mux_slice #(parameter integer W=6) (
+ input wire sel, input wire [W-1:0] a,b, output wire [W-1:0] y
+);
+ assign y = sel ? a : b;
 endmodule

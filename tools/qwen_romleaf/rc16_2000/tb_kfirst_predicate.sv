@@ -1,8 +1,9 @@
 `timescale 1ns/1ps
 module tb_kfirst_predicate;
- reg [15:0] k16=0; reg [31:0] k32=0;reg [7:0] k8=0;reg k1=0;
+ reg [17:0] k18=0; reg [15:0] k16=0; reg [31:0] k32=0;reg [7:0] k8=0;reg k1=0;
  reg [5:0] split=0;reg wsrc=0;
- wire q16,q32,q8,q1;
+ wire q18,q16,q32,q8,q1;
+ ot_qwen_kfirst_local #(.W(18)) d18(k18,split,wsrc,q18);
  ot_qwen_kfirst_local #(.W(16)) d16(k16,split,wsrc,q16);
  ot_qwen_kfirst_local #(.W(32)) d32(k32,split,wsrc,q32);
  ot_qwen_kfirst_local #(.W(8)) d8(k8,split,wsrc,q8);
@@ -19,10 +20,14 @@ module tb_kfirst_predicate;
   end
  endtask
  initial begin
-  // All production K values, all six-bit shifts (including 32..63), both modes.
+  // All W16 and actual production W18 K values, all six-bit shifts (including 32..63), both modes.
   // The real source's split is four bits. This superset checks shift-out too.
   for(s=0;s<64;s=s+1) begin
    split=6'(s);
+   for(k=0;k<262144;k=k+1) begin
+    k18=18'(k);
+    for(w=0;w<2;w=w+1) begin wsrc=1'(w);#1;check_one(q18,{14'd0,k18},18);end
+   end
    for(k=0;k<65536;k=k+1) begin
     k16=16'(k);
     for(w=0;w<2;w=w+1) begin wsrc=1'(w);#1;check_one(q16,{16'd0,k16},16);end
@@ -46,8 +51,8 @@ module tb_kfirst_predicate;
     for(w=0;w<2;w=w+1) begin wsrc=1'(w);#1;check_one(q32,k32,32);end
    end
   end
-  if(checks!=8422784) $fatal(1,"unexpected predicate coverage %0d",checks);
-  $display("KFIRST_PREDICATE_PASS checks%0d exhaustive_W16_K65536_split64_modes2 W1_W8_exhaustive W32_unsigned_boundaries",checks);
+  if(checks!=41977216) $fatal(1,"unexpected predicate coverage %0d",checks);
+  $display("KFIRST_PREDICATE_PASS checks%0d exhaustive_W18_K262144_W16_K65536_split64_modes2 W1_W8_exhaustive W32_unsigned_boundaries",checks);
   $finish;
  end
 endmodule
