@@ -1504,7 +1504,11 @@ endmodule
  // Every ENG tree starts at slot t*16; its low bit is exactly j%2.
  wire half=|odd;
  wire en=|wa;
+`ifdef OT_S81DV_MUT_N11_MASK
+ assign m={8{en && (half!=UPPER)}};
+`else
  assign m={8{en && (half==UPPER)}};
+`endif
 endmodule
 // Leaf-match predecode: oh[x] = v && b == x from 16 + 16 nibble one-hots (each net <= 16 loads).
 (* keep_hierarchy=1 *) module ot_s81dv_fin_dec #(parameter integer N=80)(input wire v,input wire[7:0] b,output wire[N-1:0] oh);
