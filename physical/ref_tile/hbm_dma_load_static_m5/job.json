@@ -33,20 +33,20 @@
     "name": "load_and_raw",
     "cmd": "bash rtl/hbm_accel/loader/service_native/split/run_hbm_dma_load_static.sh {RUN}/bench/load all",
     "expect": "pass",
-    "pass_regex": "DMA_LOAD_STATIC_ALL_PASS",
+    "pass_regex": "DMA_LOAD_STATIC PASS",
     "threads": 4,
     "peak_ram_gb": 12,
     "needs": [
      "verilator"
     ],
-    "pass_witness": "results/rtl/hbm_dma_load_static_1021/v8/bench_0.log"
+    "pass_witness": "results/rtl/hbm_dma_load_static_1021/v9/bench_0.log"
    },
    {
     "name": "bf16_data_mutant",
     "cmd": "bash rtl/hbm_accel/loader/service_native/split/run_hbm_dma_load_static.sh {RUN}/bench/mut mut",
     "expect": "fail",
     "fail_regex": "DMA_LOAD_STATIC FAIL",
-    "fail_witness": "results/rtl/hbm_dma_load_static_1021/v8/bench_1.log",
+    "fail_witness": "results/rtl/hbm_dma_load_static_1021/v9/bench_1.log",
     "threads": 4,
     "peak_ram_gb": 12,
     "needs": [
