@@ -462,6 +462,7 @@ def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blo
     """ROOT14 10-20: GEN safety facts (opentallas.die_gen_safety_facts.v1) of a real-view S81 die case"""
     region = {}
     roots = {}
+    abut_region = {}
     for mst, nm, _, _ in insts:
         if not nm.startswith('u_'):
             continue
@@ -471,11 +472,25 @@ def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blo
         r_ = n_ or f'?{nm}'
         region[nm[2:]] = r_
         roots[r_] = n_ if (n_ in top and n_.startswith('ck_')) else None
+        # S81.CLK2 (10-22): an ABUTTED face (master 'abut': plan_ports realised as named connections to the peer, e.g.
+        # dsfd_ctrl_rg3 dfi0/dfi1 -> HBM PHY k_*/kr_*) is IO of the master's clk_peer clock (ctrl ckh = ck_hbm: the
+        # core <-> hclk CDC is the closed tile's async FIFO, physical/ref_tile/s81ctrl_rg3 clock.sdc) -> its region is the
+        # peer clock net, not the core clk
+        tm = T['masters'].get(mod2master.get(mst, ''), {})
+        ab = tm.get('abut') or {}
+        for cp in tm.get('clk_peer') or []:
+            pn = next((x for x, _ in ibits[nm].get(cp.get('port'), []) if x in top and x.startswith('ck_')), None)
+            if pn and cp.get('master') == ab.get('peer'):
+                for pp in ab.get('plan_ports', []):
+                    abut_region[(nm[2:], pp.split('.')[0])] = pn
+                    roots[pn] = pn
     lp = {r['link']: r for r in LP['links']}
     crossings, wires = [], []
     for ln, L in sorted(links.items()):
         wires.append(dict(id=ln, kind=L['cls'], pts=[list(L['sxy'])] + [list(p) for p in L['pts']] + [list(L['dxy'])]))
         rs, rd = region.get(L['src'], f"?{L['src']}"), region.get(L['dst'], f"?{L['dst']}")
+        rs = abut_region.get((L['src'], L.get('sport')), rs)
+        rd = abut_region.get((L['dst'], L.get('dport')), rd)
         roots.setdefault(rs, None); roots.setdefault(rd, None)
         if rs == rd:
             continue
@@ -642,12 +657,20 @@ def main():
     W, H = plan['facts']['die_um']
     blocks = {b['name']: b for b in plan['blocks']}
     mod2master = {m.get('module'): k for k, m in T['masters'].items() if m.get('module')}
+    # S81.CLK2 (10-22): a chain-end variant module (e.g. u_irg_07 = dsdv_idx_rg3_nq, the qo-less IDX tail) is bound in
+    # place of its plan master; without this its stand-in had no clock pin rule (lib with no timing arcs) and gen_safety
+    # put it on no root (C2 '?u_irg_07')
+    for k, m in T['masters'].items():
+        ce = (m.get('chain_end') or {}).get('module')
+        if ce:
+            mod2master.setdefault(ce, k)
     links = {}
     for l in plan['links']:
-        (bi0, _, x0, y0, _), (bi1, _, x1, y1, _) = l['e']
+        (bi0, sp0, x0, y0, _), (bi1, sp1, x1, y1, _) = l['e']
         n0, n1 = plan['blocks'][bi0]['name'], plan['blocks'][bi1]['name']
         pts = [tuple(p) for p in l['sp']] if 'sp' in l else [(h[2], h[3]) for h in l['h'][:-1]]
-        links[l['i'].replace('-', '_')] = dict(src=n0, dst=n1, sxy=(x0, y0), dxy=(x1, y1), bits=l['b'], pts=pts, cls=l['c'], hops=l['h'])
+        links[l['i'].replace('-', '_')] = dict(src=n0, dst=n1, sxy=(x0, y0), dxy=(x1, y1), bits=l['b'], pts=pts, cls=l['c'], hops=l['h'],
+                                               sport=sp0, dport=sp1)
 
     # ------------------------------------------------------------------ netlist
     nets, tin, tout, insts = DPB.parse_die(a.bind_dir / 'die.v', 'dv_die')
