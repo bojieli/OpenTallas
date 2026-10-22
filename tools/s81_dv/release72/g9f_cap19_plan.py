@@ -23,7 +23,10 @@ Fix (structural; rigid re-slots into existing white space, nothing resized, no i
   * col6 SerDes rows re-spaced (gaps 86.4 -> 172.8); bk_sel up 344 (top passage over it 688 -> 344).
   * HBM row: a stacked irg pair is only kept where its lanes do not pass another irg's lane row (E: irg_04 -> lower
     row, irg_06 + irg_07 -> free slot x 23083 E of the group).
-  * E SerDes: lk_EN0/lk_EN1 + copy-A/B reserves up 172.8 (lk_ES1/lk_EN0 gap 86.4 -> 259.2).
+  * E SerDes column re-spaced: lk_ES1 +86.4, lk_EN0 + link_1_4 +259.2, lk_EN1 + link_1_5 +432 (gaps 172.8 / 259.2 /
+    259.2; was 86.4 each); rsv rows down 32.2 (irg gap 118.6 -> 86.4) so the rsv/slice street is 139 um (was 106.8):
+    fb all 16, main rsv_04..15 (main keeps the stacked W irg pair irg_02/irg_03 under rsv_00..03 whose upper lane row
+    needs 118.6; rsv_05 and rsv_11 move together so the pvso local/peer ring ages stay at the frozen K17).
 VARIANTS
   main: lk_WN1 / lk_WN3 -> (8320.96 / 7716.16, 17002.4) just above the corridor (coll lanes to s_0N get SHORTER);
         bundles reach the mouth through the 400-um street x 8925-9326; W HBM: irg_00 -> free slot (8320.96, 100)
@@ -41,7 +44,9 @@ SEAL, GAP = 100.0, 86.4
 ROW_DY = 172.8   # frame-array row streets 86.4 -> 259.2 (uses the 1.39-mm empty strip above both frame arrays)
 
 COMMON_E = {  # E SerDes column gap 86.4 -> 259.2 (with the copy-A/B reserves); E HBM irgs re-slotted
-    'dy': {'lk_EN0': 172.8, 'lk_EN1': 172.8, 'link_1_4': 172.8, 'link_1_5': 172.8},
+    'dy': {'lk_ES1': 86.4, 'lk_EN0': 259.2, 'link_1_4': 259.2, 'lk_EN1': 432.0, 'link_1_5': 432.0,
+    },
+    'rsv_dy': {'main': {f'rsv_{i:02d}': -32.2 for i in range(4, 16)}, 'fb': {f'rsv_{i:02d}': -32.2 for i in range(16)}},
 }
 VARIANTS = {
     'main': {
@@ -65,8 +70,10 @@ VARIANTS = {
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('plan'); ap.add_argument('out'); ap.add_argument('--variant', choices=sorted(VARIANTS), required=True)
+    ap.add_argument('--rsv', choices=['none', 'east', 'all'], default=None, help='rsv rows down 32.2: override the variant default')
     v = ap.parse_args(); p = json.load(open(v.plan)); W, H = p['facts']['die_um']
     spec = VARIANTS[v.variant]
+    rsv_dy = COMMON_E['rsv_dy'][v.variant] if v.rsv is None else {f'rsv_{i:02d}': -32.2 for i in {'none': [], 'east': range(8, 16), 'all': range(16)}[v.rsv]}
     allr = p['blocks'] + p.get('blockages', [])
     by = {b['name']: b for b in allr}
     move = {}
@@ -82,7 +89,7 @@ def main():
             for k, b in enumerate(rows):
                 if k:
                     move[b['name']] = (0.0, k * ROW_DY)
-    for n, d in COMMON_E['dy'].items():
+    for n, d in list(COMMON_E['dy'].items()) + list(rsv_dy.items()):
         move[n] = (move.get(n, (0, 0))[0], move.get(n, (0, 0))[1] + d)
     idx = {b['name']: i for i, b in enumerate(p['blocks'])}
     rec = {}

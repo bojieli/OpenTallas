@@ -39,11 +39,11 @@ for l in p['links']:
 json.dump(p,open(sys.argv[2],'w'),indent=1)
 PY
 python3 tools/s81_dv/release72/g9f_cap19_plan.py "$W/plan_unrouted0.json" "$W/plan_unrouted.json" --variant "$V" > "$W/cap19_plan.log" 2>&1 || exit 5
-python3 tools/s81_dv/dv_route72c.py "$W/plan_unrouted.json" "$W/plan_routed.json" --iter 16 --hop-max 380 --dump "$W/route_hot.json" > "$W/route.log" 2>&1 || exit 5
+python3 tools/s81_dv/dv_route72c.py "$W/plan_unrouted.json" "$W/plan_routed.json" --iter 16 --hop-max 380 --dump "$W/route_hot.json" ${ROUTE_ARGS:-} > "$W/route.log" 2>&1 || exit 5
 grep -q 'ROUTE_DONE failed 0 ' "$W/route.log" || exit 5
 python3 tools/s81_dv/dv_station_dirs72.py "$W/plan_routed.json" results/arch/s81_die72_1021/relay_bodies.json "$W/plan.json" > "$W/station_dirs.log" 2>&1 || exit 5
 # cap17 finish step (pin_cap17.sh PYP), source ref 528fc3c9f
-python3 - "$W" <<'PYP' || exit 6
+python3 - "$W" <<'PYP' > "$W/finish.log" 2>&1 || exit 6
 import sys,json
 from pathlib import Path
 sys.path.insert(0,'tools/s81_dv/release72')
@@ -62,7 +62,7 @@ sed -n "/^python3 - \"\$W\/table.json\" <<'PY'$/,/^PY$/p" "$I/pin_cap18.sh" > "$
 test -s "$W/cap18_tweak.sh" || exit 6
 W="$W" bash "$W/cap18_tweak.sh" > "$W/cap18_tweak.log" 2>&1 || exit 6
 if [ "${CLK2:-0}" = 1 ]; then
- python3 tools/s81_dv/release72/land_xhead_clk2.py "$W/plan.json" "$W/land.json" "$W/land_x.json" > "$W/land_xhead.log" 2>&1 || exit 6
+ python3 tools/s81_dv/release72/land_xhead_clk2.py "$W/plan.json" "$W/land.json" "$W/land_x.json" ${CLK2_ARGS:-} > "$W/land_xhead.log" 2>&1 || exit 6
  mv "$W/land_x.json" "$W/land.json"
 fi
 sha256sum "$W/plan.json" "$W/table.json" "$W/land.json" > "$W/input.sha256"
