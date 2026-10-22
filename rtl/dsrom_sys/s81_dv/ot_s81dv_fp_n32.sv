@@ -279,6 +279,17 @@ module ot_s81dv_divc_n32 #(
     (* keep *) reg [2:0] s3b_rk;       // same D (d3[2:0]), same edge as s3b_r
     always @(posedge clk) s3b_rk <= d3[2:0];
 `endif
+`ifdef OT_S81DV_XFIN_N16
+    // N16 (N16 census: the d4 remainder net fed every d5 quotient AND remainder gate, 37 loads): the two-digit S4
+    // step is split by OUTPUT into two keep_hierarchy cones, each recomputing the d4 remainder from its own register
+    // copy: dq -> d4/d5 quotient digits (from s3b_rk), dr -> d5 remainder (from a distinct kept copy s3b_rr).  Same
+    // function dstep(dstep(r, m[7:4])[2:0], m[3:0]); same D, same edge -> bit and cycle identical.
+    wire [2:0] s3b_rr;
+    ot_s81dv_xfin_rcopy3 u_s3b_rr (.clk(clk), .d(d3[2:0]), .q(s3b_rr));
+    wire [3:0] d4q_n16, d5q_n16; wire [2:0] d5r_n16;
+    ot_s81dv_xfin_div2q u_d2q (.r(s3b_rk), .m(s3b_m[7:0]), .q4(d4q_n16), .q5(d5q_n16));
+    ot_s81dv_xfin_div2r u_d2r (.r(s3b_rr), .m(s3b_m[7:0]), .r5(d5r_n16));
+`endif
 `ifdef OT_S81DV_XFIN_N13
     (* keep *) reg [15:8] s3_mk;      // same D (s2_m), same edge as s3_m: the S3b digit inputs own their copy
     always @(posedge clk) s3_mk <= s2_m[15:8];
@@ -299,6 +310,9 @@ module ot_s81dv_divc_n32 #(
         d4 = dstep(s3b_r, s3b_m[7:4]);
 `endif
         d5 = dstep(d4[2:0], s3b_m[3:0]);
+`ifdef OT_S81DV_XFIN_N16
+        d4[6:3] = d4q_n16; d5[6:3] = d5q_n16; d5[2:0] = d5r_n16;
+`endif
     end
     always @(posedge clk) begin
         s3_s <= s2_s; s3_z <= s2_z; s3_nf <= s2_nf; s3_m <= s2_m; s3_eu <= s2_eu;
@@ -1111,4 +1125,16 @@ module ot_s81dv_seed_sub32(input wire[31:0]x,output wire[31:0]y);
  for(genvar g=0;g<4;g=g+1)begin:g_b
   ot_s81dv_seed_subbyte #(.A(MAGIC[8*g+:8]))u(.b(b[8*g+:8]),.ci(c[g]),.s(y[8*g+:8]),.co(c[g+1]));
  end
+endmodule
+// N16: output-split two-digit /5 step (see ot_s81dv_divc_n32 S4); t = r*16 + d <= 79 per digit
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_div2q(input wire[2:0] r,input wire[7:0] m,output wire[3:0] q4,q5);
+ wire [6:0] t4={r,m[7:4]}; wire [2:0] r4=t4%7'd5; wire [6:0] t5={r4,m[3:0]};
+ wire [6:0] a4=t4/7'd5, a5=t5/7'd5; assign q4=a4[3:0]; assign q5=a5[3:0];
+endmodule
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_div2r(input wire[2:0] r,input wire[7:0] m,output wire[2:0] r5);
+ wire [6:0] t4={r,m[7:4]}; wire [2:0] r4=t4%7'd5; wire [6:0] t5={r4,m[3:0]}; wire [6:0] b5=t5%7'd5;
+ assign r5=b5[2:0];
+endmodule
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_rcopy3(input wire clk,input wire[2:0] d,output wire[2:0] q);
+ (* keep *) reg [2:0] r; always @(posedge clk) r<=d; assign q=r;
 endmodule
