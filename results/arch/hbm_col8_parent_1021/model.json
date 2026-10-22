@@ -1,0 +1,34 @@
+{
+  "source_r18": "d76bf51b4",
+  "source_pair8": "e774eeaa5",
+  "TP": 192,
+  "quarter_count": 4,
+  "leaves_per_quarter": 8,
+  "columns_per_leaf": 4,
+  "pairs_per_column": 4,
+  "pairs_per_quarter": 128,
+  "pair_outline_um": [
+    216,
+    172.8
+  ],
+  "bare_pair_area_um2": 4777574.4,
+  "old_quarter_outline_um": [
+    1512,
+    1512
+  ],
+  "proposed_quarter_outline_um": [
+    3888,
+    3240
+  ],
+  "planning": "8 leaves in 3x3 placement (one empty glue slot); leaf1296x1080 includes four561.6x475.2 columns in2x2 with43.2channels; quarter keeps64.8relay corridors <=405um",
+  "arithmetic_items_per_cycle": 8,
+  "query_bits_per_edge": 568,
+  "key_bits_per_edge": 4396,
+  "score_bits_per_edge": 306,
+  "pair_clock_count": 128,
+  "active_age_delta_baseline": 0,
+  "landed_age_delta": "not yet adopted; measure seams before qualified assembly",
+  "physical_status": "baseline hierarchy only, no physical or calendar qualification",
+  "quarter_area_um2": 12597120,
+  "four_quarter_area_delta_um2": 41243904
+}
