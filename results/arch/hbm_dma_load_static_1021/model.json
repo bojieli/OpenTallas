@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hbm_dma_load_static.v1",
-  "status": "COMPONENT_V9_PASS_NATIVE5_RUNNING",
+  "status": "COMPONENT_V9_PASS_NATIVE5_PASS_CTS_RUNNING",
   "required_formats": {
     "0": "FP32",
     "1": "BF16",
@@ -44,10 +44,10 @@
     "command_to_routed_output_edges": 10,
     "note": "5 local +5 route; actual die command/wire/regional crossings additional",
     "integrated_producer_receipt": {
-      "commit": "25b66179f",
-      "packet": "results/rtl/hbm_dma_producer_1021",
-      "unit": "724328-1792643067",
-      "source_commit": "d70845a2b",
+      "commit": "e4bafbc0b",
+      "packet": "results/rtl/hbm_dma_producer_1021/successors/db8c16103/receipt.json",
+      "unit": "2111555-1792644115",
+      "source_commit": "db8c16103",
       "HBM_period_ns": 1.4,
       "stream_period_ns": 2,
       "words": 384,
@@ -80,9 +80,9 @@
     "storage": "same existing SRAM payload, no new large flop storage",
     "pins": "same landing input/output registerband",
     "reach": "new fixed registered route required; die lead owns actual geometry",
-    "fanout": "Native4 max 34, five violations: four local epoch/status bank selectors and shared ownership release. db8 uses three same-edge bank captures per decoder and locally computes ownership release. Native5 MAIN and fallback are running.",
+    "fanout": "Native5 MAIN and fallback both PASS: max 32 loads, zero violations among 78,725 roots.",
     "depth": "Five local registered edges measured; native5 depth and CTS pending.",
-    "floorplan": "Native4 mapped total 21987.633960 um2 including 7789 um2 SRAM. MAIN 302.4 x 151.2; fallback 345.6 x 172.8. Actual macro channels 34.776 / 77.976 um. Native5 area and CTS pending.",
+    "floorplan": "Native5 mapped area 21988.071360 um2, sequential area 5969.635200 um2. MAIN 302.4 x 151.2; fallback 345.6 x 172.8. Macro channels 34.776 / 77.976 um. Actual layout and CTS pending.",
     "clock": "one local streamclock; external crossings landed by die",
     "reset": "new pipeline valid reset only; datapath unreset"
   },
