@@ -51,7 +51,7 @@ module tb_cap_sukv;
  col_h9_l4_lp #(.INSTANCE("f")) f(.ck_r0(clk),.ck_r1(clk),.ck_r2(clk),.rst_n(rst_n),.x(x),.xk({4{xkg}}),.lk({4{3'd2}}),.xo(xo0),.xok(xok0),.ret(ret0));
  col_h9_l4_lp #(.INSTANCE("f2")) f2(.ck_r0(clk),.ck_r1(clk),.ck_r2(clk),.rst_n(rst_n),.x(x),.xk({4{xkg}}),.lk({4{3'd4}}),.xo(xo1),.xok(xok1),.ret(ret1));
  reg cfgv=0;reg[159:0]cfgd=0;wire[5:0]sv;wire[71:0]sa;wire[191:0]sd;wire[3:0]nv;wire[47:0]na;wire[127:0]nd;wire cf;
- ot_s81sl_capc5r cap(.rt_w({70'd1,ret0,70'd1,70'd1}),.rt_e({70'd1,70'd1,70'd1,ret1}),.cfg_v(cfgv),.cfg_d(cfgd),
+ ot_s81sl_capc5r cap(.rt_w({ret1,ret0,70'd1,70'd1}),.rt_e({4{70'd1}}),.cfg_v(cfgv),.cfg_d(cfgd),
  .cw_s_v(sv),.cw_s_a(sa),.cw_s_d(sd),.cw_n_v(nv),.cw_n_a(na),.cw_n_d(nd),.fault(cf),
  .ck_rt(clk),.ck_cw(clk),.ck_ce(clk),.ck_rn(clk),.ck_rs(clk),
  .rst_n_rt(rst_n),.rst_n_cw(rst_n),.rst_n_ce(rst_n),.rst_n_rn(rst_n),.rst_n_rs(rst_n));

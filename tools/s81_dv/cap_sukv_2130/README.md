@@ -45,3 +45,11 @@ and absolute production epoch remain open. This successor also initializes all
 four GK descriptor rows (528 through 531), observes source VP `lo_v` read
 readiness and destination KV dispatch, and enforces positive and causal
 negative simulator outcomes. The preceding zero-wire `run_r2` remains intact.
+
+The XS output to frame input and frame return to CAP input are direct component
+boundary connections; frame-chain and frame-to-CAP physical route ages are not
+asserted. The native control origin is the common bounded replay clock, with
+real XS issuer words at its port and native CTL words at the RSTOP port. It is
+not mapped to a production seqhost epoch. `u_f_2L13` uses CAP W2 and
+`u_f_2R10` uses CAP W3 in the corrected successor; the original E0 connection
+for R10 in r2 is retained only as an unqualified predecessor.
