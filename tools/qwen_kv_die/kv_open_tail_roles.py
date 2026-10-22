@@ -54,7 +54,7 @@ SOURCES = {
     # recomputes the Z17 reserved-zero predicates from rx_payload (z17_dup)
     SFM: '2a19cdb5dd60035e51c916ae1f96617ed8d35a03f3a0778ca4e5e41644109331',
     ACTL: 'f60cafbb806ceff8b24b84a1c4bc10f97343ac60afcfcfed17236e6690e5cc9e',
-    SFM3: '68fc3d6713de59579146184fdebc1f030fa3af157fabe6373c57a74f791d94de',   # KV-BIND7 10-20 (claude/kv-d2d3-1020 3802573e7)
+    SFM3: '7a9aaca0a003102582b3308b4491dc9e2a6445a2b7b930cb2439168f13d75443',   # KV-BIND7 10-20 (claude/kv-d2d3-1020 3802573e7)
 }
 # the generator is a tool of the GEN7 tree (not of the binder's tools dir): pinned separately, checked by this prover only
 # KV-BIND3 10-19: re-pinned (was a7063e6b..., 60ff34e3d).  Changes since: default-off OT_KV_GRP_PRIVATE0 / OT_KV_DCAL_FLT
