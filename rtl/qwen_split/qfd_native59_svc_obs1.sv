@@ -418,7 +418,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire hp_host_match=hp_host_pending&&p_hev&&p_hfc&&p_ht[58:43]==p_he&&
     p_ht[36:19]==hp_host_token&&p_ht[18:6]==hp_host_position[12:0]&&p_ht[42:37]==0&&p_ht[5:0]==0;
  always @(posedge ck or negedge rst_top)
-  if(!rst_top)begin hp_host_pending<=0;hp_host_fault<=0;if(!FANOUT_LOCAL)begin hp_host_token<=0;hp_host_position<=0;endend
+  if(!rst_top)begin hp_host_pending<=0;hp_host_fault<=0;if(!FANOUT_LOCAL)begin hp_host_token<=0;hp_host_position<=0;end end
   else begin
    if(hp_host)begin
     if(hp_host_pending||hp_t1>=151936||hp_p1>=8192)hp_host_fault<=1;

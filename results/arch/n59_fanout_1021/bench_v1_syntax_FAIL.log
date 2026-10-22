@@ -1,0 +1,48 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1
+ot-run: ot-epyc9       admits   -45 GB (avail 89, growth 121, headroom 0, waiters 0/0 GB) load 68/128 running 30 disk 1787 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-n59-fanout-2000 (0.2 GB) ot-epyc9 -> ot-gold2 (no host with --dir admits 16 GB now)
+ot-run: SPILL: copied 1155 changed entries in 4 s; running on ot-gold2; written files go back to ot-epyc9 after the run
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-736315-1792643426 after 0 s
+N59OBS_BENCH build failed
+%Error: /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1/rtl/qwen_split/qfd_native59_svc_obs1.sv:422:3: syntax error, unexpected else
+  422 |   else begin
+      |   ^~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)
+N59OBS_BENCH build failed
+%Error: /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1/rtl/qwen_split/qfd_native59_svc_obs1.sv:422:3: syntax error, unexpected else
+  422 |   else begin
+      |   ^~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)
+N59OBS_BENCH build failed
+%Error: /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1/bench/m_hpseq/mut_qfd_native59_svc_obs1.sv:422:3: syntax error, unexpected else
+  422 |   else begin
+      |   ^~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)
+N59OBS_BENCH build failed
+%Error: /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1/bench/m_hpdrop/mut_qfd_native59_svc_obs1.sv:422:3: syntax error, unexpected else
+  422 |   else begin
+      |   ^~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)
+N59OBS_BENCH build failed
+%Error: /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1/bench/m_ret/mut_qfd_native59_svc_obs1.sv:422:3: syntax error, unexpected else
+  422 |   else begin
+      |   ^~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)
+N59OBS_BENCH build failed
+%Error: /srv/opentallas-scratch/claude/codex-n59-fanout-2000/src_v1/bench/m_hosttag/mut_qfd_native59_svc_obs1.sv:422:3: syntax error, unexpected else
+  422 |   else begin
+      |   ^~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-736315-1792643426): exit 3
+ot-run: SPILL: outputs copied back ot-gold2 -> ot-epyc9; RAN on ot-gold2: exit 3
