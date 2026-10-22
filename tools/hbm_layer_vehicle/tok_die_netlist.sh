@@ -25,7 +25,7 @@ L12=${L12_JSON:-$A/net/l12_banklat.json}
 git -C "$W" show "$SRC_REV:tools/hbm_die_v16/contract_die_v.py" > "$OUT/gen/contract_die_v.py" || exit 2
 say "GEN die=$HOST:$B/$CASE/die.v ($(sha256sum "$OUT/gen/die.v" | cut -c1-16)) contract=$CONTRACT ($(sha256sum "$CONTRACT" | cut -c1-16)) src=$SRC_REV"
 python3 "$T/gen_die_func.py" --die "$OUT/gen/die.v" --contract "$CONTRACT" --out "$OUT/gen/die_func.v" \
-  --report "$OUT/gen/gen_die_func.json" --cdv "$OUT/gen/contract_die_v.py" | tee -a "$OUT/gen/summary.log" || { say GEN_DIE_FUNC_FAIL; exit 3; }
+  --report "$OUT/gen/gen_die_func.json" --cdv "$OUT/gen/contract_die_v.py" ${PATCH_OPEN:+--patch-open} | tee -a "$OUT/gen/summary.log" || { say GEN_DIE_FUNC_FAIL; exit 3; }
 mkdir -p "$OUT"; [ -f "$L12" ] && cp "$L12" "$OUT/l12.json" || say "NO_L12_REPORT $L12 (CX emission needs it)"
 OUT=$OUT SRC_REV=$SRC_REV CONTRACT=$CONTRACT FIX_DS=${FIX_DS:-/home/ubuntu/scratch/tok-func-hbm/rsrc} QOP=${QOP:-/home/ubuntu/scratch/tok-func-hbm/qop} \
   CONNECTED_LOWERING=1 MEM=${MEM:-400} JOBS=${JOBS:-16} RUN=${RUN:-0} RUN_MEM=${RUN_MEM:-64} TAG=${TAG:-$(basename "$OUT")} \

@@ -105,6 +105,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--die', required=True); ap.add_argument('--contract', required=True)
     ap.add_argument('--out', required=True); ap.add_argument('--report')
+    ap.add_argument('--patch-open', action='store_true', help='simulate past GEN-open bits with the contract driver (listed; CONN_EQUIV stays FAIL)')
     ap.add_argument('--cdv', help='contract_die_v.py of the die source revision (default: this checkout)')
     a = ap.parse_args()
     c = ld(a.contract); I = c['instances']
@@ -163,7 +164,7 @@ def main():
             e = x['conns'].get(p, '')
             for b, t in enumerate(bits_of(e, pd['bits'], f'{i}.{p}')):
                 if t is None:
-                    continue
+                    gaps.append((i, p, b, '<unconnected>')); continue
                 if isinstance(t, tuple):
                     gen[(i, p, b)] = ('CONST', t[1], 0); continue
                 r = root(t)
@@ -178,9 +179,18 @@ def main():
         r = ref.get((i, p, b))
         if r is not None and r[0] == 'CONST':
             gen[(i, p, b)] = ('CONST', r[1], 0); straps_applied += 1
-        else:
+        elif r is not None or t != '<unconnected>':
             open_gaps.append((i, p, b, t))
     gaps = open_gaps
+    # --patch-open: a GEN-open bit that the contract drives gets the contract driver so the rest of the die can still
+    # be simulated.  CONN_EQUIV stays FAIL and every patched bit is listed: the GEN netlist itself is NOT fixed by this.
+    patched = []
+    if a.patch_open:
+        for (i, p, b, t) in gaps:
+            r = ref.get((i, p, b))
+            if r is not None:
+                gen[(i, p, b)] = tuple(r)
+                patched.append([i, p, b, t, list(r)])
     # equivalence vs contract
     def norm(s):
         if s is None:
@@ -220,7 +230,7 @@ def main():
     Path(a.out).write_text(text)
     rep = dict(schema='opentallas.gen_die_func.v1', gen_die=str(a.die), contract=str(a.contract),
                instances=len(G), buffers_collapsed=len(alias), die_pins=len(pins), input_bits_gen=len(gen),
-               input_bits_contract=len(ref), straps_applied=straps_applied, gen_open_input_bits=len(gaps), gen_gap_samples=[list(g) for g in gaps[:20]],
+               input_bits_contract=len(ref), straps_applied=straps_applied, gen_open_input_bits=len(gaps), gen_gap_samples=[list(g) for g in gaps[:20]], patched_open_bits=patched,
                conn_equiv='PASS' if not diff and not gaps else 'FAIL', diff=dict(diff), diff_by_port=dict(by_port.most_common(200)), diff_samples=samples,
                contract_driver_conflicts=bad[:20])
     if a.report:
