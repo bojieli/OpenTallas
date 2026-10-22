@@ -39,7 +39,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_pins  # noqa: E402
+from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_pins, MOUTH_MOVED  # noqa: E402
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
 import placement_coverage
@@ -1295,7 +1295,9 @@ def main():
                 pinlist.append((p, dirs[c][p], f, x, x + k * step, k, base, ports[c][p] > 1)); x += k * step
         fp = {f: L for f, L in faces.items() if L}
         ko = channels(rep)
-        synth_lef(c, w, h, pinlist, vd / f'{c}.lef', keepout=ko)
+        synth_lef(c, w, h, pinlist, vd / f'{c}.lef', keepout=ko, mouth_free=True)
+        if ko and flags.get(c) == 'synth_pin_bind' and MOUTH_MOVED.get(c):
+            print(f'GEN_PIN_MOUTH_KIT_NOTE {c}: {MOUTH_MOVED[c]} synth_pin_bind bits moved out of channel mouths', flush=True)
         if ko:
             carved[c] = ko
         face_report[c] = {f: sum(x[3] for x in L) for f, L in fp.items()}
@@ -1304,6 +1306,21 @@ def main():
 
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
+    # HBMc/CHAIN 10-22 GEN_PIN_MOUTH_CHECK: no SYNTH pin in a carved feedthrough channel mouth (die relay stations sit in
+    # the channels; a station's M1-M5 OBS over a block pin = unroutable pin; r18f S8: 15 rst pins under stations)
+    _mbad = []
+    for c_, ko_ in carved.items():
+        w_, h_ = size[c_]
+        for pn_, (px_, py_) in vxy.get(c_, {}).items():
+            for ch_ in ko_:
+                (x0_, x1_), (y0_, y1_) = ch_['x_um'], ch_['y_um']
+                if ((py_ <= 0.2 and y0_ <= 0.2) or (py_ >= h_ - 0.2 and y1_ >= h_ - 0.2)) and x0_ <= px_ <= x1_ or \
+                        ((px_ <= 0.2 and x0_ <= 0.2) or (px_ >= w_ - 0.2 and x1_ >= w_ - 0.2)) and y0_ <= py_ <= y1_:
+                    _mbad.append((c_, pn_))
+    if _mbad:
+        raise SystemExit(f'GEN_PIN_MOUTH_CHECK FAIL {len(_mbad)} pins in carved channel mouths {_mbad[:8]}')
+    print('GEN_PIN_MOUTH_CHECK PASS carved masters', len(carved), 'bits moved out of mouths',
+          sum(MOUTH_MOVED.get(c_, 0) for c_ in carved), {c_: MOUTH_MOVED[c_] for c_ in carved if MOUTH_MOVED.get(c_)}, flush=True)
     exposed = C.get('exposed_inputs', {})
     # Legacy contract layers sometimes preserved the exposed-input keys as a list.  That is not a numerical
     # summary; retain unknown counts in the diagnostic label instead of crashing after all placement work.
@@ -1508,6 +1525,19 @@ def main():
             leafclk[(n, p)] = f'ckg_por_{dom}'
     nc = []
     body = []
+    # HBMc/CHAIN 10-22 (freeze class 3, TOKEN2 CONN_EQUIV r18f S7): a 1-bit contract port is named scalar ('pw_we') by
+    # pin(), but a view declaring it [0:0] has the LEF pin 'pw_we[0]' -> the net was never emitted (col_idx/col_su pw_we,
+    # collar c_fault x5 left nc_).  view_key() maps a view pin to the contract pin name it carries.
+    def view_key(n, c, p):
+        mm_ = re.fullmatch(r'(\w+)\[0\]', p)
+        if mm_ and ports[c].get(mm_.group(1)) == 1 and f'{mm_.group(1)}[1]' not in vpins[c]:
+            return (n, mm_.group(1))
+        mm_ = re.fullmatch(r'(\w+)', p)
+        if mm_ and (ports[c].get(p) or 0) > 1:
+            return (n, f'{p}[0]')
+        return (n, p)
+    connected = set()
+    open_bits = []           # (inst, port, bit) of every view pin bit emitted unconnected (bus nc_ or omitted scalar)
     for n in sorted(inst):
         c = cell_of[n]
         bus = defaultdict(dict); scal = []
@@ -1515,11 +1545,20 @@ def main():
             if p in ('VDD', 'VSS'):
                 continue
             net_ = leafclk.get((n, p)) or netname.get((n, p))
+            if net_:
+                connected.add((n, p))
+            else:
+                k_ = view_key(n, c, p)
+                net_ = leafclk.get(k_) or netname.get(k_)
+                if net_:
+                    connected.add(k_)
             mm = re.fullmatch(r'(\w+)\[(\d+)\]', p)
             if mm:
                 bus[mm.group(1)][int(mm.group(2))] = net_
             elif net_:
                 scal.append((p, net_))
+            else:
+                open_bits.append((n, p, 0))
         cs = [f'.{p}({nn})' for p, nn in sorted(scal)]
         for p, bits in sorted(bus.items()):
             wv = 1 + max(bits)
@@ -1528,7 +1567,7 @@ def main():
                 if bits.get(k):
                     parts.append(bits[k])
                 else:
-                    nn = f'nc_{n}_{p}_{k}'; nc.append(nn); parts.append(nn)
+                    nn = f'nc_{n}_{p}_{k}'; nc.append(nn); parts.append(nn); open_bits.append((n, p, k))
             cs.append(f'.{p}({{{", ".join(parts)}}})')
         body.append(f'  {c} {n} (\n    ' + ',\n    '.join(cs) + '\n  );')
     hdr = []      # clocks and resets come from the REAL hb_ckgen (pll_<dom> / por_<dom>), not die ports
@@ -1536,6 +1575,20 @@ def main():
         hdr.append(f"{'input' if dr == 'input' else 'output'} wire {netname[(n, p)]}")
     L = ['// H-DIE v16 full-die case (tools/hbm_die_v15/die_case_v16.py); NOT_A_DIE_RESULT; open pins listed in manifest',
          'module hbm_v16_die (' + ', '.join(hdr) + ');']
+    # HBMc/CHAIN 10-22 GEN_OPEN_INPUT_CHECK: every contract net end / clock / reset pin of a placed instance is emitted,
+    # and no non-strap INPUT bit is left nc_ (strap bits = contract straps, constants of the design, listed open).
+    _expect = set(e_ for d, ends in nets.items() for e_ in ends if e_[0] in inst) | set(k for k in leafclk if k[0] in inst)
+    _dropped = sorted(_expect - connected)
+    _strap = set()
+    for st_ in C.get('straps', []):
+        for k in range(int(st_.get('lo', 0)), int(st_.get('hi', 0))):
+            _strap.add((st_['inst'], st_['port'], k))
+    _open_in = [f'{n_}.{p_}[{k_}]' for n_, p_, k_ in open_bits
+                if dirs[cell_of[n_]].get(p_) == 'input' and (n_, p_, k_) not in _strap]
+    if _dropped or _open_in:
+        raise SystemExit(f'GEN_OPEN_INPUT_CHECK FAIL dropped_contract_ends {len(_dropped)} {_dropped[:8]} '
+                         f'open_nonstrap_input_bits {len(_open_in)} {_open_in[:8]}')
+    print('GEN_OPEN_INPUT_CHECK PASS contract ends emitted', len(_expect), 'open input bits = straps only', flush=True)
     allnets = sorted(set(netname[e_] for d, ends in nets.items() for e_ in ends) - set(netname[(n, p)] for _, _, n, p in die_ports))
     L += [f'  wire {x};' for x in allnets] + [f'  wire {x};' for x in nc] + tw + body + tb + ['endmodule']
     (out / 'die.v').write_text('\n'.join(L) + '\n')

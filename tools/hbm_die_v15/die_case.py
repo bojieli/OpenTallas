@@ -122,9 +122,27 @@ def _minus(rects, keepout):
     return rects
 
 
-def synth_lef(name, w, h, pins, path, keepout=(), pin_window=None):
+MOUTH_MOVED = {}     # master -> bits moved out of carved-channel mouths by the last synth_lef(mouth_free=True)
+MOUTH_MARGIN_UM = 0.5
+
+
+def synth_lef(name, w, h, pins, path, keepout=(), pin_window=None, mouth_free=False):
     """Abstract of a SYNTH view: real outline, pins at the given (face, lo, hi) spans, every bit on a track (M5 N/S at
-    x = 0.012 + 0.048 k, M4 E/W at y = 0.012 + 0.048 k), OBS M1..M5 (the die routes M6+ over it, M4/M5 in channels)."""
+    x = 0.012 + 0.048 k, M4 E/W at y = 0.012 + 0.048 k), OBS M1..M5 (the die routes M6+ over it, M4/M5 in channels).
+    mouth_free (HBMc/CHAIN 10-22): no pin inside the mouth (+MOUTH_MARGIN_UM) of a carved feedthrough channel that opens
+    on a face -- the die places relay stations in those channels and a station's M1-M5 OBS covered 15 block reset pins
+    (sfucore/sm/host_cp rst_n, r18f S8 forest 'buried reset pin').  A bit that would land in a mouth takes the nearest free
+    track outside it; every other bit keeps its track (byte-identical LEF when no mouth holds a pin)."""
+    mouths = {f: [] for f in 'NSEW'}
+    if mouth_free:
+        M_ = MOUTH_MARGIN_UM
+        for c_ in keepout:
+            x0_, x1_ = c_['x_um']; y0_, y1_ = c_['y_um']
+            if y0_ <= 0.2: mouths['S'].append((x0_ - M_, x1_ + M_))
+            if y1_ >= h - 0.2: mouths['N'].append((x0_ - M_, x1_ + M_))
+            if x0_ <= 0.2: mouths['W'].append((y0_ - M_, y1_ + M_))
+            if x1_ >= w - 0.2: mouths['E'].append((y0_ - M_, y1_ + M_))
+    moved = 0
     L = ['VERSION 5.7 ;', 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f'MACRO {name}', '  CLASS BLOCK ;',
          f'  FOREIGN {name} 0 0 ;', f'  SIZE {w:.3f} BY {h:.3f} ;', '  SYMMETRY X Y ;']
     used = defaultdict(set)
@@ -134,8 +152,25 @@ def synth_lef(name, w, h, pins, path, keepout=(), pin_window=None):
         for k in range(nb):
             pos = lo + (k + 0.5) * ln / nb
             tr = round((pos - 0.012) / 0.048)
-            while tr in used[face]:
-                tr += 1
+            if mouths[face]:
+                Lf_ = w if face in ('N', 'S') else h
+                ok_ = lambda t: (t not in used[face] and 0 < 0.012 + 0.048 * t < Lf_
+                                 and not any(a_ <= 0.012 + 0.048 * t <= b_ for a_, b_ in mouths[face]))
+                in_mouth = any(a_ <= 0.012 + 0.048 * tr <= b_ for a_, b_ in mouths[face])
+                if in_mouth:
+                    t0, d_ = tr, 0
+                    while not ok_(t0 + d_) and not ok_(t0 - d_):
+                        d_ += 1
+                        assert d_ < 10 ** 6, (name, pn, face)
+                    tr = t0 + d_ if ok_(t0 + d_) else t0 - d_
+                    moved += 1
+                else:
+                    while not ok_(tr):
+                        tr += 1
+                        assert 0.012 + 0.048 * tr < Lf_, (name, pn, face, 'face full outside mouths')
+            else:
+                while tr in used[face]:
+                    tr += 1
             used[face].add(tr)
             c = 0.012 + 0.048 * tr
             bit = f'{pn}[{base + k}]' if bus else pn
@@ -166,6 +201,8 @@ def synth_lef(name, w, h, pins, path, keepout=(), pin_window=None):
     L += ['  OBS'] + [f'    LAYER M{k} ;\n' + '\n'.join(f'    RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;' for r in per[k])
                       for k in range(1, 6)] + ['  END', f'END {name}', '', 'END LIBRARY']
     Path(path).write_text('\n'.join(L) + '\n')
+    if mouth_free:
+        MOUTH_MOVED[name] = moved
 
 
 def face_pins(ports, faces, w, h):
