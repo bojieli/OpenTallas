@@ -1116,7 +1116,10 @@ puts "OT_SPECIAL_TOP_NETS $nsp"
 # forwarded-clock net even though repeat_nets un-skips it (case_p4l_rv: all 140 hop-0 fclk nets 0 repeaters,
 # 108 > data-1 -> fclk_mismatch FAIL).  Clock / reset distribution stays untouched by the step's own skip list
 # (clock-pin + sigtype + glob dont_touch); no step check reads the SDC clock.
-{repair}{clocks_sdc}
+{repair}
+# Preserve actual repaired placement for pin-to-pin reach inspection before routing.
+write_db /work/out/post_repair.odb
+{clocks_sdc}
 set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
