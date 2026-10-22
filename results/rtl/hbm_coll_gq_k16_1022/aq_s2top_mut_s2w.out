@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+SCALE13R_EQ PASS checks=2097152 subnormal_results=52693
+- rtl/hbm_accel/generic/collective/p2p/tb_aq_scale13r_eq.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 0.866 s; speed 2.422 ms/s
+- Verilator: cpu 0.866 s on 1 threads; allocated 6 MB
+[27500000] %Fatal: tb.sv:14: Assertion failed in tb: AQ_TREE13_NUMERIC_MISMATCH block10 fp40 e117/-14
+%Error: /home/ubuntu/scratch/hbmc-tiles/gqk16run/aq_s2top_mut_s2w/aq_s2top_mut_s2w/tb.sv:14: Verilog $stop
+Aborting...
+AQ_S2TOP AQ13 not PASS
