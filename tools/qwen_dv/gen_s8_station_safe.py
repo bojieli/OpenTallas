@@ -278,5 +278,6 @@ def tail(path):
 
 def main():
     st=math_g();safe_sv();tail(S8/'qfd_dv_s8_station_tail1.sv')
+    import subprocess,sys;subprocess.run([sys.executable,str(R/'tools/qwen_dv/gen_s8_mul_cut.py'),'0.5','station'],check=True)  # QR-TAIL1: SCALE_LAT 7 encode cut
     for x in st:print('SPLIT',*x)
 if __name__=='__main__':main()

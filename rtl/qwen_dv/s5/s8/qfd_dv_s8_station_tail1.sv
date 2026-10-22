@@ -3,7 +3,7 @@
 module qfd_dv_s8_station_tail1 #(
     parameter integer ADD_LAT   = 7,
     parameter integer SKEW      = 14,
-    parameter integer SCALE_LAT = 6,
+    parameter integer SCALE_LAT = 7,       // QR-TAIL1 10-21: scale mul encode cut (+1 result edge)
     parameter integer MUT       = 0,
     parameter integer JB        = 8,
     parameter integer PIN_IN    = 1,       // 1: every data/control input lands in one pin register (+1 edge, all inputs)

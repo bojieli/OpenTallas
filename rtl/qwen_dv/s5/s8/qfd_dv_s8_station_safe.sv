@@ -108,6 +108,10 @@ module qfd_dv_s8s_station_mul_bounded #(parameter integer LAT=6,DRST=0,CV=1,ID=0
 generate if(LAT==6 && DRST==0) begin:g_exact
 qfd_dv_s8s_station_mul_data_g u_d(.clk(clk),.rst_n(rst_n),.a(a),.b(b),.y(y),.err(err));
 if(CV) begin:g_v qfd_dv_s8s_ring_delay #(.W(1),.D(6),.ID(ID)) u_v(.clk(clk),.rst_n(rst_n),.d(valid_in),.q(valid_out));end else begin:g_nv assign valid_out=0;end
+end else if(LAT==7 && DRST==0) begin:g_exact
+// QR-TAIL1: +1 edge, encode cut (gen_s8_mul_cut.py)
+qfd_dv_s8s_station_mul_data_g7 u_d(.clk(clk),.rst_n(rst_n),.a(a),.b(b),.y(y),.err(err));
+if(CV) begin:g_v qfd_dv_s8s_ring_delay #(.W(1),.D(7),.ID(ID)) u_v(.clk(clk),.rst_n(rst_n),.d(valid_in),.q(valid_out));end else begin:g_nv assign valid_out=0;end
 end else begin:g_bad
 qfd_station_math_requires_fixed_ADD7_SCALE6_DRST0 u_fail();
 end endgenerate
