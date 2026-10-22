@@ -257,10 +257,10 @@
    },
    {
     "name": "collq_r13_mut_qard",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_QA2 -DOT_GQ_MUL8 -DOT_GQ_MUT_QARD -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_qard ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_QA2 -DOT_GQ_MUL8 -DOT_GQ_MUT_QARD -DOT_GQ_CHECK_INV -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_qard ia1",
     "expect": "fail",
-    "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
-    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_qard.log",
+    "fail_regex": "GQ_QA2_INV_FAIL",
+    "fail_witness": "results/rtl/hbm_coll_gq_qa2_1021/ea6f1c479/out_qa_mut/s0.log",
     "threads": 16,
     "peak_ram_gb": 32
    },
