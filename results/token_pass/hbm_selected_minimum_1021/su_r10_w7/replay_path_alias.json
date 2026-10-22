@@ -1,0 +1,7 @@
+{
+  "observed_at": "2026-10-21T22:32:27.500425-07:00",
+  "reason": "Generator names replay.json by its parent directory stage; live runner expects replay. Added only path alias slice/replay/replay -> stage on execution EP9 and original Gold2, without modifying source, programme, data or expected values.",
+  "reproduce": "ln -s stage slice/replay/replay before run.sh",
+  "semantic_data_changed": false,
+  "rtl_or_objects_changed": false
+}
