@@ -2693,6 +2693,12 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     ot_kvpc5_and2 u_so_l1 (.a(so_fa_l), .b(so_el_n), .y(so_e_l[2])); ot_kvpc5_and2 u_so_l0 (.a(!so_fa_l), .b(so_el_o), .y(so_e_l[3]));
     ot_kvpc5_and2 u_so_h1 (.a(so_fa_l), .b(so_eh_n), .y(so_e_l[4])); ot_kvpc5_and2 u_so_h0 (.a(!so_fa_l), .b(so_eh_o), .y(so_e_l[5]));
     wire so_eb = so_e_l[0] | so_e_l[1], so_el = so_e_l[2] | so_e_l[3], so_eh = so_e_l[4] | so_e_l[5];
+    // SQ-PCH2 sr12g (native32, gate sr12e census: the so_* load enable row_fire && c_op == ACT && c_s drove 41 pins = the
+    // so_v / so_b / so_row operand muxes): three kept leaf copies, one per load group (so_v+so_b, so_row lo, so_row hi)
+    wire [2:0] so_ld_c;
+    for (genvar q = 0; q < 3; q = q + 1) begin : g_so_ld_c
+      ot_kvpc5_and2 u_l (.a(row_fire && c_s), .b(c_op == ACT), .y(so_ld_c[q]));
+    end
     // so_o_q: the head's bank open next edge = |(sb_oh_nx & open_nx), per sb_oh head candidate (group 3 selects;
     // the four sb_oh byte groups load from identical copies) against open_nx (the exact next open, EV block)
     wire so_on = so_pick(s_go_c[13], sq_hf_qv[23], sq_hf_qv[22], s_sw_c[4], |(sq_a1_o & open_nx), |(sq_s_oh & open_nx),
@@ -2834,8 +2840,10 @@ module ot_qkd_static_kv_timing_kvpc_s #(
           else if (s_sw_c[0]) sfl <= 1'b1;
           else if (s_hit || (row_fire && c_op == ACT && c_s)) scm <= 1'b1;
           if (!sq_ne || s_go_c[17] || sq_n == 0 || s_sw_c[0]) swait <= 0; else if (swait != 8'hff) swait <= swait + 1'b1;
-          if (row_fire && c_op == ACT && c_s) begin so_v <= 1'b1; so_b <= c_bank; so_row <= c_srow; end
+          if (so_ld_c[0]) begin so_v <= 1'b1; so_b <= c_bank; end
           else if (row_fire && (c_op == PREALL || (c_op == PRE && c_bank == so_b))) so_v <= 1'b0;
+          if (so_ld_c[1]) so_row[9:0] <= c_srow[9:0];
+          if (so_ld_c[2]) so_row[18:10] <= c_srow[18:10];
         end
         if (!PI) begin
           if (REF_MODE && lead_qv[0]) begin ref_pend <= 1; rb__qv <= {3{rb__f(bsel)}}; end
