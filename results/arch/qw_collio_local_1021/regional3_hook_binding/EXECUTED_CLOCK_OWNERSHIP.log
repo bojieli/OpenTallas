@@ -1,0 +1,48 @@
+qfd_coll_face_p_regional3_main-20261021-221740
+OT_CR region=codec port=codec0 seq_cells=3913 seq_area_um2=1149.5 fixed_pin_flops=0 box_um2=134369.3 seq_util=0.009 boxes={345.6 345.6 864.0 604.8}
+OT_CR region=phy port=codec0p seq_cells=1425 seq_area_um2=415.8 fixed_pin_flops=594 box_um2=14183.4 seq_util=0.029 boxes={864.0 302.4 905.04 648.0}
+OT_CR region=cal port=cal_ck seq_cells=164 seq_area_um2=51.5 fixed_pin_flops=554 box_um2=44416.5 seq_util=0.001 boxes={2.16 345.6 259.2 518.4}
+OT_CR region=lcal port=cal_lck seq_cells=155 seq_area_um2=53.0 fixed_pin_flops=2 box_um2=22208.3 seq_util=0.002 boxes={259.2 345.6 345.6 561.6} {864.0 648.0 905.04 734.4}
+OT_CR region=tx port=tx_wck tx_rck seq_cells=2111 seq_area_um2=652.2 fixed_pin_flops=0 box_um2=77822.2 seq_util=0.008 boxes={2.16 604.8 302.4 864.0}
+OT_CR region=rx port=rx_wck rx_rck seq_cells=1564 seq_area_um2=492.6 fixed_pin_flops=547 box_um2=90792.6 seq_util=0.005 boxes={2.16 43.2 302.4 345.6}
+OT_CR region=bank0 port=codec1 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=78382.1 seq_util=0.002 boxes={302.4 86.4 604.8 345.6}
+OT_CR region=bank1 port=codec2 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=78382.1 seq_util=0.002 boxes={302.4 604.8 604.8 864.0}
+OT_CR region=bank2 port=codec3 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=67184.6 seq_util=0.003 boxes={604.8 86.4 864.0 345.6}
+OT_CR region=bank3 port=codec4 seq_cells=588 seq_area_um2=171.5 fixed_pin_flops=0 box_um2=67184.6 seq_util=0.003 boxes={604.8 604.8 864.0 864.0}
+OT_CR PASS 10 placement ownership groups for twelve clock roots (codec0 band / codec0p E strip / cal_ck + cal_lck cal channel)
+qfd_coll_face_p_regional3_fb-20261021-221740
+OT_CR region=codec port=codec0 seq_cells=3913 seq_area_um2=1149.5 fixed_pin_flops=0 box_um2=175503.2 seq_util=0.007 boxes={394.971 394.971 987.429 691.2}
+OT_CR region=phy port=codec0p seq_cells=1425 seq_area_um2=415.8 fixed_pin_flops=594 box_um2=18524.9 seq_util=0.022 boxes={987.429 345.6 1034.331 740.571}
+OT_CR region=cal port=cal_ck seq_cells=164 seq_area_um2=51.5 fixed_pin_flops=554 box_um2=58013.5 seq_util=0.001 boxes={2.469 394.971 296.229 592.457}
+OT_CR region=lcal port=cal_lck seq_cells=155 seq_area_um2=53.0 fixed_pin_flops=2 box_um2=29006.5 seq_util=0.002 boxes={296.229 394.971 394.971 641.829} {987.429 740.571 1034.331 839.314}
+OT_CR region=tx port=tx_wck tx_rck seq_cells=2111 seq_area_um2=652.2 fixed_pin_flops=0 box_um2=101645.4 seq_util=0.006 boxes={2.469 691.2 345.6 987.429}
+OT_CR region=rx port=rx_wck rx_rck seq_cells=1564 seq_area_um2=492.6 fixed_pin_flops=547 box_um2=118586.1 seq_util=0.004 boxes={2.469 49.371 345.6 394.971}
+OT_CR region=bank0 port=codec1 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=102376.4 seq_util=0.002 boxes={345.6 98.743 691.2 394.971}
+OT_CR region=bank1 port=codec2 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=102376.7 seq_util=0.002 boxes={345.6 691.2 691.2 987.429}
+OT_CR region=bank2 port=codec3 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=87751.3 seq_util=0.002 boxes={691.2 98.743 987.429 394.971}
+OT_CR region=bank3 port=codec4 seq_cells=588 seq_area_um2=171.5 fixed_pin_flops=0 box_um2=87751.6 seq_util=0.002 boxes={691.2 691.2 987.429 987.429}
+OT_CR PASS 10 placement ownership groups for twelve clock roots (codec0 band / codec0p E strip / cal_ck + cal_lck cal channel)
+qfd_coll_face_s0_regional3_main-20261021-221740
+OT_CR region=codec port=codec0 seq_cells=3913 seq_area_um2=1149.5 fixed_pin_flops=0 box_um2=134369.3 seq_util=0.009 boxes={345.6 345.6 864.0 604.8}
+OT_CR region=phy port=codec0p seq_cells=1425 seq_area_um2=415.8 fixed_pin_flops=594 box_um2=14183.4 seq_util=0.029 boxes={864.0 302.4 905.04 648.0}
+OT_CR region=cal port=cal_ck seq_cells=713 seq_area_um2=212.4 fixed_pin_flops=554 box_um2=44416.5 seq_util=0.005 boxes={2.16 345.6 259.2 518.4}
+OT_CR region=lcal port=cal_lck seq_cells=709 seq_area_um2=215.6 fixed_pin_flops=2 box_um2=22208.3 seq_util=0.010 boxes={259.2 345.6 345.6 561.6} {864.0 648.0 905.04 734.4}
+OT_CR region=tx port=tx_wck tx_rck seq_cells=2111 seq_area_um2=652.2 fixed_pin_flops=0 box_um2=77822.2 seq_util=0.008 boxes={2.16 604.8 302.4 864.0}
+OT_CR region=rx port=rx_wck rx_rck seq_cells=1564 seq_area_um2=492.6 fixed_pin_flops=547 box_um2=90792.6 seq_util=0.005 boxes={2.16 43.2 302.4 345.6}
+OT_CR region=bank0 port=codec1 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=78382.1 seq_util=0.002 boxes={302.4 86.4 604.8 345.6}
+OT_CR region=bank1 port=codec2 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=78382.1 seq_util=0.002 boxes={302.4 604.8 604.8 864.0}
+OT_CR region=bank2 port=codec3 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=67184.6 seq_util=0.003 boxes={604.8 86.4 864.0 345.6}
+OT_CR region=bank3 port=codec4 seq_cells=588 seq_area_um2=171.5 fixed_pin_flops=0 box_um2=67184.6 seq_util=0.003 boxes={604.8 604.8 864.0 864.0}
+OT_CR PASS 10 placement ownership groups for twelve clock roots (codec0 band / codec0p E strip / cal_ck + cal_lck cal channel)
+qfd_coll_face_s0_regional3_fb-20261021-221740
+OT_CR region=codec port=codec0 seq_cells=3913 seq_area_um2=1149.5 fixed_pin_flops=0 box_um2=175503.2 seq_util=0.007 boxes={394.971 394.971 987.429 691.2}
+OT_CR region=phy port=codec0p seq_cells=1425 seq_area_um2=415.8 fixed_pin_flops=594 box_um2=18524.9 seq_util=0.022 boxes={987.429 345.6 1034.331 740.571}
+OT_CR region=cal port=cal_ck seq_cells=713 seq_area_um2=212.4 fixed_pin_flops=554 box_um2=58013.5 seq_util=0.004 boxes={2.469 394.971 296.229 592.457}
+OT_CR region=lcal port=cal_lck seq_cells=709 seq_area_um2=215.6 fixed_pin_flops=2 box_um2=29006.5 seq_util=0.007 boxes={296.229 394.971 394.971 641.829} {987.429 740.571 1034.331 839.314}
+OT_CR region=tx port=tx_wck tx_rck seq_cells=2111 seq_area_um2=652.2 fixed_pin_flops=0 box_um2=101645.4 seq_util=0.006 boxes={2.469 691.2 345.6 987.429}
+OT_CR region=rx port=rx_wck rx_rck seq_cells=1564 seq_area_um2=492.6 fixed_pin_flops=547 box_um2=118586.1 seq_util=0.004 boxes={2.469 49.371 345.6 394.971}
+OT_CR region=bank0 port=codec1 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=102376.4 seq_util=0.002 boxes={345.6 98.743 691.2 394.971}
+OT_CR region=bank1 port=codec2 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=102376.7 seq_util=0.002 boxes={345.6 691.2 691.2 987.429}
+OT_CR region=bank2 port=codec3 seq_cells=596 seq_area_um2=173.8 fixed_pin_flops=0 box_um2=87751.3 seq_util=0.002 boxes={691.2 98.743 987.429 394.971}
+OT_CR region=bank3 port=codec4 seq_cells=588 seq_area_um2=171.5 fixed_pin_flops=0 box_um2=87751.6 seq_util=0.002 boxes={691.2 691.2 987.429 987.429}
+OT_CR PASS 10 placement ownership groups for twelve clock roots (codec0 band / codec0p E strip / cal_ck + cal_lck cal channel)
