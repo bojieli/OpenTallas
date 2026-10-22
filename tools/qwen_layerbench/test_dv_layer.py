@@ -38,3 +38,18 @@ def test_compose_layer():
     assert not any(g.startswith(('ATTENTION OUTPUT PATH', 'ATTENTION RETURN')) for g in r['gaps'])
     assert not any(g.startswith('XC ORDER') for g in r['gaps'])                # lowered XC precedes word 0
     assert any(n.startswith('XC ORDER: CLOSED') for n in r['notes'])
+
+
+def test_die_edges_fold():
+    """TOKSIM-QW2 10-20: PRICED die edges inserted at stage boundaries move the chain by exactly their sum"""
+    import pytest
+    base = L.compose(stage=1)['composition']
+    de = {'pre_qkv': [dict(label='a', cycles=4)], 'pre_attn': [dict(label='b', cycles=5)],
+          'pre_r2': [dict(label='c', cycles=33), dict(label='zero', cycles=0)]}
+    c = L.compose(stage=1, die_edges=de)['composition']
+    assert c['chained_period'] == base['chained_period'] + 42 and c['l0_cold'] == base['l0_cold'] + 42
+    rows = [s for s in c['stages'] if s.get('die_edge')]
+    assert [s['cycles'] for s in rows] == [4, 5, 33] and all(s['grade'] == 'PRICED' for s in rows)
+    assert len(c['stages']) == len(base['stages']) + 3
+    with pytest.raises(ValueError):
+        L.compose(stage=1, die_edges={'nowhere': [dict(label='x', cycles=1)]})

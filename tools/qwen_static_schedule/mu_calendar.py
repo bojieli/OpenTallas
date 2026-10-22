@@ -122,17 +122,25 @@ def layer_block(p, l0=False):
         if op == "qkv":
             n += extra                                             # L0 cold KV fill rides the compute-die front
             busy += extra
+        n0 = n
+        if unit == "kv":
+            n += p.get("attn_extra", 0)                            # opt-in (MU-D2D-OVL): OVL link-segment stretch X
         ops[op] = (t, t + n)
         if unit in ("me", "su"):
             bz = n if p.get("occupancy") == "priced" else min(busy, n)
             a0 = t + (n - bz) // 2
             add(unit, a0, a0 + bz)
         elif unit == "kv":
-            lat = (n - p["kv_service"] - 2 * p["d2d_record"]) // 2   # D2D flight each way (modelled split)
+            lat = (n0 - p["kv_service"] - 2 * p["d2d_record"]) // 2   # D2D flight each way (modelled split)
             add("d2d_q", t, t + p["d2d_record"])
             s0 = t + p["d2d_record"] + lat
             add("kvs", s0, s0 + p["kv_service"])
-            add("d2d_o", t + n - p["d2d_record"], t + n)
+            add("d2d_o", t + n0 - p["d2d_record"], t + n0)
+            # opt-in (MU-D2D-OVL, 967c24eed): reserve each independent link-calendar playhead at its compiled segment
+            # offsets (mu_d2d_ovl passes att_windows; without this the OVL frame compiler places colliding segments)
+            for r, iv in p.get("att_windows", {}).items():
+                for a, b in iv:
+                    add(r, t + a, t + b)
         elif unit == "coll":
             for r, iv in coll_sets(t, p).items():                  # the command reaches the engine at the window start
                 for a, b in iv:
@@ -806,28 +814,33 @@ def kv_frame_params(rows):
     return p
 
 
-def kv_frame_of_record(rows, F=KV_FRAME_F, starts=KV_FRAME_STARTS):
+def kv_frame_of_record(rows, F=KV_FRAME_F, starts=KV_FRAME_STARTS, filler_tokens=None):
     """compile the periodic frame (mu_opcal.compile_frame) on the KV image's stage frame and its KV GAP table;
     check_kv_programme on the frame"""
     from . import mu_opcal as O
-    cal = O.compile_frame(F, p=kv_frame_params(rows), starts=list(starts) if starts else None)
+    cal = O.compile_frame(F, p=kv_frame_params(rows), starts=list(starts) if starts else None, filler_tokens=filler_tokens)
     gaps, per_user = kv_gap_table(cal)
     st = kv_frame_starts(cal)
     chk = check_kv_programme(rows, gaps, st, cal["H"])
     return cal, gaps, st, chk, per_user
 
 
-def kv_frame_search(rows, F=KV_FRAME_F, seed=1, tries=400, spread=3000):
-    """seeded search of filler first starts around round(k P / 4) whose frame passes kv_gap_table + check_kv_programme"""
+def kv_frame_search(rows, F=KV_FRAME_F, seed=1, tries=400, spread=3000, filler_tokens=None):
+    """seeded search of filler first starts around round(k P / 4) whose frame passes kv_gap_table + check_kv_programme.
+    KV-PROG17 10-20: F >= 3 with filler_tokens 1 = one filler token a frame, filler k starting in latency token k-1
+    (the fillers never overlap each other: u0 + one filler at a time, the r16 STATUS-tail frame)"""
     import random
     from . import mu_opcal as O
     rnd = random.Random(seed)
     fp = kv_frame_params(rows)
     base = [round(k * fp["layer_period"] / KV_USERS) for k in range(1, KV_USERS)]
+    if filler_tokens == 1 and F >= KV_USERS - 1:
+        T = single_user_period(dict(SOURCED, users=KV_USERS, occupancy="measured", head_chunks=8, head_tok_ofs=O.EMB_T, **fp))
+        base = [(k - 1) * T + b for k, b in enumerate(base, 1)]
     for i in range(tries):
         st = base if i == 0 else [b + rnd.randint(-spread, spread) for b in base]
         try:
-            cal = O.compile_frame(F, p=fp, starts=st)
+            cal = O.compile_frame(F, p=fp, starts=st, filler_tokens=filler_tokens)
             gaps, _ = kv_gap_table(cal)
             check_kv_programme(rows, gaps, kv_frame_starts(cal), cal["H"])
         except ScheduleError:

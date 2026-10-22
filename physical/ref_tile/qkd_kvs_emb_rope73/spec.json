@@ -1,0 +1,139 @@
+{
+ "name": "qkd_kvs_emb_rope73",
+ "top": "qkd_kvs_emb_rope",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join_fan32.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx_native32.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_rope.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_rope.sv"
+ ],
+ "params": {},
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "i_head_record"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "i_ctl",
+   "i_hroot_ES",
+   "i_hroot_EN"
+  ],
+  "E": [
+   "d2d__svc",
+   "d2d__emb_tx_slot",
+   "rowtx__emb_tx_v",
+   "rowtx__emb_tx_payload",
+   "px_tok",
+   "px_tep",
+   "o_ctx_svc",
+   "emb_fault"
+  ],
+  "W": [
+   "i_hroot_WS",
+   "i_hroot_WN"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "KV-EMB4 z1 10-20: the KV die static schedule charges 0 edges at every kvs_emb face (kv_tile_views EDGES rule; i2 reason: every tile<->tile / die-master hop is priced in the compiled join ages with the die relays only). Owner 10-20 09:05: pin registers only at region crossings / wires > 405 um; the e1 recipe-3 pin registers (+1 in / +1 out on every pin) made the e1 view unbindable (tile_views edges, LEC != die RTL). Crossings land at die level (die relays / landing slots, priced)."
+ },
+ "kind": "cluster",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "*u_context.g_rope.u_rowtx.u_row",
+   "at": [
+    43.2,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "*u_context.g_rope.u_rowtx.u_rope",
+   "at": [
+    43.2,
+    172.8
+   ]
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 388.8,
+  "h": 302.40000000000003,
+  "exact": true
+ },
+ "structural_change": "RoPE73: accepted HOST O61 owner starts actual two HBM sweeps; two physical SRAMs stage 64 embedding and eight RoPE words; 73 statically reserved sends. Unique qkd_kvs_emb_rope source and interface; earlier embedding view is distinct.",
+ "job": {
+  "owner": "Codex:KV lead",
+  "branch": "codex/kv-integration-0025-1021",
+  "tag": "rope73",
+  "purpose": "RoPE73: accepted HOST O61 owner starts actual two HBM sweeps; two physical SRAMs stage 64 embedding and eight RoPE words; 73 statically reserved sends. Unique qkd_kvs_emb_rope source and interface; earlier embedding view is distinct.",
+  "benches": [],
+  "extra_paths": [
+   "rtl/qwen_sys/static_embedding_20261014",
+   "rtl/qwen_sys/static_kv_die_20261017",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_emb_rope73/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_emb_rope73",
+  "cycles_added": 1
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "first_copies": {
+   "rst_n": 2
+  },
+  "copies": {
+   "rst_n": 64
+  }
+ },
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_RST_COPIES_WIDE": "1"
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "fill_reason": {
+  "pin_bound": "Keep die outline388.8x302.4; every face below6pins/um. Two SRAMs use43.2um placement lattice. Full core remains a standard-cell band. Actual synthesis/route closure pending."
+ }
+}

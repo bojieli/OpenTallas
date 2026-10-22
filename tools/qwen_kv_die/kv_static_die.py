@@ -41,6 +41,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
+import kv_qkh_safe32 as QKH32
 
 ON = os.environ.get('OT_KV_STATIC_DIE', '0') == '1'
 # KV-DCAL-BOOTCFG 10-19 (= kv_die.DCAL_BC / DCAL_BC_LINK): the D2D end's cfg port <- dcal cfg; boot link_cfg_* -> dcal bcfg
@@ -58,6 +59,34 @@ HROOT_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root.sv'
 # root).  Done for all four stacks so the group / root replicas stay one master each.  Removes the stack-middle fan
 # tile and its two 6-mm feeds (root -> fan 334 b, fan -> root 144 b) from the stack control channels.
 FANFOLD = HROOT and os.environ.get('OT_KV_FANFOLD', '0') == '1'
+# HKV-HROOTK2 10-19 (OT_KV_HROOT_LAND=1, needs OT_KV_HROOT=1; default off until the die lane prices it): the stack root
+# tile qkd_kvs_hroot registers EVERY PIN AT ITS FACE (kit qkd_kvs_hroot_k1-6355d06bd closed but failed the native pin
+# audit: mid-span single-flop relays, capture 452.7 / launch 418.4 ps).  qkd_kv_stack_relays -> qkd_kv_stack_relays_l (a
+# capture register at the input pin + a launch register at the output pin per relay word) and the es fan stack
+# qkd_kv_es_fan_stack_b -> qkd_kv_es_fan_stack_bl (capture register on h + strap; d is the o_pc launch register), both in
+# HROOT_LAND_RTL.  ADDED EDGES (compiler: one more relay stage on each word through the root), see HROOT_LAND_EDGES.
+# Tile file suffix '_hl' (the other kits keep their tile file byte-identical).
+HROOT_LAND = HROOT and os.environ.get('OT_KV_HROOT_LAND', '0') == '1'
+HROOT_LAND_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_land.sv'
+HROOT_LAND_EDGES = {'es chain head h -> o_pc (pc_<st>_31.chain_i)': 1, 'stack fan word i_ctl -> o_c*/o_kg/o_ch0': 1,
+                    'group gathers i_g -> o_ctl (kvs_ctl.i_hroot_<st>)': 1, 'PC 31 return train i_r -> o_emb (kvs_emb.i_hroot_<st>)': 1}
+# KV-BIND7 10-20 (OT_KV_HROOT_S32=1, needs OT_KV_HROOT_LAND=1; default off): the native-census safe32 successor of the
+# landed stack root (KV-RST3 / Codex codex/kv-hroot-safe32-1020: kits qkd_kvs_hroot_s32v4 80x80 / s32v4b 90x90 centre
+# fence, top qkd_kvs_hroot_safe32 = this tile with the two children swapped; same ports / faces / outline as _hl).
+# qkd_kv_es_fan_stack_bl -> qkd_kv_es_fan_stack_safe32, qkd_kv_stack_relays_l -> qkd_kv_stack_relays_s32 (both in
+# HROOT_S32_RTL: two kept root captures -> 30 leaf captures per root, max fanout 30).  ADDED EDGES: +1 over the landed
+# root on all four word chains (HROOT_LAND_EDGES 1 -> 2 each).  RESET: synchronous sampled, assert = release = 4 edges
+# from rst_n (2 face landing + rst_root + region rn): +3 startup reset edges once vs k1 (HROOT_S32_RESET_EDGES).
+# Tile file suffix '_hs' instead of '_hl'.
+HROOT_S32 = HROOT_LAND and os.environ.get('OT_KV_HROOT_S32', '0') == '1'
+if os.environ.get('OT_KV_HROOT_S32', '0') == '1' and not HROOT_LAND:
+    raise ValueError('kv_static_die: OT_KV_HROOT_S32=1 needs OT_KV_HROOT=1 OT_KV_HROOT_LAND=1')
+HROOT_S32_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_safe32.sv'
+HROOT_S32_RESET_EDGES = 3 if HROOT_S32 else 0
+if HROOT_S32:
+    HROOT_LAND_EDGES = {k: 2 for k in HROOT_LAND_EDGES}
+HROOT_ESH_MOD = 'qkd_kv_es_fan_stack_safe32' if HROOT_S32 else 'qkd_kv_es_fan_stack_bl'
+HROOT_RLY_MOD = 'qkd_kv_stack_relays_s32' if HROOT_S32 else 'qkd_kv_stack_relays_l'
 # one generated tile file per design point (the ECTL frame pairing re-orders the fan's frame cfg words)
 # KV-INTEG2 10-18: ONE kit design point OT_KV_TILE_KITS=1 (alias OT_KV_KVS_CK1=1; default off, so every existing design
 # point and its tile file are unchanged; tile file suffix '_k').  Under it every kit tile takes ONE clock port per domain
@@ -75,6 +104,39 @@ if GRP_PRIVATE0 and not (ON and HROOT and FANFOLD and KITS and
         os.environ.get('OT_KV_MU', '0') == '1' and os.environ.get('OT_KV_BOOT_AGES', '0') == '1' and
         os.environ.get('OT_KV_DOMSPLIT', '0') != '1'):
     raise ValueError('GRP_PRIVATE0 requires selected static HROOT/FANFOLD/KITS/MU/BOOT_AGES without DOMSPLIT')
+# KV-GRP2 10-19 (OT_KV_GRP_SAFE2=1; default off): the 32 groups bind the structurally safe tiles qkd_kvs_grp_s2 /
+# qkd_kvs_grp_h_s2 (tools/qwen_kv_die/kv_grp_safe2.py: Stage 1 private ABI + registered faces + landed resets + p192 rows
+# + LD ring on the DOMSPLIT MU/BOOT_AGES point).  Added ages (die schedule): control fan word +1 core edge per group hop,
+# gather +1 per hop, EST +1, boot cfg +1, reset release +2 / +2 (lanes/KV-GEN9.md KV-GRP2 inbox).
+GRP_SAFE2 = os.environ.get('OT_KV_GRP_SAFE2', '0') == '1'
+if GRP_SAFE2 and (GRP_PRIVATE0 or not (ON and HROOT and FANFOLD and KITS and os.environ.get('OT_KV_MU', '0') == '1' and
+                                        os.environ.get('OT_KV_BOOT_AGES', '0') == '1' and
+                                        os.environ.get('OT_KV_DOMSPLIT', '0') == '1')):
+    raise ValueError('GRP_SAFE2 requires static HROOT/FANFOLD/KITS/MU/BOOT_AGES WITH DOMSPLIT (and not GRP_PRIVATE0)')
+# QKC-GRP 10-21 (OT_KV_GRP_S6C=1; default off; needs OT_KV_GRP_SAFE2=1 + OT_KV_NATIVE_SLOTS=1): the 32 groups bind the
+# CLOSED structural successors qkd_kvs_grp_s6c / qkd_kvs_grp_h_s6c (claude/kv-grp8-1020 @71f891b9b: kv_grp_safe6 SRAM
+# response ring + kv_grp_safe5 bounded-driver copies; same ports and ages as the s2 tiles, +0 cycles, pin_regs off,
+# reset landing in RTL).  Views: grp = route qkd_kvs_grp_s7d-grp_s7d-71f891b9b (388.8 x 432, record 53710f1e4),
+# grp_h = qkd_kvs_grp_h_s7c-grp_h_s7c-71f891b9b (388.8 x 388.8, record 4cf422280), both recorded under
+# physical/ref_tile/qkd_kvs_grp{,_h}_s6a/views/<master> (the closure job's block kit; kv_tile_views binds them by top).
+# Native group slots: grp_h 388.8 square, grp 388.8 x OT_KV_GRP_SLOT_H (default 432 = the closed s7d outline).
+GRP_S6C = os.environ.get('OT_KV_GRP_S6C', '0') == '1'
+if GRP_S6C and not (GRP_SAFE2 and os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'):
+    raise ValueError('GRP_S6C requires OT_KV_GRP_SAFE2=1 (DS private ABI + parent connections) and OT_KV_NATIVE_SLOTS=1 '
+                     '(the closed group tiles are 388.8 wide; the legacy group frame is narrower)')
+# SQ-KATTN2 10-21 (GRP_SAFE2 transports at the consumed width): the private group ABI reads x__est[0:0] and the H group
+# i_ctl[193:0] (kv_grp_safe2.frame_port_widths).  The die used to carry the full 13-b EST word down every group fork
+# (32 x ~70 relay stages) and the full 271-b o_dn word into each H group, then slice at the consumer: 692 driven bits nobody
+# reads (captured998 strict bind FAIL unread_net_bits).  The generator now plans those transports at the consumed width:
+# EST group fork branches 1 b (kv_die fork_narrow -> the branch's first relay reads n_est[0:0]); the o_dn bus into an H group
+# 194 b (narrow_src: the producer keeps its full 271-b net, the first stage reads [193:0]; o_dn[270:194] of those four
+# chain-end s6c groups is the declared private tail, kv_open_tail_roles odn_h_slice).
+GRP_EST_PRIVATE = 1
+GRP_H_CTL_PRIVATE = 194
+GRP_S6C_RTL = dict(grp='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv',
+                   grp_h='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv')
+GROUP_SLOT = dict(grp=(388.8, float(os.environ.get('OT_KV_GRP_SLOT_H', '432.0')) if GRP_S6C else 388.8),
+                  grp_h=(388.8, 388.8))
 KVS_CK1 = KITS
 CK1_KINDS = ('ctl', 'attn', 'emb')
 KIT_HARD = ('qkd_embedding_row_tx',)
@@ -108,14 +170,35 @@ RESET_SYNC_RTL = 'rtl/lib/ot_reset_sync.sv'
 PC_SRAM = os.environ.get('OT_KV_PC_SRAM', '0') == '1'
 PC_SRAM_RTL = ('rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv',
                'rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv')
+# KV-BIND4 10-19 (KV-PC4 21:55 / KV-PC3 18:10): the sr6 PC / PC_H tiles (kits qkd_kvs_pc_sr6 RTL stand-in until sr7 /
+# sr7b closes, qkd_kvs_pc_h_sr6 gated) land three more input pins in RTL face registers (kv_pc_sram_gen.POST: ki_q,
+# fi_q, ebr_q).  Their edges are tile RTL (kv_tile_views sees pin_regs off, 0 / 0), so the DIE SCHEDULE charges them
+# here, per PC / PC_H tile, and pc_chain_ages() folds them into the kc kick / fault chain ends (static, no credits):
+#   kick  : pc__ki -> ki_q -> u_tap -> pc__ko and -> the PC's own head   +1 hck a tile (kick chain, pre-ownership only:
+#           qkd_ctrl_pc_nc takes kc commands before static ownership, the calendar after; f_cmd faults a late kick)
+#   fault : pc__fi -> fi_q -> fo (sticky OR)                             +1 hck a tile (STATUS fault-path age via kc fi)
+#   ebr   : x__est__0_1 -> ebr_q (embedding boot-ready level)            +1 ck once (boot-time level, no token edge)
+# Plus pc__hfx[2:0] {embr, es_merge, chain}: registered sticky ck faults -> the health plane (K.STA.RETIRE.PCF,
+# kv_health_plane PC family).  OT_KV_PC_SRAM needs OT_KV_PC_RLAND and OT_KV_DOMSPLIT (the sr6 kits are DS tiles).
+PC_SR_EDGES = dict(kick_hck=1, fault_hck=1, boot_ready_ck=1) if PC_SRAM else dict(kick_hck=0, fault_hck=0, boot_ready_ck=0)
+PC_STATION_HCK = 1      # ot_qkvd_kcmd_tap o_v / o_d register (every tile); the sticky fo register (every tile)
+if PC_SRAM and not (PC_RLAND and DOMSPLIT):
+    raise ValueError('kv_static_die PC_SRAM: the sr6 PC kits are DOMSPLIT + RLAND tiles (set OT_KV_DOMSPLIT=1 OT_KV_PC_RLAND=1)')
 PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroot' if HROOT else '') + ('_ff' if FANFOLD else '') +
             ('_ep' if os.environ.get('OT_KV_ECTL_PAIR', '0') == '1' else '') + ('_k' if KITS else '') +
+            (('_hs' if HROOT_S32 else '_hl') if HROOT_LAND else '') +   # HKV-HROOTK2 10-19 (kit qkd_kvs_hroot_k1-da14c0bdf); KV-BIND7 _hs = safe32
             ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
             ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
+            ('_n32' if os.environ.get('OT_KV_EMB_N32', '0') == '1' else '') +   # KV-EMB4 10-20: kvs_emb u_join NATIVE32=1 (kv_static emb_join)
+            ('_pj' if os.environ.get('OT_KV_EMB_PJ', '0') == '1' else '') +   # KV-EMB4 10-20: kvs_emb u_join PIPE_JOIN=1 (+1 word-stream edge)
             ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + ('_sr' if PC_SRAM else '') +
             '.sv')   # KV-DOMSPLIT; KV-PC
-RTL_FILE = PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + '.sv'
+ROPE = os.environ.get('OT_KV_ROPE', '0') == '1'
+ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL','0') == '1'
+RTL_FILE = (PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + ('_gs2' if GRP_SAFE2 else '') +
+            ('_g6c' if GRP_S6C else '') + ('_rope' if ROPE else '') + ('_ovl' if ROPE_OVL else '') + '.sv')
 GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
+GRP_SAFE2_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s2.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -150,6 +233,8 @@ def frame_engine(f):
             return g
     raise ValueError(f'no engine for ECTL frame {f}')
 PC_PITCH = 378.0
+PC_SR13 = os.environ.get('OT_KV_PC_SR13', '0') == '1'
+KC_INNER = os.environ.get('OT_KV_KC_INNER', '0') == '1'
 NPC = 32
 CORE_CK = ('ck', 'return_ck')
 HBM_CK = ('hck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs', 'cal_hck', 'front_hck', 'return_hck')
@@ -159,12 +244,19 @@ KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', grp_h='qkd_kvs_grp_h', 
                    emb='qkd_kvs_emb', hroot='qkd_kvs_hroot')
 if GRP_PRIVATE0:
     KIND_MASTER.update(grp='qkd_kvs_grp_private0', grp_h='qkd_kvs_grp_h_private0')
+if GRP_SAFE2:
+    KIND_MASTER.update(grp='qkd_kvs_grp_s2', grp_h='qkd_kvs_grp_h_s2')
+if GRP_S6C:
+    KIND_MASTER.update(grp='qkd_kvs_grp_s6c', grp_h='qkd_kvs_grp_h_s6c')
+if ROPE:
+    KIND_MASTER['emb']='qkd_kvs_emb_rope_ovl' if ROPE_OVL else 'qkd_kvs_emb_rope'
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
 GRP_LOCAL = dict(slg='slg', lcal='lcal', fcal='fcal', phase='phase', drain='drain')
 # superseded die instances (0db) by name prefix
 SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
+PVFIN_HUB_GAP = float(os.environ.get('OT_KV_PVFIN_HUB_GAP', '30.0'))     # KDIE4-PH: pvfin <-> ahub gap (see PVFIN place)
 # KV-PLAN-FIN 10-17 (OT_KV_PVFIN, default ON with OT_KV_STATIC_DIE): the PV final join as ONE 512-b beat-stream slice
 # qkd_pv_fin_s (die element pvfin, master qkd_pvfin, kit physical/ref_tile/qkd_pv_fin_s), W of the attention hub between
 # the two PV pair strips; it feeds the stream face qkd_attn_result_face_s in kvs_attn (bundle port fin, 534 b).  Plan:
@@ -204,6 +296,12 @@ DCAL_FLT = (AFAULT and DCAL_BC and os.environ.get('OT_KV_DCAL_BC4', '0') == '1'
             and os.environ.get('OT_KV_DCAL_FLT', '0') == '1')
 if DCAL_FLT:
     AFAULT_D = AFAULT_D + [('ufd', ('dcal', 'flt'))]
+# KV-BIND4 10-19 (K.STA.RETIRE.KC, OT_KV_HEALTH=1 = the kvs14r MU-release default): the four KC heads' kf fault (qkd_ctrl_kc
+# kf, closed view N-face pin) and -- unless OT_KV_DCAL_FLT already loads it -- the bc4 calendar sequencer's sticky `fault`
+# (group flt) are exported as die health SOURCES: a 1-endpoint bus of class `health_src` (no relay plan, no reach check:
+# its only reader is the registered health plane kv_health_plane.py installs after the forwarded lanes, which latches the
+# non-sticky kf and folds both into the continuous STATUS fault path).  Never a tie, never left open.
+HEALTH_SRC = os.environ.get('OT_KV_HEALTH', '0') == '1'
 PVFIN_FILE = 'rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv'
 PVFIN_FRAME = (259.2, 259.2)            # kit qkd_pv_fin_s outline (gate pending)
 # KV-INTEG/AHUB 10-18 (RTL-BUILD-KV M2 + P6; OT_KV_AHUB_STATIC, default ON with PVFIN): the die hub `ahub` (master
@@ -274,11 +372,34 @@ FACE_LAND_TILES = {'kvs_attn': dict(master='qkd_kvs_attn', kit='qkd_kvs_attn', r
                    'hr_core_queue': dict(master='qkd_hr_core_queue', kit='qkd_hr_core_queue', rst_release=3)}
 if os.environ.get('OT_KV_BOOT_AGES', '0') == '1':     # KV-BOOTAGE 10-19: the boot-age attention tile's landed view
     FACE_LAND_TILES['kvs_attn'] = dict(FACE_LAND_TILES['kvs_attn'], kit='qkd_kvs_attn_ba1')
+# KV-BIND4 10-19 (OT_KV_ATTN_R16=1, needs OT_KV_BOOT_AGES=1 + kvs_attn in OT_KV_FACE_LAND): the die's kvs_attn binds the
+# structurally SAFE r16 attention tile (KV-ATTN2: qkd_kvs_attn_fl = rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv around
+# rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv; same 32 ports as the generated boot-age qkd_kvs_attn) on the
+# CLOSED view of kit qkd_kvs_attn_rv3 (qkd_kvs_attn_rv3-rv3-6fdacf98c, TT +74.30 / FF +9.56, record 6387c1f6c), with the
+# kit parameters RETIRE_STATIC=1 STATUS_DELAY=213 (KV-RETIRE / KV-HEALTH STATUS reserve).  Schedule (COORD 18:08 option (a)):
+#   * +1 edge after K.rx_record inside the tile (registered RX validation): start_qk / start_pv / ctx / ep / cal / prg / arh
+#     and the face window move +1 relative to the RX record and the run edge (ATTN_R16_RX_EDGES, compiler start_qk + 1);
+#   * the tile's calendar generator adds TX_SHIFT 1 (tx_first 1750 -> 1751): the link's K RESULT burst and STATUS move
+#     +1 edge (d2d_link_calendar --attn-tx-shift 1), NOT SERVICE_END - 1; the tile keeps SERVICE_END 1777;
+#   * STATUS_DELAY 213: the link STATUS slot at tx_first + 33 + 213 (compile_all status_delay, kv_retirement proof);
+#   * fin +1 / i_ctl +1 landed (as ba5); reset lands in 2 plain kit stages (no ot_rst_relay): rst_release 2.
+ATTN_R16 = os.environ.get('OT_KV_ATTN_R16', '0') == '1'
+ATTN_R16_PARAMS = dict(RETIRE_STATIC=1, STATUS_DELAY=213)
+ATTN_R16_RX_EDGES = 1       # registered RX validation: every RX-derived attention event +1 edge (start_qk etc.)
+ATTN_R16_TX_SHIFT = 1       # qkd_attn_cal_gen_r16 TX_SHIFT: link K RESULT / STATUS slots +1
+if ATTN_R16:
+    if os.environ.get('OT_KV_BOOT_AGES', '0') != '1':
+        raise ValueError('kv_static_die: OT_KV_ATTN_R16=1 needs OT_KV_BOOT_AGES=1 (r16 ports = the boot-age tile, i_ctl 109 b)')
+    # KV-ATTN7 10-20: kit qkd_kvs_attn_rv5 (r17 = r16 + calendar S1..S9 reset; same ports / edges / params; CLOSED
+    # qkd_kvs_attn_rv5-rv5-2cdc6bb28 TT +77.3 / FF +9.7; standard LEC receipt results/arch/kv_attn7_1020) replaces rv3
+    FACE_LAND_TILES['kvs_attn'] = dict(master='qkd_kvs_attn', kit='qkd_kvs_attn_rv5', rst_release=2, fin=1, i_ctl=1)
 _FL_ENV = os.environ.get('OT_KV_FACE_LAND', '0').strip()
 FACE_LAND_SEL = (set(FACE_LAND_TILES) if _FL_ENV == '1' else set() if _FL_ENV in ('', '0')
                  else {t.strip() for t in _FL_ENV.split(',') if t.strip()})
 if FACE_LAND_SEL - set(FACE_LAND_TILES):
     raise ValueError(f'kv_static_die: OT_KV_FACE_LAND names unknown tiles {sorted(FACE_LAND_SEL - set(FACE_LAND_TILES))}')
+if ATTN_R16 and 'kvs_attn' not in FACE_LAND_SEL:
+    raise ValueError('kv_static_die: OT_KV_ATTN_R16=1 binds the face-landed r16 view: select kvs_attn in OT_KV_FACE_LAND')
 FACE_LAND = bool(FACE_LAND_SEL)
 
 
@@ -395,6 +516,21 @@ FIN = [('out_valid', 1), ('out_beat', 5), ('out_epoch', 16), ('out_data', 512)] 
 PVFST = ['start_pv', 'ep', 'cal[175:128]']                                        # kvs_attn pvfst = pvfin fs (65 b)
 # per-tile frames (um, ASSUMED until kits close): see place()
 FRAME = dict(fan=(302.4, 302.4), attn=(302.4, 302.4), emb=(388.8, 302.4), ctl=(1123.2, 172.8), hroot=(302.4, 302.4))
+# Measured successor kit reservations, opt-in until the source/view/calendar epoch is coherent.
+# The SRAM CTL is portrait; the legacy 1123.2x172.8 strip cannot represent it.
+NATIVE_SLOTS = os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'
+# KV-BIND9 10-20 (COORD 09:28 (c) APPROVED, PINBOUND: ctl <-> 4x hroot 2,524 b a side at 14.6 pins/um on the 172.8-um W / E
+# faces): OT_KV_CTL_PORTRAIT=1 takes ONLY the 345.6 x 475.2 portrait ctl slot (5.3 pins/um), not NATIVE_SLOTS' group
+# squares; the hroot words keep their planned control-channel corridors (_hroot_waypoints) as the feedthrough channel.
+CTL_PORTRAIT = os.environ.get('OT_KV_CTL_PORTRAIT', '0') == '1'
+if NATIVE_SLOTS or CTL_PORTRAIT:
+    # Actual c32c/c32d source-shape reservations; this does not adopt either
+    # flow-generated pin-register wrapper or its added interface edges.
+    _ctl_h=float(os.environ.get('OT_KV_CTL_SLOT_H','475.2'))
+    if _ctl_h not in (475.2,561.6):
+        raise ValueError('CTL_SLOT_H must match measured c32c475.2 or c32d561.6 source shape')
+    FRAME['ctl'] = (345.6, _ctl_h)
+
 # Special bundles (die-port order = the existing master's binding order, LSB first)
 VREQ = [('vreq_valid', 1), ('vreq_t', 14)]                                         # qkd_pv16_vport vq<p>
 RSP = ['rsp_valid', 'rsp_v', 'rsp_t', 'rsp_epoch', 'rsp_data']                    # qkd_pv16_vport i<p> (R6)
@@ -427,6 +563,8 @@ def graph():
         import kv_bootage as _KB              # KV-BOOTAGE 10-19 (OT_KV_BOOT_AGES=1): boot-programmable schedule ages
         if _KB.ON:
             _KB.boot_ages_join(g)
+        if HROOT_LAND:
+            _hroot_land_join(g)
         _G['g'], _G['unpriced'] = g, left
         _G['ins'] = {i['name']: i for i in g['instances']}
         _G['spec'] = {}
@@ -442,6 +580,20 @@ def _attn_land_join(g):
         by[name]['parameters'][k] = 1
     g.setdefault('joins_added', []).append(dict(producer='attention_programme LAND / attn_root, attn_face CAL_PIPE',
         bound_inputs=0, owner_note='KV-ATTNKIT 10-18: registered kvs_attn boundary; added edges ' + json.dumps(ATTN_LAND_EDGES)))
+
+
+def _hroot_land_join(g):
+    """HKV-HROOTK2 (OT_KV_HROOT_LAND): the stack roots' es fan stack with a capture register on h (see HROOT_LAND)"""
+    by = {i['name']: i for i in g['instances']}
+    for st in STACKS:
+        e = by[f'esh_{st}']
+        if e['module'] != 'qkd_kv_es_fan_stack_b':
+            raise ValueError(f'kv_static_die HROOT_LAND: esh_{st} is {e["module"]} (needs BOOT)')
+        e.update(module=HROOT_ESH_MOD, source=HROOT_S32_RTL if HROOT_S32 else HROOT_LAND_RTL, sha256=None)
+    g.setdefault('joins_added', []).append(dict(producer=f'esh_<st> {HROOT_ESH_MOD} / u_rly {HROOT_RLY_MOD}',
+        bound_inputs=0, owner_note='HKV-HROOTK2 10-19: every qkd_kvs_hroot pin registered at its face'
+        + (' (KV-BIND7 safe32: native32 root/leaf captures, reset +%d once)' % HROOT_S32_RESET_EDGES if HROOT_S32 else '')
+        + '; added edges ' + json.dumps(HROOT_LAND_EDGES)))
 
 
 def _hroot_join(g):
@@ -856,6 +1008,28 @@ def tile(die_inst):
     for pn, (expr, w, cons) in outs.items():
         add_port(pn, dir='output', width=w, cls='export', expr=expr, consumers=cons, die=pn in die_x)
     return dict(inst=die_inst, kind=kind, ports=ports, wires=wires, body=body, members=mem, loc=loc)
+
+
+def pc_chain_ages(m):
+    """KV-BIND4 10-19: kc kick / PC fault chain end ages per stack (hck edges) from the plan relay stages + the per-tile
+    station edges (PC_STATION_HCK) + the sr6 landings (PC_SR_EDGES).  kick_end = edges from kc_<st>.ko to the LAST PC's
+    head command (c_v); fault_end = edges from the FIRST PC's fault to kc_<st>.fi."""
+    st_ = m.get('relay_stages', {}) if m else {}
+    out = {}
+    for st in STACKS:
+        kr = [v for b, v in st_.items() if b.startswith(f'kck_{st}_')]
+        fr = [v for b, v in st_.items() if b.startswith(f'kcf_{st}_')]
+        base_k = sum(kr) + NPC * PC_STATION_HCK
+        base_f = sum(fr) + NPC * PC_STATION_HCK
+        out[st] = dict(kick_relays=sum(kr), fault_relays=sum(fr),
+                       kick_end_hck=base_k + NPC * PC_SR_EDGES['kick_hck'], kick_end_hck_pre_sr6=base_k,
+                       fault_end_hck=base_f + NPC * PC_SR_EDGES['fault_hck'], fault_end_hck_pre_sr6=base_f)
+    return dict(edges_per_tile=PC_SR_EDGES, station_hck=PC_STATION_HCK, npc=NPC, stacks=out,
+                worst_kick_end_hck=max((v['kick_end_hck'] for v in out.values()), default=None),
+                worst_fault_end_hck=max((v['fault_end_hck'] for v in out.values()), default=None),
+                boot_ready_ck=PC_SR_EDGES['boot_ready_ck'],
+                note='kick chain: pre-ownership only (qkd_ctrl_pc_nc); the ownership switch must follow the last kick '
+                     'by >= worst_kick_end_hck; fault chain end feeds kc fi -> kc kf (health source, K.STA.RETIRE.KC)')
 
 
 def rsp_expr(local, fields):
@@ -1486,7 +1660,8 @@ def add_hroots(tiles):
                                              ('o_emb', RW, 'kvs_emb', f'i_hroot_{st}', 'w_rly__r')):
                 P[nm] = dict(dir='output', width=w, cls='bundle', peer=peer, peer_port=pport, consumers=[], expr=expr)
         t['wires'] += [f'    wire [{FW - 1}:0] w_rly__fan;', f'    wire [{GW - 1}:0] w_rly__g;', f'    wire [{RW - 1}:0] w_rly__r;']
-        t['body'].append(f'    qkd_kv_stack_relays #(.HW({HW}), .FW({FW}), .GW({GW}), .RW({RW})) u_rly (.ck(rly__ck), '
+        rmod = HROOT_RLY_MOD if HROOT_LAND else 'qkd_kv_stack_relays'
+        t['body'].append(f'    {rmod} #(.HW({HW}), .FW({FW}), .GW({GW}), .RW({RW})) u_rly (.ck(rly__ck), '
                          f'.dn(i_ctl), .g_i(i_g), .r_i(i_r), .fan(w_rly__fan), .g(w_rly__g), .r(w_rly__r));')
         t['hroot'] = dict(HW=HW, FW=FW, GW=GW, RW=RW)
     return tiles
@@ -1521,13 +1696,73 @@ def kit_clocks(tiles):
     return tiles
 
 
+def rope_context_tiles(tiles):
+    """Start from each actual compute-native per-head CONTEXT descriptor.
+
+    hrec_rx packs {record_rx[547:0], record_rx_v, witness_slot,
+    record_send_kind[1:0]}. The compiled C->K kind12 carries the actual
+    native stage1 descriptor, with stage normalized to zero by its producer.
+    The original RESULT service retains its terminal-owner meaning.
+    """
+    if not (HROOT and KITS and os.environ.get('OT_KV_MU', '0') == '1'):
+        raise ValueError('KV RoPE context needs MU1, HROOT and tile kits')
+    emb, ctl = tiles['kvs_emb'], tiles['kvs_ctl']
+    # The replaced join input is dead: RoPE sweep is produced inside u_context.
+    rs = emb['ports'].pop('join__rope_sweep', None)
+    if rs is not None and (rs['dir'], rs['width'], rs['cls']) != ('input', 1, 'open'):
+        raise ValueError(f'KV RoPE: unexpected join sweep face: {rs}')
+    emb['ports']['i_head_record'] = dict(dir='input', width=552, cls='special', src=None)
+    ovl=os.environ.get('OT_KV_ROPE_OVL','0')=='1'
+    if ovl:
+        emb['ports']['i_ovl_users']=dict(dir='input',width=4,cls='special',src=None)
+        emb['ports']['i_kvn_fault']=dict(dir='input',width=1,cls='special',src=None)
+        emb['ports']['i_ovl_adm']=dict(dir='input',width=1,cls='special',src=None)
+    emb['wires'] += ['    wire w_rope_start, w_rope_fault;',
+                     '    wire [17:0] w_rope_token;', '    wire [15:0] w_rope_epoch;']
+    native = int(os.environ.get('OT_KV_EMB_N32', '0'))
+    pipe = int(os.environ.get('OT_KV_EMB_PJ', '0'))
+    delay = int(os.environ.get('OT_KV_ROPE_DELAY', '1024'))
+    if delay != 1024:
+        raise ValueError('KV RoPE EW1627 image requires the actual 1024-edge second HBM sweep separation')
+    emb['body'] = [
+        f'    qkd_kvs_emb_ctx #(.NATIVE32({native}), .PIPE_JOIN({pipe}), .ROPE(1), .ROPE_DELAY({delay}), .OVL({int(ovl)})) u_context ('
+        '.ck(ck), .rst_n(rst_n), '
+        '.i_ctx({i_head_record[3],i_head_record[3],i_head_record[551:516],i_head_record[64:4]}), '
+        + ('.head_rx_user(i_ovl_users[3:2]), .emb_tx_user(i_ovl_users[1:0]), .kvn_ctx_fault(i_kvn_fault), .ovl_adm_done(i_ovl_adm), ' if ovl else '.head_rx_user(2\'d0), .emb_tx_user(2\'d0), .kvn_ctx_fault(1\'b0), .ovl_adm_done(1\'b0), ')
+        + '.d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), '
+        + ', '.join(f'.i_hroot_{st}(i_hroot_{st})' for st in STACKS)
+        + ', .rowtx__emb_tx_v(w_rowtx__emb_tx_v), .rowtx__emb_tx_payload(w_rowtx__emb_tx_payload), '
+        '.px_st(w_rope_start), .px_tok(w_rope_token), .px_tep(w_rope_epoch), .emb_fault(w_rope_fault));'
+    ]
+    for pn, expr in [('px_tok', 'w_rope_token'), ('px_tep', 'w_rope_epoch')]:
+        if pn not in emb['ports']:
+            raise ValueError(f'KV RoPE: missing existing PC owner face {pn}')
+        emb['ports'][pn]['expr'] = expr
+    # The CTL hardened module keeps its original service-word interface.
+    # Route the actual context fields through the embedding tile while every
+    # other D2D service field remains a real wire from that same service word.
+    emb['ports']['o_ctx_svc'] = dict(dir='output', width=174, cls='bundle', peer='kvs_ctl',
+        peer_port='d2d__svc', consumers=[],
+        expr='{d2d__svc[173:110],w_rope_token,d2d__svc[91:90],w_rope_epoch,d2d__svc[73:25],w_rope_start,d2d__svc[23:0]}')
+    emb['ports']['emb_fault'] = dict(dir='output', width=1, cls='export', consumers=[], die=True, expr='w_rope_fault')
+    if ctl['ports']['d2d__svc']['width'] != 174:
+        raise ValueError('KV RoPE: unexpected actual CTL service-word width')
+    ctl['ports']['d2d__svc'].update(cls='bundle', peer='kvs_emb')
+    return tiles
+
+
 def all_tiles():
     if 'tiles' not in _G:
         t_ = add_fans(pack({d: tile(d) for d in members()}))
         t_ = kit_clocks(t_) if KITS else t_
+        if ROPE:
+            t_ = rope_context_tiles(t_)
         if GRP_PRIVATE0:
             import kv_grp_private0
             kv_grp_private0.apply_tiles(t_, module_text)
+        if GRP_SAFE2:
+            import kv_grp_safe2
+            kv_grp_safe2.apply_tiles(t_, module_text)
         _G['tiles'] = t_
     return _G['tiles']
 
@@ -1536,6 +1771,11 @@ def rtl_text():
     """one module per tile kind; every replica must produce the identical text"""
     mods = OrderedDict()
     for d, t in all_tiles().items():
+        # S6C modules are registered native RTL, not the wires-only tile model.
+        # Keep the tile for placement/connections, but never emit a second body
+        # with the same module name into the active compilation unit.
+        if GRP_S6C and t['kind'] in GRP_S6C_RTL:
+            continue
         name = KIND_MASTER[t['kind']]
         txt = module_text(t, name)
         if name in mods and mods[name][0] != txt:
@@ -1558,10 +1798,16 @@ def sources():
     for t in all_tiles().values():
         for n in t['members']:
             s.add(ins()[n]['source'])
+    if GRP_S6C:
+        s.update(GRP_S6C_RTL.values())
     s.update(K.pc_emb_sources())
     if BOOT:
         s.update(BOOT_PC_DEPS)
     s.update(K.EMB_SOURCES)
+    if ROPE:
+        s.update(_E + f for f in ('qkd_kvs_emb_ctx.sv', 'qkd_embedding_ctx_start.sv',
+                                  'qkd_embedding_row_tx_ctx.sv', 'qkd_embedding_row_tx_ctx_native32.sv',
+                                  'qkd_embedding_row_tx_rope.sv'))
     if K.MU:
         s.update(K.MU_DEPS)
     if DOMSPLIT:
@@ -1585,12 +1831,16 @@ def bindings():
         seen[mst] = d
         ports = {pn: [pn] for pn, v in t['ports'].items() if v['cls'] != 'pad'}
         cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
-        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else PUBLIC_RTL_FILE
+        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else (RTL_FILE if GRP_SAFE2 or ROPE else PUBLIC_RTL_FILE)
+        if GRP_SAFE2 and t['kind'] in ('grp', 'grp_h'):
+            source_file = GRP_S6C_RTL[t['kind']] if GRP_S6C else GRP_SAFE2_RTL
+        if PC_SRAM and KITS and t['kind'] in PC_RLAND_KINDS:
+            ports['pc__hfx'] = ['pc__hfx']      # KV-BIND4: pc_hfx_text port; read by the health plane (PC family)
         out[mst] = dict(module=mst, file=source_file, ports=ports, sliced={}, classed=cls)
     # ECTL frame re-bound to the fused A + K issuer composition (qkd_ectl3_kiss_s)
     out['qkd_ectlk'] = dict(module='qkd_ectl3_kiss_st' if ASTK_ST else 'qkd_ectl3_kiss_s',
         file=ECTL_ST_FILE if ASTK_ST else 'rtl/qwen_sys/static_kv_20261014/qkd_static_ectla_kiss.sv',
-        parameters=dict(RESPONSE_LAT=ECTLK_RESPONSE_LAT, QK_ISSUE_AGE=ECTLK_QK_ISSUE_AGE, HXK=13, MUT=0),
+        parameters=dict(RESPONSE_LAT=ECTLK_RESPONSE_LAT, QK_ISSUE_AGE=ECTLK_QK_ISSUE_AGE, HXK=QKH32.capture_hxk(), MUT=0),
         ports=dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'], s0=['s0'],
                    s1=['s1'], s2=['s2'], s3=['s3'], rq=[f for f, _ in KREQ], rs=list(KRSP), kg=list(KG), cfg=['cfg'],
                    kf=['fault'], ck_a=['ck'], rst_n=['rst_n']),
@@ -1645,6 +1895,8 @@ def bindings():
         t = FACE_LAND_TILES[tl]
         if t['master'] in out:
             out[t['master']] = dict(out[t['master']], module=t['master'] + '_fl', file=face_land_rtl(tl))
+            if tl == 'kvs_attn' and ATTN_R16:     # KV-BIND4: the r16 kit's parameters (= rv3 spec params, checked by kv_tile_views)
+                out[t['master']]['parameters'] = dict(out[t['master']].get('parameters') or {}, **ATTN_R16_PARAMS)
     return out
 
 
@@ -1705,7 +1957,11 @@ def inject(m, K):
         geo[st] = dict(ctrl=(ctrl.x, ctrl.y, ctrl.w, ctrl.h, ctrl.orient, ctrl.master), land=(land.x, land.y, land.w, land.h),
                        hsl_x=hs[0].x, hsl_w=hs[0].w)
     # ---- 1. remove superseded instances; a bus that loses its driver is dropped, its surviving loads recorded open
-    gone = {i.name for i in m['insts'] if i.name.startswith(SUPERSEDED) and not i.name.startswith('cdc_dummy')}
+    # Recurring kind-12 descriptors, rather than the static writer programme,
+    # own KVN identity in RoPE OVL. Preserve that real context leaf and its
+    # original clock/reset/admission/calrx/kvi connections.
+    gone = {i.name for i in m['insts'] if i.name.startswith(SUPERSEDED)
+            and not i.name.startswith('cdc_dummy') and not (ROPE_OVL and i.name == 'kvnc')}
     m['insts'][:] = [i for i in m['insts'] if i.name not in gone]
     keep = []
     repoint = {}
@@ -1761,6 +2017,8 @@ def inject(m, K):
                 nets[(d, pn)] = [(v['peer'], v['peer_port'])]
                 widths[(d, pn)] = v['width']
                 continue
+            if ROPE_OVL and d == 'kvs_ctl' and pn == 'kvi':
+                continue  # legacy export remains unconsumed; kvnc is the sole real KVN authority
             for cd, cp in v['consumers']:
                 nets.setdefault((d, pn), [])
                 if (cd, cp) not in nets[(d, pn)]:
@@ -1792,6 +2050,24 @@ def inject(m, K):
             add((f'krq_{st}_{g}', 'kv_oneway', 38, [(f'ectl_{st}_{ectl_frame(g)}', 'rq'), (gd, 'kreq')]))
     seen_buses = {b_[0] for b_ in B}
     fk = m.setdefault('forks', {})
+    if ROPE:
+        fk.setdefault('hrec_rx', []).append(('kvs_emb', 'i_head_record'))
+        if ROPE_OVL:
+            if 'kvnc' not in by:
+                raise ValueError('RoPE OVL requires the real recurring KVN context leaf')
+            kvi_buses = [b for b in B if ('d2d_kv', 'kvi') in b[3]]
+            if len(kvi_buses) != 1 or kvi_buses[0][2:] != (61, [('kvnc', 'kvi'), ('d2d_kv', 'kvi')]):
+                raise ValueError('RoPE OVL requires kvnc as the sole D2D KVN identity producer')
+            rec['ovl_kvi_authority'] = dict(producer='kvnc.kvi', consumer='d2d_kv.kvi',
+                unconsumed_legacy_export='kvs_ctl.kvi', source='recurring compute kind12 descriptor')
+            fk['hrec_rx'].append(('kvnc','head'))
+            # Real sticky dcal admission level, already consumed by kvnc; land the new EMB fork.
+            fk.setdefault('kvnc_adm',[]).append(('kvs_emb','i_ovl_adm'))
+            add(('rope_ovl_users','kv_oneway',4,[('d2d_kv','ovu'),('kvs_emb','i_ovl_users')]))
+            fk.setdefault('rope_ovl_users',[]).append(('kvnc','ovu'))
+            add(('rope_kvn_fault','kv_oneway',1,[('kvnc','flt'),('kvs_emb','i_kvn_fault')]))
+        rec['rope_context'] = dict(source='compute native stage1 descriptor C->K kind12', width=552,
+            owner='record[60:0]', position='owner[18:6]', start='kvs_emb.o_ctx_svc -> kvs_ctl.d2d__svc', bundle=174)
     for (dinst, dport), loads in nets.items():
         if dport == 'rsp':
             for (cd, cp) in loads:
@@ -1817,6 +2093,11 @@ def inject(m, K):
         if dinst == 'embgw' and dport == 'est':
             fk.setdefault('est', [])
             fk['est'] += [l_ for l_ in loads if l_ not in fk['est']]
+            if GRP_SAFE2:
+                nf_ = m.setdefault('fork_narrow', {}).setdefault('est', {})
+                for l_ in loads:
+                    if tiles.get(l_[0], {}).get('kind') in ('grp', 'grp_h') and l_[1] == 'x__est':
+                        nf_[f'{l_[0]}.{l_[1]}'] = GRP_EST_PRIVATE
             continue
         if bits is None:
             raise ValueError(f'kv_static_die: no width for {dinst}.{dport}')
@@ -1828,6 +2109,12 @@ def inject(m, K):
             loads = [('dcal', DCAL_BC_LINK[l_[1]]) if l_[0] == 'd2d_kv' and l_[1] in DCAL_BC_LINK else l_ for l_ in loads]
             rec.setdefault('dcal_bc', []).append(f'{dinst}.{dport} -> ' + ', '.join(f'{a}.{b}' for a, b in loads))
         bid = _bid(dinst, dport, seen_buses)
+        if GRP_SAFE2 and dport == 'o_dn' and loads and \
+                all(tiles.get(c_, {}).get('kind') == 'grp_h' and p_ == 'i_ctl' for c_, p_ in loads):
+            if bits != 271:
+                raise ValueError(f'kv_static_die: {dinst}.o_dn -> H i_ctl: expected the 271-b control word, got {bits}')
+            m.setdefault('narrow_src', {})[bid] = (dinst, dport, bits)
+            bits = GRP_H_CTL_PRIVATE
         add((bid, 'kv_oneway', bits, [(dinst, dport), loads[0]]))
         if len(loads) > 1:
             fk[bid] = list(loads[1:])
@@ -2004,7 +2291,10 @@ def _die_joins(m, K, B, add, fk, rec):
         if mt:
             pi_[bid] = mt
     for st in STACKS:
-        rev = st[1] == 'S'
+        # SQC-KDIE2 10-22 (OT_KV_KC_INNER=1): S stacks wired like the N stacks -- kc head at the stack inner end above PC 31,
+        # kick pc31 -> pc0 on the facing ko S / ki N faces, fault pc0 -> pc31 -> kc (fo N / fi S): neighbour-adjacent hops at
+        # the PD-AUDIT PC slot (358.56 tall, 19.4-um gap at pitch 378: the ascending kick was an 811.6-um unrepairable hop)
+        rev = st[1] == 'S' and not KC_INNER
         for k in range(NPC):
             pc = f'kvpc_{st}_{k}'
             s = f'hsl_{st}_{k}'
@@ -2037,6 +2327,14 @@ def _die_joins(m, K, B, add, fk, rec):
     # the sequencer's kc words -> the kept kc heads (re-pointed from the removed strips)
     for st in STACKS:
         bus(f'kc_{st}', 'kv_oneway', 33, [('seq', f'kc_{st}'), (f'kc_{st}', 'kc')])
+    if HEALTH_SRC:      # KV-BIND4: fault sources the health plane reads (see HEALTH_SRC)
+        for st in STACKS:
+            bus(f'hps_kc_kf_{st}', 'health_src', 1, [(f'kc_{st}', 'kf')])
+        if (not DCAL_FLT and os.environ.get('OT_KV_DCAL_BC4', '0') == '1'
+                and any(i_.name == 'dcal' for i_ in m['insts'])):
+            bus('hps_dcal_flt', 'health_src', 1, [('dcal', 'flt')])
+        rec['notes'].append('KV-BIND4 health_src: kc_<st>.kf x4' + ('' if DCAL_FLT else ' + dcal.flt')
+                            + ' exported to the health plane')
     _kd = K                  # the kv_die module (inject's K)
     if getattr(_kd, 'HOST_RT_OBSX', False):     # KV-FRAMEPINS 10-20: the five die observations -> the HOST observation window (kv_die OBSX)
         names_ = {i_.name for i_ in m['insts']}
@@ -2130,6 +2428,10 @@ def place(m, K, geo, F):
     up = K.up
     SH = K.SHAVE
     pcw, pch = 270.0, 302.4
+    # SQC-KDIE2 10-22 (OT_KV_PC_SR13=1) / CODEX-K-DIE (OT_KV_PC_SR13_SLOTS=1): PD-AUDIT PC / PC_H tile 388.8 x 356.4 ->
+    # kits_b slot frame (full hardened body + the 2.16 um die shave)
+    if PC_SR13 or os.environ.get('OT_KV_PC_SR13_SLOTS', '0') == '1':
+        pcw, pch = 390.96, 358.56
     gap = 21.6
     for st in STACKS:
         cx, cy, cw, ch, co, cm = geo[st]['ctrl']
@@ -2164,11 +2466,20 @@ def place(m, K, geo, F):
         else:
             x_g = lx + 60.0 + kx_
             gw = round(min(x_hs - gap - x_g, 309.0 - kx_), 4)
+        if os.environ.get('OT_KV_CTL_CENTRAL', '0') == '1':
+            x_g += 172.8 if west else -172.8
         GH = 1188.0                 # group tile height: 324-um gaps between groups (relay spots + the stack fan slot)
         for g in range(8):
             idx = ORDER.index(g)
             y0 = up(cy + PC_PITCH * 4 * idx + (PC_PITCH * 4 - GH) / 2, GY)
-            m['insts'].append(F.Inst(f'slg_{st}_{g}', KIND_MASTER['grp_h' if (FANFOLD and idx == 0) else 'grp'], round(x_g, 4), round(y0, 4), gw - SH, GH - SH,
+            x_slot, y_slot, slot_w, slot_h = x_g, y0, gw, GH
+            if NATIVE_SLOTS:
+                # Reserve the complete square before wires are planned. Never squeeze the
+                # hardened group into the legacy narrow/1188-um frame or ignore keepouts.
+                slot_w, slot_h = GROUP_SLOT['grp_h' if (FANFOLD and idx == 0) else 'grp']
+                x_slot, y_slot = free_spot(m, slot_w, slot_h,
+                                          (x_g + gw / 2, y0 + GH / 2), GX, GY)
+            m['insts'].append(F.Inst(f'slg_{st}_{g}', KIND_MASTER['grp_h' if (FANFOLD and idx == 0) else 'grp'], round(x_slot, 4), round(y_slot, 4), slot_w - SH, slot_h - SH,
                                      'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
         fh = 172.8                  # the stack fan: between groups at slots 3 and 4 (the stack middle)
         yf = up(cy + PC_PITCH * 16 - fh / 2, GY)
@@ -2177,9 +2488,37 @@ def place(m, K, geo, F):
                                      'R0' if west else 'MY', kind='static', region='strip', domain='core'))
         # kc head at the strip's outer end (S stacks: below PC 0; N stacks: above PC 31), on the PC column
         kw, kh = 64.8, 43.2
-        ky = cy - kh - 10.8 if st[1] == 'S' else cy + PC_PITCH * NPC + 10.8
+        ky = cy - kh - 10.8 if (st[1] == 'S' and not KC_INNER) else cy + PC_PITCH * NPC + 10.8
         m['insts'].append(F.Inst(f'kc_{st}', 'qkd_ctrl_kc', round(up(x_pc + pcw / 2 - kw / 2, GX), 4), round(up(ky, GY), 4),
                                  kw - SH, kh - SH, 'R0', kind='static', region='strip', domain='hbm'))
+    if os.environ.get('OT_KV_KRT_ES6_HOME', '0') == '1':
+        # The ES6 round trip exceeded the hardened 80-edge budget by one.
+        # Move the actual issuer beside its group, reserving its full frame and
+        # halo before allocating any relay. Keep the fixed response budget.
+        es6 = next(i for i in m['insts'] if i.name == f'ectl_ES_{ectl_frame(6)}')
+        grp6 = next(i for i in m['insts'] if i.name == 'slg_ES_6')
+        old = [es6.x, es6.y]
+        m['insts'].remove(es6)
+        try:
+            # LEAD-KV 10-21: es6p3/p4 left a 579 um krs_ES_6 hop with no relay site (21.6 um halo boxed the 1062-b
+            # response word in): OT_KV_KRT_ES6_HALO reserves a relay / landing corridor around the re-homed frame.
+            halo6 = float(os.environ.get('OT_KV_KRT_ES6_HALO', '21.6'))
+            rmax6 = float(os.environ.get('OT_KV_KRT_ES6_RMAX', '2000'))
+            anc6 = (grp6.x + grp6.w / 2, grp6.y + grp6.h / 2)
+            d_old = abs(old[0] + es6.w / 2 - anc6[0]) + abs(old[1] + es6.h / 2 - anc6[1])
+            es6.x, es6.y = free_spot(m, es6.w + SH, es6.h + SH, anc6, GX, GY, halo=halo6, rmax=rmax6)
+            d_new = abs(es6.x + es6.w / 2 - anc6[0]) + abs(es6.y + es6.h / 2 - anc6[1])
+            print(f'kv_static_die: KRT_ES6_HOME distance to slg_ES_6 centre {d_old:.1f} -> {d_new:.1f} um', file=sys.stderr)
+            if d_new > d_old - float(os.environ.get('OT_KV_KRT_ES6_GAIN', '400')):
+                raise ValueError(f'kv_static_die: KRT_ES6_HOME no corridor spot (halo {halo6}) at least one relay stage '
+                                 f'closer: {d_old:.1f} -> {d_new:.1f} um')
+        finally:
+            m['insts'].append(es6)
+        m.setdefault('geo', {})['krt_es6_home'] = dict(
+            instance=es6.name, old=old, new=[es6.x, es6.y],
+            group='slg_ES_6', response_budget=80, halo=halo6)
+        print(f"kv_static_die: KRT_ES6_HOME {es6.name} {old} -> {[es6.x, es6.y]} size {es6.w}x{es6.h} halo {halo6}; "
+              f"slg_ES_6 at {[grp6.x, grp6.y]} size {grp6.w}x{grp6.h}", file=sys.stderr)
     # centre tiles: free spots nearest their anchors
     d2d = by['d2d_kv']
     host = by['host']
@@ -2190,6 +2529,13 @@ def place(m, K, geo, F):
     sq = by['seq']
     anchors = dict(kvs_ctl=(host.x + host.w / 2, (sq.y + sq.h + host.y) / 2), kvs_emb=(d2d.x - 40.0, d2d.y + d2d.h / 2),
                    kvs_attn=((pv.x - 500.0) if pv else d2d.x, (pv.y + pv.h - 200.0) if pv else d2d.y - 400.0))   # W of the N pair's top: the pair-top gap stays a crossing
+    if ATTN_DXY:
+        # KV-D2D3 10-20 (OT_KV_ATTN_DXY='dx,dy' um, default off): move the kvs_attn anchor toward the D2D end so the K seam
+        # bundles (K.rx_record / K.tx_slot / K.tx_record) fit the pair image's recorded die stages (OT_KV_SEAM_PIN pads them
+        # up to it; route A d22bu with D2D_PINS lands 13 / 9 / 11 > the K22 image's 11 / 9 / 9)
+        ax_, ay_ = anchors['kvs_attn']
+        anchors['kvs_attn'] = (ax_ + ATTN_DXY[0], ay_ + ATTN_DXY[1])
+        m.setdefault('geo', {})['attn_dxy'] = dict(dxy=list(ATTN_DXY), anchor=list(anchors['kvs_attn']))
     hro = []
     if HROOT:
         # KV-PLAN decision 1: the S half root at the stack seam (where the S stacks' PC 31 chain ends sit), W of the PV
@@ -2207,22 +2553,96 @@ def place(m, K, geo, F):
             anchors[f'kvs_hroot_{st}'] = (gd.x + gd.w / 2, pc.y + pc.h + 400.0)
         hro = [(f'kvs_hroot_{st}', 'hroot') for st in ('WS', 'ES', 'WN', 'EN')]
     order = [('kvs_ctl', 'ctl'), ('kvs_emb', 'emb'), ('kvs_attn', 'attn')]
+    if os.environ.get('OT_KV_ATTN_WEST_HOST', '0') == '1':
+        if ATTN_DXY or ATTN_AT_D2D:
+            raise ValueError('ATTN_WEST_HOST is an explicit corridor plan; do not combine with ATTN_DXY/ATTN_AT_D2D')
+        # Keep the K22 record source beside its real D2D endpoint and leave a
+        # full 129.6-um cell-row approach between attention and HOST. The
+        # south-going start/control words approach from the west of CTL,
+        # rather than squeezing between HOST and the D2D payload pins.
+        aw, ah = FRAME['attn']
+        anchors['kvs_attn'] = (host.x - 129.6 - aw / 2, d2d.y - 43.2 - ah / 2)
+        order = [('kvs_ctl', 'ctl'), ('kvs_attn', 'attn'), ('kvs_emb', 'emb')]
+        m.setdefault('geo', {})['attn_west_host'] = dict(
+            anchor=list(anchors['kvs_attn']), host_approach_um=129.6,
+            d2d_approach_um=43.2, geometry_only=True, qualified=False)
     if ATTN_AT_D2D:
         # QXF-SEAMK 10-18 (TOKEN-XDIE-QWEN F6 placement): kvs_attn against the D2D end's W face, kvs_emb W of it
         anchors.update(d2d_side_anchors(d2d, FRAME['attn'], FRAME['emb']))
         order = [('kvs_ctl', 'ctl'), ('kvs_attn', 'attn'), ('kvs_emb', 'emb')]
+    emb_keep = []
+    if EMB_WEST:
+        # KV-BIND12 10-20 (OT_KV_EMB_WEST=1, default off): with OT_KV_D2D_FIT the bound d2ds view (475.6 x 283) sits centred
+        # under the UCIe PHY and kvs_emb (anchored 40 um W of it) hugs its W face over the HOST root's NW corner: the
+        # HOST-top / D2D-bottom channel (131.8 um, the only approach to the view's S-face payload pins x 2..395) is then
+        # entered through a 77.8-um slot under kvs_emb, and d15p/g stranded ks_kvs_attn__attn__tx_payload stage 8 at
+        # (6490.8, 27010.8) 698 um from its farthest D2D pin.  kvs_emb moves W of the HOST root's W face (E face one halo W
+        # of it, same row) and the pocket HOST-top x [HOST.x - halo, D2D.x] x [HOST-top, D2D-top] is kept free of tiles, so the
+        # channel is open from the W column: relay stations for the S-face words (att / emb tx payload, rec_tx / rec_rx)
+        ew_ = FRAME['emb'][0]
+        # OT_KV_EMB_WEST=2: the row of the HOST root's centre instead (W of the HOST, below the channel): the four stack
+        # roots' o_emb returns then end W of the HOST without entering the HOST-top / D2D channel (d17n: ES o_emb stage 72)
+        ey_ = (host.y + host.h / 2) if EMB_WEST_MODE == '2' else anchors['kvs_emb'][1]
+        # KDIE4-RLY 10-22 (OT_KV_EMB_WEST_GAP_UM, default 0, multiple of 21.6): kvs_emb this much further W, so the pocket
+        # W of the D2D end (its W-face srx / emb_tx / kvi words, the kvnc context leaf, the record / service fork splits and
+        # the S-face words' W approach) holds relay stations instead of one 151-194-um slot
+        eg_ = float(os.environ.get('OT_KV_EMB_WEST_GAP_UM', '0'))
+        if eg_ < 0 or abs(eg_ / 21.6 - round(eg_ / 21.6)) > 1e-6:
+            raise ValueError('OT_KV_EMB_WEST_GAP_UM must be a nonnegative multiple of 21.6 um')
+        anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - eg_ - ew_ / 2), ey_)
+        emb_keep = [('emb_west_pocket', host.x - 21.6 - eg_, host.y + host.h, d2d.x - (host.x - 21.6 - eg_),
+                     d2d.y + d2d.h - host.y - host.h)]
+        if eg_:
+            m['geo']['emb_west_gap_um'] = eg_
+        m['geo']['emb_west'] = dict(pocket=list(emb_keep[0][1:]), anchor=list(anchors['kvs_emb']))
+    central_keep = []
+    if os.environ.get('OT_KV_CTL_CENTRAL', '0') == '1':
+        if not NATIVE_SLOTS or not HROOT or 'ahub' not in by:
+            raise ValueError('CTL_CENTRAL requires native slots, HROOT and actual AHUB')
+        ah = by['ahub']; pn = by['pvw_1']
+        lo = up(ah.y + ah.h + SH + 21.6, GY)
+        hi = pn.y - 21.6
+        if hi - lo < 216.0 - 1e-6:
+            raise ValueError('CTL_CENTRAL needs >=216um clear horizontal channel; use OT_KV_PVT_HUB_CLEAR=259.2 or larger')
+        ws, es = by['hsl_WN_0'], by['hsl_EN_0']
+        xl, xr = ws.x + ws.w + 21.6, es.x - 21.6
+        central_keep = [('ctl_central_tile_reservation', xl, lo, xr-xl, hi-lo)]
+        blocked = [i.name for i in m['insts'] if
+                   xl < i.x+i.w-1e-6 and i.x < xr-1e-6 and
+                   lo < i.y+i.h-1e-6 and i.y < hi-1e-6]
+        if blocked:
+            raise ValueError(f'CTL_CENTRAL crossing band intersects {blocked}; lift actual N macro rows with OT_KV_SN_LIFT')
+        # Keep a full216um approach beside the PVFIN island. Do not displace
+        # PVFIN into the through channel or squeeze the151.2um standard row.
+        anchors['kvs_ctl'] = (ah.x - 30.0 - PVFIN_FRAME[0] - 216.0 - FRAME['ctl'][0]/2,
+                              ah.y + ah.h/2)
+        m['geo']['ctl_central'] = dict(flag='OT_KV_CTL_CENTRAL=1',
+            tile_only_channel=list(central_keep[0][1:]), waypoint_y=(lo+hi)/2,
+            control_corridor_growth_per_side_um=172.8,
+            ctl_anchor=list(anchors['kvs_ctl']), geometry_only=True, qualified=False,
+            obligation='Actual GEN must rederive per-bit reach, relay/calendar ages; reticle orientation needs coherent frame/pin/grid/package transform.')
     for nm, kind in order + hro:
         w, h = FRAME[kind]
-        x, y = free_spot(m, w, h, anchors[nm], GX, GY)
+        x, y = free_spot(m, w, h, anchors[nm], GX, GY, extra=emb_keep + central_keep)
         m['insts'].append(F.Inst(nm, KIND_MASTER[kind], round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
+    if NATIVE_SLOTS:
+        m['geo']['native_slot_reservations'] = dict(
+            group_um=list(GROUP_SLOT['grp']), group_h_um=list(GROUP_SLOT['grp_h']), ctl_um=list(FRAME['ctl']),
+            geometry_only=True, qualified=False,
+            obligation='Replan physical relays and derive ages from the actual placed pins; '
+                       'no source/view/native-census or calendar qualification implied.')
     # KV-PLAN-FIN: the stream final join between the two PV pair strips (pvw_0 strip = its top, pvw_1 strip = its bottom),
     # W of the attention hub (the reciprocal source): both 512-b pair streams and rz are ~0.5-1.5 mm hops
     ah = by.get('ahub')
     if PVFIN and ah is not None and 'pvw_0' in by and pv is not None:
         w, h = PVFIN_FRAME
         ys = (by['pvw_0'].y + by['pvw_0'].h + pv.y) / 2
-        x, y = free_spot(m, w, h, (ah.x - w / 2 - 30.0, ys), GX, GY)
+        # KDIE4-PH 10-22 (OT_KV_PVFIN_HUB_GAP, default 30 um = unchanged): ks_ahfr (ahub fr -> pvfin fr, 145 b) is a direct
+        # hop across this gap and is where A.hub_fr lands its FR_OFS skew pads (kv_bundle_eq); at 30 um every pad must
+        # find a 108 x 13 spot within reach of ahub.fr among the PV / fork stations W of the hub (ovm: none left after
+        # PVFIN_ALIGN -> 'no legal spot for pad 1/2').  A wider gap gives the pads their own column between the two pins.
+        x, y = free_spot(m, w, h, (ah.x - w / 2 - PVFIN_HUB_GAP, ys), GX, GY, extra=central_keep)
         m['insts'].append(F.Inst('pvfin', 'qkd_pvfin', round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
 
@@ -2242,7 +2662,10 @@ def place(m, K, geo, F):
 # sit inside the KV service window, so the net is NOT a gain on this floorplan: default OFF, not proposed for adoption
 # until the start words get a direct channel S (KV-PLAN4 floorplan item).
 ATTN_AT_D2D = os.environ.get('OT_KV_ATTN_AT_D2D', '0') == '1'
+EMB_WEST_MODE = os.environ.get('OT_KV_EMB_WEST', '0')
+EMB_WEST = EMB_WEST_MODE in ('1', '2')      # KV-BIND12 10-20: kvs_emb W of the HOST root (see the anchors)
 ATTN_D2D_TOP = float(os.environ.get('OT_KV_ATTN_D2D_TOP', '0.0'))
+ATTN_DXY = tuple(float(v) for v in os.environ['OT_KV_ATTN_DXY'].split(',')) if os.environ.get('OT_KV_ATTN_DXY') else None
 
 
 def d2d_side_anchors(d2d, attn_wh, emb_wh, halo=21.6, top=None):
@@ -2254,13 +2677,14 @@ def d2d_side_anchors(d2d, attn_wh, emb_wh, halo=21.6, top=None):
     return dict(kvs_attn=(d2d.x - halo - aw / 2, yt - ah / 2), kvs_emb=(d2d.x - 2 * halo - aw - ew / 2, yt - ah / 2))
 
 
-def free_spot(m, w, h, anchor, GX, GY, halo=21.6, rmax=4000.0):
-    """the on-grid w x h spot nearest (Manhattan, centre) to anchor that keeps a halo to every frame / keep-out"""
+def free_spot(m, w, h, anchor, GX, GY, halo=21.6, rmax=4000.0, extra=()):
+    """the on-grid w x h spot nearest (Manhattan, centre) to anchor that keeps a halo to every frame / keep-out
+    (extra: more (name, x, y, w, h) keep-outs for this placement only)"""
     ax, ay = anchor
     W, H = m['die']['w'], m['die']['h']
     x0, x1, y0, y1 = ax - rmax - w, ax + rmax + w, ay - rmax - h, ay + rmax + h
     occ = [(i.x - halo, i.y - halo, i.x + i.w + halo, i.y + i.h + halo) for i in m['insts']]
-    occ += [(x - halo, y - halo, x + ww + halo, y + hh + halo) for _, x, y, ww, hh in m.get('keepouts', [])]
+    occ += [(x - halo, y - halo, x + ww + halo, y + hh + halo) for _, x, y, ww, hh in list(m.get('keepouts', [])) + list(extra)]
     occ = [r for r in occ if not (r[2] < x0 or r[0] > x1 or r[3] < y0 or r[1] > y1)]
     step = 21.6                          # candidate pitch (the routing cell); positions snap to the placement grid
     n = int(rmax / step)
@@ -2302,6 +2726,14 @@ if DOMSPLIT:     # KV-DOMSPLIT: the hck half of a split word sits beside its ck 
 KIT_FACE['qkd_kvs_grp_h'] = KIT_FACE['qkd_kvs_grp']
 KIT_FACE['qkd_kvs_pc_h'] = KIT_FACE['qkd_kvs_pc']
 KIT_DEFAULT_FACE = dict(qkd_kvs_grp='W', qkd_kvs_grp_h='W', qkd_kvs_pc='E', qkd_kvs_pc_h='E', qkd_kvs_hroot='W')
+# Selected S6C masters retain their exact source/view names. Their physical
+# contract comes from the actual closed kit, including every bit's position
+# (kv_group_view_pins), rather than the peer-selected auto-face fallback.
+if GRP_S6C:
+    import kv_group_view_pins as _group_pins
+    for _gm in (KIND_MASTER['grp'], KIND_MASTER['grp_h']):
+        KIT_FACE[_gm] = dict(_group_pins.load(_gm)['faces'])
+        KIT_DEFAULT_FACE[_gm] = 'W'
 
 
 def pin_face(master, port):
@@ -2388,6 +2820,10 @@ def face_order(master, face, ports):
     carries its four PCs' words: interleave i_pc<j> / o_pc<j> bottom-up so pair j sits level with PC j (PC k of the
     slot = 4 slot + j, bottom-up; the even spread puts pair j's centre within ~125 um of PC j's centre)"""
     master = master.removesuffix('_private0')
+    if GRP_S6C and master in (KIND_MASTER['grp'], KIND_MASTER['grp_h']):
+        # Explicit kit order includes only ports that survive the exact ABI.
+        _order = _group_pins.load(master)['orders'].get(face, [])
+        return sorted(ports, key=lambda p: (_order.index(p) if p in _order else len(_order), p))
     if KITS and master in ('qkd_kvs_grp', 'qkd_kvs_grp_h') and face == 'W':
         # kit: PC pairs 0 / 1 below, the clocks / resets / straps / pass words mid-face (beside the register mass), 2 / 3 above
         def key(p):
@@ -2467,6 +2903,14 @@ def _hroot_waypoints(m, a, pa, b, pb):
     by = {i.name: i for i in m['insts']}
     h = by[hr]
     top = by['kvs_ctl'] if 'kvs_ctl' in ends else by['kvs_emb']
+    if top.name == 'kvs_ctl' and os.environ.get('OT_KV_CTL_CENTRAL', '0') == '1':
+        plan = m['geo']['ctl_central']; yy = plan['waypoint_y']
+        # S roots are served through the real central horizontal band, not
+        # by a trip to the N-stack top and back down its control corridor.
+        xx = top.x - 108.0 if hr.endswith('WS') else top.x + top.w + 108.0
+        pts = [(xx, top.y + top.h/2), (xx, yy),
+               (h.x + h.w/2, yy), (h.x + h.w/2, h.y + h.h + 60.0)]
+        return pts if a != hr else list(reversed(pts))
     nst = hr[-2] + 'N'
     if os.environ.get('OT_KV_HROOT_WP', 'cc') == 'side':
         pv, pv144 = by.get('pvw_1'), m['geo'].get('pv144') or {}
@@ -2507,6 +2951,7 @@ def record(m):
                 open_tile_inputs=sorted(opens.values(), key=lambda r: (r['owner'] or '', r['master'], r['port'])),
                 **({'ahub_ages': ahub_ages(m)} if AHUB_STATIC and 'ks_ahs' in m.get('relay_stages', {}) else {}),
                 attn_fault=afault_latency(m),
+                pc_chain=pc_chain_ages(m),
                 face_land=dict(enabled=FACE_LAND, selected=sorted(FACE_LAND_SEL),
                                tiles={k: v for k, v in FACE_LAND_TILES.items() if k in FACE_LAND_SEL},
                                note='views bound only when CLOSED (lanes/HKV-RSTCAP.md)'),

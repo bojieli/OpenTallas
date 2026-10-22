@@ -1,0 +1,21 @@
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 1/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 2/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 3/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 4/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 5/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 6/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 7/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 8/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 9/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 10/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 11/16 mat wq_b rows 6 nseg 3 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 12/16 mat wq_b rows 5 nseg 3 faults 0 ret_words 5 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 13/16 mat wq_b rows 5 nseg 3 faults 0 ret_words 5 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 14/16 mat wq_b rows 5 nseg 3 faults 0 ret_words 5 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op attn.wq_b phase 15/16 mat wq_b rows 5 nseg 3 faults 0 ret_words 5 calendar measured_class T 959 mutant None
+FSEQA u_f_3L01 attn.wq_b golden P 126 nph 15 PASS as_expected rows=5 fixture_rows=5 errors=0 END edges=5217 ret_words=86 xo_checked=5215 fault=0
+TOKSIM_FGU_SEQ PASS op attn.wq_b PER 126 phases 15 rows 86 fixture_rows 86 go0 63 last_ret 2123 span 2060 errors 0 []
+FSEQA u_f_3L01 attn.wq_b period_below_floor P 125 nph 15 FAIL as_expected  FAIL op attn.wq_b PER 125 phases 15 rows 86 fixture_rows 86 go0 63 last_ret 2109 span 2046 errors 4 ['FAULT edge 422 status 11 lx 0', 'FAULT edge 423 status 11 lx 0', 'FAULT edge 424 status 11 lx 0']
+FSEQA u_f_3L01 attn.wq_b shift P 126 nph 15 FAIL as_expected rows 86 fixture_rows 86 go0 63 last_ret 2123 span 2060 errors 60 ['UNASSIGNED_RET edge 350 17ea4e02610010087', 'UNASSIGNED_RET edge 353 17f05fc3c10008087', 'UNASSIGNED_RET edge 358 17d73946210000087']
+FSEQA u_f_3L01 attn.wq_b swap P 126 nph 15 FAIL as_expected w 5 lo 0 k 2 got 3f6a5b1c/0 want 3f370e5e/0']", "PHASE_FAIL p3: ['MISMATCH edge 350 row 4 lo 0 k 2 got bee22b5a/0 want 3ed132ab/0', 'MISMATCH edge 351 row 5 lo 0 k 2 got 3e1c84b8/0 want bf4f6a11/0']"]
+FSEQA_VERDICT u_f_3L01 attn.wq_b PASS span 2060

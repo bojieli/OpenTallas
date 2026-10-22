@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: ot-epyc7       admits  1021 GB (avail 794, growth 80, headroom 0, waiters 0/0 GB) load 60/96 running 19 disk 5382 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root7-hc-binding-0720
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1900620-1792507546 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/root7-hc-binding-0720/current_helper_replay.py", line 8, in <module>
+    assert not ok,(kit,why)
+           ^^^^^^
+AssertionError: ('hbm_hcq_tree16_c1', 'gate-consumed source and gate-executed overlays match; exact reviewed HC terminal-verdict stdout repair compatible: rtl/hbm_accel/generic/peers/static_hc/run_qtree16.sh')
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1900620-1792507546): exit 1

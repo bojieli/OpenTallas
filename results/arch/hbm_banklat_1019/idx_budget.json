@@ -1,0 +1,327 @@
+{
+ "schema": "opentallas.d4g_idx_lat_budget.v1",
+ "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2c/net/contract_pre.json",
+ "segments": {
+  "ctl_banks": [
+   {
+    "bank": "vmb_SW0",
+    "rt": 57,
+    "rt_worst": 71,
+    "unresolved": 2
+   },
+   {
+    "bank": "vmb_SW1",
+    "rt": 55,
+    "rt_worst": 69,
+    "unresolved": 2
+   },
+   {
+    "bank": "vmb_SW2",
+    "rt": 49,
+    "rt_worst": 63,
+    "unresolved": 2
+   },
+   {
+    "bank": "vmb_SW3",
+    "rt": 47,
+    "rt_worst": 61,
+    "unresolved": 2
+   },
+   {
+    "bank": "vmb_SW4",
+    "rt": 49,
+    "rt_worst": 63,
+    "unresolved": 2
+   },
+   {
+    "bank": "vmb_SW5",
+    "rt": 49,
+    "rt_worst": 63,
+    "unresolved": 2
+   },
+   {
+    "bank": "vmb_SW6",
+    "rt": 41,
+    "rt_worst": 55,
+    "unresolved": 2
+   },
+   {
+    "bank": "vmb_SW7",
+    "rt": 41,
+    "rt_worst": 55,
+    "unresolved": 2
+   }
+  ],
+  "op_SE_banks": [
+   {
+    "bank": "vmb_SE0",
+    "rt": 96,
+    "rt_worst": 124,
+    "unresolved": 4
+   },
+   {
+    "bank": "vmb_SE1",
+    "rt": 97,
+    "rt_worst": 125,
+    "unresolved": 4
+   },
+   {
+    "bank": "vmb_SE2",
+    "rt": 89,
+    "rt_worst": 117,
+    "unresolved": 4
+   },
+   {
+    "bank": "vmb_SE3",
+    "rt": 90,
+    "rt_worst": 118,
+    "unresolved": 4
+   },
+   {
+    "bank": "vmb_SE4",
+    "rt": 96,
+    "rt_worst": 124,
+    "unresolved": 4
+   },
+   {
+    "bank": "vmb_SE5",
+    "rt": 97,
+    "rt_worst": 125,
+    "unresolved": 4
+   },
+   {
+    "bank": "vmb_SE6",
+    "rt": 89,
+    "rt_worst": 117,
+    "unresolved": 4
+   },
+   {
+    "bank": "vmb_SE7",
+    "rt": 91,
+    "rt_worst": 119,
+    "unresolved": 4
+   }
+  ],
+  "op_NE_banks": [
+   {
+    "bank": "vmb_NE0",
+    "rt": 61,
+    "rt_worst": 61,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NE1",
+    "rt": 63,
+    "rt_worst": 63,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NE2",
+    "rt": 60,
+    "rt_worst": 60,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NE3",
+    "rt": 62,
+    "rt_worst": 62,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NE4",
+    "rt": 76,
+    "rt_worst": 76,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NE5",
+    "rt": 78,
+    "rt_worst": 78,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NE6",
+    "rt": 76,
+    "rt_worst": 76,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NE7",
+    "rt": 78,
+    "rt_worst": 78,
+    "unresolved": 0
+   }
+  ],
+  "nwsh_banks": [
+   {
+    "bank": "vmb_NW0",
+    "rt": 34,
+    "rt_worst": 34,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NW1",
+    "rt": 36,
+    "rt_worst": 36,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NW2",
+    "rt": 15,
+    "rt_worst": 15,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NW3",
+    "rt": 13,
+    "rt_worst": 13,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NW4",
+    "rt": 30,
+    "rt_worst": 30,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NW5",
+    "rt": 32,
+    "rt_worst": 32,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NW6",
+    "rt": 15,
+    "rt_worst": 15,
+    "unresolved": 0
+   },
+   {
+    "bank": "vmb_NW7",
+    "rt": 19,
+    "rt_worst": 19,
+    "unresolved": 0
+   }
+  ],
+  "op_SW_ctl": [
+   [
+    37,
+    51,
+    2
+   ],
+   [
+    37,
+    51,
+    2
+   ]
+  ],
+  "op_NW_nwsh": [
+   [
+    30,
+    30,
+    0
+   ],
+   [
+    32,
+    32,
+    0
+   ]
+  ],
+  "argmax_ctl": [
+   [
+    4,
+    4,
+    0
+   ],
+   [
+    3,
+    3,
+    0
+   ]
+  ],
+  "ctl_cq_cr": [
+   [
+    11,
+    18,
+    1
+   ],
+   [
+    10,
+    17,
+    1
+   ]
+  ],
+  "argmax_cq_cr": [
+   [
+    12,
+    19,
+    1
+   ],
+   [
+    12,
+    19,
+    1
+   ]
+  ],
+  "ctl_sel": [
+   [
+    13,
+    13,
+    0
+   ],
+   [
+    13,
+    13,
+    0
+   ]
+  ]
+ },
+ "values": {
+  "gen2c_derived_E": {
+   "ctl": {
+    "VM_RT": 51,
+    "CR_RT": 22,
+    "SEL_LAT": 30
+   },
+   "op_per_quadrant": {
+    "SW": 129,
+    "SE": 93,
+    "NE": 74,
+    "NW": 94
+   },
+   "op_uniform_VM_RT_EXTRA": 129,
+   "nwsh_BANK_RT_assumed": 36,
+   "argmax": {
+    "VMX": 63,
+    "ACK": 38
+   }
+  },
+  "budget_worst_E8": {
+   "ctl": {
+    "VM_RT": 65,
+    "CR_RT": 36,
+    "SEL_LAT": 30
+   },
+   "op_per_quadrant": {
+    "SW": 171,
+    "SE": 121,
+    "NE": 74,
+    "NW": 94
+   },
+   "op_uniform_VM_RT_EXTRA": 171,
+   "nwsh_BANK_RT_assumed": 36,
+   "argmax": {
+    "VMX": 77,
+    "ACK": 52
+   }
+  }
+ },
+ "die_pads": {
+  "ctl_rq4": "pad every SW bank lane of hb_idx__ctl to RT 71 (lanes rq4+rr4 = 64)",
+  "op_SW": "pad hb_idx__op_SW <-> hb_idx__ctl lanes (both directions together) to 102",
+  "op_SE_NE": "pad every bank lane of hb_idx__op_SE / op_NE to RT 175 (lanes rq+rr = 168)",
+  "op_NW": "pad hb_idx__op_NW <-> hb_idx__nwsh lanes to 139 at nwsh BANK_RT 36 (HBM-BANKLAT-COLL owns nwsh; lanes = 175 - nwsh BANK_RT)",
+  "argmax": "argmax <-> ctl lanes 7 (pad if shorter); cq+cr lanes 38",
+  "ctl_cq_cr": "ctl cq+cr lanes 35; sel_op+selected_v lanes 26 (SEL_LAT is exact: pad to it)"
+ },
+ "rule": "(recorded; the die binds these values and pads every shorter lane UP to them, so the hardened views need not\nchange when K straps / GEN2d move a lane within the budget):\n  * every forwarded landing whose K strap is a NO_E placeholder is counted at its worst case E = 8 (E is 1..8);\n  * the four operand readers feed the lockstep xq score tree (rootctl agree_fault: all 4 quadrant lists in the same edge),\n    so they take ONE scalar VM_RT_EXTRA = the maximum over the quadrants; the die pads the other readers' request lanes;\n  * ctl VM_RT = max_b RT_b - 6 over the 8 SW banks of its rq4/rr4 (scalar: the share serves INDEX / TOPK / ARGMAX);\n  * op_SW = 4 + ctl VM_RT + lanes(op_SW <-> ctl) (n12 VM_RT_EXTRA 4 = 2 shell pins + the share's 2 pins);\n  * argmax r2 VMX = 5 + ctl VM_RT + lanes(argmax <-> ctl); ACK = 13 + faces pin 1 + lanes(cq) + lanes(cr);\n  * ctl CR_RT = faces pin 1 + lanes(cq) + lanes(cr) (TOPK ACK 13 + CR_RT); SEL_LAT = 4 + lanes(sel_op) + lanes(selected_v)."
+}

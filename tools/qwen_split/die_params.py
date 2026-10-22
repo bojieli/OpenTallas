@@ -40,13 +40,34 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import lane_groups as LG  # noqa: E402
 
 TT_MASTER, TT_PORT, TT_SINK = 'qfd_tt_ctlm_dv', 'hr', 'dvs_W5'
+if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
+    from qwen_split import headprep_source as HP13
+    TT_MASTER = HP13.selected_master()
 TT_STAGE_ME = 1                                  # Q-DIE14 (QLB-PROG 3fac5f0ef): the compiled ctlm image needs STAGE_ME 1
 HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one register after xpf (header 'hr -> W5 hr_wi')
-D2D_MASTER = 'qfd_d2d_static'
+HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
+STATUS_OBS = os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1'
+FAULT_FACE = os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1'
+SF_MASTER = 'qfd_sys_face_ovl_fault1' if FAULT_FACE else 'qfd_sys_face_ovl'
+from qwen_split.sysface_lctx_source import select as select_lctx_source, enabled as lctx_enabled, wrapper_enabled, wrapper_contract
+SF_MASTER, _SF_SOURCE = select_lctx_source((SF_MASTER,'rtl/qwen_split/'+SF_MASTER+'.sv'),ROOT)
+if STATUS_OBS and not HEAD_PREP:
+    raise ValueError('STATUS observer v1 requires coherent head-prepare source')
+NATIVE_MASTER = 'qfd_native59_dv_headprep_obs1' if STATUS_OBS else 'qfd_native59_dv_headprep'
+D2D_MASTER = 'qfd_d2d_static_ovl_sf7' if HEAD_PREP else 'qfd_d2d_static'
 DHOBS_MASTER = 'qfd_sys_face_mu_dhobs'           # MU-DQ-DHUSER: the die's tt_ctlm.dh_user observer (dv_case.DHOBS)
 DHOBS_LISTS = ('NS', 'USER_SEQ', 'STG_SEQ', 'RES_SEQ')
 CTXRX_MASTER = 'qfd_mu_ctx_rx_die'               # MU-DQ-BOOTCTX: filler runtime context leaf (dv_case.CTXRX) -> tt_ctlm.ctx_x
-IMAGE = ROOT / 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh'
+if STATUS_OBS:
+    D2D_MASTER = 'qfd_d2d_static_ovl_sf7_obs1'
+    DHOBS_MASTER = 'qfd_sys_face_mu_dhobs_obs1'
+    CTXRX_MASTER = 'qfd_mu_ctx_rx_die_obs1'
+# QW-GENPREP 10-21: OT_QWEN_D2D_IMAGE selects the ONE shared compute<->KV pair image (KV-PROG17
+# d2d_cal_image_mu_ew595_r16.svh; TXDP_C/K identical to d2d_cal_image.svh, so qfd_d2d_static.TXDP is unchanged)
+DEFAULT_IMAGE = ('rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu_ew1627_r16_rope.svh'
+                 if os.environ.get('OT_QWEN_ROPE', '0') == '1'
+                 else 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh')
+IMAGE = ROOT / os.environ.get('OT_QWEN_D2D_IMAGE', DEFAULT_IMAGE)
 TRAP_BODY = re.compile(r'\$error|\$fatal|\w*NOT_COMPILED\w*|\w+__set_\w+')
 GEN_IF = re.compile(r'generate\s+if\s*\(', re.S)
 SENTINELS = (-1, 0)
@@ -100,7 +121,16 @@ def gen_params(insts, hr_rows, image=IMAGE):
     """the GEN's assignments: insts = [(name, master)] of the die model -> {master: {param: value, _source}}."""
     masters = {mst for _, mst in insts}
     out, rec = {}, {}
-    if TT_MASTER in masters:
+    fixed_native = HEAD_PREP and TT_MASTER in masters
+    if fixed_native:
+        if os.environ.get('OT_QWEN_HP13_COREPUB', '0') not in ('1', '2'):
+            HP13.reject_unbound_hr_age()
+        from qwen_split.hp13_hr_contract import reconcile
+        T, r = reconcile(ROOT, TT_MASTER, hr_rows)
+        out[TT_MASTER] = dict(_source='exact fixed native source; no parameter overrides')
+        rec['xpf'] = r
+        rec['fixed_native'] = True
+    elif TT_MASTER in masters:
         T, r = xpf_transport_edges(hr_rows)
         out[TT_MASTER] = dict(XPF_TRANSPORT_EDGES=T, STAGE_ME=TT_STAGE_ME,
                               _source='QLB-GEN G-C1: 1 hr pin register + hr lane cycles as built '
@@ -116,13 +146,21 @@ def gen_params(insts, hr_rows, image=IMAGE):
         if not 2 <= nu <= 4:
             raise ValueError(f'OT_QWEN_MU_NU {nu} outside 2..4')
         src = f'MU-DIE-QW: OT_QWEN_MU_NU={nu} (owner 0kc release MU die; MU-QW-B1 OPSEG 1, MU-ADOPT-SLICE MU_NU)'
-        if TT_MASTER in masters:
+        if TT_MASTER in masters and not fixed_native:
             out[TT_MASTER].update(NU=nu, OPSEG=1)
             out[TT_MASTER]['_source'] += '; ' + src
+        # TOK.QW.LAYER.4 (STEWARD-TOK-QW 10-21): the release die runs a real token only with the QW-LAYERGAP slice RTL
+        # bound: ARF 1 (AR message framer: io_collective tag / last-on-message-last) + RP 1 (per-token RoPE row from the
+        # D2D return chain).  STG3 c0f8097f3: ARF/RP 0 -> od/lm --arf + qk --rope rx FAIL; ARF/RP 1 -> 36 layers PASS.
+        # The slice2_e / slice2_wh kits carry the same params.  OT_QWEN_SLICE_LAYERGAP=0 = the old ARF/RP 0 views (diag).
+        lg = int(os.environ.get('OT_QWEN_SLICE_LAYERGAP', '1') or 0)
         for sm in ('qfd_dv_slice2_w', 'qfd_dv_slice2_e'):
             if sm in masters:
                 out[sm] = dict(MU_NU=nu, _source=src)
-        rec['mu'] = dict(nu=nu, opseg=1)
+                if lg:
+                    out[sm].update(ARF=1, RP=1)
+                    out[sm]['_source'] += '; QW-LAYERGAP ARF 1 RP 1 (TOK.QW.LAYER.4)'
+        rec['mu'] = dict(nu=nu, opseg=1, slice_layergap=lg)
         if 'qfd_sys_face' in masters:
             # MU-DQ-SYSFACE (COORD 0kg (a)): qfd_sys_face #(MU 1) = MU d2d image (ot_qwen_d2d_cal_seq_dies_mu.sv) + filler
             # head contexts accepted by user on tt_native_pos[17:16]; the die stand-in view stays the MU 0 rs3 view until mu1 closes
@@ -139,21 +177,62 @@ def gen_params(insts, hr_rows, image=IMAGE):
             # MU-DQ-BOOTCTX (COORD 0kg (1)): the leaf drives tt_ctlm.ctx_x; the ctlm takes it with CTX_SRC 1
             out[CTXRX_MASTER] = dict(NU=nu, _source='MU-DQ-BOOTCTX (COORD 0kg (1)): filler initial context from the KV host '
                                      'plane, MU-KV-CTX kind-12 MU slot')
-            out[TT_MASTER].update(CTX_SRC=1)
+            if not fixed_native:
+                out[TT_MASTER].update(CTX_SRC=1)
             out[TT_MASTER]['_source'] += '; MU-DQ-BOOTCTX: CTX_SRC 1 (ctx_x from qfd_mu_ctx_rx_die)'
             rec['ctxrx'] = dict(nu=nu)
         # MU-DQ-BOOTCTX: fillers' native59 contexts (tt_ctlm FCTX 1: base-0x10 filler LOCAL SEG starts raise the head
         # layer context) and the face's HOST-context check limited to user 0 (qfd_sys_face MU_HEAD 1; MU-DQ-SYSFACE re-close)
-        if TT_MASTER in masters:
+        if TT_MASTER in masters and not fixed_native:
             out[TT_MASTER].update(FCTX=1)
             out[TT_MASTER]['_source'] += '; MU-DQ-BOOTCTX: FCTX 1 (filler native contexts)'
         if 'qfd_sys_face' in masters:
             out.setdefault('qfd_sys_face', {}).update(MU_HEAD=1)
             out['qfd_sys_face']['_source'] = 'MU-DQ-BOOTCTX: MU_HEAD 1 (filler head contexts not checked by the HOST RX)'
         rec['fctx'] = 1
+    if os.environ.get('OT_QWEN_ROPE', '0') == '1':
+        for master in ('qfd_sys_face', SF_MASTER, 'qfd_embedding_word_provider', 'qfd_native59_dv_service', NATIVE_MASTER):
+            if master in masters:
+                out.setdefault(master, {}).update(ROPE=1)
+        rec['rope'] = dict(words=8, payload_flag=512, expected_args=list(range(65, 73)),
+                           read_bank='embed_code_addr = 9723904 + token*8 + beat',
+                           scope='requires the shared 73-item pair image and matching source-complete views')
+    if HEAD_PREP:
+        if NATIVE_MASTER not in masters or SF_MASTER not in masters:
+            raise ValueError('head prepare requires the actual source-complete native and OVL face masters')
+        out.setdefault(NATIVE_MASTER, {}).update(HEAD_PREP=1, NU=nu)
+        qa = os.environ.get('OT_QWEN_NATIVE_QB_ALIGN', '0')
+        if qa not in ('0', '1'):
+            raise ValueError('OT_QWEN_NATIVE_QB_ALIGN must be 0 (selected legacy) or 1 (qualification candidate)')
+        if qa == '1':
+            out[NATIVE_MASTER]['QB_ALIGN'] = 1
+            rec['native_qbank_alignment'] = dict(QB_ALIGN=1, scope='source qualification candidate; matching physical view and booking required')
+        qlocal = os.environ.get('OT_QWEN_NATIVE_QB_LOCAL32', '0')
+        if qlocal not in ('0', '1') or (qlocal == '1' and qa != '1'):
+            raise ValueError('QB_LOCAL32 candidate requires value 0/1 and QB_ALIGN 1 when enabled')
+        if qlocal == '1':
+            out[NATIVE_MASTER]['QB_LOCAL32'] = 1
+            rec['native_qbank_local32'] = dict(QB_ALIGN=1, QB_LOCAL32=1,
+                scope='exact 32x512 source candidate; matching physical view and tuple-specific booking required')
+        # SQ-C2-N59 svc5/5b harden the existing receive-first/local-decode
+        # implementation. Carry the selected child's parameters into its parent.
+        if os.environ.get('OT_QWEN_NATIVE_SVC5', '0') == '1':
+            out[NATIVE_MASTER].update(SVC_RECV=1, SVC_LOCAL32=1)
+            rec['native_svc5'] = dict(SVC_RECV=1, SVC_LOCAL32=1)
+        out.setdefault(SF_MASTER, {}).update(MU=int(nu>1), MU_HEAD=int(nu>1), ROPE=1)
+        if lctx_enabled():
+            out[SF_MASTER]['L_CONTEXTS'] = 1
+            rec['sysface_l_contexts'] = dict(master=SF_MASTER,L_CONTEXTS=1,scope='source candidate; final image and physical qualification required')
+        if wrapper_enabled():
+            out[SF_MASTER].update(MUT=0,GO_OFS=3,START_ADJ=0)
+            rec['sysface_wrapper'] = wrapper_contract(ROOT)
+        rec['head_prepare'] = dict(source='c_emb stored token/position/user, never RESULT',
+                                  transport='derive both bundle ages from actual GEN; no zero default')
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
         out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")
+        if HEAD_PREP:
+            out[D2D_MASTER].update(HEAD_CONTEXT=1)
         rec['txdp'] = r
     return out, rec
 
@@ -203,6 +282,11 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
     prm = json.loads(pj.read_text()).get('masters', {}) if pj.exists() else {}
     pb = json.loads(Path(port_bind).read_text())
     fails, req = [], {}
+    fixed_native = HEAD_PREP and os.environ.get('OT_QWEN_HP13_COREPUB', '0') in ('1', '2')
+    fixed_params = {}
+    if fixed_native:
+        from qwen_split.hp13_hr_contract import compiled_params
+        fixed_params = compiled_params(ROOT, TT_MASTER)
     for mst, r in sorted(pb['masters'].items()):
         path = r.get('rtl')
         if not path:
@@ -214,14 +298,21 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
         mods = {m_.name: m_ for m_ in DPB.parse_modules(Path(path).read_text(errors='replace'), path)}
         if mst not in mods:
             continue
-        if mst == CTXRX_MASTER and (prm.get(mst, {}).get('NU') != prm.get(TT_MASTER, {}).get('NU') or
-                                    prm.get(TT_MASTER, {}).get('CTX_SRC') != 1):
+        tt_params = fixed_params if fixed_native else prm.get(TT_MASTER, {})
+        if mst == CTXRX_MASTER and (prm.get(mst, {}).get('NU') != tt_params.get('NU') or
+                                    tt_params.get('CTX_SRC') != 1):
             fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} / {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")} / '
                          f'CTX_SRC {prm.get(TT_MASTER, {}).get("CTX_SRC")}: the ctx leaf needs the same NU and CTX_SRC 1')
         if mst == DHOBS_MASTER:
             fails += dhobs_check(mods[mst])
-            if prm.get(mst, {}).get('NU') != prm.get(TT_MASTER, {}).get('NU'):
+            if prm.get(mst, {}).get('NU') != tt_params.get('NU'):
                 fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} != {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")}')
+        if mst == NATIVE_MASTER and os.environ.get('OT_QWEN_NATIVE_QB_ALIGN', '0') == '1' and prm.get(mst, {}).get('QB_ALIGN') != 1:
+            fails.append(f'{mst}: selected aligned qbank candidate requires explicit QB_ALIGN 1')
+        if mst == NATIVE_MASTER and os.environ.get('OT_QWEN_NATIVE_QB_LOCAL32', '0') == '1' and (prm.get(mst, {}).get('QB_LOCAL32'), prm.get(mst, {}).get('QB_ALIGN')) != (1, 1):
+            fails.append(f'{mst}: local qbank candidate requires explicit QB_LOCAL32 1 and QB_ALIGN 1')
+        if mst == SF_MASTER and lctx_enabled() and prm.get(mst, {}).get('L_CONTEXTS') != 1:
+            fails.append(f'{mst}: L-context candidate requires explicit L_CONTEXTS 1')
         tp = trapped_params(mods[mst])
         if not tp:
             continue
@@ -263,7 +354,14 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
             if not sink:
                 fails.append(f'{bid}: no consumer of the hr bus in die.v')
         try:
-            T, xr = xpf_transport_edges(rows) if rows and all(r is None or r.get('E') is not None or r.get('n') for _, r in rows) else (None, None)
+            if HEAD_PREP and os.environ.get('OT_QWEN_HP13_COREPUB', '0') in ('1', '2'):
+                from qwen_split.hp13_hr_contract import reconcile
+                T, xr = reconcile(ROOT, TT_MASTER, rows)
+                overrides = set(prm.get(TT_MASTER, {})) - {'_source'}
+                if overrides:
+                    fails.append('fixed HP13 native has parameter overrides: ' + str(sorted(overrides)))
+            else:
+                T, xr = xpf_transport_edges(rows) if rows and all(r is None or r.get('E') is not None or r.get('n') for _, r in rows) else (None, None)
         except ValueError as e:
             T = None
             fails.append(str(e))
@@ -275,7 +373,7 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
                          f'{xr["lane_cycles"]})')
     # (b2) Q-DIE14: tt_ctlm runs the QLB-PROG deployment image (ctlm_image.py) -> STAGE_ME must be 1 (as built 0 starts
     # the layer programme in stage 0 and faults 'start while active' in stage 1)
-    if tt and prm.get(TT_MASTER, {}).get('STAGE_ME') != TT_STAGE_ME:
+    if tt and not (HEAD_PREP and os.environ.get('OT_QWEN_HP13_COREPUB', '0') in ('1', '2')) and prm.get(TT_MASTER, {}).get('STAGE_ME') != TT_STAGE_ME:
         fails.append(f'{TT_MASTER}.STAGE_ME = {prm.get(TT_MASTER, {}).get("STAGE_ME")} (the deployment image needs {TT_STAGE_ME})')
     # (c) TXDP == the committed production image
     tr = None

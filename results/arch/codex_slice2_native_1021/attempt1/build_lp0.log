@@ -1,0 +1,34 @@
+%Warning-MODDUP: rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv:21:35: Duplicate declaration of module: 'qfd_bmath_dff_p'
+   21 | (* keep_hierarchy="yes" *) module qfd_bmath_dff_p #(parameter integer ID=0)(C,D,Q);
+      |                                   ^~~~~~~~~~~~~~~
+                 rtl/qwen_dv/qfd_dv_station_math_g.sv:11114:35: ... Location of original declaration
+11114 | (* keep_hierarchy="yes" *) module qfd_bmath_dff_p #(parameter integer ID=0)(C,D,Q);
+      |                                   ^~~~~~~~~~~~~~~
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv:34:35: Duplicate declaration of module: 'qfd_bmath_not'
+   34 | (* keep_hierarchy="yes" *) module qfd_bmath_not #(parameter integer ID=0)(A,Y);
+      |                                   ^~~~~~~~~~~~~
+                 rtl/qwen_dv/qfd_dv_station_math_g.sv:11154:35: ... Location of original declaration
+11154 | (* keep_hierarchy="yes" *) module qfd_bmath_not #(parameter integer ID=0)(A,Y);
+      |                                   ^~~~~~~~~~~~~
+%Warning-MODDUP: rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv:46:35: Duplicate declaration of module: 'qfd_bmath_or'
+   46 | (* keep_hierarchy="yes" *) module qfd_bmath_or #(parameter integer ID=0)(A,B,Y);
+      |                                   ^~~~~~~~~~~~
+                 rtl/qwen_dv/qfd_dv_station_math_g.sv:11120:35: ... Location of original declaration
+11120 | (* keep_hierarchy="yes" *) module qfd_bmath_or #(parameter integer ID=0)(A,B,Y);
+      |                                   ^~~~~~~~~~~~
+%Error-MODMISSING: rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv:66:5: Cannot find file containing module: 'ot_rst_relay'
+   66 |     ot_rst_relay #(.REGIONS(NRG), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rl (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
+      |     ^~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ot_rst_relay
+                        ot_rst_relay.v
+                        ot_rst_relay.sv
+                        /srv/opentallas-scratch/claude/codex-q-slice2-native-1021/parent/src/bench_s7/obj_lp0/ot_rst_relay
+                        /srv/opentallas-scratch/claude/codex-q-slice2-native-1021/parent/src/bench_s7/obj_lp0/ot_rst_relay.v
+                        /srv/opentallas-scratch/claude/codex-q-slice2-native-1021/parent/src/bench_s7/obj_lp0/ot_rst_relay.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/codex-q-slice2-native-1021/parent/src'
+%Error: Exiting due to 1 error(s)

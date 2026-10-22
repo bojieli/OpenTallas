@@ -1,0 +1,45 @@
+{
+ "cell": "qkd_embedding_row_tx_ctx",
+ "view": "physical/ref_tile/qkd_embedding_row_tx_ctx_c1b/views/qkd_embedding_row_tx_ctx",
+ "lib_cell": "qkd_embedding_row_tx_ctx",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean -> relative C 218.9"
+ ],
+ "R_ps": 218.9,
+ "spread_ps": 78.3,
+ "relative_to": "neighbour physical/ref_tile/qkd_embedding_row_tx_ctx_c1b/views/qkd_embedding_row_tx_ctx/insertion.json boundary mean",
+ "outputs": 540,
+ "inputs": 591,
+ "launch_ps": 205.0,
+ "launch_pin": "emb_tx_payload[242]",
+ "capture_ps": 94.1,
+ "capture_pin": "word_data[499]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 70.6,
+ "ff_launch_min_ps": 84.8,
+ "ff_hold_need_ps": -13.8,
+ "relative": {
+  "tt": {
+   "clock_pin": "ck",
+   "rel_min_ps": -21.0,
+   "rel_max_ps": 57.3,
+   "mismatch_ps": 57.3,
+   "offset_ps": 0.0,
+   "comp_ps": 218.9
+  },
+  "ff": {
+   "clock_pin": "ck",
+   "rel_min_ps": -19.7,
+   "rel_max_ps": 50.9,
+   "mismatch_ps": 50.9,
+   "offset_ps": 0.0,
+   "comp_ps": 178.1
+  }
+ },
+ "pass": true,
+ "fail_why": ""
+}

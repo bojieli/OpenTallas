@@ -1,0 +1,39 @@
+{
+  "source_slot_um": [
+    2462.4,
+    2592.0
+  ],
+  "requested_slot_um": [
+    2462.4,
+    4276.8
+  ],
+  "slice_gap_um": 172.8,
+  "baseline_die_um": [
+    32983.2,
+    24300.0
+  ],
+  "reticle_um": [
+    33000.0,
+    26000.0
+  ],
+  "column_pitch_um": 2592.0,
+  "slices": 12,
+  "slot_um": [
+    2462.4,
+    4276.8
+  ],
+  "slot_area_mm2": 10.5312,
+  "cluster_rows_moved_north_um": 1684.8,
+  "moved_cluster_instances": 24,
+  "die_um": [
+    32983.2,
+    25984.8
+  ],
+  "die_mm2": 857.062,
+  "headroom_um": [
+    16.8,
+    15.2
+  ],
+  "kept": "every slice <-> cluster cw / rs link stays face to face; slice <-> slice lateral pitch unchanged; W-column service / PHY origins unchanged",
+  "scope": "planned slot only; GEN relay / reach / clock / bind gates decide"
+}

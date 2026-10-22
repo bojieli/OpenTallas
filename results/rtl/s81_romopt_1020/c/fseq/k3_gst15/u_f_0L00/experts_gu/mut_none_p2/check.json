@@ -1,0 +1,19 @@
+{
+ "summary": {
+  "words": 20,
+  "rows": 9,
+  "complete_rows_at_root": 0,
+  "partial_words": 20,
+  "plan_exact": false,
+  "end": "END edges=1113 ret_words=20 xo_checked=1111 fault=0"
+ },
+ "fixture_rows": 9,
+ "errors": [
+  "PLAN_MISMATCH predicted 20 words, got 20; first diff ((425, 2, (0, 1, 5), 3196386064, 0), (421, 2, (0, 1, 5), 3196386064, 0))"
+ ],
+ "frame": "u_f_0L00",
+ "op": "ffn.experts_gu",
+ "field_phase": 2,
+ "mutant": null,
+ "pass": false
+}

@@ -1,0 +1,142 @@
+{
+ "cur_bound_image": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_bound_image/run.log"
+ },
+ "cur_bound_image_tile_sd0": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_bound_image_tile_sd0/run.log"
+ },
+ "cur_c_rx_codec1": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_c_rx_codec1/run.log"
+ },
+ "cur_kseam_d22bu_bound": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_kseam_d22bu_bound/run.log"
+ },
+ "cur_mut_kseam_rx_torn": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_mut_kseam_rx_torn/run.log"
+ },
+ "cur_mut_kv_run_late": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_mut_kv_run_late/run.log"
+ },
+ "cur_mut_phy_bit": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_mut_phy_bit/run.log"
+ },
+ "cur_mut_result_bit": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_mut_result_bit/run.log"
+ },
+ "cur_mut_status_done": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_mut_status_done/run.log"
+ },
+ "cur_mut_txdp_c_off1": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_mut_txdp_c_off1/run.log"
+ },
+ "cur_no_status_tail": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/cur_no_status_tail/run.log"
+ },
+ "f1_n59_legacy_window": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/f1_n59_legacy_window/run.log"
+ },
+ "f2_kv_status_legacy": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/f2_kv_status_legacy/run.log"
+ },
+ "f2_vk_status_legacy": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/f2_vk_status_legacy/run.log"
+ },
+ "f4_masters_stale_txdp": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/f4_masters_stale_txdp/run.log"
+ },
+ "f7_l0_priced_window": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/f7_l0_priced_window/run.log"
+ },
+ "face_asbuilt": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/face_asbuilt/run.log"
+ },
+ "fin_t256_face_noR": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/fin_t256_face_noR/run.log"
+ },
+ "fin_t256_pvfin_noR": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/fin_t256_pvfin_noR/run.log"
+ },
+ "fin_t8192_face_noR": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/fin_t8192_face_noR/run.log"
+ },
+ "full_gap1": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/full_gap1/run.log"
+ },
+ "mut1_kv_run_late": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/mut1_kv_run_late/run.log"
+ },
+ "mut2_phy_bit": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/mut2_phy_bit/run.log"
+ },
+ "mut3_result_word": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/mut3_result_word/run.log"
+ },
+ "mut4_qslot_late": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/mut4_qslot_late/run.log"
+ },
+ "mut5_kv_status_zero": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/mut5_kv_status_zero/run.log"
+ },
+ "mut_attn_d2d_torn": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/mut_attn_d2d_torn/run.log"
+ },
+ "netlist_c": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/netlist_c/run.log"
+ },
+ "netlist_k": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/netlist_k/run.log"
+ },
+ "pair_mut_kseam_rx_torn": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/pair_mut_kseam_rx_torn/run.log"
+ },
+ "pair_mut_kseam_tx_torn": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/pair_mut_kseam_tx_torn/run.log"
+ },
+ "pair_mut_phy_bit": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/pair_mut_phy_bit/run.log"
+ },
+ "pair_mut_result_bit": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/pair_mut_result_bit/run.log"
+ },
+ "pair_mut_status_done": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/pair_mut_status_done/run.log"
+ },
+ "pair_mut_txdp_c_off1": {
+  "fail_regex": "^XQ_FAIL",
+  "log": "results/rtl/xdie_qwen_1018/cur_r3/pair_mut_txdp_c_off1/run.log"
+ }
+}

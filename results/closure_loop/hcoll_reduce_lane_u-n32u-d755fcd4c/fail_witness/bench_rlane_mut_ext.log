@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hcoll_reduce_lane_u-n32u-d755fcd4c bench bench_rlane_mut_ext host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/hcoll_reduce_lane_u-n32u-d755fcd4c log cl/bench_rlane_mut_ext.a1b1.log captured 2026-10-21T03:42:34-07:00
+# fail_regex 'RS_MUTANT rs_mext REJECTED'
+Verilator 5.050 2026-07-01 rev v5.050
+rs_mext RSPLIT_MISMATCH cyc=32 ref_v=1 spl_v=1 ref_c=15 spl_c=15
+rs_mext RSPLIT_MISMATCH cyc=33 ref_v=0 spl_v=0 ref_c=15 spl_c=15
+rs_mext RSPLIT_EQ FAIL mismatches=136108 publishes=33166 adds=49845
+RS_MUTANT rs_mext REJECTED
+COLL_LP_ARS_RSMUT_EXIT 1

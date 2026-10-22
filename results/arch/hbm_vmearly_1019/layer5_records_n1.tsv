@@ -1,0 +1,45 @@
+layer	op	tag	client	d_edges	exposed_n1	bound
+5	SM.MATVEC	wq_a	xl	44.7	32.7	raw
+5	COLL.ALL_GATHER	x_projections_gather.qa	coll	54.2	50.2	raw
+5	SM.MATVEC	wkv	xl	44.7	0.0	hidden
+5	COLL.ALL_GATHER	x_projections_gather.kvraw	coll	54.2	0.0	hidden
+5	SM.MATVEC	wq_b (head-aligned: head h on die h)	xl	44.7	32.7	raw
+5	DMA.KVWB_DS	window_row_append	dma	27.8	15.8	raw
+5	ATT.QK	attend.qk	xl	44.7	32.7	raw
+5	ATT.PV	attend.pv	xl	44.7	32.7	raw
+5	SM.MATVEC	wo_a K-split: the die's head against its o-group's 1,024 row	xl	44.7	32.7	raw
+5	COLL.GROUP_REDUCE_MCAST	o-group tree reduce (8 contributors) + multicast	coll	54.2	50.2	raw
+5	SM.MATVEC	wo_b	xl	44.7	32.7	raw
+5	COLL.ALL_GATHER	attn_out_gather.y	coll	54.2	50.2	raw
+5	SM.MATVEC	router gate	xl	44.7	32.7	raw
+5	COLL.ALL_GATHER	router_gather.gsc	coll	54.2	50.2	raw
+5	IDX.TOPK	route.top6	idx	181.0	164.0	raw
+5	SM.MATVEC	expert slot 0 w1	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 6 w1	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 6 w3	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 0 w3	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 1 w1	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 1 w3	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 2 w1	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 2 w3	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 3 w1	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 3 w3	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 4 w1	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 4 w3	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 5 w1	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 5 w3	xl	44.7	0.0	hidden
+5	COLL.ALL_GATHER	expert_intermediate_gather.s4	coll	54.2	50.2	raw
+5	COLL.ALL_GATHER	expert_intermediate_gather.s3	coll	54.2	0.0	hidden
+5	COLL.ALL_GATHER	expert_intermediate_gather.s1	coll	54.2	0.0	hidden
+5	SM.MATVEC	expert slot 1 w2	xl	44.7	32.7	raw
+5	COLL.ALL_GATHER	expert_intermediate_gather.s5	coll	54.2	0.0	hidden
+5	SM.MATVEC	expert slot 4 w2	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 3 w2	xl	44.7	0.0	hidden
+5	COLL.ALL_GATHER	expert_intermediate_gather.s0	coll	54.2	0.0	hidden
+5	SM.MATVEC	expert slot 0 w2	xl	44.7	0.0	hidden
+5	COLL.ALL_GATHER	expert_intermediate_gather.s2	coll	54.2	0.0	hidden
+5	SM.MATVEC	expert slot 5 w2	xl	44.7	0.0	hidden
+5	SM.MATVEC	expert slot 2 w2	xl	44.7	0.0	hidden
+5	COLL.ALL_GATHER	expert_intermediate_gather.s6	coll	54.2	0.0	hidden
+5	SM.MATVEC	expert slot 6 w2	xl	44.7	32.7	raw
+5	COLL.ALL_GATHER	ffn_out_gather.yf	coll	54.2	50.2	raw

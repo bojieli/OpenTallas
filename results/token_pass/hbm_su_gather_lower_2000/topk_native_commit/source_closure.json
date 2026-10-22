@@ -1,0 +1,66 @@
+[
+  {
+    "top": "ot_hbm_idx_rootctl_static_am",
+    "files": [
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_calendar_static_f32.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_kreg.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv",
+      "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv"
+    ],
+    "macros": [
+      {
+        "module": "ot_sram_1r1w_256x256_m2_r2c2",
+        "file": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+      }
+    ],
+    "blackboxes": [],
+    "unresolved": [],
+    "ambiguous": {}
+  },
+  {
+    "top": "ot_hbm_idx_topk_static_f32",
+    "files": [
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static_f32.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_kreg.sv"
+    ],
+    "macros": [],
+    "blackboxes": [],
+    "unresolved": [],
+    "ambiguous": {}
+  },
+  {
+    "top": "hfd_hgi_vms_glue_sw_t",
+    "files": [
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv"
+    ],
+    "macros": [],
+    "blackboxes": [],
+    "unresolved": [],
+    "ambiguous": {}
+  },
+  {
+    "top": "hfd_vms_bank_native_q0_faces",
+    "files": [
+      "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+      "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+      "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+      "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv"
+    ],
+    "macros": [
+      {
+        "module": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "file": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+      }
+    ],
+    "blackboxes": [],
+    "unresolved": [],
+    "ambiguous": {}
+  }
+]

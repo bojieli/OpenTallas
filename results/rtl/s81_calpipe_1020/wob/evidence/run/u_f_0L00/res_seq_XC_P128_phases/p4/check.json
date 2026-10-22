@@ -1,0 +1,29 @@
+{
+ "summary": {
+  "words": 10,
+  "rows": 10,
+  "complete_rows_at_root": 10,
+  "partial_words": 0,
+  "plan_exact": false,
+  "end": "END edges=2459 ret_words=40 xo_checked=2457 fault=0"
+ },
+ "fixture_rows": 0,
+ "errors": [
+  "MISMATCH edge 368 row 2 lo 0 k 1 got 3c612be8/0 want 3c5b13e8/0",
+  "MISMATCH edge 369 row 3 lo 0 k 1 got bc2a0636/0 want bc27ca36/0",
+  "MISMATCH edge 371 row 8 lo 0 k 1 got 3a3d3ec0/0 want 3a3726c0/0",
+  "MISMATCH edge 372 row 9 lo 0 k 1 got bc437f24/0 want bc429524/0",
+  "MISMATCH edge 376 row 4 lo 0 k 1 got 3d628c12/0 want 3d605012/0",
+  "MISMATCH edge 377 row 5 lo 0 k 1 got bc798834/0 want bc764834/0",
+  "MISMATCH edge 378 row 0 lo 0 k 1 got bda0516e/0 want bda0c66e/0",
+  "MISMATCH edge 379 row 1 lo 0 k 1 got 3b254f10/0 want 3b234710/0",
+  "MISMATCH edge 380 row 6 lo 0 k 1 got bcb16558/0 want bcb3d558/0",
+  "MISMATCH edge 381 row 7 lo 0 k 1 got 3dcfad92/0 want 3dcff512/0",
+  "PLAN_MISMATCH predicted 10 words, got 10; first diff ((368, 2, (0, 1, 2), 1012601832, 0), (368, 2, (0, 1, 2), 1013001192, 0))"
+ ],
+ "frame": "u_f_0L00",
+ "op": "attn.wo_b",
+ "field_phase": 4,
+ "mutant": null,
+ "pass": false
+}

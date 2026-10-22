@@ -136,5 +136,66 @@ class NeighbourCheck(unittest.TestCase):
         r = D.report(self.f, budget=80, region_map=self.spec, families=self.fam, ff_dump=self.f)["neighbour_check"]
         self.assertEqual(r["verdict"], "PASS")
 
+class LandedCrossings(unittest.TestCase):
+    """OWNER 10-20 ~08:50 CLOCK RULE: every region crossing lands in a fixed-latency mesochronous ring; the 80 ps limit
+    applies WITHIN a region only.  A ring-landed cross-region pair (landing token in the net / tile / master, or listed
+    in --landed) is exempt from the neighbour budget (reported; judged against --ring-window-ps when given); a
+    NON-landed cross-region pair over budget still FAILS; --strict-neighbour restores the 10-16 form."""
+    def setUp(self):
+        self.d = tempfile.mkdtemp()
+        self.spec = os.path.join(self.d, "spec.json")
+        json.dump({"trees": [{"name": "W0_a", "balance_group": "W0"}, {"name": "E0_b", "balance_group": "E0"},
+                             {"name": "E1_b", "balance_group": "E1"}, {"name": "hb"}]}, open(self.spec, "w"))
+        self.fam = os.path.join(self.d, "fam.json")
+        json.dump({"core": ["pll/a", "pll/b"], "hbm": ["pll/h"]}, open(self.fam, "w"))
+
+    def run_nb(self, text, **kw):
+        f = os.path.join(self.d, "tt.tsv"); open(f, "w").write(text)
+        ff = os.path.join(self.d, "ff.tsv"); open(ff, "w").write(text.replace("\t1100\n", "\t1000\n"))
+        return D.report(f, budget=80, region_map=self.spec, families=self.fam, ff_dump=ff, **kw)["neighbour_check"]
+
+    def test_unlanded_crossing_over_budget_still_fails(self):
+        r = self.run_nb(NB)
+        self.assertEqual(r["classes"]["neighbour:E0|E1"]["over"], 1)
+        self.assertEqual(r["verdict"], "FAIL")
+
+    def test_landed_net_is_exempt(self):
+        r = self.run_nb(NB.replace("P\tt1\tt2\tn2\n", "P\tt1\tt2\tu_land8_ring/wd[0]\n"))
+        self.assertNotIn("neighbour:E0|E1", r["classes"])
+        c = r["classes"]["landed:E0|E1"]
+        self.assertFalse(c["judged"]); self.assertEqual(c["pairs"], 1); self.assertEqual(c["tt_ps"]["max"], 250.0)
+        self.assertEqual(r["verdict"], "PASS")
+        # strict 10-16 form: the landed crossing is judged at 80 again
+        r = self.run_nb(NB.replace("P\tt1\tt2\tn2\n", "P\tt1\tt2\tu_land8_ring/wd[0]\n"), strict_neighbour=True)
+        self.assertEqual(r["verdict"], "FAIL")
+
+    def test_landed_master_and_list(self):
+        r = self.run_nb(NB.replace("T\tt2/ck\tm\t", "T\tt2/ck\tqfd_landh_w\t"))
+        self.assertIn("landed:E0|E1", r["classes"]); self.assertEqual(r["verdict"], "PASS")
+        lj = os.path.join(self.d, "landed.json"); json.dump({"pairs": [["t2", "t1"]]}, open(lj, "w"))
+        r = self.run_nb(NB, landed=lj)
+        self.assertIn("landed:E0|E1", r["classes"]); self.assertEqual(r["verdict"], "PASS")
+        json.dump({"regions": [["E1", "E0"]]}, open(lj, "w"))
+        r = self.run_nb(NB, landed=lj)
+        self.assertIn("landed:E0|E1", r["classes"]); self.assertEqual(r["verdict"], "PASS")
+
+    def test_ring_window_governs(self):
+        lj = os.path.join(self.d, "landed.json"); json.dump({"pairs": [["t1", "t2"]]}, open(lj, "w"))
+        r = self.run_nb(NB, landed=lj, ring_window_ps=200)
+        c = r["classes"]["landed:E0|E1"]
+        self.assertEqual(c["over_window"], 1); self.assertEqual(r["verdict"], "FAIL")
+        r = self.run_nb(NB, landed=lj, ring_window_ps=300)
+        self.assertEqual(r["classes"]["landed:E0|E1"]["window_margin_ps"], 50.0); self.assertEqual(r["verdict"], "PASS")
+
+    def test_intra_region_landed_name_still_judged(self):
+        # t1 moves into W0 (its tree W0_a): a landing token never exempts an INTRA-region pair from 80 ps
+        t = NB.replace("B\tdc_E0_b_B1/Y\tBUFx24_ASAP7_75t_R\t20\t10\tpll/b\t1050\t960\n",
+                       "B\tdc_W0_a_B2/Y\tBUFx24_ASAP7_75t_R\t20\t10\tpll/a\t1150\t1060\n")
+        t = t.replace("dc_E0_b_B1/Y\t1050\t960", "dc_W0_a_B2/Y\t1150\t1060").replace("P\tt0\tt1\tn1\n", "P\tt0\tt1\tland8_x\n")
+        r = self.run_nb(t)
+        self.assertEqual(r["classes"]["intra:W0"]["over"], 1)
+        self.assertEqual(r["verdict"], "FAIL")
+
+
 if __name__ == "__main__":
     unittest.main()

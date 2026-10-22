@@ -1,0 +1,59 @@
+{
+  "pickle_sha256": "009480cd90d1d06865a7b74d055e424140305060249b4095dd2759aee919835b",
+  "pin_before": [
+    7333.524,
+    27380.787999999997
+  ],
+  "pin_after": [
+    7731.912,
+    27588.922870199935
+  ],
+  "pin_definition": [
+    "face",
+    1,
+    "E",
+    "M4",
+    459.32287019993646,
+    1
+  ],
+  "existing_500um_check": {
+    "hops": 19495,
+    "reach_um": 500.0,
+    "violations": 0,
+    "worst": [],
+    "all": []
+  },
+  "reach_405um": {
+    "hops": 19495,
+    "reach_um": 405.0,
+    "violations": 1,
+    "worst": [
+      {
+        "bus": "hrec_rx",
+        "cls": "spine_local",
+        "bits": 552,
+        "um": 433.5,
+        "a": "d2d_kv.rec_rx",
+        "b": "host.rec_rx"
+      }
+    ],
+    "all": [
+      {
+        "bus": "hrec_rx",
+        "cls": "spine_local",
+        "bits": 552,
+        "um": 433.5,
+        "a": "d2d_kv.rec_rx",
+        "b": "host.rec_rx"
+      }
+    ]
+  },
+  "repair_seconds": 6.8721283370032324,
+  "added": [],
+  "unresolved": [
+    {
+      "bus": "hrec_rx",
+      "um": 218.1840000000011
+    }
+  ]
+}

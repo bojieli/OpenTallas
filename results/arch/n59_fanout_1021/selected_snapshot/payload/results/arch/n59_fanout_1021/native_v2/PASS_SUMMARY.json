@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "qfd_n59_svc5",
+  "top": "qfd_native59_svc_obs1",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 76016,
+  "max_dynamic_loads": 32,
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qfd_native59_svc_obs1_asap7_ref_census/base/1_2_yosys.v",
+    "sha256": "a24680815896e0289386b5f70f8b929d391c076e33e20ea17dc41c4efc656dc5"
+  },
+  "role_errors": [],
+  "violations": [],
+  "source_commit": "5af330d09",
+  "proof_commit": "6f537f2d6",
+  "unit": "oth-ubuntu-2318184-1792644482",
+  "host": "ot-gold1",
+  "full_report_sha256": "e670b02465608d9b730993bb033db0398c84ce7f00963371c93454e1cd39949e",
+  "full_report_remote": "/srv/opentallas-scratch/claude/codex-n59-fanout-native-2000/native_v2/census/work/orfs/native_census.json",
+  "scope": "strict mapped native census; functional behavior independently tested",
+  "wrapper_exit": 1,
+  "wrapper_note": "Native-only hook exits before floorplan output; inspect retained floorplan log separately. Census PASS is explicit."
+}

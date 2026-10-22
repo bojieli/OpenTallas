@@ -1,0 +1,131 @@
+{
+  "source": "f9753ee142a0ce191b0a60b4f885f404712ac35a",
+  "view_record": "0d4ba50ed",
+  "files": [
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+      "sha256": "4ff2277323f183b987020f57000ba33b9b4aaac8f63a8916e3a384fe98ed6954",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+      "sha256": "c3fd0c31291fc694200c2ec146cfb294c4bf3a042e7bfc73327e071e087ded7a",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+      "sha256": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+      "sha256": "aa0cf52b30c907d061064c0653da384edb4d1f475e35e0c3e1526d5511c636cf",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+      "sha256": "893675838e94c9fb2f5f54419417d0be3f13e3e9ac727b8e7784618f5695bdaf",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/common/ot_fwd_link_stage.sv",
+      "sha256": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+      "sha256": "08b22f64bc851aa681eeb0717c501b9fd82ab69b21c3fe2953dbaea3cfe3c99d",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+      "sha256": "8b95ede44bf070b8c1c47f03952b69d4c77763b6f433573c922302ef863f62b0",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+      "sha256": "9aa2031ad6365b055e1befd12188b474e8f72f8a9934b3dbb255cab922810b82",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+      "sha256": "62c40e5e1221e71291f3baaa4fb4c4c914fb7735d952888646fbe5b3a9462706",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+      "sha256": "ff63f419d7a2d7bbe20f254261a1fa554e6013eb86b66f57ccf7a48fdf05d029",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+      "sha256": "009f11d2d81bfbf477cefffa0d88ff024328b66c938cdd2f48049752538fffb1",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "main_identical": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv",
+      "sha256": "6ca92536c22eeabb7388a5c35c15ca868fee2c3e992f41b9269431f438c53b2d",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_parts.sv",
+      "sha256": "d73b81d4bd6517ac5eef0f672e45c5ca80b6241a321c581abd79df25fe563a1c",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_slice.sv",
+      "sha256": "a82cff4b227ab484029532cf20fa7f5959e99bd83cb5e0a859b311dbfbe4cc4c",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_hq_tile.sv",
+      "sha256": "fbdcbd02a4fcd8085d9017ca245606ba56c68a897058a0afb09193003505f194",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+      "sha256": "8207af6a447e47c327fdfd301ca3667046a8f2f0428473b805b47f6e5ebac8da",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/lib/ot_sram_showahead_1r1w.sv",
+      "sha256": "0a39a8d56f12b5ec1ca6d2a168123bd8353743e4baedf7cd3310a6967b49612e",
+      "main_identical": false
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv",
+      "sha256": "1292158831d9468c2a29130f8338ba56a327c34d0699d121129b062376610a3c",
+      "main_identical": false
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+      "sha256": "8c582d0e44734e4277c2036a8130ea16deea003aea5bb52dd483a25ffc139dae",
+      "main_identical": true
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v",
+      "sha256": "abcda04ef59dc8c8056b48e3d1b1aab255d4d3713d658644e57a6638974799ba",
+      "main_identical": true
+    },
+    {
+      "path": "physical/ref_tile/s81dvbk_sq_hk2l/spec.json",
+      "sha256": "41df3985f4bb4361a2c4aae29e682bfb2024344dfcc1d4cb693152908005ae30",
+      "main_identical": false
+    },
+    {
+      "path": "results/arch/s81_topk7_1020/run_hq_layer.sh",
+      "sha256": "f6bef49b148c34e5716fa87b5297342d4c8c85267933cf62f0deff2ce9605010",
+      "main_identical": false
+    }
+  ]
+}

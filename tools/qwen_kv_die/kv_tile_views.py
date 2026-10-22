@@ -31,6 +31,7 @@ kv_static_params.py runs check() on the die chain's die_bound.v when RUN/tile_vi
 """
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -85,7 +86,8 @@ def view_source(vdir):
     p = vdir / 'provenance' / 'view_export.abstract.json'
     if not p.exists():
         return None, None
-    m = re.search(r'closure-loop/([^/"]+)-([0-9a-f]{9})/', p.read_text(errors='replace'))
+    # QKC-GRP 10-21: the run dir may carry a stage suffix after the sha (qkd_kvs_grp_h_s7c-grp_h_s7c-71f891b9b-bench)
+    m = re.search(r'closure-loop/([^/"]+?)-([0-9a-f]{9})(?:-[A-Za-z0-9_]+)?/', p.read_text(errors='replace'))
     if not m:
         return None, None
     full = git('rev-parse', '--verify', '-q', m.group(2) + '^{commit}')
@@ -120,7 +122,18 @@ def wrapper_edges(text):
     return buses, int(r.group(1)) if r else 0
 
 
+VIEW_ENV = {'qkd_kvs_grp_s6c': 'OT_KV_GRP_VIEW', 'qkd_kvs_grp_h_s6c': 'OT_KV_GRP_H_VIEW'}
+
+
 def candidates(master, vm):
+    """QKC-GRP 10-21: OT_KV_GRP_VIEW / OT_KV_GRP_H_VIEW = auto (default: every kit view by top) | 0 (frame) |
+    physical/ref_tile/<kit>/views/<vm> (explicit view; still judged)"""
+    sel = os.environ.get(VIEW_ENV.get(master, ''), 'auto') if master in VIEW_ENV else 'auto'
+    if sel == '0':
+        return []
+    if sel != 'auto':
+        vdir = ROOT / sel
+        return [(vdir.parent.parent.name, vdir)] if (vdir / f'{vm}.lef').exists() else []
     out = []
     for kd in sorted((ROOT / REF).glob('qkd_kvs_*')):
         vdir = kd / 'views' / vm
@@ -153,7 +166,11 @@ def judge(master, vm, kit, vdir, die_rtl, die_text, charge, KSD):
     if not spec_txt:
         return dict(r, verdict='REFUSE', why=f'kit spec absent at the view source {src[:9]}')
     spec = json.loads(spec_txt)
-    tfile = [s for s in spec.get('sources', []) if re.search(r'/qkd_kvs_tiles\w*\.sv$', s)]
+    # QKC-GRP 10-21: a master the die binds from its own standalone file (OT_KV_GRP_S6C: qkd_kvs_grp{,_h}_s6c.sv) is
+    # judged against that file: the kit's tile file is the spec source equal to the die binding file
+    tfile = [s for s in spec.get('sources', []) if re.search(r'/qkd_kvs_tiles\w*\.sv$', s) or s == die_rtl]
+    if not tfile and vm.endswith('_fl'):
+        return whole_tile(r, master, vm, kit, src, spec, charge, KSD)
     if len(tfile) != 1:
         return dict(r, verdict='REFUSE', why=f'kit tile file not unique in the spec sources: {tfile}')
     kmod = module_text(show(src, tfile[0]), master)
@@ -188,6 +205,49 @@ def judge(master, vm, kit, vdir, die_rtl, die_text, charge, KSD):
     return dict(r, verdict='PASS', why='tile RTL identical, sources unchanged, face edges = die charges')
 
 
+def whole_tile(r, master, vm, kit, src, spec, charge, KSD):
+    """KV-BIND4 10-19: a face-landed kit whose sources are a hand-written WHOLE tile (no generated qkd_kvs_tiles file, e.g.
+    qkd_kvs_attn_rv3 = qkd_kvs_attn_fl_r16 around qkd_kvs_attn_r16).  The die binds exactly that wrapper (kv_static_die
+    bindings: module <master>_fl, file = the kit's face_land source), so identity = (1) the die's selected face-land kit IS
+    this kit, (2) every kit source byte-identical (git blob) between the view source commit and HEAD, (3) the kit spec
+    parameters == the parameters the die binds on the instance, (4) the same face-edge rule as generated tiles."""
+    fk = next((k for k, v in KSD.FACE_LAND_TILES.items() if v['master'] == master), None)
+    if fk is None or KSD.FACE_LAND_TILES[fk]['kit'] != kit:
+        return dict(r, verdict='REFUSE', why=f'whole-tile kit {kit} is not the die face-land kit '
+                    f'{KSD.FACE_LAND_TILES.get(fk, {}).get("kit")} for {master}')
+    wf = [s for s in spec.get('sources', []) if s.startswith('rtl/lib/face_land/')]
+    if len(wf) != 1:
+        return dict(r, verdict='REFUSE', why=f'whole-tile kit {kit}: {len(wf)} face_land wrapper sources')
+    b = KSD.bindings().get(master) or {}
+    r.update(kit_tile_file=None, die_tile_file=b.get('file'), identity='whole_tile')
+    if b.get('module') != vm or b.get('file') != wf[0]:
+        return dict(r, verdict='REFUSE', why=f'die binds {b.get("module")} from {b.get("file")}, the view is {vm} from {wf[0]}')
+    changed = [s for s in spec.get('sources', []) if blob(src, s) is None or blob(src, s) != blob('HEAD', s)]
+    if changed:
+        return dict(r, verdict='REFUSE', why=f'kit sources changed since the view source {src[:9]}: {changed[:6]}')
+    kp = {k: str(v) for k, v in (spec.get('params') or spec.get('parameters') or {}).items()}
+    dp = {k: str(v) for k, v in (b.get('parameters') or {}).items()}
+    r['parameters'] = dict(kit=kp, die=dp)
+    if kp != dp:
+        return dict(r, verdict='REFUSE', why=f'kit parameters {kp} != die instance parameters {dp}')
+    eff = effective(spec)
+    wbuses, wrst = wrapper_edges(show(src, wf[0]))
+    got = dict(pin_in=eff['pin_in'], pin_out=eff['pin_out'], land=wbuses)
+    want = dict(pin_in=0, pin_out=0, land=charge.get('land', {}))
+    rst = wrst + eff['reset_landing_stages']
+    rr = KSD.FACE_LAND_TILES[fk]['rst_release']
+    r.update(edges=dict(view=got, die_charges=want, reset_release=dict(view=rst, face_land_relay=wrst,
+                                                                       reset_landing=eff['reset_landing_stages'],
+                                                                       die_charges=rr, budget=KSD.FACE_LAND_RST_BUDGET)))
+    if got != want:
+        return dict(r, verdict='REFUSE', why=f'closed view adds edges the die schedule does not charge: view {got} vs die {want}')
+    if rst != rr:
+        return dict(r, verdict='REFUSE', why=f'reset release: view +{rst} vs die startup charge +{rr}')
+    if rst > KSD.FACE_LAND_RST_BUDGET:
+        return dict(r, verdict='REFUSE', why=f'reset release +{rst} exceeds the region hold budget {KSD.FACE_LAND_RST_BUDGET}')
+    return dict(r, verdict='PASS', why='whole-tile kit: sources unchanged, parameters = die binding, face edges = die charges')
+
+
 def select():
     KSD = _ksd()
     die_rtl = KSD.RTL_FILE
@@ -207,13 +267,23 @@ def select():
         if landed:
             t = KSD.FACE_LAND_TILES[fk]
             charge = dict(land={k: v for k, v in t.items() if k not in ('master', 'kit', 'rst_release')})
-        rows = [judge(mst, vm, k, v, die_rtl, die_text, charge, KSD) for k, v in candidates(mst, vm)]
+        b_ = KSD.bindings().get(mst) or {}
+        d_rtl, d_text = die_rtl, die_text
+        if b_.get('module') == mst and b_.get('file') and b_['file'] not in (die_rtl, getattr(KSD, 'PUBLIC_RTL_FILE', die_rtl)):
+            d_rtl = b_['file']
+            d_text = (ROOT / d_rtl).read_text(errors='replace') if (ROOT / d_rtl).exists() else show('HEAD', d_rtl)
+        rows = [judge(mst, vm, k, v, d_rtl, d_text, charge, KSD) for k, v in candidates(mst, vm)]
         ok = [x for x in rows if x['verdict'] == 'PASS']
         if ok:
             def when(x):
                 o = git('show', '-s', '--format=%ct', x['source_commit'])
                 return int(o.strip()) if o else 0
-            best = max(ok, key=when)
+            # Owner-selected CLOSED baseline. Identity, parameters and edge
+            # charges above still decide eligibility; the RoPE master is distinct.
+            preferred = ('qkd_kvs_emb_z3a', 'qkd_kvs_emb_z3b') if mst == 'qkd_kvs_emb' else ()
+            best = next((x for kit in preferred for x in ok if x['kit'] == kit), None)
+            if best is None:
+                best = max(ok, key=when)
             tiles[mst] = dict(verdict='BIND', face_land=landed, bind=best, considered=rows)
         else:
             tiles[mst] = dict(verdict='ASSUMED', face_land=landed, why='no closed view passes identity + edges' if rows

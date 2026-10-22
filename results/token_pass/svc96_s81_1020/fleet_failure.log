@@ -1,0 +1,53 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: ot-epyc9       admits  1060 GB (avail 846, growth 104, headroom 0, waiters 0/0 GB) load 96/128 running 36 disk 107 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-token-svc96-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2530564-1792559799 after 0 s
+XS_CAP_DEDUP exp_n1 frames 96 classes 15 compiled 28
+XS_CAP {"id": "exp_n1", "vdepth": null, "experts": 1, "dense_layer": null, "frames": 96, "faults": 96, "first_fault": {"frame": "u_f_0L10", "fault": "AssertionError(('a_proj one-phase capacity', 'wq_a', 320, 69))", "seconds": 0.1}, "q_max_fill": null, "q_max_fill_identity": null, "q_fill_pct": null, "q_margin_words": null, "worst_frame": null, "bf_max_fill": null, "bf_fill_pct": null, "cfg7_phases": null, "cfg7_margin": null, "stream_dedup_words": null, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 0, "layout_identical_all": true, "pass": false, "seconds": 0.7}
+XS_CAP_DEDUP exp_n2 frames 96 classes 15 compiled 28
+XS_CAP {"id": "exp_n2", "vdepth": null, "experts": 2, "dense_layer": null, "frames": 96, "faults": 96, "first_fault": {"frame": "u_f_0L10", "fault": "AssertionError(('a_proj one-phase capacity', 'wq_a', 320, 69))", "seconds": 0.0}, "q_max_fill": null, "q_max_fill_identity": null, "q_fill_pct": null, "q_margin_words": null, "worst_frame": null, "bf_max_fill": null, "bf_fill_pct": null, "cfg7_phases": null, "cfg7_margin": null, "stream_dedup_words": null, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 0, "layout_identical_all": true, "pass": false, "seconds": 0.7}
+XS_CAP_DEDUP exp_n3 frames 96 classes 15 compiled 28
+XS_CAP {"id": "exp_n3", "vdepth": null, "experts": 3, "dense_layer": null, "frames": 96, "faults": 96, "first_fault": {"frame": "u_f_0L10", "fault": "AssertionError(('a_proj one-phase capacity', 'wq_a', 320, 69))", "seconds": 0.1}, "q_max_fill": null, "q_max_fill_identity": null, "q_fill_pct": null, "q_margin_words": null, "worst_frame": null, "bf_max_fill": null, "bf_fill_pct": null, "cfg7_phases": null, "cfg7_margin": null, "stream_dedup_words": null, "calendar_rows": 0, "calendar_margin": 4096, "expert_phases": 0, "layout_identical_all": true, "pass": false, "seconds": 0.9}
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/multiprocessing/pool.py", line 48, in mapstar
+    return list(map(*args))
+  File "/srv/opentallas-scratch/claude/codex-token-svc96-1020/root/tools/s81_dv/layer_prog/xs_capacity.py", line 234, in _sig
+    return frame, frame_signature(_die(die_src), frame, str(Path(fixroot) / fix), spec)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-token-svc96-1020/root/tools/s81_dv/layer_prog/xs_capacity.py", line 216, in frame_signature
+    p0 = [] if spec.get('dense_layer') is None else LX.placement(die, sl, LX.load_fixture(fixd))[1][j]['rows']
+                                                    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-token-svc96-1020/root/tools/s81_dv/layer_prog/lower_xs.py", line 187, in placement
+    assert 0 < nf <= nrows and nrows <= nf * ROWS_PER_FRAME, ('a_proj one-phase capacity', name, nrows, nf)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('a_proj one-phase capacity', 'wq_a', 320, 69)
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-token-svc96-1020/capacity96.py", line 40, in <module>
+    sys.exit(XC.main())
+             ~~~~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-token-svc96-1020/root/tools/s81_dv/layer_prog/xs_capacity.py", line 412, in main
+    return dict(run=cmd_run, bound=cmd_bound, verdict=cmd_verdict)[a.cmd](a)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch/claude/codex-token-svc96-1020/root/tools/s81_dv/layer_prog/xs_capacity.py", line 300, in cmd_run
+    sig = dict(pool.map(_sig, [(a.die_src, a.fixtures_root, spec, f, env) for f in frames], chunksize=1))
+               ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/multiprocessing/pool.py", line 367, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/multiprocessing/pool.py", line 774, in get
+    raise self._value
+AssertionError: ('a_proj one-phase capacity', 'wq_a', 320, 69)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2530564-1792559799): exit 1

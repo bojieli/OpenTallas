@@ -1,0 +1,13 @@
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 1 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 2 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 3 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 4 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 5 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 6 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 7 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 8 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 9 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 10 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 11 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 12 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4875 ret_words=216 xo_checked=4873 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 144 phases 12 rows 72 fixture_rows 72 go0 63 last_ret 1995 span 1932 errors 4 ['FAULT edge 460 status 11 lx 0', 'FAULT edge 461 status 11 lx 0', 'FAULT edge 462 status 11 lx 0']

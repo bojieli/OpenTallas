@@ -1,0 +1,26 @@
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------------------------------------------------
+// S81-IDX3R (10-20, tree MU.BAL.SX.3, LEAD9 decision 13:55 option (c)): dsdv_idx_rg3, the NON-INLINE paired index
+// reader of the S81-DV p4l-MU die (mu7, 122 frames).  Same reader as dsdv_idx_rg2 (S81-L20RD3 69e03df35: walker, slot
+// table, landing, hardened-slice engine, assembler, fail-closed gather slots, chains, beat format, MUT 1/3/4/6/7) --
+// generated from it by results/rtl/s81_idx3r_1020/mk_rg3.py, which rewrites ONLY the HBM faces -- but placed in a PHY
+// corner strip as a static-slot CLIENT of the two controllers of its pair (dsfd_ctrl_rg3), instead of in-line on the
+// svc_rs <-> controller rq / rd links (those stay 682 / 562 b straight down, unchanged).
+//
+// HBM faces (u = 2 r + q: region r of the pair, pseudo-channel parity q; one lane a PC, no lane sharing, no arbiter):
+//   rqo[46u +: 46] = {tag10, len 4, addr 30, sl, v}   request lane -> controller r, PC q (read-only command)
+//                    tag10 = tag[14:5] of the reader tag {2'b11, g, slot 3, cell 4, sc, slot[3], 5'b0}
+//                    sl    = the reader window (job active: header -> window done), the controller's compiled reader-
+//                            slot calendar: inside it the controller feeds this lane's requests into the PC, svc_rs
+//                            never issues there (a slice word in a reader slot is a controller fault)
+//   rri[272u +: 272] = {data 256, tag10, beat 4, pop, v}   response lane <- controller r, PC q
+//                    v / data / tag10 / beat: a response beat in the reader-tag range (tag[16:15] = 2'b11)
+//                    pop: one request of this lane left the controller's landing FIFO (dsfd_ctrl_rg3 RFD entries)
+// BUDGET: own_n = requests issued - pops seen; a request issues only while own_n < DQR (= the controller's RFD).  The
+// pop returns over the fixed lane latency, so own_n >= the FIFO occupancy: the FIFO never overflows (static, no
+// credits on the lane: the HBM boundary's elastic take stays inside the controller, owner 10-14/15).
+// Latency vs dsdv_idx_rg2 (fixed per pair, set by the die's relay stations s each way): request +s + 3 controller
+// edges, response +s + 1; absorbed by the run-ahead window T0 (static schedule; priced in lanes/S81-IDX3R.md).
+// MUT (bench negative controls): 1 / 3 / 4 / 6 / 7 as dsdv_idx_rg2; 2 = budget ignored (controller FIFO overflow
+// must raise the controller fault), 5 = response beats of odd cells lost (slot never ready: fail-closed late words).
+// ---------------------------------------------------------------------------------------------------------------------

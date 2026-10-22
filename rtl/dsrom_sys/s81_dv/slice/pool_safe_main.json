@@ -1,0 +1,25 @@
+{
+  "variant": "main",
+  "top": "ot_s81sl_cmp_pool",
+  "copy_factor": 1,
+  "table_bits_per_copy": 2,
+  "generator": "tools/s81_dv/rtlgap_sukv_1021/pool_safe_source.py",
+  "inputs_sha256": {
+    "tools/s81_dv/rtlgap_sukv_1021/pool_safe_template.sv": "cfe1e6419bb8795d32aaeaf16e04dc55a78dd0fd3e3679152a51f964eb18c1f4",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b"
+  },
+  "generated_sha256": "06bae7a49b4b2a98f2583b67db88fe17f6298f7aa49235efbd2354f946daac2e",
+  "unit_latency": {
+    "add": 6,
+    "mul": 7,
+    "div": 35,
+    "exp": "7 LM + 8 LA + 6"
+  },
+  "original_unit_latency": {
+    "add": 4,
+    "mul": 5,
+    "div": 33,
+    "exp": "7 LM + 8 LA + 4"
+  },
+  "qualification": "UNQUALIFIED until numeric (positive + swap_kv) and native census outcomes"
+}

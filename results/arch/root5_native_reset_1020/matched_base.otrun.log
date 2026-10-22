@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: ot-epyc7       admits   862 GB (avail 704, growth 101, headroom 0, waiters 0/0 GB) load 46/96 running 22 disk 5490 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root5-shared-bytes-1020
+ot-run: -> ot-epyc7
+ot-heavy: request 24G is charged 9G (class 'set:R=$PWD' measured peak 0.8G, n=1+0 proved); the cap stays 24G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3314265-1792496027 after 0 s
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3314265-1792496027): exit 1

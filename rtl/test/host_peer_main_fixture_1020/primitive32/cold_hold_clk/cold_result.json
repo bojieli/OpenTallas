@@ -1,0 +1,13 @@
+{
+  "passed": false,
+  "mutant": "hold_clk",
+  "independent_initial_state": true,
+  "opt_merge": false,
+  "ignore_unknown_cells": false,
+  "macro_abstraction": "proof-only singleton shared unconstrained 546bit read stream per actual SRAM; no macro clones",
+  "copied_output_pairs": 477,
+  "reset_assert_steps": 12,
+  "reset_release_steps": 12,
+  "checked_steps": "12..24",
+  "source_sha256": "1bc03759a342760bb3fedf1033487de9333af94695f6a958a1997f240c858bb3"
+}

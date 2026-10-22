@@ -1,0 +1,4 @@
+PASS LOCKSTEP seed=1 segs=600 cycles=146682 writes=76745 dones=292
+PASS LOCKSTEP seed=2 segs=600 cycles=149914 writes=77984 dones=299
+PASS LOCKSTEP seed=3 segs=600 cycles=148178 writes=77812 dones=308
+LOCKSTEP_GATE PASS

@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsdv_gunit_l5.lef",
+    "sha256": "c954764a6d6990990e7dd023921d88e98e7034246f9cf91bf7cae35324abb258"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/dsdv_gunit_l5-g3-37cf95cf2/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/dsdv_gunit_l5-g3-37cf95cf2/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/dsdv_gunit_l5-g3-37cf95cf2/record/views/dsdv_gunit_l5/provenance/raw/dsdv_gunit_l5.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/dsdv_gunit_l5-g3-37cf95cf2/record/views/dsdv_gunit_l5/provenance/dsdv_gunit_l5.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 4267 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/dsdv_gunit_l5-g3-37cf95cf2/record/views/dsdv_gunit_l5/provenance/dsdv_gunit_l5.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsdv_gunit_l5 345.6 x 302.4: PG M5 VDD 64 stripes (98% spread, 100% cov) / VSS 64 stripes (98% spread, 100% cov); strap M6; face pins 1861 blocked-above 0 blocked-same 0; clock clk insertion 552 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsdv_gunit_l5",
+      "W": 345.6,
+      "H": 302.4,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 64,
+            "dir": "V",
+            "spread": 0.984,
+            "coverage": 1.0,
+            "shapes_on_top": 64
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 64,
+            "dir": "V",
+            "spread": 0.984,
+            "coverage": 1.0,
+            "shapes_on_top": 64
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1861,
+        "blocked_above": 0,
+        "covered_below": 124,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 551.8,
+          "min_ps": 370.54
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 4267
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "dsdv_gunit_l5.lef",
+    "sha256": "531114aa3182011d69d21d9f2cf0e5d2ec3a8eb00edabeb153b18ee5ffed8ea9"
+  }
+}

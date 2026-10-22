@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-toksched/src
+ot-run: ot-epyc6       admits   167 GB (avail 230, growth 113, headroom 0, waiters 0/0 GB) load 56/128 running 44 disk 2420 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-toksched/src
+ot-run: ot-epyc9       admits  1110 GB (avail 895, growth 117, headroom 0, waiters 0/0 GB) load 85/128 running 32 disk 145 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-toksched/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-toksched/src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1064335-1792558275 after 1 s
+ot-epyc9
+{"cycles": 261667, "tok_s": 4587.8, "chained": 7160, "l0_cold": 7694, "pct_measured": 61.2, "pct_rel": 61.2, "vs_price": -4.64, "by": {"REL": 160041, "PLAN_GAP": 1297, "PRICED": 32683, "DIAG": 67646}, "die_edges_per_layer": 625, "sched_added_per_layer": 834, "u4": 12223.7, "variants": {"variant_plan": [4723.6, 12565.8], "variant_asbuilt": [4734.7, 12592.8]}}
+67a409b5112595bc613238ce81be76b5ae43c95320b2f111787df00e439e2ab1  ../cycles_fleet.json
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1064335-1792558275): exit 0

@@ -1,0 +1,101 @@
+ar: 50 users x 950.6 = 47529 agg; period 1262388; bound {'cycles': 23495, 'stage': 'R007'}; checker PASS (34250 windows, 0 coll); N+1 FAULT; inject FAULT
+mtp: 6 users x 2957.6 = 17745 agg; period 1687464; bound {'cycles': 259011, 'stage': 'R091'}; checker PASS (17406 windows, 0 coll); N+1 FAULT; inject FAULT
+{
+ "composer": "tools/toksim_s81_compose.py --scenario calpipe + S81-ROMOPT o3mix compiled spans (results/rtl/s81_romopt_1020/c/compose/o3mix_prop_compiled.json.gz)",
+ "ar": {
+  "T_composer": 1153402.6,
+  "tok_s_composer": 1040.4,
+  "pct_measured": 69.74,
+  "cal2_structural": 2418,
+  "added_hops": 100067,
+  "forward_x_chain_delta": 40001.0,
+  "T": 1262387.6,
+  "tok_s": 950.6
+ },
+ "mtp": {
+  "T_composer": 1562863.8,
+  "tok_s_composer": 3193.4,
+  "pct_measured": 61.15,
+  "cal2_structural": 2556,
+  "added_hops": 100067,
+  "forward_x_chain_delta": 40001.0,
+  "wave_composer": 199775.0,
+  "wave_physical": 239305.0,
+  "T": 1687460.8,
+  "tok_s": 2957.6,
+  "schedule_law": "position-major stages (6 W - 5 scan), every position message serialised on its LINK5 circuit and propagated (arrival = send + HOP) to the receiving item; heads a position, then the draft tail"
+ },
+ "partial_add_cycles": 82.0,
+ "partial_add_grade": "priced (= measured eng.add SU add instance)",
+ "release241": {
+  "offchip": "direct",
+  "links_serial": true,
+  "land": true,
+  "attn": "G4",
+  "idx_lat": 40,
+  "eng_age": 640,
+  "eng_ii": 704,
+  "mtp_law": "pipeline",
+  "hop": 827,
+  "hop_head": 818,
+  "x_flat_stage_hop": 382,
+  "land_lead": 447,
+  "d_cycles": {
+   "tp_mesh": 257,
+   "stage_hop": 272,
+   "head_hop": 263
+  },
+  "hop_latency": "results/arch/release_rack_1021/hop_latency.json @4b528ad2b",
+  "node_override": {
+   "ar": {
+    "T_before": 1153402.6,
+    "T_after": 1119901.6,
+    "delta": -33501.0,
+    "critical_by_op": {
+     "attn:attn.a_allgather": -7840.0,
+     "attn:attn.idx.score": 320.0,
+     "attn:attn.idx.topk_merge": -1568.0,
+     "attn:attn.out_allreduce": -15680.0,
+     "attn:attn.rows_allgather": -1568.0,
+     "attn:attn.scores": 19200.0,
+     "ffn:ffn.combine_allreduce": -15680.0,
+     "ffn:ffn.router_allgather": -7840.0,
+     "head:head.argmax_merge": -196.0,
+     "head:head.hop": -190.0,
+     "substage_hop0:substage_hop0": -7240.0,
+     "substage_hop1:substage_hop1": -3077.0,
+     "unplaced_hops:unplaced_hops": -11222.0
+    }
+   },
+   "mtp": {
+    "T_before": 1562863.8,
+    "T_after": 1505306.8,
+    "delta": -57557.0,
+    "critical_by_op": {
+     "attn:attn.a_allgather": -8428.0,
+     "attn:attn.idx.score": 320.0,
+     "attn:attn.idx.topk_merge": -1568.0,
+     "attn:attn.out_allreduce": -16856.0,
+     "attn:attn.rows_allgather": -1568.0,
+     "attn:attn.scores": 19200.0,
+     "ffn:ffn.combine_allreduce": -16856.0,
+     "ffn:ffn.router_allgather": -8428.0,
+     "head:head.argmax_merge": -196.0,
+     "head:head.hop": -190.0,
+     "hop_in:hop_in": -543.0,
+     "substage_hop0:substage_hop0": -7240.0,
+     "substage_hop1:substage_hop1": -3077.0,
+     "unplaced_hops:unplaced_hops": -11222.0,
+     "wave:wave.hop": -905.0
+    }
+   }
+  },
+  "dense2": true,
+  "dense2_ser": 8,
+  "eng_stages": [
+   "R007",
+   "R085"
+  ],
+  "host": "MODEL S81.HOST option (b), not connected production programme: local calendar job start; host plane = head die only (HOST_TOK a token a user), no host / KS frame on stage circuits"
+ }
+}

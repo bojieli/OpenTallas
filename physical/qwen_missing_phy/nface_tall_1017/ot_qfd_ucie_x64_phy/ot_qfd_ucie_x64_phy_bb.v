@@ -3,6 +3,7 @@
 // Blackbox view for synthesis and place-and-route (the hard macro).
 (* blackbox *)
 module ot_qfd_ucie_x64_phy (
+    output wire lclk,   // QW-GEN5 10-20: the PHY FDI clock output (1.0 GHz), root of the die clk_ucie tree
     input wire clk,
     input wire rst_n,
     output wire tx_up,

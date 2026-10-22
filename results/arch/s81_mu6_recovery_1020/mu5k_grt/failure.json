@@ -1,0 +1,89 @@
+{
+  "schema": "opentallas.s81.mu5k.grt_failure.v1",
+  "status": "FAIL_CONGESTION",
+  "chain_status": "LIVE_AFTER_GRT",
+  "sample_pt": "2026-10-20 04:04",
+  "host": "ot-epyc7",
+  "run": "/srv/opentallas-scratch/claude/s81-mu5/case_mu5k",
+  "view_refs": [
+    "804d68ef69adab4aca463317d74bbed100da330d",
+    "43a1311b7d87821c799a9824db88187c0afec7c5"
+  ],
+  "bound_die_sha256": "9ac324e79a0d5960e4fed57cdea9d102cf512743e766b2244e80ae3c34d39d56",
+  "source_case_sha256": "591bf85b210ac3197cd301716971a617c20987bb0f6aebf5859aaa45019e869f",
+  "actual_phy_lef_sha256": "188c0f25011aa87da11f5934085de5bb562966f4d110a5ec0f623d5d12d67a29",
+  "grt_rpt_sha256": "88dd5457e488908f1e6a51cfd16875f6c0f3740f08d72a95d88176d10029ffc1",
+  "run_log_sha256": "a7e40a51a16c96b0c0d6d1c44f638574a3f0d49df502622c801b94b90c344733",
+  "overflow": 854368,
+  "overflow_layers": {
+    "M2": 31574,
+    "M3": 81322,
+    "M4": 332457,
+    "M5": 227272,
+    "M6": 155182,
+    "M7": 26561,
+    "M8": 0,
+    "M9": 0
+  },
+  "wirelength_um": 453706368,
+  "routed_nets": 3847990,
+  "runtime_s": 5183,
+  "hotspot_sample": {
+    "report_items": 16,
+    "bbox_union_um": [
+      15964.8,
+      1248.0,
+      16003.2,
+      1305.6
+    ],
+    "horizontal_items": 10,
+    "vertical_items": 6,
+    "capacity120_usage142_overflow22_items": 14,
+    "capacity190_usage212_overflow22_items": 2,
+    "report_layer_labels": "-; no per-item layer attribution inferred",
+    "primary_names": [
+      [
+        "a_phy_hbm_k_wdata",
+        986
+      ],
+      [
+        "a_phy_hbm_k_wstrb",
+        128
+      ],
+      [
+        "a_phy_hbm_k_addr",
+        120
+      ],
+      [
+        "a_phy_hbm_k_tag",
+        68
+      ],
+      [
+        "a_phy_hbm_kr_tag",
+        17
+      ],
+      [
+        "a_phy_hbm_k_len",
+        16
+      ],
+      [
+        "a_phy_hbm_kr_rdy",
+        4
+      ],
+      [
+        "a_phy_hbm_k_we",
+        4
+      ],
+      [
+        "a_phy_hbm_kr_beat",
+        4
+      ],
+      [
+        "a_phy_hbm_k_v",
+        4
+      ]
+    ]
+  },
+  "sta_status": "NOT_TERMINAL",
+  "clock_status": "NOT_TERMINAL"
+}

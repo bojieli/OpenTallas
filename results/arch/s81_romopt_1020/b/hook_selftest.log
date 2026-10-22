@@ -1,0 +1,27 @@
+++ OT_XS_QPAIRS=12
+++ timeout 60 python3 tools/s81_dv/layer_prog/xs_capacity.py verdict
+XS_CAPCHECK FAULT stage map stage_map.json (release chain of record: 97 TP4 layer stages (388 p4l dies), contiguous experts, balanced): 97 of 97 stages have no exact xs_capacity verdict (run it and xs_stage_map.py merge)
+++ echo rc=1
+rc=1
+++ OT_XS_QPAIRS=12
+++ timeout 60 python3 tools/s81_dv/layer_prog/xs_capacity.py verdict --map /tmp/romoptb_allpass.json
+XS_CAPCHECK PASS
+++ echo rc=0
+rc=0
+++ OT_XS_QPAIRS=12
+++ timeout 60 python3 tools/s81_dv/layer_prog/xs_capacity.py verdict --map /tmp/romoptb_inject.json
+XS_CAPCHECK FAULT stage map romoptb_inject.json (minimum as-built fit: 116 TP4 stages (464 dies; CHAIN CHANGE, not adopted)) overfills 1 of 116 stages; worst R005: q 100.4 % / cfg7 822 phases (limits 100 %, 1024)
+++ echo rc=1
+rc=1
+++ OT_XS_QPAIRS=12
+++ timeout 120 python3 tools/s81_dv/layer_prog/xs_place.py frame --frame u_f_0L00 --fixtures /nonexistent --out /tmp/romoptb_hook_frame
+++ tail -1
+xs_capacity.CompileFault: stage map stage_map.json (release chain of record: 97 TP4 layer stages (388 p4l dies), contiguous experts, balanced): 97 of 97 stages have no exact xs_capacity verdict (run it and xs_stage_map.py merge)
+++ OT_XS_QPAIRS=12
+++ OT_XS_CAPCHECK=0
+++ timeout 120 python3 tools/s81_dv/layer_prog/xs_place.py frame --frame u_f_0L00 --fixtures /nonexistent --out /tmp/romoptb_hook_frame
+++ tail -1
+ValueError: unqualified XR injection timing for RTL SHA e51bcf9e2cd5178ac5524865eecb9a8089cf20a7da919cbb49f342193181a9d2
+++ OT_XS_QPAIRS=10
+++ timeout 60 python3 -c 'import sys;sys.path.insert(0,'\''tools/s81_dv/layer_prog'\'');import xs_capacity as X;print('\''enabled at 10 pairs:'\'',X.enabled())'
+enabled at 10 pairs: False

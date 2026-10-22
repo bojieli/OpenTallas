@@ -1,0 +1,157 @@
+{
+ "PASS": true,
+ "old_predicted": 1105,
+ "new_measured": 1189,
+ "added_edges": 84,
+ "origin": "u_sp.go at63 -> last frame-root RET at1252",
+ "same_ROM_actions_and_issuer": true,
+ "new_record": {
+  "op": "attn.wq_b",
+  "fam": "fp8",
+  "mode": "pipeline",
+  "period": 126,
+  "cfg_lead": 52,
+  "floor": 126,
+  "nphases": 8,
+  "cal_rows": 546,
+  "stream_words": 336,
+  "static": {
+   "checks": {
+    "rows_le_4096": true,
+    "rows_time_ordered_unique": true,
+    "streams_disjoint": true,
+    "tag_reuse_after_retire": true,
+    "tag0_even_x_parity": true,
+    "stream_addr_in_rom": true,
+    "isd_delay_line_le_ND": true,
+    "launch_spacing_eq_period": true,
+    "pipe_replay_period_ge_88": true,
+    "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+    "pipe_cfg_lead_ge_48": true,
+    "period_ge_measured_floor": true
+   },
+   "PASS": true,
+   "below_floor_negative_control": false
+  },
+  "predicted_span": 1189,
+  "span_tail": 307,
+  "span_metric": "spine_go0_to_last_frame_root_ret_edges",
+  "span_evidence": "results/rtl/s81_rom12_codex_1020/fseq12/wq_b/check_P126.json (8ph64rows96RET; P125 FAIL)",
+  "phases": [
+   {
+    "phase": 1,
+    "tag": 0,
+    "accept": 41,
+    "cfg": 51,
+    "launch": 103,
+    "stream": [
+     103,
+     166
+    ],
+    "retire": 174,
+    "nb": 64,
+    "stall_edges": 0
+   },
+   {
+    "phase": 2,
+    "tag": 2,
+    "accept": 167,
+    "cfg": 177,
+    "launch": 229,
+    "stream": [
+     229,
+     292
+    ],
+    "retire": 300,
+    "nb": 64,
+    "stall_edges": 0
+   },
+   {
+    "phase": 3,
+    "tag": 0,
+    "accept": 293,
+    "cfg": 303,
+    "launch": 355,
+    "stream": [
+     355,
+     418
+    ],
+    "retire": 426,
+    "nb": 64,
+    "stall_edges": 0
+   },
+   {
+    "phase": 4,
+    "tag": 2,
+    "accept": 419,
+    "cfg": 429,
+    "launch": 481,
+    "stream": [
+     481,
+     544
+    ],
+    "retire": 552,
+    "nb": 64,
+    "stall_edges": 0
+   },
+   {
+    "phase": 5,
+    "tag": 0,
+    "accept": 545,
+    "cfg": 555,
+    "launch": 607,
+    "stream": [
+     607,
+     670
+    ],
+    "retire": 678,
+    "nb": 64,
+    "stall_edges": 0
+   },
+   {
+    "phase": 6,
+    "tag": 2,
+    "accept": 671,
+    "cfg": 681,
+    "launch": 733,
+    "stream": [
+     733,
+     796
+    ],
+    "retire": 804,
+    "nb": 64,
+    "stall_edges": 0
+   },
+   {
+    "phase": 7,
+    "tag": 0,
+    "accept": 797,
+    "cfg": 807,
+    "launch": 859,
+    "stream": [
+     859,
+     922
+    ],
+    "retire": 930,
+    "nb": 64,
+    "stall_edges": 0
+   },
+   {
+    "phase": 8,
+    "tag": 2,
+    "accept": 923,
+    "cfg": 933,
+    "launch": 985,
+    "stream": [
+     985,
+     1048
+    ],
+    "retire": 1056,
+    "nb": 64,
+    "stall_edges": 0
+   }
+  ],
+  "floor_evidence": "claude/s81-ratefix-1019@ff8fa3745 p126c52 PASS / p124c50 FAIL; claude/s81-wqbp-1020",
+  "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 307 (measured law); die wire / CAP tail not included"
+ }
+}

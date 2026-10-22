@@ -1,0 +1,5 @@
+GROUP_PASS W=68 MUT=0 INIT_CASE=1 edges=363 accepted=244 observed=240 discarded=4 txdrain=4 first_accept=21 predecessor=19 first_output=25
+- tb_grouped_transport.sv:136: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.001 s; speed 5.432 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

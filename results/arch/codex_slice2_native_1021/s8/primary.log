@@ -1,0 +1,2 @@
+PASS RP1 eight payloads -> four words x two banks, exact lo/hi512 and legacyctl masks; ninth return forwarded
+rtl/test/qwen_dv/s8/tb_rp1_crh.sv:37: $finish called at 321000 (1ps)

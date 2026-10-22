@@ -1,0 +1,4 @@
+S2_FAIL tile=g output=af__fault edge=8 side=1 mut=4 dut=1 ref=0
+[7168000] %Fatal: tb_m4.sv:192: Assertion failed in tb.compare
+%Error: /srv/opentallas-scratch/claude/kv-grp2/b1/out/b1/tb_m4.sv:192: Verilog $stop
+Aborting...

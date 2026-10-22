@@ -1,0 +1,9 @@
+{
+  "mutant": "Freeze actual added witness-slot FF copy u_7141 clock",
+  "original_instance": "qfd_bmath_dff_p #(.ID(0)) u_7141(.C(n_2),.D(n_589),.Q(n_8967));",
+  "mutated_instance": "qfd_bmath_dff_p #(.ID(0)) u_7141(.C(1'b0),.D(n_589),.Q(n_8967));",
+  "source_raw_bit": "prog_witness_slot via n_589",
+  "affected_copy_output": "n_8967",
+  "required_failure_regex": "SYSFACE32_WRAPPER_MISMATCH",
+  "scope": "Actual bounded producer copy consumed by record source_copies; no bare-adapter mutant"
+}

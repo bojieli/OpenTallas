@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: ot-epyc9       admits   553 GB (avail 589, growth 202, headroom 0, waiters 0/0 GB) load 80/128 running 46 disk 182 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2074715-1792489430 after 0 s
+EXE v_h10_e2 08da5e9047e92899 Verilator 5.050 2026-07-01 rev v5.050
+SEQ /srv/opentallas-scratch/claude/s81-wqbp/pipe3/vec/L0/u_f_0L01/seq_woa 12 4096 6 5
+WOA_SEQ g01 u_f_0L01 rc=0 P=1200 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 1200 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 13608 span 13545 errors 0 []
+WOA_SEQ g01 u_f_0L01 rc=0 P=352 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 352 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 4280 span 4217 errors 0 []
+WOA_SEQ g01 u_f_0L01 rc=0 P=320 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 320 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 3928 span 3865 errors 0 []
+WOA_SEQ g01 u_f_0L01 rc=0 P=300 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 300 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 3708 span 3645 errors 0 []
+WOA_SEQ g01 u_f_0L01 rc=0 P=280 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 280 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 3488 span 3425 errors 0 []
+WOA_SEQ g01 u_f_0L01 rc=0 P=260 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 260 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 3268 span 3205 errors 0 []
+WOA_SEQ g01 u_f_0L01 rc=0 P=240 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 240 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 3048 span 2985 errors 0 []
+WOA_SEQ g01 u_f_0L01 rc=0 P=232 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 232 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 2960 span 2897 errors 0 []
+WOA_SEQ g01 u_f_0L01 rc=0 P=231 TOKSIM_FGU_SEQ PASS op attn.wo_a PER 231 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 2949 span 2886 errors 0 []
+WOA_SEQ g01 u_f_0L01 rc=0 P=230 TOKSIM_FGU_SEQ FAIL op attn.wo_a PER 230 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 2938 span 2875 errors 11 ["PHASE_FAIL p5: ['MISMATCH edge 401 row 1 lo 1 k 0 got 3d310bfe/0 want 3c809e57/0', 'MISMATCH edge 404 row 0 lo 1 k 0 got bc1e21b3/0 want bc15fd04/0']", "PHASE_FAIL p6: ['MISMATCH edge 401 row 1 lo 2 k 0 got 3c809e57/0 want bcb172b0/0', 'MISMATCH edge 404 row 0 lo 2 k 0 got bc15fd04/0 want bcbfdd0a/0']", "PHASE_FAIL p7: ['MISMATCH edge 401 row 1 lo 3 k 0 got bcb172b0/0 want bc442994/0', 'MISMATCH edge 404 row 0 lo 3 k 0 got bcbfdd0a/0 want bc7dd8ce/0']"]
+WOA_SEQ g01 u_f_0L01 rc=0 P=220 TOKSIM_FGU_SEQ FAIL op attn.wo_a PER 220 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 2828 span 2765 errors 11 ["PHASE_FAIL p5: ['MISMATCH edge 401 row 1 lo 1 k 0 got 3d310bfe/0 want 3c809e57/0', 'MISMATCH edge 404 row 0 lo 1 k 0 got bc1e21b3/0 want bc15fd04/0']", "PHASE_FAIL p6: ['MISMATCH edge 401 row 1 lo 2 k 0 got 3c809e57/0 want bcb172b0/0', 'MISMATCH edge 404 row 0 lo 2 k 0 got bc15fd04/0 want bcbfdd0a/0']", "PHASE_FAIL p7: ['MISMATCH edge 401 row 1 lo 3 k 0 got bcb172b0/0 want bc442994/0', 'MISMATCH edge 404 row 0 lo 3 k 0 got bcbfdd0a/0 want bc7dd8ce/0']"]
+WOA_SEQ g01 u_f_0L01 rc=0 P=200 TOKSIM_FGU_SEQ FAIL op attn.wo_a PER 200 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 2608 span 2545 errors 11 ["PHASE_FAIL p5: ['MISMATCH edge 401 row 1 lo 1 k 0 got 3d310bfe/0 want 3c809e57/0', 'MISMATCH edge 404 row 0 lo 1 k 0 got bc1e21b3/0 want bc15fd04/0']", "PHASE_FAIL p6: ['MISMATCH edge 401 row 1 lo 2 k 0 got 3c809e57/0 want bcb172b0/0', 'MISMATCH edge 404 row 0 lo 2 k 0 got bc15fd04/0 want bcbfdd0a/0']", "PHASE_FAIL p7: ['MISMATCH edge 401 row 1 lo 3 k 0 got bcb172b0/0 want bc442994/0', 'MISMATCH edge 404 row 0 lo 3 k 0 got bcbfdd0a/0 want bc7dd8ce/0']"]
+WOA_SEQ g01 u_f_0L01 rc=0 P=180 TOKSIM_FGU_SEQ FAIL op attn.wo_a PER 180 phases 12 rows 64 fixture_rows 64 go0 63 last_ret 2388 span 2325 errors 11 ["PHASE_FAIL p5: ['MISMATCH edge 401 row 1 lo 1 k 0 got 3d310bfe/0 want 3c809e57/0', 'MISMATCH edge 404 row 0 lo 1 k 0 got bc1e21b3/0 want bc15fd04/0']", "PHASE_FAIL p6: ['MISMATCH edge 401 row 1 lo 2 k 0 got 3c809e57/0 want bcb172b0/0', 'MISMATCH edge 404 row 0 lo 2 k 0 got bc15fd04/0 want bcbfdd0a/0']", "PHASE_FAIL p7: ['MISMATCH edge 401 row 1 lo 3 k 0 got bcb172b0/0 want bc442994/0', 'MISMATCH edge 404 row 0 lo 3 k 0 got bcbfdd0a/0 want bc7dd8ce/0']"]
+WOA_SEQ_DONE g01 u_f_0L01
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2074715-1792489430): exit 0

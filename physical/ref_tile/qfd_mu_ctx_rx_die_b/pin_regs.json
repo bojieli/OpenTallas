@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_mu_ctx_rx_die",
+ "enable": false,
+ "reason": "QW-MU 10-20 (owner 10-20 09:05: pin registers only at region crossings / > 405 um): the leaf sits on the face's clock (clk_d2d) beside qfd_sys_face, on the same D2D RX nets; every output is a flop (ld_q / rec_q / ctx_user / mu_fault); inputs reach flops through the record-check compare (one cone, no in->out path). ctx_x crosses to tt_ctlm's ctx_q pin register (the die's crossing, landed by GEN). rx_payload[511:59] are unread (whole-port GEN endpoint)."
+}

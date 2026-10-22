@@ -1,0 +1,2 @@
+DV_LOWER_MAT od PASS 515/515 mutant=0 fixture=L1_mat_od.npz {"span_cycles": 1555, "isa_gold": "TP8-gold-only (TP8 partial, split 256; no TP4 value)", "collisions": {"o": 0, "down": 0}, "collective_contract": [{"message": "o", "cmd_tag": 0, "words": 256, "tag_mismatch": 255, "last_set": 32, "last_on_final": 1}, {"message": "down", "cmd_tag": 1, "words": 256, "tag_mismatch": 256, "last_set": 32, "last_on_final": 1}], "stn": {"o": 32, "down": 32}}
+rc=0

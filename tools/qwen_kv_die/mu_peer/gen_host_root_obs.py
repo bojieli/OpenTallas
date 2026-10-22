@@ -23,7 +23,7 @@ AXI wires (host lanes: qkd_hr_cluster glue / a new small hard child).
 
 KV-FRAMEPINS 10-20 (--ext, die flag OT_KV_HOST_OBSX=1): the five die observations of EXT_PENDING (dcal adm_done /
 cal_ready / running / layer, the D2D end's recovery_cycles = 41 b) enter the root as inputs obs_dcal_* /
-obs_d2d_recovery_cycles and join the window snapshot above the 1,335 HOST bits (46 words, still inside 0x1900-0x19FF).
+obs_d2d_recovery_cycles and join the window snapshot above the 1,335 HOST bits (47 words, still inside 0x1900-0x19FF).
 Their die buses are kv_oneway relayed buses dcal.dob / dcal.lay / d2d_kv.rcy -> host.odc / odl / odr (kv_static_die
 OBSX).  Module names carry the suffix _obsx so the OBS (no-ext) file stays byte-identical for runs that bind it.
 """

@@ -1,0 +1,26 @@
+{
+ "summary": {
+  "words": 28,
+  "rows": 11,
+  "complete_rows_at_root": 2,
+  "partial_words": 26,
+  "plan_exact": false,
+  "end": "END edges=1041 ret_words=28 xo_checked=1039 fault=0"
+ },
+ "fixture_rows": 11,
+ "errors": [
+  "MISMATCH edge 348 row 10 lo 0 k 0 got 00000000/0 want bc75fcf8/0",
+  "MISMATCH edge 350 row 6 lo 0 k 1 got ba265800/0 want bc29c48c/0",
+  "MISMATCH edge 351 row 7 lo 0 k 1 got 3be1da80/0 want bb4e1b20/0",
+  "MISMATCH edge 352 row 0 lo 0 k 1 got 3bc042f4/0 want bbd1c958/0",
+  "MISMATCH edge 353 row 1 lo 0 k 1 got bc8eff5c/0 want bcd368c0/0",
+  "MISMATCH edge 356 row 4 lo 4 k 2 got 00000000/0 want 3b5fc460/0",
+  "MISMATCH edge 357 row 5 lo 4 k 2 got 00000000/0 want 3bb95548/0",
+  "PLAN_MISMATCH predicted 28 words, got 28; first diff ((348, 10, (0, 0, 5), 3161849080, 0), (348, 10, (0, 0, 5), 0, 0))"
+ ],
+ "frame": "u_f_3L01",
+ "op": "ffn.down",
+ "field_phase": 7,
+ "mutant": "swap",
+ "pass": false
+}

@@ -67,7 +67,26 @@ def test_pvw_variant_anchors():
             continue
         t = KB.pvw_variant(p.read_text())
         assert 'module qkd_pvw_die_tb #(' in t and '.cfg_fia(cfg_age[8*PAIR+:8])' in t
-        assert (ROOT / KB.pvw_file(f)).read_text() == t, f'{KB.pvw_file(f)} stale: kv_bootage.py --pvw {f}'
+        assert (ROOT / KB.pvw_file(f, False)).read_text() == t, f'{KB.pvw_file(f, False)} stale: kv_bootage.py --pvw {f}'
+
+
+
+def test_pvw_variant_floor():
+    """KV-FLOOR1 10-20: the END FLOOR frame = the boot-age frame with module qkd_pvw_die_tbf and u_ctl ctl_tbf END_FLOOR(1)
+    (station rows byte-identical); committed *_bf.sv current; default file / module names unchanged"""
+    for f in ('rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv', 'rtl/qwen_sys/split_20261014/qkd_pvw_die_t_f.sv'):
+        p = ROOT / f
+        if not p.exists():
+            continue
+        a, t = KB.pvw_variant(p.read_text()), KB.pvw_variant_floor(p.read_text())
+        assert 'module qkd_pvw_die_tbf #(' in t and ' ot_qwen_tp8_pv_wide_ctl_tbf #(.FIRST_INPUT_AGE(FIRST_INPUT_AGE),.END_FLOOR(1),' in t
+        assert 'ot_qwen_tp8_pv_wide_ctl_tb #(' not in t
+        da = [l for l in a.splitlines() if l not in t.splitlines()]
+        assert len(da) == 3, da          # header, module line, u_ctl master line only
+        assert KB.pvw_file(f, True).endswith('_bf.sv') and KB.pvw_file(f, False).endswith('_ba.sv')
+        assert KB.pvw_module(True) == 'qkd_pvw_die_tbf' and KB.pvw_module(False) == 'qkd_pvw_die_tb'
+        assert (ROOT / KB.pvw_file(f, True)).read_text() == t, f'{KB.pvw_file(f, True)} stale: kv_bootage.py --pvw {f} --floor'
+    assert KB.SUCC['pv_ctl_floor'] == ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv', 'ot_qwen_tp8_pv_wide_ctl_tbf')
 
 
 if __name__ == '__main__':

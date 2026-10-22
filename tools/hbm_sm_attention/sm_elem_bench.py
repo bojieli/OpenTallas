@@ -245,13 +245,22 @@ def x_beats(fields):
     return [(frag >> (2048 * g)) & ((1 << 2048) - 1) for g in range(13)]
 
 
-def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
+def compile_op(rec, op, lat, mode_pv, t0=8, smut="", *, runtime_probability_rows=None):
     """One attention op on one SM -> (calendar, expectation).  lat: implemented latencies (cycles).
     smut (schedule negative controls, must FAIL): "r7clear" = the r7 law clear_w = last_w + qk_clear (wipes wave w-1
     before its publication); "early" = publish_w at last_w + qk_land_meas (one cycle before the last landing registers)."""
     name, kind, kv4, rows, nrun = op[:5]
     T8 = len(rec["rows8"])
     qk = kind == "qk"
+    if runtime_probability_rows is not None:
+        if qk or not isinstance(runtime_probability_rows, dict):
+            raise ValueError("runtime probability rows require a PV page mapping")
+        if set(runtime_probability_rows) != set(rows):
+            raise ValueError("explicit pstore address for every global consumer row required")
+        if any(type(a) is not int or not 0 <= a < 128 for a in runtime_probability_rows.values()):
+            raise ValueError("runtime pstore address outside actual128-row page")
+        if len(set(runtime_probability_rows.values())) != len(rows):
+            raise ValueError("distinct live consumer rows must not alias one pstore address")
     n8 = sum(1 for r in rows if r < T8)
     cal = Calendar()
     c = t0
@@ -266,7 +275,7 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
             for g, beat in enumerate(x_beats(fields)):
                 cal.xw[c] = (1 << 2062) | (t << 2055) | (g << 2048) | beat
                 c += 1
-    else:
+    elif runtime_probability_rows is None:
         pb = B.bf16b(rec["p"])
         for i, r in enumerate(rows):
             cal.xw[c] = (1 << 2062) | (i << 2055) | (127 << 2048) | sum(int(pb[r]) << (16 * col) for col in range(8))
@@ -334,7 +343,8 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
                 cal.set(c, mode=mode, consume=1, eslot=b["slot"], estep=b["step"], first=int(tk % 8 == 0),
                         last=int(tk % 8 == 7 or tk + 1 == nr), run_first=int(tk < 8), run_last=int(tk >= lastc),
                         tag_row=tk, tag_slot=b["step"])
-                cal.set(c - 3, mode=mode, pread=1, paddr=tk)
+                cal.set(c - 3, mode=mode, pread=1,
+                        paddr=(tk if runtime_probability_rows is None else runtime_probability_rows[rows[tk]]))
             beats.append((c, b))
             consumed += 1
         c += 1
@@ -388,6 +398,11 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
         d.setdefault("mode", mode)
         d.setdefault("be_mode", be_mode)
     exp["end"] = end
+    if runtime_probability_rows is not None:
+        exp["runtime_probability_rows"] = dict(runtime_probability_rows)
+        exp["probability_xw_preloads"] = 0
+        exp["probability_join_qualified"] = False
+        exp["probability_join_obligation"] = "actual runtime producer writes and fixed clear/write/read/drain/page-reuse calendar must be bound before this consumer runs"
     return cal, exp
 
 

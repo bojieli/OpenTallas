@@ -1,0 +1,159 @@
+{
+  "name": "qfd_coll_bank_local_main",
+  "top": "ot_coll_bank_land137",
+  "kind": "tile",
+  "sources": [
+    "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+  ],
+  "params": {},
+  "clock_port": "ck",
+  "reset_ports": [],
+  "outline": {
+    "w": 259.2,
+    "h": 216
+  },
+  "layer_cap": "M5",
+  "pins": {
+    "W": [
+      "we",
+      "din",
+      "dout",
+      "wa",
+      "ra",
+      "rd_v"
+    ],
+    "S": [
+      "ck"
+    ],
+    "E": [],
+    "N": []
+  },
+  "pin_ranges": {
+    "we": [
+      5.4,
+      10.8
+    ],
+    "din": [
+      16.2,
+      81.0
+    ],
+    "dout": [
+      91.8,
+      172.8
+    ],
+    "wa": [
+      178.2,
+      183.6
+    ],
+    "ra": [
+      189.0,
+      194.4
+    ],
+    "rd_v": [
+      199.8,
+      205.2
+    ],
+    "ck": [
+      108,
+      118.8
+    ]
+  },
+  "route": {
+    "pd": 0.52,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "pin_balance": {
+      "group_max": 32,
+      "v": "M5",
+      "h": "M4"
+    },
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 10.8,
+    "io_hold_margin_ns": 0.03
+  },
+  "recipe": 2,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "structural_change": "Opt-in local bank landing: per-bank write/address/data capture and predicted read-address capture on the same real clock tree as the SRAM. Replaces face BWREG on codec0 and removes that direct region crossing. Production 64x137 storage and collision bypass preserved. Write capture remains +1 edge, predicted read address preserves slot read age. Enlarged landing bands and SRAM channels; no clock exception.",
+  "job": {
+    "owner": "CODEX-QW-COLLIO-2000",
+    "branch": "codex/qw-collio-2000-1021",
+    "tag": "local1main",
+    "purpose": "Harden the collective face codec bank leaf (ot_qkvd_llr_replay_sram_leaf 64x137): child of the io_collective face cluster (HANDOFF 0ea item 3)",
+    "benches": [
+      {
+        "name": "coll_face_hard_pass",
+        "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator BANK_LOCAL=1 PLAND=1 SAFE=1 FACE_L=381 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/h0 0",
+        "expect": "pass",
+        "pass_regex": "^COLL_STATIC_FACE_BENCH PASS MUT=0$",
+        "pass_witness": "results/arch/qw_collio_local_1021/source3/suite_s1_m0.log",
+        "min_count_regex": "^MUT=0 PHI=1 COLL_FACE_BENCH .* got (\\d+) ",
+        "threads": 1,
+        "peak_ram_gb": 32,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "coll_face_hard_mut_bank_hit",
+        "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator BANK_LOCAL=1 PLAND=1 SAFE=1 FACE_L=381 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/h4 4",
+        "expect": "fail",
+        "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
+        "fail_witness": "results/arch/qw_collio_local_1021/source3/suite_s1_m4.log",
+        "threads": 1,
+        "peak_ram_gb": 32,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "rtl/test/tb_coll_static_face.sv",
+      "rtl/test/run_coll_static_face.sh",
+      "results/rtl/qwen_coll_face_1018",
+      "rtl/physical/ot_qfd_coll_static_face.sv",
+      "rtl/physical/ot_qfd_static_transport.sv",
+      "rtl/rom/ot_coll_static_linkcal.sv",
+      "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+      "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+      "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+      "results/arch/qw_collio_local_1021/source3"
+    ],
+    "views_to": "physical/ref_tile/qfd_coll_bank_local_main/views",
+    "record_to": "results/rtl/ref_tile/qfd_coll_bank_local_main"
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+      "count": 1,
+      "inst": "*u_sram",
+      "at": [
+        43.2,
+        43.2
+      ],
+      "orient": "MX"
+    }
+  ],
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "slot_change_request": "New opt-in collective bank leaf (259.2, 216); requires face outline growth before adoption.",
+  "pin_regs": {
+    "enable": false,
+    "reason": "we/wa/din and predicted read address captured locally. dout is original bank output register; reset-free payload guarded by static slots."
+  }
+}

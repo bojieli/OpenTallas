@@ -1004,6 +1004,8 @@ def dirs_qwen(bid, cls, bits, eps, j, port):
         return 'complement'
     if cls == 'constant':                             # kv-die write leaves: a die-top tie (chain tail, lane strap) into one input
         return [(0, bits, 'in')]
+    if cls == 'health_src':                           # KV-BIND4 kv-die: 1-endpoint fault SOURCE (kc kf, dcal flt) the health plane reads
+        return [(0, bits, 'out')]
     if cls == 'kvn':                                  # kv-die: word + valid down, one credit back
         return flow(j, bits, bits - 1)
     if cls == 'd2d_face':                             # kv-die: N class words (529 b each) down, N credits back
@@ -1201,6 +1203,13 @@ def lint_connectivity(die, m, real, ports_w):
                 add('undirected_bits', cls, f'{mst}.{port}', bid, int((~cov).sum()))
         sig = ' + '.join(sorted({(by[i].master if i != 'TOP' else 'TOP') + '.' + re.sub(r'[SN][WE]$|\d+$', '*', p)
                                  for i, p in eps}))
+        if cls == 'health_src':
+            # KV-BIND5 10-20 (gen9d3 PREP KeyError 'health_src'): a KV-BIND4 health SOURCE is a 1-endpoint bus whose only
+            # reader is the registered health plane kv_health_plane.py installs after the forwarded lanes (die_port_bind
+            # v2 then proves the source read).  Here it must be exactly one real output endpoint that drives every bit.
+            if len(eps) != 1 or int((drv != 1).sum()) or int(ld.sum()):
+                add('health_src_not_a_source', cls, sig, bid, bits)
+            continue
         if cls == 'constant':
             # qwen-1010/b 2026-10-10: a die-top tie (tie cells next to the one input it straps: KV write-leaf chain tail,
             # lane index); driven by construction, so only a driver on the net would be a defect

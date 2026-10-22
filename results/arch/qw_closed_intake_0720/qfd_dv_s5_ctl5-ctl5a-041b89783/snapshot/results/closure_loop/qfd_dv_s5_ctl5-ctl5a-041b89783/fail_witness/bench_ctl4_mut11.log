@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_dv_s5_ctl5-ctl5a-041b89783 bench bench_ctl4_mut11 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qfd_dv_s5_ctl5-ctl5a-041b89783 log cl/bench_ctl4_mut11.a1b1.log captured 2026-10-20T04:19:57-07:00
+# fail_regex 'CTL_REPAIR_EQ FAIL mismatches='
+Verilator 5.050 2026-07-01 rev v5.050
+CTL_REPAIR_MISMATCH cc_o cycle=2841
+CTL_REPAIR_MISMATCH cc_o cycle=3183
+CTL_REPAIR_MISMATCH cc_o cycle=4111
+CTL_REPAIR_MISMATCH cc_o cycle=4275
+CTL_REPAIR_EQ FAIL mismatches=5 compares=151677
+- rtl/test/qwen_dv/s5/ctlrepair1/tb_ctl_repair4.sv:205: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 80us; walltime 0.283 s; speed 282.969 us/s
+- Verilator: cpu 0.282 s on 1 threads; allocated 8 MB

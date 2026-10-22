@@ -1,0 +1,38 @@
+{
+ "schema": "toksim.hbm.su_vop_record.v1",
+ "record": "ds_attend_norm",
+ "design": "ds_ar",
+ "N": 512,
+ "rows": 1,
+ "roles": {
+  "A": "vm",
+  "B": "rf"
+ },
+ "mods": {
+  "cp_m1": 4,
+  "cm_m1": 4,
+  "co_rnd": 1
+ },
+ "red": null,
+ "sfu_lanes": true,
+ "lanes_per_quarter": 32,
+ "issues": 4,
+ "emissions": 4,
+ "issue_to_write": 43,
+ "RR": 12,
+ "WR": 10,
+ "fill_slack": 1,
+ "drain_slack": 2,
+ "dispatch_edge": 114,
+ "first_emit": 130,
+ "last_emit": 133,
+ "last_lg_write": 182,
+ "retire_edge": 192,
+ "cycles_serial": 78,
+ "cycles_stream_833ps": 104.0,
+ "edges": 200,
+ "expected_vm_writes": 64,
+ "expected_scalars": 1,
+ "reduction": {},
+ "golden": "hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT), calendar order"
+}

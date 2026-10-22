@@ -1,0 +1,26 @@
+............
+----------------------------------------------------------------------
+Ran 12 tests in 39.799s
+
+OK
+t expect=pass: PROVEN 4/4 state 3/2 -> OK
+t expect=fail: NOT PROVEN 3/4 state 3/3 -> OK
+1 receipts / 1 audited modules
+t expect=pass: PROVEN 4/4 state 3/2 -> OK
+0 receipts / 1 audited modules
+t expect=pass: NOT PROVEN 1/4 state 3/2 -> UNEXPECTED
+t expect=pass: NOT PROVEN 4/6 state 4/8 -> UNEXPECTED
+t expect=pass: PROVEN 10/10 state 4/8 -> OK
+t expect=pass: PROVEN 10/10 state 4/8 -> OK
+1 receipts / 1 audited modules
+t expect=pass: NOT PROVEN 8/10 state 4/8 -> UNEXPECTED
+t expect=pass: NOT PROVEN 4/6 state 4/8 -> UNEXPECTED
+t expect=pass: PROVEN 10/10 state 4/8 -> OK
+t expect=pass: PROVEN 10/10 state 4/8 -> OK
+1 receipts / 1 audited modules
+t expect=pass: PROVEN 9/9 state 4/4 -> OK
+1 receipts / 1 audited modules
+t expect=pass: NOT PROVEN 8/9 state 4/4 -> UNEXPECTED
+t expect=pass: NOT PROVEN 8/10 state 4/8 -> UNEXPECTED
+t expect=pass: NOT PROVEN 8/10 state 4/8 -> UNEXPECTED
+t expect=pass: NOT PROVEN 8/10 state 4/8 -> UNEXPECTED

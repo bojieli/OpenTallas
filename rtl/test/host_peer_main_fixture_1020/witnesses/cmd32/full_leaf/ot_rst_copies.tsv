@@ -1,0 +1,10 @@
+family	copies	total_loads	fixed	moves	group_loads	status
+host_rst_n__ot_rl0v	2	64	0	32	32,32	OK
+host_rst_n__ot_rlv	64	23	0	22	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	OK
+por_n__ot_rl0v	2	64	0	32	32,32	OK
+por_n__ot_rlv	64	37	0	36	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	OK
+u_ot_pr_core.root__u_coordinator.por_n_qv	28	5464	0	5268	196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,172	OVER max 32: 28 copies over (largest 196): give the relay more copies (REGIONS >= 171)
+u_ot_pr_core.root__u_peer_codec.por_n_qv	16	967	0	906	61,61,61,61,61,61,61,61,61,61,61,61,61,61,61,52	OVER max 32: 16 copies over (largest 61): give the relay more copies (REGIONS >= 31)
+u_ot_pr_core.root__u_root_mux.por_n_qv	3	536	0	357	179,179,178	OVER max 32: 3 copies over (largest 179): give the relay more copies (REGIONS >= 17)
+u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.rst_n_qv	12	2711	0	2485	226,226,226,226,226,226,226,226,226,226,226,225	OVER max 32: 12 copies over (largest 226): give the relay more copies (REGIONS >= 85)
+u_ot_pr_core.u_rank__u_peer.rst_n_qv	7	140	0	120	20,20,20,20,20,20,20	OK

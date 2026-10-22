@@ -1,0 +1,202 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rrl_cpad18-r1-b723bcdc9/routes/hbfd_rrl_cpad18_r1_b723bcdc9/work/orfs/results/asap7/opentallas_hbfd_rrl_cpad18_asap7_ref_hbfd_rrl_cpad18_r1_b723bcdc9/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "clock_family": {
+   "core_clk": 7
+  },
+  "boundary": {
+   "n": 2,
+   "mean": 53.1,
+   "min": 53.1,
+   "max": 53.1
+  },
+  "all": {
+   "n": 7,
+   "mean": 53.4,
+   "min": 53.1,
+   "max": 53.6
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "clock_family": {
+   "core_clk": 7
+  },
+  "boundary": {
+   "n": 2,
+   "mean": 36.3,
+   "min": 36.2,
+   "max": 36.3
+  },
+  "all": {
+   "n": 7,
+   "mean": 36.4,
+   "min": 36.2,
+   "max": 36.6
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "clock_family": {
+   "core_clk": 7
+  },
+  "boundary": {
+   "n": 2,
+   "mean": 26.7,
+   "min": 26.7,
+   "max": 26.7
+  },
+  "all": {
+   "n": 7,
+   "mean": 26.9,
+   "min": 26.7,
+   "max": 27.0
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 53,
+  "CK_SS_ALL_MEAN": 53,
+  "CK_SS_MIN": 53,
+  "CK_SS_ALL_MIN": 53,
+  "CK_SS_MAX": 53,
+  "CK_SS_ALL_MAX": 54,
+  "CK_TT_MEAN": 36,
+  "CK_TT_ALL_MEAN": 36,
+  "CK_TT_MIN": 36,
+  "CK_TT_ALL_MIN": 36,
+  "CK_TT_MAX": 36,
+  "CK_TT_ALL_MAX": 37,
+  "CK_FF_MEAN": 27,
+  "CK_FF_ALL_MEAN": 27,
+  "CK_FF_MIN": 27,
+  "CK_FF_ALL_MIN": 27,
+  "CK_FF_MAX": 27,
+  "CK_FF_ALL_MAX": 27,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rrl_cpad18-r1-b723bcdc9/routes/hbfd_rrl_cpad18_r1_b723bcdc9/work/orfs/results/asap7/opentallas_hbfd_rrl_cpad18_asap7_ref_hbfd_rrl_cpad18_r1_b723bcdc9/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "core_clk": 7
+    },
+    "boundary": {
+     "n": 2,
+     "mean": 53.1,
+     "min": 53.1,
+     "max": 53.1
+    },
+    "all": {
+     "n": 7,
+     "mean": 53.4,
+     "min": 53.1,
+     "max": 53.6
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "clock_family": {
+     "core_clk": 7
+    },
+    "boundary": {
+     "n": 2,
+     "mean": 36.3,
+     "min": 36.2,
+     "max": 36.3
+    },
+    "all": {
+     "n": 7,
+     "mean": 36.4,
+     "min": 36.2,
+     "max": 36.6
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "clock_family": {
+     "core_clk": 7
+    },
+    "boundary": {
+     "n": 2,
+     "mean": 26.7,
+     "min": 26.7,
+     "max": 26.7
+    },
+    "all": {
+     "n": 7,
+     "mean": 26.9,
+     "min": 26.7,
+     "max": 27.0
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 53,
+    "CK_SS_ALL_MEAN": 53,
+    "CK_SS_MIN": 53,
+    "CK_SS_ALL_MIN": 53,
+    "CK_SS_MAX": 53,
+    "CK_SS_ALL_MAX": 54,
+    "CK_TT_MEAN": 36,
+    "CK_TT_ALL_MEAN": 36,
+    "CK_TT_MIN": 36,
+    "CK_TT_ALL_MIN": 36,
+    "CK_TT_MAX": 36,
+    "CK_TT_ALL_MAX": 37,
+    "CK_FF_MEAN": 27,
+    "CK_FF_ALL_MEAN": 27,
+    "CK_FF_MIN": 27,
+    "CK_FF_ALL_MIN": 27,
+    "CK_FF_MAX": 27,
+    "CK_FF_ALL_MAX": 27,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+  }
+ }
+}

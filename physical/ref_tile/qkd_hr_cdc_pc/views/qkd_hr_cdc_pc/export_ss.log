@@ -18,16 +18,16 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_io_phy can not be propagated.
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_phy can not be propagated.
-OT_HYBRID CLOCK_RULE ss ck_core WARN pin_spread=39.9 scope=boundary sinks=11183 WARN: insertion all_mean 303.9 / pin_mean 306.3 ps > 300 (guidance)
-OT_HYBRID CTS_MEASURE ss ck_core sinks=11183 reference_scope=boundary boundary_sinks=1063 min=296.7746060768231 mean=306.2960553078707 max=336.66283784281933 all_mean=303.9255890890973
-OT_HYBRID CLOCK_RULE ss ck_phy_fam WARN pin_spread=32.1 scope=boundary sinks=10121 WARN: insertion all_mean 302.2 / pin_mean 310.9 ps > 300 (guidance)
-OT_HYBRID CTS_MEASURE ss ck_phy_fam sinks=10121 reference_scope=boundary boundary_sinks=1062 min=295.73735245634674 mean=310.9055785246751 max=327.8669571172018 all_mean=302.1987357198389
+OT_HYBRID CLOCK_RULE ss ck_core WARN pin_spread=23.9 scope=boundary sinks=11183 WARN: insertion all_mean 301.2 / pin_mean 305.7 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE ss ck_core sinks=11183 reference_scope=boundary boundary_sinks=1063 min=295.88151491667037 mean=305.6853613860392 max=319.77368103552584 all_mean=301.2227069412874
+OT_HYBRID CLOCK_RULE ss ck_phy_fam WARN pin_spread=34.2 scope=boundary sinks=10121 WARN: insertion all_mean 300.6 / pin_mean 302.8 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE ss ck_phy_fam sinks=10121 reference_scope=boundary boundary_sinks=1062 min=292.0216302671084 mean=302.77099312967584 max=326.2590211042122 all_mean=300.6132254359449
 OT_ENTRIES LEVEL ck_core deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_core -> host_rst_n__ot_rl0$_DFF_P_/CLK wire=0 R=306.2960553078707 latency=4.609523216804405 phi=310.9055785246751
+OT_ENTRIES COMP ss ck_core -> host_rst_n__ot_rl0$_DFF_P_/CLK wire=0 R=305.6853613860392 latency=0.0 phi=305.6853613860392
 OT_ENTRIES LEVEL ck_phy_fam deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss ck_phy_fam -> ot_prs_00000_ff/CLK wire=0 R=310.9055785246751 latency=0.0 phi=310.9055785246751
-OT_ENTRIES DOMAIN core 833.333008ps IO531/532 boundary=301.38412929362755..341.2723610596237
-OT_ENTRIES DOMAIN phy 1043.000000ps IO548/550 boundary=295.7373524563468..327.86695711720176
+OT_ENTRIES COMP ss ck_phy_fam -> ot_prs_00000_ff/CLK wire=0 R=302.77099312967584 latency=2.914368256363332 phi=305.6853613860392
+OT_ENTRIES DOMAIN core 833.333008ps IO531/532 boundary=295.8815149166703..319.7736810355259
+OT_ENTRIES DOMAIN phy 1043.000000ps IO548/550 boundary=294.93599852347165..329.1733893605756
 OT_GF BOUNDED f0 mem mem -> rstage u_ot_pr_core.u_rank__u_phy__u_rx.g_afw.u_af.mem[0][0]$_DFFE_PP_ -> u_ot_pr_core.u_rank__u_phy__u_rx.g_afw.u_af.g_rs[0].genblk1.g_s2.rs_q[0][0]$_DFF_P_
 OT_GF BOUNDED f0 mem mem -> rstage u_ot_pr_core.u_rank__u_phy__u_rx.g_afw.u_af.mem[1][0]$_DFFE_PP_ -> u_ot_pr_core.u_rank__u_phy__u_rx.g_afw.u_af.g_rs[0].genblk1.g_s2.rs_q[0][0]$_DFF_P_
 OT_GF BOUNDED f0 mem mem -> rstage u_ot_pr_core.u_rank__u_phy__u_rx.g_afw.u_af.mem[2][0]$_DFFE_PP_ -> u_ot_pr_core.u_rank__u_phy__u_rx.g_afw.u_af.g_rs[0].genblk1.g_s2.rs_q[0][0]$_DFF_P_
@@ -8522,7 +8522,7 @@ OT_GF MERGED_ONLINE f1 ronl -> f0 wonl (phy -> core)
 OT_GF MERGED_ONLINE f1 wonl -> f0 ronl (core -> phy)
 OT_GF STRUCTURAL_PASS 26 crossing classes (bounded reviewed FIFO crossings only; no physical closure claim)
 OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=21304 inputs=1079 outputs=1082 async_control_pins=332
-OT_ENTRIES COMP DONE ss 2 entries phi=310.9055785246751 boundary=295.7373524563468..341.2723610596237
+OT_ENTRIES COMP DONE ss 2 entries phi=305.6853613860392 boundary=294.93599852347165..329.1733893605756
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_phy can not be propagated.
 OT_IOREF clock-port ck_core (ot_entry_0): data input delays dropped
@@ -8537,5 +8537,5 @@ OT_IOREF_EDGE ot_entry_0 boundary 1063 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_1 boundary 1062 negedge 0 noarc 0 inverted 0
 OT_IOREF keep core_clk (not an insertion-reference clock)
 OT_IOREF keep ot_io_phy (not an insertion-reference clock)
-OT_WS max -1.177271613528319e-10 min 7.732989248943056e-11
+OT_WS max -1.3868739490163762e-10 min 8.110101479275045e-11
 OT_EXPORT_DONE

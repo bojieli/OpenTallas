@@ -85,6 +85,13 @@ def declare(lines, pads, root):
     base = Path(root) / 'results/arch/s81_dv_1016/svc_rs'
     tree = json.loads((base / 'tree.json').read_text())['slices']
     emb = json.loads((base / 'embed.json').read_text())['roles']
+    # TOK-S81-GAPS/SVCP P path (85340f61a): the fold root also drives `ro` on its rs_pface pout face (rsv_09 W ->
+    # rsv_07 E, lane pr_09_07); the role ROM of record is the generated roles header, not tree.json (S81-DIE9 10-20)
+    pout = {}
+    svh = Path(root) / 'rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_roles.svh'
+    if svh.exists():
+        for m in re.finditer(r"4'd(\d+): rs_pface = 8'h([0-9a-fA-F]{2});", svh.read_text()):
+            pout[int(m.group(1))] = {f for f in range(4) if int(m.group(2), 16) >> f & 1}
 
     def add(inst, master, reason, port, lo, hi, cls):
         e = pads.setdefault(inst, dict(master=master, reason=reason, ports={}))
@@ -101,7 +108,7 @@ def declare(lines, pads, root):
         t, r = tree[str(sid)], emb[str(sid)]
         active = {'dn_o': {f for f in range(4) if t['children'] >> f & 1},
                   'up_o': {t['parent'] - 1} if t['parent'] else set(),
-                  'ro': {t['parent'] - 1} if t['parent'] else set(),
+                  'ro': ({t['parent'] - 1} if t['parent'] else set()) | pout.get(sid, set()),
                   'go_v': {f for f in range(4) if r['go'][f]}, 'go_d': {f for f in range(4) if r['go'][f]},
                   'so_v': {f for f in range(4) if r['so'][f]}, 'so_d': {f for f in range(4) if r['so'][f]}}
         for port, fw in RS_FACE_W.items():
@@ -120,9 +127,11 @@ def declare(lines, pads, root):
                     rec['gaps'].append(dict(inst=inst, port=port, face=FACES[f], why='role-inactive face wired (plan vs role ROM)'))
     # ---- B: lane quantisation landing outputs
     for st, e in list(pads.items()):
-        if not (st.startswith('st_') and st.endswith('_0') and e.get('reason', '').startswith('lane quantisation')):
+        direct = st.startswith('ld_')
+        relay = st.startswith('st_') and st.endswith('_0')
+        if not ((direct or relay) and e.get('reason', '').startswith('lane quantisation')):
             continue
-        nm = st[3:-2]
+        nm = st[3:] if direct else st[3:-2]
         ld = f'ld_{nm}'
         if ld not in insts:
             continue
@@ -130,6 +139,23 @@ def declare(lines, pads, root):
         if not ps.get('o', '').startswith(f'w_{nm}_lnd'):
             continue
         for lo, hi in e['ports']['i']:
+            if direct:
+                # A direct crossing has no relay station. Its landing input itself
+                # carries the declared padding: require the exact emitted zero range,
+                # never a declaration over any live payload bit.
+                pos, zero = 0, []
+                expr = ps.get('i', '')
+                parts = (expr[1:-1] if expr.startswith('{') and expr.endswith('}') else expr).split(',')
+                for part in reversed(parts):
+                    part = part.strip()
+                    match = re.fullmatch(r"(\d+)'d0", part)
+                    width = int(match[1]) if match else sum(h-l+1 for l,h,_ in _segments(part,decl))
+                    if match:
+                        zero.append((pos,pos+width-1))
+                    pos += width
+                if not any(a <= lo <= hi <= b for a,b in zero):
+                    rec['gaps'].append(dict(inst=ld,port='o',lo=lo,hi=hi,why='direct landing spare range is not literal zero padding'))
+                    continue
             add(ld, mst, f'lane quantisation: landing output bits [{lo}, {hi}] carry the zero pads tied at {st}.i', 'o', lo, hi,
                 'B_lane_quantisation')
     # ---- C: forwarded-clock taps

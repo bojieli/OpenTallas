@@ -57,6 +57,41 @@ def test_forwarded_spine_has_no_pads():
     assert sorted(pins) == sorted(f'{rb}/A' for _, rb in members)
 
 
+def test_spt_spine_bounded_depth_vs_dme():
+    # QW-DIECLK6 10-20: forwarded spine topology 'spt' (shortest-path tree): every entry driven exactly once, no pads,
+    # every buffer->buffer hop <= SEG_MAX, and depth/insertion below the zero-skew DME on a hard-column floorplan
+    import random
+    random.seed(7)
+    W, H = 12000.0, 9000.0
+    obs = [(x, 600.0, x + 450.0, 8400.0) for x in range(1000, 11000, 1400)]
+    g = rt.dct.Grid(W, H, obs)
+    xy = {}
+    for i in range(96):
+        while True:
+            x, y = random.uniform(100, W - 100), random.uniform(100, H - 100)
+            if g.free(g.cell(x, y)):
+                break
+        xy[f'dc_root_r{i}'] = (x, y)
+    members = [(dict(name=f'r{i}'), f'dc_root_r{i}') for i in range(96)]
+    rt.SAFE = True
+    try:
+        dme = rt.Builder(g, 'dc_spine', pads=False)
+        rd = dme.build('g/p0', (W / 2, H / 2), rt.spine_leaves(members, xy))
+        spt = rt.Builder(g, 'dc_spine', pads=False, topo='spt')
+        rs = spt.build('g/p0', (W / 2, H / 2), rt.spine_leaves(members, xy))
+    finally:
+        rt.SAFE = False
+    pins = [l[1] for _, _, ls in spt.nets for l in ls if l[0] == 'pin']
+    assert sorted(pins) == sorted(f'{rb}/A' for _, rb in members)
+    loads = [l[1] for _, _, ls in spt.nets for l in ls if l[0] == 'buf']
+    assert len(loads) == len(set(loads)) == len(spt.bufs)
+    assert rs['pads'] == 0 and rs['topology'] == 'spt' and not spt.violations, spt.violations[:3]
+    pos = {b[0]: (b[2], b[3]) for b in spt.bufs}
+    hop = max(abs(pos[x][0] - pos[p][0]) + abs(pos[x][1] - pos[p][1]) for x, p in spt.parent.items() if x in pos and p in pos)
+    assert hop <= rt.SEG_MAX + rt.GRID, hop
+    assert rs['tree_depth'] < rd['tree_depth'] and rs['tree_model_ps'] < rd['tree_model_ps'], (rs, rd)
+
+
 if __name__ == '__main__':
     for k, f in list(globals().items()):
         if k.startswith('test_'):

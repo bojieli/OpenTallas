@@ -29,10 +29,18 @@
 // Reserve pipeline: table read -> A (fields, id wait) -> P (registered 9x15 products) -> S (block = {row_base, slot} +
 // products, 18-bit, overflow = fault) -> reserve.  Faults (sticky): bad word, id_sel > NID, row overflow, run while running / count
 // 0, issue the feed refuses (queue overflow), late or busy go slot, done without a programme.
-// MUT (bench negative controls): 1 layer stride ignored; 2 expert id ignored (id 0); 3 context row_off dropped.
+// MUT (bench negative controls): 1 layer stride ignored; 2 expert id ignored (id 0); 3 context row_off dropped;
+// 4 context x slot base dropped (XSLOT 1: every record reads x at slot 0).
+// HBM-SMXL 2026-10-19 XSLOT (default 0 = unchanged): descriptor [206:200] = xb, the record's x-store SLOT BASE (fragment
+//   address base of the SM x store, XD 128 words), allocated by the compiler as a static ring (tools/hbm_layer_vehicle
+//   smb_unit SMB_XMODE xl).  It rides the go context to the feed, which adds it to every issued command's xaddr [6:0]
+//   (mod 128).  This is the die's op_xb: without it every record reads x at fragment 0, so the x load of record n+1
+//   cannot start before record n's last command (single-buffered x).  The x loader writes at xb + a (its own static
+//   x_xb, ot_hgi_sm_xload*).  XSLOT 1 widens program_start_ctx 46 -> 53 b ({xb7, ...}); [231:207] must be zero.
 module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer LB=(LBANKS>2)?2:1, parameter integer QD=4,
  parameter integer NID=6, parameter integer IDW=9, parameter integer PAW=11, parameter integer DD=256, parameter integer MUT=0,
- parameter integer DAW=(DD>128)?8:7, parameter integer ID_COHORT=0)(
+ parameter integer DAW=(DD>128)?8:7, parameter integer ID_COHORT=0, parameter integer XSLOT=0,
+ parameter integer CTXW=(XSLOT!=0)?53:46)(
  input wire clk,rst_n,
  input wire desc_we,input wire[DAW-1:0]desc_addr,input wire[255:0]desc_data,
  input wire run_v,input wire[DAW-1:0]run_base,input wire[DAW:0]run_count,input wire[7:0]run_layer,
@@ -46,10 +54,10 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  output wire start_v,output wire[LB-1:0]start_bank,output wire[15:0]start_epoch,
  output wire program_start_v,output wire[PAW-1:0]program_start_base,output wire[PAW:0]program_start_limit,
  output wire[15:0]program_start_loops,
- output wire[45:0]program_start_ctx,   // {row_off12, tag_base10, epoch16, bank1, lstep4, fl1, mode2}
+ output wire[CTXW-1:0]program_start_ctx,   // {[xb7 (XSLOT),] row_off12, tag_base10, epoch16, bank1, lstep4, fl1, mode2}
  input wire program_done
 );
- initial if(NID<1||NID>15||IDW<1||IDW>9||(PAW!=10&&PAW!=11)||(DD!=128&&DD!=256))$fatal(1,"issuer_rel parameters");
+ initial if(NID<1||NID>15||IDW<1||IDW>9||(PAW!=10&&PAW!=11)||(DD!=128&&DD!=256)||CTXW!=((XSLOT!=0)?53:46))$fatal(1,"issuer_rel parameters");
  // descriptor table: DD/128 actual 128x256 SRAMs, registered write port; written at install only (locked while running)
  reg desc_we_q;reg[DAW-1:0]desc_addr_q;reg[255:0]desc_data_q;
  always @(posedge clk)begin desc_addr_q<=desc_addr;desc_data_q<=desc_data;end
@@ -74,7 +82,7 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  reg[7:0]layer_q,ids_layer_q;reg ids_ok_q;reg[IDW*NID-1:0]ids_q;
  reg[15:0]run_cohort_q;
  // reserve pipeline A -> P -> S
- reg[DAW:0]n_rd,n_go;reg a_v,p_v,st_v;reg[199:0]a,p;reg[142:0]st;reg[23:0]p_lay,p_id;reg[23:0]rc;
+ reg[DAW:0]n_rd,n_go;reg a_v,p_v,st_v;reg[206:0]a,p;reg[142:0]st;reg[23:0]p_lay,p_id;reg[23:0]rc;
  wire[3:0]a_sel=a[176:173];
  wire a_ids=a_sel==0||(ids_ok_q&&ids_layer_q==layer_q);
  wire a_go=a_v&&!p_v&&a_ids;
@@ -87,8 +95,9 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  assign reserve_v=st_v&&reserve_ready;
  assign reserve_base=st[31:0];assign reserve_row_base=st[46:32];assign reserve_total=st_total[11:0];
  assign reserve_bank=st[47+:LB];assign reserve_epoch=st[64:49];assign reserve_rows=st_rows;assign reserve_tag_base=st[81:72];
- // start / go queues: {fl1, mode2, lstep4, row_off12, tag10, go_at24, loops16, limit12, base11, epoch16, landing LB}
- localparam integer QW=7+12+10+24+16+12+11+16+LB;
+ // start / go queues: {xb7, fl1, mode2, lstep4, row_off12, tag10, go_at24, loops16, limit12, base11, epoch16, landing LB}
+ // (xb7 constant 0 when XSLOT 0)
+ localparam integer QW=7+7+12+10+24+16+12+11+16+LB;
  reg[QW-1:0]sq[0:QD-1],gq[0:QD-1];reg[2:0]sq_n,gq_n;reg[1:0]sq_r,sq_w,gq_r,gq_w;
  reg[QW-1:0]s_ent;
  wire[QW-1:0]sh=sq[sq_r],gh=gq[gq_r];
@@ -100,7 +109,10 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
  assign program_start_v=gq_n!=0&&rc==gh_at;
  assign program_start_base=gh[LB+16+:PAW];assign program_start_limit=gh[LB+27+:PAW+1];assign program_start_loops=gh[LB+39+:16];
  wire[11:0]gh_roff=(MUT==3)?12'd0:gh[LB+89+:12];
- assign program_start_ctx={gh_roff,gh[LB+79+:10],gh[LB+:16],gh_land[0],gh[LB+101+:4],gh[LB+107],gh[LB+105+:2]};
+ wire[6:0]gh_xb=(MUT==4)?7'd0:gh[LB+108+:7];
+ wire[45:0]ctx46={gh_roff,gh[LB+79+:10],gh[LB+:16],gh_land[0],gh[LB+101+:4],gh[LB+107],gh[LB+105+:2]};
+ generate if(XSLOT!=0)begin:g_xs assign program_start_ctx={gh_xb,ctx46};end
+ else begin:g_nx assign program_start_ctx=ctx46;end endgenerate
  wire push_s=reserve_v,pop_s=start_v,push_g=start_v,pop_g=program_start_v;
  wire[DAW-1:0]rd_id=rd[232+:DAW];
  always @(posedge clk or negedge rst_n)begin
@@ -124,8 +136,8 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
    if(running&&!run_v)rc<=rc+24'd1;
    if(rd_go)begin rp<=rp+1'b1;n_rd<=n_rd-1'b1;end
    if(rd_q)begin
-    a<=rd[199:0];a_v<=1;
-    if(rd[255:240]!=16'h5d15||rd_id!=rp_q||(DAW==7&&rd[239])||rd[231:200]!=0||rd[176:173]>NID)fault<=1;
+    a<=rd[206:0];a_v<=1;
+    if(rd[255:240]!=16'h5d15||rd_id!=rp_q||(DAW==7&&rd[239])||rd[231:207]!=0||(XSLOT==0&&rd[206:200]!=0)||rd[176:173]>NID)fault<=1;
    end
    if(a_go)begin
     a_v<=0;p_v<=1;p<=a;
@@ -137,7 +149,7 @@ module ot_hbm_svc_sm_issuer_rel #(parameter integer LBANKS=4, parameter integer 
    if(s_go)begin
     p_v<=0;st_v<=1;
     st<={p[142:47],s_blk[17:3],p[31:10],s_blk[2:0],p[6:0]};
-    s_ent<={p[199],p[196:195],p[194:191],p[188:177],p[81:72],p[142:119],p[118:103],p[190],p[102:92],p[189],p[91:82],p[64:49],p[47+:LB]};
+    s_ent<={((XSLOT!=0)?p[206:200]:7'd0),p[199],p[196:195],p[194:191],p[188:177],p[81:72],p[142:119],p[118:103],p[190],p[102:92],p[189],p[91:82],p[64:49],p[47+:LB]};
     if(s_blk>=26'd262144)fault<=1;
    end
    if(reserve_v)st_v<=0;

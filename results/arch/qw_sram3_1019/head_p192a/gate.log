@@ -1,0 +1,28 @@
+GATE INFO pin_regs: pin registers opted out: Unchanged closed qfd_tt_ctlm_head RTL registers every port at the face (io_flop_at_pins cols 4 places those flops FIRM at their pins, inhold/outhold); adding generated pin regs would add a cycle to every head port, outside this SRAM-only change
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 8.7 pins/um (cmd): recipe-2 hold stages take 2.92 um behind the face, the pin flops need gap 3.7 um and 5 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc8 for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_tt_ctlm_head_p192_20261019-163443.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_tt_ctlm_head_p192_20261019-163443.log; host dir ot-epyc8:/srv/opentallas-scratch/claude/ref_gate/qfd_tt_ctlm_head_p192-20261019-163443
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc8 in 153 s (gate total 1089 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 915, 'pin_rectangles': 915, 'pin_track_checked': 915, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 2f66152c2e90bf67b301dc66f705500e7b2d544bca66f6cbbdf5fd830cfcc738
+GATE INFO util: synthesized std area 3016 um2 + macros 52727 in core 97996: util 8% (std-cell density 7.9% of placeable 38012 um2; total fill 56.9%)
+GATE INFO textbook: REFUSE qfd_tt_ctlm_head cells 22,811 flops 4,642 depth 686.8 ps util 0.5684 reach 0.0 um (0.7 s)
+GATE FAIL textbook.reset_landing: reset port rst_n: 8 sinks (8 flops, 0 hard-child / macro pins, e.g. g_rrg.g_r[0].r$_DFF_PN0_/RESETN) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile "reset_landing": {"enable": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth  -> FIX: land every reset input at its face in 2 registered stages, then fan out at equal depth: kit "reset_landing": {"enable": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant
+GATE WARN textbook.logic_depth: reg->reg stage u_ctrl_me.kvd_pos[14]$_DFFE_PP_ -> u_ctrl_me.g_dtab.g_ds[10].r_q[11]$_DFFE_PP_/D: ~687 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE WARN textbook.util_channel: 1 macro channel(s) narrower than 20 um with placement rows (e.g. g_psram.g_m\[0\].u_pm.u_p192|g_psram.g_m\[1\].u_pm.u_p192 0.0 um): widen to >= 20 um or block the channel  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 864.9..990.8 ps (spread 125.9), boundary mean 892.3; tt insertion all 605.8..800.3 ps (spread 194.5), boundary mean 639.7; ff insertion all 458.9..674.1 ps (spread 215.2), boundary mean 493.5; macro_clk flag True
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 5 (fine) leaves 653 sinks 5192 cells 1834 leaf arrival 562.1..605.2 ps (spread 43.1) pad 56.6 / 16.2 ps
+GATE INFO clock_spine: OT_SPINE iter 6 (fine) leaves 653 sinks 5192 cells 1889 leaf arrival 575.7..605.2 ps (spread 29.5) pad 56.6 / 21.8 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_head_p192/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      433 paths, worst slack -243.4 ps (e.g. u_ctrl_me.g_dtab.g_ds[10].r_q[9]$_DFFE_PP_/D)
+GATE INFO path_classes: reg->macro      7 paths, worst slack -34.9 ps (e.g. g_psram.g_m[0].u_pm.u_p192/wd_in[288])
+GATE INFO path_classes: macro->reg      2 paths, worst slack 8.0 ps (e.g. prog_q[893]$_SDFFCE_PN0P_/D)
+GATE INFO path_classes: in->reg         7 paths, worst slack 141.6 ps (e.g. g_rrg.g_r[3].r$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -2.4335011783449545e-10 hold WNS -8.834566411763944e-11
+GATE FAIL clock_rule: 4,644 sinks on the largest root; measured TT insertion 800.3 ps, FF insertion 674.1 ps, TT pin-flop spread 124.9 ps, FF pin-flop spread 135.7 ps; TT pin-flop spread 124.9 ps > 80 and FF pin-flop spread 135.7 ps > 80 (declared clock 'spine' does not waive it)  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/qw-sram3-1019/physical/ref_tile/qfd_tt_ctlm_head_p192/gate_layout/floorplan.png; density /home/ubuntu/wt/qw-sram3-1019/physical/ref_tile/qfd_tt_ctlm_head_p192/gate_layout/density.png; congestion /home/ubuntu/wt/qw-sram3-1019/physical/ref_tile/qfd_tt_ctlm_head_p192/gate_layout/congestion.png
+GATE FAIL trial_route: trial GRT: total overflow 18365; worst layer M2 13.48% used; worst-overflow layer M2 (10234); worst gcell Horizontal congestion overflow 1 (cap 0 use 1) at (42.75,53.58)-(43.32,54.15) um; 10000 markers span (42.75,50.16)-(214.32,346.56) um; congestion map /home/ubuntu/wt/qw-sram3-1019/physical/ref_tile/qfd_tt_ctlm_head_p192/gate_layout/congestion.png; GRT 254 s  -> FIX: regroup macros / widen the congested channels / move pins to their consumers; look at congestion.png and density.png
+PRE_ROUTE_GATE: FAIL (3 fail, 2 warn)
+GATE: qfd_tt_ctlm_head_p192/gate_result.json written (exact staged source binding; commit it with the kit)

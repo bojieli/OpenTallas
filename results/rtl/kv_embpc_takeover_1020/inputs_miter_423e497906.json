@@ -1,0 +1,11 @@
+{
+ "name": "codex-emb-ctx-native32-miter-423e497906",
+ "mode": "miter",
+ "sources": {
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv": "42840262068243862e31c3165a69f36b21995cff20adfbf724cd82f6d589388d",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "tools/qwen_kv_die/attn_rv_1019/fanout_census.py": "c71d865b2385177144d2ba83880d74ea684cffc4613cf6acf6e602531451971c",
+  "results/rtl/kv_embpc_takeover_1020/tb_ctx_native32.sv": "5a7708a99526c3300eb64735c1d7c30acdcd81c79fc84e5392336c2f15914f04",
+  "ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+ }
+}

@@ -1,0 +1,36 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: ot-epyc9       admits   805 GB (avail 733, growth 169, headroom 0, waiters 0/0 GB) load 174/128 running 41 disk 22 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-a
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2640473-1792513148 after 0 s
+ENV {'OT_XS_GU_MERGE': '1', 'OT_XS_QPAIRS': '12', 'OT_XS_CAL_SEGMENT': '1', 'OT_XS_TOPO': '1', 'OT_XS_PROP': '1', 'OT_XS_COMPACT_TAILS': '1', 'OT_XS_LEGACY': '0'}
+CAP default L0 rc=0 XS_CAP_MERGED_LAYOUT {"rows": 30336, "reference_rows": 30336, "differing": 0, "gu_slot_collisions": 0, "reference_gu_slot_collisions": 0, "vp_rows_used": 1600, "reference_vp_rows_used": 1600, "PASS": true} []|XS_CAP L0 phases 57 slices/phase <= 16 faults 0 vp rows 1600 slot collisions 512 gu_merge True|
+CAP default L20 rc=0 XS_CAP_MERGED_LAYOUT {"rows": 34432, "reference_rows": 34432, "differing": 0, "gu_slot_collisions": 0, "reference_gu_slot_collisions": 0, "vp_rows_used": 1664, "reference_vp_rows_used": 1664, "PASS": true} []|XS_CAP L20 phases 63 slices/phase <= 16 faults 0 vp rows 1664 slot collisions 596 gu_merge True|
+CAP default L2 rc=0 XS_CAP_MERGED_LAYOUT {"rows": 34432, "reference_rows": 34432, "differing": 0, "gu_slot_collisions": 0, "reference_gu_slot_collisions": 0, "vp_rows_used": 1664, "reference_vp_rows_used": 1664, "PASS": true} []|XS_CAP L2 phases 63 slices/phase <= 16 faults 0 vp rows 1664 slot collisions 596 gu_merge True|
+CAP default L14 rc=0 XS_CAP_MERGED_LAYOUT {"rows": 40832, "reference_rows": 40832, "differing": 0, "gu_slot_collisions": 0, "reference_gu_slot_collisions": 0, "vp_rows_used": 1792, "reference_vp_rows_used": 1792, "PASS": true} []|XS_CAP L14 phases 80 slices/phase <= 16 faults 0 vp rows 1792 slot collisions 630 gu_merge True|
+BENCHA o1o2c rc=0 ROMOPTA_BENCH_VERDICT PASS
+TIE o1o2c L0 rc=0 16 ok-lines
+TIE o1o2c L2 rc=0 17 ok-lines
+TIE o1o2c L14 rc=0 18 ok-lines
+TIE o1o2c L20 rc=0 17 ok-lines
+IMG o1o2c L2 u_f_3L02 rc=0 IMAGESA L2 u_f_3L02 phases 82 faults 0 fill 1152 / 8192 images 165 set b2084855736f1da4 {"attn.a_proj": 1, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L0 u_f_2L00 rc=0 IMAGESA L0 u_f_2L00 phases 75 faults 0 fill 1088 / 8192 images 165 set e7c9fb1cfc47d5bf {"attn.a_proj": 1, "attn.wq_b": 11, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L0 u_f_3L01 rc=0 IMAGESA L0 u_f_3L01 phases 75 faults 0 fill 1088 / 8192 images 176 set 548d387317fb5954 {"attn.a_proj": 1, "attn.wq_b": 11, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L2 u_f_0L00 rc=0 IMAGESA L2 u_f_0L00 phases 82 faults 0 fill 1152 / 8192 images 165 set 92700adf0d1636c5 {"attn.a_proj": 1, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L2 u_f_2L00 rc=0 IMAGESA L2 u_f_2L00 phases 82 faults 0 fill 1152 / 8192 images 165 set ff197dc3e0bf3dd0 {"attn.a_proj": 1, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L0 u_f_0L00 rc=0 IMAGESA L0 u_f_0L00 phases 75 faults 0 fill 1088 / 8192 images 165 set d0b937eb59f37cbd {"attn.a_proj": 1, "attn.wq_b": 11, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L0 u_f_3L02 rc=0 IMAGESA L0 u_f_3L02 phases 75 faults 0 fill 1088 / 8192 images 165 set 8459bd71ae878457 {"attn.a_proj": 1, "attn.wq_b": 11, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L2 u_f_3L01 rc=0 IMAGESA L2 u_f_3L01 phases 82 faults 0 fill 1152 / 8192 images 176 set 0b4b7104929a0157 {"attn.a_proj": 1, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L20 u_f_3L01 rc=0 IMAGESA L20 u_f_3L01 phases 82 faults 0 fill 1152 / 8192 images 176 set d28baacbee6ddc4f {"attn.a_proj": 1, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L20 u_f_0L00 rc=0 IMAGESA L20 u_f_0L00 phases 82 faults 0 fill 1152 / 8192 images 165 set f60b837b8a8bbb0a {"attn.a_proj": 1, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L20 u_f_3L02 rc=0 IMAGESA L20 u_f_3L02 phases 82 faults 0 fill 1152 / 8192 images 165 set 7fdd9085ea0d851c {"attn.a_proj": 1, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L20 u_f_2L00 rc=0 IMAGESA L20 u_f_2L00 phases 82 faults 0 fill 1152 / 8192 images 165 set 9eff207a48847bbd {"attn.a_proj": 1, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L14 u_f_0L00 rc=0 IMAGESA L14 u_f_0L00 phases 99 faults 0 fill 1352 / 8192 images 165 set 780180d8603c07aa {"attn.a_proj": 1, "eng.wkv": 17, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L14 u_f_3L02 rc=0 IMAGESA L14 u_f_3L02 phases 99 faults 0 fill 1448 / 8192 images 165 set 54e465d9f47b0838 {"attn.a_proj": 1, "eng.wkv": 17, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L14 u_f_2L00 rc=0 IMAGESA L14 u_f_2L00 phases 99 faults 0 fill 1416 / 8192 images 165 set 0801bb045f178ff1 {"attn.a_proj": 1, "eng.wkv": 17, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMG o1o2c L14 u_f_3L01 rc=0 IMAGESA L14 u_f_3L01 phases 99 faults 0 fill 1448 / 8192 images 176 set 1c9a97ab37daf667 {"attn.a_proj": 1, "eng.wkv": 17, "attn.wq_b": 11, "attn.idx.q": 6, "attn.wo_b": 4, "ffn.shared_gu": 3, "ffn.experts_gu": 18, "ffn.down": 21, "attn.cmp.wk": 1, "attn.wo_a": 12, "ffn.router": 5}
+IMAGESA_DONE o1o2c
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2640473-1792513148): exit 0

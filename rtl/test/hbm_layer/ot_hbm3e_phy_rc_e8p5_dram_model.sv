@@ -58,6 +58,9 @@ module ot_hbm3e_phy_rc_e8p5 (
             for (integer g = 0; g < 4; g = g + 1) begin last_act_bg[p][g] = -1000; last_col_bg[p][g] = -1000; faw[p][g] = -1000; end
         end
         full = $sformatf("%m");
+        // %m inside this named block ends in ".INIT": drop it so leaf = the PHY instance name (phy_SW, ...); before
+        // 10-21 every preload looked for INIT.hex and the SM replays read all-zero weights (TOK-FUNC3-HBM).
+        if (full.len() > 5 && full.substr(full.len() - 5, full.len() - 1) == ".INIT") full = full.substr(0, full.len() - 6);
         leaf = full;
         for (k = full.len() - 1; k >= 0; k = k - 1) if (full[k] == ".") begin leaf = full.substr(k + 1, full.len() - 1); break; end
         if ($value$plusargs("HBM_IMG_DIR=%s", dir)) begin

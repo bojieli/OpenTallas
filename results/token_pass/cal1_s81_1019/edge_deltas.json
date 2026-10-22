@@ -1,0 +1,3487 @@
+{
+ "T_ar_edges": 8832,
+ "T_mtp_edges": 9507,
+ "counts": {
+  "RATEFIX": {
+   "ar": {
+    "by_delta": {
+     "CAPC2_PINPIPE": 580,
+     "CAP_EDLD": 6000,
+     "LEPCAP_INPIPE": 387,
+     "VPX_P6": 520,
+     "XDIE_GUARD2": 385
+    },
+    "by_op": {
+     "attn.a_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 40,
+       "VPX_P6": 520,
+       "XDIE_GUARD2": 40
+      },
+      "n": 40,
+      "sum": 600
+     },
+     "attn.a_proj": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "attn.den": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.exp": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.gather": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.hc_post": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.idx.q": {
+      "edges": {
+       "CAPC2_PINPIPE": 16,
+       "CAP_EDLD": 192,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 208
+     },
+     "attn.idx.score": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_final": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_local": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_merge": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 8,
+      "sum": 16
+     },
+     "attn.max": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.normalize": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.out_allreduce": {
+      "edges": {
+       "LEPCAP_INPIPE": 80,
+       "XDIE_GUARD2": 80
+      },
+      "n": 40,
+      "sum": 160
+     },
+     "attn.q_norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.q_norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.q_norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.q_quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.q_rope": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 32,
+      "sum": 0
+     },
+     "attn.quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.rows_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 8,
+      "sum": 16
+     },
+     "attn.scores": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.sink": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.window_load": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 32,
+      "sum": 0
+     },
+     "attn.wo_a": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "attn.wo_b": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "attn.wq_b": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 80
+     },
+     "attn.z_quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "embed": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "eng.add": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 0
+     },
+     "eng.dot": {
+      "edges": {
+       "CAPC2_PINPIPE": 4,
+       "CAP_EDLD": 48,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 52
+     },
+     "eng.gate": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 0
+     },
+     "ffn.bias": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.combine_allreduce": {
+      "edges": {
+       "LEPCAP_INPIPE": 80,
+       "XDIE_GUARD2": 80
+      },
+      "n": 40,
+      "sum": 160
+     },
+     "ffn.down": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.experts_gu": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.hc_post": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.quant2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.route_w": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.router": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.router_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 40,
+       "XDIE_GUARD2": 40
+      },
+      "n": 40,
+      "sum": 80
+     },
+     "ffn.softplus_sqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.swiglu": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.top6": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.top6_order": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "head.argmax": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.argmax_merge": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "head.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.hop": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "head.lm_head": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "substage_hop0": {
+      "edges": {
+       "LEPCAP_INPIPE": 40,
+       "XDIE_GUARD2": 40
+      },
+      "n": 40,
+      "sum": 80
+     },
+     "substage_hop1": {
+      "edges": {
+       "LEPCAP_INPIPE": 17,
+       "XDIE_GUARD2": 17
+      },
+      "n": 17,
+      "sum": 34
+     },
+     "token.return": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 1,
+      "sum": 16
+     },
+     "unplaced_hops": {
+      "edges": {
+       "LEPCAP_INPIPE": 62,
+       "XDIE_GUARD2": 62
+      },
+      "n": 1,
+      "sum": 124
+     }
+    },
+    "per_layer": {
+     "0": 185,
+     "1": 211,
+     "2": 217,
+     "3": 185,
+     "4": 187,
+     "5": 185,
+     "6": 187,
+     "7": 185,
+     "8": 217,
+     "9": 185,
+     "10": 185,
+     "11": 187,
+     "12": 185,
+     "13": 187,
+     "14": 241,
+     "15": 187,
+     "16": 185,
+     "17": 187,
+     "18": 185,
+     "19": 187,
+     "20": 215,
+     "21": 185,
+     "22": 187,
+     "23": 185,
+     "24": 217,
+     "25": 185,
+     "26": 187,
+     "27": 185,
+     "28": 217,
+     "29": 185,
+     "30": 185,
+     "31": 187,
+     "32": 215,
+     "33": 187,
+     "34": 185,
+     "35": 187,
+     "36": 215,
+     "37": 187,
+     "38": 185,
+     "39": 185
+    },
+    "per_layer_max": 241,
+    "sensitivity_vpx_issue_rate": 36837.7,
+    "total": 7872
+   },
+   "mtp": {
+    "by_delta": {
+     "CAPC2_PINPIPE": 624,
+     "CAP_EDLD": 6456,
+     "LEPCAP_INPIPE": 419,
+     "VPX_P6": 559,
+     "XDIE_GUARD2": 417
+    },
+    "by_op": {
+     "V.embed": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.argmax": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.argmax_merge": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "V.head.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.hop": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "V.head.lm_head": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.token.return": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 1,
+      "sum": 16
+     },
+     "V.unplaced_hops": {
+      "edges": {
+       "LEPCAP_INPIPE": 62,
+       "XDIE_GUARD2": 62
+      },
+      "n": 1,
+      "sum": 124
+     },
+     "accept.commit": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "accept.round": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "accept.seed": {
+      "edges": {
+       "CAPC2_PINPIPE": 2,
+       "CAP_EDLD": 24,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 26
+     },
+     "attn.a_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 43,
+       "VPX_P6": 559,
+       "XDIE_GUARD2": 43
+      },
+      "n": 43,
+      "sum": 645
+     },
+     "attn.a_proj": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "CAP_EDLD": 1032,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 1118
+     },
+     "attn.den": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.den.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.den.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.den.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.den.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.den.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.exp.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.gather": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.hc_post": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.idx.q": {
+      "edges": {
+       "CAPC2_PINPIPE": 16,
+       "CAP_EDLD": 192,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 208
+     },
+     "attn.idx.score": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_final": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_local": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_merge": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 8,
+      "sum": 16
+     },
+     "attn.max": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.max.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.max.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.max.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.max.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.max.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.normalize": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.normalize.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.normalize.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.normalize.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.normalize.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.normalize.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.out_allreduce": {
+      "edges": {
+       "LEPCAP_INPIPE": 86,
+       "XDIE_GUARD2": 86
+      },
+      "n": 43,
+      "sum": 172
+     },
+     "attn.q_norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.q_norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.q_norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.q_quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.q_rope": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 35,
+      "sum": 0
+     },
+     "attn.quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.rows_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 8,
+      "sum": 16
+     },
+     "attn.scores": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.scores.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.sink.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.window_load": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 32,
+      "sum": 0
+     },
+     "attn.wo_a": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "CAP_EDLD": 1032,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 1118
+     },
+     "attn.wo_b": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "CAP_EDLD": 1032,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 1118
+     },
+     "attn.wq_b": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 86
+     },
+     "attn.z_quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "draft.fixed": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "eng.add": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 0
+     },
+     "eng.dot": {
+      "edges": {
+       "CAPC2_PINPIPE": 4,
+       "CAP_EDLD": 48,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 52
+     },
+     "eng.gate": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 0
+     },
+     "ffn.bias": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.combine_allreduce": {
+      "edges": {
+       "LEPCAP_INPIPE": 86,
+       "XDIE_GUARD2": 86
+      },
+      "n": 43,
+      "sum": 172
+     },
+     "ffn.down": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.down.r0": {
+      "edges": {
+       "CAPC2_PINPIPE": 6,
+       "CAP_EDLD": 72,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 78
+     },
+     "ffn.experts_gu": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.experts_gu.r0": {
+      "edges": {
+       "CAPC2_PINPIPE": 6,
+       "CAP_EDLD": 72,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 78
+     },
+     "ffn.hc_post": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.ids_hop.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 3,
+       "XDIE_GUARD2": 3
+      },
+      "n": 3,
+      "sum": 6
+     },
+     "ffn.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.quant2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.quant2.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "ffn.ret_hop.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 3,
+       "XDIE_GUARD2": 3
+      },
+      "n": 3,
+      "sum": 6
+     },
+     "ffn.route_w": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.route_w.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "ffn.router": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "CAP_EDLD": 1032,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 1118
+     },
+     "ffn.router_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 43,
+       "XDIE_GUARD2": 43
+      },
+      "n": 43,
+      "sum": 86
+     },
+     "ffn.softplus_sqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.swiglu": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.swiglu.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "ffn.top6": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.top6_order": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "hop_in": {
+      "edges": {
+       "LEPCAP_INPIPE": 3,
+       "XDIE_GUARD2": 3
+      },
+      "n": 3,
+      "sum": 6
+     },
+     "mc.markov.floor": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.mtp_commit": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.mtp_seq.draft_chain": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.mtp_seq.seed_release": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.p2.selected_path": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.wfc_kit.ar_pass": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.wfc_kit.intervals": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.wfc_tok.edges": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "substage_hop0": {
+      "edges": {
+       "LEPCAP_INPIPE": 40,
+       "XDIE_GUARD2": 40
+      },
+      "n": 40,
+      "sum": 80
+     },
+     "substage_hop1": {
+      "edges": {
+       "LEPCAP_INPIPE": 17,
+       "XDIE_GUARD2": 17
+      },
+      "n": 17,
+      "sum": 34
+     },
+     "wave.h2": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.h3": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.h4": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.h5": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.h6": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.p2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "wave.p3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "wave.p4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "wave.p5": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "wave.p6": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     }
+    },
+    "per_layer": {
+     "0": 185,
+     "1": 211,
+     "2": 217,
+     "3": 185,
+     "4": 187,
+     "5": 185,
+     "6": 187,
+     "7": 185,
+     "8": 217,
+     "9": 185,
+     "10": 185,
+     "11": 187,
+     "12": 185,
+     "13": 187,
+     "14": 241,
+     "15": 187,
+     "16": 185,
+     "17": 187,
+     "18": 185,
+     "19": 187,
+     "20": 215,
+     "21": 185,
+     "22": 187,
+     "23": 185,
+     "24": 217,
+     "25": 185,
+     "26": 187,
+     "27": 185,
+     "28": 217,
+     "29": 185,
+     "30": 185,
+     "31": 187,
+     "32": 215,
+     "33": 187,
+     "34": 185,
+     "35": 187,
+     "36": 215,
+     "37": 187,
+     "38": 185,
+     "39": 185
+    },
+    "per_layer_max": 241,
+    "sensitivity_vpx_issue_rate": 39147.1,
+    "total": 8475
+   }
+  },
+  "TOKSIM-S81B": {
+   "ar": {
+    "by_delta": {
+     "CAPC2_PINPIPE": 580,
+     "CAP_EDLD": 6960,
+     "LEPCAP_INPIPE": 387,
+     "VPX_P6": 520,
+     "XDIE_GUARD2": 385
+    },
+    "by_op": {
+     "attn.a_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 40,
+       "VPX_P6": 520,
+       "XDIE_GUARD2": 40
+      },
+      "n": 40,
+      "sum": 600
+     },
+     "attn.a_proj": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "attn.den": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.exp": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.gather": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.hc_post": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.idx.q": {
+      "edges": {
+       "CAPC2_PINPIPE": 16,
+       "CAP_EDLD": 192,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 208
+     },
+     "attn.idx.score": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_final": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_local": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_merge": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 8,
+      "sum": 16
+     },
+     "attn.max": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.normalize": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.out_allreduce": {
+      "edges": {
+       "LEPCAP_INPIPE": 80,
+       "XDIE_GUARD2": 80
+      },
+      "n": 40,
+      "sum": 160
+     },
+     "attn.q_norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.q_norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.q_norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.q_quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.q_rope": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 32,
+      "sum": 0
+     },
+     "attn.quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.rows_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 8,
+      "sum": 16
+     },
+     "attn.scores": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.sink": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.window_load": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 32,
+      "sum": 0
+     },
+     "attn.wo_a": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "attn.wo_b": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "attn.wq_b": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "attn.z_quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "embed": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "eng.add": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 0
+     },
+     "eng.dot": {
+      "edges": {
+       "CAPC2_PINPIPE": 4,
+       "CAP_EDLD": 48,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 52
+     },
+     "eng.gate": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 0
+     },
+     "ffn.bias": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.combine_allreduce": {
+      "edges": {
+       "LEPCAP_INPIPE": 80,
+       "XDIE_GUARD2": 80
+      },
+      "n": 40,
+      "sum": 160
+     },
+     "ffn.down": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.experts_gu": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.hc_post": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.quant2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.route_w": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.router": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.router_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 40,
+       "XDIE_GUARD2": 40
+      },
+      "n": 40,
+      "sum": 80
+     },
+     "ffn.softplus_sqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.swiglu": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.top6": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.top6_order": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "head.argmax": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.argmax_merge": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "head.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.hop": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "head.lm_head": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "head.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "substage_hop0": {
+      "edges": {
+       "LEPCAP_INPIPE": 40,
+       "XDIE_GUARD2": 40
+      },
+      "n": 40,
+      "sum": 80
+     },
+     "substage_hop1": {
+      "edges": {
+       "LEPCAP_INPIPE": 17,
+       "XDIE_GUARD2": 17
+      },
+      "n": 17,
+      "sum": 34
+     },
+     "token.return": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 1,
+      "sum": 16
+     },
+     "unplaced_hops": {
+      "edges": {
+       "LEPCAP_INPIPE": 62,
+       "XDIE_GUARD2": 62
+      },
+      "n": 1,
+      "sum": 124
+     }
+    },
+    "per_layer": {
+     "0": 209,
+     "1": 235,
+     "2": 241,
+     "3": 209,
+     "4": 211,
+     "5": 209,
+     "6": 211,
+     "7": 209,
+     "8": 241,
+     "9": 209,
+     "10": 209,
+     "11": 211,
+     "12": 209,
+     "13": 211,
+     "14": 265,
+     "15": 211,
+     "16": 209,
+     "17": 211,
+     "18": 209,
+     "19": 211,
+     "20": 239,
+     "21": 209,
+     "22": 211,
+     "23": 209,
+     "24": 241,
+     "25": 209,
+     "26": 211,
+     "27": 209,
+     "28": 241,
+     "29": 209,
+     "30": 209,
+     "31": 211,
+     "32": 239,
+     "33": 211,
+     "34": 209,
+     "35": 211,
+     "36": 239,
+     "37": 211,
+     "38": 209,
+     "39": 209
+    },
+    "per_layer_max": 265,
+    "sensitivity_vpx_issue_rate": 36837.7,
+    "total": 8832
+   },
+   "mtp": {
+    "by_delta": {
+     "CAPC2_PINPIPE": 624,
+     "CAP_EDLD": 7488,
+     "LEPCAP_INPIPE": 419,
+     "VPX_P6": 559,
+     "XDIE_GUARD2": 417
+    },
+    "by_op": {
+     "V.embed": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.argmax": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.argmax_merge": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "V.head.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.hop": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "V.head.lm_head": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.head.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "V.token.return": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 1,
+      "sum": 16
+     },
+     "V.unplaced_hops": {
+      "edges": {
+       "LEPCAP_INPIPE": 62,
+       "XDIE_GUARD2": 62
+      },
+      "n": 1,
+      "sum": 124
+     },
+     "accept.commit": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "accept.round": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "accept.seed": {
+      "edges": {
+       "CAPC2_PINPIPE": 2,
+       "CAP_EDLD": 24,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 26
+     },
+     "attn.a_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 43,
+       "VPX_P6": 559,
+       "XDIE_GUARD2": 43
+      },
+      "n": 43,
+      "sum": 645
+     },
+     "attn.a_proj": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "CAP_EDLD": 1032,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 1118
+     },
+     "attn.den": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.den.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.den.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.den.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.den.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.den.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.exp.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.exp.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.gather": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.hc_post": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.idx.q": {
+      "edges": {
+       "CAPC2_PINPIPE": 16,
+       "CAP_EDLD": 192,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 208
+     },
+     "attn.idx.score": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_final": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_local": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 8,
+      "sum": 0
+     },
+     "attn.idx.topk_merge": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 8,
+      "sum": 16
+     },
+     "attn.max": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.max.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.max.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.max.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.max.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.max.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.normalize": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.normalize.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.normalize.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.normalize.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.normalize.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.normalize.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.out_allreduce": {
+      "edges": {
+       "LEPCAP_INPIPE": 86,
+       "XDIE_GUARD2": 86
+      },
+      "n": 43,
+      "sum": 172
+     },
+     "attn.q_norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.q_norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.q_norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.q_quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.q_rope": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 35,
+      "sum": 0
+     },
+     "attn.quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "attn.rows_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 8,
+       "XDIE_GUARD2": 8
+      },
+      "n": 8,
+      "sum": 16
+     },
+     "attn.scores": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.scores.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "attn.sink.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink.r1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink.r2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink.r3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.sink.r4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "attn.window_load": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 32,
+      "sum": 0
+     },
+     "attn.wo_a": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "CAP_EDLD": 1032,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 1118
+     },
+     "attn.wo_b": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "CAP_EDLD": 1032,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 1118
+     },
+     "attn.wq_b": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "CAP_EDLD": 1032,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 1118
+     },
+     "attn.z_quant": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "draft.fixed": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.head4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov1": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "draft.markov4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "eng.add": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 0
+     },
+     "eng.dot": {
+      "edges": {
+       "CAPC2_PINPIPE": 4,
+       "CAP_EDLD": 48,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 52
+     },
+     "eng.gate": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 2,
+      "sum": 0
+     },
+     "ffn.bias": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.combine_allreduce": {
+      "edges": {
+       "LEPCAP_INPIPE": 86,
+       "XDIE_GUARD2": 86
+      },
+      "n": 43,
+      "sum": 172
+     },
+     "ffn.down": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.down.r0": {
+      "edges": {
+       "CAPC2_PINPIPE": 6,
+       "CAP_EDLD": 72,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 78
+     },
+     "ffn.experts_gu": {
+      "edges": {
+       "CAPC2_PINPIPE": 80,
+       "CAP_EDLD": 960,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 1040
+     },
+     "ffn.experts_gu.r0": {
+      "edges": {
+       "CAPC2_PINPIPE": 6,
+       "CAP_EDLD": 72,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 78
+     },
+     "ffn.hc_post": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.hc_pre": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.ids_hop.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 3,
+       "XDIE_GUARD2": 3
+      },
+      "n": 3,
+      "sum": 6
+     },
+     "ffn.norm.rsqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.norm.scale": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.norm.sumsq": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.quant2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.quant2.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "ffn.ret_hop.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 3,
+       "XDIE_GUARD2": 3
+      },
+      "n": 3,
+      "sum": 6
+     },
+     "ffn.route_w": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.route_w.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "ffn.router": {
+      "edges": {
+       "CAPC2_PINPIPE": 86,
+       "CAP_EDLD": 1032,
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 1118
+     },
+     "ffn.router_allgather": {
+      "edges": {
+       "LEPCAP_INPIPE": 43,
+       "XDIE_GUARD2": 43
+      },
+      "n": 43,
+      "sum": 86
+     },
+     "ffn.softplus_sqrt": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.swiglu": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 40,
+      "sum": 0
+     },
+     "ffn.swiglu.r0": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 3,
+      "sum": 0
+     },
+     "ffn.top6": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "ffn.top6_order": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 43,
+      "sum": 0
+     },
+     "hop_in": {
+      "edges": {
+       "LEPCAP_INPIPE": 3,
+       "XDIE_GUARD2": 3
+      },
+      "n": 3,
+      "sum": 6
+     },
+     "mc.markov.floor": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.mtp_commit": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.mtp_seq.draft_chain": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.mtp_seq.seed_release": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.p2.selected_path": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.wfc_kit.ar_pass": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.wfc_kit.intervals": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "mc.wfc_tok.edges": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "substage_hop0": {
+      "edges": {
+       "LEPCAP_INPIPE": 40,
+       "XDIE_GUARD2": 40
+      },
+      "n": 40,
+      "sum": 80
+     },
+     "substage_hop1": {
+      "edges": {
+       "LEPCAP_INPIPE": 17,
+       "XDIE_GUARD2": 17
+      },
+      "n": 17,
+      "sum": 34
+     },
+     "wave.h2": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.h3": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.h4": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.h5": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.h6": {
+      "edges": {
+       "LEPCAP_INPIPE": 1,
+       "XDIE_GUARD2": 1
+      },
+      "n": 1,
+      "sum": 2
+     },
+     "wave.p2": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "wave.p3": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "wave.p4": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "wave.p5": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     },
+     "wave.p6": {
+      "edges": {
+       "LEPCAP_INPIPE": 0,
+       "XDIE_GUARD2": 0
+      },
+      "n": 1,
+      "sum": 0
+     }
+    },
+    "per_layer": {
+     "0": 209,
+     "1": 235,
+     "2": 241,
+     "3": 209,
+     "4": 211,
+     "5": 209,
+     "6": 211,
+     "7": 209,
+     "8": 241,
+     "9": 209,
+     "10": 209,
+     "11": 211,
+     "12": 209,
+     "13": 211,
+     "14": 265,
+     "15": 211,
+     "16": 209,
+     "17": 211,
+     "18": 209,
+     "19": 211,
+     "20": 239,
+     "21": 209,
+     "22": 211,
+     "23": 209,
+     "24": 241,
+     "25": 209,
+     "26": 211,
+     "27": 209,
+     "28": 241,
+     "29": 209,
+     "30": 209,
+     "31": 211,
+     "32": 239,
+     "33": 211,
+     "34": 209,
+     "35": 211,
+     "36": 239,
+     "37": 211,
+     "38": 209,
+     "39": 209
+    },
+    "per_layer_max": 265,
+    "sensitivity_vpx_issue_rate": 39147.1,
+    "total": 9507
+   }
+  }
+ },
+ "ledger": {
+  "CAPC2_PINPIPE": {
+   "edges": 2,
+   "per": "field op instance",
+   "src": "claude/s81-capc2-cal-1019 1e559612c (gate 1f4c80cf6)"
+  },
+  "CAP_EDLD": {
+   "edges": 24,
+   "per": "field op instance not measured on the L16/E24 cap",
+   "src": "claude/tok2-capld-1019 636f4c670"
+  },
+  "LEPCAP_INPIPE": {
+   "edges": 1,
+   "per": "crossing phase (+2 a token: t_host / t_kd)",
+   "src": "claude/s81-lepcap-1019 bb66563eb (RTL eec2dca41)"
+  },
+  "VPX_P6": {
+   "edges": 13,
+   "per": "attn.a_allgather instance",
+   "src": "Codex 73879e4d2 + claude/s81-tok4-1019 6ea6ea0a9"
+  },
+  "XDIE_GUARD2": {
+   "edges": 1,
+   "per": "crossing phase",
+   "src": "claude/xdie-s81-mu-1019 eb0d31c63 (out_g2 rerun live)"
+  }
+ },
+ "ledger_digest": "d64ecfe0248a8ce8",
+ "per_stage_edges": 265,
+ "schema": "opentallas.s81_cal1.edge_deltas.v1",
+ "source": "results/token_pass/cal1_s81_1019/fold_cal1.py"
+}

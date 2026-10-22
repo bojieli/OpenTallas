@@ -26,11 +26,20 @@ TP=results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz
 # HKV-DIE 10-19: KV attention codec edges read from the instantiated qkd_kvs_attn (.LAND(1) -> 2), never assumed
 KV_CODEC=${D2D_KV_CODEC:-$(python3 -c "import sys; sys.path[:0]=['tools/qwen_layerbench','tools','tools/qwen_split']; import layer_compile as C; print(C.kv_codec_edges(open('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read()))")}
 MU_ARGS=()
+[ "${D2D_ROPE:-0}" = 1 ] && MU_ARGS+=(--rope)
+[ -n "${D2D_HEAD_PREPARE_EDGES:-}" ] && MU_ARGS+=(--head-prepare-edges "$D2D_HEAD_PREPARE_EDGES")
 [ "${D2D_MU:-0}" = 1 ] && MU_ARGS+=(--mu)
 # KV-DCAL2 10-19 (KV-EMB2): D2D_CTX_HOST_REQ=<measured HOST RESULT->context edges> moves the token-run CONTEXT slot after
 # RESULT(n) reaches the KV HOST; D2D_EMB_FILL=<fork + 2 + join last + 1> fails closed on a short fill budget
 [ -n "${D2D_CTX_HOST_REQ:-}" ] && MU_ARGS+=(--ctx-host-req "$D2D_CTX_HOST_REQ")
 [ -n "${D2D_EMB_FILL:-}" ] && MU_ARGS+=(--emb-fill-edges "$D2D_EMB_FILL")
+# KV-EMBWIN16 10-20: D2D_EMB_WINDOW=<edges> grows the token-run embedding window (L0..L35 + token period move with it)
+[ -n "${D2D_EMB_WINDOW:-}" ] && MU_ARGS+=(--emb-window "$D2D_EMB_WINDOW")
+# KV-PROG17 10-20: the KV attention r16 tile (OT_KV_ATTN_R16=1: qkd_attn_cal_gen_r16 TX_SHIFT 1, RETIRE_STATIC STATUS_DELAY 213)
+# moves the K RESULT burst +D2D_ATTN_TX_SHIFT and the K STATUS +D2D_STATUS_DELAY in every layer (priced in every layer /
+# token window); both link ends bind the resulting _r16 image (kv_static_programme LINK_IMAGE, compute sequencer).
+[ -n "${D2D_ATTN_TX_SHIFT:-}" ] && MU_ARGS+=(--attn-tx-shift "$D2D_ATTN_TX_SHIFT")
+[ -n "${D2D_STATUS_DELAY:-}" ] && MU_ARGS+=(--status-delay "$D2D_STATUS_DELAY")
 mkdir -p "$OUT"
 gunzip -c "$TP" > "$OUT/token_path_compiled.json"
 python3 tools/qwen_split/d2d_link_calendar.py --out "$OUT/program" --txl 6 --phy 5 --profile program --die-stages "$STAGES" --kv-codec "$KV_CODEC" \

@@ -44,7 +44,7 @@ module qfd_native59_dv_service #(
  // LAND_EDGES=0 profile is not allowed: production must supply the measured W5..E5 return-chain landing edge count.
  parameter integer NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
  // MU-DQ-D2DUSER: users (1 = single user, the as-built block) and the HOST allocator's initial sequence (INITIAL_EPOCH[15:2])
- parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0
+ parameter integer ROPE=0,parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
@@ -136,7 +136,6 @@ module qfd_native59_dv_service #(
  // so the window opens on the accepted request edge itself: q_slot may be the edge after request_slot, and the Q record
  // follows the CMD record on consecutive codec edges.  MUT 4 (bench): the legacy window from the registered vm_q_start
  // (Q beat 0 >= 2 edges after the CMD, i.e. one idle link slot), which the compiled calendar does not reserve.
- reg[16383:0]qbuf;reg[511:0]qseen;reg qctx,qlock;   // ROOT-N59 10-19: restored (as MU-DQ-TOK 16299df8a); merge e28fa950f dropped it -> no elaboration
  wire vm_q_epoch,vm_q_start;
  wire q_open=(MUT==4)?vm_q_start:request_slot;
  // Decoded constant-index form (S-QWCOL 10-18): the n1c gate's synthesis smoke timed out (2700 s, yosys SHARE on the
@@ -253,10 +252,14 @@ module qfd_native59_dv_service #(
   else if(p_vis)visibility_seen<=commit_complete&&!land_fault;
  wire visibility_fault=p_cs&&!visibility_seen;
  reg dv_fault;
+ // TOK-FUNC-QW xdie 10-21: the record endpoint (087c61d9a R3c) selects its CMD tx_data / TAG59 halves by the service's
+ // same-edge request copies kernel_request_pub (== kernel_request_v; LOCAL32 0: alias). Unwired here, the CMD record
+ // carried the Q data / Q tag -> codec tx_record fault at the first CMD (xdie cur_pair). Wired as in qfd_native59_svc.
+ wire[23:0]kreq_pub;
  qfd_native59_static_service u_service(
  .ck(ck),.rst_n(rst_n),.source_fault(context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault),
  .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),
- .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(req_v),.kernel_request_tag(req_tag),
+ .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(req_v),.kernel_request_pub(kreq_pub),.kernel_request_tag(req_tag),
  .q_slot(p_qs),.q_slot_beat(p_qb),.q_v(q[523]),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
  .kernel_q_v(kq_v),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
  .result_slot(result_slot),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
@@ -264,7 +267,7 @@ module qfd_native59_dv_service #(
  .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
  .complete_slot(p_cs),.completed(completed),.active(active),.fault(svc_fault),.native_ret(service_ret_raw));
  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT))u_record(
- .ck(ck),.rst_n(rst_n),.operation_tag(operation_tag),.kernel_request_v(req_v),.kernel_request_tag(req_tag),
+ .ck(ck),.rst_n(rst_n),.operation_tag(operation_tag),.kernel_request_v(req_v),.kernel_request_pub(kreq_pub),.kernel_request_tag(req_tag),
  .kernel_q_v(kq_v),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
  .tx_slot(p_ts),.tx_slot_kind(p_tk),.tx_slot_beat(p_tb),.tx_valid(native_tx_v),.tx_payload(native_tx_payload),
  .rx_event(p_rv),.rx_payload(p_rp),.rx_slot(p_rs),.rx_slot_kind(p_rk),.rx_slot_beat(p_rb),
@@ -273,7 +276,12 @@ module qfd_native59_dv_service #(
  // ---------------------------------------------------------------- embedding row read (G9), fixed 65-edge sequence
  wire emb_go=!p_cmd[0]&&p_cmd[379:376]==4'hE;
  wire cmd_bad=(emb_go&&((|p_cmd[357:1])||p_cmd[375:358]>=18'd151936))||(!p_cmd[0]&&(|p_cmd)&&!emb_go);
+ // RP1 arms on the scalar chain 12 edges before RoPE word0. Keep that
+ // arm interval free of preceding group1 embedding data/header words.
+ localparam integer ROPE_FIRST = 77; // 65 embedding reads + 12 blank return edges
+ wire emb_read;
  reg emb_act;reg[6:0]emb_k;reg[17:0]emb_tok;
+ assign emb_read=emb_act && (emb_k<=7'd64 || emb_k>=7'(ROPE_FIRST));
  reg e1,e2,e3;reg[6:0]k1,k2,k3;
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin emb_act<=0;emb_k<=0;emb_tok<=0;emb_code_re<=0;emb_code_addr<=0;emb_scale_re<=0;emb_scale_addr<=0;
@@ -283,11 +291,15 @@ module qfd_native59_dv_service #(
    if(emb_go&&!emb_act&&!cmd_bad)begin emb_act<=1;emb_k<=0;emb_tok<=p_cmd[375:358];end
    if(emb_act)begin
     if(emb_k<7'd64)begin emb_code_re<=1;emb_code_addr<={emb_tok,emb_k[5:0]^((MUT==3)?6'd1:6'd0)};end
-    else begin emb_scale_re<=1;emb_scale_addr<=emb_tok;end
-    emb_k<=emb_k+7'd1;if(emb_k==7'd64)emb_act<=0;
+    else if(emb_k==7'd64)begin emb_scale_re<=1;emb_scale_addr<=emb_tok;end
+    else if(emb_k>=7'(ROPE_FIRST))begin
+     emb_code_re<=1;
+     emb_code_addr<=24'd9723904+{3'd0,emb_tok,3'd0}+24'(emb_k-7'(ROPE_FIRST));
+    end
+    emb_k<=emb_k+7'd1;if(emb_k==(ROPE?7'(ROPE_FIRST+7):7'd64))emb_act<=0;
    end
    // read edge (e1: the re flop is at the pin), provider answer (e2), answer in the pin register (e3)
-   e1<=emb_act;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2;k3<=k2;
+   e1<=emb_read;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2;k3<=k2;
   end
  // ---------------------------------------------------------------- dr_o: group 0 attention result / group 1 embedding row
  wire g0=vm_write_v,g1=e3;
@@ -297,7 +309,7 @@ module qfd_native59_dv_service #(
   else begin
    dr_tag<=vm_write_tag;
    dr_o<=g0?{1'b1,1'b0,1'b0,vm_write_beat,vm_write_data}:
-         g1?{1'b1,1'b1,(k3==7'd64)?6'd0:k3[5:0],(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
+         g1?{1'b1,1'b1,(k3==7'd64)?6'd0:((k3>7'd64)?6'(k3-7'(ROPE_FIRST)):k3[5:0]),(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
   end
  qfd_native59_dr_landing #(.LAND_EDGES(LAND_EDGES))u_land(
  .ck(ck),.rst_n(rst_n),.request_slot(request_slot),.request_tag59(request_tag),

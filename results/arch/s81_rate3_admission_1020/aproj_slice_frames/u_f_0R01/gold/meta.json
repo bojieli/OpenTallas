@@ -1,0 +1,1489 @@
+{
+ "master": "col_h10",
+ "die_frame": "u_f_0R01",
+ "die_master": "col_h10_l4",
+ "lk": 1170,
+ "land_e": 2,
+ "slice": "u_s_0S",
+ "slice_index": 0,
+ "seed": 1,
+ "only": null,
+ "K": 5120,
+ "rows_per_mat": [
+  4
+ ],
+ "mats": 1,
+ "q_pairs": [
+  0,
+  2,
+  3,
+  4,
+  6,
+  7,
+  8,
+  9,
+  11,
+  12,
+  13,
+  14
+ ],
+ "bf_pairs": [
+  1,
+  5,
+  10,
+  15
+ ],
+ "pairs": [
+  0,
+  2,
+  3,
+  4,
+  6,
+  7,
+  8,
+  9,
+  11,
+  12
+ ],
+ "phase": {
+  "index": 0,
+  "bf": false,
+  "K": 5120,
+  "nbeat": 80,
+  "sbase": 0,
+  "nrows": 4,
+  "fmt_fp32": [
+   false,
+   false
+  ],
+  "rsplit": 0,
+  "t_read": 32,
+  "t_phase_model": 80,
+  "segments_per_pair_max": 1
+ },
+ "matrices": [
+  {
+   "name": "wq_a",
+   "fmt": "fp8",
+   "rows": [
+    0,
+    4
+   ],
+   "cols": [
+    0,
+    5120
+   ],
+   "off": 0,
+   "split": 5,
+   "segment_elems": [
+    1024,
+    1024,
+    1024,
+    1024,
+    1024
+   ]
+  }
+ ],
+ "nrows": 4,
+ "ops": 4,
+ "rows": {
+  "20": {
+   "vals": [
+    3175010416,
+    3171120594,
+    3166045362,
+    1000032571,
+    3166010175
+   ],
+   "acc": 3186773642,
+   "bf16": 48626,
+   "src": [
+    "wq_a",
+    20
+   ],
+   "out_index": 20
+  },
+  "21": {
+   "vals": [
+    1018559480,
+    1006737883,
+    3165642576,
+    1016722295,
+    3137350656
+   ],
+   "acc": 1020319629,
+   "bf16": 15569,
+   "src": [
+    "wq_a",
+    21
+   ],
+   "out_index": 21
+  },
+  "22": {
+   "vals": [
+    1019876288,
+    1015144982,
+    3156476394,
+    3139685964,
+    971982944
+   ],
+   "acc": 1021917242,
+   "bf16": 15593,
+   "src": [
+    "wq_a",
+    22
+   ],
+   "out_index": 22
+  },
+  "23": {
+   "vals": [
+    1009299545,
+    1007201356,
+    1010694015,
+    1018516131,
+    1026593546
+   ],
+   "acc": 1036224690,
+   "bf16": 15812,
+   "src": [
+    "wq_a",
+    23
+   ],
+   "out_index": 23
+  }
+ },
+ "cycles": 2000,
+ "plan": {
+  "schema": "opentallas.s81_dv.frame_return_plan.v1",
+  "master": "col_h10",
+  "win": 2,
+  "rst": 1,
+  "cf": 2,
+  "K": 5120,
+  "nseg": 5,
+  "super_rows": 2,
+  "rows": 4,
+  "topology": {
+   "nodes": {
+    "n0": {
+     "a": "e0.r0",
+     "link_a": 6,
+     "b": "e0.r1",
+     "link_b": 7
+    },
+    "n1": {
+     "a": "n0",
+     "link_a": 0,
+     "b": "n2",
+     "link_b": 0
+    },
+    "n10": {
+     "a": "e5w.r",
+     "link_a": 5,
+     "b": "e5e.r",
+     "link_b": 2
+    },
+    "n11": {
+     "a": "n9",
+     "link_a": 0,
+     "b": "n13",
+     "link_b": 0
+    },
+    "n12": {
+     "a": "e6.r0",
+     "link_a": 7,
+     "b": "e6.r1",
+     "link_b": 8
+    },
+    "n13": {
+     "a": "n12",
+     "link_a": 0,
+     "b": "n14",
+     "link_b": 0
+    },
+    "n14": {
+     "a": "e7.r0",
+     "link_a": 4,
+     "b": "e7.r1",
+     "link_b": 5
+    },
+    "n15": {
+     "a": "n7",
+     "link_a": 2,
+     "b": "n23",
+     "link_b": 2
+    },
+    "n16": {
+     "a": "e8.r0",
+     "link_a": 7,
+     "b": "e8.r1",
+     "link_b": 8
+    },
+    "n17": {
+     "a": "n16",
+     "link_a": 0,
+     "b": "n18",
+     "link_b": 0
+    },
+    "n18": {
+     "a": "e9.r0",
+     "link_a": 4,
+     "b": "e9.r1",
+     "link_b": 5
+    },
+    "n19": {
+     "a": "n17",
+     "link_a": 0,
+     "b": "n21",
+     "link_b": 0
+    },
+    "n2": {
+     "a": "e1w.r",
+     "link_a": 5,
+     "b": "e1e.r",
+     "link_b": 2
+    },
+    "n20": {
+     "a": "e10w.r",
+     "link_a": 5,
+     "b": "e10e.r",
+     "link_b": 3
+    },
+    "n21": {
+     "a": "n20",
+     "link_a": 0,
+     "b": "n22",
+     "link_b": 0
+    },
+    "n22": {
+     "a": "e11.r0",
+     "link_a": 8,
+     "b": "e11.r1",
+     "link_b": 9
+    },
+    "n23": {
+     "a": "n19",
+     "link_a": 1,
+     "b": "n27",
+     "link_b": 1
+    },
+    "n24": {
+     "a": "e12.r0",
+     "link_a": 5,
+     "b": "e12.r1",
+     "link_b": 6
+    },
+    "n25": {
+     "a": "n24",
+     "link_a": 0,
+     "b": "n26",
+     "link_b": 0
+    },
+    "n26": {
+     "a": "e13.r0",
+     "link_a": 8,
+     "b": "e13.r1",
+     "link_b": 9
+    },
+    "n27": {
+     "a": "n25",
+     "link_a": 0,
+     "b": "n29",
+     "link_b": 0
+    },
+    "n28": {
+     "a": "e14.r0",
+     "link_a": 5,
+     "b": "e14.r1",
+     "link_b": 6
+    },
+    "n29": {
+     "a": "n28",
+     "link_a": 0,
+     "b": "n30",
+     "link_b": 0
+    },
+    "n3": {
+     "a": "n1",
+     "link_a": 0,
+     "b": "n5",
+     "link_b": 0
+    },
+    "n30": {
+     "a": "e15w.r",
+     "link_a": 6,
+     "b": "e15e.r",
+     "link_b": 3
+    },
+    "n4": {
+     "a": "e2.r0",
+     "link_a": 3,
+     "b": "e2.r1",
+     "link_b": 4
+    },
+    "n5": {
+     "a": "n4",
+     "link_a": 0,
+     "b": "n6",
+     "link_b": 0
+    },
+    "n6": {
+     "a": "e3.r0",
+     "link_a": 7,
+     "b": "e3.r1",
+     "link_b": 8
+    },
+    "n7": {
+     "a": "n3",
+     "link_a": 1,
+     "b": "n11",
+     "link_b": 1
+    },
+    "n8": {
+     "a": "e4.r0",
+     "link_a": 3,
+     "b": "e4.r1",
+     "link_b": 4
+    },
+    "n9": {
+     "a": "n8",
+     "link_a": 0,
+     "b": "n10",
+     "link_b": 0
+    }
+   },
+   "root": "n15",
+   "root_link": 10,
+   "r1_skew": true
+  },
+  "frame_schedule": null,
+  "emission": {
+   "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+   "e0": 209,
+   "off": {
+    "0": 0,
+    "2": 0,
+    "3": 4,
+    "4": 4,
+    "6": 8,
+    "7": 8,
+    "8": 10,
+    "9": 10,
+    "11": 14,
+    "12": 14,
+    "13": 16,
+    "14": 16
+   },
+   "seg_extra": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "cfifo": "dsfd_cfifo_crs4",
+   "land_e": 2,
+   "x_shift": -4,
+   "last_beat": [
+    71,
+    73,
+    75,
+    77,
+    79
+   ],
+   "edges": {
+    "e0": 313,
+    "e2": 315,
+    "e3": 323,
+    "e4": 323,
+    "e6": 329,
+    "e7": 325,
+    "e8": 331,
+    "e9": 327,
+    "e11": 327,
+    "e12": 329
+   },
+   "elem_extra": 33,
+   "elem_class": [
+    2,
+    2
+   ]
+  },
+  "placement": [
+   {
+    "pair": 0,
+    "field_slot": 0,
+    "super_row": 0,
+    "seg": 0,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   },
+   {
+    "pair": 2,
+    "field_slot": 1,
+    "super_row": 0,
+    "seg": 1,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   },
+   {
+    "pair": 3,
+    "field_slot": 2,
+    "super_row": 1,
+    "seg": 3,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   },
+   {
+    "pair": 4,
+    "field_slot": 3,
+    "super_row": 0,
+    "seg": 3,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   },
+   {
+    "pair": 6,
+    "field_slot": 4,
+    "super_row": 1,
+    "seg": 4,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   },
+   {
+    "pair": 7,
+    "field_slot": 5,
+    "super_row": 1,
+    "seg": 2,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   },
+   {
+    "pair": 8,
+    "field_slot": 6,
+    "super_row": 0,
+    "seg": 4,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   },
+   {
+    "pair": 9,
+    "field_slot": 7,
+    "super_row": 0,
+    "seg": 2,
+    "nseg": 5,
+    "rows": [
+     0,
+     1
+    ]
+   },
+   {
+    "pair": 11,
+    "field_slot": 8,
+    "super_row": 1,
+    "seg": 0,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   },
+   {
+    "pair": 12,
+    "field_slot": 9,
+    "super_row": 1,
+    "seg": 1,
+    "nseg": 5,
+    "rows": [
+     2,
+     3
+    ]
+   }
+  ],
+  "assign_slots": [
+   [
+    0,
+    0,
+    0
+   ],
+   [
+    1,
+    0,
+    1
+   ],
+   [
+    2,
+    1,
+    3
+   ],
+   [
+    3,
+    0,
+    3
+   ],
+   [
+    4,
+    1,
+    4
+   ],
+   [
+    5,
+    1,
+    2
+   ],
+   [
+    6,
+    0,
+    4
+   ],
+   [
+    7,
+    0,
+    2
+   ],
+   [
+    8,
+    1,
+    0
+   ],
+   [
+    9,
+    1,
+    1
+   ]
+  ],
+  "nodes": {
+   "n0": {
+    "a": "e0.r0",
+    "b": "e0.r1",
+    "link_a": 6,
+    "link_b": 7,
+    "arrive_a": [
+     286
+    ],
+    "arrive_b": [
+     287
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     299,
+     300
+    ],
+    "faults": []
+   },
+   "n10": {
+    "a": "e5w.r",
+    "b": "e5e.r",
+    "link_a": 5,
+    "link_b": 2,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n12": {
+    "a": "e6.r0",
+    "b": "e6.r1",
+    "link_a": 7,
+    "link_b": 8,
+    "arrive_a": [
+     303
+    ],
+    "arrive_b": [
+     304
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     316,
+     317
+    ],
+    "faults": []
+   },
+   "n14": {
+    "a": "e7.r0",
+    "b": "e7.r1",
+    "link_a": 4,
+    "link_b": 5,
+    "arrive_a": [
+     296
+    ],
+    "arrive_b": [
+     297
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     309,
+     310
+    ],
+    "faults": []
+   },
+   "n13": {
+    "a": "n12",
+    "b": "n14",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     316,
+     317
+    ],
+    "arrive_b": [
+     309,
+     310
+    ],
+    "merges": 0,
+    "forwards": 4,
+    "exits": [
+     322,
+     323,
+     329,
+     330
+    ],
+    "faults": []
+   },
+   "n16": {
+    "a": "e8.r0",
+    "b": "e8.r1",
+    "link_a": 7,
+    "link_b": 8,
+    "arrive_a": [
+     305
+    ],
+    "arrive_b": [
+     306
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     318,
+     319
+    ],
+    "faults": []
+   },
+   "n18": {
+    "a": "e9.r0",
+    "b": "e9.r1",
+    "link_a": 4,
+    "link_b": 5,
+    "arrive_a": [
+     298
+    ],
+    "arrive_b": [
+     299
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     311,
+     312
+    ],
+    "faults": []
+   },
+   "n17": {
+    "a": "n16",
+    "b": "n18",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     318,
+     319
+    ],
+    "arrive_b": [
+     311,
+     312
+    ],
+    "merges": 0,
+    "forwards": 4,
+    "exits": [
+     324,
+     325,
+     331,
+     332
+    ],
+    "faults": []
+   },
+   "n2": {
+    "a": "e1w.r",
+    "b": "e1e.r",
+    "link_a": 5,
+    "link_b": 2,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n1": {
+    "a": "n0",
+    "b": "n2",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     299,
+     300
+    ],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     312,
+     313
+    ],
+    "faults": []
+   },
+   "n20": {
+    "a": "e10w.r",
+    "b": "e10e.r",
+    "link_a": 5,
+    "link_b": 3,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n22": {
+    "a": "e11.r0",
+    "b": "e11.r1",
+    "link_a": 8,
+    "link_b": 9,
+    "arrive_a": [
+     302
+    ],
+    "arrive_b": [
+     303
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     315,
+     316
+    ],
+    "faults": []
+   },
+   "n21": {
+    "a": "n20",
+    "b": "n22",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [],
+    "arrive_b": [
+     315,
+     316
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     328,
+     329
+    ],
+    "faults": []
+   },
+   "n19": {
+    "a": "n17",
+    "b": "n21",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     324,
+     325,
+     331,
+     332
+    ],
+    "arrive_b": [
+     328,
+     329
+    ],
+    "merges": 0,
+    "forwards": 6,
+    "exits": [
+     337,
+     338,
+     341,
+     342,
+     344,
+     345
+    ],
+    "faults": []
+   },
+   "n24": {
+    "a": "e12.r0",
+    "b": "e12.r1",
+    "link_a": 5,
+    "link_b": 6,
+    "arrive_a": [
+     301
+    ],
+    "arrive_b": [
+     302
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     314,
+     315
+    ],
+    "faults": []
+   },
+   "n26": {
+    "a": "e13.r0",
+    "b": "e13.r1",
+    "link_a": 8,
+    "link_b": 9,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n25": {
+    "a": "n24",
+    "b": "n26",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     314,
+     315
+    ],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     327,
+     328
+    ],
+    "faults": []
+   },
+   "n28": {
+    "a": "e14.r0",
+    "b": "e14.r1",
+    "link_a": 5,
+    "link_b": 6,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n30": {
+    "a": "e15w.r",
+    "b": "e15e.r",
+    "link_a": 6,
+    "link_b": 3,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n29": {
+    "a": "n28",
+    "b": "n30",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 0,
+    "exits": [],
+    "faults": []
+   },
+   "n27": {
+    "a": "n25",
+    "b": "n29",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     327,
+     328
+    ],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     340,
+     341
+    ],
+    "faults": []
+   },
+   "n23": {
+    "a": "n19",
+    "b": "n27",
+    "link_a": 1,
+    "link_b": 1,
+    "arrive_a": [
+     338,
+     339,
+     342,
+     343,
+     345,
+     346
+    ],
+    "arrive_b": [
+     341,
+     342
+    ],
+    "merges": 2,
+    "forwards": 4,
+    "exits": [
+     351,
+     352,
+     354,
+     355,
+     358,
+     359
+    ],
+    "faults": []
+   },
+   "n4": {
+    "a": "e2.r0",
+    "b": "e2.r1",
+    "link_a": 3,
+    "link_b": 4,
+    "arrive_a": [
+     285
+    ],
+    "arrive_b": [
+     286
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     298,
+     299
+    ],
+    "faults": []
+   },
+   "n6": {
+    "a": "e3.r0",
+    "b": "e3.r1",
+    "link_a": 7,
+    "link_b": 8,
+    "arrive_a": [
+     297
+    ],
+    "arrive_b": [
+     298
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     310,
+     311
+    ],
+    "faults": []
+   },
+   "n5": {
+    "a": "n4",
+    "b": "n6",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     298,
+     299
+    ],
+    "arrive_b": [
+     310,
+     311
+    ],
+    "merges": 0,
+    "forwards": 4,
+    "exits": [
+     311,
+     312,
+     323,
+     324
+    ],
+    "faults": []
+   },
+   "n3": {
+    "a": "n1",
+    "b": "n5",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     312,
+     313
+    ],
+    "arrive_b": [
+     311,
+     312,
+     323,
+     324
+    ],
+    "merges": 2,
+    "forwards": 2,
+    "exits": [
+     324,
+     325,
+     336,
+     337
+    ],
+    "faults": []
+   },
+   "n8": {
+    "a": "e4.r0",
+    "b": "e4.r1",
+    "link_a": 3,
+    "link_b": 4,
+    "arrive_a": [
+     293
+    ],
+    "arrive_b": [
+     294
+    ],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     306,
+     307
+    ],
+    "faults": []
+   },
+   "n9": {
+    "a": "n8",
+    "b": "n10",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     306,
+     307
+    ],
+    "arrive_b": [],
+    "merges": 0,
+    "forwards": 2,
+    "exits": [
+     319,
+     320
+    ],
+    "faults": []
+   },
+   "n11": {
+    "a": "n9",
+    "b": "n13",
+    "link_a": 0,
+    "link_b": 0,
+    "arrive_a": [
+     319,
+     320
+    ],
+    "arrive_b": [
+     322,
+     323,
+     329,
+     330
+    ],
+    "merges": 0,
+    "forwards": 6,
+    "exits": [
+     332,
+     333,
+     335,
+     336,
+     342,
+     343
+    ],
+    "faults": []
+   },
+   "n7": {
+    "a": "n3",
+    "b": "n11",
+    "link_a": 1,
+    "link_b": 1,
+    "arrive_a": [
+     325,
+     326,
+     337,
+     338
+    ],
+    "arrive_b": [
+     333,
+     334,
+     336,
+     337,
+     343,
+     344
+    ],
+    "merges": 2,
+    "forwards": 6,
+    "exits": [
+     338,
+     339,
+     346,
+     347,
+     349,
+     350,
+     356,
+     357
+    ],
+    "faults": []
+   },
+   "n15": {
+    "a": "n7",
+    "b": "n23",
+    "link_a": 2,
+    "link_b": 2,
+    "arrive_a": [
+     340,
+     341,
+     348,
+     349,
+     351,
+     352,
+     358,
+     359
+    ],
+    "arrive_b": [
+     353,
+     354,
+     356,
+     357,
+     360,
+     361
+    ],
+    "merges": 0,
+    "forwards": 14,
+    "exits": [
+     353,
+     354,
+     361,
+     362,
+     364,
+     365,
+     366,
+     367,
+     369,
+     370,
+     371,
+     372,
+     373,
+     374
+    ],
+    "faults": []
+   }
+  },
+  "faults": 0,
+  "ret": [
+   [
+    398,
+    134381605,
+    3181454113,
+    0
+   ],
+   [
+    399,
+    134389797,
+    1022806246,
+    0
+   ],
+   [
+    406,
+    134382341,
+    1000032571,
+    0
+   ],
+   [
+    407,
+    134390533,
+    1016722295,
+    0
+   ],
+   [
+    409,
+    134398501,
+    3159160189,
+    0
+   ],
+   [
+    410,
+    134406693,
+    1024075569,
+    0
+   ],
+   [
+    411,
+    134382085,
+    3166045362,
+    0
+   ],
+   [
+    412,
+    134390277,
+    3165642576,
+    0
+   ],
+   [
+    414,
+    134397989,
+    1025899243,
+    0
+   ],
+   [
+    415,
+    134406181,
+    1016639058,
+    0
+   ],
+   [
+    416,
+    134399045,
+    971982944,
+    0
+   ],
+   [
+    417,
+    134407237,
+    1026593546,
+    0
+   ],
+   [
+    418,
+    134382661,
+    3166010175,
+    0
+   ],
+   [
+    419,
+    134390853,
+    3137350656,
+    0
+   ]
+  ],
+  "ret_words": 14,
+  "merges": 6,
+  "rows_vals": {
+   "20": [
+    3175010416,
+    3171120594,
+    3166045362,
+    1000032571,
+    3166010175
+   ],
+   "21": [
+    1018559480,
+    1006737883,
+    3165642576,
+    1016722295,
+    3137350656
+   ],
+   "22": [
+    1019876288,
+    1015144982,
+    3156476394,
+    3139685964,
+    971982944
+   ],
+   "23": [
+    1009299545,
+    1007201356,
+    1010694015,
+    1018516131,
+    1026593546
+   ]
+  },
+  "single_frame_cap_score": 0,
+  "single_frame_cap_scope": "logical FIN only; simultaneous frames and physical ages unadmitted"
+ },
+ "mutant": null,
+ "fixture": {
+  "dir": "/srv/opentallas-scratch/claude/s81-calpipe/fixtures/L0",
+  "meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+  "files": {
+   "weights/wq_a.bin": "b28303e9cc298160c163e94d64c27faad73f971a80ef138ad40823a286bb3055",
+   "weights/wq_a.scale.bin": "5ecfde0c3abfbd41e4c14a2613b08714146fb054a2f328d0637723e9ef834d22",
+   "weights/wkv.bin": "14aeec2efbf2b2bc106ce561ef41992b87613906b02f279282391d0320325462",
+   "weights/wkv.scale.bin": "173b2d3eb7b1ef3a4372b90d1d41a68a2d89b7ff0ad46c27c9115773bcff6e4c",
+   "ops/attn.norm.scale.bin": "d3ee639f5701851a549e46720ac38075b195fda29a5eaa25eb94caebc0141805",
+   "ops/attn.a_proj.bin": "d82493701364c667482bd719bcec6f0739115be13a8d7c223dddd3a585d62dc2"
+  }
+ },
+ "images": {
+  "u_f_0R01_e0_0.viamap.hex": "0f1bc2fc639762719a3faae9298fbec8031371ac200b243ab327ba88f9c34297",
+  "u_f_0R01_e0_1.viamap.hex": "dacbe70996a2db5a7b76f95de13c9b8f08f38085ab478577af1eb57b433b624d",
+  "u_f_0R01_e0b_0.viamap.hex": "e671a7ebee9b1cca871af8fe260966d64b68ae9df553ccf00309ff631f0f24be",
+  "u_f_0R01_e0b_1.viamap.hex": "3d3cb3f35eb9c8e7dc7272340b30cb418ac9b10e22f800ab83bf4ec1cc0dff48",
+  "u_f_0R01_e2_0.viamap.hex": "98f3aaae1e657797c46cd1a25ab2400f188cd913586481c9f77e1658b880009e",
+  "u_f_0R01_e2_1.viamap.hex": "2712149e1aa7f1d07ad427eb3159327eff158564022b95c0a89ee02159c55566",
+  "u_f_0R01_e2b_0.viamap.hex": "762d6669065b777f562697048aa094fd9c504a2d1e6a48985f51fdf1ebec9525",
+  "u_f_0R01_e2b_1.viamap.hex": "de605bc8b04a382ced7764a482712789c18f7e8a584dace5c9e2f63ab4641eea",
+  "u_f_0R01_e3_0.viamap.hex": "c961d115a5586d322772b7d25ab4f12131a54107de93fff254523cc54b6efd3b",
+  "u_f_0R01_e3_1.viamap.hex": "4deea7212663312ce125daadc39553ff0746dee4767798045be0a56c2805c56b",
+  "u_f_0R01_e3b_0.viamap.hex": "93fa4f3cb722210ce308f1cd5fe98f1bb61562bbce5f67c15be5a93ebb65a23c",
+  "u_f_0R01_e3b_1.viamap.hex": "8cb6f73315cc0f26217db66f8d98f1296695fdd2fb94be37ecdc5bf36d8bb1f5",
+  "u_f_0R01_e4_0.viamap.hex": "0d6ce58d4e14699a2364923c721d8bda076fc3188726c7e13ff7e221e8b56ef7",
+  "u_f_0R01_e4_1.viamap.hex": "ce23a10c0dbd89ee661e27ecb98fb98cdb56f45c8fff164556753cd2e07699b7",
+  "u_f_0R01_e4b_0.viamap.hex": "d7218e6ae9edb947b684176cbc21cbc9545add195f59fc812fd489fa2e7956cf",
+  "u_f_0R01_e4b_1.viamap.hex": "ce884bedcf3b3e87908a5d6473ec31cea4902ebf1d9eb4f9f2e52b483d74f832",
+  "u_f_0R01_e6_0.viamap.hex": "76d51d9b0f9df58f6515ea143615bb7141d03b9cedc59908d5efe46d14d3ff0a",
+  "u_f_0R01_e6_1.viamap.hex": "ad8c129488dac8675f2ca386a125e58644dd6c5e1eb0be0b8140aa5e4c9b09aa",
+  "u_f_0R01_e6b_0.viamap.hex": "c5f716899b04d71ceea9b5bfcf3d038289cd77b6ca7751241b0141c58672b48c",
+  "u_f_0R01_e6b_1.viamap.hex": "1a0884ab6592fba99005df1b5e6b7be249ff7fc56d20f032d4f6233d8a337400",
+  "u_f_0R01_e7_0.viamap.hex": "059b01967bce2a9d873ca8a6bf8458130e3e95616958891bd03b5ca2245b86ba",
+  "u_f_0R01_e7_1.viamap.hex": "56e1803c20802ffeffa20f6e3ec5fd5ce4db5a4cc1e9fa0b32f1ece9decee672",
+  "u_f_0R01_e7b_0.viamap.hex": "3be0a7d322baa776db99b15825befaf86734a367a78e688f8be412a710d4359a",
+  "u_f_0R01_e7b_1.viamap.hex": "cc053639a2039380fb86fb65de0c86caf70627519360b06ed73ff33a522008cd",
+  "u_f_0R01_e8_0.viamap.hex": "7f0dd6aa10236d6e6272baf99339243be74a430694bd28291e0210c0aa889057",
+  "u_f_0R01_e8_1.viamap.hex": "8a6ccd80a60cc51bc385f42a415d9a7868d983ca31ed89ef13f1eb38c821bc5c",
+  "u_f_0R01_e8b_0.viamap.hex": "d0f5d31c17818056a315406aa49b8d70bfad9d622f26d37913f8218ad7491fba",
+  "u_f_0R01_e8b_1.viamap.hex": "cd7f3baf7cf1d4065110fe145e1854e23ad1d2d0a9a42b7f8bc2d21600c65233",
+  "u_f_0R01_e9_0.viamap.hex": "5e97278feaba8be88f7121ac90dee2e82eadda9db2ccc5f3fc76941cc59a1248",
+  "u_f_0R01_e9_1.viamap.hex": "53d9cebd255610581b552a7e743f627683ac301f82e874ed9ec6d7c810cd5f97",
+  "u_f_0R01_e9b_0.viamap.hex": "520de100e4ccc129d5897cee1fed190f625713557aa8a4e298eee99c70f04140",
+  "u_f_0R01_e9b_1.viamap.hex": "ebf55680b6ca6d5e7be31f8ba6ac46e3156da657516d28a171528e77319b6507",
+  "u_f_0R01_e11_0.viamap.hex": "ace9a8935326d5174af43e1a5ac0de1198910f0b869085cad7be76b5d92ae47b",
+  "u_f_0R01_e11_1.viamap.hex": "40ad32df2f4b5ae10eb813fbcec628d58a0a96fee16eee7c708b142fd063a72a",
+  "u_f_0R01_e11b_0.viamap.hex": "6906ac93bf4db3052b6f1c4c70415f66d8373c7c104fa71af3a09402aeae6bb1",
+  "u_f_0R01_e11b_1.viamap.hex": "6d57db40fdd4a2ed4ba6d0b9633d753b86b4ede4de4893c663de43137821c02d",
+  "u_f_0R01_e12_0.viamap.hex": "d4403a5b3d780a0c18218862f773d18206cef7a87c9c1511bc1e355dca31c4be",
+  "u_f_0R01_e12_1.viamap.hex": "6b0ddc84755b3afefd4ef4cc42781097cb3b22359762b34677c8b0f2c564c6ab",
+  "u_f_0R01_e12b_0.viamap.hex": "a4a2bf9d02c382d8b22853fc0249657834349f4ce1303006e811c74bce4f7064",
+  "u_f_0R01_e12b_1.viamap.hex": "bab5f486d10f9fd60dc75706340a8815333353b883c739ca98edd80dfac82202",
+  "u_f_0R01_c0_0.viamap.hex": "8b32fd022a4d5eec3c8d314ca40cc55648a921472786681f7b29e927ceabaf7e",
+  "u_f_0R01_c0_1.viamap.hex": "561e613388c1854096fd7ea677da872081e621ff2cc768820e903a4b6829907a",
+  "u_f_0R01_c0_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c0_3.viamap.hex": "7712d159eff3fe30d6a1093414ea79b61f20a4acef1c9d8d134f7fc6974b1827",
+  "u_f_0R01_c0_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c0_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c0_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c2_0.viamap.hex": "3884172e81f845eeb8174501e9ba7e5fa6bad3a024e57761ca764b84d45d5bcc",
+  "u_f_0R01_c2_1.viamap.hex": "2a2cf3a76473aa4c5ccc4545c03fd910dbeeb37c09a9964f9757588df6e4d67b",
+  "u_f_0R01_c2_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c2_3.viamap.hex": "7712d159eff3fe30d6a1093414ea79b61f20a4acef1c9d8d134f7fc6974b1827",
+  "u_f_0R01_c2_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c2_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c2_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c3_0.viamap.hex": "9b5f2fd49aa2a4fdd53c67fb062135b2266e46a01a15af897979c5a2db2c984d",
+  "u_f_0R01_c3_1.viamap.hex": "962e2f4cd8632b983aa68de20043a39a59c9bb09344a1d99b4c2edff8ce4398a",
+  "u_f_0R01_c3_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c3_3.viamap.hex": "3a517f5731e7dba3d873606760ea80d18817354674adb57812926064bc395a5c",
+  "u_f_0R01_c3_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c3_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c3_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c4_0.viamap.hex": "c50b89f75f1ac5f26c243e5f0969aa8602cfb86bc428ddd1da168bdeab82e1d7",
+  "u_f_0R01_c4_1.viamap.hex": "962e2f4cd8632b983aa68de20043a39a59c9bb09344a1d99b4c2edff8ce4398a",
+  "u_f_0R01_c4_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c4_3.viamap.hex": "7712d159eff3fe30d6a1093414ea79b61f20a4acef1c9d8d134f7fc6974b1827",
+  "u_f_0R01_c4_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c4_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c4_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c6_0.viamap.hex": "eb3a3aa2aab7b2b621e4197fcd3eed39964e28d0476a1e33d68d4ca88370918e",
+  "u_f_0R01_c6_1.viamap.hex": "6290f3eed7d58a3bc573ac7d122fb1889cff39b89855ec7bd6c7f76f61f18c44",
+  "u_f_0R01_c6_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c6_3.viamap.hex": "3a517f5731e7dba3d873606760ea80d18817354674adb57812926064bc395a5c",
+  "u_f_0R01_c6_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c6_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c6_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c7_0.viamap.hex": "73eee2948a4c85be4acbec049e4230339c5308f676b47c1d2641278ac408945c",
+  "u_f_0R01_c7_1.viamap.hex": "9dae3b87cc41f63c083cb002970a3e90154898bb16966ffb734a9a8d85e9e2f6",
+  "u_f_0R01_c7_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c7_3.viamap.hex": "3a517f5731e7dba3d873606760ea80d18817354674adb57812926064bc395a5c",
+  "u_f_0R01_c7_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c7_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c7_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c8_0.viamap.hex": "fd76cb7122efc73c1da7c7244a41184b2c12a950bbe5e2632922a44876c8f9d5",
+  "u_f_0R01_c8_1.viamap.hex": "6290f3eed7d58a3bc573ac7d122fb1889cff39b89855ec7bd6c7f76f61f18c44",
+  "u_f_0R01_c8_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c8_3.viamap.hex": "7712d159eff3fe30d6a1093414ea79b61f20a4acef1c9d8d134f7fc6974b1827",
+  "u_f_0R01_c8_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c8_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c8_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c9_0.viamap.hex": "149c6c2a6c2abd475039908e84ef4472b8418124b55519db332dad80ee661b22",
+  "u_f_0R01_c9_1.viamap.hex": "9dae3b87cc41f63c083cb002970a3e90154898bb16966ffb734a9a8d85e9e2f6",
+  "u_f_0R01_c9_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c9_3.viamap.hex": "7712d159eff3fe30d6a1093414ea79b61f20a4acef1c9d8d134f7fc6974b1827",
+  "u_f_0R01_c9_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c9_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c9_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c11_0.viamap.hex": "3eb836005aaf678912b1e84e8db421b17b0d928e58d6a91c178c97231aba9d02",
+  "u_f_0R01_c11_1.viamap.hex": "561e613388c1854096fd7ea677da872081e621ff2cc768820e903a4b6829907a",
+  "u_f_0R01_c11_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c11_3.viamap.hex": "3a517f5731e7dba3d873606760ea80d18817354674adb57812926064bc395a5c",
+  "u_f_0R01_c11_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c11_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c11_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c12_0.viamap.hex": "8ef6f2dbe294ca852fa49a0bb1518ff08dd6b60d113d03da228fe40735eb4c93",
+  "u_f_0R01_c12_1.viamap.hex": "2a2cf3a76473aa4c5ccc4545c03fd910dbeeb37c09a9964f9757588df6e4d67b",
+  "u_f_0R01_c12_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c12_3.viamap.hex": "3a517f5731e7dba3d873606760ea80d18817354674adb57812926064bc395a5c",
+  "u_f_0R01_c12_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c12_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c12_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c13_0.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c13_1.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c13_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c13_3.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c13_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c13_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c13_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c14_0.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c14_1.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c14_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c14_3.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c14_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c14_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c14_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c1_0.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c1_1.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c1_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c1_3.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c1_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c1_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c1_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c5_0.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c5_1.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c5_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c5_3.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c5_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c5_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c5_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c10_0.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c10_1.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c10_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c10_3.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c10_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c10_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c10_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c15_0.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c15_1.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c15_2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c15_3.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c15_4.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c15_5.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "u_f_0R01_c15_6.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "pq_phase0.viamap.hex": "7f5e41982750a36a5858a180d1aa441ff9fefaa7b34b5e4245b61aee34c3bb15",
+  "pq_stream0.viamap.hex": "16e3d38183c6940d7369236b406222030819b02fe1e0458792e649dea8bc6f7a",
+  "pq_stream1.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "pq_stream2.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b",
+  "pq_stream3.viamap.hex": "02023d5701df48161047201e49f659f378c2f6cc3ef396a1f5c364aaaaf40c7b"
+ }
+}

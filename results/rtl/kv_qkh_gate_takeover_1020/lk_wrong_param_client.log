@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020
+ot-run: ot-epyc7       admits   870 GB (avail 710, growth 101, headroom 0, waiters 0/0 GB) load 36/96 running 21 disk 5491 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3299955-1792495955 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+%Error-MODMISSING: /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020/lane8_core_renamed.v:24:55: Cannot find file containing module: 'ot_qkh_lane8_nc32c_requires7_12'
+   24 |     generate if(ADD_LAT!=7 || LTW!=12)begin:bad_shape ot_qkh_lane8_nc32c_requires7_12 trap();end endgenerate
+                        ot_qkh_lane8_nc32c_requires7_12
+                        ot_qkh_lane8_nc32c_requires7_12.v
+                        ot_qkh_lane8_nc32c_requires7_12.sv
+                        /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020/obj_wrong_param/ot_qkh_lane8_nc32c_requires7_12
+                        /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020/obj_wrong_param/ot_qkh_lane8_nc32c_requires7_12.v
+                        /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020/obj_wrong_param/ot_qkh_lane8_nc32c_requires7_12.sv
+WRONG_PARAM_CONTROL_EXPECTED_FAIL
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3299955-1792495955): exit 0

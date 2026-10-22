@@ -1,0 +1,39 @@
+{
+  "status": "UNIQUE_HP13_SOURCE_AND_LP_PARSER_AUDIT_PASS_NOT_NATIVE_OR_SELECTED_AGE",
+  "actual_RR2": "7b81ef212d6bfcf88aeb4cfbfcc7fb578d5da78640d64f647a99ddcbb8d04747",
+  "actual_RRloc": "cf82d273a9ccd40c7236a76f929d7595db3b1aa90e4cf73901b4dd7e412d3de2",
+  "original_generic_recipe": "actual qko source results/rtl/qw_calr_1020/ctlm9c/full_generic9.ys; XPF20 historical fixture",
+  "proof": "HP export reversal matches current readonly qkoWT symbolic files. Those are NOT byte-identical to admitted original symbolic source: they add bench CAL_MUT pass-through default0. Explicit CAL_MUT0 specialization was reversed and byte-compared to recovered original source, preserving source distinction.",
+  "source_law": "Actual GI reads pos_b[c_user]/c_user at same edge as existing emb_token; emb_start is validity. Source capture1 is preserved; actual new LP offset minus actual producer offset must be generated and qualified again.",
+  "selected_recipe_requirement": "New unique source/top, actual explicit XPF_TRANSPORT_EDGES21, actual H16ZA source/ports, regenerated LP +bounded native+RRrole+RRloc, new physical view. Prior XPF20 component offsets4 are not selected21 qualification.",
+  "actual_new_LP_offsets": null,
+  "actual_new_GEN_transport_ages": null,
+  "remaining": [
+    "new native synthesis/construction from exact HP13 source (LP parsing completed); apply safe RR structural transformations without aliasing old numeric-cell placement IDs",
+    "apply exact RRrole and placed RRloc transformations to actual new cells, preserving available physical constraints",
+    "source-functional/native export qualification",
+    "actual selected S8/TT source ABI/newmaster/view and final GEN endpoint receipts"
+  ],
+  "unique_top": "qfd_tt_ctlm_dv_lpf_hp13_lp",
+  "construction_XPF_TRANSPORT_EDGES": 21,
+  "new_GEN_measured_XPF_TRANSPORT_EDGES": null,
+  "source_tree": "/home/ubuntu/scratch/q-hp13-rrloc-source2-1021",
+  "actual_head_sha256": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
+  "parser_audit": {
+    "landings": 33,
+    "pads": 0,
+    "reset_depth": 3,
+    "ok": true
+  },
+  "admitted_original_raw_json": {
+    "host": "ot-epyc7",
+    "path": "/srv/opentallas-scratch/claude/qw-calr9-1020/generic7/parent.json",
+    "sha256": "44a800e270aaf7c5f2abf140ff5758f231b3304acce1c18055329ba5bf4535f9",
+    "local_archive": "/home/ubuntu/scratch/q-die-resume-1021/original_parent_44a800e.json"
+  },
+  "rejected_older_raw_json": {
+    "host": "ot-epyc5",
+    "sha256": "be1f82c79ed0db62120c400f301b18a4867ff11d94d1985e3e75530df8996f9b",
+    "reason": "does not match admitted construct_record input hash"
+  }
+}

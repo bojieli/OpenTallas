@@ -59,7 +59,7 @@ module dsdv_svc_rs_c #(
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
     parameter bit SRAM_MACRO = 0,
-    parameter bit SMT = 1
+    parameter integer PV_IDENTITY = 0, parameter bit SMT = 1
 ) (
     input  wire              ck,
     input  wire              rst,
@@ -116,10 +116,18 @@ module dsdv_svc_rs_c #(
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
+`ifdef OT_SVC_ALLQ
+    wire [1:0] a_st;                                  // stack position (dsdv_svc_att: CFG [31:30] or the parameter ST)
+    // RTLGAP-SO (10-21): CFG [54] ALLQ -> every slice drains its tile's P.V in its all-owner window (rs_pvslot_all)
+    reg [21:0] role; reg [9:0] pvs; reg [7:0] pf; wire a_allq;
+    always @(posedge ck or negedge rn) if (!rn) begin role <= '0; pvs <= 10'd1023; pf <= 8'h00; end
+        else begin role <= rs_role(sid); pvs <= a_allq ? rs_pvslot_all(sid) : {2'b00, rs_pvslot(a_st, sid)}; pf <= rs_pface(sid); end
+`else
     reg [21:0] role; reg [7:0] pvs, pf;
     wire [1:0] a_st;                                  // stack position (dsdv_svc_att: CFG [31:30] or the parameter ST)
     always @(posedge ck or negedge rn) if (!rn) begin role <= '0; pvs <= 8'd255; pf <= 8'h00; end
         else begin role <= rs_role(sid); pvs <= rs_pvslot(a_st, sid); pf <= rs_pface(sid); end
+`endif
     wire [3:0] tile = role[3:0], chm = role[7:4];
     wire [2:0] par = role[10:8];
 `ifdef RS_MUT_GD
@@ -198,14 +206,18 @@ module dsdv_svc_rs_c #(
     wire l_v; wire [2131:0] l_d; wire a_pv_v; wire [512:0] a_pv_d;
     wire sm_st, sm_rv, sm_rp; wire [3:0] sm_kind; wire [7:0] sm_jid; wire [2:0] sm_rj; wire [511:0] sm_rd;
     wire go, done; wire [9:0] tjob; wire [7:0] tagj; wire [1:0] hcr, hack; wire a_f; wire [31:0] a_fc;
-    dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO)) u_att (
+    dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY)) u_att (
         .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ENTRY),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[DW-1:514]),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
         .l_v(l_v), .l_d(l_d), .pv_ov(a_pv_v), .pv_od(a_pv_d),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go), .tjob_o(tjob), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(a_f), .fault_code(a_fc),
+`ifdef OT_SVC_ALLQ
+        .pio_o(pio), .pvo_o(pvo_j), .jc_o(jcs), .st_o(a_st), .allq_o(a_allq));
+`else
         .pio_o(pio), .pvo_o(pvo_j), .jc_o(jcs), .st_o(a_st));
+`endif
 
     // ------------------------------------------------------------------ score exchange
     wire rt_v, t_v, x_f; wire [2131:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;
@@ -375,8 +387,15 @@ module dsdv_svc_rs_c #(
             if (n > 3'd1) r_f <= 1'b1;                                      // two words in one cycle: a schedule fault
             rm_v <= n != 0;
         end
+    // PVSO source fence: each tile carries proof of its OWN real SE denominator
+    // in otherwise-unused P.V header bits. This is not compiler-asserted proof.
+    wire[512:0]a_pv_stamped;
+    dsdv_pv_den_stamp #(.ENABLE(PV_IDENTITY)) u_den_stamp(.clk(ck),.rst_n(rn),
+      .cfg_v(zt_cfg_v),.cfg_owner(zt_owner),.cfg_se_jid(zt_se),
+      .op_st(sm_st),.op_kind(sm_kind),.op_jid(sm_jid),.den(o_den),.result_jid(o_rjid),.error(o_fu||o_fo),
+      .pv_d(a_pv_d),.stamped(a_pv_stamped));
     always @(posedge ck) begin
-        rm_d <= gw_v ? gw_d : pp_v ? pp_d : a_pv_d;
+        rm_d <= gw_v ? gw_d : pp_v ? pp_d : a_pv_stamped;
         for (int i = 0; i < 4; i++) if (rfi[i][0] && chr[i]) rm_d <= rfi[i][RW-1:1];
     end
     generate for (f = 0; f < 4; f = f + 1) begin : g_ro
@@ -453,7 +472,7 @@ endmodule
 // S81-SMWIRE (10-19): the SM face is internal (the SO target); w_* are bench observation ports (RS_OBS) only.  The
 // entry adds pv_x[47:0] (the 48 spare bits of the 562-b pv lane: the SO gather-word stamp).
 module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                           parameter bit SRAM_MACRO = 0, parameter bit SMT = 1) (
+                           parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
@@ -473,7 +492,7 @@ module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID =
 `ifndef RS_OBS
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
-    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT)) u (.ck(ck),
+    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg), .dn_i(dn_i),
         .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d),
         .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data),
@@ -487,7 +506,7 @@ endmodule
 
 // the other 14 slices (incl. the chain roots rsv_07 / rsv_09: their P.V return lane toward the entry is `ro`)
 module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                     parameter bit SRAM_MACRO = 0, parameter bit SMT = 1) (
+                     parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
@@ -505,7 +524,7 @@ module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, pa
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
     wire [1:0] jd; wire [8:0] hc; wire fault; wire pv_v; wire [512:0] pv_d; wire [47:0] pv_x; wire [1:0] st_rg;
-    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT)) u (.ck(ck),
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .st_rg(st_rg),
         .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v),
         .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv),
@@ -563,4 +582,30 @@ module dsdv_svc_rs_up #(parameter integer UW = 16, parameter integer UPMUT = 0) 
             else begin o0 <= (par == 3'(f + 1)) ? uc : '0; o1 <= o0; end
         assign up_o[UW*f +: UW] = o1;
     end endgenerate
+endmodule
+
+// The same source-owned SE fence instantiated on every real service tile.
+// Observe the current SE's denominator-low phase before accepting its completion;
+// a stale high denominator with a reused jid cannot authorize the next token.
+module dsdv_pv_den_stamp #(parameter integer ENABLE=0)(
+ input wire clk,rst_n,cfg_v,input wire[19:0]cfg_owner,input wire[7:0]cfg_se_jid,
+ input wire op_st,input wire[3:0]op_kind,input wire[7:0]op_jid,
+ input wire den,input wire[7:0]result_jid,input wire error,
+ input wire[512:0]pv_d,output wire[512:0]stamped
+);
+ generate if(ENABLE==0)begin:g_disabled assign stamped=pv_d;end else begin:g_enabled
+ reg seen,live,saw_low;reg[19:0]owner;reg[7:0]jid;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin seen<=0;live<=0;saw_low<=0;owner<=0;jid<=0;end
+  else if(cfg_v)begin seen<=0;live<=0;saw_low<=0;owner<=cfg_owner;jid<=cfg_se_jid;end
+  else if(op_st)begin
+   if(op_kind==4'd4)begin seen<=0;live<=op_jid==jid;saw_low<=0;end
+   else live<=0;
+  end else if(live)begin
+   if(!den)saw_low<=1;
+   if(den && saw_low && result_jid==jid && !error)seen<=1;
+  end
+ end
+ assign stamped=pv_d[512]?((pv_d & ~(513'h1ff<<120)) | (513'({jid,seen && owner==pv_d[91:72]})<<120)):pv_d;
+ end endgenerate
 endmodule

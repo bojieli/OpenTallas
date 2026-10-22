@@ -1,0 +1,10 @@
+{
+ "name": "codex-emb-ctx-native32-synth-8bbb68cfab",
+ "mode": "synth",
+ "sources": {
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv": "a24c57494edf26192fbd399e529ba869fb1fa356c549acee43268498b9e1e942",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "tools/qwen_kv_die/attn_rv_1019/fanout_census.py": "c71d865b2385177144d2ba83880d74ea684cffc4613cf6acf6e602531451971c",
+  "ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+ }
+}
