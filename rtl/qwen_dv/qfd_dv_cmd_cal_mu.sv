@@ -114,6 +114,14 @@
 //   every layer segment, for every user, on the static calendar (no handshake, no runtime readiness).  Bit [10] = 0:
 //   unchanged (an image without bit-10 entries is edge-identical).  MUT 35 (bench only): the REL load of stage 17 is
 //   dropped (no pulse, no fault).
+// CALREG (QE3-CTLM3 10-21, Q.STA.TTC.4: safe12c post-CTS reg->reg -897 ps / 583 eps, FIFO SRAM -> FIREDQ -780 ps; bit mask,
+//   0 = unchanged):  [0] FQREG: per-playhead ring = 2 x 512 flops (1 kb) + a registered next head nx_q; the FIFO SRAMs and
+//   the pending / bypass forwarding are gone, a pop loads the head from nx_q.  Edge-identical (calr_port lockstep vs the
+//   f16 reference: 0 mismatched edges), T_0 >= 5 + (NU - 1) unchanged, no image change.  [1] STARTREG: the start interface
+//   (start / stage / user / range, plus its user one-hot, range check and stage class) is registered before the playheads:
+//   the calendar plays as if every start arrived one edge later (+1 edge start -> issue, priced in
+//   results/rtl/qe3_ctlm3_1021; T_k and the image unchanged).  [2] ISSUEFLAT: issue enables / issue fault sites per
+//   playhead from the registered head, the one-hot isel only selects (exact).  [3] (parent u_thru) NOUTREG.
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -127,7 +135,8 @@ module qfd_dv_cmd_cal_mu #(
     parameter integer UFOLD = 0,                    // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
     parameter integer TABLE_ROM = 0,                // opt-in LOCAL4 explicit table-load pulse (with CALENDAR_ROM)
     parameter integer CALENDAR_ROM = 0,             // opt-in CALR10 / two-ROM calendar fetch; +1 fetch edge
-    parameter integer CTX_DW = 0                    // 1: DW5 / DW6 = the MU context record (ctx_dw / ctx_load)
+    parameter integer CTX_DW = 0,                   // 1: DW5 / DW6 = the MU context record (ctx_dw / ctx_load)
+    parameter integer CALREG = 0                    // QE3-CTLM3 10-21 bit mask (0 = unchanged): [0] FQREG, [1] STARTREG, [2] ISSUEFLAT
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -383,133 +392,225 @@ module qfd_dv_cmd_cal_mu #(
     // dq_n / fire_n / nh_t are computed per source in parallel and the late select only picks (exact, 0 edges)
     wire [11:0] dsw [0:NU-1], dsb [0:NU-1], dsr [0:NU-1];
     wire [NU-1:0] selw3, bp3, nx2;
+    localparam integer FQ = CALREG % 2;
+    reg  [127:0] nx_q [0:NU-1];                     // FQREG: registered next entry (ring slot rp + 1)
+    wire [127:0] hd_word [0:NU-1];                  // the word a pop loads into the head
+    genvar ghw;
+    generate for (ghw = 0; ghw < NU; ghw = ghw + 1) begin : g_hdw
+        assign hd_word[ghw] = (FQ != 0) ? nx_q[ghw] : fq_word[ghw];
+    end endgenerate
     generate for (g = 0; g < NU; g = g + 1) begin : g_fifo
-        reg [2:0] rp_bin;
-        integer b;
-        // CTLM7: OR encoder (rp_oh is one-hot by construction: reset / start 8'd1, rotate on pop),
-        // equal to the last-wins loop on every reachable value; was an 8-deep priority chain
-        always @* begin
-            rp_bin = {|(rp_oh[g] & 8'hf0), |(rp_oh[g] & 8'hcc), |(rp_oh[g] & 8'haa)};
-        end
-        assign fq_next[g] = rp_bin + ((MUT == 33) ? 3'd0 : 3'd1);
-        // CTLM8: bit 2 of rp + 1 straight from the one-hot pointer (rp in 3..6), no encoder + incrementer in the select
-        assign nx2[g] = (MUT == 33) ? |(rp_oh[g] & 8'hf0) : |(rp_oh[g] & 8'h78);
-        assign fq_ahead[g] = rp_bin + ((fire_q[g] && !frz_u[g] && !go_u[g]) ? 3'd2 : 3'd1);
-        assign fq_ra[g] = fq_ahead[g][2];
-        ot_sram_1r1w_64x512_m1_r2c2 u_fifo (
-            .clk(ck), .r_ce_in(1'b1), .r_addr_in({5'd0, fq_ra[g]}), .rd_out(fq_rd[g]),
-            .w_ce_in(fq_we[g]), .w_addr_in({5'd0, fq_wa[g]}), .wd_in(fq_wd[g]), .w_mask_in({512{1'b1}}),
-            .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
-        // Distinct hierarchy-kept selector flops per32-bit data chunk and
-        // per source; no selector register drives a full128/512-bit mux.
-        wire do_pop = fire_q[g] && !frz_u[g] && !go_u[g];
-        wire do_clear = go_u[g] && !start_bad && g_cnt_nz;
-        genvar q;
-        for (q = 0; q < 4; q = q + 1) begin : g_sel
-            wire [3:0] ws, rs, bs;
-            wire pend, bp;
-            wire [31:0] wword, rword, bword;
-            qfd_calpipe_selector #(.COPY_ID(12*g+3*q), .MUT(MUT)) u_ws (
-                .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear),
-                .pending_in(rd_v[g] && !frz_u[g] && !go_u[g]),
-                .bypass_in(fq_we[g] && fq_wa[g] == fq_ra[g]), .sel(ws), .pending(), .bypass());
-            qfd_calpipe_selector #(.COPY_ID(12*g+3*q+1), .MUT(MUT)) u_rs (
-                .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear),
-                .pending_in(rd_v[g] && !frz_u[g] && !go_u[g]),
-                .bypass_in(fq_we[g] && fq_wa[g] == fq_ra[g]), .sel(rs), .pending(pend), .bypass(bp));
-            qfd_calpipe_selector #(.COPY_ID(12*g+3*q+2), .MUT(MUT)) u_bs (
-                .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear),
-                .pending_in(rd_v[g] && !frz_u[g] && !go_u[g]),
-                .bypass_in(fq_we[g] && fq_wa[g] == fq_ra[g]), .sel(bs), .pending(), .bypass());
-            wire [3:0] ba = do_pop ? {bs[2:0],bs[3]} : bs;
-            assign wword = ({32{ws[0]}} & fq_wd[g][q*32 +: 32]) |
-                           ({32{ws[1]}} & fq_wd[g][128+q*32 +: 32]) |
-                           ({32{ws[2]}} & fq_wd[g][256+q*32 +: 32]) |
-                           ({32{ws[3]}} & fq_wd[g][384+q*32 +: 32]);
-            assign rword = ({32{rs[0]}} & fq_rd[g][q*32 +: 32]) |
-                           ({32{rs[1]}} & fq_rd[g][128+q*32 +: 32]) |
-                           ({32{rs[2]}} & fq_rd[g][256+q*32 +: 32]) |
-                           ({32{rs[3]}} & fq_rd[g][384+q*32 +: 32]);
-            assign bword = ({32{ba[0]}} & fq_wd[g][q*32 +: 32]) |
-                           ({32{ba[1]}} & fq_wd[g][128+q*32 +: 32]) |
-                           ({32{ba[2]}} & fq_wd[g][256+q*32 +: 32]) |
-                           ({32{ba[3]}} & fq_wd[g][384+q*32 +: 32]);
-            assign fq_word[g][32*q +: 32] = (pend && fq_wa[g] == nx2[g]) ? wword :
-                                            bp ? fq_bd[g][32*q +: 32] : rword;
-            if (q == 3) begin : g_src3
-                assign dsw[g] = wword[31:20]; assign dsr[g] = rword[31:20]; assign dsb[g] = fq_bd[g][127:116];
-                assign selw3[g] = pend && fq_wa[g] == nx2[g]; assign bp3[g] = bp;
+        if (FQ == 0) begin : g_sram
+            reg [2:0] rp_bin;
+            integer b;
+            // CTLM7: OR encoder (rp_oh is one-hot by construction: reset / start 8'd1, rotate on pop),
+            // equal to the last-wins loop on every reachable value; was an 8-deep priority chain
+            always @* begin
+                rp_bin = {|(rp_oh[g] & 8'hf0), |(rp_oh[g] & 8'hcc), |(rp_oh[g] & 8'haa)};
             end
-            always @(posedge ck)
-                if (fq_we[g] && fq_wa[g] == fq_ra[g]) fq_bd[g][32*q +: 32] <= bword;
-        end
-        // Match rd_v's pipeline/hold semantics in local kept CE copies.
-        // Each copy enables exactly32 WD flops instead of one512-load CE.
-        genvar c;
-        for (c = 0; c < 16; c = c + 1) begin : g_wce
-            wire valid;
-            qfd_calpipe_readvalid #(.COPY_ID(16*g+c)) u_v (
-                .ck(ck), .rst_n(rst_n), .clear(do_clear), .freeze(frz_u[g] || go_u[g]),
-                .read_ce((CALENDAR_ROM != 0) ? rce2_q[g] : rce_q[g]), .valid(valid));
-            always @(posedge ck)
-                if (valid && !frz_u[g] && !go_u[g]) fq_wd[g][32*c +: 32] <= rds[32*c +: 32];
-        end
-        always @(posedge ck or negedge rst_n)
-            if (!rst_n) begin fq_we[g] <= 1'b0; fq_bypass[g] <= 1'b0; end
-            else begin
-                fq_we[g] <= rd_v[g] && !frz_u[g] && !go_u[g];
-                fq_bypass[g] <= fq_we[g] && fq_wa[g] == fq_ra[g];
+            assign fq_next[g] = rp_bin + ((MUT == 33) ? 3'd0 : 3'd1);
+            // CTLM8: bit 2 of rp + 1 straight from the one-hot pointer (rp in 3..6), no encoder + incrementer in the select
+            assign nx2[g] = (MUT == 33) ? |(rp_oh[g] & 8'hf0) : |(rp_oh[g] & 8'h78);
+            assign fq_ahead[g] = rp_bin + ((fire_q[g] && !frz_u[g] && !go_u[g]) ? 3'd2 : 3'd1);
+            assign fq_ra[g] = fq_ahead[g][2];
+            ot_sram_1r1w_64x512_m1_r2c2 u_fifo (
+                .clk(ck), .r_ce_in(1'b1), .r_addr_in({5'd0, fq_ra[g]}), .rd_out(fq_rd[g]),
+                .w_ce_in(fq_we[g]), .w_addr_in({5'd0, fq_wa[g]}), .wd_in(fq_wd[g]), .w_mask_in({512{1'b1}}),
+                .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+            // Distinct hierarchy-kept selector flops per32-bit data chunk and
+            // per source; no selector register drives a full128/512-bit mux.
+            wire do_pop = fire_q[g] && !frz_u[g] && !go_u[g];
+            wire do_clear = go_u[g] && !start_bad && g_cnt_nz;
+            genvar q;
+            for (q = 0; q < 4; q = q + 1) begin : g_sel
+                wire [3:0] ws, rs, bs;
+                wire pend, bp;
+                wire [31:0] wword, rword, bword;
+                qfd_calpipe_selector #(.COPY_ID(12*g+3*q), .MUT(MUT)) u_ws (
+                    .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear),
+                    .pending_in(rd_v[g] && !frz_u[g] && !go_u[g]),
+                    .bypass_in(fq_we[g] && fq_wa[g] == fq_ra[g]), .sel(ws), .pending(), .bypass());
+                qfd_calpipe_selector #(.COPY_ID(12*g+3*q+1), .MUT(MUT)) u_rs (
+                    .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear),
+                    .pending_in(rd_v[g] && !frz_u[g] && !go_u[g]),
+                    .bypass_in(fq_we[g] && fq_wa[g] == fq_ra[g]), .sel(rs), .pending(pend), .bypass(bp));
+                qfd_calpipe_selector #(.COPY_ID(12*g+3*q+2), .MUT(MUT)) u_bs (
+                    .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear),
+                    .pending_in(rd_v[g] && !frz_u[g] && !go_u[g]),
+                    .bypass_in(fq_we[g] && fq_wa[g] == fq_ra[g]), .sel(bs), .pending(), .bypass());
+                wire [3:0] ba = do_pop ? {bs[2:0],bs[3]} : bs;
+                assign wword = ({32{ws[0]}} & fq_wd[g][q*32 +: 32]) |
+                               ({32{ws[1]}} & fq_wd[g][128+q*32 +: 32]) |
+                               ({32{ws[2]}} & fq_wd[g][256+q*32 +: 32]) |
+                               ({32{ws[3]}} & fq_wd[g][384+q*32 +: 32]);
+                assign rword = ({32{rs[0]}} & fq_rd[g][q*32 +: 32]) |
+                               ({32{rs[1]}} & fq_rd[g][128+q*32 +: 32]) |
+                               ({32{rs[2]}} & fq_rd[g][256+q*32 +: 32]) |
+                               ({32{rs[3]}} & fq_rd[g][384+q*32 +: 32]);
+                assign bword = ({32{ba[0]}} & fq_wd[g][q*32 +: 32]) |
+                               ({32{ba[1]}} & fq_wd[g][128+q*32 +: 32]) |
+                               ({32{ba[2]}} & fq_wd[g][256+q*32 +: 32]) |
+                               ({32{ba[3]}} & fq_wd[g][384+q*32 +: 32]);
+                assign fq_word[g][32*q +: 32] = (pend && fq_wa[g] == nx2[g]) ? wword :
+                                                bp ? fq_bd[g][32*q +: 32] : rword;
+                if (q == 3) begin : g_src3
+                    assign dsw[g] = wword[31:20]; assign dsr[g] = rword[31:20]; assign dsb[g] = fq_bd[g][127:116];
+                    assign selw3[g] = pend && fq_wa[g] == nx2[g]; assign bp3[g] = bp;
+                end
+                always @(posedge ck)
+                    if (fq_we[g] && fq_wa[g] == fq_ra[g]) fq_bd[g][32*q +: 32] <= bword;
             end
-        always @(posedge ck) begin
-            if (rd_v[g] && !frz_u[g] && !go_u[g]) fq_wa[g] <= wh[g];
+            // Match rd_v's pipeline/hold semantics in local kept CE copies.
+            // Each copy enables exactly32 WD flops instead of one512-load CE.
+            genvar c;
+            for (c = 0; c < 16; c = c + 1) begin : g_wce
+                wire valid;
+                qfd_calpipe_readvalid #(.COPY_ID(16*g+c)) u_v (
+                    .ck(ck), .rst_n(rst_n), .clear(do_clear), .freeze(frz_u[g] || go_u[g]),
+                    .read_ce((CALENDAR_ROM != 0) ? rce2_q[g] : rce_q[g]), .valid(valid));
+                always @(posedge ck)
+                    if (valid && !frz_u[g] && !go_u[g]) fq_wd[g][32*c +: 32] <= rds[32*c +: 32];
+            end
+            always @(posedge ck or negedge rst_n)
+                if (!rst_n) begin fq_we[g] <= 1'b0; fq_bypass[g] <= 1'b0; end
+                else begin
+                    fq_we[g] <= rd_v[g] && !frz_u[g] && !go_u[g];
+                    fq_bypass[g] <= fq_we[g] && fq_wa[g] == fq_ra[g];
+                end
+            always @(posedge ck) begin
+                if (rd_v[g] && !frz_u[g] && !go_u[g]) fq_wa[g] <= wh[g];
+            end
+        end else begin : g_ring
+            // FQREG (QE3-CTLM3 10-21, CALREG[0]): the playhead's 8-entry ring is 2 x 512 flops (1 kb, under the 2 kb SRAM rule)
+            // written at the arrival edge (the edge fifo_n counts the entries), and the head has a REGISTERED next entry
+            // nx_q (= ring slot rp + 1 whenever fifo_n >= 2).  A pop loads the head from nx_q (register -> FIREDQ candidate
+            // -> fire_q / dq, no SRAM access and no source mux in front of the adders) and refills nx_q from ring slot
+            // rp + 2 (kept one-hot select copies, register -> AND-OR -> register).  Entries counted by fifo_n are always in
+            // the ring, so no pending-write / read-before-write forwarding remains.  Edge-identical to the SRAM ring
+            // (same fifo_n / infl / wh / rp_oh / fetch, T_0 rule unchanged): the issue timeline does not move.
+            reg [511:0] ring [0:1];
+            wire do_pop = fire_q[g] && !frz_u[g] && !go_u[g];
+            wire do_clear = go_u[g] && !start_bad && g_cnt_nz;
+            genvar c, q;
+            for (c = 0; c < 32; c = c + 1) begin : g_wce
+                wire valid;
+                qfd_calpipe_readvalid #(.COPY_ID(64*g+c)) u_v (
+                    .ck(ck), .rst_n(rst_n), .clear(do_clear), .freeze(frz_u[g] || go_u[g]),
+                    .read_ce((CALENDAR_ROM != 0) ? rce2_q[g] : rce_q[g]), .valid(valid));
+                always @(posedge ck)
+                    if (valid && !frz_u[g] && !go_u[g] && (wh[g] == c[4])) ring[c / 16][32*(c % 16) +: 32] <= rds[32*(c % 16) +: 32];
+            end
+            for (q = 0; q < 4; q = q + 1) begin : g_sel
+                wire [7:0] s8;
+                qfd_calpipe_selector8 #(.COPY_ID(4*g+q), .MUT(MUT)) u_s8 (
+                    .ck(ck), .rst_n(rst_n), .pop(do_pop), .clear(do_clear), .sel(s8));
+                assign fq_word[g][32*q +: 32] =
+                    ({32{s8[0]}} & ring[0][q*32 +: 32])       | ({32{s8[1]}} & ring[0][128+q*32 +: 32]) |
+                    ({32{s8[2]}} & ring[0][256+q*32 +: 32])   | ({32{s8[3]}} & ring[0][384+q*32 +: 32]) |
+                    ({32{s8[4]}} & ring[1][q*32 +: 32])       | ({32{s8[5]}} & ring[1][128+q*32 +: 32]) |
+                    ({32{s8[6]}} & ring[1][256+q*32 +: 32])   | ({32{s8[7]}} & ring[1][384+q*32 +: 32]);
+            end
+            // next entry: post-pop count c0 = fifo_n - pop; c0 >= 2: pop ? slot rp + 2 : hold; c0 = 1: the first arriving
+            // entry; c0 = 0: the second arriving entry (the first goes to the head).  Invalid data is immaterial (fifo_n).
+            wire [3:0] c0 = fifo_n[g] - (fire_q[g] ? 4'd1 : 4'd0);
+            always @(posedge ck)
+                if (!frz_u[g] && !go_u[g]) begin
+                    if (c0 == 4'd0) nx_q[g] <= rds[255:128];          // raw, as the ring (MUT 2 swaps at csel)
+                    else if (c0 == 4'd1) nx_q[g] <= rds[127:0];
+                    else if (fire_q[g]) nx_q[g] <= fq_word[g];
+                end
+            assign fq_rd[g] = 512'd0; assign fq_ra[g] = 1'b0; assign fq_next[g] = 3'd0; assign fq_ahead[g] = 3'd0;
+            assign nx2[g] = 1'b0;
+            assign dsw[g] = nx_q[g][127:116]; assign dsb[g] = 12'd0; assign dsr[g] = 12'd0;
+            assign selw3[g] = 1'b1; assign bp3[g] = 1'b0;
         end
     end endgenerate
 
     // ================================================================ segment start
+    // STARTREG (QE3-CTLM3 10-21, CALREG[1]): the start interface is a register stage in front of the playheads, so the
+    //   calendar plays exactly as if every start arrived one edge later (+1 edge start -> issue, priced; the parent delays
+    //   its other start consumers by the same edge).  The decode that only needs the start pins (user one-hot, range check,
+    //   stage class, stage bound) is done in the register stage, so the late start no longer reaches the playhead / issue
+    //   logic through the pin mux, the range adder and the user decode (safe12c CTS: leaf op_* -> u_start -> go_u -> hgo ->
+    //   issue flags, 37 levels, -897 ps).  The range check uses nent of the pin edge: a start one edge after a DW0 write is
+    //   refused anyway (unsealed), so the result equals the check on the delayed start.
+    localparam integer SR = (CALREG / 2) % 2;
+    wire          c_start, c_rng; wire [5:0] c_stage; wire [UB-1:0] c_user; wire [9:0] c_first, c_cnt;
+    wire [NU-1:0] c_oh; wire c_rbad, c_sgt; wire [1:0] c_sseg;
+    wire [11:0]   pa_a = {2'd0, start_first}, pa_b = {2'd0, start_cnt}, pa_c = {2'b01, ~nent};
+    wire [11:0]   pa_s = pa_a ^ pa_b ^ pa_c;
+    wire [11:0]   pa_k = {((pa_a[10:0] & pa_b[10:0]) | (pa_a[10:0] & pa_c[10:0]) | (pa_b[10:0] & pa_c[10:0])), 1'b0};
+    wire [11:0]   pa_t;
+    ot_ks_add #(.W(12)) u_paks (.a(pa_s), .b(pa_k), .cin(1'b0), .s(pa_t));
+    wire          p_rbad = start_rng && (start_cnt == 10'd0 || start_first[1:0] != 2'd0 || pa_t[11]);
+    reg  [NU-1:0] p_oh;
+    integer       po;
+    always @* for (po = 0; po < NU; po = po + 1) p_oh[po] = (NU == 1) ? 1'b1 : (start_user == po[UB-1:0]);
+    generate if (SR != 0) begin : g_sreg
+        reg r_start, r_rng, r_rbad, r_sgt; reg [5:0] r_stage; reg [UB-1:0] r_user; reg [9:0] r_first, r_cnt;
+        reg [NU-1:0] r_oh; reg [1:0] r_sseg;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) r_start <= 1'b0;
+            else r_start <= start;
+        always @(posedge ck) begin
+            r_rng <= start_rng; r_stage <= stage; r_user <= start_user; r_first <= start_first; r_cnt <= start_cnt;
+            r_oh <= p_oh; r_rbad <= p_rbad; r_sgt <= stage > LAST_STAGE[5:0];
+            r_sseg <= (stage == 6'd0) ? 2'd0 : (stage == LAST_STAGE[5:0]) ? 2'd2 : 2'd1;
+        end
+        assign c_start = r_start; assign c_rng = r_rng; assign c_stage = r_stage; assign c_user = r_user;
+        assign c_first = r_first; assign c_cnt = r_cnt; assign c_oh = r_oh; assign c_rbad = r_rbad; assign c_sgt = r_sgt;
+        assign c_sseg = r_sseg;
+    end else begin : g_nosreg
+        assign c_start = start; assign c_rng = start_rng; assign c_stage = stage; assign c_user = start_user;
+        assign c_first = start_first; assign c_cnt = start_cnt; assign c_oh = p_oh; assign c_rbad = p_rbad;
+        assign c_sgt = stage > LAST_STAGE[5:0];
+        assign c_sseg = (stage == 6'd0) ? 2'd0 : (stage == LAST_STAGE[5:0]) ? 2'd2 : 2'd1;
+    end endgenerate
     wire       boot_go = sealed && !sealed_d && (MUT != 3);
     assign     ctx_dw = {dwr[6], dwr[5]};
     assign     ctx_load = (CTX_DW != 0) && sealed && !sealed_d && !fault;
-    wire [1:0] sseg = (stage == 6'd0) ? 2'd0 : (stage == LAST_STAGE[5:0]) ? 2'd2 : 2'd1;
-    wire       go = start || boot_go;
+    wire [1:0] sseg = c_sseg;
+    wire       go = c_start || boot_go;
     wire [1:0] gseg = boot_go ? 2'd3 : sseg;
     // CTLM7: one-hot word select (gseg 0..3 -> dwr[1..4]), no index adder; the count-nonzero
     // test is taken per word from the registered dwr so do_clear does not wait on the 64-b mux
     wire [3:0]  gsel = {gseg == 2'd3, gseg == 2'd2, gseg == 2'd1, gseg == 2'd0};
     wire [63:0] gd = ({64{gsel[0]}} & dwr[1]) | ({64{gsel[1]}} & dwr[2]) | ({64{gsel[2]}} & dwr[3]) | ({64{gsel[3]}} & dwr[4]);
     wire [3:0]  dnz = {dwr[4][15:0] != 16'd0, dwr[3][15:0] != 16'd0, dwr[2][15:0] != 16'd0, dwr[1][15:0] != 16'd0};
-    wire        g_rng = start && start_rng && !boot_go;
-    wire [15:0] g_first = (g_rng && MUT != 21) ? {6'd0, start_first} : gd[31:16];
-    wire [15:0] g_cnt = (g_rng && MUT != 21) ? {6'd0, start_cnt} : gd[15:0];
+    wire        g_rng = c_start && c_rng && !boot_go;
+    wire [15:0] g_first = (g_rng && MUT != 21) ? {6'd0, c_first} : gd[31:16];
+    wire [15:0] g_cnt = (g_rng && MUT != 21) ? {6'd0, c_cnt} : gd[15:0];
     // CTLM7: {0,first} + {0,cnt} > {0,nent}  <=>  bit 11 of first + cnt + (2^11 - 1 - nent), 3:2 compressed
-    wire [11:0] rg_a = {2'd0, start_first}, rg_b = {2'd0, start_cnt}, rg_c = {2'b01, ~nent};
+    wire [11:0] rg_a = {2'd0, c_first}, rg_b = {2'd0, c_cnt}, rg_c = {2'b01, ~nent};
     wire [11:0] rg_s = rg_a ^ rg_b ^ rg_c;
     wire [11:0] rg_k = {((rg_a[10:0] & rg_b[10:0]) | (rg_a[10:0] & rg_c[10:0]) | (rg_b[10:0] & rg_c[10:0])), 1'b0};
     wire [11:0] rg_t;
     ot_ks_add #(.W(12)) u_rgks (.a(rg_s), .b(rg_k), .cin(1'b0), .s(rg_t));
     wire        rng_gt = rg_t[11];
-    wire        g_cnt_nz = (g_rng && MUT != 21) ? (start_cnt != 10'd0) : |(gsel & dnz);   // == (g_cnt != 0)
-    wire        rng_bad = g_rng && (start_cnt == 10'd0 || start_first[1:0] != 2'd0 ||
-                                    rng_gt);
-    wire [UB-1:0] go_user = (NU > 1 && !boot_go) ? start_user : {UB{1'b0}};
+    wire        g_cnt_nz = (g_rng && MUT != 21) ? (c_cnt != 10'd0) : |(gsel & dnz);   // == (g_cnt != 0)
+    wire        rng_bad = (SR != 0) ? (c_start && !boot_go && c_rbad) :
+                          (g_rng && (c_cnt == 10'd0 || c_first[1:0] != 2'd0 || rng_gt));
+    wire [UB-1:0] go_user = (NU > 1 && !boot_go) ? c_user : {UB{1'b0}};
     // a start reaches only its own playhead (MUT 15: every playhead, the single calendar's gating)
     reg  [NU-1:0] go_u, frz_u;
     integer       b;
     always @* begin
         for (b = 0; b < NU; b = b + 1) begin
-            go_u[b]  = go && (go_user == b[UB-1:0]);
+            go_u[b]  = (SR != 0) ? (boot_go ? (b == 0) : (c_start && c_oh[b])) : (go && (go_user == b[UB-1:0]));
             frz_u[b] = (MUT == 15) ? go : go_u[b];
         end
     end
     // start refusal: own playhead playing (MUT 13: any playhead; MUT 14: never)
-    wire busy_sel = (MUT == 13) ? (|run_q) : (MUT == 14) ? 1'b0 : run_q[go_user];
-    wire start_bad = !sealed || busy_sel || (start && boot_go) || (start && stage > LAST_STAGE[5:0]) || rng_bad;
+    wire busy_sel = (MUT == 13) ? (|run_q) : (MUT == 14) ? 1'b0 :
+                    (SR != 0) ? (boot_go ? run_q[0] : |(run_q & c_oh)) : run_q[go_user];
+    wire start_bad = !sealed || busy_sel || (c_start && boot_go) || (c_start && c_sgt) || rng_bad;
     // TABLE_REL: the stage each playhead was started on (payload, unreset: read only by a REL LOCAL4 entry of the
     // segment that this very start opened; loaded on the same edge and condition as the playhead's run state)
     reg  [5:0]    pst [0:NU-1];
     integer       pk;
     always @(posedge ck)
         for (pk = 0; pk < NU; pk = pk + 1)
-            if (go_u[pk] && !start_bad && g_cnt_nz) pst[pk] <= boot_go ? 6'd0 : stage;
+            if (go_u[pk] && !start_bad && g_cnt_nz) pst[pk] <= boot_go ? 6'd0 : c_stage;
 
     // ================================================================ fetch / head, per playhead (combinational)
     reg  [NU-1:0]  can_read, gnt, hv, late, hgo, zd;
@@ -597,11 +698,11 @@ module qfd_dv_cmd_cal_mu #(
             tdif = dq[u];                                    // FIREDQ: registered tcount + 1 - ht_q (no adder here)
             fn_ap = fifo_n[u] - (fire_q[u] ? 4'd1 : 4'd0);
             rpa_oh[u] = {rp_oh[u][6:0], rp_oh[u][7]};
-            csel = fq_word[u][115:0];
-            dsel = fq_word[u][127:116];
+            csel = hd_word[u][115:0];
+            dsel = hd_word[u][127:116];
             if (MUT == 2) begin
-                csel = {fq_word[u][63:0], fq_word[u][115:64]};
-                dsel = fq_word[u][63:52];
+                csel = {hd_word[u][63:0], hd_word[u][115:64]};
+                dsel = hd_word[u][63:52];
             end
             nh_v[u] = 1'b1; nh_c[u] = hc_q[u]; dd = 12'd0;
             if (fn_ap != 4'd0) begin
@@ -732,6 +833,28 @@ module qfd_dv_cmd_cal_mu #(
             ic = ic | ({116{isel[c]}} & hc_q[c]); rc = rc | ({116{isel[c]}} & rcu[c]); r_bad = r_bad | (isel[c] & rbad[c]);
             tl_bad = tl_bad | (isel[c] & tlb[c]); tl_go = tl_go | (isel[c] & tlk[c]); tr_go = tr_go | (isel[c] & trk[c]);
             tr_bad = tr_bad | (isel[c] & trb[c]); ru = ru | ({UB{isel[c]}} & ruu[c]); ts = ts | ({6{isel[c]}} & tst[c]);
+        end
+    end
+    // ISSUEFLAT (QE3-CTLM3 10-21, CALREG[2]; exact): every issue-register enable and issue fault site per playhead from
+    // its registered head; isel (one-hot or 0) only selects, so the start / fire -> isel edge no longer runs through the
+    // 116-b AND-OR word, its kind decode and the fault guard chain.
+    localparam integer IFL = (CALREG / 4) % 2;
+    reg  [NU-1:0] e_emb, e_seg, e_tl, e_cmd, e_su, e_xc, f44, f45, f46;
+    reg  [115:0]  rcm_s;
+    integer       fv;
+    reg           fl_lc; reg [2:0] fl_kd; reg fl_nk;
+    always @* begin
+        rcm_s = 116'd0;
+        for (fv = 0; fv < NU; fv = fv + 1) begin
+            fl_lc = hc_q[fv][115:112] == 4'hE; fl_kd = hc_q[fv][3:1]; fl_nk = fl_kd != 3'd1 && fl_kd != 3'd2;
+            e_emb[fv] = fl_lc && fl_kd == 3'd1;
+            e_seg[fv] = fl_lc && fl_kd == 3'd2;
+            e_tl[fv]  = fl_lc && fl_nk && trk[fv] && !trb[fv] && !(MUT == 35 && hc_q[fv][10] && tst[fv] == 6'd17);
+            e_cmd[fv] = !fl_lc; e_su[fv] = !fl_lc && fl_kd == 3'd1; e_xc[fv] = !fl_lc && fl_kd == 3'd0;
+            f44[fv] = fl_lc && fl_nk && trk[fv] && trb[fv];
+            f45[fv] = fl_lc && fl_nk && !trk[fv] && fl_kd == 3'd3 && tlb[fv];
+            f46[fv] = fl_lc && fl_nk && !trk[fv] && fl_kd != 3'd3;
+            rcm_s = rcm_s | ({116{isel[fv] && !fl_lc}} & rcu[fv]);
         end
     end
     wire [2:0]    i_kind = ic[3:1];
@@ -887,6 +1010,15 @@ module qfd_dv_cmd_cal_mu #(
             if (MUT == 5) tl <= tl_v3 ? {tl_ctl3, tl_pay3} : 1088'd0;
             else          tl <= tl_v2 ? {tl_ctl2, (MUT == 4) ? {rd[0], rd[1]} : {rd[1], rd[0]}} : 1088'd0;
             if (NU > 1 && i_col) begin fx1 = 1'b1; end
+            if (IFL != 0) begin
+                // ISSUEFLAT: the per-playhead enables (from the registered head) are only selected by the one-hot isel
+                if (NU > 1 && i_any) cmd_user <= ru;
+                loc_emb <= |(isel & e_emb); loc_seg <= |(isel & e_seg);
+                if (|(isel & e_seg)) loc_base <= ic[15:4];
+                if (|(isel & e_tl)) begin table_load <= 1'b1; table_stage <= ts; table_user <= 2'(ru); end
+                cmd <= rcm_s; su_issue <= |(isel & e_su); xc_issue <= |(isel & e_xc);
+                if (|(isel & e_cmd)) su_pidx <= rc[12:4];
+            end else
             if (i_any) begin
                 if (NU > 1) cmd_user <= ru;
                 // fx3[1] / fx4[4..6] are set flat below (CTLM7)
@@ -908,9 +1040,9 @@ module qfd_dv_cmd_cal_mu #(
             // stays last, so it overrides the pw addr-0 'fault <= running' exactly as before.
             // CTLM7: the issue-register fault sites, flat (same guards as the if nest above)
             fx3[1] = i_any && (NU > 1) && r_bad;
-            fx4[4] = i_any && i_loc && i_kind != 3'd1 && i_kind != 3'd2 && tr_go && tr_bad;
-            fx4[5] = i_any && i_loc && i_kind != 3'd1 && i_kind != 3'd2 && !tr_go && i_kind == 3'd3 && tl_bad;
-            fx4[6] = i_any && i_loc && i_kind != 3'd1 && i_kind != 3'd2 && !tr_go && i_kind != 3'd3;
+            fx4[4] = (IFL != 0) ? |(isel & f44) : i_any && i_loc && i_kind != 3'd1 && i_kind != 3'd2 && tr_go && tr_bad;
+            fx4[5] = (IFL != 0) ? |(isel & f45) : i_any && i_loc && i_kind != 3'd1 && i_kind != 3'd2 && !tr_go && i_kind == 3'd3 && tl_bad;
+            fx4[6] = (IFL != 0) ? |(isel & f46) : i_any && i_loc && i_kind != 3'd1 && i_kind != 3'd2 && !tr_go && i_kind != 3'd3;
             // the raw site flags are registered; their OR is taken after the flops (exact)
             r4 <= fx4; r4g <= fx4g; r4h <= fx4h; r3 <= fx3; r2 <= fx2; r1 <= fx1; r0 <= fx0; r5 <= fx5;
         end
@@ -935,6 +1067,17 @@ module qfd_calpipe_selector #(parameter integer COPY_ID = 0, parameter integer M
             if (clear) sel <= (MUT == 33) ? 4'b0001 : 4'b0010;
             else if (pop) sel <= {sel[2:0], sel[3]};
         end
+endmodule
+
+// FQREG: one-hot ring select of the slot after the next head (rp + 2), rotated on pop, reset / start = slot 2.
+(* keep_hierarchy = 1 *)
+module qfd_calpipe_selector8 #(parameter integer COPY_ID = 0, parameter integer MUT = 0) (
+    input wire ck, rst_n, pop, clear, output reg [7:0] sel
+);
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) sel <= (MUT == 33) ? 8'b0000_0010 : 8'b0000_0100;
+        else if (clear) sel <= (MUT == 33) ? 8'b0000_0010 : 8'b0000_0100;
+        else if (pop) sel <= {sel[6:0], sel[7]};
 endmodule
 
 (* keep_hierarchy = 1 *)

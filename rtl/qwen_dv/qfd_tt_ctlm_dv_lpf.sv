@@ -43,7 +43,8 @@ module qfd_tt_ctlm_dv_lpf #(
     parameter OPSEG_INST = "qfd_tt_ctlm_opseg",
     parameter integer PRIVATE_CALR = 0,          // QW-F16PROG4: CALR two-ROM calendar + 9-bit table request lane (table_req)
     parameter integer F16WTN = 0,                // QW-F16PROG4: F16 typed witness control (SAFE_PHYS) in u_gi (f16_*)
-    parameter integer CAL_MUT = 0                // QW-TLPROD (bench only): u_gi.u_cal MUT (35 = drop the stage-17 REL table load)
+    parameter integer CAL_MUT = 0,               // QW-TLPROD (bench only): u_gi.u_cal MUT (35 = drop the stage-17 REL table load)
+    parameter integer CALREG = 0                 // QE3-CTLM3 10-21: u_gi.u_cal / u_gi / u_thru register options (see qfd_dv_cmd_cal_mu)
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -110,7 +111,7 @@ module qfd_tt_ctlm_dv_lpf #(
     wire [379:0] ib_hr;
     qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
         .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .INIT_U0(INIT_U0), .INIT_FIRST(INIT_FIRST), .INIT_CNT(INIT_CNT), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .NCTX_BASE(NCTX_BASE), .OPSEG(OPSEG), .OPSEG_EXPANDED(OPSEG_EXPANDED), .OPSEG_PINREG(OPSEG_PINREG), .OPSEG_VIAMAP1(OPSEG_VIAMAP1), .OPSEG_VIAMAP2(OPSEG_VIAMAP2), .OPSEG_INST1(OPSEG_INST1), .OPSEG_INST2(OPSEG_INST2), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST),
-        .PRIVATE_CALR(PRIVATE_CALR), .F16WTN(F16WTN), .CAL_MUT(CAL_MUT))
+        .PRIVATE_CALR(PRIVATE_CALR), .F16WTN(F16WTN), .CAL_MUT(CAL_MUT), .CALREG(CALREG))
         u_gi (.ck(ck), .rst_n(rst_n), .pw(pw), .f16_auth(f16_auth), .f16_obs(f16_obs), .f16_st(g_f16_st), .treq(g_treq), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .init_u0(init_u0), .mu_fault(mu_fault), .ss5(ss5),
         .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
         .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start),
@@ -132,7 +133,7 @@ module qfd_tt_ctlm_dv_lpf #(
     qfd_tt_ctlm_dv_go #(.XPF_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_go (.ck(ck), .rst_n(rst_n), .pw(pw), .st(st),
         .su_obs(su_obs), .me_observe(me_observe), .cp(cp), .me_image_ready(me_image_ready), .hr_fault(hr_fault),
         .dcs(dcs), .hr_lo(hr_lo), .dc(dc), .cf(cf), .control_stores_ready(control_stores_ready));
-    qfd_tt_ctlm_dv_thru u_thru (.ck(ck), .rst_n(rst_n), .f16_st_i(g_f16_st), .f16_st(f16_st), .treq_i(g_treq), .table_req(table_req), .hu_i(hu), .fctx_i(fctx), .lcv_i(lcv_h), .ntok_i(ntok_h), .layer_context_v(layer_context_v), .native_tok(native_tok), .npos_i(npos_h), .native_pos(native_pos), .cmd_i(g_cmd), .cal_program_obs_i(g_cal_program_obs),
+    qfd_tt_ctlm_dv_thru #(.CALREG(CALREG)) u_thru (.ck(ck), .rst_n(rst_n), .f16_st_i(g_f16_st), .f16_st(f16_st), .treq_i(g_treq), .table_req(table_req), .hu_i(hu), .fctx_i(fctx), .lcv_i(lcv_h), .ntok_i(ntok_h), .layer_context_v(layer_context_v), .native_tok(native_tok), .npos_i(npos_h), .native_pos(native_pos), .cmd_i(g_cmd), .cal_program_obs_i(g_cal_program_obs),
         .cal_descriptor_obs_i(g_cal_descriptor_obs), .cal_image_ready_i(g_cal_image_ready), .emb_start_i(g_emb_start),
         .emb_token_i(g_emb_token), .ib_i(ib_q), .ib_hr(ib_hr), .cmd(cmd), .cal_program_obs(cal_program_obs), .cal_descriptor_obs(cal_descriptor_obs),
         .cal_image_ready(cal_image_ready), .emb_start(emb_start), .emb_token(emb_token));

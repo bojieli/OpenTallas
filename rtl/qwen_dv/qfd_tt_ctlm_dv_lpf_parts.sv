@@ -39,7 +39,8 @@ module qfd_tt_ctlm_dv_gi #(
     parameter OPSEG_INST = "qfd_tt_ctlm_opseg",
     parameter integer PRIVATE_CALR = 0,          // QW-F16PROG4: 1 = CALR two-ROM calendar + LOCAL4 table-load request lane
     parameter integer F16WTN = 0,                // QW-F16PROG4: 1 = F16 typed witness control (SAFE_PHYS) in the core
-    parameter integer CAL_MUT = 0                // QW-TLPROD (bench only): u_cal MUT (35 = drop the stage-17 REL table load)
+    parameter integer CAL_MUT = 0,               // QW-TLPROD (bench only): u_cal MUT (35 = drop the stage-17 REL table load)
+    parameter integer CALREG = 0                 // QE3-CTLM3 10-21: u_cal CALREG (bit 1 STARTREG also delays the head / ME / witness start here)
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -154,7 +155,7 @@ module qfd_tt_ctlm_dv_gi #(
     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
     wire        c_tload; wire [5:0] c_tstage; wire [1:0] c_tuser;
     qfd_dv_cmd_cal_mu #(.MUT(CAL_MUT), .LAST_STAGE(LAST_STAGE), .NU(NU), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE),
-        .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS), .TABLE_ROM(PRIVATE_CALR), .CALENDAR_ROM(PRIVATE_CALR))
+        .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS), .TABLE_ROM(PRIVATE_CALR), .CALENDAR_ROM(PRIVATE_CALR), .CALREG(CALREG))
         u_cal (.ck(ck), .rst_n(rst_n), .table_load(c_tload), .table_stage(c_tstage), .table_user(c_tuser),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),
         .dw_v(dh_q[186]), .dw_addr(dh_q[185:183]), .dw_data(dh_q[182:119]),
@@ -168,7 +169,22 @@ module qfd_tt_ctlm_dv_gi #(
         .consume(c_emb || c_seg), .consume_user(c_user),
         .result_write(r_fill), .result_user(r_wr), .fault(ctx_write_fault));
     wire        c_u0 = (NU == 1) || (c_user == {UB{1'b0}});
-    wire        s_u0 = (NU == 1) || (s_user == {UB{1'b0}});
+    wire        s_u0r = (NU == 1) || (s_user == {UB{1'b0}});
+    // QE3-CTLM3 STARTREG (CALREG bit 1): u_cal sees every start one edge later (start pre-decode register), so the face
+    // start's head / ME consumers (hd_start / hd_stage, s_me -> st / hu, and the F16 witness start) take the same +1 edge:
+    // the head, the ME station and the calendar keep their relative timing exactly; +1 edge face start -> head / ME / cmd.
+    localparam integer GSR = (CALREG / 2) % 2;
+    wire        h_start, s_u0; wire [5:0] h_stage; wire [17:0] h_tok, h_pos;
+    generate if (GSR != 0) begin : g_hsr
+        reg r_start, r_u0; reg [5:0] r_stage; reg [17:0] r_tok, r_pos;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) r_start <= 1'b0;
+            else r_start <= d_start;
+        always @(posedge ck) begin r_u0 <= s_u0r; r_stage <= d_stage; r_tok <= s_tok; r_pos <= s_pos; end
+        assign h_start = r_start; assign s_u0 = r_u0; assign h_stage = r_stage; assign h_tok = r_tok; assign h_pos = r_pos;
+    end else begin : g_nohsr
+        assign h_start = d_start; assign s_u0 = s_u0r; assign h_stage = d_stage; assign h_tok = s_tok; assign h_pos = s_pos;
+    end endgenerate
     assign cal_image_ready = c_ready;
 
     // head running stage (NU > 1): the hard leaf has ONE loaded stage (ROM relocation).  Latch it on user 0's dh start
@@ -182,11 +198,11 @@ module qfd_tt_ctlm_dv_gi #(
             if (d_start) stg_b[s_user] <= d_stage;
             else if (l_start) stg_b[l_user] <= op_stage;            // OPSEG: the leaf start's user
         end
-    wire        hd_start = (NU == 1 || 1'b0) ? d_start : ((d_start && s_u0) || c_seg);
-    wire [5:0]  hd_stage = (NU == 1 || 1'b0) ? d_stage : ((d_start && s_u0) ? d_stage : stg_b[c_user]);
+    wire        hd_start = (NU == 1 || 1'b0) ? h_start : ((h_start && s_u0) || c_seg);
+    wire [5:0]  hd_stage = (NU == 1 || 1'b0) ? h_stage : ((h_start && s_u0) ? h_stage : stg_b[c_user]);
     assign s_start = hd_start;                   // to u_hr stage_start / stage (the head running stage)
     assign s_stage = hd_stage;
-    wire        s_me0 = (STAGE_ME == 0) ? d_start : (d_start && d_stage != 6'd0 && d_stage < LAST_STAGE[5:0]);
+    wire        s_me0 = (STAGE_ME == 0) ? h_start : (h_start && h_stage != 6'd0 && h_stage < LAST_STAGE[5:0]);
     wire        s_me = s_me0 && s_u0;
     reg  [17:0] tok_b [0:NU-1], pos_b [0:NU-1];
     reg         st_h; reg [17:0] st_tok, st_pos; reg [11:0] st_base;
@@ -208,7 +224,7 @@ module qfd_tt_ctlm_dv_gi #(
             if (d_start) begin tok_b[s_user] <= s_tok; pos_b[s_user] <= s_pos; end
             if (r_fill) begin tok_b[r_wr] <= ss_tok[17:0]; pos_b[r_wr] <= pos_b[r_wr] + 18'd1; end
             st_h <= s_me | c_seg;
-            if (s_me) begin st_tok <= s_tok; st_pos <= s_pos; st_base <= 12'd0; end
+            if (s_me) begin st_tok <= h_tok; st_pos <= h_pos; st_base <= 12'd0; end
             else if (c_seg) begin st_tok <= tok_b[c_user]; st_pos <= pos_b[c_user]; st_base <= c_base; end
             if (s_me && c_seg) start_fault <= 1'b1;
             emb_start <= c_emb; emb_token <= tok_b[c_user];
@@ -254,9 +270,20 @@ module qfd_tt_ctlm_dv_gi #(
     //      has no outstanding read).  Fault joins start_fault (core_fault -> dc / cf).
     wire        w_fault;
     wire [15:0] u_tokid = l_start ? tok_b[l_user][15:0] : s_tok[15:0];   // the context's token identity at its start
+    wire [25:0] w_start_r = {u_start, 2'(u_user), u_stage, u_tokid};
+    wire [25:0] w_start;
+    generate if (GSR != 0) begin : g_wsr
+        reg [25:0] r_ws;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) r_ws <= 26'd0;
+            else r_ws <= w_start_r;
+        assign w_start = r_ws;
+    end else begin : g_nowsr
+        assign w_start = w_start_r;
+    end endgenerate
     generate if (F16WTN != 0) begin : g_wtn
         qfd_tt_ctlm_dv_wtn u_wtn (.ck(ck), .rst_n(rst_n), .pw(pw), .auth(f16_auth),
-            .start({u_start, 2'(u_user), u_stage, u_tokid}), .retire({c_done, 2'(c_done_user), !ag_stn_busy}), .obs(f16_obs),
+            .start(w_start), .retire({c_done, 2'(c_done_user), !ag_stn_busy}), .obs(f16_obs),
             .st(f16_st));
         assign w_fault = f16_st[16];
     end else begin : g_no_wtn
@@ -374,9 +401,11 @@ module qfd_tt_ctlm_dv_go #(
     wire unused = &{1'b0, arl_d, cfg_index[2], cfg_count[3]};
 endmodule
 
-module qfd_tt_ctlm_dv_thru (
-    input  wire          ck,                     // region membership only (no state)
-    input  wire          rst_n,                  // region membership only (no state)
+module qfd_tt_ctlm_dv_thru #(
+    parameter integer CALREG = 0                 // QE3-CTLM3: bit 3 = NOUTREG (registered native_tok / native_pos / layer_context_v)
+) (
+    input  wire          ck,                     // region membership (NOUTREG: the three output registers)
+    input  wire          rst_n,
     input  wire [115:0]  cmd_i,
     input  wire [75:0]   cal_program_obs_i,
     input  wire [68:0]   cal_descriptor_obs_i,
@@ -405,9 +434,21 @@ module qfd_tt_ctlm_dv_thru (
     output wire [17:0]   emb_token
 );
     assign cmd = cmd_i;
-    assign layer_context_v = lcv_i | fctx_i[37];
-    assign native_tok = fctx_i[36] ? fctx_i[35:18] : ntok_i;
-    assign native_pos = (fctx_i[36] ? {2'b00, fctx_i[15:0]} : npos_i) | {hu_i, 16'd0};
+    wire        lcv_n = lcv_i | fctx_i[37];
+    wire [17:0] ntok_n = fctx_i[36] ? fctx_i[35:18] : ntok_i;
+    wire [17:0] npos_n = (fctx_i[36] ? {2'b00, fctx_i[15:0]} : npos_i) | {hu_i, 16'd0};
+    // NOUTREG (QE3-CTLM3 10-21, CALREG bit 3): the head's native_tok / native_pos / layer_context_v leave through output
+    // registers beside u_hr (safe12c: u_hr macro -> 600 um unregistered output, -721 ps); +1 edge on the three, priced.
+    generate if ((CALREG / 8) % 2 != 0) begin : g_nor
+        reg lcv_q; reg [17:0] ntok_q, npos_q;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) lcv_q <= 1'b0;
+            else lcv_q <= lcv_n;
+        always @(posedge ck) begin ntok_q <= ntok_n; npos_q <= npos_n; end
+        assign layer_context_v = lcv_q; assign native_tok = ntok_q; assign native_pos = npos_q;
+    end else begin : g_nonor
+        assign layer_context_v = lcv_n; assign native_tok = ntok_n; assign native_pos = npos_n;
+    end endgenerate
     assign f16_st = f16_st_i;
     assign table_req = treq_i;
     assign cal_program_obs = cal_program_obs_i;
