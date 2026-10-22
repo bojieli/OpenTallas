@@ -1,0 +1,45 @@
+{
+  "status": "STRUCTURAL_CONSTRUCTION_MODEL_NOT_QUALIFIED",
+  "selected_source": "1f7a4aedb",
+  "top": "ot_hdc_vstream_lane",
+  "successor": "qfd_flat_ml1_native_bounded",
+  "params": {
+    "WR": 16,
+    "AW": 24,
+    "NW": 18,
+    "LANE": 0,
+    "KV_FP8": 1,
+    "ML": 1,
+    "TLS": 1,
+    "QLA": 3,
+    "QLM": 3,
+    "SFH": 0
+  },
+  "method": "Generic synth -flatten -noabc -nofsm -noshare graph; recursively duplicate overloaded FFs and Boolean cones with identical capture/data/control, retain each operator helper; no technology-cell graph mutation",
+  "actual_clocks": "All copied state and reset forest use original lane clk",
+  "startup": {
+    "async_assert": true,
+    "release_edges": 3,
+    "branch_limit": 24,
+    "pricing": "Three actual-clock startup edges after external reset release; existing warm guard140 retained until successor proof"
+  },
+  "storage": {
+    "authentic_sram_instances": 1,
+    "sram_shape": "128x256",
+    "sram_bits": 32768,
+    "macro_copy_forbidden": true,
+    "additional_ff": "Source constructor reports exact data copies plus three-level reset nodes; native inventory required"
+  },
+  "communication": {
+    "external_ports": "Full original ABI preserved",
+    "internal_data_reset_fanout_cap": 24,
+    "clock_fanout": "Native clock qualification required, clock is never duplicated as data",
+    "external_input_overload": "Refuse and report exact source input; no added input buffers or phantom copies"
+  },
+  "latency": {
+    "functional_execution_delta_edges": 0,
+    "reset_release_delta_edges": 3
+  },
+  "area": "Actual copied FF and logic count generated before native; no timing or area closure claim",
+  "scope": "One selected lane0; exact authentic SRAM; no LT1/safe2 switch, no threshold waiver"
+}
