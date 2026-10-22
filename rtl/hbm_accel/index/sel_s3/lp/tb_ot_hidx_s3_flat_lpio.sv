@@ -1,0 +1,134 @@
+`timescale 1ns/1ps
+// C16 (HBMc/TILES2 10-22) from the GENERATED lp.py bench: ot_hidx_s3_flat_lpio vs the same reference, outputs delayed DO.
+// lockstep ot_hidx_s3_flat (flat, reset delayed 4 = RB 2 + 2 face landing stages u_rst_l0/l1, HBM-ELEM13/IDX-SEL c13) vs ot_hidx_s3_flat_lp; every input presented off_in edges later, every output compared off_out edges later.
+module tb_ot_hidx_s3_flat_lpio;
+    parameter integer MUT = 0;
+    parameter integer OUTST = 1;
+    localparam integer DO = 1 + OUTST;   // C16: outputs compared 1 + OUTST edges later (pin register + output relays)
+    reg clk = 1'b0;  always #0.5 clk = ~clk;
+    reg rst = 0;  reg [3:0] rst_dl;
+    wire rst_f = rst_dl[3];
+    always @(posedge clk) rst_dl <= {rst_dl[2:0], rst};
+    reg [3:0] fi_op;
+    reg [3:0] dli_op [0:0];  wire [3:0] li_op = fi_op;
+    always @(posedge clk) begin : g_dli_op integer j; dli_op[0] <= fi_op; for (j = 1; j <= 0; j = j + 1) dli_op[j] <= dli_op[j - 1]; end
+    reg [1:0] fi_pass;
+    reg [1:0] dli_pass [0:0];  wire [1:0] li_pass = fi_pass;
+    always @(posedge clk) begin : g_dli_pass integer j; dli_pass[0] <= fi_pass; for (j = 1; j <= 0; j = j + 1) dli_pass[j] <= dli_pass[j - 1]; end
+    reg [7:0] fi_addr;
+    reg [7:0] dli_addr [0:0];  wire [7:0] li_addr = fi_addr;
+    always @(posedge clk) begin : g_dli_addr integer j; dli_addr[0] <= fi_addr; for (j = 1; j <= 0; j = j + 1) dli_addr[j] <= dli_addr[j - 1]; end
+    reg [9:0] fi_k;
+    reg [9:0] dli_k [0:0];  wire [9:0] li_k = fi_k;
+    always @(posedge clk) begin : g_dli_k integer j; dli_k[0] <= fi_k; for (j = 1; j <= 0; j = j + 1) dli_k[j] <= dli_k[j - 1]; end
+    reg [591:0] fi_in_line_0;
+    reg [591:0] dli_in_line_0 [0:0];  wire [591:0] li_in_line_0 = fi_in_line_0;
+    always @(posedge clk) begin : g_dli_in_line_0 integer j; dli_in_line_0[0] <= fi_in_line_0; for (j = 1; j <= 0; j = j + 1) dli_in_line_0[j] <= dli_in_line_0[j - 1]; end
+    reg [591:0] fi_in_line_1;
+    reg [591:0] dli_in_line_1 [0:0];  wire [591:0] li_in_line_1 = fi_in_line_1;
+    always @(posedge clk) begin : g_dli_in_line_1 integer j; dli_in_line_1[0] <= fi_in_line_1; for (j = 1; j <= 0; j = j + 1) dli_in_line_1[j] <= dli_in_line_1[j - 1]; end
+    reg [591:0] fi_in_line_2;
+    reg [591:0] dli_in_line_2 [0:0];  wire [591:0] li_in_line_2 = fi_in_line_2;
+    always @(posedge clk) begin : g_dli_in_line_2 integer j; dli_in_line_2[0] <= fi_in_line_2; for (j = 1; j <= 0; j = j + 1) dli_in_line_2[j] <= dli_in_line_2[j - 1]; end
+    reg [591:0] fi_in_line_3;
+    reg [591:0] dli_in_line_3 [0:0];  wire [591:0] li_in_line_3 = fi_in_line_3;
+    always @(posedge clk) begin : g_dli_in_line_3 integer j; dli_in_line_3[0] <= fi_in_line_3; for (j = 1; j <= 0; j = j + 1) dli_in_line_3[j] <= dli_in_line_3[j - 1]; end
+    wire [0:0] fo_selected_v_0, lo_selected_v_0;  reg [0:0] dlo_selected_v_0 [0:DO-1];
+    always @(posedge clk) begin : g_dlo_selected_v_0 integer j; dlo_selected_v_0[0] <= fo_selected_v_0; for (j = 1; j <= DO-1; j = j + 1) dlo_selected_v_0[j] <= dlo_selected_v_0[j - 1]; end
+    wire [0:0] fo_selected_v_1, lo_selected_v_1;  reg [0:0] dlo_selected_v_1 [0:DO-1];
+    always @(posedge clk) begin : g_dlo_selected_v_1 integer j; dlo_selected_v_1[0] <= fo_selected_v_1; for (j = 1; j <= DO-1; j = j + 1) dlo_selected_v_1[j] <= dlo_selected_v_1[j - 1]; end
+    wire [0:0] fo_selected_v_2, lo_selected_v_2;  reg [0:0] dlo_selected_v_2 [0:DO-1];
+    always @(posedge clk) begin : g_dlo_selected_v_2 integer j; dlo_selected_v_2[0] <= fo_selected_v_2; for (j = 1; j <= DO-1; j = j + 1) dlo_selected_v_2[j] <= dlo_selected_v_2[j - 1]; end
+    wire [0:0] fo_selected_v_3, lo_selected_v_3;  reg [0:0] dlo_selected_v_3 [0:DO-1];
+    always @(posedge clk) begin : g_dlo_selected_v_3 integer j; dlo_selected_v_3[0] <= fo_selected_v_3; for (j = 1; j <= DO-1; j = j + 1) dlo_selected_v_3[j] <= dlo_selected_v_3[j - 1]; end
+    wire [591:0] fo_selected_line_0, lo_selected_line_0;  reg [591:0] dlo_selected_line_0 [0:DO-1];
+    always @(posedge clk) begin : g_dlo_selected_line_0 integer j; dlo_selected_line_0[0] <= fo_selected_line_0; for (j = 1; j <= DO-1; j = j + 1) dlo_selected_line_0[j] <= dlo_selected_line_0[j - 1]; end
+    wire [591:0] fo_selected_line_1, lo_selected_line_1;  reg [591:0] dlo_selected_line_1 [0:DO-1];
+    always @(posedge clk) begin : g_dlo_selected_line_1 integer j; dlo_selected_line_1[0] <= fo_selected_line_1; for (j = 1; j <= DO-1; j = j + 1) dlo_selected_line_1[j] <= dlo_selected_line_1[j - 1]; end
+    wire [591:0] fo_selected_line_2, lo_selected_line_2;  reg [591:0] dlo_selected_line_2 [0:DO-1];
+    always @(posedge clk) begin : g_dlo_selected_line_2 integer j; dlo_selected_line_2[0] <= fo_selected_line_2; for (j = 1; j <= DO-1; j = j + 1) dlo_selected_line_2[j] <= dlo_selected_line_2[j - 1]; end
+    wire [591:0] fo_selected_line_3, lo_selected_line_3;  reg [591:0] dlo_selected_line_3 [0:DO-1];
+    always @(posedge clk) begin : g_dlo_selected_line_3 integer j; dlo_selected_line_3[0] <= fo_selected_line_3; for (j = 1; j <= DO-1; j = j + 1) dlo_selected_line_3[j] <= dlo_selected_line_3[j - 1]; end
+    wire [0:0] fo_fault, lo_fault;  reg [0:0] dlo_fault [0:DO-1];
+    always @(posedge clk) begin : g_dlo_fault integer j; dlo_fault[0] <= fo_fault; for (j = 1; j <= DO-1; j = j + 1) dlo_fault[j] <= dlo_fault[j - 1]; end
+    ot_hidx_s3_flat_rsref u_flat (.clk(clk), .rst_n(rst_f), .op(fi_op), .pass(fi_pass), .addr(fi_addr), .k(fi_k), .in_line_0(fi_in_line_0), .in_line_1(fi_in_line_1), .in_line_2(fi_in_line_2), .in_line_3(fi_in_line_3), .selected_v_0(fo_selected_v_0), .selected_v_1(fo_selected_v_1), .selected_v_2(fo_selected_v_2), .selected_v_3(fo_selected_v_3), .selected_line_0(fo_selected_line_0), .selected_line_1(fo_selected_line_1), .selected_line_2(fo_selected_line_2), .selected_line_3(fo_selected_line_3), .fault(fo_fault));
+    ot_hidx_s3_flat_lpio #(.MUT(MUT), .OUTST(OUTST)) u_lp (.ck_ctl(clk), .ck_q0(clk), .ck_q1(clk), .ck_q2(clk), .ck_q3(clk), .rst_n(rst), .op(li_op), .pass(li_pass), .addr(li_addr), .k(li_k), .in_line_0(li_in_line_0), .in_line_1(li_in_line_1), .in_line_2(li_in_line_2), .in_line_3(li_in_line_3), .selected_v_0(lo_selected_v_0), .selected_v_1(lo_selected_v_1), .selected_v_2(lo_selected_v_2), .selected_v_3(lo_selected_v_3), .selected_line_0(lo_selected_line_0), .selected_line_1(lo_selected_line_1), .selected_line_2(lo_selected_line_2), .selected_line_3(lo_selected_line_3), .fault(lo_fault));
+    function [31:0] rnd; input integer k; rnd = $urandom; endfunction
+    integer cyc = 0, nc = 0, bad = 0;
+    always @(negedge clk) begin
+        cyc <= cyc + 1;
+        if (cyc > 29) begin
+            nc = nc + 1; if (lo_selected_v_0 !== dlo_selected_v_0[DO-1]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=selected_v_0 cycle=%0d flat=%h landed=%h", cyc, dlo_selected_v_0[DO-1], lo_selected_v_0); end
+            nc = nc + 1; if (lo_selected_v_1 !== dlo_selected_v_1[DO-1]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=selected_v_1 cycle=%0d flat=%h landed=%h", cyc, dlo_selected_v_1[DO-1], lo_selected_v_1); end
+            nc = nc + 1; if (lo_selected_v_2 !== dlo_selected_v_2[DO-1]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=selected_v_2 cycle=%0d flat=%h landed=%h", cyc, dlo_selected_v_2[DO-1], lo_selected_v_2); end
+            nc = nc + 1; if (lo_selected_v_3 !== dlo_selected_v_3[DO-1]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=selected_v_3 cycle=%0d flat=%h landed=%h", cyc, dlo_selected_v_3[DO-1], lo_selected_v_3); end
+            nc = nc + 1; if (lo_selected_line_0 !== dlo_selected_line_0[DO-1]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=selected_line_0 cycle=%0d flat=%h landed=%h", cyc, dlo_selected_line_0[DO-1], lo_selected_line_0); end
+            nc = nc + 1; if (lo_selected_line_1 !== dlo_selected_line_1[DO-1]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=selected_line_1 cycle=%0d flat=%h landed=%h", cyc, dlo_selected_line_1[DO-1], lo_selected_line_1); end
+            nc = nc + 1; if (lo_selected_line_2 !== dlo_selected_line_2[DO-1]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=selected_line_2 cycle=%0d flat=%h landed=%h", cyc, dlo_selected_line_2[DO-1], lo_selected_line_2); end
+            nc = nc + 1; if (lo_selected_line_3 !== dlo_selected_line_3[DO-1]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=selected_line_3 cycle=%0d flat=%h landed=%h", cyc, dlo_selected_line_3[DO-1], lo_selected_line_3); end
+            nc = nc + 1; if (lo_fault !== dlo_fault[DO-1]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=fault cycle=%0d flat=%h landed=%h", cyc, dlo_fault[DO-1], lo_fault); end
+        end
+    end
+    task lp_finish; input [8*48-1:0] what; begin
+        if (bad == 0 && nc > 0) $display("LP_LOCKSTEP PASS MUT=%0d compared=%0d cycles=%0d warm=29 stimulus=%0s", MUT, nc, cyc, what);
+        else $display("LP_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d stimulus=%0s", MUT, bad, nc, what);
+        $finish; end endtask
+    `include "rtl/hbm_accel/index/sel_s3/lp/tb_hidx_s3_stim.svh"
+endmodule
+// GENERATED by tools/landed_parent/lp.py (reschedule): ot_hidx_s3_flat with +3 edges on each of the 20 landed nets (the compiler re-schedule) -- the lockstep reference of ot_hidx_s3_flat_lp
+module ot_hidx_s3_flat_rsref #(
+    parameter integer DMUT=0
+) (
+    input wire clk,
+    input wire rst_n,
+    input wire [3:0] op,
+    input wire [1:0] pass,
+    input wire [7:0] addr,
+    input wire [9:0] k,
+    input wire [591:0] in_line_0,
+    input wire [591:0] in_line_1,
+    input wire [591:0] in_line_2,
+    input wire [591:0] in_line_3,
+    output wire selected_v_0,
+    output wire selected_v_1,
+    output wire selected_v_2,
+    output wire selected_v_3,
+    output wire [591:0] selected_line_0,
+    output wire [591:0] selected_line_1,
+    output wire [591:0] selected_line_2,
+    output wire [591:0] selected_line_3,
+    output wire fault
+);
+ wire [13:0] cw;
+ wire [15:0] thr;
+ wire [13:0] ties_0, ties_1, ties_2, ties_3;
+ wire [24:0] ret_0, ret_1, ret_2, ret_3;
+ wire qf_0, qf_1, qf_2, qf_3;
+    wire lprs_g;  ot_pl_pad #(.W(1), .N(3)) u_lprs_g (.ck(clk), .d(rst_n), .q(lprs_g));
+    wire [24:0] ret_0__rq_ctl, ret_0__rs_ctl;  ot_pl_pad #(.W(((24) - (0) + 1)), .N(3)) u_lprs_0 (.ck(clk), .d(ret_0), .q(ret_0__rq_ctl));  assign ret_0__rs_ctl = lprs_g ? ret_0__rq_ctl : {(((24) - (0) + 1)){1'b0}};
+    wire [24:0] ret_1__rq_ctl, ret_1__rs_ctl;  ot_pl_pad #(.W(((24) - (0) + 1)), .N(3)) u_lprs_1 (.ck(clk), .d(ret_1), .q(ret_1__rq_ctl));  assign ret_1__rs_ctl = lprs_g ? ret_1__rq_ctl : {(((24) - (0) + 1)){1'b0}};
+    wire [24:0] ret_2__rq_ctl, ret_2__rs_ctl;  ot_pl_pad #(.W(((24) - (0) + 1)), .N(3)) u_lprs_2 (.ck(clk), .d(ret_2), .q(ret_2__rq_ctl));  assign ret_2__rs_ctl = lprs_g ? ret_2__rq_ctl : {(((24) - (0) + 1)){1'b0}};
+    wire [24:0] ret_3__rq_ctl, ret_3__rs_ctl;  ot_pl_pad #(.W(((24) - (0) + 1)), .N(3)) u_lprs_3 (.ck(clk), .d(ret_3), .q(ret_3__rq_ctl));  assign ret_3__rs_ctl = lprs_g ? ret_3__rq_ctl : {(((24) - (0) + 1)){1'b0}};
+    wire  qf_0__rq_ctl, qf_0__rs_ctl;  ot_pl_pad #(.W(1), .N(3)) u_lprs_4 (.ck(clk), .d(qf_0), .q(qf_0__rq_ctl));  assign qf_0__rs_ctl = lprs_g ? qf_0__rq_ctl : {(1){1'b0}};
+    wire  qf_1__rq_ctl, qf_1__rs_ctl;  ot_pl_pad #(.W(1), .N(3)) u_lprs_5 (.ck(clk), .d(qf_1), .q(qf_1__rq_ctl));  assign qf_1__rs_ctl = lprs_g ? qf_1__rq_ctl : {(1){1'b0}};
+    wire  qf_2__rq_ctl, qf_2__rs_ctl;  ot_pl_pad #(.W(1), .N(3)) u_lprs_6 (.ck(clk), .d(qf_2), .q(qf_2__rq_ctl));  assign qf_2__rs_ctl = lprs_g ? qf_2__rq_ctl : {(1){1'b0}};
+    wire  qf_3__rq_ctl, qf_3__rs_ctl;  ot_pl_pad #(.W(1), .N(3)) u_lprs_7 (.ck(clk), .d(qf_3), .q(qf_3__rq_ctl));  assign qf_3__rs_ctl = lprs_g ? qf_3__rq_ctl : {(1){1'b0}};
+    wire [13:0] cw__rq_q0, cw__rs_q0;  ot_pl_pad #(.W(((13) - (0) + 1)), .N(3)) u_lprs_8 (.ck(clk), .d(cw), .q(cw__rq_q0));  assign cw__rs_q0 = lprs_g ? cw__rq_q0 : {(((13) - (0) + 1)){1'b0}};
+    wire [15:0] thr__rq_q0, thr__rs_q0;  ot_pl_pad #(.W(((15) - (0) + 1)), .N(3)) u_lprs_9 (.ck(clk), .d(thr), .q(thr__rq_q0));  assign thr__rs_q0 = lprs_g ? thr__rq_q0 : {(((15) - (0) + 1)){1'b0}};
+    wire [13:0] ties_0__rq_q0, ties_0__rs_q0;  ot_pl_pad #(.W(((13) - (0) + 1)), .N(3)) u_lprs_10 (.ck(clk), .d(ties_0), .q(ties_0__rq_q0));  assign ties_0__rs_q0 = lprs_g ? ties_0__rq_q0 : {(((13) - (0) + 1)){1'b0}};
+    wire [13:0] cw__rq_q1, cw__rs_q1;  ot_pl_pad #(.W(((13) - (0) + 1)), .N(3)) u_lprs_11 (.ck(clk), .d(cw), .q(cw__rq_q1));  assign cw__rs_q1 = lprs_g ? cw__rq_q1 : {(((13) - (0) + 1)){1'b0}};
+    wire [15:0] thr__rq_q1, thr__rs_q1;  ot_pl_pad #(.W(((15) - (0) + 1)), .N(3)) u_lprs_12 (.ck(clk), .d(thr), .q(thr__rq_q1));  assign thr__rs_q1 = lprs_g ? thr__rq_q1 : {(((15) - (0) + 1)){1'b0}};
+    wire [13:0] ties_1__rq_q1, ties_1__rs_q1;  ot_pl_pad #(.W(((13) - (0) + 1)), .N(3)) u_lprs_13 (.ck(clk), .d(ties_1), .q(ties_1__rq_q1));  assign ties_1__rs_q1 = lprs_g ? ties_1__rq_q1 : {(((13) - (0) + 1)){1'b0}};
+    wire [13:0] cw__rq_q2, cw__rs_q2;  ot_pl_pad #(.W(((13) - (0) + 1)), .N(3)) u_lprs_14 (.ck(clk), .d(cw), .q(cw__rq_q2));  assign cw__rs_q2 = lprs_g ? cw__rq_q2 : {(((13) - (0) + 1)){1'b0}};
+    wire [15:0] thr__rq_q2, thr__rs_q2;  ot_pl_pad #(.W(((15) - (0) + 1)), .N(3)) u_lprs_15 (.ck(clk), .d(thr), .q(thr__rq_q2));  assign thr__rs_q2 = lprs_g ? thr__rq_q2 : {(((15) - (0) + 1)){1'b0}};
+    wire [13:0] ties_2__rq_q2, ties_2__rs_q2;  ot_pl_pad #(.W(((13) - (0) + 1)), .N(3)) u_lprs_16 (.ck(clk), .d(ties_2), .q(ties_2__rq_q2));  assign ties_2__rs_q2 = lprs_g ? ties_2__rq_q2 : {(((13) - (0) + 1)){1'b0}};
+    wire [13:0] cw__rq_q3, cw__rs_q3;  ot_pl_pad #(.W(((13) - (0) + 1)), .N(3)) u_lprs_17 (.ck(clk), .d(cw), .q(cw__rq_q3));  assign cw__rs_q3 = lprs_g ? cw__rq_q3 : {(((13) - (0) + 1)){1'b0}};
+    wire [15:0] thr__rq_q3, thr__rs_q3;  ot_pl_pad #(.W(((15) - (0) + 1)), .N(3)) u_lprs_18 (.ck(clk), .d(thr), .q(thr__rq_q3));  assign thr__rs_q3 = lprs_g ? thr__rq_q3 : {(((15) - (0) + 1)){1'b0}};
+    wire [13:0] ties_3__rq_q3, ties_3__rs_q3;  ot_pl_pad #(.W(((13) - (0) + 1)), .N(3)) u_lprs_19 (.ck(clk), .d(ties_3), .q(ties_3__rq_q3));  assign ties_3__rs_q3 = lprs_g ? ties_3__rq_q3 : {(((13) - (0) + 1)){1'b0}};
+    ot_hidx_s3_ctl #(.DMUT(DMUT)) u_ctl (.clk(clk), .rst_n(rst_n), .op(op), .pass(pass), .addr(addr), .k(k), .cw(cw), .thr(thr), .ties_0(ties_0), .ties_1(ties_1), .ties_2(ties_2), .ties_3(ties_3), .ret_0(ret_0__rs_ctl), .ret_1(ret_1__rs_ctl), .ret_2(ret_2__rs_ctl), .ret_3(ret_3__rs_ctl), .qf_0(qf_0__rs_ctl), .qf_1(qf_1__rs_ctl), .qf_2(qf_2__rs_ctl), .qf_3(qf_3__rs_ctl), .fault(fault));
+    ot_hidx_s3_q #(.DMUT(DMUT)) u_q0 (.clk(clk), .rst_n(rst_n), .cw(cw__rs_q0), .thr(thr__rs_q0), .ties(ties_0__rs_q0), .in_line(in_line_0), .ret(ret_0), .qfault_o(qf_0), .selected_v_o(selected_v_0), .selected_line_o(selected_line_0));
+    ot_hidx_s3_q #(.DMUT(DMUT)) u_q1 (.clk(clk), .rst_n(rst_n), .cw(cw__rs_q1), .thr(thr__rs_q1), .ties(ties_1__rs_q1), .in_line(in_line_1), .ret(ret_1), .qfault_o(qf_1), .selected_v_o(selected_v_1), .selected_line_o(selected_line_1));
+    ot_hidx_s3_q #(.DMUT(DMUT)) u_q2 (.clk(clk), .rst_n(rst_n), .cw(cw__rs_q2), .thr(thr__rs_q2), .ties(ties_2__rs_q2), .in_line(in_line_2), .ret(ret_2), .qfault_o(qf_2), .selected_v_o(selected_v_2), .selected_line_o(selected_line_2));
+    ot_hidx_s3_q #(.DMUT(DMUT)) u_q3 (.clk(clk), .rst_n(rst_n), .cw(cw__rs_q3), .thr(thr__rs_q3), .ties(ties_3__rs_q3), .in_line(in_line_3), .ret(ret_3), .qfault_o(qf_3), .selected_v_o(selected_v_3), .selected_line_o(selected_line_3));
+endmodule
+

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hidx_s3_flat_lpio",
+ "enable": false,
+ "reason": "C16: the RTL registers every pin: inputs in one plain register on the consumer region clock (in_line_i on ck_qi, rst_n/op/pass/addr/k on ck_ctl); outputs leave through OUTST=1 relay register(s) on the producer clock placed by timing between the quadrant and the E face."
+}

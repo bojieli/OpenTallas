@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hidx_s3_flat_lpio",
+ "enable": false,
+ "reason": "the RTL lands it: rst_n -> u_rst_l0 -> u_rst_l1 (2 plain kept stages on ck_ctl, fenced in the ctl box) -> 5 kept equal-age root copies u_lpr_root_* -> regional pads; the port net has ONE sink; release +2 edges priced in the landed record (RB 4)"
+}
