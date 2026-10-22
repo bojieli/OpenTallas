@@ -64,17 +64,36 @@ def bind(graph, read_sample, write_commit):
                 edge(n+'_'+p,ep(name,p,width,j*width),ep(n,'gather_'+p,width),width)
             edge(n+'_rr',ep(n,'gather_rr',257),ep(name,'rr',257,j*257),257)
             edge(n+'_reserve',ep(name,'active',1),ep(n,'reserve',1),1)
-            ck(n);c['open_outputs'].append([n,'fault',1])
+            ck(n)
             inventory.append(dict(bank=bank,selector=n,read_owner=0,write_owner=0,preserved_sources=owners))
     c['clock_resets']+=clocks
+    # Target membership and faults are real host-status inputs, not open debug.
+    hs=I['host_status'];nt=int(hs['params']['NT']);nf=int(hs['params']['NF'])
+    width,packed=hs['params']['TGTS'].split("'h")
+    assert int(width)==nt*8
+    assert 180 not in bytes.fromhex(packed.zfill(nt*2))
+    hs['params'].update(NT=nt+1,NF=nf+35,TGTS=f"{(nt+1)*8}'h"+'b4'+packed.zfill(nt*2))
+    for p in ['t_ready','t_active']: hs['ports'][p]['bits']=nt+1
+    hs['ports']['t_fault']['bits']=nf+35
+    edge('target_ready',ep(name,'configured',1),ep('host_status','t_ready',1,nt),1)
+    edge('target_active',ep(name,'active',1),ep('host_status','t_active',1,nt),1)
+    for j,p in enumerate(['target_fault','program_fault','engine_fault']):
+        edge('target_'+p,ep(name,p,1),ep('host_status','t_fault',1,nf+j),1)
+    for j,r in enumerate(inventory):
+        edge(r['selector']+'_fault',ep(r['selector'],'fault',1),ep('host_status','t_fault',1,nf+3+j),1)
+    # The host ingress must accept the new F20 target before its leaf can see it.
+    ing=I['host_cp_ingress'];mw,mhex=ing['params']['TARGET_MASK'].split("'h")
+    assert int(mw)==256
+    ing['params']['TARGET_MASK']=f"256'h{int(mhex,16)|(1<<180):064x}"
     for p,b in out.items():
-        if p not in ['rq','wq','active']:c['open_outputs'].append([name,p,b])
-    c.setdefault('notes',[]).append('Indexed gather source is opt-in candidate; physical homes, fault aggregation, source-ready dates, calendar reservation and exact post-landing latency remain required before release.')
+        if p not in ['rq','wq','active','configured','target_fault','program_fault','engine_fault']:
+            c['open_outputs'].append([name,p,b])
+    c.setdefault('notes',[]).append('Indexed gather is opt-in candidate; all faults and target readiness join real host_status. Physical homes, source-ready dates, calendar drain guards and post-landing age proof remain required.')
     report=dict(schema='opentallas.hbm.indexed_gather.binding_candidate.v1',target=180,clock='stream',endpoint=name,
                 READ_SAMPLE=read_sample,WRITE_COMMIT=write_commit,banks=inventory,
                 descriptor_fields={'index_word':[0,24],'score_base':[24,24],'score_limit':[48,24],'dest_word':[72,24],'dyn_mul':[96,24],'start':[120,16],'release_exclusive':[136,16]},
                 required_release_gap=2*read_sample+write_commit+7,release_ready=False,
-                open=['Measured source-ready dates','Exact F20 launch-to-local-edge-zero measurement','Actual mapped route/clock/reset qualification','Fault aggregation','All native client/calendar drain guards','Post-landing latency equality'])
+                open=['Measured source-ready dates','Exact F20 launch-to-local-edge-zero measurement','Actual mapped route/clock/reset qualification','Host readiness round-trip GUARD after route','All native client/calendar drain guards','Post-landing latency equality'])
     return c,report
 
 def main():
