@@ -1,0 +1,14 @@
+src/ot_hbm_svc_vmdel_lane_load_static.sv
+src/ot_hbm_dma_load_route_static.sv
+src/hfd_vms_bank_native_q0_faces.sv
+src/ot_vms_bank_q0_faces_core.sv
+src/ot_vms_bank_q0_faces_body.sv
+src/ot_vms_ce_counter_pipe.sv
+src/ot_sram_1r1w_128x256_m1_r2c2.v
+src/ot_sram_1r1w_1024x256_m2_r2c2.v
+src/ot_hbm_svc_vm_kshare_splitstrap.sv
+src/ot_hbm_svc_async_fifo.sv
+src/ot_hbm_svc_pc_ctrl_leaf.sv
+src/ot_hbm_svc_ring_h9b_ff.sv
+src/ot_reset_sync.sv
+tb_dma_integrated.sv

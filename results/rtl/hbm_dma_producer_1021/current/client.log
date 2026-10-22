@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-2124
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-2124
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-2124
+ot-run: ot-gold2       admits    32 GB (avail 431, growth 408, headroom 0, waiters 0/0 GB) load 35/112 running 18 disk 2734 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-2124
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-2124
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-dma-producer-2124
+ot-run: -> ot-gold2
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-724328-1792643067 after 0 s
+DMA_PRODUCER_INTEGRATED_PASS words384 packets48 routed48 commits48 SRAM_readback48 source_windows2 command_sample_to_bank_packet10/10 command_drive_to_bank_packet11/11 native_read_return7
+[241000] %Fatal: tb_dma_integrated.sv:70: Assertion failed in tb_dma_integrated.unnamedblk3.unnamedblk4: ROUTE_DATA packet0 word0
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-724328-1792643067): exit 0

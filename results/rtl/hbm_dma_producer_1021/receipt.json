@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "observed_at": "2026-10-21T21:28:02-07:00",
+  "fleet_host": "ot-gold2",
+  "unit": "oth-ubuntu-724328-1792643067",
+  "converter_rev": "d70845a2be3fc4e8f4cc1b64a6558f69f1e7ee46",
+  "route_rev": "394f2083a",
+  "service_rev": "d76bf51b4",
+  "vmks_parameters": {
+    "MUT": 0,
+    "KRL1": 1
+  },
+  "hbm_clock_period_ns": 1.4,
+  "stream_clock_period_ns": 2.0,
+  "vmks_instances": 8,
+  "converter_lanes": 16,
+  "actual_native_vm_banks": 8,
+  "source_windows": 2,
+  "input_format": "BF16",
+  "source_bank": 0,
+  "destination_quadrant": 0,
+  "words": 384,
+  "packets": 48,
+  "actual_native_vm_commits": 48,
+  "physical_sram_readbacks": 48,
+  "command_sample_to_bank_packet_edges": 10,
+  "preceding_negedge_drive_to_bank_packet_cycles": 11,
+  "native_read_return_edges": 7,
+  "same_binary_negative_controls": {
+    "destination_bank": "ROUTE_MISMATCH packet0 bank1",
+    "hbm_source_bytes": "ROUTE_DATA packet0 word0"
+  },
+  "binary_sha256": "62c78ff005e4166934b9aede4b3d9ae27a9bf0d83a75a0bde9766df6186d252c",
+  "scope": "384/1280 actual q_norm.gain subset. Real vmks fixed-window requests and KRL1 response acceptance, true source-byte HBM boundary model, real asynchronous service CDC, converter, static route, native VM commit and SRAM readback. Group/WB traffic idle. HBM controller/PHY is a boundary model, source producer launch/physical distribution and native admission are not qualified. No full tensor/full token/release die claim.",
+  "evidence_sha256": {
+    "current/binary.sha256": "5ea9c6335dfc8b214fd880c7192b0c5fadb0151978268e6cf162bb694fba0e3b",
+    "current/build.log": "414e00b3d04ce40ef021f416a52ec13846b2ebed7b6c5c7fbf9e15e731941a03",
+    "current/client.log": "1e2ad51319bdd0397c88654c7dea99609248bfdb40fa159ffaf75ac1f1145e71",
+    "current/hbm_mutant.log": "7209b911aa8318ce16281c486af1e63d9c07221b642ea0bc22d17ddd25c34a3d",
+    "current/mutant.log": "3cb88d8e7c61b0cbe4a86e20d62f028b4f3bf18c64b8e5dd69c4c973fc5e8a99",
+    "current/positive.log": "ad403ed371446bae3c7f69774c8ecd4e2f76d48935e0a3fcdc74f8e74df4b402",
+    "current/tool_version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+  }
+}
