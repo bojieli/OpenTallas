@@ -166,29 +166,30 @@ def sfu_extend(c, L, R, rep):
     r0 = r0.pop()
     assert R >= r0, (R, r0)
     new_edges = []
-    drop = set()
     for g, idx in sorted(chains.items()):
-        last = f'{g}{r0 - 1:02d}'; proto = I[f'{g}00']
-        tail = [e for e in E if e['source'][0] == last]
-        assert tail and all(e['source'][1] == 'o' for e in tail), g
+        # new stages go IN FRONT of the existing tail stage g<r0-1>: the tail keeps its name, its load edges and its
+        # reviewed spare (unread) output bits -- the strict unread review stays valid without re-pointing
+        last = f'{g}{r0 - 1:02d}'; prev = f'{g}{r0 - 2:02d}'; proto = I[f'{g}00']
+        into = [e for e in E if e['source'][0] == prev and e['sink'][0] == last]
+        assert len(into) == 1 and into[0]['source'][1] == 'o' and into[0]['sink'][1] == 'i', (g, len(into))
         dom = next(x['domain'] for x in c['clock_resets'] if x['instance'] == last and x['kind'] == 'clock')
-        width = I[last]['ports']['o']['bits']
-        prev = last
-        for s in range(r0, R):
-            n = f'{g}{s:02d}'
-            I[n] = json.loads(json.dumps({k: v for k, v in proto.items()}))
+        width = I[last]['ports']['i']['bits']
+        assert into[0]['bits'] == width, g
+        for s_ in range(r0, R):
+            n = f'{g}{s_:02d}'
+            I[n] = json.loads(json.dumps(proto))
             I[n]['slot'] = None
-            I[n]['note'] = f'r18h B1 SFU LG relay stage {s} of R{R} (LG_PATH {R + 1}); same master as {g}00'
+            I[n]['note'] = f'r18h B1 SFU LG relay stage {s_} of R{R} (LG_PATH {R + 1}), inserted before tail {last}; same master as {g}00'
             c['masters'][proto['master']] = c['masters'].get(proto['master'], 0) + 1
-            for kind, p in (('clock', 'ck'), ('reset', 'rs')):
-                old = next(x for x in c['clock_resets'] if x['instance'] == last and x['port'] == p)
+            for kind, p_ in (('clock', 'ck'), ('reset', 'rs')):
+                old = next(x for x in c['clock_resets'] if x['instance'] == last and x['port'] == p_)
                 c['clock_resets'].append(dict(old, instance=n))
             new_edges.append(dict(name=f'r18h_{prev}_{n}', bits=width, source=[prev, 'o', 0, width], sink=[n, 'i', 0, width],
                                   clock=dom, ready_or_credit=False, allowed_exception=None,
                                   basis=f'r18h B1 SFU LG chain R{R} (registered stage, compiler LG_PATH {R + 1})', region='su_sfu'))
             prev = n
-        for e in tail:
-            e['source'] = [prev] + e['source'][1:]
+        into[0]['source'] = [prev, 'o', 0, width]
+        into[0]['basis'] = (into[0].get('basis') or '') + f' | r18h B1: tail {last} now fed by {prev}'
     E += new_edges
     for q in ('SW', 'SE', 'NW', 'NE'):
         I[f'sfucore_{q}']['params']['LG_PATH'] = R + 1
