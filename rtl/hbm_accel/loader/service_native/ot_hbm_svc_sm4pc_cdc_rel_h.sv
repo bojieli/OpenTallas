@@ -89,6 +89,10 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  assign desc_wr_reset=dwr_leaf[0];assign desc_rd_reset=drd_leaf[0];
  assign reserve_ready=sc[0]&&!allocated[reserve_bank]&&desc_wr_ready&&!fault;
  wire reserve_fire=reserve_v&&reserve_ready&&descriptor_ok;
+ // HBMc/TILES 10-22: two kept copies of reserve_fire for the descriptor FIFO slices (one drove 34 loads)
+ wire rf_ok=reserve_ready&&descriptor_ok;wire [1:0] rf_k;
+ ot_hbm_svc_local_and2 u_rf0(.a(reserve_v),.b(rf_ok),.y(rf_k[0]));
+ ot_hbm_svc_local_and2 u_rf1(.a(reserve_v),.b(rf_ok),.y(rf_k[1]));
  // HBM-COLLECT11 2026-10-21 (rel8e, COORDINATOR DECISION 2): the descriptor FIFO is DSN BIT-SLICED instances of the
  // reviewed ot_hbm_svc_async_fifo (byte-identical module, only WIDTH differs; each <= DSW = 5 bits so a slot-select
  // decode stays bounded (WIDTH5 DEPTH4 mapped max16); DW97 = 19 x 5 + 2).  Own pointers / synchronisers / reset syncs per instance.
@@ -108,7 +112,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  generate for(ds=0;ds<DSN;ds=ds+1)begin:dsl
   localparam integer W=(ds==DSN-1)?(DW-DSW*(DSN-1)):DSW;
   ot_hbm_svc_async_fifo #(.WIDTH(W),.DEPTH(4)) u_descriptor(
-   .wr_clk(stream_clk),.wr_rst_n(dwr_leaf[ds/4]),.wr_valid(reserve_fire&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
+   .wr_clk(stream_clk),.wr_rst_n(dwr_leaf[ds/4]),.wr_valid(rf_k[ds%2]&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
    .wr_data(desc_wd[ds*DSW+:W]),.wr_overflow(ds_ov[ds]),
    .rd_clk(hbm_clk),.rd_rst_n(drd_leaf[ds/4]),.rd_valid(ds_rd_valid[ds]),.rd_ready(desc_rd_ready&&drq_k[ds]),
    .rd_data(desc_data[ds*DSW+:W]),.rd_underflow(ds_un[ds]));
