@@ -78,12 +78,13 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     if(INSTALLED_ROWS!=0)begin:g_bounded_descriptor
         // Invalid descriptors still fault in the control path. Payload captures
         // may proceed because no consumer can launch an invalid generation.
-        wire[23:0]payload={1'b0,base[PCW-1:0],limit[PCW:0],loops};
-        wire[23:0]resident;
-        for(genvar c=0;c<3;c=c+1)begin:chunk
+        localparam integer BYTES=(2*PCW+17+7)/8;
+        wire[BYTES*8-1:0]payload={base[PCW-1:0],limit[PCW:0],loops};
+        wire[BYTES*8-1:0]resident;
+        for(genvar c=0;c<BYTES;c=c+1)begin:chunk
             ot_static_target_descriptor_byte capture(.clk(clk),.valid(dv),.target(target),.tid(tid),.data(payload[c*8+:8]),.q(resident[c*8+:8]));
         end
-        always @*begin stored_base=resident[22:20];stored_limit=resident[19:16];stored_loops=resident[15:0];end
+        always @*begin stored_base=resident[17+PCW+:PCW];stored_limit=resident[16+:PCW+1];stored_loops=resident[15:0];end
     end
     always @(posedge clk or negedge reset_live)
         if(!reset_live)begin
