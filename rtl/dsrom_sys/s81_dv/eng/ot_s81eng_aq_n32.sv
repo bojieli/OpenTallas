@@ -76,16 +76,12 @@ module ot_s81sl_aq12x_eng_n32 (
     // -- S5: max(m4[0], m4[1], floor): three parallel compares and a select -----------------------
     wire ab = m4[0] >= m4[1], af = m4[0] >= FLOOR_FP8, bf = m4[1] >= FLOOR_FP8;
 `ifdef OT_S81ENG_RR_MUL_N32
-    wire[30:0]amax;wire[30:0]amax_next=(ab&&af)?m4[0]:(!ab&&bf)?m4[1]:FLOOR_FP8;
-    // Preserve every real nonconstant BF16/floor capture identity at the original S5 edge.
-    // Other positions remain ordinary captures, preserving generic FP32 semantics and constant pruning.
-    for(genvar mb=0;mb<31;mb=mb+1)begin:g_amax
-        if((31'h7fffb717>>mb)&1)begin:g_owned
-            (* keep=1 *)ot_s81eng_rr_amaxbit u_b(.ck(clk),.d(amax_next[mb]),.q(amax[mb]));
-        end else begin:g_free
-            reg q;always @(posedge clk)q<=amax_next[mb];assign amax[mb]=q;
-        end
-    end
+    // TOKb-S81 10-21 (native census FAIL dsdv_eng_rr_a/_b @1bf6aa28c: g_amax[22] u_b QN 34 loads > 32, all inside the
+    // multiplier's uncut stage 0 = decode + two subnormal norm12 shifters + norm pick + rows): the S5 capture of amax
+    // moves INTO the multiplier as its K0 input cut (CUTS 8'b01101011, the XFIN default).  Same edge, same value
+    // (u_k0 captures amax's fields at the S5 edge), same prod edge (S5 + 6 = S10 + 1 as before: amax reg + LAT5 =
+    // K0 + LAT5); K0 gives the N32 captured-norm path (count precomputed, kept shift chains) instead of the one net.
+    wire[30:0]amax_next=(ab&&af)?m4[0]:(!ab&&bf)?m4[1]:FLOOR_FP8;
 `else
     reg[30:0]amax;
     always @(posedge clk)amax<=(ab&&af)?m4[0]:(!ab&&bf)?m4[1]:FLOOR_FP8;
@@ -95,8 +91,12 @@ module ot_s81sl_aq12x_eng_n32 (
     wire [31:0] prod;
     wire        pfault;
 `ifdef OT_S81ENG_RR_MUL_N32
-    // Internal two-edge reset forest reconstitutes exactly the original consumer release edge.
-    ot_s81dv_qmul_n32 #(.LAT(5)) u_scale (clk, rst_mul_early_n, vl[6], {1'b0, amax}, INV_448, prod, pfault);
+    // Internal two-edge reset forest reconstitutes exactly the original consumer release edge.  K0 input cut = the
+    // former S5 amax register, so valid enters with amax_next (vl[5]); output edge unchanged (vl[11]).
+    wire [1:0] scale_err; wire scale_vo;
+    ot_s81dv_fp32_mul_f12_n32 #(.CUTS(8'b01101011)) u_scale (.clk(clk), .rst_n(rst_mul_early_n), .valid_in(vl[5]),
+        .a({1'b0, amax_next}), .b(INV_448), .y(prod), .err(scale_err), .valid_out(scale_vo));
+    assign pfault = scale_vo && (scale_err != 2'd0);
 `else
     ot_hdc_qmul_lat #(5) u_scale (clk, rst_n, vl[6], {1'b0, amax}, INV_448, prod, pfault);
 `endif
