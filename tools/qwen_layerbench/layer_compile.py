@@ -285,7 +285,94 @@ def extend_token_path(tp, X):
     return d
 
 
-def sys_face_events(prog_cal, svh, S, ex, txd, n59_land_edges):
+def lower_qslots(contract, messages, *, allow_test=False):
+    """Book the aligned Q-bank's fixed read slots from source/GEN receipts.
+
+    Dates use the same segment-start core-edge origin as the paired messages.
+    ``wr`` is the paired compiler's actual D2D producer write-capture edge,
+    not its earlier calendar command or the serial link's receive edge.
+    Missing facts never become zero-edge paths.
+    """
+    def need(ok, why):
+        if not ok:
+            raise ValueError('QSLOT: ' + why)
+
+    def edge(obj, key):
+        value = obj.get(key)
+        need(type(value) is int and value >= 0, 'missing/noninteger ' + key)
+        return value
+
+    need(contract.get('schema') == 'opentallas.qwen.qslot-contract.v1', 'unknown contract schema')
+    status = contract.get('status')
+    need(status == 'QUALIFIED_SOURCE_GEN_EDGES' or
+         (allow_test and status == 'SYNTHETIC_COMPILER_TEST'), 'actual source/GEN edge qualification required')
+    need(contract.get('clock') == 'ck_core' and contract.get('origin') == 'paired_segment_start',
+         'source and paired programme must share a named core-edge origin')
+    need(contract.get('endpoint_bundle') == dict(id='SF.q_slot', source='sys_face', destination='native59',
+                                                members=['q_slot', 'q_slot_beat']),
+         'QSLOT pulse and beat must use the actual coherent two-field GEN bundle')
+    need(contract.get('params') == dict(QB_ALIGN=1, QB_LOCAL32=0, SVC_RECV=0, SVC_LOCAL32=0),
+         'only the explicitly qualified aligned, flags-off source ABI is supported')
+    for name in ('qbank', 'wrapper', 'service', 'macro'):
+        need(re.fullmatch('[0-9a-f]{64}', contract.get('source_sha256', {}).get(name, '')) is not None,
+             'missing source identity: ' + name)
+    for name in ('commit_identity', 'sysface_bundle', 'qbank_read', 'svc_codec_wire', 'tx_retire'):
+        proof = contract.get('proofs', {}).get(name, {})
+        need(bool(proof.get('path')) and re.fullmatch('[0-9a-f]{64}', proof.get('sha256', '')) is not None,
+             'missing immutable receipt: ' + name)
+    rows = contract.get('segments')
+    need(isinstance(rows, list) and rows, 'no segment bookings')
+    bookings, seen = [], set()
+    for row in rows:
+        seg = row.get('segment')
+        need(type(seg) is int and seg in (0, 1) and seg not in seen, 'duplicate/unsupported segment')
+        seen.add(seg)
+        need(bool(row.get('context_identity')) and bool(row.get('commit_id')),
+             'Q writes, commit and request need an explicit context identity')
+        writes = row.get('q_dd_pin_edges')
+        need(isinstance(writes, list) and len(writes) == 64 and
+             all(type(v) is int and v >= 0 for v in writes) and writes == sorted(set(writes)),
+             'all 64 eight-lane Q write capture dates are required')
+        begin = edge(row, 'begin_pin_edge')
+        commit = edge(row, 'q_committed_pin_edge')
+        commit_age = edge(row, 'commit_after_last_dd_edges')
+        hop = edge(row, 'sysface_to_qbank_edges')
+        read = edge(row, 'qbank_read_edges')
+        wire = edge(row, 'svc_codec_to_wire_edges')
+        request = edge(row, 'request_capture_edge')
+        retire = edge(row, 'retire_pin_edge')
+        next_begin = edge(row, 'next_begin_pin_edge')
+        l_start = edge(row, 'l_calendar_start_edge')
+        need(begin < writes[0] and commit == writes[-1] + commit_age,
+             'commit does not follow this context\'s final Q write')
+        need(request > commit, 'request captures before committed Q is visible')
+        need(read > 0 and wire > 0, 'read and service/codec paths need measured nonzero ages')
+        q = sorted((m for m in messages if m.get('seg', 0) == seg and m.get('src') == 'C' and
+                    m.get('tx_port') == 0 and m.get('kind') == 2), key=lambda m: m['beat'])
+        need(len(q) == 32 and [m['beat'] for m in q] == list(range(32)),
+             'paired programme must contain exactly 32 ordered Q beats')
+        captures = [edge(m, 'wr') for m in q]
+        need(captures == list(range(captures[0], captures[0] + 32)),
+             'aligned source requires the selected contiguous Q burst')
+        qbank = [v - wire - read for v in captures]
+        face = [v - hop for v in qbank]
+        l_events = [v - l_start for v in face]
+        need(qbank[0] >= commit and qbank[0] + read > request,
+             'fixed paired Q burst precedes Q-ready/request; reprice the programme')
+        need(l_events[0] > 1, 'QSLOT lies before the system-face calendar can emit it')
+        need(qbank[-1] + read < next_begin and captures[-1] < retire < next_begin,
+             'Q reads or retirement overlap the next context clear')
+        bookings.append(dict(segment=seg, context_identity=row['context_identity'], commit_id=row['commit_id'],
+                             events=[[v, 2, b] for b, v in enumerate(l_events)],
+                             sysface_pin_edges=face, l_calendar_start_edge=l_start, qbank_pin_edges=qbank,
+                             qbank_emit_edges=[v + read for v in qbank], d2d_write_capture_edges=captures,
+                             committed_edge=commit, request_capture_edge=request, retire_pin_edge=retire,
+                             cadence=1, extra_idle_edges=0))
+    return dict(schema='opentallas.qwen.qslot-booking.v1', source_contract=contract,
+                scope='fixed source/GEN booking; physical/full-token qualification is separate', bookings=bookings)
+
+
+def sys_face_events(prog_cal, svh, S, ex, txd, n59_land_edges, qslot_booking=None):
     """qfd_sys_face T calendar (the run_sys_face_bench.sh token timeline from the compiled program) + the L events
     this compiler can place (KVSLOT before each x3 slot, VIS / complete after the last RESULT lands)."""
     img = Path(svh).read_text()
@@ -306,15 +393,79 @@ def sys_face_events(prog_cal, svh, S, ex, txd, n59_land_edges):
     t31 = r[31]['arrive'] + 2 + S['CS_RXV']
     vis = t31 + 4 + n59_land_edges + 2
     Lev = kvslot + [(vis, 4, 0), (vis + 2, 4, 1)]
-    return dict(first_token=first - c0, d2d_first_token=first, go_ofs=c0, T=T, L_compiled=Lev,
-                L_missing=['QSLOT (class 2): no compiler relation for native59 q_slot vs the qkv result landing'],
+    missing_q = ['QSLOT (class 2): no compiler relation for native59 q_slot vs the qkv result landing']
+    q_by_seg = {}
+    if qslot_booking is not None:
+        q_by_seg = {str(b['segment']): b['events'] for b in qslot_booking['bookings']}
+        # The selected system-face L player always starts at base zero. It cannot
+        # silently choose a different token/decode programme. Different patterns
+        # therefore need an explicit source successor, not an unused JSON list.
+        if set(q_by_seg) != {'0', '1'} or q_by_seg['0'] != q_by_seg['1']:
+            raise ValueError('QSLOT: selected L player requires identical segment 0/1 pin patterns')
+        Lev = sorted(Lev + q_by_seg['0'])
+        if len({e[0] for e in Lev}) != len(Lev):
+            raise ValueError('QSLOT: event collides with another system-face L event')
+        missing_q = []
+    result = dict(first_token=first - c0, d2d_first_token=first, go_ofs=c0, T=T, L_compiled=Lev,
+                L_missing=missing_q,
                 E_missing=['E calendar (EMBW / FILL): the KV embedding provider row timing is not compiled here'],
                 land_edges_used=n59_land_edges)
+    if qslot_booking is not None:
+        result.update(L=Lev, QSLOT_by_segment=q_by_seg)
+    return result
 
 
 def write_json(p, d):
     Path(p).parent.mkdir(parents=True, exist_ok=True)
     Path(p).write_text(json.dumps(d, indent=1) + '\n')
+
+
+def read_qslot_contract(path, compute_commit, compute_params, compute_die_v=None):
+    """Verify actual selected source, elaborated mode and immutable edge proofs."""
+    path = Path(path).resolve()
+    c = json.loads(path.read_text())
+    if c.get('status') != 'QUALIFIED_SOURCE_GEN_EDGES':
+        raise ValueError('QSLOT: production lowering requires qualified actual source/GEN receipts')
+    revision = subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', compute_commit], text=True).strip()
+    if c.get('source_revision') != revision:
+        raise ValueError('QSLOT: contract source revision differs from selected compute source')
+    if not compute_die_v or sha(compute_die_v) != c.get('gen_sha256'):
+        raise ValueError('QSLOT: actual compute GEN identity required')
+    sources = dict(qbank='rtl/qwen_split/qfd_native59_qbank.sv',
+                   wrapper='rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv',
+                   service='rtl/qwen_split/qfd_native59_svc_obs1.sv',
+                   macro='physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.v')
+    for name, src in sources.items():
+        digest = hashlib.sha256(git_show(compute_commit, src).encode()).hexdigest()
+        if c.get('source_sha256', {}).get(name) != digest:
+            raise ValueError('QSLOT: selected source identity differs: ' + name)
+    if not compute_params:
+        raise ValueError('QSLOT: actual compute GEN parameter receipt required')
+    if sha(compute_params) != c.get('gen_params_sha256'):
+        raise ValueError('QSLOT: actual compute GEN parameter identity differs')
+    masters = json.loads(Path(compute_params).read_text()).get('masters', {})
+    params = masters.get('qfd_native59_dv_headprep_obs1', {})
+    expected = dict(QB_ALIGN=1, QB_LOCAL32=0, SVC_RECV=0, SVC_LOCAL32=0)
+    if c.get('params') != expected or any(params.get(k, 0) != v for k, v in expected.items()):
+        raise ValueError('QSLOT: actual elaborated source is not the qualified aligned flags-off mode')
+    for name in ('commit_identity', 'sysface_bundle', 'qbank_read', 'svc_codec_wire', 'tx_retire'):
+        proof = c.get('proofs', {}).get(name, {})
+        proof_path = Path(proof.get('path', ''))
+        if not proof_path.is_absolute():
+            proof_path = path.parent / proof_path
+        if not proof_path.is_file() or sha(proof_path) != proof.get('sha256'):
+            raise ValueError('QSLOT: missing or changed immutable proof: ' + name)
+        if name == 'qbank_read':
+            pin = json.loads(proof_path.read_text())
+            if (pin.get('qbank_sha256') != c['source_sha256']['qbank'] or
+                    pin.get('macro_sha256') != c['source_sha256']['macro'] or
+                    pin.get('params') != dict(QB_ALIGN=1, QB_LOCAL32=0)):
+                raise ValueError('QSLOT: qbank pin-edge proof names another source or mode')
+            for row in c.get('segments', []):
+                if (row.get('qbank_read_edges') != pin.get('slot_to_emit_edges') or
+                        row.get('commit_after_last_dd_edges') != pin.get('last_dd_to_committed_edges')):
+                    raise ValueError('QSLOT: declared source-intrinsic age differs from measured qbank proof')
+    return c
 
 
 def run(cmd, log):
@@ -339,6 +490,8 @@ def main(argv=None):
     ap.add_argument('--txl', type=int, default=6); ap.add_argument('--phy', type=int, default=5)
     ap.add_argument('--n59-land-edges', type=int, default=8,
                     help='qfd_native59_dv_service LAND_EDGES the die binds (dv2f14bn: default 8; see gaps)')
+    ap.add_argument('--qslot-contract', help='opt-in actual aligned Q-bank source/GEN edge and identity receipts; '
+                    'missing dates or mismatched source/parameters fail closed')
     ap.add_argument('--gz-over', type=int, default=4_000_000, help='write a compiled table gzipped above this many bytes')
     ap.add_argument('--kv-die-v', help='KVR-DERIVE: the bound KV die netlist (die_bound.v): instance bindings checked')
     ap.add_argument('--kv-case-die-v', help='KVR-DERIVE: the KV case die.v (+ .params.json): straps / relay clocks checked')
@@ -453,8 +606,18 @@ def main(argv=None):
     run([sys.executable, 'tools/qwen_static_kv/layer_roots_from_link.py', str(prog.resolve()), str(kvo.resolve())], out / 'kv_programme.log')
     # ------------------------------------------------------------------ compute-die programme
     cpo = out / 'compute_programme'; cpo.mkdir(exist_ok=True)
-    write_json(cpo / 'sys_face_events.json', sys_face_events(pc, d2d / 'd2d_cal_image.svh', S, ex, txd, a.n59_land_edges))
+    qslot_booking = None
+    if a.qslot_contract:
+        qslot_booking = lower_qslots(read_qslot_contract(a.qslot_contract, a.compute_commit, a.compute_params,
+                                                        a.compute_die_v),
+                                    pc['messages'])
+        write_json(cpo / 'qslot_booking.json', qslot_booking)
+    write_json(cpo / 'sys_face_events.json', sys_face_events(pc, d2d / 'd2d_cal_image.svh', S, ex, txd,
+                                                           a.n59_land_edges, qslot_booking))
     land = tables['qwen_compute'].match(src_inst='native59', src_port='dr_o')
+    if qslot_booking is None:
+        gaps.append(dict(module='qfd_sys_face', port='L calendar class 2 QSLOT (q_slot / q_slot_beat to native59)',
+                         missing='no qualified Q-ready/identity/booking contract; declared stimulus is not a programme'))
     gaps += [
         dict(module='qfd_tt_ctlm_dv (qfd_tt_ctlm_head_static program store + qfd_dv_cmd_cal) via qfd_sys_face config ROM rows 0..1031',
              port='sys_face ROM / dh pw,dw (program copy)', missing='the deployment PW1024 + DW8 program image of a Qwen layer '
@@ -464,9 +627,6 @@ def main(argv=None):
              missing=f'dv2f14bn binds the default LAND_EDGES 8 (NATIVE_PROFILE 0); the dr_o return chain is '
                      f'{[(b["id"], b["stages"], b.get("landing_k")) for b in land]} relay instances to the W5 slice (a landed '
                      'lane n > 1: E = K mod 8) then the W5..E5 chain -- the compiled value needs the die land plan'),
-        dict(module='qfd_sys_face', port='L calendar class 2 QSLOT (q_slot / q_slot_beat to native59)',
-             missing='no compiler relation between the Q seat-bank commit (dd_i Q landings from the W5 slices) and q_slot; '
-                     'the xdie vehicle drives it as a declared stimulus'),
         dict(module='qfd_sys_face', port='E calendar (EMBW / FILL)', missing='embedding row slots not compiled by this pass'),
         dict(module='dv2f14bn landed lanes (57 buses, n > 1)', port='ot_qfd_land K straps',
              missing='land_plan.json (lane age E per landing) is not produced by the dv2f14bn chain; E = K mod 8 only, so '
