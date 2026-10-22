@@ -42,7 +42,8 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     // Metadata uses independently kept start copies on the original retire edge.
     always @(posedge ck)begin
       if(start_local[1] && ROPE)rope_id<=18'd151936+{8'd0,accepted_owner[18:9]};
-      if(start_local[2] && ROPE)begin position<=accepted_owner[18:6];rope_epoch<=tep;end
+      if(start_local[2] && ROPE)position<=accepted_owner[18:6];
+      if(start_local[0] && ROPE)rope_epoch<=tep;   // SQ-KATTN2 10-21: own start bank (bank 2 had 29 + loads)
     end
     always @(posedge ck or negedge rst_n)
       if(!rst_n)begin rope_count<=0;rope_pending<=0;rope_start<=0;end

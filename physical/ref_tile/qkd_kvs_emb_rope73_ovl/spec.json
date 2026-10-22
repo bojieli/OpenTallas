@@ -173,6 +173,17 @@
     ],
     "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
     "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "row_tx_rope_eq",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_rowtx_eq.sh {RUN}/bench/eq",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^EQ PASS "
    }
   ],
   "extra_paths": [
@@ -180,7 +191,8 @@
    "rtl/lib",
    "rtl/qwen_sys/static_embedding_20261014",
    "rtl/qwen_sys/static_kv_die_20261017",
-   "tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh"
+   "tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh",
+   "tools/qwen_kv_die/kvs_emb_rope_rowtx_eq.sh"
   ],
   "views_to": "physical/ref_tile/qkd_kvs_emb_rope73_ovl/views",
   "record_to": "results/rtl/ref_tile/qkd_kvs_emb_rope73_ovl",
