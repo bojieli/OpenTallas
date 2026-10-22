@@ -66,6 +66,8 @@ TAU = 4.159
 PHASE_Q = 4
 HOP_SW = 1006 + 2              # switched-leg law (453 inside)
 HOP = HOP_SW                   # cal2 STAGE_HOP law (link_rt 652 + KP4 PHY + UCIe + wire, + CAL1 guard/LEPCAP)
+SHIFT_SEARCH = False            # STEWARD-TOK: --mtp-shift-search (position hold only)
+MTP_HOLD = 'step'               # STEWARD-TOK: MTP stage hold = whole step ('step') or one job a position ('position')
 HOP_REF = 120                  # stage hops in the composed DAG record
 H_MSG = LEG.H_MSG              # 652 link serialisation a message
 HOST_TOK = LEG.HOST_TOK
@@ -105,9 +107,11 @@ def qup(x):
 #   host      S81.HOST option (b) (owner 07:10 10-21): stage dies start jobs from their local calendar (no per-job
 #             host / KS frame on the stage circuits); this remains MODEL until the actual HOST descriptor programme
 #             is connected. The host plane is the head die's (HOST_TOK a token a user).
-REL = dict(offchip='switched', links_serial=False, land=False, attn='G16', idx_lat=0, eng_age=0, eng_ii=0)
+REL = dict(offchip='switched', links_serial=False, land=False, attn='G16', idx_lat=0, eng_age=0, eng_ii=0,
+           mtp_law='stretch')
 REL0 = dict(REL)
-REL241 = dict(offchip='direct', links_serial=True, land=True, attn='G4', idx_lat=40, eng_age=640, eng_ii=704)
+REL241 = dict(offchip='direct', links_serial=True, land=True, attn='G4', idx_lat=40, eng_age=640, eng_ii=704,
+              mtp_law='pipeline')   # STEWARD-TOK 10-21: causal six-position pipeline (overlap424 repair)
 HOPLAT = ROOT / 'results/arch/release_rack_1021/hop_latency.json'
 SWITCHED = 453
 X_FLAT = 563                   # tb_xdie_s81_2 LEG 1 crossing incl. the die lane legs and the 453 switched leg
@@ -428,6 +432,127 @@ def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False, causal_i
     return win, log, links, chain, legacy
 
 
+def timeline_positions(stages, seg, add, embed_end, alap, scan, positions=6):
+    """STEWARD-TOK 10-21: causal PIPELINED MTP step (the same-user overlap424 repair of 6f8bbf5c4).
+
+    6f8bbf5c4 serialised each stage circuit for ONE position (AR message lengths) and then stretched every message to
+    6 x H_MSG in the checker, so x L0 [18136,22048) and partial L0 [21624,25536) of the SAME user overlapped (424
+    cycles, 200 / 240 circuits).  Here every one of the six verify positions is propagated through the DAG:
+      * a stage runs position-major (all its items for position p, then p + 1: ONE job context, the MTP law
+        6 W - 5 scan): positions p >= 1 skip the shared index read (scan_l on the dense item);
+      * each position's messages (x, partial, combined, DENSE2 A->B) are real H_MSG messages on the ONE LINK5 stage
+        circuit, serialised in send order across ALL positions and message kinds (free pointer carried);
+      * every arrival is the serialised send + HOP, and the downstream item of that position waits for it, so a TX
+        delay propagates to the receiver's stage window, its own sends and the head (dependency-propagated).
+    Integer causality: durations are ceiled before propagation (as Codex 181a2cdce).
+    Returns per stage: hold window (first start, last end) + per-position (start, end) + per-position dense start;
+    links (stage, position, start, label, length); per-position chain end (combined L39 at its last stage)."""
+    assert not any(st.get('d_here') for st in stages), 'positions timeline: --dsplit not supported'
+    seg = {layer: {kind: math.ceil(cycles) for kind, cycles in parts.items()} for layer, parts in seg.items()}
+    add, embed_end = math.ceil(add), math.ceil(embed_end)
+    last_stage = {}
+    for i, st in enumerate(stages):
+        for l, a, b in st['experts']:
+            if b == 383:
+                last_stage[l] = i
+    x_arr, p_arr, comb, d2_arr = {}, {}, {}, {}     # keyed (position, layer)
+    out, links = [], []
+    for i, st in enumerate(stages):
+        cur, first = None, None
+        part_out, d2_out = {}, {}
+        pos_win, dense_start, msgs = [], {}, []
+        for p in range(positions):
+            pfirst = None
+            for kind, l, N in stage_items(st):
+                sc = math.ceil(scan.get(l, 0.0)) if p else 0      # shared index read: position 0 only
+                if kind == 'D' and st.get('dense_split2') == 'A':
+                    ready = comb.get((p, l - 1), embed_end) if l > 0 else embed_end
+                    s0 = max(cur or 0, ready)
+                    e0 = s0 + math.ceil(APROJ[l]['prefix']) + math.ceil(0.5 * APROJ[l]['cycles'])
+                    d2_out[(p, l)] = e0
+                elif kind == 'D' and st.get('dense_split2') == 'B':
+                    s0 = max(cur or 0, d2_arr[(p, l)])
+                    e0 = s0 + math.ceil(seg[l]['A'] - sc + seg[l]['D'] - 0.5 * APROJ[l]['cycles']) + DENSE2_SER
+                    x_arr[(p, l)] = e0
+                    dense_start[p] = s0
+                elif kind == 'D':
+                    ready = comb.get((p, l - 1), embed_end) if l > 0 else embed_end
+                    s0 = max(cur or 0, ready)
+                    e0 = s0 + seg[l]['A'] - sc + seg[l]['D']
+                    x_arr[(p, l)] = e0
+                    dense_start[p] = s0
+                else:
+                    R = math.ceil(seg[l]['E'] * min(6, N) / 6.0)
+                    pin = p_arr.get((p, l))
+                    s0 = max(cur or 0, x_arr[(p, l)])
+                    if alap and pin is not None:
+                        s0 = max(s0, pin - R)
+                    e = s0 + R
+                    po = (max(e, pin) + add) if pin is not None else e
+                    part_out[(p, l)] = po
+                    e0 = po
+                    if last_stage.get(l) == i:
+                        comb[(p, l)] = po + seg[l]['C']
+                        e0 = comb[(p, l)]
+                first = s0 if first is None else first
+                pfirst = s0 if pfirst is None else pfirst
+                cur = e0
+            pos_win.append((pfirst, cur))
+            if i + 1 < len(stages):
+                nxt = stages[i + 1]
+                nl = {l for l, _, _ in nxt['experts']}
+                for l in sorted(nl):
+                    if (p, l) in x_arr and nxt['dense_layer'] != l:
+                        msgs.append((x_arr[(p, l)], p, 0, f'x L{l} pos {p}', H_MSG, x_arr, (p, l)))
+                    if (p, l) in part_out and last_stage.get(l) != i:
+                        msgs.append((part_out[(p, l)], p, 1, f'partial L{l} pos {p}', H_MSG, p_arr, (p, l)))
+                for (q, l), t in list(comb.items()):
+                    if q == p and last_stage.get(l) == i and l + 1 < 40 and st['dense_layer'] != l + 1:
+                        msgs.append((t, p, 2, f'combined L{l} pos {p}', H_MSG, comb, (p, l)))
+                if st.get('dense_split2') == 'A' and nxt.get('dense_split2') == 'B' and (p, st['dense_layer']) in d2_out:
+                    l = st['dense_layer']
+                    msgs.append((d2_out[(p, l)], p, 3, f'x + a_proj partial L{l} pos {p} (DENSE2 A->B)',
+                                 H_MSG + DENSE2_SER, d2_arr, (p, l)))
+        free = -10 ** 18
+        for t, p, _, what, ln, dst, key in sorted(msgs, key=lambda m: (m[0], m[1], m[2])):
+            s0 = max(t, free)                       # LINK5: ONE stage-hop circuit, send order, all positions
+            free = s0 + ln
+            links.append((i, p, s0, what, ln))
+            dst[key] = s0 + HOP
+        out.append(dict(first=first, last=cur, positions=pos_win, dense_start=dense_start))
+    chain_end = [comb[(p, 39)] for p in range(positions)]
+    return out, links, chain_end
+
+
+def mtp_pipeline_graph(model, tl, links, chain_end, hop_head, lead):
+    """six-position pipelined step graph for windows(): stage hold windows (one job context, LINK5 land-0 lead on the
+    receivers), every position's message on its stage circuit, Engram windows a position, heads a position + draft."""
+    stages = []
+    for i, (q, w) in enumerate(zip(model['stages'], tl)):
+        ld = lead if i else 0
+        eng = []
+        if q.get('eng_off') is not None and REL['eng_ii']:
+            eng = [w['dense_start'][p] for p in sorted(w['dense_start'])]
+        stages.append(dict(stage=q['stage'], owner_start=w['first'] - ld, owner_end=w['last'],
+                           position_windows=[list(x) for x in w['positions']], eng_starts=eng))
+    heads, t = [], 0
+    for p, c in enumerate(chain_end):
+        h0 = max(c + hop_head, t)
+        t = h0 + model['head_ar']
+        heads.append([h0, t])
+    draft = [t, t + model['draft_tail']]
+    host = [heads[0][0], heads[0][0] + HOST_TOK * len(chain_end)]
+    end = max(draft[1], host[1])
+    return dict(schema='opentallas.s81_mtp.pipeline.v1', positions=len(chain_end), stages=stages,
+                links=[dict(sender_index=i, position=p, send_start=s, send_end=s + ln, label=what)
+                       for i, p, s, what, ln in links],
+                heads=heads, draft=draft, host=host, step_end=end, chain_end=chain_end,
+                law='position-major stages (6 W - 5 scan), every position message serialised on its LINK5 circuit and '
+                    'propagated (arrival = send + HOP) to the receiving item; heads a position, then the draft tail',
+                qualification='MODEL (exact integer causal arithmetic on composed node cycles); RTL calendar programme '
+                              'emission pending')
+
+
 # ------------------------------------------------------------------------------------------------ calendar + checker
 def position_barrier_graph(model):
     """Conservative six-position graph, with an explicit global completion barrier.
@@ -471,6 +596,28 @@ def position_barrier_graph(model):
 
 def windows(model, user, shift, kind, col):
     mt = kind == 'mtp'
+    pipe = model.get('mtp_pipeline')
+    if mt and pipe:
+        ws = []
+        for i, w in enumerate(pipe['stages']):
+            st = model['stages'][i]
+            cp = col.get(st['stage'], {}).get(user, 'A') if st['copies'] > 1 else 'A'
+            if pipe.get('hold') == 'position':     # one job a position: the copy is free between positions
+                ld = pipe['lead'] if i else 0
+                ws.extend((f"{st['stage']}.{cp}", shift + a, shift + b)       # land lead; touching jobs merge
+                          for a, b in merge_iv([(a - ld, b) for a, b in w['position_windows']]))
+            else:
+                ws.append((f"{st['stage']}.{cp}", shift + w['owner_start'], shift + w['owner_end']))
+            ws.extend((f"eng.{st['stage']}.{cp}", shift + e, shift + e + REL['eng_ii']) for e in w['eng_starts'])
+        for m in pipe['links']:
+            i = m['sender_index']
+            a, b = model['stages'][i:i + 2]
+            ca = col.get(a['stage'], {}).get(user, 'A') if a['copies'] > 1 else 'A'
+            cb = col.get(b['stage'], {}).get(user, 'A') if b['copies'] > 1 else 'A'
+            ws.append((f"link.{a['stage']}.{ca}-{b['stage']}.{cb}", shift + m['send_start'], shift + m['send_end']))
+        ws.extend(('head', shift + a, shift + b) for a, b in pipe['heads'] + [pipe['draft']])
+        ws.append(('host', shift + pipe['host'][0], shift + pipe['host'][1]))
+        return [w for w in ws if w[2] > w[1]]
     graph = model.get('mtp_position_graph')
     if mt and graph:
         ws = []
@@ -603,17 +750,96 @@ def calendar(model, mode, N=None):
     key = 'step' if mode == 'mtp' else 'occ'
     nonrep = max(st[key] for st in model['stages'] if st['copies'] == 1)
     nonrep = max(nonrep, model['head_mtp'] if mode == 'mtp' else model['head_ar'])
+    pipe = model.get('mtp_pipeline') if mode == 'mtp' else None
+    if pipe and pipe.get('hold') == 'position':
+        return calendar_position_jobs(model, P, N)
     tried = []
     for n in ([N] if N else range(max(1, P // int(nonrep)), 0, -1)):
         shifts = [(k * (P // PHASE_Q)) // n * PHASE_Q for k in range(n)]
         col, why = colour(model, shifts, P, mode)
-        users = [dict(user=k, shift=shifts[k], kind=mode if model.get('mtp_position_graph') else ('latency' if k == 0 else mode)) for k in range(n)]
+        users = [dict(user=k, shift=shifts[k], kind=mode if (model.get('mtp_position_graph') or model.get('mtp_pipeline')) else ('latency' if k == 0 else mode)) for k in range(n)]
         if col is None:
             tried.append(dict(users=n, result='FAULT', why=f'{why}: no A/B colouring'))
             if N:
                 return dict(P=P, users=users, col={}, tried=tried, bad=[dict(resource=why)], nres={})
             continue
         bad, nres = check(model, users, P, col)
+        tried.append(dict(users=n, result='PASS' if not bad else 'FAULT', collisions=len(bad),
+                          first=bad[0] if bad else None))
+        if not bad or N:
+            return dict(P=P, users=users, col=col, tried=tried, bad=bad, nres=nres, nonrep=nonrep)
+    return dict(P=P, users=[], col={}, tried=tried, bad=[], nres={}, nonrep=nonrep)
+
+
+def shift_search_pos(model, P, limit=64):
+    """first-fit shifts for the one-job-a-position MTP pipeline: user k takes copy 'AB'[k % 2] on every duplicated
+    stage; a shift difference D is forbidden if any window of one user overlaps any window of the other at D (same
+    copy: every resource; other copy: every resource but the duplicated stage copies / their Engram engines)."""
+    import numpy as np
+    n = P // PHASE_Q
+    byr = collections.defaultdict(list)
+    for r, a, b in windows(model, 0, 0, 'mtp', {}):
+        byr[r].append((a, b))
+    copyb = {st['stage'] for st in model['stages'] if st['copies'] > 1}
+    FD_same = np.zeros(n, dtype=bool)
+    FD_diff = np.zeros(n, dtype=bool)
+    for r, iv in byr.items():
+        A = np.array([x[0] for x in iv]); B = np.array([x[1] for x in iv])
+        lo = np.subtract.outer(A, B).ravel()
+        hi = np.subtract.outer(B, A).ravel()
+        _forbid(FD_same, lo, hi, P)
+        stg = r.split('.')[1] if r.startswith('eng.') else r.split('.')[0]
+        if not (stg in copyb and not r.startswith(('link', 'head', 'host'))):
+            _forbid(FD_diff, lo, hi, P)
+    FD_same[0] = FD_diff[0] = True
+    users, F = [], {0: np.zeros(n, dtype=bool), 1: np.zeros(n, dtype=bool)}
+    for k in range(limit):
+        c = k % 2
+        cand = np.nonzero(~F[c])[0]
+        if not len(cand):
+            break
+        x = int(cand[0]) * PHASE_Q
+        users.append(dict(user=k, shift=x, kind='mtp', colour='AB'[c]))
+        for c2 in (0, 1):
+            F[c2] |= np.roll(FD_same if c2 == c else FD_diff, x // PHASE_Q)
+    return users
+
+
+def calendar_position_jobs(model, P, N=None):
+    """MTP pipeline, one job a position: per-user busy bound -> uniform phase-q shifts; copies round-robin in shift
+    order (every rotation of the odd wrap tried); the exact checker (every window, same user included) decides."""
+    pipe = model['mtp_pipeline']
+    busy = []
+    for i, (st, w) in enumerate(zip(model['stages'], pipe['stages'])):
+        ld = pipe['lead'] if i else 0
+        busy.append(sum(b - a for a, b in merge_iv([(a - ld, b) for a, b in w['position_windows']])) / st['copies'])
+    nonrep = max(busy + [sum(b - a for a, b in pipe['heads'] + [pipe['draft']])])
+    tried = []
+    if SHIFT_SEARCH and N is None:                 # greedy first-fit on the phase grid (same-colour / other-colour sets)
+        users = shift_search_pos(model, P)
+        col = {st['stage']: {u['user']: 'ABCDEFGH'[u['user'] % st['copies']] for u in users}
+               for st in model['stages'] if st['copies'] > 1}
+        bad, nres = check(model, users, P, col)
+        tried.append(dict(users=len(users), result='PASS' if not bad else 'FAULT', collisions=len(bad),
+                          first=bad[0] if bad else None, search='greedy first-fit phase-grid shifts'))
+        return dict(P=P, users=users if not bad else [], col=col, tried=tried, bad=bad, nres=nres, nonrep=nonrep,
+                    searched=True)
+    for n in ([N] if N else range(max(1, int(P // nonrep)), 0, -1)):
+        shifts = [(k * (P // PHASE_Q)) // n * PHASE_Q for k in range(n)]
+        users = [dict(user=k, shift=shifts[k], kind='mtp') for k in range(n)]
+        best = None
+        for rot in range(n if n % 2 else 1):
+            col = {}
+            for st in model['stages']:
+                k = st['copies']
+                if k > 1:
+                    col[st['stage']] = {u: 'ABCDEFGH'[(u if u < n - rot or not rot else u + 1) % k] for u in range(n)}
+            bad, nres = check(model, users, P, col)
+            if best is None or len(bad) < len(best[1]):
+                best = (col, bad, nres)
+            if not bad:
+                break
+        col, bad, nres = best
         tried.append(dict(users=n, result='PASS' if not bad else 'FAULT', collisions=len(bad),
                           first=bad[0] if bad else None))
         if not bad or N:
@@ -718,7 +944,7 @@ def calendar2(model, mode, N=None):
     for n in ([N] if N else range(int(P // lb), 0, -1)):
         shifts = [(k * (P // PHASE_Q)) // n * PHASE_Q for k in range(n)]
         col = {st['stage']: {k: 'AB'[k % 2] for k in range(n)} for st in model['stages'] if st['copies'] > 1}
-        users = [dict(user=k, shift=shifts[k], kind=mode if model.get('mtp_position_graph') else ('latency' if k == 0 else mode)) for k in range(n)]
+        users = [dict(user=k, shift=shifts[k], kind=mode if (model.get('mtp_position_graph') or model.get('mtp_pipeline')) else ('latency' if k == 0 else mode)) for k in range(n)]
         bad, nres = check2(model, users, P, col, mode)
         tried.append(dict(users=n, result='PASS' if not bad else 'FAULT', collisions=len(bad),
                           first=bad[0] if bad else None))
@@ -909,6 +1135,21 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
                 q['eng_off'] += lead
     model = dict(stages=st_rec, links=links, head_t=math.ceil(chain + embed + hop_head), head_ar=math.ceil(head_ar),
                  head_mtp=math.ceil(head_mtp), draft_tail=math.ceil(draft_tail), T_ar=T_ar, T_mtp_step=T_mtp)
+    if REL['mtp_law'] == 'pipeline' and not mtp_position_barriers:
+        if contexts != 1:
+            raise ValueError('MTP pipeline MODEL supports one job context only')
+        tl, plinks, chain_end = timeline_positions(stages, seg, add, embed, alap, scan, 6)
+        tl1, _, chain1 = timeline_positions(stages, seg, add, embed, alap, scan, 1)
+        pipe = mtp_pipeline_graph(model, tl, plinks, chain_end, math.ceil(hop_head), lead)
+        pipe['hold'], pipe['lead'] = MTP_HOLD, lead
+        model['mtp_pipeline'] = pipe
+        T_mtp_old = T_mtp
+        model['T_mtp_step'] = T_mtp = max(T_mtp_old, pipe['step_end'] + (T_ar - (chain1[0] + hop_head + head_ar)))
+        pipe['T_mtp_law_6f'] = round(T_mtp_old, 1)
+        pipe['ar_tail_beyond_head'] = round(T_ar - (chain1[0] + hop_head + head_ar), 1)
+        pipe['ar_chain_integer_check'] = dict(timeline=round(chain + embed, 1), positions1=chain1[0])
+        for i, q in enumerate(st_rec):
+            q['step'] = math.ceil(pipe['stages'][i]['owner_end'] - pipe['stages'][i]['owner_start'])
     if mtp_position_barriers:
         if contexts != 1:
             raise ValueError('Position-barrier MODEL currently supports one job context only')
@@ -1008,6 +1249,10 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
             stage_windows=[{k: s[k] for k in ('stage', 'dense_layer', 'copies', 't', 'occ', 'step', 'busy_total', 'eng_off') if k in s}
                            for s in st_rec],
             composition=comp, grade='node cycles: composer grades; stage split / reservation / forward-x / MTP law: MODEL')
+    if model.get('mtp_pipeline'):
+        recs['mtp']['pipeline_graph'] = model['mtp_pipeline']
+        recs['mtp']['grade'] = model['mtp_pipeline']['qualification']
+        comp['mtp']['schedule_law'] = model['mtp_pipeline']['law']
     if mtp_position_barriers:
         recs['mtp']['position_graph'] = graph
         recs['mtp']['grade'] = graph['qualification']
@@ -1038,7 +1283,14 @@ def main(argv=None):
                     'serial stage circuit + land-0 lead with TX hold, G4 attention, idx +40, Engram RA640 / II 704)')
     ap.add_argument('--attn', choices=sorted(ATTN), help='attention service variant (overrides REL)')
     ap.add_argument('--mtp-position-barriers', action='store_true', help='Conservative explicit six-position MODEL; compiler implementation pending')
+    ap.add_argument('--mtp-hold', choices=['step', 'position'], default='step',
+                    help='MTP pipeline: a stage copy is held for the whole six-position step (one job context, default) '
+                         'or one job a position (copy free between positions; needs per-position job starts)')
+    ap.add_argument('--mtp-shift-search', action='store_true', help='MTP pipeline + --mtp-hold position: greedy '
+                    'first-fit phase-grid shifts instead of uniform shifts (the exact checker still decides)')
     a = ap.parse_args(argv)
+    global MTP_HOLD, SHIFT_SEARCH
+    MTP_HOLD, SHIFT_SEARCH = a.mtp_hold, a.mtp_shift_search
     if a.release241:
         REL.update(REL241)
     if a.attn:
