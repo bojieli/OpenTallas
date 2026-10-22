@@ -497,6 +497,7 @@ module ot_hidx_rst_tree_f32 #(parameter integer REGIONS=32,MUT=0)(
 endmodule
 module ot_hidx_chunk_glue #(
     parameter integer RESET_F32=0,
+    parameter integer RESET_F32_FAST3=0, // local opt-in, original three-edge release
     parameter integer QLATE    = 0,      // bench mutant: the query broadcast reaches the heads QLATE edges late
     parameter integer VL_EXTRA = 0,      // landed-leaf schedule: valid line + VL_EXTRA edges
     parameter integer SUM_PAD  = 0,      // flat reference of a landed leaf: column sums padded SUM_PAD edges
@@ -543,7 +544,9 @@ module ot_hidx_chunk_glue #(
     localparam integer NVS    = (LATE + SEG - 1) / SEG;
     wire [15:0] prdy; reg [15:0] rdy1, rdy2;
     wire [NKT+1+NVS:0] rr;
-    generate if(RESET_F32)begin:g_reset_f32
+    generate if(RESET_F32_FAST3)begin:g_reset_fast3
+      ot_hidx_rst_tree_3e_f32 #(.REGIONS(NKT+2+NVS)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    end else if(RESET_F32)begin:g_reset_f32
       ot_hidx_rst_tree_f32 #(.REGIONS(NKT+2+NVS)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     end else begin:g_reset_legacy
     ot_rst_relay_l #(.REGIONS(NKT + 2 + NVS), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
@@ -591,6 +594,7 @@ endmodule
 // The leaf core: wires only (glue + 4 identical columns).  Same ports and cycles as ot_hbm_idx_chunk_rt_l (no clk_pair).
 module ot_hbm_idx_chunk_rt_c #(
     parameter integer RESET_F32=0,
+    parameter integer RESET_F32_FAST3=0, // local opt-in, original three-edge release
     parameter integer QLATE = 0
 ) (
     input  wire          clk,

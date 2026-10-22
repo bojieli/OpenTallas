@@ -38,7 +38,7 @@ module ot_hbm_idx_chunk_col8_control #(
  localparam integer NB=4,NKT=4;
  wire [3:0] crst; wire cqv; wire [567:0] cq; wire [2175:0] ckey; wire [63:0] chid;
  wire [127:0] ccs; wire [3:0] ccf; wire [15:0] cprdy;
- ot_hidx_chunk_glue #(.QLATE(QLATE),.VL_EXTRA(23)) u_glue (.clk(clk),.rst_n(rst_n),.hb(hb),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.k_v(k_v),.k_kv(k_kv),.k_key(k_key),.c_v(c_v),.c_kv(c_kv),.c_sum(c_sum),.c_fault(c_fault),.online(online),.n_v(n_v),.n_kv(n_kv),.n_sum(n_sum),.n_fault(n_fault),.col_rst_n(crst),.col_qv(cqv),.col_q(cq),.col_key(ckey),.col_hid(chid),.col_cs(ccs),.col_cf(ccf),.col_prdy(cprdy));
+ ot_hidx_chunk_glue #(.RESET_F32_FAST3(1),.QLATE(QLATE),.VL_EXTRA(23)) u_glue (.clk(clk),.rst_n(rst_n),.hb(hb),.ql_v(ql_v),.ql_head(ql_head),.ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),.k_v(k_v),.k_kv(k_kv),.k_key(k_key),.c_v(c_v),.c_kv(c_kv),.c_sum(c_sum),.c_fault(c_fault),.online(online),.n_v(n_v),.n_kv(n_kv),.n_sum(n_sum),.n_fault(n_fault),.col_rst_n(crst),.col_qv(cqv),.col_q(cq),.col_key(ckey),.col_hid(chid),.col_cs(ccs),.col_cf(ccf),.col_prdy(cprdy));
  assign cut_rst_n=crst;assign cut_qv={4{cqv}};assign cut_q={4{cq}};
  assign cut_key=ckey;assign cut_hid={4{chid}};
  assign ccs=cut_cs;assign ccf=cut_cf;assign cprdy=cut_prdy;

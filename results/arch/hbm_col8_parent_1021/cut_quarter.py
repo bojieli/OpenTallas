@@ -11,7 +11,7 @@ def append_ports(s,n):return s.replace('\n);',declarations(n)+'\n);',1)
 def bindings(index,n):return ','.join(f'.cut_{name}(cut_{name}[({index})*{w}+:{n*w}])' for _,name,w in ports)
 def allbindings():return ','.join(f'.cut_{name}(cut_{name})' for _,name,_ in ports)
 def wiredecl(n):return '\n'.join(f' wire [{n*w-1}:0] cut_{name};' for _,name,w in ports)+'\n'
-old=(hd/'ot_hbm_idx_chunk_col8_face.sv').read_text();chunk=append_ports(old.replace('module ot_hbm_idx_chunk_col8_face','module ot_hbm_idx_chunk_col8_control',1),4);chunk=chunk[:chunk.index(' genvar g;')]+''' assign cut_rst_n=crst;assign cut_qv={4{cqv}};assign cut_q={4{cq}};
+old=(hd/'ot_hbm_idx_chunk_col8_face.sv').read_text();chunk=append_ports(old.replace('module ot_hbm_idx_chunk_col8_face','module ot_hbm_idx_chunk_col8_control',1),4);chunk=chunk.replace('#(.QLATE(QLATE),.VL_EXTRA(23)) u_glue','#(.RESET_F32_FAST3(1),.QLATE(QLATE),.VL_EXTRA(23)) u_glue');chunk=chunk[:chunk.index(' genvar g;')]+''' assign cut_rst_n=crst;assign cut_qv={4{cqv}};assign cut_q={4{cq}};
  assign cut_key=ckey;assign cut_hid={4{chid}};
  assign ccs=cut_cs;assign ccf=cut_cf;assign cprdy=cut_prdy;
 endmodule

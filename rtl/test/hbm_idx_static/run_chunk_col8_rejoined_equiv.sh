@@ -9,7 +9,7 @@ set -euo pipefail
 root=$(cd "$(dirname "$0")/../../.." && pwd); cd "$root"
 out=$(realpath -m "${1:?out}"); mode=${2:-pos}; mkdir -p "$out"
 vl=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; [ -x "$vl" ] || vl=verilator
-src=(rtl/hdc/v41x/ot_hbm_idx_chunk_col8_rejoined.sv rtl/hdc/v41x/ot_hbm_idx_chunk_col8_control.sv rtl/hdc/v41x/ot_hbm_idx_col8_sram_face.sv rtl/hdc/v41x/ot_hbm_idx_col8_sram_landed.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.v rtl/hdc/v41x/ot_hbm_idx_col8_landed.sv rtl/common/landed_parent/ot_pl_land_physical.sv rtl/hdc/v41x/ot_hbm_idx_score_col8.sv rtl/test/hbm_idx_static/tb_idx_chunk_col8_rejoined_equiv.sv rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_delay_auto.sv
+src=(rtl/hdc/v41x/ot_hidx_rst_tree_3e_f32.sv rtl/hdc/v41x/ot_hbm_idx_chunk_col8_rejoined.sv rtl/hdc/v41x/ot_hbm_idx_chunk_col8_control.sv rtl/hdc/v41x/ot_hbm_idx_col8_sram_face.sv rtl/hdc/v41x/ot_hbm_idx_col8_sram_landed.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.v rtl/hdc/v41x/ot_hbm_idx_col8_landed.sv rtl/common/landed_parent/ot_pl_land_physical.sv rtl/hdc/v41x/ot_hbm_idx_score_col8.sv rtl/test/hbm_idx_static/tb_idx_chunk_col8_rejoined_equiv.sv rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_delay_auto.sv
  rtl/hdc/ot_hdc_delay_rf.sv rtl/lib/ot_rst_relay_l.sv rtl/hdc/v41x/ot_hbm_idx_owned_native.sv
  rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_relay.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv
  rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv)
