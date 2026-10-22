@@ -1,0 +1,35 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Exact selected RTL already captures inputs and publishes registered outputs; added pin registers would change source-proven cadence.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "sources",
+   "message": "14 referenced file(s) do not exist at HEAD: ['physical/ref_tile/qfd_n59_qbank_align1a/clock.sdc', 'physical/ref_tile/qfd_n59_qbank_align1a/kit.env', 'physical/ref_tile/qfd_n59_qbank_align1a/pdn.tcl', 'physical/ref_tile/qfd_n59_qbank_align1a/place.tcl', 'physical/ref_tile/qfd_n59_qbank_align1a/post_cts.tcl', 'physical/ref_tile/qfd_n59_qbank_align1a/post_drt.tcl']",
+   "fix": "commit them / fix the path"
+  },
+  {
+   "severity": "FAIL",
+   "check": "sources",
+   "message": "1 committed input(s) absent from the working-tree archive: ['physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl']",
+   "fix": "materialize the referenced files in the sparse checkout before rerunning the gate"
+  }
+ ]
+}
