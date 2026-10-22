@@ -106,12 +106,14 @@ module qfd_static_ch546_regional (
  end
  wire [3:0] selected_p,selected_s;
  for(genvar g=0;g<4;g=g+1)begin:g_read_select
-  (* keep="true",dont_touch="true" *)reg [3:0] ra_lo;
+  // Independent publication/seen selectors leave room for the SRAM
+  // address alias: source4's shared selector actually mapped33 loads.
+  (* keep="true",dont_touch="true" *)reg [3:0] ra_p,ra_s;
   wire [15:0] p_lane=pub_sync[g*16+:16];
   wire [15:0] s_lane=seen_sync[g*16+:16];
-  always @(posedge rck)ra_lo<=r_addr[3:0];
-  assign selected_p[g]=p_lane[ra_lo];
-  assign selected_s[g]=s_lane[ra_lo];
+  always @(posedge rck)begin ra_p<=r_addr[3:0];ra_s<=r_addr[3:0];end
+  assign selected_p[g]=p_lane[ra_p];
+  assign selected_s[g]=s_lane[ra_s];
  end
  wire read_p=selected_p[ra[5:4]];
  wire read_s=selected_s[ra[5:4]];

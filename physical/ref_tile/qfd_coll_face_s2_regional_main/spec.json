@@ -331,11 +331,11 @@
   "enable": false,
   "reason": "SAFE/TOK_REG registered owning roots; exact calendar neutral. PHY-up captured; no extra automatic data stages."
  },
- "structural_change": "Native regional-tree production S2 face, six actual SRAM macros and explicit roots for calendar, two-clock channels, four banks and PHY. Removes hybrid hard-entry purity restriction by implementing the real sequential regions, not replacing a hard-child timing model. Local bank landing shares the bank SRAM tree; sticky fault returns use actual fixed-slot4/K2 rings. Larger frame and10.8um macro halos reserve landing and routing bands. Existing phase/calendar/CRC/data protocol maintained; status visibility is3edges later and must be measured. No threshold change/timing exception. Native source2 failure explicitly repaired: collision controls14groups, publication resets8bytegroups, write/version4groups, read-select4groups, eight final face-reset copies, all original stages retained.",
+ "structural_change": "Native regional-tree production S2 face, six actual SRAM macros and explicit roots for calendar, two-clock channels, four banks and PHY. Removes hybrid hard-entry purity restriction by implementing the real sequential regions, not replacing a hard-child timing model. Local bank landing shares the bank SRAM tree; sticky fault returns use actual fixed-slot4/K2 rings. Larger frame and10.8um macro halos reserve landing and routing bands. Existing phase/calendar/CRC/data protocol maintained; status visibility is3edges later and must be measured. No threshold change/timing exception. Native source2 failure explicitly repaired: collision controls14groups, publication resets8bytegroups, write/version4groups, read-select4groups, eight final face-reset copies, all original stages retained. Source5 separates publication and seen address-select registers; source4 actually mapped33loads after aliasing the raw SRAM address. Identical capture edge, no extra stage.",
  "slot_change_request": "S2 native regional frame 907.2 square; original734.4x864. Must reprice parent slot before binding.",
  "job": {
   "owner": "CODEX-QW-COLLIO-2000",
-  "branch": "codex/qw-collio-2000-1021",
+  "branch": "codex/qw-collio-native-2000-1021",
   "tag": "reg1main",
   "purpose": "S2 face PHY-region landing split D2K1 (QW-COLLIO3 stamp of s1_pl); non-critical; submit on PASS",
   "benches": [
