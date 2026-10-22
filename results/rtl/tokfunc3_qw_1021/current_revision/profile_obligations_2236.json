@@ -1,13 +1,13 @@
 {
   "schema": "opentallas.qwen.current-profile-obligations.v1",
-  "updated": "2026-10-21 22:36 PT",
+  "updated": "2026-10-21 22:44 PT",
   "status": "COMPONENTS_ONLY_NO_FULL_CURRENT_TOKEN_OR_PHYSICAL_QUALIFICATION",
   "compute": {
-    "source": "9b560810b",
-    "generation": "r21 MAIN/fallback submitted; actual root and transport ages pending",
+    "source": "ca282f1e9",
+    "generation": "r22 MAIN/fallback submitted; actual root and transport ages pending",
     "params": {
       "QB_ALIGN": 1,
-      "QB_LOCAL32": 0,
+      "QB_LOCAL32": 1,
       "SVC_RECV": 0,
       "SVC_LOCAL32": 0,
       "L_CONTEXTS": 1
@@ -21,16 +21,8 @@
       "source_sha256": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33",
       "read_edges": 4,
       "commit_edges": 4,
-      "pin_receipt": "../qslot_lowering/read_edges.json",
-      "scope": "exact ALIGN1 LOCAL320 component source pins; actual transport and wire/retirement pending"
-    },
-    "unadopted_local32": {
-      "source_propagation": "7bf87f775",
-      "local_pin_receipt": "../qslot_lowering/local32/read_edges.json",
-      "read_edges": 4,
-      "commit_edges": 4,
-      "physical_owner": "/root/qbank_align",
-      "scope": "ALIGN1 LOCAL321 candidate is distinct; no actual r21 tuple transfer"
+      "pin_receipt": "../qslot_lowering/local32/read_edges.json",
+      "scope": "exact ALIGN1 LOCAL321 component source pins; actual transport and wire/retirement pending"
     },
     "flat_lane_scope_correction": {
       "retained_binary_SU_LT": 1,
@@ -38,7 +30,17 @@
       "status": "CURRENT_FLAT_PARAMETER_PROOF_OPEN",
       "owner": "/root/token/s81",
       "no_duplicate_replay": true
-    }
+    },
+    "previous_source": "9b560810b / r21 / QB_LOCAL320; no transport age transfer",
+    "local32_candidate": {
+      "source_propagation": "7bf87f775",
+      "local_pin_receipt": "../qslot_lowering/local32/read_edges.json",
+      "read_edges": 4,
+      "commit_edges": 4,
+      "physical_owner": "/root/qbank_align",
+      "scope": "Explicit in r22 candidate; physical and actual GEN transport qualification remain open"
+    },
+    "geometry_delta": "Native59 south/east service channels 108 to 216 um, native59 y +108 um and embedding/system-face x +108 um; no transport age inferred"
   },
   "kv": {
     "source": "65cb1678b",
