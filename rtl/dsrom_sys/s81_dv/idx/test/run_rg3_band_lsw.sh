@@ -10,7 +10,7 @@ T=rtl/dsrom_sys/s81_dv/idx/test
 sed 's/dsdv_idx_rg3 #(/dsdv_idx_rg3_lsw #(/' $T/tb_dsdv_idx_rg3.sv > "$D/tb_dsdv_idx_rg3.sv"
 grep -q 'dsdv_idx_rg3_lsw #(' "$D/tb_dsdv_idx_rg3.sv" || { echo "LSW: tb sed failed"; exit 2; }
 # the campaign's source list, the tb replaced by the lockstep copy + the band sources
-sed -e "s#rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3.sv)#rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_br.sv rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_band.sv $T/dsdv_idx_rg3_lsw.sv $D/tb_dsdv_idx_rg3.sv)#" \
+sed -e "s#rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3.sv)#rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_br.sv rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_band.sv rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_bf.sv $T/dsdv_idx_rg3_lsw.sv $D/tb_dsdv_idx_rg3.sv)#" \
     $T/idxrd3_campaign.sh > "$D/campaign.sh"
 grep -q dsdv_idx_rg3_lsw.sv "$D/campaign.sh" || { echo "LSW: campaign sed failed"; exit 2; }
 bash "$D/campaign.sh" "$O" "$BN" "$G" "$J" "$@"; rc=$?

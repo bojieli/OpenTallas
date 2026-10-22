@@ -30,7 +30,7 @@ module dsdv_idx_rg3_lsw #(
     dsdv_idx_rg3 #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .SQD(SQD), .IQD(IQD), .OH(OH), .RH(RH), .IH(IH), .KR(KR)) u_ref (
         .ck(ck), .rst(rst), .sid(sid), .qi(qi), .qo(qo), .si(si), .so(so), .rqo(rqo), .rri(rri), .st(st));
     wire [512:0] bqo; wire [275:0] bso; wire [183:0] brqo; wire [9:0] bst;
-    dsdv_idx_rg3_bf #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .SQD(SQD), .IQD(IQD), .RH(RH), .KR(KR), .LX(0), .PD(0)) u_band (
+    dsdv_idx_rg3_bf #(.MUTR(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .SQD(SQD), .IQD(IQD), .RH(RH), .KR(KR), .LX(0), .PD(0)) u_band (
         .ck(ck), .rst(rst), .sid(sid), .qi(qi), .qo(bqo), .si(si), .so(bso), .rqo(brqo), .rri(rri), .st(bst));
     reg [9:0] st_d;
     reg       live;
