@@ -89,8 +89,13 @@ proc ot_cct_corner {cell {scene ""}} {
   foreach lc [get_lib_cells -quiet -of_objects $cell] {
     if {[regexp -nocase {_(tt|ff|ss)(?:[/_.]|$)} [get_full_name $lc] -> c]} { dict set have [string tolower $c] 1 }
   }
-  foreach lib [get_libs -quiet *] {
-    if {[regexp -nocase {_(tt|ff|ss)(?:_|$)} [get_full_name $lib] -> c]} { dict set have [string tolower $c] 1 }
+  # Child-associated libraries take precedence.  An unrelated loaded _ss library must not
+  # turn the gate's WC (TT) child arrivals into SS ranges.  Fall back to global names
+  # only when this child's Liberty cells carry no recognizable corner suffix.
+  if {![dict size $have]} {
+    foreach lib [get_libs -quiet *] {
+      if {[regexp -nocase {_(tt|ff|ss)(?:_|$)} [get_full_name $lib] -> c]} { dict set have [string tolower $c] 1 }
+    }
   }
   if {[regexp {^(wc|ss|slow|max)} $sc]} {
     if {[dict exists $have ss]} { return ss }
