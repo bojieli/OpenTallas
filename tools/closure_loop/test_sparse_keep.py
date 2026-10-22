@@ -2,6 +2,7 @@
 
 Reproduces the 10-22 S81 TOPK TX loss: kit x is committed in a sparse worktree but not in its list; a plain
 `git sparse-checkout add <kit ga>` (the submit waiter) deletes x from disk.  sparse_keep.add must keep it."""
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -126,3 +127,92 @@ def test_matcher_cone_format():
     nc = K.parse_patterns("/tools/\n/physical/ref_tile/k*/\n!/physical/ref_tile/kq/\n**/keep.me\n")
     assert K.included(nc, "tools/a/b.py") and K.included(nc, "physical/ref_tile/kx/f")
     assert not K.included(nc, "physical/ref_tile/kq/f") and K.included(nc, "deep/x/keep.me")
+
+
+# ---------------------------------------------------------------------------------------------- 10-22 append-only fix
+def _negrepo(tmp_path):
+    """non-cone worktree whose list carries negatives + a comment (the codex-qw-a0-kfirst/localreq shape)"""
+    repo, wt = make(tmp_path, False)
+    for f in ("tools/x/a.py", "tools/x/drop/f", "tools/x/keep/f", "tools/x/rc14/f"):
+        (repo / f).parent.mkdir(parents=True, exist_ok=True)
+        (repo / f).write_text(f)
+    g(repo, "add", "-A")
+    g(repo, "commit", "-qm", "x")
+    g(wt, "merge", "-q", "--ff-only", "master" if "master" in g(repo, "branch") else "main")
+    sf = K.sparse_file(wt)
+    lines = sf.read_text().splitlines() + ["# keep me", "!/tools/x/*/", "/tools/x/keep/", "/tools/x/rc14/"]
+    sf.write_text("\n".join(lines) + "\n")
+    g(wt, "sparse-checkout", "reapply")
+    assert not (wt / "tools/x/drop/f").exists() and (wt / "tools/x/rc14/f").is_file()
+    kx = g(wt, "ls-files", "physical/ref_tile/kx").split()        # the reapply above removed kit x: re-materialize
+    g(wt, "update-index", "--no-skip-worktree", *kx)
+    g(wt, "checkout-index", "-f", "--", *kx)
+    subprocess.run(["git", "-C", str(wt), "update-index", "-q", "--refresh"], capture_output=True)
+    assert K.at_risk(wt) == ["physical/ref_tile/kx/f.json", "physical/ref_tile/kx/sub/g"]
+    return repo, wt, sf.read_text()
+
+
+@pytest.mark.parametrize("cmd", ["add", "protect"])
+def test_noncone_negatives_kept_verbatim(tmp_path, cmd):
+    _, wt, before = _negrepo(tmp_path)
+    args = [cmd, str(wt)] + (["rtl/"] if cmd == "add" else [])
+    assert K.main(args) == 0
+    after = K.sparse_file(wt).read_text()
+    assert after.startswith(before), after               # every old line, same order, negatives and comment intact
+    assert len(after.splitlines()) > len(before.splitlines())
+    assert (wt / "tools/x/keep/f").is_file() and (wt / "tools/x/rc14/f").is_file() and (wt / "tools/x/a.py").is_file()
+    assert not (wt / "tools/x/drop/f").exists()
+    assert (wt / "physical/ref_tile/kx/sub/g").is_file()
+    assert (cmd != "add") or (wt / "rtl/f.json").is_file()
+
+
+def test_untracked_and_ignored_in_losing_dir_refuse(tmp_path):
+    """a cone list whose a/sub/ entry lacks its parent: appending a valid cone parent for a/other narrows a/sub;
+    the untracked + ignored files there make sparse_keep refuse with nothing changed"""
+    repo, wt = make(tmp_path, True)
+    (repo / ".gitignore").write_text("*.log\n")
+    (repo / "a/other").mkdir(parents=True)
+    (repo / "a/other/f").write_text("f")
+    g(repo, "add", "-A")
+    g(repo, "commit", "-qm", "a")
+    g(wt, "merge", "-q", "--ff-only", "master" if "master" in g(repo, "branch") else "main")
+    sf = K.sparse_file(wt)
+    sf.write_text(sf.read_text() + "/a/sub/\n")
+    (wt / "a/sub").mkdir(parents=True)
+    (wt / "a/sub/u.txt").write_text("u")
+    (wt / "a/sub/i.log").write_text("i")
+    before = sf.read_text()
+    rc, msg = K.add(wt, ["a/other"])
+    assert rc == 1 and "REFUSED" in msg and "untracked" in msg, msg
+    assert sf.read_text() == before
+    assert (wt / "a/sub/u.txt").is_file() and (wt / "a/sub/i.log").is_file() and not (wt / "a/other/f").exists()
+
+
+def test_full_checkout_and_unreadable_list_are_noops(tmp_path):
+    repo, wt = make(tmp_path, False)
+    sf = K.sparse_file(wt)
+    # 1) all of HEAD on disk though core.sparseCheckout=true and the list is narrow (qkc-cb16 / sqc-iof shape)
+    g(wt, "sparse-checkout", "disable")
+    g(wt, "config", "--worktree", "core.sparseCheckout", "true")
+    sf.write_text("/tools/\n")
+    assert K.main(["protect", str(wt)]) == 0 and K.main(["add", str(wt), "rtl/"]) == 0
+    assert sf.read_text() == "/tools/\n" and (wt / "rtl/f.json").is_file()
+    # 2) missing list (qkc-grp-1021 shape)
+    sf.unlink()
+    assert K.main(["protect", str(wt)]) == 0 and K.main(["add", str(wt), "rtl/"]) == 0 and not sf.exists()
+    # 3) unreadable list on a really sparse worktree
+    (tmp_path / "two").mkdir()
+    _, wt2 = make(tmp_path / "two", False)
+    sf2 = K.sparse_file(wt2)
+    keep = sf2.read_text()
+    sf2.chmod(0)
+    try:
+        if os.access(sf2, os.R_OK):
+            pytest.skip("running as root: chmod 0 does not block reads")
+        assert K.main(["protect", str(wt2)]) == 0 and K.main(["add", str(wt2), "rtl/"]) == 0
+    finally:
+        sf2.chmod(0o644)
+    assert sf2.read_text() == keep
+    # 4) core.sparseCheckout false
+    g(wt2, "config", "--worktree", "core.sparseCheckout", "false")
+    assert K.main(["protect", str(wt2)]) == 0 and sf2.read_text() == keep
