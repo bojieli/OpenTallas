@@ -1,0 +1,19 @@
+Verilator 5.050 2026-07-01 rev v5.050
+SVC8LOCK cycles=20000 mismatches=0 ov=14981 invalid_diff=6 seed=1 gid=1
+- tools/s81_dv/svc_rs/tb_svc8_hgrp.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 5.983 s; speed 6.686 us/s
+- Verilator: cpu 5.687 s on 1 threads; allocated 20 MB
+SVC8_BENCH PASS tag=m0x run=1:1:4:3 SVC8LOCK cycles=20000 mismatches=0 ov=14981 invalid_diff=6 seed=1 gid=1
+SVC8LOCK cycles=20000 mismatches=0 ov=19942 invalid_diff=6 seed=2 gid=3
+- tools/s81_dv/svc_rs/tb_svc8_hgrp.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 6.750 s; speed 5.926 us/s
+- Verilator: cpu 6.297 s on 1 threads; allocated 20 MB
+SVC8_BENCH PASS tag=m0x run=2:3:0:2 SVC8LOCK cycles=20000 mismatches=0 ov=19942 invalid_diff=6 seed=2 gid=3
+SVC8LOCK cycles=20000 mismatches=0 ov=10013 invalid_diff=6 seed=3 gid=0
+- tools/s81_dv/svc_rs/tb_svc8_hgrp.sv:87: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 5.546 s; speed 7.212 us/s
+- Verilator: cpu 5.426 s on 1 threads; allocated 20 MB
+SVC8_BENCH PASS tag=m0x run=3:0:2:1 SVC8LOCK cycles=20000 mismatches=0 ov=10013 invalid_diff=6 seed=3 gid=0
