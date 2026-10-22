@@ -2,7 +2,7 @@
 set -eu
 O=$1
 mkdir -p "$O"
-iverilog -g2012 -s tb_s81_land -DTB_W=276 -DTB_D=32 -DTB_KW=6 -DTB_NMAX=8 -DTB_TOP=dsdv_pv_local_land_n32_276 -o "$O/sim" tools/s81_dv/pv_local_d32_n32/tb.sv rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv
+iverilog -g2012 -s tb_s81_land -DTB_W=276 -DTB_D=32 -DTB_KW=6 -DTB_NMAX=8 -DTB_TOP=${PV_TOP:-dsdv_pv_local_land_n32_276} -o "$O/sim" tools/s81_dv/pv_local_d32_n32/tb.sv ${PV_RTL:-rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32.sv} rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv
 for pair in 115:0 815:0 115:700; do
  d=${pair%:*}; r=${pair#*:}
  vvp -n "$O/sim" +N=0 +DH="$d" +LR="$r" +K=17 +R0=12 +G=12 +RL=2 +IR=2 +GS=4 +CYC=256 > "$O/p_${d}_${r}.log"
