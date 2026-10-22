@@ -1,0 +1,104 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_pc_h_sr10e-sr10e-1b36b2643/cl/io_ref_routed.sdc"
+ ],
+ "orfs": "/home/ubuntu/ot-scratch/claude/closure-loop/qkd_kvs_pc_h_sr10e-sr10e-1b36b2643/routes/qkd_kvs_pc_h_sr10e_sr10e_1b36b2643/work/orfs",
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": 91.93,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": 91.93,
+  "worst_input_to_reg_slack_ps": 350.32,
+  "worst_output_port_slack_ps": 247.15,
+  "violating_d_pins": "0",
+  "registers": 25552,
+  "registers_clocked": 25552,
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 564.0,
+    "min": 551.6,
+    "max": 642.4,
+    "n": 2739,
+    "kind": "boundary"
+   },
+   "ot_lb_v_hclk": {
+    "clock": "hclk",
+    "mean": 552.4,
+    "min": 531.5,
+    "max": 592.1,
+    "n": 813,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 2739,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "hclk": {
+    "boundary": 813,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "ioref_class": {},
+  "ioref_class_mixed": [],
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "6dd83e4db02ed44c82e1f23f768f3aaf85bd531158fb9f5b606114572bb98ddc"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -14.15,
+  "tns_ps": -1134.34,
+  "worst_reg_to_reg_slack_ps": -12.45,
+  "worst_input_to_reg_slack_ps": -14.15,
+  "worst_output_port_slack_ps": 52.5,
+  "violating_d_pins": "378",
+  "registers": 25552,
+  "registers_clocked": 25552,
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 456.2,
+    "min": 444.5,
+    "max": 526.7,
+    "n": 2739,
+    "kind": "boundary"
+   },
+   "ot_lb_v_hclk": {
+    "clock": "hclk",
+    "mean": 448.9,
+    "min": 429.4,
+    "max": 484.7,
+    "n": 813,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 2739,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   },
+   "hclk": {
+    "boundary": 813,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "ioref_class": {},
+  "ioref_class_mixed": [],
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "1470ac03e816e245c2fb19a9322f6b4e5d087eea2e70ecdfc1620c52880f5e4e"
+ }
+}
