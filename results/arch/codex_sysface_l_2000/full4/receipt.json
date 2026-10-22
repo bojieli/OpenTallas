@@ -1,0 +1,39 @@
+{
+  "status": "SOURCE_CONSTRUCTION_AND_SCOPED_PROOFS_PASS",
+  "original_cells": 36718,
+  "final_cells": 37047,
+  "added_by_type": {
+    "$_AND_": 72,
+    "$_OR_": 36,
+    "$_DFF_PN0_": 163,
+    "$_DFF_P_": 20,
+    "$_NOT_": 36,
+    "$_DFF_PN1_": 2
+  },
+  "passes": 4,
+  "rom_instances": 3,
+  "external_ports": 93,
+  "wrapper_ages": {
+    "input": 1,
+    "output": 1,
+    "reset_input_relays": 2,
+    "core_reset_release": 3
+  },
+  "fourstate_comparisons": 22842,
+  "reset_valid_binary_comparisons": 22842,
+  "invariant": "Specialized NL1 admission sequencer running is 0 after asynchronous reset and inductively remains 0; no universal arbitrary power-up claim",
+  "undefined_origin": "ot_qwen_d2d_cal_seq.sv85 START[TW*li+:TW] out-of-range MUX undefined bits affect li and cal_start in unreachable running states",
+  "original_fail_preserved": "original_xor_fail.log and original_xor_counterexample.json",
+  "native": "PENDING",
+  "production": "PENDING final actual image and source/GEN/programme proof; historical5f746e4c6 header used here",
+  "emitter_audit": {
+    "status": "PASS",
+    "scope": "All emitted generic cell/macro connections, complete external aliases and actual helper truth tables match the separately proved graph; no startup/ROM-content/physical claim",
+    "cell_instances": 37044,
+    "rom_instances": 3,
+    "external_port_aliases": 93,
+    "helper_types": 9,
+    "source_sha256": "f9dab4fb06d01243de1b9c0322b3af8db14e934d94ddab9c77e7e92e52d1289c",
+    "helpers_sha256": "f6e8a1742301a45190bd3a0a9976ff2e7b2afd74d610cd198f41a8f5b0227de3"
+  }
+}
