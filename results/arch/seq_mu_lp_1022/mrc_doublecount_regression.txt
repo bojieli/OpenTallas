@@ -1,0 +1,3 @@
+module string constants 11 differ []
+landed_raw_body identical: True
+multi_root_body diff: ['+        if {[lsearch -exact $::ot_ce_multi_root_children [get_full_name $cell]] >= 0 && [ot_ce_net_root_port $pin] ne $name} continue']

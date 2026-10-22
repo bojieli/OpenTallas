@@ -2314,8 +2314,20 @@ def multi_root_children(spec, root):
     return out
 
 
+# STW-S81c-COLLA3 10-22 (seq b1m/b1f2 gate "OT_LANDED: 11 of 7 bound hard-child clock pins reached"): OpenSTA's
+# all_registers -clock <root> -clock_pins returns EVERY clock pin of a multi-root child's ETM for each of its roots
+# (u_blk/ck_lk and u_blk/ck_sq under both ck_lk and ck_sq), so each band pin was measured and counted on both roots.  A
+# declared multi-root child's pin is a sink ONLY of the root its net is structurally wired to (ot_ce_net_root_port, the
+# same walk the check-only pins use); the other roots skip it.  Only multi_root_children instances are filtered.
+MULTI_ROOT_SINK = ('      if {[dict exists $::ot_ce_counts $master]} {\n'
+                   '        # landed cluster: a hard child on its region root, judged at its flops (entry wire + routed child insertion)\n')
+
+
 def multi_root_body(body):
-    if body.count(MULTI_ROOT_OWNER) != 1:
+    if body.count(MULTI_ROOT_OWNER) != 1 or body.count(MULTI_ROOT_SINK) != 1:
         raise ValueError("landed body changed; revalidate multi_root_children")
+    body = body.replace(MULTI_ROOT_SINK, MULTI_ROOT_SINK +
+                        '        if {[lsearch -exact $::ot_ce_multi_root_children [get_full_name $cell]] >= 0'
+                        ' && [ot_ce_net_root_port $pin] ne $name} continue\n')
     return body.replace(MULTI_ROOT_OWNER, MULTI_ROOT_OWNER[:-3] +
                         ' && [lsearch -exact $::ot_ce_multi_root_children $cname] < 0} {')
