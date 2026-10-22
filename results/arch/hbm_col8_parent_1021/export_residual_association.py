@@ -33,6 +33,13 @@ def walk(mod,prefix,bindings):
  for nn,cc in m['cells'].items():
   for pn,bs in cc['connections'].items():
    for b in bs:(drv if pn in outputs(cc) else bybit)[b].add(nn)
+ boundary_in=collections.defaultdict(set);boundary_out=collections.defaultdict(set)
+ for pn,pv in m['ports'].items():
+  for i,b in enumerate(pv['bits']):
+   gg=group(prefix.removesuffix('/')) if prefix else 'quarter_root'
+   if not prefix and pn.startswith('cut_'):
+    width={'cut_rst_n':1,'cut_qv':1,'cut_q':568,'cut_key':544,'cut_hid':64,'cut_cs':32,'cut_cf':1,'cut_prdy':4}[pn];ci=i//width;gg=f'ge[{ci//16}].gc[{(ci//4)%4}].leaf'
+   (boundary_out if pv['direction']=='output' else boundary_in)[b].add(gg)
  cache={};active=set()
  def endpoint_groups(n,up=False):
   if n in owner:return {owner[n]}
@@ -43,6 +50,7 @@ def walk(mod,prefix,bindings):
   for pn,bs in cc['connections'].items():
    if (pn in outputs(cc)) != up:
     for b in bs:
+     ss.update((boundary_in if up else boundary_out).get(b,()))
      for nxt in (drv if up else bybit).get(b,()):
       if nxt!=n:ss.update(endpoint_groups(nxt,up))
   active.remove(key);cache[key]=ss;return ss
@@ -67,7 +75,7 @@ bindings={b:(pn if len(pv['bits'])==1 else f'{pn}[{i}]') for pn,pv in mods[top][
 walk(top,'',bindings)
 assert len(hard)==2,hard
 for h in hard:assert h['clock_terminals']['clk']==h['clock_terminals']['clk_mem']
-r={'schema':'col8.residual_mapped_cells.v1','functional_source':'b056ec205','physical_specialization':'a08546f1e','physical_mapping_source':'6fa118416','top':top,'cell_counts':dict(counts),'source_group_cells':dict(areascope),'ff_clock_counts':dict(ffclocks),'hard_metadata_instances':hard,'cells':rows,'notes':['Actual source group associations only, no residual detailed placement or footprint qualification.','Source groups retain exact mapped hierarchy. Cell connections remain in lossless Verilog and JSON.','Two metadata hard cells per controller, eight across four quarters, preserve literal clk/clk_mem.','Controller active clocks and the 128 separate pair clocks together retain 143 external clocks per quarter. Inverted clock roots preserve negative source edges and are not additional external clocks.']}
+r={'schema':'col8.residual_mapped_cells.v1','functional_source':'f9d6fc51f','physical_specialization':'f9d6fc51f','specialization_method':'a08546f1e','physical_mapping_source':'f9d6fc51f','top':top,'cell_counts':dict(counts),'source_group_cells':dict(areascope),'ff_clock_counts':dict(ffclocks),'hard_metadata_instances':hard,'cells':rows,'notes':['Actual source group associations only, no residual detailed placement or footprint qualification.','Source groups retain exact mapped hierarchy. Cell connections remain in lossless Verilog and JSON.','Two metadata hard cells per controller, eight across four quarters, preserve literal clk/clk_mem.','Controller active clocks and the 128 separate pair clocks together retain 143 external clocks per quarter. Inverted clock roots preserve negative source edges and are not additional external clocks.']}
 q=p.parent/'residual_cell_association.json.gz'
 with gzip.GzipFile(filename=str(q),mode='wb',mtime=0) as z:z.write((json.dumps(r,indent=2)+'\n').encode())
 print(json.dumps({k:v for k,v in r.items() if k!='cells'},indent=2))
