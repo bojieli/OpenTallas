@@ -18,10 +18,19 @@ def key(ty,c):
     if ty=='mux': return (ty,c['A'],c['B'],c['S'])
     return (ty,c['C'],c['D'],c.get('R'))
 grp=collections.Counter(key(ty,c) for ty,_,_,c,_ in cells)
+import os
+KEEPFF=os.environ.get('LCTX5_KEEP_FF','0')=='1'
+FO=collections.Counter(v for _,_,_,c,_ in cells for k,v in c.items() if k not in('Y','Q'))
+FOMAX=int(os.environ.get('LCTX5_KEEP_FO','0') or 0)
+def keep(ty,c):
+    if grp[key(ty,c)]>1: return True
+    if KEEPFF and ty.startswith(('dff','sdff')): return True
+    o=c.get('Y',c.get('Q'))
+    return FOMAX>0 and FO[o]>=FOMAX
 kept=flat=0; ffregs=[]; body=[]
 EXPR={'and':'{A} & {B}','or':'{A} | {B}','xor':'{A} ^ {B}','not':'~{A}','mux':'{S} ? {B} : {A}'}
 for ty,i,name,c,line in cells:
-    if grp[key(ty,c)]>1: body.append(line); kept+=1; continue
+    if keep(ty,c): body.append(line); kept+=1; continue
     flat+=1
     if ty in EXPR: body.append(f"assign {c['Y']} = {EXPR[ty].format(**c)};\n"); continue
     q=c['Q']; ffregs.append(q)
@@ -39,4 +48,4 @@ new=new.replace('module qfd_sys_face_lctx4_bounded','module qfd_sys_face_lctx5_h
 hdr='// SQC-SYSFACE 10-22 qfd_sys_face_lctx5_hybrid: derived from qfd_sys_face_lctx4_bounded (c22e52bbf) by tools/qwen_split/mk_lctx5_hybrid.py;\n// identical graph; keep_hierarchy only on duplicate-input cells (copies), all other cells flat for ABC.\n'
 open(out,'w').write(hdr+new)
 print(f'cells {len(cells)} kept {kept} flat {flat} ff_flat {len(ffregs)} dup_groups {sum(1 for v in grp.values() if v>1)}')
-print('kept by type',collections.Counter(ty for ty,_,_,c,_ in cells if grp[key(ty,c)]>1))
+print('kept by type',collections.Counter(ty for ty,_,_,c,_ in cells if keep(ty,c)))
