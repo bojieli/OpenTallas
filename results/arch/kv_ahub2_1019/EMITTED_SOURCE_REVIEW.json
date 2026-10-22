@@ -1,0 +1,231 @@
+{
+  "base": "143642b6b",
+  "source_predecessor": "4415ee6cf",
+  "private_source": "qkd_ahub_grouped_transport_private.sv",
+  "default": "ENABLE=0 pure combinational predecessor-identical interface bypass; public files untouched",
+  "state": {
+    "indexed_payload": 1344,
+    "payload_ingress_read_landing": 1008,
+    "phase": 86,
+    "slot_valid": 172,
+    "ring_valid": 43,
+    "landing_valid": 43,
+    "group_ingress_valid": 7,
+    "leaf_reset": 344,
+    "root_reset": 28,
+    "total": 3075
+  },
+  "admission": {
+    "experimental_startup_extra_edges": 2,
+    "accepted_word_latency_edges": 4,
+    "production_calendar_change": false
+  },
+  "groups": {
+    "command": [
+      8,
+      8,
+      8,
+      8,
+      2
+    ],
+    "return": [
+      8,
+      1
+    ]
+  },
+  "source_equation_maxloads": {
+    "raw": 21,
+    "root_group_reset": 18,
+    "group_valid": 32,
+    "local_active": 19,
+    "phase_decode": 10,
+    "write_enable": 9
+  },
+  "compile_permission": "HOLD parent actual emitted-source review",
+  "test_scope": [
+    "arbitrary old Q/raw low before first edge",
+    "partial startup",
+    "common-clock independent reset convergence",
+    "TX drain/RX discard outstanding",
+    "earliest legal release exactly +2",
+    "wrap/sparse/line rate four-edge identities",
+    "no extra output",
+    "owned return fault",
+    "raw/release/group topology/stale valid/read slot/return owner causal mutants"
+  ],
+  "holds": [
+    "native mapped graph",
+    "storage technology even though payload<2kb",
+    "reset pulse glitch/recovery",
+    "clock phase",
+    "area PG pins",
+    "arithmetic health retirement",
+    "production calendar and SU/MU"
+  ],
+  "classification": "EMITTED_PRIVATE_FUNCTIONAL_SOURCE_NOT_COMPILED_NOT_NATIVE_QUALIFIED",
+  "source_sha256": "f8211325ebd982bccb90083f2c58af6ef2d24c6d1e2d6a5ea6c015a9d5b61b25",
+  "maxloads_are_preoptimization_equations_only": true,
+  "graph": [
+    [
+      "raw reset",
+      21,
+      "14 root async pins +7 AND"
+    ],
+    [
+      "root a0",
+      1,
+      "a1 D"
+    ],
+    [
+      "root a1",
+      1,
+      "group AND"
+    ],
+    [
+      "tx group reset",
+      17,
+      "16 leaf async +admission"
+    ],
+    [
+      "rx group reset",
+      18,
+      "16 leaf async +admission +public output authority"
+    ],
+    [
+      "input valid",
+      5,
+      "command5/return2 admissions"
+    ],
+    [
+      "TX s0",
+      1,
+      "s1 D"
+    ],
+    [
+      "TX s1",
+      2,
+      "q0 D+ready"
+    ],
+    [
+      "TX q0",
+      1,
+      "q1 D"
+    ],
+    [
+      "TX q1",
+      1,
+      "ready"
+    ],
+    [
+      "RX s0",
+      1,
+      "s1 D"
+    ],
+    [
+      "RX s1",
+      4,
+      "q0 D+ready+active+landing async"
+    ],
+    [
+      "RX q0",
+      1,
+      "q1 D"
+    ],
+    [
+      "RX q1",
+      3,
+      "ready+active+landing clear"
+    ],
+    [
+      "bank-ready",
+      1,
+      "binary group tree"
+    ],
+    [
+      "group admission",
+      2,
+      "ingress-valid D+public accept tree"
+    ],
+    [
+      "group ingress-valid Q",
+      32,
+      "four static slot-valid mux data inputs per bank,8banks"
+    ],
+    [
+      "phase bit combined polarities",
+      6,
+      "four decoder uses +increment"
+    ],
+    [
+      "phase decoder",
+      10,
+      "one write-enable +BW read AND +valid read AND"
+    ],
+    [
+      "write-enable",
+      9,
+      "BW payload muxes+slot-valid mux"
+    ],
+    [
+      "active",
+      19,
+      "4 write enables+BW ringhold+2 phaseclear+4 slotclear+ringvalidclear"
+    ],
+    [
+      "ingress payload",
+      4,
+      "four indexed slot write data mux inputs"
+    ],
+    [
+      "payload cell",
+      2,
+      "hold mux+one read AND"
+    ],
+    [
+      "slotvalid Q",
+      2,
+      "hold mux+one read AND"
+    ],
+    [
+      "read intermediate",
+      1,
+      "binary OR"
+    ],
+    [
+      "ring_q",
+      1,
+      "landing D"
+    ],
+    [
+      "ring_valid",
+      1,
+      "landing-valid D"
+    ],
+    [
+      "landing payload",
+      1,
+      "ABI output"
+    ],
+    [
+      "landing_valid",
+      1,
+      "binary valid tree"
+    ],
+    [
+      "tree intermediate",
+      1,
+      "next binary node"
+    ]
+  ],
+  "constant_roots": "UNBOUND: all logical1/0 uses must be partitioned into local <=32-pin tie cells at native binding; RTL constants do not certify that placement or synthesis behavior",
+  "root_merge": "keep/dont_touch preserve source intention only; no synthesis preservation receipt",
+  "clock_sinks": "1731 non-array FF +43 actual bank clock ports; FF-expanded3075; no CTS claim",
+  "mutants": {
+    "1": "remove raw authority",
+    "2": "advance root release",
+    "3": "advance leaf ready",
+    "4": "stale slot-valid writes",
+    "5": "wrong read slot",
+    "6": "wrong return fault owner"
+  }
+}

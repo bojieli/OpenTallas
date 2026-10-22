@@ -1,0 +1,86 @@
+{
+  "status": "SOURCE_EVIDENCE_PACKET_ONLY",
+  "published_base": "6ec5b4b748121d8dc8fe842bde41f4378fcbefab",
+  "source_projection": "a89ceb6f9eaf9209016ef715642bfc55fb6e19d9",
+  "projection_files": {
+    "results/rtl/hc_connected_lowering_1021/hc_pre_mix_receipt.json": "ad5a392c9f83d03e67f4b7b3fcf15de133db67c1e54239191b888083ad89167b",
+    "results/rtl/hc_connected_lowering_1021/hc_pre_sum_receipt.json": "31f78acf2c17a3aac3e144081b3a4fd09a7b1457f0e7c1ab9dedb54e74190f7f",
+    "results/token_pass/hbm_functional_1021/qwen_safe_1340/README.txt": "ebef87ecf3f3b54d2081ff14985aa69f97bffcdaf5718ae3623a3fc1ade077ad",
+    "results/token_pass/hbm_functional_1021/qwen_safe_1340/emission_receipt.json": "5b5b23fe930fdac683798d394e3a566d62a98ec589163cf87e87958669a4122f",
+    "tools/hbm_layer_vehicle/check_slice_run.py": "560f6bb77ab5c132f91660fbcebb4fcb57f688b293de24031a04b66562553290",
+    "tools/hbm_layer_vehicle/coll_images.py": "0f7cfdd2ecda1b03addf849a6a10af0b98efcfb1418a45aebb0abcd10a27c558",
+    "tools/hbm_layer_vehicle/cx_layer_1021.py": "95216d259a75ac89b730acb2b407d30cfecfca7244deaa8c4ce5f04aea69caac",
+    "tools/hbm_layer_vehicle/gen_slice_tb.py": "bd1b8514fe1a6abfaf49563d3a2c394d9b62b8c16ade199af271dcf3ef92bea7",
+    "tools/hbm_layer_vehicle/hc_layer_lower_1021.py": "f9a506e3883d8939c2bd1712bc5bd6e3415ad7f4d2f79108235a2fbc41f21825",
+    "tools/hbm_layer_vehicle/idx_layer_lower_1021.py": "9e6059f9e1bcc20f3b17e355aa38bb8d30dce3080005d02ab1d29fa434453a6f",
+    "tools/hbm_layer_vehicle/layer_images.py": "71c32aad155ebbc2ff5ec26b1bda24502d7e39d457a287d58c1703d57a2c41dc",
+    "tools/hbm_layer_vehicle/merge_layer_replay.py": "01ac44eea13888425f285253b7d324fd04f23d35997b943062b72095106bba56",
+    "tools/hbm_layer_vehicle/qwen_layer_images.py": "c463d0e203688bad024bb0f4d6acfb6b8ee62d4e0ae4ee0b3d9920cd6a04dfaa",
+    "tools/hbm_layer_vehicle/run_pay_replays.sh": "caefb795efe5c9394fbdeb9bd4ecec9829c4d57df1a8cc70e1e77b160eb3d618",
+    "tools/hbm_layer_vehicle/sm_slice_lower.py": "24c2bc137bc117ae1fbb89a413ddde5e97e2810a9b82f6264c55a814dcc6f91e",
+    "tools/hbm_layer_vehicle/su_layer_lower_1021.py": "8b676c73c6f5d27ebf2636efc0a1087b17d883326264be6bc82ded2e2f65870c",
+    "tools/hbm_layer_vehicle/tok_func_hbm.sh": "2dcff2e238bf0ddae841e0164dfee99095aa777d4b543313e19d29258c20e57a",
+    "tools/hbm_layer_vehicle/toksim_smhbm.py": "569950b3b0ce9afa352d55dfecb41887c7e769518eb8973611e8221a8813f027",
+    "tools/hbm_layer_vehicle/verify_qwen_safe_calendar.py": "9aa2b6557f7d18c8cc3714c3e3721cff2c0fe0ad7a9bacfa00bc411d6b8efa77",
+    "tools/hbm_layer_vehicle/native_su_calendar.py": "3a1d16a0e8f97ae1f35406a6a3c8cb4ea12f158347d9d3e104f9a20d06e1ec45",
+    "tools/hbm_layer_vehicle/test_layer_images.py": "72d313a9018a042a4d849bce260de704b48f744b4d9e8a98778428b244c98262",
+    "tools/hbm_layer_vehicle/verify_default_tree_compat.py": "be4a08bcc865ce96c6ff0b23cd981acc926c364ef5d64361d15c9e9fc79269c3",
+    "results/token_pass/hbm_functional_1021/default_tree_compat/README.txt": "adbc1b21045cd6847b04ffe3fd0547752b3bd985aa00b3c9b09d4ad9cbe62ec4",
+    "results/token_pass/hbm_functional_1021/default_tree_compat/receipt.json": "8cf2ebf6525bb079457ad565c76c4c90382828745d8356a1e96e1acd4341e40b"
+  },
+  "source_dependencies": {
+    "r15_source": "5fbd4d07ac12750940f3e76884cd52c1cb675a96",
+    "contract_sha256": "99756f7ec3fe40e1dab45ae3da313ee27df40b941ddb173e620b5e1b19a70dd9",
+    "SIDE_overlay": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv@7f5a5d10f72b85131c6132565f92a8f8fb54bb14",
+    "HC_phase40_overlay": "two reader/q_static files@ee6ddb9448f8f6e7dfe8035b9c2ae6db5fdacdd6",
+    "source_objects_available_on": "origin/codex/hbm-token-resume-1021; origin/codex/hbm-att-recover-1021"
+  },
+  "RTL_files_changed": [],
+  "physical_views_changed": [],
+  "master_or_assembly_adoption": false,
+  "qualifies_native_layer": false,
+  "qualifies_full_token": false,
+  "existing_builds": "conn_p40 terminal infrastructure hostearlyoom/NO_BINARY14:00:12, objects preserved/no retry; conn_idx/hcp40/SMSL progressing unchanged",
+  "frozen_verdict_source": "/home/ubuntu/scratch/tok-func2-hbm-cx/frozen_a356b3097",
+  "grade": "pure emission/source assembly only; conn_p40 NO_BINARY, no actual RTL verdict; other coupled builds pending",
+  "notes": [
+    "Includes existing SU profile lowerings, connected COLL/HC/IDX emission, optional real SM-chain lowering, and Qwen idle-reader/fixed-drain repair.",
+    "No fixture expected output is used to replace on-chip arithmetic. Existing component input boundaries and PARTIAL/refusal nodes remain explicit.",
+    "Default 2470-bit representation compatibility is documented by existing seven-case pure proof; low2422 numerical words unchanged and new tree bits zero.",
+    "Qwen safe four-case proof keeps every preload/numerical expectation unchanged; exactly20 same-value D holds per chain may be removed for existing11651-slotbinary reuse, never checks or transitions.",
+    "Source projections do not adopt their referenced SIDE/HC RTL overlays into main physical contracts."
+  ],
+  "terminal_infrastructure": {
+    "unit": "oth-ubuntu-3312528-1792612964",
+    "host": "ot-gold2",
+    "declared_GiB": 400,
+    "build_peak_RSS_KB": 245979584,
+    "build_rc": 2,
+    "signal": 15,
+    "earlyoom_time": "2026-10-21T13:59:58-07:00",
+    "binary_exists": false,
+    "DUT_failed": false,
+    "retry": false,
+    "objects_preserved": true,
+    "raw_client_log": "/home/ubuntu/scratch/tok-func2-hbm/conn_p40/log/build.log",
+    "raw_build_log": "/srv/opentallas-scratch/claude/tok-func2-hbm/conn_p40/out/build.log"
+  },
+  "selected_source_pure_test": {
+    "status": "PASS",
+    "command": "PYTHONPATH=tools python3 tools/hbm_layer_vehicle/test_layer_images.py --die /home/ubuntu/scratch/tok-func2-hbm/conn_p40/die.v --boundary /home/ubuntu/scratch/tok-func2-hbm/conn_p40/bundle/slice/boundary.json --programme /home/ubuntu/OpenTallas/results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json --fixtures /home/ubuntu/scratch/tok-func-hbm/rsrc/L02",
+    "pins": {
+      "/home/ubuntu/scratch/tok-func2-hbm/conn_p40/die.v": "35350876531724e4d2cc33c71ef85724d8e85ff1685e0bc8b612dacce906b432",
+      "/home/ubuntu/scratch/tok-func2-hbm/conn_p40/bundle/slice/boundary.json": "8c4984e3c58fae0135c5e3243ad4bcfe3dd0ae6a835d6e3aaa276ef0aa1549eb",
+      "/home/ubuntu/OpenTallas/results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+      "/home/ubuntu/scratch/tok-func-hbm/rsrc/L02/records.json": "b76ee2eddc3b2f508991c517a8654a118de53e4329630484853b04d7e7a22311",
+      "/home/ubuntu/scratch/tok-func-hbm/rsrc/L02/operands.npz": "37e53c216beab346c328a2e3436637a54c158cc827a7c586a79d599bd2ece057"
+    },
+    "checks": [
+      "layout2470/tree48 actualdie",
+      "31goldenarithmeticops",
+      "8SUrecords/1336VMchecks",
+      "L02actualfixture9SU/10868Owords/split2parts",
+      "all18hostCPtargetstraps"
+    ]
+  }
+}

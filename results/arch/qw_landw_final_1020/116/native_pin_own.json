@@ -1,0 +1,26 @@
+{
+ "cell": "qfd_landh0d8g_116_EW_52x52",
+ "view": "physical/ref_tile/qfwd_landh0d8_116_ew_46x46/views/qfd_landh0d8g_116_EW_52x52",
+ "lib_cell": "qfd_landh0d8g_116_EW_52x52",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 97.1,
+ "spread_ps": 6.3,
+ "outputs": 117,
+ "inputs": 122,
+ "launch_ps": 166.9,
+ "launch_pin": "fault",
+ "capture_ps": 150.5,
+ "capture_pin": "a[2]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 6.5,
+ "ff_launch_min_ps": 92.9,
+ "ff_hold_need_ps": -19.1,
+ "pass": true,
+ "fail_why": ""
+}

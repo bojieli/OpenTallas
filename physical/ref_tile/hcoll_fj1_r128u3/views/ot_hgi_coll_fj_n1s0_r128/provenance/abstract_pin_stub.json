@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hgi_coll_fj_n1s0_r128.lef",
+    "sha256": "8cdbda5eb3cdb7bb0a009e780917a2a4b5a4ae5b92a62dd6915d1cd46318f5d9"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj1_r128u3-n1s0-native32-rc32-d67caf790/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj1_r128u3-n1s0-native32-rc32-d67caf790/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj1_r128u3-n1s0-native32-rc32-d67caf790/record/views/ot_hgi_coll_fj_n1s0_r128/provenance/raw/ot_hgi_coll_fj_n1s0_r128.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj1_r128u3-n1s0-native32-rc32-d67caf790/record/views/ot_hgi_coll_fj_n1s0_r128/provenance/ot_hgi_coll_fj_n1s0_r128.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 59 OBS rects moved into 59 pins: arg_capture_slot, capture_fault[0], capture_fault[1], capture_fault[2], capture_fault[3], capture_fault[4], capture_fault[5], capture_fault[6], capture_fault[7], link_abort, protocol_fault, reduce_fault; pockets: 442 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj1_r128u3-n1s0-native32-rc32-d67caf790/record/views/ot_hgi_coll_fj_n1s0_r128/provenance/ot_hgi_coll_fj_n1s0_r128.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hgi_coll_fj_n1s0_r128 103.68 x 71.28: PG M5 VDD 19 stripes (94% spread, 100% cov) / VSS 19 stripes (94% spread, 100% cov); strap M6; face pins 459 blocked-above 0 blocked-same 0; clock clk insertion 178 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hgi_coll_fj_n1s0_r128",
+      "W": 103.68,
+      "H": 71.28,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 19,
+            "dir": "V",
+            "spread": 0.938,
+            "coverage": 1.0,
+            "shapes_on_top": 19
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 19,
+            "dir": "V",
+            "spread": 0.938,
+            "coverage": 1.0,
+            "shapes_on_top": 19
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 459,
+        "blocked_above": 0,
+        "covered_below": 38,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 178.43,
+          "min_ps": 133.39
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 442
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      },
+      "pin_access_violations": 0
+    }
+  },
+  "output": {
+    "path": "ot_hgi_coll_fj_n1s0_r128.lef",
+    "sha256": "2aee94a3e67ec98ae5b0d595912088b17ddb1821485ba3fdeedf2bfd498dc755"
+  }
+}

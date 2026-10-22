@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.qwen_compute.landing_price.v1",
+ "die": "dv2f19g3r",
+ "built": 264,
+ "E_hist": {
+  "2": 264
+ },
+ "n_hist": {
+  "1": 264
+ },
+ "lane_cycles_per_crossing_max": 3,
+ "owed_in_face": 182,
+ "serial_crossings_per_layer": {
+  "q3h_broadcast": 2,
+  "rs_reduction": 2,
+  "dv_chain_hops": 11
+ },
+ "added_cycles_per_layer_worst": 45,
+ "note": "lane cycles = E + 1 (landing o register) per built landing (fwd_lanes.json of dv2f19g3r); the 11 dv chain hops are slice<->slice (owed in-face, priced at the same cycles); no layer-period compiler consumes q3h/dv chain ages yet (gap for the DV calendar / ME programme compiler)",
+ "added_cycles_per_token_worst": 1620
+}

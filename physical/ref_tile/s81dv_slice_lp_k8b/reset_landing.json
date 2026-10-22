@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_s81sl_slice_c1x_k8_lp",
+ "enable": false,
+ "reason": "lp.py RTL lands it: rst_n -> u_lpr_root (ck_C) -> per-region runs + per-chunk reset forest; the port net has ONE sink"
+}

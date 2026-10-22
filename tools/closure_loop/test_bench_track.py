@@ -56,6 +56,24 @@ class BenchTrack(unittest.TestCase):
                     break
         return launched, kill
 
+    def test_migrated_same_run_path_checks_vanished_old_host(self):
+        j = job(bench_par=True, status="RUNNING", stage_idx=2,
+                bench_location=dict(host="old", run="/r", attempt=1))
+        launched = []
+        def vanished(j, location):
+            self.assertEqual(location["host"], "old")
+            j.pop("bench_location")
+            return True
+        def launch(v, st, cmd):
+            v["stage_tag"] = "test"
+            launched.append(v["host"])
+        with patch.object(cl, "vanished_bench_location", side_effect=vanished) as check, \
+                patch.object(cl, "launch_stage", side_effect=launch), \
+                patch.object(cl, "hosts_table", return_value=[]), patch.object(cl, "log"):
+            cl.bench_track(j, Fleet(), cl.stage_list(SPEC))
+        check.assert_called_once()
+        self.assertEqual(launched, ["h"])
+
     def test_parallel_and_main_track_starts_at_route(self):
         j = job()
         launched, _ = self.run_track(j, [("RC", 0), ("RC", 1)])

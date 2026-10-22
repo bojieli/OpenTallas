@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       admits   556 GB (avail 502, growth 113, headroom 0, waiters 0/0 GB) load 57/128 running 40 disk 246 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-su8-1020
+ot-run: ot-epyc7       admits   875 GB (avail 713, growth 101, headroom 0, waiters 0/0 GB) load 119/96 running 23 disk 5041 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw-su8-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-su8-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-su8-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2261331-1792558731 after 0 s
+PRE_GATE_NATIVE_CENSUS PASS report=native.json
+textbook_lint: PASS qfd_dv_s5_su8_rst3 cells 26,993 flops 4,655 depth 470.1 ps util None reach None um (0.9 s)
+textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":2,"flops":2,"macros":0}]}
+textbook_lint: INFO clock_roots max_root_sinks=4655 root=port:ck rule=PASS: 4,655 sinks on the largest root; no measured clock tree (no --cts gate evidence)
+   Chip area for module '$paramod$d4c68b995d0bccc4bf7e525ef37cd26b44d5c4fd\qfd_dv_su8_kffr': 0.422820
+    27073  2.9E+03 cells
+   Chip area for top module '\qfd_dv_s5_su8_rst3': 2895.369300
+NATIVE_RC=0 TEXTBOOK_RC=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2261331-1792558731): exit 0

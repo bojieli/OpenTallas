@@ -1,0 +1,221 @@
+{
+ "checked_numeric_words": 64,
+ "actual_interface": "VM SRAM final-state read via C vm:physicalsector, not stimulus/trace",
+ "final_output_checks": [
+  {
+   "port": "vm:40",
+   "serial": 7090,
+   "logical_words": [
+    52288,
+    52289,
+    52290,
+    52291,
+    52292,
+    52293,
+    52294,
+    52295
+   ],
+   "value": "beea00003f4500003ece00003f5400003f9600003e0900003fac00003f700000",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  {
+   "port": "vm:1",
+   "serial": 7090,
+   "logical_words": [
+    52296,
+    52297,
+    52298,
+    52299,
+    52300,
+    52301,
+    52302,
+    52303
+   ],
+   "value": "3e8e0000bed10000bef400003f160000bf090000bf0000003f050000bd990000",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  {
+   "port": "vm:2",
+   "serial": 7090,
+   "logical_words": [
+    52304,
+    52305,
+    52306,
+    52307,
+    52308,
+    52309,
+    52310,
+    52311
+   ],
+   "value": "bbd00000befc0000bf1200003ecc0000bf470000beed0000beaf00003f230000",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  {
+   "port": "vm:3",
+   "serial": 7090,
+   "logical_words": [
+    52312,
+    52313,
+    52314,
+    52315,
+    52316,
+    52317,
+    52318,
+    52319
+   ],
+   "value": "404200003f4a0000be310000bdfa00003fad00003dd600003e370000bed20000",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  {
+   "port": "vm:4",
+   "serial": 7090,
+   "logical_words": [
+    52320,
+    52321,
+    52322,
+    52323,
+    52324,
+    52325,
+    52326,
+    52327
+   ],
+   "value": "be560000be7300003d970000be4400003e3b00003d510000be9300003eae0000",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  {
+   "port": "vm:5",
+   "serial": 7090,
+   "logical_words": [
+    52328,
+    52329,
+    52330,
+    52331,
+    52332,
+    52333,
+    52334,
+    52335
+   ],
+   "value": "3e270000be7f00003db10000bcf500003eee0000becf00003e2e0000bdec0000",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  {
+   "port": "vm:6",
+   "serial": 7090,
+   "logical_words": [
+    52336,
+    52337,
+    52338,
+    52339,
+    52340,
+    52341,
+    52342,
+    52343
+   ],
+   "value": "be9c00003ea00000bea200003dd30000bdc300003e6300003da70000be700000",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  {
+   "port": "vm:7",
+   "serial": 7090,
+   "logical_words": [
+    52344,
+    52345,
+    52346,
+    52347,
+    52348,
+    52349,
+    52350,
+    52351
+   ],
+   "value": "3dcf0000bebb00003ebe0000be3000003e0800003e8c00003ea100003de00000",
+   "mask": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  }
+ ],
+ "checks_sha256": "768a79d00ac041ffc17c422a3c69d89f97b3ea17c976f9f7aab8b1679dec629a",
+ "protocol_fault_checks": {
+  "outputs": [
+   {
+    "name": "cp_svg_SW4__fault",
+    "width": 1
+   },
+   {
+    "name": "cp_svg_SW5__fault",
+    "width": 1
+   },
+   {
+    "name": "cp_svg_SW6__fault",
+    "width": 1
+   },
+   {
+    "name": "cp_svg_SW7__fault",
+    "width": 1
+   },
+   {
+    "name": "hleaf_SW__s_fault",
+    "width": 29
+   },
+   {
+    "name": "pgp_SW__fault",
+    "width": 1
+   },
+   {
+    "name": "su_SW0__fault",
+    "width": 1
+   },
+   {
+    "name": "su_SW0__lg_fault",
+    "width": 1
+   },
+   {
+    "name": "su_SW1__fault",
+    "width": 1
+   },
+   {
+    "name": "su_SW1__lg_fault",
+    "width": 1
+   },
+   {
+    "name": "su_SW2__fault",
+    "width": 1
+   },
+   {
+    "name": "su_SW2__lg_fault",
+    "width": 1
+   },
+   {
+    "name": "su_SW3__fault",
+    "width": 1
+   },
+   {
+    "name": "su_SW3__lg_fault",
+    "width": 1
+   },
+   {
+    "name": "subr_SW__fault",
+    "width": 1
+   },
+   {
+    "name": "sucore_NE__fault",
+    "width": 1
+   },
+   {
+    "name": "sucore_NW__fault",
+    "width": 1
+   },
+   {
+    "name": "sucore_SE__fault",
+    "width": 1
+   },
+   {
+    "name": "sucore_SW__fault",
+    "width": 1
+   }
+  ],
+  "per_part_checks": 19,
+  "required_NEV_by_part": [
+   4155
+  ],
+  "sticky_check_guard_serial_edges": 16
+ },
+ "runtime_qualified": false
+}

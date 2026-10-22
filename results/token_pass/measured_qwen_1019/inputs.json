@@ -52,15 +52,15 @@
  },
  "attention": {
   "grade": "DIAG",
-  "round_trip_plan_cycles": 1825,
-  "source": "1u compute<->KV D2D pair on dv2f18dh2 (claude/qw-tok-1019, results/rtl/qw_tok_1019/xdie_dh2/pair_img, 34/34 sources = qw-gen3): 35 layers bit-exact, mutants FAIL; roundtrip cmd issue -> r31 land 1840 = C2K 63 + KV service 1779 (KV side = kvs14c kvs_attn LAND=0 stand-in, not GEN9) + K2C; plan term = 1840 - 31 (r0..r31 landing spread) + 16 (plan done = first landed word + 16) = 1825. KV attention on GEN9 -> TOKSIM-QW/KV. TOKSIM-QW/KV: no full QK+softmax+PV16 attention measured on current KV RTL (GEN9 not built, KVJ-B2 unit not rebuildable) -> the 1779 KV service is the kvs14c stand-in => DIAG (D2D part C2K 63/K2C 62 REL)",
+  "round_trip_plan_cycles": 1827,
+  "source": "QW-TOKSCHED2 10-21: current-die compute<->KV D2D pair (QW-XDIE claude/qw-xdie-2150 486462c3f, results/rtl/xdie_qwen_1018/cur_r3: dv2f20g5r2b x d22bu r17, 35 layers bit-exact, mutants FAIL): roundtrip cmd issue -> r31 land 1842 = C2K cmd 32 + KV service 1779 + K2C r31 31; plan term = 1842 - 31 (r0..r31 landing spread) + 16 (plan done) = 1827. Replaces the dh2 pair 1840/1825 estimate rows. Window X / STATUS tail are a ledger die edge (sched/ledger.json). KV service 1779 = r17 static programme with PV pair streams + rz driven as outer-pin stimuli -> stays DIAG (full GEN9 QK+softmax+PV16 owed to TOK.QW.KV). Was: 1u compute<->KV D2D pair on dv2f18dh2 (claude/qw-tok-1019, results/rtl/qw_tok_1019/xdie_dh2/pair_img, 34/34 sources = qw-gen3): 35 layers bit-exact, mutants FAIL; roundtrip cmd issue -> r31 land 1840 = C2K 63 + KV service 1779 (KV side = kvs14c kvs_attn LAND=0 stand-in, not GEN9) + K2C; plan term = 1840 - 31 (r0..r31 landing spread) + 16 (plan done = first landed word + 16) = 1825. KV attention on GEN9 -> TOKSIM-QW/KV. TOKSIM-QW/KV: no full QK+softmax+PV16 attention measured on current KV RTL (GEN9 not built, KVJ-B2 unit not rebuildable) -> the 1779 KV service is the kvs14c stand-in => DIAG (D2D part C2K 63/K2C 62 REL)",
   "split": {
-   "c2k": 30,
+   "c2k": 32,
    "c2k_grade": "REL",
    "kv_service": 1779,
    "kv_service_grade": "DIAG",
    "k2c_grade": "REL",
-   "source": "link/record.json d2d_1u_pair (34/34 = gen3): C2K cmd issue -> land 30; KV service cmd land -> r31 issue 1779 (kvs14c kvs_attn stand-in, NOT GEN9 -> DIAG); K2C r31 issue -> land 31, minus the r0..r31 spread 31, plus plan done 16 = 16 (REL)"
+   "source": "QW-XDIE cur_r3 cur_pair (current dies): C2K cmd issue -> land 32 (Q31 33), KV service cmd land -> r31 issue 1779 (r17 programme, PV streams stimuli -> DIAG), K2C r31 issue -> land 31 minus spread 31 plus plan done 16 = 16 (REL); exposed D2D 64/layer (PHY9 72)"
   }
  },
  "attn_return": {
@@ -81,9 +81,10 @@
   "grade": "PRICED",
   "cycles": 52,
   "unfolded_cycles": 0,
-  "source": "TOK.QW.SCHED (TOKSIM-QW2 10-20): every priced die edge below is inserted into the dv_layer critical-path schedule at its stage boundary (dv_layer.compose die_edges); the old flat 52/layer term (landings 45 + n59 1 + ctlm 4 + 2) is retired",
+  "source": "superseded at compose time by sched.ledger (die_edges.edges below = TOKSIM-QW2 10-20 02:25 list, kept for reference)",
   "variants": [
-   "plan"
+   "plan",
+   "asbuilt"
   ],
   "edges": [
    {
@@ -203,7 +204,11 @@
   "note": "release die uses the serial MU calendar; no paired 4u TB exists for it (owed). Frame user 0 at 16 tok/frame = 4,768 tok/s vs 1u composed below.",
   "schedule_scale": {
    "ref_layer_period": 6842,
-   "rule": "4u frame is compute-layer bound on the OVL link schedule built at the 1u dh2 pair period 6,842/layer (link/record.json); every user-layer moves by the same folded die edges -> frame x (6842 + die_edges_per_layer) / 6842 (no die edge is in the link-schedule frame)"
+   "rule": "4u frame is compute-layer bound on the OVL link schedule built at the 1u dh2 pair period 6,842/layer (link/record.json); every user-layer moves by the cycles the schedule ledger adds per chained layer -> frame x (6842 + sched_added_per_layer) / 6842, sched_added = chained - chained(no die edges, dv2f14bi lane ages, measured AR, measured ages) (no die edge is in the link-schedule frame)"
   }
+ },
+ "sched": {
+  "ledger": "results/token_pass/measured_qwen_1019/sched/ledger.json",
+  "source": "QW-TOKSCHED 10-20 (TOK.QW.SCHED): one priced-edge ledger (die g5r2b + release successors) replaces die_edges.edges; lane ages from dv2f20g5r2b; SU8/VM8l age deltas and the COLL split AR price are absorbed by the lowering / compiler (variant asbuilt = g5r2b netlist only)"
  }
 }

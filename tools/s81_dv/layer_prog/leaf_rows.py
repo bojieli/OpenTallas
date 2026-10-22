@@ -8,6 +8,10 @@ H        0..31         vpx a_allgather RD rows / vp HLOAD a0 (norm input h)    d
 VPX      0..447        vpx row allgather (80 rows / rank, 320 + 32 / rank)      lower_vpx.py rows_of_rank (shares H by design:
                                                                                   the allgathered rows ARE the norm input)
 GAIN     64..79        host / frame gain rows -> vp GAIN                         lower_norm_smoke r_gain (inside VPX: same rows)
+FFNC     448..463      final FFN combined BF16-in-FP32 rows -> vp POST a1       final_ffn.py COMBINED / ROWS (9b2e70333)
+HEADG    480..495      released head-norm gains, BOOT-resident (16 rows = 64    lower_head.py (S81-RTLGAP/RG-HEAD 10-21): written
+                       FP32 / leaf, element order) -> vp GAIN of head.norm      once at boot by CTL target-5 row writes; no
+                                                                                  other writer, never in VPX (overwritten per layer)
 VS       512..663      vs operand / result rows (QR, QB, RA, RB, SW)             lower_vs.py VS_ROWS (SW_OUT 632 + 32)
 ENG      704..991      Engram K / V / W rows (L1 704.., L14 848.., 144 each)     eng_rowmap.py A0 / REGION_ROWS
 GU_ATTN  1000..1005    gunit L5 HC rows -> vp NORMR a0 = R (pre), POST a0 = R+1  lower_gu (dsdv_gunit_l5.sv:79-101; vp op 7)
@@ -15,7 +19,7 @@ GU_FFN   1008..1013    same for the ffn HC                                      
 GU_RT    1016..1018    gunit L1/L3 router rows: ids R, weights R+1 (m f), R+2    lower_gu (dsdv_gunit_l1.sv:150-163) -> vs SW
 """
 LEAF_ROWS = 1024
-REGIONS = dict(VPX=(0, 448), VS=(512, 664), ENG=(704, 992), GU_ATTN=(1000, 1006), GU_FFN=(1008, 1014), GU_RT=(1016, 1019))
+REGIONS = dict(VPX=(0, 448), FFNC=(448, 464), HEADG=(480, 496), VS=(512, 664), ENG=(704, 992), GU_ATTN=(1000, 1006), GU_FFN=(1008, 1014), GU_RT=(1016, 1019))
 SHARED = dict(H=('VPX', (0, 32)), GAIN=('VPX', (64, 80)))       # sub-ranges of a region by design (same data)
 GU_ROWS = dict(attn=REGIONS['GU_ATTN'][0], ffn=REGIONS['GU_FFN'][0], router=REGIONS['GU_RT'][0])
 

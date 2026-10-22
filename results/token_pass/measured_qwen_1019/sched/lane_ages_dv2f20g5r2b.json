@@ -1,0 +1,82 @@
+{
+ "schema": "opentallas.qwen.ctlm-lane-ages.v1",
+ "die": "dv2f20g5r2b out/case (ot-epyc6:/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5r2b)",
+ "why": "lane age = E + 1 (landing o register) of the GEN fwd_lanes.json lane (tools/qwen_layerbench/lane_ages_export.py, QW-TOKSCHED 10-20)",
+ "source": "ot-epyc6:/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5r2b/out/case/fwd_lanes.json",
+ "source_sha256": "56d798022deddeb4db8c2e6c032dfc482d7cd5a4d1fb4767915641e16082607a",
+ "lanes": {
+  "R_CMD": {
+   "bid": "dvw_cmd_wi",
+   "n": 27,
+   "E": 19,
+   "E_sta": 7,
+   "K": 2,
+   "E_basis": "land plan (die STA)"
+  },
+  "R_HR": {
+   "bid": "dvw_hr_wi",
+   "n": 26,
+   "E": 19,
+   "E_sta": 7,
+   "K": 2,
+   "E_basis": "land plan (die STA)"
+  },
+  "R_SS": {
+   "bid": "dvw_ss_wo",
+   "n": 23,
+   "E": 16,
+   "E_sta": 6,
+   "K": 3,
+   "E_basis": "land plan (die STA)"
+  },
+  "R_AG": {
+   "bid": "dvw_ag_wo",
+   "n": 24,
+   "E": 17,
+   "E_sta": 6,
+   "K": 4,
+   "E_basis": "land plan (die STA)"
+  },
+  "R_ST": {
+   "bid": "dvw_st_wi",
+   "n": 23,
+   "E": 12,
+   "E_sta": 2,
+   "K": 3,
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA"
+  },
+  "R_DD": {
+   "bid": "dvw_dd_wo",
+   "n": 27,
+   "E": 19,
+   "E_sta": 7,
+   "K": 6,
+   "E_basis": "land plan (die STA)"
+  },
+  "R_DR": {
+   "bid": "dvw_dr_wi",
+   "n": 29,
+   "E": 20,
+   "E_sta": 7,
+   "K": 3,
+   "E_basis": "land plan (die STA)"
+  },
+  "R_CTX": {
+   "bid": "dvw_mu_ctxrx_ctx_x",
+   "n": 10,
+   "E": 6,
+   "E_sta": 2,
+   "K": 7,
+   "E_basis": "estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA"
+  }
+ },
+ "R_CMD": 20,
+ "R_HR": 20,
+ "R_SS": 17,
+ "R_AG": 18,
+ "R_ST": 13,
+ "R_DD": 20,
+ "R_DR": 21,
+ "R_CTX": 7,
+ "XPF_TRANSPORT_EDGES": 21
+}

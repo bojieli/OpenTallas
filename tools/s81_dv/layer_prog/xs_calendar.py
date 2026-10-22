@@ -130,6 +130,19 @@ def ring_order(nbeat, slc):
     return [own, W, E]
 
 
+def q_command_lead(fam):
+    """CPR captures Q go/tag once; BF16 phases retain their original launch.
+
+    Match frame_wrap --cpr with OT_XS_Q_CPR=1. The launch row alone
+    advances: the element's internal go, stream requests and return edges stay
+    at their existing logical times.
+    """
+    if fam:
+        return 0
+    import os
+    return int(os.environ.get('OT_XS_Q_CPR', '0') == '1')
+
+
 def compile_phase(P, S, ph, slc, mutant=None):
     """the xs programme of one field phase: calendar rows, is_d words, gather arrivals, predicted shift D"""
     from pq_calendar import action_word
@@ -148,7 +161,7 @@ def compile_phase(P, S, ph, slc, mutant=None):
     tg = tc + CFG_TO_GO + (1 if mutant == 'shift' else 0)
     ev(a, accept_tag=0)
     ev(tc, cfg=1, cfg_tag=0)
-    ev(tg, launch=1, launch_tag=0)
+    ev(tg - q_command_lead(fam), launch=1, launch_tag=0)
     # payload delay XDLY behind cc and the xs beat latency (CTL_TO_BEAT - CTL_TO_CC = 6 = GO_TO_BEAT + XDLY)
     assert CTL_TO_BEAT - CTL_TO_CC == GO_TO_BEAT + XDLY
     ts = [tg + o - GO_TO_BEAT for o in offs]
@@ -189,7 +202,8 @@ def compile_phase(P, S, ph, slc, mutant=None):
     slack = min(head[g] - it for it, _, _, g in arr if g in head)
     D = ctl(tc) + CTL_TO_CC - CFG_WORD
     stalls = offs[-1] - (GO_TO_BEAT + nb - 1)
-    return dict(rows=rows, packed=packed, iss=iss, arr=arr, D=D, ts=ts, tg=tg, tc=tc, nbeat_x=nbeat, slack=slack,
+    return dict(rows=rows, packed=packed, iss=iss, arr=arr, D=D, ts=ts, tg=tg, tc=tc,
+                go_command_lead_edges=q_command_lead(fam), nbeat_x=nbeat, slack=slack,
                 stall_edges=stalls, off_load=off_load, fam=fam, K=K, nb=nb, sbase=sbase, cal_rows=len(tt),
                 end_iter=ctl(max(tt)) + 40)
 
@@ -249,7 +263,7 @@ def compile_pipeline(P, S, phases, slc, period, cfg_lead=48, acc_gap=10, retire_
         assert ta >= 0, ('accept before the segment start', n, ta)
         ev(ta, accept_tag=tag)
         ev(tc, cfg=1, cfg_tag=tag)
-        ev(tg, launch=1, launch_tag=tag)
+        ev(tg - q_command_lead(c['fam']), launch=1, launch_tag=tag)
         ts = [t + sh for t in c['ts']]
         for i, t in enumerate(ts):
             ev(t, stream_req=1, stream_tag=tag, stream_pos=0, stream_fam=c['fam'],
@@ -559,7 +573,14 @@ def cmd_cap(a):
     rec['env'] = XO.describe()
     rec['pairing_slot_collisions'] = slotc
     bad = rec['faults']
-    if XP.GU_MERGE:
+    if XP.GU_PROP:     # DRIVE-S81-GUPROP: SW row-pair capture layout; the consumer check is the gather map (gu_gather)
+        import gu_gather as GG
+        gg = GG.check(amap, fx.meta['experts'])[0]
+        gsl = [c for c in slotc if c['op'] in ('ffn.experts_gu', 'ffn.shared_gu')]
+        rec['gu_gather_check'] = dict(gg, gu_slot_collisions=len(gsl), PASS=gg['PASS'] and not gsl)
+        bad += 0 if rec['gu_gather_check']['PASS'] else 1
+        print('XS_CAP_GU_GATHER', json.dumps({k: v for k, v in rec['gu_gather_check'].items() if k != 'refusals_first'}))
+    elif XP.GU_MERGE:
         XP.GU_MERGE = False
         try:
             _r0, ref, _s0 = cap_emit(XP, fx, ops, ff)

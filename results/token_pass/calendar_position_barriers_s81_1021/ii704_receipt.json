@@ -1,0 +1,91 @@
+{
+  "grade": "MODEL only; production programme/descriptor anchor and full token incomplete",
+  "source": "59c744755",
+  "functional_engram_source": "d5e45464e",
+  "engram": {
+    "return_age": 640,
+    "old_ii": 576,
+    "actual_ii": 704,
+    "physical": "ra640a/b terminal FAIL; no adopted closed view"
+  },
+  "run": {
+    "host": "ot-gold1",
+    "unit": "oth-ubuntu-1959448-1792606311",
+    "exit": 0
+  },
+  "old_model": "calendar_causal_mtp.json.gz retained unchanged; old576 resource constraint superseded",
+  "calendar_sha256": {
+    "ar": "47e6fd85ad577b79002d75a5c9de1cfdd73330fe98b45d1d1622106974ee1444",
+    "mtp": "04145d2cd1b03ff3ff29d5047fb9791a0d77a6f80caaf6cdd58ccffc81f0b233"
+  },
+  "checker": {
+    "ar": {
+      "result": "PASS",
+      "collisions": 0,
+      "same_user_checked": true,
+      "source_sha256": "4d31a1a878400157e527297cc20df79bc4a2376b87e60cbaa1107e1323b8707c",
+      "position_graph_sha256": null,
+      "resources": 510,
+      "windows": 34250,
+      "negative_n_plus_1": {
+        "users": 51,
+        "result": "FAULT",
+        "collisions": 1
+      },
+      "negative_injected_shift": {
+        "collisions": 660,
+        "result": "FAULT"
+      }
+    },
+    "mtp": {
+      "result": "PASS",
+      "collisions": 0,
+      "same_user_checked": true,
+      "source_sha256": "4d31a1a878400157e527297cc20df79bc4a2376b87e60cbaa1107e1323b8707c",
+      "position_graph_sha256": "8fde842fb6f61fb31d6024c300dcbcd27538836d63f50f1faa90454f9d98ddc5",
+      "resources": 485,
+      "windows": 4112,
+      "negative_n_plus_1": {
+        "users": 2,
+        "result": "FAULT",
+        "collisions": 6
+      },
+      "negative_injected_shift": {
+        "collisions": null,
+        "result": "NOT_APPLICABLE: fewer than two admitted users"
+      }
+    }
+  },
+  "actual_reemission_comparison": {
+    "position_graph_equal": true,
+    "graph_sha256": "8fde842fb6f61fb31d6024c300dcbcd27538836d63f50f1faa90454f9d98ddc5",
+    "starts": [
+      0,
+      1259408,
+      2518816,
+      3778224,
+      5037632,
+      6297040
+    ],
+    "period": 7598864,
+    "draft_start": 7556448,
+    "draft_end": 7598728,
+    "host_tail_end": 7598862,
+    "notes": "Resource II increased to704 on both Engram owner stages; admitted spacing and exact graph dates unchanged after actual regeneration, not assumed. Existing admitted real link replay retains exact graph."
+  },
+  "rates": {
+    "ar": {
+      "users": 50,
+      "period": 1259408,
+      "per_user_tok_s": 952.8,
+      "aggregate_tok_s": 47641
+    },
+    "mtp": {
+      "users": 1,
+      "period": 7598864,
+      "per_user_tok_s": 656.8,
+      "aggregate_tok_s": 657
+    }
+  },
+  "scope": "Static resource checker only; old6f MTP overlap424 remains FAIL. AR and causal single-user MTP are MODEL rates. No claim that static KS source is connected to an executable full layer programme."
+}

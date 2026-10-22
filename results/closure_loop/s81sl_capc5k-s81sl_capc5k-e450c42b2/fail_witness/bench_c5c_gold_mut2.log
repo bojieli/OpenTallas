@@ -1,0 +1,18 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_capc5k-s81sl_capc5k-e450c42b2 bench bench_c5c_gold_mut2 host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/s81sl_capc5k-s81sl_capc5k-e450c42b2 log cl/bench_c5c_gold_mut2.a1b1.log captured 2026-10-20T22:41:52-07:00
+# fail_regex '^CAP_C5C_MUTANT_DETECTED MUT=2 '
+WRITE_MISMATCH edge 352 leaf 3 port 0 addr 34 data be997474
+WRITE_MISMATCH edge 359 leaf 0 port 0 addr 0 data 3f334718
+WRITE_MISMATCH edge 367 leaf 0 port 0 addr 0 data 3f334718
+WRITE_MISMATCH edge 371 leaf 0 port 0 addr 0 data 3f334718
+WRITE_MISMATCH edge 379 leaf 0 port 0 addr 0 data 3f334718
+WRITE_MISMATCH edge 397 leaf 3 port 0 addr 27 data 3ecbbb18
+WRITE_MISMATCH edge 408 leaf 4 port 0 addr 50 data bf800e8e
+WRITE_MISMATCH edge 412 leaf 4 port 0 addr 50 data bf800e8e
+WRITE_MISMATCH edge 440 leaf 2 port 0 addr 56 data be5299af
+WRITE_MISMATCH edge 444 leaf 2 port 0 addr 56 data be5299af
+MISSING row write edge 282 leaf 2 port 1 addr 39
+MISSING row write edge 325 leaf 0 port 1 addr 39
+MISSING row write edge 333 leaf 2 port 0 addr 1
+MISSING row write edge 340 leaf 2 port 1 addr 13
+CAP_C5C_MUTANT_DETECTED MUT=2 slcap_vec_c5m2

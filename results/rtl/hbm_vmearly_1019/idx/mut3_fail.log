@@ -1,0 +1,5 @@
+IDX_VME_N12 MUT3 IA0 EXPECT1 vmrt171 LB183 QL14 G4 blocks512 uses128 errors0 lb_bad0 fault0 exposed_r1 198 exposed_r2_dep 198 exposed_r3 198 raw_r2 827 A 208 534 860 1186 last_use 534 860 1186 1512 span 1102 lb_meas 183 digest c851296ee2039919
+IDX_VME_N12 FAIL exposure
+[15280000] %Fatal: tb_idx_vme_n12.sv:191: Assertion failed in tb_idx_vme_n12: IDX early issue: exposure check
+%Error: rtl/test/hbm_idx_static/tb_idx_vme_n12.sv:191: Verilog $stop
+Aborting...

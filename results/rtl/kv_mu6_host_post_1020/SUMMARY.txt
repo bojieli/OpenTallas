@@ -1,0 +1,9 @@
+tb_mu_peer_e2e: MU_PEER tb_mu_peer_e2e rc=0: PASS MU_PEER_E2E uidslot=0 release_checked_posts=12 rank_releases=96 users=4 rounds=3 steps=12 posts=12 rank_requests=96 peer_starts=84 writer_stages=432 overlap_dispatch=10 overlap_post=10 epochs_out_of_global_order=1 max_post_after_kv_done=34 cycles=10936
+tb_mu_peer_abort: MU_PEER tb_mu_peer_abort rc=0: PASS MU_PEER_ABORT cancels=3 (u0 terminated identity, u1+u2 live) posts=15 after 12 normal steps
+tb_mu_peer_e2e_uid: MU_PEER tb_mu_peer_e2e_uid rc=0: PASS MU_PEER_E2E uidslot=1 release_checked_posts=12 rank_releases=96 users=4 rounds=3 steps=12 posts=12 rank_requests=96 peer_starts=84 writer_stages=432 overlap_dispatch=10 overlap_post=10 epochs_out_of_global_order=1 max_post_after_kv_done=34 cycles=10936
+tb_mu_peer_abort_uid: MU_PEER tb_mu_peer_abort_uid rc=0: PASS MU_PEER_ABORT cancels=3 (u0 terminated identity, u1+u2 live) posts=15 after 12 normal steps
+uid0: MU_PEER uid0 rc=0: FAIL MU_PEER_E2E fails=13 (stopped)
+pr1: MU_PEER pr1 rc=0: FAIL MU_PEER_E2E fails=12 (stopped)
+pr2: MU_PEER pr2 rc=0: FAIL MU_PEER_E2E fails=12 (stopped)
+pc1: MU_PEER pc1 rc=0: FAIL MU_PEER_E2E fails=5 posts=12 requests=96 writer_stages=432
+sv1: MU_PEER sv1 rc=0: FAIL MU_PEER_E2E fails=12 (stopped)

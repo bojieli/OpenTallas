@@ -1,0 +1,31 @@
+{
+  "source_odb_sha256": "24903285cdac7df00bf6417dfb8bf206fa7438c30adf069e752650a97a31b3bb",
+  "groups": {
+    "data_control": {
+      "drivers": 10312,
+      "over32": 0,
+      "max_fanout": 32
+    },
+    "constant": {
+      "drivers": 648,
+      "over32": 0,
+      "max_fanout": 32
+    }
+  },
+  "clock_pin_native_master_counts": {
+    "DFFHQNx1_ASAP7_75t_R": 1253,
+    "DFFASRHQNx1_ASAP7_75t_R": 576,
+    "ICGx1_ASAP7_75t_R": 32
+  },
+  "clock_role_authority": "Actual Liberty ff/latch/clock:true same verified library hashes",
+  "sta_covered_flops": {
+    "tt": 1829,
+    "ff": 1829
+  },
+  "native_ff_clock_pins": 1829,
+  "all_clock_pins_bound": true,
+  "load_only_open_outputs": 122,
+  "load_only_clock_role_proved_all": true,
+  "max_pin_bbox_L1_um": 64.196,
+  "reach_over405": 0
+}
