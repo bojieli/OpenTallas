@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.s81hd.glue_r3.result.v1",
+ "bench": "tb_s81hd_ctl.sv unchanged via ot_s81hd_ctl_peer wrapper (run_hd_glue_r3_bench.sh), Verilator 5.050",
+ "base": "PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+ "mutants": {
+  "SLICE": "FAIL xa slice mismatch",
+  "TIE": "FAIL local best",
+  "TKF": "FAIL token count"
+ },
+ "measured_ages": {
+  "old": {
+   "go0": 184,
+   "tok0": 8736,
+   "go1": 9129,
+   "tok1": 17683
+  },
+  "r3": {
+   "go0": 196,
+   "tok0": 8788,
+   "go1": 9168,
+   "tok1": 17760
+  },
+  "delta": "stream start +12 cyc, token per position +52 (pos 0) / +38 rel. to go (pos 1); occupancy unchanged (8248-slice stream pipelined)"
+ },
+ "census": {
+  "status": "PASS",
+  "max_dynamic_loads": 32,
+  "violations": 0,
+  "tool": "hd_census.sh (yosys 0.68 + ABC, native_census.py)"
+ }
+}

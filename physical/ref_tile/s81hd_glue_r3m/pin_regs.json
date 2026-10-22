@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81hd_ctl_glue",
+ "enable": false,
+ "reason": "Source-registered (HD-CTL): every input lands in a pin flop, every output leaves a flop (ot_s81hd_hreg32 / kf / grx pin stages); a recipe pin stage would add unpriced edges."
+}
