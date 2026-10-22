@@ -235,7 +235,7 @@ module tb_ot_hfd_coll_n1s0_lp_ars256;
             nc = nc + 1; if (lo_program_fault !== fo_program_fault) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=program_fault cycle=%0d flat=%h landed=%h", cyc, fo_program_fault, lo_program_fault); end
             nc = nc + 1; if (lo_hgi_busy !== fo_hgi_busy) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hgi_busy cycle=%0d flat=%h landed=%h", cyc, fo_hgi_busy, lo_hgi_busy); end
             nc = nc + 1; if (lo_hgi_done !== fo_hgi_done) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hgi_done cycle=%0d flat=%h landed=%h", cyc, fo_hgi_done, lo_hgi_done); end
-            nc = nc + 1; if (((lo_hgi_fault & ~fo_hgi_fault) | (dlo_hgi_fault[11] & fo_hgi_fault & ~lo_hgi_fault)) !== 0) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH sticky port=hgi_fault cycle=%0d flat=%h landed=%h", cyc, fo_hgi_fault, lo_hgi_fault); end
+            nc = nc + 1; if (((lo_hgi_fault & ~fo_hgi_fault) | ((fo_hgi_fault & dlo_hgi_fault[0] & dlo_hgi_fault[1] & dlo_hgi_fault[2] & dlo_hgi_fault[3] & dlo_hgi_fault[4] & dlo_hgi_fault[5] & dlo_hgi_fault[6] & dlo_hgi_fault[7] & dlo_hgi_fault[8] & dlo_hgi_fault[9] & dlo_hgi_fault[10] & dlo_hgi_fault[11]) & ~lo_hgi_fault)) !== 0) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH sticky port=hgi_fault cycle=%0d flat=%h landed=%h", cyc, fo_hgi_fault, lo_hgi_fault); end
             nc = nc + 1; if (lo_inj_rd !== dlo_inj_rd[4]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=inj_rd cycle=%0d flat=%h landed=%h", cyc, dlo_inj_rd[4], lo_inj_rd); end
             nc = nc + 1; if (lo_inj_idx !== dlo_inj_idx[4]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=inj_idx cycle=%0d flat=%h landed=%h", cyc, dlo_inj_idx[4], lo_inj_idx); end
             nc = nc + 1; if (lo_hgi_inj_addr !== dlo_hgi_inj_addr[4]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hgi_inj_addr cycle=%0d flat=%h landed=%h", cyc, dlo_hgi_inj_addr[4], lo_hgi_inj_addr); end
@@ -258,8 +258,8 @@ module tb_ot_hfd_coll_n1s0_lp_ars256;
             nc = nc + 1; if (lo_ag_d !== fo_ag_d) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=ag_d cycle=%0d flat=%h landed=%h", cyc, fo_ag_d, lo_ag_d); end
             nc = nc + 1; if (lo_vm_rq !== dlo_vm_rq[3]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=vm_rq cycle=%0d flat=%h landed=%h", cyc, dlo_vm_rq[3], lo_vm_rq); end
             nc = nc + 1; if (lo_vm_kq !== dlo_vm_kq[5]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=vm_kq cycle=%0d flat=%h landed=%h", cyc, dlo_vm_kq[5], lo_vm_kq); end
-            nc = nc + 1; if (((lo_fault & ~fo_fault) | (dlo_fault[11] & fo_fault & ~lo_fault)) !== 0) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH sticky port=fault cycle=%0d flat=%h landed=%h", cyc, fo_fault, lo_fault); end
-            nc = nc + 1; if (((lo_fault_cause & ~fo_fault_cause) | (dlo_fault_cause[11] & fo_fault_cause & ~lo_fault_cause)) !== 0) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH sticky port=fault_cause cycle=%0d flat=%h landed=%h", cyc, fo_fault_cause, lo_fault_cause); end
+            nc = nc + 1; if (((lo_fault & ~fo_fault) | ((fo_fault & dlo_fault[0] & dlo_fault[1] & dlo_fault[2] & dlo_fault[3] & dlo_fault[4] & dlo_fault[5] & dlo_fault[6] & dlo_fault[7] & dlo_fault[8] & dlo_fault[9] & dlo_fault[10] & dlo_fault[11]) & ~lo_fault)) !== 0) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH sticky port=fault cycle=%0d flat=%h landed=%h", cyc, fo_fault, lo_fault); end
+            nc = nc + 1; if (((lo_fault_cause & ~fo_fault_cause) | ((fo_fault_cause & dlo_fault_cause[0] & dlo_fault_cause[1] & dlo_fault_cause[2] & dlo_fault_cause[3] & dlo_fault_cause[4] & dlo_fault_cause[5] & dlo_fault_cause[6] & dlo_fault_cause[7] & dlo_fault_cause[8] & dlo_fault_cause[9] & dlo_fault_cause[10] & dlo_fault_cause[11]) & ~lo_fault_cause)) !== 0) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH sticky port=fault_cause cycle=%0d flat=%h landed=%h", cyc, fo_fault_cause, lo_fault_cause); end
             nc = nc + 1; if (lo_done !== fo_done) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=done cycle=%0d flat=%h landed=%h", cyc, fo_done, lo_done); end
             nc = nc + 1; if (lo_stat_cycles !== dlo_stat_cycles[3]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=stat_cycles cycle=%0d flat=%h landed=%h", cyc, dlo_stat_cycles[3], lo_stat_cycles); end
         end
@@ -269,7 +269,4 @@ module tb_ot_hfd_coll_n1s0_lp_ars256;
         else $display("LP_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d stimulus=%0s", MUT, bad, nc, what);
         $finish; end endtask
     `include "rtl/hbm_accel/generic/collective/p2p/landed/stim_n1s0_lp_ar256.vh"
-`ifdef OT_COLL_LP_DIAG
-    always @(negedge clk) if (cyc>=3070 && cyc<=3130) $display("LP_DIAG cycle=%0d flatPF=%b landedPF=%b landedInPF=%b flatF=%b landedF=%b flatC=%h landedC=%h",cyc,u_flat.protocol_fault,u_lp.protocol_fault,u_lp.protocol_fault__l_hd,fo_fault,lo_fault,fo_fault_cause,lo_fault_cause);
-`endif
 endmodule
