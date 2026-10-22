@@ -1,0 +1,289 @@
+{
+ "name": "qkd_d2d_cal_seq_pin_bc4_ew1627_r16_rope",
+ "top": "qkd_d2d_cal_seq_pin_bc4",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4_ew1627_r16_rope.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_bc4.sv"
+ ],
+ "params": {
+  "EP_SKEW": 3,
+  "GO_OFS": 0,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 25.92,
+  "h": 34.56,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "epoch_go",
+   "halt"
+  ],
+  "E": [
+   "cal_ready",
+   "running",
+   "layer",
+   "adm_done",
+   "tok_start",
+   "fault",
+   "bcfg_tx_we",
+   "bcfg_rx_we",
+   "bcfg_addr",
+   "bcfg_data"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "reload"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qkd_d2d_cal_seq_pin_bc4_ew1627_r16_rope/io_pins.tcl",
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Explicit RTL pin registers: every functional input (reload, epoch_go, halt, bcfg_*) is captured once at the pin (51 capture flops in 4 reset banks, bcfg_tx/rx_we replicated x4) and every output is a tile output register. A generic extra stage would shift the compiled calendar."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:KV-PROG17",
+  "branch": "claude/kv-prog17-1020",
+  "tag": "ew595r16",
+  "purpose": "KV link calendar sequencer bc4 on the ATTN_R16 pair image d2d_cal_image_mu_ew1627_r16_rope.svh (KV-PROG17 10-20: r16 attention tile K RESULT +1 / STATUS +213 a layer on the 595 embed window; START table + token period 258,048). Same structure/ports/edges as the CLOSED bc4 / bc4_ew595 (source differs only in the `include); static, no credits.",
+  "extra_paths": [
+   "rtl/qwen_sys/d2d_static_20261015",
+   "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+   "rtl/test/qwen_static_kv/tb_kv_dcal_bc4.sv",
+   "tools/qwen_static_kv/run_dcal_bc4_production.sh",
+   "tools/qwen_static_kv/run_dcal_bc4.sh",
+   "tools/qwen_static_kv/gen_dcal_bc4.py",
+   "results/arch/kv_dcal_bc3safe_1019/frozen_outer_wrapper.v",
+   "physical/ref_tile/qkd_d2d_cal_seq_pin_bc4_ew1627_r16_rope",
+   "results/rtl/kv_prog17_1020",
+   "tools/qwen_static_kv/gen_dcal_bc4_ew.py"
+  ],
+  "benches": [
+   {
+    "name": "boot_cfg_admission_seg2_token_seg1_vs_pin_tile_k22",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p0 0",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "DCALBC_PASS mut0"
+   },
+   {
+    "name": "mut1_sequencer_writes_dropped_todays_die",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p1 1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "token run would replay segment 9",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_production_m1.log"
+   },
+   {
+    "name": "mut2_stale_nonmu_boot_image",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p2 2",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "stale 1",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_production_m2.log"
+   },
+   {
+    "name": "mut3_boot_sequencer_collision",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p3 3",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "col 1 run 0 stale 0 early 0",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_production_m3.log"
+   },
+   {
+    "name": "mut4_boot_write_while_running",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p4 4",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "run 1",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_production_m4.log"
+   },
+   {
+    "name": "mut5_admission_before_boot_rx_base",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p5 5",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "early 1",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_production_m5.log"
+   },
+   {
+    "name": "miter_vs_frozen_bc2_wrapper_600k_edges_53_bits",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x0 0",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "BC4_MITER_PASS edges=600000"
+   },
+   {
+    "name": "miter_mut1_reset_landing_stage_dropped",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x1 1",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "BC4_MITER mismatch",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_miter_m1.log"
+   },
+   {
+    "name": "miter_mut2_sticky_fault_reset_value",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x2 2",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "BC4_MITER mismatch",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_miter_m2.log"
+   },
+   {
+    "name": "miter_mut3_payload_reset_value",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x3 3",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "BC4_MITER mismatch",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_miter_m3.log"
+   },
+   {
+    "name": "mut7_stale_base_window_boot_image",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p7 7",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "DCALBC_FAIL mut7",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_production_m7.log"
+   },
+   {
+    "name": "miter_mut7_reference_on_base_window_image",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x7 7",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "BC4_MITER mismatch",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_miter_m7.log"
+   },
+   {
+    "name": "mut8_stale_nonr16_boot_image",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4_production.sh {RUN}/p8 8",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "DCALBC_FAIL mut8",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_production_m8.log"
+   },
+   {
+    "name": "miter_mut8_reference_on_nonr16_image",
+    "cmd": "EW=1627_r16_rope bash tools/qwen_static_kv/run_dcal_bc4.sh {RUN}/x8 8",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "BC4_MITER mismatch",
+    "fail_witness": "results/rtl/kv_prog17_1020/r16_dcal_bc4_miter_m8.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_cal_seq_pin_bc4_ew1627_r16_rope/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_bc4_ew1627_r16_rope"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "RoPE actual73-record EW1627 pairedimage include; admission bases compiled10 instead9. Source candidate, no inherited closure/equivalence claim.",
+ "reset_landing": {
+  "enable": false,
+  "reason": "The RTL owns the 2-stage landing at the face: rst_n -> land0 (1 load) -> 4 kept land1 copies (synchronous assert and release, as the frozen generated landing), then rel0 -> 19 kept rel1 release copies; every reset source drives <= 23 loads (bc3safe census c494be2d7: raw reset 1, outer Q max 23, inner Q max 16). A flow landing would add 2 more release edges to the scheduled constant."
+ },
+ "safe_design_checklist": {
+  "1_pins": "PENDING current RoPE source physical closure; previous bc4 record does not qualify this image",
+  "2_reach": "PENDING current RoPE source physical closure; previous bc4 record does not qualify this image",
+  "3_fanout": "PENDING current RoPE source physical closure; previous bc4 record does not qualify this image",
+  "4_depth": "PENDING current RoPE source physical closure; previous bc4 record does not qualify this image",
+  "5_storage": "PENDING current RoPE source physical closure; previous bc4 record does not qualify this image",
+  "6_floorplan": "PENDING current RoPE source physical closure; previous bc4 record does not qualify this image",
+  "7_clock": "PENDING current RoPE source physical closure; previous bc4 record does not qualify this image",
+  "8_schedule": "PENDING current RoPE source physical closure; previous bc4 record does not qualify this image"
+ }
+}
