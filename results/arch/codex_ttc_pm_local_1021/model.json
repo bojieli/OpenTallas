@@ -1,0 +1,44 @@
+{
+  "scope": "physical placement structure only",
+  "source_base": "dfb8b417f",
+  "rtl_changed": false,
+  "cycles_added": 0,
+  "std_area_um2": 12890.0,
+  "measured_prior_paths": {
+    "pm_address_final_wire_ps": 444.79,
+    "reset_final_wire_ps": 567.04,
+    "safe15b_signoff_placement_setup_wns_ps": -268.2
+  },
+  "smoke": {
+    "host": "ot-epyc5",
+    "unit": "oth-ubuntu-964605-1792640223",
+    "fixture": "safe15b actual 3_3_place_gp.odb",
+    "variants": {
+      "a": {
+        "band_um": [
+          226.8,
+          129.6,
+          432,
+          540
+        ],
+        "selected_cells": 2648,
+        "selected_std_area_um2": 357.22458,
+        "band_area_um2": 84214.07999999999,
+        "hook_sha256": "13c8f44a469e24fcf95150ae4e08a8cd2122776873f1ee445269624f3a3eb62e"
+      },
+      "b": {
+        "band_um": [
+          226.8,
+          129.6,
+          453.6,
+          604.8
+        ],
+        "selected_cells": 2648,
+        "selected_std_area_um2": 357.22458,
+        "band_area_um2": 107775.35999999999,
+        "hook_sha256": "c4b76e94282e21f7d7149877c267cfb4e99f9f3155607f7f65282be4104e403a"
+      }
+    }
+  },
+  "timing_qualification": "OPEN; normal MAIN/FALLBACK gates required"
+}
