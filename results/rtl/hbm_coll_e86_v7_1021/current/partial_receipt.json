@@ -14,5 +14,16 @@
     "status": "PASS"
   },
   "mutants": "Still running; no final qualification claim",
-  "physical_gate": "Native census pending"
+  "physical_gate": "Native census pending",
+  "collected_local_time": "2026-10-21T22:39:47.728659",
+  "actual_completed_mutants": {
+    "1": 132,
+    "3": 1252,
+    "4": 1542
+  },
+  "remaining_mutants": [
+    5,
+    6
+  ],
+  "actual_result": "Positive 4000 cycles PASS errors0; completed mutants fail numerically; remaining builds still progressing. No complete qualifier claim."
 }
