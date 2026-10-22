@@ -1,0 +1,441 @@
+{
+  "schema": "opentallas.source_clock_ownership.v1",
+  "assembly_source": "16a35bc82",
+  "selected_source": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_rl_sr_gs2_g6c_rope_ovl.sv",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_rl_sr_gs2_g6c_rope_ovl.sv": "5292c0d1631cd60f5a3dd2a76370b0e40fbb10cf5310b6c85f975835f37ac606",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv": "11d27a69443b998136e424f93bbac4c5f986734f20c262c31f41b1087b54702e",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv": "f5b97a6e1a23b855cc4cf4f6c52973ba6d5d117f9da85cea275a2d6cfa8bdf53",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "tools/qwen_kv_die/kv_static_die.py": "7a34d1e00440e4b78c2748383d2df6ce6b04d19625ff0dfd0f21c15becfbe679"
+  },
+  "module_body_sha256": {
+    "qkd_kvs_pc": "2549b2919310bbf3167abe28d543717d3b56d4815d8976173dfba3da230556d1",
+    "qkd_kvs_pc_h": "5f8d9246ebf97f0a52636de8d1fdd473b77e3b301026c096de3f2de86d2b6f9d"
+  },
+  "ports": {
+    "qkd_kvs_pc": {
+      "ck": {
+        "direction": "input",
+        "width": 1,
+        "classification": "existing_clock_entry",
+        "clock": "ck"
+      },
+      "rst_n": {
+        "direction": "input",
+        "width": 1,
+        "classification": "async_reset_input",
+        "landing_clock": "ck",
+        "release_edges": 2
+      },
+      "hck": {
+        "direction": "input",
+        "width": 1,
+        "classification": "existing_clock_entry",
+        "clock": "hck"
+      },
+      "hrst_n": {
+        "direction": "input",
+        "width": 1,
+        "classification": "async_reset_input",
+        "landing_clock": "hck",
+        "release_edges": 2
+      },
+      "pc__pc": {
+        "direction": "input",
+        "width": 5,
+        "classification": "constant_die_identity_strap",
+        "first_capture_clock": "ck",
+        "additional_clock": "hck",
+        "witness": "pc_sr/st_sr and chain strap registers on ck; downstream HBM pc_q samples the stable identity. This is not a blanket dynamic clock alias."
+      },
+      "pc__pi": {
+        "direction": "input",
+        "width": 289,
+        "classification": "data",
+        "capture_clock": "hck"
+      },
+      "pc__ki": {
+        "direction": "input",
+        "width": 33,
+        "classification": "data",
+        "capture_clock": "hck"
+      },
+      "pc__fi": {
+        "direction": "input",
+        "width": 1,
+        "classification": "data",
+        "capture_clock": "hck"
+      },
+      "pc__cfg_stack": {
+        "direction": "input",
+        "width": 2,
+        "classification": "constant_die_identity_strap",
+        "first_capture_clock": "ck",
+        "additional_clock": "hck",
+        "witness": "pc_sr/st_sr and chain strap registers on ck; downstream HBM pc_q samples the stable identity. This is not a blanket dynamic clock alias."
+      },
+      "pc__front_hbm_data": {
+        "direction": "input",
+        "width": 4,
+        "classification": "unused_under_exact_selected_SRAM_body",
+        "clock": null,
+        "witness": "Selected SRAM modules declare legacy vector but SRAM clocks use pll_hbm=hck; no posedge bank-data vector process."
+      },
+      "pc__return_hbm_data": {
+        "direction": "input",
+        "width": 4,
+        "classification": "unused_under_exact_selected_SRAM_body",
+        "clock": null,
+        "witness": "Selected SRAM modules declare legacy vector but SRAM clocks use pll_hbm=hck; no posedge bank-data vector process."
+      },
+      "x__est__0_1": {
+        "direction": "input",
+        "width": 1,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "pc__land_er": {
+        "direction": "input",
+        "width": 261,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "pc__hes": {
+        "direction": "input",
+        "width": 288,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "pc__fo": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "hck"
+      },
+      "pc__hfx": {
+        "direction": "output",
+        "width": 3,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__er": {
+        "direction": "output",
+        "width": 261,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__ko": {
+        "direction": "output",
+        "width": 33,
+        "classification": "data",
+        "launch_clock": "hck"
+      },
+      "pc__po": {
+        "direction": "output",
+        "width": 328,
+        "classification": "data",
+        "launch_clock": "hck"
+      },
+      "pc__completion_v": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__completion_we": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__land_es": {
+        "direction": "output",
+        "width": 288,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__her": {
+        "direction": "output",
+        "width": 261,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__hcompletion_v": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__hcompletion_we": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "i_grp": {
+        "direction": "input",
+        "width": 33,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "i_grp_h": {
+        "direction": "input",
+        "width": 95,
+        "classification": "data",
+        "capture_clock": "hck"
+      },
+      "i_next": {
+        "direction": "input",
+        "width": 780,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "i_prev": {
+        "direction": "input",
+        "width": 299,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "o_grp": {
+        "direction": "output",
+        "width": 295,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "o_grp_h": {
+        "direction": "output",
+        "width": 10,
+        "classification": "data",
+        "launch_clock": "hck"
+      },
+      "o_next": {
+        "direction": "output",
+        "width": 299,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "o_prev": {
+        "direction": "output",
+        "width": 780,
+        "classification": "data",
+        "launch_clock": "ck"
+      }
+    },
+    "qkd_kvs_pc_h": {
+      "ck": {
+        "direction": "input",
+        "width": 1,
+        "classification": "existing_clock_entry",
+        "clock": "ck"
+      },
+      "rst_n": {
+        "direction": "input",
+        "width": 1,
+        "classification": "async_reset_input",
+        "landing_clock": "ck",
+        "release_edges": 2
+      },
+      "hck": {
+        "direction": "input",
+        "width": 1,
+        "classification": "existing_clock_entry",
+        "clock": "hck"
+      },
+      "hrst_n": {
+        "direction": "input",
+        "width": 1,
+        "classification": "async_reset_input",
+        "landing_clock": "hck",
+        "release_edges": 2
+      },
+      "pc__pc": {
+        "direction": "input",
+        "width": 5,
+        "classification": "constant_die_identity_strap",
+        "first_capture_clock": "ck",
+        "additional_clock": "hck",
+        "witness": "pc_sr/st_sr and chain strap registers on ck; downstream HBM pc_q samples the stable identity. This is not a blanket dynamic clock alias."
+      },
+      "pc__pi": {
+        "direction": "input",
+        "width": 289,
+        "classification": "data",
+        "capture_clock": "hck"
+      },
+      "pc__ki": {
+        "direction": "input",
+        "width": 33,
+        "classification": "data",
+        "capture_clock": "hck"
+      },
+      "pc__fi": {
+        "direction": "input",
+        "width": 1,
+        "classification": "data",
+        "capture_clock": "hck"
+      },
+      "pc__cfg_stack": {
+        "direction": "input",
+        "width": 2,
+        "classification": "constant_die_identity_strap",
+        "first_capture_clock": "ck",
+        "additional_clock": "hck",
+        "witness": "pc_sr/st_sr and chain strap registers on ck; downstream HBM pc_q samples the stable identity. This is not a blanket dynamic clock alias."
+      },
+      "pc__front_hbm_data": {
+        "direction": "input",
+        "width": 4,
+        "classification": "unused_under_exact_selected_SRAM_body",
+        "clock": null,
+        "witness": "Selected SRAM modules declare legacy vector but SRAM clocks use pll_hbm=hck; no posedge bank-data vector process."
+      },
+      "pc__return_hbm_data": {
+        "direction": "input",
+        "width": 4,
+        "classification": "unused_under_exact_selected_SRAM_body",
+        "clock": null,
+        "witness": "Selected SRAM modules declare legacy vector but SRAM clocks use pll_hbm=hck; no posedge bank-data vector process."
+      },
+      "x__est__0_1": {
+        "direction": "input",
+        "width": 1,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "pc__land_er": {
+        "direction": "input",
+        "width": 261,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "pc__hes": {
+        "direction": "input",
+        "width": 288,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "pc__fo": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "hck"
+      },
+      "pc__hfx": {
+        "direction": "output",
+        "width": 3,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__er": {
+        "direction": "output",
+        "width": 261,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__ko": {
+        "direction": "output",
+        "width": 33,
+        "classification": "data",
+        "launch_clock": "hck"
+      },
+      "pc__po": {
+        "direction": "output",
+        "width": 328,
+        "classification": "data",
+        "launch_clock": "hck"
+      },
+      "pc__completion_v": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__completion_we": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__land_es": {
+        "direction": "output",
+        "width": 288,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__her": {
+        "direction": "output",
+        "width": 261,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__hcompletion_v": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "pc__hcompletion_we": {
+        "direction": "output",
+        "width": 1,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "i_grp": {
+        "direction": "input",
+        "width": 33,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "i_grp_h": {
+        "direction": "input",
+        "width": 95,
+        "classification": "data",
+        "capture_clock": "hck"
+      },
+      "i_next": {
+        "direction": "input",
+        "width": 780,
+        "classification": "data",
+        "capture_clock": "ck"
+      },
+      "o_grp": {
+        "direction": "output",
+        "width": 295,
+        "classification": "data",
+        "launch_clock": "ck"
+      },
+      "o_grp_h": {
+        "direction": "output",
+        "width": 10,
+        "classification": "data",
+        "launch_clock": "hck"
+      },
+      "o_next": {
+        "direction": "output",
+        "width": 299,
+        "classification": "data",
+        "launch_clock": "ck"
+      }
+    }
+  },
+  "stage_notices": {
+    "kick_hck": 1,
+    "fault_hck": 1,
+    "boot_ready_ck": 1,
+    "reset_release_edges_per_own_domain": 2,
+    "sticky_hfx_export_ck": 1,
+    "extra_i_grp_ck": 0,
+    "extra_i_grp_h_hck": 0
+  },
+  "clock_witnesses": {
+    "phy_io": "qkd_kvpc_s_sched: rv_q/ki_q/fi_q and po/fo on hclk; u_tap clock hclk. Tile ties hclk-derived PLL inputs to hck.",
+    "return": "qkd_kvpc_s_return write clock hck, expected/actual core side ck.",
+    "front": "qkd_kvpc_s_front writes/reads under pll_hbm tied hck; legacy bank clock vector unused.",
+    "chain_and_boot": "qkd_kvpc_s_chain, rhead/rhop and esm clock ck; ebr_q captures boot_ready on ck.",
+    "reset": "Separate ot_reset_sync ASYNC_STAGES2 instances land rst_n on ck and hrst_n on hck.",
+    "hfx": "hfx_q sticky OR register under ck and landed ck reset."
+  },
+  "qualification": false,
+  "scope": "Only these exact baseline module bodies and source bytes. No legacy g6c, sr13/sr14, native32, physical view, timing exception, selected-net root mapping or final GEN qualification transfers. Bind actual generated net names only after an actual source-matched GEN case exists."
+}
