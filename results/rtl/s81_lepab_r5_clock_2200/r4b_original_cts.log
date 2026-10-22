@@ -1,0 +1,123 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_s81sl_lep_mu_ab_regional_r4l_asap7_ref_gate/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_s81sl_lep_mu_ab_regional_r4l_asap7_ref_gate/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_s81sl_lep_mu_ab_regional_r4l_asap7_ref_gate/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_s81sl_lep_mu_ab_regional_r4l_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+REF_TILE spine: child insertion targets 
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_SPINE sym: 1399 flop leaves, 0 insertion leaves (0 on their earliest tap), 312 tree nodes, estimated latest flop leaf 1070 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_pairA can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_pairB can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 1399 sinks 28790 cells 1730 leaf arrival 539.2..677.0 ps (spread 137.8) pad 60.0 / 14.0 ps
+OT_SPINE tree pad: 508 early leaves served by 416 pad cells
+OT_SPINE iter 1 (coarse) leaves 1399 sinks 28790 cells 2146 leaf arrival 600.3..684.5 ps (spread 84.2) pad 67.3 / 14.0 ps
+OT_SPINE tree pad: 1070 early leaves served by 397 pad cells
+OT_SPINE iter 2 (fine) leaves 1399 sinks 28790 cells 2543 leaf arrival 613.9..687.4 ps (spread 73.4) pad 67.3 / 19.3 ps
+OT_SPINE tree pad: 851 early leaves served by 498 pad cells
+OT_SPINE iter 3 (fine) leaves 1399 sinks 28790 cells 3041 leaf arrival 630.0..687.4 ps (spread 57.4) pad 67.3 / 16.1 ps
+OT_SPINE tree pad: 650 early leaves served by 459 pad cells
+OT_SPINE iter 4 (fine) leaves 1399 sinks 28790 cells 3500 leaf arrival 646.3..688.3 ps (spread 42.0) pad 67.3 / 16.1 ps
+OT_SPINE tree pad: 271 early leaves served by 236 pad cells
+OT_SPINE iter 5 (fine) leaves 1399 sinks 28790 cells 3736 leaf arrival 662.3..689.6 ps (spread 27.3) pad 67.3 / 16.2 ps
+OT_SPINE tree pad: 111 early leaves served by 111 pad cells
+OT_SPINE iter 6 (fine) leaves 1399 sinks 28790 cells 3847 leaf arrival 665.2..690.7 ps (spread 25.5) pad 67.3 / 16.2 ps
+OT_SPINE tree pad: 117 early leaves served by 117 pad cells
+OT_SPINE iter 7 (fine) leaves 1399 sinks 28790 cells 3964 leaf arrival 667.6..692.3 ps (spread 24.7) pad 67.3 / 16.1 ps
+OT_SPINE tree pad: 139 early leaves served by 139 pad cells
+OT_SPINE iter 8 (fine) leaves 1399 sinks 28790 cells 4103 leaf arrival 668.4..693.8 ps (spread 25.5) pad 67.3 / 16.2 ps
+OT_SPINE overshoot 25.466003 ps vs best 24.689757999999983 ps; restoring measured best
+OT_SPINE restored best checkpoint; removed 139 pad cells
+OT_SPINE restored measured spread 24.689757999999983 ps (best 24.689757999999983)
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 3964 spine cells
+OT_SPINE done port clk buffers 3964
+OT_SPINE sym: 1722 flop leaves, 0 insertion leaves (0 on their earliest tap), 363 tree nodes, estimated latest flop leaf 1246 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_pairA can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_pairB can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 1722 sinks 33936 cells 2105 leaf arrival 620.6..816.1 ps (spread 195.6) pad 60.0 / 14.0 ps
+OT_SPINE tree pad: 1345 early leaves served by 616 pad cells
+OT_SPINE iter 1 (coarse) leaves 1722 sinks 33936 cells 2721 leaf arrival 739.9..837.9 ps (spread 98.0) pad 68.5 / 14.0 ps
+OT_SPINE tree pad: 1614 early leaves served by 302 pad cells
+OT_SPINE iter 2 (fine) leaves 1722 sinks 33936 cells 3023 leaf arrival 757.6..839.2 ps (spread 81.5) pad 68.5 / 19.1 ps
+OT_SPINE tree pad: 1244 early leaves served by 633 pad cells
+OT_SPINE iter 3 (fine) leaves 1722 sinks 33936 cells 3656 leaf arrival 774.9..838.1 ps (spread 63.2) pad 68.5 / 16.1 ps
+OT_SPINE tree pad: 1046 early leaves served by 618 pad cells
+OT_SPINE iter 4 (fine) leaves 1722 sinks 33936 cells 4274 leaf arrival 790.9..839.5 ps (spread 48.6) pad 68.5 / 16.1 ps
+OT_SPINE tree pad: 551 early leaves served by 426 pad cells
+OT_SPINE iter 5 (fine) leaves 1722 sinks 33936 cells 4700 leaf arrival 806.8..840.5 ps (spread 33.6) pad 68.5 / 16.2 ps
+OT_SPINE tree pad: 202 early leaves served by 196 pad cells
+OT_SPINE iter 6 (fine) leaves 1722 sinks 33936 cells 4896 leaf arrival 815.7..841.3 ps (spread 25.6) pad 68.5 / 16.2 ps
+OT_SPINE tree pad: 59 early leaves served by 59 pad cells
+OT_SPINE iter 7 (fine) leaves 1722 sinks 33936 cells 4955 leaf arrival 817.7..842.4 ps (spread 24.6) pad 68.5 / 16.2 ps
+OT_SPINE tree pad: 99 early leaves served by 99 pad cells
+OT_SPINE iter 8 (fine) leaves 1722 sinks 33936 cells 5054 leaf arrival 818.0..843.2 ps (spread 25.2) pad 68.5 / 16.9 ps
+OT_SPINE overshoot 25.226684999999975 ps vs best 24.647095000000036 ps; restoring measured best
+OT_SPINE restored best checkpoint; removed 99 pad cells
+OT_SPINE restored measured spread 24.647095000000036 ps (best 24.647095000000036)
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 4955 spine cells
+OT_SPINE done port clk_a buffers 4955
+OT_SPINE sym: 1758 flop leaves, 0 insertion leaves (0 on their earliest tap), 365 tree nodes, estimated latest flop leaf 1207 ps
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_pairA can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_pairB can not be propagated.
+OT_RC_CAL spine: -placement clock wire R 0.014 C 0.105 (spine clock; platform setRC restored after)
+OT_SPINE iter 0 (coarse) leaves 1758 sinks 33936 cells 2140 leaf arrival 607.2..760.1 ps (spread 152.8) pad 60.0 / 14.0 ps
+OT_SPINE tree pad: 987 early leaves served by 638 pad cells
+OT_SPINE iter 1 (coarse) leaves 1758 sinks 33936 cells 2778 leaf arrival 686.5..780.2 ps (spread 93.7) pad 69.0 / 14.0 ps
+OT_SPINE tree pad: 1630 early leaves served by 466 pad cells
+OT_SPINE iter 2 (fine) leaves 1758 sinks 33936 cells 3244 leaf arrival 704.5..782.5 ps (spread 78.0) pad 69.0 / 18.1 ps
+OT_SPINE tree pad: 1349 early leaves served by 456 pad cells
+OT_SPINE iter 3 (fine) leaves 1758 sinks 33936 cells 3700 leaf arrival 721.9..782.1 ps (spread 60.2) pad 69.0 / 18.0 ps
+OT_SPINE tree pad: 1011 early leaves served by 655 pad cells
+OT_SPINE iter 4 (fine) leaves 1758 sinks 33936 cells 4355 leaf arrival 738.0..782.1 ps (spread 44.1) pad 69.0 / 16.1 ps
+OT_SPINE tree pad: 624 early leaves served by 490 pad cells
+OT_SPINE iter 5 (fine) leaves 1758 sinks 33936 cells 4845 leaf arrival 754.3..783.4 ps (spread 29.1) pad 69.0 / 16.1 ps
+OT_SPINE tree pad: 290 early leaves served by 266 pad cells
+OT_SPINE iter 6 (fine) leaves 1758 sinks 33936 cells 5111 leaf arrival 759.5..784.6 ps (spread 25.1) pad 69.0 / 16.2 ps
+OT_SPINE tree pad: 111 early leaves served by 111 pad cells
+OT_SPINE iter 7 (fine) leaves 1758 sinks 33936 cells 5222 leaf arrival 762.1..786.1 ps (spread 24.0) pad 69.0 / 16.2 ps
+OT_SPINE tree pad: 157 early leaves served by 157 pad cells
+OT_SPINE iter 8 (fine) leaves 1758 sinks 33936 cells 5379 leaf arrival 761.9..787.4 ps (spread 25.5) pad 69.0 / 16.2 ps
+OT_SPINE overshoot 25.533386000000064 ps vs best 23.982788000000028 ps; restoring measured best
+OT_SPINE restored best checkpoint; removed 157 pad cells
+OT_SPINE restored measured spread 23.982788000000028 ps (best 23.982788000000028)
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_RC_CAL restored platform setRC.tcl
+OT_SPINE legal: check_placement clean after 5222 spine cells
+OT_SPINE done port clk_b buffers 5222
+OT_HYBRID CTS roots clk clk_a clk_b; hard-child entries excluded
+OT_ENTRIES done: 0 independent hard entries, 3 glue CTS roots, 0 entry wires over 60.0 um
+OT_HYBRID CLOCK_RULE tt clk WARN pin_spread=47.5 scope=boundary sinks=28790 WARN: sinks 28790 > 15000 (guidance); insertion all_mean 867.1 / pin_mean 866.9 ps > 300 (guidance)
+OT_HYBRID CTS_MEASURE tt clk sinks=28790 reference_scope=boundary boundary_sinks=4600 min=847.627416090341 mean=866.8556748625886 max=895.1407428866579 all_mean=867.0729374466877
+OT_HYBRID CLOCK_RULE tt clk_a FAIL pin_spread=82.2 scope=boundary sinks=33936 WARN: sinks 33936 > 15000 (guidance); insertion all_mean 1085.7 / pin_mean 1089.4 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root clk_a pin-flop spread 82.2 ps > 80 at tt (boundary, 2227 of 33936 sinks)
+Elapsed time: 38:12.46[h:]min:sec. CPU time: user 3776.53 sys 446.05 (184%). Peak memory: 11178784KB.

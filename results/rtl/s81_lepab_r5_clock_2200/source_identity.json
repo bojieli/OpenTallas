@@ -1,0 +1,73 @@
+{
+  "exact_functional_source_ref": "a516fe9b1",
+  "sources": [
+    {
+      "path": "rtl/lib/ot_rst_relay_tree3.sv",
+      "git_blob": "37e72d9c9d7857f6d99c2077deaa5166ffcc7627",
+      "sha256": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "git_blob": "0259a926697bf544c4456016d1d475a2ae542e34",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "path": "rtl/lib/ot_sram_oldread_wreg.sv",
+      "git_blob": "c1ceded532a36d9738c6cabc11d3c9a9ebb695f0",
+      "sha256": "67df3246d6cb5648945ca87ef2fd2f46f6e631df622bc19f39432286f97a46f0"
+    },
+    {
+      "path": "rtl/lib/ot_sram_showahead_1r1w.sv",
+      "git_blob": "b7b1475fd13cafdfd47ff4b70dd092ea430d6ed6",
+      "sha256": "71d2f165d8280107d143a15dd2728b11a88007ca9df0ea7c099f19469a67c864"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+      "git_blob": "52da5863d01fdd4245ddc5a6b6f3ca33fa84be50",
+      "sha256": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915"
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land.sv",
+      "git_blob": "1c91f8bdb6f784f1f4ffd514b48f5dca8ebc4a3e",
+      "sha256": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54"
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land_n32.sv",
+      "git_blob": "4cd83497849ca48591b034cf08927cc889654ed3",
+      "sha256": "f65e61ea0f42b7eb10e3fa9af434e456927134504479043a0d8b3b1332bd1edf"
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+      "git_blob": "9b8e1478bca54c708a6bde9cb3550e57ca156f26",
+      "sha256": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab"
+    },
+    {
+      "path": "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+      "git_blob": "c6d03ec73c205c77b8c219a5dbc0d0d998ed7142",
+      "sha256": "6c8d60d1f1d6a9b91a8a6a39015fe94811a14fb5f59f7bba17b0934678c68b71"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+      "git_blob": "a6775e6f9f7d2b32075233cc8e62dc6a7e55d66e",
+      "sha256": "3106d0e1d6402b3212b05526e0ebbe5e636883caaf025820b0471e605aff82f2"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv",
+      "git_blob": "9ac79588ec6e04fcd989916458aad8a2e167db26",
+      "sha256": "980c3c70832cdc01024d4649616d3a3dc76e7a510c8b2e64801e2e0b4ec29f9d"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r3r.sv",
+      "git_blob": "c8d6649aa10836e859aad78fd49eadd5e9c21d7c",
+      "sha256": "2ee039c5a5e7d60ef256b000bf5b581534dc63a61dae6c4ba8789ee62fdf3d9a"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r4l.sv",
+      "git_blob": "95b8b00a32a4641135c5844e8676f84142854106",
+      "sha256": "a7b0c5769b36c5a2c8b88553cd644e28557b2461fe956bb9d257e96dc494a909"
+    }
+  ],
+  "rtl_changed": false,
+  "data_reset_ages_changed": false,
+  "qualification": false
+}

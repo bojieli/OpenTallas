@@ -43,5 +43,10 @@ if str(result.get('stage', '')).startswith('stg'):
             add(f'{cfg}/{path}')
     add('fx/L*_fixture.json')
     add('fx/L*.log')
+    # build receipts (STEWARD-TOKb-QW 10-21): the source/binary identity chain normalize_collected_stg.py verifies
+    add('overlay.sha256')
+    for cfg in ('rel', 'pos', 'mut'):
+        for path in (f'{cfg}.build_source.json', f'{cfg}.identity.log', f'{cfg}/build/obj_n12/build_identity.json'):
+            add(path)
 for name in sorted(names):
     sys.stdout.buffer.write(name.encode() + b'\0')

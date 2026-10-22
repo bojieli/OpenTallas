@@ -6,7 +6,12 @@ set -u -o pipefail
 OUT=$1; shift
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 mkdir -p "$OUT"
-SRC="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+SRC="rtl/lib/ot_sram_showahead_1r1w.sv
+rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv
+physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v
+physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v
+physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v
+physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
 rtl/common/ot_fwd_link_stage.sv
 rtl/hdc/ot_hdc_prefix.sv
@@ -32,7 +37,7 @@ tools/s81_dv/layer_prog/bk/tb_bk_layer.sv"
 ( sha256sum $SRC; $VL --version ) > "$OUT/sources.sha256"
 $VL --version > "$OUT/verilator.version"
 if [ ! -x "$OUT/obj/Vtb_bk_layer" ]; then
-  /usr/bin/time -v -o "$OUT/build.time" $VL --binary --timing -j "${J:-16}" -Wno-fatal -Wno-lint -Wno-style \
+  /usr/bin/time -v -o "$OUT/build.time" $VL ${VL_EXTRA:-} --binary --timing -j "${J:-16}" -Wno-fatal -Wno-lint -Wno-style \
     -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE \
     --top-module tb_bk_layer $SRC -Mdir "$OUT/obj" > "$OUT/build.log" 2>&1 || { tail -20 "$OUT/build.log"; echo "BK_LAYER BUILD FAIL"; exit 2; }
 fi
