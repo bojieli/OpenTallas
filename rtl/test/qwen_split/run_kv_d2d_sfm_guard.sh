@@ -7,10 +7,13 @@ OUT=$1
 W=$(cd "$(dirname "$0")/../.." && pwd); R=$(cd "$W/.." && pwd)
 V=${VERILATOR:-verilator}
 mkdir -p "$OUT"
+DREF=$W/qwen_sys/d2d_static_20261015
+# SQC-KDIE4 10-22: OVLM=1 reads the as-built OVL reference from the bench-only frozen copy (see d2d_ovl_asbuilt_ref/README.txt)
+[ "${OVLM:-0}" = 1 ] && DREF=$W/test/qwen_split/d2d_ovl_asbuilt_ref
 SRC=("$W/lib/ot_rst_pipe.sv" "$W/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv" "$W/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv"
  "$W/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv" "$W/qwen_sys/split_20261014/qkd_native_attention_record.sv"
- "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv"
- "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv"
+ "$DREF/ot_qwen_d2d_static.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv"
+ "$DREF/ot_qwen_d2d_dies.sv" "$DREF/ot_qwen_d2d_dies_ovl.sv" $([ "${OVLM:-0}" = 1 ] && echo "$DREF/ot_qwen_d2d_dies_sfo.sv")
  "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe_fo.sv"
  "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv" $([ "${SFM3:-0}" = 1 ] && echo "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv") "$W/qwen_split/qfd_kvn_static_transport.sv"
  "$R/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
