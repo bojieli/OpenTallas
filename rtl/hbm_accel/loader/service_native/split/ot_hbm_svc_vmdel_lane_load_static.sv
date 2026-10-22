@@ -96,24 +96,31 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
  always @(posedge clk) begin
   if(!reset_copy[2]) begin
    owned<=0;running<=0;bank_r<=0;slot_q<=0;
-   sticky<=0;group_q<=0;out_group<=0;out_v<=0;out_slot<=0;
+   sticky<=0;out_v<=0;
   end else begin
-   out_v<=raw_issue && !landing_fault;out_slot<=rs;out_group<=rg;
+   out_v<=raw_issue && !landing_fault;
    if(load_v&&!command_ok)sticky<=1;
-   if(lv2&&out_v)sticky<=1;
+   if(lv3&&out_v)sticky<=1;
    if(command_ok&&load_cmd[56])owned[load_cmd[0]]<=0;
    if(begin_v) begin
     if(owned[begin_bank] || (lstart && start_bank==begin_bank)) sticky<=1;
     else begin owned[begin_bank]<=1;if(begin_bank)epoch1<=begin_epoch;else epoch0<=begin_epoch;end
    end
    if(lstart && !start_ok) sticky<=1;
-   if(start_ok) begin running<=1;bank_r<=start_bank;slot_q<=6'd0;group_q<=2'd1;end
+   if(start_ok) begin running<=1;bank_r<=start_bank;slot_q<=6'd0;end
    if(running) begin
     if(slot_q==63 && group_q==GLAST) begin running<=0;owned[bank_r]<=0;end
-    else if(group_q==GLAST)begin slot_q<=slot_q+1'b1;group_q<=0;end
-    else group_q<=group_q+1'b1;
+    else if(group_q==GLAST)begin slot_q<=slot_q+1'b1;end
+
    end
   end
+ end
+ always @(posedge clk)begin
+  if(!reset_copy[5])group_q<=0;
+  else if(start_ok)group_q<=1;
+  else if(running&&!(slot_q==63&&group_q==GLAST))group_q<=(group_q==GLAST)?2'd0:group_q+1'b1;
+  if(!reset_copy[6])begin out_group<=0;out_slot<=0;end
+  else begin out_group<=rg;out_slot<=rs;end
  end
  // ---- the four PCs of this lane ----
  wire [256*NPC-1:0] macro_data; wire [NPC-1:0] f0,f1,bad_v;
@@ -124,27 +131,29 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
   for(genvar r=0;r<3;r=r+1)begin:reset_counter
    (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(2100+g*3+r)) u(.clk(clk),.d(rst_n),.q(rst_pc[r]));
   end
-  wire fb_count;
+  wire fb_count,fb_epoch;
+  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(2400+g)) u_epoch_bank(.clk(clk),.d(fill_bank_i[g]),.q(fb_epoch));
   (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(2200+g)) u_count_bank(.clk(clk),.d(fill_bank_i[g]),.q(fb_count));
-  wire[7:0]seen_part;
+  wire[7:0]seen_part,clear_counts0,clear_counts1;
   for(genvar part=0;part<8;part=part+1)begin:seen_slice
+   wire unused_clear0,unused_clear1;
    (* keep_hierarchy="yes" *) ot_hbm_dma_seen8 #(.COPY_ID(g*8+part),.BLOCK(part)) u(.clk(clk),.rst_n(rst_n),
     .begin_v_i(begin_v_i),.begin_bank_i(begin_bank_i),.start_bank_i(start_bank_i),.fill_bank_i(fill_bank_i[g]),.fill_slot_i(fill_slot_i[g*6+:6]),
     .load_bank_i(load_cmd_i[0]),.lstart(lstart),.start_ok(start_ok),.raw_done(running&&slot_q==63&&group_q==GLAST),
-    .load_release(command_ok&&load_cmd[56]),.fill_ok(fill_ok),.seen_current(seen_part[part]));
+    .load_release(command_ok&&load_cmd[56]),.fill_ok(fill_ok),.seen_current(seen_part[part]),.clear0(clear_counts0[part]),.clear1(clear_counts1[part]));
   end
   wire fb=fill_bank[g]; wire [5:0] fs=fill_slot[g*6+:6];
-  wire [15:0] ep=fb?epoch1:epoch0;
+  wire [15:0] ep=fb_epoch?epoch1:epoch0;
   wire seen_current=|seen_part;
   wire fill_ok=fill_v[g] && owned[fb] && fill_epoch[g*16+:16]==ep && !seen_current && !(issue && rb==fb) && !landing_fault;
   // n counts accepted (always distinct, !seen) writes, so &seen == (n==64) == n[6]: a registered full flag
   assign f0[g]=n0[6]; assign f1[g]=n1[6]; assign bad_v[g]=pbad;
   always @(posedge clk)begin
    if(!rst_pc[0])n0<=0;
-   else if(clear_bank&&!begin_bank)n0<=0;
+   else if(clear_counts0[0])n0<=0;
    else if(fill_ok&&!fb_count)n0<=n0+1'b1;
    if(!rst_pc[1])n1<=0;
-   else if(clear_bank&&begin_bank)n1<=0;
+   else if(clear_counts1[0])n1<=0;
    else if(fill_ok&&fb_count)n1<=n1+1'b1;
    if(!rst_pc[2])pbad<=0;
    else if(fill_v[g]&&!fill_ok)pbad<=1;
@@ -167,34 +176,42 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
  end
  wire [15:0]sector0=(NPC==4)?base_q+{5'b0,out_slot,out_group,3'b0}:base_q+{6'b0,out_slot,out_group[0],3'b0};
  // Static read commands carry exact source ownership and output destination. No arbitration.
- reg lv0,lv1,lv2;reg[61:0]lc0,lc1,lc2;
+ reg lv0,lv1,lv2,lv3;reg[61:0]lc0,lc1,lc2,lc3;
  always @(posedge clk)begin
-  if(!reset_copy[3])begin lv0<=0;lv1<=0;lv2<=0;end
-  else begin lv0<=load_ok;lv1<=lv0;lv2<=lv1;end
-  lc0<=load_cmd;lc1<=lc0;lc2<=lc1;
-  load_dest_bank<=lc2[59:57];load_dest_q<=lc2[61:60];
-  load_dq[279:264]<=lc2[48:33];
-  if(!reset_copy[4])load_dq[280]<=0;else load_dq[280]<=lv2&&!fault_c;
+  if(!reset_copy[3])begin lv0<=0;lv1<=0;lv2<=0;lv3<=0;end
+  else begin lv0<=load_ok;lv1<=lv0;lv2<=lv1;lv3<=lv2;end
+  lc0<=load_cmd;lc1<=lc0;lc2<=lc1;lc3<=lc2;
+  load_dest_bank<=lc3[59:57];load_dest_q<=lc3[61:60];
+  load_dq[279:264]<=lc3[48:33];
+  if(!reset_copy[4])load_dq[280]<=0;else load_dq[280]<=lv3&&!fault_c;
  end
  assign load_out_v=load_dq[280];
- wire[63:0]capture_cmd;
- wire[27:0]scatter_cmd;
- for(genvar c=0;c<8;c=c+1)begin:cap_root
+ wire[175:0]capture_cmd;
+ wire[41:0]scatter_cmd;
+ for(genvar c=0;c<22;c=c+1)begin:cap_root
   (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(8),.COPY_ID(c)) u(.clk(clk),.d({load_cmd_i[32:30],load_cmd_i[29:25]}),.q(capture_cmd[c*8+:8]));
  end
- for(genvar c=0;c<4;c=c+1)begin:scatter_root
+ for(genvar c=0;c<6;c=c+1)begin:scatter_root
   (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(7),.COPY_ID(8+c)) u(.clk(clk),.d({load_cmd_i[55:52],load_cmd_i[51:49]}),.q(scatter_cmd[c*7+:7]));
  end
- wire[511:0]normalized;
- for(genvar c=0;c<256;c=c+1)begin:capture
-  (* keep_hierarchy="yes" *) ot_hbm_dma_capture_pair #(.COPY_ID(c),.WORD((c%128)/16),.PAIR(c%16)) u(.clk(clk),.cmd_i(capture_cmd[(c/32)*8+:8]),.source(sel),.q(normalized[c*2+:2]));
+ wire[2047:0]source_copies;
+ for(genvar c=0;c<8;c=c+1)begin:source_copy
+  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(256),.COPY_ID(3000+c)) u(.clk(clk),.d(sel),.q(source_copies[c*256+:256]));
+ end
+ wire[5:0]fmt_copies;
+ for(genvar c=0;c<2;c=c+1)begin:format_copy
+  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(3),.COPY_ID(3100+c)) u(.clk(clk),.d(load_cmd_i[32:30]),.q(fmt_copies[c*3+:3]));
+ end
+ wire[1023:0]normalized;
+ for(genvar c=0;c<512;c=c+1)begin:capture
+  (* keep_hierarchy="yes" *) ot_hbm_dma_capture_pair #(.COPY_ID(c),.WORD((c%128)/16),.PAIR(c%16)) u(.clk(clk),.cmd_i(capture_cmd[(c/24)*8+:8]),.source(source_copies[(c/64)*256+:256]),.q(normalized[c*2+:2]));
  end
  wire[255:0]word_data;
- for(genvar w=0;w<8;w=w+1)for(genvar half=0;half<2;half=half+1)begin:convert_word
-  (* keep_hierarchy="yes" *) ot_hbm_dma_convert_half #(.COPY_ID(w*2+half),.HALF(half),.MUT(MUT)) u(.clk(clk),.fmt_i(lc0[32:30]),.raw(normalized[half*256+w*32+:32]),.q(word_data[w*32+half*16+:16]));
+ for(genvar w=0;w<8;w=w+1)for(genvar half=0;half<4;half=half+1)begin:convert_word
+  (* keep_hierarchy="yes" *) ot_hbm_dma_convert_part #(.COPY_ID(w*4+half),.PART(half),.MUT(MUT)) u(.clk(clk),.fmt_i(fmt_copies[((w*4+half)/16)*3+:3]),.raw(normalized[half*256+w*32+:32]),.q(word_data[w*32+half*8+:8]));
  end
  for(genvar c=0;c<128;c=c+1)begin:scatter
-  (* keep_hierarchy="yes" *) ot_hbm_dma_scatter_pair #(.COPY_ID(c),.WORD(c/16),.PAIR(c%16)) u(.clk(clk),.dest_i(scatter_cmd[(c/32)*7+:7]),.d(word_data),.q(load_dq[8+c*2+:2]));
+  (* keep_hierarchy="yes" *) ot_hbm_dma_scatter_pair #(.COPY_ID(c),.WORD(c/16),.PAIR(c%16)) u(.clk(clk),.dest_i(scatter_cmd[(c/24)*7+:7]),.d(word_data),.q(load_dq[8+c*2+:2]));
  end
  wire[63:0]mask_cmd;
  for(genvar b=0;b<8;b=b+1)begin:mask
@@ -216,16 +233,25 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_hbm_dma_capture_pair #(parameter COPY_ID=0,WORD=0,PAIR=0)(input wire clk,input wire[7:0]cmd_i,input wire[255:0]source,output reg[1:0]q);
  (* keep="true" *)reg[7:0]cmd;
- integer size,idx;
- always @*begin size=(cmd[7:5]==0||cmd[7:5]==5)?4:cmd[7:5]==1?2:1;idx=(cmd[4:0]+WORD*size)*8+PAIR*2;end
+ (* keep="true" *)reg[7:0]lo;
+ (* keep="true" *)reg[3:0]hi;
+ reg valid;
+ wire[2:0]size=(cmd[7:5]==0||cmd[7:5]==5)?3'd4:cmd[7:5]==1?3'd2:3'd1;
+ wire[6:0]byte_index={2'd0,cmd[4:0]}+7'(WORD*size)+7'(PAIR/4);
+ reg[1:0]selected;
+ always @*begin
+ selected=0;
+ for(integer b=0;b<32;b=b+1)selected=selected|({2{lo[b%8]&&hi[b/8]}}&source[b*8+(PAIR%4)*2+:2]);
+ end
  always @(posedge clk)begin
- cmd<=cmd_i;
- q<=(PAIR<size*4)?2'(source>>idx):2'b00;
+ cmd<=cmd_i;lo<=8'b1<<byte_index[2:0];hi<=4'b1<<byte_index[4:3];
+ valid<=byte_index<32&&PAIR<size*4;
+ q<=valid?selected:2'b00;
  end
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_hbm_dma_convert_half #(parameter COPY_ID=0,HALF=0,MUT=0)(input wire clk,input wire[2:0]fmt_i,input wire[31:0]raw,output reg[15:0]q);
- (* keep="true" *)reg[2:0]fmt;
+module ot_hbm_dma_convert_part #(parameter COPY_ID=0,PART=0,MUT=0)(input wire clk,input wire[2:0]fmt_i,input wire[31:0]raw,output reg[7:0]q);
+ (* keep="true" *)reg[2:0]fmt,f0,f1;
     function automatic [31:0] i8_f(input [7:0] c);
         reg [7:0] a; reg [2:0] p; integer k;
         begin
@@ -263,21 +289,21 @@ module ot_hbm_dma_convert_half #(parameter COPY_ID=0,HALF=0,MUT=0)(input wire cl
 
  wire[31:0]result=decode_word(raw,fmt);
  always @(posedge clk)begin
- fmt<=fmt_i;
- q<=result[HALF*16+:16]^((MUT==1&&fmt==1&&HALF==1)?16'h0001:16'h0000);
+ f0<=fmt_i;f1<=f0;fmt<=f1;
+ q<=result[PART*8+:8]^((MUT==1&&fmt==1&&PART==2)?8'h01:8'h00);
  end
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_hbm_dma_scatter_pair #(parameter COPY_ID=0,WORD=0,PAIR=0)(input wire clk,input wire[6:0]dest_i,input wire[255:0]d,output reg[1:0]q);
- (* keep="true" *)reg[6:0]p0,p1,p2;
+ (* keep="true" *)reg[6:0]p0,p1,p2,p3;
  integer src;
- always @*src=WORD-p2[2:0];
- always @(posedge clk)begin p0<=dest_i;p1<=p0;p2<=p1;q<=(WORD>=p2[2:0]&&WORD<p2[2:0]+p2[6:3])?2'(d>>(src*32+PAIR*2)):2'b00;end
+ always @*src=WORD-p3[2:0];
+ always @(posedge clk)begin p0<=dest_i;p1<=p0;p2<=p1;p3<=p2;q<=(WORD>=p3[2:0]&&WORD<p3[2:0]+p3[6:3])?2'(d>>(src*32+PAIR*2)):2'b00;end
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_hbm_dma_mask #(parameter COPY_ID=0,WORD=0)(input wire clk,input wire[6:0]d,output reg q);
- (* keep="true" *)reg[6:0]p0,p1,p2,p3;
- always @(posedge clk)begin p0<=d;p1<=p0;p2<=p1;p3<=p2;q<=WORD>=p3[2:0]&&WORD<p3[2:0]+p3[6:3];end
+ (* keep="true" *)reg[6:0]p0,p1,p2,p3,p4;
+ always @(posedge clk)begin p0<=d;p1<=p0;p2<=p1;p3<=p2;p4<=p3;q<=WORD>=p4[2:0]&&WORD<p4[2:0]+p4[6:3];end
 endmodule
 
 
@@ -285,7 +311,7 @@ endmodule
 module ot_hbm_dma_seen8 #(parameter COPY_ID=0,BLOCK=0)(
  input wire clk,rst_n,begin_v_i,begin_bank_i,start_bank_i,fill_bank_i,
  input wire[5:0]fill_slot_i,input wire load_bank_i,lstart,start_ok,raw_done,load_release,fill_ok,
- output wire seen_current);
+ output wire seen_current,clear0,clear1);
  (* keep="true" *)reg rs,bv,bb,sb,fb,lb,rb;
  (* keep="true" *)reg[5:0]fs;
  (* keep="true" *)reg[1:0]owned;
@@ -305,6 +331,7 @@ module ot_hbm_dma_seen8 #(parameter COPY_ID=0,BLOCK=0)(
  if(clear_bank&&bb)seen1<=0;
  else if(fill_ok&&fb&&fs[5:3]==BLOCK)seen1[fs[2:0]]<=1;
  end
+ assign clear0=clear_bank&&!bb;assign clear1=clear_bank&&bb;
  assign seen_current=(fs[5:3]==BLOCK)&&(fb?seen1[fs[2:0]]:seen0[fs[2:0]]);
 endmodule
 
