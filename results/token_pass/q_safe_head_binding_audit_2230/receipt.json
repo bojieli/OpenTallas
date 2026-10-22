@@ -379,7 +379,7 @@
     },
     "total_storage_and_native_roots": "Require actual selected-lane census; partial source counts above are not total area/FF qualification.",
     "observed_flat_to_safe2_age_delta": null,
-    "observed_flat_scope": "No exact SU_LT0 standalone functional receipt found. The prior STG4 minimum and527-case aggregate use SU_LT1 and are separate LT1 component evidence."
+    "observed_flat_scope": "Actual selected lane0 functional proof now available in qwen_flat_lane_functional_2240; older STG4 LT1 evidence remains separate."
   },
   "not_equivalent": {
     "SU_LT1_current": "Selects old qfd_dv_su_lane with ML1/RD2, QLA4/QLM5, innerML7; it does not select safe2.",
@@ -402,8 +402,9 @@
       "host": "ot-gold2",
       "unit": "oth-ubuntu-1670590-1792647810",
       "path": "/srv/opentallas-scratch/claude/codex-qwen-flat-functional-2240/run_r1",
-      "status": "ADMITTED",
-      "scope": "One current lane0,96 values,fiveclasses,dirty reset; existing OT_TLS_MUT causal. No whole array or native closure."
+      "status": "PASS",
+      "scope": "Actual current lane0 only:96values/fiveclasses/dirtyreset and existingTLSmutant. No wholearray or native closure.",
+      "receipt_path": "results/token_pass/qwen_flat_lane_functional_2240/result.json"
     }
   },
   "native_qualified": false,
