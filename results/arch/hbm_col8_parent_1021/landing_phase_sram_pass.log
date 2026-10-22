@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       admits    28 GB (avail 277, growth 258, headroom 0, waiters 11/1126 GB) load 88/128 running 34 disk 1364 GB 
+ot-run: ot-epyc7       admits    43 GB (avail 470, growth 440, headroom 0, waiters 2/160 GB) load 204/96 running 60 disk 4341 GB 
+ot-run: ot-epyc9       admits   -47 GB (avail 362, growth 395, headroom 0, waiters 4/105 GB) load 117/128 running 37 disk 1884 GB 
+ot-run: ot-gold2       admits     2 GB (avail 420, growth 419, headroom 0, waiters 4/192 GB) load 38/112 running 19 disk 2740 GB 
+ot-run: ot-gold1       admits     6 GB (avail 794, growth 791, headroom 0, waiters 3/988 GB) load 37/112 running 13 disk 1742 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/sramsrc
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/sramsrc
+ot-run: -> ot-epyc5
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 8 = 6 GB, admissible 7 GB: available 279 GB, growth charged 273 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 251 GB at x1), young 45 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-976923-1792640284 after 21 s
+COL8_SRAM_LAND_PASS checks=256 width=1210 phase=2ns latency=3
+- rtl/test/hbm_idx_static/tb_col8_sram_land.sv:9: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.002 s; speed 1.386 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-976923-1792640284): exit 0

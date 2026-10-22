@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       admits    13 GB (avail 384, growth 375, headroom 0, waiters 9/998 GB) load 58/128 running 35 disk 1399 GB 
+ot-run: ot-epyc7       admits   -46 GB (avail 325, growth 357, headroom 0, waiters 4/127 GB) load 152/96 running 49 disk 4351 GB 
+ot-run: ot-epyc9       admits     5 GB (avail 582, growth 579, headroom 0, waiters 2/74 GB) load 97/128 running 35 disk 1894 GB 
+ot-run: ot-gold2       admits   -35 GB (avail 370, growth 394, headroom 0, waiters 2/712 GB) load 54/112 running 17 disk 2713 GB 
+ot-run: ot-gold1       admits   -41 GB (avail 590, growth 619, headroom 0, waiters 9/664 GB) load 49/112 running 13 disk 1774 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/landsrc
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/landsrc
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-810316-1792639411 after 0 s
+COL8_LAND_PASS checks=256 width=1210 phase=2ns latency=3
+- rtl/test/hbm_idx_static/tb_col8_land.sv:9: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.001 s; speed 2.960 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-810316-1792639411): exit 0

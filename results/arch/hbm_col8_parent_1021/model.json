@@ -17,10 +17,10 @@
     1512
   ],
   "proposed_quarter_outline_um": [
-    3888,
-    3240
+    4147.2,
+    4147.2
   ],
-  "planning": "8 leaves in 3x3 placement (one empty glue slot); leaf1296x1080 includes four561.6x475.2 columns in2x2 with43.2channels; quarter keeps64.8relay corridors <=405um",
+  "planning": "MAINcolumn604.8square,FB691.2square; 4MAINcolumns1252.8square perleaf then8leaves3x3 on1382.4pitch inclrelaychannels. Realquarter4147.2square (conservative, gatearea may refine).",
   "arithmetic_items_per_cycle": 8,
   "query_bits_per_edge": 568,
   "key_bits_per_edge": 4396,
@@ -29,6 +29,11 @@
   "active_age_delta_baseline": 0,
   "landed_age_delta": "not yet adopted; measure seams before qualified assembly",
   "physical_status": "baseline hierarchy only, no physical or calendar qualification",
-  "quarter_area_um2": 12597120,
-  "four_quarter_area_delta_um2": 41243904
+  "quarter_area_um2": 17199267.84,
+  "four_quarter_area_delta_um2": 59652495.36,
+  "canonical_column_landing_flops": 33124,
+  "canonical_column_alignment_flops": 21204,
+  "canonical_column_storage_status": "OPEN: flop rings and alignment pads; SRAM conversion before release adoption",
+  "sequential_landing_edges": 15,
+  "canonical_column_landing_edges": 16
 }

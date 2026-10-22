@@ -119,7 +119,7 @@
    ]
   },
   {
-   "view": "physical/ref_tile/hidx_col8_standin_r1/views/ot_hidx_score_pair8_r1",
+   "view": "physical/ref_tile/hidx_score_pair8_r1/views/ot_hidx_score_pair8_r1",
    "count": 1,
    "inst": "u_pair1",
    "at": [
@@ -209,7 +209,7 @@
   "reset_depth": 3,
   "lp_spec": "tools/landed_parent/specs/hidx_col8_region_1021.json"
  },
- "views_status": "DIAGNOSTIC ONLY: exact zt0r/zt2r CLOSED; r1/r3 explicit STANDIN_NOT_A_VIEW pending successors; no submit/bind",
+ "views_status": "DIAGNOSTIC ONLY: exact zt0r/zt1r/zt2r CLOSED; r3 explicit STANDIN_NOT_A_VIEW pending successor; no submit/bind",
  "job": {
   "owner": "CODEX-HBM-COL8-PARENT-2000",
   "branch": "codex/hbm-col8-parent-2000-1021",
@@ -226,7 +226,9 @@
    "physical/ref_tile/hidx_score_pair8_r0",
    "physical/ref_tile/hidx_score_pair8_r2",
    "physical/ref_tile/hidx_col8_standin_r1",
-   "physical/ref_tile/hidx_col8_standin_r3"
+   "physical/ref_tile/hidx_col8_standin_r3",
+   "tools/orfs_allcorner_spef.py",
+   "physical/ref_tile/hidx_score_pair8_r1"
   ]
  },
  "safe_design_checklist": {
