@@ -1,0 +1,10 @@
+MISMATCH vmux cyc 14 ref 6ffd3cdb05da1b73/0 dut 6ffd3cdb05da1b73/0
+MISMATCH vmux cyc 15 ref 3b7328a0a91bdfc3/0 dut 3b7328a0a91bdfc3/0
+MISMATCH vmux cyc 26 ref 283f3f2a2ef5526d/0 dut 283f3f2a2ef5526d/0
+MISMATCH vmux cyc 27 ref 0000000000000000/0 dut 0000000000000000/0
+MISMATCH vmux cyc 29 ref d1d7a7fa0509dd55/0 dut d1d7a7fa0509dd55/0
+VMUX_N32 FAIL nerr 5553 valid_beats 13317 fault_ref 1 | VDLY PASS nerr 0 (vm_mut 2 dl_mut 0)
+- rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_vmux_n32.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.240 s; speed 83.245 us/s
+- Verilator: cpu 0.120 s on 1 threads; allocated 7 MB

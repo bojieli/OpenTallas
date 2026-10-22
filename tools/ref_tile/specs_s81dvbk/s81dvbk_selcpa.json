@@ -1,0 +1,165 @@
+{
+  "name": "s81dvbk_selcpa",
+  "top": "dsdv_bksel_c_pa",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+    "rtl/common/ot_fwd_link_stage.sv",
+    "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv",
+    "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv",
+    "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+    "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+    "rtl/dsrom_sys/s81_dv/unit/bk/plana/dsdv_bksel_q_pa.sv"
+  ],
+  "params": {},
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst"
+  ],
+  "outline": {
+    "w": 388.8,
+    "h": 172.8,
+    "exact": true
+  },
+  "pins": {
+    "S": [
+      "fs0_0",
+      "fs0_1",
+      "fs0_2",
+      "fs1_0",
+      "fs1_1",
+      "fs1_2",
+      "fo0",
+      "fo1",
+      "t_c_s",
+      "t_cr_s",
+      "ck",
+      "rst"
+    ],
+    "N": [
+      "fs2_0",
+      "fs2_1",
+      "fs2_2",
+      "fs3_0",
+      "fs3_1",
+      "fs3_2",
+      "fo2",
+      "fo3",
+      "t_c_n",
+      "t_cr_n"
+    ],
+    "E": [
+      "vd"
+    ]
+  },
+  "pin_ranges": {
+    "f_s_s": [
+      4,
+      250
+    ],
+    "t_c_s": [
+      250,
+      270
+    ],
+    "t_cr_s": [
+      270,
+      272
+    ],
+    "f_o_s": [
+      272,
+      384.8
+    ],
+    "f_s_n": [
+      4,
+      250
+    ],
+    "t_c_n": [
+      250,
+      270
+    ],
+    "t_cr_n": [
+      270,
+      272
+    ],
+    "f_o_n": [
+      272,
+      384.8
+    ],
+    "vd": [
+      43.2,
+      129.6
+    ],
+    "ck": [
+      131,
+      134
+    ],
+    "rst": [
+      134,
+      137
+    ]
+  },
+  "macros": [],
+  "layer_cap": "M5",
+  "recipe": 2,
+  "hold_budget": "die",
+  "pin_regs": {
+    "enable": false,
+    "reason": "Source-registered: dsfd_selt_c lands every quarter bundle in its pin flops (sq / oq) and launches t_c / t_cr / vd from flops."
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M3 M5"
+    }
+  },
+  "structural_change": "New XDX15 (XD17/XR34) exact-control successor used in source-validated PlanA landed parent. This is native admission only; CLOSED c2 is immutable and is not reused as its view. No physical adoption until native plus own target/context timing pass.",
+  "job": {
+    "owner": "Codex:S81-PlanA",
+    "branch": "codex/s81-topk-plana-parent-1021",
+    "tag": "cpa1",
+    "purpose": "Native admission of actual PlanA XDX15 control successor (XD17/XR34), source-validated with fixed external796-cycle tail. No old c2 view alias; physical/context qualification pending.",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_ph",
+      "rtl/dsrom_sys/s81_dv/unit/bk/plana",
+      "rtl/hdc",
+      "rtl/common",
+      "rtl/lib",
+      "results/arch/s81_topk_plana_parent_1021"
+    ],
+    "views_to": "physical/ref_tile/s81dvbk_selcpa/views",
+    "record_to": "results/rtl/ref_tile/s81dvbk_selcpa"
+  },
+  "clock": "cts",
+  "reset_landing": {
+    "enable": false,
+    "reason": "Native-only source admission of the actual control successor; actual source has two reset capture flops. No additional unpriced kit reset stage."
+  },
+  "hold_merge": true,
+  "defines": [
+    "OT_S81PH_SEL_INDEXED13",
+    "OT_S81PH_FIFO_SRAM",
+    "OT_SRAM_P192",
+    "OT_S81PH_SEL_SUCC",
+    "OT_S81PH_SEL_FAN32",
+    "OT_S81PH_SEL_ACC32",
+    "OT_S81PH_SEL_HQ",
+    "OT_HARD_CHILDREN",
+    "OT_S81PH_HQ_INPUT_RAW",
+    "OT_S81PH_SEL_ILD",
+    "OT_S81PH_SEL_FRPR"
+  ]
+}
