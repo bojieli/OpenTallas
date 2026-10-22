@@ -102,6 +102,18 @@ class PortClockBind(unittest.TestCase):
    moved=(*e[:5],y,e[6])
    self.assertEqual(D.place_lane(rule,moved,[],{'y':0,'h':100}), (8,'xc',276,('ck_xc',8)))
   with self.assertRaises(KeyError):D.place_lane(rule,(*e[:3],'missing',*e[4:]),[],{'y':0,'h':100})
+ def test_unhardened_landing_reset_contract_is_source_bound_and_cannot_alias_view(self):
+  import hashlib
+  body=(Path(__file__).resolve().parents[2]/'rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv').read_text()
+  name='dsdv_svc_busland_16'
+  row=dict(ref='source',path='rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv',sha256=hashlib.sha256(body.encode()).hexdigest(),reset_stages=0)
+  table={'landing_assemblies':{name:row},'landing_reset_stages':{name:0}}
+  good=D.landing_reset_check(table,{name},read=lambda ref,path:body)
+  self.assertEqual(good['verdict'],'PASS')
+  self.assertEqual(good['rows'][0]['qualification'],'UNHARDENED_RTL_ASSEMBLY')
+  self.assertEqual(D.landing_reset_check(table,{name},read=lambda ref,path:body+'//changed')['verdict'],'FAIL')
+  table['land_views']={name:{'ref':'fake'}}
+  with self.assertRaisesRegex(ValueError,'cannot alias'):D.landing_reset_check(table,{name},read=lambda ref,path:body)
  def test_production_zero_hop_forwarding_roots(self):
   text=self.emitted(zero=True)
   for i,root in enumerate(('ck_A','ck_A','ck_B','ck_B')):

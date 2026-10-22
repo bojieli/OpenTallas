@@ -236,8 +236,20 @@ def landing_reset_check(T, masters, read=_read_at):
     tab = T.get('landing_reset_stages', {})
     lv = T.get('land_views', {})
     rows, mism, unres = [], [], []
-    for m in sorted(x for x in masters if x.startswith('dsfd_dvland')):
-        r = land_view_reset_stages(m, lv.get(m), read)
+    assemblies = T.get('landing_assemblies', {})
+    for m in sorted(x for x in masters if x.startswith('dsfd_dvland') or x in assemblies):
+        if m in assemblies:
+            import hashlib
+            a = assemblies[m]
+            body = read(a['ref'], a['path'])
+            valid = body is not None and hashlib.sha256(body.encode()).hexdigest() == a['sha256']
+            if m in lv:
+                raise ValueError(f'{m}: an unhardened RTL assembly cannot alias a closed landing view')
+            r = dict(master=m, rl=a['reset_stages'] if valid else None, job=None, source=a['ref'],
+                     kit=None, qualification='UNHARDENED_RTL_ASSEMBLY',
+                     error=None if valid else 'landing assembly source hash mismatch')
+        else:
+            r = land_view_reset_stages(m, lv.get(m), read)
         r['table'] = int(tab.get(m, 0))
         rows.append(r)
         if r['rl'] is None:
@@ -432,7 +444,10 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         link_src[e[3]] = (w, None)
                     else:
                         w = dname(e[3])
-                        if rule.get('land') and (chains_pts[e[3]] or e[3] in force_land) and b in LAND_W:
+                        if (chains_pts[e[3]] or e[3] in force_land) and rule.get('adapter'):
+                            landings.append((n, e[3], b, rule['adapter'], rule['out_w'], rule.get('adapter_straps', {})))
+                            w = f'w_{e[3]}_lnd'
+                        elif rule.get('land') and (chains_pts[e[3]] or e[3] in force_land) and b in LAND_W:
                             landings.append((n, e[3], b)); w = f'w_{e[3]}_lnd'
                         for rport, rlo, plo, nb in lr['split']:
                             c[rport].append((rlo, rlo + nb - 1, f'{w}[{plo + nb - 1}:{plo}]', nb))
@@ -477,7 +492,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         # -> slice band RD beat); its o is the full RTL port
                         landings.append((n, e[3], b, rule['adapter'], rule['out_w'], rule.get('adapter_straps', {})))
                         w = f'w_{e[3]}_lnd'
-                        c[rport].append((0, rule['out_w'] - 1, w, rule['out_w']))
+                        c[rport].append((lane * lw, lane * lw + rule['out_w'] - 1, w, rule['out_w']))
                         link_dst[e[3]] = w
                         continue
                     if rule.get('land') and (chains_pts[e[3]] or e[3] in force_land) and b in LAND_W:

@@ -78,6 +78,23 @@ def main():
         w = {k: v for k, v in bw.items() if k != 'clk'}; w.update({c: 1 for c in CKP})
         t['rtl_widths'][mod] = w
         assert spec[key]['outline']['exact'] and set(spec[key]['clock_ports']) == set(CKP)
+    # Service bus rings are real RTL parents, intentionally not claimed CLOSED.
+    # The exact source hash binds their no-extra-reset-stage contract.
+    import hashlib
+    bus_ref = '96d428dee'
+    bus_path = 'rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv'
+    bus_hash = '6761a57f2ed4239b9eb8a72d1757d59630bbcacc1eba0ead84835ad487cd33d1'
+    t['rtl_refs'][bus_ref] = [bus_path]
+    t.setdefault('landing_assemblies', {})
+    for pre, width in (('dn',805),('up',16),('pr',514),('sg',2133),('ss',1077)):
+        master = f'dsdv_svc_busland_{width}'
+        t['landing_assemblies'][master] = dict(ref=bus_ref,path=bus_path,sha256=bus_hash,reset_stages=0,
+            qualification='UNHARDENED_RTL_ASSEMBLY',slots=4,steady_words_per_cycle=1)
+        t['rtl_widths'][master] = dict(ck_f=1,i=width,ck=1,rs=1,k=3,o=width,fault=1)
+        t.setdefault('landing_reset_stages', {})[master] = 0
+        for face in 'NESW':
+            rule = t['masters']['dsdv_svc_rs']['ports'][f'{pre}{face}.i']
+            rule.update(adapter=master,out_w=width,land=True)
     t['rtl_refs'][WREF] = list(WFILES)
     t['prefer'] = list(t['prefer']) + [f'{WREF}/{f}' for f in WFILES]
     for k in ('status_fault_masters',):

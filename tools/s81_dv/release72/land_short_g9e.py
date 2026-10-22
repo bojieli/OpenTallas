@@ -14,13 +14,13 @@ def main():
  added=[];changed=[];B=p['blocks']
  for l in p['links']:
   dst=B[l['e'][1][0]];rule=t['masters'][dst['master']].get('ports',{}).get(l['e'][1][1]+'.i',{})
-  if not rule.get('land') or l['b'] not in (70,276,512,562,682):continue
+  if not rule.get('land') or (l['b'] not in (70,276,512,562,682) and not rule.get('adapter')):continue
   n=l['i'].replace('-','_');N=l.get('s',0)
   if n in rows and N:continue
   E=max(2,math.ceil(.47*N)+1)
   if E>7 and l['b']!=276:raise ValueError(f'{n}: no existing long view for {l["b"]}b E{E}')
   r=dict(link=n,cls=l['c'],dst=dst['name'],bits=l['b'],stages=N,E=E,K=E,D=8 if E>7 else 4,
-   master=f'dsfd_dvland_{l["b"]}'+('l' if E>7 else ''),force_landing=not N,model=True,
+   master=rule.get('adapter') or (f'dsfd_dvland_{l["b"]}'+('l' if E>7 else '')),force_landing=not N,model=True,
    K_source='G9e short crossing: real source-gated ring, fixed E2 K2 age3 at N0; nonzero ceil(.47N)+1')
   rows[n]=r;added.append(n)
  groups={}
