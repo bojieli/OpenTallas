@@ -1,0 +1,32 @@
+[
+  {
+    "commit": null,
+    "archive_sha256": "8c6fb262b4f0a66309ba41e524efe055db6b41884d18eeedc8afaf42924f39c2",
+    "remote_host": "ot-epyc5",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s1_regional5_main-20261021-231535",
+    "bindings": {
+      "physical/ref_tile/qfd_coll_face_s1_regional5_main/spec.json": "92bcfc929387aa97ce4065717eddc5b6c4bacf01829f1bc00e08af6de8863512",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_main/pre_gpl.tcl": "b8af38e8ceaa0c69b4de8481fd58a59b85c98bca3f9e6b0e3a3308b50538d71d",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_main/pre_dpl.tcl": "0e7de4f75ee49429e0a6ff8b053b52d5c025b8d00d941c8b19cb21b5a585509c",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_main/pre_cts.tcl": "ea09afa6475c5ca65bc48a42705caad588d5548f8e4764f5878bd3f4e420bf39",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_main/seq_landing.tcl": "ff9e57161993fa872e3569b62740805b39095aaad80d022b8793a29be2e4d385",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_main/seq_release.tcl": "57810fcddbc116734d20e5f147a43558b47a8e5c5b161bbea4e9767fe6b66fcd",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_main/place.tcl": "866f16915861bdc8c9b382b2257479f3f87bbfff518782f15ec809ccd076b4da"
+    }
+  },
+  {
+    "commit": null,
+    "archive_sha256": "b3b1fbbd8ec2b45e652bf4450987de0af2d5bf9c627f6d197e2e7709bde8cff5",
+    "remote_host": "ot-epyc5",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s1_regional5_fb-20261021-231535",
+    "bindings": {
+      "physical/ref_tile/qfd_coll_face_s1_regional5_fb/spec.json": "566d59e3aa5b8d69f5ed3881eed1b1ec0650600ad724c6eab2900d4ae7f8dbc4",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_fb/pre_gpl.tcl": "8c309b120e8fb50cb1bebc05ebb150d9d53b3c314f55d6d3c9ef92d8af87d1f6",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_fb/pre_dpl.tcl": "03a82ba5e0dd489a225f6bab31faf73e7cc4cff77ac7292eae3ad2b6fc048313",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_fb/pre_cts.tcl": "a86287c413fb2de7db0b016e5c8533c23e06bb95dda5673cb72e909076491f5d",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_fb/seq_landing.tcl": "9c8bece71b308bdf090f392e366f7bd8431219ff53ccc31e5c10cdc0fdc1e898",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_fb/seq_release.tcl": "57810fcddbc116734d20e5f147a43558b47a8e5c5b161bbea4e9767fe6b66fcd",
+      "physical/ref_tile/qfd_coll_face_s1_regional5_fb/place.tcl": "02a2739255a9a28100e460f9cafc689bb8d81d0f909f7ba571e2eba5a6a0a02d"
+    }
+  }
+]
