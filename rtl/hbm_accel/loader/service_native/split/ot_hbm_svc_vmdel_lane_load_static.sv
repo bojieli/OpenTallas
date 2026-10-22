@@ -137,9 +137,16 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  // m11 (HBMc/TILES4): m11 census found the epoch0/epoch1 load enable at 34/33 loads (abc shared the begin-accept term
  // with the owned/sticky/start cones).  Each epoch's write enable is the same condition as before (out of reset, begin_v,
  // bank free and not being started, begin_bank selects it), ended on a kept net that drives only its 16 enables.
- (* keep="true" *) wire ep0_we=reset_copy[2]&&begin_v&&!begin_bank&&!(owned[0]||(lstart&&start_bank==1'b0));
- (* keep="true" *) wire ep1_we=reset_copy[2]&&begin_v&&begin_bank&&!(owned[1]||(lstart&&start_bank==1'b1));
- always @(posedge clk) begin if(ep0_we)epoch0<=begin_epoch; if(ep1_we)epoch1<=begin_epoch; end
+ // m11 round 3: the kept net was still buffered to 33 pins (census counts through buffers; each enable bit maps to a
+ // 2-pin AO mux).  Each epoch's enable now ends in two hierarchy-kept AND gates, one per byte (same function).
+ (* keep="true" *) wire ep0_acc=reset_copy[2]&&begin_v&&!begin_bank; (* keep="true" *) wire ep0_free=!(owned[0]||(lstart&&start_bank==1'b0));
+ (* keep="true" *) wire ep1_acc=reset_copy[2]&&begin_v&&begin_bank;  (* keep="true" *) wire ep1_free=!(owned[1]||(lstart&&start_bank==1'b1));
+ wire [1:0] ep0_we,ep1_we;
+ for(genvar h=0;h<2;h=h+1)begin:ep_en
+  (* keep_hierarchy="yes" *) ot_hbm_dma_and2 #(.COPY_ID(h))   u0(.a(ep0_acc),.b(ep0_free),.y(ep0_we[h]));
+  (* keep_hierarchy="yes" *) ot_hbm_dma_and2 #(.COPY_ID(2+h)) u1(.a(ep1_acc),.b(ep1_free),.y(ep1_we[h]));
+  always @(posedge clk) begin if(ep0_we[h])epoch0[8*h+:8]<=begin_epoch[8*h+:8]; if(ep1_we[h])epoch1[8*h+:8]<=begin_epoch[8*h+:8]; end
+ end
  always @(posedge clk) begin
   if(!reset_copy[2]) begin
    owned<=0;running<=0;bank_r<=0;slot_q<=0;
@@ -255,8 +262,20 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  assign load_out_v=load_dq[280];
  wire[175:0]capture_cmd;
  wire[41:0]scatter_cmd;
- for(genvar c=0;c<22;c=c+1)begin:cap_root
-  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(8),.COPY_ID(c),.S(1+RPIPE)) u(.clk(clk),.d({load_cmd_i[32:30],load_cmd_i[29:25]}),.q(capture_cmd[c*8+:8]));
+ // m11 round 3: with RPIPE the 22 capture copies share their first stage per group of 6 (4 input flops instead of 22 on
+ // load_cmd_i[32:25]; the census refused [30..32] at 33-36).  Same 1+RPIPE edges per copy.
+ if(RPIPE!=0)begin:g_cap_tree
+  wire[31:0]cap_pre;
+  for(genvar g=0;g<4;g=g+1)begin:cap_pre_root
+   (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(8),.COPY_ID(2400+g),.S(1)) u(.clk(clk),.d({load_cmd_i[32:30],load_cmd_i[29:25]}),.q(cap_pre[g*8+:8]));
+  end
+  for(genvar c=0;c<22;c=c+1)begin:cap_root
+   (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(8),.COPY_ID(c),.S(RPIPE)) u(.clk(clk),.d(cap_pre[(c/6)*8+:8]),.q(capture_cmd[c*8+:8]));
+  end
+ end else begin:g_cap_flat
+  for(genvar c=0;c<22;c=c+1)begin:cap_root
+   (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(8),.COPY_ID(c),.S(1+RPIPE)) u(.clk(clk),.d({load_cmd_i[32:30],load_cmd_i[29:25]}),.q(capture_cmd[c*8+:8]));
+  end
  end
  for(genvar c=0;c<6;c=c+1)begin:scatter_root
   (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(7),.COPY_ID(8+c),.S(1+RPIPE)) u(.clk(clk),.d({load_cmd_i[55:52],load_cmd_i[51:49]}),.q(scatter_cmd[c*7+:7]));
@@ -301,6 +320,10 @@ module ot_hbm_dma_cmd_copy #(parameter W=8,COPY_ID=0,S=1)(input wire clk,input w
  end else begin:g_one
   always @(posedge clk)q<=d;
  end
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hbm_dma_and2 #(parameter COPY_ID=0)(input wire a,input wire b,output wire y);
+ assign y=a&b;
 endmodule
 // RPIPE read port: r_ce / r_addr registered beside the payload macro (HBMc/TILES3 10-22)
 (* keep_hierarchy="yes" *)
