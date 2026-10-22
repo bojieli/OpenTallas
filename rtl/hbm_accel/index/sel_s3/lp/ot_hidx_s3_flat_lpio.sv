@@ -10,7 +10,9 @@
 module ot_hidx_s3_flat_lpio #(
     parameter integer DMUT=0,
     parameter integer MUT = 0,
-    parameter integer OUTST = 1
+    parameter integer OUTST = 1,
+    // C17 (HBMc/TILES4): FACE=1 face-landed IO (see the pin-register block); requires OUTST == 2.  0 = C16 (unchanged).
+    parameter integer FACE = 0
 ) (
     input wire rst_n,
     input wire [3:0] op,
@@ -36,57 +38,147 @@ module ot_hidx_s3_flat_lpio #(
     input wire ck_q2,
     input wire ck_q3
 );
+ // C17 FACE=1 (HBMc/TILES4 10-22; C16a/b gate clock_rule REFUSE: the IO registers sat on the ck_qi roots but at the
+ // W/E faces up to ~700 um from u_qi, soft-tree span 396..944 ps vs child 566..602 = pin-flop spread 133..375 ps).  In_line_*
+ // enter on W and selected_* leave on E while the quadrants sit in two columns, so half the lines cross a column on one root.
+ // FACE lands every port on the root of the region it physically sits in: input stage A at the pin on the root of the
+ // quadrant beside that face segment (W top ck_q0, W bottom ck_q2; ctl ports ck_ctl), stage B = the C16 register on the
+ // consumer root; outputs leave a producer-root relay then a face-root relay (E top ck_q1, E bottom ck_q3; fault ck_ctl).
+ // Every root then has a compact sink region and each column crossing is one registered hop.  Whole cluster = C15 shifted
+ // 1 + FACE + OUTST edges at every port (rst_n included): every internal alignment unchanged.
  // ---- C16 PIN REGISTERS (HBMc/TILES2 10-22, freeze class 1; C15d EARLY_FAIL_SETUP -499 ps = unregistered 734-um IO
  // crossings): every input lands in one plain register on its consumer's region clock (in_line_i on ck_qi; rst_n/op/
  // pass/addr/k on ck_ctl), every output leaves through OUTST relay registers on its producer's clock (selected_*_i on
  // ck_qi, fault on ck_ctl).  The cluster is the C15 cluster shifted by 1 + OUTST edges at every port (rst_n included),
  // so every internal alignment is unchanged.  MUT 9 (bench, must FAIL): in_line_1 register bypassed.
 
- wire rst_n__x; (* keep = 1 *) reg rst_n__pr; always @(posedge ck_ctl) rst_n__pr <= rst_n;
+ initial if (FACE != 0 && OUTST != 2) $fatal(1, "ot_hidx_s3_flat_lpio: FACE=1 needs OUTST=2");
+ wire rst_n__a; (* keep = 1 *) reg rst_n__pa; always @(posedge ck_ctl) if (FACE != 0) rst_n__pa <= rst_n;   // C17 FACE: pin-side stage on the face root
+ assign rst_n__a = (FACE != 0) ? rst_n__pa : rst_n;
+ wire rst_n__x; (* keep = 1 *) reg rst_n__pr; always @(posedge ck_ctl) rst_n__pr <= rst_n__a;
  assign rst_n__x = rst_n__pr;
- wire [3:0] op__x; (* keep = 1 *) reg [3:0] op__pr; always @(posedge ck_ctl) op__pr <= op;
+ wire [3:0] op__a; (* keep = 1 *) reg [3:0] op__pa; always @(posedge ck_ctl) if (FACE != 0) op__pa <= op;   // C17 FACE: pin-side stage on the face root
+ assign op__a = (FACE != 0) ? op__pa : op;
+ wire [3:0] op__x; (* keep = 1 *) reg [3:0] op__pr; always @(posedge ck_ctl) op__pr <= op__a;
  assign op__x = op__pr;
- wire [1:0] pass__x; (* keep = 1 *) reg [1:0] pass__pr; always @(posedge ck_ctl) pass__pr <= pass;
+ wire [1:0] pass__a; (* keep = 1 *) reg [1:0] pass__pa; always @(posedge ck_ctl) if (FACE != 0) pass__pa <= pass;   // C17 FACE: pin-side stage on the face root
+ assign pass__a = (FACE != 0) ? pass__pa : pass;
+ wire [1:0] pass__x; (* keep = 1 *) reg [1:0] pass__pr; always @(posedge ck_ctl) pass__pr <= pass__a;
  assign pass__x = pass__pr;
- wire [7:0] addr__x; (* keep = 1 *) reg [7:0] addr__pr; always @(posedge ck_ctl) addr__pr <= addr;
+ wire [7:0] addr__a; (* keep = 1 *) reg [7:0] addr__pa; always @(posedge ck_ctl) if (FACE != 0) addr__pa <= addr;   // C17 FACE: pin-side stage on the face root
+ assign addr__a = (FACE != 0) ? addr__pa : addr;
+ wire [7:0] addr__x; (* keep = 1 *) reg [7:0] addr__pr; always @(posedge ck_ctl) addr__pr <= addr__a;
  assign addr__x = addr__pr;
- wire [9:0] k__x; (* keep = 1 *) reg [9:0] k__pr; always @(posedge ck_ctl) k__pr <= k;
+ wire [9:0] k__a; (* keep = 1 *) reg [9:0] k__pa; always @(posedge ck_ctl) if (FACE != 0) k__pa <= k;   // C17 FACE: pin-side stage on the face root
+ assign k__a = (FACE != 0) ? k__pa : k;
+ wire [9:0] k__x; (* keep = 1 *) reg [9:0] k__pr; always @(posedge ck_ctl) k__pr <= k__a;
  assign k__x = k__pr;
- wire [591:0] in_line_0__x; (* keep = 1 *) reg [591:0] in_line_0__pr; always @(posedge ck_q0) in_line_0__pr <= in_line_0;
+ wire [591:0] in_line_0__a; (* keep = 1 *) reg [591:0] in_line_0__pa; always @(posedge ck_q0) if (FACE != 0) in_line_0__pa <= in_line_0;   // C17 FACE: pin-side stage on the face root
+ assign in_line_0__a = (FACE != 0) ? in_line_0__pa : in_line_0;
+ wire [591:0] in_line_0__x; (* keep = 1 *) reg [591:0] in_line_0__pr; always @(posedge ck_q0) in_line_0__pr <= in_line_0__a;
  assign in_line_0__x = in_line_0__pr;
- wire [591:0] in_line_1__x; (* keep = 1 *) reg [591:0] in_line_1__pr; always @(posedge ck_q1) in_line_1__pr <= in_line_1;
+ wire [591:0] in_line_1__a; (* keep = 1 *) reg [591:0] in_line_1__pa; always @(posedge ck_q0) if (FACE != 0) in_line_1__pa <= in_line_1;   // C17 FACE: pin-side stage on the face root
+ assign in_line_1__a = (FACE != 0) ? in_line_1__pa : in_line_1;
+ wire [591:0] in_line_1__x; (* keep = 1 *) reg [591:0] in_line_1__pr; always @(posedge ck_q1) in_line_1__pr <= in_line_1__a;
  assign in_line_1__x = (MUT == 9) ? in_line_1 : in_line_1__pr;
- wire [591:0] in_line_2__x; (* keep = 1 *) reg [591:0] in_line_2__pr; always @(posedge ck_q2) in_line_2__pr <= in_line_2;
+ wire [591:0] in_line_2__a; (* keep = 1 *) reg [591:0] in_line_2__pa; always @(posedge ck_q2) if (FACE != 0) in_line_2__pa <= in_line_2;   // C17 FACE: pin-side stage on the face root
+ assign in_line_2__a = (FACE != 0) ? in_line_2__pa : in_line_2;
+ wire [591:0] in_line_2__x; (* keep = 1 *) reg [591:0] in_line_2__pr; always @(posedge ck_q2) in_line_2__pr <= in_line_2__a;
  assign in_line_2__x = in_line_2__pr;
- wire [591:0] in_line_3__x; (* keep = 1 *) reg [591:0] in_line_3__pr; always @(posedge ck_q3) in_line_3__pr <= in_line_3;
+ wire [591:0] in_line_3__a; (* keep = 1 *) reg [591:0] in_line_3__pa; always @(posedge ck_q2) if (FACE != 0) in_line_3__pa <= in_line_3;   // C17 FACE: pin-side stage on the face root
+ assign in_line_3__a = (FACE != 0) ? in_line_3__pa : in_line_3;
+ wire [591:0] in_line_3__x; (* keep = 1 *) reg [591:0] in_line_3__pr; always @(posedge ck_q3) in_line_3__pr <= in_line_3__a;
  assign in_line_3__x = in_line_3__pr;
  wire selected_v_0__x; (* keep = 1 *) reg selected_v_0__or [0:OUTST-1];
- always @(posedge ck_q0) begin : g_or_selected_v_0 integer j; selected_v_0__or[0] <= selected_v_0__x; for (j = 1; j < OUTST; j = j + 1) selected_v_0__or[j] <= selected_v_0__or[j-1]; end
- assign selected_v_0 = selected_v_0__or[OUTST-1];
+ generate if (FACE != 0) begin : g_face_selected_v_0
+  (* keep = 1 *) reg selected_v_0__fr; (* keep = 1 *) reg selected_v_0__fd;
+  always @(posedge ck_q0) selected_v_0__fr <= selected_v_0__x;   // producer-side relay (child root)
+  always @(posedge ck_q1) selected_v_0__fd <= selected_v_0__fr;   // face-side relay (root of the quadrant beside the E/S face)
+  assign selected_v_0 = selected_v_0__fd;
+ end else begin : g_c16_selected_v_0
+  always @(posedge ck_q0) begin : g_or_selected_v_0 integer j; selected_v_0__or[0] <= selected_v_0__x; for (j = 1; j < OUTST; j = j + 1) selected_v_0__or[j] <= selected_v_0__or[j-1]; end
+  assign selected_v_0 = selected_v_0__or[OUTST-1];
+ end endgenerate
  wire selected_v_1__x; (* keep = 1 *) reg selected_v_1__or [0:OUTST-1];
- always @(posedge ck_q1) begin : g_or_selected_v_1 integer j; selected_v_1__or[0] <= selected_v_1__x; for (j = 1; j < OUTST; j = j + 1) selected_v_1__or[j] <= selected_v_1__or[j-1]; end
- assign selected_v_1 = selected_v_1__or[OUTST-1];
+ generate if (FACE != 0) begin : g_face_selected_v_1
+  (* keep = 1 *) reg selected_v_1__fr; (* keep = 1 *) reg selected_v_1__fd;
+  always @(posedge ck_q1) selected_v_1__fr <= selected_v_1__x;   // producer-side relay (child root)
+  always @(posedge ck_q1) selected_v_1__fd <= selected_v_1__fr;   // face-side relay (root of the quadrant beside the E/S face)
+  assign selected_v_1 = selected_v_1__fd;
+ end else begin : g_c16_selected_v_1
+  always @(posedge ck_q1) begin : g_or_selected_v_1 integer j; selected_v_1__or[0] <= selected_v_1__x; for (j = 1; j < OUTST; j = j + 1) selected_v_1__or[j] <= selected_v_1__or[j-1]; end
+  assign selected_v_1 = selected_v_1__or[OUTST-1];
+ end endgenerate
  wire selected_v_2__x; (* keep = 1 *) reg selected_v_2__or [0:OUTST-1];
- always @(posedge ck_q2) begin : g_or_selected_v_2 integer j; selected_v_2__or[0] <= selected_v_2__x; for (j = 1; j < OUTST; j = j + 1) selected_v_2__or[j] <= selected_v_2__or[j-1]; end
- assign selected_v_2 = selected_v_2__or[OUTST-1];
+ generate if (FACE != 0) begin : g_face_selected_v_2
+  (* keep = 1 *) reg selected_v_2__fr; (* keep = 1 *) reg selected_v_2__fd;
+  always @(posedge ck_q2) selected_v_2__fr <= selected_v_2__x;   // producer-side relay (child root)
+  always @(posedge ck_q3) selected_v_2__fd <= selected_v_2__fr;   // face-side relay (root of the quadrant beside the E/S face)
+  assign selected_v_2 = selected_v_2__fd;
+ end else begin : g_c16_selected_v_2
+  always @(posedge ck_q2) begin : g_or_selected_v_2 integer j; selected_v_2__or[0] <= selected_v_2__x; for (j = 1; j < OUTST; j = j + 1) selected_v_2__or[j] <= selected_v_2__or[j-1]; end
+  assign selected_v_2 = selected_v_2__or[OUTST-1];
+ end endgenerate
  wire selected_v_3__x; (* keep = 1 *) reg selected_v_3__or [0:OUTST-1];
- always @(posedge ck_q3) begin : g_or_selected_v_3 integer j; selected_v_3__or[0] <= selected_v_3__x; for (j = 1; j < OUTST; j = j + 1) selected_v_3__or[j] <= selected_v_3__or[j-1]; end
- assign selected_v_3 = selected_v_3__or[OUTST-1];
+ generate if (FACE != 0) begin : g_face_selected_v_3
+  (* keep = 1 *) reg selected_v_3__fr; (* keep = 1 *) reg selected_v_3__fd;
+  always @(posedge ck_q3) selected_v_3__fr <= selected_v_3__x;   // producer-side relay (child root)
+  always @(posedge ck_q3) selected_v_3__fd <= selected_v_3__fr;   // face-side relay (root of the quadrant beside the E/S face)
+  assign selected_v_3 = selected_v_3__fd;
+ end else begin : g_c16_selected_v_3
+  always @(posedge ck_q3) begin : g_or_selected_v_3 integer j; selected_v_3__or[0] <= selected_v_3__x; for (j = 1; j < OUTST; j = j + 1) selected_v_3__or[j] <= selected_v_3__or[j-1]; end
+  assign selected_v_3 = selected_v_3__or[OUTST-1];
+ end endgenerate
  wire [591:0] selected_line_0__x; (* keep = 1 *) reg [591:0] selected_line_0__or [0:OUTST-1];
- always @(posedge ck_q0) begin : g_or_selected_line_0 integer j; selected_line_0__or[0] <= selected_line_0__x; for (j = 1; j < OUTST; j = j + 1) selected_line_0__or[j] <= selected_line_0__or[j-1]; end
- assign selected_line_0 = selected_line_0__or[OUTST-1];
+ generate if (FACE != 0) begin : g_face_selected_line_0
+  (* keep = 1 *) reg [591:0] selected_line_0__fr; (* keep = 1 *) reg [591:0] selected_line_0__fd;
+  always @(posedge ck_q0) selected_line_0__fr <= selected_line_0__x;   // producer-side relay (child root)
+  always @(posedge ck_q1) selected_line_0__fd <= selected_line_0__fr;   // face-side relay (root of the quadrant beside the E/S face)
+  assign selected_line_0 = selected_line_0__fd;
+ end else begin : g_c16_selected_line_0
+  always @(posedge ck_q0) begin : g_or_selected_line_0 integer j; selected_line_0__or[0] <= selected_line_0__x; for (j = 1; j < OUTST; j = j + 1) selected_line_0__or[j] <= selected_line_0__or[j-1]; end
+  assign selected_line_0 = selected_line_0__or[OUTST-1];
+ end endgenerate
  wire [591:0] selected_line_1__x; (* keep = 1 *) reg [591:0] selected_line_1__or [0:OUTST-1];
- always @(posedge ck_q1) begin : g_or_selected_line_1 integer j; selected_line_1__or[0] <= selected_line_1__x; for (j = 1; j < OUTST; j = j + 1) selected_line_1__or[j] <= selected_line_1__or[j-1]; end
- assign selected_line_1 = selected_line_1__or[OUTST-1];
+ generate if (FACE != 0) begin : g_face_selected_line_1
+  (* keep = 1 *) reg [591:0] selected_line_1__fr; (* keep = 1 *) reg [591:0] selected_line_1__fd;
+  always @(posedge ck_q1) selected_line_1__fr <= selected_line_1__x;   // producer-side relay (child root)
+  always @(posedge ck_q1) selected_line_1__fd <= selected_line_1__fr;   // face-side relay (root of the quadrant beside the E/S face)
+  assign selected_line_1 = selected_line_1__fd;
+ end else begin : g_c16_selected_line_1
+  always @(posedge ck_q1) begin : g_or_selected_line_1 integer j; selected_line_1__or[0] <= selected_line_1__x; for (j = 1; j < OUTST; j = j + 1) selected_line_1__or[j] <= selected_line_1__or[j-1]; end
+  assign selected_line_1 = selected_line_1__or[OUTST-1];
+ end endgenerate
  wire [591:0] selected_line_2__x; (* keep = 1 *) reg [591:0] selected_line_2__or [0:OUTST-1];
- always @(posedge ck_q2) begin : g_or_selected_line_2 integer j; selected_line_2__or[0] <= selected_line_2__x; for (j = 1; j < OUTST; j = j + 1) selected_line_2__or[j] <= selected_line_2__or[j-1]; end
- assign selected_line_2 = selected_line_2__or[OUTST-1];
+ generate if (FACE != 0) begin : g_face_selected_line_2
+  (* keep = 1 *) reg [591:0] selected_line_2__fr; (* keep = 1 *) reg [591:0] selected_line_2__fd;
+  always @(posedge ck_q2) selected_line_2__fr <= selected_line_2__x;   // producer-side relay (child root)
+  always @(posedge ck_q3) selected_line_2__fd <= selected_line_2__fr;   // face-side relay (root of the quadrant beside the E/S face)
+  assign selected_line_2 = selected_line_2__fd;
+ end else begin : g_c16_selected_line_2
+  always @(posedge ck_q2) begin : g_or_selected_line_2 integer j; selected_line_2__or[0] <= selected_line_2__x; for (j = 1; j < OUTST; j = j + 1) selected_line_2__or[j] <= selected_line_2__or[j-1]; end
+  assign selected_line_2 = selected_line_2__or[OUTST-1];
+ end endgenerate
  wire [591:0] selected_line_3__x; (* keep = 1 *) reg [591:0] selected_line_3__or [0:OUTST-1];
- always @(posedge ck_q3) begin : g_or_selected_line_3 integer j; selected_line_3__or[0] <= selected_line_3__x; for (j = 1; j < OUTST; j = j + 1) selected_line_3__or[j] <= selected_line_3__or[j-1]; end
- assign selected_line_3 = selected_line_3__or[OUTST-1];
+ generate if (FACE != 0) begin : g_face_selected_line_3
+  (* keep = 1 *) reg [591:0] selected_line_3__fr; (* keep = 1 *) reg [591:0] selected_line_3__fd;
+  always @(posedge ck_q3) selected_line_3__fr <= selected_line_3__x;   // producer-side relay (child root)
+  always @(posedge ck_q3) selected_line_3__fd <= selected_line_3__fr;   // face-side relay (root of the quadrant beside the E/S face)
+  assign selected_line_3 = selected_line_3__fd;
+ end else begin : g_c16_selected_line_3
+  always @(posedge ck_q3) begin : g_or_selected_line_3 integer j; selected_line_3__or[0] <= selected_line_3__x; for (j = 1; j < OUTST; j = j + 1) selected_line_3__or[j] <= selected_line_3__or[j-1]; end
+  assign selected_line_3 = selected_line_3__or[OUTST-1];
+ end endgenerate
  wire fault__x; (* keep = 1 *) reg fault__or [0:OUTST-1];
- always @(posedge ck_ctl) begin : g_or_fault integer j; fault__or[0] <= fault__x; for (j = 1; j < OUTST; j = j + 1) fault__or[j] <= fault__or[j-1]; end
- assign fault = fault__or[OUTST-1];
+ generate if (FACE != 0) begin : g_face_fault
+  (* keep = 1 *) reg fault__fr; (* keep = 1 *) reg fault__fd;
+  always @(posedge ck_ctl) fault__fr <= fault__x;   // producer-side relay (child root)
+  always @(posedge ck_ctl) fault__fd <= fault__fr;   // face-side relay (root of the quadrant beside the E/S face)
+  assign fault = fault__fd;
+ end else begin : g_c16_fault
+  always @(posedge ck_ctl) begin : g_or_fault integer j; fault__or[0] <= fault__x; for (j = 1; j < OUTST; j = j + 1) fault__or[j] <= fault__or[j-1]; end
+  assign fault = fault__or[OUTST-1];
+ end endgenerate
  wire [13:0] cw;
  wire [15:0] thr;
  wire [13:0] ties_0, ties_1, ties_2, ties_3;

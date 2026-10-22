@@ -4,7 +4,8 @@
 module tb_ot_hidx_s3_flat_lpio;
     parameter integer MUT = 0;
     parameter integer OUTST = 1;
-    localparam integer DO = 1 + OUTST;   // C16: outputs compared 1 + OUTST edges later (pin register + output relays)
+    parameter integer FACE = 0;   // C17 (HBMc/TILES4): face-landed IO, one more input stage at every port
+    localparam integer DO = 1 + FACE + OUTST;   // C16: outputs compared 1 + OUTST edges later (pin register + output relays); C17 +FACE
     reg clk = 1'b0;  always #0.5 clk = ~clk;
     reg rst = 0;  reg [3:0] rst_dl;
     wire rst_f = rst_dl[3];
@@ -52,7 +53,7 @@ module tb_ot_hidx_s3_flat_lpio;
     wire [0:0] fo_fault, lo_fault;  reg [0:0] dlo_fault [0:DO-1];
     always @(posedge clk) begin : g_dlo_fault integer j; dlo_fault[0] <= fo_fault; for (j = 1; j <= DO-1; j = j + 1) dlo_fault[j] <= dlo_fault[j - 1]; end
     ot_hidx_s3_flat_rsref u_flat (.clk(clk), .rst_n(rst_f), .op(fi_op), .pass(fi_pass), .addr(fi_addr), .k(fi_k), .in_line_0(fi_in_line_0), .in_line_1(fi_in_line_1), .in_line_2(fi_in_line_2), .in_line_3(fi_in_line_3), .selected_v_0(fo_selected_v_0), .selected_v_1(fo_selected_v_1), .selected_v_2(fo_selected_v_2), .selected_v_3(fo_selected_v_3), .selected_line_0(fo_selected_line_0), .selected_line_1(fo_selected_line_1), .selected_line_2(fo_selected_line_2), .selected_line_3(fo_selected_line_3), .fault(fo_fault));
-    ot_hidx_s3_flat_lpio #(.MUT(MUT), .OUTST(OUTST)) u_lp (.ck_ctl(clk), .ck_q0(clk), .ck_q1(clk), .ck_q2(clk), .ck_q3(clk), .rst_n(rst), .op(li_op), .pass(li_pass), .addr(li_addr), .k(li_k), .in_line_0(li_in_line_0), .in_line_1(li_in_line_1), .in_line_2(li_in_line_2), .in_line_3(li_in_line_3), .selected_v_0(lo_selected_v_0), .selected_v_1(lo_selected_v_1), .selected_v_2(lo_selected_v_2), .selected_v_3(lo_selected_v_3), .selected_line_0(lo_selected_line_0), .selected_line_1(lo_selected_line_1), .selected_line_2(lo_selected_line_2), .selected_line_3(lo_selected_line_3), .fault(lo_fault));
+    ot_hidx_s3_flat_lpio #(.MUT(MUT), .OUTST(OUTST), .FACE(FACE)) u_lp (.ck_ctl(clk), .ck_q0(clk), .ck_q1(clk), .ck_q2(clk), .ck_q3(clk), .rst_n(rst), .op(li_op), .pass(li_pass), .addr(li_addr), .k(li_k), .in_line_0(li_in_line_0), .in_line_1(li_in_line_1), .in_line_2(li_in_line_2), .in_line_3(li_in_line_3), .selected_v_0(lo_selected_v_0), .selected_v_1(lo_selected_v_1), .selected_v_2(lo_selected_v_2), .selected_v_3(lo_selected_v_3), .selected_line_0(lo_selected_line_0), .selected_line_1(lo_selected_line_1), .selected_line_2(lo_selected_line_2), .selected_line_3(lo_selected_line_3), .fault(lo_fault));
     function [31:0] rnd; input integer k; rnd = $urandom; endfunction
     integer cyc = 0, nc = 0, bad = 0;
     always @(negedge clk) begin
