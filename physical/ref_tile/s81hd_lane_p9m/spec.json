@@ -1,0 +1,260 @@
+{
+ "name": "s81hd_lane_p9m",
+ "top": "ot_s81hd_lane",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_util.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_lsc_parts.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_lane_sc6.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 898.56,
+  "h": 669.6,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "rx",
+   "tx"
+  ],
+  "E": [
+   "tx_v",
+   "tx_d",
+   "rx_v",
+   "rx_d",
+   "flt",
+   "ck",
+   "rst_n",
+   "chb"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:STW-S81c-DIE3-LANE",
+  "branch": "claude/s81-head-lane-sc-1022",
+  "tag": "s81hd_lane_p9m",
+  "purpose": "HEAD lane (b) parent: closed lane + stacked adapter sub-children (sc6)",
+  "views_to": "physical/ref_tile/s81hd_lane_p9m/views",
+  "record_to": "results/rtl/ref_tile/s81hd_lane_p9m",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "physical/ref_tile/dscoll_lane_w_s8ng/views",
+   "results/rtl/s81_head_lane_sc_1022"
+  ],
+  "benches": [
+   {
+    "name": "lsc_eq_base",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_head/test/run_hd_lane_sc_bench.sh {RUN}/lsc sc6 eq base",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lsc_eq cycles \\d+ outputs exact",
+    "pass_witness": "results/rtl/s81_head_lane_sc_1022/sc6_eq_base.log"
+   },
+   {
+    "name": "lsc_func_base",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_head/test/run_hd_lane_sc_bench.sh {RUN}/lsc sc6 func base",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane flits \\d+/\\d+ exact, overflow flagged",
+    "pass_witness": "results/rtl/s81_head_lane_sc_1022/sc6_func_base.log"
+   },
+   {
+    "name": "lsc_eq_mut_ovf",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_head/test/run_hd_lane_sc_bench.sh {RUN}/lsc sc6 eq OVF",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lsc_eq",
+    "fail_regex": "^FAIL lsc_eq mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_head_lane_sc_1022/sc6_eq_OVF.log"
+   },
+   {
+    "name": "lsc_eq_mut_rp",
+    "cmd": "J=2 bash rtl/dsrom_sys/s81_head/test/run_hd_lane_sc_bench.sh {RUN}/lsc sc6 eq RP",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lsc_eq",
+    "fail_regex": "^FAIL lsc_eq mismatches [1-9]",
+    "fail_witness": "results/rtl/s81_head_lane_sc_1022/sc6_eq_RP.log"
+   }
+  ]
+ },
+ "recipe": 1,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered, unchanged edges (freeze): tx_d/tx_v land in the TX / control sub-children's pin flops, rx_v/rx_d/flt leave the control / RX sub-children's flops; rx/tx/chb are wires to the CLOSED lane child; the only parent flop is rxen."
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+   "count": 1,
+   "inst": "*u_ln",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81hd_lsc_t9/views/ot_s81hd_lsc_t9",
+   "count": 1,
+   "inst": "*u_t0",
+   "at": [
+    777.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81hd_lsc_t9/views/ot_s81hd_lsc_t9",
+   "count": 1,
+   "inst": "*u_t1",
+   "at": [
+    777.6,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81hd_lsc_t9/views/ot_s81hd_lsc_t9",
+   "count": 1,
+   "inst": "*u_t2",
+   "at": [
+    777.6,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81hd_lsc_t8/views/ot_s81hd_lsc_t8",
+   "count": 1,
+   "inst": "*u_t3",
+   "at": [
+    777.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81hd_lsc_r0m/views/ot_s81hd_lsc_r0m",
+   "count": 1,
+   "inst": "*u_r0",
+   "at": [
+    777.6,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/s81hd_lsc_r1m/views/ot_s81hd_lsc_r1m",
+   "count": 1,
+   "inst": "*u_r1",
+   "at": [
+    777.6,
+    518.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "inter": [],
+ "pin_ranges": {
+  "rx": [
+   45.36,
+   331.56
+  ],
+  "tx": [
+   333.72,
+   619.92
+  ],
+  "tx_d": [
+   45.36,
+   317.52
+  ],
+  "tx_v": [
+   319.68,
+   320.76
+  ],
+  "chb": [
+   324.0,
+   326.16
+  ],
+  "ck": [
+   341.28,
+   343.44
+  ],
+  "rst_n": [
+   345.6,
+   347.76
+  ],
+  "rx_v": [
+   349.92,
+   351.0
+  ],
+  "flt": [
+   353.2,
+   358.56
+  ],
+  "rx_d": [
+   360.72,
+   624.24
+  ]
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "every hard sub-child lands rst_n itself (2 stages + own tree3, identical in each), so the parent adds no landing (same release edge as the flat lane: 2 + tree3)."
+ },
+ "fill_reason": {
+  "pin_bound": "child-bound: the CLOSED 725.76 x 583.2 lane view + 43.2-um ring + the stacked adapter sub-children band (x 777.6-864); parent soft = rxen only; never shrink."
+ },
+ "structural_change": "s81hd_lane_p9 (STW-S81c-DIE3-LANE 10-22, HEAD lane design (b) successor): the adapter is STACKED hard sub-children (ot_s81hd_lsc_*), each closed with its own local CTS root, replacing p8's single 4,523-sink adapter root along the 583-um strip (TT 163-170 / FF 140-162) and p7f/p6a's pad-chain slice hold (FF -98.9 / -63.0). Parent = closed lane child + sub-children, judged per linked child pair TT+FF; RTL ot_s81hd_lane_{sc6,sc4}.sv cycle-exact vs the current ot_s81hd_lane (eq bench + OVF/RP/SKEW mutants). Ports/widths/edges frozen.",
+ "child_clock_ref": "boundary",
+ "child_clock_ref_reason": "the parent adapter talks to the child's boundary pin registers (lo_* landing, li_* sender, W-face rx/tx flops): target = the child's routed boundary insertion (insertion.json TT mean 698.4), not its deepest leaf",
+ "std_area_um2": 2600.0,
+ "slot_change_request": {
+  "reason": "H10 reserve ln_* is 518.4 x 1123.2 R0; the closed lane child is 725.76 x 583.2 (no R90 for SRAM views), so the head die re-slots the 13 lanes to 898.56 x 669.6 (area 0.602 mm2 vs 0.582 reserve). Ports / widths / protocol / cycles unchanged (freeze). Faces: SerDes rx/tx on W (MY for the E-SerDes lanes); core tx_d/rx_d/v/flt/ck/rst_n/chb on E (as m/f)."
+ },
+ "orfs_vars": {
+  "OT_SPINE_PAD_CELL": "BUFx4_ASAP7_75t_R"
+ }
+}
