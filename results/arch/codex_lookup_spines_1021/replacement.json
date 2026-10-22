@@ -1,0 +1,18 @@
+{
+  "generated": "2026-10-21T21:19:50.040442-07:00",
+  "source": "2dee22619",
+  "actual_prior_failures": {
+    "n": {
+      "root": "ck_hash[1]",
+      "tt_spread_ps": 95.2,
+      "native_max": 32
+    },
+    "o": {
+      "root": "ck_hash[2]",
+      "tt_spread_ps": 117.3,
+      "native_max": 32
+    }
+  },
+  "replacement": "Same RTL and domain constraints. Physical multiport spines replace prior fixed regional buffers and the remaining TritonCTS trees. All 11 actual source domains are measured after construction.",
+  "new_physical_qualification": "Pending actual gate; no success inferred from predecessor."
+}
