@@ -12,7 +12,7 @@ ONLY clock-related arcs in the clocked model (a data output from ck is never rep
 """
 import re, sys
 
-CK = re.compile(r'^(ck|ckf)$')
+CK = re.compile(r'^(ck|ckf|ck_\w+|ckf_\w+)$')
 
 
 def blocks(text, head):
