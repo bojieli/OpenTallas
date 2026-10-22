@@ -35,6 +35,12 @@ module ot_sram_showahead_1r1w #(
 `endif
  end
 `ifdef OT_SHOWAHEAD_FLOP
+ // hit compares computed twice behind keep_hierarchy (one per 8-bit half of every slice's hit flags)
+ wire hit_ca, hit_cb, hit_pa, hit_pb;
+ ot_sa_hit #(.AW(AW),.ID(0)) u_hca(.en(we),.a(wa),.b(ra),.hit(hit_ca));
+ ot_sa_hit #(.AW(AW),.ID(1)) u_hcb(.en(we),.a(wa),.b(ra),.hit(hit_cb));
+ ot_sa_hit #(.AW(AW),.ID(2)) u_hpa(.en((WREG!=0)&&wv),.a(waddr),.b(ra),.hit(hit_pa));
+ ot_sa_hit #(.AW(AW),.ID(3)) u_hpb(.en((WREG!=0)&&wv),.a(waddr),.b(ra),.hit(hit_pb));
  // STW-S81c-COLLA 10-22 (TOPK control h NEEDS_RTL: SRAM clk->q -> queue head -> packet done, TT -111): opt-in flop
  // storage per 16-bit slice.  The macro read is registered (old word); here the read ADDRESS is registered (kept copy
  // per slice, same edge) and the word is read combinationally after the edge.  They differ only when the landing write
@@ -66,11 +72,29 @@ module ot_sram_showahead_1r1w #(
 `endif
  for(s=0;s<NS;s=s+1) begin:g_slice
   localparam integer LO=s*16, SW=(W-LO<16)?W-LO:16;
+`ifdef OT_SHOWAHEAD_FLOP
+  // control i/j census #3 (cur_q QN 48 loads: with the AND-OR flop read the per-16-bit hit flag folds into 3 AOI
+  // pins per bit): one cur/prev hit-flag pair per 8-bit half, behind keep_hierarchy copies; each half's flags take
+  // their D from their own hit compare (hit_ca/cb, hit_pa/pb: NS loads each).  Same D, same edge, same reset -> q
+  // identical.
+  localparam integer HA=(SW<8)?SW:8, HB=SW-HA;
+  wire cqa, pqa;
+  ot_sa_rcopy #(.ID(4*s))   u_ca(.clk(clk),.rst_n(rst_n[s]),.d((MUT==1)?1'b0:hit_ca),.q(cqa));
+  ot_sa_rcopy #(.ID(4*s+1)) u_pa(.clk(clk),.rst_n(rst_n[s]),.d((MUT==2)?1'b0:hit_pa),.q(pqa));
+  assign q[LO+:HA]=cqa ? wdata[LO+:HA] : pqa ? prevdata[LO+:HA] : raw[LO+:HA];
+  if(HB>0) begin:g_hb
+   wire cqb, pqb;
+   ot_sa_rcopy #(.ID(4*s+2)) u_cb(.clk(clk),.rst_n(rst_n[s]),.d((MUT==1)?1'b0:hit_cb),.q(cqb));
+   ot_sa_rcopy #(.ID(4*s+3)) u_pb(.clk(clk),.rst_n(rst_n[s]),.d((MUT==2)?1'b0:hit_pb),.q(pqb));
+   assign q[LO+HA+:HB]=cqb ? wdata[LO+HA+:HB] : pqb ? prevdata[LO+HA+:HB] : raw[LO+HA+:HB];
+  end
+`else
   (* keep="true" *) reg cur_q, prev_q;
   always @(posedge clk or negedge rst_n[s])
    if(!rst_n[s]) begin cur_q<=1'b0; prev_q<=1'b0; end
    else begin cur_q<=(MUT==1)?1'b0:current_hit; prev_q<=(MUT==2)?1'b0:previous_hit; end
   assign q[LO+:SW]=cur_q ? wdata[LO+:SW] : prev_q ? prevdata[LO+:SW] : raw[LO+:SW];
+`endif
  end endgenerate
 `ifndef SYNTHESIS
  initial begin
@@ -88,6 +112,10 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_sa_ohcopy #(parameter integer W=1, ID=0)(input wire clk, rst_n, input wire [W-1:0] d, output wire [W-1:0] q);
  (* keep *) reg [W-1:0] r; always @(posedge clk or negedge rst_n) if(!rst_n) r<='0; else r<=d; assign q=r;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_sa_hit #(parameter integer AW=1, ID=0)(input wire en, input wire [AW-1:0] a, b, output wire hit);
+ assign hit = en && a == b;
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_sa_rcopy #(parameter integer ID=0)(input wire clk, rst_n, d, output wire q);
