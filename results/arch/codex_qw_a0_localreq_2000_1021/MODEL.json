@@ -1,0 +1,38 @@
+{
+  "scope": "A0 bank 4 request-distribution successor; same logical edge and entry0 to entry19 contract",
+  "baseline_source": "712494b5e",
+  "baseline_metadata": "c976fb2a0",
+  "actual_path_report": "NK rc14a 3_detailed_place.rpt, bank4 col0 any_d",
+  "path_stage": "complete pre-CTS; final CTS phase remains binding",
+  "baseline_data_ps": 580.03,
+  "baseline_q_ps": 70.29,
+  "baseline_wire_ps": 158.79,
+  "baseline_logic_and_repeaters_ps": 350.95,
+  "baseline_repeaters": 7,
+  "baseline_boolean_cells": 2,
+  "plan": "One private combinational reduction per actual leaf, using existing north/south kept request state. Keep hierarchy so synthesis does not recreate the global shared reduction. Place decoder gates beside the corresponding hard leaf input in existing standard-cell bands. No duplicate register state and no added edge.",
+  "replicas": 10,
+  "decode_width": 5,
+  "max_decode_input_fanout": 12,
+  "latency_edges_added": 0,
+  "state_bits_added": 0,
+  "register_clock_changes": 0,
+  "boundary_request_bits_per_leaf_per_cycle": 14,
+  "production_leaves": 10,
+  "geometry_um": [
+    820.8,
+    907.2
+  ],
+  "lattice_um": 43.2,
+  "new_macro_count": 0,
+  "area_margin": "at most two small logic gates per leaf; under 0.1% of existing ~26,700 um2 movable standard-cell area",
+  "channel_model": "50 north/south request-bit leaf connections replace the shared reduction tree; 5 bits per leaf, native fanout <=12. Existing open macro gutters retained, no outline or hard child movement.",
+  "schedule": "same values from existing rq_ce_[sn][1] state on the same edge, local OR is combinational",
+  "pending": [
+    "exact final CTS setup path and launch/capture phase",
+    "native source census and decoder replication census",
+    "existing production component positive and MUT4 witnesses",
+    "MAIN and fallback physical gates, clock and strict timing",
+    "separate xm9 minimum path after final clock evidence"
+  ]
+}
