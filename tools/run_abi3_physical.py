@@ -2125,7 +2125,7 @@ def gate_trial_grt(case: Path, results_dir: Path, source: Path, image: str,
     relative = results_dir.relative_to(case)
     logs = case / "logs" / relative.relative_to("results")
     def invoke(recovering=False):
-        goal = (f"-o /work/{relative}/4_cts.odb " if recovering else "") + make_args + "grt"
+        goal = (f"-o /work/{relative}/4_cts.odb " if recovering else "") + make_args.strip() + " grt"
         cmd = ["docker", "run", "--rm", "--name", container,
                "-v", f"{source}:/src:ro", "-v", f"{case}:/work",
                "-w", "/OpenROAD-flow-scripts/flow", image, "bash", "-lc",
