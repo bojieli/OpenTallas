@@ -1,0 +1,12 @@
+{
+  "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/share/yosys/simcells.v",
+  "sha256": "63918d5fd356ffcda0780eccfa4304a9888603a5266bbc1c812bf5a9bdd65b3c",
+  "models": {
+    "$_DFF_P_": "module \\$_DFF_P_ (D, C, Q);\ninput D, C;\noutput reg Q;\nalways @(posedge C) begin\n\tQ <= D;\nend\nendmodule",
+    "$_DFF_PN0_": "module \\$_DFF_PN0_ (D, C, R, Q);\ninput D, C, R;\noutput reg Q;\nalways @(posedge C or negedge R) begin\n\tif (R == 0)\n\t\tQ <= 0;\n\telse\n\t\tQ <= D;\nend\nendmodule",
+    "$_SDFF_PN0_": "module \\$_SDFF_PN0_ (D, C, R, Q);\ninput D, C, R;\noutput reg Q;\nalways @(posedge C) begin\n\tif (R == 0)\n\t\tQ <= 0;\n\telse\n\t\tQ <= D;\nend\nendmodule",
+    "$_SDFF_PN1_": "module \\$_SDFF_PN1_ (D, C, R, Q);\ninput D, C, R;\noutput reg Q;\nalways @(posedge C) begin\n\tif (R == 0)\n\t\tQ <= 1;\n\telse\n\t\tQ <= D;\nend\nendmodule",
+    "$_SDFF_PP0_": "module \\$_SDFF_PP0_ (D, C, R, Q);\ninput D, C, R;\noutput reg Q;\nalways @(posedge C) begin\n\tif (R == 1)\n\t\tQ <= 0;\n\telse\n\t\tQ <= D;\nend\nendmodule",
+    "$_SDFF_PP1_": "module \\$_SDFF_PP1_ (D, C, R, Q);\ninput D, C, R;\noutput reg Q;\nalways @(posedge C) begin\n\tif (R == 1)\n\t\tQ <= 1;\n\telse\n\t\tQ <= D;\nend\nendmodule"
+  }
+}
