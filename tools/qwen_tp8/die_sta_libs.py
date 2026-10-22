@@ -72,6 +72,43 @@ def measured_clock_refs(lib_path, insertion_path, corner):
     return result
 
 
+def kphy_boundary_model(master, root, view, libs):
+    """QK3-PHYCLK 10-21 (opt-in OT_KPHY_BOUNDARY_MODEL=1): the KV-link UCIe PHY abstract ot_qkvd_ucie_x64_phy
+    (schema opentallas.qwen-kv-die.link-phy-abstract, tools/qwen_kv_die/phy_gen.py) is the same kind of licensed-IP
+    boundary model as the Q link PHY branch above: registered FDI pins, every Liberty arc referenced to its input clk,
+    no clock_tree_path -> no internal tree to measure; its clock pin is timed at the pin (R 0, listed in
+    assumed_clock_insertion), exactly as the KV die STA (kvsys_clocks assumed_ideal) and the KV die clock targets
+    (die_clock/boundary_targets.py) time it.  Admitted ONLY for the exact hash-approved profile (DP.APPROVED, all 7
+    files) whose three corner libs pass DP.validate_lib_roles and the pin-referenced boundary check.  -> record | None"""
+    from qwen_tp8 import diagnostic_phy_etm as DP     # QK3-QGEN: r10 kit src predates the module-level DP import
+    if master != DP.MASTER or os.environ.get('OT_KPHY_BOUNDARY_MODEL') != '1':
+        return None
+    import hashlib
+    from die_clock.boundary_targets import boundary_clock_pins, cell_body
+    if set(libs) != {'tt', 'ff', 'ss'}:
+        raise ValueError(f'{master}: K PHY boundary model requires TT/FF/SS Liberty')
+    hashes = {}
+    for suffix, digest in DP.APPROVED.items():
+        p = view / (master + suffix)
+        got = hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else None
+        if got != digest:
+            raise ValueError(f'{master}: K PHY profile {suffix} not the approved abstract ({got})')
+        hashes[suffix] = got
+    sheet = json.loads((view / (master + '.json')).read_text())
+    if sheet.get('schema') != DP.SCHEMA or sheet.get('name') != master:
+        raise ValueError(f'{master}: K PHY sheet schema/name differs')
+    for c, rel in libs.items():
+        if (root / rel).resolve() != (view / f'{master}_{c}.lib').resolve():
+            raise ValueError(f'{master}: {c} Liberty is not the approved profile file')
+        text = (root / rel).read_text()
+        DP.validate_lib_roles(text)
+        if set(boundary_clock_pins(cell_body(text, master), master)) != {'clk'}:
+            raise ValueError(f'{master}: K PHY clock pin set differs from clk')
+    return dict(reference_kind='LIBERTY_ARCS_PIN_REFERENCED', internal_tree='NONE_IN_MODEL', clock='clk',
+                model_class='OFFCHIP_BOUNDARY_PHY_MODEL', profile_sha256=hashes,
+                scope='licensed-IP abstract (claim_boundary of the sheet); clock timed at the pin, R 0; no PLL phase')
+
+
 def assumed_clock_refs(master, ports, physical_ports=None, clock_ports=None):
     """Use the exact generated Liberty/LEF names, including one-bit buses.
 
@@ -313,6 +350,14 @@ def main():
             for c, rel in libs.items():
                 shutil.copy(root / rel, out / f'qfd_etm_{mst}_{c}.lib')
             views['hard_macro'][mst] = str(r['view'])
+            skip.add(mst)
+            continue
+        kphy = kphy_boundary_model(mst, root, vd, libs)
+        if kphy is not None:
+            for c, rel in libs.items():
+                shutil.copy(root / rel, out / f'qfd_etm_{mst}_{c}.lib')
+            views['hard_macro'][mst] = str(r['view'])
+            views.setdefault('phy_boundary_models', {})[mst] = kphy
             skip.add(mst)
             continue
         leaves[mst] = {c: measured_clock_refs(root / libs[c], vd / 'insertion.json', c) for c in ('tt', 'ff', 'ss')}

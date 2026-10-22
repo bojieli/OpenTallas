@@ -78,13 +78,26 @@ def _hard(s=None):
         if part.strip():
             inst, ports = part.split(':')
             out[inst.strip()] = [p.strip() for p in ports.split(',') if p.strip()]
-    if os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1':
-        # cf is the actual combinational core/calendar fault. Its registered
-        # dc status carries a different phase, so it is a genuine tree source.
+    if os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1' or os.environ.get('OT_SPLIT_FAULT_TT_CF', '0') == '1':
+        # SQ-QB2-FUNC 10-21 (same rule as codex/q-headprep-1021 607f24c57, here also opt-in on the historical 595 line
+        # via OT_SPLIT_FAULT_TT_CF=1): qfd_tt_ctlm_dv.cf = core_fault | c_fault is the TT's combinational fault; dc[52:51]
+        # carries it only registered and only into the RESULT capture, so cf is a genuine die fault-tree source (leaf).
+        # (codex/q-headprep-1021: the same leaf under OT_QWEN_FAULT_FACE=1; fault_face_bind.py keeps its own single-clock refusal.)
         ports = out.setdefault('tt_ctlm', [])
         if 'cf' not in ports:
             ports.append('cf')
     return out
+
+
+def _tt_cf_clock_guard(m, hard):
+    """cf is produced on the TT's own clock: admit it only when tt_ctlm sits on exactly ONE clock_trunk bus (a
+    multi-clock TT needs an explicit per-port owner + landing; fail closed, never guess the capturing root)."""
+    if 'cf' not in hard.get('tt_ctlm', ()):
+        return None
+    cks = sorted({b for b, cl, _n, eps in m['buses'] if cl == 'clock_trunk' and any(e[0] == 'tt_ctlm' for e in eps)})
+    if len(cks) != 1:
+        raise ValueError(f'fault emit: tt_ctlm.cf needs exactly one tt_ctlm clock root, found {cks}')
+    return cks[0]
 
 
 class Occ:
@@ -416,6 +429,7 @@ def pre(v, m, G):
             owners[inst] = row
     else:
         pos = G._pin_pos(v, m)
+    _tt_cf_clock_guard(m, hard)
     for inst, ports in hard.items():
         if inst not in by:
             raise ValueError(f'fault emit: hard fault block {inst} not on this GEN')

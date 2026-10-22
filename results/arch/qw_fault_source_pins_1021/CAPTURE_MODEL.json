@@ -1,0 +1,1267 @@
+{
+  "scope": "placement+exact perbit capture wires only; same owner/clock source plan; root/reset/clock/native/GEN qualification owed; actualR6bdata+reset occupancy conservative reference, R7AFfault roots notincluded",
+  "reference": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r6b/out/case",
+  "die": {
+    "w": 32983.176,
+    "h": 25984.8,
+    "mm2": 857.061,
+    "budget_mm2": 858,
+    "margin_mm2": 116.347
+  },
+  "actual_frames": 22489,
+  "leaves": [
+    {
+      "name": "model_capture0",
+      "xy": [
+        1608.768,
+        12193.2
+      ],
+      "n": 16,
+      "native_input_xy": [
+        [
+          0.096,
+          1.068
+        ],
+        [
+          0.096,
+          2.172
+        ],
+        [
+          0.096,
+          3.228
+        ],
+        [
+          0.096,
+          4.332
+        ],
+        [
+          0.096,
+          5.388
+        ],
+        [
+          0.096,
+          6.492
+        ],
+        [
+          0.096,
+          7.548
+        ],
+        [
+          0.096,
+          8.652000000000001
+        ],
+        [
+          0.096,
+          9.708
+        ],
+        [
+          0.096,
+          10.812000000000001
+        ],
+        [
+          0.096,
+          11.868
+        ],
+        [
+          0.096,
+          12.972000000000001
+        ],
+        [
+          0.096,
+          14.028
+        ],
+        [
+          0.096,
+          15.132000000000001
+        ],
+        [
+          0.096,
+          16.188000000000002
+        ],
+        [
+          0.096,
+          17.292
+        ]
+      ],
+      "sources": [
+        "flt_fault_code_0",
+        "flt_fault_code_1",
+        "flt_fault_code_2",
+        "flt_fault_code_3",
+        "flt_fault_code_4",
+        "flt_transport_cdc_fault_0",
+        "flt_transport_cdc_fault_1",
+        "flt_transport_cdc_fault_2",
+        "flt_transport_cdc_fault_3",
+        "flt_transport_cdc_fault_4",
+        "flt_transport_cdc_fault_5",
+        "flt_transport_cdc_fault_6",
+        "flt_transport_cdc_fault_7",
+        "flt_transport_cdc_fault_8",
+        "flt_transport_cdc_fault_9",
+        "flt_transport_cdc_fault_10"
+      ]
+    },
+    {
+      "name": "model_capture1",
+      "xy": [
+        1569.888,
+        12193.2
+      ],
+      "n": 16,
+      "native_input_xy": [
+        [
+          0.096,
+          1.068
+        ],
+        [
+          0.096,
+          2.172
+        ],
+        [
+          0.096,
+          3.228
+        ],
+        [
+          0.096,
+          4.332
+        ],
+        [
+          0.096,
+          5.388
+        ],
+        [
+          0.096,
+          6.492
+        ],
+        [
+          0.096,
+          7.548
+        ],
+        [
+          0.096,
+          8.652000000000001
+        ],
+        [
+          0.096,
+          9.708
+        ],
+        [
+          0.096,
+          10.812000000000001
+        ],
+        [
+          0.096,
+          11.868
+        ],
+        [
+          0.096,
+          12.972000000000001
+        ],
+        [
+          0.096,
+          14.028
+        ],
+        [
+          0.096,
+          15.132000000000001
+        ],
+        [
+          0.096,
+          16.188000000000002
+        ],
+        [
+          0.096,
+          17.292
+        ]
+      ],
+      "sources": [
+        "flt_transport_cdc_fault_11",
+        "flt_transport_cdc_fault_12",
+        "flt_transport_cdc_fault_13",
+        "flt_transport_cdc_fault_14",
+        "flt_transport_cdc_fault_15",
+        "flt_transport_cdc_fault_16",
+        "flt_transport_cdc_fault_17",
+        "flt_transport_cdc_fault_18",
+        "flt_transport_cdc_fault_19",
+        "flt_transport_abort_0",
+        "flt_transport_abort_1",
+        "flt_transport_abort_2",
+        "flt_transport_abort_3",
+        "flt_transport_abort_4",
+        "flt_transport_fault_cause_0",
+        "flt_transport_fault_cause_1"
+      ]
+    },
+    {
+      "name": "model_capture2",
+      "xy": [
+        1660.608,
+        12195.36
+      ],
+      "n": 16,
+      "native_input_xy": [
+        [
+          0.096,
+          1.068
+        ],
+        [
+          0.096,
+          2.172
+        ],
+        [
+          0.096,
+          3.228
+        ],
+        [
+          0.096,
+          4.332
+        ],
+        [
+          0.096,
+          5.388
+        ],
+        [
+          0.096,
+          6.492
+        ],
+        [
+          0.096,
+          7.548
+        ],
+        [
+          0.096,
+          8.652000000000001
+        ],
+        [
+          0.096,
+          9.708
+        ],
+        [
+          0.096,
+          10.812000000000001
+        ],
+        [
+          0.096,
+          11.868
+        ],
+        [
+          0.096,
+          12.972000000000001
+        ],
+        [
+          0.096,
+          14.028
+        ],
+        [
+          0.096,
+          15.132000000000001
+        ],
+        [
+          0.096,
+          16.188000000000002
+        ],
+        [
+          0.096,
+          17.292
+        ]
+      ],
+      "sources": [
+        "flt_transport_fault_cause_2",
+        "flt_transport_fault_cause_3",
+        "flt_transport_fault_cause_4",
+        "flt_transport_fault_cause_5",
+        "flt_transport_fault_cause_6",
+        "flt_transport_fault_cause_7",
+        "flt_transport_fault_cause_8",
+        "flt_transport_fault_cause_9",
+        "flt_transport_fault_cause_10",
+        "flt_transport_fault_cause_11",
+        "flt_transport_fault_cause_12",
+        "flt_transport_fault_cause_13",
+        "flt_transport_fault_cause_14",
+        "flt_transport_fault_cause_15",
+        "flt_transport_fault_cause_16",
+        "flt_transport_fault_cause_17"
+      ]
+    },
+    {
+      "name": "model_capture3",
+      "xy": [
+        1595.808,
+        12219.12
+      ],
+      "n": 16,
+      "native_input_xy": [
+        [
+          0.096,
+          1.068
+        ],
+        [
+          0.096,
+          2.172
+        ],
+        [
+          0.096,
+          3.228
+        ],
+        [
+          0.096,
+          4.332
+        ],
+        [
+          0.096,
+          5.388
+        ],
+        [
+          0.096,
+          6.492
+        ],
+        [
+          0.096,
+          7.548
+        ],
+        [
+          0.096,
+          8.652000000000001
+        ],
+        [
+          0.096,
+          9.708
+        ],
+        [
+          0.096,
+          10.812000000000001
+        ],
+        [
+          0.096,
+          11.868
+        ],
+        [
+          0.096,
+          12.972000000000001
+        ],
+        [
+          0.096,
+          14.028
+        ],
+        [
+          0.096,
+          15.132000000000001
+        ],
+        [
+          0.096,
+          16.188000000000002
+        ],
+        [
+          0.096,
+          17.292
+        ]
+      ],
+      "sources": [
+        "flt_transport_fault_cause_18",
+        "flt_transport_fault_cause_19",
+        "flt_transport_fault_cause_20",
+        "flt_transport_fault_cause_21",
+        "flt_transport_fault_cause_22",
+        "flt_transport_fault_cause_23",
+        "flt_transport_fault_cause_24",
+        "flt_transport_fault_cause_25",
+        "flt_transport_fault_cause_26",
+        "flt_transport_fault_cause_27",
+        "flt_transport_fault_cause_28",
+        "flt_transport_fault_cause_29",
+        "flt_transport_fault_cause_30",
+        "flt_transport_fault_cause_31",
+        "flt_transport_fault_cause_32",
+        "flt_transport_fault_cause_33"
+      ]
+    },
+    {
+      "name": "model_capture4",
+      "xy": [
+        1569.888,
+        12219.12
+      ],
+      "n": 6,
+      "native_input_xy": [
+        [
+          0.096,
+          1.068
+        ],
+        [
+          0.096,
+          2.172
+        ],
+        [
+          0.096,
+          3.228
+        ],
+        [
+          0.096,
+          4.332
+        ],
+        [
+          0.096,
+          5.388
+        ],
+        [
+          0.096,
+          6.492
+        ]
+      ],
+      "sources": [
+        "flt_transport_fault_cause_34",
+        "flt_transport_fault_cause_35",
+        "flt_transport_fault_cause_36",
+        "flt_transport_fault_cause_37",
+        "flt_transport_fault_cause_38",
+        "flt_transport_fault_cause_39"
+      ]
+    }
+  ],
+  "wires": [
+    {
+      "source": "flt_fault_code_0",
+      "source_xy": [
+        1563.72,
+        12120.395999999999
+      ],
+      "target": [
+        1608.864,
+        12194.268
+      ],
+      "um": 119.01600000000121
+    },
+    {
+      "source": "flt_fault_code_1",
+      "source_xy": [
+        1563.72,
+        12120.491999999998
+      ],
+      "target": [
+        1608.864,
+        12195.372000000001
+      ],
+      "um": 120.02400000000284
+    },
+    {
+      "source": "flt_fault_code_2",
+      "source_xy": [
+        1563.72,
+        12120.588
+      ],
+      "target": [
+        1608.864,
+        12196.428
+      ],
+      "um": 120.98400000000015
+    },
+    {
+      "source": "flt_fault_code_3",
+      "source_xy": [
+        1563.72,
+        12120.684
+      ],
+      "target": [
+        1608.864,
+        12197.532000000001
+      ],
+      "um": 121.99200000000178
+    },
+    {
+      "source": "flt_fault_code_4",
+      "source_xy": [
+        1563.72,
+        12120.779999999999
+      ],
+      "target": [
+        1608.864,
+        12198.588000000002
+      ],
+      "um": 122.95200000000273
+    },
+    {
+      "source": "flt_transport_cdc_fault_0",
+      "source_xy": [
+        1563.72,
+        12137.148
+      ],
+      "target": [
+        1608.864,
+        12199.692000000001
+      ],
+      "um": 107.6880000000017
+    },
+    {
+      "source": "flt_transport_cdc_fault_1",
+      "source_xy": [
+        1563.72,
+        12137.243999999999
+      ],
+      "target": [
+        1608.864,
+        12200.748000000001
+      ],
+      "um": 108.64800000000264
+    },
+    {
+      "source": "flt_transport_cdc_fault_2",
+      "source_xy": [
+        1563.72,
+        12137.34
+      ],
+      "target": [
+        1608.864,
+        12201.852
+      ],
+      "um": 109.65600000000063
+    },
+    {
+      "source": "flt_transport_cdc_fault_3",
+      "source_xy": [
+        1563.72,
+        12137.436
+      ],
+      "target": [
+        1608.864,
+        12202.908000000001
+      ],
+      "um": 110.61600000000158
+    },
+    {
+      "source": "flt_transport_cdc_fault_4",
+      "source_xy": [
+        1563.72,
+        12137.532
+      ],
+      "target": [
+        1608.864,
+        12204.012
+      ],
+      "um": 111.62400000000139
+    },
+    {
+      "source": "flt_transport_cdc_fault_5",
+      "source_xy": [
+        1563.72,
+        12137.628
+      ],
+      "target": [
+        1608.864,
+        12205.068000000001
+      ],
+      "um": 112.58400000000051
+    },
+    {
+      "source": "flt_transport_cdc_fault_6",
+      "source_xy": [
+        1563.72,
+        12137.724
+      ],
+      "target": [
+        1608.864,
+        12206.172
+      ],
+      "um": 113.59200000000033
+    },
+    {
+      "source": "flt_transport_cdc_fault_7",
+      "source_xy": [
+        1563.72,
+        12137.82
+      ],
+      "target": [
+        1608.864,
+        12207.228000000001
+      ],
+      "um": 114.55200000000127
+    },
+    {
+      "source": "flt_transport_cdc_fault_8",
+      "source_xy": [
+        1563.72,
+        12137.916
+      ],
+      "target": [
+        1608.864,
+        12208.332
+      ],
+      "um": 115.56000000000108
+    },
+    {
+      "source": "flt_transport_cdc_fault_9",
+      "source_xy": [
+        1563.72,
+        12138.011999999999
+      ],
+      "target": [
+        1608.864,
+        12209.388
+      ],
+      "um": 116.52000000000203
+    },
+    {
+      "source": "flt_transport_cdc_fault_10",
+      "source_xy": [
+        1563.72,
+        12138.108
+      ],
+      "target": [
+        1608.864,
+        12210.492
+      ],
+      "um": 117.52800000000002
+    },
+    {
+      "source": "flt_transport_cdc_fault_11",
+      "source_xy": [
+        1563.72,
+        12138.204
+      ],
+      "target": [
+        1569.984,
+        12194.268
+      ],
+      "um": 62.3280000000002
+    },
+    {
+      "source": "flt_transport_cdc_fault_12",
+      "source_xy": [
+        1563.72,
+        12138.3
+      ],
+      "target": [
+        1569.984,
+        12195.372000000001
+      ],
+      "um": 63.33600000000183
+    },
+    {
+      "source": "flt_transport_cdc_fault_13",
+      "source_xy": [
+        1563.72,
+        12138.395999999999
+      ],
+      "target": [
+        1569.984,
+        12196.428
+      ],
+      "um": 64.29600000000096
+    },
+    {
+      "source": "flt_transport_cdc_fault_14",
+      "source_xy": [
+        1563.72,
+        12138.491999999998
+      ],
+      "target": [
+        1569.984,
+        12197.532000000001
+      ],
+      "um": 65.30400000000259
+    },
+    {
+      "source": "flt_transport_cdc_fault_15",
+      "source_xy": [
+        1563.72,
+        12138.588
+      ],
+      "target": [
+        1569.984,
+        12198.588000000002
+      ],
+      "um": 66.26400000000172
+    },
+    {
+      "source": "flt_transport_cdc_fault_16",
+      "source_xy": [
+        1563.72,
+        12138.684
+      ],
+      "target": [
+        1569.984,
+        12199.692000000001
+      ],
+      "um": 67.27200000000153
+    },
+    {
+      "source": "flt_transport_cdc_fault_17",
+      "source_xy": [
+        1563.72,
+        12138.779999999999
+      ],
+      "target": [
+        1569.984,
+        12200.748000000001
+      ],
+      "um": 68.23200000000247
+    },
+    {
+      "source": "flt_transport_cdc_fault_18",
+      "source_xy": [
+        1563.72,
+        12138.876
+      ],
+      "target": [
+        1569.984,
+        12201.852
+      ],
+      "um": 69.24000000000046
+    },
+    {
+      "source": "flt_transport_cdc_fault_19",
+      "source_xy": [
+        1563.72,
+        12138.972
+      ],
+      "target": [
+        1569.984,
+        12202.908000000001
+      ],
+      "um": 70.20000000000141
+    },
+    {
+      "source": "flt_transport_abort_0",
+      "source_xy": [
+        1563.72,
+        12141.036
+      ],
+      "target": [
+        1569.984,
+        12204.012
+      ],
+      "um": 69.24000000000046
+    },
+    {
+      "source": "flt_transport_abort_1",
+      "source_xy": [
+        1563.72,
+        12141.132
+      ],
+      "target": [
+        1569.984,
+        12205.068000000001
+      ],
+      "um": 70.20000000000141
+    },
+    {
+      "source": "flt_transport_abort_2",
+      "source_xy": [
+        1563.72,
+        12141.228
+      ],
+      "target": [
+        1569.984,
+        12206.172
+      ],
+      "um": 71.20800000000122
+    },
+    {
+      "source": "flt_transport_abort_3",
+      "source_xy": [
+        1563.72,
+        12141.324
+      ],
+      "target": [
+        1569.984,
+        12207.228000000001
+      ],
+      "um": 72.16800000000035
+    },
+    {
+      "source": "flt_transport_abort_4",
+      "source_xy": [
+        1563.72,
+        12141.42
+      ],
+      "target": [
+        1569.984,
+        12208.332
+      ],
+      "um": 73.17600000000016
+    },
+    {
+      "source": "flt_transport_fault_cause_0",
+      "source_xy": [
+        1563.72,
+        12154.092
+      ],
+      "target": [
+        1569.984,
+        12209.388
+      ],
+      "um": 61.56000000000017
+    },
+    {
+      "source": "flt_transport_fault_cause_1",
+      "source_xy": [
+        1563.72,
+        12154.188
+      ],
+      "target": [
+        1569.984,
+        12210.492
+      ],
+      "um": 62.567999999999984
+    },
+    {
+      "source": "flt_transport_fault_cause_2",
+      "source_xy": [
+        1563.72,
+        12154.284
+      ],
+      "target": [
+        1660.704,
+        12196.428
+      ],
+      "um": 139.12800000000016
+    },
+    {
+      "source": "flt_transport_fault_cause_3",
+      "source_xy": [
+        1563.72,
+        12154.38
+      ],
+      "target": [
+        1660.704,
+        12197.532000000001
+      ],
+      "um": 140.1360000000018
+    },
+    {
+      "source": "flt_transport_fault_cause_4",
+      "source_xy": [
+        1563.72,
+        12154.475999999999
+      ],
+      "target": [
+        1660.704,
+        12198.588
+      ],
+      "um": 141.0960000000009
+    },
+    {
+      "source": "flt_transport_fault_cause_5",
+      "source_xy": [
+        1563.72,
+        12154.572
+      ],
+      "target": [
+        1660.704,
+        12199.692000000001
+      ],
+      "um": 142.10400000000072
+    },
+    {
+      "source": "flt_transport_fault_cause_6",
+      "source_xy": [
+        1563.72,
+        12154.668
+      ],
+      "target": [
+        1660.704,
+        12200.748000000001
+      ],
+      "um": 143.06400000000167
+    },
+    {
+      "source": "flt_transport_fault_cause_7",
+      "source_xy": [
+        1563.72,
+        12154.764
+      ],
+      "target": [
+        1660.704,
+        12201.852
+      ],
+      "um": 144.07200000000148
+    },
+    {
+      "source": "flt_transport_fault_cause_8",
+      "source_xy": [
+        1563.72,
+        12154.86
+      ],
+      "target": [
+        1660.704,
+        12202.908000000001
+      ],
+      "um": 145.0320000000006
+    },
+    {
+      "source": "flt_transport_fault_cause_9",
+      "source_xy": [
+        1563.72,
+        12154.956
+      ],
+      "target": [
+        1660.704,
+        12204.012
+      ],
+      "um": 146.04000000000042
+    },
+    {
+      "source": "flt_transport_fault_cause_10",
+      "source_xy": [
+        1563.72,
+        12155.052
+      ],
+      "target": [
+        1660.704,
+        12205.068000000001
+      ],
+      "um": 147.00000000000136
+    },
+    {
+      "source": "flt_transport_fault_cause_11",
+      "source_xy": [
+        1563.72,
+        12155.148
+      ],
+      "target": [
+        1660.704,
+        12206.172
+      ],
+      "um": 148.00800000000118
+    },
+    {
+      "source": "flt_transport_fault_cause_12",
+      "source_xy": [
+        1563.72,
+        12155.243999999999
+      ],
+      "target": [
+        1660.704,
+        12207.228000000001
+      ],
+      "um": 148.96800000000212
+    },
+    {
+      "source": "flt_transport_fault_cause_13",
+      "source_xy": [
+        1563.72,
+        12155.34
+      ],
+      "target": [
+        1660.704,
+        12208.332
+      ],
+      "um": 149.9760000000001
+    },
+    {
+      "source": "flt_transport_fault_cause_14",
+      "source_xy": [
+        1563.72,
+        12155.436
+      ],
+      "target": [
+        1660.704,
+        12209.388
+      ],
+      "um": 150.93600000000106
+    },
+    {
+      "source": "flt_transport_fault_cause_15",
+      "source_xy": [
+        1563.72,
+        12155.532
+      ],
+      "target": [
+        1660.704,
+        12210.492
+      ],
+      "um": 151.94400000000087
+    },
+    {
+      "source": "flt_transport_fault_cause_16",
+      "source_xy": [
+        1563.72,
+        12155.628
+      ],
+      "target": [
+        1660.704,
+        12211.548
+      ],
+      "um": 152.904
+    },
+    {
+      "source": "flt_transport_fault_cause_17",
+      "source_xy": [
+        1563.72,
+        12155.724
+      ],
+      "target": [
+        1660.704,
+        12212.652
+      ],
+      "um": 153.9119999999998
+    },
+    {
+      "source": "flt_transport_fault_cause_18",
+      "source_xy": [
+        1563.72,
+        12155.82
+      ],
+      "target": [
+        1595.904,
+        12220.188
+      ],
+      "um": 96.55200000000036
+    },
+    {
+      "source": "flt_transport_fault_cause_19",
+      "source_xy": [
+        1563.72,
+        12155.916
+      ],
+      "target": [
+        1595.904,
+        12221.292000000001
+      ],
+      "um": 97.56000000000199
+    },
+    {
+      "source": "flt_transport_fault_cause_20",
+      "source_xy": [
+        1563.72,
+        12156.011999999999
+      ],
+      "target": [
+        1595.904,
+        12222.348
+      ],
+      "um": 98.52000000000112
+    },
+    {
+      "source": "flt_transport_fault_cause_21",
+      "source_xy": [
+        1563.72,
+        12156.108
+      ],
+      "target": [
+        1595.904,
+        12223.452000000001
+      ],
+      "um": 99.52800000000093
+    },
+    {
+      "source": "flt_transport_fault_cause_22",
+      "source_xy": [
+        1563.72,
+        12156.204
+      ],
+      "target": [
+        1595.904,
+        12224.508000000002
+      ],
+      "um": 100.48800000000188
+    },
+    {
+      "source": "flt_transport_fault_cause_23",
+      "source_xy": [
+        1563.72,
+        12156.3
+      ],
+      "target": [
+        1595.904,
+        12225.612000000001
+      ],
+      "um": 101.49600000000169
+    },
+    {
+      "source": "flt_transport_fault_cause_24",
+      "source_xy": [
+        1563.72,
+        12156.395999999999
+      ],
+      "target": [
+        1595.904,
+        12226.668000000001
+      ],
+      "um": 102.45600000000263
+    },
+    {
+      "source": "flt_transport_fault_cause_25",
+      "source_xy": [
+        1563.72,
+        12156.491999999998
+      ],
+      "target": [
+        1595.904,
+        12227.772
+      ],
+      "um": 103.46400000000244
+    },
+    {
+      "source": "flt_transport_fault_cause_26",
+      "source_xy": [
+        1563.72,
+        12156.588
+      ],
+      "target": [
+        1595.904,
+        12228.828000000001
+      ],
+      "um": 104.42400000000157
+    },
+    {
+      "source": "flt_transport_fault_cause_27",
+      "source_xy": [
+        1563.72,
+        12156.684
+      ],
+      "target": [
+        1595.904,
+        12229.932
+      ],
+      "um": 105.43200000000138
+    },
+    {
+      "source": "flt_transport_fault_cause_28",
+      "source_xy": [
+        1563.72,
+        12156.779999999999
+      ],
+      "target": [
+        1595.904,
+        12230.988000000001
+      ],
+      "um": 106.39200000000233
+    },
+    {
+      "source": "flt_transport_fault_cause_29",
+      "source_xy": [
+        1563.72,
+        12156.876
+      ],
+      "target": [
+        1595.904,
+        12232.092
+      ],
+      "um": 107.40000000000032
+    },
+    {
+      "source": "flt_transport_fault_cause_30",
+      "source_xy": [
+        1563.72,
+        12156.972
+      ],
+      "target": [
+        1595.904,
+        12233.148000000001
+      ],
+      "um": 108.36000000000126
+    },
+    {
+      "source": "flt_transport_fault_cause_31",
+      "source_xy": [
+        1563.72,
+        12157.068
+      ],
+      "target": [
+        1595.904,
+        12234.252
+      ],
+      "um": 109.36800000000108
+    },
+    {
+      "source": "flt_transport_fault_cause_32",
+      "source_xy": [
+        1563.72,
+        12157.163999999999
+      ],
+      "target": [
+        1595.904,
+        12235.308
+      ],
+      "um": 110.32800000000202
+    },
+    {
+      "source": "flt_transport_fault_cause_33",
+      "source_xy": [
+        1563.72,
+        12157.259999999998
+      ],
+      "target": [
+        1595.904,
+        12236.412
+      ],
+      "um": 111.33600000000183
+    },
+    {
+      "source": "flt_transport_fault_cause_34",
+      "source_xy": [
+        1563.72,
+        12157.356
+      ],
+      "target": [
+        1569.984,
+        12220.188
+      ],
+      "um": 69.09600000000023
+    },
+    {
+      "source": "flt_transport_fault_cause_35",
+      "source_xy": [
+        1563.72,
+        12157.452
+      ],
+      "target": [
+        1569.984,
+        12221.292000000001
+      ],
+      "um": 70.10400000000186
+    },
+    {
+      "source": "flt_transport_fault_cause_36",
+      "source_xy": [
+        1563.72,
+        12157.547999999999
+      ],
+      "target": [
+        1569.984,
+        12222.348
+      ],
+      "um": 71.06400000000099
+    },
+    {
+      "source": "flt_transport_fault_cause_37",
+      "source_xy": [
+        1563.72,
+        12157.644
+      ],
+      "target": [
+        1569.984,
+        12223.452000000001
+      ],
+      "um": 72.0720000000008
+    },
+    {
+      "source": "flt_transport_fault_cause_38",
+      "source_xy": [
+        1563.72,
+        12157.74
+      ],
+      "target": [
+        1569.984,
+        12224.508000000002
+      ],
+      "um": 73.03200000000174
+    },
+    {
+      "source": "flt_transport_fault_cause_39",
+      "source_xy": [
+        1563.72,
+        12157.836
+      ],
+      "target": [
+        1569.984,
+        12225.612000000001
+      ],
+      "um": 74.04000000000156
+    }
+  ],
+  "maxwire_um": 153.9119999999998
+}
