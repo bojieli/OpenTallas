@@ -202,5 +202,31 @@
     "construct_hp13.py",
     "run_frontend.sh"
   ],
-  "scope": "43 RTL inputs and frontend script recovered exactly. Constructor2 is the recorded successful continuation. No frontend or construction executed; no transport age or phase claim."
+  "scope": "All 43 RTL inputs, frontend script, physical abstracts, bound-macro tool and all six macro contract source files recovered exactly. Constructor2 is the recorded successful continuation. No frontend or construction executed; no transport age or phase claim.",
+  "macro_contract_sources": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": {
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "origin": "d2c8e45a7:physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+    },
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": {
+      "sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+      "origin": "d2c8e45a7:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+    },
+    "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": {
+      "sha256": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+      "origin": "d2c8e45a7:physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v"
+    },
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": {
+      "sha256": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+      "origin": "d2c8e45a7:physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v"
+    },
+    "rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv": {
+      "sha256": "c904c97c3b3f40de76f0d9d280d393bc700bc26fca34decd6bec9e68e9af340c",
+      "origin": "d2c8e45a7:rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv"
+    },
+    "rtl/qwen_dv/headprep13/h16za/native32_1r_param.v": {
+      "sha256": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
+      "origin": "working snapshot"
+    }
+  }
 }
