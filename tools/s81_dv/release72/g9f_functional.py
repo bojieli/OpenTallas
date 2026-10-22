@@ -220,3 +220,47 @@ if __name__=='__main__':
             hbc_disabled(p,t,a.hbc_ref,read(a.regional_manifest))
     else:print(json.dumps(finish(p,t),indent=1))
     write(a.out_plan,p);write(a.out_other,t)
+
+
+def select_native_local_source4(table, land, source_ref):
+    """Select explicit unclosed source4 assembly, never alias a CLOSED kit.
+
+    Native core is fixed K17 with source reset2. This distinct assembly adds
+    actual external reset2, matching the intended kit's total reset4. A future
+    CLOSED kit replaces the whole assembly, including that external reset2.
+    """
+    import hashlib
+    native_ref = '42afc37bb'
+    deps = ['rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32.sv',
+            'rtl/common/landed_parent/ot_pl_land_reset_forest.sv',
+            'rtl/common/landed_parent/ot_pl_land_field_copies.sv']
+    path = 'rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_source4.sv'
+    mst = 'dsdv_pv_local_land_n32_source4_276'
+    body = subprocess.check_output(['git', 'show', source_ref + ':' + path])
+    table['rtl_refs'].setdefault(native_ref, []).extend(deps)
+    table['rtl_refs'].setdefault(source_ref, []).append(path)
+    table['prefer'] = [p for p in table['prefer'] if not any(p.endswith('/' + q) for q in deps)]
+    table['prefer'].extend(native_ref + '/' + q for q in deps)
+    table['rtl_widths'][mst] = dict(ck_f=1, i=276, ck=1, rs=1, k=6, o=276, fault=1)
+    table.setdefault('landing_assemblies', {})[mst] = dict(
+        ref=source_ref, path=path, sha256=hashlib.sha256(body).hexdigest(), reset_stages=4,
+        qualification='UNHARDENED_RTL_ASSEMBLY', slots=32, steady_words_per_cycle=1,
+        body_um=[129.6, 194.4], native_source_ref=native_ref,
+        replacement_rule='Future CLOSED kit replaces this WHOLE source4 assembly, never adds its own reset2 underneath it')
+    table.setdefault('landing_k_width', {})[mst] = 6
+    table.setdefault('landing_reset_stages', {})[mst] = 4
+    table['masters']['dsdv_svc_pvso_entry']['ports']['pvlocal.i'].update(adapter=mst, out_w=276)
+    for row in land['links']:
+        if row['link'].startswith('pvso_') and '_local_' in row['link']:
+            validate_local_ring_window(row['stages'], row['E'], row['K'], row['D'])
+            assert row['K'] == 17
+            row['master'] = mst
+    for producer in ['E', 'W']:
+        for name, row in land['pvso_routes'][producer]['lanes'].items():
+            if '_local_' in name:
+                row['master'] = mst
+    table['functional_successor']['local_ring'].update(
+        master=mst, source_reset_stages=4, source_reset_external=2, source_reset_internal=2,
+        body_um=[129.6, 194.4], native_fanout_verdict='PASS max32 at42afc37bb',
+        physical_qualification='OPEN', active_pin_age=18, half_join_sampled_age=19,
+        source_native_deps=deps, native_source_ref=native_ref)
