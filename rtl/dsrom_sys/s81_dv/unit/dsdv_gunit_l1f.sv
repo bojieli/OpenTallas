@@ -118,7 +118,13 @@ module dsdv_gunit_l1f #(
     output reg           o_flt
 );
     localparam integer EW = 41, LW = 8 * EW, NL = 16, LA = 5, NS = 7 * NL;
+`ifdef OT_S81_GUNIT_FWDOWN
+    // Eight store groups plus sixteen same-edge forward row/enable owners.
+    // Four payload owners each serve four forward lanes; no new data edge.
+    localparam integer NW = 24, ND = 8, NB = 32, NG = 4, NQ = 18, NR = 21;
+`else
     localparam integer NW = 9, ND = 5, NB = 32, NG = 4, NQ = 18, NR = 13;
+`endif
     integer i, j, k, c;
     genvar g, l, h, t;
     // ---------------------------------------------------------------- reset relay: NR kept regions (valid bits only)
@@ -137,8 +143,13 @@ module dsdv_gunit_l1f #(
     reg cgo, cl, rdq, gq; reg [4:0] clv; reg [3:0] rad; reg [1:0] bwe; reg [3:0] bwa; reg [255:0] bwd;
     generate
         for (g = 0; g < NW; g = g + 1) begin : g_wq
-            always @(posedge clk or negedge rq[g / 2])
-                if (!rq[g / 2]) wqc[14 * g +: 14] <= 14'd0; else wqc[14 * g +: 14] <= we;
+`ifdef OT_S81_GUNIT_FWDOWN
+            localparam integer WR_REGION=(g<8)?g/2:13+(g-8)/2;
+`else
+            localparam integer WR_REGION=g/2;
+`endif
+            always @(posedge clk or negedge rq[WR_REGION])
+                if (!rq[WR_REGION]) wqc[14 * g +: 14] <= 14'd0; else wqc[14 * g +: 14] <= we;
             always @(posedge clk) begin arc[6 * g +: 6] <= sa_r; brc[6 * g +: 6] <= sb_r; end
         end
         for (g = 0; g < ND; g = g + 1) begin : g_dq
@@ -179,7 +190,12 @@ module dsdv_gunit_l1f #(
                 wire [7:0] en, hit, enf, hitf; wire [127:0] dd, ddf;
                 for (t = 0; t < 4; t = t + 1) begin : g_t
                     localparam integer IX = 64 * (g / 16) + 16 * t + (g % 16), WJ = IX % 7, RJ = IX / 7;
-                    localparam integer CW = g / 14, CD = g / 28, FW = NW - 1, FD = ND - 1;
+                    localparam integer CW = g / 14, CD = g / 28;
+`ifdef OT_S81_GUNIT_FWDOWN
+                    localparam integer FW=8+((g<NL)?g:0), FD=4+((g<NL)?g/4:0);
+`else
+                    localparam integer FW=NW-1, FD=ND-1;
+`endif
                     assign en[2 * t]      = wqc[14 * CW + WJ];      assign en[2 * t + 1]  = wqc[14 * CW + 7 + WJ];
                     assign hit[2 * t]     = aoh[64 * CW + RJ];      assign hit[2 * t + 1] = boh[64 * CW + RJ];
                     assign dd[32 * t +: 16]      = adc[224 * CD + 32 * WJ + 16 * h +: 16];
