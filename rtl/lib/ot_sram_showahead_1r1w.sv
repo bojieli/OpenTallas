@@ -19,7 +19,7 @@ module ot_sram_showahead_1r1w #(
  wire [AW-1:0] mwa=(WREG!=0) ? waddr : wa;
  wire [W-1:0] mwd=(WREG!=0) ? wdata : wd;
  wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},mwd}, raw;
- genvar b,s,h;
+ genvar b,s;
  generate for(b=0;b<NB;b=b+1) begin:g_bank
 `ifdef OT_SHOWAHEAD_FLOP
   // flop variant: storage lives in g_fs below (raw driven there)
@@ -40,26 +40,28 @@ module ot_sram_showahead_1r1w #(
  // per slice, same edge) and the word is read combinationally after the edge.  They differ only when the landing write
  // (wv/waddr) hits the read address on that edge, and exactly then previous_hit selects prevdata (= that write's data),
  // so q is identical.  Write enables decode from per-slice kept copies of wv / waddr (same D, same edge, same reset).
+ wire [(1<<AW)-1:0] woh_d, roh_d;
+ for(s=0;s<(1<<AW);s=s+1) begin:g_wd
+  assign woh_d[s] = we && wa == AW'(s);
+  assign roh_d[s] = ra == AW'(s);
+ end
  for(s=0;s<NS;s=s+1) begin:g_fs
   localparam integer LO=s*16, SW=(W-LO<16)?W-LO:16;
   // per-slice copies live in keep_hierarchy instances (plain keep regs were merged by synthesis: 1432 loads).
-  // Each slice is stored as two 8-bit halves with their own address copy (one copy per 16 bits: wa MSB 64 loads).
-  wire wv_s;
-  if (s % 2 == 0) begin : g_wv
-   ot_sa_rcopy #(.ID(s)) u_vc (.clk(clk),.rst_n(rst_n[s]),.d(we),.q(wv_s));   // one landing-write copy per 2 slices
-  end else begin : g_wvs
-   assign wv_s = g_fs[s-1].wv_s;
-  end
-  for(h=0;h<2;h=h+1) begin:g_h
-   localparam integer HLO=LO+h*8, HW=(SW-h*8<=0)?1:((SW-h*8<8)?SW-h*8:8);
-   if (SW>h*8) begin : g_on
-    wire [AW-1:0] rap_h, wa_h;
-    ot_sa_copy #(.W(2*AW),.ID(2*s+h)) u_ac (.clk(clk),.d({ra,wa}),.q({rap_h,wa_h}));
-    reg [HW-1:0] mfh [0:(1<<AW)-1];
-    always @(posedge clk) if(wv_s) mfh[wa_h]<=wdata[HLO+:HW];
-    assign raw[HLO+:HW]=mfh[rap_h];
-   end
-  end
+  // Write and read addresses are decoded ONCE (woh_d / roh_d, one line per word) and each slice registers its own
+  // one-hot copies, so no address bit fans into every slice's decoder / mux tree (control i/j census: read-address
+  // copy bit 64 loads per 16-bit slice, rp/wp 46-49 loads with per-8-bit copies).  Each one-hot line drives one
+  // slice's 16 bits (enables / AND-OR read); each decoded line drives NS (<= 32) copies.
+  wire [(1<<AW)-1:0] woh_s, roh_s;
+  ot_sa_ohcopy #(.W(1<<AW),.ID(s)) u_wc (.clk(clk),.rst_n(rst_n[s]),.d(woh_d),.q(woh_s));
+  ot_sa_copy #(.W(1<<AW),.ID(s)) u_ac (.clk(clk),.d(roh_d),.q(roh_s));
+  reg [SW-1:0] mfs [0:(1<<AW)-1];
+  integer k;
+  always @(posedge clk) for(k=0;k<(1<<AW);k=k+1) if(woh_s[k]) mfs[k]<=wdata[LO+:SW];
+  reg [SW-1:0] rd_s;
+  integer kr;
+  always @* begin rd_s='0; for(kr=0;kr<(1<<AW);kr=kr+1) rd_s=rd_s|({SW{roh_s[kr]}}&mfs[kr]); end
+  assign raw[LO+:SW]=rd_s;
  end
 `endif
  for(s=0;s<NS;s=s+1) begin:g_slice
@@ -82,6 +84,10 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_sa_copy #(parameter integer W=1, ID=0)(input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
  (* keep *) reg [W-1:0] r; always @(posedge clk) r<=d; assign q=r;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_sa_ohcopy #(parameter integer W=1, ID=0)(input wire clk, rst_n, input wire [W-1:0] d, output wire [W-1:0] q);
+ (* keep *) reg [W-1:0] r; always @(posedge clk or negedge rst_n) if(!rst_n) r<='0; else r<=d; assign q=r;
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_sa_rcopy #(parameter integer ID=0)(input wire clk, rst_n, d, output wire q);
