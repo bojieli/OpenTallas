@@ -704,12 +704,14 @@ module ot_s81dv_xfin #(
         else ew_q <= (sv_c && mdc[NENG] && !e1_bad) ? ({{(NE-1){1'b0}}, 1'b1} << e1_vec) : {NE{1'b0}};
     always @(posedge clk) el_oh <= {{(NVL-1){1'b0}}, 1'b1} << e1_l;
 `ifdef OT_S81DV_XFIN_SRAM
+`ifndef OT_S81DV_XFIN_ECOL_BYTEOWN
     // N8: byte-lane copies of the capture decode: ew_qb[h] (bytes 2h, 2h+1), el_ohb[y] (byte y), edq[k] (vectors 2k,
     // 2k+1) -- each ecol byte enable drives 8 bits (census R33: 60 word enables of 65 loads, ed_q2 60, el_oh 38)
     (* keep *) reg [2*NE-1:0] ew_qb; (* keep *) reg [4*NVL-1:0] el_ohb; (* keep *) reg [6*32-1:0] edq;
     always @(posedge clk or negedge rt[16]) if (!rt[16]) ew_qb <= {(2*NE){1'b0}};
         else ew_qb <= {2{(sv_c && mdc[NENG] && !e1_bad) ? ({{(NE-1){1'b0}}, 1'b1} << e1_vec) : {NE{1'b0}}}};
     always @(posedge clk) begin el_ohb <= {4{{{(NVL-1){1'b0}}, 1'b1} << e1_l}}; edq <= {6{s_c}}; end
+`endif
 `else
     (* keep *) reg [31:0] ed_q2;
     always @(posedge clk) ed_q2 <= s_c;
@@ -786,11 +788,34 @@ module ot_s81dv_xfin #(
         if (!rt[0]) eflt <= 1'b0; else if (gcc[GEF]) eflt <= 1'b0; else if ((ev_q && ebad_q) || rep) eflt <= 1'b1;
     integer c4, c5, c6;
 `ifdef OT_S81DV_XFIN_SRAM
+`ifdef OT_S81DV_XFIN_ECOL_BYTEOWN
+    // Source-bound N9: a group owns two vectors and one byte, giving at most ten
+    // byte consumers per data bit. Its first captures are the old s_c/si_c/sv_c
+    // edge, and its output captures are the old edq/ew_qb/el_ohb edge.
+    localparam integer ECB_GROUPS = ((NE+1)/2)*4;
+    wire [ECB_GROUPS-1:0] ecb_reset;
+    ot_s81dv_finish_reset2 #(.LEAVES(ECB_GROUPS)) u_ecb_reset (.clk(clk),.rst_n(rst_n),.q(ecb_reset));
+    for(genvar eg=0;eg<ECB_GROUPS;eg=eg+1)begin:g_ecb
+        localparam integer V0=2*(eg/4), BY=eg%4;
+        wire [2*NVL-1:0] we;
+        wire [7:0] payload;
+        ot_s81dv_ecol_byteowner #(.NVL(NVL),.V0(V0)) u_owner (
+            .clk(clk),.rst_n(ecb_reset[eg]),.s_v(s_v),.s_i(s_i),.s_byte(s[8*BY+:8]),
+            .mode_owned(mdc[eg]),.we(we),.payload(payload));
+        for(genvar vv0=0;vv0<2;vv0=vv0+1)begin:g_v
+            for(genvar sl0=0;sl0<NVL;sl0=sl0+1)begin:g_s
+                always @(posedge clk) if(we[vv0*NVL+sl0])
+                    ecol[V0+vv0][sl0*32+BY*8+:8] <= payload;
+            end
+        end
+    end
+`else
     always @(posedge clk)
         for (c4 = 0; c4 < NE; c4 = c4 + 1)
             for (c5 = 0; c5 < NVL; c5 = c5 + 1)
                 for (c6 = 0; c6 < 4; c6 = c6 + 1)
                     if (ew_qb[(c6/2)*NE + c4] && el_ohb[c6*NVL + c5]) ecol[c4][c5*32 + 8*c6 +: 8] <= edq[(c4/2)*32 + 8*c6 +: 8];
+`endif
 `else
     always @(posedge clk)
         for (c4 = 0; c4 < NE; c4 = c4 + 1)
@@ -963,4 +988,23 @@ module ot_s81dv_norm_slice #(
     always @(posedge clk or negedge rstn)
         if (!rstn) flt <= 1'b0; else if (go_c) flt <= 1'b0; else if (gf || xff) flt <= 1'b1;
     assign fault = flt;
+endmodule
+
+// N9 collector capsule: hierarchy prevents equal-valued owners being merged
+// across physical byte groups. All payload edges match the original collector.
+(* keep_hierarchy=1 *)
+module ot_s81dv_ecol_byteowner #(parameter integer NVL=5,V0=0)(
+ input wire clk,rst_n,s_v,input wire[7:0]s_i,input wire[7:0]s_byte,
+ input wire mode_owned,output reg[2*NVL-1:0]we,output reg[7:0]payload);
+ reg valid_c;reg[7:0]index_c,data_c;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)valid_c<=0;else valid_c<=s_v;
+ always @(posedge clk)begin index_c<=s_i;data_c<=s_byte;payload<=data_c;end
+ for(genvar v=0;v<2;v=v+1)begin:g_v
+  for(genvar l=0;l<NVL;l=l+1)begin:g_l
+   always @(posedge clk or negedge rst_n)
+    if(!rst_n)we[v*NVL+l]<=0;
+    else we[v*NVL+l]<=valid_c && mode_owned && index_c==8'((V0+v)*NVL+l);
+  end
+ end
 endmodule
