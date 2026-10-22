@@ -10,6 +10,7 @@
 //     (ot_qfd_xs_mx16, ABC cannot move a select across slices); each slice has its own registered select replica
 //     (was one replica per 256 mux bits, re-associated by ABC up to 569 loads), loaded from NG independent
 //     next-select cones per tile, each built from its own kept copies of the request / held-request / element state;
+//   * storage entries are kept 17-b modules (ot_qfd_xs_ent17) so each write enable is one net into its entry;
 //   * the answer-side tile select (done[1]) is computed from NQ kept copies of tile 1's sequencer state.
 // The x-slice timing contract (lanes/SQC-CB16.md, qfd_xs_leaf_w130m5 successor) is unchanged: a read request at
 // the pins at edge R answers at the same edge as the reference; a write is readable one edge after it lands.
@@ -108,14 +109,10 @@ module ot_qfd_xs_leaf_fo32 #(
                 wire cond = (dd == 2'b00) ? (tf == tw) : (dd == 2'b01) ? (tf && !tw) :
                             (dd == 2'b10) ? (!tf && tw) : 1'b0;
                 for (ge = 0; ge < 2; ge = ge + 1) begin : g_e
-                    wire we = kv && (kep == ge) && en && cond && wm[EP];
-                    reg [15:0] m;
-                    reg        v;
-                    always @(posedge clk) if (we) m <= wd[16*EP +: 16];
-                    always @(posedge clk)
-                        if (kcv && kcep == ge) v <= 1'b0;
-                        else if (we) v <= 1'b1;
-                    assign mem_all[2176*gt + 17*(64*ge + EP) +: 17] = {v, m};
+                    wire we  = kv && (kep == ge) && en && cond && wm[EP];
+                    wire clr = kcv && (kcep == ge);
+                    ot_qfd_xs_ent17 u_ent (.clk(clk), .we(we), .clr(clr), .d(wd[16*EP +: 16]),
+                                           .q(mem_all[2176*gt + 17*(64*ge + EP) +: 17]));
                 end
             end
         end
@@ -278,6 +275,24 @@ module ot_qfd_xs_mux_rep16 #(parameter integer LN = 7, parameter integer SW = 13
         end
     end endgenerate
     assign q = g_l[LN].n;
+endmodule
+
+// one {valid, BF16} storage entry; kept through ABC (route.synth_keep_modules) so the write enable stays ONE net
+// into the entry (ABC flattened the enable cone into the 17 bit muxes: wm[EP] 69 loads, partial products 50)
+(* keep_hierarchy = "yes" *) module ot_qfd_xs_ent17 (
+    input  wire        clk,
+    input  wire        we,
+    input  wire        clr,
+    input  wire [15:0] d,
+    output wire [16:0] q
+);
+    reg [15:0] m;
+    reg        v;
+    always @(posedge clk) if (we) m <= d;
+    always @(posedge clk)
+        if (clr) v <= 1'b0;
+        else if (we) v <= 1'b1;
+    assign q = {v, m};
 endmodule
 
 // one select, sixteen 2:1 bits; kept through ABC (route.synth_keep_modules) so a select never leaves its slice

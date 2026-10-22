@@ -2475,7 +2475,8 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "synth_keep_modules": [
-   "ot_qfd_xs_mx16"
+   "ot_qfd_xs_mx16",
+   "ot_qfd_xs_ent17"
   ]
  },
  "slot_change_request": "Q-XSLEAF 2026-10-16: leaf slot 64.8x138.24 -> 129.6x69.12 (same 8,958 um2). Measured m6c..m6f GRT: N-band vertical demand ~2,490 tracks vs ~2,385 derated on 64.8 um (1.04); needs >=113 um face for <=0.60. AGREED by Q-COMPUTE-DIE 2026-10-16 (heads 129.6x345.6; column body 920.16 um).",
