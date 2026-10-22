@@ -10,7 +10,7 @@
 # history shift registers are NBA loops, exactly the miscompile the guard refuses (exit 86).  Never the distro 5.032.
 set -uo pipefail
 L=$1; OUT=$(realpath -m "$2"); MB=${3:-0}; mkdir -p "$OUT"; fail=0
-SIM=${OT_LOCKSTEP_SIM:-verilator}; HOSTS=${OT_LOCKSTEP_HOSTS:-ot-epyc5,ot-epyc7,ot-epyc9,ot-gold1,ot-gold2,ot-pve1}   # HBM-DIE14 10-21 00:00: ep4 unreachable, pve1 28 cores at load 100 hung the flat-TB builds
+SIM=${OT_LOCKSTEP_SIM:-verilator}; HOSTS=${OT_LOCKSTEP_HOSTS:-ot-epyc5,ot-epyc7,ot-epyc9,ot-gold1,ot-gold2,ot-agidock128}   # HBMc/CHAIN 10-22: ot-pve1 dropped (r18e S5L legs there ran ~30 min each on 28 cores);   # HBM-DIE14 10-21 00:00: ep4 unreachable, pve1 28 cores at load 100 hung the flat-TB builds
 VL=${OT_LOCKSTEP_VERILATOR:-/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator}; OTRUN=${OTRUN:-/home/ubuntu/bin/ot-run}
 D=rtl/hbm_accel/die_glue
 src=($D/hbfd_rly_fc_masters.sv $D/hbfd_rly_fcf_masters.sv $D/hbfd_rly_masters.sv $D/ot_hbm_rly_fc.sv $D/ot_hbm_rly_fcf.sv $D/ot_hbm_rly.sv rtl/lib/ot_rst_relay.sv)
