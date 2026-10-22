@@ -286,8 +286,8 @@
  },
  "structural_change": "STW-S81-TOPK FALLBACK-3 after selcpn_f (spine) clock PASS 48.4/43.0 but GRT-0183 boxed net u_c.oq[536] (E-face output flop x382) -> buffer x288 across the x302.4 SRAM column 35 um from the E face. RTL/ports/booking/clock/reset unchanged (cb73b3e99). Structural: SRAMs pulled off every pin face into a central 3x4 block (quarter l -> row, bank -> column; x 86.4/172.8/259.2, y 86.4/172.8/259.2/345.6, R0 lattice), leaving >=78 um macro-free pin-flop bands on all four faces; outline 388.8 W x 475.2 H (perimeter 1728, W 3.25 / E 3.18 / S,N 3.88 pins/um). Clock = balanced spine (as f, measured 48/43 ps).",
  "job": {
-  "owner": "Claude:STW-S81-TOPK",
-  "branch": "claude/stw-s81-topk-sq432-1021",
+  "owner": "CODEX-S81-COLLB-2000",
+  "branch": "codex/s81-control-proof-2225",
   "tag": "cpnh",
   "purpose": "FALLBACK-3: central macro block, >=78 um pin-flop bands, 388.8x475.2, spine clock (fixes f GRT-0183 boxed E-face net).",
   "extra_paths": [
@@ -297,10 +297,50 @@
    "rtl/common",
    "rtl/lib",
    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
-   "results/arch/s81_topk_control_local_1021"
+   "results/arch/s81_topk_control_local_1021",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv",
+   "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv",
+   "tools/s81_dv/topk_control_local_1021/run_production.sh",
+   "tools/s81_dv/control_export_1021",
+   "results/arch/codex_control_export_1021"
   ],
   "views_to": "physical/ref_tile/s81dvbk_selcpn_h/views",
-  "record_to": "results/rtl/ref_tile/s81dvbk_selcpn_h"
+  "record_to": "results/rtl/ref_tile/s81dvbk_selcpn_h",
+  "benches": [
+   {
+    "name": "control_exact",
+    "cmd": "J=4 bash tools/s81_dv/control_export_1021/run_control.sh {RUN}/control_exact 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^CONTROL_MITER_PASS$",
+    "min_count_regex": "^CONTROL_STATS cycles 4096 checks (\\d+) "
+   },
+   {
+    "name": "control_missing_output_stage",
+    "cmd": "J=4 bash tools/s81_dv/control_export_1021/run_control.sh {RUN}/control_missing_output_stage 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CONTROL_CAUSAL_FAIL$",
+    "fail_witness": "results/arch/codex_control_export_1021/witness/mutant_wrapper.log"
+   }
+  ]
  },
  "clock": "spine",
  "reset_landing": {
