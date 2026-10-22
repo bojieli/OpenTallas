@@ -1,0 +1,44 @@
+{
+  "status": "MINIMUM_SOURCE_BOUND_BENCH_PASS",
+  "source_hardware_commit": "8df44bf90",
+  "tool": "Verilator 5.050",
+  "unit": "oth-ubuntu-738336-1792643494",
+  "positive_seeds": 2,
+  "random_edges_per_positive": 6000,
+  "directed_descriptors_per_positive": 18,
+  "causal_mutants_rejected": 4,
+  "source_option": "FANOUT_LOCAL=1; exact svc5 parameters",
+  "scope": "Legacy output lockstep and independent descriptor scoreboard. No completed service workload, physical timing or native census claim.",
+  "cases": {
+    "s1": {
+      "expected": "PASS",
+      "verdict_seen": "N59OBS_PASS",
+      "sim_log_sha256": "b84b4b8b597328c43a4907d84203ed15f0008d92015543c6b5c19c87afcf25a7"
+    },
+    "s2": {
+      "expected": "PASS",
+      "verdict_seen": "N59OBS_PASS",
+      "sim_log_sha256": "b02d30dc076bc6ca164e01015d859fc1ad18151b3deb03a3b162b1da8869dd46"
+    },
+    "m_hpseq": {
+      "expected": "CAUSAL_REJECTION",
+      "verdict_seen": "N59OBS_FAIL",
+      "sim_log_sha256": "7434bbb5ec77f0b12f7cee75f4a7e8657b201f5cf77bcc0b516899344602c50e"
+    },
+    "m_hpdrop": {
+      "expected": "CAUSAL_REJECTION",
+      "verdict_seen": "N59OBS_FAIL",
+      "sim_log_sha256": "4dcfe55657e46b11d9350f4a7e59828521c7847f7a56fca17661c9565691ba06"
+    },
+    "m_ret": {
+      "expected": "CAUSAL_REJECTION",
+      "verdict_seen": "N59OBS_FAIL",
+      "sim_log_sha256": "f137a2cd6886238799cad5499e0074ac39da42863ce0ddbd02ecacff049d710f"
+    },
+    "m_hosttag": {
+      "expected": "CAUSAL_REJECTION",
+      "verdict_seen": "N59OBS_FAIL",
+      "sim_log_sha256": "754b09977694af9c627f300f8e2026e30a9d7a955eb3770b7d25534536c3d65d"
+    }
+  }
+}
