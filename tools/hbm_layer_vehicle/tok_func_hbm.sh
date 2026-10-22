@@ -40,6 +40,17 @@ if [ "${REUSE:-0}" = 1 ]; then
   OUT=${OUT:?OUT}; FROZEN=${FROZEN:?FROZEN}; BIN_HOST=${BIN_HOST:?BIN_HOST}; BIN_ROOT=${BIN_ROOT:?BIN_ROOT}
   SRC_REV=${SRC_REV:?SRC_REV (provenance of the binary)}; CONTRACT=${CONTRACT:?CONTRACT}
   TAG=${TAG:-$(basename "$OUT")}; RUNROOT=${RUNROOT:-/srv/opentallas-scratch/claude/tok-func3-hbm/$TAG}
+  # Canonicalise on the execution host: existing parent symlinks must not hide
+  # an overlap that lets staging or the out/obj link modify the binary tree.
+  printf -v REUSE_GUARD 'python3 - %q %q' "$BIN_ROOT" "$RUNROOT"
+  timeout 300 ssh "$BIN_HOST" "$REUSE_GUARD" <<'PY_GUARD' || exit 4
+import os, sys
+binary, run = (os.path.realpath(p) for p in sys.argv[1:])
+if os.path.commonpath((binary, run)) in (binary, run):
+    print(f"REUSE_PATH_OVERLAP binary={binary} run={run}", file=sys.stderr)
+    sys.exit(4)
+print(f"REUSE_PATH_DISJOINT binary={binary} run={run}")
+PY_GUARD
   mkdir -p "$OUT/log" "$OUT/rj" "$OUT/stage/slice/replay"; L=$OUT/log
   say() { echo "$(date -Is) $*" | tee -a "$L/summary.log"; }
   timeout 300 ssh "$BIN_HOST" "test -x $BIN_ROOT/out/obj/Vtb_hbm_slice" || { say "NO_BINARY $BIN_HOST:$BIN_ROOT"; exit 4; }
