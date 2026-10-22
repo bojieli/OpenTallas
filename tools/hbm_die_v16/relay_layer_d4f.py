@@ -58,6 +58,51 @@ SRC_LANE = 'rtl/hbm_accel/die_glue/hbfd_lane_masters.sv'
 DEPS_LANE = ['rtl/hbm_accel/die_glue/ot_hbm_lane.sv', 'rtl/qwen_split/qfd_fwd_lane.sv', 'rtl/hdc/ot_hdc_cg.sv']
 
 
+# HBMb/NW 10-21: host cfg leaf copy buses are cfg_no_pad (die_relay_stations.bus_class).  All cfg/desc ports of ONE leaf
+# copy (a_ or b_) form one functional WORD at each receiver (cfg_v qualifies target/addr/data, desc_v the desc fields; the
+# receivers pin-flop payload and valid on the same edge), so the PORT-AGE aligner groups them as one port 'cfgword' per
+# sink: every row of the copy reaches a sink at ONE age (no torn word, payload never later than its valid).
+CFG_LEAF = re.compile(r'ot_hbm_host_cfg_leaf\w*$')
+CFG_LEAF_WORD = re.compile(r'([ab])_(cfg_|desc_)')
+CFG_LEAF_LAUNCH = re.compile(r'([ab])_launch_v$')
+
+
+def port_key(master, cls, driver_port, sink_port):
+    """(driver port, sink port) identity of one functional path for PORT-AGE alignment"""
+    m = CFG_LEAF_WORD.match(driver_port)
+    if cls == 'cfg_no_pad' and m and CFG_LEAF.match(master or ''):
+        return m.group(1) + '_cfgword', 'cfgword'
+    return driver_port, sink_port
+
+
+def cfg_launch_order(consts, master_of):
+    """HBMb/NW 10-21 CFG-LAUNCH-ORDER: per cfg leaf copy and sink, the launch strobe age must be >= the cfg/desc word age
+    (the receivers fault on cv/dv coinciding with lv and act on lv only after the word).  Returns (problems, rows)."""
+    word, launch = collections.defaultdict(dict), collections.defaultdict(dict)
+    for x in consts:
+        di, ports = x['driver'].split('.', 1); ports = ports.split('+')
+        if not CFG_LEAF.match(master_of.get(di) or ''):
+            continue
+        for p in ports:
+            mw, ml = CFG_LEAF_WORD.match(p), CFG_LEAF_LAUNCH.match(p)
+            tgt = word if mw else launch if ml else None
+            if tgt is None:
+                continue
+            for s_, e_ in (x.get('sink_edges') or {}).items():
+                key = (di, (mw or ml).group(1))
+                if e_ is not None:
+                    tgt[key][s_] = max(tgt[key].get(s_, e_), e_)
+    probs, rows = [], []
+    for key, w in sorted(word.items()):
+        L = launch.get(key, {})
+        for s_, a_ in sorted(w.items()):
+            l_ = L.get(s_)
+            rows.append(dict(leaf=key[0], copy=key[1], sink=s_, word_edges=a_, launch_edges=l_))
+            if l_ is not None and l_ < a_:   # no launch path = a cfg-only receiver (e.g. ot_hbm_pc_refresh_cfg): no order
+                probs.append(f'CFG-LAUNCH-ORDER {key[0]}.{key[1]}_launch_v -> {s_}: launch {l_} < cfg word {a_} edges')
+    return probs, rows
+
+
 def load(p):
     return json.loads(gzip.open(p).read() if str(p).endswith('.gz') else Path(p).read_text())
 
@@ -215,7 +260,8 @@ def main():
         di_ = r['driver'].split('.', 1)[0]
         for p_, k_, ls_ in rowbits[bi]:
             for x_ in ls_:   # one functional path = one producer port -> one consumer port (other drivers' slots differ)
-                (port_mixed if fwd else port_rows)[x_[0], x_[1], di_, p_].add(bi)
+                dp_, sp_ = port_key(inst[di_].get('master'), r['cls'], p_, x_[1])
+                (port_mixed if fwd else port_rows)[x_[0], sp_, di_, dp_].add(bi)
     # One functional word must use one transport mechanism even when its bits
     # have different fanout sets. Take the transitive row closure: a row can
     # participate in several producer/consumer port groups.
@@ -570,6 +616,9 @@ def main():
             const_by_tag[tag]['sink_edges'][sink] = lr['latency_edges']
             port_age_pads.append(dict(row=st['rows'][int(tag[2:])]['driver'], sink=sink, pads=count,
                                       transport='landed', diagnostic_E=lr['E'] is None))
+    cl_probs, cl_rows = cfg_launch_order(consts, {k: v.get('master') for k, v in inst.items()})
+    problems += cl_probs
+    notes.append(f'CFG-LAUNCH-ORDER: {len(cl_rows)} leaf copy sinks checked, {len(cl_probs)} launch-before-word')
     eq = collections.defaultdict(int)
     for x in consts:
         if x['cls'] == 'equal_age_pad':
@@ -601,7 +650,7 @@ def main():
                tiles=dict(sorted(tiles.items())), kinds=dict(collections.Counter(x['kind'] for x in consts)),
                fork_buses=sum(1 for x in consts if x['fork']), inter_region_buses=sum(1 for x in consts if x['inter_region']),
                equal_age_max_depth_by_domain=dict(eq), hops_over_reach=hops_over, problems=problems, notes=notes, compiler=consts,
-               port_age_pads=port_age_pads)
+               port_age_pads=port_age_pads, cfg_launch_order=cl_rows)
     if a.land:
         rep['landing'] = dict(links=len(land_rows), landing_tiles=sum(x['lanes'] for x in land_rows),
                               by_master=dict(collections.Counter(x['master'] for x in land_rows for _ in range(x['lanes']))),
