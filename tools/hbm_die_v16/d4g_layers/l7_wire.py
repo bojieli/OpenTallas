@@ -37,7 +37,12 @@ def run(c, rep):
     fixed = []
     for q in ('SE', 'NW', 'NE'):
         n = f'cxij_{q}'
-        assert n in I and I[n]['master'] == 'ot_hbm_su_static_cxport_ij', n
+        if n not in I and f'cxij_{q}_s' in I:
+            # l32 r17 split (cxij_<q> -> cxij_<q>_q CLOSED + cxij_<q>_s SYNTH): INJ_RET / B39_NOOP live on the ij_s half
+            n = f'cxij_{q}_s'
+            assert I[n]['master'] == 'ot_hbm_su_static_cxport_ij_s' and I[f'cxij_{q}_q']['master'] == 'ot_hbm_su_static_cxport_ij_q', n
+        else:
+            assert n in I and I[n]['master'] == 'ot_hbm_su_static_cxport_ij', n
         assert f'cij_{q}' in I and int(I[f'cij_{q}']['params']['INJLAT']) - 3 == FIX['INJ_RET'], q
         old = {k: I[n]['params'].get(k) for k in FIX}
         if old != FIX:
