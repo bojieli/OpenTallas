@@ -75,6 +75,7 @@ OPS = [r'^attn\.(own_row_write|window_load|scores|max|exp|den|sink|pv|normalize)
 BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc'
 BENCH_P = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc_p'   # TOK-S81-GAPS/SVCP: on-die P path (PPATH)
 BENCH_ALLQ = 'results/rtl/s81_rtlgap_so_1021/bench_allq'           # RTLGAP-SO: all-quarter P.V on one die (-DOT_SVC_ALLQ)
+BENCH_SO = 'results/rtl/s81_rtlgap_so_1021/bench_so'               # RTLGAP-SO: SO programme on the 16 real SM shares
 UNIT = 'svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4'
 INSTS = [f'u_rsv_{i:02d}' for i in range(16)] + ['u_seqhost']
 
@@ -117,6 +118,18 @@ SO_INPUT_GAP = dict(
             '32 FP32 operand rows/head, five SO parameter rows (obase, cos lo/hi, sin lo/hi), and '
             'SOT owner/read/retire booking. Job._frames emits SE kind 4 only. Do not replace the missing '
             'on-chip producer with fixture attn.pv or claim SO completion from the raw P.V END.')
+
+
+SO_ALLQ_GAP = dict(
+    module='entry PVSO ingress + on-die half exchange (RTLGAP-SO, ALLQ die)',
+    port='entry pv words (E tiles 0..7 / W tiles 8..15) -> per-half transpose -> SMJ kind 5 + 16 operand frames on q',
+    missing='G10 cross-die exchange is NOT needed (ALLQ: all 512 dims on this die, bench_allq). Remaining HW: (1) bind '
+            'the transposer/serializer (codex/s81-pv-so-assembly-1021 dsdv_pv_so_ingress) at BOTH entries, each for its '
+            'half\'s 8 heads; (2) the half exchange XH of the other half\'s 8-head 256-b record halves on existing lanes '
+            '(W->E: tq_05_07 dn, fc_07_09 score gather, tr_09_11 return; E->W: tq_11_09, pr_09_07 P-path lane, tr_07_05), '
+            '320 records each way, concurrent with the drain; (3) SOT14 booking dates + deferred END. The programme '
+            '(so_frames: SMJ kind 5 + 16 operand frames, 534 words; per half 6 + 8 x 33 = 270) is lowered and '
+            'bench-proven on the 16 real SM shares with the RTL P.V (bench_so).')
 
 
 def so_source_contract(die=None):
@@ -382,6 +395,74 @@ def pv_words(job, s, entry=None):
     return out
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+# RTLGAP-SO (10-21): the normalised-SO (SM kind 5) INPUT PROGRAMME of the layer -- every field is the decode of the built RTL:
+#   SMJ frame (svc type 9; dsdv_svc_att.sv SMJ block): header [0] start, [4:1] kind, [12:5] jid, [13] operand rows,
+#   [29:14] head mask (operand rows only: the slice of tile g takes the row iff [14 + g]); payload word i -> sm_rj = i.
+#   SO job (ot_s81_su_smq.sv K_SO = 5, np = 5): parameter rows r_j 0..4 = {row0 [13:0] obase}, cos lo, cos hi, sin lo,
+#   sin hi with cos / sin pair k (0..31) = {row2, row1}[32 k +: 32] / {row4, row3}[32 k +: 32] (smq cosw / sinw); the
+#   tap streams the 32 pairs for 32 cycles after the last parameter row (SO_CS_LEAD = 40 edges before the first operand
+#   row, tb_s81_su_sms); operand row r (0..31) of head g = P.V dims 16 r .. 16 r + 15 as FP32 lanes [32 i +: 32]; the
+#   o row k = SO_LAT 54 edges after operand row k at the share's pins, written at obase + 8 k + g / 2, mask 00FF (g even)
+#   / FF00 (g odd), data = 16 BF16 = bf16(pv / den) with the inverse RoPE on the last 64 dims (adjacent pairs = rows
+#   28..31; hdc_golden_v41.rope_tail), den = the SE job's (den + exp(sink - max), held by the SM, smd).
+#   Frame order (534 q words, = the codex PVSO serializer's): SMJ kind 5 header + 5 rows, then 16 operand frames (head
+#   g = frame g: header + 32 rows, head mask 1 << g).  The operand payload is NOT a compiler constant: it is the on-die
+#   P.V (ALLQ: all 512 dims on this die) transposed by the entry PVSO ingress (dsdv_pv_so_ingress); the compiler emits
+#   the headers / parameters / cycles and, for benches, the expected payload derived from the RTL P.V words.
+#   cos / sin are the token position's rows (same runtime source as attn.q_rope's QR rows, lower_vs.rope_rows).
+SO_JID, SO_OBASE = 0x22, 0x0200
+SO_CS_LEAD, SO_LAT, SO_DEN_MARGIN = 40, 54, 16
+SE_LAT, DEN_LAT0, DEN_LAT_LT = 106, 46, 5            # tb_s81_su_sms published constants (lanes/S81U-2.md)
+
+
+def rope_cs_u32(fx):
+    """(cos[32], sin[32]) u32 of the fixture token position (the attend() rope: yarn iff compressed layer)"""
+    import lower_vs as LV
+    rows = LV.rope_rows(fx)               # [{c, s, c', s'} x 16] = pairs 2 i, 2 i + 1
+    cos, sin = [0] * 32, [0] * 32
+    for i, w in enumerate(rows):
+        cos[2 * i], sin[2 * i] = w & 0xFFFFFFFF, (w >> 32) & 0xFFFFFFFF
+        cos[2 * i + 1], sin[2 * i + 1] = (w >> 64) & 0xFFFFFFFF, (w >> 96) & 0xFFFFFFFF
+    return cos, sin
+
+
+def so_param_rows(cos, sin, obase=SO_OBASE, mutant=None):
+    if mutant == 'cs_swap':                            # MUTANT: cos / sin rows exchanged
+        cos, sin = sin, cos
+    r0 = obase & 0x3FFF
+    row = lambda v, lo: sum(int(v[lo + k]) << (32 * k) for k in range(16))
+    return [r0, row(cos, 0), row(cos, 16), row(sin, 0), row(sin, 16)]
+
+
+def so_operand_rows(pv_u32):
+    """pv_u32 [16 heads, 512 dims] FP32 bits -> rows[g][r] (512-b) = dims 16 r .. 16 r + 15 of head g"""
+    return [[sum(int(pv_u32[g, 16 * r + i]) << (32 * i) for i in range(16)) for r in range(32)] for g in range(H)]
+
+
+def so_frames(tag, cos, sin, pv_u32, jid=SO_JID, obase=SO_OBASE, mutant=None):
+    """[(name, [512-b words])]: SMJ kind 5 (header + 5 parameter rows) then 16 operand frames (header + 32 rows)"""
+    fr = [('SMJ_SO', [hdr(9, 5, tag, spec=1 | (5 << 1) | ((jid & 255) << 5))] +
+           so_param_rows(cos, sin, obase, mutant))]
+    ops = so_operand_rows(pv_u32)
+    for g in range(H):
+        gm = (g + 1) % H if mutant == 'hm_shift' else g   # MUTANT: head mask one head off
+        fr.append((f'SMJ_OP{g}', [hdr(9, 32, tag, spec=(1 << 13) | (1 << (14 + gm)))] + ops[g]))
+    return fr
+
+
+def so_schedule(t_se_last_row, nv, nframes_words=534):
+    """static cycles at the SM share pins: SO start after the SE den (+ margin); operand rows after the cos / sin
+    stream; o row k = operand row k + SO_LAT.  Returns dict(start, first_op, last_op, last_o, den)"""
+    lt = max(0, (nv - 1).bit_length())
+    den = t_se_last_row + SE_LAT + (nv - 1) + DEN_LAT0 + DEN_LAT_LT * lt
+    start = den + SO_DEN_MARGIN
+    first_op = start + 6 + SO_CS_LEAD
+    last_op = first_op + 16 * 33 - 1
+    return dict(den=den, start=start, first_op=first_op, last_op=last_op, last_o=last_op + SO_LAT, lt=lt,
+                edges_after_den=last_op + SO_LAT - den)
+
+
 def _ages(die):
     lk = getattr(die, 'links', {}) if die is not None else {}
     g = lambda k, d: (lk.get(k) or {}).get('age_edges', d)
@@ -522,7 +603,11 @@ def lower(die, op, ctx):
         r['bench'] = BENCH_P
     elif name in ('attn.den', 'attn.sink') and PPATH:
         st = 'PARTIAL'
-        r['gap'] = dict(SO_INPUT_GAP)
+        r['gap'] = dict(SO_ALLQ_GAP if job.allq else SO_INPUT_GAP)
+    elif name == 'attn.normalize' and job.allq:
+        st = 'PARTIAL'                       # programme LOWERED + bench_so; input HW = SO_ALLQ_GAP (no cross-die part)
+        r['bench'] = BENCH_SO
+        r['gap'] = dict(SO_ALLQ_GAP)
     elif name == 'attn.pv' and job.allq:
         # RTLGAP-SO (10-21): all 512 dims of the rank leave this die (E tiles 0..7, W tiles 8..15); bench_allq
         st = 'LOWERED'
