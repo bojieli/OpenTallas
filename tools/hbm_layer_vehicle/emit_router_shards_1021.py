@@ -73,6 +73,8 @@ def emit(programme):
             logical_rank = rank['rank']
             expert_first = 4 * logical_rank + 2 * half
             md = shard.desc['O']
+            if md.base % 8 + md.n > 8:
+                raise ValueError('two-word output shard crosses a native VM sector')
             rows.append(dict(layer_id=programme['layer'], logical_tp=96,
                 logical_parent_rank=logical_rank, logical_record=k, half=half,
                 candidate_producer_tp=192, candidate_rank=2 * logical_rank + half,
