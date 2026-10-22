@@ -188,7 +188,11 @@ module ot_s81sl_xrt #(
     // 160 rwr_c kept copies, 578 paths): the kind / owner predicates are decoded from the input PINS into kept flags at
     // the SAME edge as eb / wb / vb (input-to-reg slack +365 ps).  sid_oh is a static strap, so mine_* from dl_* equals
     // mine_* from the registered words; the flags reset with ev / wv / vv (rs_c).  Same values, same edges.
-    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd, pq_me, pq_mw, pq_mv;
+    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd;
+    // XRT3R (STW-S81c-COLLA3 10-22, xrt3p TT I2R dl_e -> pq_me -12.6): the owner match is captured as two byte halves
+    // (8-bit AND-OR at the pin) and OR-ed after the flops: mine_* = l | h == |(dl[36:21] & sid_ohp), same edge.
+    (* keep *) reg pq_me_l, pq_me_h, pq_mw_l, pq_mw_h, pq_mv_l, pq_mv_h;
+    wire pq_me = pq_me_l | pq_me_h, pq_mw = pq_mw_l | pq_mw_h, pq_mv = pq_mv_l | pq_mv_h;
     wire pq_vrdc, pq_vrdm;   // same-D copies behind keep_hierarchy (plain keep regs were merged: 36-42 loads)
     ot_s81sl_xr_rcp #(.ID(1)) u_vrdc (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdc));
     ot_s81sl_xr_rcp #(.ID(2)) u_vrdm (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdm));
@@ -210,7 +214,9 @@ module ot_s81sl_xrt #(
             pq_vrd <= dl_vv && dl_vb[3:1] == K_RD;
         end
     always @(posedge clk) begin
-        pq_me <= |(dl_e[36:21] & sid_ohp); pq_mw <= |(dl_w[36:21] & sid_ohp); pq_mv <= |(dl_vb[36:21] & sid_ohp);
+        pq_me_l <= |(dl_e[28:21] & sid_ohp[7:0]);  pq_me_h <= |(dl_e[36:29] & sid_ohp[15:8]);
+        pq_mw_l <= |(dl_w[28:21] & sid_ohp[7:0]);  pq_mw_h <= |(dl_w[36:29] & sid_ohp[15:8]);
+        pq_mv_l <= |(dl_vb[28:21] & sid_ohp[7:0]); pq_mv_h <= |(dl_vb[36:29] & sid_ohp[15:8]);
     end
     wire e_ctl = pq_ectl, w_ctl = pq_wctl, v_ctl = pq_vctl;
     wire e_rd = pq_erd, w_rd = pq_wrd;
@@ -319,6 +325,22 @@ module ot_s81sl_xrt #(
         lmask <= lmask0; rnp <= v_rd ? 2'd0 : rdb0[50 +: 2]; rrow <= v_rd ? vb[16:7] : rdb0[40 +: 10];
 `endif
         lo_sel <= lo_sel0;
+    end
+    // XRT3R (STW-S81c-COLLA3 10-22, xrt3p/xrt3q NEEDS_RTL TT -40.1/-32.3: bsw_c/bse_c -> body mux -> 4 repeaters ->
+    // x_eps / x_scale / x_mode at the S face; one body bit fed c_d (W), is_d / cfg_d (N), sw_* and x_* (S)): the S-face
+    // consumers get their OWN stage-1 raw-word copies (ebx/wbx/vbx = eb2/wb2/vb2 bits 46+{0..32, 64..95}, KEPT, same D)
+    // and their own one-hot select copies (bsex_c/bswx_c = bse_c/bsw_c, same D), so the 3:1 select sits beside the
+    // x flops and the long hop is the zero-logic pin-flop -> copy wire.  bodyx == body on those bits every cycle.
+    (* keep *) reg [32:0] ebx_l, wbx_l, vbx_l; (* keep *) reg [31:0] ebx_h, wbx_h, vbx_h; (* keep *) reg [8:0] bsex_c, bswx_c;
+    always @(posedge clk) begin
+        ebx_l <= eb[47 +: 33]; wbx_l <= wb[47 +: 33]; vbx_l <= vb[47 +: 33];
+        ebx_h <= eb[111 +: 32]; wbx_h <= wb[111 +: 32]; vbx_h <= vb[111 +: 32];
+        for (k = 0; k < 9; k = k + 1) begin bsex_c[k] <= ce && sp[2]; bswx_c[k] <= !ce && cw && sp[3]; end
+    end
+    reg [32:0] bx_l; reg [31:0] bx_h;
+    always @(*) begin
+        for (k = 0; k < 33; k = k + 1) bx_l[k] = bsex_c[k / 8] ? ebx_l[k] : bswx_c[k / 8] ? wbx_l[k] : vbx_l[k];
+        for (k = 0; k < 32; k = k + 1) bx_h[k] = bsex_c[5 + k / 8] ? ebx_h[k] : bswx_c[5 + k / 8] ? wbx_h[k] : vbx_h[k];
     end
     reg [1023:0] rdat; reg [159:0] body; reg [V-2:0] cix;
     always @(*) begin
@@ -564,11 +586,11 @@ module ot_s81sl_xrt #(
         else begin
             c_v <= tg[0] ? lmask : 5'd0;
             x_go <= tg[1];
-            x_mode_m <= tg[1] ? body[32] : x_mode_m;
+            x_mode_m <= tg[1] ? bx_l[32] : x_mode_m;
 `ifdef OT_S81SL_XR_MUT_XHOLD
-            x_mode_q <= tg[1] ? body[32] : 1'b0;                    // mutant: output copy does not hold
+            x_mode_q <= tg[1] ? bx_l[32] : 1'b0;                    // mutant: output copy does not hold
 `else
-            x_mode_q <= tg[1] ? body[32] : x_mode_m;
+            x_mode_q <= tg[1] ? bx_l[32] : x_mode_m;
 `endif
             is_v <= tg[2];
             cfg_v <= tg[3];
@@ -576,14 +598,14 @@ module ot_s81sl_xrt #(
     always @(posedge clk) begin
         c_d <= body;
         for (k = 0; k < 4; k = k + 1) begin
-            x_eps_m[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : x_eps_m[8 * k +: 8];
-            x_scale_m[8 * k +: 8] <= tg1_c[4 + k] ? body[64 + 8 * k +: 8] : x_scale_m[8 * k +: 8];
+            x_eps_m[8 * k +: 8] <= tg1_c[k] ? bx_l[8 * k +: 8] : x_eps_m[8 * k +: 8];
+            x_scale_m[8 * k +: 8] <= tg1_c[4 + k] ? bx_h[8 * k +: 8] : x_scale_m[8 * k +: 8];
 `ifdef OT_S81SL_XR_MUT_XHOLD
-            x_eps_q[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : 8'd0;  // mutant: output copies do not hold
-            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? body[64 + 8 * k +: 8] : 8'd0;
+            x_eps_q[8 * k +: 8] <= tg1_c[k] ? bx_l[8 * k +: 8] : 8'd0;  // mutant: output copies do not hold
+            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? bx_h[8 * k +: 8] : 8'd0;
 `else
-            x_eps_q[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : x_eps_m[8 * k +: 8];
-            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? body[64 + 8 * k +: 8] : x_scale_m[8 * k +: 8];
+            x_eps_q[8 * k +: 8] <= tg1_c[k] ? bx_l[8 * k +: 8] : x_eps_m[8 * k +: 8];
+            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? bx_h[8 * k +: 8] : x_scale_m[8 * k +: 8];
 `endif
         end
         is_d <= body; cfg_d <= body;
