@@ -663,6 +663,16 @@ def main():
             box = P[f'pc_{q}{k}']; fw, fh = size[cell_of[n]]
             gx = round(round((box['x'] + (box['w'] - fw) / 2) / 0.216) * 0.216, 3)
             gy = round(box['y'] + 4.32, 3) if north else round(box['y'] + box['h'] - fh - 4.32, 3)
+            # HBM-DIE17 10-21: an explicit --slot-map grant for a service group is its home (r16p exact_p_svg_NW1 was
+            # silently ignored -> svg_NW1 stayed on the band centre and overlapped the moved vmks_NW1).  The slot must sit
+            # inside its PC band box and keep the band orientation; otherwise GEN refuses.
+            s_ = slot_map.get(n)
+            if s_ is not None:
+                o_ = slots[s_]['origin']; x_, y_ = o_['x'], o_['y']
+                assert o_.get('orient', 'R0') == ('MX' if north else 'R0'), (n, s_, 'slot orient != band orient')
+                assert box['x'] - 0.01 <= x_ and x_ + fw <= box['x'] + box['w'] + 0.01, (n, s_, 'slot outside PC band box')
+                put(n, x_, y_, 'MX' if north else 'R0', f'grant slot {s_} (PC band box d2)')
+                continue
             put(n, gx, gy, 'MX' if north else 'R0', 'PC band box (d2)')
     # 1b singleton grant slots (a v15 slot left at the die origin is a placeholder, not a home)
     placeholder = sorted((n, eslot(n)) for n in inst if eslot(n) in slots and
