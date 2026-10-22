@@ -34,8 +34,9 @@ module ot_hbm_idx_score_quarter_col8_control #(parameter integer TP=96,RANK_W=(T
 );
  localparam integer QW = 8 + 512 + 32 + 16, KW4 = 4 * 544, SW = 1 + 1 + 4 + 128 + 4, AUXW = 30, NK = 4, NCH = 4;
  // ---------------- reset relay
- wire rst_c;
- ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_c));
+ wire[12:0]rst_regions;
+ ot_hidx_rst_tree_3e_f32 #(.REGIONS(13)) u_rst(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_regions));
+ wire rst_c=rst_regions[12];
  // ---------------- input pin flops (no reset)
  (* keep *) reg h_r;(* keep *) reg[RANK_W-1:0]rk_r;(* keep *) reg[10:0]fo_r;(* keep *) reg[11:0]nk_r;
  (* keep *) reg ke_r;(* keep *) reg[170:0]kb_r;
@@ -46,6 +47,8 @@ module ot_hbm_idx_score_quarter_col8_control #(parameter integer TP=96,RANK_W=(T
   qv_r<=ql_v;qh_r<=ql_head;qc_r<=ql_codes;qs_r<=ql_sc;qw_r<=ql_w;
   bv_r<=beat_v;bi_r<=beat_index;kl_r<=key_lines;
  end
+ wire bitmap_bit;
+ ot_hidx_keep171_f32 keep_select(.clk(clk_ctl),.kb_registered(kb_r),.index_registered(bi_r),.index_next(beat_index[3:0]),.q(bitmap_bit));
  // ---------------- W glue (cluster W glue on the registered inputs; this quarter's 4 key lines)
  wire[19:0]g0=20'(8*TP)*20'(fo_r)+20'(8)*20'(rk_r)+20'(16*TP)*20'(bi_r);
  reg wf;
@@ -64,7 +67,7 @@ module ot_hbm_idx_score_quarter_col8_control #(parameter integer TP=96,RANK_W=(T
    localparam integer ll=4*e+l;                               // quarter lane 0..7 = stack lane 8*half + ll
    assign keys[l*544+:544]=kl_r[(ll/2)*1099+11+(ll%2)*544+:544];
    assign valid_keys[l]=({4'd0,bi_r}*12'd16+12'(ll)+(h_r?12'd8:12'd0))<nk_r;
-   assign keep_keys[l]=!ke_r||kb_r[bi_r];
+   assign keep_keys[l]=!ke_r||bitmap_bit;
   end
   // stack-cluster metadata of global engine 2*half + e: first = g0 + half*(8TP) + e*4
   wire[19:0]first=g0+(h_r?20'(8*TP):20'd0)+20'(e*4);
@@ -80,23 +83,24 @@ module ot_hbm_idx_score_quarter_col8_control #(parameter integer TP=96,RANK_W=(T
     assign cp[l]=clk_hslice[e*128 + c*32 + 2*l];
    end
    wire [4*SW-1:0] bo;
-   ot_hbm_idx_score_leaf_col8_control #(.AUXW(AUXW)) leaf(.clk(clk_chunk[e*4+c]), .clk_pair(cp), .rst_n(rst_c), .hb(8'(8*c)),
+   ot_hbm_idx_score_leaf_col8_control #(.AUXW(AUXW)) leaf(.clk(clk_chunk[e*4+c]), .clk_pair(cp), .rst_n(rst_regions[e*4+c]), .hb(8'(8*c)),
     .w_qv(qv_c[c]), .w_q(q_c[c]), .w_kv(kv_c[c]), .w_kkv(kkv_c[c]), .w_key(key_c[c]), .w_aux(aux_c[c]), .w_bus(bus_c[c]),
     .e_qv(qv_c[c+1]), .e_q(q_c[c+1]), .e_kv(kv_c[c+1]), .e_kkv(kkv_c[c+1]), .e_key(key_c[c+1]), .e_aux(aux_c[c+1]), .e_bus(bo),.cut_rst_n(cut_rst_n[(4*(e*4+c))*1+:4]),.cut_qv(cut_qv[(4*(e*4+c))*1+:4]),.cut_q(cut_q[(4*(e*4+c))*568+:2272]),.cut_key(cut_key[(4*(e*4+c))*544+:2176]),.cut_hid(cut_hid[(4*(e*4+c))*64+:256]),.cut_cs(cut_cs[(4*(e*4+c))*32+:128]),.cut_cf(cut_cf[(4*(e*4+c))*1+:4]),.cut_prdy(cut_prdy[(4*(e*4+c))*4+:16]));
    assign bus_c[c+1]=bo;
   end
   // ---------------- E glue of row e (verbatim ot_hbm_idx_score_cluster)
   wire eclk=clk_engine[e];
+  wire rst_e=rst_regions[8+e],rst_t=rst_regions[10+e];
   wire qv_e=qv_c[NCH], kv_e=kv_c[NCH]; wire [AUXW-1:0] aux_e=aux_c[NCH]; wire [4*SW-1:0] bus_e=bus_c[NCH];
   wire [3:0] keep_d;
-  ot_hdc_delay #(.W(4),.D(129)) keep_pipe(.clk(eclk),.rst_n(rst_c),.d(aux_e[3:0]),.q(keep_d));
+  ot_hdc_delay #(.W(4),.D(129)) keep_pipe(.clk(eclk),.rst_n(rst_e),.d(aux_e[3:0]),.q(keep_d));
   wire [3:0] son, sv; wire [3:0] skv [0:3]; wire [127:0] ssum [0:3]; wire [3:0] sfl [0:3];
   for(c=0;c<4;c=c+1)begin:gs
    assign {son[c], sv[c], skv[c], ssum[c], sfl[c]} = bus_e[c*SW +: SW];
   end
   reg [3:0] ready1,ready2; reg online_q; reg fault_q; reg [1:0] settle;
-  always @(posedge eclk or negedge rst_c)begin
-   if(!rst_c)begin ready1<=0;ready2<=0;online_q<=0;fault_q<=0;settle<=0;end
+  always @(posedge eclk or negedge rst_e)begin
+   if(!rst_e)begin ready1<=0;ready2<=0;online_q<=0;fault_q<=0;settle<=0;end
    else begin
     if(qv_e)settle<=3;else if(settle!=0)settle<=settle-1;
     ready1<=son;ready2<=ready1;online_q<=&ready2;
@@ -112,10 +116,10 @@ module ot_hbm_idx_score_quarter_col8_control #(parameter integer TP=96,RANK_W=(T
    end
   end
   wire tv; wire [NK-1:0] tkv, tf; wire [NK*16-1:0] ts;
-  ot_hbm_idx_tail_native u_t (.clk(clk_tail[e]), .rst_n(rst_c), .i_v(sv[0]), .i_kv(skv[0]),
+  ot_hbm_idx_tail_col8_f32 u_t (.clk(clk_tail[e]), .rst_n(rst_t), .i_v(sv[0]), .i_kv(skv[0]),
    .i_keep(keep_d), .i_sum(tsum), .i_fault(tfl), .o_v(tv), .o_kv(tkv), .o_score(ts), .o_fault(tf));
   reg ov; reg [3:0] ok, ofl; reg [63:0] os;
-  always @(posedge eclk or negedge rst_c) if(!rst_c) ov<=0; else ov<=tv;
+  always @(posedge eclk or negedge rst_e) if(!rst_e) ov<=0; else ov<=tv;
   always @(posedge eclk) begin ok<=tkv; os<=ts; ofl<=tf; end
   assign ev[e]=ov; assign kv[e*4+:4]=ok; assign val[e*64+:64]=os;
   wire[24:0]meta;

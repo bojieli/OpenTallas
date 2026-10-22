@@ -11,6 +11,17 @@ def append_ports(s,n):return s.replace('\n);',declarations(n)+'\n);',1)
 def bindings(index,n):return ','.join(f'.cut_{name}(cut_{name}[({index})*{w}+:{n*w}])' for _,name,w in ports)
 def allbindings():return ','.join(f'.cut_{name}(cut_{name})' for _,name,_ in ports)
 def wiredecl(n):return '\n'.join(f' wire [{n*w-1}:0] cut_{name};' for _,name,w in ports)+'\n'
+
+def repair_residual(s):
+ import re
+ s=re.sub(r' wire rst_c;\n ot_rst_relay #\(\.REGIONS\(1\),\.SYNC_STAGES\(2\),\.TREE_STAGES\(1\)\) u_rst\(\.clk\(clk_ctl\),\.rst_n_in\(rst_n\),\.rst_n\(rst_c\)\);', ' wire[12:0]rst_regions;\n ot_hidx_rst_tree_3e_f32 #(.REGIONS(13)) u_rst(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_regions));\n wire rst_c=rst_regions[12];',s)
+ assert 'wire[12:0]rst_regions' in s
+ s=s.replace(' // ---------------- W glue',' wire bitmap_bit;\n ot_hidx_keep171_f32 keep_select(.clk(clk_ctl),.kb_registered(kb_r),.index_registered(bi_r),.index_next(beat_index[3:0]),.q(bitmap_bit));\n // ---------------- W glue')
+ s=s.replace('!ke_r||kb_r[bi_r]','!ke_r||bitmap_bit').replace('.rst_n(rst_c), .hb(8', '.rst_n(rst_regions[e*4+c]), .hb(8')
+ start=s.index('  // ---------------- E glue');end=s.index(' // ---------------- output pin flops')
+ middle=s[start:end].replace('rst_c','rst_e').replace('wire eclk=clk_engine[e];','wire eclk=clk_engine[e];\n  wire rst_e=rst_regions[8+e],rst_t=rst_regions[10+e];').replace('ot_hbm_idx_tail_native u_t','ot_hbm_idx_tail_col8_f32 u_t').replace('.rst_n(rst_e), .i_v','.rst_n(rst_t), .i_v')
+ return s[:start]+middle+s[end:]
+
 old=(hd/'ot_hbm_idx_chunk_col8_face.sv').read_text();chunk=append_ports(old.replace('module ot_hbm_idx_chunk_col8_face','module ot_hbm_idx_chunk_col8_control',1),4);chunk=chunk.replace('#(.QLATE(QLATE),.VL_EXTRA(23)) u_glue','#(.RESET_F32_FAST3(1),.QLATE(QLATE),.VL_EXTRA(23)) u_glue');chunk=chunk[:chunk.index(' genvar g;')]+''' assign cut_rst_n=crst;assign cut_qv={4{cqv}};assign cut_q={4{cq}};
  assign cut_key=ckey;assign cut_hid={4{chid}};
  assign ccs=cut_cs;assign ccf=cut_cf;assign cprdy=cut_prdy;
@@ -18,7 +29,7 @@ endmodule
 `default_nettype wire
 ''';(hd/'ot_hbm_idx_chunk_col8_control.sv').write_text(chunk)
 leaf=(qd/'ot_hbm_idx_score_leaf_col8_sram.sv').read_text();leaf=append_ports(leaf.replace('module ot_hbm_idx_score_leaf_col8_sram','module ot_hbm_idx_score_leaf_col8_control',1),4).replace('ot_hbm_idx_chunk_col8_face core','ot_hbm_idx_chunk_col8_control core').replace('.n_fault(n_f));','.n_fault(n_f),'+allbindings()+');');(qd/'ot_hbm_idx_score_leaf_col8_control.sv').write_text(leaf)
-quarter=(qd/'ot_hbm_idx_score_quarter_col8_sram.sv').read_text();ctl=append_ports(quarter.replace('module ot_hbm_idx_score_quarter_col8_sram','module ot_hbm_idx_score_quarter_col8_control',1),32).replace('ot_hbm_idx_score_leaf_col8_sram #','ot_hbm_idx_score_leaf_col8_control #').replace('.e_bus(bo));','.e_bus(bo),'+bindings('4*(e*4+c)',4)+');');(qd/'ot_hbm_idx_score_quarter_col8_control.sv').write_text(ctl)
+quarter=(qd/'ot_hbm_idx_score_quarter_col8_sram.sv').read_text();ctl=append_ports(quarter.replace('module ot_hbm_idx_score_quarter_col8_sram','module ot_hbm_idx_score_quarter_col8_control',1),32).replace('ot_hbm_idx_score_leaf_col8_sram #','ot_hbm_idx_score_leaf_col8_control #').replace('.e_bus(bo));','.e_bus(bo),'+bindings('4*(e*4+c)',4)+');');ctl=repair_residual(ctl);(qd/'ot_hbm_idx_score_quarter_col8_control.sv').write_text(ctl)
 qports='clk_ctl clk_engine clk_meta clk_tail clk_chunk clk_hslice rst_n half rank first_ord nkeys keep_en keep_bitmap ql_v ql_head ql_codes ql_sc ql_w beat_v beat_index key_lines score fault'.split();head=quarter[:quarter.index(' localparam integer')];head=head.replace('ot_hbm_idx_score_quarter_col8_sram','ot_hbm_idx_score_quarter_col8_split').replace('output reg[305:0]score','output wire[305:0]score');body=wiredecl(32)+' ot_hbm_idx_score_quarter_col8_control #(.TP(TP),.RANK_W(RANK_W)) u_control('+','.join(f'.{a}({a})' for a in qports)+','+allbindings()+');\n';body+=''' for(genvar e=0;e<2;e=e+1)begin:ge
   for(genvar c=0;c<4;c=c+1)begin:gc
    for(genvar g=0;g<4;g=g+1)begin:g_col
