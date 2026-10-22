@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.qbank.align1_physical_sizing.v1",
+  "status": "QUALIFICATION_ONLY",
+  "source_sha256": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33",
+  "params": {
+    "QB_ALIGN": 1,
+    "QB_LOCAL32": 0
+  },
+  "actual_die_replica_count": 1,
+  "replica_source": "qdie source-bound hierarchy: native59.qfd_native59_dv_headprep_obs1.u_qb; wrapper SHA b8f883e7b0ec00b591eb68c1b57f75b76802c666030528c7f9e8483d790e1c44",
+  "sram": {
+    "count": 8,
+    "rows": 32,
+    "bits": 512,
+    "total_bits": 131072,
+    "total_bytes": 16384,
+    "macro_area_um2": 101966.688
+  },
+  "hardware_capacity_bits_per_edge": {
+    "dd_i": 548,
+    "dd_o_relay": 548,
+    "qb_row": 512
+  },
+  "alignment_delta": {
+    "qb_v_edges": -1,
+    "qb_beat_edges": -1,
+    "row_edges": 0,
+    "added_FF": 0,
+    "possible_dead_FF_removed": 6,
+    "other_edges": 0
+  },
+  "geometry": {
+    "MAIN_um": [
+      518.4,
+      561.6
+    ],
+    "ALT_um": [
+      604.8,
+      604.8
+    ],
+    "macro_vertical_gap_um": 53.46,
+    "macro_horizontal_gap_um": 91.8
+  },
+  "clock": "single existing ck from wrapper native59.ck; actual final die root driver UNMEASURED",
+  "reset": "existing rst_n plus unchanged local reset forests",
+  "production_budget": "OPEN: token/qwen owns actual QSLOT lowerer and missing032 booking; source bandwidth is hardware capacity only",
+  "physical_qualification_eligible": false
+}
