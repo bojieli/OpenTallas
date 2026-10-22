@@ -249,6 +249,9 @@ SCOPED_CLOCK_WAIVER_CAPS = {
     # DRIVE-S81 COORD 10-21 00:35 (rule freeze): S81 SerDes column lp7b merged decoder region ck_dec (hard children only;
     # lpk6b CTS u_dly pairs TT 243 / 285): judged by ROUTED timing (TT setup / FF hold), not hard-child pin balance
     "s81lk_serdes_col_lp7b": {"tt": 300.0, "ff": 300.0},
+    # STW-S81-OWN7 10-21: lp8a / lp8b carry the same (unchanged) decoder region ck_dec under the same decision
+    "s81lk_serdes_col_lp8a": {"tt": 300.0, "ff": 300.0},
+    "s81lk_serdes_col_lp8b": {"tt": 300.0, "ff": 300.0},
 }
 
 
