@@ -15,7 +15,7 @@
 //   * one-hot strobes: group-select leaves ot_s32_and(acc_t && group && rs_s[j], dec16) over shared 16-way decodes
 //     (controller: groups {target - 6, addr[9]} x addr[8:5] (MUT 2: ^1); landing / front: groups gi[4] x gi[3:0], gi = addr/6).
 // Lockstep vs the originals: rtl/test/mu_qwen_1018/run_kv_ctl_s32_d2.sh.
-module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer SRQ=0,parameter integer RS=24)(
+module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer SRQ=0,parameter integer RS=24,parameter integer DSTG=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[9:0]boot_addr_b,input wire[3:0]boot_image_target,
  input wire[4:0]boot_gix,input wire[2:0]boot_rem6,
  input wire boot_seal,input wire[9:0]boot_addr_raw,
@@ -24,14 +24,14 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  input wire[159:0]sink_applied,input wire[2:0]local_configured,input wire sink_fault,
  input wire diecfg_sealed,diecfg_fault,
  output reg layer_we,output wire[8:0]layer_addr,output wire[63:0]layer_data,
- output reg writer_we,output wire[7:0]writer_addr,output wire[63:0]writer_data,
- output reg ownership_we,output wire[1:0]ownership_addr,output wire[31:0]ownership_data,
+ output wire writer_we,output wire[7:0]writer_addr,output wire[63:0]writer_data,
+ output wire ownership_we,output wire[1:0]ownership_addr,output wire[31:0]ownership_data,
  output wire[31:0]landing_we,front_we,output wire[7:0]group_addr,output wire[63:0]group_data,
  output wire[127:0]controller_we,output wire[7:0]controller_addr,output wire[63:0]controller_data,
  output wire[127:0]controller_last,output wire[31:0]front_last,
- output reg diecfg_we,output wire[7:0]diecfg_addr,output wire[63:0]diecfg_data,
- output reg link_cfg_tx_we,link_cfg_rx_we,output wire[5:0]link_cfg_addr,output wire[31:0]link_cfg_data,
- output reg es_cfg_we,output wire[7:0]es_cfg_addr,output wire[63:0]es_cfg_data,
+ output wire diecfg_we,output wire[7:0]diecfg_addr,output wire[63:0]diecfg_data,
+ output wire link_cfg_tx_we,link_cfg_rx_we,output wire[5:0]link_cfg_addr,output wire[31:0]link_cfg_data,
+ output wire es_cfg_we,output wire[7:0]es_cfg_addr,output wire[63:0]es_cfg_data,
  output wire setup_ready,output reg fault,output reg[7:0]fault_code,
  output reg[15:0]installed_epoch,output wire[63:0]installed_isa_digest
 );
@@ -106,16 +106,67 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  wire ok12=acc_t[12]&&!(data[63:62]!=0||data[61:18]!=0||data[17:16]!=addr[9:8]);
  wire ok13=acc_t[13]&&!(data[63:62]!=2'd1||data[61:24]!=0);
  wire isa_w=boot_image_ready&&!ready_q&&!fault&&tdec[0]&&!(expected_target!=0||!have_epoch||boot_image_epoch!=installed_epoch);
+
+ // DSTG: one extra boot-write edge; control/sequence checks stay at the original edge.
+ wire[13:0]d_acc_t;
+ wire[0:0]d_ok3;
+ wire[0:0]d_ok11;
+ wire[0:0]d_ok12;
+ wire[0:0]d_ok13;
+ wire[0:0]d_isa_w;
+ wire[9:0]d_addr_b;
+ wire[63:0]d_data;
+ wire[2:0]d_boot_rem6;
+ wire[4:0]d_boot_gix;
+ wire[9:0]d_addr;
+ wire[63:0]d_boot_image_digest;
+ generate if(DSTG!=0)begin:g_dstg
+ (* keep *) reg[13:0]q_acc_t; assign d_acc_t=q_acc_t;
+ (* keep *) reg[0:0]q_ok3; assign d_ok3=q_ok3;
+ (* keep *) reg[0:0]q_ok11; assign d_ok11=q_ok11;
+ (* keep *) reg[0:0]q_ok12; assign d_ok12=q_ok12;
+ (* keep *) reg[0:0]q_ok13; assign d_ok13=q_ok13;
+ (* keep *) reg[0:0]q_isa_w; assign d_isa_w=q_isa_w;
+ (* keep *) reg[9:0]q_addr_b; assign d_addr_b=q_addr_b;
+ (* keep *) reg[63:0]q_data; assign d_data=q_data;
+ (* keep *) reg[2:0]q_boot_rem6; assign d_boot_rem6=q_boot_rem6;
+ (* keep *) reg[4:0]q_boot_gix; assign d_boot_gix=q_boot_gix;
+ (* keep *) reg[9:0]q_addr; assign d_addr=q_addr;
+ (* keep *) reg[63:0]q_boot_image_digest; assign d_boot_image_digest=q_boot_image_digest;
+ always @(posedge ck or negedge rst_n) if(!rst_n)begin q_acc_t<=0;q_ok3<=0;q_ok11<=0;q_ok12<=0;q_ok13<=0;q_isa_w<=0; end else begin q_acc_t<=acc_t;q_ok3<=ok3;q_ok11<=ok11;q_ok12<=ok12;q_ok13<=ok13;q_isa_w<=isa_w; end
+ always @(posedge ck)begin q_addr_b<=addr_b;q_data<=data;q_boot_rem6<=boot_rem6;q_boot_gix<=boot_gix;q_addr<=addr;q_boot_image_digest<=boot_image_digest; end
+ end else begin:g_no_dstg
+ assign d_acc_t=acc_t;
+ assign d_ok3=ok3;
+ assign d_ok11=ok11;
+ assign d_ok12=ok12;
+ assign d_ok13=ok13;
+ assign d_isa_w=isa_w;
+ assign d_addr_b=addr_b;
+ assign d_data=data;
+ assign d_boot_rem6=boot_rem6;
+ assign d_boot_gix=boot_gix;
+ assign d_addr=addr;
+ assign d_boot_image_digest=boot_image_digest;
+ end endgenerate
+
+ reg writer_we_raw,ownership_we_raw,diecfg_we_raw,link_cfg_tx_we_raw,link_cfg_rx_we_raw,es_cfg_we_raw;
+ generate if(DSTG!=0)begin:g_writer_we_stage reg q; always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=writer_we_raw; assign writer_we=q; end else assign writer_we=writer_we_raw; endgenerate
+ generate if(DSTG!=0)begin:g_ownership_we_stage reg q; always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=ownership_we_raw; assign ownership_we=q; end else assign ownership_we=ownership_we_raw; endgenerate
+ generate if(DSTG!=0)begin:g_diecfg_we_stage reg q; always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=diecfg_we_raw; assign diecfg_we=q; end else assign diecfg_we=diecfg_we_raw; endgenerate
+ generate if(DSTG!=0)begin:g_link_cfg_tx_we_stage reg q; always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=link_cfg_tx_we_raw; assign link_cfg_tx_we=q; end else assign link_cfg_tx_we=link_cfg_tx_we_raw; endgenerate
+ generate if(DSTG!=0)begin:g_link_cfg_rx_we_stage reg q; always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=link_cfg_rx_we_raw; assign link_cfg_rx_we=q; end else assign link_cfg_rx_we=link_cfg_rx_we_raw; endgenerate
+ generate if(DSTG!=0)begin:g_es_cfg_we_stage reg q; always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=es_cfg_we_raw; assign es_cfg_we=q; end else assign es_cfg_we=es_cfg_we_raw; endgenerate
  // ---- slice literals: kept copies of the reset (identical D = rst_n) ----
  (* keep *) reg[RS-1:0]rs_s;
  always @(posedge ck)rs_s<={RS{rst_n}};
  // ---- held registers, sliced <= 16 bits (ot_s32_sel leaves, distinct select nets) ----
  // KV-CTL12 10-21 (gate222038 c32a/b: boot_image_epoch -> o_hroot 1037 ps, the /6 chain u_gix ~350 ps in series behind the
- // MU seal re-address mux): the parent computes addr/6 and addr%6 of the RAW address in parallel with the seal accept and
- // selects the constants of word 326 (54 r 2) on an accepted seal.  Same values as addr/6, addr%6 of the re-addressed word.
- wire[9:0]a6={7'd0,boot_rem6};
- wire[5:0]lk_a=(addr_b<64)?{1'b0,addr_b[5:1]}:((MUT==6)?6'd0:6'b100000);
- wire[7:0]es_a=ok13?{5'd0,addr_b[2:0]}:((MUT==7)?{addr_b[2:0],addr_b[7:3]}:addr_b[7:0]);
+ // MU seal re-address mux): the parent computes d_addr/6 and d_addr%6 of the RAW address in parallel with the seal accept and
+ // selects the constants of word 326 (54 r 2) on an accepted seal.  Same values as d_addr/6, d_addr%6 of the re-addressed word.
+ wire[9:0]a6={7'd0,d_boot_rem6};
+ wire[5:0]lk_a=(d_addr_b<64)?{1'b0,d_addr_b[5:1]}:((MUT==6)?6'd0:6'b100000);
+ wire[7:0]es_a=d_ok13?{5'd0,d_addr_b[2:0]}:((MUT==7)?{d_addr_b[2:0],d_addr_b[7:3]}:d_addr_b[7:0]);
  wire[72:0]s_layer={addr_b[8:0],data};
  reg[72:0]layer_q;wire[72:0]layer_n;
  generate for(gi_=0;gi_<5;gi_=gi_+1)begin:g_layer
@@ -123,60 +174,60 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
   ot_s32_sel #(.W(W)) u_s(.s((acc_t[1])&&rs_s[(0+gi_)%RS]),.a(s_layer[LO+:W]),.b(layer_q[LO+:W]),.y(layer_n[LO+:W]));
  end endgenerate
  always @(posedge ck or negedge rst_n)if(!rst_n)layer_q<=0;else layer_q<=layer_n;
- wire[71:0]s_writer={addr_b[7:0],data};
+ wire[71:0]s_writer={d_addr_b[7:0],d_data};
  reg[71:0]writer_q;wire[71:0]writer_n;
  generate for(gi_=0;gi_<5;gi_=gi_+1)begin:g_writer
   localparam integer LO=16*gi_,W=((72-LO)<16)?(72-LO):16;
-  ot_s32_sel #(.W(W)) u_s(.s((acc_t[2])&&rs_s[(5+gi_)%RS]),.a(s_writer[LO+:W]),.b(writer_q[LO+:W]),.y(writer_n[LO+:W]));
+  ot_s32_sel #(.W(W)) u_s(.s((d_acc_t[2])&&rs_s[(5+gi_)%RS]),.a(s_writer[LO+:W]),.b(writer_q[LO+:W]),.y(writer_n[LO+:W]));
  end endgenerate
  always @(posedge ck or negedge rst_n)if(!rst_n)writer_q<=0;else writer_q<=writer_n;
- wire[33:0]s_own={addr_b[1:0],data[31:0]};
+ wire[33:0]s_own={d_addr_b[1:0],d_data[31:0]};
  reg[33:0]own_q;wire[33:0]own_n;
  generate for(gi_=0;gi_<3;gi_=gi_+1)begin:g_own
   localparam integer LO=16*gi_,W=((34-LO)<16)?(34-LO):16;
-  ot_s32_sel #(.W(W)) u_s(.s((ok3)&&rs_s[(10+gi_)%RS]),.a(s_own[LO+:W]),.b(own_q[LO+:W]),.y(own_n[LO+:W]));
+  ot_s32_sel #(.W(W)) u_s(.s((d_ok3)&&rs_s[(10+gi_)%RS]),.a(s_own[LO+:W]),.b(own_q[LO+:W]),.y(own_n[LO+:W]));
  end endgenerate
  always @(posedge ck or negedge rst_n)if(!rst_n)own_q<=0;else own_q<=own_n;
- wire[71:0]s_group={a6[7:0],data};
+ wire[71:0]s_group={a6[7:0],d_data};
  reg[71:0]group_q;wire[71:0]group_n;
  generate for(gi_=0;gi_<5;gi_=gi_+1)begin:g_group
   localparam integer LO=16*gi_,W=((72-LO)<16)?(72-LO):16;
-  ot_s32_sel #(.W(W)) u_s(.s((acc_t[4]||acc_t[5])&&rs_s[(13+gi_)%RS]),.a(s_group[LO+:W]),.b(group_q[LO+:W]),.y(group_n[LO+:W]));
+  ot_s32_sel #(.W(W)) u_s(.s((d_acc_t[4]||d_acc_t[5])&&rs_s[(13+gi_)%RS]),.a(s_group[LO+:W]),.b(group_q[LO+:W]),.y(group_n[LO+:W]));
  end endgenerate
  always @(posedge ck or negedge rst_n)if(!rst_n)group_q<=0;else group_q<=group_n;
- wire[71:0]s_ctl={3'b0,addr_b[4:0],data};
+ wire[71:0]s_ctl={3'b0,d_addr_b[4:0],d_data};
  reg[71:0]ctl_q;wire[71:0]ctl_n;
  generate for(gi_=0;gi_<5;gi_=gi_+1)begin:g_ctl
   localparam integer LO=16*gi_,W=((72-LO)<16)?(72-LO):16;
-  ot_s32_sel #(.W(W)) u_s(.s((acc_t[6]||acc_t[7]||acc_t[8]||acc_t[9])&&rs_s[(18+gi_)%RS]),.a(s_ctl[LO+:W]),.b(ctl_q[LO+:W]),.y(ctl_n[LO+:W]));
+  ot_s32_sel #(.W(W)) u_s(.s((d_acc_t[6]||d_acc_t[7]||d_acc_t[8]||d_acc_t[9])&&rs_s[(18+gi_)%RS]),.a(s_ctl[LO+:W]),.b(ctl_q[LO+:W]),.y(ctl_n[LO+:W]));
  end endgenerate
  always @(posedge ck or negedge rst_n)if(!rst_n)ctl_q<=0;else ctl_q<=ctl_n;
- wire[71:0]s_dcf={addr_b[7:0],data};
+ wire[71:0]s_dcf={d_addr_b[7:0],d_data};
  reg[71:0]dcf_q;wire[71:0]dcf_n;
  generate for(gi_=0;gi_<5;gi_=gi_+1)begin:g_dcf
   localparam integer LO=16*gi_,W=((72-LO)<16)?(72-LO):16;
-  ot_s32_sel #(.W(W)) u_s(.s((acc_t[10])&&rs_s[(23+gi_)%RS]),.a(s_dcf[LO+:W]),.b(dcf_q[LO+:W]),.y(dcf_n[LO+:W]));
+  ot_s32_sel #(.W(W)) u_s(.s((d_acc_t[10])&&rs_s[(23+gi_)%RS]),.a(s_dcf[LO+:W]),.b(dcf_q[LO+:W]),.y(dcf_n[LO+:W]));
  end endgenerate
  always @(posedge ck or negedge rst_n)if(!rst_n)dcf_q<=0;else dcf_q<=dcf_n;
- wire[37:0]s_lk={lk_a,data[31:0]};
+ wire[37:0]s_lk={lk_a,d_data[31:0]};
  reg[37:0]lk_q;wire[37:0]lk_n;
  generate for(gi_=0;gi_<3;gi_=gi_+1)begin:g_lk
   localparam integer LO=16*gi_,W=((38-LO)<16)?(38-LO):16;
-  ot_s32_sel #(.W(W)) u_s(.s((ok11)&&rs_s[(28+gi_)%RS]),.a(s_lk[LO+:W]),.b(lk_q[LO+:W]),.y(lk_n[LO+:W]));
+  ot_s32_sel #(.W(W)) u_s(.s((d_ok11)&&rs_s[(28+gi_)%RS]),.a(s_lk[LO+:W]),.b(lk_q[LO+:W]),.y(lk_n[LO+:W]));
  end endgenerate
  always @(posedge ck or negedge rst_n)if(!rst_n)lk_q<=0;else lk_q<=lk_n;
- wire[71:0]s_es={es_a,data};
+ wire[71:0]s_es={es_a,d_data};
  reg[71:0]es_q;wire[71:0]es_n;
  generate for(gi_=0;gi_<5;gi_=gi_+1)begin:g_es
   localparam integer LO=16*gi_,W=((72-LO)<16)?(72-LO):16;
-  ot_s32_sel #(.W(W)) u_s(.s((ok12||ok13)&&rs_s[(31+gi_)%RS]),.a(s_es[LO+:W]),.b(es_q[LO+:W]),.y(es_n[LO+:W]));
+  ot_s32_sel #(.W(W)) u_s(.s((d_ok12||d_ok13)&&rs_s[(31+gi_)%RS]),.a(s_es[LO+:W]),.b(es_q[LO+:W]),.y(es_n[LO+:W]));
  end endgenerate
  always @(posedge ck or negedge rst_n)if(!rst_n)es_q<=0;else es_q<=es_n;
- wire[63:0]s_isa=boot_image_digest;
+ wire[63:0]s_isa=d_boot_image_digest;
  reg[63:0]isa_q;wire[63:0]isa_n;
  generate for(gi_=0;gi_<4;gi_=gi_+1)begin:g_isa
   localparam integer LO=16*gi_,W=((64-LO)<16)?(64-LO):16;
-  ot_s32_sel #(.W(W)) u_s(.s((isa_w)&&rs_s[(36+gi_)%RS]),.a(s_isa[LO+:W]),.b(isa_q[LO+:W]),.y(isa_n[LO+:W]));
+  ot_s32_sel #(.W(W)) u_s(.s((d_isa_w)&&rs_s[(36+gi_)%RS]),.a(s_isa[LO+:W]),.b(isa_q[LO+:W]),.y(isa_n[LO+:W]));
  end endgenerate
  always @(posedge ck or negedge rst_n)if(!rst_n)isa_q<=0;else isa_q<=isa_n;
  assign layer_addr=layer_q[72:64];assign layer_data=layer_q[63:0];
@@ -189,26 +240,26 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  assign es_cfg_addr=es_q[71:64];assign es_cfg_data=es_q[63:0];
  assign installed_isa_digest=isa_q;
  // ---- one-hot write strobes (no hold: 0 unless a word is accepted): group-select leaves over shared 16-way decodes ----
- // Keep each small remainder step separate: monolithic /6 remapping gave addr[9] 37 loads.
- wire[4:0]gix=boot_gix;
+ // Keep each small remainder step separate: monolithic /6 remapping gave d_addr[9] 37 loads.
+ wire[4:0]gix=d_boot_gix;
  wire[15:0]dg,dp;
  generate for(gi_=0;gi_<16;gi_=gi_+1)begin:g_dec
   assign dg[gi_]=gix[3:0]==gi_;
-  assign dp[gi_]={addr[8:6],addr[5]^(MUT==2)}==gi_;
+  assign dp[gi_]={d_addr[8:6],d_addr[5]^(MUT==2)}==gi_;
  end endgenerate
- wire l5=(MUT!=4)&&boot_rem6==3'd5;
- wire c31=addr[4:0]==31;
+ wire l5=(MUT!=4)&&d_boot_rem6==3'd5;
+ wire c31=d_addr[4:0]==31;
  reg[31:0]lw_q,fw_q,fl_q;reg[127:0]cw_q,cl_q;
  wire[31:0]lw_n,fw_n,fl_n;wire[127:0]cw_n,cl_n;
  generate for(gi_=0;gi_<2;gi_=gi_+1)begin:g_lf
-  ot_s32_and #(.W(16)) u_l(.s(acc_t[4]&&gix[4]==gi_&&rs_s[(40+gi_)%RS]),.a(dg),.y(lw_n[16*gi_+:16]));
-  ot_s32_and #(.W(16)) u_f(.s(acc_t[5]&&gix[4]==gi_&&rs_s[(42+gi_)%RS]),.a(dg),.y(fw_n[16*gi_+:16]));
-  ot_s32_and #(.W(16)) u_x(.s(acc_t[5]&&l5&&gix[4]==gi_&&rs_s[(44+gi_)%RS]),.a(dg),.y(fl_n[16*gi_+:16]));
+  ot_s32_and #(.W(16)) u_l(.s(d_acc_t[4]&&gix[4]==gi_&&rs_s[(40+gi_)%RS]),.a(dg),.y(lw_n[16*gi_+:16]));
+  ot_s32_and #(.W(16)) u_f(.s(d_acc_t[5]&&gix[4]==gi_&&rs_s[(42+gi_)%RS]),.a(dg),.y(fw_n[16*gi_+:16]));
+  ot_s32_and #(.W(16)) u_x(.s(d_acc_t[5]&&l5&&gix[4]==gi_&&rs_s[(44+gi_)%RS]),.a(dg),.y(fl_n[16*gi_+:16]));
  end
  for(gi_=0;gi_<8;gi_=gi_+1)begin:g_cw
   localparam integer T=6+gi_/2,H=gi_%2;
-  ot_s32_and #(.W(16)) u_w(.s(acc_t[T]&&addr[9]==H&&rs_s[(46+gi_)%RS]),.a(dp),.y(cw_n[16*gi_+:16]));
-  ot_s32_and #(.W(16)) u_l(.s(acc_t[T]&&c31&&addr[9]==H&&rs_s[(54+gi_)%RS]),.a(dp),.y(cl_n[16*gi_+:16]));
+  ot_s32_and #(.W(16)) u_w(.s(d_acc_t[T]&&d_addr[9]==H&&rs_s[(46+gi_)%RS]),.a(dp),.y(cw_n[16*gi_+:16]));
+  ot_s32_and #(.W(16)) u_l(.s(d_acc_t[T]&&c31&&d_addr[9]==H&&rs_s[(54+gi_)%RS]),.a(dp),.y(cl_n[16*gi_+:16]));
  end endgenerate
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin lw_q<=0;fw_q<=0;fl_q<=0;cw_q<=0;cl_q<=0;end
@@ -219,13 +270,13 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  if(!rst_n)begin
   expected_target<=1;next_word<=0;ready_q<=0;isa_seen<=0;installed<=0;have_epoch<=0;
   installed_epoch<=0;fault<=0;fault_code<=0;
-  layer_we<=0;writer_we<=0;ownership_we<=0;
-  diecfg_we<=0;diecfg_done<=0;
-  link_cfg_tx_we<=0;link_cfg_rx_we<=0;linkcfg_done<=0;
-  es_cfg_we<=0;es12_done<=0;es13_done<=0;
+  layer_we<=0;writer_we_raw<=0;ownership_we_raw<=0;
+  diecfg_we_raw<=0;diecfg_done<=0;
+  link_cfg_tx_we_raw<=0;link_cfg_rx_we_raw<=0;linkcfg_done<=0;
+  es_cfg_we_raw<=0;es12_done<=0;es13_done<=0;
  end else begin
   ready_q<=boot_image_ready;
-  layer_we<=0;writer_we<=0;ownership_we<=0;diecfg_we<=0;link_cfg_tx_we<=0;link_cfg_rx_we<=0;es_cfg_we<=0;
+  layer_we<=0;writer_we_raw<=0;ownership_we_raw<=0;diecfg_we_raw<=0;link_cfg_tx_we_raw<=0;link_cfg_rx_we_raw<=0;es_cfg_we_raw<=0;
   if(boot_image_fault||sink_fault||(DIECFG!=0&&diecfg_fault))begin fault<=1;fault_code[0]<=1;end
   if((boot_pr[74]||boot_pr[142])&&execution_active)begin fault<=1;fault_code[1]<=1;end
   if(boot_pr[142]&&!tdec[0])begin fault<=1;fault_code[2]<=1;end
@@ -238,30 +289,30 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
     next_word<=next_word+1'b1;
     case(1'b1)
     tdec[1]:layer_we<=1;
-    tdec[2]:writer_we<=1;
+    tdec[2]:writer_we_raw<=1;
     tdec[3]:begin
       if(data[63:32]!=0)begin fault<=1;fault_code[5]<=1;end
-      else ownership_we<=1;
+      else ownership_we_raw<=1;
     end
     tdec[4],tdec[5],tdec[6],tdec[7],tdec[8],tdec[9]:;
-    tdec[10]:diecfg_we<=1;
+    tdec[10]:diecfg_we_raw<=1;
     tdec[11]:begin
       if(data[63:32]!=0)begin fault<=1;fault_code[5]<=1;end
       else begin
        if(addr<64)begin
-        link_cfg_tx_we<=(MUT==5)?addr[0]:!addr[0];link_cfg_rx_we<=(MUT==5)?!addr[0]:addr[0];
+        link_cfg_tx_we_raw<=(MUT==5)?addr[0]:!addr[0];link_cfg_rx_we_raw<=(MUT==5)?!addr[0]:addr[0];
        end else begin
-        link_cfg_tx_we<=(addr==64);link_cfg_rx_we<=(addr==65);
+        link_cfg_tx_we_raw<=(addr==64);link_cfg_rx_we_raw<=(addr==65);
        end
       end
     end
     tdec[12]:begin
       if(data[63:62]!=0||data[61:18]!=0||data[17:16]!=addr[9:8])begin fault<=1;fault_code[5]<=1;end
-      else es_cfg_we<=1;
+      else es_cfg_we_raw<=1;
     end
     tdec[13]:begin
       if(data[63:62]!=2'd1||data[61:24]!=0)begin fault<=1;fault_code[5]<=1;end
-      else es_cfg_we<=!(MUT==8&&addr[2:0]==1);
+      else es_cfg_we_raw<=!(MUT==8&&addr[2:0]==1);
     end
     default:begin fault<=1;fault_code[3]<=1;end
     endcase
@@ -285,13 +336,13 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
 endmodule
 
 // ===== MU wrapper =====
-module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer MU=1,parameter integer WMUT=0,parameter integer SRQ=0)(
+module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer MU=1,parameter integer WMUT=0,parameter integer SRQ=0,parameter integer DSTG=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[3:0]boot_image_target,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
  input wire[159:0]sink_applied,input wire[2:0]local_configured,input wire sink_fault,
  input wire diecfg_sealed,diecfg_fault,
- output reg layer_we,output reg[8:0]layer_addr,output reg[63:0]layer_data,
+ output wire layer_we,output wire[8:0]layer_addr,output wire[63:0]layer_data,
  output wire writer_we,output wire[7:0]writer_addr,output wire[63:0]writer_data,
  output wire ownership_we,output wire[1:0]ownership_addr,output wire[31:0]ownership_data,
  output wire[31:0]landing_we,front_we,output wire[7:0]group_addr,output wire[63:0]group_data,
@@ -303,10 +354,16 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
  output wire setup_ready,output reg fault,output reg[7:0]fault_code,
  output wire[15:0]installed_epoch,output wire[63:0]installed_isa_digest
 );
+
+ reg layer_we_raw;reg[8:0]layer_addr_raw;reg[63:0]layer_data_raw;
+ generate if(DSTG!=0)begin:g_layer_stage
+ reg v;reg[72:0]payload;always @(posedge ck or negedge rst_n)if(!rst_n)v<=0;else v<=layer_we_raw;always @(posedge ck)payload<={layer_addr_raw,layer_data_raw};
+ assign layer_we=v;assign {layer_addr,layer_data}=payload;
+ end else begin assign layer_we=layer_we_raw;assign layer_addr=layer_addr_raw;assign layer_data=layer_data_raw;end endgenerate
  wire o_lw,o_fault;wire[8:0]o_la;wire[63:0]o_ld;wire[7:0]o_fc;wire o_setup;
  wire[142:0]pr_o;wire[9:0]pr_ab;wire[4:0]pr_gix;wire[2:0]pr_rem6;wire pr_seal;
  reg x_fault;reg[7:0]x_fc;
- qkd_static_kv_boot_dispatch_c32 #(.MUT(MUT),.DIECFG(DIECFG),.NRST(NRST),.LINKCFG(LINKCFG),.ESCFG(ESCFG),.DIECAP(DIECAP),.SRQ(SRQ))u_disp(
+ qkd_static_kv_boot_dispatch_c32 #(.MUT(MUT),.DIECFG(DIECFG),.NRST(NRST),.LINKCFG(LINKCFG),.ESCFG(ESCFG),.DIECAP(DIECAP),.SRQ(SRQ),.DSTG(DSTG))u_disp(
   .ck(ck),.rst_n(rst_n),.boot_pr(pr_o),.boot_addr_b(pr_ab),.boot_gix(pr_gix),.boot_rem6(pr_rem6),.boot_seal(pr_seal),.boot_addr_raw(boot_pr[73:64]),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),
   .boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),
   .execution_active(execution_active),.sink_applied(sink_applied),.local_configured(local_configured),.sink_fault(sink_fault),
@@ -323,7 +380,7 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
  generate if(MU==0)begin:g_plain
   assign pr_o=boot_pr;assign pr_ab=boot_pr[73:64];assign setup_ready=o_setup;assign pr_seal=1'b0;
   qkd_kv_ctl_c32_div6r u_gixr(.a(boot_pr[73:64]),.q(pr_gix),.r(pr_rem6));
-  always @*begin layer_we=o_lw;layer_addr=o_la;layer_data=o_ld;fault=o_fault;fault_code=o_fc;x_fault=0;x_fc=0;end
+  always @*begin layer_we_raw=o_lw;layer_addr_raw=o_la;layer_data_raw=o_ld;fault=o_fault;fault_code=o_fc;x_fault=0;x_fc=0;end
  end else begin:g_mu
   wire[9:0]addr=boot_pr[73:64];wire[63:0]data=boot_pr[63:0];
   wire w1=boot_pr[74]&&boot_image_target==1;
@@ -390,9 +447,9 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
   end
   always @(posedge ck or negedge rst_n)if(!rst_n)begin g_a<=0;g_d<=0;end else begin g_a<=gnx[72:64];g_d<=gnx[63:0];end
   always @*begin
-   layer_we=o_lw||g_we;
-   layer_addr=lsel[72:64];
-   layer_data=lsel[63:0];
+   layer_we_raw=o_lw||g_we;
+   layer_addr_raw=lsel[72:64];
+   layer_data_raw=lsel[63:0];
    fault=o_fault||x_fault;fault_code=o_fc|x_fc;
   end
  end endgenerate

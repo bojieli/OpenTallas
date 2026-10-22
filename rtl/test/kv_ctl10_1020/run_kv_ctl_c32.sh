@@ -38,6 +38,9 @@ case "$CASE" in
  m_dc6) KIND=dcfg; DEF="+define+CMUT=6";;
  m_dc7) KIND=dcfg; DEF="+define+CMUT=7";;
  tile_a) ;;
+ tile_i) C32=$D/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32i.sv;;
+ kb_i) KIND=kb; C32=$D/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32i.sv;;
+ kb_i_m_tl) KIND=kb; C32=$D/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32i.sv; MF=$LP; FROM=".a(lsrc[LO+:W])"; TO=".a((gs==7)?lsrc[LO+16+:W]:lsrc[LO+:W])";;
  tile_b) C32=$D/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32b.sv;;
  first_a) XI="--x-initial unique"; RR="+verilator+rand+reset+2";;
  m_tl) MF=$LP; FROM=".a(lsrc[LO+:W])"; TO=".a((gs==7)?lsrc[LO+16+:W]:lsrc[LO+:W])";;
@@ -47,6 +50,7 @@ case "$CASE" in
  kb_m_tl) KIND=kb; MF=$LP; FROM=".a(lsrc[LO+:W])"; TO=".a((gs==7)?lsrc[LO+16+:W]:lsrc[LO+:W])";;
  *) echo "C32 $CASE: unknown case"; exit 2;;
 esac
+case "$CASE" in tile_i|kb_i|kb_i_m_tl) export C32_DSTG=1;; esac
 W="$OUT/src_$CASE"; rm -rf "$W"; mkdir -p "$W"
 cpf(){ mkdir -p "$W/$(dirname "$1")"; cp "$ROOT/$1" "$W/$1"; }
 EXTRA=""
@@ -74,6 +78,8 @@ for a, c in (('module qkd_kvs_ctl (', 'module qkd_kvs_ctl_ref ('),
              ('.MU(1), .WMUT(0)) u_boot', '.MU(1), .WMUT(0), .SRQ(2)) u_boot')):
     assert b.count(a) == 1, a
     b = b.replace(a, c)
+import os
+if os.environ.get('C32_DSTG') == '1': b=b.replace('.SRQ(2)) u_boot', '.SRQ(2), .DSTG(1)) u_boot')
 open(sys.argv[2], 'w').write('`timescale 1ns/1ps\n' + b)
 PY
 fi
