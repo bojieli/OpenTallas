@@ -1,0 +1,21 @@
+{
+  "status": "COMPONENT_ROUTE_PASS_NOT_DIE_QUALIFIED",
+  "source": "d76e1bcec",
+  "fleet_unit": "oth-ubuntu-4058427-1792639278",
+  "host": "ot-epyc9",
+  "verilator": "5.050",
+  "tests": "32 source/destination paths, raw masks, source/destination/raw-load collisions",
+  "load_route_edges": 5,
+  "raw_added_edges": 1,
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/split/ot_hbm_dma_load_route_static.sv": "f52400e2d281cfe46d57bd4e22e04840681c45f330e0fc542f7eabe797fc866d",
+    "rtl/hbm_accel/loader/service_native/split/tb_hbm_dma_load_route_static.sv": "721b3ef61f727431ed074f89b94d8a34a6051c0c0d788e8c0a58e66a8b8fc554"
+  },
+  "remaining": [
+    "actual DMA conversion source composition",
+    "widen vmfc role W89 to W159 and bind command62+valid8",
+    "actual source and destination region landing/relay ages",
+    "native census and physical die GRT STA CLK IR",
+    "compiler schedule and actual token rerun"
+  ]
+}
