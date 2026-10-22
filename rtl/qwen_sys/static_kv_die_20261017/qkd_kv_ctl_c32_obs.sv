@@ -86,3 +86,22 @@ module qkd_kv_ownership_obs_c32 #(parameter integer QUIET_WIN = 16, parameter in
             kv_flush_local <= of_q || gf_any;
         end
 endmodule
+
+// QR-CTL 10-21 (c32d route 104fb88b7 FF -45.62: RESETN removal rst_n landing clone c62 -> u_bobs.f2[10]): successor of
+// qkd_static_kv_boot_observe for the c32 ctl tile.  Reset only control / valid bits (safe rule 8): the 960 synchroniser
+// data flops (a1 a2 f1 f2 c1 c2) carry NO reset; a 2-flop valid shift (v1 v2, reset, local to this block) masks the two
+// stale stages after reset release, so applied_core / fault_core equal the original on every edge (original: a2/f2/c2 = 0
+// for the first two edges after release, then the first post-release samples).  Reset load of the block 1123 -> 163 flops.
+module qkd_static_kv_boot_observe_c32(
+ input wire ck,rst_n,input wire[159:0]applied_hbm,fault_hbm,fault_leaf_core,
+ output reg[159:0]applied_core,output reg fault_core
+);
+ (* async_reg="true" *)reg[159:0]a1,a2,f1,f2,c1,c2;
+ reg v1,v2;
+ always @(posedge ck)begin a1<=applied_hbm;a2<=a1;f1<=fault_hbm;f2<=f1;c1<=fault_leaf_core;c2<=c1;end
+ always @(posedge ck or negedge rst_n)begin
+ if(!rst_n)begin v1<=0;v2<=0;applied_core<=0;fault_core<=0;end
+ else begin v1<=1'b1;v2<=v1;
+  applied_core<=v2?a2:160'd0;fault_core<=fault_core||(v2&&((|f2)||(|c2)));end
+ end
+endmodule

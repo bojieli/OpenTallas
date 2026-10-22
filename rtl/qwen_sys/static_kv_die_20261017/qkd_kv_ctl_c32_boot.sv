@@ -18,6 +18,7 @@
 module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer SRQ=0,parameter integer RS=24)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[9:0]boot_addr_b,input wire[3:0]boot_image_target,
  input wire[4:0]boot_gix,input wire[2:0]boot_rem6,
+ input wire boot_seal,input wire[9:0]boot_addr_raw,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
  input wire[159:0]sink_applied,input wire[2:0]local_configured,input wire sink_fault,
@@ -90,7 +91,12 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  wire t_ok=t10?t10_ok:((MUT==1||t_eq_e)&&((|tdec[9:0])||t11||t12||t13));
  // ---- accept term (the original's else-branch of the word checks) and per-target accepts ----
  wire tv=boot_pr[74]&&!tdec[0]&&!fault&&!execution_active;
- wire wbad=!t_ok||{1'b0,addr}!=next_word||next_word>=wc_t;
+ // QR-CTL 10-21 (c32d route 104fb88b7 TT -164.64: boot_image_epoch[15] -> epoch compare -> seal accept -> u_pa re-address
+ // -> this compare -> acc -> strobe/held select, 855 ps logic): the word-address check runs on the RAW address in parallel
+ // with the seal detect; boot_seal (= the select of the parent's u_pa) picks the word-326 compare.  Same value as
+ // {1'b0,addr}!=next_word because addr = boot_seal ? 326 : boot_addr_raw.
+ wire a_ne=boot_seal?(next_word!=11'd326):({1'b0,boot_addr_raw}!=next_word);
+ wire wbad=!t_ok||a_ne||next_word>=wc_t;
  wire ebad=have_epoch&&boot_image_epoch!=installed_epoch;
  wire acc=tv&&!wbad&&!ebad;
  wire[13:0]acc_t;
@@ -298,10 +304,10 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
  output wire[15:0]installed_epoch,output wire[63:0]installed_isa_digest
 );
  wire o_lw,o_fault;wire[8:0]o_la;wire[63:0]o_ld;wire[7:0]o_fc;wire o_setup;
- wire[142:0]pr_o;wire[9:0]pr_ab;wire[4:0]pr_gix;wire[2:0]pr_rem6;
+ wire[142:0]pr_o;wire[9:0]pr_ab;wire[4:0]pr_gix;wire[2:0]pr_rem6;wire pr_seal;
  reg x_fault;reg[7:0]x_fc;
  qkd_static_kv_boot_dispatch_c32 #(.MUT(MUT),.DIECFG(DIECFG),.NRST(NRST),.LINKCFG(LINKCFG),.ESCFG(ESCFG),.DIECAP(DIECAP),.SRQ(SRQ))u_disp(
-  .ck(ck),.rst_n(rst_n),.boot_pr(pr_o),.boot_addr_b(pr_ab),.boot_gix(pr_gix),.boot_rem6(pr_rem6),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),
+  .ck(ck),.rst_n(rst_n),.boot_pr(pr_o),.boot_addr_b(pr_ab),.boot_gix(pr_gix),.boot_rem6(pr_rem6),.boot_seal(pr_seal),.boot_addr_raw(boot_pr[73:64]),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),
   .boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),
   .execution_active(execution_active),.sink_applied(sink_applied),.local_configured(local_configured),.sink_fault(sink_fault),
   .diecfg_sealed(diecfg_sealed),.diecfg_fault(diecfg_fault),
@@ -315,7 +321,7 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
   .es_cfg_we(es_cfg_we),.es_cfg_addr(es_cfg_addr),.es_cfg_data(es_cfg_data),
   .setup_ready(o_setup),.fault(o_fault),.fault_code(o_fc),.installed_epoch(installed_epoch),.installed_isa_digest(installed_isa_digest));
  generate if(MU==0)begin:g_plain
-  assign pr_o=boot_pr;assign pr_ab=boot_pr[73:64];assign setup_ready=o_setup;
+  assign pr_o=boot_pr;assign pr_ab=boot_pr[73:64];assign setup_ready=o_setup;assign pr_seal=1'b0;
   qkd_kv_ctl_c32_div6r u_gixr(.a(boot_pr[73:64]),.q(pr_gix),.r(pr_rem6));
   always @*begin layer_we=o_lw;layer_addr=o_la;layer_data=o_ld;fault=o_fault;fault_code=o_fc;x_fault=0;x_fc=0;end
  end else begin:g_mu
@@ -334,16 +340,20 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
   // leaves with distinct selects (the select and a kept reset-copy literal; the select is 0 on the first edge after reset:
   // open_q / o_lw are reset), so the dispatcher's address consumers split over two drivers (boot_pr[69/70]: 33-38 loads).
   // KV-CTL12b: u_pg gets its own select copy rs_a[2] (c32c native census: as&&rs_a[0] drove u_pa+u_pg = 36 > 32 loads)
-  (* keep *) reg[2:0]rs_a;
-  always @(posedge ck)rs_a<={3{rst_n}};
-  wire as=seal_w&&ok_seal&&!bad_epoch;
+  // QR-CTL 10-21: the three re-address selects (u_pa/u_pb/u_pg) and the parallel compare select (pr_seal) use seal_w, a
+  // function of the RAW word only, instead of as = seal_w && ok_seal && !bad_epoch: the 16-bit epoch compare and the seal
+  // accept leave the address path.  Same outputs on every edge: for seal_w && !as the word is not valid (v74 = as on a
+  // seal word, so tv = 0, acc = 0) and every consumer of the re-addressed fields is gated by acc_t / ok* / tv.
+  (* keep *) reg[3:0]rs_a;
+  always @(posedge ck)rs_a<={4{rst_n}};
   wire[9:0]pa_a;
-  ot_s32_sel #(.W(10)) u_pa(.s(as&&rs_a[0]),.a(10'd326),.b(boot_pr[73:64]),.y(pa_a));
-  ot_s32_sel #(.W(10)) u_pb(.s(as&&rs_a[1]),.a(10'd326),.b(boot_pr[73:64]),.y(pr_ab));
+  ot_s32_sel #(.W(10)) u_pa(.s(seal_w&&rs_a[0]),.a(10'd326),.b(boot_pr[73:64]),.y(pa_a));
+  ot_s32_sel #(.W(10)) u_pb(.s(seal_w&&rs_a[1]),.a(10'd326),.b(boot_pr[73:64]),.y(pr_ab));
   // KV-CTL12: /6 and %6 of the RAW address (parallel to the seal accept), then the word-326 constants on an accepted seal
   wire[4:0]gix_r;wire[2:0]rem_r;
   qkd_kv_ctl_c32_div6r u_gixr(.a(boot_pr[73:64]),.q(gix_r),.r(rem_r));
-  ot_s32_sel #(.W(8)) u_pg(.s(as&&rs_a[2]),.a({5'd22,3'd2}),.b({gix_r,rem_r}),.y({pr_gix,pr_rem6}));
+  ot_s32_sel #(.W(8)) u_pg(.s(seal_w&&rs_a[2]),.a({5'd22,3'd2}),.b({gix_r,rem_r}),.y({pr_gix,pr_rem6}));
+  assign pr_seal=seal_w&&rs_a[3];
   wire v74=gap_w?1'b0:(seal_w?(ok_seal&&!bad_epoch):boot_pr[74]);
   assign pr_o={boot_pr[142:75],v74,pa_a,boot_pr[63:0]};
   always @(posedge ck or negedge rst_n)
