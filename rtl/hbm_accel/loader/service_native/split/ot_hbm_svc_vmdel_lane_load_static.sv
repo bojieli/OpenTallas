@@ -101,8 +101,12 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  {1'b0,load_cmd[29:25]}+ln*esz<=32&&lf!=3&&lf!=7);
  wire shape_load=(SHPRE!=0)?shape_load_q:(load_cmd[18:17]<NPC&&ln!=0&&ln<=8&&{1'b0,load_cmd[51:49]}+ln<=8&&
  {1'b0,load_cmd[29:25]}+ln*esz<=32&&lf!=3&&lf!=7);
+ // round 5 (b11r4 census: the load_bank_epoch copy selected the 16-bit epoch mux of both compares, 34 loads): compare the
+ // command epoch with BOTH bank epochs on kept nets; load_bank_epoch then selects one bit.  Same function.
+ (* keep="true" *) wire lc_eq0=load_cmd[16:1]==epoch0; (* keep="true" *) wire lc_eq1=load_cmd[16:1]==epoch1;
+ wire lc_epoch_eq=load_bank_epoch?lc_eq1:lc_eq0;
  wire command_ok=load_v&&!raw_issue&&owned[load_cmd[0]]&&
- block_ready_c[load_cmd[0]]&&load_cmd[16:1]==(load_bank_epoch?epoch1:epoch0)&&
+ block_ready_c[load_cmd[0]]&&lc_epoch_eq&&
  shape_cmd&&!landing_fault;
  wire load_ok=command_ok&&ln!=0;
  wire release_only=command_ok&&ln==0;
@@ -111,7 +115,7 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  // raw_issue || (command_ok && ln!=0) == raw_issue || (load_cmd_ok && ln!=0): the two validations run in parallel.
  // Identical function (every edge, valid or malformed); no read is enabled that the old expression did not enable.
  wire load_cmd_ok=load_v&&owned[load_cmd[0]]&&
- block_ready_c[load_cmd[0]]&&load_cmd[16:1]==(load_bank_epoch?epoch1:epoch0)&&
+ block_ready_c[load_cmd[0]]&&lc_epoch_eq&&
  shape_load&&!landing_fault;
  wire issue=raw_issue||load_cmd_ok;
  // Address selection does not wait for ownership/shape validation. Read CE
