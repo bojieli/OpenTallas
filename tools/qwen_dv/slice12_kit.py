@@ -20,9 +20,11 @@ assert P['status']=='OPTIMAL' and P['independent_matching_bit_max_um']<=405 and 
 assert all(q['orientation'] in (0,2) for q in P['placements'].values())
 s10.PACK=P
 g.H=round(g.H+43.2,3)
-base={'a':'qfd_dv_slice2_w12','b':'qfd_dv_slice2_w12b','e':'qfd_dv_slice2_e12','f':'qfd_dv_slice2_e12b'}[g.V]
-g.NAME=base.replace('_w12','_w12c').replace('_e12','_e12c') if CENSUS else base
-if CHARD:g.NAME=base.replace('_w12','_w13c').replace('_e12','_e13c')
+# QE3-SLICE2B 10-21: gate kits w13/w13b/e13/e13b = w12 geometry + census-fix source (kept rp_w/ARF/TAP copies,
+# shared station control rings, 210 landings); census-hard kits keep their names w13c/w13cb/e13c/e13cb.
+base={'a':'qfd_dv_slice2_w13','b':'qfd_dv_slice2_w13b','e':'qfd_dv_slice2_e13','f':'qfd_dv_slice2_e13b'}[g.V]
+g.NAME=base.replace('_w13','_w12c').replace('_e13','_e12c') if CENSUS else base
+if CHARD:g.NAME=base.replace('_w13','_w13c').replace('_e13','_e13c')
 if CENSUS:
     old=g.children
     def children():
@@ -39,5 +41,8 @@ def main():
     p=k.R/f'{g.SPEC_DIR}/{g.NAME}.json';s=json.loads(p.read_text())
     s['structural_change']=('CENSUS-ONLY (not a gate kit): station_tail1 x8 + crh_rp1 soft from exact new source. ' if CENSUS else '')+('CENSUS-ONLY HARD (not a gate kit): station proxy view. ' if CHARD else '')+\
         'On-track head-column packing o734.4 (leaves R0/MX), parent +43.2 um Y (4319.976). '+s.get('structural_change','')
+    if 'job' in s:s['job']['branch']='claude/qe3-slice2b-1021'
+    if 'safe_design_checklist' in s and '8_schedule' in s['safe_design_checklist']:
+        s['safe_design_checklist']['8_schedule']='OWED measured selected 210-landing programme ages (187 + 23 shared-ring station control reads, same ages as the per-station rings they replace); no added edges from the QE3-SLICE2B kept copies.'
     p.write_text(json.dumps(s,indent=1)+'\n')
 if __name__=='__main__':main()
