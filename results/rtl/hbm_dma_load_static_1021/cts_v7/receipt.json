@@ -1,0 +1,31 @@
+{
+  "source_commit": "fb9122ac6",
+  "physical_tree_commit": "323278ee7",
+  "status": "GATE_WARN_ZERO_FAILURES_ROUTE_PENDING",
+  "native": {
+    "status": "PASS",
+    "max_dynamic_loads": 32,
+    "roots": 78733
+  },
+  "MAIN": {
+    "TT_pin_spread_ps": 63.2,
+    "FF_pin_spread_ps": 61.2,
+    "TT_setup_ps": -207.3177,
+    "FF_setup_ps": -17.326696,
+    "TT_hold_ps": 32.1291,
+    "FF_hold_ps": 28.820751,
+    "GRT_overflow": 0
+  },
+  "fallback": {
+    "TT_pin_spread_ps": 53.6,
+    "FF_pin_spread_ps": 50.2,
+    "TT_setup_ps": -278.2637,
+    "FF_setup_ps": -80.956573,
+    "TT_hold_ps": 32.3608,
+    "FF_hold_ps": 28.561682,
+    "GRT_overflow": 0
+  },
+  "timing_scope": "TT and FF use actual final CTS database with placement RC and unchanged signoff constraints. Setup remains negative; normal routed timing is pending.",
+  "PNG_review": "Actual MAIN floorplan and density and fallback density reviewed. SRAMs stay on the 43.2 um lattice, channels 34.776/77.976 um remain open; continuous cell band above macros, west clock entry. No pocket or outline squeeze.",
+  "FF_STA_unit": "oth-ubuntu-3373959-1792648870"
+}

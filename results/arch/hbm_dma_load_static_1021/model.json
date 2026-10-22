@@ -83,7 +83,7 @@
     "fanout": "Native6 MAIN and fallback both PASS on fb9122ac6: max32, zero violations among78,733 roots.",
     "depth": "fb9122ac6 removes ownership/validation reconvergence at source address selectors; no added register edge. Five local edges measured by V10; native6 CTS pending.",
     "floorplan": "MAIN/fallback outlines and macro channels unchanged. Native5 MAIN gate WARN, overflow0, TT/FF pin-flop76.9/74.3 ps; TT setup -114.4 ps at macro read CE. Fallback clock105.7/99.0 ps fails. Native6 fallback uses8-sink20um CTS clusters. New area/timing pending.",
-    "clock": "Native6 MAIN TT/FF pin spreads96.9/92.0 ps; fallback85.2/80.2 ps, both fail80. Native7 keeps body/SRAM CTS and gives actual1744 boundary flops a five-level geometric BUFx24 tree, equal repeater count, repeat beyond80um. No data age change; actual insertions/spreads pending.",
+    "clock": "MAIN7 and fallback7 balanced boundary trees pass measured TT/FF pin spread: 63.2/61.2 ps and 53.6/50.2 ps. GRT overflow zero; normal route pending. Actual final corner paths preserved in cts_v7.",
     "reset": "new pipeline valid reset only; datapath unreset"
   },
   "source_commit": "fb9122ac6"

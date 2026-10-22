@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "hbm_dma_load_static_m7",
+  "top": "ot_hbm_svc_vmdel_lane_load_static",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 78733,
+  "max_dynamic_loads": 32,
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true,
+  "sha256": "10824f7fe22fa052e5df333a3442fe358a1d97b1f14738d79160e9b82ed738ef",
+  "violations": [],
+  "RTL_source_commit": "fb9122ac6",
+  "physical_kit_commit": "323278ee7"
+}
