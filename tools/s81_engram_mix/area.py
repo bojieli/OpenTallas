@@ -2,6 +2,7 @@
 """Map a physical Engram leaf to real ASAP7 RVT TT cells; report LEF area.
 This is a cell-area census only, never route/STA/DRC qualification.
 """
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parents[1])); from yosys_pin import pinned_yosys  # TOKc-YOSYS 10-22: Yosys >= 0.68 or fail
 import sys,subprocess,json,hashlib,re,collections
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
@@ -19,7 +20,7 @@ ys='read_verilog -sv -DSYNTHESIS '+' '.join(map(str,src))+'\n'+blackbox_ys+f'hie
 (out/'map.ys').write_text(ys)
 (out/'sources.json').write_text(json.dumps({str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in src},indent=2)+'\n')
 if '--report-only' not in sys.argv:
- with (out/'map.log').open('w') as log:r=subprocess.run(['yosys','-s',str(out/'map.ys')],stdout=log,stderr=subprocess.STDOUT)
+ with (out/'map.log').open('w') as log:r=subprocess.run([pinned_yosys(),'-s',str(out/'map.ys')],stdout=log,stderr=subprocess.STDOUT)
  if r.returncode:sys.exit(r.returncode)
 z=json.loads((out/'mapped.json').read_text());cells=collections.Counter(c['type'] for c in z['modules'][leaf]['cells'].values() if c['type']!='$scopeinfo' and not z['modules'].get(c['type'],{}).get('attributes',{}).get('blackbox'))
 metadata=sum(c['type']=='$scopeinfo' for c in z['modules'][leaf]['cells'].values())

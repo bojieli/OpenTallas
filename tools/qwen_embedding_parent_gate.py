@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); from yosys_pin import pinned_yosys  # TOKc-YOSYS 10-22: Yosys >= 0.68 or fail
 from pathlib import Path
 import subprocess,json,sys,copy
 import argparse
@@ -8,7 +9,7 @@ if R.exists():raise ValueError('new immutable output directory required')
 R.mkdir(parents=True)
 from check_qwen_embedding_parent_storage import check
 import shutil
-Y=Path.home()/'.local/opentallas-tools/yosys-0.68/bin/yosys';Y=str(Y) if Y.exists() else shutil.which('yosys')
+Y=pinned_yosys()
 if not Y:raise ValueError('Yosys required')
 lib=C/'results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib'
 
