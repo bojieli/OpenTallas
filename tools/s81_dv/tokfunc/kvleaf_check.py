@@ -10,10 +10,11 @@ from pathlib import Path
 run, prog, expf = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
 P = json.loads((prog / 'plan.json').read_text())
 lanes = defaultdict(dict)
+OP = [str(x) for x in P.get('out_ports', [1444, 1445, 1446, 1447])]
 for l in (run / 'trace.txt').read_text().splitlines():
     c, p, v = l.split()
-    if p in ('1444', '1445', '1446', '1447'):
-        lanes[int(c)][int(p) - 1444] = int(v, 16)
+    if p in OP:
+        lanes[int(c)][OP.index(p)] = int(v, 16)
 cur = [0, 0, 0, 0]; beats = []
 for c in sorted(lanes):
     for k, v in lanes[c].items():
