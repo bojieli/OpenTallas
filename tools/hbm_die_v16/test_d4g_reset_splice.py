@@ -23,6 +23,31 @@ def layer():
 
 
 class ResetSplice(unittest.TestCase):
+    def test_col8_source_reset_keeps_bit_authority(self):
+        import copy
+        c = dict(instances={'control':dict(master='ot_hbm_idx_score_quarter_col8_control',
+                     ports={'cut_rst_n':dict(bits=32)})}, clock_resets=[],edges=[])
+        for bit in (3,19):
+            c['edges'].append(dict(source=['control','cut_rst_n',bit,bit+1],
+                sink=['col'+str(bit),'rst_n',0,1],bits=1,kind='reset',payload_relay_allowed=False))
+        original = copy.deepcopy(c)
+        declaration = {k:c['edges'][1][k] for k in ('source','sink','bits')}
+        problems=[]
+        S.detach_reset_inputs(c,dict(edges=[],drop_exact_reset_edges=[declaration]),problems)
+        self.assertEqual(problems,[])
+        self.assertEqual(c['edges'],original['edges'][:1])
+        # A stale source bit must neither remove this edge nor another column.
+        c=copy.deepcopy(original);stale=copy.deepcopy(declaration)
+        stale['source'][2:]=[18,19];problems=[]
+        S.detach_reset_inputs(c,dict(edges=[],drop_exact_reset_edges=[stale]),problems)
+        self.assertTrue(any('stale exact reset drop' in p for p in problems))
+        self.assertEqual(c,original)
+        # Naming alone never authorizes dropping a payload edge.
+        c=copy.deepcopy(original);c['edges'][1]['kind']='payload';problems=[]
+        S.detach_reset_inputs(c,dict(edges=[],drop_exact_reset_edges=[declaration]),problems)
+        self.assertTrue(any('refuses non-Col8' in p for p in problems))
+        self.assertEqual(len(c['edges']),2)
+
     def test_vector_reset_requires_every_bit(self):
         c, l, problems = contract(), layer(), []
         S.detach_reset_inputs(c, l, problems)

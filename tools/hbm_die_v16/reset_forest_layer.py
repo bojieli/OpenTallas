@@ -511,11 +511,19 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         report['domains'][f'{dom}:{por}'] = dict(sinks=len(S), regions=len(plans), age=age,
                                                        actual_leaf_ages=sorted(set(ages)))
     bridges = collections.defaultdict(list)
+    cut_resets = collections.defaultdict(list)
     for e in c['edges']:
         if e['source'][1] == 'bridge_rst_n':
             if len(e['source']) != 2 or len(e['sink']) != 2 or e['bits'] != 1:
                 raise GeometryError('bridge reset must be an unsliced scalar edge')
             bridges[e['source'][0]].append(e['sink'])
+        elif (c['instances'][e['source'][0]]['master'] == 'ot_hbm_idx_score_quarter_col8_control'
+              and e['source'][1] == 'cut_rst_n'):
+            if (e.get('kind') != 'reset' or e.get('payload_relay_allowed') is not False
+                    or len(e['source']) != 4 or len(e['sink']) != 4 or e['bits'] != 1
+                    or e['source'][3]-e['source'][2] != 1 or e['sink'][3]-e['sink'][2] != 1):
+                raise GeometryError('Col8 cut reset must retain its exact source and sink bit and reset role')
+            cut_resets[tuple(e['source'])].append(e['sink'])
     g.host_dom = 'stream'
     for src, dsts in sorted(bridges.items()):
         source = g.pin(src, 'bridge_rst_n')
@@ -534,6 +542,34 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             edge(prev, dst, 'stream')
             drop.append([src, 'bridge_rst_n', dst[0]])
         report['domains'][f'bridge:{src}'] = dict(sinks=len(dsts), age=age, actual_leaf_ages=[age])
+    # The cut has 32 independently registered reset bits per quarter. Reuse the
+    # existing source-reset forest recipe, retaining each bit's actual pin and
+    # deterministic boot release age. These paths never use data landings.
+    drop_exact = []
+    for source_ref, dsts in sorted(cut_resets.items()):
+        src, port, bit, end = source_ref
+        width = c['instances'][src]['ports'][port]['bits']
+        source = g.pin(src, port, bit, width)
+        paths = []
+        for dst in dsts:
+            di, dp, lo, hi = dst
+            pin = g.pin(di, dp, lo, c['instances'][di]['ports'][dp]['bits'])
+            leaf = g.reserve('hop', pin, targets=[('rst_n', pin)])
+            chain = g.chain(source, leaf)
+            paths.append((dst, leaf, chain))
+        age = max(sum(map(tage, p[2])) + 1 for p in paths)
+        tag = f'col8_{src}_{bit}'
+        for dst, leaf, chain in paths:
+            prev = wire_chain(list(source_ref), chain, 'stream', tag, 'Col8 source reset reach hop')
+            n_leaf = age - sum(map(tage, chain))
+            set_stages(leaf, n_leaf)
+            prev = wire_chain(prev, [leaf], 'stream', tag, f'Col8 reset leaf, {n_leaf} release stages')
+            destination = dst[:2] if c['instances'][dst[0]]['ports'][dst[1]]['bits']==1 else dst
+            edge(prev, destination, 'stream')
+            drop_exact.append(dict(source=list(source_ref),sink=dst,bits=1))
+        report['domains'][f'col8:{src}.{port}[{bit}]'] = dict(
+            sinks=len(dsts),age=age,actual_leaf_ages=[age],
+            source=list(source_ref),scope='Added boot edges from exact registered cut reset; not active score latency')
     remaster = []
     if rows:
         por_of = {x['instance']: (x['domain'], x['source'][1]) for x in c['clock_resets']
@@ -599,7 +635,8 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
                   tiles_by_master=dict(collections.Counter(t['master'] for t in tiles)))
     spec = dict(region='reset_forest', author='H-NETLIST source-bound reset planner',
                 basis_commit='regional synchronous reset owner standard 10-16',
-                instances=tiles, edges=edges, clocks=clocks, straps=[], gaps=[], drop_edges=drop, remaster=remaster,
+                instances=tiles, edges=edges, clocks=clocks, straps=[], gaps=[], drop_edges=drop,
+                drop_exact_reset_edges=drop_exact, remaster=remaster,
                 reset_forest_ports=ports, notes=__doc__)
     return spec, report
 

@@ -41,7 +41,7 @@ def apply(graph, split, geometry, dependencies):
         want = dependencies['sha256'].get(f)
         if want:
             assert hashlib.sha256((ROOT/f).read_bytes()).hexdigest() == want, f
-    changed = []; added = []; reset = []; clocks = []; placements = {}
+    changed = []; added = []; reset = []; clocks = []; placements = {}; hard_children = []
     for q in Q:
         n = 'hb_idx__s_' + q
         i = c['instances'][n]
@@ -58,6 +58,16 @@ def apply(graph, split, geometry, dependencies):
         for s in c['straps']:
             if s.get('inst') == n and s.get('master') == old:
                 s['master'] = i['master']
+        declared = next(x for x in split['instances'] if x['placement_key']==q+'.residual_control')
+        i['hard_children'] = []
+        for child in declared.get('hard_children',[]):
+            child = copy.deepcopy(child)
+            assert child['master']=='ot_hidx_meta_sram146' and child['params']=={'D':146}
+            assert hashlib.sha256((ROOT/child['source']).read_bytes()).hexdigest()==child['source_sha256']
+            assert (ROOT/child['view']/(child['master']+'.lef')).is_file()
+            child['instance'] = child['instance'].replace(n+'.u_control.',n+'.',1)
+            child['clock_terminal_compensation_open'] = True
+            i['hard_children'].append(child);hard_children.append(child)
         changed.append(n)
     for item in split['instances']:
         if item['kind'] != 'hierarchical_column':
@@ -77,6 +87,11 @@ def apply(graph, split, geometry, dependencies):
             source_rectangles={p.split('/',1)[1]:v for p,v in geometry['individual_source_rectangles'].items()
                                if p.startswith(key+'/')})
         assert len([v for v in placements[name]['source_rectangles'].values() if v['kind']=='pair']) == 4
+        for physical_path, part in placements[name]['source_rectangles'].items():
+            rtl_path = physical_path
+            if rtl_path.startswith(('l0.','l1.','l2.','l3.')):
+                rtl_path = rtl_path[:3]+'u_ring.'+rtl_path[3:]
+            part['rtl_path'] = name+'.'+rtl_path
         for p, conn in item['connections'].items():
             direction,bits = PORTS[p]
             if p in ('ctl','cp'):
@@ -115,7 +130,8 @@ def apply(graph, split, geometry, dependencies):
         enlarged_hc_root=geometry['placed_service_envelopes']['hc_eng'],
         baseline_roots_within_existing_bodies=geometry['baseline_roots_within_existing_bodies'],
         reset_delivery=reset,automatic_relays_requiring_regeneration=geometry['automatic_relays_requiring_regeneration'],
-        local_calendar=split['calendar'],
+        local_calendar=split['calendar'],hard_children=hard_children,
+        placement_input_manifest_sha256=geometry['input_manifest_sha256'],
         obligations=['real legal clock construction for all active terminals',
             'source-bound reset delivery with measured additional boot ages',
             'regenerate routes for all displaced bodies',

@@ -23,7 +23,7 @@ def load(p):
 def detach_reset_inputs(c, layer, problems):
     """Replace only declared reset forest inputs; reject partial-bit or stale replacements."""
     targets = {tuple(p) for p in layer.get('reset_forest_ports', [])}
-    if not targets and not layer.get('drop_edges'):
+    if not targets and not layer.get('drop_edges') and not layer.get('drop_exact_reset_edges'):
         return
     replacement = collections.defaultdict(set)
     ports = {n: v['ports'] for n, v in c['instances'].items()}
@@ -59,6 +59,18 @@ def detach_reset_inputs(c, layer, problems):
         else:
             edges.append(e)
     problems.extend(f'reset forest stale drop {key}' for key in sorted(drop - removed))
+    for declaration in layer.get('drop_exact_reset_edges', []):
+        matches = [e for e in edges if all(e[k] == declaration[k] for k in ('source','sink','bits'))]
+        if len(matches) != 1:
+            problems.append(f'reset forest stale exact reset drop {declaration}: matches {len(matches)}')
+            continue
+        e = matches[0]
+        src = c['instances'][e['source'][0]]
+        if (src['master'] != 'ot_hbm_idx_score_quarter_col8_control' or e['source'][1] != 'cut_rst_n'
+                or e.get('kind') != 'reset' or e.get('payload_relay_allowed') is not False or e['bits'] != 1):
+            problems.append(f'reset forest refuses non-Col8 exact reset drop {declaration}')
+            continue
+        edges.remove(e)
     c['edges'] = edges
 
 

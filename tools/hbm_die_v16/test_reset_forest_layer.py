@@ -73,6 +73,28 @@ def test_multibit_reset(case):
     assert [e['dst'] for e in spec['edges'] if e['dst'][0] == 'a'] == [['a', 'rst_lanes', 0, 1], ['a', 'rst_lanes', 1, 2]]
 
 
+def test_col8_registered_reset_bits_get_separate_boot_paths(case):
+    c,m,v=case
+    name='ot_hbm_idx_score_quarter_col8_control'
+    lef(v,name,60,40,{'cut_rst_n[3]':(60,10),'cut_rst_n[19]':(60,30)})
+    m['placement']['control']=dict(m=name,x=200,y=100,w=60,h=40,o='R0')
+    c['instances']['control']=dict(master=name,ports={'cut_rst_n':dict(bits=32)})
+    c['clock_resets']=[]
+    for bit,sink in [(3,'a'),(19,'b')]:
+        c['instances'][sink]['ports']={'rst_n':dict(bits=1)}
+        c['edges'].append(dict(source=['control','cut_rst_n',bit,bit+1],sink=[sink,'rst_n',0,1],
+            bits=1,kind='reset',payload_relay_allowed=False))
+    spec,report=run(case)
+    assert {tuple(x['source']) for x in spec['drop_exact_reset_edges']}=={
+        ('control','cut_rst_n',3,4),('control','cut_rst_n',19,20)}
+    assert {tuple(e['src']) for e in spec['edges'] if e['src'][0]=='control'}=={
+        ('control','cut_rst_n',3,4),('control','cut_rst_n',19,20)}
+    assert report['max_actual_pin_hop_um']<=200
+    assert report['domains']['col8:control.cut_rst_n[3]']['age']>0
+    assert report['domains']['col8:control.cut_rst_n[19]']['age']>report['domains']['col8:control.cut_rst_n[3]']['age']
+    assert all(e['dst']==['a','rst_n'] or e['dst']==['b','rst_n'] or e['dst'][0] not in ('a','b') for e in spec['edges'])
+
+
 def test_obstacle_detour(case):
     c, m, _ = case
     m['placement']['wall'] = dict(m='wall', x=700, y=0, w=300, h=780, o='R0')
