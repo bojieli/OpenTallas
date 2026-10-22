@@ -188,8 +188,9 @@ dense() {   # $1 remote case dir  $2 remote contract  $3 tag
 CACHED=/home/ubuntu/artifacts/hdie-d4/codex_ucie_colh_bind_1021
 CACHE16=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r16e_full_1021/planeM/vplan_changed/synth
 J=/srv/opentallas-scratch/claude/codex-hbm-r16j-s4q-1021/chainjM
+if [ -z "${RESUME_S4:-}" ]; then
 step S3_STAGE exact_source_colh
-[ -z "$(git diff --name-only 83d057be0 HEAD -- rtl tools | grep -v -x -e tools/hbm_die_v15/die_case_v16.py -e rtl/hbm_accel/die_glue/hbfd_exact_tail_classes.sv)" ] || { echo SOURCE_READSET_CHANGED_REFUSED; exit 12; }
+[ -z "$(git diff --name-only 83d057be0 HEAD -- rtl tools | grep -v -x -e tools/hbm_die_v15/die_case_v16.py -e tools/hbm_die_v15/die_relay_stations.py -e rtl/hbm_accel/die_glue/hbfd_exact_tail_classes.sv)" ] || { echo SOURCE_READSET_CHANGED_REFUSED; exit 12; }
 python3 - "$CACHED/reuse.json" "$CACHED/pre_relay_colm.json" "$W/$PD/corridor_model.json" <<'PYREADY'
 import json,sys
 m=json.load(open(sys.argv[3]));assert len(m['placement_checks'])==78 and not any(i['fixed_body_overlaps'] for i in m['placement_checks']);assert m['rtl_changes']==m['guard_changes']==m['cycle_credit']==0
@@ -245,6 +246,17 @@ wait $S3B; R3B=$?; wait $S3Q; R3Q=$?; cat $A/s3b.log $A/s3q.log
 stop_future "AFTER_PQ completed_workers"
 for tag in case_p x12_q; do python3 "$W/results/arch/hbm_release_r16_1021/verify_model_homes.py" "$W/$PD/corridor_model.json" "$A/${tag}_manifest.json" "$A/actual_model_${tag}.json" || { echo MODEL_PQ_NOT_REALIZED; exit 25; }; done
 for tag in case_p x12_q; do python3 "$W/results/arch/hbm_release_r16_1021/verify_rootaware_identity.py" "$W/results/arch/hbm_no_window_decomposition_1021/root_aware_model.json" "$A/${tag}_manifest.json" "$W/$PD/d4g_region_map.json" "$A/rootaware_${tag}.json" || { echo ROOT_PQ_IDENTITY_FAIL; exit 25; }; done
+else
+  # HBM-DIE17 RESUME_S4: staged remote root + A/P/Q GEN of this run kept (S3 verdicts above in this log); re-stage only the
+  # tool files changed since that staging (hardlinks broken first), then rerun S4..S11.
+  echo "RESUME_S4 from staged $B (S3 A/P/Q of this run reused) HEAD $H $(date -Is)"
+  for f in ${RESUME_TOOLS:-tools/hbm_die_v15/die_relay_stations.py}; do
+    git -C $W show HEAD:$f | ssh $HOST "rm -f $B/src/$f && cat > $B/src/$f" || { echo RESUME_RESTAGE_FAIL $f; exit 14; }
+    [ "$(ssh $HOST sha256sum $B/src/$f | cut -d' ' -f1)" = "$(git -C $W show HEAD:$f | sha256sum | cut -d' ' -f1)" ] || { echo RESUME_SHA_FAIL $f; exit 14; }
+    echo "RESUME_RESTAGED $f"
+  done
+  ssh $HOST "rm -f $B/S4_DONE $B/S5_LAYER_DONE"
+fi
 # ---------------- HBM-DIE17 r16q: S4 + S5 + S5b remote, S4 capacity gate RECORDED (diag) so the die reaches GRT/STA/CLK ----------------
 # Owner 10-21 closure push: real GRT overflow / STA / clock numbers on the current die beat a capacity model; the S4 capacity
 # verdict is still emitted (S4_CAPACITY_GATE ...) and kept as a release blocker until it reads 0/0/0.
