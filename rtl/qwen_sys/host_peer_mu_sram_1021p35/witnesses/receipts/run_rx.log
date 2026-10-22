@@ -1,0 +1,5 @@
+RX_HEAD PASS token=0 edges=100000 commands=6542 frames=46289 heads=98143 rxheads=69460 maxcount=1
+- rtl/qwen_sys/host_peer_mu_sram_1021p35/witnesses/tb_rx.sv:168: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 0.380 s; speed 2.630 ms/s
+- Verilator: cpu 0.380 s on 1 threads; allocated 7 MB
