@@ -479,6 +479,18 @@
     ],
     "fail_regex": "ROMLEAF_PARENT_NK_NATIVE_FAIL|ROMLEAF_PARENT_NK_MISMATCH",
     "fail_witness": "results/arch/codex_qw_a0_kfirst_2000_1021/parent_native_clock_MUT4_FAIL.log"
+   },
+   {
+    "name": "kfirst_predicate",
+    "cmd": "bash tools/qwen_romleaf/rc16_2000/predicate_check.sh {RUN}/bench/kfirst_predicate",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KFIRST_PREDICATE_PASS checks8422784",
+    "pass_witness": "results/arch/codex_qw_a0_kfirst_2000_1021/predicate_PASS.log"
    }
   ],
   "cycles_added": 0,
