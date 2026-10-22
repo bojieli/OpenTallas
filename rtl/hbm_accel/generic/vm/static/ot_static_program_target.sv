@@ -75,6 +75,13 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     always @(posedge clk_in or negedge reset_live)
         if(!reset_live)begin cv<=0;dv<=0;lv<=0;end
         else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;end
+    if(INSTALLED_ROWS!=0)begin:g_bounded_descriptor
+        // dv is reset-qualified at the input capture. Payload storage needs no
+        // wide reset-qualified write enable; valid controls every consumer.
+        always @(posedge clk)if(dv && target==tid && !(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>ROWS))begin
+            stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
+        end
+    end
     always @(posedge clk or negedge reset_live)
         if(!reset_live)begin
             program_cfg_we<=0;program_start_v<=0;configured<=0;fault<=0;
@@ -101,7 +108,7 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 armed<=0;validated<=0;configured<=0;install_open<=0;
                 if(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>ROWS)fault<=1;
                 else begin
-                    stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
+                    if(INSTALLED_ROWS==0)begin stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;end
                     armed<=1;missing<=0;
                     if(validated && base==stored_base && limit==stored_limit)begin
                         // Same range in the unchanged resident generation: reuse

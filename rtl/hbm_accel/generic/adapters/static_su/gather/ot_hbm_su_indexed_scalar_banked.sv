@@ -14,14 +14,18 @@ module ot_hbm_su_indexed_scalar_banked #(
  reg[PW-1:0]phase;reg[23:0]ix,base,limit,dst,mul,score_address;reg[71:0]bases;
  wire[31:0]index_value;wire[31:0]value[0:1];wire[1023:0]bank_words;wire[31:0]return_valid;
  wire[31:0]returned_word;wire[4:0]ix_expected,score_expected;
- wire[1:0]rank=index_value<96?0:index_value<192?1:index_value<288?2:3;
- wire[31:0]offset=index_value-(rank==0?0:rank==1?96:rank==2?192:288);
- wire[23:0]segment_base=rank==0?base:rank==1?bases[23:0]:rank==2?bases[47:24]:bases[71:48];
- wire[55:0]product=SEGMENTED96!=0?56'(segment_base)+56'(offset):56'(index_value)*56'(mul)+56'(base);
+ wire[23:0]segmented_address;
+ for(genvar c=0;c<3;c=c+1)begin:segment_chunk
+  ot_hbm_gather_segment_byte #(.N(c)) addr(.index_value(index_value),.base(base),.bases(bases),.q(segmented_address[c*8+:8]));
+ end
+ wire[55:0]product=SEGMENTED96!=0?56'(segmented_address):56'(index_value)*56'(mul)+56'(base);
  function automatic[4:0]bank_of(input[23:0]a);bank_of={a[17:16],a[5:3]};endfunction
  wire rd_fire,wr_fire;
  ot_hbm_gather_phase_fire #(.SI(SI),.WI(WI)) fire(.phase(16'(phase)),.busy(busy),.rd(rd_fire),.wr(wr_fire));
- wire[23:0]read_address=phase==0?ix:score_address;
+ wire[23:0]read_address;
+ for(genvar c=0;c<3;c=c+1)begin:read_mux
+  ot_hbm_gather_read_byte #(.PW(PW)) mux(.phase(phase),.ix(ix[c*8+:8]),.score(score_address[c*8+:8]),.q(read_address[c*8+:8]));
+ end
  for(genvar b=0;b<32;b=b+1)begin:bank
   ot_hbm_gather_bank_header #(.B(b)) head(.clk(clk),.rst_n(rrst[1+b/4]),
    .rd_fire(rd_fire),.wr_fire(wr_fire),.read_bank(bank_of(read_address)),.write_bank(bank_of(dst)),
@@ -132,5 +136,15 @@ endmodule
 endmodule
 (* keep_hierarchy *) module ot_hbm_gather_bank_identity_copy(input wire clk,input wire[4:0]d,output reg[4:0]q);
  always @(posedge clk)q<=d;
+endmodule
+(* keep_hierarchy *) module ot_hbm_gather_read_byte #(parameter PW=5)(input wire[PW-1:0]phase,input wire[7:0]ix,score,output wire[7:0]q);
+ assign q=phase==0?ix:score;
+endmodule
+(* keep_hierarchy *) module ot_hbm_gather_segment_byte #(parameter N=0)(input wire[31:0]index_value,input wire[23:0]base,input wire[71:0]bases,output wire[7:0]q);
+ wire[1:0]rank=index_value<96?0:index_value<192?1:index_value<288?2:3;
+ wire[31:0]offset=index_value-(rank==0?0:rank==1?96:rank==2?192:288);
+ wire[23:0]selected=rank==0?base:rank==1?bases[23:0]:rank==2?bases[47:24]:bases[71:48];
+ wire[31:0]address={8'b0,selected}+offset;
+ assign q=address[N*8+:8];
 endmodule
 `default_nettype wire
