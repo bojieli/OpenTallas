@@ -413,7 +413,9 @@ module ot_hgi_coll_fj_core_s256 #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,RC
   else begin fault<=fault | (|cause_now);fault_cause<=fault_cause | cause_now;end
 endmodule
 
-// ROWS-256 twin of ot_hgi_coll_fj_n2s1_r128 (same NPT / SOLO / NS / RC 32).
+// ROWS-256 twin of ot_hgi_coll_fj_n2s1_r128 (same NPT / SOLO / NS). RC 40 kept reset copies (r128: 32): the 256-row target adds ~146 reset
+// loads (loaded 128 -> 256 bits, 8 scan/write address copies, 4 checking copies): ~673 loads / 40 = <= 17 per copy
+// (reset_relay_split max 19); the kit lands rst_n with 2 last-stage copies (OT_RST_LAND_COPIES rst_n=2, 20 loads each).
 module ot_hgi_coll_fj_n2s1_r256(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
@@ -424,7 +426,7 @@ module ot_hgi_coll_fj_n2s1_r256(
  input wire protocol_fault,input wire [9:0] capture_fault,input wire [17:0] select_fault,unavailable_fault,
  input wire [1:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,arg_fault,tkm_fault,
  output wire fault,output wire [15:0] fault_cause);
- ot_hgi_coll_fj_core_s256 #(.NPT(2),.SOLO(1),.NS(10),.NSL(18),.RC(32)) u(.clk(clk),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+ ot_hgi_coll_fj_core_s256 #(.NPT(2),.SOLO(1),.NS(10),.NSL(18),.RC(40)) u(.clk(clk),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
   .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
   .desc_loops(desc_loops),.launch_v(launch_v),.program_active(program_active),.issuer_busy(issuer_busy),
   .issuer_fault(issuer_fault),.issuer_uop_v(issuer_uop_v),.issuer_uop_pc(issuer_uop_pc),.issuer_cfg(issuer_cfg),
@@ -436,7 +438,9 @@ module ot_hgi_coll_fj_n2s1_r256(
   .fault(fault),.fault_cause(fault_cause));
 endmodule
 
-// ROWS-256 twin of ot_hgi_coll_fj_q2_r128 (same NPT / SOLO / NS / RC 32).
+// ROWS-256 twin of ot_hgi_coll_fj_q2_r128 (same NPT / SOLO / NS). RC 40 kept reset copies (r128: 32): the 256-row target adds ~146 reset
+// loads (loaded 128 -> 256 bits, 8 scan/write address copies, 4 checking copies): ~673 loads / 40 = <= 17 per copy
+// (reset_relay_split max 19); the kit lands rst_n with 2 last-stage copies (OT_RST_LAND_COPIES rst_n=2, 20 loads each).
 module ot_hgi_coll_fj_q2_r256(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
@@ -448,7 +452,7 @@ module ot_hgi_coll_fj_q2_r256(
  input wire [1:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,
  input wire arg_capture_slot,tkm_start,input wire [3:0] tkm_del_slot,tkm_dest_v,
  output wire fault,output wire [15:0] fault_cause);
- ot_hgi_coll_fj_core_s256 #(.NPT(2),.SOLO(0),.NS(9),.NSL(18),.RC(32)) u(.clk(clk),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+ ot_hgi_coll_fj_core_s256 #(.NPT(2),.SOLO(0),.NS(9),.NSL(18),.RC(40)) u(.clk(clk),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
   .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
   .desc_loops(desc_loops),.launch_v(launch_v),.program_active(program_active),.issuer_busy(issuer_busy),
   .issuer_fault(issuer_fault),.issuer_uop_v(issuer_uop_v),.issuer_uop_pc(issuer_uop_pc),.issuer_cfg(issuer_cfg),
@@ -459,7 +463,9 @@ module ot_hgi_coll_fj_q2_r256(
   .tkm_del_slot(tkm_del_slot),.tkm_dest_v(tkm_dest_v),.arg_fault(1'b0),.tkm_fault(1'b0),.fault(fault),.fault_cause(fault_cause));
 endmodule
 
-// ROWS-256 twin of ot_hgi_coll_fj_n1s0_r128 (same NPT / SOLO / NS / RC 32).
+// ROWS-256 twin of ot_hgi_coll_fj_n1s0_r128 (same NPT / SOLO / NS). RC 40 kept reset copies (r128: 32): the 256-row target adds ~146 reset
+// loads (loaded 128 -> 256 bits, 8 scan/write address copies, 4 checking copies): ~673 loads / 40 = <= 17 per copy
+// (reset_relay_split max 19); the kit lands rst_n with 2 last-stage copies (OT_RST_LAND_COPIES rst_n=2, 20 loads each).
 module ot_hgi_coll_fj_n1s0_r256(
  input wire clk,rst_n,input wire [1:0] qid,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
@@ -471,7 +477,7 @@ module ot_hgi_coll_fj_n1s0_r256(
  input wire [0:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,
  input wire arg_capture_slot,tkm_start,input wire [3:0] tkm_del_slot,tkm_dest_v,
  output wire fault,output wire [15:0] fault_cause);
- ot_hgi_coll_fj_core_s256 #(.NPT(1),.SOLO(0),.NS(8),.NSL(18),.RC(32)) u(.clk(clk),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+ ot_hgi_coll_fj_core_s256 #(.NPT(1),.SOLO(0),.NS(8),.NSL(18),.RC(40)) u(.clk(clk),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
   .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
   .desc_loops(desc_loops),.launch_v(launch_v),.program_active(program_active),.issuer_busy(issuer_busy),
   .issuer_fault(issuer_fault),.issuer_uop_v(issuer_uop_v),.issuer_uop_pc(issuer_uop_pc),.issuer_cfg(issuer_cfg),
