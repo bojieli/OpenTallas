@@ -40,7 +40,10 @@ import dv_rtl_kit as K  # noqa: E402
 
 RELAY_RE = re.compile(r'^(dsfd_dvrlyh_|dsfd_rly_|dsfd_dvland_|BUFx|INVx|ICGx)')   # ICGx: hop-0 lane clock gate (S81-LBGAP/G1)
 RESET_RE = re.compile(r'^dsfd_rly_1_')
-CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|cr|cr_s|CLK)$')
+# RTLGAP-G9 (10-22): ck_r<k> = the H9/H10 frame region roots (col_h9_l4_lp ck_r0/ck_r1/ck_r2).  Without it ck_r1/ck_r2
+# (which reach no other clock pin) were classed die_input and the bench held them at 0: two of the three frame regions
+# never clocked on every G9 cut.
+CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|ck_r\d+|cr|cr_s|CLK)$')
 
 
 FLIGHT_SIM = """// dv_flight_sim (S81-LBGAP/G1, bench side): F whole periods of lane flight between the last relay station and its
@@ -82,6 +85,8 @@ module dv_rst_land #(parameter integer N = 2) (input wire ck, input wire rs, out
     assign o = q[N-1];
 endmodule
 """
+
+
 
 
 def load_masters(kit, D, names):
