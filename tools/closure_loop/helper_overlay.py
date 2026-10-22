@@ -192,6 +192,16 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: 497ebf9c7 changes helper_overlay.py only by adding the RULE_COMMITS entry for 522f36523
+    # (plus new seq (B) parent kit files) -> no gate behaviour changes.
+    "497ebf9c7533848ddbc0e797a5bc0df69e0e16a7": dict(
+        kind="neutral",
+        what="helper_overlay: adds the 522f36523 RULE_COMMITS entry only; seq (B) kit files"),
+    # ROOT-MERGE-1022 10-22: claude/s81-seq-b1-1022 lineage ba140fd98 (S81-ELEM2-SEQ) only edits the dsdv_seq_host
+    # kit spec generators under tools/ref_tile/specs_pl_seq; no shared gate or helper rule changes.
+    "ba140fd98883fbc99cae1066757fa98f32be77d4": dict(
+        kind="neutral",
+        what="seq host kit spec generators (mk_dsdv_seq_host_gh/hw) only; shared gate unchanged"),
     # ROOT-MERGE-1022 10-22: claude/tokc-oomadj-1022 ded87247b (URGENT TOKc-OOM). closure_loop.py only changes the die
     # job OOM probe/adjust value (-1000 -> -999, -1000 processes left untouched); no gate verdict or route helper changes.
     "ded87247b93bc390636bc661eaec6ecbdcb198d7": dict(
