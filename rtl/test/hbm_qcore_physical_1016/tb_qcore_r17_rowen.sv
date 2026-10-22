@@ -4,7 +4,7 @@ module tb_qcore_r17_rowen;
  wire[3:0] e0,e1,e2,eb;wire[15:0]d0,d1,d2,db;wire c0,c1,c2,cb;
  ot_hbm_su_qcore_r13_wb #(.ROW_EN(0)) legacy(.sm(hit),.wbk(12'b0),.row(row),.wd16(64'h1004200340028001),.rr_hit(rr),.rrd16(16'ha55a),.en(e0),.d(d0),.conf(c0));
  ot_hbm_su_qcore_r13_wb #(.ROW_EN(1)) sop(.sm(hit),.wbk(12'b0),.row(row),.wd16(64'h1004200340028001),.rr_hit(rr),.rrd16(16'ha55a),.en(e1),.d(d1),.conf(c1));
- ot_hbm_su_qcore_r13_wb #(.ROW_EN(2)) priority(.sm(hit),.wbk(12'b0),.row(row),.wd16(64'h1004200340028001),.rr_hit(rr),.rrd16(16'ha55a),.en(e2),.d(d2),.conf(c2));
+ ot_hbm_su_qcore_r13_wb #(.ROW_EN(2)) u_priority(.sm(hit),.wbk(12'b0),.row(row),.wd16(64'h1004200340028001),.rr_hit(rr),.rrd16(16'ha55a),.en(e2),.d(d2),.conf(c2));
  // Causal negative: actual candidate writer3 row bit misbound, all other pins identical.
  ot_hbm_su_qcore_r13_wb #(.ROW_EN(1)) wrong_row(.sm(hit),.wbk(12'b0),.row(row^8'h40),.wd16(64'h1004200340028001),.rr_hit(rr),.rrd16(16'ha55a),.en(eb),.d(db),.conf(cb));
  integer n,bad=0,negative=0;
