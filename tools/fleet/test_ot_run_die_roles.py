@@ -33,3 +33,11 @@ class DieRolePlacement(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class V16MeasuredReserve(unittest.TestCase):
+    """v16 MEASURED RESERVE (coordinator 10-22): ep7 admits 176 GB for tile work, MemAvailable - 64 = 568 for a die job"""
+    def test_die_job_uses_die_admit_gb(self):
+        r = dict(row(176), die_admit_gb=568, total_gb=1008, floor_gb=50, ncpu=96)
+        self.assertEqual(m.choose({"ot-epyc7": r}, 300, 1, die=True), ("ot-epyc7", False))
+        self.assertEqual(m.choose({"ot-epyc7": r}, 300, 1, die=False), ("ot-epyc7", True))
