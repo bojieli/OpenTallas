@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hbm_dma_load_static.v1",
-  "status": "COMPONENT_V9_PASS_NATIVE5_PASS_CTS_RUNNING",
+  "status": "COMPONENT_V10_PASS_NATIVE6_PENDING",
   "required_formats": {
     "0": "FP32",
     "1": "BF16",
@@ -36,7 +36,7 @@
   },
   "latency": {
     "load_pin_to_output_edges_expected": 5,
-    "measurement": "EP5 unit1581780-1792643894, Verilator5.050, source db8c16103: both banks 1480 commands each, zero mismatches, II 1, five local edges; release/reuse, mutant, raw lockstep, checkpoint subset and independent outputs pass.",
+    "measurement": "EP9 unit89173-1792645335, source fb9122ac6: both banks 1480 commands each, six formats, II 1, five local edges; full release/reuse/mutant/raw/checkpoint/overlap checks pass.",
     "HBM_window_latency": "real vmks CDC and drain dependent; not104",
     "load_pin_to_output_edges_measured": 5,
     "route_extra_edges": 5,
@@ -59,7 +59,7 @@
         "wrong destination bank",
         "corrupt HBM source byte"
       ],
-      "scope": "Eight actual KRL1 vmks and real CDC; controller/PHY boundary modeled; group and WB idle; not native physical, die transport or full-token qualification."
+      "scope": "Prior source db8c16103 passed producer; exact fb9122ac6 replay pending. Controller/PHY boundary modeled; group and WB idle; not native physical, die transport or full token."
     }
   },
   "replicas": {
@@ -80,11 +80,11 @@
     "storage": "same existing SRAM payload, no new large flop storage",
     "pins": "same landing input/output registerband",
     "reach": "new fixed registered route required; die lead owns actual geometry",
-    "fanout": "Native5 MAIN and fallback both PASS: max 32 loads, zero violations among 78,725 roots.",
-    "depth": "Five local registered edges measured; native5 depth and CTS pending.",
-    "floorplan": "Native5 mapped area 21988.071360 um2, sequential area 5969.635200 um2. MAIN 302.4 x 151.2; fallback 345.6 x 172.8. Macro channels 34.776 / 77.976 um. Actual layout and CTS pending.",
+    "fanout": "Prior source db8c16103 native5 MAIN and fallback passed max32/zero violations; current source independent address select needs fresh native6 measurement.",
+    "depth": "fb9122ac6 removes ownership/validation reconvergence at source address selectors; no added register edge. Five local edges measured by V10; native6 CTS pending.",
+    "floorplan": "MAIN/fallback outlines and macro channels unchanged. Native5 MAIN gate WARN, overflow0, TT/FF pin-flop76.9/74.3 ps; TT setup -114.4 ps at macro read CE. Fallback clock105.7/99.0 ps fails. Native6 fallback uses8-sink20um CTS clusters. New area/timing pending.",
     "clock": "one local streamclock; external crossings landed by die",
     "reset": "new pipeline valid reset only; datapath unreset"
   },
-  "source_commit": "db8c16103"
+  "source_commit": "fb9122ac6"
 }
