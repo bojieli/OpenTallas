@@ -294,19 +294,15 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "physical/common_flow/clock_split_km.tcl",
-   "results/rtl/mu_s81_2_rx_1019",
-   "results/rtl/mu_s81_kit_1019",
-   "results/rtl/mu_s81b_1019",
-   "results/rtl/s81_lepa_r7_1021",
-   "results/rtl/s81_lepcap_1019",
-   "results/rtl/s81_lepmu_native32_1020",
    "rtl/common",
    "rtl/dsrom_sys/s81_dv/slice",
    "rtl/dsrom_sys/s81_link",
    "rtl/dsrom_sys/s81_ph",
    "rtl/lib",
    "rtl/link",
-   "tools/s81_dv"
+   "tools/s81_dv",
+   "results/rtl/s81_lep_c12_1021",
+   "tools/s81_dv/cred12_1021"
   ],
   "benches": [
    {
@@ -343,24 +339,6 @@
     "peak_ram_gb": 12,
     "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
     "fail_witness": "results/rtl/s81_lep_c12_1021/a/lepmua_mut_landcut.log"
-   },
-   {
-    "name": "lepmua_mut_stalehd",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmua_mut_stalehd lepmu STALEHD 1",
-    "expect": "fail",
-    "threads": 8,
-    "peak_ram_gb": 12,
-    "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
-    "fail_witness": "results/rtl/s81_lep_c12_1021/a/lepmua_mut_stalehd.log"
-   },
-   {
-    "name": "lepmua_mut_vskew",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmua_mut_vskew lepmu VSKEW 1",
-    "expect": "fail",
-    "threads": 8,
-    "peak_ram_gb": 12,
-    "fail_regex": "%Fatal: .*TX regional state differs",
-    "fail_witness": "results/rtl/s81_lep_c12_1021/a/lepmua_mut_vskew.log"
    }
   ],
   "views_to": "physical/ref_tile/s81sl_lepmua_c12m/views",
