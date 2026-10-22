@@ -1846,7 +1846,9 @@ proc ot_gf_bound {start target bound} {
   # (Earlier: interleaving set_*_delay with find_timing_paths was O(N^2), HKV-HRADM 10-19.)
   set launch [ot_gf_launch $start]
   if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
-    set role port
+    # Ports can belong to different families; keep each source separate so a Cartesian bus
+    # exception never reaches an unrelated same-family input path.
+    set role [list port [get_full_name $start]]
   } else {
     set role [lrange [ot_gf_role $launch] 0 1]
   }

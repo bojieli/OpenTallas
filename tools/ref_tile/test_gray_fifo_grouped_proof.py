@@ -70,6 +70,15 @@ puts "EXCEPTIONS $::exceptions"
         self.assertEqual(result.stderr, "", result.stderr)
         return result.stdout
 
+    def test_distinct_input_ports_do_not_share_cartesian_exception(self):
+        script = STUB + verifier() + "\nset ::mode finite\n"
+        script += "namespace eval sta {proc object_type {obj} {return Port}}\n"
+        script += "ot_gf_bound P1 T1 773.333\not_gf_bound P2 T2 773.333\n"
+        script += "ot_gf_verify\nputs \"EXCEPTIONS $::exceptions\"\n"
+        result = subprocess.run(["tclsh"], input=script, text=True, capture_output=True, check=True)
+        self.assertEqual(result.stderr, "", result.stderr)
+        self.assertIn("EXCEPTIONS 4", result.stdout)
+
     def test_two_finite_pairs_share_one_exception(self):
         log = self.run_case("finite")
         self.assertIn("VERDICT PASS", log)
