@@ -1,0 +1,5 @@
+{
+  "class": "INFRASTRUCTURE_CLOCK_SINK_DUPLICATION",
+  "actual_failure": "Custom CTS equalizer encountered an empty arrival after one physical SRAM clock pin was wired twice under differently escaped STA and ODB names. No measured clock or final timing result.",
+  "replacement": "Canonical ODB instance/MTerm identity dedup. Every distinct physical clock pin retained; unique actual clock owner required and conflicting roots refused globally across ck/hck. No first-root selection, timing waiver or data-edge change."
+}

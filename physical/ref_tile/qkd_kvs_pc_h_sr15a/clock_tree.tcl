@@ -157,7 +157,7 @@ proc ot_sv_bnd_tree {port clkname} {
   set bt [$block findBTerm $port]; set pnet [$bt getNet]
   set bb [[lindex [$bt getBPins] 0] getBBox]
   lassign [ot_sv_legal [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]] tx ty
-  set sinks {}
+  set sinks {}; set local_pin_owners {}; set duplicate_refs 0
   foreach inst [ot_sv_bnd_regs [get_clocks $clkname]] {
     # A true dual-port SRAM can have more than one clock entry. Preserve every actual clock pin.
     foreach it [$inst getITerms] {
@@ -169,13 +169,26 @@ proc ot_sv_bnd_tree {port clkname} {
       foreach c [get_property $p clocks] { lappend owners [get_full_name $c] }
       set owners [lsort -unique $owners]
       if {[llength $owners] != 1} { error "PC15 clock entry requires one existing owner: $owners" }
-      if {[lindex $owners 0] ne $clkname} continue
+      set owner [lindex $owners 0]
+      set physical_pin "[$inst getName]/[[$it getMTerm] getName]"
+      if {[dict exists $::ot_sv_seen_pin_owners $physical_pin] && [dict get $::ot_sv_seen_pin_owners $physical_pin] ne $owner} {
+        error "PC15 physical clock pin ownership conflict: $physical_pin"
+      }
+      dict set ::ot_sv_seen_pin_owners $physical_pin $owner
+      if {$owner ne $clkname} continue
+      if {[dict exists $local_pin_owners $physical_pin]} {
+        if {[dict get $local_pin_owners $physical_pin] ne $owner} { error "PC15 duplicate pin owner mismatch: $physical_pin" }
+        incr duplicate_refs
+        continue
+      }
+      dict set local_pin_owners $physical_pin $owner
       lassign [$it getAvgXY] ok ix iy
       if {!$ok} { error "PC15 clock entry has no geometry: [$inst getName]/[[$it getMTerm] getName]" }
       lappend sinks [list $it $ix $iy]
     }
   }
   if {![llength $sinks]} { error "OT_SV_BND: no $clkname boundary registers found" }
+  puts "OT_PC15_CLOCK_ENTRIES $clkname: [llength $sinks] unique physical pins, $duplicate_refs duplicate STA/ODB references"
   set t [ot_sv_build $sinks $::ot_sv_depth]
   # stem beside the ck pin on the port net
   lassign [ot_sv_buf $tx $ty] b net; [$b findITerm A] connect $pnet
@@ -277,6 +290,7 @@ proc clock_tree_synthesis {args} {
   estimate_parasitics -placement
   set ::ot_sv_leaves {}
   set_propagated_clock [all_clocks]
+  set ::ot_sv_seen_pin_owners {}
   foreach {port cname} {ck core_clk hck hclk} {
     set ::ot_sv_tag $port
     set ::ot_sv_leaves {}
