@@ -192,6 +192,10 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: tokc-sparse-keep2
+    "fd50f64dbbfa30e99b39f83fab582b5ec5d7d01b": dict(
+        kind="neutral",
+        what="sparse_keep.py v2: append-only sparse list edits, refuses before any removal; no gate check"),
     # ROOT-MERGE-1022 10-22: tokc-sparse-keep (new files only)
     "cc298a6f04b3bc417d29076a8e70783653af108d": dict(
         kind="neutral",
