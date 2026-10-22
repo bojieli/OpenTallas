@@ -520,7 +520,14 @@ module ot_s81dv_eng_finish_sram #(
             else begin o_r <= o8; g_r <= (|r8) && !go_t[(q + 3) % NGO]; end
         assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r && !go_t[(q + 17) % NGO];
     end endgenerate
+`ifdef OT_S81DV_XFIN_N20
+    // N20 (STW-S81c-COLLA3 10-22, N19 census: the lowest-group borrow chain of the mem command priority ms, 33 loads on
+    // g_mem_command[0/4] of cp1/cp2): lowest-set one-hot built as 8-group blocks behind keep_hierarchy (within-block first
+    // + "no lower block" prefix), the same function for gs and every ms; same edges, same values
+    wire [NG8-1:0] gs; ot_s81dv_fin_lowpri #(.N(NG8)) u_gpri (.g(ga1), .s(gs));
+`else
     wire [NG8-1:0] gs = ga1 & ~(ga1 - {{(NG8-1){1'b0}}, 1'b1});
+`endif
     generate for (n = 0; n < NC; n = n + 1) begin : g_win
         assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n];
     end endgenerate
@@ -595,7 +602,11 @@ module ot_s81dv_eng_finish_sram #(
           assign mo[mq*8+:8]=8'd0;assign mg[mq]=1'b0;
         end
       end
+`ifdef OT_S81DV_XFIN_N20
+      wire[NG8-1:0] ms; ot_s81dv_fin_lowpri #(.N(NG8)) u_mpri(.g(mg),.s(ms));
+`else
       wire[NG8-1:0] ms=mg & ~(mg-1'b1);
+`endif
       wire[NC-1:0] mw;
       for(genvar mn=0;mn<NC;mn=mn+1)begin:g_node
         assign mw[mn]=mo[mn] && ms[mn/8] && !iss_v[mn];
@@ -3084,4 +3095,23 @@ endmodule
    assign ra[b*5+k]=|addr[k];
   end
  end
+endmodule
+
+// N20 (STW-S81c-COLLA3 10-22): s = g & ~(g - 1) (lowest set bit, one-hot) in blocks of 8 behind keep_hierarchy, so no
+// borrow / prefix term is shared by more than one block (N19 census 33 loads on the flat chain).
+(* keep_hierarchy=1 *) module ot_s81dv_fin_lowpri8(input wire [7:0] g, input wire nb, output wire [7:0] s, output wire any);
+    assign s = (g & ~(g - 8'd1)) & {8{nb}};
+    assign any = |g;
+endmodule
+module ot_s81dv_fin_lowpri #(parameter integer N = 48)(input wire [N-1:0] g, output wire [N-1:0] s);
+    localparam integer NB = (N + 7) / 8;
+    wire [NB*8-1:0] gp = {{(NB*8-N){1'b0}}, g};
+    wire [NB*8-1:0] sp; wire [NB-1:0] any; wire [NB-1:0] nb;
+    genvar b;
+    generate for (b = 0; b < NB; b = b + 1) begin : g_b
+        if (b == 0) begin : g_0 assign nb[b] = 1'b1; end
+        else begin : g_n assign nb[b] = ~|any[b-1:0]; end
+        ot_s81dv_fin_lowpri8 u_b (.g(gp[b*8 +: 8]), .nb(nb[b]), .s(sp[b*8 +: 8]), .any(any[b]));
+    end endgenerate
+    assign s = sp[N-1:0];
 endmodule
