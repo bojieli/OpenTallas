@@ -33,6 +33,20 @@ def strip(t):
     return t
 
 
+TRAP_INST = {"u_trap", "u_cfg_err"}
+TRAP_LABEL = re.compile(r"^g_bad_\w*$|^g_\w*_err\w*$")
+
+
+def trap_label(text, pos, inst):
+    """HBMc/CHAIN2 10-22 trap classifier: an instantiation named u_trap / u_cfg_err whose nearest enclosing generate
+    label is g_bad_* or g_*_err* is a deliberate illegal-parameter elaboration trap (an undefined module, never
+    elaborated at legal params) -> static assert, not a missing module.  Returns the label or None."""
+    if inst not in TRAP_INST:
+        return None
+    labels = re.findall(r"\bbegin\s*:\s*(\w+)", text[:pos])
+    return labels[-1] if labels and TRAP_LABEL.match(labels[-1]) else None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--contract", required=True)
@@ -84,6 +98,9 @@ def main():
             if sub in KW or inst in KW or sub.startswith("$") or re.search(r"_ASAP7_75t_[RLS]L?$", sub):
                 continue   # keywords, system tasks, ASAP7 standard cells (physical library, not RTL)
             if sub not in defs and not re.search(r"\b" + re.escape(sub) + r"\s*(?:#|\w)", body[mod]):
+                continue
+            if sub not in defs and trap_label(body[mod], m.start(), inst):
+                asserts.setdefault(sub, set()).add(root)   # generate-guarded elaboration trap (g_bad_* / g_*_err*)
                 continue
             stack.append((sub, root))
     # names that look like instantiations but are e.g. function calls / types are only reported if never defined
