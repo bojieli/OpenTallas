@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81sl_xgr2",
+ "enable": false,
+ "reason": "Source-registered leaf with explicit RTL face stages: every input pin lands in exactly one face flop (rstopr p_* stage, xgr is_vq / is_dq) and every output leaves a flop (MAIN xgr2 q_* output stage / FB rstopr ro_* / vo / dl_* / nx_*; xs5 xw_q; fault); io_flop_at_pins puts them at the pins.  The relay stages behind / before them are RTL edges priced in MU.S81.CAL (README); a recipe pin_regs stage would add a further unpriced edge."
+}
