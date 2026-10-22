@@ -88,6 +88,15 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1,ROW_EN=0
  ot_hbm_su_qcore_r13_kq #(.W(256)) u_rr(.clk(clk),.d(rrd),.q(rrd_c));
   // r13b: row fields straight from wa_c (16 writer loads each; r13a: 4 row copies loaded the rf_wa pins 40x)
  wire [7:0] row_c={wa_c[30+:2],wa_c[22+:2],wa_c[14+:2],wa_c[6+:2]};
+ // r18: each kept equal-age row capture serves four banks / eight half-word
+ // writers. Four local row compares then cap each row-bit driver at32 loads.
+ wire [7:0] row_local[0:1];
+ for(genvar rg=0;rg<2;rg=rg+1)begin:g_row_capture
+  if(ROW_EN!=0)begin:g_local
+   ot_hbm_su_qcore_r13_kq #(.W(8)) u_row(.clk(clk),
+    .d({wa[30+:2],wa[22+:2],wa[14+:2],wa[6+:2]}),.q(row_local[rg]));
+  end else begin:g_old assign row_local[rg]=row_c;end
+ end
  // r16 candidate: real collective sector/row decode BEFORE the existing raw-capture edge.
  // Each kept row bit serves only two banks / four half-word writers; commit remains k+1.
  // Each row-hit flop has its own scalar reset port so native reset splitting counts actual loads.
@@ -134,7 +143,7 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1,ROW_EN=0
   for(genvar hf=0;hf<2;hf=hf+1)begin:g_h
    wire [3:0] en; wire [15:0] d; wire [63:0] wd16;
    for(genvar w=0;w<4;w=w+1)begin:g_w assign wd16[w*16+:16]=wd_c[w*32+hf*16+:16]; end
-   ot_hbm_su_qcore_r13_wb #(.S(S),.B(b),.COLLPORT(COLLPORT),.ROW_EN(ROW_EN)) u_wb(.sm(smatch),.wbk(wbk),.row(row_c),.wd16(wd16),.rr_hit(rr_hit_g[b/2]),
+   ot_hbm_su_qcore_r13_wb #(.S(S),.B(b),.COLLPORT(COLLPORT),.ROW_EN(ROW_EN)) u_wb(.sm(smatch),.wbk(wbk),.row(row_local[b/4]),.wd16(wd16),.rr_hit(rr_hit_g[b/2]),
     .rrd16(rrd_c[32*((MUT==128)?7-b:b)+hf*16+:16]),.en(en),.d(d),.conf(cf[hf]));
    for(genvar r=0;r<4;r=r+1)begin:g_r
     reg [15:0] q;
