@@ -6,10 +6,10 @@ set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{pw} {rst_n} {dh_user}} outputs {{tl} {emb_start} {emb_token} {emb_position} {emb_user}}} {hr} {clock ot_io_hr io_budget_ps 166.667 inputs {{dh} {init_u0} {ctx_x} {mu_fault} {kok} {kwd} {fab} {native_ret} {ss5} {ag5} {f16_auth} {f16_obs}} outputs {{program_obs} {control_stores_ready} {layer_context_v} {native_tok} {native_pos} {command_stage} {cal_program_obs} {cal_descriptor_obs} {cal_image_ready} {dc} {native_cmd} {hr} {cmd} {cf} {f16_st} {table_req}}}]
-set ::ot_ce_source_domains [dict create {ck_core} {core} {ck_hr} {hr}]
+set ::ot_ce_source_domains [dict create {ck_core[0]} {core} {ck_hr[0]} {hr}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{ck_core} {ck_hr}}
-set ::ot_ce_ports {{ck_core} {ck_hr}}
+set ::ot_ce_cts_roots {{ck_core[0]} {ck_hr[0]}}
+set ::ot_ce_ports {{ck_core[0]} {ck_hr[0]}}
 # Actual OpenSTA clock ancestry and physical propagated-clock measurements.
 # OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
 # resolves inferred masters; evaluate only its generated-clock declarations in

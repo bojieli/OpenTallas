@@ -76,10 +76,10 @@
    "ck_core"
   ]
  },
- "clock_port": "ck_core",
+ "clock_port": "ck_core[0]",
  "clock_ports": [
-  "ck_core",
-  "ck_hr"
+  "ck_core[0]",
+  "ck_hr[0]"
  ],
  "blocks": [
   {

@@ -5,8 +5,8 @@ set ::ot_ref_pre_cts 1
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 create_clock -name core_clk -period 770.000000000
 create_clock -name ot_io_hr -period 770.000000000
-create_clock -name ot_entry_0 -period 770.000000000 [get_ports {ck_core}]
-create_clock -name ot_entry_1 -period 770.000000000 [get_ports {ck_hr}]
+create_clock -name ot_entry_0 -period 770.000000000 [get_ports {ck_core[0]}]
+create_clock -name ot_entry_1 -period 770.000000000 [get_ports {ck_hr[0]}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
@@ -22,10 +22,10 @@ set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
 set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{pw} {rst_n} {dh_user}} outputs {{tl} {emb_start} {emb_token} {emb_position} {emb_user}}} {hr} {clock ot_io_hr io_budget_ps 166.667 inputs {{dh} {init_u0} {ctx_x} {mu_fault} {kok} {kwd} {fab} {native_ret} {ss5} {ag5} {f16_auth} {f16_obs}} outputs {{program_obs} {control_stores_ready} {layer_context_v} {native_tok} {native_pos} {command_stage} {cal_program_obs} {cal_descriptor_obs} {cal_image_ready} {dc} {native_cmd} {hr} {cmd} {cf} {f16_st} {table_req}}}]
-set ::ot_ce_source_domains [dict create {ck_core} {core} {ck_hr} {hr}]
+set ::ot_ce_source_domains [dict create {ck_core[0]} {core} {ck_hr[0]} {hr}]
 set ::ot_ce_explicit_domains 1
-set ::ot_ce_cts_roots {{ck_core} {ck_hr}}
-set ::ot_ce_ports {{ck_core} {ck_hr}}
+set ::ot_ce_cts_roots {{ck_core[0]} {ck_hr[0]}}
+set ::ot_ce_ports {{ck_core[0]} {ck_hr[0]}}
 # Actual OpenSTA clock ancestry and physical propagated-clock measurements.
 # OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
 # resolves inferred masters; evaluate only its generated-clock declarations in
