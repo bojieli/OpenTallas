@@ -29,7 +29,7 @@ inputs = {'k_v': 1, 'k_we': 1, 'k_addr': 30, 'k_len': 4, 'k_tag': 17, 'k_wdata':
 outputs = {'k_rdy': 1, 'kr_v': 1, 'kr_tag': 17, 'kr_beat': 4, 'kr_data': 256, 'k_wr_done': 1, 'row_v': 1, 'row_op': 3,
            'row_bank': 5, 'row_row': 19, 'col_v': 1, 'col_we': 1, 'col_bank': 5, 'col_col': 5, 'col_data': 256,
            'col_strb': 32, 'pc_fault': 1}
-L = ['`timescale 1ns/1ps', 'module tb; parameter MUT=0;',
+L = ['`timescale 1ns/1ps', 'module tb; parameter MUT=0; parameter RLAT=0; parameter RH=64;',
      'reg clk=0; always #0.4165 clk=~clk; reg hclk=0; always #0.5 hclk=~hclk;',
      'reg rst_n=0, hrst_n=0; integer cyc=0; integer checks=0, cols=0, refs=0;',
      'reg cfg_v=0; reg [7:0] cfg_target=0; reg [11:0] cfg_addr=0; reg [255:0] cfg_data=0;',
@@ -37,7 +37,7 @@ L = ['`timescale 1ns/1ps', 'module tb; parameter MUT=0;',
      'task automatic frame(input [7:0] t, input [11:0] a, input [255:0] d); begin',
      '  @(negedge clk); cfg_v=1; cfg_target=t; cfg_addr=a; cfg_data=d; @(negedge clk); cfg_v=0; repeat(3) @(negedge clk); end endtask',
      'wire [255:0] rr_m, rr_bad, rr_rw; wire prst_m, prst_bad, prst_rw; wire rdy_m, act_m, flt_m, rdy_bad, act_bad, flt_bad, rdy_rw, act_rw, flt_rw;',
-     f'ot_hbm_pc_refresh_cfg #(.NPC({NPC}),.MUT((MUT==2||MUT==4)?MUT:0)) prod_m(.clk(clk),.rst_n(rst_n),.clk_hbm(hclk),.rst_hbm_n(hrst_n),.tgt(8\'d126),'
+     f'ot_hbm_pc_refresh_cfg #(.NPC({NPC}),.REL_HOLD(RH),.MUT((MUT==2||MUT==4)?MUT:0)) prod_m(.clk(clk),.rst_n(rst_n),.clk_hbm(hclk),.rst_hbm_n(hrst_n),.tgt(8\'d126),'
      '.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.refresh_reload(rr_m),.pc_rst_n(prst_m),'
      '.ready(rdy_m),.active(act_m),.fault(flt_m));',
      f'ot_hbm_pc_refresh_cfg #(.NPC({NPC}),.MUT((MUT==1)?1:0)) prod_bad(.clk(clk),.rst_n(rst_n),.clk_hbm(hclk),.rst_hbm_n(hrst_n),.tgt(8\'d127),'
@@ -57,6 +57,10 @@ L = ['`timescale 1ns/1ps', 'module tb; parameter MUT=0;',
      '  if(prst_bad) $fatal(1,"PC_REFCFG_BAD_ROW_RELEASED cycle=%0d mut=%0d",cyc,MUT);',
      '  if(prst_rw && rr_rw!==ROW) $fatal(1,"PC_REFCFG_REWRITE_ACCEPTED cycle=%0d mut=%0d",cyc,MUT);',
      'end',
+     # die relay latency (HBMc/CHAIN2 10-22): refresh_reload reaches the controllers through RLAT HBM-clock relay
+     # stages (no reset, as hbfd_rly), pc_rst_n through one wire -- the die has 3..28 stages
+     'reg [255:0] rr_pipe [0:63]; integer ri; always @(posedge hclk) begin rr_pipe[0]<=rr_m; for(ri=1;ri<64;ri=ri+1) rr_pipe[ri]<=rr_pipe[ri-1]; end',
+     'wire [255:0] rr_dl = (RLAT==0) ? rr_m : rr_pipe[RLAT-1];',
      'genvar p; generate for(p=0;p<32;p=p+1) begin:g',
      'localparam integer RP=(p*118/32)%118; localparam integer RELOAD=118+RP+((RP+118+p)%2);']
 for n, w in inputs.items():
@@ -67,7 +71,7 @@ for n, w in inputs.items():
 for n, w in outputs.items():
     L.append(f'wire [{w-1}:0] a_{n},b_{n};')
 L.append('wire [5:0] a_of,b_of;')
-for pre, rr in [('a', "8'(RELOAD)"), ('b', 'rr_m[p*8+:8]')]:
+for pre, rr in [('a', "8'(RELOAD)"), ('b', 'rr_dl[p*8+:8]')]:
     con = ['.clk(hclk)', '.rst_n(prst_m)', ".pc_id(5'(p))", f'.refresh_reload({rr})'] + [f'.{n}({n})' for n in inputs] + \
           [f'.{n}({pre}_{n})' for n in outputs] + [f'.owner_fault_split({pre}_of)']
     L.append(f'ot_hbm_svc_pc_ctrl_leaf_cfg_h9b {pre}(' + ','.join(con) + ');')
