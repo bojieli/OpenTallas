@@ -38,7 +38,8 @@ if [ "${FRAME_LP:-0}" = 1 ]; then
   LPSV=${FRAME_LP_SV:-$FR/${MASTER}_l4_lp.sv}
   grep -q ot_reset_sync $LPSV && TOPF="$TOPF rtl/lib/ot_reset_sync.sv"
   VFLAGS="${VFLAGS:-} -DLP_MUT=$LM -DLK=${LK:-2} -DTB_FWD_GATE -DTB_LDLY=${LDLY:-0}"
-  LANDE="--land-e ${LK:-2} --frame-schedule results/arch/s81_dv_1016/frame_l4_cluster/compiler/${MASTER}_schedule.json"
+  # STW-S81c-DIE-FRAME 10-22: FRAME_SCHED = the schedule of a re-cut LP variant (default: the committed one)
+  LANDE="--land-e ${LK:-2} --frame-schedule ${FRAME_SCHED:-results/arch/s81_dv_1016/frame_l4_cluster/compiler/${MASTER}_schedule.json}"
 elif [ "${L4:-0}" = 1 ]; then
   if [ "$MUT" = 0 ]; then FR=rtl/dsrom_sys/s81_dv/frame_l4; else
     [ -f $O/rtl/${MASTER}_l4.sv ] || python3 tools/s81_dv/frame_l4.py --mutant $MUT --out-rtl $(realpath $O)/rtl > $O/mutant.log 2>&1 || { echo "MUTANT_EMIT_FAILED"; tail -n 3 $O/mutant.log; exit 3; }
