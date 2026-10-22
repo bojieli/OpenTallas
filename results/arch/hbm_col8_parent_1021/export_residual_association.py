@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+"""Export actual hierarchical cell ownership from lossless post-map JSON."""
+from pathlib import Path
+import json,collections,sys,gzip,hashlib,re
+p=Path(sys.argv[1]);d=json.load(open(p));mods=d['modules'];top='ot_hbm_idx_score_quarter_col8_control';counts=collections.Counter();ffclocks=collections.Counter();areascope=collections.Counter();rows=[];hard=[]
+def group(path):
+ m=re.match(r'(ge\[[01]\]\.gc\[[0-3]\]\.leaf)(?:[./]|$)',path)
+ if m:return m[1]
+ m=re.match(r'(ge\[[01]\]\.(?:md|u_t|keep_pipe))(?:[./]|$)',path)
+ if m:return m[1]
+ m=re.match(r'(ge\[[01]\])(?:[./]|$)',path)
+ return m[1]+'.engine_glue' if m else 'quarter_root'
+def walk(mod,prefix,bindings):
+ m=mods[mod];drivers={}
+ for n,c in m['cells'].items():
+  if c['type'].startswith(('INV','BUF')):
+   for b in c['connections'].get('Y',[]):drivers[b]=c
+ def ck(b,seen=None):
+  if b in bindings:return bindings[b]
+  c=drivers.get(b)
+  if c:
+   a=c['connections'].get('A',[])
+   if len(a)==1:
+    x=ck(a[0]);return 'inverted('+x+')' if c['type'].startswith('INV') else x
+  return prefix+'local_net_'+str(b)
+ for n,c in m['cells'].items():
+  path=prefix+n;t=c['type']
+  if t in mods and mods[t].get('cells'):
+   binds={b:ck(c['connections'][pn][i]) for pn,pv in mods[t]['ports'].items() for i,b in enumerate(pv['bits']) if pn in c['connections']}
+   walk(t,path+'/',binds);continue
+  row={'instance':path,'master':t,'source_group':group(path)}
+  counts[t]+=1;areascope[row['source_group']]+=1
+  if 'DFF' in t:
+   row['clock']=ck(c['connections']['CLK'][0]);ffclocks[row['clock']]+=1
+  if t=='ot_hidx_meta_sram146':
+   row['hard_view']='physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146';row['record']='06d0f5e44';row['D']=146;row['clock_terminals']={pn:ck(c['connections'][pn][0]) for pn in ('clk','clk_mem')};hard.append(row.copy())
+  rows.append(row)
+bindings={b:(pn if len(pv['bits'])==1 else f'{pn}[{i}]') for pn,pv in mods[top]['ports'].items() for i,b in enumerate(pv['bits'])}
+walk(top,'',bindings)
+assert len(hard)==2,hard
+for h in hard:assert h['clock_terminals']['clk']==h['clock_terminals']['clk_mem']
+r={'schema':'col8.residual_mapped_cells.v1','functional_source':'b056ec205','physical_specialization':'a08546f1e','top':top,'cell_counts':dict(counts),'source_group_cells':dict(areascope),'ff_clock_counts':dict(ffclocks),'hard_metadata_instances':hard,'cells':rows,'notes':['Actual source group associations only, no residual detailed placement or footprint qualification.','Source groups retain exact mapped hierarchy. Cell connections remain in lossless Verilog and JSON.','Two metadata hard cells per controller, eight across four quarters, preserve literal clk/clk_mem.','Controller active clocks and the 128 separate pair clocks together retain 143 external clocks per quarter. Inverted clock roots preserve negative source edges and are not additional external clocks.']}
+q=p.parent/'residual_cell_association.json.gz'
+with gzip.GzipFile(filename=str(q),mode='wb',mtime=0) as z:z.write((json.dumps(r,indent=2)+'\n').encode())
+print(json.dumps({k:v for k,v in r.items() if k!='cells'},indent=2))

@@ -1,0 +1,5 @@
+{
+  "required_helper": "physical/common_flow/ot_keep_regs.tcl",
+  "sha256": "8a19ec58c67bb276f7fd8ab2d472aa54e27712b26eb81246850ad73f3a8c88f7",
+  "reason": "Existing canonical SYNTH_CANONICALIZE_TCL sets keep on cells driving kept wires; no rule or functional change. Must be in physical source packet."
+}
