@@ -339,7 +339,17 @@ python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --lef $O/case_kv/elements
 python3 tools/qwen_kv_die/kv_gen_source_ports.py --case "$O/case_kv" --records "$O/port_bind_v2" --root "$PWD" \
   > "$O/gen_source_ports.log" 2>&1 \
   || { tail -6 "$O/gen_source_ports.log"; echo 'KV GEN source direction export REFUSED'; exit 12; }
-python3 tools/qwen_kv_die/kv_gen_safety.py --case "$O/case_kv" --libs "$O/libs" \
+# KDIE5 10-22 (opt-in OT_KV_FRAME_PIN_ROOTS=1, default off): multi-root frame masters with no Liberty clock arcs
+# (qkd_kvs_pc[_h] / qkd_kvs_grp[_h] / qkd_host_rt) get per-port clock roots from their strict-bound RTL (yosys cones);
+# ambiguous / unclocked port bits stay unmapped (region None) and are listed in frame_pin_roots.json.report.json.
+FPR=()
+if [ "${OT_KV_FRAME_PIN_ROOTS:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_frame_pin_roots.py --case "$O/case_kv" --records "$O/port_bind_v2" --root "$PWD" \
+    --libs "$O/libs" --work "$O/frame_pin_roots" --out "$O/case_kv/frame_pin_roots.json" > "$O/frame_pin_roots.log" 2>&1 \
+    || { tail -6 "$O/frame_pin_roots.log"; echo 'KV frame pin-root derivation REFUSED'; exit 12; }
+  FPR=(--pin-roots "$O/case_kv/frame_pin_roots.json")
+fi
+python3 tools/qwen_kv_die/kv_gen_safety.py --case "$O/case_kv" --libs "$O/libs" "${FPR[@]}" \
   --source-ports "$O/case_kv/gen_source_ports.json" > "$O/gen_safety_export.log" 2>&1 \
   || { tail -6 "$O/gen_safety_export.log"; echo 'KV GEN safety facts export REFUSED'; exit 12; }
 echo "prep done: $(cat $O/case_kv/SOURCE_COMMIT) $(tail -1 $O/bind.log | head -c 300)"
