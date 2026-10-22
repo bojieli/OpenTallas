@@ -186,7 +186,9 @@ module tb_svc_lower;
     integer aq_n [0:1], aq_first [0:1], aq_last [0:1];                 // ALLQ: per entry (0 = W, 1 = E)
     initial for (i = 0; i < 2; i = i + 1) begin aq_n[i] = 0; aq_first[i] = -1; aq_last[i] = -1; end
     integer pvd_fd = 0;                // ALLQ: every RTL P.V word {entry, cycle, pv_d 513} -> IMG/pv_dump_s<seed>.hex
-    initial begin #2; if (ALLQ != 0) pvd_fd = $fopen($sformatf("%0s/pv_dump_s%0d.hex", dir, seed), "w"); end
+    integer sed_fd = 0;                // ALLQ: every RTL SE operand row {slice, cycle, se_d 512} -> IMG/se_dump_s<seed>.hex
+    initial begin #2; if (ALLQ != 0) begin pvd_fd = $fopen($sformatf("%0s/pv_dump_s%0d.hex", dir, seed), "w");
+                                           sed_fd = $fopen($sformatf("%0s/se_dump_s%0d.hex", dir, seed), "w"); end end
     reg [7:0] pvc [0:15]; reg [63:0] pvf [0:15];
     integer first_rt = -1, last_rt = -1, done_c [0:1], n_done [0:1];
     integer p_first = -1, p_last = -1, p_beats = 0, p_err = 0, p_chk = 0, pf_err = 0, we_first [0:15], we_last [0:15];
@@ -245,6 +247,7 @@ module tb_svc_lower;
         for (int s = 0; s < 16; s++) begin
             if (se_v[s]) begin
                 integer rr, t; t = tile_of(s);
+                if (sed_fd != 0) $fdisplay(sed_fd, "%0d %0d %0128h", s, cyc, se_d[s]);
                 for (rr = 0; rr < 16; rr = rr + 1) if (16 * se_rows[s] + rr < T) begin
                     se_chk = se_chk + 1;
                     if (se_d[s][32*rr +: 32] !== scm[16 * se_rows[s] + rr][t*33 +: 32]) begin
@@ -369,6 +372,7 @@ module tb_svc_lower;
                  (PMODE == 0 || (p_err == 0 && pf_err == 0 && p_beats == (T + 3) / 4 && p_chk == 64 * ((T + 3) / 4) &&
                                  pf_n[0] == 1 && pf_n[1] == 1 && pf_i[0] == 0 && pf_i[1] == 0))) ? "PASS" : "FAIL");
             if (pvd_fd != 0) $fclose(pvd_fd);
+            if (sed_fd != 0) $fclose(sed_fd);
             $finish;
         end
     end
