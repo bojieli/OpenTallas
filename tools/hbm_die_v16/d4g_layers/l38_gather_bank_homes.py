@@ -37,6 +37,9 @@ def place(g,base,roots,source,cut,pins,clocks,variant):
  rects += [('ROOT:'+s['region'],s['keepout']) for s in roots['sites']]
  for i,b in enumerate(source['last_step_postcut_bands']):
   rects.append(('INSERTION_CORRIDOR:'+str(i),(b['start_um'],0,b['end_um'],H) if b['axis']=='x' else (0,b['start_um'],W,b['end_um'])))
+ # Existing actual clock cells are retained obstacles in this successor.
+ for tree in clocks['clock_trees'].values():
+  rects += [('CLOCK:'+n,(x,y,x+1.62,y+.27)) for n,m,x,y in tree['buffers']]
  occ=Occupancy(W,H,rects);banks=[];failed=[]
  bw,bh=cut['grant_requests']['bank_local']['outline_'+variant+'_um']
  for b in cut['banks']:
