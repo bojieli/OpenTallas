@@ -1,0 +1,31 @@
+{
+  "status": "PREPARED_NOT_QUALIFIED",
+  "source_sha256": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33",
+  "params": {
+    "QB_ALIGN": 1,
+    "QB_LOCAL32": 1,
+    "MUT": 0,
+    "QB_MUT": 0,
+    "QB_LOCAL_MUT": 0
+  },
+  "candidates": {
+    "g": "MAIN 518.4x561.6 stock single-root TritonCTS",
+    "h": "ALT 604.8x604.8 stock single-root TritonCTS"
+  },
+  "cause": "Legacy spine balances leaf drivers to 28.6ps in ALT f but intermediate actual std-register arrival range is 183.7ps. Terminal gates remain active; these intermediate observations are not final qualification.",
+  "unchanged": [
+    "RTL/data edges and local4-edge receipt",
+    "8 authentic32x512 macro inventory",
+    "geometry and macro coordinates",
+    "1639 signal/clock pin identities, actual-grid-validated recipe",
+    "two-edge external reset landing and local reset forests",
+    "SS/FF constraints and source port ck"
+  ],
+  "sizing": "Same measured native data inventory:10596FF/8SRAM/7325.75um2 std area before clock construction. Clock buffer area and actual full-sink arrivals require new measurement. No programme age or rate credit.",
+  "predecessors_preserved": [
+    "a/b native328violations",
+    "c/d pin-recipe kit failure",
+    "e/f live legacy-spine gates"
+  ],
+  "helper_changes": []
+}

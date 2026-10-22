@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_native59_qbank",
+ "enable": false,
+ "reason": "Exact selected RTL already captures inputs and publishes registered outputs; added pin registers would change source-proven cadence."
+}
