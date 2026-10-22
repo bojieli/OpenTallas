@@ -82,8 +82,16 @@
   "clock_contract": {
     "literal_pairs": 40,
     "planA_pairs": 39,
-    "common_clk": "clk/rst_n for VMUX, VDLY, TX; must be explicitly unified with ck_r37/rst_n_r37 region or separately declared with real delivery; no silent alias",
-    "new_clock_waivers": false
+    "common_clk": "Literal clk/rst_n pair retained for VMUX, VDLY and TX. One actual asynchronous entry register drives unchanged child reset inputs; no alias to region r37.",
+    "new_clock_waivers": false,
+    "common_release_edges": 3,
+    "common_raw_reset_consumers": 1,
+    "release_edges": {
+      "VMUX": 3,
+      "VDLY": 3,
+      "TX": 4
+    },
+    "common_registered_reset_consumers_rtl": 9
   },
   "calendar": {
     "VMUX_edges": 2,
@@ -92,7 +100,8 @@
     "TOPK_tail": 796,
     "TX_OFF": 33,
     "selection_tail_delta_from_640": 156,
-    "new_reset_delta_edges": 0
+    "new_reset_delta_edges": 1,
+    "data_path_delta_from_reset_repair": 0
   },
   "limits": [
     "Origins and body sizes do not prove actual paired pin reach, landing sites, PG, CTS or signoff.",
