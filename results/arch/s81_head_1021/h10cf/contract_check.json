@@ -1,0 +1,24 @@
+{
+  "source": "8d29a1f09",
+  "geometry_changed": false,
+  "rtl_changed": false,
+  "routing_failures": 0,
+  "max_hop_um": 397.8,
+  "links": 439,
+  "stations": 2559,
+  "instance_clock_ports": {
+    "lk_WN3": {
+      "clk": "ck_head_lep_B"
+    },
+    "lep": {
+      "ck": "ck_head_lep_C",
+      "ck_A": "ck_head_lep_A",
+      "ck_B": "ck_head_lep_B"
+    }
+  },
+  "endpoint_clock_ports": {
+    "tx3.o": "ck_B",
+    "rx3.i": "ck_B"
+  },
+  "qualification": "construction/contract only; full strict source bind and regenerated GEN safety pending"
+}
