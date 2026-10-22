@@ -1,0 +1,51 @@
+{
+  "status": "CTS_MEASURED_GRT_PENDING_NOT_CLOSED",
+  "source": "fab57c770",
+  "controllers": [
+    1067073,
+    1067074
+  ],
+  "measurements": {
+    "main": {
+      "tt": {
+        "max_boundary": {
+          "spread_ps": 31.0,
+          "root": "clk",
+          "boundary_sinks": 870
+        },
+        "measured_boundary_roots": 13,
+        "errors": []
+      },
+      "ff": {
+        "max_boundary": {
+          "spread_ps": 28.7,
+          "root": "clk",
+          "boundary_sinks": 870
+        },
+        "measured_boundary_roots": 13,
+        "errors": []
+      }
+    },
+    "fallback": {
+      "tt": {
+        "max_boundary": {
+          "spread_ps": 31.0,
+          "root": "clk",
+          "boundary_sinks": 870
+        },
+        "measured_boundary_roots": 13,
+        "errors": []
+      },
+      "ff": {
+        "max_boundary": {
+          "spread_ps": 28.8,
+          "root": "clk",
+          "boundary_sinks": 870
+        },
+        "measured_boundary_roots": 13,
+        "errors": []
+      }
+    }
+  },
+  "next": "Preserve live normal GRT pin access and collect terminal gate timing before qualification or publication."
+}

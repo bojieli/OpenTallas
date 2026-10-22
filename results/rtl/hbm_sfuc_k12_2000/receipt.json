@@ -23,5 +23,20 @@
   },
   "repair": "Same-edge source-local control copies; no changed interface edge, outline, hard children or native rule. R24 arithmetic proof and normal MAIN / fallback gates must qualify repaired source.",
   "proof_controller": 2570433,
-  "gen_controller": 2580220
+  "gen_controller": 2622037,
+  "gen_unit": "EP9 1826554-1792647769",
+  "main_gen": "PASS",
+  "main_freeze": "38d99f00f177a9f7cc09ed5ec3853da0d546f35f",
+  "main_gate_controller": 2716352,
+  "fallback_gen": "LIVE",
+  "operand_proof": {
+    "status": "PASS",
+    "commit": "82bb981ef",
+    "checks": 143360,
+    "negative_controls": [
+      "ADDR",
+      "RANGE",
+      "SCALAR"
+    ]
+  }
 }
