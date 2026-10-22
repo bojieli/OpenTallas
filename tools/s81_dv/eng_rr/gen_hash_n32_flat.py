@@ -65,16 +65,29 @@ e('    input  wire [5:0]    clk_columns,  // one per (layer, order)')
 e('    input  wire [%d:0]   in_w,' % (N * IDW - 1))
 e('    output wire [%d:0] out_res' % (RW * NC - 1))
 e(');')
-e('    function automatic [63:0] add64cs(input [63:0] a, input [63:0] b);')
-e('        reg [32:0] lo;')
-e('        reg [31:0] h0, h1;')
-e('        begin')
-e("            lo = {1'b0, a[31:0]} + {1'b0, b[31:0]};")
-e('            h0 = a[63:32] + b[63:32];')
-e("            h1 = a[63:32] + b[63:32] + 32'd1;")
-e('            add64cs = {lo[32] ? h1 : h0, lo[31:0]};')
-e('        end')
-e('    endfunction')
+# S81-ELEM2-ENGRR 10-21 (zero-wire intrinsic 082fa3d2b: roll_s -9 ps / s1 -52.6 ps at 770 from ripple-mapped adds):
+# every adder is an 8-bit-chunk carry-select (chunk ripple <= 8 + one select per chunk); same sums, same registers/edges.
+def emit_csa(fname, W):
+    nch = (W + 7) // 8
+    e('    function automatic [%d:0] %s(input [%d:0] a, input [%d:0] b);' % (W - 1, fname, W - 1, W - 1))
+    for k in range(nch):
+        lo, hi = 8 * k, min(8 * k + 8, W) - 1
+        cw = hi - lo + 2
+        e('        reg [%d:0] z%d, o%d;' % (cw - 1, k, k))
+    e('        reg [%d:0] c;' % nch)
+    e('        begin')
+    e("            c[0] = 1'b0;")
+    for k in range(nch):
+        lo, hi = 8 * k, min(8 * k + 8, W) - 1
+        cw = hi - lo + 2
+        e("            z%d = {1'b0, a[%d:%d]} + {1'b0, b[%d:%d]};" % (k, hi, lo, hi, lo))
+        e("            o%d = {1'b0, a[%d:%d]} + {1'b0, b[%d:%d]} + %d'd1;" % (k, hi, lo, hi, lo, cw))
+        e('            c[%d] = c[%d] ? o%d[%d] : z%d[%d];' % (k + 1, k, k, cw - 1, k, cw - 1))
+        e('            %s[%d:%d] = c[%d] ? o%d[%d:0] : z%d[%d:0];' % (fname, hi, lo, k, k, cw - 2, k, cw - 2))
+    e('        end')
+    e('    endfunction')
+emit_csa('add64cs', 64)
+emit_csa('csa28', 28)
 
 def onehot(name, sel, width_sel, n):
     # n-entry one-hot decode of sel (explicit equalities, entry k at bit k)
@@ -167,12 +180,12 @@ for c in range(NC):
             e('    ot_s81engf_red45_%s u_red45_%s (.a(m1_45), .y(red45_%s));' % ((('lo' if half==0 else 'hi'),)*3))
     e('    always @(posedge clk_columns[%d]) begin' % ck)
     for i in range(8):
-        e("        s1_%d_%d <= {1'b0, r_%d_%d} + {1'b0, r_%d_%d};" % (c, i, c, 2 * i, c, 2 * i + 1))
+        e("        s1_%d_%d <= csa28({4'b0, r_%d_%d}, {4'b0, r_%d_%d});" % (c, i, c, 2 * i, c, 2 * i + 1))
     for i in range(4):
-        e("        s2_%d_%d <= {1'b0, s1_%d_%d} + {1'b0, s1_%d_%d};" % (c, i, c, 2 * i, c, 2 * i + 1))
+        e("        s2_%d_%d <= csa28({3'b0, s1_%d_%d}, {3'b0, s1_%d_%d});" % (c, i, c, 2 * i, c, 2 * i + 1))
     for i in range(2):
-        e("        s3_%d_%d <= {1'b0, s2_%d_%d} + {1'b0, s2_%d_%d};" % (c, i, c, 2 * i, c, 2 * i + 1))
-    e("        s4_%d <= {1'b0, s3_%d_0} + {1'b0, s3_%d_1};" % (c, c, c))
+        e("        s3_%d_%d <= csa28({2'b0, s2_%d_%d}, {2'b0, s2_%d_%d});" % (c, i, c, 2 * i, c, 2 * i + 1))
+    e("        s4_%d <= csa28({1'b0, s3_%d_0}, {1'b0, s3_%d_1});" % (c, c, c))
     e('        m1_%d <= !d12_%d[%d] ? d12_%d[%d:0] : !d8_%d[%d] ? d8_%d[%d:0] : !d4_%d[%d] ? d4_%d[%d:0] : s4_%d[%d:0];'
       % (c, c, RW + 4, c, RW + 2, c, RW + 4, c, RW + 2, c, RW + 4, c, RW + 2, c, RW + 2))
     if c == 45:
