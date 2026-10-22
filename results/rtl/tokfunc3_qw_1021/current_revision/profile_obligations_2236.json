@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.qwen.current-profile-obligations.v1",
-  "updated": "2026-10-21 22:44 PT",
+  "updated": "2026-10-21 22:47 PT",
   "status": "COMPONENTS_ONLY_NO_FULL_CURRENT_TOKEN_OR_PHYSICAL_QUALIFICATION",
   "compute": {
     "source": "ca282f1e9",
@@ -27,9 +27,21 @@
     "flat_lane_scope_correction": {
       "retained_binary_SU_LT": 1,
       "current_die_SU_LT": 0,
-      "status": "CURRENT_FLAT_PARAMETER_PROOF_OPEN",
+      "status": "DISTINCT_CURRENT_MODE_LANE0_MINIMUM_PASS_ONLY",
       "owner": "/root/token/s81",
-      "no_duplicate_replay": true
+      "no_duplicate_replay": true,
+      "receipt": "6e722a356",
+      "bench": "01a62111b",
+      "source": "1f7a4aedb",
+      "params": {
+        "ML": 1,
+        "TLS": 1,
+        "QLA": 3,
+        "QLM": 3,
+        "SFH": 0
+      },
+      "unit": "Gold2 1670590",
+      "scope": "96 values, five classes, dirty-history reset and OT_TLS_MUT rejection; excludes eight-lane/whole-array/current physical parent"
     },
     "previous_source": "9b560810b / r21 / QB_LOCAL320; no transport age transfer",
     "local32_candidate": {
@@ -43,7 +55,7 @@
     "geometry_delta": "Native59 south/east service channels 108 to 216 um, native59 y +108 um and embedding/system-face x +108 um; no transport age inferred"
   },
   "kv": {
-    "source": "65cb1678b",
+    "source": "16a35bc82",
     "profile": [
       "S6C",
       "ROPE",
@@ -55,7 +67,7 @@
     "unit_coverage": "a869e0174 exact unchanged SRAM/PC bodies; no whole-tile transfer",
     "changed_chain_receipt": "../kv_pc_rope_chain_current/receipt.json",
     "next_job": {
-      "name": "tok_qw_s6c_parent_boot_token_65cb",
+      "name": "tok_qw_s6c_parent_boot_token_current",
       "owner": "/root/token/qwen",
       "status": "WAITING_ACTUAL_GEN_INPUTS_HARNESS_PREPARATION",
       "inputs": [
@@ -67,14 +79,21 @@
         "actual selected-parent boot and first token",
         "cold SRAM start and token data with actual programme",
         "real admission before first kind12 context"
-      ]
+      ],
+      "source": "16a35bc82",
+      "preserved_preparation_name": "tok_qw_s6c_parent_boot_token_65cb"
     },
     "physical": "cm1/cf1 diagnostic frames; no hardened OVL view",
-    "unadopted_ovl": {
+    "previous_source": "65cb1678b; unchanged PC/SRAM/chain and attention/EMB component identities",
+    "current_gen_jobs": {
+      "MAIN": "R19 EP5 oth-ubuntu-1059661-1792647892",
+      "ALT": "R20 EP5 oth-ubuntu-1059978-1792647892"
+    },
+    "ovl_phase_copy_component": {
       "source": "523b795d6",
       "component_evidence": "8cf5fd752",
       "change": "same-edge run_p phase copy; no new source edge",
-      "scope": "owner proof available, no die adoption assumed"
+      "scope": "Adopted into current 16a parent source; exact miter/native component evidence only, no full parent or hardened view"
     }
   },
   "current_r17_replay": {
