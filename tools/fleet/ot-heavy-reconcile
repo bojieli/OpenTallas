@@ -695,7 +695,9 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 GROW_WINDOW_S=600, GROWING_FACTOR=1.0, LAUNCH_HOLD_S=120,    # v12 GROWING RESERVATION (SCHED-MEM 10-21)
                 RATE_HORIZON_S=600, RATE_MULT=2.0, SETTLED_FLOOR_FRAC=0.02,  # v13 GROWTH RATE (SCHED-TUNE 10-21)
                 OLD_S=600, OLD_SLOW_GB=5.0, OLD_MULT=3.0, OLD_HORIZON_S=1800, OLD_CAP_GB=32.0,
-                OLD_MIN_SPAN_S=200)                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
+                OLD_MIN_SPAN_S=200,                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
+                MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
+                GROWTH_CAP_AVAIL_FRAC=0.25, DIE_HEADROOM_GB=64.0)
 
 
 def conf(key):
@@ -771,11 +773,25 @@ def books(rows, total, avail, table, gf=None):
             # v13: stable or old: nothing beyond what it holds (earlyoom + per-job MemoryMax + the settled floor below)
             r["grow"] = 0.0
             settled += margin
+        # v16 MEASURED RESERVE (coordinator 10-22, owner 10-17 "admit ASAP, light reservations, swap is the safety net";
+        # ep7 10-22: avail 632 GB, growth charged 510 -> admits 176, S81 H11 300 GB die build queued): a running unit
+        # past YOUNG_S with an RSS sample is charged what its MEASURED growth gives over the next ~30 min, never the
+        # full projection (declared - now): min(projection above, RESERVE_K x observed rate x RESERVE_HORIZON_S).
+        if conf("MEASURED_RESERVE") and r["age"] >= YOUNG_S and r.get("sampled", True) and r["grow"] > 0:
+            r["grow"] = max(0.0, min(r["grow"], conf("RESERVE_K") * orate * conf("RESERVE_HORIZON_S")))
+            r["pending"] = r["pending"] and r["grow"] > 0
         if r["pending"]:
             pending += r["grow"]
     # v13: a small host floor for the settled units' combined slack, never above that slack
     sfloor = min(settled, conf("SETTLED_FLOOR_FRAC") * total)
-    return dict(grow=sum(r["grow"] for r in rows) + sfloor, young=young, plenty=plenty, pending=pending, settled_floor=sfloor,
+    grow = sum(r["grow"] for r in rows) + sfloor
+    unstarted = sum(r["grow"] for r in rows if not r["active"])
+    if conf("MEASURED_RESERVE"):
+        # v16: the whole growth charge is capped at GROWTH_CAP_AVAIL_FRAC (25 %) of physical MemAvailable; swap and the
+        # per-job MemoryMax (memcg OOM, oom_score_adj -999/0 since 10-22) are the safety net
+        cap = conf("GROWTH_CAP_AVAIL_FRAC") * max(avail, 0.0)
+        grow, pending = min(grow, cap), min(pending, cap)
+    return dict(grow=grow, young=young, plenty=plenty, pending=pending, settled_floor=sfloor, unstarted=unstarted,
                 used=sum(r["now"] for r in rows), reserved=sum(r["res"] for r in rows if r["active"]),
                 running=sum(1 for r in rows if r["active"]), fresh=sum(1 for r in rows if r["active"] and r["age"] < 90))
 
@@ -801,6 +817,16 @@ def admissible(total, avail, b, floor, need=None):
     MemAvailable - the full sum of supported unit growth, and leave MemAvailable above the floor"""
     need = conf("NEED_FACTOR") if need is None else need
     return min(avail - charged_growth(b, total), avail - floor) / need
+
+
+def die_admissible(avail, b, floor, need, can):
+    """the largest request a die-level job is admitted at now.  v9-v15: current memory minus pending growth (/ NEED);
+    v16 (coordinator 10-22): physical MemAvailable - DIE_HEADROOM_GB (64) >= its request, minus only the memory of
+    units admitted but not started yet (they hold nothing MemAvailable can show); swap is the safety net"""
+    old = max(can, min(avail - b.get("pending", 0.0) - b.get("settled_floor", 0.0), avail - floor) / need)
+    if not conf("MEASURED_RESERVE"):
+        return old
+    return max(can, avail - b.get("unstarted", 0.0) - conf("DIE_HEADROOM_GB"))
 
 
 def holds_admit_lock(fd=8):
@@ -842,7 +868,7 @@ def gate_locked(mem, argv):
     # v9: a die job is admitted on current memory alone; v12: memory promised to units admitted in the last
     # GROW_WINDOW_S / still growing (b["pending"]) is not current memory, so it is charged to die jobs too
     # v13: and the settled floor (die jobs still never pay the settled units' growth itself)
-    can_die = max(can, min(avail - b.get("pending", 0.0) - b.get("settled_floor", 0.0), avail - floor) / need)
+    can_die = die_admissible(avail, b, floor, need, can)
     me_die = os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(argv, os.getcwd())
     if me_die and can < res <= can_die:
         note = (note + "; " if note else "") + f"DIE: admitted on current memory ({avail:.0f} GB available, {b.get('pending', 0.0):.0f} GB pending charged, settled growth not charged)"
@@ -851,7 +877,7 @@ def gate_locked(mem, argv):
     if held and can - res < held:
         ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
     print(f"{'OK' if ok else 'NO'} {res} {cls} | need {need:g} x {res} = {need * res:.0f} GB, admissible {can:.0f} GB: "
-          f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB (v13 rate rule, uncapped sum, settled floor {b.get('settled_floor', 0.0):.0f} GB; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
+          f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB (v16 measured reserve, cap {100 * conf('GROWTH_CAP_AVAIL_FRAC'):g} % of available, settled floor {b.get('settled_floor', 0.0):.0f} GB; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
           f"floor {floor:.0f} GB" + (f"; {note}" if note else ""))
 
 
@@ -936,6 +962,7 @@ def free(path):
     b = books(rows, total, avail, table)
     head, floor = 0, floor_gb(total)
     can = admissible(total, avail, b, floor)
+    can_die = die_admissible(avail, b, floor, conf("NEED_FACTOR"), can)
     wait, req = waiters(table)
     try:
         v = os.statvfs(path)
@@ -948,7 +975,7 @@ def free(path):
                           young_gb=round(b["young"]), plenty=b["plenty"], headroom_gb=head, floor_gb=round(floor),
                           cpu_load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
                           fresh=b["fresh"], waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
-                          admit_gb=round(can), free_gb=round(can) - sum(wait))))
+                          admit_gb=round(can), free_gb=round(can) - sum(wait), die_admit_gb=round(can_die))))
 
 
 def units():
@@ -982,10 +1009,11 @@ def selftest():
     one = lambda avail, **k: books([u(**k)], T, avail, tab, 0.5)["grow"]
     # v12/v13: admitted < GROW_WINDOW_S ago or not sampled yet -> whole remaining; rising -> 2 x rate x 10 min; else 0
     keys = ("GROW_WINDOW_S", "GROWING_FACTOR", "LAUNCH_HOLD_S", "RATE_HORIZON_S", "RATE_MULT", "SETTLED_FLOOR_FRAC",
-            "OLD_S", "OLD_SLOW_GB", "OLD_MULT", "OLD_HORIZON_S", "OLD_CAP_GB", "OLD_MIN_SPAN_S")
+            "OLD_S", "OLD_SLOW_GB", "OLD_MULT", "OLD_HORIZON_S", "OLD_CAP_GB", "OLD_MIN_SPAN_S", "MEASURED_RESERVE",
+            "RESERVE_K", "RESERVE_HORIZON_S", "GROWTH_CAP_AVAIL_FRAC", "DIE_HEADROOM_GB")
     saved = {k: os.environ.get(k) for k in keys}
     os.environ.update(GROW_WINDOW_S="600", GROWING_FACTOR="1.0", LAUNCH_HOLD_S="120", RATE_HORIZON_S="600",
-                      RATE_MULT="2", SETTLED_FLOOR_FRAC="0")
+                      RATE_MULT="2", SETTLED_FLOOR_FRAC="0", MEASURED_RESERVE="0")
     chk("v12 young (60 s): whole remaining reservation", one(800), 90)
     chk("v12 young, lowered reservation bounds it", one(300, res=40, cls="x"), 30)
     chk("v13 old, no reconcile sample yet (building): whole remaining", one(300, age=4000, now=60.0, obs=60.0, sampled=False), 40)
@@ -1035,6 +1063,27 @@ def selftest():
     chk("the floor is the stop", admissible(T, 100, dict(grow=0.0, young=0.0), 50, 0.7), 71.43)
     chk("AGIdock: 65 GB available cannot cover 68 GB growth", admissible(128, 65, dict(grow=68.0, young=0.0), 6.4, 0.7), -4.285714)
     chk("EPYC4: 539 available minus full 119 GB growth", admissible(1133, 539, dict(grow=119.0, young=0.0), 56.65, 0.7), 600.0)
+    # v16 MEASURED RESERVE (coordinator 10-22): ep7 avail 632 GB, growth charged 510 GB -> admitted only 176 GB
+    os.environ.update(MEASURED_RESERVE="1", RESERVE_K="1.5", RESERVE_HORIZON_S="1800", GROWTH_CAP_AVAIL_FRAC="0.25",
+                      DIE_HEADROOM_GB="64", SETTLED_FLOOR_FRAC="0")
+    fe = dict(age=54000, req=600.0, res=600, now=90.0, obs=90.0, declared=600, frontend_pids=[1], frontend_waiting=False)
+    chk("v16 frontend full projection 510 -> 1.5 x rate x 1800 s", one(632, rate=0.002, **fe), 5.4)
+    chk("v16 frontend never above its projection (cap not binding at 5 TB)", one(5000, rate=1.0, **fe), 510)
+    chk("v16 stable frontend (rate 0): 0", one(632, rate=0.0, **fe), 0)
+    chk("v16 young (< YOUNG_S): unchanged v12 rule", one(800), 90)
+    chk("v16 unsampled: unchanged (full remaining)", one(632, age=4000, now=60.0, obs=60.0, sampled=False), 40)
+    ep7 = [u(unit=f"g{i}", age=600 + i, req=200.0, res=200, now=30.0, obs=30.0, sampled=False) for i in range(3)] + \
+          [u(unit="f", rate=1.0, **fe)]
+    b7 = books(ep7, 1008, 632, tab)
+    chk("v16 ep7: raw 3 x 170 + 510 = 1020 GB capped at 25 % of 632", b7["grow"], 158)
+    chk("v16 ep7: non-die admits (632 - 158) / 0.7 (v15: (632 - 510) / 0.7 = 174)", admissible(1008, 632, b7, 50.4, 0.7), 677.14)
+    chk("v16 ep7: 300 GB H11 die build admitted (632 - 64 >= 300)", die_admissible(632, b7, 50.4, 0.7, 0) >= 300, 1)
+    b5 = books([u(unit="f", rate=1.0, **fe)], 1133, 230, tab)
+    chk("v16 ep5 230 GB available: 300 GB die build still refused", die_admissible(230, b5, 56.65, 0.7, 0) >= 300, 0)
+    bn = books([u(unit="n", active=False, res=200, file_age=3)], 1008, 632, tab)
+    chk("v16 die pays unstarted admissions: 632 - 200 - 64", die_admissible(632, bn, 50.4, 0.7, 0), 368)
+    os.environ.update(MEASURED_RESERVE="0")
+    chk("v16 off: ep7 legacy uncapped growth", books(ep7, 1008, 632, tab)["grow"], 1020)
     for k, v in saved.items():
         if v is None:
             os.environ.pop(k, None)
