@@ -39,7 +39,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_pins  # noqa: E402
+from die_case import synth_lef, entry_cap, ports_of_lib, rect_of, _minus, grant_pins, MOUTH_MOVED  # noqa: E402
 from view_case import lef_pins, lef_xy  # noqa: E402
 import clock_sites
 import placement_coverage
@@ -90,6 +90,15 @@ def lef_size(lef):
 
 def pin(port, bits, k):
     return f'{port}[{k}]' if bits > 1 else port
+
+
+def view_pin_key(p, cports, vpins_c):
+    """Contract pin name carried by view pin p (HBMc/CHAIN 10-22): a view that declares a 1-bit port [0:0] has the
+    LEF pin 'p[0]' while pin() names the 1-bit contract port scalar 'p'."""
+    mm_ = re.fullmatch(r'(\w+)\[0\]', p)
+    if mm_ and cports.get(mm_.group(1)) == 1 and f'{mm_.group(1)}[1]' not in vpins_c:
+        return mm_.group(1)
+    return p
 
 
 def validate_view_coverage(instances, views, allow_param_alias=False):
@@ -419,6 +428,14 @@ def main():
     ap.add_argument('--coord-map-re', default='.', help='HBM-DIE9: regex of instances whose note homes are in original coordinates')
     die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
+    # HBMc/CHAIN 10-22: the post-landing S7 case_b only plans the S8 reset forest; S3 case_a and S10 final already run
+    # --lane-reach diag and S11 STA is the timing judge.  Since HBM-GENREACH (10-20) made 'fail' the default, S7 has
+    # killed every r16+ chain (r18 03:59: 315 rows, median best span 461 um, i.e. inside the measured repeated reach).
+    # OT_GEN_S7_REACH=diag (set by HBMc chains) or OT_GEN2_CASE=case_b without an explicit --lane-reach -> diag, recorded.
+    import os as _os
+    if '--lane-reach' not in sys.argv and (_os.environ.get('OT_GEN_S7_REACH') == 'diag' or _os.environ.get('OT_GEN2_CASE') == 'case_b'):
+        a.lane_reach = 'diag'
+        print('LANE_REACH_DIAG_S7 case_b: reach_fail.json recorded, not gating (S11 STA judges)', flush=True)
     mw = die_reach.from_args(a, 'hbm')
     C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
     import reticle; RETICLE = reticle.require_contract(G, "die_case_v16 GEN")   # OWNER 10-16: >= 0.5 mm margin in W AND H
@@ -1117,6 +1134,7 @@ def main():
             used[dp['instance']].add(pn)
     # clocks / resets
     clk = defaultdict(lambda: defaultdict(list)); rst = defaultdict(list)
+    src_rst = []     # HBMc/CHAIN 10-22: (source inst, source port) of every non-hb_ckgen reset (refcfg_<q>.pc_rst_n)
     for r in C['clock_resets']:
         n = r['instance']
         if n not in cell_of:
@@ -1125,9 +1143,31 @@ def main():
         pins_ = [pin(r['port'], b, k) for k in range(r['bits'])]
         if r['kind'] == 'clock':
             clk[r['domain']][n] += pins_
+        elif r.get('source') and r['source'][0] != CKGEN:
+            # HBMc/CHAIN 10-22 (freeze class 3): a reset whose contract source is a block output (64 PC controllers
+            # ctl_<q>_pNN.rst_n <- refcfg_<q>.pc_rst_n: "PC reset released only after the refresh row is loaded") is wired
+            # to that output, never to hb_ckgen.por_<dom> (which left the PCs released at POR and pc_rst_n dangling).
+            si, sp = r['source'][0], r['source'][1]
+            if si not in cell_of:
+                raise SystemExit(f'RESET_SOURCE_EXCLUDED {n}.{r["port"]} <- {si}.{sp}: refusing to tie it to POR')
+            sb = ports[cell_of[si]][sp]
+            for k, lp in enumerate(pins_):
+                d = (si, pin(sp, sb, k if sb is not None and r['bits'] > 1 else 0))
+                nets.setdefault(d, [d]).append((n, lp)); used[si].add(d[1])
+            src_rst.append((si, sp))
         else:
             rst[r['domain']] += [(n, p) for p in pins_]
         used[n].update(pins_)
+    print('reset sources: por', sum(len(v) for v in rst.values()), 'block-sourced', len(src_rst), sorted(set(src_rst))[:8], flush=True)
+    # HBMc/CHAIN 10-22 GEN check (owner: no stubs / open inputs): a block-sourced reset may never sit on a por tree, and
+    # no contract edge into a cfg collar / PC controller may be dropped (would leave its input open).
+    _blk = {(r_['instance'], r_['port']) for r_ in C['clock_resets'] if r_['kind'] != 'clock' and r_.get('source') and r_['source'][0] != CKGEN}
+    _por_bad = [(n, p_) for lst in rst.values() for (n, p_) in lst if (n, re.sub(r'\[\d+\]$', '', p_)) in _blk]
+    _drop_bad = {k: v for k, v in dropped.items() if any(str(x).startswith(('col_', 'ctl_')) for x in (k if isinstance(k, tuple) else (k,)))}
+    if _por_bad or _drop_bad:
+        raise SystemExit(f'GEN_RESET_OPEN_CHECK FAIL por_bound_block_resets {_por_bad[:6]} dropped_collar_pc_edges {_drop_bad}')
+    print('GEN_RESET_OPEN_CHECK PASS block-sourced resets', len(src_rst), 'collar/pc dropped edges 0', flush=True)
+    src_rst_fp = ''.join(f'set_false_path -from [get_pins {si}/{sp}*]   ;# block-sourced reset (as por: distribution not modelled)\n' for si, sp in sorted(set(src_rst)))
 
     # ---------------- SYNTH abstracts (pin faces toward peers) ----------------
     peer_xy = defaultdict(list)   # (inst, port) -> [(x, y, bits)]
@@ -1264,7 +1304,9 @@ def main():
                 pinlist.append((p, dirs[c][p], f, x, x + k * step, k, base, ports[c][p] > 1)); x += k * step
         fp = {f: L for f, L in faces.items() if L}
         ko = channels(rep)
-        synth_lef(c, w, h, pinlist, vd / f'{c}.lef', keepout=ko)
+        synth_lef(c, w, h, pinlist, vd / f'{c}.lef', keepout=ko, mouth_free=True)
+        if ko and flags.get(c) == 'synth_pin_bind' and MOUTH_MOVED.get(c):
+            print(f'GEN_PIN_MOUTH_KIT_NOTE {c}: {MOUTH_MOVED[c]} synth_pin_bind bits moved out of channel mouths', flush=True)
         if ko:
             carved[c] = ko
         face_report[c] = {f: sum(x[3] for x in L) for f, L in fp.items()}
@@ -1273,6 +1315,21 @@ def main():
 
     vpins = {c: lef_pins(vd / f'{c}.lef') for c in kinds}
     vxy = {c: lef_xy(vd / f'{c}.lef') for c in kinds}
+    # HBMc/CHAIN 10-22 GEN_PIN_MOUTH_CHECK: no SYNTH pin in a carved feedthrough channel mouth (die relay stations sit in
+    # the channels; a station's M1-M5 OBS over a block pin = unroutable pin; r18f S8: 15 rst pins under stations)
+    _mbad = []
+    for c_, ko_ in carved.items():
+        w_, h_ = size[c_]
+        for pn_, (px_, py_) in vxy.get(c_, {}).items():
+            for ch_ in ko_:
+                (x0_, x1_), (y0_, y1_) = ch_['x_um'], ch_['y_um']
+                if ((py_ <= 0.2 and y0_ <= 0.2) or (py_ >= h_ - 0.2 and y1_ >= h_ - 0.2)) and x0_ <= px_ <= x1_ or \
+                        ((px_ <= 0.2 and x0_ <= 0.2) or (px_ >= w_ - 0.2 and x1_ >= w_ - 0.2)) and y0_ <= py_ <= y1_:
+                    _mbad.append((c_, pn_))
+    if _mbad:
+        raise SystemExit(f'GEN_PIN_MOUTH_CHECK FAIL {len(_mbad)} pins in carved channel mouths {_mbad[:8]}')
+    print('GEN_PIN_MOUTH_CHECK PASS carved masters', len(carved), 'bits moved out of mouths',
+          sum(MOUTH_MOVED.get(c_, 0) for c_ in carved), {c_: MOUTH_MOVED[c_] for c_ in carved if MOUTH_MOVED.get(c_)}, flush=True)
     exposed = C.get('exposed_inputs', {})
     # Legacy contract layers sometimes preserved the exposed-input keys as a list.  That is not a numerical
     # summary; retain unknown counts in the diagnostic label instead of crashing after all placement work.
@@ -1477,6 +1534,13 @@ def main():
             leafclk[(n, p)] = f'ckg_por_{dom}'
     nc = []
     body = []
+    # HBMc/CHAIN 10-22 (freeze class 3, TOKEN2 CONN_EQUIV r18f S7): a 1-bit contract port is named scalar ('pw_we') by
+    # pin(), but a view declaring it [0:0] has the LEF pin 'pw_we[0]' -> the net was never emitted (col_idx/col_su pw_we,
+    # collar c_fault x5 left nc_).  view_key() maps a view pin to the contract pin name it carries.
+    def view_key(n, c, p):
+        return (n, view_pin_key(p, ports[c], vpins[c]))
+    connected = set()
+    open_bits = []           # (inst, port, bit) of every view pin bit emitted unconnected (bus nc_ or omitted scalar)
     for n in sorted(inst):
         c = cell_of[n]
         bus = defaultdict(dict); scal = []
@@ -1484,11 +1548,20 @@ def main():
             if p in ('VDD', 'VSS'):
                 continue
             net_ = leafclk.get((n, p)) or netname.get((n, p))
+            if net_:
+                connected.add((n, p))
+            else:
+                k_ = view_key(n, c, p)
+                net_ = leafclk.get(k_) or netname.get(k_)
+                if net_:
+                    connected.add(k_)
             mm = re.fullmatch(r'(\w+)\[(\d+)\]', p)
             if mm:
                 bus[mm.group(1)][int(mm.group(2))] = net_
             elif net_:
                 scal.append((p, net_))
+            else:
+                open_bits.append((n, p, 0))
         cs = [f'.{p}({nn})' for p, nn in sorted(scal)]
         for p, bits in sorted(bus.items()):
             wv = 1 + max(bits)
@@ -1497,7 +1570,7 @@ def main():
                 if bits.get(k):
                     parts.append(bits[k])
                 else:
-                    nn = f'nc_{n}_{p}_{k}'; nc.append(nn); parts.append(nn)
+                    nn = f'nc_{n}_{p}_{k}'; nc.append(nn); parts.append(nn); open_bits.append((n, p, k))
             cs.append(f'.{p}({{{", ".join(parts)}}})')
         body.append(f'  {c} {n} (\n    ' + ',\n    '.join(cs) + '\n  );')
     hdr = []      # clocks and resets come from the REAL hb_ckgen (pll_<dom> / por_<dom>), not die ports
@@ -1505,6 +1578,21 @@ def main():
         hdr.append(f"{'input' if dr == 'input' else 'output'} wire {netname[(n, p)]}")
     L = ['// H-DIE v16 full-die case (tools/hbm_die_v15/die_case_v16.py); NOT_A_DIE_RESULT; open pins listed in manifest',
          'module hbm_v16_die (' + ', '.join(hdr) + ');']
+    # HBMc/CHAIN 10-22 GEN_OPEN_INPUT_CHECK: every contract net end / clock / reset pin of a placed instance is emitted,
+    # and no non-strap INPUT bit is left nc_ (strap bits = contract straps, constants of the design, listed open).
+    _inst = set(inst)       # inst is a list: 'in inst' per net end was O(83k) x 12M ends (GEN hung 70 min, c1bb32ac3)
+    _expect = set(e_ for d, ends in nets.items() for e_ in ends if e_[0] in _inst) | set(k for k in leafclk if k[0] in _inst)
+    _dropped = sorted(_expect - connected)
+    _strap = set()
+    for st_ in C.get('straps', []):
+        for k in range(int(st_.get('lo', 0)), int(st_.get('hi', 0))):
+            _strap.add((st_['inst'], st_['port'], k))
+    _open_in = [f'{n_}.{p_}[{k_}]' for n_, p_, k_ in open_bits
+                if dirs[cell_of[n_]].get(p_) == 'input' and (n_, p_, k_) not in _strap]
+    if _dropped or _open_in:
+        raise SystemExit(f'GEN_OPEN_INPUT_CHECK FAIL dropped_contract_ends {len(_dropped)} {_dropped[:8]} '
+                         f'open_nonstrap_input_bits {len(_open_in)} {_open_in[:8]}')
+    print('GEN_OPEN_INPUT_CHECK PASS contract ends emitted', len(_expect), 'open input bits = straps only', flush=True)
     allnets = sorted(set(netname[e_] for d, ends in nets.items() for e_ in ends) - set(netname[(n, p)] for _, _, n, p in die_ports))
     L += [f'  wire {x};' for x in allnets] + [f'  wire {x};' for x in nc] + tw + body + tb + ['endmodule']
     (out / 'die.v').write_text('\n'.join(L) + '\n')
@@ -1610,7 +1698,7 @@ set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_false_path -from [get_pins {CKGEN}/por_*]
-# die clock check (ROOT d59a62a37): dump the die clock network + STA arrivals; report with tools/die_clock_check.py
+{src_rst_fp}# die clock check (ROOT d59a62a37): dump the die clock network + STA arrivals; report with tools/die_clock_check.py
 set ::env(OT_DCC_OUT) /work/out/die_clock_dump.tsv
 set ::env(OT_DCC_ROOTS) "{' '.join(clock_root_names)}"
 set ::env(OT_DCC_MAX_FANOUT) {a.pair_max_tiles}
@@ -1646,11 +1734,16 @@ puts OT_DONE
                 die_repeaters_step.tcl_call('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
                                             repair_args='-buffer_gain 4.0', max_wire_um=a.repeater_max_wire_um,
                                             signal_top_layer=a.signal_top_layer).rstrip())
+    # HBMc 10-22: the repeater spread sees carved feedthrough channels as free (solid = master bbox minus channels)
+    rep_carved = ('set ::ot_die_rep_carved [dict create' + ''.join(
+        f" {m} {{{' '.join('{%.4f %.4f %.4f %.4f}' % (k['x_um'][0], k['y_um'][0], k['x_um'][1], k['y_um'][1]) for k in ko)}}}"
+        for m, ko in sorted(carved.items())) + ']') if carved else ''
     rep_ = '' if not a.die_repeaters else f'''{clocks}
 {groups}
 estimate_parasitics -placement
 set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* ckg_*}}]
 set r0 [clock seconds]
+{rep_carved}
 {rep_call}
 puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
     if a.hold_budget == 'die':
