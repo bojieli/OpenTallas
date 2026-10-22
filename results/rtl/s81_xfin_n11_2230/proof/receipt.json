@@ -1,0 +1,18 @@
+{
+  "source": "74a9a304650eb0801f65ac7276c5311135d3d02e",
+  "unit": "ot-epyc9 oth-ubuntu-1749500-1792647483",
+  "profiles": 30,
+  "cases": 3000,
+  "comparisons": 90000,
+  "positive": "PASS",
+  "mutant": "real mask-select inversion caught",
+  "scope": "Write payload, address, enable and all mask bits only. Mapped native and full engine numerical result remain separate.",
+  "sha256": {
+    "rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv": "77866559b7f9560448e1e0617ed438d4d530087e79dc739e937c0ae993235e1a",
+    "tools/s81_slice/xfin_n11_2230/reference.sv": "f728fe3f1ee05892163dfef6dee9c4811bfeec2cb675f42fb85bd8d0b5b66105",
+    "tools/s81_slice/xfin_n11_2230/tb.sv": "b312e93e72a08ba01a18ff758f3fa08a5bc973358fb8842b4780e27ef6cc80ac",
+    "tools/s81_slice/xfin_n11_2230/run.sh": "51d398cf00645f69252ab80c75221ac2353d6785d02e16fc0994a627bb1bfdaa",
+    "positive.log": "45258add3c6011de498326bcd9de788905062273ac7bacd24876f02286c6d9da",
+    "mutant.log": "5ec05ff501a377e3f44bc52551ca035f55072d5ce65ec4cb6a891449372d5f0b"
+  }
+}
