@@ -1955,6 +1955,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     except (ValueError, OSError) as error:
         raise SpecError(str(error)) from error
     fwd = bool(s.get("forwarded_clock"))
+    entry_sdc = ce_generate(s) if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else None
     spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
                + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else "")
@@ -1970,6 +1971,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
                 pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
+        pre_cts.extend(clock_entry_constraints.forwarded_pre_cts_tcl(s, entry_sdc))
         pre_cts.extend(domain_spatial_spine.before_entries(s))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         pre_cts.extend(domain_spatial_spine.after_entries(s, ROOT))
@@ -2000,7 +2002,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
-        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + entry_sdc
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO

@@ -198,6 +198,21 @@ def main(argv=None):
     bindings = dict(PHY_BINDINGS, **K.BINDINGS)
     files = [str(ROOT / b['file']) for b in bindings.values() if (ROOT / b['file']).exists()]
     files += [a.relay_rtl] if a.relay_rtl else []
+    # Native S6C ownership must be unique in the active compilation readset.
+    # Historical variants under rtl/ are indexed for dependencies, but an active
+    # shared assembly may not redeclare a module owned by another binding file.
+    if any(b['module'] in ('qkd_kvs_grp_s6c', 'qkd_kvs_grp_h_s6c') for b in bindings.values()):
+        _active_definitions = defaultdict(list)
+        for _path in sorted(set(files)):
+            for _module in PB.parse_modules(PB.preprocess(PB.strip_comments(Path(_path).read_text()), {}), _path):
+                _active_definitions[_module.name].append(Path(_path).resolve())
+        for _binding in bindings.values():
+            if _binding['module'] not in ('qkd_kvs_grp_s6c', 'qkd_kvs_grp_h_s6c'):
+                continue
+            _authority = (ROOT / _binding['file']).resolve()
+            _conflicts = [p for p in _active_definitions[_binding['module']] if p != _authority]
+            if _conflicts:
+                raise SystemExit(f"kv_bound_netlist: {_binding['module']}: active compilation redeclares selected source {_authority}: {_conflicts}")
     idx, _amb = PB.rtl_index(['rtl'], files, {}, files)
     # The selected binding file is source authority. A module with the same name
     # elsewhere in the repository cannot replace a missing generated variant.

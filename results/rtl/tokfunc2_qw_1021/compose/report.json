@@ -42,29 +42,35 @@
  },
  "stages": {
   "stg": "FAIL",
-  "ovl4u": "PASS"
+  "ovl4u": "PASS",
+  "kv": "PASS"
  },
  "missing_stages": [
   "xt1",
   "xdie",
   "tp8",
   "ctx4u",
-  "head",
-  "kv"
+  "head"
  ],
  "diagnostic_stages": [
-  "stg"
+  "stg",
+  "kv"
  ],
  "stage_sources": {
   "stg": {
    "src_commit": "c0f8097f3",
-   "grade": "DIAG (historical reused c0 binary; exact build-source/overlay identity unverified)",
+   "grade": "RTL-functional (identified c0+a83 monolith source assembly); required calibration FAIL",
    "source_note": null
   },
   "ovl4u": {
    "src_commit": "c0f8097f3",
    "grade": "RTL-functional (source assembly)",
    "source_note": null
+  },
+  "kv": {
+   "src_commit": "0e597ed1c51e4c71071368c72706ed3967289d9e",
+   "grade": "RTL-functional (source-bound historical KV attention component)",
+   "source_note": "Original KV-MU7 job4 incremental0e597ed1c TB-only update over fafc28231 GEN9 vehicle9fb1918f6; unchanged56non-TB sources match inheritedcache hashes, freshhierarchyTB record and rebuiltaggregate/object/archive/binary lineage retained; no selectedcoherent73 GEN qualification."
   }
  },
  "applied": [
@@ -139,8 +145,8 @@
    "missing stage: tp8",
    "missing stage: ctx4u",
    "missing stage: head",
-   "missing stage: kv",
-   "diagnostic stage: stg"
+   "diagnostic stage: stg",
+   "diagnostic stage: kv"
   ]
  },
  "isolated_ovl_transport": {

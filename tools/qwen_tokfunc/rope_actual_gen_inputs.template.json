@@ -25,5 +25,21 @@
     "ct_lm_sample": null,
     "native_prepare_descriptor": null,
     "face_held_bank": null
-  }
+  },
+  "tt_source": {
+    "master": null,
+    "producer_instance": null,
+    "calendar_sample_edges": null,
+    "output_offset_edges": null,
+    "producer_offset_edges": null,
+    "source_to_output_edges": null,
+    "receipt_sha256": null,
+    "rtl_sha256": null,
+    "lp_record_sha256": null,
+    "status": null
+  },
+  "kv_descriptor_to_kvn_expected_edges": null,
+  "kv_descriptor_to_kvn_expected_path": null,
+  "status225_transport": null,
+  "status225_transport_path": null
 }

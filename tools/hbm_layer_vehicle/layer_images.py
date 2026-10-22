@@ -649,7 +649,9 @@ PAYLOAD_COMPILER = {
           "writer table, calendar_SW VM calendar, packed136 HBM image)",
     "COLL": "ALL_GATHER on-die quadrant phase: hbm_layer_vehicle/coll_images.py (hcollgi_SW gq row + calendar_SW + far-end "
             "ring replay, VEH-FMT-COLL); cross-die / GROUP_REDUCE_MCAST / TOPK_MERGE / ROW_GATHER: hb_coll_SW 1536-b ISA "
-            "rows (ot_hgi_coll_issuer_m) have no production compiler",
+            "rows (ot_hgi_coll_issuer_m) have no bound common production compiler; source-only "
+            "tkm_endpoint_1021.endpoint_plan@ca8bc89afd537729fc1f722306efa9cf8142c05b is unqualified until "
+            "issuer-to-endpoint age, real own/peer producers, qslots, writer and160-clock schedule are bound",
     "DMA": "sm_images.py (hb_dbk_SW command table) + calendar_SW",
     "HC": "hc_SW (ot_hbm_hc_qhub_static) row ABI",
     "FUSED": "hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)",
@@ -790,7 +792,34 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None):
     core = {"str_C", "sucore_SW", "stl_SW"}
     tree_ok = core <= set(bnd["instances"])
     res = None
-    if unit == 2 and SL.reduce_profile(sut, desc) and not (in_layout and SL.sfu_profile(sut, desc, layout=True)):
+    if a.rope_candidate and unit == 2 and sut.get('c_pair') and sut.get('b_half'):
+        from hbm_layer_vehicle import su_rope_bank_1340 as RP
+        import copy
+        if not tree_ok or not {'sucore_SE','sucore_NW','sucore_NE'} <= set(bnd['instances']):
+            return dict(status='unsupported_lowering', reasons=['candidate RoPE requires real four-core RF tree'],
+                        lowering=dict(supported=False), sut=sut)
+        def candidate_rope():
+            saved = copy.deepcopy(place.__dict__)
+            try:
+                # Reserve one aligned 16-sector live run. Return any alignment
+                # padding to the ledger; scratch is written only by runtime RF drains.
+                allocation = place.alloc_run(32, 0)
+                scratch = ((allocation + 15)//16)*16
+                if scratch > allocation:
+                    place.free_run(allocation, scratch-allocation)
+                if scratch+16 < allocation+32:
+                    place.free_run(scratch+16, allocation+32-(scratch+16))
+                result = RP.lower(raw, q=a.quarter, data=vm_data, place=place, tag=tag, timing=timing,
+                                  scratch_base=8*scratch, pair_c_reads=1,
+                                  pair_source_path=a.rope_source, pair_die_path=a.rope_die)
+            except Exception:
+                place.__dict__.clear(); place.__dict__.update(saved)
+                raise
+            if result.get('status') != 'emitted':
+                place.__dict__.clear(); place.__dict__.update(saved)
+            return result
+        res = attempt('candidate_runtime_RoPE', candidate_rope)
+    elif unit == 2 and SL.reduce_profile(sut, desc) and not (in_layout and SL.sfu_profile(sut, desc, layout=True)):
         if not tree_ok:
             res = dict(status="unsupported_lowering", reasons=["reduction requires the real stree cut (no RF injection)"],
                        lowering=dict(supported=False), sut=sut)
@@ -878,6 +907,12 @@ def main():
                     "record profile on every layer (pretree reductions, scalar rsqrt, RF-broadcast B, single-row "
                     "identity lane terms); failed attempts leave the VM placement / written state untouched")
     ap.add_argument("--rf-local", type=int, default=1, help="selected su_<q><g> RF_LOCAL parameter (contract)")
+    ap.add_argument('--rope-candidate', action='store_true', help='explicit unqualified candidate source: local C bank exchange and runtime coefficient staging')
+    ap.add_argument('--rope-source', type=Path, help='actual candidate scoped pgslice source')
+    ap.add_argument('--rope-die', type=Path, help='actual candidate die with all four SW PAIR_C_READS=1 bindings')
+    ap.add_argument('--pv-probability-candidate', action='store_true', help='emit source-bound partial PV input plans; keeps ATT.PV consumer/calendar open')
+    ap.add_argument('--pv-probability-source', type=Path, help='actual source root containing qualified probability producer candidate files')
+    ap.add_argument('--pv-probability-contract', type=Path, help='actual selected xload parameter contract')
     ap.add_argument("--nev", type=int, default=0, help="(--su-lower2) built TB event depth: split into independent replays")
     ap.add_argument("--defer-records", default="", help="(--su-lower2, internal) records left unlowered because their "
                     "VM-linked programme group exceeds the TB event depth")
@@ -887,6 +922,7 @@ def main():
     ap.add_argument("--cx-contract", type=Path)
     ap.add_argument("--cx-l12", type=Path)
     ap.add_argument("--cx-checkpoint", type=Path)
+    ap.add_argument("--cx-hc-source-profile", choices=["safe2_phase40_qchx12"], help="default-off bounded SAFE2 HC candidate, requires matching contract and k31 A64/O72 scope")
     ap.add_argument("--cx-chapters", default="", help="priced records starting a new VM chapter (quarter VM reset; "
                     "parts never span chapters; values crossing it are imaged, listed)")
     ap.add_argument("--cx-skip", default="", help="priced component records left as fixture-imaged probes (VM capacity)")
@@ -899,6 +935,11 @@ def main():
     ap.add_argument("--sm-count", type=int, default=4, help="with --sm-lowering: SW SM service groups driven (sm_SW0..)")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
+    if a.rope_candidate and (not a.su_lower2 or a.rope_source is None or a.rope_die is None):
+        ap.error('--rope-candidate requires --su-lower2 and actual --rope-source/--rope-die bindings')
+    if a.pv_probability_candidate and (not a.su_lower2 or a.fixtures is None or
+            a.pv_probability_source is None or a.pv_probability_contract is None):
+        ap.error('--pv-probability-candidate requires actual source/contract and fixture-backed --su-lower2 producer')
     if a.sm_lowering and (a.smw is None or a.fixtures is None):
         ap.error("--sm-lowering needs --fixtures and --smw")
     if (a.native_read_return is None) != (a.native_write_return is None):
@@ -960,6 +1001,9 @@ def main():
     events, manifest, t_su_free = [], [], 0
     rng = np.random.default_rng(1018)
     place, vm_data = Placement(a.quarter), {}
+    if a.rope_candidate and not a.cx:
+        from hbm_layer_vehicle import cx_layer_1021 as CX
+        place = CX.make_placement(Placement, a.quarter)
     cx = None
     if a.cx:
         from hbm_layer_vehicle import cx_layer_1021 as CX
@@ -968,7 +1012,7 @@ def main():
         place = CX.make_placement(Placement, a.quarter)
         cx = CX.Cx(a.fixtures, a.rank, recs, place, contract=a.cx_contract, l12=a.cx_l12, checkpoint=a.cx_checkpoint,
                    boundary=bnd, ops=set(a.cx_ops.split(",")), skip={int(x) for x in a.cx_skip.split(",") if x},
-                   chapters={int(x) for x in a.cx_chapters.split(",") if x})
+                   chapters={int(x) for x in a.cx_chapters.split(",") if x}, hc_source_profile=a.cx_hc_source_profile)
     # layer t0 (serial): reset relay 3 edges + the first record's whole configuration load + slack
     pending = []
     for r in recs:
@@ -1038,6 +1082,13 @@ def main():
                        inputs_placeholder=su.get("inputs_placeholder"))
             if su.get("su_lower2_attempts") is not None:
                 ent["su_lower2_attempts"] = su["su_lower2_attempts"]
+            if su.get('runtime_coefficient_moves'):
+                ent['candidate_rope'] = dict(execution_qualified=False,
+                    runtime_coefficient_moves=su['runtime_coefficient_moves'],
+                    scratch_write_footprint=su['scratch_write_footprint'],
+                    scratch_read_footprint=su['scratch_read_footprint'],
+                    scratch_reuse_after_serial=su['scratch_reuse_after_serial'],
+                    preload_provenance=su['preload_provenance'])
             if su.get('timing_obligations'):
                 ent.update(timing_obligations=su['timing_obligations'], source_contract=su['source_contract'],
                            execution_qualified=False, quarter_ownership=su.get('quarter_ownership'),
@@ -1048,6 +1099,10 @@ def main():
                            prior_record_price_qualified=False,
                            record_price_delta_stream_edges=su['timing_obligations']['stream_edges']-(r['end']-r['start']),
                            price_scope='actual emitted bounded programme, no inherited layer/token throughput claim')
+                ent['effective_record_price'] = dict(serial_edges=len(su.get('lines', [])),
+                    stream_edges=su['timing_obligations']['stream_edges'],
+                    source='actual emitted programme occupancy; configuration cost recorded separately per programme',
+                    inherited_price_qualified=False, execution_qualified=False)
             if fx:
                 ent["fixture"] = dict(su.get("fixture", dict(matched=False)), pad_words_zero=su.get("pad_words_zero", 0))
                 if su.get('fixture_reduction_reference'):
@@ -1211,6 +1266,13 @@ def main():
                 written_at[ls_] = l0 + e
             ent.update(programme=k, line0_serial=l0, compiled_commit_serial=l0 + (su["last_commit"] or 0),
                        priced_end_serial=t0 + serial(r["end"]))
+            if ent.get('effective_record_price'):
+                # Actual consumers (commit slack, following programme occupancy)
+                # use the emitted kernel length. Keep the superseded nominal
+                # estimate separately so it cannot masquerade as a valid budget.
+                ent['inherited_priced_end_serial'] = ent['priced_end_serial']
+                ent['inherited_commit_slack_edges'] = ent['priced_end_serial']-ent['compiled_commit_serial']
+                ent['priced_end_serial'] = l0+len(su['lines'])
             ent["commit_slack_edges"] = ent["priced_end_serial"] - ent["compiled_commit_serial"]
             if note:
                 ent.setdefault("reasons", []).append(note)
@@ -1352,6 +1414,11 @@ def main():
                 bins.append(dict(events=list(evs), progs=list(g)))
         too_big = [b for b in bins if cap is not None and nonm(b["events"]) > cap]
         if too_big:
+            if a.rope_candidate and any(r.get('candidate_rope') for r in manifest):
+                need = max(nonm(b['events'])+1 for b in too_big)
+                raise ValueError(f'new RoPE programme requires at least NEV{need} before protocol/calendar checks; '
+                                 f'compiled capacity{a.nev} is insufficient; preserve existing build and '
+                                 'derive the necessary incremental top from the full emitted replay')
             # defer the latest record of the oversize VM-linked group (no later record of the group consumes it)
             # and recompile the layer; never an expected-value carry between parts
             last = max(((r_["i"], P["base"] + o_) for k_ in too_big[0]["progs"] for r_, _, _, o_ in progs[k_]["recs"]),
@@ -1379,6 +1446,31 @@ def main():
         for P_k, P in enumerate(progs):
             for r_, ent_, su_, o_ in P["recs"]:
                 ent_["replay_part"] = part_of.get(P_k, 0)
+    candidate_fault_checks = None
+    if a.rope_candidate and any(r.get('candidate_rope') and 'programme' in r for r in manifest):
+        # SLICE_OUT reports activity spans, not values, and SLICE_PASS alone
+        # does not reject a sticky protocol fault. Assert every actual boundary
+        # fault face explicitly after the final commit of each independent part.
+        fault_outputs = [p for p in bnd['outputs'] if 'fault' in p['name'].lower()]
+        if not fault_outputs:
+            raise ValueError('RoPE candidate cut has no observable protocol fault outputs')
+        counts = []
+        for evs in [events] + [es for es, _ in extra_parts]:
+            last_serial = max((e['cyc'] if e['dom']=='serial' else (3*e['cyc']+3)//4
+                               for e in evs if e['k']!='M'), default=0)
+            for port in fault_outputs:
+                evs.append(dict(k='C', dom='serial', cyc=last_serial+16, port=port['name'],
+                                val='0', mask=f"{(1<<port['width'])-1:x}",
+                                src='source:required_sticky_protocol_fault_zero'))
+            evs.sort(key=lambda e:(e['dom'],e['cyc'],e['k']))
+            count = sum(e['k']!='M' for e in evs)+1
+            if a.nev and count>a.nev:
+                raise ValueError(f'RoPE protocol checks require source-bound NEV{count}, compiled capacity{a.nev}; '
+                                 'preserve old build and regenerate the necessary top')
+            counts.append(count)
+        candidate_fault_checks = dict(outputs=[dict(name=p['name'],width=p['width']) for p in fault_outputs],
+                                      per_part_checks=len(fault_outputs), required_NEV_by_part=counts,
+                                      sticky_check_guard_serial_edges=16)
     for p in {e["port"] for e in events if e["k"] == "D"}:
         assert p in inports, f"replay drives {p}, not a slice input port"
     rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design=a.design,
@@ -1389,6 +1481,8 @@ def main():
                             "VM operands as M preload events (no slice VM input port)",
                             f"start advance {START_ADVANCE}, config lead {CFG_LEAD} (pgcol.sv header)"],
                events=events)
+    if candidate_fault_checks is not None:
+        rep['candidate_protocol_fault_checks'] = candidate_fault_checks
     if cx is not None:
         rep.update(cx_scope="connected_layer_parts", lane="TOK-FUNC2-HBM-CX", connected_components=True,
                    cx_epochs=cx_epochs, cx_components=cx_comp_place, cx_parts=cx_parts,
@@ -1441,6 +1535,38 @@ def main():
                                                      skipped_components=cx.skipped,
                                                      component_runs_top_sector=place.top))),
                counts={k: sum(1 for m in manifest if m["status"] == k) for k in sorted({m["status"] for m in manifest})})
+    effective_prices = [dict(i=r['i'], tag=r['tag'], programme=r.get('programme'),
+                             **r['effective_record_price'])
+                        for r in manifest if r.get('effective_record_price') and 'programme' in r]
+    if effective_prices:
+        man['emitted_record_prices'] = dict(scope='actual bounded emitted kernels; no complete layer/token rate',
+                                           records=effective_prices, inherited_prices_qualified=False,
+                                           configuration_cost='su_programmes[].config_writes at one serial edge each')
+    if a.pv_probability_candidate:
+        from hbm_layer_vehicle import pv_probability_rows_1340 as PV
+        producer = next((r for r in manifest if r['tag']=='attend.bf16_p' and 'programme' in r), None)
+        partial = []
+        for r in manifest:
+            if r['op'] != 'ATT.PV':
+                continue
+            if producer is None:
+                r['reasons'].append('PV input producer join OPEN: no emitted attend.bf16_p programme')
+                continue
+            metadata = json.loads((a.fixtures/'records.json').read_text())['records'][str(a.rank)]
+            node = next(x for x in metadata if x['op']=='ATT.PV')
+            record = json.loads((a.out/'images'/f"r{producer['i']:03d}_su"/'record.json').read_text())
+            plan = PV.plan(logical_words=desc_addrs(node['desc']['A']), producer_entry=producer,
+                producer_record=record, contract=json.loads(a.pv_probability_contract.read_text()),
+                source_root=a.pv_probability_source)
+            directory = a.out/'pv_probability_input'; directory.mkdir(parents=True, exist_ok=True)
+            (directory/f"r{r['i']:03d}.json").write_text(json.dumps(plan,indent=1)+'\n')
+            r['partial_probability_input'] = dict(status=plan['status'], pages_required=plan['pages_required'],
+                rows=plan['probability_rows'], fixed_input_kernel_stream_edges=plan['fixed_input_kernel_stream_edges'],
+                full_ATT_PV_lowered=False, producer_join_qualified=False, input_M_events=0,
+                refusal=plan['refusal'])
+            r['reasons'].append(plan['refusal'])
+            partial.append(dict(i=r['i'], **r['partial_probability_input']))
+        man['partial_probability_inputs'] = partial
     (a.out / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
     print(json.dumps(dict(records=len(manifest), events=len(events), counts=man["counts"], t0_serial=t0)))
 

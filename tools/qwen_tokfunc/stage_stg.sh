@@ -167,7 +167,8 @@ build_cfg() {   # build + slice / vec / stn calibrate on this build
   local b0=$(date +%s)
   if [ -n "$REUSE" ]; then [ -x "$REUSE/$c/Vtb" ] || { echo "$c: no $REUSE/$c/Vtb"; return 2; }
     ln -sfn "$REUSE/$c" $W/build/obj_n12; sha256sum "$REUSE/$c/Vtb" > $W/reused_vtb.sha256; fi
-  python3 $T/rtl/test/qwen_dv/dv_lower_bench.py --work $W/build --calibrate > $W/build/slice_calibrate.out 2>&1; echo "rc=$?" >> $W/build/slice_calibrate.out
+  python3 $T/rtl/test/qwen_dv/dv_lower_bench.py --work $W/build --calibrate > $W/build/slice_calibrate.out 2>&1
+  local slice_rc=$?; echo "rc=$slice_rc" >> $W/build/slice_calibrate.out
   echo "build+slice_calibrate $(( $(date +%s) - b0 )) s" > $W/timing.txt
   [ -x $W/build/obj_n12/Vtb ] || { echo "$c BUILD FAILED"; tail -30 $W/build/build.log; return 2; }
   if [ -z "$REUSE" ]; then
@@ -175,9 +176,17 @@ build_cfg() {   # build + slice / vec / stn calibrate on this build
   else
     bash "$HERE/stage_stg.sh" --object-manifest verify "$T" "$S/$c.build_source.json" "$S/overlay.sha256" "$W/build/obj_n12" >> "$S/$c.identity.log" 2>&1 || { cat "$S/$c.identity.log"; return 5; }
   fi
-  python3 $VB --work $W/build --mode calibrate > $W/build/calibrate.out 2>&1; echo "rc=$?" >> $W/build/calibrate.out
+  python3 $VB --work $W/build --mode calibrate > $W/build/calibrate.out 2>&1
+  local vec_rc=$?; echo "rc=$vec_rc" >> $W/build/calibrate.out
   ln -sfn $W/build/obj_n12 $W/cal_mat/obj_n12
-  python3 $MB --work $W/cal_mat --calibrate > $W/cal_mat/calibrate.out 2>&1; echo "rc=$?" >> $W/cal_mat/calibrate.out
+  python3 $MB --work $W/cal_mat --calibrate > $W/cal_mat/calibrate.out 2>&1
+  local mat_rc=$?; echo "rc=$mat_rc" >> $W/cal_mat/calibrate.out
+  # Mutant calibration is retained as diagnostic, not credited as a causal
+  # negative. Required nominal calibration failure must block all stage cases.
+  if [ "$c" != mut ] && { [ "$slice_rc" != 0 ] || [ "$vec_rc" != 0 ] || [ "$mat_rc" != 0 ]; }; then
+    echo "$c REQUIRED CALIBRATION FAILED slice=$slice_rc vec=$vec_rc mat=$mat_rc"
+    return 6
+  fi
   echo "calibrate done $(( $(date +%s) - b0 )) s" >> $W/timing.txt; echo "$c built"
 }
 declare -A BP

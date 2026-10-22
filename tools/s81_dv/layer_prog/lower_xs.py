@@ -444,6 +444,14 @@ def lower(die, op, ctx):
                                                 'ROM images carry the checkpoint rows of the layer'))
     fx = load_fixture(fxd)
     g, pl = placement(die, sl, fx)
+    native = bool(dense_split2()) and aproj_topology_enabled() and aproj_rank_tags_enabled() and \
+        os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1'
+    if native and any(p['master'].endswith('_lp') for p in pl) and not callable(globals().get('source_frame_schedule')):
+        return dict(rec, status='GAP', gap=dict(module='lower_xs.source_frame_schedule', port='actual LP source schedule',
+            missing='native LP GO/FIN lowering requires the source-qualified LP resolver and prepared models'))
+    shared_phase = None
+    native_error = None
+    capture = aproj_capture_contract(die, sl, fx, 1) if native and any(p['rows'] for p in pl) else None
     frames = []
     for p in pl:
         if not p['rows']:
@@ -452,11 +460,24 @@ def lower(die, op, ctx):
         mats, gidx = frame_mats(fx, p['rows'])
         field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
                            cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
+        if native:
+            from layer_prog.aproj_native import phase_material
+            material = phase_material(field)
+            if shared_phase is None:
+                shared_phase = material
+            elif material != shared_phase:
+                native_error = 'active frame phase/stream words differ: one shared XS broadcast is not established'
+            plan = rank_plan(plan, p['rows'])
         frames.append(dict(p, out_index=gidx, pairs=qa, nseg=NSEG, faults=plan['faults'], ret_words=plan['ret_words'],
                            merges=plan['merges'], ret=plan['ret'], placement=plan['placement'],
-                           cfg_words={str(k): [f'{w:012x}' for w in field.cfg[0][s]] for s, k in enumerate(qa)},
+                           cfg_words={str(k): [f'{w:012x}' for w in
+                               (rank_cfg_words(field.cfg[0][s], p['rows']) if native else field.cfg[0][s])]
+                                      for s, k in enumerate(qa)},
                            phase=dict((k, v) for k, v in ph.items() if k != 'matrices'),
                            emission=plan['emission']))
+        if native:
+            model = source_frame_schedule(p['master'])
+            frames[-1]['source_schedule'] = dict(path=str(model), sha256=sha(model.read_bytes())) if model else None
     ok = all(f['phase'] is None or f['faults'] == 0 for f in frames)
     rec['files'] = {f'prog/xs/{op["id"]}.json': json.dumps(dict(
         schema='opentallas.s81_dv.xs_lowering.v1', op=op, slice=sl, slice_index=g, nseg=NSEG, rows_per_slice=sum(len(p['rows']) for p in pl),
@@ -465,6 +486,23 @@ def lower(die, op, ctx):
     if not ok:
         return dict(rec, status='GAP', gap=dict(module='tools/s81_dv/frame_return_plan.py', port='legalise',
                                                 missing='return plan faults on ' + ', '.join(f['frame'] for f in frames if f['phase'] and f['faults'])))
+    if native and shared_phase is not None:
+        from layer_prog.aproj_native import programme
+        try:
+            if native_error:
+                raise ValueError(native_error)
+            lowered = programme(die, op, ctx, shared_phase, frames, capture)
+        except ValueError as exc:
+            return dict(rec, status='GAP', gap=dict(module='aproj_native', port='current source XS/CAP native programme',
+                                                   missing=str(exc)))
+        rec['files'].update(lowered.pop('files'))
+        rec.update(lowered)
+        rec['unit'] = 'actual frame cfg7/MAT + XS phase/stream/calendar ROMs + native XR target2/3 command rows'
+        return dict(rec, status='PARTIAL', gap=dict(module='selected XS4/frame/cap5r native programme',
+            port='actual VQ/rstopt_xo/ring gather ownership and aggregate CAP fixed retirement',
+            missing='Real target2/3 command rows, rank-tag cfg words and XS calendar ROMs are emitted. '
+                    'Sealed programme is held: incoming gather producer, all-frame FIN/clock retirement, '
+                    'per-instance MAT image binding and whole A/B schedule adoption remain unqualified.'))
     return dict(rec, status='PARTIAL', gap=gap_rest)
 
 

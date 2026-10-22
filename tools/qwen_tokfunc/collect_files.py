@@ -18,9 +18,15 @@ def add(value):
         return
     path = value.removeprefix(root.name + '/').replace('<name>', '*')
     for match in glob.glob(str(root / path)):
-        candidate = Path(match).resolve()
+        logical = Path(match)
+        candidate = logical.resolve()
         if candidate.is_file() and candidate.is_relative_to(root):
             names.add(str(candidate.relative_to(root)))
+        elif (logical.is_relative_to(root / 'fx') and candidate.is_file()
+              and candidate.is_relative_to(root.parent)):
+            # STG3 deliberately links its fixtures to the original stage.
+            # Fetch their bytes at the logical path, never a parent escape.
+            names.add(str(logical.relative_to(root)))
 
 for value in result.get('logs', []):
     add(value)
@@ -29,5 +35,13 @@ for value in (result.get('ages') or {}).values():
 for cfg in result.get('configs', {}).values():
     for key in ('vec_ages', 'stn_ages', 'slice_ages'):
         add(cfg.get(key))
+if str(result.get('stage', '')).startswith('stg'):
+    for cfg in ('rel', 'pos', 'mut'):
+        for path in ('vtb.sha256', 'vflags.txt', 'build/slice_calibrate.out',
+                     'build/calibrate.out', 'cal_mat/calibrate.out',
+                     'cal_mat/cal.ev', 'cal_mat/cal.log'):
+            add(f'{cfg}/{path}')
+    add('fx/L*_fixture.json')
+    add('fx/L*.log')
 for name in sorted(names):
     sys.stdout.buffer.write(name.encode() + b'\0')

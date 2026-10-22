@@ -151,11 +151,14 @@ def desc_vm_range(d):
 
 
 class Cx:
-    def __init__(s, fixtures, rank, priced, place, *, contract, l12, checkpoint, boundary, ops, skip=(), chapters=()):
+    def __init__(s, fixtures, rank, priced, place, *, contract, l12, checkpoint, boundary, ops, skip=(), chapters=(), hc_source_profile=None):
         s.meta, s.z, s.frecs = CI.load_fixture_records(fixtures, rank)
+        if hc_source_profile is not None and (rank != 0 or int(s.meta["layer"]) != 0):
+            raise ValueError("explicit SAFE2 HC profile covers only rank0/layer0/k31")
         s.place, s.bnd, s.ops = place, boundary, ops
         s.vm_rt = CI.vm_rt_from_contract(contract)
         s.tim = HI.timing_from_contract(contract, l12)
+        s.hc_source_profile, s.profile_contract = hc_source_profile, contract
         s.checkpoint = checkpoint
         s.seen = {}                  # logical VM word -> last value bits the layer holds there
         s.emitted_k = set()          # fixture records executed in this layer emission (SU emitted + components)
@@ -403,7 +406,7 @@ class Cx:
             A = np.asarray(s.z[x["inputs"]["A"]["array"]], np.uint32)
             params, _ = HL.checkpoint_parameters(s.checkpoint, int(s.meta["layer"]), "attn" if "attn" in x["tag"] else "ffn")
             real = HL.lower_mix_post(A, c["O"], params, s.tim, a_sector=base, o_sector=base + 8,
-                                     component_allocation=True, record=c["i"], boundary=s.bnd)
+                                     component_allocation=True, record=c["i"], boundary=s.bnd, source_profile=s.hc_source_profile, profile_contract=s.profile_contract)
             return real["events"], 16
         P = s.iso_parts[-1] if s.iso_parts else None
         evs = nsec = None
@@ -524,7 +527,13 @@ class Cx:
                             consumer_port_mismatch_note=("gq landing run dst+s*stride+j vs SU port rule lsec%8 with "
                                                          "F%8!=0: those sectors need a re-placement copy (open); the "
                                                          "consumer images them") if c["port_mismatch"] else None,
-                            launch=g["launch_cyc"], check=g["check_cyc"], far_end_flits=g["far_end_flits"]))
+                            launch=g["launch_cyc"], check=g["check_cyc"], far_end_flits=g["far_end_flits"],
+                            **({} if c['op']!='COLL.GROUP_REDUCE_MCAST' else dict(
+                                global_reduction_qualified=False, on_die_transport_only=True,
+                                tkm_endpoint_programme_qualified=False,
+                                tkm_endpoint_obligation='source-only tkm_endpoint_1021.endpoint_plan@ca8bc89afd537729fc1f722306efa9cf8142c05b; '
+                                    'real issuer-to-endpoint age/own+peer producers/qslots/writer/160-clock schedule unbound; '
+                                    'PRE1 SETTLE136 candidate not adopted; current SETTLE104 source retained'))))
 
     def _idx_params(s, contract, l12):
         """hb_idx__ctl selected engine timing (contract) + l12 request pads: the TOPK engine runs with
@@ -631,7 +640,7 @@ class Cx:
         which = "attn" if "attn" in x["tag"] else "ffn"
         params, prov = HL.checkpoint_parameters(s.checkpoint, int(s.meta["layer"]), which)
         real = HL.lower_mix_post(A, c["O"], params, s.tim, a_sector=c["a_sector"], o_sector=c["dst"],
-                                 component_allocation=False, record=c["i"], boundary=s.bnd)
+                                 component_allocation=False, record=c["i"], boundary=s.bnd, source_profile=s.hc_source_profile, profile_contract=s.profile_contract)
         return dict(events=real["events"], reads=set(), writes=set(c["mapping"]),
                     cx=dict(a_sector=c["a_sector"], o_sector=c["dst"], root_schedule=real["root_schedule"],
                             checkpoint=prov, A_provenance="un-emitted upstream HC projection + mix gather (fixture image)",
