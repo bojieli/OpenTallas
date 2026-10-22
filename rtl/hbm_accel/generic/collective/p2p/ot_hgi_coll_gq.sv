@@ -360,11 +360,28 @@ module ot_hgi_coll_gq_issue #(
     wire run_next=p_sv?1'b1:(run&&!(tl_last_c[10]&&!lps_gt1_c[10]));
     // R10 fire_next (value of fire at the next edge), same priority as the calendar FSM: launch (cur <= base, tl <= 0),
     // period end (wrap: cur <= b0, tl <= 0; last loop: run <= 0), counting (tl <= tl+1, cur <= cur + fire).
+`ifdef OT_GQ_TLN
+    // R13 TLN (HBMb/COLL-GQ 10-21, k13q native census: tl[0] / tl[1] QN 39 / 41 loads = tl+1 inlined into the 16 st_m
+    // row comparators). tl+1 is now a REGISTER (tl_n == tl + 1 at every edge after the first launch) in 4 kept copies,
+    // each updated by the same launch / wrap / count controls as tl and feeding 4 rows of st_m. No reset (datapath:
+    // fire_next reads st_m only while run, and every run starts with a launch that loads tl_n <= 1). Same edges.
+    wire[15:0]tl_nc[0:3];
+    generate for(genvar g=0;g<4;g=g+1)begin:g_tln
+        ot_hgi_coll_gq_tln u_n(.clk(clk),.start(p_start_bank[4]),.run(run_copy[8]),.last(tl_last_c[8]),.gt1(lps_gt1_c[8]),.q(tl_nc[g]));
+    end endgenerate
+`ifdef OT_GQ_CHECK_INV
+    always @(posedge clk) if(rn && run) for(integer g=0;g<4;g=g+1)
+        if(tl_nc[g]!==tl+16'd1)$fatal(1,"GQ_R13_INV_FAIL tl_n copy%0d=%0d tl=%0d",g,tl_nc[g],tl);
+`endif
+`else
     wire[15:0]tl_p1=tl+16'd1;
+`endif
     reg[15:0]st_m,st_z;
     always @* for(integer j=0;j<16;j=j+1)begin
 `ifdef OT_GQ_MUT_FIRE_LATE
         st_m[j]=rf[j][18:3]==tl;                       // mutant: fires one edge late
+`elsif OT_GQ_TLN
+        st_m[j]=rf[j][18:3]==tl_nc[j/4];
 `else
         st_m[j]=rf[j][18:3]==tl_p1;
 `endif
@@ -1767,3 +1784,21 @@ module ot_hgi_coll_gq_request_reset(input wire clk,rst_n,output wire[7:0]q);
  assign q=leaf_n;
 `endif
 endmodule
+`ifdef OT_GQ_TLN
+// R13 TLN: one kept register copy of tl + 1 (same launch / wrap / count priority as tl; no reset, see the instance note)
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_gq_tln(input wire clk,start,run,last,gt1,output wire[15:0]q);
+    (* keep="true",dont_touch="true" *) reg[15:0]r;
+    always @(posedge clk)
+        if(start)r<=16'd1;
+        else if(run)begin
+            if(last)begin if(gt1)r<=16'd1;end
+`ifdef OT_GQ_MUT_TLN
+            else r<=r+16'd2;                          // mutant: counts twice as fast
+`else
+            else r<=r+16'd1;
+`endif
+        end
+    assign q=r;
+endmodule
+`endif
