@@ -1,4 +1,14 @@
 `timescale 1ns/1ps
+`ifndef OT_LEP_AR
+`ifdef OT_S81SL_LEP_SYNCRST
+// R7 (ELEM-LEP/A 10-21, opt-in): reset only gates control/valid D inputs (synchronous); no async RESETN pin, so no
+// removal check sits on two different clock leaves (r6v FF -34.22: local_r -> frame flop 1.7 um, 51 ps leaf skew).
+// Release edges are unchanged; assertion needs the clock running for >= 4 cycles (benches hold reset 8).
+`define OT_LEP_AR(r)
+`else
+`define OT_LEP_AR(r) or negedge r
+`endif
+`endif
 // Registered-write, registered OLD-read memory. q holds when re=0, exactly
 // ot_s81ph_mem1r1w WREG1. Reset-distinct16-bit forwarding slices prevent shared
 // enabled payload muxes and output selects. SB8/GA4 opt-in gives four8-bit
@@ -19,9 +29,9 @@ module ot_sram_oldread_wreg #(parameter integer W=553, AW=9, SB=16, GA=16, NS=(W
  generate for(a=0;a<NA;a=a+1) begin:g_address
    (* keep="true" *) reg [AW-1:0] address_r;
    reg valid_r; assign wvalid[a]=valid_r;
-   always @(posedge clk or negedge rst_n[GA*a]) if(!rst_n[GA*a]) valid_r<=0;else valid_r<=w_en[a];
+   always @(posedge clk `OT_LEP_AR(rst_n[GA*a])) if(!rst_n[GA*a]) valid_r<=0;else valid_r<=w_en[a];
    assign waddr[a*AW+:AW]=address_r;
-   always @(posedge clk or negedge rst_n[GA*a]) if(!rst_n[GA*a]) address_r<=0;else address_r<=wa[a*AW+:AW];
+   always @(posedge clk `OT_LEP_AR(rst_n[GA*a])) if(!rst_n[GA*a]) address_r<=0;else address_r<=wa[a*AW+:AW];
  end
  for(b=0;b<NB;b=b+1) begin:g_bank
    ot_sram_1r1w_512x128_m4_r2c2 u_m(.clk(clk),.r_ce_in(r_en[(128*b)/(GA*SB)]),.r_addr_in(9'(ra[AW*((128*b)/(GA*SB))+:AW])),.rd_out(raw[128*b+:128]),
@@ -34,13 +44,31 @@ module ot_sram_oldread_wreg #(parameter integer W=553, AW=9, SB=16, GA=16, NS=(W
    (* keep="true" *) reg [AW-1:0] addr_r;
    reg [SW-1:0] forwarded;
    wire hit=(MUT==1)?1'b0:(valid_r && ra[AW*(s/GA)+:AW]==addr_r);
-   always @(posedge clk or negedge rst_n[s])
+`ifdef OT_S81SL_LEP_SYNCRST
+   // r7 SYNCRST: one forward enable per slice in a kept-hierarchy cell, so ABC cannot spread the group read enable into
+   // every payload bit (r7m/r7f pre-gate native census: rd_group 39-45 loads through per-bit AND3).
+   wire fwd_en;
+   ot_lep_en2 u_fwd_en(.a(r_en[s/GA]),.b(hit),.y(fwd_en));
+`else
+   wire fwd_en=r_en[s/GA] && hit;
+`endif
+   always @(posedge clk `OT_LEP_AR(rst_n[s]))
      if(!rst_n[s]) begin valid_r<=0;addr_r<=0;select_r<=0;end
      else begin valid_r<=w_en[s/GA];addr_r<=wa[AW*(s/GA)+:AW];if(r_en[s/GA]) select_r<=hit;end
-   always @(posedge clk) if(r_en[s/GA] && hit) forwarded<=wdata[LO+:SW];
+   always @(posedge clk) if(fwd_en) forwarded<=wdata[LO+:SW];
    assign q[LO+:SW]=select_r?forwarded:raw[LO+:SW];
  end endgenerate
 `ifndef SYNTHESIS
  initial if(AW>9 || W<1 || (SB!=8 && SB!=16) || GA<1 || ((128%(GA*SB))!=0 && ((GA*SB)%128)!=0)) $fatal(1,"oldread memory requires1..512rows");
 `endif
 endmodule
+`ifdef OT_S81SL_LEP_SYNCRST
+`ifndef OT_LEP_EN2_DEFINED
+`define OT_LEP_EN2_DEFINED
+// r7 SYNCRST helper: a kept 2-input enable (kit SYNTH_KEEP_MODULES), one driver per slice for the forwarded payload.
+(* keep_hierarchy="yes" *)
+module ot_lep_en2(input wire a, input wire b, output wire y);
+ assign y=a&b;
+endmodule
+`endif
+`endif

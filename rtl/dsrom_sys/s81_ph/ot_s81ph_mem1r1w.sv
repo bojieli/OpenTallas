@@ -1,4 +1,14 @@
 `timescale 1ns/1ps
+`ifndef OT_LEP_AR
+`ifdef OT_S81SL_LEP_SYNCRST
+// R7 (ELEM-LEP/A 10-21, opt-in): reset only gates control/valid D inputs (synchronous); no async RESETN pin, so no
+// removal check sits on two different clock leaves (r6v FF -34.22: local_r -> frame flop 1.7 um, 51 ps leaf skew).
+// Release edges are unchanged; assertion needs the clock running for >= 4 cycles (benches hold reset 8).
+`define OT_LEP_AR(r)
+`else
+`define OT_LEP_AR(r) or negedge r
+`endif
+`endif
 // ot_s81ph_mem1r1w (CLAUDE S81-PH collective, 2026-10-06): a 1R1W array with a REGISTERED read port
 // (q <= mem[ra] when re; q holds otherwise; a same-cycle write to ra returns the OLD word -- callers forward).
 // SRAM = 0: flops.  SRAM = 1: ceil(W/128) x ot_sram_1r1w_512x128_m4_r2c2 (DEPTH <= 512; the macro's read data is
@@ -39,7 +49,7 @@ module ot_s81ph_mem1r1w #(
 `else
         wire hit = wv_q && (ra == wa_q); // the word written last cycle has not reached the array yet
 `endif
-        always @(posedge clk or negedge rst_n)
+        always @(posedge clk `OT_LEP_AR(rst_n))
             if (!rst_n) begin wv_q <= 1'b0; sel_r <= 1'b0; end
             else begin wv_q <= we; if (re) sel_r <= hit; end
         always @(posedge clk) begin
