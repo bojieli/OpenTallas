@@ -88,7 +88,7 @@ for s in ${STAGES//,/ }; do
       install_collection "$incoming" "$s" || exit 4
       echo "$s collected from $best:$RUNROOT/$sd"
       if [ "$s" = stg ]; then
-        python3 "$HERE/normalize_collected_stg.py" "$OUT/results/$s" || exit 4
+        python3 "$HERE/normalize_collected_stg.py" "$OUT/results/$s" "$ASM" "$REPO" || exit 4
       fi
     else
       python3 "$HERE/normalize_collected_stg.py" --unavailable "$incoming" "$s" 'required remote evidence could not be collected' || exit 4

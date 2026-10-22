@@ -11,11 +11,64 @@ c_emb producer and held O61 descriptor, never RESULT or inferred next-token data
 import argparse
 import hashlib
 import json
+import re
 import os
 from pathlib import Path
 import subprocess
 import sys
 
+
+
+def write_wrapper_params(release, admission, directory, rom_dir=None, pathfinding=False):
+    """The final compiler and existing-image recovery use this same renderer."""
+    directory = Path(directory)
+    params = dict(ROPE_OVL_FIRST_OFS=release['first_ofs'],
+                  ROPE_OVL_ADM_OFS=admission['ofs'], ROPE_OVL_ADM_LEN=admission['len'],
+                  ROPE_OVL_ADM_BASE=release['admission_base'])
+    lines = ['// Generated from the sole pair calendar and four-ROM release.']
+    if pathfinding:
+        lines += ['// PATHFINDING ONLY: existing73-record image lacks the recurring HEAD_PREP slot.',
+                  '// Final release requires actual current GEN ages and a corrected sole pair compile.']
+    lines += [f'localparam integer {key} = {value};' for key, value in params.items()]
+    lines += [f'localparam ROPE_OVL_ROM_DIR = {json.dumps(str(rom_dir if rom_dir is not None else directory))};']
+    directory.mkdir(parents=True, exist_ok=True)
+    target = directory / 'ovl_wrapper_params.svh'
+    target.write_text('\n'.join(lines) + '\n')
+    return target
+
+
+def render_existing_wrapper(argv):
+    ap = argparse.ArgumentParser(description='Recover only a pathfinding wrapper from a recorded existing image')
+    ap.add_argument('--release-metadata', type=Path, required=True)
+    ap.add_argument('--admission-image', type=Path, required=True)
+    ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--rom-dir', required=True)
+    a = ap.parse_args(argv)
+    release = json.loads(a.release_metadata.read_text())
+    raw = a.admission_image.read_bytes()
+    digest = hashlib.sha256(raw).hexdigest()
+    if release.get('admission_sha256') != digest:
+        raise SystemExit('existing admission image differs from recorded release hash')
+    text = raw.decode()
+    def number(name):
+        m = re.search(r'localparam integer ' + name + r'\s*=\s*([0-9]+)\s*;', text)
+        if not m: raise SystemExit('existing admission image lacks ' + name)
+        return int(m.group(1))
+    admission = dict(ofs=number('D2D_ADM_OFS'), len=number('D2D_ADM_LEN'))
+    if release.get('first_ofs') != number('D2D_FIRST_TOKEN'):
+        raise SystemExit('existing release and admission disagree on first token offset')
+    a.out.mkdir(parents=True, exist_ok=False)
+    target = write_wrapper_params(release, admission, a.out, a.rom_dir, pathfinding=True)
+    record = dict(status='PATHFINDING_ONLY_EXISTING_PROGRAMME',
+                  final_programme_qualified=False,
+                  release_metadata_sha256=hashlib.sha256(a.release_metadata.read_bytes()).hexdigest(),
+                  admission_image_sha256=digest, source_admission=release.get('admission'),
+                  first_ofs=release['first_ofs'], admission_base=release['admission_base'],
+                  admission=admission, token_period=number('D2D_TOKEN_PERIOD'),
+                  rom_dir=a.rom_dir, wrapper_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
+                  limitation='existing image lacks recurring HEAD_PREP slot; final current GEN/source compile remains required')
+    (a.out / 'wrapper_receipt.json').write_text(json.dumps(record, indent=2) + '\n')
+    print(json.dumps(record))
 
 
 def require_status_observation_ages(receipt):
@@ -127,13 +180,7 @@ def main():
          str(out / 'ovl_release_rope')], 'release.log')
     release = json.loads((out / 'ovl_release_rope/source.json').read_text())
     admission = calendar['program']['admission']
-    params = dict(ROPE_OVL_FIRST_OFS=release['first_ofs'],
-                  ROPE_OVL_ADM_OFS=admission['ofs'], ROPE_OVL_ADM_LEN=admission['len'],
-                  ROPE_OVL_ADM_BASE=release['admission_base'])
-    lines = ['// Generated from the sole pair calendar and four-ROM release.']
-    lines += [f'localparam integer {key} = {value};' for key, value in params.items()]
-    lines += [f'localparam ROPE_OVL_ROM_DIR = {json.dumps(str(out / "ovl_release_rope"))};']
-    (out / 'ovl_release_rope/ovl_wrapper_params.svh').write_text('\n'.join(lines) + '\n')
+    write_wrapper_params(release, admission, out / 'ovl_release_rope')
     hashes = {str(p.relative_to(out)): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in sorted(out.rglob('*')) if p.is_file()}
     (out / 'generated.json').write_text(json.dumps(dict(
@@ -155,4 +202,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if sys.argv[1:2] == ['--render-existing-wrapper']:
+        render_existing_wrapper(sys.argv[2:])
+    else:
+        main()
