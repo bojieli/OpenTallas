@@ -2141,18 +2141,20 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     // QE3-PC2 sr10e (native32, gate 171639: one wq_bq select net drove 38 mux pins via open[]/blk[]/aok_z[]): two more
     // kept one-hot copies of wq_rp build distinct copies of the queued banks: wq_bq (open[] + rrdl/bsel + wab_n),
     // wq_bq_b (blk[]), wq_bq_c (aok_z[]).  Identical values (same D every edge, same reset).
-    (* keep *) reg [3:0] wq_rpoh_b, wq_rpoh_c;
-    wire [5*WQ-1:0] wq_bq_b, wq_bq_c;
+    (* keep *) reg [3:0] wq_rpoh_b, wq_rpoh_c, wq_rpoh_d;   // d (sr10f census 34): rrdl/bsel + oldest-candidate wab_n
+    wire [5*WQ-1:0] wq_bq_b, wq_bq_c, wq_bq_d;
     wire [WQ-1:0] wq_in;                              // queue entry valid
     for (genvar i = 0; i < WQ; i = i + 1) begin : wqe
       wire [3:0] q_oh = wq_rot(wq_rpoh_qv[3:0], i);
-      wire [3:0] q_ob = wq_rot(wq_rpoh_b, i), q_oc = wq_rot(wq_rpoh_c, i);
+      wire [3:0] q_ob = wq_rot(wq_rpoh_b, i), q_oc = wq_rot(wq_rpoh_c, i), q_od = wq_rot(wq_rpoh_d, i);
       assign wq_bq[i*5 +: 5] = ({5{q_oh[0]}} & wq_bank[0]) | ({5{q_oh[1]}} & wq_bank[1]) |
                                ({5{q_oh[2]}} & wq_bank[2]) | ({5{q_oh[3]}} & wq_bank[3]);
       assign wq_bq_b[i*5 +: 5] = ({5{q_ob[0]}} & wq_bank[0]) | ({5{q_ob[1]}} & wq_bank[1]) |
                                  ({5{q_ob[2]}} & wq_bank[2]) | ({5{q_ob[3]}} & wq_bank[3]);
       assign wq_bq_c[i*5 +: 5] = ({5{q_oc[0]}} & wq_bank[0]) | ({5{q_oc[1]}} & wq_bank[1]) |
                                  ({5{q_oc[2]}} & wq_bank[2]) | ({5{q_oc[3]}} & wq_bank[3]);
+      assign wq_bq_d[i*5 +: 5] = ({5{q_od[0]}} & wq_bank[0]) | ({5{q_od[1]}} & wq_bank[1]) |
+                                 ({5{q_od[2]}} & wq_bank[2]) | ({5{q_od[3]}} & wq_bank[3]);
       assign wq_in[i] = W && i < wq_n;
     end
     reg [31:0] hold_n, hold;                          // banks a queued write needs (never precharged;
@@ -2529,9 +2531,9 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
     wire [WQ-1:0] wq_act;
     for (genvar i = 0; i < WQ; i = i + 1) begin : wqa
-      wire [4:0] bq = wq_bq[i*5 +: 5], bq_b = wq_bq_b[i*5 +: 5], bq_c = wq_bq_c[i*5 +: 5];
-      assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq_b] && aok_z[bq_c] && rrdl_z[bq[1:0]] &&
-                         !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
+      wire [4:0] bq = wq_bq[i*5 +: 5], bq_b = wq_bq_b[i*5 +: 5], bq_c = wq_bq_c[i*5 +: 5], bq_d = wq_bq_d[i*5 +: 5];
+      assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq_b] && aok_z[bq_c] && rrdl_z[bq_d[1:0]] &&
+                         !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq_d == bsel);
     end
     // The candidate (oldest queued write whose bank can open) is REGISTERED and re-validated at use
     // against the current bank state with one-hot reductions, keeping the queue indexing and the
@@ -2541,7 +2543,7 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     always @* begin
       wcand = 1'b0; wab_n = 0; wcrd_n = 1'b0;
       for (ai = WQ - 1; ai >= 0; ai = ai - 1) if (wq_act[ai]) begin
-        wcand = 1'b1; wab_n = wq_bq[ai*5 +: 5]; wcrd_n = AQ && wq_rd[WQW'(wq_rp + ai)];
+        wcand = 1'b1; wab_n = wq_bq_d[ai*5 +: 5]; wcrd_n = AQ && wq_rd[WQW'(wq_rp + ai)];
       end
     end
     reg wcand_q; reg [4:0] wab; reg [31:0] wab_oh; reg wcrd_q;
@@ -2715,9 +2717,9 @@ module ot_qkd_static_kv_timing_kvpc_s #(
     wire [3:0] wq_ws_m = (wq_n_m != (WQW+1)'(WQ)) ? (4'b1 << WQW'(wq_rp1 + wq_n_m[WQW-1:0])) : 4'b0;
     wire [3:0] wq_wsoh_nx = wr_ok_c[14] ? wq_ws_m : wq_ws_p;
     always @(posedge clk or negedge rst_n)
-      if (!rst_n) begin wq_rpoh_qv <= {4{4'b0001}}; wq_rpoh_b <= 4'b0001; wq_rpoh_c <= 4'b0001; wq_ne_qv <= {3{2'b10}}; wq_ws_qv <= {3{4'b0001}}; end
+      if (!rst_n) begin wq_rpoh_qv <= {4{4'b0001}}; wq_rpoh_b <= 4'b0001; wq_rpoh_c <= 4'b0001; wq_rpoh_d <= 4'b0001; wq_ne_qv <= {3{2'b10}}; wq_ws_qv <= {3{4'b0001}}; end
       else begin
-        wq_rpoh_qv <= {4{wq_rpoh_nx}}; wq_rpoh_b <= wq_rpoh_nx; wq_rpoh_c <= wq_rpoh_nx; wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}}; wq_ws_qv <= {3{wq_wsoh_nx}};
+        wq_rpoh_qv <= {4{wq_rpoh_nx}}; wq_rpoh_b <= wq_rpoh_nx; wq_rpoh_c <= wq_rpoh_nx; wq_rpoh_d <= wq_rpoh_nx; wq_ne_qv <= {3{wr_ok_c[15] ? {wq_n_m != 1, wq_n_m != 0} : {wq_n_p != 1, wq_n_p != 0}}}; wq_ws_qv <= {3{wq_wsoh_nx}};
       end
     wire [31:0] wq_dec = 32'b1 << wr_bank;
     always @(posedge clk) if (W) for (integer e = 0; e < WQ; e = e + 1) begin
