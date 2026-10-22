@@ -32,6 +32,7 @@ b=b.replace('ot_hbm_smh_rp4a_flat u_flat','ot_hbm_smh_rp6_2 #(.VAR(VAR)) u_flat'
 for n,d in [('rout_n','DN'),('rout_s','DS'),('bout','DB')]:
  b=b.replace(f'dlo_{n} [0:0]',f'dlo_{n} [0:{d}-1]').replace(f'j <= 0; j = j + 1) dlo_{n}',f'j < {d}; j = j + 1) dlo_{n}').replace(f'dlo_{n}[0]) begin bad',f'dlo_{n}[{d}-1]) begin bad').replace(f'cyc, dlo_{n}[0],',f'cyc, dlo_{n}[{d}-1],')
 b=b.replace('dlo_gout[2 + GN + GS + LR + 2 * OS + DG]','dlo_gout[DG-1]')
+b=b.replace('dlo_gout [0:31]', 'dlo_gout [0:DG-1]').replace('j <= 31; j = j + 1) dlo_gout', 'j < DG; j = j + 1) dlo_gout')
 b=b.replace('lo_bout !== fo_bout','lo_bout !== dlo_bout[DB-1]').replace('cyc, fo_bout, lo_bout','cyc, dlo_bout[DB-1], lo_bout')
 start=b.index('    // activity census');end=b.index('    function [31:0] rnd;',start)
 activity=['    integer c_bov=0,c_fov=0,c_ev=0,c_pub=0,c_pvin=0;']
