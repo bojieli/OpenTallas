@@ -7,6 +7,11 @@
 // No parent physical qualification is claimed. Pairwise child-clock spread,
 // routed reach and die-level calendar checks remain required before adoption.
 module ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72 #(
+    parameter integer MUT = 0,
+    parameter integer HBC_LOCAL_STAGE=255,HBC_LOCAL_RANK=4,HBC_PHASE_BOUND=0,
+    parameter [63:0] HBC_CLOCK_RESET_ID=0,
+    parameter [47:0] HBC_BOOT_HEADER_EDGE=48'hffffffffffff,HBC_BOOT_COMMIT_EDGE=48'hffffffffffff,
+    parameter [47:0] HBC_RETURN_ARRIVAL_DEADLINE=48'hffffffffffff
 ) (
     input wire [76:0] hb_status_t_host,input wire [53:0] hb_status_t_kd,
     input wire hb_starter_armed,
