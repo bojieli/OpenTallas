@@ -1,0 +1,1334 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/o/equiv.ys' --
+
+1. Executing Liberty frontend: /tmp/lib/SIMPLE.lib
+Imported 56 cell types from liberty file.
+
+2. Executing Liberty frontend: /tmp/lib/AO.lib
+Imported 42 cell types from liberty file.
+
+3. Executing Liberty frontend: /tmp/lib/OA.lib
+Imported 34 cell types from liberty file.
+
+4. Executing Liberty frontend: /tmp/lib/INVBUF.lib
+Imported 37 cell types from liberty file.
+
+5. Executing Liberty frontend: /tmp/lib/SEQ.lib
+Ignoring cell ICGx1_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx2_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx2p67DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx3_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx4DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx4_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx5_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx5p33DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx6p67DC_ASAP7_75t_R with missing function on output IQ.
+Ignoring cell ICGx8DC_ASAP7_75t_R with missing function on output IQ.
+Imported 23 cell types from liberty file.
+<suppressed ~2 debug messages>
+
+6. Executing Verilog-2005 frontend: /o/flat.v
+Parsing Verilog input from `/o/flat.v' to AST representation.
+Generating RTLIL representation for module `\add_plain'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /o/l5x_n32.v
+Parsing Verilog input from `/o/l5x_n32.v' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l5x_n32'.
+Successfully finished Verilog frontend.
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+9. Executing FLATTEN pass (flatten design).
+<suppressed ~6408 debug messages>
+
+10. Executing PROC pass (convert processes to netlists).
+
+10.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+10.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+10.4. Executing PROC_INIT pass (extract init attributes).
+
+10.5. Executing PROC_ARST pass (detect async resets in processes).
+
+10.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+10.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+10.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+10.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+10.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+10.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hdc_fp32_add_f12_l5x_n32.
+<suppressed ~1081 debug messages>
+Optimizing module add_plain.
+<suppressed ~1070 debug messages>
+Optimizing module SDFLx4_ASAP7_75t_R.
+Optimizing module SDFLx3_ASAP7_75t_R.
+Optimizing module SDFLx2_ASAP7_75t_R.
+Optimizing module SDFLx1_ASAP7_75t_R.
+Optimizing module SDFHx4_ASAP7_75t_R.
+Optimizing module SDFHx3_ASAP7_75t_R.
+Optimizing module SDFHx2_ASAP7_75t_R.
+Optimizing module SDFHx1_ASAP7_75t_R.
+Optimizing module DLLx3_ASAP7_75t_R.
+Optimizing module DLLx2_ASAP7_75t_R.
+Optimizing module DLLx1_ASAP7_75t_R.
+Optimizing module DHLx3_ASAP7_75t_R.
+Optimizing module DHLx2_ASAP7_75t_R.
+Optimizing module DHLx1_ASAP7_75t_R.
+Optimizing module DFFLQx4_ASAP7_75t_R.
+Optimizing module DFFLQNx3_ASAP7_75t_R.
+Optimizing module DFFLQNx2_ASAP7_75t_R.
+Optimizing module DFFLQNx1_ASAP7_75t_R.
+Optimizing module DFFHQx4_ASAP7_75t_R.
+Optimizing module DFFHQNx3_ASAP7_75t_R.
+Optimizing module DFFHQNx2_ASAP7_75t_R.
+Optimizing module DFFHQNx1_ASAP7_75t_R.
+Optimizing module DFFASRHQNx1_ASAP7_75t_R.
+Optimizing module INVxp67_ASAP7_75t_R.
+Optimizing module INVxp33_ASAP7_75t_R.
+Optimizing module INVx8_ASAP7_75t_R.
+Optimizing module INVx6_ASAP7_75t_R.
+Optimizing module INVx5_ASAP7_75t_R.
+Optimizing module INVx4_ASAP7_75t_R.
+Optimizing module INVx3_ASAP7_75t_R.
+Optimizing module INVx2_ASAP7_75t_R.
+Optimizing module INVx1_ASAP7_75t_R.
+Optimizing module INVx13_ASAP7_75t_R.
+Optimizing module INVx11_ASAP7_75t_R.
+Optimizing module HB4xp67_ASAP7_75t_R.
+Optimizing module HB3xp67_ASAP7_75t_R.
+Optimizing module HB2xp67_ASAP7_75t_R.
+Optimizing module HB1xp67_ASAP7_75t_R.
+Optimizing module CKINVDCx9p33_ASAP7_75t_R.
+Optimizing module CKINVDCx8_ASAP7_75t_R.
+Optimizing module CKINVDCx6p67_ASAP7_75t_R.
+Optimizing module CKINVDCx5p33_ASAP7_75t_R.
+Optimizing module CKINVDCx20_ASAP7_75t_R.
+Optimizing module CKINVDCx16_ASAP7_75t_R.
+Optimizing module CKINVDCx14_ASAP7_75t_R.
+Optimizing module CKINVDCx12_ASAP7_75t_R.
+Optimizing module CKINVDCx11_ASAP7_75t_R.
+Optimizing module CKINVDCx10_ASAP7_75t_R.
+Optimizing module BUFx8_ASAP7_75t_R.
+Optimizing module BUFx6f_ASAP7_75t_R.
+Optimizing module BUFx5_ASAP7_75t_R.
+Optimizing module BUFx4f_ASAP7_75t_R.
+Optimizing module BUFx4_ASAP7_75t_R.
+Optimizing module BUFx3_ASAP7_75t_R.
+Optimizing module BUFx2_ASAP7_75t_R.
+Optimizing module BUFx24_ASAP7_75t_R.
+Optimizing module BUFx16f_ASAP7_75t_R.
+Optimizing module BUFx12f_ASAP7_75t_R.
+Optimizing module BUFx12_ASAP7_75t_R.
+Optimizing module BUFx10_ASAP7_75t_R.
+Optimizing module OAI33xp33_ASAP7_75t_R.
+Optimizing module OAI333xp33_ASAP7_75t_R.
+Optimizing module OAI332xp33_ASAP7_75t_R.
+Optimizing module OAI331xp33_ASAP7_75t_R.
+Optimizing module OAI32xp33_ASAP7_75t_R.
+Optimizing module OAI322xp33_ASAP7_75t_R.
+Optimizing module OAI321xp33_ASAP7_75t_R.
+Optimizing module OAI31xp67_ASAP7_75t_R.
+Optimizing module OAI31xp33_ASAP7_75t_R.
+Optimizing module OAI311xp33_ASAP7_75t_R.
+Optimizing module OAI22xp5_ASAP7_75t_R.
+Optimizing module OAI22xp33_ASAP7_75t_R.
+Optimizing module OAI22x1_ASAP7_75t_R.
+Optimizing module OAI222xp33_ASAP7_75t_R.
+Optimizing module OAI221xp5_ASAP7_75t_R.
+Optimizing module OAI21xp5_ASAP7_75t_R.
+Optimizing module OAI21xp33_ASAP7_75t_R.
+Optimizing module OAI21x1_ASAP7_75t_R.
+Optimizing module OAI211xp5_ASAP7_75t_R.
+Optimizing module OA33x2_ASAP7_75t_R.
+Optimizing module OA333x2_ASAP7_75t_R.
+Optimizing module OA333x1_ASAP7_75t_R.
+Optimizing module OA332x2_ASAP7_75t_R.
+Optimizing module OA332x1_ASAP7_75t_R.
+Optimizing module OA331x2_ASAP7_75t_R.
+Optimizing module OA331x1_ASAP7_75t_R.
+Optimizing module OA31x2_ASAP7_75t_R.
+Optimizing module OA22x2_ASAP7_75t_R.
+Optimizing module OA222x2_ASAP7_75t_R.
+Optimizing module OA221x2_ASAP7_75t_R.
+Optimizing module OA21x2_ASAP7_75t_R.
+Optimizing module OA211x2_ASAP7_75t_R.
+Optimizing module O2A1O1Ixp5_ASAP7_75t_R.
+Optimizing module O2A1O1Ixp33_ASAP7_75t_R.
+Optimizing module AOI33xp33_ASAP7_75t_R.
+Optimizing module AOI333xp33_ASAP7_75t_R.
+Optimizing module AOI332xp33_ASAP7_75t_R.
+Optimizing module AOI331xp33_ASAP7_75t_R.
+Optimizing module AOI32xp33_ASAP7_75t_R.
+Optimizing module AOI322xp5_ASAP7_75t_R.
+Optimizing module AOI321xp33_ASAP7_75t_R.
+Optimizing module AOI31xp67_ASAP7_75t_R.
+Optimizing module AOI31xp33_ASAP7_75t_R.
+Optimizing module AOI311xp33_ASAP7_75t_R.
+Optimizing module AOI22xp5_ASAP7_75t_R.
+Optimizing module AOI22xp33_ASAP7_75t_R.
+Optimizing module AOI22x1_ASAP7_75t_R.
+Optimizing module AOI222xp33_ASAP7_75t_R.
+Optimizing module AOI221xp5_ASAP7_75t_R.
+Optimizing module AOI221x1_ASAP7_75t_R.
+Optimizing module AOI21xp5_ASAP7_75t_R.
+Optimizing module AOI21xp33_ASAP7_75t_R.
+Optimizing module AOI21x1_ASAP7_75t_R.
+Optimizing module AOI211xp5_ASAP7_75t_R.
+Optimizing module AOI211x1_ASAP7_75t_R.
+Optimizing module AO33x2_ASAP7_75t_R.
+Optimizing module AO333x2_ASAP7_75t_R.
+Optimizing module AO333x1_ASAP7_75t_R.
+Optimizing module AO332x2_ASAP7_75t_R.
+Optimizing module AO332x1_ASAP7_75t_R.
+Optimizing module AO331x2_ASAP7_75t_R.
+Optimizing module AO331x1_ASAP7_75t_R.
+Optimizing module AO32x2_ASAP7_75t_R.
+Optimizing module AO32x1_ASAP7_75t_R.
+Optimizing module AO322x2_ASAP7_75t_R.
+Optimizing module AO31x2_ASAP7_75t_R.
+Optimizing module AO22x2_ASAP7_75t_R.
+Optimizing module AO22x1_ASAP7_75t_R.
+Optimizing module AO222x2_ASAP7_75t_R.
+Optimizing module AO221x2_ASAP7_75t_R.
+Optimizing module AO221x1_ASAP7_75t_R.
+Optimizing module AO21x2_ASAP7_75t_R.
+Optimizing module AO21x1_ASAP7_75t_R.
+Optimizing module AO211x2_ASAP7_75t_R.
+Optimizing module A2O1A1O1Ixp25_ASAP7_75t_R.
+Optimizing module A2O1A1Ixp33_ASAP7_75t_R.
+Optimizing module XOR2xp5_ASAP7_75t_R.
+Optimizing module XOR2x2_ASAP7_75t_R.
+Optimizing module XOR2x1_ASAP7_75t_R.
+Optimizing module XNOR2xp5_ASAP7_75t_R.
+Optimizing module XNOR2x2_ASAP7_75t_R.
+Optimizing module XNOR2x1_ASAP7_75t_R.
+Optimizing module TIELOx1_ASAP7_75t_R.
+Optimizing module TIEHIx1_ASAP7_75t_R.
+Optimizing module OR5x2_ASAP7_75t_R.
+Optimizing module OR5x1_ASAP7_75t_R.
+Optimizing module OR4x2_ASAP7_75t_R.
+Optimizing module OR4x1_ASAP7_75t_R.
+Optimizing module OR3x4_ASAP7_75t_R.
+Optimizing module OR3x2_ASAP7_75t_R.
+Optimizing module OR3x1_ASAP7_75t_R.
+Optimizing module OR2x6_ASAP7_75t_R.
+Optimizing module OR2x4_ASAP7_75t_R.
+Optimizing module OR2x2_ASAP7_75t_R.
+Optimizing module NOR5xp2_ASAP7_75t_R.
+Optimizing module NOR4xp75_ASAP7_75t_R.
+Optimizing module NOR4xp25_ASAP7_75t_R.
+Optimizing module NOR3xp33_ASAP7_75t_R.
+Optimizing module NOR3x2_ASAP7_75t_R.
+Optimizing module NOR3x1_ASAP7_75t_R.
+Optimizing module NOR2xp67_ASAP7_75t_R.
+Optimizing module NOR2xp33_ASAP7_75t_R.
+Optimizing module NOR2x2_ASAP7_75t_R.
+Optimizing module NOR2x1p5_ASAP7_75t_R.
+Optimizing module NOR2x1_ASAP7_75t_R.
+Optimizing module NAND5xp2_ASAP7_75t_R.
+Optimizing module NAND4xp75_ASAP7_75t_R.
+Optimizing module NAND4xp25_ASAP7_75t_R.
+Optimizing module NAND3xp33_ASAP7_75t_R.
+Optimizing module NAND3x2_ASAP7_75t_R.
+Optimizing module NAND3x1_ASAP7_75t_R.
+Optimizing module NAND2xp67_ASAP7_75t_R.
+Optimizing module NAND2xp5_ASAP7_75t_R.
+Optimizing module NAND2xp33_ASAP7_75t_R.
+Optimizing module NAND2x2_ASAP7_75t_R.
+Optimizing module NAND2x1p5_ASAP7_75t_R.
+Optimizing module NAND2x1_ASAP7_75t_R.
+Optimizing module MAJx3_ASAP7_75t_R.
+Optimizing module MAJx2_ASAP7_75t_R.
+Optimizing module MAJIxp5_ASAP7_75t_R.
+Optimizing module HAxp5_ASAP7_75t_R.
+Optimizing module FAx1_ASAP7_75t_R.
+Optimizing module AND5x2_ASAP7_75t_R.
+Optimizing module AND5x1_ASAP7_75t_R.
+Optimizing module AND4x2_ASAP7_75t_R.
+Optimizing module AND4x1_ASAP7_75t_R.
+Optimizing module AND3x4_ASAP7_75t_R.
+Optimizing module AND3x2_ASAP7_75t_R.
+Optimizing module AND3x1_ASAP7_75t_R.
+Optimizing module AND2x6_ASAP7_75t_R.
+Optimizing module AND2x4_ASAP7_75t_R.
+Optimizing module AND2x2_ASAP7_75t_R.
+
+11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hdc_fp32_add_f12_l5x_n32..
+Finding unused cells or wires in module \add_plain..
+Finding unused cells or wires in module \SDFLx4_ASAP7_75t_R..
+Finding unused cells or wires in module \SDFLx3_ASAP7_75t_R..
+Finding unused cells or wires in module \SDFLx2_ASAP7_75t_R..
+Finding unused cells or wires in module \SDFLx1_ASAP7_75t_R..
+Finding unused cells or wires in module \SDFHx4_ASAP7_75t_R..
+Finding unused cells or wires in module \SDFHx3_ASAP7_75t_R..
+Finding unused cells or wires in module \SDFHx2_ASAP7_75t_R..
+Finding unused cells or wires in module \SDFHx1_ASAP7_75t_R..
+Finding unused cells or wires in module \DLLx3_ASAP7_75t_R..
+Finding unused cells or wires in module \DLLx2_ASAP7_75t_R..
+Finding unused cells or wires in module \DLLx1_ASAP7_75t_R..
+Finding unused cells or wires in module \DHLx3_ASAP7_75t_R..
+Finding unused cells or wires in module \DHLx2_ASAP7_75t_R..
+Finding unused cells or wires in module \DHLx1_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFLQx4_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFLQNx3_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFLQNx2_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFLQNx1_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFHQx4_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFHQNx3_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFHQNx2_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFHQNx1_ASAP7_75t_R..
+Finding unused cells or wires in module \DFFASRHQNx1_ASAP7_75t_R..
+Finding unused cells or wires in module \INVxp67_ASAP7_75t_R..
+Finding unused cells or wires in module \INVxp33_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx8_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx6_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx5_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx4_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx3_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx2_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx1_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx13_ASAP7_75t_R..
+Finding unused cells or wires in module \INVx11_ASAP7_75t_R..
+Finding unused cells or wires in module \HB4xp67_ASAP7_75t_R..
+Finding unused cells or wires in module \HB3xp67_ASAP7_75t_R..
+Finding unused cells or wires in module \HB2xp67_ASAP7_75t_R..
+Finding unused cells or wires in module \HB1xp67_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx9p33_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx8_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx6p67_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx5p33_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx20_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx16_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx14_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx12_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx11_ASAP7_75t_R..
+Finding unused cells or wires in module \CKINVDCx10_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx8_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx6f_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx5_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx4f_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx4_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx3_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx2_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx24_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx16f_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx12f_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx12_ASAP7_75t_R..
+Finding unused cells or wires in module \BUFx10_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI33xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI333xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI332xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI331xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI32xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI322xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI321xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI31xp67_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI31xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI311xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI22xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI22xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI222xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI221xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI21xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI21xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OAI211xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \OA33x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA333x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA333x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OA332x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA332x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OA331x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA331x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OA31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA22x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA222x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA221x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA21x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OA211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \O2A1O1Ixp5_ASAP7_75t_R..
+Finding unused cells or wires in module \O2A1O1Ixp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI33xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI333xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI332xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI331xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI32xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI322xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI321xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI31xp67_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI31xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI311xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI22xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI22xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI222xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI221xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI221x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI21xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI21xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI211xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \AOI211x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO33x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO333x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO333x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO332x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO332x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO331x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO331x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO32x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO32x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO322x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO31x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO22x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO22x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO222x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO221x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO221x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO21x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AO21x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AO211x2_ASAP7_75t_R..
+Finding unused cells or wires in module \A2O1A1O1Ixp25_ASAP7_75t_R..
+Finding unused cells or wires in module \A2O1A1Ixp33_ASAP7_75t_R..
+Finding unused cells or wires in module \XOR2xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \XOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \XOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \XNOR2xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \XNOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \XNOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \TIELOx1_ASAP7_75t_R..
+Finding unused cells or wires in module \TIEHIx1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR5x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OR5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR4x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OR4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR3x4_ASAP7_75t_R..
+Finding unused cells or wires in module \OR3x2_ASAP7_75t_R..
+Finding unused cells or wires in module \OR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \OR2x6_ASAP7_75t_R..
+Finding unused cells or wires in module \OR2x4_ASAP7_75t_R..
+Finding unused cells or wires in module \OR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR5xp2_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR4xp75_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR4xp25_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR3xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR3x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2xp67_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2x1p5_ASAP7_75t_R..
+Finding unused cells or wires in module \NOR2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND5xp2_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND4xp75_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND4xp25_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND3xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND3x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2xp67_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2xp5_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2xp33_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2x2_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2x1p5_ASAP7_75t_R..
+Finding unused cells or wires in module \NAND2x1_ASAP7_75t_R..
+Finding unused cells or wires in module \MAJx3_ASAP7_75t_R..
+Finding unused cells or wires in module \MAJx2_ASAP7_75t_R..
+Finding unused cells or wires in module \MAJIxp5_ASAP7_75t_R..
+Finding unused cells or wires in module \HAxp5_ASAP7_75t_R..
+Finding unused cells or wires in module \FAx1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND5x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AND5x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND4x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AND4x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND3x4_ASAP7_75t_R..
+Finding unused cells or wires in module \AND3x2_ASAP7_75t_R..
+Finding unused cells or wires in module \AND3x1_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x6_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x4_ASAP7_75t_R..
+Finding unused cells or wires in module \AND2x2_ASAP7_75t_R..
+Removed 4257 unused cells and 16637 unused wires.
+<suppressed ~9230 debug messages>
+
+12. Executing ASYNC2SYNC pass.
+Replacing ot_hdc_fp32_add_f12_l5x_n32.$flatten\c2631.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\c2631.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=$flatten\c2631.$auto$rtlil.cc:3504:NotGate$3332, Q=\c2631.IQN
+Replacing ot_hdc_fp32_add_f12_l5x_n32.$flatten\c2634.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\c2634.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=\c2633.IQN, Q=\c2634.IQN
+Replacing ot_hdc_fp32_add_f12_l5x_n32.$flatten\c2632.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\c2632.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=\c2631.IQN, Q=\c2632.IQN
+Replacing ot_hdc_fp32_add_f12_l5x_n32.$flatten\c2633.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\c2633.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=\c2632.IQN, Q=\c2633.IQN
+Replacing ot_hdc_fp32_add_f12_l5x_n32.$flatten\c2630.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\c2630.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=\c2634.IQN, Q=\c2630.IQN
+Replacing add_plain.$flatten\_5213_.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\_5213_.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=\_5217_.IQN, Q=\_5213_.IQN
+Replacing add_plain.$flatten\_5214_.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\_5214_.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=$flatten\_5214_.$auto$rtlil.cc:3504:NotGate$3332, Q=\_5214_.IQN
+Replacing add_plain.$flatten\_5215_.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\_5215_.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=\_5214_.IQN, Q=\_5215_.IQN
+Replacing add_plain.$flatten\_5216_.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\_5216_.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=\_5215_.IQN, Q=\_5216_.IQN
+Replacing add_plain.$flatten\_5217_.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$flatten\_5217_.$auto$rtlil.cc:3511:AndnotGate$3337, CLR=1'0, D=\_5216_.IQN, Q=\_5217_.IQN
+Replacing DLLx3_ASAP7_75t_R.$auto$liberty.cc:334:create_latch$3412 ($_DLATCH_P_): EN=$auto$rtlil.cc:3504:NotGate$3410, D=\D, Q=\IQ
+Replacing DLLx2_ASAP7_75t_R.$auto$liberty.cc:334:create_latch$3408 ($_DLATCH_P_): EN=$auto$rtlil.cc:3504:NotGate$3406, D=\D, Q=\IQ
+Replacing DLLx1_ASAP7_75t_R.$auto$liberty.cc:334:create_latch$3404 ($_DLATCH_P_): EN=$auto$rtlil.cc:3504:NotGate$3402, D=\D, Q=\IQ
+Replacing DHLx3_ASAP7_75t_R.$auto$liberty.cc:334:create_latch$3400 ($_DLATCH_P_): EN=\CLK, D=\D, Q=\IQ
+Replacing DHLx2_ASAP7_75t_R.$auto$liberty.cc:334:create_latch$3398 ($_DLATCH_P_): EN=\CLK, D=\D, Q=\IQ
+Replacing DHLx1_ASAP7_75t_R.$auto$liberty.cc:334:create_latch$3396 ($_DLATCH_P_): EN=\CLK, D=\D, Q=\IQ
+Replacing DFFASRHQNx1_ASAP7_75t_R.$auto$liberty.cc:242:create_ff$3335 ($_DFFSR_PPP_): SET=$auto$rtlil.cc:3511:AndnotGate$3337, CLR=$auto$rtlil.cc:3504:NotGate$3330, D=$auto$rtlil.cc:3504:NotGate$3332, Q=\IQN
+
+13. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: vo_gold (\vo_gold), vo_gate (\vo_gate) -> vo
+Presumably equivalent wires: err_gold ({ \_2217_.Y_gold \_2115_.Y_gold }), err_gate ({ \inv506.Y_gate \inv505.Y_gate }) -> err
+Presumably equivalent wires: y_gold ({ \_2218_.Y_gold \_2184_.Y_gold \_2185_.Y_gold \_2186_.Y_gold \_2192_.Y_gold \_2193_.Y_gold \_2194_.Y_gold \_2200_.Y_gold \_2201_.Y_gold \_2202_.Y_gold \_2203_.Y_gold \_2204_.Y_gold \_2205_.Y_gold \_2206_.Y_gold \_2207_.Y_gold \_2208_.Y_gold \_2209_.Y_gold \_2210_.Y_gold \_2213_.Y_gold \_2214_.Y_gold \_2215_.Y_gold \_1980_.Y_gold \_2219_.Y_gold \_2220_.Y_gold \_2221_.Y_gold \_2222_.Y_gold \_2223_.Y_gold \_2224_.Y_gold \_2225_.Y_gold \_2226_.Y_gold \_2227_.Y_gold \_2228_.Y_gold }), y_gate ({ \inv504.Y_gate \inv503.Y_gate \inv502.Y_gate \inv501.Y_gate \inv500.Y_gate \inv499.Y_gate \inv498.Y_gate \inv497.Y_gate \inv496.Y_gate \inv495.Y_gate \inv494.Y_gate \inv493.Y_gate \inv492.Y_gate \inv491.Y_gate \inv490.Y_gate \inv489.Y_gate \inv488.Y_gate \inv487.Y_gate \inv486.Y_gate \inv485.Y_gate \inv484.Y_gate \inv483.Y_gate \inv482.Y_gate \inv481.Y_gate \inv480.Y_gate \inv479.Y_gate \inv478.Y_gate \inv477.Y_gate \inv476.Y_gate \inv475.Y_gate \inv474.Y_gate \inv473.Y_gate }) -> y
+Presumably equivalent wires: b_gold (\b_gold), b_gate (\b_gate) -> b
+Presumably equivalent wires: a_gold (\a_gold), a_gate (\a_gate) -> a
+Presumably equivalent wires: v_gold (\v_gold), v_gate (\v_gate) -> v
+Presumably equivalent wires: rst_n_gold (\rst_n_gold), rst_n_gate (\rst_n_gate) -> rst_n
+Presumably equivalent wires: clk_gold (\clk_gold), clk_gate (\clk_gate) -> clk
+Setting undriven nets to undef: \u.u.x_err_gold [0]
+Setting undriven nets to undef: \u.u.x_bman_gold [22:0]
+Setting undriven nets to undef: \u.u.x_aman_gold [22:0]
+Setting undriven nets to undef: \u.u.w_exp_gold [0]
+Setting undriven nets to undef: \u.u.w_exp_gold [7:2]
+Setting undriven nets to undef: \u.u.w_err_gold [0]
+Setting undriven nets to undef: \u.u.u_sum.s_gold [2:0]
+Setting undriven nets to undef: \u.u.u_sum.p[4]_gold [19:16]
+Setting undriven nets to undef: \u.u.u_sum.p[3]_gold [18:8]
+Setting undriven nets to undef: \u.u.u_sum.p[2]_gold [7:4]
+Setting undriven nets to undef: \u.u.u_sum.p[2]_gold [9]
+Setting undriven nets to undef: \u.u.u_sum.p[2]_gold [11]
+Setting undriven nets to undef: \u.u.u_sum.p[1]_gold [5:3]
+Setting undriven nets to undef: \u.u.u_sum.p[0]_gold [3:1]
+Setting undriven nets to undef: \u.u.u_sum.g[5]_gold [16:12]
+Setting undriven nets to undef: \u.u.u_sum.g[4]_gold [16:12]
+Setting undriven nets to undef: \u.u.u_sum.b_gold [2:0]
+Setting undriven nets to undef: \u.u.u_rnd.t[5]_gold [3]
+Setting undriven nets to undef: \u.u.u_rnd.t[5]_gold [6]
+Setting undriven nets to undef: \u.u.u_rnd.t[5]_gold [10]
+Setting undriven nets to undef: \u.u.u_rnd.t[4]_gold [3]
+Setting undriven nets to undef: \u.u.u_rnd.t[4]_gold [6]
+Setting undriven nets to undef: \u.u.u_rnd.t[4]_gold [10]
+Setting undriven nets to undef: \u.u.u_rnd.t[4]_gold [24:16]
+Setting undriven nets to undef: \u.u.u_rnd.t[3]_gold [3]
+Setting undriven nets to undef: \u.u.u_rnd.t[3]_gold [6]
+Setting undriven nets to undef: \u.u.u_rnd.t[3]_gold [10]
+Setting undriven nets to undef: \u.u.u_rnd.t[3]_gold [15:12]
+Setting undriven nets to undef: \u.u.u_rnd.t[3]_gold [19:18]
+Setting undriven nets to undef: \u.u.u_rnd.t[3]_gold [22]
+Setting undriven nets to undef: \u.u.u_rnd.t[2]_gold [3]
+Setting undriven nets to undef: \u.u.u_rnd.t[2]_gold [8:6]
+Setting undriven nets to undef: \u.u.u_rnd.t[2]_gold [11:10]
+Setting undriven nets to undef: \u.u.u_rnd.t[2]_gold [14]
+Setting undriven nets to undef: \u.u.u_rnd.t[1]_gold [5:3]
+Setting undriven nets to undef: \u.u.u_rnd.t[1]_gold [7]
+Setting undriven nets to undef: \u.u.u_rnd.t[1]_gold [10:9]
+Setting undriven nets to undef: \u.u.u_rnd.t[1]_gold [12]
+Setting undriven nets to undef: \u.u.u_rnd.t[1]_gold [14]
+Setting undriven nets to undef: \u.u.u_rnd.t[1]_gold [19:17]
+Setting undriven nets to undef: \u.u.u_rnd.t[1]_gold [21]
+Setting undriven nets to undef: \u.u.u_rnd.t[1]_gold [24:23]
+Setting undriven nets to undef: \u.u.u_rnd.t[0]_gold [2:1]
+Setting undriven nets to undef: \u.u.u_rnd.t[0]_gold [20:14]
+Setting undriven nets to undef: \u.u.u_rnd.a_gold [1:0]
+Setting undriven nets to undef: \u.u.u_rnd.a_gold [19:13]
+Setting undriven nets to undef: \u.u.u_lzc.x_gold [31:5]
+Setting undriven nets to undef: \u.u.u_k6.q_gold [61:0]
+Setting undriven nets to undef: \u.u.u_k6.q_gold [100:78]
+Setting undriven nets to undef: \u.u.u_k6.q_gold [124:102]
+Setting undriven nets to undef: \u.u.u_k6.q_gold [177:144]
+Setting undriven nets to undef: \u.u.u_k6.q_gold [180:179]
+Setting undriven nets to undef: \u.u.u_k6.g_r.r_gold [61:0]
+Setting undriven nets to undef: \u.u.u_k6.g_r.r_gold [100:78]
+Setting undriven nets to undef: \u.u.u_k6.g_r.r_gold [124:102]
+Setting undriven nets to undef: \u.u.u_k6.g_r.r_gold [177:144]
+Setting undriven nets to undef: \u.u.u_k6.g_r.r_gold [179]
+Setting undriven nets to undef: \u.u.u_k6.d_gold [62]
+Setting undriven nets to undef: \u.u.u_k6.d_gold [70]
+Setting undriven nets to undef: \u.u.u_k6.d_gold [101]
+Setting undriven nets to undef: \u.u.u_k6.d_gold [126:125]
+Setting undriven nets to undef: \u.u.u_k6.d_gold [134]
+Setting undriven nets to undef: \u.u.u_k5.q_gold [67]
+Setting undriven nets to undef: \u.u.u_k5.q_gold [70]
+Setting undriven nets to undef: \u.u.u_k5.g_r.r_gold [67]
+Setting undriven nets to undef: \u.u.u_k5.d_gold [65:33]
+Setting undriven nets to undef: \u.u.u_k5.d_gold [67]
+Setting undriven nets to undef: \u.u.u_k5.d_gold [70:69]
+Setting undriven nets to undef: \u.u.u_k4.q_gold [4:3]
+Setting undriven nets to undef: \u.u.u_k4.q_gold [22:16]
+Setting undriven nets to undef: \u.u.u_k4.q_gold [67:35]
+Setting undriven nets to undef: \u.u.u_k4.q_gold [72:70]
+Setting undriven nets to undef: \u.u.u_k4.d_gold [4:3]
+Setting undriven nets to undef: \u.u.u_k4.d_gold [22:16]
+Setting undriven nets to undef: \u.u.u_k4.d_gold [67:35]
+Setting undriven nets to undef: \u.u.u_k4.d_gold [72:70]
+Setting undriven nets to undef: \u.u.u_k3.q_gold [0]
+Setting undriven nets to undef: \u.u.u_k3.q_gold [62]
+Setting undriven nets to undef: \u.u.u_k3.q_gold [102:64]
+Setting undriven nets to undef: \u.u.u_k3.q_gold [104]
+Setting undriven nets to undef: \u.u.u_k3.q_gold [107:106]
+Setting undriven nets to undef: \u.u.u_k3.g_r.r_gold [0]
+Setting undriven nets to undef: \u.u.u_k3.g_r.r_gold [62]
+Setting undriven nets to undef: \u.u.u_k3.g_r.r_gold [102:64]
+Setting undriven nets to undef: \u.u.u_k3.g_r.r_gold [104]
+Setting undriven nets to undef: \u.u.u_k3.g_r.r_gold [106]
+Setting undriven nets to undef: \u.u.u_k3.d_gold [7]
+Setting undriven nets to undef: \u.u.u_k3.d_gold [28:26]
+Setting undriven nets to undef: \u.u.u_k3.d_gold [30]
+Setting undriven nets to undef: \u.u.u_k3.d_gold [33]
+Setting undriven nets to undef: \u.u.u_k3.d_gold [63:62]
+Setting undriven nets to undef: \u.u.u_k3.d_gold [102:67]
+Setting undriven nets to undef: \u.u.u_k3.d_gold [107:104]
+Setting undriven nets to undef: \u.u.u_k2.q_gold [0]
+Setting undriven nets to undef: \u.u.u_k2.q_gold [21:19]
+Setting undriven nets to undef: \u.u.u_k2.q_gold [23]
+Setting undriven nets to undef: \u.u.u_k2.q_gold [26]
+Setting undriven nets to undef: \u.u.u_k2.q_gold [30:28]
+Setting undriven nets to undef: \u.u.u_k2.q_gold [57:56]
+Setting undriven nets to undef: \u.u.u_k2.q_gold [96:61]
+Setting undriven nets to undef: \u.u.u_k2.q_gold [101:98]
+Setting undriven nets to undef: \u.u.u_k2.d_gold [0]
+Setting undriven nets to undef: \u.u.u_k2.d_gold [21:19]
+Setting undriven nets to undef: \u.u.u_k2.d_gold [23]
+Setting undriven nets to undef: \u.u.u_k2.d_gold [26]
+Setting undriven nets to undef: \u.u.u_k2.d_gold [30:28]
+Setting undriven nets to undef: \u.u.u_k2.d_gold [57:56]
+Setting undriven nets to undef: \u.u.u_k2.d_gold [96:61]
+Setting undriven nets to undef: \u.u.u_k2.d_gold [101:98]
+Setting undriven nets to undef: \u.u.u_k1.q_gold [2:0]
+Setting undriven nets to undef: \u.u.u_k1.q_gold [53:52]
+Setting undriven nets to undef: \u.u.u_k1.q_gold [92:57]
+Setting undriven nets to undef: \u.u.u_k1.q_gold [97:94]
+Setting undriven nets to undef: \u.u.u_k1.g_r.r_gold [2:0]
+Setting undriven nets to undef: \u.u.u_k1.g_r.r_gold [53:52]
+Setting undriven nets to undef: \u.u.u_k1.g_r.r_gold [92:57]
+Setting undriven nets to undef: \u.u.u_k1.g_r.r_gold [96:94]
+Setting undriven nets to undef: \u.u.u_k1.d_gold [92:60]
+Setting undriven nets to undef: \u.u.u_k1.d_gold [97:95]
+Setting undriven nets to undef: \u.u.u_k0.q_gold [38:16]
+Setting undriven nets to undef: \u.u.u_k0.q_gold [62:40]
+Setting undriven nets to undef: \u.u.u_k0.q_gold [115:82]
+Setting undriven nets to undef: \u.u.u_k0.q_gold [117]
+Setting undriven nets to undef: \u.u.u_k0.q_gold [119]
+Setting undriven nets to undef: \u.u.u_k0.d_gold [38:16]
+Setting undriven nets to undef: \u.u.u_k0.d_gold [62:40]
+Setting undriven nets to undef: \u.u.u_k0.d_gold [115:82]
+Setting undriven nets to undef: \u.u.u_k0.d_gold [117]
+Setting undriven nets to undef: \u.u.u_k0.d_gold [119]
+Setting undriven nets to undef: \u.u.u_esub.p[3]_gold [8]
+Setting undriven nets to undef: \u.u.u_esub.p[2]_gold [5:4]
+Setting undriven nets to undef: \u.u.u_esub.p[2]_gold [8:7]
+Setting undriven nets to undef: \u.u.u_esub.p[1]_gold [3]
+Setting undriven nets to undef: \u.u.u_esub.p[1]_gold [8:5]
+Setting undriven nets to undef: \u.u.u_esub.p[0]_gold [2]
+Setting undriven nets to undef: \u.u.u_esub.g[4]_gold [1]
+Setting undriven nets to undef: \u.u.u_esub.g[4]_gold [3]
+Setting undriven nets to undef: \u.u.u_esub.g[4]_gold [7:6]
+Setting undriven nets to undef: \u.u.u_esub.g[3]_gold [1]
+Setting undriven nets to undef: \u.u.u_esub.g[3]_gold [3]
+Setting undriven nets to undef: \u.u.u_esub.g[3]_gold [8:6]
+Setting undriven nets to undef: \u.u.u_esub.g[2]_gold [1]
+Setting undriven nets to undef: \u.u.u_esub.g[2]_gold [5:3]
+Setting undriven nets to undef: \u.u.u_esub.g[2]_gold [8:7]
+Setting undriven nets to undef: \u.u.u_esub.g[1]_gold [1]
+Setting undriven nets to undef: \u.u.u_esub.g[1]_gold [5]
+Setting undriven nets to undef: \u.u.u_esub.g[1]_gold [7]
+Setting undriven nets to undef: \u.u.u_esub.g[0]_gold [8:6]
+Setting undriven nets to undef: \u.u.u_esub.b_gold [4:0]
+Setting undriven nets to undef: \u.u.u_esub.a_gold [0]
+Setting undriven nets to undef: \u.u.u_esub.a_gold [7:2]
+Setting undriven nets to undef: \u.u.u_eadd.t[4]_gold [0]
+Setting undriven nets to undef: \u.u.u_eadd.t[4]_gold [3:2]
+Setting undriven nets to undef: \u.u.u_eadd.t[4]_gold [6]
+Setting undriven nets to undef: \u.u.u_eadd.t[4]_gold [8]
+Setting undriven nets to undef: \u.u.u_eadd.t[3]_gold [0]
+Setting undriven nets to undef: \u.u.u_eadd.t[3]_gold [3:2]
+Setting undriven nets to undef: \u.u.u_eadd.t[3]_gold [6]
+Setting undriven nets to undef: \u.u.u_eadd.t[3]_gold [8]
+Setting undriven nets to undef: \u.u.u_eadd.t[2]_gold [0]
+Setting undriven nets to undef: \u.u.u_eadd.t[2]_gold [6:2]
+Setting undriven nets to undef: \u.u.u_eadd.t[2]_gold [8]
+Setting undriven nets to undef: \u.u.u_eadd.t[1]_gold [0]
+Setting undriven nets to undef: \u.u.u_eadd.t[1]_gold [2]
+Setting undriven nets to undef: \u.u.u_eadd.t[1]_gold [5:4]
+Setting undriven nets to undef: \u.u.u_eadd.t[1]_gold [8:7]
+Setting undriven nets to undef: \u.u.u_eadd.t[0]_gold [1:0]
+Setting undriven nets to undef: \u.u.u_eadd.t[0]_gold [8:3]
+Setting undriven nets to undef: \u.u.u_eadd.a_gold [0]
+Setting undriven nets to undef: \u.u.u_eadd.a_gold [7:2]
+Setting undriven nets to undef: \u.u.u_dif.s_gold [0]
+Setting undriven nets to undef: \u.u.u_dif.s_gold [21:19]
+Setting undriven nets to undef: \u.u.u_dif.s_gold [23]
+Setting undriven nets to undef: \u.u.u_dif.s_gold [26]
+Setting undriven nets to undef: \u.u.u_dif.p[4]_gold [23:17]
+Setting undriven nets to undef: \u.u.u_dif.p[4]_gold [27]
+Setting undriven nets to undef: \u.u.u_dif.p[3]_gold [8]
+Setting undriven nets to undef: \u.u.u_dif.p[3]_gold [16:10]
+Setting undriven nets to undef: \u.u.u_dif.p[3]_gold [19:18]
+Setting undriven nets to undef: \u.u.u_dif.p[3]_gold [24:21]
+Setting undriven nets to undef: \u.u.u_dif.p[3]_gold [27]
+Setting undriven nets to undef: \u.u.u_dif.p[2]_gold [8:6]
+Setting undriven nets to undef: \u.u.u_dif.p[2]_gold [12:10]
+Setting undriven nets to undef: \u.u.u_dif.p[2]_gold [17:15]
+Setting undriven nets to undef: \u.u.u_dif.p[2]_gold [27]
+Setting undriven nets to undef: \u.u.u_dif.p[1]_gold [4:2]
+Setting undriven nets to undef: \u.u.u_dif.p[1]_gold [6]
+Setting undriven nets to undef: \u.u.u_dif.p[1]_gold [14:8]
+Setting undriven nets to undef: \u.u.u_dif.p[1]_gold [21]
+Setting undriven nets to undef: \u.u.u_dif.p[1]_gold [23]
+Setting undriven nets to undef: \u.u.u_dif.p[1]_gold [27]
+Setting undriven nets to undef: \u.u.u_dif.p[0]_gold [5:4]
+Setting undriven nets to undef: \u.u.u_dif.p[0]_gold [9]
+Setting undriven nets to undef: \u.u.u_dif.g[5]_gold [3:2]
+Setting undriven nets to undef: \u.u.u_dif.g[5]_gold [7:5]
+Setting undriven nets to undef: \u.u.u_dif.g[5]_gold [11:10]
+Setting undriven nets to undef: \u.u.u_dif.g[5]_gold [28:13]
+Setting undriven nets to undef: \u.u.u_dif.g[4]_gold [3:2]
+Setting undriven nets to undef: \u.u.u_dif.g[4]_gold [7:5]
+Setting undriven nets to undef: \u.u.u_dif.g[4]_gold [11:10]
+Setting undriven nets to undef: \u.u.u_dif.g[4]_gold [27:13]
+Setting undriven nets to undef: \u.u.u_dif.g[3]_gold [3:2]
+Setting undriven nets to undef: \u.u.u_dif.g[3]_gold [8:5]
+Setting undriven nets to undef: \u.u.u_dif.g[3]_gold [19:11]
+Setting undriven nets to undef: \u.u.u_dif.g[3]_gold [27:25]
+Setting undriven nets to undef: \u.u.u_dif.g[2]_gold [3:2]
+Setting undriven nets to undef: \u.u.u_dif.g[2]_gold [11:5]
+Setting undriven nets to undef: \u.u.u_dif.g[2]_gold [14:13]
+Setting undriven nets to undef: \u.u.u_dif.g[2]_gold [27]
+Setting undriven nets to undef: \u.u.u_dif.g[1]_gold [13:5]
+Setting undriven nets to undef: \u.u.u_dif.g[1]_gold [22:20]
+Setting undriven nets to undef: \u.u.u_dif.g[1]_gold [27]
+Setting undriven nets to undef: \u.u.u_dif.g[0]_gold [25]
+Setting undriven nets to undef: \u.u.u_dif.b_gold [26:3]
+Setting undriven nets to undef: \u.u.u_dba.s_gold [0]
+Setting undriven nets to undef: \u.u.u_dba.p[3]_gold [8]
+Setting undriven nets to undef: \u.u.u_dba.p[2]_gold [4]
+Setting undriven nets to undef: \u.u.u_dba.p[2]_gold [8]
+Setting undriven nets to undef: \u.u.u_dba.p[1]_gold [3]
+Setting undriven nets to undef: \u.u.u_dba.g[4]_gold [2]
+Setting undriven nets to undef: \u.u.u_dba.g[4]_gold [8]
+Setting undriven nets to undef: \u.u.u_dba.g[3]_gold [2]
+Setting undriven nets to undef: \u.u.u_dba.g[3]_gold [8]
+Setting undriven nets to undef: \u.u.u_dba.g[2]_gold [2]
+Setting undriven nets to undef: \u.u.u_dba.g[2]_gold [4]
+Setting undriven nets to undef: \u.u.u_dba.g[2]_gold [6]
+Setting undriven nets to undef: \u.u.u_dba.g[2]_gold [8]
+Setting undriven nets to undef: \u.u.u_dba.g[1]_gold [3]
+Setting undriven nets to undef: \u.u.u_dba.g[1]_gold [8]
+Setting undriven nets to undef: \u.u.u_dba.a_gold [0]
+Setting undriven nets to undef: \u.u.u_dab.s_gold [0]
+Setting undriven nets to undef: \u.u.u_dab.p[3]_gold [8]
+Setting undriven nets to undef: \u.u.u_dab.p[2]_gold [4]
+Setting undriven nets to undef: \u.u.u_dab.p[2]_gold [8]
+Setting undriven nets to undef: \u.u.u_dab.p[1]_gold [3]
+Setting undriven nets to undef: \u.u.u_dab.g[4]_gold [1]
+Setting undriven nets to undef: \u.u.u_dab.g[4]_gold [8]
+Setting undriven nets to undef: \u.u.u_dab.g[3]_gold [1]
+Setting undriven nets to undef: \u.u.u_dab.g[3]_gold [8]
+Setting undriven nets to undef: \u.u.u_dab.g[2]_gold [1]
+Setting undriven nets to undef: \u.u.u_dab.g[2]_gold [4]
+Setting undriven nets to undef: \u.u.u_dab.g[1]_gold [1]
+Setting undriven nets to undef: \u.u.u_dab.g[0]_gold [7:2]
+Setting undriven nets to undef: \u.u.u_dab.a_gold [0]
+Setting undriven nets to undef: \u.u.u_cmp.p[4]_gold [23:16]
+Setting undriven nets to undef: \u.u.u_cmp.p[3]_gold [14:8]
+Setting undriven nets to undef: \u.u.u_cmp.p[3]_gold [22:16]
+Setting undriven nets to undef: \u.u.u_cmp.p[2]_gold [6:4]
+Setting undriven nets to undef: \u.u.u_cmp.p[2]_gold [10:8]
+Setting undriven nets to undef: \u.u.u_cmp.p[2]_gold [14:12]
+Setting undriven nets to undef: \u.u.u_cmp.p[2]_gold [22:16]
+Setting undriven nets to undef: \u.u.u_cmp.p[1]_gold [2]
+Setting undriven nets to undef: \u.u.u_cmp.p[1]_gold [4]
+Setting undriven nets to undef: \u.u.u_cmp.p[1]_gold [6]
+Setting undriven nets to undef: \u.u.u_cmp.p[1]_gold [8]
+Setting undriven nets to undef: \u.u.u_cmp.p[1]_gold [10]
+Setting undriven nets to undef: \u.u.u_cmp.p[1]_gold [14:12]
+Setting undriven nets to undef: \u.u.u_cmp.p[1]_gold [16]
+Setting undriven nets to undef: \u.u.u_cmp.p[1]_gold [18]
+Setting undriven nets to undef: \u.u.u_cmp.p[1]_gold [23:20]
+Setting undriven nets to undef: \u.u.u_cmp.p[0]_gold [15:1]
+Setting undriven nets to undef: \u.u.u_cmp.p[0]_gold [17]
+Setting undriven nets to undef: \u.u.u_cmp.g[5]_gold [2]
+Setting undriven nets to undef: \u.u.u_cmp.g[5]_gold [6:4]
+Setting undriven nets to undef: \u.u.u_cmp.g[5]_gold [14:8]
+Setting undriven nets to undef: \u.u.u_cmp.g[5]_gold [23:16]
+Setting undriven nets to undef: \u.u.u_cmp.g[4]_gold [2]
+Setting undriven nets to undef: \u.u.u_cmp.g[4]_gold [6:4]
+Setting undriven nets to undef: \u.u.u_cmp.g[4]_gold [14:8]
+Setting undriven nets to undef: \u.u.u_cmp.g[4]_gold [23:16]
+Setting undriven nets to undef: \u.u.u_cmp.g[3]_gold [2]
+Setting undriven nets to undef: \u.u.u_cmp.g[3]_gold [6:4]
+Setting undriven nets to undef: \u.u.u_cmp.g[3]_gold [14:8]
+Setting undriven nets to undef: \u.u.u_cmp.g[3]_gold [23:16]
+Setting undriven nets to undef: \u.u.u_cmp.g[2]_gold [2]
+Setting undriven nets to undef: \u.u.u_cmp.g[2]_gold [6:4]
+Setting undriven nets to undef: \u.u.u_cmp.g[2]_gold [10:8]
+Setting undriven nets to undef: \u.u.u_cmp.g[2]_gold [14:12]
+Setting undriven nets to undef: \u.u.u_cmp.g[2]_gold [18:16]
+Setting undriven nets to undef: \u.u.u_cmp.g[2]_gold [22:20]
+Setting undriven nets to undef: \u.u.u_cmp.g[1]_gold [2]
+Setting undriven nets to undef: \u.u.u_cmp.g[1]_gold [4]
+Setting undriven nets to undef: \u.u.u_cmp.g[1]_gold [6]
+Setting undriven nets to undef: \u.u.u_cmp.g[1]_gold [8]
+Setting undriven nets to undef: \u.u.u_cmp.g[1]_gold [10]
+Setting undriven nets to undef: \u.u.u_cmp.g[1]_gold [12]
+Setting undriven nets to undef: \u.u.u_cmp.g[1]_gold [14]
+Setting undriven nets to undef: \u.u.u_cmp.g[1]_gold [23:16]
+Setting undriven nets to undef: \u.u.u_cmp.g[0]_gold [3:1]
+Setting undriven nets to undef: \u.u.u_cmp.g[0]_gold [5]
+Setting undriven nets to undef: \u.u.u_cmp.g[0]_gold [9:7]
+Setting undriven nets to undef: \u.u.u_cmp.g[0]_gold [11]
+Setting undriven nets to undef: \u.u.u_cmp.g[0]_gold [13]
+Setting undriven nets to undef: \u.u.u_cmp.g[0]_gold [15]
+Setting undriven nets to undef: \u.u.u_cmp.g[0]_gold [19]
+Setting undriven nets to undef: \u.u.u_cmp.g[0]_gold [21]
+Setting undriven nets to undef: \u.u.u_cmp.g[0]_gold [23]
+Setting undriven nets to undef: \u.u.t_exp_gold [1:0]
+Setting undriven nets to undef: \u.u.t_exp_gold [7:5]
+Setting undriven nets to undef: \u.u.t_err_gold [0]
+Setting undriven nets to undef: \u.u.sum_w_gold [2:0]
+Setting undriven nets to undef: \u.u.sum_gold [2:0]
+Setting undriven nets to undef: \u.u.small_b_gold [26:0]
+Setting undriven nets to undef: \u.u.small_a_gold [26:0]
+Setting undriven nets to undef: \u.u.s2_val_gold [4:3]
+Setting undriven nets to undef: \u.u.s2_val_gold [22:16]
+Setting undriven nets to undef: \u.u.s2_err_gold [0]
+Setting undriven nets to undef: \u.u.s1_small_gold [2:0]
+Setting undriven nets to undef: \u.u.s1_exp_gold [1:0]
+Setting undriven nets to undef: \u.u.s1_exp_gold [7:5]
+Setting undriven nets to undef: \u.u.s1_err_gold [0]
+Setting undriven nets to undef: \u.u.qa_gold [38:16]
+Setting undriven nets to undef: \u.u.qa_gold [62:40]
+Setting undriven nets to undef: \u.u.qa_gold [115:82]
+Setting undriven nets to undef: \u.u.qa_gold [117]
+Setting undriven nets to undef: \u.u.qa_gold [119]
+Setting undriven nets to undef: \u.u.q6_gold [69:0]
+Setting undriven nets to undef: \u.u.q6_gold [177:71]
+Setting undriven nets to undef: \u.u.q6_gold [180:179]
+Setting undriven nets to undef: \u.u.q5_gold [65:0]
+Setting undriven nets to undef: \u.u.q5_gold [70:67]
+Setting undriven nets to undef: \u.u.q4_gold [4:0]
+Setting undriven nets to undef: \u.u.q4_gold [22:16]
+Setting undriven nets to undef: \u.u.q4_gold [67:35]
+Setting undriven nets to undef: \u.u.q4_gold [72:70]
+Setting undriven nets to undef: \u.u.q3_gold [0]
+Setting undriven nets to undef: \u.u.q3_gold [62:7]
+Setting undriven nets to undef: \u.u.q3_gold [102:64]
+Setting undriven nets to undef: \u.u.q3_gold [107:104]
+Setting undriven nets to undef: \u.u.q2_gold [0]
+Setting undriven nets to undef: \u.u.q2_gold [21:19]
+Setting undriven nets to undef: \u.u.q2_gold [23]
+Setting undriven nets to undef: \u.u.q2_gold [26]
+Setting undriven nets to undef: \u.u.q2_gold [30:28]
+Setting undriven nets to undef: \u.u.q2_gold [54:32]
+Setting undriven nets to undef: \u.u.q2_gold [57:56]
+Setting undriven nets to undef: \u.u.q2_gold [96:61]
+Setting undriven nets to undef: \u.u.q2_gold [101:98]
+Setting undriven nets to undef: \u.u.q1_gold [26:0]
+Setting undriven nets to undef: \u.u.q1_gold [53:52]
+Setting undriven nets to undef: \u.u.q1_gold [92:57]
+Setting undriven nets to undef: \u.u.q1_gold [97:94]
+Setting undriven nets to undef: \u.u.lz_gold [4:0]
+Setting undriven nets to undef: \u.u.g0_gold [1:0]
+Setting undriven nets to undef: \u.u.g0_gold [4:3]
+Setting undriven nets to undef: \u.u.dif_w_gold [0]
+Setting undriven nets to undef: \u.u.dif_w_gold [21:19]
+Setting undriven nets to undef: \u.u.dif_w_gold [23]
+Setting undriven nets to undef: \u.u.dif_w_gold [26]
+Setting undriven nets to undef: \u.u.dif_gold [0]
+Setting undriven nets to undef: \u.u.dif_gold [21:19]
+Setting undriven nets to undef: \u.u.dif_gold [23]
+Setting undriven nets to undef: \u.u.dif_gold [26]
+Setting undriven nets to undef: \u.u.dba_gold [0]
+Setting undriven nets to undef: \u.u.dba_gold [7:5]
+Setting undriven nets to undef: \u.u.dab_gold [0]
+Setting undriven nets to undef: \u.u.dab_gold [7:5]
+Setting undriven nets to undef: \u.u.big28_gold [26:3]
+Setting undriven nets to undef: \u.u.b_man_gold [23]
+Setting undriven nets to undef: \u.u.b_exp_gold [0]
+Setting undriven nets to undef: \u.u.a_man_gold [23]
+Setting undriven nets to undef: \u.u.a_exp_gold [0]
+
+14. Executing HIERARCHY pass (managing design hierarchy).
+
+14.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+14.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\ot_hdc_fp32_add_f12_l5x_n32'.
+Removing unused module `\add_plain'.
+Removing unused module `\SDFLx4_ASAP7_75t_R'.
+Removing unused module `\SDFLx3_ASAP7_75t_R'.
+Removing unused module `\SDFLx2_ASAP7_75t_R'.
+Removing unused module `\SDFLx1_ASAP7_75t_R'.
+Removing unused module `\SDFHx4_ASAP7_75t_R'.
+Removing unused module `\SDFHx3_ASAP7_75t_R'.
+Removing unused module `\SDFHx2_ASAP7_75t_R'.
+Removing unused module `\SDFHx1_ASAP7_75t_R'.
+Removing unused module `\DLLx3_ASAP7_75t_R'.
+Removing unused module `\DLLx2_ASAP7_75t_R'.
+Removing unused module `\DLLx1_ASAP7_75t_R'.
+Removing unused module `\DHLx3_ASAP7_75t_R'.
+Removing unused module `\DHLx2_ASAP7_75t_R'.
+Removing unused module `\DHLx1_ASAP7_75t_R'.
+Removing unused module `\DFFLQx4_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx3_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx2_ASAP7_75t_R'.
+Removing unused module `\DFFLQNx1_ASAP7_75t_R'.
+Removing unused module `\DFFHQx4_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx3_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx2_ASAP7_75t_R'.
+Removing unused module `\DFFHQNx1_ASAP7_75t_R'.
+Removing unused module `\DFFASRHQNx1_ASAP7_75t_R'.
+Removing unused module `\INVxp67_ASAP7_75t_R'.
+Removing unused module `\INVxp33_ASAP7_75t_R'.
+Removing unused module `\INVx8_ASAP7_75t_R'.
+Removing unused module `\INVx6_ASAP7_75t_R'.
+Removing unused module `\INVx5_ASAP7_75t_R'.
+Removing unused module `\INVx4_ASAP7_75t_R'.
+Removing unused module `\INVx3_ASAP7_75t_R'.
+Removing unused module `\INVx2_ASAP7_75t_R'.
+Removing unused module `\INVx1_ASAP7_75t_R'.
+Removing unused module `\INVx13_ASAP7_75t_R'.
+Removing unused module `\INVx11_ASAP7_75t_R'.
+Removing unused module `\HB4xp67_ASAP7_75t_R'.
+Removing unused module `\HB3xp67_ASAP7_75t_R'.
+Removing unused module `\HB2xp67_ASAP7_75t_R'.
+Removing unused module `\HB1xp67_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx9p33_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx8_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx6p67_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx5p33_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx20_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx16_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx14_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx12_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx11_ASAP7_75t_R'.
+Removing unused module `\CKINVDCx10_ASAP7_75t_R'.
+Removing unused module `\BUFx8_ASAP7_75t_R'.
+Removing unused module `\BUFx6f_ASAP7_75t_R'.
+Removing unused module `\BUFx5_ASAP7_75t_R'.
+Removing unused module `\BUFx4f_ASAP7_75t_R'.
+Removing unused module `\BUFx4_ASAP7_75t_R'.
+Removing unused module `\BUFx3_ASAP7_75t_R'.
+Removing unused module `\BUFx2_ASAP7_75t_R'.
+Removing unused module `\BUFx24_ASAP7_75t_R'.
+Removing unused module `\BUFx16f_ASAP7_75t_R'.
+Removing unused module `\BUFx12f_ASAP7_75t_R'.
+Removing unused module `\BUFx12_ASAP7_75t_R'.
+Removing unused module `\BUFx10_ASAP7_75t_R'.
+Removing unused module `\OAI33xp33_ASAP7_75t_R'.
+Removing unused module `\OAI333xp33_ASAP7_75t_R'.
+Removing unused module `\OAI332xp33_ASAP7_75t_R'.
+Removing unused module `\OAI331xp33_ASAP7_75t_R'.
+Removing unused module `\OAI32xp33_ASAP7_75t_R'.
+Removing unused module `\OAI322xp33_ASAP7_75t_R'.
+Removing unused module `\OAI321xp33_ASAP7_75t_R'.
+Removing unused module `\OAI31xp67_ASAP7_75t_R'.
+Removing unused module `\OAI31xp33_ASAP7_75t_R'.
+Removing unused module `\OAI311xp33_ASAP7_75t_R'.
+Removing unused module `\OAI22xp5_ASAP7_75t_R'.
+Removing unused module `\OAI22xp33_ASAP7_75t_R'.
+Removing unused module `\OAI22x1_ASAP7_75t_R'.
+Removing unused module `\OAI222xp33_ASAP7_75t_R'.
+Removing unused module `\OAI221xp5_ASAP7_75t_R'.
+Removing unused module `\OAI21xp5_ASAP7_75t_R'.
+Removing unused module `\OAI21xp33_ASAP7_75t_R'.
+Removing unused module `\OAI21x1_ASAP7_75t_R'.
+Removing unused module `\OAI211xp5_ASAP7_75t_R'.
+Removing unused module `\OA33x2_ASAP7_75t_R'.
+Removing unused module `\OA333x2_ASAP7_75t_R'.
+Removing unused module `\OA333x1_ASAP7_75t_R'.
+Removing unused module `\OA332x2_ASAP7_75t_R'.
+Removing unused module `\OA332x1_ASAP7_75t_R'.
+Removing unused module `\OA331x2_ASAP7_75t_R'.
+Removing unused module `\OA331x1_ASAP7_75t_R'.
+Removing unused module `\OA31x2_ASAP7_75t_R'.
+Removing unused module `\OA22x2_ASAP7_75t_R'.
+Removing unused module `\OA222x2_ASAP7_75t_R'.
+Removing unused module `\OA221x2_ASAP7_75t_R'.
+Removing unused module `\OA21x2_ASAP7_75t_R'.
+Removing unused module `\OA211x2_ASAP7_75t_R'.
+Removing unused module `\O2A1O1Ixp5_ASAP7_75t_R'.
+Removing unused module `\O2A1O1Ixp33_ASAP7_75t_R'.
+Removing unused module `\AOI33xp33_ASAP7_75t_R'.
+Removing unused module `\AOI333xp33_ASAP7_75t_R'.
+Removing unused module `\AOI332xp33_ASAP7_75t_R'.
+Removing unused module `\AOI331xp33_ASAP7_75t_R'.
+Removing unused module `\AOI32xp33_ASAP7_75t_R'.
+Removing unused module `\AOI322xp5_ASAP7_75t_R'.
+Removing unused module `\AOI321xp33_ASAP7_75t_R'.
+Removing unused module `\AOI31xp67_ASAP7_75t_R'.
+Removing unused module `\AOI31xp33_ASAP7_75t_R'.
+Removing unused module `\AOI311xp33_ASAP7_75t_R'.
+Removing unused module `\AOI22xp5_ASAP7_75t_R'.
+Removing unused module `\AOI22xp33_ASAP7_75t_R'.
+Removing unused module `\AOI22x1_ASAP7_75t_R'.
+Removing unused module `\AOI222xp33_ASAP7_75t_R'.
+Removing unused module `\AOI221xp5_ASAP7_75t_R'.
+Removing unused module `\AOI221x1_ASAP7_75t_R'.
+Removing unused module `\AOI21xp5_ASAP7_75t_R'.
+Removing unused module `\AOI21xp33_ASAP7_75t_R'.
+Removing unused module `\AOI21x1_ASAP7_75t_R'.
+Removing unused module `\AOI211xp5_ASAP7_75t_R'.
+Removing unused module `\AOI211x1_ASAP7_75t_R'.
+Removing unused module `\AO33x2_ASAP7_75t_R'.
+Removing unused module `\AO333x2_ASAP7_75t_R'.
+Removing unused module `\AO333x1_ASAP7_75t_R'.
+Removing unused module `\AO332x2_ASAP7_75t_R'.
+Removing unused module `\AO332x1_ASAP7_75t_R'.
+Removing unused module `\AO331x2_ASAP7_75t_R'.
+Removing unused module `\AO331x1_ASAP7_75t_R'.
+Removing unused module `\AO32x2_ASAP7_75t_R'.
+Removing unused module `\AO32x1_ASAP7_75t_R'.
+Removing unused module `\AO322x2_ASAP7_75t_R'.
+Removing unused module `\AO31x2_ASAP7_75t_R'.
+Removing unused module `\AO22x2_ASAP7_75t_R'.
+Removing unused module `\AO22x1_ASAP7_75t_R'.
+Removing unused module `\AO222x2_ASAP7_75t_R'.
+Removing unused module `\AO221x2_ASAP7_75t_R'.
+Removing unused module `\AO221x1_ASAP7_75t_R'.
+Removing unused module `\AO21x2_ASAP7_75t_R'.
+Removing unused module `\AO21x1_ASAP7_75t_R'.
+Removing unused module `\AO211x2_ASAP7_75t_R'.
+Removing unused module `\A2O1A1O1Ixp25_ASAP7_75t_R'.
+Removing unused module `\A2O1A1Ixp33_ASAP7_75t_R'.
+Removing unused module `\XOR2xp5_ASAP7_75t_R'.
+Removing unused module `\XOR2x2_ASAP7_75t_R'.
+Removing unused module `\XOR2x1_ASAP7_75t_R'.
+Removing unused module `\XNOR2xp5_ASAP7_75t_R'.
+Removing unused module `\XNOR2x2_ASAP7_75t_R'.
+Removing unused module `\XNOR2x1_ASAP7_75t_R'.
+Removing unused module `\TIELOx1_ASAP7_75t_R'.
+Removing unused module `\TIEHIx1_ASAP7_75t_R'.
+Removing unused module `\OR5x2_ASAP7_75t_R'.
+Removing unused module `\OR5x1_ASAP7_75t_R'.
+Removing unused module `\OR4x2_ASAP7_75t_R'.
+Removing unused module `\OR4x1_ASAP7_75t_R'.
+Removing unused module `\OR3x4_ASAP7_75t_R'.
+Removing unused module `\OR3x2_ASAP7_75t_R'.
+Removing unused module `\OR3x1_ASAP7_75t_R'.
+Removing unused module `\OR2x6_ASAP7_75t_R'.
+Removing unused module `\OR2x4_ASAP7_75t_R'.
+Removing unused module `\OR2x2_ASAP7_75t_R'.
+Removing unused module `\NOR5xp2_ASAP7_75t_R'.
+Removing unused module `\NOR4xp75_ASAP7_75t_R'.
+Removing unused module `\NOR4xp25_ASAP7_75t_R'.
+Removing unused module `\NOR3xp33_ASAP7_75t_R'.
+Removing unused module `\NOR3x2_ASAP7_75t_R'.
+Removing unused module `\NOR3x1_ASAP7_75t_R'.
+Removing unused module `\NOR2xp67_ASAP7_75t_R'.
+Removing unused module `\NOR2xp33_ASAP7_75t_R'.
+Removing unused module `\NOR2x2_ASAP7_75t_R'.
+Removing unused module `\NOR2x1p5_ASAP7_75t_R'.
+Removing unused module `\NOR2x1_ASAP7_75t_R'.
+Removing unused module `\NAND5xp2_ASAP7_75t_R'.
+Removing unused module `\NAND4xp75_ASAP7_75t_R'.
+Removing unused module `\NAND4xp25_ASAP7_75t_R'.
+Removing unused module `\NAND3xp33_ASAP7_75t_R'.
+Removing unused module `\NAND3x2_ASAP7_75t_R'.
+Removing unused module `\NAND3x1_ASAP7_75t_R'.
+Removing unused module `\NAND2xp67_ASAP7_75t_R'.
+Removing unused module `\NAND2xp5_ASAP7_75t_R'.
+Removing unused module `\NAND2xp33_ASAP7_75t_R'.
+Removing unused module `\NAND2x2_ASAP7_75t_R'.
+Removing unused module `\NAND2x1p5_ASAP7_75t_R'.
+Removing unused module `\NAND2x1_ASAP7_75t_R'.
+Removing unused module `\MAJx3_ASAP7_75t_R'.
+Removing unused module `\MAJx2_ASAP7_75t_R'.
+Removing unused module `\MAJIxp5_ASAP7_75t_R'.
+Removing unused module `\HAxp5_ASAP7_75t_R'.
+Removing unused module `\FAx1_ASAP7_75t_R'.
+Removing unused module `\AND5x2_ASAP7_75t_R'.
+Removing unused module `\AND5x1_ASAP7_75t_R'.
+Removing unused module `\AND4x2_ASAP7_75t_R'.
+Removing unused module `\AND4x1_ASAP7_75t_R'.
+Removing unused module `\AND3x4_ASAP7_75t_R'.
+Removing unused module `\AND3x2_ASAP7_75t_R'.
+Removing unused module `\AND3x1_ASAP7_75t_R'.
+Removing unused module `\AND2x6_ASAP7_75t_R'.
+Removing unused module `\AND2x4_ASAP7_75t_R'.
+Removing unused module `\AND2x2_ASAP7_75t_R'.
+Removed 194 unused modules.
+
+15. Executing EQUIV_SIMPLE pass.
+Found 35 unproven $equiv cells (3 groups) in equiv:
+ Grouping SAT models for \y:
+  Trying to prove $equiv for \y [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [2]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [3]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [4]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [5]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [6]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [7]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [8]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [9]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [10]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [11]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [12]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [13]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [14]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [15]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [16]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [17]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [18]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [19]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [20]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [21]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [22]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [23]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [24]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [25]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [26]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [27]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [28]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [29]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [30]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \y [31]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+ Grouping SAT models for \err:
+  Trying to prove $equiv for \err [0]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \err [1]:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \vo:ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ezsat
+ success!
+Proved 35 previously unproven $equiv cells.
+
+16. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+17. Executing EQUIV_STATUS pass.
+Found 35 $equiv cells in equiv:
+  Of those cells 35 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: e37ef44942, time: 62.99s, user: 62.84s, system: 0.50s, MEM: 181.12 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 96% 1x equiv_simple (60 sec), 0% 4x read_verilog (0 sec), ...

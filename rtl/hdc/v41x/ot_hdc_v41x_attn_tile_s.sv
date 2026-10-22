@@ -547,8 +547,19 @@ module ot_hdc_v41x_qaddf #(
         end else if (F12 != 0 && LAT == 5) begin : g_f5
             wire [1:0] err;
             wire vo;
+`ifdef OT_F12_ADD5_N32
+            // S81-ELEM2-SVCATT (10-21, safe-design 3): physical-only native32 form of the SAME l5x adder.
+            // rtl/hdc/v41x/ot_hdc_fp32_add_f12_l5x_n32.v = the mapped OT_FP_DATA_NORST l5x with 25 kept driver
+            // copies (bound graph limit 32, structural ledger); yosys equiv_simple/induct proves y/err/valid_out
+            // equal to the mapped l5x (35/35).  Same cycles, same reset (valid only).  Simulation uses the RTL below.
+`ifndef OT_FP_DATA_NORST
+            initial $error("OT_F12_ADD5_N32 is the OT_FP_DATA_NORST l5x netlist");
+`endif
+            ot_hdc_fp32_add_f12_l5x_n32 u (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y), .err(err), .vo(vo));
+`else
             ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
                                        .valid_out(vo));
+`endif
             assign fault = vo && (err != 2'd0);
         end else if (F12 != 0 && LAT == 6) begin : g_f6
             // LAT 6: ot_hdc_fp32_add_f12_l6x (rtl/hdc/v41x/ot_dsrom_su_add6.sv, the DS ROM kit's six-cut adder: the

@@ -1,0 +1,73 @@
+
+23. Printing statistics.
+
+=== add_plain ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     2270        - wires
+     8332        - wire bits
+      292        - public wires
+     6354        - public wire bits
+        8        - ports
+      102        - port bits
+     3260  323.968 cells
+       20        -   $scopeinfo
+       50    4.374   A2O1A1Ixp33_ASAP7_75t_R
+        9    1.181   A2O1A1O1Ixp25_ASAP7_75t_R
+       57    4.986   AND2x2_ASAP7_75t_R
+       44    3.849   AND3x1_ASAP7_75t_R
+       10    1.021   AND4x1_ASAP7_75t_R
+        5    0.583   AND5x1_ASAP7_75t_R
+      154   13.472   AO21x1_ASAP7_75t_R
+        2    0.292   AO221x1_ASAP7_75t_R
+        4    0.467   AO32x1_ASAP7_75t_R
+       40    3.499   AOI211xp5_ASAP7_75t_R
+      204   14.872   AOI21xp33_ASAP7_75t_R
+        1    0.102   AOI221xp5_ASAP7_75t_R
+       10    0.875   AOI22xp33_ASAP7_75t_R
+        2    0.204   AOI311xp33_ASAP7_75t_R
+       27    2.362   AOI31xp33_ASAP7_75t_R
+        1    0.117   AOI321xp33_ASAP7_75t_R
+        5     0.51   AOI32xp33_ASAP7_75t_R
+        1    0.117   AOI33xp33_ASAP7_75t_R
+        5    1.895   DFFASRHQNx1_ASAP7_75t_R
+      417  121.597   DFFHQNx1_ASAP7_75t_R
+        6     0.35   HB1xp67_ASAP7_75t_R
+      599     26.2   INVx1_ASAP7_75t_R
+       10    1.021   MAJIxp5_ASAP7_75t_R
+       12    1.575   MAJx2_ASAP7_75t_R
+      320   18.662   NAND2xp33_ASAP7_75t_R
+       36    2.624   NAND3xp33_ASAP7_75t_R
+       12     1.05   NAND4xp25_ASAP7_75t_R
+        9    0.919   NAND5xp2_ASAP7_75t_R
+      421   24.553   NOR2xp33_ASAP7_75t_R
+       74    5.395   NOR3xp33_ASAP7_75t_R
+       59    5.161   NOR4xp25_ASAP7_75t_R
+       16    1.633   NOR5xp2_ASAP7_75t_R
+       62    5.424   O2A1O1Ixp33_ASAP7_75t_R
+        9     1.05   OA211x2_ASAP7_75t_R
+       22    2.245   OA21x2_ASAP7_75t_R
+        2    0.437   OA31x2_ASAP7_75t_R
+        1    0.146   OA33x2_ASAP7_75t_R
+       38    3.324   OAI211xp5_ASAP7_75t_R
+      194   14.143   OAI21xp33_ASAP7_75t_R
+        7    0.714   OAI221xp5_ASAP7_75t_R
+       54    4.724   OAI22xp33_ASAP7_75t_R
+       13    1.137   OAI31xp33_ASAP7_75t_R
+        1    0.117   OAI321xp33_ASAP7_75t_R
+       19    1.939   OAI32xp33_ASAP7_75t_R
+        1    0.117   OAI33xp33_ASAP7_75t_R
+       37    3.237   OR2x2_ASAP7_75t_R
+       12     1.05   OR3x1_ASAP7_75t_R
+       15    1.531   OR4x1_ASAP7_75t_R
+        5    0.583   OR5x1_ASAP7_75t_R
+       68    8.923   XNOR2xp5_ASAP7_75t_R
+       58    7.611   XOR2xp5_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\add_plain': 323.967600
+     of which used for sequential elements: 123.492600 (38.12%)
+
