@@ -6029,7 +6029,11 @@ def _pin_pos(v, m, strict=False):
         if (inst, port) in extra:
             return extra[(inst, port)]
         i = by[inst]
-        base = port.lstrip('*').split('[')[0]
+        # a bit-indexed port resolves to its port's pin centroid only under strict export or the opt-in planning
+        # knob OT_PIN_POS_BIT_BASE=1 (Q compute-die r45+ GEN line); default planning keeps the legacy block centre
+        base = port.lstrip('*')
+        if strict or __import__('os').environ.get('OT_PIN_POS_BIT_BASE', '0') == '1':
+            base = base.split('[')[0]
         c = cen.get(i.master, {}).get(base)
         if c is None:
             if strict:
