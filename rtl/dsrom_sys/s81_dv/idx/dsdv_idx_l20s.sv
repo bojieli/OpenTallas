@@ -128,7 +128,12 @@ module dsdv_idx_txm_n32 #(
     // decode + r_addr_in) in a kept register per bank beside its macro: the read is issued one edge later (+1 lookup
     // edge, the bank select and the consumer pipe in dsdv_idx_tx_n32 follow RIL like RDL)
     parameter integer RIL = 0,
-    parameter integer RIL_MUT = 0   // bench mutant (tb_tx_miter MUT 5): the bank select ignores the landed read address
+    parameter integer RIL_MUT = 0,  // bench mutant (tb_tx_miter MUT 5): the bank select ignores the landed read address
+    // STW-S81c-TOK4 10-22 (TX y FB: one clock root over 626 x 562 um): SPLIT = 1 builds the store as two bank groups
+    // (dsdv_idx_txm_grp: banks [0, WCB) = column A, a hardened child with its own clock root; banks [WCB, NB) = column B
+    // in the parent).  Each group lands its read/write ports (RIL/WDL), captures rd_out (RDL) and ORs its banks under its
+    // own bank-select copies; the parent ORs the two partial words into rd.  Same function, same edges (0 cycles).
+    parameter integer SPLIT = 0
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -144,7 +149,19 @@ module dsdv_idx_txm_n32 #(
     input  wire [255:0]         wd_b
 );
     localparam integer AW = $clog2(D);
-    generate if (SRAM_MACRO) begin : g_m
+    generate if (SRAM_MACRO && SPLIT != 0) begin : g_s
+        localparam integer NB = D / 1024;
+        initial if (D % 1024 != 0 || NB <= WCB) $fatal(1, "dsdv_idx_txm_n32 SPLIT: D must be a multiple of 1024 with NB > WCB");
+        wire [255:0] pa, pb;
+        // column A (banks 0..WCB-1): the hardened child (own clock root)
+        dsdv_idx_txm_grp #(.D(D), .B0(0), .NG(WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT)) u_ga (
+            .ck(ck), .re(re), .ra(ra), .we(we), .wa(wa), .wd(wd), .wm_next(wm_next), .p(pa));
+        // column B (banks WCB..NB-1, fed by the WDC copy of the write port when WDC = 1)
+        dsdv_idx_txm_grp #(.D(D), .B0(WCB), .NG(NB - WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT)) u_gb (
+            .ck(ck), .re(re), .ra(ra), .we((WDC != 0) ? we_b : we), .wa((WDC != 0) ? wa_b : wa), .wd((WDC != 0) ? wd_b : wd),
+            .wm_next(wm_next), .p(pb));
+        always @(posedge ck) rd <= pa | pb;
+    end else if (SRAM_MACRO) begin : g_m
         localparam integer NB = D / 1024;
         initial if (D % 1024 != 0 || D < 1024) $fatal(1, "dsdv_idx_txm_n32: D must be a multiple of 1024");
         wire [255:0] q [0:NB-1];
@@ -237,6 +254,105 @@ module dsdv_idx_txm_n32 #(
     end endgenerate
 endmodule
 
+// STW-S81c-TOK4 10-22: one bank group of the TX score store (dsdv_idx_txm_n32 SPLIT = 1).  Banks B0 .. B0+NG-1 of the
+// D-score store, each exactly as dsdv_idx_txm_n32 g_m builds it (mask copies, WDL write landing, RIL read landing, RDL
+// capture), plus this group's own bank-select copies; p = OR over the group's banks of (captured word AND bank select):
+// the parent registers pa | pb into rd.  Every input lands in a flop of this group before any logic (re/ra/we/wa/wd/
+// wm_next), every output comes from flops through one AND-OR: a clean hardened child with its own clock root.
+module dsdv_idx_txm_grp #(
+    parameter integer D = 8192,
+    parameter integer B0 = 0,
+    parameter integer NG = 5,
+    parameter integer RDL = 1,
+    parameter integer WDL = 1,
+    parameter integer RIL = 1,
+    parameter integer RIL_MUT = 0
+) (
+    input  wire                 ck,
+    input  wire                 re,
+    input  wire [$clog2(D)-1:0] ra,
+    input  wire                 we,
+    input  wire [$clog2(D)-1:0] wa,
+    input  wire [255:0]         wd,
+    input  wire [15:0]          wm_next,
+    output reg  [255:0]         p
+);
+    localparam integer AW = $clog2(D), NB = D / 1024;
+    wire [255:0] q [0:NG-1];
+    genvar i;
+    for (i = 0; i < NG; i = i + 1) begin : g_b
+        localparam integer b = B0 + i;
+        wire[255:0]wm_bank;
+        for(genvar f=0;f<16;f=f+1)begin:g_mask
+            wire bit_q;
+            dsdv_tx_copy #(.W(1),.ID(1000+b*16+f))u(.ck(ck),.rn(1'b1),.d(wm_next[f]),.q(bit_q));
+            if (WDL != 0) begin : g_wdl
+                wire bit_q2;
+                dsdv_tx_copy #(.W(1),.ID(5000+b*16+f))u2(.ck(ck),.rn(1'b1),.d(bit_q),.q(bit_q2));
+                assign wm_bank[f*16+:16]={16{bit_q2}};
+            end else begin : g_wd0
+                assign wm_bank[f*16+:16]={16{bit_q}};
+            end
+        end
+        wire we_m; wire [9:0] wa_m; wire [255:0] wd_m;
+        if (WDL != 0) begin : g_wl
+            (* keep = "true" *) reg we_l; (* keep = "true" *) reg [9:0] wa_l; (* keep = "true" *) reg [255:0] wd_l;
+            always @(posedge ck) begin we_l <= we && (NB == 1 || wa[AW-1:10] == b); wa_l <= wa[9:0]; wd_l <= wd; end
+            assign we_m = we_l; assign wa_m = wa_l; assign wd_m = wd_l;
+        end else begin : g_w0
+            assign we_m = we && (NB == 1 || wa[AW-1:10] == b); assign wa_m = wa[9:0]; assign wd_m = wd;
+        end
+        wire [255:0] q_raw;
+        wire re_m; wire [9:0] ra_m;
+        if (RIL != 0) begin : g_ril
+            (* keep = "true" *) reg re_l; (* keep = "true" *) reg [9:0] ra_l;
+            always @(posedge ck) begin re_l <= re && (NB == 1 || ra[AW-1:10] == b); ra_l <= ra[9:0]; end
+            assign re_m = re_l; assign ra_m = ra_l;
+        end else begin : g_ri0
+            assign re_m = re && (NB == 1 || ra[AW-1:10] == b); assign ra_m = ra[9:0];
+        end
+        ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
+            .clk(ck), .r_ce_in(re_m), .r_addr_in(ra_m), .rd_out(q_raw),
+            .w_ce_in(we_m), .w_addr_in(wa_m), .wd_in(wd_m), .w_mask_in(wm_bank),
+            .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
+        if (RDL != 0) begin : g_rl
+            (* keep = "true" *) reg [255:0] q_l;
+            always @(posedge ck) q_l <= q_raw;
+            assign q[i] = q_l;
+        end else begin : g_r0
+            assign q[i] = q_raw;
+        end
+    end
+    (* keep = "true" *) reg [NG*8-1:0] bsk0;
+    wire [AW-1:0] ra_bs;
+    if (RIL != 0) begin : g_rabs
+        reg [AW-1:0] ra_q;
+        always @(posedge ck) ra_q <= ra;
+        assign ra_bs = (RIL_MUT != 0) ? ra : ra_q;
+    end else begin : g_rabs0
+        assign ra_bs = ra;
+    end
+    always @(posedge ck) begin : g_bs
+        integer k_;
+        for (k_ = 0; k_ < NG * 8; k_ = k_ + 1) bsk0[k_] <= (NB == 1) ? 1'b1 : (ra_bs[AW-1:10] == (B0 + k_ / 8));
+    end
+    wire [NG*8-1:0] bsk;
+    if (RDL != 0) begin : g_bsl
+        (* keep = "true" *) reg [NG*8-1:0] bsk1;
+        always @(posedge ck) bsk1 <= bsk0;
+        assign bsk = bsk1;
+    end else begin : g_bs0
+        assign bsk = bsk0;
+    end
+    integer k, g;
+    always @* begin
+        p = 256'd0;
+        for (k = 0; k < NG; k = k + 1)
+            for (g = 0; g < 8; g = g + 1)
+                p[32 * g +: 32] = p[32 * g +: 32] | (q[k][32 * g +: 32] & {32{bsk[8 * k + g]}});
+    end
+endmodule
+
 // ===================================================================================================================
 // dsdv_idx_tx_n32: tree transmit (child die).  Function, job word and fault codes = dsdv_idx_tx (dsdv_idx_tree.sv):
 // CAPTURE every ingress beat of kind IK on vi (per lane cursor, part-0 scores held, part 1 writes the 16 scores masked
@@ -262,7 +378,8 @@ module dsdv_idx_tx_n32 #(
     parameter integer WDC = 0,      // STW-S81c-COLLA2-TX 10-22: column-B copy of the score-store write port (0 cycles)
     parameter integer SCS = 0,      // STW-S81c-COLLA2-TX 10-22: grid-slot count compare carry-selected off slot_q (0 cycles)
     parameter integer RIL = 0,      // STW-S81c-COLLA2 10-22: score-store read issue landed at the macro pins (+1 lookup edge)
-    parameter integer RHP = 0       // STW-S81c-COLLA2 10-22: result-FIFO head prefetched into a register (0 cycles)
+    parameter integer RHP = 0,      // STW-S81c-COLLA2 10-22: result-FIFO head prefetched into a register (0 cycles)
+    parameter integer SPLIT = 0     // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
 ) (
     input  wire          ck,
     input  wire          rst,       // active low (as dsdv_idx_tx / the bk_sel rst_n)
@@ -431,7 +548,7 @@ module dsdv_idx_tx_n32 #(
         if(lk_go)lvl_next[ne]=1'b0;
     end
     wire [255:0] m_rd;
-    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
+    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
         .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]),
         .we_b(m_we_b), .wa_b(m_wa_b), .wd_b(m_wd_b));
     localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
