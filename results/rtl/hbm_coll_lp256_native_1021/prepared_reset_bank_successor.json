@@ -1,0 +1,21 @@
+{
+  "status": "PREPARED ONLY; not launched or qualified",
+  "trigger": "Actual current safe24 mapped census must name remaining t=0 soft-child reset overload before launch.",
+  "current_jobs_preserved": [
+    2569988,
+    2569989,
+    2571613,
+    2571614
+  ],
+  "source_change": "Private FINAL_BANKS parameter, default0. Option1 replaces original final one-bit captures with 32 kept identical captures per existing branch and marks each existing equivalent family for canonical reset redistribution.",
+  "edge_proof": "Every q[l] remains the register of branch[l/32] on the same ck edge. All prefix and branch registers unchanged.",
+  "fanout_proof": "Root D count unchanged. Prefix drives at most32 branch D pins, each branch drives exactly32 final capture D pins. Canonical pass proves identical FF D/clock/reset and bounds actual loads to32, or fails.",
+  "extra_flops": "At most31 spare final captures per region; original real leaf captures retained. No stage added.",
+  "remaining_validation": [
+    "actual current native failure trigger",
+    "fleet generation and exact compiler comparison",
+    "full positive and causal proof",
+    "actual mapped canonical family/native32 census",
+    "normal physical and clock gates"
+  ]
+}

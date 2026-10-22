@@ -2,7 +2,7 @@
 // Requires ot_pl_land_field_copy_bit from ot_pl_land_field_copies.sv.
 `default_nettype none
 module ot_pl_land_reset_forest #(
-    parameter integer DEPTH=8, LEAVES=47, ROOT_LOADS=1
+    parameter integer DEPTH=8, LEAVES=47, ROOT_LOADS=1, FINAL_BANKS=0
 )(input wire ck,d, output wire [LEAVES-1:0] q);
     localparam integer BRANCHES=(LEAVES+31)/32;
     wire [DEPTH-2:0] prefix;
@@ -19,9 +19,25 @@ module ot_pl_land_reset_forest #(
         (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(1024+b)) u_ff(
             .ck(ck),.d(prefix[DEPTH-2]),.q(branch[b]));
     end
-    for(genvar l=0;l<LEAVES;l=l+1) begin:g_leaf
-        (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(2048+l)) u_ff(
-            .ck(ck),.d(branch[l/32]),.q(q[l]));
+    if(FINAL_BANKS!=0)begin:g_final_banks
+        // Existing final edge as actual equivalent captures. A full final bank
+        // remains even for a partial output group, giving the canonical reset
+        // pass enough real copies to distribute a t=0 soft child's reset pins.
+        // Each branch drives exactly 32 D pins; no depth or release edge changes.
+        for(genvar b=0;b<BRANCHES;b=b+1)begin:g_bank
+            (* keep="true",dont_touch="true",ot_rst_split=1 *) reg [31:0] copies;
+            always @(posedge ck) copies <= {32{branch[b]}};
+            for(genvar l=0;l<32;l=l+1)begin:g_output
+                if(b*32+l<LEAVES)begin:g_live
+                    assign q[b*32+l]=copies[l];
+                end
+            end
+        end
+    end else begin:g_original_leaves
+        for(genvar l=0;l<LEAVES;l=l+1) begin:g_leaf
+            (* keep_hierarchy="yes" *) ot_pl_land_field_copy_bit #(.ID(2048+l)) u_ff(
+                .ck(ck),.d(branch[l/32]),.q(q[l]));
+        end
     end endgenerate
 `ifndef SYNTHESIS
     initial if(DEPTH<2 || LEAVES<1 || LEAVES>1024 || ROOT_LOADS<1 || ROOT_LOADS>32) $fatal(1,"LAND_RESET_FOREST_SHAPE");

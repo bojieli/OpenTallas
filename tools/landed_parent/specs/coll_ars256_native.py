@@ -13,6 +13,7 @@ for name in sys.argv[1:]:
     lp.gen(spec)
     parent=lp.Parent(spec);plan=parent.plan()
     top=spec['top_lp'];out=lp.ROOT/spec['out_dir'];rtlpath=out/(top+'.sv');rtl=rtlpath.read_text()
+    rtl=rtl.replace('ot_pl_land_reset_forest #(', 'ot_pl_land_reset_forest #(.FINAL_BANKS(1), ')
     rtl=rtl.replace('ot_pl_land_vector_reset_w #(', 'ot_pl_land_vector_reset_w #(.KEPT_ENABLE(1), ')
     rtl,n=re.subn(r'ot_pl_pad #\(\.W\(1\), \.N\((.*?)\)\) (u_lprc_\w+)',r'ot_pl_pad #(.W(1), .N(\1), .RESET_COPIES(16)) \2',rtl)
     assert n>0
@@ -23,7 +24,10 @@ for name in sys.argv[1:]:
     recordpath=lp.ROOT/spec.get('record_dir',spec['out_dir'])/(top+'_record.json');record=json.loads(recordpath.read_text())
     reset_copies=sum(15 for child in parent.insts if plan['t'].get(child['inst'],0)+parent.rx>0 and any(pin in spec.get('reset_pins',[]) and expression.strip()==parent.rst for pin,expression in child['conns'].items()))
     record['landing_implementation'].update(writer_kept_enable=True,child_pad_reset_copies=16,publication_dual_rail_groups=32,publication_bits_per_group=16,private_generator='tools/landed_parent/specs/coll_ars256_native.py')
-    record['flops']['reset']+=reset_copies
+    forest=record['reset']['same_depth_forest']
+    spare_captures=sum(((region['leaves']+31)//32)*32-region['leaves'] for region in forest['regions'].values())
+    record['landing_implementation'].update(final_reset_bank_copies=32,spare_final_reset_captures=spare_captures,reset_release_edge_unchanged=True)
+    record['flops']['reset']+=reset_copies+spare_captures
     record['flops']['private_pub_mode']=64
     recordpath.write_text(json.dumps(record,indent=2)+'\n')
     print('COLL_LP_NATIVE_GENERATED',name,'child_pads',n,'extra_reset_FFs',reset_copies,'audit PASS')
