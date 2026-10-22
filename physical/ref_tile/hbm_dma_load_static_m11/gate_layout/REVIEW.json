@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.tile_visual_review.v1",
  "tile": "hbm_dma_load_static_m11",
- "reviewer": "HBMc/TILES4",
+ "reviewer": "coordinator",
  "verdict": "APPROVED",
- "time": "2026-10-22T16:10:00-07:00",
+ "time": "2026-10-22T16:45:00-07:00",
  "gate_commit": "46bb0a653",
  "checklist": {
   "lattice": "2 ot_sram_1r1w_128x256 macros centred on one row, ~35 um centre channel (m9 geometry unchanged)",
@@ -12,6 +12,6 @@
   "clock_entry": "CTS pin-flop spread TT 34.0 / FF 32.7 ps; 20.6k sinks one root (guidance), insertion 412.6/343.5 (guidance)",
   "shape": "302.4 x 151.2 um, fill 35%"
  },
- "notes": "HBMc/TILES4: PNGs floorplan.png + density.png viewed. m11 = m9 geometry + SHPRE + RPIPE (+1 edge, STEWARD-TOK notice) + census keep nets / grouped capture (round 3); gate WARN 0 fail. Submitted from the pinned gated source (round 4/5 RTL on claude/hbmc-dma-load-1022 is b11-only re-gate).",
+ "notes": "COORD 10-22 16:45 APPROVED: m9 geometry class + registered read-CE (+1 edge, accepted 12:20). Spread 34.0/32.7 ps. Watch item persists: NE strip under the N bus reaches ~1.0+ density while the W third is empty; if the route reports congestion/DRC there, FB b11 or the successor spreads the N-face bus pins across the full face.",
  "geometry_sha256": "726e8d4ae3f138929d025c0ce31354b2798a2fb7d02413480c3a3c0af6446896"
 }
