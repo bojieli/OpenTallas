@@ -6,11 +6,17 @@
 PASS case must PASS; each mutant (one per path class + the slot rule + a stale gap) must FAIL with the named reason:
   M1 INJ   cij_SE.inj_d_r1 -> hb_coll_SE.inj_d edge moved 256 b (region halves crossed)
   M2 DEL   cxdl_NW2.del_flit driven from lane 1 instead of lane 2
-  M3 HC    hc_eng.result -> hc_NE.result edge dropped (consumer undriven)
+  M3 HC    the last edge into hc_NE.result dropped (consumer undriven)
   M4 XCMD  sm_NW6.xw_data driven from xq_NE_p0_eg instead of xq_NE_p1_eg
   M5 SLOT  cxij_NW.INJ_RET back to 11
   M6 STALE G-HC-ENG re-opened in the gap list while its paths are bound (--gaps strict)
-  M7 HC    one relay stage spliced on hc_eng.qd_v -> hc_SW.d_v while XRD = 0
+  M7 HC    one relay stage spliced on hc_eng.qd_v -> hc_SW.d_v while XRD = 0   (direct-edge contracts only)
+HC-XRDU 10-18 -- slot rules on LANDED paths (contracts whose hc_eng <-> hc_<q> links are landed, e.g. the GEN2 land smoke
+after l7_wire, which sets hc_eng XRD/XRU/XRDQ/XRUQ from d4g_hc_xr.py):
+  M8 LANDK the landing of hc_eng.qd_v -> hc_SE.d_v has its K strap +1 (lands one edge later than XRDQ[SE] compiles)
+  M9 XRDQ  hc_eng XRDQ byte SE +1 (root told one edge more than the landed SE down-link compiles to)
+  M10 XRU0 hc_eng back to XRD = XRU = 0 without XRDQ/XRUQ (the unlanded root on the landed die)
+A mutant whose site does not exist in CONTRACT prints SKIP (not a failure).
 Prints FB_TEST PASS|FAIL and per case verdict lines.
 """
 import copy, sys
@@ -46,7 +52,11 @@ def main():
 
     def mut(name, fn, want):
         nonlocal ok
-        c = copy.deepcopy(c0); fn(c)
+        c = copy.deepcopy(c0)
+        try:
+            fn(c)
+        except (KeyError, IndexError, StopIteration) as e:
+            print('CASE', name, 'SKIP | site not in this contract:', str(e)[:120]); return
         v, f, s = verdict(c)
         why = (f[0]['bad'][0] if f else ('stale ' + ','.join(s) if s else ''))
         good = v == 'FAIL' and want in why
@@ -59,7 +69,7 @@ def main():
     def m2(c):
         e = edge(c, ['hb_coll_NW', 'del_flit'], ['cxdl_NW2', 'del_flit']); e['source'][2:4] = [545, 1090]
     def m3(c):
-        c['edges'] = [e for e in c['edges'] if not (e['source'][:2] == ['hc_eng', 'result'] and e['sink'][:2] == ['hc_NE', 'result'])]
+        c['edges'] = [e for e in c['edges'] if not (e['sink'][:2] == ['hc_NE', 'result'])]   # last hop (direct or relayed)
     def m4(c):
         e = edge(c, ['xq_NE_p1_eg', 'xw_data'], ['sm_NW6', 'xw_data']); e['source'][0] = 'xq_NE_p0_eg'
     def m5(c):
@@ -82,6 +92,43 @@ def main():
     mut('M5-SLOT', m5, 'cxij_NW.INJ_RET = 11, slot needs 9')
     mut('M6-STALE', m6, 'stale G-HC-ENG')
     mut('M7-XRD', m7, 'relay stages [1] != hc_eng.XRD = 0')
+
+    def landing_of(c, src, dst):   # landing instances on the src.port -> dst.port path (bit 0 of every lane)
+        I = c['instances']
+        drv = {(e['sink'][0], e['sink'][1]): e for e in c['edges']}
+        i, p = dst; out = []
+        while (i, p) in drv:
+            e = drv[(i, p)]; si, sp = e['source'][:2]
+            m = I.get(si, {}).get('master', '')
+            if FB.RELAY.match(m) and sp in FB.THRU:
+                if FB.LANDING.match(m):
+                    out.append(si)
+                i, p = si, FB.THRU[sp]; continue
+            break
+        if not out:
+            raise KeyError(f'no landing on {src}->{dst}')
+        return out
+    def m8(c):
+        ln = landing_of(c, ('hc_eng', 'qd_v'), ('hc_SE', 'd_v'))[0]
+        st = {s['port']: s for s in c['straps'] if s['inst'] == ln and s['port'] in ('k0', 'k1', 'k2')}
+        k = sum(int(st[f'k{j}']['value']) << j for j in range(3)); k = (k + 1) % 8
+        for j in range(3):
+            st[f'k{j}']['value'] = (k >> j) & 1
+    def m9(c):
+        P = c['instances']['hc_eng']['params']
+        if int(P.get('XRDQ', 0xffffffff)) == 0xffffffff:
+            raise KeyError('hc_eng has no XRDQ')
+        P['XRDQ'] = int(P['XRDQ']) + (1 << 8)
+    def m10(c):
+        P = c['instances']['hc_eng']['params']
+        if 'XRDQ' not in P:
+            raise KeyError('hc_eng has no XRDQ')
+        for k in ('XRDQ', 'XRUQ'):
+            P.pop(k)
+        P['XRD'] = P['XRU'] = 0
+    mut('M8-LANDK', m8, 'landed latency [7] edges')
+    mut('M9-XRDQ', m9, '!= hc_eng.XRDQ[1] = 7')
+    mut('M10-XRU0', m10, '!= hc_eng.XRD = 0')
     print('FB_TEST', 'PASS' if ok else 'FAIL')
     sys.exit(0 if ok else 1)
 

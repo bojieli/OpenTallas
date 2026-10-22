@@ -1,0 +1,11 @@
+Verilator 5.050 2026-07-01 rev v5.050
+ERR edge 663 ref we0 sv0 cf0 f0 a08f  fs we0 sv0 cf0 f1 a08f
+ERR edge 664 ref we0 sv0 cf1 f0 a08f  fs we0 sv0 cf0 f1 a08f
+ERR edge 665 ref we0 sv0 cf1 f0 a08f  fs we0 sv0 cf0 f1 a08f
+ERR edge 666 ref we0 sv0 cf1 f0 a08f  fs we0 sv0 cf0 f1 a08f
+ERR edge 667 ref we0 sv1 cf0 f0 a08f  fs we0 sv0 cf0 f1 a08f
+ERR edge 668 ref we0 sv0 cf0 f0 a08f  fs we0 sv0 cf0 f1 a08f
+ERR edge 669 ref we0 sv0 cf0 f0 a08f  fs we0 sv0 cf0 f1 a08f
+SPT_EQ FAIL errs=395 writes=25415 scans=2806 launches=1144
+SPT_EQ_RUN MUT=1 N=200000 SEED=7 rc=0
+RC spt2_m1 0

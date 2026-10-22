@@ -1,0 +1,242 @@
+{
+ "name": "hbm_hc_root_d4g_xr3",
+ "top": "ot_hbm_hc_root_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_seq_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+  "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+  "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "QDRLY": 2,
+  "XRD": 11,
+  "XRU": 11,
+  "XRDQ": 101385739,
+  "XRUQ": 84543243
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_seq*u_program",
+   "at": [
+    237.6,
+    216.0
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_tbl",
+   "at": [
+    237.6,
+    388.8
+   ],
+   "at_exact": true
+  }
+ ],
+ "outline": {
+  "w": 648.0,
+  "h": 648.0,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.3,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_x_um": 10.8
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hbm_hc_root_static registers every pin in RTL: gathered_mix_*/qps*/q_fault pin flops (gv_q/gr_q/gp_q/gd_q/psv_q/ps_q/psf_q/qf_q), the F20 bus lands in the two ot_static_program_target pin flops (target/address/data_q/base/limit/loops/cv/dv/lv, tgt_q strap), and every output (qd_*, qi_*, result*, configured, program_active/done, fault) is a flop; a kit flop stage would shift the compiled HC_MIX schedule (RAW0 / SYS_LAT)"
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "program_active",
+   "program_done",
+   "fault"
+  ],
+  "N": [
+   "qd_v",
+   "qd_ss",
+   "qd_nv",
+   "qd_wa",
+   "qd_xa",
+   "qi_v",
+   "qi_kind",
+   "qi_slot",
+   "qi_lo",
+   "qi_w",
+   "qi_cnt",
+   "qi_word",
+   "qps_v",
+   "qps",
+   "qps_f",
+   "q_fault"
+  ],
+  "E": [
+   "result_v",
+   "result_position",
+   "result"
+  ],
+  "S": [
+   "gathered_mix_v",
+   "gathered_mix_row",
+   "gathered_mix_pos",
+   "gathered_mix_data"
+  ]
+ },
+ "inter": [],
+ "structural_change": "L2H-HC 10-19 (H.STA.BLK.1): successor of hbm_hc_root_d4g_xr (route r1-88f1fa301 crashed twice in macro_place.tcl 'expected 1 macros, netlist has 2'). The root has TWO ot_sram_1r1w_1024x256 macros: u_tbl (bases/scales table) and u_seq.u_program (HC event programme); the kit now names both instances explicitly on the 43.2 um lattice, PARALLEL VARIANT of xr2: stacked in the centre column (x237.6; programme y216, table y388.8; 102 um N-S gap), both W/E pin faces open onto >=237 um of std cells each side, W/E pin-face halo 10.8 um (macro_halo_x_um) for the native 57 contacts/5.4 um faces; io_hold_margin 0.03. Same RTL/params/pins/outline as xr. HC-XRDU 10-18 (RELEASE_TREE H.STA.WIRE.8): the d4g HC root hbm_hc_root_d4g with the LANDED root <-> quarter-hub latency compiled in: XRD 11 / XRU 11 (compiler constants = per-quarter maxima) and per-quarter XRDQ = SW/SE/NW/NE 11/6/11/6 (32'h060b060b), XRUQ = 11/7/10/5 (32'h050a070b), derived by tools/hbm_die_v16/d4g_hc_xr.py from the GEN2 landed smoke contract (landed lane latency ceil(N/2) + 1 + E from each landing's K strap; N = 17/7/18/8 down, 18/9/16/5 up). The root pads quarter q by XRD - XRDQ[q] stages before its qd/qi out flops and XRU - XRUQ[q] after its qps/q_fault/gathered-mix pin flops (ot_hdc_delay, 65 + 76 b per quarter, max 5 stages), so every quarter runs on one compiled timeline (RAW0 167 + 22 = 189, ingest lead 13). Same RTL/ports/outline/pins as hbm_hc_root_d4g; only the four parameters differ. Re-derive (and re-kit) when the GEN2 stations replace the smoke stations (root moves to the centre slot): l7_wire.py applies d4g_hc_xr.py to the landed contract.",
+ "job": {
+  "owner": "Claude:LEAD2-HBM/L2H-HC",
+  "branch": "claude/l2h-hcroot-1019",
+  "tag": "s1",
+  "purpose": "d4g HC root with the LANDED root<->hub latency (per-quarter pads, XRD/XRU 11/11)",
+  "views_to": "physical/ref_tile/hbm_hc_root_d4g_xr3/views",
+  "record_to": "results/rtl/ref_tile/hbm_hc_root_d4g_xr3",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_root_uring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/test/run_hbm_hc_root_landed.sh",
+   "results/rtl/hbm_hc_root_d4g_xr_1018",
+   "tools/hbm_die_v16/d4g_hc_xr.py"
+  ],
+  "benches": [
+   {
+    "name": "hcxr_m0",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_m0 0 11 11 060b060b 050a070b 060b060b 050a070b",
+    "expect": "pass",
+    "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0"
+   },
+   {
+    "name": "hcxr_unl",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_unl 0 0 0 ffffffff ffffffff 060b060b 050a070b",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT|MISMATCH",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_xr_1018/hcxr_unl.log",
+    "note": "root left at XRD = XRU = 0 (the unlanded kit) on the landed die links -> fault"
+   },
+   {
+    "name": "hcxr_xruse",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_xruse 0 11 11 060b060b 050a060b 060b060b 050a070b",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT|MISMATCH",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_xr_1018/hcxr_xruse.log",
+    "note": "root told XRUQ SE 6, the landed SE up-link is 7 -> SE subtree sum 1 edge late -> ps_fault"
+   },
+   {
+    "name": "hcxr_xrdne",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_xrdne 0 11 11 070b060b 050a070b 060b060b 050a070b",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_LANDED MUT=0 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT|MISMATCH",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_xr_1018/hcxr_xrdne.log",
+    "note": "root told XRDQ NE 7, the landed NE down-link is 6 -> NE descriptor/ingest 1 edge early -> fault/mismatch"
+   },
+   {
+    "name": "hcxr_mut2",
+    "cmd": "bash rtl/test/run_hbm_hc_root_landed.sh {RUN}/bench/hcxr_mut2 2 11 11 060b060b 050a070b 060b060b 050a070b",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_LANDED MUT=2 .* rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT|MISMATCH",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_xr_1018/hcxr_mut2.log",
+    "note": "root tail unit 0 pre-sigmoid eps dropped (MUT 2) on the landed configuration"
+   }
+  ],
+  "reroute_reason": "88f1fa301 NEEDS_HUMAN: macro_place 'expected 1 macros, netlist has 2' -> kit names both SRAMs (u_tbl, u_seq.u_program); no closed view"
+ },
+ "children": [],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}

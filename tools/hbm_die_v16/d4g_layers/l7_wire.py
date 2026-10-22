@@ -17,6 +17,10 @@ compiled producer, bit for bit, plus the schedule-slot parameter rules) shows on
 This layer:
   1. re-parametrises cxij_SE/NW/NE: INJ_RET 11 -> 9, B39_NOOP 0 -> 1 (= cxij_SW; same master
      ot_hbm_su_static_cxport_ij, same ports/edges; the leaf is SYNTH -> 3 new synthesis cells, no route change);
+  1b. (HC-XRDU 10-18, RELEASE_TREE H.STA.WIRE.8) on a relayed / LANDED contract sets hc_eng XRD / XRU / XRDQ / XRUQ to the
+     compiled per-quarter root <-> hub latency (tools/hbm_die_v16/d4g_hc_xr.py: plain relay 1 edge, landed lane
+     1 + K' from its K strap; the root pads every quarter to the maximum); a contract without relays on those links is
+     left unchanged (XRD = XRU = 0);
   2. syncs the gap list: every gap whose functional paths ALL pass after (1) gets status 'closed' + closed_by
      (entries are kept, never deleted), so layer_coverage.py stops grading closed paths BLOCKED.
 """
@@ -27,6 +31,7 @@ H = Path(__file__).resolve().parent
 sys.path.insert(0, str(H)); sys.path.insert(0, str(H.parent))
 import l3_vm_hc_coll as L3M  # noqa: E402
 import d4g_functional_bind as FB  # noqa: E402
+import d4g_hc_xr as HCXR  # noqa: E402
 
 REGION = 'd4g_gen2_l7_wire'
 FIX = {'INJ_RET': 9, 'B39_NOOP': 1}
@@ -46,6 +51,18 @@ def run(c, rep):
             I[n]['note'] = (I[n].get('note') or '') + (f' | {REGION}: {old} -> {FIX} (cij_{q} join INJLAT 12 samples the SU word '
                                                         f'at P+INJLAT-2: SU inj_d register at P+9, as cxij_SW; bit 39 = IDX staging)')
             fixed.append(dict(inst=n, old=old, new=dict(FIX)))
+    xr = HCXR.derive(c)
+    rep['hc_xr'] = dict(ok=xr['ok'], per_quarter=xr['per_quarter'], params=xr.get('params'), compiler=xr.get('compiler'),
+                        problems=xr['problems'][:10])
+    if xr['ok'] and any(v for d in xr['per_quarter'].values() for v in d.values()):
+        P = I['hc_eng'].setdefault('params', {})
+        old = {k: P.get(k) for k in xr['params']}
+        if old != xr['params']:
+            P.update(xr['params'])
+            I['hc_eng']['note'] = (I['hc_eng'].get('note') or '') + (
+                f' | {REGION} (HC-XRDU): landed root<->hub latency per quarter {xr["per_quarter"]} -> {xr["params"]} '
+                f'(compiler RAW0 {xr["compiler"]["RAW0"]}, ingest lead {xr["compiler"]["ingest_lead"]})')
+            fixed.append(dict(inst='hc_eng', old=old, new=dict(xr['params'])))
     res = FB.check(c, FB.spec())
     pres = FB.check_params(c, FB.param_rules())
     st = {}

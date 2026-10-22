@@ -14,7 +14,7 @@ Timing model of the programme (event at time T fires on the sequencer edge t == 
   launch at TL       -> raw accumulation a (a = 25 p + i, i = 0 ss, 1..24 rows) reaches the raw FIFO at
                         TL + RAW0 + 10 a (RAW0 measured by --probe); pop ss at arrival, rows at
                         max(arrival, ss pop + RS) (RS measured); mix o_valid at pop + OV.
-  tail launch        -> fixed L = 496 edges to the unit's result; emit one edge later or after.
+  tail launch        -> fixed L = 496 (+ --tail-x) edges to the unit's result; emit one edge later or after.
 """
 import argparse, json, sys
 from pathlib import Path
@@ -74,6 +74,7 @@ def main():
     # earlier (root out flop + quarter pin flop + XRD relays).  RAW0 from the split probe.
     ap.add_argument('--split', action='store_true')
     ap.add_argument('--ding', type=int, default=2)
+    ap.add_argument('--tail-x', type=int, default=0, help='HBM-COLLECT10/HCROOT 10-21: tail child latency over L 496 (k3 451, k3b 283): every emit TX edges later; per-unit launch spacing follows')
     a = ap.parse_args()
     run = a.run
     run.mkdir(parents=True, exist_ok=True)
@@ -104,7 +105,7 @@ def main():
     def add(t, **f):
         ev.setdefault(t, {}).update(f)
     slot = 1
-    T0 = 8
+    T0 = max(8, a.ding + 6) if a.split else 8   # HC-XRDU 10-18: first event (T0 - ding) not before t = 6 (sequencer prefetch; ding 2 -> 8 unchanged)
     if a.mode != 'g22':
         # phase A: the weight set (slot 1) from the 4 quadrants, quadrant q rows 6q..6q+5, 480 waves each
         for q in range(4):
@@ -162,7 +163,7 @@ def main():
                     tft -= 1
                 add(tft, tf=1, tset=tset)
                 add(t, tl=1, tunit=u, tpos=p)
-                e = t + 497
+                e = t + 497 + a.tail_x
                 while e in ev and 'emit' in ev[e]:
                     e += 1
                 add(e, emit=1, qmask=0xf, eunit=u)
@@ -180,7 +181,7 @@ def main():
         t = TB + 2 + 24 + 6
         add(t - 7, tf=1, tset=tset)
         add(t, tl=1, tunit=1, tpos=0)
-        add(t + 497, emit=1, qmask=0b0101, eunit=1)
+        add(t + 497 + a.tail_x, emit=1, qmask=0b0101, eunit=1)
         events = {'TB': TB, 'tail_launch': t}
         P = 1
     words = []

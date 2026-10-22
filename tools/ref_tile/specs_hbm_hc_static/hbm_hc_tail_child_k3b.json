@@ -1,0 +1,217 @@
+{
+ "name": "hbm_hc_tail_child_k3b",
+ "top": "ot_hbm_hc_tail_child_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_k3b.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "launch",
+   "mixes",
+   "bases",
+   "scales"
+  ],
+  "S": [
+   "result_v",
+   "result",
+   "fault"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "outline": {
+  "w": 440.64,
+  "h": 293.76
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "sdc_extra": [
+  "physical/hbm_hc_tail_child/tailc_skmcp12.sdc"
+ ],
+ "route": {
+  "pd": 0.5,
+  "threads": 32,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The netlist is the gate-level cloned ot_hbm_hc_tail_child_static: the RTL registers every data pin itself (input pin flop + 2nd stage, output pin flops, priced +2 edges in the root TAILC schedule); generated pin regs would add an unpriced stage."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "job": {
+  "owner": "Claude:FAM-HBM-B/HCTAIL",
+  "branch": "claude/hbm-hcroot8-1020",
+  "tag": "k3b",
+  "purpose": "H.STA.BLK.1 HC Sinkhorn tail child FALLBACK k3b (parallel with k3): TPIPE 1 + SKCE 1 + SDIV 12 + MCP 12, gate-level CLONED netlist. 440.64 x 293.76 (aspect 1.5), inputs on the long N face, outputs S, clk+rst_n W | SAFE checklist (FAM-HBM-B/HCTAIL 10-21, rebuilt after the k2b STRUCTURAL FAIL: Sinkhorn step 7.53 ns vs the 5.83 ns MCP7 budget, ~2,100 single-period tail paths ~38 levels -417 ps): 1 pins PASS (RTL pin flops + 2nd stage on every data pin; rst_n reset_landing 2 then ot_rst_relay 3 regions + kept leaf) | 2 reach: side <= 441 um, every pin->core hop registered; post-GRT 405 by gate | 3 fanout PASS: clone limit 24, native32 census on the mapped + retained netlist (README) | 4 depth: Sinkhorn step (7.53 ns measured on k2b) = DECLARED multicycle 12 between its own registers (10.0 ns budget, tailc_skmcp12.sdc); tail TPIPE 1: operand registers before every unit, mul_lat 9 / add_lat 7 / exp LM6 LA4 / fdiv 1 bit a stage, registered 2-level row max | 5 storage: no runtime-indexed flop array > 2 kb | 6 floorplan: no macros, util ~0.5 of synthesis area, full std-cell band | 7 clock: ONE root (clk), no derived clock; spread <=80 by --cts gate; io_hold_margin 0.03 | 8 schedule: static, no backpressure; child L 779 (+283 edges over L 496); the root's TAILC emit offset TE must grow by the same 283 edges (root xr4).",
+  "structural_change": "Sinkhorn step = declared multicycle 12 (SDIV 12, tailc_skmcp12.sdc) + pipelined tail calendar (TPIPE 1)",
+  "extra_paths": [
+   "physical/hbm_hc_tail_child",
+   "tools/prepare_fp32_fan32_models.py",
+   "results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+   "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+   "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+   "rtl/test/run_hbm_hc_tail_child_eq.sh",
+   "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_k2.v",
+   "rtl/hdc/v41/ot_hdc_sinkhorn_ce.sv",
+   "results/rtl/hbm_hc_root_safe_1020/tail_child_hc8",
+   "rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv",
+   "rtl/hdc/v41/ot_hdc_sk_arith_cp.sv",
+   "results/rtl/hbm_hc_root_safe_1020/tail_child_hc9"
+  ],
+  "benches": [
+   {
+    "name": "tailc_native_lockstep",
+    "cmd": "python3 tools/prepare_fp32_fan32_models.py --out {RUN}/cells.v && TC_OFF=285 TC_GAP=800 bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/nat 0 48 1 rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_k3b.v {RUN}/cells.v",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS cases=48",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_k3b.v",
+     "tools/prepare_fp32_fan32_models.py",
+     "results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_ce.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith_cp.sv"
+    ],
+    "pass_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc9/tailc_k3b_native_m0_run.log"
+   },
+   {
+    "name": "tailc_rtl_lockstep",
+    "cmd": "TC_PARAMS='.TPIPE(1),.SKP(0),.SDIV(12)' TC_OFF=285 TC_GAP=800 bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/m0 0 48 1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS cases=48",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_ce.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith_cp.sv"
+    ],
+    "pass_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc9/tailc_k3b_rtl_m0_run.log"
+   },
+   {
+    "name": "tailc_rtl_mut1_rowmax",
+    "cmd": "TC_PARAMS='.TPIPE(1),.SKP(0),.SDIV(12)' TC_OFF=285 TC_GAP=800 bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/m1 1 48 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS",
+    "fail_regex": "TAILC FAIL",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_ce.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith_cp.sv"
+    ],
+    "fail_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc9/tailc_k3b_rtl_mut1_run.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/hbm_hc_tail_child_k3b/views",
+  "record_to": "results/rtl/ref_tile/hbm_hc_tail_child_k3b"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

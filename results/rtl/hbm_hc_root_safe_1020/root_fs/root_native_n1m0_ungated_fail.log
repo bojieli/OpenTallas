@@ -1,0 +1,11 @@
+Verilator 5.050 2026-07-01 rev v5.050
+NATIVE_MISMATCH edge 1 rv 0000/0000 f 0/0 qd_v 0000/0000 qi_v 0000/0000
+NATIVE_MISMATCH edge 2 rv 0000/0000 f 0/0 qd_v 0000/0000 qi_v 0000/0000
+NATIVE_MISMATCH edge 3 rv 0000/0000 f 0/0 qd_v 0000/0000 qi_v 0000/0000
+NATIVE_MISMATCH edge 4 rv 0000/0000 f 0/0 qd_v 0000/0000 qi_v 0000/0000
+NATIVE_MISMATCH edge 5 rv 0000/0000 f 0/0 qd_v 0000/0000 qi_v 0000/0000
+HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=0 TB=1955 last_mix_t=2476 first_out_t=2980 last_out_t=2980 HC_MIX_CYCLES=1025
+HC_NATIVE_EQ FAIL mismatched_edges=3084 of 3118
+[6245000] %Fatal: tb_hbm_hc_eng4_static.sv:263: Assertion failed in tb_hbm_hc_eng4_static: HC_NATIVE_EQ FAIL
+HC_ROOT_LANDED SAFE=1 TAILC=1 PTFS=1 CPR=0 MUT=0 XRD=11 XRU=11 XRDQ=32'h060b060b XRUQ=32'h050a070b DIE_XRDQ=32'h060b060b DIE_XRUQ=32'h050a070b DING=13 RAW0=189 rc=1
+BENCH_RC n1m0 rc=1

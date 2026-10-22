@@ -1,0 +1,157 @@
+{
+ "name": "hbm_hc_root_d4g-r1-COMMIT",
+ "block": "ot_hbm_hc_root_static",
+ "ref_tile": true,
+ "owner": "Claude:ELEM-GAPS/HBMB",
+ "purpose": "d4g HC root (centre hc_eng): programme/table targets, sequencer, HCP core TPRE 6 partial-sum root, mix store, table, 2 tails, result pins",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/eg-hbmb-hcroot-1018",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_root_uring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/hbm_hc_root_d4g_1018"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_hc_root_static #(.QDRLY(2), .XRD(0), .XRU(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_seq_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hcroot_m0",
+    "cmd": "bash rtl/test/run_hbm_hc_root_uring.sh {RUN}/bench/hcroot_m0 0 2 167",
+    "expect": "pass",
+    "pass_regex": "^HC_ROOT_URING MUT=0 QDRLY=2 RAW0=167 rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0"
+   },
+   {
+    "name": "hcroot_mut2",
+    "cmd": "bash rtl/test/run_hbm_hc_root_uring.sh {RUN}/bench/hcroot_mut2 2 2 167",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_URING MUT=2 QDRLY=2 RAW0=167 rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_1018/hcroot_mut2.log",
+    "note": "root tail unit 0 pre-sigmoid eps dropped (MUT 2, root-local)"
+   },
+   {
+    "name": "hcroot_qd1",
+    "cmd": "bash rtl/test/run_hbm_hc_root_uring.sh {RUN}/bench/hcroot_qd1 0 1 167",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_URING MUT=0 QDRLY=1 RAW0=167 rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_1018/hcroot_qd1.log",
+    "note": "root QDRLY 1: SYS_LAT one edge short of the U-ring hub DRLY 2 -> ps_fault"
+   },
+   {
+    "name": "hcroot_raw165",
+    "cmd": "bash rtl/test/run_hbm_hc_root_uring.sh {RUN}/bench/hcroot_raw165 0 2 165",
+    "expect": "fail",
+    "pass_regex": "^HC_ROOT_URING MUT=0 QDRLY=2 RAW0=165 rc=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT",
+    "fail_witness": "results/rtl/hbm_hc_root_d4g_1018/hcroot_raw165.log",
+    "note": "compiler keeps the ring-form RAW0 165 (U form needs 167) -> core fault"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_hc_root_d4g/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_hc_root_d4g/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_hc_root_d4g --out {RUN}/record/views/ot_hbm_hc_root_static --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_hc_root_d4g/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_hc_root_d4g/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_hc_root_d4g/hbm_hc_root_d4g-r1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "d4g GEN1 HC ROOT (instance hc_eng; l3_vm_hc_coll.py remaster ot_hbm_hc_eng_static -> ot_hbm_hc_root_static, QDRLY 2 = U-ring hub DRLY 2 (HBM-RTL5/hc 0fi), XRD = XRU = 0 until the relay layer stations the root <-> hub links). Programme/table F20 targets 164/165, ot_hbm_hc_eng_seq_static, HCP core ot_hdc_v41x_hcp_sys1_static SYS 1 TPRE 6 (partial-sum tree root ((q0+q1)+(q2+q3)) over the 4 quarter sums), 6,144-b mix store, bases/scales table (1 x 1024x256 SRAM, W beside the F20 pins), 2 exact tail units, 3,072-b result pins. No lane datapath (moved to the 4 quarter engines). Slot: the d4g grant hc_eng (5,223 x 1,953 um at the S edge) is the retired full-engine slot; this root is 648 x 648 (15 x 43.2) and belongs at the centre between the 4 hce_<q> quarters."
+}

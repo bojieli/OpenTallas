@@ -49,6 +49,44 @@ QS = ('SW', 'SE', 'NW', 'NE')
 EAST = {'SW': 'SE', 'NW': 'NE'}
 RELAY = re.compile(r'^hbfd_(rly|lh0?|lnd|land)[A-Za-z0-9_]*$')   # lane relays (i -> o) / landing hops + landings (a -> b), same bit
 THRU = {'o': 'i', 'b': 'a'}
+STATION = re.compile(r'^hbfd_lh0?_')            # half-cycle forwarded stations (lane hop 0 / hop k)
+LANDING = re.compile(r'^hbfd_(land0?|lnd)_')    # 4-slot landing (K strap k0..k2) on the sink regional root
+
+
+def landed_k(n_stations, k):
+    """K' = ceil(N/2) + E: the landing's read offset in edges (HC-XRDU 10-18).  The K strap holds K' mod 8 (0 encodes 8;
+    relay_layer_d4f.py, bench-calibrated by relay_lockstep_bench.py); E >= 0, so K' is the smallest value >= ceil(N/2)
+    congruent to K mod 8."""
+    h = (n_stations + 1) // 2
+    return h + ((k - h) % 8)
+
+
+def chain_latency(chain, I, strap_v):
+    """Compiled latency in edges from the producer pin to the consumer pin of one bit whose die relays are `chain`
+    (list of (inst, master), any order): a plain root-clocked relay (hbfd_rly) = 1 edge; a landed lane = N half-cycle
+    stations + one landing = ceil(N/2) + 1 + E = 1 + K' (relay_layer_d4f.py latency_formula; lockstep-calibrated).
+    Returns (edges, landed, problem)."""
+    plain = sum(1 for _, m in chain if m.startswith('hbfd_rly'))
+    n = sum(1 for _, m in chain if STATION.match(m))
+    lands = [i for i, m in chain if LANDING.match(m)]
+    if not lands:
+        return plain, False, ('half-cycle stations without a landing' if n else None)
+    if len(lands) > 1:
+        return None, True, f'{len(lands)} landings on one bit'
+    k = sum(int(strap_v.get((lands[0], f'k{j}'), 0)) << j for j in range(3))
+    return plain + 1 + landed_k(n, k), True, None
+
+
+def stage_want(I, st):
+    """stages = (inst, param, default[, quarter]): the compiled latency of the path.  With a quarter index the per-quarter
+    byte of <param>Q (e.g. hc_eng XRDQ, byte q) is used when that parameter is set (not all-1), else <param>."""
+    pi, pn, dflt = st[:3]
+    P = I.get(pi, {}).get('params', {})
+    if len(st) > 3:
+        v = P.get(pn + 'Q')
+        if v is not None and int(v) & 0xffffffff != 0xffffffff:
+            return (int(v) >> (8 * st[3])) & 0xff, f'{pi}.{pn}Q[{st[3]}]'
+    return int(P.get(pn, dflt)), f'{pi}.{pn}'
 
 
 def P(gap, cls, kind, src, dst, w, slot='', note='', stages=None):
@@ -126,12 +164,12 @@ def spec():
                          ('i_v', 'qi_v', 1), ('i_kind', 'qi_kind', 1), ('i_slot', 'qi_slot', 2), ('i_lo', 'qi_lo', 5),
                          ('i_w', 'qi_w', 5), ('i_cnt', 'qi_cnt', 12), ('i_word', 'qi_word', 10)):
             S.append(P(g, 'HC', 'cmd', ('hc_eng', rp, w * qi), (f'hc_{q}', p, 0), w, 'root -> quarter (XRD relays)',
-                       stages=('hc_eng', 'XRD', 0)))
+                       stages=('hc_eng', 'XRD', 0, qi)))
         for p, rp, w in (('ps_v', 'qps_v', 1), ('ps', 'qps', 32), ('ps_f', 'qps_f', 1), ('eng_fault', 'q_fault', 1),
                          ('gathered_mix_v', 'gathered_mix_v', 1), ('gathered_mix_row', 'gathered_mix_row', 5),
                          ('gathered_mix_pos', 'gathered_mix_pos', 3), ('gathered_mix_data', 'gathered_mix_data', 32)):
             S.append(P(g, 'HC', 'data', (f'hc_{q}', p, 0), ('hc_eng', rp, w * qi), w, 'quarter -> root (XRU relays)',
-                       stages=('hc_eng', 'XRU', 0)))
+                       stages=('hc_eng', 'XRU', 0, qi)))
         for p, rp, w in (('result_v', 'result_v', 1), ('result_position', 'result_position', 3), ('result', 'result', 768)):
             S.append(P(g, 'HC', 'data', ('hc_eng', rp, w * qi), (f'hc_{q}', p, 0), w, 'tail result -> VM store'))
         for p, w in (('v', 1), ('ss', 1), ('nv', 7), ('wa', 10), ('xa', 10)):
@@ -227,26 +265,25 @@ def check(c, S):
         assert shi - slo == khi - klo, e
         for b in range(khi - klo):
             drv[(ki, kp, klo + b)] = (si, sp, slo + b)
-    strap = set()
+    strap = set(); strap_v = {}
     for s in c.get('straps', []):
         for b in range(s['lo'], s['hi']):
             strap.add((s['inst'], s['port'], b))
-
-    landed = [False]
+        if s['hi'] - s['lo'] == 1:
+            strap_v[(s['inst'], s['port'])] = s.get('value', 0)
 
     def trace(i, p, b):
-        st = 0
+        ch = []
         while True:
             d = drv.get((i, p, b))
             if d is None:
-                return ('STRAP' if (i, p, b) in strap else None), st
+                return ('STRAP' if (i, p, b) in strap else None), ch
             si, sp, sb = d
             m = I.get(si, {}).get('master', '')
             if RELAY.match(m) and sp in THRU:
-                if not m.startswith('hbfd_rly'):
-                    landed[0] = True
-                i, p, b = si, THRU[sp], sb; st += 1; continue
-            return d, st
+                ch.append((si, m))
+                i, p, b = si, THRU[sp], sb; continue
+            return d, ch
     res = []
     for x in S:
         si, sp, slo = x['src']; di, dp, dlo = x['dst']; w = x['w']
@@ -260,11 +297,16 @@ def check(c, S):
             elif lo + w > pd['bits']:
                 r['status'] = 'FAIL'; r['bad'].append(f'{role} {inst}.{port}[{lo}+:{w}] beyond {pd["bits"]} b')
         if r['status'] == 'PASS':
-            wrong = collections.Counter(); stages = set(); nbad = 0; landed[0] = False
+            wrong = collections.Counter(); stages = set(); lat = set(); nbad = 0; landed = False; lprob = set()
             for b in range(w):
-                d, st = trace(di, dp, dlo + b)
+                d, ch = trace(di, dp, dlo + b)
                 if d == (si, sp, slo + b):
-                    stages.add(st); continue
+                    stages.add(len(ch))
+                    L, ld, pr = chain_latency(ch, I, strap_v)
+                    lat.add(L); landed |= ld
+                    if pr:
+                        lprob.add(pr)
+                    continue
                 nbad += 1
                 wrong['undriven' if d is None else 'strap' if d == 'STRAP' else f'{d[0]}.{d[1]}'] += 1
             if nbad:
@@ -272,18 +314,22 @@ def check(c, S):
                 r['bad'].append(f'{nbad}/{w} consumer bits not from {si}.{sp}[{slo}+:{w}]: ' +
                                 ', '.join(f'{k}:{v}' for k, v in wrong.most_common(4)))
             r['relay_stages'] = sorted(stages)
-            r['landed'] = landed[0]
-            if landed[0]:
-                # half-cycle hops + landing: the latency is the land plan's (equal-age padding at the landing), not a
-                # stage count -> slot rules are checked by the land plan / landing lockstep (HBM-LANDING), not here
-                pass
-            elif len(stages) > 1:
-                r['status'] = 'FAIL'; r['bad'].append(f'unequal relay stages across bits {sorted(stages)}')
-            if x.get('stages') and stages and not landed[0]:
-                pi, pn, dflt = x['stages']
-                want = int(I.get(pi, {}).get('params', {}).get(pn, dflt))
-                if stages != {want}:
-                    r['status'] = 'FAIL'; r['bad'].append(f'relay stages {sorted(stages)} != {pi}.{pn} = {want} (compiled slot)')
+            r['landed'] = landed
+            # HC-XRDU 10-18: slot rules hold on LANDED paths too -- the per-bit compiled latency (plain relay = 1 edge,
+            # landed lane = 1 + K' from the K strap) must be equal across the bits and equal the compiled parameter
+            r['latency'] = sorted(lat, key=lambda v: -1 if v is None else v)
+            if lprob:
+                r['status'] = 'FAIL'; r['bad'].append('landing: ' + '; '.join(sorted(lprob)))
+            elif len(lat) > 1:
+                r['status'] = 'FAIL'; r['bad'].append(f'unequal {"landed latency" if landed else "relay stages"} across bits '
+                                                      f'{r["latency"]}')
+            if x.get('stages') and lat and not lprob and len(lat) == 1:
+                want, wname = stage_want(I, x['stages'])
+                if lat != {want}:
+                    r['status'] = 'FAIL'
+                    r['bad'].append(f'relay stages {sorted(stages)} != {wname} = {want} (compiled slot)' if not landed else
+                                    f'landed latency {r["latency"]} edges (stations+landing {sorted(stages)}) != {wname} = {want} '
+                                    f'(compiled slot)')
         res.append(r)
     return res
 
@@ -325,12 +371,13 @@ def main():
     fails = [r for r in res if r['status'] != 'PASS']
     cls = collections.OrderedDict()
     for r in res:
-        k = cls.setdefault(r['cls'], dict(paths=0, bits=0, fail=0, relay_stages=set()))
+        k = cls.setdefault(r['cls'], dict(paths=0, bits=0, fail=0, relay_stages=set(), landed_paths=0))
         k['paths'] += 1; k['bits'] += r['w']; k['fail'] += r['status'] != 'PASS'
-        k['relay_stages'] |= set(r['relay_stages'] or [])
+        k['relay_stages'] |= set(r['relay_stages'] or []); k['landed_paths'] += bool(r.get('landed'))
     ok = not fails and not unlisted_open and (a.gaps == 'warn' or not stale)
     for k, v in cls.items():
-        print(f'  {k:5s} paths {v["paths"]:4d} bits {v["bits"]:7d} fail {v["fail"]:3d} relay_stages {sorted(v["relay_stages"])}')
+        print(f'  {k:5s} paths {v["paths"]:4d} bits {v["bits"]:7d} fail {v["fail"]:3d} landed {v["landed_paths"]:4d} '
+              f'relay_stages {sorted(v["relay_stages"])}')
     for r in fails[:40]:
         print('  FAIL', r['cls'], f'{r["src"][0]}.{r["src"][1]}[{r["src"][2]}+:{r["w"]}] -> {r["dst"][0]}.{r["dst"][1]}[{r["dst"][2]}]',
               '|', '; '.join(r['bad']))

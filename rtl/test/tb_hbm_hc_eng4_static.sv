@@ -57,24 +57,122 @@ module tb_hbm_hc_eng4_static;
 `ifndef HC_CPR
 `define HC_CPR 0
 `endif
+    // HBM-HC5 10-20: +define+HC_SAFE=1 = root SAFE 1 (SRAM mix store; tail domain + result pins 2 edges later)
+// HBM-HCROOT6 10-20: +define+HC_TAILC=1 = root TAILC 1 (hardened tail child tiles, +2 edges)
+`ifndef HC_TAILC
+`define HC_TAILC 0
+`endif
+// HBM-HC7-ROOT 10-20: +define+HC_PTFS=1 = root PTFS 1 (fanout-safe programme / table targets; cycles unchanged)
+`ifndef HC_PTFS
+`define HC_PTFS 0
+`endif
+// HBM-COLLECT10/HCROOT 10-21: tail child parameters of root TAILC 1 (k3: 16/1/1 + --tail-x 451; k3b: 12/1/0 + 283)
+`ifndef HC_TSDIV
+`define HC_TSDIV 7
+`endif
+`ifndef HC_TTPIPE
+`define HC_TTPIPE 0
+`endif
+`ifndef HC_TSKP
+`define HC_TSKP 0
+`endif
+`ifndef HC_SAFE
+`define HC_SAFE 0
+`endif
+    // HC-XRDU 10-18: LANDED root <-> quarter links.  HC_XRD/HC_XRU/HC_XRDQ/HC_XRUQ = the root's compiled parameters;
+    // HC_DIE_XRDQ / HC_DIE_XRUQ = the die's compiled per-quarter link latency (byte q, edges from driver pin to sink pin:
+    // a landed lane = ceil(N/2) + 1 + E, tools/hbm_die_v16/d4g_hc_xr.py), modelled here as that many register stages
+    // per quarter (the landing lockstep, relay_lockstep_bench.py, proves a landed lane IS that fixed latency).
+    // Defaults = 0 / all-1 = the unlanded bench (byte-identical to before).
+`ifndef HC_XRD
+`define HC_XRD 0
+`endif
+`ifndef HC_XRU
+`define HC_XRU 0
+`endif
+`ifndef HC_XRDQ
+`define HC_XRDQ 32'hffffffff
+`endif
+`ifndef HC_XRUQ
+`define HC_XRUQ 32'hffffffff
+`endif
+`ifndef HC_DIE_XRDQ
+`define HC_DIE_XRDQ 32'h0
+`endif
+`ifndef HC_DIE_XRUQ
+`define HC_DIE_XRUQ 32'h0
+`endif
+    localparam [31:0] DXD = `HC_DIE_XRDQ, DXU = `HC_DIE_XRUQ;
     wire [3:0] qd_v, qd_ss, qi_v, qi_kind, qps_v, qps_f, q_fault; wire [27:0] qd_nv; wire [39:0] qd_wa, qd_xa, qi_word;
     wire [7:0] qi_slot; wire [19:0] qi_lo, qi_w; wire [47:0] qi_cnt; wire [127:0] qps;
-    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .QCHX(11 * `HC_CPR)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
+    // quarter-side copies after the die links
+    wire [3:0] ld_v, ld_ss, li_v, li_kind, lps_v, lps_f, l_fault; wire [27:0] ld_nv; wire [39:0] ld_wa, ld_xa, li_word;
+    wire [7:0] li_slot; wire [19:0] li_lo, li_w; wire [47:0] li_cnt; wire [127:0] lps;
+    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .XRD(`HC_XRD), .XRU(`HC_XRU), .XRDQ(`HC_XRDQ), .XRUQ(`HC_XRUQ), .QCHX(11 * `HC_CPR), .SAFE(`HC_SAFE), .TAILC(`HC_TAILC), .PTFS(`HC_PTFS), .TSDIV(`HC_TSDIV), .TTPIPE(`HC_TTPIPE), .TSKP(`HC_TSKP)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured),
         .qd_v(qd_v), .qd_ss(qd_ss), .qd_nv(qd_nv), .qd_wa(qd_wa), .qd_xa(qd_xa), .qi_v(qi_v), .qi_kind(qi_kind),
-        .qi_slot(qi_slot), .qi_lo(qi_lo), .qi_w(qi_w), .qi_cnt(qi_cnt), .qi_word(qi_word), .qps_v(qps_v), .qps(qps),
-        .qps_f(qps_f), .q_fault(q_fault),
+        .qi_slot(qi_slot), .qi_lo(qi_lo), .qi_w(qi_w), .qi_cnt(qi_cnt), .qi_word(qi_word), .qps_v(lps_v), .qps(lps),
+        .qps_f(lps_f), .q_fault(l_fault),
         .gathered_mix_v(gm_v), .gathered_mix_row(gm_row), .gathered_mix_pos(gm_pos), .gathered_mix_data(gm_data),
         .result_v(result_v), .result_position(result_position), .result(result),
         .program_active(pa), .program_done(pd), .fault(fault));
+`ifdef HC_NATIVE
+    // HBM-HC7-ROOT 10-20: +define+HC_NATIVE = lockstep of the gate-cloned root netlist (ot_hbm_hc_root_static_nat:
+    // bound_fanout_clone + retained re-synth of THIS RTL at MUT 0, cell models from cells.v) against the RTL dut: same
+    // inputs, every output compared on every edge after reset.  Prints HC_NATIVE_EQ PASS/FAIL before the HC_ENG verdict.
+    wire n_cf, n_pa, n_pd, n_fault; wire [3:0] n_qd_v, n_qd_ss, n_qi_v, n_qi_kind, n_result_v; wire [27:0] n_qd_nv;
+    wire [39:0] n_qd_wa, n_qd_xa, n_qi_word; wire [7:0] n_qi_slot; wire [19:0] n_qi_lo, n_qi_w; wire [47:0] n_qi_cnt;
+    wire [11:0] n_result_position; wire [3071:0] n_result;
+    ot_hbm_hc_root_static_nat dutn (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
+        .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
+        .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(n_cf),
+        .qd_v(n_qd_v), .qd_ss(n_qd_ss), .qd_nv(n_qd_nv), .qd_wa(n_qd_wa), .qd_xa(n_qd_xa), .qi_v(n_qi_v), .qi_kind(n_qi_kind),
+        .qi_slot(n_qi_slot), .qi_lo(n_qi_lo), .qi_w(n_qi_w), .qi_cnt(n_qi_cnt), .qi_word(n_qi_word), .qps_v(lps_v), .qps(lps),
+        .qps_f(lps_f), .q_fault(l_fault),
+        .gathered_mix_v(gm_v), .gathered_mix_row(gm_row), .gathered_mix_pos(gm_pos), .gathered_mix_data(gm_data),
+        .result_v(n_result_v), .result_position(n_result_position), .result(n_result),
+        .program_active(n_pa), .program_done(n_pd), .fault(n_fault));
+    integer nat_edges = 0, nat_bad = 0, nat_bad_q = 0, nat_cmp = 0;
+    always @(posedge clk) if (rst_n) begin
+        nat_edges = nat_edges + 1;
+        // control pins every edge; data pins on their valid edges (an unreset data flop powers up differently in the
+        // cell models -- DFFHQN state 0 = Q 1 -- and is never read before its valid edge)
+        if ({n_cf, n_pa, n_pd, n_fault, n_qd_v, n_qi_v, n_result_v} !== {configured, pa, pd, fault, qd_v, qi_v, result_v})
+            nat_bad = nat_bad + 1;
+        for (integer q = 0; q < 4; q = q + 1) begin
+            if (qd_v[q] && ({n_qd_ss[q], n_qd_nv[q*7 +: 7], n_qd_wa[q*10 +: 10], n_qd_xa[q*10 +: 10]} !==
+                            {qd_ss[q], qd_nv[q*7 +: 7], qd_wa[q*10 +: 10], qd_xa[q*10 +: 10]})) nat_bad = nat_bad + 1;
+            if (qi_v[q] && ({n_qi_kind[q], n_qi_slot[q*2 +: 2], n_qi_lo[q*5 +: 5], n_qi_w[q*5 +: 5], n_qi_cnt[q*12 +: 12],
+                             n_qi_word[q*10 +: 10]} !== {qi_kind[q], qi_slot[q*2 +: 2], qi_lo[q*5 +: 5], qi_w[q*5 +: 5],
+                             qi_cnt[q*12 +: 12], qi_word[q*10 +: 10]})) nat_bad = nat_bad + 1;
+            if (result_v[q] && ({n_result_position[q*3 +: 3], n_result[q*768 +: 768]} !==
+                                {result_position[q*3 +: 3], result[q*768 +: 768]})) nat_bad = nat_bad + 1;
+        end
+        if (nat_bad != nat_bad_q && nat_bad < 6) $display("NATIVE_MISMATCH edge %0d rv %b/%b f %b/%b qd_v %b/%b qi_v %b/%b",
+            nat_edges, n_result_v, result_v, n_fault, fault, n_qd_v, qd_v, n_qi_v, qi_v);
+        nat_bad_q = nat_bad;
+        nat_cmp = nat_cmp + (|qd_v) + (|qi_v) + (|result_v);
+    end
+`endif
     genvar gqi;
+    for (gqi = 0; gqi < 4; gqi = gqi + 1) begin : g_lnk
+        // die link root -> quarter gqi (65 b) and quarter gqi -> root (35 b), fixed latency DXD/DXU byte gqi
+        ot_hdc_delay #(.W(65), .D((DXD >> (8 * gqi)) & 255), .RESET(1)) u_dn (.clk(clk), .rst_n(rst_n),
+            .d({qd_v[gqi], qd_ss[gqi], qd_nv[gqi*7 +: 7], qd_wa[gqi*10 +: 10], qd_xa[gqi*10 +: 10], qi_v[gqi], qi_kind[gqi],
+                qi_slot[gqi*2 +: 2], qi_lo[gqi*5 +: 5], qi_w[gqi*5 +: 5], qi_cnt[gqi*12 +: 12], qi_word[gqi*10 +: 10]}),
+            .q({ld_v[gqi], ld_ss[gqi], ld_nv[gqi*7 +: 7], ld_wa[gqi*10 +: 10], ld_xa[gqi*10 +: 10], li_v[gqi], li_kind[gqi],
+                li_slot[gqi*2 +: 2], li_lo[gqi*5 +: 5], li_w[gqi*5 +: 5], li_cnt[gqi*12 +: 12], li_word[gqi*10 +: 10]}));
+        ot_hdc_delay #(.W(35), .D((DXU >> (8 * gqi)) & 255), .RESET(1)) u_up (.clk(clk), .rst_n(rst_n),
+            .d({qps_v[gqi], qps[gqi*32 +: 32], qps_f[gqi], q_fault[gqi]}),
+            .q({lps_v[gqi], lps[gqi*32 +: 32], lps_f[gqi], l_fault[gqi]}));
+    end
     for (gqi = 0; gqi < 4; gqi = gqi + 1) begin : g_q
         ot_hbm_hc_qeng_static #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY), .CPR(`HC_CPR)) u_q (
             .clk(clk), .rst_n(rst_n),
-            .d_v(qd_v[gqi]), .d_ss(qd_ss[gqi]), .d_nv(qd_nv[gqi*7 +: 7]), .d_wa(qd_wa[gqi*10 +: 10]), .d_xa(qd_xa[gqi*10 +: 10]),
-            .i_v(qi_v[gqi]), .i_kind(qi_kind[gqi]), .i_slot(qi_slot[gqi*2 +: 2]), .i_lo(qi_lo[gqi*5 +: 5]),
-            .i_w(qi_w[gqi*5 +: 5]), .i_cnt(qi_cnt[gqi*12 +: 12]), .i_word(qi_word[gqi*10 +: 10]),
+            .d_v(ld_v[gqi]), .d_ss(ld_ss[gqi]), .d_nv(ld_nv[gqi*7 +: 7]), .d_wa(ld_wa[gqi*10 +: 10]), .d_xa(ld_xa[gqi*10 +: 10]),
+            .i_v(li_v[gqi]), .i_kind(li_kind[gqi]), .i_slot(li_slot[gqi*2 +: 2]), .i_lo(li_lo[gqi*5 +: 5]),
+            .i_w(li_w[gqi*5 +: 5]), .i_cnt(li_cnt[gqi*12 +: 12]), .i_word(li_word[gqi*10 +: 10]),
             .x_wave_v(x_wave_v[gqi]), .x_wave_beat(x_wave_beat[gqi*2 +: 2]), .x_wave_word(x_wave_word[gqi*10 +: 10]),
             .x_wave(x_wave[gqi*BW +: BW]), .ps_v(qps_v[gqi]), .ps(qps[gqi*32 +: 32]), .ps_f(qps_f[gqi]), .fault(q_fault[gqi]));
     end
@@ -109,8 +207,13 @@ module tb_hbm_hc_eng4_static;
     // ---- checks
     integer mixseen = 0, mixbad = 0, outseen = 0, outbad = 0, cyc = 0, last_out_t = 0, first_out_t = -1;
     integer last_mix_t = 0;
+    // HBM-HCROOT6 10-20: extended programme-edge counter.  t (u_seq.t) freezes when the sequencer stops, so a result
+    // emitted after the last programme event (root SAFE 1: tail domain TD = 2 edges later) was timed at the frozen t.
+    // tx follows t while busy and keeps counting one per edge after it, so HC_MIX_CYCLES is measured, not clipped.
+    integer tx = 0;
     always @(posedge clk) begin
         cyc <= cyc + 1;
+        if (busy) tx = t; else tx = tx + 1;
         if (rst_n && fault) begin
             $display("HC_ENG_FAULT t=%0d seq=%0d ev=%0d ps=%0d qf=%b core=%0d mix=%0d tbl=%0d tail=%0d tfl=%0d", t,
                 dut.seq_fault, dut.ev_fault, dut.ps_fault, dut.qf_q, dut.core_fault, dut.mix_fault, dut.tbl_fault,
@@ -120,7 +223,7 @@ module tb_hbm_hc_eng4_static;
         if (mode == 1 && dut.u_core.raw_wv) $display("PROBE raw t=%0d ss=%0d pos=%0d idx=%0d", t,
             dut.u_core.raw_w[40], dut.u_core.raw_w[32 + 5 +: 3], dut.u_core.raw_w[32 +: 5]);
         if (dut.o_valid) begin
-            mixseen = mixseen + 1; last_mix_t = t;
+            mixseen = mixseen + 1; last_mix_t = tx;
             if (dut.o_data !== expmix[dut.o_pos*24 + dut.o_idx]) begin
                 mixbad = mixbad + 1;
                 if (mixbad < 6) $display("MIX_MISMATCH pos%0d row%0d got=%08x exp=%08x", dut.o_pos, dut.o_idx,
@@ -129,7 +232,7 @@ module tb_hbm_hc_eng4_static;
         end
         for (integer q = 0; q < 4; q = q + 1) if (result_v[q]) begin : chk
             integer p; p = result_position[q*3 +: 3];
-            outseen = outseen + 1; last_out_t = t; if (first_out_t < 0) first_out_t = t;
+            outseen = outseen + 1; last_out_t = tx; if (first_out_t < 0) first_out_t = tx;
             for (integer j = 0; j < 24; j = j + 1) if (result[q*768 + j*32 +: 32] !== exptail[p*24 + j]) begin
                 outbad = outbad + 1;
                 if (outbad < 6) $display("TAIL_MISMATCH q%0d pos%0d word%0d got=%08x exp=%08x", q, p, j,
@@ -174,6 +277,10 @@ module tb_hbm_hc_eng4_static;
         $display("HC_ENG_DONE mode=%0d npos=%0d mixes=%0d mixbad=%0d outs=%0d outbad=%0d TB=%0d last_mix_t=%0d first_out_t=%0d last_out_t=%0d HC_MIX_CYCLES=%0d",
             mode, npos, mixseen, mixbad, outseen, outbad, tb0, last_mix_t, first_out_t, last_out_t, last_out_t - tb0);
         if (mode == 1) $finish;
+`ifdef HC_NATIVE
+        if (nat_bad == 0 && nat_edges > 100 && nat_cmp > 50) $display("HC_NATIVE_EQ PASS edges=%0d data_edges=%0d", nat_edges, nat_cmp);
+        else begin $display("HC_NATIVE_EQ FAIL mismatched_edges=%0d of %0d", nat_bad, nat_edges); $fatal(1, "HC_NATIVE_EQ FAIL"); end
+`endif
         if (mixbad || outbad || outseen != nemit || (mode == 0 && mixseen != 24 * npos)) $fatal(1, "HC_ENG FAIL");
         $display("HC_ENG PASS");
         $finish;

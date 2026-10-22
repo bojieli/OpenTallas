@@ -1,0 +1,6 @@
+HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=0 TB=1955 last_mix_t=2476 first_out_t=2980 last_out_t=2980 HC_MIX_CYCLES=1025
+HC_ENG PASS
+- rtl/test/tb_hbm_hc_eng4_static.sv:276: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 64.368 s; speed 97.020 ns/s
+- Verilator: cpu 64.362 s on 1 threads; allocated 212 MB

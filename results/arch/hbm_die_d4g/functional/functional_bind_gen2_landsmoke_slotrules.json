@@ -1,0 +1,3106 @@
+{
+ "schema": "opentallas.d4g_functional_bind.v1",
+ "contract": "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/land_smoke/net/contract.json",
+ "verdict": "FAIL",
+ "classes": {
+  "INJ": {
+   "paths": 200,
+   "bits": 39296,
+   "fail": 6,
+   "relay_stages": [
+    0,
+    19,
+    20,
+    21,
+    23
+   ],
+   "landed_paths": 4
+  },
+  "DEL": {
+   "paths": 96,
+   "bits": 26080,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ],
+   "landed_paths": 0
+  },
+  "RC": {
+   "paths": 84,
+   "bits": 5628,
+   "fail": 0,
+   "relay_stages": [
+    0
+   ],
+   "landed_paths": 0
+  },
+  "SFUJ": {
+   "paths": 64,
+   "bits": 2048,
+   "fail": 0,
+   "relay_stages": [
+    2,
+    3
+   ],
+   "landed_paths": 0
+  },
+  "DMA": {
+   "paths": 44,
+   "bits": 9620,
+   "fail": 0,
+   "relay_stages": [
+    0,
+    3,
+    4
+   ],
+   "landed_paths": 11
+  },
+  "HC": {
+   "paths": 376,
+   "bits": 82452,
+   "fail": 80,
+   "relay_stages": [
+    0,
+    6,
+    8,
+    9,
+    10,
+    17,
+    18,
+    19
+   ],
+   "landed_paths": 92
+  },
+  "XCMD": {
+   "paths": 296,
+   "bits": 124816,
+   "fail": 0,
+   "relay_stages": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    12,
+    13
+   ],
+   "landed_paths": 12
+  }
+ },
+ "stale_gaps": [
+  "G-CIL-DEL",
+  "G-CIL-RC",
+  "G-DMA-WB",
+  "G-SFU-OPERAND-JOIN-NE",
+  "G-SFU-OPERAND-JOIN-NW",
+  "G-SFU-OPERAND-JOIN-SE",
+  "G-SFU-OPERAND-JOIN-SW",
+  "G-SMVM-XCMD"
+ ],
+ "open_gaps": [
+  "G-CIL-INJ",
+  "G-HC-ENG"
+ ],
+ "unlisted_open_gaps": [],
+ "fails": [
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_v",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "d_v",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_ss",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "d_ss",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_nv",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "d_nv",
+    0
+   ],
+   "w": 7,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_wa",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "d_wa",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_xa",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "d_xa",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_v",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "i_v",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_kind",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "i_kind",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_slot",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "i_slot",
+    0
+   ],
+   "w": 2,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_lo",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "i_lo",
+    0
+   ],
+   "w": 5,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_w",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "i_w",
+    0
+   ],
+   "w": 5,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_cnt",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "i_cnt",
+    0
+   ],
+   "w": 12,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_word",
+    0
+   ],
+   "dst": [
+    "hc_SW",
+    "i_word",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    18
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [18]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SW",
+    "ps_v",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps_v",
+    0
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SW",
+    "ps",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps",
+    0
+   ],
+   "w": 32,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SW",
+    "ps_f",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps_f",
+    0
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SW",
+    "eng_fault",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "q_fault",
+    0
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SW",
+    "gathered_mix_v",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_v",
+    0
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SW",
+    "gathered_mix_row",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_row",
+    0
+   ],
+   "w": 5,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SW",
+    "gathered_mix_pos",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_pos",
+    0
+   ],
+   "w": 3,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SW",
+    "gathered_mix_data",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_data",
+    0
+   ],
+   "w": 32,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    0
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_v",
+    1
+   ],
+   "dst": [
+    "hc_SE",
+    "d_v",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_ss",
+    1
+   ],
+   "dst": [
+    "hc_SE",
+    "d_ss",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_nv",
+    7
+   ],
+   "dst": [
+    "hc_SE",
+    "d_nv",
+    0
+   ],
+   "w": 7,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_wa",
+    10
+   ],
+   "dst": [
+    "hc_SE",
+    "d_wa",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_xa",
+    10
+   ],
+   "dst": [
+    "hc_SE",
+    "d_xa",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_v",
+    1
+   ],
+   "dst": [
+    "hc_SE",
+    "i_v",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_kind",
+    1
+   ],
+   "dst": [
+    "hc_SE",
+    "i_kind",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_slot",
+    2
+   ],
+   "dst": [
+    "hc_SE",
+    "i_slot",
+    0
+   ],
+   "w": 2,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_lo",
+    5
+   ],
+   "dst": [
+    "hc_SE",
+    "i_lo",
+    0
+   ],
+   "w": 5,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_w",
+    5
+   ],
+   "dst": [
+    "hc_SE",
+    "i_w",
+    0
+   ],
+   "w": 5,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_cnt",
+    12
+   ],
+   "dst": [
+    "hc_SE",
+    "i_cnt",
+    0
+   ],
+   "w": 12,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_word",
+    10
+   ],
+   "dst": [
+    "hc_SE",
+    "i_word",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    8
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [8]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SE",
+    "ps_v",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps_v",
+    1
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    10
+   ],
+   "bad": [
+    "landed latency [7] edges (stations+landing [10]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    7
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SE",
+    "ps",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps",
+    32
+   ],
+   "w": 32,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    10
+   ],
+   "bad": [
+    "landed latency [7] edges (stations+landing [10]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    7
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SE",
+    "ps_f",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps_f",
+    1
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    10
+   ],
+   "bad": [
+    "landed latency [7] edges (stations+landing [10]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    7
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SE",
+    "eng_fault",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "q_fault",
+    1
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    10
+   ],
+   "bad": [
+    "landed latency [7] edges (stations+landing [10]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    7
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SE",
+    "gathered_mix_v",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_v",
+    1
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    10
+   ],
+   "bad": [
+    "landed latency [7] edges (stations+landing [10]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    7
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SE",
+    "gathered_mix_row",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_row",
+    5
+   ],
+   "w": 5,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    10
+   ],
+   "bad": [
+    "landed latency [7] edges (stations+landing [10]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    7
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SE",
+    "gathered_mix_pos",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_pos",
+    3
+   ],
+   "w": 3,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    10
+   ],
+   "bad": [
+    "landed latency [7] edges (stations+landing [10]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    7
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_SE",
+    "gathered_mix_data",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_data",
+    32
+   ],
+   "w": 32,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    1
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    10
+   ],
+   "bad": [
+    "landed latency [7] edges (stations+landing [10]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    7
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_v",
+    2
+   ],
+   "dst": [
+    "hc_NW",
+    "d_v",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_ss",
+    2
+   ],
+   "dst": [
+    "hc_NW",
+    "d_ss",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_nv",
+    14
+   ],
+   "dst": [
+    "hc_NW",
+    "d_nv",
+    0
+   ],
+   "w": 7,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_wa",
+    20
+   ],
+   "dst": [
+    "hc_NW",
+    "d_wa",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_xa",
+    20
+   ],
+   "dst": [
+    "hc_NW",
+    "d_xa",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_v",
+    2
+   ],
+   "dst": [
+    "hc_NW",
+    "i_v",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_kind",
+    2
+   ],
+   "dst": [
+    "hc_NW",
+    "i_kind",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_slot",
+    4
+   ],
+   "dst": [
+    "hc_NW",
+    "i_slot",
+    0
+   ],
+   "w": 2,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_lo",
+    10
+   ],
+   "dst": [
+    "hc_NW",
+    "i_lo",
+    0
+   ],
+   "w": 5,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_w",
+    10
+   ],
+   "dst": [
+    "hc_NW",
+    "i_w",
+    0
+   ],
+   "w": 5,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_cnt",
+    24
+   ],
+   "dst": [
+    "hc_NW",
+    "i_cnt",
+    0
+   ],
+   "w": 12,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_word",
+    20
+   ],
+   "dst": [
+    "hc_NW",
+    "i_word",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    19
+   ],
+   "bad": [
+    "landed latency [11] edges (stations+landing [19]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    11
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NW",
+    "ps_v",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps_v",
+    2
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    17
+   ],
+   "bad": [
+    "landed latency [10] edges (stations+landing [17]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    10
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NW",
+    "ps",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps",
+    64
+   ],
+   "w": 32,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    17
+   ],
+   "bad": [
+    "landed latency [10] edges (stations+landing [17]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    10
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NW",
+    "ps_f",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps_f",
+    2
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    17
+   ],
+   "bad": [
+    "landed latency [10] edges (stations+landing [17]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    10
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NW",
+    "eng_fault",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "q_fault",
+    2
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    17
+   ],
+   "bad": [
+    "landed latency [10] edges (stations+landing [17]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    10
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NW",
+    "gathered_mix_v",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_v",
+    2
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    17
+   ],
+   "bad": [
+    "landed latency [10] edges (stations+landing [17]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    10
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NW",
+    "gathered_mix_row",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_row",
+    10
+   ],
+   "w": 5,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    17
+   ],
+   "bad": [
+    "landed latency [10] edges (stations+landing [17]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    10
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NW",
+    "gathered_mix_pos",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_pos",
+    6
+   ],
+   "w": 3,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    17
+   ],
+   "bad": [
+    "landed latency [10] edges (stations+landing [17]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    10
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NW",
+    "gathered_mix_data",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_data",
+    64
+   ],
+   "w": 32,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    2
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    17
+   ],
+   "bad": [
+    "landed latency [10] edges (stations+landing [17]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    10
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_v",
+    3
+   ],
+   "dst": [
+    "hc_NE",
+    "d_v",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_ss",
+    3
+   ],
+   "dst": [
+    "hc_NE",
+    "d_ss",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_nv",
+    21
+   ],
+   "dst": [
+    "hc_NE",
+    "d_nv",
+    0
+   ],
+   "w": 7,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_wa",
+    30
+   ],
+   "dst": [
+    "hc_NE",
+    "d_wa",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qd_xa",
+    30
+   ],
+   "dst": [
+    "hc_NE",
+    "d_xa",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_v",
+    3
+   ],
+   "dst": [
+    "hc_NE",
+    "i_v",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_kind",
+    3
+   ],
+   "dst": [
+    "hc_NE",
+    "i_kind",
+    0
+   ],
+   "w": 1,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_slot",
+    6
+   ],
+   "dst": [
+    "hc_NE",
+    "i_slot",
+    0
+   ],
+   "w": 2,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_lo",
+    15
+   ],
+   "dst": [
+    "hc_NE",
+    "i_lo",
+    0
+   ],
+   "w": 5,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_w",
+    15
+   ],
+   "dst": [
+    "hc_NE",
+    "i_w",
+    0
+   ],
+   "w": 5,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_cnt",
+    36
+   ],
+   "dst": [
+    "hc_NE",
+    "i_cnt",
+    0
+   ],
+   "w": 12,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "cmd",
+   "src": [
+    "hc_eng",
+    "qi_word",
+    30
+   ],
+   "dst": [
+    "hc_NE",
+    "i_word",
+    0
+   ],
+   "w": 10,
+   "slot": "root -> quarter (XRD relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRD",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    9
+   ],
+   "bad": [
+    "landed latency [6] edges (stations+landing [9]) != hc_eng.XRD = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    6
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NE",
+    "ps_v",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps_v",
+    3
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    6
+   ],
+   "bad": [
+    "landed latency [5] edges (stations+landing [6]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    5
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NE",
+    "ps",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps",
+    96
+   ],
+   "w": 32,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    6
+   ],
+   "bad": [
+    "landed latency [5] edges (stations+landing [6]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    5
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NE",
+    "ps_f",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "qps_f",
+    3
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    6
+   ],
+   "bad": [
+    "landed latency [5] edges (stations+landing [6]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    5
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NE",
+    "eng_fault",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "q_fault",
+    3
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    6
+   ],
+   "bad": [
+    "landed latency [5] edges (stations+landing [6]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    5
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NE",
+    "gathered_mix_v",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_v",
+    3
+   ],
+   "w": 1,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    6
+   ],
+   "bad": [
+    "landed latency [5] edges (stations+landing [6]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    5
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NE",
+    "gathered_mix_row",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_row",
+    15
+   ],
+   "w": 5,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    6
+   ],
+   "bad": [
+    "landed latency [5] edges (stations+landing [6]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    5
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NE",
+    "gathered_mix_pos",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_pos",
+    9
+   ],
+   "w": 3,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    6
+   ],
+   "bad": [
+    "landed latency [5] edges (stations+landing [6]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    5
+   ]
+  },
+  {
+   "gap": "G-HC-ENG",
+   "cls": "HC",
+   "kind": "data",
+   "src": [
+    "hc_NE",
+    "gathered_mix_data",
+    0
+   ],
+   "dst": [
+    "hc_eng",
+    "gathered_mix_data",
+    96
+   ],
+   "w": 32,
+   "slot": "quarter -> root (XRU relays)",
+   "note": "",
+   "stages": [
+    "hc_eng",
+    "XRU",
+    0,
+    3
+   ],
+   "status": "FAIL",
+   "relay_stages": [
+    6
+   ],
+   "bad": [
+    "landed latency [5] edges (stations+landing [6]) != hc_eng.XRU = 0 (compiled slot)"
+   ],
+   "landed": true,
+   "latency": [
+    5
+   ]
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "INJ_RET.SE",
+   "inst": "cxij_SE",
+   "param": "INJ_RET",
+   "expect": [
+    "cij",
+    "cij_SE",
+    "INJLAT",
+    -3
+   ],
+   "why": "ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_SE.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))"
+   ],
+   "have": 11,
+   "want": 9,
+   "src": [
+    "cxij_SE",
+    "INJ_RET",
+    0
+   ],
+   "dst": [
+    "cxij_SE",
+    "INJ_RET",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "B39_NOOP.SE",
+   "inst": "cxij_SE",
+   "param": "B39_NOOP",
+   "expect": [
+    "const",
+    1
+   ],
+   "why": "addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_SE.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))"
+   ],
+   "have": 0,
+   "want": 1,
+   "src": [
+    "cxij_SE",
+    "B39_NOOP",
+    0
+   ],
+   "dst": [
+    "cxij_SE",
+    "B39_NOOP",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "INJ_RET.NW",
+   "inst": "cxij_NW",
+   "param": "INJ_RET",
+   "expect": [
+    "cij",
+    "cij_NW",
+    "INJLAT",
+    -3
+   ],
+   "why": "ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NW.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))"
+   ],
+   "have": 11,
+   "want": 9,
+   "src": [
+    "cxij_NW",
+    "INJ_RET",
+    0
+   ],
+   "dst": [
+    "cxij_NW",
+    "INJ_RET",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "B39_NOOP.NW",
+   "inst": "cxij_NW",
+   "param": "B39_NOOP",
+   "expect": [
+    "const",
+    1
+   ],
+   "why": "addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NW.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))"
+   ],
+   "have": 0,
+   "want": 1,
+   "src": [
+    "cxij_NW",
+    "B39_NOOP",
+    0
+   ],
+   "dst": [
+    "cxij_NW",
+    "B39_NOOP",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "INJ_RET.NE",
+   "inst": "cxij_NE",
+   "param": "INJ_RET",
+   "expect": [
+    "cij",
+    "cij_NE",
+    "INJLAT",
+    -3
+   ],
+   "why": "ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NE.INJ_RET = 11, slot needs 9 (ot_hgi_coll_inj_idx_join: the SU must update its inj_d register at P+INJLAT-3 (P+9 for INJLAT 12))"
+   ],
+   "have": 11,
+   "want": 9,
+   "src": [
+    "cxij_NE",
+    "INJ_RET",
+    0
+   ],
+   "dst": [
+    "cxij_NE",
+    "INJ_RET",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  },
+  {
+   "gap": "G-CIL-INJ",
+   "cls": "INJ",
+   "id": "B39_NOOP.NE",
+   "inst": "cxij_NE",
+   "param": "B39_NOOP",
+   "expect": [
+    "const",
+    1
+   ],
+   "why": "addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault)",
+   "status": "FAIL",
+   "bad": [
+    "cxij_NE.B39_NOOP = 0, slot needs 1 (addr_lo[39]=1 selects the cij IDX staging; bit 39 is reserved in the SU space (no SU read, no fault))"
+   ],
+   "have": 0,
+   "want": 1,
+   "src": [
+    "cxij_NE",
+    "B39_NOOP",
+    0
+   ],
+   "dst": [
+    "cxij_NE",
+    "B39_NOOP",
+    0
+   ],
+   "w": 0,
+   "relay_stages": [],
+   "kind": "slot"
+  }
+ ],
+ "paths": 1160
+}

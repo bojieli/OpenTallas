@@ -1,0 +1,87 @@
+library (ot_hbm_hc_tail_child_static_stub_tt) {
+  comment : "HBM-HC7-ROOT interface-only stub for the native census of the parent (hard child, own census)";
+  technology (cmos);
+  delay_model : table_lookup;
+  time_unit : "1ps";
+  voltage_unit : "1V";
+  capacitive_load_unit (1, ff);
+  voltage_map (VDD, 0.7);
+  voltage_map (VSS, 0);
+  type (ot_hbm_hc_tail_child_static_mixes_t) {
+    base_type : array;
+    data_type : bit;
+    bit_width : 768;
+    bit_from : 767;
+    bit_to : 0;
+    downto : true;
+  }
+  type (ot_hbm_hc_tail_child_static_bases_t) {
+    base_type : array;
+    data_type : bit;
+    bit_width : 768;
+    bit_from : 767;
+    bit_to : 0;
+    downto : true;
+  }
+  type (ot_hbm_hc_tail_child_static_scales_t) {
+    base_type : array;
+    data_type : bit;
+    bit_width : 96;
+    bit_from : 95;
+    bit_to : 0;
+    downto : true;
+  }
+  type (ot_hbm_hc_tail_child_static_result_t) {
+    base_type : array;
+    data_type : bit;
+    bit_width : 768;
+    bit_from : 767;
+    bit_to : 0;
+    downto : true;
+  }
+  cell (ot_hbm_hc_tail_child_static) {
+    area : 1;
+    dont_use : true;
+    dont_touch : true;
+    pg_pin (VDD) { voltage_name : VDD; pg_type : primary_power; }
+    pg_pin (VSS) { voltage_name : VSS; pg_type : primary_ground; }
+    pin (clk) {
+      direction : input;
+      clock : true;
+      capacitance : 1;
+    }
+    pin (rst_n) {
+      direction : input;
+      capacitance : 1;
+    }
+    pin (launch) {
+      direction : input;
+      capacitance : 1;
+    }
+    pin (result_v) {
+      direction : output;
+    }
+    pin (fault) {
+      direction : output;
+    }
+    bus (mixes) {
+      bus_type : ot_hbm_hc_tail_child_static_mixes_t;
+      direction : input;
+      capacitance : 1;
+    }
+    bus (bases) {
+      bus_type : ot_hbm_hc_tail_child_static_bases_t;
+      direction : input;
+      capacitance : 1;
+    }
+    bus (scales) {
+      bus_type : ot_hbm_hc_tail_child_static_scales_t;
+      direction : input;
+      capacitance : 1;
+    }
+    bus (result) {
+      bus_type : ot_hbm_hc_tail_child_static_result_t;
+      direction : output;
+    }
+  }
+}

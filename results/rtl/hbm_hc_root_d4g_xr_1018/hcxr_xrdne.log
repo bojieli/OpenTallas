@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       admits   283 GB (avail 399, growth 200, headroom 0, waiters 0/0 GB) load 63/128 running 24 disk 705 GB 
+ot-run: ot-epyc5       admits   530 GB (avail 681, growth 310, headroom 0, waiters 0/0 GB) load 70/128 running 18 disk 1849 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hc-xrdu/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hc-xrdu/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2505219-1792392190 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+HC_ENG_FAULT t=38 seq=0 ev=0 ps=0 qf=1000 core=0 mix=0 tbl=0 tail=0 tfl=0
+HC_ROOT_LANDED MUT=0 XRD=11 XRU=11 XRDQ=32'h070b060b XRUQ=32'h050a070b DIE_XRDQ=32'h060b060b DIE_XRUQ=32'h050a070b DING=13 RAW0=189 rc=1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2505219-1792392190): exit 1

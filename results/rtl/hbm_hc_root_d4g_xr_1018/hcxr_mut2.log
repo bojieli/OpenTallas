@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits   283 GB (avail 399, growth 200, headroom 0, waiters 0/0 GB) load 63/128 running 24 disk 705 GB 
+ot-run: ot-epyc5       admits   530 GB (avail 681, growth 310, headroom 0, waiters 0/0 GB) load 70/128 running 18 disk 1849 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hc-xrdu/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hc-xrdu/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2505222-1792392190 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+TAIL_MISMATCH q0 pos0 word0 got=3f4535aa exp=3f4535bb
+TAIL_MISMATCH q0 pos0 word1 got=3f68634b exp=3f68635c
+TAIL_MISMATCH q0 pos0 word2 got=3f282d75 exp=3f282d86
+TAIL_MISMATCH q0 pos0 word3 got=3ebb377e exp=3ebb37a0
+TAIL_MISMATCH q1 pos0 word0 got=3f4535aa exp=3f4535bb
+HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=16 TB=1955 last_mix_t=2476 first_out_t=2975 last_out_t=2975 HC_MIX_CYCLES=1020
+[6245000] %Fatal: tb_hbm_hc_eng4_static.sv:211: Assertion failed in tb_hbm_hc_eng4_static: HC_ENG FAIL
+HC_ROOT_LANDED MUT=2 XRD=11 XRU=11 XRDQ=32'h060b060b XRUQ=32'h050a070b DIE_XRDQ=32'h060b060b DIE_XRUQ=32'h050a070b DING=13 RAW0=189 rc=1
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2505222-1792392190): exit 1

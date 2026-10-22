@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_hc_root_static",
+ "enable": false,
+ "reason": "ot_hbm_hc_root_static registers every pin in RTL: gathered_mix_*/qps*/q_fault pin flops (gv_q/gr_q/gp_q/gd_q/psv_q/ps_q/psf_q/qf_q), the F20 bus lands in the two ot_static_program_target pin flops (target/address/data_q/base/limit/loops/cv/dv/lv, tgt_q strap), and every output (qd_*, qi_*, result*, configured, program_active/done, fault) is a flop; a kit flop stage would shift the compiled HC_MIX schedule (RAW0 / SYS_LAT)"
+}

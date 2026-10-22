@@ -1,0 +1,9 @@
+TAIL_MISMATCH q0 pos0 word0 got=3f4276af exp=3f4535bb
+TAIL_MISMATCH q0 pos0 word1 got=3f69888f exp=3f68635c
+TAIL_MISMATCH q0 pos0 word2 got=3f27aab8 exp=3f282d86
+TAIL_MISMATCH q0 pos0 word3 got=3eb68149 exp=3ebb37a0
+TAIL_MISMATCH q0 pos0 word4 got=3fdee7f6 exp=3fde2b3b
+HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=92 TB=1955 last_mix_t=2476 first_out_t=2975 last_out_t=2975 HC_MIX_CYCLES=1020
+[6245000] %Fatal: tb_hbm_hc_eng4_static.sv:219: Assertion failed in tb_hbm_hc_eng4_static: HC_ENG FAIL
+%Error: rtl/test/tb_hbm_hc_eng4_static.sv:219: Verilog $stop
+Aborting...
