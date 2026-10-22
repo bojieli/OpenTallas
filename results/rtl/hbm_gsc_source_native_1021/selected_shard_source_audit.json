@@ -1,0 +1,83 @@
+{
+  "schema": "opentallas.hbm.gsc_source_native_audit.v1",
+  "collected_local_time": "2026-10-21T22:31:34.449894",
+  "source_authority": {
+    "selected_graph_commit": "57cd9d54d",
+    "graph_sha256": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
+    "selected_su_inventory_source_commit": "d76bf51b4",
+    "inventory_file": "/home/ubuntu/scratch/codex-hbm-idxsu-2000/r18_selected_su_router_inventory.json",
+    "inventory_sha256": "8a93bef0b14c9123209c635595f9a2c21692bb83a2af45979aca4ad9a3433ef9"
+  },
+  "source_files": {
+    "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991"
+  },
+  "native_shard_contract": {
+    "logical_programme_tp": 96,
+    "logical_outputs_per_rank": 4,
+    "selected_hardware_tp": 192,
+    "paired_two_word_physical_shard_binding": null,
+    "physical_rank_to_logical_rank": null,
+    "quarter_ownership": null,
+    "observed_native_commit_edge": null,
+    "observed_native_readable_edge": null,
+    "retained_through_edge": null,
+    "clock_epoch": null,
+    "reason": "No executable selected SU caller transform/config and no native macro observer receipt has been admitted."
+  },
+  "source_derived_su_abi": {
+    "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+    "selected_instance": "su_SW0",
+    "selected_params": {
+      "QID": 0,
+      "G": 0,
+      "READ_RETURN": 10,
+      "WRITE_RETURN": 7,
+      "FETCH_EXTRA_EDGES": 2,
+      "MLAT": 4,
+      "ALAT": 3,
+      "LEAF": 1,
+      "MUT": 0,
+      "MULTIRATE": 1,
+      "COLLPORT": 1,
+      "RF_LOCAL": 1,
+      "PRETREE": 1
+    },
+    "command": "vmw_cmd[h] = {v,src,grp4,row9,sector16,mask8}, 39 bits",
+    "local_write_record": "{v,sector16,data256,mask8}, 281 bits per bank",
+    "source_relative_serial_edges": {
+      "drain_command_sample": 0,
+      "store_drain_data_held": [
+        2,
+        3
+      ],
+      "group_select_register": 3,
+      "su_write_presented": 4
+    },
+    "rf_drain": "src1 only G0 h0; RF class5 read command E-1, registered rf_dsec E+3",
+    "locality": "VM port p drains only store groups p and p+8",
+    "multirate": "Selected MULTIRATE1 adds real bridge phase/stream edges; serial E+4 is not a native VM commit date",
+    "local_done": "WRITE_RETURN7 is a fixed calendar and source checks echo; no readiness or retention authority"
+  },
+  "ring_packet_word_masks": {
+    "source": "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
+    "mask_input_bits": "e[256+k], k=0..7",
+    "mask_expansion": "Each word enable replicates to four byte strobes in the 338-bit hub request",
+    "actual_masked_transfer_binding": null,
+    "caveat": "This proves packet capability only. Actual caller and all-rank transport masks/slots/physical writes remain unproved."
+  },
+  "ownership": {
+    "cross_rank_caller": "/root/token/hbm",
+    "logical_mapping_calendar": "/root/s81_kv_lower",
+    "source_native_commit_retention_audit": "/root/hbm/coll",
+    "routed_ages": "/root/hbm/chain"
+  },
+  "excluded_evidence": [
+    "Imaged far-end fixture flits",
+    "Logical rank divided by 24 as physical quadrant identity",
+    "LP/GQ component closure as all-rank readiness",
+    "Compiled fixture commit_serial as observed native commit",
+    "RF register commit as VM macro commit"
+  ],
+  "next_action": "Bind exact selected caller configuration and observed native write/readable edges from token/hbm producer minimum; require explicit per-shard ownership and retained-through edge before aggregation readiness."
+}
