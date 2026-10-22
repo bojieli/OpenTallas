@@ -293,12 +293,21 @@ module ot_s81svc8_hgrp_s81 #(
                 reg [NBANK*16-1:0] ab;
                 integer bb;
                 if (WRITE_PREDECODE == 2) begin : g_postwrite
+                // 070956c9b native BLOCKED again (ld_mode[0] 34): every ab bit took all three mode-derived enables
+                // (en_n/en_h/en_l, ~30k sinks under the R0 mode registers -> clones pushed 34 loads onto the port).
+                // Same priority normal > high > low, factored: ONE write enable per (slot group, bank) (en_n|en_h|en_l)
+                // and ONE data word per slot (normal ? r_ld_w : high ? pcol2 : pcol) shared by the 5 banks.  Bank
+                // select is common to the three enables, so the captured value is identical; ~14k sinks.
+                wire        we_b [0:NBANK-1];
+                wire [15:0] wd_s = g_predecode.write_normal ? r_ld_w[gk*16 +: 16] :
+                                   g_predecode.write_high[gk/R] ? pcol2[(gk%R)*16 +: 16] : pcol[(gk%R)*16 +: 16];
+                for (gp = 0; gp < NBANK; gp = gp + 1) begin : g_we
+                    assign we_b[gp] = g_predecode.g_post.en_n[(gk/R)*NBANK + gp] | g_predecode.g_post.en_h[(gk/R)*NBANK + gp] |
+                                      g_predecode.g_post.en_l[(gk/R)*NBANK + gp];
+                end
                 always @(posedge clk)
-                    for (bb = 0; bb < NBANK; bb = bb + 1) begin
-                        if (g_predecode.g_post.en_n[(gk/R)*NBANK + bb]) ab[bb*16 +: 16] <= r_ld_w[gk*16 +: 16];
-                        else if (g_predecode.g_post.en_h[(gk/R)*NBANK + bb]) ab[bb*16 +: 16] <= pcol2[(gk%R)*16 +: 16];
-                        else if (g_predecode.g_post.en_l[(gk/R)*NBANK + bb]) ab[bb*16 +: 16] <= pcol[(gk%R)*16 +: 16];
-                    end
+                    for (bb = 0; bb < NBANK; bb = bb + 1)
+                        if (we_b[bb]) ab[bb*16 +: 16] <= wd_s;
                 end else if (WRITE_PREDECODE != 0) begin : g_prewrite
                 always @(posedge clk)
                     for (bb = 0; bb < NBANK; bb = bb + 1)
