@@ -6,7 +6,7 @@ out=$(realpath -m "$1"); mut=${2:-0}; mkdir -p "$out"
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 "$VL" --version | tee "$out/version.txt"
 S=rtl/hbm_accel/generic/adapters/static_su
-"$VL" --binary --timing -j 8 --top-module tb_qcore_r13_lockstep -GMUT="$mut" -GROW_EN="${ROW_EN:-0}" -Wno-fatal --Mdir "$out/obj" -o vtb \
+"$VL" --binary --timing -j 8 --top-module tb_qcore_r13_lockstep -GMUT="$mut" -GROW_EN="${ROW_EN:-0}" -GWDEC="${WDEC:-0}" -Wno-fatal --Mdir "$out/obj" -o vtb \
  "$S/top/ot_hbm_su_static_qcore_r5.sv" "$S/top/ot_hbm_su_static_qcore_r13.sv" "$S/register_file/ot_hbm_su_static_rf.sv" "$S/reduction/ot_hbm_su_reduce_static.sv" \
  "$S/reduction/ot_hbm_su_reduce_static_r13.sv" "$S/reduction/ot_hbm_su_red_pretree.sv" "$S/reduction/ot_hbm_su_red_pretree_r13.sv" \
  rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_n32.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv \

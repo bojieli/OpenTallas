@@ -67,7 +67,7 @@ endmodule
 
 // One RF sector (banks 8S..8S+7, rows 0..3): storage, writer copies + decode, read copies + gated k+1 read registers.
 (* keep_hierarchy *)
-module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1,ROW_EN=0)(
+module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1,ROW_EN=0,WDEC=0)(
  input wire clk,
  // r13b: one 1-bit reset port per reset flop (all = rst_n): the copy splitter moves 1-bit ports only (r13b census: 9-bit
  // same-net bus ports stuck 6 sectors on one copy, 54 loads)
@@ -75,6 +75,7 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1,ROW_EN=0
  input wire [5*32-1:0] rd_oh, input wire [3:0] r5_oh,
  input wire [39:0] rd_ve,rd_key, input wire [7:0] r5_ve,r5_key,
  input wire [3:0] wv, input wire [31:0] wa, input wire [127:0] wd,
+ input wire [31:0] whit,                       // r19 WDEC: {writer w, bank b} = wa[w] == 8S+b, decoded before the raw capture
  input wire rrv, input wire [4:0] rra, input wire [255:0] rrd,
  output reg [5*32-1:0] raw_o,                  // classes 0..4, k+1, zero unless this sector was addressed
  output reg [255:0] raw5_o,                    // class 5 row, k+1, zero unless this sector was addressed
@@ -83,7 +84,16 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1,ROW_EN=0
  // ---- writer copies (raw, k).  r11: data / address / valid copies; row + COLL fields in 4 copies (r13; banks 2g, 2g+1: r13a census rra/rrv 40 loads with 2)
  wire [31:0] wa_c; wire [127:0] wd_c; wire [3:0] wv_c; wire [255:0] rrd_c;
  ot_hbm_su_qcore_r13_kq #(.W(128)) u_wd(.clk(clk),.d(wd),.q(wd_c));
- ot_hbm_su_qcore_r13_kq #(.W(32)) u_wa(.clk(clk),.d(wa),.q(wa_c));
+ // r19 WDEC (opt-in): the writer sector/bank compare moves before the existing raw capture edge (as the r16 COLL row hit and
+ // the read predecode); the sector captures one (writer, bank) hit bit, so wv_c -> hit is one AND inside the writer.
+ // u_wa keeps its name and width in the default elaboration; with WDEC and local rows wa_c is unused (1-bit stub capture).
+ localparam integer WAW=(WDEC!=0&&ROW_EN!=0)?1:32;
+ wire [WAW-1:0] wa_q;
+ ot_hbm_su_qcore_r13_kq #(.W(WAW)) u_wa(.clk(clk),.d(wa[WAW-1:0]),.q(wa_q));
+ assign wa_c=(WAW==32)?32'(wa_q):32'd0;
+ wire [31:0] whit_c;
+ if(WDEC!=0)begin:g_wdec ot_hbm_su_qcore_r13_kq #(.W(32)) u_wh(.clk(clk),.d(whit),.q(whit_c)); end
+ else begin:g_nowdec assign whit_c=32'd0; end
  for(genvar w=0;w<4;w=w+1)begin:g_wv ot_hbm_su_qcore_r13_kqr u_wv(.clk(clk),.rst_v(w==0?rst_wv0:w==1?rst_wv1:w==2?rst_wv2:rst_wv3),.d(wv[w]),.q(wv_c[w])); end
  ot_hbm_su_qcore_r13_kq #(.W(256)) u_rr(.clk(clk),.d(rrd),.q(rrd_c));
   // r13b: row fields straight from wa_c (16 writer loads each; r13a: 4 row copies loaded the rf_wa pins 40x)
@@ -143,7 +153,8 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1,ROW_EN=0
   for(genvar hf=0;hf<2;hf=hf+1)begin:g_h
    wire [3:0] en; wire [15:0] d; wire [63:0] wd16;
    for(genvar w=0;w<4;w=w+1)begin:g_w assign wd16[w*16+:16]=wd_c[w*32+hf*16+:16]; end
-   ot_hbm_su_qcore_r13_wb #(.S(S),.B(b),.COLLPORT(COLLPORT),.ROW_EN(ROW_EN)) u_wb(.sm(smatch),.wbk(wbk),.row(row_local[b/4]),.wd16(wd16),.rr_hit(rr_hit_g[b/2]),
+   wire [3:0] bh={whit_c[24+b],whit_c[16+b],whit_c[8+b],whit_c[b]};
+   ot_hbm_su_qcore_r13_wb #(.S(S),.B(b),.COLLPORT(COLLPORT),.ROW_EN(ROW_EN),.WDEC(WDEC)) u_wb(.sm(WDEC!=0?wv_c:smatch),.bh(bh),.wbk(wbk),.row(row_local[b/4]),.wd16(wd16),.rr_hit(rr_hit_g[b/2]),
     .rrd16(rrd_c[32*((MUT==128)?7-b:b)+hf*16+:16]),.en(en),.d(d),.conf(cf[hf]));
    for(genvar r=0;r<4;r=r+1)begin:g_r
     reg [15:0] q;
@@ -173,7 +184,7 @@ module ot_hbm_su_qcore_r13_sec #(parameter integer S=0,MUT=0,COLLPORT=1,ROW_EN=0
 
 endmodule
 
-module ot_hbm_su_static_qcore_r13 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1,PRETREE=0,ROW_EN=0)(
+module ot_hbm_su_static_qcore_r13 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=1,PRETREE=0,ROW_EN=0,WDEC=0)(
  input wire clk_ctl,rst_n,
  input wire [6*9-1:0] rf_rd_cmd,
  input wire [73:0] red_cmd,
@@ -212,6 +223,13 @@ module ot_hbm_su_static_qcore_r13 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=
   ot_hbm_su_qcore_r13_kq #(.W(2)) u_v(.clk(clk_ctl),
    .d({rf_rd_cmd[53]^rf_rd_cmd[51],rf_rd_cmd[51]}),.q({r5_ve[g],r5_key[g]}));
  end
+ // ---------------------------------------------------------------- r19 WDEC: writer (sector, bank) one-hot before the raw capture
+ // wdec[w*64+i] = (rf_wa[w*8+:6] == i); the valid stays a reset capture in the sector (wv_c), so hit = wv_c & captured bit.
+ // MUT 2048 (bench, must FAIL): bank bit 0 of the decode inverted.
+ wire [255:0] wdec;
+ for(genvar w=0;w<4;w=w+1)begin:g_wdec
+  ot_hbm_su_qcore_r19_dec6 u_d(.a(rf_wa[w*8+:6]^((MUT==2048)?6'd1:6'd0)),.y(wdec[w*64+:64]));
+ end
  // ---------------------------------------------------------------- 8 sectors (kept, one placement region each)
  wire [5*32-1:0] raw_s [0:7]; wire [255:0] raw5_s [0:7]; wire [7:0] conf_s;
  for(genvar s=0;s<8;s=s+1)begin:g_sec
@@ -222,8 +240,10 @@ module ot_hbm_su_static_qcore_r13 #(parameter integer MUT=0,COLLPORT=1,RF_LOCAL=
    end
   end
   for(genvar n=0;n<4;n=n+1)begin:g_n5 assign local_5[n]=r5_all[n*8+s]; end
-  ot_hbm_su_qcore_r13_sec #(.S(s),.MUT(MUT),.COLLPORT(COLLPORT),.ROW_EN(ROW_EN)) u_s(.clk(clk_ctl),.rst_wv0(rst_n),.rst_wv1(rst_n),.rst_wv2(rst_n),.rst_wv3(rst_n),.rst_rv00(rst_n),.rst_rv01(rst_n),.rst_rv02(rst_n),.rst_rv03(rst_n),.rst_rv10(rst_n),.rst_rv11(rst_n),.rst_rv12(rst_n),.rst_rv13(rst_n),.rst_rv20(rst_n),.rst_rv21(rst_n),.rst_rv22(rst_n),.rst_rv23(rst_n),.rst_rv30(rst_n),.rst_rv31(rst_n),.rst_rv32(rst_n),.rst_rv33(rst_n),.rst_cf(rst_n),.rd_oh(local_oh),.r5_oh(local_5),.rd_ve(rd_ve),.rd_key(rd_key),.r5_ve(r5_ve),.r5_key(r5_key),
-   .wv(rf_wv),.wa(rf_wa),.wd(rf_wd),.rrv(rr_wv),.rra(rr_wa),.rrd(rr_wd),.raw_o(raw_s[s]),.raw5_o(raw5_s[s]),.conf_o(conf_s[s]));
+  wire [31:0] local_wh;
+  for(genvar n=0;n<32;n=n+1)begin:g_wh assign local_wh[n]=wdec[(n/8)*64+s*8+n%8]; end
+  ot_hbm_su_qcore_r13_sec #(.S(s),.MUT(MUT),.COLLPORT(COLLPORT),.ROW_EN(ROW_EN),.WDEC(WDEC)) u_s(.clk(clk_ctl),.rst_wv0(rst_n),.rst_wv1(rst_n),.rst_wv2(rst_n),.rst_wv3(rst_n),.rst_rv00(rst_n),.rst_rv01(rst_n),.rst_rv02(rst_n),.rst_rv03(rst_n),.rst_rv10(rst_n),.rst_rv11(rst_n),.rst_rv12(rst_n),.rst_rv13(rst_n),.rst_rv20(rst_n),.rst_rv21(rst_n),.rst_rv22(rst_n),.rst_rv23(rst_n),.rst_rv30(rst_n),.rst_rv31(rst_n),.rst_rv32(rst_n),.rst_rv33(rst_n),.rst_cf(rst_n),.rd_oh(local_oh),.r5_oh(local_5),.rd_ve(rd_ve),.rd_key(rd_key),.r5_ve(r5_ve),.r5_key(r5_key),
+   .wv(rf_wv),.wa(rf_wa),.wd(rf_wd),.whit((WDEC!=0)?local_wh:32'd0),.rrv(rr_wv),.rra(rr_wa),.rrd(rr_wd),.raw_o(raw_s[s]),.raw5_o(raw5_s[s]),.conf_o(conf_s[s]));
  end
  // ---------------------------------------------------------------- k+2: OR of the gated sector words
  reg [5*32-1:0] raw_or; reg [255:0] raw5_or; integer s2;
@@ -310,13 +330,13 @@ endmodule
 // r13: bank hit compare per writer copy. r11 writer for one (bank, 16-bit half) of sector S: last-writer-wins one-hot select (as r5) on the predecoded bank hits,
 // COLL row writer, row enables.
 (* keep_hierarchy *)
-module ot_hbm_su_qcore_r13_wb #(parameter integer S=0,B=0,COLLPORT=1,ROW_EN=0)(
- input wire [3:0] sm, input wire [11:0] wbk, input wire [7:0] row, input wire [63:0] wd16,
+module ot_hbm_su_qcore_r13_wb #(parameter integer S=0,B=0,COLLPORT=1,ROW_EN=0,WDEC=0)(
+ input wire [3:0] sm, input wire [3:0] bh, input wire [11:0] wbk, input wire [7:0] row, input wire [63:0] wd16,
  input wire [3:0] rr_hit, input wire [15:0] rrd16,
  output wire [3:0] en, output wire [15:0] d, output wire conf
 );
  wire [3:0] hit, sel; wire wvb, multi;
- for(genvar w=0;w<4;w=w+1)begin:g_hit assign hit[w]=sm[w]&&wbk[w*3+:3]==3'(B); end
+ for(genvar w=0;w<4;w=w+1)begin:g_hit assign hit[w]=(WDEC!=0)?(sm[w]&&bh[w]):(sm[w]&&wbk[w*3+:3]==3'(B)); end
  ot_hbm_su_qcore_r13_selq u_q(.hit(hit),.sel(sel),.any(wvb),.multi(multi));
  wire [15:0] wdb=({16{sel[0]}}&wd16[0+:16])|({16{sel[1]}}&wd16[16+:16])|({16{sel[2]}}&wd16[32+:16])|({16{sel[3]}}&wd16[48+:16]);
  wire [1:0] wab=({2{sel[0]}}&row[0+:2])|({2{sel[1]}}&row[2+:2])|({2{sel[2]}}&row[4+:2])|({2{sel[3]}}&row[6+:2]);
@@ -400,6 +420,12 @@ endmodule
 (* keep_hierarchy *) module ot_hbm_su_qcore_r13_dec6(input wire[5:0]a,output wire[31:0]y);
  wire[7:0]lo;wire[3:0]hi;ot_hbm_su_qcore_r13_dec3 u_l(.a(a[2:0]),.y(lo));ot_hbm_su_qcore_r13_dec3v u_h(.a(a[5:3]),.y(hi));
  for(genvar i=0;i<32;i=i+1)begin:g assign y[i]=lo[i%8]&hi[i/8];end
+endmodule
+
+// r19: plain 6-bit one-hot (y[i] = a == i) as two 3-bit decodes; each input bit drives one 3:8 decode.
+(* keep_hierarchy *) module ot_hbm_su_qcore_r19_dec6(input wire[5:0]a,output wire[63:0]y);
+ wire[7:0]lo,hi;ot_hbm_su_qcore_r13_dec3 u_l(.a(a[2:0]),.y(lo));ot_hbm_su_qcore_r13_dec3 u_h(.a(a[5:3]),.y(hi));
+ for(genvar i=0;i<64;i=i+1)begin:g assign y[i]=lo[i%8]&hi[i/8];end
 endmodule
 
 `default_nettype wire

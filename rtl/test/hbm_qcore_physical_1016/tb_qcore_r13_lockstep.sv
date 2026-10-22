@@ -12,7 +12,7 @@
 // (HH-11 r6: the per-sector conflict term is registered in the sector, then ORed into fault).
 // MUT 256: an extra read stage (reads k+4) -> FAIL.
 module tb_qcore_r13_lockstep;
- parameter integer MUT=0, NRST=4, EDGES=3000, ROW_EN=0;
+ parameter integer MUT=0, NRST=4, EDGES=3000, ROW_EN=0, WDEC=0;
  reg clk=0; always #5 clk=~clk;
  reg rst_n=0, active=0;
  reg [53:0] rf_rd_cmd=0; reg [73:0] red_cmd=0; reg [1:0] rf_drain_cmd=0; reg [127:0] slice_x=0;
@@ -29,7 +29,7 @@ module tb_qcore_r13_lockstep;
  end else begin rf_rd_cmd=0; red_cmd=0; rf_drain_cmd=0; rf_wv=0; rr_wv=0; end
  wire [127:0] d_bw, r_bw; wire [35:0] d_bc, r_bc; wire [255:0] d_ds, r_ds; wire d_sv, r_sv, d_rv, r_rv, d_f, r_f;
  wire [31:0] d_tag, r_tag, d_x, r_x;
- ot_hbm_su_static_qcore_r13 #(.MUT(MUT),.COLLPORT(1),.RF_LOCAL(1),.ROW_EN(ROW_EN)) dut(
+ ot_hbm_su_static_qcore_r13 #(.MUT(MUT),.COLLPORT(1),.RF_LOCAL(1),.ROW_EN(ROW_EN),.WDEC(WDEC)) dut(
   .clk_ctl(clk),.rst_n(rst_n),.rf_rd_cmd(rf_rd_cmd),.red_cmd(red_cmd),
   .rf_drain_cmd(rf_drain_cmd),.slice_x(slice_x),.rf_wv(rf_wv),.rf_wa(rf_wa),.rf_wd(rf_wd),.rf_bword(d_bw),.rf_bcmd(d_bc),
   .rf_dsec(d_ds),.red_sv(d_sv),.red_tag(d_tag),.red_x(d_x),.red_rf_v(d_rv),.rr_wv(rr_wv),.rr_wa(rr_wa),.rr_wd(rr_wd),
