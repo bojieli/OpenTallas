@@ -549,9 +549,12 @@ module ot_wbk8_pp_credit #(parameter integer FAW=2,NPP=2,MUT=0)(
 endmodule
 // Authentic ASAP7 Y=A*B master; official pinned Liberty supplies synthesis/CDC
 // function. Simulation is the exact same Boolean function and adds no state.
+// HBMc/TILES 10-22: keep (yosys never folds the per-slice AND) but NOT dont_touch: both kq8 gates (MAIN cf4ff6a23 /
+// FB 76e98cd8e) died in timing-driven global placement with RSZ-3006 -- the resizer must buffer the w_k_rdy port net
+// in front of these loads and dont_touch forbade it.  Function unchanged (simulation branch identical).
 module ot_wbk8_native_and(input wire a,b,output wire y);
 `ifdef SYNTHESIS
- (* keep="true",dont_touch="true" *) AND2x2_ASAP7_75t_R u_and(.A(a),.B(b),.Y(y));
+ (* keep="true" *) AND2x2_ASAP7_75t_R u_and(.A(a),.B(b),.Y(y));
 `else
  assign y=a&b;
 `endif
