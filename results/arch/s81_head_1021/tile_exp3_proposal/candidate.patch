@@ -1,0 +1,34 @@
+--- a/rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv
++++ b/rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv
+@@ -236,10 +236,10 @@
+     wire is_sub = s2_isc[8];
+     wire signed [11:0] fl;
+     generate if (SPLIT_EXP != 0) begin : g_exp_copies
+-        (* keep="true",dont_touch="true" *) reg [3:0] top_q;
+-        always @(posedge clk) top_q <= {4{top_d}};
+         for (genvar fc=0;fc<4;fc=fc+1) begin:g_fl
+-            assign fl[3*fc +: 3] = top_q[fc] ? s2_fl47[3*fc +: 3] : s2_fl46[3*fc +: 3];
++            ot_hdc_mul_exp3_local u_exp (.clk(clk), .top_d(top_d),
++                .e47(q_fl47[3*fc +: 3]), .e46(q_fl46[3*fc +: 3]),
++                .fl(fl[3*fc +: 3]));
+         end
+     end else begin:g_exp_original
+         assign fl = s2_top[12] ? s2_fl47 : s2_fl46;
+@@ -375,3 +375,17 @@
+     end
+     assign lz = (x == 24'd0) ? 6'd24 : {1'b0, e};
+ endmodule
++
++// Named same-edge data/control owner: all seven captured values and the three
++// local exponent muxes stay together. No reset or pipeline edge is introduced.
++(* keep_hierarchy="yes" *) module ot_hdc_mul_exp3_local (
++    input wire clk, input wire top_d,
++    input wire [2:0] e47, e46, output wire [2:0] fl
++);
++    reg top_q;
++    reg [2:0] e47_q, e46_q;
++    always @(posedge clk) begin
++        top_q <= top_d; e47_q <= e47; e46_q <= e46;
++    end
++    assign fl = top_q ? e47_q : e46_q;
++endmodule

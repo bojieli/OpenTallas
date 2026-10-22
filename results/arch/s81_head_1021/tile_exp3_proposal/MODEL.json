@@ -1,0 +1,33 @@
+{
+  "status": "PROPOSAL_ONLY_NOT_BUILT",
+  "baseline": "3834fc6d332f166b62339f5ece64774b0d3faa64",
+  "baseline_file_sha256": "a02dd744f81d14e2bfe48e2cfae3a89b099850e553432a9770860ab096383c66",
+  "candidate_file_sha256": "e7c90348146ee04dcfc115d484397002fcc71dca14ca4ac70e0b54a711602556",
+  "actual_trigger": "Both R4 gate mappings native max33/68 violations in g_exp_copies.top_q; originalR3max51 refusal and R4golden/reset4PASS preserved.",
+  "ownership": "Four genuine kept-hierarchy3-bit exponent consumers per multiplier; each captures3e47+3e46+1top from SAME S2b inputs on sameposedge. Scalaraliascopies removed from opt-in branch.",
+  "equation": "For capturededge n: local.fl[3j+:3](n+) = top_d(n-) ? q_fl47[3j+:3](n-) : q_fl46[3j+:3](n-). This equals old top_q(n+) ? s2_fl47[...](n+) : s2_fl46[...](n+).",
+  "contacts": {
+    "each_local_top_q": "at most6 muxgate input contacts (3 bits); exactmap mustjudge",
+    "each_local_data_q": "one mux input; exactmap mustjudge",
+    "upstream_top_d": "fourlocal FF D plus existing16 s2_top FF D; 20 capturingsinks before transparentbufs, actualnative required",
+    "upstream_q_fl47_fl46": "eachbit feeds1localFF; old s2_fl47/fl46 becomeunused inoptin and must be provenpruned",
+    "local_clock": "7FF/module,28/modulegroup, same clk; no reset",
+    "module_output": "3bits to existing c3 and c3b consumers, no new flop edge"
+  },
+  "cost": {
+    "old_r4_live_exp_state": 28,
+    "new_exp_state": 28,
+    "delta_vs_r4": 0,
+    "delta_vs_original_baseline_per_mul": 4,
+    "multipliers_per_tile": 80,
+    "delta_vs_original_per_tile": 320,
+    "latency_edges": 0,
+    "reset_edges": 0,
+    "valid_age": 0,
+    "arithmetic": "same 12-bit exponent selection, unchangedrounding/normalization/reduction",
+    "mapped_area": "UNMEASURED"
+  },
+  "timing": "top_d retains original S2b prefixadd-to-FF timing; e47/e46 capture sameoldS2b edge, output3-bitmux remains beforeoriginalS3 c3/c3b cut. No mux moves before topcapture. ActualSTA/clock/reach remainopen.",
+  "default": "SPLIT_EXP=0 branch text unchanged, no selected8916 H4/HOSTsource edits. Namedhelper usedonlySPLIT_EXP1.",
+  "proof_plan": "After parentreview only: existing4golden/resetminibenches and bounded actual component/native with unchangedcanonical453+keep hook; causally compare localcapturededgefl including reassert. NOphysicalgate/H4campaign; original68fails retained."
+}
