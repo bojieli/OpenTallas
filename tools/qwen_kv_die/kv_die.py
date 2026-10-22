@@ -1086,11 +1086,22 @@ def d2ds_kit():
 D2D_FIT = os.environ.get('OT_KV_D2D_FIT', '0') == '1'
 
 
+def d2d_geometry_lef(kit, top):
+    """Closed view by default; a separately identified source frame is diagnostic only."""
+    frame = os.environ.get('OT_KV_D2D_SOURCE_FRAME', '')
+    if frame:
+        if not ROPE_OVL:
+            raise ValueError('diagnostic D2D source frame requires actual RoPE OVL source')
+        import kv_source_frame
+        return kv_source_frame.load(ROOT, frame, kit, top)[0]
+    return ROOT / 'physical/ref_tile' / str(kit) / 'views' / str(top) / f'{top}.lef'
+
+
 def d2d_fit_outline():
     """KV-BIND10: (w, h) on the GX/GY lattice (+SHAVE) of the BOUND d2ds view (OT_KV_D2DS_KIT's views/<top>/<top>.lef)."""
     kit = os.environ.get('OT_KV_D2DS_KIT', '')
     top = json.loads((ROOT / 'physical/ref_tile' / kit / 'spec.json').read_text()).get('top') if kit else None
-    lef = ROOT / 'physical/ref_tile' / str(kit) / 'views' / str(top) / f'{top}.lef'
+    lef = d2d_geometry_lef(kit, top)
     if not lef.is_file():
         raise SystemExit(f'kv_die: OT_KV_D2D_FIT=1 needs the bound d2ds view LEF ({lef} missing)')
     m = re.search(r'MACRO\s+' + re.escape(top) + r'\b.*?SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', lef.read_text(), re.S)
@@ -1118,7 +1129,7 @@ def d2d_view_ports():
         raise SystemExit('kv_die: OT_KV_D2D_PINS=1 needs OT_KV_D2D_FIT=1 (frame = the bound view outline)')
     kit = os.environ.get('OT_KV_D2DS_KIT', '')
     top = json.loads((ROOT / 'physical/ref_tile' / kit / 'spec.json').read_text()).get('top')
-    txt = (ROOT / 'physical/ref_tile' / kit / 'views' / top / f'{top}.lef').read_text()
+    txt = d2d_geometry_lef(kit, top).read_text()
     blk = re.search(r'MACRO\s+' + re.escape(top) + r'\b(.*?)\nEND\s+' + re.escape(top) + r'\b', txt, re.S).group(1)
     W, H = map(float, re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', blk).groups())
     pins = {}
@@ -5524,6 +5535,14 @@ def case(m, work):
     if m.get('fork_slices') or m.get('narrow_src'):
         die_v = work / 'die.v'
         die_v.write_text(narrow_transports(m, die_v.read_text()))
+    if os.environ.get('OT_KV_D2D_SOURCE_FRAME'):
+        kit = os.environ.get('OT_KV_D2DS_KIT', '')
+        import kv_source_frame
+        _, frame = kv_source_frame.load(ROOT, os.environ['OT_KV_D2D_SOURCE_FRAME'], kit, d2ds_kit()[0])
+        (work / 'd2d_source_frame.json').write_text(json.dumps(frame, indent=2) + '\n')
+        for directory in (work, work.parent):
+            with (directory / 'NOT_A_DIE_RESULT').open('a') as marker:
+                marker.write('D2D_SOURCE_FRAME_DIAGNOSTIC_ONLY; actual closed leaf binding required\n')
     _case_ties(m, work / 'die.v')
     if KSD.ON and m['geo'].get('static_die'):
         # KVR-DERIVE 10-19: the case's die.v gets the per-instance parameter sidecar too (F.case_real writes die.v with the
