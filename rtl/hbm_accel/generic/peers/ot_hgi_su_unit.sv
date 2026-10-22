@@ -712,7 +712,10 @@ module ot_hgi_su_lgroup2 #(
     // HBMc/TILES 10-22 RRF=1: each (lane, bank) claim is two kept hit leaves -- hit_a (rr) selects b_re and the low
     // half of the row, hit_b (rq, same function) the high half -- so no decode term drives a whole 11-bit row mux.
     localparam integer RBL=RB/2;
-    wire [N*N-1:0] hit_a,hit_b;
+    // HBMc/TILES4 10-22 (k14h, first completed SFU native census: lane 0's rr/rq at 97/111 loads): lane 0 may claim all
+    // 16 banks and abc pushed its unkept enable into every bank's row-select mux (16 x (RBL+1)). The hit leaves are now
+    // kept nets: rr[0]/rq[0] drive 16 AND leaves, each leaf drives its bank's selects. Same function, same edge.
+    (* keep=1 *) wire [N*N-1:0] hit_a,hit_b;
     if (RRF) begin:g_hits
         for (genvar hl=0; hl<N; hl=hl+1) begin:g_l
             for (genvar hb=0; hb<N; hb=hb+1) begin:g_b

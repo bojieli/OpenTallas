@@ -125,6 +125,8 @@ module ot_hgi_sfu_vm_static_bridge #(
   assign stage_data[b*256+:256]=local_rr[b*257+:256];
  end
  reg scalar_collision;
+ reg sd_later,sd_hit;   // k14f: AND-OR priority temporaries (combinational)
+ reg [1:0] sd_word;     // k14g: constant-sliced word select (combinational)
  reg [3:0] used_group;
  always @*begin
   scalar_load=0;scalar_data=0;used_group=0;scalar_collision=0;
@@ -138,10 +140,24 @@ module ot_hgi_sfu_vm_static_bridge #(
    scalar_data=0;
    for(integer sg=0;sg<4;sg=sg+1)
     for(integer n=0;n<8;n=n+1)
-     for(integer h=0;h<2;h=h+1)   // k14c: one copy per (nibble, sector group, 2-bit half) -- 4-bit copies drove 37 loads
-      for(integer b=0;b<8;b=b+1)
-       if(scalar_meta_copies[7*(64*b+8*n+2*sg+h)+6] && scalar_meta_copies[7*(64*b+8*n+2*sg+h)+3] && scalar_meta_copies[7*(64*b+8*n+2*sg+h)+4+:2]==sg)
-        scalar_data[32*sg+4*n+2*h+:2]=local_rr[257*b+32*scalar_meta_copies[7*(64*b+8*n+2*sg+h)+:3]+4*n+2*h+:2];
+     for(integer h=0;h<2;h=h+1)begin   // k14c: one copy per (nibble, sector group, 2-bit half) -- 4-bit copies drove 37 loads
+      // k14f: the 512-deep if-chain sent ORFS yosys opt (OPT_MUXTREE/OPT_EXPR) into a non-converging loop (k14d 106 GB,
+      // k14e >1,000 rounds).  Same last-b-wins priority, written as an explicit one-hot AND-OR (no mux tree): b is scanned
+      // from 7 down and only the highest hitting b contributes.
+      // k14g (HBMc/TILES4): k14f still did not finish synthesis.  The loop was TECHMAP's per-cell _TECHMAP_DO_ scripts, not
+      // the if-chain: local_rr[257*b+32*idx+...] is a variable part-select over the whole 2,056-bit local_rr, so each of the
+      // 512 (sg,n,h,b) copies became a 2,056-bit $shiftx log shifter.  The word is now picked by a constant-sliced 8-way
+      // one-hot AND-OR on the 3-bit index (idx<8 and 32*7+31<256, so the same bits as before): exact, no $shift/$shiftx.
+      sd_later=0;
+      for(integer b=7;b>=0;b=b-1)begin
+       sd_hit=scalar_meta_copies[7*(64*b+8*n+2*sg+h)+6] && scalar_meta_copies[7*(64*b+8*n+2*sg+h)+3] && scalar_meta_copies[7*(64*b+8*n+2*sg+h)+4+:2]==sg;
+       sd_word=0;
+       for(integer w=0;w<8;w=w+1)
+        sd_word=sd_word|({2{scalar_meta_copies[7*(64*b+8*n+2*sg+h)+:3]==w}}&local_rr[257*b+32*w+4*n+2*h+:2]);
+       scalar_data[32*sg+4*n+2*h+:2]=scalar_data[32*sg+4*n+2*h+:2]|({2{sd_hit&&!sd_later}}&sd_word);
+       sd_later=sd_later|sd_hit;
+      end
+     end
   end
  end
  function automatic [255:0] round_sector(input [255:0] data,input do_round);

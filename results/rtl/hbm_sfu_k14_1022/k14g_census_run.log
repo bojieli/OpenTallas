@@ -1,0 +1,11 @@
+ot-run: ot-epyc9       admits   380 GB (avail 316, growth 20, headroom 0, waiters 0/0 GB) load 33/128 running 24 disk 1519 GB 
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1129026-1792703242 after 0 s
+orfs_hold_mm: final legalization patched
+orfs_hold_mm: {"helper": "/src/tools/orfs_hold_mm.tcl", "load_before": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934", "util_before": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81", "status": "patched", "load_after": "50f4af0af0194e085d6641275578d072ab1d25cb980513362df50888f83e1b4c", "util_after": "9bec38e0bc6c6109820d48ee99ed9c1c8a4232c8fce25f1fc67a3b0674c99329"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook patched
+orfs_hold_mm: sliver block hook patched
+orfs_hold_mm: pre-route gate hook patched
+{"allcorner_spef_evaluator": "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl", "original_sha256": "8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c", "patched_sha256": "532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d", "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1129026-1792703242): exit 1
