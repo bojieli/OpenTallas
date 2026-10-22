@@ -86,14 +86,15 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  wire a_go=a_v&&!p_v&&a_ids;
  // HBMc/TILES 10-22: the id select reads two KEPT copies of a[176:173] (loaded with a's slice enable), one per half of
  // the id word (a[173..176] had 44 loads through the 6 x 9-bit select)
- (* keep="true",dont_touch="true" *) reg[3:0]asel_lo,asel_hi;
+ (* keep="true",dont_touch="true" *) reg[3:0]asel_lo,asel_hi,asel_mid;
  reg[IDW-1:0]a_id;integer ai;
  always @*begin
   a_id={IDW{1'bx}};
   if(a_sel==0||MUT==2)a_id=0;
   else for(ai=0;ai<NID;ai=ai+1)begin
-   if(asel_lo==ai+1)a_id[IDW/2-1:0]=ids_q[ai*IDW+:IDW/2];
-   if(asel_hi==ai+1)a_id[IDW-1:IDW/2]=ids_q[ai*IDW+IDW/2+:IDW-IDW/2];
+   if(asel_lo==ai+1)a_id[2:0]=ids_q[ai*IDW+:3];
+   if(asel_mid==ai+1)a_id[5:3]=ids_q[ai*IDW+3+:3];
+   if(asel_hi==ai+1)a_id[IDW-1:6]=ids_q[ai*IDW+6+:IDW-6];
   end
  end
  wire[25:0]s_blk={8'd0,p[46:32],p[9:7]}+{2'd0,p_lay}+{2'd0,p_id};
@@ -260,7 +261,7 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
   // stage registers: load while the stage is empty (the KEPT copy of its valid gates each <= 32-bit slice)
   for(ab=0;ab<200;ab=ab+1)begin
    if(!av_k[ab/SS])a[ab]<=rd[ab];
-   if(ab>=173&&ab<=176&&!av_k[ab/SS])begin asel_lo[ab-173]<=rd[ab];asel_hi[ab-173]<=rd[ab];end
+   if(ab>=173&&ab<=176&&!av_k[ab/SS])begin asel_lo[ab-173]<=rd[ab];asel_mid[ab-173]<=rd[ab];asel_hi[ab-173]<=rd[ab];end
    if(!pv_k[ab/SS])p[ab]<=a[ab];
   end
   for(ab=0;ab<24;ab=ab+1)begin

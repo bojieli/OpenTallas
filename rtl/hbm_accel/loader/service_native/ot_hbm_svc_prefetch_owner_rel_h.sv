@@ -17,6 +17,8 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  input wire clk,input wire[4:0]rst_n,   // HBMc/TILES 10-22: [3]/[4] = generation copies (24 flops each)
  input wire blk_start,
  input wire [3:0] blk_start_k,         // HBMc/TILES 10-22: KEPT same-edge copies of blk_start, one per table region leaf
+ input wire blk_start_c,               // HBMc/TILES 10-22: KEPT copy of blk_start for the cursor update
+ input wire [11:0] block_total_b,      // HBMc/TILES 10-22: KEPT copy of block_total for the words range compare
  input wire block_active,input wire [29:0] block_base,input wire [19:0] block_pcs,
  input wire [14:0] block_row_base,input wire [11:0] block_total,input wire [LB-1:0] block_bank,
  input wire [15:0] block_epoch,input wire stop,k_ready,kr_v,input wire [16:0] kr_tag,
@@ -63,7 +65,8 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   for(j=0;j<4;j=j+1)if(pcs[j*5+:5]==pc_q)begin selected=1;lane=j;end
  end
  wire [9:0] t=blk_start?10'd0:cursor;
- wire [10:0] words=total>lane?(total+3-lane)/4:0;
+ wire [10:0] words;
+ ot_hbm_svc_owner_words_leaf u_words(.total_a(total),.total_b(block_total_b),.lane(lane),.words(words));
  wire full_group=words>={1'b0,t}+4;
  wire [2:0] length=full_group?3'd4:3'd1;
  wire [14:0] row=row_base;
@@ -87,9 +90,11 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  // HBMc/TILES 10-22 (native census: constant-input ANDs are transparent, so and2(hit,1) left each hit with 50 loads):
  // hit = (ret[4:2] == rs[4:2]) && (ret[1:0] == rs[1:0]) as FOUR real 2-input ANDs per entry (one per field family);
  // ret_hi[k] serves 4 entries x 4 = 16 pins, ret_lo[j] 8 x 4 = 32.  Same function, same edge.
- wire [7:0] ret_hi; wire [3:0] ret_lo;
- for(genvar rh=0;rh<8;rh=rh+1)begin:g_ret_hi assign ret_hi[rh]=(ret[4:2]==rh); end
- for(genvar rl=0;rl<4;rl=rl+1)begin:g_ret_lo assign ret_lo[rl]=(ret[1:0]==rl); end
+ // three kept decode leaves (A: field selects, B: valid clear, C: seen update) -- distinct drivers of the same decode
+ wire [7:0] ret_hi,ret_hi_b,ret_hi_c; wire [3:0] ret_lo,ret_lo_b,ret_lo_c;
+ ot_hbm_svc_owner_tag_leaf u_tag_a(.tag(ret),.hi(ret_hi),.lo(ret_lo));
+ ot_hbm_svc_owner_tag_leaf u_tag_b(.tag(ret),.hi(ret_hi_b),.lo(ret_lo_b));
+ ot_hbm_svc_owner_tag_leaf u_tag_c(.tag(ret),.hi(ret_hi_c),.lo(ret_lo_c));
  for(genvar rs=0;rs<ENTRIES;rs=rs+1)begin:g_return_select
   ot_hbm_svc_local_and2 u_g(.a(ret_hi[rs/4]),.b(ret_lo[rs%4]),.y(rgen_sel[rs]));
   ot_hbm_svc_local_and2 u_e(.a(ret_hi[rs/4]),.b(ret_lo[rs%4]),.y(rep_sel[rs]));
@@ -137,11 +142,11 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  wire [10:0] ordinal_local[0:RG-1];
  wire [2:0] length_local[0:RG-1];
  for(genvar gr=0;gr<RG;gr=gr+1)begin:g_issue_field_tree
-  ot_hbm_svc_owner_issue_leaf u_leaf(.blk_start(blk_start_k[gr]),.cursor(cur_k[gr]),.lane(lane),.words(words),
+  ot_hbm_svc_owner_issue_leaf u_leaf(.blk_start(blk_start_k[gr]),.cursor(cur_k[gr]),.pcs(pcs),.pc(pc_q),.words(words),
    .ordinal(ordinal_local[gr]),.length(length_local[gr]));
  end
  wire fire=k_v&&k_ready;
- assign cursor_n=fire_cursor?t+length:(blk_start?10'd0:cursor);
+ assign cursor_n=fire_cursor?t+length:(blk_start_c?10'd0:cursor);
  wire fire_ticket_lo,fire_ticket_hi,fire_cursor;
  ot_hbm_svc_local_and2 u_ftl(.a(k_v),.b(k_ready),.y(fire_ticket_lo));
  ot_hbm_svc_local_and2 u_fth(.a(k_v),.b(k_ready),.y(fire_ticket_hi));
@@ -169,7 +174,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   valid_n=valid_q;
   for(ve=0;ve<ENTRIES;ve=ve+1)begin
    if(fire_valid_local[ve/8]&&alloc_a==ve)valid_n[ve]=1;
-   if(ret_done_local[ve/8]&&ret==ve)valid_n[ve]=0;
+   if(ret_done_local[ve/8]&&ret_hi_b[ve/4]&&ret_lo_b[ve%4])valid_n[ve]=0;
   end
  end
  // rst_n[0]: ticket / sticky / issuing (19); rst_n[1]: valid (32); rst_n[2]: !valid copy a (32)
@@ -210,20 +215,32 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
     length_q[e]<=length_local[e/8];
     seen_q[e]<=0;permuted_q[e]<=length_local[e/8][2];row_low_q[e]<=row_local[e/8];
    end
-   else if(response_take_local[e/8]&&ret==e)seen_q[e]<=seen_q[e]|beat_local[e/8];
+   else if(response_take_local[e/8]&&ret_hi_c[e/4]&&ret_lo_c[e%4])seen_q[e]<=seen_q[e]|beat_local[e/8];
   end
  end
 endmodule
 // HBMc/TILES 10-22: per-region kept issue-field leaf (same function as the owner's ordinal_d / length) and per-group beat
 // decode: separate instances are separate drivers (no shared node fans out to all 32 table entries).
-(* keep_hierarchy=1 *) module ot_hbm_svc_owner_issue_leaf(input wire blk_start,input wire [9:0] cursor,input wire [1:0] lane,
- input wire [10:0] words,output wire [10:0] ordinal,output wire [2:0] length);
+(* keep_hierarchy=1 *) module ot_hbm_svc_owner_issue_leaf(input wire blk_start,input wire [9:0] cursor,input wire [19:0] pcs,
+ input wire [4:0] pc,input wire [10:0] words,output wire [10:0] ordinal,output wire [2:0] length);
  wire [9:0] t=blk_start?10'd0:cursor;
+ reg [1:0] lane;integer j;      // the owner's lane, recomputed locally (same function as the owner's select loop)
+ always @*begin lane=0;for(j=0;j<4;j=j+1)if(pcs[j*5+:5]==pc)lane=j;end
  wire full_group=words>={1'b0,t}+4;
  assign ordinal={t[8:0],2'b0}+lane;
  assign length=full_group?3'd4:3'd1;
 endmodule
 (* keep_hierarchy=1 *) module ot_hbm_svc_owner_beat_leaf(input wire [3:0] beat,output wire [3:0] onehot);
  for(genvar b=0;b<4;b=b+1)begin:g_b assign onehot[b]=(beat==b); end
+endmodule
+// HBMc/TILES 10-22: kept return-tag decode leaf and words leaf (distinct drivers; the range compare and the arithmetic
+// read separate kept copies of block_total)
+(* keep_hierarchy=1 *) module ot_hbm_svc_owner_tag_leaf(input wire [4:0] tag,output wire [7:0] hi,output wire [3:0] lo);
+ for(genvar h=0;h<8;h=h+1)begin:g_h assign hi[h]=(tag[4:2]==h); end
+ for(genvar l=0;l<4;l=l+1)begin:g_l assign lo[l]=(tag[1:0]==l); end
+endmodule
+(* keep_hierarchy=1 *) module ot_hbm_svc_owner_words_leaf(input wire [11:0] total_a,total_b,input wire [1:0] lane,output wire [10:0] words);
+ wire [11:0] w=(total_a+3-lane)/4;
+ assign words=total_b>lane?w[10:0]:11'd0;
 endmodule
 `default_nettype wire
