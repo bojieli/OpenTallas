@@ -4754,12 +4754,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     got.append((sp[0], sp[1], w, h))
                     px, py = sp[0] + w / 2, sp[1] + h / 2
                 got.reverse()          # chain order: the last pad placed (farthest along the walk) first, the sink's last
-                _pts = [Q] + [(f_[0] + f_[2] / 2, f_[1] + f_[3] / 2) for f_ in got] + [(x1, y1)]
-                _hop = max(abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) for a_, b_ in zip(_pts, _pts[1:]))
-                if _xtra and _try < 2 and _hop > RELAY_REACH_UM - 5:
+                # judged pin to pin (the gate's p2p_hops measure; r37cxd: centre hop <= 400 but p2p 408.2)
+                _hop = max(p2p_hops(dict(pl, frames=list(pl['frames']) + got))) if _xtra else 0.0
+                if _xtra and _try < 2 and _hop > RELAY_REACH_UM - 2:
                     for f_ in got:
                         rm_rect((f_[0], f_[1], f_[0] + w + v.SHAVE, f_[1] + h + v.SHAVE))
-                    print(f'FAULT_LAND_EXTRA {bid}: {_np} station(s) hop {_hop:.1f} > {RELAY_REACH_UM - 5:.0f} -> {_np + 1}', flush=True)
+                    print(f'FAULT_LAND_EXTRA {bid}: {_np} station(s) p2p hop {_hop:.1f} > {RELAY_REACH_UM - 2:.0f} -> {_np + 1}', flush=True)
                     _np += 1
                     continue
                 break
