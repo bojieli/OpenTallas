@@ -38,6 +38,9 @@ def make(name, chan):
                             "cw_v": [432.0, 433.0], "cw_a": [434.0, 444.0], "cw_d": [446.0, 590.0],
                             "sid": [592.0, 596.0], "fault": [598.0, 599.0]})
     s["diagnostic"] = diag
+    # 276-b rungs / 256-b cw_d on ranged faces need a defined bit order (gate pin_order); L1f precedent ea03a00de
+    s["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
+    s["route"]["peak_ram_gb"] = 300   # 10-18 lp gates died in GRT at 64 / 160 GB
     s["reset_landing"] = {"enable": False, "reason": "the RTL lands it: tools/landed_parent/lp.py regional reset runs (rst_n -> per-region registered run, depth 4, lpr_c_<inst> per child; record results/arch/landed_parent_1018/gunit/dsdv_gunit_lp_record.json)"}
     j = s.setdefault("job", {})
     j["owner"] = "Claude:S81-ELEM2-GUNIT"; j["branch"] = "claude/s81-gunit-lp4-1021"
