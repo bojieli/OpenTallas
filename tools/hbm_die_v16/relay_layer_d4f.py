@@ -69,6 +69,14 @@ CFG_LEAF_LAUNCH = re.compile(r'([ab])_launch_v$')
 
 def port_key(master, cls, driver_port, sink_port):
     """(driver port, sink port) identity of one functional path for PORT-AGE alignment"""
+    # The source cut keeps one request word per column and one return word.
+    # Equalize their actual routed ages; reset has its separate boot delivery.
+    if (master == 'ot_hbm_idx_score_quarter_col8_control'
+            and driver_port in ('cut_qv', 'cut_q', 'cut_key', 'cut_hid')):
+        return 'col8_request', 'col8_request'
+    if (master == 'ot_hidx_col8_sram_face_col'
+            and driver_port in ('cs_out', 'cf_out', 'prdy')):
+        return 'col8_return', 'col8_return'
     # Static LOAD commands and their routed destination metadata change every
     # edge. They are single words even where the RTL exposes several ports.
     # The existing aligner pads to the longest physical path at each receiver;

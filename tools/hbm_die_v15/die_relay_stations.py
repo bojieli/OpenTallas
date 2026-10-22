@@ -37,9 +37,16 @@ CFG_LEAF_LAUNCH = re.compile(r'[ab]_launch_v$')
 RESET_PORT = re.compile(r'(por_|rst|reset)')
 
 
+def reset_port(master, port):
+    # The real Col8 cut exposes a registered reset under its original cut
+    # interface name. Preserve its reset-forest role across that source cut.
+    return bool(RESET_PORT.match(port)) or (
+        master == 'ot_hbm_idx_score_quarter_col8_control' and port == 'cut_rst_n')
+
+
 def bus_flag(master, port, cfg_leaf=True):
     """third bus-key element: True = reset port (own bus), 'launch' = cfg-leaf launch strobe (own bus), False = data"""
-    if RESET_PORT.match(port):
+    if reset_port(master, port):
         return True
     if cfg_leaf and CFG_LEAF.match(master or '') and CFG_LEAF_LAUNCH.match(port):
         return 'launch'
@@ -154,7 +161,7 @@ def main():
                             keepouts=[s_['keepout'] for s_ in json.load(open(a.root_keepouts))['sites']] if getattr(a, 'root_keepouts', None) else None)
         jobs = []
         for (di, sk, _rf), b in buses.items():
-            if pl[di]['master'] == 'ot_hbm_su_programme' or any(re.match(r'(por_|rst|reset)', p_) for p_ in b['ports']):
+            if pl[di]['master'] == 'ot_hbm_su_programme' or any(reset_port(pl[di]['master'], p_) for p_ in b['ports']):
                 continue
             jobs.append(((di, sk, _rf), bus_points(b), 48 if b['bits'] <= 48 else 624, list(b['spts'])))
         import multiprocessing as mp
@@ -178,7 +185,7 @@ def main():
         dmax = max(depth)
         if dmax == 0:
             continue
-        if any(re.match(r'(por_|rst|reset)', p_) for p_ in b['ports']):
+        if any(reset_port(pl[di]['master'], p_) for p_ in b['ports']):
             skipped['reset_forest (reset relays/sync per region, not data stations)'].append(f"{di}.{dp} ({b['bits']} b, {len(sinks)} sinks)")
             continue
         if pl[di]['master'] == 'ot_hbm_su_programme':
