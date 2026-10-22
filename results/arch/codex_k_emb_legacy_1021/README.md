@@ -1,0 +1,3 @@
+Existing legacy EMB lockstep obligation completed on source 32a59f3d8. The bench hierarchy now follows g_legacy.u_rowtx, and two stale mutant anchors match current source. Hardware RTL is unchanged from 92fb829b0.
+
+Fleet EP9 unit oth-ubuntu-2367423-1792642364 used Verilator 5.050. The normal case passed 14,000 checks, with 47 starts, 2 overlaps, and 1 malformed input. All four causal mutants built and failed in simulation: row_open disconnect (2 mismatches), raw record start (12,182), dropped row transmitter fault (5,400), and epoch replacing fill token (27,992). The suite exited 0. This qualifies the existing ROPE=0 legacy comparison; it makes no current RoPE assembly or physical timing claim.

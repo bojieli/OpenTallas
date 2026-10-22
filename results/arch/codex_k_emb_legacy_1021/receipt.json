@@ -1,0 +1,26 @@
+{
+  "source_commit": "32a59f3d8",
+  "base_source": "92fb829b0",
+  "host": "ot-epyc9",
+  "unit": "oth-ubuntu-2367423-1792642364",
+  "exit": 0,
+  "positive": {
+    "checks": 14000,
+    "starts": 47,
+    "overlaps": 2,
+    "malformed": 1,
+    "errors": 0
+  },
+  "mutants": {
+    "1": 2,
+    "2": 12182,
+    "3": 5400,
+    "4": 27992
+  },
+  "sha256": {
+    "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv": "230690d5d0acf1cf561290e0a7262c79aa28ea19aeea346d7b86d535be304dfc",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv": "d07896d059e87a1de2fb1f54cdd8e8ccfc737f1b8947f8cc77d2a511f5e92d54",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_qkd_kvs_emb_ctx_lockstep.sv": "ef14714b8b22cf7160a5681f8ab650b374f1e06ddbef00b9d0d1122343df7db1",
+    "tools/qwen_kv_die/kvs_emb_ctx_bench.sh": "64e6ab7e8d3d87c844f88e6b439269d46a4126b092470f646390ef8943711e1c"
+  }
+}

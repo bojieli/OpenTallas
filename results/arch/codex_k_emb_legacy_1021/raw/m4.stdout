@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc 9 row_tx child inputs
+MISMATCH cyc 10 row_tx child inputs
+MISMATCH cyc 11 rowtx v 1/1 payload 044000000000/0001c0000000
+MISMATCH cyc 11 row_tx child inputs
+MISMATCH cyc 12 rowtx v 0/0 payload 044000000000/0001c0000000
+INFO cyc 5409 ref ctx fault rises (take 1 hdr_ok 1 own_ok 1 fresh 1 gap 0 open 1)
+INFO cyc 9717 ref ctx fault rises (take 1 hdr_ok 1 own_ok 1 fresh 0 gap 0 open 0)
+INFO cyc 13445 ref ctx fault rises (take 0 hdr_ok 0 own_ok 1 fresh 1 gap 0 open 1)
