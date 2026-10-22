@@ -237,8 +237,8 @@ endmodule
 // Every copy is loaded with exactly the value of its master on the same edge, so busy/valid/done/fault/edge_index/
 // command are cycle-identical to ot_hbm_su_programme #(PIPE 2) (benches: pgcol_run.sh NCX=1, flat14 == pslice_c5).
 module ot_hbm_su_programme_mem_r5 #(
-  parameter integer BANKS=1, OG=2, RS=16, NA=4, MUT=0
-)(input logic clk, input logic [BANKS-1:0] clk_macro, input logic [NA-1:0] ren_c, input logic [16*NA-1:0] addr_c,
+  parameter integer BANKS=1, OG=2, RS=16, NA=4, NAA=NA, MUT=0
+)(input logic clk, input logic [BANKS-1:0] clk_macro, input logic [NA-1:0] ren_c, input logic [16*NAA-1:0] addr_c,
   input logic [BANKS-1:0] w_ce, input logic [7*BANKS-1:0] w_row, input logic [256*BANKS-1:0] w_data,
   output logic [255:0] data);
   localparam integer LOG=(OG<=1)?0:$clog2(OG);
@@ -256,8 +256,9 @@ module ot_hbm_su_programme_mem_r5 #(
     localparam integer NB=((o+1)*OG<=BANKS)?OG:(BANKS-o*OG);
     for(r=0;r<RS;r=r+1) begin:rs
       localparam integer K=((o*RS+r)*NA)/(NOG*RS);
+      localparam integer KA=((o*RS+r)*NAA)/(NOG*RS);
       wire ren_k=ren_c[K];
-      wire [8:0] ba=addr_c[16*K+7+:9];
+      wire [8:0] ba=addr_c[16*KA+7+:9];
       if(LOG>0) begin:lsel
         (* keep *) logic [NB-1:0] oh;
         integer b;
@@ -284,10 +285,11 @@ module ot_hbm_su_programme_mem_r5 #(
   end
   generate for(bank=0;bank<BANKS;bank=bank+1) begin:g
     localparam integer KB=(bank*NA)/BANKS;
+    localparam integer KBA=(bank*NAA)/BANKS;
     wire [255:0] bank_q;
     assign q[256*bank+:256]=bank_q;
     ot_sram_1r1w_128x256_m1_r2c2 mem(
-      .clk(clk_macro[bank]), .r_ce_in(ren_c[KB] && addr_c[16*KB+7+:9]==bank), .r_addr_in(addr_c[16*KB+:7]),
+      .clk(clk_macro[bank]), .r_ce_in(ren_c[KB] && addr_c[16*KBA+7+:9]==bank), .r_addr_in(addr_c[16*KBA+:7]),
       .rd_out(bank_q), .w_ce_in(w_ce[bank]), .w_addr_in(w_row[7*bank+:7]),
       .wd_in(w_data[256*bank+:256]), .w_mask_in({256{1'b1}}),
       .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
@@ -332,21 +334,23 @@ module ot_hbm_su_programme_nc #(
   wire write_enable=cfg_we && !busy_i && cfg_bank<TOTAL_BANKS;
   wire accept=start && !(busy_i || length==0 || length>EDGES || cfg_we);
   wire last=(pc==count-1);
-  // kept copies of the index read address / enable (pc / issue)
-  (* keep *) logic [15:0] pc_k [0:NAI-1];
-  (* keep *) logic [NAI-1:0] issue_k;
-  wire [16*NAI-1:0] ia_c; 
+  // kept copies of the index read enable issue: NAI for the index memory slots + one for the pc increment + one for
+  // the e1 capture (the index address itself is the one pc register: few loads).  idle_start (start while not busy)
+  // loads count: equivalent to loading it on accept, because count is only read while busy_i (a rejected start while
+  // idle leaves no run behind it, the next accepted start reloads it).
+  (* keep *) logic [NAI+1:0] issue_k;
+  wire idle_start=start && !busy_i;
   genvar k;
-  generate for(k=0;k<NAI;k=k+1) begin:g_ik
+  generate for(k=0;k<NAI+2;k=k+1) begin:g_ik
     always_ff @(posedge clk) begin
       if(!rst_x[1]) issue_k[k]<=0;
       else begin
-        if(accept) begin issue_k[k]<=1; pc_k[k]<=0; end
-        if(issue) begin if(last) issue_k[k]<=0; else pc_k[k]<=pc_k[k]+1; end
+        if(accept) issue_k[k]<=1;
+        if(issue_k[k] && last) issue_k[k]<=0;
       end
     end
-    assign ia_c[16*k+:16]=pc_k[k] >> INDEX_SHIFT;
   end endgenerate
+  wire [15:0] ia_c=pc >> INDEX_SHIFT;
   // configuration write port (as ot_hbm_su_programme PIPE 2)
   logic [TOTAL_BANKS-1:0] wce_r;
   (* keep *) logic [6:0] wrow_r [0:CFGR-1];
@@ -368,8 +372,8 @@ module ot_hbm_su_programme_nc #(
     assign w_row[7*wbg+:7]=wrow_r[(wbg*CFGR)/TOTAL_BANKS];
     assign w_data[256*wbg+:256]=wdat_r[(wbg*CFGR)/TOTAL_BANKS];
   end endgenerate
-  ot_hbm_su_programme_mem_r5 #(.BANKS(INDEX_BANKS),.OG(IOG),.RS(RS),.NA(NAI),.MUT(MUT==1)) u_ix(
-    .clk(clk),.clk_macro(clk_macro[0+:INDEX_BANKS]),.ren_c(issue_k),.addr_c(ia_c),
+  ot_hbm_su_programme_mem_r5 #(.BANKS(INDEX_BANKS),.OG(IOG),.RS(RS),.NA(NAI),.NAA(1),.MUT(MUT==1)) u_ix(
+    .clk(clk),.clk_macro(clk_macro[0+:INDEX_BANKS]),.ren_c(issue_k[NAI-1:0]),.addr_c(ia_c),
     .w_ce(wce_r[0+:INDEX_BANKS]),.w_row(w_row[0+:7*INDEX_BANKS]),.w_data(w_data[0+:256*INDEX_BANKS]),.data(index_rows));
   // index path: v1 -> va (og registers) -> vb (word select ixw) -> vi (dictionary read) ; vd = command stage
   logic va, vb, vi, vd; logic [15:0] ea, eb, ei, ed;
@@ -378,6 +382,7 @@ module ot_hbm_su_programme_nc #(
   (* keep *) logic [15:0] ix_k [0:NAD-1];
   (* keep *) logic [NAD-1:0] vi_k;
   (* keep *) logic [RS-1:0] vd_c;
+  (* keep *) logic vd_e;   // copy of vd for the edge_index / done updates
   genvar j;
   generate for(j=0;j<16;j=j+1) begin:g_ea
     always_ff @(posedge clk) begin ea_k[j]<=e1[INDEX_SHIFT-1:0]; ixw[j]<=index_rows[16*ea_k[j]+j]; end
@@ -385,8 +390,8 @@ module ot_hbm_su_programme_nc #(
   integer kd;
   always_ff @(posedge clk) for(kd=0;kd<NAD;kd=kd+1) ix_k[kd]<=ixw;
   always_ff @(posedge clk) begin ea<=e1; eb<=ea; ei<=eb; ed<=e2; end
-  always_ff @(posedge clk) if(!rst_x[1]) begin va<=0; vb<=0; vi<=0; vd<=0; end
-    else begin va<=v1; vb<=va; vi<=vb; vd<=v2; end
+  always_ff @(posedge clk) if(!rst_x[1]) begin va<=0; vb<=0; vi<=0; vd<=0; vd_e<=0; end
+    else begin va<=v1; vb<=va; vi<=vb; vd<=v2; vd_e<=v2; end
   always_ff @(posedge clk) if(!rst_x[2]) vi_k<='0; else vi_k<={NAD{vb}};
   always_ff @(posedge clk) if(!rst_x[3]) vd_c<='0; else vd_c<={RS{v2}};
   wire [16*NAD-1:0] da_c;
@@ -417,18 +422,23 @@ module ot_hbm_su_programme_nc #(
       busy_i<=nb;
       if(start) begin
         if(busy_i || length==0 || length>EDGES || cfg_we) fault_i<=1;
-        else begin issue<=1; pc<=0; count<=length; end
+        else issue<=1;
       end
-      if(issue) begin
-        e1<=pc;
-        if(pc==count-1) issue<=0; else pc<=pc+1;
-      end
+      if(issue && last) issue<=0;
       if(d_ren) e2<=d_e;
-      if(c_v) begin
+      if(vd_e) begin
         edge_index<=c_e;
         if(c_e==count-1) done<=1;
       end
     end
+  end
+  // pc / e1 / count (not reset, as PIPE 2): pc zeroed on accept and stepped on its own issue copy, e1 captured on its
+  // own copy, count loaded on idle_start (see above); the reset only holds them, exactly as the shared block did
+  always_ff @(posedge clk) if(rst_n) begin
+    if(idle_start) count<=length;
+    if(accept) pc<=0;
+    if(issue_k[NAI] && !last) pc<=pc+1;
+    if(issue_k[NAI+1]) e1<=pc;
   end
   genvar cb;
   generate for(cb=0;cb<256;cb=cb+1) begin:cbit

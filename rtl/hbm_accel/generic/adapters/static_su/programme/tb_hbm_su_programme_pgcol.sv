@@ -64,8 +64,8 @@ task automatic rel_check;
  r0=-1; r1=-1; rh=-1;
  for(integer k=1;k<=8;k=k+1) begin
    tick();
-   if(r0<0 && u_cl.g_c[0].u_c.rl===2'b11) r0=k;
-   if(r1<0 && u_cl.g_c[1].u_c.rl===2'b11) r1=k;
+   if(r0<0 && (&u_cl.g_c[0].u_c.rl)===1'b1) r0=k;
+   if(r1<0 && (&u_cl.g_c[1].u_c.rl)===1'b1) r1=k;   // PS15: every relay region (NCX: 6)
    if(rh<0 && u_cl.u_h.hr===1'b1) rh=k;
  end
  if(r0!=RREL || r1!=RREL || rh!=RREL) begin mism=mism+1;
