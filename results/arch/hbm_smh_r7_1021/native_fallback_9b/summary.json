@@ -1,0 +1,14 @@
+{
+  "source_commit": "9b81077f6",
+  "hardware_source": "e8a4ce865",
+  "archive_sha256": "8af852de5f46f3445b481042efb753d598a708c7454d71c0bdb44a0eaf745f07",
+  "actual_host": "ot-epyc9",
+  "gate_root": "/srv/opentallas-scratch/claude/ref_gate/smh_rp7s_f-20261021-222603",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 436574,
+  "max_dynamic_loads": 32,
+  "role_errors": [],
+  "violations": [],
+  "scope": "Actual native census only. Final physical clocks, timing and layout remain pending."
+}
