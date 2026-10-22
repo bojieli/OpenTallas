@@ -2164,6 +2164,27 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if _flt_defer and it.kind == 'fault':
             continue
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    # SQC-QSTWI 10-22: OT_RELAY_SLOT_RESERVE=inst:WxH[,inst:WxH] books the NEXT view's slot (anchored at the instance's
+    # origin; the current closed view still draws the pins) as a relay keep-out, so the die plan already leaves room for
+    # the grown master (release sys_face lctx5: 345.6 x 216, view 302.4 x 216).  Fails closed on any macro overlap.
+    if _os_r.environ.get('OT_RELAY_SLOT_RESERVE') and not m.get('_slot_reserve_done'):
+        _byr = {i_.name: i_ for i_ in m['insts']}
+        for _sr in _os_r.environ['OT_RELAY_SLOT_RESERVE'].split(','):
+            _n, _wh = _sr.split(':')
+            _w, _h = (float(z_) for z_ in _wh.lower().split('x'))
+            _i = _byr[_n]
+            if _w < _i.w - 1e-3 or _h < _i.h - 1e-3:
+                raise ValueError(f'OT_RELAY_SLOT_RESERVE: {_n} slot {_w} x {_h} smaller than its view {_i.w} x {_i.h}')
+            for _rr in ((_i.x + _i.w, _i.y, _i.x + _w, _i.y + _h), (_i.x, _i.y + _i.h, _i.x + _i.w, _i.y + _h)):
+                if _rr[2] - _rr[0] < 1e-3 or _rr[3] - _rr[1] < 1e-3:
+                    continue
+                _hit = [q_.name for q_ in m['insts'] if q_ is not _i and q_.kind != 'fault' and q_.x < _rr[2] - 1e-3 and
+                        _rr[0] < q_.x + q_.w - 1e-3 and q_.y < _rr[3] - 1e-3 and _rr[1] < q_.y + q_.h - 1e-3]
+                if _hit:
+                    raise ValueError(f'OT_RELAY_SLOT_RESERVE: {_n} grown slot {_rr} overlaps {_hit[:6]}')
+                m.setdefault('relay_keepouts', []).append(dict(name=f'slot_{_n}', rect=[round(z_, 3) for z_ in _rr]))
+        m['_slot_reserve_done'] = True
+        print('SLOT_RESERVE', [k_ for k_ in m['relay_keepouts'] if str(k_.get('name', '')).startswith('slot_')], flush=True)
     # Q-DIEPLAN3 q3h5: reserved keep-outs (DIE-CLOCK regional root sites, dedicated lanes): no relay may take them
     for r_ in m.get('relay_keepouts', ()):
         add_rect(tuple(r_['rect']))
