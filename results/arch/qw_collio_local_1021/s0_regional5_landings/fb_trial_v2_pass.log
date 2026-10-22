@@ -1,0 +1,36 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb
+ot-run: ot-epyc7       admits   248 GB (avail 301, growth 127, headroom 0, waiters 0/0 GB) load 300/96 running 62 disk 4144 GB 
+ot-run: ot-epyc9       admits    54 GB (avail 444, growth 407, headroom 0, waiters 0/0 GB) load 108/128 running 39 disk 1711 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2024535-1792648227 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_COLL_LAND planned codec roots={codec0} cells=3913 columns=152 rows=26 box=691.200000 444.342857 938.057143 641.828571
+OT_COLL_LAND planned phy roots={codec0p} cells=1425 columns=22 rows=65 box=987.428571 394.971429 1024.457143 691.200000
+OT_COLL_LAND planned cal roots={cal_ck} cells=713 columns=60 rows=12 box=12.342857 444.342857 111.085714 567.771429
+OT_COLL_LAND planned lcal roots={cal_lck} cells=709 columns=45 rows=16 box=296.228571 444.342857 370.285714 567.771429
+OT_COLL_LAND planned tx roots={tx_wck tx_rck} cells=2111 columns=15 rows=141 box=12.342857 703.542857 37.028571 975.085714
+OT_COLL_LAND planned rx roots={rx_wck rx_rck} cells=1564 columns=15 rows=105 box=12.342857 61.714286 37.028571 382.628571
+OT_COLL_LAND planned bank0 roots={codec1} cells=596 columns=27 rows=23 box=345.600000 111.085714 382.628571 370.285714
+OT_COLL_LAND planned bank1 roots={codec2} cells=596 columns=28 rows=22 box=345.600000 703.542857 382.628571 975.085714
+OT_COLL_LAND planned bank2 roots={codec3} cells=596 columns=27 rows=23 box=691.200000 111.085714 728.228571 370.285714
+OT_COLL_LAND planned bank3 roots={codec4} cells=588 columns=28 rows=21 box=691.200000 703.542857 728.228571 975.085714
+OT_ANCHOR_PACK: legally packed 12811 owned anchors; maximum Manhattan displacement 648.0 DBU
+OT_COLL_LAND actual codec cells=3913 bbox={691.254 447.66 937.98 638.28}
+OT_COLL_LAND actual phy cells=1425 bbox={987.498 396.9 1024.11 689.04}
+OT_COLL_LAND actual cal cells=713 bbox={12.42 449.01 111.024 562.68}
+OT_COLL_LAND actual lcal cells=709 bbox={296.298 447.66 370.224 564.03}
+OT_COLL_LAND actual tx cells=2111 bbox={12.42 704.43 36.99 974.16}
+OT_COLL_LAND actual rx cells=1564 bbox={12.42 62.91 36.99 381.24}
+OT_COLL_LAND actual bank0 cells=596 bbox={345.654 116.37 382.536 364.77}
+OT_COLL_LAND actual bank1 cells=596 bbox={345.654 709.29 382.59 969.03}
+OT_COLL_LAND actual bank2 cells=596 bbox={691.254 116.64 728.19 364.77}
+OT_COLL_LAND actual bank3 cells=588 bbox={691.254 709.83 728.19 968.76}
+OT_COLL_LAND PASS 12811 exact source-owned sequential cells, ten landing bands, twelve roots; zero exclusion regions
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2024535-1792648227): exit 0

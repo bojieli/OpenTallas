@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/main
+ot-run: ot-epyc7       admits   272 GB (avail 310, growth 120, headroom 0, waiters 0/0 GB) load 314/96 running 63 disk 4145 GB 
+ot-run: ot-epyc9       admits   451 GB (avail 477, growth 161, headroom 0, waiters 0/0 GB) load 108/128 running 36 disk 1711 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/main
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/main
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/main
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/main
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1992737-1792648094 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+Error: trial.tcl, 5 Invalid method. Must be one of: configure cget -acquire -disown -delete = init reset moveTo moveDelta mergeInit isInverted minDXDY maxDXDY getDir set_xlo set_xhi set_ylo set_yhi xMin yMin xMax yMax dx dy xCenter yCenter getPoints ll ul ur lr center intersects overlaps contains inside closestPtInside merge bloat intersection intersect area margin printf print
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1992737-1792648094): exit 1

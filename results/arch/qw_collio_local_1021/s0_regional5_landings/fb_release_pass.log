@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb/release_input
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb/release_input
+ot-run: ot-epyc9       admits   155 GB (avail 457, growth 348, headroom 0, waiters 0/0 GB) load 105/128 running 41 disk 1704 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb/release_input
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb/release_input
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb/release_input
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-collio-landingtrial/fb/release_input
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2155761-1792648520 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_COLL_LAND_RELEASE PASS 12811 source sequential landings for DPL
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2155761-1792648520): exit 0
