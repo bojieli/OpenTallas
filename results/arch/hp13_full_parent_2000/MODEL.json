@@ -11,7 +11,8 @@
     "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
     "rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_physical.sv": "00449141d63da7b404a000ee27dfcae3b0a4d256f1b76467441e19c6a7bfab15",
     "rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2_physical.sv": "e5d008498cd94b3b8e89eb0d56822b5bc5f56e0412ac7b28577dfee63a02cf40",
-    "rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv": "c904c97c3b3f40de76f0d9d280d393bc700bc26fca34decd6bec9e68e9af340c"
+    "rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv": "c904c97c3b3f40de76f0d9d280d393bc700bc26fca34decd6bec9e68e9af340c",
+    "rtl/qwen_dv/headprep13/physical_abi/qfd_dv_typed_witness_control_frozen.sv": "737c772b892baf869ed19a58665d7792ef3a0281d82632a053f35af8fc0afac7"
   },
   "primitive_count": 94443,
   "macro_count": 19,
@@ -30,5 +31,6 @@
   "reset": "Exact source forest retained. External reset release/removal proof remains open.",
   "functional_scope": "Native constituent source proofs exist; no final full-parent source-programme or physical qualification claimed.",
   "next": "Native-first MAIN/ALT, collect actual whole-parent census and named timing failures; final bench package required before submission.",
-  "source_abi_repair": "Exact source-bound physical projection removes only two image metadata annotations. Original functional sources/images remain separately pinned; fixed Liberty cell/pins/timing/shape preserved. See SYNTHESIS_PROJECTION.json."
+  "source_abi_repair": "Exact source-bound physical projection removes only two image metadata annotations. Original functional sources/images remain separately pinned; fixed Liberty cell/pins/timing/shape preserved. See SYNTHESIS_PROJECTION.json.",
+  "transitive_recovery": "WTN actual RTL instantiates its exact frozen typed-witness control; source recovered from hash-bound43RTL packet, not historical hardview."
 }
