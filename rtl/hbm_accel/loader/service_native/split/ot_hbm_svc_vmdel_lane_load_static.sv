@@ -90,6 +90,14 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
  wire rb=load_v?load_cmd[0]:(running ? bank_r : start_bank);
  wire [1:0] rg=load_v?load_cmd[18:17]:(running ? group_q : 2'd0);
  wire [5:0] rs=load_v?load_cmd[24:19]:(running ? slot_q : 6'd0);
+ // A bank requested for reading cannot accept a fill on this edge. This
+ // hazard check deliberately precedes read validation: valid schedules are
+ // unchanged, and an invalid conflicting request already latches fault.
+ // After such a fault, rejected fills and their counter/pcbad side effects
+ // can differ from the old implementation. No invalid read or output is
+ // enabled; complete ownership/epoch/full/shape checks remain above.
+ wire raw_request=running||start;
+ wire raw_request_bank=running?bank_r:start_bank;
  wire clear_bank=begin_v && !owned[begin_bank] && !(lstart && start_bank==begin_bank);
  always @(posedge clk) if(!reset_copy[1])begin bad<=0;end
  else if(start)begin
@@ -156,7 +164,8 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
   wire fb=fill_bank[g]; wire [5:0] fs=fill_slot[g*6+:6];
   wire [15:0] ep=fb_epoch?epoch1:epoch0;
   wire seen_current=|seen_part;
-  wire fill_ok=fill_v[g] && owned[fb] && fill_epoch[g*16+:16]==ep && !seen_current && !(issue && rb==fb) && !landing_fault;
+  wire fill_hazard=(load_v&&load_cmd[0]==fb)||(raw_request&&raw_request_bank==fb);
+  wire fill_ok=fill_v[g] && owned[fb] && fill_epoch[g*16+:16]==ep && !seen_current && !fill_hazard && !landing_fault;
   // n counts accepted (always distinct, !seen) writes, so &seen == (n==64) == n[6]: a registered full flag
   assign f0[g]=n0[6]; assign f1[g]=n1[6]; assign bad_v[g]=pbad;
   always @(posedge clk)begin
