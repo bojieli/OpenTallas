@@ -1,0 +1,145 @@
+{
+  "status": "SCOPED_RETAINED_COMPONENT_EVIDENCE",
+  "tested_source": "b26999d6d",
+  "current_baseline_source": "880b247a9",
+  "fleet_unit": "oth-ubuntu-105226-1792457976",
+  "host": "ot-epyc4 (regular-crane)",
+  "retained_log_path": "results/rtl/qwen_kv_die/kvpc_sram_sr6_1019/bench_sweep_b26999d6d.log",
+  "retained_log_sha256": "9dff44019548d4401eecc29ac2b4a710e9ea4ef4b69bca37530efc73ec6c52b3",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv": "11d27a69443b998136e424f93bbac4c5f986734f20c262c31f41b1087b54702e",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv": "f5b97a6e1a23b855cc4cf4f6c52973ba6d5d117f9da85cea275a2d6cfa8bdf53"
+  },
+  "sram_file_exactly_matches_tested": true,
+  "clone_modules": {
+    "qkd_kvpc_s_fan_nc_b": {
+      "same": true,
+      "current_sha256": "4281a1f96717a57c35b59bd41907e45a0f227cf0b8dc5ef5cf0589dc9502abf8",
+      "tested_sha256": "4281a1f96717a57c35b59bd41907e45a0f227cf0b8dc5ef5cf0589dc9502abf8"
+    },
+    "qkd_kvpc_s_emb_nc_b": {
+      "same": true,
+      "current_sha256": "7c39185145283e38b070afcddcbc5f5ea43b7c6276292a1f27f34b99be704277",
+      "tested_sha256": "7c39185145283e38b070afcddcbc5f5ea43b7c6276292a1f27f34b99be704277"
+    },
+    "qkd_kvpc_s_path_nc": {
+      "same": true,
+      "current_sha256": "d0b89c919f8043211f5e36c0810a803d459c372924cd619e8af4813ef2f6ddec",
+      "tested_sha256": "d0b89c919f8043211f5e36c0810a803d459c372924cd619e8af4813ef2f6ddec"
+    },
+    "qkd_kvpc_s_ctrl": {
+      "same": true,
+      "current_sha256": "e4583fe7283da7c7881bd5b668bbfae6ac5d0836999e8f0c902036e145af8334",
+      "tested_sha256": "e4583fe7283da7c7881bd5b668bbfae6ac5d0836999e8f0c902036e145af8334"
+    },
+    "qkd_kvpc_s_sched": {
+      "same": true,
+      "current_sha256": "3b5529345c9bee8beec54cdc118ec382cc3f43e677be5ce66b9990a50ea95d47",
+      "tested_sha256": "3b5529345c9bee8beec54cdc118ec382cc3f43e677be5ce66b9990a50ea95d47"
+    },
+    "qkd_kvpc_s_cdc_child": {
+      "same": true,
+      "current_sha256": "0b6fc553e7d9a3c48884bf8977865feb25e1179536fe1c939a4a34f802fd0d49",
+      "tested_sha256": "0b6fc553e7d9a3c48884bf8977865feb25e1179536fe1c939a4a34f802fd0d49"
+    },
+    "qkd_kvpc_s_obs_child": {
+      "same": true,
+      "current_sha256": "be685b8afa3d9f9a7306103a8f9363c1237899ad92ea86748dd24aac943434f4",
+      "tested_sha256": "be685b8afa3d9f9a7306103a8f9363c1237899ad92ea86748dd24aac943434f4"
+    },
+    "qkd_kvpc_s_port_child": {
+      "same": true,
+      "current_sha256": "b77aa7f4a3b24a667865c4ccb90ba2a66ffc288f0a6c66bf11ccb7df59a686e8",
+      "tested_sha256": "b77aa7f4a3b24a667865c4ccb90ba2a66ffc288f0a6c66bf11ccb7df59a686e8"
+    },
+    "ot_qfd_emb_pcport_nkw_kvpc_s": {
+      "same": true,
+      "current_sha256": "25944cffbacbb6cba0ce9773dc451a29021885703df4665ac53a4232164714f4",
+      "tested_sha256": "25944cffbacbb6cba0ce9773dc451a29021885703df4665ac53a4232164714f4"
+    },
+    "qkd_kvpc_s_ecc_child": {
+      "same": true,
+      "current_sha256": "1ed961a6720096f39bfc9afeedae90c0c1b5b8eadb90e0672fe7708f0c51920a",
+      "tested_sha256": "1ed961a6720096f39bfc9afeedae90c0c1b5b8eadb90e0672fe7708f0c51920a"
+    },
+    "ot_qfd_kv_landing_ecc_kvpc_s": {
+      "same": true,
+      "current_sha256": "6a980552a6ccd7c3598651398d73df4a58db28c4e15b2bb41fb9f5b7e32ac953",
+      "tested_sha256": "6a980552a6ccd7c3598651398d73df4a58db28c4e15b2bb41fb9f5b7e32ac953"
+    },
+    "qkd_kvpc_s_calendar": {
+      "same": true,
+      "current_sha256": "fb101202411460378bda6e402dc810000e92178cdccc53aea27caec110b528bd",
+      "tested_sha256": "fb101202411460378bda6e402dc810000e92178cdccc53aea27caec110b528bd"
+    },
+    "ot_qkd_static_ctrl_pc_emb_kvpc_s": {
+      "same": true,
+      "current_sha256": "9d641692e380f841af3ebd759619722103670622ed722d229f2d10a62286e495",
+      "tested_sha256": "9d641692e380f841af3ebd759619722103670622ed722d229f2d10a62286e495"
+    },
+    "ot_qkd_static_kv_timing_kvpc_s": {
+      "same": true,
+      "current_sha256": "4db746e01ab7351eae7361b35d248de1333a0e2ffb419548d132dd92db41e62e",
+      "tested_sha256": "4db746e01ab7351eae7361b35d248de1333a0e2ffb419548d132dd92db41e62e"
+    },
+    "qkd_kvpc_s_chain": {
+      "same": false,
+      "current_sha256": "4606fb366a5e55424703929bec18dc6c53655f22de1556387e644a03524c043b",
+      "tested_sha256": "f307e45e0c39926a6b0c16bb4d9e97b8d7548e535e9909df9a18ee519dd2d5cf"
+    },
+    "qkd_kvpc_s_esm": {
+      "same": true,
+      "current_sha256": "5672bab77274e5b45436a67ff8717e9bb280d23465e210493ca552b76dcba12a",
+      "tested_sha256": "5672bab77274e5b45436a67ff8717e9bb280d23465e210493ca552b76dcba12a"
+    },
+    "qkd_kvpc_s_rhop": {
+      "same": true,
+      "current_sha256": "e8b86a133d1785b85c5e453e6ae5a291043a9b8c3a488ff3f1955a9a947eaa71",
+      "tested_sha256": "e8b86a133d1785b85c5e453e6ae5a291043a9b8c3a488ff3f1955a9a947eaa71"
+    },
+    "qkd_kvpc_s_rhead": {
+      "same": true,
+      "current_sha256": "95dd458c007431fe4a818925c4b7be7bc07e7b468659b323d14cc1ec2c545526",
+      "tested_sha256": "95dd458c007431fe4a818925c4b7be7bc07e7b468659b323d14cc1ec2c545526"
+    }
+  },
+  "wrapper_modules": {
+    "qkd_kvs_pc": {
+      "same": true,
+      "sha256_without_final_newline": "2549b2919310bbf3167abe28d543717d3b56d4815d8976173dfba3da230556d1",
+      "sha256_with_final_newline": "2189cc80c4fa0e87913cb38c03931e85f97c7eb2d15f9f03f2f1417276a42db8"
+    },
+    "qkd_kvs_pc_h": {
+      "same": true,
+      "sha256_without_final_newline": "5f8d9246ebf97f0a52636de8d1fdd473b77e3b301026c096de3f2de86d2b6f9d",
+      "sha256_with_final_newline": "4a9075e59d089ff3f1683eccccff06b5245924f0e141aee5ae1e9e0b0cb5e4a6"
+    }
+  },
+  "component_pass_counts": {
+    "front": 40000,
+    "return": 26734,
+    "cdc_valid_qualified": 44608,
+    "tq": 49997,
+    "sched": 540000,
+    "ctrl": 580624,
+    "path": 1161248
+  },
+  "causal_caveat": "sched_m1 lost coverage and PASS is preserved as such; use sched_m5 actual FAIL (107683 mismatches). Other bank, prefetch, CDC and landing mutants fail in simulation in raw log.",
+  "reset_scope": "Front bench includes power-on and one mid-run reset, storage retaining contents; legal sectors, bursts, early block hold and block credit. This is not arbitrary unknown-state silicon proof.",
+  "clock_scope": "Tile bench uses ck half-period417 and hck512 with0.3ps start offset; legacy per-bank PHY storage roots tied hck. Reference sees fi/ki +1hck and boot_ready +1ck. No general same-phase assumption is transferred to old per-bank clocks.",
+  "current_delta": "Only clone module qkd_kvpc_s_chain changes: home requires tok<151936, excluding real RoPE tokens. Canonical qkd_embedding_static_map and qkd_kv_pc_chain_station_b also change on the same RoPE split; therefore old whole-tile/token claims do not transfer automatically. Front/return/CDC/TQ/sched/ctrl/path active module bodies retain exact component source.",
+  "qualification_only_flags": {
+    "PC_SRAM": 1,
+    "PC_RLAND": 1,
+    "DOMSPLIT": 1
+  },
+  "edge_law": {
+    "kick_hck": 1,
+    "fault_hck": 1,
+    "boot_ready_ck": 1,
+    "extra_group_landing_ck": 0,
+    "extra_group_landing_hck": 0,
+    "reset_release_edges_per_domain": 2
+  },
+  "missing_current_scope": "Actual selected-parent boot/token/cold-start and real RoPE chain exclusion under current source/flags. No sr13/sr14 view, slot, native32 or physical STA claim."
+}

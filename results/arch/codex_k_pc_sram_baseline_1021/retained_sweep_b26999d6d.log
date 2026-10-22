@@ -1,0 +1,39 @@
+ot-run: ot-epyc4       admits   888 GB (avail 735, growth 113, headroom 0, waiters 0/0 GB) load 80/128 running 43 disk 300 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/kv-pc3/src-b26999d6d
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-pc3/src-b26999d6d
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-pc3/src-b26999d6d
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-pc3/src-b26999d6d
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-pc3/src-b26999d6d
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-pc3/src-b26999d6d
+ot-run: -> ot-epyc4
+ot-heavy: request 96G is charged 57G (class 'benches.sh' measured peak 37.5G, n=4+0 proved); the cap stays 96G
+ot-heavy: admitted on regular-crane as oth-ubuntu-105226-1792457976 after 0 s
+tq_m0 rc=0 KVPC_TQ PASS edges=50000 checks=49997 bypassed=10246 errors=0 mut=0
+tq_m1 rc=1 KVPC_TQ FAIL edges=50000 checks=49997 errors=10246 bypassed=10246 mut=1
+return_m2 rc=1 KVPC_RETURN FAIL edges=12000 checks=26734 errors=18920 consumed=9128 mut=2
+front_m1 rc=1 KVPC_FRONT FAIL edges=40000 checks=40000 errors=39391 puts=22890 holds=8489 mut=1
+front_m4 rc=1 KVPC_FRONT FAIL edges=40000 checks=40000 errors=39985 puts=22890 holds=8489 mut=4
+return_m0 rc=0 KVPC_RETURN PASS edges=12000 checks=26734 consumed=9128 errors=0 mut=0
+front_m0 rc=0 KVPC_FRONT PASS edges=40000 checks=40000 puts=22890 holds=8489 freed=2860 errors=0 mut=0
+front_m5 rc=1 KVPC_FRONT FAIL edges=40000 checks=40000 errors=39126 puts=22890 holds=8489 mut=5
+return_m1 rc=1 KVPC_RETURN FAIL edges=12000 checks=26734 errors=26705 consumed=9128 mut=1
+cdc_m2 rc=1 KVPC_CDC FAIL edges=20000 checks=44608 errors=21716 c_v=27473 e_v=20923 mut=2
+cdc_m0 rc=0 KVPC_CDC PASS edges=20000 checks=44608 c_v=27473 e_v=20923 errors=0 unqualified_payload_diffs=2615 mut=0
+cdc_m1 rc=1 KVPC_CDC FAIL edges=20000 checks=44608 errors=27473 c_v=27473 e_v=20923 mut=1
+sched_m0 rc=0 KVPC_SCHED PASS edges=30000 checks=540000 active_out=234436 outs=18 errors=0 mut=0
+sched_m1 rc=0 KVPC_SCHED PASS edges=30000 checks=540000 active_out=234436 outs=18 errors=0 mut=1
+sched_m5 rc=1 KVPC_SCHED FAIL edges=30000 checks=540000 errors=107683 active_out=234436 mut=5
+ctrl_m5 rc=1 KVPC_CTRL FAIL edges=20000 checks=580624 errors=125096 active_out=172267 mut=5
+ctrl_m1 rc=1 KVPC_CTRL FAIL edges=20000 checks=580624 errors=11926 active_out=172267 mut=1
+ctrl_m2 rc=1 KVPC_CTRL FAIL edges=20000 checks=580624 errors=8496 active_out=172267 mut=2
+ctrl_m0 rc=0 KVPC_CTRL PASS edges=20000 checks=580624 active_out=172267 outs=16 errors=0 mut=0
+path_m2 rc=1 KVPC_PATH FAIL edges=20000 checks=1161248 errors=89 active_out=233268 mut=2
+path_m5 rc=1 KVPC_PATH FAIL edges=20000 checks=1161248 errors=36359 active_out=233268 mut=5
+path_m0 rc=0 KVPC_PATH PASS edges=20000 checks=1161248 active_out=233268 outs=32 errors=0 mut=0
+tile_pc_m4 rc=1 KVPC_TILE FAIL edges=3000 checks=79216 errors=2986 active_out=28287 mut=4
+tile_pc_m0 rc=0 KVPC_TILE PASS edges=3000 checks=79216 active_out=28287 outs=14 errors=0 mut=0
+tile_pc_m5 rc=1 KVPC_TILE FAIL edges=3000 checks=79216 errors=8213 active_out=28287 mut=5
+tile_pc_h_m0 rc=0 KVPC_TILE PASS edges=3000 checks=73772 active_out=22151 outs=13 errors=0 mut=0
+tile_pc_h_m4 rc=1 KVPC_TILE FAIL edges=3000 checks=73772 errors=2986 active_out=22151 mut=4
+tile_pc_h_m5 rc=1 KVPC_TILE FAIL edges=3000 checks=73772 errors=8030 active_out=22151 mut=5
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-105226-1792457976): exit 0
