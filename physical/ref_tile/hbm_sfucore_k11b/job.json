@@ -1,14 +1,14 @@
 {
- "name": "hbm_sfucore_k11b-k11b-COMMIT",
+ "name": "hbm_sfucore_k11b-k11b-cb9969e79",
  "block": "ot_hgi_sfu_core_split3l",
  "ref_tile": true,
  "owner": "CODEX-HBM-HC-2000",
- "purpose": "k11b (HBMb/HC-SFU 10-21, FALLBACK) = k10b + FPIPE=1 (PD-AUDIT (1)): k9y reg2reg -18.5 ns g_lane[15].u_sfu/rd_addr -> u_engine.u_memory store_fault = combinational 16-lane range/source/scalar gather into one flop across 1.9 mm; now per-lane registered partials + ot_hgi_sfu_fault_tree (lane -> pair -> side -> 2 relays, hops <= ~405 um) for the store fault AND the engine lane_fault/lane_coll gather; sticky diagnostic fault rises +5 edges, no data/schedule edge moves. Floorplan/pins/children/clock roots unchanged from k10b.",
+ "purpose": "k11b (HBMb/HC-SFU 10-21, FALLBACK) = k10b + FPIPE=1 (PD-AUDIT (1)): k9y reg2reg -18.5 ns g_lane[15].u_sfu/rd_addr -> u_engine.u_memory store_fault = combinational 16-lane range/source/scalar gather into one flop across 1.9 mm; now per-lane registered partials + ot_hgi_sfu_fault_tree (lane -> pair -> side -> 2 relays, hops <= ~405 um) for the store fault AND the engine lane_fault/lane_coll gather; sticky diagnostic fault rises +5 edges, no data/schedule edge moves. Floorplan/pins/children/clock roots unchanged from k10b. Bench declarations corrected to exact LG_PATH 24; raw R24 positive proof b02bfc61b matches all 58 source hashes. Physical source and constraints unchanged.",
  "threads": 16,
  "peak_ram_gb": 96,
  "source": {
   "branch": "codex/hbm-hc-sfu-2000",
-  "commit": "COMMIT",
+  "commit": "cb9969e79",
   "extra_paths": [
    "results/arch/hbm_native_1013/sfu_native_quarter",
    "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
@@ -36,8 +36,8 @@
     ]
    },
    {
-    "name": "split_equiv_r23",
-    "cmd": "OUT={RUN}/bench/r23 SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "name": "split_equiv_r24",
+    "cmd": "OUT={RUN}/bench/r24 SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
     "expect": "pass",
     "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
     "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
@@ -49,7 +49,7 @@
    },
    {
     "name": "split_mutant_skip_pinreg",
-    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
     "expect": "fail",
     "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
@@ -61,7 +61,7 @@
    },
    {
     "name": "split_mutant_clkpw",
-    "cmd": "OUT={RUN}/bench/clkpw SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=clkpw bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/clkpw/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/clkpw SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=clkpw bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/clkpw/run.log; exit 1",
     "expect": "fail",
     "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
@@ -73,7 +73,7 @@
    },
    {
     "name": "split_mutant_nodrainpipe",
-    "cmd": "OUT={RUN}/bench/nodrainpipe SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=nodrainpipe bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/nodrainpipe/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/nodrainpipe SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=nodrainpipe bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/nodrainpipe/run.log; exit 1",
     "expect": "fail",
     "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
@@ -85,7 +85,7 @@
    },
    {
     "name": "split_mutant_gclk",
-    "cmd": "OUT={RUN}/bench/gclk SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=gclk bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/gclk/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/gclk SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=gclk bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/gclk/run.log; exit 1",
     "expect": "fail",
     "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
@@ -97,7 +97,7 @@
    },
    {
     "name": "split_mutant_wpskew",
-    "cmd": "OUT={RUN}/bench/wpskew SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=wpskew bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/wpskew/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/wpskew SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=wpskew bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/wpskew/run.log; exit 1",
     "expect": "fail",
     "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
@@ -109,7 +109,7 @@
    },
    {
     "name": "split_mutant_wrot",
-    "cmd": "OUT={RUN}/bench/wrot SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=wrot bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/wrot/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/wrot SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=wrot bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/wrot/run.log; exit 1",
     "expect": "fail",
     "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
@@ -121,7 +121,7 @@
    },
    {
     "name": "split_mutant_rsttree",
-    "cmd": "OUT={RUN}/bench/rsttree SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=rsttree bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/rsttree/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/rsttree SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=rsttree bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/rsttree/run.log; exit 1",
     "expect": "fail",
     "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
@@ -133,7 +133,7 @@
    },
    {
     "name": "split_mutant_tree4",
-    "cmd": "OUT={RUN}/bench/tree4 SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=tree4 bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/tree4/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/tree4 SFU_LG_R=24 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=tree4 bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/tree4/run.log; exit 1",
     "expect": "fail",
     "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
     "threads": 8,
@@ -207,7 +207,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_sfucore_k11b/hbm_sfucore_k11b-k11b-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_sfucore_k11b/hbm_sfucore_k11b-k11b-cb9969e79"
   }
  ],
  "cycles_added": 0,
