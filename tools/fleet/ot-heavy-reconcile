@@ -85,6 +85,18 @@ tasks as soon as possible"):
       RATE_HORIZON_S (600 s))
     stable or old:  0, plus one host floor min(sum of their (ceiling - now), SETTLED_FLOOR_FRAC (0.02) x RAM)
   The v6/v8 age/class/GROWTH_FACTOR rules above no longer set the charge (GROWTH_FACTOR is read but unused).
+  Active Verilator frontend phases (verified executable in the scope's current cgroup) retain full declared
+  remaining growth until the frontend exits. Flat RSS or a lowered class reservation cannot predict its next AST phase.
+  Other sampled phases keep the v13 rate policy; this does not restore full reservations for long-running yosys jobs.
+  v14 OLD SLOW (SCHED-TUNE2, owner 2026-10-22: gold2 showed admits -55 GB with 436 GB free at load 32/112 because
+  6-15 h cc1plus compiles at 54-87 GB, growing a few MB per sample, each held its whole declared --mem through the
+  frontend-phase rule while its verilator_bin only waited on its --build): a unit older than OLD_S (7200 s) whose
+  measured growth is below OLD_SLOW_GB (5 GB) per 10 min and whose every verilator_bin pid has a make/compiler
+  descendant is charged min(ceiling - now, OLD_MULT (3) x rate x OLD_HORIZON_S (1800 s), OLD_CAP_GB (32)).  rate = RSS
+  slope over rss_hist (now kept 30 min, not 3 samples), never below the last-two-sample v13 rate.  A frontend still in
+  its AST phase keeps the full declared charge (13:01 TP192 grew again after a plateau); other units keep v13 (stable 0;
+  rising 2 x rate x 600 s, already under the v14 charge below 5 GB/10 min), so v14 never charges more than v13.
+  Young units, the host floor, the settled floor, the admit lock and the 5 x 64 GB replay regression are unchanged.
   Safety stays with the per-job caps (scope MemoryMax, docker --memory via ot-heavy-docker), swap and earlyoom.
   DIE-FIRST unchanged: a waiting die trial's request is held free against non-die requests.
 
@@ -177,6 +189,45 @@ def procs(cgdir):
         out.append(dict(pid=int(pid), comm=comm, exe=exe, argv=rd(f"/proc/{pid}/cmdline").split("\0")[:-1],
                         rss=status(pid, "VmRSS"), hwm=status(pid, "VmHWM")))
     return out
+
+
+def active_verilator_frontends(cgdir):
+    """Read this scope's actual executables, not script names or an old cron phase sample."""
+    names = {"verilator_bin", "verilator_bin_dbg"}
+    return [p["pid"] for p in procs(cgdir)
+            if os.path.basename(p["exe"].removesuffix(" (deleted)")) in names]
+
+
+def frontend_waiting_on_build(cgdir, fpids):
+    """True when every Verilator frontend pid in this scope has a build child (make / C++ compiler) in the scope:
+    a --build verilator_bin whose AST phase is over and which only waits for the C++ compile"""
+    if not fpids:
+        return False
+    parent, comm = {}, {}
+    for pid in rd(f"{cgdir}/cgroup.procs").split():
+        try:
+            parent[int(pid)] = int(rd(f"/proc/{pid}/stat").rsplit(")", 1)[1].split()[1])
+        except (IndexError, ValueError):
+            continue
+        comm[int(pid)] = rd(f"/proc/{pid}/comm").strip()
+    waiting = set()
+    for pid, c in comm.items():                      # walk each build process up to its frontend (sh -c make ...)
+        if c not in BUILD:
+            continue
+        p, seen = parent.get(pid), 0
+        while p in parent and seen < 64:
+            if p in fpids:
+                waiting.add(p)
+            p, seen = parent[p], seen + 1
+    return all(f in waiting for f in fpids)
+
+
+def hist_rate(hist):
+    """GB/s of RSS over the kept rss_hist window (>= 0), and the window span in s"""
+    if len(hist) < 2 or hist[-1][0] <= hist[0][0]:
+        return 0.0, 0.0
+    span = hist[-1][0] - hist[0][0]
+    return max(0.0, (hist[-1][1] - hist[0][1]) / GB / span), span
 
 
 def is_sim(p):
@@ -444,7 +495,8 @@ def main():
         # v13 GROWTH RATE (SCHED-TUNE 10-21): s["samples"] is wiped on every pass that sees a compiler / GRT / a new
         # process key, so it never held an RSS delta for a building job.  rss_hist keeps the last 3 cron samples of
         # scope + container RSS, never reset; rate_gbs = GB/s between the last two when RSS rose > max(5 %, 0.5 GiB).
-        h = [x for x in s.get("rss_hist", []) if NOW - x[0] <= 3 * FLAT_S][-2:] + [[NOW, rss]]
+        # v14: keep the whole 30-min window (the OLD SLOW rate); the v13 rate below still reads only the last two
+        h = [x for x in s.get("rss_hist", []) if NOW - x[0] <= 3 * FLAT_S][-40:] + [[NOW, rss]]
         s["rss_hist"] = h
         (t0, r0), (t1, r1) = h[-2] if len(h) >= 2 else h[-1], h[-1]
         rose = len(h) >= 2 and t1 > t0 and r1 - r0 > max(0.05 * r0, GB // 2)
@@ -626,14 +678,20 @@ def read_units():
                          obs=max(cur, num(cg + "/memory.peak") / GB),
                          cls=s.get("cls") or (meta[1] if len(meta) > 1 else None),
                          sampled=bool(s.get("rss_hist") or s.get("samples") or s.get("first")),
-                         rate=float(s.get("rate_gbs") or 0.0)))
+                         rate=float(s.get("rate_gbs") or 0.0),
+                         declared=max(req, int(meta[0]) if meta[:1] and meta[0].isdigit() else req),
+                         frontend_pids=(fp := active_verilator_frontends(cg)),
+                         frontend_waiting=frontend_waiting_on_build(cg, fp),
+                         slow=hist_rate(s.get("rss_hist", []))[0], slow_span=hist_rate(s.get("rss_hist", []))[1]))
     return rows
 
 
 YOUNG_S, MID_S, PLENTY, GONE_S = 300, 1800, 0.35, 20
 DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v8 (owner 2026-10-17), see the module text
                 GROW_WINDOW_S=600, GROWING_FACTOR=1.0, LAUNCH_HOLD_S=120,    # v12 GROWING RESERVATION (SCHED-MEM 10-21)
-                RATE_HORIZON_S=600, RATE_MULT=2.0, SETTLED_FLOOR_FRAC=0.02)  # v13 GROWTH RATE (SCHED-TUNE 10-21)
+                RATE_HORIZON_S=600, RATE_MULT=2.0, SETTLED_FLOOR_FRAC=0.02,  # v13 GROWTH RATE (SCHED-TUNE 10-21)
+                OLD_S=7200, OLD_SLOW_GB=5.0, OLD_MULT=3.0, OLD_HORIZON_S=1800, OLD_CAP_GB=32.0,
+                OLD_MIN_SPAN_S=200)                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
 
 
 def conf(key):
@@ -682,10 +740,23 @@ def books(rows, total, avail, table, gf=None):
             continue
         now = r["now"]
         margin = max(0.0, r["ceil"] - now)
-        if r["age"] < win or not r.get("sampled", True):
+        # v14 OLD SLOW: old, measured, and growing slower than OLD_SLOW_GB per 10 min
+        orate = max(r.get("slow", 0.0), r.get("rate", 0.0))
+        old_slow = (r["age"] >= conf("OLD_S") and r.get("sampled", True) and
+                    (r.get("slow_span", 0.0) >= conf("OLD_MIN_SPAN_S") or r.get("rate", 0.0) > 0) and
+                    orate * 600 < conf("OLD_SLOW_GB"))
+        if r.get("frontend_pids") and not (old_slow and r.get("frontend_waiting")):
+            # A real Verilator frontend can grow again after a long AST/DFG plateau. Its declared budget
+            # stays pending until that executable exits, even when class reconciliation lowered res.
+            r["grow"], r["pending"] = max(0.0, r.get("declared", r["req"]) - now), True
+        elif r["age"] < win or not r.get("sampled", True):
             # v12/v13: admitted in the last GROW_WINDOW_S, or reconcile has no RSS sample of it yet (still building):
             # its whole remaining reservation
             r["grow"], r["pending"] = gfull * margin, True
+        elif r.get("frontend_pids"):
+            # v14: an old, slowly growing --build job whose frontend only waits on the C++ compile (cc1plus RSS is
+            # what grows): 3 x the growth its measured rate gives over the next 30 min, at most 32 GB, <= the margin
+            r["grow"], r["pending"] = min(margin, conf("OLD_MULT") * orate * conf("OLD_HORIZON_S"), conf("OLD_CAP_GB")), True
         elif r.get("rate", 0.0) > 0:
             # v13: RSS rose > 5 % between the last two cron samples: RATE_MULT x the measured rate over RATE_HORIZON_S
             r["grow"], r["pending"] = min(margin, conf("RATE_MULT") * r["rate"] * conf("RATE_HORIZON_S")), True
@@ -903,7 +974,8 @@ def selftest():
             bad.append(f"{name}: got {got:.2f}, want {want:.2f}")
     one = lambda avail, **k: books([u(**k)], T, avail, tab, 0.5)["grow"]
     # v12/v13: admitted < GROW_WINDOW_S ago or not sampled yet -> whole remaining; rising -> 2 x rate x 10 min; else 0
-    keys = ("GROW_WINDOW_S", "GROWING_FACTOR", "LAUNCH_HOLD_S", "RATE_HORIZON_S", "RATE_MULT", "SETTLED_FLOOR_FRAC")
+    keys = ("GROW_WINDOW_S", "GROWING_FACTOR", "LAUNCH_HOLD_S", "RATE_HORIZON_S", "RATE_MULT", "SETTLED_FLOOR_FRAC",
+            "OLD_S", "OLD_SLOW_GB", "OLD_MULT", "OLD_HORIZON_S", "OLD_CAP_GB", "OLD_MIN_SPAN_S")
     saved = {k: os.environ.get(k) for k in keys}
     os.environ.update(GROW_WINDOW_S="600", GROWING_FACTOR="1.0", LAUNCH_HOLD_S="120", RATE_HORIZON_S="600",
                       RATE_MULT="2", SETTLED_FLOOR_FRAC="0")
@@ -918,6 +990,20 @@ def selftest():
     chk("v12 not started 60 s, launcher alive: still held", one(800, active=False, res=64, file_age=60, launcher_alive=True), 64)
     chk("v12 not started 60 s, launcher gone: nothing", one(800, active=False, res=64, file_age=60, launcher_alive=False), 0)
     chk("gone for 30 s: nothing", one(800, active=False, res=64, file_age=30), 0)
+    os.environ.update(OLD_S="7200", OLD_SLOW_GB="5", OLD_MULT="3", OLD_HORIZON_S="1800", OLD_CAP_GB="32", OLD_MIN_SPAN_S="200")
+    # v14 OLD SLOW: gold2 10-22, 15 h cc1plus at 83 of 200 GB growing ~4e-5 GB/s: 3 x rate x 1800 s (v13 frontend: 117)
+    g2 = dict(age=54000, req=200.0, res=200, now=83.0, obs=160.0, slow_span=1200.0, declared=200,
+              frontend_pids=[1], frontend_waiting=True)
+    chk("v14 old slow --build waiting: 3 x 30-min growth", one(300, slow=4e-5, **g2), 0.216)
+    chk("v14 old slow 3 GB/10 min: 27", one(300, slow=0.005, **g2), 27)
+    chk("v14 old slow 4.7 GB/10 min: capped at 32", one(300, slow=0.0079, **g2), 32)
+    chk("v14 old slow: never above the margin", one(300, slow=0.0079, **dict(g2, now=190.0)), 10)
+    chk("v14 old but >= 5 GB/10 min: frontend rule (full)", one(300, rate=0.01, slow=0.01, **g2), 117)
+    chk("v14 1.4 h old: frontend rule (full)", one(300, slow=0.005, **dict(g2, age=5000)), 117)
+    chk("v14 window too short: frontend rule (full)", one(300, slow=0.005, **dict(g2, slow_span=120.0)), 117)
+    chk("v14 frontend still in its AST phase: full declared", one(300, slow=4e-5, **dict(g2, frontend_waiting=False)), 117)
+    chk("v14 non-frontend old slow stable: v13 0", one(300, slow=0.005, **dict(g2, frontend_pids=[])), 0)
+    chk("v14 non-frontend old rising: v13 2 x rate x 600", one(300, rate=0.005, slow=0.005, **dict(g2, frontend_pids=[])), 6)
     os.environ.update(SETTLED_FLOOR_FRAC="0.02")
     chk("v13 settled floor: 2 % of RAM", one(300, age=4000, req=512.0, res=512, now=490.0, obs=490.0), 20)
     chk("v13 settled floor never above the settled slack", one(300, age=4000, now=95.0, obs=95.0), 5)
