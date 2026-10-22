@@ -118,7 +118,12 @@ module dsdv_idx_txm_n32 #(
     // (read latency +1: rd valid one edge later, the consumer pipeline in dsdv_idx_tx_n32 follows RDL); WDL = 1 lands
     // the write port (we/wa/wd/mask) in a kept register per bank next to its macro (write +1 edge).
     parameter integer RDL = 0,
-    parameter integer WDL = 0
+    parameter integer WDL = 0,
+    // STW-S81c-COLLA2-TX 10-22 (TX t TT class B: one m_wd/m_wa register fed both macro columns, ~600 ps of wire to
+    // banks 6/7): WDC = 1 feeds banks >= WCB (column B) from a second, identical write-port register (we_b/wa_b/wd_b,
+    // same D, same edge); 0 cycles.
+    parameter integer WDC = 0,
+    parameter integer WCB = 5
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -128,7 +133,10 @@ module dsdv_idx_txm_n32 #(
     input  wire [$clog2(D)-1:0] wa,
     input  wire [255:0]         wd,
     input wire[255:0]wm,
-    input wire[15:0]wm_next // next value of original registered sixteen lane masks
+    input wire[15:0]wm_next, // next value of original registered sixteen lane masks
+    input  wire                 we_b,     // WDC: column-B copy of we / wa / wd (same values, same edge)
+    input  wire [$clog2(D)-1:0] wa_b,
+    input  wire [255:0]         wd_b
 );
     localparam integer AW = $clog2(D);
     generate if (SRAM_MACRO) begin : g_m
@@ -150,12 +158,15 @@ module dsdv_idx_txm_n32 #(
                 end
             end
             wire we_m; wire [9:0] wa_m; wire [255:0] wd_m;
+            wire we_c = (WDC != 0 && b >= WCB) ? we_b : we;
+            wire [AW-1:0] wa_c = (WDC != 0 && b >= WCB) ? wa_b : wa;
+            wire [255:0] wd_c = (WDC != 0 && b >= WCB) ? wd_b : wd;
             if (WDL != 0) begin : g_wl
                 (* keep = "true" *) reg we_l; (* keep = "true" *) reg [9:0] wa_l; (* keep = "true" *) reg [255:0] wd_l;
-                always @(posedge ck) begin we_l <= we && (NB == 1 || wa[AW-1:10] == b); wa_l <= wa[9:0]; wd_l <= wd; end
+                always @(posedge ck) begin we_l <= we_c && (NB == 1 || wa_c[AW-1:10] == b); wa_l <= wa_c[9:0]; wd_l <= wd_c; end
                 assign we_m = we_l; assign wa_m = wa_l; assign wd_m = wd_l;
             end else begin : g_w0
-                assign we_m = we && (NB == 1 || wa[AW-1:10] == b); assign wa_m = wa[9:0]; assign wd_m = wd;
+                assign we_m = we_c && (NB == 1 || wa_c[AW-1:10] == b); assign wa_m = wa_c[9:0]; assign wd_m = wd_c;
             end
             wire [255:0] q_raw;
             ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
@@ -226,7 +237,9 @@ module dsdv_idx_tx_n32 #(
     parameter bit SRAM_MACRO = 0,
     parameter integer MUT = 0,
     parameter integer RDL = 0,      // STW-S81c-COLLA 10-22: score-store read capture at the macro pins (+1 lookup edge)
-    parameter integer WDL = 0       // score-store write landing per bank (+1 write edge)
+    parameter integer WDL = 0,      // score-store write landing per bank (+1 write edge)
+    parameter integer WDC = 0,      // STW-S81c-COLLA2-TX 10-22: column-B copy of the score-store write port (0 cycles)
+    parameter integer SCS = 0       // STW-S81c-COLLA2-TX 10-22: grid-slot count compare carry-selected off slot_q (0 cycles)
 ) (
     input  wire          ck,
     input  wire          rst,       // active low (as dsdv_idx_tx / the bk_sel rst_n)
@@ -305,16 +318,29 @@ module dsdv_idx_tx_n32 #(
     // score-store write port: free-running data / address / mask (used only with m_we), m_we = a BEAT part 1
     reg         m_we; reg [AW-1:0] m_wa; reg [255:0] m_wd, m_wm;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) m_we <= 1'b0; else m_we <= c_v && c_p1;
-    always @(posedge ck) begin : g_mw
+    reg  [255:0] m_wd_d;
+    always @* begin : g_mwd
         integer l_, c_; reg [31:0] x_;
-        m_wa <= AW'(c_cur[19:4]);
-        m_wm <= (MUT == 4) ? {256{1'b1}} : lvmask(vi_r[35:20]);
         for (c_ = 0; c_ < 8; c_ = c_ + 1) begin
             x_ = 32'd0;
             for (l_ = 0; l_ < 4; l_ = l_ + 1) x_ = x_ | (hs[l_][32 * c_ +: 32] & {32{shs[8 * l_ + c_]}});
-            m_wd[32 * c_ +: 32] <= x_;
+            m_wd_d[32 * c_ +: 32] = x_;
         end
     end
+    always @(posedge ck) begin : g_mw
+        m_wa <= AW'(c_cur[19:4]);
+        m_wm <= (MUT == 4) ? {256{1'b1}} : lvmask(vi_r[35:20]);
+        m_wd <= m_wd_d;
+    end
+    // WDC: column-B write port = kept copies of m_we / m_wa / m_wd (same D, same reset, same edge)
+    wire m_we_b; wire [AW-1:0] m_wa_b; wire [255:0] m_wd_b;
+    generate if (WDC != 0) begin : g_wdc
+        dsdv_tx_copy #(.W(1),.RESET(1),.ID(8100))u_we(.ck(ck),.rn(rl[0]),.d(c_v && c_p1),.q(m_we_b));
+        dsdv_tx_copy #(.W(AW),.ID(8101))u_wa(.ck(ck),.rn(1'b1),.d(AW'(c_cur[19:4])),.q(m_wa_b));
+        dsdv_tx_copy #(.W(256),.ID(8102))u_wd(.ck(ck),.rn(1'b1),.d(m_wd_d),.q(m_wd_b));
+    end else begin : g_wdc0
+        assign m_we_b = m_we; assign m_wa_b = m_wa; assign m_wd_b = m_wd;
+    end endgenerate
     wire cap_unal = c_v && c_p1 && c_cur[3:0] != 4'd0;
 
     // ------------------------------------------------------------------ job fields (CTL on vo), kept-copy enables
@@ -382,8 +408,9 @@ module dsdv_idx_tx_n32 #(
         if(lk_go)lvl_next[ne]=1'b0;
     end
     wire [255:0] m_rd;
-    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
-        .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]));
+    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
+        .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]),
+        .we_b(m_we_b), .wa_b(m_wa_b), .wd_b(m_wd_b));
     localparam integer LP = 2 + ((RDL != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
     reg  [LP-1:0] lp_v; reg [19:0] lp_i [0:LP-1];
     reg  [35:0] rf [0:7];
@@ -484,6 +511,7 @@ module dsdv_idx_tx_n32 #(
     reg  [15:0] nx_tc; reg [2:0] nx_rc; reg [11:0] nx_sn; reg [2:0] nx_bq_n; reg [1:0] nx_bix;
     reg         nx_d_h, nx_d_buf, nx_d_rb, nx_d_em, nx_d_last; reg [19:0] nx_lcur, nx_w0c;
     reg  [15:0] nx_dly; reg [11:0] nx_sm; reg [2:0] nx_r;
+    reg  [11:0] sn_i, sn_h; reg sn_inc, nx_snlt;
     always @* begin
         nx_armed = armed; nx_busy = busy; nx_done = done; nx_in_end = in_end; nx_wv = wv; nx_act = act;
         nx_hdr_q = hdr_q; nx_fin = fin; nx_tc = tc; nx_rc = rc; nx_sn = sn; nx_bq_n = bq_n; nx_bix = bix;
@@ -495,9 +523,13 @@ module dsdv_idx_tx_n32 #(
         if(okk[10])nx_tc=0;else if(armed&&tc!=16'hffff)nx_tc=tc+16'd1;
         if(okk[11])nx_rc=0;else if(armed&&g_on&&!done)nx_rc=(rc==0)?j_r-3'd1:rc-3'd1;
         begin
-            nx_sn=(armed&&g_on&&!done&&slot_q)?sn+12'd1:sn;
-            if(okk[12])nx_sn[5:0]=6'd0;
-            if(okk[16])nx_sn[11:6]=6'd0;
+            // SCS: both candidates (sn + 1 / sn, same okk clears) and their compares against nx_sm are formed off
+            // slot_q; slot_q only selects (same values as the plain form below)
+            sn_i=sn+12'd1; sn_h=sn;
+            if(okk[12])begin sn_i[5:0]=6'd0; sn_h[5:0]=6'd0; end
+            if(okk[16])begin sn_i[11:6]=6'd0; sn_h[11:6]=6'd0; end
+            sn_inc=armed&&g_on&&!done&&slot_q;
+            nx_sn=sn_inc?sn_i:sn_h;
         end
         // staging: HDR first, else pop / flush
         if (armed && !hdr_q && !okk[8]) begin
@@ -516,7 +548,8 @@ module dsdv_idx_tx_n32 #(
         if (fin && bq_n == 3'd0 && armed && !done) begin nx_done = 1'b1; nx_busy = 1'b0; end
         // the next cycle's grid slot
         nx_dly = {ct_delay_hi?cp[84:77]:j_dly[15:8],okk[13]?cp[76:69]:j_dly[7:0]}; nx_sm = okk[14] ? cp[99:88] : j_sm; nx_r = okk[15] ? cp[87:85] : j_r;
-        nx_slot = nx_armed && nx_tc_pred >= nx_dly + ((MUT == 3) ? 16'(nx_r) : 16'd0) && nx_rc == 3'd0 && nx_sn < nx_sm && !nx_done;
+        nx_snlt = (SCS != 0) ? (sn_inc ? (sn_i < nx_sm) : (sn_h < nx_sm)) : (nx_sn < nx_sm);
+        nx_slot = nx_armed && nx_tc_pred >= nx_dly + ((MUT == 3) ? 16'(nx_r) : 16'd0) && nx_rc == 3'd0 && nx_snlt && !nx_done;
     end
     always @(posedge ck or negedge rl[1])
         if (!rl[1]) begin
