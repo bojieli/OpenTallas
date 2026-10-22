@@ -1250,14 +1250,15 @@ def exit_report(unit, t0, rc, pidfile, cg=""):
             pids.add(int(ln))
     out = []
     since = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(t0) - 5))
-    mem = ""
+    mem, done = "", set()
     for ln in journal(["-u", "earlyoom", "--since", since]):
         m = EO_MEM.match(ln)
         if m:
             mem = f"host mem avail {m[2]} %, swap free {m[3]} %"
             continue
         m = EO_RE.match(ln)
-        if m and int(m[3]) in pids:
+        if m and int(m[3]) in pids and int(m[3]) not in done:   # earlyoom re-sends SIGTERM every 10 s: one line per pid
+            done.add(int(m[3]))
             out.append(f"ot-heavy: EARLYOOM on {host} at {m[1]}: earlyoom {m[2]} pid {m[3]} {m[4]} VmRSS {int(m[5]) / 1024:.1f} GiB"
                        f" ({mem or 'host memory exhausted'}); unit {unit}, job exit {rc}.  Host-level kill, not this job's cap: "
                        f"the host was over-committed (see ot-heavy-reconcile --free inv_free_gb)")

@@ -13,6 +13,8 @@ EO = [
     "2026-10-22T14:15:44-07:00 ot-epyc5 earlyoom[1366863]: mem avail: 32268 of 1093354 MiB ( 2.95%), swap free: 13223 of 139263 MiB ( 9.50%)",
     '2026-10-22T14:15:44-07:00 ot-epyc5 earlyoom[1366863]: sending SIGTERM to process 2234736 uid 1000 "cc1plus": oom_score 988, '
     'oom_score_adj 0, VmRSS 43995 MiB, cmdline "/usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -I ."',
+    '2026-10-22T14:15:54-07:00 ot-epyc5 earlyoom[1366863]: sending SIGTERM to process 2234736 uid 1000 "cc1plus": oom_score 988, '
+    'oom_score_adj 0, VmRSS 43995 MiB, cmdline "x"',
     '2026-10-22T14:16:02-07:00 ot-epyc5 earlyoom[1366863]: sending SIGTERM to process 999 uid 1000 "cc1plus": oom_score 988, '
     'oom_score_adj 0, VmRSS 43578 MiB, cmdline "x"',
 ]
@@ -33,7 +35,8 @@ class ExitReport(unittest.TestCase):
         self.assertIn("EARLYOOM", text)
         self.assertIn("pid 2234736 cc1plus VmRSS 43.0 GiB", text)
         self.assertIn("mem avail 2.95 %", text)
-        self.assertNotIn("pid 999", text)                 # another scope's kill is not this job's
+        self.assertNotIn("pid 999", text)
+        self.assertEqual(text.count("EARLYOOM"), 1)       # repeated SIGTERMs to one pid: one line                 # another scope's kill is not this job's
 
     def test_no_kill_of_this_scope_reports_nothing(self):
         self.assertEqual(self.run_report([1, 2, 3]), "")
