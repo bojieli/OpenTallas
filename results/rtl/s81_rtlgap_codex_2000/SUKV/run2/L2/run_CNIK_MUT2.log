@@ -1,0 +1,21 @@
+SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0
+SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0
+SUKV_JOB CP kind=14 finish_edges=391 reads=256 pair_writes=64 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=2557 fault=0
+SUKV_JOB CN kind=12 finish_edges=1219 reads=74 pair_writes=96 events=48 first_event_age=244 last_event_age=273 first_event=2821 last_read=2651 fault=0
+SUKV CNN mismatch row=0 word=0 got=3e083eb8 want=3e14bca9
+SUKV CNN mismatch row=0 word=1 got=3d763ce4 want=bdd9bd18
+SUKV CNN mismatch row=0 word=2 got=be5cbe2a want=bf25be8a
+SUKV CNN mismatch row=0 word=3 got=3e22bf2e want=be0f3f07
+SUKV CNN mismatch row=0 word=4 got=bd523d31 want=3f10bf12
+SUKV CNN mismatch row=0 word=5 got=be2e3e7c want=3e673e7d
+SUKV CNN mismatch row=0 word=6 got=bd95bdbe want=be563f0c
+SUKV CNN mismatch row=0 word=7 got=bdac3e82 want=3d06bdaa
+SUKV CNN mismatch row=0 word=8 got=3d84be9e want=be523d06
+SUKV CNN mismatch row=0 word=9 got=bf1abef9 want=be6ebf09
+SUKV CNN mismatch row=0 word=10 got=3e8fbe94 want=3e4e3ecd
+SUKV CNN mismatch row=0 word=11 got=be0fbeac want=3d09bead
+SUKV_JOB IK kind=13 finish_edges=1059 reads=74 pair_writes=16 events=8 first_event_age=259 last_event_age=272 first_event=4056 last_read=3871 fault=0
+SUKV bad=256 fault=0 cycles=4854
+[4918000] %Fatal: tb_s81sl_kv_leaf_sukv.sv:116: Assertion failed in tb_s81sl_kv_leaf_sukv: SUKV FAIL
+%Error: /srv/opentallas-scratch/claude/rtlgap-sukv-1021/src/rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_kv_leaf_sukv.sv:116: Verilog $stop
+Aborting...
