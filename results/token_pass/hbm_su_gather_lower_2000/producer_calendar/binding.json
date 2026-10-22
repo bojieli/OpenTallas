@@ -1,6 +1,6 @@
 {
   "status": "PARTIAL",
-  "engine": "ot_hbm_su_indexed_scalar",
+  "engine": "ot_hbm_su_indexed_scalar_banked",
   "clock": "stream",
   "die_sha256": null,
   "source_sha256": null,
@@ -25,5 +25,61 @@
   "producer_tp": null,
   "programme_tp": 96,
   "diagnostic_selected_source_tp": 192,
-  "layer_id": 0
+  "layer_id": 0,
+  "functional_endpoint_component": {
+    "receipt_commit": "19073f245",
+    "receipt_path": "results/arch/hbm_indexed_gather_binding_2000/segmented_native/receipt.json",
+    "receipt_sha256": "8e243e4d2f29c7d61d9892bbc72b5ac2c0edcf86c4eb48bc7165e9e4e56ff8d4",
+    "source_commit": "383b0af36",
+    "profile": {
+      "read_sample": 10,
+      "write_commit": 5,
+      "starts": [
+        8,
+        40,
+        72,
+        104,
+        136,
+        168
+      ],
+      "releases": [
+        40,
+        72,
+        104,
+        136,
+        168,
+        200
+      ],
+      "minimum_release_gap": 32,
+      "first_start_minimum": 2,
+      "ownership_tail": 2,
+      "launch_pin_cycle": 908,
+      "calendar_zero_cycle": 912,
+      "local_launch_to_calendar_zero": 4,
+      "engine_start_cycles": [
+        920,
+        952,
+        984,
+        1016,
+        1048,
+        1080
+      ],
+      "engine_done_observed_cycles": [
+        951,
+        983,
+        1015,
+        1047,
+        1079,
+        1111
+      ],
+      "programme_done_observed_cycle": 1112
+    },
+    "scope": "Controlled preload component proof with actual SEGMENTED96 production address layout and 32 current native faces banks / 96 SRAMs. Whole host transport, producer readiness and physical qualification remain open.",
+    "mapping": {
+      "selector": "PASS",
+      "endpoint": "FAIL",
+      "endpoint_max_loads": 85,
+      "violating_driver_count": 3
+    }
+  }
 }

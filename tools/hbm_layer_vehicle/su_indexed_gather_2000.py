@@ -6,11 +6,20 @@ engine, real bank-port ownership, source clocks and producer leases are bound.
 """
 from __future__ import annotations
 import math
+import json
+from pathlib import Path
 
 ENGINE = 'ot_hbm_su_indexed_scalar'
+BANKED_ENGINE = 'ot_hbm_su_indexed_scalar_banked'
 SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv'
+BANKED_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar_banked.sv'
 SOURCE_REF = '865ad748e'
 APERTURE = 1 << 18
+
+
+def load_binding(path):
+    record=json.loads(Path(path).read_text())
+    return record['source_binding'] if record.get('schema')=='opentallas.hbm.gather_calendar.v1' else record
 
 
 def integer(value, name, lo=0, hi=APERTURE-1):
@@ -64,7 +73,7 @@ def lower(raw, *, tag, source_window=None, binding=None, record_start=0, placeme
     descriptor['score_limit']=hi
     base['native_gather']['logical_descriptor']=dict(descriptor)
     base['native_gather']['address_space']='logical HGI; actual producer placement not yet bound'
-    if not binding:
+    if not binding or binding.get('status')!='PASS':
         base['reasons']=['existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases']
         return base
     if placement is None:
@@ -89,8 +98,13 @@ def lower(raw, *, tag, source_window=None, binding=None, record_start=0, placeme
         if mapped!=list(range(mapped[0],mapped[0]+len(mapped))):
             base['reasons']=['runtime score window needs a contiguous producer allocation; existing VM placement is scattered']
             return base
-    if binding.get('engine')!=ENGINE or binding.get('status')!='PASS' or binding.get('clock')!='stream':
+    if binding.get('engine') not in (ENGINE,BANKED_ENGINE) or binding.get('status')!='PASS' or binding.get('clock')!='stream':
         raise ValueError('actual selected stream-clock indexed engine binding PASS required')
+    if segmented and (binding['engine']!=BANKED_ENGINE or binding['parameters'].get('NATIVE_BANKED')!=1):
+        raise ValueError('SEGMENTED96 requires actual banked implementation and NATIVE_BANKED=1')
+    base['native_gather'].update(engine=binding['engine'],
+        source=BANKED_SOURCE if binding['engine']==BANKED_ENGINE else SOURCE,
+        source_ref=binding.get('source_ref'),source_sha256=binding.get('source_sha256'))
     if binding.get('read_client')!=0 or binding.get('write_client')!=0:
         raise ValueError('selected engine requires actual RG0/WG0 ownership')
     if not binding.get('source_sha256') or not binding.get('die_sha256'):

@@ -13,7 +13,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 
-from hbm_layer_vehicle.su_indexed_gather_2000 import ENGINE,integer,phases,programme_replay
+from hbm_layer_vehicle.su_indexed_gather_2000 import BANKED_ENGINE,integer,phases,programme_replay
 
 
 def receipt(spec, root, binding):
@@ -77,16 +77,18 @@ def build(binding, ledger, requests, receipt_root):
         obligations=['No fixture output, imaged far end, model completion or cut check edge supplies producer readiness.',
                      'Whole token requires actual upstream producers and downstream consumer leases.'])
     if missing:return result
-    if binding.get('engine')!=ENGINE or binding.get('clock')!='stream':
+    if binding.get('engine')!=BANKED_ENGINE or binding.get('clock')!='stream':
         raise ValueError('actual selected stream-clock gather engine required')
     if binding.get('control_transport')!='ot_static_program_target' or binding.get('target_id')!=180:
         raise ValueError('released selected F20 gather target 180 required')
-    if binding['parameters'].get('SEGMENTED96')!=1:
+    if binding['parameters'].get('SEGMENTED96')!=1 or binding['parameters'].get('NATIVE_BANKED')!=1:
         raise ValueError('actual GSC placement requires selected SEGMENTED96 source')
     control=receipt(ledger['control_transport'],receipt_root,binding)
     if control['producer_kind']!='native_control_transport':raise ValueError('actual control transport authority required')
-    for field in ('calendar_epoch','configuration_start','launch_to_calendar_zero','ownership_release_tail','parameters','source_sha256','producer_tp','layer_id'):
+    for field in ('calendar_epoch','configuration_start','launch_to_calendar_zero','ownership_release_tail','parameters','producer_tp','layer_id'):
         if control.get(field)!=binding[field]:raise ValueError('control binding differs from hashed source receipt: '+field)
+    if control.get('engine_source_sha256')!=binding['source_sha256']:
+        raise ValueError('control transport receipt names a different selected engine source')
     profile=phases(binding['parameters']['READ_SAMPLE'],binding['parameters']['WRITE_COMMIT'])
     epoch=integer(binding['calendar_epoch'],'actual calendar epoch',0,2**31-1)
     available=integer(binding['port_free'],'actual bank ownership availability',0,2**31-1)
