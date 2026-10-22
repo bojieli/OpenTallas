@@ -1,0 +1,77 @@
+{
+  "source_commit": "15d4a3ed4",
+  "functional_unit": "oth-ubuntu-1624884-1792646203",
+  "mapping_unit": "oth-ubuntu-3462442-1792646203",
+  "host": "ot-gold2",
+  "positive": {
+    "authentic_cases": 18,
+    "masked_checks": 144,
+    "six_row_bundles": 3
+  },
+  "mutants": {
+    "index": 18,
+    "address": 18,
+    "phase": 18
+  },
+  "profile": {
+    "read_sample": 10,
+    "write_commit": 5,
+    "starts": [
+      8,
+      40,
+      72,
+      104,
+      136,
+      168
+    ],
+    "releases": [
+      40,
+      72,
+      104,
+      136,
+      168,
+      200
+    ],
+    "minimum_release_gap": 32,
+    "first_start_minimum": 2,
+    "ownership_tail": 2,
+    "launch_pin_cycle": 908,
+    "calendar_zero_cycle": 912,
+    "local_launch_to_calendar_zero": 4,
+    "engine_start_cycles": [
+      920,
+      952,
+      984,
+      1016,
+      1048,
+      1080
+    ],
+    "engine_done_observed_cycles": [
+      951,
+      983,
+      1015,
+      1047,
+      1079,
+      1111
+    ],
+    "programme_done_observed_cycle": 1112
+  },
+  "mapping": {
+    "state": "Synthesis completed, census Python dependency transport being corrected; no fanout verdict yet"
+  },
+  "scope": "Controlled preload component proof with actual SEGMENTED96 production address layout and 32 current native faces banks / 96 SRAMs. Whole host transport, producer readiness and physical qualification remain open.",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar_banked.sv": "1cce661d44f1030e2ea65b743403297f89cd954a6be90eb2cf4349ba5751322f",
+    "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar_f20.sv": "3c1c86986082906cd7203afc6b7258bb03c8f9ddcb9ff8f0ded140a4f7e787b2",
+    "rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv": "6750075cfe31656e9681aec40e20f554ed1a4c26462f07fee9fafaa49a7ca1ee",
+    "rtl/hbm_accel/generic/adapters/static_su/gather/run_f20.sh": "e9dfda31e03b13c006739e90dbbc5e781715710c43254aef2c8f3472fab55cc8",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "349db1cdc38df45240d4c4d522249ae7378d4d92575191116d0d63dc14e40477",
+    "tools/hbm_static/bind_indexed_gather.py": "6a3d22a10e2f6a9d502ce1f602b1e9d6df53d8fceca52b5d569ec67edc41eb2c"
+  },
+  "default_target_regression": {
+    "unit": "oth-ubuntu-3605833-1792646351",
+    "host": "ot-gold1",
+    "result": "PASS",
+    "scope": "Existing actual two 1024x256 SRAM install/readiness benchmark, default target parameters"
+  }
+}
