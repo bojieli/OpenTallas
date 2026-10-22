@@ -90,30 +90,79 @@ proc ot_gf_launch {start} {
   return $launch
 }
 set ::ot_gf_pending {}
+set ::ot_gf_groups {}
 proc ot_gf_bound {start target bound} {
-  # Constraints are applied here; the finite-path proof runs once all are applied (ot_gf_verify). Interleaving
-  # set_*_delay with find_timing_paths re-searched the whole design per crossing (O(N^2): ~13-50 crossings/min, a
-  # 12.8k-bit storage FIFO leaf ~15 h in synth_odb, HKV-HRADM 10-19).
+  # Every actual crossing is classified (and refused) by its caller exactly as before; here it is only recorded.
+  # Exceptions are applied once per BUS in ot_gf_verify: one set_max/min_delay -from {launches} -to {targets} per
+  # (bound, launch FIFO, launch role) group, never one per bit.  ~25.8k point-to-point exceptions (hdie_svg_rel8e/f,
+  # ~100 bit-sliced FIFOs) stalled synth_odb >5 h in the per-pair proof under that many exceptions (STEWARD-HBM 10-21).
+  # (Earlier: interleaving set_*_delay with find_timing_paths was O(N^2), HKV-HRADM 10-19.)
   set launch [ot_gf_launch $start]
-  set_max_delay -ignore_clock_latency $bound -from $launch -to $target
-  set_min_delay -ignore_clock_latency 0.0 -from $launch -to $target
-  lappend ::ot_gf_pending [list $launch $target [get_full_name $start] [get_full_name $target]]
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set role port
+  } else {
+    set role [lrange [ot_gf_role $launch] 0 1]
+  }
+  set key [list $bound $role]
+  set ln [get_full_name $launch]; set tn [get_full_name $target]
+  dict set ::ot_gf_groups $key launches $ln $launch
+  dict set ::ot_gf_groups $key targets $tn $target
+  lappend ::ot_gf_pending [list $key $ln $tn [get_full_name $start]]
 }
 proc ot_gf_verify {} {
+  # (1) a bus exception covers the launch x target product; it may cover only pairs of its own bound.  Every actual
+  # cross-family path into a register D / async pin was enumerated by the caller, so an actual pair (L,T) whose own
+  # group differs from another group holding both L and T would receive a second bound: refused.
+  set lg {}; set tg {}
+  dict for {key g} $::ot_gf_groups {
+    foreach n [dict keys [dict get $g launches]] {dict lappend lg $n $key}
+    foreach n [dict keys [dict get $g targets]] {dict lappend tg $n $key}
+  }
   foreach item $::ot_gf_pending {
-    lassign $item launch target sname tname
-    foreach kind {max min} {
-      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-        puts "OT_GF PATH_DEFERRED $sname -> $tname $kind (strict at sign-off)"
-        continue
-      }
-      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-        error "OT_GF: missing finite bounded $kind path $sname -> $tname"
+    lassign $item key ln tn sname
+    foreach k [dict get $lg $ln] {
+      if {$k ne $key && [lsearch -exact [dict get $tg $tn] $k] >= 0 && [lindex $k 0] != [lindex $key 0]} {
+        error "OT_GF: bus exception [lrange $k 1 end] (bound [lindex $k 0]) would also cover $sname -> $tn (bound [lindex $key 0])"
       }
     }
   }
+  # (2) apply one max/min exception per bus
+  dict for {key g} $::ot_gf_groups {
+    set bound [lindex $key 0]
+    set from [dict values [dict get $g launches]]; set to [dict values [dict get $g targets]]
+    set_max_delay -ignore_clock_latency $bound -from $from -to $to
+    set_min_delay -ignore_clock_latency 0.0 -from $from -to $to
+    puts "OT_GF BUS [lrange $key 1 end] bound $bound launches [llength $from] targets [llength $to]"
+  }
+  # (3) finite-path proof per bus: every bounded target endpoint has a finite max and min path from its bus
+  set want {}
+  foreach item $::ot_gf_pending {
+    lassign $item key ln tn sname
+    dict set want $key $tn $sname
+  }
+  set deferred 0
+  dict for {key g} $::ot_gf_groups {
+    set from [dict values [dict get $g launches]]; set to [dict values [dict get $g targets]]
+    set n [expr {[llength $to] + 1}]
+    foreach kind {max min} {
+      set got {}
+      foreach path [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count $n -endpoint_path_count 1] {
+        if {[ot_ce_finite [get_property $path slack]]} {dict set got [get_full_name [get_property $path endpoint]] 1}
+      }
+      dict for {tn sname} [dict get $want $key] {
+        if {[dict exists $got $tn]} continue
+        if {[info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+          puts "OT_GF PATH_DEFERRED $sname -> $tn $kind (strict at sign-off)"
+          incr deferred
+          continue
+        }
+        error "OT_GF: missing finite bounded $kind path $sname -> $tn"
+      }
+    }
+  }
+  puts "OT_GF BUSES [dict size $::ot_gf_groups] pairs [llength $::ot_gf_pending] deferred $deferred"
   set ::ot_gf_pending {}
+  set ::ot_gf_groups {}
 }
 proc ot_gf_crossing {start pin source target source_domain target_domain} {
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {
