@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hcoll_gq_issue_k14r_1021",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T01:45:00-07:00",
+ "gate_commit": "1a1b7d8a4",
+ "checklist": {
+  "lattice": "8 p192 SRAMs on 43.2 lattice, two 4-high stacks, ~49 um channels",
+  "std_cell_band": "central std band, density <=~0.6, no hotspot",
+  "pin_spread": "pins spread on all faces",
+  "clock_entry": "CTS pin-flop spread TT 60.5 / FF 54.1 ps; 31.5k sinks one root (guidance)",
+  "shape": "475x562 near-square, fill 32%"
+ },
+ "notes": "COORD 10-22 01:45 APPROVED k14r (H.STA.BLK.3 gq_issue FB); TT-place reg->reg -125.8 QA2 class to be settled by route; first CLOSED of k14r/k14y/k15b binds",
+ "geometry_sha256": "c769592cfab04675f101fd9d2214c6af8a78ff74a4f1cab9a9c13671e32656e7"
+}
