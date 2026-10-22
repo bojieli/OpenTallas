@@ -1,0 +1,98 @@
+{
+  "scope": "production face using local bank source3; REGIONAL=0 HARD=1, V5.050",
+  "remote_unit": "oth-ubuntu-797067-1792641631",
+  "status": "PASS",
+  "profiles": [
+    {
+      "profile": "p",
+      "payload_latency_edges": 56,
+      "positive_phase_cases": 2,
+      "words_per_direction_per_phase": 240,
+      "causal_mutants_rejected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "profile": "r",
+      "payload_latency_edges": 56,
+      "positive_phase_cases": 2,
+      "words_per_direction_per_phase": 240,
+      "causal_mutants_rejected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "profile": "s0",
+      "payload_latency_edges": 381,
+      "positive_phase_cases": 2,
+      "words_per_direction_per_phase": 240,
+      "causal_mutants_rejected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "profile": "s2",
+      "payload_latency_edges": 381,
+      "positive_phase_cases": 2,
+      "words_per_direction_per_phase": 240,
+      "causal_mutants_rejected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "profile": "s1",
+      "payload_latency_edges": 381,
+      "positive_phase_cases": 2,
+      "words_per_direction_per_phase": 240,
+      "causal_mutants_rejected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "profile": "s1k2",
+      "payload_latency_edges": 383,
+      "positive_phase_cases": 2,
+      "words_per_direction_per_phase": 240,
+      "causal_mutants_rejected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "source_hashes": "source_hashes_full.json"
+}
