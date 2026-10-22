@@ -75,8 +75,14 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  wire desc_wr_ready,desc_rd_valid,desc_rd_ready,desc_ov,desc_un;
  wire [DW-1:0] desc_data;
  wire desc_wr_reset,desc_rd_reset;
- ot_hbm_svc_local_and2 u_dwrreset(.a(s_rst[2]),.b(1'b1),.y(desc_wr_reset));
- ot_hbm_svc_local_and2 u_drdreset(.a(h_rst[1]),.b(1'b1),.y(desc_rd_reset));
+ // HBMc/TILES 10-22 (native census: the constant-input AND is transparent, and the 19 slices' identical both_reset ANDs
+ // were merged into one 80-pin driver): per-group KEPT reset leaves (ot_rst_fanout, release +1 edge, boot only) give
+ // each group of <= 4 slices its own distinct both_reset.
+ localparam integer DRG=5;
+ wire [DRG-1:0] dwr_leaf,drd_leaf;
+ ot_rst_fanout #(.N(DRG)) u_dwr_leaf(.clk(stream_clk),.rst_n_in(s_rst[2]),.rst_n(dwr_leaf));
+ ot_rst_fanout #(.N(DRG)) u_drd_leaf(.clk(hbm_clk),.rst_n_in(h_rst[1]),.rst_n(drd_leaf));
+ assign desc_wr_reset=dwr_leaf[0];assign desc_rd_reset=drd_leaf[0];
  assign reserve_ready=sc[0]&&!allocated[reserve_bank]&&desc_wr_ready&&!fault;
  wire reserve_fire=reserve_v&&reserve_ready&&descriptor_ok;
  // HBM-COLLECT11 2026-10-21 (rel8e, COORDINATOR DECISION 2): the descriptor FIFO is DSN BIT-SLICED instances of the
@@ -98,9 +104,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  generate for(ds=0;ds<DSN;ds=ds+1)begin:dsl
   localparam integer W=(ds==DSN-1)?(DW-DSW*(DSN-1)):DSW;
   ot_hbm_svc_async_fifo #(.WIDTH(W),.DEPTH(4)) u_descriptor(
-   .wr_clk(stream_clk),.wr_rst_n(desc_wr_reset),.wr_valid(reserve_fire&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
+   .wr_clk(stream_clk),.wr_rst_n(dwr_leaf[ds/4]),.wr_valid(reserve_fire&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
    .wr_data(desc_wd[ds*DSW+:W]),.wr_overflow(ds_ov[ds]),
-   .rd_clk(hbm_clk),.rd_rst_n(desc_rd_reset),.rd_valid(ds_rd_valid[ds]),.rd_ready(desc_rd_ready&&drq_k[ds]),
+   .rd_clk(hbm_clk),.rd_rst_n(drd_leaf[ds/4]),.rd_valid(ds_rd_valid[ds]),.rd_ready(desc_rd_ready&&drq_k[ds]),
    .rd_data(desc_data[ds*DSW+:W]),.rd_underflow(ds_un[ds]));
  end endgenerate
  assign fault=stream_fault||hbf2||desc_ov||(|bank_fault);

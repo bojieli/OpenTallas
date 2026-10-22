@@ -39,7 +39,10 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  // on exactly the same edges, its binary pointers stay equal to every other's, and the heads of all instances are the
  // same entry whenever packet_v.  wr_overflow / rd_underflow (OR-reduced) stay 0 by construction.  Per-instance push /
  // pop enables carry their own KEPT qualifier flop (wq_k / cq_k), so no shared fire node fans out to 57 pointer sets.
- localparam integer RSW=5,RSN=(IW+RSW-1)/RSW;
+ // HBMc/TILES 10-22 (native census): RSW 5 -> 3 (285 = 95 x 3).  ABC builds each 8-deep read mux as sum-of-products, so
+ // the address MSB rd_bin[2] reaches every (entry, bit) term: 8 x 5 = 40 (+gray) loads at RSW 5 (349 violations, 33-44);
+ // at RSW 3 it is 24 + gray.  Same reviewed FIFO module, only WIDTH differs (as rel8e's 5).
+ localparam integer RSW=3,RSN=(IW+RSW-1)/RSW;
  initial if(RSN*RSW!=IW)$fatal(1,"landing_bank_h: IW must be RSN x RSW");
  wire packet_v,packet_take,underflow;wire [IW-1:0] packet;
  wire [RSN-1:0] rs_wr_ready,rs_rd_valid,rs_ov,rs_un;
