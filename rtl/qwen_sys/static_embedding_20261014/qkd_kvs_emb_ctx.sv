@@ -103,6 +103,7 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
       else if(OVL)begin
         if(ovl_adm_done&&i_ctx[98]&&i_ctx[91:88]==12&&head_rx_user!=i_ctx[44:43])ovl_fault<=1;
         if(ovl_adm_done&&d2d__emb_tx_slot[0]&&emb_tx_user!=tep[1:0])ovl_fault<=1;
+        if(kvn_ctx_fault)ovl_fault<=1;   // SQ-KATTN2 10-21: registered (gate: i_kvn_fault N -> emb_fault E 527 um unregistered); sticky source, +1 edge
       end
-    assign emb_fault = cf | jf | rf | (OVL&&(ovl_fault|kvn_ctx_fault));
+    assign emb_fault = cf | jf | rf | (OVL&&ovl_fault);
 endmodule

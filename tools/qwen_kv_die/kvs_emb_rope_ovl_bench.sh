@@ -14,7 +14,7 @@ case $m in
  1) sed -i "s/rope_count<=16'(ROPE_DELAY-2)/rope_count<=16'(ROPE_DELAY-3)/" "$out/qkd_kvs_emb_ctx.sv";;
  2) sed -i "s/18'd151936+{8'd0,accepted_owner/18'd151935+{8'd0,accepted_owner/" "$out/qkd_kvs_emb_ctx.sv";;
  3) sed -i "s/head_rx_user!=i_ctx\[44:43\])ovl_fault<=1/1'b0)ovl_fault<=1/" "$out/qkd_kvs_emb_ctx.sv";;
- 4) sed -i "s/(ovl_fault|kvn_ctx_fault)/(ovl_fault)/" "$out/qkd_kvs_emb_ctx.sv";;
+ 4) sed -i "s/if(kvn_ctx_fault)ovl_fault<=1;//" "$out/qkd_kvs_emb_ctx.sv";;
  5) sed -i "s/\.ctx_v(i_ctx\[98\]&&(!OVL||ovl_adm_done))/.ctx_v(i_ctx[98])/; s/\.ctx_observed_v(i_ctx\[97\]&&(!OVL||ovl_adm_done))/.ctx_observed_v(i_ctx[97])/" "$out/qkd_kvs_emb_ctx.sv";;
 esac
 awk '/^module qkd_kvs_emb_rope_ovl /,/^endmodule/' rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_rope_ovl.sv > "$out/qkd_kvs_emb_rope_ovl.sv"
