@@ -59,8 +59,42 @@
     "route_edges": 5,
     "sample_to_packet_edges": 10,
     "preceding_drive_to_packet_cycles": 11,
-    "physical_status": "Source owner reports native5 MAIN and fallback mapped census PASS on db8c16103: max32, zero violations,78725 roots. Geometry/CTS remain active; no physical closure/adoption.",
-    "selected_die_status": "new converter and route remain candidate only"
+    "physical_status": "Exact native5 summaries committed86a8d9acc: MAIN/fallback census PASS max32/zero violations/78725 roots. Pin, functional-pin and storage contracts not evaluated by census. Geometry/CTS live; no physical closure/adoption.",
+    "selected_die_status": "new converter and route remain candidate only",
+    "native_census_evidence": [
+      {
+        "commit": "86a8d9acc",
+        "path": "results/rtl/hbm_dma_load_static_1021/native_v5_pass/m5_summary.json",
+        "summary_sha256": "263b6bf5ff080d555c4431dc0c60dadebd28af94bfeba16c43499614c4c6fce2",
+        "full_census_sha256": "e896c9d0bf0acdcb7749a5117162bcfa7d778600915480ba38c1b93a2b921c51",
+        "status": "PASS",
+        "max_dynamic_loads": 32,
+        "roots_examined": 78725,
+        "mapped_area_um2": 21988.07136,
+        "sequential_area_um2": 5969.6352,
+        "not_evaluated": [
+          "functional_pin_contract",
+          "pin_registration_contract",
+          "storage_contract"
+        ]
+      },
+      {
+        "commit": "86a8d9acc",
+        "path": "results/rtl/hbm_dma_load_static_1021/native_v5_pass/b5_summary.json",
+        "summary_sha256": "75643e26aaf94098f2ee9ed41a4be1f963c6d6c83fe7cf0eb6e8b32298b16f10",
+        "full_census_sha256": "568d27ee15219a842673dd42b75b8204f4a1a4c212eb6cf41f427fc5cace8596",
+        "status": "PASS",
+        "max_dynamic_loads": 32,
+        "roots_examined": 78725,
+        "mapped_area_um2": 21988.07136,
+        "sequential_area_um2": 5969.6352,
+        "not_evaluated": [
+          "functional_pin_contract",
+          "pin_registration_contract",
+          "storage_contract"
+        ]
+      }
+    ]
   },
   "remaining_lowering_gaps": [
     "six SU route.gather records: runtime indexed address and real placed score window",
