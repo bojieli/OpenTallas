@@ -1,0 +1,23 @@
+{
+  "main": {
+    "source": "9d4d786ea",
+    "status": "PASS",
+    "comparisons": 12796,
+    "cycles": 4000,
+    "first_token_added_edges": 21,
+    "causal_pending": true
+  },
+  "fallback_original": {
+    "source": "e8a4ce865",
+    "status": "FAIL",
+    "mismatches": 16773,
+    "first_token_added_edges": 36,
+    "cause": "Reference gout delay buffer had 32 entries; required index 35 was out of bounds."
+  },
+  "repair": {
+    "source": "e7adbd0c3",
+    "hardware_changed": false,
+    "change": "Reference delay buffer and shift loop use DG depth.",
+    "rerun": "codex-smh-r7-frame-sizefix-2220-1021"
+  }
+}

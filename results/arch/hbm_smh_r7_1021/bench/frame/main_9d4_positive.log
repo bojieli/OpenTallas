@@ -1,0 +1,10 @@
+R7_FIRST_TOKEN lane=0 old_cycle=93 new_cycle=114 required_added_edges=21
+R7_FIRST_TOKEN lane=1 old_cycle=80 new_cycle=101 required_added_edges=21
+R7_FIRST_TOKEN lane=2 old_cycle=47 new_cycle=68 required_added_edges=21
+R7_FIRST_TOKEN lane=3 old_cycle=47 new_cycle=68 required_added_edges=21
+R7_FRAME_ACTIVITY bdc_out=1989 qk_out=1214 pv_events=223 publications=6823 pv_inputs=0
+R7_FRAME_LOCKSTEP PASS VAR=0 HMUT=0 compared=12796 cycles=4000 warm=800 added_gout_edges=21 ATTN=13
+- rtl/hbm_accel/sm/repack/h2a7/tb_ot_hbm_smh_rp7_frame.sv:133: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 10.482 s; speed 381.597 ns/s
+- Verilator: cpu 9.404 s on 1 threads; allocated 25 MB
