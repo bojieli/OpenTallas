@@ -97,21 +97,19 @@
   {
    "name": "sw",
    "insts": [
-    "u_fj",
-    "u_issuer",
     "u_up*",
     "u_va*",
     "u_control",
     "u_qc*",
     "u_qo*",
-    "u_link*",
+    "u_arg",
     "u_ariter",
     "u_rdc",
     "u_rdl*"
    ],
    "centre": [
-    430,
-    440
+    450,
+    640
    ]
   },
   {
@@ -120,8 +118,8 @@
     "u_writer"
    ],
    "centre": [
-    980,
-    640
+    80,
+    780
    ]
   },
   {
@@ -132,8 +130,29 @@
     "u_radd*"
    ],
    "centre": [
-    930,
-    200
+    250,
+    1080
+   ]
+  },
+  {
+   "name": "hd",
+   "insts": [
+    "u_fj",
+    "u_issuer"
+   ],
+   "centre": [
+    1250,
+    600
+   ]
+  },
+  {
+   "name": "lk",
+   "insts": [
+    "u_link*"
+   ],
+   "centre": [
+    500,
+    110
    ]
   }
  ],
@@ -149,12 +168,18 @@
  },
  "loose": [
   "ring_fault",
-  "writer_fault"
+  "writer_fault",
+  "protocol_fault",
+  "capture_fault",
+  "select_fault",
+  "unavailable_fault",
+  "link_abort",
+  "reduce_fault"
  ],
  "sticky_outputs": {
-  "fault": 8,
-  "fault_cause": 8,
-  "hgi_fault": 8
+  "fault": 12,
+  "fault_cause": 12,
+  "hgi_fault": 12
  },
  "D": 4,
  "E": 2,
@@ -173,12 +198,46 @@
  "qid_wr_note": "TW-HBM-COLLP 10-19: qid_wr = the VM-writer region's copy of the quadrant identity strap (W face beside ck_wr / u_writer.sid; die ties it to the same constant as qid). One sw-owned qid fed u_writer.sid (kit OT_MULTI_ROOT: input qid has wrong domain for u_writer); a strap is case-analysed, never landed.",
  "out_regs": {
   "isa_ring": 1,
-  "isa_lp_data": 2
+  "isa_lp_data": 2,
+  "del_valid": 1,
+  "del_flit": 1,
+  "hgi_del_obase": 1,
+  "inj_rd": 1,
+  "inj_idx": 1,
+  "hgi_inj_addr": 1,
+  "vm_rq": 1,
+  "stat_cycles": 1
  },
  "out_regs_note": "TW2-COLLP 10-19: isa_lp_data = rc_d was a port -> port pass-through (SU -> gather master hcollgi_<q>); the landed standard / OT_MULTI_ROOT refuse an output with no region flop (lpk5 gate floorplan FAIL 'output isa_lp_data[0] has wrong or unregistered source domain rc_d[0]'). Registered on ck_sw (+1 edge); isa_ring gets the same +1 because hcollgi captures isa_ring and isa_lp_data on the same edge (ring-A merge register). COMPILER: every ISA ring-A command and its rc_d take effect 3 edges later than on v5 (was +2 on v8g); rc_* / SU bundle timing unchanged.",
  "in_regs": {
   "rc_v": 1,
-  "rc_tag": 1
+  "rc_tag": 1,
+  "inj_d": 1,
+  "vm_rr": 1
  },
- "in_regs_note": "COLLQ3 10-19: rc_v / rc_tag (SU -> COLL reduce-complete strobe + tag) were a combinational pin -> u_control path up to 540 um (ar128 gate textbook wire_reach REFUSE). One pin register in sw at the S face under u_control (pin x ~254 um, flop -> u_control rc pin ~324 um < 405). COMPILER: the die presents rc_v / rc_tag ONE edge earlier relative to every other COLL input (record input_port_offset_edges rc_* = other inputs - 1); rc_d / isa_lp_data unchanged. rc_d keeps the bundle: rc_d -> isa_lp_data gets out_regs 2 (was 1) so the SU rc bundle (rc_v, rc_tag, rc_d) is presented together, one edge earlier than the other COLL inputs, and isa_ring / isa_lp_data still leave on the SAME edge (hcollgi ring-A merge register; record output offsets isa_ring = isa_lp_data)."
+ "in_regs_note": "COLLQ3 10-19: rc_v / rc_tag (SU -> COLL reduce-complete strobe + tag) were a combinational pin -> u_control path up to 540 um (ar128 gate textbook wire_reach REFUSE). One pin register in sw at the S face under u_control (pin x ~254 um, flop -> u_control rc pin ~324 um < 405). COMPILER: the die presents rc_v / rc_tag ONE edge earlier relative to every other COLL input (record input_port_offset_edges rc_* = other inputs - 1); rc_d / isa_lp_data unchanged. rc_d keeps the bundle: rc_d -> isa_lp_data gets out_regs 2 (was 1) so the SU rc bundle (rc_v, rc_tag, rc_d) is presented together, one edge earlier than the other COLL inputs, and isa_ring / isa_lp_data still leave on the SAME edge (hcollgi ring-A merge register; record output offsets isa_ring = isa_lp_data).",
+ "lag_pins": [
+  {
+   "inst": "u_qc2",
+   "pins": [
+    "src_v",
+    "src_d"
+   ],
+   "why": "HBMb/COLL-LP 10-21: link0 rx (region lk) -> its capture slot (sw): the sw->lk->sw node loop (crossbar -> link wr / link rx -> capture) is broken here; the rx frame reaches the capture lag edges later = a longer die-to-die link latency the compiler schedules (record compiler lag)"
+  },
+  {
+   "inst": "u_fj",
+   "pins": [
+    "arg_capture_slot",
+    "tkm_start",
+    "tkm_del_slot",
+    "tkm_dest_v"
+   ],
+   "why": "HBMb/COLL-LP 10-21: SOLO-0 fj misuse checks (compiled arg capture / tkm start / tkm delivery reservations that this quadrant must never issue): fault-only status inputs from sw into region hd; one common lag, they only ever raise the sticky fault / fault_cause"
+  }
+ ],
+ "in_regs_note_1021": "HBMb/COLL-LP 10-21: pin registers (SAFE item 1/2) on the far port buses of the 1.5 mm parent: inj_d (response, 1,024 b), vm_rr (2,056 b) -- each port presented 1 edge earlier (record input_port_offset_edges).",
+ "out_regs_note_1021": "HBMb/COLL-LP 10-21: one region register on every far output bus (delivery bundle del_valid/del_flit/hgi_del_obase, inj request inj_rd/inj_idx/hgi_inj_addr, vm_rq, stat_cycles) so each bundle stays aligned (+1 edge each, record output offsets).",
+ "regions_note_1021": "HBMb/COLL-LP 10-21 (reach model scratch/hbmb-coll-lp/reach.py, child LEFs): one sw region holding issuer 518x432, 2 x link_e1 475x173, fj and the 28-child crossbar leaves 550-1250 um direct child/port wires in every floorplan (textbook wire_reach REFUSE > 500). Regions hd = {fj, issuer} (fj<->issuer loop stays inside) and lk = {links} are LANDED: issuer -> up / control / ports +3, sw -> link +3, link rx -> capture = lag pins; child faults -> fj loose (sticky status).",
+ "clock_ports_note_1021": "new region clock ports ck_hd / ck_lk (die drops one clock per region, neighbour-matched)"
 }

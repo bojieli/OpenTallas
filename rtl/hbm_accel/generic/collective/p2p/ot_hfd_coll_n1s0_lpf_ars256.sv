@@ -114,8 +114,6 @@ module ot_hfd_coll_n1s0_lpf_ars256(
  wire reduce_out_v,reduce_fault;wire [544:0] reduce_out_data;wire [7:0] reduce_fault_cause;
  wire [0:0] link_rx_v,link_abort;wire [544:0] link_rx_data;wire [10:0] link_cause;
  wire [7:0] capture_fault;wire [17:0] select_fault,unavailable_fault;wire ring_fault,writer_fault;
- wire [7:0] source_v={reduce_out_v,vm_assembled_v[3],vm_assembled_v[2],vm_assembled_v[1],vm_assembled_v[0],link_rx_v[0],inj_source_v[1],inj_source_v[0]};
- wire [4359:0] source_d={reduce_out_data,{vm_source_meta[99+:33],vm_assembled[1536+:512]},{vm_source_meta[66+:33],vm_assembled[1024+:512]},{vm_source_meta[33+:33],vm_assembled[512+:512]},{vm_source_meta[0+:33],vm_assembled[0+:512]},link_rx_data[0+:545],{inj_source_meta[33+:33],inj_d[512+:512]},{inj_source_meta[0+:33],inj_d[0+:512]}};
  wire [7:0] capture_calendar=p_capture_slot[7:0];
  ot_hgi_coll_ctl_v5_n1s0 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_ctl),
   .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(busy_d2),.issue_done(issue_done),.tkm_done(1'b0),.tkm_busy(1'b0),
@@ -162,14 +160,14 @@ module ot_hfd_coll_n1s0_lpf_ars256(
   .add_valid(rd_add_valid),.pub_a(rd_pub_a),.pub_b(rd_pub_b),.wb(rd_wb),.wb_tag(rd_wb_tag),.wb_n(rd_wb_n),.wb_tag_n(rd_wb_tag_n),
   .out_v(reduce_out_v),.out_flit(reduce_out_data),.fault(reduce_fault),.fault_cause(reduce_fault_cause));
  wire [4359:0] captured;wire [7:0] captured_slot;
- ot_hgi_coll_qslots_capture_pin_v2 u_qc0(.clk(clk_qslots[0]),.rst_n(rst_n),.src_v(source_v[0]),.capture_slot(capture_calendar[0]),.src_d(source_d[0+:545]),.captured(captured[0+:545]),.captured_slot(captured_slot[0]),.fault(capture_fault[0]));
- ot_hgi_coll_qslots_capture_pin_v2 u_qc1(.clk(clk_qslots[1]),.rst_n(rst_n),.src_v(source_v[1]),.capture_slot(capture_calendar[1]),.src_d(source_d[545+:545]),.captured(captured[545+:545]),.captured_slot(captured_slot[1]),.fault(capture_fault[1]));
- ot_hgi_coll_qslots_capture_pin_v2 u_qc2(.clk(clk_qslots[2]),.rst_n(rst_n),.src_v(source_v[2]),.capture_slot(capture_calendar[2]),.src_d(source_d[1090+:545]),.captured(captured[1090+:545]),.captured_slot(captured_slot[2]),.fault(capture_fault[2]));
- ot_hgi_coll_qslots_capture_pin_v2 u_qc3(.clk(clk_qslots[3]),.rst_n(rst_n),.src_v(source_v[3]),.capture_slot(capture_calendar[3]),.src_d(source_d[1635+:545]),.captured(captured[1635+:545]),.captured_slot(captured_slot[3]),.fault(capture_fault[3]));
- ot_hgi_coll_qslots_capture_pin_v2 u_qc4(.clk(clk_qslots[4]),.rst_n(rst_n),.src_v(source_v[4]),.capture_slot(capture_calendar[4]),.src_d(source_d[2180+:545]),.captured(captured[2180+:545]),.captured_slot(captured_slot[4]),.fault(capture_fault[4]));
- ot_hgi_coll_qslots_capture_pin_v2 u_qc5(.clk(clk_qslots[5]),.rst_n(rst_n),.src_v(source_v[5]),.capture_slot(capture_calendar[5]),.src_d(source_d[2725+:545]),.captured(captured[2725+:545]),.captured_slot(captured_slot[5]),.fault(capture_fault[5]));
- ot_hgi_coll_qslots_capture_pin_v2 u_qc6(.clk(clk_qslots[6]),.rst_n(rst_n),.src_v(source_v[6]),.capture_slot(capture_calendar[6]),.src_d(source_d[3270+:545]),.captured(captured[3270+:545]),.captured_slot(captured_slot[6]),.fault(capture_fault[6]));
- ot_hgi_coll_qslots_capture_pin_v2 u_qc7(.clk(clk_qslots[7]),.rst_n(rst_n),.src_v(source_v[7]),.capture_slot(capture_calendar[7]),.src_d(source_d[3815+:545]),.captured(captured[3815+:545]),.captured_slot(captured_slot[7]),.fault(capture_fault[7]));
+ ot_hgi_coll_qslots_capture_pin_v2 u_qc0(.clk(clk_qslots[0]),.rst_n(rst_n),.src_v(inj_source_v[0]),.capture_slot(capture_calendar[0]),.src_d({inj_source_meta[0+:33],inj_d[0+:512]}),.captured(captured[0+:545]),.captured_slot(captured_slot[0]),.fault(capture_fault[0]));
+ ot_hgi_coll_qslots_capture_pin_v2 u_qc1(.clk(clk_qslots[1]),.rst_n(rst_n),.src_v(inj_source_v[1]),.capture_slot(capture_calendar[1]),.src_d({inj_source_meta[33+:33],inj_d[512+:512]}),.captured(captured[545+:545]),.captured_slot(captured_slot[1]),.fault(capture_fault[1]));
+ ot_hgi_coll_qslots_capture_pin_v2 u_qc2(.clk(clk_qslots[2]),.rst_n(rst_n),.src_v(link_rx_v[0]),.capture_slot(capture_calendar[2]),.src_d(link_rx_data[0+:545]),.captured(captured[1090+:545]),.captured_slot(captured_slot[2]),.fault(capture_fault[2]));
+ ot_hgi_coll_qslots_capture_pin_v2 u_qc3(.clk(clk_qslots[3]),.rst_n(rst_n),.src_v(vm_assembled_v[0]),.capture_slot(capture_calendar[3]),.src_d({vm_source_meta[0+:33],vm_assembled[0+:512]}),.captured(captured[1635+:545]),.captured_slot(captured_slot[3]),.fault(capture_fault[3]));
+ ot_hgi_coll_qslots_capture_pin_v2 u_qc4(.clk(clk_qslots[4]),.rst_n(rst_n),.src_v(vm_assembled_v[1]),.capture_slot(capture_calendar[4]),.src_d({vm_source_meta[33+:33],vm_assembled[512+:512]}),.captured(captured[2180+:545]),.captured_slot(captured_slot[4]),.fault(capture_fault[4]));
+ ot_hgi_coll_qslots_capture_pin_v2 u_qc5(.clk(clk_qslots[5]),.rst_n(rst_n),.src_v(vm_assembled_v[2]),.capture_slot(capture_calendar[5]),.src_d({vm_source_meta[66+:33],vm_assembled[1024+:512]}),.captured(captured[2725+:545]),.captured_slot(captured_slot[5]),.fault(capture_fault[5]));
+ ot_hgi_coll_qslots_capture_pin_v2 u_qc6(.clk(clk_qslots[6]),.rst_n(rst_n),.src_v(vm_assembled_v[3]),.capture_slot(capture_calendar[6]),.src_d({vm_source_meta[99+:33],vm_assembled[1536+:512]}),.captured(captured[3270+:545]),.captured_slot(captured_slot[6]),.fault(capture_fault[6]));
+ ot_hgi_coll_qslots_capture_pin_v2 u_qc7(.clk(clk_qslots[7]),.rst_n(rst_n),.src_v(reduce_out_v),.capture_slot(capture_calendar[7]),.src_d(reduce_out_data),.captured(captured[3815+:545]),.captured_slot(captured_slot[7]),.fault(capture_fault[7]));
  wire [255:0] qo_w0={captured[3815+:32],captured[3270+:32],captured[2725+:32],captured[2180+:32],captured[1635+:32],captured[1090+:32],captured[545+:32],captured[0+:32]};wire [447:0] qo_r0;wire [13:0] qo_v0;
  ot_hgi_coll_qso_n1s0_b32 u_qo0(.clk(clk_qslots[8]),.rst_n(rst_n),.captured(qo_w0),.captured_slot(captured_slot),.sink_slot(p_sink_slot[13:0]),.sink_select(p_sink_select[55:0]),.dst_v(qo_v0),.dst_d(qo_r0),.select_fault(select_fault[0]),.unavailable_fault(unavailable_fault[0]));
  wire [255:0] qo_w1={captured[3847+:32],captured[3302+:32],captured[2757+:32],captured[2212+:32],captured[1667+:32],captured[1122+:32],captured[577+:32],captured[32+:32]};wire [447:0] qo_r1;wire [13:0] qo_v1;

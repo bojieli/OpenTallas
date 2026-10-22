@@ -3,8 +3,10 @@
 set ot_lp_per [get_property [get_clocks core_clk] period]
 create_clock -name ck_wr -period $ot_lp_per [get_ports ck_wr]
 create_clock -name ck_rg -period $ot_lp_per [get_ports ck_rg]
-set_clock_uncertainty -setup 60 [get_clocks {ck_wr ck_rg}]
-set_clock_uncertainty -hold 25 [get_clocks {ck_wr ck_rg}]
+create_clock -name ck_hd -period $ot_lp_per [get_ports ck_hd]
+create_clock -name ck_lk -period $ot_lp_per [get_ports ck_lk]
+set_clock_uncertainty -setup 60 [get_clocks {ck_wr ck_rg ck_hd ck_lk}]
+set_clock_uncertainty -hold 25 [get_clocks {ck_wr ck_rg ck_hd ck_lk}]
 # 1-bit reset runs sw -> every region: single-cycle with the 60-ps die residual on top of 60 / 25
 set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_wr]
 set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_wr]
@@ -14,8 +16,16 @@ set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_
 set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_rg]
 set_clock_uncertainty -setup 120 -from [get_clocks ck_rg] -to [get_clocks core_clk]
 set_clock_uncertainty -hold 85 -from [get_clocks ck_rg] -to [get_clocks core_clk]
-# 12 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 2 -hold 3, window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup
-set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11}
+set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_hd]
+set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_hd]
+set_clock_uncertainty -setup 120 -from [get_clocks ck_hd] -to [get_clocks core_clk]
+set_clock_uncertainty -hold 85 -from [get_clocks ck_hd] -to [get_clocks core_clk]
+set_clock_uncertainty -setup 120 -from [get_clocks core_clk] -to [get_clocks ck_lk]
+set_clock_uncertainty -hold 85 -from [get_clocks core_clk] -to [get_clocks ck_lk]
+set_clock_uncertainty -setup 120 -from [get_clocks ck_lk] -to [get_clocks core_clk]
+set_clock_uncertainty -hold 85 -from [get_clocks ck_lk] -to [get_clocks core_clk]
+# 41 landings (LANDING-CONTRACT L5): ring -> read multicycle -setup 2 -hold 3, window (2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup
+set ot_lp_lands {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40}
 set ot_lp_miss 0
 foreach ot_ln $ot_lp_lands {
   set ot_lf [get_cells -quiet u_lpl_${ot_ln}_w.*]
@@ -27,9 +37,30 @@ foreach ot_ln $ot_lp_lands {
   set_multicycle_path -hold 3 -from $ot_lf -to $ot_lt
 }
 puts "OT_LP_LAND_SDC [expr {[llength $ot_lp_lands] - $ot_lp_miss}] of [llength $ot_lp_lands] landings constrained"
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {cfg_v}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {cfg_target[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {cfg_addr[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {cfg_data[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {desc_v}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {desc_base[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {desc_limit[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {desc_loops[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {launch_v}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {program_configured}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {program_init_busy}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {program_fault}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {hgi_busy}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {hgi_done}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {hgi_fault}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_rg [get_ports {rr_v}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_rg [get_ports {rr_tag[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_rg [get_ports {rr_d[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_lk [get_ports {phy_up[*]}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_lk [get_ports {tx_pin_v[*]}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_lk [get_ports {tx_pin_flit[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_lk [get_ports {rx_pin_v[*]}]
+set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_lk [get_ports {rx_pin_flit[*]}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_lk [get_ports {retry_requested[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_rg [get_ports {pr_cw_i[*]}]
 set_input_delay [expr {0.2 * $ot_lp_per}] -clock ck_rg [get_ports {pr_ccw_i[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_rg [get_ports {pr_cw_o[*]}]
@@ -69,7 +100,10 @@ set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_rg [get_ports {ag_src[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_rg [get_ports {ag_tag[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_rg [get_ports {ag_d[*]}]
 set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_wr [get_ports {vm_kq[*]}]
-if {!$::ot_ref_pre_cts} { set_propagated_clock [get_clocks {ck_wr ck_rg}] }
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {fault}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {fault_cause[*]}]
+set_output_delay [expr {0.2 * $ot_lp_per}] -clock ck_hd [get_ports {done}]
+if {!$::ot_ref_pre_cts} { set_propagated_clock [get_clocks {ck_wr ck_rg ck_hd ck_lk}] }
 set_case_analysis 0 [get_ports {qid[*]}]   ;# identity strap
 set_case_analysis 0 [get_ports {qid_rg[*]}]   ;# identity strap
 set_case_analysis 0 [get_ports {qid_wr[*]}]   ;# identity strap

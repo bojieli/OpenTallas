@@ -569,6 +569,8 @@ class Parent:
             if p not in self.ports or self.ports[p]["dir"] != "in" or k < 1 or p in self.ck | self.static | {self.rst}:
                 raise SystemExit(f"in_regs {p}: not a data input port of {self.S['top']} or stages {k} < 1")
             rr = {self.region[i] for n, i, _ in rd if n == p}
+            if not rr:      # HBMb/COLL-LP 10-21: a port read only through wires-only assigns (bus concatenations)
+                rr = {self.region[i] for n, i, _ in rd if f"port:{p}" in drv.get(n, set())}
             if len(rr) != 1:
                 raise SystemExit(f"in_regs {p}: readers in regions {sorted(rr)} (one region: the pin register sits there)")
             if p in self.loose:
@@ -595,7 +597,7 @@ class Parent:
             if landed and n in self.loose:
                 lands[key]["loose"] = True
             for d in ds:
-                ir = iregs.get(n, 0) if d == f"port:{n}" else 0
+                ir = iregs.get(d[5:], 0) if d.startswith("port:") else 0    # direct or through assigns
                 (loose if n in self.loose else edges).append((d, inst, n, (self.A if landed else 0) + ir, landed, pin))
         oregs = {k: int(v) for k, v in (self.S.get("out_regs") or {}).items()}
         for p, k in oregs.items():
@@ -804,12 +806,24 @@ class Parent:
             pos = ins["span"][1]
         keep.append(body[pos:])
         oregs = P.get("oregs") or {}
+        # in_regs ports read only through wires-only assigns (no direct child pin): the body reads <p>__i everywhere
+        direct_rd = {n for n, _, _ in P["rd"]}
+        iregs_ind = {p: k for p, k in (P.get("iregs") or {}).items() if p not in direct_rd}
         def oren(txt):      # out_regs ports: the flat body drives <p>__o; the region register drives the port
             for p in oregs:
                 txt = re.sub(rf"(?<![\w$.]){re.escape(p)}\b", f"{p}__o", txt)
+            for p in iregs_ind:
+                txt = re.sub(rf"(?<![\w$.]){re.escape(p)}\b", f"{p}__i", txt)
             return txt
         for p in sorted(oregs):         # declared before the flat body that drives them
             w(f"    wire {self.ports[p]['range'] or ''} {p}__o;   // out_regs: flat driver of {p}")
+        for p, k in sorted(iregs_ind.items()):
+            rng = self.ports[p]["range"]
+            reg_r = self.region[next(i for n, i, _ in P["rd"] if f"port:{p}" in P["drv"].get(n, set()))]
+            w(f"    // ---- INPUT PIN REGISTER {p}: +{k} edge(s) in region {reg_r} (in_regs through wires-only assigns; the "
+              f"port is presented {k} edge(s) earlier than its region's other inputs)")
+            w(f"    wire {rng or ''} {p}__i;  ot_pl_pad #(.W({width_text(rng)}), .N({k})) u_lpi_{p} (.ck(ck_{reg_r}), "
+              f".d({p}), .q({p}__i));")
         for chunk in keep:
             for line in oren(chunk).splitlines():
                 if line.strip():
@@ -875,6 +889,8 @@ class Parent:
                 sub[(rp.split(".")[0], net)] = out
         # input pin registers (in_regs): one u_lpi_<port> in the readers' region; every reader takes its output
         for p, k in sorted((P.get("iregs") or {}).items()):
+            if p not in {n for n, _, _ in P["rd"]}:
+                continue                # emitted before the body (through assigns)
             rng = self.ports[p]["range"]
             reg_r = self.region[next(i for n, i, _ in P["rd"] if n == p)]
             w(f"    // ---- INPUT PIN REGISTER {p}: +{k} edge(s) in region {reg_r} (in_regs; the port is presented {k} edge(s) "
@@ -1098,7 +1114,7 @@ class Parent:
                             "depth + t(c)"),
             flops=dict(landing=flops_land, pads=flops_pad, reset=flops_rst, **({"out_regs": flops_oreg} if flops_oreg else {}),
                        **({"in_regs": flops_ireg} if flops_ireg else {})),
-            **({"in_regs": [dict(port=p, stages=k, region=self.region[next(i for n, i, _ in P["rd"] if n == p)],
+            **({"in_regs": [dict(port=p, stages=k, region=self.region[next(i for n, i, _ in P["rd"] if n == p or f"port:{p}" in P["drv"].get(n, set()))],
                                  inst=f"u_lpi_{p}") for p, k in sorted(P["iregs"].items())]} if P.get("iregs") else {}),
             **({"out_regs": [dict(port=p, stages=k, region=P["nreg"][f"port:{p}"], inst=f"u_lpo_{p}")
                              for p, k in sorted(P["oregs"].items())]} if P.get("oregs") else {}),

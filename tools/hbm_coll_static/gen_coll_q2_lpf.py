@@ -231,8 +231,13 @@ def flat(v="q2", ar=False, rows=64, suffix="", safe=False) -> str:
         w(" wire arg_out_v,arg_fault;wire [544:0] arg_out_data;")
         sv += ["arg_out_v"]
         sd += ["arg_out_data"]
-    w(f" wire [{NS - 1}:0] source_v=" + cat(sv) + ";")
-    w(f" wire [{NS * PWT - 1}:0] source_d=" + cat(sd) + ";")
+    # HBMb/COLL-LP 10-21: the ROWS-256 parents read each capture slot's source directly (no source_v / source_d bundle):
+    # the bundle mixed child outputs of different landed regions (link rx in region lk, the rest in sw), and lp.py
+    # lands per net.  Pure wiring: every capture pin carries the same bits as before (EQ unchanged by construction).
+    direct = rows == 256
+    if not direct:
+        w(f" wire [{NS - 1}:0] source_v=" + cat(sv) + ";")
+        w(f" wire [{NS * PWT - 1}:0] source_d=" + cat(sd) + ";")
     if SOLO:
         w(f" wire [{NS - 1}:0] capture_calendar={{p_ring[82],p_capture_slot[{NPT + 6}:0]}};")
     else:
@@ -301,8 +306,9 @@ def flat(v="q2", ar=False, rows=64, suffix="", safe=False) -> str:
     # qslots capture
     w(f" wire [{NS * PWT - 1}:0] captured;wire [{NS - 1}:0] captured_slot;")
     for s in range(NS):
-        w(f" ot_hgi_coll_qslots_capture_pin_v2 u_qc{s}(.clk(clk_qslots[{s}]),.rst_n(rst_n),.src_v(source_v[{s}]),"
-          f".capture_slot(capture_calendar[{s}]),.src_d(source_d[{s * PWT}+:{PWT}]),.captured(captured[{s * PWT}+:{PWT}]),"
+        srcv, srcd = (sv[s], sd[s]) if direct else (f"source_v[{s}]", f"source_d[{s * PWT}+:{PWT}]")
+        w(f" ot_hgi_coll_qslots_capture_pin_v2 u_qc{s}(.clk(clk_qslots[{s}]),.rst_n(rst_n),.src_v({srcv}),"
+          f".capture_slot(capture_calendar[{s}]),.src_d({srcd}),.captured(captured[{s * PWT}+:{PWT}]),"
           f".captured_slot(captured_slot[{s}]),.fault(capture_fault[{s}]));")
     # qslots switch slices
     dbits = [None] * (ND * PWT)
