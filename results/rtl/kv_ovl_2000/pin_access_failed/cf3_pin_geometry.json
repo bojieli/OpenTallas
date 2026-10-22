@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "FAIL",
+ "fails": [
+  {
+   "check": "pin_track",
+   "msg": "3410 signal/clock pins have no full min-width landing on any actual preferred routing track (att_rx_beat[0]: M5 [181.116, 0.0, 181.14, 0.084]; att_rx_beat[1]: M5 [181.308, 0.0, 181.332, 0.084]; att_rx_beat[2]: M5 [181.548, 0.0, 181.572, 0.084]): correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant"
+  }
+ ],
+ "metrics": {
+  "signal_clock_pins": 4896,
+  "pin_rectangles": 4896,
+  "pin_track_checked": 4896,
+  "pin_track_inaccessible": 3410,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "/srv/opentallas-scratch/claude/ref_gate/qkd_d2d_static_ovl_sfm3_cf3-20261021-220641/routes/gate/work/orfs/gate_dump.json",
+ "dump_sha256": "4ba321e906371a58c4d1b60f2c13264eb215050bda58041ba5b8cac72f053d95",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}
