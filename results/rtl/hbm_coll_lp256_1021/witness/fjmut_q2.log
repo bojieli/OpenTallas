@@ -1,0 +1,14 @@
+ot-run: ot-epyc7       admits   146 GB (avail 523, growth 421, headroom 0, waiters 0/0 GB) load 73/96 running 29 disk 4523 GB 
+ot-run: -> ot-epyc7
+ot-heavy: request 40G is charged 13G (class 'run_coll_lp_ars_all.sh:q#' measured peak 4.1G, n=4+0 proved); the cap stays 40G
+ot-heavy: waiting for memory on ot-epyc7: need 0.7 x 13 = 9 GB, admissible -35 GB: available 523 GB, growth charged 548 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 528 GB at x1), young 233 GB, floor 50 GB; class 'run_coll_lp_ars_all.sh:q#' measured peak 4.1G, n=4+0 proved
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3005511-1792632916 after 83 s
+Verilator 5.050 2026-07-01 rev v5.050
+m_lastale EQ_MISMATCH port=program_configured cyc=2551
+m_lastale EQ_MISMATCH port=program_fault cyc=2551
+m_lastale EQ_MISMATCH port=program_configured cyc=2552
+m_lastale EQ_MISMATCH port=program_fault cyc=2552
+EQ_MUTANT m_lastale REJECTED
+COLL_LP_ARS_FJMUT rejected=1/1
+COLL_LP_ARS_FJMUT_EXIT 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3005511-1792632916): exit 1

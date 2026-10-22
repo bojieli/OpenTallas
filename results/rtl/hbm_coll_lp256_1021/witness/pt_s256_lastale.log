@@ -1,0 +1,17 @@
+ot-run: ot-epyc7       admits   146 GB (avail 523, growth 421, headroom 0, waiters 0/0 GB) load 73/96 running 29 disk 4523 GB 
+ot-run: -> ot-epyc7
+ot-heavy: waiting for memory on ot-epyc7: need 0.7 x 16 = 11 GB, admissible 3 GB: available 523 GB, growth charged 521 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 501 GB at x1), young 233 GB, floor 50 GB
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3005497-1792632916 after 83 s
+Verilator 5.050 2026-07-01 rev v5.050
+PT_S256_MISMATCH cyc 1381 ref cfg 0000000000 st 0 spc 193 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 193 conf 0 ib 0 f 1
+PT_S256_MISMATCH cyc 1382 ref cfg 0000000000 st 0 spc 193 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 193 conf 0 ib 0 f 1
+PT_S256_MISMATCH cyc 1383 ref cfg 0000000000 st 0 spc 193 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 193 conf 0 ib 0 f 1
+PT_S256_MISMATCH cyc 1384 ref cfg 0000000000 st 0 spc 193 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 193 conf 0 ib 0 f 1
+PT_S256_MISMATCH cyc 1385 ref cfg 0000000000 st 1 spc 193 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 193 conf 0 ib 0 f 1
+PT_S256_MISMATCH cyc 1386 ref cfg 0000000000 st 0 spc 193 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 193 conf 0 ib 0 f 1
+PT_S256_MISMATCH cyc 1387 ref cfg 0000000000 st 0 spc 193 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 193 conf 0 ib 0 f 1
+PT_S256_MISMATCH cyc 1388 ref cfg 0000000000 st 0 spc 193 conf 1 ib 0 f 0 | dut cfg 0000000000 st 0 spc 193 conf 0 ib 0 f 1
+PT_S256_COVER episodes 3000 cycles 1322478 faults 2674 configured 299 starts 384 fwd_frames 4
+PT_S256_MITER FAIL mismatches 7932
+PT_S256_MUTANT lastale REJECTED
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3005497-1792632916): exit 1

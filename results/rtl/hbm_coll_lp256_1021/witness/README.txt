@@ -1,0 +1,1 @@
+sources: fjmut/pt on claude/hbm-coll-lp256-1021 @3ce04e821 (src_3ce04e821 on ot-epyc7), EQ on @6f117bc34 (same RTL except s256 mutant define names); Verilator 5.050 ot-epyc7; leaves RC 32 then (RC 40 since: identical copies, function unchanged)

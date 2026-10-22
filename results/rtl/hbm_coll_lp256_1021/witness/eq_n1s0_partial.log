@@ -1,0 +1,13 @@
+ot-run: ot-epyc7       admits   283 GB (avail 560, growth 361, headroom 0, waiters 0/0 GB) load 52/96 running 25 disk 4526 GB 
+ot-run: -> ot-epyc7
+ot-heavy: request 40G is charged 12G (class 'run_coll_lp_ars_all.sh:n#s#' measured peak 4.0G, n=1+0 proved); the cap stays 40G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2983538-1792632843 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+eq LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=8 rr_v_cycles=2045 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0204
+eq LPF_EQ PASS compared=104736 cycles=3294 stimulus=n1s0ar_v5prog_vm_writer_ring_random
+EQ PASS
+m_refnostep LP_ACTIVITY del_valid_cycles=8 vm_kq_changes=8 rr_v_cycles=2045 tx_v_cycles=0 ariter_step_cycles=48 fault=1 cause=0204
+m_refnostep LPF_EQ FAIL mismatches=2 of 104736 stimulus=n1s0ar_v5prog_vm_writer_ring_random
+EQ_MUTANT m_refnostep REJECTED
+EQ_MUTANT m_leafedge REJECTED
+EQ_MUTANT m_rlaneext REJECTED

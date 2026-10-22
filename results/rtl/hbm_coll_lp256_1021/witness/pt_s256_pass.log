@@ -1,0 +1,8 @@
+ot-run: ot-epyc7       admits   146 GB (avail 523, growth 421, headroom 0, waiters 0/0 GB) load 73/96 running 29 disk 4523 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3005483-1792632916 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+PT_S256_COVER episodes 3000 cycles 1322478 faults 2674 configured 299 starts 384 fwd_frames 4
+PT_S256_MITER PASS checks 1322478
+PT_S256_EXIT 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3005483-1792632916): exit 0
