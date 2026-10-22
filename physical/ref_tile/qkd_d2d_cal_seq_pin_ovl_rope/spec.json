@@ -102,18 +102,15 @@
   "io_hold_margin_ns": 0.03
  },
  "job": {
-  "owner": "Codex:KV-DCAL-OVL-CODEX",
-  "branch": "codex/kv-dcal-ovl-1019",
-  "tag": "ovlbc3",
-  "purpose": "KV overlap sequencer with two hard list ROMs and registered single boot/runtime configuration producer. Shared codec2 release image and 4-user start-list frame; preserves bootcfg runtime SEG2/SEG1 switches and sticky fault checks. Exact TX/RX/user outputs at EP_SKEW3; no credits/backpressure.",
+  "owner": "Claude:SQC-KDIE4",
+  "branch": "claude/sqc-kdie4-ovl-1022",
+  "tag": "ovlr1",
+  "purpose": "K.STA.DCAL.OVL (RoPE OVL list player, SQC-KDIE4 10-22): qkd_d2d_cal_seq_pin_ovl_bc (CLOSED ovlbc3) geometry, two hard list ROMs, RoPE OVL wrapper (ovl_release_rope). PATHFINDING image (pathfinding_only.json): final route after the GEN-aged corrected pair compile.",
   "extra_paths": [
    "rtl/qwen_sys/d2d_static_20261015",
-   "rtl/test/qwen_split/tb_kv_dcal_ovl_bc.sv",
-   "tools/qwen_static_kv/run_dcal_ovl_bc.sh",
    "physical/asap7_memory_macros/ot_rom_4096x72_m8",
-   "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc",
-   "results/rtl/kv_dcal_ovl_codex_1019",
-   "physical/common_flow/macro_channel_block.tcl"
+   "physical/common_flow/macro_channel_block.tcl",
+   "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_rope"
   ],
   "benches": [
    {
@@ -200,8 +197,8 @@
     "fail_witness": "results/rtl/kv_dcal_ovl_codex_1019/run_m6.log"
    }
   ],
-  "views_to": "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc/views",
-  "record_to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_ovl_bc"
+  "views_to": "physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_rope/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_cal_seq_pin_ovl_rope"
  },
  "recipe": 3,
  "pin_reg_split": true,
