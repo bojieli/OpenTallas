@@ -1,0 +1,27 @@
+lint_receipt: reviewed_gray_fifos hbm_wbk_native_1340_pp_pipe: lint ran on ot-epyc9 (3013 s); receipt /srv/opentallas-scratch/claude/hbmb-idxsu-gflint-1021/src_rv/physical/ref_tile/hbm_wbk_native_1340_pp_pipe/lint_receipt.json (commit it with the kit)
+REF_TILE WARN clock_span: 777.6 x 518.4 um: one clock root over > 600 um -> split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+REF_TILE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it) -> pass --area-um2 / std_area_um2 from the synthesis smoke
+REF_TILE kit physical/ref_tile/hbm_wbk_native_1340_pp_pipe outline 777.6 x 518.4 um (spec outline (exact: the closed view's sub-slot)); job hbm_wbk_native_1340_pp_pipe-q8c-451867fe3
+	Command being timed: "python3 tools/ref_tile/ref_tile.py gen tools/hbm_static/wbk_native_1340/spec.json --commit 451867fe3"
+	User time (seconds): 2998.70
+	System time (seconds): 50.53
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 50:20.94
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4856992
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 144
+	Minor (reclaiming a frame) page faults: 11391453
+	Voluntary context switches: 179308
+	Involuntary context switches: 60426
+	Swaps: 0
+	File system inputs: 32728
+	File system outputs: 80248
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

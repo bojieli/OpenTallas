@@ -1,0 +1,70 @@
+{
+  "source": "451867fe3",
+  "rtl_sha256": "46eec0c5467c7a26810f48e6865094eb944ad1ab8f54a6ea02d02075fc6c088e",
+  "gen": {
+    "rc": 0,
+    "wall_seconds": 3020.94,
+    "peak_rss_kib": 4856992
+  },
+  "cases": {
+    "wbq_w": {
+      "verdict": "PASS",
+      "sha256": "8f7b5fb1e44ec3c2434b98b6829ead5359c88e1d9d391f41208756b0ba9a02c2"
+    },
+    "wbq_e": {
+      "verdict": "PASS",
+      "sha256": "fb2ff79efa61e378c33c956672950f38a8f113f0716a0e64a072243c5acb46fa"
+    },
+    "wbq_e_wopen": {
+      "verdict": "PASS",
+      "sha256": "13cbb9390c9f993bc6d053566f26085becf11b504ef4281714fb102e10e509bb"
+    },
+    "wbq_mut_pp": {
+      "verdict": "EXPECTED_REJECTION",
+      "sha256": "825141a153a39fd1777251aa5658961fd04ffd35e0ce324a33943d8678f9e930"
+    },
+    "wbq_mut_quad": {
+      "verdict": "EXPECTED_REJECTION",
+      "sha256": "9549d804ec9b65fe3b36611e5a75023d6dd6723d94d7434ccf0b631a28829981"
+    },
+    "wbq_mut_commit": {
+      "verdict": "EXPECTED_REJECTION",
+      "sha256": "6ca488bf416cac06b2badbd777f13615597a54d7ff0468dd0ceaad2e8af04b44"
+    },
+    "wbq_mut_ksaddr": {
+      "verdict": "EXPECTED_REJECTION",
+      "sha256": "dece5334f54e1fb8ad1804d74c5bfc58655966e16a7b70b3cc77c4833d3a886e"
+    },
+    "wbq_mut_slice": {
+      "verdict": "EXPECTED_REJECTION",
+      "sha256": "f75435f21f70b712f1900bb828a2c13fb441a2a1a207c27db57f9ac2f392072f"
+    },
+    "wbq_mut_premature": {
+      "verdict": "EXPECTED_REJECTION",
+      "sha256": "6fabaee4faa37a1cfae14675efc64b89a63fbb424c32e903ce64513a190816dd"
+    },
+    "wbq_mut_span": {
+      "verdict": "EXPECTED_REJECTION",
+      "sha256": "4d79e5faf9c8031647dd47d01fed3ad05163b18db8c28df946045442dcafd4ff"
+    },
+    "wbq_mut_lock": {
+      "verdict": "EXPECTED_REJECTION",
+      "sha256": "bd91c0b0ecc348a7b7d520b37c5a6a18260d6472cc2ccba1e047319257bacdd6"
+    },
+    "wbq_mut_credit": {
+      "verdict": "EXPECTED_REJECTION",
+      "sha256": "a8529905ea949c4bc64c683b1169ae17bffd6651b2a8c1a1dec46c3e23dc3d19"
+    }
+  },
+  "pp_counterexample": {
+    "positive": "PASS grants9 A4 B3",
+    "M11": "EXPECTED_REJECTION unavailable expected bank granted"
+  },
+  "native": {
+    "status": "RUNNING_NO_VERDICT",
+    "host": "ot-epyc9",
+    "unit": "oth-ubuntu-698662-1792640248",
+    "root": "/srv/opentallas-scratch2/claude/codex-wbk-rv-native-2036-1021/run"
+  },
+  "physical_qualification": "OPEN; no native/layout/timing/CDC-adoption claim"
+}
