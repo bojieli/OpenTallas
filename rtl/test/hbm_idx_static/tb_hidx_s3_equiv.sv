@@ -1,0 +1,68 @@
+`timescale 1ns/1ps
+// HBM-IDX6 FAN32 lockstep equivalence bench: the FAN32 quadrant ot_hidx_s3_q / ctl ot_hidx_s3_ctl against the
+// census-failing s3 originals (ot_hidx_s3_q_ref / ot_hidx_s3_ctl_ref, fb02fa82f), cycle by cycle on EVERY output port,
+// under random control words (all ops 0..8, random pass/addr), random thresholds / ties / lines / returned streams, and
+// random mid-run resets (op 0 around them).  DMUT/CMUT apply to the NEW design only (the bench must then FAIL).
+// PASS line: "S3_EQUIV PASS ..."; any port difference prints "S3_EQUIV FAIL ..." and exits 1.
+module tb_hidx_s3_equiv;
+ parameter integer DMUT=0;        // quadrant mutant on the new design (1, 3, 5)
+ parameter integer CMUT=0;        // ctl mutant on the new design (6)
+ parameter integer CYC=200000;
+ reg clk=0;always #1 clk=~clk;
+ reg rst_n=0;
+ reg [13:0] cw;reg [15:0] thr;reg [13:0] ties;reg [591:0] in_line;
+ wire [24:0] ret_n,ret_r;wire qf_n,qf_r,sv_n,sv_r;wire [591:0] sl_n,sl_r;
+ ot_hidx_s3_q #(.DMUT(DMUT)) u_n(.clk(clk),.rst_n(rst_n),.cw(cw),.thr(thr),.ties(ties),.in_line(in_line),
+  .ret(ret_n),.qfault_o(qf_n),.selected_v_o(sv_n),.selected_line_o(sl_n));
+ ot_hidx_s3_q_ref #(.DMUT(0)) u_r(.clk(clk),.rst_n(rst_n),.cw(cw),.thr(thr),.ties(ties),.in_line(in_line),
+  .ret(ret_r),.qfault_o(qf_r),.selected_v_o(sv_r),.selected_line_o(sl_r));
+ reg [3:0] op;reg [1:0] pass;reg [7:0] addr;reg [9:0] k;
+ reg [24:0] rq[0:3];reg [3:0] qf;
+ wire [13:0] ccw_n,ccw_r;wire [15:0] cthr_n,cthr_r;wire [13:0] ct_n[0:3],ct_r[0:3];wire cf_n,cf_r;
+ ot_hidx_s3_ctl #(.DMUT(CMUT)) c_n(.clk(clk),.rst_n(rst_n),.op(op),.pass(pass),.addr(addr),.k(k),.cw(ccw_n),.thr(cthr_n),
+  .ties_0(ct_n[0]),.ties_1(ct_n[1]),.ties_2(ct_n[2]),.ties_3(ct_n[3]),.ret_0(rq[0]),.ret_1(rq[1]),.ret_2(rq[2]),.ret_3(rq[3]),
+  .qf_0(qf[0]),.qf_1(qf[1]),.qf_2(qf[2]),.qf_3(qf[3]),.fault(cf_n));
+ ot_hidx_s3_ctl_ref #(.DMUT(0)) c_r(.clk(clk),.rst_n(rst_n),.op(op),.pass(pass),.addr(addr),.k(k),.cw(ccw_r),.thr(cthr_r),
+  .ties_0(ct_r[0]),.ties_1(ct_r[1]),.ties_2(ct_r[2]),.ties_3(ct_r[3]),.ret_0(rq[0]),.ret_1(rq[1]),.ret_2(rq[2]),.ret_3(rq[3]),
+  .qf_0(qf[0]),.qf_1(qf[1]),.qf_2(qf[2]),.qf_3(qf[3]),.fault(cf_r));
+ function automatic [3:0] rop(input integer r);
+  integer x;x=r%100;
+  if(x<18)rop=0;else if(x<38)rop=2;else if(x<48)rop=4;else if(x<78)rop=6;else if(x<83)rop=1;else if(x<88)rop=3;
+  else if(x<93)rop=5;else if(x<98)rop=7;else rop=8;
+ endfunction
+ integer cyc,errs,quiet,seed,nsel,nret,ncf,nqf,nrst;
+ integer i;
+ initial begin
+  if(!$value$plusargs("seed=%d",seed))seed=1;
+  i=$urandom(seed);                     // seed the thread's generator
+  errs=0;quiet=0;nsel=0;nret=0;ncf=0;nqf=0;nrst=0;
+  cw=0;thr=0;ties=0;in_line=0;op=0;pass=0;addr=0;k=1;qf=0;for(i=0;i<4;i=i+1)rq[i]=0;
+  for(cyc=0;cyc<CYC;cyc=cyc+1)begin
+   @(negedge clk);
+   // reset: first 10 cycles, then random 6-cycle pulses with 8 quiet cycles either side
+   if(cyc<10)rst_n=0;
+   else if(cyc>20&&quiet==0&&($urandom(seed+cyc)%5000)==0)begin quiet=22;nrst=nrst+1;end
+   if(quiet>0)begin quiet=quiet-1;rst_n=!(quiet<14&&quiet>=8);end else if(cyc>=10)rst_n=1;
+   cw={8'($urandom),2'($urandom%3),(quiet>0||cyc<12)?4'd0:rop($urandom)};
+   if(($urandom%8)!=0)thr=thr;else thr=16'($urandom);
+   if(($urandom%8)==0)ties=14'($urandom%40);
+   for(i=0;i<16;i=i+1)in_line[i*37+:37]={$urandom,5'($urandom)}|37'(($urandom%3)!=0);
+   op=(quiet>0||cyc<12)?4'd0:rop($urandom);pass=2'($urandom%3);addr=8'($urandom);k=10'($urandom%600);
+   for(i=0;i<4;i=i+1)rq[i]=($urandom%4==0)?{11'($urandom),14'($urandom)}:{rq[0][24:14],14'($urandom)};
+   qf=(($urandom%200)==0)?4'($urandom):4'd0;
+   @(posedge clk);#0.1;
+   if(cyc>=12&&!(quiet>0))begin
+    if(sv_n!==sv_r||sl_n!==sl_r||ret_n!==ret_r||qf_n!==qf_r)begin
+     errs=errs+1;if(errs<=5)$display("S3_EQUIV MISMATCH quadrant cyc %0d sv %b/%b ret %h/%h qf %b/%b line_eq %b",cyc,sv_n,sv_r,ret_n,ret_r,qf_n,qf_r,sl_n===sl_r);
+    end
+    if(ccw_n!==ccw_r||cthr_n!==cthr_r||cf_n!==cf_r||ct_n[0]!==ct_r[0]||ct_n[1]!==ct_r[1]||ct_n[2]!==ct_r[2]||ct_n[3]!==ct_r[3])begin
+     errs=errs+1;if(errs<=5)$display("S3_EQUIV MISMATCH ctl cyc %0d",cyc);
+    end
+    nsel=nsel+(sv_r&&sl_r!=0);nret=nret+(ret_r[13:0]!=0);ncf=ncf+cf_r;nqf=nqf+qf_r;
+   end
+  end
+  if(errs==0)$display("S3_EQUIV PASS DMUT%0d CMUT%0d cycles %0d seed %0d resets %0d selected_lines %0d nonzero_hist_reads %0d qfault_cycles %0d",DMUT,CMUT,CYC,seed,nrst,nsel,nret,nqf);
+  else $fatal(1,"S3_EQUIV FAIL DMUT%0d CMUT%0d errors %0d",DMUT,CMUT,errs);
+  $finish;
+ end
+endmodule

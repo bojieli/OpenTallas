@@ -1,0 +1,14 @@
+bad id0 frame0
+bad id2743 frame0
+bad id2746 frame0
+bad id2749 frame0
+bad id5473 frame0
+bad id5479 frame0
+bad id5480 frame0
+IDX_SELECTOR_S3 DMUT6 MUT0 RT8 DRAIN4 frame0 checked3107 errors5191 fault1 edges877 firstsel695
+IDX_SELECTOR_S3 DMUT6 MUT0 RT8 DRAIN4 frame1 checked4380 errors12928 fault1 edges877 firstsel695
+IDX_SELECTOR_S3 DMUT6 MUT0 RT8 DRAIN4 frame2 checked10928 errors33761 fault1 edges877 firstsel695
+IDX_SELECTOR_S3 DMUT6 MUT0 RT8 DRAIN4 frame3 checked1887 errors36512 fault1 edges877 firstsel695
+[35240000] %Fatal: tb_selector_s3.sv:70: Assertion failed in tb_selector_s3: fullshape exact selector mismatch
+%Error: rtl/test/hbm_idx_static/tb_selector_s3.sv:70: Verilog $stop
+Aborting...
