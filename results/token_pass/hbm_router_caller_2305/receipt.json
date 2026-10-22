@@ -1,0 +1,45 @@
+{
+  "status": "SOURCE_BYTES_VERIFIED",
+  "observed_at": "2026-10-21T23:08:15.632847-07:00",
+  "source_document_sha256": "fecf551737f5dee73358d4ec3022a83c4dbda58fda6d74f1f8c79d0ff13850c0",
+  "layers": [
+    {
+      "layer": 0,
+      "ranks": 96,
+      "words": 384,
+      "distinct_vectors": 96,
+      "source_records_sha256": "cb5ebc2ed017b9a045e9011735c773dae67f252d76d88708d264af62663aadb2",
+      "source_operands_sha256": "a4dde40f980699650083bcc8e5e4cf8fb658924bb013d1a35e88ee4fb8dec9f9",
+      "native_model_verdict": [
+        "pass"
+      ]
+    },
+    {
+      "layer": 2,
+      "ranks": 96,
+      "words": 384,
+      "distinct_vectors": 96,
+      "source_records_sha256": "fd126f2e5045ff9573896791f4a94106c0af0b735a219811620f8feee7764279",
+      "source_operands_sha256": "925e87ada914c142849106953502889ed3332deecaf9a85c800eb5be2649e9ba",
+      "native_model_verdict": [
+        "pass"
+      ]
+    },
+    {
+      "layer": 14,
+      "ranks": 96,
+      "words": 384,
+      "distinct_vectors": 96,
+      "source_records_sha256": "ad71a5c3d91767d0ecc6467cd3c0c941e4ce03b52b4987a87ba9c2d27ef92b0a",
+      "source_operands_sha256": "e1e26e44682c62cd643624ed8376ba692f7d8c8d510abef40ce46226530d468e",
+      "native_model_verdict": [
+        "pass"
+      ]
+    }
+  ],
+  "input_role": "Actual pre-operation router A, never fixture O",
+  "hardware_native_production_qualified": false,
+  "source_producer_tp": 96,
+  "proposed_native_tp": 192,
+  "physical_embedding_qualified": false
+}
