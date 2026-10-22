@@ -406,6 +406,15 @@ def apply_dv(v, m):
         if orient.get('ucie_kv') in ('MX', 'R0'):
             fc = (fc[0], 389.1)
         uk['x'] = max(0.0, round(round((dd['x'] + fc[0] - fc[1]) / 0.216) * 0.216, 3))
+        if os.environ.get('OT_PIN_PEER_PIN', '0') == '1':
+            # SQC-QDIE4 10-22: the d2d_rom FDI pins were ASSIGNED (static_link_bind peer-pin wishes) facing the ucie_kv
+            # PHY pins at the GEN's home positions; keep that home x offset (not the old closed view's FDI centres
+            # 238.0 / 389.1), so the assigned groups stay face to face (r44: tx 117 um apart with the old constants)
+            hb_ = {i.name: i for i in m['insts']}
+            if 'd2d_rom' in hb_ and 'ucie_kv' in hb_:
+                uk['x'] = max(0.0, round(round((dd['x'] + hb_['ucie_kv'].x - hb_['d2d_rom'].x) / 0.216) * 0.216, 3))
+                print(f'PEER_PIN dv: ucie_kv x {uk["x"]} = d2d_rom x {dd["x"]} + home offset '
+                      f'{hb_["ucie_kv"].x - hb_["d2d_rom"].x:.3f}', flush=True)
         bumps = [DI[b_] for b_ in ('ckb_rom', 'rs_bump', 'bump_fwd_epoch', 'bump_fwd_lrst') if b_ in DI]
         if bumps:
             sh = max(0.0, uk['x'] + uk['w'] + 21.6 - min(d['x'] for d in bumps))
