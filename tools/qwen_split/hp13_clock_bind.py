@@ -28,6 +28,46 @@ def apply(model, buses, instances, tt_ports):
     print('HP13_CLOCK_SYMBOLS',model['hp13_clock_bind'],flush=True)
 
 
+def data_clock_owner(model, inst, port):
+    """An ABI data endpoint needs a source-bound capture/producer clock law."""
+    if inst != 'tt_ctlm' or 'hp13_clock_bind' not in model:
+        return None
+    import hashlib, json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[2]
+    proof = model.get('hp13_data_clock_proof')
+    if proof is None:
+        path = root / 'results/arch/hp13_corepub39_1021/DATA_CLOCK_OWNERS.json'
+        if not path.is_file():
+            raise ValueError('HP13 data endpoint has no source-bound clock inventory: '+str((inst,port)))
+        master = next(i.master for i in model['insts'] if i.name == inst)
+        rows = [r for r in json.loads(path.read_text()) if r['master'] == master]
+        if len(rows) != 1:
+            raise ValueError('HP13 data clock inventory selected master is unresolved: '+master)
+        proof = rows[0]
+        if hashlib.sha256((root / proof['rtl']).read_bytes()).hexdigest() != proof['rtl_sha256']:
+            raise ValueError('HP13 data clock inventory selected source differs')
+        for dependency in proof.get('source_dependencies', []):
+            if hashlib.sha256((root / dependency['rtl']).read_bytes()).hexdigest() != dependency['sha256']:
+                raise ValueError('HP13 data clock supporting source differs: '+dependency['rtl'])
+        model['hp13_data_clock_proof'] = proof
+    row = proof['ports'].get(port, {})
+    clock_port = row.get('clock_port')
+    if row.get('status') != 'PROVEN' or clock_port not in ('ck_core', 'ck_hr') or not row.get('basis'):
+        raise ValueError('HP13 data endpoint clock is unresolved: '+str((inst,port,row)))
+    model.setdefault('hp13_data_clock_uses', {})[port] = row
+    return inst, clock_port
+
+
+def defer_data(model, follower, endpoint, lane):
+    owner = data_clock_owner(model, *endpoint)
+    if owner is None:
+        return False
+    model['hp13_deferred_follow'][follower] = owner
+    model.setdefault('hp13_deferred_data', {})[follower] = dict(endpoint=list(endpoint), owner=list(owner), lane=lane)
+    return True
+
+
 def defer_fault(model, follower, owner, clock_index):
     if owner!='tt_ctlm' or 'hp13_clock_bind' not in model: return False
     bid=model['buses'][clock_index][0]
@@ -60,7 +100,11 @@ def finalize(model, per, record, by):
     for f in mapping:
         e=terminal(f);k=locations[e][0]
         if f[0] not in by:raise ValueError('HP13 follower actual instance absent: '+str(f))
-        if f[0]!='tt_ctlm' and not by[f[0]].master.startswith('qfd_fault_or_n'):
+        if f in model.get('hp13_deferred_data', {}):
+            row=model['hp13_deferred_data'][f]
+            if data_clock_owner(model, *row['endpoint']) != mapping[f] or not by[f[0]].master.startswith(('qfd_rlyh0_', 'qfd_landh0_', 'qfd_landh_', 'qfd_rlyr0_', 'qfd_rlyrl_')):
+                raise ValueError('HP13 data follower source/primitive differs: '+str(f))
+        elif f[0]!='tt_ctlm' and not by[f[0]].master.startswith('qfd_fault_or_n'):
             raise ValueError('HP13 deferred follower is not a source-proven fault primitive: '+str(f))
         if len(locations.get(f,[]))>1:raise ValueError('HP13 follower has multiple actual regions: '+str(f))
         if f not in locations:per[k].append(f);locations[f]=[k]

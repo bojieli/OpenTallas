@@ -4640,7 +4640,14 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         _lp = json.loads(Path(_os_r.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os_r.environ.get('OT_SPLIT_LAND_PLAN') else {}
         _lpE = {r_['bid']: r_ for r_ in _lp.get('links', [])}
 
-        def _fwd_clock(inst):
+        def _fwd_clock(inst, port=None):
+            from qwen_split.hp13_clock_bind import data_clock_owner
+            owner = data_clock_owner(m, inst, port)
+            if owner is not None:
+                rows = [bid for bid,pin in _ckof.get(inst, []) if pin == owner[1]]
+                if len(rows) != 1:
+                    raise ValueError('HP13 data endpoint clock symbol is absent or ambiguous: '+str((inst,port,rows)))
+                return rows[0]
             c_ = _ckof.get(inst, [])
             return next((b_ for b_, p_ in c_ if p_ == 'ck'), None) or next((b_ for b_, p_ in c_ if p_ == 'clk'), None) or \
                 (c_[0][0] if c_ else None)
@@ -4654,6 +4661,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 _pdom = json.loads(Path(_os_r.environ['OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS']).read_text()).get('port_domains', {})
             except (OSError, ValueError):
                 _pdom = {}
+
+        def _follow_fwd(follower, endpoint, lane):
+            from qwen_split.hp13_clock_bind import defer_data
+            if not defer_data(m, follower, endpoint, lane):
+                _ckf[follower] = endpoint[0]
 
         def _fwd_rst(inst, port=None):
             r_ = _rstof.get(inst, {})
@@ -4681,16 +4693,16 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if re.search(FWD_RST_RX, dp_.lstrip('*')) or re.match(r'(a?rst|rs_)', bid_) or '_rst' in bid_ or 'lrst' in bid_:
                 if not _frst:
                     return 'reset lane (stays a reset relay chain; the reset tree / calendar owns it; OT_SPLIT_FWD_LANES_RST=1 converts)'
-                if _fwd_clock(di_) is None:
+                if _fwd_clock(di_, dp_) is None:
                     return 'reset lane: sink without a clock trunk (no root for the reset-release landing)'
                 return 'RST'
             if by[si_].master in FWD_NO_ROOT_SRC:
                 if not _fbump:
                     return f'source {by[si_].master} has no clock (pad bump): no source root to forward (OT_SPLIT_FWD_LANES_BUMP=1 converts)'
-                if _fwd_clock(di_) is None or _fwd_rst(di_) is None:
+                if _fwd_clock(di_, dp_) is None or _fwd_rst(di_) is None:
                     return f'pad-bump lane: sink without clock / reset pin (dst {_fwd_rst(di_)})'
                 return 'BUMP'
-            if _fwd_clock(si_) is None or _fwd_clock(di_) is None:
+            if _fwd_clock(si_, sp_) is None or _fwd_clock(di_, dp_) is None:
                 return 'source or sink without a clock trunk'
             if _fwd_rst(si_, sp_) is None or _fwd_rst(di_, dp_) is None:
                 return f'source / sink reset pin not found (src {_fwd_rst(si_, sp_)}, dst {_fwd_rst(di_, dp_)})'
@@ -4735,7 +4747,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 k_ = ((e_ + 1) % 8) if k_ is None else int(k_)   # QK-LANDEN / RLYH0-EN: hop-0 en registered (+1, every lane)
                 if bid in fwd_eq:          # Q-COLLCAL: the bus group's E / landing MCP / total-E K
                     es_, e_, k_ = fwd_eq[bid]['E_sta'], fwd_eq[bid]['E'], fwd_eq[bid]['K']
-                fwd = dict(bid=bid, cl=cl, bits=bits, n=n_, src=si_, dst=di_, src_ck=_fwd_clock(si_), dst_ck=_fwd_clock(di_),
+                fwd = dict(bid=bid, cl=cl, bits=bits, n=n_, src=si_, dst=di_, src_ck=_fwd_clock(si_, sp_), dst_ck=_fwd_clock(di_, dp_),
                            src_rst=[si_, _fwd_rst(si_, sp_)], dst_rst=[di_, _fwd_rst(di_, dp_)], E=e_, E_sta=es_, K=k_,
                            lane={'RST': 'reset', 'BUMP': 'bump'}.get(why_, 'data'),
                            E_basis='land plan (die STA)' if bid in _lpE else 'estimate ceil((n-1)/2)+1 >= 2 (S81 p4j half-cycle fit); re-derive from the die STA',
@@ -4805,13 +4817,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 # re-registers the level on the receiving block's root (no epoch bit, no ring, no straps)
                 if kind_ == 'rlyrl':
                     ck_add.setdefault(fwd['dst_ck'], []).append((nm, 'ck'))
-                    _ckf[(nm, 'ck')] = fwd['dst']        # DIE-QWEN-GEN16: re-filed with the RECEIVER's root
+                    _follow_fwd((nm, 'ck'), eps[1], bid)        # DIE-QWEN-GEN16: re-filed with the RECEIVER's root
                     fwd['landing'] = nm
                 else:
                     if k == 0:
                         ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck'))
                         if not fwd.get('source_feed_contract'):
-                            _ckf[(nm, 'ck')] = fwd['src']    # regional source follows its sender
+                            _follow_fwd((nm, 'ck'), eps[0], bid)    # regional source follows its sender
                     else:
                         fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
                     fwd['stations'].append(nm)
@@ -4822,7 +4834,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     # released reset (attached to the source's reset net after the plan: the reset tree reaches it)
                     ck_add.setdefault(fwd['src_ck'], []).append((nm, 'ck' if kind_ == 'rlyh0' else 'ck_s'))
                     if not fwd.get('source_feed_contract'):
-                        _ckf[(nm, 'ck' if kind_ == 'rlyh0' else 'ck_s')] = fwd['src']
+                        _follow_fwd((nm, 'ck' if kind_ == 'rlyh0' else 'ck_s'), eps[0], bid)
                     fwd_attach.append((nm, 'en', *fwd['src_rst']))
                 else:
                     fck_new.append((f'fck_{bid}__h{k}', 'clock_trunk', 1, [(prev[0], 'ck_o'), (nm, 'ckf')]))
@@ -4830,7 +4842,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if kind_ in ('landh', 'landh0'):
                     # the landing reads on the RECEIVING block's root, from its regional reset; K strap from own ties
                     ck_add.setdefault(fwd['dst_ck'], []).append((nm, 'ck'))
-                    _ckf[(nm, 'ck')] = fwd['dst']        # DIE-QWEN-GEN16: the landing reads on the RECEIVER's root
+                    _follow_fwd((nm, 'ck'), eps[1], bid)        # DIE-QWEN-GEN16: the landing reads on the RECEIVER's root
                     fwd_attach.append((nm, 'rs', *fwd['dst_rst']))
                     hi_ = [(nm, f'k{b_}') for b_ in range(3) if (fwd['K'] >> b_) & 1]
                     lo_ = [(nm, f'k{b_}') for b_ in range(3) if not (fwd['K'] >> b_) & 1]
