@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       admits    34 GB (avail 327, growth 304, headroom 0, waiters 7/777 GB) load 85/128 running 33 disk 831 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg2-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg2-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg2-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg2-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg2-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-seg2-2000
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3704152-1792645642 after 1 s
+endpoint rc=0    Chip area for module '$paramod\ot_hbm_gather_return_nibble\N=s32'00000000000000000000000000001110': 3.849120
+selector rc=0    Chip area for module '\ot_hbm_su_indexed_scalar_bank_select': 101.505960
+PRE_GATE_NATIVE_CENSUS FAIL report=/out/endpoint.native.json
+NATIVE_RESULT endpoint 1
+PRE_GATE_NATIVE_CENSUS PASS report=/out/selector.native.json
+NATIVE_RESULT selector 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3704152-1792645642): exit 0
