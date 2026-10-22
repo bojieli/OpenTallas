@@ -161,6 +161,9 @@ module ot_hgi_sfu_bcast_tree4 #(parameter integer MUT_TREE=0) (   // MUT_TREE 1:
  end
  // ---- L1: one kept copy per face group q (q0 W, q3 S from A; q1 N, q2 E from B)
  wire [CW-1:0] l1 [0:7];
+ // HBMc/TILES 10-22 (k14, native census): each L1 copy's ls field fed both lanes' three 24-bit meta shifts (k12 d[464]/
+ // d[465] 39-46 loads); one KEPT same-edge ls copy per lane (same D, no reset as d) feeds that lane's shifts. Cycle-identical.
+ wire [3:0] ls1k [0:15];
  for(genvar q=0;q<8;q=q+1)begin:g_l1
   localparam integer CK=4*(q/2);
   localparam integer SRC=(q/2==0||q/2==3)?0:1;
@@ -172,6 +175,9 @@ module ot_hgi_sfu_bcast_tree4 #(parameter integer MUT_TREE=0) (   // MUT_TREE 1:
    if(!f_rst)begin emit<=1'b0;ld<=1'b0;end else begin emit<=l0[SRC][1];ld<=l0[SRC][0];end
   end
   assign l1[q]={d,emit,ld};
+  (* keep = "true" *) reg [3:0] ls_k0, ls_k1;
+  always @(posedge clk_map[CK]) begin ls_k0<=l0[SRC][2+464+:4]; ls_k1<=l0[SRC][2+464+:4]; end
+  assign ls1k[2*q]=ls_k0; assign ls1k[2*q+1]=ls_k1;
  end
  // ---- L2 (per lane pair) + L3 (per lane)
  for(genvar p=0;p<8;p=p+1)begin:g_l2
@@ -198,10 +204,10 @@ module ot_hgi_sfu_bcast_tree4 #(parameter integer MUT_TREE=0) (   // MUT_TREE 1:
      pair2[s*2]  <=(JJ[0]?t1[(s*4+0)*24+:24]:24'd0)+(JJ[1]?t1[(s*4+1)*24+:24]:24'd0);
      pair2[s*2+1]<=(JJ[2]?t1[(s*4+2)*24+:24]:24'd0)+(JJ[3]?t1[(s*4+3)*24+:24]:24'd0);
     end
-    meta2<={24'(ov1 + (24'(JJ)>>ls1) - (24'd5>>ls1)),
-            24'(iv1 + (24'(JJ)&((24'd1<<ls1)-1)) - (24'd5&((24'd1<<ls1)-1))),
-            24'(row1 + (24'(JJ)>>ls1) - (24'd5>>ls1)),
-            ls1,(lvw1<3 ? 4'd3 : lvw1)};
+    meta2<={24'(ov1 + (24'(JJ)>>ls1k[J]) - (24'd5>>ls1k[J])),
+            24'(iv1 + (24'(JJ)&((24'd1<<ls1k[J])-1)) - (24'd5&((24'd1<<ls1k[J])-1))),
+            24'(row1 + (24'(JJ)>>ls1k[J]) - (24'd5>>ls1k[J])),
+            ls1k[J],(lvw1<3 ? 4'd3 : lvw1)};
     if(!f_rst) emit2<=1'b0; else emit2<=emit1 && (24'(JJ)<(24'd1<<lvw1));
    end
    // edge 3: the lane's own registers on its clk_map[J] root

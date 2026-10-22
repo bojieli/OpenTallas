@@ -620,7 +620,12 @@ module ot_hgi_su_lgroup2 #(
     // s8 (10-21): PRESEL=1 takes every bank's write enable, one-hot source selects (one kept copy per destination
     // slice: data[15:0] / data[31:16] / row) and the collision fault from registers the parent captured on its
     // existing bank-write landing edge; PNC candidate sources per bank. PRESEL=0: pw_* unused (bit-identical).
-    parameter integer PRESEL = 0, PNC = 1
+    parameter integer PRESEL = 0, PNC = 1,
+    // HBMc/TILES 10-22 (SFU k14, native census): RRF=1 (NATIVE32 only) takes the fault-side one-hot bank capture from
+    // rq instead of rr -- the parent MUST drive rq and rr with the same function from two kept nodes, so the raw lane
+    // enable that feeds the bank selects / pick no longer also feeds the 16 bank_q enables (k12: 41-52 loads) -- and
+    // decodes the captured bank in a kept per-lane one-hot leaf. Cycle-identical. RRF=0: the original text (bit-identical).
+    parameter integer RRF = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -981,8 +986,16 @@ module ot_hgi_su_lgroup2 #(
     for (genvar nl=0; nl<N; nl=nl+1) begin:g_native_fault_bank
         if (NATIVE32) begin:g_on
             (* keep=1,dont_touch=1 *) reg [N-1:0] bank_q;
+            if (RRF) begin:g_rrf
+                wire [N-1:0] onehot;
+                ot_hgi_su_bank_onehot #(.N(N),.LN(LN)) u_onehot(.bank(ra[nl*AW+:LN]),.onehot(onehot));
+                for(genvar nb=0; nb<N; nb=nb+1) begin:g_bank
+                    always @(posedge clk) if(rq[nl]) bank_q[nb] <= onehot[nb];
+                end
+            end else begin:g_rr
             for(genvar nb=0; nb<N; nb=nb+1) begin:g_bank
                 always @(posedge clk) if(rr[nl]) bank_q[nb] <= (ra[nl*AW+:LN]==LN'(nb));
+            end
             end
             reg mismatch;
             always @* begin
@@ -2939,4 +2952,13 @@ endmodule
 (* keep_hierarchy=1 *) module ot_hgi_su_select2 #(parameter integer N=16,LN=$clog2(N))
 (input wire [LN-1:0]sel,input wire[2*N-1:0]data,output wire[1:0]q);
  assign q=data[2*sel+:2];
+endmodule
+
+// HBMc/TILES 10-22: kept one-hot bank decode (ot_hgi_su_lgroup2 RRF=1): its partial products stay inside the leaf, so
+// the fault-side bank capture shares no decode term with the read selects.
+(* keep_hierarchy=1 *) module ot_hgi_su_bank_onehot #(parameter integer N=16, LN=4)(
+ input wire [LN-1:0] bank, output wire [N-1:0] onehot);
+ for(genvar b=0;b<N;b=b+1)begin:g_b
+  assign onehot[b]=(bank==LN'(b));
+ end
 endmodule

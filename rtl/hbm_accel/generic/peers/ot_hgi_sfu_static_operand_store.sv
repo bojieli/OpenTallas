@@ -272,6 +272,9 @@ module ot_hgi_sfu_static_operand_store #(
  end
  for(genvar g=0;g<4;g=g+1)begin:g_operand
   (* keep=1 *) wire [15:0] req;   // s9: one kept node per lane (the read selects fan out from it, not from the ports)
+  // HBMc/TILES 10-22 (k14): NATIVE32 adds a second kept per-lane node req_f (same function) for lgroup2 RRF's fault-side
+  // bank capture; the k12 single node drove the bank selects, the pick hold mux and 16 bank_q enables (43 loads).
+  wire [15:0] req_f;
   wire [383:0] addr;
   wire [511:0] data;
   wire [511:0] scalar_read;
@@ -299,7 +302,13 @@ module ot_hgi_sfu_static_operand_store #(
   end
   wire [7:0] sw;
   for(genvar l=0;l<16;l=l+1)begin:g_lane
+   if(NATIVE32)begin:g_req_nodes
+    ot_hgi_sfu_req_node u_req(.re(rd_re[4*l+g]),.src(rd_src[8*l+2*g+:2]),.se(se_l[4*l+g]),.req(req[l]));
+    ot_hgi_sfu_req_node u_req_f(.re(rd_re[4*l+g]),.src(rd_src[8*l+2*g+:2]),.se(se_l[4*l+g]),.req(req_f[l]));
+   end else begin:g_req_wire
    assign req[l]=rd_re[4*l+g] && rd_src[8*l+2*g+:2]==0 && !se_l[4*l+g];
+   assign req_f[l]=req[l];
+   end
    assign addr[24*l+:24]=rd_addr[(4*l+g)*24+:24];
    for(genvar h=0;h<2;h=h+1)begin:g_half
     assign rd_q[(4*l+g)*32+16*h+:16]=scalar_selected[2*l+h]?scalar_read[32*l+16*h+:16]:data[32*l+16*h+:16];
@@ -367,8 +376,8 @@ module ot_hgi_sfu_static_operand_store #(
    assign pw_d=0;assign pw_r0=0;assign pw_r1=0;
   end
   ot_hgi_su_lgroup2 #(.N(16),.M(16),.LWB(LWB),.AW(24),.NLW(0),
-   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(8),.WROT(WROT),.NATIVE32(NATIVE32),.PRESEL(PS),.PNC(8)) u_group(
-   .clk(gck[g]),.rst_n(rst_n),.rq(req),.rr(req),.ra(addr),.rd(data),
+   .MACRO(1),.MUT_XBAR(MUT_XBAR),.NS(8),.WROT(WROT),.NATIVE32(NATIVE32),.PRESEL(PS),.PNC(8),.RRF(NATIVE32?1:0)) u_group(
+   .clk(gck[g]),.rst_n(rst_n),.rq(req_f),.rr(req),.ra(addr),.rd(data),
    .sr_v(8'd0),.sr_addr({8*LWB{1'b0}}),.sr_d(),.sr_rv(),
    .sw_v(sw),.sw_addr(w_stage_addr),.sw_mask(w_stage_mask),.sw_d(w_stage_data),
    .swr_d(swr_d),.swr_m(swr_m),.swr_w(swr_w),.swr_r0(swr_r0),.swr_r1(swr_r1),
@@ -440,4 +449,10 @@ endmodule
 (* keep_hierarchy=1 *) module ot_hgi_sfu_stage_group_decode #(parameter integer GROUP=0)(
  input wire v,input wire[1:0]group_id,output wire hit);
  assign hit=v && group_id==GROUP;
+endmodule
+
+// HBMc/TILES 10-22: kept per-lane read-request node (operand store NATIVE32): two instances per lane give lgroup2 two
+// distinct drivers of the same function (rr: bank selects / pick; rq: fault-side bank capture, RRF=1).
+(* keep_hierarchy=1 *) module ot_hgi_sfu_req_node(input wire re,input wire [1:0] src,input wire se,output wire req);
+ assign req=re && src==2'd0 && !se;
 endmodule
