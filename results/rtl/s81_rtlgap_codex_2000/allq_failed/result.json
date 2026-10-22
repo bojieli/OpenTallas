@@ -10,5 +10,10 @@
   "slice_faults": "ffff",
   "root_fault": 1,
   "repair_owner": "/root/s81_sot",
-  "no_full_layer_pass": true
+  "no_full_layer_pass": true,
+  "source_ref_check": {
+    "ref": "95b67d6af",
+    "checked": 50,
+    "mismatch": []
+  }
 }

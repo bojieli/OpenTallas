@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "scope": "SO arithmetic component from actual ALLQ P.V and SE dumps; production SOT and physical binding remain open",
+  "scope": "SO per-share arithmetic across all 16 head configurations, reset and replayed sequentially on one real SM instance, from actual ALLQ P.V and SE dumps; simultaneous 16-share integration, production SOT and physical binding remain open",
   "unit": "oth-ubuntu-1377832-1792642495",
   "host": "ot-gold1",
   "binary_sha256": "6abaafe906f2f36682898c8f9b2e9a479396e57a5eda755088540d19d7afa432",
@@ -24,5 +24,18 @@
   "input_dump_sha256": {
     "pv_dump_s1.hex": "8ce60a6a9604d7e082f4566d112d9fe150793b047fd38317a46835caa6bc9297",
     "se_dump_s1.hex": "43dce5921c45eb37476e6099403fae5b6102a8e5c81d015e8d1f2c598ff0aefa"
+  },
+  "binary_topology": {
+    "real_sm_instances": 1,
+    "head_configurations": 16,
+    "execution": "sequential passes with reset",
+    "source_artifact": "binary_original_tb.sv",
+    "warning": "Current source tb_so_golden.sv instantiates 16 shares simultaneously and is not this reused binary."
+  },
+  "rtl_reference_check": {
+    "ref": "95b67d6af",
+    "all_rtl_inputs_match": true,
+    "original_readset_nonmatching_path": "tools/s81_dv/layer_prog/svc/tb_so_golden.sv",
+    "original_tb_committed_here": true
   }
 }
