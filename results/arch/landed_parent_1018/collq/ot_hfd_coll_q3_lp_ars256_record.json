@@ -1,1679 +1,2902 @@
 {
- "lane": "PARENTS-LANDED",
- "generator": "tools/landed_parent/lp.py",
- "flat": "ot_hfd_coll_q3_lpf_ars256",
- "top": "ot_hfd_coll_q3_lp_ars256",
- "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
- "regions": {
-  "sw": {
-   "clock_port": "ck_sw",
-   "children": [
-    "u_arg",
-    "u_ariter",
-    "u_control",
-    "u_qc0",
-    "u_qc1",
-    "u_qc2",
-    "u_qc3",
-    "u_qc4",
-    "u_qc5",
-    "u_qc6",
-    "u_qc7",
-    "u_qc8",
-    "u_qc9",
-    "u_qo0",
-    "u_qo1",
-    "u_qo10",
-    "u_qo11",
-    "u_qo12",
-    "u_qo13",
-    "u_qo14",
-    "u_qo15",
-    "u_qo16",
-    "u_qo17",
-    "u_qo2",
-    "u_qo3",
-    "u_qo4",
-    "u_qo5",
-    "u_qo6",
-    "u_qo7",
-    "u_qo8",
-    "u_qo9",
-    "u_rdc",
-    "u_rdl0",
-    "u_rdl1",
-    "u_rdl10",
-    "u_rdl11",
-    "u_rdl12",
-    "u_rdl13",
-    "u_rdl14",
-    "u_rdl15",
-    "u_rdl2",
-    "u_rdl3",
-    "u_rdl4",
-    "u_rdl5",
-    "u_rdl6",
-    "u_rdl7",
-    "u_rdl8",
-    "u_rdl9",
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9",
-    "u_va0",
-    "u_va1",
-    "u_va10",
-    "u_va11",
-    "u_va12",
-    "u_va13",
-    "u_va14",
-    "u_va15",
-    "u_va2",
-    "u_va3",
-    "u_va4",
-    "u_va5",
-    "u_va6",
-    "u_va7",
-    "u_va8",
-    "u_va9"
-   ]
+  "lane": "PARENTS-LANDED",
+  "generator": "tools/landed_parent/lp.py",
+  "flat": "ot_hfd_coll_q3_lpf_ars256",
+  "top": "ot_hfd_coll_q3_lp_ars256",
+  "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+  "regions": {
+    "sw": {
+      "clock_port": "ck_sw",
+      "children": [
+        "u_arg",
+        "u_ariter",
+        "u_control",
+        "u_qc0",
+        "u_qc1",
+        "u_qc2",
+        "u_qc3",
+        "u_qc4",
+        "u_qc5",
+        "u_qc6",
+        "u_qc7",
+        "u_qc8",
+        "u_qc9",
+        "u_qo0",
+        "u_qo1",
+        "u_qo10",
+        "u_qo11",
+        "u_qo12",
+        "u_qo13",
+        "u_qo14",
+        "u_qo15",
+        "u_qo16",
+        "u_qo17",
+        "u_qo2",
+        "u_qo3",
+        "u_qo4",
+        "u_qo5",
+        "u_qo6",
+        "u_qo7",
+        "u_qo8",
+        "u_qo9",
+        "u_rdc",
+        "u_rdl0",
+        "u_rdl1",
+        "u_rdl10",
+        "u_rdl11",
+        "u_rdl12",
+        "u_rdl13",
+        "u_rdl14",
+        "u_rdl15",
+        "u_rdl2",
+        "u_rdl3",
+        "u_rdl4",
+        "u_rdl5",
+        "u_rdl6",
+        "u_rdl7",
+        "u_rdl8",
+        "u_rdl9",
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9",
+        "u_va0",
+        "u_va1",
+        "u_va10",
+        "u_va11",
+        "u_va12",
+        "u_va13",
+        "u_va14",
+        "u_va15",
+        "u_va2",
+        "u_va3",
+        "u_va4",
+        "u_va5",
+        "u_va6",
+        "u_va7",
+        "u_va8",
+        "u_va9"
+      ]
+    },
+    "wr": {
+      "clock_port": "ck_wr",
+      "children": [
+        "u_writer"
+      ]
+    },
+    "rg": {
+      "clock_port": "ck_rg",
+      "children": [
+        "u_radd0",
+        "u_radd1",
+        "u_radd2",
+        "u_radd3",
+        "u_radd4",
+        "u_radd5",
+        "u_radd6",
+        "u_radd7",
+        "u_rctl",
+        "u_rst0",
+        "u_rst1",
+        "u_rst2",
+        "u_rst3",
+        "u_rst4",
+        "u_rst5",
+        "u_rst6",
+        "u_rst7"
+      ]
+    },
+    "hd": {
+      "clock_port": "ck_hd",
+      "children": [
+        "u_fj",
+        "u_issuer"
+      ]
+    },
+    "lk": {
+      "clock_port": "ck_lk",
+      "children": [
+        "u_link0",
+        "u_link1"
+      ]
+    }
   },
-  "wr": {
-   "clock_port": "ck_wr",
-   "children": [
-    "u_writer"
-   ]
-  },
-  "rg": {
-   "clock_port": "ck_rg",
-   "children": [
-    "u_radd0",
-    "u_radd1",
-    "u_radd2",
-    "u_radd3",
-    "u_radd4",
-    "u_radd5",
-    "u_radd6",
-    "u_radd7",
-    "u_rctl",
-    "u_rst0",
-    "u_rst1",
-    "u_rst2",
-    "u_rst3",
-    "u_rst4",
-    "u_rst5",
-    "u_rst6",
-    "u_rst7"
-   ]
-  },
-  "hd": {
-   "clock_port": "ck_hd",
-   "children": [
-    "u_fj",
-    "u_issuer"
-   ]
-  },
-  "lk": {
-   "clock_port": "ck_lk",
-   "children": [
-    "u_link0",
-    "u_link1"
-   ]
-  }
- },
- "D": 4,
- "E": 2,
- "K": 2,
- "added_edges_per_landing": 3,
- "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
- "landings": [
-  {
-   "name": "0",
-   "net": "inst_d1",
-   "src_region": "hd",
-   "dst_region": "sw",
-   "src_nodes": [
-    "u_issuer"
-   ],
-   "width": 1536,
-   "readers": [
-    "u_up0.d1",
-    "u_up1.d1",
-    "u_up2.d1",
-    "u_up3.d1",
-    "u_up4.d1",
-    "u_up5.d1",
-    "u_up6.d1",
-    "u_up7.d1",
-    "u_up8.d1",
-    "u_up9.d1",
-    "u_up10.d1",
-    "u_up11.d1",
-    "u_up12.d1",
-    "u_up13.d1",
-    "u_up14.d1",
-    "u_up15.d1"
-   ],
-   "ring": "u_lpl_0_w (ck_hd)",
-   "read": "u_lpl_0_r (ck_sw)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
-  },
-  {
-   "name": "1",
-   "net": "tap_iteration",
-   "src_region": "hd",
-   "dst_region": "sw",
-   "src_nodes": [
-    "u_issuer"
-   ],
-   "width": 32,
-   "readers": [
-    "u_ariter.iteration",
-    "u_control.tap_iteration"
-   ],
-   "ring": "u_lpl_1_w (ck_hd)",
-   "read": "u_lpl_1_r (ck_sw)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
-  },
-  {
-   "name": "2",
-   "net": "tap_steps",
-   "src_region": "hd",
-   "dst_region": "sw",
-   "src_nodes": [
-    "u_issuer"
-   ],
-   "width": 88,
-   "readers": [
-    "u_control.tap_steps"
-   ],
-   "ring": "u_lpl_2_w (ck_hd)",
-   "read": "u_lpl_2_r (ck_sw)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
-  },
-  {
-   "name": "3",
-   "net": "start_d2",
-   "src_region": "hd",
-   "dst_region": "sw",
-   "src_nodes": [
-    "u_issuer"
-   ],
-   "width": 1,
-   "readers": [
-    "u_control.hgi_start"
-   ],
-   "ring": "u_lpl_3_w (ck_hd)",
-   "read": "u_lpl_3_r (ck_sw)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
-  },
-  {
-   "name": "4",
-   "net": "busy_d2",
-   "src_region": "hd",
-   "dst_region": "sw",
-   "src_nodes": [
-    "u_issuer"
-   ],
-   "width": 1,
-   "readers": [
-    "u_control.hgi_busy"
-   ],
-   "ring": "u_lpl_4_w (ck_hd)",
-   "read": "u_lpl_4_r (ck_sw)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
-  },
-  {
-   "name": "5",
-   "net": "issue_done",
-   "src_region": "hd",
-   "dst_region": "sw",
-   "src_nodes": [
-    "u_issuer"
-   ],
-   "width": 1,
-   "readers": [
-    "u_control.issue_done"
-   ],
-   "ring": "u_lpl_5_w (ck_hd)",
-   "read": "u_lpl_5_r (ck_sw)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
-  },
-  {
-   "name": "6",
-   "net": "link_rx_v",
-   "src_region": "lk",
-   "dst_region": "sw",
-   "src_nodes": [
-    "u_link0",
-    "u_link1"
-   ],
-   "width": 2,
-   "readers": [
-    "u_qc2.src_v",
-    "u_qc3.src_v"
-   ],
-   "ring": "u_lpl_6_w (ck_lk)",
-   "read": "u_lpl_6_r (ck_sw)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
-  },
-  {
-   "name": "7",
-   "net": "link_rx_data",
-   "src_region": "lk",
-   "dst_region": "sw",
-   "src_nodes": [
-    "u_link0",
-    "u_link1"
-   ],
-   "width": 1090,
-   "readers": [
-    "u_qc2.src_d",
-    "u_qc3.src_d"
-   ],
-   "ring": "u_lpl_7_w (ck_lk)",
-   "read": "u_lpl_7_r (ck_sw)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
-  },
-  {
-   "name": "8",
-   "net": "p_lk_epoch_begin",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9"
-   ],
-   "width": 3,
-   "readers": [
-    "u_link0.epoch_begin",
-    "u_link1.epoch_begin"
-   ],
-   "ring": "u_lpl_8_w (ck_sw)",
-   "read": "u_lpl_8_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
-  },
-  {
-   "name": "9",
-   "net": "p_lk_epoch",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9"
-   ],
-   "width": 8,
-   "readers": [
-    "u_link0.epoch_new",
-    "u_link1.epoch_new"
-   ],
-   "ring": "u_lpl_9_w (ck_sw)",
-   "read": "u_lpl_9_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
-  },
-  {
-   "name": "10",
-   "net": "held_epoch",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_control"
-   ],
-   "width": 16,
-   "readers": [
-    "u_link0.held_epoch",
-    "u_link1.held_epoch"
-   ],
-   "ring": "u_lpl_10_w (ck_sw)",
-   "read": "u_lpl_10_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_10_r.*"
-  },
-  {
-   "name": "11",
-   "net": "p_lk_wr_v",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9"
-   ],
-   "width": 3,
-   "readers": [
-    "u_link0.wr_v",
-    "u_link1.wr_v"
-   ],
-   "ring": "u_lpl_11_w (ck_sw)",
-   "read": "u_lpl_11_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
-  },
-  {
-   "name": "12",
-   "net": "dest_v",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_qo0"
-   ],
-   "width": 15,
-   "readers": [
-    "u_link0.wr_observed_v",
-    "u_link1.wr_observed_v"
-   ],
-   "ring": "u_lpl_12_w (ck_sw)",
-   "read": "u_lpl_12_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
-  },
-  {
-   "name": "13",
-   "net": "wr_sequence_pin",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_control"
-   ],
-   "width": 32,
-   "readers": [
-    "u_link0.wr_seq",
-    "u_link1.wr_seq"
-   ],
-   "ring": "u_lpl_13_w (ck_sw)",
-   "read": "u_lpl_13_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_13_w.* -to u_lpl_13_r.*"
-  },
-  {
-   "name": "14",
-   "net": "dest_d",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_qo0",
-    "u_qo1",
-    "u_qo10",
-    "u_qo11",
-    "u_qo12",
-    "u_qo13",
-    "u_qo14",
-    "u_qo15",
-    "u_qo16",
-    "u_qo17",
-    "u_qo2",
-    "u_qo3",
-    "u_qo4",
-    "u_qo5",
-    "u_qo6",
-    "u_qo7",
-    "u_qo8",
-    "u_qo9"
-   ],
-   "width": 8175,
-   "readers": [
-    "u_link0.wr_flit",
-    "u_link1.wr_flit"
-   ],
-   "ring": "u_lpl_14_w (ck_sw)",
-   "read": "u_lpl_14_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_14_w.* -to u_lpl_14_r.*"
-  },
-  {
-   "name": "15",
-   "net": "p_lk_rd_v",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9"
-   ],
-   "width": 3,
-   "readers": [
-    "u_link0.rd_v",
-    "u_link1.rd_v"
-   ],
-   "ring": "u_lpl_15_w (ck_sw)",
-   "read": "u_lpl_15_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
-  },
-  {
-   "name": "16",
-   "net": "rd_sequence_pin",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_control"
-   ],
-   "width": 32,
-   "readers": [
-    "u_link0.rd_seq",
-    "u_link1.rd_seq"
-   ],
-   "ring": "u_lpl_16_w (ck_sw)",
-   "read": "u_lpl_16_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
-  },
-  {
-   "name": "17",
-   "net": "p_lk_rx_expect",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9"
-   ],
-   "width": 3,
-   "readers": [
-    "u_link0.rx_expect_v",
-    "u_link1.rx_expect_v"
-   ],
-   "ring": "u_lpl_17_w (ck_sw)",
-   "read": "u_lpl_17_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
-  },
-  {
-   "name": "18",
-   "net": "rx_sequence_pin",
-   "src_region": "sw",
-   "dst_region": "lk",
-   "src_nodes": [
-    "u_control"
-   ],
-   "width": 32,
-   "readers": [
-    "u_link0.rx_expect_seq",
-    "u_link1.rx_expect_seq"
-   ],
-   "ring": "u_lpl_18_w (ck_sw)",
-   "read": "u_lpl_18_r (ck_lk)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
-  },
-  {
-   "name": "19",
-   "net": "w_rgx_v",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_qo0"
-   ],
-   "width": 4,
-   "readers": [
-    "u_writer.rgx_v"
-   ],
-   "ring": "u_lpl_19_w (ck_sw)",
-   "read": "u_lpl_19_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
-  },
-  {
-   "name": "20",
-   "net": "w_rgx_addr",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_control"
-   ],
-   "width": 160,
-   "readers": [
-    "u_writer.rgx_addr"
-   ],
-   "ring": "u_lpl_20_w (ck_sw)",
-   "read": "u_lpl_20_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
-  },
-  {
-   "name": "21",
-   "net": "w_rgx_d0",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_qo0",
-    "u_qo1",
-    "u_qo10",
-    "u_qo11",
-    "u_qo12",
-    "u_qo13",
-    "u_qo14",
-    "u_qo15",
-    "u_qo16",
-    "u_qo17",
-    "u_qo2",
-    "u_qo3",
-    "u_qo4",
-    "u_qo5",
-    "u_qo6",
-    "u_qo7",
-    "u_qo8",
-    "u_qo9"
-   ],
-   "width": 512,
-   "readers": [
-    "u_writer.rgx_data0"
-   ],
-   "ring": "u_lpl_21_w (ck_sw)",
-   "read": "u_lpl_21_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_21_w.* -to u_lpl_21_r.*"
-  },
-  {
-   "name": "22",
-   "net": "w_rgx_d1",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_qo0",
-    "u_qo1",
-    "u_qo10",
-    "u_qo11",
-    "u_qo12",
-    "u_qo13",
-    "u_qo14",
-    "u_qo15",
-    "u_qo16",
-    "u_qo17",
-    "u_qo2",
-    "u_qo3",
-    "u_qo4",
-    "u_qo5",
-    "u_qo6",
-    "u_qo7",
-    "u_qo8",
-    "u_qo9"
-   ],
-   "width": 512,
-   "readers": [
-    "u_writer.rgx_data1"
-   ],
-   "ring": "u_lpl_22_w (ck_sw)",
-   "read": "u_lpl_22_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_22_w.* -to u_lpl_22_r.*"
-  },
-  {
-   "name": "23",
-   "net": "w_rgx_d2",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_qo0",
-    "u_qo1",
-    "u_qo10",
-    "u_qo11",
-    "u_qo12",
-    "u_qo13",
-    "u_qo14",
-    "u_qo15",
-    "u_qo16",
-    "u_qo17",
-    "u_qo2",
-    "u_qo3",
-    "u_qo4",
-    "u_qo5",
-    "u_qo6",
-    "u_qo7",
-    "u_qo8",
-    "u_qo9"
-   ],
-   "width": 512,
-   "readers": [
-    "u_writer.rgx_data2"
-   ],
-   "ring": "u_lpl_23_w (ck_sw)",
-   "read": "u_lpl_23_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_23_w.* -to u_lpl_23_r.*"
-  },
-  {
-   "name": "24",
-   "net": "w_rgx_d3",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_qo0",
-    "u_qo1",
-    "u_qo10",
-    "u_qo11",
-    "u_qo12",
-    "u_qo13",
-    "u_qo14",
-    "u_qo15",
-    "u_qo16",
-    "u_qo17",
-    "u_qo2",
-    "u_qo3",
-    "u_qo4",
-    "u_qo5",
-    "u_qo6",
-    "u_qo7",
-    "u_qo8",
-    "u_qo9"
-   ],
-   "width": 512,
-   "readers": [
-    "u_writer.rgx_data3"
-   ],
-   "ring": "u_lpl_24_w (ck_sw)",
-   "read": "u_lpl_24_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_24_w.* -to u_lpl_24_r.*"
-  },
-  {
-   "name": "25",
-   "net": "w_rgx_vm",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9"
-   ],
-   "width": 1,
-   "readers": [
-    "u_writer.rgx_vm"
-   ],
-   "ring": "u_lpl_25_w (ck_sw)",
-   "read": "u_lpl_25_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_25_w.* -to u_lpl_25_r.*"
-  },
-  {
-   "name": "26",
-   "net": "w_ingress_slot",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9"
-   ],
-   "width": 5,
-   "readers": [
-    "u_writer.ingress_slot"
-   ],
-   "ring": "u_lpl_26_w (ck_sw)",
-   "read": "u_lpl_26_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_26_w.* -to u_lpl_26_r.*"
-  },
-  {
-   "name": "27",
-   "net": "w_slot_valid",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9"
-   ],
-   "width": 8,
-   "readers": [
-    "u_writer.slot_valid"
-   ],
-   "ring": "u_lpl_27_w (ck_sw)",
-   "read": "u_lpl_27_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_27_w.* -to u_lpl_27_r.*"
-  },
-  {
-   "name": "28",
-   "net": "w_slot_owner",
-   "src_region": "sw",
-   "dst_region": "wr",
-   "src_nodes": [
-    "u_up0",
-    "u_up1",
-    "u_up10",
-    "u_up11",
-    "u_up12",
-    "u_up13",
-    "u_up14",
-    "u_up15",
-    "u_up2",
-    "u_up3",
-    "u_up4",
-    "u_up5",
-    "u_up6",
-    "u_up7",
-    "u_up8",
-    "u_up9"
-   ],
-   "width": 32,
-   "readers": [
-    "u_writer.slot_owner"
-   ],
-   "ring": "u_lpl_28_w (ck_sw)",
-   "read": "u_lpl_28_r (ck_wr)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_28_w.* -to u_lpl_28_r.*"
-  },
-  {
-   "name": "29",
-   "net": "protocol_fault",
-   "src_region": "sw",
-   "dst_region": "hd",
-   "src_nodes": [
-    "u_control"
-   ],
-   "width": 1,
-   "readers": [
-    "u_fj.protocol_fault"
-   ],
-   "loose": true,
-   "ring": "u_lpl_29_w (ck_sw)",
-   "read": "u_lpl_29_r (ck_hd)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_29_w.* -to u_lpl_29_r.*"
-  },
-  {
-   "name": "30",
-   "net": "capture_fault",
-   "src_region": "sw",
-   "dst_region": "hd",
-   "src_nodes": [
-    "u_qc0",
-    "u_qc1",
-    "u_qc2",
-    "u_qc3",
-    "u_qc4",
-    "u_qc5",
-    "u_qc6",
-    "u_qc7",
-    "u_qc8",
-    "u_qc9"
-   ],
-   "width": 10,
-   "readers": [
-    "u_fj.capture_fault"
-   ],
-   "loose": true,
-   "ring": "u_lpl_30_w (ck_sw)",
-   "read": "u_lpl_30_r (ck_hd)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_30_w.* -to u_lpl_30_r.*"
-  },
-  {
-   "name": "31",
-   "net": "select_fault",
-   "src_region": "sw",
-   "dst_region": "hd",
-   "src_nodes": [
-    "u_qo0",
-    "u_qo1",
-    "u_qo10",
-    "u_qo11",
-    "u_qo12",
-    "u_qo13",
-    "u_qo14",
-    "u_qo15",
-    "u_qo16",
-    "u_qo17",
-    "u_qo2",
-    "u_qo3",
-    "u_qo4",
-    "u_qo5",
-    "u_qo6",
-    "u_qo7",
-    "u_qo8",
-    "u_qo9"
-   ],
-   "width": 18,
-   "readers": [
-    "u_fj.select_fault"
-   ],
-   "loose": true,
-   "ring": "u_lpl_31_w (ck_sw)",
-   "read": "u_lpl_31_r (ck_hd)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_31_w.* -to u_lpl_31_r.*"
-  },
-  {
-   "name": "32",
-   "net": "unavailable_fault",
-   "src_region": "sw",
-   "dst_region": "hd",
-   "src_nodes": [
-    "u_qo0",
-    "u_qo1",
-    "u_qo10",
-    "u_qo11",
-    "u_qo12",
-    "u_qo13",
-    "u_qo14",
-    "u_qo15",
-    "u_qo16",
-    "u_qo17",
-    "u_qo2",
-    "u_qo3",
-    "u_qo4",
-    "u_qo5",
-    "u_qo6",
-    "u_qo7",
-    "u_qo8",
-    "u_qo9"
-   ],
-   "width": 18,
-   "readers": [
-    "u_fj.unavailable_fault"
-   ],
-   "loose": true,
-   "ring": "u_lpl_32_w (ck_sw)",
-   "read": "u_lpl_32_r (ck_hd)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_32_w.* -to u_lpl_32_r.*"
-  },
-  {
-   "name": "33",
-   "net": "link_abort",
-   "src_region": "lk",
-   "dst_region": "hd",
-   "src_nodes": [
-    "u_link0",
-    "u_link1"
-   ],
-   "width": 2,
-   "readers": [
-    "u_fj.link_abort"
-   ],
-   "loose": true,
-   "ring": "u_lpl_33_w (ck_lk)",
-   "read": "u_lpl_33_r (ck_hd)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_33_w.* -to u_lpl_33_r.*"
-  },
-  {
-   "name": "34",
-   "net": "ring_fault",
-   "src_region": "rg",
-   "dst_region": "hd",
-   "src_nodes": [
-    "u_rctl"
-   ],
-   "width": 1,
-   "readers": [
-    "u_fj.ring_fault"
-   ],
-   "loose": true,
-   "ring": "u_lpl_34_w (ck_rg)",
-   "read": "u_lpl_34_r (ck_hd)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_34_w.* -to u_lpl_34_r.*"
-  },
-  {
-   "name": "35",
-   "net": "writer_fault",
-   "src_region": "wr",
-   "dst_region": "hd",
-   "src_nodes": [
-    "u_writer"
-   ],
-   "width": 1,
-   "readers": [
-    "u_fj.writer_fault"
-   ],
-   "loose": true,
-   "ring": "u_lpl_35_w (ck_wr)",
-   "read": "u_lpl_35_r (ck_hd)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_35_w.* -to u_lpl_35_r.*"
-  },
-  {
-   "name": "36",
-   "net": "reduce_fault",
-   "src_region": "sw",
-   "dst_region": "hd",
-   "src_nodes": [
-    "u_rdc"
-   ],
-   "width": 1,
-   "readers": [
-    "u_fj.reduce_fault"
-   ],
-   "loose": true,
-   "ring": "u_lpl_36_w (ck_sw)",
-   "read": "u_lpl_36_r (ck_hd)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_36_w.* -to u_lpl_36_r.*"
-  },
-  {
-   "name": "37",
-   "net": "arg_fault",
-   "src_region": "sw",
-   "dst_region": "hd",
-   "src_nodes": [
-    "u_arg"
-   ],
-   "width": 1,
-   "readers": [
-    "u_fj.arg_fault"
-   ],
-   "loose": true,
-   "ring": "u_lpl_37_w (ck_sw)",
-   "read": "u_lpl_37_r (ck_hd)",
-   "added_edges": 3,
-   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_37_w.* -to u_lpl_37_r.*"
-  }
- ],
- "pads": [],
- "loose_status": {
-  "nets": [
-   "arg_fault",
-   "capture_fault",
-   "link_abort",
-   "protocol_fault",
-   "reduce_fault",
-   "ring_fault",
-   "select_fault",
-   "unavailable_fault",
-   "writer_fault"
+  "D": 4,
+  "E": 2,
+  "K": 2,
+  "added_edges_per_landing": 3,
+  "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+  "landings": [
+    {
+      "name": "0",
+      "net": "inst_d1",
+      "src_region": "hd",
+      "dst_region": "sw",
+      "src_nodes": [
+        "u_issuer"
+      ],
+      "width": 1536,
+      "readers": [
+        "u_up0.d1",
+        "u_up1.d1",
+        "u_up2.d1",
+        "u_up3.d1",
+        "u_up4.d1",
+        "u_up5.d1",
+        "u_up6.d1",
+        "u_up7.d1",
+        "u_up8.d1",
+        "u_up9.d1",
+        "u_up10.d1",
+        "u_up11.d1",
+        "u_up12.d1",
+        "u_up13.d1",
+        "u_up14.d1",
+        "u_up15.d1"
+      ],
+      "ring": "u_lpl_0_w (ck_hd)",
+      "read": "u_lpl_0_r (ck_sw)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+    },
+    {
+      "name": "1",
+      "net": "tap_iteration",
+      "src_region": "hd",
+      "dst_region": "sw",
+      "src_nodes": [
+        "u_issuer"
+      ],
+      "width": 32,
+      "readers": [
+        "u_ariter.iteration",
+        "u_control.tap_iteration"
+      ],
+      "ring": "u_lpl_1_w (ck_hd)",
+      "read": "u_lpl_1_r (ck_sw)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+    },
+    {
+      "name": "2",
+      "net": "tap_steps",
+      "src_region": "hd",
+      "dst_region": "sw",
+      "src_nodes": [
+        "u_issuer"
+      ],
+      "width": 88,
+      "readers": [
+        "u_control.tap_steps"
+      ],
+      "ring": "u_lpl_2_w (ck_hd)",
+      "read": "u_lpl_2_r (ck_sw)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+    },
+    {
+      "name": "3",
+      "net": "start_d2",
+      "src_region": "hd",
+      "dst_region": "sw",
+      "src_nodes": [
+        "u_issuer"
+      ],
+      "width": 1,
+      "readers": [
+        "u_control.hgi_start"
+      ],
+      "ring": "u_lpl_3_w (ck_hd)",
+      "read": "u_lpl_3_r (ck_sw)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+    },
+    {
+      "name": "4",
+      "net": "busy_d2",
+      "src_region": "hd",
+      "dst_region": "sw",
+      "src_nodes": [
+        "u_issuer"
+      ],
+      "width": 1,
+      "readers": [
+        "u_control.hgi_busy"
+      ],
+      "ring": "u_lpl_4_w (ck_hd)",
+      "read": "u_lpl_4_r (ck_sw)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+    },
+    {
+      "name": "5",
+      "net": "issue_done",
+      "src_region": "hd",
+      "dst_region": "sw",
+      "src_nodes": [
+        "u_issuer"
+      ],
+      "width": 1,
+      "readers": [
+        "u_control.issue_done"
+      ],
+      "ring": "u_lpl_5_w (ck_hd)",
+      "read": "u_lpl_5_r (ck_sw)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+    },
+    {
+      "name": "6",
+      "net": "link_rx_v",
+      "src_region": "lk",
+      "dst_region": "sw",
+      "src_nodes": [
+        "u_link0",
+        "u_link1"
+      ],
+      "width": 2,
+      "readers": [
+        "u_qc2.src_v",
+        "u_qc3.src_v"
+      ],
+      "ring": "u_lpl_6_w (ck_lk)",
+      "read": "u_lpl_6_r (ck_sw)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+    },
+    {
+      "name": "7",
+      "net": "link_rx_data",
+      "src_region": "lk",
+      "dst_region": "sw",
+      "src_nodes": [
+        "u_link0",
+        "u_link1"
+      ],
+      "width": 1090,
+      "readers": [
+        "u_qc2.src_d",
+        "u_qc3.src_d"
+      ],
+      "ring": "u_lpl_7_w (ck_lk)",
+      "read": "u_lpl_7_r (ck_sw)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+    },
+    {
+      "name": "8",
+      "net": "p_lk_epoch_begin",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9"
+      ],
+      "width": 3,
+      "readers": [
+        "u_link0.epoch_begin",
+        "u_link1.epoch_begin"
+      ],
+      "ring": "u_lpl_8_w (ck_sw)",
+      "read": "u_lpl_8_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+    },
+    {
+      "name": "9",
+      "net": "p_lk_epoch",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9"
+      ],
+      "width": 8,
+      "readers": [
+        "u_link0.epoch_new",
+        "u_link1.epoch_new"
+      ],
+      "ring": "u_lpl_9_w (ck_sw)",
+      "read": "u_lpl_9_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+    },
+    {
+      "name": "10",
+      "net": "held_epoch",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_control"
+      ],
+      "width": 16,
+      "readers": [
+        "u_link0.held_epoch",
+        "u_link1.held_epoch"
+      ],
+      "ring": "u_lpl_10_w (ck_sw)",
+      "read": "u_lpl_10_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_10_w.* -to u_lpl_10_r.*"
+    },
+    {
+      "name": "11",
+      "net": "p_lk_wr_v",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9"
+      ],
+      "width": 3,
+      "readers": [
+        "u_link0.wr_v",
+        "u_link1.wr_v"
+      ],
+      "ring": "u_lpl_11_w (ck_sw)",
+      "read": "u_lpl_11_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_11_w.* -to u_lpl_11_r.*"
+    },
+    {
+      "name": "12",
+      "net": "dest_v",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_qo0"
+      ],
+      "width": 15,
+      "readers": [
+        "u_link0.wr_observed_v",
+        "u_link1.wr_observed_v"
+      ],
+      "ring": "u_lpl_12_w (ck_sw)",
+      "read": "u_lpl_12_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_12_w.* -to u_lpl_12_r.*"
+    },
+    {
+      "name": "13",
+      "net": "wr_sequence_pin",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_control"
+      ],
+      "width": 32,
+      "readers": [
+        "u_link0.wr_seq",
+        "u_link1.wr_seq"
+      ],
+      "ring": "u_lpl_13_w (ck_sw)",
+      "read": "u_lpl_13_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_13_w.* -to u_lpl_13_r.*"
+    },
+    {
+      "name": "14",
+      "net": "dest_d",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_qo0",
+        "u_qo1",
+        "u_qo10",
+        "u_qo11",
+        "u_qo12",
+        "u_qo13",
+        "u_qo14",
+        "u_qo15",
+        "u_qo16",
+        "u_qo17",
+        "u_qo2",
+        "u_qo3",
+        "u_qo4",
+        "u_qo5",
+        "u_qo6",
+        "u_qo7",
+        "u_qo8",
+        "u_qo9"
+      ],
+      "width": 8175,
+      "readers": [
+        "u_link0.wr_flit",
+        "u_link1.wr_flit"
+      ],
+      "ring": "u_lpl_14_w (ck_sw)",
+      "read": "u_lpl_14_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_14_w.* -to u_lpl_14_r.*"
+    },
+    {
+      "name": "15",
+      "net": "p_lk_rd_v",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9"
+      ],
+      "width": 3,
+      "readers": [
+        "u_link0.rd_v",
+        "u_link1.rd_v"
+      ],
+      "ring": "u_lpl_15_w (ck_sw)",
+      "read": "u_lpl_15_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_15_w.* -to u_lpl_15_r.*"
+    },
+    {
+      "name": "16",
+      "net": "rd_sequence_pin",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_control"
+      ],
+      "width": 32,
+      "readers": [
+        "u_link0.rd_seq",
+        "u_link1.rd_seq"
+      ],
+      "ring": "u_lpl_16_w (ck_sw)",
+      "read": "u_lpl_16_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_16_w.* -to u_lpl_16_r.*"
+    },
+    {
+      "name": "17",
+      "net": "p_lk_rx_expect",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9"
+      ],
+      "width": 3,
+      "readers": [
+        "u_link0.rx_expect_v",
+        "u_link1.rx_expect_v"
+      ],
+      "ring": "u_lpl_17_w (ck_sw)",
+      "read": "u_lpl_17_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_17_w.* -to u_lpl_17_r.*"
+    },
+    {
+      "name": "18",
+      "net": "rx_sequence_pin",
+      "src_region": "sw",
+      "dst_region": "lk",
+      "src_nodes": [
+        "u_control"
+      ],
+      "width": 32,
+      "readers": [
+        "u_link0.rx_expect_seq",
+        "u_link1.rx_expect_seq"
+      ],
+      "ring": "u_lpl_18_w (ck_sw)",
+      "read": "u_lpl_18_r (ck_lk)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_18_w.* -to u_lpl_18_r.*"
+    },
+    {
+      "name": "19",
+      "net": "w_rgx_v",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_qo0"
+      ],
+      "width": 4,
+      "readers": [
+        "u_writer.rgx_v"
+      ],
+      "ring": "u_lpl_19_w (ck_sw)",
+      "read": "u_lpl_19_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_19_w.* -to u_lpl_19_r.*"
+    },
+    {
+      "name": "20",
+      "net": "w_rgx_addr",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_control"
+      ],
+      "width": 160,
+      "readers": [
+        "u_writer.rgx_addr"
+      ],
+      "ring": "u_lpl_20_w (ck_sw)",
+      "read": "u_lpl_20_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_20_w.* -to u_lpl_20_r.*"
+    },
+    {
+      "name": "21",
+      "net": "w_rgx_d0",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_qo0",
+        "u_qo1",
+        "u_qo10",
+        "u_qo11",
+        "u_qo12",
+        "u_qo13",
+        "u_qo14",
+        "u_qo15",
+        "u_qo16",
+        "u_qo17",
+        "u_qo2",
+        "u_qo3",
+        "u_qo4",
+        "u_qo5",
+        "u_qo6",
+        "u_qo7",
+        "u_qo8",
+        "u_qo9"
+      ],
+      "width": 512,
+      "readers": [
+        "u_writer.rgx_data0"
+      ],
+      "ring": "u_lpl_21_w (ck_sw)",
+      "read": "u_lpl_21_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_21_w.* -to u_lpl_21_r.*"
+    },
+    {
+      "name": "22",
+      "net": "w_rgx_d1",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_qo0",
+        "u_qo1",
+        "u_qo10",
+        "u_qo11",
+        "u_qo12",
+        "u_qo13",
+        "u_qo14",
+        "u_qo15",
+        "u_qo16",
+        "u_qo17",
+        "u_qo2",
+        "u_qo3",
+        "u_qo4",
+        "u_qo5",
+        "u_qo6",
+        "u_qo7",
+        "u_qo8",
+        "u_qo9"
+      ],
+      "width": 512,
+      "readers": [
+        "u_writer.rgx_data1"
+      ],
+      "ring": "u_lpl_22_w (ck_sw)",
+      "read": "u_lpl_22_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_22_w.* -to u_lpl_22_r.*"
+    },
+    {
+      "name": "23",
+      "net": "w_rgx_d2",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_qo0",
+        "u_qo1",
+        "u_qo10",
+        "u_qo11",
+        "u_qo12",
+        "u_qo13",
+        "u_qo14",
+        "u_qo15",
+        "u_qo16",
+        "u_qo17",
+        "u_qo2",
+        "u_qo3",
+        "u_qo4",
+        "u_qo5",
+        "u_qo6",
+        "u_qo7",
+        "u_qo8",
+        "u_qo9"
+      ],
+      "width": 512,
+      "readers": [
+        "u_writer.rgx_data2"
+      ],
+      "ring": "u_lpl_23_w (ck_sw)",
+      "read": "u_lpl_23_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_23_w.* -to u_lpl_23_r.*"
+    },
+    {
+      "name": "24",
+      "net": "w_rgx_d3",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_qo0",
+        "u_qo1",
+        "u_qo10",
+        "u_qo11",
+        "u_qo12",
+        "u_qo13",
+        "u_qo14",
+        "u_qo15",
+        "u_qo16",
+        "u_qo17",
+        "u_qo2",
+        "u_qo3",
+        "u_qo4",
+        "u_qo5",
+        "u_qo6",
+        "u_qo7",
+        "u_qo8",
+        "u_qo9"
+      ],
+      "width": 512,
+      "readers": [
+        "u_writer.rgx_data3"
+      ],
+      "ring": "u_lpl_24_w (ck_sw)",
+      "read": "u_lpl_24_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_24_w.* -to u_lpl_24_r.*"
+    },
+    {
+      "name": "25",
+      "net": "w_rgx_vm",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9"
+      ],
+      "width": 1,
+      "readers": [
+        "u_writer.rgx_vm"
+      ],
+      "ring": "u_lpl_25_w (ck_sw)",
+      "read": "u_lpl_25_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_25_w.* -to u_lpl_25_r.*"
+    },
+    {
+      "name": "26",
+      "net": "w_ingress_slot",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9"
+      ],
+      "width": 5,
+      "readers": [
+        "u_writer.ingress_slot"
+      ],
+      "ring": "u_lpl_26_w (ck_sw)",
+      "read": "u_lpl_26_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_26_w.* -to u_lpl_26_r.*"
+    },
+    {
+      "name": "27",
+      "net": "w_slot_valid",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9"
+      ],
+      "width": 8,
+      "readers": [
+        "u_writer.slot_valid"
+      ],
+      "ring": "u_lpl_27_w (ck_sw)",
+      "read": "u_lpl_27_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_27_w.* -to u_lpl_27_r.*"
+    },
+    {
+      "name": "28",
+      "net": "w_slot_owner",
+      "src_region": "sw",
+      "dst_region": "wr",
+      "src_nodes": [
+        "u_up0",
+        "u_up1",
+        "u_up10",
+        "u_up11",
+        "u_up12",
+        "u_up13",
+        "u_up14",
+        "u_up15",
+        "u_up2",
+        "u_up3",
+        "u_up4",
+        "u_up5",
+        "u_up6",
+        "u_up7",
+        "u_up8",
+        "u_up9"
+      ],
+      "width": 32,
+      "readers": [
+        "u_writer.slot_owner"
+      ],
+      "ring": "u_lpl_28_w (ck_sw)",
+      "read": "u_lpl_28_r (ck_wr)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_28_w.* -to u_lpl_28_r.*"
+    },
+    {
+      "name": "29",
+      "net": "protocol_fault",
+      "src_region": "sw",
+      "dst_region": "hd",
+      "src_nodes": [
+        "u_control"
+      ],
+      "width": 1,
+      "readers": [
+        "u_fj.protocol_fault"
+      ],
+      "loose": true,
+      "ring": "u_lpl_29_w (ck_sw)",
+      "read": "u_lpl_29_r (ck_hd)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_29_w.* -to u_lpl_29_r.*"
+    },
+    {
+      "name": "30",
+      "net": "capture_fault",
+      "src_region": "sw",
+      "dst_region": "hd",
+      "src_nodes": [
+        "u_qc0",
+        "u_qc1",
+        "u_qc2",
+        "u_qc3",
+        "u_qc4",
+        "u_qc5",
+        "u_qc6",
+        "u_qc7",
+        "u_qc8",
+        "u_qc9"
+      ],
+      "width": 10,
+      "readers": [
+        "u_fj.capture_fault"
+      ],
+      "loose": true,
+      "ring": "u_lpl_30_w (ck_sw)",
+      "read": "u_lpl_30_r (ck_hd)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_30_w.* -to u_lpl_30_r.*"
+    },
+    {
+      "name": "31",
+      "net": "select_fault",
+      "src_region": "sw",
+      "dst_region": "hd",
+      "src_nodes": [
+        "u_qo0",
+        "u_qo1",
+        "u_qo10",
+        "u_qo11",
+        "u_qo12",
+        "u_qo13",
+        "u_qo14",
+        "u_qo15",
+        "u_qo16",
+        "u_qo17",
+        "u_qo2",
+        "u_qo3",
+        "u_qo4",
+        "u_qo5",
+        "u_qo6",
+        "u_qo7",
+        "u_qo8",
+        "u_qo9"
+      ],
+      "width": 18,
+      "readers": [
+        "u_fj.select_fault"
+      ],
+      "loose": true,
+      "ring": "u_lpl_31_w (ck_sw)",
+      "read": "u_lpl_31_r (ck_hd)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_31_w.* -to u_lpl_31_r.*"
+    },
+    {
+      "name": "32",
+      "net": "unavailable_fault",
+      "src_region": "sw",
+      "dst_region": "hd",
+      "src_nodes": [
+        "u_qo0",
+        "u_qo1",
+        "u_qo10",
+        "u_qo11",
+        "u_qo12",
+        "u_qo13",
+        "u_qo14",
+        "u_qo15",
+        "u_qo16",
+        "u_qo17",
+        "u_qo2",
+        "u_qo3",
+        "u_qo4",
+        "u_qo5",
+        "u_qo6",
+        "u_qo7",
+        "u_qo8",
+        "u_qo9"
+      ],
+      "width": 18,
+      "readers": [
+        "u_fj.unavailable_fault"
+      ],
+      "loose": true,
+      "ring": "u_lpl_32_w (ck_sw)",
+      "read": "u_lpl_32_r (ck_hd)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_32_w.* -to u_lpl_32_r.*"
+    },
+    {
+      "name": "33",
+      "net": "link_abort",
+      "src_region": "lk",
+      "dst_region": "hd",
+      "src_nodes": [
+        "u_link0",
+        "u_link1"
+      ],
+      "width": 2,
+      "readers": [
+        "u_fj.link_abort"
+      ],
+      "loose": true,
+      "ring": "u_lpl_33_w (ck_lk)",
+      "read": "u_lpl_33_r (ck_hd)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_33_w.* -to u_lpl_33_r.*"
+    },
+    {
+      "name": "34",
+      "net": "ring_fault",
+      "src_region": "rg",
+      "dst_region": "hd",
+      "src_nodes": [
+        "u_rctl"
+      ],
+      "width": 1,
+      "readers": [
+        "u_fj.ring_fault"
+      ],
+      "loose": true,
+      "ring": "u_lpl_34_w (ck_rg)",
+      "read": "u_lpl_34_r (ck_hd)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_34_w.* -to u_lpl_34_r.*"
+    },
+    {
+      "name": "35",
+      "net": "writer_fault",
+      "src_region": "wr",
+      "dst_region": "hd",
+      "src_nodes": [
+        "u_writer"
+      ],
+      "width": 1,
+      "readers": [
+        "u_fj.writer_fault"
+      ],
+      "loose": true,
+      "ring": "u_lpl_35_w (ck_wr)",
+      "read": "u_lpl_35_r (ck_hd)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_35_w.* -to u_lpl_35_r.*"
+    },
+    {
+      "name": "36",
+      "net": "reduce_fault",
+      "src_region": "sw",
+      "dst_region": "hd",
+      "src_nodes": [
+        "u_rdc"
+      ],
+      "width": 1,
+      "readers": [
+        "u_fj.reduce_fault"
+      ],
+      "loose": true,
+      "ring": "u_lpl_36_w (ck_sw)",
+      "read": "u_lpl_36_r (ck_hd)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_36_w.* -to u_lpl_36_r.*"
+    },
+    {
+      "name": "37",
+      "net": "arg_fault",
+      "src_region": "sw",
+      "dst_region": "hd",
+      "src_nodes": [
+        "u_arg"
+      ],
+      "width": 1,
+      "readers": [
+        "u_fj.arg_fault"
+      ],
+      "loose": true,
+      "ring": "u_lpl_37_w (ck_sw)",
+      "read": "u_lpl_37_r (ck_hd)",
+      "added_edges": 3,
+      "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_37_w.* -to u_lpl_37_r.*"
+    }
   ],
-  "lag": [
-   {
-    "net": "arg_fault",
-    "reader": "u_fj",
-    "lag_edges": 6
-   },
-   {
-    "net": "capture_fault",
-    "reader": "u_fj",
-    "lag_edges": 6
-   },
-   {
-    "net": "link_abort",
-    "reader": "u_fj",
-    "lag_edges": 9
-   },
-   {
-    "net": "protocol_fault",
-    "reader": "u_fj",
-    "lag_edges": 6
-   },
-   {
-    "net": "reduce_fault",
-    "reader": "u_fj",
-    "lag_edges": 6
-   },
-   {
-    "net": "ring_fault",
-    "reader": "u_fj",
-    "lag_edges": 2
-   },
-   {
-    "net": "select_fault",
-    "reader": "u_fj",
-    "lag_edges": 6
-   },
-   {
-    "net": "unavailable_fault",
-    "reader": "u_fj",
-    "lag_edges": 6
-   },
-   {
-    "net": "writer_fault",
-    "reader": "u_fj",
-    "lag_edges": 9
-   }
-  ],
-  "sticky_outputs": {
-   "fault": 12,
-   "fault_cause": 12,
-   "hgi_fault": 12
-  },
-  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
- },
- "reset": {
-  "port": "rst_n",
-  "root_region": "sw",
-  "depth": 4,
-  "hops": {
-   "sw": 0,
-   "wr": 2,
-   "rg": 2,
-   "hd": 3,
-   "lk": 2
-  },
-  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
- },
- "flops": {
-  "landing": 67414,
-  "pads": 0,
-  "reset": 227,
-  "out_regs": 8155,
-  "in_regs": 4111
- },
- "in_regs": [
-  {
-   "port": "inj_d",
-   "stages": 2,
-   "region": "sw",
-   "inst": "u_lpi_inj_d"
-  },
-  {
-   "port": "rc_tag",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpi_rc_tag"
-  },
-  {
-   "port": "rc_v",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpi_rc_v"
-  },
-  {
-   "port": "tkx_busy",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpi_tkx_busy"
-  },
-  {
-   "port": "tkx_done",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpi_tkx_done"
-  },
-  {
-   "port": "tkx_fault",
-   "stages": 1,
-   "region": "hd",
-   "inst": "u_lpi_tkx_fault"
-  },
-  {
-   "port": "vm_rr",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpi_vm_rr"
-  }
- ],
- "out_regs": [
-  {
-   "port": "del_flit",
-   "stages": 2,
-   "region": "sw",
-   "inst": "u_lpo_del_flit"
-  },
-  {
-   "port": "del_valid",
-   "stages": 2,
-   "region": "sw",
-   "inst": "u_lpo_del_valid"
-  },
-  {
-   "port": "hgi_del_obase",
-   "stages": 2,
-   "region": "sw",
-   "inst": "u_lpo_hgi_del_obase"
-  },
-  {
-   "port": "hgi_inj_addr",
-   "stages": 2,
-   "region": "sw",
-   "inst": "u_lpo_hgi_inj_addr"
-  },
-  {
-   "port": "inj_idx",
-   "stages": 2,
-   "region": "sw",
-   "inst": "u_lpo_inj_idx"
-  },
-  {
-   "port": "inj_rd",
-   "stages": 2,
-   "region": "sw",
-   "inst": "u_lpo_inj_rd"
-  },
-  {
-   "port": "isa_lp_data",
-   "stages": 2,
-   "region": "sw",
-   "inst": "u_lpo_isa_lp_data"
-  },
-  {
-   "port": "isa_ring",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_isa_ring"
-  },
-  {
-   "port": "stat_cycles",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_stat_cycles"
-  },
-  {
-   "port": "tkx_arg_mode",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_arg_mode"
-  },
-  {
-   "port": "tkx_cfg_g",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_cfg_g"
-  },
-  {
-   "port": "tkx_cfg_gbase",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_cfg_gbase"
-  },
-  {
-   "port": "tkx_cfg_has_r",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_cfg_has_r"
-  },
-  {
-   "port": "tkx_cfg_k",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_cfg_k"
-  },
-  {
-   "port": "tkx_cfg_n",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_cfg_n"
-  },
-  {
-   "port": "tkx_cfg_nout",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_cfg_nout"
-  },
-  {
-   "port": "tkx_cfg_obase",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_cfg_obase"
-  },
-  {
-   "port": "tkx_cfg_pf",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_cfg_pf"
-  },
-  {
-   "port": "tkx_cfg_rbase",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_cfg_rbase"
-  },
-  {
-   "port": "tkx_del_flit",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_del_flit"
-  },
-  {
-   "port": "tkx_del_slot",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_del_slot"
-  },
-  {
-   "port": "tkx_del_valid",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_del_valid"
-  },
-  {
-   "port": "tkx_start",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_tkx_start"
-  },
-  {
-   "port": "vm_rq",
-   "stages": 1,
-   "region": "sw",
-   "inst": "u_lpo_vm_rq"
-  }
- ],
- "communicating_region_pairs": {
-  "landed": [
-   "hd-lk",
-   "hd-rg",
-   "hd-sw",
-   "hd-wr",
-   "lk-sw",
-   "sw-wr"
-  ],
-  "reset_hops": [
-   "hd-sw",
-   "lk-sw",
-   "rg-sw",
-   "sw-wr"
-  ]
- },
- "compiler": {
-  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
-  "child_offset_edges": {
-   "u_issuer": 1,
-   "u_up0": 4,
-   "u_up1": 4,
-   "u_up2": 4,
-   "u_up3": 4,
-   "u_up4": 4,
-   "u_up5": 4,
-   "u_up6": 4,
-   "u_up7": 4,
-   "u_up8": 4,
-   "u_up9": 4,
-   "u_up10": 4,
-   "u_up11": 4,
-   "u_up12": 4,
-   "u_up13": 4,
-   "u_up14": 4,
-   "u_up15": 4,
-   "u_ariter": 4,
-   "u_va0": 4,
-   "u_va1": 4,
-   "u_va2": 4,
-   "u_va3": 4,
-   "u_va4": 4,
-   "u_va5": 4,
-   "u_va6": 4,
-   "u_va7": 4,
-   "u_va8": 4,
-   "u_va9": 4,
-   "u_va10": 4,
-   "u_va11": 4,
-   "u_va12": 4,
-   "u_va13": 4,
-   "u_va14": 4,
-   "u_va15": 4,
-   "u_control": 4,
-   "u_arg": 4,
-   "u_fj": 1,
-   "u_rdl0": 4,
-   "u_rdl1": 4,
-   "u_rdl2": 4,
-   "u_rdl3": 4,
-   "u_rdl4": 4,
-   "u_rdl5": 4,
-   "u_rdl6": 4,
-   "u_rdl7": 4,
-   "u_rdl8": 4,
-   "u_rdl9": 4,
-   "u_rdl10": 4,
-   "u_rdl11": 4,
-   "u_rdl12": 4,
-   "u_rdl13": 4,
-   "u_rdl14": 4,
-   "u_rdl15": 4,
-   "u_rdc": 4,
-   "u_qc0": 4,
-   "u_qc1": 4,
-   "u_qc2": 4,
-   "u_qc3": 4,
-   "u_qc4": 4,
-   "u_qc5": 4,
-   "u_qc6": 4,
-   "u_qc7": 4,
-   "u_qc8": 4,
-   "u_qc9": 4,
-   "u_qo0": 4,
-   "u_qo1": 4,
-   "u_qo2": 4,
-   "u_qo3": 4,
-   "u_qo4": 4,
-   "u_qo5": 4,
-   "u_qo6": 4,
-   "u_qo7": 4,
-   "u_qo8": 4,
-   "u_qo9": 4,
-   "u_qo10": 4,
-   "u_qo11": 4,
-   "u_qo12": 4,
-   "u_qo13": 4,
-   "u_qo14": 4,
-   "u_qo15": 4,
-   "u_qo16": 4,
-   "u_qo17": 4,
-   "u_link0": 7,
-   "u_link1": 7,
-   "u_writer": 7,
-   "u_rctl": 0,
-   "u_rst0": 0,
-   "u_radd0": 0,
-   "u_rst1": 0,
-   "u_radd1": 0,
-   "u_rst2": 0,
-   "u_radd2": 0,
-   "u_rst3": 0,
-   "u_radd3": 0,
-   "u_rst4": 0,
-   "u_radd4": 0,
-   "u_rst5": 0,
-   "u_radd5": 0,
-   "u_rst6": 0,
-   "u_radd6": 0,
-   "u_rst7": 0,
-   "u_radd7": 0
-  },
-  "input_port_offset_edges": {
-   "cfg_v": 1,
-   "cfg_target": 1,
-   "cfg_addr": 1,
-   "cfg_data": 1,
-   "desc_v": 1,
-   "desc_base": 1,
-   "desc_limit": 1,
-   "desc_loops": 1,
-   "launch_v": 1,
-   "inj_d": 2,
-   "rc_v": 3,
-   "rc_tag": 3,
-   "rc_d": 0,
-   "phy_up": 7,
-   "rx_pin_v": 7,
-   "rx_pin_flit": 7,
-   "pr_cw_i": 0,
-   "pr_ccw_i": 0,
-   "ra_lp_we": 0,
-   "ra_lp_tag": 0,
-   "ra_lp_data": 0,
-   "ra_state_read_add": 0,
-   "ra_state_read_tx": 0,
-   "ra_state_read_rr": 0,
-   "ra_state_add_tag": 0,
-   "ra_state_tx_tag": 0,
-   "ra_state_rr_tag": 0,
-   "ra_state_add_src": 0,
-   "ra_state_add_rhs_acc": 0,
-   "ra_state_tx_acc": 0,
-   "ra_add_v": 0,
-   "ra_add_tag": 0,
-   "ra_add_src": 0,
-   "ra_add_rhs_acc": 0,
-   "ra_tx_inject": 0,
-   "ra_tx_forward": 0,
-   "ra_tx_tag": 0,
-   "ra_tx_dst": 0,
-   "ra_tx_result": 0,
-   "ra_tx_acc": 0,
-   "ra_tx_gather": 0,
-   "ra_tx_ttl": 0,
-   "ra_rx_slot": 0,
-   "ra_rx_kind": 0,
-   "ra_rx_src": 0,
-   "ra_rx_tag": 0,
-   "ra_rr_local": 0,
-   "ra_rr_local_tag": 0,
-   "vm_rr": 3,
-   "tkx_w_v": 7,
-   "tkx_w_addr": 7,
-   "tkx_w_mask": 7,
-   "tkx_w_data": 7,
-   "tkx_busy": 3,
-   "tkx_done": 3,
-   "tkx_fault": 0
-  },
-  "output_port_offset_edges": {
-   "program_configured": 1,
-   "program_init_busy": 1,
-   "program_fault": 1,
-   "hgi_busy": 1,
-   "hgi_done": 1,
-   "hgi_fault": 1,
-   "inj_rd": 6,
-   "inj_idx": 6,
-   "hgi_inj_addr": 6,
-   "del_valid": 6,
-   "del_flit": 6,
-   "hgi_del_obase": 6,
-   "rr_v": 0,
-   "rr_tag": 0,
-   "rr_d": 0,
-   "tx_pin_v": 7,
-   "tx_pin_flit": 7,
-   "retry_requested": 7,
-   "pr_cw_o": 0,
-   "pr_ccw_o": 0,
-   "isa_ring": 5,
-   "isa_lp_data": 2,
-   "ag_v": 0,
-   "ag_src": 0,
-   "ag_tag": 0,
-   "ag_d": 0,
-   "vm_rq": 5,
-   "vm_kq": 7,
-   "tkx_start": 5,
-   "tkx_arg_mode": 5,
-   "tkx_cfg_n": 5,
-   "tkx_cfg_k": 5,
-   "tkx_cfg_nout": 5,
-   "tkx_cfg_g": 5,
-   "tkx_cfg_gbase": 5,
-   "tkx_cfg_pf": 5,
-   "tkx_cfg_obase": 5,
-   "tkx_cfg_rbase": 5,
-   "tkx_cfg_has_r": 5,
-   "tkx_del_slot": 5,
-   "tkx_del_valid": 5,
-   "tkx_del_flit": 5,
-   "fault": 1,
-   "fault_cause": 1,
-   "done": 1,
-   "stat_cycles": 5
-  },
-  "reset_release_added_edges": 4,
-  "status_flag_lag_edges": {
-   "arg_fault->u_fj": 6,
-   "capture_fault->u_fj": 6,
-   "link_abort->u_fj": 9,
-   "protocol_fault->u_fj": 6,
-   "reduce_fault->u_fj": 6,
-   "ring_fault->u_fj": 2,
-   "select_fault->u_fj": 6,
-   "unavailable_fault->u_fj": 6,
-   "writer_fault->u_fj": 9
-  },
-  "schedule": "offsets",
-  "ref_params": null,
-  "status_lag_edges": {
-   "u_qc2": {
-    "lag": 6,
-    "pins": [
-     "src_d",
-     "src_v"
+  "pads": [],
+  "loose_status": {
+    "nets": [
+      "arg_fault",
+      "capture_fault",
+      "link_abort",
+      "protocol_fault",
+      "reduce_fault",
+      "ring_fault",
+      "select_fault",
+      "unavailable_fault",
+      "writer_fault"
     ],
-    "note": "these status-return inputs reach the reader lag edges after its own time (flat == <top>_lagref: the reader's outputs carry that status lag edges later than in the flat parent)"
-   },
-   "u_qc3": {
-    "lag": 6,
-    "pins": [
-     "src_d",
-     "src_v"
+    "lag": [
+      {
+        "net": "arg_fault",
+        "reader": "u_fj",
+        "lag_edges": 6
+      },
+      {
+        "net": "capture_fault",
+        "reader": "u_fj",
+        "lag_edges": 6
+      },
+      {
+        "net": "link_abort",
+        "reader": "u_fj",
+        "lag_edges": 9
+      },
+      {
+        "net": "protocol_fault",
+        "reader": "u_fj",
+        "lag_edges": 6
+      },
+      {
+        "net": "reduce_fault",
+        "reader": "u_fj",
+        "lag_edges": 6
+      },
+      {
+        "net": "ring_fault",
+        "reader": "u_fj",
+        "lag_edges": 3
+      },
+      {
+        "net": "select_fault",
+        "reader": "u_fj",
+        "lag_edges": 6
+      },
+      {
+        "net": "unavailable_fault",
+        "reader": "u_fj",
+        "lag_edges": 6
+      },
+      {
+        "net": "writer_fault",
+        "reader": "u_fj",
+        "lag_edges": 9
+      }
     ],
-    "note": "these status-return inputs reach the reader lag edges after its own time (flat == <top>_lagref: the reader's outputs carry that status lag edges later than in the flat parent)"
-   }
+    "sticky_outputs": {
+      "fault": 12,
+      "fault_cause": 12,
+      "hgi_fault": 12
+    },
+    "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
   },
-  "max_added_edges": 7
- },
- "warnings": [
-  "child u_up0 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up1 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up2 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up3 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up4 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up5 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up6 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up7 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up8 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up9 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up10 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up11 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up12 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up13 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up14 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_up15 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_ariter runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va0 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va1 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va2 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va3 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va4 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va5 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va6 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va7 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va8 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va9 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va10 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va11 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va12 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va13 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va14 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
-  "child u_va15 runs t = 4 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)"
- ],
- "die_obligations": [
-  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
-  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
-  "reset-hop pairs ['hd-sw', 'lk-sw', 'rg-sw', 'sw-wr']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
-  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
- ],
- "audit": {
-  "ok": true,
-  "landings": 38,
-  "reset_hops": 4,
-  "fails": []
- }
+  "reset": {
+    "port": "rst_n",
+    "root_region": "sw",
+    "depth": 4,
+    "hops": {
+      "sw": 0,
+      "wr": 2,
+      "rg": 2,
+      "hd": 3,
+      "lk": 2
+    },
+    "same_depth_forest": {
+      "regional_stages": 3,
+      "root_D_loads": 5,
+      "regions": {
+        "sw": {
+          "leaves": 629,
+          "terms": [
+            "1",
+            "(((((1535) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((((87) - (0) + 1))+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((((1) - (0) + 1))+24-1)/24)",
+            "(((((1089) - (0) + 1))+24-1)/24)",
+            "(((((2) - (0) + 1))+24-1)/24)",
+            "(((((7) - (0) + 1))+24-1)/24)",
+            "(((((15) - (0) + 1))+24-1)/24)",
+            "(((((2) - (0) + 1))+24-1)/24)",
+            "(((((14) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((((8174) - (0) + 1))+24-1)/24)",
+            "(((((2) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((((2) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((((3) - (0) + 1))+24-1)/24)",
+            "(((((159) - (0) + 1))+24-1)/24)",
+            "(((((511) - (0) + 1))+24-1)/24)",
+            "(((((511) - (0) + 1))+24-1)/24)",
+            "(((((511) - (0) + 1))+24-1)/24)",
+            "(((((511) - (0) + 1))+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((((4) - (0) + 1))+24-1)/24)",
+            "(((((7) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((((9) - (0) + 1))+24-1)/24)",
+            "(((((17) - (0) + 1))+24-1)/24)",
+            "(((((17) - (0) + 1))+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1"
+          ],
+          "bindings": [
+            {
+              "landing": "0",
+              "role": "r",
+              "first_leaf": 1,
+              "chunks": 64,
+              "first_expr": "1",
+              "chunks_expr": "(((((1535) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "1",
+              "role": "r",
+              "first_leaf": 65,
+              "chunks": 2,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "2",
+              "role": "r",
+              "first_leaf": 67,
+              "chunks": 4,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((87) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "3",
+              "role": "r",
+              "first_leaf": 71,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "4",
+              "role": "r",
+              "first_leaf": 72,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "5",
+              "role": "r",
+              "first_leaf": 73,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "6",
+              "role": "r",
+              "first_leaf": 74,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((((1) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "7",
+              "role": "r",
+              "first_leaf": 75,
+              "chunks": 46,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((1089) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "8",
+              "role": "w",
+              "first_leaf": 121,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "9",
+              "role": "w",
+              "first_leaf": 122,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((7) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "10",
+              "role": "w",
+              "first_leaf": 123,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((15) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "11",
+              "role": "w",
+              "first_leaf": 124,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "12",
+              "role": "w",
+              "first_leaf": 125,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((14) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "13",
+              "role": "w",
+              "first_leaf": 126,
+              "chunks": 2,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "14",
+              "role": "w",
+              "first_leaf": 128,
+              "chunks": 341,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((8174) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "15",
+              "role": "w",
+              "first_leaf": 469,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "16",
+              "role": "w",
+              "first_leaf": 470,
+              "chunks": 2,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "17",
+              "role": "w",
+              "first_leaf": 472,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "18",
+              "role": "w",
+              "first_leaf": 473,
+              "chunks": 2,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "19",
+              "role": "w",
+              "first_leaf": 475,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((3) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "20",
+              "role": "w",
+              "first_leaf": 476,
+              "chunks": 7,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((159) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "21",
+              "role": "w",
+              "first_leaf": 483,
+              "chunks": 22,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "22",
+              "role": "w",
+              "first_leaf": 505,
+              "chunks": 22,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "23",
+              "role": "w",
+              "first_leaf": 527,
+              "chunks": 22,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "24",
+              "role": "w",
+              "first_leaf": 549,
+              "chunks": 22,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "25",
+              "role": "w",
+              "first_leaf": 571,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "26",
+              "role": "w",
+              "first_leaf": 572,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "27",
+              "role": "w",
+              "first_leaf": 573,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((7) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "28",
+              "role": "w",
+              "first_leaf": 574,
+              "chunks": 2,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "29",
+              "role": "w",
+              "first_leaf": 576,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "30",
+              "role": "w",
+              "first_leaf": 577,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((((9) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "31",
+              "role": "w",
+              "first_leaf": 578,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((17) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "32",
+              "role": "w",
+              "first_leaf": 579,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((17) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "36",
+              "role": "w",
+              "first_leaf": 580,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "37",
+              "role": "w",
+              "first_leaf": 581,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            }
+          ],
+          "child_bindings": [
+            {
+              "inst": "u_control",
+              "pin": null,
+              "bit": null,
+              "leaf": 582,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)"
+            },
+            {
+              "inst": "u_arg",
+              "pin": null,
+              "bit": null,
+              "leaf": 583,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1"
+            },
+            {
+              "inst": "u_rdl0",
+              "pin": null,
+              "bit": null,
+              "leaf": 584,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1"
+            },
+            {
+              "inst": "u_rdl1",
+              "pin": null,
+              "bit": null,
+              "leaf": 585,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1"
+            },
+            {
+              "inst": "u_rdl2",
+              "pin": null,
+              "bit": null,
+              "leaf": 586,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl3",
+              "pin": null,
+              "bit": null,
+              "leaf": 587,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl4",
+              "pin": null,
+              "bit": null,
+              "leaf": 588,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl5",
+              "pin": null,
+              "bit": null,
+              "leaf": 589,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl6",
+              "pin": null,
+              "bit": null,
+              "leaf": 590,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl7",
+              "pin": null,
+              "bit": null,
+              "leaf": 591,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl8",
+              "pin": null,
+              "bit": null,
+              "leaf": 592,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl9",
+              "pin": null,
+              "bit": null,
+              "leaf": 593,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl10",
+              "pin": null,
+              "bit": null,
+              "leaf": 594,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl11",
+              "pin": null,
+              "bit": null,
+              "leaf": 595,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl12",
+              "pin": null,
+              "bit": null,
+              "leaf": 596,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl13",
+              "pin": null,
+              "bit": null,
+              "leaf": 597,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl14",
+              "pin": null,
+              "bit": null,
+              "leaf": 598,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdl15",
+              "pin": null,
+              "bit": null,
+              "leaf": 599,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_rdc",
+              "pin": null,
+              "bit": null,
+              "leaf": 600,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc0",
+              "pin": null,
+              "bit": null,
+              "leaf": 601,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc1",
+              "pin": null,
+              "bit": null,
+              "leaf": 602,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc2",
+              "pin": null,
+              "bit": null,
+              "leaf": 603,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc3",
+              "pin": null,
+              "bit": null,
+              "leaf": 604,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc4",
+              "pin": null,
+              "bit": null,
+              "leaf": 605,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc5",
+              "pin": null,
+              "bit": null,
+              "leaf": 606,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc6",
+              "pin": null,
+              "bit": null,
+              "leaf": 607,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc7",
+              "pin": null,
+              "bit": null,
+              "leaf": 608,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc8",
+              "pin": null,
+              "bit": null,
+              "leaf": 609,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qc9",
+              "pin": null,
+              "bit": null,
+              "leaf": 610,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo0",
+              "pin": null,
+              "bit": null,
+              "leaf": 611,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo1",
+              "pin": null,
+              "bit": null,
+              "leaf": 612,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo2",
+              "pin": null,
+              "bit": null,
+              "leaf": 613,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo3",
+              "pin": null,
+              "bit": null,
+              "leaf": 614,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo4",
+              "pin": null,
+              "bit": null,
+              "leaf": 615,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo5",
+              "pin": null,
+              "bit": null,
+              "leaf": 616,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo6",
+              "pin": null,
+              "bit": null,
+              "leaf": 617,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo7",
+              "pin": null,
+              "bit": null,
+              "leaf": 618,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo8",
+              "pin": null,
+              "bit": null,
+              "leaf": 619,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo9",
+              "pin": null,
+              "bit": null,
+              "leaf": 620,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo10",
+              "pin": null,
+              "bit": null,
+              "leaf": 621,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo11",
+              "pin": null,
+              "bit": null,
+              "leaf": 622,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo12",
+              "pin": null,
+              "bit": null,
+              "leaf": 623,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo13",
+              "pin": null,
+              "bit": null,
+              "leaf": 624,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo14",
+              "pin": null,
+              "bit": null,
+              "leaf": 625,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo15",
+              "pin": null,
+              "bit": null,
+              "leaf": 626,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo16",
+              "pin": null,
+              "bit": null,
+              "leaf": 627,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_qo17",
+              "pin": null,
+              "bit": null,
+              "leaf": 628,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1"
+            }
+          ],
+          "branches": 20,
+          "FFs": 650,
+          "scalar_child_pad_port_uses": 47
+        },
+        "wr": {
+          "leaves": 104,
+          "terms": [
+            "1",
+            "(((((3) - (0) + 1))+24-1)/24)",
+            "(((((159) - (0) + 1))+24-1)/24)",
+            "(((((511) - (0) + 1))+24-1)/24)",
+            "(((((511) - (0) + 1))+24-1)/24)",
+            "(((((511) - (0) + 1))+24-1)/24)",
+            "(((((511) - (0) + 1))+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((((4) - (0) + 1))+24-1)/24)",
+            "(((((7) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "1"
+          ],
+          "bindings": [
+            {
+              "landing": "19",
+              "role": "r",
+              "first_leaf": 1,
+              "chunks": 1,
+              "first_expr": "1",
+              "chunks_expr": "(((((3) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "20",
+              "role": "r",
+              "first_leaf": 2,
+              "chunks": 7,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((159) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "21",
+              "role": "r",
+              "first_leaf": 9,
+              "chunks": 22,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "22",
+              "role": "r",
+              "first_leaf": 31,
+              "chunks": 22,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "23",
+              "role": "r",
+              "first_leaf": 53,
+              "chunks": 22,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "24",
+              "role": "r",
+              "first_leaf": 75,
+              "chunks": 22,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((511) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "25",
+              "role": "r",
+              "first_leaf": 97,
+              "chunks": 1,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "26",
+              "role": "r",
+              "first_leaf": 98,
+              "chunks": 1,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "27",
+              "role": "r",
+              "first_leaf": 99,
+              "chunks": 1,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((7) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "28",
+              "role": "r",
+              "first_leaf": 100,
+              "chunks": 2,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "35",
+              "role": "w",
+              "first_leaf": 102,
+              "chunks": 1,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            }
+          ],
+          "child_bindings": [
+            {
+              "inst": "u_writer",
+              "pin": null,
+              "bit": null,
+              "leaf": 103,
+              "first_expr": "1+(((((3) - (0) + 1))+24-1)/24)+(((((159) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((((511) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)"
+            }
+          ],
+          "branches": 4,
+          "FFs": 109,
+          "scalar_child_pad_port_uses": 1
+        },
+        "rg": {
+          "leaves": 11,
+          "terms": [
+            "1",
+            "(((1)+24-1)/24)",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1"
+          ],
+          "bindings": [
+            {
+              "landing": "34",
+              "role": "w",
+              "first_leaf": 1,
+              "chunks": 1,
+              "first_expr": "1",
+              "chunks_expr": "(((1)+24-1)/24)"
+            }
+          ],
+          "child_bindings": [
+            {
+              "inst": "u_rctl",
+              "pin": null,
+              "bit": null,
+              "leaf": 2,
+              "first_expr": "1+(((1)+24-1)/24)"
+            },
+            {
+              "inst": "u_radd0",
+              "pin": null,
+              "bit": null,
+              "leaf": 3,
+              "first_expr": "1+(((1)+24-1)/24)+1"
+            },
+            {
+              "inst": "u_radd1",
+              "pin": null,
+              "bit": null,
+              "leaf": 4,
+              "first_expr": "1+(((1)+24-1)/24)+1+1"
+            },
+            {
+              "inst": "u_radd2",
+              "pin": null,
+              "bit": null,
+              "leaf": 5,
+              "first_expr": "1+(((1)+24-1)/24)+1+1+1"
+            },
+            {
+              "inst": "u_radd3",
+              "pin": null,
+              "bit": null,
+              "leaf": 6,
+              "first_expr": "1+(((1)+24-1)/24)+1+1+1+1"
+            },
+            {
+              "inst": "u_radd4",
+              "pin": null,
+              "bit": null,
+              "leaf": 7,
+              "first_expr": "1+(((1)+24-1)/24)+1+1+1+1+1"
+            },
+            {
+              "inst": "u_radd5",
+              "pin": null,
+              "bit": null,
+              "leaf": 8,
+              "first_expr": "1+(((1)+24-1)/24)+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_radd6",
+              "pin": null,
+              "bit": null,
+              "leaf": 9,
+              "first_expr": "1+(((1)+24-1)/24)+1+1+1+1+1+1+1"
+            },
+            {
+              "inst": "u_radd7",
+              "pin": null,
+              "bit": null,
+              "leaf": 10,
+              "first_expr": "1+(((1)+24-1)/24)+1+1+1+1+1+1+1+1"
+            }
+          ],
+          "branches": 1,
+          "FFs": 13,
+          "scalar_child_pad_port_uses": 9
+        },
+        "hd": {
+          "leaves": 85,
+          "terms": [
+            "1",
+            "(((((1535) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((((87) - (0) + 1))+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((((9) - (0) + 1))+24-1)/24)",
+            "(((((17) - (0) + 1))+24-1)/24)",
+            "(((((17) - (0) + 1))+24-1)/24)",
+            "(((((1) - (0) + 1))+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "(((1)+24-1)/24)",
+            "1",
+            "1"
+          ],
+          "bindings": [
+            {
+              "landing": "0",
+              "role": "w",
+              "first_leaf": 1,
+              "chunks": 64,
+              "first_expr": "1",
+              "chunks_expr": "(((((1535) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "1",
+              "role": "w",
+              "first_leaf": 65,
+              "chunks": 2,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "2",
+              "role": "w",
+              "first_leaf": 67,
+              "chunks": 4,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((87) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "3",
+              "role": "w",
+              "first_leaf": 71,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "4",
+              "role": "w",
+              "first_leaf": 72,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "5",
+              "role": "w",
+              "first_leaf": 73,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "29",
+              "role": "r",
+              "first_leaf": 74,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "30",
+              "role": "r",
+              "first_leaf": 75,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((((9) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "31",
+              "role": "r",
+              "first_leaf": 76,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((17) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "32",
+              "role": "r",
+              "first_leaf": 77,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((17) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "33",
+              "role": "r",
+              "first_leaf": 78,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((1) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "34",
+              "role": "r",
+              "first_leaf": 79,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "35",
+              "role": "r",
+              "first_leaf": 80,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "36",
+              "role": "r",
+              "first_leaf": 81,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            },
+            {
+              "landing": "37",
+              "role": "r",
+              "first_leaf": 82,
+              "chunks": 1,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)",
+              "chunks_expr": "(((1)+24-1)/24)"
+            }
+          ],
+          "child_bindings": [
+            {
+              "inst": "u_issuer",
+              "pin": null,
+              "bit": null,
+              "leaf": 83,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)"
+            },
+            {
+              "inst": "u_fj",
+              "pin": null,
+              "bit": null,
+              "leaf": 84,
+              "first_expr": "1+(((((1535) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((87) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((((9) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((17) - (0) + 1))+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+1"
+            }
+          ],
+          "branches": 3,
+          "FFs": 89,
+          "scalar_child_pad_port_uses": 2
+        },
+        "lk": {
+          "leaves": 405,
+          "terms": [
+            "1",
+            "(((((1) - (0) + 1))+24-1)/24)",
+            "(((((1089) - (0) + 1))+24-1)/24)",
+            "(((((2) - (0) + 1))+24-1)/24)",
+            "(((((7) - (0) + 1))+24-1)/24)",
+            "(((((15) - (0) + 1))+24-1)/24)",
+            "(((((2) - (0) + 1))+24-1)/24)",
+            "(((((14) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((((8174) - (0) + 1))+24-1)/24)",
+            "(((((2) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((((2) - (0) + 1))+24-1)/24)",
+            "(((((31) - (0) + 1))+24-1)/24)",
+            "(((((1) - (0) + 1))+24-1)/24)",
+            "1",
+            "1"
+          ],
+          "bindings": [
+            {
+              "landing": "6",
+              "role": "w",
+              "first_leaf": 1,
+              "chunks": 1,
+              "first_expr": "1",
+              "chunks_expr": "(((((1) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "7",
+              "role": "w",
+              "first_leaf": 2,
+              "chunks": 46,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((1089) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "8",
+              "role": "r",
+              "first_leaf": 48,
+              "chunks": 1,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "9",
+              "role": "r",
+              "first_leaf": 49,
+              "chunks": 1,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((7) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "10",
+              "role": "r",
+              "first_leaf": 50,
+              "chunks": 1,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((15) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "11",
+              "role": "r",
+              "first_leaf": 51,
+              "chunks": 1,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "12",
+              "role": "r",
+              "first_leaf": 52,
+              "chunks": 1,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((14) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "13",
+              "role": "r",
+              "first_leaf": 53,
+              "chunks": 2,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "14",
+              "role": "r",
+              "first_leaf": 55,
+              "chunks": 341,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((8174) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "15",
+              "role": "r",
+              "first_leaf": 396,
+              "chunks": 1,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "16",
+              "role": "r",
+              "first_leaf": 397,
+              "chunks": 2,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "17",
+              "role": "r",
+              "first_leaf": 399,
+              "chunks": 1,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((2) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "18",
+              "role": "r",
+              "first_leaf": 400,
+              "chunks": 2,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((31) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "landing": "33",
+              "role": "w",
+              "first_leaf": 402,
+              "chunks": 1,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)",
+              "chunks_expr": "(((((1) - (0) + 1))+24-1)/24)"
+            }
+          ],
+          "child_bindings": [
+            {
+              "inst": "u_link0",
+              "pin": null,
+              "bit": null,
+              "leaf": 403,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)"
+            },
+            {
+              "inst": "u_link1",
+              "pin": null,
+              "bit": null,
+              "leaf": 404,
+              "first_expr": "1+(((((1) - (0) + 1))+24-1)/24)+(((((1089) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((7) - (0) + 1))+24-1)/24)+(((((15) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((14) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((8174) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((2) - (0) + 1))+24-1)/24)+(((((31) - (0) + 1))+24-1)/24)+(((((1) - (0) + 1))+24-1)/24)+1"
+            }
+          ],
+          "branches": 13,
+          "FFs": 419,
+          "scalar_child_pad_port_uses": 2
+        }
+      },
+      "incremental_FFs": 1265,
+      "required_rtl_sources": [
+        "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+        "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+      ],
+      "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified."
+    },
+    "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+  },
+  "flops": {
+    "landing": 79184,
+    "pads": 0,
+    "reset": 2190,
+    "out_regs": 8155,
+    "private_pub_mode": 64
+  },
+  "out_regs": [
+    {
+      "port": "del_flit",
+      "stages": 2,
+      "region": "sw",
+      "inst": "u_lpo_del_flit"
+    },
+    {
+      "port": "del_valid",
+      "stages": 2,
+      "region": "sw",
+      "inst": "u_lpo_del_valid"
+    },
+    {
+      "port": "hgi_del_obase",
+      "stages": 2,
+      "region": "sw",
+      "inst": "u_lpo_hgi_del_obase"
+    },
+    {
+      "port": "hgi_inj_addr",
+      "stages": 2,
+      "region": "sw",
+      "inst": "u_lpo_hgi_inj_addr"
+    },
+    {
+      "port": "inj_idx",
+      "stages": 2,
+      "region": "sw",
+      "inst": "u_lpo_inj_idx"
+    },
+    {
+      "port": "inj_rd",
+      "stages": 2,
+      "region": "sw",
+      "inst": "u_lpo_inj_rd"
+    },
+    {
+      "port": "isa_lp_data",
+      "stages": 2,
+      "region": "sw",
+      "inst": "u_lpo_isa_lp_data"
+    },
+    {
+      "port": "isa_ring",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_isa_ring"
+    },
+    {
+      "port": "stat_cycles",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_stat_cycles"
+    },
+    {
+      "port": "tkx_arg_mode",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_arg_mode"
+    },
+    {
+      "port": "tkx_cfg_g",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_cfg_g"
+    },
+    {
+      "port": "tkx_cfg_gbase",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_cfg_gbase"
+    },
+    {
+      "port": "tkx_cfg_has_r",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_cfg_has_r"
+    },
+    {
+      "port": "tkx_cfg_k",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_cfg_k"
+    },
+    {
+      "port": "tkx_cfg_n",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_cfg_n"
+    },
+    {
+      "port": "tkx_cfg_nout",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_cfg_nout"
+    },
+    {
+      "port": "tkx_cfg_obase",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_cfg_obase"
+    },
+    {
+      "port": "tkx_cfg_pf",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_cfg_pf"
+    },
+    {
+      "port": "tkx_cfg_rbase",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_cfg_rbase"
+    },
+    {
+      "port": "tkx_del_flit",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_del_flit"
+    },
+    {
+      "port": "tkx_del_slot",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_del_slot"
+    },
+    {
+      "port": "tkx_del_valid",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_del_valid"
+    },
+    {
+      "port": "tkx_start",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_tkx_start"
+    },
+    {
+      "port": "vm_rq",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpo_vm_rq"
+    }
+  ],
+  "communicating_region_pairs": {
+    "landed": [
+      "hd-lk",
+      "hd-rg",
+      "hd-sw",
+      "hd-wr",
+      "lk-sw",
+      "sw-wr"
+    ],
+    "reset_hops": [
+      "hd-sw",
+      "lk-sw",
+      "rg-sw",
+      "sw-wr"
+    ]
+  },
+  "compiler": {
+    "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+    "child_offset_edges": {
+      "u_issuer": 0,
+      "u_up0": 3,
+      "u_up1": 3,
+      "u_up2": 3,
+      "u_up3": 3,
+      "u_up4": 3,
+      "u_up5": 3,
+      "u_up6": 3,
+      "u_up7": 3,
+      "u_up8": 3,
+      "u_up9": 3,
+      "u_up10": 3,
+      "u_up11": 3,
+      "u_up12": 3,
+      "u_up13": 3,
+      "u_up14": 3,
+      "u_up15": 3,
+      "u_ariter": 3,
+      "u_va0": 3,
+      "u_va1": 3,
+      "u_va2": 3,
+      "u_va3": 3,
+      "u_va4": 3,
+      "u_va5": 3,
+      "u_va6": 3,
+      "u_va7": 3,
+      "u_va8": 3,
+      "u_va9": 3,
+      "u_va10": 3,
+      "u_va11": 3,
+      "u_va12": 3,
+      "u_va13": 3,
+      "u_va14": 3,
+      "u_va15": 3,
+      "u_control": 3,
+      "u_arg": 3,
+      "u_fj": 0,
+      "u_rdl0": 3,
+      "u_rdl1": 3,
+      "u_rdl2": 3,
+      "u_rdl3": 3,
+      "u_rdl4": 3,
+      "u_rdl5": 3,
+      "u_rdl6": 3,
+      "u_rdl7": 3,
+      "u_rdl8": 3,
+      "u_rdl9": 3,
+      "u_rdl10": 3,
+      "u_rdl11": 3,
+      "u_rdl12": 3,
+      "u_rdl13": 3,
+      "u_rdl14": 3,
+      "u_rdl15": 3,
+      "u_rdc": 3,
+      "u_qc0": 3,
+      "u_qc1": 3,
+      "u_qc2": 3,
+      "u_qc3": 3,
+      "u_qc4": 3,
+      "u_qc5": 3,
+      "u_qc6": 3,
+      "u_qc7": 3,
+      "u_qc8": 3,
+      "u_qc9": 3,
+      "u_qo0": 3,
+      "u_qo1": 3,
+      "u_qo2": 3,
+      "u_qo3": 3,
+      "u_qo4": 3,
+      "u_qo5": 3,
+      "u_qo6": 3,
+      "u_qo7": 3,
+      "u_qo8": 3,
+      "u_qo9": 3,
+      "u_qo10": 3,
+      "u_qo11": 3,
+      "u_qo12": 3,
+      "u_qo13": 3,
+      "u_qo14": 3,
+      "u_qo15": 3,
+      "u_qo16": 3,
+      "u_qo17": 3,
+      "u_link0": 6,
+      "u_link1": 6,
+      "u_writer": 6,
+      "u_rctl": 0,
+      "u_rst0": 0,
+      "u_radd0": 0,
+      "u_rst1": 0,
+      "u_radd1": 0,
+      "u_rst2": 0,
+      "u_radd2": 0,
+      "u_rst3": 0,
+      "u_radd3": 0,
+      "u_rst4": 0,
+      "u_radd4": 0,
+      "u_rst5": 0,
+      "u_radd5": 0,
+      "u_rst6": 0,
+      "u_radd6": 0,
+      "u_rst7": 0,
+      "u_radd7": 0
+    },
+    "input_port_offset_edges": {
+      "cfg_v": 0,
+      "cfg_target": 0,
+      "cfg_addr": 0,
+      "cfg_data": 0,
+      "desc_v": 0,
+      "desc_base": 0,
+      "desc_limit": 0,
+      "desc_loops": 0,
+      "launch_v": 0,
+      "inj_d": 3,
+      "rc_v": 3,
+      "rc_tag": 3,
+      "rc_d": 0,
+      "phy_up": 6,
+      "rx_pin_v": 6,
+      "rx_pin_flit": 6,
+      "pr_cw_i": 0,
+      "pr_ccw_i": 0,
+      "ra_lp_we": 0,
+      "ra_lp_tag": 0,
+      "ra_lp_data": 0,
+      "ra_state_read_add": 0,
+      "ra_state_read_tx": 0,
+      "ra_state_read_rr": 0,
+      "ra_state_add_tag": 0,
+      "ra_state_tx_tag": 0,
+      "ra_state_rr_tag": 0,
+      "ra_state_add_src": 0,
+      "ra_state_add_rhs_acc": 0,
+      "ra_state_tx_acc": 0,
+      "ra_add_v": 0,
+      "ra_add_tag": 0,
+      "ra_add_src": 0,
+      "ra_add_rhs_acc": 0,
+      "ra_tx_inject": 0,
+      "ra_tx_forward": 0,
+      "ra_tx_tag": 0,
+      "ra_tx_dst": 0,
+      "ra_tx_result": 0,
+      "ra_tx_acc": 0,
+      "ra_tx_gather": 0,
+      "ra_tx_ttl": 0,
+      "ra_rx_slot": 0,
+      "ra_rx_kind": 0,
+      "ra_rx_src": 0,
+      "ra_rx_tag": 0,
+      "ra_rr_local": 0,
+      "ra_rr_local_tag": 0,
+      "vm_rr": 3,
+      "tkx_w_v": 6,
+      "tkx_w_addr": 6,
+      "tkx_w_mask": 6,
+      "tkx_w_data": 6,
+      "tkx_busy": 3,
+      "tkx_done": 3,
+      "tkx_fault": 0
+    },
+    "output_port_offset_edges": {
+      "program_configured": 0,
+      "program_init_busy": 0,
+      "program_fault": 0,
+      "hgi_busy": 0,
+      "hgi_done": 0,
+      "hgi_fault": 0,
+      "inj_rd": 5,
+      "inj_idx": 5,
+      "hgi_inj_addr": 5,
+      "del_valid": 5,
+      "del_flit": 5,
+      "hgi_del_obase": 5,
+      "rr_v": 0,
+      "rr_tag": 0,
+      "rr_d": 0,
+      "tx_pin_v": 6,
+      "tx_pin_flit": 6,
+      "retry_requested": 6,
+      "pr_cw_o": 0,
+      "pr_ccw_o": 0,
+      "isa_ring": 4,
+      "isa_lp_data": 2,
+      "ag_v": 0,
+      "ag_src": 0,
+      "ag_tag": 0,
+      "ag_d": 0,
+      "vm_rq": 4,
+      "vm_kq": 6,
+      "tkx_start": 4,
+      "tkx_arg_mode": 4,
+      "tkx_cfg_n": 4,
+      "tkx_cfg_k": 4,
+      "tkx_cfg_nout": 4,
+      "tkx_cfg_g": 4,
+      "tkx_cfg_gbase": 4,
+      "tkx_cfg_pf": 4,
+      "tkx_cfg_obase": 4,
+      "tkx_cfg_rbase": 4,
+      "tkx_cfg_has_r": 4,
+      "tkx_del_slot": 4,
+      "tkx_del_valid": 4,
+      "tkx_del_flit": 4,
+      "fault": 0,
+      "fault_cause": 0,
+      "done": 0,
+      "stat_cycles": 4
+    },
+    "reset_release_added_edges": 4,
+    "status_flag_lag_edges": {
+      "arg_fault->u_fj": 6,
+      "capture_fault->u_fj": 6,
+      "link_abort->u_fj": 9,
+      "protocol_fault->u_fj": 6,
+      "reduce_fault->u_fj": 6,
+      "ring_fault->u_fj": 3,
+      "select_fault->u_fj": 6,
+      "unavailable_fault->u_fj": 6,
+      "writer_fault->u_fj": 9
+    },
+    "schedule": "offsets",
+    "ref_params": null,
+    "status_lag_edges": {
+      "u_qc2": {
+        "lag": 6,
+        "pins": [
+          "src_d",
+          "src_v"
+        ],
+        "note": "these status-return inputs reach the reader lag edges after its own time (flat == <top>_lagref: the reader's outputs carry that status lag edges later than in the flat parent)"
+      },
+      "u_qc3": {
+        "lag": 6,
+        "pins": [
+          "src_d",
+          "src_v"
+        ],
+        "note": "these status-return inputs reach the reader lag edges after its own time (flat == <top>_lagref: the reader's outputs carry that status lag edges later than in the flat parent)"
+      }
+    },
+    "max_added_edges": 6
+  },
+  "warnings": [
+    "child u_up0 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up1 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up2 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up3 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up4 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up5 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up6 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up7 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up8 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up9 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up10 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up11 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up12 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up13 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up14 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_up15 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_ariter runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va0 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va1 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va2 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va3 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va4 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va5 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va6 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va7 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va8 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va9 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va10 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va11 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va12 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va13 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va14 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)",
+    "child u_va15 runs t = 3 edges late but has no reset pin on rst_n: its free-running state is NOT re-aligned (check it in the bench)"
+  ],
+  "landing_implementation": {
+    "chunk_bits": 24,
+    "direct_quarter_period_timing": false,
+    "compensated_phase_T": [
+      -0.75,
+      0.75
+    ],
+    "sample_age_T": [
+      1.25,
+      2.75
+    ],
+    "overwrite_gap_min_T": 1.25,
+    "writer_kept_enable": true,
+    "child_pad_reset_copies": 16,
+    "publication_dual_rail_groups": 32,
+    "publication_bits_per_group": 16,
+    "private_generator": "tools/landed_parent/specs/coll_ars256_native.py"
+  },
+  "die_obligations": [
+    "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+    "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+    "reset-hop pairs ['hd-sw', 'lk-sw', 'rg-sw', 'sw-wr']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+    "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+  ],
+  "audit": {
+    "ok": true,
+    "landings": 38,
+    "reset_hops": 4,
+    "fails": []
+  }
 }

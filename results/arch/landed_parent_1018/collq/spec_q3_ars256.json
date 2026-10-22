@@ -49,9 +49,12 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
   "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
-  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/common/landed_parent/ot_coll_lp_native_helpers.sv"
  ],
- "defines": [],
+ "defines": [
+  "OT_COLL_LP_PUB32"
+ ],
  "out_dir": "rtl/hbm_accel/generic/collective/p2p/landed",
  "record_dir": "results/arch/landed_parent_1018/collq",
  "clock_ports": [
@@ -263,5 +266,6 @@
  "regs2_note_1021": "HBMb/COLL-LP 10-21: the delivery (del_valid/del_flit/hgi_del_obase) and injection (inj_rd/inj_idx/hgi_inj_addr out, inj_d in) bundles take TWO pin stages: their 3.5 k pins sit on the E face (the S/N/W faces are full at ~4 pins/um), up to ~1.2 mm from the crossbar; qid (static strap) read only by u_fj -> region hd.",
  "landing_chunk_bits": 24,
  "landing_reset_forest": true,
- "landing_child_reset_forest": true
+ "landing_child_reset_forest": true,
+ "_spec_path": "results/arch/landed_parent_1018/collq/spec_q3_ars256.json"
 }
