@@ -87,7 +87,9 @@ SOURCES = {
 # no instance, port or chain-end text changed).
 # CODEX-K-DIE 10-21: QKC-GRP adds opt-in S6C masters/slots; legacy chain strings below stay asserted.
 # Central CTL/corridor successor changes geometry only; all admitted chain-end assertions remain checked.
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '6bd07c2d0139a124f9a31f915e07173ec9cf89d5080c32c1b950cb5d9d76abd6')
+# QK3-KGEN 10-21 re-prove: f36bb6cd5 changed the generator only in rtl_text() (skip emitting the S6C group bodies, which
+# are native RTL) and sources() (add the native S6C files); module_text / chain-end emission untouched (6bd07c2d -> 3fe10a90).
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '3fe10a90d6bb0fe8c61380020119a42178e27fbfa72c6d88ddd8224c4c82d076')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -308,7 +310,10 @@ if __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1':
     _T0 = TILES
     TILES = _expected
     SOURCES.pop(_T0)
-    SOURCES[TILES] = '5375388226c71629575cdae949047f85f7c39e55d4e117641b623669b4e9aa69'
+    # QK3-KGEN 10-21 re-prove: f36bb6cd5 removed ONLY the duplicate qkd_kvs_grp_s6c / qkd_kvs_grp_h_s6c bodies from the
+    # assembly (pure deletion, 0 added lines; c652 5375388226c7 -> a99ef537a419); every other module body is byte-identical
+    # and the native S6C sources below keep their pins, so the role assertions are re-run on the new file unchanged.
+    SOURCES[TILES] = 'a99ef537a41999fc21b12346cda7aae28a807ee13253db504664b55ec23152fb'
     DS_GROUP_SOURCES = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv': 'b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00', 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv': '6e1b7fd0daf74439afac1064ace66c91cb1836bf17635575aa46d3287ecacdb1'}
     SOURCES.update(DS_GROUP_SOURCES)
     GRP = ()
