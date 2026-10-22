@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.s81hd.glue_r6.report.v1",
+ "stages_equal_r3": true,
+ "rtl_identical_r3": true,
+ "kits": {
+  "s81hd_glue_r6m": {
+   "pins": 20307,
+   "faces": {
+    "N": {
+     "pins": 3533,
+     "per_um_face": 1.64,
+     "max_per_um_100um": 6.01
+    },
+    "S": {
+     "pins": 2242,
+     "per_um_face": 1.04,
+     "max_per_um_100um": 2.87
+    },
+    "W": {
+     "pins": 6748,
+     "per_um_face": 1.74,
+     "max_per_um_100um": 2.76
+    },
+    "E": {
+     "pins": 7784,
+     "per_um_face": 2.0,
+     "max_per_um_100um": 3.12
+    }
+   },
+   "m6_pins": 0
+  },
+  "s81hd_glue_r6f": {
+   "pins": 20307,
+   "faces": {
+    "N": {
+     "pins": 3533,
+     "per_um_face": 1.36,
+     "max_per_um_100um": 6.01
+    },
+    "S": {
+     "pins": 2242,
+     "per_um_face": 0.86,
+     "max_per_um_100um": 2.61
+    },
+    "W": {
+     "pins": 6748,
+     "per_um_face": 1.56,
+     "max_per_um_100um": 3.07
+    },
+    "E": {
+     "pins": 7784,
+     "per_um_face": 1.8,
+     "max_per_um_100um": 3.55,
+     "per_layer_max_per_um_100um": 1.77
+    }
+   },
+   "m6_pins": 3892
+  }
+ }
+}
