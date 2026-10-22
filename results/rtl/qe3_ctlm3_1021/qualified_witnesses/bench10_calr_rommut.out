@@ -1,0 +1,18 @@
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_gi.u_cal.g_calrom.u_rom.m1 <- calendar_m0
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_gi.u_cal.g_calrom.u_rom.m0 <- calendar_m0
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom.m1 <- calendar_m1
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom.m0 <- calendar_m0
+CALRDIR_STATE warm=1150 image_ready=1 cal_descriptor_obs=080000000000000000 dc=5539bd086adf32 cf=1
+CALRDIR_STATE warm=1499 image_ready=1 cal_descriptor_obs=080000000000000000 dc=9ec1e01a9c7e98 cf=1
+LP_MISMATCH port=cal_image_ready cycle=1528 flat=1 landed=0
+LP_MISMATCH port=cal_image_ready cycle=1529 flat=1 landed=0
+LP_MISMATCH port=dc cycle=1529 flat=57d6718fb38c4d landed=5fd6718fb38c4d
+LP_MISMATCH port=cal_image_ready cycle=1530 flat=1 landed=0
+LP_MISMATCH port=dc cycle=1530 flat=95c0a9d76a6c79 landed=9dc0a9d76a6c79
+CALRDIR_STATE warm=9000 image_ready=0 cal_descriptor_obs=080000000000000000 dc=9dc9a0ae1f5008 cf=1
+CALRDIR_SUMMARY starts=39 flat_cmd_edges=4510 table_req=0 f16_st_nonzero=59976 image_ready=0
+LP_LOCKSTEP FAIL MUT=0 mismatches=9215 of 1138974
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 2.645 s; speed 22.684 us/s
+- Verilator: cpu 2.645 s on 1 threads; allocated 11 MB

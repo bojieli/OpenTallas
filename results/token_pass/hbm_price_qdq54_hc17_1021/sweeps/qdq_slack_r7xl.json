@@ -1,0 +1,66 @@
+{
+ "495+100": {
+  "ds_schedule_total": 872528.2,
+  "qwen_schedule_total": 1165323.9,
+  "crit": {
+   "HC.HC_MIX": [
+    8,
+    12400.0,
+    124000.0
+   ],
+   "FUSED.QDQ_FP8": [
+    4,
+    632.0,
+    6320.0
+   ]
+  }
+ },
+ "495+200": {
+  "ds_schedule_total": 876054.4,
+  "qwen_schedule_total": 1165323.9,
+  "crit": {
+   "HC.HC_MIX": [
+    8,
+    12400.0,
+    124000.0
+   ],
+   "FUSED.QDQ_FP8": [
+    37,
+    9546.0,
+    10320.0
+   ]
+  }
+ },
+ "495+400": {
+  "ds_schedule_total": 883454.4,
+  "qwen_schedule_total": 1165323.9,
+  "crit": {
+   "HC.HC_MIX": [
+    8,
+    12400.0,
+    124000.0
+   ],
+   "FUSED.QDQ_FP8": [
+    37,
+    16946.0,
+    18320.0
+   ]
+  }
+ },
+ "495+800": {
+  "ds_schedule_total": 898254.4,
+  "qwen_schedule_total": 1165323.9,
+  "crit": {
+   "HC.HC_MIX": [
+    8,
+    12400.0,
+    124000.0
+   ],
+   "FUSED.QDQ_FP8": [
+    37,
+    31746.0,
+    34320.0
+   ]
+  }
+ }
+}

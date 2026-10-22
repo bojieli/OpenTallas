@@ -21,6 +21,67 @@ set -u -o pipefail
 T=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$T/../.." && pwd)
 REPO=${REPO:-/home/ubuntu/OpenTallas}
 MODE=${MODE:-source}
+# TOK-FUNC3-HBM (10-21): CLI hooks.  --die-netlist <GEN die.v> = closure rerun of this SAME script (MODE=gen_rtl,
+#   DIE_V=<die.v>; CONTRACT/SRC_REV must name the post-relay contract and its exact commit).  --reuse = run frozen
+#   replay sets on an EXISTING slice binary (no re-assembly, no rebuild; see REUSE below).
+while [ $# -gt 0 ]; do case "$1" in
+  --die-netlist) MODE=gen_rtl; DIE_V=${2:?--die-netlist <GEN die.v>}; shift 2;;
+  --reuse) REUSE=1; shift;;
+  *) echo "unknown arg $1" >&2; exit 2;;
+esac; done
+# REUSE=1: FROZEN=<dir with replay/<set>/ + emit/ (or <set>.json) + tb_slice.sv + slice.v> [EXTRA_SETS="<replay dir>:<json dir> ..."
+#   run INSTEAD of same-name frozen sets, e.g. the Qwen --safe-calendar packet] [ONLY="set ..."]
+#   BIN_HOST=<host> BIN_ROOT=<remote root holding out/obj/Vtb_hbm_slice + slice/{tb_slice.sv,slice.v}> [BOUNDARY=<boundary.json>]
+#   The frozen TB/slice must be byte-identical to the binary's (fail closed); replays run in a separate run root on
+#   BIN_HOST (RUNROOT, symlinked out/obj, the binary root is never written), then the same report (per-layer, chain,
+#   token rungs with measured stream/serial/HBM cycles).
+if [ "${REUSE:-0}" = 1 ]; then
+  T=$(cd "$(dirname "$0")" && pwd)
+  OUT=${OUT:?OUT}; FROZEN=${FROZEN:?FROZEN}; BIN_HOST=${BIN_HOST:?BIN_HOST}; BIN_ROOT=${BIN_ROOT:?BIN_ROOT}
+  SRC_REV=${SRC_REV:?SRC_REV (provenance of the binary)}; CONTRACT=${CONTRACT:?CONTRACT}
+  TAG=${TAG:-$(basename "$OUT")}; RUNROOT=${RUNROOT:-/srv/opentallas-scratch/claude/tok-func3-hbm/$TAG}
+  # Canonicalise on the execution host: existing parent symlinks must not hide
+  # an overlap that lets staging or the out/obj link modify the binary tree.
+  printf -v REUSE_GUARD 'python3 - %q %q' "$BIN_ROOT" "$RUNROOT"
+  timeout 300 ssh "$BIN_HOST" "$REUSE_GUARD" <<'PY_GUARD' || exit 4
+import os, sys
+binary, run = (os.path.realpath(p) for p in sys.argv[1:])
+if os.path.commonpath((binary, run)) in (binary, run):
+    print(f"REUSE_PATH_OVERLAP binary={binary} run={run}", file=sys.stderr)
+    sys.exit(4)
+print(f"REUSE_PATH_DISJOINT binary={binary} run={run}")
+PY_GUARD
+  mkdir -p "$OUT/log" "$OUT/rj" "$OUT/stage/slice/replay"; L=$OUT/log
+  say() { echo "$(date -Is) $*" | tee -a "$L/summary.log"; }
+  timeout 300 ssh "$BIN_HOST" "test -x $BIN_ROOT/out/obj/Vtb_hbm_slice" || { say "NO_BINARY $BIN_HOST:$BIN_ROOT"; exit 4; }
+  want=$(cd "$FROZEN" && sha256sum tb_slice.sv slice.v | awk '{print $1}' | tr '\n' ' ')
+  have=$(timeout 300 ssh "$BIN_HOST" "cd $BIN_ROOT/slice && sha256sum tb_slice.sv slice.v" | awk '{print $1}' | tr '\n' ' ')
+  [ "$want" = "$have" ] || { say "TB_MISMATCH frozen=[$want] binary=[$have]"; exit 4; }
+  BINSHA=$(timeout 600 ssh "$BIN_HOST" "sha256sum $BIN_ROOT/out/obj/Vtb_hbm_slice" | cut -d' ' -f1)
+  say "REUSE binary=$BIN_HOST:$BIN_ROOT sha256=$BINSHA tb+slice identical [$want]"
+  cp "$FROZEN/tb_slice.sv" "$FROZEN/slice.v" "$OUT/stage/slice/"; cp "${BOUNDARY:-$FROZEN/boundary.json}" "$OUT/stage/slice/boundary.json" || exit 2
+  cp "$T/check_slice_run.py" "$OUT/stage/"
+  NAMES=()
+  addset() { # $1 replay dir, $2 dir with <name>.json (rj) or emit/
+    local rd=$1 jd=$2 n
+    for d in "$rd"/*/; do n=$(basename "$d"); [ -f "$d/hdr.mem" ] || continue
+      case " ${NAMES[*]} " in *" $n "*) say "KEEP $n (EXTRA_SETS override; frozen copy not run)"; continue;; esac
+      if [ -f "$jd/$n.json" ]; then cp "$jd/$n.json" "$OUT/rj/$n.json"
+      else local l=${n%%_x*}; local x=${n#"$l"}; local e="$jd/emit/$l/replay${x}.json"; if [ -f "$e" ]; then cp "$e" "$OUT/rj/$n.json"; else cp "$d/index.json" "$OUT/rj/$n.json" || return 2; say "RJ_FROM_INDEX $n"; fi; fi
+      NAMES+=("$n"); rsync -a --delete "$d" "$OUT/stage/slice/replay/$n/"; done; }
+  for xs in ${EXTRA_SETS:-}; do addset "${xs%%:*}" "${xs#*:}" || exit 2; done   # first: they replace same-name frozen sets
+  addset "$FROZEN/replay" "$FROZEN" || exit 2
+  [ -z "${ONLY:-}" ] || NAMES=($ONLY)
+  timeout 600 ssh "$BIN_HOST" "mkdir -p $RUNROOT/out && ln -sfn $BIN_ROOT/out/obj $RUNROOT/out/obj" || exit 2
+  timeout 1800 rsync -a "$OUT/stage/" "$BIN_HOST:$RUNROOT/" || exit 2
+  say "STAGED ${#NAMES[@]} sets -> $BIN_HOST:$RUNROOT"
+  REMOTE="$RUNROOT" RDIR=slice/replay HOST="$BIN_HOST" OUT="$OUT" PAR="${RUN_PAR:-8}" RUN_MEM="${RUN_MEM:-64}" \
+    bash "$T/run_pay_replays.sh" "${NAMES[@]}"; SIM_RC=$?
+  python3 "$T/tok_func_hbm_report.py" --out "$OUT" --mode "${MODE:-source}" --rev "$SRC_REV" --contract "$CONTRACT" \
+    --binary "$BIN_HOST:$BIN_ROOT/out/obj/Vtb_hbm_slice" --binary-sha256 "$BINSHA" "${NAMES[@]}"; RRC=$?
+  say "DONE reuse sim_rc=$SIM_RC report_rc=$RRC report=$OUT/report.json"
+  exit "$RRC"
+fi
 case "$MODE" in
   source|gen_rtl) ;;
   *) echo "MODE=$MODE unsupported: mapped-netlist qualification requires frozen mapped hierarchy and libraries; use gen_rtl for GEN composition with source children" >&2; exit 2;;
