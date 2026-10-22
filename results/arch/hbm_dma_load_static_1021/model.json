@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hbm_dma_load_static.v1",
-  "status": "STRUCTURAL_COMPONENT_PASS_NATIVE_PENDING",
+  "status": "COMPONENT_BANKS_PASS_NATIVE3_RUNNING",
   "required_formats": {
     "0": "FP32",
     "1": "BF16",
@@ -16,7 +16,13 @@
     "sectors_per_PC_per_bank": 64,
     "bytes_per_sector": 32,
     "bytes_per_lane": 8192,
-    "macros_per_lane": 2
+    "macros_per_lane": 2,
+    "new_payload_pipeline_bits_by_stage": {
+      "registered_source_copies": 2048,
+      "normalized_quarter_copies": 1024,
+      "converted": 256,
+      "scatter": 256
+    }
   },
   "per_cycle": {
     "read_commands": 1,
@@ -25,16 +31,18 @@
     "destination_bits": 256,
     "destination_packet_bits": 281,
     "command_bits": 62,
-    "boundary_bits": 286
+    "boundary_bits": 286,
+    "active_source_lanes_per_quadrant_route_limit": 1
   },
   "latency": {
     "load_pin_to_output_edges_expected": 3,
-    "measurement": "Gold2 unit558152-1792640667 Verilator5.050 source442181e77:1480commands/0mismatch/II1/4edges; releaseonly/reusePASS; raw1538edges0mismatch; actualqnorm384PASS",
+    "measurement": "EP9 unit1557506-1792641415 Verilator5.050 source0a9f055cf:1480commands eachbank0/bank1,0mismatch,II1,5edges; releaseonly/reusePASS; mutant causalFAIL; raw1538edges0mismatch; actualqnorm384PASS",
     "HBM_window_latency": "real vmks CDC and drain dependent; not104",
-    "load_pin_to_output_edges_measured": 4,
+    "load_pin_to_output_edges_measured": 5,
     "route_extra_edges": 5,
     "raw_extra_route_edges": 1,
-    "command_to_routed_output_edges": 9
+    "command_to_routed_output_edges": 10,
+    "note": "5 local +5 route; actual die command/wire/regional crossings additional"
   },
   "replicas": {
     "lanes_per_quadrant": 8,
@@ -54,11 +62,11 @@
     "storage": "same existing SRAM payload, no new large flop storage",
     "pins": "same landing input/output registerband",
     "reach": "new fixed registered route required; die lead owns actual geometry",
-    "fanout": "Prior51f0 nativeFAIL778/49violations;442 structuralnarrow helpers native2running",
+    "fanout": "Native1max778/49 and Native2max76/350 immutablefailures; source0a9 registereddecode/payloadcopies/quarterconvert; native3MAIN+FBlive",
     "depth": "read then selected payload capture then conversion output; PENDING synthesis",
     "floorplan": "reuse NPC2 macroinventory; syntharea pending",
     "clock": "one local streamclock; external crossings landed by die",
     "reset": "new pipeline valid reset only; datapath unreset"
   },
-  "source_commit": "442181e77"
+  "source_commit": "0a9f055cf"
 }
