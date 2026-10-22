@@ -1,0 +1,65 @@
+{
+  "scope": "unselected receiving-reset mechanism; explicit preamble and independent reader reset; no production date qualification",
+  "writer_preamble_ck_f_edges": 2,
+  "reader_reset_ck_edges": 4,
+  "kit_reset_ck_edges": 2,
+  "cases": [
+    {
+      "file": "p_115_0.log",
+      "measurement": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 0,
+        "dl": 115,
+        "k": 17,
+        "rl": 2,
+        "gs": 4,
+        "slip": 0,
+        "pred": 18,
+        "meas": 16,
+        "chk": 222,
+        "mism": 222,
+        "fault": 0
+      }
+    },
+    {
+      "file": "p_115_700.log",
+      "measurement": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 700,
+        "dl": -585,
+        "k": 17,
+        "rl": 2,
+        "gs": 4,
+        "slip": 0,
+        "pred": 18,
+        "meas": 16,
+        "chk": 222,
+        "mism": 222,
+        "fault": 0
+      }
+    },
+    {
+      "file": "p_815_0.log",
+      "measurement": {
+        "w": 276,
+        "n": 0,
+        "dh": 815,
+        "lr": 0,
+        "dl": 815,
+        "k": 17,
+        "rl": 2,
+        "gs": 4,
+        "slip": 0,
+        "pred": 18,
+        "meas": 16,
+        "chk": 222,
+        "mism": 222,
+        "fault": 0
+      }
+    }
+  ]
+}

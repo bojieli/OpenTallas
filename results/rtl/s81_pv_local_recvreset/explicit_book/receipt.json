@@ -1,0 +1,34 @@
+{
+  "source": "d2c02aa48",
+  "execution": {
+    "host": "ot-epyc9",
+    "unit": "2777448-1792649542",
+    "runtime": "/srv/opentallas-scratch2/claude/codex-root-d32-reset-book-2310",
+    "wrapper_exit": 0
+  },
+  "positive": "three offsets, pred18/measured18,222checks each,mismatch0,fault0",
+  "negative": "exact700c2f8a4 predecessor with reader-reset2 instead4: three offsets measured16/mismatch222/fault0,expected exit1 and MISSING_READER_STARTUP_CAUGHT",
+  "selected_in_die": false,
+  "physical_qualified": false,
+  "calendar": {
+    "K": 17,
+    "D": 32,
+    "kit_reset_ck_edges": 2,
+    "reader_reset_core_ck_edges": 4,
+    "writer_release_ck_f_edges": 2,
+    "forwarded_preamble_edges": 2,
+    "steady_age": 18,
+    "reader_startup_delta_vs_b_ck_edges": 2
+  },
+  "observations": "Event times are component simulation ps. Raw receiver_m is sampled in an active event region alongside the bench counter and may precede its same-edge increment; do not turn it into a production counter book. No global clock/epoch or actual die binding inferred.",
+  "files": {
+    "negative/measurement.json": "5849cf26b54bd9130576d0e0c6f6c4a76f59b90734b411a2b3bb42adeabad2db",
+    "negative/p_115_0.log": "8d0fa1540cc8c60d811600ced50538c0a96c3b31f8a12167b73362239085b2f1",
+    "negative/p_115_700.log": "8d04cf7f88a88b1514b961d2a006b1f48a2fa480dfa2b2690a322eadf6f1998f",
+    "negative/p_815_0.log": "fbf0c906f0843700a05c305ad59ed32d10b3f4dc2f2be1822ad39fe3ad63aea9",
+    "positive/measurement.json": "347afe2e557580a4090accf4c965d2d0eb98e3fd72dfcc14158388bd4255b8a9",
+    "positive/p_115_0.log": "232d91607a413b46eb444a0a079f16c33703553bc1edd43707af53ef371e0c89",
+    "positive/p_115_700.log": "0199ff226e6b50bcbf20bb3314ad0bf7fa7c1b1ece8cd44efb8bf49cdac58d64",
+    "positive/p_815_0.log": "8dd10bfc6f56673c467eb32aaed03b0b7962871003c3e663d48cf8f42a66e608"
+  }
+}

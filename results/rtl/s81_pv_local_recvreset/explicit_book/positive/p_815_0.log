@@ -1,0 +1,10 @@
+RESET_EVENT forwarded_edge=1 source_n=16 receiver_m=16 time_ps=14576 writer_reset=0
+RESET_EVENT reader_release source_n=17 receiver_m=17 time_ps=14595
+RESET_EVENT forwarded_edge=2 source_n=17 receiver_m=17 time_ps=15410 writer_reset=0
+RESET_EVENT writer_release source_n=17 receiver_m=17 time_ps=15410
+RESET_EVENT first_reader_capture source_n=18 receiver_m=17 time_ps=15429
+RESET_EVENT forwarded_edge=3 source_n=18 receiver_m=18 time_ps=16244 writer_reset=1
+RESET_EVENT first_writer_capture source_n=18 receiver_m=18 time_ps=16244
+RESET_EVENT forwarded_edge=4 source_n=19 receiver_m=19 time_ps=17078 writer_reset=1
+OT_LAND w=276 n=0 dh=815 lr=0 dl=815 k=17 rl=2 gs=4 slip=0 pred=18 meas=18 chk=222 mism=0 fault=0
+tools/s81_dv/pv_local_recvreset/tb.sv:120: $finish called at 215172 (1ps)
