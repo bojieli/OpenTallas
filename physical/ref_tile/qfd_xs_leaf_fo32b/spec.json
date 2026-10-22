@@ -18,7 +18,7 @@
  ],
  "outline": {
   "w": 129.6,
-  "h": 69.12,
+  "h": 77.76,
   "exact": true
  },
  "pins": {
@@ -2484,7 +2484,7 @@
    "ot_qfd_xs_ent8"
   ]
  },
- "slot_change_request": "Q-XSLEAF 2026-10-16: leaf slot 64.8x138.24 -> 129.6x69.12 (same 8,958 um2). Measured m6c..m6f GRT: N-band vertical demand ~2,490 tracks vs ~2,385 derated on 64.8 um (1.04); needs >=113 um face for <=0.60. AGREED by Q-COMPUTE-DIE 2026-10-16 (heads 129.6x345.6; column body 920.16 um).",
+ "slot_change_request": "Q-XSLEAF 2026-10-16: leaf slot 64.8x138.24 -> 129.6x69.12 (same 8,958 um2). Measured m6c..m6f GRT: N-band vertical demand ~2,490 tracks vs ~2,385 derated on 64.8 um (1.04); needs >=113 um face for <=0.60. AGREED by Q-COMPUTE-DIE 2026-10-16 (heads 129.6x345.6; column body 920.16 um). | SQC-CB16b 10-22: fo32 leaf 129.6x69.12 -> 129.6x77.76 (+32 rows, N face up 8.64 um; N/S pin x and E/W pin y unchanged): daemon FLOORPLAN_MARGIN util 65.5% > 60% after the native-census copies (std 5316 um2); 77.76 gives ~53%. W16real/E17real column regen (SQC-CB16b) absorbs +8.64 um per leaf.",
  "job": {
   "owner": "SQC-CB16b",
   "branch": "claude/sqc-slice16-1022",
