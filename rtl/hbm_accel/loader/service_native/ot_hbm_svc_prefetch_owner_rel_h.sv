@@ -18,6 +18,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  input wire blk_start,
  input wire [3:0] blk_start_k,         // HBMc/TILES 10-22: KEPT same-edge copies of blk_start, one per table region leaf
  input wire blk_start_c,               // HBMc/TILES 10-22: KEPT copy of blk_start for the cursor update
+ input wire blk_start_t,               // HBMc/TILES 10-22: KEPT copy of blk_start for t
  input wire [11:0] block_total_b,      // HBMc/TILES 10-22: KEPT copy of block_total for the words range compare
  input wire block_active,input wire [29:0] block_base,input wire [19:0] block_pcs,
  input wire [14:0] block_row_base,input wire [11:0] block_total,input wire [LB-1:0] block_bank,
@@ -36,6 +37,8 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  localparam integer ENTRIES=1<<OWNER_AW,GW=17-OWNER_AW;
  initial if(ENTRIES!=32)$fatal(1,"owner_rel_h: OWNER_AW 5 (reset leaves sized for 32 entries)");
  reg [4:0] pc_q;always @(posedge clk)pc_q<=pc_id; // strap identity (static), this owner's physical PC
+ (* keep="true",dont_touch="true" *) reg [4:0] pc_k[0:3];   // HBMc/TILES 10-22: per-region-leaf strap copies (pc_q had 56 loads)
+ always @(posedge clk)begin pc_k[0]<=pc_id;pc_k[1]<=pc_id;pc_k[2]<=pc_id;pc_k[3]<=pc_id;end
  reg [16:0] ticket;reg [9:0] cursor;reg sticky;reg issuing_q;
  reg [ENTRIES-1:0] valid_q;
  (* keep="true",dont_touch="true" *) reg [ENTRIES-1:0] vfree_a,vfree_b,vfree_c,vfree_d;   // KEPT copies of !valid_q (table capture enables)
@@ -64,7 +67,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   selected=0;lane=0;
   for(j=0;j<4;j=j+1)if(pcs[j*5+:5]==pc_q)begin selected=1;lane=j;end
  end
- wire [9:0] t=blk_start?10'd0:cursor;
+ wire [9:0] t=blk_start_t?10'd0:cursor;
  wire [10:0] words;
  ot_hbm_svc_owner_words_leaf u_words(.total_a(total),.total_b(block_total_b),.lane(lane),.words(words));
  wire full_group=words>={1'b0,t}+4;
@@ -142,7 +145,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  wire [10:0] ordinal_local[0:RG-1];
  wire [2:0] length_local[0:RG-1];
  for(genvar gr=0;gr<RG;gr=gr+1)begin:g_issue_field_tree
-  ot_hbm_svc_owner_issue_leaf u_leaf(.blk_start(blk_start_k[gr]),.cursor(cur_k[gr]),.pcs(pcs),.pc(pc_q),.words(words),
+  ot_hbm_svc_owner_issue_leaf u_leaf(.blk_start(blk_start_k[gr]),.cursor(cur_k[gr]),.pcs(pcs),.pc(pc_k[gr]),.words(words),
    .ordinal(ordinal_local[gr]),.length(length_local[gr]));
  end
  wire fire=k_v&&k_ready;

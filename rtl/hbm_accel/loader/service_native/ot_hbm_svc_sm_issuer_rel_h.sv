@@ -90,7 +90,8 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  reg[IDW-1:0]a_id;integer ai;
  always @*begin
   a_id={IDW{1'bx}};
-  if(a_sel==0||MUT==2)a_id=0;
+  if(MUT==2)a_id=0;
+  else if(asel_lo==0&&asel_mid==0&&asel_hi==0)a_id=0;   // = a_sel==0 (copies are equal), per-part zero below
   else for(ai=0;ai<NID;ai=ai+1)begin
    if(asel_lo==ai+1)a_id[2:0]=ids_q[ai*IDW+:3];
    if(asel_mid==ai+1)a_id[5:3]=ids_q[ai*IDW+3+:3];
