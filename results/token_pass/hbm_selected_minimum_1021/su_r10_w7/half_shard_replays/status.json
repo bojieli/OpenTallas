@@ -1,0 +1,25 @@
+{
+  "status": "WAITING_FOR_SAME_SELECTED_BINARY",
+  "observed_at": "2026-10-21T22:50:55.378315-07:00",
+  "scope": "Execute the concrete two-word descriptor halves on the actual selected scoped SU and native VM. Each independent case keeps the other two original nonzero input words unchanged; full-sector checks include these neighbours and64 additional serial edges of retention. Actual TP192 rank configuration, cross-die transfer and all-rank ownership remain unproven.",
+  "input_source_sha256": "608782cda054cfd03afa06569257141327f1dfd980f8dd21d57bfc9e5ec4a582",
+  "cases": [
+    {
+      "half": 0,
+      "drain_word_mask": 3,
+      "replay_sha256": "e55d65ca09a1a76d514650ca50aa55c86bf56aad45e1c703d4a44fffaf265d19",
+      "checks": 9,
+      "compiled_capacity": 553,
+      "events_plus_end": 459
+    },
+    {
+      "half": 1,
+      "drain_word_mask": 12,
+      "replay_sha256": "929a75742a75d002728cc26ab93c6af60309ef0dafd9cabeaa98d83f712bc5d9",
+      "checks": 9,
+      "compiled_capacity": 553,
+      "events_plus_end": 459
+    }
+  ],
+  "expected_outputs": "Original native reference slices are comparisons only; they never seed VM. Runtime VM image contains four original router A words plus zero inactive padding."
+}
