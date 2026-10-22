@@ -80,12 +80,17 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  // Local row-select branches drive <=16 bits each. The binary tag decoder
  // feeds four real gate inputs, instead of one selected-row net driving51 bits.
  wire [ENTRIES-1:0] rgen_sel,rep_sel,rord_sel,rctl_sel;
+ // HBMc/TILES 10-22 (native census: constant-input ANDs are transparent, so and2(hit,1) left each hit with 50 loads):
+ // hit = (ret[4:2] == rs[4:2]) && (ret[1:0] == rs[1:0]) as FOUR real 2-input ANDs per entry (one per field family);
+ // ret_hi[k] serves 4 entries x 4 = 16 pins, ret_lo[j] 8 x 4 = 32.  Same function, same edge.
+ wire [7:0] ret_hi; wire [3:0] ret_lo;
+ for(genvar rh=0;rh<8;rh=rh+1)begin:g_ret_hi assign ret_hi[rh]=(ret[4:2]==rh); end
+ for(genvar rl=0;rl<4;rl=rl+1)begin:g_ret_lo assign ret_lo[rl]=(ret[1:0]==rl); end
  for(genvar rs=0;rs<ENTRIES;rs=rs+1)begin:g_return_select
-  wire hit=ret==rs;
-  ot_hbm_svc_local_and2 u_g(.a(hit),.b(1'b1),.y(rgen_sel[rs]));
-  ot_hbm_svc_local_and2 u_e(.a(hit),.b(1'b1),.y(rep_sel[rs]));
-  ot_hbm_svc_local_and2 u_o(.a(hit),.b(1'b1),.y(rord_sel[rs]));
-  ot_hbm_svc_local_and2 u_c(.a(hit),.b(1'b1),.y(rctl_sel[rs]));
+  ot_hbm_svc_local_and2 u_g(.a(ret_hi[rs/4]),.b(ret_lo[rs%4]),.y(rgen_sel[rs]));
+  ot_hbm_svc_local_and2 u_e(.a(ret_hi[rs/4]),.b(ret_lo[rs%4]),.y(rep_sel[rs]));
+  ot_hbm_svc_local_and2 u_o(.a(ret_hi[rs/4]),.b(ret_lo[rs%4]),.y(rord_sel[rs]));
+  ot_hbm_svc_local_and2 u_c(.a(ret_hi[rs/4]),.b(ret_lo[rs%4]),.y(rctl_sel[rs]));
  end
  reg [GW-1:0] generation_r;
  reg [15:0] epoch_r;reg [LB-1:0]bank_r;reg [10:0]ordinal_r;
@@ -118,43 +123,36 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  endfunction
  // Actual local library gates distribute each issue field to eight table rows.
  // The Boolean model is the official AND2 function with B tied high: zero cycles.
+ // HBMc/TILES 10-22 (native census): every table-region field copy is a REAL distinct driver: the generation copies are
+ // KEPT registers loaded with ticket's next value (= ticket, same edge), the ordinal / length copies are per-region kept
+ // leaves (ot_hbm_svc_owner_issue_leaf) computing the same function from t / lane / words; the beat decode is per group.
  wire [GW-1:0] generation_local[0:RG-1];
  wire [10:0] ordinal_local[0:RG-1];
  wire [2:0] length_local[0:RG-1];
- wire [10:0] ordinal_d={t[8:0],2'b0}+lane;
  for(genvar gr=0;gr<RG;gr=gr+1)begin:g_issue_field_tree
-  for(genvar gb=0;gb<GW;gb=gb+1)begin:g_gen
-   ot_hbm_svc_local_and2 u_buf(.a(ticket[OWNER_AW+gb]),.b(1'b1),.y(generation_local[gr][gb]));
-  end
-  for(genvar ob=0;ob<11;ob=ob+1)begin:g_ord
-   ot_hbm_svc_local_and2 u_buf(.a(ordinal_d[ob]),.b(1'b1),.y(ordinal_local[gr][ob]));
-  end
-  ot_hbm_svc_local_and2 u_len0(.a(length[0]),.b(1'b1),.y(length_local[gr][0]));
-  assign length_local[gr][1]=1'b0;
-  ot_hbm_svc_local_and2 u_len2(.a(length[2]),.b(1'b1),.y(length_local[gr][2]));
+  ot_hbm_svc_owner_issue_leaf u_leaf(.t(t),.lane(lane),.words(words),.ordinal(ordinal_local[gr]),.length(length_local[gr]));
  end
  wire fire=k_v&&k_ready;
  wire fire_ticket_lo,fire_ticket_hi,fire_cursor;
- ot_hbm_svc_local_and2 u_ftl(.a(fire),.b(1'b1),.y(fire_ticket_lo));
- ot_hbm_svc_local_and2 u_fth(.a(fire),.b(1'b1),.y(fire_ticket_hi));
- ot_hbm_svc_local_and2 u_fc(.a(fire),.b(1'b1),.y(fire_cursor));
+ ot_hbm_svc_local_and2 u_ftl(.a(k_v),.b(k_ready),.y(fire_ticket_lo));
+ ot_hbm_svc_local_and2 u_fth(.a(k_v),.b(k_ready),.y(fire_ticket_hi));
+ ot_hbm_svc_local_and2 u_fc(.a(k_v),.b(k_ready),.y(fire_cursor));
  wire[3:0] beat_local[0:3];
  for(genvar bg=0;bg<4;bg=bg+1)begin:g_beat_local
-  for(genvar bb=0;bb<4;bb=bb+1)begin:g_bit
-   ot_hbm_svc_local_and2 u_buf(.a(kr_beat==bb),.b(1'b1),.y(beat_local[bg][bb]));
-  end
+  ot_hbm_svc_owner_beat_leaf u_leaf(.beat(kr_beat),.onehot(beat_local[bg]));
  end
  wire [3:0] seen_ret=seen_r|(4'b1<<kr_beat);
+ // region-qualified strobes: region r = entry / 8 = tag[4:3]; each term is still ANDed with its exact entry compare
  wire[3:0] response_take_local;
  genvar rt;
  generate for(rt=0;rt<4;rt=rt+1)begin:response_local
-  ot_hbm_svc_local_and2 u_buf(.a(response_take),.b(1'b1),.y(response_take_local[rt]));
+  ot_hbm_svc_local_and2 u_buf(.a(response_take),.b(ret[4:3]==rt),.y(response_take_local[rt]));
  end endgenerate
  wire ret_done=response_take&&seen_ret==mask_for(length_r);
  wire[3:0] ret_done_local,fire_valid_local;
  for(genvar vg=0;vg<4;vg=vg+1)begin:g_valid_control
-  ot_hbm_svc_local_and2 u_ret(.a(ret_done),.b(1'b1),.y(ret_done_local[vg]));
-  ot_hbm_svc_local_and2 u_fire(.a(fire),.b(1'b1),.y(fire_valid_local[vg]));
+  ot_hbm_svc_local_and2 u_ret(.a(ret_done),.b(ret[4:3]==vg),.y(ret_done_local[vg]));
+  ot_hbm_svc_local_and2 u_fire(.a(fire),.b(alloc[4:3]==vg),.y(fire_valid_local[vg]));
  end
  // next valid (allocate at fire, free at the last beat)
  reg [ENTRIES-1:0] valid_n;integer e,ve;
@@ -166,13 +164,18 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   end
  end
  // rst_n[0]: ticket / sticky / issuing (19); rst_n[1]: valid (32); rst_n[2]: !valid copy a (32)
+ wire [16:0] ticket_n={fire_ticket_hi?ticket[16:9]+(&ticket[8:0]):ticket[16:9],fire_ticket_lo?ticket[8:0]+1'b1:ticket[8:0]};
+ (* keep="true",dont_touch="true" *) reg [GW-1:0] gen_k[0:RG-1];   // KEPT copies of ticket[16:OWNER_AW] (same reset/D)
+ for(genvar gk=0;gk<RG;gk=gk+1)begin:g_gen_copy
+  always @(posedge clk or negedge rst_n[0])if(!rst_n[0])gen_k[gk]<=0;else gen_k[gk]<=ticket_n[16:OWNER_AW];
+  assign generation_local[gk]=gen_k[gk];
+ end
  always @(posedge clk or negedge rst_n[0])begin
   if(!rst_n[0])begin ticket<=0;sticky<=0;issuing_q<=0;end
   else begin
    issuing_q<=issuing;
    if(blk_start&&issuing_q)sticky<=1;
-   if(fire_ticket_lo)ticket[8:0]<=ticket[8:0]+1'b1;
-   if(fire_ticket_hi)ticket[16:9]<=ticket[16:9]+(&ticket[8:0]);
+   ticket<=ticket_n;
    if(kr_v&&!response_ok)sticky<=1;
   end
  end
@@ -201,5 +204,16 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
    else if(response_take_local[e/8]&&ret==e)seen_q[e]<=seen_q[e]|beat_local[e/8];
   end
  end
+endmodule
+// HBMc/TILES 10-22: per-region kept issue-field leaf (same function as the owner's ordinal_d / length) and per-group beat
+// decode: separate instances are separate drivers (no shared node fans out to all 32 table entries).
+(* keep_hierarchy=1 *) module ot_hbm_svc_owner_issue_leaf(input wire [9:0] t,input wire [1:0] lane,input wire [10:0] words,
+ output wire [10:0] ordinal,output wire [2:0] length);
+ wire full_group=words>={1'b0,t}+4;
+ assign ordinal={t[8:0],2'b0}+lane;
+ assign length=full_group?3'd4:3'd1;
+endmodule
+(* keep_hierarchy=1 *) module ot_hbm_svc_owner_beat_leaf(input wire [3:0] beat,output wire [3:0] onehot);
+ for(genvar b=0;b<4;b=b+1)begin:g_b assign onehot[b]=(beat==b); end
 endmodule
 `default_nettype wire

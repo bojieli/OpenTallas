@@ -45,9 +45,12 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  wire [RSN-1:0] rs_wr_ready,rs_rd_valid,rs_ov,rs_un;
  localparam integer FG=(RSN+15)/16;
  wire [FG-1:0] write_group,pop_group;
+ // HBMc/TILES 10-22 (native census: a constant-input AND is transparent, so and2(packet_take,1) left packet_take with 58
+ // loads): each pop group is a real 2-input AND of packet_v and take_ok (= packet_take, same edge, same function).
+ wire take_ok;
  for(genvar fg=0;fg<FG;fg=fg+1)begin:g_handshake_tree
   ot_hbm_svc_local_and2 u_wr(.a(in_v),.b(in_ready),.y(write_group[fg]));
-  ot_hbm_svc_local_and2 u_rd(.a(packet_take),.b(1'b1),.y(pop_group[fg]));
+  ot_hbm_svc_local_and2 u_rd(.a(packet_v),.b(take_ok),.y(pop_group[fg]));
  end
  // Eight slices per reset leaf: one FIFO reset comb pin and one qualifier reset
  // per slice. Both-side reset still asserts asynchronously through every leaf.
@@ -90,7 +93,9 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  // identity (elastic HBM side, before block_ready; go slots unchanged).  A packet popped in the edge a bad one is being
  // checked is dropped (sticky blocks stage B): the bank is in fault either way.
  // reserve stage 2: KEPT per-slot enables [slot*4+c] (c0: valid/epoch/count 24, c1/c2: seen halves 32, c3: received 7)
- (* keep="true",dont_touch="true" *) reg[LBANKS*4-1:0]ren_k;
+ // HBMc/TILES 10-22: 8 KEPT copies per slot (k: 0 epoch[7:0], 1 epoch[15:8], 2 count + valid, 3..6 seen quarter k-3,
+ // 7 received); rel8e had 4 (c0 24 b, c1/c2 32 b: 47 mapped load pins with the hold muxes).
+ (* keep="true",dont_touch="true" *) reg[LBANKS*8-1:0]ren_k;
  reg[15:0]r_epoch;reg[6:0]r_count;
  // bank state as FLAT vectors (rel8c): reg arrays indexed by the registered h_bank were inferred as yosys $mem and
  // MEMORY_DFF cloned h_bank into an anonymous read-address flop (gate r1 OT_GF unapproved crossing mem -> _318839_)
@@ -109,23 +114,31 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  wire [LBANKS*4-1:0] seen_sel,seen_clear,seen_write;
  wire [63:0]row_sel;
  wire [LBANKS*64-1:0]seen_set;
+ wire[LBANKS-1:0] rcv_sel;
  for(genvar bs=0;bs<LBANKS;bs=bs+1)begin:g_bank_select
-  wire hit=h_bank==bs;
-  ot_hbm_svc_local_and2 u_e(.a(hit),.b(1'b1),.y(ep_sel[bs]));
-  ot_hbm_svc_local_and2 u_c(.a(hit),.b(1'b1),.y(ctl_sel[bs]));
+  // hit = (h_bank == bs) as real 2-input ANDs of this slot's kept bank copy bits (LB 2)
+  localparam [1:0] BS=bs;
+  wire hb1=BS[1]?hbank_k[bs][1]:!hbank_k[bs][1];
+  wire hb0=BS[0]?hbank_k[bs][0]:!hbank_k[bs][0];
+  ot_hbm_svc_local_and2 u_e(.a(hb1),.b(hb0),.y(ep_sel[bs]));
+  ot_hbm_svc_local_and2 u_c(.a(hb1),.b(hb0),.y(ctl_sel[bs]));
+  ot_hbm_svc_local_and2 u_r(.a(hb1),.b(hb0),.y(rcv_sel[bs]));
   for(genvar sg=0;sg<4;sg=sg+1)begin:g_seen_group
-   ot_hbm_svc_local_and2 u_s(.a(hit),.b(1'b1),.y(seen_sel[bs*4+sg]));
-   ot_hbm_svc_local_and2 u_clr(.a(ren_k[bs*4+1+sg/2]),.b(1'b1),.y(seen_clear[bs*4+sg]));
+   ot_hbm_svc_local_and2 u_s(.a(hb1),.b(hb0),.y(seen_sel[bs*4+sg]));
+   assign seen_clear[bs*4+sg]=ren_k[bs*8+3+sg];
   end
  end
- wire[5:0] row_local[0:7];
- for(genvar rg=0;rg<8;rg=rg+1)begin:g_row_distribution
-  for(genvar rb=0;rb<6;rb=rb+1)begin:g_bit
-   ot_hbm_svc_local_and2 u_buf(.a(row[rb]),.b(1'b1),.y(row_local[rg][rb]));
-  end
+ // HBMc/TILES 10-22: row / bank decodes read KEPT same-edge copies of the head bits (loaded with the head slice that
+ // holds them), not constant-input AND "buffers" (transparent to the native census: hq row bits had 100 loads).
+ (* keep="true",dont_touch="true" *) reg[5:0] row_k[0:7];
+ (* keep="true",dont_touch="true" *) reg[LB-1:0] hbank_k[0:LBANKS-1];
+ integer rk,rkb;
+ always @(posedge stream_clk)begin
+  for(rk=0;rk<8;rk=rk+1)for(rkb=0;rkb<6;rkb=rkb+1)if(cap_en[(IW-11+3+rkb)/RSW])row_k[rk][rkb]<=packet[IW-11+3+rkb];
+  for(rk=0;rk<LBANKS;rk=rk+1)for(rkb=0;rkb<LB;rkb=rkb+1)if(cap_en[(272+rkb)/RSW])hbank_k[rk][rkb]<=packet[272+rkb];
  end
  for(genvar rr=0;rr<64;rr=rr+1)begin:g_row_select
-  assign row_sel[rr]=(row_local[rr/8]==rr);
+  assign row_sel[rr]=(row_k[rr/8]==rr);
  end
  reg [15:0]b_epoch;reg [6:0]b_count,b_rcv;reg b_valid,b_seen;
  integer br,cr;
@@ -146,7 +159,7 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  wire landing_write=take_b&&identity_ok;
  wire[LBANKS-1:0] received_capture;
  for(genvar rcv=0;rcv<LBANKS;rcv=rcv+1)begin:g_received_capture
-  ot_hbm_svc_local_and2 u_capture(.a(landing_write),.b(h_bank==rcv),.y(received_capture[rcv]));
+  ot_hbm_svc_local_and2 u_capture(.a(landing_write),.b(rcv_sel[rcv]),.y(received_capture[rcv]));
  end
  for(genvar wb=0;wb<LBANKS;wb=wb+1)begin:g_seen_write
   for(genvar wg=0;wg<4;wg=wg+1)begin:g_group
@@ -156,15 +169,16 @@ module ot_hbm_svc_sm8_landing_bank_h #(
    end
   end
  end
- assign packet_take=packet_v&&!stop&&!sticky;
+ assign take_ok=!stop&&!sticky;
+ assign packet_take=packet_v&&take_ok;
  wire complete_now=landing_write&&b_rcv+1'b1==b_count;
  wire[LBANKS*2-1:0] epoch_capture;
  wire[LBANKS-1:0] count_capture;
  genvar ec;
  generate for(ec=0;ec<LBANKS;ec=ec+1)begin:reserve_capture_local
-  ot_hbm_svc_local_and2 u_lo(.a(ren_k[ec*4]),.b(1'b1),.y(epoch_capture[ec*2]));
-  ot_hbm_svc_local_and2 u_hi(.a(ren_k[ec*4]),.b(1'b1),.y(epoch_capture[ec*2+1]));
-  ot_hbm_svc_local_and2 u_count(.a(ren_k[ec*4]),.b(1'b1),.y(count_capture[ec]));
+  assign epoch_capture[ec*2]=ren_k[ec*8];
+  assign epoch_capture[ec*2+1]=ren_k[ec*8+1];
+  assign count_capture[ec]=ren_k[ec*8+2];
  end endgenerate
  reg w_ce_q,cmp_q;reg [LB-1:0] w_bank_q;reg [5:0] w_row_q;reg [255:0] w_data_q;
  assign complete_v=cmp_q;assign complete_bank=w_bank_q;assign fault=sticky||underflow;
@@ -178,8 +192,8 @@ module ot_hbm_svc_sm8_landing_bank_h #(
   if(!sr[0])begin valid_q<=0;sticky<=0;w_ce_q<=0;cmp_q<=0;ren_k<=0;h_v<=0;end
   else begin
    h_v<=packet_take;w_ce_q<=landing_write;cmp_q<=complete_now;
-   for(b=0;b<LBANKS;b=b+1)for(c=0;c<4;c=c+1)ren_k[b*4+c]<=reserve_v&&reserve_bank==b;
-   for(b=0;b<LBANKS;b=b+1)if(ren_k[b*4])valid_q[b]<=1;
+   for(b=0;b<LBANKS;b=b+1)for(c=0;c<8;c=c+1)ren_k[b*8+c]<=reserve_v&&reserve_bank==b;
+   for(b=0;b<LBANKS;b=b+1)if(ren_k[b*8+2])valid_q[b]<=1;
    if(take_b&&!identity_ok)sticky<=1;
   end
  end
@@ -199,7 +213,7 @@ module ot_hbm_svc_sm8_landing_bank_h #(
     if(seen_clear[b*4+c/16])seen_q[b*64+c]<=0;
     else if(seen_set[b*64+c])seen_q[b*64+c]<=1'b1;
    end
-   if(ren_k[b*4+3])received_q[b*7+:7]<=0;
+   if(ren_k[b*8+7])received_q[b*7+:7]<=0;
    else if(received_capture[b])received_q[b*7+:7]<=b_rcv+1'b1;
   end
  end
