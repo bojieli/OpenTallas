@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.tokfunc_s81.head_cut_run.v1",
+ "grade": "RTL-functional CUT (per-tile full RTL x 253 + whole bound die RTL with replayed bundle faces)",
+ "bind": "/srv/opentallas-scratch/claude/codex-s81-head-a7-portable/bind",
+ "golden": {
+  "local": {
+   "row": 21946,
+   "bits": "4173a558"
+  },
+  "peers": [
+   {
+    "rank": 1,
+    "row": 33100,
+    "bits": "41345fd2"
+   },
+   {
+    "rank": 2,
+    "row": 93642,
+    "bits": "41363460"
+   },
+   {
+    "rank": 3,
+    "row": 103774,
+    "bits": "414142e8"
+   }
+  ],
+  "token": {
+   "row": 21946,
+   "bits": "4173a558"
+  }
+ },
+ "cases": {
+  "a": {
+   "verdict": "PASS",
+   "expect": "PASS",
+   "tiles": 253,
+   "tiles_pass": 253,
+   "bundle_lat": [
+    8345
+   ],
+   "failing": []
+  },
+  "a_mut": {
+   "verdict": "FAIL",
+   "line": "FAIL tilecut row 21993 != 21946",
+   "expect": "FAIL",
+   "what": "tile u_t_S01Er3 reads u_t_N00Wo0's ROM images"
+  }
+ },
+ "build_peak_rss_gb": {
+  "a": null,
+  "b": null,
+  "b_mut_slice": null
+ },
+ "run_peak_rss_gb": {
+  "b": null
+ },
+ "ok": false
+}
