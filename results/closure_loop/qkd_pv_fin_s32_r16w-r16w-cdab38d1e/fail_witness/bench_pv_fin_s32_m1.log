@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_pv_fin_s32_r16w-r16w-cdab38d1e bench bench_pv_fin_s32_m1 host ot-epyc5 run /srv/opentallas-scratch2/claude/closure-loop/qkd_pv_fin_s32_r16w-r16w-cdab38d1e log cl/bench_pv_fin_s32_m1.a1b1.log captured 2026-10-21T22:07:29-07:00
+# fail_regex '^PVFIN_KIT FAIL mut=1 detected \\([1-9][0-9]* mismatch/fault lines\\)'
+SIM Verilator 5.050 2026-07-01 rev v5.050
+ABORT RESET PASS: SRAM partially written, command interrupted before result
+COLD MISMATCH cycle=84 valid=1/1 fault=0/0
+COLD MISMATCH cycle=92 valid=1/1 fault=0/0
+COLD MISMATCH cycle=100 valid=1/1 fault=0/0
+COLD MISMATCH cycle=193 valid=1/1 fault=0/0
+MISMATCH cmd 6 beat 23 at k 63 (ref out 39) db 23
+PVFIN_KIT FAIL mut=1 detected (9 mismatch/fault lines)
