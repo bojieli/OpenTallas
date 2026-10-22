@@ -31,6 +31,9 @@ place() {
   done
 }
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
+# SQC-KDIE5 10-22: die STA memory reservation override (sqc3s KV STA TT/FF memcg-OOM at 100 GB = P4 40 + 60, RSS 104 GB);
+# memory only, default unchanged
+P4=${OT_DIE_STA_P4:-$P4}
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
 # ROOT RELAY-SCHEMA 10-16: die relay stages vs the compiled schedule (OT_RELAY_SCHEDULE; SKIPPED when unset).  The KV die
 # runs it after the strict bind below (QXF-SEAMK 10-18: netlist-walk export + the compiler's schedule for THIS die)
