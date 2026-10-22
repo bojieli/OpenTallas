@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-21T21:43:57-07:00",
+  "observed_at": "2026-10-21T21:46:36-07:00",
   "selected_r18_source": "d76bf51b4",
   "next_physical_revision": {
     "source": "13cbe8431",
@@ -59,7 +59,7 @@
     "route_edges": 5,
     "sample_to_packet_edges": 10,
     "preceding_drive_to_packet_cycles": 11,
-    "physical_status": "d708 native4 failed five max34 roots; db8 native5 live",
+    "physical_status": "Source owner reports native5 MAIN and fallback mapped census PASS on db8c16103: max32, zero violations,78725 roots. Geometry/CTS remain active; no physical closure/adoption.",
     "selected_die_status": "new converter and route remain candidate only"
   },
   "remaining_lowering_gaps": [
