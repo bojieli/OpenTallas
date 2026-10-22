@@ -382,9 +382,12 @@ def _op_t(sched, name, key):
     return None
 
 
-def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None):
+def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
     job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch)
+    if sot_booking is not None:
+        from sot_program import attach_to_job
+        attach_to_job(job, sot_booking)
     ag = _ages(die)
     t_own = int(np.ceil(_op_t(sched, 'attn.own_row_write', 'start') or 1805))
     t_q = int(np.ceil(_op_t(sched, 'attn.q_rope', 'end') or 3001))
@@ -440,11 +443,12 @@ def lower(die, op, ctx):
     if fx is None:
         return dict(base, status='GAP', gap=dict(module='lower_svc', port='fixtures',
                                                  missing='no fixture dir (--fixtures): q / P / own row are runtime data'))
-    key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0), ctx.get('svc_owner_epoch'))
+    key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0), ctx.get('svc_owner_epoch'),
+           json.dumps(ctx.get('svc_sot_booking'), sort_keys=True))
     if key not in _CACHE:
         try:
             _CACHE[key] = build(fx, ctx.get('sched'), die, tag=ctx.get('svc_tag', 0),
-                                owner_epoch=ctx.get('svc_owner_epoch'))
+                                owner_epoch=ctx.get('svc_owner_epoch'), sot_booking=ctx.get('svc_sot_booking'))
         except AssertionError as e:
             _CACHE[key] = (None, str(e))
     job, s = _CACHE[key]
