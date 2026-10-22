@@ -1954,7 +1954,11 @@ def inject(m, K):
         geo[st] = dict(ctrl=(ctrl.x, ctrl.y, ctrl.w, ctrl.h, ctrl.orient, ctrl.master), land=(land.x, land.y, land.w, land.h),
                        hsl_x=hs[0].x, hsl_w=hs[0].w)
     # ---- 1. remove superseded instances; a bus that loses its driver is dropped, its surviving loads recorded open
-    gone = {i.name for i in m['insts'] if i.name.startswith(SUPERSEDED) and not i.name.startswith('cdc_dummy')}
+    # Recurring kind-12 descriptors, rather than the static writer programme,
+    # own KVN identity in RoPE OVL. Preserve that real context leaf and its
+    # original clock/reset/admission/calrx/kvi connections.
+    gone = {i.name for i in m['insts'] if i.name.startswith(SUPERSEDED)
+            and not i.name.startswith('cdc_dummy') and not (ROPE_OVL and i.name == 'kvnc')}
     m['insts'][:] = [i for i in m['insts'] if i.name not in gone]
     keep = []
     repoint = {}
@@ -2010,6 +2014,8 @@ def inject(m, K):
                 nets[(d, pn)] = [(v['peer'], v['peer_port'])]
                 widths[(d, pn)] = v['width']
                 continue
+            if ROPE_OVL and d == 'kvs_ctl' and pn == 'kvi':
+                continue  # legacy export remains unconsumed; kvnc is the sole real KVN authority
             for cd, cp in v['consumers']:
                 nets.setdefault((d, pn), [])
                 if (cd, cp) not in nets[(d, pn)]:
@@ -2043,7 +2049,14 @@ def inject(m, K):
     fk = m.setdefault('forks', {})
     if ROPE:
         fk.setdefault('hrec_rx', []).append(('kvs_emb', 'i_head_record'))
-        if os.environ.get('OT_KV_ROPE_OVL','0')=='1':
+        if ROPE_OVL:
+            if 'kvnc' not in by:
+                raise ValueError('RoPE OVL requires the real recurring KVN context leaf')
+            kvi_buses = [b for b in B if ('d2d_kv', 'kvi') in b[3]]
+            if len(kvi_buses) != 1 or kvi_buses[0][2:] != (61, [('kvnc', 'kvi'), ('d2d_kv', 'kvi')]):
+                raise ValueError('RoPE OVL requires kvnc as the sole D2D KVN identity producer')
+            rec['ovl_kvi_authority'] = dict(producer='kvnc.kvi', consumer='d2d_kv.kvi',
+                unconsumed_legacy_export='kvs_ctl.kvi', source='recurring compute kind12 descriptor')
             fk['hrec_rx'].append(('kvnc','head'))
             # Real sticky dcal admission level, already consumed by kvnc; land the new EMB fork.
             fk.setdefault('kvnc_adm',[]).append(('kvs_emb','i_ovl_adm'))

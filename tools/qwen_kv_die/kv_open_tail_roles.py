@@ -87,7 +87,7 @@ SOURCES = {
 # no instance, port or chain-end text changed).
 # CODEX-K-DIE 10-21: QKC-GRP adds opt-in S6C masters/slots; legacy chain strings below stay asserted.
 # Central CTL/corridor successor changes geometry only; all admitted chain-end assertions remain checked.
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '7a34d1e00440e4b78c2748383d2df6ce6b04d19625ff0dfd0f21c15becfbe679')
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'fe4cd5d7cadd19a89d613e571032217e5f91171f5044dd237ebe554ce1fb0c60')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
