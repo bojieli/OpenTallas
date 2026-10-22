@@ -56,12 +56,21 @@
     "CN_IK_writers": "Place by their existing localKVQ region; cross-region paths need measured landed binding"
   },
   "area": {
-    "status": "PENDING_ACTUAL_MAPPED_SYNTHESIS",
+    "status": "POOL_MAPPED_NATIVE_FAIL",
     "normal_pool_native_unit": "ot-epyc7/3758592-1792639443",
     "additional_cell_area_um2": null,
     "minimum_outline_growth_um2": null,
     "growth_formula": "additional mapped standard-cell area divided by selected utilization in[0.4,0.6], plus actual relay/clock channels; no SRAM delta forCN/IK/pool",
-    "must_not_assume_existing_slot_fit": true
+    "must_not_assume_existing_slot_fit": true,
+    "pool_mapped_cells": 875879,
+    "pool_mapped_cell_area_asap7_report_units": 95849.83854,
+    "pool_sequential_cell_area_asap7_report_units": 29646.06804,
+    "pool_report": "results/rtl/s81_rtlgap_codex_2000/pool_native/synth_stat.txt",
+    "remaining": "Original pool native FAIL; private MAIN and alternate source successors run actual numerical checks then normal native synthesis. CN/IK growth, physical body, reset calendar, clocks and routing remain unqualified.",
+    "native_max_dynamic_loads": 5391,
+    "native_violating_roots": 2247,
+    "native_roots_examined": 603703,
+    "native_summary": "results/rtl/s81_rtlgap_codex_2000/pool_native/native_summary.json"
   },
   "qualification": "Model inventory and measured source cycles only; physical body, reachable placement, native max32, per-region clocks and timing remain open"
 }
