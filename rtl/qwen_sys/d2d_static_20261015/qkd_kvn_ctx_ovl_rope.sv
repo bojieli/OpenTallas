@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
-// Exact recurring Ckind12 authority, independent from received KVN data.
-// Four small owner banks; no queues, credits, stalls or calendar adjustment.
+// Real recurring Ckind12 authority. Copies keep the original three sampled
+// edges: input capture, owner/stage update, output capture. No queue or stall.
 module qkd_kvn_ctx_ovl_rope #(
  parameter integer MUT_USER=0, parameter integer MUT_STALE=0
 )(
@@ -13,49 +13,95 @@ module qkd_kvn_ctx_ovl_rope #(
  output reg fault
 );
  (* keep=1,dont_touch=1 *)reg reset_first,reset_last;
- always @(posedge ck)begin reset_first<=rst_n;reset_last<=reset_first;end
+ (* keep=1,dont_touch=1 *)reg [3:0] reset_bank;
+ always @(posedge ck)begin
+   reset_first<=rst_n;reset_last<=reset_first;reset_bank<={4{reset_first}};
+ end
  wire [1:0] rx_user=ovl_users[3:2], cal_user_rx=calrx[3:2];
- wire cal_start_rx=calrx[0],cal_seg_rx=calrx[1];
  reg [551:0] hq;
  reg [1:0] uq,cuser_q;
  reg cstart_q,cseg_q,adm_q;
+ // Read selectors are independent same-edge captures, eight owner bits each.
+ (* keep=1,dont_touch=1 *)reg [1:0] uq_read[0:7],cu_read[0:7];
+ (* keep=1,dont_touch=1 *)reg [1:0] uq_write[0:3];
+ (* keep=1,dont_touch=1 *)reg [3:0] take_legal_q;
+ (* keep=1,dont_touch=1 *)reg [1:0] stage_user_q;
+ function automatic legal_head(input[551:0] h,input[1:0]u);
+   reg[60:0]o;reg[35:0]hd;
+   begin o=h[64:4];hd=h[551:516];
+   legal_head=hd[35:31]==0&&hd[26:21]==63&&hd[4:0]==0&&
+     hd[20:5]==o[58:43]&&o[42:37]==0&&o[5:0]==0&&o[36:19]<151936&&
+     (MUT_USER!=0||o[44:43]==u);
+   end
+ endfunction
+ wire take_in=head_record[3]&&head_record[546:543]==4'd12;
+ integer i;
  always @(posedge ck)begin
    hq<=head_record;uq<=rx_user;cuser_q<=cal_user_rx;
-   cstart_q<=cal_start_rx;cseg_q<=cal_seg_rx;adm_q<=adm_done;
+   cstart_q<=calrx[0];cseg_q<=calrx[1];adm_q<=adm_done;
+   stage_user_q<=cal_user_rx;
+   for(i=0;i<8;i=i+1)begin uq_read[i]<=rx_user;cu_read[i]<=cal_user_rx;end
+   for(i=0;i<4;i=i+1)begin
+     uq_write[i]<=rx_user;take_legal_q[i]<=take_in&&legal_head(head_record,rx_user);
+   end
  end
  reg [60:0] owners[0:3];
  reg [3:0] have;
  reg [5:0] stage[0:3];
  wire [60:0] owner=hq[64:4];
- wire [35:0] header=hq[551:516];
- wire take=hq[3]&&header[30:27]==4'd12;
- wire legal=header[35:31]==0&&header[26:21]==63&&header[4:0]==0&&
-   header[20:5]==owner[58:43]&&owner[42:37]==0&&owner[5:0]==0&&owner[36:19]<151936&&
-   (MUT_USER!=0||owner[44:43]==uq);
- integer i;
- // Owner bytes stay unreset; only validity and stage are control state.
+ wire take=hq[3]&&hq[546:543]==4'd12;
+ wire legal=legal_head(hq,uq);
+ wire [60:0] previous,chosen;
+ genvar g,b;
+ generate for(g=0;g<8;g=g+1)begin:read_group
+   localparam integer LO=g*8;
+   localparam integer N=(LO+8>61)?61-LO:8;
+   assign previous[LO+:N]=owners[uq_read[g]][LO+:N];
+   assign chosen[LO+:N]=owners[cu_read[g]][LO+:N];
+ end endgenerate
+ wire have_u=have[uq];
+ wire bad_previous=have_u&&(owner[58:45]<previous[58:45]||
+   (owner[58:45]==previous[58:45]&&owner!=previous));
+ wire previous_ok=!reseed&&!bad_previous&&(MUT_STALE==0||!have_u);
+ wire [5:0] selected_stage=stage[stage_user_q];
+ wire bad_stage=selected_stage==0||selected_stage>=36;
+ // Fault timing and sticky behavior are unchanged, including reseed priority.
  always @(posedge ck or negedge reset_last)
-   if(!reset_last)begin have<=0;fault<=0;for(i=0;i<4;i=i+1)stage[i]<=0;end
-   else if(reseed)begin have<=0;for(i=0;i<4;i=i+1)stage[i]<=0;end
-   else begin
-     if(take)begin
-       if(!legal)fault<=1;
-       else if(have[uq] && (owner[58:45]<owners[uq][58:45] ||
-         (owner[58:45]==owners[uq][58:45] && owner!=owners[uq])))fault<=1;
-       else if(MUT_STALE==0||!have[uq])begin owners[uq]<=owner;have[uq]<=1;end
-     end
-     if(cstart_q&&adm_q)begin
-       if(cseg_q)stage[cuser_q]<=1;
-       else if(stage[cuser_q]==0||stage[cuser_q]>=36)fault<=1;
-       else stage[cuser_q]<=stage[cuser_q]+1;
-     end
+   if(!reset_last)fault<=0;
+   else if(!reseed)begin
+     if(take&&(!legal||bad_previous))fault<=1;
+     if(cstart_q&&adm_q&&!cseg_q&&bad_stage)fault<=1;
    end
- // The selected RX user remains stable across the compiled KVN segment. Its
- // descriptor must arrive before the first KVN record; missing owner/stage is
- // deliberately invalid and is checked by the unchanged D2D KVN receiver.
- wire [60:0] chosen=owners[cuser_q];
+ generate for(b=0;b<4;b=b+1)begin:owner_bank
+   always @(posedge ck or negedge reset_bank[b])
+     if(!reset_bank[b])begin have[b]<=0;stage[b]<=0;end
+     else if(reseed)begin have[b]<=0;stage[b]<=0;end
+     else begin
+       if(take&&legal&&previous_ok&&uq==b)have[b]<=1;
+       if(cstart_q&&adm_q&&cuser_q==b)begin
+         if(cseg_q)stage[b]<=1;
+         else if(stage[b]>0&&stage[b]<36)stage[b]<=stage[b]+1;
+       end
+     end
+   for(g=0;g<4;g=g+1)begin:write_group
+     localparam integer LO=g*16;
+     localparam integer N=(LO+16>61)?61-LO:16;
+     // Each qualifier drives at most16 data-bit muxes. The data stays unreset.
+     always @(posedge ck)
+       if(reset_bank[b]&&take_legal_q[g]&&uq_write[g]==b&&previous_ok)
+         owners[b][LO+:N]<=owner[LO+:N];
+   end
+ end endgenerate
  always @(posedge ck)begin
-   compiled_identity<={chosen[58:43],have[cuser_q]&&!fault?stage[cuser_q]:6'd0,chosen[36:6],6'd0};
+   compiled_identity<={chosen[58:43],have[cuser_q]&&!fault?selected_stage:6'd0,chosen[36:6],6'd0};
    compiled_generation<=chosen[60:59];
  end
+`ifdef OT_FO_CHECK
+ integer n;
+ always @(posedge ck)if(reset_last)begin
+   for(n=0;n<8;n=n+1)if(uq_read[n]!==uq||cu_read[n]!==cuser_q)$fatal(1,"CTX_COPY_MISMATCH read");
+   for(n=0;n<4;n=n+1)if(uq_write[n]!==uq||take_legal_q[n]!==(take&&legal))$fatal(1,"CTX_COPY_MISMATCH write");
+   if(stage_user_q!==cuser_q)$fatal(1,"CTX_COPY_MISMATCH stage");
+ end
+`endif
 endmodule
