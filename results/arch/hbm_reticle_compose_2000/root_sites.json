@@ -1,0 +1,896 @@
+{
+ "schema": "opentallas.die_clock.root_sites.v1",
+ "die": "hbm_d4g",
+ "plan": "results/arch/hbm_release_r16_1021/planeM/compact.P.json",
+ "rule": "one root per d4g clock region at its region-map site; keepout +-30 um",
+ "sites": [
+  {
+   "region": "band_NE0",
+   "x": 24722.2,
+   "y": 20959.4,
+   "moved_um": 0.0,
+   "planned": [
+    24722.2,
+    20959.4
+   ],
+   "keepout": [
+    24692.2,
+    20929.4,
+    24752.2,
+    20989.4
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_NE1",
+   "x": 20474.8,
+   "y": 20719.1,
+   "moved_um": 0.0,
+   "planned": [
+    20474.8,
+    20719.1
+   ],
+   "keepout": [
+    20444.8,
+    20689.1,
+    20504.8,
+    20749.1
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_NE2",
+   "x": 15426.8,
+   "y": 22151.4,
+   "moved_um": 0.0,
+   "planned": [
+    15426.8,
+    22151.4
+   ],
+   "keepout": [
+    15396.8,
+    22121.4,
+    15456.8,
+    22181.4
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_NW0",
+   "x": 911.5,
+   "y": 21082.6,
+   "moved_um": 0.0,
+   "planned": [
+    911.5,
+    21082.6
+   ],
+   "keepout": [
+    881.5,
+    21052.6,
+    941.5,
+    21112.6
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_NW1",
+   "x": 5435.6,
+   "y": 21082.6,
+   "moved_um": 0.0,
+   "planned": [
+    5435.6,
+    21082.6
+   ],
+   "keepout": [
+    5405.6,
+    21052.6,
+    5465.6,
+    21112.6
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_NW2",
+   "x": 10917.7,
+   "y": 21741.2,
+   "moved_um": 0.0,
+   "planned": [
+    10917.7,
+    21741.2
+   ],
+   "keepout": [
+    10887.7,
+    21711.2,
+    10947.7,
+    21771.2
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_SE0",
+   "x": 24728.3,
+   "y": 12058.3,
+   "moved_um": 0.0,
+   "planned": [
+    24728.3,
+    12058.3
+   ],
+   "keepout": [
+    24698.3,
+    12028.3,
+    24758.3,
+    12088.3
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_SE1",
+   "x": 20482.2,
+   "y": 12284.7,
+   "moved_um": 0.0,
+   "planned": [
+    20482.2,
+    12284.7
+   ],
+   "keepout": [
+    20452.2,
+    12254.7,
+    20512.2,
+    12314.7
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_SE2",
+   "x": 15426.8,
+   "y": 10831.7,
+   "moved_um": 0.0,
+   "planned": [
+    15426.8,
+    10831.7
+   ],
+   "keepout": [
+    15396.8,
+    10801.7,
+    15456.8,
+    10861.7
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_SW0",
+   "x": 1260.5,
+   "y": 12058.3,
+   "moved_um": 0.0,
+   "planned": [
+    1260.5,
+    12058.3
+   ],
+   "keepout": [
+    1230.5,
+    12028.3,
+    1290.5,
+    12088.3
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_SW1",
+   "x": 5938.6,
+   "y": 12280.2,
+   "moved_um": 0.0,
+   "planned": [
+    5938.6,
+    12280.2
+   ],
+   "keepout": [
+    5908.6,
+    12250.2,
+    5968.6,
+    12310.2
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "band_SW2",
+   "x": 10982.0,
+   "y": 10775.7,
+   "moved_um": 0.0,
+   "planned": [
+    10982.0,
+    10775.7
+   ],
+   "keepout": [
+    10952.0,
+    10745.7,
+    11012.0,
+    10805.7
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "idx_NE",
+   "x": 19765.7,
+   "y": 31974.3,
+   "moved_um": 0.0,
+   "planned": [
+    19765.7,
+    31974.3
+   ],
+   "keepout": [
+    19735.7,
+    31944.3,
+    19795.7,
+    32004.3
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "idx_NW",
+   "x": 6221.1,
+   "y": 31974.3,
+   "moved_um": 0.0,
+   "planned": [
+    6221.1,
+    31974.3
+   ],
+   "keepout": [
+    6191.1,
+    31944.3,
+    6251.1,
+    32004.3
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "idx_SE",
+   "x": 19765.7,
+   "y": 1008.8,
+   "moved_um": 0.0,
+   "planned": [
+    19765.7,
+    1008.8
+   ],
+   "keepout": [
+    19735.7,
+    978.8,
+    19795.7,
+    1038.8
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "idx_SW",
+   "x": 6221.1,
+   "y": 1008.8,
+   "moved_um": 0.0,
+   "planned": [
+    6221.1,
+    1008.8
+   ],
+   "keepout": [
+    6191.1,
+    978.8,
+    6251.1,
+    1038.8
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "pc_NE",
+   "x": 15268.0,
+   "y": 31445.7,
+   "moved_um": 0.0,
+   "planned": [
+    15268.0,
+    31445.7
+   ],
+   "keepout": [
+    15238.0,
+    31415.7,
+    15298.0,
+    31475.7
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "pc_NW",
+   "x": 10720.8,
+   "y": 31445.7,
+   "moved_um": 0.0,
+   "planned": [
+    10720.8,
+    31445.7
+   ],
+   "keepout": [
+    10690.8,
+    31415.7,
+    10750.8,
+    31475.7
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "pc_SE",
+   "x": 15268.0,
+   "y": 1537.4,
+   "moved_um": 0.0,
+   "planned": [
+    15268.0,
+    1537.4
+   ],
+   "keepout": [
+    15238.0,
+    1507.4,
+    15298.0,
+    1567.4
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "pc_SW",
+   "x": 10720.8,
+   "y": 1537.4,
+   "moved_um": 0.0,
+   "planned": [
+    10720.8,
+    1537.4
+   ],
+   "keepout": [
+    10690.8,
+    1507.4,
+    10750.8,
+    1567.4
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "phy_NW",
+   "x": 12745.2,
+   "y": 32372.9,
+   "moved_um": 0.0,
+   "planned": [
+    12745.2,
+    32372.9
+   ],
+   "keepout": [
+    12715.2,
+    32342.9,
+    12775.2,
+    32402.9
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "phy_SW",
+   "x": 12745.2,
+   "y": 610.2,
+   "moved_um": 0.0,
+   "planned": [
+    12745.2,
+    610.2
+   ],
+   "keepout": [
+    12715.2,
+    580.2,
+    12775.2,
+    640.2
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_NW0",
+   "x": 2795.1,
+   "y": 27363.1,
+   "moved_um": 0.0,
+   "planned": [
+    2795.1,
+    27363.1
+   ],
+   "keepout": [
+    2765.1,
+    27333.1,
+    2825.1,
+    27393.1
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_NW1",
+   "x": 6225.2,
+   "y": 27363.1,
+   "moved_um": 0.0,
+   "planned": [
+    6225.2,
+    27363.1
+   ],
+   "keepout": [
+    6195.2,
+    27333.1,
+    6255.2,
+    27393.1
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_NW2",
+   "x": 8437.7,
+   "y": 27363.1,
+   "moved_um": 0.0,
+   "planned": [
+    8437.7,
+    27363.1
+   ],
+   "keepout": [
+    8407.7,
+    27333.1,
+    8467.7,
+    27393.1
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_NW3",
+   "x": 11608.6,
+   "y": 27363.1,
+   "moved_um": 0.0,
+   "planned": [
+    11608.6,
+    27363.1
+   ],
+   "keepout": [
+    11578.6,
+    27333.1,
+    11638.6,
+    27393.1
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_NW4",
+   "x": 14380.2,
+   "y": 27363.1,
+   "moved_um": 0.0,
+   "planned": [
+    14380.2,
+    27363.1
+   ],
+   "keepout": [
+    14350.2,
+    27333.1,
+    14410.2,
+    27393.1
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_NW5",
+   "x": 17551.1,
+   "y": 27363.1,
+   "moved_um": 0.0,
+   "planned": [
+    17551.1,
+    27363.1
+   ],
+   "keepout": [
+    17521.1,
+    27333.1,
+    17581.1,
+    27393.1
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_NW6",
+   "x": 19763.6,
+   "y": 27363.1,
+   "moved_um": 0.0,
+   "planned": [
+    19763.6,
+    27363.1
+   ],
+   "keepout": [
+    19733.6,
+    27333.1,
+    19793.6,
+    27393.1
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_NW7",
+   "x": 23193.7,
+   "y": 27363.1,
+   "moved_um": 0.0,
+   "planned": [
+    23193.7,
+    27363.1
+   ],
+   "keepout": [
+    23163.7,
+    27333.1,
+    23223.7,
+    27393.1
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_SW0",
+   "x": 2795.1,
+   "y": 5620.0,
+   "moved_um": 0.0,
+   "planned": [
+    2795.1,
+    5620.0
+   ],
+   "keepout": [
+    2765.1,
+    5590.0,
+    2825.1,
+    5650.0
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_SW1",
+   "x": 6225.2,
+   "y": 5620.0,
+   "moved_um": 0.0,
+   "planned": [
+    6225.2,
+    5620.0
+   ],
+   "keepout": [
+    6195.2,
+    5590.0,
+    6255.2,
+    5650.0
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_SW2",
+   "x": 8437.7,
+   "y": 5620.0,
+   "moved_um": 0.0,
+   "planned": [
+    8437.7,
+    5620.0
+   ],
+   "keepout": [
+    8407.7,
+    5590.0,
+    8467.7,
+    5650.0
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_SW3",
+   "x": 11608.6,
+   "y": 5620.0,
+   "moved_um": 0.0,
+   "planned": [
+    11608.6,
+    5620.0
+   ],
+   "keepout": [
+    11578.6,
+    5590.0,
+    11638.6,
+    5650.0
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_SW4",
+   "x": 14380.2,
+   "y": 5620.0,
+   "moved_um": 0.0,
+   "planned": [
+    14380.2,
+    5620.0
+   ],
+   "keepout": [
+    14350.2,
+    5590.0,
+    14410.2,
+    5650.0
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_SW5",
+   "x": 17551.1,
+   "y": 5620.0,
+   "moved_um": 0.0,
+   "planned": [
+    17551.1,
+    5620.0
+   ],
+   "keepout": [
+    17521.1,
+    5590.0,
+    17581.1,
+    5650.0
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_SW6",
+   "x": 19763.6,
+   "y": 5620.0,
+   "moved_um": 0.0,
+   "planned": [
+    19763.6,
+    5620.0
+   ],
+   "keepout": [
+    19733.6,
+    5590.0,
+    19793.6,
+    5650.0
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "sm_SW7",
+   "x": 23193.7,
+   "y": 5620.0,
+   "moved_um": 0.0,
+   "planned": [
+    23193.7,
+    5620.0
+   ],
+   "keepout": [
+    23163.7,
+    5590.0,
+    23223.7,
+    5650.0
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "strip_C",
+   "x": 14006.8,
+   "y": 16431.4,
+   "moved_um": 0.0,
+   "planned": [
+    14006.8,
+    16431.4
+   ],
+   "keepout": [
+    13976.8,
+    16401.4,
+    14036.8,
+    16461.4
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "strip_E",
+   "x": 24745.1,
+   "y": 16095.4,
+   "moved_um": 0.0,
+   "planned": [
+    24745.1,
+    16095.4
+   ],
+   "keepout": [
+    24715.1,
+    16065.4,
+    24775.1,
+    16125.4
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "strip_W",
+   "x": 2193.1,
+   "y": 16095.4,
+   "moved_um": 0.0,
+   "planned": [
+    2193.1,
+    16095.4
+   ],
+   "keepout": [
+    2163.1,
+    16065.4,
+    2223.1,
+    16125.4
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "xq_NE",
+   "x": 18756.2,
+   "y": 24626.8,
+   "moved_um": 0.0,
+   "planned": [
+    18756.2,
+    24626.8
+   ],
+   "keepout": [
+    18726.2,
+    24596.8,
+    18786.2,
+    24656.8
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "xq_NW",
+   "x": 7257.5,
+   "y": 24626.8,
+   "moved_um": 0.0,
+   "planned": [
+    7257.5,
+    24626.8
+   ],
+   "keepout": [
+    7227.5,
+    24596.8,
+    7287.5,
+    24656.8
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "xq_SE",
+   "x": 18756.2,
+   "y": 8356.4,
+   "moved_um": 0.0,
+   "planned": [
+    18756.2,
+    8356.4
+   ],
+   "keepout": [
+    18726.2,
+    8326.4,
+    18786.2,
+    8386.4
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  },
+  {
+   "region": "xq_SW",
+   "x": 7257.5,
+   "y": 8356.4,
+   "moved_um": 0.0,
+   "planned": [
+    7257.5,
+    8356.4
+   ],
+   "keepout": [
+    7227.5,
+    8326.4,
+    7287.5,
+    8386.4
+   ],
+   "note": "d4g region site (d4g_region_map)"
+  }
+ ],
+ "failed": [],
+ "inside_blocks": [
+  [
+   "band_NE0",
+   "su_NE0"
+  ],
+  [
+   "band_SE0",
+   "su_SE0"
+  ],
+  [
+   "band_SE1",
+   "su_SE1"
+  ],
+  [
+   "band_SW1",
+   "su_SW1"
+  ],
+  [
+   "idx_NE",
+   "hb_idx__s_NE"
+  ],
+  [
+   "idx_NW",
+   "hb_idx__s_NW"
+  ],
+  [
+   "idx_SE",
+   "hb_idx__s_SE"
+  ],
+  [
+   "idx_SW",
+   "hb_idx__s_SW"
+  ],
+  [
+   "pc_SE",
+   "xc_SW6"
+  ],
+  [
+   "pc_SW",
+   "xc_SW2"
+  ],
+  [
+   "phy_NW",
+   "phy_NW"
+  ],
+  [
+   "phy_SW",
+   "phy_SW"
+  ],
+  [
+   "sm_NW0",
+   "sm_NW0"
+  ],
+  [
+   "sm_NW1",
+   "sm_NW1"
+  ],
+  [
+   "sm_NW2",
+   "sm_NW2"
+  ],
+  [
+   "sm_NW3",
+   "sm_NW3"
+  ],
+  [
+   "sm_NW4",
+   "sm_NW4"
+  ],
+  [
+   "sm_NW5",
+   "sm_NW5"
+  ],
+  [
+   "sm_NW6",
+   "sm_NW6"
+  ],
+  [
+   "sm_NW7",
+   "sm_NW7"
+  ],
+  [
+   "sm_SW0",
+   "sm_SW0"
+  ],
+  [
+   "sm_SW1",
+   "sm_SW1"
+  ],
+  [
+   "sm_SW2",
+   "sm_SW2"
+  ],
+  [
+   "sm_SW3",
+   "sm_SW3"
+  ],
+  [
+   "sm_SW4",
+   "sm_SW4"
+  ],
+  [
+   "sm_SW5",
+   "sm_SW5"
+  ],
+  [
+   "sm_SW6",
+   "sm_SW6"
+  ],
+  [
+   "sm_SW7",
+   "sm_SW7"
+  ],
+  [
+   "strip_E",
+   "lk_N2"
+  ],
+  [
+   "strip_W",
+   "ep_S1"
+  ]
+ ]
+}

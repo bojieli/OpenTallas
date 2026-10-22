@@ -1,0 +1,37 @@
+ot-run: ot-epyc5       admits  -103 GB (avail 447, growth 519, headroom 0, waiters 1/192 GB) load 67/128 running 37 disk 915 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-reticle-compose-2000-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-reticle-compose-2000-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-reticle-compose-2000-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-reticle-compose-2000-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-reticle-compose-2000-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-reticle-compose-2000-1021
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-hbm-reticle-compose-2000-1021 (0.0 GB) ot-epyc5 -> ot-gold1 (no host with --dir admits 4 GB now)
+ot-run: SPILL: copied 12 changed entries in 7 s; running on ot-gold1; written files go back to ot-epyc5 after the run
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-2142206-1792644044 after 1 s
+{"status": "BOUNDED_SERVICE_ENVELOPE_ATTEMPT_INCOMPLETE_NOT_GLOBAL_NO_FIT", "placed_columns": 110, "required_columns": 128, "unplaced": ["NE.engine0.leaf3.column2", "NE.engine0.leaf3.column3", "NE.engine1.leaf0.column0", "NE.engine1.leaf0.column1", "NE.engine1.leaf0.column2", "NE.engine1.leaf0.column3", "NE.engine1.leaf1.column0", "NE.engine1.leaf1.column1", "NE.engine1.leaf1.column2", "NE.engine1.leaf1.column3", "NE.engine1.leaf2.column0", "NE.engine1.leaf2.column1", "NE.engine1.leaf2.column2", "NE.engine1.leaf2.column3", "NE.engine1.leaf3.column0", "NE.engine1.leaf3.column1", "NE.engine1.leaf3.column2", "NE.engine1.leaf3.column3"], "runtime_s": 5.018494367599487}
+{"status": "DIAGNOSTIC_FULL_COUNT_COMPOSITION_FOUND_CLOCK_ROUTE_SOURCE_QUALIFICATION_OPEN", "placed_columns": 128, "unplaced": [], "existing_bodies_displaced_count": 32, "existing_bodies_unplaced": [], "runtime_s": 7.711138963699341}
+	Command being timed: "python3 repack_columns.py"
+	User time (seconds): 7.59
+	System time (seconds): 0.05
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:07.85
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 31924
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 11691
+	Voluntary context switches: 1
+	Involuntary context switches: 197
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 9112
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-2142206-1792644044): exit 0
+ot-run: SPILL: outputs copied back ot-gold1 -> ot-epyc5; RAN on ot-gold1: exit 0

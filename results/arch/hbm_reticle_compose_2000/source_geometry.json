@@ -3953,5 +3953,32 @@
   "per_quarter_combined": 9.770288947200001,
   "all_quarters_combined": 39.081155788800004,
   "excluded": "Real FF bands, control logic, reset/clock distribution, access and routing channels. This is an area lower bound, not a placement result."
+ },
+ "column_geometry_binding": {
+  "commit": "5f4e5992c",
+  "sha256": "271fc90a87ed9fd9e961d35639a0bbaf10bf2be1c76276db3d3c557dd2295075",
+  "source_commit": "08d38a78f",
+  "source_sha256": "2ce6212fb8984428ada4008b1e45b0b04d07ad98bc4fd077350341f319dfbbb6",
+  "reach_audit": {
+   "kind": "Exact LEF pin midpoint and pessimistic full FF band corner Manhattan bounds; not detailed route or CTS proof",
+   "net_count": 19036,
+   "max_center_um": 393.216,
+   "max_band_corner_um": 400.776,
+   "violations": [],
+   "hard_macro_halo_um": 5.4
+  },
+  "status": "DIAGNOSTIC candidate geometry, not placed or CTS qualified"
+ },
+ "outside_column_residual_reserves": {
+  "per_quarter": {
+   "leaf_wrappers": 8,
+   "shared_chunk_glue": 8,
+   "engine_glue": 2,
+   "tail": 2,
+   "metadata_delay_25bit_D146": 2,
+   "keep_delay_4bit_D129": 2,
+   "quarter_control_output_fault": 1
+  },
+  "geometry": "Retain old 1512-square quarter body as an explicitly conservative diagnostic residual reserve. Exact native footprint and clock qualification remain open."
  }
 }
