@@ -31,7 +31,7 @@ from hbm_layer_vehicle import layer_images as LI  # noqa: E402
 
 def t_layout(die):
     pos, lo = {}, 0
-    for k in ("red", "rf", "vmw", "vmr", "control"):
+    for k in ("red", "rf", "vmw", "vmr", "control", "tree"):
         pos[k] = (lo, lo + LI.Q_W[k] - 1)
         lo += LI.Q_W[k]
     assert lo == LI.SB_W
@@ -42,6 +42,10 @@ def t_layout(die):
             assert re.search(rf"\.{port}\(pgp_SW__command\[{hi}:{l}\]\)", t), port
         assert re.search(r"\.vmr_cmd\(pgp_SW__command\[499:440\]\)", t) and pos["vmr"] == (440, 679)
         assert re.search(r"\.vmw_cmd\(pgp_SW__command\[205:128\]\)", t) and pos["vmw"] == (128, 439)
+        assert pos["tree"] == (2422, 2469)
+        for group in range(4):
+            lo = 2422 + group * 12
+            assert f".tree_cmd(pgp_SW__command[{lo+11}:{lo}])" in t
     import su_top_compile as STC
     P = STC.Prog(2)
     P.vmr_cmd(0, 0, 3, 0x1234, 11, 77)
@@ -102,12 +106,13 @@ def t_layer(programme, boundary):
               f"counts {m['counts']}")
 
 
-def t_fixture(boundary):
+def t_fixture(boundary, fixtures=None):
     from hbm_layer_vehicle import split_replay as SP
     rec = HERE.parents[1] / "results/rtl/hbm_ds_layer_tput_1018"
+    fixtures = Path(fixtures) if fixtures is not None else rec / 'fixtures/L02'
     with tempfile.TemporaryDirectory() as d:
         subprocess.run([sys.executable, "-m", "hbm_layer_vehicle.layer_images", "--design", "ds", "--layer", "2",
-                        "--fixtures", str(rec / "fixtures/L02"), "--boundary", str(boundary), "--out", d], check=True,
+                        "--fixtures", str(fixtures), "--boundary", str(boundary), "--out", d], check=True,
                        env={"PYTHONPATH": str(HERE.parent), "PATH": "/usr/bin:/bin"}, capture_output=True)
         m = json.loads(Path(d, "manifest.json").read_text())
         rep = json.loads(Path(d, "replay.json").read_text())
@@ -160,6 +165,7 @@ def main():
     ap.add_argument("--programme", default=str(LI.DS_PROGRAMME))
     ap.add_argument("--boundary", default="/home/ubuntu/scratch/layerbench-hbm/slice_sw/boundary.json")
     ap.add_argument("--die", default="/home/ubuntu/scratch/hd4g-gen2/full_smoke/pb/die.v")
+    ap.add_argument('--fixtures', help='actual L02 fixture directory for the selected-source fixture check')
     a = ap.parse_args()
     t_layout(a.die)
     t_golden()
@@ -167,9 +173,8 @@ def main():
         t_layer(a.programme, a.boundary)
     else:
         print("layer test SKIPPED (programme / boundary not present)")
-    t_fixture(HERE.parents[1] / "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json")
-    t_cp(a.die if Path(a.die).exists() else "/home/ubuntu/artifacts/hdie-d4/d4g_gen2/pb0/die.v",
-         HERE.parents[1] / "results/rtl/hbm_ds_layer_tput_1018/slice_sw/boundary.json")
+    t_fixture(a.boundary, a.fixtures)
+    t_cp(a.die, a.boundary)
     print("TEST_LAYER_IMAGES PASS")
 
 

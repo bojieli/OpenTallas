@@ -18,6 +18,10 @@ src=(rtl/test/tb_hbm_hc_eng4_static.sv $H/ot_hbm_hc_root_static.sv $H/ot_hbm_hc_
  rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/lib/ot_rst_relay.sv
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
+# HBM-HCBANK6 10-20: HC_XDEF containing +define+HC_BANK_RC builds the ring from the regional-clock bank successors
+# (ot_hbm_hc_bankrc_static.sv, hier block ot_hbm_hc_bankrc_core); otherwise byte-identical.
+vlt=rtl/test/tb_hbm_hc_eng4_static_hier.vlt
+if [[ "${HC_XDEF:-}" == *HC_BANK_RC* ]]; then src+=($H/ot_hbm_hc_bankrc_static.sv); vlt=rtl/test/tb_hbm_hc_eng4_static_hier_rc.vlt; fi
 # HC-RINGPLAN 10-19: HC_XDEF = extra verilator defines (e.g. the GEN2d closed ring "+define+HC_DRLY=2 +define+HC_XRLY=0":
 # bank 0 DRLY 2, no b7->b0 relay, hub/root DRLY 2); unset = byte-identical build.
 # HH-9 10-19: HC_CPR (default 1 = the adopted ring: bank chain pin registers, chain +11 edges -> RAW0 165 + 11)
@@ -35,7 +39,7 @@ if [ -n "${HC_JOINT_MAP:-}" ]; then jdir=$(realpath "$HC_JOINT_MAP"); [ -f "$jdi
   jm=(+define+OT_HC_JOINT_MAP +incdir+"$jdir"); jtag=$(head -1 "$jdir/hc_joint_map.svh" | tr -d '/'); fi
 "$vl" --binary --timing --hierarchical -j "${HC_BUILD_JOBS:-16}" -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
   --top-module tb_hbm_hc_eng4_static +define+MUT=$mut +define+HC_CPR=$cpr +define+OT_FP_DATA_NORST "${jm[@]}" ${HC_XDEF:-} -Mdir "$out/obj" -o Vring \
-  rtl/test/tb_hbm_hc_eng4_static_hier.vlt "${src[@]}" > "$out/build.log" 2>&1
+  "$vlt" "${src[@]}" > "$out/build.log" 2>&1
 set +e; (cd "$out/case" && "$out/obj/Vring" $(cat plus.txt)) > "$out/run.log" 2>&1; rc=$?; set -e
 grep -E "HC_ENG_DONE|HC_ENG PASS|HC_ENG FAIL|FAULT" "$out/run.log" | head -4
 echo "HC_RING_LOCKSTEP MUT=$mut rc=$rc (CPR=$cpr RAW0=$raw0${HC_XDEF:+ XDEF=$HC_XDEF})"

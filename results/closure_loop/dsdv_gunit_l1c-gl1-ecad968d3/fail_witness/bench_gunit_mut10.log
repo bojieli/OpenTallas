@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job dsdv_gunit_l1c-gl1-ecad968d3 bench bench_gunit_mut10 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/dsdv_gunit_l1c-gl1-ecad968d3 log cl/bench_gunit_mut10.a1b1.log captured 2026-10-18T03:26:12-07:00
+# fail_regex '^MUT=10: GUNIT FAIL '
+MUT=10: GUNIT FAIL 80 (MUT=10)

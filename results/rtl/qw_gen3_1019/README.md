@@ -2,7 +2,7 @@
 
 PILOT_NOT_A_GATE die run with declared stand-ins (owner rule: die integration early and often). Strict bind must PASS
 (no stubs, no ties). Branch claude/qw-gen3-1019 = claude/qw-gen2-1019 6bca9694c + claude/qw-dieclk2-1019 04f228b61 +
-MU-DQ-BOOTCTX 600df51cd + the commits below. Run dir ot-epyc6 /srv/opentallas-scratch/claude/mu-die-qw/dv2f19g3.
+MU-DQ-BOOTCTX 600df51cd + the commits below. Run of record: ot-epyc6 /srv/opentallas-scratch/claude/mu-die-qw/dv2f19g3r (evidence in dv2f19g3r/ here).
 
 ## New in this GEN
 - LANDINGS (QW-DIECLK2 R5, LEAD2-QW decision 17:00): OT_SPLIT_LAND_LIST=results/arch/qw_dieclk2_1019/landing_list.json.
@@ -52,3 +52,20 @@ MU-DQ-BOOTCTX 600df51cd + the commits below. Run dir ot-epyc6 /srv/opentallas-sc
   ages from its record when it closes. n59 safe4: +1 embedding edge into the compiler.
 - DV calendar / ME programme compiler: take the per-crossing landing ages (+3 each) of the q3h broadcast, rs reduction and
   the dv slice chain.
+
+## Outcome (dv2f19g3r, source 6f78e3de2)
+- GEN rc 0: relays 854, max pin-pin 397.8 um, over_reach 0, 13,538 instances; RESET_SYNC_AUDIT PASS; ROM_BIND PASS 768.
+- STRICT BIND PASS: 223 masters / 13,538 inst, input_tied 0, input_unconnected 0, strap_ports 15 (dh_user and ctx_x driven);
+  LANE_LATENCY PASS 417 buses, all forwarded (fwd 417, plain 0); RECORD_BUNDLE PASS 9; DIE_PARAM PASS TXDP 0xa010308 / XPF 21;
+  HR_CONTRACT PASS.
+- Landings: 264 of the 446 listed links are BUILT as landh0 landings (every c_b16-touching link: n = 1, E 2, +3 lane cycles,
+  landing_price.json). The 182 slice <-> slice rows (abutted dv_slice2 pairs, 0-um gap) are OWED to the receiving slice face
+  (OT_SPLIT_LAND_LIST_IN_FACE=qfd_dv_slice2; R5 / NB2 -> QW-SLICE3 kit). A die-level site does not exist within reach:
+  try 1 left dv_ch_E3_dd_dd with its sink 900 um from the nearest gap. Codex c1 widened the channels and failed with
+  127 nets over 405 um. R2 split is limited to qfd_c_b16_dv (dvs_E0/E1 keep pll_r95, and their crossings stay intra).
+- c_b16 lanes take the port's REGIONAL reset (rst_c<c>r<r>, die_clock16 port_domains); without it the 264 stayed plain relays.
+- mu_ctxrx sits E of sys_face at (1555.2, 22809.6). At the N face it took the sys_face -> native59 relay sites
+  (q_slot / visibility over reach); at (1533.6, 22496.0) 4 nets were still over reach. Its reset comes from the tt_ctlm
+  reset tree, because the rst_d2d spine leg had no declared release edge.
+- RELAY_CHECK (local phase 2): netlist table 641 buses / 839 relays, problems 0, vs layer_compile on THIS die -> PASS;
+  compiled txd C [8,3,1,10] = the image; K 23 vs the MU image 21 is the open KV-side "TXDP K" finding.

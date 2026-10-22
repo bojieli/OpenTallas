@@ -1,13 +1,13 @@
 {
- "name": "hcoll_v5_issuer_r256-r256-COMMIT",
+ "name": "hcoll_v5_issuer_r256-r256native-COMMIT",
  "block": "ot_hgi_coll_issuer_m256",
  "ref_tile": true,
- "owner": "Claude:HBM-COLL256-KITS",
- "purpose": "HBM-COLL256-KITS (coordinator HANDOFF 0ky (2)(3)): the 256-row COLL issuer leaf ot_hgi_coll_issuer_m256 = v7 core (SAFE-DESIGN: metadata in 4 x 256x64 SRAM copies with a registered C/CT/CN lookahead, loop counters by id NL 32, 2 x 256x256 SRAMs per programme bank instead of 12 x 64x512; v6 ROWS 256 kept only as the miter reference). Bound by the d4g SW COLL parent at ROWS 256 (ARGMAX at VM_RT 74 = 212 rows; DS RS(144)).",
+ "owner": "Codex:CODEX-HBM-IDX-1021",
+ "purpose": "Selected r15 exact issuer_m256 source (8-bit PC, ROWS256), existing macro kit recovered for mandatory first mapped native census; no128view alias.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/hbm-argmax-1019",
+  "branch": "codex/hbm-issuer256-1021",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
@@ -161,7 +161,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hcoll_v5_issuer_r256/hcoll_v5_issuer_r256-r256-COMMIT"
+   "to": "results/rtl/ref_tile/hcoll_v5_issuer_r256/hcoll_v5_issuer_r256-r256native-COMMIT"
   }
  ],
  "cycles_added": 0,

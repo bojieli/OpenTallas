@@ -32,10 +32,15 @@ for p in $(git -C $R ls-tree --name-only $G8 $L/ | grep '\.svh$'); do put $G8 $p
 put $G8 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.g8r2.sv
 put $HF3 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv
 put $MU rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.mu.sv
+if [ -n "${G7_COMMIT:-}" ]; then   # TOK-FUNC-S81/MURATE: the G7-bound lep + its RX_SRAM / NATIVE32 leaves (xdie2.sh set g7)
+  put $G7_COMMIT rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.g7.sv
+  for p in rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv \
+    physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v; do put $G7_COMMIT $p; done
+fi
 for p in rtl/test/xdie_s81_2/xdie_s81_2.vlt rtl/test/xdie_s81_2/xdie_s81_2_ep.sv rtl/test/xdie_s81_2/tb_xdie_s81_2.sv \
   tools/xdie_s81_2/xdie2.sh tools/xdie_s81_2/gate.sh tools/xdie_s81_2/gen_golden.py \
   tools/xdie_s81_2/gate_mu.sh tools/xdie_s81_2/gate_mu_g2.sh tools/xdie_s81_2/gate_mu_u_g2.sh \
-  tools/xdie_s81_2/gate_result.sh tools/xdie_s81_2/mu_check.py tools/xdie_s81_2/record.py; do
+  tools/xdie_s81_2/gate_result.sh tools/xdie_s81_2/mu_check.py tools/xdie_s81_2/record.py tools/xdie_s81_2/lfix_check.py; do
   mkdir -p $S/$(dirname $p); cp $W/$p $S/$p
 done
 echo "STAGED $(wc -l < $S/SOURCES.txt) pinned files"

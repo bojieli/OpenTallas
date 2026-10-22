@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hidx_rootctl_am_g2e_1020-g2e-40128835b bench bench_ctl_g2e_eq_f32_m5 host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/hidx_rootctl_am_g2e_1020-g2e-40128835b log cl/bench_ctl_g2e_eq_f32_m5.a1b1.log captured 2026-10-21T07:39:56-07:00
+# fail_regex '^CASE eq_f32_m5 .*F32_EQ MUT1=5 .*errors [1-9][0-9]* IDX_F32_EQ FAIL'
+CASE eq_f32_m5 DIFF cyc 158: sel 0Xxx/0Xxx cq 1/0 busy 1/1 done 00/00 fault 01/01 am 0 ir 0 vq 0 sh 0/0 DIFF cyc 159: sel 0Xxx/0Xxx cq 0/0 busy 1/1 done 00/00 fault 01/01 am 0 ir 0 vq 1 sh 0/0 F32_EQ MUT1=5 SEED=1 cycles 51345 reads 4894 writes 801 topk_done 98 topk_fault 67 argmax_words 701 index_req 894 sel_ops 1189 copy_err 0 errors 48200 IDX_F32_EQ FAIL 

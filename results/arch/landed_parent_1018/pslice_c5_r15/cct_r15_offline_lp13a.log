@@ -1,0 +1,44 @@
+OT_CCT WC(tt) u_h/clk root ot_entry_0 soft n=3412 536.2..583.0 child 395.0+(100.1..123.2) pair 87.8
+OT_CCT BC(ff) u_h/clk root ot_entry_0 soft n=3412 492.2..537.8 child 373.4+(80.9..104.0) pair 83.5
+OT_CCT WC(tt) u_c1/clk root ot_entry_2 soft n=932 527.2..578.4 child 73.5+(425.6..488.2) pair 79.4
+OT_CCT BC(ff) u_c1/clk root ot_entry_2 soft n=932 407.9..457.5 child 62.2+(344.9..398.2) pair 52.5
+OT_CCT WC(tt) u_c2/clk root ot_entry_3 soft n=932 522.8..585.8 child 66.1+(425.6..488.2) pair 94.2
+OT_CCT BC(ff) u_c2/clk root ot_entry_3 soft n=932 401.4..463.5 child 54.8+(344.9..398.2) pair 63.9
+OT_CCT WC(tt) u_c3/clk root ot_entry_4 soft n=932 539.8..590.0 child 76.1+(425.6..488.2) pair 88.3
+OT_CCT BC(ff) u_c3/clk root ot_entry_4 soft n=932 419.1..467.2 child 64.9+(344.9..398.2) pair 57.5
+OT_CCT DONE u_h/clk buffers=0 steps={} worst 87.8 -> 87.8 | WC(tt) pin 395.0 child 495.1..518.2 soft 536.2..583.0 pair 87.8 | BC(ff) pin 373.4 child 454.3..477.4 soft 492.2..537.8 pair 83.5
+OT_CCT DONE u_c1/clk buffers=0 steps={} worst 79.4 -> 79.4 | WC(tt) pin 73.5 child 499.1..561.7 soft 527.2..578.4 pair 79.4 | BC(ff) pin 62.2 child 407.1..460.4 soft 407.9..457.5 pair 52.5
+OT_CCT DONE u_c2/clk buffers=0 steps={} worst 94.2 -> 94.2 | WC(tt) pin 66.1 child 491.7..554.3 soft 522.8..585.8 pair 94.2 | BC(ff) pin 54.8 child 399.7..453.0 soft 401.4..463.5 pair 63.9
+OT_CCT DONE u_c3/clk buffers=0 steps={} worst 88.3 -> 88.3 | WC(tt) pin 76.1 child 501.7..564.3 soft 539.8..590.0 pair 88.3 | BC(ff) pin 64.9 child 409.8..463.1 soft 419.1..467.2 pair 57.5
+OT_CCT centred 4 hard-child clock pins (0 tapped, 0 parasitics rounds, minimax over scenes)
+====
+OT_CCT WC(tt) u_h/clk root ot_entry_0 soft n=3412 536.2..583.0 child 395.0+(100.1..123.2) pair 87.8
+OT_CCT BC(ff) u_h/clk root ot_entry_0 soft n=3412 492.2..537.8 child 373.4+(80.9..104.0) pair 83.5
+OT_CCT WC(tt) u_c1/clk root ot_entry_2 soft n=932 527.2..578.4 child 73.5+(425.6..488.2) pair 79.4
+OT_CCT BC(ff) u_c1/clk root ot_entry_2 soft n=932 407.9..457.5 child 62.2+(344.9..398.2) pair 52.5
+OT_CCT WC(tt) u_c2/clk root ot_entry_3 soft n=932 522.8..585.8 child 66.1+(425.6..488.2) pair 94.2
+OT_CCT BC(ff) u_c2/clk root ot_entry_3 soft n=932 401.4..463.5 child 54.8+(344.9..398.2) pair 63.9
+OT_CCT WC(tt) u_c3/clk root ot_entry_4 soft n=932 539.8..590.0 child 76.1+(425.6..488.2) pair 88.3
+OT_CCT BC(ff) u_c3/clk root ot_entry_4 soft n=932 419.1..467.2 child 64.9+(344.9..398.2) pair 57.5
+OT_CCT u_h/clk keep BUFx4_ASAP7_75t_R n=1 worst pair 62.3
+OT_CCT u_c1/clk keep BUFx4_ASAP7_75t_R n=1 worst pair 74.6
+OT_CCT u_c2/clk keep BUFx4_ASAP7_75t_R n=1 worst pair 73.8
+OT_CCT u_c3/clk keep BUFx4_ASAP7_75t_R n=1 worst pair 65.6
+OT_CCT u_h/clk keep BUFx4_ASAP7_75t_R n=2 worst pair 46.0
+OT_CCT u_c1/clk drop BUFx4_ASAP7_75t_R (worst pair 90.9 vs 74.6)
+OT_CCT u_c2/clk drop BUFx4_ASAP7_75t_R (worst pair 90.2 vs 73.8)
+OT_CCT u_c3/clk drop BUFx4_ASAP7_75t_R (worst pair 81.9 vs 65.6)
+OT_CCT u_h/clk drop BUFx4_ASAP7_75t_R (worst pair 55.0 vs 46.0)
+OT_CCT u_c1/clk drop BUFx2_ASAP7_75t_R (worst pair 92.0 vs 74.6)
+OT_CCT u_c2/clk drop BUFx2_ASAP7_75t_R (worst pair 91.3 vs 73.8)
+OT_CCT u_c3/clk drop BUFx2_ASAP7_75t_R (worst pair 83.0 vs 65.6)
+OT_CCT u_h/clk drop BUFx2_ASAP7_75t_R (worst pair 56.1 vs 46.0)
+OT_CCT u_c1/clk drop HB1xp67_ASAP7_75t_R (worst pair 127.6 vs 74.6)
+OT_CCT u_c2/clk drop HB1xp67_ASAP7_75t_R (worst pair 124.8 vs 73.8)
+OT_CCT u_c3/clk drop HB1xp67_ASAP7_75t_R (worst pair 117.2 vs 65.6)
+OT_CCT u_h/clk drop HB1xp67_ASAP7_75t_R (worst pair 87.2 vs 46.0)
+OT_CCT DONE u_h/clk buffers=2 steps={BUFx4_ASAP7_75t_R BUFx4_ASAP7_75t_R} worst 87.8 -> 46.0 | WC(tt) pin 446.1 child 546.2..569.3 soft 536.2..583.0 pair 36.8 | BC(ff) pin 410.9 child 491.8..514.9 soft 492.2..537.8 pair 46.0
+OT_CCT DONE u_c1/clk buffers=1 steps={BUFx4_ASAP7_75t_R} worst 79.4 -> 74.6 | WC(tt) pin 104.0 child 529.6..592.2 soft 527.2..578.4 pair 65.0 | BC(ff) pin 84.2 child 429.1..482.4 soft 407.9..457.5 pair 74.6
+OT_CCT DONE u_c2/clk buffers=1 steps={BUFx4_ASAP7_75t_R} worst 94.2 -> 73.8 | WC(tt) pin 96.8 child 522.4..585.0 soft 522.8..585.8 pair 63.5 | BC(ff) pin 77.0 child 421.9..475.2 soft 401.4..463.5 pair 73.8
+OT_CCT DONE u_c3/clk buffers=1 steps={BUFx4_ASAP7_75t_R} worst 88.3 -> 65.6 | WC(tt) pin 106.2 child 531.8..594.4 soft 539.8..590.0 pair 58.2 | BC(ff) pin 86.5 child 431.4..484.7 soft 419.1..467.2 pair 65.6
+OT_CCT centred 4 hard-child clock pins (4 tapped, 5 parasitics rounds, minimax over scenes)

@@ -1,0 +1,9 @@
+ot-run: ot-epyc6       admits   639 GB (avail 537, growth 90, headroom 0, waiters 0/0 GB) load 29/128 running 11 disk 6582 GB 
+ot-run: ot-epyc7       admits  1202 GB (avail 901, growth 60, headroom 0, waiters 0/0 GB) load 59/96 running 23 disk 6586 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-645267-1792405031 after 1 s
+COLL_CALENDAR compiled LS=378 (binding port 0, LX [11, 0, 10], RS [0, 0, 5]) -> lats 378
+case qwen_ar_256w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=1328 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=2048 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=797
+case qwen_layer_2x256w kind=pos latu=53 lats=378 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=2704 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4096 meas_lu=53 meas_ls=378 pr_overlap=0 compiled_span=1537
+COLL_TP8SL NEGATIVE-CONTROL PASS cases=2 latu=53 lats=378
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-645267-1792405031): exit 0

@@ -1,0 +1,6 @@
+12c12
+<   if (`KVA_AUTH_ADMIT === 1'b1 && kva_authority_known !== 18'h3ffff) begin
+---
+>   if (`KVA_AUTH_ADMIT === 1'b1 && kva_authority_known !== {18{1'b1}}) begin
+--- fault bind (index 18->13 renumbered)
+IDENTICAL

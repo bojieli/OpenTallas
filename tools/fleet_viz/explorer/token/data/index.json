@@ -16,21 +16,21 @@
    "composition_1018": {
     "ar": {
      "available": true,
-     "banner": "0.8% of token cycles measured on current RTL (98.4% on older RTL, 0.1% modelled PHY, 0.7% priced)",
-     "pct_measured_current_rtl": 0.8,
-     "tok_s": 4766.5,
-     "T_token_cycles": 251759.0,
-     "per_accepted_cycles": 251759.0,
+     "banner": "4.6% of token cycles measured on current RTL (87.3% on older RTL, 7.2% modelled PHY, 0.8% priced)",
+     "pct_measured_current_rtl": 4.62,
+     "tok_s": 6194.3,
+     "T_token_cycles": 193727.0,
+     "per_accepted_cycles": 193727.0,
      "tau": null,
      "by_grade": {
-      "measured-current-RTL": 2016.0,
-      "measured-old-RTL": 247743.0,
-      "modelled-PHY": 360.0,
+      "measured-current-RTL": 8942.4,
+      "measured-old-RTL": 169119,
+      "modelled-PHY": 14025.6,
       "priced": 1640.0
      },
      "by_kind": {
       "layer": 170487.0,
-      "xdie": 81272.0,
+      "xdie": 23240.0,
       "adjust": 0
      },
      "price_of_record": {
@@ -38,15 +38,16 @@
       "cycles": 249431.0,
       "source": "results/rtl/qwen_layer_tput_1013/record.json end_to_end.base_cycles (6,835-cycle production layer)"
      },
-     "vs_price_pct": -0.92,
+     "vs_price_pct": 28.76,
      "o_rule": "O from the 10-13 die run op-fetch window partition (TP4 reference vehicle); no dv2f14+kvs14c co-sim yet",
      "title": "Qwen3-8B ROM (compute dies + KV die + D2D), 8K context, AR",
      "xdie_top": [
       {
        "x": "tp_allreduce",
-       "exposed": 78624.0,
+       "exposed": 20592.0,
        "by_grade": {
-        "measured-old-RTL": 78624.0
+        "measured-current-RTL": 6926.4,
+        "modelled-PHY": 13665.6
        }
       },
       {

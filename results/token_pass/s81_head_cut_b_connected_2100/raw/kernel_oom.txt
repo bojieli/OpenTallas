@@ -1,0 +1,187 @@
+Oct 21 22:29:40 ot-gold1 kernel: veth9533eb3: renamed from eth0
+Oct 21 22:29:40 ot-gold1 kernel: docker0: port 19(veth3073ce7) entered disabled state
+Oct 21 22:29:40 ot-gold1 kernel: docker0: port 19(veth3073ce7) entered disabled state
+Oct 21 22:29:40 ot-gold1 kernel: veth3073ce7 (unregistering): left allmulticast mode
+Oct 21 22:29:40 ot-gold1 kernel: veth3073ce7 (unregistering): left promiscuous mode
+Oct 21 22:29:40 ot-gold1 kernel: docker0: port 19(veth3073ce7) entered disabled state
+Oct 21 22:29:41 ot-gold1 kernel: docker0: port 12(veth2dcf20f) entered blocking state
+Oct 21 22:29:41 ot-gold1 kernel: docker0: port 12(veth2dcf20f) entered disabled state
+Oct 21 22:29:41 ot-gold1 kernel: veth2dcf20f: entered allmulticast mode
+Oct 21 22:29:41 ot-gold1 kernel: veth2dcf20f: entered promiscuous mode
+Oct 21 22:29:41 ot-gold1 kernel: eth0: renamed from veth7672ea7
+Oct 21 22:29:41 ot-gold1 kernel: docker0: port 12(veth2dcf20f) entered blocking state
+Oct 21 22:29:41 ot-gold1 kernel: docker0: port 12(veth2dcf20f) entered forwarding state
+Oct 21 22:29:43 ot-gold1 kernel: docker0: port 19(veth560b7fc) entered blocking state
+Oct 21 22:29:43 ot-gold1 kernel: docker0: port 19(veth560b7fc) entered disabled state
+Oct 21 22:29:43 ot-gold1 kernel: veth560b7fc: entered allmulticast mode
+Oct 21 22:29:43 ot-gold1 kernel: veth560b7fc: entered promiscuous mode
+Oct 21 22:29:43 ot-gold1 kernel: eth0: renamed from veth19a6cd8
+Oct 21 22:29:43 ot-gold1 kernel: docker0: port 19(veth560b7fc) entered blocking state
+Oct 21 22:29:43 ot-gold1 kernel: docker0: port 19(veth560b7fc) entered forwarding state
+Oct 21 22:29:45 ot-gold1 kernel: docker0: port 12(veth2dcf20f) entered disabled state
+Oct 21 22:29:45 ot-gold1 kernel: veth7672ea7: renamed from eth0
+Oct 21 22:29:46 ot-gold1 kernel: docker0: port 12(veth2dcf20f) entered disabled state
+Oct 21 22:29:46 ot-gold1 kernel: veth2dcf20f (unregistering): left allmulticast mode
+Oct 21 22:29:46 ot-gold1 kernel: veth2dcf20f (unregistering): left promiscuous mode
+Oct 21 22:29:46 ot-gold1 kernel: docker0: port 12(veth2dcf20f) entered disabled state
+Oct 21 22:29:46 ot-gold1 kernel: veth19a6cd8: renamed from eth0
+Oct 21 22:29:46 ot-gold1 kernel: docker0: port 19(veth560b7fc) entered disabled state
+Oct 21 22:29:46 ot-gold1 kernel: docker0: port 19(veth560b7fc) entered disabled state
+Oct 21 22:29:46 ot-gold1 kernel: veth560b7fc (unregistering): left allmulticast mode
+Oct 21 22:29:46 ot-gold1 kernel: veth560b7fc (unregistering): left promiscuous mode
+Oct 21 22:29:46 ot-gold1 kernel: docker0: port 19(veth560b7fc) entered disabled state
+Oct 21 22:29:48 ot-gold1 kernel: docker0: port 12(veth8ae65ce) entered blocking state
+Oct 21 22:29:48 ot-gold1 kernel: docker0: port 12(veth8ae65ce) entered disabled state
+Oct 21 22:29:48 ot-gold1 kernel: veth8ae65ce: entered allmulticast mode
+Oct 21 22:29:48 ot-gold1 kernel: veth8ae65ce: entered promiscuous mode
+Oct 21 22:29:48 ot-gold1 kernel: eth0: renamed from veth5d0897f
+Oct 21 22:29:48 ot-gold1 kernel: docker0: port 12(veth8ae65ce) entered blocking state
+Oct 21 22:29:48 ot-gold1 kernel: docker0: port 12(veth8ae65ce) entered forwarding state
+Oct 21 22:29:49 ot-gold1 kernel: cc1plus invoked oom-killer: gfp_mask=0x100cca(GFP_HIGHUSER_MOVABLE), order=0, oom_score_adj=0
+Oct 21 22:29:49 ot-gold1 kernel: CPU: 44 UID: 1000 PID: 3378327 Comm: cc1plus Not tainted 7.0.0-38-generic #38-Ubuntu PREEMPT(lazy) 
+Oct 21 22:29:49 ot-gold1 kernel: Hardware name: Supermicro SYS-220BT-HNTR/X12DPT-B6, BIOS 2.5 11/22/2025
+Oct 21 22:29:49 ot-gold1 kernel: Call Trace:
+Oct 21 22:29:49 ot-gold1 kernel:  <TASK>
+Oct 21 22:29:49 ot-gold1 kernel:  show_stack+0x49/0x60
+Oct 21 22:29:49 ot-gold1 kernel:  dump_stack_lvl+0x5f/0x90
+Oct 21 22:29:49 ot-gold1 kernel:  dump_stack+0x10/0x18
+Oct 21 22:29:49 ot-gold1 kernel:  dump_header+0x48/0x1c7
+Oct 21 22:29:49 ot-gold1 kernel:  oom_kill_process.cold+0x8/0xac
+Oct 21 22:29:49 ot-gold1 kernel:  out_of_memory+0xff/0x2b0
+Oct 21 22:29:49 ot-gold1 kernel:  mem_cgroup_out_of_memory+0xc8/0xe0
+Oct 21 22:29:49 ot-gold1 kernel:  try_charge_memcg+0x3c3/0x620
+Oct 21 22:29:49 ot-gold1 kernel:  charge_memcg+0x34/0x80
+Oct 21 22:29:49 ot-gold1 kernel:  __mem_cgroup_charge+0x2f/0xa0
+Oct 21 22:29:49 ot-gold1 kernel:  filemap_add_folio+0x5e/0x220
+Oct 21 22:29:49 ot-gold1 kernel:  __filemap_get_folio_mpol+0x1cf/0x340
+Oct 21 22:29:49 ot-gold1 kernel:  filemap_fault+0x112/0xce0
+Oct 21 22:29:49 ot-gold1 kernel:  ? filemap_map_pages+0x2f8/0x440
+Oct 21 22:29:49 ot-gold1 kernel:  __do_fault+0x3c/0x1e0
+Oct 21 22:29:49 ot-gold1 kernel:  do_read_fault+0x12f/0x280
+Oct 21 22:29:49 ot-gold1 kernel:  do_fault+0x16c/0x2a0
+Oct 21 22:29:49 ot-gold1 kernel:  ? pte_offset_map_rw_nolock+0x20/0xa0
+Oct 21 22:29:49 ot-gold1 kernel:  handle_pte_fault+0x141/0x1f0
+Oct 21 22:29:49 ot-gold1 kernel:  ? set_next_entity+0xeb/0x270
+Oct 21 22:29:49 ot-gold1 kernel:  __handle_mm_fault+0x493/0x720
+Oct 21 22:29:49 ot-gold1 kernel:  handle_mm_fault+0xee/0x2e0
+Oct 21 22:29:49 ot-gold1 kernel:  do_user_addr_fault+0x2ee/0x830
+Oct 21 22:29:49 ot-gold1 kernel:  exc_page_fault+0x83/0x1e0
+Oct 21 22:29:49 ot-gold1 kernel:  asm_exc_page_fault+0x27/0x30
+Oct 21 22:29:49 ot-gold1 kernel: RIP: 0033:0x18cf161
+Oct 21 22:29:49 ot-gold1 kernel: Code: 00 00 5b 5d 41 5c 41 5e c3 f3 0f 1e fa 48 39 f7 0f 84 93 00 00 00 48 85 ff 0f 94 c0 48 85 f6 0f 94 c2 08 d0 0f 85 af 00 00 00 <8b> 4e 18 39 4f 18 75 7c 0f b6 57 21 3a 56 21 75 73 84 d2 74 7a 48
+Oct 21 22:29:49 ot-gold1 kernel: RSP: 002b:00007ffe7a1dbfc8 EFLAGS: 00010246
+Oct 21 22:29:49 ot-gold1 kernel: RAX: 0000000002b3a700 RBX: 00007ffe7a1dc020 RCX: 0000000000000009
+Oct 21 22:29:49 ot-gold1 kernel: RDX: 0000000000000000 RSI: 00000010081cc240 RDI: 00007ffe7a1dc020
+Oct 21 22:29:49 ot-gold1 kernel: RBP: 00000cb0216aea20 R08: 00007ffe7a1dbf6c R09: 00007ffe7a1dbf88
+Oct 21 22:29:49 ot-gold1 kernel: R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000003b30
+Oct 21 22:29:49 ot-gold1 kernel: R13: 0000000000000000 R14: 0000000000000766 R15: 00000010079d7168
+Oct 21 22:29:49 ot-gold1 kernel:  </TASK>
+Oct 21 22:29:49 ot-gold1 kernel: memory: usage 100663296kB, limit 100663296kB, failcnt 21210
+Oct 21 22:29:49 ot-gold1 kernel: swap: usage 0kB, limit 0kB, failcnt 0
+Oct 21 22:29:49 ot-gold1 kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1628119-1792642813.scope:
+Oct 21 22:29:49 ot-gold1 kernel: anon 102781804544
+Oct 21 22:29:49 ot-gold1 kernel: file 31985664
+Oct 21 22:29:49 ot-gold1 kernel: kernel 265424896
+Oct 21 22:29:49 ot-gold1 kernel: kernel_stack 360448
+Oct 21 22:29:49 ot-gold1 kernel: pagetables 220495872
+Oct 21 22:29:49 ot-gold1 kernel: sec_pagetables 0
+Oct 21 22:29:49 ot-gold1 kernel: percpu 41952
+Oct 21 22:29:49 ot-gold1 kernel: sock 0
+Oct 21 22:29:49 ot-gold1 kernel: vmalloc 0
+Oct 21 22:29:49 ot-gold1 kernel: shmem 31772672
+Oct 21 22:29:49 ot-gold1 kernel: zswap 0
+Oct 21 22:29:49 ot-gold1 kernel: zswapped 0
+Oct 21 22:29:49 ot-gold1 kernel: file_mapped 102400
+Oct 21 22:29:49 ot-gold1 kernel: file_dirty 0
+Oct 21 22:29:49 ot-gold1 kernel: file_writeback 0
+Oct 21 22:29:49 ot-gold1 kernel: swapcached 0
+Oct 21 22:29:49 ot-gold1 kernel: anon_thp 0
+Oct 21 22:29:49 ot-gold1 kernel: file_thp 0
+Oct 21 22:29:49 ot-gold1 kernel: shmem_thp 0
+Oct 21 22:29:49 ot-gold1 kernel: inactive_anon 102266769408
+Oct 21 22:29:49 ot-gold1 kernel: active_anon 546709504
+Oct 21 22:29:49 ot-gold1 kernel: inactive_file 0
+Oct 21 22:29:49 ot-gold1 kernel: active_file 4096
+Oct 21 22:29:49 ot-gold1 kernel: unevictable 0
+Oct 21 22:29:49 ot-gold1 kernel: slab_reclaimable 43263528
+Oct 21 22:29:49 ot-gold1 kernel: slab_unreclaimable 1253896
+Oct 21 22:29:49 ot-gold1 kernel: slab 44517424
+Oct 21 22:29:49 ot-gold1 kernel: hugetlb 0
+Oct 21 22:29:49 ot-gold1 kernel: workingset_refault_anon 0
+Oct 21 22:29:49 ot-gold1 kernel: workingset_refault_file 250613
+Oct 21 22:29:49 ot-gold1 kernel: workingset_activate_anon 0
+Oct 21 22:29:49 ot-gold1 kernel: workingset_activate_file 29323
+Oct 21 22:29:49 ot-gold1 kernel: workingset_restore_anon 0
+Oct 21 22:29:49 ot-gold1 kernel: workingset_restore_file 3696
+Oct 21 22:29:49 ot-gold1 kernel: workingset_nodereclaim 0
+Oct 21 22:29:49 ot-gold1 kernel: pgdemote_kswapd 0
+Oct 21 22:29:49 ot-gold1 kernel: pgdemote_direct 0
+Oct 21 22:29:49 ot-gold1 kernel: pgdemote_khugepaged 0
+Oct 21 22:29:49 ot-gold1 kernel: pgdemote_proactive 0
+Oct 21 22:29:49 ot-gold1 kernel: pgpromote_success 0
+Oct 21 22:29:49 ot-gold1 kernel: pgscan 2448119
+Oct 21 22:29:49 ot-gold1 kernel: pgsteal 2108456
+Oct 21 22:29:49 ot-gold1 kernel: pswpin 0
+Oct 21 22:29:49 ot-gold1 kernel: pswpout 0
+Oct 21 22:29:49 ot-gold1 kernel: pgscan_kswapd 93813
+Oct 21 22:29:49 ot-gold1 kernel: pgscan_direct 2354306
+Oct 21 22:29:49 ot-gold1 kernel: pgscan_khugepaged 0
+Oct 21 22:29:49 ot-gold1 kernel: pgscan_proactive 0
+Oct 21 22:29:49 ot-gold1 kernel: pgsteal_kswapd 93813
+Oct 21 22:29:49 ot-gold1 kernel: pgsteal_direct 2014643
+Oct 21 22:29:49 ot-gold1 kernel: pgsteal_khugepaged 0
+Oct 21 22:29:49 ot-gold1 kernel: pgsteal_proactive 0
+Oct 21 22:29:49 ot-gold1 kernel: pgfault 127073257
+Oct 21 22:29:49 ot-gold1 kernel: pgmajfault 6867
+Oct 21 22:29:49 ot-gold1 kernel: pgrefill 212725
+Oct 21 22:29:49 ot-gold1 kernel: pgactivate 94369
+Oct 21 22:29:49 ot-gold1 kernel: pgdeactivate 0
+Oct 21 22:29:49 ot-gold1 kernel: pglazyfree 0
+Oct 21 22:29:49 ot-gold1 kernel: pglazyfreed 0
+Oct 21 22:29:49 ot-gold1 kernel: swpin_zero 0
+Oct 21 22:29:49 ot-gold1 kernel: swpout_zero 0
+Oct 21 22:29:49 ot-gold1 kernel: zswpin 0
+Oct 21 22:29:49 ot-gold1 kernel: zswpout 0
+Oct 21 22:29:49 ot-gold1 kernel: zswpwb 0
+Oct 21 22:29:49 ot-gold1 kernel: thp_fault_alloc 0
+Oct 21 22:29:49 ot-gold1 kernel: thp_collapse_alloc 0
+Oct 21 22:29:49 ot-gold1 kernel: thp_swpout 0
+Oct 21 22:29:49 ot-gold1 kernel: thp_swpout_fallback 0
+Oct 21 22:29:49 ot-gold1 kernel: numa_pages_migrated 10522246
+Oct 21 22:29:49 ot-gold1 kernel: numa_pte_updates 23266968
+Oct 21 22:29:49 ot-gold1 kernel: numa_hint_faults 21055984
+Oct 21 22:29:49 ot-gold1 kernel: Memory cgroup min protection 0kB -- low protection 0kB
+Oct 21 22:29:49 ot-gold1 kernel: Tasks state (memory values in pages):
+Oct 21 22:29:49 ot-gold1 kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+Oct 21 22:29:49 ot-gold1 kernel: [1628119]  1000 1628119     2115     1084      209      875         0    57344        0             0 bash
+Oct 21 22:29:49 ot-gold1 kernel: [1628699]  1000 1628699      695      457       24      433         0    49152        0             0 time
+Oct 21 22:29:49 ot-gold1 kernel: [1628700]  1000 1628700     5534     3285     1486     1799         0    81920        0             0 python3
+Oct 21 22:29:49 ot-gold1 kernel: [1628702]  1000 1628702     4681     3408     1798     1610         0    77824        0             0 perl
+Oct 21 22:29:49 ot-gold1 kernel: [1628710]  1000 1628710  9835571   114523   110595     3928         0  8212480        0             0 verilator_bin
+Oct 21 22:29:49 ot-gold1 kernel: [2042500]  1000 2042500      722      514       26      488         0    45056        0             0 sh
+Oct 21 22:29:49 ot-gold1 kernel: [2042501]  1000 2042501    61684    60050    59432      618         0   544768        0             0 make
+Oct 21 22:29:49 ot-gold1 kernel: [2617592]  1000 2617592     1927      818       71      747         0    53248        0             0 g++
+Oct 21 22:29:49 ot-gold1 kernel: [2617594]  1000 2617594     1927      823       72      751         0    49152        0             0 g++
+Oct 21 22:29:49 ot-gold1 kernel: [2617596]  1000 2617596  2011698  1675993  1671058     4935         0 14286848        0             0 cc1plus
+Oct 21 22:29:49 ot-gold1 kernel: [2617599]  1000 2617599  2012709  1676904  1671958     4946         0 14295040        0             0 cc1plus
+Oct 21 22:29:49 ot-gold1 kernel: [3326948]  1000 3326948     1927      822       72      750         0    49152        0             0 g++
+Oct 21 22:29:49 ot-gold1 kernel: [3326950]  1000 3326950  4387487  4042610  4037235     5375         0 33845248        0             0 cc1plus
+Oct 21 22:29:49 ot-gold1 kernel: [3327545]  1000 3327545     1927      821       71      750         0    49152        0             0 g++
+Oct 21 22:29:49 ot-gold1 kernel: [3327547]  1000 3327547  4045917  3361975  3356455     5520         0 28594176        0             0 cc1plus
+Oct 21 22:29:49 ot-gold1 kernel: [3377973]  1000 3377973     1927      819       71      748         0    53248        0             0 g++
+Oct 21 22:29:49 ot-gold1 kernel: [3377974]  1000 3377974  4342129  3673324  3667814     5510         0 30994432        0             0 cc1plus
+Oct 21 22:29:49 ot-gold1 kernel: [3378326]  1000 3378326     1927      822       71      751         0    49152        0             0 g++
+Oct 21 22:29:49 ot-gold1 kernel: [3378327]  1000 3378327  5043008  4414486  4408645     5841         0 36929536        0             0 cc1plus
+Oct 21 22:29:49 ot-gold1 kernel: [3500889]  1000 3500889     1927      821       71      750         0    53248        0             0 g++
+Oct 21 22:29:49 ot-gold1 kernel: [3500890]  1000 3500890  4199982  3579777  3574665     5112         0 30060544        0             0 cc1plus
+Oct 21 22:29:49 ot-gold1 kernel: [3634951]  1000 3634951     1927      818       70      748         0    53248        0             0 g++
+Oct 21 22:29:49 ot-gold1 kernel: [3634952]  1000 3634952  3005061  2536236  2531245     4991         0 21823488        0             0 cc1plus
+Oct 21 22:29:49 ot-gold1 kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0-1,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1628119-1792642813.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1628119-1792642813.scope,task=cc1plus,pid=3378327,uid=1000
+Oct 21 22:29:49 ot-gold1 kernel: Memory cgroup out of memory: Killed process 3378327 (cc1plus) total-vm:20172032kB, anon-rss:17634580kB, file-rss:23364kB, shmem-rss:0kB, UID:1000 pgtables:36064kB oom_score_adj:0
+Oct 21 22:29:52 ot-gold1 kernel: veth5d0897f: renamed from eth0
+Oct 21 22:29:52 ot-gold1 kernel: docker0: port 12(veth8ae65ce) entered disabled state
+Oct 21 22:29:52 ot-gold1 kernel: docker0: port 12(veth8ae65ce) entered disabled state
+Oct 21 22:29:52 ot-gold1 kernel: veth8ae65ce (unregistering): left allmulticast mode
+Oct 21 22:29:52 ot-gold1 kernel: veth8ae65ce (unregistering): left promiscuous mode
+Oct 21 22:29:52 ot-gold1 kernel: docker0: port 12(veth8ae65ce) entered disabled state
+Oct 21 22:29:53 ot-gold1 kernel: oom_reaper: reaped process 3378327 (cc1plus), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB

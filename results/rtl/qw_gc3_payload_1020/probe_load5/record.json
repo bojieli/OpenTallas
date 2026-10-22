@@ -1,0 +1,16 @@
+{
+  "status": "CFG_LOADER_EXPECTATIONS_PASS",
+  "release_qualified": false,
+  "cases": [
+    {
+      "case": "candidate",
+      "exit": 0,
+      "scope": "realcfgROMloader andactualNU4controllerstores; OPSEGunboundhold remains"
+    },
+    {
+      "case": "missing_base",
+      "exit": 0,
+      "scope": "realcfgROMloader andactualNU4controllerstores; OPSEGunboundhold remains"
+    }
+  ]
+}

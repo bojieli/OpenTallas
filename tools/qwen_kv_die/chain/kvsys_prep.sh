@@ -195,6 +195,14 @@ if [ "${OT_KV_TILE_VIEWS:-1}" = 1 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${
     cat $O/tile_views.log; echo "KV_TILE_VIEWS FAIL (tile_views.json)"; exit 10; }
   BV="$BV $TVB"; echo "KV_TILE_VIEWS: bind [$TVB] assumed $(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['assumed'])" $O/tile_views.json)"
 fi
+# QKC-GRP 10-21 (OT_KV_GRP_S6C=1 with OT_KV_GRP_SAFE2=1 OT_KV_DOMSPLIT=1 OT_KV_NATIVE_SLOTS=1): the 32 groups bind the CLOSED
+# s6c views through kv_tile_views (OT_KV_GRP_VIEW / OT_KV_GRP_H_VIEW = auto (default) | 0 | physical/ref_tile/<kit>/views/<vm>):
+# grp <- qkd_kvs_grp_s7d-grp_s7d-71f891b9b (388.8 x 432), grp_h <- qkd_kvs_grp_h_s7c-grp_h_s7c-71f891b9b (388.8 sq).
+# With the flag a group master left ASSUMED fails the prep (exit 10): the die would schedule a tile no netlist backs.
+if [ "${OT_KV_GRP_S6C:-0}" = 1 ] && [ -f $O/tile_views.json ]; then
+  python3 -c "import json,sys; a=json.load(open(sys.argv[1]))['assumed']; m=[x for x in ('qkd_kvs_grp_s6c','qkd_kvs_grp_h_s6c') if x in a]; print('OT_KV_GRP_S6C: bound' if not m else 'OT_KV_GRP_S6C: ASSUMED %s' % m); sys.exit(1 if m else 0)" $O/tile_views.json \
+    || { echo "OT_KV_GRP_S6C: group view not bound (tile_views.json)"; exit 10; }
+fi
 python3 tools/qwen_kv_die/kv_die.py case --kv-wq-mirror --split $H14 --out $O/case_kv > $O/case.log
 git rev-parse --short=9 HEAD > $O/case_kv/SOURCE_COMMIT
 python3 tools/die_top_lint.py lint --die qwen_kv --variant kv_wq_mirror,split$V14 --out $O/lint > $O/lint.log 2>&1
@@ -262,12 +270,7 @@ if [ "${OT_KV_RLY_STD:-0}" = 1 ]; then
   EXP="--expanded $O/expand.json"
 fi
 [ "${OT_KV_RLY_STD_NETLIST_ONLY:-0}" = 1 ] || kv_orient prefwd
-# KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
-# half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
-# RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
-if [ "${OT_KV_FWD:-0}" = 1 ]; then
-  python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
-  EXP="--expanded $O/expand.json"
+kv_land_lag() {
   # KVR-LANDLAG 10-19: every forwarded-clock landed crossing of the laned netlist (qkd_landsh* / qkd_landsh0*) checked
   # against its compiled age, FAIL CLOSED: lane traced on die.v == fwd_lanes.json row, K straps from the landing's own
   # tie cells == (E + cal + h0(n)) mod 8, the strap age inside the ring window, and the latency the hardware delivers
@@ -280,6 +283,14 @@ if [ "${OT_KV_FWD:-0}" = 1 ]; then
     if [ "${OT_KV_LAND_LAG_DIAG:-0}" = 1 ]; then tail -1 $O/land_lag.log > $O/LAND_LAG_DIAGNOSTIC
     else tail -4 $O/land_lag.log; echo "LAND_LAG_KV FAIL: landed crossings vs compiled ages ($O/case_kv/land_lag.json)"; exit 9; fi; }
   tail -1 $O/land_lag.log | cut -c1-400
+}
+# KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
+# half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
+# RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
+if [ "${OT_KV_FWD:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
+  EXP="--expanded $O/expand.json"
+  [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ] || kv_land_lag
 fi
 # KV-HEALTH 10-19 (OT_KV_HEALTH=1; kvs14r default ON = MU release): the continuous registered health plane -- every
 # landing / KC / DCAL fault source -> no-reset OR joins + relay pipes per clock root, cross-root on spare bits of the
@@ -292,6 +303,16 @@ if [ "${OT_KV_HEALTH:-0}" = 1 ]; then
     || { tail -5 $O/health_plane.log; echo "KV_HEALTH install FAILED ($O/health_plane.log)"; exit 11; }
   grep '^KV_HEALTH' $O/health_plane.log | cut -c1-900
   EXP="--expanded $O/expand.json"
+fi
+# Opt-in actual source-preserving reset stations after all lane/health placements.
+# The existing land-lag check below consumes the recompiled G-R0/K calendar once.
+if [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_final_reset_stations.py --run "$O" > "$O/final_reset_stations.log" 2>&1 \
+    || { tail -5 "$O/final_reset_stations.log"; echo "KV_FINAL_RESET_STATIONS source generation failed"; exit 6; }
+  export OT_KV_FINAL_RESET_CALENDAR="$O/final_reset_stations/calendar.json"
+fi
+if [ "${OT_KV_FWD:-0}" = 1 ] && [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ]; then
+  kv_land_lag
 fi
 [ "${OT_KV_FWD_NETLIST_ONLY:-0}" = 1 ] || kv_orient final --check-only
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)

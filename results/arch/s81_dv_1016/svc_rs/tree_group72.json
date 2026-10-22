@@ -1,0 +1,206 @@
+{
+ "generator": "tools/s81_dv/svc_rs/svc_rs_tree.py",
+ "plan": "S81-DV p4j",
+ "hop": 8,
+ "g0": 1,
+ "dmax": 3,
+ "entries": {
+  "W": 5,
+  "E": 11
+ },
+ "chain_roots": {
+  "W": 7,
+  "E": 9
+ },
+ "fold": 9,
+ "pv_words": 40,
+ "offmax": 24,
+ "rsv_map": "rsv_NN = sid NN = 2 column + row (row 1 upper), as dv_plan.py rsv_links",
+ "plan_edges": {
+  "tq": "dn stream, parent -> child",
+  "tp": "up + P.V return, child -> parent (non-root edges)",
+  "tr": "up + P.V return on the chain-root -> entry edge: tr_07_05 (07 W face -> 05 E face), tr_09_11 (09 E face -> 11 W face) = ro on 07 / 09, ri on 05 / 11",
+  "fc": "score exchange gather 07 -> 09 / scatter 09 -> 07 (fold)",
+  "tp_entry_root": "score exchange gather 05 -> 07, 11 -> 09; scatter 09 -> 11, 07 -> 05"
+ },
+ "slices": {
+  "0": {
+   "tile": 12,
+   "half": "W",
+   "entry": false,
+   "parent": 1,
+   "children": 0,
+   "depth": 3,
+   "gd": 9,
+   "sx_off": 8
+  },
+  "1": {
+   "tile": 13,
+   "half": "W",
+   "entry": false,
+   "parent": 2,
+   "children": 4,
+   "depth": 2,
+   "gd": 25,
+   "sx_off": 16
+  },
+  "2": {
+   "tile": 15,
+   "half": "W",
+   "entry": false,
+   "parent": 1,
+   "children": 0,
+   "depth": 2,
+   "gd": 25,
+   "sx_off": 16
+  },
+  "3": {
+   "tile": 14,
+   "half": "W",
+   "entry": false,
+   "parent": 2,
+   "children": 12,
+   "depth": 1,
+   "gd": 25,
+   "sx_off": 8
+  },
+  "4": {
+   "tile": 8,
+   "half": "W",
+   "entry": false,
+   "parent": 1,
+   "children": 0,
+   "depth": 1,
+   "gd": 25,
+   "sx_off": 8
+  },
+  "5": {
+   "tile": 9,
+   "half": "W",
+   "entry": true,
+   "parent": 0,
+   "children": 14,
+   "depth": 0,
+   "gd": 25,
+   "sx_off": 0
+  },
+  "6": {
+   "tile": 11,
+   "half": "W",
+   "entry": false,
+   "parent": 1,
+   "children": 0,
+   "depth": 2,
+   "gd": 9,
+   "sx_off": 0
+  },
+  "7": {
+   "tile": 10,
+   "half": "W",
+   "entry": false,
+   "parent": 4,
+   "children": 4,
+   "depth": 1,
+   "gd": 25,
+   "sx_off": 8
+  },
+  "8": {
+   "tile": 2,
+   "half": "E",
+   "entry": false,
+   "parent": 1,
+   "children": 0,
+   "depth": 2,
+   "gd": 33,
+   "sx_off": 24
+  },
+  "9": {
+   "tile": 3,
+   "half": "E",
+   "entry": false,
+   "parent": 2,
+   "children": 4,
+   "depth": 1,
+   "gd": 33,
+   "sx_off": 16
+  },
+  "10": {
+   "tile": 0,
+   "half": "E",
+   "entry": false,
+   "parent": 1,
+   "children": 0,
+   "depth": 1,
+   "gd": 33,
+   "sx_off": 16
+  },
+  "11": {
+   "tile": 4,
+   "half": "E",
+   "entry": true,
+   "parent": 0,
+   "children": 14,
+   "depth": 0,
+   "gd": 33,
+   "sx_off": 8
+  },
+  "12": {
+   "tile": 1,
+   "half": "E",
+   "entry": false,
+   "parent": 1,
+   "children": 0,
+   "depth": 2,
+   "gd": 33,
+   "sx_off": 24
+  },
+  "13": {
+   "tile": 5,
+   "half": "E",
+   "entry": false,
+   "parent": 4,
+   "children": 6,
+   "depth": 1,
+   "gd": 33,
+   "sx_off": 16
+  },
+  "14": {
+   "tile": 6,
+   "half": "E",
+   "entry": false,
+   "parent": 1,
+   "children": 0,
+   "depth": 3,
+   "gd": 17,
+   "sx_off": 16
+  },
+  "15": {
+   "tile": 7,
+   "half": "E",
+   "entry": false,
+   "parent": 4,
+   "children": 4,
+   "depth": 2,
+   "gd": 17,
+   "sx_off": 8
+  }
+ },
+ "pvslot": {
+  "st0_s8": 88,
+  "st0_s9": 144,
+  "st0_s10": 24,
+  "st0_s12": 48,
+  "st1_s11": 40,
+  "st1_s13": 64,
+  "st1_s14": 88,
+  "st1_s15": 144,
+  "st2_s4": 32,
+  "st2_s5": 88,
+  "st2_s6": 152,
+  "st2_s7": 112,
+  "st3_s0": 16,
+  "st3_s1": 56,
+  "st3_s2": 136,
+  "st3_s3": 112
+ }
+}

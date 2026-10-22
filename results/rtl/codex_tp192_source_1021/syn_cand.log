@@ -1,0 +1,5 @@
+TKM_CTL_EXACTEDGE PASS MUT=0 cycles=34918 entries=33536 writes=256 reads=512 buffer=512
+- rtl/hbm_accel/generic/collective/tkm/bench/tb_tkm_ctl_exactedge.sv:111: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 29us; walltime 1.290 s; speed 22.576 us/s
+- Verilator: cpu 1.262 s on 1 threads; allocated 11 MB

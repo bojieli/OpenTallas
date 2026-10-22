@@ -1,0 +1,9 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_grp_s7d-grp_s7d-71f891b9b bench bench_s6_m2 host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_grp_s7d-grp_s7d-71f891b9b-bench log cl/bench_s6_m2.a1b1.log captured 2026-10-21T04:25:07-07:00
+# fail_regex '(S2_FAIL|PROD_VALID_FAIL|PROD_RESPONSE_FAIL|PROD_STATUS_FAIL)'
+[16680000] %Fatal: tb.sv:252: Assertion failed in tb: PROD_RESPONSE_FAIL
+%Error: /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_grp_s7d-grp_s7d-71f891b9b-bench/bench/s6_m2/bench_m2/tb.sv:252: Verilog $stop
+Aborting...
+
+MUT 2 EXPECTED True RC 1
+[{"mut": 2, "rc": 1, "pass_expected": true, "line": "[16680000] %Fatal: tb.sv:252: Assertion failed in tb: PROD_RESPONSE_FAIL"}]

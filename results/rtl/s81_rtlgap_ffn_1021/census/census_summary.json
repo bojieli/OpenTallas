@@ -1,0 +1,158 @@
+{
+ "ot_s81sl_rstopt": {
+  "status": "PASS",
+  "limit": 32,
+  "max_dynamic_loads": 32,
+  "violations": 0,
+  "seq_violations": 0,
+  "rst_n_loads": 10,
+  "roots_examined": 35320,
+  "role_errors": [],
+  "netlist_sha256": "687d74a1533f956da13c65fcab6bf7ee72a84b8832bf8ee72a067564e8d25ced",
+  "area_um2": 6848.10936,
+  "top_violations": []
+ },
+ "ot_s81sl_xrt1": {
+  "status": "PASS",
+  "limit": 32,
+  "max_dynamic_loads": 32,
+  "violations": 0,
+  "seq_violations": 0,
+  "rst_n_loads": 16,
+  "roots_examined": 54806,
+  "role_errors": [],
+  "netlist_sha256": "9903b49a7eb56a8b7742c9a635a00efcd917bac3d695eae466b87aa3b6ffa78e",
+  "area_um2": 9336.76956,
+  "top_violations": []
+ },
+ "ot_s81sl_xrt3": {
+  "status": "PASS",
+  "limit": 32,
+  "max_dynamic_loads": 32,
+  "violations": 0,
+  "seq_violations": 0,
+  "rst_n_loads": 16,
+  "roots_examined": 63241,
+  "role_errors": [],
+  "netlist_sha256": "531386e4744f04bf9c4518fc51bb05ead1f63dd8c0f857c069e24e5501aec1df",
+  "area_um2": 10789.46244,
+  "top_violations": []
+ },
+ "ot_s81sl_rstop (base 4ee613834)": {
+  "status": "FAIL",
+  "limit": 32,
+  "max_dynamic_loads": 2935,
+  "violations": 61,
+  "seq_violations": 9,
+  "rst_n_loads": 2507,
+  "roots_examined": 43715,
+  "role_errors": [],
+  "netlist_sha256": "a8d44b6e7f7812f64bf7b22663e1ca9b44c0edd1b6ea6aaf16894e6e3b17c899",
+  "area_um2": 7776.47628,
+  "top_violations": [
+   [
+    2935,
+    "sequential",
+    "_79482_/QN"
+   ],
+   [
+    2507,
+    "input_port",
+    "rst_n"
+   ],
+   [
+    2193,
+    "combinational_or_macro",
+    "_63033_/Y"
+   ],
+   [
+    1973,
+    "sequential",
+    "_79483_/QN"
+   ],
+   [
+    1390,
+    "sequential",
+    "_85344_/QN"
+   ]
+  ]
+ },
+ "ot_s81sl_xr1 (base, keep hook)": {
+  "status": "FAIL",
+  "limit": 32,
+  "max_dynamic_loads": 148,
+  "violations": 29,
+  "seq_violations": 2,
+  "rst_n_loads": 10,
+  "roots_examined": 50148,
+  "role_errors": [],
+  "netlist_sha256": "2181d1ab58d3ff373374c87415b098cd6aec7009e1b4c4e1f39a6d4f0100baee",
+  "area_um2": 8648.38944,
+  "top_violations": [
+   [
+    148,
+    "combinational_or_macro",
+    "_056074_/Y"
+   ],
+   [
+    145,
+    "combinational_or_macro",
+    "_056088_/Y"
+   ],
+   [
+    129,
+    "combinational_or_macro",
+    "_061984_/Y"
+   ],
+   [
+    129,
+    "combinational_or_macro",
+    "_061985_/Y"
+   ],
+   [
+    129,
+    "combinational_or_macro",
+    "_061988_/Y"
+   ]
+  ]
+ },
+ "ot_s81sl_xr3 (base, keep hook)": {
+  "status": "FAIL",
+  "limit": 32,
+  "max_dynamic_loads": 513,
+  "violations": 33,
+  "seq_violations": 2,
+  "rst_n_loads": 10,
+  "roots_examined": 59733,
+  "role_errors": [],
+  "netlist_sha256": "5746ba04b3e0f8a208a1dbb6ae6d52772c5c6dede8c553b7b4d31827de029b2d",
+  "area_um2": 10361.6415,
+  "top_violations": [
+   [
+    513,
+    "combinational_or_macro",
+    "_075041_/Y"
+   ],
+   [
+    151,
+    "combinational_or_macro",
+    "_072083_/Y"
+   ],
+   [
+    142,
+    "combinational_or_macro",
+    "_072089_/Y"
+   ],
+   [
+    129,
+    "combinational_or_macro",
+    "_072156_/Y"
+   ],
+   [
+    129,
+    "combinational_or_macro",
+    "_072162_/Y"
+   ]
+  ]
+ }
+}

@@ -66,9 +66,12 @@ def main():
     ap.add_argument('--variant', choices=['base', 'mut_naive', 'mut_sel', 'mut_rlcal'], help='tile mode: run only this variant')
     ap.add_argument('--rst-land', type=int, default=0, help='kit reset landing stages on rs (ref_tile reset_landing.stages)')
     a = ap.parse_args()
+    wrapper = WRAP
     if a.tile:
-        m = re.fullmatch(r'dsfd_dvland_(\d+)(l?)', a.tile)
-        assert m, f'--tile {a.tile}: not a dsfd_dvland_<W>[l] top'
+        m = re.fullmatch(r'(?:dsfd_dvland|dsdv_svc_busland)_(\d+)(l?)', a.tile)
+        if a.tile.startswith('dsdv_svc_busland_'):
+            wrapper = ROOT / 'rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv'
+        assert m, f'--tile {a.tile}: not a supported real landing top'
         a.widths, a.long = [int(m.group(1))], bool(m.group(2))
     d_, kw, nmax, geoms = (8, 6, 64, GEOM_LONG) if a.long else (D, 3, 16, GEOM)
     if a.long and not a.tile:
@@ -81,7 +84,7 @@ def main():
                calendar='re-derived: core release R0 + rst_land, hop-0 gate G + rst_land (K, latency unchanged)' if a.rst_land else 'R0 / G')
     verdict = True
     if a.tile:
-        res.update(tile=a.tile, wrapper=str(WRAP.relative_to(ROOT)))
+        res.update(tile=a.tile, wrapper=str(wrapper.relative_to(ROOT)))
     assert 0 <= a.rst_land <= 8, '--rst-land: 0..8 stages'
     if a.variant == 'mut_rlcal':
         assert a.rst_land > 0, 'mut_rlcal needs --rst-land > 0'
@@ -95,7 +98,7 @@ def main():
         for w in a.widths:
             b = tmp / f'{var}_{w}'
             cmd = ['iverilog', '-g2012', f'-DTB_W={w}', f'-DTB_D={d_}', f'-DTB_KW={kw}', f'-DTB_NMAX={nmax}', '-o', str(b), str(TB),
-                   str(DUT)] + ([f'-D{define}'] if define else []) + ([f'-DTB_TOP={a.tile}', str(WRAP)] if a.tile else [])
+                   str(DUT)] + ([f'-D{define}'] if define else []) + ([f'-DTB_TOP={a.tile}', str(wrapper)] if a.tile else [])
             subprocess.run(cmd, check=True)
             for g in geoms:
                 dl0 = (g['N'] + 1) * g['DH'] - g['LR']

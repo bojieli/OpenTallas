@@ -4137,6 +4137,10 @@ def masters(m, k=1, port_bits=None):
     for bid, cl, bits, eps in m['buses']:
         for inst, port in eps:
             used.setdefault(by[inst].master, {})[port.lstrip('*')] = max(bits, used.get(by[inst].master, {}).get(port.lstrip('*'), 0))
+    if KSD.GRP_SAFE2:
+        import kv_grp_safe2
+        used = {master: kv_grp_safe2.frame_port_widths(master, ports, partial=True)
+                for master, ports in used.items()}
     if m['geo'].get('kv_wq_binary') and not m['geo'].get('split'):
         # Physical eight-bit lane port survives; only its low3 pins enter the bus.
         for g in range(4):
@@ -5104,6 +5108,8 @@ def static_instance_params(m):
 def write_netlist(m, k, path, top='qkd_die'):
     if os.environ.get('OT_KV_GRP_PRIVATE0', '0') == '1' and k != 1:
         raise ValueError('GRP_PRIVATE0 requires full-width parent nets (k=1)')
+    if os.environ.get('OT_KV_GRP_SAFE2', '0') == '1' and k != 1:
+        raise ValueError('GRP_SAFE2 requires full-width parent nets (k=1)')
     F.write_netlist(m, k, path, top=top)
     if m['geo'].get('static_die'):
         # KVJ-G2: per-instance parameters (ECTL kiss RESPONSE_LAT from this plan's K request / response relays) as a
@@ -5123,6 +5129,10 @@ def write_netlist(m, k, path, top='qkd_die'):
         import kv_grp_private0
         p_ = Path(path)
         p_.write_text(kv_grp_private0.parent_connections(p_.read_text()))
+    if os.environ.get('OT_KV_GRP_SAFE2', '0') == '1':
+        import kv_grp_safe2
+        p_ = Path(path)
+        p_.write_text(kv_grp_safe2.parent_connections(p_.read_text()))
     if m.get('host_ties'):
         # v1.4: per-slice logical-PC straps and the stack chain terminators (the source parent's constants), as tie cells
         p_ = Path(path)
@@ -5289,6 +5299,9 @@ def _case_ties(m, path):
     if os.environ.get('OT_KV_GRP_PRIVATE0', '0') == '1':
         import kv_grp_private0
         tx = kv_grp_private0.parent_connections(tx)
+    if os.environ.get('OT_KV_GRP_SAFE2', '0') == '1':
+        import kv_grp_safe2
+        tx = kv_grp_safe2.parent_connections(tx)
     ties = {}
     for b_, lane in (m.get('wq_straps') or {}).items():
         ties[b_] = (3, lane)

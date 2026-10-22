@@ -1,0 +1,11 @@
+# Actual72 frame LP source binding implementation
+
+Bounded source candidate, no new tests/audits/gates. Current-main base79047d2c4; selected plan329d6c07a. Existing rf3rlfs1 physical gates remain pinned21b97190e. Non-frame table bindings are retained for the die lead's service/CAP/GU integration.
+
+frame_bind.py emits72 actual LP frame bindings:60 col_h9_l4_lp and12 col_h10_l4_lp,24 with class-local MX composed with the plan's transform exactly once. INSTANCE remains u_<actual frame name>. Each frame has three distinct real die clock top inputs with explicit source/receiver/region metadata; no clk_extra alias. Main binder, peer clocks, landing receiver clocks and hop0 fallback/calendar clocks use this explicit source when present. Absent the opt-in maps, existing clock wiring and placement behavior remain unchanged.
+
+RVcase keeps kit pins in native master coordinates; native place_inst carries the instance reflection. Pin heuristics derived from global endpoints are inverse-transformed before writing the native stand-in LEF. Forward-clock relocation transforms actual closed/stand-in LEF source pins into global coordinates before taking the centroid. No double mirror. Explicit frame pin plans come from the real kit's per-port pin_ranges, not whole-face centroid projection. These positions are planned within the allowed ranges; actual routed LEF coordinates remain authoritative.
+
+LP rst_n passes two FRL stages then the cfifo's two sync stages, so this opt-in frame receive-reset epoch is4 edges (legacy default2 retained). The xk relay's two reset synchronizer edges are separate boot state; ownership repair adds no steady-state data cycle. Internal LP compiler records remain required for actual programme timing.
+
+The emitted table is deliberately interim source integration, not strict-bind PASS or a closed parent. Legacy non-LP _nx chain-end substitution is removed: it cannot accept the new clock ABI. Full LP chain-end outputs remain real ports; any unconsumed outputs stay visible to strict bind, with no tie or spare-output waiver added. The selected72 land plan and actual programmes must be supplied; the inherited old land_plan path is not current qualification. CPR leaf integration is being added from its exact existing closed record/export, with Q-only one-edge command lead from current main; parent physical closure remains owed.
