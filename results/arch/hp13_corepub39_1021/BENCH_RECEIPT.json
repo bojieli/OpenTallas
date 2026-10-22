@@ -4,8 +4,8 @@
   "host": "ot-epyc5",
   "verilator": "5.050",
   "cases": {
-    "main_positive": 596,
-    "fallback_positive": 596,
+    "main_positive": 592,
+    "fallback_positive": 592,
     "bits_each": 39,
     "causal_clock_mutants": 2,
     "causal_drop_tuple_mutants": 2
@@ -26,5 +26,6 @@
     "results/arch/hp13_corepub39_1021/FANOUT_AUDIT.json": "6dc21f74327e4b80819588e330ef293b0f88fc65a058347a8266ad186b1156fe",
     "results/arch/hp13_corepub39_1021/CLOCK_OWNERS.json": "e6b324f77b2e92e208438356d126cedbf0dd53b6445557a7daf08e82f1b4793c"
   },
-  "scope": "source-local coherent publisher mechanism and actual GI FF cells; no physical TT/native/embed root relation or transport credit"
+  "scope": "source-local coherent publisher mechanism and actual GI FF cells; no physical TT/native/embed root relation or transport credit",
+  "display_count_note": "Raw logs print nominal596; actual scoreboard checks cycles9..600 inclusive,592tuples. All39bits and causal failures unchanged; original rawlogs preserved."
 }
