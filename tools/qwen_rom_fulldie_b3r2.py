@@ -4890,8 +4890,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 _pdom = {}
 
         def _follow_fwd(follower, endpoint, lane):
-            from qwen_split.hp13_clock_bind import defer_data
-            if not defer_data(m, follower, endpoint, lane):
+            from qwen_split.hp13_clock_bind import defer_data, defer_fault_relay
+            if not defer_data(m, follower, endpoint, lane) and not defer_fault_relay(m, follower, endpoint, lane):
                 _ckf[follower] = endpoint[0]
 
         def _fwd_rst(inst, port=None):

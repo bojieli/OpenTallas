@@ -81,6 +81,23 @@ def defer_fault(model, follower, owner, clock_index):
     return True
 
 
+RELAY_PRIMS = ('qfd_rlyh0_', 'qfd_landh0_', 'qfd_landh_', 'qfd_rlyr0_', 'qfd_rlyrl_')
+
+
+def defer_fault_relay(model, follower, endpoint, lane):
+    """SQC-QDIE4 10-22 (r45 bind: 6 fault-lane stations with ck/ck_s unconnected): a forwarded-lane hop 0 / landing whose
+    end is a fault primitive with a DEFERRED HP13 owner follows that primitive's deferred clock (finalize chases it to
+    the source-proven tt_ctlm port), instead of a legacy follow that the regional construction drops with the symbol."""
+    if 'hp13_clock_bind' not in model or os.environ.get('OT_QWEN_HP13_FAULT_RELAY_FOLLOW', '1') != '1':
+        return False
+    owner = (endpoint[0], 'ck')
+    if owner not in model['hp13_deferred_follow']:
+        return False
+    model['hp13_deferred_follow'][follower] = owner
+    model.setdefault('hp13_deferred_fault_relay', {})[follower] = dict(endpoint=list(endpoint), owner=list(owner), lane=lane)
+    return True
+
+
 def finalize(model, per, record, by):
     info=model.get('hp13_clock_bind')
     if not info:return
@@ -107,6 +124,10 @@ def finalize(model, per, record, by):
             row=model['hp13_deferred_data'][f]
             if data_clock_owner(model, *row['endpoint']) != mapping[f] or not by[f[0]].master.startswith(('qfd_rlyh0_', 'qfd_landh0_', 'qfd_landh_', 'qfd_rlyr0_', 'qfd_rlyrl_')):
                 raise ValueError('HP13 data follower source/primitive differs: '+str(f))
+        elif f in model.get('hp13_deferred_fault_relay', {}):
+            o=mapping[f]
+            if not by[f[0]].master.startswith(RELAY_PRIMS) or o not in mapping or o[0] not in by or not by[o[0]].master.startswith('qfd_fault_or_n'):
+                raise ValueError('HP13 fault-lane follower is not a relay of a deferred fault primitive: '+str((f,o)))
         elif f[0]!='tt_ctlm' and not by[f[0]].master.startswith('qfd_fault_or_n'):
             raise ValueError('HP13 deferred follower is not a source-proven fault primitive: '+str(f))
         if len(locations.get(f,[]))>1:raise ValueError('HP13 follower has multiple actual regions: '+str(f))

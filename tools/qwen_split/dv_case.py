@@ -955,6 +955,33 @@ def apply_dv(v, m):
             out.append((bid, cl, bits, kept2))
         conn.update(tuple(e) for e in kept2)
         m.setdefault('dv_partial_buses', []).append(dict(bus=bid, endpoints=[list(e) for e in kept2], removed=gone))
+    if os.environ.get('OT_SPLIT_DV_ONE_NET_PER_DRIVER', '1') == '1':
+        # SQC-QDIE4 10-22 (r45 strict bind: DUPLICATE_PORT tt_ctlm.emb_start/emb_token, d2d_rom.tx_user + undriven
+        # n_dvw_tt_ctlm_emb_*/n_sf_prog_head_context_user): the HP13 head-prepare joins and the head-user link add a
+        # second net on an output that the W5/sys_face binds already drive.  One net per driver port: the later bus's
+        # sinks join the first bus (the relay plan fans a multi-sink bus out into <bus>__fo<k> legs).
+        first, merged, out2 = {}, [], []
+        for b_ in out:
+            bid_, cl_, n_, eps_ = b_
+            if cl_ in ('clock_trunk', 'reset', 'constant') or len(eps_) < 2:
+                out2.append(b_)
+                continue
+            d_ = tuple(eps_[0])
+            if d_ not in first:
+                first[d_] = len(out2)
+                out2.append(b_)
+                continue
+            j_ = first[d_]
+            b0, c0, n0, e0 = out2[j_]
+            if n0 != n_:
+                raise ValueError(f'one driver port, two nets of different width: {d_} {b0}({n0}) {bid_}({n_})')
+            have = {tuple(e) for e in e0}
+            out2[j_] = (b0, c0, n0, list(e0) + [e for e in eps_[1:] if tuple(e) not in have])
+            merged.append(dict(driver=list(d_), kept=b0, merged=bid_, sinks=[list(e) for e in eps_[1:]]))
+        if merged:
+            out[:] = out2
+            m['dv_one_net_per_driver'] = merged
+            print('DV_ONE_NET_PER_DRIVER', [(r_['kept'], r_['merged']) for r_ in merged], flush=True)
     m['buses'] = out
     # relay routing on the dv array (b3r2 _poly0): field-to-field links stay in their band gap / the W|E seam
     m['dv_gap_route'] = True
