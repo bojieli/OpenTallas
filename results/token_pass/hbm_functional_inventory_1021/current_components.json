@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-21T21:42:45-07:00",
+  "observed_at": "2026-10-21T21:43:57-07:00",
   "selected_r18_source": "d76bf51b4",
   "next_physical_revision": {
     "source": "13cbe8431",
@@ -50,9 +50,9 @@
   },
   "candidate_dma_load": {
     "latest_functional_source": "db8c1610329b89ec05ec25a4550edb42add3028c",
-    "latest_caller_state": "real vmks asynchronous producer replay active, EP5 unit2111555-1792644115; no verdict yet",
-    "last_caller_pass_source": "d70845a2b",
-    "last_caller_evidence": "25b66179f:results/rtl/hbm_dma_producer_1021/receipt.json",
+    "latest_caller_state": "PASS: real vmks asynchronous producer, EP5 unit2111555-1792644115, both causal controls rejected",
+    "last_caller_pass_source": "db8c1610329b89ec05ec25a4550edb42add3028c",
+    "last_caller_evidence": "results/rtl/hbm_dma_producer_1021/successors/db8c16103/receipt.json",
     "last_caller_words": 384,
     "full_record_words": 1280,
     "local_edges": 5,
