@@ -59,10 +59,13 @@ def resolve(die, slice_inst, source_root=None):
         xg = child(text, 'u_xg')
         if xg:
             break
-        nested = re.findall(r'(?m)^\s*(ot_s81sl_slice[A-Za-z0-9_]*)\s*(?:#\s*\([^;]*?\)\s*)?(u_[A-Za-z0-9_]+)\s*\(', text, re.S)
-        if len(nested) != 1:
+        # instance names: u_<x> or the bare wrapper core `u` (ot_s81sl_slice_lepw: `ot_s81sl_slice_lep #(...) u (...)`)
+        nested = re.findall(r'(?m)^\s*(ot_s81sl_slice[A-Za-z0-9_]*)\s*(?:#\s*\([^;]*?\)\s*)?(u(?:_[A-Za-z0-9_]+)?)\s*\(', text, re.S)
+        # generate branches may instantiate the same child master more than once (lep: u_sl in both HOST_EN arms)
+        masters = sorted({m for m, _ in nested})
+        if len(masters) != 1:
             raise ValueError('selected slice wrapper child is ambiguous: ' + master)
-        master = nested[0][0]
+        master = masters[0]
     cap = child(text, 'u_cap')
     if cap is None:
         raise ValueError('selected source CAP instance is unresolved')
