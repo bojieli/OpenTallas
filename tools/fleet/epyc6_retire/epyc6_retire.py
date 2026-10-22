@@ -562,7 +562,29 @@ def copy_roots(roots, final):
             payload[DEST + root] = [[a, b if b == "L" else int(b), h] for a, b, h in items]
         if payload:
             ver = agi_py("list", payload, timeout=3 * 3600)
+    if final:
+        errs = retain_copy_errors(errs, summ, ver)
+        jsave(f"{STATE}/final_archive_verification.json",
+              dict(at=now(), verification=ver, copy_errors=errs))
     return summ, errs, ver
+
+
+def retain_copy_errors(errs, summ, ver):
+    """A complete final SHA verification supersedes only a no-copy space estimate."""
+    retained = dict(errs)
+    for root, error in errs.items():
+        proof = ver.get(DEST + root, {})
+        source = summ.get(root, {})
+        # This estimate subtracts the whole source even if it is already archived.
+        # Never forgive rsync failures, incomplete receipts or non-final copies.
+        if (error.startswith("AGIdock /archive free ") and error.endswith(" GB (copy held)")
+                and source.get("exists") is True
+                and proof.get("ok") is True
+                and proof.get("n") == source.get("files", -1) + source.get("links", -1)
+                and all(proof.get(key) == 0
+                        for key in ("missing", "size_mismatch", "hash_mismatch"))):
+            retained.pop(root)
+    return retained
 
 
 def note_pending(roots_map, summ):
@@ -575,7 +597,7 @@ def note_pending(roots_map, summ):
         if root in done or not summ.get(root, {}).get("exists"):
             continue
         lanes = sorted({r.get("lane") or "?" for r in refs})
-        src = "; ".join(f"{r['src']}:{r['line_no']}" for r in refs[:4]) if refs and "src" in refs[0] else "live job work dir"
+        src = "; ".join(f"{r.get('src') or 'work dir'}:{r.get('line_no', '-')}" for r in refs[:4]) if refs else "live job work dir"
         s = summ[root]
         lines.append(f"agidock:{DEST}{root} | EPYC6-RETIRE copy of ot-epyc6:{root} ({s['files']} files, "
                      f"{s['bytes'] / 1e9:.2f} GB; regenerable src/obj bulk skipped; host terminated) for {src} | "
