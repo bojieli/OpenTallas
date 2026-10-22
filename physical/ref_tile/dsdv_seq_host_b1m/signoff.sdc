@@ -287,6 +287,11 @@ proc ot_ce_startpoint_class {start purpose memo_name} {
 }
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
+proc ot_ce_mr_doms {mrd cells c} {
+  if {[dict exists $mrd $c]} {return [lsort -unique [dict get $mrd $c]]}
+  return [list [dict get $cells $c]]
+}
+proc ot_ce_mr_meet {la lb} {foreach x $la {if {[lsearch -exact $lb $x] >= 0} {return 1}}; return 0}
 proc ot_ce_leaf_ownership {inputs outputs} {
   ot_cf_refresh
   set expected {}
@@ -296,6 +301,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}
   if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
   set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
+  set ot_ce_mrd {}
   foreach root $::ot_ce_ports {
     set domain [dict get $::ot_ce_source_domains $root]
     dict set domain_roots $domain $root
@@ -303,6 +309,13 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     lassign [ot_cf_pins $clock] ot_ce_family_pins ot_ce_family_owners
     foreach pin $ot_ce_family_pins {
       set cell [get_full_name [get_cells -of_objects $pin]]
+      if {[lsearch -exact $::ot_ce_multi_root_children $cell] >= 0} {
+        if {[ot_ce_net_root_port $pin] eq $root} {
+          dict lappend ot_ce_mrd $cell $domain
+          if {![dict exists $cells $cell]} {dict set cells $cell $domain}
+        }
+        continue
+      }
       if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain || ![dict exists $::ot_ce_counts [get_property [get_cells -of_objects $pin] ref_name]])} {
         error "OT_MULTI_ROOT: duplicate clock ownership $cell"
       }
@@ -331,7 +344,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       lassign [ot_ce_startpoint_class $start input startpoint_classes] source_kind source
       if {$source_kind eq "port"} {
         set name [get_full_name $start]
-        if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {
+        if {![dict exists $inputs $name] || ([dict get $inputs $name] ne $expected && ![ot_ce_mr_meet [list [dict get $inputs $name]] [ot_ce_mr_doms $ot_ce_mrd $cells $cell]])} {
           error "OT_MULTI_ROOT: input $name has wrong domain for $cell"
         }
       } else {
@@ -343,7 +356,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
           error "OT_MULTI_ROOT: unowned data path $source -> $cell"
         }
         set source_domain [dict get $cells $source]
-        if {$source_domain ne $expected} {
+        if {$source_domain ne $expected && ![ot_ce_mr_meet [ot_ce_mr_doms $ot_ce_mrd $cells $source] [ot_ce_mr_doms $ot_ce_mrd $cells $cell]]} {
           if {!$::ot_ce_related_data} {error "OT_MULTI_ROOT: cross-domain data path $source -> $cell requires explicit related profile"}
           dict set crossing_pairs [list $source_domain $expected] 1
         }
@@ -367,7 +380,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
         puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
         continue
       }
-      if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
+      if {![dict exists $cells $source] || ([dict get $cells $source] ne $domain && ![ot_ce_mr_meet [ot_ce_mr_doms $ot_ce_mrd $cells $source] [list $domain]])} {
         error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
       }
     }
