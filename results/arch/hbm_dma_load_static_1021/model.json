@@ -35,14 +35,32 @@
     "active_source_lanes_per_quadrant_route_limit": 1
   },
   "latency": {
-    "load_pin_to_output_edges_expected": 3,
+    "load_pin_to_output_edges_expected": 5,
     "measurement": "Gold2 unit710376-1792642633, Verilator5.050, source d70845a2b: both banks1480 commands each, zero mismatches, II1, five local edges; release-only/reuse, mutant rejection, raw lockstep, actual384 and independent raw/converted overlap pass.",
     "HBM_window_latency": "real vmks CDC and drain dependent; not104",
     "load_pin_to_output_edges_measured": 5,
     "route_extra_edges": 5,
     "raw_extra_route_edges": 1,
     "command_to_routed_output_edges": 10,
-    "note": "5 local +5 route; actual die command/wire/regional crossings additional"
+    "note": "5 local +5 route; actual die command/wire/regional crossings additional",
+    "integrated_producer_receipt": {
+      "commit": "25b66179f",
+      "packet": "results/rtl/hbm_dma_producer_1021",
+      "unit": "724328-1792643067",
+      "source_commit": "d70845a2b",
+      "HBM_period_ns": 1.4,
+      "stream_period_ns": 2,
+      "words": 384,
+      "native_VM_commits": 48,
+      "SRAM_readbacks": 48,
+      "sample_age": 10,
+      "preceding_drive_age": 11,
+      "negative_checks": [
+        "wrong destination bank",
+        "corrupt HBM source byte"
+      ],
+      "scope": "Eight actual KRL1 vmks and real CDC; controller/PHY boundary modeled; group and WB idle; not native physical, die transport or full-token qualification."
+    }
   },
   "replicas": {
     "lanes_per_quadrant": 8,
@@ -63,7 +81,7 @@
     "pins": "same landing input/output registerband",
     "reach": "new fixed registered route required; die lead owns actual geometry",
     "fanout": "Native3 max38: only lstart38/start_ok37/rawfinal33 remain; d708 local window decoders and local bank captures address these; native4 MAIN+FB running.",
-    "depth": "read then selected payload capture then conversion output; PENDING synthesis",
+    "depth": "Five local registered edges measured; native4 depth and CTS pending.",
     "floorplan": "Native3 mapped total21954.202um2 (includes7789um2 SRAM); MAIN302.4x151.2 about48% fill. M4 macros explicitly on43.2um lattice with34.776um channel; FB77.976um channel. Native4 area/CTS pending.",
     "clock": "one local streamclock; external crossings landed by die",
     "reset": "new pipeline valid reset only; datapath unreset"
