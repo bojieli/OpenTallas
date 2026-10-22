@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hbm_dma_load_static.v1",
-  "status": "COMPONENT_BANKS_PASS_NATIVE3_RUNNING",
+  "status": "COMPONENT_V8_PASS_NATIVE4_RUNNING",
   "required_formats": {
     "0": "FP32",
     "1": "BF16",
@@ -36,7 +36,7 @@
   },
   "latency": {
     "load_pin_to_output_edges_expected": 3,
-    "measurement": "EP9 unit1557506-1792641415 Verilator5.050 source0a9f055cf:1480commands eachbank0/bank1,0mismatch,II1,5edges; releaseonly/reusePASS; mutant causalFAIL; raw1538edges0mismatch; actualqnorm384PASS",
+    "measurement": "Gold2 unit710376-1792642633, Verilator5.050, source d70845a2b: both banks1480 commands each, zero mismatches, II1, five local edges; release-only/reuse, mutant rejection, raw lockstep, actual384 and independent raw/converted overlap pass.",
     "HBM_window_latency": "real vmks CDC and drain dependent; not104",
     "load_pin_to_output_edges_measured": 5,
     "route_extra_edges": 5,
@@ -57,16 +57,16 @@
     "tracks_and_area": "PENDING synthesis/native and dieGEN/GRT; no physical qualification"
   },
   "ownership": "source bank+epoch+full checked before read; release final read; invalid schedule faults; count0/release1 frees unused window lanes without reads or writes",
-  "schedule": "compiler lowers real MOVE descriptors to vmfc89 window and static62 read/convert commands; no lease, credit or ready",
+  "schedule": "compiler lowers real MOVE descriptors to vmfc89 window and static62 read/convert commands; no lease, credit or ready; raw and converted output pipelines may overlap after distinct SRAM read edges, with destination collisions checked by the real route.",
   "safe_review": {
     "storage": "same existing SRAM payload, no new large flop storage",
     "pins": "same landing input/output registerband",
     "reach": "new fixed registered route required; die lead owns actual geometry",
-    "fanout": "Native1max778/49 and Native2max76/350 immutablefailures; source0a9 registereddecode/payloadcopies/quarterconvert; native3MAIN+FBlive",
+    "fanout": "Native3 max38: only lstart38/start_ok37/rawfinal33 remain; d708 local window decoders and local bank captures address these; native4 MAIN+FB running.",
     "depth": "read then selected payload capture then conversion output; PENDING synthesis",
-    "floorplan": "reuse NPC2 macroinventory; syntharea pending",
+    "floorplan": "Native3 mapped total21954.202um2 (includes7789um2 SRAM); MAIN302.4x151.2 about48% fill. M4 macros explicitly on43.2um lattice with34.776um channel; FB77.976um channel. Native4 area/CTS pending.",
     "clock": "one local streamclock; external crossings landed by die",
     "reset": "new pipeline valid reset only; datapath unreset"
   },
-  "source_commit": "0a9f055cf"
+  "source_commit": "d70845a2b"
 }
