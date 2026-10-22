@@ -1,0 +1,191 @@
+{
+  "kind": "tile",
+  "top": "qfd_native59_qbank",
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "recipe": 4,
+  "layer_cap": "M5",
+  "hold_budget": "die",
+  "sources": [
+    "rtl/qwen_split/qfd_native59_qbank.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_bb.v"
+  ],
+  "params": {
+    "MUT": 0,
+    "QB_MUT": 0,
+    "QB_ALIGN": 1,
+    "QB_LOCAL32": 1,
+    "QB_LOCAL_MUT": 0
+  },
+  "pins": {
+    "N": [
+      "qb_row",
+      "qb_v",
+      "qb_beat",
+      "qb_full",
+      "qb_committed",
+      "qb_bad",
+      "dd_o",
+      "lcv_o",
+      "stage_o"
+    ],
+    "S": [
+      "dd_i",
+      "layer_context_v",
+      "command_stage",
+      "q_slot",
+      "q_slot_beat",
+      "ck",
+      "rst_n"
+    ],
+    "W": [],
+    "E": []
+  },
+  "inhold": false,
+  "outhold": false,
+  "pin_regs": {
+    "enable": false,
+    "reason": "Exact selected RTL already captures inputs and publishes registered outputs; added pin registers would change source-proven cadence."
+  },
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "reset_landing": {
+    "enable": true,
+    "stages": 2,
+    "copies": {
+      "rst_n": 32
+    }
+  },
+  "reset_relay_split": {
+    "max_loads": 32,
+    "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)rst_cp_[a-z0-9]+$"
+  },
+  "clock": "spine",
+  "orfs_vars": {
+    "OT_SPINE_LEAF_N": "16"
+  },
+  "route": {
+    "pd": 0.55,
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "hold_margin_ns": 0.03,
+    "io_hold_margin_ns": 0.03,
+    "pin_balance": {
+      "h": "M3 M5",
+      "v": "M4"
+    }
+  },
+  "structural_change": "Current558f ALIGN1/LOCAL321/32x512 same-edge kept element/control publications repair original328 functional fanout violations(max270). No STAGE/M546/WLOCAL flags or historical mirrored546 alias. No extra pipeline edge. Native census and minimum scoreboard gate adoption.",
+  "name": "qfd_n59_qbank_align1d",
+  "outline": {
+    "w": 604.8,
+    "h": 604.8,
+    "exact": true
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+      "count": 1,
+      "inst": "*u_qseat*g_writer?0?*u_mem",
+      "at": [
+        86.4,
+        43.2
+      ],
+      "orient": "R0",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+      "count": 1,
+      "inst": "*u_qseat*g_writer?1?*u_mem",
+      "at": [
+        86.4,
+        172.8
+      ],
+      "orient": "R0",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+      "count": 1,
+      "inst": "*u_qseat*g_writer?2?*u_mem",
+      "at": [
+        86.4,
+        302.4
+      ],
+      "orient": "R0",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+      "count": 1,
+      "inst": "*u_qseat*g_writer?3?*u_mem",
+      "at": [
+        86.4,
+        432.0
+      ],
+      "orient": "R0",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+      "count": 1,
+      "inst": "*u_qseat*g_writer?4?*u_mem",
+      "at": [
+        345.6,
+        43.2
+      ],
+      "orient": "R0",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+      "count": 1,
+      "inst": "*u_qseat*g_writer?5?*u_mem",
+      "at": [
+        345.6,
+        172.8
+      ],
+      "orient": "R0",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+      "count": 1,
+      "inst": "*u_qseat*g_writer?6?*u_mem",
+      "at": [
+        345.6,
+        302.4
+      ],
+      "orient": "R0",
+      "at_exact": true
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+      "count": 1,
+      "inst": "*u_qseat*g_writer?7?*u_mem",
+      "at": [
+        345.6,
+        432.0
+      ],
+      "orient": "R0",
+      "at_exact": true
+    }
+  ],
+  "job": {
+    "owner": "CODEX:QBANK-ALIGN-2000",
+    "branch": "codex/qbank-align-2000",
+    "tag": "align1d",
+    "purpose": "Current558f ALIGN1/LOCAL321/32x512 same-edge kept element/control publications repair original328 functional fanout violations(max270). No STAGE/M546/WLOCAL flags or historical mirrored546 alias. No extra pipeline edge. Native census and minimum scoreboard gate adoption.",
+    "extra_paths": [
+      "results/arch/qbank_align1_1021",
+      "results/rtl/tokfunc3_qw_1021/qbank_alignment_current"
+    ],
+    "views_to": "physical/ref_tile/qfd_n59_qbank_align1d/views",
+    "record_to": "results/rtl/ref_tile/qfd_n59_qbank_align1d"
+  }
+}
