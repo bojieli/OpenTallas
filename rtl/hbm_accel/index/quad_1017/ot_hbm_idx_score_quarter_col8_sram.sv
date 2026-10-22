@@ -111,7 +111,7 @@ module ot_hbm_idx_score_quarter_col8_sram #(parameter integer TP=96,RANK_W=(TP<=
   always @(posedge eclk) begin ok<=tkv; os<=ts; ofl<=tf; end
   assign ev[e]=ov; assign kv[e*4+:4]=ok; assign val[e*64+:64]=os;
   wire[24:0]meta;
-  ot_hdc_delay_rf32 #(.W(25),.D(146)) md(.clk(clk_meta[e]),.d(aux_e[28:4]),.q(meta));
+  ot_hidx_meta_sram146 #(.D(146)) md(.clk(clk_meta[e]),.clk_mem(clk_meta[e]),.d(aux_e[28:4]),.q(meta));
   for(l=0;l<4;l=l+1)begin:go
    assign idx[(e*4+l)*20+:20]=meta[23:4]+20'(l);
   end
