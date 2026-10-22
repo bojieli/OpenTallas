@@ -272,6 +272,15 @@
     "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/wr2/mut_tln.log",
     "threads": 16,
     "peak_ram_gb": 32
+   },
+   {
+    "name": "collq_desc3_mut_hold",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_COLLQ_SRAM_WR2 -DOT_GQ_DESC3 -DOT_GQ_QA2 -DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P -DOT_GQ_CHECK_INV -DOT_GQ_MUT_DESC_HOLD' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/desc3_mut ia1",
+    "expect": "fail",
+    "fail_regex": "GQ_DESC3_INV_FAIL",
+    "fail_witness": "results/rtl/hbm_coll_gq_desc3_1021/36349884e/out_desc_mut/s0.log",
+    "threads": 8,
+    "peak_ram_gb": 32
    }
   ],
   "extra_paths": [
