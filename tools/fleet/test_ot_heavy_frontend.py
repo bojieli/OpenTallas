@@ -90,5 +90,35 @@ class FrontendPhase(unittest.TestCase):
             self.assertEqual(R.active_verilator_frontends(cg), [7, 8])
 
 
+    def test_v14_build_waiting_frontend_detected_through_sh_make_cc1plus(self):
+        # gold2 10-22: verilator_bin 1847416 -> sh -> make -> cc1plus (57.6 GB); perl wrapper above it
+        cg = '/fake/cg'
+        files = {cg+'/cgroup.procs': '10\n11\n12\n13\n14\n',
+                 '/proc/10/stat': '10 (perl) S 1 x', '/proc/10/comm': 'perl',
+                 '/proc/11/stat': '11 (verilator_bin) S 10 x', '/proc/11/comm': 'verilator_bin',
+                 '/proc/12/stat': '12 (sh) S 11 x', '/proc/12/comm': 'sh',
+                 '/proc/13/stat': '13 (make) S 12 x', '/proc/13/comm': 'make',
+                 '/proc/14/stat': '14 (cc1plus) S 13 x', '/proc/14/comm': 'cc1plus'}
+        with patch.object(R, 'rd', side_effect=lambda p: files.get(p, '')):
+            self.assertTrue(R.frontend_waiting_on_build(cg, [11]))
+            # a second (hierarchical) frontend with no build descendant is still in its AST phase
+            files[cg+'/cgroup.procs'] += '15\n'
+            files['/proc/15/stat'], files['/proc/15/comm'] = '15 (verilator_bin) S 13 x', 'verilator_bin'
+            self.assertFalse(R.frontend_waiting_on_build(cg, [11, 15]))
+            self.assertFalse(R.frontend_waiting_on_build(cg, []))
+
+    def test_v14_old_slow_build_waiting_frontend_charged_3x_30min_capped(self):
+        with patch.dict(R.os.environ, {'OLD_S': '7200', 'OLD_SLOW_GB': '5', 'OLD_MULT': '3',
+                                       'OLD_HORIZON_S': '1800', 'OLD_CAP_GB': '32', 'OLD_MIN_SPAN_S': '200'}):
+            rows = [dict(scope(83, 200, age=54000), slow=4e-5, slow_span=1200.0, frontend_waiting=True),
+                    dict(scope(476, 720, age=54000), slow=4e-5, slow_span=1200.0, frontend_waiting=False),
+                    dict(scope(56, 200, age=54000), slow=0.0079, slow_span=1200.0, frontend_waiting=True)]
+            b = self.book(rows)
+            self.assertAlmostEqual(rows[0]['grow'], 0.216)
+            self.assertEqual(rows[1]['grow'], 244)
+            self.assertEqual(rows[2]['grow'], 32)
+            self.assertAlmostEqual(b['pending'], 276.216)
+
+
 if __name__ == '__main__':
     unittest.main()
