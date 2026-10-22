@@ -160,10 +160,10 @@ module ot_hgi_sfu_bcast_tree4 #(parameter integer MUT_TREE=0) (   // MUT_TREE 1:
   assign l0[a]={d,emit,ld};
  end
  // ---- L1: one kept copy per face group q (q0 W, q3 S from A; q1 N, q2 E from B)
- wire [CW-1:0] l1 [0:3];
- for(genvar q=0;q<4;q=q+1)begin:g_l1
-  localparam integer CK=4*q;
-  localparam integer SRC=(q==0||q==3)?0:1;
+ wire [CW-1:0] l1 [0:7];
+ for(genvar q=0;q<8;q=q+1)begin:g_l1
+  localparam integer CK=4*(q/2);
+  localparam integer SRC=(q/2==0||q/2==3)?0:1;
   reg f_rst; always @(posedge clk_map[CK]) f_rst<=rst_map_n[CK];
   (* keep = "true" *) reg [CW-3:0] d;
   (* keep = "true" *) reg emit, ld;
@@ -178,7 +178,7 @@ module ot_hgi_sfu_bcast_tree4 #(parameter integer MUT_TREE=0) (   // MUT_TREE 1:
   localparam integer CK=2*p;
   reg f_rst; always @(posedge clk_map[CK]) f_rst<=rst_map_n[CK];
   wire [479:0] t1; wire [23:0] ov1,iv1,row1; wire [3:0] ls1,lvw1; wire [459:0] ps1; wire emit1,ld1;
-  assign {t1,ov1,iv1,row1,ls1,lvw1,ps1,emit1,ld1}=l1[p/2];
+  assign {t1,ov1,iv1,row1,ls1,lvw1,ps1,emit1,ld1}=l1[p];
   (* keep = "true" *) reg [459:0] ps2;
   (* keep = "true" *) reg ld2;
   always @(posedge clk_map[CK]) begin

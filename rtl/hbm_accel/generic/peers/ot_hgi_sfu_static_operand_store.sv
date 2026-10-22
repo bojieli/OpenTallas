@@ -190,17 +190,17 @@ module ot_hgi_sfu_static_operand_store #(
  wire [8*16*32-1:0] swr_d; wire [8*16-1:0] swr_m, swr_w; wire [8*RBS-1:0] swr_r0, swr_r1;
  wire [8*16*16*4-1:0] rotate_lo;
  generate if(NATIVE32 && WPIPE && WROT)begin:g_rotate_copies
-  // Capture on the existing WPIPE edge. s10: eight select copies per bank, each serving one 4-bit rotate slice
-  // (two 2-bit halves), all from that bank's own upstream replica (16/sector), which also feeds the bank's presel
+  // Capture on the existing WPIPE edge. s12: sixteen select copies per bank, each serving one 2-bit rotate slice
+  // (one 2-bit half), all from that bank's own upstream replica (16/sector), which also feeds the bank's presel
   // hit decode below. No new stage or data storage is added.
-  (* keep=1,dont_touch=1 *) reg [8*16*8*4-1:0] lo_q;
+  (* keep=1,dont_touch=1 *) reg [8*16*16*4-1:0] lo_q;
   for(genvar s=0;s<8;s=s+1)begin:g_s
    for(genvar b=0;b<16;b=b+1)begin:g_b
-    for(genvar c=0;c<8;c=c+1)begin:g_c
-     always @(posedge clk)lo_q[4*((s*16+b)*8+c)+:4]<=stage_lo_replicas[4*(s*16+b)+:4];
+    for(genvar c=0;c<16;c=c+1)begin:g_c
+     always @(posedge clk)lo_q[4*((s*16+b)*16+c)+:4]<=stage_lo_replicas[4*(s*16+b)+:4];
     end
     for(genvar h=0;h<16;h=h+1)begin:g_h
-     assign rotate_lo[4*((s*16+b)*16+h)+:4]=lo_q[4*((s*16+b)*8+h/2)+:4];
+     assign rotate_lo[4*((s*16+b)*16+h)+:4]=lo_q[4*((s*16+b)*16+h)+:4];
     end
    end
   end
@@ -345,18 +345,21 @@ module ot_hgi_sfu_static_operand_store #(
    (* keep=1,dont_touch=1 *) reg [15:0] we_q;
    (* keep=1,dont_touch=1 *) reg coll_q;
    (* keep=1,dont_touch=1 *) reg [127:0] sd0_q,sd1_q,sa0_q,sa1_q;
-   (* keep=1,dont_touch=1 *) reg [8*RBS-1:0] hi_q;       // this group's copy of the sector rows
+   (* keep=1,dont_touch=1 *) reg [2*8*RBS-1:0] hi_q;       // this group's copy of the sector rows
    always @(posedge clk)begin
     we_q<=we_d;coll_q<=coll_d;sd0_q<=win_d;sd1_q<=win_d;sa0_q<=win_d&~wr_d;sa1_q<=win_d&wr_d;
-    for(integer s=0;s<8;s=s+1)hi_q[RBS*s+:RBS]<=stage_addr[LWB*s+4+:RBS];
+    for(integer s=0;s<8;s=s+1)begin
+     hi_q[RBS*s+:RBS]<=stage_addr[LWB*s+4+:RBS];
+     hi_q[RBS*(8+s)+:RBS]<=stage_addr[LWB*s+4+:RBS];
+    end
    end
    assign pw_we=we_q;assign pw_coll=coll_q;
    assign pw_sd0=sd0_q;assign pw_sd1=sd1_q;assign pw_sa0=sa0_q;assign pw_sa1=sa1_q;
    for(genvar b=0;b<16;b=b+1)begin:g_pb
     for(genvar s=0;s<8;s=s+1)begin:g_ps
      assign pw_d[32*(8*b+s)+:32]=swr_d[32*(16*s+b)+:32];
-     assign pw_r0[RBS*(8*b+s)+:RBS]=hi_q[RBS*s+:RBS];
-     assign pw_r1[RBS*(8*b+s)+:RBS]=hi_q[RBS*s+:RBS]+1'b1;
+     assign pw_r0[RBS*(8*b+s)+:RBS]=hi_q[RBS*(8*(b/8)+s)+:RBS];
+     assign pw_r1[RBS*(8*b+s)+:RBS]=hi_q[RBS*(8*(b/8)+s)+:RBS]+1'b1;
     end
    end
   end else begin:g_presel_off

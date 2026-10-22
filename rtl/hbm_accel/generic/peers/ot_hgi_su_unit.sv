@@ -774,10 +774,10 @@ module ot_hgi_su_lgroup2 #(
             // Capture each word's select on the original read edge. Sixteen
             // same-D copies each feed one2-bit output mux; D fanout is16.
             for(genvar word_=0;word_<8;word_=word_+1)begin:g_word
-                (* keep=1,dont_touch=1 *) reg [16*LN-1:0] pick_q;
-                wire [LN-1:0] next_pick=sr_v_leaf[sec*N+2*word_]?(sr_addr_leaf[(sec*N+2*word_)*LWB+:LN]+LN'(word_)):pick_q[0+:LN];
-                always @(posedge clk)pick_q<={16{next_pick}};
-                assign sr_pick[sec][16*LN*word_+:16*LN]=pick_q;
+                (* keep=1,dont_touch=1 *) reg [17*LN-1:0] pick_q;
+                wire [LN-1:0] next_pick=sr_v_leaf[sec*N+2*word_]?(sr_addr_leaf[(sec*N+2*word_)*LWB+:LN]+LN'(word_)):pick_q[16*LN+:LN];
+                always @(posedge clk)pick_q<={17{next_pick}};
+                assign sr_pick[sec][16*LN*word_+:16*LN]=pick_q[0+:16*LN];
             end
             assign sr_lo[sec]=sr_pick[sec][0+:LN];
         end else begin:g_original
@@ -811,9 +811,9 @@ module ot_hgi_su_lgroup2 #(
         if (NATIVE32 && NLW==0 && LAT==0 && N==16) begin : g_native_read
             // Same-edge selector capture, split across kept two-bit muxes.
             // A shared hold mux feeds sixteen copies; no added read edge.
-            (* keep=1, dont_touch=1 *) reg [16*LN-1:0] pick_q;
-            wire [LN-1:0] next_pick = rr[gl] ? ra[gl*AW+:LN] : pick_q[0+:LN];
-            always @(posedge clk) pick_q <= {16{next_pick}};
+            (* keep=1, dont_touch=1 *) reg [17*LN-1:0] pick_q;
+            wire [LN-1:0] next_pick = rr[gl] ? ra[gl*AW+:LN] : pick_q[16*LN+:LN];
+            always @(posedge clk) pick_q <= {17{next_pick}};
             for(genvar pair_=0;pair_<16;pair_=pair_+1)begin:g_pair
                 wire [2*N-1:0] data2;
                 for(genvar bank_=0;bank_<N;bank_=bank_+1)begin:g_bank
@@ -975,12 +975,32 @@ module ot_hgi_su_lgroup2 #(
         for (l = 0; l < N; l = l + 1) lr_q[l] <= ra[l*AW + LN +: RB];
         for (b = 0; b < N; b = b + 1) br_q[b] <= b_ra[b];
     end
+    // Native fault checks use same-edge one-hot bank capture. Each bank's
+    // row compare has literal wiring instead of a shared variable bank mux.
+    wire [N-1:0] native_row_mismatch;
+    for (genvar nl=0; nl<N; nl=nl+1) begin:g_native_fault_bank
+        if (NATIVE32) begin:g_on
+            (* keep=1,dont_touch=1 *) reg [N-1:0] bank_q;
+            for(genvar nb=0; nb<N; nb=nb+1) begin:g_bank
+                always @(posedge clk) if(rr[nl]) bank_q[nb] <= (ra[nl*AW+:LN]==LN'(nb));
+            end
+            reg mismatch;
+            always @* begin
+                mismatch=0;
+                for(integer nb=0;nb<N;nb=nb+1)
+                    if(bank_q[nb] && lr_q[nl]!=br_q[nb]) mismatch=1;
+            end
+            assign native_row_mismatch[nl]=mismatch;
+        end else begin:g_off
+            assign native_row_mismatch[nl]=(lr_q[nl]!=br_q[lb_q[nl]]);
+        end
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) flt <= 1'b0;
         else begin
             if (srv_q || wcoll_q) flt <= 1'b1;
             for (l = 0; l < N; l = l + 1)
-                if (rq_q[l] && (!lok_q[l] || lr_q[l] != br_q[lb_q[l]])) flt <= 1'b1;
+                if (rq_q[l] && (!lok_q[l] || native_row_mismatch[l])) flt <= 1'b1;
 `ifdef LMEM_DBG
             if (srv_q) $display("LMEM_DBG %m sr during lane reads / sector-lane conflict");
             if (wcoll_q) $display("LMEM_DBG %m write collision");

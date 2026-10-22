@@ -1,0 +1,27 @@
+{
+  "status": "SOURCE_REPAIR_PENDING_PROOF_AND_NATIVE_GATE",
+  "predecessor_source": "4733c83d8",
+  "failed_gate": "hbm_sfucore_k11b-20261021-211544",
+  "actual_params": {
+    "LWB": 15,
+    "LG_PATH": 24,
+    "BTREE": 3,
+    "BRING": 0,
+    "NATIVE32": 1,
+    "FPIPE": 1,
+    "WPIPE": 1,
+    "WROT": 1,
+    "TAP_RR": 14,
+    "TAP_WR": 11
+  },
+  "effective_vm_read_return": 64,
+  "failed_native": {
+    "roots": 325363,
+    "max_loads": 256,
+    "violations": 803,
+    "role_errors": []
+  },
+  "repair": "Same-edge source-local control copies; no changed interface edge, outline, hard children or native rule. R24 arithmetic proof and normal MAIN / fallback gates must qualify repaired source.",
+  "proof_controller": 2570433,
+  "gen_controller": 2580220
+}

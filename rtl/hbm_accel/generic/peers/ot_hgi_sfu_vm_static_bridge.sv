@@ -66,6 +66,22 @@ module ot_hgi_sfu_vm_static_bridge #(
  wire [1:0] dr_v,dr_round,dr_result_v;
  wire [31:0] dr_sector;
  wire [511:0] dr_data;
+ wire [4*36-1:0] dr_region;
+ wire [8*8*7-1:0] scalar_meta_copies;
+ if(NATIVE32 && DRAIN_PIPE!=0)begin:g_drain_region_copies
+  for(genvar r=0;r<4;r=r+1)begin:g_r
+   (* keep=1,dont_touch=1 *) reg [33:0] data_q;
+   (* keep=1,dont_touch=1 *) reg [1:0] valid_q;
+   always @(posedge clk)data_q<={drain_round_bf16,drain_vm_sector};
+   always @(posedge clk `OT_SFU_ARST(rst_n))
+    if(!rst_n)valid_q<=0;else valid_q<=drain_v;
+   assign dr_region[36*r+:36]={valid_q,data_q};
+  end
+ end else begin:g_drain_region_direct
+  for(genvar r=0;r<4;r=r+1)begin:g_r
+   assign dr_region[36*r+:36]={dr_v,dr_round,dr_sector};
+  end
+ end
  if(DRAIN_PIPE!=0)begin:g_drain_pipe
   reg [1:0] v_q,round_q,result_q;
   reg [31:0] sector_q;
@@ -117,6 +133,14 @@ module ot_hgi_sfu_vm_static_bridge #(
    used_group[stage_group[2*b+:2]]=1;
    scalar_load[stage_group[2*b+:2]]=1;
    scalar_data[32*stage_group[2*b+:2]+:32]=local_rr[257*b+32*word_sel[3*b+:3]+:32];
+  end
+  if(NATIVE32 && BRING==0 && READ_RETURN>0)begin
+   scalar_data=0;
+   for(integer sg=0;sg<4;sg=sg+1)
+    for(integer n=0;n<8;n=n+1)
+     for(integer b=0;b<8;b=b+1)
+      if(scalar_meta_copies[7*(8*b+n)+6] && scalar_meta_copies[7*(8*b+n)+3] && scalar_meta_copies[7*(8*b+n)+4+:2]==sg)
+       scalar_data[32*sg+4*n+:4]=local_rr[257*b+32*scalar_meta_copies[7*(8*b+n)+:3]+4*n+:4];
   end
  end
  function automatic [255:0] round_sector(input [255:0] data,input do_round);
@@ -174,6 +198,18 @@ module ot_hgi_sfu_vm_static_bridge #(
     end
    end
    assign meta_q=meta[READ_RETURN];
+   if(NATIVE32 && READ_RETURN>0)begin:g_scalar_meta_copies
+    for(genvar sl=0;sl<2;sl=sl+1)begin:g_s
+     for(genvar cp=0;cp<8;cp=cp+1)begin:g_c
+      (* keep=1,dont_touch=1 *) reg [6:0] scalar_q;
+      always @(posedge clk_lg[g] `OT_SFU_ARST(rst_lg_n[g]))
+       if(!rst_lg_n[g])scalar_q<=0;
+       else scalar_q<={meta[READ_RETURN-1][12+2*LWB+sl],meta[READ_RETURN-1][8+2*LWB+2*sl+:2],meta[READ_RETURN-1][6+sl],meta[READ_RETURN-1][3*sl+:3]};
+      assign scalar_meta_copies[7*((2*g+sl)*8+cp)+:7]=scalar_q;
+     end
+    end
+   end
+
    if(NATIVE32 && READ_RETURN>0)begin:g_lo_copies
     // Same final metadata edge, unreset data copies (valid remains reset).
     // s10: sixteen source copies per sector, one per operand-store bank (its rotate selects + its write decode).
@@ -220,6 +256,44 @@ module ot_hgi_sfu_vm_static_bridge #(
      write_v[drain_sector_q[16*s]]=1;
     end
   end
+  if(NATIVE32)begin:g_native_drain_write
+   (* keep=1,dont_touch=1 *) reg [2*8-1:0] round_copies;
+   (* keep=1,dont_touch=1 *) reg [2*18*3-1:0] sector_copies;
+   (* keep=1,dont_touch=1 *) reg [2*18-1:0] valid_copies;
+   wire [511:0] rounded_data;
+   for(genvar sl=0;sl<2;sl=sl+1)begin:g_s
+    for(genvar w=0;w<8;w=w+1)begin:g_word
+     always @(posedge clk_lg[g])round_copies[8*sl+w]<=dr_region[36*g+32+sl];
+     wire [31:0] word=dr_data[256*sl+32*w+:32];
+`ifdef OT_SFU_VM_BF16_MUTANT
+     wire [31:0] rounded=word+32'h00007fff;
+`else
+     wire [31:0] rounded=word+32'h00007fff+{31'd0,word[16]};
+`endif
+     assign rounded_data[256*sl+32*w+:32]=round_copies[8*sl+w]?{rounded[31:16],16'd0}:word;
+    end
+    for(genvar c=0;c<18;c=c+1)begin:g_chunk
+     always @(posedge clk_lg[g])sector_copies[3*(18*sl+c)+:3]<=dr_region[36*g+16*sl+:3];
+     always @(posedge clk_lg[g] `OT_SFU_ARST(rst_lg_n[g]))
+      if(!rst_lg_n[g])valid_copies[18*sl+c]<=0;
+      else valid_copies[18*sl+c]<=dr_region[36*g+34+sl];
+    end
+   end
+   always @(posedge clk_lg[g])drain_sector_q<=dr_sector;
+   for(genvar dest=0;dest<2;dest=dest+1)begin:g_dest
+    for(genvar c=0;c<18;c=c+1)begin:g_chunk
+     localparam integer CW=(281-16*c<16)?281-16*c:16;
+     reg [CW-1:0] selected;
+     always @*begin
+      selected=0;
+      for(integer sl=0;sl<2;sl=sl+1)
+       if(valid_copies[18*sl+c] && sector_copies[3*(18*sl+c)+1+:2]==g && sector_copies[3*(18*sl+c)]==dest)
+        selected=({1'b1,drain_sector_q[16*sl+:16],rounded_data[256*sl+:256],8'hff} >> (16*c));
+     end
+     always @(posedge clk_lg[g])write_q[281*dest+16*c+:CW]<=selected;
+    end
+   end
+  end else begin:g_original_drain_write
   always @(posedge clk_lg[g])begin
    drain_sector_q<=dr_sector;drain_round_q<=dr_round;
    write_q<=0;
@@ -227,6 +301,7 @@ module ot_hgi_sfu_vm_static_bridge #(
     if(drain_expected[s] && drain_sector_q[16*s+1+:2]==g)
      write_q[281*drain_sector_q[16*s]+:281]<=
       {1'b1,drain_sector_q[16*s+:16],round_sector(dr_data[256*s+:256],drain_round_q[s]),8'hff};
+  end
   end
   always @(posedge clk_lg[g] `OT_SFU_ARST(rst_lg_n[g]))begin
    if(!rst_lg_n[g])begin
