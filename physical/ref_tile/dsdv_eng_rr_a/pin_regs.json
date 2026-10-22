@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_eng_rr",
+ "enable": false,
+ "reason": "Every dsdv_eng_rr port is registered in RTL at its first/last flop (f_ks->ks, cfg->*_q, pci->head hr_*, rco flops, vi_s/vi_n->ia/ib_, vo_s/vo_n flops, st flops); flow pin registers would add an unpriced edge on every link"
+}

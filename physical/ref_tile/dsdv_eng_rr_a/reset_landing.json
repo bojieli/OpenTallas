@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "dsdv_eng_rr",
+ "enable": false,
+ "reason": "RTL landing: ot_s81eng_reset3n32 (literal root pair, middle groups <=32, leaves) in u_c and again in u_xq (128 leaves); direct rst_n sinks = 2 root flops; release edges unchanged"
+}
