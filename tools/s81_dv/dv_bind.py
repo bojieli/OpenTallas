@@ -113,6 +113,36 @@ def endpoint_clock(table, blocks, regions, link, source):
     block = blocks[link['e'][0 if source else 1][0]]
     return clock if clock is not None else regional_clock(table, {block['name']: block}, regions, block['name'])
 
+def copied_lane_expression(name, width, copies, outputs, payload_width=None):
+    """Pack an existing producer's real output wires into a broadcast lane.
+
+    Every copied slice must have exactly one producer. Upper quantisation bits
+    are explicit zeros; this expression can feed a relay or a direct ring.
+    """
+    limit = width if payload_width is None else payload_width
+    segments = []
+    for instance, port, source_lo, lane_lo, bits in copies:
+        hits = [(lo, wire, offset) for lo, count, wire, offset in outputs[(instance, port)]
+                if lo <= source_lo and source_lo + bits <= lo + count]
+        if len(hits) != 1:
+            raise ValueError(f'{name}: copied {instance}.{port}[{source_lo}+:{bits}] has {len(hits)} producers')
+        lo, wire, offset = hits[0]
+        start = offset + source_lo - lo
+        segments.append((lane_lo, bits, f'{wire}[{start + bits - 1}:{start}]'))
+    position, parts = 0, []
+    for start, bits, expression in sorted(segments) + [(limit, 0, None)]:
+        if start < position or start + bits > limit:
+            raise ValueError(f'{name}: overlapping or out-of-range copied payload')
+        if start > position:
+            parts.append(f'w_{name}_src[{start - 1}:{position}]')
+        if expression:
+            parts.append(expression)
+        position = start + bits
+    if limit < width:
+        parts.append(f"{width - limit}'d0")
+    return '{' + ', '.join(reversed(parts)) + '}'
+
+
 def reset_local_leaf(rst, leaf, clock, xy, master, consumer, enabled=True):
     """Land a reset release on its consuming root before pricing its calendar.
 
@@ -873,9 +903,13 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
         xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
         input_wire = dname(nm)
+        root_nm = same_as.get(nm, nm)
+        if not chains_pts[nm] and root_nm in lane_copy:
+            input_wire = copied_lane_expression(root_nm, b, lane_copy[root_nm], out_bits, lane_spare.get(root_nm))
         if not chains_pts[nm] and nm in lane_spare:
             cov = lane_spare[nm]
-            input_wire = f"{{{b - cov}'d0, {input_wire}[{cov - 1}:0]}}"
+            if root_nm not in lane_copy:
+                input_wire = f"{{{b - cov}'d0, {input_wire}[{cov - 1}:0]}}"
             why = f'lane quantisation: {cov}-b RTL payload on a {b}-b landing (spare bits never consumed)'
             pads.setdefault(f'ld_{nm}', dict(master=lm, reason=why, ports={}))['ports']['i'] = [[cov, b - 1]]
             pad_rows.append(dict(inst=f'ld_{nm}', master=lm, port='i', bits=b-cov, lo=cov, hi=b-1, reason=why))
@@ -961,23 +995,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             pad_rows.append(dict(inst=f'st_{nm}_0', master=rly_pick(b, sdir[(nm, 0)], f'st_{nm}_0'),
                                  port='i', bits=b - cov, lo=cov, hi=b - 1, reason='lane quantisation spare bits'))
         if root_nm in lane_copy:
-            segs_ = []          # (plo, nb, expr) covering the lane: own wire where bound, copied bits elsewhere
-            for n_, rp_, rlo_, plo_, nb_ in lane_copy[root_nm]:
-                hit_ = [(lo_, w_, pl_) for lo_, nb2, w_, pl_ in out_bits[(n_, rp_)] if lo_ <= rlo_ and rlo_ + nb_ <= lo_ + nb2]
-                assert hit_, (root_nm, rp_, rlo_, nb_)
-                lo_, w_, pl_ = hit_[0]
-                segs_.append((plo_, nb_, f'{w_}[{pl_ + rlo_ - lo_ + nb_ - 1}:{pl_ + rlo_ - lo_}]'))
-            cov_ = lane_spare.get(root_nm, b)
-            pos_, parts_ = 0, []
-            for plo_, nb_, ex_ in sorted(segs_) + [(cov_, 0, None)]:
-                if plo_ > pos_:
-                    parts_.append(f'w_{root_nm}_src[{plo_ - 1}:{pos_}]')
-                if ex_:
-                    parts_.append(ex_)
-                pos_ = max(pos_, plo_ + nb_)
-            if cov_ < b:
-                parts_.append(f"{b - cov_}'d0")
-            src = '{' + ', '.join(reversed(parts_)) + '}'
+            src = copied_lane_expression(root_nm, b, lane_copy[root_nm], out_bits, lane_spare.get(root_nm))
         st = len(pts)
         gen = gate_en.get(nm)
         if gen:
