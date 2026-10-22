@@ -1,0 +1,10 @@
+RSPLIT_MISMATCH cyc=27 ref_v=1 spl_v=1 ref_c=05 spl_c=05
+RSPLIT_MISMATCH cyc=29 ref_v=1 spl_v=1 ref_c=05 spl_c=05
+RSPLIT_MISMATCH cyc=30 ref_v=0 spl_v=0 ref_c=15 spl_c=15
+RSPLIT_MISMATCH cyc=32 ref_v=1 spl_v=1 ref_c=15 spl_c=15
+RSPLIT_MISMATCH cyc=33 ref_v=0 spl_v=0 ref_c=15 spl_c=15
+RSPLIT_EQ FAIL mismatches=136108 publishes=33166 adds=49845
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_reduce_split_eq.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 22.498 s; speed 8.890 us/s
+- Verilator: cpu 22.149 s on 1 threads; allocated 9 MB
