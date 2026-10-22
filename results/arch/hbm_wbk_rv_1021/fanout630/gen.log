@@ -1,0 +1,4 @@
+lint_receipt: reviewed_gray_fifos hbm_wbk_native_1340_pp_pipe: lint ran on ot-epyc9 (2126 s); receipt /home/ubuntu/ot-scratch/claude/codex-wbk-fanout-2146-1021/src/physical/ref_tile/hbm_wbk_native_1340_pp_pipe/lint_receipt.json (commit it with the kit)
+REF_TILE WARN clock_span: 777.6 x 518.4 um: one clock root over > 600 um -> split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+REF_TILE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it) -> pass --area-um2 / std_area_um2 from the synthesis smoke
+REF_TILE kit physical/ref_tile/hbm_wbk_native_1340_pp_pipe outline 777.6 x 518.4 um (spec outline (exact: the closed view's sub-slot)); job hbm_wbk_native_1340_pp_pipe-q8c-630245fe5
