@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hgi_sfu_programme_store_r11.lef",
+    "sha256": "12bc2ad4d17fa0d3f09d7ed13ba5b108486899743f3e5e2f6defc50b9601acf0"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/codex-sfups-pass1-export-2000/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/codex-sfups-pass1-export-2000/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/codex-sfups-pass1-export-2000/views/ot_hgi_sfu_programme_store_r11/provenance/raw/ot_hgi_sfu_programme_store_r11.lef",
+    "/srv/opentallas-scratch2/claude/codex-sfups-pass1-export-2000/views/ot_hgi_sfu_programme_store_r11/provenance/ot_hgi_sfu_programme_store_r11.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 624 OBS rects moved into 622 pins: cfg_addr[0], cfg_addr[10], cfg_addr[1], cfg_addr[2], cfg_addr[3], cfg_addr[4], cfg_addr[5], cfg_addr[6], cfg_addr[7], cfg_addr[8], cfg_addr[9], cfg_data[0]; pockets: 2202 OBS rects added on M7 (gaps < 2.048 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/codex-sfups-pass1-export-2000/views/ot_hgi_sfu_programme_store_r11/provenance/ot_hgi_sfu_programme_store_r11.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hgi_sfu_programme_store_r11 1080.0 x 950.4: PG M7 VDD 100 stripes (99% spread, 100% cov) / VSS 100 stripes (99% spread, 100% cov); strap M8; face pins 2904 blocked-above 0 blocked-same 0; clock clk insertion 1284 ps; pockets M7 0 (closed)",
+    "info": {
+      "cell": "ot_hgi_sfu_programme_store_r11",
+      "W": 1080.0,
+      "H": 950.4,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M7",
+            "stripes": 100,
+            "dir": "V",
+            "spread": 0.99,
+            "coverage": 1.0,
+            "shapes_on_top": 100
+          },
+          "VSS": {
+            "top_layer": "M7",
+            "stripes": 100,
+            "dir": "V",
+            "spread": 0.99,
+            "coverage": 1.0,
+            "shapes_on_top": 100
+          }
+        },
+        "top_layer": "M7",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M7",
+      "strap_layer": "M8",
+      "cap": null,
+      "face": {
+        "face_pins": 2904,
+        "blocked_above": 0,
+        "covered_below": 292,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 1283.53,
+          "min_ps": 762.92
+        }
+      },
+      "pockets": {
+        "layer": "M7",
+        "d_um": 2.048,
+        "marker": {
+          "layer": "M7",
+          "d_um": 2.048,
+          "added": 2202
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      },
+      "pin_access_violations": 0
+    }
+  },
+  "output": {
+    "path": "ot_hgi_sfu_programme_store_r11.lef",
+    "sha256": "6c5199f76df0e679db0bb14b6b5bdbdb2c0f468f3d7405872483b28bfd32173c"
+  }
+}

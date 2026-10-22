@@ -1,0 +1,37 @@
+{
+  "status": "PASS1_NOT_DAEMON_CLOSED",
+  "original_daemon_job": "hbm_sfu_programme_store_r14_cl-r14-133946a12",
+  "source": "133946a12",
+  "original_snapshot": "EP9 /srv/opentallas-scratch2/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/eco/pass1/orfs",
+  "normal_export_exit": 0,
+  "check_export_exit": 0,
+  "check_timing_ps": {
+    "tt": 160.39636285825054,
+    "ff": 16.196377572441634
+  },
+  "note": "Full normal export and supported independent check have identical FF and TT liberty bytes. The check-only abstract has ok=false because SS is absent in that ff,tt-only session; both timing consistency checks pass and checked=true. Original daemon remains in ECO pass 2. This packet is not an adopted closure-loop record.",
+  "files": {
+    "export.log": "d8c0adfb56bcb1f829cdbe4a14d5accd235dbe006d74123d2052769c3d29b88f",
+    "checked_export.log": "c4dfa0086cd5cb1ba6b25acbcd5977cda90aabc61f606139718b1a3b54e351a3",
+    "corner_sta.json": "d8c426ab38e7a927c8279f7a3843afae8b9357c4b5477912d89ddd79ff8c3eed",
+    "result.json": "300ff168a5d5f5bd1f65ef3093ceb78c7a0d261cf2e4db4b6a10d08c85525afa",
+    "PASS1_NOT_DAEMON_CLOSED": "56430245967aae87378a7c55c1dd43da9d6d0e62f93955e9f345b8fa8f447a6d",
+    "view/export_tt.tcl": "f0d47e5ab4f83fb621f483f591ea3ab2f4e8eeab72b7617be09bb21072c23291",
+    "view/abstract.json": "e620b37dee06ac7ab57b2d64aeccb82c5de92ed845b642e87f370a7e3a8db88c",
+    "view/ot_hgi_sfu_programme_store_r11_ff.lib": "a3b8359f6c392d46ceefff699b2decb953434e8579eaac9ddd6a44ddc0d51a82",
+    "view/export_ff.tcl": "b568067e7746cc215ebe64af3641b24717be5506055c9e9d973e620bacc78365",
+    "view/insertion.json": "4ab28ee177a4a5c438e6cb0652085006d71235a0e4e3babfbceb939cefcca967",
+    "view/export_tt.log": "19ba7af2bc2a645057de62aa27d8f7465cbd80bc48de07c7565281d36c4de3c2",
+    "view/ot_hgi_sfu_programme_store_r11_tt.lib": "eb7e4edec8b36ec469bfe63b6a5ea71124fbed4fe579c57509e666a01698cb23",
+    "view/export_ss.log": "cb29d7ae003d8284da8f10274c488422c35f5eafe1f518b2ac2296774a2fcfce",
+    "view/export_ff.log": "c492bcefd04b80d62b7cca05b165a704085ec582282a4b19f8c8891625a9d936",
+    "view/export_ss.tcl": "215e0e8ef885ef905f20779f8d3226bc4313159bf37e9896463af6b607922608",
+    "view/child_lint.json": "962423fd88ddeba9f12495e0bc0b1da6c7cdbd2e80e5057b6335fe2777d4d80c",
+    "view/ot_hgi_sfu_programme_store_r11.lef": "6c5199f76df0e679db0bb14b6b5bdbdb2c0f468f3d7405872483b28bfd32173c",
+    "view/ot_hgi_sfu_programme_store_r11_ss.lib": "fa88497650dc05314d9010695cefef93fed664e85873704f3900f7ca643a6767",
+    "view/provenance/view_export.abstract.json": "6ea7d52c3495c0b3a0093c4026340ab7c580056f6f2b99966e61da3f907e2eb6",
+    "view/provenance/abstract_pin_stub.json": "ba380db54802ae3626ed874df1c9838e84446ec82d88bc7bccef21487fcaa4c0",
+    "view/provenance/raw/ot_hgi_sfu_programme_store_r11.lef": "12bc2ad4d17fa0d3f09d7ed13ba5b108486899743f3e5e2f6defc50b9601acf0",
+    "checked_session/abstract.json": "e4e84d7d50afe2a51c16dd4fe21cfabe1ef29d576729f98df72cc8f1bd25bdc4"
+  }
+}
