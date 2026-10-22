@@ -10,7 +10,7 @@ T=${1:-$(mktemp -d)}; N=${2:-8}; SCOMP=${3:-3}; mkdir -p "$T"
 eval "$(sed -n '/^SRC="/,/"$/p' "$U/test/run_gunit_bench.sh")"
 # STW-S81-COLLA-GUNIT 10-21: the bound native-32 L5 configuration (same defaults as run_gunit_bench.sh)
 GUNIT_L5_DEFS="-DOT_S81_GUNIT_PIN_COPY=${GUNIT_PIN_COPY:-1} -DOT_S81_GUNIT_CONTROL_SAFE=${GUNIT_CONTROL_SAFE:-1} -DOT_S81_GUNIT_Q4=${GUNIT_Q4:-1} -DOT_S81_GUNIT_FANOUT_SAFE=${GUNIT_FANOUT_SAFE:-1} -DOT_S81_GUNIT_NAT32=${GUNIT_NAT32:-1} ${GUNIT_DEFS--DOT_S81_VE_LOADSAFE5}"
-SRC=$(echo $SRC | sed 's#rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv#rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_x.sv rtl/dsrom_sys/s81_dv/unit/landed/dsdv_gunit_lp.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_dv/unit/landed/dsdv_gunit_lpwrap.sv#')
+SRC=$(echo $SRC | sed 's#rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv#rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_x.sv rtl/dsrom_sys/s81_dv/unit/landed/dsdv_gunit_lp.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_n32.sv rtl/common/landed_parent/ot_pl_land_rst_copy.sv rtl/dsrom_sys/s81_dv/unit/landed/dsdv_gunit_lpwrap.sv#')
 python3 -I "$U/test/gunit_vectors.py" "$T/gv.hex" "$N" 1017 || { echo "GUNIT_LP FAIL vectors"; exit 1; }
 ( cd "$T" && verilator --cc --exe --build -j 6 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DMUT=0 -DGUNIT_LP_SCOMP=$SCOMP $GUNIT_L5_DEFS \
     --top-module tb_dsdv_gunit -Mdir obj0 $(for f in $SRC; do echo "$R/$f"; done) "$U/test/tb_dsdv_gunit.cpp" \
