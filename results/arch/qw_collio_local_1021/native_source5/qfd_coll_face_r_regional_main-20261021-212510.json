@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "top": "qfd_coll_face_r_pl",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 35365,
+  "max_dynamic_loads": 32,
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qfd_coll_face_r_pl_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "d72329288c3cfff3c8cdcb31a3b44eb912b9abf1fac41ef709044986a8a0c586"
+  },
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ff.lib",
+      "sha256": "3267f513a584c50980ddb85d1b6e1e9879a15a764b8aa749f125e65607f17c48"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+      "sha256": "0e6668f4417a0a449784d60e1ec8545cb9eb750d92591e9639523795b796a058"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
+      "sha256": "b15626b72d40256d4dec034212ad2a8541af7c839f3ef2c2f2b8fa8e9fbd0c16"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+      "sha256": "bcd68206a8602806e80881a7c2067076cca9dbcbd21611fae97ab49f3a930879"
+    }
+  ],
+  "violations": [],
+  "role_errors": [],
+  "raw_report_sha256": "bd3597a3ac1c7bad44377a5a9d409ddfe1b6dca3b7c09228bfc38d35fa596caf",
+  "original_remote_report": "/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_r_regional_main-20261021-212510/routes/gate/work/orfs/native_census.json"
+}
