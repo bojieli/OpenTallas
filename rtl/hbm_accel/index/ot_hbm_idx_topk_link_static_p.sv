@@ -280,7 +280,7 @@ endmodule
 // PIN-REGISTERED TILE (owner rule 19:50 PT 10-15): die master ot_hbm_idx_topk_link_static_p. Every data input and
 // every output passes ONE kept flop at the pin (+1/+1 edge, as the historical shell); rst_n enters a 2-flop release
 // synchroniser on clk. Port list identical to ot_hbm_idx_topk_link_static (drop-in); outputs = historical +5 edges.
-module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer SAFE=0)(
+module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer SAFE=0,parameter integer WPE=0)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -337,7 +337,7 @@ module ot_hbm_idx_topk_link_static_p #(parameter integer MUT=0,parameter integer
   if(SAFE==2)begin:t assign lane_vc[gl]=line_r[gl*37]; end
  end
  if(SAFE==2)begin:vt assign lane_vc[6*NVC*64-1:64]=vrep; end else begin:vs assign lane_vc=vrep; end
- ot_hbm_idx_topk_link_static_s_core #(.MUT(MUT),.SV(SAFE)) core(.clk(clk),.rst_n(rst_l),.clear(clear_r),.ingest_v(ingest_r),
+ ot_hbm_idx_topk_link_static_s_core #(.MUT(MUT),.SV(SAFE),.WPE(WPE)) core(.clk(clk),.rst_n(rst_l),.clear(clear_r),.ingest_v(ingest_r),
   .selected_line(line_r),.lane_vc(lane_vc),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
   .tx_v(c_tx_v),.tx(c_tx),.fault(c_fault),.selected_count(c_count));
  end
@@ -486,7 +486,7 @@ module ot_hbm_idx_link_s_slice #(parameter integer BW=6,parameter integer MUT=0)
  assign o_s3_v=s3_v;assign o_s4_v=s4_v;assign o_total=total;assign o_s3_n=s3_n;assign o_s4_f0=s4_f0;assign o_s4_nf=s4_nf;
 endmodule
 
-module ot_hbm_idx_topk_link_static_s_core #(parameter integer MUT=0,parameter integer NS=6,parameter integer SV=1)(
+module ot_hbm_idx_topk_link_static_s_core #(parameter integer MUT=0,parameter integer NS=6,parameter integer SV=1,parameter integer WPE=0)(
  input wire clk,input wire[((SV==2)?7+3*NS:7)-1:0]rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,input wire[NS*((SV==2)?5:4)*64-1:0]lane_vc,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -561,8 +561,17 @@ module ot_hbm_idx_topk_link_static_s_core #(parameter integer MUT=0,parameter in
    end
   end
  end
- always @(negedge clk or negedge rst_n[5])begin if(!rst_n[5])we_n<=0;else we_n<=we_r;end
- always @(negedge clk)begin wa_n<=wa_r;wd_n<=wd_r;end
+ // WPE (HBMc/TILES2 r7a 10-22; r6a/b GRT setup repair stalled at -20.9 ps on all 196 SRAM wd_in endpoints = this
+ // HALF-CYCLE negedge stage): WPE=1 registers we/wa/wd on the RISING edge beside each macro (anchored at the macro pins
+ // and on the macro's own CTS leaf by the kit), a full cycle to the SRAM; the write lands one edge later (RAW distance
+ // to the emit read is >= 2 edges larger than needed: proved by the +5 miter bench).  WPE=0: r4h negedge stage (r6/r7b).
+ if(WPE==1)begin:g_wpos
+  always @(posedge clk or negedge rst_n[5])begin if(!rst_n[5])we_n<=0;else we_n<=we_r;end
+  always @(posedge clk)begin wa_n<=wa_r;wd_n<=wd_r;end
+ end else begin:g_wneg
+  always @(negedge clk or negedge rst_n[5])begin if(!rst_n[5])we_n<=0;else we_n<=we_r;end
+  always @(negedge clk)begin wa_n<=wa_r;wd_n<=wd_r;end
+ end
  // per-bank registered read port (as r4h)
  wire em4=em_d[RT-1];wire[3:0]grp4=grp_d[(RT-1)*4+:4];
  (* keep="true",dont_touch="true" *) reg[7:0]re_b;(* keep="true",dont_touch="true" *) reg[8*3-1:0]ra_b;
