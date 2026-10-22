@@ -15,5 +15,20 @@
     "TAP_WR": 11
   },
   "vehicle": "Existing d76 canonical full-Qswiglu split-equivalence component vehicle, with a wires-only bus slicing adapter into exact selected split3. Reference lane sources retain the normal closed ae589 manifest. The target is the exact full scoped source closure, not generic peers or the predecessor tap parameters.",
-  "status": "STAGED_NOT_RUN"
+  "status": "STAGED_NOT_RUN",
+  "selected_view_manifest": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r18d_2000_1021/plansM/vplan_r17/views.json",
+  "selected_view_manifest_sha256": "d26d70363a593e13192681f3bd1f5442fa9f18f1bbbd1617e59bd9e748dd9ade",
+  "selected_view_env": {},
+  "compiled_vehicle_defines": [
+    "SFU_CORE_SPLIT2",
+    "SFU_LG_R=15",
+    "SFU_IMAGE=<generated>",
+    "SFU_DATA_DIR=<generated>",
+    "SFU_IO_ROWS=<generated>",
+    "SFU_SCALAR_EDGE=<generated>"
+  ],
+  "unforced_target_defines": [
+    "OT_SFU_SYNC_RST",
+    "OT_SU_RST_RELAY"
+  ]
 }
