@@ -121,12 +121,13 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
   if(!reset_copy[6])begin out_group<=0;out_slot<=0;end
   else begin out_group<=rg;out_slot<=rs;end
  end
- wire[NPC*2-1:0]local_lstart,local_start_ok,local_raw_done;
+ wire[NPC*2-1:0]local_lstart,local_start_ok,local_raw_done,local_load_release;
  for(genvar c=0;c<NPC*2;c=c+1)begin:window_decode
   (* keep_hierarchy="yes" *) ot_hbm_dma_window_decode #(.NPC(NPC),.COPY_ID(c)) u(
    .start(start),.base(start_base_sector),.bad(bad),.running(running),.owned(owned),.ready(block_ready_c),
    .clk(clk),.start_bank_i(start_bank_i),.epoch(start_epoch),.epoch0(epoch0),.epoch1(epoch1),
    .landing_fault(landing_fault),.slot(slot_q),.group_id(group_q),
+   .command_ok(command_ok),.release_flag(load_cmd[56]),.load_release(local_load_release[c]),
    .lstart(local_lstart[c]),.start_ok(local_start_ok[c]),.raw_done(local_raw_done[c]));
  end
  // ---- the four PCs of this lane ----
@@ -147,7 +148,7 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
    (* keep_hierarchy="yes" *) ot_hbm_dma_seen8 #(.COPY_ID(g*8+part),.BLOCK(part)) u(.clk(clk),.rst_n(rst_n),
     .begin_v_i(begin_v_i),.begin_bank_i(begin_bank_i),.start_bank_i(start_bank_i),.fill_bank_i(fill_bank_i[g]),.fill_slot_i(fill_slot_i[g*6+:6]),
     .load_bank_i(load_cmd_i[0]),.lstart(local_lstart[(g*8+part)/4]),.start_ok(local_start_ok[(g*8+part)/4]),.raw_done(local_raw_done[(g*8+part)/4]),
-    .load_release(command_ok&&load_cmd[56]),.fill_ok(fill_ok),.seen_current(seen_part[part]),.clear0(clear_counts0[part]),.clear1(clear_counts1[part]));
+    .load_release(local_load_release[(g*8+part)/4]),.fill_ok(fill_ok),.seen_current(seen_part[part]),.clear0(clear_counts0[part]),.clear1(clear_counts1[part]));
   end
   wire fb=fill_bank[g]; wire [5:0] fs=fill_slot[g*6+:6];
   wire [15:0] ep=fb_epoch?epoch1:epoch0;
@@ -347,12 +348,20 @@ endmodule
 module ot_hbm_dma_window_decode #(parameter NPC=2,COPY_ID=0)(
  input wire clk,start_bank_i,start,bad,running,landing_fault,
  input wire[15:0]base,epoch,epoch0,epoch1,input wire[1:0]owned,ready,
- input wire[5:0]slot,input wire[1:0]group_id,output wire lstart,start_ok,raw_done);
- (* keep="true" *)reg bank;
- always @(posedge clk)bank<=start_bank_i;
+ input wire[5:0]slot,input wire[1:0]group_id,input wire command_ok,release_flag,
+ output wire lstart,start_ok,raw_done,load_release);
+ // Three same-edge pin captures bound the status and two byte comparisons.
+ wire[2:0]bank;
+ for(genvar b=0;b<3;b=b+1)begin:bank_copy
+  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(3000+COPY_ID*3+b)) u(
+   .clk(clk),.d(start_bank_i),.q(bank[b]));
+ end
  wire aperture_ok=base[4:0]==0&&base[12:0]<=13'(8192-512*NPC)&&(!base[15]||base[14:13]==0);
  assign lstart=start&&aperture_ok&&!bad;
- assign start_ok=lstart&&!running&&owned[bank]&&ready[bank]&&epoch==(bank?epoch1:epoch0)&&!landing_fault;
+ assign start_ok=lstart&&!running&&owned[bank[0]]&&ready[bank[0]]&&
+   epoch[7:0]==(bank[1]?epoch1[7:0]:epoch0[7:0])&&
+   epoch[15:8]==(bank[2]?epoch1[15:8]:epoch0[15:8])&&!landing_fault;
+ assign load_release=command_ok&&release_flag;
  assign raw_done=running&&slot==63&&group_id==NPC-1;
 endmodule
 
