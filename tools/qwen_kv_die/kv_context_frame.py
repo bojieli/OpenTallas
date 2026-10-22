@@ -5,9 +5,43 @@ import json,os,re
 from pathlib import Path
 import kv_source_frame
 
+# SQC-KDIE4 10-22 (OT_KV_KVNC_VIEW=1, needs OT_KV_ROPE_OVL=1): the same literal pin geometry, read from the CLOSED view of
+# OT_KV_KVNC_KIT (physical/ref_tile/<kit>/views/qkd_kvn_ctx_ovl_rope, e.g. cm4 / cf4 CLOSED 10-22) instead of a diagnostic
+# source frame: no NOT_A_DIE_RESULT marker; the view's kit spec must name the selected source file and production params.
+VIEW_TOP='qkd_kvn_ctx_ovl_rope'
+
+def active():
+    return bool(os.environ.get('OT_KV_KVNC_SOURCE_FRAME')) or os.environ.get('OT_KV_KVNC_VIEW','0')=='1'
+
+def _load_view(root):
+    import hashlib
+    kit=os.environ.get('OT_KV_KVNC_KIT','')
+    if not kit:raise ValueError('OT_KV_KVNC_VIEW=1 needs OT_KV_KVNC_KIT (a CLOSED qkd_kvn_ctx_ovl_rope kit)')
+    kd=Path(root)/'physical/ref_tile'/kit
+    spec=json.loads((kd/'spec.json').read_text())
+    lef=kd/'views'/VIEW_TOP/(VIEW_TOP+'.lef')
+    if spec.get('top')!=VIEW_TOP or not lef.is_file():raise ValueError('OT_KV_KVNC_VIEW: no closed '+VIEW_TOP+' view in '+str(kd))
+    text=lef.read_text()
+    m=re.search(r'MACRO\s+'+VIEW_TOP+r'\b.*?SIZE\s+([\d.]+)\s+BY\s+([\d.]+)',text,re.S)
+    srcs=[s for s in spec['sources'] if s.endswith(VIEW_TOP+'.sv')]
+    receipt=dict(top=VIEW_TOP,params=spec.get('params',{}),outline=[float(m[1]),float(m[2])],kit=kit,view=str(lef.relative_to(root)),
+                 source_sha256={s:hashlib.sha256((Path(root)/s).read_bytes()).hexdigest() for s in srcs},qualification='CLOSED_VIEW')
+    return lef,receipt
+
 @lru_cache(None)
 def load(root):
     manifest=os.environ.get('OT_KV_KVNC_SOURCE_FRAME','')
+    if not manifest and os.environ.get('OT_KV_KVNC_VIEW','0')=='1':
+        lef,receipt=_load_view(root)
+        if receipt['params']!={'MUT_USER':0,'MUT_STALE':0}:
+            raise ValueError('context view must bind the selected production mutation parameters')
+        text=lef.read_text();w,h=receipt['outline'];raw={}
+        for m in re.finditer(r'\bPIN\s+(\S+)(.*?)\bEND\s+\1\s',text,re.S):
+            if m[1] in ('VDD','VSS'):continue
+            rs=re.findall(r'LAYER\s+(\w+)\s*;\s*RECT\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s*;',m[2])
+            if not rs:raise ValueError('context view pin lacks literal geometry '+m[1])
+            raw[m[1]]=(m[0],[(lay,*map(float,v)) for lay,*v in rs])
+        return dict(receipt=receipt,lef=lef,text=text,w=float(w),h=float(h),raw=raw)
     if not manifest:return None
     kit=os.environ.get('OT_KV_KVNC_KIT','')
     lef,receipt=kv_source_frame.load(root,manifest,kit,'qkd_kvn_ctx_ovl_rope')
@@ -95,5 +129,6 @@ def install_case(root,binding,work):
     p=Path(work)/'elements.lef';old=p.read_text();old,n=re.subn(r'(?ms)^MACRO qkd_kvnc\b.*?^END qkd_kvnc\s*$',lambda m:macro,old)
     if n!=1:raise ValueError('context case must replace exactly one generic macro')
     p.write_text(old);(Path(work)/'context_source_frame.json').write_text(json.dumps(r['receipt'],indent=2)+'\n')
+    if r['receipt'].get('qualification')=='CLOSED_VIEW':return
     for d in (Path(work),Path(work).parent):
         with (d/'NOT_A_DIE_RESULT').open('a') as f:f.write('CONTEXT_SOURCE_FRAME_DIAGNOSTIC_ONLY; closed leaf qualification pending\n')

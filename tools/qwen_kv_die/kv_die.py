@@ -1192,7 +1192,7 @@ _D2D_INST = {}
 def ep_far(inst, port, pt):
     """KV-BIND11: Manhattan distance from pt to the FARTHEST realized view pin of d2d word port (the hop every bit of
     the word makes), or None for any other end (callers keep their point distance)."""
-    if inst=='kvnc' and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+    if inst=='kvnc' and _kvnc_geom():
         it=_D2D_INST.get('kvnc')
         if it is not None:
             import kv_context_frame as KCF
@@ -1416,6 +1416,13 @@ RTL.update(qkd_dcal=DCAL_FILE)
 # generation = HOST cohort_gen.  Inputs: the calendar sequencer's cal_start (tap of n_dcal_cfg bit 40 at its source) and
 # its run index layer (new 6-bit bus), the HOST root's cohort_tag / cohort_gen.  Bench tools/qwen_kv_die/kvn_ctx_bench.sh.
 KVNC = __import__('os').environ.get('OT_KV_KVNC', '0') == '1'
+
+
+def _kvnc_geom():
+    """SQC-KDIE4 10-22: literal kvnc pin geometry = a diagnostic source frame (OT_KV_KVNC_SOURCE_FRAME) or the CLOSED
+    OT_KV_KVNC_KIT view (OT_KV_KVNC_VIEW=1, kv_context_frame._load_view); both only under OT_KV_ROPE_OVL"""
+    return bool(os.environ.get('OT_KV_KVNC_SOURCE_FRAME')) or os.environ.get('OT_KV_KVNC_VIEW', '0') == '1'
+
 KVNC_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_cal.sv'
 KVNC_WH = (12.96, 19.44)
 KVNC_CS_BIT = DCAL_CS.index('cal_start')
@@ -1430,7 +1437,7 @@ if ROPE_OVL:
         ports=dict(ck=['ck'],rst_n=['rst_n'],head=['head_record'],ovu=['ovl_users'],calrx=['calrx'],kad=['adm_done'],
           kvi=['compiled_identity','compiled_generation'],flt=['fault'],rld=['reseed']),sliced={},classed={})
     KVNC_WH=(86.4,86.4)
-    if os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+    if _kvnc_geom():
         import kv_context_frame as KCF
         _ctx_frame=KCF.load(str(ROOT))
         KCF.groups(ROOT,BINDINGS['qkd_kvnc'])
@@ -2020,7 +2027,7 @@ def _leaf_pin(it, port):
         gp_ = GP.xy(it, port)
         if gp_ is not None:
             return gp_
-    if it.name=='kvnc' and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+    if it.name=='kvnc' and _kvnc_geom():
         import kv_context_frame as KCF
         _D2D_INST['kvnc']=it
         return KCF.xy(ROOT,BINDINGS['qkd_kvnc'],it,port)
@@ -3038,7 +3045,7 @@ def _d2ds_swap(m):
             dc_ = it
             kw_, kh_ = up(KVNC_WH[0] + SHAVE, GX), up(KVNC_WH[1] + SHAVE, GY)
             kt = F.Inst('kvnc', 'qkd_kvnc', dc_.x, up(dc_.y - 21.6 - kh_, GY), kw_ - SHAVE, kh_ - SHAVE, 'R0', kind='ctl', region='io')
-            if ROPE_OVL and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+            if ROPE_OVL and _kvnc_geom():
                 # Source-bound E-facing KVI outputs abut the D2D W-face inputs;
                 # retain the free column between EMB and the context leaf.
                 kt.x=up(d_.x-21.6-kw_,GX)
@@ -3054,7 +3061,7 @@ def _d2ds_swap(m):
             for i_, (bid, cl, bits, eps) in enumerate(B):
                 if bid == 'clk_core_c':
                     B[i_] = (bid, cl, bits, list(eps) + [('kvnc', 'ck')])
-            if ROPE_OVL and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+            if ROPE_OVL and _kvnc_geom():
                 # Transport the actual selected calendar bits to the moved leaf;
                 # the former direct tap had no planned wire or relay age.
                 m.setdefault('forks',{}).setdefault('dcal_cfg',[]).append(('kvnc','calrx'))
@@ -5106,7 +5113,7 @@ def _land_level_pins(m, mm, inst0, face_load, by):
 
 def pin_xy(it, mm, port):
     """qwen-1010/b: absolute centre of a face / area port of instance it (master mm), with the orientation applied."""
-    if it.name=='kvnc' and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+    if it.name=='kvnc' and _kvnc_geom():
         import kv_context_frame as KCF
         _D2D_INST['kvnc']=it
         return KCF.xy(ROOT,BINDINGS['qkd_kvnc'],it,port)
@@ -5599,7 +5606,7 @@ def case(m, work):
         for directory in (work, work.parent):
             with (directory / 'NOT_A_DIE_RESULT').open('a') as marker:
                 marker.write('D2D_SOURCE_FRAME_DIAGNOSTIC_ONLY; actual closed leaf binding required\n')
-    if os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+    if _kvnc_geom():
         import kv_context_frame as KCF
         KCF.install_case(ROOT,BINDINGS['qkd_kvnc'],work)
     _case_ties(m, work / 'die.v')

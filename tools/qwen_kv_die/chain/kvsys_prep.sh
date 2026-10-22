@@ -152,7 +152,10 @@ if [ "${OT_KV_DCAL:-0}" = 1 ]; then
 fi
 # OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view
 # when the kit has closed (OT_KV_KVNC_KIT, default qkd_kvn_ctx_cal_r2); without a view the frame stays ASSUMED (diagnostic)
-if [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
+# SQC-KDIE4 10-22: under OT_KV_ROPE_OVL the leaf is qkd_kvn_ctx_ovl_rope (CLOSED kits qkd_kvn_ctx_ovl_rope_cm4 / cf4)
+if [ "${OT_KV_KVNC:-0}" = 1 ] && [ "${OT_KV_ROPE_OVL:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_ovl_rope_cm4}/views/qkd_kvn_ctx_ovl_rope
+  [ -f $KVV/qkd_kvn_ctx_ovl_rope.lef ] && BV="$BV --view qkd_kvnc=$KVV" || echo "OT_KV_KVNC (ROPE_OVL): no closed view at $KVV (frame ASSUMED)"
+elif [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
   [ -f $KVV/qkd_kvn_ctx_cal.lef ] && BV="$BV --view qkd_kvnc=$KVV" || echo "OT_KV_KVNC: no closed view at $KVV (frame ASSUMED)"; fi
 # OT_KV_SEQ_STATIC=1 (Q-KVSYS PVJOIN 10-16, needs DCAL + KVNC): qkd_seq_static in slot seq (cluster frame, as qkd_seq) and
 # the compile-time-image layer programme lprg on its closed view when available (OT_KV_LPRG_KIT, default qkd_layer_prog_img_r3)
