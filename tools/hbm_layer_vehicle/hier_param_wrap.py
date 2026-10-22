@@ -69,6 +69,7 @@ def header(t, m):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--bundle', required=True)
+    ap.add_argument('--min-bytes', type=int, default=0, help='opt-in: masters smaller than this (relays, pads) are left unwrapped and elaborate in their parent (equiv-checked on the collar slice: collar2 bit-exact)')
     a = ap.parse_args(); B = Path(a.bundle)
     sv = (B / 'slice' / 'slice.v').read_text()
     inst_re = re.compile(r"^(  )([A-Za-z_]\w*)(?:\s*#\((.*?)\))?(\s+[A-Za-z_]\w*\s*\()", re.M)
@@ -83,8 +84,10 @@ def main():
         if m not in hdrs:
             t = f.read_text()
             hdrs[m] = header(t, m) if MARK in t else None
+            if hdrs[m] and len(t) < a.min_bytes:
+                hdrs[m]['small'] = True
         h = hdrs[m]
-        if not h:
+        if not h or h.get('small'):
             return mo.group(0)            # parameter-free master: Verilator substitutes it already
         ovd = {}
         for it in split_top(ov or ''):
@@ -114,7 +117,7 @@ def main():
                 f.write_text(t[:i] + '/* hier_block moved to its _hw wrappers */' + t[i + len(MARK):])
     (B / 'slice' / 'slice_hw.v').write_text(out)
     (B / 'slice' / 'hier_wraps.sv').write_text('`timescale 1ns/1ps\n' + '\n'.join(wraps))
-    print(f'HIER_PARAM_WRAP masters={sum(1 for h in hdrs.values() if h)} wrappers={len(wraps)} instances={n_inst}')
+    print(f'HIER_PARAM_WRAP masters={sum(1 for h in hdrs.values() if h and not h.get("small"))} small_unmarked={sum(1 for h in hdrs.values() if h and h.get("small"))} wrappers={len(wraps)} instances={n_inst}')
 
 
 if __name__ == '__main__':
