@@ -8,12 +8,14 @@ module ot_hbm_dma_load_source_join (
  output reg [280:0] packet,output reg [4:0] destination,output reg fault
 );
  reg [2247:0] data_q;reg [39:0] dest_q;
+ (* keep = "true", dont_touch = "true" *) reg [7:0] reset_q;
+ always @(posedge clk) reset_q<={8{rst_n}};
  (* keep = "true", dont_touch = "true" *) reg [79:0] valid_q;
  reg [280:0] selected;reg [4:0] selected_destination;reg collision,seen;
  always @(posedge clk)begin
   data_q<=lane_dq;dest_q<=lane_destination;
   for(integer n=0;n<8;n=n+1)for(integer j=0;j<10;j=j+1)
-   valid_q[n*10+j]<=rst_n&&lane_dq[n*281+280];
+   valid_q[n*10+j]<=reset_q[n]&&lane_dq[n*281+280];
  end
  always @*begin
   selected=0;selected_destination=0;collision=0;seen=0;
@@ -35,12 +37,14 @@ module ot_hbm_dma_load_destination_join #(parameter integer QID=0)(
  output reg [280:0] packet,output reg [2:0] bank,output reg fault
 );
  reg [1123:0] data_q;reg [19:0] dest_q;
+ (* keep = "true", dont_touch = "true" *) reg [3:0] reset_q;
+ always @(posedge clk) reset_q<={4{rst_n}};
  (* keep = "true", dont_touch = "true" *) reg [39:0] valid_q;
  reg [280:0] selected;reg [2:0] selected_bank;reg collision,seen;
  always @(posedge clk)begin
   data_q<=source_packet;dest_q<=source_destination;
   for(integer n=0;n<4;n=n+1)for(integer j=0;j<10;j=j+1)
-   valid_q[n*10+j]<=rst_n&&source_packet[n*281+280]&&source_destination[n*5+3+:2]==2'(QID);
+   valid_q[n*10+j]<=reset_q[n]&&source_packet[n*281+280]&&source_destination[n*5+3+:2]==2'(QID);
  end
  always @*begin
   selected=0;selected_bank=0;collision=0;seen=0;
@@ -64,6 +68,8 @@ module ot_hbm_dma_load_bank_join #(parameter integer BANK=0)(
  output wire [280:0] dq,output reg fault
 );
  reg [279:0] raw_q,load_q;
+ (* keep = "true", dont_touch = "true" *) reg [9:0] reset_q;
+ always @(posedge clk) reset_q<={10{rst_n}};
  (* keep = "true", dont_touch = "true" *) reg [9:0] rv,lv;
  reg safe_q;
  wire take_load=load_dq[280]&&(load_bank==3'(BANK));
@@ -71,7 +77,7 @@ module ot_hbm_dma_load_bank_join #(parameter integer BANK=0)(
  always @(posedge clk)begin
   raw_q<=raw_dq[279:0];load_q<=load_dq[279:0];
   safe_q<=rst_n&&!collision;
-  for(integer j=0;j<10;j=j+1)begin rv[j]<=rst_n&&raw_dq[280];lv[j]<=rst_n&&take_load;end
+  for(integer j=0;j<10;j=j+1)begin rv[j]<=reset_q[j]&&raw_dq[280];lv[j]<=reset_q[j]&&take_load;end
   if(!rst_n)fault<=0;else fault<=fault|collision;
  end
  for(genvar k=0;k<280;k=k+1)begin:G
