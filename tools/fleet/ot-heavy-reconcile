@@ -777,7 +777,10 @@ def books(rows, total, avail, table, gf=None):
         # ep7 10-22: avail 632 GB, growth charged 510 -> admits 176, S81 H11 300 GB die build queued): a running unit
         # past YOUNG_S with an RSS sample is charged what its MEASURED growth gives over the next ~30 min, never the
         # full projection (declared - now): min(projection above, RESERVE_K x observed rate x RESERVE_HORIZON_S).
-        if conf("MEASURED_RESERVE") and r["age"] >= YOUNG_S and r.get("sampled", True) and r["grow"] > 0:
+        # A Verilator frontend still in its AST/DFG phase grows in steps its RSS slope cannot show (gold2 10-21: flat
+        # at 476 of 720 GB, then +244): it keeps its projection and is bounded only by the host cap below.
+        in_ast = r.get("frontend_pids") and not build_wait
+        if conf("MEASURED_RESERVE") and r["age"] >= YOUNG_S and r.get("sampled", True) and r["grow"] > 0 and not in_ast:
             r["grow"] = max(0.0, min(r["grow"], conf("RESERVE_K") * orate * conf("RESERVE_HORIZON_S")))
             r["pending"] = r["pending"] and r["grow"] > 0
         if r["pending"]:
@@ -787,11 +790,17 @@ def books(rows, total, avail, table, gf=None):
     grow = sum(r["grow"] for r in rows) + sfloor
     unstarted = sum(r["grow"] for r in rows if not r["active"])
     if conf("MEASURED_RESERVE"):
-        # v16: the whole growth charge is capped at GROWTH_CAP_AVAIL_FRAC (25 %) of physical MemAvailable; swap and the
-        # per-job MemoryMax (memcg OOM, oom_score_adj -999/0 since 10-22) are the safety net
+        # v16: the growth charge of RUNNING units (and the settled floor) is capped at GROWTH_CAP_AVAIL_FRAC (25 %) of
+        # physical MemAvailable; swap and the per-job MemoryMax (memcg OOM, oom_score_adj -999/0 since 10-22) are the
+        # safety net.  Memory of units admitted < YOUNG_S ago or not started yet is NOT capped: MemAvailable cannot show
+        # it yet (EP7 10-21: five rapid 64 GB replays at 146 GB available -> earlyoom burst)
+        fresh = sum(r["grow"] for r in rows if not r["active"] or r["age"] < YOUNG_S)
+        fresh_p = sum(r["grow"] for r in rows if r["pending"] and (not r["active"] or r["age"] < YOUNG_S))
         cap = conf("GROWTH_CAP_AVAIL_FRAC") * max(avail, 0.0)
-        grow, pending = min(grow, cap), min(pending, cap)
+        grow = fresh + min(grow - fresh, cap)
+        pending = fresh_p + min(pending - fresh_p, cap)
     return dict(grow=grow, young=young, plenty=plenty, pending=pending, settled_floor=sfloor, unstarted=unstarted,
+                fresh_gb=sum(r["grow"] for r in rows if not r["active"] or r["age"] < YOUNG_S),
                 used=sum(r["now"] for r in rows), reserved=sum(r["res"] for r in rows if r["active"]),
                 running=sum(1 for r in rows if r["active"]), fresh=sum(1 for r in rows if r["active"] and r["age"] < 90))
 
@@ -822,11 +831,11 @@ def admissible(total, avail, b, floor, need=None):
 def die_admissible(avail, b, floor, need, can):
     """the largest request a die-level job is admitted at now.  v9-v15: current memory minus pending growth (/ NEED);
     v16 (coordinator 10-22): physical MemAvailable - DIE_HEADROOM_GB (64) >= its request, minus only the memory of
-    units admitted but not started yet (they hold nothing MemAvailable can show); swap is the safety net"""
+    units admitted < YOUNG_S ago or not started yet (memory MemAvailable cannot show yet); swap is the safety net"""
     old = max(can, min(avail - b.get("pending", 0.0) - b.get("settled_floor", 0.0), avail - floor) / need)
     if not conf("MEASURED_RESERVE"):
         return old
-    return max(can, avail - b.get("unstarted", 0.0) - conf("DIE_HEADROOM_GB"))
+    return max(can, avail - b.get("fresh_gb", b.get("unstarted", 0.0)) - conf("DIE_HEADROOM_GB"))
 
 
 def holds_admit_lock(fd=8):
@@ -877,7 +886,7 @@ def gate_locked(mem, argv):
     if held and can - res < held:
         ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
     print(f"{'OK' if ok else 'NO'} {res} {cls} | need {need:g} x {res} = {need * res:.0f} GB, admissible {can:.0f} GB: "
-          f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB (v16 measured reserve, cap {100 * conf('GROWTH_CAP_AVAIL_FRAC'):g} % of available, settled floor {b.get('settled_floor', 0.0):.0f} GB; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
+          f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB ({('v16 measured reserve, running growth cap ' + format(100 * conf('GROWTH_CAP_AVAIL_FRAC'), 'g') + ' % of available') if conf('MEASURED_RESERVE') else 'v13 rate rule, uncapped sum'}, settled floor {b.get('settled_floor', 0.0):.0f} GB; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
           f"floor {floor:.0f} GB" + (f"; {note}" if note else ""))
 
 
@@ -1067,9 +1076,12 @@ def selftest():
     os.environ.update(MEASURED_RESERVE="1", RESERVE_K="1.5", RESERVE_HORIZON_S="1800", GROWTH_CAP_AVAIL_FRAC="0.25",
                       DIE_HEADROOM_GB="64", SETTLED_FLOOR_FRAC="0")
     fe = dict(age=54000, req=600.0, res=600, now=90.0, obs=90.0, declared=600, frontend_pids=[1], frontend_waiting=False)
-    chk("v16 frontend full projection 510 -> 1.5 x rate x 1800 s", one(632, rate=0.002, **fe), 5.4)
-    chk("v16 frontend never above its projection (cap not binding at 5 TB)", one(5000, rate=1.0, **fe), 510)
-    chk("v16 stable frontend (rate 0): 0", one(632, rate=0.0, **fe), 0)
+    bw = dict(fe, frontend_waiting=True, slow_span=1200.0)
+    chk("v16 build-waiting 510 projection -> 1.5 x rate x 1800 s (v14: 10.8)", one(5000, slow=0.002, **bw), 5.4)
+    chk("v16 build-waiting stable (rate 0): 0", one(5000, slow=0.0, rate=0.0, **bw), 0)
+    chk("v16 AST-phase frontend keeps its projection per unit (cap not binding at 5 TB)", one(5000, rate=0.0, **fe), 510)
+    chk("v16 AST-phase frontend: host charge capped at 25 % of 632", one(632, rate=0.0, **fe), 158)
+    chk("v16 non-frontend rising: min(v13 2 x rate x 600, 1.5 x rate x 1800)", one(5000, rate=0.01, **dict(fe, frontend_pids=[])), 12)
     chk("v16 young (< YOUNG_S): unchanged v12 rule", one(800), 90)
     chk("v16 unsampled: unchanged (full remaining)", one(632, age=4000, now=60.0, obs=60.0, sampled=False), 40)
     ep7 = [u(unit=f"g{i}", age=600 + i, req=200.0, res=200, now=30.0, obs=30.0, sampled=False) for i in range(3)] + \

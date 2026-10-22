@@ -77,7 +77,7 @@ class GrowthAccounting(unittest.TestCase):
         self.assertAlmostEqual(R.admissible(1008, 146, book, 50.4, .7), (146 - book['grow']) / .7)
         text = self.gate(rows, 146)
         self.assertTrue(text.startswith('NO '), text)
-        self.assertIn('uncapped sum', text)
+        self.assertIn('v16 measured reserve', text)      # v16: young replays are charged in full, running growth capped
         self.assertNotIn('cap 0.1', text)
 
     def test_low_growth_job_is_still_admitted_and_real_floor_remains(self):
