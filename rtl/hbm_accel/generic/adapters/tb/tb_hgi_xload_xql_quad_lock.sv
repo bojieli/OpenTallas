@@ -18,6 +18,13 @@
 // Mutants (-DQMUT=n, must FAIL): 1 quad_E pair 1 write dropped (xql XQL_MUT 1, RTL); 2 quad_E ctl rotation select + 1
 // (ctl MUT 1, RTL); 3 quad_E issuer fires one edge late (ctlw MUT 6, RTL); 4 quad_E bound to the SW banks (die binding,
 // cross-quadrant read); 5 quad_E tgt strap 100 (die binding: SE runs the SW command).
+// -DCTL_OLD_REF (ELEM-GAPS/HBMN1 10-18): ref_w / ref_e use the CLOSED q1-7af6f4406 ctlx function (xql CTL_OLD 1), so
+// the lock also proves today's native ctlx (l_d_o pin copy, pin reset relay) against the closed control.
+`ifdef CTL_OLD_REF
+`define CTL_OLD_ 1
+`else
+`define CTL_OLD_ 0
+`endif
 `ifndef QMUT
 `define QMUT 0
 `endif
@@ -101,9 +108,9 @@ module tb_xload_xql_quad_lock;
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), \
         .configured(CF), .fault(FT), .active(AC), .x_done(D), .xw_en(E), .xw_last(L), .xw_addr(A), .xw_grp(G), \
         .xw_data(X), .rq(RQ), .rr(RR)
-    ot_hgi_sm_xload_static_xql #(.RD_LAT(RD_LAT), .MUT(0), .NP(4), .T(T), .XQL_MUT(0)) ref_w (
+    ot_hgi_sm_xload_static_xql #(.RD_LAT(RD_LAT), .MUT(0), .NP(4), .T(T), .XQL_MUT(0), .CTL_OLD(`CTL_OLD_)) ref_w (
         `XQL_PORTS(4, 8'd100, rq_rw, rr_rw, cf[0], ft[0], ac[0], d_rw, e_rw, l_rw, a_rw, g_rw, x_rw));
-    ot_hgi_sm_xload_static_xql #(.RD_LAT(RD_LAT), .MUT(0), .NP(4), .T(T), .XQL_MUT(0)) ref_e (
+    ot_hgi_sm_xload_static_xql #(.RD_LAT(RD_LAT), .MUT(0), .NP(4), .T(T), .XQL_MUT(0), .CTL_OLD(`CTL_OLD_)) ref_e (
         `XQL_PORTS(4, 8'd101, rq_re, rr_re, cf[1], ft[1], ac[1], d_re, e_re, l_re, a_re, g_re, x_re));
     ot_hgi_sm_xload_static_xql #(.RD_LAT(RD_LAT), .MUT(0), .NP(2), .T(T), .XQL_MUT(0)) quad_w (
         `XQL_PORTS(2, 8'd100, rq_qw, rr_qw, cf[2], ft[2], ac[2], d_qw, e_qw, l_qw, a_qw, g_qw, x_qw));
