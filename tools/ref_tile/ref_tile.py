@@ -708,6 +708,15 @@ def load_spec(path: str) -> dict:
                 raise SpecError("multiple_cts_roots owns the clock relationship and boundary; custom timing/clock hooks are unsupported")
             if s.get("clock_cts_roots") is not None:
                 raise SpecError("multiple_cts_roots derives every CTS root from clock_ports")
+            # STW-S81-COLLA-LEPAB 10-21 (s81sl_lepab r3a/r3b TritonCTS clk_a pin-flop spread 199.2 / 139.5 ps on ~34k
+            # sinks from one face pin): "cts_engine": "spine" builds EVERY declared root as a pre-placed balanced clock
+            # spine (clock_spine.tcl OT_SPINE_PORTS = clock_ports) under the unchanged clock-entry checks/measurement.
+            if s.get("cts_engine", "tritoncts") not in ("tritoncts", "spine"):
+                raise SpecError("cts_engine must be tritoncts or spine")
+            if s.get("cts_engine") == "spine" and s["kind"] != "tile":
+                raise SpecError("cts_engine spine is a multiple_cts_roots leaf-tile option")
+        elif s.get("cts_engine") is not None:
+            raise SpecError("cts_engine requires multiple_cts_roots")
             if s["kind"] == "cluster":
                 try:
                     clock_entry_constraints.landed_record(s, ROOT)
@@ -1941,6 +1950,11 @@ SPINE_PIN_LOOKUP = """        regexp {[^/]+$} [get_full_name $pin] pn
 HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 
+def multi_spine(s: dict) -> bool:
+    """multiple_cts_roots leaf tile whose declared roots are built as balanced clock spines (spec cts_engine spine)"""
+    return s.get("clock") == "multiple_cts_roots" and s.get("cts_engine") == "spine"
+
+
 def gen_hooks(s: dict, kd: str) -> dict:
     try:
         raw_bindings, _ = raw_macro_clocks.contract(s, ROOT)
@@ -1964,6 +1978,10 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.extend(clock_entry_constraints.forwarded_pre_cts_tcl(s, entry_sdc))
+        if multi_spine(s):
+            # sourced BEFORE clock_entries.tcl: the entry wrapper keeps its root/raw-memory checks and calls the spine
+            pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
+            files["spine_ins.tcl"] = SPINE_INS.format(ins="", pinlookup="")
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
         # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
@@ -2098,6 +2116,9 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             rows_x = float(s["route"].get("macro_halo_x_um", rows_y))
             extra += [f"--orfs-var MACRO_ROWS_HALO_X={rows_x:g}",
                       f"--orfs-var MACRO_ROWS_HALO_Y={rows_y:g}"]
+    if multi_spine(s):
+        extra += [f"--orfs-var OT_SPINE_PORT={s['clock_port']}", f"--orfs-var OT_SPINE_PORTS={','.join(clock_ports(s))}",
+                  "--orfs-var OT_SPINE_MACRO_LEAF=1"]
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
@@ -2395,7 +2416,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(s["post_synth_tcl"])
     if s["route"].get("hold_delay"):
         out.append(HDLY_TCL)
-    if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
+    if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine" or multi_spine(s):
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         out += ["physical/common_flow/clock_entries.tcl", f"{kd}/clock_entry.sdc"]
