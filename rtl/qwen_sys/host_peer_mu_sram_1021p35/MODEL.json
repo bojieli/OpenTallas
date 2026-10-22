@@ -1,0 +1,38 @@
+{
+  "baseline_source": "c7b2fc3ea",
+  "baseline_native_prefix": "34ca0704",
+  "clock": {
+    "domain": "core_clk",
+    "port": "ck_core",
+    "route_period_ps": 770,
+    "signoff_period_ps": 833.333,
+    "new_domains": 0
+  },
+  "measured_p34b": {
+    "mapped_depth_ps": 528.4,
+    "mapped_depth_levels": 15,
+    "reg_to_reg_setup_ps": -93.1,
+    "endpoint": "lifecycle hc_tag[43] capture, native u96848_c5",
+    "reg_to_macro_setup_ps": -52.9,
+    "macro_endpoint": "packet RX head SRAM wd_in[512] = zero-test rd[511:64]",
+    "hold_ps": 14.1,
+    "boundary_spread_tt_ff_ps": [
+      30.9,
+      53.9
+    ],
+    "trial_overflow": 0
+  },
+  "source_replacement": [
+    "Register RX zero/header flags at the existing rd input capture edge, aligned with existing rv/rd.",
+    "Replace lifecycle late indexed-head/bypass cascade with exact distributed one-hot per-user selection and a forwarded word OR."
+  ],
+  "external_added_edges": 0,
+  "reset_head_gap_contract": "Keep reset validity, queue admission/pop and head refresh/gap edges. New flags are DATA, valid-qualified by the unchanged rv path.",
+  "required_proofs": [
+    "Existing cyclewise lifecycle comparison and stale-head negative.",
+    "RX metadata alignment with existing rd and same-cycle queue observations.",
+    "Existing primitive correspondence and exact/copy-D/copy-clock native benches.",
+    "Actual MAIN and fallback native32 CTS gates, ROOT geometry review before qualified submission."
+  ],
+  "qualification": false
+}
