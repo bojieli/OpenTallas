@@ -82,7 +82,53 @@
           "width": 128
         }
       },
-      "physical_status": "Residual reserve is diagnostic; no hard 1512-square footprint or timing claim."
+      "physical_status": "Residual reserve is diagnostic; no hard 1512-square footprint or timing claim.",
+      "hard_children": [
+        {
+          "instance": "hb_idx__s_SW.u_control.ge[0].md",
+          "master": "ot_hidx_meta_sram146",
+          "view": "physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146",
+          "record_commit": "06d0f5e44",
+          "main_publish_commit": "6a5b95375",
+          "params": {
+            "D": 146
+          },
+          "fixed_width": 25,
+          "source": "rtl/hdc/v41x/ot_hidx_meta_sram146.sv",
+          "source_sha256": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
+          "clock_pins": {
+            "clk": "hb_idx__s_SW.clk_meta[0]",
+            "clk_mem": "hb_idx__s_SW.clk_meta[0]"
+          },
+          "outline_um": [
+            259.2,
+            172.8
+          ],
+          "status": "CLOSED TT197.51 FF31.10 ps DRC0; SS sensitivity -60.10 ps"
+        },
+        {
+          "instance": "hb_idx__s_SW.u_control.ge[1].md",
+          "master": "ot_hidx_meta_sram146",
+          "view": "physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146",
+          "record_commit": "06d0f5e44",
+          "main_publish_commit": "6a5b95375",
+          "params": {
+            "D": 146
+          },
+          "fixed_width": 25,
+          "source": "rtl/hdc/v41x/ot_hidx_meta_sram146.sv",
+          "source_sha256": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
+          "clock_pins": {
+            "clk": "hb_idx__s_SW.clk_meta[1]",
+            "clk_mem": "hb_idx__s_SW.clk_meta[1]"
+          },
+          "outline_um": [
+            259.2,
+            172.8
+          ],
+          "status": "CLOSED TT197.51 FF31.10 ps DRC0; SS sensitivity -60.10 ps"
+        }
+      ]
     },
     {
       "instance": "hb_idx__s_SW.ge[0].gc[0].g_col[0].u_col",
@@ -2686,7 +2732,53 @@
           "width": 128
         }
       },
-      "physical_status": "Residual reserve is diagnostic; no hard 1512-square footprint or timing claim."
+      "physical_status": "Residual reserve is diagnostic; no hard 1512-square footprint or timing claim.",
+      "hard_children": [
+        {
+          "instance": "hb_idx__s_SE.u_control.ge[0].md",
+          "master": "ot_hidx_meta_sram146",
+          "view": "physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146",
+          "record_commit": "06d0f5e44",
+          "main_publish_commit": "6a5b95375",
+          "params": {
+            "D": 146
+          },
+          "fixed_width": 25,
+          "source": "rtl/hdc/v41x/ot_hidx_meta_sram146.sv",
+          "source_sha256": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
+          "clock_pins": {
+            "clk": "hb_idx__s_SE.clk_meta[0]",
+            "clk_mem": "hb_idx__s_SE.clk_meta[0]"
+          },
+          "outline_um": [
+            259.2,
+            172.8
+          ],
+          "status": "CLOSED TT197.51 FF31.10 ps DRC0; SS sensitivity -60.10 ps"
+        },
+        {
+          "instance": "hb_idx__s_SE.u_control.ge[1].md",
+          "master": "ot_hidx_meta_sram146",
+          "view": "physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146",
+          "record_commit": "06d0f5e44",
+          "main_publish_commit": "6a5b95375",
+          "params": {
+            "D": 146
+          },
+          "fixed_width": 25,
+          "source": "rtl/hdc/v41x/ot_hidx_meta_sram146.sv",
+          "source_sha256": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
+          "clock_pins": {
+            "clk": "hb_idx__s_SE.clk_meta[1]",
+            "clk_mem": "hb_idx__s_SE.clk_meta[1]"
+          },
+          "outline_um": [
+            259.2,
+            172.8
+          ],
+          "status": "CLOSED TT197.51 FF31.10 ps DRC0; SS sensitivity -60.10 ps"
+        }
+      ]
     },
     {
       "instance": "hb_idx__s_SE.ge[0].gc[0].g_col[0].u_col",
@@ -5290,7 +5382,53 @@
           "width": 128
         }
       },
-      "physical_status": "Residual reserve is diagnostic; no hard 1512-square footprint or timing claim."
+      "physical_status": "Residual reserve is diagnostic; no hard 1512-square footprint or timing claim.",
+      "hard_children": [
+        {
+          "instance": "hb_idx__s_NW.u_control.ge[0].md",
+          "master": "ot_hidx_meta_sram146",
+          "view": "physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146",
+          "record_commit": "06d0f5e44",
+          "main_publish_commit": "6a5b95375",
+          "params": {
+            "D": 146
+          },
+          "fixed_width": 25,
+          "source": "rtl/hdc/v41x/ot_hidx_meta_sram146.sv",
+          "source_sha256": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
+          "clock_pins": {
+            "clk": "hb_idx__s_NW.clk_meta[0]",
+            "clk_mem": "hb_idx__s_NW.clk_meta[0]"
+          },
+          "outline_um": [
+            259.2,
+            172.8
+          ],
+          "status": "CLOSED TT197.51 FF31.10 ps DRC0; SS sensitivity -60.10 ps"
+        },
+        {
+          "instance": "hb_idx__s_NW.u_control.ge[1].md",
+          "master": "ot_hidx_meta_sram146",
+          "view": "physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146",
+          "record_commit": "06d0f5e44",
+          "main_publish_commit": "6a5b95375",
+          "params": {
+            "D": 146
+          },
+          "fixed_width": 25,
+          "source": "rtl/hdc/v41x/ot_hidx_meta_sram146.sv",
+          "source_sha256": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
+          "clock_pins": {
+            "clk": "hb_idx__s_NW.clk_meta[1]",
+            "clk_mem": "hb_idx__s_NW.clk_meta[1]"
+          },
+          "outline_um": [
+            259.2,
+            172.8
+          ],
+          "status": "CLOSED TT197.51 FF31.10 ps DRC0; SS sensitivity -60.10 ps"
+        }
+      ]
     },
     {
       "instance": "hb_idx__s_NW.ge[0].gc[0].g_col[0].u_col",
@@ -7894,7 +8032,53 @@
           "width": 128
         }
       },
-      "physical_status": "Residual reserve is diagnostic; no hard 1512-square footprint or timing claim."
+      "physical_status": "Residual reserve is diagnostic; no hard 1512-square footprint or timing claim.",
+      "hard_children": [
+        {
+          "instance": "hb_idx__s_NE.u_control.ge[0].md",
+          "master": "ot_hidx_meta_sram146",
+          "view": "physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146",
+          "record_commit": "06d0f5e44",
+          "main_publish_commit": "6a5b95375",
+          "params": {
+            "D": 146
+          },
+          "fixed_width": 25,
+          "source": "rtl/hdc/v41x/ot_hidx_meta_sram146.sv",
+          "source_sha256": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
+          "clock_pins": {
+            "clk": "hb_idx__s_NE.clk_meta[0]",
+            "clk_mem": "hb_idx__s_NE.clk_meta[0]"
+          },
+          "outline_um": [
+            259.2,
+            172.8
+          ],
+          "status": "CLOSED TT197.51 FF31.10 ps DRC0; SS sensitivity -60.10 ps"
+        },
+        {
+          "instance": "hb_idx__s_NE.u_control.ge[1].md",
+          "master": "ot_hidx_meta_sram146",
+          "view": "physical/ref_tile/hidx_meta146_main_1021/views/ot_hidx_meta_sram146",
+          "record_commit": "06d0f5e44",
+          "main_publish_commit": "6a5b95375",
+          "params": {
+            "D": 146
+          },
+          "fixed_width": 25,
+          "source": "rtl/hdc/v41x/ot_hidx_meta_sram146.sv",
+          "source_sha256": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
+          "clock_pins": {
+            "clk": "hb_idx__s_NE.clk_meta[1]",
+            "clk_mem": "hb_idx__s_NE.clk_meta[1]"
+          },
+          "outline_um": [
+            259.2,
+            172.8
+          ],
+          "status": "CLOSED TT197.51 FF31.10 ps DRC0; SS sensitivity -60.10 ps"
+        }
+      ]
     },
     {
       "instance": "hb_idx__s_NE.ge[0].gc[0].g_col[0].u_col",
@@ -10486,5 +10670,6 @@
     "Connections of replicated query and head-ID fields are wires to the original shared glue outputs, not extra register copies.",
     "All pair and SRAM bodies retain real masters. R3 is still an explicit stand-in.",
     "Controller clock ports for pair hslice are retained but unused; all 128 active pair clocks go to real columns."
-  ]
+  ],
+  "metadata_binding": "Eight real CLOSED D146 masters; exact source bytes and literal clk_meta connections. This is component binding, not parent delivery/return timing qualification."
 }
