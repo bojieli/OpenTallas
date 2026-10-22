@@ -43,7 +43,7 @@ module dsdv_pv_local_rr_group #(parameter integer W=4, ID=0)(
 endmodule
 
 // EXPERIMENTAL, UNSELECTED: receiving-clock reset ownership. Writer reset
-// releases only after two real ck_f edges, reader after two ck edges. The
+// releases only after two real ck_f edges, reader after four ck edges. The
 // required forwarded preamble and pointer/calendar alignment are unqualified.
 module dsdv_pv_local_land_recvreset_276(
  input wire ck_f,input wire[275:0] i,input wire ck,rs,input wire[5:0] k,
@@ -55,7 +55,7 @@ module dsdv_pv_local_land_recvreset_276(
  // forwarded-clock release edges. These edges need a booked preamble.
  dsdv_pv_local_recvreset #(.LEAVES(2*GROUPS)) wr_rf(
   .ck(ck_f),.rs(rs),.q(wr_reset));
- ot_pl_land_reset_forest #(.DEPTH(2),.LEAVES(2*GROUPS),.ROOT_LOADS(1)) rd_rf(
+ ot_pl_land_reset_forest #(.DEPTH(4),.LEAVES(2*GROUPS),.ROOT_LOADS(1)) rd_rf(
   .ck(ck),.d(rs),.q(rd_reset));
  for(genvar r=0;r<GROUPS;r=r+1)begin:g_reset_map
   assign rst_leaf[4*r+0]=wr_reset[2*r];
