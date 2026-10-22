@@ -170,6 +170,9 @@ reg io_cfg_we=0,io_start_v=0;
 `ifndef SFU_K9X_BRING
 `define SFU_K9X_BRING 0
 `endif
+`ifndef SFU_FPIPE
+`define SFU_FPIPE 0
+`endif
 `ifndef SFU_NATIVE32
 `define SFU_NATIVE32 0
 `endif
@@ -179,13 +182,13 @@ reg io_cfg_we=0,io_start_v=0;
  // HBM-COLLECT10/SFUC k9z (10-21): SFU_CORE_SPLIT3L runs ot_hgi_sfu_core_split3l (split3 with the lane clock / reset
  // entry buses as 64 scalar ports <bus>_<lane>, pure port wrapper) with the same per-lane drive.
 `ifdef SFU_CORE_SPLIT3L
- ot_hgi_sfu_core_split3l #(.LG_PATH(EQ_LG),.DRAIN_PIPE(1),.BTREE(`SFU_K9X_BTREE),.BRING(`SFU_K9X_BRING),.NATIVE32(`SFU_NATIVE32)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_st(eq_clk_st),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
+ ot_hgi_sfu_core_split3l #(.LG_PATH(EQ_LG),.DRAIN_PIPE(1),.BTREE(`SFU_K9X_BTREE),.BRING(`SFU_K9X_BRING),.NATIVE32(`SFU_NATIVE32),.FPIPE(`SFU_FPIPE)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_st(eq_clk_st),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
   .clk_lane_0(clk),.clk_lane_1(clk),.clk_lane_2(clk),.clk_lane_3(clk),.clk_lane_4(clk),.clk_lane_5(clk),.clk_lane_6(clk),.clk_lane_7(clk),.clk_lane_8(clk),.clk_lane_9(clk),.clk_lane_10(clk),.clk_lane_11(clk),.clk_lane_12(clk),.clk_lane_13(clk),.clk_lane_14(clk),.clk_lane_15(clk),
   .clk_map_0(clk),.clk_map_1(clk),.clk_map_2(clk),.clk_map_3(clk),.clk_map_4(clk),.clk_map_5(clk),.clk_map_6(clk),.clk_map_7(clk),.clk_map_8(clk),.clk_map_9(clk),.clk_map_10(clk),.clk_map_11(clk),.clk_map_12(clk),.clk_map_13(clk),.clk_map_14(clk),.clk_map_15(clk),
   .rst_lane_n_0(rst_n),.rst_lane_n_1(rst_n),.rst_lane_n_2(rst_n),.rst_lane_n_3(rst_n),.rst_lane_n_4(rst_n),.rst_lane_n_5(rst_n),.rst_lane_n_6(rst_n),.rst_lane_n_7(rst_n),.rst_lane_n_8(rst_n),.rst_lane_n_9(rst_n),.rst_lane_n_10(rst_n),.rst_lane_n_11(rst_n),.rst_lane_n_12(rst_n),.rst_lane_n_13(rst_n),.rst_lane_n_14(rst_n),.rst_lane_n_15(rst_n),
   .rst_map_n_0(rst_n),.rst_map_n_1(rst_n),.rst_map_n_2(rst_n),.rst_map_n_3(rst_n),.rst_map_n_4(rst_n),.rst_map_n_5(rst_n),.rst_map_n_6(rst_n),.rst_map_n_7(rst_n),.rst_map_n_8(rst_n),.rst_map_n_9(rst_n),.rst_map_n_10(rst_n),.rst_map_n_11(rst_n),.rst_map_n_12(rst_n),.rst_map_n_13(rst_n),.rst_map_n_14(rst_n),.rst_map_n_15(rst_n),
 `else
- ot_hgi_sfu_core_split3 #(.LG_PATH(EQ_LG),.DRAIN_PIPE(1),.BTREE(`SFU_K9X_BTREE),.BRING(`SFU_K9X_BRING),.NATIVE32(`SFU_NATIVE32)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_st(eq_clk_st),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
+ ot_hgi_sfu_core_split3 #(.LG_PATH(EQ_LG),.DRAIN_PIPE(1),.BTREE(`SFU_K9X_BTREE),.BRING(`SFU_K9X_BRING),.NATIVE32(`SFU_NATIVE32),.FPIPE(`SFU_FPIPE)) eq_core(.clk(clk),.clk_pw(eq_clk_pw),.clk_pe(clk),.rst_n(rst_n),.clk_st(eq_clk_st),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),
   .clk_lane({16{clk}}),.clk_map({16{clk}}),.rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
 `endif
   .io_word(s_io),.compiler_control(s_ctl),

@@ -22,6 +22,9 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
  parameter integer WPIPE=0, GCLK=0,
  // LH-SU (10-19): WROT passed to the operand store (bank-aligned shared sector rotate)
  parameter integer WROT=0, NATIVE32=0,
+ // FPIPE (HBMb/HC-SFU 10-21, PD-AUDIT (1)): the sixteen lanes' fault/coll and the store fault reach the sticky engine
+ // fault through registered relayed OR trees (ot_hgi_sfu_fault_tree, +5 edges, diagnostic only). 0 = released form.
+ FPIPE=0,
  // LH-SU (10-19): lane_map pass-ring one-hot replication (ot_hdc_delay_ring OHREP)
  parameter integer PASS_OHREP=0,
  // L2H-SU-FB k9x (10-19): BTREE passed to the quarter's arithmetic grid (3 = four-level kept-copy broadcast tree)
@@ -72,16 +75,22 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15,
   .rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.ro_v(ro_v),.ro_x(ro_x),
   .fault(lane_fault),.coll(lane_coll));
- ot_hgi_sfu_static_operand_store #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.NATIVE32(NATIVE32)) u_memory(
+ ot_hgi_sfu_static_operand_store #(.LWB(LWB),.WPIPE(WPIPE),.GCLK(GCLK),.WROT(WROT),.NATIVE32(NATIVE32),.FPIPE(FPIPE)) u_memory(
   .clk(clk),.rst_n(rst_n),.clk_grp(clk_grp),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.rd_q(rd_q),
   .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_load_leaves(scalar_load_leaves),.scalar_enable_leaves(scalar_enable_leaves),
   .scalar_addr(scalar_addr),.scalar_data(scalar_data),
   .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_lo_replicas(stage_lo_replicas),.stage_mask(stage_mask),.stage_data(stage_data),
   .drain_v(drain_v),.drain_v_leaves(drain_v_leaves),.drain_addr_leaves(drain_addr_leaves),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),.fault(store_fault));
+ wire lane_fault_any;
+ generate if(FPIPE)begin:g_lane_fault_tree
+  ot_hgi_sfu_fault_tree u_lane_fault_tree(.clk(clk),.rst_n(rst_n),.lane_bad(lane_fault|lane_coll),.loc_bad(1'b0),.fault_any(lane_fault_any));
+ end else begin:g_lane_fault_comb
+  assign lane_fault_any=|lane_fault || |lane_coll;
+ end endgenerate
  always @(posedge clk `OT_SFU_ARST(rst_n))
   if(!rst_n)fault<=0;
-  else if(store_fault || |lane_fault || |lane_coll ||
+  else if(store_fault || lane_fault_any ||
    (compiler_control[77:75]!=0 && compiler_control[77:75]!=1 && compiler_control[77:75]!=4 && compiler_control[77:75]!=5) ||
    (compiler_control[74:72]!=0 && compiler_control[74:72]!=1 && compiler_control[74:72]!=4 && compiler_control[74:72]!=5))fault<=1;
 endmodule

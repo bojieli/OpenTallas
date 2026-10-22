@@ -32,7 +32,14 @@ module ot_hgi_sfu_static_operand_store #(
  // last-writer-wins order and same-bank collision fault as the per-word loop). Same edges; no schedule change.
  parameter integer WROT=0,
  // Same-edge kept scalar select copies; default off preserves released users.
- parameter integer NATIVE32=0
+ parameter integer NATIVE32=0,
+ // FPIPE (HBMb/HC-SFU 10-21, PD-AUDIT (1)): the sticky diagnostic fault was ONE flop fed by a combinational gather of all
+ // sixteen lanes' rd_addr/rd_src/vm_waddr range + scalar compares across the 1.9-mm tile (k9y reg2reg -18.5 ns at
+ // u_memory fault).  FPIPE=1: per-lane partial (range/source/scalar of lane l) registered next to its lane, store-local
+ // partial (stage/drain range, group faults) aged equally, then a registered relayed OR
+ // tree (ot_hgi_sfu_fault_tree: lane -> pair -> side -> 2 relays, hops <= ~405 um), final OR into the sticky fault: fault
+ // rises 5 edges later (diagnostic only; no data/schedule edge moves).  FPIPE=0: byte-identical released behaviour.
+ parameter integer FPIPE=0
 )(
  input wire clk,rst_n,
  input wire [4:0] clk_grp,
@@ -71,6 +78,7 @@ module ot_hgi_sfu_static_operand_store #(
  reg [31:0] scalar_data_q[0:3];
  reg [3:0] scalar_valid;
  reg scalar_bad;
+ reg [15:0] scalar_bad_l;
  // se_l[4*l+g]: the scalar_enable[g] copy that serves lane l (NATIVE32: upstream copy l/2; else the port itself)
  wire [63:0] se_l;
  for(genvar l=0;l<16;l=l+1)begin:g_se_l
@@ -95,10 +103,10 @@ module ot_hgi_sfu_static_operand_store #(
    assign sq_all[80*g+:80]=sq;assign sv_all[2*g+:2]=sv;
   end
   always @*begin
-   scalar_bad=0;
+   scalar_bad=0;scalar_bad_l=0;
    for(integer l=0;l<16;l=l+1)for(integer g=0;g<4;g=g+1)
     if(rd_re[4*l+g] && se_l[4*l+g] &&
-     (!sv_all[2*g+l/8] || rd_addr[24*(4*l+g)+:24]!=sq_all[80*g+24*(l/8)+:24]))scalar_bad=1;
+     (!sv_all[2*g+l/8] || rd_addr[24*(4*l+g)+:24]!=sq_all[80*g+24*(l/8)+:24]))begin scalar_bad=1;scalar_bad_l[l]=1;end
   end
  end else begin:g_scalar_original
   assign sq_all=0;assign sv_all=0;
@@ -107,10 +115,10 @@ module ot_hgi_sfu_static_operand_store #(
   always @(posedge clk `OT_SFU_ARST(rst_n))
    if(!rst_n)scalar_valid<=0;else scalar_valid<=scalar_valid|scalar_load;
   always @*begin
-   scalar_bad=0;
+   scalar_bad=0;scalar_bad_l=0;
    for(integer l=0;l<16;l=l+1)for(integer g=0;g<4;g=g+1)
     if(rd_re[4*l+g] && scalar_enable[g] &&
-     (!scalar_valid[g] || rd_addr[24*(4*l+g)+:24]!=scalar_addr_q[g]))scalar_bad=1;
+     (!scalar_valid[g] || rd_addr[24*(4*l+g)+:24]!=scalar_addr_q[g]))begin scalar_bad=1;scalar_bad_l[l]=1;end
   end
  end endgenerate
  reg bad_source,bad_range;
@@ -129,9 +137,33 @@ module ot_hgi_sfu_static_operand_store #(
    for(integer s=0;s<4;s=s+1)
     if(rd_re[4*l+s] && rd_src[8*l+2*s+:2]!=0)bad_source=1;
  end
- always @(posedge clk `OT_SFU_ARST(rst_n))
-  if(!rst_n)fault<=0;
-  else if(bad_source || bad_range || scalar_bad || |group_fault)fault<=1;
+ generate if(FPIPE)begin:g_fault_pipe
+  // per-lane partials (lane l's own read/write range, source and scalar compares) and the store-local partial
+  reg [15:0] lane_bad; reg loc_bad;
+  always @*begin
+   lane_bad=scalar_bad_l;loc_bad=|group_fault;
+   for(integer l=0;l<16;l=l+1)begin
+    if(vm_we[l] && |vm_waddr[24*l+LWB+:24-LWB])lane_bad[l]=1;
+    for(integer g=0;g<4;g=g+1)begin
+     if(rd_re[4*l+g] && !se_l[4*l+g] && |rd_addr[24*(4*l+g)+LWB+:24-LWB])lane_bad[l]=1;
+     if(rd_re[4*l+g] && rd_src[8*l+2*g+:2]!=0)lane_bad[l]=1;
+    end
+   end
+   for(integer b=0;b<8;b=b+1)
+    if(stage_v[b] && stage_addr[LWB*b+:LWB]>{LWB{1'b1}}-7)loc_bad=1;
+   for(integer b=0;b<2;b=b+1)
+    if(drain_v[b] && drain_addr[LWB*b+:LWB]>{LWB{1'b1}}-7)loc_bad=1;
+  end
+  wire tree_fault;
+  ot_hgi_sfu_fault_tree u_fault_tree(.clk(clk),.rst_n(rst_n),.lane_bad(lane_bad),.loc_bad(loc_bad),.fault_any(tree_fault));
+  always @(posedge clk `OT_SFU_ARST(rst_n))
+   if(!rst_n)fault<=0;
+   else if(tree_fault)fault<=1;
+ end else begin:g_fault_comb
+  always @(posedge clk `OT_SFU_ARST(rst_n))
+   if(!rst_n)fault<=0;
+   else if(bad_source || bad_range || scalar_bad || |group_fault)fault<=1;
+ end endgenerate
  // ---- bank-write landing stage (WPIPE): fault checks above keep the raw inputs (unchanged fault edges)
  wire [7:0] w_stage_v; wire [15:0] w_stage_group; wire [8*LWB-1:0] w_stage_addr; wire [63:0] w_stage_mask;
  wire [2047:0] w_stage_data; wire [15:0] w_vm_we; wire [383:0] w_vm_waddr; wire [511:0] w_vm_wdata;
