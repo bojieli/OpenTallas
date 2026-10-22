@@ -296,6 +296,49 @@ def pin_regs_plan(s: dict) -> dict | None:
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
 
 
+# spec "clock_rc_cal_measure" (HBMb/HC 10-21, opt-in): a clock_spine.tcl tree is balanced on the RCX-calibrated clock
+# wire RC (OT_RC_CAL, tools/orfs_hold_mm.tcl) and the hold flow times it on that RC, and main f02b312f0 measures
+# spine-clocked CTS odbs on it in ck_insertion.py; the in-flow hybrid clock rule (ot_ce_apply) still measured on the
+# platform setRC (C 0.145 vs 0.105 fF/um) and stopped wire-dominated island spines (E2 rw13isc h1 129 vs 26.7 balanced,
+# rw14is d0 93 vs 26.1).  This wraps ONE ot_ce_apply call in the same calibrated RC when (a) clock spine cells
+# clkbuf_sp_* exist and (b) the spine is not detail-routed (no dbWire): placement (CTS) and global-route (GRT)
+# estimates only; routed / SPEF measurements are unchanged.  The platform RC is restored and re-estimated after.
+CE_RC_CAL_TCL = r'''proc ot_ce_rc_cal_begin {} {
+  set ::ot_ce_rcc ""
+  if {![llength [info commands ot_rc_cal_apply]] || ![llength [info commands ord::get_db_block]]} {
+    puts "OT_CE_RC_CAL off: no ot_rc_cal_apply in this stage"; return
+  }
+  set sp ""
+  foreach i [[ord::get_db_block] getInsts] { if {[string match clkbuf_sp_* [$i getName]]} { set sp $i; break } }
+  if {$sp eq ""} { puts "OT_CE_RC_CAL off: no clock spine cells"; return }
+  foreach it [$sp getITerms] {
+    set n [$it getNet]
+    if {$n ne "NULL" && [$it isOutputSignal] && [$n getWire] ne "NULL"} { puts "OT_CE_RC_CAL off: spine detail-routed"; return }
+  }
+  set mode [ot_rc_cal_mode]
+  if {[ot_rc_cal_apply spine]} {
+    estimate_parasitics $mode
+    set ::ot_ce_rcc $mode
+    puts "OT_CE_RC_CAL on: hybrid clock rule measured on the calibrated spine clock RC ($mode)"
+  }
+}
+proc ot_ce_rc_cal_end {} {
+  if {[info exists ::ot_ce_rcc] && $::ot_ce_rcc ne ""} {
+    ot_rc_cal_restore
+    estimate_parasitics $::ot_ce_rcc
+    set ::ot_ce_rcc ""
+  }
+}
+'''
+
+
+def _ce_rc_cal_wrap(text: str) -> str:
+    lines = text.rstrip("\n").split("\n")
+    if lines[-1].strip() != "ot_ce_apply":
+        raise SpecError("clock_rc_cal_measure: generated clock_entry.sdc no longer ends with one ot_ce_apply call")
+    return "\n".join(lines[:-1]) + "\n" + CE_RC_CAL_TCL + "ot_ce_rc_cal_begin\not_ce_apply\not_ce_rc_cal_end\n"
+
+
 def ce_generate(s: dict) -> str:
     """clock_entry_constraints.generate with the CDC fsm_extract guard (cdc_fsm_guard.py) after the CDC bindings."""
     return cdc_fsm_guard.splice(clock_entry_constraints.generate(s, ROOT), s)
@@ -1991,6 +2034,8 @@ def gen_hooks(s: dict, kd: str) -> dict:
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
+        if s.get("clock_rc_cal_measure"):
+            files["clock_entry.sdc"] = _ce_rc_cal_wrap(files["clock_entry.sdc"])
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
