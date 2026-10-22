@@ -1,16 +1,8 @@
-// Opt-in flat input for the canonical regional landing generator.
+// Flat three-child input to the canonical three-root landing generator.
+// Physical successor to both r2 clock failures. The generated parent gives LK, SQ and VC
+// separate roots and lands every cross-region net with two real edges; SQ/VC feedback gains four edges.
+// Closed child RTL is unchanged. The full programme producer explicitly books the new calendar.
 `timescale 1ns/1ps
-// PL-SEQ option B (PARENTS-LANDED decision 10-18 06:22): dsdv_seq_host_c = the COMPACT CORE of dsdv_seq_host -- leaves
-// L0 dsdv_sh_lk, L1 dsdv_sh_sq, L2 dsdv_sh_vc only, pin-abutted (~255 x 471 um < 1 mm): ONE clock region, no landings
-// (the L1 <-> L2 calendar loop and the L0 status fold stay in-region; nothing is re-scheduled).  The two registered rung
-// hops L3 / L4 (dsdv_sh_ft) of dsdv_seq_host are NOT in the hardened parent: the vc N face rung (vo_n / vi_n) leaves the
-// core directly and the col-4 lane seqhost -> s_4N is a DIE lane on CLOSED 276-b dvrlyh relays (die record counts them).
-// Same leaves, nets and parameters as dsdv_seq_host (CHILD_MUT / STAGE pass through to the leaves; CHILD_MUT 3 is the lane's).
-// Latency vs dsdv_seq_host: rung vi_s -> vo_n and vi_n -> vo_s 6 -> 4 edges inside the parent (+ k die-lane relay
-// stages; k = 2 reproduces dsdv_seq_host exactly, test/dsdv_seq_host_bw.sv); every other port unchanged; reset unchanged.
-// S81-GUSEQ 10-18: L0 = dsdv_sh_lk RL 1 (S81-SHLK2: rung landed at both lk faces, ONE CTS root ck -- ck_ih / ck_ic gone):
-// Hardened (define OT_DSDV_SEQHOST_HARD): children without #() (hard views carry the default = hardened config).
-// in-parent rung 4 + RL = 5 edges each way (V south command -> vo_s 7 + RL); host path f_host -> s_hw / t_host = golden + 2 (APIPE 7).
 module dsdv_seq_host_c_r3 #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer CHILD_MUT = 0, parameter integer RL = 1) (
     input  wire          ck,
     input  wire          rst_n,
