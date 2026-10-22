@@ -192,6 +192,11 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: claude/tokc-oomadj-1022 ded87247b (URGENT TOKc-OOM). closure_loop.py only changes the die
+    # job OOM probe/adjust value (-1000 -> -999, -1000 processes left untouched); no gate verdict or route helper changes.
+    "ded87247b93bc390636bc661eaec6ecbdcb198d7": dict(
+        kind="neutral",
+        what="closure_loop die oom_score_adj -1000 -> -999; process protection only, no gate check"),
     # ROOT-MERGE-1022 10-22: 0c6c603fa (same branch): clock_entry_constraints landed_band record type + half-landing port
     # multicycles, only through a spec's landed_band key (absent = lp-record SDC sha identical) -> no older gate changes.
     "0c6c603fa825799b1ffaf8c66292016122daed92": dict(
