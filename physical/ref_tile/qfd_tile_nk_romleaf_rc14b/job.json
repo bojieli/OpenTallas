@@ -12,8 +12,8 @@
   "extra_paths": [
    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
-   "results/arch/qwen_romleaf_1552/bench/parent_nk_clock_mutant.log",
-   "results/arch/qwen_romleaf_1552/bench/parent_nk_positive.log",
+   "results/arch/codex_qw_a0_2000_1021/parent_native_clock_MUT4_FAIL.log",
+   "results/arch/codex_qw_a0_2000_1021/parent_native_PASS.log",
    "rtl/lib/ot_rst_relay.sv",
    "rtl/physical/ot_qwen_tile_lsl_fp1.sv",
    "rtl/physical/ot_qwen_tile_node.sv",
@@ -63,7 +63,7 @@
      "verilator"
     ],
     "pass_regex": "^ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560",
-    "pass_witness": "results/arch/qwen_romleaf_1552/bench/parent_nk_positive.log"
+    "pass_witness": "results/arch/codex_qw_a0_2000_1021/parent_native_PASS.log"
    },
    {
     "name": "parent_native_leaf_clock_4",
@@ -75,7 +75,7 @@
      "verilator"
     ],
     "fail_regex": "ROMLEAF_PARENT_NK_NATIVE_FAIL|ROMLEAF_PARENT_NK_MISMATCH",
-    "fail_witness": "results/arch/qwen_romleaf_1552/bench/parent_nk_clock_mutant.log"
+    "fail_witness": "results/arch/codex_qw_a0_2000_1021/parent_native_clock_MUT4_FAIL.log"
    }
   ],
   "calibrate": {

@@ -1,0 +1,72 @@
+Host: ot-pve1
+Original path: /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_rc13b-20261021-034605
+average displacement        0.8 u
+max displacement           73.8 u
+original HPWL         4084361.1 u
+legalized HPWL        4262579.2 u
+delta HPWL                    4 %
+
+Took 241 seconds: detailed_placement
+optimize_mirroring
+[INFO DPL-0020] Mirrored 80085 instances
+[INFO DPL-0021] HPWL before          4262579.2 u
+[INFO DPL-0022] HPWL after           4234202.4 u
+[INFO DPL-0023] HPWL delta               -0.7 %
+Took 8 seconds: optimize_mirroring
+OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring
+detailed_placement
+[INFO DPL-0006] Core area: 737183.46 um^2
+[INFO DPL-0007] Movable instances area: 26765.02 um^2
+[INFO DPL-0008] Fixed instances area within core: 324526.22 um^2
+[INFO DPL-0009] Utilization: 47.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 224567 cells
+[INFO DPL-0393]   height 408 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+[INFO DPL-0393]   height 1600 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         26 |        26 |         0
+        1 |         26 |        26 |         0
+        2 |         26 |        26 |         0
+        3 |         26 |        26 |         0
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 26 for 3 consecutive iterations.
+Using old diamond search for 26 remaining illegal cells.
+diamond recovery: recovered 0/26 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |         26 |        26 |         0
+      403 |         26 |        26 |         0
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 26 for 3 consecutive iterations. Using diamond search for 26 remaining illegal cells.
+diamond recovery: recovered 0/26 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 26
+[INFO DPL-0500] Runtime: 32.42s
+Placement Analysis
+---------------------------------
+total displacement      46381.6 u
+average displacement        0.2 u
+max displacement            1.6 u
+original HPWL         4234202.4 u
+legalized HPWL        4262577.6 u
+delta HPWL                    1 %
+
+Took 33 seconds: detailed_placement
+[WARNING DPL-0004] Placed in rows check failed (8).
+ wire61402
+ wire61936
+ wire61938
+ wire61949
+ wire61971
+ wire62023
+ wire62348
+ wire62361
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+write_db /work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 42 DPL-0033
+Elapsed time: 5:44.53[h:]min:sec. CPU time: user 341.13 sys 3.37 (99%). Peak memory: 3374788KB.

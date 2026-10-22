@@ -31,5 +31,13 @@
     "repaired_odb_sha256": "414200c014ee74e17dcb176011f542a7f0c1acae2d47521ef5c635dd1637f888"
   },
   "canonical_source_policy": "Evolved canonical files preserved; isolated byte-exact baseline selection manifest.",
-  "node_view_binding": "Exact CLOSED NB1 published packet f6e8b355 in own fresh directory; inherited source marker not altered."
+  "node_view_binding": "Exact CLOSED NB1 published packet f6e8b355 in own fresh directory; inherited source marker not altered.",
+  "existing_component_bench": {
+    "verilator": "5.050",
+    "source_commit": "712494b5e",
+    "positive": "PASS checks6399 valids2560 nonzero2560",
+    "mutant": "MUT4 FAIL errors1200 checks6399 valids2560; samecompiledbinary",
+    "source_inventory": "results/arch/codex_qw_a0_2000_1021/parent_native_sources.sha256",
+    "scope": "Original native-parent component obligation, not full REGROOT9 die-token numerical execution. Physical revision changes no RTL logic."
+  }
 }

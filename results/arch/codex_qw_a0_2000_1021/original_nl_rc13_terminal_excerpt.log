@@ -1,0 +1,72 @@
+Host: ot-epyc6
+Original path: /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_romleaf_rc13-20261021-034456
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 210090 cells
+[INFO DPL-0393]   height 408 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         31 |        31 |         0
+        1 |         31 |        31 |         0
+        2 |         31 |        31 |         0
+        3 |         31 |        31 |         0
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 31 for 3 consecutive iterations.
+Using old diamond search for 31 remaining illegal cells.
+diamond recovery: recovered 0/31 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |         31 |        31 |         0
+      403 |         31 |        31 |         0
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 31 for 3 consecutive iterations. Using diamond search for 31 remaining illegal cells.
+diamond recovery: recovered 0/31 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 31
+[INFO DPL-0500] Runtime: 13.68s
+Placement Analysis
+---------------------------------
+total displacement      42692.1 u
+average displacement        0.2 u
+max displacement            1.6 u
+original HPWL         3463187.6 u
+legalized HPWL        3488137.6 u
+delta HPWL                    1 %
+
+Took 14 seconds: detailed_placement
+[WARNING DPL-0004] Placed in rows check failed (31).
+ wire47203
+ wire47805
+ wire47815
+ wire47912
+ wire48469
+ wire48476
+ wire48480
+ wire48483
+ wire48486
+ wire48487
+ wire48493
+ wire48494
+ wire48495
+ wire48496
+ wire48500
+ wire48541
+ wire48550
+ wire48555
+ wire48690
+ wire48691
+ wire48692
+ wire48700
+ wire48706
+ wire48720
+ wire48733
+ wire48751
+ wire49832
+ wire49836
+ wire49838
+ wire49846
+ wire49855
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+write_db /work/results/asap7/opentallas_qfd_tile_nl_rp2_romleaf_rr_asap7_ref_gate/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 42 DPL-0033
+Elapsed time: 1:48.69[h:]min:sec. CPU time: user 106.59 sys 2.08 (99%). Peak memory: 3321920KB.

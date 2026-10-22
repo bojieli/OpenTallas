@@ -1,0 +1,72 @@
+Host: ot-pve1
+Original path: /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_romleaf_rc13-20261021-034557
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |        198 |        66 |       111
+      403 |        198 |        66 |       111
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 198 for 3 consecutive iterations. Using diamond search for 66 remaining illegal cells.
+diamond recovery: recovered 0/66 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 66
+[INFO DPL-0500] Runtime: 225.94s
+Placement Analysis
+---------------------------------
+total displacement     116640.4 u
+average displacement        0.4 u
+max displacement           53.9 u
+original HPWL         4355349.1 u
+legalized HPWL        4408172.9 u
+delta HPWL                    1 %
+
+Took 226 seconds: detailed_placement
+[WARNING DPL-0004] Placed in rows check failed (19).
+ clkbuf_0_ck_de
+ clkbuf_0_ck_dw
+ clkbuf_1_1_0_ck_de
+ clkbuf_1_1_0_ck_dw
+ clkbuf_leaf_15_ot_ckkm_ck_dw_10_clk
+ clkbuf_leaf_26_ck_tx5
+ clkbuf_leaf_27_ck_tx5
+ clkbuf_leaf_30_ck_tx6
+ clkbuf_leaf_31_ck_tx5
+ clkbuf_leaf_4_ot_ckkm_ck_dw_9_clk
+ clkbuf_leaf_5_ot_ckkm_ck_dw_9_clk
+ clkload184
+ hold100768
+ hold101030
+ hold103439
+ hold104186
+ hold104396
+ hold104588
+ hold85535
+[WARNING DPL-0005] Overlap check failed (14).
+ clkbuf_0_ck_de (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1417_2_Right_14145 (TAPCELL_ASAP7_75t_R)
+ clkbuf_0_ck_dw (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1441_3_Left_12561 (TAPCELL_ASAP7_75t_R)
+ clkbuf_1_1_0_ck_de (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1475_3_Right_14203 (TAPCELL_ASAP7_75t_R)
+ clkbuf_1_1_0_ck_dw (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1496_3_Left_12616 (TAPCELL_ASAP7_75t_R)
+ clkbuf_2_1__f_ck_tx2 (BUFx24_ASAP7_75t_R) overlaps clkbuf_2_0__f_ck_tx2 (BUFx24_ASAP7_75t_R)
+ clkbuf_leaf_15_ot_ckkm_ck_dw_10_clk (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1941_2_Right_25789 (TAPCELL_ASAP7_75t_R)
+ clkbuf_leaf_26_ck_tx5 (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1478_3_Right_14206 (TAPCELL_ASAP7_75t_R)
+ clkbuf_leaf_27_ck_tx5 (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1435_3_Right_14163 (TAPCELL_ASAP7_75t_R)
+ clkbuf_leaf_30_ck_tx6 (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1919_3_Right_17847 (TAPCELL_ASAP7_75t_R)
+ clkbuf_leaf_31_ck_tx5 (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1270_2_Right_13998 (TAPCELL_ASAP7_75t_R)
+ clkbuf_leaf_4_ot_ckkm_ck_dw_9_clk (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1896_2_Right_25744 (TAPCELL_ASAP7_75t_R)
+ clkbuf_leaf_5_ot_ckkm_ck_dw_9_clk (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1853_2_Right_25701 (TAPCELL_ASAP7_75t_R)
+ clkload184 (BUFx24_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1271_2_Left_12391 (TAPCELL_ASAP7_75t_R)
+ clkload484 (BUFx24_ASAP7_75t_R) overlaps clkbuf_leaf_39_ck_tx2 (BUFx24_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (14).
+ clkbuf_0_ck_de
+ clkbuf_0_ck_dw
+ clkbuf_1_1_0_ck_de
+ clkbuf_1_1_0_ck_dw
+ clkbuf_2_1__f_ck_tx2
+ clkbuf_leaf_15_ot_ckkm_ck_dw_10_clk
+ clkbuf_leaf_26_ck_tx5
+ clkbuf_leaf_27_ck_tx5
+ clkbuf_leaf_30_ck_tx6
+ clkbuf_leaf_31_ck_tx5
+ clkbuf_leaf_4_ot_ckkm_ck_dw_9_clk
+ clkbuf_leaf_5_ot_ckkm_ck_dw_9_clk
+ clkload184
+ clkload484
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: cts.tcl, 83 DPL-0033
+Elapsed time: 4:22:15.47[h:]min:sec. CPU time: user 16533.65 sys 160.15 (106%). Peak memory: 6222868KB.

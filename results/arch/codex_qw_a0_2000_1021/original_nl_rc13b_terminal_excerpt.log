@@ -1,0 +1,72 @@
+Host: ot-epyc6
+Original path: /srv/opentallas-scratch/claude/ref_gate/qfd_tile_nl_romleaf_rc13b-20261021-034439
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |         60 |        40 |        10
+      403 |         60 |        40 |        10
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 60 for 3 consecutive iterations. Using diamond search for 40 remaining illegal cells.
+diamond recovery: recovered 0/40 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 40
+[INFO DPL-0500] Runtime: 16.53s
+Placement Analysis
+---------------------------------
+total displacement      43108.7 u
+average displacement        0.2 u
+max displacement            1.6 u
+original HPWL         3500704.8 u
+legalized HPWL        3525925.9 u
+delta HPWL                    1 %
+
+Took 17 seconds: detailed_placement
+[WARNING DPL-0004] Placed in rows check failed (36).
+ wire47793
+ wire47804
+ wire47805
+ wire47811
+ wire47812
+ wire47818
+ wire47823
+ wire47826
+ wire47866
+ wire47886
+ wire47892
+ wire47901
+ wire48140
+ wire48144
+ wire48147
+ wire48154
+ wire48156
+ wire48157
+ wire48169
+ wire48171
+ wire48178
+ wire48198
+ wire48205
+ wire48215
+ wire49442
+ wire49449
+ wire49456
+ wire49459
+ wire49471
+ wire49473
+ wire49488
+ wire49492
+ wire49496
+ wire49520
+ wire49525
+ wire49534
+[WARNING DPL-0005] Overlap check failed (5).
+ wire47811 (BUFx16f_ASAP7_75t_R) overlaps PHY_EDGE_ROW_2062_2_Left_16382 (TAPCELL_ASAP7_75t_R)
+ wire47892 (BUFx16f_ASAP7_75t_R) overlaps PHY_EDGE_ROW_2046_2_Left_16366 (TAPCELL_ASAP7_75t_R)
+ wire49492 (BUFx16f_ASAP7_75t_R) overlaps PHY_EDGE_ROW_2018_2_Left_16338 (TAPCELL_ASAP7_75t_R)
+ wire49511 (BUFx16f_ASAP7_75t_R) overlaps PHY_EDGE_ROW_2057_2_Left_16377 (TAPCELL_ASAP7_75t_R)
+ wire49534 (BUFx16f_ASAP7_75t_R) overlaps PHY_EDGE_ROW_2072_3_Left_16392 (TAPCELL_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (5).
+ wire47811
+ wire47892
+ wire49492
+ wire49511
+ wire49534
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+write_db /work/results/asap7/opentallas_qfd_tile_nl_rp2_romleaf_rr_asap7_ref_gate/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 42 DPL-0033
+Elapsed time: 1:56.79[h:]min:sec. CPU time: user 114.59 sys 2.19 (99%). Peak memory: 3325692KB.
