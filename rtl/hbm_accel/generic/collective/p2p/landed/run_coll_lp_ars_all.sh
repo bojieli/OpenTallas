@@ -59,7 +59,9 @@ if [ "$WHICH" = fjmut ]; then
   # programme by construction: the host contract leaves 55 edges after a row's final frame, so no frame meets the drain's
   # last edge.  It is rejected by the beyond-contract random miter run_coll_pt_s128_miter.sh ldhnofwd.)
   nrej=0; nall=0
-  for m in "m_lastale +define+OT_PT_MUT_LA_STALE"; do
+  # ars256: the s256 body has its own define (the ROWS-256 reference programme target also reads OT_PT_MUT_LA_STALE).
+  LA_DEF=OT_PT_MUT_LA_STALE; [ "$SFX" = ars256 ] && LA_DEF=OT_PT256_MUT_LA_STALE
+  for m in "m_lastale +define+$LA_DEF"; do
     set -- $m; eq $1 $2; nall=$((nall+1))
     if grep -q '^LPF_EQ FAIL' "$OUT/$1.log" 2>/dev/null; then echo "EQ_MUTANT $1 REJECTED"; nrej=$((nrej+1)); else echo "EQ_MUTANT $1 SURVIVED"; fi
   done

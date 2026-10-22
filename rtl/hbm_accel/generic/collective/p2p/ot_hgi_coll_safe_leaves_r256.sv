@@ -16,7 +16,9 @@
 //  * mode-0 cfg row word carries row[7:6] in cfg[9:8] (the reference's PW 8 encoding), flow word {halt, rep, tgt[7:0], nx[7:0]}
 //    with pc MSBs from metadata[55:54] (tgt[7], nx[7]) / [52:51] (tgt[6], nx[6]).
 // Schedule: 0 port edges moved -> 0 cycles.  Bench: tb_hfd_coll_<v>_lpf_ars256_eq (parent lockstep vs v8x/v8g #(AR_ITER 1,
-// ROWS 256)); mutant OT_PT_MUT_LA_STALE (lookahead never advances) must FAIL it.
+// ROWS 256)) + random miter tb_hgi_coll_pt_s256_miter (run_coll_pt_s256_miter.sh) vs program_target #(ROWS 256).  The s256
+// mutants have their own defines OT_PT256_MUT_* (the reference #(ROWS 256) also reads OT_PT_MUT_LA_STALE, which would freeze
+// both sides): lastale (SRAM flow / loaded lookahead never advance) and ldhnofwd must FAIL the miter.
 
 module ot_hgi_coll_static_program_target_s256 #(
     parameter [7:0] TARGET=8'd52,
@@ -63,7 +65,7 @@ module ot_hgi_coll_static_program_target_s256 #(
     reg [PW:0] limit;
     reg ld_la;
     reg fw_q;reg [PW-1:0] fa_q;reg [FW-1:0] fd_q;
-`ifdef OT_PT_MUT_LATE_SPC
+`ifdef OT_PT256_MUT_LATE_SPC
     localparam integer PCREG=1;
 `else
     localparam integer PCREG=(ASSEMBLY_PIPE==0);
@@ -123,7 +125,7 @@ module ot_hgi_coll_static_program_target_s256 #(
         ahb_q<=(cfg_addr[11]!=1'b0);
         dsp_q<=(cfg_data[255:64]!=0) || ((cfg_data[63:51]&MSPARE)!=0);
         dbad_q<=(desc_base>=ROWS) || (desc_limit>ROWS) || (desc_limit<={1'b0,desc_base}) || (desc_loops!=1);
-`ifdef OT_PT_MUT_LDH_NOFWD
+`ifdef OT_PT256_MUT_LDH_NOFWD
         ldh_q<=cfg_loaded;                                      // mutant: same-edge drain completion not forwarded
 `else
         ldh_q<=cfg_loaded || (drain_done && row==c_row);
@@ -229,7 +231,7 @@ module ot_hgi_coll_static_program_target_s256 #(
     end endgenerate
     wire fw=frame && !frame_bad && seg_q[6];
     wire [FW-1:0] fwd={data_q[44],|data_q[43:12],data_q[55],data_q[52],data_q[11:6],data_q[54],data_q[51],data_q[5:0]};
-`ifdef OT_PT_MUT_LA_STALE
+`ifdef OT_PT256_MUT_LA_STALE
     wire fr=dacc;                                                  // mutant: lookahead never advances
 `else
     wire fr=dacc || (checking && check_row!=PW'(ROWS-1));
@@ -257,7 +259,7 @@ module ot_hgi_coll_static_program_target_s256 #(
                     else if(!fault)configured<=1;
                 end else begin
                     check_row<=check_row+1'b1;
-`ifndef OT_PT_MUT_LA_STALE
+`ifndef OT_PT256_MUT_LA_STALE
                     ld_la<=scan_loaded;
 `endif
                 end
@@ -287,7 +289,7 @@ module ot_hgi_coll_static_program_target_s256 #(
                 if(!dacc)fault<=1;
                 else begin
                     if(ASSEMBLY_PIPE==0)begin base<=base_q[PW-1:0];limit<=limit_q[PW:0];end configured<=0;
-`ifndef OT_PT_MUT_LATE_SPC
+`ifndef OT_PT256_MUT_LATE_SPC
                     if(PCREG!=0)issuer_start_pc<=base_q[PW-1:0];                     // mutant: start_pc only at launch (v7 start faults)
 `endif
                     checking<=1;check_row<=0;check_bad<=0;init_busy<=1;
