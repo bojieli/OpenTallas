@@ -1,0 +1,61 @@
+{
+  "record": {
+    "k": 43,
+    "L": 0,
+    "layer": 0,
+    "op": "SU.VOP",
+    "tag": "router_act",
+    "family": "router_act",
+    "occ": 0,
+    "desc": {
+      "A": [
+        87556,
+        4,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "O": [
+        87556,
+        4,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ]
+    },
+    "inputs": {
+      "A": {
+        "space": "VM",
+        "array": "r1.k43.A",
+        "words": 4,
+        "sha256": "6011bc5f79f396ec1079d7b314f317a562fb84c9e103d1122db0dd64790257ad"
+      }
+    },
+    "outputs": {
+      "O": {
+        "space": "VM",
+        "array": "r1.k43.O",
+        "words": 4,
+        "sha256": "88542fa4e90727eeacecd1cac0d4f08ad490038d7cad61f2eafadf2a02b77818"
+      }
+    },
+    "k_layer": 43
+  },
+  "input_words": [
+    3227844144,
+    3209637162,
+    3215272846,
+    3221433432
+  ],
+  "comparison_only_output_words": [
+    1042937268,
+    1058756770,
+    1056730579,
+    1051866320
+  ],
+  "source_records_sha256": "cb5ebc2ed017b9a045e9011735c773dae67f252d76d88708d264af62663aadb2"
+}

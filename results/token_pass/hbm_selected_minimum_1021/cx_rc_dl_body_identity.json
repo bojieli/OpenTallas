@@ -1,0 +1,77 @@
+{
+  "status": "EXACT_MODULE_BODY_IDENTITY",
+  "observed_at": "2026-10-21T22:57:22.077245-07:00",
+  "source_file": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+  "note": "The containing file changed only IJ variants; these RC/DL roots and epoch helper are byte-identical with unchanged explicit parameters. This refines the conservative full-file matrix and allows preserving existing compiled vehicle for these modules; it is not a terminal simulation PASS.",
+  "instances": [
+    "cxdl_NE0_s",
+    "cxdl_NE0_q",
+    "cxdl_NE1_s",
+    "cxdl_NE1_q",
+    "cxdl_NE2_s",
+    "cxdl_NE2_q",
+    "cxdl_NE3_s",
+    "cxdl_NE3_q",
+    "cxdl_NW0_s",
+    "cxdl_NW0_q",
+    "cxdl_NW1_s",
+    "cxdl_NW1_q",
+    "cxdl_NW2_s",
+    "cxdl_NW2_q",
+    "cxdl_NW3_s",
+    "cxdl_NW3_q",
+    "cxdl_SE0_s",
+    "cxdl_SE0_q",
+    "cxdl_SE1_s",
+    "cxdl_SE1_q",
+    "cxdl_SE2_s",
+    "cxdl_SE2_q",
+    "cxdl_SE3_s",
+    "cxdl_SE3_q",
+    "cxdl_SW0_s",
+    "cxdl_SW0_q",
+    "cxdl_SW1_s",
+    "cxdl_SW1_q",
+    "cxdl_SW2_s",
+    "cxdl_SW2_q",
+    "cxdl_SW3_s",
+    "cxdl_SW3_q",
+    "cxrc_NE_s",
+    "cxrc_NE_q",
+    "cxrc_NW_s",
+    "cxrc_NW_q",
+    "cxrc_SE_s",
+    "cxrc_SE_q",
+    "cxrc_SW_s",
+    "cxrc_SW_q"
+  ],
+  "bodies": {
+    "ot_hbm_su_cx_epoch": {
+      "bytes": 596,
+      "frozen_sha256": "798dba83b7e1751973f37549c0799f415de16ce87dd2dce0da947861d94eeaa3",
+      "selected_sha256": "798dba83b7e1751973f37549c0799f415de16ce87dd2dce0da947861d94eeaa3"
+    },
+    "ot_hbm_su_static_cxport_dl_q": {
+      "bytes": 1519,
+      "frozen_sha256": "54ced2695cfa626d47208908bd602588bec2746508aa0e86b88432861d1235bb",
+      "selected_sha256": "54ced2695cfa626d47208908bd602588bec2746508aa0e86b88432861d1235bb"
+    },
+    "ot_hbm_su_static_cxport_dl_s": {
+      "bytes": 1131,
+      "frozen_sha256": "7493c0c36d80c413f5b52968083d4e35292d9cd6898367f660629adcb72f58cc",
+      "selected_sha256": "7493c0c36d80c413f5b52968083d4e35292d9cd6898367f660629adcb72f58cc"
+    },
+    "ot_hbm_su_static_cxport_rc_q": {
+      "bytes": 3275,
+      "frozen_sha256": "86603cb34fd44bd70b2b2e85bfe4c98267616b2a1c8e6f5f337b06808e4b69e2",
+      "selected_sha256": "86603cb34fd44bd70b2b2e85bfe4c98267616b2a1c8e6f5f337b06808e4b69e2"
+    },
+    "ot_hbm_su_static_cxport_rc_s": {
+      "bytes": 2003,
+      "frozen_sha256": "3a897ff2d76ca74d9df992d25528639541e18f7d0f59aec4371bb91ee4a9f131",
+      "selected_sha256": "3a897ff2d76ca74d9df992d25528639541e18f7d0f59aec4371bb91ee4a9f131"
+    }
+  },
+  "source_rev": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+  "ij_reuse": false
+}

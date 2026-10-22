@@ -21,5 +21,11 @@
       "events_plus_end": 459
     }
   ],
-  "expected_outputs": "Original native reference slices are comparisons only; they never seed VM. Runtime VM image contains four original router A words plus zero inactive padding."
+  "expected_outputs": "Original native reference slices are comparisons only; they never seed VM. Runtime VM image contains four original router A words plus zero inactive padding.",
+  "upper_word_masks": [
+    48,
+    192
+  ],
+  "upper_mask_source": "Actual TP96 rank1 router A4, native input SHA6011bc5f79f396ec1079d7b314f317a562fb84c9e103d1122db0dd64790257ad; O values comparison only.",
+  "coverage": "All four actual native two-word masks03/0c/30/c0, with nonzero untouched neighbour inputs and64-edge retention checked; no new frontend."
 }
