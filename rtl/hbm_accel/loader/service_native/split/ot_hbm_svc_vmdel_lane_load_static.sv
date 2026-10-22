@@ -125,7 +125,7 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
  for(genvar c=0;c<NPC*2;c=c+1)begin:window_decode
   (* keep_hierarchy="yes" *) ot_hbm_dma_window_decode #(.NPC(NPC),.COPY_ID(c)) u(
    .start(start),.base(start_base_sector),.bad(bad),.running(running),.owned(owned),.ready(block_ready_c),
-   .bank(start_bank),.epoch_bank(start_bank_epoch),.epoch(start_epoch),.epoch0(epoch0),.epoch1(epoch1),
+   .clk(clk),.start_bank_i(start_bank_i),.epoch(start_epoch),.epoch0(epoch0),.epoch1(epoch1),
    .landing_fault(landing_fault),.slot(slot_q),.group_id(group_q),
    .lstart(local_lstart[c]),.start_ok(local_start_ok[c]),.raw_done(local_raw_done[c]));
  end
@@ -345,12 +345,14 @@ endmodule
 
 (* keep_hierarchy="yes" *)
 module ot_hbm_dma_window_decode #(parameter NPC=2,COPY_ID=0)(
- input wire start,bad,running,bank,epoch_bank,landing_fault,
+ input wire clk,start_bank_i,start,bad,running,landing_fault,
  input wire[15:0]base,epoch,epoch0,epoch1,input wire[1:0]owned,ready,
  input wire[5:0]slot,input wire[1:0]group_id,output wire lstart,start_ok,raw_done);
+ (* keep="true" *)reg bank;
+ always @(posedge clk)bank<=start_bank_i;
  wire aperture_ok=base[4:0]==0&&base[12:0]<=13'(8192-512*NPC)&&(!base[15]||base[14:13]==0);
  assign lstart=start&&aperture_ok&&!bad;
- assign start_ok=lstart&&!running&&owned[bank]&&ready[bank]&&epoch==(epoch_bank?epoch1:epoch0)&&!landing_fault;
+ assign start_ok=lstart&&!running&&owned[bank]&&ready[bank]&&epoch==(bank?epoch1:epoch0)&&!landing_fault;
  assign raw_done=running&&slot==63&&group_id==NPC-1;
 endmodule
 
