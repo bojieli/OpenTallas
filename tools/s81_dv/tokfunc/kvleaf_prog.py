@@ -46,13 +46,19 @@ def main():
     ap.add_argument('--gain', required=True); ap.add_argument('--kv', required=True)
     ap.add_argument('--out', required=True); ap.add_argument('--t0', type=int, default=400)
     ap.add_argument('--mut-row', type=int, default=None)
+    ap.add_argument('--in-ports', default=','.join(map(str, PORT_L)),
+                    help='tb port indices of i__w_xrW_3N_l0..l3_src (cut-specific; G9 1452..1455, cap22 1760..1763)')
+    ap.add_argument('--out-ports', default='1444,1445,1446,1447',
+                    help='tb port indices of the E line out o__w_xrE_3N_l0..l3 (G9 _src 1444.., cap22 _lnd 1752..)')
     a = ap.parse_args()
+    pin = [int(x) for x in a.in_ports.split(',')]
+    assert len(pin) == 4
     G, KV = mem(a.gain), mem(a.kv)
     ev, plan, t = [], [], a.t0
 
     def put(b, what):
         nonlocal t
-        for l, port in enumerate(PORT_L):
+        for l, port in enumerate(pin):
             ev.append((t, port, (b >> (276 * l)) & ((1 << 276) - 1)))
             ev.append((t + 1, port, 0))                   # a ONE-cycle pulse of the producer register (dv_cut_replay)
         plan.append(dict(cycle=t, what=what))
@@ -80,7 +86,7 @@ def main():
     o = Path(a.out); o.mkdir(parents=True, exist_ok=True)
     ev.sort(key=lambda x: (x[0], x[1]))
     (o / 'in.txt').write_text(''.join(f'{c}.0 {p} {v:x}\n' for c, p, v in ev))
-    (o / 'plan.json').write_text(json.dumps(dict(sid=SID, src_sid=SRC_SID, hops=HOPS, mut_row=a.mut_row, end=t,
+    (o / 'plan.json').write_text(json.dumps(dict(sid=SID, src_sid=SRC_SID, hops=HOPS, mut_row=a.mut_row, end=t, in_ports=pin, out_ports=[int(x) for x in a.out_ports.split(',')],
                                                  rdout=rd, events=plan), indent=0) + '\n')
     print(f'kvleaf_prog: {len(plan)} CTL beats, last at {t}, NCYC >= {t + 200}')
 
