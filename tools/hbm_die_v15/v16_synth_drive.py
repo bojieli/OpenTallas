@@ -215,7 +215,7 @@ def main():
     idx = module_index(a.commit)
     lock, summary = threading.Lock(), {}
     pending = set(a.cells)
-    hosts = sorted(set(HOSTS.values()) - {'ot-epyc4'})
+    hosts = sorted(set(HOSTS.values()) - {'ot-epyc4', 'ot-epyc6'})   # HBMc/CHAIN 10-22: ot-epyc6 retired (no DNS) -> existing-job collection killed r17/r17c/r18e/r18f S6
     while pending:
         states = {}
         with ThreadPoolExecutor(max_workers=a.workers) as pool:
