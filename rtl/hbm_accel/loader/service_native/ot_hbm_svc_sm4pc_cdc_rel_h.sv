@@ -214,7 +214,11 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   end
  end
  // hc[0]: h_active, h_fresh, hbm_fault, hidle copies (7); hc[1] / hc[2]: rx_left of landing blocks 0-1 / 2-3 (24 each)
- always @(posedge hbm_clk or negedge hc[3])if(!hc[3])hfresh_k<=0;else hfresh_k<={32{descriptor_fire&&desc_good}};
+ // two kept ANDs (descriptor_fire && desc_good), 16 copies each (one AND drove 35-43 loads)
+ wire dfg_a,dfg_b;
+ ot_hbm_svc_local_and2 u_dfg_a(.a(descriptor_fire),.b(desc_good),.y(dfg_a));
+ ot_hbm_svc_local_and2 u_dfg_b(.a(descriptor_fire),.b(desc_good),.y(dfg_b));
+ always @(posedge hbm_clk or negedge hc[3])if(!hc[3])hfresh_k<=0;else hfresh_k<={{16{dfg_b}},{16{dfg_a}}};
  always @(posedge hbm_clk or negedge hc[0])begin
   if(!hc[0])begin h_active<=0;h_fresh<=0;hbm_fault<=0;hidle_k<={4{1'b1}};end
   else begin
@@ -260,18 +264,18 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  wire [LB-1:0] sbk0=start_bank_k[0+:LB],sbk1=start_bank_k[LB+:LB],sbk2=start_bank_k[2*LB+:LB];
  wire [LB-1:0] drain_bank_n=start_acc?sbk2:drain_bank;
  wire [10:0] drain_ordinal_n=(draining&&!fault&&!drain_last)?drain_ordinal+drain_count:(start_acc?11'd0:drain_ordinal);
- (* keep="true",dont_touch="true" *) reg [11*LB-1:0] dbank_v;   // k4 allocation clear, k5 out epoch hi, k6 out bank, k7..k10 bank-read totals lo/hi     // flat vectors: no memory inference under the async reset
+ (* keep="true",dont_touch="true" *) reg [12*LB-1:0] dbank_v;   // k4 allocation clear, k5 out epoch hi, k6 out bank, k7..k10 bank-read totals lo/hi, k11 drain total hi     // flat vectors: no memory inference under the async reset
  (* keep="true",dont_touch="true" *) reg [7*11-1:0] dord_v;
  always @(posedge stream_clk or negedge sc[2])
-  if(!sc[2])dbank_v<=0;else dbank_v<={11{drain_bank_n}};
+  if(!sc[2])dbank_v<=0;else dbank_v<={12{drain_bank_n}};
  for(genvar dg=0;dg<7;dg=dg+1)begin:g_dord_rst
   always @(posedge stream_clk or negedge sc[3+dg/2])
    if(!sc[3+dg/2])dord_v[dg*11+:11]<=0;else dord_v[dg*11+:11]<=drain_ordinal_n;
  end
- wire [LB-1:0] dbank_k[0:10];wire [10:0] dord_k[0:6];
- for(genvar dk=0;dk<11;dk=dk+1)begin:g_dbank assign dbank_k[dk]=dbank_v[dk*LB+:LB]; end
+ wire [LB-1:0] dbank_k[0:11];wire [10:0] dord_k[0:6];
+ for(genvar dk=0;dk<12;dk=dk+1)begin:g_dbank assign dbank_k[dk]=dbank_v[dk*LB+:LB]; end
  for(genvar dk=0;dk<7;dk=dk+1)begin:g_dord assign dord_k[dk]=dord_v[dk*11+:11]; end
- wire [11:0] drain_total=bank_total[dbank_k[0]];
+ wire [11:0] drain_total={bank_total[dbank_k[11]][11:6],bank_total[dbank_k[0]][5:0]};
  wire [11:0] drain_total_r[0:1];   // per landing-bank half (same value; drain_total had 35 loads)
  assign drain_total_r[0]={bank_total[dbank_k[9]][11:6],bank_total[dbank_k[7]][5:0]};
  assign drain_total_r[1]={bank_total[dbank_k[10]][11:6],bank_total[dbank_k[8]][5:0]};
