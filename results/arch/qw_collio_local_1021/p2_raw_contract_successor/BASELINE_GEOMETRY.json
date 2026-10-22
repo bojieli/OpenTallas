@@ -1,0 +1,16 @@
+{
+  "baseline_source": "342402a44",
+  "baseline_snapshot": "3b8e62e80fa82fd2f00796570ff4f5ba8a319edc00463195b22b167f1ffc2ad3",
+  "baseline_run": "ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_p_regional2_main-20261021-220613",
+  "successful_geometry_hook_sha256": {
+    "place.tcl": "a3f617478930506b595d64a57e658b968fe66665455832fd22cebb1eb481afac",
+    "pdn.tcl": "6122dcad76ff6802b3b7df64e38f22509bdbb636fdec0f44cdded192d3c855e7",
+    "pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
+    "pre_dpl.tcl": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9"
+  },
+  "frozen_geometry_paths": {
+    "place.tcl": "physical/ref_tile/qfd_coll_face_p_p2bind_main/p2_geometry/place.tcl",
+    "pdn.tcl": "physical/ref_tile/qfd_coll_face_p_p2bind_main/p2_geometry/pdn.tcl"
+  },
+  "scope": "one MAIN successor; exact original P2 place/PDN/preGPL/preDPL bytes, ordinary supported final orfs_vars overrides preserve frozen place/PDN. Canonical ownership validation requires replacing macro-selector globs by the six actual exact instance names; the frozen successful place hook still places exactly those same instances at original coordinates. Only raw ownership timing-contract and kit namespace change."
+}

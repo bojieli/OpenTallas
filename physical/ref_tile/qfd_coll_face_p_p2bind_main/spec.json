@@ -1,0 +1,540 @@
+{
+ "name": "qfd_coll_face_p_p2bind_main",
+ "top": "qfd_coll_face_p_pl",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_p_pl.sv",
+  "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+  "rtl/physical/ot_qfd_coll_static_face.sv",
+  "rtl/physical/ot_qfd_static_transport.sv",
+  "rtl/rom/ot_coll_static_linkcal.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "PLD": 2,
+  "PLK": 1
+ },
+ "clock_port": "cal_ck",
+ "clock_ports": [
+  "cal_ck",
+  "tx_wck",
+  "rx_rck",
+  "cal_lck",
+  "tx_rck",
+  "rx_wck",
+  "codec0",
+  "codec1",
+  "codec2",
+  "codec3",
+  "codec4",
+  "codec0p"
+ ],
+ "clock": "multiple_cts_roots",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cal_ck"
+   ],
+   "inputs": [
+    "rst_n",
+    "peer_slot",
+    "tx_slot",
+    "tx_valid",
+    "tx_data"
+   ],
+   "outputs": [
+    "cdc_fault"
+   ]
+  },
+  "txw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "tx_wck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rxr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rx_rck"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rx_valid",
+    "rx_data"
+   ]
+  },
+  "lcal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cal_lck"
+   ],
+   "inputs": [],
+   "outputs": [
+    "phy_tx_slot",
+    "phy_rx_slot"
+   ]
+  },
+  "txr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "tx_rck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rxw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rx_wck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec3"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec4"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec0p": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec0p"
+   ],
+   "inputs": [
+    "phy_up",
+    "phy_rx_valid",
+    "phy_rx"
+   ],
+   "outputs": [
+    "phy_tx_valid",
+    "phy_tx",
+    "epoch_abort",
+    "fault_cause"
+   ]
+  }
+ },
+ "outline": {
+  "w": 907.2,
+  "h": 907.2
+ },
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "inst": "u_body.u_tx.u_mem",
+   "count": 1,
+   "at": [
+    43.2,
+    648.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "inst": "u_body.u_rx.u_mem",
+   "count": 1,
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram",
+   "count": 1,
+   "at": [
+    345.6,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram",
+   "count": 1,
+   "at": [
+    345.6,
+    648.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram",
+   "count": 1,
+   "at": [
+    648.0,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram",
+   "count": 1,
+   "at": [
+    648.0,
+    648.0
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rx_valid",
+   "cdc_fault",
+   "rx_data",
+   "cal_ck",
+   "rx_rck",
+   "rx_wck",
+   "cal_lck",
+   "tx_data",
+   "tx_wck",
+   "tx_rck",
+   "tx_slot",
+   "peer_slot",
+   "tx_valid",
+   "rst_n",
+   "codec2"
+  ],
+  "E": [
+   "phy_rx_valid",
+   "codec3",
+   "phy_rx",
+   "phy_up",
+   "epoch_abort",
+   "fault_cause",
+   "codec0p",
+   "codec4",
+   "phy_tx",
+   "phy_tx_valid",
+   "phy_tx_slot",
+   "phy_rx_slot"
+  ],
+  "N": [],
+  "S": [
+   "codec1",
+   "codec0"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 10.8,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "inhold": true,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "SAFE/TOK_REG registered owning roots; exact calendar neutral. PHY-up captured; no extra automatic data stages."
+ },
+ "structural_change": "Native regional-tree production P face, six actual SRAM macros and explicit roots for calendar, two-clock channels, four banks and PHY. Removes hybrid hard-entry purity restriction by implementing the real sequential regions, not replacing a hard-child timing model. Local bank landing shares the bank SRAM tree; sticky fault returns use actual fixed-slot4/K2 rings. Larger frame and10.8um macro halos reserve landing and routing bands. Existing phase/calendar/CRC/data protocol maintained; status visibility is3edges later and must be measured. No threshold change/timing exception. Native source2 failure explicitly repaired: collision controls14groups, publication resets8bytegroups, write/version4groups, read-select4groups, eight final face-reset copies, all original stages retained. Source5 separates publication and seen address-select registers; source4 actually mapped33loads after aliasing the raw SRAM address. Identical capture edge, no extra stage.",
+ "slot_change_request": "P native regional frame 907.2 square; original734.4x864. Must reprice parent slot before binding.",
+ "job": {
+  "owner": "CODEX-QW-COLLIO-2000",
+  "branch": "codex/qw-collio-native-2000-1021",
+  "tag": "p2raw",
+  "purpose": "Exact successful unfenced P2 MAIN geometry with only authentic native-memory clock ownership contract correction",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_coll_face_p_pl #(.PLD(2), .PLK(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLL_BANK_LOCAL -DOT_COLL_REGIONAL --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qwen_coll_safe_1019/qfd_coll_face_p_pl.sv rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv rtl/physical/ot_qfd_coll_static_face.sv rtl/physical/ot_qfd_static_transport.sv rtl/rom/ot_coll_static_linkcal.sv rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_face_pass",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=20 FACE_R=5 FACE_PR=5 FACE_L=56 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/p_m0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_STATIC_FACE_BENCH PASS MUT=0$",
+    "pass_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_p_m0.log",
+    "min_count_regex": "^MUT=0 PHI=1 COLL_FACE_BENCH .* got (\\d+) "
+   },
+   {
+    "name": "coll_face_mut_rx_early",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=20 FACE_R=5 FACE_PR=5 FACE_L=56 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/p_m1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=1$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_p_m1.log"
+   },
+   {
+    "name": "coll_face_mut_cdc_latency",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=20 FACE_R=5 FACE_PR=5 FACE_L=56 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/p_m2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=2$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_p_m2.log"
+   },
+   {
+    "name": "coll_face_mut_phy_long",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=20 FACE_R=5 FACE_PR=5 FACE_L=56 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/p_m3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=3$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_p_m3.log"
+   },
+   {
+    "name": "coll_face_mut_bank_hit",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=20 FACE_R=5 FACE_PR=5 FACE_L=56 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/p_m4 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_p_m4.log"
+   },
+   {
+    "name": "coll_face_mut_ring_early",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=20 FACE_R=5 FACE_PR=5 FACE_L=56 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/p_m5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=5$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_p_m5.log"
+   },
+   {
+    "name": "coll_face_mut_land_unlanded",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=20 FACE_R=5 FACE_PR=5 FACE_L=56 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/p_m6 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=6$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_p_m6.log"
+   },
+   {
+    "name": "coll_face_mut_phyland_short",
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator REGIONAL=1 BANK_LOCAL=1 PLAND=1 PLD=2 PLK=1 PPH=0 FACE_FW=546 FACE_PHY=20 FACE_R=5 FACE_PR=5 FACE_L=56 SAFE=1 SIM=verilator HARD=0 bash rtl/test/run_coll_static_face.sh {RUN}/p_m7 7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=7$",
+    "fail_witness": "results/arch/qw_collio_local_1021/native_source5/regional_suite_p_m7.log"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile/qfd_coll_bank137/views",
+   "physical/ref_tile/qfd_static_ch546/views",
+   "results/rtl/qwen_coll_face_1018",
+   "rtl/test/run_coll_static_face.sh",
+   "rtl/test/tb_coll_static_face.sv",
+   "rtl/physical/qwen_coll_safe_1019",
+   "results/rtl/qwen_coll_safe_1019",
+   "tools/orfs_allcorner_spef.py",
+   "results/rtl/qw_collio_1020",
+   "results/arch/qw_collio_local_1021/native_source5"
+  ],
+  "views_to": "physical/ref_tile/qfd_coll_face_p_p2bind_main/views",
+  "record_to": "results/rtl/ref_tile/qfd_coll_face_p_p2bind_main"
+ },
+ "pin_ranges": {},
+ "hard_define": "OT_QFD_FACE_HARD",
+ "children": [],
+ "pg_layer": "M5",
+ "defines": [
+  "OT_COLL_BANK_LOCAL",
+  "OT_COLL_REGIONAL"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "cal_ck",
+  "copies": {
+   "rst_n": 8
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 8,
+  "allow_none": true
+ },
+ "inter": [],
+ "layer_cap": "M5",
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "std_area_um2": 7207.9,
+ "fill_reason": {
+  "pin_bound": "P source5 gate measured 2321 logical signal/clock pins and actual physical pin demand over 100% of each W/E edge (W1300 and E1403 including generated physical pin geometry). The 6-macro body is perimeter-limited; retain the outline and broad regional landing channels. Measured post-floorplan standard-cell area7207.9um2; failed placement area10744.1um2 is separately preserved, not used to claim dense fill."
+ },
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w2c_64x546_m1",
+  "ot_sram_1r1w_64x512_m1_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "codec1"
+  },
+  "u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "codec2"
+  },
+  "u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "codec3"
+  },
+  "u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "codec4"
+  },
+  "u_body.u_rx.u_mem": {
+   "master": "ot_sram_1r1w2c_64x546_m1",
+   "clock_pins": {
+    "wclk": "rx_wck",
+    "rclk": "rx_rck"
+   }
+  },
+  "u_body.u_tx.u_mem": {
+   "master": "ot_sram_1r1w2c_64x546_m1",
+   "clock_pins": {
+    "wclk": "tx_wck",
+    "rclk": "tx_rck"
+   }
+  }
+ },
+ "orfs_vars": {
+  "MACRO_PLACEMENT_TCL": "physical/ref_tile/qfd_coll_face_p_p2bind_main/p2_geometry/place.tcl",
+  "PDN_TCL": "physical/ref_tile/qfd_coll_face_p_p2bind_main/p2_geometry/pdn.tcl"
+ }
+}

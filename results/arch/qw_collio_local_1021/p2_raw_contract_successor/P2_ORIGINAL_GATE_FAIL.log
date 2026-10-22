@@ -1,0 +1,21 @@
+GATE WARN clock_span: 907.2 x 907.2 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE WARN fill: fill 11% = (macros/children 82232 + std 7208) / outline 823012 um2 (pin-bound: P source5 gate measured 2321 logical signal/clock pins and actual physical pin demand over 100% of each W/E edge (W1300 and E1403 including generated physical pin geometry). The 6-macro body is perimeter-limited; retain the outline and broad regional landing channels. Measured post-floorplan standard-cell area7207.9um2; failed placement area10744.1um2 is separately preserved, not used to claim dense fill.)
+GATE INFO pin_regs: pin registers opted out: SAFE/TOK_REG registered owning roots; exact calendar neutral. PHY-up captured; no extra automatic data stages.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc5 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_coll_face_p_regional2_main_20261021-220613.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_coll_face_p_regional2_main_20261021-220613.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_p_regional2_main-20261021-220613
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc5 in 156 s (gate total 1130 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2321, 'pin_rectangles': 2321, 'pin_track_checked': 2321, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 377b906dc8a332af1f5811effecd3229dabe115582a2417bc9493d963c192113
+GATE INFO util: synthesized std area 6961 um2 + macros 82232 in core 815192: util 1% (std-cell density 1.0% of placeable 697425 um2; total fill 10.9%)
+GATE INFO textbook: PASS qfd_coll_face_p_pl cells 45,029 flops 13,406 depth 483.4 ps util 0.1097 reach 0.0 um (1.6 s)
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55
+GATE WARN cross_clock: multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)  -> FIX: fix the signoff SDC read and re-gate with --cts
+GATE FAIL clock_rule: actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-qw-collio-native-2000-1021/physical/ref_tile/qfd_coll_face_p_regional2_main/gate_layout/floorplan.png
+GATE WARN fill: fill 11% = (hard macros 82232.2 + synthesized std cells 7207.9) / outline 823011.8 um2; pin demand per face: S 2 pins over 452.6/907.2 um (50%), N 0 pins over 0.0/907.2 um (0%), W 1276 pins over 904.4/907.2 um (100%), E 1379 pins over 904.5/907.2 um (100%) (pin-bound: P source5 gate measured 2321 logical signal/clock pins and actual physical pin demand over 100% of each W/E edge (W1300 and E1403 including generated physical pin geometry). The 6-macro body is perimeter-limited; retain the outline and broad regional landing channels. Measured post-floorplan standard-cell area7207.9um2; failed placement area10744.1um2 is separately preserved, not used to claim dense fill.)
+PRE_ROUTE_GATE: FAIL (2 fail, 5 warn)
+GATE: qfd_coll_face_p_regional2_main/gate_result.json written (exact staged source binding; commit it with the kit)
