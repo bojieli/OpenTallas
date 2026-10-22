@@ -1,0 +1,135 @@
+@MDIR@/Vot_qwen_tp8_pv256_finalize_static_cal_8/ot_qwen_tp8_pv256_finalize_static_cal_8.sv
+@MDIR@/Vot_qkd_ahub_static_die_cal_3/ot_qkd_ahub_static_die_cal_3.sv
+@MDIR@/Vot_qwen_tp8_pv_wide_pair_5/ot_qwen_tp8_pv_wide_pair_5.sv
+@MDIR@/Vot_qwen_tp8_pv_wide_pair_d/ot_qwen_tp8_pv_wide_pair_d.sv
+@MDIR@/Vot_qwen_tp8_attention_native_stack_w4_cp_5/ot_qwen_tp8_attention_native_stack_w4_cp_5.sv
+@MDIR@/Vqkd_astk_native_er_service_w_3/qkd_astk_native_er_service_w_3.sv
+@MDIR@/Vqkd_astk_ctl_tp8_cal_d/qkd_astk_ctl_tp8_cal_d.sv
+@MDIR@/Vqkd_astk_ep_cal_3/qkd_astk_ep_cal_3.sv
+@MDIR@/Vqkd_astk_ex/qkd_astk_ex.sv
+@MDIR@/Vqkd_astk_ep_cal_a/qkd_astk_ep_cal_a.sv
+@MDIR@/Vqkd_astk_ep_cal_f/qkd_astk_ep_cal_f.sv
+@MDIR@/Vqkd_astk_ep_cal_5/qkd_astk_ep_cal_5.sv
+@MDIR@/Vqkd_astk_ep_cal_0/qkd_astk_ep_cal_0.sv
+@MDIR@/Vqkd_astk_ep_cal_8/qkd_astk_ep_cal_8.sv
+@MDIR@/Vqkd_astk_ep_cal_e/qkd_astk_ep_cal_e.sv
+@MDIR@/Vqkd_astk_ep_cal_2/qkd_astk_ep_cal_2.sv
+@MDIR@/Vqkd_astk_zn/qkd_astk_zn.sv
+@MDIR@/Vot_nhb_zh/ot_nhb_zh.sv
+@MDIR@/Vot_qkh_recip_leaf/ot_qkh_recip_leaf.sv
+@MDIR@/Vot_qwen_tp8_pv_slice_t_d/ot_qwen_tp8_pv_slice_t_d.sv
+@MDIR@/Vot_qwen_tp8_pv_join_t_a/ot_qwen_tp8_pv_join_t_a.sv
+@MDIR@/Vot_qwen_tp8_pv_join16_static_cal_0/ot_qwen_tp8_pv_join16_static_cal_0.sv
+@MDIR@/Vot_qwen_tp8_pv_wide_ctl_d/ot_qwen_tp8_pv_wide_ctl_d.sv
+@MDIR@/Vqkd_ectl3_epoch_direct_s_f/qkd_ectl3_epoch_direct_s_f.sv
+@MDIR@/Vot_qkh_head_native_r4_8/ot_qkh_head_native_r4_8.sv
+@MDIR@/Vqkd_ectl_a_tp8_epoch_direct_1/qkd_ectl_a_tp8_epoch_direct_1.sv
+@MDIR@/Vqkd_ectl_b_tp8_direct_f/qkd_ectl_b_tp8_direct_f.sv
+@MDIR@/Vqkd_ectl_c_tp8_direct_3/qkd_ectl_c_tp8_direct_3.sv
+@MDIR@/Vot_qkh_head_frontq_native_e/ot_qkh_head_frontq_native_e.sv
+@MDIR@/Vot_qkh_head_stin_native_f/ot_qkh_head_stin_native_f.sv
+@MDIR@/Vot_qkh_head_stk_native_6/ot_qkh_head_stk_native_6.sv
+@MDIR@/Vot_qkh_head_nb_native_0/ot_qkh_head_nb_native_0.sv
+@MDIR@/Vot_qkh_lane8_c/ot_qkh_lane8_c.sv
+@MDIR@/Vot_qkh_ktree_9/ot_qkh_ktree_9.sv
+@MDIR@/Vot_qkh_head_score4_native_7/ot_qkh_head_score4_native_7.sv
+rtl/hdc/ot_hdc_fpu.sv
+rtl/hdc/ot_hdc_fastfp.sv
+rtl/hdc/ot_hdc_prefix.sv
+rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+rtl/hdc/ot_hdc_fp32_add_lat.sv
+rtl/hdc/ot_hdc_fp32_add_lat_nr.sv
+rtl/hdc/ot_hdc_fp32_mul_lat.sv
+rtl/hdc/ot_hdc_sfu.sv
+rtl/hdc/ot_hdc_delay.sv
+rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv
+rtl/hdc/ot_hdc_sfu_q.sv
+rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv
+rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv
+rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv
+rtl/hdc/nearhbm/ot_qkh_subtiles.sv
+rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv
+rtl/lib/ot_rst_relay.sv
+rtl/lib/ot_rst_pipe.sv
+rtl/lib/ot_pin_land.sv
+rtl/proto/ot_fp32_add_rne_pipe.sv
+rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv
+rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv
+rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv
+rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv
+rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv
+rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv
+rtl/qwen_sys/split_20261014/qkd_astk_native_er_service.sv
+rtl/qwen_sys/split_20261014/qkd_astk_native_er_service_w.sv
+rtl/qwen_sys/split_20261014/qkd_astk_native_stack_s.sv
+rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv
+rtl/qwen_sys/split_20261014/qkd_astk_cal_gen.sv
+rtl/qwen_sys/split_20261014/qkd_astk_native_stack_w4_gen.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+physical/qkd_astk_strip/macros/ot_sram_1r1w_256x128_m1_r2c2/ot_sram_1r1w_256x128_m1_r2c2.v
+physical/qkd_astk_strip/macros/ot_sram_1r1w_64x128_m1_r2c2/ot_sram_1r1w_64x128_m1_r2c2.v
+physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v
+rtl/hdc/nearhbm/ot_qwen_tp8_attention_native_stack.sv
+rtl/hdc/nearhbm/ot_qkd_ahub_static.sv
+rtl/hdc/nearhbm/ot_qkd_ahub_static_cal_gen.sv
+rtl/hdc/nearhbm/ot_qkd_ahub_core.sv
+rtl/hdc/nearhbm/ot_nhb_tiles.sv
+rtl/hdc/nearhbm/ot_qkh_recip_leaf.sv
+rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv
+rtl/hdc/nearhbm/ot_qwen_tp8_vrow_static.sv
+rtl/hdc/nearhbm/ot_qwen_tp8_vrow_capture.sv
+rtl/hdc/nearhbm/ot_qwen_tp8_pv256_slice.sv
+rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv
+rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv
+rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static.sv
+rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize_static_cal_gen.sv
+rtl/hdc/nearhbm/ot_qwen_tp8_attention_native_service_w16.sv
+rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv
+rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r17.sv
+rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv
+rtl/test/qwen_kv_die/kvattn_rel_1019/kvattn_rel_dp.sv
+rtl/test/qwen_kv_die/kvattn_rel_1019/tb_kvattn_rel.sv
+--top-module tb_kvattn_rel
+--prefix Vtb_kvattn_rel
+-Mdir @MDIR@
+--mod-prefix Vtb_kvattn_rel
+--hierarchical-block ot_qwen_tp8_pv256_finalize_static_cal,ot_qwen_tp8_pv256_finalize_static_cal_8
+--hierarchical-block ot_qkd_ahub_static_die_cal,ot_qkd_ahub_static_die_cal_3
+--hierarchical-block ot_qwen_tp8_pv_wide_pair,ot_qwen_tp8_pv_wide_pair_5,PAIR,\'sh1
+--hierarchical-block ot_qwen_tp8_pv_wide_pair,ot_qwen_tp8_pv_wide_pair_d
+--hierarchical-block ot_qwen_tp8_attention_native_stack_w4_cp,ot_qwen_tp8_attention_native_stack_w4_cp_5,ROW_RETURN_LAT,32\'h15,Z_STRIDE,\'sh10
+--hierarchical-block qkd_astk_native_er_service_w,qkd_astk_native_er_service_w_3
+--hierarchical-block qkd_astk_ctl_tp8_cal,qkd_astk_ctl_tp8_cal_d,STATIC_SCHEDULE,\'sh1,Z_STRIDE,\'sh10
+--hierarchical-block qkd_astk_ep_cal,qkd_astk_ep_cal_3,STATIC_SCHEDULE,\'sh1
+--hierarchical-block qkd_astk_ex,qkd_astk_ex
+--hierarchical-block qkd_astk_ep_cal,qkd_astk_ep_cal_a,STATIC_SCHEDULE,\'sh1,EXP_START_AGE,32\'ha
+--hierarchical-block qkd_astk_ep_cal,qkd_astk_ep_cal_f,STATIC_SCHEDULE,\'sh1,EXP_START_AGE,32\'h15
+--hierarchical-block qkd_astk_ep_cal,qkd_astk_ep_cal_5,STATIC_SCHEDULE,\'sh1,EXP_START_AGE,32\'h1f
+--hierarchical-block qkd_astk_ep_cal,qkd_astk_ep_cal_0,STATIC_SCHEDULE,\'sh1,EXP_START_AGE,32\'h2a
+--hierarchical-block qkd_astk_ep_cal,qkd_astk_ep_cal_8,STATIC_SCHEDULE,\'sh1,EXP_START_AGE,32\'h34
+--hierarchical-block qkd_astk_ep_cal,qkd_astk_ep_cal_e,STATIC_SCHEDULE,\'sh1,EXP_START_AGE,32\'h3f
+--hierarchical-block qkd_astk_ep_cal,qkd_astk_ep_cal_2,STATIC_SCHEDULE,\'sh1,EXP_START_AGE,32\'h49
+--hierarchical-block qkd_astk_zn,qkd_astk_zn
+--hierarchical-block ot_nhb_zh,ot_nhb_zh
+--hierarchical-block ot_qkh_recip_leaf,ot_qkh_recip_leaf
+--hierarchical-block ot_qwen_tp8_pv_slice_t,ot_qwen_tp8_pv_slice_t_d
+--hierarchical-block ot_qwen_tp8_pv_join_t,ot_qwen_tp8_pv_join_t_a
+--hierarchical-block ot_qwen_tp8_pv_join16_static_cal,ot_qwen_tp8_pv_join16_static_cal_0
+--hierarchical-block ot_qwen_tp8_pv_wide_ctl,ot_qwen_tp8_pv_wide_ctl_d
+--hierarchical-block qkd_ectl3_epoch_direct_s,qkd_ectl3_epoch_direct_s_f,STATIC_QK,\'sh1,ROW_RETURN_LAT,32\'h15,HXK,\'sh8
+--hierarchical-block ot_qkh_head_native_r4,ot_qkh_head_native_r4_8
+--hierarchical-block qkd_ectl_a_tp8_epoch_direct,qkd_ectl_a_tp8_epoch_direct_1,STATIC_QK,\'sh1,ROW_RETURN_LAT,32\'h15,HXK,\'sh8
+--hierarchical-block qkd_ectl_b_tp8_direct,qkd_ectl_b_tp8_direct_f,STATIC_QK,\'sh1,ROW_RETURN_LAT,32\'h15,HXK,\'sh8
+--hierarchical-block qkd_ectl_c_tp8_direct,qkd_ectl_c_tp8_direct_3,STATIC_QK,\'sh1,ROW_RETURN_LAT,32\'h15,HXK,\'sh8
+--hierarchical-block ot_qkh_head_frontq_native,ot_qkh_head_frontq_native_e
+--hierarchical-block ot_qkh_head_stin_native,ot_qkh_head_stin_native_f
+--hierarchical-block ot_qkh_head_stk_native,ot_qkh_head_stk_native_6
+--hierarchical-block ot_qkh_head_nb_native,ot_qkh_head_nb_native_0
+--hierarchical-block ot_qkh_lane8,ot_qkh_lane8_c
+--hierarchical-block ot_qkh_ktree,ot_qkh_ktree_9
+--hierarchical-block ot_qkh_head_score4_native,ot_qkh_head_score4_native_7
+--threads 1
+--cc
+"--cc" "--main" "--exe" "--timing" "--build-jobs" "6" "-O2" "-Wno-fatal" "-Wno-lint" "-Wno-style" "-Wno-TIMESCALEMOD" "-Wno-MULTIDRIVEN" "-Wno-WIDTH" "-Wno-SELRANGE" "+define+KVD_HEADS=1" "+define+KVD_Q_FP32=1" "+define+KVD_QK_ONLY=1" "tools/qwen_layerbench/kvattn_rel/kvattn_rel.vlt"
+
+rtl/test/qwen_kv_die/kvattn_rel_1019/kvattn_rel_pv_bound.sv

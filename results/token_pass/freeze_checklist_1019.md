@@ -75,6 +75,9 @@ it is not mapped die-netlist evidence. Only actual simulated netlist coverage ea
       until those stages actually execute against the frozen hierarchy. The inherited composition
       base is 272,641 cycles; the interim head-adjusted source composition is 272,675 cycles,
       pending STG/XT1/TP8/KV results. Neither is a final token verdict.
+      Stage `chain` (TOK-FUNC3-QW): the real token through the KV attention vehicle on all 36 layers takes
+      the KV part of `--die-netlist` as `<KV-netlist-vehicle-out>` (its `obj/Vtb_kvattn_rel`, built by stage
+      `kv --die-netlist`); the compute-die hand-off checks re-read the frozen run's stg fixtures.
 - [ ] S81 ROM: `tools/s81_dv/tokfunc/run_tokfunc_s81.sh --ref <frozen-commit>
       --work <fleet-dir> --fixtures <fixture-dir>`; closure adds `--die-v <die.v>
       --port-bind <port_bind.json> --plan <plan.json> --land <land.json>`.
