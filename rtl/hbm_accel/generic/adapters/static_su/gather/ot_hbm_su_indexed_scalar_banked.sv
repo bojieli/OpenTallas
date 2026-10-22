@@ -8,12 +8,12 @@ module ot_hbm_su_indexed_scalar_banked #(
  input wire[71:0]extra_bases,input wire[8223:0]rr,
  output wire[543:0]rq,output wire[8991:0]wq,output reg busy,done,fault);
  localparam SI=READ_SAMPLE+2,SS=2*READ_SAMPLE+2,WI=2*READ_SAMPLE+4,END=WI+WRITE_COMMIT;
- wire[4:0]rrst;
- ot_rst_relay #(.REGIONS(5),.SYNC_STAGES(2),.TREE_STAGES(1)) reset_tree(.clk(clk),.rst_n_in(rst_n),.rst_n(rrst));
+ wire[8:0]rrst;
+ ot_rst_relay #(.REGIONS(9),.SYNC_STAGES(2),.TREE_STAGES(1)) reset_tree(.clk(clk),.rst_n_in(rst_n),.rst_n(rrst));
  localparam PW=$clog2(END+2);
  reg[PW-1:0]phase;reg[23:0]ix,base,limit,dst,mul,score_address;reg[71:0]bases;
- wire[31:0]index_value,value;wire[1023:0]bank_words;wire[31:0]return_valid;
- wire[31:0]returned_word;reg[4:0]ix_expected,score_expected;
+ wire[31:0]index_value;wire[31:0]value[0:1];wire[1023:0]bank_words;wire[31:0]return_valid;
+ wire[31:0]returned_word;wire[4:0]ix_expected,score_expected;
  wire[1:0]rank=index_value<96?0:index_value<192?1:index_value<288?2:3;
  wire[31:0]offset=index_value-(rank==0?0:rank==1?96:rank==2?192:288);
  wire[23:0]segment_base=rank==0?base:rank==1?bases[23:0]:rank==2?bases[47:24]:bases[71:48];
@@ -23,9 +23,9 @@ module ot_hbm_su_indexed_scalar_banked #(
  ot_hbm_gather_phase_fire #(.SI(SI),.WI(WI)) fire(.phase(16'(phase)),.busy(busy),.rd(rd_fire),.wr(wr_fire));
  wire[23:0]read_address=phase==0?ix:score_address;
  for(genvar b=0;b<32;b=b+1)begin:bank
-  ot_hbm_gather_bank_header #(.B(b)) head(.clk(clk),.rst_n(rrst[1+b/8]),
+  ot_hbm_gather_bank_header #(.B(b)) head(.clk(clk),.rst_n(rrst[1+b/4]),
    .rd_fire(rd_fire),.wr_fire(wr_fire),.read_bank(bank_of(read_address)),.write_bank(bank_of(dst)),
-   .read_sector(read_address[18:3]),.write_sector(dst[18:3]),.word_lane(dst[2:0]),.read_word_lane(read_address[2:0]),.value(value),
+   .read_sector(read_address[18:3]),.write_sector(dst[18:3]),.word_lane(dst[2:0]),.read_word_lane(read_address[2:0]),.value(value[b/16]),
    .rr(rr[b*257+:257]),.returned_word(bank_words[b*32+:32]),.return_valid(return_valid[b]),
    .rq(rq[b*17+:17]),.wq(wq[b*281+:281]));
  end
@@ -36,14 +36,18 @@ module ot_hbm_su_indexed_scalar_banked #(
  end
  for(genvar b=0;b<4;b=b+1)begin:capture
   ot_hbm_gather_sample_byte #(.EDGE(READ_SAMPLE+MUT_PHASE)) index_capture(.clk(clk),.busy(busy),.phase(16'(phase)),.d(returned_word[b*8+:8]),.q(index_value[b*8+:8]));
-  ot_hbm_gather_sample_byte #(.EDGE(SS)) value_capture(.clk(clk),.busy(busy),.phase(16'(phase)),.d(returned_word[b*8+:8]),.q(value[b*8+:8]));
+  for(genvar c=0;c<2;c=c+1)begin:vcopy
+   ot_hbm_gather_sample_byte #(.EDGE(SS)) value_capture(.clk(clk),.busy(busy),.phase(16'(phase)),.d(returned_word[b*8+:8]),.q(value[c][b*8+:8]));
+  end
  end
  // Descriptor data remains stable for the entire scheduled transaction. Raw
  // local captures avoid a hundreds-of-bits shared load-enable node.
  always @(posedge clk)begin
   ix<=index_word;base<=score_base;limit<=score_limit;dst<=dest_word;mul<=dyn_mul;bases<=extra_bases;
-  ix_expected<=bank_of(index_word);score_address<=product[23:0];score_expected<=bank_of(product[23:0]);
+  score_address<=product[23:0];
  end
+ ot_hbm_gather_bank_identity_copy ix_copy(.clk(clk),.d(bank_of(index_word)),.q(ix_expected));
+ ot_hbm_gather_bank_identity_copy score_copy(.clk(clk),.d(bank_of(product[23:0])),.q(score_expected));
  integer k;
  always @(posedge clk or negedge rrst[0])begin
   if(!rrst[0])begin busy<=0;done<=0;fault<=0;phase<=0;end
@@ -82,11 +86,11 @@ endmodule
  input wire[15:0]read_sector,write_sector,input wire[2:0]word_lane,read_word_lane,input wire[31:0]value,
  input wire[256:0]rr,output wire[31:0]returned_word,output wire return_valid,
  output wire[16:0]rq,output wire[280:0]wq);
- wire rv,wv;wire[1:0]ret_hit;
+ wire rv,wv;wire[3:0]ret_hit;
  wire rd_hit=rd_fire&&(read_bank==5'(B));wire wr_hit=wr_fire&&(write_bank==5'(B));
  ot_hbm_gather_valid_bit rv0(.clk(clk),.rst_n(rst_n),.d(rd_hit),.q(rv));
  ot_hbm_gather_valid_bit wv0(.clk(clk),.rst_n(rst_n),.d(wr_hit),.q(wv));
- for(genvar c=0;c<2;c=c+1)begin:hitcopy
+ for(genvar c=0;c<4;c=c+1)begin:hitcopy
   ot_hbm_gather_valid_bit rv1(.clk(clk),.rst_n(rst_n),.d(rd_hit),.q(ret_hit[c]));
  end
  reg[15:0]rs,ws;reg[2:0]lane,read_lane_cap;reg[31:0]word_q;
@@ -95,9 +99,9 @@ endmodule
   ot_hbm_gather_reserve_bit v(.clk(clk),.d(rr[256]),.q(response[c]));
  end
  assign return_valid=response[0];
- for(genvar n=0;n<8;n=n+1)begin:readnibble
+ for(genvar n=0;n<16;n=n+1)begin:readnibble
   ot_hbm_gather_return_nibble #(.N(n)) ret(.clk(clk),.hit(ret_hit[n/4]),.lane(read_lane_cap),
-    .rr(rr[255:0]),.v(response[n/4]),.q(returned_word[n*4+:4]));
+    .rr(rr[255:0]),.v(response[n/8]),.q(returned_word[n*2+:2]));
  end
  // Bank identity sector bits are local constants, avoiding a second global
  // bank-address fanout into each header's data capture.
@@ -118,12 +122,15 @@ endmodule
  always @(posedge clk)if(busy&&phase==EDGE)q<=d;
 endmodule
 (* keep_hierarchy *) module ot_hbm_gather_return_nibble #(parameter integer N=0)(
- input wire clk,hit,input wire[2:0]lane,input wire[255:0]rr,input wire v,output wire[3:0]q);
- reg[2:0]held_lane;reg[3:0]word_q;
+ input wire clk,hit,input wire[2:0]lane,input wire[255:0]rr,input wire v,output wire[1:0]q);
+ reg[2:0]held_lane;reg[1:0]word_q;
  always @(posedge clk)begin
   if(hit)held_lane<=lane;
-  word_q<=rr[held_lane*32+N*4+:4];
+  word_q<=rr[held_lane*32+N*2+:2];
  end
- assign q=word_q&{4{v}};
+ assign q=word_q&{2{v}};
+endmodule
+(* keep_hierarchy *) module ot_hbm_gather_bank_identity_copy(input wire clk,input wire[4:0]d,output reg[4:0]q);
+ always @(posedge clk)q<=d;
 endmodule
 `default_nettype wire

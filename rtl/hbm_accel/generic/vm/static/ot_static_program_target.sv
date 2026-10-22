@@ -37,7 +37,7 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     output reg configured,fault
 );
     localparam integer ROWS=INSTALLED_ROWS==0?(1<<PCW):INSTALLED_ROWS;
-    initial if(PCW<8 || PCW>12 || ROWS<1 || ROWS>(1<<PCW))$fatal(1,"programme target PCW must be8..12");
+    initial if(PCW<1 || (INSTALLED_ROWS==0&&PCW<8) || PCW>12 || ROWS<1 || ROWS>(1<<PCW))$fatal(1,"programme target PCW must be8..12");
     // External reset reaches two synchronizer pins, not the entire valid bitmap.
     (* async_reg = "true" *) reg reset_meta,reset_live;
     always @(posedge clk or negedge rst_n)
@@ -55,6 +55,14 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     reg [PCW:0] stored_limit;
     reg [15:0] loops,stored_loops;
     reg [ROWS-1:0] installed;
+    generate if(INSTALLED_ROWS!=0)begin:g_bounded_payload
+     // Unqualified output payloads capture every edge. Only the real valid
+     // registers gate target transactions; no256-bit reset/enable broadcast.
+     always @(posedge clk)begin
+      program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;
+      program_start_base<=stored_base;program_start_limit<=stored_limit;program_start_loops<=stored_loops;
+     end
+    end endgenerate
     reg install_open,armed,scanning,validated,missing;
     reg [PCW-1:0] scan_row;
     reg [PCW:0] scan_limit;
@@ -87,7 +95,7 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 armed<=0;validated<=0;configured<=0;
                 if(program_active || scanning || lv || {1'b0,address}>=ROWS ||
                    data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address})fault<=1;
-                else begin program_cfg_we<=1;program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end
+                else begin program_cfg_we<=1;if(INSTALLED_ROWS==0)begin program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end end
             end
             if(dv && target==tid)begin
                 armed<=0;validated<=0;configured<=0;install_open<=0;
@@ -116,8 +124,8 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 armed<=0;configured<=0;
                 if(!launch_ready || cv || dv)fault<=1;
                 else begin
-                    program_start_v<=1;program_start_base<=stored_base;
-                    program_start_limit<=stored_limit;program_start_loops<=stored_loops;
+                    program_start_v<=1;if(INSTALLED_ROWS==0)begin program_start_base<=stored_base;
+                    program_start_limit<=stored_limit;program_start_loops<=stored_loops;end
                 end
             end
         end

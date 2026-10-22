@@ -23,7 +23,7 @@ module ot_hbm_su_indexed_scalar_f20 #(
  reg[1:0]tail;
  always @(posedge clk or negedge resets[1])if(!resets[1])tail<=0;else tail<={tail[0],active};
  assign reservation_active=active|(|tail);wire[7:0]wa,sb;wire[8:0]sl;wire[15:0]loops;wire[255:0]wd;
- ot_static_program_target #(.TARGET(TARGET),.PCW(8),.INSTALLED_ROWS(6)) target(
+ ot_static_program_target #(.TARGET(TARGET),.PCW(3),.INSTALLED_ROWS(6)) target(
   .clk(clk),.clk_cap(clk),.rst_n(resets[0]),.tgt(TARGET),
   .cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),

@@ -9,13 +9,13 @@ module tb_indexed_scalar_f20;
  reg[8991:0]dq=0;reg[543:0]verify_rq=0;
  wire[575:0]status;
  reg cfg_v=0,desc_v=0,launch_v=0;reg[11:0]cfg_addr=0;reg[12:0]desc_limit=1;reg[255:0]cfg_data=0;
- wire active,configured,pf,tf,ef,es,eb,ed;wire[15:0]edge_index;wire[119:0]descriptor;
+ wire active,active0,active1,reservation_active,configured,pf,tf,ef,es,eb,ed;wire[15:0]edge_index;wire[119:0]descriptor;
  wire[31:0]selector_fault;
  assign fault=pf|tf|ef|(|selector_fault);
  ot_hbm_su_indexed_scalar_f20 #(.READ_SAMPLE(10),.WRITE_COMMIT(5),.NATIVE_BANKED(NATIVE_BANKED),.SEGMENTED96(SEGMENTED96),.MUT_PHASE(MUT==3))dut(
  .clk(clk),.rst_n(rst_n),.cfg_v(cfg_v),.cfg_target(8'd180),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .desc_v(desc_v),.desc_base(12'd0),.desc_limit(desc_limit),.desc_loops(16'd1),.launch_v(launch_v),
- .rr(rr),.rq(rq),.wq(wq),.active(active),.done(done),.program_fault(pf),.configured(configured),
+ .rr(rr),.rq(rq),.wq(wq),.active(active),.active0(active0),.active1(active1),.reservation_active(reservation_active),.done(done),.program_fault(pf),.configured(configured),
  .target_fault(tf),.engine_fault(ef),.edge_index(edge_index),.engine_busy(eb),.engine_done(ed),
  .engine_start(es),.descriptor(descriptor));
  assign busy=active;
@@ -23,7 +23,7 @@ module tb_indexed_scalar_f20;
   for(genvar b=0;b<8;b=b+1)begin:gb
    localparam I=q*8+b;
    wire[16:0]brq;wire[280:0]bwq;wire[256:0]brr,nrr;wire bd;
-   ot_hbm_su_indexed_scalar_bank_select select0(.clk(clk),.rst_n(rst_n),.reserve(active),
+   ot_hbm_su_indexed_scalar_bank_select select0(.clk(clk),.rst_n(rst_n),.reserve(I<16?active0:active1),
     .normal_rq(verify_rq[I*17+:17]),.normal_wq(281'd0),
     .gather_rq(rq[I*17+:17]),.gather_wq(wq[I*281+:281]),.bank_rr(brr),.bank_done(bd),
     .bank_rq(brq),.bank_wq(bwq),.normal_rr(nrr),.normal_done(),.gather_rr(rr[I*257+:257]),.fault(selector_fault[I]));
@@ -80,7 +80,7 @@ module tb_indexed_scalar_f20;
    $readmemh({rows_dir,"/L0_6rows.mem"},row_mem,0,5);$readmemh({rows_dir,"/L2_6rows.mem"},row_mem,6,11);
    $readmemh({rows_dir,"/L14_6rows.mem"},row_mem,12,17);
    for(l=0;l<3;l=l+1)begin
-    c=1;preload=1;verify_rq=0;
+    c=l==0?0:1;preload=1;verify_rq=0;
     base=row_mem[l*6][47:24];
     for(n=0;n<48;n=n+1)begin
      for(t=0;t<8;t=t+1)data[t*32+:32]=score_mem[l*6*384+n*8+t];
