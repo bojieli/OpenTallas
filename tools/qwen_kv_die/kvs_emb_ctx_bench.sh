@@ -12,8 +12,8 @@ cp $E/qkd_kvs_emb_ctx.sv "$out/qkd_kvs_emb_ctx.sv"
 case $m in
  0) ;;
  1) sed -i 's/\.row_open(row_open), \.ctx_v/.row_open(1'"'"'b0), .ctx_v/' "$out/qkd_kvs_emb_ctx.sv";;
- 2) sed -i 's/\.start(st), \.cfg_we/.start(i_ctx[98]), .cfg_we/' "$out/qkd_kvs_emb_ctx.sv";;
- 3) sed -i 's/assign emb_fault = cf | jf | rf;/assign emb_fault = cf | jf;/' "$out/qkd_kvs_emb_ctx.sv";;
+ 2) sed -i 's/\.start(sweep_start), \.rope_sweep/.start(i_ctx[98]), .rope_sweep/' "$out/qkd_kvs_emb_ctx.sv";;
+ 3) sed -i 's/assign emb_fault = cf | jf | rf | (OVL\&\&ovl_fault);/assign emb_fault = cf | jf | (OVL\&\&ovl_fault);/' "$out/qkd_kvs_emb_ctx.sv";;
  4) sed -i 's/\.fill_token(tok)/.fill_token({2'"'"'b0, tep})/' "$out/qkd_kvs_emb_ctx.sv";;
 esac
 [[ $m == 0 ]] || ! cmp -s $E/qkd_kvs_emb_ctx.sv "$out/qkd_kvs_emb_ctx.sv" || { echo "KVS_EMB_CTX FAIL mutant $m not applied"; exit 3; }

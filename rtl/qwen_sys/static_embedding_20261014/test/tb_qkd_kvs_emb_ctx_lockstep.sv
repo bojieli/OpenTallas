@@ -58,13 +58,13 @@ module tb_qkd_kvs_emb_ctx_lockstep;
             || u_new.u_join.cfg_data !== u_old.u_join.cfg_data || u_new.u_join.up0 !== u_old.u_join.up0 || u_new.u_join.up1 !== u_old.u_join.up1
             || u_new.u_join.up2 !== u_old.u_join.up2 || u_new.u_join.up3 !== u_old.u_join.up3) begin
             errors = errors + 1; if (errors < 6) $display("MISMATCH cyc %0d join child inputs (start %b/%b)", cyc, u_new.u_join.start, u_old.u_join.start); end
-        if (u_new.u_rowtx.fill_begin !== u_old.u_rowtx.fill_begin || u_new.u_rowtx.fill_token !== u_old.u_rowtx.fill_token
-            || u_new.u_rowtx.fill_epoch !== u_old.u_rowtx.fill_epoch || u_new.u_rowtx.word_v !== u_old.u_rowtx.word_v
-            || u_new.u_rowtx.word_data !== u_old.u_rowtx.word_data || u_new.u_rowtx.word_token !== u_old.u_rowtx.word_token
-            || u_new.u_rowtx.word_index !== u_old.u_rowtx.word_index || u_new.u_rowtx.word_scale !== u_old.u_rowtx.word_scale
-            || u_new.u_rowtx.word_epoch !== u_old.u_rowtx.word_epoch || u_new.u_rowtx.emb_tx_slot !== u_old.u_rowtx.emb_tx_slot) begin
+        if (u_new.g_legacy.u_rowtx.fill_begin !== u_old.u_rowtx.fill_begin || u_new.g_legacy.u_rowtx.fill_token !== u_old.u_rowtx.fill_token
+            || u_new.g_legacy.u_rowtx.fill_epoch !== u_old.u_rowtx.fill_epoch || u_new.g_legacy.u_rowtx.word_v !== u_old.u_rowtx.word_v
+            || u_new.g_legacy.u_rowtx.word_data !== u_old.u_rowtx.word_data || u_new.g_legacy.u_rowtx.word_token !== u_old.u_rowtx.word_token
+            || u_new.g_legacy.u_rowtx.word_index !== u_old.u_rowtx.word_index || u_new.g_legacy.u_rowtx.word_scale !== u_old.u_rowtx.word_scale
+            || u_new.g_legacy.u_rowtx.word_epoch !== u_old.u_rowtx.word_epoch || u_new.g_legacy.u_rowtx.emb_tx_slot !== u_old.u_rowtx.emb_tx_slot) begin
             errors = errors + 1; if (errors < 6) $display("MISMATCH cyc %0d row_tx child inputs", cyc); end
-        if (u_new.u_rowtx.row_open !== u_old.u_rowtx.armed) begin errors = errors + 1; if (errors < 6) $display("MISMATCH cyc %0d row_open", cyc); end
+        if (u_new.g_legacy.u_rowtx.row_open !== u_old.u_rowtx.armed) begin errors = errors + 1; if (errors < 6) $display("MISMATCH cyc %0d row_open", cyc); end
         if (n_f && !(r_f | u_old.w_join__fault[0])) fault_rowtx_only = fault_rowtx_only + 1;
         if (r_st) starts = starts + 1;
     end
