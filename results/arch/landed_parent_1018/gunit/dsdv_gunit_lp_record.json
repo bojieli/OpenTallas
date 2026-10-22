@@ -273,12 +273,49 @@
    "hc": 0,
    "rt": 3
   },
+  "regional_reset_copies": {
+   "hc": {
+    "loads": 84,
+    "copies": [
+     {
+      "net": "lpr_hc_c0",
+      "loads": 32
+     },
+     {
+      "net": "lpr_hc_c1",
+      "loads": 29
+     },
+     {
+      "net": "lpr_hc_c2",
+      "loads": 23
+     }
+    ]
+   },
+   "rt": {
+    "loads": 86,
+    "copies": [
+     {
+      "net": "lpr_rt_c0",
+      "loads": 32
+     },
+     {
+      "net": "lpr_rt_c1",
+      "loads": 31
+     },
+     {
+      "net": "lpr_rt_c2",
+      "loads": 23
+     }
+    ]
+   }
+  },
+  "copies_note": "last regional stage as kept parallel copies (<= 32 loads each), same reset age, no added edge",
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 8444,
+  "landing": 9913,
   "pads": 0,
-  "reset": 7
+  "reset": 11
  },
  "communicating_region_pairs": {
   "landed": [
@@ -458,6 +495,20 @@
   "max_added_edges": 0
  },
  "warnings": [],
+ "landing_implementation": {
+  "chunk_bits": 24,
+  "writer": "n32",
+  "direct_quarter_period_timing": false,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
  "die_obligations": [
   "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
   "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",

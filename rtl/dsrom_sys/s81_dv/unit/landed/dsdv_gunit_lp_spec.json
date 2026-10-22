@@ -108,5 +108,9 @@
  },
  "mut4_stages": 40,
  "mut4_why": "every gunit leaf is event-driven (valid-qualified beats / jobs, no free-running calendar from reset), so a 1-stage reset slip of u_l5 is invisible to random lockstep (measured: MUT 4 at +1 PASSED, witness lp_bench_mut4_1stage.log); +40 > warm 30 proves the region reset run reaches the child",
- "floorplan_note": "kit tools/ref_tile/specs_pl_gunit/dsdv_gunit_lp.json: 950.4 x 1468.8; hc = col A L0/L4/L5 (y 777.6..1425.6) + col B L0r/L4r/L5f; rt = col A L3/L1/L2 (y 43.2..691.2) + col B fronts f0..f2 + col C f3 / L1c; landing channel L2|L0 86.4 um"
+ "floorplan_note": "kit tools/ref_tile/specs_pl_gunit/dsdv_gunit_lp.json: 950.4 x 1468.8; hc = col A L0/L4/L5 (y 777.6..1425.6) + col B L0r/L4r/L5f; rt = col A L3/L1/L2 (y 43.2..691.2) + col B fronts f0..f2 + col C f3 / L1c; landing channel L2|L0 86.4 um",
+ "landing_chunk_bits": 24,
+ "landing_writer": "n32",
+ "regional_reset_copies": true,
+ "native32_why": "S81-ELEM2-GUNIT 10-21: parent gate native census FAIL 52 drivers (ot_pl_land_r read counter rc -> 276..1112 slot-select loads; regional reset run); chunked n32 landings (24-b kept local one-hot selectors) + regional reset kept copies (capc5r precedent), same landing contract / latency"
 }
