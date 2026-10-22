@@ -175,6 +175,33 @@ class Geometry:
         self.rgrid.blk[:] = self.grid.blk
         for rect in overflown:   # homes only (empty unless --overfly-masters)
             self.block_rect(*rect)
+        # HBMc/CHAIN 10-22: GEN reserved reset homes (manifest.reserved_reset_homes, die_case_v16 --reserve-homes) are EXACT
+        # 32.4 um free squares; the 10 um home grid (tile centre at a cell centre, obstacles grown by half a tile) cannot see a
+        # square that is exactly one tile wide unless it happens to be grid-aligned (r18f case_bA2: rhl_069_009 empty, 64 um from
+        # the CS point, but its cell blocked by a lane relay 0.6 um away).  Each empty site whose square holds the largest tile
+        # becomes ONE exact home: its centre cell is freed and reserve() places the tile on the site centre itself.
+        self.exact, self.exact_skipped = {}, 0
+        for st in (manifest.get('reserved_reset_homes') or {}).get('sites', []):
+            x0, y0, w, h = st['x'], st['y'], st['w'], st['h']
+            if w + 1e-6 < 2 * self.half_w or h + 1e-6 < 2 * self.half_h:
+                self.exact_skipped += 1
+                continue
+            cx, cy = x0 + w / 2, y0 + h / 2
+            tx0, ty0, tx1, ty1 = cx - self.half_w, cy - self.half_h, cx + self.half_w, cy + self.half_h
+            hit = False
+            for i in range(int(tx0 // self.BIN), int(tx1 // self.BIN) + 1):
+                for j in range(int(ty0 // self.BIN), int(ty1 // self.BIN) + 1):
+                    for n in self.bins.get((i, j), ()):
+                        v = self.pl[n]
+                        if any(a0 < tx1 - 1e-6 and a1 > tx0 + 1e-6 and b0 < ty1 - 1e-6 and b1 > ty0 + 1e-6
+                               for a0, b0, a1, b1 in self.solid(v)):
+                            hit = True
+            if hit:
+                self.exact_skipped += 1
+                continue
+            c = self.grid.cell(cx, cy)
+            self.grid.blk[c[1] * self.grid.nx + c[0]] = 0
+            self.exact[c] = (cx, cy)
         # LH-RSTHOP 10-19 (opt-in, set_hosts): reach hops co-located in placed lane relay stations (hbfd_rly_*_rf/_rrf).
         self.hosts, self.host_bins, self.host_mode, self.host_dom, self.host_used = [], {}, None, None, set()
         self.HBIN = 100.0
@@ -441,7 +468,7 @@ class Geometry:
         for cell in self.candidates(point, max_distance if max_distance is not None else self.reach):
             if allowed is not None and not allowed[cell[1] * self.grid.nx + cell[0]]:
                 continue
-            cx, cy = self.grid.xy(cell)
+            cx, cy = self.exact.get(cell) or self.grid.xy(cell)
             tile = dict(kind=kind, home=(round(cx - w / 2, 6), round(cy - h / 2, 6)))
             if cx - w / 2 < 0 or cy - h / 2 < 0 or cx + w / 2 > self.W or cy + h / 2 > self.H:
                 continue
