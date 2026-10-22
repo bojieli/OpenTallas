@@ -573,12 +573,12 @@ def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, re
             # the hops to this station's children / loads (planned), then displacement from its planned point
             pc_ = plan_c[v]
             base = placed[parent[v]] if v in parent else pc_
-            fc = _free_cands(placer, base[0] - w / 2, base[1] - h / 2, w, h, near=16, rmax=1200.0)
+            fc = _free_cands(placer, base[0] - w / 2, base[1] - h / 2, w, h, near=16, rmax=400.0) + _free_cands(placer, pc_[0] - w / 2, pc_[1] - h / 2, w, h, near=16, rmax=400.0)
             best = None
             for cx, cy, _ in fc:
                 q = (cx + w / 2, cy + h / 2)
                 sc = (hc(hop(q, base)) if v in parent else 0.0) + sum(hc(hop(q, plan_c[u])) for u in kids[v]) \
-                    + sum(hc(hop(q, t)) for t in terms[v]) + 0.1 * hop(q, pc_) + hop(q, base)
+                    + sum(hc(hop(q, t)) for t in terms[v]) + hop(q, pc_) + hop(q, base)
                 if best is None or sc < best[0]:
                     best = (sc, q)
             if best is not None:
