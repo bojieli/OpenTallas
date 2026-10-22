@@ -1251,5 +1251,8 @@
    ]
   }
  },
- "io_tcl": "physical/ref_tile/s81frame_col_h9_vgch_b0/pins.tcl"
+ "io_tcl": "physical/ref_tile/s81frame_col_h9_vgch_b0/pins.tcl",
+ "orfs_vars": {
+  "OT_PRS_PORT_RE": "^(?!lpl_[0-9]+_bank(\\[|$))"
+ }
 }

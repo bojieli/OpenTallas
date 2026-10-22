@@ -316,6 +316,10 @@ def main():
             fp[face[b][n]].append(n)
         s['pins'] = dict(fp)
         s['io_tcl'] = f'physical/ref_tile/{name}/pins.tcl'
+        # half-landing bank ports (lpl_<n>_bank) launch from the writer's enabled slot flops (hold mux = an internal
+        # load), read by the neighbour band under the landed multicycle (setup E / hold D-1): no dedicated pin launch
+        # flop is needed, and cloning ~6k of them per seam would exceed pin_reg_split's OT_PRS_MAX (vgch b0 gate 10-22)
+        s.setdefault('orfs_vars', {})['OT_PRS_PORT_RE'] = r'^(?!lpl_[0-9]+_bank(\[|$))'
         s['structural_change'] = (
             f'S81 frame MAIN-hier (b2, STW-S81c-DIE-FRAME 10-22): band b{b} of {m} {tag} = rows y [{bounds[b]}, '
             f'{bounds[b + 1]}) of the bound {src_tag} landed frame (same instances / nets; frame_hier_part.py); hard band '
