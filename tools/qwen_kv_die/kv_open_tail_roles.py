@@ -46,15 +46,15 @@ SOURCES = {
     'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv': 'b2b1d1e72368059e32aedc071824779dcc68425284b53122fde623dae604511c',
     'rtl/qwen_sys/split_20261014/qkd_host_pc_slice.sv': '5a1cc9d9cab3dead2768d934999f938de75d3e96281328c5a1e4dc36fff2e1fa',
     'rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv': '28931dd981edaf460f2be7d928e3bea62ca8ea2cff8fa3ee72f78c36e96b460c',
-    'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv': '1214151aa45994195dc498fa0d1e3932b75f0004f4a6aa3e1a7a7248e4f61a80',
+    'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv': 'c74e71552631c487426980953cd4b803e6455b8eb671c538f1ba3c578f3f63d0',
     'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv': '713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a',
     'rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv': 'c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42',
     'rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv': 'a0db1639e4fb5448e3bcbe91761933a5c2b990733058ee5eaa1fd6877debf983',
     # KV-BIND4 10-19: the d2ds successor master qkd_d2d_static_sfm (CLOSED r7w_sfm2 view) + the attention RX codec that
     # recomputes the Z17 reserved-zero predicates from rx_payload (z17_dup)
-    SFM: 'e17a16804b4125e5c171dc92e78366edb3d73a933195b3c0a4b619477ffb50d3',
+    SFM: '2a19cdb5dd60035e51c916ae1f96617ed8d35a03f3a0778ca4e5e41644109331',
     ACTL: 'f60cafbb806ceff8b24b84a1c4bc10f97343ac60afcfcfed17236e6690e5cc9e',
-    SFM3: 'd60d50cc5bdc8495ccb001beb89b20ad6960dfadc6457d8cd3b2afa31fa71db0',   # KV-BIND7 10-20 (claude/kv-d2d3-1020 3802573e7)
+    SFM3: '68fc3d6713de59579146184fdebc1f030fa3af157fabe6373c57a74f791d94de',   # KV-BIND7 10-20 (claude/kv-d2d3-1020 3802573e7)
 }
 # the generator is a tool of the GEN7 tree (not of the binder's tools dir): pinned separately, checked by this prover only
 # KV-BIND3 10-19: re-pinned (was a7063e6b..., 60ff34e3d).  Changes since: default-off OT_KV_GRP_PRIVATE0 / OT_KV_DCAL_FLT
@@ -87,7 +87,7 @@ SOURCES = {
 # no instance, port or chain-end text changed).
 # CODEX-K-DIE 10-21: QKC-GRP adds opt-in S6C masters/slots; legacy chain strings below stay asserted.
 # Central CTL/corridor successor changes geometry only; all admitted chain-end assertions remain checked.
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '5592a28804bf6c1050f0ee50bbe1e347b802749c689e71b9b18aaebe2a448f39')
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '283885f9d76d8926551998f19f078b533fde813955067f61509bc80994fcb126')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -302,13 +302,19 @@ if __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
 DS_GROUP_SOURCES = {}
 if __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1':
     import kv_static_die as _D
-    _expected = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv'
-    if _D.RTL_FILE != _expected:
+    # SQ-KATTN2 10-21: the RoPE OVL point (OT_KV_ROPE=1 OT_KV_ROPE_OVL=1) is its own pinned S6C tiles file
+    _S6C_TILES = {
+        'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv':
+            'a99ef537a41999fc21b12346cda7aae28a807ee13253db504664b55ec23152fb',
+        'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c_rope_ovl.sv':
+            'e4b74c66e617b8b6f62214bc2bea4c95c3624737fe5375fd3ccf6b0f8ebeb144'}
+    _expected = _D.RTL_FILE
+    if _expected not in _S6C_TILES:
         raise ValueError('open-tail DS/S6C recipe unproved: ' + _D.RTL_FILE)
     _T0 = TILES
     TILES = _expected
     SOURCES.pop(_T0)
-    SOURCES[TILES] = 'a99ef537a41999fc21b12346cda7aae28a807ee13253db504664b55ec23152fb'
+    SOURCES[TILES] = _S6C_TILES[_expected]
     DS_GROUP_SOURCES = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv': 'b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00', 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv': '6e1b7fd0daf74439afac1064ace66c91cb1836bf17635575aa46d3287ecacdb1'}
     SOURCES.update(DS_GROUP_SOURCES)
     GRP = ()
