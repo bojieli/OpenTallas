@@ -1,0 +1,15 @@
+{
+ "recorded": "2026-10-21T22:58:35-07:00",
+ "gate_source": "a47419169c48abf75fc66bb5132fcccb4935e971",
+ "archive_sha256": "a0e584b170c4fc568955e05ad82a678601e02a1e60cc4348082aca73c01aef24",
+ "manifest_sha256": "183db6d88eebb398a3e67909be4eb6f8e92de145fba634b6491068e4410ac795",
+ "exact_route_rtl_files": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv"
+ ],
+ "all_gate_rtl_hashes_match": true,
+ "change": "Closure job metadata only: declared exported fixture proves git fallback unreachable. Physical spec, RTL, actual gate and bench scripts unchanged.",
+ "scope": "Gate WARN and source-export readiness; normal behavioral and route qualification still required."
+}
