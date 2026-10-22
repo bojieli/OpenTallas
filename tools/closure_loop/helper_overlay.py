@@ -192,6 +192,13 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # START-NONFAIL/HBM-CANC 10-21: claude/hbm-ks13-agtool-1021. async_gray SDC applies every bounded pair's
+    # set_max/min_delay first and proves each pair's finite max/min path in one ot_ag_verify pass (was one
+    # find_timing_paths re-search per pair).  Same exceptions/checks/errors/PATH_DEFERRED texts; ASAP7 equivalence on
+    # the 10-18 kshare netlist BOUNDED 12,576 = 12,576, 0 extra/missing, ownership identical -> no verdict changes.
+    "a7bc197f096b54b49b908549e2369bbc58baae8e": dict(
+        kind="neutral", paths=("tools/ref_tile/async_gray_fifo_constraints.py",),
+        what="async_gray: one-pass ot_ag_verify of bounded pairs; identical exceptions (EQUIV 12,576=12,576)"),
     # MERGE-1200 10-21: SQK-INGEST OT_GF fixes (claude/sqk-ingest-1021). db8d8c63d: a hard-macro output in a storage-gating
     # cone is a free-variable leaf in _bdd_of (as _cone_cut already did; it crashed before) -> only cones that used to
     # error now evaluate.  a3aafacd6: reset-bank copy flops named ot_rrs__<fam>__c<k> alias to their own reviewed leaf
