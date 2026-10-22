@@ -1,0 +1,18 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_pc_h_sr10e-sr10e-1b36b2643 bench bench_kvpc_tile_pc_h_mut4 host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_pc_h_sr10e-sr10e-1b36b2643 log cl/bench_kvpc_tile_pc_h_mut4.a1b1.log captured 2026-10-21T20:35:20-07:00
+# fail_regex '^KVPC_TILE FAIL .* mut=4'
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=7 out pc__hfx 1/0
+MISMATCH t=8 out pc__hfx 1/0
+MISMATCH t=9 out pc__hfx 1/0
+MISMATCH t=10 out pc__hfx 1/0
+MISMATCH t=11 out pc__hfx 1/0
+MISMATCH t=12 out pc__hfx 3/2
+MISMATCH t=13 out pc__hfx 3/2
+KVPC_TILE FAIL edges=3000 checks=73772 errors=2986 active_out=22151 mut=4
+- /home/ubuntu/ot-scratch/claude/closure-loop/qkd_kvs_pc_h_sr10e-sr10e-1b36b2643/bench/kvpc_tile_pc_h_m4/tb.sv:131: Verilog $finish
+HFX active_edges=2982 final=011
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.151 s; speed 16.709 us/s
+- Verilator: cpu 0.151 s on 1 threads; allocated 8 MB
+

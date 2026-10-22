@@ -1,0 +1,24 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_pc_h_sr10e-sr10e-1b36b2643 bench bench_kvpc_sched_mut7 host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_pc_h_sr10e-sr10e-1b36b2643 log cl/bench_kvpc_sched_mut7.a1b1.log captured 2026-10-21T20:36:22-07:00
+# fail_regex '^KVPC_SCHED FAIL .* mut=7'
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=496 pll out s_cr_o 0/1
+MISMATCH t=497 pll out po
+MISMATCH t=497 pll out physical_col_sr 0/1
+MISMATCH t=498 pll out p_col_v 0/1
+MISMATCH t=498 pll out p_col_we 0/1
+MISMATCH t=498 pll out p_col_sr 0/1
+MISMATCH t=498 pll out physical_context
+OUT po mismatches=7561
+OUT p_col_v mismatches=1056
+OUT p_col_we mismatches=540
+OUT p_col_sr mismatches=1055
+OUT s_cr_o mismatches=1055
+OUT physical_context mismatches=28166
+OUT physical_col_sr mismatches=1055
+KVPC_SCHED FAIL edges=30000 checks=540000 errors=40488 active_out=234436 mut=7
+- /home/ubuntu/ot-scratch/claude/closure-loop/qkd_kvs_pc_h_sr10e-sr10e-1b36b2643/bench/kvpc_sched_m7/tb.sv:175: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 31us; walltime 0.339 s; speed 90.775 us/s
+- Verilator: cpu 0.339 s on 1 threads; allocated 7 MB
+

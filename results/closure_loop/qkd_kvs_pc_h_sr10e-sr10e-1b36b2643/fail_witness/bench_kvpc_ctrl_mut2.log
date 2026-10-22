@@ -1,0 +1,18 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_pc_h_sr10e-sr10e-1b36b2643 bench bench_kvpc_ctrl_mut2 host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_pc_h_sr10e-sr10e-1b36b2643 log cl/bench_kvpc_ctrl_mut2.a1b1.log captured 2026-10-21T20:29:20-07:00
+# fail_regex '^KVPC_CTRL FAIL .* mut=2'
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=162  ck out er
+MISMATCH t=162 pll out er
+MISMATCH t=333  ck out er
+MISMATCH t=333 pll out er
+MISMATCH t=336  ck out er
+MISMATCH t=337 pll out er
+MISMATCH t=338  ck out er
+OUT er mismatches=8496
+KVPC_CTRL FAIL edges=20000 checks=600624 errors=8496 active_out=172267 mut=2
+- /home/ubuntu/ot-scratch/claude/closure-loop/qkd_kvs_pc_h_sr10e-sr10e-1b36b2643/bench/kvpc_ctrl_m2/tb.sv:159: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.815 s; speed 20.481 us/s
+- Verilator: cpu 0.815 s on 1 threads; allocated 7 MB
+
