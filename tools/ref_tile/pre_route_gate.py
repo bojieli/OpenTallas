@@ -2519,7 +2519,8 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             if rec is not None:
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
-        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and binding.get("files"):
+        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and binding.get("files") \
+                and binding.get("execution_kind") != "metadata-classification":
             try:
                 binding = narrow_consumed_tools(binding, gate_executed_tools(binding, kd))
                 d["source_binding"] = binding        # the relaxing-rule allowlist record is read from here

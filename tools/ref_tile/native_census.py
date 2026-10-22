@@ -6,6 +6,7 @@ are special; reset and macro data pins count like other dynamic endpoints.
 """
 import argparse
 from collections import Counter
+from functools import lru_cache
 import gzip
 import hashlib
 import json
