@@ -2559,5 +2559,10 @@
  "pin_regs": {
   "enable": false,
   "reason": "the RTL captures every input at its pin register (raw kept copies, no logic before capture) and drives every output from its own register (FILL_PIPE output stage, q/q_v/q_bad registers), as the closed w130 leaf"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "why": "ROOT-RST 10-19 gate rule: rst_n reached 14 async-reset flops (write/read valids, sequencer sv/el, q_v/q_bad/coll_q) without a landing register; 2 registered face stages, 14 sinks <= 32 on the last stage; reset release latency +2 cycles (schedule item, not datapath)"
  }
 }
