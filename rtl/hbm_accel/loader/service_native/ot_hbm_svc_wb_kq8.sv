@@ -61,12 +61,13 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  function automatic integer sw_f(input integer g); sw_f=(g<4)?15:(g<NDS)?14:(g==NDS)?15:14; endfunction
  function automatic integer so_f(input integer g); so_f=(g<4)?15*g:(g<NDS)?60+14*(g-4):(g==NDS)?0:15; endfunction
  localparam integer NPART=3, NC=NSL*NPART;
+ localparam integer RELEASE_GROUP=4, NREL=(NC+RELEASE_GROUP-1)/RELEASE_GROUP+1;
  localparam integer NFP=NSL*NPP*NPART;                     // crossing FIFOs per PC
  localparam [32:0] SPACE_END=33'h020000000;
  // reset leaf maps
- localparam integer CS=29, RB=CS+16*NC*NPP+16, NS=RB+16*NPP*7;
+ localparam integer CS=29, RB=CS+16*NC*NPP+16, NS=RB+16*NPP*NREL;
  localparam integer XB=4*NFP, NR=XB+13;              // per root: 4 PCs x NFP FIFO write leaves, 4 x 3 slice leaves, ready
- localparam integer NRL=8, NF=16*NFP, HB=NF, HM=HB+16*NRL, NH=HM+7;
+ localparam integer NRL=(NSL+1)/2+1, NF=16*NFP, HB=NF, HM=HB+16*NRL, NH=HM+7;
  // ------------------------------------------------------------------------------------------------ resets
  wire reset_both=srst_in_n&&hrst_in_n;
  wire srs,hrs;wire [3:0] rrs;
@@ -295,7 +296,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  wire [FAW:0] fifo_wf [0:16*NFP-1];wire [FAW:0] fifo_rc [0:16*NFP-1];
  (* keep="true",dont_touch="true" *) reg popc [0:16*NSL-1];        // registered lockstep pop, one copy per slice
  (* keep="true",dont_touch="true" *) reg rtc [0:16*NSL-1];         // read toggle (which ping-pong FIFO is next)
- (* keep="true",dont_touch="true" *) reg rtd [0:16*NSL-1];         // read toggle copy for the data mux
+ (* keep="true",dont_touch="true" *) reg rtd [0:16*NSL*NPART-1];   // same-edge data and valid toggle per capture fragment
  generate for(gp=0;gp<16;gp=gp+1)begin:g_pc
   localparam integer K=gp/4;
   wire fclk=stream_fifo_clk[K];
@@ -315,12 +316,12 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   // A write. Grant phase tracks accepted grants, ahead of the delayed wtog.
   for(gr=0;gr<NPP;gr=gr+1)begin:g_pp_credit
    wire [PW-1:0] credit_tree [1:127];
-   (* keep="true",dont_touch="true" *) reg [PW-1:0] released [0:6];
+   (* keep="true",dont_touch="true" *) reg [PW-1:0] released [0:NREL-1];
    for(gq=0;gq<64;gq=gq+1)begin:g_credit
     if(gq<NC)begin:g_live
      (* keep="true",dont_touch="true" *) reg [PW-1:0] pending;
      localparam integer F=(gq/NPART)*NPART*NPP+(gq%NPART)*NPP+gr;
-     assign credit_tree[64+gq]=pending+PW'(fifo_wf[gp*NFP+F])-released[gq/10];
+     assign credit_tree[64+gq]=pending+PW'(fifo_wf[gp*NFP+F])-released[gq/RELEASE_GROUP];
      always @(posedge stream_clk or negedge sl[CS+gp*NC*NPP+gr*NC+gq])
       if(!sl[CS+gp*NC*NPP+gr*NC+gq])pending<=0;
       else pending<=credit_tree[64+gq];
@@ -329,15 +330,15 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    for(gq=1;gq<64;gq=gq+1)begin:g_cmin
     assign credit_tree[gq]=(credit_tree[2*gq]<credit_tree[2*gq+1])?credit_tree[2*gq]:credit_tree[2*gq+1];
    end
-   // Balanced six-level minimum loads only seven kept FF copies, never
-   // sixty subtractors. The delayed release is subtracted in candidate above
+   // Balanced six-level minimum feeds same-edge kept copies, each serving
+   // four subtractors; the last copy serves the independent capacity ledger. The delayed release is subtracted in candidate above
    // AND consumed by the ledger on the same edge, so it cannot release twice.
-   for(gq=0;gq<7;gq=gq+1)begin:g_cdist
-    localparam integer LR=RB+gp*NPP*7+gr*7+gq;
+   for(gq=0;gq<NREL;gq=gq+1)begin:g_cdist
+    localparam integer LR=RB+gp*NPP*NREL+gr*NREL+gq;
     always @(posedge stream_clk or negedge sl[LR])
      if(!sl[LR])released[gq]<=0;else released[gq]<=credit_tree[1];
    end
-   assign wfreed_pp[gp][gr]=released[6];
+   assign wfreed_pp[gp][gr]=released[NREL-1];
   end
   for(gf=0;gf<NSL;gf=gf+1)begin:g_sl
    localparam integer SW=sw_f(gf), SO=so_f(gf);
@@ -431,7 +432,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   for(gf=0;gf<NSL;gf=gf+1)begin:g_s
    localparam integer SW=sw_f(gf), SO=so_f(gf);
    localparam integer IX=gp*NSL+gf;
-   localparam integer RL=HB+gp*NRL+gf/3;
+   localparam integer RL=HB+gp*NRL+gf/2;
    localparam integer F0=gp*NFP+gf*NPART*NPP;
    wire [NPART-1:0] e0p,e1p;
    wire e0=|e0p,e1=|e1p;
@@ -457,20 +458,20 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
     wire [4:0] r0=fifo_rd[F0+gb*NPP],r1=fifo_rd[F0+gb*NPP+NPP-1];
     assign e0p[gb]=fifo_empty[F0+gb*NPP];
     assign e1p[gb]=(NPP==2)?fifo_empty[F0+gb*NPP+NPP-1]:1'b1;
-    wire [BW-1:0] din=(NPP==2&&rtd[IX])?r1[BW-1:0]:r0[BW-1:0];
-    // HBMb/IDXSU 10-21: the capture valid selects with the SAME kept toggle copy (rtd) as the data mux, so each
+    wire [BW-1:0] din=(NPP==2&&rtd[IX*NPART+gb])?r1[BW-1:0]:r0[BW-1:0];
+    // Native repair 10-21: each fragment uses one kept same-edge toggle for both the data mux and valid. Each
     // captured bit is structurally gated by its own FIFO read-valid (reviewed_gray_fifos SAT miter: rtc-gated valid with
     // an rtd-selected payload read FIFO 1 storage while FIFO 1 was empty in the rtc!=rtd cone). rtc==rtd always.
-    wire rv=(NPP==2&&rtd[IX])?!e1p[gb]:!e0p[gb];
+    wire rv=(NPP==2&&rtd[IX*NPART+gb])?!e1p[gb]:!e0p[gb];
     integer e;
     always @(posedge hbm_clk)for(e=0;e<3;e=e+1)
      if(push&&rv&&wpo[IX][e])ent[e][5*gb+:BW]<=din;
    end
    always @(posedge hbm_clk or negedge hl[RL])
-    if(!hl[RL])begin popc[IX]<=1'b0;rtc[IX]<=1'b0;rtd[IX]<=1'b0;vqc[IX]<=1'b0;wpo[IX]<=3'b001;rpo[IX]<=3'b001;end
+    if(!hl[RL])begin popc[IX]<=1'b0;rtc[IX]<=1'b0;for(integer rt=0;rt<NPART;rt=rt+1)rtd[IX*NPART+rt]<=1'b0;vqc[IX]<=1'b0;wpo[IX]<=3'b001;rpo[IX]<=3'b001;end
     else begin
      popc[IX]<=pop_n;vqc[IX]<=occ_n!=2'd0;
-     if(push&&NPP==2&&!(MUT==9&&gf==5))begin rtc[IX]<=!rtc[IX];rtd[IX]<=!rtd[IX];end
+     if(push&&NPP==2&&!(MUT==9&&gf==5))begin rtc[IX]<=!rtc[IX];for(integer rt=0;rt<NPART;rt=rt+1)rtd[IX*NPART+rt]<=!rtd[IX*NPART+rt];end
      if(push)wpo[IX]<={wpo[IX][1:0],wpo[IX][2]};
      if(fire)rpo[IX]<={rpo[IX][1:0],rpo[IX][2]};
     end
