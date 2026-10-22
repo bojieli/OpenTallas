@@ -4,7 +4,7 @@
 // Dates are sampled engine-start edges relative to local edge zero. Release is
 // exclusive. All bank clients are reserved throughout active; no request arbiter.
 module ot_hbm_su_indexed_scalar_f20 #(
- parameter integer READ_SAMPLE=11,WRITE_COMMIT=8,
+ parameter integer READ_SAMPLE=11,WRITE_COMMIT=8,MUT_PHASE=0,
  parameter [7:0] TARGET=8'd180
 )(input wire clk,rst_n,
  input wire cfg_v,input wire[7:0]cfg_target,input wire[11:0]cfg_addr,
@@ -58,7 +58,7 @@ module ot_hbm_su_indexed_scalar_f20 #(
    end
   end
  end
- ot_hbm_su_indexed_scalar #(.READ_SAMPLE(READ_SAMPLE),.WRITE_COMMIT(WRITE_COMMIT)) engine(
+ ot_hbm_su_indexed_scalar #(.READ_SAMPLE(READ_SAMPLE),.WRITE_COMMIT(WRITE_COMMIT),.MUT_PHASE(MUT_PHASE)) engine(
   .clk(clk),.rst_n(rst_n),.start(engine_start),
   .index_word(descriptor[23:0]),.score_base(descriptor[47:24]),.score_limit(descriptor[71:48]),
   .dest_word(descriptor[95:72]),.dyn_mul(descriptor[119:96]),.rr(rr),.rq(rq),.wq(wq),
