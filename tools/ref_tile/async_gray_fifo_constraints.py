@@ -241,7 +241,7 @@ def extend(body, spec, root):
         raise ValueError('async_gray_fifo ownership gate changed; revalidate extension')
     body = body.replace(marker, '  ot_ag_complete\n' + marker)
     body = body.replace('  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}',
-                        '  set ::ot_ag_seen {}\n  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}')
+                        '  set ::ot_ag_seen {}\n  set ::ot_ag_pending {}\n  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}')
     return bindings(record) + TCL + '\n' + body
 
 
@@ -250,6 +250,37 @@ TCL = r'''
 # emitted. Fail if mapping loses public register identities; never guess names.
 set ::ot_ag_seen {}
 set ::ot_ag_reset_seen {}
+# HBM-ELEM13/COLL-KS 10-21: every bounded pair's set_max_delay/set_min_delay is applied first and its finite max/min
+# path proof runs afterwards in ot_ag_verify (one timing update for the whole profile).  The per-pair
+# exception -> find_timing_paths interleave invalidated arrivals on every pair, so each pair cost a full STA search
+# (hdie_svc_vm_kshare: >10k pairs, 11+ h in synth_odb and again at every hook re-source).  The checks, the error and
+# PATH_DEFERRED messages are identical; a BOUNDED line is printed only after that pair's proof passed.
+set ::ot_ag_pending {}
+proc ot_ag_verify {} {
+  set pending $::ot_ag_pending
+  set ::ot_ag_pending {}
+  foreach row $pending {
+    lassign $row kind launch target start_name target_name done
+    foreach k {max min} {
+      set paths [find_timing_paths -from $launch -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+        if {$kind eq "reset"} {
+          puts "OT_ASYNC_GRAY PATH_DEFERRED reset $start_name -> $target_name $k (strict at sign-off)"
+        } else {
+          puts "OT_ASYNC_GRAY PATH_DEFERRED $start_name -> $target_name $k (strict at sign-off)"
+        }
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        if {$kind eq "reset"} {
+          error "OT_ASYNC_GRAY: missing finite bounded reset $k path $start_name -> $target_name"
+        }
+        error "OT_ASYNC_GRAY: missing finite bounded $k path $start_name -> $target_name"
+      }
+    }
+    if {$done ne ""} {puts $done}
+  }
+}
 proc ot_ag_public_nets {cell} {
   set result {}
   # The mapped register instance keeps its Yosys register name plus the cell-type suffix ($_DFF_PN0_, $_DFFE_PN0P_, ...)
@@ -336,7 +367,7 @@ proc ot_ag_reset_stage {cell} {
   }
   return 0
 }
-proc ot_ag_reset_bound {start pin bound} {
+proc ot_ag_reset_bound {start pin bound {done {}}} {
   if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
     set launch [get_ports [get_full_name $start]]
   } else {
@@ -345,16 +376,7 @@ proc ot_ag_reset_bound {start pin bound} {
   }
   set_max_delay -ignore_clock_latency $bound -from $launch -to $pin
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $pin
-  foreach kind {max min} {
-    set paths [find_timing_paths -from $launch -to $pin -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-      puts "OT_ASYNC_GRAY PATH_DEFERRED reset [get_full_name $start] -> [get_full_name $pin] $kind (strict at sign-off)"
-      continue
-    }
-    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-      error "OT_ASYNC_GRAY: missing finite bounded reset $kind path [get_full_name $start] -> [get_full_name $pin]"
-    }
-  }
+  lappend ::ot_ag_pending [list reset $launch $pin [get_full_name $start] [get_full_name $pin] $done]
 }
 proc ot_ag_async_control {pin cells inputs} {
   # Reset recovery/removal stays timed within a domain. A FIFO data/pointer publication must
@@ -397,12 +419,11 @@ proc ot_ag_async_control {pin cells inputs} {
     if {![ot_ag_reset_stage $target]} {
       error "OT_ASYNC_GRAY: cross-domain asynchronous control $name ($source_domain) -> [get_full_name $pin] ($domain); only an ot_reset_sync pipe may take it"
     }
-    ot_ag_reset_bound $start $pin [dict get $::ot_ag_reset_bound $domain]
+    ot_ag_reset_bound $start $pin [dict get $::ot_ag_reset_bound $domain] "OT_ASYNC_GRAY BOUNDED reset $name -> [get_full_name $pin]"
     dict incr ::ot_ag_reset_seen $domain
-    puts "OT_ASYNC_GRAY BOUNDED reset $name -> [get_full_name $pin]"
   }
 }
-proc ot_ag_bound {start target} {
+proc ot_ag_bound {start target {done {}}} {
   # OpenSTA graph startpoints are register clock pins; exceptions and path
   # queries must begin at the actual launch register, not a clock input pin.
   set launch [get_cells -quiet -of_objects $start]
@@ -413,16 +434,7 @@ proc ot_ag_bound {start target} {
   # No exception applies to any other path or either synchronizer's second stage.
   set_max_delay -ignore_clock_latency 773.333 -from $launch -to $target
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $target
-  foreach kind {max min} {
-    set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-      puts "OT_ASYNC_GRAY PATH_DEFERRED [get_full_name $start] -> [get_full_name $target] $kind (strict at sign-off)"
-      continue
-    }
-    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-      error "OT_ASYNC_GRAY: missing finite bounded $kind path [get_full_name $start] -> [get_full_name $target]"
-    }
-  }
+  lappend ::ot_ag_pending [list path $launch $target [get_full_name $start] [get_full_name $target] $done]
 }
 proc ot_ag_crossing {start pin source target source_domain target_domain} {
   lassign [ot_ag_role $source] scope sr source_bit
@@ -439,9 +451,8 @@ proc ot_ag_crossing {start pin source target source_domain target_domain} {
   }
   if {$sr eq "payload" && $source_domain eq $writer && $target_domain eq $reader && [ot_ag_target $scope $source_bit $target $pin]} {set permitted 1}
   if {!$permitted} {error "OT_ASYNC_GRAY: unapproved actual crossing $source -> $target ($scope $sr -> $target_scope $tr)"}
-  ot_ag_bound $start $pin
+  ot_ag_bound $start $pin "OT_ASYNC_GRAY BOUNDED $source -> $target"
   dict incr ::ot_ag_seen [list $scope $sr]
-  puts "OT_ASYNC_GRAY BOUNDED $source -> $target"
 }
 proc ot_ag_payload {start port source name source_domain target_domain} {
   lassign [ot_ag_role $source] scope role source_bit
@@ -482,6 +493,7 @@ proc ot_ag_online_merged {scope role domains} {
   return 0
 }
 proc ot_ag_complete {} {
+  ot_ag_verify
   dict for {scope domains} $::ot_ag_fifo_domains {
     foreach role {wr_gray rd_gray wr_online rd_online} {
       if {[dict exists $::ot_ag_seen [list $scope $role]]} continue
