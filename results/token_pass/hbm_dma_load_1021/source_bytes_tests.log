@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-tok-hbm-2000/dma
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-tok-hbm-2000/dma
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-tok-hbm-2000/dma
+ot-run: ot-gold2       admits     6 GB (avail 398, growth 394, headroom 0, waiters 3/760 GB) load 47/112 running 17 disk 2713 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-tok-hbm-2000/dma
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-tok-hbm-2000/dma
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-tok-hbm-2000/dma
+ot-run: -> ot-gold2
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-435682-1792639618 after 0 s
+DMA_SOURCE_BYTES_PASS records=18 dynamic_open=4
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-435682-1792639618): exit 0

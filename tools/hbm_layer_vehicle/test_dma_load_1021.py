@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """LOAD source-address and split-packet contract checks against actual RTL ABI."""
 import random
-from dma_load_1021 import lower_load, source_location, load_word, vmfc_load_word
+from dma_load_1021 import lower_load, source_location, load_word, vmfc_load_word, vmfc_release_word
 
 
 def test_inverse():
@@ -52,6 +52,11 @@ def test_rejections():
         else:
             raise AssertionError(change)
     assert vmfc_load_word(2, load_word(**f), (1 << 88) | 17) & ((1 << 89) - 1) == (1 << 88) | 17
+    release = vmfc_release_word(0xfe, bank=1, epoch=37)
+    assert (release >> 89) & 255 == 0xfe
+    command = release >> 97
+    assert command & 1 == 1 and (command >> 1) & 65535 == 37
+    assert (command >> 52) & 15 == 0 and (command >> 56) & 1 == 1
     print('REJECTIONS_PASS malformed7 old89preserved')
 
 

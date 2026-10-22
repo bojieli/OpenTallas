@@ -1,0 +1,693 @@
+{
+  "schema": "opentallas.dma_load_actual_sources.v1",
+  "execution_qualified": false,
+  "records": [
+    {
+      "layer": 0,
+      "record": 1,
+      "tag": "q_norm.gain",
+      "file": "L00_k1_q_norm.gain.bin",
+      "A": [
+        17179889664,
+        1280,
+        1,
+        0,
+        1,
+        "HBM",
+        "BF16"
+      ],
+      "O": [
+        48128,
+        1280,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "bc33729956bf59c4c8cedeee3583e2c1e12415f42ea5653d7137c6f16226fc28",
+      "bytes": 2560,
+      "provenance": {
+        "tensor": "layers.0.attn.q_norm.weight",
+        "file": "L00_q_norm.gain.bin",
+        "shard": "model-00003-of-00048.safetensors",
+        "dtype": "BF16",
+        "shape": [
+          1280
+        ],
+        "data_offsets": [
+          3936728,
+          3939288
+        ],
+        "sha256": "bc33729956bf59c4c8cedeee3583e2c1e12415f42ea5653d7137c6f16226fc28"
+      }
+    },
+    {
+      "layer": 0,
+      "record": 2,
+      "tag": "kv_norm.gain",
+      "file": "L00_k2_kv_norm.gain.bin",
+      "A": [
+        17179892224,
+        512,
+        1,
+        0,
+        1,
+        "HBM",
+        "BF16"
+      ],
+      "O": [
+        49408,
+        512,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "2a9b0a0dceb2ba42257731be89a985d42dd17da06158eb0357683834bab0ddb9",
+      "bytes": 1024,
+      "provenance": {
+        "tensor": "layers.0.attn.kv_norm.weight",
+        "file": "L00_kv_norm.gain.bin",
+        "shard": "model-00003-of-00048.safetensors",
+        "dtype": "BF16",
+        "shape": [
+          512
+        ],
+        "data_offsets": [
+          3935704,
+          3936728
+        ],
+        "sha256": "2a9b0a0dceb2ba42257731be89a985d42dd17da06158eb0357683834bab0ddb9"
+      }
+    },
+    {
+      "layer": 0,
+      "record": 3,
+      "tag": "kv_rope.table",
+      "file": "L00_k3_kv_rope.table.bin",
+      "A": [
+        17179893248,
+        64,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        53376,
+        64,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "9fcbeb54192ff58902d030f471775eab4d7695ec096f4685b5a0dcaee3441330",
+      "bytes": 256,
+      "provenance": {
+        "source": "native build_tables rope_cs, rank0, position1048575",
+        "config_sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+        "compressed": false
+      }
+    },
+    {
+      "layer": 0,
+      "record": 8,
+      "tag": "attend.sink_table",
+      "file": "L00_k8_attend.sink_table.bin",
+      "A": [
+        17179895040,
+        1,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        56000,
+        1,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "b17ccc53a1e3589fbf9f15ad055e2cef77a1a3c64dcd51d7f4f67b785ee55e93",
+      "bytes": 4,
+      "provenance": {
+        "tensor": "layers.0.attn.attn_sink",
+        "file": "L00_attend.sink_table.bin",
+        "shard": "model-00003-of-00048.safetensors",
+        "dtype": "F32",
+        "shape": [
+          64
+        ],
+        "data_offsets": [
+          0,
+          256
+        ],
+        "sha256": "8017bf7692016398f5b28fee5afe99d3f2f3a54cb68fc66d86a5b7a58c241457"
+      }
+    },
+    {
+      "layer": 0,
+      "record": 34,
+      "tag": "route.bias",
+      "file": "L00_k34_route.bias.bin",
+      "A": [
+        17179893504,
+        384,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        87936,
+        384,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "7cc2d71eb39af331c32cf35fea8fcc84be5706a7188791eaa54df7cad5f43b0b",
+      "bytes": 1536,
+      "provenance": {
+        "tensor": "layers.0.ffn.gate.bias",
+        "file": "L00_route.bias.bin",
+        "shard": "model-00003-of-00048.safetensors",
+        "dtype": "F32",
+        "shape": [
+          384
+        ],
+        "data_offsets": [
+          256,
+          1792
+        ],
+        "sha256": "7cc2d71eb39af331c32cf35fea8fcc84be5706a7188791eaa54df7cad5f43b0b"
+      }
+    },
+    {
+      "layer": 0,
+      "record": 35,
+      "tag": "route.one",
+      "file": "L00_k35_route.one.bin",
+      "A": [
+        17180167456,
+        1,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        88966,
+        1,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "bytes": 4,
+      "provenance": {
+        "source": "ds_native.build_tables ONE=np.ones(1,F)"
+      }
+    },
+    {
+      "layer": 2,
+      "record": 2,
+      "tag": "q_norm.gain",
+      "file": "L02_k2_q_norm.gain.bin",
+      "A": [
+        17179889664,
+        1280,
+        1,
+        0,
+        1,
+        "HBM",
+        "BF16"
+      ],
+      "O": [
+        48128,
+        1280,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "4e4f37565086588ba7f369cccbda956b622728bb5aab1a1e35c1246d8c028164",
+      "bytes": 2560,
+      "provenance": {
+        "tensor": "layers.2.attn.q_norm.weight",
+        "file": "L02_q_norm.gain.bin",
+        "shard": "model-00005-of-00048.safetensors",
+        "dtype": "BF16",
+        "shape": [
+          1280
+        ],
+        "data_offsets": [
+          14882520,
+          14885080
+        ],
+        "sha256": "4e4f37565086588ba7f369cccbda956b622728bb5aab1a1e35c1246d8c028164"
+      }
+    },
+    {
+      "layer": 2,
+      "record": 4,
+      "tag": "kv_rope.table",
+      "file": "L02_k4_kv_rope.table.bin",
+      "A": [
+        17179893248,
+        64,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        53376,
+        64,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "c83afab342b17745818a6642007bdd0839a71b75e3435c0b4cffb0b7051fa41f",
+      "bytes": 256,
+      "provenance": {
+        "source": "native build_tables rope_cs, rank0, position1048575",
+        "config_sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+        "compressed": true
+      }
+    },
+    {
+      "layer": 2,
+      "record": 5,
+      "tag": "kv_norm.gain",
+      "file": "L02_k5_kv_norm.gain.bin",
+      "A": [
+        17179892224,
+        512,
+        1,
+        0,
+        1,
+        "HBM",
+        "BF16"
+      ],
+      "O": [
+        49408,
+        512,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "b415c277d895e21f5b408c829438af4a11fdb605998a54b11b43072a2089dbd1",
+      "bytes": 1024,
+      "provenance": {
+        "tensor": "layers.2.attn.kv_norm.weight",
+        "file": "L02_kv_norm.gain.bin",
+        "shard": "model-00005-of-00048.safetensors",
+        "dtype": "BF16",
+        "shape": [
+          512
+        ],
+        "data_offsets": [
+          14881496,
+          14882520
+        ],
+        "sha256": "b415c277d895e21f5b408c829438af4a11fdb605998a54b11b43072a2089dbd1"
+      }
+    },
+    {
+      "layer": 2,
+      "record": 34,
+      "tag": "attend.sink_table",
+      "file": "L02_k34_attend.sink_table.bin",
+      "A": [
+        17179895040,
+        1,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        56000,
+        1,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "0faaaf864e3032ca2de9500f90b8b176f54c6120961086c65fef0f180c8d18b7",
+      "bytes": 4,
+      "provenance": {
+        "tensor": "layers.2.attn.attn_sink",
+        "file": "L02_attend.sink_table.bin",
+        "shard": "model-00005-of-00048.safetensors",
+        "dtype": "F32",
+        "shape": [
+          64
+        ],
+        "data_offsets": [
+          0,
+          256
+        ],
+        "sha256": "fcf433c9435a3484908b9a4b9b76f6eb3f87c32e02df227fa9ab0c3157fdfdae"
+      }
+    },
+    {
+      "layer": 2,
+      "record": 37,
+      "tag": "route.bias",
+      "file": "L02_k37_route.bias.bin",
+      "A": [
+        17179893504,
+        384,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        87936,
+        384,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "52662945131cbd8c799e5ba90554bf65a41c7cef59b0ab00ed2c4c86cd1219e4",
+      "bytes": 1536,
+      "provenance": {
+        "tensor": "layers.2.ffn.gate.bias",
+        "file": "L02_route.bias.bin",
+        "shard": "model-00005-of-00048.safetensors",
+        "dtype": "F32",
+        "shape": [
+          384
+        ],
+        "data_offsets": [
+          256,
+          1792
+        ],
+        "sha256": "52662945131cbd8c799e5ba90554bf65a41c7cef59b0ab00ed2c4c86cd1219e4"
+      }
+    },
+    {
+      "layer": 2,
+      "record": 40,
+      "tag": "route.one",
+      "file": "L02_k40_route.one.bin",
+      "A": [
+        17180167456,
+        1,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        88966,
+        1,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "bytes": 4,
+      "provenance": {
+        "source": "ds_native.build_tables ONE=np.ones(1,F)"
+      }
+    },
+    {
+      "layer": 14,
+      "record": 10,
+      "tag": "q_norm.gain",
+      "file": "L14_k10_q_norm.gain.bin",
+      "A": [
+        17179889664,
+        1280,
+        1,
+        0,
+        1,
+        "HBM",
+        "BF16"
+      ],
+      "O": [
+        48128,
+        1280,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "3877167296dd2b6c678c2a3cfe2433bdc71b147f2a3df997ad17afbd2734d5db",
+      "bytes": 2560,
+      "provenance": {
+        "tensor": "layers.14.attn.q_norm.weight",
+        "file": "L14_q_norm.gain.bin",
+        "shard": "model-00017-of-00048.safetensors",
+        "dtype": "BF16",
+        "shape": [
+          1280
+        ],
+        "data_offsets": [
+          14882520,
+          14885080
+        ],
+        "sha256": "3877167296dd2b6c678c2a3cfe2433bdc71b147f2a3df997ad17afbd2734d5db"
+      }
+    },
+    {
+      "layer": 14,
+      "record": 12,
+      "tag": "kv_rope.table",
+      "file": "L14_k12_kv_rope.table.bin",
+      "A": [
+        17179893248,
+        64,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        53376,
+        64,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "c83afab342b17745818a6642007bdd0839a71b75e3435c0b4cffb0b7051fa41f",
+      "bytes": 256,
+      "provenance": {
+        "source": "native build_tables rope_cs, rank0, position1048575",
+        "config_sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+        "compressed": true
+      }
+    },
+    {
+      "layer": 14,
+      "record": 13,
+      "tag": "kv_norm.gain",
+      "file": "L14_k13_kv_norm.gain.bin",
+      "A": [
+        17179892224,
+        512,
+        1,
+        0,
+        1,
+        "HBM",
+        "BF16"
+      ],
+      "O": [
+        49408,
+        512,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "a776bb27c0995f96f80f881a9f051d99016a2143a6537e6097aa1ef7ab977986",
+      "bytes": 1024,
+      "provenance": {
+        "tensor": "layers.14.attn.kv_norm.weight",
+        "file": "L14_kv_norm.gain.bin",
+        "shard": "model-00017-of-00048.safetensors",
+        "dtype": "BF16",
+        "shape": [
+          512
+        ],
+        "data_offsets": [
+          14881496,
+          14882520
+        ],
+        "sha256": "a776bb27c0995f96f80f881a9f051d99016a2143a6537e6097aa1ef7ab977986"
+      }
+    },
+    {
+      "layer": 14,
+      "record": 52,
+      "tag": "attend.sink_table",
+      "file": "L14_k52_attend.sink_table.bin",
+      "A": [
+        17179895040,
+        1,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        56000,
+        1,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "a6924a097a396d42c359b4353846a3d85ffa80ce890a5863afe6bf6217af7d18",
+      "bytes": 4,
+      "provenance": {
+        "tensor": "layers.14.attn.attn_sink",
+        "file": "L14_attend.sink_table.bin",
+        "shard": "model-00017-of-00048.safetensors",
+        "dtype": "F32",
+        "shape": [
+          64
+        ],
+        "data_offsets": [
+          0,
+          256
+        ],
+        "sha256": "d5db0c08067fa8f55ba4a754845376f4883efbe289cc9d78f037440de671b9ce"
+      }
+    },
+    {
+      "layer": 14,
+      "record": 55,
+      "tag": "route.bias",
+      "file": "L14_k55_route.bias.bin",
+      "A": [
+        17179893504,
+        384,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        87936,
+        384,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "b10e27eb9b850aac41191ef66a7adb80fb75cd90d2d621ab35a6a33471ded76b",
+      "bytes": 1536,
+      "provenance": {
+        "tensor": "layers.14.ffn.gate.bias",
+        "file": "L14_route.bias.bin",
+        "shard": "model-00017-of-00048.safetensors",
+        "dtype": "F32",
+        "shape": [
+          384
+        ],
+        "data_offsets": [
+          256,
+          1792
+        ],
+        "sha256": "b10e27eb9b850aac41191ef66a7adb80fb75cd90d2d621ab35a6a33471ded76b"
+      }
+    },
+    {
+      "layer": 14,
+      "record": 58,
+      "tag": "route.one",
+      "file": "L14_k58_route.one.bin",
+      "A": [
+        17180167456,
+        1,
+        1,
+        0,
+        1,
+        "HBM",
+        "FP32"
+      ],
+      "O": [
+        88966,
+        1,
+        1,
+        0,
+        1,
+        "VM",
+        "FP32"
+      ],
+      "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "bytes": 4,
+      "provenance": {
+        "source": "ds_native.build_tables ONE=np.ones(1,F)"
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "layer": 14,
+      "record": 0,
+      "tag": "engram.host_table",
+      "reason": "requires actual dynamic upstream producer; not derived from fixture output"
+    },
+    {
+      "layer": 14,
+      "record": 3,
+      "tag": "engram.codes",
+      "reason": "requires actual dynamic upstream producer; not derived from fixture output"
+    },
+    {
+      "layer": 14,
+      "record": 4,
+      "tag": "engram.scales",
+      "reason": "requires actual dynamic upstream producer; not derived from fixture output"
+    },
+    {
+      "layer": 14,
+      "record": 6,
+      "tag": "engram.wgt",
+      "reason": "requires actual dynamic upstream producer; not derived from fixture output"
+    }
+  ],
+  "note": "Source hashes match actual fixture HBM operands. No fixture output used as input."
+}

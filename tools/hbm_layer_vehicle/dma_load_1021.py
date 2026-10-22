@@ -27,7 +27,8 @@ def load_word(**fields):
         if not 0 <= x < 1 << width:
             raise ValueError(f'{name}={x} does not fit {width} bits')
         value |= x << lo
-    if fields['fmt'] not in SIZE_BY_FMT or not 1 <= fields['count'] <= 8:
+    release_only = fields['count'] == 0 and fields['release'] == 1
+    if fields['fmt'] not in SIZE_BY_FMT or not (1 <= fields['count'] <= 8 or release_only):
         raise ValueError('unsupported format or count (FP4 code3 is not UE8M0)')
     if fields['byte'] + fields['count'] * SIZE_BY_FMT[fields['fmt']] > 32:
         raise ValueError('load crosses a source sector')
@@ -46,6 +47,19 @@ def vmfc_load_word(lane, command, legacy_payload=0):
     if not 0 <= lane < 8 or not 0 <= command < 1 << 62 or not 0 <= legacy_payload < 1 << 89:
         raise ValueError('vmfc payload out of range')
     return legacy_payload | (1 << (89 + lane)) | (command << 97)
+
+
+def vmfc_release_word(lanes, *, bank, epoch):
+    """Release unused source lanes without reading SRAM or writing dummy VM data.
+
+    A lane already released on its last read must be absent from this mask.
+    Count zero is legal only together with release and checked ownership.
+    """
+    if not 1 <= lanes < 256:
+        raise ValueError('release needs a nonempty eight-lane mask')
+    command = load_word(bank=bank, epoch=epoch, group=0, slot=0, byte=0,
+                        fmt=0, sector=0, word=0, count=0, release=1, destbank=0, destq=0)
+    return (lanes << 89) | (command << 97)
 
 
 def source_location(address):
