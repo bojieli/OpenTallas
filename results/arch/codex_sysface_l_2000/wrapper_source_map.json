@@ -1059,13 +1059,6 @@
       "width": "1",
       "capture_edges": 1,
       "reset": "none on boundary data capture"
-    },
-    {
-      "port": "_source_copies",
-      "direction": "input",
-      "width": "1",
-      "capture_edges": 1,
-      "reset": "none on boundary data capture"
     }
   ],
   "core_reset_release_edges": 3,

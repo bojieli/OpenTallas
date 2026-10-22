@@ -57,7 +57,7 @@ def main():
  wrapper=wrapper.replace('endmodule','  initial if(MU!=1 || MU_HEAD!=1 || ROPE!=1) $fatal(1,"LCTX3 wrapper requires actual production MU1/MU_HEAD1/ROPE1");\nendmodule',1)
  (OUT/'qfd_sys_face_lctx3_core.sv').write_text(core);(OUT/'qfd_sys_face_lctx3_wrapped.sv').write_text(wrapper)
  ports=[]
- for direction,width,name in re.findall(r'\b(input|output)\s*(\[[^]]+\])?\s*(\w+)\s*;',wrapper):
+ for direction,width,name in re.findall(r'\b(input|output)\b\s*(\[[^]]+\])?\s*(\w+)\s*;',wrapper):
   ports.append(dict(port=name,direction=direction,width=width or '1',capture_edges=0 if name=='ck' else 2 if name=='rst_n' else 1,reset='two synchronous relay registers, then core third-edge release' if name=='rst_n' else 'none on boundary data capture'))
  receipt=dict(scope='actual explicit capture wrapper replaces automatic pin registers, never stacks them',baseline_wrapper_sha256=hashlib.sha256((R/'results/arch/codex_sysface_l_2000/pin_wrapper_lctx2.v').read_bytes()).hexdigest(),external_copy_map=external,per_port_capture=ports,core_reset_release_edges=3,reset_input_relay_edges=2,record_reset_leaves=54,head_reset_leaves=40,txv_publications=23,calendar_data_publications=28,unqualified='Actual mapped native census and image-specific functional/timing qualification remain required; no old view/age transfer')
  (R/'results/arch/codex_sysface_l_2000/wrapper_source_map.json').write_text(json.dumps(receipt,indent=2)+'\n');print('explicit same-edge input copies',len(external),'ports',len(ports))
