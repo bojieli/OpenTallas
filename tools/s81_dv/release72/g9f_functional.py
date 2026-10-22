@@ -141,8 +141,8 @@ def hbc_disabled(plan,table,source_ref,regional_manifest):
     plan['links'].append(dict(i='hbc_reverse_l0',c='ctrl',b=276,d=1,
         e=[[di,'hbr',dst['x'],dst['y']+dst['h']*.7,'box'],[si,'hbr',src['x']+src['w'],src['y']+src['h']*.7,'box']],
         endpoint_faces=['W','E'],n='Real t_host77/t_kd54/starter1; 132 live bits plus144 declared spares'))
-    paths=['rtl/dsrom_sys/s81_dv/hostb/'+n+'.sv' for n in ['dsdv_hostb_hold','dsdv_hostb_crc512','dsdv_hostb_rx','dsdv_hostb_tx','dsdv_hostb_stage','dsdv_hbc1_loader','dsdv_hbc1_affine_book','dsdv_hostb_return','dsdv_hostb_stage_hbc','dsdv_hostb_source','dsdv_hostb_seqhost_mux']]
-    paths+=['rtl/dsrom_sys/s81_dv/slice/mu72/'+top+'.sv']
+    paths=['rtl/dsrom_sys/s81_dv/hostb/'+n+'.sv' for n in ['dsdv_hostb_hold','dsdv_hostb_crc512','dsdv_hostb_rx','dsdv_hostb_tx','dsdv_hostb_stage','dsdv_hbc1_loader','dsdv_hbc1_affine_book','dsdv_hostb_return','dsdv_hostb_stage_hbc','dsdv_hostb_source','dsdv_hostb_seqhost_mux','dsdv_hostb_landing']]
+    paths+=['rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv','rtl/dsrom_sys/s81_dv/slice/mu72/'+top+'.sv']
     table['rtl_refs'].setdefault(source_ref,[]).extend(paths)
     table['prefer'].extend(source_ref+'/'+path for path in paths)
     for rec in regional_manifest['files']:
