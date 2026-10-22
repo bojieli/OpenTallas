@@ -263,7 +263,8 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wire tag_ok=rt=={cm_bank,cm_epoch[11:0],rt[3:0]}&&rb<4;
   wire[FW-1:0]f_d={cm_bank,cm_epoch,rt[3:0],rb[1:0],c_d[255:0]};
   wire f_ov,f_un;
-  ot_hbm_svc_async_fifo_shp #(.WIDTH(FW),.DEPTH(8),.SW(7)) u_fill(
+  // v4d: SW 14 (NS 20, NG 7): u_wr/rd_reset drives ~20 control + NG leaf flops <= 32 (SW 7: 34); rs[d] -> 14 AND + 1
+  ot_hbm_svc_async_fifo_shp #(.WIDTH(FW),.DEPTH(8),.SW(14)) u_fill(
    .wr_clk(hbm_clk),.wr_rst_n(hfl[0]),.wr_valid(c_pop_vm),.wr_ready(f_r),.wr_data(f_d),.wr_overflow(f_ov),
    .rd_clk(stream_clk),.rd_rst_n(sfl[0]),.rd_valid(rf_valid[l]),.rd_ready(rf_valid[l]),.rd_data(rf_data[FW*l+:FW]),.rd_underflow(f_un));
   wire[8:0]rd_beats=b_pop_grp&&!b_d[KW-1]?{5'd0,b_d[KW-1-30-1-:4]}:9'd0;

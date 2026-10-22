@@ -18,6 +18,7 @@
 // wr_online / rd_online), on the same edge as rd_online_w1 / wr_online_r1 capture; the first fire needs the _w2 / _r2
 // flag, i.e. >= 1 edge later (bench margin).  The tool admits this exact wiring only (COORD re-ack 10-22 (b)).
 // group reset leaf -> GE slices x (DEPTH + 1) + 1 <= 32.
+// Leaf flops (NG per side) share u_wr/rd_reset with ~20 control flops: callers keep NG <= 11 (kshare u_fill SW 14, NG 7).
 (* keep_hierarchy = "yes" *)
 module ot_hbm_svc_shp_and2(input wire a,b,output wire y); assign y=a&b; endmodule
 // Group release leaf: N kept copies of the side's own online flag (D = wr_online / rd_online, NOT a constant 1: a D=1
@@ -94,9 +95,15 @@ module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)
 `else
  assign gw_reset=gw_l0; assign gr_reset=gr_l0;
 `endif
+ // v4d (r5a v4c gate 10-22, census max 40): wr_fire was one abc net shared by the control (wr_bin/gray/overflow), the
+ // caller's wr_ready users and the NG group ANDs (14 + 26 pins).  The group ANDs now hang off a KEPT private fire copy
+ // (u_wfg / u_rfg, same wr_valid & wr_ready / rd_valid & rd_ready), so the shared net carries one extra pin only.
+ wire wr_fire_g,rd_fire_g;
+ (* keep="true" *) ot_hbm_svc_shp_and2 u_wfg(.a(wr_valid),.b(wr_ready),.y(wr_fire_g));
+ (* keep="true" *) ot_hbm_svc_shp_and2 u_rfg(.a(rd_valid),.b(rd_ready),.y(rd_fire_g));
  generate for(g=0;g<NG;g=g+1)begin:g_g
-  (* keep="true" *) ot_hbm_svc_shp_and2 u_gw(.a(wr_fire),.b(gw_reset[g]),.y(gw_fire[g]));
-  (* keep="true" *) ot_hbm_svc_shp_and2 u_gr(.a(rd_fire),.b(gr_reset[g]),.y(gr_fire[g]));
+  (* keep="true" *) ot_hbm_svc_shp_and2 u_gw(.a(wr_fire_g),.b(gw_reset[g]),.y(gw_fire[g]));
+  (* keep="true" *) ot_hbm_svc_shp_and2 u_gr(.a(rd_fire_g),.b(gr_reset[g]),.y(gr_fire[g]));
  end
  for(s=0;s<NS;s=s+1)begin:g_s
   localparam integer B=(WIDTH-s*SW<SW)?WIDTH-s*SW:SW;
