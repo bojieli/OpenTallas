@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.head.native32.boolean_cone_identity.v1",
+  "original_source": "0a2b8ec63",
+  "old_path": "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v",
+  "new_path": "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native_h32.v",
+  "old_sha256": "5bd2448e4914cefa7b1d8dd8ffa294dd3c3e69e24910658d994a564b7593e5a7",
+  "new_sha256": "56a9fce0521401d7d8c28441d20d56514c5e76f35fe6235e1f882ddded431742",
+  "new_cone": "(* keep = 1, dont_touch = 1 *) NAND5xp2_ASAP7_75t_R c2107_r6b (.A(n62),.B(n61),.C(n60),.D(n67),.E(n3486),.Y(n3487_r6b));",
+  "original_cone": "(* keep = 1, dont_touch = 1 *) NAND5xp2_ASAP7_75t_R c2107 (.A(n62),.B(n61),.C(n60),.D(n67),.E(n3486),.Y(n3487));",
+  "only_consumer_rewire": {
+    "old": "(* keep = 1, dont_touch = 1 *) OAI21xp33_ASAP7_75t_R c2835 (.A1(n3488),.A2(n3489),.B(n3487),.Y(n3623));",
+    "new": "(* keep = 1, dont_touch = 1 *) OAI21xp33_ASAP7_75t_R c2835 (.A1(n3488),.A2(n3489),.B(n3487_r6b),.Y(n3623));"
+  },
+  "canonicalize_new_graph_to_original_byte_identity": true,
+  "meaning": "The new NAND5 owner has exactly the original five inputs and same cell. Replacing its output by the original output and dropping its duplicate cell restores every original byte. The complete graph therefore computes identical four-state functions on every edge; no state or capture edge changes.",
+  "mapped_native_status": "pending, no waiver",
+  "old_native_max": 34,
+  "old_native_violations": 10,
+  "old_native_role_errors": 0
+}
