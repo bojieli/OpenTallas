@@ -26,3 +26,15 @@ def test_contract_uses_emitted_standin_cell_and_exact_closed_master():
     kinds = {'ld_dn':'standin','ld_xr':'closed','u_other':'standin'}
     assert forwarded_payload_contracts(insts,kinds,{'ld_dn':'rv_ld_dn','u_other':'rv_other'}) == {
         'rv_ld_dn':805,'dsfd_dvland_276l':276}
+
+
+def test_corner_hook_updates_step_artifact_before_equalization(tmp_path):
+    from dv_rvcase import install_controller_corner_repair
+    # die_repair_tcl returns only a source command; its generated artifact owns
+    # the equalization call. Hooking that return fragment misses the call.
+    path = tmp_path/'die_repeaters_step.tcl'
+    path.write_text('source /work/die_repeaters.tcl\not_die_rep_fclk_equalize /work/fclk {n*_fck*} {BUFx8}\n')
+    install_controller_corner_repair(tmp_path)
+    text = path.read_text()
+    assert text.index('s81_ctrl_corner_repair') < text.index('ot_die_rep_fclk_equalize')
+    assert (tmp_path/'ctrl_corner.tcl').is_file()
