@@ -1,0 +1,5 @@
+# E2 rw13isb (FALLBACK)
+
+E2 regional per-island clock subtrees (HBM-ELEM13/HC 10-21) after ROOT-reviewed baseline replay 3b4b14119 reproduced rw12is d2 platform TT 130.248: d0-3/h0-3 row-assembler roots have ~110 real sinks WEST of the 8-SRAM column and ~400 EAST; default sym build splits one bbox across the column + collapse leaves unequal depth (within-bin 138 ps). Fix = one local subtree per island, equal buffer depth, fork at unchanged root pin (same mechanism the actual gate validated for w1/w2/w3 17.7/30.1/32.6 TT). Same 734.4 outline, 20 hard children, pins, roots, edges, RTL; no SDC/RC/Lib change; zero cycles. FALLBACK: island subtrees on every glue-only root (all 23; w1-w3 keep validated build; hard-insertion roots keep original).
+
+SAFE8: 1 pins unchanged (same faces/pin regs); 2 reach unchanged (<=405 hops); 3 fanout native32 (gate census); 4 depth unchanged; 5 storage 8 SRAM column on lattice unchanged; 6 floorplan 734.4 sq unchanged; 7 clock: local subtree per SRAM-separated island, equal depth, per-root spread target <=80 TT+FF; 8 reset unchanged landed.
