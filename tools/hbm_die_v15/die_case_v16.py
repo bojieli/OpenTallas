@@ -1815,7 +1815,7 @@ write_db /work/out/place_pg.odb'''
 # OpenROAD in the pinned ORFS image; writes out/run.log, out/run.exit
 D=$(cd $(dirname $0) && pwd); N=hdie-v16case-$$
 docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-256}g -v $D:/work -w /work openroad/orfs:asap7lock \\
-  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=\\$?; chmod -R a+rwX /work/out; exit \\$rc"
+  bash -lc "ulimit -s unlimited; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=\\$?; chmod -R a+rwX /work/out; exit \\$rc"
 echo $? > $D/out/run.exit
 ''')
     # H-DIE-R8 (coordinator 0dg (2)): MEASURED neighbour-skew gate on the die STA clock dump, every die trial
