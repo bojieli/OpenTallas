@@ -65,7 +65,22 @@ def test_cfg_launch_order():
     assert probs == [], probs                              # cfg-only receivers (pc_refresh_cfg) have no launch input
 
 
+def test_launch_floor():
+    rows = [dict(driver='hleaf_SW.b_cfg_addr+b_cfg_data'), dict(driver='hleaf_SW.b_cfg_target+b_cfg_v'),
+            dict(driver='hleaf_SW.b_launch_v'), dict(driver='hleaf_SW.s_ready'), dict(driver='x.b_launch_v')]
+    lr = RL.leaf_copy_rows(rows, {'hleaf_SW': 'ot_hbm_host_cfg_leaf_sw', 'x': 'ot_other'})
+    assert dict(lr) == {('hleaf_SW', 'b'): ([0, 1], [2])}, dict(lr)
+    age = {(0, 'xl'): 38, (1, 'xl'): 38, (0, 'cp'): 33, (1, 'cp'): 33, (2, 'xl'): 37, (2, 'cp'): 37, (2, 'smw'): 37}
+    def eff(b, s=None):
+        if s is None:
+            return [(k[1], v) for k, v in age.items() if k[0] == b]
+        return age.get((b, s))
+    assert RL.launch_floor([0, 1], [2], eff) == {2: 1}     # r16q replay case: launch 37 < word 38 at xl_SW_ctl
+    age[2, 'xl'] = age[2, 'cp'] = age[2, 'smw'] = 38
+    assert RL.launch_floor([0, 1], [2], eff) == {}
+
+
 if __name__ == '__main__':
-    for t in (test_classes, test_port_key, test_cfg_launch_order):
+    for t in (test_classes, test_port_key, test_cfg_launch_order, test_launch_floor):
         t()
     print('CFG_LEAF_NO_PAD tests PASS')
