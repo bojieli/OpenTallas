@@ -2476,7 +2476,8 @@
   "macro_halo_um": 5.4,
   "synth_keep_modules": [
    "ot_qfd_xs_mx16",
-   "ot_qfd_xs_ent17"
+   "ot_qfd_xs_ent9",
+   "ot_qfd_xs_ent8"
   ]
  },
  "slot_change_request": "Q-XSLEAF 2026-10-16: leaf slot 64.8x138.24 -> 129.6x69.12 (same 8,958 um2). Measured m6c..m6f GRT: N-band vertical demand ~2,490 tracks vs ~2,385 derated on 64.8 um (1.04); needs >=113 um face for <=0.60. AGREED by Q-COMPUTE-DIE 2026-10-16 (heads 129.6x345.6; column body 920.16 um).",
@@ -2546,7 +2547,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "SQC-CB16b 10-22 native-census successor of qfd_xs_leaf_w130m5 (w130m5 regate FAIL native census max 569 / 137 drivers > 32: ABC re-associated the 1-per-256 select replicas of the 128:1 x 17-b read tree and shared write-control cones). ot_qfd_xs_leaf_fo32 = same ports / slot 129.6x69.12 / M5 pins / storage, 0 added edges (cycle-exact vs ot_qfd_xs_leaf NCH4 RPP1 FILL1 on every output every edge, tb_qfd_xs_leaf_fo32): read tree of kept 16-b 2:1 slices each with its own select replica fed from NG independent next-select cones; raw kept copies of every write/clear control per region of GRP positions; answer tile select from NQ kept copies of tile-1 sequencer state. MAIN: GRP 8 / NG 3 / NQ 3.",
+ "structural_change": "SQC-CB16b 10-22 native-census successor of qfd_xs_leaf_w130m5 (w130m5 regate FAIL native census max 569 / 137 drivers > 32: ABC re-associated the 1-per-256 select replicas of the 128:1 x 17-b read tree and shared write-control cones). ot_qfd_xs_leaf_fo32 = same ports / slot 129.6x69.12 / M5 pins / storage, 0 added edges (cycle-exact vs ot_qfd_xs_leaf NCH4 RPP1 FILL1 on every output every edge, tb_qfd_xs_leaf_fo32): read tree of kept 16-b 2:1 slices each with its own select replica fed from NG independent next-select cones; raw kept copies of every write/clear control per region of GRP positions; answer tile select from NQ kept copies of tile-1 sequencer state. MAIN: GRP 8 / NG 3 / NQ 6.",
  "io_tcl": "physical/ref_tile/qfd_xs_leaf_fo32a/assigned_pins.tcl",
  "orfs_vars": {
   "OT_OUTHOLD_FREE": "1"

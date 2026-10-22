@@ -10,7 +10,8 @@
 //     (ot_qfd_xs_mx16, ABC cannot move a select across slices); each slice has its own registered select replica
 //     (was one replica per 256 mux bits, re-associated by ABC up to 569 loads), loaded from NG independent
 //     next-select cones per tile, each built from its own kept copies of the request / held-request / element state;
-//   * storage entries are kept 17-b modules (ot_qfd_xs_ent17) so each write enable is one net into its entry;
+//   * storage entries are two kept halves (ot_qfd_xs_ent9/ent8) each forming its own write enable; line assembly in
+//     two halves from kept sequencer copies; answer select from NQ = 6 copies;
 //   * the answer-side tile select (done[1]) is computed from NQ kept copies of tile 1's sequencer state.
 // The x-slice timing contract (lanes/SQC-CB16.md, qfd_xs_leaf_w130m5 successor) is unchanged: a read request at
 // the pins at edge R answers at the same edge as the reference; a write is readable one edge after it lands.
@@ -18,7 +19,7 @@
 module ot_qfd_xs_leaf_fo32 #(
     parameter integer GRP  = 8,     // slot positions per write-control copy region (64 / GRP regions)
     parameter integer NG   = 3,     // independent next-select cones per tile
-    parameter integer NQ   = 3,     // copies of tile 1's sequencer state for the answer select
+    parameter integer NQ   = 6,     // copies of tile 1's sequencer state for the answer select
     parameter integer MUT  = 0      // 2: tile 1's reads return tile 0's data (swapped tile) -- must FAIL
 ) (
     input  wire          clk,
@@ -109,10 +110,12 @@ module ot_qfd_xs_leaf_fo32 #(
                 wire cond = (dd == 2'b00) ? (tf == tw) : (dd == 2'b01) ? (tf && !tw) :
                             (dd == 2'b10) ? (!tf && tw) : 1'b0;
                 for (ge = 0; ge < 2; ge = ge + 1) begin : g_e
-                    wire we  = kv && (kep == ge) && en && cond && wm[EP];
+                    wire pw  = kv && (kep == ge) && en && cond;   // into both entry halves (2 loads)
                     wire clr = kcv && (kcep == ge);
-                    ot_qfd_xs_ent17 u_ent (.clk(clk), .we(we), .clr(clr), .d(wd[16*EP +: 16]),
-                                           .q(mem_all[2176*gt + 17*(64*ge + EP) +: 17]));
+                    ot_qfd_xs_ent9 u_lo (.clk(clk), .p(pw), .m(wm[EP]), .clr(clr), .d(wd[16*EP +: 8]),
+                                         .q({mem_all[2176*gt + 17*(64*ge + EP) + 16], mem_all[2176*gt + 17*(64*ge + EP) +: 8]}));
+                    ot_qfd_xs_ent8 u_hi (.clk(clk), .p(pw), .m(wm[EP]), .d(wd[16*EP + 8 +: 8]),
+                                         .q(mem_all[2176*gt + 17*(64*ge + EP) + 8 +: 8]));
                 end
             end
         end
@@ -185,16 +188,22 @@ module ot_qfd_xs_leaf_fo32 #(
         end
         localparam integer SRC = (MUT == 2 && gt == 1) ? 0 : gt;
         ot_qfd_xs_mux_rep16 #(.LN(7), .SW(RSW)) u_m (.d(mem_all[2176*SRC +: 2176]), .s(sr), .q(tr[gt]));
-        // assembly of elements 0 .. 2
+        // assembly of elements 0 .. 2: two halves, each enabled from its own kept copy of the sequencer state
+        // (one shared position enable measured 36 pins: 16 bits x 2 pins + valid/enable)
         reg [47:0] ad;
         reg [2:0]  av, ae;
         wire       een = hen[el];
+        (* keep *) reg       asv0, asv1;
+        (* keep *) reg [1:0] ael0, ael1;
+        always @(posedge clk) begin asv0 <= sv_n; asv1 <= sv_n; ael0 <= el_n; ael1 <= el_n; end
         always @(posedge clk)
-            if (sv && el != 2'd3) begin
-                ad[16*el +: 16] <= een ? tr[gt][15:0] : 16'd0;
-                av[el] <= een && tr[gt][16];
-                ae[el] <= een;
+            if (asv0 && ael0 != 2'd3) begin
+                ad[16*ael0 +: 8] <= een ? tr[gt][7:0] : 8'd0;
+                av[ael0] <= een && tr[gt][16];
+                ae[ael0] <= een;
             end
+        always @(posedge clk)
+            if (asv1 && ael1 != 2'd3) ad[16*ael1 + 8 +: 8] <= een ? tr[gt][15:8] : 8'd0;
         assign asm_d[gt] = ad; assign asm_v[gt] = av; assign asm_e[gt] = ae;
         assign l_en[gt] = hen[3];
     end endgenerate
@@ -277,22 +286,38 @@ module ot_qfd_xs_mux_rep16 #(parameter integer LN = 7, parameter integer SW = 13
     assign q = g_l[LN].n;
 endmodule
 
-// one {valid, BF16} storage entry; kept through ABC (route.synth_keep_modules) so the write enable stays ONE net
-// into the entry (ABC flattened the enable cone into the 17 bit muxes: wm[EP] 69 loads, partial products 50)
-(* keep_hierarchy = "yes" *) module ot_qfd_xs_ent17 (
-    input  wire        clk,
-    input  wire        we,
-    input  wire        clr,
-    input  wire [15:0] d,
-    output wire [16:0] q
+// one {valid, BF16} storage entry = two kept halves, each with its OWN write enable p & m (a gate inside the half), so
+// an enable net drives 8 bits (2 pins each) + valid <= 17 pins (one shared enable measured 33: ASAP7 maps the enable
+// mux on 2 pins per bit)
+(* keep_hierarchy = "yes" *) module ot_qfd_xs_ent9 (
+    input  wire       clk,
+    input  wire       p,
+    input  wire       m,
+    input  wire       clr,
+    input  wire [7:0] d,
+    output wire [8:0] q          // {valid, data[7:0]}
 );
-    reg [15:0] m;
-    reg        v;
-    always @(posedge clk) if (we) m <= d;
+    wire we = p & m;
+    reg [7:0] r;
+    reg       v;
+    always @(posedge clk) if (we) r <= d;
     always @(posedge clk)
         if (clr) v <= 1'b0;
         else if (we) v <= 1'b1;
-    assign q = {v, m};
+    assign q = {v, r};
+endmodule
+
+(* keep_hierarchy = "yes" *) module ot_qfd_xs_ent8 (
+    input  wire       clk,
+    input  wire       p,
+    input  wire       m,
+    input  wire [7:0] d,
+    output wire [7:0] q
+);
+    wire we = p & m;
+    reg [7:0] r;
+    always @(posedge clk) if (we) r <= d;
+    assign q = r;
 endmodule
 
 // one select, sixteen 2:1 bits; kept through ABC (route.synth_keep_modules) so a select never leaves its slice

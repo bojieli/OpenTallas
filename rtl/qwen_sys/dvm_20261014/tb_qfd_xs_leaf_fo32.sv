@@ -5,7 +5,7 @@
 // Stimulus: seeded random writes (all d codes incl. 11, random w_off / wo / masks / epochs), clears, reads on both
 // tiles at II 4 (incl. disabled elements, collisions and reads of cleared epochs), writes concurrent with reads.
 module tb_qfd_xs_leaf_fo32;
- parameter integer MUT=0, GRP=8, NG=3, NQ=3, NOPS=4000, SEED=7;
+ parameter integer MUT=0, GRP=8, NG=3, NQ=6, NOPS=4000, SEED=7;
  reg clk=0,rst_n=0;
  always #1 clk=~clk;
  reg w_v=0,w_ep=0,c_v=0,c_ep=0,r_v=0,r_t=0,r_ep=0;
