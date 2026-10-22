@@ -29,6 +29,7 @@ import qwen_die_element_lib as E   # noqa: E402
 from hier_contract.pinreg_audit import parse_lib, clock_refs
 from die_port_bind import parse_die, expr_bits
 from die_clock.qualification import carry_unqualified as clock_qualification
+from qwen_tp8 import diagnostic_phy_etm as DP
 
 HARD = {'ot_hbm3e_phy': 'physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy'}
 PERIOD = dict(stream=833.333, serial=833.333 * 4.0 / 3.0, ucie=833.333, serdes=833.333)
@@ -129,6 +130,18 @@ def assumed_clock_refs(master, ports, physical_ports=None, clock_ports=None):
     return refs
 
 
+def deep_reference(master, pin, value):
+    return False if DP.is_unmeasured_reference(master, pin, value) else value > 300.0
+
+
+def reference_tcl(pin, master, libpin, value, name):
+    if DP.is_unmeasured_reference(master, libpin, value):
+        return [f'# DIAGNOSTIC UNMEASURED_INPUT_BOUNDARY {pin}; internal/native R UNPROVEN; no insertion compensation',
+                'incr ot_clock_boundary_unmeasured']
+    return [f'set_clock_latency -source -clock [get_clocks {name}] {-value:.6f} [get_pins {{{pin}}}]',
+            'incr ot_clock_bound']
+
+
 def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budget='tile', generated=None):
     # Each domain has related shallow / earlier-tap clock objects. Separate
     # domains remain asynchronous; no exception is created between levels.
@@ -141,6 +154,13 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
             raise ValueError('invalid source clock period')
     lines = ['# DOMS ' + ' '.join(sorted(doms)), '# INSERTION_COMPENSATED ' + corner,
              '# OWNER_CLOCK_BUDGET v1', 'set_cmd_units -time ps', 'set ot_clock_bound 0']
+    unmeasured = any(DP.is_unmeasured_reference(master, pin, value)
+                     for master, rows in leaves.items() for pin, value in rows[corner].items() if value is None)
+    if unmeasured:
+        lines += ['# PHYSICAL_DIAGNOSTIC_ONLY; NOT_A_DIE_RESULT',
+                  'set ot_clock_boundary_unmeasured 0',
+                  'set ot_clock_qualification UNMEASURED', 'set ot_sta_qualification UNMEASURED',
+                  'set ot_region_qualification UNMEASURED']
     domain_clocks = {}
     # QW-GENPREP 10-21 (QW-COLLIO NOTICE): a domain produced by a real on-die divider (generated[d] = dict(source=
     # '<div>/ck', master=<master domain>, divide_by=N, pin='<div>/blk_o')) is a create_generated_clock at the divider
@@ -153,9 +173,9 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
             g = generated[d]
             if g['master'] not in doms or g['master'] in generated:
                 raise ValueError(f'generated clock {d}: master domain {g["master"]} is not a created clock')
-            if any(leaves[master]['tt'][libpin] > 300.0 for _, master, libpin in entries):
+            if any(deep_reference(master, libpin, leaves[master]['tt'][libpin]) for _, master, libpin in entries):
                 raise ValueError(f'generated clock {d}: deep (>300 ps) leaf levels need their own generated clocks')
-            mlev = sorted({int(leaves[m_]['tt'][lp_] > 300.0) for _, m_, lp_ in doms[g['master']]})
+            mlev = sorted({int(deep_reference(m_, lp_, leaves[m_]['tt'][lp_])) for _, m_, lp_ in doms[g['master']]})
             mname = g['master'] if 0 in mlev else g['master'] + '__early'
             gen_lines += [f'set p [get_pins -quiet {{{g["pin"]}}}]',
                           f'if {{[llength $p] != 1}} {{ error "generated clock pin missing or ambiguous: {g["pin"]}" }}',
@@ -165,13 +185,12 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
                 raise ValueError(f'generated clock {d}: period {periods[d]} != {g["divide_by"]} x {periods[g["master"]]}')
             for pin, master, libpin in entries:
                 r = leaves[master][corner][libpin]
-                gen_lines += [f'set_clock_latency -source -clock [get_clocks {d}] {-r:.6f} [get_pins {{{pin}}}]',
-                              'incr ot_clock_bound']
+                gen_lines += reference_tcl(pin, master, libpin, r, d)
             domain_clocks[d] = [d]
             continue
         levels = {}
         for pin, master, libpin in entries:
-            level = int(leaves[master]['tt'][libpin] > 300.0)
+            level = int(deep_reference(master, libpin, leaves[master]['tt'][libpin]))
             levels.setdefault(level, []).append((pin, master, libpin))
         names = {level: d if level == 0 else d + '__early' for level in levels}
         domain_clocks[d] = list(names.values())
@@ -185,8 +204,7 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
             lines.append(f'create_clock -name {name} -period {(periods[d] if periods is not None else PERIOD.get(d, 1024.0)):.6f} $ot_pins')
             for pin, master, libpin in group:
                 r = leaves[master][corner][libpin]
-                lines += [f'set_clock_latency -source -clock [get_clocks {name}] {-r:.6f} [get_pins {{{pin}}}]',
-                          'incr ot_clock_bound']
+                lines += reference_tcl(pin, master, libpin, r, name)
         # Exact owner tree-link budget: pair_check.py SKEW_SHALLOW / SKEW_DEEP,
         # HOLD_TREE (50 ps margin + 50 ps die skew). Either earlier end costs150.
         for launch, lname in sorted(names.items()):
@@ -226,6 +244,8 @@ def clock_tcl(doms, leaves, corner, periods=None, related_domains=(), hold_budge
             '-group [get_clocks {' + ' '.join(name for d in group for name in domain_clocks[d]) + '}]' for group in groups))
     lines += ['set_propagated_clock [all_clocks]',
               f'puts "OT_COMPENSATED_CLOCK corner={corner} bound=$ot_clock_bound"']
+    if unmeasured:
+        lines += ['puts "OT_DIAGNOSTIC_INPUT_BOUNDARY clock_qualification=UNMEASURED sta_qualification=UNMEASURED region_qualification=UNMEASURED refs=$ot_clock_boundary_unmeasured"']
     return '\n'.join(lines) + '\n'
 
 
@@ -332,6 +352,7 @@ def main():
     views = dict(real={}, hard_macro={}, assumed=[])
     skip = set()
     leaves = {}
+    boundary_models = {}
     for mst, r in bind['masters_detail'].items():
         if not r.get('bound'):
             continue
@@ -343,6 +364,15 @@ def main():
         if set(libs) != {'tt', 'ff', 'ss'}:
             raise ValueError(f'{mst}: real view requires actual TT, FF, SS Liberty, got {sorted(libs)}')
         sheet = vd / f'{mst}.json'
+        boundary_model = DP.admit(mst, root, case, vd, libs)
+        if boundary_model is not None:
+            for c, rel in libs.items():
+                shutil.copy(root / rel, out / f'qfd_etm_{mst}_{c}.lib')
+            leaves[mst] = {c: {'clk': None} for c in ('tt', 'ff', 'ss')}
+            boundary_models[mst] = boundary_model
+            views['hard_macro'][mst] = str(r['view'])
+            skip.add(mst)
+            continue
         if sheet.exists() and str(json.loads(sheet.read_text()).get('schema', '')).startswith(
                 'opentallas.qwen-missing.link-phy-abstract'):
             # licensed link-PHY hard macro (tools/qwen_missing/link_phy_gen.py): its Liberty IS the boundary model
@@ -426,7 +456,8 @@ def main():
                  clock_budget='related shallow/early levels: setup 60 + 90 ps shallow/shallow, 60 + 150 ps when either TT R > 300 ps; hold H1 50 margin + 50 skew = 100 ps',
                  insertion_ps={m: v for m, v in leaves.items() if m in views['real']},
                  note='PATHFINDING: unbound masters remain assumed single-flop views; no physical die CTS proof')
-    views.update(clock_qualification(contract))
+    views.update(clock_qualification(contract, *boundary_models.values()))
+    DP.annotate(views, boundary_models)
     if generated:
         views.update(generated_clocks={d: {k: v for k, v in g.items()} for d, g in generated.items()})
     fwd_m = sorted(m_ for m_ in dirs if E.FWD_RE.match(m_))

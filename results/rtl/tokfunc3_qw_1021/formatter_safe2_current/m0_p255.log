@@ -1,0 +1,5 @@
+FMT_PASS SAFE=2 LOCAL_CTL=0 POS=255 words=4 bytes=256 slot_to_word=2 checks=277
+- /srv/opentallas-scratch/claude/codex-tok-qw-2000/formatter_src/tb_formatter.sv:51: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 656ns; walltime 0.001 s; speed 998.869 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

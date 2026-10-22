@@ -20,6 +20,7 @@ module tb_hbm_su_programme_pgcol;
 `include "cols_params.svh"
 localparam integer B=CL_SB, N=CL_EDGES, WM=REF_WRITES, WP=CL_WRITES;
 parameter integer MUT=0;
+parameter integer NCX=0;   // PS15: 1 = the L columns use the NCX producer (pgcol_l r7 RTL)
 localparam integer CL=2, RREL=3;
 logic clk=0; always #5 clk=~clk;
 logic rst_n=0;
@@ -34,7 +35,7 @@ ot_hbm_su_programme_pslice #(.SB(B),.EDGES(N),.SCOLS(REF_COLS),.DICT_BANKS(REF_D
  .clk(clk),.clk_macro({REF_MACROS{clk}}),.rst_n(rst_n),.cfg_we(m_we),.cfg_bank(m_bank),.cfg_row(m_row),
  .cfg_data(m_data),.start(start),.length(16'(N)),.busy(m_busy),.valid(m_valid),.done(m_done),.fault(m_fault),
  .edge_index(m_edge),.command(m_cmd));
-ot_hbm_su_programme_pslice_c5 #(.SB(B),.NC(CL_NC),.DICT_CAP(CL_CAP),.MUT(MUT),.MUT_COL(1)) u_cl(
+ot_hbm_su_programme_pslice_c5 #(.SB(B),.NC(CL_NC),.DICT_CAP(CL_CAP),.MUT(MUT),.MUT_COL(1),.NCX(NCX)) u_cl(
  .clk(clk),.rst_n(rst_n),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(p_row),
  .cfg_data(p_data),.start(start),.length(16'(N)),.busy(p_busy),.valid(p_valid),.done(p_done),.fault(p_fault),
  .edge_index(p_edge),.command(p_cmd));
@@ -63,8 +64,8 @@ task automatic rel_check;
  r0=-1; r1=-1; rh=-1;
  for(integer k=1;k<=8;k=k+1) begin
    tick();
-   if(r0<0 && u_cl.g_c[0].u_c.rl===2'b11) r0=k;
-   if(r1<0 && u_cl.g_c[1].u_c.rl===2'b11) r1=k;
+   if(r0<0 && (&u_cl.g_c[0].u_c.rl)===1'b1) r0=k;
+   if(r1<0 && (&u_cl.g_c[1].u_c.rl)===1'b1) r1=k;   // PS15: every relay region (NCX: 6)
    if(rh<0 && u_cl.u_h.hr===1'b1) rh=k;
  end
  if(r0!=RREL || r1!=RREL || rh!=RREL) begin mism=mism+1;

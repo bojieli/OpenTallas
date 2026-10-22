@@ -1,0 +1,16 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_capc5r-s81sl_capc5r-163d31541 bench bench_c5r_gold_mut4 host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/s81sl_capc5r-s81sl_capc5r-163d31541 log cl/bench_c5r_gold_mut4.a1b1.log captured 2026-10-21T05:10:01-07:00
+# fail_regex '^CAP_C5R_MUTANT_DETECTED MUT=4 '
+MISSING row write edge 254 leaf 1 port 1 addr 14
+MISSING row write edge 280 leaf 1 port 1 addr 53
+MISSING row write edge 282 leaf 2 port 1 addr 39
+MISSING row write edge 286 leaf 3 port 1 addr 29
+MISSING row write edge 288 leaf 0 port 1 addr 36
+MISSING row write edge 294 leaf 0 port 1 addr 6
+MISSING row write edge 307 leaf 0 port 1 addr 22
+MISSING row write edge 313 leaf 0 port 1 addr 30
+MISSING row write edge 320 leaf 0 port 1 addr 53
+MISSING row write edge 321 leaf 1 port 1 addr 46
+SLCAP_GOLD MUT 4 DE 24 DL 16 rows 1280 written_ok 960 bad_writes 0 missing 320 arrivals 7446/7446 arr_mismatch 0 fault 1 fcause 0100
+SLCAP_LATENCY last_lane_arrival_to_leaf_write edges min 50 max 91 mean 67.46
+CAP_C5R_MUTANT_DETECTED MUT=4 slcap_vec_c5m4

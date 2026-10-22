@@ -26,6 +26,7 @@ clock_from}}, DIR/slice_insts.json (instances by master, how each was included).
 """
 import argparse
 import gzip
+import hashlib
 import json
 import math
 import re
@@ -68,6 +69,17 @@ module dv_flight_sim #(parameter integer W = 1, parameter integer F = 0) (
         assign ck_out = ck_in & en_l;
         assign i_out = d[F - 1];
     end endgenerate
+endmodule
+"""
+
+RST_LAND = """// dv_rst_land (TOKc-S81, 10-22, bench side): the kit reset landing of a hardened landing view (ref_tile reset_landing
+// {"enable": true, "stages": N}, physical/common_flow/ot_pin_regs.tcl OT_RST_LAND: rs -> rs__ot_rl0 .. rs__ot_rl<N-1>
+// plain ck flops -> core).  The die calendar (dv_bind landing_reset_stages, bind landing_reset_check.json) opens the
+// hop-0 gate N edges later for exactly these masters, so the RTL landing body without it reads N edges early (fault).
+module dv_rst_land #(parameter integer N = 2) (input wire ck, input wire rs, output wire o);
+    reg [N-1:0] q = {N{1'b0}};
+    always @(posedge ck) q <= {q, rs};
+    assign o = q[N-1];
 endmodule
 """
 
@@ -123,12 +135,18 @@ def main(argv=None):
                     'L3) is what makes the late first edge carry the calendar epoch.  Bench side only (wire flight), never '
                     'in the die netlist.  Within the window the landing output is independent of F (run both corners).')
     ap.add_argument('--corner', default='tt', choices=['tt', 'ff'])
+    ap.add_argument('--land-model', action='store_true', help='TOK-FUNC-S81: landings without a land-plan row / S1 '
+                    '(model rows, die.v K placeholders) get flight F = K - 1 instead of failing (recorded source model)')
     ap.add_argument('--flight-shift', type=int, default=0,
                     help='MUTANT ONLY: add this many cycles to every F (outside the window -> the landings must fault)')
     ap.add_argument('--rom-instance', action='store_true',
                     help='give every instance of a master with a string INSTANCE parameter (the frames: their ROM macros '
                          'load <OT_ROM_DIR>/<INSTANCE>_cX_Y.viamap.hex) .INSTANCE("<instance name>") -- die.v passes none, so '
                          'every frame of one master would read the same ROM image (die-netlist gap, recorded)')
+    ap.add_argument('--landing-reset', default='auto',
+                    help='bind landing_reset_check.json (rows master/rl): every landing whose bound view carries the kit '
+                         'reset landing (rl > 0) gets dv_rst_land #(rl) on its rs, as the hardened view and the die gate '
+                         'calendar have it; auto = <die.v dir>/landing_reset_check.json when present, none = off (pre-po2 dies)')
     ap.add_argument('--repo', default=str(K.ROOT))
     a = ap.parse_args(argv)
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=True)
@@ -305,11 +323,19 @@ def main(argv=None):
             if not byname[i][0].startswith('dsfd_dvland'):
                 continue
             r = LP.get(i[3:] if i.startswith('ld_') else i)
-            if r is None:
-                raise SystemExit(f'dv_slice_cut: landing {i} has no land-plan row')
-            s1 = r['s1'].get(a.corner)
-            if s1 is None:
-                raise SystemExit(f'dv_slice_cut: landing {i} has no S1 at {a.corner}')
+            src = 'land_plan'
+            if r is None or r.get('s1', {}).get(a.corner) is None:
+                # TOK-FUNC-S81 (10-21, --land-model): an RTL-only source assembly has no routed flight for model rows
+                # (G7 MODEL K = F + 1) and the die.v K placeholder landings (no row): F = K - 1, the flight the strap assumes
+                if not a.land_model:
+                    raise SystemExit(f'dv_slice_cut: landing {i} has no land-plan row / S1 at {a.corner}')
+                km = re.fullmatch(r"(\d+)'[dh]([0-9a-fA-F]+)", byname[i][3].get('k', '').strip())
+                kk = int(r['K']) if r and r.get('K') else (int(km.group(2), 16 if "'h" in byname[i][3]['k'] else 10) if km else 1)
+                r = dict(r or {}, E=(r or {}).get('E') or kk, K=kk)
+                src = 'model'
+                s1 = -(kk - 1) * T_ps
+            else:
+                s1 = r['s1'].get(a.corner)
             E_, D_ = int(r['E']), int(r.get('D', LPJ.get('D', 4)))
             K_ = int(r.get('K') or E_)      # S81-LBGAP/G8: the landing reads at K (bundle age), the window is K's
             # whole periods the lane clock lags beyond the single-cycle hop, kept inside the window: with the hop-0
@@ -330,7 +356,35 @@ def main(argv=None):
             body.append(f'  dv_flight_sim #(.W({w}), .F({F})) {i}__flight (.ck_in({cm["ck_f"]}), .rs({cm["rs"]}), .i_in({cm["i"]}), .ck_out({i}__ckf_d), .i_out({i}__i_d));')
             lines[i] = ln
             lane_dl[i] = dict(F=F, F_raw=f_raw, clipped=F - a.flight_shift != f_raw, s1_ps=float(s1), E=E_, D=D_, K=K_,
-                              corner=a.corner, flight_shift=a.flight_shift)
+                              corner=a.corner, flight_shift=a.flight_shift, source=src)
+    land_rl, land_rl_src = {}, None
+    lr_path = (Path(a.die_v).parent / 'landing_reset_check.json') if a.landing_reset == 'auto' else \
+        (None if a.landing_reset == 'none' else Path(a.landing_reset))
+    if lr_path is not None and lr_path.exists():
+        LR = json.loads(lr_path.read_text())
+        if LR.get('verdict') != 'PASS':
+            raise SystemExit(f'dv_slice_cut: {lr_path} verdict {LR.get("verdict")} (die calendar vs views unresolved)')
+        rl_by_master = {r['master']: int(r['rl']) for r in LR['rows']}
+        land_rl_src = dict(path=str(lr_path), sha256=hashlib.sha256(lr_path.read_bytes()).hexdigest(), by_master=rl_by_master)
+        for i in sorted(lines):
+            mst = byname[i][0]
+            if not mst.startswith('dsfd_dvland'):
+                continue
+            if mst not in rl_by_master:
+                raise SystemExit(f'dv_slice_cut: landing {i} master {mst} not in {lr_path}')
+            rl = rl_by_master[mst]
+            if rl <= 0:
+                continue
+            cm = byname[i][3]
+            ln = lines[i]
+            if ln.count(f'.rs({cm["rs"]})') != 1:
+                raise SystemExit(f'dv_slice_cut: landing {i}: rs pin not found once')
+            lines[i] = ln.replace(f'.rs({cm["rs"]})', f'.rs({i}__rs_l)', 1)
+            body.append(f'  wire {i}__rs_l;   // kit reset landing {rl} stages ({mst} view)')
+            body.append(f'  dv_rst_land #(.N({rl})) {i}__rl (.ck({cm["ck"]}), .rs({cm["rs"]}), .o({i}__rs_l));')
+            land_rl[i] = rl
+    elif a.landing_reset not in ('auto', 'none'):
+        raise SystemExit(f'dv_slice_cut: --landing-reset {a.landing_reset} not found')
     lost = sorted(S - set(lines))
     if lost:
         raise SystemExit(f'dv_slice_cut: instance line not found verbatim for {lost[:5]}')
@@ -340,12 +394,15 @@ def main(argv=None):
     sv = [hdr] + decl + body + [lines[i] for i in sorted(S, key=lambda x: list(byname).index(x))] + ['endmodule', '']
     if lane_dl:
         sv += [FLIGHT_SIM]
+    if land_rl:
+        sv += [RST_LAND]
     (out / f'{a.name}.sv').write_text('\n'.join(sv))
     (out / 'slice_ports.json').write_text(json.dumps(dict(schema='opentallas.s81_dv.slice_ports.v1', top=a.name,
                                                           die_v=a.die_v, ports=ports), indent=1) + '\n')
     cnt = Counter(byname[i][0] for i in S)
     (out / 'slice_insts.json').write_text(json.dumps(dict(instances=len(S), by_master=dict(sorted(cnt.items())),
-                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst, lane_flight_time=lane_dl), indent=1) + '\n')
+                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst, lane_flight_time=lane_dl,
+                                                          landing_reset=dict(source=land_rl_src, stages=land_rl)), indent=1) + '\n')
     nin = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'input')
     nout = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'output')
     print(f'dv_slice_cut: {len(S)} instances {dict(sorted(cnt.items()))}; ports {len(ports)} '

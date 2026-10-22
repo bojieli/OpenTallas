@@ -107,13 +107,19 @@ def dd_by_slice(log):
     return out
 
 
-def mat(rng, rows, split):
-    w = rng.integers(-127, 128, size=(rows, split * KC)).astype(F)
-    x = (rng.standard_normal(split * KC) * 2.0).astype(F)
+def mat(rng, rows, split, kc):
+    w = rng.integers(-127, 128, size=(rows, split * kc)).astype(F)
+    x = (rng.standard_normal(split * kc) * 2.0).astype(F)
     s = G.to_bf16((rng.random(rows) * 0.02 + 1e-3).astype(F))
     parts = B.l6_parts(w, x, split)
-    y = G.mul(G.matvec(w, x, split), s)
-    return dict(w=w, x=x, s=s, parts=parts, y=B.fbits(y))
+    return dict(w=w, x=x, s=s, parts=parts, y=None)
+
+
+def expect_y(name, gm, split):
+    """bench expectation with the compiler's station row scale (o / down: 1.0; others: the matrix scale)"""
+    if gm['y'] is None:
+        gm['y'] = B.fbits(G.mul(G.matvec(gm['w'], gm['x'], split), M.station_row_scales(name, gm['s'])))
+    return gm
 
 
 FIX = {}                                              # QW-REALSTG: --fixture npz (dv_layer_fixture.py)
@@ -123,13 +129,12 @@ def real_mat(name, split):
     """real int8 rows / BF16 scales / matvec input of the fixture (TP8 die 0 cut of the recorded ISA golden)"""
     pre = '' if name in ('qkv', 'gu') else f'{name}_'
     w, x, sc = FIX[pre + 'w'].astype(F), FIX[pre + 'x'].astype(F), FIX[pre + 's'].astype(F)
-    if name in ('o', 'down'):                         # the ISA all-reduces RAW o / down partials (FastDieMachine: no
-        sc = np.ones(len(sc), dtype=F)                # scale); the post-TP scale is the residual's pscale after the AR,
-                                                      # so the station's BTAB row scale must be BF16 1.0 (exact)
     if 'split' in FIX and int(FIX['split']) != split:
         raise SystemExit(f'fixture split {int(FIX["split"])} != ownership split {split}')
     parts = B.l6_parts(w, x, split)
-    y = G.mul(G.matvec(w, x, split), sc)
+    # s = the MATRIX row scales (the compiler's input); the expectation applies the COMPILER's station row scale
+    # (dv_lower_mat.station_row_scales: o / down -> BF16 1.0, the ISA all-reduces RAW partials -- QW-ODSCALE)
+    y = G.mul(G.matvec(w, x, split), M.station_row_scales(name, sc))
     return dict(w=w, x=x, s=sc, parts=parts, y=B.fbits(y))
 
 
@@ -144,24 +149,64 @@ def gold_y(gm, errs):
     return int(o == len(g)), 1, f'isa_gold_words={o}/{len(g)}'
 
 
-def drive(ev, low, parts):
-    """the tile-delivery contract: far words at d['far'][j], near words SK earlier; L9 receiver parts 0..3, sender
-    4..7; L8 parts 0..3 (lo = p0 far + p1 near on rs_s, hi = p3 far + p2 near on rs_n); L7 lower pair block bl[0]
-    (p0 far, p1 near) on rs_s, upper pair block bl[1] (p1 far, p0 near) on rs_n."""
-    lv = low['level']
+def l6_running_parts(gm, split):
+    """Actual per-k FP32 recurrence, then the same 64-chunk tree as B.l6_parts.
+
+    This is stimulus at the cluster-output cut. It does not replace a MAC DUT.
+    Every prefix starts from +0, BF16-rounds x, and uses G.mul/G.add exactly as
+    hdc_golden.matvec_fp32. The final prefix must equal the existing final golden.
+    """
+    if 'running_parts' in gm:
+        return gm['running_parts']
+    w, xb = gm['w'], G.to_bf16(gm['x'])
+    kc = w.shape[1] // split
+    if kc * split != w.shape[1]:
+        raise M.LowerError('running-partial split does not divide the matrix K')
+    chunks = [np.zeros(w.shape[0], dtype=F) for _ in range(split)]
+    result = []
+    for k in range(kc):
+        for c in range(split):
+            chunks[c] = G.add(chunks[c], G.mul(w[:, c * kc + k], xb[c * kc + k]))
+        parts = []
+        for cl in range(split // 64):
+            tree = chunks[64 * cl:64 * (cl + 1)]
+            while len(tree) > 1:
+                tree = [G.add(tree[i], tree[i + 1]) for i in range(0, len(tree), 2)]
+            parts.append(tree[0])
+        result.append(parts)
+    if any(not np.array_equal(B.fbits(a), B.fbits(b)) for a, b in zip(result[-1], gm['parts'])):
+        raise M.LowerError('running-partial final prefix differs from existing l6_parts golden')
+    gm['running_parts'] = result
+    return result
+
+
+def drive(ev, low, gm, mutant=None):
+    """Drive all k*8 running words; the existing far[] edges name the FINAL block.
+
+    Last-k selection and the production kc field remain active. Earlier prefixes
+    carry genuine recurrence values, rather than copies of the final output.
+    """
+    lv, kc = low['level'], low['kc']
+    sequence = l6_running_parts(gm, 64 * len(gm['parts']))
+    if len(sequence) != kc:
+        raise M.LowerError(f'producer kc {len(sequence)} != compiled station kc {kc}')
     for d in low['deliveries']:
         s = d['slice']
-        for j, tf in enumerate(d['far']):
-            if lv == 7:
-                b0, b1 = d['blocks']
-                r0, r1 = D.BLOCK * b0 + 16 * j, D.BLOCK * b1 + 16 * j
-                LB_pair(ev, s, parts[0][r0:r0 + 16], parts[1][r0:r0 + 16], parts[1][r1:r1 + 16], parts[0][r1:r1 + 16], tf)
-            else:
-                b = d['blocks'][0]
-                r0 = D.BLOCK * b + 16 * j
-                o = 4 if d['role'] == 'snd' else 0
-                LB_pair(ev, s, parts[o][r0:r0 + 16], parts[o + 1][r0:r0 + 16], parts[o + 3][r0:r0 + 16],
-                        parts[o + 2][r0:r0 + 16], tf)
+        for k, parts in enumerate(sequence):
+            if mutant == 'drop_last_k' and k == kc - 1:
+                continue
+            for j, last_tf in enumerate(d['far']):
+                tf = last_tf - (kc - 1 - k) * low['k_block_words']
+                if lv == 7:
+                    b0, b1 = d['blocks']
+                    r0, r1 = D.BLOCK * b0 + 16 * j, D.BLOCK * b1 + 16 * j
+                    LB_pair(ev, s, parts[0][r0:r0 + 16], parts[1][r0:r0 + 16], parts[1][r1:r1 + 16], parts[0][r1:r1 + 16], tf)
+                else:
+                    b = d['blocks'][0]
+                    r0 = D.BLOCK * b + 16 * j
+                    o = 4 if d['role'] == 'snd' else 0
+                    LB_pair(ev, s, parts[o][r0:r0 + 16], parts[o + 1][r0:r0 + 16], parts[o + 3][r0:r0 + 16],
+                            parts[o + 2][r0:r0 + 16], tf)
 
 
 def LB_pair(ev, s, lo_far, lo_near, hi_far, hi_near, t):
@@ -200,6 +245,9 @@ def calibrate(work, seed):
     probes = {}
     for s in (0, N - 1):                                   # L8 AR, unscaled
         land = t
+        # The ARF-enabled positive vehicle must have one root framer arm per
+        # eight-word probe, before its first AR word. ARF=0 ignores the arm.
+        ev.cmd(land - 2 * s - 1, D.cmd_xc(0, 0, 8, 0x100 * (s + 1)))
         ev.cmd(land - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1), kc=1))
         far = land + 10
         for j in range(8):
@@ -207,9 +255,12 @@ def calibrate(work, seed):
         probes[s] = far
         t += 200
     xc_e = t
-    ev.cmd(xc_e, D.cmd_xc(0, 0, 7, 0x55))
+    # This marker also arms the final one-word AMAX/ARX gather message. Seven
+    # words would leave the framer armed after the single actual ARX result.
+    ev.cmd(xc_e, D.cmd_xc(0, 1, 1, 0x55))
     t += 40
     # AMAX: root s0 (amnb 2) + s5; ARX armed on the root
+    ev.cmd(t - 2, D.cmd_amax(15, clear=1))  # MU lifecycle: user 0 must be open before AMAX results
     ev.cmd(t, D.cmd_root(0, 1, 32, 0, amnb=2))
     ev.cmd(t + 1 - 10, D.cmd_root(5, 0, 0, 0))
     ev.cmd(t + 2, D.cmd_amax(0, arx=1))
@@ -229,7 +280,8 @@ def calibrate(work, seed):
     l8 = ar[0] - probes[0]
     a11 = [c for c in ar if c > probes[N - 1]][0]
     hop = (a11 - probes[N - 1] - l8) / (N - 1)
-    cc = [c for c, _ in log.get('S0CC', [])]
+    # Probe pre-arms produce earlier CC pulses; measure only this unique marker.
+    cc = [c for c, word in log.get('S0CC', []) if (word & 0xFFFFFFFF) == 0x55]
     ami = [c for c, w in log.get('S5SD', []) if (w >> 44) & 7 == 3]
     amv1 = [c for c, w in log.get('S1SD', []) if (w >> 44) & 7 == 4]
     arx = [c for c, w in log.get('S0AR', []) if (w >> 513) & 1 and c > e5]
@@ -250,18 +302,18 @@ def calibrate(work, seed):
 # ------------------------------------------------------------------------------------------------ runs
 def run_vm(work, name, ages, rng, mutant):
     m = D.ownership()[name]
-    gm = real_mat(name, m['split']) if FIX else mat(rng, m['blocks'][-1]['rows'][1], m['split'])
+    gm = real_mat(name, m['split']) if FIX else expect_y(name, mat(rng, m['blocks'][-1]['rows'][1], m['split'], M.STN_KC[name]), m['split'])
     lay = M.btab_layout(D.ownership())
     tabs = M.btab_stream(lay, {name: gm['s']})
     ev = LB.Events()
     t, regions = prelude(ev, LB.T0, tabs)
     ch = M.Chain(D.slice_map())
-    low = M.lower_matvec(name, 400, ages, ch, mutant=mutant)
+    low = M.lower_matvec(name, 400, ages, ch, mutant=mutant, running_k=True)
     base = t + 20 - min(c['edge'] for c in ch.commands())
     put_chain(ev, base, ch.commands())
     for d in low['deliveries']:
         d['far'] = [f + base for f in d['far']]
-    drive(ev, low, gm['parts'])
+    drive(ev, low, gm, mutant)
     t = max(f for d in low['deliveries'] for f in d['far']) + 200
     reg = 'GU' if name == 'gu' else 'QKV'
     t = readback(ev, t, reg, sorted(low['expected_vm']))
@@ -270,17 +322,43 @@ def run_vm(work, name, ages, rng, mutant):
     ok, n = check_vm(low, dd_by_slice(log), gm['y'], errs, name)
     go, gn, ginfo = gold_y(gm, errs)
     last = max(f for d in low['deliveries'] for f in d['far'])
+    vw = vm_writes(log, low)
     return ok + go, n + gn, errs, dict(stn=len(low['stn']), slices=sorted(low['expected_vm']), isa_gold=ginfo,
-                                       delivery_span_cycles=last - base,
-                                       span_note='VM-landing ops have no output pin: span = last tile word consumed - '
-                                                 'first lowered edge (station drain = stn_ages); exactness by readback')
+                                       delivery_span_cycles=None if vw['last'] is None else vw['last'] - base,
+                                       delivery_span_origin='chain schedule base (same origin as od span_cycles and the legacy anchor)',
+                                       legacy_schedule_anchor_span_cycles=last - base,
+                                       first_stn_command_edge=base + min(c['edge'] for c in ch.commands()),
+                                       first_cluster_word_edge=min(d['far'][0] - low['prefix_edges'] - SK for d in low['deliveries']),
+                                       last_cluster_word_edge=last,
+                                       first_vm_write_edge=vw['first'], last_vm_write_edge=vw['last'],
+                                       vm_write_window_cycles=None if vw['last'] is None else vw['last'] - vw['first'],
+                                       vm_writes_observed=vw['observed'], vm_writes_expected=vw['expected'],
+                                       vm_write_addresses_missing=vw['missing'], vm_write_observability=vw['scope'],
+                                       producer_kc=low['kc'],
+                                       producer_words_per_cluster_per_round=8 * low['kc'],
+                                       producer_scope='STN/VM cut-boundary protocol; upstream MAC arithmetic not simulated here',
+                                       span_note='legacy anchor span is not measured VM latency; input pin edges and readback/drain bounds are recorded separately')
+
+
+def vm_writes(log, low):
+    """Actual VM-write edges of the station results (tb_qfd_dv2 S<k>VW: st_vm write port, 24-bit word address).
+    Only writes to this matvec's expected VM words count; edges stay None when the binary has no probe."""
+    want = {(s, a) for s, amap in low['expected_vm'].items() for a in amap}
+    hits = [(c, s, a) for s in low['expected_vm'] for c, a in log.get(f'S{s}VW', []) if (s, a & 0xFFFFFF) in want]
+    probed = any(k.endswith('VW') and k[1:-2].isdigit() for k in log)
+    seen = {(s, a) for _, s, a in hits}
+    return dict(first=min(c for c, _, _ in hits) if hits else None, last=max(c for c, _, _ in hits) if hits else None,
+                observed=len(hits), expected=len(want), missing=len(want - seen),
+                scope=('tb_qfd_dv2 S<k>VW probe: station-result VM write (st_vm) edges at the expected word addresses'
+                       if probed else 'binary has no S<k>VW VM-write probe lines; edges unknown'))
 
 
 def run_od(work, ages, rng, mutant):
     own = D.ownership()
     lay = M.btab_layout(own)
-    gms = {n: (real_mat(n, own[n]['split']) if FIX else mat(rng, 4096, own[n]['split'])) for n in ('o', 'down')}
-    tabs = M.btab_stream(lay, {n: g['s'] for n, g in gms.items()})
+    gms = {n: (real_mat(n, own[n]['split']) if FIX else expect_y(n, mat(rng, 4096, own[n]['split'], M.STN_KC[n]), own[n]['split']))
+           for n in ('o', 'down')}
+    tabs = M.btab_stream(lay, {n: g['s'] for n, g in gms.items()}, mutant=mutant)   # matrix scales in; BTAB 1.0 out
     ev = LB.Events()
     t, _ = prelude(ev, LB.T0, tabs)
     ch = M.Chain(D.slice_map())
@@ -288,7 +366,7 @@ def run_od(work, ages, rng, mutant):
     w0 = {'o': 600, 'down': 1300}
     for k, n in enumerate(('o', 'down')):
         xcs[n] = M.lower_xc(ch, ages, w0[n], 256, k, mutant=mutant)          # exact edge: reserved first
-        lows[n] = M.lower_matvec(n, w0[n], ages, ch, own=own, mutant=None if mutant in ('xc_bc',) else mutant)
+        lows[n] = M.lower_matvec(n, w0[n], ages, ch, own=own, mutant=None if mutant in ('xc_bc', 'rawscale') else mutant, running_k=True)
     coll = {n: M.ar_collisions(lows[n], ages) for n in lows}
     if ARF['on']:
         M.ar_framer_order([(xcs[n], lows[n]['expected_ar']) for n in lows])
@@ -297,7 +375,7 @@ def run_od(work, ages, rng, mutant):
     for n in lows:
         for d in lows[n]['deliveries']:
             d['far'] = [f + base for f in d['far']]
-        drive(ev, lows[n], gms[n]['parts'])
+        drive(ev, lows[n], gms[n], mutant)
     end = base + max(w0.values()) + 400
     log = LB.run(work, f'od_{mutant or "m0"}', ev, end)
     errs = B2.status_ok2(log)
@@ -339,8 +417,22 @@ def run_od(work, ages, rng, mutant):
         errs.append(f'XC: cc words on {others} (only dvs_W5 reaches io_collective)')
     else:
         ok += 1
-    return ok, n_, errs, dict(span_cycles=span, isa_gold='TP8-gold-only (TP8 partial, split 256; no TP4 value)' if FIX
-                              else 'none', collisions={k: len(v) for k, v in coll.items()}, collective_contract=gap,
+    # TP8 ISA gold (dv_layer_fixture.py tp8od: qwen_tp8_layer_gold collective<s>_partial of die 0 = the RAW o / down
+    # partial the die all-reduces): the bench expectation (= the RTL AR words, checked above) bit-exact vs the gold
+    gold = 'TP8-gold-only (TP8 partial, split 256; no TP4 value)' if FIX else 'none'
+    if FIX and all(f'{n}_gold_y' in FIX for n in ('o', 'down')):
+        res = {}
+        for n in ('o', 'down'):
+            g = B.fbits(FIX[f'{n}_gold_y'].astype(F))
+            o = int(np.sum(g == gms[n]['y']))
+            res[n] = f'{o}/{len(g)}'
+            n_ += 1
+            if o == len(g):
+                ok += 1
+            else:
+                errs.append(f'TP8 ISA gold {n}: bench expectation differs from the gold partial in {len(g) - o}/{len(g)} rows')
+        gold = 'tp8_isa_gold_words=' + ','.join(f'{k}:{v}' for k, v in res.items())
+    return ok, n_, errs, dict(span_cycles=span, isa_gold=gold, collisions={k: len(v) for k, v in coll.items()}, collective_contract=gap,
                               stn={n: len(l['stn']) for n, l in lows.items()})
 
 
@@ -353,19 +445,19 @@ def run_lm(work, ages, rng, mutant):
     lay = M.btab_layout(own)
     hg = own['lm_head']
     rows = hg['blocks'][-1]['rows'][1]
-    gm = mat(rng, rows, 512)
+    gm = expect_y('lm_head', mat(rng, rows, 512, M.STN_KC['lm_head']), 512)
     tabs = M.btab_stream(lay, {'lm_head': gm['s']})
     ev = LB.Events()
     t, _ = prelude(ev, LB.T0, tabs)
     ch = M.Chain(D.slice_map())
     row0 = 0
-    lm = M.lower_lm(200, ages, ch, row0=row0, mutant=mutant)
+    lm = M.lower_lm(200, ages, ch, row0=row0, mutant=mutant, running_k=True)
     lo_e = min(c['edge'] for c in ch.commands())
     base = t + 20 - lo_e
     put_chain(ev, base, ch.commands())
     for d in lm['matvec']['deliveries']:
         d['far'] = [f + base for f in d['far']]
-    drive(ev, lm['matvec'], gm['parts'])
+    drive(ev, lm['matvec'], gm, mutant)
     # golden die argmax (okey order, the lowest row on ties)
     y = [int(v) for v in gm['y']]
     best = max(range(rows), key=lambda r: (okey(y[r]), -r))
@@ -443,7 +535,7 @@ def run_emb(work, ages, rng, mutant):
 
 RUNS = dict(qkv=lambda w, a, r, m: run_vm(w, 'qkv', a, r, m), gu=lambda w, a, r, m: run_vm(w, 'gu', a, r, m),
             od=run_od, lm=run_lm, emb=run_emb)
-MUTANTS = dict(qkv=('sbase1',), gu=('sbase1',), od=('nostagger', 'xc_bc'), lm=('amax_local',), emb=('emb_late',))
+MUTANTS = dict(qkv=('sbase1', 'drop_last_k'), gu=('sbase1', 'drop_last_k'), od=('nostagger', 'xc_bc', 'rawscale'), lm=('amax_local',), emb=('emb_late',))
 
 
 def main():

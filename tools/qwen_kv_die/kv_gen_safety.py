@@ -108,10 +108,18 @@ def clock_pins(libs):
     return result, hashes
 
 
-def export(case, pin_roots=None, libs=None):
+def export(case, pin_roots=None, libs=None, source_ports=None):
     paths = [case / 'die.v', case / 'elements.lef', case / 'place.tcl', case / 'manifest.json']
     paths += sorted(case.glob('phy*.lef'))
     text = paths[0].read_text()
+    source_directions = None
+    source_direction_sha = None
+    if source_ports:
+        raw = source_ports.read_bytes()
+        source_directions = json.loads(raw)
+        source_direction_sha = hashlib.sha256(raw).hexdigest()
+        if source_directions.get('die_sha256') != hashlib.sha256(paths[0].read_bytes()).hexdigest():
+            raise ValueError('source-port directions describe another die netlist')
     lef = '\n'.join(p.read_text() for p in paths if p.suffix == '.lef')
     macros = {m['name']: m for m in C.parse_lef(lef)}
     directions, cur, pin = {}, None, None
@@ -200,6 +208,18 @@ def export(case, pin_roots=None, libs=None):
                 if net is None or net in clock_nets or net.startswith(('n_clk_', 'n_fck_')) or net in const:
                     continue
                 dr = directions.get((mst, f'{port}[{bit}]'), directions.get((mst, port)))
+                if source_directions:
+                    per = source_directions.get('masters', {}).get(mst, {}).get('ports', {}).get(port, [])
+                    if bit >= len(per):
+                        raise ValueError(f'missing actual source-port direction {n}/{port}[{bit}]')
+                    actual = per[bit]
+                    if dr in ('INPUT', 'OUTPUT') and actual != dr:
+                        raise ValueError(f'LEF/source direction conflict {n}/{port}[{bit}]: {dr} vs {actual}')
+                    dr = actual if dr else None
+                elif dr == 'INOUT':
+                    # Generic geometric frames deliberately use INOUT even
+                    # for real RTL inputs. It cannot establish a driver.
+                    dr = None
                 ep = (n, port, bit)
                 if dr is None:
                     nets[net][2].append(ep)
@@ -261,6 +281,7 @@ def export(case, pin_roots=None, libs=None):
                 coverage=dict(instances=len(insts), net_bits=len(nets), driver_load_bit_pairs=pairs,
                               unconnected_without_abstract=dangling,
                               liberty_clock_pins=len(related_clocks),
+                              source_ports_sha256=source_direction_sha,
                               liberty_sha256=library_hashes,
                               aggregation='maximum actual pin-pair Manhattan span per instance-port pair',
                               source_sha256={str(p.relative_to(case)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}))
@@ -271,11 +292,12 @@ def main():
     ap.add_argument('--case', type=Path, required=True)
     ap.add_argument('--pin-roots', type=Path)
     ap.add_argument('--libs', type=Path, help='actual bound TT Liberty directory; per-pin clock identity')
+    ap.add_argument('--source-ports', type=Path, help='exact selected strict-bind RTL port directions')
     a = ap.parse_args()
     out = a.case / 'gen_safety_facts.json'
     # A refused export must not leave an earlier successful packet behind.
     out.unlink(missing_ok=True)
-    facts = export(a.case, json.loads(a.pin_roots.read_text()) if a.pin_roots else None, a.libs)
+    facts = export(a.case, json.loads(a.pin_roots.read_text()) if a.pin_roots else None, a.libs, a.source_ports)
     out.write_text(json.dumps(facts, indent=1) + '\n')
     print('KV_GEN_SAFETY_FACTS ' + json.dumps(facts['coverage']))
 

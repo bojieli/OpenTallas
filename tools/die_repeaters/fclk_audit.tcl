@@ -179,11 +179,11 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
 # A forwarded clock is delay-matched to its bundle: after the repair, for every judged hop whose deepest data bit is more
 # than one stage deeper than the clock, n = data_max - 1 - fclk BUFs are chained in front of the capture clock pin
 # (n only if the shallowest bit then stays within +-1; else the hop is left for the audit to fail).  Never touches data.
-proc ot_die_rep_fclk_eq_plan {fd dmin dmax} {
+proc ot_die_rep_fclk_eq_plan {fd dmin dmax {payload_can_equalize 0}} {
   if {$dmin < 0 || $dmax < 0} { return 0 }
   set n [expr {$dmax - 1 - $fd}]
   if {$n <= 0} { return 0 }
-  if {$fd + $n - $dmin > 1} { return -1 }
+  if {$fd + $n - $dmin > 1 && !$payload_can_equalize} { return -1 }
   return $n
 }
 
@@ -197,7 +197,11 @@ proc ot_die_rep_fclk_equalize {prefix globs bufs} {
   while {[gets $f line] >= 0} {
     set r [dict create]; foreach c $cols v [split $line "\t"] { dict set r $c $v }
     if {[dict get $r broadcast] ne "0" || [dict get $r mismatch] ne "1"} { continue }
-    set n [ot_die_rep_fclk_eq_plan [dict get $r fclk_repeaters] [dict get $r data_min] [dict get $r data_max]]
+    # Only a complete declared payload can be padded by equalize_data below.
+    # Move its clock toward the deepest bit first, then pad shallow bits.
+    # Generic pairing retains the original wide-interval refusal.
+    set payload_can_equalize [expr {[dict get $r pairing] eq "data_port_contract"}]
+    set n [ot_die_rep_fclk_eq_plan [dict get $r fclk_repeaters] [dict get $r data_min] [dict get $r data_max] $payload_can_equalize]
     if {$n < 0} { incr unfix; puts "OT_DIE_REP_FCLK_EQ unfixable [dict get $r fclk_net] -> [dict get $r capture]: fclk [dict get $r fclk_repeaters] data [dict get $r data_min]..[dict get $r data_max]"; continue }
     if {$n == 0} { continue }
     set fnet [$blk findNet [dict get $r fclk_net]]; set cap [$blk findInst [dict get $r capture]]
@@ -215,6 +219,7 @@ proc ot_die_rep_fclk_equalize {prefix globs bufs} {
     $it disconnect
     for {set j 0} {$j < $n} {incr j} {
       set nm "fclkeq_[incr k]"
+      while {[$blk findInst $nm] ne "NULL" || [$blk findNet "${nm}_y"] ne "NULL"} { set nm "fclkeq_[incr k]" }
       set bi [odb::dbInst_create $blk $master $nm]
       set nn [odb::dbNet_create $blk "${nm}_y"]
       foreach x [$bi getITerms] {

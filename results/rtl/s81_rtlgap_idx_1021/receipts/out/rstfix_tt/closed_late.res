@@ -1,0 +1,1 @@
+IDXRD_CASE OK rstfix_tt/closed_late: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 60 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1003 end_to_last 938 nerr 257 nopen 0 qerr 0 slice_err 16 | maxrss_kb=188448 wall=2:36.05

@@ -1,0 +1,125 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered: qs / ql / uid land in flops at the pin (qs_d/ql_d/qs_v0/ql_v0/qs_vk/ql_vk/mek), qr / qc0 / qc1 / st leave flops; the die calendar prices pin -> pin 3 edges, recipe pin_regs would add an unpriced stage.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_dsdv_idx_qf_f_20261021-143144.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_dsdv_idx_qf_f_20261021-143144.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/dsdv_idx_qf_f-20261021-143144",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=30",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 125 s (gate total 671 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2579, 'pin_rectangles': 2579, 'pin_track_checked': 2579, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 67671249133b97e42e32825367824f9453919822f9476171cfa427d6d9ca700e",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 1713 um2 + macros 0 in core 109007: util 2%",
+   "fix": "set \"std_area_um2\": 1713 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN dsdv_idx_qf cells 11,296 flops 3,618 depth 280.1 ps util 0.0157 reach 0.0 um (0.3 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 1.6% outside 45%-65% (std 1706 + macro 0 um2 in 109007 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 547.5..588.5 ps (spread 41.0), boundary mean 570.1; tt insertion all 427.9..465.0 ps (spread 37.1), boundary mean 447.8; ff insertion all 352.3..388.0 ps (spread 35.7), boundary mean 371.5; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/dsdv_idx_qf_f/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      516 paths, worst slack 25.1 ps (e.g. qr[29]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         1 paths, worst slack 448.9 ps (e.g. rs0$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.5139001991192345e-11 hold WNS 3.449990293447058e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck: 3,618 sinks on the largest root; measured TT insertion 465.0 ps, FF insertion 388.0 ps, TT pin-flop spread 37.1 ps, FF pin-flop spread 34.9 ps; WARN: insertion 465.0 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-idxqf-n32fix-1348/physical/ref_tile/dsdv_idx_qf_f/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-s81-idxqf-n32fix-1348/physical/ref_tile/dsdv_idx_qf_f/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M3 12.41% used; GRT 141 s",
+   "fix": ""
+  }
+ ]
+}

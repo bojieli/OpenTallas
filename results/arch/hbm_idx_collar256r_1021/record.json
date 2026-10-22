@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.hbm.idx256.proof.v1",
+ "item": "H.HOST.IDX256 programme depth guard",
+ "verdict": "FUNCTIONAL_PASS",
+ "dut": "ot_hbm_static_cfg_collar_idx256r (exact source restored on main c7581ed8a; bound by HBM r14 via CLOSED view physical/ref_tile/hdie_col_idx256r_b)",
+ "params": {
+  "PAGE_W": 1,
+  "NS": 1,
+  "NPR": 6,
+  "NREC": 8,
+  "NGO": 2,
+  "NB": 2,
+  "NF": 5,
+  "XSER": 0,
+  "FAN32": 1
+ },
+ "base_commit": "81add7c4657a04f79c93a28759a4479581ecb169",
+ "source_sha256": {
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "e24af398774ed829314db25d68960b67832f0802437df19f46df24f62cd62e9e",
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256r.sv": "26d34bece786413235c5c0484be10cded7d6e53ae5820c1df2ec97b01b135426",
+  "rtl/test/hbm_collar_idx256/tb_idx256r.sv": "060a6307b7e715d710d1c89e3d05808898d59bb544ff299ee6c0e2fbda9c26e5",
+  "rtl/test/hbm_collar_idx256/run_idx256r.sh": "84e2329fa303ccb4cb8bc351c7bf8b10605c7cd55d15283a37dbe38ff85dc6e6",
+  "rtl/test/hbm_collar_idx256/tb_idx256.sv": "9439df9214a0e94385e330a8eef3872fbcb76cf2c083f09a63c46cb91b774aa7"
+ },
+ "bench": "existing tb_idx256 (5d3c8b5e0/efe735d55, record a421fa8ab) re-targeted: guarded instance idx256r; 8-bit pw_addr zero-extended; packed 769-bit prm compared to legacy 1536-bit face via documented packing; operand stimulus masked to used bits (idx256r reserved-bit ABI). Cases and mutants unchanged.",
+ "m0": "IDX256_PASS cases=9 identity_edges=2280 writes=1026 launches=4 legacy_aliases=2",
+ "mutants": {
+  "9": "FAIL (write guard off: row256 write reaches pw_we -> bad install wrote)",
+  "10": "FAIL (missing page rejection)",
+  "11": "FAIL (missing need rejection k0=257)"
+ },
+ "run": {
+  "host": "localhost",
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+ },
+ "scope": "functional guard proof on the bound source only; no new timing/physical claim (view already CLOSED)"
+}

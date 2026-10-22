@@ -59,3 +59,32 @@ reach, no overlaps; occupied region and unreachable endpoint negatives).
 `corridor_proof.log`: both geometry variants PASS, unit
 oth-ubuntu-15477-1792560095 on ot-epyc6, admitted through unpinned ot-run.
 The script and full site/endpoint packets are retained alongside this note.
+
+## Integrated strict trials, 22:27 PT
+
+Integrated source c641da67d = die-owner743e0575d (ROOT14/LAND/scalar
+bind alias/GENfacts plus plan) + strict-launch and actual M8 routing fix.
+The original router used M4-M9 even when the repeater RC knob selected M8;
+this source sends M8 into the Docker GRT process and routes signals M4-M8,
+reserving M9 for clocks/PG. `OT_KV_STRICT_CHAIN_ONLY=1` suppresses automatic
+diagnostic continuation after marker/bind failure. No diagnostic bypass is
+set. `launch_strict_trial.sh A|B` captures the exact flags and commit.
+
+Both admitted unpinned through ot-run with 250 GB, matching the established
+KV chain admission (GRT140GB plus concurrent clock stages). Five congestion
+iterations form the early GRT trial; TT/FF and IR still run on every build.
+This is an iteration count, not a wall-time limit. Full physical and schedule
+qualification remains pending. LAND=1 is an opt-in candidate with standard
+LEC EQUIVALENT already present; independent d22hl2 bind is still pending.
+AHUB a7 adoption is conditional on its independently running positive LEC.
+
+- A: ep6 unit oth-ubuntu-69163-1792560404, session3766;
+  `/srv/opentallas-scratch/claude/qwen-kvsys/kvs14r-c641da67d-codexcpA`.
+- B: ep6 unit oth-ubuntu-69436-1792560405, session34650;
+  same path with suffix `codexcpB`.
+
+Initial bash-stdin wrappers exited0 without executing the source because the
+fleet admission process did not retain stdin. No result directory or job was
+created. The actual launches above carry the script as a quoted bash argument;
+worktree creation and running source were verified. No failed design verdict
+was overwritten or rerun by this setup correction.

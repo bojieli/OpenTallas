@@ -30,12 +30,54 @@ generate if(MU==0)begin:g_plain
  qkd_host_service_guard #(.SETTLE(SETTLE),.MUT(MUT)) u_plain(.ck_guard(ck_guard),.rst_n(rst_n),.raw_faults(raw_faults),.die_id(die_id),.physical_faults(physical_faults),.transport_faults(transport_faults),.accepted_ing_v(accepted_ing_v),.accepted_ing_cls(accepted_ing_cls),.accepted_ing_header(accepted_ing_header),.done_v(done_v),.done_d(done_d),.boot_barrier_v(boot_barrier_v),.boot_barrier_target(boot_barrier_target),.begin_v(begin_v),.begin_epoch(begin_epoch),.pending_advertised(pending_advertised),.pending_epoch(pending_epoch),.local_tk(local_tk),.guarded_tk(w_guarded_tk),.abort(w_abort),.service_ready(w_service_ready),.service_epoch(w_service_epoch),.diag_raw(w_diag_raw),.status(w_status),.groups(w_groups),.physical_diag(w_physical_diag),.transport_diag(w_transport_diag),.service_protocol_fault(service_protocol_fault));
  always @*begin guarded_tk=w_guarded_tk;abort=w_abort;service_ready=w_service_ready;service_epoch=w_service_epoch;diag_raw=w_diag_raw;status=w_status;groups=w_groups;physical_diag=w_physical_diag;transport_diag=w_transport_diag;end
 end else begin:g_mu
+ // KV-PEER13: g_mu declarations hoisted before first use (Yosys declare-before-use; tools/qwen_kv_die/mu_peer/hoist_gmu_decls.py)
+ reg protocol_pin_q;
+ reg[2:0] role_q,role;
+ reg role_valid,role_sampled;
+ reg[7:0] pf_q,tf_q;
+ reg[92:0] tk_q;
+ reg iv,dv,bv,ev,av;
+ reg[1:0] ic;
+ reg[15:0] ih,ep,ap;
+ reg[63:0] dd;
+ reg[31:0] bt;
+ reg[24:0] sticky;
+ reg protocol_fault,wait_advert,epoch_dirty;
+ reg[31:0] activity_gen,activity_closed,nadmit,nclosed,last_done,last_barrier;
+ reg[7:0] quiet;
+ wire fp;
+ wire np;
+ wire mp;
+ wire activity_admit;
+ wire unfenced_admit;
+ wire ftv,mtv;
+ wire[7:0] ft;
+ wire[63:0] mt;
+ wire[7:0] fc,mc;
+ wire fo,fu,mo,mu;
+ reg[39:0] dq[0:7];
+ reg[31:0] bq[0:7];
+ reg[2:0] dw,dr,bw,br;
+ reg[3:0] dc,bc;
+ wire dt;
+ wire mb;
+ wire dp;
+ wire dbad;
+ wire dop;
+ wire bop;
+ wire internal_bad;
+ wire[24:0] next_sticky;
+ wire bad;
+ wire clean;
+ wire activity;
+ wire[3:0] g;
+
 
  (* ASYNC_REG="TRUE" *)reg[24:0]fm,fs;
- reg protocol_pin_q;reg[2:0]role_q,role;reg role_valid,role_sampled;
- reg[7:0]pf_q,tf_q;reg[92:0]tk_q;
- reg iv,dv,bv,ev,av;reg[1:0]ic;reg[15:0]ih,ep,ap;
- reg[63:0]dd;reg[31:0]bt;
+ 
+ 
+ 
+ 
  always @(posedge ck_guard or negedge rst_n)if(!rst_n)begin
  protocol_pin_q<=0;fm<=0;fs<=0;role_sampled<=0;role_q<=0;pf_q<=0;tf_q<=0;tk_q<=0;
  iv<=0;dv<=0;bv<=0;ev<=0;av<=0;ic<=0;ih<=0;ep<=0;ap<=0;dd<=0;bt<=0;
@@ -45,37 +87,37 @@ end else begin:g_mu
  dv<=done_v;dd<=done_d;bv<=boot_barrier_v;bt<=boot_barrier_target;
  ev<=begin_v;ep<=begin_epoch;av<=pending_advertised;ap<=pending_epoch;
  end
- reg[24:0]sticky;reg protocol_fault,wait_advert,epoch_dirty;
- reg[31:0]activity_gen,activity_closed,nadmit,nclosed,last_done,last_barrier;
- reg[7:0]quiet;
- wire fp=iv&&ic==1&&ih[7];wire np=iv&&ic==1&&!ih[7];
- wire mp=iv&&ic==0&&ih[7:0]==2;
- wire activity_admit=iv&&!mp;
+ 
+ 
+ 
+ assign fp=iv&&ic==1&&ih[7];assign np=iv&&ic==1&&!ih[7];
+ assign mp=iv&&ic==0&&ih[7:0]==2;
+ assign activity_admit=iv&&!mp;
  // This service candidate requires a genuine ordered BOOT_END for ALL ingest
  // activity. DONE never establishes payload ownership or closes readiness.
- wire unfenced_admit=np||(iv&&ic==0&&!mp)||(iv&&ic==2&&fc==0);
- wire ftv,mtv;wire[7:0]ft;wire[63:0]mt;
- wire[7:0]fc,mc;wire fo,fu,mo,mu;
+ assign unfenced_admit=np||(iv&&ic==0&&!mp)||(iv&&ic==2&&fc==0);
+ 
+ 
  // Completion staging absorbs the four-edge bank prefetch startup.
- reg[39:0]dq[0:7];reg[31:0]bq[0:7];reg[2:0]dw,dr,bw,br;
- reg[3:0]dc,bc;
- wire dt=dc!=0&&ftv;wire mb=bc!=0&&mtv;
- wire dp=dv&&dd[63:56]==1&&dd[55:48]==0&&dd[39:32]==0;
- wire dbad=dv&&!dp;
- wire dop=dp&&(dc<8||dt);wire bop=bv&&(bc<8||mb);
+ 
+ 
+ assign dt=dc!=0&&ftv;assign mb=bc!=0&&mtv;
+ assign dp=dv&&dd[63:56]==1&&dd[55:48]==0&&dd[39:32]==0;
+ assign dbad=dv&&!dp;
+ assign dop=dp&&(dc<8||dt);assign bop=bv&&(bc<8||mb);
  qkd_host_guard_fifo #(.W(8))fenced(ck_guard,rst_n,fp,ih[15:8],dt,ftv,ft,fc,fo,fu);
  qkd_host_guard_fifo #(.W(64),.SRAM_FIFO(1))markers(ck_guard,rst_n,mp,{activity_gen,nadmit},mb,mtv,mt,mc,mo,mu);
- wire internal_bad=protocol_pin_q||fo||mo||dbad||(dp&&!dop)||(bv&&!bop)||
+ assign internal_bad=protocol_pin_q||fo||mo||dbad||(dp&&!dop)||(bv&&!bop)||
  (dc!=0&&fc==0&&!fp)||(bc!=0&&mc==0&&!mp)||
  (dt&&((MUT!=4&&dq[dr][39:32]!=ft)||dq[dr][31:0]<last_done))||
  (mb&&(bq[br]<last_barrier||mt[63:32]>activity_gen||mt[31:0]>nadmit))||
  (role_valid&&role_q!=role)||(activity_admit&&activity_gen==32'hffffffff)||(unfenced_admit&&nadmit==32'hffffffff)||
  (ev&&(ep<=service_epoch||wait_advert||fc!=0||mc!=0||nadmit!=nclosed||activity_gen!=activity_closed));
- wire[24:0]next_sticky=sticky|((MUT==1)?25'b0:fs);
- wire bad=protocol_fault||internal_bad||(|next_sticky);
- wire clean=(MUT==3)||(!epoch_dirty&&(fc==0)&&(mc==0)&&(dc==0)&&(bc==0)&&(nadmit==nclosed)&&((MUT==5)||(activity_gen==activity_closed)));
- wire activity=iv||dv||bv||ev||dt||mb;
- wire[3:0]g={ (|next_sticky[19:14]),(|next_sticky[13:12]),
+ assign next_sticky=sticky|((MUT==1)?25'b0:fs);
+ assign bad=protocol_fault||internal_bad||(|next_sticky);
+ assign clean=(MUT==3)||(!epoch_dirty&&(fc==0)&&(mc==0)&&(dc==0)&&(bc==0)&&(nadmit==nclosed)&&((MUT==5)||(activity_gen==activity_closed)));
+ assign activity=iv||dv||bv||ev||dt||mb;
+ assign g={ (|next_sticky[19:14]),(|next_sticky[13:12]),
  ((|next_sticky[11:6])||(|next_sticky[24:20])),(|next_sticky[5:0])};
  always @(posedge ck_guard or negedge rst_n)if(!rst_n)begin
  role<=0;role_valid<=0;sticky<=0;protocol_fault<=0;wait_advert<=0;epoch_dirty<=0;
@@ -513,19 +555,79 @@ module qkd_host_rank_services_admission_mu #(
 generate if(MU==0)begin:g_plain
  qkd_host_rank_services_admission #(.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_NATIVE(ENABLE_NATIVE),.ENABLE_TOKEN(ENABLE_TOKEN),.PHY_MUT(PHY_MUT),.QM_MUT(QM_MUT),.ORDER_MUT(ORDER_MUT),.BRIDGE_MUT(BRIDGE_MUT),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT),.NL(NL)) u_plain(.host_upstream_quiet(host_upstream_quiet),.static_setup_ready(static_setup_ready),.boot_pr(boot_pr),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),.boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),.native_reserved(native_reserved),.ownership_valid(ownership_valid),.host_admission_open(host_admission_open),.host_launch_quiet(host_launch_quiet),.host_deferred(host_deferred),.ck_phy(ck_phy),.ck_pad(ck_pad),.ck_phy_rx_w(ck_phy_rx_w),.ck_phy_rx_r(ck_phy_rx_r),.ck_phy_tx_w(ck_phy_tx_w),.ck_phy_tx_r(ck_phy_tx_r),.peer_reset_request(peer_reset_request),.native_recovery_clear(native_recovery_clear),.ck_peer(ck_peer),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.peer_tx_ready(peer_tx_ready),.peer_rx_valid(peer_rx_valid),.peer_rx_data(peer_rx_data),.peer_rx_ready(peer_rx_ready),.peer_link_drained(peer_link_drained),.ck_program_rx(ck_program_rx),.ck_program_loader(ck_program_loader),.ck_host(ck_host),.ck_csr(ck_csr),.ck_rst(ck_rst),.ck_ctl(ck_ctl),.ck_prompt(ck_prompt),.ck_rx(ck_rx),.ck_tx(ck_tx),.ck_axi(ck_axi),.ck_ctrl(ck_ctrl),.ck_hc(ck_hc),.ck_qm_queue(ck_qm_queue),.ck_qm_ing_w(ck_qm_ing_w),.ck_qm_ing_r(ck_qm_ing_r),.ck_qm_credit(ck_qm_credit),.ck_qm_done_w(ck_qm_done_w),.ck_qm_done_r(ck_qm_done_r),.ck_qm_core(ck_qm_core),.ck_qm_host(ck_qm_host),.ck_qm_ingest(ck_qm_ingest),.ck_qm_bank(ck_qm_bank),.ck_qm_out(ck_qm_out),.ck_map(ck_map),.ck_sum(ck_sum),.ck_order(ck_order),.ck_dispatch(ck_dispatch),.ck_retire(ck_retire),.ck_bootbarrier(ck_bootbarrier),.ck_fence_core(ck_fence_core),.ck_fence_host(ck_fence_host),.ck_guard(ck_guard),.ck_native(ck_native),.token_allocator_fault(token_allocator_fault),.token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),.package_abort(package_abort),.abort_drained(abort_drained),.token_request_valid(token_request_valid),.token_request_ready(token_request_ready),.token_request_token(token_request_token),.token_request_position(token_request_position),.token_request_generation(token_request_generation),.cancel_release_v(cancel_release_v),.cancel_release_tag(cancel_release_tag),.cancel_release_gen(cancel_release_gen),.cancel_released(cancel_released),.native_context_owned(native_context_owned),.token_grant_valid(token_grant_valid),.token_grant_ready(token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_generation(token_grant_generation),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_epoch(allocated_epoch),.allocated_token(allocated_token),.allocated_position(allocated_position),.allocated_generation(allocated_generation),.token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),.cancel_valid(cancel_valid),.cancel_tag(cancel_tag),.cancel_generation(cancel_generation),.cancel_done(cancel_done),.cancel_fault(cancel_fault),.cancel_drained(cancel_drained),.token_cancel_accepted(token_cancel_accepted),.native_request_v(native_request_v),.native_request_tag(native_request_tag),.native_request_trace(native_request_trace),.native_request_gen(native_request_gen),.native_request_token(native_request_token),.native_request_pos(native_request_pos),.native_request_cr(native_request_cr),.native_pr(native_pr),.native_result_v(native_result_v),.native_result_tag(native_result_tag),.native_result_gen(native_result_gen),.native_result_done(native_result_done),.native_result_fault(native_result_fault),.native_result_cause(native_result_cause),.native_result_token(native_result_token),.native_result_value(native_result_value),.native_result_cycles(native_result_cycles),.native_result_cr(native_result_cr),.native_kv_drained(native_kv_drained),.native_vm_drained(native_vm_drained),.native_collective_drained(native_collective_drained),.native_host_drained(native_host_drained),.native_collective_busy(native_collective_busy),.native_kv_flush(native_kv_flush),.service_ready(service_ready),.service_abort(service_abort),.ingest_permission(ingest_permission),.local_service_epoch(local_service_epoch),.service_diag_raw(service_diag_raw),.service_status(service_status),.die_id(die_id),.por_n(por_n),.pll_locked(pll_locked),.phy_up(phy_up),.phy_rx_v(phy_rx_v),.phy_rx_flit(phy_rx_flit),.phy_tx_v(phy_tx_v),.phy_tx_flit(phy_tx_flit),.link_up(link_up),.transport_fault(transport_fault),.physical_fault(physical_fault),.crom_fault(crom_fault),.local_tk(local_tk),.local_kst(local_kst),.program_installed_valid(program_installed_valid),.execution_active(execution_active),.program_commit_v(program_commit_v),.program_commit_epoch(program_commit_epoch),.program_commit_digest(program_commit_digest),.program_ready(program_ready),.program_epoch(program_epoch),.program_digest(program_digest),.program_authorized_footer_v(program_authorized_footer_v),.program_authorized_footer64(program_authorized_footer64),.program_begin_epoch(program_begin_epoch),.program_begin_v(program_begin_v),.program_auth_v(program_auth_v),.program_expected_pw(program_expected_pw),.program_expected_dw(program_expected_dw),.program_auth_epoch(program_auth_epoch),.program_auth_digest(program_auth_digest),.hc(hc),.seen(seen),.irq(irq),.host_rst_n(host_rst_n),.link_rst_n(link_rst_n),.hbm_rst_n(hbm_rst_n),.boot_go(boot_go),.die_rst_n(die_rst_n),.sys_ready(sys_ready),.fault_src(fault_src),.source_cr(source_cr),.available(available),.hb(hb),.hb_cr(hb_cr),.est(est),.chain_f(chain_f),.chain_c(chain_c),.chain_a(chain_a),.chain_fault_i(chain_fault_i),.slice_ack(slice_ack),.slice_boot_done(slice_boot_done),.slice_boot_ok(slice_boot_ok),.slice_boot_fault(slice_boot_fault),.ctrl_completion_fault(ctrl_completion_fault),.marker_v(marker_v),.marker(marker),.certificate_v(certificate_v),.certificate(certificate),.certificate_prefix(certificate_prefix),.issued(issued),.landed(landed),.physical_ack_n(physical_ack_n),.service_faults(service_faults),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),.host_idle(host_idle),.host_observer_fault(host_observer_fault));
 end else begin:g_mu
+ // KV-PEER13: g_mu declarations hoisted before first use (Yosys declare-before-use; tools/qwen_kv_die/mu_peer/hoist_gmu_decls.py)
+ wire[142:0] pr,raw_pr;
+ wire[3:0] image_target,auth_target,replay_target;
+ wire[1:0] local_boot;
+ wire[127:0] boot_done_pc,boot_ok_pc,boot_fault_pc;
+ wire ingress_fault,program_fault;
+ wire begin_image,word_v,word_desc,seal,auth_v;
+ wire[15:0] image_epoch,auth_epoch;
+ wire[10:0] pw_count;
+ wire[3:0] dw_count;
+ wire[9:0] word_addr;
+ wire[63:0] word_data,auth_digest;
+ wire replay_done;
+ reg committed,commit_fault;
+ wire[7:0] observed_physical_faults;
+ wire d_rv,d_rcr,d_cv,d_ccr;
+ wire[1023:0] d_rd,d_cd;
+ wire adapter_fault;
+ wire raw_rx_v,raw_rx_cr,program_rx_v,program_rx_cr;
+ wire[527:0] raw_rx_d,program_rx_d;
+ wire physical_tx_v,physical_tx_cr,peer_link_fault;
+ wire[527:0] physical_tx_d;
+ wire rx_v,rx_cr,tx_v,tx_cr;
+ wire[527:0] rx_d,tx_d;
+ wire[4:0] phy_faults;
+ wire ing_v,done_v,done_cr;
+ wire[1:0] ing_cls;
+ wire[511:0] ing_d;
+ wire[4:0] ing_crn;
+ wire[63:0] done_d;
+ wire source_fault;
+ wire[3:0] packet_faults;
+ wire[92:0] native_tk,guarded_tk;
+ wire native_protocol_fault;
+ wire[7:0] guarded_physical,guarded_transport,peer_service_ready,peer_pending_ack;
+ wire[127:0] peer_service_epoch;
+ wire service_begin_v,pending_advertised,begin_fault;
+ wire[15:0] service_begin_epoch,pending_epoch;
+ wire marker_cr,marker_consumer_fault;
+ wire qm_v,qm_t_v,qm_t_cr,fenced_v,fenced_cr;
+ wire[1:0] qm_cls;
+ wire[511:0] qm_d;
+ wire[4:0] qm_crn;
+ wire[63:0] qm_t_d,fenced_d;
+ wire[5:0] bridge_faults;
+ wire ov,owe,ocr,qm_fault;
+ wire[31:0] oa;
+ wire[255:0] od;
+ wire[289:0] kv_ing;
+ wire kv_ing_cr;
+ wire[127:0] all_acks;
+ wire global_prefix_v,dispatch_fault;
+ wire[31:0] kv_issued,kv_landed;
+ wire local_marker_v,local_marker_cr,bootbarrier_fault,image_check;
+ wire[65:0] local_marker;
+ wire map_fault,order_fault,fence_fault;
+ wire[3:0] chain_fault;
+ wire[7:0] prefix_ack_n;
+ wire[31:0] fence_landed;
 
- wire[142:0]pr,raw_pr;
- wire[3:0]image_target,auth_target,replay_target;
+
+ 
+ 
  assign pr=(replay_target==0)?raw_pr:143'b0;
- assign boot_pr=raw_pr;assign boot_image_target=replay_target;assign boot_image_ready=replay_done&&!program_fault&&!ingress_fault&&!begin_image;assign boot_image_fault=program_fault|ingress_fault;assign boot_image_epoch=program_epoch;assign boot_image_digest=program_digest;wire[1:0]local_boot;
- wire[127:0]boot_done_pc=slice_boot_done,boot_ok_pc=slice_boot_ok,boot_fault_pc=slice_boot_fault;
+ assign boot_pr=raw_pr;assign boot_image_target=replay_target;assign boot_image_ready=replay_done&&!program_fault&&!ingress_fault&&!begin_image;assign boot_image_fault=program_fault|ingress_fault;assign boot_image_epoch=program_epoch;assign boot_image_digest=program_digest;
+ assign boot_done_pc=slice_boot_done;assign boot_ok_pc=slice_boot_ok;assign boot_fault_pc=slice_boot_fault;
  assign local_boot={&boot_ok_pc,&boot_done_pc};
  // g_boot: per-PC qkd_hbm_boot_static_completion in qkd_host_pc_slice (die-placed)
- wire ingress_fault,program_fault;wire begin_image,word_v,word_desc,seal,auth_v;
- wire[15:0]image_epoch,auth_epoch;wire[10:0]pw_count;wire[3:0]dw_count;
- wire[9:0]word_addr;wire[63:0]word_data,auth_digest;wire replay_done;
+ 
+ 
+ 
  assign program_begin_epoch=image_epoch;assign program_begin_v=begin_image&&image_target==0;assign program_auth_v=auth_v&&auth_target==0;assign program_expected_pw=pw_count;assign program_expected_dw=dw_count;assign program_auth_epoch=auth_epoch;assign program_auth_digest=auth_digest;
- reg committed,commit_fault;
+ 
  always @(posedge ck_program_loader or negedge host_rst_n)begin
   if(!host_rst_n)begin committed<=0;commit_fault<=0;end
   else begin
@@ -540,13 +642,13 @@ end else begin:g_mu
  qkd_host_program_loader_target u_program(.ck(ck_program_loader),.rst_n(host_rst_n),.begin_image(begin_image),.image_epoch(image_epoch),.pw_count(pw_count),.dw_count(dw_count),
  .word_v(word_v),.word_desc(word_desc),.word_addr(word_addr),.word_data(word_data),.seal(seal),.auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),
  .image_target(image_target),.auth_target(auth_target),.replay_target(replay_target),.execution_active(execution_active),.pr(raw_pr),.program_ready(replay_done),.fault(program_fault),.digest(program_digest),.program_epoch(program_epoch),.authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64));
- wire[7:0]observed_physical_faults=physical_fault|((8'((|boot_fault_pc)||(|ctrl_completion_fault)||ingress_fault||program_fault||commit_fault||host_observer_fault||peer_link_fault))<<die_id);
- wire d_rv,d_rcr,d_cv,d_ccr;wire[1023:0]d_rd,d_cd;wire adapter_fault;
- wire raw_rx_v,raw_rx_cr,program_rx_v,program_rx_cr;wire[527:0]raw_rx_d,program_rx_d;
- wire physical_tx_v,physical_tx_cr,peer_link_fault;wire[527:0]physical_tx_d;
+ assign observed_physical_faults=physical_fault|((8'((|boot_fault_pc)||(|ctrl_completion_fault)||ingress_fault||program_fault||commit_fault||host_observer_fault||peer_link_fault))<<die_id);
+ 
+ 
+ 
  qkd_host_peer_link u_peer(.ck(ck_peer),.rst_n(host_rst_n),.rx_v(raw_rx_v),.rx_d(raw_rx_d),.rx_cr(raw_rx_cr),.normal_rx_v(program_rx_v),.normal_rx_d(program_rx_d),.normal_rx_cr(program_rx_cr),
  .peer_rx_valid(peer_rx_valid),.peer_rx_data(peer_rx_data),.peer_rx_ready(peer_rx_ready),.normal_tx_v(tx_v),.normal_tx_d(tx_d),.normal_tx_cr(tx_cr),.peer_tx_valid(peer_tx_valid),.peer_tx_data(peer_tx_data),.peer_tx_ready(peer_tx_ready),.tx_v(physical_tx_v),.tx_d(physical_tx_d),.tx_cr(physical_tx_cr),.drained(peer_link_drained),.fault(peer_link_fault));
- wire rx_v,rx_cr,tx_v,tx_cr;wire[527:0]rx_d,tx_d;wire[4:0]phy_faults;
+ 
  qfd_link_adp512_split #(.MUT(PHY_MUT))u_adapter(.ck(ck_phy),.rst_n(host_rst_n),
  .c_v(d_cv),.c_d(d_cd),.c_cr(d_ccr),.r_v(d_rv),.r_d(d_rd),.r_cr(d_rcr),
  .tx_up(phy_up),.tx_v(phy_tx_v),.tx_flit(phy_tx_flit),.rx_v(phy_rx_v),.rx_flit(phy_rx_flit),.fault(adapter_fault));
@@ -556,11 +658,11 @@ end else begin:g_mu
  qkd_host_program_rx_target u_program_rx(.ck(ck_program_rx),.rst_n(host_rst_n),.rx_v(program_rx_v),.rx_d(program_rx_d),.rx_cr(program_rx_cr),
  .normal_v(rx_v),.normal_d(rx_d),.normal_cr(rx_cr),.begin_image(begin_image),.image_epoch(image_epoch),.image_target(image_target),.auth_target(auth_target),.pw_count(pw_count),.dw_count(dw_count),
  .word_v(word_v),.word_desc(word_desc),.word_addr(word_addr),.word_data(word_data),.seal(seal),.auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),.fault(ingress_fault));
- wire ing_v,done_v,done_cr;wire[1:0]ing_cls;wire[511:0]ing_d;wire[4:0]ing_crn;wire[63:0]done_d;
- wire source_fault;wire[3:0]packet_faults;
- wire[92:0]native_tk,guarded_tk;wire native_protocol_fault;
- wire[7:0]guarded_physical,guarded_transport,peer_service_ready,peer_pending_ack;wire[127:0]peer_service_epoch;
- wire service_begin_v,pending_advertised,begin_fault;wire[15:0]service_begin_epoch,pending_epoch;
+ 
+ 
+ 
+ 
+ 
  qkd_host_control_packet_admission_mu #(.MU(1),.NL(NL),.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(.native_reserved(native_reserved),.ownership_valid(ownership_valid),.host_admission_open(host_admission_open),.host_launch_quiet(host_launch_quiet),.host_deferred(host_deferred),.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .token_allocator_fault(token_allocator_fault),
  .token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),
@@ -584,24 +686,24 @@ end else begin:g_mu
  .pending_advertised(pending_advertised),.pending_epoch(pending_epoch),
  .service_ready8(peer_service_ready),.pending_ack8(peer_pending_ack),.service_epoch8(peer_service_epoch),
  .ingest_permission(ingest_permission),.begin_fault(begin_fault));
- wire marker_cr,marker_consumer_fault;
+ 
  qkd_host_marker_consumer u_marker_consumer(.ck(ck_bootbarrier),.rst_n(host_rst_n),.marker_v(marker_v),.marker(marker),.issued(issued),.landed(landed),.est(est),.source_fault(source_fault),.marker_cr(marker_cr),.certificate_v(certificate_v),.certificate(certificate),.certificate_prefix(certificate_prefix),.fault(marker_consumer_fault));
- wire qm_v,qm_t_v,qm_t_cr,fenced_v,fenced_cr;wire[1:0]qm_cls;wire[511:0]qm_d;wire[4:0]qm_crn;wire[63:0]qm_t_d,fenced_d;wire[5:0]bridge_faults;
+ 
  qkd_host_qm_clock_bridge_service_debt #(.ENABLE_SERVICE(ENABLE_SERVICE),.MUT(BRIDGE_MUT))u_bridge(.cq(ck_qm_queue),.qw(ck_qm_ing_w),.qr(ck_qm_ing_r),.qp(ck_qm_credit),.ccw(ck_qm_done_w),.ccr(ck_qm_done_r),.rst_n(host_rst_n),
  .ingest_permission(ingest_permission),.ing_v(ing_v),.ing_cls(ing_cls),.ing_d(ing_d),.ing_crn(ing_crn),.qm_v(qm_v),.qm_cls(qm_cls),.qm_d(qm_d),.qm_crn(qm_crn),
  .done_v(fenced_v),.done_d(fenced_d),.done_cr(fenced_cr),.packet_done_v(done_v),.packet_done_d(done_d),.packet_done_cr(done_cr),.faults(bridge_faults),.queue_quiet(host_upstream_quiet[0]));
- wire ov,owe,ocr,qm_fault;wire[31:0]oa;wire[255:0]od;
+ 
  qkd_host_native_qm_debt #(.AW(32),.HDMAX(128),.KVHMAX(2),.RMW_EN(0),.QPIPE(2),.NATIVE_ROWS(1),.MUT(QM_MUT))u_qm(
  .rst_n(host_rst_n),.clk_h(ck_qm_host),.h_v(qm_v),.h_cls(qm_cls),.h_d(qm_d),.h_crn(qm_crn),.t_v(qm_t_v),.t_d(qm_t_d),.t_cr(qm_t_cr),
  .clk_i(ck_qm_ingest),.clk_i_bank(ck_qm_bank),.clk_i_out(ck_qm_out),.ck(ck_qm_core),
  .o_v(ov),.o_we(owe),.o_addr(oa),.o_d(od),.o_cr(ocr),.i_rv(1'b0),.i_rd(256'd0),.fault(qm_fault),.quiet_h(host_upstream_quiet[1]),.quiet_i(host_upstream_quiet[2]),.quiet_c(host_upstream_quiet[3]));
- wire[289:0]kv_ing;wire kv_ing_cr;wire[127:0]all_acks;wire global_prefix_v,dispatch_fault;
- wire[31:0]kv_issued,kv_landed;wire local_marker_v,local_marker_cr,bootbarrier_fault,image_check;wire[65:0]local_marker;
+ 
+ 
  qkd_host_emb_boot_barrier u_bootbarrier(.ck(ck_bootbarrier),.rst_n(host_rst_n),.in_v(local_marker_v),.in_d(local_marker),.in_cr(local_marker_cr),.est(est),.require_fresh(image_check),.out_v(marker_v),.out_d(marker),.out_cr(marker_cr),.fault(bootbarrier_fault));
  qkd_host_boot_dispatch_debt u_dispatch(.ck(ck_dispatch),.ck_order(ck_retire),.rst_n(host_rst_n),.boot_release(local_marker_cr),
  .ing({od,oa,owe,ov}),.ing_cr(ocr),.kv(kv_ing),.kv_cr(kv_ing_cr),.hb(hb),.hb_cr(hb_cr),.image_check(image_check),
  .acks(all_acks),.prefix_v(global_prefix_v),.issued(issued),.landed(landed),.fault(dispatch_fault),.dispatch_quiet(host_upstream_quiet[4]),.order_quiet(host_upstream_quiet[5]));
- wire map_fault,order_fault,fence_fault;wire[3:0]chain_fault;wire[7:0]prefix_ack_n;wire[31:0]fence_landed;
+ 
  qkd_host_ingest_chain_pt #(.ORDER_MUT(ORDER_MUT))u_chain(.ck_map(ck_map),.ck_sum(ck_sum),.ck_order(ck_order),.rst_n(host_rst_n),
  .ing(kv_ing),.ing_cr(kv_ing_cr),.all_acks(all_acks),.chain_f(chain_f),.chain_c(chain_c),.chain_a(chain_a),.chain_fault_i(chain_fault_i),.slice_ack(slice_ack),
  .marker_v(local_marker_v),.marker(local_marker),.marker_cr(local_marker_cr),.issued(kv_issued),.landed(kv_landed),.map_fault(map_fault),.chain_fault(chain_fault),.ack_n(prefix_ack_n),.physical_ack_n(physical_ack_n),.order_fault(order_fault));
@@ -786,12 +888,9 @@ module qkd_host_root_admission_mu #(
 generate if(MU==0)begin:g_plain
  qkd_host_root_admission #(.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_NATIVE(ENABLE_NATIVE),.ENABLE_TOKEN(ENABLE_TOKEN),.PHY_MUT(PHY_MUT),.QM_MUT(QM_MUT),.ORDER_MUT(ORDER_MUT),.BRIDGE_MUT(BRIDGE_MUT),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT),.NL(NL)) u_plain(.host_upstream_quiet(host_upstream_quiet),.static_setup_ready(static_setup_ready),.boot_pr(boot_pr),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),.boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),.native_reserved(native_reserved),.ownership_valid(ownership_valid),.host_admission_open(host_admission_open),.host_launch_quiet(host_launch_quiet),.host_deferred(host_deferred),.ck_phy(ck_phy),.ck_pad(ck_pad),.ck_phy_rx_w(ck_phy_rx_w),.ck_phy_rx_r(ck_phy_rx_r),.ck_phy_tx_w(ck_phy_tx_w),.ck_phy_tx_r(ck_phy_tx_r),.ck_peer(ck_peer),.ck_program_rx(ck_program_rx),.ck_program_loader(ck_program_loader),.ck_host(ck_host),.ck_csr(ck_csr),.ck_rst(ck_rst),.ck_ctl(ck_ctl),.ck_prompt(ck_prompt),.ck_rx(ck_rx),.ck_tx(ck_tx),.ck_axi(ck_axi),.ck_ctrl(ck_ctrl),.ck_hc(ck_hc),.ck_qm_queue(ck_qm_queue),.ck_qm_ing_w(ck_qm_ing_w),.ck_qm_ing_r(ck_qm_ing_r),.ck_qm_credit(ck_qm_credit),.ck_qm_done_w(ck_qm_done_w),.ck_qm_done_r(ck_qm_done_r),.ck_qm_core(ck_qm_core),.ck_qm_host(ck_qm_host),.ck_qm_ingest(ck_qm_ingest),.ck_qm_bank(ck_qm_bank),.ck_qm_out(ck_qm_out),.ck_map(ck_map),.ck_sum(ck_sum),.ck_order(ck_order),.ck_dispatch(ck_dispatch),.ck_retire(ck_retire),.ck_bootbarrier(ck_bootbarrier),.ck_fence_core(ck_fence_core),.ck_fence_host(ck_fence_host),.ck_guard(ck_guard),.ck_native(ck_native),.package_abort(package_abort),.abort_drained(abort_drained),.token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),.native_pr(native_pr),.native_kv_drained(native_kv_drained),.native_vm_drained(native_vm_drained),.native_collective_drained(native_collective_drained),.native_host_drained(native_host_drained),.native_collective_busy(native_collective_busy),.native_kv_flush(native_kv_flush),.service_ready(service_ready),.service_abort(service_abort),.ingest_permission(ingest_permission),.local_service_epoch(local_service_epoch),.service_diag_raw(service_diag_raw),.service_status(service_status),.die_id(die_id),.por_n(por_n),.pll_locked(pll_locked),.phy_up(phy_up),.phy_rx_v(phy_rx_v),.phy_rx_flit(phy_rx_flit),.phy_tx_v(phy_tx_v),.phy_tx_flit(phy_tx_flit),.link_up(link_up),.transport_fault(transport_fault),.link_physical_fault(link_physical_fault),.crom_fault(crom_fault),.local_tk(local_tk),.local_kst(local_kst),.ck_records(ck_records),.record_send_kind(record_send_kind),.record_witness_slot(record_witness_slot),.record_rx_v(record_rx_v),.record_rx(record_rx),.record_tx_v(record_tx_v),.record_tx_observed_v(record_tx_observed_v),.record_tx(record_tx),.record_fault(record_fault),.execution_active(execution_active),.program_ready(program_ready),.program_epoch(program_epoch),.program_digest(program_digest),.program_authorized_footer_v(program_authorized_footer_v),.program_authorized_footer64(program_authorized_footer64),.program_begin_v(program_begin_v),.program_auth_v(program_auth_v),.program_expected_pw(program_expected_pw),.program_expected_dw(program_expected_dw),.program_auth_epoch(program_auth_epoch),.program_auth_digest(program_auth_digest),.hc(hc),.seen(seen),.irq(irq),.host_rst_n(host_rst_n),.link_rst_n(link_rst_n),.hbm_rst_n(hbm_rst_n),.boot_go(boot_go),.die_rst_n(die_rst_n),.sys_ready(sys_ready),.fault_src(fault_src),.source_cr(source_cr),.available(available),.hb(hb),.hb_cr(hb_cr),.est(est),.chain_f(chain_f),.chain_c(chain_c),.chain_a(chain_a),.chain_fault_i(chain_fault_i),.slice_ack(slice_ack),.slice_boot_done(slice_boot_done),.slice_boot_ok(slice_boot_ok),.slice_boot_fault(slice_boot_fault),.ctrl_completion_fault(ctrl_completion_fault),.marker_v(marker_v),.marker(marker),.issued(issued),.landed(landed),.physical_ack_n(physical_ack_n),.service_faults(service_faults),.native_admit_ready(native_admit_ready),.native_links_drained(native_links_drained),.native_link_reset_seen(native_link_reset_seen),.native_retrained(native_retrained),.peer_protocol_fault(peer_protocol_fault),.ck_root_mux(ck_root_mux),.ck_coordinator_codec(ck_coordinator_codec),.ck_coordinator_lifecycle(ck_coordinator_lifecycle),.ck_coordinator_post(ck_coordinator_post),.dispatch_valid(dispatch_valid),.dispatched(dispatched),.cohort_tag(cohort_tag),.cohort_gen(cohort_gen),.accepted_ranks(accepted_ranks),.participant_trace(participant_trace),.participant_token(participant_token),.participant_pos(participant_pos),.engine_result_v(engine_result_v),.engine_result_tag(engine_result_tag),.engine_result_gen(engine_result_gen),.engine_result_done(engine_result_done),.engine_result_fault(engine_result_fault),.engine_result_cause(engine_result_cause),.engine_result_token(engine_result_token),.engine_result_value(engine_result_value),.engine_result_cycles(engine_result_cycles),.engine_result_cr(engine_result_cr),.program_consensus(program_consensus),.coordinator_fault(coordinator_fault),.recovery_complete(recovery_complete),.host_link_reset_req(host_link_reset_req),.host_recovery_clear(host_recovery_clear),.host_interface_idle(host_interface_idle));
 end else begin:g_mu
-
- localparam[2:0]RANK=0;
- wire[7:0] physical_fault=8'(link_physical_fault)<<die_id;
- // kvsys v1.4.2: this rank's engine is the compute die across the static D2D link; its admission is that link's
- // native_admit_ready (compute admit_ready & status fresh), the same level the control packet reports as native_ready
- wire engine_admit_ready=native_admit_ready;
+ // KV-PEER13: g_mu declarations hoisted before first use (Yosys declare-before-use; tools/qwen_kv_die/mu_peer/hoist_gmu_decls.py)
+ wire[7:0] physical_fault;
+ wire engine_admit_ready;
  wire token_allocator_fault;
  wire token_wrap_fence_valid;
  wire token_wrap_drained;
@@ -816,23 +915,10 @@ end else begin:g_mu
  wire[17:0] allocated_position;
  wire[1:0] allocated_generation;
  wire program_installed_valid,program_commit_v,installed_fusedcap;
- wire[15:0]program_commit_epoch,program_begin_epoch;wire[63:0]program_commit_digest;
- qkd_host_record_port_mu #(.MU(1))u_records(.ck(ck_records),.rst_n(host_rst_n),.send_kind(record_send_kind),
- .request_v(native_request_v),.request_tag(native_request_tag),.request_gen(native_request_gen),
- .request_token(native_request_token),.request_position(native_request_pos),
- .token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),
- .begin_v(program_begin_v),.begin_epoch(program_begin_epoch),.expected_pw(program_expected_pw),.expected_dw(program_expected_dw),
- .auth_v(program_auth_v),.auth_epoch(program_auth_epoch),.auth_digest(program_auth_digest),
- .program_ready(program_ready),.program_epoch(program_epoch),.program_digest(program_digest),
- .authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64),
- .witness_slot(record_witness_slot),.rx_v(record_rx_v),.rx_record(record_rx),
- .commit_v(program_commit_v),.installed_valid(program_installed_valid),.installed_fusedcap(installed_fusedcap),
- .commit_epoch(program_commit_epoch),.commit_digest(program_commit_digest),
- .tx_v(record_tx_v),.tx_observed_v(record_tx_observed_v),.tx_record(record_tx),.fault(record_fault));
+ wire[15:0] program_commit_epoch,program_begin_epoch;
+ wire[63:0] program_commit_digest;
  wire peer_reset_request;
  wire native_recovery_clear;
- assign host_link_reset_req=peer_reset_request;
- assign host_recovery_clear=native_recovery_clear;
  wire peer_tx_valid;
  wire[511:0] peer_tx_data;
  wire peer_tx_ready;
@@ -890,10 +976,131 @@ end else begin:g_mu
  wire[17:0] step_retire_pos;
  wire[17:0] step_retire_token;
  wire host_idle;
- assign host_interface_idle=host_idle;
  wire host_observer_fault;
  wire peer_retrain_request,request_aborted;
- wire codec_allocated_valid,codec_allocated_delivered;wire[15:0]codec_allocated_epoch;wire[17:0]codec_allocated_token,codec_allocated_position;wire[1:0]codec_allocated_gen;
+ wire codec_allocated_valid,codec_allocated_delivered;
+ wire[15:0] codec_allocated_epoch;
+ wire[17:0] codec_allocated_token,codec_allocated_position;
+ wire[1:0] codec_allocated_gen;
+ wire local_tx_valid,local_tx_ready,local_rx_valid,local_rx_ready;
+ wire[511:0] local_tx_data,local_rx_data;
+ wire[7:0] coordinator_rx_valid,coordinator_rx_ready,coordinator_tx_valid,coordinator_tx_ready;
+ wire[4095:0] coordinator_rx_data,coordinator_tx_data;
+ wire root_mux_fault,coordinator_wrap_locked,coordinator_identity_fault,coordinator_post_pending;
+ wire[15:0] coordinator_program_epoch;
+ wire[63:0] coordinator_program_digest;
+ wire[7:0] coordinator_certificate_valid;
+ wire[527:0] coordinator_certificate;
+ wire[255:0] coordinator_certificate_prefix;
+
+
+ localparam[2:0]RANK=0;
+ assign physical_fault=8'(link_physical_fault)<<die_id;
+ // kvsys v1.4.2: this rank's engine is the compute die across the static D2D link; its admission is that link's
+ // native_admit_ready (compute admit_ready & status fresh), the same level the control packet reports as native_ready
+ assign engine_admit_ready=native_admit_ready;
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ qkd_host_record_port_mu #(.MU(1))u_records(.ck(ck_records),.rst_n(host_rst_n),.send_kind(record_send_kind),
+ .request_v(native_request_v),.request_tag(native_request_tag),.request_gen(native_request_gen),
+ .request_token(native_request_token),.request_position(native_request_pos),
+ .token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),
+ .begin_v(program_begin_v),.begin_epoch(program_begin_epoch),.expected_pw(program_expected_pw),.expected_dw(program_expected_dw),
+ .auth_v(program_auth_v),.auth_epoch(program_auth_epoch),.auth_digest(program_auth_digest),
+ .program_ready(program_ready),.program_epoch(program_epoch),.program_digest(program_digest),
+ .authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64),
+ .witness_slot(record_witness_slot),.rx_v(record_rx_v),.rx_record(record_rx),
+ .commit_v(program_commit_v),.installed_valid(program_installed_valid),.installed_fusedcap(installed_fusedcap),
+ .commit_epoch(program_commit_epoch),.commit_digest(program_commit_digest),
+ .tx_v(record_tx_v),.tx_observed_v(record_tx_observed_v),.tx_record(record_tx),.fault(record_fault));
+ 
+ 
+ assign host_link_reset_req=peer_reset_request;
+ assign host_recovery_clear=native_recovery_clear;
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ assign host_interface_idle=host_idle;
+ 
+ 
+ 
  qkd_host_rank_services_admission_mu #(.MU(1),.NL(NL),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_NATIVE(ENABLE_NATIVE),.ENABLE_TOKEN(ENABLE_TOKEN),.PHY_MUT(PHY_MUT),.QM_MUT(QM_MUT),.ORDER_MUT(ORDER_MUT),.BRIDGE_MUT(BRIDGE_MUT),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_rank(
  .static_setup_ready(static_setup_ready),.boot_pr(boot_pr),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),.boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),
  .host_upstream_quiet(host_upstream_quiet),
@@ -1166,11 +1373,11 @@ end else begin:g_mu
  .certificate_v(certificate_v),
  .certificate(certificate),
  .certificate_prefix(certificate_prefix));
- wire local_tx_valid,local_tx_ready,local_rx_valid,local_rx_ready;wire[511:0]local_tx_data,local_rx_data;
- wire[7:0]coordinator_rx_valid,coordinator_rx_ready,coordinator_tx_valid,coordinator_tx_ready;wire[4095:0]coordinator_rx_data,coordinator_tx_data;
- wire root_mux_fault,coordinator_wrap_locked,coordinator_identity_fault,coordinator_post_pending;
- wire[15:0]coordinator_program_epoch;wire[63:0]coordinator_program_digest;
- wire[7:0]coordinator_certificate_valid;wire[527:0]coordinator_certificate;wire[255:0]coordinator_certificate_prefix;
+ 
+ 
+ 
+ 
+ 
  assign allocated_epoch=token_grant_epoch;assign allocated_token=token_grant_token;assign allocated_position=token_grant_position;assign allocated_generation=token_grant_generation;
  assign token_allocator_fault=coordinator_identity_fault;
  // Each legacy fact input carries the actual same completed global fence

@@ -192,6 +192,58 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: claude/hbm-pslice-lp15-1021 b6940eee2 (HBMb/IDXSU-PS15). Its child_centre_tap.tcl r15 was
+    # resolved to main's copy (58622b026, Gate-Rule: neutral), which already carries the r15 child-scoped corner fix
+    # and the per-mode propagation; the rest are NEW pgcol_l r6a/r6b and pslice_c5_r15 kit files.
+    "b6940eee26c1db9b96ffca27e11586cb54093df4": dict(
+        kind="neutral",
+        what="pslice lp15: new kit files; child_centre_tap.tcl = main's copy (58622b026)"),
+    # ROOT-MERGE-1022 10-22: claude/hbm-pslice-lp14-1021 17f38120b (HBM-ELEM13/SU-PSLICE14). The merge resolved
+    # physical/common_flow/child_centre_tap.tcl to main's newer copy (58622b026, Gate-Rule: neutral), its ref_tile.py
+    # hunk is byte-identical to main's, and the rest are NEW pslice_c5 lp14a/b kit spec/pin/fence files -> no gate rule
+    # an older gate blob saw changes.
+    "17f38120bb4a6dce5f38384bbed1a80d2bb276dd": dict(
+        kind="neutral",
+        what="pslice lp14: new kit files; cct + ref_tile.py identical to main's copies"),
+    # START-NONFAIL/HBM-CANC 10-21: claude/hbm-ks13-agtool-1021. async_gray SDC applies every bounded pair's
+    # set_max/min_delay first and proves each pair's finite max/min path in one ot_ag_verify pass (was one
+    # find_timing_paths re-search per pair).  Same exceptions/checks/errors/PATH_DEFERRED texts; ASAP7 equivalence on
+    # the 10-18 kshare netlist BOUNDED 12,576 = 12,576, 0 extra/missing, ownership identical -> no verdict changes.
+    "a7bc197f096b54b49b908549e2369bbc58baae8e": dict(
+        kind="neutral", paths=("tools/ref_tile/async_gray_fifo_constraints.py",),
+        what="async_gray: one-pass ot_ag_verify of bounded pairs; identical exceptions (EQUIV 12,576=12,576)"),
+    # MERGE-1200 10-21: SQK-INGEST OT_GF fixes (claude/sqk-ingest-1021). db8d8c63d: a hard-macro output in a storage-gating
+    # cone is a free-variable leaf in _bdd_of (as _cone_cut already did; it crashed before) -> only cones that used to
+    # error now evaluate.  a3aafacd6: reset-bank copy flops named ot_rrs__<fam>__c<k> alias to their own reviewed leaf
+    # role (no new role) -> a refusal becomes a pass for exactly those copies.  Neither tightens any gate.
+    "db8d8c63d661ec74102231f0afb5963238223459": dict(
+        kind="relaxing", paths=("tools/ref_tile/gray_fifo_cdc_constraints.py",),
+        what="OT_GF: macro output is a free BDD leaf (was a crash)"),
+    "a3aafacd6cfb91e0704eda7825c4e619fc3043b0": dict(
+        kind="relaxing", paths=("tools/ref_tile/gray_fifo_cdc_constraints.py",),
+        what="OT_GF: reset-bank copy names alias to the reviewed leaf role"),
+    # MERGE-1200 10-21: SCRATCH2-1021 run_base() falls back to the last good host probe when the probe cache was just
+    # dropped (run-dir placement on the freest scratch base only); no gate check or route helper behaviour changes.
+    "0f20951a3b233134e8b8e7b38c60a2541117d871": dict(
+        kind="neutral", paths=("tools/closure_loop/closure_loop.py",),
+        what="run_base scratch-base selection uses last good probe; placement only, gates unchanged"),
+    # ROOT 10-21: a kit-specific generator under the broad tools/ref_tile prefix; it creates only the new
+    # xhead3/xhead3b specs, with no change to shared gate checks or pre-existing kit generation.
+    "b9e2576f31ef0a5ff404bbb4693f04c0295bd173": dict(
+        kind="neutral", paths=("tools/ref_tile/specs_qw_s5_xhead/gen_xhead3_specs.py",),
+        what="new xhead3/xhead3b kit generator; shared gate and route helpers unchanged"),
+    # ROOT-1021 10-21: da435c6ac / 712ed0fe8 are claude/drives81-l1f-1020 lineage commits (S81-GUSEQ / PL-GULEAF) whose
+    # helper hunks are origin/main tool content carried into the branch (its later 'sync ... from origin/main
+    # (byte-identical)' commits d5427b883 / 5858e903d prove the copies).  The ROOT merge resolved every helper file to
+    # main's own content, so these commits bring no rule onto main that an older gate blob did not already have.
+    "da435c6ace7434f910b524da6698802e1cd41274": dict(
+        kind="neutral", paths=("tools/closure_loop/ck_insertion.py", "tools/ref_tile/pre_route_gate.py",
+                               "tools/ref_tile/source_binding.py"),
+        what="drives81-l1f lineage: main helper content carried into the branch; ROOT merge kept main's files"),
+    "712ed0fe86cb946c41f4643e1f84642e8b2d17ac": dict(
+        kind="neutral", paths=("tools/closure_loop/helper_overlay.py", "tools/ref_tile/pre_route_gate.py",
+                               "tools/ref_tile/source_binding.py"),
+        what="drives81-l1f lineage: main helper content carried into the branch; ROOT merge kept main's files"),
     # KV-PVFIN17 10-20 21:40: 13a502b48 ("scoped cap binds to the gated tile") carries a bare 'Gate-Rule: tightening'
     # (no applies-to), so every gate made before it was refused at submit (s81sl_ve_r5, PVFIN R15c, ...).  It only adds
     # "scoped waiver S does not apply to tile T" when a spec's clock_rule_waiver names scope S != its block T; the scoped

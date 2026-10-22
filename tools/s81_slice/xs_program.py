@@ -106,6 +106,9 @@ def main():
     ap.add_argument("--slice", type=int, default=5)
     ap.add_argument("--order", choices=["near", "far", "rand"], default="near")
     ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--s0-stride", type=int, default=1,
+                    help="min edges between two source-0 (own / V partner) beats; 2 = the ot_s81sl_xg ring stop bench "
+                         "(own beats by 4-fragment own path and V partner beats by 4-fragment V path, alternating)")
     a = ap.parse_args()
     rng = random.Random(a.seed)
     out = a.out
@@ -218,11 +221,12 @@ def main():
                 if gaps:
                     while rng.random() < 0.2:
                         it += 1
-                while (it, src) in busy:
+                st = a.s0_stride if src == 0 else 1
+                while any((it + d, src) in busy for d in range(-st + 1, st)):
                     it += 1
                 busy.add((it, src))
                 res.append((it, src, fam, bt, gid, name))
-                it += 1
+                it += st
         return res
     gaps = a.order == "rand"
     # gather q0: tight -- the latest beat (relative to its first read) on the last legal edge
@@ -315,7 +319,7 @@ def main():
     lines.sort(key=lambda s: int(s.split()[0]))
     end_it = T_START + GO_LAT + t_end + off + 80
     (out / "prog.txt").write_text("\n".join(lines) + "\n")
-    meta = dict(stage_dir=str(a.stage_dir), off=off, off_load=off_load, slice=a.slice, order=a.order, seed=a.seed,
+    meta = dict(stage_dir=str(a.stage_dir), s0_stride=a.s0_stride, off=off, off_load=off_load, slice=a.slice, order=a.order, seed=a.seed,
                 cal_rows=cal_len, end_iter=end_it, t_start=T_START,
                 phases=[dict(ph=pl["p"]["ph"], tag=pl["tag"], np=pl["np"], fam=pl["fam"], K=pl["p"]["K"],
                              nb=pl["p"]["nb"], rows=pl["p"]["rows"], accept=pl["accept"], s0=pl["s0"], s1=pl["s1"])

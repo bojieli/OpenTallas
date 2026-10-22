@@ -1,0 +1,22 @@
+{
+  "scope": "component source pin edges and synthetic compiler mechanism replay only; actual GEN dates remain absent",
+  "qbank_sha256": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33",
+  "macro_sha256": "36d6c40d8ac6ea92330a01b30b92e08658b437c24d2f279065144ea5d3420f00",
+  "binary_sha256": "95930fc83eff5ce3465e83ef858c5eff1b6b943030c9ea7a21f1c340997535e0",
+  "cases": [
+    {
+      "name": "positive",
+      "rc": 0,
+      "source_read_age": 4,
+      "emit_matches_compiler": true,
+      "ok": true
+    },
+    {
+      "name": "early",
+      "rc": 0,
+      "source_read_age": 4,
+      "emit_matches_compiler": false,
+      "ok": true
+    }
+  ]
+}

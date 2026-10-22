@@ -376,6 +376,14 @@
      ],
      "by": "v1.4.1 relay width classes (qkd_rly_1/2/13/17/21/32/33/36/93/284/289/291/293/520/521/540/563/1025/1048/2089; per-case kv_relays.py)",
      "evidence": "FILL-Q 2026-10-15 (el1015-fill-qwen.log): absent from the KV die v1.4.1 bind/contract (results/arch/qwen_split_1014/kvsys_v1_4_1/{port_bind,contract}.json, kvs7c); relay classes regenerate per die case"
+    },
+    {
+     "elements": [
+      "qkd_pvw_die_t"
+     ],
+     "by": "die top (GEN9 expand, OT_KV_EXPAND qkd_pvw_s,qkd_pvw_n): its 2,790 closed leaves/pair bind directly in the KV die (pv_slice_t, pv_join_t, pv_wide_ctl_tb/tbf, pv_rs_hd_f, rlyi_258s, rlys relays)",
+     "reason": "die-placed wires-only parent (COORD 0je 10-19 00:50; landed-regions standard: a 1,555 x 12,010 um frame with 33 clock entries cannot be one hardened tree). No hardened parent exists; clock/seam judgement of the frame belongs to the die DIECLK step (tree K.CLK).",
+     "evidence": "KV-PVW 10-19 22:06: results/rtl/kv_pvw_1019/README.md (claude/kv-pvw-1019 @201636618): GEN9 expand 2,790 leaves 0 undriven/multi/unbound/overlap/outside; composition bench tb_qkd_pvw_die_tb PASS 3 cfg x T 1..8192, 5 mutants FAIL with witnesses. Same pattern as HBM hfd_ckgen_rel fold."
     }
    ],
    "streams": [

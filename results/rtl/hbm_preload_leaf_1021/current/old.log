@@ -1,0 +1,7 @@
+HBM_MODEL_PRELOAD INIT sectors=2 file=img/INIT.hex
+HBM_MODEL_PRELOAD INIT sectors=2 file=img/INIT.hex
+HBM_MODEL_PRELOAD INIT sectors=2 file=img/INIT.hex
+HBM_MODEL_PRELOAD INIT sectors=2 file=img/INIT.hex
+[97000] %Fatal: tb_preload.sv:12: Assertion failed in tb_preload: PRELOAD_READBACK q0 pc0 actualdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef
+%Error: tb_preload.sv:12: Verilog $stop
+Aborting...

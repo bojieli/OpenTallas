@@ -99,9 +99,9 @@ if [ "$TB" = lint_peer_mu ]; then
   "$V" --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-WIDTH --top-module qkd_hr_core_peer \
     $(cat "$L/$LIST.f") > "$OUT/$CASE.log" 2>&1; rc=$?
   if [ $rc = 0 ] && ! grep -qE '%Error|PINMISSING|PINNOTFOUND|PINCONNECTEMPTY' "$OUT/$CASE.log" \
-     && grep -q 'qkd_host_tp8_coordinator_mu root__u_coordinator' rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_peer.v \
+     && grep -qF 'qkd_host_tp8_coordinator_mu #(.MU(1),.POST_UID_SLOT(1)) root__u_coordinator' rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_peer.v \
      && grep -q 'qkd_host_ctrl_token_service_packet_collected_mu #' rtl/qwen_sys/mu_qwen_20261018/host_cluster_mu/qkd_hr_core_peer.v; then
-    echo "PASS LINT_PEER_MU qkd_hr_core_peer (root__u_coordinator = qkd_host_tp8_coordinator_mu, u_ctrl = token service _mu, MU 1; $(wc -l < "$L/$LIST.f") sources)" >> "$OUT/$CASE.log"
+    echo "PASS LINT_PEER_MU qkd_hr_core_peer (root__u_coordinator = qkd_host_tp8_coordinator_mu POST_UID_SLOT 1, u_ctrl = token service _mu, MU 1; $(wc -l < "$L/$LIST.f") sources)" >> "$OUT/$CASE.log"
   else echo "FAIL LINT_PEER_MU rc=$rc" >> "$OUT/$CASE.log"; fi
   echo "MU_PEER $CASE: $(tail -1 "$OUT/$CASE.log")"; grep -q '^PASS' "$OUT/$CASE.log"; exit
 fi

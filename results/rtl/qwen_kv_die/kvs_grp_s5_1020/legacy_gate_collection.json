@@ -1,0 +1,452 @@
+{
+  "qkd_kvs_grp_s3a": {
+    "verdict": "WARN",
+    "generated": "2026-10-20T01:16:00-0700",
+    "start_commit": "0038193066e76bb5b5a8fafbc2a25e57a8c04c09",
+    "clock_measurements": [
+      {
+        "clock": "core_clk",
+        "source": "ck",
+        "tt_boundary_spread_ps": 43.0,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 39.9,
+        "ff_errors": []
+      },
+      {
+        "clock": "hclk",
+        "source": "hck",
+        "tt_boundary_spread_ps": 26.1,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 23.4,
+        "ff_errors": []
+      }
+    ],
+    "checklist": {
+      "actual_pngs_viewed": true,
+      "outline_um": [
+        388.8,
+        388.8
+      ],
+      "macro_count": 4,
+      "macro_grid": "2x2 mirrored SRAM lattice",
+      "overlap": false,
+      "continuous_stdcell_band": true,
+      "density": "predominantly blue, localized green near pin boundaries and macro interfaces; no red bins",
+      "fill_fraction": 0.245,
+      "blockers": "Native all-driver max399>32; no submit; no new approval"
+    },
+    "items": [
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+        "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+      },
+      {
+        "severity": "WARN",
+        "check": "pins",
+        "message": "1-bit vector ports ['afk', 'afv', 'afu', 'af__fault', 'y__est__0_1']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+        "fix": "use the actual RTL and mapped pin names"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_domain",
+        "message": "clock root port ck: 16,383 flops > 15,000 on one root (+0 ICGs, 4 macro clock pins; e.g. icq_bcdc0[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+        "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_guidance",
+        "message": "clock root port:ck: 16,387 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,387 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+        "fix": ""
+      },
+      {
+        "severity": "WARN",
+        "check": "clock_rule",
+        "message": "root port:ck: 16,387 sinks on the largest root; measured TT insertion 526.3 ps, FF insertion 431.9 ps, TT pin-flop spread 43.0 ps, FF pin-flop spread 39.9 ps; WARN: 16,387 sinks on one clock root > 15,000 (guidance); insertion 526.3 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+        "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+      },
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "fill 24% = (hard macros 30522.7 + synthesized std cells 6502.6) / outline 151165.4 um2; pin demand per face: S 415 pins over 382.9/388.8 um (98%), N 415 pins over 382.9/388.8 um (98%), W 1819 pins over 383.6/388.8 um (99%), E 2243 pins over 383.6/388.8 um (99%) (pin-bound: 4.6k signal pins on a 388.8 square (E 5.58 /um, W 4.5 /um); the outline is the die slot of the sq1 square; synthesis area alone would give ~200 x 200.)",
+        "fix": ""
+      }
+    ]
+  },
+  "qkd_kvs_grp_s3b": {
+    "verdict": "WARN",
+    "generated": "2026-10-20T01:19:59-0700",
+    "start_commit": "0038193066e76bb5b5a8fafbc2a25e57a8c04c09",
+    "clock_measurements": [
+      {
+        "clock": "core_clk",
+        "source": "ck",
+        "tt_boundary_spread_ps": 38.2,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 38.5,
+        "ff_errors": []
+      },
+      {
+        "clock": "hclk",
+        "source": "hck",
+        "tt_boundary_spread_ps": 28.0,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 25.0,
+        "ff_errors": []
+      }
+    ],
+    "checklist": {
+      "actual_pngs_viewed": true,
+      "outline_um": [
+        388.8,
+        388.8
+      ],
+      "macro_count": 4,
+      "macro_grid": "2x2 mirrored SRAM lattice",
+      "overlap": false,
+      "continuous_stdcell_band": true,
+      "density": "predominantly blue, localized green near pin boundaries and macro interfaces; no red bins",
+      "fill_fraction": 0.245,
+      "blockers": "Native all-driver max399>32; no submit; no new approval"
+    },
+    "items": [
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+        "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+      },
+      {
+        "severity": "WARN",
+        "check": "pins",
+        "message": "1-bit vector ports ['afk', 'afv', 'afu', 'af__fault', 'y__est__0_1']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+        "fix": "use the actual RTL and mapped pin names"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_domain",
+        "message": "clock root port ck: 16,383 flops > 15,000 on one root (+0 ICGs, 4 macro clock pins; e.g. icq_bcdc0[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+        "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_guidance",
+        "message": "clock root port:ck: 16,387 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,387 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+        "fix": ""
+      },
+      {
+        "severity": "WARN",
+        "check": "clock_rule",
+        "message": "root port:ck: 16,387 sinks on the largest root; measured TT insertion 533.4 ps, FF insertion 436.5 ps, TT pin-flop spread 38.2 ps, FF pin-flop spread 38.5 ps; WARN: 16,387 sinks on one clock root > 15,000 (guidance); insertion 533.4 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+        "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+      },
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "fill 24% = (hard macros 30522.7 + synthesized std cells 6502.6) / outline 151165.4 um2; pin demand per face: S 415 pins over 382.9/388.8 um (98%), N 415 pins over 382.9/388.8 um (98%), W 1819 pins over 383.6/388.8 um (99%), E 2243 pins over 383.6/388.8 um (99%) (pin-bound: 4.6k signal pins on a 388.8 square (E 5.58 /um, W 4.5 /um); the outline is the die slot of the sq1 square; synthesis area alone would give ~200 x 200.)",
+        "fix": ""
+      }
+    ]
+  },
+  "qkd_kvs_grp_h_s3a": {
+    "verdict": "WARN",
+    "generated": "2026-10-20T00:57:37-0700",
+    "start_commit": "0038193066e76bb5b5a8fafbc2a25e57a8c04c09",
+    "clock_measurements": [
+      {
+        "clock": "core_clk",
+        "source": "ck",
+        "tt_boundary_spread_ps": 62.2,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 52.9,
+        "ff_errors": []
+      },
+      {
+        "clock": "hclk",
+        "source": "hck",
+        "tt_boundary_spread_ps": 25.7,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 24.8,
+        "ff_errors": []
+      }
+    ],
+    "checklist": {
+      "actual_pngs_viewed": true,
+      "outline_um": [
+        388.8,
+        388.8
+      ],
+      "macro_count": 4,
+      "macro_grid": "2x2 mirrored SRAM lattice",
+      "overlap": false,
+      "continuous_stdcell_band": true,
+      "density": "predominantly blue, localized green near pin boundaries and macro interfaces; no red bins",
+      "fill_fraction": 0.243,
+      "blockers": "Native all-driver max399>32; no submit; no new approval"
+    },
+    "items": [
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+        "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+      },
+      {
+        "severity": "WARN",
+        "check": "pins",
+        "message": "1-bit vector ports ['afk', 'afv', 'af__fault', 'y__est__0_1']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+        "fix": "use the actual RTL and mapped pin names"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_domain",
+        "message": "clock root port ck: 15,680 flops > 15,000 on one root (+0 ICGs, 4 macro clock pins; e.g. icq_bcdc0[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+        "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_guidance",
+        "message": "clock root port:ck: 15,684 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 15,684 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+        "fix": ""
+      },
+      {
+        "severity": "WARN",
+        "check": "clock_rule",
+        "message": "root port:ck: 15,684 sinks on the largest root; measured TT insertion 537.6 ps, FF insertion 448.1 ps, TT pin-flop spread 62.2 ps, FF pin-flop spread 52.9 ps; WARN: 15,684 sinks on one clock root > 15,000 (guidance); insertion 537.6 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+        "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+      },
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "fill 24% = (hard macros 30522.7 + synthesized std cells 6247.4) / outline 151165.4 um2; pin demand per face: S 0 pins over 0.0/388.8 um (0%), N 338 pins over 382.7/388.8 um (98%), W 1818 pins over 383.6/388.8 um (99%), E 2243 pins over 383.6/388.8 um (99%) (pin-bound: 4.6k signal pins on a 388.8 square (E 5.58 /um, W 4.5 /um); the outline is the die slot of the sq1 square; synthesis area alone would give ~200 x 200.)",
+        "fix": ""
+      }
+    ]
+  },
+  "qkd_kvs_grp_h_s3b": {
+    "verdict": "WARN",
+    "generated": "2026-10-20T01:27:33-0700",
+    "start_commit": "0038193066e76bb5b5a8fafbc2a25e57a8c04c09",
+    "clock_measurements": [
+      {
+        "clock": "core_clk",
+        "source": "ck",
+        "tt_boundary_spread_ps": 58.4,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 53.4,
+        "ff_errors": []
+      },
+      {
+        "clock": "hclk",
+        "source": "hck",
+        "tt_boundary_spread_ps": 26.3,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 25.1,
+        "ff_errors": []
+      }
+    ],
+    "checklist": {
+      "actual_pngs_viewed": true,
+      "outline_um": [
+        388.8,
+        388.8
+      ],
+      "macro_count": 4,
+      "macro_grid": "2x2 mirrored SRAM lattice",
+      "overlap": false,
+      "continuous_stdcell_band": true,
+      "density": "predominantly blue, localized green near pin boundaries and macro interfaces; no red bins",
+      "fill_fraction": 0.243,
+      "blockers": "Native all-driver max399>32; no submit; no new approval"
+    },
+    "items": [
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+        "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+      },
+      {
+        "severity": "WARN",
+        "check": "pins",
+        "message": "1-bit vector ports ['afk', 'afv', 'af__fault', 'y__est__0_1']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+        "fix": "use the actual RTL and mapped pin names"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_domain",
+        "message": "clock root port ck: 15,680 flops > 15,000 on one root (+0 ICGs, 4 macro clock pins; e.g. icq_bcdc0[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+        "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_guidance",
+        "message": "clock root port:ck: 15,684 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 15,684 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+        "fix": ""
+      },
+      {
+        "severity": "WARN",
+        "check": "clock_rule",
+        "message": "root port:ck: 15,684 sinks on the largest root; measured TT insertion 534.9 ps, FF insertion 438.8 ps, TT pin-flop spread 58.4 ps, FF pin-flop spread 53.4 ps; WARN: 15,684 sinks on one clock root > 15,000 (guidance); insertion 534.9 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+        "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+      },
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "fill 24% = (hard macros 30522.7 + synthesized std cells 6247.4) / outline 151165.4 um2; pin demand per face: S 0 pins over 0.0/388.8 um (0%), N 338 pins over 382.7/388.8 um (98%), W 1818 pins over 383.6/388.8 um (99%), E 2243 pins over 383.6/388.8 um (99%) (pin-bound: 4.6k signal pins on a 388.8 square (E 5.58 /um, W 4.5 /um); the outline is the die slot of the sq1 square; synthesis area alone would give ~200 x 200.)",
+        "fix": ""
+      }
+    ]
+  },
+  "qkd_kvs_grp_h_s4a": {
+    "verdict": "WARN",
+    "generated": "2026-10-20T01:20:37-0700",
+    "start_commit": "b4a7217789c8899847113f3dea3e93bbebdb746f",
+    "clock_measurements": [
+      {
+        "clock": "core_clk",
+        "source": "ck",
+        "tt_boundary_spread_ps": 45.4,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 38.7,
+        "ff_errors": []
+      },
+      {
+        "clock": "hclk",
+        "source": "hck",
+        "tt_boundary_spread_ps": 30.5,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 29.9,
+        "ff_errors": []
+      }
+    ],
+    "checklist": {
+      "actual_pngs_viewed": true,
+      "outline_um": [
+        388.8,
+        388.8
+      ],
+      "macro_count": 4,
+      "macro_grid": "2x2 mirrored SRAM lattice",
+      "overlap": false,
+      "continuous_stdcell_band": true,
+      "density": "predominantly blue, localized green near pin boundaries and macro interfaces; no red bins",
+      "fill_fraction": 0.246,
+      "blockers": "Native all-driver max399>32; no submit; no new approval"
+    },
+    "items": [
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+        "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+      },
+      {
+        "severity": "WARN",
+        "check": "pins",
+        "message": "1-bit vector ports ['afk', 'afv', 'af__fault', 'y__est__0_1']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+        "fix": "use the actual RTL and mapped pin names"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_domain",
+        "message": "clock root port ck: 16,742 flops > 15,000 on one root (+0 ICGs, 4 macro clock pins; e.g. icq_bcdc0[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+        "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_guidance",
+        "message": "clock root port:ck: 16,746 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,746 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+        "fix": ""
+      },
+      {
+        "severity": "WARN",
+        "check": "clock_rule",
+        "message": "root port:ck: 16,746 sinks on the largest root; measured TT insertion 526.5 ps, FF insertion 437.4 ps, TT pin-flop spread 45.4 ps, FF pin-flop spread 38.7 ps; WARN: 16,746 sinks on one clock root > 15,000 (guidance); insertion 526.5 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+        "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+      },
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "fill 25% = (hard macros 30522.7 + synthesized std cells 6651.6) / outline 151165.4 um2; pin demand per face: S 0 pins over 0.0/388.8 um (0%), N 338 pins over 382.7/388.8 um (98%), W 1818 pins over 383.6/388.8 um (99%), E 2243 pins over 383.6/388.8 um (99%) (pin-bound: 4.6k signal pins on a 388.8 square (E 5.58 /um, W 4.5 /um); the outline is the die slot of the sq1 square; synthesis area alone would give ~200 x 200.)",
+        "fix": ""
+      }
+    ]
+  },
+  "qkd_kvs_grp_h_s4b": {
+    "verdict": "WARN",
+    "generated": "2026-10-20T01:14:03-0700",
+    "start_commit": "b4a7217789c8899847113f3dea3e93bbebdb746f",
+    "clock_measurements": [
+      {
+        "clock": "core_clk",
+        "source": "ck",
+        "tt_boundary_spread_ps": 35.9,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 34.0,
+        "ff_errors": []
+      },
+      {
+        "clock": "hclk",
+        "source": "hck",
+        "tt_boundary_spread_ps": 30.8,
+        "tt_errors": [],
+        "ff_boundary_spread_ps": 30.0,
+        "ff_errors": []
+      }
+    ],
+    "checklist": {
+      "actual_pngs_viewed": true,
+      "outline_um": [
+        388.8,
+        388.8
+      ],
+      "macro_count": 4,
+      "macro_grid": "2x2 mirrored SRAM lattice",
+      "overlap": false,
+      "continuous_stdcell_band": true,
+      "density": "predominantly blue, localized green near pin boundaries and macro interfaces; no red bins",
+      "fill_fraction": 0.246,
+      "blockers": "Native all-driver max399>32; no submit; no new approval"
+    },
+    "items": [
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+        "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+      },
+      {
+        "severity": "WARN",
+        "check": "pins",
+        "message": "1-bit vector ports ['afk', 'afv', 'af__fault', 'y__est__0_1']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+        "fix": "use the actual RTL and mapped pin names"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_domain",
+        "message": "clock root port ck: 16,742 flops > 15,000 on one root (+0 ICGs, 4 macro clock pins; e.g. icq_bcdc0[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+        "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+      },
+      {
+        "severity": "WARN",
+        "check": "textbook.clock_guidance",
+        "message": "clock root port:ck: 16,746 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 16,746 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+        "fix": ""
+      },
+      {
+        "severity": "WARN",
+        "check": "clock_rule",
+        "message": "root port:ck: 16,746 sinks on the largest root; measured TT insertion 522.6 ps, FF insertion 433.8 ps, TT pin-flop spread 35.9 ps, FF pin-flop spread 34.0 ps; WARN: 16,746 sinks on one clock root > 15,000 (guidance); insertion 522.6 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+        "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+      },
+      {
+        "severity": "WARN",
+        "check": "fill",
+        "message": "fill 25% = (hard macros 30522.7 + synthesized std cells 6651.6) / outline 151165.4 um2; pin demand per face: S 0 pins over 0.0/388.8 um (0%), N 338 pins over 382.7/388.8 um (98%), W 1818 pins over 383.6/388.8 um (99%), E 2243 pins over 383.6/388.8 um (99%) (pin-bound: 4.6k signal pins on a 388.8 square (E 5.58 /um, W 4.5 /um); the outline is the die slot of the sq1 square; synthesis area alone would give ~200 x 200.)",
+        "fix": ""
+      }
+    ]
+  }
+}

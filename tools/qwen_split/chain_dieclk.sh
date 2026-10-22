@@ -8,7 +8,7 @@
 set -u
 R=$1; S=$2; C=$R/case_r22k; D=$R/dieclk; V=${OT_DIE_CLOCK_VARIANT:-spine}
 mkdir -p $D/tools/hbm_die_v15; chmod a+rwx $D
-cp -r $S/tools/die_clock $S/tools/die_clock_check.py $S/tools/die_clock_geom_dump.py $D/tools/
+cp -r $S/tools/die_clock $S/tools/die_clock_check.py $S/tools/die_clock_geom_dump.py $S/tools/die_port_bind.py $D/tools/
 cp $S/tools/hbm_die_v15/die_clock_tree.py $D/tools/hbm_die_v15/
 [ -s $C/floorplan_pdn.odb ] || { echo "no $C/floorplan_pdn.odb"; exit 1; }
 DC_FLOORPLAN=floorplan_pdn.odb bash $D/tools/die_clock/qwen_compute_dieclk.sh prep $D $C $R/libs || exit 1
