@@ -1,0 +1,40 @@
+{
+  "source_base": "9cee141be",
+  "baseline": {
+    "ports": 16,
+    "region_sinks_max": 117,
+    "local_groups": 1083,
+    "per_region_perimeter_um": 3594,
+    "observed_padding_cells": [
+      57405,
+      58967
+    ]
+  },
+  "candidate": {
+    "topology": "shared binary channel branches",
+    "ports": 16,
+    "landings": 69,
+    "clock_only": true,
+    "cycles_added": 0,
+    "max_leaf_sinks": 8,
+    "child_insertion_bin_ps": 30,
+    "region_root_correction": "one shared correction per port",
+    "sibling_correction": "one shared correction per delayed subtree",
+    "variants": {
+      "rgi": {
+        "buffer_step_um": 150,
+        "leaf_span_um": 150
+      },
+      "rgj": {
+        "buffer_step_um": 100,
+        "leaf_span_um": 100
+      }
+    }
+  },
+  "price": {
+    "latency_cycles": 0,
+    "area": "measure clock buffer inventory at CTS",
+    "power": "pending measured clock buffers/wires; no credit taken",
+    "qualification": "diagnostic A0 stand-ins, unchanged real TT/FF <=80ps gate; actual GRT/STA required"
+  }
+}
