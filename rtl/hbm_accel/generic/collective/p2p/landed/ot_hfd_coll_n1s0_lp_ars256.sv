@@ -187,18 +187,18 @@ module ot_hfd_coll_n1s0_lp_ars256 #(
  assign isa_ring__o=p_ring[57:0];assign isa_lp_data__o=rc_d;
  wire [279:0] r_pin0,r_pin1;wire [1:0] r_carry_write;wire r_acc_we;wire [2:0] r_acc_tag;
  wire [255:0] r_rhs_add,r_carry_add,r_state_tx,r_acc_rr,r_ay;wire [7:0] r_av;
-    // ---- OUTPUT REGISTER del_flit: +1 edge(s) in region sw (out_regs; port offset +1)
-    ot_pl_pad #(.W(((2179) - (0) + 1)), .N(1)) u_lpo_del_flit (.ck(ck_sw), .d(del_flit__o), .q(del_flit));
-    // ---- OUTPUT REGISTER del_valid: +1 edge(s) in region sw (out_regs; port offset +1)
-    ot_pl_pad #(.W(((3) - (0) + 1)), .N(1)) u_lpo_del_valid (.ck(ck_sw), .d(del_valid__o), .q(del_valid));
-    // ---- OUTPUT REGISTER hgi_del_obase: +1 edge(s) in region sw (out_regs; port offset +1)
-    ot_pl_pad #(.W(((159) - (0) + 1)), .N(1)) u_lpo_hgi_del_obase (.ck(ck_sw), .d(hgi_del_obase__o), .q(hgi_del_obase));
-    // ---- OUTPUT REGISTER hgi_inj_addr: +1 edge(s) in region sw (out_regs; port offset +1)
-    ot_pl_pad #(.W(((159) - (0) + 1)), .N(1)) u_lpo_hgi_inj_addr (.ck(ck_sw), .d(hgi_inj_addr__o), .q(hgi_inj_addr));
-    // ---- OUTPUT REGISTER inj_idx: +1 edge(s) in region sw (out_regs; port offset +1)
-    ot_pl_pad #(.W(((31) - (0) + 1)), .N(1)) u_lpo_inj_idx (.ck(ck_sw), .d(inj_idx__o), .q(inj_idx));
-    // ---- OUTPUT REGISTER inj_rd: +1 edge(s) in region sw (out_regs; port offset +1)
-    ot_pl_pad #(.W(((1) - (0) + 1)), .N(1)) u_lpo_inj_rd (.ck(ck_sw), .d(inj_rd__o), .q(inj_rd));
+    // ---- OUTPUT REGISTER del_flit: +2 edge(s) in region sw (out_regs; port offset +2)
+    ot_pl_pad #(.W(((2179) - (0) + 1)), .N(2)) u_lpo_del_flit (.ck(ck_sw), .d(del_flit__o), .q(del_flit));
+    // ---- OUTPUT REGISTER del_valid: +2 edge(s) in region sw (out_regs; port offset +2)
+    ot_pl_pad #(.W(((3) - (0) + 1)), .N(2)) u_lpo_del_valid (.ck(ck_sw), .d(del_valid__o), .q(del_valid));
+    // ---- OUTPUT REGISTER hgi_del_obase: +2 edge(s) in region sw (out_regs; port offset +2)
+    ot_pl_pad #(.W(((159) - (0) + 1)), .N(2)) u_lpo_hgi_del_obase (.ck(ck_sw), .d(hgi_del_obase__o), .q(hgi_del_obase));
+    // ---- OUTPUT REGISTER hgi_inj_addr: +2 edge(s) in region sw (out_regs; port offset +2)
+    ot_pl_pad #(.W(((159) - (0) + 1)), .N(2)) u_lpo_hgi_inj_addr (.ck(ck_sw), .d(hgi_inj_addr__o), .q(hgi_inj_addr));
+    // ---- OUTPUT REGISTER inj_idx: +2 edge(s) in region sw (out_regs; port offset +2)
+    ot_pl_pad #(.W(((31) - (0) + 1)), .N(2)) u_lpo_inj_idx (.ck(ck_sw), .d(inj_idx__o), .q(inj_idx));
+    // ---- OUTPUT REGISTER inj_rd: +2 edge(s) in region sw (out_regs; port offset +2)
+    ot_pl_pad #(.W(((1) - (0) + 1)), .N(2)) u_lpo_inj_rd (.ck(ck_sw), .d(inj_rd__o), .q(inj_rd));
     // ---- OUTPUT REGISTER isa_lp_data: +2 edge(s) in region sw (out_regs; port offset +2)
     ot_pl_pad #(.W(((255) - (0) + 1)), .N(2)) u_lpo_isa_lp_data (.ck(ck_sw), .d(isa_lp_data__o), .q(isa_lp_data));
     // ---- OUTPUT REGISTER isa_ring: +1 edge(s) in region sw (out_regs; port offset +1)
@@ -419,8 +419,8 @@ module ot_hfd_coll_n1s0_lp_ars256 #(
     ot_pl_land_w #(.W(1), .D(4)) u_lpl_40_w (.ck(ck_sw), .rsi(lpr_sw), .i(reduce_fault), .bank(lpl_40_bank), .epo(lpl_40_epo), .vld(lpl_40_vld));
     ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_40_r (.ck(ck_hd), .rsi(lpr_hd), .bank(lpl_40_bank), .epo(lpl_40_epo), .vld(lpl_40_vld), .o(lpl_40_o));
     assign reduce_fault__l_hd = lpl_40_o;
-    // ---- INPUT PIN REGISTER inj_d: +1 edge(s) in region sw (in_regs; the port is presented 1 edge(s) earlier than its region's other inputs)
-    wire [1023:0] inj_d__i;  ot_pl_pad #(.W(((1023) - (0) + 1)), .N(1)) u_lpi_inj_d (.ck(ck_sw), .d(inj_d), .q(inj_d__i));
+    // ---- INPUT PIN REGISTER inj_d: +2 edge(s) in region sw (in_regs; the port is presented 2 edge(s) earlier than its region's other inputs)
+    wire [1023:0] inj_d__i;  ot_pl_pad #(.W(((1023) - (0) + 1)), .N(2)) u_lpi_inj_d (.ck(ck_sw), .d(inj_d), .q(inj_d__i));
     // ---- INPUT PIN REGISTER rc_tag: +1 edge(s) in region sw (in_regs; the port is presented 1 edge(s) earlier than its region's other inputs)
     wire [2:0] rc_tag__i;  ot_pl_pad #(.W(((2) - (0) + 1)), .N(1)) u_lpi_rc_tag (.ck(ck_sw), .d(rc_tag), .q(rc_tag__i));
     // ---- INPUT PIN REGISTER rc_v: +1 edge(s) in region sw (in_regs; the port is presented 1 edge(s) earlier than its region's other inputs)

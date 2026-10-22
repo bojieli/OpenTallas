@@ -196,19 +196,20 @@
  "mut_child": "u_rctl",
  "port_regions": {
   "qid_rg": "rg",
-  "qid_wr": "wr"
+  "qid_wr": "wr",
+  "qid": "hd"
  },
  "qid_rg_note": "QF-COLLQ 10-18: qid_rg = the ring region's copy of the quadrant identity strap (N face beside u_rctl; die ties it to the same constant as qid). One S-face qid reached u_rctl.qid 1,146-1,200 um combinationally (textbook wire_reach REFUSE > 500 um); a strap is case-analysed, never landed, so each region gets its own pin.",
  "qid_wr_note": "TW-HBM-COLLP 10-19: qid_wr = the VM-writer region's copy of the quadrant identity strap (W face beside ck_wr / u_writer.sid; die ties it to the same constant as qid). One sw-owned qid fed u_writer.sid (kit OT_MULTI_ROOT: input qid has wrong domain for u_writer); a strap is case-analysed, never landed.",
  "out_regs": {
   "isa_ring": 1,
   "isa_lp_data": 2,
-  "del_valid": 1,
-  "del_flit": 1,
-  "hgi_del_obase": 1,
-  "inj_rd": 1,
-  "inj_idx": 1,
-  "hgi_inj_addr": 1,
+  "del_valid": 2,
+  "del_flit": 2,
+  "hgi_del_obase": 2,
+  "inj_rd": 2,
+  "inj_idx": 2,
+  "hgi_inj_addr": 2,
   "vm_rq": 1,
   "stat_cycles": 1,
   "tkx_start": 1,
@@ -230,7 +231,7 @@
  "in_regs": {
   "rc_v": 1,
   "rc_tag": 1,
-  "inj_d": 1,
+  "inj_d": 2,
   "vm_rr": 1,
   "tkx_busy": 1,
   "tkx_done": 1,
@@ -258,5 +259,6 @@
  "in_regs_note_1021": "HBMb/COLL-LP 10-21: pin registers (SAFE item 1/2) on the far port buses of the 1.5 mm parent: inj_d (response, 1,024 b), vm_rr (2,056 b), tkx_busy/done/fault -- each port presented 1 edge earlier (record input_port_offset_edges).",
  "out_regs_note_1021": "HBMb/COLL-LP 10-21: one region register on every far output bus (delivery bundle del_valid/del_flit/hgi_del_obase, inj request inj_rd/inj_idx/hgi_inj_addr, vm_rq, stat_cycles, the whole tkx bundle) so each bundle stays aligned (+1 edge each, record output offsets).",
  "regions_note_1021": "HBMb/COLL-LP 10-21 (reach model scratch/hbmb-coll-lp/reach.py, child LEFs): one sw region holding issuer 518x432, 2 x link_e1 475x173, fj and the 28-child crossbar leaves 550-1250 um direct child/port wires in every floorplan (textbook wire_reach REFUSE > 500). Regions hd = {fj, issuer} (fj<->issuer loop stays inside) and lk = {links} are LANDED: issuer -> up / control / ports +3, sw -> link +3, link rx -> capture = lag pins; child faults -> fj loose (sticky status).",
- "clock_ports_note_1021": "new region clock ports ck_hd / ck_lk (die drops one clock per region, neighbour-matched)"
+ "clock_ports_note_1021": "new region clock ports ck_hd / ck_lk (die drops one clock per region, neighbour-matched)",
+ "regs2_note_1021": "HBMb/COLL-LP 10-21: the delivery (del_valid/del_flit/hgi_del_obase) and injection (inj_rd/inj_idx/hgi_inj_addr out, inj_d in) bundles take TWO pin stages: their 3.5 k pins sit on the E face (the S/N/W faces are full at ~4 pins/um), up to ~1.2 mm from the crossbar; qid (static strap) read only by u_fj -> region hd."
 }

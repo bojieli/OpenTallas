@@ -1174,13 +1174,13 @@
   "landing": 67414,
   "pads": 0,
   "reset": 227,
-  "out_regs": 5617,
-  "in_regs": 3087
+  "out_regs": 8155,
+  "in_regs": 4111
  },
  "in_regs": [
   {
    "port": "inj_d",
-   "stages": 1,
+   "stages": 2,
    "region": "sw",
    "inst": "u_lpi_inj_d"
   },
@@ -1224,37 +1224,37 @@
  "out_regs": [
   {
    "port": "del_flit",
-   "stages": 1,
+   "stages": 2,
    "region": "sw",
    "inst": "u_lpo_del_flit"
   },
   {
    "port": "del_valid",
-   "stages": 1,
+   "stages": 2,
    "region": "sw",
    "inst": "u_lpo_del_valid"
   },
   {
    "port": "hgi_del_obase",
-   "stages": 1,
+   "stages": 2,
    "region": "sw",
    "inst": "u_lpo_hgi_del_obase"
   },
   {
    "port": "hgi_inj_addr",
-   "stages": 1,
+   "stages": 2,
    "region": "sw",
    "inst": "u_lpo_hgi_inj_addr"
   },
   {
    "port": "inj_idx",
-   "stages": 1,
+   "stages": 2,
    "region": "sw",
    "inst": "u_lpo_inj_idx"
   },
   {
    "port": "inj_rd",
-   "stages": 1,
+   "stages": 2,
    "region": "sw",
    "inst": "u_lpo_inj_rd"
   },
@@ -1499,7 +1499,7 @@
    "desc_limit": 1,
    "desc_loops": 1,
    "launch_v": 1,
-   "inj_d": 3,
+   "inj_d": 2,
    "rc_v": 3,
    "rc_tag": 3,
    "rc_d": 0,
@@ -1554,12 +1554,12 @@
    "hgi_busy": 1,
    "hgi_done": 1,
    "hgi_fault": 1,
-   "inj_rd": 5,
-   "inj_idx": 5,
-   "hgi_inj_addr": 5,
-   "del_valid": 5,
-   "del_flit": 5,
-   "hgi_del_obase": 5,
+   "inj_rd": 6,
+   "inj_idx": 6,
+   "hgi_inj_addr": 6,
+   "del_valid": 6,
+   "del_flit": 6,
+   "hgi_del_obase": 6,
    "rr_v": 0,
    "rr_tag": 0,
    "rr_d": 0,

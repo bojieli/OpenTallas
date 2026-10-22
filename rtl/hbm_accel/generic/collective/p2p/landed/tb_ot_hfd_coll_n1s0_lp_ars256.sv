@@ -40,8 +40,8 @@ module tb_ot_hfd_coll_n1s0_lp_ars256;
     reg [0:0] dli_launch_v [0:0];  wire [0:0] li_launch_v = fi_launch_v;
     always @(posedge clk) begin : g_dli_launch_v integer j; dli_launch_v[0] <= fi_launch_v; for (j = 1; j <= 0; j = j + 1) dli_launch_v[j] <= dli_launch_v[j - 1]; end
     reg [1023:0] fi_inj_d;
-    reg [1023:0] dli_inj_d [0:2];  wire [1023:0] li_inj_d = dli_inj_d[1];
-    always @(posedge clk) begin : g_dli_inj_d integer j; dli_inj_d[0] <= fi_inj_d; for (j = 1; j <= 2; j = j + 1) dli_inj_d[j] <= dli_inj_d[j - 1]; end
+    reg [1023:0] dli_inj_d [0:1];  wire [1023:0] li_inj_d = dli_inj_d[0];
+    always @(posedge clk) begin : g_dli_inj_d integer j; dli_inj_d[0] <= fi_inj_d; for (j = 1; j <= 1; j = j + 1) dli_inj_d[j] <= dli_inj_d[j - 1]; end
     reg [0:0] fi_rc_v;
     reg [0:0] dli_rc_v [0:2];  wire [0:0] li_rc_v = dli_rc_v[1];
     always @(posedge clk) begin : g_dli_rc_v integer j; dli_rc_v[0] <= fi_rc_v; for (j = 1; j <= 2; j = j + 1) dli_rc_v[j] <= dli_rc_v[j - 1]; end
@@ -171,18 +171,18 @@ module tb_ot_hfd_coll_n1s0_lp_ars256;
     always @(posedge clk) begin : g_dlo_hgi_done integer j; dlo_hgi_done[0] <= fo_hgi_done; for (j = 1; j <= 0; j = j + 1) dlo_hgi_done[j] <= dlo_hgi_done[j - 1]; end
     wire [0:0] fo_hgi_fault, lo_hgi_fault;  reg [0:0] dlo_hgi_fault [0:12];
     always @(posedge clk) begin : g_dlo_hgi_fault integer j; dlo_hgi_fault[0] <= fo_hgi_fault; for (j = 1; j <= 12; j = j + 1) dlo_hgi_fault[j] <= dlo_hgi_fault[j - 1]; end
-    wire [1:0] fo_inj_rd, lo_inj_rd;  reg [1:0] dlo_inj_rd [0:4];
-    always @(posedge clk) begin : g_dlo_inj_rd integer j; dlo_inj_rd[0] <= fo_inj_rd; for (j = 1; j <= 4; j = j + 1) dlo_inj_rd[j] <= dlo_inj_rd[j - 1]; end
-    wire [31:0] fo_inj_idx, lo_inj_idx;  reg [31:0] dlo_inj_idx [0:4];
-    always @(posedge clk) begin : g_dlo_inj_idx integer j; dlo_inj_idx[0] <= fo_inj_idx; for (j = 1; j <= 4; j = j + 1) dlo_inj_idx[j] <= dlo_inj_idx[j - 1]; end
-    wire [159:0] fo_hgi_inj_addr, lo_hgi_inj_addr;  reg [159:0] dlo_hgi_inj_addr [0:4];
-    always @(posedge clk) begin : g_dlo_hgi_inj_addr integer j; dlo_hgi_inj_addr[0] <= fo_hgi_inj_addr; for (j = 1; j <= 4; j = j + 1) dlo_hgi_inj_addr[j] <= dlo_hgi_inj_addr[j - 1]; end
-    wire [3:0] fo_del_valid, lo_del_valid;  reg [3:0] dlo_del_valid [0:4];
-    always @(posedge clk) begin : g_dlo_del_valid integer j; dlo_del_valid[0] <= fo_del_valid; for (j = 1; j <= 4; j = j + 1) dlo_del_valid[j] <= dlo_del_valid[j - 1]; end
-    wire [2179:0] fo_del_flit, lo_del_flit;  reg [2179:0] dlo_del_flit [0:4];
-    always @(posedge clk) begin : g_dlo_del_flit integer j; dlo_del_flit[0] <= fo_del_flit; for (j = 1; j <= 4; j = j + 1) dlo_del_flit[j] <= dlo_del_flit[j - 1]; end
-    wire [159:0] fo_hgi_del_obase, lo_hgi_del_obase;  reg [159:0] dlo_hgi_del_obase [0:4];
-    always @(posedge clk) begin : g_dlo_hgi_del_obase integer j; dlo_hgi_del_obase[0] <= fo_hgi_del_obase; for (j = 1; j <= 4; j = j + 1) dlo_hgi_del_obase[j] <= dlo_hgi_del_obase[j - 1]; end
+    wire [1:0] fo_inj_rd, lo_inj_rd;  reg [1:0] dlo_inj_rd [0:5];
+    always @(posedge clk) begin : g_dlo_inj_rd integer j; dlo_inj_rd[0] <= fo_inj_rd; for (j = 1; j <= 5; j = j + 1) dlo_inj_rd[j] <= dlo_inj_rd[j - 1]; end
+    wire [31:0] fo_inj_idx, lo_inj_idx;  reg [31:0] dlo_inj_idx [0:5];
+    always @(posedge clk) begin : g_dlo_inj_idx integer j; dlo_inj_idx[0] <= fo_inj_idx; for (j = 1; j <= 5; j = j + 1) dlo_inj_idx[j] <= dlo_inj_idx[j - 1]; end
+    wire [159:0] fo_hgi_inj_addr, lo_hgi_inj_addr;  reg [159:0] dlo_hgi_inj_addr [0:5];
+    always @(posedge clk) begin : g_dlo_hgi_inj_addr integer j; dlo_hgi_inj_addr[0] <= fo_hgi_inj_addr; for (j = 1; j <= 5; j = j + 1) dlo_hgi_inj_addr[j] <= dlo_hgi_inj_addr[j - 1]; end
+    wire [3:0] fo_del_valid, lo_del_valid;  reg [3:0] dlo_del_valid [0:5];
+    always @(posedge clk) begin : g_dlo_del_valid integer j; dlo_del_valid[0] <= fo_del_valid; for (j = 1; j <= 5; j = j + 1) dlo_del_valid[j] <= dlo_del_valid[j - 1]; end
+    wire [2179:0] fo_del_flit, lo_del_flit;  reg [2179:0] dlo_del_flit [0:5];
+    always @(posedge clk) begin : g_dlo_del_flit integer j; dlo_del_flit[0] <= fo_del_flit; for (j = 1; j <= 5; j = j + 1) dlo_del_flit[j] <= dlo_del_flit[j - 1]; end
+    wire [159:0] fo_hgi_del_obase, lo_hgi_del_obase;  reg [159:0] dlo_hgi_del_obase [0:5];
+    always @(posedge clk) begin : g_dlo_hgi_del_obase integer j; dlo_hgi_del_obase[0] <= fo_hgi_del_obase; for (j = 1; j <= 5; j = j + 1) dlo_hgi_del_obase[j] <= dlo_hgi_del_obase[j - 1]; end
     wire [0:0] fo_rr_v, lo_rr_v;  reg [0:0] dlo_rr_v [0:0];
     always @(posedge clk) begin : g_dlo_rr_v integer j; dlo_rr_v[0] <= fo_rr_v; for (j = 1; j <= 0; j = j + 1) dlo_rr_v[j] <= dlo_rr_v[j - 1]; end
     wire [2:0] fo_rr_tag, lo_rr_tag;  reg [2:0] dlo_rr_tag [0:0];
@@ -236,12 +236,12 @@ module tb_ot_hfd_coll_n1s0_lp_ars256;
             nc = nc + 1; if (lo_hgi_busy !== fo_hgi_busy) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hgi_busy cycle=%0d flat=%h landed=%h", cyc, fo_hgi_busy, lo_hgi_busy); end
             nc = nc + 1; if (lo_hgi_done !== fo_hgi_done) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hgi_done cycle=%0d flat=%h landed=%h", cyc, fo_hgi_done, lo_hgi_done); end
             nc = nc + 1; if (((lo_hgi_fault & ~fo_hgi_fault) | (dlo_hgi_fault[11] & fo_hgi_fault & ~lo_hgi_fault)) !== 0) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH sticky port=hgi_fault cycle=%0d flat=%h landed=%h", cyc, fo_hgi_fault, lo_hgi_fault); end
-            nc = nc + 1; if (lo_inj_rd !== dlo_inj_rd[3]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=inj_rd cycle=%0d flat=%h landed=%h", cyc, dlo_inj_rd[3], lo_inj_rd); end
-            nc = nc + 1; if (lo_inj_idx !== dlo_inj_idx[3]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=inj_idx cycle=%0d flat=%h landed=%h", cyc, dlo_inj_idx[3], lo_inj_idx); end
-            nc = nc + 1; if (lo_hgi_inj_addr !== dlo_hgi_inj_addr[3]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hgi_inj_addr cycle=%0d flat=%h landed=%h", cyc, dlo_hgi_inj_addr[3], lo_hgi_inj_addr); end
-            nc = nc + 1; if (lo_del_valid !== dlo_del_valid[3]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=del_valid cycle=%0d flat=%h landed=%h", cyc, dlo_del_valid[3], lo_del_valid); end
-            nc = nc + 1; if (lo_del_flit !== dlo_del_flit[3]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=del_flit cycle=%0d flat=%h landed=%h", cyc, dlo_del_flit[3], lo_del_flit); end
-            nc = nc + 1; if (lo_hgi_del_obase !== dlo_hgi_del_obase[3]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hgi_del_obase cycle=%0d flat=%h landed=%h", cyc, dlo_hgi_del_obase[3], lo_hgi_del_obase); end
+            nc = nc + 1; if (lo_inj_rd !== dlo_inj_rd[4]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=inj_rd cycle=%0d flat=%h landed=%h", cyc, dlo_inj_rd[4], lo_inj_rd); end
+            nc = nc + 1; if (lo_inj_idx !== dlo_inj_idx[4]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=inj_idx cycle=%0d flat=%h landed=%h", cyc, dlo_inj_idx[4], lo_inj_idx); end
+            nc = nc + 1; if (lo_hgi_inj_addr !== dlo_hgi_inj_addr[4]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hgi_inj_addr cycle=%0d flat=%h landed=%h", cyc, dlo_hgi_inj_addr[4], lo_hgi_inj_addr); end
+            nc = nc + 1; if (lo_del_valid !== dlo_del_valid[4]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=del_valid cycle=%0d flat=%h landed=%h", cyc, dlo_del_valid[4], lo_del_valid); end
+            nc = nc + 1; if (lo_del_flit !== dlo_del_flit[4]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=del_flit cycle=%0d flat=%h landed=%h", cyc, dlo_del_flit[4], lo_del_flit); end
+            nc = nc + 1; if (lo_hgi_del_obase !== dlo_hgi_del_obase[4]) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=hgi_del_obase cycle=%0d flat=%h landed=%h", cyc, dlo_hgi_del_obase[4], lo_hgi_del_obase); end
             nc = nc + 1; if (lo_rr_v !== fo_rr_v) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=rr_v cycle=%0d flat=%h landed=%h", cyc, fo_rr_v, lo_rr_v); end
             nc = nc + 1; if (lo_rr_tag !== fo_rr_tag) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=rr_tag cycle=%0d flat=%h landed=%h", cyc, fo_rr_tag, lo_rr_tag); end
             nc = nc + 1; if (lo_rr_d !== fo_rr_d) begin bad = bad + 1; if (bad <= 5) $display("LP_MISMATCH port=rr_d cycle=%0d flat=%h landed=%h", cyc, fo_rr_d, lo_rr_d); end
@@ -269,4 +269,7 @@ module tb_ot_hfd_coll_n1s0_lp_ars256;
         else $display("LP_LOCKSTEP FAIL MUT=%0d mismatches=%0d of %0d stimulus=%0s", MUT, bad, nc, what);
         $finish; end endtask
     `include "rtl/hbm_accel/generic/collective/p2p/landed/stim_n1s0_lp_ar256.vh"
+`ifdef OT_COLL_LP_DIAG
+    always @(negedge clk) if (cyc>=3070 && cyc<=3130) $display("LP_DIAG cycle=%0d flatPF=%b landedPF=%b landedInPF=%b flatF=%b landedF=%b flatC=%h landedC=%h",cyc,u_flat.protocol_fault,u_lp.protocol_fault,u_lp.protocol_fault__l_hd,fo_fault,lo_fault,fo_fault_cause,lo_fault_cause);
+`endif
 endmodule
