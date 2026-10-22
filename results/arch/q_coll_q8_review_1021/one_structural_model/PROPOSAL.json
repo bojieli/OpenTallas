@@ -1,0 +1,1612 @@
+{
+  "verdict": "ONE_MODEL_FOR_ROOT_REVIEW_NOT_READY_FOR_GATE",
+  "scope": "No active source/kit edit, RTL edge, probe, map, router, gate or variant. One q8a-derived pin-contained geometry plus durable data-role placement and full-family clock proposal.",
+  "source_commit": "a153761f95cee63943c1c363ec80ccc9c4344b8a",
+  "inputs": {
+    "q8a_geometry_sha": "813912b54b227005639eda9eb1af6e99f6c7a16e9d9a7c89f185dac5bc880a18",
+    "q8a_floorplan_sha256": "dfbe0cc61799a9882b50683e9592be7e4e3ca1e292b5bc3fbb231a47db348e11",
+    "q8a_spec_sha256": "73d7b458342406b98e0281c0fbffe1ce820f24534d2fe2ed24a2b0a1d18ca1e7",
+    "q8a_dump_sha256": "e6f5a868702f41fbdd997025e70b52bf99ec5b2a59b240933bb275ad218f4c80",
+    "q8b_dump_sha256": "b173837c3c743e20bf915c3ccdb942ba79f802436abe064283308a9103e368eb",
+    "mapped_source_sha256": "68b2d033b4603e1ce949fe697ea27bbd34b341981884c40f623839033814b1f5"
+  },
+  "existing_pin_band_mismatch": {
+    "W_pair_span_um": 64,
+    "q8a_actual_internal_cut_um": 27.288,
+    "q8b_actual_internal_cut_um": 23.0,
+    "required_two_bus_band_um": 64.0,
+    "policy_pins_per_um": 4,
+    "old_declared_pin_ranges": {
+      "sx1_data": [
+        88.13,
+        120.13
+      ],
+      "sr1_data": [
+        120.13,
+        152.13
+      ],
+      "sx2_data": [
+        198.15,
+        230.15
+      ],
+      "sr2_data": [
+        230.15,
+        262.15
+      ],
+      "up_data": [
+        60.58,
+        92.58
+      ],
+      "dp_data": [
+        92.58,
+        124.58
+      ],
+      "ur_data": [
+        143.04,
+        175.04
+      ],
+      "dr_data": [
+        175.04,
+        207.04
+      ]
+    }
+  },
+  "actual_LEF": {
+    "128": {
+      "path": "/home/ubuntu/scratch/q8a-net42538-1021/inputs/ot_sram_1r1w2c_128x64_m1.lef",
+      "sha256": "737a650260dfd52a14003b0e0aad97378b81ebc1adb0b6b9383c256c67ea92d6",
+      "w": 33.72,
+      "h": 27.576,
+      "canonical_face_counts": {
+        "W": {
+          "wclk": 1,
+          "rclk": 1,
+          "r_ce_in": 1,
+          "r_addr_in": 7,
+          "rd_out": 64,
+          "w_ce_in": 1,
+          "w_addr_in": 7,
+          "wd_in": 23
+        },
+        "E": {
+          "wd_in": 41,
+          "w_mask_in": 64,
+          "VDD": 1,
+          "VSS": 1
+        }
+      }
+    },
+    "256": {
+      "path": "/home/ubuntu/scratch/q8a-net42538-1021/inputs/ot_sram_1r1w2c_256x64_m1.lef",
+      "sha256": "6aedd879283b864ef29c6ec1d5c71395c0c4bd5b720580887a01aff4d4d37e78",
+      "w": 34.584,
+      "h": 41.352,
+      "canonical_face_counts": {
+        "W": {
+          "wclk": 1,
+          "rclk": 1,
+          "r_ce_in": 1,
+          "r_addr_in": 8,
+          "rd_out": 64,
+          "w_ce_in": 1,
+          "w_addr_in": 8,
+          "wd_in": 22,
+          "VDD": 1,
+          "VSS": 1
+        },
+        "E": {
+          "wd_in": 42,
+          "w_mask_in": 64
+        }
+      }
+    }
+  },
+  "MY_outer_payload_unique_nets": 125,
+  "MY_outer_payload_connections": [
+    {
+      "instance": "\\u_pring.g_b[1].u_m",
+      "MY_outer_W_payload": [
+        {
+          "pin": "wd_in[23]",
+          "signal": "\\ir_q[87]"
+        },
+        {
+          "pin": "wd_in[24]",
+          "signal": "\\ir_q[88]"
+        },
+        {
+          "pin": "wd_in[25]",
+          "signal": "\\ir_q[89]"
+        },
+        {
+          "pin": "wd_in[26]",
+          "signal": "\\ir_q[90]"
+        },
+        {
+          "pin": "wd_in[27]",
+          "signal": "\\ir_q[91]"
+        },
+        {
+          "pin": "wd_in[28]",
+          "signal": "\\ir_q[92]"
+        },
+        {
+          "pin": "wd_in[29]",
+          "signal": "\\ir_q[93]"
+        },
+        {
+          "pin": "wd_in[30]",
+          "signal": "\\ir_q[94]"
+        },
+        {
+          "pin": "wd_in[31]",
+          "signal": "\\ir_q[95]"
+        },
+        {
+          "pin": "wd_in[32]",
+          "signal": "\\ir_q[96]"
+        },
+        {
+          "pin": "wd_in[33]",
+          "signal": "\\ir_q[97]"
+        },
+        {
+          "pin": "wd_in[34]",
+          "signal": "\\ir_q[98]"
+        },
+        {
+          "pin": "wd_in[35]",
+          "signal": "\\ir_q[99]"
+        },
+        {
+          "pin": "wd_in[36]",
+          "signal": "\\ir_q[100]"
+        },
+        {
+          "pin": "wd_in[37]",
+          "signal": "\\ir_q[101]"
+        },
+        {
+          "pin": "wd_in[38]",
+          "signal": "\\ir_q[102]"
+        },
+        {
+          "pin": "wd_in[39]",
+          "signal": "\\ir_q[103]"
+        },
+        {
+          "pin": "wd_in[40]",
+          "signal": "\\ir_q[104]"
+        },
+        {
+          "pin": "wd_in[41]",
+          "signal": "\\ir_q[105]"
+        },
+        {
+          "pin": "wd_in[42]",
+          "signal": "\\ir_q[106]"
+        },
+        {
+          "pin": "wd_in[43]",
+          "signal": "\\ir_q[107]"
+        },
+        {
+          "pin": "wd_in[44]",
+          "signal": "\\ir_q[108]"
+        },
+        {
+          "pin": "wd_in[45]",
+          "signal": "\\ir_q[109]"
+        },
+        {
+          "pin": "wd_in[46]",
+          "signal": "\\ir_q[110]"
+        },
+        {
+          "pin": "wd_in[47]",
+          "signal": "\\ir_q[111]"
+        },
+        {
+          "pin": "wd_in[48]",
+          "signal": "\\ir_q[112]"
+        },
+        {
+          "pin": "wd_in[49]",
+          "signal": "\\ir_q[113]"
+        },
+        {
+          "pin": "wd_in[50]",
+          "signal": "\\ir_q[114]"
+        },
+        {
+          "pin": "wd_in[51]",
+          "signal": "\\ir_q[115]"
+        },
+        {
+          "pin": "wd_in[52]",
+          "signal": "\\ir_q[116]"
+        },
+        {
+          "pin": "wd_in[53]",
+          "signal": "\\ir_q[117]"
+        },
+        {
+          "pin": "wd_in[54]",
+          "signal": "\\ir_q[118]"
+        },
+        {
+          "pin": "wd_in[55]",
+          "signal": "\\ir_q[119]"
+        },
+        {
+          "pin": "wd_in[56]",
+          "signal": "\\ir_q[120]"
+        },
+        {
+          "pin": "wd_in[57]",
+          "signal": "\\ir_q[121]"
+        },
+        {
+          "pin": "wd_in[58]",
+          "signal": "\\ir_q[122]"
+        },
+        {
+          "pin": "wd_in[59]",
+          "signal": "\\ir_q[123]"
+        },
+        {
+          "pin": "wd_in[60]",
+          "signal": "\\ir_q[124]"
+        },
+        {
+          "pin": "wd_in[61]",
+          "signal": "\\ir_q[125]"
+        },
+        {
+          "pin": "wd_in[62]",
+          "signal": "\\ir_q[126]"
+        },
+        {
+          "pin": "wd_in[63]",
+          "signal": "\\ir_q[127]"
+        }
+      ],
+      "mask_note": "w_mask pins also outer W; source mapped _05108_ is TIEHI, preserve actual local tie splitting/PG and pin access; not a global data crossing"
+    },
+    {
+      "instance": "\\u_sd.g_d[0].g_c[0].u_m",
+      "MY_outer_W_payload": [
+        {
+          "pin": "wd_in[22]",
+          "signal": "\\u_sd.wd[22]"
+        },
+        {
+          "pin": "wd_in[23]",
+          "signal": "\\u_sd.wd[23]"
+        },
+        {
+          "pin": "wd_in[24]",
+          "signal": "\\u_sd.wd[24]"
+        },
+        {
+          "pin": "wd_in[25]",
+          "signal": "\\u_sd.wd[25]"
+        },
+        {
+          "pin": "wd_in[26]",
+          "signal": "\\u_sd.wd[26]"
+        },
+        {
+          "pin": "wd_in[27]",
+          "signal": "\\u_sd.wd[27]"
+        },
+        {
+          "pin": "wd_in[28]",
+          "signal": "\\u_sd.wd[28]"
+        },
+        {
+          "pin": "wd_in[29]",
+          "signal": "\\u_sd.wd[29]"
+        },
+        {
+          "pin": "wd_in[30]",
+          "signal": "\\u_sd.wd[30]"
+        },
+        {
+          "pin": "wd_in[31]",
+          "signal": "\\u_sd.wd[31]"
+        },
+        {
+          "pin": "wd_in[32]",
+          "signal": "\\u_sd.wd[32]"
+        },
+        {
+          "pin": "wd_in[33]",
+          "signal": "\\u_sd.wd[33]"
+        },
+        {
+          "pin": "wd_in[34]",
+          "signal": "\\u_sd.wd[34]"
+        },
+        {
+          "pin": "wd_in[35]",
+          "signal": "\\u_sd.wd[35]"
+        },
+        {
+          "pin": "wd_in[36]",
+          "signal": "\\u_sd.wd[36]"
+        },
+        {
+          "pin": "wd_in[37]",
+          "signal": "\\u_sd.wd[37]"
+        },
+        {
+          "pin": "wd_in[38]",
+          "signal": "\\u_sd.wd[38]"
+        },
+        {
+          "pin": "wd_in[39]",
+          "signal": "\\u_sd.wd[39]"
+        },
+        {
+          "pin": "wd_in[40]",
+          "signal": "\\u_sd.wd[40]"
+        },
+        {
+          "pin": "wd_in[41]",
+          "signal": "\\u_sd.wd[41]"
+        },
+        {
+          "pin": "wd_in[42]",
+          "signal": "\\u_sd.wd[42]"
+        },
+        {
+          "pin": "wd_in[43]",
+          "signal": "\\u_sd.wd[43]"
+        },
+        {
+          "pin": "wd_in[44]",
+          "signal": "\\u_sd.wd[44]"
+        },
+        {
+          "pin": "wd_in[45]",
+          "signal": "\\u_sd.wd[45]"
+        },
+        {
+          "pin": "wd_in[46]",
+          "signal": "\\u_sd.wd[46]"
+        },
+        {
+          "pin": "wd_in[47]",
+          "signal": "\\u_sd.wd[47]"
+        },
+        {
+          "pin": "wd_in[48]",
+          "signal": "\\u_sd.wd[48]"
+        },
+        {
+          "pin": "wd_in[49]",
+          "signal": "\\u_sd.wd[49]"
+        },
+        {
+          "pin": "wd_in[50]",
+          "signal": "\\u_sd.wd[50]"
+        },
+        {
+          "pin": "wd_in[51]",
+          "signal": "\\u_sd.wd[51]"
+        },
+        {
+          "pin": "wd_in[52]",
+          "signal": "\\u_sd.wd[52]"
+        },
+        {
+          "pin": "wd_in[53]",
+          "signal": "\\u_sd.wd[53]"
+        },
+        {
+          "pin": "wd_in[54]",
+          "signal": "\\u_sd.wd[54]"
+        },
+        {
+          "pin": "wd_in[55]",
+          "signal": "\\u_sd.wd[55]"
+        },
+        {
+          "pin": "wd_in[56]",
+          "signal": "\\u_sd.wd[56]"
+        },
+        {
+          "pin": "wd_in[57]",
+          "signal": "\\u_sd.wd[57]"
+        },
+        {
+          "pin": "wd_in[58]",
+          "signal": "\\u_sd.wd[58]"
+        },
+        {
+          "pin": "wd_in[59]",
+          "signal": "\\u_sd.wd[59]"
+        },
+        {
+          "pin": "wd_in[60]",
+          "signal": "\\u_sd.wd[60]"
+        },
+        {
+          "pin": "wd_in[61]",
+          "signal": "\\u_sd.wd[61]"
+        },
+        {
+          "pin": "wd_in[62]",
+          "signal": "\\u_sd.wd[62]"
+        },
+        {
+          "pin": "wd_in[63]",
+          "signal": "\\u_sd.wd[63]"
+        }
+      ],
+      "mask_note": "w_mask pins also outer W; source mapped _05108_ is TIEHI, preserve actual local tie splitting/PG and pin access; not a global data crossing"
+    },
+    {
+      "instance": "\\u_sd.g_d[0].g_c[1].u_m",
+      "MY_outer_W_payload": [
+        {
+          "pin": "wd_in[22]",
+          "signal": "\\u_sd.wd[86]"
+        },
+        {
+          "pin": "wd_in[23]",
+          "signal": "\\u_sd.wd[87]"
+        },
+        {
+          "pin": "wd_in[24]",
+          "signal": "\\u_sd.wd[88]"
+        },
+        {
+          "pin": "wd_in[25]",
+          "signal": "\\u_sd.wd[89]"
+        },
+        {
+          "pin": "wd_in[26]",
+          "signal": "\\u_sd.wd[90]"
+        },
+        {
+          "pin": "wd_in[27]",
+          "signal": "\\u_sd.wd[91]"
+        },
+        {
+          "pin": "wd_in[28]",
+          "signal": "\\u_sd.wd[92]"
+        },
+        {
+          "pin": "wd_in[29]",
+          "signal": "\\u_sd.wd[93]"
+        },
+        {
+          "pin": "wd_in[30]",
+          "signal": "\\u_sd.wd[94]"
+        },
+        {
+          "pin": "wd_in[31]",
+          "signal": "\\u_sd.wd[95]"
+        },
+        {
+          "pin": "wd_in[32]",
+          "signal": "\\u_sd.wd[96]"
+        },
+        {
+          "pin": "wd_in[33]",
+          "signal": "\\u_sd.wd[97]"
+        },
+        {
+          "pin": "wd_in[34]",
+          "signal": "\\u_sd.wd[98]"
+        },
+        {
+          "pin": "wd_in[35]",
+          "signal": "\\u_sd.wd[99]"
+        },
+        {
+          "pin": "wd_in[36]",
+          "signal": "\\u_sd.wd[100]"
+        },
+        {
+          "pin": "wd_in[37]",
+          "signal": "\\u_sd.wd[101]"
+        },
+        {
+          "pin": "wd_in[38]",
+          "signal": "\\u_sd.wd[102]"
+        },
+        {
+          "pin": "wd_in[39]",
+          "signal": "\\u_sd.wd[103]"
+        },
+        {
+          "pin": "wd_in[40]",
+          "signal": "\\u_sd.wd[104]"
+        },
+        {
+          "pin": "wd_in[41]",
+          "signal": "\\u_sd.wd[105]"
+        },
+        {
+          "pin": "wd_in[42]",
+          "signal": "\\u_sd.wd[106]"
+        },
+        {
+          "pin": "wd_in[43]",
+          "signal": "\\u_sd.wd[107]"
+        },
+        {
+          "pin": "wd_in[44]",
+          "signal": "\\u_sd.wd[108]"
+        },
+        {
+          "pin": "wd_in[45]",
+          "signal": "\\u_sd.wd[109]"
+        },
+        {
+          "pin": "wd_in[46]",
+          "signal": "\\u_sd.wd[110]"
+        },
+        {
+          "pin": "wd_in[47]",
+          "signal": "\\u_sd.wd[111]"
+        },
+        {
+          "pin": "wd_in[48]",
+          "signal": "\\u_sd.wd[112]"
+        },
+        {
+          "pin": "wd_in[49]",
+          "signal": "\\u_sd.wd[113]"
+        },
+        {
+          "pin": "wd_in[50]",
+          "signal": "\\u_sd.wd[114]"
+        },
+        {
+          "pin": "wd_in[51]",
+          "signal": "\\u_sd.wd[115]"
+        },
+        {
+          "pin": "wd_in[52]",
+          "signal": "\\u_sd.wd[116]"
+        },
+        {
+          "pin": "wd_in[53]",
+          "signal": "\\u_sd.wd[117]"
+        },
+        {
+          "pin": "wd_in[54]",
+          "signal": "\\u_sd.wd[118]"
+        },
+        {
+          "pin": "wd_in[55]",
+          "signal": "\\u_sd.wd[119]"
+        },
+        {
+          "pin": "wd_in[56]",
+          "signal": "\\u_sd.wd[120]"
+        },
+        {
+          "pin": "wd_in[57]",
+          "signal": "\\u_sd.wd[121]"
+        },
+        {
+          "pin": "wd_in[58]",
+          "signal": "\\u_sd.wd[122]"
+        },
+        {
+          "pin": "wd_in[59]",
+          "signal": "\\u_sd.wd[123]"
+        },
+        {
+          "pin": "wd_in[60]",
+          "signal": "\\u_sd.wd[124]"
+        },
+        {
+          "pin": "wd_in[61]",
+          "signal": "\\u_sd.wd[125]"
+        },
+        {
+          "pin": "wd_in[62]",
+          "signal": "\\u_sd.wd[126]"
+        },
+        {
+          "pin": "wd_in[63]",
+          "signal": "\\u_sd.wd[127]"
+        }
+      ],
+      "mask_note": "w_mask pins also outer W; source mapped _05108_ is TIEHI, preserve actual local tie splitting/PG and pin access; not a global data crossing"
+    },
+    {
+      "instance": "\\u_sd.g_d[1].g_c[0].u_m",
+      "MY_outer_W_payload": [
+        {
+          "pin": "wd_in[22]",
+          "signal": "\\u_sd.wd[22]"
+        },
+        {
+          "pin": "wd_in[23]",
+          "signal": "\\u_sd.wd[23]"
+        },
+        {
+          "pin": "wd_in[24]",
+          "signal": "\\u_sd.wd[24]"
+        },
+        {
+          "pin": "wd_in[25]",
+          "signal": "\\u_sd.wd[25]"
+        },
+        {
+          "pin": "wd_in[26]",
+          "signal": "\\u_sd.wd[26]"
+        },
+        {
+          "pin": "wd_in[27]",
+          "signal": "\\u_sd.wd[27]"
+        },
+        {
+          "pin": "wd_in[28]",
+          "signal": "\\u_sd.wd[28]"
+        },
+        {
+          "pin": "wd_in[29]",
+          "signal": "\\u_sd.wd[29]"
+        },
+        {
+          "pin": "wd_in[30]",
+          "signal": "\\u_sd.wd[30]"
+        },
+        {
+          "pin": "wd_in[31]",
+          "signal": "\\u_sd.wd[31]"
+        },
+        {
+          "pin": "wd_in[32]",
+          "signal": "\\u_sd.wd[32]"
+        },
+        {
+          "pin": "wd_in[33]",
+          "signal": "\\u_sd.wd[33]"
+        },
+        {
+          "pin": "wd_in[34]",
+          "signal": "\\u_sd.wd[34]"
+        },
+        {
+          "pin": "wd_in[35]",
+          "signal": "\\u_sd.wd[35]"
+        },
+        {
+          "pin": "wd_in[36]",
+          "signal": "\\u_sd.wd[36]"
+        },
+        {
+          "pin": "wd_in[37]",
+          "signal": "\\u_sd.wd[37]"
+        },
+        {
+          "pin": "wd_in[38]",
+          "signal": "\\u_sd.wd[38]"
+        },
+        {
+          "pin": "wd_in[39]",
+          "signal": "\\u_sd.wd[39]"
+        },
+        {
+          "pin": "wd_in[40]",
+          "signal": "\\u_sd.wd[40]"
+        },
+        {
+          "pin": "wd_in[41]",
+          "signal": "\\u_sd.wd[41]"
+        },
+        {
+          "pin": "wd_in[42]",
+          "signal": "\\u_sd.wd[42]"
+        },
+        {
+          "pin": "wd_in[43]",
+          "signal": "\\u_sd.wd[43]"
+        },
+        {
+          "pin": "wd_in[44]",
+          "signal": "\\u_sd.wd[44]"
+        },
+        {
+          "pin": "wd_in[45]",
+          "signal": "\\u_sd.wd[45]"
+        },
+        {
+          "pin": "wd_in[46]",
+          "signal": "\\u_sd.wd[46]"
+        },
+        {
+          "pin": "wd_in[47]",
+          "signal": "\\u_sd.wd[47]"
+        },
+        {
+          "pin": "wd_in[48]",
+          "signal": "\\u_sd.wd[48]"
+        },
+        {
+          "pin": "wd_in[49]",
+          "signal": "\\u_sd.wd[49]"
+        },
+        {
+          "pin": "wd_in[50]",
+          "signal": "\\u_sd.wd[50]"
+        },
+        {
+          "pin": "wd_in[51]",
+          "signal": "\\u_sd.wd[51]"
+        },
+        {
+          "pin": "wd_in[52]",
+          "signal": "\\u_sd.wd[52]"
+        },
+        {
+          "pin": "wd_in[53]",
+          "signal": "\\u_sd.wd[53]"
+        },
+        {
+          "pin": "wd_in[54]",
+          "signal": "\\u_sd.wd[54]"
+        },
+        {
+          "pin": "wd_in[55]",
+          "signal": "\\u_sd.wd[55]"
+        },
+        {
+          "pin": "wd_in[56]",
+          "signal": "\\u_sd.wd[56]"
+        },
+        {
+          "pin": "wd_in[57]",
+          "signal": "\\u_sd.wd[57]"
+        },
+        {
+          "pin": "wd_in[58]",
+          "signal": "\\u_sd.wd[58]"
+        },
+        {
+          "pin": "wd_in[59]",
+          "signal": "\\u_sd.wd[59]"
+        },
+        {
+          "pin": "wd_in[60]",
+          "signal": "\\u_sd.wd[60]"
+        },
+        {
+          "pin": "wd_in[61]",
+          "signal": "\\u_sd.wd[61]"
+        },
+        {
+          "pin": "wd_in[62]",
+          "signal": "\\u_sd.wd[62]"
+        },
+        {
+          "pin": "wd_in[63]",
+          "signal": "\\u_sd.wd[63]"
+        }
+      ],
+      "mask_note": "w_mask pins also outer W; source mapped _05108_ is TIEHI, preserve actual local tie splitting/PG and pin access; not a global data crossing"
+    },
+    {
+      "instance": "\\u_sd.g_d[1].g_c[1].u_m",
+      "MY_outer_W_payload": [
+        {
+          "pin": "wd_in[22]",
+          "signal": "\\u_sd.wd[86]"
+        },
+        {
+          "pin": "wd_in[23]",
+          "signal": "\\u_sd.wd[87]"
+        },
+        {
+          "pin": "wd_in[24]",
+          "signal": "\\u_sd.wd[88]"
+        },
+        {
+          "pin": "wd_in[25]",
+          "signal": "\\u_sd.wd[89]"
+        },
+        {
+          "pin": "wd_in[26]",
+          "signal": "\\u_sd.wd[90]"
+        },
+        {
+          "pin": "wd_in[27]",
+          "signal": "\\u_sd.wd[91]"
+        },
+        {
+          "pin": "wd_in[28]",
+          "signal": "\\u_sd.wd[92]"
+        },
+        {
+          "pin": "wd_in[29]",
+          "signal": "\\u_sd.wd[93]"
+        },
+        {
+          "pin": "wd_in[30]",
+          "signal": "\\u_sd.wd[94]"
+        },
+        {
+          "pin": "wd_in[31]",
+          "signal": "\\u_sd.wd[95]"
+        },
+        {
+          "pin": "wd_in[32]",
+          "signal": "\\u_sd.wd[96]"
+        },
+        {
+          "pin": "wd_in[33]",
+          "signal": "\\u_sd.wd[97]"
+        },
+        {
+          "pin": "wd_in[34]",
+          "signal": "\\u_sd.wd[98]"
+        },
+        {
+          "pin": "wd_in[35]",
+          "signal": "\\u_sd.wd[99]"
+        },
+        {
+          "pin": "wd_in[36]",
+          "signal": "\\u_sd.wd[100]"
+        },
+        {
+          "pin": "wd_in[37]",
+          "signal": "\\u_sd.wd[101]"
+        },
+        {
+          "pin": "wd_in[38]",
+          "signal": "\\u_sd.wd[102]"
+        },
+        {
+          "pin": "wd_in[39]",
+          "signal": "\\u_sd.wd[103]"
+        },
+        {
+          "pin": "wd_in[40]",
+          "signal": "\\u_sd.wd[104]"
+        },
+        {
+          "pin": "wd_in[41]",
+          "signal": "\\u_sd.wd[105]"
+        },
+        {
+          "pin": "wd_in[42]",
+          "signal": "\\u_sd.wd[106]"
+        },
+        {
+          "pin": "wd_in[43]",
+          "signal": "\\u_sd.wd[107]"
+        },
+        {
+          "pin": "wd_in[44]",
+          "signal": "\\u_sd.wd[108]"
+        },
+        {
+          "pin": "wd_in[45]",
+          "signal": "\\u_sd.wd[109]"
+        },
+        {
+          "pin": "wd_in[46]",
+          "signal": "\\u_sd.wd[110]"
+        },
+        {
+          "pin": "wd_in[47]",
+          "signal": "\\u_sd.wd[111]"
+        },
+        {
+          "pin": "wd_in[48]",
+          "signal": "\\u_sd.wd[112]"
+        },
+        {
+          "pin": "wd_in[49]",
+          "signal": "\\u_sd.wd[113]"
+        },
+        {
+          "pin": "wd_in[50]",
+          "signal": "\\u_sd.wd[114]"
+        },
+        {
+          "pin": "wd_in[51]",
+          "signal": "\\u_sd.wd[115]"
+        },
+        {
+          "pin": "wd_in[52]",
+          "signal": "\\u_sd.wd[116]"
+        },
+        {
+          "pin": "wd_in[53]",
+          "signal": "\\u_sd.wd[117]"
+        },
+        {
+          "pin": "wd_in[54]",
+          "signal": "\\u_sd.wd[118]"
+        },
+        {
+          "pin": "wd_in[55]",
+          "signal": "\\u_sd.wd[119]"
+        },
+        {
+          "pin": "wd_in[56]",
+          "signal": "\\u_sd.wd[120]"
+        },
+        {
+          "pin": "wd_in[57]",
+          "signal": "\\u_sd.wd[121]"
+        },
+        {
+          "pin": "wd_in[58]",
+          "signal": "\\u_sd.wd[122]"
+        },
+        {
+          "pin": "wd_in[59]",
+          "signal": "\\u_sd.wd[123]"
+        },
+        {
+          "pin": "wd_in[60]",
+          "signal": "\\u_sd.wd[124]"
+        },
+        {
+          "pin": "wd_in[61]",
+          "signal": "\\u_sd.wd[125]"
+        },
+        {
+          "pin": "wd_in[62]",
+          "signal": "\\u_sd.wd[126]"
+        },
+        {
+          "pin": "wd_in[63]",
+          "signal": "\\u_sd.wd[127]"
+        }
+      ],
+      "mask_note": "w_mask pins also outer W; source mapped _05108_ is TIEHI, preserve actual local tie splitting/PG and pin access; not a global data crossing"
+    }
+  ],
+  "measured_gcell_pitch_um": 0.57,
+  "capacity_model": {
+    "stored_M3_plus_M5_sample_min": [
+      28.0,
+      27.0
+    ],
+    "payload_tracks_required": 125,
+    "full_vertical_gcells_required": 5,
+    "stripe_um": 4.56,
+    "stripe_derivation": "(ceil(125/27)+3)*0.570 =4.560; two GCell edge guards plus one unknown-phase GCell; guarantees five full payload columns in an empty corresponding strip",
+    "raw_vertical_capacity_ceiling": 135.0,
+    "phase_safe_full_aperture_rows": 55,
+    "raw_M2_M4_capacity_ceiling": 1430,
+    "partial_per_aperture_connection_ledger": 509,
+    "ledger_detail": "PARTIAL ledger only:128banddata+125allouterWD+128clock+128reset endpoint connections. NOT a full traffic/cut or required-track certificate; other selection/read/control nets, local mask-tie stubs, actual clock topology, metal and PG remain uncounted. Source one-register-per-boundary-bit assumption must remain enforced.",
+    "free_capacity_status": "UNPROVEN. Stored grid capacity is a ceiling, not actual free tracks after PG, temporary hook shapes, repair and other nets. Reservation/guide enforcement must be implemented and checked, no legal-route claim."
+  },
+  "proposed_outline_um": {
+    "w": 233.28,
+    "h": 334.8
+  },
+  "proposed_core_um": [
+    2.16,
+    2.16,
+    231.12,
+    332.64
+  ],
+  "proposed_macro_blocks": [
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+      "master": "ot_sram_1r1w2c_256x64_m1",
+      "inst": "*u_sd*g_d?0?*g_c?0?*u_m",
+      "idx": 0,
+      "x": 43.2,
+      "y": 37.488,
+      "w": 34.584,
+      "h": 41.352,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+      "master": "ot_sram_1r1w2c_256x64_m1",
+      "inst": "*u_sd*g_d?0?*g_c?1?*u_m",
+      "idx": 0,
+      "x": 43.2,
+      "y": 78.864,
+      "w": 34.584,
+      "h": 41.352,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+      "master": "ot_sram_1r1w2c_256x64_m1",
+      "inst": "*u_sd*g_d?1?*g_c?0?*u_m",
+      "idx": 0,
+      "x": 43.2,
+      "y": 153.36,
+      "w": 34.584,
+      "h": 41.352,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+      "master": "ot_sram_1r1w2c_256x64_m1",
+      "inst": "*u_sd*g_d?1?*g_c?1?*u_m",
+      "idx": 0,
+      "x": 43.2,
+      "y": 194.736,
+      "w": 34.584,
+      "h": 41.352,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+      "master": "ot_sram_1r1w2c_128x64_m1",
+      "inst": "*u_pring*g_b?1?*u_m",
+      "idx": 0,
+      "x": 43.2,
+      "y": 269.232,
+      "w": 33.72,
+      "h": 27.576,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+      "master": "ot_sram_1r1w2c_128x64_m1",
+      "inst": "*u_xf*g_st?3?*u_dr*g_b?1?*u_m",
+      "idx": 0,
+      "x": 168.48,
+      "y": 37.488,
+      "w": 33.72,
+      "h": 27.576,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+      "master": "ot_sram_1r1w2c_128x64_m1",
+      "inst": "*u_xf*g_st?3?*u_dr*g_b?0?*u_m",
+      "idx": 0,
+      "x": 168.48,
+      "y": 65.088,
+      "w": 33.72,
+      "h": 27.576,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+      "master": "ot_sram_1r1w2c_128x64_m1",
+      "inst": "*u_xf*g_st?2?*u_dr*g_b?1?*u_m",
+      "idx": 0,
+      "x": 168.48,
+      "y": 125.808,
+      "w": 33.72,
+      "h": 27.576,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+      "master": "ot_sram_1r1w2c_128x64_m1",
+      "inst": "*u_xf*g_st?2?*u_dr*g_b?0?*u_m",
+      "idx": 0,
+      "x": 168.48,
+      "y": 153.408,
+      "w": 33.72,
+      "h": 27.576,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+      "master": "ot_sram_1r1w2c_128x64_m1",
+      "inst": "*u_rring*g_b?1?*u_m",
+      "idx": 0,
+      "x": 168.48,
+      "y": 214.128,
+      "w": 33.72,
+      "h": 27.576,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+      "master": "ot_sram_1r1w2c_128x64_m1",
+      "inst": "*u_rring*g_b?0?*u_m",
+      "idx": 0,
+      "x": 168.48,
+      "y": 241.728,
+      "w": 33.72,
+      "h": 27.576,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "macro",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+      "master": "ot_sram_1r1w2c_128x64_m1",
+      "inst": "*u_pring*g_b?0?*u_m",
+      "idx": 0,
+      "x": 168.48,
+      "y": 269.328,
+      "w": 33.72,
+      "h": 27.576,
+      "orient": "R0",
+      "offtrack": 0
+    }
+  ],
+  "proposed_openings": {
+    "43.2": [
+      {
+        "lo": 2.16,
+        "hi": 37.488,
+        "pin_lo": 4.890000000000001,
+        "pin_hi": 36.89
+      },
+      {
+        "lo": 120.216,
+        "hi": 153.36,
+        "pin_lo": 120.78599999999999,
+        "pin_hi": 152.786
+      },
+      {
+        "lo": 236.088,
+        "hi": 269.232,
+        "pin_lo": 236.658,
+        "pin_hi": 268.658
+      },
+      {
+        "lo": 296.808,
+        "hi": 332.108,
+        "pin_lo": 297.378,
+        "pin_hi": 329.378
+      }
+    ],
+    "168.48": [
+      {
+        "lo": 2.16,
+        "hi": 37.488,
+        "pin_lo": 4.890000000000001,
+        "pin_hi": 36.89
+      },
+      {
+        "lo": 92.664,
+        "hi": 125.808,
+        "pin_lo": 93.234,
+        "pin_hi": 125.234
+      },
+      {
+        "lo": 180.984,
+        "hi": 214.128,
+        "pin_lo": 181.554,
+        "pin_hi": 213.554
+      },
+      {
+        "lo": 296.904,
+        "hi": 332.204,
+        "pin_lo": 297.474,
+        "pin_hi": 329.474
+      }
+    ]
+  },
+  "proposed_pin_ranges": {
+    "sx1_data": [
+      4.890000000000001,
+      36.89
+    ],
+    "sr1_data": [
+      120.78599999999999,
+      152.786
+    ],
+    "sx2_data": [
+      236.658,
+      268.658
+    ],
+    "sr2_data": [
+      297.378,
+      329.378
+    ],
+    "up_data": [
+      4.890000000000001,
+      36.89
+    ],
+    "dp_data": [
+      93.234,
+      125.234
+    ],
+    "ur_data": [
+      181.554,
+      213.554
+    ],
+    "dr_data": [
+      297.474,
+      329.474
+    ]
+  },
+  "pin_aperture_derivation": "128/4=32um band + one measured0.570GCell guard at each end; outer apertures also exclude2.160um initial orthogonal IO-flop depth (1+4*0.27 rounded to0.216). Macro origins retain48nm lattice; frame rounds2.160um. No increased pin density.",
+  "outer_W_payload_strip_um": [
+    38.64,
+    43.2
+  ],
+  "placement_contract": "IO first/last registers and their actual transparent repair descendants must stay in their own clear aperture corridor; all ordinary non-IO arithmetic/selection remains in the inner core bay. Dedicated outer-W WD spine/data stubs must retain access, with local tie cells/endcaps/PG explicitly handled. Initial FIRM anchoring then release toPLACED is insufficient. Do not place hard blockages over existing macro halo/endcaps. This durable region/guide implementation is not supplied by current kit.",
+  "selected_paths": [
+    {
+      "name": "q8a observed SerDes-capture segment",
+      "points": [
+        [
+          43.1285,
+          313.378
+        ],
+        [
+          88.77,
+          313.378
+        ],
+        [
+          88.77,
+          167.4
+        ]
+      ],
+      "length_um": 191.6195,
+      "centerline_OBS_check": "PASS against retained actual LEF OBS only; no via/spacing/PG/free-track proof",
+      "segments": [
+        {
+          "layer": "M4",
+          "start": [
+            43.1285,
+            313.378
+          ],
+          "end": [
+            88.77,
+            313.378
+          ]
+        },
+        {
+          "layer": "M3",
+          "start": [
+            88.77,
+            313.378
+          ],
+          "end": [
+            88.77,
+            167.4
+          ]
+        }
+      ]
+    },
+    {
+      "name": "q8b WD123 -> SRAM bank0wd59",
+      "points": [
+        [
+          116.64,
+          167.4
+        ],
+        [
+          116.64,
+          136.788
+        ],
+        [
+          40.92,
+          136.788
+        ],
+        [
+          40.92,
+          83.196
+        ],
+        [
+          43.212,
+          83.196
+        ]
+      ],
+      "length_um": 162.216,
+      "centerline_OBS_check": "PASS against retained actual LEF OBS only; no via/spacing/PG/free-track proof",
+      "segments": [
+        {
+          "layer": "M3",
+          "start": [
+            116.64,
+            167.4
+          ],
+          "end": [
+            116.64,
+            136.788
+          ]
+        },
+        {
+          "layer": "M4",
+          "start": [
+            116.64,
+            136.788
+          ],
+          "end": [
+            40.92,
+            136.788
+          ]
+        },
+        {
+          "layer": "M3",
+          "start": [
+            40.92,
+            136.788
+          ],
+          "end": [
+            40.92,
+            83.196
+          ]
+        },
+        {
+          "layer": "M4",
+          "start": [
+            40.92,
+            83.196
+          ],
+          "end": [
+            43.212,
+            83.196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "q8b WD123 -> SRAM bank1wd59",
+      "points": [
+        [
+          116.64,
+          167.4
+        ],
+        [
+          116.64,
+          136.788
+        ],
+        [
+          40.92,
+          136.788
+        ],
+        [
+          40.92,
+          199.06799999999998
+        ],
+        [
+          43.212,
+          199.06799999999998
+        ]
+      ],
+      "length_um": 170.904,
+      "centerline_OBS_check": "PASS against retained actual LEF OBS only; no via/spacing/PG/free-track proof",
+      "segments": [
+        {
+          "layer": "M3",
+          "start": [
+            116.64,
+            167.4
+          ],
+          "end": [
+            116.64,
+            136.788
+          ]
+        },
+        {
+          "layer": "M4",
+          "start": [
+            116.64,
+            136.788
+          ],
+          "end": [
+            40.92,
+            136.788
+          ]
+        },
+        {
+          "layer": "M3",
+          "start": [
+            40.92,
+            136.788
+          ],
+          "end": [
+            40.92,
+            199.06799999999998
+          ]
+        },
+        {
+          "layer": "M4",
+          "start": [
+            40.92,
+            199.06799999999998
+          ],
+          "end": [
+            43.212,
+            199.06799999999998
+          ]
+        }
+      ]
+    },
+    {
+      "name": "q8b WD123 -> existing face-buffer region",
+      "points": [
+        [
+          116.64,
+          167.4
+        ],
+        [
+          116.64,
+          58.725
+        ],
+        [
+          94.443,
+          58.725
+        ]
+      ],
+      "length_um": 130.872,
+      "centerline_OBS_check": "PASS against retained actual LEF OBS only; no via/spacing/PG/free-track proof",
+      "segments": [
+        {
+          "layer": "M3",
+          "start": [
+            116.64,
+            167.4
+          ],
+          "end": [
+            116.64,
+            58.725
+          ]
+        },
+        {
+          "layer": "M4",
+          "start": [
+            116.64,
+            58.725
+          ],
+          "end": [
+            94.443,
+            58.725
+          ]
+        }
+      ]
+    }
+  ],
+  "selected_path_scope": "Only observed failing segment and WD123 bank/face branches are geometrically bounded below405; corridor knots are not detailed routing sites. Not an all-native-hop/reach or timing proof.",
+  "clock_evidence": {
+    "q8a": {
+      "verdict": "WARN",
+      "tt_spread_ps": 48.7,
+      "ff_spread_ps": 51.9,
+      "tt_pin_spread_ps": 40.2,
+      "ff_pin_spread_ps": 37.9,
+      "tt": {
+        "soft": {
+          "n": 18722,
+          "mean": 505.4,
+          "min": 484.6,
+          "max": 530.5
+        },
+        "soft_spread": 45.9,
+        "macro_min": {
+          "pin": "g_xf_fan32.u_xf/g_st[3].genblk1.genblk1.g_dr.u_dr.g_b[0].u_m/wclk",
+          "arr": 504.8,
+          "slew": 26.5,
+          "late": -0.7,
+          "net": "clkbuf_sp_L2357_net"
+        },
+        "macro_max": {
+          "pin": "u_rring.g_b[0].u_m/wclk",
+          "arr": 533.3,
+          "slew": 27.3,
+          "late": 27.8,
+          "net": "clkbuf_sp_L1403_net"
+        }
+      },
+      "ff": {
+        "soft": {
+          "n": 18722,
+          "mean": 403.1,
+          "min": 382.3,
+          "max": 428.9
+        },
+        "soft_spread": 46.6,
+        "macro_min": {
+          "pin": "u_pring.g_b[1].u_m/wclk",
+          "arr": 403.2,
+          "slew": 25.6,
+          "late": 0.1,
+          "net": "clkbuf_sp_L1455_net"
+        },
+        "macro_max": {
+          "pin": "u_rring.g_b[0].u_m/wclk",
+          "arr": 434.2,
+          "slew": 26.1,
+          "late": 31.1,
+          "net": "clkbuf_sp_L1403_net"
+        }
+      }
+    },
+    "q8b": {
+      "verdict": "REFUSE",
+      "tt_spread_ps": 115.8,
+      "ff_spread_ps": 114.3,
+      "tt_pin_spread_ps": 90.9,
+      "ff_pin_spread_ps": 82.5,
+      "tt": {
+        "soft": {
+          "n": 18722,
+          "mean": 529.1,
+          "min": 475.7,
+          "max": 589.4
+        },
+        "soft_spread": 113.7,
+        "macro_min": {
+          "pin": "u_pring.g_b[1].u_m/wclk",
+          "arr": 517.5,
+          "slew": 26.8,
+          "late": -11.6,
+          "net": "clkbuf_sp_L1208_net"
+        },
+        "macro_max": {
+          "pin": "g_xf_fan32.u_xf/g_st[3].genblk1.genblk1.g_dr.u_dr.g_b[1].u_m/wclk",
+          "arr": 591.5,
+          "slew": 39.9,
+          "late": 62.4,
+          "net": "clkbuf_sp_L2294_net"
+        }
+      },
+      "ff": {
+        "soft": {
+          "n": 18722,
+          "mean": 420.5,
+          "min": 374.4,
+          "max": 485.8
+        },
+        "soft_spread": 111.4,
+        "macro_min": {
+          "pin": "u_pring.g_b[1].u_m/wclk",
+          "arr": 415.7,
+          "slew": 25.5,
+          "late": -4.8,
+          "net": "clkbuf_sp_L1208_net"
+        },
+        "macro_max": {
+          "pin": "g_xf_fan32.u_xf/g_st[3].genblk1.genblk1.g_dr.u_dr.g_b[1].u_m/rclk",
+          "arr": 488.7,
+          "slew": 40.2,
+          "late": 68.2,
+          "net": "clkbuf_sp_L2294_net"
+        }
+      }
+    }
+  },
+  "clock_proposal": "Keep clock source/frequency/SDC/edge semantics and q8a source as pinned comparison. Build physical balanced leaf clusters for the four IO-aperture endpoint groups, ordinary core registers, and all12dual-clock SRAMs under the SAME root. Balance actual TT and FF all-register+all-macro endpoint union, not boundary-only or macro-only. Region durability must include clock/hold repair; no delay exception/phase/multicycle/new state. Existing generic SYM/SAFE_BALANCE flags alone do not establish this.",
+  "blocking_unmodelled_clock_gap": "Existing ck.json only gives standard-cell aggregate extrema, not their identities/per-leaf membership, branch RC/cap or TT/FF leaf windows. q8b SOFT spans113.7/111.4 already exceed80, so macro-only fixes cannot qualify. Cannot derive legal physical buffer sizes/counts or new334.8um-frame clock spread from current data. Need exact existing clock-tree/leaf/sink raw data before admitting this single proposal; q8a48.7/51.9 is no transfer PASS.",
+  "blocking_unmodelled_routing_gap": "30 transient hook shapes and failed maze heap removed. Existing snapshots identify endpoints/OBS/grid but cannot certify full after-PG/transient multi-net capacity or repair-created buffer placement. Actual durable region/guide allocator + all affected branch/access occupancy must be demonstrated before any unchanged gate retry.",
+  "qualification": "OPEN: no physical/gate/schedule/native/clock improvement claimed; no further job authorized by this artifact.",
+  "technology_source": {
+    "original_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "extraction": "read-only /bin/cat of actual OCI image files, no design load or EDA invocation",
+    "tech_lef": {
+      "original_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef",
+      "retained_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
+    },
+    "make_tracks": {
+      "original_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl",
+      "retained_sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632"
+    },
+    "directions": "M2/M4 horizontal; M3/M5 vertical. M6 excluded by existing top-M5 tile rule. Physical track grids do not establish after-PG free GCell capacity."
+  }
+}

@@ -1,0 +1,58 @@
+ONE Q8 STRUCTURAL MODEL — ROOT REVIEW ONLY / NOT READY FOR GATE
+
+Pinned source a153761f95cee63943c1c363ec80ccc9c4344b8a. No RTL, port,
+clock, reset, state or edge change. No active kit edit or EDA job. This packet
+proposes one q8a-derived geometry, not a qualified successor or implementation.
+
+The current two 128-bit bands require 64um at the existing 4 pins/um policy;
+q8a offers only 27.288um and q8b 23um at the internal cuts. Moving pins within
+those cuts cannot satisfy the original policy. Replace each paired-bus cut
+with four separate contained 32um bands per face: two internal apertures and
+two outer apertures. Preserve macro X/orientation/order and 48nm Y-origin
+lattice; use actual 0.570um stored GCell guards, initial orthogonal IO-cell
+corner depth and 2.160um frame rounding. Single resulting frame:
+233.280 x 334.800um. Exact macro coordinates and eight pin ranges are in JSON.
+
+Actual LEF/native connections also invalidate an all-inner-pin assumption:
+MY places write-data and mask pins on the outer W face. Five macros expose
+125 distinct WD payload signals there. A 4.560um modeled access strip contains
+five full GCell columns plus phase/edge guards; five times the sampled stored
+27-slot M3+M5 capacity gives a NOMINAL 135-slot CEILING. This is NOT actual
+post-PG/free capacity and does NOT establish routing readiness. The 1430-slot
+horizontal ceiling and partial 509-connection ledger likewise do NOT count
+all selection/read/control traffic, PG, via access, local ties or repair nets.
+No claim that either cut has proven sufficient required tracks is made.
+
+Four selected modeled corridor paths (the observed SerDes-capture segment,
+WD123 branches to both SRAM banks, and its face-buffer region) measure
+191.620/162.216/170.904/130.872um. Their M3 vertical/M4 horizontal centerlines
+avoid transformed actual SRAM LEF OBS. They are not detailed routes, nor a
+proof of via/spacing/track legality or all-native-hop reach. The original
+q8a failure is a low-fanout SerDes data segment; q8b is a branched WD123 data
+segment. Neither supports a generic high-fanout write-control copy fix.
+
+Implementation obligations: durable source-role placement regions must retain
+IO captures/launches and their transparent hold/repair descendants in their
+clear aperture, ordinary logic in the core bay, and actual outer-W WD access.
+Current initial FIRM then PLACED release does not enforce this. Preserve local
+tie/PG/endcap legality; do not hard-block existing macro halo/endcaps. Derive
+full multi-net traffic/cut demand and actual post-PG pin-access capacity before
+admission. Thirty transient hook shapes and failed maze state are absent from
+the retained checkpoint, so exact original path feasibility cannot be inferred.
+
+CLOCK IS A SEPARATE BLOCKER: q8b TT/FF soft-register spreads113.7/111.4ps already
+exceed80ps, independently of SRAM leaves (all-endpoint115.8/114.3ps). A macro-only
+correction cannot qualify. Propose physical balanced leaf clusters under the
+same original root for the four IO groups, core registers and all12 dual-clock
+SRAMs, judged on complete TT/FF register+macro union. Existing summaries lack
+standard-cell extrema identities, leaf ownership, branch RC/cap and TT/FF leaf
+windows; buffer counts/sizes and new334.8um-frame clock readiness cannot yet be
+derived. Prior q8a48.7/51.9ps is a pinned comparison, not a transferred PASS.
+
+Proof scope: pure Python source/rectangle/LEF centerline model. Actual source
+and dump hashes are pinned in JSON; full actual image technology and track
+source files are retained with hashes and original image identity. No routing,
+STA, native qualification, gate, fixture, reroute or new probe was invoked.
+All readiness remains OPEN. Next owner decision is whether to develop the
+missing durable placement, actual free-capacity/traffic and clock-leaf model;
+this packet itself authorizes no launch.
