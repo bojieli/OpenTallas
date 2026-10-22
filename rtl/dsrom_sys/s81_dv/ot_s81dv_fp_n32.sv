@@ -299,6 +299,23 @@ module ot_s81dv_divc_n32 #(
     (* keep *) reg [15:8] s3_mk;      // same D (s2_m), same edge as s3_m: the S3b digit inputs own their copy
     always @(posedge clk) s3_mk <= s2_m[15:8];
 `endif
+`ifdef OT_S81DV_XFIN_N19
+    // N19 (N18 census: the S3b two-digit step still shared one register per input, s3_r[0..1] 34 and s3_mk[13] 33
+    // loads): the S3b step gets the N16 treatment -- three keep_hierarchy cones by OUTPUT (d2 quotient, d3 quotient,
+    // d3 remainder), each reading its OWN distinct-ID register copies of the S3 remainder (same D d1[2:0], same edge as
+    // s3_r) and significand byte (same D s2_m[15:8], same edge as s3_m).  Same function -> bit and cycle identical.
+    wire [2:0] s3_rq4, s3_rq5, s3_rr5; wire [7:0] s3_mq4, s3_mq5, s3_mr5;
+    ot_s81dv_xfin_rcopy #(.W(3),.ID(5))  u_s3_rq4 (.clk(clk), .d(d1[2:0]),     .q(s3_rq4));
+    ot_s81dv_xfin_rcopy #(.W(3),.ID(6))  u_s3_rq5 (.clk(clk), .d(d1[2:0]),     .q(s3_rq5));
+    ot_s81dv_xfin_rcopy #(.W(3),.ID(7))  u_s3_rr5 (.clk(clk), .d(d1[2:0]),     .q(s3_rr5));
+    ot_s81dv_xfin_rcopy #(.W(8),.ID(8))  u_s3_mq4 (.clk(clk), .d(s2_m[15:8]),  .q(s3_mq4));
+    ot_s81dv_xfin_rcopy #(.W(8),.ID(9))  u_s3_mq5 (.clk(clk), .d(s2_m[15:8]),  .q(s3_mq5));
+    ot_s81dv_xfin_rcopy #(.W(8),.ID(10)) u_s3_mr5 (.clk(clk), .d(s2_m[15:8]),  .q(s3_mr5));
+    wire [3:0] d2q_n19, d3q_n19; wire [2:0] d3r_n19;
+    ot_s81dv_xfin_div2q4 u_s3q4 (.r(s3_rq4), .m(s3_mq4[7:4]), .q4(d2q_n19));
+    ot_s81dv_xfin_div2q5 u_s3q5 (.r(s3_rq5), .m(s3_mq5), .q5(d3q_n19));
+    ot_s81dv_xfin_div2r  u_s3r5 (.r(s3_rr5), .m(s3_mr5), .r5(d3r_n19));
+`endif
     always @(*) begin
         d0 = dstep(3'd0, s2_m[23:20]);
         d1 = dstep(d0[2:0], s2_m[19:16]);
@@ -315,6 +332,9 @@ module ot_s81dv_divc_n32 #(
         d4 = dstep(s3b_r, s3b_m[7:4]);
 `endif
         d5 = dstep(d4[2:0], s3b_m[3:0]);
+`ifdef OT_S81DV_XFIN_N19
+        d2[6:3] = d2q_n19; d3[6:3] = d3q_n19; d3[2:0] = d3r_n19;
+`endif
 `ifdef OT_S81DV_XFIN_N16
         d4[6:3] = d4q_n16; d5[6:3] = d5q_n16; d5[2:0] = d5r_n16;
 `endif
