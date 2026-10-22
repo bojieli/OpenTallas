@@ -1,0 +1,296 @@
+Violations: 14 max 92
+_109737_/Y net _059750_ loads 45 role combinational_or_macro
+SAP7_75t_R _109735_ (
+    .A1(_059609_),
+    .A2(_059747_),
+    .B(_059748_),
+    .Y(_023842_)
+  );
+  INVx1_ASAP7_75t_R _109736_ (
+    .A(_019967_),
+    .Y(_059749_)
+  );
+  OR4x1_ASAP7_75t_R _109737_ (
+    .A(\u_ot_pr_core.sel_nf[0] ),
+    .B(_059749_),
+    .C(_044142_),
+    .D(_044159_),
+    .Y(_059750_)
+  );
+  BUFx2_ASAP7_75t_R _109738_ (
+    .A(_059750_),
+    .Y(_059751_)
+  );
+  AND2x2_ASAP7_75t_R _109739_ (
+    .A(_000163_),
+    .B(
+_113001_/Y net _062629_ loads 44 role combinational_or_macro
+)
+  );
+  AOI21x1_ASAP7_75t_R _113000_ (
+    .A1(\u_ot_pr_core.g_slot[0].u_record.g_result_pub.g_copy[50].q ),
+    .A2(_010956_),
+    .B(_062628_),
+    .Y(_024206_)
+  );
+  NAND2x1_ASAP7_75t_R _113001_ (
+    .A(_044160_),
+    .B(_044161_),
+    .Y(_062629_)
+  );
+  AND2x2_ASAP7_75t_R _113002_ (
+    .A(_000211_),
+    .B(_000210_),
+    .Y(_062630_)
+  );
+  AND5x1_ASAP7_75t_R _113003_ (
+    .A(_000381_),
+    .B(_000212_),
+    .C(_000380_),
+    
+_123330_/Y net _071587_ loads 64 role combinational_or_macro
+583_),
+    .Y(_071584_)
+  );
+  INVx1_ASAP7_75t_R _123328_ (
+    .A(_071584_),
+    .Y(_071585_)
+  );
+  BUFx2_ASAP7_75t_R _123329_ (
+    .A(_014519_),
+    .Y(_071586_)
+  );
+  OR3x1_ASAP7_75t_R _123330_ (
+    .A(_071580_),
+    .B(_071585_),
+    .C(_071586_),
+    .Y(_071587_)
+  );
+  BUFx2_ASAP7_75t_R _123331_ (
+    .A(_071587_),
+    .Y(_071588_)
+  );
+  AO21x1_ASAP7_75t_R _123332_ (
+    .A1(_006237_),
+    .A2(_071578_),
+    .B(_071588_),
+   
+_123403_/Y net _071659_ loads 92 role combinational_or_macro
+_),
+    .D(_071656_),
+    .Y(_071657_)
+  );
+  AND4x1_ASAP7_75t_R _123402_ (
+    .A(_071636_),
+    .B(_071647_),
+    .C(_071652_),
+    .D(_071657_),
+    .Y(_071658_)
+  );
+  AND2x2_ASAP7_75t_R _123403_ (
+    .A(_071631_),
+    .B(_071658_),
+    .Y(_071659_)
+  );
+  BUFx2_ASAP7_75t_R _123404_ (
+    .A(_071659_),
+    .Y(_071660_)
+  );
+  BUFx2_ASAP7_75t_R _123405_ (
+    .A(_071660_),
+    .Y(_071661_)
+  );
+  AO21x1_ASAP7_75t_R _123406_ (
+    .A
+_126105_/Y net _030251_ loads 65 role combinational_or_macro
+5_),
+    .E(_074102_),
+    .Y(_074103_)
+  );
+  OR4x1_ASAP7_75t_R _126104_ (
+    .A(_074097_),
+    .B(_074099_),
+    .C(_074101_),
+    .D(_074103_),
+    .Y(_074104_)
+  );
+  NOR2x1_ASAP7_75t_R _126105_ (
+    .A(_074088_),
+    .B(_074104_),
+    .Y(_030251_)
+  );
+  AND5x1_ASAP7_75t_R _126106_ (
+    .A(_071676_),
+    .B(_074000_),
+    .C(_074001_),
+    .D(_074074_),
+    .E(_030251_),
+    .Y(_030246_)
+  );
+  NAND2x1_ASAP7_75t_R _126107_ (
+   
+_126109_/Y net _030068_ loads 68 role combinational_or_macro
+  .A(\u_ot_pr_core.rst_cp_svc[102] ),
+    .B(_030246_),
+    .Y(_074105_)
+  );
+  INVx1_ASAP7_75t_R _126108_ (
+    .A(_019300_),
+    .Y(\u_ot_pr_core.rst_cp_svc[99] )
+  );
+  AND2x2_ASAP7_75t_R _126109_ (
+    .A(_019816_),
+    .B(_074074_),
+    .Y(_030068_)
+  );
+  OR4x1_ASAP7_75t_R _126110_ (
+    .A(_010478_),
+    .B(_010479_),
+    .C(_010480_),
+    .D(_010497_),
+    .Y(_074106_)
+  );
+  OR5x1_ASAP7_75t_R _126111_ (
+    .A(_010477_),
+    .B
+_126140_/Y net _030067_ loads 66 role combinational_or_macro
+6_),
+    .E(_074133_),
+    .Y(_074134_)
+  );
+  OR4x1_ASAP7_75t_R _126139_ (
+    .A(_074130_),
+    .B(_074131_),
+    .C(_074132_),
+    .D(_074134_),
+    .Y(_074135_)
+  );
+  NOR2x1_ASAP7_75t_R _126140_ (
+    .A(_074120_),
+    .B(_074135_),
+    .Y(_030067_)
+  );
+  AND5x1_ASAP7_75t_R _126141_ (
+    .A(_071674_),
+    .B(\u_ot_pr_core.rst_cp_svc[99] ),
+    .C(_074000_),
+    .D(_030068_),
+    .E(_030067_),
+    .Y(_074136_)
+  );
+  AOI21x1_ASAP7
+_127118_/Y net _074925_ loads 46 role combinational_or_macro
+_)
+  );
+  NAND2x1_ASAP7_75t_R _127116_ (
+    .A(_005826_),
+    .B(_074915_),
+    .Y(_025976_)
+  );
+  INVx1_ASAP7_75t_R _127117_ (
+    .A(_005825_),
+    .Y(_025977_)
+  );
+  OA21x2_ASAP7_75t_R _127118_ (
+    .A1(_071580_),
+    .A2(_071585_),
+    .B(_074883_),
+    .Y(_074925_)
+  );
+  BUFx2_ASAP7_75t_R _127119_ (
+    .A(_074925_),
+    .Y(_074926_)
+  );
+  AO21x1_ASAP7_75t_R _127120_ (
+    .A1(_071631_),
+    .A2(_071658_),
+    .B(_074926_),
+ 
+_127127_/Y net _074931_ loads 46 role combinational_or_macro
+    .A1(head_descriptor_generation[0]),
+    .A2(_022103_),
+    .B(_074929_),
+    .Y(_025979_)
+  );
+  BUFx2_ASAP7_75t_R _127126_ (
+    .A(_074926_),
+    .Y(_074930_)
+  );
+  AO21x1_ASAP7_75t_R _127127_ (
+    .A1(_074757_),
+    .A2(_074758_),
+    .B(_071586_),
+    .Y(_074931_)
+  );
+  BUFx2_ASAP7_75t_R _127128_ (
+    .A(_074931_),
+    .Y(_074932_)
+  );
+  BUFx2_ASAP7_75t_R _127129_ (
+    .A(_071659_),
+    .Y(_074933_)
+  );
+  NAND2x1_ASAP7_75
+_152344_/Y net _030252_ loads 66 role combinational_or_macro
+[1].u_service.g_q_payload32.g_kreq[3].q )
+  );
+  INVx1_ASAP7_75t_R _152343_ (
+    .A(_019961_),
+    .Y(\u_ot_pr_core.g_slot[1].u_service.g_q_payload32.g_kreq[2].q )
+  );
+  AND2x2_ASAP7_75t_R _152344_ (
+    .A(_074001_),
+    .B(_074074_),
+    .Y(_030252_)
+  );
+  AND3x1_ASAP7_75t_R _152345_ (
+    .A(\u_ot_pr_core.g_qv_pub.g_c[6].s ),
+    .B(\u_ot_pr_core.g_pin_pub.rq_c[25] ),
+    .C(_030252_),
+    .Y(_030248_)
+  );
+  OR3x1_ASAP7_75t_R _15
+_152346_/Y net _041140_ loads 63 role combinational_or_macro
+030252_)
+  );
+  AND3x1_ASAP7_75t_R _152345_ (
+    .A(\u_ot_pr_core.g_qv_pub.g_c[6].s ),
+    .B(\u_ot_pr_core.g_pin_pub.rq_c[25] ),
+    .C(_030252_),
+    .Y(_030248_)
+  );
+  OR3x1_ASAP7_75t_R _152346_ (
+    .A(_071674_),
+    .B(_019303_),
+    .C(_019669_),
+    .Y(_041140_)
+  );
+  INVx1_ASAP7_75t_R _152347_ (
+    .A(_041140_),
+    .Y(_030250_)
+  );
+  AND3x1_ASAP7_75t_R _152348_ (
+    .A(_074462_),
+    .B(\u_ot_pr_core.g_recv.p_qb_v ),
+   
+u_ot_pr_core.emb_k[6]$_DFFE_PN0P_/QN net _000152_ loads 37 role sequential
+/* Generated by Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0) */
+
+(* dynports =  1  *)
+(* keep_hierarchy = "yes" *)
+(* hdlname = "qfd_status_obs_hold_chunk" *)
+module \$paramod\qfd_status_obs_hold_chunk\W=s32'
+u_ot_pr_core.hp_u1[0]$_DFF_PN0_/QN net _000478_ loads 38 role sequential
+/* Generated by Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0) */
+
+(* dynports =  1  *)
+(* keep_hierarchy = "yes" *)
+(* hdlname = "qfd_status_obs_hold_chunk" *)
+module \$paramod\qfd_status_obs_hold_chunk\W=s32'
+u_ot_pr_core.hp_u1[1]$_DFF_PN0_/QN net _000479_ loads 69 role sequential
+/* Generated by Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0) */
+
+(* dynports =  1  *)
+(* keep_hierarchy = "yes" *)
+(* hdlname = "qfd_status_obs_hold_chunk" *)
+module \$paramod\qfd_status_obs_hold_chunk\W=s32'
