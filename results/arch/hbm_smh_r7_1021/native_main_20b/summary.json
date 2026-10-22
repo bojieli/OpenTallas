@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "smh_rp7s_m",
+  "top": "ot_hbm_smh_rp7s_m",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 275292,
+  "max_dynamic_loads": 32,
+  "role_errors": [],
+  "violations": [],
+  "independent_source_contract_audit_required": true,
+  "source_commit": "20b948fab",
+  "archive_sha256": "c60fe54534ad0b337eccdac3a1f43945671abbe3ed26d50d50d68d0152d775e1",
+  "actual_host": "ot-gold1",
+  "gate_root": "/srv/opentallas-scratch/claude/ref_gate/smh_rp7s_m-20261021-212931",
+  "scope": "Native census only. Physical global placement and final clock results pending. No full qualification inferred."
+}
