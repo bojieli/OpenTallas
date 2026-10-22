@@ -993,8 +993,26 @@ module ot_hgi_coll_gq_issue #(
 `else
         wire[12:0]qa_src=rc_qa;
 `endif
+`ifdef OT_GQ_K17
+        // K17 (HBMc/TILES4 10-22, K16a pre-route reg->reg -136 ps: cur_ohc -> row read -> i0 -> 13-b ripple add -> qa[*][12],
+        // 13-14 levels).  k = {i0,2'b00}+W is in [-4,7] (i0 in {0, R, 7ff}), so qa = {src_hi + c - neg, lo} with
+        // lo/c = src[2:0] + k[2:0] and neg = (k < 0).  src_hi +/- 1 come from the row read alone on kept nets, in parallel
+        // with the low add; the row-dependent i0 only steers a 3-way select.  Exact, same edge.
+        wire [12:0] qk = 13'({i0,2'b00}+W);
+        wire        qneg = qk[12];
+        wire [3:0]  qlo = {1'b0, qa_src[2:0]} + {1'b0, qk[2:0]};
+        (* keep = "true" *) wire [9:0] qhi_p1 = qa_src[12:3] + 10'd1;
+        (* keep = "true" *) wire [9:0] qhi_m1 = qa_src[12:3] - 10'd1;
+        wire [9:0]  qhi = (qlo[3] && !qneg) ? qhi_p1 : (!qlo[3] && qneg) ? qhi_m1 : qa_src[12:3];
+        wire [12:0] qa_init = {qhi, qlo[2:0]};
+`ifdef OT_GQ_CHECK_INV
+        always @(posedge clk) if (rn && fire_local && qa_init !== qa_src + qk) $fatal(1, "GQ_K17_QA_FAIL q=%0d", q);
+`endif
+`else
+        wire [12:0] qa_init = qa_src+13'({i0,2'b00}+W);
+`endif
         always @(posedge clk)
-            if(fire_local)qa[q]<=qa_src+13'({i0,2'b00}+W);
+            if(fire_local)qa[q]<=qa_init;
             else if(ev_local)qa[q]<=qa[q]+(qa_r2[q]?13'd8:13'd4);
 `ifdef OT_GQ_N32
         wire[2:0] qb0=qa_src[2:0]+3'({i0[0],2'b00}+W);
@@ -1230,9 +1248,11 @@ module ot_hgi_coll_gq_issue #(
     end
     reg [1:0] p_v; reg [255:0] p_d [0:1];
 `ifdef OT_GQ_K16
+`ifndef OT_GQ_K17
     // K16 (k14r route TT -69 rb_lp_data[12] -> port: p_d[1] also feeds ld_p_d / b2_d, so io_flop_at_pins could not anchor
     // it and the port net ran ~390 ps): rb_lp_data gets its own register (= p_d[1] every edge), anchored at its pins.
     (* keep = "true" *) reg [255:0] rb_pin_d;
+`endif
 `endif
     always @(posedge clk or negedge rn1)
         if (!rn1) p_v <= 2'd0;
@@ -1251,9 +1271,11 @@ module ot_hgi_coll_gq_issue #(
                 p_d[r][32*c +: 32] <= rdw_oh32(pp_rawc[r*8 + c], c) | (aq_q_q[r*256 + 32*c +: 32] & {32{pp_codec[r][c]}}) |
                                       (ex_n[32*c +: 32] & {32{pp_loc[r][c]}}) | (ex_n[256 + 32*c +: 32] & {32{pp_hic[r][c]}});
 `ifdef OT_GQ_K16
+`ifndef OT_GQ_K17
         for (integer c = 0; c < 8; c = c + 1)
             rb_pin_d[32*c +: 32] <= rdw_oh32(pp_rawc[8 + c], c) | (aq_q_q[256 + 32*c +: 32] & {32{pp_codec[1][c]}}) |
                                     (ex_n[32*c +: 32] & {32{pp_loc[1][c]}}) | (ex_n[256 + 32*c +: 32] & {32{pp_hic[1][c]}});
+`endif
 `endif
     end
     // ------------------------------------------------------------------ ring B commands (lp @24, read @25, inject @27, rx @27+2h)
@@ -1307,7 +1329,19 @@ module ot_hgi_coll_gq_issue #(
     always @(posedge clk or negedge rn3) if (!rn3) b2 <= '0; else b2 <= b1;
     always @(posedge clk) b2_d <= b1_d;
     wire [290:0] bo = (MUT == 5) ? b2 : b1;
-`ifdef OT_GQ_K16
+`ifdef OT_GQ_K17
+    // K17 (HBMc/TILES4 10-22): K16's kept rb_pin_d was merged by yosys with p_d[1] (same D): the flop also drove ld_p_d, was
+    // not single-flop, io_flop_at_pins skipped it and K16a/k15b placed it ~400 um from its pins (rb_lp_data -308/-204 ps).
+    // The pin register now lives in its own keep_hierarchy instance (cannot merge), drives only the port, and is anchored
+    // at its pins; its D cone is p_d[1]'s (same value every edge, 0 edges).
+    wire [255:0] rb_pin_n, rb_pin_q;
+    for (genvar c = 0; c < 8; c = c + 1) begin : g_rb_pin_n
+        assign rb_pin_n[32*c +: 32] = rdw_oh32(pp_rawc[8 + c], c) | (aq_q_q[256 + 32*c +: 32] & {32{pp_codec[1][c]}}) |
+                                      (ex_n[32*c +: 32] & {32{pp_loc[1][c]}}) | (ex_n[256 + 32*c +: 32] & {32{pp_hic[1][c]}});
+    end
+    (* keep_hierarchy = "yes" *) ot_hgi_coll_gq_pin_reg #(.W(256)) u_rb_pin(.clk(clk), .d(rb_pin_n), .q(rb_pin_q));
+    wire [255:0] bo_d = (MUT == 5) ? b2_d : rb_pin_q;
+`elsif OT_GQ_K16
     wire [255:0] bo_d = (MUT == 5) ? b2_d : rb_pin_d;
 `else
     wire [255:0] bo_d = (MUT == 5) ? b2_d : b1_d;
@@ -1869,3 +1903,8 @@ module ot_hgi_coll_gq_tln(input wire clk,start,run,last,gt1,output wire[15:0]q);
     assign q=r;
 endmodule
 `endif
+// K17 (HBMc/TILES4 10-22): rb_lp_data pin register in its own hierarchy (no merge with the identical p_d[1] flop)
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_gq_pin_reg #(parameter integer W = 256) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(posedge clk) q <= d;
+endmodule
