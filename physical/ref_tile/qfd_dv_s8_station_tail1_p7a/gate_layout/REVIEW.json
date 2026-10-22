@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_dv_s8_station_tail1_p7a",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T19:47:00-07:00",
+ "gate_commit": "0bdb6326e",
+ "checklist": {
+  "lattice": "5 SRAM 32x64 with channels between them",
+  "std_cell_band": "even std density ~0.5, no hot spots",
+  "pin_spread": "pins on W/N/E faces, spread",
+  "clock_entry": "pin-flop spread 59/57 (p7a), 72/70 (p7b) ps",
+  "shape": "151.2 sq (p7a) / 162 sq (p7b), util 48%/41%, GRT 0, TT +83.6/+71.8"
+ },
+ "notes": "COORD 10-21 19:50 APPROVED tail1 p7a main + p7b fallback (const-zero mul fix 103b505c6, census max 32)",
+ "geometry_sha256": "92e4b45385db7b4c60f0636c567f990b148225726f6c4f0b683bfb0ca897aca3"
+}
