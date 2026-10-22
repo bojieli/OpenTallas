@@ -54,7 +54,7 @@ def cyclic_cells(inputs,drivers):
     return cyclic
 
 
-def bound(data, top, limit=24, clock_ports=('clk',), incremental=False, collect=None):
+def bound(data, top, limit=24, clock_ports=('clk',), incremental=False, collect=None, clone_cyclic='none'):
     m=deepcopy(data['modules'][top])
     original=deepcopy(m['cells'])
     aliases={}
@@ -91,6 +91,18 @@ def bound(data, top, limit=24, clock_ports=('clk',), incremental=False, collect=
     outputs={p:[norm(b) for b in v['bits']] for p,v in m['ports'].items()
              if v['direction']=='output'}
     cyclic=cyclic_cells(inputs,drivers)
+    # SVCATT 10-21 (--clone-cyclic): a clone has the SAME input nets (D, clock, reset) as its original.
+    #   comb : a combinational clone is the same function of the same nets -> equal at every instant.
+    #   reset: + flops with an async set/reset pin (ASAP7 DFFASR*): equal while reset is applied and, sampling the
+    #          same D net on the same edge, equal at every later edge (induction), even inside a feedback loop.
+    #   all  : + plain flops: equal from the first clock edge on (same D net); only the pre-first-edge power-up X differs.
+    def cyclic_ok(c):
+        t=c['type']
+        if clone_cyclic=='none':return False
+        is_ff=t.startswith(('DFF','SDF','DHL','DLL','ICG'))
+        if not is_ff:return clone_cyclic in ('comb','reset','all')
+        if t.startswith('DFFASR'):return clone_cyclic in ('reset','all')
+        return clone_cyclic=='all'
     nextbit=max([b for c in cells.values() for bs in c['connections'].values()
                  for b in bs if isinstance(b,int)]+[1])+1
     clock={b for p in clock_ports for b in m['ports'].get(p,{}).get('bits',[])}
@@ -147,7 +159,7 @@ def bound(data, top, limit=24, clock_ports=('clk',), incremental=False, collect=
                 net=b,ports=ports,loads=len(sinks),limit=limit,clones_so_far=clones,
                 cells_so_far=len(cells),original_cells=len(original))); continue
         src=drivers[b];cell=cells[src]
-        if origins[src] in cyclic:
+        if origins[src] in cyclic and not cyclic_ok(cell):
             _front(dict(reason='feedback state/logic needs explicit initialization proof',
                 cell=src,type=cell['type'],net=b,loads=len(sinks),limit=limit,
                 cyclic_cells=len(cyclic),clones_so_far=clones,cells_so_far=len(cells),
@@ -247,6 +259,7 @@ def main():
     a.add_argument('--clock-port',action='append',default=['clk'])
     a.add_argument('--incremental',action='store_true',help='update fanout worklist instead of rescanning every cell')
     a.add_argument('--budget-only',action='store_true',help='report resource/frontier only, emit no RTL')
+    a.add_argument('--clone-cyclic',default='none',choices=['none','comb','reset','all'])
     a.add_argument('--collect-frontier',action='store_true',help='SVCATT: skip and list every frontier net (implies --incremental, budget only)')
     args=a.parse_args()
     raw=Path(args.mapped_json).read_bytes();d=json.loads(raw)
@@ -257,7 +270,7 @@ def main():
             for k,bb in enumerate(nd['bits']):
                 if isinstance(bb,int):names.setdefault(bb,[]).append('%s[%d]'%(nm,k) if len(nd['bits'])>1 else nm)
         col=dict(skip=set(),rows=[],names=names)
-        m,c,i,o,origins,n=bound(d,args.top,args.limit,args.clock_port,incremental=True,collect=col)
+        m,c,i,o,origins,n=bound(d,args.top,args.limit,args.clock_port,incremental=True,collect=col,clone_cyclic=args.clone_cyclic)
         for r in col['rows']:
             r['names']=names.get(r['net'],[])[:4]
         rep=dict(status='FRONTIER' if col['rows'] else 'BOUNDED',clones=n,original_cells=len(m['cells']),
@@ -268,7 +281,7 @@ def main():
             Path(args.out).write_text(emit(m,c,i,o,args.name))
         return
     try:
-        m,c,i,o,origins,n=bound(d,args.top,args.limit,args.clock_port,incremental=args.incremental)
+        m,c,i,o,origins,n=bound(d,args.top,args.limit,args.clock_port,incremental=args.incremental,clone_cyclic=args.clone_cyclic)
     except ReplicationFrontier as e:
         Path(args.out+'.blocked.json').write_text(json.dumps(e.report,indent=2)+'\n')
         print('SVC7_GRAPH BLOCKED '+json.dumps(e.report))

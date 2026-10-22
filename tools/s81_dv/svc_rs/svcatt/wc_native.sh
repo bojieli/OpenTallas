@@ -1,10 +1,10 @@
 #!/bin/bash
 # whole-core native: wc_native.sh OUTNAME TOP "DEFINES" [EXTRA_CHPARAM]
 set -e
-R=/srv/opentallas-scratch/claude/svcatt-1021; S=$R/src; O=$R/$1; T=$2; DEF="$3"
+R=/srv/opentallas-scratch/claude/svcatt-1021; S=$R/src; O=$R/$1; T=$2; DEF="$3"; CHP="${4:--chparam MUT 0 -chparam DIE_ID 0 -chparam ST 0 -chparam SRAM_MACRO 1 -chparam NTP 1 -chparam PMEM 1 -chparam QMEM_SRAM 0}"
 LIB=/srv/opentallas-scratch/claude/elemsvc-g4-1021/out_norst/map/lib
 mkdir -p $O
-F="/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv /src/rtl/hdc/v41x/ot_hdc_v41x_kreg.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_fp32_add_lat.sv /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/hdc/ot_hdc_fp32_f12.sv /src/rtl/hdc/v41x/ot_dsrom_su_add6.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv /src/rtl/hdc/v41x/ot_hdc_v41x_merge_ring_sram.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv /src/rtl/hdc/v41x/ot_hdc_v41x_stagepick_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_smj_payload_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_pword_pick_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_offset144_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/ot_s81svc_reset132_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/ot_s81svc_reset9_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att_reset9.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv"
+F="/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv /src/rtl/hdc/v41x/ot_hdc_v41x_kreg.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/hdc/ot_hdc_fp32_add_lat.sv /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/hdc/ot_hdc_fp32_f12.sv /src/rtl/hdc/v41x/ot_dsrom_su_add6.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv /src/rtl/hdc/v41x/ot_hdc_v41x_merge_ring_sram.sv /src/rtl/hdc/v41x/ot_hdc_v41x_attn_tr_sram.sv /src/rtl/hdc/v41x/ot_hdc_v41x_stagepick_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_smj_payload_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_pword_pick_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_offset144_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/ot_s81svc_reset132_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/ot_s81svc_reset9_n32.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att_reset9.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_glue.sv /src/rtl/dsrom_sys/s81_dv/svc_rs/attw/lp/dsdv_svc_attw_n1_f_lp.sv /src/rtl/common/landed_parent/ot_pl_land.sv"
 case "$DEF" in *OT_F12_ADD5_N32*) NL="read_verilog /src/rtl/hdc/v41x/ot_hdc_fp32_add_f12_l5x_n32.v";; *) NL="";; esac
 cat > $O/map.ys <<YS
 read_verilog -lib /src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v
@@ -17,7 +17,7 @@ read_liberty -lib /tmp/lib/INVBUF.lib
 read_liberty -lib /tmp/lib/SEQ.lib
 $NL
 read_verilog -defer -sv -DSYNTHESIS $DEF -I/src/rtl/dsrom_sys/s81_dv/svc_rs $F
-hierarchy -check -top $T -chparam MUT 0 -chparam DIE_ID 0 -chparam ST 0 -chparam SRAM_MACRO 1 -chparam NTP 1 -chparam PMEM 1 -chparam QMEM_SRAM 0
+hierarchy -check -top $T $CHP
 tcl /src/physical/common_flow/ot_keep_regs.tcl
 synth -top $T -flatten -noshare
 dfflibmap -liberty /tmp/lib/SEQ.lib
