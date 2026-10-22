@@ -19,7 +19,8 @@ Path(sys.argv[1]).write_text('\n'.join(dict.fromkeys(f))+'\n')
 PY
 mapfile -t F < "$OUT/files.txt"; sha256sum "${F[@]}" > "$OUT/sources.sha256"
 DEFS="-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E"
-for c in "0 0" "1 0" "2 0" "0 1"; do set -- $c; t=m$1_l$2
+# MULP_CASES (env, MU_LP_MUT:LPMUT words) restricts the cases, e.g. MULP_CASES=1:0 for an expect=fail kit bench
+for c in ${MULP_CASES:-0:0 1:0 2:0 0:1}; do set -- ${c%:*} ${c#*:}; t=m$1_l$2
   ${VERILATOR:-verilator} --binary --timing -j ${VL_JOBS:-4} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -Wno-TIMESCALEMOD -O1 \
     $DEFS --top-module tb_dsdv_seq_host_mu_lp -GMU_LP_MUT=$1 -GLPMUT=$2 "${F[@]}" -Mdir "$OUT/obj_$t" > "$OUT/build_$t.log" 2>&1 \
     && "$OUT/obj_$t/Vtb_dsdv_seq_host_mu_lp" > "$OUT/run_$t.log" 2>&1
