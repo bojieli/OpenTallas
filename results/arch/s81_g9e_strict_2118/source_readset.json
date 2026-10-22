@@ -91,14 +91,6 @@
       "sha256": "6761a57f2ed4239b9eb8a72d1757d59630bbcacc1eba0ead84835ad487cd33d1"
     },
     {
-      "path": "tools/die_repeaters/fclk_audit.tcl",
-      "sha256": "ad1676f3096d13dbeb13619e764d5a1d62c8934bea4a4d01d82c751996b085fa"
-    },
-    {
-      "path": "tools/die_repeaters/step.py",
-      "sha256": "c3e7a095bd59d11a80ff4e3e308a8c9a3782d848d353ed72d3900c2ac8966ba0"
-    },
-    {
       "path": "tools/s81_dv/dv_bind.py",
       "sha256": "fccde35a0d3ff7770d55a81873e07217f1ed1c85967dd9206aecf0f2236b0100"
     },
@@ -150,5 +142,6 @@
       "path": "tools/s81_dv/test_port_clock_bind.py",
       "sha256": "af617ad19eb095be4e0551c2810453b18834e44bc3a18087753ef5fa7e69f8e5"
     }
-  ]
+  ],
+  "shared_physical_helpers": "Excluded from publication; immutable fleet runs retain their original pinned source."
 }

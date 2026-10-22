@@ -200,9 +200,7 @@ proc ot_die_rep_fclk_equalize {prefix globs bufs} {
     # Only a complete declared payload can be padded by equalize_data below.
     # Move its clock toward the deepest bit first, then pad shallow bits.
     # Generic pairing retains the original wide-interval refusal.
-    # same_source hops (a station's own launch: fclk and data leave one instance) can be padded on the data side
-    # too (G9c 10-21: 9 l3 frame hops fclk 13 vs data 11..12 were refused only for lacking a declared contract).
-    set payload_can_equalize [expr {[dict get $r pairing] in {data_port_contract same_source}}]
+    set payload_can_equalize [expr {[dict get $r pairing] eq "data_port_contract"}]
     set n [ot_die_rep_fclk_eq_plan [dict get $r fclk_repeaters] [dict get $r data_min] [dict get $r data_max] $payload_can_equalize]
     if {$n < 0} { incr unfix; puts "OT_DIE_REP_FCLK_EQ unfixable [dict get $r fclk_net] -> [dict get $r capture]: fclk [dict get $r fclk_repeaters] data [dict get $r data_min]..[dict get $r data_max]"; continue }
     if {$n == 0} { continue }
@@ -264,28 +262,16 @@ proc ot_die_rep_fclk_equalize_data {prefix globs bufs} {
   while {[gets $f line] >= 0} {
     set r [dict create]; foreach c $cols v [split $line "\t"] { dict set r $c $v }
     if {[dict get $r broadcast] ne "0" || [dict get $r mismatch] ne "1"} { continue }
-    set how [dict get $r pairing]
-    if {$how ni {data_port_contract same_source}} { incr unfix; continue }
+    if {[dict get $r pairing] ne "data_port_contract"} { incr unfix; continue }
     set cap [$blk findInst [dict get $r capture]]
     set cm [[$cap getMaster] getName]
-    if {$how eq "data_port_contract"} {
-      if {![info exists ot_die_rep_fclk_data_ports] || ![dict exists $ot_die_rep_fclk_data_ports $cm]} { incr unfix; continue }
-      lassign [dict get $ot_die_rep_fclk_data_ports $cm] pattern expected
-    } else {
-      # same_source: the audit's data bits are exactly the capture inputs traced back to the fclk driver instance
-      # through another output pin than the forwarded clock's own (the fclk pin is excluded by its source pin).
-      set pattern *
-      set fnet [$blk findNet [dict get $r fclk_net]]
-      if {$fnet eq "NULL"} { incr unfix; continue }
-      set fpin ""; foreach x [$fnet getITerms] { if {[$x getIoType] eq "OUTPUT"} { set fpin [[$x getMTerm] getName] } }
-      if {$fpin eq ""} { incr unfix; continue }
-    }
+    if {![info exists ot_die_rep_fclk_data_ports] || ![dict exists $ot_die_rep_fclk_data_ports $cm]} { incr unfix; continue }
+    lassign [dict get $ot_die_rep_fclk_data_ports $cm] pattern expected
     foreach it [$cap getITerms] {
       if {[$it getIoType] ne "INPUT" || ![string match $pattern [[$it getMTerm] getName]]} { continue }
       if {[$it getNet] eq "NULL" || [[$it getNet] isSpecial]} { continue }
       lassign [ot_die_rep_fclk_back $it $bufs] src depth pin
       if {$src eq "" || $pin eq ""} { continue }
-      if {$how eq "same_source" && ($src ne [dict get $r fclk_src] || $pin eq $fpin)} { continue }
       set sm [[[$blk findInst $src] getMaster] getName]
       if {($sm eq "TIEHIx1_ASAP7_75t_R" && $pin eq "H") || ($sm eq "TIELOx1_ASAP7_75t_R" && $pin eq "L")} { continue }
       set n [ot_die_rep_fclk_data_eq_plan [dict get $r fclk_repeaters] $depth]
