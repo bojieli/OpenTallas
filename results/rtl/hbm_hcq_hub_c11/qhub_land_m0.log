@@ -1,0 +1,10 @@
+QHUB_LAND activity ps_v=13064 bd_v=13253 xb_d_changes=19910 wc_changes=6762 gathered_changes=19910
+QHUB_LAND PASS LAND=7 LMUT=0 DF=1 DPS=3 DG=1 checks=19910
+Verilator 5.050 2026-07-01 rev v5.050
+--- run.log
+QHUB_LAND activity ps_v=13064 bd_v=13253 xb_d_changes=19910 wc_changes=6762 gathered_changes=19910
+QHUB_LAND PASS LAND=7 LMUT=0 DF=1 DPS=3 DG=1 checks=19910
+- rtl/test/tb_hbm_hc_qhub_land.sv:148: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 3.020 s; speed 13.245 us/s
+- Verilator: cpu 3.019 s on 1 threads; allocated 21 MB

@@ -29,7 +29,18 @@ module ot_hbm_hc_qhub_static #(
     // their register mass, compensated by the die), every adder the native-fanout LAT-7 graph, and the hc_<q> client
     // FAN32 fixes of ot_hbm_hc_q_static SAFE 2.  clk_t[3:0] is unused for SAFE < 2 (the die ties it to the HC clock).
     parameter integer SAFE = 0,
-    parameter integer TARGET_SCAN_BOUNDARY = 0
+    parameter integer TARGET_SCAN_BOUNDARY = 0,
+    // HBMc/QHUB4 10-22 (kits hbm_hcq_hub_c11a/b, landed-regions standard; default 0 = unchanged bit for bit):
+    //   bit 0  landed slice -> centre crossings (ot_hbm_hc_qcen_static LAND bit 0): ps_v / ps / ps_f +2 edges;
+    //   bit 1  bank-face output registers: xb_v*, xb_beat*, xb_d0..7 here and bd_* / wc_* in the centre leave one register
+    //          AT their face pins (c10: the x_wave beat register sits between lg_rr (N) and four faces, post-GRT xb_d7
+    //          -1,351 ps): the whole bank ring +1 edge, so ps_* +1;
+    //   bit 2  gathered-mix pin stage: gathered_mix_v/row/pos/data and gather_done leave one more register at their
+    //          pins (c10: lg_rr pin register (N) -> 8:1 return mux -> gathered_mix_data pin flop (S), reg->reg -736 ps):
+    //          +1 edge on the gathered-mix stream (the root accepts rows by their row/pos tags inside its gm window).
+    //   Root QCHX + 2 * bit0 + bit1 (ring bench HC_QSI = 1 + that).
+    parameter integer LAND = 0,
+    parameter integer LMUT = 0          // bench only: centre MUT (7 = LAND bit 0 valid hop skipped)
 )(
     input  wire           clk, rst_n,
     input  wire [3:0]     clk_t,                 // SAFE 2: clock entries of the 4 hard tree slices
@@ -67,6 +78,7 @@ module ot_hbm_hc_qhub_static #(
     output wire [255:0]   xb_d0, xb_d1, xb_d2, xb_d3, xb_d4, xb_d5, xb_d6, xb_d7
 );
     wire xv; wire [9:0] xw; wire [2047:0] xd; wire [1:0] xbt; wire [7:0] rb; wire [4:0] xfv; wire [9:0] xfb;
+    wire gm_v_i, gd_i; wire [4:0] gm_r_i; wire [2:0] gm_p_i; wire [31:0] gm_d_i;
     assign rstb_w = rb[0]; assign rstb_n = rb[3:1]; assign rstb_e = rb[4]; assign rstb_s = rb[7:5];
     ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .GATHER_PERIOD(GATHER_PERIOD), .DONE_LAT(DONE_LAT), .XW_BEATS(4), .SAFE(SAFE), .TARGET_SCAN_BOUNDARY(TARGET_SCAN_BOUNDARY)) u_q (
         .clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
@@ -74,23 +86,34 @@ module ot_hbm_hc_qhub_static #(
         .launch_v(launch_v), .configured(configured), .lg_rq(lg_rq), .lg_wq(lg_wq), .lg_rr(lg_rr), .lg_w_done(lg_w_done),
         .x_wave_v(xv), .x_wave_word(xw), .x_wave(xd), .x_wave_beat(xbt), .x_face_v(xfv), .x_face_beat(xfb),
         .residual_done(residual_done),
-        .gathered_mix_v(gathered_mix_v), .gathered_mix_row(gathered_mix_row), .gathered_mix_pos(gathered_mix_pos),
-        .gathered_mix_data(gathered_mix_data), .gather_done(gather_done), .result_v(result_v),
+        .gathered_mix_v(gm_v_i), .gathered_mix_row(gm_r_i), .gathered_mix_pos(gm_p_i),
+        .gathered_mix_data(gm_d_i), .gather_done(gd_i), .result_v(result_v),
         .result_position(result_position), .result(result), .program_active(program_active),
         .program_done(program_done), .fault(hcq_fault));
     wire cxv = (SAFE != 0) ? xfv[4] : xv; wire [1:0] cxb = (SAFE != 0) ? xfb[9:8] : xbt;
-    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .SAFE(SAFE)) u_cen (
+    if ((LAND & 4) != 0) begin : g_gmf    // LAND bit 2: gathered-mix pin stage (no reset: loaded from reset registers)
+        (* keep = "true", dont_touch = "true" *) reg gm_v_q, gd_q;
+        (* keep = "true", dont_touch = "true" *) reg [4:0] gm_r_q;
+        (* keep = "true", dont_touch = "true" *) reg [2:0] gm_p_q;
+        (* keep = "true", dont_touch = "true" *) reg [31:0] gm_d_q;
+        always @(posedge clk) begin gm_v_q <= gm_v_i; gd_q <= gd_i; gm_r_q <= gm_r_i; gm_p_q <= gm_p_i; gm_d_q <= gm_d_i; end
+        assign gathered_mix_v = gm_v_q; assign gather_done = gd_q; assign gathered_mix_row = gm_r_q;
+        assign gathered_mix_pos = gm_p_q; assign gathered_mix_data = gm_d_q;
+    end else begin : g_gmd
+        assign gathered_mix_v = gm_v_i; assign gather_done = gd_i; assign gathered_mix_row = gm_r_i;
+        assign gathered_mix_pos = gm_p_i; assign gathered_mix_data = gm_d_i;
+    end
+    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .MUT(LMUT), .SAFE(SAFE), .LAND(LAND & 3)) u_cen (
         .clk(clk), .clk_t(clk_t), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
         .x_v(cxv), .x_beat(cxb), .x_word(xw), .s_i(s_i), .wfault_i({wf_s[2:0], wf_e, wf_n[2:0], wf_w}), .rst_b(rb),
         .bd_v(bd_v), .bd_ss(bd_ss), .bd_nv(bd_nv), .bd_wa(bd_wa), .bd_xa(bd_xa),
         .wc_w(wc_w), .wc_n(wc_n), .wc_e(wc_e), .wc_s(wc_s), .ps_v(ps_v), .ps(ps), .ps_f(ps_f), .fault(eng_fault));
+    wire [3:0] bv_i; wire [7:0] bb_i;    // per-face beat control {S, E, N, W}
     if (SAFE != 0) begin : g_face
-        assign xb_v = xfv[0]; assign xb_v_n = xfv[1]; assign xb_v_e = xfv[2]; assign xb_v_s = xfv[3];
-        assign xb_beat = xfb[1:0]; assign xb_beat_n = xfb[3:2]; assign xb_beat_e = xfb[5:4]; assign xb_beat_s = xfb[7:6];
+        assign bv_i = xfv[3:0]; assign bb_i = xfb[7:0];
     end else begin : g_one
-        assign xb_v = xv; assign xb_v_n = xv; assign xb_v_e = xv; assign xb_v_s = xv;
-        assign xb_beat = xbt; assign xb_beat_n = xbt; assign xb_beat_e = xbt; assign xb_beat_s = xbt;
+        assign bv_i = {4{xv}}; assign bb_i = {4{xbt}};
     end
     wire [8*256-1:0] xs;
     for (genvar k = 0; k < 8; k = k + 1) begin : g_xs
@@ -98,6 +121,18 @@ module ot_hbm_hc_qhub_static #(
             assign xs[k*256 + i*32 +: 32] = xd[i*256 + k*32 +: 32];
         end
     end
-    assign {xb_d7, xb_d6, xb_d5, xb_d4, xb_d3, xb_d2, xb_d1, xb_d0} = xs;
+    wire [3:0] bv_o; wire [7:0] bb_o; wire [8*256-1:0] xs_o;
+    if ((LAND & 2) != 0) begin : g_xbf  // LAND bit 1: bank-face beat registers at the pins (no reset: loaded from reset regs)
+        (* keep = "true", dont_touch = "true" *) reg [3:0] fv_q;
+        (* keep = "true", dont_touch = "true" *) reg [7:0] fb_q;
+        (* keep = "true", dont_touch = "true" *) reg [8*256-1:0] fd_q;
+        always @(posedge clk) begin fv_q <= bv_i; fb_q <= bb_i; fd_q <= xs; end
+        assign bv_o = fv_q; assign bb_o = fb_q; assign xs_o = fd_q;
+    end else begin : g_xbd
+        assign bv_o = bv_i; assign bb_o = bb_i; assign xs_o = xs;
+    end
+    assign xb_v = bv_o[0]; assign xb_v_n = bv_o[1]; assign xb_v_e = bv_o[2]; assign xb_v_s = bv_o[3];
+    assign xb_beat = bb_o[1:0]; assign xb_beat_n = bb_o[3:2]; assign xb_beat_e = bb_o[5:4]; assign xb_beat_s = bb_o[7:6];
+    assign {xb_d7, xb_d6, xb_d5, xb_d4, xb_d3, xb_d2, xb_d1, xb_d0} = xs_o;
 endmodule
 `default_nettype wire

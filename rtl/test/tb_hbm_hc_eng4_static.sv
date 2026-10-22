@@ -67,6 +67,11 @@ module tb_hbm_hc_eng4_static;
 `ifndef HC_QSAFE
 `define HC_QSAFE `HC_QSI
 `endif
+    // HBMc/QHUB4 10-22: +define+HC_QLAND=<n> = the hub's landed form (ot_hbm_hc_qeng_static LAND): bit 0 landed slice
+    // crossings (+2), bit 1 bank-face registers (+1); set HC_QSI = 1 + 2 * bit0 + bit1 with it.  Default 0 = unchanged.
+`ifndef HC_QLAND
+`define HC_QLAND 0
+`endif
     wire [3:0] qd_v, qd_ss, qi_v, qi_kind, qps_v, qps_f, q_fault; wire [27:0] qd_nv; wire [39:0] qd_wa, qd_xa, qi_word;
     wire [7:0] qi_slot; wire [19:0] qi_lo, qi_w; wire [47:0] qi_cnt; wire [127:0] qps;
     ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .QCHX(11 * `HC_CPR + `HC_QSI)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
@@ -80,7 +85,7 @@ module tb_hbm_hc_eng4_static;
         .program_active(pa), .program_done(pd), .fault(fault));
     genvar gqi;
     for (gqi = 0; gqi < 4; gqi = gqi + 1) begin : g_q
-        ot_hbm_hc_qeng_static #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY), .CPR(`HC_CPR), .SAFE(`HC_QSAFE)) u_q (
+        ot_hbm_hc_qeng_static #(.MUT((MUTP == 2) ? 0 : (gqi == 0 || MUTP == 3) ? MUTP : 0), .XW_BEATS(XWB), .DRLY(`HC_DRLY), .XRLY(`HC_XRLY), .CPR(`HC_CPR), .SAFE(`HC_QSAFE), .LAND(`HC_QLAND)) u_q (
             .clk(clk), .rst_n(rst_n),
             .d_v(qd_v[gqi]), .d_ss(qd_ss[gqi]), .d_nv(qd_nv[gqi*7 +: 7]), .d_wa(qd_wa[gqi*10 +: 10]), .d_xa(qd_xa[gqi*10 +: 10]),
             .i_v(qi_v[gqi]), .i_kind(qi_kind[gqi]), .i_slot(qi_slot[gqi*2 +: 2]), .i_lo(qi_lo[gqi*5 +: 5]),

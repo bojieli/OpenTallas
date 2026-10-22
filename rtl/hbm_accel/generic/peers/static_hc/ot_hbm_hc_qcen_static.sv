@@ -30,13 +30,27 @@
 //   fanout LAT-7 graph (ot_hdc_fp32_add_lat_fan32 SAFE_DIST 1, SAT-equal to the LAT-7 DRST-0 adder).  ps_f ORs the
 //   slices' node valid/err output registers on the same edge as SAFE 1.  The lane-fault bit s_i[2048] keeps its glue pin
 //   register.  clk_t is unused for SAFE < 2.
+// LAND (HBMc/QHUB4 10-22, kit hbm_hcq_hub_c11a/b; default 0 = unchanged bit for bit; landed-regions standard):
+//   bit 0 (SAFE 2 only) LANDED slice crossings: every slice output (level-4 y, the 15 node valids nv_o, the 30 err bits
+//         e_o) is captured at the centre entry by a landing register under the CENTRE root with NO logic before it, then
+//         one registered hop (also centre root), then the level-5 adders / the ps_f OR.  The c10 gates timed the slice
+//         y -> level-5 adder logic and nv_o -> ps_f OR as cross-root paths with logic (ot_entry_3/4 -> ot_entry_0
+//         -455 / -447 ps).  +2 edges on the subtree (ps_v / ps / ps_f; the lane-fault pipe lfd grows by 2 with it).
+//         The slice leaf valid v_i leaves a per-slice KEPT copy loaded from vl[VD-3] (= vl[VD-2] on every edge after the
+//         first reset edge): one centre flop per slice pin instead of one vl bit fanned to 4 slices (0 edges).
+//   bit 1 BANK-FACE registers: bd_* and wc_* leave one more register at their face (the xb_* bank beats get the same
+//         register in ot_hbm_hc_qhub_static / ot_hbm_hc_qeng_static), so the whole bank ring runs +1 edge; the subtree
+//         leaf valid follows the registered bd_v, so ps_* move +1 too.
+//   Root: QCHX + 2 * bit0 + bit1 (bench HC_QSI = 1 + that).
+// MUT 7 (bench, LAND bit 0): the slice node valids skip the hop (valid one edge ahead of the landed sums): must FAIL.
 module ot_hbm_hc_qcen_static #(
     parameter integer K    = 20480,
     parameter integer DRLY = 1,
     parameter integer TLA  = 7,
     parameter integer CHX  = 0,     // HH-9 10-19: extra chain edges (bank chain pin registers, ot_hbm_hc_qeng_static CPR)
     parameter integer MUT  = 0,
-    parameter integer SAFE = 0
+    parameter integer SAFE = 0,
+    parameter integer LAND = 0
 )(
     input  wire           clk, rst_n,
     input  wire [3:0]     clk_t,                     // SAFE 2: clock entries of the 4 hard tree slices
@@ -56,6 +70,8 @@ module ot_hbm_hc_qcen_static #(
     localparam integer LM = 8, LA = 7, SOR = 1, ML = 2, NVW = 7, LT = 6;
     localparam integer SB = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR;
     initial if (K % 2048 != 0 || R > 16 || WPRQ > 32) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
+    localparam integer LS = ((LAND & 1) != 0) ? 1 : 0, LF = ((LAND & 2) != 0) ? 1 : 0;
+    initial if (LS != 0 && SAFE < 2) $fatal(1, "LAND bit 0 lands the SAFE 2 hard-slice crossings: SAFE 2 only");
 
     localparam integer RCN = 32;
     wire [8:0] rn; wire rc;
@@ -188,10 +204,17 @@ module ot_hbm_hc_qcen_static #(
             for (integer f = 0; f < 4; f = f + 1) c_a[f] <= ik_c[f] ? dwaddr : dxaddr;
         end
     end
-    assign wc_w = {c_wv[0], c_xv[0], c_j[0], c_a[0]};
-    assign wc_n = {c_wv[1], c_xv[1], c_j[1], c_a[1]};
-    assign wc_e = {c_wv[2], c_xv[2], c_j[2], c_a[2]};
-    assign wc_s = {c_wv[3], c_xv[3], c_j[3], c_a[3]};
+    wire [4*13-1:0] wc_i = {c_wv[3], c_xv[3], c_j[3], c_a[3], c_wv[2], c_xv[2], c_j[2], c_a[2],
+                            c_wv[1], c_xv[1], c_j[1], c_a[1], c_wv[0], c_xv[0], c_j[0], c_a[0]};
+    wire [4*13-1:0] wc_o;
+    if (LF != 0) begin : g_wcf           // LAND bit 1: bank-face register (no reset: loaded from reset registers)
+        (* keep = "true", dont_touch = "true" *) reg [4*13-1:0] wcf;
+        always @(posedge clk) wcf <= wc_i;
+        assign wc_o = wcf;
+    end else begin : g_wcd
+        assign wc_o = wc_i;
+    end
+    assign {wc_s, wc_e, wc_n, wc_w} = wc_o;
 
     // descriptor relay to bank 0
     localparam integer DW = 2 + NVW + 2 * AW;
@@ -201,7 +224,13 @@ module ot_hbm_hc_qcen_static #(
         dr[0] <= d_in;
         for (integer i = 1; i < DRLY; i = i + 1) dr[i] <= dr[i-1];
     end
-    assign {bd_v, bd_ss, bd_nv, bd_wa, bd_xa} = dr[DRLY-1];
+    if (LF != 0) begin : g_bdf          // LAND bit 1: bank-face register after the relay (the subtree valid follows bd_v)
+        (* keep = "true", dont_touch = "true" *) reg [DW-1:0] bdf;
+        always @(posedge clk) bdf <= dr[DRLY-1];
+        assign {bd_v, bd_ss, bd_nv, bd_wa, bd_xa} = bdf;
+    end else begin : g_bdd
+        assign {bd_v, bd_ss, bd_nv, bd_wa, bd_xa} = dr[DRLY-1];
+    end
 
     localparam integer SID = (SAFE != 0 && MUT != 6) ? 1 : 0;   // MUT 6: landing without the valid delay
     // 6-level subtree over the chunk sums of the task whose valid entered bank 0 SB + DRLY (+ SID) edges ago
@@ -243,30 +272,50 @@ module ot_hbm_hc_qcen_static #(
         end
     end else begin : g_hard
         // SAFE 2: levels 1..4 in the 4 hard slices, levels 5..6 here (node numbering as g_flat)
-        initial if (TLA != 7 || VD < 2) $fatal(1, "SAFE 2: TLA 7 (native-fanout adder graph) and VD >= 2");
+        initial if (TLA != 7 || VD < 2 + LS) $fatal(1, "SAFE 2: TLA 7 (native-fanout adder graph) and VD >= 2 (LAND bit 0: 3)");
         reg lf_q; always @(posedge clk) lf_q <= s_i[W*32];
         assign s_lf = lf_q;
         wire [4*32-1:0] ty; wire [3:0] tv;
         for (genvar c = 0; c < 4; c = c + 1) begin : g_qt
             wire [14:0] snv; wire [29:0] se;
+            wire vti;                              // slice leaf valid (vl[VD-2] timing)
+            wire [31:0] tyl; wire [14:0] snl; wire [29:0] sel;   // slice outputs as the centre logic sees them
+            if (LS != 0) begin : g_land
+                // LAND bit 0: per-slice kept leaf-valid copy (same value as vl[VD-2]) and the landed crossing:
+                // slice pin -> landing register (centre root, no logic) -> hop register -> level-5 adders / ps_f OR
+                (* keep = "true", dont_touch = "true" *) reg vc;
+                (* keep = "true", dont_touch = "true" *) reg [31:0] y_l, y_h;
+                (* keep = "true", dont_touch = "true" *) reg [14:0] n_l, n_h;
+                (* keep = "true", dont_touch = "true" *) reg [29:0] e_l, e_h;
+                always @(posedge clk) begin
+                    vc <= vl[VD-3];
+                    y_l <= ty[c*32 +: 32]; n_l <= snv; e_l <= se;
+                    y_h <= y_l; n_h <= n_l; e_h <= e_l;
+                end
+                assign vti = vc;
+                assign tyl = y_h; assign snl = (MUT == 7) ? n_l : n_h; assign sel = e_h;
+            end else begin : g_dir
+                assign vti = vl[VD-2];
+                assign tyl = ty[c*32 +: 32]; assign snl = snv; assign sel = se;
+            end
             // hard child: synthesis (the hub kit, hard_define SYNTHESIS) binds the hardened view with NO overrides
             // (defaults TLA 7 / MUT 0 = the closed tree16 config; TLA 7 is asserted above); simulation keeps the mutant knob.
 `ifndef SYNTHESIS
             ot_hbm_hc_qtree16_static #(.TLA(TLA), .MUT((MUT == 4) ? 4 : 0)) u_t (.clk(clk_t[c]), .rst_n(rcn_t[c]),
-                .v_i(vl[VD-2]), .s_in(s_i[c*512 +: 512]), .y(ty[c*32 +: 32]), .v(tv[c]), .nv_o(snv), .e_o(se));
+                .v_i(vti), .s_in(s_i[c*512 +: 512]), .y(ty[c*32 +: 32]), .v(tv[c]), .nv_o(snv), .e_o(se));
 `else
             ot_hbm_hc_qtree16_static u_t (.clk(clk_t[c]), .rst_n(rcn_t[c]),
-                .v_i(vl[VD-2]), .s_in(s_i[c*512 +: 512]), .y(ty[c*32 +: 32]), .v(tv[c]), .nv_o(snv), .e_o(se));
+                .v_i(vti), .s_in(s_i[c*512 +: 512]), .y(ty[c*32 +: 32]), .v(tv[c]), .nv_o(snv), .e_o(se));
 `endif
             // slice node j (level l = 1..4) = centre node OFF(l) + (N(l) * c) + (j - SOFF(l))
             for (genvar j = 0; j < 15; j = j + 1) begin : g_m
                 localparam integer L = (j < 8) ? 1 : (j < 12) ? 2 : (j < 14) ? 3 : 4;
                 localparam integer SOFF = 16 - (32 >> L), N = 64 >> L, OFF = 64 - (128 >> L);
                 localparam integer G = OFF + (N / 4) * c + (j - SOFF);
-                assign nv[G] = snv[j];
-                assign ne[G] = snv[j] && (|se[j*2 +: 2]);
+                assign nv[G] = snl[j];
+                assign ne[G] = snl[j] && (|sel[j*2 +: 2]);
                 if (L == 4) begin : g_top
-                    assign nd[G*32 +: 32] = ty[c*32 +: 32];
+                    assign nd[G*32 +: 32] = tyl;
                 end else begin : g_in
                     assign nd[G*32 +: 32] = 32'd0;          // internal slice node: its sum stays in the slice
                 end
@@ -284,13 +333,14 @@ module ot_hbm_hc_qcen_static #(
         end
     end
     localparam integer RT = 62;
-    reg [LT*TLA-1:0] lfd;
-    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_lf && leaf_v};
+    localparam integer LFD = LT * TLA + 2 * LS;               // LAND bit 0: the lane-fault pipe follows the landed subtree
+    reg [LFD-1:0] lfd;
+    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LFD-2:0], s_lf && leaf_v};
     always @(posedge clk or negedge rc) begin
         if (!rc) begin ps_v <= 1'b0; ps_f <= 1'b0; fault <= 1'b0; end
         else begin
             ps_v <= nv[RT];
-            ps_f <= lfd[LT*TLA-1] || (|ne);
+            ps_f <= lfd[LFD-1] || (|ne);
             if (ing_fault || rx_fault || (|wf_q)) fault <= 1'b1;
         end
     end

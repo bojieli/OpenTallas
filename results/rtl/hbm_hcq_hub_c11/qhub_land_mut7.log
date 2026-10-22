@@ -1,0 +1,22 @@
+QHUB_LAND activity ps_v=13064 bd_v=13253 xb_d_changes=19910 wc_changes=6762 gathered_changes=19910
+QHUB_LAND FAIL LAND=7 LMUT=7 bad=11916 checks=19910
+MISMATCH subtree cyc=153 b=2fba03b10 e=0fba03b10
+MISMATCH subtree cyc=154 b=1f8387c00 e=3f8387c00
+MISMATCH subtree cyc=155 b=2fe13bd3e e=0fe13bd3e
+MISMATCH subtree cyc=160 b=1f7fac700 e=3f7fac700
+MISMATCH subtree cyc=161 b=2845d5af0 e=0845d5af0
+MISMATCH subtree cyc=162 b=0fc384b90 e=2fc384b90
+Verilator 5.050 2026-07-01 rev v5.050
+--- run.log
+MISMATCH subtree cyc=153 b=2fba03b10 e=0fba03b10
+MISMATCH subtree cyc=154 b=1f8387c00 e=3f8387c00
+MISMATCH subtree cyc=155 b=2fe13bd3e e=0fe13bd3e
+MISMATCH subtree cyc=160 b=1f7fac700 e=3f7fac700
+MISMATCH subtree cyc=161 b=2845d5af0 e=0845d5af0
+MISMATCH subtree cyc=162 b=0fc384b90 e=2fc384b90
+QHUB_LAND activity ps_v=13064 bd_v=13253 xb_d_changes=19910 wc_changes=6762 gathered_changes=19910
+QHUB_LAND FAIL LAND=7 LMUT=7 bad=11916 checks=19910
+- rtl/test/tb_hbm_hc_qhub_land.sv:148: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 3.051 s; speed 13.112 us/s
+- Verilator: cpu 3.050 s on 1 threads; allocated 21 MB
