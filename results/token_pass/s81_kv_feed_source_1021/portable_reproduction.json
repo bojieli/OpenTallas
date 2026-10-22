@@ -1,0 +1,44 @@
+{
+  "status": "PASS_PORTABLE_PURE_REPRODUCTION_WITH_SOURCE_PROFILE_HELD",
+  "original_raw_receipt_sha256": "3640d4bfbe8f6acd03939797b1f79b025c02c0cf4c5ca6365cd8f5a2accbcd9a",
+  "preserved_original_receipt": true,
+  "matched_fields": [
+    "feed",
+    "first_blocker",
+    "actual_source_routes",
+    "source_descriptor",
+    "source_profile_provenance"
+  ],
+  "snapshot_mismatch_rejected": true,
+  "checker_sha256": "632263a8fc7aea71c1c9a82d0005d3a21df830d89457458a120a6788907519a6",
+  "snapshot_inputs": {
+    "parser-source": {
+      "ref": "802a6d63d868774356d9418814d770b431d3a244",
+      "path": "tools/s81_dv/tokfunc/selected_cap_phase.py",
+      "sha256": "e60fca98d5f0dae97257716b1c4a90c6911935eb82ac1490bd0899992af8c66f"
+    },
+    "driver-source": {
+      "ref": "f14ca52e7e37d54f28a4aee36f35906537584916",
+      "path": "tools/s81_dv/dv_layer_compile.py",
+      "sha256": "1e26495715f1c8a992a35170307482883b1e8fe0d2dd54eea31bc4470a350517"
+    },
+    "lower-xs-source": {
+      "ref": "f14ca52e7e37d54f28a4aee36f35906537584916",
+      "path": "tools/s81_dv/layer_prog/lower_xs.py",
+      "sha256": "89091fb1b1c791b94759e09b599c08736ca24099e0165fd10188917368024015"
+    },
+    "bindings-source": {
+      "ref": "7373f3015e1c0ed89e0f4e7ab1900b0ff4b4b8ca",
+      "path": "results/arch/s81_die72_1021/g9_assembly/actual_source_bindings.json",
+      "sha256": "5e2de380659740383ab311382803d92b34b8cf49359a3167d6f9aa3c56e6d7ee"
+    }
+  },
+  "native_fragments": 0,
+  "scheduled_rows": 0,
+  "actual_resident_scalars": 0,
+  "dispatch": null,
+  "runtime": false,
+  "compiler": false,
+  "simulation": false,
+  "historical_counts_changed": false
+}

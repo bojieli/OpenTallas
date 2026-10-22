@@ -21,3 +21,20 @@ The current receipt is `PASS_PURE_FEED_API_CHECK`, not a runtime, component or w
 The required actual-G9 pure check is recorded in `actual_G9_partial.json`. It verifies die00715, plan5a061, legitimate fixture metadata d7f2, six actual0N frame identities and their LK straps, 24 proposed wkv scalar addresses, and 12 actual horizontal lane paths to KV3N. No MAT assets or runtime producer were generated. The full materialized manifest6f0 and final ordered289 port-bind309c were read and hashed; the receipt retains all289 absolute source paths and byte hashes.
 
 The FIRST blocking source-profile condition is two different XS4 files in that actual ordered list: `bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv` SHA50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808 and `src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv` SHA974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9. Both are preserved. No first/last precedence is assumed. The source owner must supply the actual executed GEN/index module-source selection witness before this guard can admit any native fragment. This receipt therefore has ZERO native fragments, ZERO scheduled rows, ZERO actual resident scalars and no opcode15 dispatch. Route and address checks are partial source checks only; historical50PARTIAL/5GAP remains unchanged.
+
+Portable checker packet
+
+`check_kv_feed_actual_g9.py` no longer reads Git history. Supply `--parser-source`, `--driver-source`, `--lower-xs-source`, and `--bindings-source` as explicit files; `portable_inputs.json` gives each immutable original commit/path and required full SHA256. The checker rejects changed bytes before evaluating the parser. Only `ComponentDie` and `explicit_capture` are used from the parser snapshot; only `INST_RE`/`CONN_RE` AST assignments from the driver and `a_proj_rows` AST function from lower_xs are evaluated. No aggregate file is imported or required from a worktree. A source archive must include those four original snapshot files, the local feed/contract modules and this checker, the exact die/plan/fixture metadata inputs, and the full readset JSON. No aggregate ancestry cherry-pick is needed.
+
+Required invocation (paths are explicit archive inputs):
+
+```sh
+python3 tools/s81_dv/layer_prog/check_kv_feed_actual_g9.py \
+  --actual-die DIE --actual-plan PLAN --fixture-meta META --fixture-files FILES \
+  --parser-source PARSER --driver-source DRIVER --lower-xs-source LOWER_XS \
+  --bindings-source BINDINGS --source-readset FULL_READSET --out NEW_RECEIPT
+```
+
+`portable_reproduction.json` records necessary reproduction of the original raw receipt's exact feed, route, descriptor, provenance and first-refusal fields, plus rejection of a modified parser snapshot. The original `actual_G9_partial.json` bytes are unchanged. The portable reproduction remains source-profile HELD with zero fragments/rows/residency/dispatch.
+
+The source owner subsequently sealed the genuine selector divergence at commit `09fe754940dbe21123f43551af80b5d59863ba24`, file `results/arch/s81_die72_1021/g9_assembly/xs4_selection/executed_selector_witness.json`, SHA256 `93169a8a81bdec1fa6c9cf0406f9b52c319055ef617f7851541462fdfa9fc975`. The strict final-PB projection selects SRC974ec, while the actual GEN index projection selects override50485a/f5 via explicit prefer index23. GEN failed after indexing and emitted no case RTL. These remain separate source maps; this witness does not repair the strict-PB contract or relax the feed guard. Source-owner correction is required before any new profile can be admitted.
