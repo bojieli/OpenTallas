@@ -193,7 +193,7 @@ endmodule
 
 // The control of ot_hgi_coll_reduce_static, verbatim, with the 16 lanes outside (wb / wb_tag out, add_valid /
 // pub_a / pub_b in).
-module ot_hgi_coll_reduce_static_ctl #(parameter integer MUT_TAG=0,MUT_BF16=0)(
+module ot_hgi_coll_reduce_static_ctl #(parameter integer MUT_TAG=0,MUT_BF16=0,MODE_COPY_MUT=0)(
  input wire clk_control,
  input wire rst_n,clear,in_v,
  input wire load_v,input wire [3:0] load_tag,
@@ -286,7 +286,27 @@ module ot_hgi_coll_reduce_static_ctl #(parameter integer MUT_TAG=0,MUT_BF16=0)(
    out_v<=pub_issue;
   end
  end
+`ifdef OT_COLL_LP_PUB32
+ // Private same-edge mode captures:32 groups of16 output bits. Real reset-
+ // qualified predecode leaves drive16 capture pins per rail. Status retains
+ // its original pub_bf_q. No new port edge or arithmetic operation.
+ wire[1:0] pub_mode_hi_d,pub_mode_lo_d;
+ for(genvar pg=0;pg<2;pg=pg+1)begin:g_pub_mode_decode
+  (* keep="true" *)ot_coll_lp_pub_mode_decode #(.ID(pg))u_decode(
+   .rst_n(rst_n),.bf(pub_bf16),.hi(pub_mode_hi_d[pg]),.lo(pub_mode_lo_d[pg]));
+ end
+ for(genvar pg=0;pg<32;pg=pg+1)begin:g_pub_mode
+  wire hi,lo;
+  (* keep="true" *)ot_coll_lp_pub_mode_ff #(.ID(pg))u_mode(
+   .clk(clk_control),.rst_n(rst_n),.hi_d(pub_mode_hi_d[pg/16]),.lo_d(pub_mode_lo_d[pg/16]),.hi(hi),.lo(lo));
+  wire selected_hi=(MODE_COPY_MUT!=0 && pg==17)?1'b0:hi;
+  always @(posedge clk_control)out_flit[pg*16+:16]<=
+   (bf_packed[pg*16+:16]&{16{selected_hi}})|(pub_a[pg*16+:16]&{16{lo}});
+ end
+ always @(posedge clk_control)out_flit[544:512]<=pub_meta_q;
+`else
  always @(posedge clk_control)out_flit<={pub_meta_q,pub_bf_q?bf_packed:pub_a};
+`endif
 endmodule
 
 // Bench vehicle only: the split reduce (control + 16 hardened lanes) with the ports of ot_hgi_coll_reduce_static.
