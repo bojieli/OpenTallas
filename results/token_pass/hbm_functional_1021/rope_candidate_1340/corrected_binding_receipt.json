@@ -1,0 +1,50 @@
+{
+  "status": "KNOWN_PROTOCOL_VIOLATION_DIAGNOSTIC_EMISSION_ONLY",
+  "hardware_executed": false,
+  "execution_qualified": false,
+  "source_owner_commit": "d32a05aa1",
+  "candidate_die_sha256": "cfd91a040f3a8a7b005b0847e617bc109b834920d460642ef44de4f26a0e0280",
+  "binding_prefilter_is_parser_qualification": false,
+  "actual_owner_Verilator_firststage": "syntax/elaboration passed; admitted build preserved; does not qualify known-illegal commands",
+  "effective_record_price": {
+    "serial_edges": 2088,
+    "stream_edges": 2784,
+    "source": "actual emitted programme occupancy; configuration cost recorded separately per programme",
+    "inherited_price_qualified": false,
+    "execution_qualified": false
+  },
+  "emitted_record_prices": {
+    "scope": "actual bounded emitted kernels; no complete layer/token rate",
+    "records": [
+      {
+        "i": 15,
+        "tag": "kv_rope.tail",
+        "programme": 0,
+        "serial_edges": 2088,
+        "stream_edges": 2784,
+        "source": "actual emitted programme occupancy; configuration cost recorded separately per programme",
+        "inherited_price_qualified": false,
+        "execution_qualified": false
+      }
+    ],
+    "inherited_prices_qualified": false,
+    "configuration_cost": "su_programmes[].config_writes at one serial edge each"
+  },
+  "inherited_price_qualified": false,
+  "inherited_record_price": 49.179999999999836,
+  "priced_end_serial": 3736,
+  "compiled_commit_serial": 3735,
+  "inherited_priced_end_serial": 3392,
+  "scratch_M_events": 0,
+  "required_NEV": 2513,
+  "files": {
+    "manifest.json": "eb0349b9af1dd24b35bad3d8cb9896dcf7f4c925cc001599b3baee7d11042478",
+    "replay.json": "9eba0920a676b3385170f2a2811187389ca2df4cf8e299b5e172300f5e7bb705",
+    "reserved.json": "a015493aa399274944faff9adc62ee8c153efeb0586fb16788dd34e17221ab60"
+  },
+  "artifact_root": "/home/ubuntu/scratch/tok-func2-hbm/rope_candidate_1340/k15bind2",
+  "scope": "one original L0 kv_rope.tail kernel; no current frozen source/rate adoption or full layer/token proof",
+  "known_protocol_violation": "RFsrc1 drain legal onlyport0/G0h0; old helper usesk%8",
+  "cost_status": "FAILED_SUPERSEDED:2088serial/2784stream describes invalid diagnostic programme; not runnable/qualified cost",
+  "current_helper": "refuses before emitting commands until actual RF->SUstore->allbank drain repair and new price"
+}

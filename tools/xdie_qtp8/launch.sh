@@ -7,14 +7,14 @@ W=$(cd "$(dirname "$0")/../.." && pwd)
 # Q-COLLCAL 10-18: QTP8_RD / QTP8_OUT select a separate fleet stage dir / result dir (defaults = TOKEN-XDIE-QTP8)
 RD=${QTP8_RD:-/srv/opentallas-scratch/claude/xdie-qtp8-1018/src}
 OUTREL=${QTP8_OUT:-results/rtl/xdie_qtp8_1018}
-HOSTS="ot-epyc5 ot-epyc4 ot-pve1 ot-agidock128"
+HOSTS=${QTP8_HOSTS:-"ot-epyc5 ot-epyc4 ot-pve1 ot-agidock128"}  # TW3-QK 10-19: overridable (epyc6/7 spare)
 LOG=$W/$OUTREL/ot_run
 mkdir -p "$LOG"
 OK=()
 SSH='ssh -o ControlPath=none -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3'
 for h in $HOSTS; do   # stage fully or not at all (a partial tree on a host would be picked by --dir): marker written last
   if timeout 300 $SSH "$h" "rm -rf $RD.part && mkdir -p $RD.part" && \
-     timeout 600 rsync -a --exclude "/$OUTREL" --exclude '.git' --include '/results/' --include '/results/rtl/' --include '/results/rtl/q_collcal_1018/***' --include '/results/rtl/qcollcal_rl_1018/' --include '/results/rtl/qcollcal_rl_1018/gen_*/***' --include '/results/rtl/mu_qwen_1018/' --include '/results/rtl/mu_qwen_1018/coll/' --include '/results/rtl/mu_qwen_1018/coll/mu_cal.json' --exclude '/results/**' -e "$SSH" "$W/" "$h:$RD.part/" && \
+     timeout 600 rsync -a --exclude "/$OUTREL" --exclude '.git' --include '/results/' --include '/results/rtl/' --include '/results/rtl/q_collcal_1018/***' --include '/results/rtl/qcollcal_rl_1018/' --include '/results/rtl/qcollcal_rl_1018/gen_*/***' --include '/results/rtl/mu_qwen_1018/' --include '/results/rtl/mu_qwen_1018/coll/' --include '/results/rtl/mu_qwen_1018/coll/mu_cal.json' --include '/results/rtl/xdie_qtp8_2_1019/' --include '/results/rtl/xdie_qtp8_2_1019/gen_*/***' --exclude '/results/**' -e "$SSH" "$W/" "$h:$RD.part/" && \
      timeout 120 $SSH "$h" "rm -rf $RD && mv $RD.part $RD && touch $RD/.staged"; then OK+=("$h"); else
      echo "stage to $h failed (skipped)"; timeout 60 $SSH "$h" "rm -rf $RD.part" ; fi
 done

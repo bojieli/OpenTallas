@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-epyc5       admits  1179 GB (avail 938, growth 113, headroom 0, waiters 0/0 GB) load 115/128 running 30 disk 744 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-522739-1792455001 after 0 s
+AUTHORITY_GENERATE_PASS top=qwk_stk_WS paths=18 captures=510 depths=[9, 5, 69, 69, 67, 63, 56, 47, 34, 51, 6, 4, 6, 4, 6, 4, 6, 4] fault_probes=14
+slice_smoke: /srv/opentallas-scratch/claude/kv-tok3-1019/lint_g7_WSQK/tb_qwk_stk_WS.sv: 198 inputs (5 clock, 2 reset), 913 outputs
+LINT rc=0 errors=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-522739-1792455001): exit 0

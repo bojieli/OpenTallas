@@ -83,10 +83,24 @@ def source_ops(sid):
     return ['service', 'result_tx']         # landings / KC / AHUB carry or check this op's service traffic
 
 
-def build(successor, reset_candidate, prog, link_edges, dcal_sink=None, skew=64):
-    succ = json.loads(Path(successor).read_text())
-    rc = json.loads(Path(reset_candidate).read_text())
-    succ_sha, rc_sha = sha(successor), sha(reset_candidate)
+def read_json(path):
+    """a JSON file, or 'archive.tar.gz:member' (the committed GEN7 reset evidence is a tarball member); (data, sha256)"""
+    path = str(path)
+    if '.tar.gz:' in path:
+        import tarfile
+        arc, member = path.split('.tar.gz:', 1)
+        with tarfile.open(arc + '.tar.gz') as t:
+            raw = t.extractfile(member).read()
+    else:
+        raw = Path(path).read_bytes()
+    return json.loads(raw), hashlib.sha256(raw).hexdigest()
+
+
+def build(successor, reset_candidate, prog, link_edges, dcal_sink=None, skew=64, default_depth=None):
+    """default_depth (KV-PROG17 10-20): reset depth for a die source the reset candidate does not list (the GEN9 die plane
+    has sources the GEN7 candidate predates); None = refuse such a non-DCAL source (it used to fall to the DCAL depth 6)"""
+    succ, succ_sha = read_json(successor)
+    rc, rc_sha = read_json(reset_candidate)
     leaf = succ['leaf_latencies']
     clears = {c['id']: c for c in rc['source_clears']}
     ops = operations(prog['compiled_rx_cmd'], prog['compiled_tx_first'], prog['service_end'])
@@ -103,15 +117,20 @@ def build(successor, reset_candidate, prog, link_edges, dcal_sink=None, skew=64)
         path = [dict(role=r, edges=e, qualified=False, receipt_sha256=(model if i == 0 else succ_sha))
                 for i, (r, e) in enumerate(zip(ROLES, edges))]
         c = clears.get(sid)
-        if c is None:   # DCAL (successor only): link_rst_n -> 2 plain -> region -> 1 plain -> release_q 2 edges
-            depth = 2 + 1 + 1 + 2
-        else:
+        basis = 'reset candidate depth'
+        if c is not None:
             depth = int(c['depth'])
+        elif sid.startswith('dcal'):   # DCAL (successor only): link_rst_n -> 2 plain -> region -> 1 plain -> release_q 2 edges
+            depth, basis = 2 + 1 + 1 + 2, 'DCAL link reset chain'
+        elif default_depth is not None:
+            depth, basis = int(default_depth), 'not in the reset candidate: die worst regional reset depth (conservative)'
+        else:
+            raise ValueError(f'{sid}: no reset depth in the reset candidate (pass default_depth from the die reset plan)')
         sources.append(dict(id=sid, ops=source_ops(sid), path=path, clock=s.get('clock'),
                             reset_clear_age=depth + skew, reset_propagation_edges=to_coll + ufh,
                             sink_release_age=None, reset_qualified=False,
-                            reset_basis='depth from its reset root + diagnostic cross-root assertion skew %d (UNMEASURED)'
-                                        % skew))
+                            reset_basis='%s from its reset root + diagnostic cross-root assertion skew %d (UNMEASURED)'
+                                        % (basis, skew)))
     need = max(s['reset_clear_age'] + s['reset_propagation_edges'] for s in sources)
     for s in sources:
         s['sink_release_age'] = need

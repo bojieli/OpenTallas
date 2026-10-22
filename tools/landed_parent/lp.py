@@ -529,8 +529,10 @@ class Parent:
         self.rcopies = spec.get("regional_reset_copies", False)
         if type(self.rcopies) is not bool:
             raise SystemExit("regional_reset_copies must be an explicit boolean")
-        if self.rcopies and (self.reset_forest or self.reset_lead or self.rports is not None or spec.get("reset_net")):
-            raise SystemExit("regional_reset_copies excludes landing_reset_forest / landing_reset_lead / regional_reset_ports / reset_net")
+        # S81-CAPRST 10-21: regional_reset_copies now combines with regional_reset_ports (per-region landed reset port,
+        # last stage as kept copies); specs that set only one of the two emit byte-identical text.
+        if self.rcopies and (self.reset_forest or self.reset_lead or spec.get("reset_net")):
+            raise SystemExit("regional_reset_copies excludes landing_reset_forest / landing_reset_lead / reset_net")
         if type(self.mcp) is not bool:
             raise SystemExit("landing_mcp must be an explicit boolean")
         if type(self.reset_forest) is not bool:
@@ -1001,6 +1003,13 @@ class Parent:
                 w(f'    wire [LPR_LEAVES_{r}-1:0] lpr_{r}_leaves; wire lpr_{r} = lpr_{r}_leaves[0];')
                 w(f'    ot_pl_land_reset_forest #(.DEPTH({RB-1}), .LEAVES(LPR_LEAVES_{r}), .ROOT_LOADS({root_load_expr})) u_lpr_{r} '
                   f'(.ck(ck_{r}), .d(lpr_root), .q(lpr_{r}_leaves)); // same reset age; physical reach unproved')
+            elif self.rports is not None and copies and len(copies[r]['copies']) > 1:
+                cs = copies[r]['copies']
+                w(f"    wire lpr_{r}_p;  ot_pl_pad #(.W(1), .N({RB - 1})) u_lpr_{r}_p (.ck(ck_{r}), .d({self.rst}_{r}), .q(lpr_{r}_p));"
+                  f"   // regional reset port landed on ck_{r}; last stage = {len(cs)} kept copies")
+                for b in cs:
+                    w(f"    wire {b['net']};  ot_pl_land_rst_copy #(.ID({b['id']})) u_{b['net']} (.ck(ck_{r}), .d(lpr_{r}_p), .q({b['net']}));"
+                      f"   // regional_reset_copies: {b['loads']} loads")
             elif self.rports is not None:
                 w(f"    wire lpr_{r};  ot_pl_pad #(.W(1), .N({RB})) u_lpr_{r} (.ck(ck_{r}), .d({self.rst}_{r}), .q(lpr_{r}));"
                   f"   // regional reset port landed on ck_{r}")

@@ -1,0 +1,140 @@
+{
+ "name": "qfd_dv_lane_h_safe2-safe2-COMMIT",
+ "block": "qfd_dv_lane_h_safe2",
+ "ref_tile": true,
+ "owner": "Claude:QW-CLUSTER3/HEAD",
+ "purpose": "QW-CLUSTER3/HEAD Q.SAFE.HEAD safe2 (flop rings, no 32x64 macros): structurally safe native ML5 head (reset tree, kept copies, SRAM rings for holding chains)",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/qw-cluster3-head-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_native_head_1019",
+   "tools/hdc_golden.py",
+   "results/arch/qwen_native_head_1019/safe1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_dv_lane_h_safe2 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_dv/qfd_dv_head_safe1.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "head_safe1_production",
+    "cmd": "export HS1_TOP=safe2 && export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && python3 tools/qwen_native_head_1019/run_safe1_production.py e a c f g k q m o n --work {RUN}/positive --vflags \"+define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1\"",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "head_safe1_mut_tls_bank",
+    "cmd": "export HS1_TOP=safe2 && export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && python3 tools/qwen_native_head_1019/run_safe1_production.py e --work {RUN}/bank_mut --vflags \"+define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1 +define+OT_HEAD_B64_BANK_MUT\"",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "bench2 \\(e\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_native_head_1019/safe1/witness_safe2/mut_bank.log"
+   },
+   {
+    "name": "head_safe1_mut_tls_slot",
+    "cmd": "export HS1_TOP=safe2 && export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && python3 tools/qwen_native_head_1019/run_safe1_production.py e --work {RUN}/slot_mut --vflags \"+define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1 +define+OT_TLS_MUT\"",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "bench2 \\(e\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_native_head_1019/safe1/witness_safe2/mut_slot.log"
+   },
+   {
+    "name": "head_safe1_mut_ron_copy",
+    "cmd": "export HS1_TOP=safe2 && export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && python3 tools/qwen_native_head_1019/run_safe1_production.py e --work {RUN}/ron_mut --vflags \"+define+OT_QFD_DV_SAFE_STORAGE -GSU_LT=1 -GHD_W130=1 -GMU_NU=4 -GFACE=1 +define+OT_HS1_RON_MUT\"",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "bench2 \\(e\\) MUT=0: FAIL",
+    "fail_witness": "results/arch/qwen_native_head_1019/safe1/witness_safe2/mut_ron.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_dv_lane_h_safe2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_dv_lane_h_safe2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_dv_lane_h_safe2 --out {RUN}/record/views/qfd_dv_lane_h_safe2 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_dv_lane_h_safe2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_dv_lane_h_safe2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_dv_lane_h_safe2/qfd_dv_lane_h_safe2-safe2-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "QW-CLUSTER3/HEAD safe2 (= safe1 with every fixed-age ring < 2 kb as a flop ring of 16-bit slices, own pointers and leaf relays; safe1 kits were macro-channel bound at 30% fill): new tile for the opt-in ML5 native head (qfd_dv_head_native_b64 CONTROL_SAFE=1 @5cd31ebb8, never gated): face reset landing + balanced relay tree (rt 1603 sinks -> 11 leaves <= 32), kept same-edge copies for ring_on (130) / class one-hot / S1 lane (128/64) / bsrc (65) / mc flag (33), S2-age tag ring + daddr ring replace the 97+36+24 SRAM-capture holding chains, FPU payload reset off; 0 added steady-state cycles; 2 x 128x64 TLS natives only on the 43.2 lattice; checklist results/arch/qwen_native_head_1019/safe1/README.md"
+}

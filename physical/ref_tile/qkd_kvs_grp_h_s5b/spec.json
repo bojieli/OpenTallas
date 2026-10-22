@@ -1,0 +1,379 @@
+{
+ "name": "qkd_kvs_grp_h_s5b",
+ "top": "qkd_kvs_grp_h_s5",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s5.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n",
+  "hrst_n"
+ ],
+ "outline": {
+  "w": 388.8,
+  "h": 388.8,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "*u46198_c0.u_cell",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "*u47639_c0.u_cell",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "*u49080_c0.u_cell",
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "*u50521_c0.u_cell",
+   "at": [
+    216.0,
+    172.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "i_ctl",
+   "o_ctl"
+  ],
+  "E": [
+   "kreq",
+   "krsp",
+   "rsp",
+   "vreq"
+  ],
+  "W": [
+   "i_pc0",
+   "i_pc0_h",
+   "o_pc0",
+   "o_pc0_h",
+   "i_pc1",
+   "i_pc1_h",
+   "o_pc1",
+   "o_pc1_h",
+   "ck",
+   "hck",
+   "af__fault",
+   "afk",
+   "afv",
+   "hrst_n",
+   "rst_n",
+   "slg__cfg_group",
+   "slg__cfg_stack",
+   "x__est",
+   "y__est__0_1",
+   "i_pc2",
+   "i_pc2_h",
+   "o_pc2",
+   "o_pc2_h",
+   "i_pc3",
+   "i_pc3_h",
+   "o_pc3",
+   "o_pc3_h"
+  ]
+ },
+ "pin_ranges": {
+  "i_ctl": [
+   2.5,
+   222.21
+  ],
+  "o_ctl": [
+   223.21,
+   386.3
+  ],
+  "kreq": [
+   2.5,
+   9.17
+  ],
+  "krsp": [
+   10.17,
+   196.44
+  ],
+  "rsp": [
+   197.44,
+   382.67
+  ],
+  "vreq": [
+   383.67,
+   386.3
+  ],
+  "i_pc0": [
+   2.5,
+   62.95
+  ],
+  "i_pc0_h": [
+   63.95,
+   66.0
+  ],
+  "o_pc0": [
+   67.0,
+   73.76
+  ],
+  "o_pc0_h": [
+   74.76,
+   94.23
+  ],
+  "i_pc1": [
+   95.23,
+   155.69
+  ],
+  "i_pc1_h": [
+   156.69,
+   158.74
+  ],
+  "o_pc1": [
+   159.74,
+   166.5
+  ],
+  "o_pc1_h": [
+   167.5,
+   186.97
+  ],
+  "ck": [
+   187.97,
+   188.17
+  ],
+  "hck": [
+   189.17,
+   189.38
+  ],
+  "af__fault": [
+   190.38,
+   190.58
+  ],
+  "afk": [
+   191.58,
+   191.79
+  ],
+  "afv": [
+   192.79,
+   192.99
+  ],
+  "hrst_n": [
+   193.99,
+   194.2
+  ],
+  "rst_n": [
+   195.2,
+   195.4
+  ],
+  "slg__cfg_group": [
+   196.4,
+   197.01
+  ],
+  "slg__cfg_stack": [
+   198.01,
+   198.42
+  ],
+  "x__est": [
+   199.42,
+   199.63
+  ],
+  "y__est__0_1": [
+   200.63,
+   200.83
+  ],
+  "i_pc2": [
+   201.83,
+   262.29
+  ],
+  "i_pc2_h": [
+   263.29,
+   265.34
+  ],
+  "o_pc2": [
+   266.34,
+   273.1
+  ],
+  "o_pc2_h": [
+   274.1,
+   293.57
+  ],
+  "i_pc3": [
+   294.57,
+   355.02
+  ],
+  "i_pc3_h": [
+   356.02,
+   358.07
+  ],
+  "o_pc3": [
+   359.07,
+   365.83
+  ],
+  "o_pc3_h": [
+   366.83,
+   386.3
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 6.48,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "recipe": 3,
+ "purpose": "Opt-in source-pinned mapped primitive replication, zero added cycles; all nonclock/nonconstant drivers bounded32 including through buffers/inverters.",
+ "job": {
+  "owner": "Codex:KV-GRP-S5",
+  "branch": "codex/kv-grp-collect-1019",
+  "tag": "grp_h_s5b",
+  "benches": [
+   {
+    "name": "s5_m0",
+    "cmd": "python3 tools/qwen_kv_die/kvs_grp_safe5_bench.py --out {RUN}/bench/s5_m0 --cases m0 --raw",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^S2_PASS checks=\\d+ edges=6000 mut=0",
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_grp_s5_1020/behavior/m0.log",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "s5_m1",
+    "cmd": "python3 tools/qwen_kv_die/kvs_grp_safe5_bench.py --out {RUN}/bench/s5_m1 --cases m1 --raw",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "^S2_PASS ",
+    "fail_regex": "(S2_FAIL|PROD_VALID_FAIL|PROD_RESPONSE_FAIL|PROD_STATUS_FAIL)",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_s5_1020/behavior/m1.log"
+   },
+   {
+    "name": "s5_m2",
+    "cmd": "python3 tools/qwen_kv_die/kvs_grp_safe5_bench.py --out {RUN}/bench/s5_m2 --cases m2 --raw",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "^S2_PASS ",
+    "fail_regex": "(S2_FAIL|PROD_VALID_FAIL|PROD_RESPONSE_FAIL|PROD_STATUS_FAIL)",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_s5_1020/behavior/m2.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die",
+   "results/rtl/qwen_kv_die/kvs_grp_s5_1020",
+   "results/rtl/qwen_kv_die/canonical_seq_coupon_1020",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/qkd_kvs_kits"
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "reason": "All six legacy mapped sources violate binding all-driver32 rule (max399); structural zero-cycle primitive copies replace old source, authoritative mapped admission PASS32, independent cold SAT and canonical transaction bench required."
+  },
+  "views_to": "physical/ref_tile/qkd_kvs_grp_h_s5b/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_grp_h_s5b"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Mapped source preserves the exact original registered input/output boundary and cycles (canonical production bench checks all retained outputs); no new flow stage: would add an unpriced cycle."
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Opt-in source-pinned mapped primitive replication, zero added cycles; all nonclock/nonconstant drivers bounded32 including through buffers/inverters. Immutable original mapped3/4 snapshot; fixed-point backward cell replication, same D/clock/reset/type; every primitive kept, each copy independent at cold boot. Parent RTL and shared leaves unchanged.",
+ "kits_b": {
+  "frame": [
+   388.8,
+   388.8
+  ],
+  "kit_outline": [
+   388.8,
+   388.8
+  ],
+  "count": 4,
+  "rep_instance": "slg_WS_4",
+  "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s5.sv",
+  "hck_inputs": [
+   "hrst_n"
+  ],
+  "hck_outputs": [
+   "o_pc0_h",
+   "o_pc1_h",
+   "o_pc2_h",
+   "o_pc3_h"
+  ],
+  "mixed_domain_ports": [],
+  "critical": null,
+  "pin_bound_waiver": "E face 2171 bits / 388.8 um = 5.58 pins/um (K + V responses, 2 x 1024 data bits); std cells ~10-12k um2 + four p192 SRAMs 30.5k um2 in 151k um2: the perimeter, not the area, sets the outline (pin-bound waiver as sq1, coordinator-accepted)."
+ },
+ "sdc_extra": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_h_s4b_hck.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_h_s4b_hck_boundary.tcl"
+ ],
+ "clock": "spine",
+ "reset_landing": {
+  "enable": false,
+  "reason": "Mapped source preserves original two-stage own-domain reset landing and relay topology; port has one sink each. Independent-copy cold proof converges under actual reset, no equal initial state assumption."
+ },
+ "fill_reason": {
+  "pin_bound": "4.6k signal pins on a 388.8 square (E 5.58 /um, W 4.5 /um); the outline is the die slot of the sq1 square; synthesis area alone would give ~200 x 200."
+ },
+ "orfs_vars": {
+  "OT_SPINE_PORTS": "ck,hck",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1",
+  "OT_SPINE_LEAF_N": "16"
+ }
+}

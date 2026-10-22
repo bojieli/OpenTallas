@@ -1,0 +1,31 @@
+{
+  "status": "PAIRED_SUITE_NEW0_NOT_ALL_TESTS_PASS",
+  "actual_unit": "3292442-1792624189",
+  "baseline": "b5f983efec3f397e21d998efd23bfa55e40d0c3d",
+  "candidate": "50f7eec0ee2261ab634ec59303f0928c2f7edcf1",
+  "both_runs": {
+    "cases": 253,
+    "passed": 248,
+    "failure_elements": 5,
+    "passed_subtests": 18,
+    "pytest_rc": 1
+  },
+  "comparison": "Exact full classname/name/element/type/message/text Counter equality, no normalization; new0/resolved0; comparison rc0",
+  "known_failures": "Four missing historical fixture paths, one published K producer-law constant24 vs compiler23. All five exact before/after unchanged. No waiver or all-tests-pass claim.",
+  "file_set": "Clean exact published qwen_split240files; verified filename diff empty. Old unpublished helpers/tests removed from src before corrected pair.",
+  "preserved_invalid_attempt": "ot-epyc5:/srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021/mixed_attempt; first overlay retained unpublished extra tools, invalid baseline; excluded from publication evidence",
+  "scope": "Required helper regression only. No native/PHY/physical continuation and no clock/release qualification. Existing18pure/defaultTcl byteidentity in parent50f receipt.",
+  "artifact_sha256": {
+    "otrun.log": "3bd00bf9246f60cea7143d5a77cd81143b5b4f426f34164d97e0d179d038598b",
+    "baseline.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "final.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "run_pair_clean.sh": "333ff7cd8364ab143b94d2b07455bad5dc0d8cc4b13bd80f44773d94eb1671b0",
+    "actual-qsplit-files.txt": "1f442b88e7c5e324703b15ccfbc18da8ad736ac1c31bdfd7d806abbdfdcebdac",
+    "final.xml": "28d27c75d71cf45af51c09479de5710c47d719f3ea0e919342c71ecea5f56300",
+    "baseline.xml": "b9ded9b31fd29f0cd3f4663da4e514df5d66abc52570edf8a1a1102ab5e5e758",
+    "SOURCE_RECIPE.json": "5ec619f20476c26a183d02c86b988bea8613d87dc44d7c4f479ce132d6e4bdd7",
+    "final.log": "4e882be07e70bc1f8c21aff54f9a9132141c0050370f5abce2076edbd31750d7",
+    "baseline.log": "e4a9ae178bd320a698752d39a11bfb5db22ccbe01c3b6bc72de86fc925af0bfa",
+    "paired_result.json": "1abdff80e06151ae28f5f94640e80df6f18a8dd2f4f61135c083af105138e326"
+  }
+}

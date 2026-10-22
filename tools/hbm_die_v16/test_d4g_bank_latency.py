@@ -95,6 +95,7 @@ def test():
     assert status(dma(12, extra=1))[:2] == ('FAIL', 12)                                       # unequal: pad bank 0
     assert status(dma([11, 12], extra=1))[0] == 'FAIL'                                         # no vector form (VECTOR_OK)
     assert L.dma_min_drain_lag(7) == 10 and L.dma_min_drain_lag() == L.DMA_RR_RT_BUDGET + 3
+    assert L.dma_min_next_issue(104, 8) == 116 and L.dma_min_next_issue(104, 8, producer_retire=200) == 200   # bench pass: move 0 (drain 104, 8 chunks) -> move 1 issue_at 116
     test_chain()
     print('test_d4g_bank_latency PASS')
 

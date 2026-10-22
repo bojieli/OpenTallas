@@ -1,0 +1,17 @@
+S5_XH3_EQ MISMATCH cyc 11896
+  highest differing output bit 196 (o_all index; n_d at top)
+  lr_p differs
+S5_XH3_EQ MISMATCH cyc 11914
+  highest differing output bit 197 (o_all index; n_d at top)
+  lr_p differs
+S5_XH3_EQ MISMATCH cyc 11924
+  highest differing output bit 223 (o_all index; n_d at top)
+  lr_p differs
+S5_XH3_EQ MISMATCH cyc 11938
+  highest differing output bit 225 (o_all index; n_d at top)
+  lr_p differs
+S5_XH3_COVER ops 839 lw_v 7278 en 15754 lr_v 74392 go 932 xvalid 74344 xnz 74344 fault 133167 resets 15
+S5_XH3_EQ FAIL 61 mismatches of 149375 compares seed 7 cid 22
+[1500040000] %Fatal: tb_xhead3.sv:244: Assertion failed in tb_xhead3: S5_XH3_EQ FAIL
+%Error: rtl/test/qwen_dv/s5/xhead3/tb_xhead3.sv:244: Verilog $stop
+Aborting...
