@@ -1,0 +1,15 @@
+{
+  "original_report": "/srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k14z_1021-20261021-211836/routes/gate/work/orfs/native_census.json",
+  "sha256": "7b4858f1544616409b32a53062ee38f6b993b8db0ee3fde7adc29bd0b224a959",
+  "status": "FAIL",
+  "roots_examined": 127295,
+  "max_dynamic_loads": 35,
+  "failing_roots": [
+    {
+      "driver": "_123960_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_035597_",
+      "loads": 35
+    }
+  ]
+}
