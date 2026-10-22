@@ -40,3 +40,42 @@ module ot_s81_col_sts (
             st <= {lk_s[1], st[0] | uf_s[1] | rm_flt | e_flt};
         end
 endmodule
+
+// STW-S81-OWN7 10-21: ot_s81_col_sts split into its two clock halves so the column parent LANDS the status crossing
+// (lp7b gate: u_sts.lock_r (ck_dec, y~2860) -> u_sts.lk_s[0] (ck_rxo, y~3600) was a single-cycle 740-um cross-region wire,
+// TT setup -283 ps).  ot_s81_col_sts_r sits in the decoder region (pma_rck), ot_s81_col_sts_t in the output region (clk);
+// lp.py lands lock_r / unc_r between them (D4/E2 ring + read, fixed latency), and the 2-flop stages lk_s / uf_s stay behind
+// the landing read (plesiochronous pma_rck: the landing read flop + lk_s[0..1] form the synchroniser chain of a level).
+// ot_s81_col_sts_r + ot_s81_col_sts_t wired lock_r/unc_r == ot_s81_col_sts (bit-exact, same reset behaviour).
+module ot_s81_col_sts_r (
+    input  wire ck_r,
+    input  wire rst_r_n,
+    input  wire lock,
+    input  wire q_v,
+    input  wire q_first,
+    input  wire q_unc,
+    output reg  lock_r,
+    output reg  unc_r
+);
+    always @(posedge ck_r)
+        if (!rst_r_n) begin unc_r <= 1'b0; lock_r <= 1'b0; end
+        else begin lock_r <= lock; if (q_v && q_first && q_unc) unc_r <= 1'b1; end
+endmodule
+
+module ot_s81_col_sts_t (
+    input  wire       ck_t,
+    input  wire       rst_t_n,
+    input  wire       lock_r,
+    input  wire       unc_r,
+    input  wire       rm_flt,
+    input  wire       e_flt,
+    output reg  [1:0] st
+);
+    reg [1:0] lk_s, uf_s;
+    always @(posedge ck_t)
+        if (!rst_t_n) begin lk_s <= 2'b00; uf_s <= 2'b00; st <= 2'b00; end
+        else begin
+            lk_s <= {lk_s[0], lock_r}; uf_s <= {uf_s[0], unc_r};
+            st <= {lk_s[1], st[0] | uf_s[1] | rm_flt | e_flt};
+        end
+endmodule

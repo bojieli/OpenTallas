@@ -8,6 +8,10 @@ the HBM PHY -- this writes only what the column parent flow needs to reserve, pl
                   pad face S (die edge): pma_tx[543:0], pma_tck (launched on ck).
 * ot_s81_pma_rxm: pad face S: pma_rck (recovered clock), pma_rx[543:0] (captured on pma_rck);
                   digital face N: q[543:0] (launched on pma_rck).
+* ot_s81_pma_rxn (v1.2, STW-S81-OWN7 10-21): ot_s81_pma_rxm with pma_rck on the DIGITAL face N, beside the q launch
+                  registers (as ck of ot_s81_pma_txm sits beside d): the column's prx clock root then stays at the N end of
+                  the macro instead of spanning its 2.25 mm height (lp7b gate: ck_prx insertion 1278 ps, FF spread 147).
+                  Same pins, timing, footprint and behaviour as ot_s81_pma_rxm; only the clock pin face differs.
 Each macro: one clock, registered boundary (ASAP7 flop clk->q / setup + 3 FO4), footprint = half of the 250 x 2250 um
 analog model of results/arch/serdes_parent_recovery_1019/model.json, snapped to the 43.2 um lattice (129.6 x 2246.4).
 Behavioural model of the same interface: ot_s81_pma_txm / ot_s81_pma_rxm in rtl/dsrom_sys/s81_link/col/ (LAT 4 cycles).
@@ -40,8 +44,9 @@ def macros():
     rx = [Pin("pma_rck", 1, "input", "clock", "pma_rck"), Pin("pma_rx", 544, "input", "data_in", "pma_rck"),
           Pin("q", 544, "output", "data_out", "pma_rck")]
     face = {"ot_s81_pma_txm": {"N": ["ck", "d_v", "d"], "S": ["pma_tx", "pma_tck"]},
-            "ot_s81_pma_rxm": {"S": ["pma_rck", "pma_rx"], "N": ["q"]}}
-    return {"ot_s81_pma_txm": tx, "ot_s81_pma_rxm": rx}, face
+            "ot_s81_pma_rxm": {"S": ["pma_rck", "pma_rx"], "N": ["q"]},
+            "ot_s81_pma_rxn": {"S": ["pma_rx"], "N": ["pma_rck", "q"]}}
+    return {"ot_s81_pma_txm": tx, "ot_s81_pma_rxm": rx, "ot_s81_pma_rxn": rx}, face
 
 
 def write_lef(name, plist, face):
@@ -101,8 +106,10 @@ def write_lef(name, plist, face):
     return "\n".join(L) + "\n", info
 
 
-def generate(out: Path):
+def generate(out: Path, only=None):
     ms, faces = macros()
+    if only:
+        ms = {k: v for k, v in ms.items() if k in only}
     cal = asap7.calibration()
     res = {}
     for name, plist in ms.items():
@@ -125,7 +132,7 @@ def generate(out: Path):
             (d / f"{name}_{c}.lib").write_text(write_liberty(name, t, plist, W_UM * H_UM, None, comment))
         (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment + "; behavioural model: "
                                                          "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv"))
-        sheet = {"schema": "opentallas.s81-pma-abstract.v1", "generator": "tools/mem_compiler/s81_pma_gen.py v1.1",
+        sheet = {"schema": "opentallas.s81-pma-abstract.v1", "generator": "tools/mem_compiler/s81_pma_gen.py " + ("v1.2" if name == "ot_s81_pma_rxn" else "v1.1"),
                  "name": name, "footprint_um": [W_UM, H_UM], "faces": faces[name], "pins": info,
                  "timing": {c: asdict(t) for c, t in per.items()},
                  "basis": "results/arch/serdes_parent_recovery_1019/model.json analog 250 x 2250 (two halves)",
@@ -140,8 +147,9 @@ def generate(out: Path):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=asap7.ROOT / "physical/asap7_memory_macros")
+    ap.add_argument("--only", nargs="*", help="generate only these macros (existing views stay byte-identical)")
     a = ap.parse_args()
-    print(json.dumps(generate(a.out), indent=1))
+    print(json.dumps(generate(a.out, a.only), indent=1))
     return 0
 
 

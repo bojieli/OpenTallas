@@ -21,3 +21,13 @@ module ot_s81_pma_rxm #(parameter integer LAT = 4) (
 );
     ot_s81_pma_bm #(.W(544), .LAT(LAT)) u_m (.clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(q));
 endmodule
+
+// STW-S81-OWN7 10-21: ot_s81_pma_rxn = ot_s81_pma_rxm with the pma_rck pin on the digital (N) face of the abstract
+// (tools/mem_compiler/s81_pma_gen.py v1.2); same interface and behaviour.
+module ot_s81_pma_rxn #(parameter integer LAT = 4) (
+    input  wire          pma_rck,
+    input  wire [543:0]  pma_rx,
+    output wire [543:0]  q
+);
+    ot_s81_pma_bm #(.W(544), .LAT(LAT)) u_m (.clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(q));
+endmodule
