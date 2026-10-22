@@ -379,7 +379,7 @@
     },
     "total_storage_and_native_roots": "Require actual selected-lane census; partial source counts above are not total area/FF qualification.",
     "observed_flat_to_safe2_age_delta": null,
-    "observed_flat_scope": "Current stg4 numeric/programme receipts remain separate; no standalone measured issue-to-output decomposition supplied."
+    "observed_flat_scope": "No exact SU_LT0 standalone functional receipt found. The prior STG4 minimum and527-case aggregate use SU_LT1 and are separate LT1 component evidence."
   },
   "not_equivalent": {
     "SU_LT1_current": "Selects old qfd_dv_su_lane with ML1/RD2, QLA4/QLM5, innerML7; it does not select safe2.",
@@ -395,9 +395,34 @@
       "Actual expanded native root/pin/storage census under current <=32 policy; preserve failures rather than reuse historical exceptions.",
       "Reuse existing flat arithmetic vectors where source exact; qualify authentic lane boundary and native memory timing with source/phase/reset causals.",
       "Bind selected parent instance and receiving clock/reset release; derive actual producer-to-consumer route ages before compiler projection."
-    ]
+    ],
+    "functional_run": {
+      "bench_source": "01a62111b",
+      "selected_source": "1f7a4aedb",
+      "host": "ot-gold2",
+      "unit": "oth-ubuntu-1670590-1792647810",
+      "path": "/srv/opentallas-scratch/claude/codex-qwen-flat-functional-2240/run_r1",
+      "status": "ADMITTED",
+      "scope": "One current lane0,96 values,fiveclasses,dirty reset; existing OT_TLS_MUT causal. No whole array or native closure."
+    }
   },
   "native_qualified": false,
   "SAFE": false,
-  "production_parent_bound": false
+  "production_parent_bound": false,
+  "existing_receipt_parameter_gap": {
+    "commit": "cbf2d6353",
+    "path": "results/rtl/tokfunc3_qw_1021/stg4_receipt/qualified_stg_result.json",
+    "receipt_sha256": "95e5fdc73dd4b0adbc75432614605b347f05250d2b8462408ae103178534b5e5",
+    "binary_sha256": "6df53648fb792b3ce0d88be40356e5679eb33d29810575807035685dd0e77866",
+    "actual_flags": [
+      "-GMU_NU=4",
+      "-GSU_LT=1",
+      "-GARF=1",
+      "-GRP=1"
+    ],
+    "hierarchy": "tb_qfd_dv2 SU_LT forwards through tb_dv2_slice to qfd_dv_slice2 and qfd_dv_su8_entries",
+    "actual_selected_lane": "LT1/LTD1 old qfd_dv_su_lane, ML1/RD2/QLA4/QLM5/externalSFUs",
+    "current_flat_match": false,
+    "note": "28 matching source files cannot transfer evidence across this parameter mismatch. Original evidence is preserved."
+  }
 }
