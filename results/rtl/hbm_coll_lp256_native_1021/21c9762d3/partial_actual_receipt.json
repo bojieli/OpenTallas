@@ -1,0 +1,29 @@
+{
+  "collected_local_time": "2026-10-21T22:47:50.395842",
+  "source_commit": "21c9762d3",
+  "actual_host": "ot-gold2",
+  "actual_units": {
+    "q3": "oth-ubuntu-1658794-1792647317",
+    "n1s0": "oth-ubuntu-1654381-1792647188"
+  },
+  "actual_result": "Both full positive locksteps PASS; both region audits PASS and deliberately unlanded audits FAIL. Causal mutants1/2/4/6 remain progressing.",
+  "positive_comparisons": {
+    "q3": 149500,
+    "n1s0": 104000
+  },
+  "cycles_each": 3294,
+  "remaining_required_mutants": [
+    1,
+    2,
+    4,
+    6
+  ],
+  "evidence_sha256": {
+    "out_q3/mut0.log": "4402800c954e0c0686fb3ccd08ed2c61e162421d833479f487f98d42e7eab9e6",
+    "out_q3/audit_unland.log": "1d8c1353095a09d496e5450e44f463437a1cd9273deb1b01a062bcc00bccb055",
+    "out_q3/audit.log": "7c6590bbe9af0cd1902e5996e9c5c63f2a6543b415525b77e14bb40efa2a1652",
+    "out_n1s0/mut0.log": "3f65ff855c2df2096d06ce19f95a31e0c30b2891edd2342669c641e4baa79d09",
+    "out_n1s0/audit_unland.log": "af36b1694926c8516ae6b3e6ec7bb9164dd6986ea93b377a5e223af891c50d86",
+    "out_n1s0/audit.log": "4f21763d71e88e34349314a80a98c6c67a29c681ca75a8802bbbe4a09db46c4f"
+  }
+}
