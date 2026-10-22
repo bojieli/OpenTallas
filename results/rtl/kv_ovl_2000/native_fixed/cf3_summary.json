@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "top": "qkd_d2d_static_ovl_sfm3",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 30701,
+  "max_dynamic_loads": 30,
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qkd_d2d_static_ovl_sfm3_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "12026b2ac6e3bcc1b2d8960a90794eab377b551d994b757acc91c85187a77439"
+  },
+  "role_errors": [],
+  "violations": [],
+  "source": "523b795d6",
+  "host": "ot-gold1",
+  "run": "qkd_d2d_static_ovl_sfm3_cf3-20261021-220641"
+}

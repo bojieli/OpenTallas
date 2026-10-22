@@ -1,0 +1,82 @@
+{
+  "start_commit": "523b795d6c302ef9b4e7bc1bb39d97d7f3ad8519",
+  "identity": "exact_content_snapshot",
+  "archive_sha256": "455dee7cc9d66200ee026818f09073a11b90c0a00f547487d52ad10bddf0e758",
+  "manifest_sha256": "5d31356303f7a7250053dc059bb158a0e5ea40ff7d1621e8cba744d2ae826fad",
+  "remote_host": "ot-gold1",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_d2d_static_ovl_sfm3_cm3-20261021-220641",
+  "captured": "2026-10-21T22:07:19-0700",
+  "remote_script_sha256": "e8a87834ea8943941189f962d1742b27141528972a5b7789a50ec3f4ddbbc5d6",
+  "consumed_sources_all_match": true,
+  "consumed_sources": [
+    {
+      "path": "rtl/lib/ot_rst_pipe.sv",
+      "sha256": "29203f84edfc6009125d3b26330534d3c6af6900d2ad4c44bf7d490f2ee96664"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+      "sha256": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+      "sha256": "7a6c49228700d1956ca5618e1bd1130d58f23972d273f0258007380025a8b1dd"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+      "sha256": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+      "sha256": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+      "sha256": "713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+      "sha256": "5f195b4304470722e41f5af44337f74fc31b70990bc74bce5a680f6df2b41607"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+      "sha256": "c74e71552631c487426980953cd4b803e6455b8eb671c538f1ba3c578f3f63d0"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv",
+      "sha256": "6927365f6d204079b19780ce74bbc1dddc6bd051a03d30061d6f6de2a15eb3bd"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe_fo.sv",
+      "sha256": "9b3694353d39abc17f83e52f2f6de4273fa3dbe498a138dbee147e436bcefb67"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+      "sha256": "2a19cdb5dd60035e51c916ae1f96617ed8d35a03f3a0778ca4e5e41644109331"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv",
+      "sha256": "7a9aaca0a003102582b3308b4491dc9e2a6445a2b7b930cb2439168f13d75443"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_kvn_static_transport.sv",
+      "sha256": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb"
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_bb.v",
+      "sha256": "1c73f0dd60671fec51283900ff52663936188d1e32385ea6ce3e61faaff9b308"
+    }
+  ],
+  "tool_overlays": [
+    "physical/common_flow/macro_cts_cluster.tcl",
+    "physical/common_flow/native_pg_binding.tcl",
+    "tools/fp_margin_lint.py",
+    "tools/fp_margin_lint.tcl",
+    "tools/orfs_allcorner_spef.py",
+    "tools/orfs_hold_mm.py",
+    "tools/orfs_hold_mm.tcl",
+    "tools/ref_tile/native_census.py",
+    "tools/ref_tile/native_census.tcl",
+    "tools/ref_tile/ref_route.sh",
+    "tools/textbook_lint.py"
+  ]
+}
