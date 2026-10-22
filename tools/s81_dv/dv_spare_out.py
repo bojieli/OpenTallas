@@ -102,7 +102,7 @@ def declare(lines, pads, root):
 
     # ---- A: svc_rs role faces
     for inst, (mod, ps) in sorted(insts.items()):
-        if mod not in ('dsdv_svc_rs', 'dsdv_svc_rs_entry'):
+        if mod not in ('dsdv_svc_rs', 'dsdv_svc_rs_entry', 'dsdv_svc_rs_pvso_entry'):
             continue
         sid = int(inst.split('_')[2])
         t, r = tree[str(sid)], emb[str(sid)]

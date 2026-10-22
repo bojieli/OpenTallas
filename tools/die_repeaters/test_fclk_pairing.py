@@ -189,7 +189,7 @@ rename ot_die_rep_fclk_audit original_audit
 proc ot_die_rep_fclk_audit {prefix args} {
     set f [open $prefix.tsv w]
     puts $f "broadcast\tmismatch\tpairing\tfclk_repeaters\tdata_min\tdata_max\tfclk_net\tcapture"
-    puts $f "0\t1\tsame_source\t1\t1\t4\tn_fck\tcap"
+    puts $f "0\t1\tcapture_inputs\t1\t1\t4\tn_fck\tcap"
     close $f
     return 1
 }

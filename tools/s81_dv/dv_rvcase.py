@@ -57,6 +57,50 @@ LINK_RE = re.compile(r'^w_(.+)_(src|dst|lnd)$')
 _FULL_CONST = re.compile(r"\s*(\d+)'[sS]?([bBhHdDoO])([0-9a-fA-F_]+)\s*")
 
 
+def forwarded_payload_width(master):
+    """Exact source families whose forwarded payload is the complete i bus.
+
+    Landing reset, selector and receiver clock inputs belong to separate trees;
+    tracing them as payload can falsely demand dozens of clock buffers.
+    """
+    for pattern in (r'dsfd_dvrlyh?_(\d+)_[A-Z]+', r'dsfd_dvland_(\d+)l?',
+                    r'dsdv_svc_busland_(\d+)', r'dsdv_pv_local_land_(\d+)'):
+        match = re.fullmatch(pattern, master)
+        if match:
+            return int(match[1])
+    if master in ('dsdv_pv_local_land_n32_276', 'dsdv_pv_local_land_n32_source4_276'):
+        return 276
+    if master == 'dsfd_dvland_pvrd':
+        return 562
+    return None
+
+
+def forwarded_payload_contracts(insts, kind, standin_cells):
+    result = {}
+    for master, name, _, _ in insts:
+        width = forwarded_payload_width(master)
+        if width:
+            cell = standin_cells[name] if kind[name] == 'standin' else master
+            if cell in result and result[cell] != width:
+                raise ValueError(f'inconsistent forwarded payload width for {cell}')
+            result[cell] = width
+    return result
+
+
+def install_controller_corner_repair(out):
+    """Patch the generated step artifact, before its clock/data balancing."""
+    shutil.copy(HERE / 'ctrl_corner.tcl', out / 'ctrl_corner.tcl')
+    hook = ('source /work/ctrl_corner.tcl\n'
+            'if {[s81_ctrl_corner_repair /work/ctrl_corner] != 0} { write_db /work/out/ctrl_corner.fail.odb; exit 5 }\n'
+            'global_connect\n')
+    path = out / 'die_repeaters_step.tcl'
+    text = path.read_text()
+    marker = 'ot_die_rep_fclk_equalize '
+    if marker not in text:
+        raise ValueError('controller corner repair requires generated forwarded-clock equalization')
+    path.write_text(text.replace(marker, hook + marker, 1))
+
+
 def clock_sdc(table, top_ports):
     """Declare core and off-die PHY domains from the same binding contract."""
     domains = table.get('clock_domains', {})
@@ -414,6 +458,284 @@ def fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, gap=4.0, or
     return moves
 
 
+def _free_cands(placer, x, y, w, h, near=10, step=4.0, rmax=400.0, ray_um=200.0, per_ray=3):
+    """free lower-left positions for a w x h macro around lower-left (x, y): the `near` nearest (square spiral), plus the
+    first `per_ray` free points on each of the 4 axis rays (a station can slide along its street); [(x, y, disp)]"""
+    out, seen = [], set()
+
+    def ok(dx, dy):
+        k = (round(dx, 3), round(dy, 3))
+        if k in seen:
+            return False
+        seen.add(k)
+        return not placer.hits((x + dx, y + dy, x + dx + w, y + dy + h))
+    if ok(0.0, 0.0):
+        out.append((x, y, 0.0))
+    k = 1
+    while len(out) < near and k * step <= rmax:
+        d = k * step
+        ring = []
+        for t in range(-k, k + 1):
+            ring += [(t * step, d), (t * step, -d), (d, t * step), (-d, t * step)]
+        ring.sort(key=lambda p: abs(p[0]) + abs(p[1]))
+        for dx, dy in ring:
+            if ok(dx, dy):
+                out.append((x + dx, y + dy, abs(dx) + abs(dy)))
+                if len(out) >= near:
+                    break
+        k += 1
+    for ux, uy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        n, d = 0, step
+        while n < per_ray and d <= ray_um:
+            if ok(ux * d, uy * d):
+                out.append((x + ux * d, y + uy * d, d)); n += 1; d += 4 * step
+            else:
+                d += step
+    return out
+
+
+def _placer_remove(placer, r):
+    """take one rectangle (exact tuple) out of a Placer"""
+    x0, y0, x1, y1 = r
+    for i in range(int(x0 // placer.B), int(x1 // placer.B) + 1):
+        for j in range(int(y0 // placer.B), int(y1 // placer.B) + 1):
+            b = placer.buck.get((i, j))
+            if b and r in b:
+                b.remove(r)
+
+
+def _rs_repair(st, parent, kids, terms, placed, loc, placer, reach, box_of, margin=6.0, step=4.0, rmax=480.0,
+               max_moves=400000):
+    """STW-S81c-DIE-C23 cap23 reset-chain repair after the C22 tree DP: every station hop (station -> station child,
+    station -> fixed load) over `reach` is removed by moving stations ALONG their chain on legal free sites.
+    A violating station moves to the free site that minimises (sum of its hop excesses over reach - margin, then the
+    distance to the target): the target is the point of the intersection of the (reach - margin) diamonds around all
+    its neighbours (parent, station children, fixed loads) nearest its current point, or, when that intersection is
+    empty (a stack of chained stations whose ends are pulled apart), the minimax centre of its neighbours.  A station
+    that cannot clear its own excess PULLS its station neighbours (they move to their minimax centre when that shortens
+    their longest hop without creating an excess), so a chain planned as a stack on one point unrolls along its path
+    (rope relaxation) instead of being packed in place.  Every site stays inside the station's clock-region box
+    (box_of[inst] = its root's geometric extent grown by reach - margin: the S81.CLK region gate cannot fail) and outside
+    every block / frame / landing / relay (the Placer).  Same stations, same nets, same stage counts."""
+    import time as _t
+    t0 = _t.time()
+    R = reach - margin
+    hop = lambda a_, b_: abs(a_[0] - b_[0]) + abs(a_[1] - b_[1])
+    nb = {v: ([parent[v]] if v in parent else []) + list(kids[v]) for v in st}
+    pts = lambda v: [placed[u] for u in nb[v]] + list(terms[v])
+    exc = lambda c, P: sum(max(0.0, hop(c, q) - R) for q in P)
+    exc_r = lambda c, P: sum(max(0.0, hop(c, q) - reach) for q in P)
+
+    def viol(v):
+        return any(hop(placed[v], q) > reach for q in pts(v))
+
+    def target(v, P, cur):
+        us = [q[0] + q[1] for q in P]; vs = [q[0] - q[1] for q in P]
+        ulo, uhi, vlo, vhi = max(us) - R, min(us) + R, max(vs) - R, min(vs) + R
+        u0, v0 = cur[0] + cur[1], cur[0] - cur[1]
+        if ulo <= uhi and vlo <= vhi:
+            ut, vt = min(max(u0, ulo), uhi), min(max(v0, vlo), vhi)
+        else:
+            ut = (max(us) + min(us)) / 2 if ulo > uhi else min(max(u0, ulo), uhi)
+            vt = (max(vs) + min(vs)) / 2 if vlo > vhi else min(max(v0, vlo), vhi)
+        return (ut + vt) / 2, (ut - vt) / 2
+
+    def search(v, tx, ty, score, best0):
+        w, h = loc[v][2], loc[v][3]
+        bx = box_of.get(v)
+        if bx:
+            tx, ty = min(max(tx, bx[0]), bx[2]), min(max(ty, bx[1]), bx[3])
+        best, bestc = None, best0
+        k = 0
+        while k * step <= rmax:
+            d = k * step
+            ring = [(0.0, 0.0)] if k == 0 else []
+            for t in range(-k, k + 1):
+                ring += [(t * step, d), (t * step, -d), (d, t * step), (-d, t * step)] if k else []
+            for dx, dy in ring:
+                cx, cy = tx + dx, ty + dy
+                if bx and not (bx[0] <= cx <= bx[2] and bx[1] <= cy <= bx[3]):
+                    continue
+                c = score((cx, cy))
+                if c >= bestc:
+                    continue
+                if placer.hits((cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)):
+                    continue
+                best, bestc = (cx, cy), c
+            if best is not None and bestc[0] == 0.0:
+                break
+            k += 1
+        return best, bestc
+
+    def move(v, c):
+        w, h = loc[v][2], loc[v][3]
+        _placer_remove(placer, (loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+        r = (c[0] - w / 2, c[1] - h / 2, c[0] + w / 2, c[1] + h / 2)
+        placer.add(r); placed[v] = c
+        loc[v] = (r[0], r[1], w, h, 'FIRM')
+
+    work = collections.deque(sorted(v for v in st if viol(v)))
+    inq = {v: 'fix' for v in work}
+    moves = pulls = 0
+    stuck = set()
+    before = len(work)
+    while work and moves + pulls < max_moves:
+        v = work.popleft(); mode = inq.pop(v)
+        P = pts(v)
+        if not P:
+            continue
+        cur = placed[v]
+        w, h = loc[v][2], loc[v][3]
+        _placer_remove(placer, (loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+        if mode == 'fix':
+            e0 = exc_r(cur, P)
+            if e0 == 0.0:
+                placer.add((loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h)); continue
+            tx, ty = target(v, P, cur)
+            score = lambda c: (round(exc(c, P), 1), hop(c, (tx, ty)))
+            best, bc_ = search(v, tx, ty, score, (round(exc(cur, P), 1), hop(cur, (tx, ty))))
+            placer.add((loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+            if best is not None:
+                move(v, best); moves += 1
+            if exc_r(placed[v], P) > 0.0:
+                for u in nb[v]:                    # pull the chain neighbours toward their own centres
+                    if u not in inq and (u, v) not in stuck:
+                        inq[u] = 'pull'; work.append(u)
+                if best is None:
+                    stuck.add(v)
+            for u in nb[v]:
+                if u not in inq and viol(u):
+                    inq[u] = 'fix'; work.append(u)
+            if exc_r(placed[v], P) > 0.0 and best is not None and v not in inq:
+                inq[v] = 'fix'; work.append(v)
+        else:
+            m0 = max(hop(cur, q) for q in P)
+            us = [q[0] + q[1] for q in P]; vs = [q[0] - q[1] for q in P]
+            ut, vt = (max(us) + min(us)) / 2, (max(vs) + min(vs)) / 2
+            tx, ty = (ut + vt) / 2, (ut - vt) / 2
+            score = lambda c: (round(exc(c, P), 1), max(hop(c, q) for q in P))
+            best, bc_ = search(v, tx, ty, score, (round(exc(cur, P), 1), m0 - step))
+            placer.add((loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+            if best is not None:
+                move(v, best); pulls += 1
+                for u in nb[v]:
+                    if u not in inq:
+                        inq[u] = 'fix' if viol(u) else 'pull'
+                        work.append(u)
+    after = sum(1 for v in st if viol(v))
+    return dict(rule='C23 rope relaxation after the DP: violating stations move on free legal sites inside their clock-region '
+                     'box toward the (reach - margin) diamond intersection of their neighbours; unresolved ones pull their '
+                     'chain neighbours to their minimax centres (stacks unroll along the chain path)',
+                margin_um=margin, stations_violating_before=before, stations_violating_after=after, moves=moves, pulls=pulls,
+                budget_hit=moves + pulls >= max_moves, seconds=round(_t.time() - t0, 1), boxed=sum(1 for v in st if v in box_of))
+
+
+def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, reach, skip_loads=(), box_of=None, repair=False):
+    """C22 --rs-chain-place: place every reset / gate-calendar station (dsfd_rly_1_WN, planned in hints['reset_place'],
+    provisional loc = planned point) by a DP over the reset TREE (every station has one station parent: rst_sync ->
+    street -> crossing -> leaf -> gate calendar -> ICG ENA / relay rs / landing rs / block rst_n).  Each station picks one
+    of ~20 free candidate points near its planned point; cost = 1e6 per hop (centre to centre, to its station children and
+    to its fixed non-station loads) over `reach` + 1e3 x excess + displacement um.  Children are committed top-down
+    (a candidate taken meanwhile falls back to the next best).  Stage counts are unchanged.
+    skip_loads: instances no longer loading a station net in the case netlist (co-forwarded relay reset stages k >= 2)."""
+    import time as _t
+    t0 = _t.time()
+    st = set(stations)
+    cen = lambda i: (loc[i][0] + loc[i][2] / 2, loc[i][1] + loc[i][3] / 2)
+    plan_c = {i: cen(i) for i in st}
+    parent, kids, terms = {}, collections.defaultdict(list), collections.defaultdict(list)
+    for i in st:
+        outs = {n_ for n_, _ in ibits[i].get('o', []) if n_ not in ('CONST', 'Z', 'UNDECL')}
+        for n_ in outs:
+            for o in touch.get(n_, ()):
+                if o == i:
+                    continue
+                if o in st:
+                    if any(b_[0] == n_ for p_ in ('i', 'rs') for b_ in ibits[o].get(p_, [])):
+                        if o not in parent:
+                            parent[o] = i; kids[i].append(o)
+                    continue
+                if o in skip_loads or o not in loc:
+                    continue
+                if o.startswith('u_') and o[2:] in hints.get('block_rst_pin', {}):
+                    terms[i].append(tuple(hints['block_rst_pin'][o[2:]]))
+                elif o.startswith('u_') and o[2:] in blocks:
+                    b = blocks[o[2:]]; px, py = plan_c[i]
+                    terms[i].append((min(max(px, b['x']), b['x'] + b['w']), min(max(py, b['y']), b['y'] + b['h'])))
+                else:
+                    terms[i].append(cen(o))
+    roots = sorted(i for i in st if i not in parent)
+    order, seen = [], set()
+    for r in roots:                       # iterative pre-order
+        stk = [r]
+        while stk:
+            v = stk.pop()
+            if v in seen:
+                continue
+            seen.add(v); order.append(v); stk.extend(kids[v])
+    hop = lambda a_, b_: abs(a_[0] - b_[0]) + abs(a_[1] - b_[1])
+    hc = lambda h: 0.0 if h <= reach else 1e6 + 1e3 * (h - reach)
+    cand, f = {}, {}
+    for i in st:
+        x0, y0, w, h, _ = loc[i]
+        cs = _free_cands(placer, x0, y0, w, h)
+        cand[i] = [(cx + w / 2, cy + h / 2, dd) for cx, cy, dd in cs] or [(x0 + w / 2, y0 + h / 2, 0.0)]
+    best_child = {}
+    for v in reversed(order):              # children before parents
+        fv = []
+        for (cx, cy, dd) in cand[v]:
+            c = dd + sum(hc(hop((cx, cy), t)) for t in terms[v])
+            for u in kids[v]:
+                c += min(hc(hop((cx, cy), cand[u][k][:2])) + f[u][k] for k in range(len(cand[u])))
+            fv.append(c)
+        f[v] = fv
+    placed, fallback = {}, 0
+    W_, H_ = placer.W, placer.H
+    for v in order:
+        w, h = loc[v][2], loc[v][3]
+        if v in parent:
+            pc = placed[parent[v]]
+            ranks = sorted(range(len(cand[v])), key=lambda k: hc(hop(pc, cand[v][k][:2])) + f[v][k])
+        else:
+            ranks = sorted(range(len(cand[v])), key=lambda k: f[v][k])
+        for k in ranks:
+            cx, cy, _ = cand[v][k]
+            r = (cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
+            if not placer.hits(r):
+                placer.add(r); placed[v] = (cx, cy); break
+        else:
+            pc_ = plan_c[v]
+            px_, py_, _ = placer.put(pc_[0] - w / 2, pc_[1] - h / 2, w, h, step=4.0)
+            placed[v] = (px_ + w / 2, py_ + h / 2); fallback += 1
+        loc[v] = (placed[v][0] - w / 2, placed[v][1] - h / 2, w, h, 'FIRM')
+    dp_over = sum(1 for v in st for u in kids[v] if hop(placed[v], placed[u]) > reach) + \
+        sum(1 for v in st for t in terms[v] if hop(placed[v], t) > reach)
+    rrep = None
+    if repair:
+        rrep = _rs_repair(st, parent, kids, terms, placed, loc, placer, reach, box_of or {})
+    over, over_plan, worst = [], 0, []
+    for v in st:
+        for u in kids[v]:
+            hp, hq = hop(placed[v], placed[u]), hop(plan_c[v], plan_c[u])
+            over_plan += hq > reach
+            if hp > reach:
+                over.append(('reset_station', u, v, round(hp, 1), round(hq, 1)))
+        for t in terms[v]:
+            hp = hop(placed[v], t)
+            if hp > reach:
+                over.append(('station_load', v, f'{t[0]:.1f},{t[1]:.1f}', round(hp, 1), None))
+    disp = sorted(hop(placed[v], plan_c[v]) for v in st)
+    rep = dict(stations=len(st), roots=len(roots), station_hops=sum(len(k_) for k_ in kids.values()),
+               load_hops=sum(len(t_) for t_ in terms.values()), planned_station_hops_over_reach=over_plan,
+               placed_hops_over_reach=len(over), by_kind=dict(collections.Counter(o[0] for o in over)),
+               max_hop_um=max((o[3] for o in over), default=None), fallback_spiral=fallback,
+               disp_um=dict(median=round(disp[len(disp) // 2], 1), p99=round(disp[int(len(disp) * 0.99)], 1), max=round(disp[-1], 1)) if disp else None,
+               reach_um=reach, seconds=round(_t.time() - t0, 1), dp_hops_over_reach=dp_over, repair=rrep,
+               rule='tree DP: candidates near each planned point (nearest free + 4 axis rays), cost 1e6/hop over reach '
+                    '+ 1e3 x excess + displacement; same stations, same stage counts')
+    return rep, sorted(over, key=lambda o: -o[3])
+
+
 def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blocks, reach):
     """ROOT14 10-20: GEN safety facts (opentallas.die_gen_safety_facts.v1) of a real-view S81 die case"""
     region = {}
@@ -598,6 +920,37 @@ def main():
                          'geometric extent + reach, e.g. a pre-S81.CLK logical bind) as a labelled diagnostic')
     ap.add_argument('--reach-um', type=float, default=DSG.REACH_UM, help='GEN safety planning reach (owner 405 um)')
     ap.add_argument('--no-ir', metavar='REASON', help='skip the die IR-drop step in run_all.sh (labelled NOT_A_DIE_RESULT)')
+    ap.add_argument('--rfw', action='store_true',
+                    help='STW-S81c-DIE-C21 cap21: co-forwarded relay reset -- every forwarded relay stage k>=1 takes rs from a '
+                         'die-level retimer clocked by its own forwarded clock fck[k], fed from the retimer of stage k-1 '
+                         '(the reset travels the lane with its clock; was a regional-root reset grid flop -> per-stage CDC)')
+    ap.add_argument('--hold-eco', action='store_true',
+                    help='STW-S81c-DIE-C21 cap21: post-GRT die hold ECO session (hold_eco.sh) before the die STA: hold buffers '
+                         'on die data nets only (clock / reset-distribution / special / skip nets dont_touch; closed views are '
+                         'macros and cannot be edited)')
+    ap.add_argument('--dieclk', action='store_true',
+                    help='STW-S81c-DIE-C22 cap22: physical regional clock tree per die clock root port (tools/die_clock '
+                         'build.py safe DME tree + measured TT/FF trim) between placement and the die repeater step; the '
+                         'root port stays a top port and drives its regional entry buffer ckr_<root> at the sink median; '
+                         'STA propagates through the real trees (was: ideal special root nets up to 9.9 mm)')
+    ap.add_argument('--dieclk-iters', type=int, default=3, help='measured trim iterations of the die clock build')
+    ap.add_argument('--fck-out-pin', action='store_true',
+                    help='STW-S81c-DIE-C22 cap22: a stand-in forwarded-clock OUTPUT bit (slice ck_xc[k], no kit pin) that '
+                         'drives one hop-0 forward cell sits beside its lane data launch (as nX_fck lanes); was the '
+                         'centroid of the whole bus loads -> up to 6.8 mm unbuffered clock-pin nets to the fwd ICG')
+    ap.add_argument('--rs-chain-place', action='store_true',
+                    help='STW-S81c-DIE-C22 cap22: reset / gate-calendar stations placed by a tree DP over the reset tree '
+                         '(candidates near each planned point, cost = hops over --reach-um, then displacement) after the '
+                         'forward cells are relocated; same stations, same stage counts (no latency change); was a '
+                         'per-station spiral that pushed 400-um planned hops to 405-1,228 um')
+    ap.add_argument('--rs-repair', action='store_true',
+                    help='STW-S81c-DIE-C23 cap23: after the --rs-chain-place DP, rope relaxation of every station hop over '
+                         '--reach-um on legal free sites inside the station clock-region box (chained stacks unroll along '
+                         'their path); same stations / stage counts')
+    ap.add_argument('--dieclk-split-um', type=float, default=0.0,
+                    help='STW-S81c-DIE-C23 cap23: a die clock root whose placed sink bbox has a side > this (or a half '
+                         'perimeter > 1.5x this) is split into geometric sub-regions (bisection at the bbox middle) with '
+                         'one entry buffer each, all in one build.py balance_group (shared TT/FF target); 0 = off')
     a = ap.parse_args()
     # ROOT14 10-20 (COORD 21:29 (a)): TT setup + FF hold on every die build, diagnostic ones included
     a.corners = DSC.required(a.corners)
@@ -660,13 +1013,14 @@ def main():
         ibits[nm] = pb
     top = set(tin) | set(tout)
     clocks_sdc = clock_sdc(T, top)
+    landing_instances = {row['inst'] for row in hints['landings']}
     # clock nets: region roots, lane forwarded clocks (relay ck / ck_o, landing ck_f, forward cells), peer clocks (bind clk_peer)
     clocknets = {n for n in top if n.startswith('ck_')}
     for mst, nm, _, cm in insts:
         cps = []
         if mst.startswith('dsfd_dvrlyh_') or mst.startswith('dsfd_dvrly_'):
             cps = ['ck', 'ck_o']
-        elif mst.startswith('dsfd_dvland_'):
+        elif nm in landing_instances:
             cps = ['ck_f', 'ck']
         elif mst.endswith('_ASAP7_75t_R') and nm.startswith('fwd_'):
             cps = ['A', 'Y', 'CLK', 'GCLK']     # BUFx8 forward / ICGx4 hop-0 lane clock gate (S81-LBGAP/G1)
@@ -759,12 +1113,25 @@ def main():
         else:
             w_, h_ = short, long_; yy = y - h_ / 2; xx = b['x'] - w_ - 2.0 if f == 'W' else b['x'] + b['w'] + 2.0
             pref = [(0, 1), (0, -1), (-1 if f == 'W' else 1, 0)]
+        body = T.get('landing_assemblies', {}).get(mst_of[i], {}).get('body_um')
+        if body:
+            # Explicit source/native outline grant, fixed orientation. No inherited view.
+            w_, h_ = map(float, body)
+            if f in 'SN':
+                xx = x - w_ / 2; yy = b['y'] - h_ - 2.0 if f == 'S' else b['y'] + b['h'] + 2.0
+            else:
+                yy = y - h_ / 2; xx = b['x'] - w_ - 2.0 if f == 'W' else b['x'] + b['w'] + 2.0
         px_, py_, dd = placer.put(xx, yy, w_, h_, prefer=pref)
         loc[i] = (px_, py_, w_, h_, 'FIRM'); moved['landing'] += dd is not None and dd > 0
         if dd is None or dd > 200:
             far.append((i, dd))
     for p in hints['reset_place']:
         i = p['inst']; x, y = p['xy']
+        if a.rs_chain_place:
+            # C22: provisional = planned point (stand-in heuristic pins read it); placed by rs_chain_place after the
+            # forward cells are relocated (the gate-calendar end station must reach its fwd ICG ENA)
+            loc[i] = (x - rw / 2, y - rh / 2, rw, rh, 'FIRM')
+            continue
         px_, py_, dd = placer.put(x - rw / 2, y - rh / 2, rw, rh, step=4.0)
         loc[i] = (px_, py_, rw, rh, 'FIRM'); moved['reset'] += dd is not None and dd > 0
         if dd is None or dd > 100:
@@ -789,6 +1156,16 @@ def main():
     if missing:
         raise SystemExit(f'dv_rvcase: no position for {len(missing)} instances, e.g. {missing[:5]}')
     centre = {i: (v[0] + v[2] / 2, v[1] + v[3] / 2) for i, v in loc.items()}
+    # C22 --fck-out-pin: (net, bit) of a block forwarded-clock output -> the ONE hop-0 forward cell it clocks
+    fck_bit_icg, fck_out_pins = {}, collections.Counter()
+    if a.fck_out_pin:
+        _cnt = collections.Counter()
+        for mst, nm, _, _ in insts:
+            if nm.startswith('fwd_') and mst.endswith('_ASAP7_75t_R') and nm[4:] in links:
+                for b_ in ibits[nm].get('CLK', []):
+                    if b_[0] not in ('CONST', 'Z', 'UNDECL'):
+                        fck_bit_icg[b_] = nm; _cnt[b_] += 1
+        fck_bit_icg = {k: v for k, v in fck_bit_icg.items() if _cnt[k] == 1}
 
     # ------------------------------------------------------------------ stand-in abstracts + libs
     census = collections.Counter(); scell = {}
@@ -878,6 +1255,17 @@ def main():
                         x, y = L['sxy'] if bname == L['src'] else L['dxy']
                         f = face_of(blocks[bname], x, y)
                         t = (y - y0 if f in 'WE' else x - x0) + L['bits'] * PITCH / 2 + PITCH * (1 + slot[('f', ln)]); slot[('f', ln)] += 1
+                    elif L is None and d == 'output' and (n_, bi) in fck_bit_icg:
+                        # C22: block forwarded-clock output bit (slice ck_xc[k]) -> its lane's hop-0 forward cell: the
+                        # pin sits right after that lane's data launch bits, so clock and data leave together
+                        ln = fck_bit_icg[(n_, bi)][4:]; L = links[ln]
+                        if L['src'] == bname:
+                            x, y = L['sxy']
+                            f = face_of(blocks[bname], x, y)
+                            t = (y - y0 if f in 'WE' else x - x0) + L['bits'] * PITCH / 2 + PITCH * (1 + slot[('f', ln)]); slot[('f', ln)] += 1
+                            fck_out_pins['beside_lane'] += 1
+                        else:
+                            fck_out_pins['lane_src_mismatch'] += 1
                 elif LINK_RE.match(n_) and bname:
                     ln, role = LINK_RE.match(n_).groups(); kinds.add('data')
                     L = links.get(ln)
@@ -966,9 +1354,57 @@ def main():
                 ties.append(f'  {mst_} tie_{n}_{k} (.{pin_}({n}[{k}]));')
             return n
         return CONST_RE.sub(rep, e)
+    # ------------------------------------------------------------------ STW-S81c-DIE-C21 co-forwarded relay reset (--rfw)
+    # MAIN4 die STA: relay_reset hold -23.2 ns on 7459 of 7953 relay rs pins.  Stage k of a forwarded lane is clocked by
+    # n<lane>_fck[k] (stage k-1 ck_o; ~245 ps per hop, 23.4 ns at stage 94) while its rs came from a reset grid flop
+    # st_rs_* on an IDEAL regional root ck_g*: an uncontrolled phase per stage = a reset CDC, not a buffering problem.
+    # Fix (die glue only, no block interface / topology change): rfw_<lane>_<k> (DFFHQNx1, CLK = fck[k]) +
+    # rfwi_<lane>_<k> (INVx1) per stage k>=1; D(k) = rfwq(k-1) (stage 1: its own former grid rs, local), rs(stage k) =
+    # rfwq(k).  Reset release reaches stage k k cycles after stage 1, exactly as the data wave does; hop = the relay hop.
+    rfw_cells, rfw_rows, rfw_rs, rfw_first = [], [], {}, set()
+    if a.rfw:
+        fck_re = re.compile(r'^n(\w+)_fck\[(\d+)\]$')
+        lanes_ = collections.defaultdict(dict)
+        for i_, (mst, nm, prm, cm) in enumerate(insts):
+            if not mst.startswith('dsfd_dvrly') or kind.get(nm) == 'standin' or 'rs' not in cm or 'ck' not in cm:
+                continue
+            m_ = fck_re.match(cm['ck'].strip())
+            if m_:
+                lanes_[m_.group(1)][int(m_.group(2))] = i_
+        for lane_, st_ in sorted(lanes_.items()):
+            prevq = None
+            for k_ in sorted(st_):
+                i_ = st_[k_]
+                mst, nm, prm, cm = insts[i_]
+                if k_ == 0:
+                    prevq = None
+                    continue
+                d_ = prevq if (prevq is not None and (k_ - 1) in st_) else cm['rs'].strip()
+                if CONST_RE.search(d_) or CONST_RE.search(cm['rs']):
+                    prevq = None            # constant reset (tied stage): leave it as bound
+                    continue
+                qn, q = f'rfwn_{lane_}_{k_}', f'rfwq_{lane_}_{k_}'
+                decl.append(f'  wire {qn};'); decl.append(f'  wire {q};')
+                rfw_cells.append(f'  DFFHQNx1_ASAP7_75t_R rfw_{lane_}_{k_} (.CLK({cm["ck"].strip()}), .D({d_}), .QN({qn}));')
+                rfw_cells.append(f'  INVx1_ASAP7_75t_R rfwi_{lane_}_{k_} (.A({qn}), .Y({q}));')
+                rfw_rows.append((f'rfw_{lane_}_{k_}', f'rfwi_{lane_}_{k_}', nm))
+                if d_ == cm['rs'].strip():
+                    rfw_first.add(nm)       # its retimer (at this stage's rs pin) still loads the station net
+                rfw_rs[nm] = q          # body-only override: insts / ibits (gen safety, clock regions) stay the bind netlist
+                prevq = q
+        print(f'RFW co-forwarded relay reset: lanes={len(lanes_)} stages_rewired={len(rfw_rows)} cells={len(rfw_cells)}', flush=True)
     body = []
     for mst, nm, prm, cm in insts:
-        cs = ', '.join(f'.{p}({detie(e, nm, kind[nm] != "standin")})' for p, e in cm.items())
+        # STW-S81c-DIE 10-22 (cap18/CLK2 fclk pairing_errors=2): a stand-in LANDING whose forwarded payload is a
+        # declared i-bus contract (forwarded_payload_width) receives its zero padding from the die top
+        # (pvso_*_local_l2 = {tz[265:0], 10 real bits}); those padding pins are real boundary pins of the stand-in LEF,
+        # so drive them with physical TIELO/TIEHI cells like any bound instance. A floating 1-pin wire left 266 of the
+        # 276 contracted bits untraced -> data_port_contract_ERROR. Straps (k, sid ...) of stand-ins stay internal.
+        payload_w = forwarded_payload_width(mst)
+        if nm in rfw_rs:
+            cm = dict(cm, rs=rfw_rs[nm])
+        cs = ', '.join(f'.{p}({detie(e, nm, kind[nm] != "standin" or (p == "i" and bool(payload_w)))})'
+                       for p, e in cm.items())
         if kind[nm] == 'standin':
             body.append(f'  {scell[nm]} {nm} ({cs});')
         else:
@@ -978,6 +1414,117 @@ def main():
             raise SystemExit('dv_rvcase: constant assign has no physical load to place its tie at -- bind it to a port')
         body.append('  ' + s_ + ';')
     body += ties
+    body += rfw_cells
+    # ------------------------------------------------------------------ C22 regional die clock entry (--dieclk)
+    # Every die clock root port ck_* keeps its top port; the port drives ONE entry buffer ckr_<root> (placed at the
+    # median of its sinks) whose output net carries all former loads.  tools/die_clock/build.py then builds the physical
+    # regional tree from ckr_<root>/Y (safe DME tree, repeater <= 220 um, measured TT/FF trim) before the repeater step.
+    dieclk_ports = []
+    if a.dieclk:
+        if not a.die_repair:
+            raise SystemExit('dv_rvcase: --dieclk needs --die-repair (two-session die flow)')
+        cand_p = sorted(n for n in tin if n.startswith('ck_') and nets[n][0] == 1 and touch.get(n))
+        if cand_p:
+            rx_ = re.compile(r'(?<![\w$])(' + '|'.join(map(re.escape, sorted(cand_p, key=len, reverse=True))) + r')(?![\w$\[])')
+            used = set()
+
+            def _sub(m):
+                used.add(m.group(1)); return 'ckrn_' + m.group(1)
+            body = [rx_.sub(_sub, ln) for ln in body]
+            dieclk_ports = sorted(used)
+            for p_ in dieclk_ports:
+                decl.append(f'  wire ckrn_{p_};')
+                body.append(f'  BUFx24_ASAP7_75t_R ckr_{p_} (.A({p_}), .Y(ckrn_{p_}));')
+        print(f'DIECLK entry buffers: roots={len(dieclk_ports)} (ck_* input ports with loads {len(cand_p)})', flush=True)
+
+    # ------------------------------------------------------------------ C22 reset-tree DP placement (--rs-chain-place)
+    rsdp, rsdp_over = None, []
+    if a.rs_chain_place:
+        box_of = {}
+        if a.rs_repair:
+            # C23: each station stays inside its clock root's geometric extent grown by reach - 10 um (S81.CLK gate)
+            cr_ = bc.get('clock_regions') or {}
+            if cr_.get('mode') == 'geometric':
+                grid_ = GC.Grid.from_spec(cr_['grid'])
+                reg_ = {b: (f'b_{b}' if r['kind'] == 'own_root' else r['cell']) for b, r in cr_['blocks'].items()}
+                ext_ = GC.extents(grid_, plan['blocks'], reg_, [b for b, r in cr_['blocks'].items() if r['kind'] == 'table_clock'])
+                doms_ = set(T.get('clock_domains', {}))
+                g_ = a.reach_um - 10.0
+                for p in hints['reset_place']:
+                    ck_ = [n_ for n_, _ in ibits[p['inst']].get('ck', []) if n_ in top and n_.startswith('ck_')]
+                    if ck_ and ck_[0] not in doms_ and ck_[0][3:] in ext_:
+                        e_ = ext_[ck_[0][3:]]
+                        box_of[p['inst']] = (e_[0] - g_, e_[1] - g_, e_[2] + g_, e_[3] + g_)
+        rsdp, rsdp_over = rs_chain_place([p['inst'] for p in hints['reset_place']], insts, ibits, touch, loc, placer,
+                                         hints, blocks, a.reach_um, skip_loads=set(rfw_rs) - rfw_first,
+                                         box_of=box_of, repair=a.rs_repair)
+        (out / 'rs_chain_place.tsv').write_text('kind\tcapture\tsource\thop_um\tplanned_hop_um\n' +
+                                                ''.join('\t'.join(map(str, o)) + '\n' for o in rsdp_over))
+        print('RS_CHAIN_PLACE', json.dumps(rsdp), flush=True)
+        centre = {i: (v[0] + v[2] / 2, v[1] + v[3] / 2) for i, v in loc.items()}
+    dieclk_info = None
+    split_info = {}
+    if dieclk_ports:
+        domains_ = T.get('clock_domains', {})
+        rows_, trees_ = [], []
+        sub_of = {}                       # (port, inst) -> sub-region index (C23 --dieclk-split-um)
+        S_ = a.dieclk_split_um
+
+        def _bisect(items):
+            xs_ = [q[1][0] for q in items]; ys_ = [q[1][1] for q in items]
+            wx, wy = max(xs_) - min(xs_), max(ys_) - min(ys_)
+            if len(items) < 2 or (max(wx, wy) <= S_ and wx + wy <= 1.5 * S_):
+                return [items]
+            if wx >= wy:
+                m_ = (max(xs_) + min(xs_)) / 2; A_ = [q for q in items if q[1][0] <= m_]; B_ = [q for q in items if q[1][0] > m_]
+            else:
+                m_ = (max(ys_) + min(ys_)) / 2; A_ = [q for q in items if q[1][1] <= m_]; B_ = [q for q in items if q[1][1] > m_]
+            return _bisect(A_) + _bisect(B_)
+        for p_ in dieclk_ports:
+            per = float(domains_.get(p_, {}).get('period_ps', T_PS))
+            items = sorted((o, centre[o]) for o in set(touch[p_]) if o in centre and o != f'ckr_{p_}')
+            parts = _bisect(items) if S_ > 0 and items else [items]
+            if len(parts) == 1:
+                pts = sorted(q for _, q in items)
+                xs = sorted(q[0] for q in pts); ys = sorted(q[1] for q in pts)
+                rows_.append(f'ckr_{p_} {xs[len(xs) // 2]:.3f} {ys[len(ys) // 2]:.3f}\n')
+                trees_.append(dict(name=p_, root=f'ckr_{p_}/Y', period=per, select='all'))
+                continue
+            boxes = []
+            for j, part in enumerate(parts):
+                xs = sorted(q[0] for _, q in part); ys = sorted(q[1] for _, q in part)
+                en = f'ckr_{p_}' if j == 0 else f'ckr_{p_}_r{j}'
+                rows_.append(f'{en} {xs[len(xs) // 2]:.3f} {ys[len(ys) // 2]:.3f}\n')
+                trees_.append(dict(name=p_ if j == 0 else f'{p_}_r{j}', root=f'{en}/Y', period=per, select='all', balance_group=p_))
+                boxes.append([round(xs[0], 1), round(ys[0], 1), round(xs[-1], 1), round(ys[-1], 1), len(part)])
+                for o, _ in part:
+                    if j:
+                        sub_of[(p_, o)] = j
+                if j:
+                    decl.append(f'  wire ckrn_{p_}_r{j};')
+                    body.append(f'  BUFx24_ASAP7_75t_R {en} (.A({p_}), .Y(ckrn_{p_}_r{j}));')
+            split_info[p_] = boxes
+        if sub_of:
+            by_inst = collections.defaultdict(dict)
+            for (p_, o), j in sub_of.items():
+                by_inst[o][p_] = j
+            irx = re.compile(r'^\s*\S+\s+(\S+)\s*\(')
+            for k_, ln in enumerate(body):
+                m_ = irx.match(ln)
+                if m_ and m_.group(1) in by_inst:
+                    for p_, j in by_inst[m_.group(1)].items():
+                        ln = re.sub(r'(?<![\w$])ckrn_' + re.escape(p_) + r'(?![\w$\[])', f'ckrn_{p_}_r{j}', ln)
+                    body[k_] = ln
+        (out / 'ckr_place.txt').write_text(''.join(rows_))
+        print('DIECLK_SPLIT', json.dumps(dict(split_um=S_, roots_split=len(split_info),
+                                              sub_regions=sum(len(v) for v in split_info.values()))), flush=True)
+        (out / 'dieclk_spec.json').write_text(json.dumps(dict(
+            trees=trees_, rc_layer=M8['sta_wire_rc_layer'], safe_tree=True, grid_center=True,
+            note='C22 regional die clock trees: one tree per die clock root port, rooted at its entry buffer ckr_<root>; '
+                 'no balance_group (regions are balanced inside; region crossings are landed / neighbour-judged)'), indent=1))
+        dieclk_info = dict(roots=len(dieclk_ports), iters=a.dieclk_iters, spec='dieclk_spec.json', split_um=a.dieclk_split_um,
+                           roots_split=len(split_info), entries=len(rows_), split=split_info,
+                           tool=f'{a.dcc_ref}:tools/die_clock/build.py (safe tree, grid_center, two-corner TT/FF trim)')
     hdr = [f'// S81-DIE7 REAL-VIEW die case netlist from {a.bind_dir / "die.v"} (tools/s81_dv/dv_rvcase.py): bound instances, '
            'stand-in cells rv_* where no closed view, constant bits driven by TIEHI/TIELO cells tie_tz_*',
            f'module dv_die ({", ".join(sorted(top))});']
@@ -986,7 +1533,6 @@ def main():
         rng = f'[{lo + wv - 1}:{lo}] ' if wv > 1 or lo else ''
         hdr.append(f'  {"input" if n in tin else "output" if n in tout else "wire"} {rng}{n};')
     (out / 'die.v').write_text('\n'.join(hdr + decl + body + ['endmodule']) + '\n')
-
     # ------------------------------------------------------------------ placement
     pl = []
     for i, (x, y, w_, h_, st) in sorted(loc.items()):
@@ -1050,15 +1596,16 @@ def main():
 
     # ------------------------------------------------------------------ GRT run
     repair = DC.die_repair_tcl(out, a.dieflow_ref, rc_layer=M8['repeater_rc_layer'], skip=()) if a.die_repair else '# no die repair\n'
+    if a.die_repair and T.get('controller_corner_repair'):
+        install_controller_corner_repair(out)
     # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
     # synchronous reset tree, not payload. Declare the width as well as the port
     # so a missing/disconnected payload bit fails the structural audit.
     if a.die_repair:
         contracts = []
-        for master in sorted({m for m, _, _, _ in insts}):
-            match = re.fullmatch(r'dsfd_dvrlyh?_(\d+)_[A-Z]+', master)
-            if match:
-                contracts.append(f'{{{master}}} {{{{i\\[*\\]}} {int(match[1])}}}')
+        payload_contracts = forwarded_payload_contracts(insts, kind, scell)
+        for master, width in sorted(payload_contracts.items()):
+            contracts.append(f'{{{master}}} {{{{i\\[*\\]}} {width}}}')
         repair = ('set ::ot_die_rep_fclk_data_ports [dict create ' + ' '.join(contracts) + ']\n' + repair)
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
@@ -1093,6 +1640,41 @@ proc ot_rv_place_ties {report} {
 ''')
     tie_step = ('source /work/die_repeaters.tcl\nsource /work/tie_place.tcl\n'
                 'if {[ot_rv_place_ties /work/out/tie_spread.json] != 0} { puts "OT_TIE_PLACE_FAIL"; exit 4 }\n') if ties else '# no tie cells\n'
+    if rfw_rows:
+        if not a.die_repair:
+            raise SystemExit('dv_rvcase: --rfw needs --die-repair (the retimer spread uses the die repeater legaliser)')
+        # STW-S81c-DIE-C21: each retimer pair starts at its relay stage's rs pin; the die repeater legaliser spreads them
+        # to the nearest free slots (the relay macros and channels are obstacles), then its caches are cleared as for ties.
+        (out / 'rfw_place.txt').write_text(''.join(f'{d} {i} {s_}\n' for d, i, s_ in rfw_rows))
+        (out / 'rfw_place.tcl').write_text('''# STW-S81c-DIE-C21 co-forwarded relay reset retimer placement (tools/s81_dv/dv_rvcase.py --rfw)
+proc ot_rv_place_rfw {listfile report} {
+  set blk [ord::get_db_block]; set cells {}; set bad 0
+  set fh [open $listfile]
+  while {[gets $fh line] >= 0} {
+    lassign $line dff inv stage
+    set si [$blk findInst $stage]
+    if {$si eq "NULL" || $si eq ""} { incr bad; continue }
+    set it [$si findITerm rs]
+    set b [expr {$it eq "NULL" || $it eq "" ? [$si getBBox] : [$it getBBox]}]
+    set x [expr {([$b xMin] + [$b xMax]) / 2}]; set y [expr {([$b yMin] + [$b yMax]) / 2}]
+    foreach c [list $dff $inv] {
+      set ci [$blk findInst $c]
+      if {$ci eq "NULL" || $ci eq ""} { incr bad; continue }
+      $ci setLocation $x $y; $ci setPlacementStatus PLACED; lappend cells $ci
+    }
+  }
+  close $fh
+  set left [ot_die_rep_spread $cells $report 0.30 8.64 0.60 3]
+  foreach v {::ot_die_rep_slw ::ot_die_rep_obs ::ot_die_rep_occ ::ot_die_rep_onobs ::ot_die_rep_maxdisp} { unset -nocomplain $v }
+  array unset ::ot_die_rep_ob
+  puts "OT_RFW placed=[llength $cells] missing=$bad unplaced=$left"; flush stdout
+  return [expr {$bad + $left}]
+}
+''')
+        tie_step += ('source /work/die_repeaters.tcl\nsource /work/rfw_place.tcl\n'
+                     'if {[ot_rv_place_rfw /work/rfw_place.txt /work/out/rfw_spread.json] != 0} { puts "OT_RFW_PLACE_FAIL"; exit 4 }\n')
+        # the forwarded-clock audit lists the retimer captures on fck[k] but does not judge them as payload hops
+        repair = 'set ::ot_die_rep_fclk_aux_capture_masters {DFFHQNx1_ASAP7_75t_R}\n' + repair
     if ties and not a.die_repair:
         raise SystemExit('dv_rvcase: tie cells need --die-repair (the tie spread uses the die repeater legaliser)')
     reserve_tcl = ''
@@ -1139,7 +1721,10 @@ puts "OT_SPECIAL_TOP_NETS $nsp"
 # forwarded-clock net even though repeat_nets un-skips it (case_p4l_rv: all 140 hop-0 fclk nets 0 repeaters,
 # 108 > data-1 -> fclk_mismatch FAIL).  Clock / reset distribution stays untouched by the step's own skip list
 # (clock-pin + sigtype + glob dont_touch); no step check reads the SDC clock.
-{repair}{clocks_sdc}
+{repair}
+# Preserve actual repaired placement for pin-to-pin reach inspection before routing.
+write_db /work/out/post_repair.odb
+{clocks_sdc}
 set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
@@ -1151,12 +1736,72 @@ write_db /work/out/grt.odb
 {post}
 puts OT_DONE
 '''
+    if dieclk_ports:
+        # C22: session 1 = place + ties + retimers + entry buffers -> out/place.odb; build.py (die clock trees, measured
+        # TT/FF trim) -> out/dieclk/clock.odb; session 2 = repeater step + GRT on the clocked ODB (one session, so the
+        # post-GRT repeater audit keeps its in-session state)
+        head_, sep_, rest_ = tcl.partition('write_db /work/out/place.odb\n')
+        if not sep_:
+            raise SystemExit('dv_rvcase: --dieclk: run.tcl has no place.odb split point')
+        (out / 'ckr_place.tcl').write_text('''# STW-S81c-DIE-C22 die clock entry buffer placement (tools/s81_dv/dv_rvcase.py --dieclk)
+proc ot_rv_place_ckr {listfile report} {
+  set blk [ord::get_db_block]; set dbu [$blk getDbUnitsPerMicron]; set cells {}; set bad 0
+  set fh [open $listfile]
+  while {[gets $fh line] >= 0} {
+    lassign $line nm x y
+    set ci [$blk findInst $nm]
+    if {$ci eq "NULL" || $ci eq ""} { incr bad; continue }
+    $ci setLocation [expr {round($x * $dbu)}] [expr {round($y * $dbu)}]; $ci setPlacementStatus PLACED; lappend cells $ci
+  }
+  close $fh
+  set left [ot_die_rep_spread $cells $report 0.30 8.64 0.60 3]
+  foreach v {::ot_die_rep_slw ::ot_die_rep_obs ::ot_die_rep_occ ::ot_die_rep_onobs ::ot_die_rep_maxdisp} { unset -nocomplain $v }
+  array unset ::ot_die_rep_ob
+  puts "OT_CKR placed=[llength $cells] missing=$bad unplaced=$left"; flush stdout
+  return [expr {$bad + $left}]
+}
+''')
+        ckr_step = ('source /work/die_repeaters.tcl\nsource /work/ckr_place.tcl\n'
+                    'if {[ot_rv_place_ckr /work/ckr_place.txt /work/out/ckr_spread.json] != 0} { puts "OT_CKR_PLACE_FAIL"; exit 4 }\n')
+        (out / 'run_place.tcl').write_text(head_ + ckr_step + sep_ + 'puts OT_PLACE_DONE\n')
+        std_tt_ = ' '.join(STD_CORNERS['tt'])
+        tcl = (f'''# S81-DIE7 REAL-VIEW die case, session 2 (C22 --dieclk): clocked ODB from tools/die_clock/build.py -> repeaters -> GRT
+foreach f {{{std_tt_}}} {{ read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_$f }}
+foreach f [glob /work/views/*.lib] {{ read_liberty $f }}
+read_db /work/out/dieclk/clock.odb
+set ot_nck 0
+foreach n [[ord::get_db_block] getNets] {{ if {{[string match ckrn_* [$n getName]] || [string match n_dc_* [$n getName]]}} {{ $n setSigType CLOCK; incr ot_nck }} }}
+puts "OT_DIECLK_ODB insts [llength [[ord::get_db_block] getInsts]] clock_nets_typed $ot_nck"
+''' + rest_)
+        (out / 'run_inner.sh').write_text(f'''#!/bin/bash
+# C22 die flow inside the container: place session -> die clock build -> repeaters + GRT session
+source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
+P={PLAT}/lib/NLDM; N=${{CPUS:-8}}
+/usr/bin/time -v openroad -threads $N -no_init -exit /work/run_place.tcl > /work/out/run_place.log 2>&1
+rc=$?; grep -q OT_PLACE_DONE /work/out/run_place.log || {{ echo "OT_PLACE_STEP_FAIL rc=$rc (out/run_place.log)" > /work/out/run.log; exit 4; }}
+ls {' '.join('$P/asap7sc7p5t_' + f for f in STD_CORNERS['tt'])} /work/views/*.lib > /work/out/libs_tt.txt
+ls {' '.join('$P/asap7sc7p5t_' + f for f in STD_CORNERS['ff'])} /work/views/sta/*_ff.lib /work/views/rv_*.lib > /work/out/libs_ff.txt
+/usr/bin/time -v openroad -python -no_init -exit /work/dcc/tools/die_clock/build.py --odb /work/out/place.odb --spec /work/dieclk_spec.json \\
+  --libs /work/out/libs_tt.txt --libs-ff /work/out/libs_ff.txt --out /work/out/dieclk --iters ${{DIECLK_ITERS:-{a.dieclk_iters}}} --write-odb > /work/out/dieclk.log 2>&1
+rc=$?; grep -q DIE_CLOCK_BUILD_DONE /work/out/dieclk.log || {{ echo "OT_DIECLK_FAIL rc=$rc (out/dieclk.log)" > /work/out/run.log; exit 7; }}
+/usr/bin/time -v openroad -threads $N -no_init -exit /work/run.tcl > /work/out/run.log 2>&1
+''')
+        (out / 'run_inner.sh').chmod(0o755)
+        for f_ in ('build.py', 'regtree.py', 'qualification.py'):
+            txt = git(a.dcc_ref, f'tools/die_clock/{f_}')
+            if txt is None:
+                raise SystemExit(f'dv_rvcase: tools/die_clock/{f_} not at {a.dcc_ref}')
+            (out / 'dcc/tools/die_clock').mkdir(parents=True, exist_ok=True)
+            (out / 'dcc/tools/die_clock' / f_).write_text(txt)
+        (out / 'root_clock_report.py').write_text(ROOT_CLOCK_REPORT)
     (out / 'run.tcl').write_text(tcl)
     shutil.copy(ROOT / 'tools/die_cluster/cluster_bounds.tcl', out / 'cluster_bounds.tcl')
+    run_cmd = ('bash /work/run_inner.sh; rc=\\$?' if dieclk_ports else
+             '/usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=\\$?')
     (out / 'run.sh').write_text('''#!/bin/bash
 D=$(cd $(dirname $0) && pwd); N=dvrv-$$
-docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-96}g -v $D:/work -w /work openroad/orfs:asap7lock \\
-  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=\\$?; chmod -R a+rwX /work/out; exit \\$rc"
+docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-96}g -e CPUS=${CPUS:-8} -v $D:/work -w /work openroad/orfs:asap7lock \\
+  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; ''' + run_cmd + '''; chmod -R a+rwX /work/out; exit \\$rc"
 rc=$?; echo $rc > $D/out/run.exit; exit $rc
 ''')
 
@@ -1229,6 +1874,18 @@ foreach p {{{' '.join(blk_clk)}}} {{ rv_arr $fo $p }}
 close $fo
 set ::env(OT_DCC_OUT) /work/sta/die_clock_dump_{c}.tsv
 source /work/dcc/tools/die_clock_check.tcl
+# C22 (--dieclk): propagated arrival at every regional clock tree sink (out/dieclk/sink_pins.txt: tree<TAB>pin)
+if {{[file exists /work/out/dieclk/sink_pins.txt]}} {{
+  set fi [open /work/out/dieclk/sink_pins.txt]; set fo [open /work/sta/root_arr_{c}.tsv w]
+  while {{[gets $fi line] >= 0}} {{
+    lassign [split $line "\t"] tr pn
+    set q [get_pins -quiet [string map {{[ \\[ ] \\]}} $pn]]
+    set mx -; set mn -
+    if {{[llength $q] == 1}} {{ catch {{ set mx [get_property $q arrival_max_rise] }}; catch {{ set mn [get_property $q arrival_min_rise] }} }}
+    puts $fo "$tr\t$pn\t$mx\t$mn"
+  }}
+  close $fi; close $fo
+}}
 puts OT_STA_DONE
 ''')
     runs = ' && '.join(f'/usr/bin/time -v openroad -threads ${{CPUS:-8}} -no_init -exit /work/sta_{c}.tcl > /work/sta/sta_{c}.log 2>&1' for c in a.corners)
@@ -1237,13 +1894,76 @@ puts OT_STA_DONE
     (out / 'sta.sh').write_text(f'''#!/bin/bash
 # S81-DIE7 real-view die STA {' / '.join(a.corners)} + die_clock_check + classify (needs out/grt.odb)
 D=$(cd $(dirname $0) && pwd); N=dvrvsta-$$; mkdir -p $D/sta
+[ -f $D/root_clock_report.py ] && python3 $D/root_clock_report.py pins $D
 docker run --rm --name $N --cpus=${{CPUS:-8}} --memory=${{MEMG:-64}}g -v $D:/work -w /work openroad/orfs:asap7lock \\
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; {runs}; chmod -R a+rwX /work/sta"
 rc=$?
 {dccs}
 python3 $D/classify.py $D {' '.join(a.corners)} > $D/sta/classes.txt 2>&1
+[ -f $D/root_clock_report.py ] && python3 $D/root_clock_report.py report $D {' '.join(a.corners)} > $D/sta/root_clock.txt 2>&1
 echo $rc > $D/sta/run.exit; exit $rc
 ''')
+    # STW-S81c-DIE-C21 10-22 (--hold-eco): post-GRT die hold ECO session before the die STA.  MAIN4 diag STA: hold on
+    # every forwarded hop class (relay_data x_frame/hbm/idx/coll/unit/attn/xtier/ret -64..-181 ps), landing data, die
+    # nets into closed views (iqf qs, bk_col vi_s, ctrl k_rdy/kr_data/rq from the PHY on ck_hbm) -- the die flow had no
+    # hold repair.  Hold buffers go on die data nets only: special top nets and the repeater step's skip list (clock /
+    # sigtype nets) are dont_touch, and closed views are macros (nothing inside them is editable).  Corner: TT, the
+    # worse hold corner on this die (relay_data TT -180.7 vs FF -142.6 ps), margin 10 ps; FF hold is then judged by the
+    # STA.  New cells are legalised by the die repeater spread.  Fail-soft: on any failure the pre-ECO grt.odb is kept.
+    if a.hold_eco:
+        std_tt = ' '.join(STD_CORNERS['tt'])
+        (out / 'hold_eco.tcl').write_text(f'''# STW-S81c-DIE-C21 post-GRT die hold ECO (tools/s81_dv/dv_rvcase.py --hold-eco)
+foreach f {{{std_tt}}} {{ read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_$f }}
+foreach f [glob /work/views/sta/*_tt.lib] {{ read_liberty $f }}
+foreach f [glob /work/views/rv_*.lib] {{ read_liberty $f }}
+read_db /work/out/grt_prehold.odb
+source {PLAT}/setRC.tcl
+set_wire_rc -signal -layer {M8['sta_wire_rc_layer']}
+{clocks_sdc}
+set_propagated_clock [all_clocks]
+set_clock_uncertainty -setup 60 [all_clocks]
+set_clock_uncertainty -hold 25 [all_clocks]
+set_false_path -from [get_ports rst_n]
+source /work/landing.sdc
+if {{[catch {{estimate_parasitics -global_routing}} e]}} {{ puts "OT_HOLD_PARA placement ($e)"; estimate_parasitics -placement }} else {{ puts "OT_HOLD_PARA global_routing" }}
+set blk [ord::get_db_block]
+set ndt 0
+foreach n [$blk getNets] {{ if {{[$n isSpecial]}} {{ $n setDoNotTouch 1; incr ndt }} }}
+if {{[file exists /work/die_repeaters.skip_nets.txt]}} {{
+  set fh [open /work/die_repeaters.skip_nets.txt]
+  foreach nm [split [string trim [read $fh]] "\n"] {{ set n [$blk findNet $nm]; if {{$n ne "NULL" && $n ne ""}} {{ $n setDoNotTouch 1; incr ndt }} }}
+  close $fh
+}}
+set maxid 0; foreach i [$blk getInsts] {{ if {{[$i getId] > $maxid}} {{ set maxid [$i getId] }} }}
+puts "OT_HOLD_DONT_TOUCH nets=$ndt pre_max_inst_id=$maxid"
+puts "OT_HOLD_PRE"; report_worst_slack -min -digits 1; report_tns -min -digits 1
+set t0 [clock seconds]
+if {{[catch {{repair_timing -hold -hold_margin 10 -allow_setup_violations -max_buffer_percent 20}} e]}} {{ puts "OT_HOLD_FAIL repair_timing: $e"; exit 5 }}
+puts "OT_HOLD_REPAIR_S [expr {{[clock seconds]-$t0}}]"
+set new {{}}; foreach i [$blk getInsts] {{ if {{[$i getId] > $maxid}} {{ lappend new $i }} }}
+source /work/die_repeaters.tcl
+set left [ot_die_rep_spread $new /work/out/hold_spread.json 0.30 8.64 0.60 3]
+puts "OT_HOLD_CELLS new=[llength $new] unplaced=$left"
+if {{$left != 0}} {{ puts "OT_HOLD_FAIL unplaced hold cells $left"; exit 6 }}
+estimate_parasitics -placement
+puts "OT_HOLD_POST"; report_worst_slack -min -digits 1; report_tns -min -digits 1
+write_db /work/out/grt.odb
+puts OT_HOLD_DONE
+''')
+        (out / 'hold_eco.sh').write_text('''#!/bin/bash
+# STW-S81c-DIE-C21 post-GRT die hold ECO: out/grt.odb -> out/grt_prehold.odb, ECO writes a new out/grt.odb; any failure restores it
+D=$(cd $(dirname $0) && pwd); N=dvrvhold-$$
+[ -f $D/out/grt.odb ] || exit 3
+mv $D/out/grt.odb $D/out/grt_prehold.odb || exit 3
+timeout ${HOLD_TIMEOUT:-5h} docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-96}g -v $D:/work -w /work openroad/orfs:asap7lock \
+  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/hold_eco.tcl > /work/out/hold_eco.log 2>&1; rc=\\$?; chmod -R a+rwX /work/out; exit \\$rc"
+rc=$?
+if [ $rc -ne 0 ] || ! grep -q OT_HOLD_DONE $D/out/hold_eco.log 2>/dev/null; then
+  docker rm -f $N >/dev/null 2>&1; rm -f $D/out/grt.odb; mv $D/out/grt_prehold.odb $D/out/grt.odb; echo "HOLD_ECO_FAILED rc=$rc (pre-ECO grt.odb kept)" > $D/out/hold_eco.exit; exit $rc
+fi
+echo "HOLD_ECO_OK" > $D/out/hold_eco.exit; exit 0
+''')
+        (out / 'hold_eco.sh').chmod(0o755)
     # ROOT14 10-20: die IR-drop check with the M8 signal routes present (tools/die_safety/ir_step.sh, copied into the case);
     # FAIL / NOT_RUN = chain exit 1 + OWNER_REPORT line in run_all.log (the coordinator tells the owner)
     shutil.copytree(ROOT / 'tools/die_safety', out / 'die_safety', dirs_exist_ok=True,
@@ -1258,7 +1978,8 @@ set -u; D=$(cd $(dirname $0) && pwd); date > $D/run_all.start
 CPUS=${CPUS:-16} MEMG=${MEMG_GRT:-96} bash $D/run.sh; grt_rc=$?; echo "grt rc $grt_rc" >> $D/run_all.log
 [ $grt_rc -eq 0 ] || { date > $D/run_all.done; exit $grt_rc; }
 [ -f $D/out/grt.odb ] || { echo "NO grt.odb" >> $D/run_all.log; date > $D/run_all.done; exit 3; }
-CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $sta_rc" >> $D/run_all.log
+''' + ('''CPUS=${CPUS:-16} MEMG=${MEMG_HOLD:-96} bash $D/hold_eco.sh; hold_rc=$?; echo "hold_eco rc $hold_rc $(cat $D/out/hold_eco.exit 2>/dev/null)" >> $D/run_all.log
+''' if a.hold_eco else '') + '''CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $sta_rc" >> $D/run_all.log
 ''' + ir_block + '''date > $D/run_all.done; [ $sta_rc -eq 0 ] || exit $sta_rc; exit ${ir_rc:-0}
 ''')
     for f in ('run.sh', 'sta.sh', 'run_all.sh'):
@@ -1284,8 +2005,12 @@ CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $s
                 closed_views={m: f'{r}:{d}' for m, (r, d) in views.items() if m in {x[0] for x in insts}},
                 standin_instances=sum(1 for v in kind.values() if v == 'standin'),
                 closed_instances=sum(1 for v in kind.values() if v == 'closed'), std_instances=sum(1 for v in kind.values() if v == 'std'),
-                tie_wires=tz[0], tie_cells=len(ties), fwd_moves_over_20um={k: v for k, v in fwd_moves.items() if v[0] > 20}, placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
-                land_plan_links_without_model=no_model, regional_roots='IDEAL top ports ck_<region> (DIE-CLOCK trees not built in this case)',
+                tie_wires=tz[0], tie_cells=len(ties), rfw=dict(enabled=bool(a.rfw), stages_rewired=len(rfw_rows), cells=len(rfw_cells)), hold_eco=bool(a.hold_eco), fwd_moves_over_20um={k: v for k, v in fwd_moves.items() if v[0] > 20}, placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
+                land_plan_links_without_model=no_model,
+                regional_roots=('PHYSICAL regional trees (C22 --dieclk): top port ck_<root> -> entry buffer ckr_<root> at the sink '
+                                'median (ideal from the port to the entry) -> tools/die_clock build.py tree; STA propagated'
+                                if dieclk_ports else 'IDEAL top ports ck_<region> (DIE-CLOCK trees not built in this case)'),
+                dieclk=dieclk_info, rs_chain_place=rsdp, fck_out_pins=dict(fck_out_pins),
                 clock_regions=ckr,
                 label=('NOT_A_DIE_RESULT: real-view case; stand-ins = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('standin:')}))
                        + ' (no closed view yet); closed = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('closed:')}))),
@@ -1298,6 +2023,50 @@ CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $s
                 ir_drop='SKIPPED: ' + a.no_ir if a.no_ir else 'run_all.sh -> ir_drop/ir_drop.json (tools/die_safety/ir_step.sh)')
     (out / 'case.json').write_text(json.dumps(info, indent=1))
     print(json.dumps({k: v for k, v in info.items() if k not in ('chains', 'landings')}, indent=1))
+
+
+ROOT_CLOCK_REPORT = r'''#!/usr/bin/env python3
+# C22 per-root regional die clock report (tools/s81_dv/dv_rvcase.py --dieclk)
+#   root_clock_report.py pins CASE              -> out/dieclk/sink_pins.txt (tree<TAB>pin) from the build manifest
+#   root_clock_report.py report CASE tt ff ...  -> sta/root_clock.json + summary: per root insertion (late max / early min)
+#     and pin-arrival spread (late and early) at every corner from the die STA (GRT parasitics, propagated clocks);
+#     owner clock rule: spread <= 80 ps at TT and FF inside a region.  The build's own placement-parasitic trim
+#     measurement (manifest iterations) is carried for comparison.
+import json, sys, collections
+mode, D = sys.argv[1], sys.argv[2]
+man = json.load(open(f'{D}/out/dieclk/manifest.json'))
+if mode == 'pins':
+    open(f'{D}/out/dieclk/sink_pins.txt', 'w').write(''.join(f"{v['tree']}\t{k}\n" for k, v in sorted(man['sinks'].items())))
+    sys.exit(0)
+res = dict(schema='opentallas.s81_dv.root_clock.v1', rule='per root: pin-arrival spread <= 80 ps at TT and FF (owner clock rule)',
+           roots=len(man['trees']), cells=len(man['cells']), build_last_iteration=(man.get('iterations') or [{}])[-1].get('trees'),
+           safe_tree_violations=len((man.get('safe_tree') or {}).get('violations', [])), corners={})
+for c in sys.argv[3:]:
+    per = collections.defaultdict(lambda: dict(n=0, late=[], early=[]))
+    try:
+        for ln in open(f'{D}/sta/root_arr_{c}.tsv'):
+            t, p, mx, mn = ln.rstrip('\n').split('\t')
+            r = per[t]; r['n'] += 1
+            if mx not in ('-', ''): r['late'].append(float(mx))
+            if mn not in ('-', ''): r['early'].append(float(mn))
+    except OSError as e:
+        res['corners'][c] = f'unavailable ({e})'; continue
+    rows = {}
+    for t, r in per.items():
+        L, E = r['late'], r['early']
+        rows[t] = dict(sinks=r['n'], measured=len(L), insertion_max_ps=round(max(L), 1) if L else None,
+                       insertion_min_ps=round(min(E), 1) if E else None,
+                       spread_late_ps=round(max(L) - min(L), 1) if L else None, spread_early_ps=round(max(E) - min(E), 1) if E else None)
+    over = sorted((max(v['spread_late_ps'] or 0, v['spread_early_ps'] or 0), t) for t, v in rows.items())
+    res['corners'][c] = dict(roots=len(rows), over_80=sum(1 for s_, _ in over if s_ > 80), worst=over[::-1][:15],
+                             insertion_max_ps=max((v['insertion_max_ps'] for v in rows.values() if v['insertion_max_ps'] is not None), default=None),
+                             unmeasured_sinks=sum(v['sinks'] - v['measured'] for v in rows.values()), per_root=rows)
+json.dump(res, open(f'{D}/sta/root_clock.json', 'w'), indent=1)
+for c, v in res['corners'].items():
+    if isinstance(v, str):
+        print(f'ROOT_CLOCK {c} {v}'); continue
+    print(f"ROOT_CLOCK {c} roots={v['roots']} spread>80ps={v['over_80']} max_insertion_ps={v['insertion_max_ps']} unmeasured={v['unmeasured_sinks']} worst={v['worst'][:5]}")
+'''
 
 
 CLASSIFY = r'''#!/usr/bin/env python3
