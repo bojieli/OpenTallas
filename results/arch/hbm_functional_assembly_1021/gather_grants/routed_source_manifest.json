@@ -1,0 +1,30 @@
+{
+  "predecessor_source": "0c55c33fc",
+  "canonical_inputs": {
+    "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar_banked.sv": "73179a4b62d17bd02de9300d99ce1d3004277501e5d793d4e9f00c59c90a5b3d",
+    "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar_f20.sv": "e3ec16f9f9f069261568004bf07401b054598890d74d6963bb4d9d3628ba284d"
+  },
+  "new_masters": [
+    "ot_hbm_su_indexed_scalar_banked_routed",
+    "ot_hbm_su_indexed_scalar_f20_routed"
+  ],
+  "default_route_edges": 0,
+  "outbound_bit_order_MSB": [
+    "rd_fire",
+    "wr_fire",
+    "read_bank5",
+    "write_bank5",
+    "read_sector16",
+    "write_sector16",
+    "word_lane3",
+    "read_word_lane3",
+    "value32",
+    "reserve1"
+  ],
+  "return_bit_order_MSB": [
+    "return_valid",
+    "returned_word32"
+  ],
+  "source_only_status": "Await selected actual O/R, routed native replay and renewed native/physical qualification",
+  "ownership_tail": "OUTBOUND_EDGES+2; actual bank_reserve uses delayed active0/active1 and existing selector capture2; host status and programme target use extended reservation_active"
+}
