@@ -556,6 +556,8 @@ module ot_s81sl_lep_core #(
     wire [NL-1:0] rne_addr,rne_meta,rne_return;
     wire [NL-1:0] rhostx,rksx;
     wire [NL-1:0] rnex, rhkx, rringx, rtagx;
+    wire [NL-1:0] rnexh;                               // host-enable copy of rnex (RXLAND: own vq copy)
+    wire [NL-1:0] rne_addr2;                           // RXLAND: second pair-advance copy (lane 1 of the pair)
     wire [NL-1:0] rhk;                                 // MU_EN 1: pre-decoded land bit of each lane's head row
     wire [1:0] relp;                                   // pair releases (pair B only at AB_EN 1)
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
@@ -589,7 +591,25 @@ module ot_s81sl_lep_core #(
         wire [AR-1:0] wp_nx = wr ? ((wp == AR'(DR - 1)) ? '0 : wp + 1'b1) : wp;
         wire [AR-1:0] rp_nx = pop ? ((rp == AR'(DR - 1)) ? '0 : rp + 1'b1) : rp;
         wire [AR:0] n_nx = n + (AR+1)'(wr) - (AR+1)'(pop);
+`ifdef OT_S81SL_LEP_RXLAND
+        // STW-S81c-COLLA2-LEP 10-22: the li_v landing flop vq is replicated into kept per-consumer copies (same D, same
+        // reset, same edge): vq_m -> RX SRAM landing write-hit, vq_c -> rx_control / lookahead next-non-empty, vq_h ->
+        // host-plane enables; the original vq keeps the FIFO state (wp / n / fault).  wp_l = kept copy of wp for the
+        // landing write-hit comparators.  Values identical every cycle.
+        wire vq_m, vq_c, vq_h; wire [4:0] wp_l5;
+        (* keep=1 *) ot_s81sl_lep_vq_mem  u_vqm(.clk(clk),.rn(rx_state_reset),.d(li_v[t]),.q(vq_m));
+        (* keep=1 *) ot_s81sl_lep_vq_ctl  u_vqc(.clk(clk),.rn(rx_state_reset),.d(li_v[t]),.q(vq_c));
+        (* keep=1 *) ot_s81sl_lep_vq_host u_vqh(.clk(clk),.rn(rx_state_reset),.d(li_v[t]),.q(vq_h));
+        (* keep=1 *) ot_s81sl_lep_wp5 u_wpl(.clk(clk),.rn(rx_state_reset),.d(5'(wp_nx)),.q(wp_l5));
+        wire wr_c = vq_c && !full, wr_h = vq_h && !full;
+        wire [AR:0] n_nx_c = n + (AR+1)'(wr_c) - (AR+1)'(pop);
+        wire [AR:0] n_nx_h = n + (AR+1)'(wr_h) - (AR+1)'(pop);
+        assign rnex[t]=n_nx_c!=0;
+        assign rnexh[t]=n_nx_h!=0;
+`else
         assign rnex[t]=n_nx!=0;
+        assign rnexh[t]=n_nx!=0;
+`endif
         integer k;
         always @(posedge clk `OT_LEP_AR(rx_state_reset))
             if (!rx_state_reset) begin wp <= 0; rp <= 0; n <= 0; vq <= 1'b0; nz <= 1'b0; cr <= 1'b0; f <= 1'b0; we <= DR'(1); end
@@ -607,8 +627,13 @@ module ot_s81sl_lep_core #(
             if(!reset_c) begin addr_nz<=0;meta_nz<=0;return_nz<=0;end
             else begin addr_nz<=n_nx!=0;meta_nz<=n_nx!=0;return_nz<=n_nx!=0;end
           assign rne_addr[t]=addr_nz;assign rne_meta[t]=meta_nz;assign rne_return[t]=return_nz;
+`ifdef OT_S81SL_LEP_RXLAND
+          (* keep=1 *) ot_s81sl_lep_nzcopy u_addr2(.clk(clk),.rn(reset_c),.d(n_nx!=0),.q(rne_addr2[t]));
+`else
+          assign rne_addr2[t]=addr_nz;
+`endif
         end else begin:g_nonempty_shared
-          assign rne_addr[t]=rne[t];assign rne_meta[t]=rne[t];assign rne_return[t]=rne[t];
+          assign rne_addr[t]=rne[t];assign rne_meta[t]=rne[t];assign rne_return[t]=rne[t];assign rne_addr2[t]=rne[t];
         end
         always @(posedge clk) dq<=li_d[t*(H+1)+:H+1];
         if(MU_EN==0 || RX_SRAM==0) begin:g_legacy_mem
@@ -688,6 +713,23 @@ module ot_s81sl_lep_core #(
 `else
                 wire [AR-1:0] read_next=rp_nx;
 `endif
+`ifdef OT_S81SL_LEP_RXLAND
+                // STW-S81c-COLLA2-LEP 10-22: head = landing register beside the RX macros (macro reads one row ahead);
+                // same head value every non-empty cycle, same edges (see ot_sram_showahead_1r1w_land).  Lane 0 of the
+                // pair takes the original advance flops, lane 1 the kept copies rne_addr2 (<= 28 loads per copy).
+                ot_sram_showahead_1r1w_land #(.W(H+1),.AW(AR),.SB(8),.DEPTH(DR)) u_rx_mem(
+                    .clk(clk),.rst_n(rr[4+t*RX_NS+:RX_NS]),.we(wr),.wa(wp),.wd(dq),
+                    .we_l(vq_m && !full),.wa_l(wp_l5[AR-1:0]),.q(head),
+                    .advance_a((t%2==0)?rne_addr[2*(t/2)]:rne_addr2[2*(t/2)]),
+`ifdef OT_S81SL_LEP_MUT_NOPAIR
+                    .advance_b((t==0)?1'b1:(t%2==0)?rne_addr[2*(t/2)+1]:rne_addr2[2*(t/2)+1]));
+`else
+                    .advance_b((t%2==0)?rne_addr[2*(t/2)+1]:rne_addr2[2*(t/2)+1]));
+`endif
+`ifndef SYNTHESIS
+                initial if(NATIVE32==0) $fatal(1,"OT_S81SL_LEP_RXLAND needs NATIVE32");
+`endif
+`else
                 ot_sram_showahead_1r1w #(.W(H+1),.AW(AR),.LOCAL_HIT(1),.SB(8),.LOCAL_RA(NATIVE32),.LOCAL_WA(NATIVE32),.DEPTH(DR)) u_rx_mem(
                     .clk(clk),.rst_n(rr[4+t*RX_NS+:RX_NS]),.we(wr),.wa(wp),.wd(dq),
                     .ra(read_next),.q(head),.advance_a(rne_addr[2*(t/2)]),
@@ -695,6 +737,7 @@ module ot_s81sl_lep_core #(
                     .advance_b((t==0)?1'b1:rne_addr[2*(t/2)+1]));
 `else
                     .advance_b(rne_addr[2*(t/2)+1]));
+`endif
 `endif
                 assign rhd[t*(H+1)+:H+1]=head;
             end else begin:g_old_head
@@ -986,9 +1029,9 @@ module ot_s81sl_lep_core #(
     if(MU_EN!=0 && RX_SRAM!=0) begin:g_host_local
       wire [4:0] host_enable;wire key_enable;
       for(genvar hg=0;hg<5;hg=hg+1) begin:g_enable
-        (* keep=1 *) ot_s81sl_lep_host_enable u_host(.ne0(rnex[0]),.ne1(rnex[1]),.hit(rhostx[0]),.en(host_enable[hg]));
+        (* keep=1 *) ot_s81sl_lep_host_enable u_host(.ne0(rnexh[0]),.ne1(rnexh[1]),.hit(rhostx[0]),.en(host_enable[hg]));
       end
-      (* keep=1 *) ot_s81sl_lep_host_enable u_key(.ne0(rnex[0]),.ne1(rnex[1]),.hit(rksx[0]),.en(key_enable));
+      (* keep=1 *) ot_s81sl_lep_host_enable u_key(.ne0(rnexh[0]),.ne1(rnexh[1]),.hit(rksx[0]),.en(key_enable));
       for(c=0;c<37;c=c+1) begin:g_slice
         (* keep="true" *) reg enable_r;
         wire hit=(c<33)?rhostx[0]:rksx[0];
@@ -1561,6 +1604,24 @@ endmodule
  wire [4:0] code=cut?ring_code:replay_code;
  wire has_tag=code[0] && (code[3:1]==3'd1 || code[3:1]==3'd2) && code[4];
  assign q=has_tag?(cut?ring_data:replay_data):8'd0;
+endmodule
+
+// STW-S81c-COLLA2-LEP 10-22 (OT_S81SL_LEP_RXLAND): kept per-consumer copies of the li_v landing flop (distinct
+// module per consumer group so Yosys can never merge them back), a kept wp copy and a kept pair-advance copy.
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_vq_mem(input wire clk,rn,d,output reg q);
+ always @(posedge clk `OT_LEP_AR(rn)) if(!rn) q<=1'b0; else q<=d;
+endmodule
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_vq_ctl(input wire clk,rn,d,output reg q);
+ always @(posedge clk `OT_LEP_AR(rn)) if(!rn) q<=1'b0; else q<=d;
+endmodule
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_vq_host(input wire clk,rn,d,output reg q);
+ always @(posedge clk `OT_LEP_AR(rn)) if(!rn) q<=1'b0; else q<=d;
+endmodule
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_wp5(input wire clk,rn,input wire [4:0] d,output reg [4:0] q);
+ always @(posedge clk `OT_LEP_AR(rn)) if(!rn) q<=5'd0; else q<=d;
+endmodule
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_nzcopy(input wire clk,rn,d,output reg q);
+ always @(posedge clk `OT_LEP_AR(rn)) if(!rn) q<=1'b0; else q<=d;
 endmodule
 
 // Opt-in LEPA physical byte owner. Datapath intentionally unreset, as before.
