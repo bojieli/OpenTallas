@@ -5,8 +5,9 @@
   "selected_qbank": {
     "path": "rtl/qwen_split/qfd_native59_qbank.sv",
     "sha256": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33",
-    "instance": "g_bank[w].u_mem",
-    "module": "ot_sram_1r1w_32x512_m1"
+    "instance": "u_qseat.g_writer[w].u_mem",
+    "module": "ot_sram_1r1w_32x512_m1",
+    "instance_scope": "qfd_native59_qbank -> qfd_native59_qseat_lanes"
   },
   "macro_contract": {
     "words": 32,
