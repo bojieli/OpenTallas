@@ -44,8 +44,8 @@ module ot_pdie_serdes_col_lp8b #(
     localparam integer LPR_LEAVES_tx = 1+(((1)+24-1)/24);
     localparam integer LPR_LEAVES_sr = 1+(((1)+24-1)/24)+(((1)+24-1)/24);
     localparam integer LPR_LEAVES_rxo = 1+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24);
-    localparam integer LPR_LEAVES_prx = 1+(((1)+24-1)/24)+(((((543) - (0) + 1))+24-1)/24);
-    localparam integer LPR_LEAVES_dec = 1+(((1)+24-1)/24)+(((((543) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24);
+    localparam integer LPR_LEAVES_prx = 1+(((((543) - (0) + 1))+24-1)/24)+(((1)+24-1)/24);
+    localparam integer LPR_LEAVES_dec = 1+(((((543) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24);
     wire [LPR_LEAVES_tx-1:0] lpr_tx_leaves; wire lpr_tx = lpr_tx_leaves[0];
     ot_pl_land_reset_forest #(.DEPTH(4), .LEAVES(LPR_LEAVES_tx), .ROOT_LOADS(1)) u_lpr_tx (.ck(ck_tx), .d(rst_tx), .q(lpr_tx_leaves)); // same reset age; physical reach unproved (regional reset port rst_tx landed on ck_tx)
     wire [LPR_LEAVES_sr-1:0] lpr_sr_leaves; wire lpr_sr = lpr_sr_leaves[0];
@@ -56,16 +56,16 @@ module ot_pdie_serdes_col_lp8b #(
     ot_pl_land_reset_forest #(.DEPTH(4), .LEAVES(LPR_LEAVES_prx), .ROOT_LOADS(1)) u_lpr_prx (.ck(ck_prx), .d(rst_prx), .q(lpr_prx_leaves)); // same reset age; physical reach unproved (regional reset port rst_prx landed on ck_prx)
     wire [LPR_LEAVES_dec-1:0] lpr_dec_leaves; wire lpr_dec = lpr_dec_leaves[0];
     ot_pl_land_reset_forest #(.DEPTH(4), .LEAVES(LPR_LEAVES_dec), .ROOT_LOADS(1)) u_lpr_dec (.ck(ck_dec), .d(rst_dec), .q(lpr_dec_leaves)); // same reset age; physical reach unproved (regional reset port rst_dec landed on ck_dec)
-    // ---- LANDING 0: r_live prx -> dec, 1 b (u_syn.p_v)
-    wire [4*1-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_0_vld;  wire  r_live__l_dec, lpl_0_o;
-    ot_pl_land_vector_reset_we_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_prx), .rsi(lpr_prx_leaves[(1) +: (((1)+24-1)/24)]), .i(r_live), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
-    ot_pl_land_vector_reset_r #(.W(1), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_dec), .rsi(lpr_dec_leaves[(1) +: (((1)+24-1)/24)]), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
-    assign r_live__l_dec = (MUT == 1) ? r_live : lpl_0_o;
-    // ---- LANDING 1: r_d prx -> dec, 544 b (u_syn.p_d)
-    wire [4*((543) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*(((((543) - (0) + 1))+24-1)/24)-1:0] lpl_1_vld;  wire [543:0] r_d__l_dec, lpl_1_o;
-    ot_pl_land_vector_reset_we_w #(.W(((543) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_prx), .rsi(lpr_prx_leaves[(1+(((1)+24-1)/24)) +: (((((543) - (0) + 1))+24-1)/24)]), .i(r_d), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
-    ot_pl_land_vector_reset_r #(.W(((543) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_dec), .rsi(lpr_dec_leaves[(1+(((1)+24-1)/24)) +: (((((543) - (0) + 1))+24-1)/24)]), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
-    assign r_d__l_dec = lpl_1_o;
+    // ---- LANDING 0: r_d prx -> dec, 544 b (u_syn.p_d)
+    wire [4*((543) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((((543) - (0) + 1))+24-1)/24)-1:0] lpl_0_vld;  wire [543:0] r_d__l_dec, lpl_0_o;
+    ot_pl_land_vector_reset_we_w #(.W(((543) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_prx), .rsi(lpr_prx_leaves[(1) +: (((((543) - (0) + 1))+24-1)/24)]), .i(r_d), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
+    ot_pl_land_vector_reset_r #(.W(((543) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_dec), .rsi(lpr_dec_leaves[(1) +: (((((543) - (0) + 1))+24-1)/24)]), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+    assign r_d__l_dec = (MUT == 1) ? r_d : lpl_0_o;
+    // ---- LANDING 1: r_live prx -> dec, 1 b (u_syn.p_v)
+    wire [4*1-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_1_vld;  wire  r_live__l_dec, lpl_1_o;
+    ot_pl_land_vector_reset_we_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_prx), .rsi(lpr_prx_leaves[(1+(((((543) - (0) + 1))+24-1)/24)) +: (((1)+24-1)/24)]), .i(r_live), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
+    ot_pl_land_vector_reset_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_dec), .rsi(lpr_dec_leaves[(1+(((((543) - (0) + 1))+24-1)/24)) +: (((1)+24-1)/24)]), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
+    assign r_live__l_dec = lpl_1_o;
     // ---- LANDING 2: e_flt tx -> sr, 1 b (u_efr.d)
     wire [4*1-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_2_vld;  wire  e_flt__l_sr, lpl_2_o;
     ot_pl_land_vector_reset_we_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_2_w (.ck(ck_tx), .rsi(lpr_tx_leaves[(1) +: (((1)+24-1)/24)]), .i(e_flt), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
@@ -73,12 +73,12 @@ module ot_pdie_serdes_col_lp8b #(
     assign e_flt__l_sr = lpl_2_o;
     // ---- LANDING 3: s_lock_r dec -> rxo, 1 b (u_sts_t.lock_r)
     wire [4*1-1:0] lpl_3_bank;  wire [11:0] lpl_3_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_3_vld;  wire  s_lock_r__l_rxo, lpl_3_o;
-    ot_pl_land_vector_reset_we_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_3_w (.ck(ck_dec), .rsi(lpr_dec_leaves[(1+(((1)+24-1)/24)+(((((543) - (0) + 1))+24-1)/24)) +: (((1)+24-1)/24)]), .i(s_lock_r), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));
+    ot_pl_land_vector_reset_we_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_3_w (.ck(ck_dec), .rsi(lpr_dec_leaves[(1+(((((543) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)) +: (((1)+24-1)/24)]), .i(s_lock_r), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));
     ot_pl_land_vector_reset_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_3_r (.ck(ck_rxo), .rsi(lpr_rxo_leaves[(1) +: (((1)+24-1)/24)]), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld), .o(lpl_3_o));
     assign s_lock_r__l_rxo = lpl_3_o;
     // ---- LANDING 4: s_unc_r dec -> rxo, 1 b (u_sts_t.unc_r)
     wire [4*1-1:0] lpl_4_bank;  wire [11:0] lpl_4_epo;  wire [4*(((1)+24-1)/24)-1:0] lpl_4_vld;  wire  s_unc_r__l_rxo, lpl_4_o;
-    ot_pl_land_vector_reset_we_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_4_w (.ck(ck_dec), .rsi(lpr_dec_leaves[(1+(((1)+24-1)/24)+(((((543) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)) +: (((1)+24-1)/24)]), .i(s_unc_r), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
+    ot_pl_land_vector_reset_we_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_4_w (.ck(ck_dec), .rsi(lpr_dec_leaves[(1+(((((543) - (0) + 1))+24-1)/24)+(((1)+24-1)/24)+(((1)+24-1)/24)) +: (((1)+24-1)/24)]), .i(s_unc_r), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
     ot_pl_land_vector_reset_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_4_r (.ck(ck_rxo), .rsi(lpr_rxo_leaves[(1+(((1)+24-1)/24)) +: (((1)+24-1)/24)]), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld), .o(lpl_4_o));
     assign s_unc_r__l_rxo = lpl_4_o;
     // ---- LANDING 5: e_flt_r sr -> rxo, 1 b (u_sts_t.e_flt)
@@ -104,7 +104,7 @@ module ot_pdie_serdes_col_lp8b #(
     ot_s81_pma_txm u_ptx (.ck(ck_tx), .d_v(e_v), .d(e_d), .pma_tx(pma_tx), .pma_tck(pma_tck));   // region tx, t = 0
     ot_s81_pma_rxn u_prx (.pma_rck(ck_prx), .pma_rx(pma_rx), .q(r_d));   // region prx, t = 0
     ot_s81_col_live u_live_r (.clk(ck_prx), .rst_n(lpr_c_u_live_r), .q(r_live));   // region prx, t = 0
-    ot_s81_kp4_dsyn u_syn (.clk(ck_dec), .rst_n(lpr_c_u_syn), .p_v(r_live__l_dec), .p_d(r_d__l_dec), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_relock));   // region dec, t = 3
+    ot_s81_kp4_dsyn u_syn (.clk(ck_dec), .rst_n(lpr_c_u_syn), .p_d(r_d__l_dec), .p_v(r_live__l_dec), .x_q(x_q), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_relock));   // region dec, t = 3
     ot_s81_kp4_ddly u_dly (.clk(ck_dec), .rst_n(lpr_c_u_dly), .w_d(x_q), .r_d(d_q));   // region dec, t = 3
     ot_s81_kp4_dchn u_chn (.clk(ck_dec), .rst_n(lpr_c_u_chn), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any), .cw_q(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs), .n_corr(n_corr), .n_unc(n_unc));   // region dec, t = 3
     ot_s81_kp4_dout u_out (.clk(ck_dec), .rst_n(lpr_c_u_out), .d_q(d_q), .cw(cw), .apply(apply), .o_unc(o_unc), .o_ne(o_ne), .fs(fs), .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq));   // region dec, t = 3

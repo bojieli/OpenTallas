@@ -3,6 +3,8 @@
 // directly (relay rows u_txr0 / u_txr1 removed; they existed only to carry the encoder output 1.3 mm from the N face to the
 // PMA).  TX latency -2 edges vs flat7/flat8 (and the landed column loses the two TX landings, -6 edges).  Otherwise = flat8
 // (landed status halves u_sts_r / u_sts_t, PMA RX ot_s81_pma_rxn).  Source of the lp8b landed column (FALLBACK).
+// u_syn connects p_d before p_v so lp.py numbers the 544-b r_d landing 0 (MUT 1/2 act on landing 0; the constant-after-
+// reset live flag r_live hid them: bench 19:50 MUT 1/2 PASSED).
 module ot_pdie_serdes_col_flat8s (
     input  wire          clk,
     input  wire          pma_rck,
@@ -28,7 +30,7 @@ module ot_pdie_serdes_col_flat8s (
     wire [31:0] n_relock, n_corr, n_unc;
     ot_s81_pma_rxn u_prx (.pma_rck(pma_rck), .pma_rx(pma_rx), .q(r_d));
     ot_s81_col_live u_live_r (.clk(pma_rck), .rst_n(rst), .q(r_live));
-    ot_s81_kp4_dsyn u_syn (.clk(pma_rck), .rst_n(rst), .p_v(r_live), .p_d(r_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
+    ot_s81_kp4_dsyn u_syn (.clk(pma_rck), .rst_n(rst), .p_d(r_d), .p_v(r_live), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
         .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_relock));
     ot_s81_kp4_ddly u_dly (.clk(pma_rck), .rst_n(rst), .w_d(x_q), .r_d(d_q));
     ot_s81_kp4_dchn u_chn (.clk(pma_rck), .rst_n(rst), .k_v(k_v), .k_lo(k_lo), .k_L(k_L), .k_any(k_any),
