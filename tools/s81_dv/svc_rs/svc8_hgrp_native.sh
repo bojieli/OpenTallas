@@ -5,6 +5,7 @@
 #              --limit 32) -> bound/bounded.v + ledger
 #   3 retain : re-synthesise bounded.v through the same mandatory flow -> retained/mapped.v, native_census.py
 # usage (repo root): svc8_hgrp_native.sh OUT [STAGES]   STAGES default "map bound retain"
+#   SVC8_MAP_DEFS (env) overrides the map defines (default -DSVC8_WRITE_PREDECODE; hgrp8x: -DSVC8_WRITE_POSTDECODE)
 set -euo pipefail
 ROOT=$PWD; export PYTHONPATH="$ROOT/tools${PYTHONPATH:+:$PYTHONPATH}"
 OUT=$(mkdir -p "${1:?out}" && cd "$1" && pwd); STAGES=${2:-"map bound retain"}
@@ -60,7 +61,7 @@ PY_CHECK
 }
 sha256sum $(for f in $RTL $BB; do echo ${f#/src/}; done) tools/s81_dv/svc_rs/svc7_bound_graph.py physical/common_flow/ot_keep_regs.tcl > "$OUT/source_identity.sha256"
 for s in $STAGES; do case $s in
-  map) synth "$OUT/map" "read_verilog -sv -DSYNTHESIS -DSVC8_WRITE_PREDECODE $RTL" $TOP ;;
+  map) synth "$OUT/map" "read_verilog -sv -DSYNTHESIS ${SVC8_MAP_DEFS:--DSVC8_WRITE_PREDECODE} $RTL" $TOP ;;
   bound) mkdir -p "$OUT/bound"
      /usr/bin/time -v python3 tools/s81_dv/svc_rs/svc7_bound_graph.py "$OUT/map/flat.json" --top $TOP --name ${TOP}_bounded \
        --out "$OUT/bound/bounded.v" --limit 32 --incremental > "$OUT/bound/replicate.log" 2>&1 || { tail -20 "$OUT/bound/replicate.log"; echo "SVC8_NATIVE bound FAIL"; exit 1; }

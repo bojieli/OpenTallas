@@ -25,7 +25,9 @@
 // SVC8_MUT_BANK: chunk position 3 reads the bank of position 2; SVC8_RING_MUT_ADDR: ring read offset D-1.
 // ---------------------------------------------------------------------------
 module ot_s81svc8_hgrp_s81 #(
-`ifdef SVC8_WRITE_PREDECODE
+`ifdef SVC8_WRITE_POSTDECODE
+    parameter integer WRITE_PREDECODE = 2
+`elsif SVC8_WRITE_PREDECODE
     parameter integer WRITE_PREDECODE = 1
 `else
     parameter integer WRITE_PREDECODE = 0
@@ -175,16 +177,40 @@ module ot_s81svc8_hgrp_s81 #(
             // normal/low/high write predicates instead. Data and bank still
             // cross precisely the same R0 edge and ab captures at R0+1.
             wire write_normal;
+            wire [TD/R-1:0] write_low, write_high;
+            if (WRITE_PREDECODE == 2) begin : g_post
+            // STW-S81c-COLLB-ENG 10-21 (hgrp8 NEEDS_RTL: routed TT in->reg -79.3 ps on the ld_grp compare in
+            // front of R0): capture the RAW load fields at the same R0 edge (pin flops, no logic before them) and
+            // decode the normal/low/high predicates from the R0 registers.  q(predicate(R0 fields)) at edge R0 is
+            // identical to predicate(q(fields)) after edge R0, so the ab capture at R0+1, data, bank and every
+            // other edge are unchanged (backward retime across the decode; +0 cycles).  gid is captured with
+            // ld_grp at the same edge (the predecode compared both on the same cycle).
+            wire       p_v, p_mode, p_w2v;
+            wire [7:0] p_grp, p_gid;
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_pv (.clk(clk), .rst_n(rst_l), .d(ld_v), .q(p_v));
+            ot_hdc_v41x_kreg #(.W(1 + 8 + 1 + 8), .R(0)) u_pf (.clk(clk), .rst_n(rst_l),
+                .d({ld_mode, ld_grp, ld_w2v, gid_m}), .q({p_mode, p_grp, p_w2v, p_gid}));
+            wire [7:0] p_head = p_gid * HG + gh;
+            assign write_normal = p_v && !p_mode && (p_grp == p_head);
+            for (gk = 0; gk < TD/R; gk = gk + 1) begin : g_wdecode
+                assign write_low[gk]  = p_v && p_mode && (p_grp == gk);
+`ifdef SVC8_POST_MUT
+                assign write_high[gk] = p_v && p_mode && p_w2v && (p_grp == gk);   // bench mutant: high slot lost
+`else
+                assign write_high[gk] = p_v && p_mode && p_w2v && ((p_grp + 8'd1) == gk);
+`endif
+            end
+            end else begin : g_pre
             wire [7:0] head_id = gid_m * HG + gh;
             wire n_raw = ld_v && !ld_mode && (ld_grp == head_id);
             ot_hdc_v41x_kreg #(.W(1), .R(1)) u_wn (.clk(clk), .rst_n(rst_l),
                 .d(n_raw), .q(write_normal));
-            wire [TD/R-1:0] write_low, write_high;
             for (gk = 0; gk < TD/R; gk = gk + 1) begin : g_wdecode
                 wire lo_raw = ld_v && ld_mode && (ld_grp == gk);
                 wire hi_raw = ld_v && ld_mode && ld_w2v && ((ld_grp + 8'd1) == gk);
                 ot_hdc_v41x_kreg #(.W(2), .R(1)) u_wc (.clk(clk), .rst_n(rst_l),
                     .d({hi_raw, lo_raw}), .q({write_high[gk], write_low[gk]}));
+            end
             end
 
                 assign we = {TD{1'b0}};
