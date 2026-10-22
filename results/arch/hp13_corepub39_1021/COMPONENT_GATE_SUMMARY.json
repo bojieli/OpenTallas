@@ -1,0 +1,246 @@
+{
+  "1": {
+    "verdict": "PASS",
+    "source_commit": null,
+    "source_binding_sha256": "f921ec0b78d0872b07b969ab6408e0a22d80e6535ad432f3714d256dce0fa68a",
+    "host": "ot-gold2",
+    "data_native_max": 1,
+    "clock": {
+      "max_root_sinks": 39,
+      "root": "port:ck",
+      "cts": true,
+      "tt_insertion_ps": 51.0,
+      "tt_spread_ps": 0.4,
+      "tt_pin_spread_ps": 0.4,
+      "ff_insertion_ps": 39.5,
+      "ff_spread_ps": 0.3,
+      "ff_pin_spread_ps": 0.3,
+      "declared_clock": "cts",
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "ck",
+          "clock": "core_clk",
+          "tt": {
+            "clock_family": {
+              "core_clk": 39
+            },
+            "boundary": {
+              "n": 39,
+              "mean": 50.8,
+              "min": 50.6,
+              "max": 51.0
+            },
+            "all": {
+              "n": 39,
+              "mean": 50.8,
+              "min": 50.6,
+              "max": 51.0
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          },
+          "ff": {
+            "boundary": {
+              "n": 39,
+              "mean": 39.4,
+              "min": 39.2,
+              "max": 39.5
+            },
+            "all": {
+              "n": 39,
+              "mean": 39.4,
+              "min": 39.2,
+              "max": 39.5
+            },
+            "child_flop": null,
+            "macros": null
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "39 sinks on the largest root; measured TT insertion 51.0 ps, FF insertion 39.5 ps, TT pin-flop spread 0.4 ps, FF pin-flop spread 0.3 ps (spread <= 80 ps)",
+      "other_roots": []
+    },
+    "trial_route": {
+      "schema": "opentallas.ref_tile.trial_route.v1",
+      "overflow": 0,
+      "kind": "tile",
+      "skip_incremental_repair": true,
+      "rc": "0",
+      "grt_s": 10,
+      "layers": [
+        {
+          "layer": "M1",
+          "capacity": 0,
+          "usage": 0,
+          "pct": 0.0,
+          "overflow": 0
+        },
+        {
+          "layer": "M2",
+          "capacity": 53874,
+          "usage": 161,
+          "pct": 0.3,
+          "overflow": 0
+        },
+        {
+          "layer": "M3",
+          "capacity": 63772,
+          "usage": 2046,
+          "pct": 3.21,
+          "overflow": 0
+        },
+        {
+          "layer": "M4",
+          "capacity": 48995,
+          "usage": 173,
+          "pct": 0.35,
+          "overflow": 0
+        },
+        {
+          "layer": "M5",
+          "capacity": 47174,
+          "usage": 1025,
+          "pct": 2.17,
+          "overflow": 0
+        }
+      ],
+      "worst_layer_usage": [
+        "M3",
+        3.21
+      ],
+      "hotspot": null,
+      "congestion_png": null
+    },
+    "scope": "isolated39/78FF publisher component CTS+trialGRT gate, not fullHP13 GIplacement, regionalcrossing or finalSS/FF routed signoff"
+  },
+  "2": {
+    "verdict": "PASS",
+    "source_commit": null,
+    "source_binding_sha256": "db40c6fbd912fa6c228d9fdb6fb17ed2167c1980a984071ecee5c13a181aadb5",
+    "host": "ot-gold2",
+    "data_native_max": 1,
+    "clock": {
+      "max_root_sinks": 78,
+      "root": "port:ck",
+      "cts": true,
+      "tt_insertion_ps": 64.7,
+      "tt_spread_ps": 0.7,
+      "tt_pin_spread_ps": 0.7,
+      "ff_insertion_ps": 49.5,
+      "ff_spread_ps": 0.8,
+      "ff_pin_spread_ps": 0.8,
+      "declared_clock": "cts",
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "ck",
+          "clock": "core_clk",
+          "tt": {
+            "clock_family": {
+              "core_clk": 78
+            },
+            "boundary": {
+              "n": 78,
+              "mean": 64.4,
+              "min": 64.0,
+              "max": 64.7
+            },
+            "all": {
+              "n": 78,
+              "mean": 64.4,
+              "min": 64.0,
+              "max": 64.7
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          },
+          "ff": {
+            "boundary": {
+              "n": 78,
+              "mean": 49.1,
+              "min": 48.7,
+              "max": 49.5
+            },
+            "all": {
+              "n": 78,
+              "mean": 49.1,
+              "min": 48.7,
+              "max": 49.5
+            },
+            "child_flop": null,
+            "macros": null
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "78 sinks on the largest root; measured TT insertion 64.7 ps, FF insertion 49.5 ps, TT pin-flop spread 0.7 ps, FF pin-flop spread 0.8 ps (spread <= 80 ps)",
+      "other_roots": []
+    },
+    "trial_route": {
+      "schema": "opentallas.ref_tile.trial_route.v1",
+      "overflow": 0,
+      "kind": "tile",
+      "skip_incremental_repair": true,
+      "rc": "0",
+      "grt_s": 12,
+      "layers": [
+        {
+          "layer": "M1",
+          "capacity": 0,
+          "usage": 0,
+          "pct": 0.0,
+          "overflow": 0
+        },
+        {
+          "layer": "M2",
+          "capacity": 53840,
+          "usage": 269,
+          "pct": 0.5,
+          "overflow": 0
+        },
+        {
+          "layer": "M3",
+          "capacity": 63772,
+          "usage": 2760,
+          "pct": 4.33,
+          "overflow": 0
+        },
+        {
+          "layer": "M4",
+          "capacity": 48995,
+          "usage": 259,
+          "pct": 0.53,
+          "overflow": 0
+        },
+        {
+          "layer": "M5",
+          "capacity": 47174,
+          "usage": 465,
+          "pct": 0.99,
+          "overflow": 0
+        }
+      ],
+      "worst_layer_usage": [
+        "M3",
+        4.33
+      ],
+      "hotspot": null,
+      "congestion_png": null
+    },
+    "scope": "isolated39/78FF publisher component CTS+trialGRT gate, not fullHP13 GIplacement, regionalcrossing or finalSS/FF routed signoff"
+  }
+}
