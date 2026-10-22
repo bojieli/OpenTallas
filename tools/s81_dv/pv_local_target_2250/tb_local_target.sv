@@ -8,9 +8,10 @@ module tb_local_target;
  reg rs=1;initial #1 rs=0;
  reg enq=0,enl=0;always @(cks or enq)if(!cks)enl=enq;
  wire ckf0=cks&enl;wire ckf;assign #115 ckf=ckf0;
- reg[561:0]src=0;wire[827:0]lane_i={266'd0,src};wire[827:0]lane_o;wire[2:0]land_fault;
+ reg[561:0]src=0;wire[827:0]lane_i={266'd0,src};wire[827:0]forwarded_i;assign #115 forwarded_i=lane_i;
+ wire[827:0]lane_o;wire[2:0]land_fault;
  for(genvar l=0;l<3;l=l+1)begin:g_land
-  dsdv_pv_local_land_n32_source4_276 dut(.ck_f(ckf),.i(lane_i[276*l+:276]),.ck(ck),.rs(rs),.k(6'd17),.o(lane_o[276*l+:276]),.fault(land_fault[l]));
+  dsdv_pv_local_land_n32_source4_276 dut(.ck_f(ckf),.i(forwarded_i[276*l+:276]),.ck(ck),.rs(rs),.k(6'd17),.o(lane_o[276*l+:276]),.fault(land_fault[l]));
  end
  reg[514:0]q=0;reg[561:0]peer=0;reg[511:0]ctl[0:7],expected[0:533];reg[8191:0]dir;
  wire[514:0]qp;wire cv,pp,launch,pfault;wire[19:0]owner,po;wire[20:0]pos,pop;wire[7:0]se,so;wire[15:0]lf,pf;wire[2:0]pr;wire[511:0]par;

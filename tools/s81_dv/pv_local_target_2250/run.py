@@ -2,7 +2,7 @@
 """Scoped source4 local transport/control target cut; no production epoch."""
 import hashlib,json,subprocess,sys
 from pathlib import Path
-root=Path.cwd();out=root.parent/'run_r1';out.mkdir(exist_ok=False);images=out/'images';images.mkdir()
+root=Path.cwd();out=root.parent/'run_r3';out.mkdir(exist_ok=False);images=out/'images';images.mkdir()
 sys.path.insert(0,str(root/'tools/s81_dv'))
 from layer_prog.pv_so_calendar import control_frames
 from layer_prog.lower_svc import hdr
@@ -31,6 +31,7 @@ identity=dict(schema='opentallas.s81.local_target_cut.v1',run_id=readset['run_id
  reuse_source4_ring_receipt='3519f6369:results/rtl/s81_g9f_source_1021/source4/receipt.json',
  bench_sha256=sha(root/rtl[-1]),runner_sha256=sha(__file__),images={p.name:sha(p) for p in images.iterdir()},
  native_clock_domain='scoped_common_frequency_component_epoch',source_epoch_edge=0,target_epoch_edge=0,
+ forwarding_delay_ps=dict(clock=115,data=115),attempt=3,
  physical_epoch_mapping=None,peer_flight_qualified=False,scope='Changed local ring -> exact program/join/ingress components. Synthetic component payloads reuse existing target fixture; no SM arithmetic/SOT/full-entry execution.')
 (out/'identity.json').write_text(json.dumps(identity,indent=2)+'\n')
 cmd=['iverilog','-g2012','-s','tb_local_target','-o',str(out/'sim')]+rtl
