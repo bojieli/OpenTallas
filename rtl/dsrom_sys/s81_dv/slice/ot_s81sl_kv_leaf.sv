@@ -20,7 +20,7 @@
 //          a0 = slot-0 (older) record base, a1 = slot-1 record base, n = 32, imm[13:4] = output base, rest 0.
 // The leaf runs one job at a time (busy covers both engines); a command while busy is a sticky fault.
 module ot_s81sl_kv_leaf #(
- parameter integer CNIK=0, CP=0, CP_MUT=0, CNIK_MUT=0
+ parameter integer CNIK=0, CP=0, HARD_RQ=0, CP_MUT=0, CNIK_MUT=0
 )(
  input wire clk,rst_n,input wire c_v,input wire [159:0] c_d,
  output reg busy,done,output reg fault,
@@ -42,7 +42,7 @@ module ot_s81sl_kv_leaf #(
  reg [15:0] dn_v;reg [8191:0] dn_d;reg [255:0] halfrow;
  wire [15:0] ov;wire [223:0] oa;wire [255:0] om;wire [8191:0] od;
  wire bf,bon,bid;
- ot_s81sl_kv_bank #(.CNIK(CNIK),.CNIK_MUT(CNIK_MUT)) u_bank(.sk(clk),.rst_n(rst_n),.dn_st(dn_st),.dn_kind(kind),.dn_gsel(gsel),.dn_jid(jid),
+ ot_s81sl_kv_bank #(.CNIK(CNIK),.HARD_RQ(HARD_RQ),.CNIK_MUT(CNIK_MUT)) u_bank(.sk(clk),.rst_n(rst_n),.dn_st(dn_st),.dn_kind(kind),.dn_gsel(gsel),.dn_jid(jid),
  .dn_v(dn_v),.dn_d(dn_d),.wq_v(ov),.wq_row(oa),.wq_mask(om),.wq_d(od),.fault(bf),.online(bon),.input_done(bid));
  reg [1:0] count[0:15];
  reg [3:0] bank;reg [1:0] entry;reg [1:0] phase;reg draining;reg finishing;

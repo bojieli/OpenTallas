@@ -1,0 +1,6 @@
+SOGOLD_IMG dir=/srv/opentallas-scratch/claude/codex-s81-so-math-2105/images_pinned/base nq=537 nv=8 so_obase=200 se_obase=0
+SOGOLD se_checked=128 so_checked=512 errors=0 rope_row_errors=0 plain_row_errors=0 rows_bad=0 so_latency=54 lat_bad=0 den_mask=ffff fu=0000 fo=0000 late_q=0 cycles=20136 verdict=PASS
+- tools/s81_dv/layer_prog/svc/tb_so_golden.sv:118: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 54.222 s; speed 371.372 ns/s
+- Verilator: cpu 54.205 s on 1 threads; allocated 20 MB

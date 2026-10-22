@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-so-math-2105
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-so-math-2105
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-so-math-2105
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-so-math-2105
+ot-run: ot-gold1       admits   565 GB (avail 725, growth 330, headroom 0, waiters 0/0 GB) load 75/112 running 26 disk 1582 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-so-math-2105
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-so-math-2105
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1612056-1792642745 after 1 s
+{
+  "status": "PASS",
+  "reference_sources": {
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+  },
+  "stale_reference_rejected": "fixture reference source mismatch: tools/hdc_golden_v41.py: 1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4 != 0000000000000000000000000000000000000000000000000000000000000000",
+  "all_runtime_rows_unchanged": true
+}
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-1612056-1792642745): exit 0
