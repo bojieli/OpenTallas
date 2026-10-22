@@ -294,8 +294,8 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
 
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--out',required=True);a=p.parse_args()
- raw=Path(a.json).read_bytes();source,helpers,receipt=build(raw,a.top,'qfd_flat_ml1_native_bounded',load_cap=24,transparent_inverters=True,retain_all_comb=True)
+ p=argparse.ArgumentParser();p.add_argument('json');p.add_argument('--top',required=True);p.add_argument('--out',required=True);p.add_argument('--shared-helpers',action='store_true');p.add_argument('--name',default='qfd_flat_ml1_native_bounded');a=p.parse_args()
+ raw=Path(a.json).read_bytes();source,helpers,receipt=build(raw,a.top,a.name,load_cap=24,transparent_inverters=True,retain_all_comb=True,shared_helpers=a.shared_helpers)
  macros=[(n,c) for n,c in receipt['graph']['cells'].items() if c['type'] in MACROS]
  assert len(macros)==1,len(macros)
  receipt['scope']='Necessary source construction for complete owned explicit wrapper; exactly one unchanged 128x256 SRAM; functional edges unchanged after three-edge reset release. Actual native/functional/physical proof still required.'

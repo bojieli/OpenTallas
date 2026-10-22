@@ -1,0 +1,19 @@
+{
+  "status": "EXACT_SOURCE_NORMALIZATION_PASS",
+  "construction_unit": "oth-ubuntu-3832335-1792650564",
+  "original_source_commit": "703669f8c",
+  "changes": [
+    "Top name only",
+    "Unused helper ID parameter fixed0 instead of per-instance integer",
+    "Per-instance keep=1 added beside existing keep_hierarchy"
+  ],
+  "assertions": [
+    "Every functional Boolean connection, FF type/D/C/R/Q, actual SRAM pin and reset forest unchanged",
+    "Helper definitions byte-identical; ID appears only in unused parameter declarations",
+    "Full source text exactly equal after only declared normalization"
+  ],
+  "shared_source_sha256": "79d5bee90f59d9a7ce4a7aef656b623762660a08acf224a318e8932994dc4ceb",
+  "original_source_sha256": "98112ffd8ab4f4ebfa6469260b36dfaf513143a92ed18fe6613b6760d80c1092",
+  "native_qualified": false,
+  "physical_qualified": false
+}
