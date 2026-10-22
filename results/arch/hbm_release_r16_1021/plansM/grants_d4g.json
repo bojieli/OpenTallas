@@ -43979,8 +43979,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 5940.0,
-    "y": 12409.2,
+    "x": 5322.24,
+    "y": 12899.52,
     "orient": "R0"
    },
    "pins": [],
@@ -43990,7 +43990,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
    "instance": "cxij_SW_q",
    "physical_view": "physical/ref_tile/hbm_su_cx_ijq_1019t/views/ot_hbm_su_static_cxport_ij_q"
   },
@@ -44004,8 +44004,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 6156.0,
-    "y": 12409.2,
+    "x": 5538.24,
+    "y": 12899.52,
     "orient": "R0"
    },
    "pins": [],
@@ -44015,7 +44015,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
    "instance": "cxij_SW_s"
   },
   {
@@ -44028,8 +44028,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 20498.4,
-    "y": 12409.2,
+    "x": 21122.64,
+    "y": 12882.24,
     "orient": "R0"
    },
    "pins": [],
@@ -44039,7 +44039,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
    "instance": "cxij_SE_q",
    "physical_view": "physical/ref_tile/hbm_su_cx_ijq_1019t/views/ot_hbm_su_static_cxport_ij_q"
   },
@@ -44053,8 +44053,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 20714.4,
-    "y": 12409.2,
+    "x": 21338.64,
+    "y": 12882.24,
     "orient": "R0"
    },
    "pins": [],
@@ -44064,7 +44064,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
    "instance": "cxij_SE_s"
   },
   {
@@ -44077,8 +44077,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 5983.2,
-    "y": 20152.8,
+    "x": 5508.0,
+    "y": 20761.92,
     "orient": "R0"
    },
    "pins": [],
@@ -44088,7 +44088,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual).",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual). | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
    "instance": "cxij_NW_q",
    "physical_view": "physical/ref_tile/hbm_su_cx_ijq_1019t/views/ot_hbm_su_static_cxport_ij_q"
   },
@@ -44102,8 +44102,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 6199.2,
-    "y": 20152.8,
+    "x": 5724.0,
+    "y": 20761.92,
     "orient": "R0"
    },
    "pins": [],
@@ -44113,7 +44113,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual).",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual). | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
    "instance": "cxij_NW_s"
   },
   {
@@ -44126,8 +44126,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 20498.4,
-    "y": 20152.8,
+    "x": 21122.64,
+    "y": 19712.16,
     "orient": "R0"
    },
    "pins": [],
@@ -44137,7 +44137,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual).",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual). | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
    "instance": "cxij_NE_q",
    "physical_view": "physical/ref_tile/hbm_su_cx_ijq_1019t/views/ot_hbm_su_static_cxport_ij_q"
   },
@@ -44151,8 +44151,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 20714.4,
-    "y": 20152.8,
+    "x": 21338.64,
+    "y": 19712.16,
     "orient": "R0"
    },
    "pins": [],
@@ -44162,7 +44162,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual).",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual). | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
    "instance": "cxij_NE_s"
   },
   {
