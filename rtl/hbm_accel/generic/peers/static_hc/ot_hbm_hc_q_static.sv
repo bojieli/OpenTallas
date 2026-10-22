@@ -50,7 +50,8 @@ module ot_hbm_hc_q_static #(
     //   FAN32 (registered word check copies, start-accept copies, launch / gather-phase / store-lane kept copies),
     //   ot_hgi_hc_gathered_mix_reader_f32_static (per-group launch accepts, predicted response / request copies, one-hot
     //   row select), ot_hgi_hc_result_vm_f32_static (kept store-lane selects), residual capture enables 128 x 16 b.
-    parameter integer SAFE=0
+    parameter integer SAFE=0,
+    parameter integer TARGET_SCAN_BOUNDARY=0
 )(
     input wire clk,rst_n,
     input wire [7:0] tgt,              // identity strap: F20 target id (108+q)
@@ -120,7 +121,7 @@ module ot_hbm_hc_q_static #(
     wire [255:0] p_data;
     wire [10:0] start_limit;
     wire [15:0] start_loops;
-    ot_static_program_target #(.PCW(10),.TGT_PIN(1),.RLC((SAFE!=0)?40:1),.FAN32((SAFE>=2)?1:0)) target(
+    ot_static_program_target #(.PCW(10),.TGT_PIN(1),.RLC((SAFE!=0)?40:1),.FAN32((SAFE>=2)?1:0),.SCAN_BOUNDARY(TARGET_SCAN_BOUNDARY)) target(
         .clk(clk),.rst_n(rr_n[0]),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .program_active(program_active),.program_cfg_we(cfg_we),.program_cfg_addr(p_addr),.program_cfg_data(p_data),

@@ -28,7 +28,8 @@ module ot_hbm_hc_qhub_static #(
     // ot_hbm_hc_qtree16_static (u_cen.g_hard.g_qt[c].u_t) with their own clock entries clk_t[c] (regional roots beside
     // their register mass, compensated by the die), every adder the native-fanout LAT-7 graph, and the hc_<q> client
     // FAN32 fixes of ot_hbm_hc_q_static SAFE 2.  clk_t[3:0] is unused for SAFE < 2 (the die ties it to the HC clock).
-    parameter integer SAFE = 0
+    parameter integer SAFE = 0,
+    parameter integer TARGET_SCAN_BOUNDARY = 0
 )(
     input  wire           clk, rst_n,
     input  wire [3:0]     clk_t,                 // SAFE 2: clock entries of the 4 hard tree slices
@@ -67,7 +68,7 @@ module ot_hbm_hc_qhub_static #(
 );
     wire xv; wire [9:0] xw; wire [2047:0] xd; wire [1:0] xbt; wire [7:0] rb; wire [4:0] xfv; wire [9:0] xfb;
     assign rstb_w = rb[0]; assign rstb_n = rb[3:1]; assign rstb_e = rb[4]; assign rstb_s = rb[7:5];
-    ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .GATHER_PERIOD(GATHER_PERIOD), .DONE_LAT(DONE_LAT), .XW_BEATS(4), .SAFE(SAFE)) u_q (
+    ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .GATHER_PERIOD(GATHER_PERIOD), .DONE_LAT(DONE_LAT), .XW_BEATS(4), .SAFE(SAFE), .TARGET_SCAN_BOUNDARY(TARGET_SCAN_BOUNDARY)) u_q (
         .clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .configured(configured), .lg_rq(lg_rq), .lg_wq(lg_wq), .lg_rr(lg_rr), .lg_w_done(lg_w_done),

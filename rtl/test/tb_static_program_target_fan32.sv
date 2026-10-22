@@ -4,6 +4,9 @@
 // windows with valid magic / identity, descriptors over those windows incl. reuse, back-to-back write -> descriptor,
 // launches, illegal requests).  Every output compared on every edge.  +define+MUT=1 drives the FAN32 1 copy without
 // its bypass (row_installed from the slice bitmap only): must FAIL.
+`ifndef SCAN_BOUNDARY
+`define SCAN_BOUNDARY 0
+`endif
 `ifndef MUT
 `define MUT 0
 `endif
@@ -19,7 +22,7 @@ module tb_static_program_target_fan32;
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(pa), .program_cfg_we(we0),
         .program_cfg_addr(a0), .program_cfg_data(d0), .program_start_v(sv0), .program_start_base(sb0), .program_start_limit(sl0),
         .program_start_loops(lo0), .configured(c0), .fault(f0));
-    ot_static_program_target #(.PCW(10), .TGT_PIN(1), .RLC(40), .FAN32(1), .MUT(`MUT)) r1 (.clk(clk), .rst_n(rst_n), .clk_cap(clk), .tgt(8'd108),
+    ot_static_program_target #(.PCW(10), .TGT_PIN(1), .RLC(40), .FAN32(1), .MUT(`MUT), .SCAN_BOUNDARY(`SCAN_BOUNDARY)) r1 (.clk(clk), .rst_n(rst_n), .clk_cap(clk), .tgt(8'd108),
         .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .program_active(pa), .program_cfg_we(we1),
         .program_cfg_addr(a1), .program_cfg_data(d1), .program_start_v(sv1), .program_start_base(sb1), .program_start_limit(sl1),

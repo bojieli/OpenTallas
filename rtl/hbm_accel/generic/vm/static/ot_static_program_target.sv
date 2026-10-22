@@ -27,7 +27,10 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                                   // on every edge (write-after-clear generation semantics included).  The scan row is held in 16 kept
                                   // slice copies (64-row read slices) next to the master counter.  Requires PCW 10.  Default 0 = unchanged.
                                   parameter integer FAN32=0,
-                                  parameter integer MUT=0)(   // bench: FAN32 1 + MUT 1 = scan without the pending-write bypass
+                                  parameter integer MUT=0,
+                                  // C7 P40 opt-in: preserve the real scan next-state bus nodes before the
+                                  // scan-last comparator. No state or edge is added; default mapping unchanged.
+                                  parameter integer SCAN_BOUNDARY=0)(   // bench: FAN32 1 + MUT 1 = scan without the pending-write bypass
     input wire clk,rst_n,
     input wire clk_cap,   // used only when CAP_CLK=1
     input wire [7:0] tgt,
@@ -273,14 +276,14 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
         (* keep = "true" *) wire sload=dv_c[11] && tm[4] && !dbad && !reuse;    // scan_row[4:0]
         (* keep = "true" *) wire sloadh=dv_c[12] && tm[4] && !dbad && !reuse;   // scan_row[9:5]
         (* keep = "true" *) wire sloadl=dv_c[13] && tm[4] && !dbad && !reuse;   // scan_limit
-        wire sc_n=(sc_c[0] && sl_c[0])?1'b0:(dv && tm[4] && !dbad)?!reuse:sc_c[0];
+        (* keep = SCAN_BOUNDARY *) wire sc_n=(sc_c[0] && sl_c[0])?1'b0:(dv && tm[4] && !dbad)?!reuse:sc_c[0];
         always @(posedge clk or negedge rl)
             if(!rl)sc_c<=0;
             else sc_c<={10{sc_n}};
         (* keep = "true" *) wire sstep=sc_c[1] && !sl_c[1];
-        wire [4:0] row_lo_n=sload?base[4:0]:sstep?scan_row[4:0]+5'd1:scan_row[4:0];
-        wire [PCW-6:0] row_hi_n=sloadh?base[PCW-1:5]:sstep?scan_row[PCW-1:5]+((&scan_row[4:0])?1'b1:1'b0):scan_row[PCW-1:5];
-        wire [PCW:0] lim_n=sloadl?limit[PCW:0]:scan_limit;
+        (* keep = SCAN_BOUNDARY *) wire [4:0] row_lo_n=sload?base[4:0]:sstep?scan_row[4:0]+5'd1:scan_row[4:0];
+        (* keep = SCAN_BOUNDARY *) wire [PCW-6:0] row_hi_n=sloadh?base[PCW-1:5]:sstep?scan_row[PCW-1:5]+((&scan_row[4:0])?1'b1:1'b0):scan_row[PCW-1:5];
+        (* keep = SCAN_BOUNDARY *) wire [PCW:0] lim_n=sloadl?limit[PCW:0]:scan_limit;
         wire sl_n={1'b0,row_hi_n,row_lo_n}+1'b1==lim_n;
         always @(posedge clk or negedge rl)
             if(!rl)begin scan_row<=0;scan_limit<=0;sl_c<=0;end
