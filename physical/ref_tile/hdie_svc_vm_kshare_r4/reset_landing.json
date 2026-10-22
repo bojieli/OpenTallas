@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_svc_vm_kshare_splitstrap",
+ "enable": false,
+ "reason": "the RTL lands it: stream_rst_n -> srst_q (stream_clk), hbm_rst_n -> hrst_q (hbm_clk), one flop per domain at entry, so each reset port has one sink and core fan-out starts at a register; the kit landing has one clock and cannot land two async domains (ROOT-HBM 10-19)"
+}
