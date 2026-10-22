@@ -17,6 +17,7 @@ import async_gray_fifo_constraints
 import cdc_sync_constraints
 import gray_fifo_cdc_constraints
 import single_clock_contract
+import forwarded_clock_outputs
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -823,11 +824,35 @@ def clocks(spec, period):
         lines.append('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
             '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
             ' '.join('{' + c + '}' for c in e['cells']) + '}}' for e in soft) + ']')
+    if forwarded_clock_outputs.contract(spec):
+        lines.append(forwarded_clock_outputs.metadata(spec).rstrip('\n'))
     for e in soft:
         d = ds[e['domain']]
         value = period * d['ratio'][0] / d['ratio'][1]
         lines.append(f"create_clock -name {e['clock']} -period {value:.9f} [get_ports {{{e['port']}}}]")
     return '\n'.join(lines) + '\n'
+
+
+def forwarded_pre_cts_tcl(spec, entry_sdc):
+    """Restore the existing forwarded-clock contract in a fresh CTS process.
+
+    write_sdc preserves clocks, but not Tcl metadata.  The CTS wrapper needs
+    these exact generated dictionaries before it checks sink ownership; the
+    complete entry SDC is reapplied after CTS as before.  No clock, endpoint
+    policy or timing constraint is changed here.
+    """
+    if not forwarded_soft_clocks(spec):
+        return []
+    out = []
+    prefixes = ['set ::ot_ce_fwd_soft ', 'set ::ot_ce_refs ']
+    if forwarded_clock_outputs.contract(spec):
+        prefixes.append('set ::ot_ce_fwd_outputs ')
+    for prefix in prefixes:
+        matches = [line for line in entry_sdc.splitlines() if line.startswith(prefix)]
+        if len(matches) != 1:
+            raise ValueError('forwarded pre-CTS: missing or duplicate generated contract ' + prefix)
+        out.extend(matches)
+    return out
 
 
 
@@ -985,6 +1010,7 @@ def _generate(spec, root):
             + ('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
                 '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
                 ' '.join('{' + c + '}' for c in e['cells']) + '}}' for e in soft) + ']\n' if soft else '')
+            + forwarded_clock_outputs.metadata(spec, root)
             + ('set ::ot_ce_landed_raw [dict create ' + ' '.join(
                 f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(raw.items())) + ']\n'
                if raw else '')
@@ -2072,6 +2098,19 @@ proc ot_ce_forwarded_soft_visit {corner groups_name} {
 
 def forwarded_soft_body(body):
     substitutions = [
+        # Only explicit real-clock ports have propagated clock tags. Their hard
+        # and soft sinks must use the same phase-normalized clock metric. The
+        # legacy data-only forwarded class keeps its existing arrival query.
+        ('      set arr [ot_ce_fwd_arrival $pin]',
+         '      if {[dict exists $::ot_ce_fwd_soft $port]} {\n'
+         '        set info [dict get $::ot_ce_fwd_soft $port]\n'
+         '        set clock [get_clocks [dict get $info clock]]\n'
+         '        if {[llength $clock] != 1} {error "OT_FORWARDED_SOFT: missing clock $port"}\n'
+         '        set arr [ot_ce_clock_wire $pin $clock]\n'
+         '        puts "OT_FORWARDED_SOFT HARD_CLOCK_BASIS $corner $port $full clock=[get_full_name $clock] metric=phase_normalized_clock wire=$arr"\n'
+         '      } else {\n'
+         '        set arr [ot_ce_fwd_arrival $pin]\n'
+         '      }'),
         ('  set_propagated_clock [get_clocks ot_entry_*]',
          '  set_propagated_clock [get_clocks ot_entry_*]\n  set_propagated_clock [get_clocks ot_forwarded_*]'),
         ('  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}',
