@@ -41,6 +41,8 @@ def run(root):
         event('READ_REQUEST',10,row=0,owner=owner,job=job,read_id='r1'),
         event('READ_READY',14,row=0,read_id='r1',word128='0')]
     expect('writer_overwrites_consumer_lease',header,ev)
+    ev=deepcopy(events);ev[0]['instance']='SOURCE';ev[2]['instance']='DEST';ev[3]['instance']='DEST'
+    expect('another_SRAM_instance_is_not_a_producer',header,ev)
     incomplete=E.extract(header,[e for e in events if e['kind']!='DONE'],root/'source')
     ir=incomplete['producers'][owner+'::input_rows']
     assert ir['status']=='PARTIAL' and ir['rows'][0]['release_edge'] is None
@@ -61,6 +63,12 @@ def run(root):
     ev=deepcopy(gev);ev[7]['gain_set']=3;expect('consumer_gain_bank_mismatch',header,ev)
     ev=deepcopy(gev);ev.insert(7,event('GAIN_OVERWRITE',16,owner='OTHER',job='OTHER',gain_set=0,gain_epoch='NEXT'))
     expect('gain_overwrite_before_consumer_done',header,ev)
+    ev=deepcopy(gev);ev[4]['edge']=2;ev.sort(key=lambda e:e['edge'])
+    expect('gain_load_before_GK_capture',header,ev)
+    ev=deepcopy(gev);ev[4]['edge']=11;ev.sort(key=lambda e:e['edge'])
+    expect('gain_load_after_GK_DONE',header,ev)
+    ev=deepcopy(events);ev[4]['jid']=1
+    expect('hardware_completion_jid_mismatch',header,ev)
     inc=E.extract(header,[e for e in gev if e['kind']!='DONE'],root/'source')
     assert inc['producers'][go+'::gain_upload_rows']['status']=='PARTIAL'
     out=dict(status='PASS',scope='SYNTHETIC_DIAGNOSTIC_EVENT_EXTRACTION_ONLY',

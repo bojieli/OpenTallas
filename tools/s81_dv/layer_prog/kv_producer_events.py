@@ -96,7 +96,7 @@ def extract(header,events,source_root):
             if not m:raise ValueError('empty native commit')
             if event.get('producer_kind')=='fixture_output':raise ValueError('fixture output is not an actual producer')
             if not event.get('producer') or not event.get('role'):raise ValueError('native commit lacks writer provenance')
-            versions=writes[row]
+            versions=writes[(event.get('instance',''),row)]
             if versions and versions[-1]['edge']==edge:raise ValueError('two native writers own the same row edge')
             known=versions[-1]['known'] if versions else 0
             combined=versions[-1]['combined'] if versions else 0
@@ -122,7 +122,9 @@ def extract(header,events,source_root):
         if key in consumed or key not in requests:raise ValueError('missing or duplicate native read request')
         consumed.add(key);request=requests[key];row=request['row'];sample=request['sram_sample_edge']
         if event['edge']<sample:raise ValueError('native data appears before the SRAM read sample')
-        versions=[w for w in writes[row] if w['edge']<sample]
+        instance=request.get('instance','')
+        if event.get('instance','')!=instance:raise ValueError('native read response belongs to another SRAM instance')
+        versions=[w for w in writes[(instance,row)] if w['edge']<sample]
         if not versions:raise ValueError('native read has no prior actual writer')
         version=versions[-1]
         if version['known']!=15:raise ValueError('native read includes lanes with no actual producer')
@@ -134,34 +136,39 @@ def extract(header,events,source_root):
         command=dispatch.get((owner,job));completion=done.get((owner,job))
         if command and sample<command['edge']:raise ValueError('native read precedes consumer dispatch')
         if completion and sample>completion['edge']:raise ValueError('native read exceeds consumer completion')
-        lease_key=(owner,job,row)
+        lease_key=(owner,job,instance,row)
         if lease_key in consumer_versions and consumer_versions[lease_key]!=version['sequence']:
             raise ValueError('native consumer observes two producer versions of one input row')
         consumer_versions[lease_key]=version['sequence']
-        uses[(owner,job,row,version['sequence'])].append(sample)
-        observed_reads.append(dict(read_id=key,owner=owner,job=job,row=row,sram_sample_edge=sample,
+        uses[(owner,job,instance,row,version['sequence'])].append(sample)
+        observed_reads.append(dict(read_id=key,owner=owner,job=job,instance=instance,row=row,sram_sample_edge=sample,
                                    ready_observation_edge=event['edge'],writer_edge=version['edge']))
     pending_reads=sorted(set(requests)-consumed,key=str)
-    records=defaultdict(list);pending=[];incomplete_records=set()
+    records=defaultdict(list);pending=[];incomplete_records=set();missing_identity=[]
     for key,completion in done.items():
         command=dispatch.get(key)
         if command and (completion['edge']<command['edge'] or completion['command_kind']!=command['command_kind']):
             raise ValueError('native completion precedes or differs from its actual dispatch')
-    for (owner,job,row,version_seq),samples in uses.items():
-        version=next(w for w in writes[row] if w['sequence']==version_seq)
+        if command and 'jid' in command and 'jid' in completion:
+            if command['jid']!=completion['jid']:raise ValueError('native completion hardware jid differs from dispatch')
+        else:
+            missing_identity.append(dict(owner=key[0],job=key[1],cause='hardware_jid_not_observed_at_both_capture_and_completion',
+                dispatch_jid=command.get('jid') if command else None,completion_jid=completion.get('jid')))
+    for (owner,job,instance,row,version_seq),samples in uses.items():
+        version=next(w for w in writes[(instance,row)] if w['sequence']==version_seq)
         command=dispatch.get((owner,job))
         if command is None:
             pending.append(dict(owner=owner,job=job,cause='actual_dispatch_capture_missing'));continue
         leaf_kind=command['command_kind']
         suffix=('gain_upload_rows' if leaf_kind=='GK' else 'parameters' if version['role']=='parameter' else 'input_rows')
-        last=max(samples);future=[w['edge'] for w in writes[row] if w['edge']>version['edge']]
+        last=max(samples);future=[w['edge'] for w in writes[(instance,row)] if w['edge']>version['edge']]
         if future and min(future)<=last:raise ValueError('actual native writer overwrites a live producer lease')
         complete=(owner,job) in done and not any(requests[k].get('owner',requests[k].get('consumer'))==owner
             and requests[k].get('job')==job for k in pending_reads)
         if not complete:
             incomplete_records.add((owner,suffix))
             pending.append(dict(owner=owner,job=job,cause='consumer_completion_or_read_response_missing'))
-        item=dict(lo=row,hi=row,ready_edge=version['edge']+1,last_read_edge=last,release_edge=last+1 if complete else None,
+        item=dict(lo=row,hi=row,source_instance=instance,ready_edge=version['edge']+1,last_read_edge=last,release_edge=last+1 if complete else None,
                   producer=version['producer'],source_receipt='measured_events.jsonl',
                   format=version.get('format','fp32'),writer_commit_edge=version['edge'],
                   producer_kind=version.get('producer_kind','actual_native_commit'))
@@ -192,9 +199,11 @@ def extract(header,events,source_root):
                     gain_ok=False
                 elif upload.get('gain_set')!=bank or upload['command_kind']!='GK' or upload['edge']>loaded:
                     raise ValueError('GK completion differs from its actual load dispatch')
-                if not any(g['kind']=='GAIN_LOAD' and g.get('owner')==owner and g.get('job')==load['job']
-                           and g.get('gain_epoch')==epoch and g['gain_set']==bank and g['edge']<=loaded for g in gains):
-                    gain_ok=False
+                actual_loads=[g for g in gains if g['kind']=='GAIN_LOAD' and g.get('owner')==owner
+                    and g.get('job')==load['job'] and g.get('gain_epoch')==epoch and g['gain_set']==bank]
+                if not actual_loads:gain_ok=False
+                if upload and any(not upload['edge']<=g['edge']<=loaded for g in actual_loads):
+                    raise ValueError('actual gain load is outside its matching GK dispatch/completion interval')
                 ends=[];consumers=set()
                 for use in uses_gain:
                     if use.get('gain_epoch')!=epoch or use['gain_set']!=bank:
@@ -230,7 +239,14 @@ def extract(header,events,source_root):
         calendar_qualified=False,production_enabled=False,
         ranks_observed=sorted({e['rank'] for e in cap+carriage if 'rank' in e}),
         required_ranks_for_D512=[0,1,2,3],
-        producers=producers,pending=pending,pending_reads=pending_reads,
+        producers=producers,pending=pending,pending_reads=pending_reads,missing_identity=missing_identity,
+        row_availability=[dict(instance=instance,row=row,known_mask=versions[-1]['known'],
+            last_commit_edge=versions[-1]['edge'],
+            ready_edge=versions[-1]['edge']+1 if versions[-1]['known']==15 else None,
+            word128=f"{versions[-1]['combined']:032x}",
+            future_consumer_release_edge=None,producer=versions[-1]['producer'],
+            intended_consumer_owner=versions[-1].get('intended_consumer_owner'))
+            for (instance,row),versions in writes.items() if versions],
         observed=dict(cap_writes=cap,carriage_writes=carriage,reads=observed_reads,
                       native_commits=[w for versions in writes.values() for w in versions],dispatch=list(dispatch.values()),done=list(done.values())),
         completeness='One minimum subset never implies four ranks or a full D512 input. Missing native rows remain missing.')

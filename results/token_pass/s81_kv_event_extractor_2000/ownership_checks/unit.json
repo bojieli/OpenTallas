@@ -1,0 +1,77 @@
+{
+  "status": "PASS",
+  "scope": "SYNTHETIC_DIAGNOSTIC_EVENT_EXTRACTION_ONLY",
+  "extractor_sha256": "5cf94c7097c1f55a30b70844b1ecc67f4974d44f91bea235e943a6fd7b3edec6",
+  "causal_refusals": [
+    {
+      "case": "wrong_actual_read_value",
+      "error": "native read differs from read-before-write SRAM version"
+    },
+    {
+      "case": "read_before_write_same_edge",
+      "error": "native read has no prior actual writer"
+    },
+    {
+      "case": "read_without_actual_writer",
+      "error": "native read has no prior actual writer"
+    },
+    {
+      "case": "clock_domain_cast",
+      "error": "event clock cannot be cast into the replay epoch"
+    },
+    {
+      "case": "missing_finite_replay_end",
+      "error": "finite measured RUN_END edge required"
+    },
+    {
+      "case": "different_native_macro",
+      "error": "native read-ready derivation requires the actual pinned SRAM source"
+    },
+    {
+      "case": "read_without_all_native_lanes",
+      "error": "native read includes lanes with no actual producer"
+    },
+    {
+      "case": "writer_overwrites_consumer_lease",
+      "error": "native consumer observes two producer versions of one input row"
+    },
+    {
+      "case": "another_SRAM_instance_is_not_a_producer",
+      "error": "native read has no prior actual writer"
+    },
+    {
+      "case": "GK_DONE_epoch_mismatch",
+      "error": "gain consumer names a different loaded bank/epoch"
+    },
+    {
+      "case": "arithmetic_precedes_gain_loaded",
+      "error": "gain consumer capture/completion does not follow GK load"
+    },
+    {
+      "case": "consumer_gain_bank_mismatch",
+      "error": "gain consumer names a different loaded bank/epoch"
+    },
+    {
+      "case": "gain_overwrite_before_consumer_done",
+      "error": "gain bank overwritten before consumer completion"
+    },
+    {
+      "case": "gain_load_before_GK_capture",
+      "error": "actual gain load is outside its matching GK dispatch/completion interval"
+    },
+    {
+      "case": "gain_load_after_GK_DONE",
+      "error": "actual gain load is outside its matching GK dispatch/completion interval"
+    },
+    {
+      "case": "hardware_completion_jid_mismatch",
+      "error": "native completion hardware jid differs from dispatch"
+    }
+  ],
+  "incomplete_cases": [
+    "missing_consumer_DONE",
+    "missing_gain_consumer_DONE"
+  ],
+  "calendar_qualified": false,
+  "production_enabled": false
+}
