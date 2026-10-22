@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.qwen.compute.func-open-decisions.v1",
+ "lane": "SQ-QB2-FUNC (sub of SQ-QBIND2), 2026-10-21",
+ "die": "dv2f21g5r11bfp (ot-gold1:/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r11bfp, src eadc640c3); strict bind FAIL output_open_ports 79",
+ "rule": "no waiver, no fake sink: every functional output gets its real consumer; the coherent source line already provides each one",
+ "coherent_source": "codex/q-headprep-1021 (selected Q die source = coherent73 ASSEMBLY_CANONICAL per QE3-N59 17:55); NOT in main / claude/qk3-qgen-1021",
+ "coherent_flags": "OT_QWEN_HEAD_PREP=1 OT_QWEN_ROPE=1 OT_QWEN_STATUS_OBS=1 OT_QWEN_FAULT_FACE=1 OT_SPLIT_FAULT_SOURCE_BITS=1 OT_SPLIT_FAULT_EMIT=1 OT_QWEN_MU_NU=4",
+ "items": [
+  {"open": "flt_root_sys_face(qfd_fault_or_n4).o", "class": "real consumer owed",
+   "consumer": "sys_face.obs_fault -> sticky obs_fault_q -> face_fault (admit_ready, t_go block, tt_fab, result_cause[0])",
+   "source": "codex/q-headprep-1021 735ff7d7f/efabb37da rtl/qwen_split/qfd_sys_face_ovl_fault1.sv + tools/qwen_split/fault_face_bind.py (bus sf_fault_observe root.o -> sys_face.obs_fault)",
+   "closed_view": "NONE: qfd_sys_face_ovl_fault1 is a new unclosed master (re-closure owed). The CLOSED qfd_sys_face_n32_opt(_p192)/n32ob(o) obs_fault views (ca3ab89c1) OR obs_fault only into the face's own 'fault' output, which on this die feeds the fault tree itself (loop root->face->tree->root, no host-visible consumer) and are MU 0 historical faces: not a genuine sink",
+   "historical_line": "no closed real sink exists; staying on the 595 masters keeps this open -> r12 must use the coherent line"},
+  {"open": "tt_ctlm(qfd_tt_ctlm_dv).cf", "class": "fault source missing from the tree (confirmed)",
+   "proof": "cf = core_fault | c_fault (rtl/qwen_dv/qfd_tt_ctlm_dv.sv l.517) combinational; dc[52]=core_fault, dc[51]=c_fault|ag_any|fab_q are registered and read by sys_face only at the RESULT capture (result_fault <= seq_dc[51]|seq_dc[52]) -> cf is not redundant with any tree input",
+   "fix": "tools/qwen_split/fault_emit.py _hard(): tt_ctlm:cf added when OT_QWEN_FAULT_FACE=1 (codex 607f24c57) OR OT_SPLIT_FAULT_TT_CF=1 (this branch, historical line) + single-clock guard (tt_ctlm on exactly one clock_trunk)",
+   "r11_geometry": "tt_ctlm has one clock (n_clk_r54); r11 already has flt_root_tt_ctlm (n2, clk_r54) -> cf is one more capture input on an existing root, no new tree edge",
+   "fault_plan": "no fault_emit_plan.json change needed: hard owners take their source pins from the master (SOURCE_BITS) / pin positions; mkplan_rfs.py only lists landing owners"},
+  {"open": "tt_ctlm.emb_position[17:0], emb_user[1:0]", "class": "real consumer owed (design gap closed in coherent source)",
+   "consumer": "native59 (qfd_native59_dv_headprep[_obs1]) head_prepare_position / head_prepare_user (with emb_start/emb_token -> head_prepare_v/token), dv_case HEAD_PREP joins via headprep_source.prepare_joins",
+   "source": "codex/q-headprep-1021 (HEAD_PREP; HP13 tt_ctlm)", "closed_view": "new unclosed native59/tt_ctlm HP13 masters"},
+  {"open": "native59(qfd_native59_dv_service).completed", "class": "real consumer owed",
+   "consumer": "obs_native[59:0]={completed,completed_tag} -> d2d_rom(qfd_d2d_static_ovl_sf7_obs1).obs_native -> STATUS kind15 v1 (native_seen/count) to the KV die",
+   "source": "codex/q-status-observers-1021 318ac82fc (RTL+native32 witnesses) + codex/q-headprep-1021 dv_case status_obs_native", "closed_view": "new unclosed native59 obs1 + d2d obs1 masters"},
+  {"open": "mu_ctxrx(qfd_mu_ctx_rx_die).ctx_user", "class": "real consumer owed",
+   "consumer": "qfd_mu_ctx_rx_die_obs1.obs_ctx[61:0]={load,ctx_user,ctx_tag} -> d2d_rom.obs_ctx -> STATUS v1 ctx_seen/ctx_user/ctx_tag",
+   "source": "codex/q-headprep-1021 rtl/qwen_split/mu/qfd_mu_ctx_rx_obs1.sv (+dv_case CTXRX obs1)", "closed_view": "new unclosed (current CLOSED c1 view qfd_mu_ctx_rx_die has no obs port)"},
+  {"open": "mu_dhobs(qfd_sys_face_mu_dhobs).res_user", "class": "real consumer owed",
+   "consumer": "qfd_sys_face_mu_dhobs_obs1.obs_res[46:0]={v,res_user,dh44} -> d2d_rom.obs_res -> STATUS v1 res_seen/res_user/res_dh_run",
+   "source": "codex/q-headprep-1021 rtl/qwen_split/mu/qfd_sys_face_mu_dhobs_obs1.sv", "closed_view": "new unclosed (CLOSED d2 view qfd_sys_face_mu_dhobs has no obs port)"}
+ ],
+ "no_variant_without_port": "none of the six is redundant: each carries information no other die path delivers (fault root, comb TT fault, head-prepare position/user, completion count, context user, result user)",
+ "r12_gen": {
+  "coherent (recommended, closes all 6)": "src = codex/q-headprep-1021 HEAD (+ claude/sqqb2-func-1021 fault_emit guard if merged); env = coherent_flags; no OT_SPLIT_DV_WCOL_VIEW for native59/sys_face/tt_ctlm (dv_case skips them under HEAD_PREP); FAULT_EMIT plan from mkplan_rfs.py on the coherent base GEN",
+  "historical 595 (r11 masters)": "src = claude/sqqb2-func-1021; add OT_SPLIT_FAULT_TT_CF=1 to run.sh env (closes item 2 only); items 1,3-6 remain open = strict bind still FAILs output_open_ports"
+ },
+ "owners": {"items 1-6 source": "Codex Q-DIE / q_die (codex/q-headprep-1021, codex/q-status-observers-1021; lanes CODEX-QK-1021.md, QK-OWN.md, QE3-N59.md)",
+            "new-master closure": "sys_face_ovl_fault1, native59_dv_headprep_obs1, mu_ctx_rx_die_obs1, sys_face_mu_dhobs_obs1, d2d_static_ovl_sf7_obs1, tt_ctlm HP13 -- all unclosed (Q.STA.MU / Q.MU.FACE.3)"}
+}
