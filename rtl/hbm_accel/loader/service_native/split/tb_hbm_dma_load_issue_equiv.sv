@@ -12,12 +12,23 @@ module tb_eq;
  .fill_epoch_i(fe),.fill_data_i(fd),.full0_all(f0a),.full1_all(f1a),.pcbad_all(pba),.full0(f0[i]),.full1(f1[i]),.pcbad(pb[i]),\
  .block_ready(br[i]),.busy(bz[i]),.fault(ft[i]),.load_v_i(lv),.load_cmd_i(cmd),.load_dest_bank(db[i]),.load_dest_q(dq_[i]),\
  .load_dq(ld[i]),.load_out_v(ov[i]),.dq(dq[i]));
+ `ifdef SPEC
+ defparam u0.WCE_SPEC=1;
+`endif
  `INST(ot_hbm_svc_vmdel_lane_load_static,0)
  `INST(gold_ot_hbm_svc_vmdel_lane_load_static,1)
- integer cyc=0,err=0,rce=0,iss=0,nf=0; reg [15:0] ep0,ep1;
+ integer cyc=0,err=0,rce=0,iss=0,nf=0; reg spec_f=0; reg [15:0] ep0,ep1;
  always @(negedge clk) begin
   cyc=cyc+1;
-  if(rst_n) begin
+`ifdef SPEC
+  // WCE_SPEC=1: exact until the first duplicate fill (reference pbad; payload contents diverge from then on, also
+  // across resets); a w_ce difference is legal only on a duplicate edge (reference fill_base && seen_current).
+  if(u1.pc[0].pbad||u1.pc[1].pbad) spec_f=1;
+  if(rst_n && !spec_f && ((u0.pc[0].u_payload.w_ce_in!==u1.pc[0].u_payload.w_ce_in && !u1.pc[0].seen_current) ||
+     (u0.pc[1].u_payload.w_ce_in!==u1.pc[1].u_payload.w_ce_in && !u1.pc[1].seen_current))) begin err=err+1; $display("SPEC_WCE_NON_DUP %0d",cyc); end
+  if(rst_n && !spec_f && (u0.pc[0].u_payload.w_ce_in!==u1.pc[0].u_payload.w_ce_in || u0.pc[1].u_payload.w_ce_in!==u1.pc[1].u_payload.w_ce_in)) spec_f=1;
+`endif
+  if(rst_n && !spec_f) begin
    if({u0.pc[0].u_payload.r_ce_in,u0.pc[1].u_payload.r_ce_in,u0.pc[0].u_payload.w_ce_in,u0.pc[1].u_payload.w_ce_in}!==
       {u1.pc[0].u_payload.r_ce_in,u1.pc[1].u_payload.r_ce_in,u1.pc[0].u_payload.w_ce_in,u1.pc[1].u_payload.w_ce_in}) begin err=err+1; if(err<5)$display("CE_MISMATCH %0d",cyc); end
    if({f0[0],f1[0],pb[0],bz[0],ft[0],ov[0],br[0],dq_[0],db[0],ld[0],dq[0]}!=={f0[1],f1[1],pb[1],bz[1],ft[1],ov[1],br[1],dq_[1],db[1],ld[1],dq[1]}) begin err=err+1; if(err<5)$display("OUT_MISMATCH %0d",cyc); end

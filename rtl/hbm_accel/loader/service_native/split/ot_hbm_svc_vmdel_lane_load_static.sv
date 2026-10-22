@@ -12,7 +12,7 @@
 // the compiler issues start only when block_ready (checked, fault otherwise); no credits, no ready, no retry.
 // Bench: tb_hbm_svc_vmdel_lane_n_lockstep.sv (NPC 2 lane vs the d4f NPC 4 lane on the same fills).
 // Original history (unchanged mechanics) follows.
-module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
+module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, WCE_SPEC = 0) (
  input wire clk,rst_n,input wire [2:0] bank_id,
  input wire begin_v_i,begin_bank_i,input wire [15:0] begin_epoch_i,
  input wire start_i,start_bank_i,input wire [15:0] start_epoch_i,start_base_sector_i,
@@ -153,39 +153,31 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
  wire [256*NPC-1:0] macro_data; wire [NPC-1:0] f0,f1,bad_v;
  genvar g;
  generate for(g=0;g<NPC;g=g+1)begin:pc
-  reg [6:0] n0,n1; reg pbad;
-  wire[2:0]rst_pc;
-  for(genvar r=0;r<3;r=r+1)begin:reset_counter
-   (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(2100+g*3+r)) u(.clk(clk),.d(rst_n),.q(rst_pc[r]));
-  end
-  wire fb_count,fb_epoch;
+  // HBMc/TILES 10-22 (m8 gate: fill_ok -> seen / n0 / n1 / w_ce -131..-149 ps through the cross-slice seen OR):
+  // the seen8 slices update their own seen bits from the seen-free fill_base and their own lookup (only the slice of
+  // fs[5:3] can hit, so this equals fill_ok); full = &seen (== n[6]: n counted distinct accepted writes, cleared and
+  // reset with seen) and the sticky fill fault is kept per slice (each fill belongs to exactly one slice).
+  wire fb_epoch;
   (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(2400+g)) u_epoch_bank(.clk(clk),.d(fill_bank_i[g]),.q(fb_epoch));
-  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(2200+g)) u_count_bank(.clk(clk),.d(fill_bank_i[g]),.q(fb_count));
-  wire[7:0]seen_part,clear_counts0,clear_counts1;
+  wire[7:0]seen_part,clear_counts0,clear_counts1,full0_part,full1_part,pbad_part; wire fill_base;
   for(genvar part=0;part<8;part=part+1)begin:seen_slice
    wire unused_clear0,unused_clear1;
    (* keep_hierarchy="yes" *) ot_hbm_dma_seen8 #(.COPY_ID(g*8+part),.BLOCK(part)) u(.clk(clk),.rst_n(rst_n),
     .begin_v_i(begin_v_i),.begin_bank_i(begin_bank_i),.start_bank_i(start_bank_i),.fill_bank_i(fill_bank_i[g]),.fill_slot_i(fill_slot_i[g*6+:6]),
     .load_bank_i(load_cmd_i[0]),.lstart(local_lstart[(g*8+part)/4]),.start_ok(local_start_ok[(g*8+part)/4]),.raw_done(local_raw_done[(g*8+part)/4]),
-    .load_release(local_load_release[(g*8+part)/4]),.fill_ok(fill_ok),.seen_current(seen_part[part]),.clear0(clear_counts0[part]),.clear1(clear_counts1[part]));
+    .load_release(local_load_release[(g*8+part)/4]),.fill_v_i(fill_v_i[g]),.fill_base(fill_base),.seen_current(seen_part[part]),.clear0(clear_counts0[part]),.clear1(clear_counts1[part]),
+    .full0(full0_part[part]),.full1(full1_part[part]),.pbad(pbad_part[part]));
   end
   wire fb=fill_bank[g]; wire [5:0] fs=fill_slot[g*6+:6];
   wire [15:0] ep=fb_epoch?epoch1:epoch0;
   wire seen_current=|seen_part;
   wire fill_hazard=(load_v&&load_cmd[0]==fb)||(raw_request&&raw_request_bank==fb);
-  wire fill_ok=fill_v[g] && owned[fb] && fill_epoch[g*16+:16]==ep && !seen_current && !fill_hazard && !landing_fault;
+  assign fill_base=fill_v[g] && owned[fb] && fill_epoch[g*16+:16]==ep && !fill_hazard && !landing_fault;
+  // WCE_SPEC=1 (fallback): the payload write enable does not wait for the cross-slice duplicate check -- a malformed
+  // duplicate fill (which latches pbad -> pcbad -> landing fault) may overwrite its slot; valid schedules unchanged.
+  wire fill_ok=fill_base && (WCE_SPEC!=0 || !seen_current);
   // n counts accepted (always distinct, !seen) writes, so &seen == (n==64) == n[6]: a registered full flag
-  assign f0[g]=n0[6]; assign f1[g]=n1[6]; assign bad_v[g]=pbad;
-  always @(posedge clk)begin
-   if(!rst_pc[0])n0<=0;
-   else if(clear_counts0[0])n0<=0;
-   else if(fill_ok&&!fb_count)n0<=n0+1'b1;
-   if(!rst_pc[1])n1<=0;
-   else if(clear_counts1[0])n1<=0;
-   else if(fill_ok&&fb_count)n1<=n1+1'b1;
-   if(!rst_pc[2])pbad<=0;
-   else if(fill_v[g]&&!fill_ok)pbad<=1;
-  end
+  assign f0[g]=&full0_part; assign f1[g]=&full1_part; assign bad_v[g]=|pbad_part;
   ot_sram_1r1w_128x256_m1_r2c2 u_payload (
    .clk(clk),.r_ce_in(issue && !landing_fault && rg==g),.r_addr_in({rb,rs}),.rd_out(macro_data[g*256+:256]),
    .w_ce_in(fill_ok),.w_addr_in({fb,fs}),.wd_in(fill_data[g*256+:256]),.w_mask_in({256{1'b1}}),
@@ -338,15 +330,17 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_hbm_dma_seen8 #(parameter COPY_ID=0,BLOCK=0)(
  input wire clk,rst_n,begin_v_i,begin_bank_i,start_bank_i,fill_bank_i,
- input wire[5:0]fill_slot_i,input wire load_bank_i,lstart,start_ok,raw_done,load_release,fill_ok,
- output wire seen_current,clear0,clear1);
- (* keep="true" *)reg rs,bv,bb,sb,fb,lb,rb;
+ input wire[5:0]fill_slot_i,input wire load_bank_i,lstart,start_ok,raw_done,load_release,fill_v_i,fill_base,
+ output wire seen_current,clear0,clear1,full0,full1,output reg pbad);
+ (* keep="true" *)reg rs,bv,bb,sb,fb,lb,rb,fv;
  (* keep="true" *)reg[5:0]fs;
  (* keep="true" *)reg[1:0]owned;
  reg[7:0]seen0,seen1;
  wire clear_bank=bv&&!owned[bb]&&!(lstart&&sb==bb);
+ // this slice's own accepted fill (== the lane's fill_ok restricted to block BLOCK: only this slice can hit)
+ wire own_ok=fill_base&&fs[5:3]==BLOCK&&!seen_current;
  always @(posedge clk)begin
- rs<=rst_n;bv<=begin_v_i;bb<=begin_bank_i;sb<=start_bank_i;fb<=fill_bank_i;fs<=fill_slot_i;lb<=load_bank_i;
+ rs<=rst_n;fv<=fill_v_i;bv<=begin_v_i;bb<=begin_bank_i;sb<=start_bank_i;fb<=fill_bank_i;fs<=fill_slot_i;lb<=load_bank_i;
  if(!rs)owned<=0;
  else begin
  if(clear_bank)owned[bb]<=1;
@@ -354,12 +348,17 @@ module ot_hbm_dma_seen8 #(parameter COPY_ID=0,BLOCK=0)(
  if(raw_done)owned[rb]<=0;
  if(load_release)owned[lb]<=0;
  end
- if(clear_bank&&!bb)seen0<=0;
- else if(fill_ok&&!fb&&fs[5:3]==BLOCK)seen0[fs[2:0]]<=1;
- if(clear_bank&&bb)seen1<=0;
- else if(fill_ok&&fb&&fs[5:3]==BLOCK)seen1[fs[2:0]]<=1;
+ if(!rs)seen0<=0;
+ else if(clear_bank&&!bb)seen0<=0;
+ else if(own_ok&&!fb)seen0[fs[2:0]]<=1;
+ if(!rs)seen1<=0;
+ else if(clear_bank&&bb)seen1<=0;
+ else if(own_ok&&fb)seen1[fs[2:0]]<=1;
+ if(!rs)pbad<=0;
+ else if(fv&&fs[5:3]==BLOCK&&!own_ok)pbad<=1;
  end
  assign clear0=clear_bank&&!bb;assign clear1=clear_bank&&bb;
+ assign full0=&seen0;assign full1=&seen1;
  assign seen_current=(fs[5:3]==BLOCK)&&(fb?seen1[fs[2:0]]:seen0[fs[2:0]]);
 endmodule
 
