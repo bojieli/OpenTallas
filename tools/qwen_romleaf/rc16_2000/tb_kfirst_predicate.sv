@@ -8,9 +8,11 @@ module tb_kfirst_predicate;
  ot_qwen_kfirst_local #(.W(32)) d32(k32,split,wsrc,q32);
  ot_qwen_kfirst_local #(.W(8)) d8(k8,split,wsrc,q8);
  ot_qwen_kfirst_local #(.W(1)) d1(k1,split,wsrc,q1);
+ reg [5:0] ma=0,mb=0;reg ms=0,mt=0;wire [5:0] my;
+ ot_qwen_a0_mux_slice #(.W(6)) dm(ms,mt,ma,mb,my);
  longint unsigned checks=0;
  reg [31:0] threshold,expected_k;
- integer s,k,w,j;
+ integer s,k,w,j,a,b,t;
  task automatic check_one(input reg got,input reg [31:0] v,input integer width);
   reg want;
   begin
@@ -20,6 +22,11 @@ module tb_kfirst_predicate;
   end
  endtask
  initial begin
+  for(a=0;a<64;a=a+1) for(b=0;b<64;b=b+1) for(w=0;w<2;w=w+1) for(t=0;t<2;t=t+1) begin
+   mt=1'(t);ma=6'(a);mb=6'(b);ms=1'(w);#1;
+   if(my !== ((ms && mt) ? ma : mb)) $fatal(1,"KTOT_MUX_SLICE_FAIL");
+  end
+  $display("KTOT_MUX_SLICE_PASS exhaustive_pairs4096_enable_pairs4");
   // All W16 and actual production W18 K values, all six-bit shifts (including 32..63), both modes.
   // The real source's split is four bits. This superset checks shift-out too.
   for(s=0;s<64;s=s+1) begin
