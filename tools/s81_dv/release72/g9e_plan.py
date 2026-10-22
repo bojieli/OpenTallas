@@ -47,7 +47,7 @@ def main():
     a = argparse.ArgumentParser(); a.add_argument('plan'); a.add_argument('k8c'); a.add_argument('k8e'); a.add_argument('out')
     a.add_argument('--centre', type=float, default=302.4); a.add_argument('--top-street', type=float, default=129.6)
     a.add_argument('--east-service-strip', action='store_true', help='move eng/seqhost/bk_col into the free east inner column; releases the top strip for a wider center')
-    a.add_argument('--bksel-h', type=float, default=4449.6); a.add_argument('--seq', type=float, nargs=2, default=[1080.0, 1036.8])
+    a.add_argument('--bksel-h', type=float, default=4536.0); a.add_argument('--seq', type=float, nargs=2, default=[1080.0, 1036.8])
     a.add_argument('--streets', type=float, nargs=7, default=[172.8, 129.6, 129.6, 129.6, 129.6, 129.6, 172.8])
     v = a.parse_args()
     p = json.load(open(v.plan)); old = copy.deepcopy(p['blocks'])
