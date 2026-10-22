@@ -39,8 +39,6 @@ def module_index(commit):
     # hundreds of thousands of blobs on the coordinator). Actual builds still archive the requested immutable ref.
     head = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
     wanted = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', commit], check=True, capture_output=True, text=True).stdout.strip()
-    if head != wanted:
-        raise ValueError('module index requires a checkout of the pinned synthesis commit')
     # L2H-GEN2E 10-19: rtl/model_ready_hbm_r14 = the SAFE PC controller core ot_hbm_r14_aq_pc_safe (HBM-MC3 release ctrl)
     roots = ['rtl/gpu', 'rtl/v41rom', 'rtl/hbm_accel', 'rtl/hbm_next', 'rtl/hbm_mtp', 'rtl/hdc', 'rtl/lib', 'rtl/model_ready_hbm_r14', 'rtl/dsrom_sys/s81_window_la/recovered_ctl_m2',
              'physical/hbm_accel_die_views', 'physical/hbm_generic', 'physical/hbm_mtp',
@@ -48,6 +46,15 @@ def module_index(commit):
     roots = [p for p in roots if (ROOT / p).is_dir()]
     if not roots:
         raise ValueError('pinned HBM source roots are absent from the sparse checkout')
+    if head != wanted:
+        # HBMc/CHAIN 10-22: r16q S6 died here after tool-only commits (L25 renewal, l12 reprice) landed in its live
+        # worktree. The index only needs the module-definition roots to equal the pinned commit: accept a HEAD whose
+        # roots are byte-identical to it (and a clean tree for them); any RTL drift still refuses.
+        same = subprocess.run(['git', '-C', str(ROOT), 'diff', '--quiet', wanted, 'HEAD', '--', *roots]).returncode == 0
+        clean = subprocess.run(['git', '-C', str(ROOT), 'diff', '--quiet', 'HEAD', '--', *roots]).returncode == 0
+        if not (same and clean):
+            raise ValueError('module index requires a checkout of the pinned synthesis commit (module roots differ from ' + commit + ')')
+        print(f'MODULE_INDEX HEAD {head[:9]} != pinned {wanted[:9]}: module roots identical, index valid', file=sys.stderr)
     # LH-GEN2E 10-19: rg is not installed on every coordinator host; same scan with GNU grep (exit codes 0/1 alike)
     cmd = (['timeout', '120', 'rg', '-n', '--glob', '*.sv', '--glob', '*.v', r'^\s*module\s+\w+', *roots] if shutil.which('rg') else
            ['timeout', '120', 'grep', '-rnE', '--include=*.sv', '--include=*.v', r'^\s*module\s+\w+', *roots])
