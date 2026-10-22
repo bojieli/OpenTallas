@@ -134,6 +134,12 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
   if(!aperture_ok || running)bad<=1;
   else base_q<=start_base_sector;
  end
+ // m11 (HBMc/TILES4): m11 census found the epoch0/epoch1 load enable at 34/33 loads (abc shared the begin-accept term
+ // with the owned/sticky/start cones).  Each epoch's write enable is the same condition as before (out of reset, begin_v,
+ // bank free and not being started, begin_bank selects it), ended on a kept net that drives only its 16 enables.
+ (* keep="true" *) wire ep0_we=reset_copy[2]&&begin_v&&!begin_bank&&!(owned[0]||(lstart&&start_bank==1'b0));
+ (* keep="true" *) wire ep1_we=reset_copy[2]&&begin_v&&begin_bank&&!(owned[1]||(lstart&&start_bank==1'b1));
+ always @(posedge clk) begin if(ep0_we)epoch0<=begin_epoch; if(ep1_we)epoch1<=begin_epoch; end
  always @(posedge clk) begin
   if(!reset_copy[2]) begin
    owned<=0;running<=0;bank_r<=0;slot_q<=0;
@@ -144,7 +150,7 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
    if(command_ok&&load_cmd[56])owned[load_cmd[0]]<=0;
    if(begin_v) begin
     if(owned[begin_bank] || (lstart && start_bank==begin_bank)) sticky<=1;
-    else begin owned[begin_bank]<=1;if(begin_bank)epoch1<=begin_epoch;else epoch0<=begin_epoch;end
+    else owned[begin_bank]<=1;   // m11: epoch0/1 writes moved to their kept enables below (same condition)
    end
    if(lstart && !start_ok) sticky<=1;
    if(start_ok) begin running<=1;bank_r<=start_bank;slot_q<=6'd0;end
