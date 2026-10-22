@@ -1,0 +1,282 @@
+{
+ "name": "hidx_col8_lp_main_diag",
+ "top": "ot_hidx_score_col8_flat_lp",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/hdc/v41x/col8_lp_diag/lp/ot_hidx_score_col8_flat_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_p0",
+ "clock_ports": [
+  "ck_p0",
+  "ck_p1",
+  "ck_p2",
+  "ck_p3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_p0"
+   ],
+   "inputs": [
+    "qv_b",
+    "q_b",
+    "key",
+    "hid",
+    "rst_n"
+   ],
+   "outputs": [
+    "prdy0"
+   ]
+  },
+  "p1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_p1"
+   ],
+   "inputs": [],
+   "outputs": [
+    "prdy1"
+   ]
+  },
+  "p2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_p2"
+   ],
+   "inputs": [],
+   "outputs": [
+    "prdy2"
+   ]
+  },
+  "p3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_p3"
+   ],
+   "inputs": [],
+   "outputs": [
+    "cs_out",
+    "cf_out",
+    "prdy3"
+   ]
+  }
+ },
+ "landed_record": "results/arch/landed_parent_1018/hidx_col8_lp_diag/ot_hidx_score_col8_flat_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1080.0,
+  "h": 345.6,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/hidx_score_pair8_r0/views/ot_hidx_score_pair8_r0",
+   "count": 1,
+   "inst": "u_pair0",
+   "at": [
+    43.2,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_col8_standin_r1/views/ot_hidx_score_pair8_r1",
+   "count": 1,
+   "inst": "u_pair1",
+   "at": [
+    302.4,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_score_pair8_r2/views/ot_hidx_score_pair8_r2",
+   "count": 1,
+   "inst": "u_pair2",
+   "at": [
+    561.6,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_col8_standin_r3/views/ot_hidx_score_pair8_r3",
+   "count": 1,
+   "inst": "u_pair3",
+   "at": [
+    820.8,
+    86.4
+   ]
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "pins": {
+  "N": [
+   "qv_b",
+   "q_b",
+   "hid",
+   "rst_n",
+   "ck_p0",
+   "prdy0",
+   "ck_p1",
+   "prdy1",
+   "ck_p2",
+   "prdy2",
+   "ck_p3"
+  ],
+  "S": [
+   "key"
+  ],
+  "E": [
+   "cs_out",
+   "cf_out",
+   "prdy3"
+  ]
+ },
+ "pin_ranges": {
+  "qv_b": [
+   229.3,
+   234.5
+  ],
+  "q_b": [
+   21.6,
+   229.3
+  ],
+  "hid": [
+   234.5,
+   265.6
+  ],
+  "rst_n": [
+   265.6,
+   270.8
+  ],
+  "ck_p0": [
+   270.8,
+   276.0
+  ],
+  "prdy0": [
+   276.0,
+   281.2
+  ],
+  "key": [
+   21.6,
+   281.2
+  ],
+  "ck_p1": [
+   370.4,
+   410.4
+  ],
+  "prdy1": [
+   410.4,
+   450.4
+  ],
+  "ck_p2": [
+   629.6,
+   669.6
+  ],
+  "prdy2": [
+   669.6,
+   709.6
+  ],
+  "ck_p3": [
+   888.8,
+   968.8
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "every pair8 input/output is registered inside the pair (q_p/key_h/hid_pa pin registers, registered cs/cf/prdy); every cross-region net is an lp landing; a kit flop stage would add an unpriced edge"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "lp lands rst_n per region (reset depth 3, regional copies); each pair keeps its own 2-stage synchroniser"
+ },
+ "child_clock_ref": "boundary",
+ "keep_pin_regs": true,
+ "landed": {
+  "record": "results/arch/landed_parent_1018/hidx_col8_lp_diag/ot_hidx_score_col8_flat_lp_record.json",
+  "landings": 18,
+  "landing_flops": 18384,
+  "reset_depth": 3,
+  "lp_spec": "tools/landed_parent/specs/hidx_col8_lp_diag.json"
+ },
+ "views_status": "DIAGNOSTIC: pair8 r0/r2 = CLOSED interim views on main (005325591, shared-TIELO native defect), r1/r3 = STANDIN_NOT_A_VIEW copies of the CLOSED record views (r1 Col8R1 HOLD); swap to zt0r..zt3r views when CLOSED; NEVER submit or bind",
+ "job": {
+  "owner": "Claude:START-NONFAIL/HBM-PAR1",
+  "branch": "claude/snf-par1-sq-diag-1021",
+  "tag": "col8lp_main_diag",
+  "submit": false,
+  "benches": [],
+  "purpose": "H.STA.BLK.15.2 score-quarter hierarchy, first level above pair8 (col8) as a landed parent, DIAGNOSTIC MAIN form: floorplan/pins/clock entry early",
+  "views_to": "physical/ref_tile/hidx_col8_lp_main_diag/views",
+  "record_to": "results/rtl/ref_tile/hidx_col8_lp_main_diag",
+  "extra_paths": [
+   "rtl/common/landed_parent",
+   "rtl/hdc/v41x",
+   "results/arch/landed_parent_1018/hidx_col8_lp_diag",
+   "physical/ref_tile/hidx_score_pair8_r0",
+   "physical/ref_tile/hidx_score_pair8_r2",
+   "physical/ref_tile/hidx_col8_standin_r1",
+   "physical/ref_tile/hidx_col8_standin_r3"
+  ]
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: pair8 pins registered in the pair RTL; parent input faces over p0 (q_b+qv_b+hid 633 b on ~260 um N = 2.4 pins/um; key 544 b on ~260 um S = 2.1/um), region clocks + prdy above their pair; E face cs/cf/prdy3 beside p3",
+  "2_reach": "landings p0->p1/p2/p3 are E=2 multicycle (<= one ring->read span: p0->p3 centre distance 777.6 um); intra-region nets beside one tile; reset runs <= 405 um (lp reach_um)",
+  "3_fanout": "lp landing writer chunks (D=4 slots, chunk 24 b) + regional reset copies; pre-gate native census decides",
+  "4_depth": "PASS: landing read = registered slot mux; parent has no logic",
+  "5_storage": "PASS: no arrays in the parent; pair storage is inside the CLOSED pair views",
+  "6_floorplan": "outline 1080.0 x 345.6: 4 pair tiles on the 43.2 lattice, 43.2 um channels between pairs, 86.4 um N/S strips for landing rings + pin faces (enlarged, never squeezed); util low (landing flops only)",
+  "7_clock": "4 regional roots (one per pair, <= 302 um span each), every cross-region net landed (lp audit PASS 18 landings), child clock references from views/<pair>/insertion.json",
+  "8_schedule": "static: pair offsets 0/3/6/9 edges, outputs cs/cf +9, prdy +0/3/6/9, reset release +3 (lp compiler record); col8 face synchroniser omitted in this DIAG flat form -> NOT a schedule reference"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ }
+}

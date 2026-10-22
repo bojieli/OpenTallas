@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hidx_score_col8_flat_lp",
+ "enable": false,
+ "reason": "every pair8 input/output is registered inside the pair (q_p/key_h/hid_pa pin registers, registered cs/cf/prdy); every cross-region net is an lp landing; a kit flop stage would add an unpriced edge"
+}

@@ -1,0 +1,20 @@
+{
+ "top": "ot_hidx_score_col8_flat",
+ "why": "START-NONFAIL/HBM-PAR1/SQ 10-21 DIAGNOSTIC: col8 parent (4 CLOSED interim pair8 tiles 216 x 172.8 in a W->E row, query N / key S broadcast, running-sum chain r0->r3) as a landed parent, so the score-quarter hierarchy (pair8 -> col8 -> leaf -> quarter) proves floorplan, pins and clock entry before the zt0r..zt3r leaves close. One region per pair (pair insertion differs, row spans ~1 mm > 405 um reach); ports live in region p0 (W end).",
+ "sources": ["rtl/hdc/v41x/col8_lp_diag/ot_hidx_score_col8_flat.sv"],
+ "child_sources": ["rtl/hdc/v41x/ot_hbm_idx_score_col8.sv"],
+ "defines": [],
+ "out_dir": "rtl/hdc/v41x/col8_lp_diag/lp",
+ "record_dir": "results/arch/landed_parent_1018/hidx_col8_lp_diag",
+ "clock_ports": ["clk"],
+ "clock_pins": ["clk"],
+ "reset_port": "rst_n",
+ "reset_pins": ["rst_n"],
+ "regions": [
+  {"name": "p0", "insts": ["u_pair0"], "centre": [151.2, 172.8]},
+  {"name": "p1", "insts": ["u_pair1"], "centre": [410.4, 172.8]},
+  {"name": "p2", "insts": ["u_pair2"], "centre": [669.6, 172.8]},
+  {"name": "p3", "insts": ["u_pair3"], "centre": [928.8, 172.8]}
+ ],
+ "bench": {"cycles": 2000, "reset_cycles": 40, "sim": "verilator"}
+}
