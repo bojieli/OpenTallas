@@ -3027,6 +3027,16 @@ def _d2ds_swap(m):
         w_, h_ = up(DCAL_WH[0] + SHAVE, GX), up(DCAL_WH[1] + SHAVE, GY)       # frame on the grid, >= the real view
         it = F.Inst('dcal', 'qkd_dcal', up(d_.x + d_.w + 21.6, GX), up(d_.y + d_.h / 2 - h_ / 2, GY), w_ - SHAVE, h_ - SHAVE,
                     'R0', kind='ctl', region='io')
+        if ROPE_OVL and os.environ.get('OT_KV_DCAL_OVL_FAR', '0') == '1':
+            # SQC-KDIE4 10-22: the RoPE OVL list player is 216 x 129.6 (two list ROMs), not a 26-um sequencer; beside the
+            # D2D E face it took the relay room of the S-face 548-b attention / rx payload stations (ovm GEN: no spot for
+            # ks_kvs_attn__attn__tx_payload E of the frame).  Place it against the W face of the nearest instance E of
+            # the frame (serdes_host) at the frame's cal/cfg pin band (low E face), leaving the channel next to the frame.
+            east_ = [o for o in m['insts'] if o.x >= d_.x + d_.w and o.y < d_.y + d_.h and o.y + o.h > d_.y]
+            xr_ = min((o.x for o in east_), default=it.x + it.w + 21.6 + 216.0)
+            x0_ = xr_ - 21.6 - w_
+            it.x = max(it.x, round(x0_ - (x0_ % GX), 4))      # floor to the lattice: >= 21.6 from the E neighbour
+            it.y = up(d_.y, GY)
         m['insts'].append(it)
         add(('dcal_cfg', 'spine_local', DCAL_CS_BITS, [('dcal', 'cal'), ('d2d_kv', 'cal')]))
         if DCAL_BC:      # KV-DCAL-BOOTCFG: the merged cfg word (boot + runtime base writes) -> the D2D end's cfg port
@@ -3519,6 +3529,21 @@ def _relays(m):
         order_.sort(key=lambda b_: (0 if b_[2] >= 548 and b_[1] not in ABUT
                                    and any(e_[0] == 'd2d_kv' for e_ in b_[3]) else
                                    1 if b_[0].startswith('pvrs_') else 2))
+    if os.environ.get('OT_KV_D2D_FORKS_LAST', '0') == '1':
+        # SQC-KDIE4 10-22 (OT_KV_D2D_FORKS_LAST=1, default off; RoPE OVL successor): the RoPE OVL forks of the D2D record word
+        # (hrec_rx__f0 -> kvs_emb.i_head_record, hrec_rx__f1 -> kvnc.head, 552 b each) were planned right after their trunk,
+        # ahead of the S-face payloads; their stations (with hrec_tx's) walled the HOST-top / D2D-bottom channel under the
+        # S-face pin span (dbg cbc86d4dd-ovm: y 27250-27340, x 6489-6943) and ks_kvs_attn__attn__tx_payload found no terminal
+        # spot (R23/R24, ovm/ovf, also with apron 172.8 / 259.2).  The D2D payload / record trunks keep their first slots;
+        # the fork branches of D2D-sourced trunks follow them (forks join the trunk's source net, so only spots move).
+        dfk_ = [b_ for b_ in order_ if b_[0] in forks_ and any(e_[0] == 'd2d_kv' for e_ in b_[3])]
+        if dfk_:
+            ids_ = {b_[0] for b_ in dfk_}
+            rest_ = [b_ for b_ in order_ if b_[0] not in ids_]
+            j_ = max((i_ for i_, b_ in enumerate(rest_) if b_[2] >= 548 and b_[1] not in ABUT
+                      and any(e_[0] == 'd2d_kv' for e_ in b_[3])), default=-1)
+            order_ = rest_[:j_ + 1] + dfk_ + rest_[j_ + 1:]
+            m['d2d_forks_last'] = sorted(ids_)
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
