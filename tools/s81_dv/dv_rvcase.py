@@ -427,10 +427,25 @@ def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blo
         region[nm[2:]] = r_
         roots[r_] = n_ if (n_ in top and n_.startswith('ck_')) else None
     lp = {r['link']: r for r in LP['links']}
+
+    def port_region(inst, port, default):
+        # STW-S81-HEAD 10-21: multi-root masters (e.g. ot_s81hd_lep_regional ck/ck_A/ck_B) declare a clock_port per data
+        # port; the endpoint's region is the clock net the die netlist actually ties to THAT port's clock pin, not the
+        # master's main clk (which mislabelled lep tx3/rx3 <-> lk_WN3 on ck_B as a ck_C crossing).
+        m = T['masters'].get(mod2master.get(next((mst for mst, nm, _, _ in insts if nm == f'u_{inst}'), ''), ''), {})
+        rule = next((r for k, r in (m.get('ports') or {}).items() if k.split('.')[0] == port), None)
+        cp = (rule or {}).get('clock_port')
+        if not port or not cp or cp == m.get('clk'):
+            return default
+        n_ = next((x for x, _ in ibits.get(f'u_{inst}', {}).get(cp, []) if x not in ('CONST', 'Z', 'UNDECL')), None)
+        if n_:
+            roots.setdefault(n_, n_ if (n_ in top and n_.startswith('ck_')) else None)
+        return n_ or default
     crossings, wires = [], []
     for ln, L in sorted(links.items()):
         wires.append(dict(id=ln, kind=L['cls'], pts=[list(L['sxy'])] + [list(p) for p in L['pts']] + [list(L['dxy'])]))
         rs, rd = region.get(L['src'], f"?{L['src']}"), region.get(L['dst'], f"?{L['dst']}")
+        rs, rd = port_region(L['src'], L.get('sport'), rs), port_region(L['dst'], L.get('dport'), rd)
         roots.setdefault(rs, None); roots.setdefault(rd, None)
         if rs == rd:
             continue
@@ -496,7 +511,8 @@ def main():
         (bi0, _, x0, y0, _), (bi1, _, x1, y1, _) = l['e']
         n0, n1 = plan['blocks'][bi0]['name'], plan['blocks'][bi1]['name']
         pts = [tuple(p) for p in l['sp']] if 'sp' in l else [(h[2], h[3]) for h in l['h'][:-1]]
-        links[l['i'].replace('-', '_')] = dict(src=n0, dst=n1, sxy=(x0, y0), dxy=(x1, y1), bits=l['b'], pts=pts, cls=l['c'], hops=l['h'])
+        links[l['i'].replace('-', '_')] = dict(src=n0, dst=n1, sxy=(x0, y0), dxy=(x1, y1), bits=l['b'], pts=pts, cls=l['c'], hops=l['h'],
+                                               sport=l['e'][0][1], dport=l['e'][1][1])
 
     # ------------------------------------------------------------------ netlist
     nets, tin, tout, insts = DPB.parse_die(a.bind_dir / 'die.v', 'dv_die')
