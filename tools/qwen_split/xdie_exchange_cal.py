@@ -35,9 +35,12 @@ N59_LAND = 8    # qfd_native59_dv_service LAND_EDGES default (dr_o -> slice VM w
 KV_CODEC = L.KV_CODEC   # qkd_native_attention_static_ctl codec: age-slot event -> tx_valid register
 
 
-def layer_msgs_gap(w, txl, phy, st_ofs, gap):
+def layer_msgs_gap(w, txl, phy, st_ofs, gap, status_delay=0, attn_tx_shift=0):
     """d2d_link_calendar.layer_msgs (segment 0, base 0) with `gap` idle slots between CMD and Q beat 0; KVN and the
-    kind-15 status move by the same gap (one TX frame per cycle per end).  gap 0 == layer_msgs exactly."""
+    kind-15 status move by the same gap (one TX frame per cycle per end).  gap 0 == layer_msgs exactly.
+    QW-XDIE 10-20: status_delay = the KV STATUS tail (r17 RETIRE_STATIC / STATUS_DELAY, d2d_link_calendar --status-delay);
+    attn_tx_shift (r17 TX_SHIFT) is already inside w[3] here (the vehicle's X absorbs it), so the law check below calls
+    layer_msgs with w[3] - attn_tx_shift and --attn-tx-shift: the vehicle calendar IS the production compiler's."""
     q0 = int(sum(w[:3]))
     a_end = q0 + int(w[3])
     m = [dict(seg=0, src='C', cyc=q0, tx_port=0, rx_port=0, kind=1, beat=0)]
@@ -47,9 +50,10 @@ def layer_msgs_gap(w, txl, phy, st_ofs, gap):
     r_last = a_end - (txl + phy + 3)
     r0 = r_last - 33
     m += [dict(seg=0, src='K', cyc=r0 + b, tx_port=0, rx_port=0, kind=3, beat=b) for b in range(32)]
-    m.append(dict(seg=0, src='K', cyc=r_last, tx_port=0, rx_port=0, kind=4, beat=0))
+    m.append(dict(seg=0, src='K', cyc=r_last + status_delay, tx_port=0, rx_port=0, kind=4, beat=0))
     if gap == 0 and st_ofs == 40:
-        assert m == L.layer_msgs(0, 0, w, txl, phy, st_ofs)[0]
+        wl = list(w); wl[3] -= attn_tx_shift
+        assert m == L.layer_msgs(0, 0, wl, txl, phy, st_ofs, status_delay, attn_tx_shift)[0]
     return m
 
 
@@ -79,6 +83,12 @@ def main():
                     help='idle link slots between CMD and Q beat 0: 0 = the compiler law (d2d_link_calendar layer_msgs, Q beat b '
                          'at q0 + 1 + b; native59 opens its Q window on the request edge since QXF-LINK F1); 1 = the pre-fix '
                          'native59 requirement (negative witness only)')
+    ap.add_argument('--attn-tx-shift', type=int, default=0,
+                    help='QW-XDIE 10-20: KV attention tile TX_SHIFT (r16/r17 qkd_attn_cal_gen TX_SHIFT 1: tx_first 1751); '
+                         '0 = the kvs14c / as-bound-image law (tx_first 1750)')
+    ap.add_argument('--status-delay', type=int, default=0,
+                    help='QW-XDIE 10-20: KV STATUS tail (r17 RETIRE_STATIC 1 + STATUS_DELAY N: STATUS at tx_first + 33 + N); '
+                         'the K STATUS slot, the layer window and the native59 complete slot move by N')
     a = ap.parse_args()
     cs, ks = a.stages.split('/')
     CS_TXS, CS_RXV, CS_RXP, CS_X3S, SC_TX, SC_X3 = map(int, cs.split(','))
@@ -111,14 +121,16 @@ def main():
     q0 = sum(w[:3])
     arr_cmd = q0 + txd['C'][0] - 1 + a.txl + phy_c          # compile_seg arrival (ofs 0)
     t_cmd_prog = arr_cmd + 2 + KS_RXV                       # CMD at the programme rx pins = programme age RX_CMD
-    r0_need = t_cmd_prog + (TX_FIRST - RX_CMD) - KS_TXS
+    tx_first = TX_FIRST + a.attn_tx_shift                   # the programme's first RESULT slot age (r17: 1751)
+    r0_need = t_cmd_prog + (tx_first - RX_CMD) - KS_TXS
     r0_priced = q0 + w[3] - (txl_p + phy_p + 3) - 33
     X = 0 if a.no_extend else r0_need - r0_priced
     w2 = list(w)
     w2[3] += X
+    SD = a.status_delay
     # status (kind 15) placement: the first offset >= 40 whose write capture is unique (compiler search, fail closed)
     for st_ofs in range(40, 49):
-        msgs = layer_msgs_gap(w2, txl_p, phy_p, st_ofs, a.qgap)
+        msgs = layer_msgs_gap(w2, txl_p, phy_p, st_ofs, a.qgap, SD, a.attn_tx_shift)
         try:
             imgs, table, _ = L.compile_cal(msgs, a.txl, phy_c, 0, txd)
             break
@@ -131,8 +143,8 @@ def main():
         with open(f'{a.out}/cal_{k}.memh', 'w') as f:
             f.write('\n'.join(f'{x:08x}' for x in v + [0] * (L.NE - len(v))) + '\n')
     span = max(max(t['rx_out'], t['cyc']) for t in table)
-    if span + 64 >= period + X:
-        raise SystemExit(f'layer run span {span} does not fit the layer period {period + X}')
+    if span + 64 >= period + X + SD:
+        raise SystemExit(f'layer run span {span} does not fit the layer period {period + X + SD}')
     q = [t for t in table if t['src'] == 'C' and t['tx_port'] == 0]
     r = [t for t in table if t['src'] == 'K' and t['tx_port'] == 0]
     kv = [t for t in table if t['src'] == 'C' and t['tx_port'] == 3]
@@ -147,10 +159,12 @@ def main():
     n59_kvw = [kv[i]['cyc'] + CS_X3S - 3 for i in range(4)]  # kv_word_slot three edges before each x3 slot
     t31 = r[31]['arrive'] + 2 + CS_RXV                       # result beat 31 at the native59 rx pins
     n59_vis = t31 + N59_RX_DR + N59_LAND + 2
-    n59_cmp = n59_vis + 2
-    P = dict(P_PERIOD=period + X, P_QS=q0, P_RS=r[0]['cyc'], P_RE=r[32]['cyc'], P_SS=st[0]['cyc'], P_KS=kv[0]['cyc'],
+    # complete slot: after the visibility slot and after the STATUS (done) record reached native59 (STATUS tail SD > 0)
+    t_st = r[32]['arrive'] + 2 + CS_RXV
+    n59_cmp = max(n59_vis + 2, t_st + N59_RX_DR + 2)
+    P = dict(P_PERIOD=period + X + SD, P_QS=q0, P_RS=r[0]['cyc'], P_RE=r[32]['cyc'], P_SS=st[0]['cyc'], P_KS=kv[0]['cyc'],
              P_ARR_Q0=q[0]['arrive'], P_ARR_R0=r[0]['arrive'], P_ARR_K0=kv[0]['arrive'], P_ARR_S=st[0]['arrive'],
-             P_KV_RUN=kv_run, P_TX_FIRST=TX_FIRST, P_RX_CMD=RX_CMD,
+             P_KV_RUN=kv_run, P_TX_FIRST=tx_first, P_STATUS_DELAY=SD, P_ATTN_TX_SHIFT=a.attn_tx_shift, P_RX_CMD=RX_CMD,
              P_N59_CTX=n59_ctx, P_N59_CMD=n59_cmd, P_N59_KVW=n59_kvw[0], P_N59_VIS=n59_vis, P_N59_CMP=n59_cmp,
              P_X=X, P_TXL=a.txl, P_PHY=a.phy, P_QGAP=a.qgap,
              CS_TXS=CS_TXS, CS_RXV=CS_RXV, CS_RXP=CS_RXP, CS_X3S=CS_X3S, SC_TX=SC_TX, SC_X3=SC_X3,
@@ -168,8 +182,8 @@ def main():
     rec = dict(schema='opentallas.xdie_qwen_exchange_cal.v1', layer=a.layer, masters_txdp=mtx, c_real=a.c_real, k_real=a.k_real, qgap=a.qgap, txl=a.txl, phy=a.phy, phy_compiled=phy_c, pinreg=True, ofs=0,
                txd=txd, raw_txd=dict(C=raw_c, K=raw_k), stages=a.stages, entries={k: len(v) for k, v in imgs.items()},
                windows_priced=dict(zip(('rmsnorm1', 'qkv', 'qknorm_rope', 'attn_kv'), w)), attn_extend_X=X,
-               layer_period=period, layer_period_compiled=period + X, span=span, messages=table,
-               kv_programme=dict(RX_CMD=RX_CMD, SERVICE_END=SERVICE_END, TX_FIRST=TX_FIRST, run_cycle=kv_run,
+               layer_period=period, layer_period_compiled=period + X + SD, span=span, status_delay=SD, attn_tx_shift=a.attn_tx_shift, messages=table,
+               kv_programme=dict(RX_CMD=RX_CMD, SERVICE_END=SERVICE_END, TX_FIRST=tx_first, run_cycle=kv_run,
                                  cmd_at_programme=t_cmd_prog, r0_needed=r0_need, r0_priced=r0_priced),
                params=P, token_path=a.token_path, link_handoff=a.link_handoff,
                overlap_note='L1..L35 layer: rmsnorm1 -> qkv -> qknorm_rope -> [Q/CMD over D2D -> KV attention -> RESULT over '
@@ -178,7 +192,7 @@ def main():
                             'the 4 KVN words (new K/V of this token) are consumed by the NEXT token attention, '
                             'O_meas = layer period - KVN latency (fully hidden).')
     json.dump(rec, open(f'{a.out}/calendar.json', 'w'), indent=1)
-    print(json.dumps(dict(X=X, txd=txd, q0=q0, r0=r[0]['cyc'], kv_run=kv_run, period=period + X, entries=rec['entries'])))
+    print(json.dumps(dict(X=X, txd=txd, q0=q0, r0=r[0]['cyc'], kv_run=kv_run, period=period + X + SD, status_delay=SD, attn_tx_shift=a.attn_tx_shift, entries=rec['entries'])))
 
 
 if __name__ == '__main__':

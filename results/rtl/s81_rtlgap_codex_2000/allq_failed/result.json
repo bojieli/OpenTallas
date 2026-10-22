@@ -1,0 +1,19 @@
+{
+  "status": "FAIL",
+  "unit": "oth-ubuntu-407762-1792638508",
+  "source_ref": "95b67d6af",
+  "scope": "All-quarter producer with real SMT=1 target; producer programme omitted SOT",
+  "numerical_values_checked": 8192,
+  "numerical_errors": 0,
+  "pv_words": 640,
+  "schedule_errors": 0,
+  "slice_faults": "ffff",
+  "root_fault": 1,
+  "repair_owner": "/root/s81_sot",
+  "no_full_layer_pass": true,
+  "source_ref_check": {
+    "ref": "95b67d6af",
+    "checked": 50,
+    "mismatch": []
+  }
+}

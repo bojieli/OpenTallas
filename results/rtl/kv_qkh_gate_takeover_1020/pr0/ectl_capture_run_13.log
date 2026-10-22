@@ -1,0 +1,15 @@
+TRACE c3 localstart1 rq0 rs0 captured0 slot0
+TRACE c7 localstart0 rq1 rs0 captured0 slot0
+TRACE c8 localstart0 rq1 rs0 captured0 slot0
+TRACE c9 localstart0 rq1 rs0 captured0 slot0
+TRACE c10 localstart0 rq1 rs0 captured0 slot0
+TRACE c11 localstart0 rq1 rs0 captured0 slot0
+TRACE c12 localstart0 rq1 rs0 captured0 slot0
+TRACE c13 localstart0 rq1 rs0 captured0 slot0
+TRACE c14 localstart0 rq1 rs0 captured0 slot0
+TRACE c15 localstart0 rq1 rs0 captured0 slot0
+ECTL_SAFE32_CAPTURE_PASS mutant=0 req=256 consume=256 firstreq=7 localstart=3 firstconsume=94 fault=0
+- /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020/tb_qkd_ectl3_pr0_capture.sv:70: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 786ns; walltime 0.006 s; speed 137.973 us/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB

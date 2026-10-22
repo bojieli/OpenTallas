@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_hr_core_prompt_mu4p3_n32",
+ "enable": false,
+ "reason": "Source already carries the flow 2-stage ASR reset landing on u_rank__u_control__por_n (first1/final4, final max 31 loads, reset_profile proof PASS + 6 negatives refused); control/valid-only reset."
+}

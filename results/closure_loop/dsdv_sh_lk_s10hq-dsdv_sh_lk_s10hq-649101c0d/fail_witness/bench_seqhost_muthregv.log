@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d bench bench_seqhost_muthregv host ot-gold2 run /srv/opentallas-scratch/claude/closure-loop/dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d log cl/bench_seqhost_muthregv.a1b1.log captured 2026-10-21T10:55:43-07:00
+# fail_regex '^SEQHOST FAIL( |$)|Assertion failed.*hx_pop replica diverged'
+[64000] %Fatal: ot_rom_host_ingest_n32.sv:270: Assertion failed in tb_dsdv_seq_host.dut.u_l0.u_h.host.u_hi: ot_rom_host_ingest: hx_pop replica diverged
+%Error: /srv/opentallas-scratch/claude/closure-loop/dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d/bench_src_a1/rtl/hdc/ingest/ot_rom_host_ingest_n32.sv:270: Verilog $stop
+Aborting...

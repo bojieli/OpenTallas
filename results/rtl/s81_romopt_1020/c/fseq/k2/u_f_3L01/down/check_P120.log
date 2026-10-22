@@ -1,0 +1,102 @@
+XS_PLACE_CHECK PASS u_f_3L01 ffn.down phase 1 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+XS_PLACE_CHECK PASS u_f_3L01 ffn.down phase 2 mutant=None rows=5 fixture_rows=5 errors=0 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+MISMATCH edge 342 row 0 lo 0 k 1 got 74595c66/0 want 3afad2e0/0
+MISMATCH edge 343 row 1 lo 0 k 1 got bc2d4850/0 want bb991930/0
+MISMATCH edge 349 row 1 lo 2 k 1 got 718f5600/0 want bc218fc4/0
+MISMATCH edge 350 row 4 lo 0 k 1 got 79964a44/0 want 3afe02a0/0
+MISMATCH edge 353 row 4 lo 2 k 1 got f59865ae/0 want 3c6799bc/0
+MISMATCH edge 354 row 5 lo 2 k 1 got f806de22/0 want bc1246e8/0
+MISMATCH edge 361 row 2 lo 2 k 1 got 768d6feb/0 want 3c64b588/0
+MISMATCH edge 362 row 3 lo 2 k 1 got f49451f8/0 want ba90bab0/0
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 3 mutant=None rows=6 fixture_rows=6 errors=14 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+MISMATCH edge 345 row 0 lo 0 k 1 got bbea4460/0 want 3b2f1f30/0
+MISMATCH edge 359 row 0 lo 4 k 2 got bc05c9d8/0 want 3ab02c80/0
+MISMATCH edge 360 row 1 lo 4 k 2 got 387bd000/0 want bb8afbc0/0
+COVERAGE row 0 segments [0, 1, 4] of 5
+COVERAGE row 1 segments [4] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [0, 1] of 5
+COVERAGE row 4 segments [] of 5
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 4 mutant=None rows=5 fixture_rows=5 errors=9 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+MISMATCH edge 349 row 0 lo 0 k 1 got bc1fb354/0 want bb9e7ac0/0
+MISMATCH edge 350 row 1 lo 0 k 1 got 3aed6620/0 want 3bf5d2e4/0
+MISMATCH edge 355 row 0 lo 2 k 1 got 3c013d74/0 want bcc6059a/0
+MISMATCH edge 360 row 4 lo 2 k 1 got 3bea444c/0 want 3c0a11c2/0
+MISMATCH edge 361 row 5 lo 2 k 1 got bbd1e638/0 want bc973968/0
+COVERAGE row 0 segments [0, 1, 2, 3] of 5
+COVERAGE row 1 segments [0, 1] of 5
+COVERAGE row 2 segments [] of 5
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 5 mutant=None rows=6 fixture_rows=6 errors=12 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+MISMATCH edge 352 row 0 lo 0 k 1 got 3ba60aac/0 want bc7947fe/0
+MISMATCH edge 353 row 1 lo 0 k 1 got bc26f380/0 want bbb5867c/0
+MISMATCH edge 358 row 2 lo 0 k 1 got 3add1420/0 want 3b882a70/0
+MISMATCH edge 359 row 3 lo 0 k 1 got 3bcf0140/0 want 3c3a0548/0
+MISMATCH edge 361 row 4 lo 0 k 2 got bc4f30c2/0 want baf10720/0
+COVERAGE row 0 segments [0, 1] of 5
+COVERAGE row 1 segments [0, 1] of 5
+COVERAGE row 2 segments [0, 1] of 5
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 6 mutant=None rows=5 fixture_rows=5 errors=11 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+MISMATCH edge 362 row 0 lo 2 k 1 got bbd4f0f4/0 want bb9c4bb0/0
+COVERAGE row 0 segments [2, 3] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+COVERAGE row 5 segments [] of 5
+PLAN_MISMATCH predicted 18 words, got 1; first diff ((335, 0, (0, 1, 5), 3147472148, 0), (362, 0, (2, 1, 5), 3151294708, 0))
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 7 mutant=None rows=6 fixture_rows=6 errors=8 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+MISMATCH edge 359 row 0 lo 0 k 1 got bac822e0/0 want 3c070c56/0
+MISMATCH edge 360 row 1 lo 0 k 1 got bb2923a4/0 want 3ca35c12/0
+COVERAGE row 0 segments [0, 1] of 5
+COVERAGE row 1 segments [0, 1] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+PLAN_MISMATCH predicted 14 words, got 2; first diff ((338, 0, (0, 1, 5), 1007094870, 0), (359, 0, (0, 1, 5), 3133678304, 0))
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 8 mutant=None rows=5 fixture_rows=5 errors=8 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+COVERAGE row 5 segments [] of 5
+PLAN_MISMATCH predicted 18 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 9 mutant=None rows=6 fixture_rows=6 errors=7 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+PLAN_MISMATCH predicted 14 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 10 mutant=None rows=5 fixture_rows=5 errors=6 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+COVERAGE row 5 segments [] of 5
+PLAN_MISMATCH predicted 18 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 11 mutant=None rows=6 fixture_rows=6 errors=7 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+PLAN_MISMATCH predicted 14 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 12 mutant=None rows=5 fixture_rows=5 errors=6 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+COVERAGE row 5 segments [] of 5
+PLAN_MISMATCH predicted 18 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 13 mutant=None rows=6 fixture_rows=6 errors=7 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+COVERAGE row 0 segments [] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [] of 5
+COVERAGE row 3 segments [] of 5
+COVERAGE row 4 segments [] of 5
+PLAN_MISMATCH predicted 14 words, got 0; first diff None
+XS_PLACE_CHECK FAIL u_f_3L01 ffn.down phase 14 mutant=None rows=5 fixture_rows=5 errors=6 END edges=4803 ret_words=223 xo_checked=4801 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.down PER 120 phases 14 rows 77 fixture_rows 77 go0 63 last_ret 1963 span 1900 errors 181 ['FAULT edge 399 status 11 lx 0', 'FAULT edge 400 status 11 lx 0', 'FAULT edge 401 status 11 lx 0']

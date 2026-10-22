@@ -1,0 +1,37 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: ot-epyc9       admits   625 GB (avail 590, growth 152, headroom 0, waiters 0/0 GB) load 61/128 running 38 disk 157 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3815872-1792498808 after 1 s
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 1/22 mat shared.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 968 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 2/22 mat shared.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 971 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 3/22 mat shared.w2 rows 3 nseg 5 faults 0 ret_words 9 calendar measured_class T 972 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 4/22 mat exp61.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 5/22 mat exp61.w2 rows 4 nseg 5 faults 0 ret_words 14 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 6/22 mat exp61.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 955 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 7/22 mat exp69.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 957 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 8/22 mat exp69.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 957 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 9/22 mat exp69.w2 rows 3 nseg 5 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 10/22 mat exp112.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 11/22 mat exp112.w2 rows 4 nseg 5 faults 0 ret_words 14 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 12/22 mat exp112.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 955 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 13/22 mat exp170.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 957 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 14/22 mat exp170.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 957 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 15/22 mat exp170.w2 rows 3 nseg 5 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 16/22 mat exp299.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 17/22 mat exp299.w2 rows 4 nseg 5 faults 0 ret_words 14 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 18/22 mat exp299.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 955 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 19/22 mat exp357.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 957 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 20/22 mat exp357.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 957 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.down phase 21/22 mat exp357.w2 rows 3 nseg 5 faults 0 ret_words 6 calendar measured_class T 959 mutant None
+FSEQ3 u_f_3L01 ffn.down P 130 nph 21 PASS 93 ret_words=225 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_3L01 ffn.down phase 21 mutant=None rows=3 fixture_rows=3 errors=0 END edges=6893 ret_words=225 xo_checked=6891 fault=0
+TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 21 rows 77 fixture_rows 77 go0 63 last_ret 2959 span 2896 errors 0 []
+FSEQ3 u_f_3L01 ffn.down P 129 nph 21 PASS 52 ret_words=225 xo_checked=6850 fault=0
+XS_PLACE_CHECK PASS u_f_3L01 ffn.down phase 21 mutant=None rows=3 fixture_rows=3 errors=0 END edges=6852 ret_words=225 xo_checked=6850 fault=0
+TOKSIM_FGU_SEQ PASS op ffn.down PER 129 phases 21 rows 77 fixture_rows 77 go0 63 last_ret 2939 span 2876 errors 0 []
+FSEQ3_VERDICT u_f_3L01 ffn.down FAIL
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3815872-1792498808): exit 0

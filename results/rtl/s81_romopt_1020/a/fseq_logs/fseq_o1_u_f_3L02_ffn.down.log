@@ -1,0 +1,28 @@
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 1/22 mat shared.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 2/22 mat shared.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 3/22 mat shared.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 960 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 4/22 mat exp61.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 5/22 mat exp61.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 6/22 mat exp61.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 946 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 7/22 mat exp69.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 8/22 mat exp69.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 9/22 mat exp69.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 946 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 10/22 mat exp112.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 11/22 mat exp112.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 12/22 mat exp112.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 946 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 13/22 mat exp170.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 14/22 mat exp170.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 15/22 mat exp170.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 946 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 16/22 mat exp299.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 17/22 mat exp299.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 18/22 mat exp299.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 946 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 19/22 mat exp357.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 20/22 mat exp357.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 948 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.down phase 21/22 mat exp357.w2 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 946 mutant None
+FSEQA u_f_3L02 ffn.down golden P 130 nph 21 PASS as_expected rows=3 fixture_rows=3 errors=0 END edges=6893 ret_words=196 xo_checked=6891 fault=0
+TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 21 rows 77 fixture_rows 77 go0 63 last_ret 2946 span 2883 errors 0 []
+FSEQA u_f_3L02 ffn.down period_below_floor P 125 nph 21 FAIL as_expected  FAIL op ffn.down PER 125 phases 21 rows 77 fixture_rows 77 go0 63 last_ret 2846 span 2783 errors 23 ['FAULT edge 401 status 11 lx 0', 'FAULT edge 402 status 11 lx 0', 'FAULT edge 403 status 11 lx 0']
+FSEQA u_f_3L02 ffn.down period_below_floor P 120 nph 21 FAIL as_expected FAIL op ffn.down PER 120 phases 21 rows 77 fixture_rows 77 go0 63 last_ret 2816 span 2753 errors 193 ['FAULT edge 398 status 11 lx 0', 'FAULT edge 399 status 11 lx 0', 'FAULT edge 400 status 11 lx 0']
+FSEQA u_f_3L02 ffn.down shift P 130 nph 21 FAIL as_expected rows 77 fixture_rows 77 go0 63 last_ret 2946 span 2883 errors 75 ['UNASSIGNED_RET edge 339 0796bfe301000888b', 'UNASSIGNED_RET edge 347 178c5e2541000088b', 'UNASSIGNED_RET edge 351 074f30b001000804b']
+FSEQA u_f_3L02 ffn.down swap P 130 nph 21 FAIL as_expected w 3 lo 0 k 1 got bcca3386/0 want 3dc27e9d/0']", "PHASE_FAIL p3: ['MISMATCH edge 348 row 0 lo 0 k 1 got bdc0b2e0/0 want bcd62c2a/0', 'MISMATCH edge 349 row 1 lo 0 k 1 got 3cda5233/0 want 3c1ac4c4/0']"]
+FSEQA_VERDICT u_f_3L02 ffn.down PASS span 2883

@@ -1,0 +1,4 @@
+qpr 1: not feasible (('store rows', 512))
+qpr 2: not feasible (('store rows', 512))
+qpr 4: cycles_serial 745
+{"record": "qw_softmax_exp_sum_r3", "issues": 192, "emissions": 192, "cycles_serial": 745, "cycles_stream_833ps": 993.33, "edges": 871, "expected_vm_writes": 3073, "expected_scalars": 18}

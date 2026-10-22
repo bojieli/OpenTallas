@@ -8,6 +8,13 @@
   "derived_from": "ot_qfd_ucie_x64_phy tp8_1013 revision: same latency, timing; FDI block on the top edge; TALL edge variant (long side vertical), modeled PHY",
   "fdi": {
     "clock_ghz": 1.0,
+    "clock_output": {
+      "added": "QW-GEN5 10-20 (g5 GEN: clk_ucie root = the PHY FDI clock, replaces the clk_rx.pll_ucie R0 identity of pll_fwd)",
+      "direction": "output",
+      "ghz": 1.0,
+      "grade": "ASSUMED (PHY-modeled boundary clock source; no arcs)",
+      "pin": "lclk"
+    },
     "flit_bits": 1043,
     "latency_fdi_cycles_one_way": 4,
     "payload_bits": 1024,
@@ -22,13 +29,13 @@
   "name": "ot_qfd_ucie_x64_phy",
   "pins": {
     "pin_block_x_um": [
-      338.616,
+      338.568,
       438.984
     ],
     "pin_edge": "top (core-facing)",
     "pin_layer": "M5",
     "pin_pitch_um": 0.048,
-    "signal_pins": 2091
+    "signal_pins": 2092
   },
   "published": [
     {

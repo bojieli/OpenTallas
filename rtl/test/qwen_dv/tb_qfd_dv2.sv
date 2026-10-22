@@ -11,6 +11,9 @@
 // Events (+EV): "cycle port hex": 0 CMD (s0.cmd_i), 1 ARET, 40 DRET, 41 SWI, 2+2k RSS(k), 3+2k RSN(k).
 // Log: S0AR / S0DD (W5 edge), S<k>SU / S<k>SD (scalar words leaving slice k up / down), S<N-1>E (up-end stream),
 // S<k>TOK (status token), S<k>ST at the end.
+// S<k>VW (TOK-FUNC3-QW-STG4 10-21, testbench probe only): one line per STN-result VM write in slice k (the 16-element
+// w16 write of the station result, st_vm = r_v && stn_dst[0]), value = the 24-bit VM word address r_addr; the edge is the
+// negedge sample of the cycle that presents the write to qfd_dv_vm (same convention as every other log line).
 // +define+DV2_XHEAD (QW-XHEAD 10-19): port 42 HR (s0.hr_i, 453 b), and per slice S<k>XT (the heads' x write xt_v: xt_a),
 // S<k>CW (the 8 column-head corridor go bits {n3..n0, s3..s0}), S<k>XL (edges with a corridor x line: the tag valid
 // bits of the 8 corridor words), S<k>HF (the heads' fault, first edge).
@@ -18,6 +21,7 @@ module tb_qfd_dv2 (input wire ck);
     parameter integer MUT = 0, N = 2, SU_LT = 0, HD_W130 = 0;   // MU-SLICE-GATE: the kitted slice is SU_LT 1, HD_W130 1
     parameter integer MU_NU = 1;     // MU-ADOPT-SLICE: qfd_dv_slice2 MU_NU (R4 per-user LM-head argmax)
     parameter integer FACE = 0;      // 0 master qfd_dv_slice2; 1 the W face qfd_dv_slice2_w; 2 the E face qfd_dv_slice2_e
+    parameter integer ARF = 0, RP = 0;   // QW-LAYERGAP: qfd_dv_slice2 AR message framer / RoPE row from the return chain
     reg rst_n = 1'b0;
     reg  [115:0]  cmd0;
     reg  [452:0]  hr0;
@@ -34,6 +38,8 @@ module tb_qfd_dv2 (input wire ck);
     wire [1037:0] chr [0:N];
     wire [513:0]  l9o [0:N-1];
     wire [106:0]  st [0:N-1];
+    wire [N-1:0]  vw_v;              // VM-write probe (S<k>VW): STN result written into slice k's VM
+    wire [24*N-1:0] vw_a;
 `ifdef DV2_XHEAD
     wire [N-1:0]  xh_xtv, xh_hf;
     wire [24*N-1:0] xh_xta;
@@ -46,13 +52,14 @@ module tb_qfd_dv2 (input wire ck);
     generate for (k = 0; k < N; k = k + 1) begin : g_s
         wire [515:0] cn0, cn1, cn2, cn3, cs0, cs1, cs2, cs3;
         wire [513:0] l9i = (k % 2 == 0) ? ((k + 1 < N) ? l9o[k+1] : 514'd0) : l9o[k-1];
-        tb_dv2_slice #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .FACE(FACE)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]),
+        tb_dv2_slice #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .FACE(FACE), .ARF(ARF), .RP(RP)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]),
             .hr_i(hrc[k]), .hr_o(hrc[k+1]), .rs_s(rss[k]), .rs_n(rsn[k]), .l9_i(l9i), .l9_o(l9o[k]),
             .st_up_i(stu[k]), .st_up_o(stu[k+1]), .st_dn_i(std_[k+1]), .st_dn_o(std_[k]),
             .sc_up_i(scu[k]), .sc_up_o(scu[k+1]), .sc_dn_i(scd[k+1]), .sc_dn_o(scd[k]),
             .ch_up_i(cho[k+1]), .ch_dn_o(cho[k]), .ch_dn_i(chr[k]), .ch_up_o(chr[k+1]),
             .cw_n0(cn0), .cw_n1(cn1), .cw_n2(cn2), .cw_n3(cn3), .cw_s0(cs0), .cw_s1(cs1), .cw_s2(cs2), .cw_s3(cs3), .st(st[k]),
             .cc_o(cc[k]), .ag_up_i(agc[k+1]), .ag_dn_o(agc[k]));
+        assign vw_v[k] = u.vw_v; assign vw_a[24*k +: 24] = u.vw_a;
 `ifdef DV2_XHEAD
         // corridor word {tag 8 [515:508], xl 128, ib 379, go [0]}; tag = {vB, sB 3, vA, sA 3}
         assign xh_xtv[k] = u.xt_v; assign xh_xta[24*k +: 24] = u.xt_a; assign xh_hf[k] = u.hd_fault;
@@ -109,6 +116,7 @@ module tb_qfd_dv2 (input wire ck);
                 if (scd[i][47])   $fdisplay(lg, "%0d S%0dSD %h", cyc, i, scd[i]);
                 if (st[i][24])    $fdisplay(lg, "%0d S%0dTOK %h", cyc, i, st[i][27:0]);   // [27:26] token user (MU_NU > 1)
                 if (cc[i][49])    $fdisplay(lg, "%0d S%0dCC %h", cyc, i, cc[i]);
+                if (vw_v[i])      $fdisplay(lg, "%0d S%0dVW %h", cyc, i, vw_a[24*i +: 24]);
             end
             if (stu[N][1087]) $fdisplay(lg, "%0d S%0dE %h", cyc, N - 1, stu[N]);
 `ifdef DV2_XHEAD
@@ -146,7 +154,8 @@ endmodule
 // MU-ADOPT-SLICE 10-19: the master port list on a master core (FACE 0) or on a generated face wrapper (FACE 1 W, 2 E),
 // so every dv_bench2 bench runs unchanged on the face RTL (the face is a port map: dn face = master W for _w, E for _e).
 module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, parameter integer HD_W130 = 0,
-                      parameter integer MU_NU = 1, parameter integer FACE = 0) (
+                      parameter integer MU_NU = 1, parameter integer FACE = 0, parameter integer ARF = 0,
+                      parameter integer RP = 0) (
     input  wire ck, input wire rst_n,
     input  wire [115:0] cmd_i, output wire [115:0] cmd_o, input wire [452:0] hr_i, output wire [452:0] hr_o,
     input  wire [1027:0] rs_s, input wire [1027:0] rs_n, input wire [513:0] l9_i, output wire [513:0] l9_o,
@@ -155,16 +164,19 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
     input  wire [1094:0] ch_up_i, output wire [1094:0] ch_dn_o, input wire [1037:0] ch_dn_i, output wire [1037:0] ch_up_o,
     output wire [515:0] cw_n0, cw_n1, cw_n2, cw_n3, cw_s0, cw_s1, cw_s2, cw_s3,
     output wire [106:0] st, output wire [49:0] cc_o, input wire [9:0] ag_up_i, output wire [9:0] ag_dn_o);
+    // VM-write probe (testbench observation only; read by tb_qfd_dv2 as u.vw_v / u.vw_a): the station-result write port
+    wire vw_v; wire [23:0] vw_a;
     generate if (FACE == 0) begin : g_m
-        qfd_dv_slice2 #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmd_i), .cmd_o(cmd_o),
+        qfd_dv_slice2 #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .ARF(ARF), .RP(RP)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmd_i), .cmd_o(cmd_o),
             .hr_i(hr_i), .hr_o(hr_o), .rs_s(rs_s), .rs_n(rs_n), .l9_i(l9_i), .l9_o(l9_o),
             .st_up_i(st_up_i), .st_up_o(st_up_o), .st_dn_i(st_dn_i), .st_dn_o(st_dn_o),
             .sc_up_i(sc_up_i), .sc_up_o(sc_up_o), .sc_dn_i(sc_dn_i), .sc_dn_o(sc_dn_o),
             .ch_up_i(ch_up_i), .ch_dn_o(ch_dn_o), .ch_dn_i(ch_dn_i), .ch_up_o(ch_up_o),
             .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2),
             .cw_s3(cw_s3), .st(st), .cc_o(cc_o), .ag_up_i(ag_up_i), .ag_dn_o(ag_dn_o));
+        assign vw_v = u.st_vm; assign vw_a = u.r_addr;
     end else if (FACE == 1) begin : g_w
-        qfd_dv_slice2_w #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_wi(cmd_i), .cmd_eo(cmd_o),
+        qfd_dv_slice2_w #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .ARF(ARF), .RP(RP)) u (.ck(ck), .rst_n(rst_n), .cmd_wi(cmd_i), .cmd_eo(cmd_o),
             .hr_wi(hr_i), .hr_eo(hr_o), .st_wo(st_dn_o), .st_wi(st_up_i), .st_eo(st_up_o), .st_ei(st_dn_i),
             .sc_wo(sc_dn_o), .sc_wi(sc_up_i), .sc_eo(sc_up_o), .sc_ei(sc_dn_i),
             .arv_wo(ch_dn_o[1094]), .art_wo(ch_dn_o[1093:1062]), .arm_wo(ch_dn_o[1061]), .arl_wo(ch_dn_o[1060]),
@@ -180,8 +192,9 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
             .l9_wi(l9_i), .l9_eo(l9_o), .rs_n0(rs_n[513:0]), .rs_n1(rs_n[1027:514]), .rs_s0(rs_s[513:0]),
             .rs_s1(rs_s[1027:514]), .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0),
             .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
+        assign vw_v = u.u_core.st_vm; assign vw_a = u.u_core.r_addr;
     end else begin : g_e
-        qfd_dv_slice2_e #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU)) u (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_i), .cmd_wo(cmd_o),
+        qfd_dv_slice2_e #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .ARF(ARF), .RP(RP)) u (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_i), .cmd_wo(cmd_o),
             .hr_ei(hr_i), .hr_wo(hr_o), .st_eo(st_dn_o), .st_ei(st_up_i), .st_wo(st_up_o), .st_wi(st_dn_i),
             .sc_eo(sc_dn_o), .sc_ei(sc_up_i), .sc_wo(sc_up_o), .sc_wi(sc_dn_i),
             .arv_eo(ch_dn_o[1094]), .art_eo(ch_dn_o[1093:1062]), .arm_eo(ch_dn_o[1061]), .arl_eo(ch_dn_o[1060]),
@@ -197,5 +210,6 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
             .l9_wi(l9_i), .l9_eo(l9_o), .rs_n0(rs_n[513:0]), .rs_n1(rs_n[1027:514]), .rs_s0(rs_s[513:0]),
             .rs_s1(rs_s[1027:514]), .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0),
             .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
+        assign vw_v = u.u_core.st_vm; assign vw_a = u.u_core.r_addr;
     end endgenerate
 endmodule

@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_xrt1-s81sl_xrt1-afd9fa25e bench bench_s81sl_xrt1_mutnocol host ot-gold1 run /srv/opentallas-scratch/claude/closure-loop/s81sl_xrt1-s81sl_xrt1-afd9fa25e log cl/bench_s81sl_xrt1_mutnocol.a1b1.log captured 2026-10-21T21:08:10-07:00
+# fail_regex '^XRILL missed=[1-9][0-9]* of'
+XRB hb=0 seed=1 sid=4 cycles=6016 ctl=1543 rd=1109 rowwr=228 lo=1990 sends=814 vreinj=815 screl=174 parts=254 err=0
+XRILL missed=1 of 13 bsends=0

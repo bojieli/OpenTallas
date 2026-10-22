@@ -1,0 +1,726 @@
+{
+  "schema": "opentallas.s81_mu72.assembly.v1",
+  "top": "ot_s81sl_slice_lepw_mu_72",
+  "source": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mu_72.sv",
+  "sources": [
+    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mu_72.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r.sv",
+    "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+    "rtl/common/landed_parent/ot_pl_land.sv",
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+    "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+    "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp_bb.v",
+    "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve_bb.v",
+    "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg/ot_s81sl_xg_bb.v",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/common/landed_parent/ot_pl_land_n32.sv",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+    "rtl/link/ot_link_crc32.sv",
+    "rtl/lib/ot_rst_relay_tree3.sv",
+    "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+    "rtl/lib/ot_sram_oldread_b64.sv",
+    "rtl/lib/ot_sram_showahead_b64.sv",
+    "rtl/common/ot_link_credit_rx_b64.sv",
+    "rtl/common/ot_link_credit_tx_rc.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+    "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "rtl/v41rom/ot_v41_kreg.sv",
+    "rtl/common/ot_prefix.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv"
+  ],
+  "defines": [
+    "DSFD_PQ_STATIC_X2",
+    "OT_S81SL_HARD"
+  ],
+  "define_values": {},
+  "compiler_defines": {
+    "OT_S81_CAP5_C": "1"
+  },
+  "normal_parameters": {
+    "DLK0": 1,
+    "DLK1": 1,
+    "DLK2": 4,
+    "DLK3": 1,
+    "DLK4": 1,
+    "DLF0": 0,
+    "DLF1": 0,
+    "DLF2": 0,
+    "DLF3": 0,
+    "DLF4": 0
+  },
+  "source_dependencies": {
+    "normal": "663783aa82568d6a8d029e2ac88f65878b004e9d",
+    "normal_spec": "3c4721d69ddab3724a65c96259143faf778fe172",
+    "original_endpoint_lp": "aefbb0ca375332e55b7983b1a4da7fe40f832960",
+    "safe8_lanes": "445e6c74c"
+  },
+  "outline": {
+    "w": 2851.2,
+    "h": 6825.6,
+    "exact": true
+  },
+  "hardened": false,
+  "normal_source_envelope": {
+    "inst": "u_sl",
+    "at": [
+      43.2,
+      43.2
+    ],
+    "outline": [
+      1252.8,
+      6739.2
+    ],
+    "hardened": false,
+    "note": "Use actual hard descendants below; normal parent closure is not required for diagnostic integration"
+  },
+  "children": [
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+      "count": 1,
+      "inst": "u_sl.u_lf4.u_vp",
+      "at": [
+        86.4,
+        86.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+      "count": 1,
+      "inst": "u_sl.u_lf4.u_vn",
+      "at": [
+        864.0,
+        86.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+      "count": 1,
+      "inst": "u_sl.u_lf4.u_ve",
+      "at": [
+        864.0,
+        518.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+      "count": 1,
+      "inst": "u_sl.u_lf4.u_vsw",
+      "at": [
+        864.0,
+        907.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+      "count": 1,
+      "inst": "u_sl.u_lf4.u_vq",
+      "at": [
+        86.4,
+        993.6
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+      "count": 1,
+      "inst": "u_sl.u_lf4.u_vs",
+      "at": [
+        302.4,
+        993.6
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+      "count": 1,
+      "inst": "u_sl.u_lf4.u_rxsf",
+      "at": [
+        518.4,
+        993.6
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+      "count": 1,
+      "inst": "u_sl.u_lf4.u_rxsb",
+      "at": [
+        691.2,
+        993.6
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+      "count": 1,
+      "inst": "u_sl.u_lf3.u_vp",
+      "at": [
+        86.4,
+        1209.6
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+      "count": 1,
+      "inst": "u_sl.u_lf3.u_vn",
+      "at": [
+        864.0,
+        1209.6
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+      "count": 1,
+      "inst": "u_sl.u_lf3.u_ve",
+      "at": [
+        864.0,
+        1641.6
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+      "count": 1,
+      "inst": "u_sl.u_lf3.u_vsw",
+      "at": [
+        864.0,
+        2030.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+      "count": 1,
+      "inst": "u_sl.u_lf3.u_vq",
+      "at": [
+        86.4,
+        2116.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+      "count": 1,
+      "inst": "u_sl.u_lf3.u_vs",
+      "at": [
+        302.4,
+        2116.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+      "count": 1,
+      "inst": "u_sl.u_lf3.u_rxsf",
+      "at": [
+        518.4,
+        2116.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+      "count": 1,
+      "inst": "u_sl.u_lf3.u_rxsb",
+      "at": [
+        691.2,
+        2116.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+      "count": 1,
+      "inst": "u_sl.u_lf2.u_vp",
+      "at": [
+        86.4,
+        2332.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+      "count": 1,
+      "inst": "u_sl.u_lf2.u_vn",
+      "at": [
+        864.0,
+        2332.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+      "count": 1,
+      "inst": "u_sl.u_lf2.u_ve",
+      "at": [
+        864.0,
+        2764.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+      "count": 1,
+      "inst": "u_sl.u_lf2.u_vsw",
+      "at": [
+        864.0,
+        3153.6
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+      "count": 1,
+      "inst": "u_sl.u_lf2.u_vq",
+      "at": [
+        86.4,
+        3240.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+      "count": 1,
+      "inst": "u_sl.u_lf2.u_vs",
+      "at": [
+        302.4,
+        3240.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+      "count": 1,
+      "inst": "u_sl.u_lf2.u_rxsf",
+      "at": [
+        518.4,
+        3240.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+      "count": 1,
+      "inst": "u_sl.u_lf2.u_rxsb",
+      "at": [
+        691.2,
+        3240.0
+      ]
+    },
+    {
+      "count": 1,
+      "inst": "u_sl.u_xg",
+      "at": [
+        86.4,
+        3456.0
+      ],
+      "master": "ot_s81sl_xgt_xo",
+      "binding_state": "UNBOUND: ot_s81sl_xgt_xo (S81-FIX2/XG 6aac44322, ONE combined xg_xo + rstopt + xs4 master) kits s81sl_xgtxo 734.4x777.6 / s81sl_xgtxo_b 648x864 --cts gates live; binds the first CLOSED; never an old xg/xg_xo alias",
+      "g8_slot": {
+        "wh": [
+          734.4,
+          864.0
+        ],
+        "note": "S81-G8: xg slot = union of both kit outlines (was 604.8 x 518.4 between u_xg/u_cap/u_xr); the unhardened parent is placed by the die GEN, the children re-layout follows the closed kit"
+      }
+    },
+    {
+      "count": 1,
+      "inst": "u_sl.u_cap",
+      "at": [
+        777.6,
+        3456.0
+      ],
+      "master": "ot_s81sl_capc5r",
+      "view": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r",
+      "params": {},
+      "binding_state": "CLOSED s81sl_capc5r-s81sl_capc5r-163d31541 (closure-loop record 4a4d275ee on main; kit physical/ref_tile/s81sl_capc5r, top ot_s81sl_capc5r, no params; GRT overflow 0, per-root spread TT<=77.6/FF<=68.9); exact: u_sl.u_cap in ot_s81sl_slice_c1x_k8_cap5r_lp is ot_s81sl_capc5r, all 8 kit source blobs (ot_s81sl_capc5r.sv 6461f44e3, ot_pl_land*, ot_rst_relay, ot_hdc_delay_rf, cap_ed, cap_ld) identical to 163d31541; replaces the old capc5c view (s81sl_capc5k) carried from the normal spec (S81-LINK5B G6 10-21)"
+    },
+    {
+      "view": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin",
+      "count": 1,
+      "inst": "u_sl.u_xf",
+      "at": [
+        777.6,
+        3931.2
+      ]
+    },
+    {
+      "count": 1,
+      "inst": "u_sl.u_xr",
+      "at": [
+        86.4,
+        4060.8
+      ],
+      "master": "ot_s81sl_xrt1",
+      "binding_state": "UNBOUND: ot_s81sl_xrt1 view owed (S81-RTLGAP/ffn); never old ot_s81sl_xr1 alias"
+    },
+    {
+      "view": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg",
+      "count": 1,
+      "inst": "u_sl.u_eg",
+      "at": [
+        475.2,
+        4060.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+      "count": 1,
+      "inst": "u_sl.u_lf1.u_vp",
+      "at": [
+        86.4,
+        4536.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+      "count": 1,
+      "inst": "u_sl.u_lf1.u_vn",
+      "at": [
+        864.0,
+        4536.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+      "count": 1,
+      "inst": "u_sl.u_lf1.u_ve",
+      "at": [
+        864.0,
+        4968.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+      "count": 1,
+      "inst": "u_sl.u_lf1.u_vsw",
+      "at": [
+        864.0,
+        5356.8
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+      "count": 1,
+      "inst": "u_sl.u_lf1.u_vq",
+      "at": [
+        86.4,
+        5443.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+      "count": 1,
+      "inst": "u_sl.u_lf1.u_vs",
+      "at": [
+        302.4,
+        5443.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+      "count": 1,
+      "inst": "u_sl.u_lf1.u_rxsf",
+      "at": [
+        518.4,
+        5443.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+      "count": 1,
+      "inst": "u_sl.u_lf1.u_rxsb",
+      "at": [
+        691.2,
+        5443.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+      "count": 1,
+      "inst": "u_sl.u_lf0.u_vp",
+      "at": [
+        86.4,
+        5659.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+      "count": 1,
+      "inst": "u_sl.u_lf0.u_vn",
+      "at": [
+        864.0,
+        5659.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+      "count": 1,
+      "inst": "u_sl.u_lf0.u_ve",
+      "at": [
+        864.0,
+        6091.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+      "count": 1,
+      "inst": "u_sl.u_lf0.u_vsw",
+      "at": [
+        864.0,
+        6480.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+      "count": 1,
+      "inst": "u_sl.u_lf0.u_vq",
+      "at": [
+        86.4,
+        6566.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+      "count": 1,
+      "inst": "u_sl.u_lf0.u_vs",
+      "at": [
+        302.4,
+        6566.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+      "count": 1,
+      "inst": "u_sl.u_lf0.u_rxsf",
+      "at": [
+        518.4,
+        6566.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+      "count": 1,
+      "inst": "u_sl.u_lf0.u_rxsb",
+      "at": [
+        691.2,
+        6566.4
+      ]
+    },
+    {
+      "inst": "u_ln0",
+      "master": "dsfd_coll_lane_w_safe8_ntf",
+      "at": [
+        1468.8,
+        43.2
+      ],
+      "reserved_envelope_um": [
+        725.76,
+        583.2
+      ],
+      "count": 1,
+      "orient": "R0",
+      "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
+    },
+    {
+      "inst": "u_ln1",
+      "master": "dsfd_coll_lane_w_safe8_ntf",
+      "at": [
+        1468.8,
+        799.2
+      ],
+      "reserved_envelope_um": [
+        725.76,
+        583.2
+      ],
+      "count": 1,
+      "orient": "R0",
+      "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
+    },
+    {
+      "inst": "u_lep",
+      "master": "ot_s81sl_lep_mu_a",
+      "at": [
+        1468.8,
+        1555.2
+      ],
+      "reserved_envelope_um": [
+        561.6,
+        561.6
+      ],
+      "count": 1,
+      "orient": "R0",
+      "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
+    },
+    {
+      "inst": "u_land",
+      "master": "dsdv_mu_land",
+      "at": [
+        1468.8,
+        2289.6
+      ],
+      "reserved_envelope_um": [
+        475.2,
+        216.0
+      ],
+      "count": 1,
+      "orient": "R0",
+      "view": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land",
+      "params": {
+        "W": 1104,
+        "NB": 80,
+        "NS": 1,
+        "SRAM": 1
+      },
+      "binding_state": "CLOSED dsdv_mu_land-dsdv_mu_land-263e13fc3 (TT +68.25 / FF +24.02, DRC 0, native PASS; kit physical/ref_tile/dsdv_mu_land, top dsdv_mu_land #(W 1104, NB 80, NS 1, SRAM 1)); exact: every MU72 top instantiates u_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)), source blob dsdv_mu_land.sv bc2ab551c + ot_rst_relay.sv 0259a9266 identical to the closing commit 263e13fc3 (S81-LINK5 10-21, lead-approved)"
+    }
+  ],
+  "clock_ports": [
+    "ck_S",
+    "ck_K",
+    "ck_ML",
+    "ck_L0",
+    "ck_L1",
+    "ck_L3",
+    "ck_L4",
+    "ck_CAP_RT",
+    "ck_CAP_CW",
+    "ck_CAP_CE",
+    "ck_CAP_RN",
+    "ck_CAP_RS"
+  ],
+  "reset_port": "rst_n",
+  "clock_connections": {
+    "u_sl.ck_C": "ck_S",
+    "u_sl.ck_L0": "ck_L0",
+    "u_sl.ck_L1": "ck_L1",
+    "u_sl.ck_L3": "ck_L3",
+    "u_sl.ck_L4": "ck_L4",
+    "u_sl.ck_CAP_RT": "ck_CAP_RT",
+    "u_sl.ck_CAP_CW": "ck_CAP_CW",
+    "u_sl.ck_CAP_CE": "ck_CAP_CE",
+    "u_sl.ck_CAP_RN": "ck_CAP_RN",
+    "u_sl.ck_CAP_RS": "ck_CAP_RS",
+    "u_ln0.ck": "ck_K",
+    "u_ln1.ck": "ck_K",
+    "u_lep.clk": "ck_K",
+    "u_land.clk": "ck_ML"
+  },
+  "transport": {
+    "existing_S_to_K_cycles": 3,
+    "existing_K_to_S_cycles": 3,
+    "existing_fault_output_cycles": 2,
+    "CAP5_capture_increment_vs_CAPC2": 12,
+    "new_K_transport_cycles": null,
+    "MU_land_write_cycles": 3,
+    "MU_land_command_cycles": 3,
+    "MU_land_return_cycles": 3,
+    "MU_rc_to_first_return_cycles": 10,
+    "MU_rc_to_first_return_increment": 6
+  },
+  "soft_transport": [
+    {
+      "inst": "u_ml_wr",
+      "bank_cell_corridor": [
+        1468.8,
+        2116.8,
+        561.6,
+        172.8
+      ],
+      "kind": "existing_D4_K2_landing",
+      "physical_status": "UNROUTED real gap reservation"
+    },
+    {
+      "inst": "u_ml_cmd",
+      "bank_cell_corridor": [
+        1468.8,
+        2116.8,
+        561.6,
+        172.8
+      ],
+      "kind": "existing_D4_K2_landing",
+      "physical_status": "UNROUTED real gap reservation"
+    },
+    {
+      "inst": "u_ml_ret",
+      "bank_cell_corridor": [
+        1468.8,
+        2116.8,
+        561.6,
+        172.8
+      ],
+      "kind": "existing_D4_K2_landing",
+      "physical_status": "UNROUTED real gap reservation"
+    }
+  ],
+  "unclosed_bundles": [
+    {
+      "ends": [
+        "u_ln0",
+        "u_lep"
+      ],
+      "nets": [
+        "l0v",
+        "l0r",
+        "l0d[552:0]",
+        "i0v",
+        "i0r",
+        "i0d[552:0]",
+        "f0[2:0]",
+        "rxv[0]"
+      ],
+      "centre_distance_um": [
+        82.08,
+        1501.2
+      ],
+      "state": "UNLANDED long K transport; ready/data/status ages must align"
+    },
+    {
+      "ends": [
+        "u_ln1",
+        "u_lep"
+      ],
+      "nets": [
+        "l1v",
+        "l1r",
+        "l1d[552:0]",
+        "i1v",
+        "i1r",
+        "i1d[552:0]",
+        "f1[2:0]",
+        "rxv[1]"
+      ],
+      "centre_distance_um": [
+        82.08,
+        745.2
+      ],
+      "state": "UNLANDED long K transport; ready/data/status ages must align"
+    },
+    {
+      "ends": [
+        "u_lep",
+        "u_land"
+      ],
+      "nets": [
+        "mwv",
+        "mwd[1103:0]",
+        "mrv",
+        "mrd[1103:0]",
+        "mf"
+      ],
+      "centre_distance_um": [
+        43.2,
+        561.6
+      ],
+      "state": "SOURCE FIXED: D4/K2 wr/cmd/ret +3 each; physical ring placement/STA and compiler +6 return remain open"
+    }
+  ],
+  "physical_holds": [
+    "No parent CLOSED record or SS/FF/GRT claim",
+    "K clock is an explicit diagnostic implementation root; no balanced-region closure assumption",
+    "Actual lane/endpoint relay geometry pending; MU-land three real rings occupy172.8um face gap",
+    "Compiler replay return and identity-use calendar must add6 cycles before release",
+    "Actual child pins, clock/reset placement and PG composition feed ongoing die flow",
+    "External ports and source widths preserved; no tied functional ports or false paths",
+    "No copy-B/AB physical release alias: this two-lane envelope is copy-A only"
+  ],
+  "g8_note": "S81-G8 10-21: s_0S end slot 2505.6 -> 2851.2 (all four end parents 2851.2; room for the enlarged xg and the per-region clock roots)"
+}

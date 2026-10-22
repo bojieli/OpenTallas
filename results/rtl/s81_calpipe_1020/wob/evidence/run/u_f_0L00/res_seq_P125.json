@@ -1,0 +1,82 @@
+{
+ "op": "attn.wo_b",
+ "frame": "u_f_0L00",
+ "per": 125,
+ "nph": 4,
+ "rows": 40,
+ "go0": 63,
+ "last_go": 438,
+ "first_ret": 368,
+ "last_ret": 756,
+ "words": 40,
+ "go0_to_last_ret": 693,
+ "fixture_rows": 0,
+ "errors": [
+  "FAULT edge 405 status 11 lx 0",
+  "FAULT edge 406 status 11 lx 0",
+  "FAULT edge 407 status 11 lx 0",
+  "FAULT edge 408 status 11 lx 0",
+  "PHASE_FAIL p3: ['MISMATCH edge 368 row 2 lo 0 k 1 got 3cc0c752/0 want bb66e208/0', 'MISMATCH edge 369 row 3 lo 0 k 1 got bd580041/0 want bc0b3ddf/0']",
+  "PHASE_FAIL p4: ['MISMATCH edge 368 row 2 lo 0 k 1 got 39350480/0 want 3c5b13e8/0', 'MISMATCH edge 369 row 3 lo 0 k 1 got 3b9da456/0 want bc27ca36/0']"
+ ],
+ "phases": [
+  {
+   "i": 0,
+   "vec": "p1",
+   "phase": 1,
+   "mat": "wo_b",
+   "rows": 10,
+   "go": 63,
+   "shift": 0,
+   "words": 10,
+   "first_ret": 368,
+   "last_ret": 381,
+   "fixture_rows": 0,
+   "pass_": true
+  },
+  {
+   "i": 1,
+   "vec": "p2",
+   "phase": 2,
+   "mat": "wo_b",
+   "rows": 10,
+   "go": 188,
+   "shift": 125,
+   "words": 10,
+   "first_ret": 493,
+   "last_ret": 506,
+   "fixture_rows": 0,
+   "pass_": true
+  },
+  {
+   "i": 2,
+   "vec": "p3",
+   "phase": 3,
+   "mat": "wo_b",
+   "rows": 10,
+   "go": 313,
+   "shift": 250,
+   "words": 10,
+   "first_ret": 618,
+   "last_ret": 631,
+   "fixture_rows": 0,
+   "pass_": false
+  },
+  {
+   "i": 3,
+   "vec": "p4",
+   "phase": 4,
+   "mat": "wo_b",
+   "rows": 10,
+   "go": 438,
+   "shift": 375,
+   "words": 10,
+   "first_ret": 743,
+   "last_ret": 756,
+   "fixture_rows": 0,
+   "pass_": false
+  }
+ ],
+ "end": "END edges=2438 ret_words=40 xo_checked=2436 fault=4 spine_fault=0",
+ "pass": false
+}

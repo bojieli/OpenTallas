@@ -1,0 +1,163 @@
+{
+ "verdict": "PASS",
+ "grade": "RTL-functional (source-bound historical KV attention component)",
+ "actual_host": "ot-epyc5",
+ "actual_unit": "oth-ubuntu-1443002-1792562956",
+ "original_job_pid": 1443002,
+ "positive_cases": 8,
+ "mutants_caught": 7,
+ "bound_32k": "REFUSED:tile_fault1/cal_fault1/timeout0",
+ "calibration": "PASS",
+ "source_binding": "provenance/source_binding.json",
+ "source_commit": "0e597ed1c51e4c71071368c72706ed3967289d9e",
+ "binary_sha256": "5d0e1cab5015e2f10fc1200f9fdfb1adcdb76b08c35b595cfce5c43ee8ae34a1",
+ "nu4_command_period": 2025,
+ "period_scope": "measured component quantity only; not full-token price",
+ "selected_coherent73_qualified": false,
+ "full_token_rate_qualified": false,
+ "all_raw_sha256": {
+  "run.out": "ed02812b7ccb8e1c808a2b080fdf693710119e6e2fa13bef884bb361417af4a3",
+  "build.log": "5639c702d7164475af9a89308b274358fcb10252493c76145069cd67000c1a52",
+  "build.time": "b16cec12c60f1693ccec2ea1681e535a3fb18e6614c6dcef5fd3c5321a4f9697",
+  "collect.out": "e3ca75255094aa68b1f35dd0dbdc57716c9eeb6e4fb3f4ffbdf9c9e5f1e871bd",
+  "vectors.sha256": "eaf9f52e9bb12cc41db8cc0ea2302f9e1eecb78e6cd36c2fe79c9de2535bcfba",
+  "record.json": "e04cce0bcc9860ffce513f3ff408337814c9bb8f6052f9714d939c8c51f3bfe7",
+  "README.md": "fb254a53e6245a49e4504c859a9b32449029a423da4e3e1110ba7c05dcd50f90",
+  "binary.sha256": "692e6a8b60f7880011dad5a9a1a8c3387ae8d1c3a1a1e81d728cf4b485595479",
+  "top_changed.txt": "8996d4578d60ce957351eeabe86ba7d7b516d59ee3c8701fdb2b2ee20d5bfd46",
+  "result.json": "189ab3b79e020b855f9b3f4c7335f5b0cf0b20649451345ab8a3918f7cd24dee",
+  "SOURCE_COMMIT.txt": "86b2079ed67e522e05ec7ac1b2076baec47155fa1147f7242e0e7dcd292e82d4",
+  "summary.txt": "f3186136bfa4820d6cdfae100d6a0476853ab9e9e53922f7e74d8fca778609cd",
+  "runs/u1_T4096_peaky/time": "d6495cf74813cf52c8f04e65541bfbae0f42854a7deed9e4ed64eacca208e9b4",
+  "runs/u1_T4096_peaky/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/u1_T4096_peaky/sim.log": "6097d8594089d69ed9e33e9b7d24b1644d6b50f007ff19a32634d467c19a50ee",
+  "runs/mut_gmut4/time": "f6f8488eccbc5711a87ae1f8daa8476a325d4b3e437c5508e92619841ea25898",
+  "runs/mut_gmut4/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/mut_gmut4/sim.log": "14b5114cb09610f88079ba43f1869e099867e6a1a0b9b66e5ffd7ffce5629e90",
+  "runs/u1_T1024/time": "f2c73cb2503e780546079358af1d5853d8ba299effb6761fb75b30f0aeeedfb5",
+  "runs/u1_T1024/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/u1_T1024/sim.log": "115fa5921498b13aa2f4c5d957629cd81b1176c6d4174848deae1a434cd38d26",
+  "runs/u4_T8192/time": "06c296b13d244585a3aeb15f65e15d2a6bfc90f7ff49b25848316065379a46a0",
+  "runs/u4_T8192/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/u4_T8192/sim.log": "acd1f5f49c049157dcd0e353c7ef87c236cd5d1173acc2941931fad484b538f3",
+  "runs/u4_T1024/time": "c1732c701ac671031ff0a4f25f46be0eddda7eb5060379b6e4655a8bab56d0d1",
+  "runs/u4_T1024/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/u4_T1024/sim.log": "e08628e6f59479c9d5c9d386876eace10380e51c4569a0b1bf15185a1c5997a6",
+  "runs/mut_gmut1/time": "f7cfe5f9c6f40608a2353939bbf255c282605774ff057c7f80307e516e8c3913",
+  "runs/mut_gmut1/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/mut_gmut1/sim.log": "0dc143ef2334e649a0639c7853bccf8a92127b5946f03d73d2e2c171a64d3297",
+  "runs/u1_T4096/time": "245172b0665076c90c477f9be77bff50e680549f13ccc9face35b83a2aa269ae",
+  "runs/u1_T4096/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/u1_T4096/sim.log": "2afd8c6a51870006c36a3f6bbb9001485155646f926bf1ae0b1b18eee24e2430",
+  "runs/mut_q_swap/time": "165c4344a5855b48ea1fc44f6cc84e051d1aa0d52d3594b2209e2b7e3a6d8a29",
+  "runs/mut_q_swap/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/mut_q_swap/sim.log": "6ec339e722f63f066cd27b083e83994539f111597ec4aae05205abe5f9d9276b",
+  "runs/u1_T8192/time": "9cbdad8eff92a0859b64f2c6f00e507eb21be6e2b6bcf9d53d007a9df135320b",
+  "runs/u1_T8192/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/u1_T8192/sim.log": "ddfbcf74de4fe3af310a2dda6df8965dc35907ebb7f8663bbd1c44e4a0f835e9",
+  "runs/cal_T1024/time": "639c728dc7eaf82ec2d7a4734f00092b60706a8838edc594b421b4e827a469c1",
+  "runs/cal_T1024/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/cal_T1024/sim.log": "a9846f8eccd1326e57caf1b6ddc06c4c4143a729b00dc57ac59a99a9aca31c16",
+  "runs/mut_v_swap/time": "617980df64d9e9fb91a8473ca2231b1776f6811fd51b5f6f7abf6ae97b78fd11",
+  "runs/mut_v_swap/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/mut_v_swap/sim.log": "108902d3e4c852124d03948611b1d78695ec9617941d5a122849ba5a9f8e586e",
+  "runs/mut_k_shift/time": "fb728715e0bd1aec963f04371f2a096aadab927f76c2ca5b52cb46690443b203",
+  "runs/mut_k_shift/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/mut_k_shift/sim.log": "2737407de0c0682d0164002d6321c9f6717c013be519289d214b824767e5d40a",
+  "runs/u4_T4096/time": "0ab2463e3746e0f4b8012e61de3671af21ee3ae946e06d668e54bae12e6ced73",
+  "runs/u4_T4096/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/u4_T4096/sim.log": "a7016f8859ce78f457d367d79dcc00bc4880ebef91448cc4388c12e6da8eb2ac",
+  "runs/u1_T32768_bound/time": "e8e893ea9e5dcf7f08bf89ab8f801e57c799a0ee078c6d9c4ff6e2255f23eb5b",
+  "runs/u1_T32768_bound/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/u1_T32768_bound/sim.log": "1ed5f32bd4c16b16d6b83513ad05f7a80fbbb2edde5a856b3ab22bea25d85dee",
+  "runs/mut_gmut2/time": "12d6cad42f85ba9a5e3b326de60325fb0cd96e175aa2dc45b8f751d80550b484",
+  "runs/mut_gmut2/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/mut_gmut2/sim.log": "d53a1ec50c78a2ba76f2f0c8c9f63a6f3018d6a24722ff40ecf9f89e2a94efc6",
+  "runs/mut_k_late/time": "b6076fc0db82200a220b436198879b63d7a2d91a2a190018484da775bf3cc0e5",
+  "runs/mut_k_late/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/mut_k_late/sim.log": "fe047a409ab3735894ba8e0585e47f979435ce4a7c86488cf269cf27d6cd4b3c",
+  "runs/u1_T8191/time": "d1098501dfa84758d2fd726b2f0124829615891b1351e6e639bae3aaa101c6b8",
+  "runs/u1_T8191/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "runs/u1_T8191/sim.log": "644ce72cd97a1bc36a4b703642196d1fbff34941579dc5221cfc73258c911121",
+  "provenance/pending_rows.before_terminal.txt": "497b7a24dc2c5c2854359a74a9b39732b37a8a3195a3f7b711a84d6a7f0a9181",
+  "provenance/kv_job4b_src.sha": "1900e639696e3614367c84f2bc1262ed6ca93c43614340bfb7a837464b4171ce",
+  "provenance/kv_original_source_check.json.gz": "a1c947e5892a133594d944915ec43714c6d7170622bc8c448371e6c41cd0d21f",
+  "provenance/kv_aggregate_compile_binding.json.gz": "7000ea2c01cd6f8af9eee55127c565dec73327c5c56d00248273addf6faa6ea4",
+  "provenance/kv_incremental_top_binding.json.gz": "c9243b91ef99212115099dd033ddf40906ea97fd6259b71569d905cd2126b05e",
+  "provenance/historical_pending_entry.md": "7ee69de827077dcd3a910eb08d4df018ff2f156e894bc960d096adcf808b1fd5",
+  "provenance/kv_src_diff.txt": "003d595312f73c2a80c69f78e0c27dcd943408c967e151919507ed2e37919561",
+  "provenance/compiler_records.tar.gz": "a3621f54fa5d330dd77e4cdb655c409f6612a3bc8a3ef3f849754161febe89e7",
+  "provenance/source_binding.json": "0b86fbc9b662b24e82898dfd280c1762eed14370e2b84fb6194024692d22ba96"
+ },
+ "semantic_vs_process_exit": "All17 testbench processes exit0; seven mutants and32k use semanticFAIL with timeout0, not processfailure.",
+ "case_exit_and_verdict": {
+  "cal_T1024": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=1024 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "mut_gmut1": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL FAIL mode=steady gmut=1 nu=1 ctx=1024 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "mut_gmut2": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL FAIL mode=steady gmut=2 nu=1 ctx=1024 fd=3 tile_fault=1 svc_fault=1 result_fault=1 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "mut_gmut4": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL FAIL mode=steady gmut=4 nu=1 ctx=1024 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "mut_k_late": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL FAIL mode=k_late gmut=0 nu=1 ctx=1024 fd=3 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000011010 timeout=0 period=0"
+  },
+  "mut_k_shift": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL FAIL mode=k_shift gmut=0 nu=1 ctx=1024 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "mut_q_swap": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL FAIL mode=q_swap gmut=0 nu=1 ctx=1024 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "mut_v_swap": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL FAIL mode=v_swap gmut=0 nu=1 ctx=1024 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "u1_T1024": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=1024 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "u1_T32768_bound": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=32768 fd=3 tile_fault=1 svc_fault=0 result_fault=0 cal_fault=1 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "u1_T4096": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=4096 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "u1_T4096_peaky": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=4096 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "u1_T8191": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=8191 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "u1_T8192": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=8192 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0"
+  },
+  "u4_T1024": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=4 ctx=1024 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=2025"
+  },
+  "u4_T4096": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=4 ctx=4096 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=2025"
+  },
+  "u4_T8192": {
+   "process_exit": 0,
+   "semantic_verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=4 ctx=8192 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=2025"
+  }
+ }
+}

@@ -22,21 +22,33 @@ SOURCES={
 BOOTAGE_SOURCES={
 # KV-BIND3 10-19: re-pinned after e4eb15c83 (one line: attn_cal STATUS_DELAY default 0 in boot_ages_join; the attention
 # calendar tile, not a PV trunk/replica row -- previous pin bc8a613d...).
- 'tools/qwen_kv_die/kv_bootage.py':'9e5721ba45a8521a1dcb92e8fa756b2ac60f84f1dbc7e54d97f378ade6d5ebfe',
+# KV-BIND9 10-20: re-pinned after 6f5ecb234 (D_QK = kv_qkh_safe32.calendar_d_qk, opt-in OT_KV_QKH_SAFE32, default byte-identical;
+# attention-calendar D_QK only, not a PV trunk/replica row). Re-proof: pvw_variant/boot_ages_join source unchanged and
+# pvw_variant(qkd_pvw_die_t.sv 4601aa6d) == b15daa62 (committed _ba.sv) under old and new -- previous pin 9e5721ba...
+# KV-FLOOR1 10-20: re-pinned after the default-off OT_KV_PVFIN_FLOOR additions (pvw_variant_floor / pvw_module / floor arg
+# of pvw_file; pvw_variant and boot_ages_join unchanged). Re-proof: kv_bootage.py --pvw regenerates qkd_pvw_die_t_ba.sv and
+# _f_ba.sv byte-identical (b15daa62) -- previous pin 48d676c2...
+ 'tools/qwen_kv_die/kv_bootage.py':'4a6053c6084a9f7c649b5daef26fd782cfaf039ad91da39e16713822201fba69',
  'rtl/qwen_sys/split_20261014/qkd_pvw_die_t_ba.sv':'b15daa62c06da889ee7e0db600b08079e45862397208329b9d2e886b26ba5dad',
 }
+# KV-FLOOR1 10-20 (OT_KV_PVFIN_FLOOR=1): the END FLOOR frame qkd_pvw_die_tbf (kv_bootage.pvw_variant_floor: module name +
+# u_ctl master ot_qwen_tp8_pv_wide_ctl_tbf / END_FLOOR(1) only; station rows byte-identical to _ba).
+FLOOR_SOURCES=dict(BOOTAGE_SOURCES)
+FLOOR_SOURCES.pop('rtl/qwen_sys/split_20261014/qkd_pvw_die_t_ba.sv')
+FLOOR_SOURCES['rtl/qwen_sys/split_20261014/qkd_pvw_die_t_bf.sv']='3edcf1637c22361c7c96d31ba3eed8d7c491b87907620ec42fe743e587f4d98f'
 
 
 def qualify_frame(module, root):
     if module=='qkd_pvw_die_t':return {}
-    if module!='qkd_pvw_die_tb':raise ValueError('PV frame is not pinned generated trunk')
-    # This exact boot-age successor changes only the control cfg interface/age;
+    if module not in ('qkd_pvw_die_tb','qkd_pvw_die_tbf'):raise ValueError('PV frame is not pinned generated trunk')
+    # This exact boot-age successor changes only the control cfg interface/age (tbf: + the END FLOOR control master);
     # its standard-replica station rows are identical to the original trunk.
-    for name,sha in BOOTAGE_SOURCES.items():
+    srcs=FLOOR_SOURCES if module=='qkd_pvw_die_tbf' else BOOTAGE_SOURCES
+    for name,sha in srcs.items():
         p=root/name
         if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest()!=sha:
             raise ValueError('PV boot-age source changed; re-prove '+name)
-    return dict(BOOTAGE_SOURCES)
+    return dict(srcs)
 
 
 PARENTS={'qkd_pvw_s','qkd_pvw_n'}

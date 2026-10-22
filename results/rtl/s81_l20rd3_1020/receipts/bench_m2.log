@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-l20rd3-1020
+ot-run: ot-epyc6       admits   503 GB (avail 465, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 31 disk 3872 GB 
+ot-run: ot-epyc7       admits   942 GB (avail 755, growth 95, headroom 0, waiters 0/0 GB) load 34/96 running 22 disk 5360 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-l20rd3-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-l20rd3-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-l20rd3-1020
+ot-run: LOAD SPILL: ot-epyc7 would run at 1.27 x cores; moving to ot-epyc5
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/s81-l20rd3-1020 (0.3 GB) ot-epyc7 -> ot-epyc5 (no host with --dir admits 96 GB now)
+ot-run: SPILL: copied 12227 changed entries in 12 s; running on ot-epyc5; written files go back to ot-epyc7 after the run
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3503081-1792510734 after 0 s
+IDXRD_CASE OK m2/fail_small: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 2 sram 1 ckh 900 hdr_to_last 1261 end_to_last 1196 nerr 0 nopen 0 qerr 0 slice_err 2448 | maxrss_kb=211020 wall=1:11.27
+IDXRD_CAMPAIGN PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3503081-1792510734): exit 0

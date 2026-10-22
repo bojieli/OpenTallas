@@ -13,6 +13,13 @@ mkdir -p $O/libs
 # (kv_port_bind_v2.sh / die_port_bind_kv.py re-import kv_die: without the flags they used the non-V144_R6 vport binding
 # and reported 256 phantom undriven pvin epoch bits on kvs13h)
 env | grep -E '^OT_KV_[A-Z0-9_]*=' | sed -E "s/^([^=]*)=(.*)$/export \1='\2'/" > $O/kv_flags.env
+# KV-BIND8 10-20: the generated static tile RTL the die binds (kv_static_die.RTL_FILE for THESE flags) must exist and equal
+# the producer's text: d11r bound a stale _mu_ba body (legacy boot/programme/ownership, sha df665451) and d11s selected an
+# absent _hs_mu_ba.sv.  Fail closed before any GEN step (regenerate with kv_static_die.py --rtl and commit).
+if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_static_die.py --check > "$O/tile_rtl_check.log" 2>&1 || {
+    tail -3 "$O/tile_rtl_check.log"; echo 'KV static tile RTL missing / STALE for the run flags: regenerate (--rtl) and commit'; exit 8; }
+fi
 # v1.4 (OT_KV_HOST_V14=1): real HOST root core + 128 die-placed PC slices + PLL model (kv_die.py --host-v14)
 H14=; V14=
 if [ "${OT_KV_HOST_V14:-0}" = 1 ]; then H14=--host-v14; V14=,host_v14; fi
@@ -70,11 +77,36 @@ if [ "${OT_KV_D2DS_VIEW:-0}" != 0 ]; then
 # The k1 kit's qkd_kvs_hroot module is byte-identical to this tile file's; never bound under OT_KV_HROOT_LAND=1 (the
 # pin-registered _hl tile is a different RTL: its own kit must close first).  Absent view -> frame (ASSUMED) as before.
 if [ "${OT_KV_HROOT_VIEW:-auto}" != 0 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${OT_KV_TILE_KITS:-0}" = 1 ] && \
-   [ "${OT_KV_HROOT:-0}" = 1 ] && [ "${OT_KV_FANFOLD:-0}" = 1 ] && [ "${OT_KV_HROOT_LAND:-0}" != 1 ]; then
-  HRV=physical/ref_tile/${OT_KV_HROOT_KIT:-qkd_kvs_hroot_k1}/views/qkd_kvs_hroot
-  if [ -f $HRV/qkd_kvs_hroot.lef ] && [ -f $HRV/qkd_kvs_hroot_tt.lib ] && [ -f $HRV/qkd_kvs_hroot_ff.lib ]; then
-    BV="$BV --view qkd_kvs_hroot=$HRV"; echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot -> $HRV (stand-in: native FAIL view, CLOSED)"
+   [ "${OT_KV_HROOT:-0}" = 1 ] && [ "${OT_KV_FANFOLD:-0}" = 1 ]; then
+  # KV-BIND7 10-20: the k1 kit view is now the CLOSED pin-registered _hl view (qkd_kvs_hroot_k1-k1-da14c0bdf, own-R native
+  # PASS spread 42.5/42.0) = the matching view under OT_KV_HROOT_LAND=1 (a same-port stand-in otherwise).  Under
+  # OT_KV_HROOT_S32=1 the first CLOSED safe32 view (s32v4 / s32v4b, top qkd_kvs_hroot_safe32 = the _hs tile) binds; until
+  # one closes the _hl view is the labelled same-port stand-in.
+  HRN=qkd_kvs_hroot; HRV=physical/ref_tile/${OT_KV_HROOT_KIT:-qkd_kvs_hroot_k1}/views/qkd_kvs_hroot; HRWHY="stand-in (same ports)"
+  [ "${OT_KV_HROOT_LAND:-0}" = 1 ] && [ "${OT_KV_HROOT_S32:-0}" != 1 ] && HRWHY="matching _hl view (CLOSED da14c0bdf)"
+  if [ "${OT_KV_HROOT_S32:-0}" = 1 ]; then
+    for k in qkd_kvs_hroot_s32v4 qkd_kvs_hroot_s32v4b; do
+      v=physical/ref_tile/$k/views/qkd_kvs_hroot_safe32
+      if [ -f $v/qkd_kvs_hroot_safe32.lef ] && [ -f $v/qkd_kvs_hroot_safe32_tt.lib ] && [ -f $v/qkd_kvs_hroot_safe32_ff.lib ]; then
+        HRV=$v; HRN=qkd_kvs_hroot_safe32; HRWHY="matching safe32 view ($k CLOSED)"; break; fi
+    done
+  fi
+  if [ -f $HRV/$HRN.lef ] && [ -f ${HRV}/${HRN}_tt.lib ] && [ -f ${HRV}/${HRN}_ff.lib ]; then
+    BV="$BV --view qkd_kvs_hroot=$HRV"; echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot -> $HRV ($HRWHY)"
   else echo "OT_KV_HROOT_VIEW: no closed view at $HRV (frame ASSUMED)"; fi
+fi
+# KV-AHUB11 10-21 (OT_KV_AHUB_VIEW = auto (default on the static die) | 1 | 0): the static hub slot qkd_ahub binds the CLOSED
+# a7 view (kit qkd_ahub_sdw, qkd_ahub_sdw-a7-c6c412b4c TT +8.48 / FF +8.83, record c9b10ee5e) instead of the ASSUMED
+# 1175 x 760 frame.  Source identity: qkd_ahub_static_dw.sv / cal_gen / ot_qkd_drly identical to c6c412b4c, ot_rst_pipe only
+# gained the opt-in COPIES (default 1 = as built).  The view was hardened at Z_IN_STRIDE 4, AP_OFS -36,-36,-34,-35, FR_OFS -7
+# = OT_KV_AHUB_OFS (kv_static_params AHUB_OFS_BOUND checks kit == die binding == post-station table).  629/629 bits map
+# (bind test on a10b's case), 734.4 x 540 fits the slot.  1 = fail the prep if it does not bind.
+AHV=
+if [ "${OT_KV_AHUB_VIEW:-auto}" != 0 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
+  AHV=physical/ref_tile/${OT_KV_AHUB_KIT:-qkd_ahub_sdw}/views/qkd_ahub_static_dw
+  if [ -f $AHV/qkd_ahub_static_dw.lef ] && [ -f $AHV/qkd_ahub_static_dw_tt.lib ] && [ -f $AHV/qkd_ahub_static_dw_ff.lib ]; then
+    BV="$BV --view qkd_ahub=$AHV"; echo "OT_KV_AHUB_VIEW: qkd_ahub -> $AHV (CLOSED a7)"
+  else echo "OT_KV_AHUB_VIEW: no closed view at $AHV (frame ASSUMED)"; [ "${OT_KV_AHUB_VIEW:-auto}" = 1 ] && exit 7; AHV=; fi
 fi
 if [ "${OT_KV_V143:-0}" = 1 ]; then H14="$H14 --v143"; V14=$V14,v143
   BV="$BV --view qkd_hgs=physical/ref_tile/qkh_head_gather_stage/views/qkh_head_gather_stage --view qkd_hss=physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage"; fi
@@ -99,16 +131,31 @@ if [ "${OT_KV_DCAL:-0}" = 1 ]; then
   # KV-DCAL 10-19 (OT_KV_DCAL_BC4=1 with OT_KV_DCAL_BC=1, kv_die.DCAL_BC4): the safe K22 successor qkd_d2d_cal_seq_pin_bc4
   # (kit OT_KV_DCAL_BC4_KIT, default qkd_d2d_cal_seq_pin_bc4; PARALLEL fallback qkd_d2d_cal_seq_pin_bc4w); own view only
   if [ "${OT_KV_DCAL_BC:-0}" = 1 ] && [ "${OT_KV_DCAL_BC4:-0}" = 1 ]; then
-    B4K=${OT_KV_DCAL_BC4_KIT:-qkd_d2d_cal_seq_pin_bc4}; B4V=physical/ref_tile/$B4K/views/qkd_d2d_cal_seq_pin_bc4; DCV=
+    # KV-EMBWIN16 10-20: OT_KV_EMB_WIN=<N> (grown embed window pair image) -> default kit qkd_d2d_cal_seq_pin_bc4_ew<N>
+    B4D=qkd_d2d_cal_seq_pin_bc4; [ -n "${OT_KV_EMB_WIN:-}" ] && B4D=qkd_d2d_cal_seq_pin_bc4_ew$OT_KV_EMB_WIN
+    # KV-PROG17 10-20: OT_KV_ATTN_R16=1 -> the r16 pair image tile (kit suffix _r16)
+    [ "${OT_KV_ATTN_R16:-0}" = 1 ] && B4D=${B4D}_r16
+    [ "${OT_KV_ROPE:-0}" = 1 ] && B4D=${B4D}_rope
+    B4K=${OT_KV_DCAL_BC4_KIT:-$B4D}; B4V=physical/ref_tile/$B4K/views/qkd_d2d_cal_seq_pin_bc4; DCV=
     if [ -f $B4V/qkd_d2d_cal_seq_pin_bc4.lef ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_tt.lib ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_ff.lib ]; then
       DCV=$B4V; echo "OT_KV_DCAL_BC4: qkd_dcal -> $B4V (safe K22)"
     else echo "OT_KV_DCAL_BC4 FRAME: no view at $B4V yet; qkd_dcal stays an ASSUMED frame (kit $B4K not closed)"; fi
+  fi
+  if [ "${OT_KV_ROPE_OVL:-0}" = 1 ]; then
+    DCV=
+    OVV=physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_rope/views/qkd_d2d_cal_seq_pin_ovl_rope
+    if [ -f "$OVV/qkd_d2d_cal_seq_pin_ovl_rope.lef" ] && [ -f "$OVV/qkd_d2d_cal_seq_pin_ovl_rope_tt.lib" ] && [ -f "$OVV/qkd_d2d_cal_seq_pin_ovl_rope_ff.lib" ]; then
+      DCV=$OVV; echo "OT_KV_ROPE_OVL: actual independent K TX/RX list player binds $OVV"
+    else echo "OT_KV_ROPE_OVL FRAME: actual list-player view absent; no old BC4 view alias"; fi
   fi
   [ -z "$DCV" ] || BV="$BV --view qkd_dcal=$DCV"
 fi
 # OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view
 # when the kit has closed (OT_KV_KVNC_KIT, default qkd_kvn_ctx_cal_r2); without a view the frame stays ASSUMED (diagnostic)
-if [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
+# SQC-KDIE4 10-22: under OT_KV_ROPE_OVL the leaf is qkd_kvn_ctx_ovl_rope (CLOSED kits qkd_kvn_ctx_ovl_rope_cm4 / cf4)
+if [ "${OT_KV_KVNC:-0}" = 1 ] && [ "${OT_KV_ROPE_OVL:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_ovl_rope_cm4}/views/qkd_kvn_ctx_ovl_rope
+  [ -f $KVV/qkd_kvn_ctx_ovl_rope.lef ] && BV="$BV --view qkd_kvnc=$KVV" || echo "OT_KV_KVNC (ROPE_OVL): no closed view at $KVV (frame ASSUMED)"
+elif [ "${OT_KV_KVNC:-0}" = 1 ]; then KVV=physical/ref_tile/${OT_KV_KVNC_KIT:-qkd_kvn_ctx_cal_r2}/views/qkd_kvn_ctx_cal
   [ -f $KVV/qkd_kvn_ctx_cal.lef ] && BV="$BV --view qkd_kvnc=$KVV" || echo "OT_KV_KVNC: no closed view at $KVV (frame ASSUMED)"; fi
 # OT_KV_SEQ_STATIC=1 (Q-KVSYS PVJOIN 10-16, needs DCAL + KVNC): qkd_seq_static in slot seq (cluster frame, as qkd_seq) and
 # the compile-time-image layer programme lprg on its closed view when available (OT_KV_LPRG_KIT, default qkd_layer_prog_img_r3)
@@ -159,6 +206,14 @@ if [ "${OT_KV_TILE_VIEWS:-1}" = 1 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${
     cat $O/tile_views.log; echo "KV_TILE_VIEWS FAIL (tile_views.json)"; exit 10; }
   BV="$BV $TVB"; echo "KV_TILE_VIEWS: bind [$TVB] assumed $(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['assumed'])" $O/tile_views.json)"
 fi
+# QKC-GRP 10-21 (OT_KV_GRP_S6C=1 with OT_KV_GRP_SAFE2=1 OT_KV_DOMSPLIT=1 OT_KV_NATIVE_SLOTS=1): the 32 groups bind the CLOSED
+# s6c views through kv_tile_views (OT_KV_GRP_VIEW / OT_KV_GRP_H_VIEW = auto (default) | 0 | physical/ref_tile/<kit>/views/<vm>):
+# grp <- qkd_kvs_grp_s7d-grp_s7d-71f891b9b (388.8 x 432), grp_h <- qkd_kvs_grp_h_s7c-grp_h_s7c-71f891b9b (388.8 sq).
+# With the flag a group master left ASSUMED fails the prep (exit 10): the die would schedule a tile no netlist backs.
+if [ "${OT_KV_GRP_S6C:-0}" = 1 ] && [ -f $O/tile_views.json ]; then
+  python3 -c "import json,sys; a=json.load(open(sys.argv[1]))['assumed']; m=[x for x in ('qkd_kvs_grp_s6c','qkd_kvs_grp_h_s6c') if x in a]; print('OT_KV_GRP_S6C: bound' if not m else 'OT_KV_GRP_S6C: ASSUMED %s' % m); sys.exit(1 if m else 0)" $O/tile_views.json \
+    || { echo "OT_KV_GRP_S6C: group view not bound (tile_views.json)"; exit 10; }
+fi
 python3 tools/qwen_kv_die/kv_die.py case --kv-wq-mirror --split $H14 --out $O/case_kv > $O/case.log
 git rev-parse --short=9 HEAD > $O/case_kv/SOURCE_COMMIT
 python3 tools/die_top_lint.py lint --die qwen_kv --variant kv_wq_mirror,split$V14 --out $O/lint > $O/lint.log 2>&1
@@ -180,7 +235,12 @@ python3 tools/qwen_kv_die/bind_views.py --split --case $O/case_kv --libs $O/libs
   --out $O/libs/views.json > $O/bind.log
 if [ -n "$D2DSV" ]; then python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_d2ds' in d['bound'] else 1)" $O/libs/views.json \
   || { echo "OT_KV_D2DS_VIEW: qkd_d2ds view did not bind (bind.log)"; exit 7; }; echo "OT_KV_D2DS_VIEW: qkd_d2ds bound to $D2DSV"; fi
-if [ -n "${HRV:-}" ] && [ -f $HRV/qkd_kvs_hroot.lef ]; then
+if [ -n "$AHV" ]; then
+  if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_ahub' in d['bound'] else 1)" $O/libs/views.json; then
+    echo "OT_KV_AHUB_VIEW: qkd_ahub bound to $AHV"
+  else echo "OT_KV_AHUB_VIEW: qkd_ahub view did NOT bind (bind.log) -- frame kept"; [ "${OT_KV_AHUB_VIEW:-auto}" = 1 ] && exit 7; fi
+fi
+if [ -n "${HRV:-}" ] && [ -f $HRV/${HRN:-qkd_kvs_hroot}.lef ]; then
   if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if 'qkd_kvs_hroot' in d['bound'] else 1)" $O/libs/views.json; then
     echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot bound to $HRV (stand-in)"
   else echo "OT_KV_HROOT_VIEW: qkd_kvs_hroot view did NOT bind (bind.log) -- frame kept"; [ "${OT_KV_HROOT_VIEW:-auto}" = 1 ] && exit 7; fi
@@ -221,12 +281,7 @@ if [ "${OT_KV_RLY_STD:-0}" = 1 ]; then
   EXP="--expanded $O/expand.json"
 fi
 [ "${OT_KV_RLY_STD_NETLIST_ONLY:-0}" = 1 ] || kv_orient prefwd
-# KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
-# half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
-# RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
-if [ "${OT_KV_FWD:-0}" = 1 ]; then
-  python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
-  EXP="--expanded $O/expand.json"
+kv_land_lag() {
   # KVR-LANDLAG 10-19: every forwarded-clock landed crossing of the laned netlist (qkd_landsh* / qkd_landsh0*) checked
   # against its compiled age, FAIL CLOSED: lane traced on die.v == fwd_lanes.json row, K straps from the landing's own
   # tie cells == (E + cal + h0(n)) mod 8, the strap age inside the ring window, and the latency the hardware delivers
@@ -239,6 +294,14 @@ if [ "${OT_KV_FWD:-0}" = 1 ]; then
     if [ "${OT_KV_LAND_LAG_DIAG:-0}" = 1 ]; then tail -1 $O/land_lag.log > $O/LAND_LAG_DIAGNOSTIC
     else tail -4 $O/land_lag.log; echo "LAND_LAG_KV FAIL: landed crossings vs compiled ages ($O/case_kv/land_lag.json)"; exit 9; fi; }
   tail -1 $O/land_lag.log | cut -c1-400
+}
+# KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
+# half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
+# RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
+if [ "${OT_KV_FWD:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
+  EXP="--expanded $O/expand.json"
+  [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ] || kv_land_lag
 fi
 # KV-HEALTH 10-19 (OT_KV_HEALTH=1; kvs14r default ON = MU release): the continuous registered health plane -- every
 # landing / KC / DCAL fault source -> no-reset OR joins + relay pipes per clock root, cross-root on spare bits of the
@@ -251,6 +314,16 @@ if [ "${OT_KV_HEALTH:-0}" = 1 ]; then
     || { tail -5 $O/health_plane.log; echo "KV_HEALTH install FAILED ($O/health_plane.log)"; exit 11; }
   grep '^KV_HEALTH' $O/health_plane.log | cut -c1-900
   EXP="--expanded $O/expand.json"
+fi
+# Opt-in actual source-preserving reset stations after all lane/health placements.
+# The existing land-lag check below consumes the recompiled G-R0/K calendar once.
+if [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_final_reset_stations.py --run "$O" > "$O/final_reset_stations.log" 2>&1 \
+    || { tail -5 "$O/final_reset_stations.log"; echo "KV_FINAL_RESET_STATIONS source generation failed"; exit 6; }
+  export OT_KV_FINAL_RESET_CALENDAR="$O/final_reset_stations/calendar.json"
+fi
+if [ "${OT_KV_FWD:-0}" = 1 ] && [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ]; then
+  kv_land_lag
 fi
 [ "${OT_KV_FWD_NETLIST_ONLY:-0}" = 1 ] || kv_orient final --check-only
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)
@@ -274,4 +347,10 @@ fi
 # Q-KV 10-16: over-block capacity from each block's real top layer (post-expand elements.lef) -- the old die-layer-only
 # capacity over-counted crossings over M5 tiles (kvs13i fine max 2.26 -> 1.48)
 python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --lef $O/case_kv/elements.lef $( [ -f $O/expand.json ] && echo --expand $O/expand.json ) --out $O/window.json > $O/window.log
+python3 tools/qwen_kv_die/kv_gen_source_ports.py --case "$O/case_kv" --records "$O/port_bind_v2" --root "$PWD" \
+  > "$O/gen_source_ports.log" 2>&1 \
+  || { tail -6 "$O/gen_source_ports.log"; echo 'KV GEN source direction export REFUSED'; exit 12; }
+python3 tools/qwen_kv_die/kv_gen_safety.py --case "$O/case_kv" --libs "$O/libs" \
+  --source-ports "$O/case_kv/gen_source_ports.json" > "$O/gen_safety_export.log" 2>&1 \
+  || { tail -6 "$O/gen_safety_export.log"; echo 'KV GEN safety facts export REFUSED'; exit 12; }
 echo "prep done: $(cat $O/case_kv/SOURCE_COMMIT) $(tail -1 $O/bind.log | head -c 300)"

@@ -1,0 +1,297 @@
+{
+"schema": "opentallas.tokfunc_s81.mu_hop_plan.v1",
+"mode": "mtp",
+"hop": "R084->R085",
+"sender_index": 84,
+"why": "L14 Engram stage: R084 L14 A -> R085 L14 B (copy-B, Engram RA640 / II 704)",
+"resource": "link.R084.A-R085.B",
+"period": 1684168,
+"users": [
+1,
+3,
+5
+],
+"gap_compress": {
+"cap": null,
+"gaps_compressed": 0
+},
+"replay_scope": "sampled link resource messages",
+"compiled_position_graph": false,
+"modeled_message_receive_age": 821,
+"absolute_rebase": 156440,
+"phase_quantum": 4,
+"phase_preserved": true,
+"generator_warm_requirement": "multiple of four edges",
+"same_user_serial_delays": {
+"count": 0,
+"max": 0,
+"first": []
+},
+"same_user_adjacent": {
+"count": 15,
+"min_gap": 45167,
+"first": [
+{
+"user": 5,
+"gap": 45167,
+"label": "x + a_proj partial L14 pos 1 (DENSE2 A->B)"
+},
+{
+"user": 5,
+"gap": 45167,
+"label": "x + a_proj partial L14 pos 2 (DENSE2 A->B)"
+},
+{
+"user": 5,
+"gap": 45167,
+"label": "x + a_proj partial L14 pos 3 (DENSE2 A->B)"
+}
+]
+},
+"graph": "pipeline_graph",
+"hop_cycles": 821,
+"land_lead": 447,
+"users_shift": {
+"1": 280692,
+"3": 842084,
+"5": 1403472
+},
+"overlaps": 0,
+"negative": null,
+"msgs": [
+{
+"user": 5,
+"T": 156442,
+"position": 0,
+"m": 0,
+"label": "x + a_proj partial L14 pos 0 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 2
+},
+{
+"user": 5,
+"T": 201609,
+"position": 1,
+"m": 1,
+"label": "x + a_proj partial L14 pos 1 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 45169
+},
+{
+"user": 5,
+"T": 246776,
+"position": 2,
+"m": 2,
+"label": "x + a_proj partial L14 pos 2 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 90336
+},
+{
+"user": 5,
+"T": 291943,
+"position": 3,
+"m": 3,
+"label": "x + a_proj partial L14 pos 3 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 135503
+},
+{
+"user": 5,
+"T": 337110,
+"position": 4,
+"m": 4,
+"label": "x + a_proj partial L14 pos 4 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 180670
+},
+{
+"user": 5,
+"T": 382277,
+"position": 5,
+"m": 5,
+"label": "x + a_proj partial L14 pos 5 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 225837
+},
+{
+"user": 1,
+"T": 717830,
+"position": 0,
+"m": 0,
+"label": "x + a_proj partial L14 pos 0 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 561390
+},
+{
+"user": 1,
+"T": 762997,
+"position": 1,
+"m": 1,
+"label": "x + a_proj partial L14 pos 1 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 606557
+},
+{
+"user": 1,
+"T": 808164,
+"position": 2,
+"m": 2,
+"label": "x + a_proj partial L14 pos 2 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 651724
+},
+{
+"user": 1,
+"T": 853331,
+"position": 3,
+"m": 3,
+"label": "x + a_proj partial L14 pos 3 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 696891
+},
+{
+"user": 1,
+"T": 898498,
+"position": 4,
+"m": 4,
+"label": "x + a_proj partial L14 pos 4 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 742058
+},
+{
+"user": 1,
+"T": 943665,
+"position": 5,
+"m": 5,
+"label": "x + a_proj partial L14 pos 5 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 787225
+},
+{
+"user": 3,
+"T": 1279222,
+"position": 0,
+"m": 0,
+"label": "x + a_proj partial L14 pos 0 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 1122782
+},
+{
+"user": 3,
+"T": 1324389,
+"position": 1,
+"m": 1,
+"label": "x + a_proj partial L14 pos 1 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 1167949
+},
+{
+"user": 3,
+"T": 1369556,
+"position": 2,
+"m": 2,
+"label": "x + a_proj partial L14 pos 2 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 1213116
+},
+{
+"user": 3,
+"T": 1414723,
+"position": 3,
+"m": 3,
+"label": "x + a_proj partial L14 pos 3 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 1258283
+},
+{
+"user": 3,
+"T": 1459890,
+"position": 4,
+"m": 4,
+"label": "x + a_proj partial L14 pos 4 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 1303450
+},
+{
+"user": 3,
+"T": 1505057,
+"position": 5,
+"m": 5,
+"label": "x + a_proj partial L14 pos 5 (DENSE2 A->B)",
+"length": 660,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "B",
+"t": 1348617
+}
+]
+}

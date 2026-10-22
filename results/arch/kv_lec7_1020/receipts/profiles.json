@@ -1,0 +1,142 @@
+{
+ "ot_qkh_ktree_lk_nc32c": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_lec7_1020/receipts/receipts/ot_qkh_ktree_lk_nc32c.json",
+   "sha256": "07db262366740c120d394dd35ecc37cfdf6bbf622fd25a9e3fb604397a4dc285"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "4449b9adb348404861b308b49d73d1982acd67c126ef36dc3d5c6de8d9ed9b42",
+    "child_lint.json": "a204223556ec8cb0de7006dd64016172f26b314430d3c01fba05189420f77f5e",
+    "export_ff.log": "99328d6bb8ab62708e7874cecdee2f769b282f486424483de615e9ce41331625",
+    "export_ff.tcl": "a4fb96634fda622a9985f00f71501bd16c469e7b128a22dbd72ceb6ca1ff0826",
+    "export_ss.log": "a8da801f36ba41901fca50f2b8fcdf396a0e0218c089164290303c0ae999247c",
+    "export_ss.tcl": "db10e4f7fedcf46038c0d5bbaec80ca7bb95b417042ac382387cb34c9d4aa3ef",
+    "export_tt.log": "f5b8c99b85e13d3940644f24459f760de41c1c4debfe7fff8645ddeba0271ceb",
+    "export_tt.tcl": "475be6f92dec1abc47ebf10b5e4d2c1625c91c54d0d2d3794959d60c74b4cb23",
+    "insertion.json": "3d6226f0b21d5b7af6c1a5672a06c7369c215be9af100dcf2d0e3c866850d978",
+    "ot_qkh_ktree_lk_nc32c.lef": "1214e855224bf82e857092678ff0661fd968ecce423c8320d728e7ed135d43ac",
+    "ot_qkh_ktree_lk_nc32c_ff.lib": "70e94e7e2a7503a1c37ba3484b061075d216ba9b420bc42644de59ce7821f25e",
+    "ot_qkh_ktree_lk_nc32c_ss.lib": "f85d4511effd5d3687fd1250ef9bf3613edf2bb9e42a8652aa1d1296ac0e03fb",
+    "ot_qkh_ktree_lk_nc32c_tt.lib": "956c588a05e15b55780a7c3b822a2f09ab3f9f8f8ddd733abed2cb6b7b0abf7a",
+    "provenance/abstract_pin_stub.json": "8cf0ccb016bde3c89becb5c43d6d71ad13a04744020421d774309370e4fdc588",
+    "provenance/raw/ot_qkh_ktree_lk_nc32c.lef": "045f786006271609990ed9e9e4271e7bbb56bbd74213837128e5aafef07c87db",
+    "provenance/view_export.abstract.json": "9b3480f675c3aafa9187067a0e5c2641be2b5621a28fbede6547b9583355951c"
+   },
+   "rtl": {
+    "path": "rtl/hdc/nearhbm/ot_qkh_ktree_nc32c.sv",
+    "sha256": "3e535ed694bfe6c0f19f6a58ec21b7dac1d68f280c9eefc64a6167c72aa9a09c"
+   },
+   "view": "physical/ref_tile/ot_qkh_ktree_lk_nc32c/views/ot_qkh_ktree_lk_nc32c"
+  },
+  "parameters": {
+   "ADD_LAT": 7,
+   "MUL_LAT": 6,
+   "MUT": 0,
+   "SCALE": 1035273459
+  }
+ },
+ "ot_qkh_lane8_nc32c": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_lec7_1020/receipts/receipts/ot_qkh_lane8_nc32c.json",
+   "sha256": "bbf25c6a09f8de54685261be7c21f312fbafeae6e06b9af5c43e2c13bdc93cc8"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "19d089dfe6e1fda6298481a6840c8b153d4a6c0a925f7542ace53e4d1d0c237b",
+    "child_lint.json": "a0ef7418153d32ec1a6cd076d38e4f2fb0ec8df1c48f071134e18ddc3db185fe",
+    "export_ff.log": "2cb1dc4cd14c3fe7f6bef3c14c89e727296191cc8b476f5a6302b63bc310b16d",
+    "export_ff.tcl": "99989ae06eb921eb4a8fb390d2dcf23547b3273cff0dadb3cbd9ee2647dfc969",
+    "export_ss.log": "b9f1eed2d039ba0ef887b6e1639edc5a7837e49ca123509433227d0c0648ef5c",
+    "export_ss.tcl": "366c40714a4b142d9e201fee5fbcbcecdd7d9dc18a8734bb119620d103eea35a",
+    "export_tt.log": "6a4869fa9cbf686117abd6a51a61db5a9ea6f782464cd352b96b14f9a89d4b45",
+    "export_tt.tcl": "36a5d82679d5abbcab29cbe335f26792580d07600c30879467991a6af137ed3e",
+    "insertion.json": "df13f3a5752aaf31990a54acdb9fc9f2dfacaa93ccfc6f0c8ce5aa8ed0db38af",
+    "ot_qkh_lane8_nc32c.lef": "ba91c13f6f745e8a2ad88a70f1a10471d43afc828feb8682f9fd5b1fbeb0c874",
+    "ot_qkh_lane8_nc32c_ff.lib": "fa38ee4b9f44f5c3508dbf0d8c449f1a1407b75e8092af55798c7d6103150edb",
+    "ot_qkh_lane8_nc32c_ss.lib": "b7264f071c45b437865a74bacfde6a9b2c2c192023433454611b15347de3d4ed",
+    "ot_qkh_lane8_nc32c_tt.lib": "07137c3fc5e3330758a5acc5d8f4114729d9ecfda5f6a48910ccc90927086c77",
+    "port_latency.json": "f19780b296ab5cbb77ac06e7a6edec14e3b37bef4db13aefffe4f5c6cb965871",
+    "provenance/abstract_pin_stub.json": "a123ad7a1084b1ebbd6b2949e2953d960c438dd1313a312bb75d5023e214fece",
+    "provenance/raw/ot_qkh_lane8_nc32c.lef": "01578b2db42328a617753f6238978f457eea39352cfb507963f55ea61e1e228e",
+    "provenance/view_export.abstract.json": "3a007a213a9fc4d98e6d8a429ea830bbeda10b18dbc3db91237434e92ffaa0dd"
+   },
+   "rtl": {
+    "path": "rtl/hdc/nearhbm/ot_qkh_lane8_nc32c.sv",
+    "sha256": "bc7ad4904996da93be0be9e2b8ba1061dac9e1f6d04dbe2b4f75c03b7ed90c6a"
+   },
+   "view": "physical/ref_tile/ot_qkh_lane8_nc32c/views/ot_qkh_lane8_nc32c"
+  },
+  "parameters": {
+   "ADD_LAT": 7,
+   "LTW": 12
+  }
+ },
+ "ot_qwen_tp8_pv_join_s32_t": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_lec7_1020/receipts/receipts/ot_qwen_tp8_pv_join_s32_t.json",
+   "sha256": "f54627cf1f5540a21040217e71b8b32b33de2b6621dcf10e1e636f50526ba005"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "0e1eb3282d3d0153565d900d9ff9e9da6670acaca20bbecb26095b7989de6beb",
+    "child_lint.json": "a42f5ea5c065f7d0c74a9a1ece8c896e657515e2d9c449761e4a6fd9b17c3020",
+    "export_ff.log": "d13a1611ca3e3848e481af370ced57230d16ffbcc5660c4c02b67fb1c7120366",
+    "export_ff.tcl": "55dd0f4ce4d91fc8f3f5b658b46cf862243894af63f40d18894edb744b95732c",
+    "export_ss.log": "8eef07328fbc5c2cf7e9c27523f42b760c75d6da22377ac368d2247f7188abfa",
+    "export_ss.tcl": "6a7694370c70a56f5a25495e4b257a91c4bf569b69813eb9b8ee4ae3561290eb",
+    "export_tt.log": "71be1ac813367b20fc99573f13e8cad2312d8fd65a210da14dc040124015a095",
+    "export_tt.tcl": "ae855591d7af0cbf0dac60475d72a2762ea8dff44fa86585aeaa5005faeb5e2e",
+    "insertion.json": "3e7208632d4b830566817e7389a99b880fb099195fb8f8470351dcb3479aee15",
+    "ot_qwen_tp8_pv_join_s32_t.lef": "0d6dec60289a27c3f815773baf41c627255f2df5af2727d103a47dc19f71ed7d",
+    "ot_qwen_tp8_pv_join_s32_t_ff.lib": "091f65f08979794d029f2e4e5dfefc5648bfe1dd73295ff8f53d16ef64671a5f",
+    "ot_qwen_tp8_pv_join_s32_t_ss.lib": "605814f249d2dd3756a195c6756ee532c1fd1758b824a928aeb411ed6b6ca4ec",
+    "ot_qwen_tp8_pv_join_s32_t_tt.lib": "b8d93fb5ffae5102f4d74fcde7395ceb9cd647168502cbdc3adc4856b3483fbc",
+    "provenance/abstract_pin_stub.json": "d2fcd81c3ca8c2c1a1c6433a9d357dff0ac84aa754188fcc63b9269f53a42f55",
+    "provenance/raw/ot_qwen_tp8_pv_join_s32_t.lef": "77137a81218e429ef102e3446421e16bd60a2e881074e4832fae2b2f41462a57",
+    "provenance/view_export.abstract.json": "82e2215ef746225e6631b8c6c8b0e6677f44ee7bd5df076a7e77546cb9f7e05d"
+   },
+   "rtl": {
+    "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_join_s32_t.sv",
+    "sha256": "c721d94f7ce02b1cb0947959573b6190fac14ae68cca6ba621619e5b3cc1cbf7"
+   },
+   "view": "physical/ref_tile/qkd_pv_join_s32_p216/views/ot_qwen_tp8_pv_join_s32_t"
+  },
+  "parameters": {
+   "J_LAT": 7,
+   "MUT": 0,
+   "RESET_PIN": 1
+  }
+ },
+ "ot_qwen_tp8_pv_slice_t": {
+  "frozen_receipt": {
+   "path": "results/arch/kv_lec7_1020/receipts/receipts/ot_qwen_tp8_pv_slice_t.json",
+   "sha256": "78f078ba5cf6f8e7f2fe5fe90c28185d00630ecb866c8190764cba764b1616cb"
+  },
+  "identity": {
+   "artifacts": {
+    "abstract.json": "2b57effb1dce2e024148c9ab701873b1e83dd76b0ef203ccbb020ea605ccbbdb",
+    "child_lint.json": "b7c61beeb4601c5dae7864c036ba268e3414092111076b638617cf8100168300",
+    "export_ff.log": "4386e8e64774e7953f0cc03b3c2202369a92b0f48811ccb46c6544374eed15f2",
+    "export_ff.tcl": "04a3556fa1285717018f3bc2fbe0d7dcd114494bfb087ec09e03d3b47c0f293e",
+    "export_ss.log": "1180da6d784a958e6ee372b69f5b7545e4e852725fe7e1ae81daf8f0a62aea06",
+    "export_ss.tcl": "698e354958076d54edb59f43ac17ab492be7589ff763a576752cfa60c64fb27a",
+    "export_tt.log": "bf0e17b84c158e7cecdb6f11a3721dce8053073b72ce3bdea68870883d0584e4",
+    "export_tt.tcl": "ec4cbaedec1767e401dbc58e0ee461c0883d882b1564ae64a935db3ebd690ddf",
+    "insertion.json": "0113ba46b0372b04cdd00c845ca87ea41103e73764bfd8d41d6142fd79bf0172",
+    "ot_qwen_tp8_pv_slice_t.lef": "704c4fac0060f5a07f386e68533c8d921ff8411111111045b17bd90babaca47b",
+    "ot_qwen_tp8_pv_slice_t_ff.lib": "6af8a3819a252e48b4a3d9db0ca58c63732b6a0bf4159973a3636ac923792d73",
+    "ot_qwen_tp8_pv_slice_t_ss.lib": "205eaf81eda7318f5f0a3554bac8797956624a540a415b0ce75e514ff8c4d78f",
+    "ot_qwen_tp8_pv_slice_t_tt.lib": "661a28bd0a3c79311acbdbbd9fa1c1caf2705a6ebe4b703507be5f2847e0ed97"
+   },
+   "rtl": {
+    "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+    "sha256": "8366acac384431e5bdd9b62727d221181a7db98b09e33f99514f55870e72c5b6"
+   },
+   "view": "physical/ref_tile/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t"
+  },
+  "parameters": {
+   "RESET_PIN": 1
+  }
+ }
+}

@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex/qkh-core-boundary-review-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex/qkh-core-boundary-review-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex/qkh-core-boundary-review-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex/qkh-core-boundary-review-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex/qkh-core-boundary-review-1020
+ot-run: ot-agidock128  admits   108 GB (avail 86, growth 10, headroom 0, waiters 0/0 GB) load 9/64 running 5 disk 175 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2656507-1792496856 after 0 s
+{"scope": "READ_ONLY_VIRTUAL_CORE_CUT_NOT_NEW_KIT_QUALIFICATION", "status": "PASS", "input_bits": 235, "output_bits": 98, "errors": []}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2656507-1792496856): exit 0

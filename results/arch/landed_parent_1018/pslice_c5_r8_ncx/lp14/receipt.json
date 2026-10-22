@@ -1,0 +1,9 @@
+{
+  "source_commit": "22160ec18",
+  "scope": "Current NCX source with full LP14 parent, 90 landing audit and existing two causal negatives. No physical closure claim.",
+  "result": "PASS positive; MUT1 and MUT2 rejected; audit-unland rejected",
+  "unit": "oth-ubuntu-729429-1792641020",
+  "source_hashes": {
+    "tools/landed_parent/specs/pslice_c5_r14.json": "20dcc5b9567c933162825b77a42d8c4530a889473c13b411b5194c71cf38744a"
+  }
+}

@@ -1,0 +1,22 @@
+GATE INFO pin_regs: pin registers opted out: Every functional data input is explicitly registered twice in native32 RTL and every data output is a native output/state FF; exact full-view miter preserves legacy wrapper active timing. No generic extra edge. Native audit still required.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc9 for 16 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qkd_embedding_row_tx_ctx_n32a_20261020-014446.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qkd_embedding_row_tx_ctx_n32a_20261020-014446.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/qkd_embedding_row_tx_ctx_n32a-20261020-014446
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc9 in 127 s (gate total 520 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1144, 'pin_rectangles': 1144, 'pin_track_checked': 1144, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 0887dd580a109abad6627f10440f1d90e0f392f7abaacd2a61462f8de5f9b8d2
+GATE INFO util: synthesized std area 1114 um2 + macros 13319 in core 34264: util 6% (std-cell density 6.1% of placeable 18138 um2; total fill 42.1%)
+GATE INFO textbook: PASS qkd_embedding_row_tx_ctx_native32 cells 7,173 flops 2,460 depth 231.7 ps util 0.4205 reach 0.0 um (0.2 s)
+GATE INFO cts_calibration: ss insertion all 275.1..405.8 ps (spread 130.7), boundary mean 305.6; tt insertion all 202.7..319.1 ps (spread 116.4), boundary mean 232.6; ff insertion all 160.5..266.1 ps (spread 105.6), boundary mean 189.3; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.450 vs spec PD 0.45
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qkd_embedding_row_tx_ctx_n32a/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      302 paths, worst slack 100.1 ps (e.g. fault$_DFF_PN0_/D)
+GATE INFO path_classes: reg->out      217 paths, worst slack 218.6 ps (e.g. row_open)
+GATE INFO path_classes: macro->reg     81 paths, worst slack 258.6 ps (e.g. emb_tx_payload[11]$_DFFE_PP_/D)
+GATE INFO path_classes: setup WNS 1.0012402018588773e-10 hold WNS 4.2666703503613235e-11
+GATE FAIL clock_rule: 2,461 sinks on the largest root; measured TT insertion 319.1 ps, FF insertion 266.1 ps, TT pin-flop spread 97.8 ps, FF pin-flop spread 87.9 ps; TT pin-flop spread 97.8 ps > 80 and FF pin-flop spread 87.9 ps > 80  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-kv-rowctx-native32-1020/physical/ref_tile/qkd_embedding_row_tx_ctx_n32a/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-kv-rowctx-native32-1020/physical/ref_tile/qkd_embedding_row_tx_ctx_n32a/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 21.01% used; GRT 66 s
+PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)
+GATE: qkd_embedding_row_tx_ctx_n32a/gate_result.json written (exact staged source binding; commit it with the kit)

@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.qwen.bump-feed-source-change.v1",
+  "default": "unchanged; OT_SPLIT_FWD_BUMP_FEED=1 required",
+  "physical_qualification_eligible": false,
+  "baseline": {
+    "candidate": "dv2f20g4g",
+    "source": "b9bf998e4",
+    "sources": {
+      "die.v": "0768b5a6e728b2905ad6ade1a6b12935027d57548a3e883fcbe1eecbaaf49ce3",
+      "fwd_lanes.json": "fc9ddd3af9d52881739b1d0b90f081259f362192ed97ce65265f9550b4f15884",
+      "relay_stages_netlist.json": "e9370adace364f23e48bed3f676915602f11461bbf89e09c95e57466b3594469"
+    }
+  },
+  "observed_hop0_clock": "clk_r55",
+  "proposed_hop0_clock": "pll_fwd",
+  "exact_lanes": [
+    "lnk_fwd_epoch",
+    "lnk_fwd_epoch__fo1",
+    "lnk_fwd_lrst"
+  ],
+  "validation": "36 focused source topology/region refile and existing relay-clock tests PASS; emitted GEN/bind verification pending",
+  "owed": [
+    "Actual changed GEN reset calendar and release projection",
+    "Mapped/feed clock reach and native physical receiver",
+    "Source-domain enable reset release, epoch/first-use proof",
+    "Per-root physical clock arrivals and SS/FF closure"
+  ]
+}

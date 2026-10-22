@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_embedding_row_tx_ctx_native32",
+ "enable": false,
+ "reason": "Every functional data input is explicitly registered twice in native32 RTL and every data output is a native output/state FF; exact full-view miter preserves legacy wrapper active timing. No generic extra edge. Native audit still required."
+}

@@ -1,0 +1,32 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: ot-epyc7       admits   893 GB (avail 724, growth 99, headroom 0, waiters 0/0 GB) load 38/96 running 23 disk 5440 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3812084-1792497847 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+LK_AGE lag=0 checked=922 mism=0
+LK_AGE lag=1 checked=923 mism=923
+LK_AGE lag=2 checked=924 mism=924
+LK_AGE lag=3 checked=923 mism=923
+LK_AGE lag=4 checked=922 mism=922
+LK_AGE lag=5 checked=921 mism=921
+LK_AGE lag=6 checked=920 mism=920
+LK_AGE lag=7 checked=919 mism=919
+LK_AGE lag=8 checked=918 mism=902
+LK_AGE_PASS seed=-1172255673 measured_lag=0 compared=922 phases=2
+LK_AGE lag=0 checked=922 mism=0
+LK_AGE lag=1 checked=923 mism=923
+LK_AGE lag=2 checked=924 mism=924
+LK_AGE lag=3 checked=923 mism=923
+LK_AGE lag=4 checked=922 mism=922
+LK_AGE lag=5 checked=921 mism=921
+LK_AGE lag=6 checked=920 mism=920
+LK_AGE lag=7 checked=919 mism=919
+LK_AGE lag=8 checked=918 mism=902
+LK_AGE_PASS seed=-198373595 measured_lag=0 compared=922 phases=2
+LK_AGE_FAIL seed=-1172255673 expected_lag=1 checked=923 mism=923
+LK_AGE_FAIL seed=-1172255673 expected_lag=2 checked=924 mism=924
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3812084-1792497847): exit 0

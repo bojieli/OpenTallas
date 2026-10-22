@@ -1,0 +1,6 @@
+ot-run: ot-epyc6       admits   994 GB (avail 752, growth 49, headroom 0, waiters 0/0 GB) load 9/128 running 8 disk 6695 GB 
+ot-run: ot-epyc7       admits  1124 GB (avail 916, growth 129, headroom 0, waiters 0/0 GB) load 79/96 running 30 disk 6727 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-57703-1792402505 after 0 s
+IDX_VM_QUERY_N12 MUT0 rq_rly1 rr_rly1 commits514 reads514 blocks128 quant32 errors0 fault0 firstblock33 lastblock160 firstquant186
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-57703-1792402505): exit 0

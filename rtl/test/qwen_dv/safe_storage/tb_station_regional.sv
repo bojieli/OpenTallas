@@ -6,7 +6,8 @@
 // RMUT (regional side only, witnesses): 1 = region 5 lanes take region 4's bt_q slice; 2 = fault ring hop 3->1 cut.
 // PIN (0/1): regional PIN_IN = BT_LAT = PIN; the bt table is modelled (one-edge read of a hashed clean table) on both
 // sides; with PIN=1 nb_o/bt_re/bt_word equal the monolith's 1 edge earlier, r_v/r_idx/r_last/r_d 2 edges earlier.
-module tb_station_regional #(parameter integer MUT=0, RMUT=0, NCYC=20000, PIN=0);
+module tb_station_regional #(parameter integer MUT=0, RMUT=0, NCYC=20000, PIN=0, XR=0);
+// XR (QR-TAIL1 10-21): regional result outputs (r_v/r_idx/r_last/r_d) XR further edges late (tail1 SCALE_LAT 7 = XR 1).
 reg ck=0; always #5 ck=~ck;
 integer cycle=0;
 reg rst_n=0, quiet=1;
@@ -81,7 +82,8 @@ qfd_dv_redstn2_rg #(.MUT(MUT),.PIN_IN(PIN),.BT_LAT(PIN)) u_g (.ck_r({8{ck}}), .r
     .nb_d(nb_i[511:0]), .nb_c({8{nb_i[513:512]}}), .nb_od(g_nb_o[511:0]), .nb_oc(g_nb_o[513:512]),
     .bt_re(g_bt_re), .bt_word(g_bt_word), .bt_q(bt_q_r), .r_v(g_r_v), .r_idx(g_r_idx), .r_last(g_r_last), .r_d(g_r_d), .fault(g_fault));
 generate if (RMUT == 2) begin : g_cut
-    initial begin #1; force u_g.fb[3] = 4'd0; force u_g.fv[3] = 4'd0; end
+    initial begin
+    if (XR != 0 && (PIN == 0 || XR > 1)) $fatal(1, "TB_XR_SHAPE: XR=1 needs PIN=1"); #1; force u_g.fb[3] = 4'd0; force u_g.fv[3] = 4'd0; end
 end endgenerate
 // fault: sticky in both; regional may lag by <= FLT_LAG (+PIN) edges and never lead.
 localparam integer OW = 514 + 1 + 9 + 1 + 8 + 1 + 512;
@@ -91,7 +93,7 @@ wire [OW-1:0] g_out = {g_nb_o, g_bt_re, g_bt_word, g_r_v, g_r_idx, g_r_last, g_r
 // PIN + BT_LAT edges late (BT_LAT = PIN extra scale-wait edges for the pinned bt round trip).  Comparison resumes
 // RSTW edges after each reset release (the regional face landing delays release by 2 edges; quiet window).
 localparam integer FW = 514 + 1 + 9, RW = OW - FW, RSTW = 8;
-reg [OW-1:0] m_out_d = 0, m_out_d2 = 0;
+reg [OW-1:0] m_out_d = 0, m_out_d2 = 0, m_out_d3 = 0;
 integer rel = 0;
 reg [OW-1:0] m_exp = 0, g_cmp = 0;
 reg [FLT_LAG+1:0] m_hist = 0;
@@ -100,7 +102,7 @@ always @(posedge ck) begin
     #1;
     if (!rst_n) m_hist = 0; else m_hist = {m_hist[FLT_LAG:0], m_fault};
     rel = rst_n ? rel + 1 : 0;
-    m_exp = (PIN == 0) ? m_out : {m_out_d[OW-1:RW], m_out_d2[RW-1:0]};
+    m_exp = (PIN == 0) ? m_out : {m_out_d[OW-1:RW], (XR != 0) ? m_out_d3[RW-1:0] : m_out_d2[RW-1:0]};
     // r_idx / r_last / r_d are qualified by r_v (unreset data pipeline, DRST=0): compared only on valid edges
     g_cmp = g_out;
     if (!m_exp[RW-1]) begin m_exp[RW-2:0] = 0; g_cmp[RW-2:0] = 0; end
@@ -115,7 +117,7 @@ always @(posedge ck) begin
         if (g_fault && !m_hist[PIN]) $fatal(1, "REGIONAL_FAULT_EARLY edge%0d", cycle);
         if (m_hist[FLT_LAG] && !g_fault) $fatal(1, "REGIONAL_FAULT_LATE edge%0d (> %0d edges)", cycle, FLT_LAG);
     end
-    m_out_d2 = m_out_d; m_out_d = m_out;
+    m_out_d3 = m_out_d2; m_out_d2 = m_out_d; m_out_d = m_out;
     if (rst_n && m_fault && !m_hist[1] && flt_m_n == 0)
         $display("FAULT_SOURCE edge%0d mono in_bad%0d fp_bad%0d cfg_sched%0d", cycle, u_m.in_bad, u_m.fp_bad, u_m.cfg_schedule_fault);
     if (cycle < INJ && rst_n && m_fault) $fatal(1, "PHASE1_UNEXPECTED_FAULT edge%0d (stimulus not protocol-legal)", cycle);

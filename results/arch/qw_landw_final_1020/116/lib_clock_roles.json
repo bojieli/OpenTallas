@@ -1,0 +1,268 @@
+{
+  "AND2x2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "AND2x4_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "AND4x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "MAJx2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "NAND2x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "NAND2x2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "NOR2x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "OR2x2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "OR3x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "OR3x2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "OR4x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "OR4x2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "TIEHIx1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "TIELOx1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "XNOR2x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "XNOR2x2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "XOR2x2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "AO21x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "AO221x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "AO22x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "AO32x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "AOI21x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "AOI22x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "OA21x2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "OAI21x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "OAI22x1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "DFFASRHQNx1_ASAP7_75t_R": {
+    "ff": true,
+    "latch": false,
+    "clock_pins": [
+      "CLK"
+    ]
+  },
+  "DFFHQNx1_ASAP7_75t_R": {
+    "ff": true,
+    "latch": false,
+    "clock_pins": [
+      "CLK"
+    ]
+  },
+  "ICGx1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": [
+      "CLK"
+    ]
+  },
+  "BUFx12_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "BUFx12f_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "BUFx16f_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "BUFx24_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "BUFx2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "BUFx3_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "BUFx4_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "BUFx4f_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "BUFx6f_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "BUFx8_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "CKINVDCx10_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "CKINVDCx11_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "CKINVDCx14_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "CKINVDCx5p33_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "CKINVDCx6p67_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "CKINVDCx8_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "INVx1_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "INVx2_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "INVx3_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "INVx4_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "INVx5_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "INVx6_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  },
+  "INVx8_ASAP7_75t_R": {
+    "ff": false,
+    "latch": false,
+    "clock_pins": []
+  }
+}

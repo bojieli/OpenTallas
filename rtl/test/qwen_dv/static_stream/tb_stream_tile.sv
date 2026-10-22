@@ -1,26 +1,29 @@
 `timescale 1ns/1ps
-// qfd_dv_stream_tile (rtl/qwen_dv/qfd_dv_stream_tile.sv) against the unchanged qfd_dv_stream reference:
-//   reference inputs = tile inputs delayed one edge (the tile's face registers); the SU own-write inputs xw_* three edges
-//   (face + the packer's P1 / P2 stages, QW-STREAM2 10-19);
+// qfd_dv_stream_tile (rtl/qwen_dv/qfd_dv_stream_tile.sv, QW-STREAM3 native-32 successor) against the unchanged
+// qfd_dv_stream reference:
+//   reference pass inputs (sw / se / sid / cfg) = tile inputs delayed DP = 2 edges (face root bank + select leaf bank);
+//   reference own-write inputs xw_* delayed DX = 2 edges (face + packer P1; completion fault combinational at P2);
 //   reference tap outputs (tw_*, xt_*) delayed one more edge (the tile's interior tap relay);
 //   relay outputs and fault compared on the same edge.
 // Every output bit is compared on every edge from 20 edges after each reset release, over 10,000 edges with two resets,
 // two SIDs, random kinds / destinations (own SID, broadcast, other), pass words in both directions, config changes,
-// continuous 8-lane full packs, random lane subsets, duplicate addresses and abandoned beats, and (late) undefined kinds.
-// Also compared: the per-edge fault cause (bad, pbad) inside both.
+// continuous 8-lane full packs (one beat per 8 edges, back to back), random lane subsets, duplicate addresses and
+// abandoned beats, and (late) undefined kinds.  Also compared: the per-edge fault cause (bad, pbad) inside both.
 // PASS line: STREAM_TILE_EQ PASS edges10000 ...; any mismatch: $fatal STREAM_TILE_MISMATCH <port> cycle MUT.
 module tb_stream_tile #(parameter integer MUT = 0);
  reg ck = 0, rst = 0; always #5 ck = ~ck;
  reg [3:0] sid = 3; reg cfg = 0; reg [1:0] dir = 3; reg [27:0] tag = 28'h1234567;
  reg [1087:0] sw = 0, se = 0; reg [7:0] we = 0; reg [191:0] addr = 0; reg [255:0] data = 0;
- // one-edge delayed reference inputs
+ // DP / DX = 2-edge delayed reference inputs
  reg [3:0] sid_d = 0; reg cfg_d = 0; reg [1:0] dir_d = 0; reg [27:0] tag_d = 0;
  reg [1087:0] sw_d = 0, se_d = 0; reg [7:0] we_d = 0; reg [191:0] addr_d = 0; reg [255:0] data_d = 0;
- reg [7:0] we_d1 = 0, we_d2 = 0; reg [191:0] addr_d1 = 0, addr_d2 = 0; reg [255:0] data_d1 = 0, data_d2 = 0;
+ reg [3:0] sid_1 = 0; reg cfg_1 = 0; reg [1:0] dir_1 = 0; reg [27:0] tag_1 = 0; reg [1087:0] sw_1 = 0, se_1 = 0;
+ reg [7:0] we_d1 = 0; reg [191:0] addr_d1 = 0; reg [255:0] data_d1 = 0;
  always @(posedge ck) begin
-  sid_d <= sid; cfg_d <= cfg; dir_d <= dir; tag_d <= tag; sw_d <= sw; se_d <= se;
-  we_d1 <= we; addr_d1 <= addr; data_d1 <= data; we_d2 <= we_d1; addr_d2 <= addr_d1; data_d2 <= data_d1;
-  we_d <= we_d2; addr_d <= addr_d2; data_d <= data_d2;
+  sid_1 <= sid; cfg_1 <= cfg; dir_1 <= dir; tag_1 <= tag; sw_1 <= sw; se_1 <= se;
+  sid_d <= sid_1; cfg_d <= cfg_1; dir_d <= dir_1; tag_d <= tag_1; sw_d <= sw_1; se_d <= se_1;
+  we_d1 <= we; addr_d1 <= addr; data_d1 <= data;
+  we_d <= we_d1; addr_d <= addr_d1; data_d <= data_d1;
  end
  wire [1087:0] re, rw; wire rtw, rxv, rxb, rf; wire [1:0] rk; wire [23:0] ra, rxa; wire [1023:0] rd, rxd;
  qfd_dv_stream u_ref (.ck(ck), .rst_n(rst), .sid(sid_d), .cfg_v(cfg_d), .cfg_dir(dir_d), .cfg_tag(tag_d),
@@ -72,7 +75,10 @@ module tb_stream_tile #(parameter integer MUT = 0);
    if (qw !== rw) $fatal(1, "STREAM_TILE_MISMATCH so_w cycle%0d MUT%0d", cycle, MUT);
    if (qf !== rf) $fatal(1, "STREAM_TILE_MISMATCH fault cycle%0d MUT%0d", cycle, MUT);
    if ({qtw, qk, qa, qdh, qdl} !== {dtw, dk, da, dd}) $fatal(1, "STREAM_TILE_MISMATCH tw cycle%0d MUT%0d", cycle, MUT);
-   if ({qxv, qxa, qxh, qxl, qxb} !== {dxv, dxa, dxd, dxb}) $fatal(1, "STREAM_TILE_MISMATCH xt cycle%0d MUT%0d", cycle, MUT);
+   if ({qxv, qxa, qxh, qxl, qxb} !== {dxv, dxa, dxd, dxb}) begin
+    $display("xt detail v %b/%b a %h/%h bad %b/%b d_eq %b", qxv, dxv, qxa, dxa, qxb, dxb, {qxh, qxl} === dxd);
+    $fatal(1, "STREAM_TILE_MISMATCH xt cycle%0d MUT%0d", cycle, MUT);
+   end
    // per-edge fault cause (the sticky fault output only shows the first one): tile bad / pbad == reference bad / pbad
    if (u_t.bad !== u_ref.bad || u_t.pbad !== u_ref.pbad) $fatal(1, "STREAM_TILE_MISMATCH bad cycle%0d MUT%0d", cycle, MUT);
    if (u_ref.bad) nbad = nbad + 1;

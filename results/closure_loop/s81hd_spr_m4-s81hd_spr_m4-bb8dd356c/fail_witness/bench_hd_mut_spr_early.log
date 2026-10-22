@@ -1,0 +1,14 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81hd_spr_m4-s81hd_spr_m4-bb8dd356c bench bench_hd_mut_spr_early host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/s81hd_spr_m4-s81hd_spr_m4-bb8dd356c log cl/bench_hd_mut_spr_early.a1b1.log captured 2026-10-21T11:33:45-07:00
+# fail_regex '^A: TB_FAIL row 0 != 21946$'
+Verilator 5.050 2026-07-01 rev v5.050
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/home/ubuntu/ot-scratch/claude/closure-loop/s81hd_spr_m4-s81hd_spr_m4-bb8dd356c/hd_mut_spr_early/cells.v
+A: POS 0 RES 0 00000000 0 9
+A: TB_FAIL row 0 != 21946
+A: TB_FAIL bits 00000000 != 4173a558
+A: TB_FAIL cycles 9 != 8366
+A: POS 1 RES 21946 4173a558 0 9
+A: TB_FAIL cycles 9 != 8366
+A: LOGITS t0 256/256 t1 256/256
+A: TB_FAIL 4 mismatches
+BENCH_FAIL s81hd_mini SCEN=A MUT=SPR_EARLY (0/1)

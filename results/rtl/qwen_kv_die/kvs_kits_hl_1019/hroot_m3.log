@@ -1,0 +1,12 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=3 out o_pc
+MISMATCH t=4 out o_pc
+MISMATCH t=5 out o_pc
+MISMATCH t=6 out o_pc
+MISMATCH t=7 out o_pc
+KVS_TILE FAIL tile=hroot edges=4000 checks=51961 errors=3997 mut=3 (removed child u_esh)
+- ../out/hroot_m3/tb.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.086 s; speed 93.230 us/s
+- Verilator: cpu 0.086 s on 1 threads; allocated 7 MB
+

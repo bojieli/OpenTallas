@@ -1,0 +1,5 @@
+MISMATCH edge 353 row 2 lo 0 k 2 got bf5e27a9/0 want 3ea40810/0
+MISMATCH edge 354 row 3 lo 0 k 2 got be864f22/0 want bf784bcf/0
+MISMATCH edge 356 row 4 lo 0 k 1 got 3e2274fe/0 want bf83c739/0
+PLAN_MISMATCH predicted 6 words, got 6; first diff ((353, 2, (0, 2, 3), 1050937360, 0), (353, 2, (0, 2, 3), 3210618793, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 attn.wq_b phase 1 mutant=swap rows=5 fixture_rows=5 errors=4 END edges=1022 ret_words=6 xo_checked=1020 fault=0

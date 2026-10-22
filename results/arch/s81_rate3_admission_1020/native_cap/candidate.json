@@ -1,0 +1,28 @@
+{
+ "source": "dc702fbe899e0ef127317079eecbc8b1d976513f",
+ "scope": "BEST_ACTUAL_UNQUALIFIED_CAP_SOURCE",
+ "gateE": "1d1b90cf236be0ca90b0e35d62c7b7869cc4575d",
+ "gateF": "dc702fbe899e0ef127317079eecbc8b1d976513f",
+ "physical_qualified": false,
+ "E_fail": "ck_rt102.1/83.5;GRT2",
+ "F_fail": "ck_rt131/111.3;GRT2",
+ "source_hashes": {
+  "results/arch/landed_parent_1018/s81sl_capc5c/ot_s81sl_capc5c_record.json": "495e0f7c0c27b22f65f15c8cdbd3f237db61ea7920abf2f25ffd0ff3a104b227",
+  "tools/landed_parent/specs/ot_s81sl_capc5c.json": "7f204313a91bfbb1cf7152628882d42d45fb7a8153048afd99547284f1fbf62c",
+  "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5c.sv": "beba7dc01f5c91831787bda66689618bc9eda8662c44fb58ffa3bd1ab13d9420"
+ },
+ "derived_ages": {
+  "D": 4,
+  "E": 2,
+  "K": 2,
+  "landings": 19,
+  "per_landing": 3,
+  "input_face": 1,
+  "to_rt_landing": 3,
+  "from_rt_to_faces_landing": 3,
+  "output_face": 1,
+  "output_delay_vs_raw_cap": 8,
+  "delay_vs_old_C2": 6
+ },
+ "missing": "actual full-slice frame-arrival calendar, current die registered links/clock boundary/consumer retirement"
+}

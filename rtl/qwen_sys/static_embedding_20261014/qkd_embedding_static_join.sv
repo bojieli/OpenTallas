@@ -31,7 +31,7 @@ module qkd_embedding_static_join(
             word_v<=beat_slot&&(beat_scale||beat_half);
             if(beat_slot!=beat_v) fault<=1;
             if(beat_slot) begin
-                if(beat_token>=151936 || (beat_scale&&beat_half)) fault<=1;
+                if(beat_token>=152960 || (beat_scale&&beat_half)) fault<=1;
                 if(beat_scale) begin if(low_valid) fault<=1;end
                 else if(!beat_half) begin if(low_valid) fault<=1;low_valid<=1;end
                 else begin

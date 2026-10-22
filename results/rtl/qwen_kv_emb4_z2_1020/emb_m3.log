@@ -1,0 +1,6 @@
+MISMATCH t=3 out rowtx__emb_tx_v
+MISMATCH t=3 out rowtx__emb_tx_payload
+MISMATCH t=4 out rowtx__emb_tx_v
+MISMATCH t=4 out rowtx__emb_tx_payload
+MISMATCH t=5 out rowtx__emb_tx_payload
+KVS_TILE FAIL tile=emb edges=4000 checks=55958 errors=6025 mut=3 (removed child u_rowtx)

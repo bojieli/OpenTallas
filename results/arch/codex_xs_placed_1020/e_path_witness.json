@@ -1,0 +1,153 @@
+[
+  {
+    "um": 623.558,
+    "source": [
+      13.948,
+      388.395,
+      "u_leaf.c3bd\\[18\\]$_DFF_P_/QN"
+    ],
+    "sink": [
+      464.976,
+      215.865,
+      "u_leaf.u_ctle/q\\[16\\]$_DFF_P_/D"
+    ],
+    "net": "u_leaf.u_ctle/net19286",
+    "found": true,
+    "combinational_cells": [
+      {
+        "input": "_063766_/A",
+        "output": "_063766_/Y",
+        "master": "INVx4_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19290/A",
+        "output": "u_leaf.u_ctle/place19290/Y",
+        "master": "BUFx3_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19289/A",
+        "output": "u_leaf.u_ctle/place19289/Y",
+        "master": "BUFx3_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19288/A",
+        "output": "u_leaf.u_ctle/place19288/Y",
+        "master": "BUFx6f_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/wire23097/A",
+        "output": "u_leaf.u_ctle/wire23097/Y",
+        "master": "BUFx16f_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/wire40315/A",
+        "output": "u_leaf.u_ctle/wire40315/Y",
+        "master": "BUFx16f_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19287/A",
+        "output": "u_leaf.u_ctle/place19287/Y",
+        "master": "BUFx3_ASAP7_75t_R"
+      }
+    ]
+  },
+  {
+    "um": 612.164,
+    "source": [
+      13.246,
+      381.645,
+      "u_leaf.c3bd\\[6\\]$_DFF_P_/QN"
+    ],
+    "sink": [
+      456.66,
+      212.895,
+      "u_leaf.u_ctle/q\\[6\\]$_DFF_P_/D"
+    ],
+    "net": "u_leaf.u_ctle/net19246",
+    "found": true,
+    "combinational_cells": [
+      {
+        "input": "_063777_/A",
+        "output": "_063777_/Y",
+        "master": "INVx4_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19250/A",
+        "output": "u_leaf.u_ctle/place19250/Y",
+        "master": "BUFx3_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19249/A",
+        "output": "u_leaf.u_ctle/place19249/Y",
+        "master": "BUFx3_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19248/A",
+        "output": "u_leaf.u_ctle/place19248/Y",
+        "master": "BUFx6f_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/wire23099/A",
+        "output": "u_leaf.u_ctle/wire23099/Y",
+        "master": "BUFx16f_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19247/A",
+        "output": "u_leaf.u_ctle/place19247/Y",
+        "master": "BUFx3_ASAP7_75t_R"
+      }
+    ]
+  },
+  {
+    "um": 607.034,
+    "source": [
+      12.76,
+      384.885,
+      "u_leaf.c3bd\\[15\\]$_DFF_P_/QN"
+    ],
+    "sink": [
+      461.844,
+      226.935,
+      "u_leaf.u_ctle/q\\[15\\]$_DFF_P_/D"
+    ],
+    "net": "u_leaf.u_ctle/net23075",
+    "found": true,
+    "combinational_cells": [
+      {
+        "input": "_063768_/A",
+        "output": "_063768_/Y",
+        "master": "INVx4_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19286/A",
+        "output": "u_leaf.u_ctle/place19286/Y",
+        "master": "BUFx3_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19285/A",
+        "output": "u_leaf.u_ctle/place19285/Y",
+        "master": "BUFx3_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19284/A",
+        "output": "u_leaf.u_ctle/place19284/Y",
+        "master": "BUFx6f_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/place19283/A",
+        "output": "u_leaf.u_ctle/place19283/Y",
+        "master": "BUFx3_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/wire23077/A",
+        "output": "u_leaf.u_ctle/wire23077/Y",
+        "master": "BUFx16f_ASAP7_75t_R"
+      },
+      {
+        "input": "u_leaf.u_ctle/wire23076/A",
+        "output": "u_leaf.u_ctle/wire23076/Y",
+        "master": "BUFx16f_ASAP7_75t_R"
+      }
+    ]
+  }
+]

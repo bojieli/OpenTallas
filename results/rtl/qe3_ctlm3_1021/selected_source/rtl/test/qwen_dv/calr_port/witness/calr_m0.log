@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+CALR_PORT_SUMMARY mut=0 edges=1059923 mismatched_edges=0 issued=1871 table_loads=144 done=154 ref_fault=1 port_fault=1
+CALR_PORT_PASS
+- /srv/opentallas-scratch/claude/qw-f16sub-1019/port/src/rtl/test/qwen_dv/calr_port/tb_qfd_dv_cmd_cal_mu_calr_port.sv:85: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11ms; walltime 7.368 s; speed 1.438 ms/s
+- Verilator: cpu 7.368 s on 1 threads; allocated 8 MB
+rc=0
+rc=0

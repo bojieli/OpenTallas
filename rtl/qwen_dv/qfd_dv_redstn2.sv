@@ -78,7 +78,16 @@ module qfd_dv_redstn2 #(
     reg [JBW-1:0] wlo, whi;
     reg [7:0]     klo, khi;
     reg           klast_lo, klast_hi;
-    wire          eblo = plo && wlo == JB - 1, ebhi = phi && whi == JB - 1;
+    // TOK-FUNC2-QW 10-21 (LM-head tail): a K block is the round's ACTUAL words per pair stream, not always JB.  The
+    //   LM head's last round carries 18,992 - 148 x 128 = 48 rows = 3 words per k step; counting a fixed JB (8) made
+    //   the kc = 8 tail (24 words) look like 3 JB blocks: the last-k block never came, r_v stayed short and stn_busy
+    //   never cleared (STG lm FAIL 'S0AG stn_busy still set').  nwords >= JB (every full block, L7 pairs) keeps JB.
+    //   Same rule as the S8 regional form qfd_dv_s8_station_tail1 (0d4aa7595).
+    reg [JBW-1:0] word_last;
+    wire          eblo = plo && wlo == word_last, ebhi = phi && whi == word_last;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) word_last <= JBW'(JB - 1);
+        else if (cfg_v) word_last <= JBW'((cfg_nwords != 8'd0 && cfg_nwords < JB) ? cfg_nwords - 8'd1 : JB - 1);
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
             wlo <= 0; whi <= 0; klo <= 8'd0; khi <= 8'd0; klast_lo <= 1'b1; klast_hi <= 1'b1;

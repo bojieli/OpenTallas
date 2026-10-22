@@ -1,0 +1,56 @@
+{
+ "aig": null,
+ "aig_sha256": "469327efb531f46e6354887a90e5929049be2758784b30767ab59b8a8da86ff0",
+ "cex_frame": 16,
+ "engine": {
+  "abc_cmd": "read_aiger lec.aig; print_stats; strash; dprove -v -T 10800",
+  "abc_log_sha256": "c86ac9c58773716baba9f1b24f3b9c7a3ad42066a4bb2695838b499ef22012ab",
+  "abc_tail": "======== ABC command line \"read_aiger lec.aig; print_stats; strash; dprove -v -T 10800\"\n\u001b[1;37mlec                           :\u001b[0m i/o = 1737/    1  lat =13317  and =  36152  lev = 44\nRunning \"bmc2\". AIG:  PI/PO/Reg = 1737/1/13317.  Node =  36152. Lev =    44.\nParams: FramesMax = 20. NodesDelta = 2000. ConfMaxOne = 2000. ConfMaxAll = 0.\n   0 : F =   17. O =   0.  And =    2067. Var =    1400. Conf =      0.    4 MB     0.00 sec\nOutput 0 of miter \"lec\" was asserted in frame 16. Time =     0.00 sec\nNetworks are not equivalent.\n",
+  "rc": 0,
+  "seconds": [
+   0.2,
+   24.3,
+   0.1
+  ],
+  "tool": "yosys 0.68 miter -equiv + ABC dprove"
+ },
+ "expect": "fail",
+ "gate": "/srv/opentallas-scratch/claude/kv-attn7-1020/attn/6_final.v",
+ "gate_sha256": "d52e669944207701d3c097f363fe9c3e7428018279f98dfb6644dd94c28f4194",
+ "gate_stats": {
+  "flops": 7065,
+  "instances": 38423,
+  "macros": {}
+ },
+ "gate_top": "qkd_kvs_attn_fl",
+ "gold_opt": false,
+ "gold_ys_sha256": "cfd1fb55c1387c632f2b302f7dd8cc3dd1f73e772c252ec86c10f9c586aca819",
+ "lec_ys_sha256": "e2d4d4ce28c5b0826bd6b199a88516c97c1629b038284ec577fb19f5c7004665",
+ "module": "qkd_kvs_attn_fl",
+ "ok": true,
+ "parameters": {
+  "MUT": 1,
+  "RETIRE_STATIC": 1,
+  "STATUS_DELAY": 213
+ },
+ "reset": {
+  "active": 0,
+  "cycles": 16,
+  "once": false,
+  "port": "rst_n"
+ },
+ "schema": "opentallas.kv_leaf_lec.v1",
+ "sources": {
+  "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv": "077f3d4250af98238c17fc7a3b042e109e089b68276b68faae2359b430b532b5",
+  "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r17.sv": "2ffb5082d4403d1637359973122b56c1ce8e6abd4498abdcf5824c2088127bcf",
+  "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0"
+ },
+ "verdict": "NOT_EQUIVALENT",
+ "wrapper": {
+  "core": "qkd_kvs_attn_fl__ot_pr_core",
+  "path": "/srv/opentallas-scratch/claude/kv-attn7-1020/attn/ot_rst_land_wrapper.v",
+  "sha256": "6a413e602c62ac1a133a86ea98a311ec9d8325051cf9b30e0ccc3f328bf57e70"
+ }
+}

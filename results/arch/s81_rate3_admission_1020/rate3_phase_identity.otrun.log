@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: ot-epyc9       admits  1087 GB (avail 840, growth 79, headroom 0, waiters 0/0 GB) load 37/128 running 30 disk 116 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/root
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3823043-1792506445 after 0 s
+PHASE_IDENTITY {"scope": "ACTUAL_SOURCE_PHASE_IDENTITY_AUDIT_ONLY; plans not legalised", "source": "012a3a074", "frame": "u_f_0R03", "master": "col_h9_l4", "physical_slice": "u_s_0S", "a_proj_present": false, "actual_frame_field_phase_ids": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "shared_first_frame_calendar_phase_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "phase_identity_PASS": false, "full_stage_qualified": false, "actual_cfg_count": 11, "frame_rows": [6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 5], "calendar_sha256": "e8ab6b8bccb4ca51544c6f1187a8c54ef57eea4a93aaf8ebb331017d5c11304a", "xp_sha256": "539a611b9c076b4b0c8157e711f1e8a78b4adc88754e5ec72d277fb898d4bb90", "mechanism": "empty a_proj skips I.add_phase; subsequent cfg bank indices differ from shared calendar. This is separate from missing phase0 rows on six-frame slices."}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3823043-1792506445): exit 0

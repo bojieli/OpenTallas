@@ -1,0 +1,6 @@
+ROUTED view of CLOSED dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb (ot_v41_rom_elem_q_qxpq_w10 RSTP=1 + out-flop band + ck-N, TT +86.60 / FF +14.65, DRC 0; source 4b2f835cb).
+LEF + SS/FF/TT Liberty by verdict replay (tools/tt_views/view_export.py of main 15db15f65, --verdict-json cl/routed_ioref.a1.json, orfs cl/eco/pass1/orfs, checked=true)
+on ot-epyc6 (S81-FRAME3 10-19); trimmed src inputs restored from git archive 4b2f835cb + cl/io_ref_routed.sdc (.ot_mm) + record/dsrom_q_cl_signoff.sdc.
+insertion.json = cl/ck_insertion.py --routed --raw-source --clock core_clk on the closing 6_final.odb/spef.
+native_receipt.json (own R 489.4, spread TT 30.9 / FF 27.3): FAIL on 3 CONTROL pins only -- launch busy 230.2, fault 227.1; capture go 216.7 (all data pins pass: next launch pval[35] 210.4, capture 83.7).
+No single parent C fits (launch needs C>=499.6, capture C<=462.7) -> unregistered control pins (SAFE item 1): pin-register go / busy / fault.

@@ -1,0 +1,52 @@
+{
+ "measured_baseline": {
+  "ar": {
+   "T_cycles": 1438802.6,
+   "tok_s": 834.0
+  },
+  "mtp": {
+   "T_cycles": 1883938.8,
+   "tok_s": 2649.1
+  }
+ },
+ "GU_same_origin_only": {
+  "ar": {
+   "T_cycles": 1404002.6,
+   "tok_s": 854.7
+  },
+  "mtp": {
+   "T_cycles": 1844788.8,
+   "tok_s": 2705.4
+  }
+ },
+ "calpipe_existing": {
+  "ar": {
+   "T_cycles": 1310242.6,
+   "tok_s": 915.9
+  },
+  "mtp": {
+   "T_cycles": 1739308.8,
+   "tok_s": 2869.4
+  }
+ },
+ "calpipe_plus_GU_same_origin": {
+  "ar": {
+   "T_cycles": 1275442.6,
+   "tok_s": 940.8
+  },
+  "mtp": {
+   "T_cycles": 1700158.8,
+   "tok_s": 2935.5
+  }
+ },
+ "compiled_eight_frame_qualified": {
+  "ar": {
+   "T_cycles": 1243522.6,
+   "tok_s": 965.0
+  },
+  "mtp": {
+   "T_cycles": 1664248.8,
+   "tok_s": 2998.8
+  }
+ }
+}

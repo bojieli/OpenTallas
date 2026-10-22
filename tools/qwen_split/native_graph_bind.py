@@ -275,7 +275,7 @@ def peer_map(model):
     return peers
 
 
-def assign_pins(M, model, Master, inst, mst, src, peers, partition_master):
+def assign_pins(M, model, Master, inst, mst, src, peers, partition_master, peer_xy=None):
     """Top-down pins of one NEW unclosed parent from its RTL port list, each port on the face toward its peers."""
     if True:
         orientation = getattr(inst, 'orient', 'R0')
@@ -306,8 +306,12 @@ def assign_pins(M, model, Master, inst, mst, src, peers, partition_master):
             ox = sum(o.x + o.w / 2 for o in ps) / len(ps)
             oy = sum(o.y + o.h / 2 for o in ps) / len(ps)
             cx, cy = inst.x + inst.w / 2, inst.y + inst.h / 2
-            ns = ('N' if oy > cy else 'S', min(max(ox - inst.x, 0), inst.w))
-            ew = ('E' if ox > cx else 'W', min(max(oy - inst.y, 0), inst.h))
+            # SQC-QDIE4 10-22: a port whose peer is a fixed-pin hard macro (peer_xy: the peer's own pin-group centroid in die
+            # coordinates) wishes for THAT position along the face, not the peer instance centre (r33..r43: every d2d_rom
+            # FDI group aimed at the ucie_kv centre, so tx / rx packed in the wrong order, lnk_fdi_tx 437 um, relayed lane)
+            px_, py_ = (peer_xy or {}).get((inst.name, p), (ox, oy))
+            ns = ('N' if oy > cy else 'S', min(max(px_ - inst.x, 0), inst.w))
+            ew = ('E' if ox > cx else 'W', min(max(py_ - inst.y, 0), inst.h))
             dv, dh_ = abs(oy - cy) - inst.h / 2, abs(ox - cx) - inst.w / 2
             want[p] = ns if dv >= dh_ else ew
             alt[p] = (ew if dv >= dh_ else ns, abs(dv - dh_))

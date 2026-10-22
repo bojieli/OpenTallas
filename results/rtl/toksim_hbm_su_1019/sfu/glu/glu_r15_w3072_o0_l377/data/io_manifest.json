@@ -1,0 +1,26 @@
+{
+  "width": 471,
+  "rows": 841,
+  "words": 3072,
+  "ninst": 368,
+  "prefetch_edges": 192,
+  "scalar_prefetch_edge": 192,
+  "arith_start_edge": 242,
+  "drain_edges": [
+    619,
+    811
+  ],
+  "drain_lag": 377,
+  "overlap": false,
+  "lg_path": 16,
+  "latency_shift_edges": 32,
+  "fixture_sha256": {
+    "receipt.json": "6a36184e5e8ed0d4429e205162688d0c28d06c71b70836b2f0007edb5666efda",
+    "su_prod.json": "2df3a2af4326de5ce8f8bb3b22b204ce442f5e4667e883e720dfd7b79a7ac410",
+    "su_vmi.mem": "7fd4e2ea4049220a87a4ba739806214ec9839b012193d8f4e2f8c3609e6d14c1",
+    "su_vme.mem": "56c871dc6720ceb3b8c34603ba82b811270520212b485689df8a5923efb3e356",
+    "fixture_manifest.json": "add299cbed469e1fcceb7357eab15bd7f2f35274552c1aa80c9c031c418c2be2",
+    "mutant.log": "5476440069bb8d1bdb89803387b311e4d38fe6418c44cab8a553f93e3f80857a",
+    "run.log": "0d4684ad90db5f91c7473f287fda4b2587a6f42bf07d9a30b9f6c355d604e16d"
+  }
+}

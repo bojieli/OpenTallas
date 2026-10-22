@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: ot-epyc9       admits   634 GB (avail 618, growth 174, headroom 0, waiters 0/0 GB) load 62/128 running 33 disk 159 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-wqbp
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2023427-1792488901 after 0 s
+DVC dvc_L2 rc=0 1 calendar records
+{"layer": "L2", "ops": 83, "status": {"PARTIAL": 52, "GAP": 31}, "rows": 132, "templates": 132}
+SMOKE u_s_0S sid 0: CTL latency 63.5 edges, last partial 256.5, rstd 490.5, XQ at ring 569.5
+DVC_CAL L2 u_s_0S pipeline 126 52 phases 17 ops ['attn.wq_b', 'attn.idx.q'] static True span 2239
+DVC_LOW attn.wq_b PARTIAL per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d (xs_calen
+DVC_DONE dvc_L2
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2023427-1792488901): exit 0

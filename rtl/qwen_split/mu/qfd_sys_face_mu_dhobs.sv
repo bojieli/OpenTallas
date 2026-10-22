@@ -26,12 +26,13 @@ module qfd_sys_face_mu_dhobs #(
     parameter [64*6-1:0] STG_SEQ = 384'h9659659659659238a181f79d71b69961759551349140f38d30b289207185103081,
     parameter [63:0]     RES_SEQ = 64'h0000100000000000,
     parameter integer LAST_STAGE = 37,
-    parameter integer MUT = 0                      // bench only: the leaf's MUT (2 = stage check dropped)
+    parameter integer MUT = 0,                     // bench only: the leaf's MUT (2 = stage check dropped)
+    parameter integer DHREG = 1                    // QW-MU 10-20: dh_user leaves a flop (no in->out path), see below
 ) (
     input  wire         ck,
     input  wire         rst_n,
     input  wire [186:0] seq_dh,                    // qfd_sys_face seq_dh (die bus shared with qfd_tt_ctlm_dv.dh)
-    output wire [1:0]   dh_user,                   // -> qfd_tt_ctlm_dv.dh_user (same edge as the h_start on seq_dh)
+    output wire [1:0]   dh_user,                   // -> qfd_tt_ctlm_dv.dh_user (DHREG 1: one edge after the h_start)
     output wire [1:0]   res_user,                  // user of the latest RESULT h_start (held)
     output wire         mu_fault                   // sticky: a face h_start off the compiled stage list
 );
@@ -40,9 +41,17 @@ module qfd_sys_face_mu_dhobs #(
     wire [5:0]  op_stage;
     wire [9:0]  op_first, op_cnt;
     wire [3:0]  op_fcode;
+    wire [1:0]  dh_user_c;
+    // DHREG 1 (QW-MU 10-20, COORD 16:30 10-19 review of kit d1: SAFE-DESIGN items 1/4): the leaf's dh_user (hs ? u_k : hold)
+    // is a combinational seq_dh[42] -> dh_user path; DHREG lands it in a 2-b output flop, +1 edge.  Unpriced and harmless:
+    // the release ctlm (qfd_tt_ctlm_dv OPSEG 1) ignores dh_user (s_user = 0 at OPS) and with the compiled lists
+    // (USER_SEQ 0) dh_user is 0 on every edge.  DHREG 0 = the previous zero-edge observer.
+    reg  [1:0]  dh_user_q;
+    always @(posedge ck or negedge rst_n) if (!rst_n) dh_user_q <= 2'd0; else dh_user_q <= dh_user_c;
+    assign dh_user = (DHREG != 0) ? dh_user_q : dh_user_c;
     qfd_sys_face_mu_dhuser #(.NU(NU), .NS(NS), .USER_SEQ(USER_SEQ), .STG_SEQ(STG_SEQ), .RES_SEQ(RES_SEQ), .OPSEG(0),
                              .LAST_STAGE(LAST_STAGE), .MUT(MUT)) u_obs (
-        .ck(ck), .rst_n(rst_n), .dh_run(seq_dh[43:0]), .dh_user(dh_user), .res_user(res_user), .mu_fault(mu_fault),
+        .ck(ck), .rst_n(rst_n), .dh_run(seq_dh[43:0]), .dh_user(dh_user_c), .res_user(res_user), .mu_fault(mu_fault),
         .op_v(op_v), .op_user(op_user), .op_stage(op_stage), .op_first(op_first), .op_cnt(op_cnt), .op_ff(op_ff),
         .op_fcode(op_fcode));
 endmodule

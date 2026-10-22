@@ -1,0 +1,110 @@
+{
+ "cells": 168147,
+ "flops": 24386,
+ "icgs": 0,
+ "macros": 20,
+ "findings": {
+  "logic_depth": [
+   "reg->reg stage u_8680._2_ -> u_1323._2_/D: ~718 ps estimated (24 logic levels) > 600 ps: pipeline / restructure the stage"
+  ]
+ },
+ "refuse": {
+  "logic_depth": [
+   "~718 ps > 700 ps (u_8680._2_ -> u_1323._2_/D)"
+  ]
+ },
+ "metrics": {
+  "clock_roots": [
+   {
+    "root": "port:ck_hr[0]",
+    "ff": 12336,
+    "icg": 0,
+    "macro_pins": 8,
+    "example": "u_10._2_"
+   },
+   {
+    "root": "port:ck_core[0]",
+    "ff": 12050,
+    "icg": 0,
+    "macro_pins": 12,
+    "example": "u_0._2_"
+   }
+  ],
+  "hier_subblocks": 1,
+  "clock_max_root_sinks": 12344,
+  "clock_max_root": "port:ck_hr[0]",
+  "high_fanout_top": [],
+  "hf_max_port": 0,
+  "hf_max_reset": 0,
+  "hf_max_net": 0,
+  "reset_landing": [
+   {
+    "port": "rst_n[0]",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 3,
+  "reg_to_out_levels": 3,
+  "icg_enable_from_port": 0,
+  "depth_ps": 718.5,
+  "depth_path": [
+   "u_8680._2_",
+   "u_1323._2_/D"
+  ],
+  "depth_levels": 24
+ },
+ "top": "qfd_tt_ctlm_dv_hp13_rrloc_native32",
+ "netlist": "/work/mapped_hp13_mem/mapped.v",
+ "seconds": 9.0,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "bnd_strict_pin_regs": 0,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0
+ },
+ "clock_rule": {
+  "max_root_sinks": 12344,
+  "root": "port:ck_hr[0]",
+  "ok": true,
+  "text": "12,344 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [
+  "logic_depth"
+ ],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "logic_depth: reg->reg stage u_8680._2_ -> u_1323._2_/D: ~718 ps estimated (24 logic levels) > 600 ps: pipeline / restructure the stage"
+}

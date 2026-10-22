@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-calpipe/wob
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-calpipe/wob
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-calpipe/wob
+ot-run: ot-epyc9       admits   638 GB (avail 702, growth 256, headroom 0, waiters 0/0 GB) load 115/128 running 54 disk 132 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-calpipe/wob
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-calpipe/wob
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2386128-1792491077 after 0 s
+EXE v_h10_e2 08da5e9047e92899 Verilator 5.050 2026-07-01 rev v5.050
+SEQ /srv/opentallas-scratch/claude/s81-calpipe/wob/vec/L0/u_f_0L01/seq_wob 4 2048 10 1
+WOB_SEQ g01 u_f_0L01 P127 rc=0 P=127 TOKSIM_FGU_SEQ PASS op attn.wo_b PER 127 phases 4 rows 40 fixture_rows 0 go0 63 last_ret 764 span 701 errors 0 []
+WOB_SEQ g01 u_f_0L01 P129 rc=0 P=129 TOKSIM_FGU_SEQ PASS op attn.wo_b PER 129 phases 4 rows 40 fixture_rows 0 go0 63 last_ret 770 span 707 errors 0 []
+XCORRUPT line 0
+WOB_SEQ g01 u_f_0L01 XC_P128 rc=0 P=128 TOKSIM_FGU_SEQ FAIL op attn.wo_b PER 128 phases 4 rows 40 fixture_rows 0 go0 63 last_ret 767 span 704 errors 4 ["PHASE_FAIL p1: ['MISMATCH edge 366 row 0 lo 0 k 1 got 3b1bce70/0 want 3b050e70/0', 'MISMATCH edge 367 row 1 lo 0 k 1 got bd3ac261/0 want bd3ad781/0']", "PHASE_FAIL p2: ['MISMATCH edge 366 row 0 lo 0 k 1 got 3b2b492c/0 want 3b42092c/0', 'MISMATCH edge 367 row 1 lo 0 k 1 got 3b903b00/0 want 3b874b00/0']", "PHASE_FAIL p3: ['MISMATCH edge 366 row 0 lo 0 k 1 got 3c452c71/0 want 3c47d071/0', 'MISMATCH edge 367 row 1 lo 0 k 1 got 3b87d8b4/0 want 3b75b164/0']"]
+WOB_SEQ_DONE g01 u_f_0L01
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2386128-1792491077): exit 0

@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020
+ot-run: ot-epyc6       admits   196 GB (avail 251, growth 113, headroom 0, waiters 0/0 GB) load 120/128 running 46 disk 1967 GB 
+ot-run: ot-epyc7       admits  1073 GB (avail 852, growth 101, headroom 0, waiters 1003/48072 GB) load 84/96 running 29 disk 4971 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-737977-1792561520 after 0 s
+RSTGEN7 PASS: 3 untreated reset releases before (mutant: d2d_rom, sys_face, io_ucie), 0 after; io_ucie last hop re-clocked onto clk_ucie; 3 synchroniser endpoints; RTL / repeater / shared-hop mutants refused
+TEST_RESET_SYNC_FWD PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-737977-1792561520): exit 0

@@ -1,0 +1,12 @@
+COVERAGE row 0 segments [] of 5
+COVERAGE row 2 segments [0, 1, 2, 3] of 5
+PLAN_MISMATCH predicted 12 words, got 8; first diff ((399, 0, (0, 1, 5), 1053374258, 0), (399, 1, (0, 1, 5), 1036052463, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 ffn.shared_gu phase 1 mutant=None rows=4 fixture_rows=4 errors=3 END edges=2293 ret_words=32 xo_checked=2291 fault=0
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 8 words, got 5; first diff ((402, 2, (2, 1, 5), 3163174456, 0), (402, 3, (2, 1, 5), 3197380244, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 ffn.shared_gu phase 2 mutant=None rows=4 fixture_rows=4 errors=2 END edges=2293 ret_words=32 xo_checked=2291 fault=0
+COVERAGE row 0 segments [4] of 5
+COVERAGE row 2 segments [] of 5
+PLAN_MISMATCH predicted 12 words, got 7; first diff ((397, 2, (0, 0, 5), 1033523486, 0), (397, 3, (0, 0, 5), 3190497382, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 ffn.shared_gu phase 3 mutant=None rows=4 fixture_rows=4 errors=3 END edges=2293 ret_words=32 xo_checked=2291 fault=0
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 146 phases 3 rows 12 fixture_rows 12 go0 63 last_ret 714 span 651 errors 15 ['UNASSIGNED_RET edge 398 07d926e641000004b', 'UNASSIGNED_RET edge 401 17c2601fe1000044b', 'UNASSIGNED_RET edge 408 07901b1e41000888b']

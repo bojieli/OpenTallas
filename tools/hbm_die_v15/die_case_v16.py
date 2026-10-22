@@ -47,6 +47,7 @@ from grant_slot_bind import resolve_slot
 import die_clock_tree as dct  # noqa: E402
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_reach  # noqa: E402
+from die_safety import m8 as die_m8  # noqa: E402  (ROOT14 10-20: M8 die-signal RC model)
 from die_repeaters import step as die_repeaters_step  # noqa: E402
 import die_hold_budget  # noqa: E402
 
@@ -382,6 +383,9 @@ def main():
     ap.add_argument('--clock-region-max-um', type=float, default=4000.0,
                     help="regional: two regions joined by a communicating entry pair within --clock-near-um are merged "
                          "when the merged sink box stays within this side (adjacent communicating tiles share a root)")
+    ap.add_argument('--signal-top-layer', default='M9', choices=('M7', 'M8', 'M9'),
+                    help='die signal routing top layer (routing M4-<top>); M8/M9 -> STA wire RC + repeater RC on M8 '
+                         '(tools/die_safety/m8.py, ROOT14 10-20)')
     ap.add_argument('--clock-near-um', type=float, default=405.0, help='regional: near-pair distance (measured reach)')
     ap.add_argument('--diagnostic-param-alias', action='store_true',
                     help='DIAGNOSTIC ONLY: accept same-port parameter aliases (listed in manifest.param_aliases_diagnostic); '
@@ -1316,10 +1320,10 @@ source {plat}/setRC.tcl
 set blk [ord::get_db_block]
 foreach n [$blk getNets] {{ if {{[string match dk?_* [$n getName]] || [string match n_dk?_* [$n getName]] || [string match ckg_pll_* [$n getName]]}} {{ $n setSigType CLOCK }} }}
 set_wire_rc -clock -layer M8
-set_wire_rc -signal -layer M6
-set_routing_layers -signal M4-M9 -clock M7-M9
+set_wire_rc -signal -layer {die_m8.model(a.signal_top_layer)['sta_wire_rc_layer']}
+set_routing_layers -signal M4-{a.signal_top_layer} -clock M7-M9
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-M9 0.146
+set_global_routing_layer_adjustment M6-{a.signal_top_layer} 0.146
 {{REPEAT}}
 set t0 [clock seconds]
 global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
@@ -1392,7 +1396,8 @@ puts OT_DONE
         die_repeaters_step.copy(out)
     rep_call = (die_reach.repair_tcl(mw, '-buffer_gain 4.0') if a.legacy_die_repeaters else
                 die_repeaters_step.tcl_call('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
-                                            repair_args='-buffer_gain 4.0', max_wire_um=a.repeater_max_wire_um).rstrip())
+                                            repair_args='-buffer_gain 4.0', max_wire_um=a.repeater_max_wire_um,
+                                            signal_top_layer=a.signal_top_layer).rstrip())
     rep_ = '' if not a.die_repeaters else f'''{clocks}
 {groups}
 estimate_parasitics -placement

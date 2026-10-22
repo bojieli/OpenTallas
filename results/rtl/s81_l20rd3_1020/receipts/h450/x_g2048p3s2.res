@@ -1,0 +1,1 @@
+IDXRD_CASE OK h450/x_g2048p3s2: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 0 sram 1 ckh 450 hdr_to_last 4790 end_to_last 4597 nerr 1015 nopen 0 qerr 0 slice_err 0 | maxrss_kb=210300 wall=2:43.10

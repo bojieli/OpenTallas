@@ -436,6 +436,20 @@ def build(elem_dir, scenario=None):
         record = json.loads((elem_dir / 'WQBP.json').read_text())
         for o in record['ops']:
             ops[(o.get('dag_cls'), o['op'])] = dict(o, file=str((elem_dir / 'WQBP.json').relative_to(ROOT)))
+    if scenario and scenario.startswith('calpipe'):
+        # S81-CALPIPE 10-20: pipelined compiler calendars (scenarios/calpipe/CALPIPE.json: wo_b P127, wo_a P231) on
+        # top of the WQBP wq_b P126 record; calpipe-wob / calpipe-woa = one op alone (step-by-step reporting)
+        sd = OUT / 'scenarios' / 'calpipe'
+        keep = dict(**{'calpipe-wob': ['attn.wo_b'], 'calpipe-woa': ['attn.wo_a']}).get(scenario)
+        if scenario == 'calpipe':
+            for o in json.loads((elem_dir / 'WQBP.json').read_text())['ops']:
+                ops[(o.get('dag_cls'), o['op'])] = dict(o, file=str((elem_dir / 'WQBP.json').relative_to(ROOT)))
+        for f in sorted(sd.glob('*.json')):
+            for o in json.loads(f.read_text())['ops']:
+                if keep is None or o['op'] in keep:
+                    if not admitted(o, set()):
+                        raise ValueError('calpipe record not admissible: ' + o['op'])
+                    ops[(o.get('dag_cls'), o['op'])] = dict(o, file=str(f.relative_to(ROOT)))
     res = {wl: compose(wl, base, insert_nodes(json.loads(p.read_text()), inserts), ops, slots, xparts) for wl, p in DAGS.items()}
     mu = multi_user(base, res)
     if scenario:
@@ -455,7 +469,7 @@ def build(elem_dir, scenario=None):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--scenario', choices=['wqbp-p126'], help='write an explicitly unqualified proposal; never overwrite baseline cycles.json')
+    ap.add_argument('--scenario', choices=['wqbp-p126', 'calpipe', 'calpipe-wob', 'calpipe-woa'], help='write an explicitly unqualified proposal; never overwrite baseline cycles.json')
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()

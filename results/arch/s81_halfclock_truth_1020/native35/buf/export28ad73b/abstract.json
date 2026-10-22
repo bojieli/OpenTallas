@@ -1,0 +1,272 @@
+{
+  "name": "fc_coupon",
+  "orfs_dir": "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/buf/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 5.650022671943589e-10 min 2.469272702976255e-11",
+      "image": "openroad/orfs:asap7lock",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/buf/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/buf/export28ad73b:/out",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 6.85115963960925e-10 min 3.184288249746814e-11",
+      "image": "openroad/orfs:asap7lock",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/buf/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/buf/export28ad73b:/out",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 6.4179905834294e-10 min 3.052492286714781e-11",
+      "image": "openroad/orfs:asap7lock",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/buf/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/codex-s81-halfclock-coupon-1020/buf/export28ad73b:/out",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "legacy",
+      "tcl": [
+        "read_db /in/results/asap7/fc_coupon/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_spef /in/results/asap7/fc_coupon/base/6_final.spef",
+        "read_sdc /in/results/asap7/fc_coupon/base/6_final.sdc",
+        "set_propagated_clock [all_clocks]"
+      ]
+    },
+    "ff": {
+      "mode": "legacy",
+      "tcl": [
+        "read_db /in/results/asap7/fc_coupon/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_spef /in/results/asap7/fc_coupon/base/6_final.spef",
+        "read_sdc /in/results/asap7/fc_coupon/base/6_final.sdc",
+        "set_propagated_clock [all_clocks]"
+      ]
+    },
+    "tt": {
+      "mode": "legacy",
+      "tcl": [
+        "read_db /in/results/asap7/fc_coupon/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_spef /in/results/asap7/fc_coupon/base/6_final.spef",
+        "read_sdc /in/results/asap7/fc_coupon/base/6_final.sdc",
+        "set_propagated_clock [all_clocks]"
+      ]
+    }
+  },
+  "macro_views": [],
+  "forwarded_clock": {
+    "ss": {
+      "corner": "ss",
+      "input_pin": "ck",
+      "output_pin": "ck_o",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "driver_instance": "b0",
+      "direct_root_buffer": true,
+      "chain": [
+        {
+          "cell": "BUFx4_ASAP7_75t_R",
+          "instance": "b0"
+        }
+      ],
+      "timing_sense": "positive_unate",
+      "root_waveform_ps": [
+        22.99999956631913,
+        376.9999882906165
+      ],
+      "output_rise_input_edge": "rise",
+      "output_fall_input_edge": "fall",
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 125.55481043368087,
+        "arrival_min_rise": 125.48382643368086,
+        "arrival_max_fall": 118.69443870938352,
+        "arrival_min_fall": 118.62199070938351,
+        "slew_max_rise": 177.696365,
+        "slew_max_fall": 142.422226
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 102.99416443368087,
+        "arrival_min_rise": 102.92317243368086,
+        "arrival_max_fall": 96.60023170938348,
+        "arrival_min_fall": 96.52778270938347,
+        "slew_max_rise": 167.044174,
+        "slew_max_fall": 128.553497
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 22.560646000000006,
+        "arrival_min_rise": 22.560654,
+        "arrival_max_fall": 22.09420700000004,
+        "arrival_min_fall": 22.094208000000037,
+        "slew_max_rise": 10.652190999999988,
+        "slew_max_fall": 13.868729000000002
+      },
+      "measured_at": "physical output STA terminal including routed SPEF; propagated original primary clock",
+      "odb_sha256": "1da4c4a441e4b97415265a255b3b5ec8d71083a0ac8762938891acf025b66dac",
+      "spef_sha256": "5b90b3126555684eab6ba3c555742aca1649bc437fc7f660ae74fe385fef6adb",
+      "native_combinational_lib_sha256": "fda2c81e0b6ca000ce8a1b12e37027b52e2b95864fb74a365aff10bb06263e7c",
+      "sequential_etm_before_merge_sha256": "7f16e7d67f15e560d2227e172049b0e51b780c10d770c8172351df1133dd5bfe",
+      "exported_etm_sha256": "04d8c6e70cc537f5e116e2242460745251ba9a16c95e28531dbc6479f7867b08",
+      "extraction_tcl_sha256": "1a33daef02fce6138b71295d23557d72b292b16baadbc16062f6aa43777d1ac0"
+    },
+    "ff": {
+      "corner": "ff",
+      "input_pin": "ck",
+      "output_pin": "ck_o",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "driver_instance": "b0",
+      "direct_root_buffer": true,
+      "chain": [
+        {
+          "cell": "BUFx4_ASAP7_75t_R",
+          "instance": "b0"
+        }
+      ],
+      "timing_sense": "positive_unate",
+      "root_waveform_ps": [
+        22.99999956631913,
+        376.9999882906165
+      ],
+      "output_rise_input_edge": "rise",
+      "output_fall_input_edge": "fall",
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 73.77172143368087,
+        "arrival_min_rise": 73.71528643368087,
+        "arrival_max_fall": 72.96119370938351,
+        "arrival_min_fall": 72.8971677093835,
+        "slew_max_rise": 96.318459,
+        "slew_max_fall": 89.85051
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 51.78492043368087,
+        "arrival_min_rise": 51.72797443368087,
+        "arrival_max_fall": 50.791698709383525,
+        "arrival_min_fall": 50.726909709383506,
+        "slew_max_rise": 73.597282,
+        "slew_max_fall": 64.753822
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 21.986801,
+        "arrival_min_rise": 21.987312000000003,
+        "arrival_max_fall": 22.169494999999984,
+        "arrival_min_fall": 22.17025799999999,
+        "slew_max_rise": 22.721176999999997,
+        "slew_max_fall": 25.096688
+      },
+      "measured_at": "physical output STA terminal including routed SPEF; propagated original primary clock",
+      "odb_sha256": "1da4c4a441e4b97415265a255b3b5ec8d71083a0ac8762938891acf025b66dac",
+      "spef_sha256": "5b90b3126555684eab6ba3c555742aca1649bc437fc7f660ae74fe385fef6adb",
+      "native_combinational_lib_sha256": "cd0ab240938f563582c8ccbc10ba99ba3aba3c01bbeac6da29f3c458badb37c4",
+      "sequential_etm_before_merge_sha256": "bd0f7b69759a3c86a42ecec7f0ee19617988e33e73853bc836ea7b3f4d1de583",
+      "exported_etm_sha256": "33c8058c404ca47b29ebac81fbb91438e58d1cddcd876009d8df368524861e60",
+      "extraction_tcl_sha256": "18b7e062af4a4b6dcdbac3658d7474c407bfef292afdf45027ea5c525d4a9415"
+    },
+    "tt": {
+      "corner": "tt",
+      "input_pin": "ck",
+      "output_pin": "ck_o",
+      "driver_cell": "BUFx4_ASAP7_75t_R",
+      "driver_instance": "b0",
+      "direct_root_buffer": true,
+      "chain": [
+        {
+          "cell": "BUFx4_ASAP7_75t_R",
+          "instance": "b0"
+        }
+      ],
+      "timing_sense": "positive_unate",
+      "root_waveform_ps": [
+        22.99999956631913,
+        376.9999882906165
+      ],
+      "output_rise_input_edge": "rise",
+      "output_fall_input_edge": "fall",
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 91.55658743368086,
+        "arrival_min_rise": 91.49216543368087,
+        "arrival_max_fall": 89.0160637093835,
+        "arrival_min_fall": 88.94562970938352,
+        "slew_max_rise": 122.770699,
+        "slew_max_fall": 107.974953
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 69.56219543368087,
+        "arrival_min_rise": 69.49760443368086,
+        "arrival_max_fall": 66.82743470938351,
+        "arrival_min_fall": 66.75675570938353,
+        "slew_max_rise": 106.134064,
+        "slew_max_fall": 88.352242
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 21.99439199999999,
+        "arrival_min_rise": 21.994561000000004,
+        "arrival_max_fall": 22.18862899999999,
+        "arrival_min_fall": 22.188874,
+        "slew_max_rise": 16.636635,
+        "slew_max_fall": 19.622710999999995
+      },
+      "measured_at": "physical output STA terminal including routed SPEF; propagated original primary clock",
+      "odb_sha256": "1da4c4a441e4b97415265a255b3b5ec8d71083a0ac8762938891acf025b66dac",
+      "spef_sha256": "5b90b3126555684eab6ba3c555742aca1649bc437fc7f660ae74fe385fef6adb",
+      "native_combinational_lib_sha256": "ca9248f89aedbee8466ded831208a644b94a12c8fc28c855e91b38d4400f8d7c",
+      "sequential_etm_before_merge_sha256": "ec2c69c9c9db9badef5c3e2a2d81fdd19157a3d064a5c1b2fa9cb37b0bf40a87",
+      "exported_etm_sha256": "87bf204f01d0b961ae5a026dbea17b8504b98f5a3f7dba5184da631a90e8dec5",
+      "extraction_tcl_sha256": "8bc8795ae548d552c548d09d04db7efba4891c6ea3231418835226f3cf644512"
+    }
+  },
+  "abstract": {
+    "mode": "default",
+    "default_pin_access_violations": 0
+  },
+  "files": {
+    "fc_coupon.lef": "93fb90d6da48e175d22cc804a4d12d512a02699a76a89da4ea39b1afa60a298f",
+    "fc_coupon_ff.lib": "33c8058c404ca47b29ebac81fbb91438e58d1cddcd876009d8df368524861e60",
+    "fc_coupon_ss.lib": "04d8c6e70cc537f5e116e2242460745251ba9a16c95e28531dbc6479f7867b08",
+    "fc_coupon_tt.lib": "87bf204f01d0b961ae5a026dbea17b8504b98f5a3f7dba5184da631a90e8dec5"
+  },
+  "ok": true,
+  "checked": false
+}

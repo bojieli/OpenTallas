@@ -13,6 +13,10 @@ release host (owner MU.DECIDE A 10-18: Qwen ROM 4 users) -- the same RTL the two
       (KV-HOST2 f5cdb27df: the real observer exports raw positions + the scheduler slot; private decode, no edge) and
       u_rank.u_control.u_packet.u_ctrl = qkd_host_ctrl_token_service_packet_collected_mu (MU 1).
 
+Prompt control explicitly sets MU1 (NSLOT4/ENG_CTX4/MU_OUT1/PLB11), and
+root records explicitly select the four-context paired-slot producer. These are
+required together with the native/peer/guard substitutions for a full MU host.
+
 Each output = the original's ports/parameters + `MU` (default 1); MU 0 instantiates the original (mkmu.build).  Every
 pin of every replaced instance keeps its original connection (drop-ins with identical ports): no tie, no stub.
 
@@ -38,7 +42,8 @@ SPECS = [
         ('qkd_host_ctrl_token_service_packet_collected #(.STRAPPED(1),',
          'qkd_host_ctrl_token_service_packet_collected_mu #(.MU(1),.STRAPPED(1),')]),
     ('rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv', 'qkd_host_control_packet_admission', [
-        ('qkd_host_packet_bundle_admission #(', 'qkd_host_packet_bundle_admission_mu #(.MU(1),')]),
+        ('qkd_host_packet_bundle_admission #(', 'qkd_host_packet_bundle_admission_mu #(.MU(1),'),
+        ('qkd_host_control_prompt_observed #(', 'qkd_host_control_prompt_observed #(.MU(1),')]),
     ('rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv', 'qkd_host_rank_services_admission', [
         ('qkd_host_control_packet_admission #(', 'qkd_host_control_packet_admission_mu #(.MU(1),'),
         ('qkd_host_native_token_endpoint_cancel #(.ENABLE_NATIVE(ENABLE_NATIVE))u_native(',
@@ -46,7 +51,8 @@ SPECS = [
         ('qkd_host_service_guard u_guard(', 'qkd_host_service_guard_mu #(.MU(1))u_guard(')]),
     ('rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv', 'qkd_host_root_admission', [
         ('qkd_host_rank_services_admission #(', 'qkd_host_rank_services_admission_mu #(.MU(1),'),
-        ('qkd_host_tp8_coordinator u_coordinator(', 'qkd_host_tp8_coordinator_mu #(.MU(1),.POST_UID_SLOT(1))u_coordinator(')]),
+        ('qkd_host_tp8_coordinator u_coordinator(', 'qkd_host_tp8_coordinator_mu #(.MU(1),.POST_UID_SLOT(1))u_coordinator('),
+        ('qkd_host_record_port u_records(', 'qkd_host_record_port_mu #(.MU(1))u_records(')]),
 ]
 
 

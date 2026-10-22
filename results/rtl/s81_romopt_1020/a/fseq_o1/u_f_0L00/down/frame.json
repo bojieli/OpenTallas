@@ -1,0 +1,5937 @@
+{
+ "frame": "u_f_0L00",
+ "master": "col_h9_l4",
+ "lk": 2925,
+ "slice": "u_s_0S",
+ "slice_index": 0,
+ "frame_index": 0,
+ "pairs": [
+  0,
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11
+ ],
+ "q_pairs": [
+  0,
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  12,
+  14
+ ],
+ "bf_pairs": [
+  4,
+  8,
+  13
+ ],
+ "phases": [
+  {
+   "phase": 0,
+   "op": "attn.a_proj",
+   "mat": "wq_a",
+   "rows": 4,
+   "out_index": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "nseg": 5,
+   "nbeat": 80,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "ret": [
+    [
+     403,
+     134217797,
+     3178727794,
+     0
+    ],
+    [
+     404,
+     134225989,
+     1032675670,
+     0
+    ],
+    [
+     407,
+     134234149,
+     999887364,
+     0
+    ],
+    [
+     408,
+     134242341,
+     3165236459,
+     0
+    ],
+    [
+     413,
+     134234661,
+     1009957744,
+     0
+    ],
+    [
+     414,
+     134242853,
+     3142539696,
+     0
+    ],
+    [
+     420,
+     134235205,
+     3130426528,
+     0
+    ],
+    [
+     421,
+     134243397,
+     1004427600,
+     0
+    ],
+    [
+     423,
+     134218821,
+     3160061985,
+     0
+    ],
+    [
+     424,
+     134227013,
+     3155203690,
+     0
+    ]
+   ]
+  },
+  {
+   "phase": 1,
+   "op": "ffn.down",
+   "mat": "shared.w2",
+   "fmt": "fp8",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 4,
+   "row_index": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "tie": [
+    [
+     "ffn.shared.down",
+     0
+    ],
+    [
+     "ffn.shared.down",
+     1
+    ],
+    [
+     "ffn.shared.down",
+     2
+    ],
+    [
+     "ffn.shared.down",
+     3
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 80,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp8",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     343,
+     134235205,
+     998417996,
+     0
+    ],
+    [
+     344,
+     134243397,
+     1024755758,
+     0
+    ],
+    [
+     351,
+     134218821,
+     981836768,
+     0
+    ],
+    [
+     352,
+     134227013,
+     1017886456,
+     0
+    ],
+    [
+     355,
+     134234149,
+     1017852215,
+     0
+    ],
+    [
+     356,
+     134242341,
+     3171154886,
+     0
+    ],
+    [
+     357,
+     134234661,
+     1032177564,
+     0
+    ],
+    [
+     358,
+     134242853,
+     3183062582,
+     0
+    ],
+    [
+     365,
+     134217797,
+     3159894338,
+     0
+    ],
+    [
+     366,
+     134225989,
+     3174034921,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     0,
+     0,
+     0,
+     0,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 269,
+     "e1": 260,
+     "e2": 273,
+     "e3": 274,
+     "e5": 278,
+     "e6": 274,
+     "e7": 279,
+     "e9": 268,
+     "e10": 280,
+     "e11": 281
+    },
+    "elem_extra": [
+     0,
+     0,
+     0,
+     0,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "gi": 0
+  },
+  {
+   "phase": 2,
+   "op": "ffn.down",
+   "mat": "shared.w2",
+   "fmt": "fp8",
+   "K": 2304,
+   "chunk": 1,
+   "rows": 4,
+   "row_index": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "tie": [
+    [
+     "ffn.shared.down",
+     4
+    ],
+    [
+     "ffn.shared.down",
+     5
+    ],
+    [
+     "ffn.shared.down",
+     6
+    ],
+    [
+     "ffn.shared.down",
+     7
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 144,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp8",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     343,
+     134235205,
+     1025533900,
+     0
+    ],
+    [
+     344,
+     134243397,
+     1016887093,
+     0
+    ],
+    [
+     351,
+     134218821,
+     3153882052,
+     0
+    ],
+    [
+     352,
+     134227013,
+     3137173248,
+     0
+    ],
+    [
+     355,
+     134234149,
+     3163664126,
+     0
+    ],
+    [
+     356,
+     134242341,
+     3183983923,
+     0
+    ],
+    [
+     357,
+     134234661,
+     3179483610,
+     0
+    ],
+    [
+     358,
+     134242853,
+     1019087053,
+     0
+    ],
+    [
+     365,
+     134217797,
+     1034546984,
+     0
+    ],
+    [
+     366,
+     134225989,
+     3173665134,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     0,
+     0,
+     0,
+     0,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 269,
+     "e1": 260,
+     "e2": 273,
+     "e3": 274,
+     "e5": 278,
+     "e6": 274,
+     "e7": 279,
+     "e9": 268,
+     "e10": 280,
+     "e11": 281
+    },
+    "elem_extra": [
+     0,
+     0,
+     0,
+     0,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    }
+   ],
+   "sel": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "gi": 0
+  },
+  {
+   "phase": 3,
+   "op": "ffn.down",
+   "mat": "shared.w2",
+   "fmt": "fp8",
+   "K": 2304,
+   "chunk": 2,
+   "rows": 3,
+   "row_index": [
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.shared.down",
+     8
+    ],
+    [
+     "ffn.shared.down",
+     9
+    ],
+    [
+     "ffn.shared.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 208,
+   "faults": 0,
+   "ret_words": 8,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp8",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     345,
+     134218821,
+     1001447564,
+     0
+    ],
+    [
+     346,
+     134227013,
+     1017258486,
+     0
+    ],
+    [
+     351,
+     134235205,
+     1013511282,
+     0
+    ],
+    [
+     352,
+     134217765,
+     3181584722,
+     0
+    ],
+    [
+     353,
+     134225957,
+     1012951688,
+     0
+    ],
+    [
+     360,
+     134218277,
+     3170027836,
+     0
+    ],
+    [
+     361,
+     134226469,
+     3191869113,
+     0
+    ],
+    [
+     364,
+     134234181,
+     3124890368,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     0,
+     0,
+     0,
+     0,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 268,
+     "e1": 269,
+     "e2": 274,
+     "e3": 262,
+     "e5": 277,
+     "e6": 277,
+     "e7": 280,
+     "e9": 268,
+     "e10": 280,
+     "e11": 281
+    },
+    "elem_extra": [
+     0,
+     0,
+     0,
+     0,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    8,
+    9,
+    10
+   ],
+   "gi": 0
+  },
+  {
+   "phase": 4,
+   "op": "ffn.down",
+   "mat": "exp61.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 4,
+   "row_index": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "tie": [
+    [
+     "ffn.experts.61.down",
+     0
+    ],
+    [
+     "ffn.experts.61.down",
+     1
+    ],
+    [
+     "ffn.experts.61.down",
+     2
+    ],
+    [
+     "ffn.experts.61.down",
+     3
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 272,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     3162176064,
+     0
+    ],
+    [
+     342,
+     134225957,
+     1015273678,
+     0
+    ],
+    [
+     343,
+     134235205,
+     981575232,
+     0
+    ],
+    [
+     344,
+     134243397,
+     3142472456,
+     0
+    ],
+    [
+     345,
+     134218821,
+     968145920,
+     0
+    ],
+    [
+     346,
+     134227013,
+     989954924,
+     0
+    ],
+    [
+     347,
+     134218277,
+     998967464,
+     0
+    ],
+    [
+     348,
+     134226469,
+     994463904,
+     0
+    ],
+    [
+     351,
+     134234181,
+     1002598964,
+     0
+    ],
+    [
+     352,
+     134242373,
+     3139406000,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "gi": 1
+  },
+  {
+   "phase": 5,
+   "op": "ffn.down",
+   "mat": "exp61.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 1,
+   "rows": 4,
+   "row_index": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "tie": [
+    [
+     "ffn.experts.61.down",
+     4
+    ],
+    [
+     "ffn.experts.61.down",
+     5
+    ],
+    [
+     "ffn.experts.61.down",
+     6
+    ],
+    [
+     "ffn.experts.61.down",
+     7
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 336,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     1015886524,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3152519872,
+     0
+    ],
+    [
+     343,
+     134235205,
+     3139945080,
+     0
+    ],
+    [
+     344,
+     134243397,
+     1000143712,
+     0
+    ],
+    [
+     345,
+     134218821,
+     999733816,
+     0
+    ],
+    [
+     346,
+     134227013,
+     998977424,
+     0
+    ],
+    [
+     347,
+     134218277,
+     3156744184,
+     0
+    ],
+    [
+     348,
+     134226469,
+     976980864,
+     0
+    ],
+    [
+     351,
+     134234181,
+     3167150626,
+     0
+    ],
+    [
+     352,
+     134242373,
+     3171654227,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "gi": 1
+  },
+  {
+   "phase": 6,
+   "op": "ffn.down",
+   "mat": "exp61.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 2,
+   "rows": 3,
+   "row_index": [
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.61.down",
+     8
+    ],
+    [
+     "ffn.experts.61.down",
+     9
+    ],
+    [
+     "ffn.experts.61.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 400,
+   "faults": 0,
+   "ret_words": 8,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     1005071816,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3172026484,
+     0
+    ],
+    [
+     343,
+     134235205,
+     3139749184,
+     0
+    ],
+    [
+     345,
+     134218821,
+     3133965920,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3154938260,
+     0
+    ],
+    [
+     347,
+     134218277,
+     1007816940,
+     0
+    ],
+    [
+     348,
+     134226469,
+     1005378184,
+     0
+    ],
+    [
+     350,
+     134234181,
+     1013350554,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 263,
+     "e6": 264,
+     "e7": 266,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    8,
+    9,
+    10
+   ],
+   "gi": 1
+  },
+  {
+   "phase": 7,
+   "op": "ffn.down",
+   "mat": "exp69.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 4,
+   "row_index": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "tie": [
+    [
+     "ffn.experts.69.down",
+     0
+    ],
+    [
+     "ffn.experts.69.down",
+     1
+    ],
+    [
+     "ffn.experts.69.down",
+     2
+    ],
+    [
+     "ffn.experts.69.down",
+     3
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 464,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     3143643280,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3162605648,
+     0
+    ],
+    [
+     343,
+     134235205,
+     973213408,
+     0
+    ],
+    [
+     344,
+     134243397,
+     3157516404,
+     0
+    ],
+    [
+     345,
+     134218821,
+     3146958736,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3141552880,
+     0
+    ],
+    [
+     347,
+     134218277,
+     1013571362,
+     0
+    ],
+    [
+     348,
+     134226469,
+     3149495672,
+     0
+    ],
+    [
+     351,
+     134234181,
+     1003163244,
+     0
+    ],
+    [
+     352,
+     134242373,
+     3141208904,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "gi": 2
+  },
+  {
+   "phase": 8,
+   "op": "ffn.down",
+   "mat": "exp69.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 1,
+   "rows": 4,
+   "row_index": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "tie": [
+    [
+     "ffn.experts.69.down",
+     4
+    ],
+    [
+     "ffn.experts.69.down",
+     5
+    ],
+    [
+     "ffn.experts.69.down",
+     6
+    ],
+    [
+     "ffn.experts.69.down",
+     7
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 528,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     3152738076,
+     0
+    ],
+    [
+     342,
+     134225957,
+     1010091117,
+     0
+    ],
+    [
+     343,
+     134235205,
+     3131702688,
+     0
+    ],
+    [
+     344,
+     134243397,
+     3146228800,
+     0
+    ],
+    [
+     345,
+     134218821,
+     991566736,
+     0
+    ],
+    [
+     346,
+     134227013,
+     972476736,
+     0
+    ],
+    [
+     347,
+     134218277,
+     999243592,
+     0
+    ],
+    [
+     348,
+     134226469,
+     1009090644,
+     0
+    ],
+    [
+     351,
+     134234181,
+     1020393363,
+     0
+    ],
+    [
+     352,
+     134242373,
+     1010245466,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "gi": 2
+  },
+  {
+   "phase": 9,
+   "op": "ffn.down",
+   "mat": "exp69.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 2,
+   "rows": 3,
+   "row_index": [
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.69.down",
+     8
+    ],
+    [
+     "ffn.experts.69.down",
+     9
+    ],
+    [
+     "ffn.experts.69.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 592,
+   "faults": 0,
+   "ret_words": 8,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     995124216,
+     0
+    ],
+    [
+     342,
+     134225957,
+     991655332,
+     0
+    ],
+    [
+     343,
+     134235205,
+     3133691232,
+     0
+    ],
+    [
+     345,
+     134218821,
+     1003784520,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3120332224,
+     0
+    ],
+    [
+     347,
+     134218277,
+     1007249522,
+     0
+    ],
+    [
+     348,
+     134226469,
+     3139257104,
+     0
+    ],
+    [
+     350,
+     134234181,
+     1015309834,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 263,
+     "e6": 264,
+     "e7": 266,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    8,
+    9,
+    10
+   ],
+   "gi": 2
+  },
+  {
+   "phase": 10,
+   "op": "ffn.down",
+   "mat": "exp112.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 4,
+   "row_index": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "tie": [
+    [
+     "ffn.experts.112.down",
+     0
+    ],
+    [
+     "ffn.experts.112.down",
+     1
+    ],
+    [
+     "ffn.experts.112.down",
+     2
+    ],
+    [
+     "ffn.experts.112.down",
+     3
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 656,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     3152201880,
+     0
+    ],
+    [
+     342,
+     134225957,
+     999508666,
+     0
+    ],
+    [
+     343,
+     134235205,
+     999833792,
+     0
+    ],
+    [
+     344,
+     134243397,
+     3149289304,
+     0
+    ],
+    [
+     345,
+     134218821,
+     996018496,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3125648064,
+     0
+    ],
+    [
+     347,
+     134218277,
+     1008246009,
+     0
+    ],
+    [
+     348,
+     134226469,
+     991485288,
+     0
+    ],
+    [
+     351,
+     134234181,
+     3146478668,
+     0
+    ],
+    [
+     352,
+     134242373,
+     993137148,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "gi": 3
+  },
+  {
+   "phase": 11,
+   "op": "ffn.down",
+   "mat": "exp112.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 1,
+   "rows": 4,
+   "row_index": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "tie": [
+    [
+     "ffn.experts.112.down",
+     4
+    ],
+    [
+     "ffn.experts.112.down",
+     5
+    ],
+    [
+     "ffn.experts.112.down",
+     6
+    ],
+    [
+     "ffn.experts.112.down",
+     7
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 720,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     3151199672,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3147236906,
+     0
+    ],
+    [
+     343,
+     134235205,
+     3142088832,
+     0
+    ],
+    [
+     344,
+     134243397,
+     990874336,
+     0
+    ],
+    [
+     345,
+     134218821,
+     1001089664,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3139465440,
+     0
+    ],
+    [
+     347,
+     134218277,
+     3137023632,
+     0
+    ],
+    [
+     348,
+     134226469,
+     3090522624,
+     0
+    ],
+    [
+     351,
+     134234181,
+     994204388,
+     0
+    ],
+    [
+     352,
+     134242373,
+     1008085911,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "gi": 3
+  },
+  {
+   "phase": 12,
+   "op": "ffn.down",
+   "mat": "exp112.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 2,
+   "rows": 3,
+   "row_index": [
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.112.down",
+     8
+    ],
+    [
+     "ffn.experts.112.down",
+     9
+    ],
+    [
+     "ffn.experts.112.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 784,
+   "faults": 0,
+   "ret_words": 8,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     1006937576,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3162585895,
+     0
+    ],
+    [
+     343,
+     134235205,
+     1011399808,
+     0
+    ],
+    [
+     345,
+     134218821,
+     3112121600,
+     0
+    ],
+    [
+     346,
+     134227013,
+     1007847260,
+     0
+    ],
+    [
+     347,
+     134218277,
+     3169196341,
+     0
+    ],
+    [
+     348,
+     134226469,
+     3152672870,
+     0
+    ],
+    [
+     350,
+     134234181,
+     3136367392,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 263,
+     "e6": 264,
+     "e7": 266,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    8,
+    9,
+    10
+   ],
+   "gi": 3
+  },
+  {
+   "phase": 13,
+   "op": "ffn.down",
+   "mat": "exp170.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 4,
+   "row_index": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "tie": [
+    [
+     "ffn.experts.170.down",
+     0
+    ],
+    [
+     "ffn.experts.170.down",
+     1
+    ],
+    [
+     "ffn.experts.170.down",
+     2
+    ],
+    [
+     "ffn.experts.170.down",
+     3
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 848,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     3155173797,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3155880334,
+     0
+    ],
+    [
+     343,
+     134235205,
+     987276768,
+     0
+    ],
+    [
+     344,
+     134243397,
+     972739584,
+     0
+    ],
+    [
+     345,
+     134218821,
+     933949440,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3084390400,
+     0
+    ],
+    [
+     347,
+     134218277,
+     3133734688,
+     0
+    ],
+    [
+     348,
+     134226469,
+     1004825668,
+     0
+    ],
+    [
+     351,
+     134234181,
+     1024529566,
+     0
+    ],
+    [
+     352,
+     134242373,
+     3148467932,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "gi": 4
+  },
+  {
+   "phase": 14,
+   "op": "ffn.down",
+   "mat": "exp170.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 1,
+   "rows": 4,
+   "row_index": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "tie": [
+    [
+     "ffn.experts.170.down",
+     4
+    ],
+    [
+     "ffn.experts.170.down",
+     5
+    ],
+    [
+     "ffn.experts.170.down",
+     6
+    ],
+    [
+     "ffn.experts.170.down",
+     7
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 912,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     969262208,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3159260836,
+     0
+    ],
+    [
+     343,
+     134235205,
+     1000838400,
+     0
+    ],
+    [
+     344,
+     134243397,
+     3146646656,
+     0
+    ],
+    [
+     345,
+     134218821,
+     995404416,
+     0
+    ],
+    [
+     346,
+     134227013,
+     1007496032,
+     0
+    ],
+    [
+     347,
+     134218277,
+     997140172,
+     0
+    ],
+    [
+     348,
+     134226469,
+     3158642044,
+     0
+    ],
+    [
+     351,
+     134234181,
+     1018879974,
+     0
+    ],
+    [
+     352,
+     134242373,
+     1019320936,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "gi": 4
+  },
+  {
+   "phase": 15,
+   "op": "ffn.down",
+   "mat": "exp170.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 2,
+   "rows": 3,
+   "row_index": [
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.170.down",
+     8
+    ],
+    [
+     "ffn.experts.170.down",
+     9
+    ],
+    [
+     "ffn.experts.170.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 976,
+   "faults": 0,
+   "ret_words": 8,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     1000769378,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3162265248,
+     0
+    ],
+    [
+     343,
+     134235205,
+     983808192,
+     0
+    ],
+    [
+     345,
+     134218821,
+     3134736064,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3143010112,
+     0
+    ],
+    [
+     347,
+     134218277,
+     1009046432,
+     0
+    ],
+    [
+     348,
+     134226469,
+     1005924272,
+     0
+    ],
+    [
+     350,
+     134234181,
+     3146265752,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 263,
+     "e6": 264,
+     "e7": 266,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    8,
+    9,
+    10
+   ],
+   "gi": 4
+  },
+  {
+   "phase": 16,
+   "op": "ffn.down",
+   "mat": "exp299.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 4,
+   "row_index": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "tie": [
+    [
+     "ffn.experts.299.down",
+     0
+    ],
+    [
+     "ffn.experts.299.down",
+     1
+    ],
+    [
+     "ffn.experts.299.down",
+     2
+    ],
+    [
+     "ffn.experts.299.down",
+     3
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 1040,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     3165489416,
+     0
+    ],
+    [
+     342,
+     134225957,
+     1011135144,
+     0
+    ],
+    [
+     343,
+     134235205,
+     999872192,
+     0
+    ],
+    [
+     344,
+     134243397,
+     3166029948,
+     0
+    ],
+    [
+     345,
+     134218821,
+     3155401376,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3132827904,
+     0
+    ],
+    [
+     347,
+     134218277,
+     1020663094,
+     0
+    ],
+    [
+     348,
+     134226469,
+     1008465324,
+     0
+    ],
+    [
+     351,
+     134234181,
+     1015720290,
+     0
+    ],
+    [
+     352,
+     134242373,
+     3167438414,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "gi": 5
+  },
+  {
+   "phase": 17,
+   "op": "ffn.down",
+   "mat": "exp299.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 1,
+   "rows": 4,
+   "row_index": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "tie": [
+    [
+     "ffn.experts.299.down",
+     4
+    ],
+    [
+     "ffn.experts.299.down",
+     5
+    ],
+    [
+     "ffn.experts.299.down",
+     6
+    ],
+    [
+     "ffn.experts.299.down",
+     7
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 1104,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     1019183740,
+     0
+    ],
+    [
+     342,
+     134225957,
+     1009185548,
+     0
+    ],
+    [
+     343,
+     134235205,
+     1011274000,
+     0
+    ],
+    [
+     344,
+     134243397,
+     3159609336,
+     0
+    ],
+    [
+     345,
+     134218821,
+     1025621086,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3161996452,
+     0
+    ],
+    [
+     347,
+     134218277,
+     3166305360,
+     0
+    ],
+    [
+     348,
+     134226469,
+     993095920,
+     0
+    ],
+    [
+     351,
+     134234181,
+     1023693013,
+     0
+    ],
+    [
+     352,
+     134242373,
+     1007153140,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "gi": 5
+  },
+  {
+   "phase": 18,
+   "op": "ffn.down",
+   "mat": "exp299.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 2,
+   "rows": 3,
+   "row_index": [
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.299.down",
+     8
+    ],
+    [
+     "ffn.experts.299.down",
+     9
+    ],
+    [
+     "ffn.experts.299.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 1168,
+   "faults": 0,
+   "ret_words": 8,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     988179648,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3168442394,
+     0
+    ],
+    [
+     343,
+     134235205,
+     1019083444,
+     0
+    ],
+    [
+     345,
+     134218821,
+     1017107808,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3156370736,
+     0
+    ],
+    [
+     347,
+     134218277,
+     3161667904,
+     0
+    ],
+    [
+     348,
+     134226469,
+     1012339196,
+     0
+    ],
+    [
+     350,
+     134234181,
+     3162699228,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 263,
+     "e6": 264,
+     "e7": 266,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    8,
+    9,
+    10
+   ],
+   "gi": 5
+  },
+  {
+   "phase": 19,
+   "op": "ffn.down",
+   "mat": "exp357.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 4,
+   "row_index": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "tie": [
+    [
+     "ffn.experts.357.down",
+     0
+    ],
+    [
+     "ffn.experts.357.down",
+     1
+    ],
+    [
+     "ffn.experts.357.down",
+     2
+    ],
+    [
+     "ffn.experts.357.down",
+     3
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 1232,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     997922848,
+     0
+    ],
+    [
+     342,
+     134225957,
+     3129700912,
+     0
+    ],
+    [
+     343,
+     134235205,
+     3073359872,
+     0
+    ],
+    [
+     344,
+     134243397,
+     953492480,
+     0
+    ],
+    [
+     345,
+     134218821,
+     3117542912,
+     0
+    ],
+    [
+     346,
+     134227013,
+     960893952,
+     0
+    ],
+    [
+     347,
+     134218277,
+     3151120928,
+     0
+    ],
+    [
+     348,
+     134226469,
+     991091680,
+     0
+    ],
+    [
+     351,
+     134234181,
+     1009550116,
+     0
+    ],
+    [
+     352,
+     134242373,
+     1006184604,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "gi": 6
+  },
+  {
+   "phase": 20,
+   "op": "ffn.down",
+   "mat": "exp357.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 1,
+   "rows": 4,
+   "row_index": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "tie": [
+    [
+     "ffn.experts.357.down",
+     4
+    ],
+    [
+     "ffn.experts.357.down",
+     5
+    ],
+    [
+     "ffn.experts.357.down",
+     6
+    ],
+    [
+     "ffn.experts.357.down",
+     7
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 1296,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     991032888,
+     0
+    ],
+    [
+     342,
+     134225957,
+     990761060,
+     0
+    ],
+    [
+     343,
+     134235205,
+     3130341376,
+     0
+    ],
+    [
+     344,
+     134243397,
+     981856960,
+     0
+    ],
+    [
+     345,
+     134218821,
+     995635232,
+     0
+    ],
+    [
+     346,
+     134227013,
+     995831376,
+     0
+    ],
+    [
+     347,
+     134218277,
+     3154674072,
+     0
+    ],
+    [
+     348,
+     134226469,
+     997875752,
+     0
+    ],
+    [
+     351,
+     134234181,
+     1008375619,
+     0
+    ],
+    [
+     352,
+     134242373,
+     3141726024,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 264,
+     "e6": 264,
+     "e7": 265,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "gi": 6
+  },
+  {
+   "phase": 21,
+   "op": "ffn.down",
+   "mat": "exp357.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 2,
+   "rows": 3,
+   "row_index": [
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.357.down",
+     8
+    ],
+    [
+     "ffn.experts.357.down",
+     9
+    ],
+    [
+     "ffn.experts.357.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 4,
+   "nbeat": 64,
+   "sbase": 1360,
+   "faults": 0,
+   "ret_words": 8,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2
+   ],
+   "ret": [
+    [
+     341,
+     134217765,
+     1001263632,
+     0
+    ],
+    [
+     342,
+     134225957,
+     1015593409,
+     0
+    ],
+    [
+     343,
+     134235205,
+     3149557056,
+     0
+    ],
+    [
+     345,
+     134218821,
+     990914816,
+     0
+    ],
+    [
+     346,
+     134227013,
+     3128292032,
+     0
+    ],
+    [
+     347,
+     134218277,
+     979292992,
+     0
+    ],
+    [
+     348,
+     134226469,
+     3129641712,
+     0
+    ],
+    [
+     350,
+     134234181,
+     999037600,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     56,
+     57,
+     59,
+     60,
+     62
+    ],
+    "edges": {
+     "e0": 255,
+     "e1": 260,
+     "e2": 256,
+     "e3": 262,
+     "e5": 263,
+     "e6": 264,
+     "e7": 266,
+     "e9": 265,
+     "e10": 266,
+     "e11": 267
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 9,
+     "field_slot": 7,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ]
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ]
+    }
+   ],
+   "sel": [
+    8,
+    9,
+    10
+   ],
+   "gi": 6
+  }
+ ],
+ "fill": [
+  224,
+  208,
+  224,
+  216,
+  224,
+  224,
+  224,
+  200,
+  224,
+  224,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "depth": 8192,
+ "nphases": 22,
+ "slots": [
+  0,
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11
+ ],
+ "env": {
+  "OT_XS_GU_MERGE": "1",
+  "OT_XS_QPAIRS": "10",
+  "OT_XS_CAL_SEGMENT": "1",
+  "OT_XS_TOPO": "1",
+  "OT_XS_PROP": "1",
+  "OT_XS_COMPACT_TAILS": "0",
+  "OT_XS_LEGACY": "0"
+ },
+ "topo": {
+  "enabled": true,
+  "frames_per_slice": [
+   8,
+   8,
+   8,
+   8,
+   7,
+   8,
+   6,
+   8,
+   6,
+   8,
+   7,
+   8,
+   8,
+   8,
+   8,
+   8
+  ],
+  "die_sha": "d0222e67dc3da5c5c163a959aafdbfe2858613d3c609e05eece77467cfbf7fc8"
+ }
+}
