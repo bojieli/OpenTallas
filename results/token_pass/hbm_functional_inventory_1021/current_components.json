@@ -1,0 +1,69 @@
+{
+  "observed_at": "2026-10-21T21:42:45-07:00",
+  "selected_r18_source": "d76bf51b4",
+  "next_physical_revision": {
+    "source": "13cbe8431",
+    "change": "eight cxij slot origins only",
+    "final_post_S8b_contract": "pending"
+  },
+  "full_token_status": "INCOMPLETE",
+  "candidate_sfu_r24": {
+    "source_commit": "39c253769",
+    "unit": "oth-ubuntu-1954152-1792642838",
+    "host": "ot-epyc7",
+    "exit": 0,
+    "params": {
+      "SFU_LG_R": 24,
+      "CORE3": 1,
+      "CORE3L": 1,
+      "SYNC_RST": 1,
+      "K9X_BTREE": 3,
+      "K9X_BRING": 0,
+      "NATIVE32": 1,
+      "FPIPE": 1
+    },
+    "compared_edges": 6687,
+    "active_output_edges": 6519,
+    "exact_VM_committed_words": 3072,
+    "actual_IO_rows": 850,
+    "actual_arithmetic_rows": 368,
+    "source_hash_matches": 58,
+    "source_hash_missing": [],
+    "source_hash_bad": [],
+    "scope": "Canonical Qswiglu component equivalence at exact physical LG_PATH 24; arithmetic payload and edge alignment. The selected die LG_PATH 15 adoption is separate. Existing R23 and fault-tree proofs remain separately scoped.",
+    "evidence_commit": "b02bfc61be0ee269c3652ca870d20956a566dc2e",
+    "evidence_branch": "codex/hbm-hc-sfu-2000",
+    "evidence_path": "results/rtl/hbm_sfuc_k11_2000/full_qswiglu_r24/receipt.json",
+    "fpipe_source": "4733c83d8",
+    "physical_freezes": [
+      "7be87e34e",
+      "1da5b6742"
+    ],
+    "physical_status": "live; no verdict",
+    "selected_die_profile": "LG_PATH15 unchanged; no candidate promotion"
+  },
+  "candidate_dma_load": {
+    "latest_functional_source": "db8c1610329b89ec05ec25a4550edb42add3028c",
+    "latest_caller_state": "real vmks asynchronous producer replay active, EP5 unit2111555-1792644115; no verdict yet",
+    "last_caller_pass_source": "d70845a2b",
+    "last_caller_evidence": "25b66179f:results/rtl/hbm_dma_producer_1021/receipt.json",
+    "last_caller_words": 384,
+    "full_record_words": 1280,
+    "local_edges": 5,
+    "route_edges": 5,
+    "sample_to_packet_edges": 10,
+    "preceding_drive_to_packet_cycles": 11,
+    "physical_status": "d708 native4 failed five max34 roots; db8 native5 live",
+    "selected_die_status": "new converter and route remain candidate only"
+  },
+  "remaining_lowering_gaps": [
+    "six SU route.gather records: runtime indexed address and real placed score window",
+    "unsupported RoPE tails: three L0 and four L2",
+    "L14 Engram decode row port4 versus0, dot quarter VM capacity, out RF broadcast calendar",
+    "format_open records: DS L0 42 / L2 46 / L14 97; Qwen L0 24 / chain45",
+    "full tensor placement, upstream mixed traffic, final source/transport/calendar and full token execution"
+  ],
+  "current_graph_census": "3acc18541:results/rtl/hbm_dma_integrated_1021/r18_intermediate_census.json; all1264 original sources/deps/params unchanged at intermediate only",
+  "source_byte_availability": "57786618d: independently recovered actual input bytes for all22 LOAD fixture records; no source bytes derived from fixture O",
+  "published_model_fix": "main94c4b7a14; pre-fix live binaries retain INIT.hex workaround"
+}
