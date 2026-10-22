@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hidx_col8_region_lp",
+ "enable": false,
+ "reason": "lp lands rst_n per region (reset depth 3, regional copies); each pair keeps its own 2-stage synchroniser"
+}

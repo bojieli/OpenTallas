@@ -1,0 +1,246 @@
+{
+ "name": "hidx_col8_real_fb_1021",
+ "top": "ot_hidx_col8_region_lp",
+ "kind": "cluster",
+ "diagnostic": true,
+ "sources": [
+  "rtl/hdc/v41x/col8_parent_1021/lp/ot_hidx_col8_region_lp.sv",
+  "rtl/hdc/v41x/col8_parent_1021/ot_hidx_col8_join.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+ ],
+ "defines": [],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_ctl",
+ "clock_ports": [
+  "ck_ctl",
+  "ck_p0",
+  "ck_p1",
+  "ck_p2",
+  "ck_p3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ctl"
+   ],
+   "inputs": [
+    "qv_b",
+    "q_b",
+    "key",
+    "hid",
+    "rst_n"
+   ],
+   "outputs": [
+    "cs_out",
+    "cf_out",
+    "prdy0",
+    "prdy1",
+    "prdy2",
+    "prdy3"
+   ]
+  },
+  "p0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_p0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "p1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_p1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "p2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_p2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "p3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_p3"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/arch/hbm_col8_parent_1021/column/ot_hidx_col8_region_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 691.2,
+  "h": 691.2,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/hidx_score_pair8_r0/views/ot_hidx_score_pair8_r0",
+   "count": 1,
+   "inst": "u_pair0",
+   "at": [
+    43.2,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_col8_standin_r1/views/ot_hidx_score_pair8_r1",
+   "count": 1,
+   "inst": "u_pair1",
+   "at": [
+    302.4,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_score_pair8_r2/views/ot_hidx_score_pair8_r2",
+   "count": 1,
+   "inst": "u_pair2",
+   "at": [
+    302.4,
+    302.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_col8_standin_r3/views/ot_hidx_score_pair8_r3",
+   "count": 1,
+   "inst": "u_pair3",
+   "at": [
+    43.2,
+    302.4
+   ]
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "pins": {
+  "N": [
+   "qv_b",
+   "q_b",
+   "ck_ctl",
+   "rst_n",
+   "ck_p0",
+   "ck_p1"
+  ],
+  "S": [
+   "key",
+   "ck_p2",
+   "ck_p3"
+  ],
+  "W": [
+   "hid"
+  ],
+  "E": [
+   "cs_out",
+   "cf_out",
+   "prdy0",
+   "prdy1",
+   "prdy2",
+   "prdy3"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "every pair8 input/output is registered inside the pair (q_p/key_h/hid_pa pin registers, registered cs/cf/prdy); every cross-region net is an lp landing; a kit flop stage would add an unpriced edge"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "lp lands rst_n per region (reset depth 3, regional copies); each pair keeps its own 2-stage synchroniser"
+ },
+ "child_clock_ref": "boundary",
+ "keep_pin_regs": true,
+ "landed": {
+  "record": "results/arch/hbm_col8_parent_1021/column/ot_hidx_col8_region_lp_record.json",
+  "landings": 28,
+  "landing_flops": 33124,
+  "reset_depth": 3,
+  "lp_spec": "tools/landed_parent/specs/hidx_col8_region_1021.json"
+ },
+ "views_status": "DIAGNOSTIC ONLY: exact zt0r/zt2r CLOSED; r1/r3 explicit STANDIN_NOT_A_VIEW pending successors; no submit/bind",
+ "job": {
+  "owner": "CODEX-HBM-COL8-PARENT-2000",
+  "branch": "codex/hbm-col8-parent-2000-1021",
+  "tag": "fb",
+  "submit": false,
+  "benches": [],
+  "purpose": "H.STA.BLK.15.2 score-quarter hierarchy, first level above pair8 (col8) as a landed parent, DIAGNOSTIC MAIN form: floorplan/pins/clock entry early",
+  "views_to": "physical/ref_tile/hidx_col8_lp_main_diag/views",
+  "record_to": "results/rtl/ref_tile/hidx_col8_lp_main_diag",
+  "extra_paths": [
+   "rtl/common/landed_parent",
+   "rtl/hdc/v41x/col8_parent_1021",
+   "results/arch/hbm_col8_parent_1021",
+   "physical/ref_tile/hidx_score_pair8_r0",
+   "physical/ref_tile/hidx_score_pair8_r2",
+   "physical/ref_tile/hidx_col8_standin_r1",
+   "physical/ref_tile/hidx_col8_standin_r3"
+  ]
+ },
+ "safe_design_checklist": {
+  "1_pins": "Registered pair inputs and landed join outputs; actual face audit decides",
+  "2_reach": "2x2 pair lattice with43.2channels; clock ctl reset-ring placement to measure",
+  "3_fanout": "12bit ring control groups + reset forest; native census required before floorplan",
+  "4_depth": "Ring read registered; join one output register, no arithmetic change",
+  "5_storage": "OPEN:33124 landingflops+21204 alignmentflops; ring storage not SRAM; diagnostic only pending actual macro structure",
+  "6_floorplan": "691.2 square, actual4pair area149299um2; stdcellarea synthesis decides; no squeeze",
+  "7_clock": "5real regionalroots, every region crossing landed; TT/FF spread measured",
+  "8_schedule": "Static, generated pair offsets3/6/9/12, join offset15 plus physical join register1 =16edges vs original column; no old latency alias"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ }
+}
