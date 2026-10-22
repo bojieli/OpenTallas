@@ -83,7 +83,7 @@ module ot_s81svc8_hgrp_s81 #(
     end
 
     // -- D1: dequantise across the D1 register (deq_a | D1 | deq_b), as the old group
-    genvar gh, gk, gp;
+    genvar gh, gk, gp, gb;
     wire [TD*18-1:0] dq_b;
     reg  [TD*21-1:0] d1_a;
     reg  [BW-1:0]    d1_bank;
@@ -200,6 +200,20 @@ module ot_s81svc8_hgrp_s81 #(
                 assign write_high[gk] = p_v && p_mode && p_w2v && ((p_grp + 8'd1) == gk);
 `endif
             end
+            // Explicit per-(slot group, bank) write enables, kept nets (abc must not flatten them back into the
+            // 2,560 ab-bit cones): p_w2v / p_mode / p_v then load 16..48 gates per head, so the mapped-graph
+            // replicator never has to clone the R0 field registers past the 32-load port limit (first map:
+            // SVC7_GRAPH BLOCKED ld_w2v port 34 loads).  Function = the g_prewrite priority normal > high > low.
+            (* keep *) wire [NBANK-1:0] p_bs;
+            (* keep *) wire [TD/R*NBANK-1:0] en_n, en_h, en_l;
+            for (gb = 0; gb < NBANK; gb = gb + 1) begin : g_bs
+                assign p_bs[gb] = (r_ld_bank == gb);
+                for (gk = 0; gk < TD/R; gk = gk + 1) begin : g_en
+                    assign en_n[gk*NBANK + gb] = write_normal && p_bs[gb];
+                    assign en_h[gk*NBANK + gb] = write_high[gk] && p_bs[gb];
+                    assign en_l[gk*NBANK + gb] = write_low[gk] && p_bs[gb];
+                end
+            end
             end else begin : g_pre
             wire [7:0] head_id = gid_m * HG + gh;
             wire n_raw = ld_v && !ld_mode && (ld_grp == head_id);
@@ -246,7 +260,14 @@ module ot_s81svc8_hgrp_s81 #(
             for (gk = 0; gk < TD; gk = gk + 1) begin : g_m
                 reg [NBANK*16-1:0] ab;
                 integer bb;
-                if (WRITE_PREDECODE != 0) begin : g_prewrite
+                if (WRITE_PREDECODE == 2) begin : g_postwrite
+                always @(posedge clk)
+                    for (bb = 0; bb < NBANK; bb = bb + 1) begin
+                        if (g_predecode.g_post.en_n[(gk/R)*NBANK + bb]) ab[bb*16 +: 16] <= r_ld_w[gk*16 +: 16];
+                        else if (g_predecode.g_post.en_h[(gk/R)*NBANK + bb]) ab[bb*16 +: 16] <= pcol2[(gk%R)*16 +: 16];
+                        else if (g_predecode.g_post.en_l[(gk/R)*NBANK + bb]) ab[bb*16 +: 16] <= pcol[(gk%R)*16 +: 16];
+                    end
+                end else if (WRITE_PREDECODE != 0) begin : g_prewrite
                 always @(posedge clk)
                     for (bb = 0; bb < NBANK; bb = bb + 1)
                         if (r_ld_bank == bb) begin
