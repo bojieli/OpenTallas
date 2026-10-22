@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-r2-2000-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-r2-2000-1021
+ot-run: ot-epyc9       admits   -17 GB (avail 250, growth 261, headroom 0, waiters 2/18 GB) load 175/128 running 36 disk 1880 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-r2-2000-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-r2-2000-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-r2-2000-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-r2-2000-1021
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-hbm-load-route-r2-2000-1021 (0.0 GB) ot-epyc9 -> ot-gold1 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 8 changed entries in 3 s; running on ot-gold1; written files go back to ot-epyc9 after the run
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-725210-1792640990 after 0 s
+DMA_LOAD_ROUTE PASS 32 routes, raw masks, three collision classes
+- rtl/hbm_accel/loader/service_native/split/tb_hbm_dma_load_route_static.sv:57: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.012 s; speed 143.569 us/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-725210-1792640990): exit 0
+ot-run: SPILL: outputs copied back ot-gold1 -> ot-epyc9; RAN on ot-gold1: exit 0

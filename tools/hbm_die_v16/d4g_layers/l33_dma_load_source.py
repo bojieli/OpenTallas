@@ -77,6 +77,14 @@ def apply(c):
             i=instances[lane]
             assert i['master']=='ot_hbm_svc_vmdel_lane_n' and i['params']['NPC']==2
             i.update(master='ot_hbm_svc_vmdel_lane_load_static', source=LOAD_SOURCE, force_synth=True)
+            # Preserve the real bank identity declaration on the new source
+            # master. Leaving its old master name silently drops that identity
+            # from the strict binder's admitted strap inventory.
+            for strap in c['straps']:
+                if strap.get('inst')==lane:
+                    if strap['port']=='bank_id':
+                        assert strap['value']==b, (lane, strap)
+                    strap['master']=i['master']
             i.pop('physical_view',None)
             i.pop('closed_record',None)
             i['ports'].update(load_v_i=port('input',1),load_cmd_i=port('input',62),
