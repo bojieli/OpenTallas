@@ -29,7 +29,7 @@
   },
   "latency": {
     "load_pin_to_output_edges_expected": 3,
-    "measurement": "EP9 unit4098429-1792639320 Verilator5.050: 1480 commands,0mismatch,II1,3edges",
+    "measurement": "EP5 unit840420-1792639521 Verilator5.050 source51f0c8d67:1480commands/0mismatch/II1/3edges; releaseonly no payload; releasedreuse rejected; raw1538edges0mismatch",
     "HBM_window_latency": "real vmks CDC and drain dependent; not104",
     "load_pin_to_output_edges_measured": 3,
     "route_extra_edges": 5,
@@ -47,7 +47,7 @@
     "collision_policy": "fault, compiler reserves fixed slots",
     "tracks_and_area": "PENDING synthesis/native and dieGEN/GRT; no physical qualification"
   },
-  "ownership": "source bank+epoch+full checked before read; release final read; invalid schedule faults",
+  "ownership": "source bank+epoch+full checked before read; release final read; invalid schedule faults; count0/release1 frees unused window lanes without reads or writes",
   "schedule": "compiler lowers real MOVE descriptors to vmfc89 window and static62 read/convert commands; no lease, credit or ready",
   "safe_review": {
     "storage": "same existing SRAM payload, no new large flop storage",
