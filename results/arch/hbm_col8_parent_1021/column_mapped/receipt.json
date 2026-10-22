@@ -7,8 +7,11 @@
     "geometry_aliases.json": "45c7b8797716f9ef4e8c16648f364336abb21e9bcb1834b3fb9d1918ac799de6",
     "column_mapped.json.gz": "83647896a56436e39a3003dc577359efe0c9da20bf03581dba2c2588c8ed426d",
     "synth_stat.txt": "657f6c7c9fdc8284366a3fc217272c04afbb9fb31c2c1457515c034736d18555",
-    "combinational_ownership.json": "d64decc14033b247bbf93af67fcd88b291d14c6796d6f3298cbfe0d3b851a8bb"
+    "combinational_ownership.json": "d64decc14033b247bbf93af67fcd88b291d14c6796d6f3298cbfe0d3b851a8bb",
+    "native_census.json.gz": "5d91030dc6c9c37af6deef2fc58dd6207048ec1838c4683bb2e527975194345b",
+    "source_receipt.txt": "758cebcb4fa33713fa175a80d82e393afbacd7cc28e4ce88eaf05986346626f3"
   },
   "uncompressed_mapped_verilog_sha256": "bd95dc6533838cb8a7c590367a9355338b3a276a81a4747b69700db309ac54e3",
-  "uncompressed_mapped_json_sha256": "b4c43127086890c732108ace81d00de64e33bed020e809a114e3bebc1455eb39"
+  "uncompressed_mapped_json_sha256": "b4c43127086890c732108ace81d00de64e33bed020e809a114e3bebc1455eb39",
+  "json_export_tool": "Yosys 0.52 git fee39a3284c90249e1d9684cf6944ffbbcbb8f90 on ot-gold2; lossless read_verilog/write_json only"
 }
