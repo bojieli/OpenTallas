@@ -36,7 +36,7 @@ def main():
     assert spec['top'] == 'ot_s81hd_ctl_glue' and (spec['outline']['w'], spec['outline']['h']) == (c['w'], c['h']), \
         (a.kit, spec['outline'], c['w'], c['h'])
     moved = []
-    if a.kit.startswith('s81hd_glue_r6'):
+    if a.kit.startswith(('s81hd_glue_r6', 's81hd_glue_r8')):   # R8 = R6 pin plan + relay stations
         v = a.kit[-1]
         L = json.loads(show(a.links_ref or a.source, f'results/arch/s81_head_1021/glue_r6/h11{v}_ctl_links_r6.json'))
         # only the links R6 moved (E re-spread + the two lanes to N/S); W/lep/spine/seq endpoints stay as the H11 plan
