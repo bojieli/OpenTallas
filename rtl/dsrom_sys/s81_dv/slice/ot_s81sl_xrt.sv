@@ -180,6 +180,9 @@ module ot_s81sl_xrt #(
     // later on these registers, so every CTL / RD / lo / V / SC consequence moves +1 cycle (partials and rstd do not).
     reg [15:0] sid_oh;
     always @(posedge clk) sid_oh <= 16'd1 << sid_c;          // sid is a strap: static from reset
+`ifndef OT_S81SL_XR_PDC
+    wire [3:0] sid_t = sid_c, sid_k = sid_c;
+`endif
 `ifdef OT_S81SL_XR_PDC
     // XR8 (STW-S81c-COLLA 10-22, xrt3 / xrt3_b NEEDS_RTL TT -117 / -83: eb -> decode -> rdv0 / rl0 / tgt0 -> 640 rwe_c +
     // 160 rwr_c kept copies, 578 paths): the kind / owner predicates are decoded from the input PINS into kept flags at
@@ -189,6 +192,11 @@ module ot_s81sl_xrt #(
     wire pq_vrdc, pq_vrdm;   // same-D copies behind keep_hierarchy (plain keep regs were merged: 36-42 loads)
     ot_s81sl_xr_rcp #(.ID(1)) u_vrdc (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdc));
     ot_s81sl_xr_rcp #(.ID(2)) u_vrdm (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdm));
+    // xrt3p census #4 (sid_c 33-36, pq_vrdm 33): row-select copy for the stage-2 regs and two more strap captures
+    wire pq_vrdr; ot_s81sl_xr_rcp #(.ID(7)) u_vrdr (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdr));
+    wire [3:0] sid_t, sid_k;
+    ot_s81sl_xr_cp #(.W(4), .ID(5)) u_st (.clk(clk), .d(sid), .q(sid_t));   // transmit words (snd / so_b)
+    ot_s81sl_xr_cp #(.W(4), .ID(6)) u_sk (.clk(clk), .d(sid), .q(sid_k));   // RG-FFN / local transport checks
     // own strap capture for the predecode (sid_c reached 44 loads when shared): sid is static from reset
     wire [3:0] sid_p, sid_p2; (* keep *) reg [15:0] sid_ohp;
     ot_s81sl_xr_cp #(.W(4), .ID(3)) u_sp1 (.clk(clk), .d(sid), .q(sid_p));
@@ -306,7 +314,7 @@ module ot_s81sl_xrt #(
         for (k = 0; k < 1024; k = k + 1)
             bb2[k] <= lcl_c[k / LCG] ? ci_r[51 + k] : (HB != 0) ? bb[52 + k] : 1'b0;
 `ifdef OT_S81SL_XR_PDC
-        lmask <= lmask0; rnp <= pq_vrdm ? 2'd0 : rdb0[50 +: 2]; rrow <= pq_vrdm ? vb[16:7] : rdb0[40 +: 10];
+        lmask <= lmask0; rnp <= pq_vrdr ? 2'd0 : rdb0[50 +: 2]; rrow <= pq_vrdr ? vb[16:7] : rdb0[40 +: 10];
 `else
         lmask <= lmask0; rnp <= v_rd ? 2'd0 : rdb0[50 +: 2]; rrow <= v_rd ? vb[16:7] : rdb0[40 +: 10];
 `endif
@@ -394,7 +402,7 @@ module ot_s81sl_xrt #(
         for (k = 0; k < 128; k = k + 1) if (pkw_c[k]) pk[8 * k +: 8] <= lo_sel[8 * (k % 32) +: 8];
     always @(*) begin
         snd = {W{1'b0}};
-        snd[0] = 1'b1; snd[3:1] = s_kind; snd[8:4] = s_hops; snd[12:9] = sid_c; snd[20:13] = 8'd0;
+        snd[0] = 1'b1; snd[3:1] = s_kind; snd[8:4] = s_hops; snd[12:9] = sid_t; snd[20:13] = 8'd0;
         snd[21 +: 16] = s_mask; snd[37 +: 3] = s_leaf; snd[40 +: 10] = s_row; snd[50 +: 2] = s_np; snd[52 +: 1024] = pk;
     end
     // S81-SMWIRE: SO gather words -> one XB ring beat (assembled from the B input flops; injected on the next edge)
@@ -444,7 +452,7 @@ module ot_s81sl_xrt #(
         assign so_lo = 512'd0; assign so_hi = 512'd0;
     end endgenerate
     assign so_go_nx = b_so && so_n == 2'd2 && bb[4] && bb[52 + 32 +: 8] == 8'h5A && bb[6:5] != 2'd0 && bb[6:5] != 2'd3;
-    wire [W-1:0] so_b = {{(W - 1045){1'b0}}, so_hi, so_lo, 1'b0, so_idx, sid_c, 5'd0, 3'd2, 1'b1};
+    wire [W-1:0] so_b = {{(W - 1045){1'b0}}, so_hi, so_lo, 1'b0, so_idx, sid_t, 5'd0, 3'd2, 1'b1};
     // V-from-G-unit CTL re-injection on the tier line (both sides, hops 0 = line default), SC relay to V
     wire sc_rel = s_scv && (esc || wsc);
     always @(posedge clk or negedge rs_s)
@@ -680,8 +688,8 @@ module ot_s81sl_xrt #(
                   ((|pv) && erun);
             fc <= (vct && (pk_go || sc_rel)) | (pk_go && sc_rel) | (s_scv && esc && wsc) | (tg[4] && (|lov1)) | f_bw |
                   so_f | (so_go && (vct || pk_go || sc_rel))      // S81-SMWIRE / BIND mu4 terms (send/inject region)
-                  | (pair_v && (vct || sc_rel || so_go || s_mask != (16'd1 << (sid_c ^ 4'd1))))   // RG-FFN transport
-                  | (s_local && ((|s_dir) || s_kind != K_RD || s_mask != (16'd1 << sid_c)));
+                  | (pair_v && (vct || sc_rel || so_go || s_mask != (16'd1 << (sid_k ^ 4'd1))))   // RG-FFN transport
+                  | (s_local && ((|s_dir) || s_kind != K_RD || s_mask != (16'd1 << sid_k)));
         end
     generate if (FOREG != 0) begin : g_foreg
         always @(posedge clk or negedge rs_f)
