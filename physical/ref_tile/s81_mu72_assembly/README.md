@@ -42,12 +42,21 @@ new wrapper logic. No new tied functional port or false path is added.
 
 **Physical repair holds:** K currently spans three long bundles: lane0↔endpoint
 centreΔ(82.08,1501.2)µm; lane1↔endpoint(82.08,745.2); endpoint↔landing(43.2,561.6).
-The first two carry553b each direction plus valid/credit/status. They remain
-unlanded pending actual relay/landing placement. Their return signals are
-credit pulses, not ready levels: endpoint TX consumes finite CRED8 credits and
-receivers return one credit per freed slot. Fixed-latency transport must preserve
-every pulse and charge increased credit RTT; no new handshake or credits are
-introduced. The third connection is repaired in source as described below. The172.8µm central corridor and
+The first two carry553b each direction plus valid/credit/status. **STW-S81-LAND 10-21 (repaired in source):** each lane
+u_ln<i> is its own clock region N<i> (die root `ck_N<i>`, reset leaf `u_lpr_N<i>` from lpr_root, DEPTH 3 = K's age) and
+every lep<->lane net goes through `ot_s81_mu72_lnland` (two `ot_s81_mu72_land`, exactly +3 destination edges each way:
+K->N {li_r, rxv, lo_v, lo_d} 556 b, N->K {st, flt, lo_r, li_v, li_d} 559 b). Credit pulses are preserved; credit
+round trips grow +6, so u_lep is `#(.CRED(12), .DR(12))` and the lanes `#(.CORE_CRED(12))` (CLOSED E view
+dscoll_lane_e_s12g). Die ports tx<i>/rx<i> belong to region N<i>. Evidence: `tools/s81_slice/mu72_lnland_audit.py`
+(structural, 4 tops + mutants), `rtl/dsrom_sys/s81_dv/slice/test/run_mu72_lnland_bench.sh` (bit-exact, +6 exact,
+burst rate = unlanded CRED8 die; mutants), `tools/s81_slice/mu72_lnland_native.py` (native census), calendar
+`results/token_pass/calendar_lnland_s81_1021` (+6 a crossing). End to end a beat is +6 +-2 edges vs the unlanded die (each
+lane gearbox's 3-of-4 slot pattern re-quantises it; the landings themselves are exact +3 per pulse, monitored). u_lep in
+all four tops carries the lepmu kit params `RX_SRAM/IN_PIPE/NATIVE32 = 1` (default-param lep_mu_a/h fail the native 32
+census; with the kit params they PASS). **Regional-lep successor (bind only when r4l is CLOSED):**
+`ot_s81sl_slice_lepw_mab_r4l_mu_72` = the s_0N top with u_lep = `ot_s81sl_lep_mu_ab_regional_r4l` (clk = ck_K centre,
+clk_a = new root ck_KA for pair A + lane 0/1 landings, clk_b = ck_KB for pair B + lane 2/3 landings);
+die overlay `tools/s81_dv/release72/mu72_overlay_r4l.json`. The third connection is repaired in source as described below. The172.8µm central corridor and
 311.04µm right cell band remain reserved. Clock/reset landing sites, external pin
 projection, PG composition, GRT and corner timing remain actual die obligations.
 

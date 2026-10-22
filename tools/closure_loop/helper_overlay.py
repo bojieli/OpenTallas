@@ -192,6 +192,26 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: claude/hbm-pslice-lp15-1021 b6940eee2 (HBMb/IDXSU-PS15). Its child_centre_tap.tcl r15 was
+    # resolved to main's copy (58622b026, Gate-Rule: neutral), which already carries the r15 child-scoped corner fix
+    # and the per-mode propagation; the rest are NEW pgcol_l r6a/r6b and pslice_c5_r15 kit files.
+    "b6940eee26c1db9b96ffca27e11586cb54093df4": dict(
+        kind="neutral",
+        what="pslice lp15: new kit files; child_centre_tap.tcl = main's copy (58622b026)"),
+    # ROOT-MERGE-1022 10-22: claude/hbm-pslice-lp14-1021 17f38120b (HBM-ELEM13/SU-PSLICE14). The merge resolved
+    # physical/common_flow/child_centre_tap.tcl to main's newer copy (58622b026, Gate-Rule: neutral), its ref_tile.py
+    # hunk is byte-identical to main's, and the rest are NEW pslice_c5 lp14a/b kit spec/pin/fence files -> no gate rule
+    # an older gate blob saw changes.
+    "17f38120bb4a6dce5f38384bbed1a80d2bb276dd": dict(
+        kind="neutral",
+        what="pslice lp14: new kit files; cct + ref_tile.py identical to main's copies"),
+    # START-NONFAIL/HBM-CANC 10-21: claude/hbm-ks13-agtool-1021. async_gray SDC applies every bounded pair's
+    # set_max/min_delay first and proves each pair's finite max/min path in one ot_ag_verify pass (was one
+    # find_timing_paths re-search per pair).  Same exceptions/checks/errors/PATH_DEFERRED texts; ASAP7 equivalence on
+    # the 10-18 kshare netlist BOUNDED 12,576 = 12,576, 0 extra/missing, ownership identical -> no verdict changes.
+    "a7bc197f096b54b49b908549e2369bbc58baae8e": dict(
+        kind="neutral", paths=("tools/ref_tile/async_gray_fifo_constraints.py",),
+        what="async_gray: one-pass ot_ag_verify of bounded pairs; identical exceptions (EQUIV 12,576=12,576)"),
     # MERGE-1200 10-21: SQK-INGEST OT_GF fixes (claude/sqk-ingest-1021). db8d8c63d: a hard-macro output in a storage-gating
     # cone is a free-variable leaf in _bdd_of (as _cone_cut already did; it crashed before) -> only cones that used to
     # error now evaluate.  a3aafacd6: reset-bank copy flops named ot_rrs__<fam>__c<k> alias to their own reviewed leaf

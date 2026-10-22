@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue9b4
+ot-run: ot-epyc7       admits   161 GB (avail 182, growth 70, headroom 0, waiters 0/0 GB) load 117/96 running 16 disk 4686 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue9b4
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue9b4
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue9b4
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue9b4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue9b4
+ot-run: LOAD SPILL: ot-epyc7 would run at 1.26 x cores; moving to ot-epyc9
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021 (0.0 GB) ot-epyc7 -> ot-epyc9 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 22 changed entries in 2 s; running on ot-epyc9; written files go back to ot-epyc7 after the run
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1702164-1792608653 after 0 s
+QUEUE_CASE mut=0 rc=1 accepted
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1702164-1792608653): exit 1
+ot-run: SPILL: outputs copied back ot-epyc9 -> ot-epyc7; RAN on ot-epyc9: exit 1

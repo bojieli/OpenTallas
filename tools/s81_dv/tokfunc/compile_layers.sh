@@ -9,7 +9,14 @@ set -u
 ROOT=$(realpath $1); T=$(realpath $2); F=$(realpath $3); O=$(realpath -m $4); shift 4
 LAYERS=${*:-L0 L2 L14 L20}
 mkdir -p $O
-cd $ROOT
+cd "$ROOT"
+# LP parents add per-path ages: never compile against stale flat/archive timing.
+# Explicit caller models remain subject to lower_xs source-hash validation.
+if [ -z "${OT_XS_FRAME_SCHEDULE_DIR:-}" ]; then
+  python3 tools/s81_dv/tokfunc/prepare_frame_schedules.py --tree "$T" --out "$O/frame_schedules" \
+    > "$O/frame_schedules.log" 2>&1 || exit $?
+  export OT_XS_FRAME_SCHEDULE_DIR="$O/frame_schedules"
+fi
 for L in $LAYERS; do
   base=${L%%:*}; mode=${L#*:}; [ "$mode" = "$L" ] && mode=su
   args=(--layer $base --out $O/prog_${base}_$mode --die-src $T)

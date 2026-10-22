@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hidx_score_pair8_r0.lef",
-    "sha256": "2a1e8cc6ea229b29d6e13c0128dc021c2d2cc63e554d054e36928b236578dd4f"
+    "sha256": "37016019a13c499a94808701296a9b323c7820845cb92e4410a64115bfcff5a3"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r0-r0-005325591/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hidx_score_pair8_r0-zt0r-e774eeaa5/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
   },
   "command": [
     "/usr/bin/python3",
-    "/home/ubuntu/ot-scratch/claude/closure-loop/hidx_score_pair8_r0-r0-005325591/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/hidx_score_pair8_r0-r0-005325591/record/views/ot_hidx_score_pair8_r0/provenance/raw/ot_hidx_score_pair8_r0.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/hidx_score_pair8_r0-r0-005325591/record/views/ot_hidx_score_pair8_r0/provenance/ot_hidx_score_pair8_r0.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_score_pair8_r0-zt0r-e774eeaa5/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_score_pair8_r0-zt0r-e774eeaa5/record/views/ot_hidx_score_pair8_r0/provenance/raw/ot_hidx_score_pair8_r0.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hidx_score_pair8_r0-zt0r-e774eeaa5/record/views/ot_hidx_score_pair8_r0/provenance/ot_hidx_score_pair8_r0.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 848 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 839 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hidx_score_pair8_r0-r0-005325591/record/views/ot_hidx_score_pair8_r0/provenance/ot_hidx_score_pair8_r0.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hidx_score_pair8_r0-zt0r-e774eeaa5/record/views/ot_hidx_score_pair8_r0/provenance/ot_hidx_score_pair8_r0.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hidx_score_pair8_r0 216.0 x 172.8: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 1165 blocked-above 0 blocked-same 0; clock clk insertion 362 ps; pockets M5 0 (closed)",
+    "summary": "ot_hidx_score_pair8_r0 216.0 x 172.8: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 1165 blocked-above 0 blocked-same 0; clock clk insertion 355 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_hidx_score_pair8_r0",
       "W": 216.0,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 1165,
         "blocked_above": 0,
-        "covered_below": 435,
+        "covered_below": 410,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 362.19,
-          "min_ps": 274.23
+          "max_ps": 355.38,
+          "min_ps": 280.17
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 848
+          "added": 839
         },
         "count": 0,
         "area_um2": 0,
@@ -98,6 +98,6 @@
   },
   "output": {
     "path": "ot_hidx_score_pair8_r0.lef",
-    "sha256": "567c09b8710d95edccb50a19c2265ae507d73e89ef8732ea1d1e9cf11b0bcddc"
+    "sha256": "90ad40af560824b2df4115aa9d6e223820844d7048e45d0d5398d9fa3670f494"
   }
 }

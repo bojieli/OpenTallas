@@ -1,0 +1,34 @@
+{
+ "0+0": {
+  "ds_schedule_total": 1140466.7,
+  "qwen_schedule_total": 2174963.7,
+  "crit": {
+   "HC.HC_MIX": [
+    0,
+    0.0,
+    84400.0
+   ],
+   "FUSED.QDQ_FP8": [
+    0,
+    0.0,
+    2320.0
+   ]
+  }
+ },
+ "495+47": {
+  "ds_schedule_total": 1140466.7,
+  "qwen_schedule_total": 2174963.7,
+  "crit": {
+   "HC.HC_MIX": [
+    0,
+    0.0,
+    124000.0
+   ],
+   "FUSED.QDQ_FP8": [
+    0,
+    0.0,
+    4200.0
+   ]
+  }
+ }
+}

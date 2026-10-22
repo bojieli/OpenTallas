@@ -15,6 +15,8 @@ CUTS=${*:-cut_0S cut_0N cut_7 cut_3S_ctl}
 mkdir -p $O/cuts
 KD=$O/KD
 P72="--prefer-list tools/s81_dv/tokfunc/prefer_72.f"; [ "${PREFER72:-1}" = 0 ] && P72=""
+# a ref older than the G7 token assembly has no prefer_72.f (dv_rtl_kit reads lists at --ref): drop it there (G9 553741303)
+git -C $W cat-file -e "$REF:tools/s81_dv/tokfunc/prefer_72.f" 2>/dev/null || P72=""
 if [ ! -f $KD/kit.json ]; then
   python3 $W/tools/s81_dv/dv_rtl_kit.py --ref $REF --port-bind $PB --top-v $DIEV --top dv_die --out $KD ${KIT_EXTRA:-} > $O/cuts/KD.kit.log 2>&1 \
     || { echo "KD KIT FAIL"; tail -5 $O/cuts/KD.kit.log; exit 2; }

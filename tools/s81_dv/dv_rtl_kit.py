@@ -100,6 +100,9 @@ def main(argv=None):
     ap.add_argument('--repo', default=str(ROOT))
     ap.add_argument('--ref', required=True)
     ap.add_argument('--port-bind', required=True)
+    ap.add_argument('--bind-snapshot-bytes', action='store_true',
+                    help='with --bind-case: a bound file whose executed snapshot bytes differ from (or are absent at) --ref '
+                         'is taken from the snapshot (what the die was bound from), recorded in executed_bind_index.snapshot_overrides')
     ap.add_argument('--bind-case', help='original executed bind_case.json: honor recorded index roots/final file precedence')
     ap.add_argument('--top-v', required=True)
     ap.add_argument('--top', default=None)
@@ -126,7 +129,7 @@ def main(argv=None):
             if not Path(path).is_absolute():
                 assert '..' not in Path(path).parts, ('bind path escapes source root', path)
                 return str(Path(path))
-            m = re.search(r'/rtl_extra/([0-9a-f]{40})/(.*)$', str(path))
+            m = re.search(r'/rtl_extra/([0-9a-f]{7,40})/(.*)$', str(path))
             if m:
                 return f'rtl_extra/{m[1]}/{m[2]}'
             if Path(path).name == 'cells_used.v':
@@ -181,7 +184,7 @@ def main(argv=None):
     # rtl_extra (other commits) from the bind's file list
     extra = {}
     for f in pb.get('rtl_files', []):
-        m = re.search(r'/rtl_extra/([0-9a-f]{40})/(.*)$', f)
+        m = re.search(r'/rtl_extra/([0-9a-f]{7,40})/(.*)$', f)
         if m:
             key = f'rtl_extra/{m.group(1)}/{m.group(2)}'
             texts[key] = git(repo, 'show', f'{m.group(1)}:{m.group(2)}', binary=True)
@@ -194,6 +197,14 @@ def main(argv=None):
             body = Path(path).read_bytes()
             hashes[rel] = hashlib.sha256(body).hexdigest()
             if rel != 'cells_used.v':
+                if a.bind_snapshot_bytes and texts.get(rel) != body:
+                    # the executed bind read these bytes: the die IS this source (snapshot assembled from several
+                    # commits, e.g. cap14 6c6821c87 carries pre-edae62d7b selector files); record both identities
+                    bind_index.setdefault('snapshot_overrides', {})[rel] = dict(
+                        ref_sha256=hashlib.sha256(texts[rel]).hexdigest() if rel in texts else None,
+                        snapshot_sha256=hashlib.sha256(body).hexdigest())
+                    texts[rel] = body
+                    continue
                 assert rel in texts, ('recorded bind input absent at source ref', rel)
                 assert texts[rel] == body, ('recorded bind input differs from immutable ref', rel)
         bind_index['original_snapshot_file_sha256'] = hashes
@@ -251,7 +262,7 @@ def main(argv=None):
             pref_order.append((f, L))
         bench_defines[L] = list_files.defines
     for f in pb.get('rtl_files', []):
-        m = re.search(r'/rtl_extra/([0-9a-f]{40})/(.*)$', f)
+        m = re.search(r'/rtl_extra/([0-9a-f]{7,40})/(.*)$', f)
         if m:
             pref_order.append((f'rtl_extra/{m.group(1)}/{m.group(2)}', 'bind rtl_extra'))
     specs = defaultdict(list)        # tile top -> [(spec path, sources)]
@@ -304,8 +315,11 @@ def main(argv=None):
                 out.add(m.group(1))
         return out
 
+    moddup_resolved = []
+
     def closure(pref_of):
         problems, choices = [], {}
+        moddup_resolved.clear()
         conflicts.clear()
 
         def pick(name):
@@ -366,10 +380,28 @@ def main(argv=None):
         for n, ps in sorted(unresolved.items()):
             problems.append(f'UNRESOLVED {n} (instantiated by {sorted(ps)})')
         owner, moddup_same = {}, []
+        # TOKc-S81 (10-22, cap14): two closure files may both define a helper (frozen_tap_modules.sv vs eng_rr.sv:
+        # dsdv_eng_tap_c).  When the kit's own per-module choice (bind precedence / --select / prefer) names one of
+        # them, order that file first (Verilator MODDUP keeps the first) and record it instead of failing.
+        files = list(files)
+        for _ in range(len(files)):
+            moved, first = False, {}
+            for i, f in enumerate(files):
+                for nm in by_path[f]:
+                    if nm in first and first[nm] != f and mtext(nm, first[nm]) != mtext(nm, f) \
+                            and choices.get(nm, {}).get('file') == f:
+                        files.remove(f); files.insert(files.index(first[nm]), f); moved = True
+                        moddup_resolved.append(dict(module=nm, kept=f, shadowed=first[nm]))
+                        break
+                    first.setdefault(nm, f)
+                if moved:
+                    break
+            if not moved:
+                break
         for f in files:                 # a helper module defined in two chosen files: Verilator MODDUP keeps the first
             for nm in by_path[f]:
                 if nm in owner and owner[nm] != f:
-                    if mtext(nm, owner[nm]) != mtext(nm, f):
+                    if mtext(nm, owner[nm]) != mtext(nm, f) and choices.get(nm, {}).get('file') != owner[nm]:
                         problems.append(f'MODDUP {nm}: {owner[nm]} and {f} define it differently, both in the closure')
                     else:
                         moddup_same.append(nm)
@@ -478,7 +510,7 @@ def main(argv=None):
          [str(tdst.relative_to(out))]
     (out / 'kit.f').write_text('\n'.join(fl) + '\n')
     rec = dict(schema='opentallas.s81_dv.rtl_kit.v1', ref=ref, sha=sha, port_bind=a.port_bind, top_v=a.top_v,
-               executed_bind_index=bind_index,
+               executed_bind_index=bind_index, moddup_resolved=moddup_resolved,
                top=a.top, top_sha256=hashlib.sha256(top_text.encode()).hexdigest(), masters=len(masters),
                modules=len(seen), files=rec_files, prefer_lists=prefer_lists, variant_choices=choices, selected=select_rec, ref_tile_specs_used=used_specs, moddup_identical=sorted(set(moddup_same)), snapshot_differs=snapshot_differs, prefer_conflicts=conflicts, bench_defines_not_applied=bench_defines,
                stripped_params=dict(stripped), defines=sorted(defines), problems=problems,

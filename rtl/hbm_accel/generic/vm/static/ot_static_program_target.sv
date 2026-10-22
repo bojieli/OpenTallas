@@ -13,7 +13,7 @@
 // CAP_CLK=1 (H-NETLIST 0600): the F20 input-capture rung (cv/dv/lv, target/address/data/base/limit/loops, tgt) runs on
 // clk_cap, a related same-frequency phase-0 root kept short at the face; the body (bitmap, scan, outputs) stays on clk.
 module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer PCW=10,parameter integer TGT_PIN=0,
-                                  parameter integer CAP_CLK=0)(
+                                  parameter integer CAP_CLK=0,parameter integer INSTALLED_ROWS=0)(
     input wire clk,rst_n,
     input wire clk_cap,   // used only when CAP_CLK=1
     input wire [7:0] tgt,
@@ -36,8 +36,8 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     output reg [15:0] program_start_loops,
     output reg configured,fault
 );
-    localparam integer ROWS=1<<PCW;
-    initial if(PCW<8 || PCW>12)$fatal(1,"programme target PCW must be8..12");
+    localparam integer ROWS=INSTALLED_ROWS==0?(1<<PCW):INSTALLED_ROWS;
+    initial if(PCW<1 || (INSTALLED_ROWS==0&&PCW<8) || PCW>12 || ROWS<1 || ROWS>(1<<PCW))$fatal(1,"programme target PCW must be8..12");
     // External reset reaches two synchronizer pins, not the entire valid bitmap.
     (* async_reg = "true" *) reg reset_meta,reset_live;
     always @(posedge clk or negedge rst_n)
@@ -55,6 +55,14 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     reg [PCW:0] stored_limit;
     reg [15:0] loops,stored_loops;
     reg [ROWS-1:0] installed;
+    generate if(INSTALLED_ROWS!=0)begin:g_bounded_payload
+     // Unqualified output payloads capture every edge. Only the real valid
+     // registers gate target transactions; no256-bit reset/enable broadcast.
+     always @(posedge clk)begin
+      program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;
+      program_start_base<=stored_base;program_start_limit<=stored_limit;program_start_loops<=stored_loops;
+     end
+    end endgenerate
     reg install_open,armed,scanning,validated,missing;
     reg [PCW-1:0] scan_row;
     reg [PCW:0] scan_limit;
@@ -67,6 +75,17 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     always @(posedge clk_in or negedge reset_live)
         if(!reset_live)begin cv<=0;dv<=0;lv<=0;end
         else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;end
+    if(INSTALLED_ROWS!=0)begin:g_bounded_descriptor
+        // Invalid descriptors still fault in the control path. Payload captures
+        // may proceed because no consumer can launch an invalid generation.
+        localparam integer BYTES=(2*PCW+17+7)/8;
+        wire[BYTES*8-1:0]payload={base[PCW-1:0],limit[PCW:0],loops};
+        wire[BYTES*8-1:0]resident;
+        for(genvar c=0;c<BYTES;c=c+1)begin:chunk
+            ot_static_target_descriptor_byte capture(.clk(clk),.valid(dv),.target(target),.tid(tid),.data(payload[c*8+:8]),.q(resident[c*8+:8]));
+        end
+        always @*begin stored_base=resident[17+PCW+:PCW];stored_limit=resident[16+:PCW+1];stored_loops=resident[15:0];end
+    end
     always @(posedge clk or negedge reset_live)
         if(!reset_live)begin
             program_cfg_we<=0;program_start_v<=0;configured<=0;fault<=0;
@@ -85,15 +104,15 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
             end
             if(cv && target==tid)begin
                 armed<=0;validated<=0;configured<=0;
-                if(program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) ||
+                if(program_active || scanning || lv || {1'b0,address}>=ROWS ||
                    data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address})fault<=1;
-                else begin program_cfg_we<=1;program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end
+                else begin program_cfg_we<=1;if(INSTALLED_ROWS==0)begin program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end end
             end
             if(dv && target==tid)begin
                 armed<=0;validated<=0;configured<=0;install_open<=0;
-                if(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW))fault<=1;
+                if(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>ROWS)fault<=1;
                 else begin
-                    stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
+                    if(INSTALLED_ROWS==0)begin stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;end
                     armed<=1;missing<=0;
                     if(validated && base==stored_base && limit==stored_limit)begin
                         // Same range in the unchanged resident generation: reuse
@@ -116,10 +135,13 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 armed<=0;configured<=0;
                 if(!launch_ready || cv || dv)fault<=1;
                 else begin
-                    program_start_v<=1;program_start_base<=stored_base;
-                    program_start_limit<=stored_limit;program_start_loops<=stored_loops;
+                    program_start_v<=1;if(INSTALLED_ROWS==0)begin program_start_base<=stored_base;
+                    program_start_limit<=stored_limit;program_start_loops<=stored_loops;end
                 end
             end
         end
+endmodule
+(* keep_hierarchy *) module ot_static_target_descriptor_byte(input wire clk,valid,input wire[7:0]target,tid,data,output reg[7:0]q);
+ always @(posedge clk)if(valid&&target==tid)q<=data;
 endmodule
 `default_nettype wire
