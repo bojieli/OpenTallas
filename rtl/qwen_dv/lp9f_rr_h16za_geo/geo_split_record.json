@@ -1,0 +1,1010 @@
+{
+ "schema": "opentallas.sqc_ctlm.geo_replica_deal.v1",
+ "source": "/home/ubuntu/wt/sqc-ctlm-1022/rtl/qwen_dv/lp9f_rr_h16za/qfd_tt_ctlm_dv_np_lp.sv",
+ "source_sha256": "8b65518ea6828eebd8fe8ea63e6cb77ae835bf44c8d3a39d009886ee72dd936a",
+ "out_sha256": "6942a805cbad00abf090f81d1cdab4c00a9e002515a58321fbb83d607429f7fa",
+ "loc": "/home/ubuntu/scratch/sqc-ctl/ctlm/loc.txt",
+ "min_span": 120.0,
+ "only_gain": 40.0,
+ "stats": {
+  "copies_added": 132,
+  "groups_split": 18,
+  "skip_split_no_room": 4,
+  "groups_dealt": 2,
+  "skip_no_fit": 3,
+  "skip_external": 1
+ },
+ "sink_pins_moved": 1283,
+ "mode": "split",
+ "target_weight": 8,
+ "split_targets": [
+  "u_22528",
+  "u_30395",
+  "u_34525",
+  "u_35790",
+  "u_35796",
+  "u_39347",
+  "u_39348",
+  "u_40379",
+  "u_67419",
+  "u_67430",
+  "u_67576",
+  "u_68084",
+  "u_68130",
+  "u_68173",
+  "u_68180",
+  "u_68252",
+  "u_68256",
+  "u_68356",
+  "u_68357",
+  "u_68358",
+  "u_68399",
+  "u_8213",
+  "u_9841",
+  "u_lpl_17_r.u53349",
+  "u_lpl_18_r.u53616",
+  "u_lpl_22_r.u56678",
+  "u_lpl_4_r.u62825",
+  "u_lpl_7_r.u64966",
+  "u_lpl_7_r.u65098",
+  "u_lpl_7_r.u65105",
+  "u_lpl_7_r.u65124"
+ ],
+ "new_cells": [
+  "u_qkgeo_0",
+  "u_qkgeo_1",
+  "u_qkgeo_2",
+  "u_qkgeo_3",
+  "u_qkgeo_4",
+  "u_qkgeo_5",
+  "u_qkgeo_6",
+  "u_qkgeo_7",
+  "u_qkgeo_8",
+  "u_qkgeo_9",
+  "u_qkgeo_10",
+  "u_qkgeo_11",
+  "u_qkgeo_12",
+  "u_qkgeo_13",
+  "u_qkgeo_14",
+  "u_qkgeo_15",
+  "u_qkgeo_16",
+  "u_qkgeo_17",
+  "u_qkgeo_18",
+  "u_qkgeo_19",
+  "u_qkgeo_20",
+  "u_qkgeo_21",
+  "u_qkgeo_22",
+  "u_qkgeo_23",
+  "u_qkgeo_24",
+  "u_qkgeo_25",
+  "u_qkgeo_26",
+  "u_qkgeo_27",
+  "u_qkgeo_28",
+  "u_qkgeo_29",
+  "u_qkgeo_30",
+  "u_qkgeo_31",
+  "u_qkgeo_32",
+  "u_qkgeo_33",
+  "u_qkgeo_34",
+  "u_qkgeo_35",
+  "u_qkgeo_36",
+  "u_qkgeo_37",
+  "u_qkgeo_38",
+  "u_qkgeo_39",
+  "u_qkgeo_40",
+  "u_qkgeo_41",
+  "u_qkgeo_42",
+  "u_qkgeo_43",
+  "u_qkgeo_44",
+  "u_qkgeo_45",
+  "u_qkgeo_46",
+  "u_qkgeo_47",
+  "u_qkgeo_48",
+  "u_qkgeo_49",
+  "u_qkgeo_50",
+  "u_qkgeo_51",
+  "u_qkgeo_52",
+  "u_qkgeo_53",
+  "u_qkgeo_54",
+  "u_qkgeo_55",
+  "u_qkgeo_56",
+  "u_qkgeo_57",
+  "u_qkgeo_58",
+  "u_qkgeo_59",
+  "u_qkgeo_60",
+  "u_qkgeo_61",
+  "u_qkgeo_62",
+  "u_qkgeo_63",
+  "u_qkgeo_64",
+  "u_qkgeo_65",
+  "u_qkgeo_66",
+  "u_qkgeo_67",
+  "u_qkgeo_68",
+  "u_qkgeo_69",
+  "u_qkgeo_70",
+  "u_qkgeo_71",
+  "u_qkgeo_72",
+  "u_qkgeo_73",
+  "u_qkgeo_74",
+  "u_qkgeo_75",
+  "u_qkgeo_76",
+  "u_qkgeo_77",
+  "u_qkgeo_78",
+  "u_qkgeo_79",
+  "u_qkgeo_80",
+  "u_qkgeo_81",
+  "u_qkgeo_82",
+  "u_qkgeo_83",
+  "u_qkgeo_84",
+  "u_qkgeo_85",
+  "u_qkgeo_86",
+  "u_qkgeo_87",
+  "u_qkgeo_88",
+  "u_qkgeo_89",
+  "u_qkgeo_90",
+  "u_qkgeo_91",
+  "u_qkgeo_92",
+  "u_qkgeo_93",
+  "u_qkgeo_94",
+  "u_qkgeo_95",
+  "u_qkgeo_96",
+  "u_qkgeo_97",
+  "u_qkgeo_98",
+  "u_qkgeo_99",
+  "u_qkgeo_100",
+  "u_qkgeo_101",
+  "u_qkgeo_102",
+  "u_qkgeo_103",
+  "u_qkgeo_104",
+  "u_qkgeo_105",
+  "u_qkgeo_106",
+  "u_qkgeo_107",
+  "u_qkgeo_108",
+  "u_qkgeo_109",
+  "u_qkgeo_110",
+  "u_qkgeo_111",
+  "u_qkgeo_112",
+  "u_qkgeo_113",
+  "u_qkgeo_114",
+  "u_qkgeo_115",
+  "u_qkgeo_116",
+  "u_qkgeo_117",
+  "u_qkgeo_118",
+  "u_qkgeo_119",
+  "u_qkgeo_120",
+  "u_qkgeo_121",
+  "u_qkgeo_122",
+  "u_qkgeo_123",
+  "u_qkgeo_124",
+  "u_qkgeo_125",
+  "u_qkgeo_126",
+  "u_qkgeo_127",
+  "u_qkgeo_128",
+  "u_qkgeo_129",
+  "u_qkgeo_130",
+  "u_qkgeo_131"
+ ],
+ "groups": [
+  {
+   "type": "qfd_bmath_and",
+   "inputs": {
+    "A": "n_70885",
+    "B": "n_71011"
+   },
+   "copies": [
+    "u_qkgeo_0",
+    "\\u_lpl_17_r.u53349",
+    "u_qkgeo_1",
+    "u_qkgeo_2"
+   ],
+   "cap": 10,
+   "hpwl_before": 132.7,
+   "hpwl_after": 69.5,
+   "weights_before": [
+    32
+   ],
+   "weights_after": [
+    2,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_and",
+   "inputs": {
+    "A": "n_71127",
+    "B": "n_71253"
+   },
+   "copies": [
+    "\\u_lpl_18_r.u53616",
+    "u_qkgeo_3",
+    "u_qkgeo_4",
+    "u_qkgeo_5"
+   ],
+   "cap": 10,
+   "hpwl_before": 268.3,
+   "hpwl_after": 65.2,
+   "weights_before": [
+    32
+   ],
+   "weights_after": [
+    6,
+    6,
+    10,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_and",
+   "inputs": {
+    "A": "n_73944",
+    "B": "n_74021"
+   },
+   "copies": [
+    "u_qkgeo_6",
+    "\\u_lpl_22_r.u56678",
+    "u_qkgeo_7"
+   ],
+   "cap": 8,
+   "hpwl_before": 102.3,
+   "hpwl_after": 36.5,
+   "weights_before": [
+    18
+   ],
+   "weights_after": [
+    2,
+    8,
+    8
+   ]
+  },
+  {
+   "type": "qfd_bmath_dff_p",
+   "inputs": {
+    "C": "n_3139",
+    "D": "n_79693"
+   },
+   "copies": [
+    "\\u_lpl_4_r.u62825",
+    "u_qkgeo_8",
+    "u_qkgeo_9",
+    "u_qkgeo_10"
+   ],
+   "cap": 9,
+   "hpwl_before": 350.3,
+   "hpwl_after": 220.5,
+   "weights_before": [
+    26
+   ],
+   "weights_after": [
+    3,
+    6,
+    8,
+    9
+   ]
+  },
+  {
+   "type": "qfd_bmath_dff_p",
+   "inputs": {
+    "C": "n_3139",
+    "D": "n_81653"
+   },
+   "copies": [
+    "u_qkgeo_11",
+    "u_qkgeo_12",
+    "\\u_lpl_7_r.u64966",
+    "u_qkgeo_13"
+   ],
+   "cap": 9,
+   "hpwl_before": 280.4,
+   "hpwl_after": 44.3,
+   "weights_before": [
+    25
+   ],
+   "weights_after": [
+    1,
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "type": "qfd_bmath_and",
+   "inputs": {
+    "A": "n_81660",
+    "B": "n_81842"
+   },
+   "copies": [
+    "u_qkgeo_14",
+    "u_qkgeo_15",
+    "\\u_lpl_7_r.u65105",
+    "u_qkgeo_16",
+    "\\u_lpl_7_r.u67341",
+    "u_qkgeo_17"
+   ],
+   "cap": 10,
+   "hpwl_before": 255.3,
+   "hpwl_after": 68.2,
+   "weights_before": [
+    14,
+    32
+   ],
+   "weights_after": [
+    2,
+    8,
+    8,
+    8,
+    10,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_dff_p",
+   "inputs": {
+    "C": "n_3139",
+    "D": "n_81878"
+   },
+   "copies": [
+    "\\u_lpl_7_r.u65124",
+    "u_qkgeo_18"
+   ],
+   "cap": 10,
+   "hpwl_before": 531.4,
+   "hpwl_after": 494.5,
+   "weights_before": [
+    15
+   ],
+   "weights_after": [
+    7,
+    8
+   ]
+  },
+  {
+   "type": "qfd_bmath_ao21",
+   "inputs": {
+    "A": "n_84079",
+    "B": "n_31640",
+    "X": "n_31546"
+   },
+   "copies": [
+    "u_68357",
+    "u_68359",
+    "u_68358",
+    "u_68356",
+    "u_22528"
+   ],
+   "cap": 32,
+   "hpwl_before": 214.5,
+   "hpwl_after": 123.3,
+   "weights_before": [
+    20,
+    31,
+    32,
+    32,
+    32
+   ],
+   "weights_after": [
+    20,
+    31,
+    32,
+    32,
+    32
+   ]
+  },
+  {
+   "type": "qfd_bmath_or",
+   "inputs": {
+    "A": "n_45370",
+    "B": "n_45372"
+   },
+   "copies": [
+    "u_qkgeo_19",
+    "u_35790",
+    "u_qkgeo_20",
+    "u_qkgeo_21"
+   ],
+   "cap": 9,
+   "hpwl_before": 192.3,
+   "hpwl_after": 115.6,
+   "weights_before": [
+    27
+   ],
+   "weights_after": [
+    4,
+    6,
+    8,
+    9
+   ]
+  },
+  {
+   "type": "qfd_bmath_or",
+   "inputs": {
+    "A": "n_45358",
+    "B": "n_45360"
+   },
+   "copies": [
+    "u_qkgeo_22",
+    "u_35796",
+    "u_qkgeo_23",
+    "u_qkgeo_24"
+   ],
+   "cap": 9,
+   "hpwl_before": 196.5,
+   "hpwl_after": 84.1,
+   "weights_before": [
+    27
+   ],
+   "weights_after": [
+    5,
+    7,
+    7,
+    8
+   ]
+  },
+  {
+   "type": "qfd_bmath_and",
+   "inputs": {
+    "A": "n_19553",
+    "B": "n_55069"
+   },
+   "copies": [
+    "u_qkgeo_25",
+    "u_qkgeo_26",
+    "u_qkgeo_27",
+    "u_qkgeo_28",
+    "u_qkgeo_29",
+    "u_qkgeo_30",
+    "u_68371",
+    "u_qkgeo_31",
+    "u_qkorr_6",
+    "u_68370",
+    "u_qkgeo_32",
+    "u_68368",
+    "u_qkgeo_33",
+    "u_68369",
+    "u_39347",
+    "u_68367",
+    "u_qkgeo_34",
+    "u_qkgeo_35",
+    "u_qkgeo_36",
+    "u_qkgeo_37",
+    "u_qkgeo_38",
+    "u_qkgeo_39",
+    "u_qkgeo_40"
+   ],
+   "cap": 10,
+   "hpwl_before": 520.2,
+   "hpwl_after": 19.9,
+   "weights_before": [
+    12,
+    12,
+    32,
+    32,
+    32,
+    32,
+    32
+   ],
+   "weights_after": [
+    2,
+    4,
+    4,
+    4,
+    6,
+    6,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_and",
+   "inputs": {
+    "A": "n_55616",
+    "B": "n_84870"
+   },
+   "copies": [
+    "u_39653",
+    "u_68173",
+    "u_qkgeo_41"
+   ],
+   "cap": 24,
+   "hpwl_before": 156.2,
+   "hpwl_after": 120.8,
+   "weights_before": [
+    32,
+    32
+   ],
+   "weights_after": [
+    16,
+    24,
+    24
+   ]
+  },
+  {
+   "type": "qfd_bmath_and",
+   "inputs": {
+    "A": "n_55712",
+    "B": "n_50166"
+   },
+   "copies": [
+    "u_68256",
+    "u_68257",
+    "u_68260",
+    "u_68258",
+    "u_68259",
+    "u_39750"
+   ],
+   "cap": 32,
+   "hpwl_before": 149.2,
+   "hpwl_after": 146.1,
+   "weights_before": [
+    16,
+    32,
+    32,
+    32,
+    32,
+    32
+   ],
+   "weights_after": [
+    16,
+    32,
+    32,
+    32,
+    32,
+    32
+   ]
+  },
+  {
+   "type": "qfd_bmath_and",
+   "inputs": {
+    "A": "n_55951",
+    "B": "n_50072"
+   },
+   "copies": [
+    "u_qkgeo_42",
+    "u_qkgeo_43",
+    "u_qkgeo_44",
+    "u_qkgeo_45",
+    "u_qkgeo_46",
+    "u_67432",
+    "u_qkgeo_47",
+    "u_67431",
+    "u_qkgeo_48",
+    "u_40020",
+    "u_67430",
+    "u_qkgeo_49",
+    "u_qkgeo_50"
+   ],
+   "cap": 10,
+   "hpwl_before": 158.4,
+   "hpwl_after": 21.1,
+   "weights_before": [
+    8,
+    32,
+    32,
+    32
+   ],
+   "weights_after": [
+    4,
+    4,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    10,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_mux",
+   "inputs": {
+    "A": "n_50658",
+    "B": "n_50655",
+    "S": "n_83781"
+   },
+   "copies": [
+    "u_qkgeo_51",
+    "u_40379",
+    "u_qkgeo_52",
+    "u_qkgeo_53"
+   ],
+   "cap": 10,
+   "hpwl_before": 152.4,
+   "hpwl_after": 80.8,
+   "weights_before": [
+    32
+   ],
+   "weights_after": [
+    4,
+    9,
+    9,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_or",
+   "inputs": {
+    "A": "n_54268",
+    "B": "n_84822"
+   },
+   "copies": [
+    "u_qkgeo_54",
+    "u_qkgeo_55",
+    "u_qkgeo_56",
+    "u_qkgeo_57",
+    "u_67418",
+    "u_67419",
+    "u_qkgeo_58"
+   ],
+   "cap": 10,
+   "hpwl_before": 254.9,
+   "hpwl_after": 14.3,
+   "weights_before": [
+    20,
+    32
+   ],
+   "weights_after": [
+    4,
+    4,
+    6,
+    8,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_oa21",
+   "inputs": {
+    "A": "n_50070",
+    "B": "n_83862",
+    "X": "n_84815"
+   },
+   "copies": [
+    "u_qkgeo_59",
+    "u_68081",
+    "u_68082",
+    "u_qkgeo_60",
+    "u_68083",
+    "u_68084",
+    "u_68080",
+    "u_qkgeo_61",
+    "u_68078",
+    "u_68079",
+    "u_qkgeo_62",
+    "u_qkgeo_63",
+    "u_qkgeo_64",
+    "u_qkgeo_65",
+    "u_qkgeo_66",
+    "u_qkgeo_67",
+    "u_qkgeo_68",
+    "u_qkgeo_69",
+    "u_qkgeo_70",
+    "u_qkgeo_71",
+    "u_qkgeo_72",
+    "u_qkgeo_73",
+    "u_qkgeo_74",
+    "u_qkgeo_75",
+    "u_qkgeo_76",
+    "u_qkgeo_77",
+    "u_qkgeo_78",
+    "u_qkgeo_79"
+   ],
+   "cap": 10,
+   "hpwl_before": 219.0,
+   "hpwl_after": 36.7,
+   "weights_before": [
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32
+   ],
+   "weights_after": [
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    6,
+    8,
+    8,
+    8,
+    8,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_oa21",
+   "inputs": {
+    "A": "n_50081",
+    "B": "n_83871",
+    "X": "n_84813"
+   },
+   "copies": [
+    "u_qkgeo_80",
+    "u_68127",
+    "u_68126",
+    "u_68128",
+    "u_68129",
+    "u_qkgeo_81",
+    "u_qkgeo_82",
+    "u_qkgeo_83",
+    "u_qkgeo_84",
+    "u_68130",
+    "u_68125",
+    "u_68124",
+    "u_qkgeo_85",
+    "u_qkgeo_86",
+    "u_qkgeo_87",
+    "u_qkgeo_88",
+    "u_qkgeo_89",
+    "u_qkgeo_90",
+    "u_qkgeo_91",
+    "u_qkgeo_92",
+    "u_qkgeo_93",
+    "u_qkgeo_94",
+    "u_qkgeo_95",
+    "u_qkgeo_96",
+    "u_qkgeo_97",
+    "u_qkgeo_98",
+    "u_qkgeo_99",
+    "u_qkgeo_100"
+   ],
+   "cap": 10,
+   "hpwl_before": 202.9,
+   "hpwl_after": 41.1,
+   "weights_before": [
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32
+   ],
+   "weights_after": [
+    2,
+    2,
+    4,
+    4,
+    4,
+    6,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_oa21",
+   "inputs": {
+    "A": "n_50087",
+    "B": "n_83880",
+    "X": "n_84811"
+   },
+   "copies": [
+    "u_qkgeo_101",
+    "u_68178",
+    "u_68177",
+    "u_68179",
+    "u_qkgeo_102",
+    "u_68176",
+    "u_68180",
+    "u_qkgeo_103",
+    "u_qkgeo_104",
+    "u_qkgeo_105",
+    "u_68175",
+    "u_qkgeo_106",
+    "u_qkgeo_107",
+    "u_68174",
+    "u_qkgeo_108",
+    "u_qkgeo_109",
+    "u_qkgeo_110",
+    "u_qkgeo_111",
+    "u_qkgeo_112",
+    "u_qkgeo_113",
+    "u_qkgeo_114",
+    "u_qkgeo_115",
+    "u_qkgeo_116",
+    "u_qkgeo_117",
+    "u_qkgeo_118",
+    "u_qkgeo_119",
+    "u_qkgeo_120",
+    "u_qkgeo_121"
+   ],
+   "cap": 10,
+   "hpwl_before": 165.8,
+   "hpwl_after": 25.6,
+   "weights_before": [
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32
+   ],
+   "weights_after": [
+    2,
+    2,
+    4,
+    4,
+    4,
+    6,
+    6,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+   ]
+  },
+  {
+   "type": "qfd_bmath_dff_pn0",
+   "inputs": {
+    "C": "n_3140",
+    "D": "n_24038",
+    "R": "n_84876"
+   },
+   "copies": [
+    "u_qkgeo_122",
+    "u_qkgeo_123",
+    "u_qkgeo_124",
+    "u_68393",
+    "u_68396",
+    "u_68385",
+    "u_qkgeo_125",
+    "u_68383",
+    "u_68397",
+    "u_68391",
+    "u_68384",
+    "u_68389",
+    "u_68382",
+    "u_68390",
+    "u_68394",
+    "u_68395",
+    "u_qkgeo_126",
+    "u_68635",
+    "u_68388",
+    "u_68387",
+    "u_68381",
+    "u_68386",
+    "u_qkgeo_127",
+    "u_68392",
+    "u_68398",
+    "u_qkgeo_128",
+    "u_qkgeo_129",
+    "u_qkgeo_130",
+    "u_qkgeo_131"
+   ],
+   "cap": 22,
+   "hpwl_before": 268.2,
+   "hpwl_after": 74.6,
+   "weights_before": [
+    1,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32
+   ],
+   "weights_after": [
+    1,
+    3,
+    4,
+    21,
+    21,
+    21,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22,
+    22
+   ]
+  }
+ ]
+}

@@ -138,8 +138,11 @@ def validate(spec, domains, root):
     for field in ('symmetric', 'rc_cal', 'macro_leaf', 'macro_pin_leaf'):
         if type(value[field]) is not bool:
             raise ValueError(f'domain_spatial_spine {field} must be boolean')
-    if value['rc_cal']:
-        raise ValueError('domain_spatial_spine requires existing platform RC (rc_cal=false)')
+    # SQC-CTLM 10-22: rc_cal=true balances the spine on the RCX-calibrated clock RC (clock_spine.tcl OT_SPINE_RC_CAL, 594825ff5).
+    # With rc_cal=false the CTMS ctlm spines (safe15-17) were balanced on platform RC (C 0.145 vs RCX 0.10 fF/um):
+    # ck_hr pin-flop spread 58 ps at CTS grew to 155-260 TT / 99-187 FF at GRT.  Requires the RC-cal helper.
+    if value['rc_cal'] and not (Path(root) / 'tools/orfs_hold_mm.tcl').is_file():
+        raise ValueError('domain_spatial_spine rc_cal=true requires the RC-cal helper tools/orfs_hold_mm.tcl')
     if value['macro_pin_leaf'] and not value['macro_leaf']:
         raise ValueError('macro_pin_leaf requires macro_leaf')
     for field, lo, hi in [('leaf_max', 1, 32), ('iterations', 1, 20)]:

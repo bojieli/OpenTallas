@@ -1,0 +1,9 @@
+# safe17 local PM placement structure
+
+The unchanged safe16 CALREG15/H16ZA source has remaining long PM interface wires: the safe15b actual CTS report shows approximately445ps on the final PM read-address net and567ps on a reset net. safe17 assigns each PM macro input/output combinational cone and its first source/capture registers to a contiguous standard-cell band beside both SRAM east faces. The band is carved from the original core fence, so regions do not overlap; all other root ownership, macro positions, pins, clocks, uncertainty and RTL are unchanged. The inherited post-GPL hook dissolves all three temporary placement groups before detailed placement.
+
+Actual read-only OpenDB smoke on the prior safe15b 3_3_place_gp.odb passed MAIN and FALLBACK: both found2SRAMs/2648movable cells/357.225um2, preserved nets/clocks and assigned nonoverlapping regions. This is wiring/placement-input evidence, not timing qualification. MAIN864x820.8 and FALLBACK950.4x820.8 retain the enlarged outlines.
+
+SAFE8: (1) pin plans/landing writers unchanged; (2) PM cones now local beside SRAM east faces, all other landed reach unchanged; (3) no net/cell insertion, prior native32source unchanged, normal gate remeasures; (4) logic depth unchanged, final interface wire is the structural target; (5) SRAM2/ROM5/hardhead+witness unchanged, no new storage; (6) unchanged lattice/outline/channel widths and continuous std rows, band capacity far exceeds measured357.225um2, no squeeze; (7) exact same two-root clock spine and hard-child insertion records as safe16, normal gate must measure TT/FF; (8) no new edge or source behavior, same static calendar.
+
+This candidate is the older19-bit EMB ABI parent. It does not qualify or replace the current HP13 master/additional20EMBbits. Normal gates may classify remaining timing causes; no physical PASS is inferred here.

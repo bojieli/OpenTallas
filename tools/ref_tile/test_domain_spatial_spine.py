@@ -45,7 +45,7 @@ class Schema(unittest.TestCase):
         s, domains = fixture()
         for key, value in [('new_hook', 'x.tcl'), ('version', True), ('leaf_max', 33),
                            ('iterations', 0), ('bin_um', float('nan')),
-                           ('rc_cal', True), ('symmetric', 1)]:
+                           ('rc_cal', 1), ('symmetric', 1)]:
             b = copy.deepcopy(s); b['domain_spatial_spine'][key] = value
             with self.subTest(key=key), self.assertRaises(ValueError):
                 D.validate(b, domains, ROOT)
@@ -53,6 +53,10 @@ class Schema(unittest.TestCase):
             p = Path(temp)/D.ENGINE; p.parent.mkdir(parents=True); p.write_text('wrong engine')
             with self.assertRaisesRegex(ValueError, 'canonical engine'):
                 D.validate(s, domains, temp)
+
+    def test_rc_cal_true_accepted_with_helper(self):
+        s, domains = fixture(); s['domain_spatial_spine']['rc_cal'] = True
+        D.validate(s, domains, ROOT)  # SQC-CTLM 10-22: calibrated-RC spine balancing (tools/orfs_hold_mm.tcl present)
 
     def test_shell_requires_distinct_macro_pin_leaves(self):
         s, domains = fixture()
