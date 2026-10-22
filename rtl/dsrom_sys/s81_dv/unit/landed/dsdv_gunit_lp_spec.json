@@ -30,11 +30,16 @@
   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4r.sv",
-  "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+  "rtl/lib/ot_rst_region16.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+  "rtl/hdc/v41/ot_hdc_sinkhorn_p.sv",
+  "rtl/hdc/v41/ot_hdc_skp_predecode.sv",
+  "rtl/hdc/v41/ot_hdc_skf_predecode.sv",
+  "rtl/hdc/v41/ot_hdc_sinkhorn_fs.sv",
   "rtl/hdc/v41/ot_hdc_sk_arith.sv",
   "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
-  "rtl/hdc/ot_hdc_cg.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail_fs.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv",
   "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
@@ -47,7 +52,13 @@
   "rtl/common/landed_parent/ot_pl_land_rst_copy.sv"
  ],
  "defines": [
-  "DSDV_GUNIT_HARD"
+  "DSDV_GUNIT_HARD",
+  "OT_S81_GUNIT_PIN_COPY=1",
+  "OT_S81_GUNIT_CONTROL_SAFE=1",
+  "OT_S81_GUNIT_Q4=1",
+  "OT_S81_GUNIT_FANOUT_SAFE=1",
+  "OT_S81_GUNIT_NAT32=1",
+  "OT_S81_VE_LOADSAFE5"
  ],
  "out_dir": "rtl/dsrom_sys/s81_dv/unit/landed",
  "record_dir": "results/arch/landed_parent_1018/gunit",

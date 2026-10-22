@@ -25,7 +25,7 @@
  ],
  "outline": {
   "w": 1468.8,
-  "h": 1468.8,
+  "h": 1512.0,
   "exact": true
  },
  "children": [
@@ -75,12 +75,12 @@
    ]
   },
   {
-   "view": "physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5",
+   "view": "physical/ref_tile/dsdv_gunit_l5_n32/views/dsdv_gunit_l5",
    "count": 1,
    "inst": "*u_l5",
    "at": [
     43.2,
-    1123.2
+    1166.4
    ]
   },
   {
@@ -142,7 +142,7 @@
    "count": 1,
    "inst": "*u_l4r",
    "at": [
-    432.0,
+    475.2,
     1036.8
    ]
   },
@@ -151,8 +151,8 @@
    "count": 1,
    "inst": "*u_l5f",
    "at": [
-    432.0,
-    1209.6
+    475.2,
+    1296.0
    ]
   }
  ],
@@ -180,12 +180,12 @@
  },
  "pin_ranges": {
   "vi_n": [
-   43.2,
-   151.2
+   183.6,
+   324.0
   ],
   "vo_n": [
-   151.2,
-   259.2
+   43.2,
+   183.6
   ],
   "vi_s": [
    43.2,
@@ -249,12 +249,12 @@
   "enable": false,
   "reason": "every gunit leaf is flop-first / flop-last at its pins and every parent port goes straight to one leaf's pin flop (vi_n/vo_n L5, vi_s/vo_s L3, cw/sid/fault L2); the landing halves are flops on both sides: a recipe pin register would add an unpriced rung stage"
  },
- "structural_change": "PL-GUNIT (PARENTS-LANDED 10-18, landed-regions-standard-1018): dsdv_gunit as a LANDED parent from tools/landed_parent/lp.py (reschedule mode): two clock regions, hc = L0/L0r/L4/L4r/L5/L5f (HC subsystem above the stop) and rt = L2/L1/L1f x4/L1c/L3 (stop + router), each its own clock port and local tree; the ONLY crossing is the stop boundary L0|L2: 13 landings (1,655 b, 8,444 flops, +3 edges each), 1-bit reset runs depth 4. Every stacked leaf pair talks both ways, so any split is a cross-region loop: no offset schedule keeps the flat calendar; the compiler takes the re-schedule (N-side rung +3 each way, HC +6, router 0; results/arch/landed_parent_1018/gunit/dsdv_gunit_lp_record.json). Floorplan (43.2 lattice, 950.4 x 1468.8): col A stack L3/L1/L2 | 86.4 landing channel | L0/L4/L5; col B fronts f0..f2 beside L3/L1/L2 and L0r/L4r/L5f beside L0/L4/L5; col C f3 + L1c (collector E of the fronts). DIAGNOSTIC: L5 and L1f are stand-ins from their --cts gate odbs (no closed view: L5 regate died in synth, L1f pin-flop spread 114 TT). | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8 | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8 | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8 | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8 | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8",
+ "structural_change": "PL-GUNIT (PARENTS-LANDED 10-18, landed-regions-standard-1018): dsdv_gunit as a LANDED parent from tools/landed_parent/lp.py (reschedule mode): two clock regions, hc = L0/L0r/L4/L4r/L5/L5f (HC subsystem above the stop) and rt = L2/L1/L1f x4/L1c/L3 (stop + router), each its own clock port and local tree; the ONLY crossing is the stop boundary L0|L2: 13 landings (1,655 b, 8,444 flops, +3 edges each), 1-bit reset runs depth 4. Every stacked leaf pair talks both ways, so any split is a cross-region loop: no offset schedule keeps the flat calendar; the compiler takes the re-schedule (N-side rung +3 each way, HC +6, router 0; results/arch/landed_parent_1018/gunit/dsdv_gunit_lp_record.json). Floorplan (43.2 lattice, 950.4 x 1468.8): col A stack L3/L1/L2 | 86.4 landing channel | L0/L4/L5; col B fronts f0..f2 beside L3/L1/L2 and L0r/L4r/L5f beside L0/L4/L5; col C f3 + L1c (collector E of the fronts). DIAGNOSTIC: L5 and L1f are stand-ins from their --cts gate odbs (no closed view: L5 regate died in synth, L1f pin-flop spread 114 TT). | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8 | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8 | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8 | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8 | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5(g3)/L5f CLOSED, exact blobs) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1468.8 | S81-ELEM2-GUNIT 10-21: re-kit on current main child views (L0/L0r/L1/L1c/L2(refinalized)/L3/L4/L4r/L5f CLOSED, exact blobs; STW-S81-COLLA-GUNIT: L5 = native-32 n32-1766568f0 CLOSED view, L4r/L5f x 475.2, L5 y 1166.4) + L1f FBd 388.8x345.6 x4: fronts 2x2 x 432.0/907.2 (86.4 channel), L1c E of col C (x 1339.2, y 216 centred on the front rows), hc side leaves at x 432; cw/sid/fault on the W face over the L1|L2 gap; outline 1468.8 x 1512.0",
  "job": {
   "owner": "Claude:S81-ELEM2-GUNIT",
   "branch": "claude/s81-gunit-lp4-1021",
   "tag": "lp4b",
-  "purpose": "S81 dsdv_gunit landed-region parent on CURRENT main child sources (L5 g3 view, L1f FBd 388.8x345.6 stand-in), outline 1468.8x1468.8, channel 86.4",
+  "purpose": "S81 dsdv_gunit landed-region parent on CURRENT main child sources + native-32 L5 (n32-1766568f0 view, L1f FBd 388.8x345.6 stand-in), outline 1468.8x1512.0, channel 86.4, L5 y 1166.4",
   "submit": false,
   "hold_merge": "diagnostic: L1f stand-in abstract; real gate after its closed view",
   "extra_paths": [

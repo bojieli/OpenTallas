@@ -2,7 +2,7 @@
 # c11a6e02a: attention halves leaf spread 1,634 -> 24 ps; idx w8 cluster 518 ps skew) replaces TritonCTS for the cluster
 # clock.  Leaf target = arrival at the sink pin PLUS the hard child's own clock insertion (its TT lib max_clock_tree_path),
 # so the spine balances the flops INSIDE the children against the cluster's own flops (CLOCK LATENCY ACROSS THE HIERARCHY).
-set ::ot_ref_child_ins [dict create dsdv_gunit_l0/clk 286.1 dsdv_gunit_l0r/clk 236.3 dsdv_gunit_l1/clk 306.7 dsdv_gunit_l1c/clk 217.3 dsdv_gunit_l1f/clk 471.5 dsdv_gunit_l2/clk 276.7 dsdv_gunit_l3/clk 257.6 dsdv_gunit_l4/clk 303.0 dsdv_gunit_l4r/clk 190.6 dsdv_gunit_l5/clk 436.6 dsdv_gunit_l5f/clk 205.4]
+set ::ot_ref_child_ins [dict create dsdv_gunit_l0/clk 286.1 dsdv_gunit_l0r/clk 236.3 dsdv_gunit_l1/clk 306.7 dsdv_gunit_l1c/clk 217.3 dsdv_gunit_l1f/clk 471.5 dsdv_gunit_l2/clk 276.7 dsdv_gunit_l3/clk 257.6 dsdv_gunit_l4/clk 303.0 dsdv_gunit_l4r/clk 190.6 dsdv_gunit_l5/clk 447.9 dsdv_gunit_l5f/clk 205.4]
 proc ot_sp_leaf_arrivals {} {
   estimate_parasitics -placement
   sta::find_timing_paths -path_delay max -group_path_count 1

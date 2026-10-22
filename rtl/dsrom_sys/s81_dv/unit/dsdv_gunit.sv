@@ -37,8 +37,14 @@ module dsdv_gunit #(
 );
 `ifndef DSDV_GUNIT_HARD
   `define DSDV_GU_MUT #(.MUT(MUT))
+  // STW-S81-COLLA-GUNIT 10-21: u_l5 is the CLOSED native-32 L5 (dsdv_gunit_l5_n32-n32-1766568f0, l5 blob dac0785b):
+  // PIN_COPY / CONTROL_SAFE / Q4 / FANOUT_SAFE / NAT32 = 1 (its kit PARAMS) + -DOT_S81_VE_LOADSAFE5 (its kit define).
+  // Hardened (DSDV_GUNIT_HARD) the parent carries no #() on hard children: the macro view IS that configuration and
+  // RTL benches of the landed form pass the same values as -DOT_S81_GUNIT_*=1 (lp spec "defines").
+  `define DSDV_GU_L5 #(.MUT(MUT), .PIN_COPY(1), .CONTROL_SAFE(1), .Q4(1), .FANOUT_SAFE(1), .NAT32(1))
 `else
   `define DSDV_GU_MUT
+  `define DSDV_GU_L5
 `endif
     // rung segments: d_* southbound (from N), u_* northbound (from S)
     wire [275:0] d54, u45, d40, u04, d02, u20, d21, u12, d13, u31;
@@ -63,7 +69,7 @@ module dsdv_gunit #(
     wire rw_st, rw_v, rw_l; wire [511:0] rw_x; wire [31:0] rw_scale; wire [9:0] rw_row; wire [4:0] rw_lm;
     wire [15:0] rw_sm; wire [3:0] s13; wire w_v; wire [275:0] w_b; wire f3;
 
-    dsdv_gunit_l5 `DSDV_GU_MUT u_l5 (.clk(clk), .rst_n(rst_n), .rs_i(u45), .rs_o(d54), .launch(l_launch), .mx_v(l_mv), .mx_i(l_mi), .mx_y(l_my),
+    dsdv_gunit_l5 `DSDV_GU_L5 u_l5 (.clk(clk), .rst_n(rst_n), .rs_i(u45), .rs_o(d54), .launch(l_launch), .mx_v(l_mv), .mx_i(l_mi), .mx_y(l_my),
         .t_set(l_tset), .t_w(l_tw), .t_row(l_trow), .t_lm(l_tlm), .t_sm(l_tsm), .cw_v(c45_v), .cw_a(c45_a), .cw_d(c45_d),
         .sid_i(s45), .ct_v(h5_v), .ct_b(h5_b), .fault(f5), .vo_n(vo_n), .vi_n(vi_n),
         .xe_v(xe_v), .xe_x(xe_x), .ye_v(ye_v), .ye_y(ye_y), .ye_f(ye_f), .xd_v(xd_v), .xd_b(xd_b), .yd_v(yd_v), .yd_y(yd_y),

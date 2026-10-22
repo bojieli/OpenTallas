@@ -65,10 +65,10 @@ set i [ot_ref_pick $ot_ref_by dsdv_gunit_l0r {*u_l0r}]
 $i setOrient R0; $i setLocation [expr {round(432.0 * $dbu)}] [expr {round(820.8 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] dsdv_gunit_l0r at 432.0 820.8 R0"
 set i [ot_ref_pick $ot_ref_by dsdv_gunit_l4r {*u_l4r}]
-$i setOrient R0; $i setLocation [expr {round(432.0 * $dbu)}] [expr {round(1036.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] dsdv_gunit_l4r at 432.0 1036.8 R0"
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(1036.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] dsdv_gunit_l4r at 475.2 1036.8 R0"
 set i [ot_ref_pick $ot_ref_by dsdv_gunit_l5f {*u_l5f}]
-$i setOrient R0; $i setLocation [expr {round(432.0 * $dbu)}] [expr {round(1209.6 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] dsdv_gunit_l5f at 432.0 1209.6 R0"
+$i setOrient R0; $i setLocation [expr {round(475.2 * $dbu)}] [expr {round(1252.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] dsdv_gunit_l5f at 475.2 1252.8 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 14} { error "ref_tile place: expected 14 macros, netlist has $nb" }
