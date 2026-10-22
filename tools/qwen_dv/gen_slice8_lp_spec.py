@@ -17,8 +17,12 @@ CHILD_SOURCES=[x for x in g7.CHILD_SOURCES if x not in ['rtl/qwen_dv/s5/p3/qfd_d
 def make_flat():
     import gen_slice8_rp_source
     gen_slice8_rp_source.main()
-    import gen_s8_station_tail
-    gen_s8_station_tail.main()
+    # The regional station is selected and qualified independently of this parent.
+    # Regenerating it here silently restored the legacy SCALE_LAT=6/generic
+    # arithmetic over the p7 SCALE_LAT=7/BZ16 implementation.
+    station = ROOT / 'rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv'
+    if not station.is_file():
+        raise SystemExit('selected station_tail1 source absent; select a qualified child first')
     g7.make_flat()
     text=g7.FLAT6.read_text().replace('module qfd_dv_s7_flat (','module qfd_dv_s8_flat (',1)
     text=text.replace('qfd_dv_redstn2_region u_r','qfd_dv_s8_station_tail1 u_r')

@@ -3,7 +3,7 @@
 module qfd_dv_s8_station_tail1 #(
     parameter integer ADD_LAT   = 7,
     parameter integer SKEW      = 14,
-    parameter integer SCALE_LAT = 6,
+    parameter integer SCALE_LAT = 7,       // QR-TAIL1 10-21: scale mul encode cut (+1 result edge)
     parameter integer MUT       = 0,
     parameter integer JB        = 8,
     parameter integer PIN_IN    = 1,       // 1: every data/control input lands in one pin register (+1 edge, all inputs)
@@ -72,17 +72,20 @@ for(genvar z=0;z<24;z=z+1) begin:g_cfg_final
 wire cfg_schedule_fault=(cfg_v||cfg_mid||cfg_final[0])&&(rs_s_c[0]||rs_s_c[2]||rs_n_c[0]||rs_n_c[2]||nb_c[0]);
 
 wire[3:0] local_mode[0:NZ-1];
+wire[3:0] local_mode2[0:NZ-1];
 wire[1:0] mode_mid; wire[1:0] mode_payload[0:NZ-1];
 (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.W(2),.ID(0)) u_mode_mid(.ck(ck),.d(cfg_mode),.q(mode_mid));
 for(genvar z=0;z<NZ;z=z+1) begin:g_mode_payload
  (* keep_hierarchy="yes" *) qfd_dv_station_copy #(.W(2),.ID(100+z)) u_p(.ck(ck),.d(mode_mid),.q(mode_payload[z]));
  (* keep_hierarchy="yes" *) qfd_dv_station_mode #(.ID(z),.USE2(z==0)) u_m(.ck(ck),.rst_n(sr_reset[22+z]),.cfg_v(cfg_final[z]),.mode(mode_payload[z]),.q(local_mode[z]));
+ // second kept mode unit, same cfg edge: fd mux bits [15:8] (census: used_q 33 loads)
+ (* keep_hierarchy="yes" *) qfd_dv_station_mode #(.ID(16+z),.USE2(z==0)) u_m2(.ck(ck),.rst_n(sr_reset[22+z]),.cfg_v(cfg_final[z]),.mode(mode_payload[z]),.q(local_mode2[z]));
 end
 wire[NL-1:0] ws_rep;
 for(genvar z=0;z<NL;z=z+1) begin:g_ws
  wire ws_source;
  (* keep_hierarchy="yes" *) qfd_dv_station_cfgbit #(.ID(z)) u_c(.ck(ck),.rst_n(sr_reset[26+z]),.cfg_v(cfg_final[2*z]),.d(safe_cfg_wsrc),.q(ws_source));
- qfd_dv_ring_delay #(.W(1),.D(3+BT_LAT)) u_d(.clk(ck),.rst_n(sr_reset[28+z]),.d(ws_source),.q(ws_rep[z]));
+ qfd_dv_s8s_ring_delay #(.W(1),.D(3+BT_LAT)) u_d(.clk(ck),.rst_n(sr_reset[28+z]),.d(ws_source),.q(ws_rep[z]));
 end
 
     reg [1:0] mode; reg wsrc; reg [7:0] nwords; reg [8:0] sbase; reg [7:0] kcm1;
@@ -105,12 +108,12 @@ end
     // Near (skewed) halves: data slice through the region's own SRAM rows, valid/bad bits through finite rings.
     wire [DW-1:0] ns_d, nn_d;
     wire [1:0] ns_c, nn_c, ns_c7, nn_c7;
-    qfd_dv_sram_delay #(.W(DW), .D(SKEW), .MUT(MUT == 16)) u_sks (.ck(ck), .rst_n(sr_reset[30]), .d(rs_s_lo), .q(ns_d));
-    qfd_dv_sram_delay #(.W(DW), .D(SKEW)) u_skn (.ck(ck), .rst_n(sr_reset[31]), .d(rs_n_lo), .q(nn_d));
-    qfd_dv_ring_delay #(.W(2),.D(SKEW/2),.ID(1)) u_sks_c0 (.clk(ck),.rst_n(sr_reset[32]),.d(rs_s_c[1:0]),.q(ns_c7));
-    qfd_dv_ring_delay #(.W(2),.D(SKEW-SKEW/2+((MUT == 16) ? -1 : 0)),.ID(2)) u_sks_c1 (.clk(ck),.rst_n(sr_reset[32]),.d(ns_c7),.q(ns_c));
-    qfd_dv_ring_delay #(.W(2),.D(SKEW/2),.ID(3)) u_skn_c0 (.clk(ck),.rst_n(sr_reset[33]),.d(rs_n_c[1:0]),.q(nn_c7));
-    qfd_dv_ring_delay #(.W(2),.D(SKEW-SKEW/2),.ID(4)) u_skn_c1 (.clk(ck),.rst_n(sr_reset[33]),.d(nn_c7),.q(nn_c));
+    qfd_dv_s8s_sram_delay #(.W(DW), .D(SKEW), .MUT(MUT == 16)) u_sks (.ck(ck), .rst_n(sr_reset[30]), .d(rs_s_lo), .q(ns_d));
+    qfd_dv_s8s_sram_delay #(.W(DW), .D(SKEW)) u_skn (.ck(ck), .rst_n(sr_reset[31]), .d(rs_n_lo), .q(nn_d));
+    qfd_dv_s8s_ring_delay #(.W(2),.D(SKEW/2),.ID(1)) u_sks_c0 (.clk(ck),.rst_n(sr_reset[32]),.d(rs_s_c[1:0]),.q(ns_c7));
+    qfd_dv_s8s_ring_delay #(.W(2),.D(SKEW-SKEW/2+((MUT == 16) ? -1 : 0)),.ID(2)) u_sks_c1 (.clk(ck),.rst_n(sr_reset[32]),.d(ns_c7),.q(ns_c));
+    qfd_dv_s8s_ring_delay #(.W(2),.D(SKEW/2),.ID(3)) u_skn_c0 (.clk(ck),.rst_n(sr_reset[33]),.d(rs_n_c[1:0]),.q(nn_c7));
+    qfd_dv_s8s_ring_delay #(.W(2),.D(SKEW-SKEW/2),.ID(4)) u_skn_c1 (.clk(ck),.rst_n(sr_reset[33]),.d(nn_c7),.q(nn_c));
     wire [1:0] fs_c = rs_s_c[3:2], fn_c = rs_n_c[3:2];
     wire [DW-1:0] fs_d = rs_s_hi, fn_d = rs_n_hi;
     wire plo = fs_c[0] & ns_c[0], phi = fn_c[0] & nn_c[0];
@@ -156,9 +159,9 @@ end
     wire [2*NL-1:0] elo, ehi;
     genvar l;
     generate for (l = 0; l < NL; l = l + 1) begin : g_l7
-        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l)) u_lo (.clk(ck), .rst_n(math_reset[l]), .valid_in(vlo_in),
+        qfd_dv_s8s_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l)) u_lo (.clk(ck), .rst_n(math_reset[l]), .valid_in(vlo_in),
             .a(fs_d[32*l +: 32]), .b(ns_d[32*l +: 32]), .y(ylo[32*l +: 32]), .err(elo[2*l +: 2]), .valid_rep(vlo_rep[2*l+:2]), .valid_out(vlol[l]));
-        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l),.REPS(0)) u_hi (.clk(ck), .rst_n(math_reset[NL+l]), .valid_in(vhi_in),
+        qfd_dv_s8s_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l),.REPS(0)) u_hi (.clk(ck), .rst_n(math_reset[NL+l]), .valid_in(vhi_in),
             .a(fn_d[32*l +: 32]), .b(nn_d[32*l +: 32]), .y(yhi[32*l +: 32]), .err(ehi[2*l +: 2]), .valid_rep(vhi_rep[2*l+:2]), .valid_out(vhil[l]));
     end endgenerate
     wire vlo = vlol[0], vhi = vhil[0];
@@ -181,7 +184,7 @@ end
 
     wire [DW-1:0] hb_q;
     wire [2:0] hr_next = hr + (hpop ? 3'd1 : 3'd0);
-    qfd_dv_sram_lookahead #(.W(DW)) u_hb (.ck(ck), .write(vhi && mode == 2'd0),
+    qfd_dv_s8s_sram_lookahead #(.W(DW)) u_hb (.ck(ck), .write(vhi && mode == 2'd0),
         .wa({2'b0, hw}), .wd(yhi), .ra({2'b0, cfg_final[18] ? 3'd0 : hr_next}), .q(hb_q));
     wire        v7 = (mode == 2'd0) && (vlo || hpop);
     wire[DW-1:0] y7;
@@ -194,7 +197,7 @@ end
     wire [NL-1:0] v8l; wire[2*NL-1:0] v8_rep;
     wire [2*NL-1:0] e8;
     generate for (l = 0; l < NL; l = l + 1) begin : g_l8
-        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l)) u_add (.clk(ck), .rst_n(math_reset[2*NL+l]), .valid_in(v8_in),
+        qfd_dv_s8s_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l)) u_add (.clk(ck), .rst_n(math_reset[2*NL+l]), .valid_in(v8_in),
             .a(ylo[32*l +: 32]), .b(yhi[32*l +: 32]), .y(y8[32*l +: 32]), .err(e8[2*l +: 2]), .valid_rep(v8_rep[2*l+:2]), .valid_out(v8l[l]));
     end endgenerate
     wire v8 = v8l[0];
@@ -218,13 +221,13 @@ end
 
     wire [DW-1:0] h9_q;
     wire [2:0] c9_next = c9 + (v9_in ? 3'd1 : 3'd0);
-    qfd_dv_sram_lookahead #(.W(DW), .MUT(MUT == 17)) u_h9 (.ck(ck), .write(own9),
+    qfd_dv_s8s_sram_lookahead #(.W(DW), .MUT(MUT == 17)) u_h9 (.ck(ck), .write(own9),
         .wa({2'b0, c8}), .wd(y8), .ra({2'b0, cfg_final[22] ? 3'd0 : c9_next}), .q(h9_q));
     wire [DW-1:0] y9;
     wire [NL-1:0] v9l; wire[2*NL-1:0] v9_rep;
     wire [2*NL-1:0] e9;
     generate for (l = 0; l < NL; l = l + 1) begin : g_l9
-        qfd_dv_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l),.REPS(0)) u_add (.clk(ck), .rst_n(math_reset[3*NL+l]), .valid_in(nbv && local_mode[2*l][2]),
+        qfd_dv_s8s_station_add_bounded #(.LAT(ADD_LAT), .DRST(0),.CV(l==0),.ID(l),.REPS(0)) u_add (.clk(ck), .rst_n(math_reset[3*NL+l]), .valid_in(nbv && local_mode[2*l][2]),
             .a(h9_q[32*l +: 32]), .b(nb_d[32*l +: 32]), .y(y9[32*l +: 32]), .err(e9[2*l +: 2]), .valid_rep(v9_rep[2*l+:2]), .valid_out(v9l[l]));
     end endgenerate
     wire v9 = v9l[0];
@@ -235,7 +238,8 @@ end
     wire        fv = (mode == 2'd0) ? v7 : (mode == 2'd1) ? v8 : (mode == 2'd2) ? v9 : 1'b0;
     wire[DW-1:0] fd;
     for(genvar z=0;z<NZ;z=z+1) begin:g_fd
-     assign fd[16*z+:16]=local_mode[z][0]?y7[16*z+:16]:local_mode[z][1]?y8[16*z+:16]:y9[16*z+:16];
+     assign fd[16*z+:8]=local_mode[z][0]?y7[16*z+:8]:local_mode[z][1]?y8[16*z+:8]:y9[16*z+:8];
+     assign fd[16*z+8+:8]=local_mode2[z][0]?y7[16*z+8+:8]:local_mode2[z][1]?y8[16*z+8+:8]:y9[16*z+8+:8];
     end
     reg  [7:0]  j;
     always @(posedge ck or negedge sr_reset[17])
@@ -250,20 +254,20 @@ end
         else bt_word <= sbase + {1'b0, j} + ((MUT == 3) ? 9'd1 : 9'd0);
 
     wire [DW-1:0] fd3;
-    qfd_dv_sram_delay #(.W(DW), .D(3+BT_LAT)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
+    qfd_dv_s8s_sram_delay #(.W(DW), .D(3+BT_LAT)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
     wire fv3,ls3;wire[7:0] j3;
-    qfd_dv_ring_delay #(.W(10),.D(3+BT_LAT)) u_meta(.clk(ck),.rst_n(sr_reset[40]),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
+    qfd_dv_s8s_ring_delay #(.W(10),.D(3+BT_LAT)) u_meta(.clk(ck),.rst_n(sr_reset[40]),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
     wire [DW-1:0] y;
     wire [NL-1:0]  vs;
     wire [2*NL-1:0]  es;
     localparam integer SCALE_DRST = 0;
     generate for (l = 0; l < NL; l = l + 1) begin : g_sc
-        qfd_dv_station_mul_bounded #(.LAT(SCALE_LAT), .DRST(SCALE_DRST),.CV(l==0),.ID(l)) u_mul (.clk(ck), .rst_n(math_reset[4*NL+l]), .valid_in(fv3),
+        qfd_dv_s8s_station_mul_bounded #(.LAT(SCALE_LAT), .DRST(SCALE_DRST),.CV(l==0),.ID(l),.BZ16(1)) u_mul (.clk(ck), .rst_n(math_reset[4*NL+l]), .valid_in(fv3),
             .a(fd3[32*l +: 32]), .b({ws_rep[l] ? 16'h3F80 : bt_q[16*l +: 16], 16'd0}),
             .y(y[32*l +: 32]), .err(es[2*l +: 2]), .valid_out(vs[l]));
     end endgenerate
     wire [7:0] jo; wire lo;
-    qfd_dv_ring_delay #(.W(9), .D(SCALE_LAT)) u_jd (.clk(ck), .rst_n(sr_reset[41]), .d({ls3, j3}), .q({lo, jo}));
+    qfd_dv_s8s_ring_delay #(.W(9), .D(SCALE_LAT)) u_jd (.clk(ck), .rst_n(sr_reset[41]), .d({ls3, j3}), .q({lo, jo}));
     always @(posedge ck or negedge sr_reset[20])
         if (!sr_reset[20]) r_v <= 1'b0;
         else r_v <= vs[0];
