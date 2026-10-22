@@ -1,0 +1,11 @@
+{
+ "scope": "Bit and cycle equivalence of actual N10 add/multiply and captured output copies vs exact N8 reference, plus exact seed subtract; mapped full XFIN native remains running",
+ "source_commit": "1a5d562e9",
+ "source_sha256": "a58c906ec47ad45ee636602c52a24720e86389a1b91851fa09a1a6ce4f9fb41c",
+ "positive": "FP_N10_PASS checks11989",
+ "negative": "FP_N10_MISMATCH add cyc11",
+ "tool": "Verilator5.050",
+ "data_cycles_added": 0,
+ "opt_in": "OT_S81DV_XFIN_N10",
+ "full_native_status": "pending"
+}
