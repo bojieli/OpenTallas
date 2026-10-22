@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hdc_vstream_lane",
+ "enable": false,
+ "reason": "Actual selected RTREE0 gives direct source reset. Preserve source for native census; reset publication repair must be explicit if required."
+}
