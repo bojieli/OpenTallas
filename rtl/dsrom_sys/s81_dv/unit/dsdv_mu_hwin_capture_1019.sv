@@ -130,21 +130,29 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
       if(SAFE_NATIVE!=0) begin:g_safe
         (* keep *) reg [SI-1:0] lw_c;
         (* keep *) reg [SJ-1:0] gn_c;
+        // STW-S81-COLLB 10-21: private accept per copy (kept cfg_accept, same function) -- the shared
+        // mc_valid&!kind&idle AND fed every copy's enables (c22q/c22r native 34 loads).
+        wire acc_c;
+        (* keep=1 *) dsdv_mu_hwin_capture_1019_cfg_accept #(.NSLOT(NSLOT),.SJ(SJ)) u_acc
+          (.valid(mc_q[25]),.kind(mc_q[24]),.armed(armed),.empty(table_empty),.count(gn_c),.accept(acc_c));
         always @(posedge ck or negedge rr[RNATIVE_BASE+ngc])
           if(!rr[RNATIVE_BASE+ngc]) lw_c<=SI'(NSLOT-1);
-          else if(mc_q[25] && idle && !mc_q[24] && gn_c!=SJ'(NSLOT)) lw_c<=(gn_c==0)?SI'(NSLOT-1):gn_c[SI-1:0];
+          else if(acc_c) lw_c<=(gn_c==0)?SI'(NSLOT-1):gn_c[SI-1:0];
         always @(posedge ck or negedge rr[RNATIVE_BASE+NATIVE_LW+ngc])
           if(!rr[RNATIVE_BASE+NATIVE_LW+ngc]) gn_c<=0;
-          else if(mc_q[25] && idle && !mc_q[24] && gn_c!=SJ'(NSLOT)) gn_c<=gn_c+1'b1;
+          else if(acc_c) gn_c<=gn_c+1'b1;
         assign native_lw[ngc]=lw_c;assign native_gn_ptr[ngc]=gn_c;
       end else begin:g_old assign native_lw[ngc]=lw;assign native_gn_ptr[ngc]=gn;end
     end
     for(genvar ngc=0;ngc<NATIVE_GN;ngc=ngc+1) begin:g_native_event_state
       if(SAFE_NATIVE!=0) begin:g_safe
         (* keep *) reg [SJ-1:0] gn_c;
+        wire acc_c;
+        (* keep=1 *) dsdv_mu_hwin_capture_1019_cfg_accept #(.NSLOT(NSLOT),.SJ(SJ)) u_acc
+          (.valid(mc_q[25]),.kind(mc_q[24]),.armed(armed),.empty(table_empty),.count(gn_c),.accept(acc_c));
         always @(posedge ck or negedge rr[RNATIVE_BASE+2*NATIVE_LW+ngc])
           if(!rr[RNATIVE_BASE+2*NATIVE_LW+ngc]) gn_c<=0;
-          else if(mc_q[25] && idle && !mc_q[24] && gn_c!=SJ'(NSLOT)) gn_c<=gn_c+1'b1;
+          else if(acc_c) gn_c<=gn_c+1'b1;
         assign native_gn_event[ngc]=gn_c;
       end else begin:g_old assign native_gn_event[ngc]=gn;end
     end endgenerate
