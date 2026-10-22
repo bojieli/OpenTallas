@@ -1,0 +1,10 @@
+== Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+== Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+== yosys 0.52 netlist sim (rtl vs nl: q[1:0] z):
+in reset rtl 001 nl 110
+rtl 000 nl 111
+rtl 001 nl 110
+== yosys 0.68 netlist sim:
+in reset rtl 001 nl 001
+rtl 000 nl 000
+rtl 001 nl 001

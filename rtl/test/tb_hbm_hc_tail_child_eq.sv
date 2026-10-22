@@ -15,7 +15,12 @@
 `endif
 module tb_hbm_hc_tail_child_eq;
     reg clk = 0; always #1 clk = ~clk;
-    reg rst_n = 0, launch = 0;
+    // HBMc/HC-TAIL2 10-22: rst_n starts high and falls at t = 0.5 (before the first clk edge at t = 1): a real negedge, so
+    // every async-reset flop resets in a 2-state simulator.  Starting at 0 gives no negedge; the reference unit's Sinkhorn
+    // runs on the derived sink clock, which is held low in reset, so its control flops kept their power-up values under
+    // random init (unit fault on case 0 / a stuck final fault).  Cycle counts unchanged.
+    reg rst_n = 1, launch = 0;
+    initial #0.5 rst_n = 0;
     reg [767:0] mixes = 0, bases = 0; reg [95:0] scales = 0;
     wire rv_r, rv_c, f_r, f_c; wire [767:0] y_r, y_c;
     ot_hbm_hc_tail_unit_static u_ref (.clk(clk), .rst_n(rst_n), .launch(launch), .mixes(mixes), .bases(bases),

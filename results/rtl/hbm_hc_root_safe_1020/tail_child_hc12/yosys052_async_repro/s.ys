@@ -1,0 +1,7 @@
+read_verilog -sv d.sv
+synth -top dut
+dfflibmap -liberty ../libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty ../libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -liberty ../libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty ../libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+opt_clean -purge
+rename dut dut_nl
+write_verilog -noattr nl.v
