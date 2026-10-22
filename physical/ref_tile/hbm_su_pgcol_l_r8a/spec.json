@@ -410,7 +410,8 @@
         ],
         "cmd": "ONLY=0 LP_ROOT=. bash rtl/hbm_accel/generic/adapters/static_su/programme/landed/pslice_c5_flat14_eq_bench.sh {RUN}/bench/eq0",
         "expect": "pass",
-        "pass_regex": "EQ MUT 0: FLAT_EQ PASS"
+        "pass_regex": "EQ MUT 0: FLAT_EQ PASS",
+        "pass_witness": "results/arch/landed_parent_1018/pslice_c5_r8_ncx/flat14/driver.log"
       }
     ]
   },
