@@ -51,6 +51,8 @@ if [ -n "${GLUE_KIT:-}" ]; then
   PU=$W/plan_unrouted_glue.json; printf 'GLUE_PLAN_RC 0 %s %s\n' "$GLUE_KIT" "$(date)" >> "$S"
 fi
 python3 tools/s81_dv/dv_route72.py "$PU" "$W/plan_routed_h10_raw.json" > "$W/route72.log" 2>&1
+# H11 r4: re-cut any link whose station hop exceeds 405 um (n+1 stations, same path; no-op when none)
+python3 tools/s81_dv/head72/hd_route_reach_fix.py "$W/plan_routed_h10_raw.json" "$W/plan_routed_h10_raw.json" > "$W/reach_fix.log" 2>&1
 python3 tools/s81_dv/head72/hd_plan.py check "$W/plan_routed_h10_raw.json" > "$W/route_check.json"
 printf 'ROUTE_RC 0 %s\n' "$(date)" >> "$S"
 python3 tools/s81_dv/dv_station_dirs72.py "$W/plan_routed_h10_raw.json" results/arch/s81_die72_1021/relay_bodies.json "$W/plan_routed_h10.json" > "$W/station_dirs.log" 2>&1

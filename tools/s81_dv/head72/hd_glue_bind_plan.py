@@ -39,7 +39,9 @@ def main():
     if a.kit.startswith('s81hd_glue_r6'):
         v = a.kit[-1]
         L = json.loads(show(a.links_ref or a.source, f'results/arch/s81_head_1021/glue_r6/h11{v}_ctl_links_r6.json'))
-        J = {r['link']: r for r in L['links'] if r['port'].startswith('ln_')}
+        # only the links R6 moved (E re-spread + the two lanes to N/S); W/lep/spine/seq endpoints stay as the H11 plan
+        J = {r['link']: r for r in L['links'] if r['port'].startswith('ln_') and ('r3_pos_um' in r or 'r3_face' in r)}
+        assert len(J) == 54, len(J)
         for l in p['links']:
             for k, e in enumerate(l['e']):
                 if e[0] != ci or l['i'] not in J:
