@@ -1478,6 +1478,34 @@ def pin_demand(d: dict) -> list:
     return out
 
 
+def layout_review(g: Gate, dumps: dict, od: Path, spec: dict, title: str, imgs: dict):
+    """PD REVIEW PICTURE + STATS (TILE-REVIEW 2026-10-23, owner-ordered visual review of every unclosed tile): ALWAYS
+    write <kit>/gate_layout/review.png + review_stats.json from the placed dump (else the floorplan dump), and FAIL when
+    the std-cell fill of the free (non-macro) area is < 20 % or the pin -> pin-register p90 distance is > 150 um, unless
+    the kit spec carries an explicit "low_fill_reason" (then WARN).  Floorplan-only dumps are pictured, not judged."""
+    import layout_review as LR
+    d = dumps.get("placed") or dumps.get("floorplan")
+    if not d:
+        return
+    rspec = dict(spec)
+    mb = getattr(g, "measured_band_fill", None) or {}
+    if not str(rspec.get("low_fill_reason") or "").strip() and mb.get("valid"):
+        # a parent whose std cells live in a measured lattice/channel band (RT.measured_band_fill) already justified it
+        rspec["low_fill_reason"] = (f"measured lattice/channel band {mb.get('band_area_um2', 0):.1f} um2 at density "
+                                    f"{mb.get('band_density', 0):.0%}")
+    try:
+        st, png, items = LR.review(d, od, f"{title} layout review (gate)", rspec)
+    except Exception as ex:  # noqa: BLE001
+        g.add("WARN", "layout_review", f"layout review failed: {type(ex).__name__}: {ex}")
+        return
+    imgs["review"] = png
+    g.layout_images = dict(getattr(g, "layout_images", None) or {}, review=png)
+    g.add("INFO", "layout_images", f"LOOK at the PD review picture: review {png}")
+    g.layout_review = {k: v for k, v in st.items() if k not in ("macro_obs", "verdict_items")}
+    for sev, check, msg, fix in items:
+        g.add(sev, check, msg, fix)
+
+
 def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
     """LAYOUT IMAGES + FILL + TRIAL ROUTE (OWNER RULE 20:45 PT 2026-10-15): render the gate's layout dumps to PNG in
     <kit>/gate_layout/ (floorplan, post-place density, GRT congestion), judge fill of parent / cluster kits and the
@@ -1559,6 +1587,7 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
             g.add("WARN", "fill", msg + f" (> {FILL_HI:.0%})", "enlarge the outline toward fill 0.50-0.55")
         else:
             g.add("INFO", "fill", msg)
+    layout_review(g, dumps, od, spec, title, imgs)
     if "GATE_GRT_RC=" in out:
         # TRIAL ROUTE for EVERY kit (ROOT-0330-GRT 10-18; parent / cluster kits since 10-15): overflow > 0 FAILs with the
         # hotspot (worst gcell / layer / bbox from the congestion report) and the congestion PNG
@@ -2730,6 +2759,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
         out["measured_band_fill"] = g.measured_band_fill
     if getattr(g, "trial_route", None):
         out["trial_route"] = g.trial_route      # a gate without this record predates the every-kit trial GRT
+    if getattr(g, "layout_review", None):
+        out["layout_review"] = g.layout_review  # absent: the gate predates the TILE-REVIEW rule (10-23)
     if getattr(g, "port_latency", None):
         out["port_latency"] = g.port_latency
     if getattr(g, "reset_landing", None):
