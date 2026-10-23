@@ -198,3 +198,38 @@ def test_part_cli_resolves_census_beside_plan(tmp_path, monkeypatch):
     out = tmp_path / "probes"
     assert g2.main(["part", str(plan), "--out", str(out), "--worst", "1"]) == 0
     assert len(list(out.glob("part_*/probe.json"))) == 1
+
+
+def test_die_probe_declared_taps_share_spine_and_transform_once(tmp_path):
+    import copy
+    raw = copy.deepcopy(PAIR)
+    p = next(x for x in raw['partitions'] if x['name'] == 'pfa')
+    p['orient'] = 'MY'
+    tn = p['type']
+    raw['partition_types'][tn]['clock']['taps'] = [
+        dict(name='core.ck[0]', kind='core', xy=[10, 20], orient='MY', insertion_ps=250,
+             insertion_tol_ps=40, budget_owner='declared core budget'),
+        dict(name='glue', kind='glue', xy=[30, 40], insertion_ps=276, insertion_tol_ps=40)]
+    out = g2.die_probe(schema.Plan(raw), tmp_path/'extra')
+    tcl = (out/'probe.tcl').read_text()
+    meta = json.loads((out/'probe.json').read_text())
+    assert meta['partition_root_taps'] == 2 and meta['declared_clock_taps'] == 2 and meta['taps'] == 4
+    assert tcl.count('odb::dbNet_create') == 2  # same virtual clock/reset spines, no new regional clock net
+    assert 'clk_tap_pfa__declared_0' in tcl and 'clk_tap_pfa' in tcl and 'rst_tap_pfa' in tcl
+    tap = meta['declared_taps'][0]
+    assert tap['name'] == 'core.ck[0]' and tap['insertion_ps'] == 250 and tap['orient'] == 'MY'
+    width = raw['partition_types'][tn]['outline_um'][0]
+    assert tap['xy_die_um'] == [width-10, 20]  # core MY was already applied in xy; only partition MY applies here
+    assert f'{{{width-10:.3f} 20.000}}' in tcl
+    assert 'not measured regional clock-tree' in meta['clock_scope']
+
+
+def test_die_probe_empty_declared_taps_preserves_outputs(tmp_path):
+    import copy
+    original = g2.die_probe(schema.Plan(PAIR), tmp_path/'plain')
+    raw = copy.deepcopy(PAIR)
+    for t in raw['partition_types'].values():
+        t.setdefault('clock', {})['taps'] = []
+    empty = g2.die_probe(schema.Plan(raw), tmp_path/'empty')
+    for name in ('probe.v', 'probe.tcl', 'probe.json', 'run.sh'):
+        assert (original/name).read_bytes() == (empty/name).read_bytes()

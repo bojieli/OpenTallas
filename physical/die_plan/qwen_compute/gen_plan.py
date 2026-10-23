@@ -1325,7 +1325,7 @@ def far_from(pt, rect):
 
 def clock_taps(P):
     """one spine tap per planned core / landed glue region (schema clock.tap_um stays the partition H-tap root at the
-    centre; the extra taps are the in-partition M8/M9 branch leaves, here until the schema carries clock.taps[])."""
+    centre; the extra taps are the declared in-partition M8/M9 branch leaves)."""
     out = {}
     for tn, t in sorted(P.types.items()):
         if t.get("hard"):
@@ -1374,6 +1374,13 @@ def clock_taps(P):
         out[tn] = dict(root_um=root, taps=taps, max_from_root_um=max(tp["from_root_um"] for tp in taps),
                        max_nearest_tap_um=round(max(nn), 1), glue_taps_over_290ps=glue_over)
     return out
+
+
+def declare_clock_taps(P, notes):
+    """Promote the existing type-frame tap declarations without turning estimates into measurements."""
+    fields = {"name", "xy", "kind", "orient", "insertion_ps", "insertion_tol_ps", "budget_owner", "from_root_um", "note"}
+    for tn, entry in notes.items():
+        P.types[tn]["clock"]["taps"] = [{k: v for k, v in tap.items() if k in fields} for tap in entry["taps"]]
 
 
 def neighbours(P):
@@ -1586,6 +1593,7 @@ def main():
                         f"KV-die UCIe second port if the TP8 pair needs it"}]
     census_decl = write_census(P, geo, census, record, Path(a.out).parent)
     taps = clock_taps(P)
+    declare_clock_taps(P, taps)
     nbrs = neighbours(P)
     plan = {
         "schema": "opentallas.die_plan.v1",
@@ -1656,8 +1664,8 @@ def main():
                                     "(estimate; a synth count is owed)"},
              "clock_taps": {"rule": "COORD 10-23 07:24 ruling (2): one spine tap per planned core or landed glue "
                                      "region; die_plan clock.tap_um = the partition H-tap root (centre), the taps "
-                                     "below are its matched M8/M9 branch leaves (schema clock.taps[] requested from "
-                                     "PLAN-TOOL)", "insertion_model": INS_NOTE, "types": taps},
+                                     "below are its declared M8/M9 branch leaves, also carried verbatim in "
+                                     "schema clock.taps[] (insertion values remain estimates)", "insertion_model": INS_NOTE, "types": taps},
              "neighbours": {"max_abutting": max(v["abutting"] for v in nbrs.values()),
                             "max_linked": max(v["linked"] for v in nbrs.values()),
                             "over_6_abutting": {n: v for n, v in nbrs.items() if v["abutting"] > 6},

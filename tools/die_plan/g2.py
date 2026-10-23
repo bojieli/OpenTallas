@@ -110,10 +110,16 @@ def die_probe(P, out, mem=64):
     top_part = P.layer_budget["partition_signal_max"]
     root = P.clock.get("spine", {}).get("root_um") or [W / 2, H / 2]
     taps = {"clk": [], "rst": []}
+    declared = []
     for n, p in sorted(P.parts.items()):
         ck, rs = gen_phys.tap_points(P, P.parts[n]["type"])
         taps["clk"].append((n, P.to_die(n, ck)))
         taps["rst"].append((n, P.to_die(n, rs)))
+        for i, tap in enumerate(P.ptype(n).get("clock", {}).get("taps", [])):
+            # xy is already in the type frame (including any core orientation). Apply only the partition transform.
+            xy = P.to_die(n, tap["xy"])
+            taps["clk"].append((f"{n}__declared_{i}", xy))
+            declared.append(dict(tap, partition=n, type=P.parts[n]["type"], xy_die_um=list(xy)))
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}", "read_verilog /work/probe.v", "link_design die_probe",
            f"initialize_floorplan -die_area {{0 0 {W:g} {H:g}}} -core_area {{0 0 {W:g} {H:g}}} -site asap7sc7p5t"]
     # tracks: die layers real; M1..M7 coarse (fully blocked under the partitions) so GRT gcells stay die-sized
@@ -176,6 +182,10 @@ def die_probe(P, out, mem=64):
     os.chmod(out / "run.sh", 0o755)
     meta = dict(kind="g2-die", die=P.name, taps=len(taps["clk"]), pg_stripes=nst, channels=len(chans),
                 route_layers=die_l, root_um=root)
+    if declared:
+        meta.update(partition_root_taps=len(P.parts), declared_clock_taps=len(declared), declared_taps=declared,
+                    clock_scope="virtual connectivity/PG/reach only; declared insertion budgets are estimates, "
+                                "not measured regional clock-tree, STA or insertion qualification")
     (out / "probe.json").write_text(json.dumps(meta, indent=1) + "\n")
     return out
 
