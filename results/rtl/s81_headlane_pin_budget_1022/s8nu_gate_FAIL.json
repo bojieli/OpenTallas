@@ -1,0 +1,221 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "clock_span",
+   "message": "725.76 x 583.2 um: one clock root over > 600 um",
+   "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 17% = (macros/children 62002 + std 9489) / outline 423263 um2 (pin-bound: lattice/channel-bound (checklist 6): 55 bank64 SRAMs 62,002 um2 on the 43.2 lattice with >= 20 um channels force 86.4 um pitch; W/E faces carry ~1,200 bus pins each (<= 3.6/um). s8 (as s7) keeps the s6c row set (all core rows; the s5 band hook is NOT sourced -- s6c place.tcl never sourced it, so cells sit in the channels beside their macros); the low overall fill is channel area)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: safe3 RTL registers every data pin (rx -> lr_f/lr_d pin flops; tx = gearbox registered beat; lo_v/lo_d -> ot_link_credit_rx_b64 landing flops, lo_r registered credit; li_v/li_d ot_link_credit_tx_rc sender flops, li_r captured; flt flops; chb registered in the endpoint). An extra pin stage would add ",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['ck', 'rs', 'chb', 'lo_v', 'lo_r', 'li_v']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+   "fix": "use the actual RTL and mapped pin names"
+  },
+  {
+   "severity": "WARN",
+   "check": "sources",
+   "message": "3 referenced file(s) do not exist: ['physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v', 'physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v', 'physical/ref_tile/dscoll_lane_w_ltr/kit.env']",
+   "fix": "commit them / fix the path"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_dscoll_lane_w_s8nu_20261022-183534.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-agidock128 did not admit the gate within 900 s; same archive re-shipped to ot-pve1",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-pve1 did not admit the gate within 900 s; same archive re-shipped to ot-agidock128",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-agidock128 did not admit the gate within 900 s; same archive re-shipped to ot-epyc7",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_dscoll_lane_w_s8nu_20261022-183534.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/dscoll_lane_w_s8nu-20261022-183534",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc7 in 245 s (gate total 15170 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2143, 'pin_rectangles': 2143, 'pin_track_checked': 2143, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 2905ab3faffed1a4618e39ebbd4ec4d6df22ec2d10f18903cd61a90f2e2bb038",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 10653 um2 + macros 62002 in core 417627: util 3% (std-cell density 3.1% of placeable 338743 um2; total fill 17.4%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_sram_showahead_b64_hit5: ot_sram_showahead_b64_hit5 survives synthesis (12 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81ph_kp4_20: ot_s81ph_kp4_20 survives synthesis (2 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81ph_kff4_1: ot_s81ph_kff4_1 survives synthesis (33 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81ph_kff4_10: ot_s81ph_kff4_10 survives synthesis (9 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep ot_s81ph_rewind4: ot_s81ph_rewind4 survives synthesis (3 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN dsfd_coll_lane_w_safe8_ntf cells 68,017 flops 19,852 depth 598.5 ps util 0.1744 reach 0.0 um (4.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck: 19,852 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. rs__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:ck: 19,852 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 19,852 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 960.7..1066.1 ps (spread 105.4), boundary mean 1005.4; tt insertion all 743.6..835.4 ps (spread 91.8), boundary mean 778.0; ff insertion all 608.2..690.7 ps (spread 82.5), boundary mean 637.5; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/dscoll_lane_w_s8nu/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out       31 paths, worst slack 23.5 ps (e.g. lo_r)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      399 paths, worst slack 44.1 ps (e.g. u_ot_pr_core.u.u_ep.g_rb_safe.g_address[17].ready_r$_DFF_PN1_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg    166 paths, worst slack 44.6 ps (e.g. u_ot_pr_core.u.u_gb.beat_tx[380]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro      4 paths, worst slack 47.2 ps (e.g. u_ot_pr_core.u.u_ski.u_head.g_bank[0].u_m/r_ce_in)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.348654604134026e-11 hold WNS 4.81941708763145e-11",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "19,852 sinks on the largest root; measured TT insertion 835.4 ps, FF insertion 690.7 ps, TT pin-flop spread 83.0 ps, FF pin-flop spread 77.0 ps; TT pin-flop spread 83.0 ps > 80 (declared clock 'cts' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81hd-lane-sc/physical/ref_tile/dscoll_lane_w_s8nu/gate_layout/floorplan.png; density /home/ubuntu/wt/s81hd-lane-sc/physical/ref_tile/dscoll_lane_w_s8nu/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 17% = (hard macros 62002.4 + synthesized std cells 10817.2) / outline 423263.2 um2; pin demand per face: S 52 pins over 135.2/725.8 um (19%), N 0 pins over 0.0/725.8 um (0%), W 1135 pins over 574.0/583.2 um (98%), E 1224 pins over 578.4/583.2 um (99%) (pin-bound: lattice/channel-bound (checklist 6): 55 bank64 SRAMs 62,002 um2 on the 43.2 lattice with >= 20 um channels force 86.4 um pitch; W/E faces carry ~1,200 bus pins each (<= 3.6/um). s8 (as s7) keeps the s6c row set (all core rows; the s5 band hook is NOT sourced -- s6c place.tcl never sourced it, so cells sit in the channels beside their macros); the low overall fill is channel area)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 13.76% used; GRT 3194 s",
+   "fix": ""
+  }
+ ]
+}
