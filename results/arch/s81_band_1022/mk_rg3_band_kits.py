@@ -237,6 +237,26 @@ xm_spec("s81dv_rg3b_xm4", [234.36, 240.84], "banded idx rg3 X successor: SRAM / 
         "with the S-stage capture flops (sx_i pins beside the clock; scale select captured raw) in the same band; default tree.", unclustered=False, sx_face="S")
 xm_spec("s81dv_rg3b_xm4u", [234.36, 240.84], "banded idx rg3 X successor: SRAM / key tile, ONE pin-flop band incl. the raw scale select, unclustered CTS",
         "with the S-stage capture flops (sx_i pins beside the clock; scale select captured raw) in the same band; unclustered tree.", unclustered=True, sx_face="S")
+# gate 10-22 21:0x: xm4 / xm4u refused by the native census (the one shared 32-way decode of the raw select drove 59 / 38
+# loads).  RTL: the raw select capture is replicated 8x (keep), each copy decodes the selects for 4 of the 32 k_sc bits
+# (bx lockstep 2 seeds 0 mismatches, MUT 5 caught).  xm5 = the single X SRAM tile on that RTL (default tree);
+# xmh0s / xmh1s = the per-SRAM-column tiles (STEWARD 10-22 plan) with sx_i / rst moved onto the S face beside the clock,
+# so every pin flop (kq + the S-stage capture + the raw select) sits in ONE band at the clock entry.
+xm_spec("s81dv_rg3b_xm5", [234.36, 240.84], "banded idx rg3 X successor: SRAM / key tile, ONE S pin-flop band, select capture replicated (census)",
+        "with the S-stage capture flops (sx_i pins beside the clock; raw scale select replicated 8x) in the same band; default tree.",
+        unclustered=False, sx_face="S")
+for h in range(2):
+    b = specs[f"s81dv_rg3b_xmh{h}"]
+    m = copy.deepcopy(b)
+    nm = f"s81dv_rg3b_xmh{h}s"
+    m["name"] = nm
+    m["job"].update(tag=nm, views_to=f"physical/ref_tile/{nm}/views", record_to=f"results/rtl/ref_tile/{nm}")
+    m["job"]["purpose"] = f"banded idx rg3 X successor FB: SRAM column h{h} tile, ONE S pin-flop band (sx capture beside the clock)"
+    m["pins"] = {"N": ["lw_v", "lw_h1", "lw_a", "lw_d"], "S": ["kq_o", "ck", "sx_i", "rst"]}
+    m["pin_ranges"].update({"sx_i": [124.2, 140.4], "rst": [124.2, 140.4]})
+    m["why_floorplan"] = b["why_floorplan"] + (" sx_i / rst on the S face beside the clock (one pin-flop band; the W-face "
+                                               "capture was the early 234-ps group of xmh1).")
+    specs[m["name"]] = m
 ONLY = None
 if "--only" in sys.argv:
     i = sys.argv.index("--only"); ONLY = set(sys.argv[i + 1].split(",")); del sys.argv[i:i + 2]

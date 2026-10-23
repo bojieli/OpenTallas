@@ -187,19 +187,24 @@ module dsdv_idx_rg3_bxmh #(
         // the scale-select capture: the RAW {su_b, s_lo} land in pin flops beside the S-face sx_i pins and the 32-way
         // decode follows them (cycle-identical to registering the decoded ssel; gate 10-22 20:4x: the 32 decoded ssel
         // flops sat at the SRAM read channel as boundary flops, TT 369..419 ps vs 325..347 for the S pin band)
-        (* keep = "true" *) reg [4:0] sl_r;
-        always @(posedge ck) sl_r <= {su_b, s_lo};
-        wire [31:0] ssel;
-        genvar ga;
-        for (ga = 0; ga < 32; ga = ga + 1) begin : g_ss
-            assign ssel[ga] = sl_r[4:3] == 2'(ga / 8) && sl_r[2:0] == 3'(ga % 8);
-        end
+        // native census (gate 10-22 21:xx: one shared decode drove 59 / 38 loads): the raw capture is replicated 8x
+        // (keep, like ks0..3); copy c decodes its own 32 selects for k_sc[4c +: 4], so every sl_r bit and every
+        // decoded select stays <= 32 loads.  Cycle-identical to the single copy.
+        (* keep = "true" *) reg [7:0][4:0] sl_r;
+        always @(posedge ck) sl_r <= {8{su_b, s_lo}};
         reg [31:0] k_sc;
-        always @(posedge ck) begin : g_scr
-            reg [31:0] x; integer a_;
-            x = 32'd0;
-            for (a_ = 0; a_ < 32; a_ = a_ + 1) x = x | ({32{ssel[a_]}} & hq[a_ / 8][32 * (a_ % 8) +: 32]);
-            k_sc <= x;
+        genvar gc, ga;
+        for (gc = 0; gc < 8; gc = gc + 1) begin : g_sc8
+            wire [31:0] ssel;
+            for (ga = 0; ga < 32; ga = ga + 1) begin : g_ss
+                assign ssel[ga] = sl_r[gc][4:3] == 2'(ga / 8) && sl_r[gc][2:0] == 3'(ga % 8);
+            end
+            always @(posedge ck) begin : g_scr
+                reg [3:0] x; integer a_;
+                x = 4'd0;
+                for (a_ = 0; a_ < 32; a_ = a_ + 1) x = x | ({4{ssel[a_]}} & hq[a_ / 8][32 * (a_ % 8) + 4 * gc +: 4]);
+                k_sc[4 * gc +: 4] <= x;
+            end
         end
         (* keep = "true" *) reg [287:0] kq;         // S face pin flops
         always @(posedge ck) kq <= {k_sc, k_key};
