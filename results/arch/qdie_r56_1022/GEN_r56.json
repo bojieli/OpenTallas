@@ -1,0 +1,10 @@
+{
+ "source": "96d96401e claude/qdie-r56-1022 (8ade34452 + OT_RST_PAD64_MIXED=1)",
+ "runs": "ot-gold1:/srv/opentallas-scratch/claude/codex-qdie-2000/dv2f21g5r56cx{c,d}",
+ "dv2f21g5r56cxc": {"variant": "a (43.2x12.96)", "GEN": "rc=0 2026-10-22 23:36:21", "reset_sync": "PASS repeaters=16526 endpoints=3 untreated=0",
+   "reset_cells": {"qfd_rst_rep": 9958, "qfd_rst_rep_p8": 4311, "qfd_rst_rep_p62": 2257, "p62_fallback_to_6p8_2rep": 8}, "reach_gate": "PASS", "max_net_um": 607.4},
+ "dv2f21g5r56cxd": {"variant": "b (25.92x12.96)", "GEN": "rc=0 2026-10-22 23:36:28", "reset_sync": "PASS repeaters=16530 endpoints=3 untreated=0",
+   "reset_cells": {"qfd_rst_rep": 9954, "qfd_rst_rep_p8": 4318, "qfd_rst_rep_p62": 2258, "p62_fallback_to_6p8_2rep": 8}, "reach_gate": "PASS", "max_net_um": 538.5},
+ "reference_r54": {"reset_cells": 28833, "qfd_rst_rep_p8": 18726, "max_net_um": [509.6, 568.8]},
+ "r55_failure": "FINAL_GEN_FAIL 23:03: rst_field pad chain of 75 levels has no free site (compact pad only)"
+}
