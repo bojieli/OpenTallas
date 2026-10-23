@@ -1,0 +1,232 @@
+{
+ "name": "s81dvbk_selcpn_i",
+ "top": "dsdv_bksel_c_pa_n32",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_sram_showahead_1r1w.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/common/ot_fwd_link_stage.sv",
+  "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/plana/n32/ot_s81pa_mux.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/plana/n32/ot_s81pa_search.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/plana/n32/ot_s81pa_sel_ctl.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/plana/n32/ot_s81pa_queue.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/plana/n32/ot_s81pa_packet.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/plana/n32/ot_s81pa_ctl.sv",
+  "rtl/dsrom_sys/s81_dv/unit/bk/plana/n32/dsdv_bksel_c_pa_n32.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_profile"
+ ],
+ "outline": {
+  "w": 388.8,
+  "h": 475.2,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "fs0_0",
+   "fs0_1",
+   "fo0",
+   "fs1_1",
+   "fs2_0",
+   "t_cr_s"
+  ],
+  "N": [
+   "fs3_0",
+   "fs3_1",
+   "fo3",
+   "fs1_2",
+   "fs2_1",
+   "t_cr_n"
+  ],
+  "W": [
+   "rst_profile",
+   "ck",
+   "fs0_2",
+   "fs3_2",
+   "fs1_0",
+   "t_c_s",
+   "t_c_n"
+  ],
+  "E": [
+   "fo1",
+   "fo2",
+   "fs2_2",
+   "vd"
+  ]
+ },
+ "pin_ranges": {
+  "fs0_0": [
+   1.08,
+   235.44
+  ],
+  "fs0_1": [
+   1.08,
+   235.44
+  ],
+  "fo0": [
+   1.08,
+   235.44
+  ],
+  "fs1_1": [
+   235.44,
+   307.8
+  ],
+  "fs2_0": [
+   307.8,
+   387.72
+  ],
+  "t_cr_s": [
+   1.08,
+   235.44
+  ],
+  "fs3_0": [
+   1.08,
+   235.44
+  ],
+  "fs3_1": [
+   1.08,
+   235.44
+  ],
+  "fo3": [
+   1.08,
+   235.44
+  ],
+  "fs1_2": [
+   235.44,
+   307.8
+  ],
+  "fs2_1": [
+   307.8,
+   387.72
+  ],
+  "t_cr_n": [
+   1.08,
+   235.44
+  ],
+  "rst_profile": [
+   1.08,
+   474.12
+  ],
+  "ck": [
+   237.384,
+   237.816
+  ],
+  "fs0_2": [
+   1.08,
+   474.12
+  ],
+  "fs3_2": [
+   1.08,
+   474.12
+  ],
+  "fs1_0": [
+   1.08,
+   474.12
+  ],
+  "t_c_s": [
+   1.08,
+   474.12
+  ],
+  "t_c_n": [
+   1.08,
+   474.12
+  ],
+  "fo1": [
+   1.08,
+   474.12
+  ],
+  "fo2": [
+   1.08,
+   474.12
+  ],
+  "fs2_2": [
+   1.08,
+   474.12
+  ],
+  "vd": [
+   1.08,
+   474.12
+  ]
+ },
+ "macros": [],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: dsfd_selt_c lands every quarter bundle in its pin flops (sq / oq) and launches t_c / t_cr / vd from flops."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 2.16,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_x_um": 6.48
+ },
+ "structural_change": "s81dvbk_selcpn_i (STW-S81c-COLLA 10-22, control h NEEDS_RTL TT -110.87 / FF -11.48 / DRC 2): the 4 landing queues' 32x128 SRAM banks (showahead, depth 4) become an opt-in flop register file with the macro's exact registered read-before-write contract (OT_SHOWAHEAD_FLOP): SRAM clk->q 278 ps SS -> queue head -> packet done was the failing class; DRC 2 = VSS/mwd shorts at a queue macro edge (macros removed). Outline 388.8x475.2 (approved 388.8x475.2 or larger). Control miter vs reference: CONTROL_MITER_PASS 1,624,334 checks, output-stage mutant caught. Ports/cycles unchanged.",
+ "job": {
+  "owner": "Claude:STW-S81-TOPK",
+  "branch": "claude/stw-s81-topk-sq432-1021",
+  "tag": "cpnh",
+  "purpose": "FALLBACK-3: central macro block, >=78 um pin-flop bands, 388.8x475.2, spine clock (fixes f GRT-0183 boxed E-face net).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_dv/unit/bk/plana",
+   "rtl/hdc",
+   "rtl/common",
+   "rtl/lib",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc",
+   "results/arch/s81_topk_control_local_1021"
+  ],
+  "views_to": "physical/ref_tile/s81dvbk_selcpn_h/views",
+  "record_to": "results/rtl/ref_tile/s81dvbk_selcpn_h"
+ },
+ "clock": "spine",
+ "reset_landing": {
+  "enable": false,
+  "reason": "Source carries 413 per-consumer reset leaves (ot_s81pa_rst_leaf, 2-stage) fed by the parent 4-stage raw tree; no extra kit stage."
+ },
+ "hold_merge": true,
+ "defines": [
+  "OT_S81PH_SEL_INDEXED13",
+  "OT_S81PH_FIFO_SRAM",
+  "OT_SRAM_P192",
+  "OT_S81PH_SEL_SUCC",
+  "OT_S81PH_SEL_FAN32",
+  "OT_S81PH_SEL_ACC32",
+  "OT_S81PH_SEL_HQ",
+  "OT_HARD_CHILDREN",
+  "OT_S81PH_HQ_INPUT_RAW",
+  "OT_S81PH_SEL_ILD",
+  "OT_S81PH_SEL_FRPR",
+  "OT_SHOWAHEAD_FLOP"
+ ],
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "fill_reason": {
+  "pin_bound": "6072 functional+clock pins; macro-free pin-flop bands >=78 um on all faces need the outline (perimeter 1728 um); placed std 18391 + SRAM 24651 = 43042 um2 over 184758 = 23.3%; enlarge, never squeeze."
+ },
+ "orfs_vars": {
+  "OT_SPINE_LEAF_N": "24",
+  "OT_SPINE_BIN": "40"
+ }
+}

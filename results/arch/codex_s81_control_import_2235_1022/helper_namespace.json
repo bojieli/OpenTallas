@@ -1,0 +1,15 @@
+{
+  "record_commit": "cb3f40ce8",
+  "closed_source_blob": "2fb7fa4803f5892cc26cf7ecf23c5d74125739bb",
+  "new_path": "rtl/lib/ot_sram_showahead_1r1w_topk_flop.sv",
+  "module_map": {
+    "ot_sram_showahead_1r1w": "ot_sram_showahead_1r1w_topk_flop",
+    "ot_sa_copy": "ot_topk_sa_copy",
+    "ot_sa_ohcopy": "ot_topk_sa_ohcopy",
+    "ot_sa_hit": "ot_topk_sa_hit",
+    "ot_sa_rcopy": "ot_topk_sa_rcopy"
+  },
+  "reversible_token_rename_exact": true,
+  "canonical_main_helper_changed": false,
+  "selected_queue_change": "Existing OT_SHOWAHEAD_FLOP selects namespaced exact closed implementation; otherwise the previous canonical instance is unchanged."
+}

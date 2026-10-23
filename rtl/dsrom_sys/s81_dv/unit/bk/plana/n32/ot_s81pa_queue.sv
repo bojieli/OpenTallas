@@ -16,6 +16,11 @@ module ot_s81pa_queue #(parameter integer W=358, NS=(W+15)/16, MUT=0)(
    if(push)wp<=wp+2'd1;
    count<=count+3'(push)-3'(pop);
   end
- ot_sram_showahead_1r1w #(.W(W),.AW(2),.WREG(1),.MUT(MUT))u_mem(
+`ifdef OT_SHOWAHEAD_FLOP
+ ot_sram_showahead_1r1w_topk_flop
+`else
+ ot_sram_showahead_1r1w
+`endif
+ #(.W(W),.AW(2),.WREG(1),.MUT(MUT))u_mem(
   .clk(clk),.rst_n(rst_n),.we(push),.wa(wp),.wd(data),.ra(next_head),.q(head));
 endmodule
