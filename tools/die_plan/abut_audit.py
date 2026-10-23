@@ -49,6 +49,18 @@ def boxes_of(iterm):
     return out
 
 
+def bterm_on_pin(bt, it):
+    """die IO BTerm shape on the same layer overlapping the partition pin (die-edge IO with no wire)."""
+    a = boxes_of(it)
+    for bp in bt.getBPins():
+        for bx in bp.getBoxes():
+            L = bx.getTechLayer()
+            b = (L.getName() if L else "", bx.xMin(), bx.yMin(), bx.xMax(), bx.yMax())
+            if any(touch(x, b) for x in a):
+                return True
+    return False
+
+
 def touch(a, b):
     return a[0] == b[0] and a[1] <= b[3] and b[1] <= a[3] and a[2] <= b[4] and b[2] <= a[4]
 
@@ -85,6 +97,9 @@ def main():
         if s is None:
             if len(its) + len(bts) >= 2:
                 res["nonseam_nets"] += 1
+                if len(its) == 1 and len(bts) == 1 and not wired and bterm_on_pin(bts[0], its[0]):
+                    res["io_pin_on_pin"] = res.get("io_pin_on_pin", 0) + 1   # die IO pin drawn on the partition pin
+                    continue
                 if not wired and not net.isConnectedByAbutment():
                     if len(res["nonseam_unrouted"]) < 20:
                         res["nonseam_unrouted"].append(nm)
