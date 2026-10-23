@@ -203,9 +203,11 @@ def flags(st: dict) -> list:
     return out
 
 
-def judge(st: dict, spec: dict) -> list:
+def judge(st: dict, spec: dict, parent: bool = False) -> list:
     """[(level, item, msg, fix)] for the gate: FAIL on fill < 20 % of free or pin->register p90 > 150 um, unless the
-    kit spec carries a non-empty "low_fill_reason"; floorplan-only (unplaced) dumps are not judged."""
+    kit spec carries a non-empty "low_fill_reason"; floorplan-only (unplaced) dumps are not judged.  Parents / clusters
+    (hard children) are judged by macro packing and the existing parent fill rule, not by std-cell fill (TILE-REVIEW
+    coordinator 10-23): only the pin-register rule applies to them here."""
     if not st.get("placed"):
         return [("INFO", "layout_review", "floorplan-only dump: review picture written, fill / pin-register not judged", "")]
     reason = str(spec.get("low_fill_reason") or "").strip()
@@ -213,7 +215,7 @@ def judge(st: dict, spec: dict) -> list:
     f = st.get("std_fill_of_free")
     p = st.get("pin_to_reg_p90_um")
     bad = []
-    if f is not None and f < FILL_FREE_FAIL:
+    if f is not None and f < FILL_FREE_FAIL and not parent:
         bad.append(f"std-cell fill {100 * f:.1f}% of the free (non-macro) area < {100 * FILL_FREE_FAIL:.0f}% "
                    f"({st['std_area_um2']} um2 std cells in {st['outline_um'][0]}x{st['outline_um'][1]} um, macros "
                    f"{st['macro_area_pct']}%)")
@@ -226,7 +228,7 @@ def judge(st: dict, spec: dict) -> list:
         out.append(("FAIL", "layout_review", "; ".join(bad),
                     "shrink the outline / regroup macros so the logic fills its area and pin registers sit at their pins, "
                     "or record \"low_fill_reason\": \"<why>\" in the kit spec"))
-    msg = (f"{st['outline_um'][0]}x{st['outline_um'][1]} um, fill {None if f is None else round(100 * f, 1)}% of free, "
+    msg = ((f"parent: macro packing {st['macro_area_pct']}% of outline, " if parent else "") + f"{st['outline_um'][0]}x{st['outline_um'][1]} um, fill {None if f is None else round(100 * f, 1)}% of free, "
            f"empty {None if st.get('empty_area') is None else round(100 * st['empty_area'])}%, buf/inv "
            f"{None if st.get('buf_share') is None else round(100 * st['buf_share'])}%, pin->reg p50/p90 "
            f"{st.get('pin_to_reg_median_um')}/{p} um, pins/um {st.get('pins_per_um')}")
@@ -290,14 +292,15 @@ def render_review(d: dict, st: dict, out, title: str = "") -> str:
     return c.save(out)
 
 
-def review(d: dict, outdir, title: str = "", spec: dict | None = None):
+def review(d: dict, outdir, title: str = "", spec: dict | None = None, parent: bool = False):
     """write review.png + review_stats.json into outdir; return (stats, png path, judge items)"""
     od = Path(outdir)
     od.mkdir(parents=True, exist_ok=True)
     st = review_stats(d)
     png = render_review(d, st, od / "review.png", title)
     st["png"] = png
-    items = judge(st, spec or {})
+    st["kind"] = "parent" if parent else "tile"
+    items = judge(st, spec or {}, parent)
     st["verdict_items"] = [list(x) for x in items]
     (od / "review_stats.json").write_text(json.dumps(st, indent=1) + "\n")
     return st, png, items

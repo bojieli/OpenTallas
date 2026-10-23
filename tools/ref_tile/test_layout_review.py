@@ -104,3 +104,10 @@ def test_gate_layout_hook_fails_low_fill(tmp_path):
     g = PG.Gate()
     PG.gate_layout(g, kd, {"name": "kit", "kind": "tile", "low_fill_reason": "pin-bound perimeter"}, out)
     assert not any(i["severity"] == "FAIL" and i["check"] == "layout_review" for i in g.items)
+
+
+def test_parent_not_judged_on_std_fill():
+    st = LR.review_stats(_dump(cells_um2=960.0))
+    assert "FAIL" not in [x[0] for x in LR.judge(st, {}, parent=True)]
+    st = LR.review_stats(_dump(cells_um2=960.0, pin_reg_um=200.0))
+    assert LR.judge(st, {}, parent=True)[0][0] == "FAIL"           # pin-register rule still applies
