@@ -5381,6 +5381,7 @@ RST_OK_UM = float(os.environ.get('OT_RST_OK_UM', RST_OK_UM))
 RST_GAP_UM = 2.16                # clearance to every other instance
 # SQC-QDIE3 10-22: OT_RST_PAD_CLUSTER=1 (default) keeps every reset pad chain in one pocket on its edge (see chain()).
 _rst_pad_cluster = os.environ.get('OT_RST_PAD_CLUSTER', '1') == '1'
+_rst_pad_street = os.environ.get('OT_RST_PAD_STREET', '0') == '1'
 # QCHAIN 10-22: leave legal signal escape streets between reset equalisation islands.
 # Placement only: the pad masters, stages, equal depth and reach gates remain unchanged.
 RST_PAD_GAP_UM = float(os.environ.get('OT_RST_PAD_GAP_UM', RST_GAP_UM))
@@ -5736,7 +5737,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                     # alternated between two free pockets on either side of k (rstt_rst_field_6044 x 3481 -> 6045 x 2823,
                     # 658 um, on two region clocks).  The chain is ONE pocket: the first cell on the edge p..k (midpoint
                     # first, both hops <= RST_NET_UM / 2 + d / 2), every later cell beside the previous one.
-                    if prev is not None and RST_PAD_GAP_UM == RST_GAP_UM:
+                    if prev is not None and RST_PAD_GAP_UM == RST_GAP_UM and not _rst_pad_street:
                         a = new(*c_(prev), lim=RST_NET_UM / 4, budget=20000, gap=RST_PAD_GAP_UM)
                     else:
                         x0_, y0_ = c_(k)
