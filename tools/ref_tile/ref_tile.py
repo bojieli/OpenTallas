@@ -1915,7 +1915,9 @@ def _child_insertion(s: dict, ch: dict, out: dict) -> None:
         # its spine target too.  The lib max_clock_tree_path (latest sink of the whole tree) handed ot_v41_bf_col 697.5
         # vs boundary 544.0 and the q element 598.0 vs 510.3: their flops landed 153 / 88 ps EARLY against the soft
         # leaves on every frame spine root (s81frame_col_h9/h10 vgs/vgcs/vgys), a deterministic pair FAIL > 80 ps.
-        top = (ijd.get("tt") or {}).get("boundary") or {} if not cm else {}
+        # Scope: multiple_cts_roots only (the root_child_flops judge); single-root clock=spine kits (qfd_c_b16_dv_diag*)
+        # keep the lib-max target byte-identical.
+        top = ((ijd.get("tt") or {}).get("boundary") or {}) if not cm and s.get("clock") == "multiple_cts_roots" else {}
         for pin in sorted(set(cm) | set(ins)):
             b = (cm.get(pin) or {}).get("tt", {}).get("boundary", {})
             if b.get("n") and b.get("mean") is not None:
