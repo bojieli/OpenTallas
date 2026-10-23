@@ -1808,7 +1808,7 @@ global_connect
 set ot_pg_a [ot_pg_sig_digest]; set ot_pg_u1 [ot_pg_unbound]
 set ot_pg_inv [expr {$ot_pg_b eq $ot_pg_a}]
 set f [open /work/out/pg_connect.json w]
-puts $f "{\"step\": \"canonical global_connect (5 kit rules)\", \"unbound_before\": [lindex $ot_pg_u0 0], \"unbound_after\": [lindex $ot_pg_u1 0], \"signal_invariant\": $ot_pg_inv, \"before\": \"$ot_pg_b\", \"after\": \"$ot_pg_a\", \"after_examples\": \"[lindex $ot_pg_u1 1]\"}"
+puts $f "{\\"step\\": \\"canonical global_connect (5 kit rules)\\", \\"unbound_before\\": [lindex $ot_pg_u0 0], \\"unbound_after\\": [lindex $ot_pg_u1 0], \\"signal_invariant\\": $ot_pg_inv, \\"before\\": \\"$ot_pg_b\\", \\"after\\": \\"$ot_pg_a\\", \\"after_examples\\": \\"[lindex $ot_pg_u1 1]\\"}"
 close $f
 if {[lindex $ot_pg_u1 0] == 0 && $ot_pg_inv} { puts "OT_PG_PASS unbound [lindex $ot_pg_u0 0] -> 0, signal/placement digest unchanged $ot_pg_a" } else { puts "OT_PG_FAIL unbound [lindex $ot_pg_u0 0] -> [lindex $ot_pg_u1 0] invariant $ot_pg_inv ex [lindex $ot_pg_u1 1]" }
 write_db /work/out/place_pg.odb'''
