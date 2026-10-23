@@ -295,3 +295,18 @@ def test_land_align(tmp_path):
     lat = json.loads((out / "bind_latency.json").read_text())
     assert lat["landing_pads"]["snk.d0"] == {"src_part": "A0", "pads": [3, 3], "bits": 5}
     assert verify(out)["verdict"] == "PASS"
+
+
+def test_substitute_parent(tmp_path):
+    """asbuilt.substitute_parent: the dissolved parent p1 is elaborated as its plan variant par_nid (no id port): the
+    as-built literal on p1.id is dropped (recorded, not tied), the variant's leaves bind, and the proof passes"""
+    def edit(p):
+        p["asbuilt"]["substitute_parent"] = [{"inst": "p1", "module": "par_nid"}]
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    assert r["parent_variants"] == [dict(inst="p1", master="par", variant="par_nid", dropped_literal_bits=4,
+                                         dropped_net_ports=[], new_unconnected_ports=[])]
+    assert r["proof"]["straps"] == 4 and r["proof"]["tied"] == 0 and r["n_errors"] == 0
+    assert "lf_b_nid u_u_b" in "".join(f.read_text() for f in (out / "rtl").glob("bt_ta*.sv"))
+    assert verify(out)["verdict"] == "PASS"

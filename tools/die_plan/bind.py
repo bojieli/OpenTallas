@@ -438,7 +438,14 @@ class Binder:
         self.ab = plan["asbuilt"]
         self.errors, self.warns = [], []
         self.R = Rules(self.ab)
-        self.F = E.flatten(yjs, self.ab["top"])
+        self.F = E.flatten(yjs, self.ab["top"], self.ab.get("substitute_parent", []))
+        for r in self.F.parent_variants:
+            if r["dropped_net_ports"]:
+                self.errors.append(f"PARENT_VARIANT_NET {r['inst']} -> {r['variant']}: as-built nets on ports the variant "
+                                   f"lacks: {r['dropped_net_ports'][:8]}")
+            if r["new_unconnected_ports"]:
+                self.errors.append(f"PARENT_VARIANT_NEW {r['inst']} -> {r['variant']}: ports not in the as-built "
+                                   f"instance: {r['new_unconnected_ports'][:8]}")
         self.extra_lib, self.variants = [], []
         if self.ab.get("substitute_inst"):
             self.substitute_inst(base or str(E.REPO))
@@ -1770,6 +1777,7 @@ def cmd_bind(a):
     rep["files"] = [str(f) for f in files]
     rep["findings"] = B.findings
     rep["extra_lib"] = B.extra_lib
+    rep["parent_variants"] = B.F.parent_variants
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
