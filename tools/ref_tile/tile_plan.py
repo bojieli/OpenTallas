@@ -365,7 +365,7 @@ def over_pitch_for(pin_layers: dict | None, axis: str) -> dict | None:
 
 
 def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.4, rows: int | None = None,
-                logic_face: str | None = None, over: dict | None = None) -> dict:
+                logic_face: str | None = None, over: dict | None = None, pack_cap: float | None = None) -> dict:
     """Macro ARRAY plan: macros pinned on W / E faces (SRAM / ROM arrays) form N-S abutted COLUMNS of `rows` arrays;
     columns sit side by side with a LOGIC CHANNEL in front of every pin face, sized from the pins facing it
     (channel_um), and a 20 um gap where both faces are pin-free; the array hangs from the N or S face with the lower
@@ -414,8 +414,22 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
         best = None
         if logic_face in ("N", "S"):
             raise ValueError(f"tile_plan logic_face {logic_face}: W / E pinned macros form N-S columns (logic_face E or W)")
-        for n in range(1, len(macros) + 1):
-            r = plan_macros(W, H, macros, demand, halo, n, logic_face, over)
+        # candidates: columns of n macros in master order, and first-fit-decreasing columns packed up to a height cap
+        # (mixed heights: two tall arrays side by side with the short ones stacked beside them -- hr_core_prompt)
+        caps = set()
+        by = {}
+        for m in macros:
+            by.setdefault((m["tm"]["name"], round(m["h"], 3)), []).append(m["h"])
+        hmax = max(m["h"] for m in macros)
+        for hs in by.values():
+            for j in range(1, len(hs) + 1):
+                for g in (ABUT_PITCH_UM, CHANNEL_MIN_UM):
+                    c = j * hs[0] + (j - 1) * g
+                    if c >= hmax - 1e-6:
+                        caps.add(round(c, 3))
+        cands = [(n, None) for n in range(1, len(macros) + 1)] + [(len(macros), c) for c in sorted(caps)]
+        for n, cap in cands:
+            r = plan_macros(W, H, macros, demand, halo, n, logic_face, over, cap)
             nw, nh = max(W, r["need"][0]), max(H, r["need"][1])
             # one logic band: among equal outlines the fewest columns (the band keeps the width)
             key = (round(nw * nh, 1), -n if logic_face else 0, max(nw, nh) / min(nw, nh))
@@ -426,13 +440,23 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
     edge = macro_edge(demand, "WE")
     cols, cur = [], []          # columns of <= rows arrays, widest master first (abutted_stack needs only x overlap)
     order = sorted(range(len(macros)), key=lambda i: (-macros[i]["w"], macros[i]["tm"]["name"], i))
-    for m, s in ((macros[i], sig[i]) for i in order):
-        if cur and len(cur) >= rows:
+    if pack_cap:
+        for m, s in ((macros[i], sig[i]) for i in order):
+            for c in cols:
+                pitch = ABUT_PITCH_UM if _stackable(c[0][0]["tm"]) else CHANNEL_MIN_UM
+                if sum(x["h"] for x, _ in c) + len(c) * pitch + m["h"] <= pack_cap + 1e-6:
+                    c.append((m, s))
+                    break
+            else:
+                cols.append([(m, s)])
+    else:
+        for m, s in ((macros[i], sig[i]) for i in order):
+            if cur and len(cur) >= rows:
+                cols.append(cur)
+                cur = []
+            cur.append((m, s))
+        if cur:
             cols.append(cur)
-            cur = []
-        cur.append((m, s))
-    if cur:
-        cols.append(cur)
     spec_cols, k = [], 0
     for c in cols:
         m0, s0 = c[0]
@@ -499,7 +523,9 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
             "need": [round(need_w, 4), round(need_h, 4)], "placed": placed, "gaps": [round(g, 3) for g in gaps],
             "lead": round(lead, 3), "trail": round(trail, 3),
             "logic_face": logic_face, "over_macro_cols": [j for j, c in enumerate(spec_cols) if c.get("over")],
-            "why": (f"{len(macros)} macros in {len(spec_cols)} N-S columns of <= {rows} (abutted) hung from the {edge} "
+            "pack_cap": pack_cap,
+            "why": (f"{len(macros)} macros in {len(spec_cols)} N-S columns of "
+                    + (f"<= {pack_cap:g} um" if pack_cap else f"<= {rows}") + f" (abutted) hung from the {edge} "
                     f"face; logic channels {', '.join(f'{g:.0f}' for g in [lead] + gaps + [trail])} um in front of the "
                     "pin faces" + (f"; control faces toward ONE logic band at the {logic_face} face" if logic_face
                                    else "") + ("; back-face pins reached over the macros" if any(
