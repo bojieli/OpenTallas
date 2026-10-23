@@ -1,0 +1,182 @@
+[
+  {
+    "file": "rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_att_nt1.sv",
+    "module": "dsdv_svc_att_nt1_core",
+    "consumers": 6
+  },
+  {
+    "file": "rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_att_nt1.sv",
+    "module": "dsdv_svc_att_nt1",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+    "module": "ot_hdc_v41x_attn_merge_s",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+    "module": "ot_hdc_v41x_attn_merge_x",
+    "consumers": 6
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+    "module": "ot_hdc_v41x_attn_tr_x",
+    "consumers": 3
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+    "module": "whatever",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+    "module": "ot_hdc_v41x_attn_hgrp_s",
+    "consumers": 10
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+    "module": "ot_hdc_v41x_attn_tile_s",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+    "module": "ot_hdc_v41x_attn_hdp_s",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+    "module": "ot_hdc_v41x_attn_chunk_s",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+    "module": "ot_hdc_v41x_qaddf",
+    "consumers": 5
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+    "module": "ot_hdc_v41x_attn_chunk_l",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+    "module": "ot_hdc_v41x_attn_hdp_l",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+    "module": "ot_hdc_v41x_attn_tile_l",
+    "consumers": 5
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+    "module": "ot_hdc_v41x_qaddl",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+    "module": "ot_hdc_v41x_vdly",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+    "module": "ot_hdc_v41x_attn_chunk",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+    "module": "ot_hdc_v41x_attn_hdp",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+    "module": "ot_hdc_v41x_attn_tile",
+    "consumers": 5
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "module": "ot_hdc_v41x_attn_merge",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "module": "ot_hdc_v41x_attn_tr",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "module": "ot_hdc_v41x_attn_tr_phs",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "module": "ot_hdc_v41x_attn_merge_phs",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fastfp.sv",
+    "module": "ot_hdc_fp32_add_fast",
+    "consumers": 3
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fastfp.sv",
+    "module": "ot_hdc_fp32_mul_fast",
+    "consumers": 3
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "module": "ot_hdc_w11_cut",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "module": "ot_hdc_f12_cut",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "module": "ot_hdc_fp32_add_f12",
+    "consumers": 10
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "module": "ot_hdc_fp32_mul_f12",
+    "consumers": 9
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "module": "ot_hdc_f12_inreg",
+    "consumers": 1
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "module": "ot_hdc_fp32_add_f12_l5i",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "module": "ot_hdc_fp32_mul_f12_l6i",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_delay.sv",
+    "module": "ot_hdc_delay",
+    "consumers": 2
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "module": "ot_hdc_qmul_lat",
+    "consumers": 5
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "module": "ot_hdc_qadd_lat",
+    "consumers": 6
+  },
+  {
+    "file": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "module": "ot_hdc_mul_kcp48",
+    "consumers": 1
+  }
+]
