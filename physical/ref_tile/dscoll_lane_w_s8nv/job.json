@@ -7,7 +7,7 @@
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "codex/s81-headlane-2220-1022",
+  "branch": "claude/stw-s81e-s8nt-bench-1023",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
@@ -98,8 +98,20 @@
     "fail_witness": "results/rtl/s81_coll_native32_1020/reach8n/bench/m8.log"
    },
    {
+    "name": "lane_miter_v8_m0",
+    "cmd": "OT_COLL_P1REF_DIR=rtl/dsrom_sys/s81_ph/test/p1ref_rxsram OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter0 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_SAFE4_BOUNDARY PASS checks=\\d+",
+    "pass_witness": "results/rtl/s81_coll_native32_1020/native_v8/bench/p1ref_m0.log"
+   },
+   {
     "name": "lane_miter_v8_m1",
-    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter1 1",
+    "cmd": "OT_COLL_P1REF_DIR=rtl/dsrom_sys/s81_ph/test/p1ref_rxsram OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter1 1",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -112,7 +124,7 @@
    },
    {
     "name": "lane_miter_v8_m2",
-    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter2 2",
+    "cmd": "OT_COLL_P1REF_DIR=rtl/dsrom_sys/s81_ph/test/p1ref_rxsram OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter2 2",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -125,7 +137,7 @@
    },
    {
     "name": "lane_miter_v8_m3",
-    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter3 3",
+    "cmd": "OT_COLL_P1REF_DIR=rtl/dsrom_sys/s81_ph/test/p1ref_rxsram OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter3 3",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
@@ -138,7 +150,7 @@
    },
    {
     "name": "lane_miter_v8_m4",
-    "cmd": "OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter4 4",
+    "cmd": "OT_COLL_P1REF_DIR=rtl/dsrom_sys/s81_ph/test/p1ref_rxsram OT_COLL_NATIVE32=1 OT_COLL_NATIVE32_OFF=1 bash tools/xdie_s81/coll_safe4_boundary.sh {RUN}/miter4 4",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 8,
