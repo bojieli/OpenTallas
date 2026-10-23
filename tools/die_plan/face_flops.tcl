@@ -221,3 +221,5 @@ foreach bt [$ff_blk getBTerms] {
 close $ff_out
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
 }
+# S81-P8 10-23: soft relay stations on their source-sink lines (kits with hard cores; gen_phys copies relay_mid.tcl)
+if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} { source /work/relay_mid.tcl }
