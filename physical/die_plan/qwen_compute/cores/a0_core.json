@@ -1,0 +1,729 @@
+{
+ "schema": "opentallas.die_plan.core.v1",
+ "name": "A0",
+ "owner": "QC-A0 10-23 (claude/qc-a0-1023)",
+ "source_plan": "claude/qc-p2-1023 @6587487a5 physical/die_plan/qwen_compute/die_plan.json (variant B)",
+ "modules": {
+  "nk": "qfd_tile_nk_a0c",
+  "nl": "qfd_tile_nl_a0c"
+ },
+ "kits": {
+  "nk": [
+   "qfd_tile_nk_a0ck (MAIN)",
+   "qfd_tile_nk_a0cs (FALLBACK)"
+  ],
+  "nl": [
+   "qfd_tile_nl_a0ck",
+   "qfd_tile_nl_a0cs"
+  ]
+ },
+ "instances_on_die": {
+  "nk": 720,
+  "nl": 48
+ },
+ "outline_um": [
+  457.92,
+  1157.76
+ ],
+ "grid_um": 8.64,
+ "outline_on_lattice": true,
+ "orientation": "R0 inside the quad partition; MX quads mirror the whole partition (pins symmetric on the M4/M6 tracks per PLAN-TOOL lattice rule)",
+ "placements": [
+  {
+   "partition_type": "cbf_q00",
+   "inst": "u_t00",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    77.76
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    745.836
+   ]
+  },
+  {
+   "partition_type": "cbf_q00",
+   "inst": "u_t10",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    77.76
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    745.836
+   ]
+  },
+  {
+   "partition_type": "cbf_q00",
+   "inst": "u_t01",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbf_q00",
+   "inst": "u_t11",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbf_q01",
+   "inst": "u_t02",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbf_q01",
+   "inst": "u_t12",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbf_q01",
+   "inst": "u_t03",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbf_q01",
+   "inst": "u_t13",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbx_q10",
+   "inst": "u_t20",
+   "variant": "nk",
+   "origin_um": [
+    77.76,
+    77.76
+   ],
+   "core_tap_um_in_partition_R0": [
+    535.584,
+    745.836
+   ]
+  },
+  {
+   "partition_type": "cbx_q10",
+   "inst": "u_t30",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    77.76
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    745.836
+   ]
+  },
+  {
+   "partition_type": "cbx_q10",
+   "inst": "u_t21",
+   "variant": "nk",
+   "origin_um": [
+    77.76,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    535.584,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbx_q10",
+   "inst": "u_t31",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbf_q11",
+   "inst": "u_t22",
+   "variant": "nk",
+   "origin_um": [
+    77.76,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    535.584,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbf_q11",
+   "inst": "u_t32",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbf_q11",
+   "inst": "u_t23",
+   "variant": "nk",
+   "origin_um": [
+    77.76,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    535.584,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbf_q11",
+   "inst": "u_t33",
+   "variant": "nl",
+   "origin_um": [
+    699.84,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbn_q00",
+   "inst": "u_t00",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    77.76
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    745.836
+   ]
+  },
+  {
+   "partition_type": "cbn_q00",
+   "inst": "u_t10",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    77.76
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    745.836
+   ]
+  },
+  {
+   "partition_type": "cbn_q00",
+   "inst": "u_t01",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbn_q00",
+   "inst": "u_t11",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbn_q01",
+   "inst": "u_t02",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbn_q01",
+   "inst": "u_t12",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbn_q01",
+   "inst": "u_t03",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbn_q01",
+   "inst": "u_t13",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbn_q11",
+   "inst": "u_t22",
+   "variant": "nk",
+   "origin_um": [
+    77.76,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    535.584,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbn_q11",
+   "inst": "u_t32",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbn_q11",
+   "inst": "u_t23",
+   "variant": "nk",
+   "origin_um": [
+    77.76,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    535.584,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbn_q11",
+   "inst": "u_t33",
+   "variant": "nl",
+   "origin_um": [
+    699.84,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbf_q01_s2",
+   "inst": "u_t02",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbf_q01_s2",
+   "inst": "u_t12",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    69.12
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    737.196
+   ]
+  },
+  {
+   "partition_type": "cbf_q01_s2",
+   "inst": "u_t03",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbf_q01_s2",
+   "inst": "u_t13",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbf_q00_s2",
+   "inst": "u_t00",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    77.76
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    745.836
+   ]
+  },
+  {
+   "partition_type": "cbf_q00_s2",
+   "inst": "u_t10",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    77.76
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    745.836
+   ]
+  },
+  {
+   "partition_type": "cbf_q00_s2",
+   "inst": "u_t01",
+   "variant": "nk",
+   "origin_um": [
+    86.4,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    544.224,
+    2050.476
+   ]
+  },
+  {
+   "partition_type": "cbf_q00_s2",
+   "inst": "u_t11",
+   "variant": "nk",
+   "origin_um": [
+    699.84,
+    1382.4
+   ],
+   "core_tap_um_in_partition_R0": [
+    1157.664,
+    2050.476
+   ]
+  }
+ ],
+ "clock": {
+  "ports": [
+   "ck"
+  ],
+  "pin_um": [
+   457.824,
+   668.076
+  ],
+  "face": "E",
+  "layer": "M4",
+  "tap": "one die spine tap per core at the core ck pin (COORD 10-23 07:24 ruling 2); MX partitions: y -> partition_h - y",
+  "insertion_budget_ps": {
+   "target": 250,
+   "tol": 40,
+   "at": "core boundary flops, TT",
+   "status": "to be MEASURED by the a0ck/a0cs gates; deviation reported to QC-P2"
+  },
+  "spread_ps_max": 80,
+  "internal": "former 34 (NL) / 38 (NK) entry ports are internal nets of ck; macros balanced via Liberty clock_tree_path"
+ },
+ "reset": {
+  "port": "rst_n",
+  "landing": "2-stage synchronizer on ck inside the core (16 copies)"
+ },
+ "pins": {
+  "nk": {
+   "n_a": {
+    "face": "W",
+    "bits": 514,
+    "y_um": [
+     699.564,
+     800.556
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "n_b": {
+    "face": "W",
+    "bits": 514,
+    "y_um": [
+     800.748,
+     900.78
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "t_out": {
+    "face": "W",
+    "bits": 514,
+    "y_um": [
+     900.972,
+     1001.196
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "n_y": {
+    "face": "W",
+    "bits": 514,
+    "y_um": [
+     1001.388,
+     1102.572
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "tap": {
+    "face": "E",
+    "bits": 508,
+    "y_um": [
+     561.036,
+     660.3
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "tile_id": {
+    "face": "E",
+    "bits": 16,
+    "y_um": [
+     665.004,
+     668.844
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "ck": {
+    "face": "E",
+    "bits": 1,
+    "y_um": [
+     668.076,
+     668.076
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "rst_n": {
+    "face": "E",
+    "bits": 1,
+    "y_um": [
+     669.996,
+     669.996
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "tie_hi": {
+    "face": "E",
+    "bits": 1,
+    "y_um": [
+     672.012,
+     672.012
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "tie_lo": {
+    "face": "E",
+    "bits": 1,
+    "y_um": [
+     674.028,
+     674.028
+    ],
+    "layers": [
+     "M4"
+    ]
+   }
+  },
+  "nl": {
+   "t_out": {
+    "face": "W",
+    "bits": 514,
+    "y_um": [
+     900.684,
+     999.948
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "tap": {
+    "face": "E",
+    "bits": 508,
+    "y_um": [
+     561.036,
+     660.3
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "tile_id": {
+    "face": "E",
+    "bits": 16,
+    "y_um": [
+     665.004,
+     668.844
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "ck": {
+    "face": "E",
+    "bits": 1,
+    "y_um": [
+     668.076,
+     668.076
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "rst_n": {
+    "face": "E",
+    "bits": 1,
+    "y_um": [
+     669.996,
+     669.996
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "tie_hi": {
+    "face": "E",
+    "bits": 1,
+    "y_um": [
+     672.012,
+     672.012
+    ],
+    "layers": [
+     "M4"
+    ]
+   },
+   "tie_lo": {
+    "face": "E",
+    "bits": 1,
+    "y_um": [
+     674.028,
+     674.028
+    ],
+    "layers": [
+     "M4"
+    ]
+   }
+  }
+ },
+ "registered_ports": "every data port is sampled/launched by a flop at its face root in the RTL (pin_regs: proven native stages; in->reg slack +326 ps, reg->out +321 ps at r3)",
+ "layers": {
+  "signals": "M2-M7",
+  "pins": "M4 (W/E faces)",
+  "M8_M9": "reserved for die spine/PG/ft"
+ },
+ "cells_est": {
+  "nl": 187991,
+  "cap": 400000
+ },
+ "latency_change_cycles": 0
+}
