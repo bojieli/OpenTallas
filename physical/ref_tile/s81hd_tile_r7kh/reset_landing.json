@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_s81hd_tile_r3",
+ "enable": false,
+ "reason": "Top RTL explicitly implements three synchronous face landing stages in kept source families2/64/1536 with standard equivalence-proven redistribution; an additional kit wrapper would double land reset. Startup assertion/release +1 edge versus old two-stage kit is recorded, traffic unchanged."
+}
