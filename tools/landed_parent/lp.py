@@ -963,7 +963,13 @@ class Parent:
         for ins in self.insts:
             if any(self.cports[ins["module"]][pin] == "in" and pin in (self.S.get("reset_pins") or []) and ex.strip() == self.rst
                    for pin, ex in ins["conns"].items()):
-                items[self.region[ins["inst"]]].append((('c', ins["inst"]), 1))
+                # A zero-age soft child may flatten into several actual reset pins.
+                # Explicit measured weights keep the final copy bounded without adding reset edges.
+                weights = self.S.get("regional_reset_child_loads", {})
+                cost = weights.get(ins["inst"], 1)
+                if type(cost) is not int or not 1 <= cost <= 32:
+                    raise SystemExit(f"regional_reset_child_loads {ins['inst']}: expected 1..32")
+                items[self.region[ins["inst"]]].append((('c', ins["inst"]), cost))
         out, ident = {}, 0
         for r in self.regions:
             bins = []

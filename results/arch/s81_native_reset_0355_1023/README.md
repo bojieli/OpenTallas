@@ -1,0 +1,7 @@
+S81 current native reset repair, 2026-10-23 04:07 PDT.
+
+Original admitted frame vgnsr has nine regional final reset copies with 64-151 actual Liberty-classified loads. The generator counted each child reset as one even where a zero-age soft child flattens into several physical RESETN pins. Full actual graph closure (including Liberty-transparent unary functions) supplies the per-child weights recorded here; largest child weight is17. Landing writer n32 is unchanged.
+
+Opt-in regional_reset_child_loads changes reset copy bin packing only. MAIN vgnw needs10/17/11 final copies, reset depth7 unchanged and reset flop count36 ->54. The exact frame schedule and all interfaces are unchanged. Existing dimensions, hard children, macros, pin lists, pin windows and route settings match the original admitted source snapshot.
+
+MAIN exact kit source SHA256 f84e2fa2277c52b4434a6f9bb3a3355eeb79b3c688f1df15fab85934fc1f44f5. Native-only MAIN and ALT both canonical PASS: max32, zero violations. Original reports and summaries are retained; no physical closure or full-token pass is claimed. Remote job root: ot-epyc5:/srv/opentallas-scratch/claude/codex-s81-native-reset-0355-1023. ALT vgnz charges one extra load per measured child as a conservative partition. Full-frame functional plan rerun is live on MAIN (session91636), after restoring the missing committed 4096x274 ROM simulation model; the first source-staging error is preserved separately. Independent GEOM review is required before any P&R; existing frame clock/buffer conditions remain open.
