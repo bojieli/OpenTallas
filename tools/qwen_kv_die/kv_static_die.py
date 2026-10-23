@@ -135,6 +135,13 @@ GRP_R2 = os.environ.get('OT_KV_GRP_R2', '0') == '1'
 if GRP_R2 and (GRP_PRIVATE0 or GRP_SAFE2 or GRP_S6C or not (FANFOLD and KITS)):
     raise ValueError('GRP_R2 is the release FANFOLD + TILE_KITS point successor (not with GRP_PRIVATE0 / SAFE2 / S6C)')
 GRP_R2_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv'
+# Same registered interface/schedule, native32 mapped structural copies measured in the r2c gates.
+GRP_R2_NATIVE32 = os.environ.get('OT_KV_GRP_R2_NATIVE32', '0') == '1'
+if GRP_R2_NATIVE32 and not GRP_R2:
+    raise ValueError('GRP_R2_NATIVE32 requires GRP_R2=1 so its schedule remains priced')
+GRP_R2_NATIVE32_RTL = {k: f'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_{k}_r2c.sv'
+                       for k in ('grp', 'grp_h')}
+
 GRP_R2_HOP, GRP_R2_DEPTH = 4, 7
 GRP_R2_EDGES = dict(fan=1 + GRP_R2_HOP * GRP_R2_DEPTH, chain_hop=GRP_R2_HOP, gather_own=3, gather_hop=GRP_R2_HOP,
                     gather_max=3 + GRP_R2_HOP * GRP_R2_DEPTH, cf1_fault=2, est=2, tok_tep=2) if GRP_R2 else \
@@ -285,6 +292,8 @@ if GRP_S6C:
 TILE_MODULE = dict(KIND_MASTER)
 if GRP_R2:
     KIND_MASTER.update(grp='qkd_kvs_grp_r2', grp_h='qkd_kvs_grp_h_r2')
+    if GRP_R2_NATIVE32:
+        KIND_MASTER.update(grp='qkd_kvs_grp_r2c', grp_h='qkd_kvs_grp_h_r2c')
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
@@ -1842,7 +1851,7 @@ def sources():
     if GRP_S6C:
         s.update(GRP_S6C_RTL.values())
     if GRP_R2:
-        s.add(GRP_R2_RTL)
+        s.update(GRP_R2_NATIVE32_RTL.values()) if GRP_R2_NATIVE32 else s.add(GRP_R2_RTL)
     if CTL_NC32:
         s.add(CTL_NC32_RTL)
         s.update(CTL_NC32_DEPS)
@@ -1883,7 +1892,7 @@ def bindings():
         if GRP_SAFE2 and t['kind'] in ('grp', 'grp_h'):
             source_file = GRP_S6C_RTL[t['kind']] if GRP_S6C else GRP_SAFE2_RTL
         if GRP_R2 and t['kind'] in ('grp', 'grp_h'):
-            source_file = GRP_R2_RTL
+            source_file = GRP_R2_NATIVE32_RTL[t['kind']] if GRP_R2_NATIVE32 else GRP_R2_RTL
         if CTL_NC32 and t['kind'] == 'ctl':
             source_file = CTL_NC32_RTL
         if PC_SRAM and KITS and t['kind'] in PC_RLAND_KINDS:
