@@ -188,10 +188,21 @@ def read_span(f):
     return f['me_tiles'] * f['me_k'] * IL
 
 
+def consumer_ages(ages, name):
+    """TOKe-QW 10-23: go_lag / xpf_lead are properties of the CONSUMER op's read order (tiles, k, split: which x element
+    the column heads read first after the go), not of the x stream alone.  The resid-calibrated go_lag -3 (gu: k 32,
+    split 7) faults o (tiles 3, k 2, split 8) and down (tiles 3, k 6, split 8) on the binding slice 0 (an element read
+    before its write -> sticky heads FAULT).  ages['consumer'][op] (xhead_bench.py --point/--merge, measured per op)
+    overrides the global values; a missing op entry falls back to them."""
+    c = (ages.get('consumer') or {}).get(name.rstrip('+1'))
+    return dict(ages, **{k: c[k] for k in ('go_lag', 'xpf_lead') if k in c}) if c else ages
+
+
 def lower_consumer(name, f, xs, ages, hr_at, go_at=None, prev_xt=None, prev2_end=None, xpf_at=None):
     """one matvec's XPF / go at the W5 hr pin.  xs: {m: stream reference edges}; go_at: the composed (plan) go -- the
     lowering never issues earlier than the x allows (go = max(go_at, go_min)); prev_xt: {m: last write of the previous
     op}; prev2_end: {m: read end of op n-2}.  Returns the edges, the per-slice slack and the read windows."""
+    ages = consumer_ages(ages, name)
     xt = {m: [e + ages['x_tap'] for e in v] for m, v in xs.items()}
     go_min = max(max(v) + ages['go_lag'] - hr_at[m] for m, v in xt.items())
     xpf_max = min(min(v) - ages['xpf_lead'] - hr_at[m] for m, v in xt.items())

@@ -1,0 +1,77 @@
+{"consumer": "down", "go_lag": -1, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2397}
+{"consumer": "down", "go_lag": -2, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2396}
+{"consumer": "down", "go_lag": -3, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"0": 2418}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2307, "go_w5": 2395}
+{"consumer": "down", "go_lag": -4, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"0": 2417}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2307, "go_w5": 2394}
+{"consumer": "down", "go_lag": -5, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"0": 2416}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2307, "go_w5": 2393}
+{"consumer": "down", "go_lag": -6, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"0": 2415, "1": 2416}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2307, "go_w5": 2392}
+{"consumer": "down", "go_lag": 0, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2398}
+{"consumer": "down", "go_lag": 10, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2408}
+{"consumer": "down", "go_lag": 11, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2409}
+{"consumer": "down", "go_lag": 12, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2410}
+{"consumer": "down", "go_lag": 1, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2399}
+{"consumer": "down", "go_lag": 20, "xpf_lead": -1, "ok": false, "rc": 1, "hf": {"0": 2434, "1": 2435, "2": 2436, "3": 2437, "4": 2438}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2320, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": -2, "ok": false, "rc": 1, "hf": {"0": 2434, "1": 2435, "2": 2436, "3": 2437, "4": 2438, "5": 2439}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2321, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": 0, "ok": false, "rc": 1, "hf": {"0": 2434, "1": 2435, "2": 2436, "3": 2437}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2319, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": 1, "ok": false, "rc": 1, "hf": {"0": 2434, "1": 2435, "2": 2436}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2318, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": 2, "ok": false, "rc": 1, "hf": {"0": 2434, "1": 2435}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2317, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": 3, "ok": false, "rc": 1, "hf": {"0": 2434}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 2316, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": 4, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2315, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": 5, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2314, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": 6, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2313, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": 7, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2312, "go_w5": 2418}
+{"consumer": "down", "go_lag": 20, "xpf_lead": 8, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2311, "go_w5": 2418}
+{"consumer": "down", "go_lag": 2, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2400}
+{"consumer": "down", "go_lag": 3, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2401}
+{"consumer": "down", "go_lag": 4, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2402}
+{"consumer": "down", "go_lag": 5, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2403}
+{"consumer": "down", "go_lag": 6, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2404}
+{"consumer": "down", "go_lag": 7, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2405}
+{"consumer": "down", "go_lag": 8, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2406}
+{"consumer": "down", "go_lag": 9, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 2307, "go_w5": 2407}
+{"consumer": "o", "go_lag": -1, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 897}
+{"consumer": "o", "go_lag": -2, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"0": 914}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 839, "go_w5": 896}
+{"consumer": "o", "go_lag": -3, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"0": 913}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 839, "go_w5": 895}
+{"consumer": "o", "go_lag": -4, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"0": 912}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 839, "go_w5": 894}
+{"consumer": "o", "go_lag": -5, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"0": 911, "1": 912}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 839, "go_w5": 893}
+{"consumer": "o", "go_lag": -6, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"0": 910, "1": 911}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 839, "go_w5": 892}
+{"consumer": "o", "go_lag": 0, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 898}
+{"consumer": "o", "go_lag": 10, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 908}
+{"consumer": "o", "go_lag": 11, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 909}
+{"consumer": "o", "go_lag": 12, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 910}
+{"consumer": "o", "go_lag": 1, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 899}
+{"consumer": "o", "go_lag": 20, "xpf_lead": -1, "ok": false, "rc": 1, "hf": {"0": 934, "1": 935, "2": 936, "3": 937, "4": 938}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 852, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": -2, "ok": false, "rc": 1, "hf": {"0": 934, "1": 935, "2": 936, "3": 937, "4": 938, "5": 939}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 853, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": 0, "ok": false, "rc": 1, "hf": {"0": 934, "1": 935, "2": 936, "3": 937}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S3ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 851, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": 1, "ok": false, "rc": 1, "hf": {"0": 934, "1": 935, "2": 936}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S2ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 850, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": 2, "ok": false, "rc": 1, "hf": {"0": 934, "1": 935}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 849, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": 3, "ok": false, "rc": 1, "hf": {"0": 934}, "slice_faults": ["S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 848, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": 4, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 847, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": 5, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 846, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": 6, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 845, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": 7, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 844, "go_w5": 918}
+{"consumer": "o", "go_lag": 20, "xpf_lead": 8, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 843, "go_w5": 918}
+{"consumer": "o", "go_lag": 2, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 900}
+{"consumer": "o", "go_lag": 3, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 901}
+{"consumer": "o", "go_lag": 4, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 902}
+{"consumer": "o", "go_lag": 5, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 903}
+{"consumer": "o", "go_lag": 6, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 904}
+{"consumer": "o", "go_lag": 7, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 905}
+{"consumer": "o", "go_lag": 8, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 906}
+{"consumer": "o", "go_lag": 9, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 839, "go_w5": 907}
+{"consumer": "qkv", "go_lag": -1, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1953, "go_w5": 2174}
+{"consumer": "qkv", "go_lag": -2, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1953, "go_w5": 2173}
+{"consumer": "qkv", "go_lag": -3, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1953, "go_w5": 2172}
+{"consumer": "qkv", "go_lag": -4, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1953, "go_w5": 2171}
+{"consumer": "qkv", "go_lag": -5, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1953, "go_w5": 2170}
+{"consumer": "qkv", "go_lag": -6, "xpf_lead": 12, "ok": false, "rc": 1, "hf": {"1": 2193}, "slice_faults": ["S1ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 1953, "go_w5": 2169}
+{"consumer": "qkv", "go_lag": 0, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1953, "go_w5": 2175}
+{"consumer": "qkv", "go_lag": 1, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1953, "go_w5": 2176}
+{"consumer": "qkv", "go_lag": 20, "xpf_lead": -1, "ok": false, "rc": 1, "hf": {"8": 2219, "10": 2221}, "slice_faults": ["S10ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S8ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 1966, "go_w5": 2195}
+{"consumer": "qkv", "go_lag": 20, "xpf_lead": 0, "ok": false, "rc": 1, "hf": {"8": 2219, "10": 2221}, "slice_faults": ["S10ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S8ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 1965, "go_w5": 2195}
+{"consumer": "qkv", "go_lag": 20, "xpf_lead": 1, "ok": false, "rc": 1, "hf": {"8": 2219, "10": 2221}, "slice_faults": ["S10ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)", "S8ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 1964, "go_w5": 2195}
+{"consumer": "qkv", "go_lag": 20, "xpf_lead": 2, "ok": false, "rc": 1, "hf": {"8": 2219}, "slice_faults": ["S8ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 1963, "go_w5": 2195}
+{"consumer": "qkv", "go_lag": 20, "xpf_lead": 3, "ok": false, "rc": 1, "hf": {"8": 2219}, "slice_faults": ["S8ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)"], "xpf_w5": 1962, "go_w5": 2195}
+{"consumer": "qkv", "go_lag": 20, "xpf_lead": 4, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1961, "go_w5": 2195}
+{"consumer": "qkv", "go_lag": 20, "xpf_lead": 5, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1960, "go_w5": 2195}
+{"consumer": "qkv", "go_lag": 20, "xpf_lead": 6, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1959, "go_w5": 2195}
+{"consumer": "qkv", "go_lag": 2, "xpf_lead": 12, "ok": true, "rc": 0, "hf": {}, "slice_faults": [], "xpf_w5": 1953, "go_w5": 2177}

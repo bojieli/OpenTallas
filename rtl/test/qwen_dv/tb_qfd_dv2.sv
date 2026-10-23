@@ -166,6 +166,8 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
     output wire [106:0] st, output wire [49:0] cc_o, input wire [9:0] ag_up_i, output wire [9:0] ag_dn_o);
     // VM-write probe (testbench observation only; read by tb_qfd_dv2 as u.vw_v / u.vw_a): the station-result write port
     wire vw_v; wire [23:0] vw_a;
+    // QW-XHEAD heads probe (+DV2_XHEAD, read as u.xt_v / u.xt_a / u.hd_fault): the slice x-stream tap write + heads fault
+    wire xt_v, hd_fault; wire [23:0] xt_a;
     generate if (FACE == 0) begin : g_m
         qfd_dv_slice2 #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .ARF(ARF), .RP(RP)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmd_i), .cmd_o(cmd_o),
             .hr_i(hr_i), .hr_o(hr_o), .rs_s(rs_s), .rs_n(rs_n), .l9_i(l9_i), .l9_o(l9_o),
@@ -175,6 +177,7 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
             .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2),
             .cw_s3(cw_s3), .st(st), .cc_o(cc_o), .ag_up_i(ag_up_i), .ag_dn_o(ag_dn_o));
         assign vw_v = u.st_vm; assign vw_a = u.r_addr;
+        assign xt_v = u.xt_v; assign xt_a = u.xt_a; assign hd_fault = u.hd_fault;
     end else if (FACE == 1) begin : g_w
         qfd_dv_slice2_w #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .ARF(ARF), .RP(RP)) u (.ck(ck), .rst_n(rst_n), .cmd_wi(cmd_i), .cmd_eo(cmd_o),
             .hr_wi(hr_i), .hr_eo(hr_o), .st_wo(st_dn_o), .st_wi(st_up_i), .st_eo(st_up_o), .st_ei(st_dn_i),
@@ -193,6 +196,7 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
             .rs_s1(rs_s[1027:514]), .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0),
             .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
         assign vw_v = u.u_core.st_vm; assign vw_a = u.u_core.r_addr;
+        assign xt_v = u.u_core.xt_v; assign xt_a = u.u_core.xt_a; assign hd_fault = u.u_core.hd_fault;
     end else begin : g_e
         qfd_dv_slice2_e #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .ARF(ARF), .RP(RP)) u (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_i), .cmd_wo(cmd_o),
             .hr_ei(hr_i), .hr_wo(hr_o), .st_eo(st_dn_o), .st_ei(st_up_i), .st_wo(st_up_o), .st_wi(st_dn_i),
@@ -211,5 +215,6 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
             .rs_s1(rs_s[1027:514]), .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0),
             .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
         assign vw_v = u.u_core.st_vm; assign vw_a = u.u_core.r_addr;
+        assign xt_v = u.u_core.xt_v; assign xt_a = u.u_core.xt_a; assign hd_fault = u.u_core.hd_fault;
     end endgenerate
 endmodule
