@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_hr_core_peer_mu_n32",
+ "enable": false,
+ "reason": "Exact p35 generated native 0fc3015d0fe957bb5d23f7fe4b8e296dae34c1292114863b2436ed2205d0535f is the primitive copy of the existing flow-wrapped peer; source boundary stations are retained. No second wrapper or extra payload edge. Actual boundary and timing checks remain required."
+}

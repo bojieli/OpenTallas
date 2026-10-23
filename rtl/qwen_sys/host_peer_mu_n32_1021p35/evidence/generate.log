@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.kv_group.structural_copy.v1",
+ "qualified": false,
+ "original_top": "qkd_hr_core_peer_sram_mu",
+ "top": "qkd_hr_core_peer_mu_n32",
+ "source_sha256": "a8eb922f097e6a39ace7b58e3c51fe29faa68f2426114b57a4c2c6c5f06ed2a5",
+ "parser_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+ "generated_sha256": "0fc3015d0fe957bb5d23f7fe4b8e296dae34c1292114863b2436ed2205d0535f",
+ "fixedpoint_history": [
+  88162,
+  88228,
+  88230,
+  88230
+ ],
+ "original_cells": 86346,
+ "generated_cells": 88230,
+ "max_terminal_loads": 32,
+ "macros": [
+  {
+   "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_ctrl.u_m.genblk2.g_rx_sram32.u_rx_head.u_mem",
+   "type": "ot_sram_1r1w_32x546_m1_p192_mir",
+   "instance": "u107005_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_sram.u_n.u_mem",
+   "type": "ot_sram_1r1w_32x546_m1_p192_mir",
+   "instance": "u109627_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_peer.u_m.g_sram.u_p.u_mem",
+   "type": "ot_sram_1r1w_32x546_m1_p192_mir",
+   "instance": "u109681_c0.u_cell"
+  }
+ ],
+ "required_before_gate": [
+  "mapped census after re-synthesis",
+  "source-pinned exact library model",
+  "sequential equivalence",
+  "independent arbitrary-init cold-boot/reset convergence"
+ ]
+}

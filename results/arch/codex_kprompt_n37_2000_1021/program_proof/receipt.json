@@ -1,0 +1,37 @@
+{
+  "source_commit": "440007d7f",
+  "rtl_commit": "e60810eca",
+  "host": "ot-gold2",
+  "unit": "oth-ubuntu-1600721-1792645228",
+  "suite_exit": 0,
+  "simulator": "Verilator5.050",
+  "positive": {
+    "cycles": 4324,
+    "images": 6,
+    "program_writes": 2093,
+    "descriptor_writes": 11,
+    "reset_pending": true,
+    "bad_order": true,
+    "active_after_accept": true,
+    "cycle_exact_all_observable_outputs": true,
+    "independent_replay_payload_address_and_digest_scoreboard": true
+  },
+  "causal_mutants": {
+    "wrong_data_alignment_4": {
+      "verdict": "REJECTED_IN_SIMULATION",
+      "cycle": 17
+    },
+    "retract_accepted_write_on_execution_activity_5": {
+      "verdict": "REJECTED_IN_SIMULATION",
+      "cycle": 4277
+    }
+  },
+  "reference_exact_to_n36_after_module_rename": true,
+  "sha256": {
+    "rtl/qwen_sys/host_cluster_20261017/prompt_safe6/qkd_host_program_loader_target.sv": "49030f590085f02558f4e2195d475f78934e9e3a86b8bc27c8918bf4329724f8",
+    "rtl/test/qwen_host/tb_program_n37_eq.sv": "e1a3c64fde4eff619415dfb9ffb1889d55179c3eb126b07254e498877c9da28d",
+    "rtl/test/qwen_host/ref/qkd_host_program_loader_target_n36_ref.sv": "8dd3dd9e54513e528d0f3f8f445880b0cada40e2fc05de2c9d8d82b1b6f551b5",
+    "tools/qwen_kv_die/host_cluster/bench/prompt_n37_program.sh": "860f390749dd1de7d9ec3af48fd7162e19f5731a3679087548d490bccee6efd8"
+  },
+  "scope": "Program-loader component only, including all four SRAM banks, descriptor transition, last accepted word/seal/auth drain, pending reset and transient execution activity. Legal observable edges unchanged in this scope; prior n36 MU retirement +1 remains. No native, physical or full token claim."
+}

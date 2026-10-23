@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_hr_ingest_eng_sp6",
+ "enable": false,
+ "reason": "RTL lands eng_rst_n[1:0] at the face in 2 registered stages: each pin drives ONLY u_l0[j]; 17 kept leaves are async-reset by rst_l0[j] (equal depth, each leaf <= 32 loads); control/valid-only reset"
+}

@@ -1,0 +1,23 @@
+{
+  "actual_rtl_source": "af24fd222",
+  "reference_fix": "43d1459a5",
+  "rx_path_fix": "401de864b",
+  "source_sha256": {
+    "rtl/qwen_sys/host_peer_mu_sram_1021p35/qkd_host_lifecycle_collected_mu.sv": "223f0ccf547a987265b54aae931888a3db7f5a37b1db6f59f65911bc1dafe834",
+    "rtl/qwen_sys/host_peer_mu_sram_1021p35/qkd_host_ctrl_token_service_packet_collected_pd2_mu.sv": "f4e8e4e060f24ab0c014fbbca807f1da842b3512fbf3a7af6d92646e5ec096ba"
+  },
+  "normal_lifecycle_unit": "oth-ubuntu-1972059-1792648017",
+  "negative_lifecycle_unit": "oth-ubuntu-1998905-1792648126",
+  "rx_normal_negative_unit": "oth-ubuntu-1235430-1792648186",
+  "pass": true,
+  "normal_lifecycle_result": "LCEQ PASS checks=2957102 terminal_accepted=12636 cancel_accepts=81 posts=11705 dispatches=75 resets=42898",
+  "stale_head_rejection": "LCEQ FAIL cyc=197",
+  "normal_rx_result": "RX_HEAD PASS token=0 edges=100000 commands=6542 frames=46289 heads=98143 rxheads=69460 maxcount=1",
+  "rx_metadata_negative": "accepted flag/payload alignment rejected",
+  "earlier_unqualified_attempts": [
+    "Initial stale-head negative mutated both DUT and copied reference; PASS was invalid coverage.",
+    "RX witness g_mu references were an elaboration failure; actual existing MU module is flat."
+  ],
+  "external_added_edges": 0,
+  "physical_qualification": false
+}

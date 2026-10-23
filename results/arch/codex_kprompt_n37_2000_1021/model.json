@@ -1,0 +1,11 @@
+{
+  "base": "00384d01f",
+  "physical_witness": "n36a EP7 qkd_hr_core_prompt_n36a-20261021-204640 CTS setup worst u59584_c0/u_cell/we_in, maps to u_rank__u_program.u_m.g_pm[1].u_pm",
+  "change": "register accepted SRAM program writes as valid/address/data before macro enable/address/data",
+  "observable_age_change": 0,
+  "internal_macro_write_edge_change": 1,
+  "preserved_n36_retirement_age_change": 1,
+  "legal_drain_law": "After last program word, seal transitions LOAD->SEALED; authorization transitions SEALED->REPLAY_P; SRAM read enables first use old REPLAY_P only on the following edge. Pending accepted write drains before that read. Descriptors may begin immediately after the last program word and do not enter the SRAM write pipeline.",
+  "controls": "Only pending write valid resets. Payload is unreset and used only behind valid. Once qualified by prior-edge p_wr, the write commits independent of changing execution_active/fault/begin_image; reset cancels it. This preserves the already-accepted old write, including execution_active becoming high during a LOAD idle gap. No clock or domain change.",
+  "required_proof": "Cycle-exact old/new program-loader outputs over legal contiguous images, seal/auth transitions, descriptor transition and reset/fault cases; independent replay payload/address scoreboard; wrong data alignment mutant must fail. Native source rederivation/correspondence/census/reset and normal MAIN+FB gates remain required before qualification. Include a transient execution_active rise immediately after an accepted last word; a retraction mutant must fail."
+}

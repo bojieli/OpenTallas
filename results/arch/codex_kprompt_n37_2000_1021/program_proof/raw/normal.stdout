@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+N37_PROGRAM_EQ PASS cycles=4324 images=6 program_writes=2093 descriptor_writes=11 reset_pending=1 bad_order=1 active_after_accept=1
+- rtl/test/qwen_host/tb_program_n37_eq.sv:75: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 43us; walltime 0.008 s; speed 5.700 ms/s
+- Verilator: cpu 0.008 s on 1 threads; allocated 7 MB

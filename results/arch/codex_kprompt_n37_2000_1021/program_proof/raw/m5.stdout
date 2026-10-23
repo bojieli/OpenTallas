@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+N37_PROGRAM_EQ FAIL cycle=4277 mut=5 dut_pr=00000000000000000403adc2622eb127f0ee ref_pr=00000000000000000403adc2622fb127f0ee
+[42766000] %Fatal: tb_program_n37_eq.sv:23: Assertion failed in tb_program_n37_eq.tick: cycle-exact outputs differ
+%Error: rtl/test/qwen_host/tb_program_n37_eq.sv:23: Verilog $stop
+Aborting...

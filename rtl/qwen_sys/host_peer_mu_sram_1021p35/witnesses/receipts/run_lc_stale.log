@@ -1,0 +1,5 @@
+LCEQ FAIL cyc=197
+ first diff bit 31
+[400000] %Fatal: tb_lc_equiv.sv:42: Assertion failed in tb_lc_equiv
+%Error: rtl/qwen_sys/host_peer_mu_sram_1021p35/witnesses/tb_lc_equiv.sv:42: Verilog $stop
+Aborting...
