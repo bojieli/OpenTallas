@@ -17,10 +17,7 @@
   }
  },
  "keep_pin_regs": true,
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
- },
+ "io_flop_at_pins": false,
  "reset_landing": {
   "enable": true,
   "stages": 2

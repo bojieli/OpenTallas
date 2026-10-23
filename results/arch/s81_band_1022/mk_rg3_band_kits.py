@@ -72,7 +72,15 @@ r["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aw
 specs[r["name"]] = r
 # R fallback (parallel): same tile, H-tree buffers every 40 um (qkd_astk_ep: long leaf strings left far leaves late)
 rb = copy.deepcopy(r); rb["name"] = "s81dv_rg3b_rb"; rb["job"] = job("s81dv_rg3b_rb", r["job"]["purpose"] + " (FB: CTS buffer pitch 40 um)")
-rb["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aware -distance_between_buffers 40"}
+# gate 3 (10-22 17:4x): S-centre entry 109 / +40-um pitch 113 ps: the ~130 pin flops sit at the pins of all FOUR faces of a
+# sparse SRAM tile (754 um2 std) -> MAIN: pin flops placed with their logic (io_flop_at_pins off; the parent landing
+# halves are the timed boundary anyway); FB: pins on two faces only (W + S, clock at the SW corner)
+r["io_flop_at_pins"] = False
+rb["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aware"}
+rb["pins"] = {"W": ["rqo", "qi", "si", "sid", "rst"], "S": ["ck", "sc_i", "qoi_o", "soi_o", "st_o", "ql_o", "sx_o", "xr_i"]}
+rb["pin_ranges"] = {"rqo": [237.6, 324.0], "qi": [21.6, 237.6], "si": [21.6, 237.6], "sid": [21.6, 237.6], "rst": [21.6, 237.6],
+                    "ck": [10.8, 17.28], "sc_i": [21.6, 43.2], "qoi_o": [43.2, 345.6], "soi_o": [43.2, 345.6], "st_o": [43.2, 345.6],
+                    "ql_o": [43.2, 345.6], "sx_o": [367.2, 453.6], "xr_i": [367.2, 453.6]}
 specs[rb["name"]] = rb
 x = common("s81dv_rg3b_x", "dsdv_idx_rg3_bx", "banded idx rg3 MAIN: X band (response lanes, landing SRAMs, key mux)")
 x.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1, "RH": 1},

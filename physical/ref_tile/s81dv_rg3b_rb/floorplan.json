@@ -30,23 +30,19 @@
  },
  "pins": {
   "W": [
+   "rqo",
    "qi",
    "si",
    "sid",
    "rst"
   ],
-  "N": [
-   "rqo"
-  ],
   "S": [
+   "ck",
+   "sc_i",
    "qoi_o",
    "soi_o",
    "st_o",
    "ql_o",
-   "sc_i",
-   "ck"
-  ],
-  "E": [
    "sx_o",
    "xr_i"
   ]
