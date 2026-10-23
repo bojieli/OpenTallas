@@ -899,6 +899,15 @@ SLICE_W, SLICE_H = 129.6, 345.6
 # between the two head columns: sqcgm GRT hot spots (demand/tracks 3.0-3.8, cap>0 = 73% of reported overflow) sit on the
 # astk faces where the 1,559-b head buses (tg_/tt_/th_) cross the astk er_chain / ep chunk relays (channels 32-43 um)
 ASTK_CHAN = float(__import__('os').environ.get('OT_KV_ASTK_CHAN', '0') or 0)
+# SQC-KDIE5 10-22 (OT_KV_PINFACE=1, default off): the stacked PC column frames (qkd_kvs_pc / _pc_h, die-pinned frames, no
+# closed view) drew their chain words at independently spread face spans: o_prev (S) at x 222.8-260.2 vs the PC below's
+# i_next (N) at 80.8-118.2, o_next (N) 227.3-241.6 vs the PC above's i_prev (S) 46.8-61.1, so every bit jogged 142-180 um
+# inside the frames (GRT overflow into the frames' cap-0 gcells).  With the knob the qkd_kvs_pc S-face chain pins take the
+# EXACT spec (centre, layer, pitch) of their N-face peer port: o_prev = i_next, i_prev = o_next, pc__ko = pc__ki,
+# pc__fi = pc__fo (bit k at the same x; every column's PCs share one orientation, so the 19.5-um inter-frame gap is
+# crossed straight).  The N face (shared with qkd_kvs_pc_h, PC 0, whose S face has no chain word) is unchanged.
+PINFACE = __import__('os').environ.get('OT_KV_PINFACE', '0') == '1'
+PINFACE_PAIRS = (('o_prev', 'i_next'), ('i_prev', 'o_next'), ('pc__ko', 'pc__ki'), ('pc__fi', 'pc__fo'))
 # OT_KV_ASTK_CHAN_SIDES=1: the channel only on the head-column-0 (landing) side of the astk, where 10 of the 14 astk hot
 # spots sit; the column-1 heads / ECTL keep abutting the astk (their krq routes are unchanged: a both-sides channel moved
 # the col-1 ectl rq first hop to 1.26 mm)
@@ -4350,6 +4359,15 @@ def masters(m, k=1, port_bits=None):
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
+    if PINFACE and 'qkd_kvs_pc' in M:
+        mm = M['qkd_kvs_pc']
+        for s_, n_ in PINFACE_PAIRS:
+            ps, pn = mm.ports.get(s_), mm.ports.get(n_)
+            if not (ps and pn):
+                continue
+            if ps[0] != 'face' or pn[0] != 'face' or ps[2] != 'S' or pn[2] != 'N' or ps[1] != pn[1]:
+                raise ValueError(f'OT_KV_PINFACE: qkd_kvs_pc {s_} {ps} / {n_} {pn} not an S / N pair of equal width')
+            mm.ports[s_] = ('face', ps[1], 'S', pn[3], pn[4], pn[5])
     for name, ports in m.get('assigned_ports', {}).items():
         if name in M:
             M[name].ports.update({p: tuple(v) for p, v in ports.items() if p in M[name].ports})
