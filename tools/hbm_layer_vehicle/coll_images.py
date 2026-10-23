@@ -140,9 +140,16 @@ def calendar_window(loops):
     return prog, word
 
 
-def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm_rt=0, src_idx=None):
+def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm_rt=0, src_idx=None, transport=None):
     """COLL.ALL_GATHER of the n-word vector O (uint32) on the 4 quadrants, quadrant q's view.  Returns dict with
-    events (replay.v1 D / C / M), the checks split by kind, cycles, and the model numbers."""
+    events (replay.v1 D / C / M), the checks split by kind, cycles, and the model numbers.
+    transport (coll_transport.load, TOKg 10-23): the die revision's lane timing; None = GEN2 / tb_coll_replay timing
+    (0 launch edges, far-end flit at the stop the edge after the pin).  With it every gather edge (fire, issue, inject,
+    ring outputs, landing writes, VM / fault checks) moves by launch_edges, and each far-end drive is issued
+    ingress_edges[port] edges earlier than the stop arrival needs.  The host-ingress programme and the configured
+    check keep their edges (they precede the launch lane)."""
+    Ls = int(transport["launch_edges"]) if transport else 0
+    ing = {p: int(v) for p, v in transport["ingress_edges"].items()} if transport else {}
     from hbm_layer_vehicle.layer_images import CpBus
     O = np.asarray(O, np.uint32)
     n = len(O)
@@ -168,6 +175,9 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
     # global launch (F30) that starts both armed targets
     sp = span(F, R, vm_rt)
     win = t_start + FIRE_FROM_LAUNCH + sp + 96           # calendar grant window (edges), from calendar start
+    if transport and Ls - int(transport["calendar_launch_edges"]) > 96:
+        return dict(status="format_open", reasons=[f"gq launch lane {Ls} trails the calendar launch lane by more than the "
+                                                   "96-edge grant margin: window would end before the last write"])
     cal, cal_word = calendar_window(win)
     bus = CpBus(t_frames, src="image:COLL")
     bus.install(GQ_TGT, [f20_word(0, payload)], 0)
@@ -181,7 +191,7 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
     chk_misc.append(dict(k="C", dom="stream", cyc=cL, port="hcollgi_SW__configured", val="1", src="check:gq_target",
                          rec=i_rec))
     L = cL + 1
-    FE = L + FIRE_FROM_LAUNCH + t_start
+    FE = L + FIRE_FROM_LAUNCH + t_start + Ls
     # ---- VM preload: own slice
     for j in range(F):
         s = src + j
@@ -204,8 +214,10 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
             s = src_of(q, d, h)
             A = c + 2 * h
             p = IN_PORTS[(r, d)]
-            assert A - 2 not in drv[p], ("far-end link double-booked", p, A - 2)
-            drv[p][A - 2] = flit(s, 4 - h, k, sl[s][i])
+            D = A - 2 - ing.get(p, 0)
+            assert D > cL, ("far-end drive before the launch", p, D, cL)
+            assert D not in drv[p], ("far-end link double-booked", p, D)
+            drv[p][D] = flit(s, 4 - h, k, sl[s][i])
             if h < 3:
                 key = (OUT_PORTS[(r, d)], A + 1)
                 assert key not in outc, ("ring output double-booked", key)
@@ -255,6 +267,7 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
                         rule="read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + "
                              "edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)")
     return dict(status="emitted", F=F, R=R, stride=stride, src_sector=src, dst_sector=dst, t_start=t_start, vm_rt=vm_rt,
+                transport=dict(launch_edges=Ls, ingress_edges=ing) if transport else None,
                 n_words=n, launch_cyc=cL, L=L, fire=FE, last_write=last_w, check_cyc=T,
                 model_span_fire_to_last_write=sp, launch_to_last_write=last_w - L,
                 calendar=dict(target=CAL_TGT, loops=win, word={k: hex(v) for k, v in cal_word.items()},
@@ -320,8 +333,14 @@ def main():
     ap.add_argument("--pre-events", type=Path, help="also write <name>.events.txt for tb_coll_replay.sv here")
     ap.add_argument("--contract", type=Path, help="die functional contract: hcollgi_SW VM_RT (default 0 = GEN2)")
     ap.add_argument("--lane", default="VEH-FMT-COLL")
+    ap.add_argument("--transport", type=Path, help="coll_transport.py profile of the die revision (default: GEN2 timing)")
     a = ap.parse_args()
     vm_rt = vm_rt_from_contract(a.contract) if a.contract else 0
+    if a.transport:
+        from hbm_layer_vehicle import coll_transport
+        if a.pre_events:
+            ap.error("--pre-events is the GEN2 tb_coll_replay timing (no relays); do not combine with --transport")
+    tr = coll_transport.load(a.transport) if a.transport else None
     meta, z, recs = load_fixture_records(a.fixtures, a.rank)
     L = int(meta["layer"]) if str(meta["layer"]).isdigit() else meta["layer"]
     prefix = a.name_prefix or (f"ds_l{L}" if isinstance(L, int) else f"ds_{L}")
@@ -345,7 +364,7 @@ def main():
             man.append(ent)
             continue
         O = np.asarray(z[x["outputs"]["O"]["array"]], np.uint32)
-        g = gather_record(O, i_rec, R=a.R, t_start=a.t_start, vm_rt=vm_rt)
+        g = gather_record(O, i_rec, R=a.R, t_start=a.t_start, vm_rt=vm_rt, transport=tr)
         if g["status"] != "emitted":
             ent.update(g)
             man.append(ent)
@@ -362,6 +381,7 @@ def main():
             evs = sorted(evs, key=lambda e: (e["dom"], e["cyc"], e["k"]))
             rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design="ds", layer=str(L),
                        record=i_rec, tag=x["tag"], lane=a.lane, scope="component_probe", vm_rt=vm_rt,
+                       transport=g.get("transport"),
                        assumptions=["quadrant q holds contiguous quarter q of the gathered vector O (plain FP32, no QBG)",
                                     "on-die quadrant phase only (cross-die hb_coll link programme: no compiler)",
                                     "calendar_SW = COLL-only window grant (sole VM owner in this replay)"],
