@@ -1,0 +1,267 @@
+{
+ "name": "hcoll_v7_tkm_tile_e86rt",
+ "top": "ot_hgi_coll_tkm_tile_e86",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv"
+ ],
+ "params": {
+  "FAN32": 2,
+  "RT": 1
+ },
+ "clock_port": "clk",
+ "clock": "multiple_cts_roots",
+ "reset_ports": [],
+ "outline": {
+  "w": 302.4,
+  "h": 302.4
+ },
+ "layer_cap": "M6",
+ "layer_cap_grant": "B2 SPEC D-B2-7 TKM kept inside hb_coll; hardened chain children use M6 beneath M7 parent straps",
+ "pins": {
+  "N": [
+   "ins_v",
+   "ins_b",
+   "clk",
+   "clk_r0",
+   "clk_r1",
+   "clk_r2",
+   "clk_r3",
+   "up_out"
+  ],
+  "S": [
+   "ovf_v",
+   "ovf_b",
+   "up_in"
+  ],
+  "W": [
+   "clr",
+   "conv",
+   "busy"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.025,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:STEWARD-HBMd/E86",
+  "branch": "claude/hbm-e86-rt-1023",
+  "tag": "rt",
+  "purpose": "TKM tile e86 RT (retimed stage-C compare, +1 hop edge) MAIN 302.4 sq + up_in S-face anchor",
+  "benches": [
+   {
+    "name": "tkm_e86rt_lockstep",
+    "cmd": "FAN32=2 RT=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/rt0 4000 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^TKM_RG_CREP MUT0 cycles4000 .*errors0 PASS$"
+   },
+   {
+    "name": "tkm_e86rt_ctlmut",
+    "cmd": "FAN32=2 RT=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/rt1 4000 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TKM_RG_CREP MUT1 cycles4000 .*errors[1-9][0-9]* FAIL$"
+   },
+   {
+    "name": "tkm_e86rt_gnmut",
+    "cmd": "FAN32=2 RT=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/rt3 4000 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TKM_RG_CREP MUT3 cycles4000 .*errors[1-9][0-9]* FAIL$"
+   },
+   {
+    "name": "tkm_e86rt_rbmut",
+    "cmd": "FAN32=2 RT=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/rt5 4000 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TKM_RG_CREP MUT5 cycles4000 .*errors[1-9][0-9]* FAIL$"
+   },
+   {
+    "name": "tkm_e86rt_holdmut",
+    "cmd": "FAN32=2 RT=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/rt6 4000 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "timeout_s": 14400,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TKM_RG_CREP MUT6 cycles4000 .*errors[1-9][0-9]* FAIL$"
+   },
+   {
+    "name": "tkm_tp192_static_gate_rt",
+    "cmd": "HIERWRAP=1 FAN32=2 RT=1 bash rtl/hbm_accel/generic/collective/tkm/run_tp192_static.sh {RUN}/bench/tp192",
+    "expect": "pass",
+    "pass_regex": "TKM_TP192_STATIC_GATE_PASS",
+    "min_count_regex": "TKM_STATIC PASS words=([0-9]+) cycles=",
+    "threads": 8,
+    "peak_ram_gb": 160,
+    "timeout_s": 28800,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tkm_tp192_cal_mut_rt",
+    "cmd": "HIERWRAP=1 FAN32=2 RT=1 bash rtl/hbm_accel/generic/collective/tkm/run_tp192_cal_mut.sh {RUN}/bench/calmut",
+    "expect": "fail",
+    "fail_regex": "TKM_STATIC FAIL",
+    "threads": 8,
+    "peak_ram_gb": 160,
+    "timeout_s": 28800,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_coll_tkm_tp192_vectors.py",
+   "tools/hgi_coll_tkm_vectors.py"
+  ],
+  "cycles_added": 1,
+  "views_to": "physical/ref_tile/hcoll_v7_tkm_tile_e86rt/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86rt"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_reg_split": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hgi_coll_tkm_tile registers its inputs (p_* stage) and every output is a flop (ovf_v/ovf_b/up_out/tau_o/busy reg): the TKM chain timing is fixed by tkm_static SETTLE"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "clock_ports": [
+  "clk",
+  "clk_r0",
+  "clk_r1",
+  "clk_r2",
+  "clk_r3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "clr",
+    "conv",
+    "ins_v",
+    "ins_b"
+   ],
+   "outputs": [
+    "busy"
+   ]
+  },
+  "r0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r0"
+   ],
+   "inputs": [],
+   "outputs": [
+    "up_out"
+   ]
+  },
+  "r1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r3"
+   ],
+   "inputs": [
+    "up_in"
+   ],
+   "outputs": [
+    "ovf_v",
+    "ovf_b"
+   ]
+  }
+ },
+ "io_tcl": "physical/ref_tile/hcoll_v7_tkm_tile_e86rt/io_spread.tcl",
+ "structural_change": "STEWARD-HBMd/E86 10-23 RT: retimed stage-C compare (RT 1, FAN32 2, SEAM 0). Route f67e2e265 (v4b FAN32 2 + SEAM 1) TT -30.32 ps / 469 endpoints, ALL = compare operand (SX 185, q_bg 186, cap 41, cs 24, p_bg 18, xs 15) -> 85-b ot_tkm_lt_live -> GN leaf -> gc copy in ONE edge (Codex v7/v7b placement -30.1/-61.9 same class): logic depth, not geometry (GRT 0, uniform 47%). RT registers every compare one edge early (RX per position, ZR / GB / RB per group, operands = per-group regional N copies of the block) and the X select (SL), so stage C = flop -> 2-level AND-OR -> GN leaf -> gc. +1 input edge per chain hop (tkm_static TLAT 4 -> 5, SETTLE 5 NT + 8, tap conv_pipe[3]); SEAM/cap dropped. Lockstep vs PRE1 CREP0 reference with REF controls delayed one edge (MUT0 PASS, CMUT 1/3/5/6 FAIL). MAIN 302.4 sq + up_in capture flops (X[60..63], the conveyor seam's pin registers) FIRM-anchored at the S face (upin_anchor.tcl, coordinator review: pin->reg p90 142 um).",
+ "pin_hook_before_flops": [
+  "physical/ref_tile/hcoll_v7_tkm_tile_e86rt/upin_anchor.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/hcoll_v7_tkm_tile_e86rt/upin_release.tcl"
+ ]
+}
