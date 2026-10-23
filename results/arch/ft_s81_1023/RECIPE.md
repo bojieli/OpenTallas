@@ -133,3 +133,33 @@ Frame hardening cost, measured on the h9/h10 gates:
 - Ask the coordinator whether B' is allowed: it would cut frame variants from 9 to 2.
 - First hardening: col_h9 position-4 variant (4 corridors), on the current fs1x recipe. It is the most loaded variant
   and proves the corridor mechanism.
+
+## 6. COORD rulings 10-23 and what they change (FT-S81 addendum)
+1. **Option B approved. No tie-offs.**
+   - Without ties, frames would need a separate variant for every frame column position, i.e. 0-4 through-bundles.
+     That is 4 ft variants each for col_h9 and col_h10.
+   - Reduction to 4 frame variants (h9 ft1/ft2, h10 ft1/ft2): the lanes of the two OUTER frame columns ride their own
+     row's street. That is 2 bundles = 2.35k bits against ~3.9k capacity (M6+M8 at 0.6); each street is assigned to one
+     row, and the top row uses the die-edge margin. Column 2 then carries 0 bundles (base master), column 3 carries 1,
+     column 4 (inner) carries 2.
+   - Outliers f_3L01/f_4R01 (column 5, top): their lanes are routed around them via the top margin, so they stay base.
+   - Every ft corridor carries a real lane. No spare corridors.
+   - Centre (estimate, row policy): c1x 3 variants, svc_rs (pair72 successor) 4, serdes 3, irg 2. Singletons are
+     unaffected.
+2. **Half-cycle reach (REACH-M89 sweep data reanalysed at T/2 = 416.7 ps, same calibration 1.203, BUFx12f, <=450 um):**
+   - dsfd_dvrlyh_276 on M8: 228 um; on M9: 234 um. Full cycle: 1,499 / 1,520 um.
+   - dsfd_rly_266 does not reach 200 um at half cycle.
+   - Stage model, in cycles (sum over 835 lanes):
+     - today (19,609 HC=1 stations planned at 405 um): 9,805 cycles. Those 405 um half-cycle hops exceed the 228 um
+       half-cycle reach.
+     - HC=1 at 228 um: 29,567 stations = 14,784 cycles; x_frame max 64 cycles.
+     - **HC=0 full-cycle stations at 1.5 mm: 5,715 cycles (-42% vs today); x_frame max 28.**
+   - Decision: ft and die lane stations become FULL-cycle `ot_dvrly_st #(HC=0)` (the dsfd_dvrly_* body) at <=1.5 mm.
+   - HC=1 existed only as the relay->relay hold fix for short forwarded hops (-120..-195 ps). At 1.0-1.5 mm hops the data
+     leg dominates. Hold is re-checked per hop in FT-TOOL checks, with hold buffers where short.
+   - Files: `stage_model_r228.json`, `stage_model_r1499.json`.
+3. **Special-net M8 pre-route of ft nets:** approved. Implementation goes with FT-TOOL (pushdown).
+4. **Slot swap of the 4 chain pairs that are 26 mm apart:** approved. It goes into the FT re-plan.
+5. **(d):** col_h9 2-corridor variant (the most loaded under 1.) on the frame recipe that closes CTS. The 4 live
+   STEWARD gates (h9/h10 vgsr, vgcsr, vgysr; spine-target basis fix @d09a59d18, gold1/gold2) still run at 00:40. Their
+   verdict decides the base recipe. The structural CTS fix for the frame is owned in (d) if they fail.

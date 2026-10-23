@@ -3,7 +3,7 @@
 Row-aligned policy (frame<->hub lanes: H leg at the frame pin y, V leg at the hub face x), relay hop <= REACH,
 ft rule A = registered in AND out in every crossed block (2 forced stations), rule B = in only (1 forced)."""
 import json, collections, math, sys
-P = json.load(open(__import__('os').environ.get('FT_S81_PLAN', 'dump/plan.json'))); B = P['blocks']; REACH = 1500.0
+P = json.load(open(__import__('os').environ.get('FT_S81_PLAN', 'dump/plan.json'))); B = P['blocks']; REACH = float(__import__('os').environ.get('FT_S81_REACH', '1500'))
 big = [i for i, b in enumerate(B) if b['w'] * b['h'] >= 0.5e6]
 def span(seg, b):
     (x0, y0), (x1, y1) = seg; bx0, by0, bx1, by1 = b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']
