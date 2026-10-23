@@ -66,7 +66,7 @@ def spread(order, lo, hi, gap=0.36):
     return out, pitch
 
 
-def build(name, tag, W, x0, why, base=BASE, vlay=None):
+def build(name, tag, W, x0, why, base=BASE, vlay=None, ya=73.44):
     s = json.load(open(os.path.join(ROOT, base)))
     head = s['top'] == 'qkd_kvs_pc_h'      # chain head (4 instances): no S chain words (no i_prev / o_prev)
     s = copy.deepcopy(s)
@@ -99,7 +99,7 @@ def build(name, tag, W, x0, why, base=BASE, vlay=None):
     s['pins']['N'] = [p for p in s['pins']['N'] if p != 'o_grp']
     s['pins']['E'] = s['pins']['E'] + ['o_grp']
     # ---- macro bank
-    ya = 73.44                               # 23.76 + 23 x 2.16: the sr15 on-track row origin family
+    # ya default 73.44 = 23.76 + 23 x 2.16: the sr15 on-track row origin family (r5: 23.76, the bank on the S pin edge)
     yb = ya + 8.64
     macros = []
     for k, inst in enumerate(COL_A):
@@ -165,5 +165,9 @@ if __name__ == '__main__':
     for nm, b in (('qkd_kvs_pc', BASE), ('qkd_kvs_pc_h', BH)):
         build(f'{nm}_r4a', nm[8:] + '_r4a', 205.2, 43.2, 'r4 MAIN: 205.2 wide, N/S on M3+M5, PHY band 41 um.', b, 'M3 M5')
         build(f'{nm}_r4b', nm[8:] + '_r4b', 226.8, 43.2, 'r4 ALT: 226.8 wide (wider main band), N/S on M3+M5.', b, 'M3 M5')
+        # r5 (r4 placed image: the S 60 um stayed light -- the chain station registers sit N, the S face only lands its
+        # pin registers): the bank moves onto the S pin edge (y 23.76, 20 um inside the core), the freed ~125 um at the
+        # N end takes the N-heavy logic; S pin registers sit in the 20-um strip under the bank and beside it
+        build(f'{nm}_r5a', nm[8:] + '_r5a', 205.2, 43.2, 'r5: r4a with the bank on the S pin edge.', b, 'M3 M5', 23.76)
     build('qkd_kvs_pc_h_r3a', 'h_r3a', 270.0, 43.2, 'PC_H MAIN: 270.0 wide, PHY band 41 um.', BH)
     build('qkd_kvs_pc_h_r3b', 'h_r3b', 302.4, 64.8, 'PC_H ALT: 302.4 wide, PHY band 63 um.', BH)
