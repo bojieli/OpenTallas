@@ -36,7 +36,7 @@ def test_default_unchanged():
     assert K.pc_slot('pc') == (390.96, 358.56) and K.pc_slot('pc_h') == (390.96, 358.56)
 
 
-@pytest.mark.parametrize('v,w', [('a', 272.16), ('b', 304.56)])
+@pytest.mark.parametrize('v,w', [('a', 272.16), ('b', 304.56), ('r4a', 207.36), ('r4b', 228.96)])
 def test_r3_slot_and_face(v, w):
     K = load(OT_KV_PC_R3=v, OT_KV_PC_SR13='1')
     assert K.pc_slot('pc') == (w, 358.56)
@@ -53,7 +53,7 @@ def test_bad_value_refused():
         load(OT_KV_PC_R3='c')
 
 
-@pytest.mark.parametrize('v,w', [('a', 272.16), ('b', 304.56)])
+@pytest.mark.parametrize('v,w', [('a', 272.16), ('b', 304.56), ('r4a', 207.36), ('r4b', 228.96)])
 def test_pc_h_r3(v, w):
     K = load(OT_KV_PC_R3=v, OT_KV_PC_H_R3='1', OT_KV_PC_SR13='1')
     assert K.pc_slot('pc_h') == (w, 358.56) and K.pc_slot('pc') == (w, 358.56)

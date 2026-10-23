@@ -274,14 +274,16 @@ def frame_engine(f):
     raise ValueError(f'no engine for ECTL frame {f}')
 PC_PITCH = 378.0
 PC_SR13 = os.environ.get('OT_KV_PC_SR13', '0') == '1'
-# KVPC-R 10-23 (OT_KV_PC_R3=a|b; default off: every existing design point is unchanged): bind the COORD-review redesign
+# KVPC-R 10-23 (OT_KV_PC_R3=a|b|r4a|r4b; default off: every existing design point is unchanged): bind the COORD-review redesign
 # of the PC tile, kits physical/ref_tile/qkd_kvs_pc_r3a (MAIN, 270.0 x 356.4) / qkd_kvs_pc_r3b (ALT, 302.4 x 356.4)
 # (claude/kvpc-r-1023, tools/qwen_kv_die/kvs_pc_r3_kits.py): same module text (sr13a RTL), same height and pitch, a
 # narrower slot (kit width + the 2.16-um die shave) and the group return word o_grp on the E face (N end, toward the
 # group column) instead of N.  0 cycles (every live PC pin is flop-direct already), so no schedule edge changes.
 # The PC_H tiles (k = 0) keep the sr13 slot unless OT_KV_PC_H_R3=1 binds the r3 PC_H kit; PHY faces stay column-aligned.
 PC_R3 = os.environ.get('OT_KV_PC_R3', '0')
-PC_R3_KITS = {'a': ('qkd_kvs_pc_r3a', 270.0, 356.4), 'b': ('qkd_kvs_pc_r3b', 302.4, 356.4)}
+PC_R3_KITS = {'a': ('qkd_kvs_pc_r3a', 270.0, 356.4), 'b': ('qkd_kvs_pc_r3b', 302.4, 356.4),
+              # r4 (GEOM-REVIEW r3 FAIL fix, claude/kvpc-r-1023 @e47e759a6): N/S on M3+M5, width from content
+              'r4a': ('qkd_kvs_pc_r4a', 205.2, 356.4), 'r4b': ('qkd_kvs_pc_r4b', 226.8, 356.4)}
 if PC_R3 not in ('0', '') and PC_R3 not in PC_R3_KITS:
     raise ValueError(f"OT_KV_PC_R3={PC_R3!r}: expected one of 0, {', '.join(sorted(PC_R3_KITS))}")
 PC_R3 = PC_R3 if PC_R3 in PC_R3_KITS else None
@@ -290,7 +292,8 @@ PC_R3 = PC_R3 if PC_R3 in PC_R3_KITS else None
 PC_H_R3 = os.environ.get('OT_KV_PC_H_R3', '0') == '1'
 if PC_H_R3 and not PC_R3:
     raise ValueError('OT_KV_PC_H_R3=1 needs OT_KV_PC_R3=a|b (the PC_H r3 kit matches the PC r3 width)')
-PC_H_R3_KITS = {'a': ('qkd_kvs_pc_h_r3a', 270.0, 356.4), 'b': ('qkd_kvs_pc_h_r3b', 302.4, 356.4)}
+PC_H_R3_KITS = {'a': ('qkd_kvs_pc_h_r3a', 270.0, 356.4), 'b': ('qkd_kvs_pc_h_r3b', 302.4, 356.4),
+                'r4a': ('qkd_kvs_pc_h_r4a', 205.2, 356.4), 'r4b': ('qkd_kvs_pc_h_r4b', 226.8, 356.4)}
 
 
 def pc_slot(kind='pc'):
