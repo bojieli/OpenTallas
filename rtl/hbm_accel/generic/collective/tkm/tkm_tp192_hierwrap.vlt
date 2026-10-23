@@ -1,0 +1,7 @@
+`verilator_config
+// HBMc/TILES4 10-22: HIERWRAP=1 variant of tkm_tp192_hier.vlt (kept byte-identical): the hier blocks are the
+// parameter-free e86 wrappers (ot_hgi_coll_tkm_e86_hw.sv), so the top pass sees stubs instead of 32 flat tiles.
+hier_block -module "ot_hgi_coll_tkm_tile"
+hier_block -module "ot_hgi_coll_tkm_tile_e86_hw0"
+hier_block -module "ot_hgi_coll_tkm_tile_e86_hw1"
+hier_block -module "ot_hgi_coll_tkm_tile_e86_hw2"

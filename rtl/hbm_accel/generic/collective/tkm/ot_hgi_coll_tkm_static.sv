@@ -113,9 +113,23 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0, TP=96, FAN32
   // TP=192 (RANK_W 8, EW 86) PT64 tiles use their own hardened shape name (die view per shape, no parameter alias).
   if(EW==86 && KMAX>=64)begin:e86
   // TKM 10-18: the e86 shape has no tau probe / tid ports (this calendar reads the result through the up chain only).
+`ifdef OT_TKM_HIERWRAP
+  // HIERWRAP (bench only, HBMc/TILES4 10-22): parameter-free e86 wrapper per FAN32 so Verilator substitutes the hier block
+  if(FAN32==0)begin:hw0
+  ot_hgi_coll_tkm_tile_e86_hw0 u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.clr(clr),.conv(conv1||conv2),
+   .ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),.up_in(up[t+1]),.up_out(up[t]),.busy());
+  end else if(FAN32==1)begin:hw1
+  ot_hgi_coll_tkm_tile_e86_hw1 u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.clr(clr),.conv(conv1||conv2),
+   .ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),.up_in(up[t+1]),.up_out(up[t]),.busy());
+  end else begin:hw2
+  ot_hgi_coll_tkm_tile_e86_hw2 u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.clr(clr),.conv(conv1||conv2),
+   .ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),.up_in(up[t+1]),.up_out(up[t]),.busy());
+  end
+`else
   ot_hgi_coll_tkm_tile_e86 #(.FAN32(FAN32)) u_tile(.clk(tile_clk[t]),.clk_r0(tile_clk[t]),.clk_r1(tile_clk[t]),.clk_r2(tile_clk[t]),.clk_r3(tile_clk[t]),.clr(clr),.conv(conv1||conv2),
    .ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),
    .up_in(up[t+1]),.up_out(up[t]),.busy());
+`endif
   end else begin:gen
   ot_hgi_coll_tkm_tile #(.EW(EW),.PT((KMAX<64)?KMAX:64))u_tile(.clk(tile_clk[t]),.tid(6'(t)),.clr(clr),.conv(conv1||conv2),
    .tau_t(6'd0),.tau_l(7'd0),.ins_v(dv[t]),.ins_b(down[t]),.ovf_v(dv[t+1]),.ovf_b(down[t+1]),
