@@ -235,8 +235,8 @@ PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroo
 ROPE = os.environ.get('OT_KV_ROPE', '0') == '1'
 ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL','0') == '1'
 RTL_FILE = (PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + ('_gs2' if GRP_SAFE2 else '') +
-            ('_g6c' if GRP_S6C else '') + ('_rope' if ROPE else '') + ('_ovl' if ROPE_OVL else '') + '.sv')
-            ('_g6c' if GRP_S6C else '') + ('_nc32' if CTL_NC32 else '') + '.sv')
+            ('_g6c' if GRP_S6C else '') + ('_rope' if ROPE else '') + ('_ovl' if ROPE_OVL else '') +
+            ('_nc32' if CTL_NC32 else '') + '.sv')
 GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
 GRP_SAFE2_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s2.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
