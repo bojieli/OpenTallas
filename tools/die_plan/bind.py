@@ -9,12 +9,14 @@
 Inputs (die_plan.json, key `asbuilt`; README "As-built binding"):
   netlist / top / rtl_roots / files / prefer / defines / substitute   the as-built die top and its RTL
   dissolve      structural parents descended through (their leaves go to different partitions)
+  alias         {die master: RTL module}: GEN aliases of an RTL module (same ports, no parameters), renamed in the die top
   transport     die transport the plan replaces (relays, landings, reset repeaters, stations, wire forwarders): module
                 regex -> the out <- in port map (output regex: input, backrefs allowed) and the register stages (0 = a
                 wire); removed, every path through them collapsed to its source
   reducers      fault-OR trees: module regex -> OR of the inputs; removed and re-emitted per sink partition
   clocks        clock source pins (regex on "path.port") -> domain; a partition loads one die clock per domain
   resets        reset source pins replaced by the partition's own synchroniser (polarity low/high)
+  substitute_inst  per-INSTANCE plan variant of a leaf master ({"inst": path regex, "module": variant}; ports a subset)
   straps        constant leaf inputs that are declared position straps (-> partition parameters); others are TIED
   map           {"parts": {path prefix: partition}, "rules": [[regex, partition], ...]}: every leaf / glue cell of the
                 as-built die maps to exactly one partition (longest prefix, then the first rule)
@@ -393,18 +395,76 @@ def rel(path, root):
 
 
 class Binder:
-    def __init__(self, plan, yjs, plan_dir):
+    def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
         self.ab = plan["asbuilt"]
         self.errors, self.warns = [], []
         self.R = Rules(self.ab)
         self.F = E.flatten(yjs, self.ab["top"])
+        self.extra_lib, self.variants = [], []
+        if self.ab.get("substitute_inst"):
+            self.substitute_inst(base or str(E.REPO))
         self.G = Graph(self.F, self.R, self.errors)
         self.parts = {p["name"]: dict(p) for p in plan["partitions"]}
         self.types = {k: dict(v) for k, v in plan["partition_types"].items()}
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
+
+    def substitute_inst(self, base):
+        """asbuilt.substitute_inst [{"inst": regex on the flattened instance path, "module": variant, "reason": ...}]:
+        a leaf instance takes a plan variant of its master (e.g. a chain-head form without the chain inputs).  The
+        variant's ports must be a subset of the master's: dropped input bits are recorded (variant_removed_bits), never
+        counted as tied; a dropped output that had loads leaves them undriven (reported); parameters the variant does
+        not declare are dropped (recorded)."""
+        sys.path.insert(0, str(HERE.parent))
+        import die_port_bind as D
+        ab = self.ab
+        idx = E.module_index(ab.get("rtl_roots", ["rtl"]), ab.get("files", []), base)
+        prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]
+        iface = {}
+        self.variant_removed = defaultdict(int)
+        for r in ab["substitute_inst"]:
+            rx = re.compile(r["inst"])
+            m = r["module"]
+            if m not in iface:
+                f, _ = E.pick(idx, m, prefer)
+                if f is None:
+                    self.errors.append(f"VARIANT_MISSING {m}: no RTL defines it (substitute_inst {r['inst']})")
+                    iface[m] = None
+                    continue
+                mods = {x.name: x for x in D.parse_modules(Path(f).read_text(errors="replace"), f)}
+                iface[m] = (mods[m], f)
+                if f not in self.extra_lib:
+                    self.extra_lib.append(f)
+            if iface[m] is None:
+                continue
+            vm, vf = iface[m]
+            n = 0
+            for c in self.F.cells:
+                if c.kind != "leaf" or not rx.fullmatch(c.path):
+                    continue
+                n += 1
+                new_ports = [p for p in vm.ports if p not in c.ports]
+                outs_new = [p for p in new_ports if vm.ports[p][0] == "output"]
+                ins_new = [p for p in new_ports if vm.ports[p][0] != "output"]
+                if ins_new:
+                    self.errors.append(f"VARIANT_NEW_INPUT {c.path} -> {m}: {ins_new} (not in the as-built master)")
+                for p in [p for p in c.ports if p not in vm.ports]:
+                    d = c.dirs.get(p)
+                    if d == "input":
+                        self.variant_removed[f"{m}.{p}"] += len(c.ports[p])
+                    c.ports.pop(p)
+                    c.dirs.pop(p, None)
+                for p in c.ports:
+                    c.dirs[p] = vm.ports[p][0]
+                dropped = [k for k in c.params if k not in vm.params]
+                c.params = {k: v for k, v in c.params.items() if k in vm.params}
+                self.variants.append(dict(inst=c.path, master=c.module, variant=m, dropped_params=dropped,
+                                          open_new_outputs=outs_new, reason=r.get("reason")))
+                c.module = m
+            if n == 0:
+                self.errors.append(f"VARIANT_NO_MATCH substitute_inst {r['inst']} -> {m}: no leaf instance matches")
 
     # -- mapping
     def map_cells(self):
@@ -1327,7 +1387,7 @@ def cmd_bind(a):
     raw = load_plan(a.plan)
     out = Path(a.out)
     yjs = json.loads((out / "asbuilt.json").read_text())
-    B = Binder(raw, yjs, Path(a.plan).parent)
+    B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
     B.strict_types = bool(getattr(a, "strict", False))
     B.map_cells()
     B.analyse()
@@ -1340,10 +1400,13 @@ def cmd_bind(a):
         B.errors.append(f"EMIT {e}")
     rep, lat = B.report()
     srcs = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
-    fl = [str(f) for f in srcs.get("lib", [])] + [str(f) for f in files]
+    fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     (out / "bind.f").write_text("\n".join(fl) + "\n")
     rep["files"] = [str(f) for f in files]
     rep["findings"] = B.findings
+    rep["extra_lib"] = B.extra_lib
+    rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
+                           list=B.variants[:500])
     rep["type_splits"] = B.type_splits
     rep["tied_by_port"] = dict(sorted(B.tied_by_port.items(), key=lambda kv: -kv[1]))
     names = {}

@@ -232,9 +232,60 @@ def plan_sources(ab, base, idx=None, shim_dir=None):
     return tops, full, lib, rec
 
 
-def yosys_script(ab, tops, full, lib, out_json, check=False):
+def lib_stubs(lib, out_path):
+    """interface-only copies of the leaf (lib) files: each module's header (parameters + port list) and, for a
+    non-ANSI header, its parameter / port declarations, then endmodule.  Yosys then never parses leaf bodies (some
+    leaf RTL elaborates only under the tool of record, e.g. hierarchical references into generate blocks); the
+    leaves stay black boxes either way, and the Verilator lint reads the real files."""
+    out = []
+    for f in lib:
+        t = _strip(Path(f).read_text(errors="replace"))
+        out.append(f"// ---- interface of {f}")
+        out += [ln for ln in re.findall(r"^[ \t]*`(?:define|undef|include)\b(?:[^\n]*\\\n)*[^\n]*", t, re.M)]
+        for m in MOD_RE.finditer(t):
+            i = m.end()
+            # skip a parameter block #( ... )
+            j = i
+            while j < len(t) and t[j].isspace():
+                j += 1
+            if j < len(t) and t[j] == "#":
+                k = t.index("(", j)
+                j = _match(t, k) + 1
+            k = t.find("(", j)
+            semi = t.find(";", j)
+            if k < 0 or (0 <= semi < k):
+                hdr_end = semi
+            else:
+                hdr_end = t.find(";", _match(t, k))
+            hdr = t[m.start():hdr_end + 1]
+            body_end = t.find("endmodule", hdr_end)
+            body = t[hdr_end + 1:body_end]
+            decl = []
+            ansi = re.search(r"\b(input|output|inout)\b", hdr) is not None
+            for st in re.finditer(r"(?:^|(?<=;))\s*((?:parameter|localparam|input|output|inout)\b[^;]*;)", body):
+                txt = st.group(1)
+                if not ansi or txt.startswith(("parameter", "localparam")):
+                    decl.append("    " + txt)
+            out.append(hdr + "\n" + "\n".join(decl) + "\nendmodule")
+    Path(out_path).write_text("\n".join(out) + "\n")
+    return str(out_path)
+
+
+def _match(t, k):
+    d = 0
+    for i in range(k, len(t)):
+        if t[i] == "(":
+            d += 1
+        elif t[i] == ")":
+            d -= 1
+            if d == 0:
+                return i
+    raise ElabError("unbalanced parentheses")
+
+
+def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
     dflags = " ".join(f"-D{d}" for d in ab.get("defines", []))
-    incs = sorted({str(Path(f).parent) for f in tops + full + lib})
+    incs = sorted({str(Path(f).parent) for f in list(tops) + list(full) + list(lib) + list(inc_files)})
     iflags = " ".join(f"-I{d}" for d in incs)
     lines = []
     for f in lib:
@@ -285,11 +336,26 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
             dst.write_bytes(gzip.open(fp).read())
             fp = dst
         nl.append(str(fp))
+    alias = ab.get("alias", {})
+    if alias:
+        # GEN die masters that are aliases of an RTL module (same ports, no parameters): renamed in a copy of the die top
+        rx = re.compile(r"^(\s*)(" + "|".join(re.escape(a) for a in sorted(alias, key=len, reverse=True)) + r")(?=\s)", re.M)
+        for i, f in enumerate(nl):
+            t = Path(f).read_text(errors="replace")
+            t2 = rx.sub(lambda m: m.group(1) + alias[m.group(2)], t)
+            if t2 != t:
+                dst = out / ("aliased_" + Path(f).name)
+                dst.write_text(t2)
+                nl[i] = str(dst)
     ab["netlist"] = nl
     tops, full, lib, rec = plan_sources(ab, base, idx, shim_dir=out)
+    rec["aliased"] = alias
     js = out / "asbuilt.json"
     sc = out / "asbuilt.ys"
-    sc.write_text(yosys_script(ab, tops, full, lib, js))
+    ylib = lib
+    if ab.get("lib_stubs", True):
+        ylib = [lib_stubs(lib, out / "asbuilt_lib_stubs.sv")] if lib else []
+    sc.write_text(yosys_script(ab, tops, full, ylib, js, inc_files=lib))
     mounts = [out, Path(base).resolve(), REPO] + [Path(f).parent for f in tops + full + lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)
     mounts = [m for i, m in enumerate(roots) if not any(m.startswith(r + "/") for r in roots[:i])]

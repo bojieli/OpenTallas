@@ -72,12 +72,14 @@ def cmd_verify(a):
               defines=raw["asbuilt"].get("defines", []), substitute={})
     full = [f for f in gen if not f.endswith("_bound_top.sv")]
     rs = Path(E.REPO / "rtl/lib/ot_reset_sync.sv")
-    lib = [f for f in srcs.get("lib", []) if f not in full] + ([str(rs)] if str(rs) not in srcs.get("lib", []) else [])
+    lib = [f for f in srcs.get("lib", []) + rep.get("extra_lib", []) if f not in full] + \
+        ([str(rs)] if str(rs) not in srcs.get("lib", []) else [])
     vdir = out / "verify"
     vdir.mkdir(exist_ok=True)
     sc = vdir / "bound.ys"
     js = vdir / "bound.json"
-    sc.write_text(E.yosys_script(ab, ab["netlist"], full, lib, js, check=True))
+    ylib = [E.lib_stubs(lib, vdir / "lib_stubs.sv")] if lib else []
+    sc.write_text(E.yosys_script(ab, ab["netlist"], full, ylib, js, check=True, inc_files=lib))
     mounts = [out, E.REPO] + [Path(f).parent for f in lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)
     mounts = [m for i, m in enumerate(roots) if not any(m.startswith(r + "/") for r in roots[:i])]
@@ -164,6 +166,7 @@ def cmd_verify(a):
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])]
     leafm = sorted({c.module for ci, c in enumerate(F.cells) if G.kind[ci] == "leaf"})
+    prefer += rep.get("extra_lib", [])
     cl, cl_missing = E.closure(leafm, idx, prefer)
     gen_rtl = [f for f in rep["files"]]
     lt = lint(out, top, cl + gen_rtl + [str(rs)], ab0.get("defines", []), ab0.get("lint_waive", []))

@@ -150,3 +150,18 @@ def test_unmapped_and_unknown_are_errors(tmp_path):
     assert r["unmapped"] == 1
     assert any(e.startswith("UNMAPPED snk") for e in r["errors"])
     assert any(e.startswith("UNKNOWN_MODULE rst_rep0 (trep)") for e in r["errors"])
+
+
+def test_substitute_inst_variant(tmp_path):
+    """p1.u_b takes the plan variant lf_b_nid (no id port): its 4 strap bits disappear (recorded, not tied), A1 binds
+    as a variant of type ta, and the proof still passes"""
+    def edit(p):
+        p["asbuilt"]["substitute_inst"] = [{"inst": r"p1\.u_b", "module": "lf_b_nid", "reason": "test chain head"}]
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan.json", edit), out, "elab", "bind", "verify") == 0
+    r = report(out)
+    assert r["variants"]["instances"] == 1 and r["variants"]["removed_input_bits"] == {"lf_b_nid.id": 4}
+    assert r["proof"]["tied"] == 0 and r["proof"]["straps"] == 4 and r["n_errors"] == 0
+    assert any(t["type"] == "ta" for t in r["type_splits"])
+    assert verify(out)["verdict"] == "PASS"
+    assert "lf_b_nid u_u_b" in "".join(f.read_text() for f in (out / "rtl").glob("bt_ta*.sv"))

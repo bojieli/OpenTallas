@@ -9,3 +9,7 @@ endmodule
 module lf_sink (input wire clk, input wire flt, input wire [7:0] d0, input wire [7:0] d1, output reg [8:0] q);
     always @(posedge clk) q <= {flt, d0 ^ d1};
 endmodule
+// plan variant of lf_b for a chain head (no id input): bound per instance by asbuilt.substitute_inst
+module lf_b_nid (input wire clk, input wire [7:0] i, output reg [7:0] o, output reg flt);
+    always @(posedge clk) begin o <= i; flt <= &i; end
+endmodule
