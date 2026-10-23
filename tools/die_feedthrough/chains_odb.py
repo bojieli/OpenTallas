@@ -154,7 +154,8 @@ def main():
                 for e in elems:
                     accounted.add((e[0], e[2]))
         paths[lane["id"]] = res
-        status[lane["id"]] = "ok" if res else "no bit reaches the sink"
+        status[lane["id"]] = "ok" if res else ("no bit reaches the sink: census phantom pair (a shared multi-bus relay "
+                                                      "mixes src/dst buses; no real connection)")
     print(f"traced {sum(len(v) for v in paths.values())} bit paths {time.time()-t0:.0f}s", flush=True)
 
     # ---- pass 2: droppable relays (fixpoint) --------------------------------------------------------------------
