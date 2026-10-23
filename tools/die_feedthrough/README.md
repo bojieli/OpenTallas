@@ -46,6 +46,12 @@ Definitions:
             [--policy straight|row] [--ft-reg inout|single] [--ft-clock block|forwarded] [--kinds data,ctl]
             [--forbid-re REGEX] [--slot-um S] [--occupancy 0.6]
 
+Port bands are legalised per block face (`legalise_ports`, 1-D Abacus packing, shifts snapped to the layer pitch):
+no two ft ports of a block overlap unless the face is over capacity (`summary.faces_over_capacity[_top]`;
+`port_overlap_bits` counts what is left). Shifts are reported (`port_legalise_max_shift_um`, `port_legalise_bit_um`);
+the die-level wire between neighbours absorbs them. `--no-legalise` keeps the raw bands. `dies.py side_bits` widens
+each path by the chained side signals (eb->ea) that ride with the data (KV/QC/HBM 1, S81 0).
+
 Outputs:
 - `PLANDIR/<die>_plan.json`, schema `opentallas.die_feedthrough.plan.v1`, with these keys:
   - `summary`
@@ -109,11 +115,45 @@ Outputs (named after `spec["variant"]`):
 - `check`: `check_abstract(lef_text, spec)` returns FAIL for an ft-layer OBS over 5% of the outline (stripes up to the
   allowed width are excluded, up to 1.25x their nominal density), and for an ft pin bit that is missing, on the wrong
   layer, on the wrong face or outside [lo, hi]. Exit 1 on FAIL.
-- `die` (best-effort skeleton): `die_eco.json` + `die_eco.tcl` cover every lane with block segments and
-  keep_channel false. They delete the lane's relays (`lanes[].relays`) and their inter-relay nets, then connect
-  src -> blk/ft_i ... blk/ft_o -> dst (and the forwarded clocks) with `delete_instance`, `delete_net`, `make_net` and
-  `connect_pin`. die.v is only read. The JSON lists TODOs per lane: new channel relays are not inserted yet, only the
-  census longest chain is removed (taps need review), and MX/MY blocks may mirror bit order.
+- `die`: see 4b. Without `--chains` the old skeleton (relay nets read from die.v) is kept for reference only.
+
+### Layer contract mechanism: region fence + audit (accepted by COORD 10-23)
+OpenROAD 26Q3 has no per-net layer range (`set_routing_layers` is global; NDRs carry width/spacing/via only). The
+contract therefore (1) routes signals on M2-M9 globally, (2) applies `set_global_routing_region_adjustment` 1.0 (zero
+GRT capacity) on M8/M9 over the block outline MINUS the ft corridors, so non-ft nets get no M8/M9 outside the corridors
+and the corridors are sized for the ft bits at 0.6 occupancy, and (3) runs `ft_audit.tcl` after global_route, which
+lists every non-ft net with an M8/M9 guide outside a corridor and prints `FT_AUDIT FAIL` if there is one. It is a
+capacity fence, not a per-net rule: the audit is the check. Rejected: the `-clock` range hack (moves real clocks to
+M8/M9) and pre-routed special nets (repair_design's repeaters break the wire).
+
+## 4b. Die-side pushdown ECO (chains.sh + pushdown.py die --chains)
+
+    tools/die_feedthrough/chains.sh DIE.odb PLANDIR/<die>_plan.json CHAINDIR DIE [MEM_GB]        # openroad -python
+    python3 tools/die_feedthrough/pushdown.py die PLANDIR/ftspec --plan PLAN.json --chains CHAINDIR/chains.json \
+            --dump DUMPDIR --die D --out ECODIR [--blocks-as-wire]
+    [STAND_IN=1] [WRITE=1] tools/die_feedthrough/eco_apply.sh DIE.odb ECODIR APPLYDIR [MEM_GB]   # validation
+
+- `chains_odb.py` (schema `opentallas.die_feedthrough.chains.v1`) traces EVERY source bit of every pushed lane through
+  buffers and relays (data pin i/a/y/d[k] -> o/b/q[k]) to the sink bus, so taps and parallel chains are exact. A relay
+  matching `dies.py drop_re` is dropped only if all its data bits are on pushed bit paths and its side outputs feed only
+  dropped relays or station-local registers (fixpoint); otherwise it is kept (`kept_why`) and the bit path is cut at
+  it, so a tap relay stays and the pushed run starts after it. Heads (*0), landings, muxes and reset repeaters are
+  never dropped. Station-local registers (S81: `rfw_*` DFFHQN on the forwarded clock, QN -> INV -> rs) are recorded per
+  static pin (`local_regs`) and listed in `dropped_cells`.
+- `die_eco.py` walks each sub-chain (one physical relay chain, one forwarded clock) in route order: a channel stage at
+  every `channel_regs_t` (new relays of the same family and the route's direction token, widths an EXACT cover of the
+  bits; a width the library lacks is requested by name in `masters_needed`, never a wider relay with open or tied
+  inputs), a block segment through `ft<k>_i/_o` (+ `ft<k>_ck_i/_ck_o`), then B's inputs and the side tails. Static
+  inputs are copied from the nearest dropped relay; a station-local register is re-created per new stage on the clock
+  arriving at that stage. Parallel chains of one lane (S81 4 x 276 b) share one ft path: their bits fill the path in
+  order and the first chain's clock clocks the block's stations; all chains continue on its ck_o.
+- Bit order is orientation-safe: a port whose bit order runs toward decreasing die coordinate under the instance
+  orientation (MX/MY/R180/...) is mapped die rank r -> bit n-1-r (`port_flipped`), so lane bit j sits on the same die
+  track rank in every block and stage, and src bit k always reaches dst bit k (`test_die_eco.py` reversed-bus tests).
+- `die_eco.tcl` uses the odb Tcl API only, then destroys the dropped relays, the dead station-local registers and the
+  dead buffers, and prints `OT_ECO_DROPPED / OT_ECO_NEW / OT_ECO_OPEN_INPUTS / OT_ECO_UNDRIVEN` (both must be 0).
+  `--blocks-as-wire` skips the block ports (validates the ECO on a die whose abstracts lack ft pins); `STAND_IN=1`
+  clones a missing relay width as a pin-only abstract for validation.
 
 ## 5. checks.py (GRT probe harness; every probe writes DIR/run.sh + probe.tcl, --run executes it -> DIR/grt.json)
 

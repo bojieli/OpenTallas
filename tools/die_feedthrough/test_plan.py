@@ -71,3 +71,19 @@ def test_plan_forbidden_hard_ip():
     lane = js["lanes"][0]
     assert all(s["block"] != "A" for s in lane["segments"])
     assert not os.path.exists(os.path.join(p, "ftspec", "A.json"))
+
+
+def test_legalise_ports_no_overlap():
+    import plan
+    sp = dict(ports=[dict(name="ft0_i", path=0, dir="input", face="W", lo=10.0, hi=30.0, bits=30),
+                     dict(name="ft0_o", path=0, dir="output", face="E", lo=10.0, hi=30.0, bits=30),
+                     dict(name="ft1_i", path=1, dir="input", face="W", lo=20.0, hi=40.0, bits=30),
+                     dict(name="ft2_i", path=2, dir="input", face="W", lo=90.0, hi=99.0, bits=10)])
+    mx, tot, over = plan.legalise_ports(sp, 50.0, 100.0, {True: 0.08, False: 0.08})
+    w = sorted((p["lo"], p["hi"]) for p in sp["ports"] if p["face"] == "W")
+    assert all(a[1] <= b[0] + 1e-6 for a, b in zip(w, w[1:])), w
+    assert all(0 <= lo and hi <= 100.0 + 0.08 for lo, hi in w) and not over and mx <= 10.0
+    e = next(p for p in sp["ports"] if p["name"] == "ft0_o")
+    assert (e["lo"], e["hi"]) == (10.0, 30.0)          # alone on its face: not moved
+    sp["ports"].append(dict(name="ft3_i", path=3, dir="input", face="W", lo=0.0, hi=60.0, bits=60))
+    assert plan.legalise_ports(sp, 50.0, 100.0, {True: 0.08, False: 0.08})[2] == [("W", 1.09)]

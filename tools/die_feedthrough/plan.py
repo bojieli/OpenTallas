@@ -132,6 +132,78 @@ class Tracks:
         g[i0:i1 + 1, j:j + ntr] = True
 
 
+def pack_1d(items, lo, hi):
+    """Abacus-style 1-D legalisation: items [(desired_centre, width, key)] -> {key: centre}; no two items overlap,
+    all inside [lo, hi] when the total width fits (else they are spread evenly over the span and overlap is
+    reported by the caller).  Order by desired centre is kept, total displacement is minimised per cluster."""
+    its = sorted(items, key=lambda t: t[0])
+    total = sum(w for _, w, _ in its)
+    if total > hi - lo:
+        sc = (hi - lo) / total if total else 1.0
+        out, x = {}, lo
+        for c, w, k in its:
+            out[k] = x + w * sc / 2
+            x += w * sc
+        return out
+    clusters = []      # [start, width, sum of (desired_left - offset), n, members[(key, offset, width)]]
+    for c, w, k in its:
+        clusters.append([c - w / 2, w, c - w / 2, 1, [(k, 0.0, w)]])
+        while True:
+            cl = clusters[-1]
+            cl[0] = min(max(cl[2] / cl[3], lo), hi - cl[1])
+            if len(clusters) > 1 and clusters[-2][0] + clusters[-2][1] > cl[0] + 1e-9:
+                pv = clusters[-2]
+                for kk, off, ww in cl[4]:
+                    pv[4].append((kk, off + pv[1], ww))
+                pv[2] += cl[2] - pv[1] * cl[3]
+                pv[3] += cl[3]
+                pv[1] += cl[1]
+                clusters.pop()
+                continue
+            break
+    out = {}
+    for st, _, _, _, mem in clusters:
+        for k, off, w in mem:
+            out[k] = st + off + w / 2
+    return out
+
+
+def legalise_ports(sp, W, H, pitch):
+    """make the ft ports of one block non-overlapping on each face (FT-TOOL priority 2): every face is a 1-D
+    resource; its ports are packed (pack_1d) as close to their band coordinate as the face allows, shifts snapped to
+    the layer pitch.  A straight path whose two faces have the same conflicts gets the same shift on both and stays
+    straight; otherwise its in and out ports may shift differently (the ft corridor of the contract covers the jog
+    between the two pin ranges inside the block).  -> (max shift um, sum of bit-um shifted)."""
+    by_face = defaultdict(list)
+    for p in sp["ports"]:
+        by_face[p["face"]].append(p)
+    mx = tot = 0.0
+    over = []
+    for face, ps in by_face.items():
+        horiz = face in ("W", "E")
+        span = H if horiz else W
+        pk = pitch[horiz]
+        cand = [((p["lo"] + p["hi"]) / 2, p["hi"] - p["lo"], i) for i, p in enumerate(ps)]
+        need = sum(w for _, w, _ in cand)
+        if need > span:
+            over.append((face, round(need / span, 2)))
+        pos = pack_1d(cand, 0.0, span)
+        prev_hi = -1e18
+        for c, w, i in sorted(cand, key=lambda t: pos[t[2]]):
+            d = round((pos[i] - c) / pk) * pk
+            if need <= span and c - w / 2 + d < prev_hi - 1e-9:    # pitch snapping must not re-create an overlap
+                d += math.ceil((prev_hi - (c - w / 2 + d)) / pk - 1e-9) * pk
+            prev_hi = c + w / 2 + d
+            if abs(d) < 1e-9:
+                continue
+            p = ps[i]
+            p["lo"], p["hi"] = round(p["lo"] + d, 3), round(p["hi"] + d, 3)
+            p["legal_shift_um"] = round(d, 3)
+            mx = max(mx, abs(d))
+            tot += abs(d) * p["bits"]
+    return mx, tot, over
+
+
 def dedupe(pts):
     out = []
     for p in pts:
@@ -188,7 +260,7 @@ def where(t, blocks_on_path):
 
 def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", ft_clock="block",
         kinds=("data", "ctl"), forbid_re=FORBID_RE, slot_um=0.0, occupancy=0.6, max_shift_um=1500.0, png=True,
-        min_track_bits=8, band_jogs=False, variant_base=None,
+        min_track_bits=8, band_jogs=False, variant_base=None, mark_jogs=False, legalise=True, corridor=None,
         **over):
     t0 = time.time()
     cen = load_census(census_path)
@@ -196,6 +268,7 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
     if over.get("reach_um") is None:
         cfg["reach_um"] = cen["summary"]["reach_um"]
     reach, rep = cfg["reach_um"], cfg["rep_um"]
+    side_b = int(cfg.get("side_bits", 0))     # chained side signals (eb->ea enable) that ride as extra ft bits
     dump = Dump(dump_dir)
     ftl = tuple(cen["summary"].get("ft_layers") or cfg["ft_layers"])
     lay_h, pitch_h = ft_layer(dump, ftl, True)
@@ -203,6 +276,11 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
     fre = re.compile(forbid_re, re.I) if forbid_re else None
 
     blocks = {b["inst"]: b for b in cen["blocks"]}
+    pol = None
+    if corridor:
+        import corridors
+        pol = corridors.make_policy(corridor, die, blocks, dump, cfg, dict(
+            groups=cen["groups"], occupancy=occupancy, ft_clock=ft_clock, kinds=kinds, forbid_re=forbid_re))
     forbidden = set()
     for n, b in blocks.items():
         ms = [b["master"]] + (b.get("member_masters") or [])
@@ -242,6 +320,15 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
             broadcast.add((si, sb))
     trunks = defaultdict(list)      # (src, src_bus, horiz) -> [(c, ntr)]: first leg of a broadcast / tap tree
 
+    def pband(horiz, c0, ntr, a, b, skey):
+        """main-leg band: the corridor policy's slot when it has one (marked, never overflow), else place()."""
+        if pol is not None:
+            c = pol.band(g, horiz, c0, ntr, a, b)
+            if c is not None:
+                tr.mark(horiz, c, ntr, a, b)
+                return c, False
+        return place(horiz, c0, ntr, a, b, skey)
+
     def place(horiz, c0, ntr, a, b, skey, shift=None):
         """the first leg out of a source bus reuses an existing band of the same source (a broadcast or tapped bus
         shares its trunk: those bits are on the wire once) when one is within max_shift and wide enough."""
@@ -262,6 +349,8 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
         orders = ("HV",) if policy == "row" else ("HV", "VH")
         if policy == "row":
             orders = ("HV", "VH")   # VH only as the fallback when HV hits hard IP
+        if pol is not None:
+            orders = tuple(pol.route_orders(g) or orders)
         best = None
         for oi, order in enumerate(orders):
             pts = geom.l_route(sp, dp, order)
@@ -293,29 +382,39 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
                     face_load[(rid, f)] += g["bits"]
         # track bands
         ovf = False
-        ntr = n_tracks(g["bits"], occupancy, ft_clock)
+        ntr = n_tracks(g["bits"] + side_b, occupancy, ft_clock)
         of3 = of4 = False
         if g["bits"] < min_track_bits:      # thin control lanes keep their natural coordinate
             of1 = of2 = False
             y1, x2, x1, y2 = sp[1], dp[0], sp[0], dp[1]
             pts = dedupe(geom.l_route(sp, dp, order))
         elif order == "HV":
-            y1, of1 = place(True, sp[1], ntr, sp[0], dp[0], skey)
-            x2, of2 = place(False, dp[0], ntr, y1, dp[1], None)
+            y1, of1 = pband(True, sp[1], ntr, sp[0], dp[0], skey)
+            x2, of2 = pband(False, dp[0], ntr, y1, dp[1], None)
             # end jogs (pin -> band) get their own bands so lanes leaving one pin do not stack on one track
             xj, of3 = (place(False, sp[0], ntr, sp[1], y1, None, JOG_SHIFT_UM) if band_jogs and abs(y1 - sp[1]) > JOG_MIN_UM
                        else (sp[0], False))
             ye, of4 = (place(True, dp[1], ntr, x2, dp[0], None, JOG_SHIFT_UM) if band_jogs and abs(x2 - dp[0]) > JOG_MIN_UM
                        else (dp[1], False))
             pts = dedupe([sp, (xj, sp[1]), (xj, y1), (x2, y1), (x2, ye), (dp[0], ye), dp])
+            if pol is not None:
+                pts = pol.refine(g, pts) or pts
+            if mark_jogs and not band_jogs:     # pin -> band jogs keep the pin coordinate but reserve their tracks
+                tr.mark(False, sp[0], ntr, sp[1], y1)
+                tr.mark(True, dp[1], ntr, x2, dp[0])
         else:
-            x1, of1 = place(False, sp[0], ntr, sp[1], dp[1], skey)
-            y2, of2 = place(True, dp[1], ntr, x1, dp[0], None)
+            x1, of1 = pband(False, sp[0], ntr, sp[1], dp[1], skey)
+            y2, of2 = pband(True, dp[1], ntr, x1, dp[0], None)
             yj, of3 = (place(True, sp[1], ntr, sp[0], x1, None, JOG_SHIFT_UM) if band_jogs and abs(x1 - sp[0]) > JOG_MIN_UM
                        else (sp[1], False))
             xe, of4 = (place(False, dp[0], ntr, y2, dp[1], None, JOG_SHIFT_UM) if band_jogs and abs(y2 - dp[1]) > JOG_MIN_UM
                        else (dp[0], False))
             pts = dedupe([sp, (sp[0], yj), (x1, yj), (x1, y2), (xe, y2), (xe, dp[1]), dp])
+            if pol is not None:
+                pts = pol.refine(g, pts) or pts
+            if mark_jogs and not band_jogs:
+                tr.mark(True, sp[1], ntr, sp[0], x1)
+                tr.mark(False, dp[0], ntr, y2, dp[1])
         ovf = of1 or of2 or of3 or of4
         n_overflow += int(ovf)
         L = geom.polyline_len(pts)
@@ -362,12 +461,17 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
             def port(name, d, p, face_die):
                 mx, my = inv_xform(p[0], p[1], W, H, orient, x0, y0)
                 face = geom.nearest_face(mx, my, 0, 0, W, H)
+                if face_die:    # the segment's own die face, mapped to the master frame (corner points are ambiguous)
+                    vx, vy = {"W": (-1, 0), "E": (1, 0), "S": (0, -1), "N": (0, 1)}[face_die]
+                    qx, qy = inv_xform(p[0] + vx, p[1] + vy, W, H, orient, x0, y0)
+                    dx, dy = qx - mx, qy - my
+                    face = ("E" if dx > 0 else "W") if abs(dx) > abs(dy) else ("N" if dy > 0 else "S")
                 horiz = face in ("W", "E")
                 pitch = pitch_h if horiz else pitch_v
-                width = n_tracks(lane["bits"], occupancy, ft_clock) * pitch     # = the lane's track band
+                width = n_tracks(lane["bits"] + side_b, occupancy, ft_clock) * pitch     # = the lane's track band
                 off = my if horiz else mx
                 return dict(name=name, path=k, dir=d, face=face, lo=round(off - width / 2, 3),
-                            hi=round(off + width / 2, 3), layer=lay_h if horiz else lay_v, bits=lane["bits"],
+                            hi=round(off + width / 2, 3), layer=lay_h if horiz else lay_v, bits=lane["bits"] + side_b,
                             die_xy=p)
             pi = port(f"ft{k}_i", "input", s["p_in"], s["face_in"])
             po = port(f"ft{k}_o", "output", s["p_out"], s["face_out"])
@@ -378,13 +482,24 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
                 regs_xy.append([round(v, 1) for v in inv_xform(p[0], p[1], W, H, orient, x0, y0)])
             sp_["paths"].append(dict(path=k, lane=lane["id"], src=f"{lane['src']}/{lane['src_bus']}",
                                      dst=f"{lane['dst']}/{lane['dst_bus']}", **{"in": pi["name"], "out": po["name"]},
-                                     bits=lane["bits"], stages=s["stages"], len_um=s["len_um"], rep_sites=s["reps"],
+                                     bits=lane["bits"] + side_b, data_bits=lane["bits"], side_bits=side_b, stages=s["stages"], len_um=s["len_um"], rep_sites=s["reps"],
                                      regs_um=regs_xy))
             del horiz_in
     os.makedirs(os.path.join(out_dir, "ftspec"), exist_ok=True)
     variants = defaultdict(lambda: defaultdict(list))
+    legal_max = legal_bitum = 0.0
+    faces_over = []
     for rid, sp_ in specs.items():
         sp_.pop("_trunks", None)
+        pvar = pol.variant_of(rid, blocks[rid]["master"], sp_["ports"], sp_["paths"]) if pol is not None else None
+        owned = pvar is not None
+        if legalise and not owned:      # corridor-owned frames keep their quantised slots
+            inst_ = dump.insts.get(rid)
+            W_, H_ = (dump.masters[inst_.master].w, dump.masters[inst_.master].h) if inst_ is not None and \
+                inst_.master in dump.masters else (blocks[rid]["w"], blocks[rid]["h"])
+            m_, t_, o_ = legalise_ports(sp_, W_, H_, {True: pitch_h, False: pitch_v})
+            legal_max, legal_bitum = max(legal_max, m_), legal_bitum + t_
+            faces_over += [f"{rid}:{f}x{r}" for f, r in o_]
         b = blocks[rid]
         inst = dump.insts.get(rid)
         sig = sorted((p["dir"], p["face"], round(p["lo"], 1), round(p["hi"], 1), p["layer"], p["bits"])
@@ -393,6 +508,7 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
         master = b["master"]
         base = re.sub(variant_base[0], variant_base[1], master) if variant_base else master
         variant = f"{base}__ft{h}"
+        variant = pvar or variant
         variants[base][variant].append(rid)
         W, H = (dump.masters[inst.master].w, dump.masters[inst.master].h) if inst is not None and \
             inst.master in dump.masters else (b["w"], b["h"])
@@ -430,8 +546,13 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
                    channel_relays_new=sum(l.get("channel_stages", 0) for l in out_lanes if not l["keep_channel"]),
                    lanes_with_ft=sum(1 for l in out_lanes if l["segments"]), host_blocks=len(specs),
                    variants=sum(len(v) for v in variants.values()), masters_hosting=len(variants),
-                   track_overflow_lanes=n_overflow, port_overlap_bits=overlap_bits, max_stages_new=max((l["stages_new"] for l in out_lanes), default=0),
+                   track_overflow_lanes=n_overflow, port_overlap_bits=overlap_bits,
+                   port_legalise_max_shift_um=round(legal_max, 2), port_legalise_bit_um=round(legal_bitum),
+                   faces_over_capacity=len(faces_over), faces_over_capacity_top=sorted(
+                       faces_over, key=lambda t: -float(t.rsplit("x", 1)[1]))[:20], max_stages_new=max((l["stages_new"] for l in out_lanes), default=0),
                    seconds=round(time.time() - t0, 1))
+    if pol is not None:
+        summary["corridors"] = pol.report()
     js = dict(schema=SCHEMA, summary=summary, census=str(census_path),
               variants={m: dict(v) for m, v in variants.items()}, lanes=out_lanes)
     with open(os.path.join(out_dir, f"{die}_plan.json"), "w") as f:
@@ -505,12 +626,16 @@ def main(argv=None):
     ap.add_argument("--variant-base", help="'REGEX=>REPL' maps a master to its base master for variant keys "
                     "(S81 per-instance stand-ins, e.g. '^rv_f_\\d[LR]\\d\\d$=>col_frame')")
     ap.add_argument("--band-jogs", action="store_true", help="give pin->band jogs their own bands (more overflow)")
+    ap.add_argument("--corridor", help="corridor policy (corridors.py), e.g. s81-shifted")
+    ap.add_argument("--no-legalise", action="store_true", help="keep overlapping port bands (report only)")
+    ap.add_argument("--mark-jogs", action="store_true", help="reserve the pin -> band jog tracks (fewer overlaps, more overflow)")
+    ap.add_argument("--min-track-bits", type=int, default=8, help="lanes thinner than this keep their natural coordinate")
     ap.add_argument("--no-png", action="store_true")
     a = ap.parse_args(argv)
     ft_clock = a.ft_clock or ("forwarded" if a.die == "s81" else "block")
     js = run(a.die, a.census, a.dump, a.out, policy=a.policy, ft_reg=a.ft_reg, ft_clock=ft_clock,
              kinds=tuple(a.kinds.split(",")), forbid_re=a.forbid_re, slot_um=a.slot_um, occupancy=a.occupancy,
-             max_shift_um=a.max_shift_um, png=not a.no_png, band_jogs=a.band_jogs,
+             max_shift_um=a.max_shift_um, png=not a.no_png, band_jogs=a.band_jogs, min_track_bits=a.min_track_bits, mark_jogs=a.mark_jogs, legalise=not a.no_legalise, corridor=a.corridor,
              variant_base=tuple(a.variant_base.split('=>', 1)) if a.variant_base else None, reach_um=a.reach_um, rep_um=a.rep_um)
     print(json.dumps(js["summary"], indent=1))
 

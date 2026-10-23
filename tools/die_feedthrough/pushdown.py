@@ -44,7 +44,8 @@ contract -> DIR/<variant>.fastroute.tcl (ORFS FASTROUTE_TCL), DIR/<variant>.cont
 check    -> check_abstract(lef_text, spec): FAIL if an OBS on an ft layer covers > max_cover of the outline (stripes
    narrower than the --allow-stripes width are excluded and only fail above 1.25 x width/pitch density), or if an ft
    pin bit is missing, has no shape on its spec layer, is not on its spec face or lies outside [lo, hi].
-die      -> DIR/die_eco.json + DIR/die_eco.tcl (BEST-EFFORT SKELETON): per pushed-down lane (plan lanes[] with
+die      -> with --chains: the full die ECO of die_eco.py (see its docstring; README section 4b).
+            without (legacy): DIR/die_eco.json + DIR/die_eco.tcl (BEST-EFFORT SKELETON): per pushed-down lane (plan lanes[] with
    keep_channel false and block segments) delete the lane's channel relays (lanes[].relays, the census longest chain),
    delete the inter-relay nets, and chain src nets -> blk1/ft_i .. blk1/ft_o -> new net -> blk2/ft_i ... -> dst nets
    with OpenROAD connect_pin / make_net / delete_instance / delete_net.  die.v is only READ (net names at the relay
@@ -916,11 +917,27 @@ def main(argv=None):
     d = sub.add_parser("die")
     d.add_argument("spec_dir")
     d.add_argument("--plan", required=True)
-    d.add_argument("--die-verilog", required=True)
+    d.add_argument("--die-verilog", help="legacy skeleton (no --chains): relay pin nets read from die.v")
+    d.add_argument("--chains", help="chains.json from chains.sh (bit-exact; enables the full ECO in die_eco.py)")
+    d.add_argument("--dump", help="die dump dir (relay master inventory), with --chains")
+    d.add_argument("--die", help="dies.py key (relay regex), with --chains")
+    d.add_argument("--blocks-as-wire", action="store_true", help="skip block ft ports (abstracts without ft pins)")
     d.add_argument("--out", required=True)
     a = ap.parse_args(argv)
 
+    if a.cmd == "die" and a.chains:
+        import dies
+        import die_eco
+        inv = die_eco.relay_inventory(a.dump, dies.get(a.die)["relay_re"])
+        js, tcl = die_eco.gen(a.spec_dir, load_json(a.plan), load_json(a.chains), inv, blocks_as_wire=a.blocks_as_wire)
+        _write(os.path.join(a.out, "die_eco.json"), js)
+        _write(os.path.join(a.out, "die_eco.tcl"), tcl)
+        print(f"relays dropped {js['relays_dropped']}, new {js['relays_new']}, lanes {len(js['lanes'])}, "
+              f"with problems {js['lanes_with_problems']}")
+        return 0
     if a.cmd == "die":
+        if not a.die_verilog:
+            ap.error("die: --chains (full ECO) or --die-verilog (legacy skeleton)")
         js, tcl = gen_die_eco(a.spec_dir, load_json(a.plan), a.die_verilog)
         _write(os.path.join(a.out, "die_eco.json"), js)
         _write(os.path.join(a.out, "die_eco.tcl"), tcl)
