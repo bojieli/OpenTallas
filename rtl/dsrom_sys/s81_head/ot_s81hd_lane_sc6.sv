@@ -24,9 +24,19 @@ module ot_s81hd_lane (
     output wire [3:0]    flt
 );
     wire r_lane, r_misc;
-    reg rxen;
+    // rxen = lane rx word valid (set one edge after the control child's r_misc release).  The lane's rx[0] pin sits on
+    // its W face, ~1.05 mm (around the lane's S edge) from r_misc at the adapter column: one unlanded hop was -383 /
+    // -405 ps (STW-S81c-DIE4-LANE3 10-22).  LANDED: rxen stays beside r_misc; two relay flops carry it to the W face, each
+    // cleared asynchronously by its upstream neighbour (relay-tree style: every reset / data hop is short and registered,
+    // assertion still ripples at once).  Reset-only cost: rx[0] rises 2 edges later after reset release (booked
+    // MU.S81.CAL with the lane's release depth); no port, protocol or data-edge change.
+    (* keep = "true", dont_touch = "true" *) reg rxen;
+    (* keep = "true", dont_touch = "true" *) reg rxen_m;
+    (* keep = "true", dont_touch = "true" *) reg rxen_w;
     always @(posedge ck or negedge r_misc) if (!r_misc) rxen <= 1'b0; else rxen <= 1'b1;
-    wire [514:0] lrx = {rx[512], rx[513], rx[511:0], rxen};
+    always @(posedge ck or negedge rxen) if (!rxen) rxen_m <= 1'b0; else rxen_m <= 1'b1;
+    always @(posedge ck or negedge rxen_m) if (!rxen_m) rxen_w <= 1'b0; else rxen_w <= 1'b1;
+    wire [514:0] lrx = {rx[512], rx[513], rx[511:0], rxen_w};
     wire lo_v, lo_r, li_v, li_r; wire [552:0] lo_d, li_d; wire [2:0] lf;
     dsfd_coll_lane_w_safe8_ntf u_ln (.ck(ck), .rs(r_lane), .chb(chb), .rx(lrx), .tx(tx), .lo_v(lo_v), .lo_r(lo_r),
         .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .flt(lf));
