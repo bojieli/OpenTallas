@@ -169,6 +169,10 @@ module qkd_kv_es_fan_root2_b_nc32 #(parameter integer MUT = 0, parameter integer
             h <= {use_b, hn}; h_e <= {use_b, hn};
             if (ev_ph1 || c_bad || (bt_x && MUT != 1)) fault <= 1'b1;
         end
+`ifndef SYNTHESIS
+ // bench self-check: every E-face copy equals its original on every edge (a copy mutant stops the bench)
+ always @(negedge ck) if (h_e !== h) $fatal(1, "qkd_kv_es_fan_root2_b_nc32: E-face copy differs from its original");
+`endif
 endmodule
 
 module qkd_static_kv_boot_dispatch_nc32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer SRQ=0,parameter integer RS=24,parameter integer DSTG=0)(
@@ -496,6 +500,10 @@ module qkd_static_kv_boot_dispatch_nc32 #(parameter integer MUT=0,parameter inte
   end
  end
  end
+`ifndef SYNTHESIS
+ // bench self-check: every E-face copy equals its original on every edge (a copy mutant stops the bench)
+ always @(negedge ck) if (group_qe !== group_q || ctl_qe !== ctl_q) $fatal(1, "qkd_static_kv_boot_dispatch_nc32: E-face copy differs from its original");
+`endif
 endmodule
 
 module qkd_static_kv_boot_dispatch_mu_nc32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer MU=1,parameter integer WMUT=0,parameter integer SRQ=0,parameter integer DSTG=0)(
@@ -1032,5 +1040,9 @@ module qkd_static_kv_layer_programme_nc32 #(parameter integer MUT=0,parameter in
 `ifndef SYNTHESIS
  initial if(MU!=1)$fatal(1,"qkd_static_kv_layer_programme_s32: MU must be 1");
  initial if(FC<2||RS<24||RC<2)$fatal(1,"qkd_static_kv_layer_programme_s32: FC >= 2, RS >= 24, RCOPIES >= 2");
+`endif
+`ifndef SYNTHESIS
+ // bench self-check: every E-face copy equals its original on every edge (a copy mutant stops the bench)
+ always @(negedge ck) if ({ctrl_go_e, kgo_e, vgo_e, stage_oe, om_e_ep, om_e_ct} !== {ctrl_go, kgo, vgo, stage_o, om[0+:16], om[52+:14]}) $fatal(1, "qkd_static_kv_layer_programme_nc32: E-face copy differs from its original");
 `endif
 endmodule

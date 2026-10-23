@@ -179,7 +179,15 @@ def main():
                         dict(name='ctl_mut_tl', cmd='bash rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench kb_n_m_tl',
                              expect='fail', threads=8, peak_ram_gb=8, needs=['verilator'], pass_regex='^C32 kb_n_m_tl rc=0: PASS',
                              fail_regex='^C32 kb_n_m_tl rc=.*FAIL MU_KV_BOOT',
-                             fail_witness='results/rtl/qwen_kv_die/kdie5_rtl_1022/ctl_kb_n_m_tl.stdout')])
+                             fail_witness='results/rtl/qwen_kv_die/kdie5_rtl_1022/ctl_kb_n_m_tl.stdout'),
+                        dict(name='ctl_mut_face_boot', cmd='bash rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench tile_n_m_e',
+                             expect='fail', threads=8, peak_ram_gb=8, needs=['verilator'], pass_regex='^C32 tile_n_m_e rc=0: PASS',
+                             fail_regex='^C32 tile_n_m_e rc=.*(FAIL|E-face copy differs)',
+                             fail_witness='results/rtl/qwen_kv_die/kdie5_rtl_1022/ctl_tile_n_m_e.stdout'),
+                        dict(name='ctl_mut_face_lprg', cmd='bash rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench kb_n_m_l',
+                             expect='fail', threads=8, peak_ram_gb=8, needs=['verilator'], pass_regex='^C32 kb_n_m_l rc=0: PASS',
+                             fail_regex='^C32 kb_n_m_l rc=.*(FAIL|E-face copy differs)',
+                             fail_witness='results/rtl/qwen_kv_die/kdie5_rtl_1022/ctl_kb_n_m_l.stdout')])
     grant = dict(schema=M6.SCHEMA, master=M,
                  granted_by='STEWARD-QKc 2026-10-22 decision (b) (KDIE5-TV ctl_r1 grant, re-issued for the nc32 body; owner rule: M6 pin grants allowed when the tile does not grow)',
                  reason='Pin-density grant, NOT growth: the relm frame W / E faces carry 2524 pins each on 172.776 um (14.6 / um on '

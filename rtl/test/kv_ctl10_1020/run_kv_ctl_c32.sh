@@ -45,7 +45,7 @@ case "$CASE" in
  tile_n) C32=$D/qkd_kvs_ctl_nc32.sv;;   # KDIE5-RTL 10-22: the release-point standalone native32 ctl (OT_KV_CTL_NC32)
  kb_n) KIND=kb; C32=$D/qkd_kvs_ctl_nc32.sv;;
  tile_n_m_e) C32=$D/qkd_kvs_ctl_nc32.sv; MF=$D/qkd_kv_ctl_nc32_face.sv; FROM="ctl_qe<=ctl_n;"; TO="ctl_qe<=ctl_n^72'd1;";;   # E-face copy mutant
- tile_n_m_l) C32=$D/qkd_kvs_ctl_nc32.sv; MF=$D/qkd_kv_ctl_nc32_face.sv; FROM="kgo_e<=|e_k;"; TO="kgo_e<=|e_v;";;   # E-face kgo copy mutant
+ kb_n_m_l) KIND=kb; C32=$D/qkd_kvs_ctl_nc32.sv; MF=$D/qkd_kv_ctl_nc32_face.sv; FROM="kgo_e<=|e_k;"; TO="kgo_e<=|e_v;";;   # E-face kgo copy mutant (layer programme runs only in the kb bench)
  kb_n_m_tl) KIND=kb; C32=$D/qkd_kvs_ctl_nc32.sv; MF=$D/qkd_kv_ctl_nc32_face.sv; FROM=".a(lsrc[LO+:W])"; TO=".a((gs==7)?lsrc[LO+16+:W]:lsrc[LO+:W])";;
  first_a) XI="--x-initial unique"; RR="+verilator+rand+reset+2";;
  m_tl) MF=$LP; FROM=".a(lsrc[LO+:W])"; TO=".a((gs==7)?lsrc[LO+16+:W]:lsrc[LO+:W])";;
@@ -55,7 +55,7 @@ case "$CASE" in
  kb_m_tl) KIND=kb; MF=$LP; FROM=".a(lsrc[LO+:W])"; TO=".a((gs==7)?lsrc[LO+16+:W]:lsrc[LO+:W])";;
  *) echo "C32 $CASE: unknown case"; exit 2;;
 esac
-case "$CASE" in tile_i|kb_i|kb_i_m_tl|tile_n|kb_n|kb_n_m_tl|tile_n_m_e|tile_n_m_l) export C32_DSTG=1;; esac
+case "$CASE" in tile_i|kb_i|kb_i_m_tl|tile_n|kb_n|kb_n_m_tl|tile_n_m_e|kb_n_m_l) export C32_DSTG=1;; esac
 W="$OUT/src_$CASE"; rm -rf "$W"; mkdir -p "$W"
 cpf(){ mkdir -p "$W/$(dirname "$1")"; cp "$ROOT/$1" "$W/$1"; }
 EXTRA=""

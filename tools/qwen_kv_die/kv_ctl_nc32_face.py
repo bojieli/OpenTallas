@@ -73,6 +73,7 @@ def fanr(misc):
     t = one(t, "        if (!rs_q) begin h <= 784'd0; fault <= 1'b0; end\n        else begin\n            h <= {use_b, hn};\n",
             "        if (!rs_q) begin h <= 784'd0; h_e <= 784'd0; fault <= 1'b0; end\n        else begin\n"
             "            h <= {use_b, hn}; h_e <= {use_b, hn};\n", 'fanr h assign')
+    t = one(t, 'endmodule\n', '`ifndef SYNTHESIS\n // bench self-check: every E-face copy equals its original on every edge (a copy mutant stops the bench)\n always @(negedge ck) if (h_e !== h) $fatal(1, "qkd_kv_es_fan_root2_b_nc32: E-face copy differs from its original");\n`endif\nendmodule\n', 'fanr check')
     return t
 
 
@@ -95,6 +96,7 @@ def boot(bt):
             ' assign controller_addr=ctl_q[71:64];assign controller_data=ctl_q[63:0];\n'
             ' assign group_addr_e=group_qe[71:64];assign group_data_e=group_qe[63:0];\n'
             ' assign controller_addr_e=ctl_qe[71:64];assign controller_data_e=ctl_qe[63:0];\n', 'disp assigns')
+    d = one(d, 'endmodule\n', '`ifndef SYNTHESIS\n // bench self-check: every E-face copy equals its original on every edge (a copy mutant stops the bench)\n always @(negedge ck) if (group_qe !== group_q || ctl_qe !== ctl_q) $fatal(1, "qkd_static_kv_boot_dispatch_nc32: E-face copy differs from its original");\n`endif\nendmodule\n', 'disp check')
     m = module(bt, 'qkd_static_kv_boot_dispatch_mu_c32')
     m = one(m, 'module qkd_static_kv_boot_dispatch_mu_c32 #(', 'module qkd_static_kv_boot_dispatch_mu_nc32 #(', 'mu name')
     m = one(m, ' output wire[127:0]controller_we,output wire[7:0]controller_addr,output wire[63:0]controller_data,\n',
@@ -137,6 +139,7 @@ def lprg(lp):
     t = one(t, 'if(!rn)begin om<=0;oag<=0;otc<=0;end else begin om<=omx;oag<=oax;otc<=otx;end\n',
             'if(!rn)begin om<=0;oag<=0;otc<=0;om_e_ep<=0;om_e_ct<=0;end else begin om<=omx;oag<=oax;otc<=otx;'
             'om_e_ep<=omx[0+:16];om_e_ct<=omx[52+:14];end\n assign epoch_e=om_e_ep;assign ctx_t_e=om_e_ct;\n', 'om_e')
+    t = one(t, 'endmodule\n', '`ifndef SYNTHESIS\n // bench self-check: every E-face copy equals its original on every edge (a copy mutant stops the bench)\n always @(negedge ck) if ({ctrl_go_e, kgo_e, vgo_e, stage_oe, om_e_ep, om_e_ct} !== {ctrl_go, kgo, vgo, stage_o, om[0+:16], om[52+:14]}) $fatal(1, "qkd_static_kv_layer_programme_nc32: E-face copy differs from its original");\n`endif\nendmodule\n', 'lprg check')
     return t
 
 
