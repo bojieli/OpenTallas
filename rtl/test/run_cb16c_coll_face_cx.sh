@@ -19,6 +19,9 @@ SRC=(rtl/test/tb_cb16c_coll_face_cx.sv rtl/test/tb_coll_static_face.sv
 case $PROF in
   s0) G=(-GHARD=1 -GPHY=350 -GL0=381 -GR=0 -GPEER_R=5) ;;
   p)  G=(-GHARD=2 -GPHY=20 -GL0=56 -GR=5 -GPEER_R=5) ;;
+  s1) G=(-GHARD=3 -GPHY=339 -GL0=381 -GR=0 -GPEER_R=0) ;;
+  s2) G=(-GHARD=4 -GPHY=349 -GL0=381 -GR=5 -GPEER_R=0) ;;
+  r)  G=(-GHARD=1 -GPHY=20 -GL0=56 -GR=5 -GPEER_R=5 -GFW=514) ;;
   *) echo "bad profile $PROF"; exit 2 ;;
 esac
 DEF=(-DOT_COLL_REGIONAL -DOT_COLL_BANK_LOCAL); CASES="0:0 1:0 0:2 1:2"

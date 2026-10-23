@@ -40,7 +40,27 @@ COUNTS = {'s0': {'codec': 3920, 'phy': 1426, 'cal': 715, 'lcal': 720, 'tx': 1565
           'p': {'codec': 3920, 'phy': 1426, 'cal': 166, 'lcal': 167, 'tx': 1565, 'rx': 1018}}
 
 
+# CB16c-COLL2-SR: R-face masters (514 = 2 x 257 W, 565 = 5 x 113 E): outline height / pin span per width, bench profile
+SLICE_H = {257: (145.8, [2.16, 143.64], 'r'), 113: (86.4, [2.16, 84.24], 'r')}
+
+
 def slice_spec(w):
+    if w in SLICE_H:
+        s = slice_spec(182)
+        h, pr, prof = SLICE_H[w]
+        top = f'qfd_coll_eslice{w}'
+        s = json.loads(json.dumps(s).replace('qfd_coll_eslice182', top).replace('qfd_cb16c_es182', f'qfd_cb16c_es{w}'))
+        s['outline'] = {'w': 21.6, 'h': h}
+        s['pin_ranges'] = {'d': pr, 'q': pr}
+        s['structural_change'] = (f'CB16c-COLL2-SR 10-22: collective face edge register slice {top} ({w} b, one stage d->q, ck N) '
+                                  'for the R face (FW 514 / PW 565) of qfd_coll_face_r_cx: W tx_data / rx_data 2 x 257 b on '
+                                  'cal_ck_t0..1 / rx_rck_r0..1; E phy_tx / phy_rx 5 x 113 b on codec0p_t0..4 / codec0p_r0..4; hardened '
+                                  f'once. Outline 21.6 x {h} ({pr[1]-pr[0]:.2f} um of pins, <= 146 um of bus); recipe 4 flop-first, '
+                                  'hold_budget die; same recipe as es182/es199.')
+        s['job'] = dict(OWNER, branch='claude/cb16c-sr-1022', tag=f'es{w}',
+                        purpose=f'CB16c-COLL2-SR: R-face edge slice {top} (ALT regional split of the COLLIO faces)',
+                        benches=[lint(top, [CX]), bench(prof, 0, 'pass', f'{WIT}/{prof}_m0.log')])
+        return s
     name = f'qfd_cb16c_es{w}'
     top = f'qfd_coll_eslice{w}'
     return {
@@ -64,7 +84,10 @@ def slice_spec(w):
 
 
 def body_spec(prof):
-    src = {'s0': 'qfd_coll_face_s0_regional7_main', 'p': 'qfd_coll_face_p_regional5_main'}[prof]
+    src = {'s0': 'qfd_coll_face_s0_regional7_main', 'p': 'qfd_coll_face_p_regional5_main',
+           # CB16c-COLL2-SR: S1 / S2 / R on the S0 regional7 frame (same 907.2 frame, 6 macros at the same sites, 12 roots)
+           's1': 'qfd_coll_face_s0_regional7_main', 's2': 'qfd_coll_face_s0_regional7_main',
+           'r': 'qfd_coll_face_s0_regional7_main'}[prof]
     name = f'qfd_cb16c_{prof}_body'
     s = json.loads((RT / src / 'spec.json').read_text().replace(f'physical/ref_tile/{src}/', f'physical/ref_tile/{name}/'))
     s['name'] = name
@@ -100,8 +123,12 @@ def body_spec(prof):
         f'(E band moved in 43.2 um), with every bus pin CLUSTERED in the window of its owning band, so each root\'s pin flops are '
         f'within one ~250-um band (was: tx_data / rx_data / phy pins spread over the whole 907-um edge on one root).')
     s['slot_change_request'] = 'body 864.0 x 907.2 inside the 907.2-square face slot of the Codex regional kits (unchanged slot)'
-    prof_args = {'s0': 's0', 'p': 'p'}[prof]
-    s['job'] = dict(OWNER, tag=f'{prof}cxb', purpose=f'CB16c-COLL: {prof.upper()} face body of the regional split (ALT)',
+    prof_args = {'s0': 's0', 'p': 'p', 's1': 's1', 's2': 's2', 'r': 'r'}[prof]
+    if prof in ('s1', 's2', 'r'):
+        s['job'] = dict(OWNER, branch='claude/cb16c-sr-1022')
+        s['structural_change'] = s['structural_change'].replace('CB16c-COLL 10-22', 'CB16c-COLL2-SR 10-22', 1) + (
+            ' R: FW 514 / PW 565 (slices es257 x2 W, es113 x5 E in qfd_coll_face_r_cx).' if prof == 'r' else '')
+    s['job'] = dict(s.get('job') if prof in ('s1', 's2', 'r') else OWNER, tag=f'{prof}cxb', purpose=f'CB16c-COLL: {prof.upper()} face body of the regional split (ALT)',
                     benches=[lint(s['top'], s['sources'], '-DOT_COLL_BANK_LOCAL -DOT_COLL_REGIONAL'),
                              bench(prof_args, 0, 'pass', f'{WIT}/{prof}_m0.log')]
                     + [bench(prof_args, m, 'fail', f'{WIT}/{prof}_m{m}.log') for m in (1, 2, 3, 4)])
@@ -124,9 +151,9 @@ def write(spec, hand=None):
 
 
 if __name__ == '__main__':
-    for w in (182, 199):
+    for w in (182, 199, 257, 113):
         write(slice_spec(w))
-    for prof in ('s0', 'p'):
+    for prof in ('s0', 'p', 's1', 's2', 'r'):
         s, src = body_spec(prof)
         land = (RT / 'qfd_coll_face_s0_regional7_main' / 'seq_landing.tcl').read_text()   # P: same geometry, S0's band method
         old = (' phy {codec0p} {864.000000 345.600000 896.400000 604.800000}',

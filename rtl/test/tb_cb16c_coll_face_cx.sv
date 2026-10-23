@@ -16,9 +16,10 @@
 // ---------------------------------------------------------------------------
 module tb_cb16c_coll_face_cx #(
     parameter integer PHY = 350, L0 = 381, R = 0, PEER_R = 5, HARD = 1,
-    parameter integer PHI = 0, PPH = 0, NW = 240, START = 80, PLD = 2, PLK = 1
+    parameter integer PHI = 0, PPH = 0, NW = 240, START = 80, PLD = 2, PLK = 1,
+    parameter integer FW = 546   // CB16c-COLL2-SR: 514 = the R face (qfd_coll_face_r_cx)
 ) ();
-    localparam integer FW = 546, PW = FW + 51, XL = 2;
+    localparam integer PW = FW + 51, XL = 2;
     localparam real T = 0.8333333;
     reg clk = 0, lck = 0, pck = 0;
     always #(T / 2) clk = ~clk;
@@ -99,6 +100,19 @@ module tb_cb16c_coll_face_cx #(
                     .PLAND(1), .PLD(PLD), .PLK(PLK)) u_face (
                     .cal_ck(clk), .cal_lck(lck), .tx_wck(clk), .tx_rck(lck), .rx_wck(lck), .rx_rck(clk),
                     .codec_ck({5{lck}}), .codec_phy_ck(pck), .rst_n(rst_n),
+                    .tx_slot(f_ts), .peer_slot(f_ps), .tx_valid(f_tv), .tx_data(f_td),
+                    .rx_valid(f_rv), .rx_data(f_rd),
+                    .phy_up(1'b1), .phy_rx_valid(prv[p][f]), .phy_rx(prx[p][f]),
+                    .phy_tx_valid(ptv[p][f]), .phy_tx(ptx[p][f]), .phy_tx_slot(ptslot[p][f]), .phy_rx_slot(prslot[p][f]),
+                    .cdc_fault(cdcf[p][f]), .epoch_abort(abort[p][f]), .fault_cause(cause[p][f]));
+            end else if (FW == 514) begin : g_dut_r
+                qfd_coll_face_r_cx #(.PHY(PHY), .L(L0 + XL), .R(RF), .PEER_R(PRF), .PLD(PLD), .PLK(PLK),
+                    .HARD(f == 0 ? HARD : 0)) u_face (
+                    .cal_ck(clk), .cal_lck(lck), .tx_wck(clk), .tx_rck(lck), .rx_wck(lck), .rx_rck(clk),
+                    .codec0(lck), .codec1(lck), .codec2(lck), .codec3(lck), .codec4(lck), .codec0p(pck), .rst_n(rst_n),
+                    .cal_ck_t0(clk), .cal_ck_t1(clk), .rx_rck_r0(clk), .rx_rck_r1(clk),
+                    .codec0p_t0(pck), .codec0p_t1(pck), .codec0p_t2(pck), .codec0p_t3(pck), .codec0p_t4(pck),
+                    .codec0p_r0(pck), .codec0p_r1(pck), .codec0p_r2(pck), .codec0p_r3(pck), .codec0p_r4(pck),
                     .tx_slot(f_ts), .peer_slot(f_ps), .tx_valid(f_tv), .tx_data(f_td),
                     .rx_valid(f_rv), .rx_data(f_rd),
                     .phy_up(1'b1), .phy_rx_valid(prv[p][f]), .phy_rx(prx[p][f]),
@@ -208,8 +222,8 @@ module tb_cb16c_coll_face_cx #(
     initial begin
         wait (sent0 == NW && sent1 == NW);
         repeat (L0 + XL + 40) @(posedge clk);
-        $display("CB16C_COLL_FACE_CX HARD=%0d PHY=%0d L0=%0d R=%0d PEER_R=%0d PHI=%0d PPH=%0d words %0d %0d | REF got %0d %0d lat %0d err %0d flt %0d unx %0d | DUT got %0d %0d lat %0d err %0d flt %0d unx %0d | lockstep cycles %0d tx frames %0d rx words %0d mismatches %0d",
-                 HARD, PHY, L0, R, PEER_R, PHI, PPH, sent0, sent1, got[0][1], got[0][0], lat_seen[0], errors[0], faults[0],
+        $display("CB16C_COLL_FACE_CX FW=%0d HARD=%0d PHY=%0d L0=%0d R=%0d PEER_R=%0d PHI=%0d PPH=%0d words %0d %0d | REF got %0d %0d lat %0d err %0d flt %0d unx %0d | DUT got %0d %0d lat %0d err %0d flt %0d unx %0d | lockstep cycles %0d tx frames %0d rx words %0d mismatches %0d",
+                 FW, HARD, PHY, L0, R, PEER_R, PHI, PPH, sent0, sent1, got[0][1], got[0][0], lat_seen[0], errors[0], faults[0],
                  unexpected[0], got[1][1], got[1][0], lat_seen[1], errors[1], faults[1], unexpected[1], lk_cmp, lk_tx, lk_rx, lk_err);
         if (errors[0] == 0 && faults[0] == 0 && unexpected[0] == 0 && got[0][0] == NW && got[0][1] == NW
             && errors[1] == 0 && faults[1] == 0 && unexpected[1] == 0 && got[1][0] == NW && got[1][1] == NW
