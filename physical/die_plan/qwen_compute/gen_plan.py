@@ -215,6 +215,12 @@ def qlen(width, dens, layers, lo=100.0, flip=False, fmax=None):
             cs = None
         ok = cs is not None
         if ok:
+            # G0 budgets usable tracks per layer, including narrow control buses.
+            # A legal pin position alone may consume the only track off the PG bands.
+            ok = all(len(range(li, width, len(layers))) <=
+                     0.6 * _S.usable_tracks(_LAYERS[ln], ln, *win)
+                     for li, ln in enumerate(layers))
+        if ok:
             j = 0
             for i in range(len(cs)):
                 while cs[i] - cs[j] > 10.0 - 1e-6:
