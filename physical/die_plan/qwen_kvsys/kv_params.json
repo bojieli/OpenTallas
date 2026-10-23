@@ -1,0 +1,83 @@
+{
+ "RESPONSE_LAT": {
+  "plan": 12,
+  "plan_min": 8,
+  "natural_asbuilt_max": 80,
+  "rtl6": 80,
+  "brief_natural": 18
+ },
+ "RL": {
+  "plan": 61,
+  "plan_min": 39,
+  "O_max": 34,
+  "WP_max": 15,
+  "rtl6": 112,
+  "brief_natural": 48
+ },
+ "F_DLY": {
+  "plan": 17,
+  "asbuilt_relays": 46,
+  "rtl6": 55,
+  "brief_natural": 14
+ },
+ "PV_LEAD": {
+  "plan": 19,
+  "asbuilt_relays": 38,
+  "rtl6": 38,
+  "brief_natural": 14
+ },
+ "PV_FIRST_INPUT_AGE": {
+  "plan": 62,
+  "note": "RL + 1"
+ },
+ "gathers": [
+  {
+   "dst": "pvw_0__u_RH_r0",
+   "port": "a0",
+   "plan_cycles": 30,
+   "asbuilt": 48
+  },
+  {
+   "dst": "pvw_0__u_RH_r0",
+   "port": "a1",
+   "plan_cycles": 30,
+   "asbuilt": 48
+  },
+  {
+   "dst": "pvw_0__u_RH_r0",
+   "port": "b0",
+   "plan_cycles": 30,
+   "asbuilt": 56
+  },
+  {
+   "dst": "pvw_0__u_RH_r0",
+   "port": "b1",
+   "plan_cycles": 30,
+   "asbuilt": 56
+  },
+  {
+   "dst": "pvw_1__u_RH_r0",
+   "port": "a0",
+   "plan_cycles": 30,
+   "asbuilt": 48
+  },
+  {
+   "dst": "pvw_1__u_RH_r0",
+   "port": "a1",
+   "plan_cycles": 30,
+   "asbuilt": 48
+  },
+  {
+   "dst": "pvw_1__u_RH_r0",
+   "port": "b0",
+   "plan_cycles": 30,
+   "asbuilt": 56
+  },
+  {
+   "dst": "pvw_1__u_RH_r0",
+   "port": "b1",
+   "plan_cycles": 30,
+   "asbuilt": 56
+  }
+ ]
+}

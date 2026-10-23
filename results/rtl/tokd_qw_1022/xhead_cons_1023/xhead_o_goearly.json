@@ -1,0 +1,106 @@
+{
+ "consumer": "o",
+ "mutant": "goearly",
+ "verdict": "FAIL",
+ "errors": [
+  "S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)",
+  "producer family bench rc 1",
+  "heads FAULT on slices [0] (first edge 914)",
+  "slice 0: corridor go [912] != lowered 913",
+  "slice 1: corridor go [913] != lowered 914",
+  "slice 2: corridor go [914] != lowered 915",
+  "slice 3: corridor go [915] != lowered 916",
+  "slice 4: corridor go [916] != lowered 917",
+  "slice 5: corridor go [917] != lowered 918",
+  "slice 6: corridor go [918] != lowered 919",
+  "slice 7: corridor go [919] != lowered 920",
+  "slice 8: corridor go [920] != lowered 921",
+  "slice 9: corridor go [921] != lowered 922",
+  "slice 10: corridor go [922] != lowered 923",
+  "slice 11: corridor go [923] != lowered 924"
+ ],
+ "xpf_w5": 847,
+ "go_w5": 896,
+ "base": 218,
+ "lowered": {
+  "go_min": 897,
+  "xpf_window": [
+   -1000000000,
+   847
+  ],
+  "head_go": {
+   "0": 913,
+   "1": 914,
+   "2": 915,
+   "3": 916,
+   "4": 917,
+   "5": 918,
+   "6": 919,
+   "7": 920,
+   "8": 921,
+   "9": 922,
+   "10": 923,
+   "11": 924
+  },
+  "read_end": {
+   "0": 955,
+   "1": 956,
+   "2": 957,
+   "3": 958,
+   "4": 959,
+   "5": 960,
+   "6": 961,
+   "7": 962,
+   "8": 963,
+   "9": 964,
+   "10": 965,
+   "11": 966
+  },
+  "read_span": 48
+ },
+ "measured": {
+  "first_cw": {
+   "0": 912,
+   "1": 913,
+   "2": 914,
+   "3": 915,
+   "4": 916,
+   "5": 917,
+   "6": 918,
+   "7": 919,
+   "8": 920,
+   "9": 921,
+   "10": 922,
+   "11": 923
+  },
+  "last_xl": {
+   "0": 954,
+   "1": 955,
+   "2": 956,
+   "3": 957,
+   "4": 958,
+   "5": 959,
+   "6": 960,
+   "7": 961,
+   "8": 962,
+   "9": 963,
+   "10": 964,
+   "11": 965
+  },
+  "xl_edges": {
+   "0": 24,
+   "1": 24,
+   "2": 24,
+   "3": 24,
+   "4": 24,
+   "5": 24,
+   "6": 24,
+   "7": 24,
+   "8": 24,
+   "9": 24,
+   "10": 24,
+   "11": 24
+  }
+ },
+ "span_x_to_last_line": 114
+}

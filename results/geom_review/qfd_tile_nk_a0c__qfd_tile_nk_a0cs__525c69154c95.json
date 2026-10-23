@@ -1,0 +1,11 @@
+{
+ "element": "qfd_tile_nk_a0c",
+ "kit": "physical/ref_tile/qfd_tile_nk_a0cs@2019019b1",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "525c69154c956406719832ffbf58db89e09a59191189eb0b129794edc8e20563",
+ "reasons": "MAIN. [GEOM-REVIEW3] PLAN render viewed (core + CB quad context). Geometry identical to rpf@fce5d5cb2 (02:15 PASS-COND): 457.92x1157.76, ROM leaves in 2 abutted columns S, fp1 macros N, node column W at the mesh pins, hub/dwr/der pocket at the ROM/fp1 boundary; hard fill 0.57-0.61. Only change: 34/38 clock entries -> ONE ck pin on E at y 668 beside the hub/dwr/der pocket (sink centre in y), which removes the 210-ps inter-entry uncertainty behind the NL r3 -169/-425 ps (correct structural fix). Faces: NK W 2056/1158 um = 1.8/um, E 528. OPEN: (1) 02:15 ROM-LSL band demand 0.7-0.9 (>0.6) still unmeasured (r3 GRT running); (2) in the quad all 4 cores are R0, so the two E-column cores have ck at the QUAD E EDGE: partition tap -> core ck Manhattan ~640 um (W cores) vs ~1,090 um (E cores), an unbalanced quad spine; (3) far corner sinks (W node column, S ROM rows) are ~1.1 mm Manhattan from the single E pin.",
+ "fixes": "Route/CTS gate ALLOWED (plan-only = PASS-CONDITIONAL). Full PASS needs: the placed --cts render with ck insertion and boundary pin-flop spread <=80 ps TT+FF, pin->reg p90, and the ROM-LSL band GRT overflow numbers (if band >0.6 widen the LSL channel by one 8.64 step). Quad G3 (QC-P2): balance the 4 core taps (matched-length quad spine, or mirror the E column MY so its ck faces the centre aisle) and report quad-level skew between cores <=80 ps.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T07:45:40-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

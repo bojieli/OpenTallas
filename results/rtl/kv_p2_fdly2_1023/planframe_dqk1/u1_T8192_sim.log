@@ -1,0 +1,4 @@
+KVATTN_CFG fd=2 dqk=1
+FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)
+{"user":0,"ctx":8192,"exact":false,"data_errors":0,"result_words":0,"status_word":-1,"k_rows":8192,"v_rows":8192,"cyc_go":104,"cyc_run":128,"cyc_cmd":132,"cyc_start_qk":135,"cyc_k_last":411,"cyc_v_first":991,"cyc_v_last":1518,"cyc_pv0_out":1653,"cyc_pv1_out":1653,"cyc_final_out":1878,"cyc_result0":-1,"cyc_result31":-1,"cyc_status":-1,"cyc_idle":2129,"fin0_root_age":1744,"start_to_retire":-133,"start_to_status":-133,"work_span":1746}
+KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=8192 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000010011 timeout=0 period=0

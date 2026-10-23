@@ -157,3 +157,79 @@ def test_window_for_fits_after_pg_bands():
             hi = schema.window_for(lo, n, ["M7", "M5"])
             port = dict(id="t", width=n, window_um=[lo, hi], layers=["M7", "M5"], epoch=False)
             assert len(schema.pin_positions(port, L)) == n
+
+
+def test_kit_overrides_platform_tracks():
+    import gen_phys
+    import tempfile
+    P = schema.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
+    with tempfile.TemporaryDirectory() as d:
+        kd = gen_phys.write_type_kit(P, "src", d, [])
+        assert "override export MAKE_TRACKS = /work/make_tracks.tcl" in (kd / "config.mk").read_text()
+
+
+def test_spread_mirror_equivariant_on_ties():
+    """PLAN-HBMv2: windows with edges between tracks put targets exactly half-way between two tracks; the pick must
+    not depend on floating-point noise (die frame x vs W - x) and the odd middle pin must mirror."""
+    L = {l["name"]: l for l in schema.ASAP7_LAYERS}
+    W = 20217.6
+    for ln, (lo, hi), n in (("M5", (4182.576, 4183.536), 2), ("M7", (4167.936, 4172.544), 13)):
+        p = dict(id="t", window_um=[lo, hi], layers=[ln], width=n, epoch=False)
+        q = dict(p, window_um=[W - hi, W - lo])
+        a = sorted(round(c, 3) for _, _, c in schema.pin_positions(p, L))
+        b = sorted(round(W - c, 3) for _, _, c in schema.pin_positions(q, L))
+        assert a == b, (ln, a, b)
+
+
+def test_part_cli_resolves_census_beside_plan(tmp_path, monkeypatch):
+    """Worst-type selection must read plan-relative census files from any cwd."""
+    import copy
+    raw = copy.deepcopy(PAIR)
+    plan_dir = tmp_path / "plan"
+    plan_dir.mkdir()
+    (plan_dir / "census.json").write_text("[]")
+    (plan_dir / "map.json").write_text('{"parts": {}}')
+    raw["census"] = [{"rows": "census.json", "map": "map.json"}]
+    plan = plan_dir / "die_plan.json"
+    plan.write_text(json.dumps(raw))
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+    out = tmp_path / "probes"
+    assert g2.main(["part", str(plan), "--out", str(out), "--worst", "1"]) == 0
+    assert len(list(out.glob("part_*/probe.json"))) == 1
+
+
+def test_die_probe_declared_taps_share_spine_and_transform_once(tmp_path):
+    import copy
+    raw = copy.deepcopy(PAIR)
+    p = next(x for x in raw['partitions'] if x['name'] == 'pfa')
+    p['orient'] = 'MY'
+    tn = p['type']
+    raw['partition_types'][tn]['clock']['taps'] = [
+        dict(name='core.ck[0]', kind='core', xy=[10, 20], orient='MY', insertion_ps=250,
+             insertion_tol_ps=40, budget_owner='declared core budget'),
+        dict(name='glue', kind='glue', xy=[30, 40], insertion_ps=276, insertion_tol_ps=40)]
+    out = g2.die_probe(schema.Plan(raw), tmp_path/'extra')
+    tcl = (out/'probe.tcl').read_text()
+    meta = json.loads((out/'probe.json').read_text())
+    assert meta['partition_root_taps'] == 2 and meta['declared_clock_taps'] == 2 and meta['taps'] == 4
+    assert tcl.count('odb::dbNet_create') == 2  # same virtual clock/reset spines, no new regional clock net
+    assert 'clk_tap_pfa__declared_0' in tcl and 'clk_tap_pfa' in tcl and 'rst_tap_pfa' in tcl
+    tap = meta['declared_taps'][0]
+    assert tap['name'] == 'core.ck[0]' and tap['insertion_ps'] == 250 and tap['orient'] == 'MY'
+    width = raw['partition_types'][tn]['outline_um'][0]
+    assert tap['xy_die_um'] == [width-10, 20]  # core MY was already applied in xy; only partition MY applies here
+    assert f'{{{width-10:.3f} 20.000}}' in tcl
+    assert 'not measured regional clock-tree' in meta['clock_scope']
+
+
+def test_die_probe_empty_declared_taps_preserves_outputs(tmp_path):
+    import copy
+    original = g2.die_probe(schema.Plan(PAIR), tmp_path/'plain')
+    raw = copy.deepcopy(PAIR)
+    for t in raw['partition_types'].values():
+        t.setdefault('clock', {})['taps'] = []
+    empty = g2.die_probe(schema.Plan(raw), tmp_path/'empty')
+    for name in ('probe.v', 'probe.tcl', 'probe.json', 'run.sh'):
+        assert (original/name).read_bytes() == (empty/name).read_bytes()

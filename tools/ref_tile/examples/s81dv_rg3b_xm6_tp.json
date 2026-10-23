@@ -1,0 +1,188 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "recipe": 5,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_FENCE_UNREG_OK": "lw_a|lw_d|lw_h1|lw_v|sx_i",
+  "OT_FENCE_STRICT": "1",
+  "OT_FENCE_CLOCKS": "ck"
+ },
+ "name": "s81dv_rg3b_xm6_tptest",
+ "top": "dsdv_idx_rg3_bxm",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "structural_change": "STW-S81c-TOK4-BAND 10-22 (STEWARD-S81c item, MU.BAL.SX.3): idx rg3 clock-rule successor. rg3p / rg3nqq2 hung 27-32k sinks on ONE ck over 1.04 x 1.21 mm (TT spread 223-233 ps; k-means under one port cannot fix it). The reader is cut at existing registers into 4 hard bands (R control / X response + landing + key mux / S01 / S23 engine halves), each its own small tree with registered faces, under an lp.py landed parent (D2/E1, +2 edges a crossing; cut analysis results/arch/s81_band_1022/cut_analysis.json: every seam <= 0.16 of its tracks). Flat band composition = dsdv_idx_rg3 #(IH 0, OH 1, KR 1) cycle-exact (tb lockstep); landed = flat + 2-edge landings (lp.py lockstep) with LX 8 / PD 2.",
+ "job": {
+  "owner": "test fixture (TILE-FLOW2 10-23): copy of claude/s81-rg3t-1023@8fa2eedf6 physical/ref_tile/s81dv_rg3b_xm6/spec.json"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "band of the banded idx rg3: source-registered faces (every band input lands in a flop, every output leaves one: the landed parent's ring / read halves sit outside); a recipe pin stage would add an unpriced edge on the landed schedule (lp record)."
+ },
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_bx.sv"
+ ],
+ "params": {
+  "SRAM_MACRO": 1
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_c0.g_land[0].u_h.g_m.u_mem",
+   "at": [
+    46.656,
+    23.76
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_c0.g_land[1].u_h.g_m.u_mem",
+   "at": [
+    46.656,
+    94.272
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_c0.g_land[2].u_h.g_m.u_mem",
+   "at": [
+    46.656,
+    164.784
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_c0.g_land[3].u_h.g_m.u_mem",
+   "at": [
+    46.656,
+    235.296
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_c1.g_land[0].u_h.g_m.u_mem",
+   "at": [
+    303.696,
+    23.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_c1.g_land[1].u_h.g_m.u_mem",
+   "at": [
+    303.696,
+    94.272
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_c1.g_land[2].u_h.g_m.u_mem",
+   "at": [
+    303.696,
+    164.784
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_c1.g_land[3].u_h.g_m.u_mem",
+   "at": [
+    303.696,
+    235.296
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "children": [],
+ "pins": {
+  "N": [
+   "lw_v",
+   "lw_h1",
+   "lw_a",
+   "lw_d"
+  ],
+  "W": [],
+  "S": [
+   "kq_o",
+   "sx_i",
+   "rst",
+   "ck"
+  ]
+ },
+ "layer_cap": "M5",
+ "defines": [],
+ "std_area_um2": 2000,
+ "why_floorplan": "SRAM tile of the X cluster (475.2 x 432 under xn): 8 SRAM in 2 columns x 4 rows (90.72 pitch: 20-um channels, the v1 SRAM LEF only sits on the snapped macro lattice so it cannot abut; y 43.2 .. 385.8: 43-um S halo over the kq pin band, 46-um N halo under the lw_* face); h0 column R0 at x 43.2 (read pins on the 43-um W channel), h1 column MY at x 257.04 (read pins on the E channel): each key half reads only its own column, so its mux runs down its own channel to the kq pin flops; write pins of both columns face the 39-um centre gap.  The ONLY pin-flop band is kq on the S face, with the S-stage capture flops (sx_i pins beside the clock; raw scale select replicated 8x) in the same band; default tree.",
+ "hold_budget": "die",
+ "tile_plan": {},
+ "pin_hook_after_flops": [
+  "physical/common_flow/pin_reg_face_fence.tcl"
+ ],
+ "outline": {
+  "w": 524.88,
+  "h": 352.08,
+  "exact": true
+ },
+ "outline_reason": "tile_plan content outline (macros-bound, 8 SRAM abutted 2x4, channels 42/82/42 from pin counts); left column mirrored (MY) so both read faces share the centre channel",
+ "slot_change_request": "s81dv_idxrg3nq band column: bxm 475.2 x 432.0 -> 524.88 x 352.08 (W +49.68, H -79.92)",
+ "unregistered_ok": {
+  "sx_i": "R's S-stage read select: drives the landing SRAM read enable/row through 1-2 gates; the macro's synchronous read port is the capture register (band schedule edge, frozen)",
+  "lw_v": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)",
+  "lw_h1": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)",
+  "lw_a": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)",
+  "lw_d": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)"
+ }
+}

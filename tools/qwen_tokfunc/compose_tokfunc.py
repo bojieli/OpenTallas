@@ -37,6 +37,28 @@ BASE_PATHS = ['tools', REC, 'rtl/physical',
               'results/rtl/qw_attnret_1019']
 CLK_HZ = 1e12 / 833.0
 STAGES = ['stg', 'xt1', 'xdie', 'tp8', 'ovl4u', 'ctx4u', 'head', 'kv', 'chain']
+# TOKd-QW 10-22: optional gap stages (not required for the stage verdict; they re-measure dv_layer gap items)
+#   attnret : rtl/test/qwen_dv/dv_lower_vec_bench.py --mode attn on the stg objects + stg ages (QW-ATTNRET re-bench)
+#   xhead   : rtl/test/qwen_dv/xhead_bench.py --calibrate + --run qkv/gu/o/down (+ mutants) (QW-XHEAD x consumer)
+OPTIONAL = ['attnret', 'xhead']
+ATTNRET_REC = 'results/rtl/qw_attnret_1019/record.json'
+CALR_CAP = 'results/rtl/qw_calr_1020/calr_capacity_safe8u_tlprod.json'
+# attention-return span compiled in the engine tree with the composed ages, without and with the ledger's PRICED
+# successor age deltas (dv_age_deltas): the bench measures the unshifted RTL; the composition carries the shifted one
+ATTN_SPAN_PROBE = '''
+import json, sys
+sys.path.insert(0, 'tools/qwen_layerbench')
+import toksim_compose as T
+inp = json.load(open(sys.argv[1]))
+def span():
+    lw = T.L.V.lower_vec('attn', ar_order='slice')
+    return max(x['edge_e5'] for x in lw['expected']['x']) - lw['dd_r0']
+T.set_dv_ages(inp['dv'].get('ages'))
+T.set_age_deltas(None); s0 = span()
+dd = T.apply_ledger(inp, None)[2]
+T.set_age_deltas(dd); s1 = span(); T.set_age_deltas(None)
+print(json.dumps(dict(compiled_unshifted=s0, compiled_priced=s1, priced_delta=s1 - s0)))
+'''
 
 
 def sh(cmd, **kw):
@@ -60,7 +82,7 @@ def run_compose(tree, inputs_rel, out_json):
 
 def load_results(d):
     res = {}
-    for s in STAGES:
+    for s in STAGES + OPTIONAL:
         p = d / s / 'result.json'
         if p.exists():
             res[s] = json.loads(p.read_text())
@@ -193,6 +215,102 @@ def apply(inp, res, tree, results_dir, grade_label):
     return applied, problems
 
 
+def apply_attnret(inp, res, tree, applied, problems):
+    """attnret PASS (measured == bench-compiled on the composed ages, mutants FAIL) -> the engine's attention-return
+    record = this run's measured span + the ledger's PRICED successor delta (the same shift the compiled span carries),
+    so dv_layer's measured-vs-compiled check compares like with like."""
+    r = res.get('attnret')
+    if not r:
+        return None
+    if str(r.get('verdict', '')).upper() != 'PASS':
+        problems.append(f"attnret: verdict {r.get('verdict')} -> attention-return record unchanged"); return None
+    p = tree / 'results/token_pass/measured_qwen_1019/inputs_attnprobe.json'
+    p.write_text(json.dumps(inp))
+    q = subprocess.run([sys.executable, '-I', '-c', ATTN_SPAN_PROBE, str(p.relative_to(tree))], cwd=tree,
+                       capture_output=True, text=True)
+    if q.returncode:
+        problems.append(f'attnret: span probe failed {q.stderr[-400:]}'); return None
+    pr = json.loads(q.stdout.strip().splitlines()[-1])
+    m = int(r['measured_span_edges'])
+    if pr['compiled_unshifted'] != m or int(r.get('compiled_span_edges', m)) != m:
+        problems.append(f"attnret: measured {m} != compiled {pr['compiled_unshifted']} on the composed ages")
+        return pr
+    rec_p = tree / ATTNRET_REC
+    rec = json.loads(rec_p.read_text()) if rec_p.exists() else {}
+    rec.update(measured_span_edges=m + pr['priced_delta'], compiled_span_edges=pr['compiled_priced'],
+               tokfunc=dict(measured_on_assembly=m, priced_successor_delta=pr['priced_delta'],
+                            source=r.get('source'), note='measured + ledger dv_age_deltas (PRICED SU8/VM8 successor)'))
+    rec_p.write_text(json.dumps(rec, indent=1))
+    applied.append(f"attention return span {m} REL + {pr['priced_delta']} PRICED successor delta <- attnret")
+    return pr
+
+
+def _stg_case(res, cfg, name):
+    return ((res.get('stg', {}).get('configs', {}).get(cfg, {}).get('stages', {}) or {}).get(name) or {}).get('verdict')
+
+
+def reconcile_gaps(gaps, res, repo):
+    """dv_layer.py (engine BASE_REV) emits COLUMN-HEAD / TILE DELIVERY / RoPE / AR TAG as FIXED strings and checks the
+    image against the legacy CALD store; re-grade each against this run's stage evidence and the current main
+    designs.  Returns (open gaps, resolved gaps with evidence)."""
+    open_, done = [], []
+    st = lambda c, n: str(_stg_case(res, c, n) or '').upper()
+    xh = res.get('xhead') or {}
+    for g in gaps or []:
+        if g.startswith('AR TAG CONTRACT'):
+            ok = (st('pos', 'LGPOS_od_arf') == st('pos', 'LGPOS_lm_arf') == 'PASS' and st('rel', 'LGOFF_od_arf') == 'FAIL'
+                  and st('mut', 'LGMUT_od_arf') == 'FAIL')
+            (done if ok else open_).append(
+                'AR TAG CONTRACT: RESOLVED in RTL -- qfd_dv_slice2 ARF 1 (QW-LAYERGAP 6ff5be90f), bound on the release die '
+                'by die_params (OT_QWEN_SLICE_LAYERGAP default 1) and the slice2_e / slice2_wh kits; stg pos od/lm --arf PASS, '
+                'ARF 0 and ARF 2 mutant FAIL' if ok else g)
+        elif g.startswith('PER-TOKEN RoPE ROW'):
+            ok = st('pos', 'LGPOS_qk_roperx') == 'PASS' and st('pos', 'LGPOS_qk_roperx_ropelate') == 'FAIL' \
+                and st('mut', 'LGMUT_qk_roperx') == 'FAIL'
+            if ok:
+                done.append('PER-TOKEN RoPE ROW (compute-die consumer): RESOLVED -- qfd_dv_slice2 RP 1 + qfd_dv_vm CRH '
+                            '(QW-LAYERGAP) bound by die_params; stg pos qk --rope rx PASS, rope_late / RP 2 mutants FAIL')
+                open_.append('PER-TOKEN RoPE ROW (producer -> consumer): the KV-die RoPE OVL producer (qkd_d2d_cal_seq_ovl_rope, '
+                             'qkd_kvn_ctx_ovl_rope view, codex/kdie-2000-1021) is not in this token run: stg drives the row '
+                             'from the bench; no cross-die co-sim of the row onto the compute-die return chain yet')
+            else:
+                open_.append(g)
+        elif g.startswith('IMAGE CAPACITY'):
+            try:
+                cap = json.loads(subprocess.run(['git', '-C', repo, 'show', f'origin/main:{CALR_CAP}'], check=True,
+                                                capture_output=True, text=True).stdout)
+            except Exception:
+                cap = {}
+            if cap.get('verdict') == 'PASS':
+                lg = cap.get('logical', {})
+                open_.append(f"IMAGE CAPACITY: legacy CALD check is stale; successor = CALR (QW-CALR/TLPROD: calendar ROM "
+                             f"{lg.get('nent')}/{lg.get('nent_max')} entries, per-layer TABLE_REL loads, {CALR_CAP} PASS; "
+                             'tt_ctlm hp13 PRIVATE_CALR on main, ledger CALR producer 76/layer PRICED). OPEN: slice-side '
+                             'table_req consumer + GEN OT_SPLIT_DV_TREQ (claude/qdie5-tld-1022, not on main) not bound in the '
+                             'die and not in this run')
+            else:
+                open_.append(g)
+        elif g.startswith('COLUMN-HEAD x CONSUMER'):
+            if str(xh.get('verdict', '')).upper() == 'PASS':
+                done.append(f"COLUMN-HEAD x CONSUMER: RESOLVED -- dv_lower_xhead (QW-XHEAD fa577f2ea) lowers XPF arm + go/ib; "
+                            f"xhead_bench calibrate + qkv/gu/o/down PASS, mutants FAIL ({xh.get('summary')})")
+            else:
+                open_.append(g + (f" [xhead stage: {xh.get('verdict')} {xh.get('summary', '')}]" if xh else
+                                  ' [lowering exists: dv_lower_xhead fa577f2ea; never benched on the current slice2]'))
+        elif g.startswith('TILE DELIVERY'):
+            open_.append(g + ' [RTL item: per-slice go delay HGD[s] = 6 s - (hr_at[s] - hr_at[0]) for the AR '
+                         'destinations (dv_lower_xhead.tile_delivery); not built in qfd_dv_heads / tt_ctlm; stg od drives the '
+                         'stagger from the bench (nostagger mutant FAIL)]')
+        else:
+            open_.append(g)
+    if res.get('attnret') and not any(g.startswith('ATTENTION RETURN') for g in open_):
+        r = res['attnret']
+        done.append(f"ATTENTION RETURN: RESOLVED -- re-bench on the stg objects: measured {r.get('measured_span_edges')} == "
+                    f"compiled {r.get('compiled_span_edges')} (rel + pos), ddwin / ddbase FAIL; the composer's 116 was the "
+                    'unshifted measurement vs the PRICED SU8/VM8 successor-shifted compile (+18)')
+    return open_, done
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--results', type=Path, required=False)
@@ -215,26 +333,32 @@ def main():
         res = load_results(a.results)
         inp = json.loads((tree / REC / 'inputs.json').read_text())
         applied, problems = apply(inp, res, tree, a.results, a.grade)
+        attn_probe = apply_attnret(inp, res, tree, applied, problems)
         inp['release_source'] = f'TOK-FUNC-QW RTL assembly {a.asm} ({a.grade}); composition engine {a.base_rev}'
         (tree / REC / 'inputs_tokfunc.json').write_text(json.dumps(inp, indent=1))
         shutil.copy(tree / REC / 'inputs_tokfunc.json', a.out / 'inputs_tokfunc.json')
         r = run_compose(tree, f'{REC}/inputs_tokfunc.json', a.out / 'cycles_tokfunc.json')
         full = json.loads((a.out / 'cycles_tokfunc.json').read_text())['result']
-        verdicts = {s: res[s].get('verdict') for s in res}
+        verdicts = {s: res[s].get('verdict') for s in STAGES if s in res}
         missing = [s for s in STAGES if s not in res]
-        diagnostic = [s for s, stage in res.items()
-                      if not str(stage.get('transport_grade') or stage.get('grade', '')).startswith(a.grade)]
-        token_pass = (not diagnostic and not problems and not missing and all(str(v).upper() == 'PASS' for v in verdicts.values()))
+        diagnostic = [s for s, stage in res.items() if s in STAGES
+                      and not str(stage.get('transport_grade') or stage.get('grade', '')).startswith(a.grade)]
+        gaps_open, gaps_resolved = reconcile_gaps(full['1u'].get('gaps'), res, a.repo)
+        token_pass = (not diagnostic and not problems and not missing and not gaps_open
+                      and all(str(v).upper() == 'PASS' for v in verdicts.values()))
         report.update(stages=verdicts, missing_stages=missing, diagnostic_stages=diagnostic,
+                      gap_stages={s: res[s].get('verdict') for s in OPTIONAL if s in res},
+                      gaps=gaps_open, gaps_resolved=gaps_resolved,
                       stage_sources={s: dict(src_commit=v.get('src_commit'), grade=v.get('grade'),
                                             source_note=v.get('source_note')) for s, v in res.items()}, applied=applied, problems=problems,
-                      token=r, gaps=full['1u'].get('gaps'),
+                      token=r, gaps_engine=full['1u'].get('gaps'), attn_span_probe=attn_probe,
                       u1=dict(qualified_full_token=token_pass, scope='stage composition' if token_pass else 'historical model diagnostic; current token price held', cycles=r['cycles'], tok_s=r['tok_s'], vs_model_pct=round(100 * (r['tok_s'] / 4403.2 - 1), 2)),
                       u4=dict(qualified_full_token=token_pass, scope='stage composition' if token_pass else 'historical model diagnostic; isolated OVL transport is not full-token throughput', tok_s=r['u4'], vs_model_pct=round(100 * (r['u4'] / 11750.6 - 1), 2)),
-                      verdict='TOKEN PASS (all stages PASS)' if token_pass else 'INCOMPLETE/FAIL (see stages/problems)')
+                      verdict='TOKEN PASS (all stages PASS)' if token_pass else 'INCOMPLETE/FAIL (see stages/problems/gaps)')
     if not a.base_only:
         report['current_token_price'] = dict(status='QUALIFIED_STAGE_COMPOSITION' if token_pass else 'HELD',
-            reasons=problems + [f'missing stage: {s}' for s in missing] + [f'diagnostic stage: {s}' for s in diagnostic])
+            reasons=problems + [f'missing stage: {s}' for s in missing] + [f'diagnostic stage: {s}' for s in diagnostic]
+            + [f'open gap: {g.split(":")[0]}' for g in report.get('gaps', [])])
         if 'chain' in res:
             c = res['chain']
             report['chain'] = dict(verdict=c.get('verdict'), grade=c.get('grade'), hand_off=c.get('hand_off'),

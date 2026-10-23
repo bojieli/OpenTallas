@@ -1,67 +1,38 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/qc-p2-1023/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "/home/ubuntu/wt/codex-qc-taps-0931-1023/physical/die_plan/qwen_compute/die_plan.json",
  "verdict": "PASS",
  "errors": 0,
- "warnings": 11,
+ "warnings": 84,
  "summary": {
   "die": "qwen_compute",
-  "partitions": 380,
+  "partitions": 388,
   "types": {
-   "types": 48,
-   "partitions": 380,
-   "singleton_types": 10,
+   "types": 54,
+   "partitions": 388,
+   "singleton_types": 15,
    "max_instances": 48,
    "near_duplicate_groups": 10,
    "near_duplicate_types": 20,
    "mergeable_saving": 10
   },
-  "ports": 3234,
-  "lanes": 1997,
-  "bits": 1330632,
+  "ports": 3300,
+  "lanes": 2005,
+  "bits": 1346028,
+  "taps_cores": {
+   "taps": 134,
+   "hard_cores": 0,
+   "core_pins": 0,
+   "core_pins_off_track": 0
+  },
   "geometry": {
-   "partition_area_mm2": 768.5049415680003,
+   "partition_area_mm2": 768.5049415680004,
    "channel_area_mm2": 19.045352448,
    "uncovered_mm2": 0.0,
-   "fill": 0.9758169699221614,
+   "fill": 0.9758169699221615,
    "planned_channels": []
   },
   "worst_faces": [
-   {
-    "part": "io_serdes_1",
-    "face": "N",
-    "pins_per_um": 6.2
-   },
-   {
-    "part": "io_serdes",
-    "face": "S",
-    "pins_per_um": 6.2
-   },
-   {
-    "part": "io_collective",
-    "face": "S",
-    "pins_per_um": 6.2
-   },
-   {
-    "part": "io_collective",
-    "face": "N",
-    "pins_per_um": 6.2
-   },
-   {
-    "part": "ucie_kv",
-    "face": "N",
-    "pins_per_um": 6.0
-   },
-   {
-    "part": "tt_ctlm",
-    "face": "S",
-    "pins_per_um": 6.0
-   },
-   {
-    "part": "tt_ctlm",
-    "face": "E",
-    "pins_per_um": 6.0
-   },
    {
     "part": "sl_W5_tap",
     "face": "W",
@@ -74,6 +45,41 @@
    },
    {
     "part": "sl_W5_tap",
+    "face": "N",
+    "pins_per_um": 6.0
+   },
+   {
+    "part": "sl_W5_tap",
+    "face": "E",
+    "pins_per_um": 6.0
+   },
+   {
+    "part": "sl_W5_su_l1",
+    "face": "S",
+    "pins_per_um": 6.0
+   },
+   {
+    "part": "sl_W5_su_l1",
+    "face": "N",
+    "pins_per_um": 6.0
+   },
+   {
+    "part": "sl_W5_su_l1",
+    "face": "E",
+    "pins_per_um": 6.0
+   },
+   {
+    "part": "sl_W5_su_l0",
+    "face": "W",
+    "pins_per_um": 6.0
+   },
+   {
+    "part": "sl_W5_su_l0",
+    "face": "S",
+    "pins_per_um": 6.0
+   },
+   {
+    "part": "sl_W5_su_l0",
     "face": "N",
     "pins_per_um": 6.0
    }
@@ -134,23 +140,23 @@
    "vertical": [
     {
      "at_um": 250,
-     "bits": 662,
+     "bits": 472,
      "tracks": 289780,
-     "ratio": 0.0023,
-     "m89_only_ratio": 0.0021,
+     "ratio": 0.0016,
+     "m89_only_ratio": 0.0015,
      "worst_part": "native59",
-     "worst_part_ratio": 0.0578,
-     "worst_part_bits": 662
+     "worst_part_ratio": 0.0412,
+     "worst_part_bits": 472
     },
     {
      "at_um": 500,
-     "bits": 587,
+     "bits": 718,
      "tracks": 289780,
-     "ratio": 0.002,
-     "m89_only_ratio": 0.0019,
+     "ratio": 0.0025,
+     "m89_only_ratio": 0.0023,
      "worst_part": "native59",
-     "worst_part_ratio": 0.0513,
-     "worst_part_bits": 587
+     "worst_part_ratio": 0.0627,
+     "worst_part_bits": 718
     },
     {
      "at_um": 750,
@@ -161,33 +167,33 @@
     },
     {
      "at_um": 1000,
-     "bits": 2842,
-     "tracks": 335691,
-     "ratio": 0.0085,
-     "m89_only_ratio": 0.009,
-     "worst_part": "io_collective",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 2842
+     "bits": 5049,
+     "tracks": 368057,
+     "ratio": 0.0137,
+     "m89_only_ratio": 0.016,
+     "worst_part": "coll_f4",
+     "worst_part_ratio": 0.1742,
+     "worst_part_bits": 3988
     },
     {
      "at_um": 1250,
-     "bits": 2842,
-     "tracks": 335691,
-     "ratio": 0.0085,
-     "m89_only_ratio": 0.009,
-     "worst_part": "io_collective",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 2842
+     "bits": 3959,
+     "tracks": 368057,
+     "ratio": 0.0108,
+     "m89_only_ratio": 0.0126,
+     "worst_part": "coll_f4",
+     "worst_part_ratio": 0.1726,
+     "worst_part_bits": 3952
     },
     {
      "at_um": 1500,
-     "bits": 2842,
-     "tracks": 335691,
-     "ratio": 0.0085,
-     "m89_only_ratio": 0.009,
-     "worst_part": "io_collective",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 2842
+     "bits": 3958,
+     "tracks": 368057,
+     "ratio": 0.0108,
+     "m89_only_ratio": 0.0126,
+     "worst_part": "coll_f4",
+     "worst_part_ratio": 0.1729,
+     "worst_part_bits": 3958
     },
     {
      "at_um": 1750,
@@ -1331,13 +1337,13 @@
    "horizontal": [
     {
      "at_um": 250,
-     "bits": 1197,
+     "bits": 1195,
      "tracks": 680808,
      "ratio": 0.0018,
      "m89_only_ratio": 0.0031,
      "worst_part": "c_W5_bf_01",
-     "worst_part_ratio": 0.0439,
-     "worst_part_bits": 1197
+     "worst_part_ratio": 0.0438,
+     "worst_part_bits": 1195
     },
     {
      "at_um": 500,
@@ -1538,123 +1544,123 @@
     },
     {
      "at_um": 5500,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f0",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 5750,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f0",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 6000,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f0",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 6250,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f0",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 6500,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f1",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 6750,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f1",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 7000,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f1",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 7250,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f1",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 7500,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f2",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 7750,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_01",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f2",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 8000,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_00",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f2",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 8250,
-     "bits": 6168,
-     "tracks": 673721,
-     "ratio": 0.0092,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_00",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8361,
+     "tracks": 678020,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "coll_f2",
+     "worst_part_ratio": 0.1263,
+     "worst_part_bits": 2193
     },
     {
      "at_um": 8500,
@@ -1728,79 +1734,79 @@
     },
     {
      "at_um": 10250,
-     "bits": 6168,
-     "tracks": 685061,
-     "ratio": 0.009,
-     "m89_only_ratio": 0.0158,
-     "worst_part": "c_W4_bn_00",
-     "worst_part_ratio": 0.0188,
-     "worst_part_bits": 514
+     "bits": 8381,
+     "tracks": 689360,
+     "ratio": 0.0122,
+     "m89_only_ratio": 0.0215,
+     "worst_part": "coll_f3",
+     "worst_part_ratio": 0.1275,
+     "worst_part_bits": 2213
     },
     {
      "at_um": 10500,
-     "bits": 37104,
-     "tracks": 522899,
-     "ratio": 0.071,
-     "m89_only_ratio": 0.0951,
+     "bits": 39317,
+     "tracks": 527198,
+     "ratio": 0.0746,
+     "m89_only_ratio": 0.1008,
      "worst_part": "sl_W4_su_l1",
      "worst_part_ratio": 0.1494,
      "worst_part_bits": 1544
     },
     {
      "at_um": 10750,
-     "bits": 67464,
-     "tracks": 522899,
-     "ratio": 0.129,
-     "m89_only_ratio": 0.1729,
+     "bits": 69677,
+     "tracks": 527198,
+     "ratio": 0.1322,
+     "m89_only_ratio": 0.1786,
      "worst_part": "sl_W5_su_l0",
      "worst_part_ratio": 0.1803,
      "worst_part_bits": 1864
     },
     {
      "at_um": 11000,
-     "bits": 73800,
-     "tracks": 522899,
-     "ratio": 0.1411,
-     "m89_only_ratio": 0.1891,
+     "bits": 76013,
+     "tracks": 527198,
+     "ratio": 0.1442,
+     "m89_only_ratio": 0.1948,
      "worst_part": "sl_W5_su_l0",
      "worst_part_ratio": 0.2873,
      "worst_part_bits": 2969
     },
     {
      "at_um": 11250,
-     "bits": 74538,
-     "tracks": 522899,
-     "ratio": 0.1425,
-     "m89_only_ratio": 0.191,
+     "bits": 76751,
+     "tracks": 527198,
+     "ratio": 0.1456,
+     "m89_only_ratio": 0.1967,
      "worst_part": "sl_W5_su_l0",
      "worst_part_ratio": 0.2718,
      "worst_part_bits": 2809
     },
     {
      "at_um": 11500,
-     "bits": 75606,
-     "tracks": 522899,
-     "ratio": 0.1446,
-     "m89_only_ratio": 0.1938,
+     "bits": 77819,
+     "tracks": 527198,
+     "ratio": 0.1476,
+     "m89_only_ratio": 0.1994,
      "worst_part": "sl_W5_su_l0",
      "worst_part_ratio": 0.2718,
      "worst_part_bits": 2809
     },
     {
      "at_um": 11750,
-     "bits": 94788,
-     "tracks": 644804,
-     "ratio": 0.147,
-     "m89_only_ratio": 0.2429,
+     "bits": 96924,
+     "tracks": 649103,
+     "ratio": 0.1493,
+     "m89_only_ratio": 0.2484,
      "worst_part": "sl_E5_stm",
      "worst_part_ratio": 0.3269,
      "worst_part_bits": 3332
     },
     {
      "at_um": 12000,
-     "bits": 132235,
-     "tracks": 640551,
-     "ratio": 0.2064,
+     "bits": 132250,
+     "tracks": 644851,
+     "ratio": 0.2051,
      "m89_only_ratio": 0.3389,
      "worst_part": "sl_E5_sc",
      "worst_part_ratio": 0.4535,
@@ -1808,30 +1814,30 @@
     },
     {
      "at_um": 12250,
-     "bits": 89496,
-     "tracks": 640551,
-     "ratio": 0.1397,
-     "m89_only_ratio": 0.2294,
+     "bits": 90593,
+     "tracks": 644851,
+     "ratio": 0.1405,
+     "m89_only_ratio": 0.2322,
      "worst_part": "sl_E5_sc",
      "worst_part_ratio": 0.2874,
      "worst_part_bits": 3893
     },
     {
      "at_um": 12500,
-     "bits": 83808,
-     "tracks": 633464,
-     "ratio": 0.1323,
-     "m89_only_ratio": 0.2148,
+     "bits": 84905,
+     "tracks": 637763,
+     "ratio": 0.1331,
+     "m89_only_ratio": 0.2176,
      "worst_part": "sl_E5_sc",
      "worst_part_ratio": 0.2132,
      "worst_part_bits": 2888
     },
     {
      "at_um": 12750,
-     "bits": 95076,
-     "tracks": 673721,
-     "ratio": 0.1411,
-     "m89_only_ratio": 0.2437,
+     "bits": 96173,
+     "tracks": 678020,
+     "ratio": 0.1418,
+     "m89_only_ratio": 0.2465,
      "worst_part": "sl_E5_tap",
      "worst_part_ratio": 0.208,
      "worst_part_bits": 2818
@@ -2268,7 +2274,7 @@
     }
    ],
    "worst_full": {
-    "ratio": 0.2064,
+    "ratio": 0.2051,
     "at": "horizontal@12000"
    },
    "worst_partition_segment": {
@@ -3813,15 +3819,15 @@
    "sl_W4_fe__st_eo_st_wi": 2,
    "sl_W4_fw__st_wo_st_ei": 2,
    "sl_W5_fw__ag_wo_ag5": 4,
-   "sl_W5_fw__ard_wo_in_data": 2,
-   "sl_W5_fw__arl_wo_in_last": 2,
-   "sl_W5_fw__arm_wo_in_mode": 2,
-   "sl_W5_fw__art_wo_in_tag": 2,
-   "sl_W5_fw__arv_wo_in_valid": 2,
-   "sl_W5_fw__ccm_wo_cmd_mode": 2,
-   "sl_W5_fw__cct_wo_cmd_tag": 2,
-   "sl_W5_fw__ccv_wo_cmd_v": 2,
-   "sl_W5_fw__ccw_wo_cmd_words": 2,
+   "sl_W5_fw__ard_wo_in_data": 6,
+   "sl_W5_fw__arl_wo_in_last": 6,
+   "sl_W5_fw__arm_wo_in_mode": 6,
+   "sl_W5_fw__art_wo_in_tag": 6,
+   "sl_W5_fw__arv_wo_in_valid": 6,
+   "sl_W5_fw__ccm_wo_cmd_mode": 6,
+   "sl_W5_fw__cct_wo_cmd_tag": 6,
+   "sl_W5_fw__ccv_wo_cmd_v": 6,
+   "sl_W5_fw__ccw_wo_cmd_words": 6,
    "sl_W5_fe__cmd_eo_cmd_wi": 2,
    "sl_W5_fw__dd_wo_dd_i": 4,
    "sl_W5_fe__dr_eo_dr_wi": 2,
@@ -3837,20 +3843,20 @@
    "sl_W5_fe__st_eo_st_wi": 2,
    "glue__embed_code_q_emb_code_q": 2,
    "glue__embed_scale_q_emb_scale_q": 2,
-   "io_collective__cmd_free_io_cmd_free": 2,
-   "io_collective__fault_io_fault": 2,
-   "io_collective__out_data_rd_wi": 2,
-   "io_collective__out_err_re_wi": 2,
-   "io_collective__out_last_rl_wi": 2,
-   "io_collective__out_rank_rr_wi": 2,
-   "io_collective__out_valid_rv_wi": 2,
-   "io_collective__serdes_tx_tx_flit": 2,
-   "io_collective__serdes_tx_tx_flit_2": 2,
-   "io_collective__serdes_tx_tx_flit_3": 9,
-   "io_collective__serdes_tx_valid_tx_v": 2,
-   "io_collective__serdes_tx_valid_tx_v_2": 2,
-   "io_collective__serdes_tx_valid_tx_v_3": 9,
-   "io_collective__shared_fault_io_shared_fault": 2,
+   "coll_core__cmd_free_io_cmd_free": 3,
+   "coll_core__fault_io_fault": 3,
+   "coll_core__out_data_rd_wi": 6,
+   "coll_core__out_err_re_wi": 6,
+   "coll_core__out_last_rl_wi": 6,
+   "coll_core__out_rank_rr_wi": 6,
+   "coll_core__out_valid_rv_wi": 6,
+   "coll_n__serdes_tx_tx_flit": 2,
+   "coll_s__serdes_tx_tx_flit": 2,
+   "coll_s__serdes_tx_tx_flit_2": 9,
+   "coll_n__serdes_tx_valid_tx_v": 2,
+   "coll_s__serdes_tx_valid_tx_v": 2,
+   "coll_s__serdes_tx_valid_tx_v_2": 9,
+   "coll_core__shared_fault_io_shared_fault": 3,
    "io_serdes__rx_flit_serdes_rx": 2,
    "io_serdes__rx_v_serdes_rx_valid": 2,
    "io_serdes__tx_up_serdes_up": 2,
@@ -3888,16 +3894,16 @@
    "glue__kv_word_slot_kv_word_slot": 2,
    "glue__q_slot_q_slot": 2,
    "glue__q_slot_beat_q_slot_beat": 2,
-   "glue__seq_dh_dh": 3,
-   "glue__tt_fab_fab": 3,
-   "glue__tt_kok_kok": 3,
-   "glue__tt_kwd_kwd": 3,
-   "glue__tt_pw_pw": 3,
+   "glue__seq_dh_dh": 4,
+   "glue__tt_fab_fab": 4,
+   "glue__tt_kok_kok": 4,
+   "glue__tt_kwd_kwd": 4,
+   "glue__tt_pw_pw": 4,
    "glue__visibility_slot_visibility_slot": 2,
    "tt_ctlm__cal_descriptor_obs_seq_descriptor_obs": 4,
    "tt_ctlm__cal_image_ready_seq_cfg_image_ready": 4,
    "tt_ctlm__cal_program_obs_seq_program_obs": 4,
-   "tt_ctlm__cmd_cmd_wi": 4,
+   "tt_ctlm__cmd_cmd_wi": 3,
    "tt_ctlm__command_stage_tt_command_stage": 4,
    "tt_ctlm__command_stage_command_stage": 2,
    "tt_ctlm__control_stores_ready_tt_control_stores_ready": 4,
@@ -3921,6 +3927,12 @@
    "ucie_kv__rx_flit_fdi_rx_flit": 2,
    "ucie_kv__rx_v_fdi_rx_v": 2,
    "ucie_kv__tx_up_fdi_tx_up": 2,
+   "coll_core__crec_tx_s1": 8,
+   "coll_s__crec_rx_s1": 8,
+   "coll_core__crec_tx_s2": 8,
+   "coll_s__crec_rx_s2": 8,
+   "coll_core__crec_tx_s0": 7,
+   "coll_n__crec_rx_s0": 7,
    "c_W5_tf_01__flt": 2,
    "c_W5_tf_11__flt": 2,
    "c_W5_tf_10__flt": 2,
@@ -3951,7 +3963,7 @@
    "sl_W5_st_a__flt": 2,
    "sl_W5_hc2__flt": 2,
    "sl_W5_hc3__flt": 2,
-   "sl_W5_fw__flte": 2,
+   "sl_W5_fw__flte": 6,
    "c_W4_tf_01__flt": 2,
    "c_W4_tf_11__flt": 2,
    "c_W4_tf_10__flt": 2,
@@ -4293,13 +4305,15 @@
    "sl_E5_hc2__flt": 2,
    "sl_E5_hc3__flt": 2,
    "sl_E5_fw__flte": 2,
-   "io_collective__fltc": 2,
+   "coll_s__fltk": 8,
+   "coll_n__fltk": 7,
+   "coll_core__fltc": 3,
    "native59__fltn": 2,
    "tt_ctlm__fltt": 3
   },
   "seams": {
    "nets": {
-    "abutted": 1333866,
+    "abutted": 1349328,
     "channel": 0
    },
    "pairs": {
@@ -6803,31 +6817,39 @@
      "abutted": 5520,
      "channel": 0
     },
-    "io_collective|sl_W5_fw": {
+    "coll_f4|sl_W5_fw": {
      "abutted": 3980,
      "channel": 0
     },
-    "io_collective|tt_ctlm": {
+    "coll_f4|tt_ctlm": {
      "abutted": 1779,
      "channel": 0
     },
-    "io_collective|native59": {
+    "coll_f3|coll_f4": {
+     "abutted": 2231,
+     "channel": 0
+    },
+    "coll_core|coll_f3": {
+     "abutted": 2239,
+     "channel": 0
+    },
+    "coll_f4|native59": {
      "abutted": 1070,
      "channel": 0
     },
-    "glue|io_collective": {
+    "coll_f3|glue": {
      "abutted": 8,
      "channel": 0
     },
-    "io_collective|io_serdes": {
+    "coll_n|io_serdes": {
      "abutted": 1202,
      "channel": 0
     },
-    "io_collective|io_serdes_1": {
+    "coll_s|io_serdes_1": {
      "abutted": 1202,
      "channel": 0
     },
-    "c_W5_bf_00|io_collective": {
+    "c_W5_bf_00|coll_s": {
      "abutted": 1202,
      "channel": 0
     },
@@ -6838,10 +6860,165 @@
     "native59|tt_ctlm": {
      "abutted": 1325,
      "channel": 0
+    },
+    "coll_core|coll_f2": {
+     "abutted": 2198,
+     "channel": 0
+    },
+    "coll_f1|coll_f2": {
+     "abutted": 2198,
+     "channel": 0
+    },
+    "coll_f0|coll_f1": {
+     "abutted": 2198,
+     "channel": 0
+    },
+    "coll_f0|coll_s": {
+     "abutted": 2198,
+     "channel": 0
+    },
+    "coll_f4|coll_f5": {
+     "abutted": 1100,
+     "channel": 0
+    },
+    "coll_f5|coll_n": {
+     "abutted": 1100,
+     "channel": 0
     }
    }
   },
-  "png": "/home/ubuntu/wt/qc-p2-1023/physical/die_plan/qwen_compute/die_plan.png"
+  "census": {
+   "declared": true,
+   "sources": [
+    {
+     "rows": "census/die_rows.tsv.gz",
+     "map": "census/die_map.json",
+     "census_rows": 2494,
+     "inter_bits": 194157,
+     "intra_bits": 5267,
+     "planned_pairs": 163,
+     "dropped_bits": 0,
+     "dropped_pairs": 0,
+     "unmapped_instances": 0,
+     "forwarded_bits": 0,
+     "broadcast_collapsed_bits": 0,
+     "exempt": {
+      "reset:^reset$": 789,
+      "fault:^fault$": 741
+     },
+     "groups_spanning": {
+      "slice_W5": 15,
+      "slice_W4": 15,
+      "slice_W3": 15,
+      "slice_W2": 15,
+      "slice_W1": 15,
+      "slice_W0": 15,
+      "slice_E0": 15,
+      "slice_E1": 15,
+      "slice_E2": 15,
+      "slice_E3": 15,
+      "slice_E4": 15,
+      "slice_E5": 15,
+      "cl_W5_0": 4,
+      "cl_W5_1": 4,
+      "cl_W5_2": 4,
+      "cl_W5_3": 4,
+      "cl_W4_0": 4,
+      "cl_W4_1": 4,
+      "cl_W4_2": 4,
+      "cl_W4_3": 4,
+      "cl_W3_0": 4,
+      "cl_W3_1": 4,
+      "cl_W3_2": 4,
+      "cl_W3_3": 4,
+      "cl_W2_0": 4,
+      "cl_W2_1": 4,
+      "cl_W2_2": 4,
+      "cl_W2_3": 4,
+      "cl_W1_0": 4,
+      "cl_W1_1": 4,
+      "cl_W1_2": 4,
+      "cl_W1_3": 4,
+      "cl_W0_0": 4,
+      "cl_W0_1": 4,
+      "cl_W0_2": 4,
+      "cl_W0_3": 4,
+      "cl_E0_0": 4,
+      "cl_E0_1": 4,
+      "cl_E0_2": 4,
+      "cl_E0_3": 4,
+      "cl_E1_0": 4,
+      "cl_E1_1": 4,
+      "cl_E1_2": 4,
+      "cl_E1_3": 4,
+      "cl_E2_0": 4,
+      "cl_E2_1": 4,
+      "cl_E2_2": 4,
+      "cl_E2_3": 4,
+      "cl_E3_0": 4,
+      "cl_E3_1": 4,
+      "cl_E3_2": 4,
+      "cl_E3_3": 4,
+      "cl_E4_0": 4,
+      "cl_E4_1": 4,
+      "cl_E4_2": 4,
+      "cl_E4_3": 4,
+      "cl_E5_0": 4,
+      "cl_E5_1": 4,
+      "cl_E5_2": 4,
+      "cl_E5_3": 4,
+      "coll": 9
+     }
+    },
+    {
+     "rows": "census/slice_rows.tsv.gz",
+     "map": "census/slice_map.json",
+     "census_rows": 2472,
+     "inter_bits": 321108,
+     "intra_bits": 6480,
+     "planned_pairs": 1343,
+     "dropped_bits": 0,
+     "dropped_pairs": 0,
+     "unmapped_instances": 0,
+     "forwarded_bits": 0,
+     "broadcast_collapsed_bits": 0,
+     "exempt": {},
+     "groups_spanning": {
+      "su_W5": 3,
+      "su_W4": 3,
+      "su_W3": 3,
+      "su_W2": 3,
+      "su_W1": 3,
+      "su_W0": 3,
+      "su_E0": 3,
+      "su_E1": 3,
+      "su_E2": 3,
+      "su_E3": 3,
+      "su_E4": 3,
+      "su_E5": 3
+     }
+    },
+    {
+     "rows": "census/coll_rows.tsv.gz",
+     "map": "census/coll_map.json",
+     "census_rows": 39,
+     "inter_bits": 7997,
+     "intra_bits": 6548,
+     "planned_pairs": 1314,
+     "dropped_bits": 0,
+     "dropped_pairs": 0,
+     "unmapped_instances": 0,
+     "forwarded_bits": 0,
+     "broadcast_collapsed_bits": 0,
+     "exempt": {},
+     "groups_spanning": {
+      "slice_W5": 15
+     }
+    }
+   ],
+   "dropped_bits": 0
+  },
+  "png": "/home/ubuntu/wt/codex-qc-taps-0931-1023/physical/die_plan/qwen_compute/die_plan.png"
  },
  "findings": [
   {
@@ -6896,9 +7073,373 @@
   },
   {
    "level": "WARN",
-   "check": "clock",
-   "msg": "type coll: farthest boundary point 4951 um from the tap (> 2 hops)",
-   "type": "coll"
+   "check": "census",
+   "msg": "census[0] group cl_E0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_E5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group cl_W5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group coll spans 9 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_E0 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_E1 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_E2 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_E3 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_E4 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_E5 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_W0 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_W1 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_W2 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_W3 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_W4 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[0] group slice_W5 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_E0 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_E1 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_E2 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_E3 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_E4 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_E5 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_W0 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_W1 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_W2 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_W3 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_W4 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[1] group su_W5 spans 3 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census[2] group slice_W5 spans 15 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
   }
  ]
 }

@@ -1,0 +1,26 @@
+{
+  "base": "55e0ec7fa",
+  "note_types": 51,
+  "declared_type_taps": 134,
+  "extra_placed_clock_taps": 1941,
+  "preserved_partition_roots": 388,
+  "total_virtual_clock_terminals": 2329,
+  "other_plan_fields": "identical after removing new clock.taps",
+  "notes_taps": "exactly reproduced by existing generator clock_taps()",
+  "coordinates": "existing type frame; only partition orientation applied by G2",
+  "G0": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 84,
+    "tap_core_summary": {
+      "taps": 134,
+      "hard_cores": 0,
+      "core_pins": 0,
+      "core_pins_off_track": 0
+    }
+  },
+  "tests": "46 passed",
+  "no_extra_tap_probe": "all4outputfiles byte-identical to55e0ec7fa",
+  "qualification": "declared coordinate/connectivity/PG/reach only; insertion budgets remain estimates; hard-core pins/binding/STA/insertion OPEN",
+  "plan_sha256": "1e9aacf60e7e3869bd3ec67e223429a536240e554bb66e539eb8f4f5feaed447"
+}

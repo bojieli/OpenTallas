@@ -1,0 +1,110 @@
+{
+ "source_commit": "5a1dff89e",
+ "plan_sha256": "b6aa89812e0cfc3714dfe4752370e6e4ae8dbce27e667efd152b2e8e07b6025c",
+ "scope": "fresh G2 die + worst4 + three existing SVC fold probes; not G3 or signoff",
+ "G1": "995be148c PASS-CONDITIONAL",
+ "probes": {
+  "die": {
+   "host": "ot-gold1",
+   "unit": "oth-ubuntu-475890-1792772588",
+   "files": {
+    "probe.tcl": "a2ce1e71b9162281777c421834d17accb573579a41b769f5823fc19be76c62ca",
+    "probe.v": "786452a13de56cb69c54eb56d52ed7384689ae8cda412ad6ddcc57657921823b",
+    "grt.log": "16e165da7e86cc6a5f8985bf95d8f02d33d3df512c8381b8214e61dd39fee3a6",
+    "grt.json": "d92cd0ccc0b838111c54a405697bf854b0027478f2a90a78fdc22a2ec4b932e1",
+    "probe.exit": "d4e49dd8b59469b9ec9b4026c9796f2e272e46b3e0dfe7486db13f05630cfbf9"
+   }
+  },
+  "part_ot_s81sl_leaf__t33": {
+   "host": "ot-gold1",
+   "unit": "oth-ubuntu-475892-1792772588",
+   "files": {
+    "probe.tcl": "9173b35208a8eab9c4c0d04fc680968c5357cbf83918a57fd66320051377a80c",
+    "probe.v": "e1282e7c786b853ee003d4efbe9dff55497254bad823e2d962ab7c220598e87b",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "86fb50fa79fb9b969763b335f7af4a10cfe24f245a54305ad0057a5ef56b77ce",
+    "grt.log": "5bb55d6714403fc6b5d216ccc80fa5a6f61b7bd86ae1f74b9d1b0c1d70b79a9a",
+    "grt.json": "14f250f499319fdb241f7e1462092af4e0b25bd61d98b79e2c4aff521d0dd937",
+    "probe.exit": "d4e49dd8b59469b9ec9b4026c9796f2e272e46b3e0dfe7486db13f05630cfbf9"
+   }
+  },
+  "part_ot_s81sl_leaf__t57": {
+   "host": "ot-gold1",
+   "unit": "oth-ubuntu-475945-1792772588",
+   "files": {
+    "probe.tcl": "9e19f7c25282155a082a2ccd45d8a6492fed4029568b2b41ed1b1c9b3374ec92",
+    "probe.v": "bf01ba37f3a8741d9db939e8a9a74a048a5707ad3d79749b0061b8e566fc1a1a",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "51e1b70c3ebf13105cc54af1de20d94668ba1b7176e4ab4a0974e3b7b64cf588",
+    "grt.log": "34874b07f79467d050f0552ca5f79843382f21664a307ab76a07e1f8419fca0f",
+    "grt.json": "26e39623f87116ff086a16ae14c7cafe0178fd410a1fcc0485bb94f2fed63332",
+    "probe.exit": "d4e49dd8b59469b9ec9b4026c9796f2e272e46b3e0dfe7486db13f05630cfbf9"
+   }
+  },
+  "part_ot_s81sl_leaf__t73": {
+   "host": "ot-gold1",
+   "unit": "oth-ubuntu-475950-1792772588",
+   "files": {
+    "probe.tcl": "683dc6fad1a689908f5850f26a5f9e1a5a9b35608e080fce6fa1263954e25597",
+    "probe.v": "847955f6a9d3550362ef91d895d2a42645072fbba47b6d4057ec42047bbb3b23",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "45b720ca4c92bbb90c2c6934e1bd2f6dc68b46f687c278243c35504163ad3838",
+    "grt.log": "bf4e33688727297ba66b6b462eaf03092967f023fc7d8f7a0e01e1947d1bba4b",
+    "grt.json": "8ae26c82bb428889dad71004538ff1e614f4933bdae0264c19aa8e3c02a8d372",
+    "probe.exit": "d4e49dd8b59469b9ec9b4026c9796f2e272e46b3e0dfe7486db13f05630cfbf9"
+   }
+  },
+  "part_slice_station__t7": {
+   "host": "ot-gold1",
+   "unit": "oth-ubuntu-475891-1792772588",
+   "files": {
+    "probe.tcl": "ea8a6f6f93f954b9ce6e71cfb100ba9dcfb7c8f2e0c497f20cb55b693c471ba4",
+    "probe.v": "0b13a77bb71b491ecb0611aac38f84728df973238b16d913e8d05e81b7c16660",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "beba0d9e4dbc4f0c0400b7457e34b6ef9d8c16a6ecc5bd7c1a6ce384b5284494",
+    "grt.log": "71976ad661e577b7aa678e2a2da7e7fac230ead8cf658d01b288ff29d88c9357",
+    "grt.json": "09cd4762941bf71791d7cc194b45f67fa222de6c1bc612e5baca07683eff0fb6",
+    "probe.exit": "d4e49dd8b59469b9ec9b4026c9796f2e272e46b3e0dfe7486db13f05630cfbf9"
+   }
+  },
+  "part_svc_hi_dsdv_svc_rs__t3": {
+   "host": "ot-gold1",
+   "unit": "oth-ubuntu-475947-1792772588",
+   "files": {
+    "probe.tcl": "6ce4d75e8c789fd814aa062ca91db0a8e7eeb979818ffcb169f7e0c08f4811be",
+    "probe.v": "6b5747cb21f208e669214a58499d4c6daf4b6bc43e0648f5ca02eea09f8b41b3",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "3e1e2ee82a33033bbf684e12b093b56f7587211a309e7410bde10ef8b6a84829",
+    "grt.log": "6c48577e60c1221188fd14363f826d7ce7a81a24b3ee92e7a04d1ab73568f859",
+    "grt.json": "8f64b22aa687f4b32396595ca2dc10368baacff5fddc8a8f9922161ed78f7cc6",
+    "probe.exit": "d4e49dd8b59469b9ec9b4026c9796f2e272e46b3e0dfe7486db13f05630cfbf9"
+   }
+  },
+  "part_svc_lo_dsdv_svc_rs__t3": {
+   "host": "ot-gold1",
+   "unit": "oth-ubuntu-475939-1792772588",
+   "files": {
+    "probe.tcl": "1dc22e2297f318696eca8e02561fef050ecb9ee586d1972c73e6de30f18f2458",
+    "probe.v": "3107b0034080af11cac6858d4c3d3d36c15644768dec138219cdd2b9cd894c5e",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "1cfa0954705366cb599c9b3912ec9e336d7ba4e1fa6092b74e7d48350fb0109a",
+    "grt.log": "71698a1cc1ca4cc1deb571f8ee34def45f917227ef2f077cf5c929b00f63af0f",
+    "grt.json": "b3747d6aae68694c9bff5f48183ab1fbb6dd05c60fdb9a8b41ed21b20dc8567e",
+    "probe.exit": "d4e49dd8b59469b9ec9b4026c9796f2e272e46b3e0dfe7486db13f05630cfbf9"
+   }
+  },
+  "part_svc_lo_dsdv_svc_rs_w__t1": {
+   "host": "ot-gold1",
+   "unit": "oth-ubuntu-475940-1792772588",
+   "files": {
+    "probe.tcl": "c569b9e7a1ac78a9706a128d391f1445d5b2d0c0f1c130ae8a0b8794ef863a7f",
+    "probe.v": "9156dafeb5dcc9e258c5561e361c6ae34d9b63851d2a3f0c56d3e4e7c6485e3e",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "baa724771d9f21d421c14f583680e9f7fb19e4e8ebbd88b2c3429eb2371381d0",
+    "grt.log": "068f1c3a7a7dba158088aa1e7d1c2eac49b9a3a28169173c72ecf707c57f7691",
+    "grt.json": "a78f97783a033d0370a0b4dbae615413f53ca76987defe672b74270dbe7424e0",
+    "probe.exit": "d4e49dd8b59469b9ec9b4026c9796f2e272e46b3e0dfe7486db13f05630cfbf9"
+   }
+  }
+ }
+}

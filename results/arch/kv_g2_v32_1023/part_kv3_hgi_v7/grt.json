@@ -1,0 +1,71 @@
+{
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 41860685,
+   "demand": 1549136,
+   "usage_pct": 3.7,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 46849618,
+   "demand": 6009372,
+   "usage_pct": 12.83,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 35138866,
+   "demand": 780953,
+   "usage_pct": 2.22,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 35137880,
+   "demand": 2554408,
+   "usage_pct": 7.27,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 23926624,
+   "demand": 104596,
+   "usage_pct": 0.44,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 23924684,
+   "demand": 1348270,
+   "usage_pct": 5.64,
+   "overflow": 0
+  }
+ },
+ "total_overflow": 0,
+ "wirelength_um": 7057377.0,
+ "errors": [],
+ "pin_access_warnings": 0,
+ "pin_access_no_ap": {
+  "stdCellPin": 0,
+  "macro": 0
+ },
+ "pin_access_done": true,
+ "reach": {},
+ "done": true,
+ "exit": "EXIT 0",
+ "kind": "g2-partition",
+ "die": "qwen_kvsys",
+ "type": "kv3_hgi_v7",
+ "instance": "hgi_WN_1",
+ "outline_um": [
+  1278.72,
+  1520.64
+ ],
+ "pins": 10783,
+ "flops": 10785,
+ "leaf_blockages": 0,
+ "adjust": 0.5,
+ "route_layers": "M2-M7"
+}

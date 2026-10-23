@@ -1,0 +1,1365 @@
+src	src_bus	dst	dst_bus	kind	bits	chains	stages	ideal	cur_um	straight_um	detour	route	crosses
+PORT	rst_n	CELL:ICGx4_ASAP7_75t_R	ENA	reset	793	793	124	27	42233.1	41524.4	1.017	HV	
+u_s_0N	xc	u_f_0R10	x	data	1104	4	70	19	31876.9	29653.5	1.075	HV	u_f_3L01,u_f_3L13,u_f_2R12,u_f_2L10,u_f_1L03
+u_s_4S	xc	u_f_4R02	x	data	1104	4	88	18	28247.7	27369.6	1.032	HV	u_s_5S,u_s_6S,u_s_7N,u_f_4R01
+u_f_0R02	xo	u_f_0R03	x	data	1104	4	77	17	26383.4	26297.0	1.003	HV	
+u_f_2R12	xo	u_f_2R13	x	data	1104	4	78	17	26383.4	26297.0	1.003	HV	
+u_f_5L02	xo	u_f_5L03	x	data	1104	4	75	17	26383.4	26297.0	1.003	VH	
+u_f_7L12	xo	u_f_7L13	x	data	1104	4	75	17	26383.4	26297.0	1.003	VH	
+u_s_0N	xc	u_f_0L10	x	data	1104	4	54	17	26111.1	26111.1	1.0	HV	u_f_3L01,u_f_3L13,u_f_2R12,u_f_2L10,u_f_1L03
+u_s_5N	xc	u_f_5R10	x	data	1104	4	82	16	24230.4	24144.0	1.004	HV	u_s_6N,u_s_7S,u_lk_EN1,u_f_5L01,u_f_5R01
+u_s_0N	xc	u_f_0R12	x	data	1104	4	74	15	25847.6	23527.1	1.099	HV	u_f_3L01,u_f_3L13,u_f_2R12,u_f_2L10,u_f_1L03
+u_s_0S	xc	u_f_0L02	x	data	1104	4	69	15	23613.5	23527.1	1.004	HV	u_f_3L10,u_f_2R03,u_f_2L02,u_f_0R13
+u_s_3S	xc	u_f_3L02	x	data	1104	4	77	15	29465.4	22726.2	1.297	HV	u_s_2S,u_s_1S,u_s_0N,u_lk_WN1,u_lk_WN3
+u_s_6N	xc	u_f_6R12	x	data	1104	4	66	14	21873.7	21787.3	1.004	HV	u_s_7S,u_lk_EN1,u_f_5L01,u_f_5R01,u_f_6R01
+u_s_1N	xc	u_f_1L10	x	data	1104	4	67	14	21589.2	21589.2	1.0	HV	u_s_0S,u_f_2R01,u_f_2L01
+u_s_5N	xc	u_f_5L10	x	data	1104	4	59	13	20601.6	20428.8	1.008	HV	u_s_6N,u_s_7S,u_lk_EN1,u_f_5L01,u_f_5R01
+u_s_2S	xc	u_f_2R02	x	data	1104	4	64	13	20935.8	20301.2	1.031	VH	u_rsv_03,u_rsv_01,u_bk_sel,u_f_3L03
+u_s_7S	xc	u_f_7R02	x	data	1104	4	56	13	19990.7	19990.7	1.0	HV	u_f_4R12,u_f_5L13,u_f_6R02,u_f_7L03
+u_s_2N	xc	u_f_2R12	x	data	1104	4	56	13	19899.0	19812.6	1.004	VH	u_bk_col,u_f_3L01,u_f_3L13
+u_s_6S	xc	u_f_6R01	x	data	1104	4	54	12	19132.8	19046.4	1.005	HV	u_s_7N,u_f_4R01,u_f_4R13,u_f_5R02
+u_s_2N	xc	u_f_2L12	x	data	1104	4	62	12	18950.8	18950.8	1.0	HV	u_s_1N,u_s_0S,u_f_2R01
+u_s_5S	xc	u_f_5R01	x	data	1104	4	56	12	18992.0	18905.6	1.005	HV	u_s_6S,u_s_7N,u_f_4R01,u_f_4R13
+u_s_5S	xc	u_f_5L01	x	data	1104	4	54	12	18992.0	18819.2	1.009	VH	u_s_5N,u_s_6N,u_s_7S,u_lk_EN0
+u_s_7N	xc	u_f_7R10	x	data	1104	4	33	12	19429.1	18470.7	1.052	HV	u_gunit,u_f_5L02,u_f_5R03,u_f_6R10,u_f_7L12
+u_s_0S	xc	u_f_0R02	x	data	1104	4	57	12	20457.4	18413.9	1.111	HV	u_f_3L10,u_f_2R03,u_f_2L02,u_f_0R13,u_f_0L12
+u_s_5N	xc	u_f_5R12	x	data	1104	4	57	12	18974.2	18017.6	1.053	HV	u_s_6N,u_s_7S,u_lk_EN1,u_f_5L01,u_f_5R01
+u_s_1S	xc	u_f_1L01	x	data	1104	4	52	11	17874.0	17874.0	1.0	VH	u_s_0S,u_bk_sel,u_f_2R01,u_f_2L01
+u_s_2S	xc	u_f_2L01	x	data	1104	4	50	11	17733.2	17733.2	1.0	VH	u_s_1N,u_s_0S,u_bk_sel,u_f_2R01
+u_s_2S	xc	u_f_2R01	x	data	1104	4	53	11	17823.2	17646.8	1.01	VH	u_s_1N,u_s_0S,u_bk_sel
+u_s_2N	xc	u_f_2L10	x	data	1104	4	53	11	17705.1	17401.4	1.017	HV	u_s_1N,u_s_0S,u_f_2R01,u_f_2L01
+u_s_6N	xc	u_f_6R10	x	data	1104	4	53	11	18036.7	17191.4	1.049	HV	u_s_7S,u_lk_EN1,u_f_5L01,u_f_5R01
+u_s_7S	xc	u_f_7L02	x	data	1104	4	53	10	18426.3	16275.5	1.132	HV	u_f_4R12,u_f_5L13,u_f_6R02,u_f_7L03
+PORT	rst_n	CELL:DFFHQNx1_ASAP7_75t_R	D	reset	435	435	121	27	41477.7	40847.4	1.015	HV	
+u_s_0N	xc	u_f_0L12	x	data	1104	4	44	10	16053.5	16053.5	1.0	VH	u_f_3L10,u_f_2R03,u_f_2L02,u_f_0R13
+u_s_3N	xc	u_f_3L12	x	data	1104	4	35	10	15593.0	15593.0	1.0	HV	u_s_2N,u_s_1N,u_s_0S
+u_s_1N	xc	u_f_1L12	x	data	1104	4	58	10	19951.1	15462.8	1.29	HV	u_s_0S,u_f_2R01,u_f_2L01
+u_s_4N	xc	u_f_4R10	x	data	1104	4	44	10	15524.8	15438.4	1.006	HV	u_s_5N,u_s_6N,u_s_7S,u_lk_EN1
+u_s_7S	xc	u_f_7R01	x	data	1104	4	33	10	18929.0	15230.7	1.243	HV	u_f_4R12,u_f_5L13,u_f_6R02,u_f_7L03
+u_s_7S	xc	u_f_7L01	x	data	1104	4	40	10	20727.4	15144.3	1.369	VH	u_lk_EN0,u_f_5L01,u_f_5R01,u_f_6R01
+u_s_0S	xc	u_f_0L01	x	data	1104	4	36	10	20225.1	15138.3	1.336	HV	u_f_3L10,u_f_2R03,u_f_2L02,u_f_0R13
+u_s_0S	xc	u_f_0R01	x	data	1104	4	44	10	22207.1	15051.9	1.475	VH	u_bk_sel,u_f_2R01,u_f_2L01,u_f_1L01
+u_s_7N	xc	u_f_7L10	x	data	1104	4	34	9	18958.1	14755.5	1.285	VH	u_f_4R13,u_f_5R02,u_f_6R03
+u_s_5N	xc	u_f_5L12	x	data	1104	4	53	9	17775.1	14302.4	1.243	VH	u_rsv_15,u_lk_EN0,u_f_4R10
+u_s_2N	xc	u_f_2R10	x	data	1104	4	41	9	13772.6	13686.2	1.006	HV	u_s_1N,u_s_0S,u_f_2R01,u_f_2L01
+u_s_2S	xc	u_f_2L02	x	data	1104	4	41	8	14191.2	12827.6	1.106	VH	u_s_1S,u_f_3L10,u_f_2R03
+u_s_6S	xc	u_f_6R02	x	data	1104	4	42	8	14805.7	12617.6	1.173	VH	u_f_4R12,u_f_5L13
+u_s_4N	xc	u_f_4R12	x	data	1104	4	35	8	12452.1	12365.7	1.007	VH	u_s_4S,u_s_5S,u_s_6S
+u_s_7N	xc	u_f_7R12	x	data	1104	4	34	8	12430.7	12344.3	1.007	HV	u_gunit,u_f_5L02,u_f_5R03,u_f_6R10,u_f_7L12
+u_s_5S	xc	u_f_5L02	x	data	1104	4	42	8	14190.5	12290.5	1.155	VH	u_eng,u_gunit
+u_s_3S	iq	u_iqf	qs	data	513	2	64	13	20695.8	20546.1	1.007	VH	u_s_3N,u_rsv_07,u_rsv_06,u_rsv_04
+u_s_3N	xc	u_f_3L10	x	data	1104	4	37	6	16508.2	9466.6	1.744	HV	u_s_2N,u_s_1N,u_s_0S
+u_s_7N	xc	u_f_7L12	x	data	1104	4	37	6	13592.5	9466.3	1.436	HV	u_gunit,u_f_5L02,u_f_5R03,u_f_6R10
+u_s_1S	xc	u_f_1L02	x	data	1104	4	46	6	15791.0	9339.7	1.691	HV	u_s_0N,u_lk_WN1,u_lk_WN3,u_f_3L12,u_f_2R10,u_f_2L03
+u_s_5S	xc	u_f_5R02	x	data	1104	4	45	5	15405.4	8848.0	1.741	HV	u_s_6S,u_s_7N,u_f_4R01,u_f_4R13
+u_s_7N	ro_w	u_s_6N	ri_e	data	1104	4	25	5	8502.3	8398.1	1.012	HV	
+u_s_0N	ro_e	u_s_1N	ri_w	data	1104	4	24	5	8252.4	8252.4	1.0	HV	
+u_s_1N	ro_w	u_s_0N	ri_e	data	1104	4	24	5	8072.1	8072.1	1.0	HV	
+u_s_4S	xc	u_f_4R01	x	data	1104	4	42	5	14720.8	7854.3	1.874	HV	u_s_5S,u_s_6S,u_s_7N
+u_s_3S	xc	u_f_3L01	x	data	1104	4	32	5	15035.4	7777.8	1.933	HV	u_s_2S,u_s_1S,u_s_0N
+u_s_6N	ro_e	u_s_7N	ri_w	data	1104	4	23	5	7701.9	7701.9	1.0	HV	
+u_s_6S	ro_e	u_s_7S	ri_w	data	1104	4	21	4	6986.2	6986.2	1.0	HV	
+u_s_1S	ro_w	u_s_0S	ri_e	data	1104	4	20	4	6788.8	6788.8	1.0	HV	
+u_s_0N	tx0	u_lk_WN0	tx	data	512	1	46	9	15616.9	14450.9	1.081	VH	u_rsv_01,u_lk_WN2
+u_lk_WN2	rx	u_s_0N	rx2	data	512	1	42	9	14457.1	14417.4	1.003	VH	
+u_lk_WN0	rx	u_s_0N	rx0	data	512	1	42	9	14394.2	14354.5	1.003	HV	u_lk_WN2,u_rsv_01
+u_lk_WS1	rx	u_s_0S	rx1	data	512	1	41	9	14380.8	14341.1	1.003	VH	
+u_s_0N	tx2	u_lk_WN2	tx	data	512	1	42	9	14320.9	14320.9	1.0	HV	
+u_s_0S	tx1	u_lk_WS1	tx	data	512	1	42	9	14314.1	14314.1	1.0	HV	
+u_s_0S	ro_e	u_s_1S	ri_w	data	1104	4	20	4	6914.4	6608.5	1.046	HV	
+u_s_7S	ro_w	u_s_6S	ri_e	data	1104	4	19	4	6680.1	6290.0	1.062	HV	
+u_s_4S	bo	u_rsv_11	q	data	513	2	39	8	13471.1	13471.1	1.0	VH	
+u_s_3N	vo	u_gunit	vi_n	data	276	1	69	15	24138.6	23961.6	1.007	HV	u_f_4R01
+u_gunit	vo_n	u_s_3N	vi	data	276	1	75	15	24132.0	23959.2	1.007	VH	u_f_4R01
+u_rsv_11	pv_d	u_s_4S	bi	data	513	1	37	8	12736.3	12736.3	1.0	HV	
+u_s_4S	vo	u_bk_sel	vi_s	data	276	1	70	15	24219.8	23089.2	1.049	VH	u_rsv_09,u_rsv_07,u_rsv_05,u_rsv_03,u_rsv_01
+u_bk_sel	vo_s	u_s_4S	vi	data	276	1	70	15	24091.4	22865.6	1.054	HV	u_rsv_01,u_rsv_03,u_rsv_05,u_rsv_07,u_rsv_09
+u_etap_15	pco	u_eng	pci	data	268	1	69	15	24076.6	22855.1	1.053	VH	u_rsv_12,u_rsv_13
+u_irg_07	so	u_bk_sel	vi_idx	data	276	1	64	14	22333.1	21901.1	1.02	HV	u_rsv_12,u_rsv_10,u_rsv_08,u_rsv_06,u_rsv_04,u_lk_WS1,u_lk_WS0
+u_seqhost	vo_s	u_bk_sel	vi_n	data	276	1	66	14	21067.1	21062.8	1.0	HV	u_f_3L01,u_lk_WN3
+u_bk_sel	vo_n	u_seqhost	vi_s	data	276	1	62	14	21055.2	21055.2	1.0	VH	u_lk_WN3,u_f_3L01
+u_s_7S	tx0	u_lk_ES0	tx	data	512	1	33	7	11130.4	11130.4	1.0	HV	
+u_s_0S	tx0	u_lk_WS0	tx	data	512	1	32	7	11038.0	11038.0	1.0	HV	u_bk_sel
+u_lk_ES0	rx	u_s_7S	rx0	data	512	1	34	7	11073.8	11034.1	1.004	VH	
+u_lk_ES1	rx	u_s_7S	rx1	data	512	1	32	7	11060.5	11020.8	1.004	VH	
+u_s_7S	tx1	u_lk_ES1	tx	data	512	1	33	7	11033.6	10993.7	1.004	HV	
+u_lk_WS0	rx	u_s_0S	rx0	data	512	1	32	7	10981.3	10941.6	1.004	VH	u_bk_sel
+u_f_0R12	xo	u_f_0R13	x	data	1104	4	14	3	4947.8	4861.4	1.018	HV	
+u_f_2R02	xo	u_f_2R03	x	data	1104	4	14	3	4947.8	4861.4	1.018	HV	
+u_f_5L12	xo	u_f_5L13	x	data	1104	4	14	3	4947.8	4861.4	1.018	HV	
+u_f_7L02	xo	u_f_7L03	x	data	1104	4	14	3	4947.8	4861.4	1.018	HV	
+u_s_7N	tx0	u_lk_EN0	tx	data	512	1	31	6	10180.1	10180.1	1.0	VH	
+u_rsv_03	go_d	ld_sg_03_02	i	data	2132	1	0	1	2443.2	2443.2	1.0	HV	
+u_rsv_07	go_d	ld_sg_07_06	i	data	2132	1	0	1	2443.1	2443.1	1.0	HV	
+u_rsv_09	go_d	ld_sg_09_08	i	data	2132	1	0	1	2443.1	2443.1	1.0	HV	
+u_rsv_15	go_d	ld_sg_15_14	i	data	2132	1	0	1	2443.1	2443.1	1.0	HV	
+u_lk_EN0	rx	u_s_7N	rx0	data	512	1	30	6	10123.4	10083.7	1.004	HV	
+u_seqhost	s_hw_w	u_rsv_05	hw	data	292	2	55	11	17662.8	17650.6	1.001	VH	
+u_rsv_05	go_d	ld_sg_05_04	i	data	2132	1	0	1	2410.7	2410.7	1.0	HV	
+u_irg_03	qo	u_irg_04	qi	data	513	2	29	6	10257.2	9995.2	1.026	HV	
+u_lk_EN1	rx	u_s_7N	rx1	data	512	1	29	6	10023.7	9984.0	1.004	HV	
+ld_sg_03_02	o	u_rsv_02	gi_d	data	2132	1	0	1	2393.3	2393.3	1.0	HV	
+ld_sg_07_06	o	u_rsv_06	gi_d	data	2132	1	0	1	2393.2	2393.2	1.0	HV	
+ld_sg_09_08	o	u_rsv_08	gi_d	data	2132	1	0	1	2393.2	2393.2	1.0	HV	
+ld_sg_15_14	o	u_rsv_14	gi_d	data	2132	1	0	1	2393.2	2393.2	1.0	HV	
+u_s_7N	tx1	u_lk_EN1	tx	data	512	1	29	6	9956.9	9956.9	1.0	VH	
+ld_sg_05_04	o	u_rsv_04	gi_d	data	2132	1	0	1	2360.8	2360.8	1.0	HV	
+u_rsv_05	pv_d	u_s_3S	bi	data	513	1	28	6	9702.0	9688.6	1.001	HV	u_s_3N
+u_rsv_01	rq	u_ctrl_01	rq	data	682	1	21	4	7290.0	7263.8	1.004	VH	
+u_seqhost	s_hw_e	u_rsv_11	hw	data	292	2	49	11	17095.9	16936.4	1.009	VH	
+u_rsv_03	go_d	ld_sg_03_05	i	data	2132	1	0	1	2228.1	2228.1	1.0	HV	
+u_s_3S	bo	u_rsv_05	q	data	513	2	29	6	10307.5	9179.4	1.123	VH	u_s_3N
+u_rsv_15	rq	u_ctrl_15	rq	data	682	1	19	4	6650.2	6645.7	1.001	VH	
+ld_sg_08_10	o	u_rsv_10	gi_d	data	2132	1	0	1	2109.7	2109.7	1.0	HV	
+u_s_0N	hb_f_host	u_seqhost	hbe_f_host	data	515	2	26	5	8785.8	8714.3	1.008	VH	u_bk_col
+u_rsv_04	go_d	ld_sg_04_06	i	data	2132	1	0	1	2088.9	2088.9	1.0	HV	
+u_rsv_03	rq	u_ctrl_03	rq	data	682	1	19	4	6525.8	6468.7	1.009	VH	
+u_rsv_05	go_d	ld_sg_05_07	i	data	2132	1	0	1	2040.6	2040.6	1.0	HV	
+u_rsv_07	go_d	ld_sg_07_09	i	data	2132	1	0	1	2040.6	2040.6	1.0	HV	
+u_rsv_08	go_d	ld_sg_08_10	i	data	2132	1	0	1	2038.9	2038.9	1.0	HV	
+u_rsv_04	go_d	ld_sg_04_05	i	data	2132	1	0	1	2037.3	2037.3	1.0	HV	
+ld_sg_01_03	o	u_rsv_03	gi_d	data	2132	1	0	1	2012.5	2012.5	1.0	HV	
+u_rsv_11	go_d	ld_sg_11_13	i	data	2132	1	0	1	2008.2	2008.2	1.0	HV	
+u_rsv_02	go_d	ld_sg_02_03	i	data	2132	1	0	1	2005.0	2005.0	1.0	HV	
+u_rsv_06	go_d	ld_sg_06_07	i	data	2132	1	0	1	2005.0	2005.0	1.0	HV	
+u_rsv_10	go_d	ld_sg_10_11	i	data	2132	1	0	1	2005.0	2005.0	1.0	HV	
+u_rsv_14	go_d	ld_sg_14_15	i	data	2132	1	0	1	2005.0	2005.0	1.0	HV	
+u_rsv_00	go_d	ld_sg_00_01	i	data	2132	1	0	1	2004.9	2004.9	1.0	HV	
+ld_sg_04_06	o	u_rsv_06	gi_d	data	2132	1	0	1	1994.9	1994.9	1.0	HV	
+ld_sg_04_05	o	u_rsv_05	gi_d	data	2132	1	0	1	1987.5	1987.5	1.0	HV	
+u_rsv_01	go_d	ld_sg_01_03	i	data	2132	1	0	1	1974.7	1974.7	1.0	HV	
+ld_sg_03_05	o	u_rsv_05	gi_d	data	2132	1	0	1	1962.8	1962.8	1.0	HV	
+ld_sg_02_03	o	u_rsv_03	gi_d	data	2132	1	0	1	1955.2	1955.2	1.0	HV	
+ld_sg_06_07	o	u_rsv_07	gi_d	data	2132	1	0	1	1955.2	1955.2	1.0	HV	
+ld_sg_10_11	o	u_rsv_11	gi_d	data	2132	1	0	1	1955.2	1955.2	1.0	HV	
+ld_sg_00_01	o	u_rsv_01	gi_d	data	2132	1	0	1	1955.1	1955.1	1.0	HV	
+ld_sg_14_15	o	u_rsv_15	gi_d	data	2132	1	0	1	1955.1	1955.1	1.0	HV	
+ld_sg_05_07	o	u_rsv_07	gi_d	data	2132	1	0	1	1946.6	1946.6	1.0	HV	
+ld_sg_07_09	o	u_rsv_09	gi_d	data	2132	1	0	1	1946.6	1946.6	1.0	HV	
+ld_sg_13_15	o	u_rsv_15	gi_d	data	2132	1	0	1	1946.6	1946.6	1.0	HV	
+ld_sg_11_13	o	u_rsv_13	gi_d	data	2132	1	0	1	1914.3	1914.3	1.0	HV	
+u_rsv_10	go_d	ld_sg_10_12	i	data	2132	1	0	1	1911.1	1911.1	1.0	HV	
+u_rsv_13	go_d	ld_sg_13_15	i	data	2132	1	0	1	1869.2	1869.2	1.0	HV	
+u_rsv_09	rq	u_ctrl_09	rq	data	682	1	18	3	5906.6	5815.7	1.016	VH	
+ld_sg_10_12	o	u_rsv_12	gi_d	data	2132	1	0	1	1817.3	1817.3	1.0	HV	
+u_rsv_13	rq	u_ctrl_13	rq	data	682	1	17	3	5682.4	5677.9	1.001	VH	
+u_ctrl_01	rd	u_rsv_01	r_data	data	512	1	21	4	7455.5	7357.5	1.013	HV	
+u_rsv_05	rq	u_ctrl_05	rq	data	682	1	16	3	5500.8	5500.8	1.0	VH	
+u_seqhost	vo_n	u_s_4N	vi	data	276	1	38	8	13187.6	12582.8	1.048	HV	u_s_4S
+u_rsv_07	rq	u_ctrl_07	rq	data	682	1	15	3	5111.4	5020.5	1.018	VH	
+u_s_4N	vo	u_seqhost	vi_n	data	276	1	38	8	12956.4	12351.6	1.049	HV	u_s_4S
+u_ctrl_03	rd	u_rsv_03	r_data	data	512	1	20	4	6600.1	6562.5	1.006	HV	
+u_ctrl_15	rd	u_rsv_15	r_data	data	512	1	19	4	6587.0	6549.5	1.006	HV	
+u_bk_col	vo_n	u_s_1N	vi	data	276	1	36	8	12339.4	12129.0	1.017	HV	
+u_rsv_11	rq	u_ctrl_11	rq	data	682	1	15	3	4948.7	4882.7	1.014	HV	
+u_s_1N	vo	u_bk_col	vi_n	data	276	1	37	8	12529.4	12026.3	1.042	VH	
+u_eng	vo_n	u_s_6N	vi	data	276	1	33	7	11435.8	11349.4	1.008	HV	
+u_s_6N	vo	u_eng	vi_n	data	276	1	33	7	11381.8	11295.4	1.008	VH	
+u_ctrl_09	rd	u_rsv_09	r_data	data	512	1	18	3	5887.5	5719.4	1.029	HV	
+u_s_7N	f_host	u_seqhost	f_host	data	515	2	18	3	5955.6	5652.0	1.054	HV	
+u_rsv_11	pv_d	u_rsv_05	peer_pv	data	513	2	17	3	5682.7	5596.3	1.015	HV	
+u_ctrl_05	rd	u_rsv_05	r_data	data	512	1	17	3	5632.1	5594.5	1.007	HV	
+u_ctrl_13	rd	u_rsv_13	r_data	data	512	1	17	3	5619.2	5581.6	1.007	HV	
+u_irg_03	so	u_irg_04	si	data	276	1	30	6	10305.9	10117.0	1.019	HV	
+u_rsv_05	pv_d	u_rsv_11	peer_pv	data	513	2	17	3	5557.8	5434.0	1.023	HV	
+u_rsv_08	so_d	ld_ss_08_09	i	data	1076	1	0	1	2537.4	2537.4	1.0	HV	
+u_rsv_02	so_d	ld_ss_02_03	i	data	1076	1	0	1	2537.3	2537.3	1.0	HV	
+u_rsv_04	so_d	ld_ss_04_05	i	data	1076	1	0	1	2537.3	2537.3	1.0	HV	
+u_rsv_06	so_d	ld_ss_06_07	i	data	1076	1	0	1	2537.3	2537.3	1.0	HV	
+u_rsv_14	so_d	ld_ss_14_15	i	data	1076	1	0	1	2490.0	2490.0	1.0	HV	
+ld_ss_04_05	o	u_rsv_05	si_d	data	1076	1	0	1	2486.6	2486.6	1.0	HV	
+ld_ss_06_07	o	u_rsv_07	si_d	data	1076	1	0	1	2486.6	2486.6	1.0	HV	
+ld_ss_08_09	o	u_rsv_09	si_d	data	1076	1	0	1	2486.6	2486.6	1.0	HV	
+ld_ss_02_03	o	u_rsv_03	si_d	data	1076	1	0	1	2486.5	2486.5	1.0	HV	
+u_etap_08	rro	u_irg_04	rri	data	544	1	14	3	5128.2	4825.6	1.063	HV	
+ld_ss_14_15	o	u_rsv_15	si_d	data	1076	1	0	1	2439.2	2439.2	1.0	HV	
+u_etap_12	rro	u_irg_06	rri	data	544	1	14	3	5343.9	4739.2	1.128	VH	
+u_rsv_05	so_d	ld_ss_05_03	i	data	1076	1	0	1	2391.6	2391.6	1.0	HV	
+u_rsv_01	so_d	ld_ss_01_00	i	data	1076	1	0	1	2362.8	2362.8	1.0	HV	
+u_ctrl_11	rd	u_rsv_11	r_data	data	512	1	15	3	5061.3	4937.3	1.025	HV	
+u_ctrl_07	rd	u_rsv_07	r_data	data	512	1	15	3	5092.3	4924.3	1.034	HV	
+ld_ss_01_00	o	u_rsv_00	si_d	data	1076	1	0	1	2312.1	2312.1	1.0	HV	
+u_etap_09	rro	u_irg_04	rri	data	544	1	13	3	4523.2	4523.2	1.0	HV	
+u_rsv_12	so_d	ld_ss_12_10	i	data	1076	1	0	1	2283.3	2283.3	1.0	HV	
+u_rsv_07	so_d	ld_ss_07_06	i	data	1076	1	0	1	2268.1	2268.1	1.0	HV	
+u_rsv_11	so_d	ld_ss_11_10	i	data	1076	1	0	1	2268.1	2268.1	1.0	HV	
+u_rsv_06	so_d	ld_ss_06_04	i	data	1076	1	0	1	2267.6	2267.6	1.0	HV	
+u_rsv_10	so_d	ld_ss_10_08	i	data	1076	1	0	1	2267.6	2267.6	1.0	HV	
+u_lk_WN3	rx	u_s_0N	rx3	data	512	1	14	3	4845.7	4764.8	1.017	VH	
+u_rsv_15	go_d	ld_sg_15_13	i	data	2132	1	0	0	1141.7	1141.7	1.0	HV	
+u_gunit	vo_s	u_s_3S	vi	data	276	1	27	5	9188.2	8798.2	1.044	VH	u_s_7N
+u_s_3S	vo	u_gunit	vi_s	data	276	1	27	5	9185.8	8795.8	1.044	HV	u_s_7N
+u_s_0N	tx3	u_lk_WN3	tx	data	512	1	15	3	5112.9	4737.7	1.079	HV	u_lk_WN1
+u_rsv_05	so_d	ld_ss_05_04	i	data	1076	1	0	1	2252.4	2252.4	1.0	HV	
+u_rsv_03	so_d	ld_ss_03_02	i	data	1076	1	0	1	2252.3	2252.3	1.0	HV	
+u_rsv_12	go_d	ld_sg_12_10	i	data	2132	1	0	0	1132.6	1132.6	1.0	HV	
+u_etap_13	rro	u_irg_06	rri	data	544	1	12	2	4449.4	4436.8	1.003	VH	u_ctrl_14
+u_f_7L13	ret	u_s_7N	rt	data	70	1	110	22	37825.3	34310.6	1.102	VH	u_f_7R13,u_f_7L12,u_f_6R10,u_f_5R03,u_f_5L02,u_gunit
+u_rsv_15	so_d	ld_ss_15_14	i	data	1076	1	0	1	2220.9	2220.9	1.0	HV	
+u_rsv_03	so_d	ld_ss_03_01	i	data	1076	1	0	1	2220.2	2220.2	1.0	HV	
+u_rsv_07	so_d	ld_ss_07_05	i	data	1076	1	0	1	2220.2	2220.2	1.0	HV	
+u_rsv_09	so_d	ld_ss_09_07	i	data	1076	1	0	1	2220.2	2220.2	1.0	HV	
+u_rsv_13	so_d	ld_ss_13_11	i	data	1076	1	0	1	2220.2	2220.2	1.0	HV	
+ld_ss_07_06	o	u_rsv_06	si_d	data	1076	1	0	1	2217.4	2217.4	1.0	HV	
+ld_ss_11_10	o	u_rsv_10	si_d	data	1076	1	0	1	2217.3	2217.3	1.0	HV	
+ld_ss_03_02	o	u_rsv_02	si_d	data	1076	1	0	1	2201.6	2201.6	1.0	HV	
+ld_ss_05_04	o	u_rsv_04	si_d	data	1076	1	0	1	2201.6	2201.6	1.0	HV	
+ld_ss_15_13	o	u_rsv_13	si_d	data	1076	1	0	1	2189.5	2189.5	1.0	HV	
+ld_ss_12_10	o	u_rsv_10	si_d	data	1076	1	0	1	2188.3	2188.3	1.0	HV	
+ld_ss_06_04	o	u_rsv_04	si_d	data	1076	1	0	1	2172.5	2172.5	1.0	HV	
+ld_ss_10_08	o	u_rsv_08	si_d	data	1076	1	0	1	2172.5	2172.5	1.0	HV	
+ld_ss_15_14	o	u_rsv_14	si_d	data	1076	1	0	1	2170.2	2170.2	1.0	HV	
+u_rsv_11	go_d	ld_sg_11_09	i	data	2132	1	0	0	1084.6	1084.6	1.0	HV	
+u_rsv_13	go_d	ld_sg_13_11	i	data	2132	1	0	0	1084.6	1084.6	1.0	HV	
+ld_ss_03_01	o	u_rsv_01	si_d	data	1076	1	0	1	2125.3	2125.3	1.0	HV	
+ld_ss_05_03	o	u_rsv_03	si_d	data	1076	1	0	1	2125.3	2125.3	1.0	HV	
+ld_ss_07_05	o	u_rsv_05	si_d	data	1076	1	0	1	2125.3	2125.3	1.0	HV	
+ld_ss_09_07	o	u_rsv_07	si_d	data	1076	1	0	1	2125.3	2125.3	1.0	HV	
+ld_ss_13_11	o	u_rsv_11	si_d	data	1076	1	0	1	2125.3	2125.3	1.0	HV	
+u_etap_03	rro	u_irg_01	rri	data	544	1	11	2	4181.2	4168.5	1.003	VH	u_ctrl_00
+ld_sg_12_10	o	u_rsv_10	gi_d	data	2132	1	0	0	1039.5	1039.5	1.0	HV	
+u_rsv_06	go_d	ld_sg_06_04	i	data	2132	1	0	0	1020.4	1020.4	1.0	HV	
+u_seqhost	cw_d	u_gunit	cw_d	data	256	1	26	5	8751.2	8451.1	1.036	HV	u_eng
+u_rsv_14	rq	u_ctrl_14	rq	data	682	1	10	2	3159.5	3159.5	1.0	VH	
+u_phy_hbm	kr_data	u_ctrl_15	kr_data	data	512	1	0	2	4207.4	4207.4	1.0	HV	
+ld_sg_15_13	o	u_rsv_13	gi_d	data	2132	1	0	0	1008.7	1008.7	1.0	HV	
+u_ctrl_15	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	2	4172.1	4172.1	1.0	HV	
+u_rsv_15	so_d	ld_ss_15_13	i	data	1076	1	0	1	1984.8	1984.8	1.0	HV	
+ld_pr_04_05	o	u_rsv_05	ri	data	514	1	0	2	4138.5	4138.5	1.0	HV	
+ld_sg_11_09	o	u_rsv_09	gi_d	data	2132	1	0	0	991.4	991.4	1.0	HV	
+ld_sg_13_11	o	u_rsv_11	gi_d	data	2132	1	0	0	991.4	991.4	1.0	HV	
+ld_pr_10_11	o	u_rsv_11	ri	data	514	1	0	2	4093.8	4093.8	1.0	HV	
+u_etap_02	rro	u_irg_01	rri	data	544	1	12	2	4509.6	3866.1	1.166	VH	u_ctrl_00
+u_f_5L03	ret	u_s_5S	rt	data	70	1	92	20	30996.8	30029.5	1.032	VH	u_f_5R02,u_f_4R13,u_f_4R01,u_s_7N,u_s_6S
+u_etap_14	rro	u_irg_07	rri	data	544	1	12	2	4333.6	3853.9	1.124	HV	
+u_f_0R10	ret	u_s_0N	rt	data	70	1	73	19	32072.3	29854.2	1.074	VH	u_f_1L03,u_f_2L10,u_f_2R12,u_f_3L13,u_f_3L01
+u_ctrl_00	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	2	4055.5	4055.5	1.0	HV	
+u_phy_hbm	kr_data	u_ctrl_00	kr_data	data	512	1	0	2	4020.2	4020.2	1.0	HV	
+u_s_2S	vo	u_s_2N	vi	data	276	1	22	4	7456.4	7354.8	1.014	HV	
+u_s_5S	vo	u_s_5N	vi	data	276	1	22	4	7441.2	7354.8	1.012	HV	
+u_etap_05	rro	u_irg_02	rri	data	544	1	10	2	3650.1	3650.1	1.0	HV	
+ld_sg_06_04	o	u_rsv_04	gi_d	data	2132	1	0	0	927.3	927.3	1.0	HV	
+u_rsv_13	so_d	ld_ss_13_15	i	data	1076	1	0	1	1805.4	1805.4	1.0	HV	
+u_etap_15	rro	u_irg_07	rri	data	544	1	10	2	3747.7	3551.5	1.055	HV	
+u_s_2N	vo	u_s_2S	vi	data	276	1	21	4	7188.3	6987.6	1.029	HV	
+u_s_5N	vo	u_s_5S	vi	data	276	1	21	4	7138.8	6987.6	1.022	HV	
+u_lk_WN1	rx	u_s_0N	rx1	data	512	1	11	2	3724.9	3685.2	1.011	HV	
+u_phy_hbm	kr_data	u_ctrl_14	kr_data	data	512	1	0	2	3676.1	3676.1	1.0	HV	
+u_s_0N	tx1	u_lk_WN1	tx	data	512	1	12	2	3658.1	3658.1	1.0	HV	
+u_ctrl_14	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	2	3640.7	3640.7	1.0	HV	
+u_rsv_15	dn_o	ld_dn_15_14	i	data	805	1	0	1	2310.9	2310.9	1.0	HV	
+u_rsv_00	rq	u_ctrl_00	rq	data	682	1	9	1	2725.1	2715.0	1.004	HV	
+u_f_4R02	ret	u_s_4S	rt	data	70	1	82	17	28389.6	26338.4	1.078	VH	u_f_4R01,u_s_7N,u_s_6S,u_s_5S
+u_f_0L10	ret	u_s_0N	rt	data	70	1	52	17	26311.8	26311.8	1.0	VH	u_f_1L03,u_f_2L10,u_f_2R12,u_f_3L13,u_f_3L01
+u_f_0R03	ret	u_s_0S	rt	data	70	1	296	17	28488.5	26139.0	1.09	VH	u_f_0R13,u_f_2L02,u_f_2R03,u_f_3L10
+u_etap_04	rro	u_irg_02	rri	data	544	1	10	2	3767.1	3347.7	1.125	HV	
+ld_dn_15_14	o	u_rsv_14	dn_i	data	805	1	0	1	2259.6	2259.6	1.0	HV	
+u_ctrl_01	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	2	3524.3	3524.3	1.0	HV	
+u_rsv_10	so_d	ld_ss_10_12	i	data	1076	1	0	1	1665.6	1665.6	1.0	HV	
+u_phy_hbm	kr_data	u_ctrl_01	kr_data	data	512	1	0	2	3489.0	3489.0	1.0	HV	
+u_etap_01	rro	u_irg_00	rri	data	544	1	9	2	3382.3	3283.2	1.03	HV	
+u_rsv_03	dn_o	ld_dn_03_02	i	data	805	1	0	1	2218.3	2218.3	1.0	HV	
+u_rsv_13	dn_o	ld_dn_13_12	i	data	805	1	0	1	2218.3	2218.3	1.0	HV	
+u_rsv_07	dn_o	ld_dn_07_06	i	data	805	1	0	1	2218.2	2218.2	1.0	HV	
+u_rsv_09	dn_o	ld_dn_09_08	i	data	805	1	0	1	2218.2	2218.2	1.0	HV	
+u_rsv_04	so_d	ld_ss_04_06	i	data	1076	1	0	1	1649.8	1649.8	1.0	HV	
+u_rsv_01	dn_o	ld_dn_01_00	i	data	805	1	0	1	2187.3	2187.3	1.0	HV	
+u_rsv_09	so_d	ld_ss_09_11	i	data	1076	1	0	1	1634.0	1634.0	1.0	HV	
+u_rsv_11	so_d	ld_ss_11_13	i	data	1076	1	0	1	1634.0	1634.0	1.0	HV	
+u_f_4R03	ret	u_s_4S	rt	data	70	1	76	16	27211.6	24993.2	1.089	VH	u_f_4R01,u_s_7N,u_s_6S,u_s_5S
+ld_dn_03_02	o	u_rsv_02	dn_i	data	805	1	0	1	2167.0	2167.0	1.0	HV	
+ld_dn_11_10	o	u_rsv_10	dn_i	data	805	1	0	1	2167.0	2167.0	1.0	HV	
+ld_dn_13_12	o	u_rsv_12	dn_i	data	805	1	0	1	2167.0	2167.0	1.0	HV	
+ld_dn_07_06	o	u_rsv_06	dn_i	data	805	1	0	1	2166.9	2166.9	1.0	HV	
+ld_dn_09_08	o	u_rsv_08	dn_i	data	805	1	0	1	2166.9	2166.9	1.0	HV	
+ld_dn_01_00	o	u_rsv_00	dn_i	data	805	1	0	1	2136.0	2136.0	1.0	HV	
+u_rsv_05	dn_o	ld_dn_05_04	i	data	805	1	0	1	2133.6	2133.6	1.0	HV	
+u_etap_07	rro	u_irg_03	rri	data	544	1	9	2	3131.7	3131.7	1.0	HV	
+ld_dn_05_04	o	u_rsv_04	dn_i	data	805	1	0	1	2105.2	2105.2	1.0	HV	
+ld_ss_10_12	o	u_rsv_12	si_d	data	1076	1	0	1	1571.1	1571.1	1.0	HV	
+u_etap_10	rro	u_irg_05	rri	data	544	1	10	2	3478.2	3097.6	1.123	HV	
+u_f_0L02	ret	u_s_0S	rt	data	70	1	69	15	23970.7	23941.8	1.001	VH	u_f_0R13,u_f_2L02,u_f_2R03,u_f_3L10
+u_f_0R12	ret	u_s_0N	rt	data	70	1	76	15	26290.7	23941.8	1.098	VH	u_f_1L03,u_f_2L10,u_f_2R12,u_f_3L13,u_f_3L01
+ld_ss_04_06	o	u_rsv_06	si_d	data	1076	1	0	1	1555.4	1555.4	1.0	HV	
+u_rsv_11	dn_o	ld_dn_11_10	i	data	805	1	0	1	2071.7	2071.7	1.0	HV	
+ld_ss_09_11	o	u_rsv_11	si_d	data	1076	1	0	1	1539.5	1539.5	1.0	HV	
+ld_ss_11_13	o	u_rsv_13	si_d	data	1076	1	0	1	1539.5	1539.5	1.0	HV	
+ld_ss_13_15	o	u_rsv_15	si_d	data	1076	1	0	1	1539.5	1539.5	1.0	HV	
+u_etap_00	rro	u_irg_00	rri	data	544	1	11	1	3658.2	2982.2	1.227	HV	
+u_ctrl_07	rrd	u_etap_07	rri	data	544	1	8	1	3205.5	2961.0	1.083	VH	
+u_phy_hbm	kr_data	u_ctrl_13	kr_data	data	512	1	0	2	3144.8	3144.8	1.0	HV	
+u_f_5R10	ret	u_s_5N	rt	data	70	1	68	15	23909.2	22944.7	1.042	VH	u_f_5R01,u_f_5L01,u_lk_EN1,u_s_7S,u_s_6N
+u_f_3L02	ret	u_s_3S	rt	data	70	1	74	15	29601.3	22833.2	1.296	VH	u_lk_WN3,u_lk_WN1,u_s_0N,u_s_1S,u_s_2S
+u_ctrl_13	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	2	3109.5	3109.5	1.0	HV	
+u_rsv_11	dn_o	ld_dn_11_13	i	data	805	1	0	1	1976.9	1976.9	1.0	HV	
+u_f_2R13	ret	u_s_2N	rt	data	70	1	71	15	23972.8	22668.3	1.058	VH	u_f_2R01,u_s_0S,u_s_1N
+u_f_0L03	ret	u_s_0S	rt	data	70	1	67	15	22625.5	22596.6	1.001	VH	u_f_0R13,u_f_2L02,u_f_2R03,u_f_3L10
+u_ctrl_14	rd	u_rsv_14	r_data	data	512	1	9	2	3097.9	3063.3	1.011	HV	
+u_rsv_05	dn_o	ld_dn_05_07	i	data	805	1	0	1	1930.6	1930.6	1.0	HV	
+u_etap_06	rro	u_irg_03	rri	data	544	1	9	1	3188.3	2829.3	1.127	HV	
+u_ctrl_02	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	1	2993.0	2993.0	1.0	HV	
+u_f_2R02	ret	u_s_2S	rt	data	70	1	66	14	23042.4	21821.5	1.056	HV	u_f_3L03,u_bk_sel,u_rsv_01,u_rsv_03,u_rsv_05,u_rsv_07
+u_etap_11	rro	u_irg_05	rri	data	544	1	8	1	2816.2	2795.2	1.008	HV	
+u_f_1L10	ret	u_s_1N	rt	data	70	1	67	14	24928.1	21704.9	1.148	VH	u_f_2L01,u_f_2R01,u_s_0S
+u_phy_hbm	kr_data	u_ctrl_02	kr_data	data	512	1	0	1	2957.6	2957.6	1.0	HV	
+u_f_3L03	ret	u_s_3S	rt	data	70	1	70	14	28256.1	21488.0	1.315	VH	u_lk_WN3,u_lk_WN1,u_s_0N,u_s_1S,u_s_2S
+u_rsv_12	rq	u_ctrl_12	rq	data	682	1	7	1	2195.9	2191.5	1.002	HV	
+u_ctrl_06	rrd	u_etap_06	rri	data	544	1	8	1	2885.9	2732.0	1.056	VH	
+u_f_6R12	ret	u_s_6N	rt	data	70	1	62	13	22915.3	20864.1	1.098	VH	u_f_6R01,u_f_5R01,u_f_5L01,u_lk_EN1,u_s_7S
+u_f_2R12	ret	u_s_2N	rt	data	70	1	61	13	20970.7	20797.9	1.008	HV	u_f_3L13,u_f_3L01,u_bk_col
+u_ctrl_00	rd	u_rsv_00	r_data	data	512	1	8	1	2860.4	2811.2	1.018	HV	
+u_f_2L12	ret	u_s_2N	rt	data	70	1	64	13	21354.8	20471.1	1.043	VH	u_f_2R01,u_s_0S,u_s_1N
+u_rsv_04	ro	ld_pr_04_05	i	data	514	1	0	1	2711.6	2711.6	1.0	HV	
+u_rsv_02	ro	ld_pr_02_03	i	data	514	1	0	1	2711.5	2711.5	1.0	HV	
+u_f_7R02	ret	u_s_7S	rt	data	70	1	55	13	19819.0	19790.1	1.001	VH	u_f_7L03,u_f_6R02,u_f_5L13,u_f_4R12
+u_rsv_00	ro	ld_pr_00_01	i	data	514	1	0	1	2666.9	2666.9	1.0	HV	
+u_rsv_06	ro	ld_pr_06_07	i	data	514	1	0	1	2666.9	2666.9	1.0	HV	
+u_rsv_08	ro	ld_pr_08_09	i	data	514	1	0	1	2666.9	2666.9	1.0	HV	
+u_rsv_10	ro	ld_pr_10_11	i	data	514	1	0	1	2666.8	2666.8	1.0	HV	
+u_rsv_12	ro	ld_pr_12_13	i	data	514	1	0	1	2666.8	2666.8	1.0	HV	
+ld_pr_02_03	o	u_rsv_03	ri	data	514	1	0	1	2659.0	2659.0	1.0	HV	
+u_f_6R13	ret	u_s_6N	rt	data	70	1	61	13	21737.3	19518.9	1.114	VH	u_f_6R01,u_f_5R01,u_f_5L01,u_lk_EN1,u_s_7S
+ld_pr_07_05	o	u_rsv_05	ri	data	514	1	0	1	2652.0	2652.0	1.0	HV	
+ld_pr_13_11	o	u_rsv_11	ri	data	514	1	0	1	2652.0	2652.0	1.0	HV	
+u_ctrl_05	rrd	u_etap_05	rri	data	544	1	7	1	2657.1	2503.2	1.061	VH	
+u_rsv_02	rq	u_ctrl_02	rq	data	682	1	6	1	1984.7	1984.7	1.0	VH	
+u_f_5L10	ret	u_s_5N	rt	data	70	1	57	12	20029.7	19229.5	1.042	VH	u_f_5R01,u_f_5L01,u_lk_EN1,u_s_7S,u_s_6N
+ld_pr_00_01	o	u_rsv_01	ri	data	514	1	0	1	2614.4	2614.4	1.0	HV	
+ld_pr_08_09	o	u_rsv_09	ri	data	514	1	0	1	2614.4	2614.4	1.0	HV	
+ld_pr_06_07	o	u_rsv_07	ri	data	514	1	0	1	2614.3	2614.3	1.0	HV	
+ld_pr_12_13	o	u_rsv_13	ri	data	514	1	0	1	2614.3	2614.3	1.0	HV	
+u_f_2L13	ret	u_s_2N	rt	data	70	1	60	12	21265.6	19125.9	1.112	VH	u_f_2R01,u_s_0S,u_s_1N
+u_phy_hbm	kr_data	u_ctrl_12	kr_data	data	512	1	0	1	2613.6	2613.6	1.0	HV	
+u_f_2L01	ret	u_s_2S	rt	data	70	1	56	12	19839.6	19039.5	1.042	VH	u_f_3L12,u_lk_WN3,u_lk_WN1,u_s_0N,u_s_1S
+u_f_2R01	ret	u_s_2S	rt	data	70	1	56	12	20090.4	18953.1	1.06	HV	u_bk_sel,u_s_0S,u_s_1N,u_s_2N
+u_rsv_14	ro	ld_pr_14_15	i	data	514	1	0	1	2577.4	2577.4	1.0	HV	
+u_ctrl_12	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	1	2578.3	2578.3	1.0	HV	
+u_f_0R13	ret	u_s_0N	rt	data	70	1	57	12	21059.3	18665.4	1.128	HV	u_f_2L02,u_f_2R03,u_f_3L10,u_s_0S
+u_s_3S	ro_w	u_s_2S	ri_e	data	1104	4	4	0	1183.3	1183.3	1.0	HV	
+u_f_0R02	ret	u_s_0S	rt	data	70	1	59	12	20832.7	18614.6	1.119	VH	u_f_0L12,u_f_0R13,u_f_2L02,u_f_2R03,u_f_3L10
+u_f_2L10	ret	u_s_2N	rt	data	70	1	53	12	18687.1	18600.7	1.005	VH	u_f_2L01,u_f_2R01,u_s_0S,u_s_1N
+ld_pr_14_15	o	u_rsv_15	ri	data	514	1	0	1	2524.9	2524.9	1.0	HV	
+u_f_7R03	ret	u_s_7S	rt	data	70	1	51	12	18473.8	18444.9	1.002	VH	u_f_7L03,u_f_6R02,u_f_5L13,u_f_4R12
+u_rsv_07	ro	ld_pr_07_05	i	data	514	1	0	1	2500.5	2500.5	1.0	HV	
+u_rsv_09	ro	ld_pr_09_07	i	data	514	1	0	1	2500.5	2500.5	1.0	HV	
+u_rsv_13	ro	ld_pr_13_11	i	data	514	1	0	1	2500.5	2500.5	1.0	HV	
+u_f_7R10	ret	u_s_7N	rt	data	70	1	32	12	19030.0	18056.1	1.054	VH	u_f_7L12,u_f_6R10,u_f_5R03,u_f_5L02,u_gunit
+u_ctrl_03	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	1	2461.7	2461.7	1.0	HV	
+u_f_1L01	ret	u_s_1S	rt	data	70	1	58	11	21250.5	17989.7	1.181	VH	u_f_2R10,u_f_3L12,u_lk_WN3,u_lk_WN1,u_s_0N
+u_f_6R01	ret	u_s_6S	rt	data	70	1	52	11	19793.3	17909.3	1.105	VH	u_f_5R02,u_f_4R13,u_f_4R01,u_s_7N
+u_s_6S	vo	u_eng	vi_s	data	276	1	14	3	4667.6	4513.0	1.034	HV	
+ld_pr_15_13	o	u_rsv_13	ri	data	514	1	0	1	2418.3	2418.3	1.0	HV	
+u_eng	vo_s	u_s_6S	vi	data	276	1	14	3	4683.9	4502.2	1.04	HV	
+u_phy_hbm	kr_data	u_ctrl_03	kr_data	data	512	1	0	1	2426.4	2426.4	1.0	HV	
+u_f_5R01	ret	u_s_5S	rt	data	70	1	53	11	18670.8	17706.3	1.054	HV	u_f_5L01,u_lk_EN0,u_s_7S,u_s_6N
+u_ctrl_04	rrd	u_etap_04	rri	data	544	1	7	1	2428.2	2274.4	1.068	VH	
+ld_pr_09_07	o	u_rsv_07	ri	data	514	1	0	1	2403.5	2403.5	1.0	HV	
+u_f_5L01	ret	u_s_5S	rt	data	70	1	53	11	18420.0	17619.9	1.045	HV	u_lk_EN0,u_s_7S,u_s_6N
+ld_dn_11_13	o	u_rsv_13	dn_i	data	805	1	0	1	1500.0	1500.0	1.0	HV	
+u_rsv_15	ro	ld_pr_15_13	i	data	514	1	0	1	2343.8	2343.8	1.0	HV	
+u_irg_00	qo	u_irg_01	qi	data	513	2	8	1	2505.6	2332.8	1.074	HV	
+u_irg_06	qo	u_irg_07	qi	data	513	2	8	1	2601.3	2332.8	1.115	HV	
+u_f_6R10	ret	u_s_6N	rt	data	70	1	45	11	17075.7	17075.7	1.0	VH	u_f_5R01,u_f_5L01,u_lk_EN1,u_s_7S
+u_bk_col	vo_s	u_s_1S	vi	data	276	1	14	2	4416.5	4330.1	1.02	HV	
+u_f_5R12	ret	u_s_5N	rt	data	70	1	52	11	18080.4	17032.3	1.062	VH	u_f_5R01,u_f_5L01,u_lk_EN1,u_s_7S,u_s_6N
+u_etap_07	pco	u_etap_08	pci	data	268	1	14	2	4911.7	4439.9	1.106	HV	
+u_f_3L13	ret	u_s_3N	rt	data	70	1	37	11	16831.2	16831.2	1.0	VH	u_s_0S,u_s_1N,u_s_2N
+ld_dn_05_07	o	u_rsv_07	dn_i	data	805	1	0	0	1453.7	1453.7	1.0	HV	
+ld_dn_13_15	o	u_rsv_15	dn_i	data	805	1	0	0	1453.7	1453.7	1.0	HV	
+u_s_1S	vo	u_bk_col	vi_s	data	276	1	13	2	4565.6	4232.4	1.079	HV	
+u_f_2R03	ret	u_s_2S	rt	data	70	1	54	11	19028.4	16545.1	1.15	HV	u_f_3L10,u_s_0S,u_s_1N,u_s_2N
+u_f_0L12	ret	u_s_0N	rt	data	70	1	43	10	16497.1	16468.2	1.002	HV	u_f_0R13,u_f_2L02,u_f_2R03,u_f_3L10
+u_s_3S	ro_e	u_s_4S	ri_w	data	1104	4	4	0	1116.4	1040.2	1.073	HV	
+u_f_7L02	ret	u_s_7S	rt	data	70	1	52	10	19590.4	16074.9	1.219	VH	u_f_7L03,u_f_6R02,u_f_5L13,u_f_4R12
+u_ctrl_03	rrd	u_etap_03	rri	data	544	1	6	1	2108.8	2045.5	1.031	VH	
+u_rsv_13	dn_o	ld_dn_13_15	i	data	805	1	0	0	1377.3	1377.3	1.0	HV	
+u_irg_04	qo	u_irg_05	qi	data	513	2	10	1	3309.3	2160.0	1.532	HV	
+u_f_1L12	ret	u_s_1N	rt	data	70	1	52	10	19182.9	15792.5	1.215	VH	u_f_2L01,u_f_2R01,u_s_0S
+u_f_5R13	ret	u_s_5N	rt	data	70	1	53	10	17991.2	15687.1	1.147	VH	u_f_5R01,u_f_5L01,u_lk_EN1,u_s_7S,u_s_6N
+u_f_3L12	ret	u_s_3N	rt	data	70	1	33	10	15486.0	15486.0	1.0	VH	u_s_0S,u_s_1N,u_s_2N
+u_f_0L01	ret	u_s_0S	rt	data	70	1	36	10	20562.6	15339.0	1.341	VH	u_f_0R13,u_f_2L02,u_f_2R03,u_f_3L10
+u_ctrl_12	rd	u_rsv_12	r_data	data	512	1	7	1	2146.9	2095.2	1.025	HV	
+u_s_3N	ro_w	u_s_2N	ri_e	data	1104	4	4	0	1318.8	967.3	1.363	HV	
+u_f_0R01	ret	u_s_0S	rt	data	70	1	43	10	22771.5	15252.6	1.493	HV	u_f_1L01,u_f_2L01,u_f_2R01,u_bk_sel
+u_ctrl_08	rrd	u_etap_08	rri	data	544	1	6	1	2204.6	1960.1	1.125	VH	
+u_phy_hbm	kr_data	u_ctrl_11	kr_data	data	512	1	0	1	2082.4	2082.4	1.0	HV	
+u_f_0L13	ret	u_s_0N	rt	data	70	1	40	10	15151.9	15123.0	1.002	VH	u_f_1L03,u_f_2L10,u_f_2R12,u_f_3L13,u_f_3L01
+u_ctrl_11	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	1	2047.1	2047.1	1.0	HV	
+u_rsv_03	dn_o	ld_dn_03_01	i	data	805	1	0	0	1295.2	1295.2	1.0	HV	
+u_f_2R10	ret	u_s_2N	rt	data	70	1	42	9	15058.3	14885.5	1.012	VH	u_f_2L01,u_f_2R01,u_s_0S,u_s_1N
+u_f_7R01	ret	u_s_7S	rt	data	70	1	32	9	18830.1	14816.1	1.271	VH	u_f_7L03,u_f_6R02,u_f_5L13,u_f_4R12
+u_ctrl_02	rd	u_rsv_02	r_data	data	512	1	6	1	2065.4	2016.2	1.024	HV	
+u_f_7L01	ret	u_s_7S	rt	data	70	1	41	9	22250.0	14729.7	1.511	HV	u_f_6R01,u_f_5R01,u_f_5L01,u_lk_EN0
+u_f_0L02	xo	u_f_0L03	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_0L12	xo	u_f_0L13	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_1L02	xo	u_f_1L03	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_1L12	xo	u_f_1L13	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_2L02	xo	u_f_2L03	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_2L12	xo	u_f_2L13	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_3L02	xo	u_f_3L03	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_3L12	xo	u_f_3L13	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_4R02	xo	u_f_4R03	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_4R12	xo	u_f_4R13	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_5R02	xo	u_f_5R03	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_5R12	xo	u_f_5R13	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_6R02	xo	u_f_6R03	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_6R12	xo	u_f_6R13	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_7R02	xo	u_f_7R03	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_7R12	xo	u_f_7R13	x	data	1104	4	3	0	1016.6	930.2	1.093	HV	
+u_f_1L13	ret	u_s_1N	rt	data	70	1	61	9	22133.2	14447.3	1.532	VH	u_f_2L01,u_f_2R01,u_s_0S
+u_rsv_01	ro	ld_pr_01_03	i	data	514	1	0	1	1959.7	1959.7	1.0	HV	
+u_f_2L02	ret	u_s_2S	rt	data	70	1	48	9	16595.2	14347.9	1.157	HV	u_f_2R03,u_f_3L10,u_s_1S
+u_f_7L10	ret	u_s_7N	rt	data	70	1	34	9	20306.0	14340.9	1.416	HV	u_f_6R03,u_f_5R02,u_f_4R13
+u_iqf	qr	u_irg_00	qi	data	513	2	8	1	2656.6	1955.1	1.359	HV	
+u_f_4R10	ret	u_s_4N	rt	data	70	1	43	9	16185.2	14301.2	1.132	VH	u_lk_EN1,u_s_7S,u_s_6N,u_s_5N
+u_rsv_09	ro	ld_pr_09_11	i	data	514	1	0	1	1944.8	1944.8	1.0	HV	
+u_eng	rco	u_etap_15	rci	data	43	1	71	15	24139.1	23065.1	1.047	HV	u_rsv_13,u_rsv_12
+u_rsv_04	rq	u_ctrl_04	rq	data	682	1	5	0	1450.6	1450.6	1.0	HV	
+u_s_4N	ro_e	u_s_5N	ri_w	data	1104	4	3	0	1165.3	896.1	1.3	HV	
+u_ctrl_04	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	1	1930.5	1930.5	1.0	HV	
+u_ctrl_02	rrd	u_etap_02	rri	data	544	1	5	1	1970.6	1816.7	1.085	VH	
+u_phy_hbm	kr_data	u_ctrl_04	kr_data	data	512	1	0	1	1895.2	1895.2	1.0	HV	
+ld_dn_03_01	o	u_rsv_01	dn_i	data	805	1	0	0	1200.5	1200.5	1.0	HV	
+ld_dn_05_03	o	u_rsv_03	dn_i	data	805	1	0	0	1200.5	1200.5	1.0	HV	
+ld_dn_11_09	o	u_rsv_09	dn_i	data	805	1	0	0	1200.5	1200.5	1.0	HV	
+ld_pr_01_03	o	u_rsv_03	ri	data	514	1	0	1	1863.1	1863.1	1.0	HV	
+u_rsv_10	rq	u_ctrl_10	rq	data	682	1	4	0	1396.4	1396.4	1.0	HV	
+u_s_4S	ro_w	u_s_3S	ri_e	data	1104	4	3	0	1026.1	857.3	1.197	HV	
+u_ctrl_09	rrd	u_etap_09	rri	data	544	1	5	1	1885.2	1731.3	1.089	VH	
+u_f_4R13	ret	u_s_4N	rt	data	70	1	35	8	13381.2	13381.2	1.0	VH	u_lk_EN1,u_s_7S,u_s_6N,u_s_5N
+u_f_5L12	ret	u_s_5N	rt	data	70	1	50	8	17465.2	13317.1	1.311	HV	u_f_4R10,u_lk_EN0,u_rsv_15,u_rsv_13,u_rsv_11
+u_rsv_03	ro	ld_pr_03_05	i	data	514	1	0	1	1773.3	1773.3	1.0	HV	
+u_f_2L03	ret	u_s_2S	rt	data	70	1	47	8	16851.6	13002.7	1.296	HV	u_f_2R10,u_f_3L12,u_lk_WN3,u_lk_WN1,u_s_0N,u_s_1S
+u_s_3N	ro_e	u_s_4N	ri_w	data	1104	4	3	0	824.2	824.2	1.0	HV	
+u_rsv_05	dn_o	ld_dn_05_03	i	data	805	1	0	0	1084.7	1084.7	1.0	HV	
+u_ctrl_01	rrd	u_etap_01	rri	data	544	1	4	1	1741.7	1587.8	1.097	VH	
+u_f_7R12	ret	u_s_7N	rt	data	70	1	33	8	12172.6	12143.7	1.002	VH	u_f_7L12,u_f_6R10,u_f_5R03,u_f_5L02,u_gunit
+u_f_4R12	ret	u_s_4N	rt	data	70	1	31	8	12036.0	12036.0	1.0	HV	u_s_6S,u_s_5S,u_s_4S
+u_f_6R02	ret	u_s_6S	rt	data	70	1	38	7	14763.7	11694.5	1.262	HV	u_f_5L13,u_f_4R12
+u_ctrl_10	rrd	u_etap_10	rri	data	544	1	5	1	1656.4	1502.5	1.102	VH	
+u_f_1L03	ret	u_s_1S	rt	data	70	1	49	7	18903.7	11508.1	1.643	HV	u_f_2L10,u_f_2R12,u_f_3L13,u_f_3L01,u_s_0N
+u_phy_hbm	kr_data	u_ctrl_10	kr_data	data	512	1	0	1	1551.0	1551.0	1.0	HV	
+u_ctrl_10	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	1	1515.7	1515.7	1.0	HV	
+u_f_7L03	ret	u_s_7S	rt	data	70	1	40	7	15441.3	10798.5	1.43	VH	u_f_6R02,u_f_5L13,u_f_4R12
+u_f_7R13	ret	u_s_7N	rt	data	70	1	32	7	11999.8	10798.5	1.111	VH	u_f_7L12,u_f_6R10,u_f_5R03,u_f_5L02,u_gunit
+u_f_5L02	ret	u_s_5S	rt	data	70	1	36	7	12739.4	10770.2	1.183	HV	u_gunit,u_eng
+u_s_1N	ro_e	u_s_2N	ri_w	data	1104	4	3	0	685.9	680.1	1.008	HV	
+u_s_1S	ro_e	u_s_2S	ri_w	data	1104	4	3	0	680.1	680.1	1.0	HV	
+u_s_4S	ro_e	u_s_5S	ri_w	data	1104	4	3	0	680.1	680.1	1.0	HV	
+u_s_5N	ro_e	u_s_6N	ri_w	data	1104	4	3	0	695.1	680.1	1.022	HV	
+u_s_5S	ro_e	u_s_6S	ri_w	data	1104	4	3	0	680.1	680.1	1.0	HV	
+u_ctrl_04	rd	u_rsv_04	r_data	data	512	1	5	0	1510.7	1461.5	1.034	HV	
+u_rsv_06	rq	u_ctrl_06	rq	data	682	1	4	0	1089.3	1089.3	1.0	HV	
+u_s_5N	ro_w	u_s_4N	ri_e	data	1104	4	3	0	958.2	671.6	1.427	HV	
+u_ctrl_00	rrd	u_etap_00	rri	data	544	1	4	0	1513.0	1359.1	1.113	HV	
+u_rsv_11	dn_o	ld_dn_11_09	i	data	805	1	0	0	913.3	913.3	1.0	HV	
+u_f_6R03	ret	u_s_6S	rt	data	70	1	39	6	15103.7	10349.3	1.459	HV	u_f_5R02,u_f_4R13,u_s_7N
+u_ctrl_05	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	0	1399.3	1399.3	1.0	HV	
+u_f_1L02	ret	u_s_1S	rt	data	70	1	51	6	18267.3	10162.9	1.797	HV	u_f_2L03,u_f_2R10,u_f_3L12,u_lk_WN3,u_lk_WN1,u_s_0N
+u_s_4N	ro_w	u_s_3N	ri_e	data	1104	4	3	0	641.3	641.3	1.0	HV	
+u_phy_hbm	kr_data	u_ctrl_05	kr_data	data	512	1	0	0	1364.0	1364.0	1.0	HV	
+u_f_5L13	ret	u_s_5N	rt	data	70	1	43	6	15385.5	9923.5	1.55	HV	u_f_4R12,u_lk_EN1,u_s_7S,u_s_6N
+u_ctrl_11	rrd	u_etap_11	rri	data	544	1	4	0	1427.4	1273.5	1.121	VH	
+u_f_3L10	ret	u_s_3N	rt	data	70	1	38	6	16615.2	9573.6	1.736	HV	u_s_0S,u_s_1N,u_s_2N
+u_ctrl_10	rd	u_rsv_10	r_data	data	512	1	4	0	1342.4	1300.2	1.033	HV	
+u_seqhost	mu_c_0s	u_s_0S	mu_c	data	34	1	58	13	19744.3	19575.9	1.009	VH	
+u_seqhost	mu_c_7s	u_s_7S	mu_c	data	34	1	59	12	19558.0	19471.6	1.004	HV	u_eng,u_s_7N
+u_irg_00	so	u_irg_01	si	data	276	1	8	1	2505.6	2332.8	1.074	HV	
+u_irg_06	so	u_irg_07	si	data	276	1	8	1	2524.9	2332.8	1.082	HV	
+u_f_7L12	ret	u_s_7N	rt	data	70	1	37	6	14363.6	9051.7	1.587	HV	u_f_6R10,u_f_5R03,u_f_5L02,u_gunit
+u_irg_05	qo	u_irg_06	qi	data	513	2	7	0	2186.1	1209.6	1.807	HV	u_irg_04
+u_rsv_11	pv_x	u_s_4S	bi	data	48	1	37	8	12763.2	12763.2	1.0	HV	
+u_f_5R03	ret	u_s_5S	rt	data	70	1	39	5	13820.3	8573.0	1.612	HV	u_f_5L02,u_f_4R01,u_s_7N,u_s_6S
+u_irg_04	so	u_irg_05	si	data	276	1	11	1	3628.8	2160.0	1.68	HV	
+u_seqhost	s_hw_w	u_rsv_05	j	data	33	1	55	11	17674.3	17674.3	1.0	VH	
+u_seqhost	s_j	u_rsv_05	j	data	33	1	55	11	17628.3	17628.3	1.0	VH	
+u_seqhost	s_j	u_rsv_05	hw	data	33	1	55	11	17616.9	17604.6	1.001	VH	
+u_rsv_08	rq	u_ctrl_08	rq	data	682	1	3	0	853.4	849.0	1.005	HV	
+u_ctrl_12	rrd	u_etap_12	rri	data	544	1	3	0	1198.6	1044.7	1.147	VH	
+u_ctrl_06	rd	u_rsv_06	r_data	data	512	1	4	0	1149.4	1100.2	1.045	HV	
+u_seqhost	t_host	u_s_0N	hb_status_t_host	data	77	1	21	4	7267.1	7267.1	1.0	HV	
+u_seqhost	s_j	u_rsv_11	hw	data	33	1	49	11	17009.5	16923.1	1.005	VH	
+u_seqhost	s_hw_e	u_rsv_11	j	data	33	1	49	11	17034.2	16912.7	1.007	VH	
+u_seqhost	s_j	u_rsv_11	j	data	33	1	49	11	17021.0	16899.4	1.007	VH	
+u_f_3L01	ret	u_s_3S	rt	data	70	1	32	5	15142.4	7884.8	1.92	HV	u_s_0N,u_s_1S,u_s_2S
+u_f_5R02	ret	u_s_5S	rt	data	70	1	39	5	13993.1	7862.7	1.78	HV	u_f_4R13,u_f_4R01,u_s_7N,u_s_6S
+u_s_2S	ro_e	u_s_3S	ri_w	data	1104	4	2	0	703.9	489.7	1.438	HV	
+u_phy_hbm	kr_data	u_ctrl_09	kr_data	data	512	1	0	0	1019.8	1019.8	1.0	HV	
+u_ctrl_09	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	0	984.5	984.5	1.0	HV	
+u_s_2N	ro_w	u_s_1N	ri_e	data	1104	4	2	0	507.1	455.6	1.113	HV	
+u_s_2S	ro_w	u_s_1S	ri_e	data	1104	4	2	0	472.1	455.6	1.036	HV	
+u_s_5S	ro_w	u_s_4S	ri_e	data	1104	4	2	0	501.5	455.6	1.101	HV	
+u_s_6N	ro_w	u_s_5N	ri_e	data	1104	4	2	0	507.1	455.6	1.113	HV	
+u_s_6S	ro_w	u_s_5S	ri_e	data	1104	4	2	0	462.2	455.6	1.015	HV	
+u_rsv_05	pv_x	u_s_3S	bi	data	48	1	28	6	9675.0	9661.7	1.001	HV	u_s_3N
+u_f_4R01	ret	u_s_4S	rt	data	70	1	35	4	13868.0	6622.0	2.094	HV	u_s_7N,u_s_6S,u_s_5S
+u_s_0N	hb_ks	u_seqhost	starter_f_ks	data	53	2	26	5	8784.3	8714.3	1.008	VH	u_bk_col
+u_seqhost	t_host	u_s_7N	t_host	data	77	1	18	3	6280.7	5977.1	1.051	VH	
+u_irg_04	rqo	u_etap_08	rqi	data	92	1	15	3	5402.2	4984.6	1.084	VH	
+u_irg_06	rqo	u_etap_12	rqi	data	92	1	15	3	4898.2	4898.2	1.0	HV	
+u_ctrl_06	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	0	868.1	868.1	1.0	HV	
+u_ctrl_13	rrd	u_etap_13	rri	data	544	1	3	0	969.8	815.9	1.189	VH	
+u_irg_04	rqo	u_etap_09	rqi	data	92	1	13	3	4682.2	4682.2	1.0	VH	
+u_ctrl_08	rd	u_rsv_08	r_data	data	512	1	3	0	933.8	838.1	1.114	HV	
+u_phy_hbm	kr_data	u_ctrl_06	kr_data	data	512	1	0	0	832.7	832.7	1.0	HV	
+u_irg_06	rqo	u_etap_13	rqi	data	92	1	13	3	4595.8	4595.8	1.0	HV	u_ctrl_14
+u_irg_01	rqo	u_etap_03	rqi	data	92	1	12	2	4289.5	4289.5	1.0	HV	u_ctrl_00
+u_seqhost	t_kd	u_s_0N	hb_status_t_host	data	54	1	21	4	7273.4	7273.4	1.0	HV	
+u_seqhost	t_kd	u_s_0N	hb_status_t_kd	data	54	1	21	4	7267.1	7267.1	1.0	HV	
+u_seqhost	t_host	u_s_0N	hb_status_t_kd	data	54	1	21	4	7260.9	7260.9	1.0	HV	
+u_irg_07	rqo	u_etap_14	rqi	data	92	1	13	2	4231.2	4012.9	1.054	VH	
+u_irg_01	rqo	u_etap_02	rqi	data	92	1	12	2	3987.1	3987.1	1.0	HV	u_ctrl_00
+u_irg_02	rqo	u_etap_05	rqi	data	92	1	12	2	3771.1	3771.1	1.0	HV	
+u_irg_07	rqo	u_etap_15	rqi	data	92	1	11	2	3948.1	3710.5	1.064	VH	
+u_irg_05	so	u_irg_06	si	data	276	1	8	0	2505.6	1209.6	2.071	HV	u_irg_04
+u_s_0N	hb_f_host	u_seqhost	starter_f_ks	data	37	1	26	5	8758.3	8758.3	1.0	VH	u_bk_col
+u_seqhost	t_kd	u_s_7N	t_kd	data	54	1	18	3	6293.3	5989.7	1.051	VH	
+u_seqhost	t_host	u_s_7N	t_kd	data	54	1	18	3	6287.0	5983.4	1.051	VH	
+u_seqhost	t_kd	u_s_7N	t_host	data	54	1	18	3	6287.0	5983.4	1.051	VH	
+u_s_0N	hb_ks	u_seqhost	hbe_f_host	data	37	1	26	5	8741.9	8670.3	1.008	VH	u_bk_col
+u_ctrl_14	rrd	u_etap_14	rri	data	544	1	2	0	745.5	587.1	1.27	VH	
+u_irg_02	rqo	u_etap_04	rqi	data	92	1	11	2	3468.7	3468.7	1.0	VH	
+u_irg_00	rqo	u_etap_01	rqi	data	92	1	10	2	3622.5	3404.2	1.064	HV	
+u_s_7N	f_ks	u_seqhost	f_ks	data	53	2	19	3	6171.2	5790.1	1.066	HV	
+u_s_2N	ro_e	u_s_3N	ri_w	data	1104	4	1	0	442.5	273.7	1.617	HV	
+u_irg_05	rqo	u_etap_10	rqi	data	92	1	10	2	3256.6	3256.6	1.0	VH	
+u_irg_03	rqo	u_etap_07	rqi	data	92	1	9	2	3252.7	3252.7	1.0	HV	
+u_irg_00	rqo	u_etap_00	rqi	data	92	1	10	2	3342.5	3104.9	1.077	HV	
+u_irg_05	rqo	u_etap_11	rqi	data	92	1	8	1	2954.2	2954.2	1.0	VH	
+u_irg_03	rqo	u_etap_06	rqi	data	92	1	10	1	2950.3	2950.3	1.0	VH	
+u_rsv_11	pv_x	u_rsv_05	peer_pv	data	48	2	17	3	5709.6	5623.2	1.015	HV	
+u_ctrl_15	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	2	4188.4	4188.4	1.0	HV	
+u_ctrl_15	rrd	u_etap_15	rri	data	544	1	2	0	797.4	484.3	1.646	HV	
+u_rsv_05	pv_x	u_rsv_11	peer_pv	data	48	2	17	3	5599.6	5407.1	1.036	HV	
+u_ctrl_00	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	2	4039.2	4039.2	1.0	HV	
+u_ctrl_01	rd	u_rsv_01	r_tag	data	34	1	21	4	7442.4	7370.6	1.01	HV	
+u_phy_hbm	kr_data	u_ctrl_08	kr_data	data	512	1	0	0	488.6	488.6	1.0	HV	
+u_ctrl_15	k_addr	u_phy_hbm	k_addr	data	60	1	0	2	4153.4	4153.4	1.0	HV	
+u_ctrl_00	k_addr	u_phy_hbm	k_addr	data	60	1	0	2	4074.2	4074.2	1.0	HV	
+u_etap_07	rqo	u_ctrl_07	rrq	data	92	1	7	1	2815.5	2597.7	1.084	HV	
+u_ctrl_14	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	2	3657.0	3657.0	1.0	HV	
+u_ctrl_08	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	0	453.3	453.3	1.0	HV	
+u_ctrl_01	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	2	3508.0	3508.0	1.0	HV	
+u_ctrl_03	rd	u_rsv_03	r_tag	data	34	1	20	4	6587.0	6575.6	1.002	HV	
+u_ctrl_15	rd	u_rsv_15	r_tag	data	34	1	19	4	6573.9	6562.6	1.002	HV	
+u_etap_06	rqo	u_ctrl_06	rrq	data	92	1	7	1	2549.2	2368.7	1.076	HV	
+u_ctrl_14	k_addr	u_phy_hbm	k_addr	data	60	1	0	2	3622.0	3622.0	1.0	HV	
+u_seqhost	mu_rc_0s	u_s_0S	mu_c	data	11	1	58	13	19746.5	19578.0	1.009	VH	
+u_seqhost	mu_rc_0s	u_s_0S	mu_rc	data	11	1	58	13	19748.6	19575.9	1.009	VH	
+u_seqhost	mu_c_0s	u_s_0S	mu_rc	data	11	1	58	13	19746.5	19573.7	1.009	VH	
+u_seqhost	mu_rc_7s	u_s_7S	mu_rc	data	11	1	59	12	19562.4	19476.0	1.004	HV	u_eng,u_s_7N
+u_seqhost	mu_c_7s	u_s_7S	mu_rc	data	11	1	59	12	19560.2	19473.8	1.004	HV	u_eng,u_s_7N
+u_seqhost	mu_rc_7s	u_s_7S	mu_c	data	11	1	59	12	19560.2	19473.8	1.004	HV	u_eng,u_s_7N
+u_etap_08	rqo	u_ctrl_08	rrq	data	92	1	6	1	2388.2	2323.4	1.028	HV	
+u_ctrl_01	k_addr	u_phy_hbm	k_addr	data	60	1	0	2	3543.0	3543.0	1.0	HV	
+u_seqhost	mu_c_7n	u_s_7N	mu_c	data	34	1	18	3	6301.7	5998.1	1.051	VH	
+u_seqhost	mu_c_7n	u_s_7N	t_kd	data	34	1	18	3	6297.5	5993.9	1.051	VH	
+u_seqhost	t_kd	u_s_7N	mu_c	data	34	1	18	3	6297.5	5993.9	1.051	VH	
+u_seqhost	mu_c_7n	u_s_7N	t_host	data	34	1	18	3	6291.2	5987.6	1.051	VH	
+u_seqhost	t_host	u_s_7N	mu_c	data	34	1	18	3	6291.2	5987.6	1.051	VH	
+u_ctrl_13	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	2	3125.8	3125.8	1.0	HV	
+u_etap_05	rqo	u_ctrl_05	rrq	data	92	1	6	1	2347.6	2139.9	1.097	HV	
+u_ctrl_09	rd	u_rsv_09	r_tag	data	34	1	18	3	5874.4	5732.5	1.025	HV	
+u_etap_09	rqo	u_ctrl_09	rrq	data	92	1	6	1	2094.6	2094.6	1.0	HV	
+u_s_7N	f_ks	u_seqhost	f_host	data	33	1	18	3	6106.8	5803.2	1.052	HV	
+u_etap_08	rco	u_etap_07	rci	data	43	1	14	2	4823.1	4439.5	1.086	HV	
+u_ctrl_05	rd	u_rsv_05	r_tag	data	34	1	17	3	5619.0	5607.6	1.002	HV	
+u_ctrl_02	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	1	2976.7	2976.7	1.0	HV	
+u_ctrl_13	rd	u_rsv_13	r_tag	data	34	1	17	3	5606.1	5594.7	1.002	HV	
+ld_pr_03_05	o	u_rsv_05	ri	data	514	1	0	0	368.8	368.8	1.0	HV	
+ld_pr_09_11	o	u_rsv_11	ri	data	514	1	0	0	368.8	368.8	1.0	HV	
+u_seqhost	mu_c_0n	u_s_0N	mu_c	data	34	1	16	3	5589.9	5566.6	1.004	HV	
+u_s_7N	mu_rt	u_seqhost	mu_rt_7n	data	32	1	19	3	6253.4	5839.6	1.071	HV	
+u_s_7N	f_host	u_seqhost	f_ks	data	33	1	18	3	5942.5	5638.9	1.054	HV	
+u_ctrl_13	k_addr	u_phy_hbm	k_addr	data	60	1	0	2	3090.8	3090.8	1.0	HV	
+u_s_0N	mu_rt	u_seqhost	mu_rt_0n	data	32	1	17	3	5733.6	5733.6	1.0	HV	
+u_ctrl_02	k_addr	u_phy_hbm	k_addr	data	60	1	0	2	3011.6	3011.6	1.0	HV	
+u_etap_04	rqo	u_ctrl_04	rrq	data	92	1	5	1	2009.4	1911.1	1.051	HV	
+u_seqhost	engram_f_ks	u_eng	f_ks	data	53	1	14	2	4533.6	3283.2	1.381	HV	
+u_ctrl_07	k_wdata	u_phy_hbm	k_wdata	data	512	1	0	0	336.7	336.7	1.0	HV	
+u_etap_10	rqo	u_ctrl_10	rrq	data	92	1	5	1	1865.8	1865.8	1.0	HV	
+u_ctrl_11	rd	u_rsv_11	r_tag	data	34	1	15	3	5048.2	4950.4	1.02	HV	
+u_ctrl_07	rd	u_rsv_07	r_tag	data	34	1	15	3	5079.2	4937.4	1.029	HV	
+u_ctrl_12	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	1	2594.6	2594.6	1.0	HV	
+u_rsv_05	hc	u_seqhost	s_hc_w	data	9	1	58	11	17602.6	17552.6	1.003	HV	
+u_ctrl_03	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	1	2445.4	2445.4	1.0	HV	
+u_etap_03	rqo	u_ctrl_03	rrq	data	92	1	5	1	1862.6	1682.3	1.107	HV	
+u_phy_hbm	kr_data	u_ctrl_07	kr_data	data	512	1	0	0	301.4	301.4	1.0	HV	
+u_ctrl_12	k_addr	u_phy_hbm	k_addr	data	60	1	0	1	2559.6	2559.6	1.0	HV	
+u_rsv_11	hc	u_seqhost	s_hc_e	data	9	1	50	11	17135.9	16999.4	1.008	HV	
+u_etap_11	rqo	u_ctrl_11	rrq	data	92	1	4	1	1636.8	1636.8	1.0	HV	
+u_ctrl_03	k_addr	u_phy_hbm	k_addr	data	60	1	0	1	2480.4	2480.4	1.0	HV	
+u_s_0N	vo	u_s_0S	vi	data	276	1	2	0	522.6	518.4	1.008	HV	
+u_s_0S	vo	u_s_0N	vi	data	276	1	2	0	541.5	518.4	1.045	HV	
+u_phy_hbm	kr_tag	u_ctrl_15	kr_tag	data	34	1	0	2	4191.5	4191.5	1.0	HV	
+u_ctrl_15	k_tag	u_phy_hbm	k_tag	data	34	1	0	2	4156.5	4156.5	1.0	HV	
+u_ctrl_00	k_tag	u_phy_hbm	k_tag	data	34	1	0	2	4071.1	4071.1	1.0	HV	
+u_phy_hbm	kr_tag	u_ctrl_00	kr_tag	data	34	1	0	2	4036.1	4036.1	1.0	HV	
+u_etap_02	rqo	u_ctrl_02	rrq	data	92	1	4	0	1633.9	1453.5	1.124	HV	
+u_ctrl_11	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	1	2063.4	2063.4	1.0	HV	
+u_etap_12	rqo	u_ctrl_12	rrq	data	92	1	4	0	1408.0	1408.0	1.0	HV	
+u_phy_hbm	kr_tag	u_ctrl_14	kr_tag	data	34	1	0	2	3660.1	3660.1	1.0	HV	
+u_ctrl_14	k_tag	u_phy_hbm	k_tag	data	34	1	0	2	3625.1	3625.1	1.0	HV	
+u_ctrl_04	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	1	1914.2	1914.2	1.0	HV	
+u_ctrl_11	k_addr	u_phy_hbm	k_addr	data	60	1	0	1	2028.4	2028.4	1.0	HV	
+u_ctrl_01	k_tag	u_phy_hbm	k_tag	data	34	1	0	2	3539.9	3539.9	1.0	HV	
+u_phy_hbm	kr_tag	u_ctrl_01	kr_tag	data	34	1	0	2	3504.9	3504.9	1.0	HV	
+u_s_7N	mu_rt	u_seqhost	f_ks	data	20	1	19	3	6237.1	5856.0	1.065	HV	
+u_ctrl_04	k_addr	u_phy_hbm	k_addr	data	60	1	0	1	1949.2	1949.2	1.0	HV	
+u_s_7N	f_ks	u_seqhost	mu_rt_7n	data	20	1	19	3	6187.6	5773.8	1.072	HV	
+u_etap_01	rqo	u_ctrl_01	rrq	data	92	1	4	0	1377.5	1224.5	1.125	HV	
+u_rsv_11	pv_d	ld_pvso_E_local_l1	i	data	238	1	0	0	467.1	467.1	1.0	HV	
+u_etap_13	rqo	u_ctrl_13	rrq	data	92	1	3	0	1179.2	1179.2	1.0	HV	
+u_phy_hbm	kr_tag	u_ctrl_13	kr_tag	data	34	1	0	2	3128.9	3128.9	1.0	HV	
+u_ctrl_13	k_tag	u_phy_hbm	k_tag	data	34	1	0	2	3093.9	3093.9	1.0	HV	
+u_ctrl_14	rd	u_rsv_14	r_tag	data	34	1	9	2	3111.0	3076.4	1.011	HV	
+ld_pvso_E_local_l1	o	u_rsv_11	local_pv_landed	data	276	1	0	0	378.3	378.3	1.0	HV	
+u_ctrl_02	k_tag	u_phy_hbm	k_tag	data	34	1	0	2	3008.5	3008.5	1.0	HV	
+u_phy_hbm	kr_tag	u_ctrl_02	kr_tag	data	34	1	0	1	2973.5	2973.5	1.0	HV	
+u_ctrl_10	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	1	1532.0	1532.0	1.0	HV	
+u_s_7N	vo	u_s_7S	vi	data	276	1	1	0	349.8	345.6	1.012	HV	
+u_s_7S	vo	u_s_7N	vi	data	276	1	1	0	377.2	345.6	1.091	HV	
+u_ctrl_00	rd	u_rsv_00	r_tag	data	34	1	8	1	2873.6	2798.1	1.027	HV	
+u_etap_00	rqo	u_ctrl_00	rrq	data	92	1	3	0	1090.9	992.6	1.099	HV	
+u_ctrl_10	k_addr	u_phy_hbm	k_addr	data	60	1	0	0	1497.0	1497.0	1.0	HV	
+u_ctrl_05	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	0	1383.0	1383.0	1.0	HV	
+u_phy_hbm	kr_tag	u_ctrl_12	kr_tag	data	34	1	0	1	2597.7	2597.7	1.0	HV	
+u_etap_14	rqo	u_ctrl_14	rrq	data	92	1	2	0	950.4	950.4	1.0	HV	
+u_ctrl_12	k_tag	u_phy_hbm	k_tag	data	34	1	0	1	2562.7	2562.7	1.0	HV	
+u_ctrl_05	k_addr	u_phy_hbm	k_addr	data	60	1	0	0	1418.0	1418.0	1.0	HV	
+u_seqhost	cw_a	u_gunit	cw_d	data	10	1	26	5	8763.9	8463.9	1.035	HV	u_eng
+u_seqhost	cw_a	u_gunit	cw_a	data	10	1	26	5	8776.7	8451.1	1.039	HV	u_eng
+u_seqhost	cw_d	u_gunit	cw_a	data	10	1	26	5	8763.9	8438.3	1.039	HV	u_eng
+u_ctrl_03	k_tag	u_phy_hbm	k_tag	data	34	1	0	1	2477.3	2477.3	1.0	HV	
+u_phy_hbm	kr_tag	u_ctrl_03	kr_tag	data	34	1	0	1	2442.3	2442.3	1.0	HV	
+u_ctrl_12	rd	u_rsv_12	r_tag	data	34	1	7	1	2160.0	2108.3	1.025	HV	
+u_phy_hbm	kr_tag	u_ctrl_11	kr_tag	data	34	1	0	1	2066.5	2066.5	1.0	HV	
+ld_up_04_05	o	u_rsv_05	up_i	data	16	1	0	2	4390.4	4390.4	1.0	HV	
+ld_up_10_11	o	u_rsv_11	up_i	data	16	1	0	2	4390.4	4390.4	1.0	HV	
+u_ctrl_11	k_tag	u_phy_hbm	k_tag	data	34	1	0	1	2031.5	2031.5	1.0	HV	
+u_ctrl_02	rd	u_rsv_02	r_tag	data	34	1	6	1	2078.5	2003.1	1.038	HV	
+u_etap_15	rqo	u_ctrl_15	rrq	data	92	1	2	0	721.4	721.4	1.0	HV	
+u_ctrl_04	k_tag	u_phy_hbm	k_tag	data	34	1	0	1	1946.1	1946.1	1.0	HV	
+u_seqhost	mu_rc_7n	u_s_7N	mu_rc	data	11	1	18	4	6306.1	6002.5	1.051	VH	
+u_seqhost	mu_c_7n	u_s_7N	mu_rc	data	11	1	18	4	6303.9	6000.3	1.051	VH	
+u_seqhost	mu_rc_7n	u_s_7N	mu_c	data	11	1	18	4	6303.9	6000.3	1.051	VH	
+u_seqhost	mu_rc_7n	u_s_7N	t_kd	data	11	1	18	3	6299.7	5996.1	1.051	VH	
+u_seqhost	t_kd	u_s_7N	mu_rc	data	11	1	18	3	6299.7	5996.1	1.051	VH	
+u_seqhost	mu_rc_7n	u_s_7N	t_host	data	11	1	18	3	6293.4	5989.8	1.051	VH	
+u_seqhost	t_host	u_s_7N	mu_rc	data	11	1	18	3	6293.4	5989.8	1.051	VH	
+u_phy_hbm	kr_tag	u_ctrl_04	kr_tag	data	34	1	0	1	1911.1	1911.1	1.0	HV	
+u_ctrl_09	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	0	1000.8	1000.8	1.0	HV	
+u_seqhost	mu_rc_0n	u_s_0N	mu_c	data	11	1	16	3	5587.7	5568.8	1.003	HV	
+u_seqhost	mu_rc_0n	u_s_0N	mu_rc	data	11	1	16	3	5585.5	5566.6	1.003	HV	
+u_seqhost	mu_c_0n	u_s_0N	mu_rc	data	11	1	16	3	5587.7	5564.5	1.004	HV	
+u_ctrl_01	rd	u_rsv_01	r_beat	ctl	8	1	21	4	7441.4	7371.6	1.009	HV	
+u_ctrl_09	k_addr	u_phy_hbm	k_addr	data	60	1	0	0	965.8	965.8	1.0	HV	
+u_ctrl_06	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	0	851.8	851.8	1.0	HV	
+u_ctrl_06	k_addr	u_phy_hbm	k_addr	data	60	1	0	0	886.8	886.8	1.0	HV	
+u_ctrl_03	rd	u_rsv_03	r_beat	ctl	8	1	20	4	6586.0	6576.6	1.001	HV	
+u_ctrl_15	rd	u_rsv_15	r_beat	ctl	8	1	19	4	6572.9	6563.6	1.001	HV	
+u_phy_hbm	kr_tag	u_ctrl_10	kr_tag	data	34	1	0	1	1535.1	1535.1	1.0	HV	
+u_ctrl_10	k_tag	u_phy_hbm	k_tag	data	34	1	0	1	1500.1	1500.1	1.0	HV	
+u_ctrl_04	rd	u_rsv_04	r_tag	data	34	1	5	0	1523.8	1448.4	1.052	HV	
+u_ctrl_05	k_tag	u_phy_hbm	k_tag	data	34	1	0	0	1414.9	1414.9	1.0	HV	
+u_phy_hbm	kr_tag	u_ctrl_05	kr_tag	data	34	1	0	0	1379.9	1379.9	1.0	HV	
+u_ctrl_09	rd	u_rsv_09	r_beat	ctl	8	1	18	3	5873.4	5733.6	1.024	HV	
+u_ctrl_05	rd	u_rsv_05	r_beat	ctl	8	1	17	3	5618.0	5608.6	1.002	HV	
+u_rsv_00	up_o	ld_up_00_01	i	data	16	1	0	1	2800.1	2800.1	1.0	HV	
+u_rsv_02	up_o	ld_up_02_03	i	data	16	1	0	1	2800.1	2800.1	1.0	HV	
+u_rsv_04	up_o	ld_up_04_05	i	data	16	1	0	1	2800.1	2800.1	1.0	HV	
+u_rsv_06	up_o	ld_up_06_07	i	data	16	1	0	1	2800.1	2800.1	1.0	HV	
+u_rsv_08	up_o	ld_up_08_09	i	data	16	1	0	1	2800.1	2800.1	1.0	HV	
+u_rsv_10	up_o	ld_up_10_11	i	data	16	1	0	1	2800.1	2800.1	1.0	HV	
+u_rsv_12	up_o	ld_up_12_13	i	data	16	1	0	1	2800.1	2800.1	1.0	HV	
+u_rsv_14	up_o	ld_up_14_15	i	data	16	1	0	1	2800.1	2800.1	1.0	HV	
+u_ctrl_13	rd	u_rsv_13	r_beat	ctl	8	1	17	3	5605.1	5595.7	1.002	HV	
+u_ctrl_10	rd	u_rsv_10	r_tag	data	34	1	4	0	1343.9	1313.3	1.023	HV	
+u_rsv_07	up_o	ld_up_07_05	i	data	16	1	0	1	2780.8	2780.8	1.0	HV	
+u_rsv_13	up_o	ld_up_13_11	i	data	16	1	0	1	2780.8	2780.8	1.0	HV	
+u_irg_01	qo	u_irg_02	qi	data	513	2	1	0	182.1	86.4	2.107	HV	
+u_irg_02	qo	u_irg_03	qi	data	513	2	1	0	182.1	86.4	2.107	HV	
+ld_up_07_05	o	u_rsv_05	up_i	data	16	1	0	1	2734.5	2734.5	1.0	HV	
+ld_up_13_11	o	u_rsv_11	up_i	data	16	1	0	1	2734.5	2734.5	1.0	HV	
+ld_up_00_01	o	u_rsv_01	up_i	data	16	1	0	1	2729.6	2729.6	1.0	HV	
+ld_up_02_03	o	u_rsv_03	up_i	data	16	1	0	1	2729.6	2729.6	1.0	HV	
+ld_up_06_07	o	u_rsv_07	up_i	data	16	1	0	1	2729.6	2729.6	1.0	HV	
+ld_up_08_09	o	u_rsv_09	up_i	data	16	1	0	1	2729.6	2729.6	1.0	HV	
+ld_up_12_13	o	u_rsv_13	up_i	data	16	1	0	1	2729.6	2729.6	1.0	HV	
+ld_up_14_15	o	u_rsv_15	up_i	data	16	1	0	1	2729.6	2729.6	1.0	HV	
+u_rsv_01	up_o	ld_up_01_03	i	data	16	1	0	1	2687.3	2687.3	1.0	HV	
+u_rsv_09	up_o	ld_up_09_11	i	data	16	1	0	1	2687.3	2687.3	1.0	HV	
+ld_up_15_13	o	u_rsv_13	up_i	data	16	1	0	1	2667.4	2667.4	1.0	HV	
+u_rsv_15	up_o	ld_up_15_13	i	data	16	1	0	1	2607.8	2607.8	1.0	HV	
+PORT	rst_n	u_f_0R02	rst_n	reset	1	1	113	27	42293.4	41681.5	1.015	HV	
+ld_up_01_03	o	u_rsv_03	up_i	data	16	1	0	1	2574.0	2574.0	1.0	HV	
+PORT	rst_n	u_f_7L12	rst_n	reset	1	1	107	26	40891.5	40302.2	1.015	HV	
+u_rsv_03	up_o	ld_up_03_05	i	data	16	1	0	1	2514.2	2514.2	1.0	HV	
+u_ctrl_11	rd	u_rsv_11	r_beat	ctl	8	1	15	3	5047.2	4951.4	1.019	HV	
+u_ctrl_07	rd	u_rsv_07	r_beat	ctl	8	1	15	3	5078.2	4938.4	1.028	HV	
+PORT	rst_n	u_f_7R13	rst_n	reset	1	1	111	24	38758.0	37220.4	1.041	HV	
+PORT	rst_n	u_f_2R12	rst_n	reset	1	1	99	24	37787.2	37111.8	1.018	HV	
+u_ctrl_06	rd	u_rsv_06	r_tag	data	34	1	4	0	1162.5	1087.1	1.069	HV	
+PORT	rst_n	u_f_7R12	rst_n	reset	1	1	101	24	38281.3	36759.8	1.041	HV	
+PORT	rst_n	u_f_5L02	rst_n	reset	1	1	94	23	36173.8	35732.5	1.012	HV	
+PORT	rst_n	u_f_1L03	rst_n	reset	1	1	108	23	37725.4	35553.2	1.061	HV	
+u_etap_01	pco	u_etap_02	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_02	pco	u_etap_03	pci	data	268	1	2	0	706.2	132.5	5.33	HV	
+u_etap_03	pco	u_etap_04	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_04	pco	u_etap_05	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_05	pco	u_etap_06	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_06	pco	u_etap_07	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_08	pco	u_etap_09	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_09	pco	u_etap_10	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_10	pco	u_etap_11	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_11	pco	u_etap_12	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_12	pco	u_etap_13	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_13	pco	u_etap_14	pci	data	268	1	2	0	596.7	132.5	4.504	HV	
+u_etap_14	pco	u_etap_15	pci	data	268	1	2	0	624.1	132.5	4.711	HV	
+u_rsv_05	jd	u_seqhost	st_rg_w	ctl	2	1	58	11	17602.6	17553.6	1.003	HV	
+u_rsv_05	hc	u_seqhost	st_rg_w	ctl	2	1	58	11	17602.1	17553.1	1.003	HV	
+u_rsv_05	jd	u_seqhost	s_hc_w	ctl	2	1	58	11	17603.1	17553.1	1.003	HV	
+u_rsv_05	jd	u_seqhost	s_jd_w	ctl	2	1	58	11	17603.7	17552.6	1.003	HV	
+u_rsv_05	st_rg	u_seqhost	st_rg_w	ctl	2	1	58	11	17601.6	17552.6	1.003	HV	
+u_rsv_05	hc	u_seqhost	s_jd_w	ctl	2	1	58	11	17603.1	17552.1	1.003	HV	
+u_rsv_05	st_rg	u_seqhost	s_hc_w	ctl	2	1	58	11	17602.1	17552.1	1.003	HV	
+u_rsv_05	st_rg	u_seqhost	s_jd_w	ctl	2	1	58	11	17602.6	17551.5	1.003	HV	
+PORT	rst_n	u_f_1L02	rst_n	reset	1	1	98	23	37288.8	35092.6	1.063	HV	
+u_etap_00	pco	u_etap_01	pci	data	268	1	2	0	600.2	130.2	4.61	HV	
+PORT	rst_n	u_f_6R10	rst_n	reset	1	1	103	22	36078.6	34174.0	1.056	HV	
+u_phy_hbm	kr_tag	u_ctrl_09	kr_tag	data	34	1	0	0	1003.9	1003.9	1.0	HV	
+PORT	rst_n	u_f_2L10	rst_n	reset	1	1	104	22	36044.9	34030.0	1.059	HV	
+u_rsv_11	st_rg	u_seqhost	st_rg_e	ctl	2	1	50	11	17135.9	17000.5	1.008	HV	
+u_rsv_11	hc	u_seqhost	st_rg_e	ctl	2	1	50	11	17135.3	17000.0	1.008	HV	
+u_rsv_11	st_rg	u_seqhost	s_hc_e	ctl	2	1	50	11	17136.4	17000.0	1.008	HV	
+u_rsv_11	jd	u_seqhost	st_rg_e	ctl	2	1	50	11	17134.8	16999.4	1.008	HV	
+u_rsv_11	st_rg	u_seqhost	s_jd_e	ctl	2	1	50	11	17136.9	16999.4	1.008	HV	
+u_rsv_11	hc	u_seqhost	s_jd_e	ctl	2	1	50	11	17136.4	16998.9	1.008	HV	
+u_rsv_11	jd	u_seqhost	s_hc_e	ctl	2	1	50	11	17135.3	16998.9	1.008	HV	
+u_rsv_11	jd	u_seqhost	s_jd_e	ctl	2	1	50	11	17135.9	16998.4	1.008	HV	
+u_phy_hbm	kr_beat	u_ctrl_15	kr_beat	ctl	8	1	0	2	4192.7	4192.7	1.0	HV	
+PORT	rst_n	u_f_7L10	rst_n	reset	1	1	97	22	33585.9	33505.2	1.002	HV	
+PORT	rst_n	u_f_0L13	rst_n	reset	1	1	103	22	35107.3	33447.6	1.05	HV	
+u_ctrl_15	k_len	u_phy_hbm	k_len	ctl	8	1	0	2	4155.3	4155.3	1.0	HV	
+PORT	rst_n	u_f_0L12	rst_n	reset	1	1	93	21	34953.6	32987.0	1.06	HV	
+u_ctrl_09	k_tag	u_phy_hbm	k_tag	data	34	1	0	0	968.9	968.9	1.0	HV	
+PORT	rst_n	u_f_5R03	rst_n	reset	1	1	99	21	34623.8	32650.7	1.06	HV	
+u_ctrl_00	k_len	u_phy_hbm	k_len	ctl	8	1	0	2	4072.3	4072.3	1.0	HV	
+u_phy_hbm	kr_beat	u_ctrl_00	kr_beat	ctl	8	1	0	2	4034.9	4034.9	1.0	HV	
+PORT	rst_n	u_gunit	rst_n	reset	1	1	97	21	32466.3	32234.4	1.007	HV	u_f_4R01
+PORT	rst_n	u_f_5R02	rst_n	reset	1	1	89	21	33988.2	32190.1	1.056	HV	
+PORT	rst_n	u_f_3L13	rst_n	reset	1	1	94	20	33022.3	30983.5	1.066	HV	
+PORT	rst_n	u_f_6R03	rst_n	reset	1	1	92	20	31785.2	30545.2	1.041	HV	
+PORT	rst_n	u_f_3L12	rst_n	reset	1	1	84	20	32489.7	30522.9	1.064	HV	
+PORT	rst_n	u_f_2L03	rst_n	reset	1	1	94	20	32617.4	30401.2	1.073	HV	
+PORT	rst_n	u_f_2R10	rst_n	reset	1	1	89	20	30834.7	30314.8	1.017	HV	
+PORT	rst_n	u_f_6R02	rst_n	reset	1	1	81	20	31752.4	30084.6	1.055	HV	
+u_ctrl_08	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	0	469.6	469.6	1.0	HV	
+u_ctrl_06	k_tag	u_phy_hbm	k_tag	data	34	1	0	0	883.7	883.7	1.0	HV	
+PORT	rst_n	u_f_7R10	rst_n	reset	1	1	90	19	31537.3	29962.8	1.053	HV	
+PORT	rst_n	u_f_2L02	rst_n	reset	1	1	83	19	31897.3	29940.6	1.065	HV	
+PORT	rst_n	u_f_7L03	rst_n	reset	1	1	86	19	29993.1	29876.4	1.004	HV	
+PORT	rst_n	u_f_0R13	rst_n	reset	1	1	87	19	30255.1	29732.4	1.018	HV	
+PORT	rst_n	u_f_3L01	rst_n	reset	1	1	90	19	31341.0	29316.3	1.069	HV	u_irg_01,u_irg_00,u_rsv_00,u_rsv_01
+u_phy_hbm	kr_beat	u_ctrl_14	kr_beat	ctl	8	1	0	2	3661.3	3661.3	1.0	HV	
+u_ctrl_14	k_len	u_phy_hbm	k_len	ctl	8	1	0	2	3624.0	3624.0	1.0	HV	
+u_ctrl_08	rd	u_rsv_08	r_tag	data	34	1	3	0	946.9	851.3	1.112	HV	
+u_phy_hbm	kr_tag	u_ctrl_06	kr_tag	data	34	1	0	0	848.7	848.7	1.0	HV	
+u_lk_WN2	st	u_s_0N	rx2	ctl	2	1	42	9	14432.4	14392.7	1.003	VH	
+u_lk_WN0	st	u_s_0N	rx0	ctl	2	1	42	9	14369.5	14329.8	1.003	HV	u_lk_WN2,u_rsv_01
+u_lk_WS1	st	u_s_0S	rx1	ctl	2	1	41	9	14356.2	14316.5	1.003	VH	
+u_ctrl_01	k_len	u_phy_hbm	k_len	ctl	8	1	0	2	3541.1	3541.1	1.0	HV	
+PORT	rst_n	u_eng	rst_n	reset	1	1	90	18	31478.4	28297.4	1.112	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
+PORT	rst_n	u_bk_col	rst_n	reset	1	1	90	18	31417.1	28158.9	1.116	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
+u_phy_hbm	kr_beat	u_ctrl_01	kr_beat	ctl	8	1	0	2	3503.7	3503.7	1.0	HV	
+PORT	rst_n	u_f_4R01	rst_n	reset	1	1	88	18	29675.6	28018.7	1.059	HV	u_irg_06,u_irg_07,u_rsv_14,u_rsv_15
+PORT	rst_n	u_f_4R13	rst_n	reset	1	1	83	18	28614.2	27498.7	1.041	HV	
+PORT	rst_n	u_f_4R12	rst_n	reset	1	1	72	18	28479.5	27038.1	1.053	HV	
+PORT	rst_n	u_f_5L13	rst_n	reset	1	1	77	17	27006.6	26830.0	1.007	HV	
+PORT	rst_n	u_f_2R03	rst_n	reset	1	1	78	17	27209.9	26686.0	1.02	HV	
+PORT	rst_n	u_lk_WN3	rst	reset	1	1	82	17	27440.2	26462.0	1.037	HV	u_lk_WS0,u_lk_WN0,u_bk_sel
+u_s_0N	hb_ks	u_seqhost	hbe_ks_slot	ctl	3	1	26	5	8773.3	8725.3	1.005	VH	u_bk_col
+u_s_0N	hb_ks_slot	u_seqhost	hbe_ks_slot	ctl	3	1	26	5	8762.2	8714.3	1.005	VH	u_bk_col
+u_s_0N	hb_ks_slot	u_seqhost	starter_f_ks	ctl	3	1	26	5	8773.3	8703.3	1.008	VH	u_bk_col
+u_ctrl_08	k_addr	u_phy_hbm	k_addr	data	60	1	0	0	434.6	434.6	1.0	HV	
+PORT	rst_n	u_f_7R01	rst_n	reset	1	1	79	17	27665.6	26031.6	1.063	HV	
+PORT	rst_n	u_f_7L01	rst_n	reset	1	1	75	17	26209.9	25945.2	1.01	HV	
+PORT	rst_n	u_f_0L01	rst_n	reset	1	1	81	17	27688.0	25887.6	1.07	HV	
+PORT	rst_n	u_lk_WN1	rst	reset	1	1	79	17	26424.5	25857.2	1.022	HV	u_lk_WS1,u_lk_WN2,u_bk_sel
+PORT	rst_n	u_f_0R01	rst_n	reset	1	1	77	17	26503.2	25801.2	1.027	HV	
+PORT	rst_n	u_f_7L02	rst_n	reset	1	1	66	16	25829.9	25484.6	1.014	HV	
+PORT	rst_n	u_f_0R12	rst_n	reset	1	1	88	16	27024.7	25340.6	1.066	HV	
+PORT	rst_n	u_seqhost	rst_n	reset	1	1	95	16	33163.6	25208.6	1.316	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
+u_phy_hbm	kr_beat	u_ctrl_13	kr_beat	ctl	8	1	0	2	3130.1	3130.1	1.0	HV	
+u_ctrl_13	k_len	u_phy_hbm	k_len	ctl	8	1	0	2	3092.7	3092.7	1.0	HV	
+u_ctrl_14	rd	u_rsv_14	r_beat	ctl	8	1	9	2	3112.0	3077.4	1.011	HV	
+u_ctrl_02	k_len	u_phy_hbm	k_len	ctl	8	1	0	2	3009.7	3009.7	1.0	HV	
+u_irg_01	so	u_irg_02	si	data	276	1	1	0	105.7	86.4	1.224	HV	
+u_irg_02	so	u_irg_03	si	data	276	1	1	0	105.7	86.4	1.224	HV	
+u_phy_hbm	kr_beat	u_ctrl_02	kr_beat	ctl	8	1	0	1	2972.3	2972.3	1.0	HV	
+PORT	rst_n	u_f_3L10	rst_n	reset	1	1	73	15	25692.7	23725.9	1.083	HV	
+PORT	rst_n	u_s_7N	rst_n	reset	1	1	75	15	25452.8	23675.0	1.075	HV	u_irg_04,u_rsv_14,u_rsv_15,u_s_7S
+PORT	rst_n	u_s_0N	rst_n	reset	1	1	77	15	25539.8	23450.6	1.089	HV	u_irg_02,u_rsv_00,u_rsv_01,u_s_0S
+u_s_7N	f_ks	u_seqhost	f_lf	ctl	4	1	18	3	6110.2	5806.5	1.052	HV	
+PORT	rst_n	u_f_6R01	rst_n	reset	1	1	77	15	24979.7	22985.2	1.087	HV	
+u_s_7N	f_lf	u_seqhost	f_lf	ctl	4	1	18	3	6045.6	5742.0	1.053	HV	
+u_s_7N	f_lf	u_seqhost	f_host	ctl	4	1	18	3	6042.3	5738.7	1.053	HV	
+u_s_7N	f_lf	u_seqhost	f_ks	ctl	4	1	18	3	6029.2	5725.6	1.053	HV	
+PORT	rst_n	u_f_1L01	rst_n	reset	1	1	78	15	25104.9	22841.2	1.099	HV	
+u_s_7N	f_host	u_seqhost	f_lf	ctl	4	1	18	3	5958.9	5655.3	1.054	HV	
+PORT	rst_n	u_f_5L12	rst_n	reset	1	1	61	14	23000.4	22438.2	1.025	HV	
+PORT	rst_n	u_f_7R03	rst_n	reset	1	1	70	14	24175.9	22402.8	1.079	HV	
+u_ctrl_00	rd	u_rsv_00	r_beat	ctl	8	1	8	1	2874.6	2797.1	1.028	HV	
+PORT	rst_n	u_f_2R02	rst_n	reset	1	1	82	14	24529.0	22294.2	1.1	HV	
+PORT	rst_n	u_f_0L10	rst_n	reset	1	1	76	14	24487.9	22258.8	1.1	HV	
+u_lk_ES0	st	u_s_7S	rx0	ctl	2	1	34	7	11049.1	11009.4	1.004	VH	
+u_lk_ES1	st	u_s_7S	rx1	ctl	2	1	32	7	11035.8	10996.1	1.004	VH	
+PORT	rst_n	u_f_7R02	rst_n	reset	1	1	72	14	24712.2	21942.2	1.126	HV	
+u_lk_WS0	st	u_s_0S	rx0	ctl	2	1	32	7	10956.7	10917.0	1.004	VH	u_bk_sel
+PORT	rst_n	u_f_5R01	rst_n	reset	1	1	83	14	24678.1	21461.9	1.15	HV	
+PORT	rst_n	u_f_5L01	rst_n	reset	1	1	81	14	23866.8	21375.5	1.117	HV	
+u_ctrl_07	k_addr	u_phy_hbm	k_addr	data	60	1	0	0	355.4	355.4	1.0	HV	
+PORT	rst_n	u_f_2L01	rst_n	reset	1	1	79	14	24097.5	21317.9	1.13	HV	
+PORT	rst_n	u_s_6S	rst_n	reset	1	1	72	14	24272.6	21277.4	1.141	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
+PORT	rst_n	u_f_2R01	rst_n	reset	1	1	81	14	23258.6	21231.5	1.095	HV	
+PORT	rst_n	u_s_1S	rst_n	reset	1	1	73	14	24371.1	21053.0	1.158	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
+PORT	rst_n	u_lk_EN1	rst	reset	1	1	63	13	20898.7	20831.6	1.003	HV	u_lk_ES0,u_lk_ES1,u_lk_EN0
+u_phy_hbm	kr_beat	u_ctrl_12	kr_beat	ctl	8	1	0	1	2598.9	2598.9	1.0	HV	
+u_ctrl_07	k_wstrb	u_phy_hbm	k_wstrb	data	64	1	0	0	320.4	320.4	1.0	HV	
+u_ctrl_12	k_len	u_phy_hbm	k_len	ctl	8	1	0	1	2561.5	2561.5	1.0	HV	
+u_lk_EN0	st	u_s_7N	rx0	ctl	2	1	30	6	10098.7	10059.0	1.004	HV	
+u_lk_EN1	st	u_s_7N	rx1	ctl	2	1	29	6	9999.0	9959.3	1.004	HV	
+PORT	rst_n	u_s_5S	rst_n	reset	1	1	74	13	24543.3	19895.0	1.234	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
+u_ctrl_03	k_len	u_phy_hbm	k_len	ctl	8	1	0	1	2478.5	2478.5	1.0	HV	
+PORT	rst_n	u_s_2S	rst_n	reset	1	1	74	13	24809.4	19670.6	1.261	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
+u_phy_hbm	kr_beat	u_ctrl_03	kr_beat	ctl	8	1	0	1	2441.1	2441.1	1.0	HV	
+PORT	rst_n	u_f_5R13	rst_n	reset	1	1	61	12	20485.4	19356.4	1.058	HV	
+PORT	rst_n	u_f_1L13	rst_n	reset	1	1	63	12	21181.3	19212.4	1.102	HV	
+PORT	rst_n	u_f_5R12	rst_n	reset	1	1	64	12	21884.5	18895.8	1.158	HV	
+PORT	rst_n	u_f_1L12	rst_n	reset	1	1	60	12	21526.4	18751.8	1.148	HV	
+PORT	rst_n	u_f_0L03	rst_n	reset	1	1	71	12	21631.5	18630.0	1.161	HV	
+PORT	rst_n	u_f_0R10	rst_n	reset	1	1	74	12	20334.9	18543.6	1.097	HV	
+PORT	rst_n	u_s_3S	rst_n	reset	1	1	79	12	26601.0	18504.2	1.438	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
+PORT	rst_n	u_s_4S	rst_n	reset	1	1	78	12	26184.2	18404.6	1.423	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
+PORT	rst_n	u_f_0L02	rst_n	reset	1	1	74	12	28160.1	18169.4	1.55	HV	
+PORT	rst_n	u_f_6R13	rst_n	reset	1	1	57	11	19586.9	17250.8	1.135	HV	
+u_ctrl_12	rd	u_rsv_12	r_beat	ctl	8	1	7	1	2161.1	2109.4	1.025	HV	
+PORT	rst_n	u_f_6R12	rst_n	reset	1	1	59	11	18391.0	16790.2	1.095	HV	
+PORT	rst_n	u_lk_EN0	rst	reset	1	1	52	11	16938.9	16727.6	1.013	HV	u_lk_ES0,u_lk_ES1
+u_rsv_11	pv_x	ld_pvso_E_local_l1	i	data	38	1	0	0	440.2	440.2	1.0	HV	
+PORT	rst_n	u_f_7L13	rst_n	reset	1	1	115	11	21418.4	16582.1	1.292	HV	
+u_phy_hbm	kr_beat	u_ctrl_11	kr_beat	ctl	8	1	0	1	2067.7	2067.7	1.0	HV	
+PORT	rst_n	u_s_7S	rst_n	reset	1	1	52	11	16572.4	16503.8	1.004	HV	u_irg_04,u_rsv_14,u_rsv_15
+PORT	rst_n	u_f_4R10	rst_n	reset	1	1	67	10	18729.0	16309.9	1.148	HV	
+u_ctrl_11	k_len	u_phy_hbm	k_len	ctl	8	1	0	1	2030.3	2030.3	1.0	HV	
+PORT	rst_n	u_f_3L03	rst_n	reset	1	1	90	10	22070.1	16165.9	1.365	HV	
+PORT	rst_n	u_bk_sel	rst_n	reset	1	1	52	10	17414.8	16130.0	1.08	HV	u_lk_WS0,u_lk_WN0
+PORT	rst_n	u_s_0S	rst_n	reset	1	1	51	10	16823.3	16106.6	1.044	HV	u_irg_02,u_rsv_00,u_rsv_01
+u_phy_hbm	kr_tag	u_ctrl_08	kr_tag	data	34	1	0	0	472.7	472.7	1.0	HV	
+u_ctrl_02	rd	u_rsv_02	r_beat	ctl	8	1	6	1	2079.5	2002.1	1.039	HV	
+PORT	rst_n	u_f_3L02	rst_n	reset	1	1	93	10	22072.1	15705.3	1.405	HV	
+PORT	rst_n	u_f_5L10	rst_n	reset	1	1	61	10	17463.6	15641.2	1.117	HV	
+PORT	rst_n	ld_up_15_13	rs	reset	1	1	49	10	16094.3	15600.4	1.032	HV	
+u_ctrl_04	k_len	u_phy_hbm	k_len	ctl	8	1	0	1	1947.3	1947.3	1.0	HV	
+PORT	rst_n	ld_up_01_03	rs	reset	1	1	51	10	16456.8	15535.8	1.059	HV	u_irg_02
+PORT	rst_n	ld_pr_15_13	rs	reset	1	1	48	10	15815.2	15353.3	1.03	HV	
+u_phy_hbm	kr_beat	u_ctrl_04	kr_beat	ctl	8	1	0	1	1909.9	1909.9	1.0	HV	
+PORT	rst_n	ld_ss_03_01	rs	reset	1	1	50	10	15841.9	15225.9	1.04	HV	u_irg_02
+PORT	rst_n	ld_ss_15_13	rs	reset	1	1	48	10	15498.9	15135.0	1.024	HV	u_irg_04
+PORT	rst_n	u_f_0R03	rst_n	reset	1	1	120	9	27096.7	14914.8	1.817	HV	
+u_ctrl_08	k_tag	u_phy_hbm	k_tag	data	34	1	0	0	437.7	437.7	1.0	HV	
+PORT	rst_n	ld_pr_01_03	rs	reset	1	1	49	9	15696.0	14822.1	1.059	HV	u_irg_02
+PORT	rst_n	ld_ss_13_15	rs	reset	1	1	46	9	14963.5	14806.8	1.011	HV	u_irg_04
+u_ctrl_01	rd	u_rsv_01	hs	ctl	2	1	21	4	7427.4	7385.6	1.006	HV	
+u_ctrl_01	rd	u_rsv_01	wd	ctl	2	1	21	4	7441.0	7372.1	1.009	HV	
+u_ctrl_01	rd	u_rsv_01	rk	ctl	2	1	21	4	7441.1	7372.0	1.009	HV	
+u_ctrl_01	rd	u_rsv_01	rv	ctl	2	1	21	4	7441.2	7371.9	1.009	HV	
+ld_up_03_05	o	u_rsv_05	up_i	data	16	1	0	0	913.2	913.2	1.0	HV	
+ld_up_09_11	o	u_rsv_11	up_i	data	16	1	0	0	913.2	913.2	1.0	HV	
+PORT	rst_n	ld_dn_03_01	rs	reset	1	1	48	9	15048.4	14292.7	1.053	HV	u_irg_02
+PORT	rst_n	u_s_6N	rst_n	reset	1	1	49	9	16121.1	14106.2	1.143	HV	u_phy_hbm,u_ctrl_14,u_rsv_10,u_rsv_11
+PORT	rst_n	u_f_2L13	rst_n	reset	1	1	57	9	17159.0	14060.3	1.22	HV	
+PORT	rst_n	ld_up_14_15	rs	reset	1	1	44	9	14202.2	13890.4	1.022	HV	u_irg_06,u_irg_07,u_rsv_14
+PORT	rst_n	u_s_1N	rst_n	reset	1	1	50	9	16047.5	13881.8	1.156	HV	u_phy_hbm,u_ctrl_01,u_rsv_04,u_rsv_05
+PORT	rst_n	ld_sg_15_13	rs	reset	1	1	44	9	14178.2	13776.2	1.029	HV	u_irg_04
+PORT	rst_n	ld_up_13_11	rs	reset	1	1	46	9	15432.7	13742.8	1.123	HV	u_phy_hbm,u_ctrl_14
+PORT	rst_n	ld_pr_14_15	rs	reset	1	1	44	9	13805.0	13704.9	1.007	HV	u_irg_06,u_irg_07,u_rsv_14
+PORT	rst_n	ld_ss_14_15	rs	reset	1	1	43	9	13917.2	13643.3	1.02	HV	u_irg_06,u_irg_07,u_rsv_14
+PORT	rst_n	u_f_2L12	rst_n	reset	1	1	60	9	23515.1	13599.7	1.729	HV	
+PORT	rst_n	ld_dn_13_15	rs	reset	1	1	43	9	13738.7	13526.1	1.016	HV	u_irg_04
+PORT	rst_n	ld_pvso_E_local_l1	rs	reset	1	1	49	9	17036.2	13512.8	1.261	HV	u_phy_hbm,u_rsv_10,u_rsv_11
+PORT	rst_n	ld_up_03_05	rs	reset	1	1	47	9	15775.0	13505.4	1.168	HV	u_phy_hbm
+PORT	rst_n	ld_pr_13_11	rs	reset	1	1	45	8	15098.2	13493.9	1.119	HV	u_phy_hbm,u_ctrl_14
+u_rsv_05	pv_d	ld_pvso_W_local_l0	i	data	275	1	0	0	48.8	48.8	1.0	HV	
+PORT	rst_n	ld_ss_05_03	rs	reset	1	1	46	8	15162.4	13368.3	1.134	HV	u_phy_hbm,u_ctrl_00
+PORT	rst_n	ld_ss_15_14	rs	reset	1	1	43	8	13438.2	13290.5	1.011	HV	u_irg_06,u_irg_07,u_rsv_14
+PORT	rst_n	ld_ss_13_11	rs	reset	1	1	44	8	14861.3	13213.9	1.125	HV	u_phy_hbm,u_ctrl_14
+u_ctrl_03	rd	u_rsv_03	hs	ctl	2	1	20	4	6590.6	6590.6	1.0	HV	
+u_ctrl_15	rd	u_rsv_15	hs	ctl	2	1	19	4	6577.6	6577.6	1.0	HV	
+u_ctrl_03	rd	u_rsv_03	wd	ctl	2	1	20	4	6585.5	6577.0	1.001	HV	
+u_ctrl_03	rd	u_rsv_03	rk	ctl	2	1	20	4	6585.6	6576.9	1.001	HV	
+u_ctrl_03	rd	u_rsv_03	rv	ctl	2	1	20	4	6585.7	6576.8	1.001	HV	
+u_ctrl_15	rd	u_rsv_15	wd	ctl	2	1	19	4	6572.5	6564.0	1.001	HV	
+u_ctrl_15	rd	u_rsv_15	rk	ctl	2	1	19	4	6572.6	6563.9	1.001	HV	
+u_ctrl_15	rd	u_rsv_15	rv	ctl	2	1	19	4	6572.7	6563.8	1.001	HV	
+PORT	rst_n	ld_dn_01_00	rs	reset	1	1	44	8	13842.0	13097.2	1.057	HV	u_irg_01,u_irg_00,u_rsv_00
+PORT	rst_n	ld_pvso_E_local_l0	rs	reset	1	1	49	8	17064.4	13066.3	1.306	HV	u_phy_hbm,u_ctrl_13,u_rsv_10,u_rsv_11
+PORT	rst_n	u_rsv_15	rst	reset	1	1	41	8	13447.0	13060.0	1.03	HV	u_irg_04,u_rsv_14
+PORT	rst_n	ld_pvso_E_local_l2	rs	reset	1	1	49	8	17066.5	13029.4	1.31	HV	u_phy_hbm,u_rsv_10,u_rsv_11
+PORT	rst_n	ld_sg_14_15	rs	reset	1	1	42	8	13540.9	13008.2	1.041	HV	u_irg_04,u_rsv_14
+PORT	rst_n	ld_sg_13_15	rs	reset	1	1	42	8	13572.7	13005.7	1.044	HV	u_irg_04
+PORT	rst_n	ld_pvso_W_local_l2	rs	reset	1	1	51	8	17762.6	12998.3	1.367	HV	u_phy_hbm,u_ctrl_02,u_rsv_04,u_rsv_05
+PORT	rst_n	ld_sg_00_01	rs	reset	1	1	43	8	13918.9	12969.7	1.073	HV	u_irg_01,u_irg_00,u_rsv_00
+PORT	rst_n	u_rsv_01	rst	reset	1	1	42	8	13970.6	12922.0	1.081	HV	u_rsv_00
+PORT	rst_n	ld_sg_01_03	rs	reset	1	1	44	8	13653.8	12801.3	1.067	HV	u_irg_02
+PORT	rst_n	ld_pr_03_05	rs	reset	1	1	45	8	14749.4	12789.9	1.153	HV	u_phy_hbm
+PORT	rst_n	ld_ss_11_13	rs	reset	1	1	43	8	14249.2	12748.5	1.118	HV	u_phy_hbm
+PORT	rst_n	ld_pvso_W_local_l0	rs	reset	1	1	51	8	17186.0	12748.2	1.348	HV	u_phy_hbm,u_ctrl_02,u_rsv_04,u_rsv_05
+PORT	rst_n	u_s_5N	rst_n	reset	1	1	53	8	17463.3	12723.8	1.372	HV	u_phy_hbm,u_rsv_10,u_rsv_11
+u_rsv_11	pv_v	u_s_4S	bi	ctl	1	1	37	8	12711.6	12711.6	1.0	HV	
+PORT	rst_n	ld_pvso_W_local_l1	rs	reset	1	1	51	8	17053.3	12705.0	1.342	HV	u_phy_hbm,u_ctrl_02,u_rsv_04,u_rsv_05
+PORT	rst_n	u_f_4R03	rst_n	reset	1	1	87	8	17789.1	12681.1	1.403	HV	
+PORT	rst_n	ld_dn_15_14	rs	reset	1	1	41	8	13039.6	12668.3	1.029	HV	u_irg_04,u_rsv_14
+PORT	rst_n	u_lk_ES1	rst	reset	1	1	41	8	12826.9	12623.6	1.016	HV	u_lk_ES0
+PORT	rst_n	u_s_2N	rst_n	reset	1	1	54	8	17519.8	12499.4	1.402	HV	u_phy_hbm,u_ctrl_03,u_rsv_04,u_rsv_05
+PORT	rst_n	ld_sg_15_14	rs	reset	1	1	41	8	12711.2	12484.6	1.018	HV	u_irg_04,u_rsv_14
+PORT	rst_n	ld_ss_01_00	rs	reset	1	1	42	8	13633.7	12482.4	1.092	HV	u_irg_02,u_rsv_00
+PORT	rst_n	ld_dn_05_03	rs	reset	1	1	43	8	14174.1	12462.4	1.137	HV	u_phy_hbm,u_ctrl_00
+PORT	rst_n	u_lk_WN0	rst	reset	1	1	43	8	13268.9	12393.2	1.071	HV	u_lk_WS0
+u_rsv_11	pv_d	ld_pvso_E_local_l0	i	data	275	1	0	0	45.0	45.0	1.0	HV	
+u_phy_hbm	kr_beat	u_ctrl_10	kr_beat	ctl	8	1	0	1	1536.3	1536.3	1.0	HV	
+PORT	rst_n	u_f_4R02	rst_n	reset	1	1	90	8	17594.0	12220.5	1.44	HV	
+PORT	rst_n	ld_pr_00_01	rs	reset	1	1	42	8	13425.6	12201.2	1.1	HV	u_irg_02,u_rsv_00
+PORT	rst_n	u_f_5R10	rst_n	reset	1	1	63	8	15266.1	12098.8	1.262	HV	
+PORT	rst_n	ld_up_00_01	rs	reset	1	1	42	8	13043.5	12087.5	1.079	HV	u_irg_02,u_rsv_00
+PORT	rst_n	u_f_5L03	rst_n	reset	1	1	102	8	22540.8	12012.4	1.876	HV	
+u_ctrl_10	k_len	u_phy_hbm	k_len	ctl	8	1	0	0	1498.9	1498.9	1.0	HV	
+u_ctrl_07	k_tag	u_phy_hbm	k_tag	data	34	1	0	0	352.3	352.3	1.0	HV	
+PORT	rst_n	u_f_1L10	rst_n	reset	1	1	64	7	21829.4	11954.8	1.826	HV	
+PORT	rst_n	ld_up_09_11	rs	reset	1	1	52	7	17713.2	11917.4	1.486	HV	u_phy_hbm,u_ctrl_11
+PORT	rst_n	ld_up_07_05	rs	reset	1	1	52	7	17582.8	11866.8	1.482	HV	u_phy_hbm,u_ctrl_04
+PORT	rst_n	ld_up_12_13	rs	reset	1	1	39	7	12322.0	11860.0	1.039	HV	u_rsv_12
+PORT	rst_n	ld_sg_13_11	rs	reset	1	1	41	7	13457.8	11814.0	1.139	HV	u_phy_hbm,u_ctrl_14
+PORT	rst_n	u_lk_WN2	rst	reset	1	1	40	7	12299.3	11788.4	1.043	HV	u_lk_WS1
+PORT	rst_n	ld_pr_12_13	rs	reset	1	1	41	7	12715.7	11746.3	1.083	HV	u_irg_05,u_rsv_12
+PORT	rst_n	ld_pr_07_05	rs	reset	1	1	51	7	16992.0	11617.9	1.463	HV	u_phy_hbm,u_ctrl_04
+u_ctrl_04	rd	u_rsv_04	r_beat	ctl	8	1	5	0	1524.8	1447.4	1.053	HV	
+u_ctrl_09	rd	u_rsv_09	hs	ctl	2	1	18	3	5878.0	5747.6	1.023	HV	
+PORT	rst_n	ld_sg_03_02	rs	reset	1	1	40	7	12985.4	11471.0	1.132	HV	u_irg_03,u_rsv_02
+u_ctrl_09	rd	u_rsv_09	wd	ctl	2	1	18	3	5872.9	5734.0	1.024	HV	
+u_ctrl_09	rd	u_rsv_09	rk	ctl	2	1	18	3	5873.0	5733.9	1.024	HV	
+PORT	rst_n	ld_dn_11_13	rs	reset	1	1	40	7	13050.4	11467.6	1.138	HV	u_phy_hbm
+u_ctrl_09	rd	u_rsv_09	rv	ctl	2	1	18	3	5873.1	5733.8	1.024	HV	
+PORT	rst_n	ld_ss_07_05	rs	reset	1	1	51	7	16964.1	11337.9	1.496	HV	u_phy_hbm,u_ctrl_04
+u_ctrl_05	k_len	u_phy_hbm	k_len	ctl	8	1	0	0	1416.1	1416.1	1.0	HV	
+u_ctrl_05	rd	u_rsv_05	hs	ctl	2	1	17	3	5622.7	5622.7	1.0	HV	
+PORT	rst_n	ld_dn_03_02	rs	reset	1	1	41	7	13135.0	11243.3	1.168	HV	u_irg_03,u_rsv_02
+u_ctrl_13	rd	u_rsv_13	hs	ctl	2	1	17	3	5609.8	5609.8	1.0	HV	
+u_ctrl_05	rd	u_rsv_05	wd	ctl	2	1	17	3	5617.6	5609.1	1.002	HV	
+u_ctrl_05	rd	u_rsv_05	rk	ctl	2	1	17	3	5617.7	5609.0	1.002	HV	
+u_ctrl_05	rd	u_rsv_05	rv	ctl	2	1	17	3	5617.8	5608.9	1.002	HV	
+PORT	rst_n	ld_pr_09_11	rs	reset	1	1	50	7	16350.1	11201.9	1.46	HV	u_phy_hbm,u_ctrl_11
+u_ctrl_13	rd	u_rsv_13	wd	ctl	2	1	17	3	5604.7	5596.2	1.002	HV	
+u_ctrl_13	rd	u_rsv_13	rk	ctl	2	1	17	3	5604.8	5596.1	1.002	HV	
+u_ctrl_13	rd	u_rsv_13	rv	ctl	2	1	17	3	5604.9	5596.0	1.002	HV	
+PORT	rst_n	u_s_4N	rst_n	reset	1	1	57	7	19151.6	11125.4	1.721	HV	u_phy_hbm,u_rsv_08,u_rsv_09
+PORT	rst_n	u_s_3N	rst_n	reset	1	1	57	7	18895.7	11117.0	1.7	HV	u_phy_hbm,u_ctrl_06,u_rsv_06,u_rsv_07
+PORT	rst_n	ld_sg_02_03	rs	reset	1	1	40	7	12664.9	11112.2	1.14	HV	u_irg_03,u_rsv_02
+PORT	rst_n	u_rsv_03	rst	reset	1	1	39	7	12617.1	11064.4	1.14	HV	u_irg_03,u_rsv_02
+PORT	rst_n	u_rsv_13	rst	reset	1	1	38	7	12447.5	11032.6	1.128	HV	u_irg_05,u_rsv_12
+u_phy_hbm	kr_beat	u_ctrl_05	kr_beat	ctl	8	1	0	0	1378.7	1378.7	1.0	HV	
+PORT	rst_n	ld_sg_11_13	rs	reset	1	1	40	7	12545.1	10978.8	1.143	HV	u_phy_hbm
+PORT	rst_n	ld_ss_09_11	rs	reset	1	1	49	7	16071.4	10890.9	1.476	HV	u_phy_hbm,u_ctrl_11
+u_phy_hbm	kr_tag	u_ctrl_07	kr_tag	data	34	1	0	0	317.3	317.3	1.0	HV	
+PORT	rst_n	ld_sg_03_05	rs	reset	1	1	41	7	13027.3	10703.9	1.217	HV	u_phy_hbm
+PORT	rst_n	ld_dn_13_12	rs	reset	1	1	38	7	12225.7	10681.9	1.145	HV	u_rsv_12
+PORT	rst_n	ld_ss_03_02	rs	reset	1	1	39	7	12240.5	10661.5	1.148	HV	u_irg_03,u_rsv_02
+u_ctrl_10	rd	u_rsv_10	r_beat	ctl	8	1	4	0	1344.9	1314.3	1.023	HV	
+PORT	rst_n	ld_ss_02_03	rs	reset	1	1	39	6	12177.1	10471.8	1.163	HV	u_phy_hbm,u_ctrl_00,u_rsv_02
+PORT	rst_n	ld_dn_11_09	rs	reset	1	1	48	6	15903.2	10423.1	1.526	HV	u_phy_hbm,u_ctrl_11
+PORT	rst_n	u_f_2R13	rst_n	reset	1	1	107	6	26113.6	10345.1	2.524	HV	
+PORT	rst_n	ld_pr_02_03	rs	reset	1	1	39	6	12033.3	10321.9	1.166	HV	u_phy_hbm,u_ctrl_00,u_rsv_02
+PORT	rst_n	ld_up_02_03	rs	reset	1	1	39	6	12011.2	10229.9	1.174	HV	u_phy_hbm,u_ctrl_00,u_rsv_02
+ld_pvso_W_local_l0	o	u_rsv_05	local_pv_landed	data	276	1	0	0	36.7	36.7	1.0	HV	
+PORT	rst_n	ld_up_10_11	rs	reset	1	1	40	6	11934.4	10002.4	1.193	HV	u_phy_hbm,u_ctrl_14,u_rsv_10
+PORT	rst_n	ld_sg_11_09	rs	reset	1	1	47	6	15476.1	9956.4	1.554	HV	u_phy_hbm,u_ctrl_11
+u_ctrl_11	rd	u_rsv_11	hs	ctl	2	1	15	3	5051.8	4965.4	1.017	HV	
+u_ctrl_07	rd	u_rsv_07	hs	ctl	2	1	15	3	5082.9	4952.4	1.026	HV	
+u_ctrl_11	rd	u_rsv_11	wd	ctl	2	1	15	3	5046.7	4951.9	1.019	HV	
+u_ctrl_11	rd	u_rsv_11	rk	ctl	2	1	15	3	5046.8	4951.8	1.019	HV	
+u_ctrl_11	rd	u_rsv_11	rv	ctl	2	1	15	3	5046.9	4951.7	1.019	HV	
+PORT	rst_n	ld_pr_10_11	rs	reset	1	1	40	6	12432.1	9888.7	1.257	HV	u_phy_hbm,u_ctrl_14,u_rsv_10
+u_ctrl_07	rd	u_rsv_07	wd	ctl	2	1	15	3	5077.8	4938.8	1.028	HV	
+u_ctrl_07	rd	u_rsv_07	rk	ctl	2	1	15	3	5077.9	4938.7	1.028	HV	
+u_ctrl_07	rd	u_rsv_07	rv	ctl	2	1	15	3	5078.0	4938.6	1.028	HV	
+PORT	rst_n	ld_pr_09_07	rs	reset	1	1	57	6	19055.5	9778.7	1.949	HV	u_phy_hbm,u_ctrl_07
+u_rsv_05	pv_v	u_s_3S	bi	ctl	1	1	28	6	9726.6	9713.3	1.001	HV	u_s_3N
+PORT	rst_n	ld_ss_09_07	rs	reset	1	1	57	6	18958.7	9498.7	1.996	HV	u_phy_hbm,u_ctrl_07
+u_lk_WN3	st	u_s_0N	rx3	ctl	2	1	14	3	4821.0	4740.1	1.017	VH	
+PORT	rst_n	ld_sg_05_04	rs	reset	1	1	41	6	12253.4	9437.0	1.298	HV	u_phy_hbm,u_ctrl_01,u_rsv_04
+PORT	rst_n	ld_ss_11_10	rs	reset	1	1	40	6	12277.6	9407.8	1.305	HV	u_phy_hbm,u_ctrl_13,u_rsv_10
+PORT	rst_n	ld_dn_05_07	rs	reset	1	1	46	6	14925.5	9345.8	1.597	HV	u_phy_hbm,u_ctrl_04
+PORT	rst_n	ld_ss_12_10	rs	reset	1	1	34	6	10907.6	9335.3	1.168	HV	u_phy_hbm,u_ctrl_14
+PORT	rst_n	ld_dn_05_04	rs	reset	1	1	41	6	12480.6	9196.0	1.357	HV	u_phy_hbm,u_rsv_04
+PORT	rst_n	u_rsv_14	rst	reset	1	1	31	6	9275.9	9175.0	1.011	HV	u_irg_04
+PORT	rst_n	u_rsv_11	rst	reset	1	1	40	6	12810.0	9172.0	1.397	HV	u_phy_hbm,u_rsv_10
+PORT	rst_n	ld_sg_10_11	rs	reset	1	1	40	6	12816.2	9120.1	1.405	HV	u_phy_hbm,u_rsv_10
+PORT	rst_n	ld_sg_04_05	rs	reset	1	1	41	6	12654.6	9085.3	1.393	HV	u_phy_hbm,u_ctrl_02,u_rsv_04
+PORT	rst_n	u_rsv_05	rst	reset	1	1	41	6	12734.5	9034.0	1.41	HV	u_phy_hbm,u_ctrl_02,u_rsv_04
+PORT	rst_n	u_rsv_00	rst	reset	1	1	32	6	9600.6	9031.0	1.063	HV	
+PORT	rst_n	u_iqf	rst	reset	1	1	29	5	9408.1	8869.2	1.061	HV	
+PORT	rst_n	ld_ss_10_12	rs	reset	1	1	32	5	10325.3	8864.1	1.165	HV	u_phy_hbm
+PORT	rst_n	ld_sg_05_07	rs	reset	1	1	45	5	14633.1	8848.1	1.654	HV	u_phy_hbm,u_ctrl_04
+PORT	rst_n	ld_dn_11_10	rs	reset	1	1	41	5	12961.3	8824.3	1.469	HV	u_phy_hbm,u_ctrl_12,u_rsv_10
+u_ctrl_06	rd	u_rsv_06	r_beat	ctl	8	1	4	0	1163.5	1086.1	1.071	HV	
+PORT	rst_n	ld_ss_05_04	rs	reset	1	1	42	5	13005.1	8631.1	1.507	HV	u_phy_hbm,u_ctrl_03,u_rsv_04
+PORT	rst_n	u_lk_ES0	rst	reset	1	1	31	5	8837.8	8606.0	1.027	HV	
+PORT	rst_n	u_irg_07	rst	reset	1	1	28	5	8586.6	8565.0	1.003	VH	u_phy_hbm
+u_seqhost	cw_v	u_gunit	cw_d	ctl	1	1	26	5	8764.5	8464.4	1.035	HV	u_eng
+PORT	rst_n	u_lk_WS0	rst	reset	1	1	54	5	17517.1	8462.0	2.07	HV	
+u_seqhost	cw_v	u_gunit	cw_a	ctl	1	1	26	5	8777.2	8451.6	1.039	HV	u_eng
+u_seqhost	cw_v	u_gunit	cw_v	ctl	1	1	26	5	8777.8	8451.1	1.039	HV	u_eng
+u_seqhost	cw_a	u_gunit	cw_v	ctl	1	1	26	5	8777.2	8450.6	1.039	HV	u_eng
+PORT	rst_n	ld_ss_04_05	rs	reset	1	1	43	5	13441.8	8441.3	1.592	HV	u_phy_hbm,u_ctrl_03,u_rsv_04
+u_seqhost	cw_d	u_gunit	cw_v	ctl	1	1	26	5	8764.5	8437.8	1.039	HV	u_eng
+u_ctrl_15	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	2	4190.5	4190.5	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_15	kr_v	ctl	2	1	0	2	4190.4	4190.4	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_15	k_wr_done	ctl	2	1	0	2	4190.2	4190.2	1.0	HV	
+u_ctrl_15	k_we	u_phy_hbm	k_we	ctl	2	1	0	2	4157.5	4157.5	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_15	k_rdy	ctl	2	1	0	2	4151.6	4151.6	1.0	HV	
+u_ctrl_15	k_v	u_phy_hbm	k_v	ctl	2	1	0	2	4151.5	4151.5	1.0	HV	
+PORT	rst_n	ld_pr_04_05	rs	reset	1	1	43	5	13941.9	8291.5	1.681	HV	u_phy_hbm,u_rsv_04
+PORT	rst_n	u_irg_00	rst	reset	1	1	29	5	8872.5	8289.2	1.07	VH	u_phy_hbm
+PORT	rst_n	ld_up_04_05	rs	reset	1	1	43	5	13839.5	8199.5	1.688	HV	u_phy_hbm,u_ctrl_04,u_rsv_04
+u_ctrl_00	k_v	u_phy_hbm	k_v	ctl	2	1	0	2	4076.1	4076.1	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_00	k_rdy	ctl	2	1	0	2	4076.0	4076.0	1.0	HV	
+PORT	rst_n	ld_up_08_09	rs	reset	1	1	44	5	14211.2	8144.8	1.745	HV	u_phy_hbm,u_ctrl_11,u_rsv_08
+u_ctrl_00	k_we	u_phy_hbm	k_we	ctl	2	1	0	2	4070.1	4070.1	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_00	k_wr_done	ctl	2	1	0	2	4037.4	4037.4	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_00	kr_v	ctl	2	1	0	2	4037.2	4037.2	1.0	HV	
+u_ctrl_00	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	2	4037.1	4037.1	1.0	HV	
+u_phy_hbm	kr_beat	u_ctrl_09	kr_beat	ctl	8	1	0	0	1005.1	1005.1	1.0	HV	
+PORT	rst_n	ld_pr_08_09	rs	reset	1	1	44	5	14097.6	8031.2	1.755	HV	u_phy_hbm,u_rsv_08
+ld_pvso_E_local_l0	o	u_rsv_11	local_pv_landed	data	276	1	0	0	29.0	29.0	1.0	HV	
+PORT	rst_n	ld_sg_12_10	rs	reset	1	1	30	5	9559.9	7920.8	1.207	HV	u_phy_hbm,u_ctrl_14
+PORT	rst_n	ld_ss_08_09	rs	reset	1	1	44	5	13969.5	7903.1	1.768	HV	u_phy_hbm,u_ctrl_10,u_rsv_08
+PORT	rst_n	u_lk_WS1	rst	reset	1	1	28	5	8462.5	7857.2	1.077	HV	
+u_ctrl_09	k_len	u_phy_hbm	k_len	ctl	8	1	0	0	967.7	967.7	1.0	HV	
+PORT	rst_n	ld_sg_07_06	rs	reset	1	1	44	5	14182.4	7582.9	1.87	HV	u_phy_hbm,u_ctrl_05,u_rsv_06
+PORT	rst_n	ld_ss_10_08	rs	reset	1	1	39	5	12821.2	7532.9	1.702	HV	u_phy_hbm,u_ctrl_11
+PORT	rst_n	ld_ss_06_04	rs	reset	1	1	40	4	12981.8	7455.4	1.741	HV	u_phy_hbm,u_ctrl_04
+PORT	rst_n	ld_dn_07_06	rs	reset	1	1	44	4	14140.1	7355.2	1.922	HV	u_phy_hbm,u_ctrl_05,u_rsv_06
+u_lk_WN1	st	u_s_0N	rx1	ctl	2	1	11	2	3700.2	3660.5	1.011	HV	
+u_ctrl_14	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	2	3659.1	3659.1	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_14	kr_v	ctl	2	1	0	2	3659.0	3659.0	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_14	k_wr_done	ctl	2	1	0	2	3658.9	3658.9	1.0	HV	
+PORT	rst_n	u_rsv_09	rst	reset	1	1	44	4	14354.5	7317.4	1.962	HV	u_phy_hbm,u_ctrl_09,u_rsv_08
+PORT	rst_n	u_irg_06	rst	reset	1	1	24	4	7293.9	7269.0	1.003	HV	
+u_seqhost	t_kd	u_s_0N	hb_starter_armed	ctl	1	1	21	4	7264.5	7264.5	1.0	HV	
+PORT	rst_n	ld_sg_07_09	rs	reset	1	1	51	4	16338.2	7260.1	2.25	HV	u_phy_hbm
+u_seqhost	t_host	u_s_0N	hb_starter_armed	ctl	1	1	21	4	7258.2	7258.2	1.0	HV	
+u_ctrl_14	k_we	u_phy_hbm	k_we	ctl	2	1	0	2	3626.2	3626.2	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_14	k_rdy	ctl	2	1	0	2	3620.3	3620.3	1.0	HV	
+u_ctrl_14	k_v	u_phy_hbm	k_v	ctl	2	1	0	2	3620.2	3620.2	1.0	HV	
+PORT	rst_n	ld_sg_06_07	rs	reset	1	1	45	4	14446.1	7224.1	2.0	HV	u_phy_hbm,u_rsv_06
+PORT	rst_n	u_rsv_07	rst	reset	1	1	44	4	14414.7	7176.4	2.009	HV	u_phy_hbm,u_rsv_06
+PORT	rst_n	u_rsv_02	rst	reset	1	1	26	4	7776.3	7173.4	1.084	HV	u_irg_03
+PORT	rst_n	u_rsv_12	rst	reset	1	1	24	4	7182.6	7144.6	1.005	HV	u_irg_05
+PORT	rst_n	ld_sg_10_12	rs	reset	1	1	29	4	8641.5	7110.9	1.215	HV	u_phy_hbm
+u_seqhost	hb_starter_armed	u_s_0N	hb_status_t_host	ctl	1	1	21	4	7103.6	7102.4	1.0	HV	
+u_seqhost	hb_starter_armed	u_s_0N	hb_status_t_kd	ctl	1	1	21	4	7097.3	7096.1	1.0	HV	
+u_seqhost	hb_starter_armed	u_s_0N	hb_starter_armed	ctl	1	1	21	4	7094.7	7093.4	1.0	HV	
+u_ctrl_01	k_v	u_phy_hbm	k_v	ctl	2	1	0	2	3544.9	3544.9	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_01	k_rdy	ctl	2	1	0	2	3544.7	3544.7	1.0	HV	
+u_ctrl_06	k_len	u_phy_hbm	k_len	ctl	8	1	0	0	884.8	884.8	1.0	HV	
+u_ctrl_01	k_we	u_phy_hbm	k_we	ctl	2	1	0	2	3538.9	3538.9	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_01	k_wr_done	ctl	2	1	0	2	3506.1	3506.1	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_01	kr_v	ctl	2	1	0	2	3506.0	3506.0	1.0	HV	
+u_ctrl_01	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	2	3505.9	3505.9	1.0	HV	
+PORT	rst_n	u_irg_01	rst	reset	1	1	25	4	7719.2	6993.2	1.104	HV	
+PORT	rst_n	ld_dn_09_08	rs	reset	1	1	45	4	14582.8	6966.8	2.093	HV	u_phy_hbm,u_rsv_08
+u_ctrl_08	rd	u_rsv_08	r_beat	ctl	8	1	3	0	947.9	852.3	1.112	HV	
+u_phy_hbm	kr_beat	u_ctrl_06	kr_beat	ctl	8	1	0	0	847.5	847.5	1.0	HV	
+PORT	rst_n	ld_ss_07_06	rs	reset	1	1	46	4	14914.6	6771.7	2.202	HV	u_phy_hbm,u_ctrl_06,u_rsv_06
+PORT	rst_n	ld_sg_09_08	rs	reset	1	1	46	4	14851.2	6739.1	2.204	HV	u_phy_hbm,u_ctrl_08,u_rsv_08
+PORT	rst_n	ld_ss_04_06	rs	reset	1	1	39	4	12540.1	6735.2	1.862	HV	u_phy_hbm,u_ctrl_04
+PORT	rst_n	ld_ss_06_07	rs	reset	1	1	47	4	15065.6	6583.7	2.288	HV	u_phy_hbm,u_ctrl_07,u_rsv_06
+PORT	rst_n	ld_pr_06_07	rs	reset	1	1	47	4	15285.5	6455.6	2.368	HV	u_phy_hbm,u_ctrl_07,u_rsv_06
+PORT	rst_n	u_etap_00	rst_n	reset	1	1	23	4	7234.7	6444.2	1.123	HV	u_irg_03
+PORT	rst_n	ld_up_06_07	rs	reset	1	1	49	4	15890.7	6341.9	2.506	HV	u_phy_hbm,u_ctrl_07,u_rsv_06
+PORT	rst_n	u_etap_15	rst_n	reset	1	1	22	4	6653.5	6321.2	1.053	HV	u_phy_hbm
+u_ctrl_13	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	2	3127.9	3127.9	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_13	kr_v	ctl	2	1	0	2	3127.8	3127.8	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_13	k_wr_done	ctl	2	1	0	2	3127.7	3127.7	1.0	HV	
+u_ctrl_13	k_we	u_phy_hbm	k_we	ctl	2	1	0	2	3095.0	3095.0	1.0	HV	
+u_ctrl_14	rd	u_rsv_14	hs	ctl	2	1	9	2	3126.0	3091.4	1.011	HV	
+u_phy_hbm	k_rdy	u_ctrl_13	k_rdy	ctl	2	1	0	2	3089.1	3089.1	1.0	HV	
+u_ctrl_13	k_v	u_phy_hbm	k_v	ctl	2	1	0	2	3088.9	3088.9	1.0	HV	
+u_ctrl_14	rd	u_rsv_14	wd	ctl	2	1	9	2	3112.5	3077.8	1.011	HV	
+u_ctrl_14	rd	u_rsv_14	rk	ctl	2	1	9	2	3112.4	3077.7	1.011	HV	
+u_ctrl_14	rd	u_rsv_14	rv	ctl	2	1	9	2	3112.3	3077.6	1.011	HV	
+PORT	rst_n	u_irg_04	rst	reset	1	1	21	4	6381.4	6145.8	1.038	HV	
+PORT	rst_n	u_etap_01	rst_n	reset	1	1	23	4	6887.1	6131.8	1.123	HV	
+PORT	rst_n	ld_sg_06_04	rs	reset	1	1	37	4	11709.5	6057.3	1.933	HV	u_phy_hbm,u_ctrl_04
+u_ctrl_02	k_v	u_phy_hbm	k_v	ctl	2	1	0	2	3013.5	3013.5	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_02	k_rdy	ctl	2	1	0	2	3013.4	3013.4	1.0	HV	
+PORT	rst_n	u_etap_14	rst_n	reset	1	1	22	4	7063.2	6018.8	1.174	HV	u_phy_hbm,u_ctrl_15
+u_ctrl_02	k_we	u_phy_hbm	k_we	ctl	2	1	0	2	3007.5	3007.5	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_02	k_wr_done	ctl	2	1	0	1	2974.8	2974.8	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_02	kr_v	ctl	2	1	0	1	2974.7	2974.7	1.0	HV	
+u_ctrl_02	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	1	2974.5	2974.5	1.0	HV	
+PORT	rst_n	u_irg_02	rst	reset	1	1	23	3	6468.9	5870.0	1.102	HV	
+PORT	rst_n	u_etap_02	rst_n	reset	1	1	23	3	7133.1	5829.4	1.224	HV	u_phy_hbm,u_ctrl_00
+u_etap_01	rco	u_etap_00	rci	data	43	1	2	0	489.4	133.7	3.661	HV	
+PORT	rst_n	u_etap_13	rst_n	reset	1	1	23	3	7373.6	5716.4	1.29	HV	u_phy_hbm,u_ctrl_14
+u_etap_02	rco	u_etap_01	rci	data	43	1	2	0	496.0	132.0	3.756	HV	
+u_etap_03	rco	u_etap_02	rci	data	43	1	2	0	550.7	132.0	4.17	HV	
+u_etap_04	rco	u_etap_03	rci	data	43	1	2	0	550.7	132.0	4.17	HV	
+u_etap_05	rco	u_etap_04	rci	data	43	1	2	0	523.3	132.0	3.963	HV	
+u_etap_06	rco	u_etap_05	rci	data	43	1	2	0	523.3	132.0	3.963	HV	
+u_etap_07	rco	u_etap_06	rci	data	43	1	2	0	523.3	132.0	3.963	HV	
+u_etap_09	rco	u_etap_08	rci	data	43	1	2	0	523.3	132.0	3.963	HV	
+u_etap_10	rco	u_etap_09	rci	data	43	1	2	0	523.3	132.0	3.963	HV	
+u_etap_11	rco	u_etap_10	rci	data	43	1	2	0	523.3	132.0	3.963	HV	
+u_etap_12	rco	u_etap_11	rci	data	43	1	2	0	523.3	132.0	3.963	HV	
+u_etap_13	rco	u_etap_12	rci	data	43	1	2	0	523.3	132.0	3.963	HV	
+u_etap_14	rco	u_etap_13	rci	data	43	1	2	0	496.0	132.0	3.756	HV	
+u_etap_15	rco	u_etap_14	rci	data	43	1	2	0	523.3	132.0	3.963	HV	
+u_ctrl_00	rd	u_rsv_00	rv	ctl	2	1	8	1	2874.8	2796.9	1.028	HV	
+u_ctrl_00	rd	u_rsv_00	rk	ctl	2	1	8	1	2874.9	2796.8	1.028	HV	
+u_ctrl_00	rd	u_rsv_00	wd	ctl	2	1	8	1	2875.0	2796.7	1.028	HV	
+u_rsv_11	pv_v	u_rsv_05	peer_pv	ctl	1	1	17	3	5827.1	5571.6	1.046	HV	
+u_ctrl_00	rd	u_rsv_00	hs	ctl	2	1	8	1	2888.6	2783.1	1.038	HV	
+PORT	rst_n	u_etap_03	rst_n	reset	1	1	24	3	7331.9	5527.0	1.327	HV	u_phy_hbm
+PORT	rst_n	u_ctrl_00	rst_n	reset	1	1	21	3	6797.3	5498.3	1.236	HV	u_phy_hbm
+u_rsv_05	pv_v	u_rsv_11	peer_pv	ctl	1	1	17	3	5545.1	5458.7	1.016	HV	
+PORT	rst_n	u_ctrl_15	rst_n	reset	1	1	20	3	6551.6	5426.4	1.207	HV	u_phy_hbm
+PORT	rst_n	u_etap_12	rst_n	reset	1	1	24	3	7779.2	5414.0	1.437	HV	u_phy_hbm,u_ctrl_14
+PORT	rst_n	u_rsv_10	rst	reset	1	1	29	3	8735.8	5287.0	1.652	HV	u_phy_hbm
+PORT	rst_n	u_etap_04	rst_n	reset	1	1	24	3	7634.3	5224.6	1.461	HV	u_phy_hbm,u_ctrl_01
+u_ctrl_12	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	1	2596.7	2596.7	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_12	kr_v	ctl	2	1	0	1	2596.6	2596.6	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_12	k_wr_done	ctl	2	1	0	1	2596.4	2596.4	1.0	HV	
+PORT	rst_n	u_rsv_04	rst	reset	1	1	30	3	8800.1	5143.0	1.711	HV	u_phy_hbm,u_ctrl_02
+u_ctrl_12	k_we	u_phy_hbm	k_we	ctl	2	1	0	1	2563.7	2563.7	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_12	k_rdy	ctl	2	1	0	1	2557.9	2557.9	1.0	HV	
+u_ctrl_12	k_v	u_phy_hbm	k_v	ctl	2	1	0	1	2557.7	2557.7	1.0	HV	
+PORT	rst_n	u_etap_11	rst_n	reset	1	1	25	3	8116.8	5111.6	1.588	HV	u_phy_hbm,u_ctrl_13
+PORT	rst_n	ld_sg_08_10	rs	reset	1	1	34	3	10609.3	5080.1	2.088	HV	u_phy_hbm,u_ctrl_11
+PORT	rst_n	u_irg_05	rst	reset	1	1	17	3	5044.2	5022.6	1.004	HV	
+u_rsv_05	pv_d	ld_pvso_W_local_l1	i	data	238	1	0	0	20.9	20.9	1.0	HV	
+PORT	rst_n	u_ctrl_01	rst_n	reset	1	1	22	3	7066.1	4967.1	1.423	HV	u_phy_hbm
+u_ctrl_03	k_v	u_phy_hbm	k_v	ctl	2	1	0	1	2482.3	2482.3	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_03	k_rdy	ctl	2	1	0	1	2482.2	2482.2	1.0	HV	
+PORT	rst_n	ld_sg_04_06	rs	reset	1	1	34	3	10490.9	4954.8	2.117	HV	u_phy_hbm,u_ctrl_04
+u_ctrl_03	k_we	u_phy_hbm	k_we	ctl	2	1	0	1	2476.3	2476.3	1.0	HV	
+PORT	rst_n	u_etap_05	rst_n	reset	1	1	25	3	7936.7	4922.2	1.612	HV	u_phy_hbm
+PORT	rst_n	u_ctrl_14	rst_n	reset	1	1	21	3	7010.1	4895.0	1.432	HV	u_phy_hbm
+u_phy_hbm	k_wr_done	u_ctrl_03	k_wr_done	ctl	2	1	0	1	2443.6	2443.6	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_03	kr_v	ctl	2	1	0	1	2443.4	2443.4	1.0	HV	
+u_ctrl_03	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	1	2443.3	2443.3	1.0	HV	
+PORT	rst_n	u_etap_10	rst_n	reset	1	1	27	3	8614.4	4809.2	1.791	HV	u_phy_hbm
+PORT	rst_n	u_irg_03	rst	reset	1	1	18	3	5398.9	4746.8	1.137	HV	
+PORT	rst_n	u_etap_06	rst_n	reset	1	1	27	3	8395.5	4619.8	1.817	HV	u_phy_hbm,u_ctrl_02
+PORT	rst_n	u_etap_09	rst_n	reset	1	1	27	3	8575.2	4506.8	1.903	HV	u_phy_hbm,u_ctrl_12
+u_rsv_05	pv_x	ld_pvso_W_local_l2	i	data	10	1	0	0	446.6	446.6	1.0	HV	
+PORT	rst_n	u_ctrl_02	rst_n	reset	1	1	25	2	8107.2	4435.8	1.828	HV	u_phy_hbm
+PORT	rst_n	u_ctrl_13	rst_n	reset	1	1	23	2	7622.2	4363.8	1.747	HV	u_phy_hbm
+PORT	rst_n	u_etap_07	rst_n	reset	1	1	28	2	8593.3	4317.4	1.99	HV	u_phy_hbm,u_ctrl_03
+u_ctrl_12	rd	u_rsv_12	hs	ctl	2	1	7	1	2175.1	2123.4	1.024	HV	
+u_ctrl_12	rd	u_rsv_12	wd	ctl	2	1	7	1	2161.5	2109.8	1.025	HV	
+u_ctrl_12	rd	u_rsv_12	rk	ctl	2	1	7	1	2161.4	2109.7	1.025	HV	
+u_ctrl_12	rd	u_rsv_12	rv	ctl	2	1	7	1	2161.3	2109.6	1.025	HV	
+PORT	rst_n	u_etap_08	rst_n	reset	1	1	28	2	8837.6	4204.4	2.102	HV	u_phy_hbm
+u_ctrl_11	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	1	2065.5	2065.5	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_11	kr_v	ctl	2	1	0	1	2065.4	2065.4	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_11	k_wr_done	ctl	2	1	0	1	2065.2	2065.2	1.0	HV	
+u_ctrl_11	k_we	u_phy_hbm	k_we	ctl	2	1	0	1	2032.5	2032.5	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_11	k_rdy	ctl	2	1	0	1	2026.6	2026.6	1.0	HV	
+u_ctrl_11	k_v	u_phy_hbm	k_v	ctl	2	1	0	1	2026.5	2026.5	1.0	HV	
+u_ctrl_02	rd	u_rsv_02	rv	ctl	2	1	6	1	2079.7	2001.8	1.039	HV	
+u_ctrl_02	rd	u_rsv_02	rk	ctl	2	1	6	1	2079.8	2001.7	1.039	HV	
+u_ctrl_02	rd	u_rsv_02	wd	ctl	2	1	6	1	2079.9	2001.6	1.039	HV	
+u_ctrl_02	rd	u_rsv_02	hs	ctl	2	1	6	1	2093.5	1988.1	1.053	HV	
+PORT	rst_n	u_ctrl_03	rst_n	reset	1	1	26	2	8419.5	3904.6	2.156	HV	u_phy_hbm
+u_ctrl_04	k_v	u_phy_hbm	k_v	ctl	2	1	0	1	1951.1	1951.1	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_04	k_rdy	ctl	2	1	0	1	1950.9	1950.9	1.0	HV	
+u_ctrl_04	k_we	u_phy_hbm	k_we	ctl	2	1	0	1	1945.1	1945.1	1.0	HV	
+PORT	rst_n	u_ctrl_12	rst_n	reset	1	1	25	2	8201.4	3832.6	2.14	HV	u_phy_hbm
+u_phy_hbm	k_wr_done	u_ctrl_04	k_wr_done	ctl	2	1	0	1	1912.4	1912.4	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_04	kr_v	ctl	2	1	0	1	1912.2	1912.2	1.0	HV	
+u_ctrl_04	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	1	1912.1	1912.1	1.0	HV	
+u_phy_hbm	kr_beat	u_ctrl_08	kr_beat	ctl	8	1	0	0	473.9	473.9	1.0	HV	
+u_ctrl_08	k_len	u_phy_hbm	k_len	ctl	8	1	0	0	436.5	436.5	1.0	HV	
+PORT	rst_n	u_rsv_08	rst	reset	1	1	33	2	10521.4	3429.4	3.068	HV	u_phy_hbm,u_ctrl_09
+PORT	rst_n	u_ctrl_04	rst_n	reset	1	1	27	2	8688.3	3373.3	2.576	HV	u_phy_hbm
+PORT	rst_n	u_ctrl_11	rst_n	reset	1	1	26	2	8611.7	3301.4	2.609	HV	u_phy_hbm
+PORT	rst_n	u_rsv_06	rst	reset	1	1	33	2	10590.7	3285.4	3.224	HV	u_phy_hbm
+u_ctrl_10	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	1	1534.1	1534.1	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_10	kr_v	ctl	2	1	0	1	1534.0	1534.0	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_10	k_wr_done	ctl	2	1	0	1	1533.9	1533.9	1.0	HV	
+u_ctrl_10	k_we	u_phy_hbm	k_we	ctl	2	1	0	1	1501.2	1501.2	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_10	k_rdy	ctl	2	1	0	0	1495.3	1495.3	1.0	HV	
+u_ctrl_10	k_v	u_phy_hbm	k_v	ctl	2	1	0	0	1495.2	1495.2	1.0	HV	
+u_ctrl_04	rd	u_rsv_04	rv	ctl	2	1	5	0	1525.0	1447.1	1.054	HV	
+u_ctrl_04	rd	u_rsv_04	rk	ctl	2	1	5	0	1525.1	1447.0	1.054	HV	
+u_ctrl_04	rd	u_rsv_04	wd	ctl	2	1	5	0	1525.2	1446.9	1.054	HV	
+u_ctrl_04	rd	u_rsv_04	hs	ctl	2	1	5	0	1538.8	1433.3	1.074	HV	
+PORT	rst_n	u_ctrl_05	rst_n	reset	1	1	29	1	9443.9	2842.1	3.323	HV	u_phy_hbm
+u_ctrl_05	k_v	u_phy_hbm	k_v	ctl	2	1	0	0	1419.9	1419.9	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_05	k_rdy	ctl	2	1	0	0	1419.7	1419.7	1.0	HV	
+u_ctrl_07	k_len	u_phy_hbm	k_len	ctl	8	1	0	0	353.5	353.5	1.0	HV	
+u_ctrl_05	k_we	u_phy_hbm	k_we	ctl	2	1	0	0	1413.8	1413.8	1.0	HV	
+PORT	rst_n	u_ctrl_10	rst_n	reset	1	1	28	1	9264.0	2770.0	3.344	HV	u_phy_hbm
+u_phy_hbm	k_wr_done	u_ctrl_05	k_wr_done	ctl	2	1	0	0	1381.1	1381.1	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_05	kr_v	ctl	2	1	0	0	1381.0	1381.0	1.0	HV	
+u_ctrl_05	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	0	1380.9	1380.9	1.0	HV	
+u_rsv_11	pv_x	ld_pvso_E_local_l2	i	data	10	1	0	0	266.5	266.5	1.0	HV	
+u_ctrl_10	rd	u_rsv_10	hs	ctl	2	1	4	0	1358.9	1328.3	1.023	HV	
+u_ctrl_10	rd	u_rsv_10	wd	ctl	2	1	4	0	1345.4	1314.7	1.023	HV	
+u_ctrl_10	rd	u_rsv_10	rk	ctl	2	1	4	0	1345.3	1314.6	1.023	HV	
+u_ctrl_10	rd	u_rsv_10	rv	ctl	2	1	4	0	1345.2	1314.5	1.023	HV	
+ld_pvso_W_local_l2	o	u_rsv_05	local_pv_landed	data	10	1	0	0	262.7	262.7	1.0	HV	
+u_rsv_08	so_v	ld_ss_08_09	i	ctl	1	1	0	1	2537.4	2537.4	1.0	HV	
+u_rsv_02	so_v	ld_ss_02_03	i	ctl	1	1	0	1	2537.3	2537.3	1.0	HV	
+u_rsv_04	so_v	ld_ss_04_05	i	ctl	1	1	0	1	2537.3	2537.3	1.0	HV	
+u_rsv_06	so_v	ld_ss_06_07	i	ctl	1	1	0	1	2537.3	2537.3	1.0	HV	
+u_phy_hbm	kr_beat	u_ctrl_07	kr_beat	ctl	8	1	0	0	316.1	316.1	1.0	HV	
+u_rsv_14	so_v	ld_ss_14_15	i	ctl	1	1	0	1	2490.0	2490.0	1.0	HV	
+ld_ss_04_05	o	u_rsv_05	si_v	ctl	1	1	0	1	2486.6	2486.6	1.0	HV	
+ld_ss_06_07	o	u_rsv_07	si_v	ctl	1	1	0	1	2486.6	2486.6	1.0	HV	
+ld_ss_08_09	o	u_rsv_09	si_v	ctl	1	1	0	1	2486.6	2486.6	1.0	HV	
+ld_ss_02_03	o	u_rsv_03	si_v	ctl	1	1	0	1	2486.5	2486.5	1.0	HV	
+u_rsv_03	go_v	ld_sg_03_02	i	ctl	1	1	0	1	2443.2	2443.2	1.0	HV	
+u_rsv_07	go_v	ld_sg_07_06	i	ctl	1	1	0	1	2443.1	2443.1	1.0	HV	
+u_rsv_09	go_v	ld_sg_09_08	i	ctl	1	1	0	1	2443.1	2443.1	1.0	HV	
+u_rsv_15	go_v	ld_sg_15_14	i	ctl	1	1	0	1	2443.1	2443.1	1.0	HV	
+ld_ss_14_15	o	u_rsv_15	si_v	ctl	1	1	0	1	2439.2	2439.2	1.0	HV	
+u_rsv_05	go_v	ld_sg_05_04	i	ctl	1	1	0	1	2410.7	2410.7	1.0	HV	
+ld_sg_03_02	o	u_rsv_02	gi_v	ctl	1	1	0	1	2393.3	2393.3	1.0	HV	
+ld_sg_07_06	o	u_rsv_06	gi_v	ctl	1	1	0	1	2393.2	2393.2	1.0	HV	
+ld_sg_09_08	o	u_rsv_08	gi_v	ctl	1	1	0	1	2393.2	2393.2	1.0	HV	
+ld_sg_15_14	o	u_rsv_14	gi_v	ctl	1	1	0	1	2393.2	2393.2	1.0	HV	
+u_rsv_05	so_v	ld_ss_05_03	i	ctl	1	1	0	1	2391.6	2391.6	1.0	HV	
+u_rsv_01	so_v	ld_ss_01_00	i	ctl	1	1	0	1	2362.8	2362.8	1.0	HV	
+ld_sg_05_04	o	u_rsv_04	gi_v	ctl	1	1	0	1	2360.8	2360.8	1.0	HV	
+ld_pvso_W_local_l1	o	u_rsv_05	local_pv_landed	data	276	1	0	0	8.4	8.4	1.0	HV	
+ld_ss_01_00	o	u_rsv_00	si_v	ctl	1	1	0	1	2312.1	2312.1	1.0	HV	
+PORT	rst_n	u_ctrl_06	rst_n	reset	1	1	30	1	10033.8	2310.9	4.342	HV	u_phy_hbm
+u_rsv_12	so_v	ld_ss_12_10	i	ctl	1	1	0	1	2283.3	2283.3	1.0	HV	
+u_rsv_07	so_v	ld_ss_07_06	i	ctl	1	1	0	1	2268.1	2268.1	1.0	HV	
+u_rsv_11	so_v	ld_ss_11_10	i	ctl	1	1	0	1	2268.1	2268.1	1.0	HV	
+u_rsv_06	so_v	ld_ss_06_04	i	ctl	1	1	0	1	2267.6	2267.6	1.0	HV	
+u_rsv_10	so_v	ld_ss_10_08	i	ctl	1	1	0	1	2267.6	2267.6	1.0	HV	
+u_rsv_05	so_v	ld_ss_05_04	i	ctl	1	1	0	1	2252.4	2252.4	1.0	HV	
+u_rsv_03	so_v	ld_ss_03_02	i	ctl	1	1	0	1	2252.3	2252.3	1.0	HV	
+PORT	rst_n	u_ctrl_09	rst_n	reset	1	1	29	1	9795.2	2238.8	4.375	HV	u_phy_hbm
+u_rsv_03	go_v	ld_sg_03_05	i	ctl	1	1	0	1	2228.1	2228.1	1.0	HV	
+u_rsv_15	so_v	ld_ss_15_14	i	ctl	1	1	0	1	2220.9	2220.9	1.0	HV	
+u_rsv_03	so_v	ld_ss_03_01	i	ctl	1	1	0	1	2220.2	2220.2	1.0	HV	
+u_rsv_07	so_v	ld_ss_07_05	i	ctl	1	1	0	1	2220.2	2220.2	1.0	HV	
+u_rsv_09	so_v	ld_ss_09_07	i	ctl	1	1	0	1	2220.2	2220.2	1.0	HV	
+u_rsv_13	so_v	ld_ss_13_11	i	ctl	1	1	0	1	2220.2	2220.2	1.0	HV	
+ld_ss_07_06	o	u_rsv_06	si_v	ctl	1	1	0	1	2217.4	2217.4	1.0	HV	
+ld_ss_11_10	o	u_rsv_10	si_v	ctl	1	1	0	1	2217.3	2217.3	1.0	HV	
+ld_ss_03_02	o	u_rsv_02	si_v	ctl	1	1	0	1	2201.6	2201.6	1.0	HV	
+ld_ss_05_04	o	u_rsv_04	si_v	ctl	1	1	0	1	2201.6	2201.6	1.0	HV	
+ld_ss_15_13	o	u_rsv_13	si_v	ctl	1	1	0	1	2189.5	2189.5	1.0	HV	
+ld_ss_12_10	o	u_rsv_10	si_v	ctl	1	1	0	1	2188.3	2188.3	1.0	HV	
+ld_ss_06_04	o	u_rsv_04	si_v	ctl	1	1	0	1	2172.5	2172.5	1.0	HV	
+ld_ss_10_08	o	u_rsv_08	si_v	ctl	1	1	0	1	2172.5	2172.5	1.0	HV	
+u_ctrl_06	rd	u_rsv_06	rv	ctl	2	1	4	0	1163.8	1085.8	1.072	HV	
+u_ctrl_06	rd	u_rsv_06	rk	ctl	2	1	4	0	1163.9	1085.7	1.072	HV	
+u_ctrl_06	rd	u_rsv_06	wd	ctl	2	1	4	0	1163.9	1085.7	1.072	HV	
+ld_ss_15_14	o	u_rsv_14	si_v	ctl	1	1	0	1	2170.2	2170.2	1.0	HV	
+u_ctrl_06	rd	u_rsv_06	hs	ctl	2	1	4	0	1177.5	1072.1	1.098	HV	
+ld_ss_03_01	o	u_rsv_01	si_v	ctl	1	1	0	1	2125.3	2125.3	1.0	HV	
+ld_ss_05_03	o	u_rsv_03	si_v	ctl	1	1	0	1	2125.3	2125.3	1.0	HV	
+ld_ss_07_05	o	u_rsv_05	si_v	ctl	1	1	0	1	2125.3	2125.3	1.0	HV	
+ld_ss_09_07	o	u_rsv_07	si_v	ctl	1	1	0	1	2125.3	2125.3	1.0	HV	
+ld_ss_13_11	o	u_rsv_11	si_v	ctl	1	1	0	1	2125.3	2125.3	1.0	HV	
+ld_sg_08_10	o	u_rsv_10	gi_v	ctl	1	1	0	1	2109.7	2109.7	1.0	HV	
+u_rsv_04	go_v	ld_sg_04_06	i	ctl	1	1	0	1	2088.9	2088.9	1.0	HV	
+u_rsv_05	go_v	ld_sg_05_07	i	ctl	1	1	0	1	2040.6	2040.6	1.0	HV	
+u_rsv_07	go_v	ld_sg_07_09	i	ctl	1	1	0	1	2040.6	2040.6	1.0	HV	
+u_rsv_08	go_v	ld_sg_08_10	i	ctl	1	1	0	1	2038.9	2038.9	1.0	HV	
+u_rsv_04	go_v	ld_sg_04_05	i	ctl	1	1	0	1	2037.3	2037.3	1.0	HV	
+ld_sg_01_03	o	u_rsv_03	gi_v	ctl	1	1	0	1	2012.5	2012.5	1.0	HV	
+ld_pvso_E_local_l2	o	u_rsv_11	local_pv_landed	data	10	1	0	0	201.1	201.1	1.0	HV	
+u_rsv_11	go_v	ld_sg_11_13	i	ctl	1	1	0	1	2008.2	2008.2	1.0	HV	
+u_ctrl_09	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	0	1002.9	1002.9	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_09	kr_v	ctl	2	1	0	0	1002.8	1002.8	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_09	k_wr_done	ctl	2	1	0	0	1002.7	1002.7	1.0	HV	
+u_rsv_02	go_v	ld_sg_02_03	i	ctl	1	1	0	1	2005.0	2005.0	1.0	HV	
+u_rsv_06	go_v	ld_sg_06_07	i	ctl	1	1	0	1	2005.0	2005.0	1.0	HV	
+u_rsv_10	go_v	ld_sg_10_11	i	ctl	1	1	0	1	2005.0	2005.0	1.0	HV	
+u_rsv_14	go_v	ld_sg_14_15	i	ctl	1	1	0	1	2005.0	2005.0	1.0	HV	
+u_rsv_00	go_v	ld_sg_00_01	i	ctl	1	1	0	1	2004.9	2004.9	1.0	HV	
+ld_sg_04_06	o	u_rsv_06	gi_v	ctl	1	1	0	1	1994.9	1994.9	1.0	HV	
+ld_sg_04_05	o	u_rsv_05	gi_v	ctl	1	1	0	1	1987.5	1987.5	1.0	HV	
+u_rsv_15	so_v	ld_ss_15_13	i	ctl	1	1	0	1	1984.8	1984.8	1.0	HV	
+u_rsv_01	go_v	ld_sg_01_03	i	ctl	1	1	0	1	1974.7	1974.7	1.0	HV	
+ld_sg_03_05	o	u_rsv_05	gi_v	ctl	1	1	0	1	1962.8	1962.8	1.0	HV	
+ld_sg_02_03	o	u_rsv_03	gi_v	ctl	1	1	0	1	1955.2	1955.2	1.0	HV	
+ld_sg_06_07	o	u_rsv_07	gi_v	ctl	1	1	0	1	1955.2	1955.2	1.0	HV	
+ld_sg_10_11	o	u_rsv_11	gi_v	ctl	1	1	0	1	1955.2	1955.2	1.0	HV	
+ld_sg_00_01	o	u_rsv_01	gi_v	ctl	1	1	0	1	1955.1	1955.1	1.0	HV	
+ld_sg_14_15	o	u_rsv_15	gi_v	ctl	1	1	0	1	1955.1	1955.1	1.0	HV	
+ld_sg_05_07	o	u_rsv_07	gi_v	ctl	1	1	0	1	1946.6	1946.6	1.0	HV	
+ld_sg_07_09	o	u_rsv_09	gi_v	ctl	1	1	0	1	1946.6	1946.6	1.0	HV	
+ld_sg_13_15	o	u_rsv_15	gi_v	ctl	1	1	0	1	1946.6	1946.6	1.0	HV	
+u_ctrl_09	k_we	u_phy_hbm	k_we	ctl	2	1	0	0	969.9	969.9	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_09	k_rdy	ctl	2	1	0	0	964.1	964.1	1.0	HV	
+u_ctrl_09	k_v	u_phy_hbm	k_v	ctl	2	1	0	0	963.9	963.9	1.0	HV	
+ld_sg_11_13	o	u_rsv_13	gi_v	ctl	1	1	0	1	1914.3	1914.3	1.0	HV	
+u_rsv_10	go_v	ld_sg_10_12	i	ctl	1	1	0	1	1911.1	1911.1	1.0	HV	
+u_rsv_13	go_v	ld_sg_13_15	i	ctl	1	1	0	1	1869.2	1869.2	1.0	HV	
+ld_sg_10_12	o	u_rsv_12	gi_v	ctl	1	1	0	1	1817.3	1817.3	1.0	HV	
+u_rsv_05	pv_x	ld_pvso_W_local_l1	i	data	38	1	0	0	47.8	47.8	1.0	HV	
+u_rsv_13	so_v	ld_ss_13_15	i	ctl	1	1	0	1	1805.4	1805.4	1.0	HV	
+PORT	rst_n	u_ctrl_07	rst_n	reset	1	1	32	1	10546.9	1779.5	5.927	HV	u_phy_hbm
+u_ctrl_06	k_v	u_phy_hbm	k_v	ctl	2	1	0	0	888.6	888.6	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_06	k_rdy	ctl	2	1	0	0	888.5	888.5	1.0	HV	
+u_ctrl_06	k_we	u_phy_hbm	k_we	ctl	2	1	0	0	882.6	882.6	1.0	HV	
+u_ctrl_08	rd	u_rsv_08	hs	ctl	2	1	3	0	961.9	866.3	1.11	HV	
+PORT	rst_n	u_ctrl_08	rst_n	reset	1	1	30	1	10205.5	1707.6	5.977	HV	u_phy_hbm
+u_ctrl_08	rd	u_rsv_08	wd	ctl	2	1	3	0	948.3	852.7	1.112	HV	
+u_ctrl_08	rd	u_rsv_08	rk	ctl	2	1	3	0	948.3	852.6	1.112	HV	
+u_ctrl_08	rd	u_rsv_08	rv	ctl	2	1	3	0	948.2	852.5	1.112	HV	
+u_phy_hbm	k_wr_done	u_ctrl_06	k_wr_done	ctl	2	1	0	0	849.9	849.9	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_06	kr_v	ctl	2	1	0	0	849.8	849.8	1.0	HV	
+u_ctrl_06	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	0	849.7	849.7	1.0	HV	
+u_rsv_10	so_v	ld_ss_10_12	i	ctl	1	1	0	1	1665.6	1665.6	1.0	HV	
+u_rsv_04	so_v	ld_ss_04_06	i	ctl	1	1	0	1	1649.8	1649.8	1.0	HV	
+u_rsv_09	so_v	ld_ss_09_11	i	ctl	1	1	0	1	1634.0	1634.0	1.0	HV	
+u_rsv_11	so_v	ld_ss_11_13	i	ctl	1	1	0	1	1634.0	1634.0	1.0	HV	
+ld_ss_10_12	o	u_rsv_12	si_v	ctl	1	1	0	1	1571.1	1571.1	1.0	HV	
+ld_ss_04_06	o	u_rsv_06	si_v	ctl	1	1	0	1	1555.4	1555.4	1.0	HV	
+ld_ss_09_11	o	u_rsv_11	si_v	ctl	1	1	0	1	1539.5	1539.5	1.0	HV	
+ld_ss_11_13	o	u_rsv_13	si_v	ctl	1	1	0	1	1539.5	1539.5	1.0	HV	
+ld_ss_13_15	o	u_rsv_15	si_v	ctl	1	1	0	1	1539.5	1539.5	1.0	HV	
+PORT	rst_n	u_phy_hbm	rst_n	reset	1	1	4	0	1840.6	1465.9	1.256	HV	
+u_rsv_15	go_v	ld_sg_15_13	i	ctl	1	1	0	0	1141.7	1141.7	1.0	HV	
+u_rsv_12	go_v	ld_sg_12_10	i	ctl	1	1	0	0	1132.6	1132.6	1.0	HV	
+u_rsv_11	go_v	ld_sg_11_09	i	ctl	1	1	0	0	1084.6	1084.6	1.0	HV	
+u_rsv_13	go_v	ld_sg_13_11	i	ctl	1	1	0	0	1084.6	1084.6	1.0	HV	
+ld_sg_12_10	o	u_rsv_10	gi_v	ctl	1	1	0	0	1039.5	1039.5	1.0	HV	
+u_rsv_06	go_v	ld_sg_06_04	i	ctl	1	1	0	0	1020.4	1020.4	1.0	HV	
+ld_sg_15_13	o	u_rsv_13	gi_v	ctl	1	1	0	0	1008.7	1008.7	1.0	HV	
+ld_sg_11_09	o	u_rsv_09	gi_v	ctl	1	1	0	0	991.4	991.4	1.0	HV	
+ld_sg_13_11	o	u_rsv_11	gi_v	ctl	1	1	0	0	991.4	991.4	1.0	HV	
+u_ctrl_08	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	0	471.7	471.7	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_08	kr_v	ctl	2	1	0	0	471.6	471.6	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_08	k_wr_done	ctl	2	1	0	0	471.4	471.4	1.0	HV	
+ld_sg_06_04	o	u_rsv_04	gi_v	ctl	1	1	0	0	927.3	927.3	1.0	HV	
+u_ctrl_08	k_we	u_phy_hbm	k_we	ctl	2	1	0	0	438.7	438.7	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_08	k_rdy	ctl	2	1	0	0	432.8	432.8	1.0	HV	
+u_ctrl_08	k_v	u_phy_hbm	k_v	ctl	2	1	0	0	432.7	432.7	1.0	HV	
+u_ctrl_07	k_v	u_phy_hbm	k_v	ctl	2	1	0	0	357.3	357.3	1.0	HV	
+u_phy_hbm	k_rdy	u_ctrl_07	k_rdy	ctl	2	1	0	0	357.2	357.2	1.0	HV	
+u_ctrl_07	k_we	u_phy_hbm	k_we	ctl	2	1	0	0	351.3	351.3	1.0	HV	
+u_phy_hbm	k_wr_done	u_ctrl_07	k_wr_done	ctl	2	1	0	0	318.6	318.6	1.0	HV	
+u_phy_hbm	kr_v	u_ctrl_07	kr_v	ctl	2	1	0	0	318.4	318.4	1.0	HV	
+u_ctrl_07	kr_rdy	u_phy_hbm	kr_rdy	ctl	2	1	0	0	318.3	318.3	1.0	HV	
+u_rsv_11	pv_v	ld_pvso_E_local_l0	i	ctl	1	1	0	0	69.7	69.7	1.0	HV	
+u_rsv_05	pv_v	ld_pvso_W_local_l0	i	ctl	1	1	0	0	24.1	24.1	1.0	HV	

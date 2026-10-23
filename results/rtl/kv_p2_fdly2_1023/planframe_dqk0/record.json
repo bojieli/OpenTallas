@@ -1,0 +1,1232 @@
+{
+ "schema": "opentallas.toksim.kvattn.v1",
+ "lane": "TOKSIM-KVATTN",
+ "fd": "FD=2 (calibration: FIN0 user 0 root age 1743 face res_t 1745 (fin pin -> face core +1))",
+ "measured": {
+  "u1_T1024": {
+   "pass_": true,
+   "ctx": 1024,
+   "users": 1,
+   "start_to_retire": [
+    1782
+   ],
+   "start_to_status": [
+    1997
+   ],
+   "work_span": [
+    1746
+   ],
+   "cmd_period": null,
+   "first_cmd_to_last_retire": 1782,
+   "first_cmd_to_last_status": 1997,
+   "exact": [
+    true
+   ],
+   "k_rows": [
+    1024
+   ],
+   "v_rows": [
+    1024
+   ]
+  },
+  "u4_T1024": {
+   "pass_": true,
+   "ctx": 1024,
+   "users": 4,
+   "start_to_retire": [
+    1782,
+    1782,
+    1782,
+    1782
+   ],
+   "start_to_status": [
+    1997,
+    1997,
+    1997,
+    1997
+   ],
+   "work_span": [
+    1746,
+    1746,
+    1746,
+    1746
+   ],
+   "cmd_period": 2025.0,
+   "first_cmd_to_last_retire": 7857,
+   "first_cmd_to_last_status": 8072,
+   "exact": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "k_rows": [
+    1024,
+    1024,
+    1024,
+    1024
+   ],
+   "v_rows": [
+    1024,
+    1024,
+    1024,
+    1024
+   ]
+  },
+  "u1_T4096": {
+   "pass_": true,
+   "ctx": 4096,
+   "users": 1,
+   "start_to_retire": [
+    1782
+   ],
+   "start_to_status": [
+    1997
+   ],
+   "work_span": [
+    1746
+   ],
+   "cmd_period": null,
+   "first_cmd_to_last_retire": 1782,
+   "first_cmd_to_last_status": 1997,
+   "exact": [
+    true
+   ],
+   "k_rows": [
+    4096
+   ],
+   "v_rows": [
+    4096
+   ]
+  },
+  "u4_T4096": {
+   "pass_": true,
+   "ctx": 4096,
+   "users": 4,
+   "start_to_retire": [
+    1782,
+    1782,
+    1782,
+    1782
+   ],
+   "start_to_status": [
+    1997,
+    1997,
+    1997,
+    1997
+   ],
+   "work_span": [
+    1746,
+    1746,
+    1746,
+    1746
+   ],
+   "cmd_period": 2025.0,
+   "first_cmd_to_last_retire": 7857,
+   "first_cmd_to_last_status": 8072,
+   "exact": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "k_rows": [
+    4096,
+    4096,
+    4096,
+    4096
+   ],
+   "v_rows": [
+    4096,
+    4096,
+    4096,
+    4096
+   ]
+  },
+  "u1_T8191": {
+   "pass_": false,
+   "ctx": 8191,
+   "users": 1,
+   "start_to_retire": [
+    -133
+   ],
+   "start_to_status": [
+    -133
+   ],
+   "work_span": [
+    1746
+   ],
+   "cmd_period": null,
+   "first_cmd_to_last_retire": -133,
+   "first_cmd_to_last_status": -133,
+   "exact": [
+    false
+   ],
+   "k_rows": [
+    8191
+   ],
+   "v_rows": [
+    8191
+   ]
+  },
+  "u1_T8192": {
+   "pass_": false,
+   "ctx": 8192,
+   "users": 1,
+   "start_to_retire": [
+    -133
+   ],
+   "start_to_status": [
+    -133
+   ],
+   "work_span": [
+    1746
+   ],
+   "cmd_period": null,
+   "first_cmd_to_last_retire": -133,
+   "first_cmd_to_last_status": -133,
+   "exact": [
+    false
+   ],
+   "k_rows": [
+    8192
+   ],
+   "v_rows": [
+    8192
+   ]
+  },
+  "u4_T8192": {
+   "pass_": false,
+   "ctx": 8192,
+   "users": 4,
+   "start_to_retire": [
+    -133,
+    -2158,
+    -4183,
+    -6208
+   ],
+   "start_to_status": [
+    -133,
+    -2158,
+    -4183,
+    -6208
+   ],
+   "work_span": [
+    1746,
+    -2158,
+    -4183,
+    -6208
+   ],
+   "cmd_period": 2025.0,
+   "first_cmd_to_last_retire": -133,
+   "first_cmd_to_last_status": -133,
+   "exact": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "k_rows": [
+    8192,
+    8192,
+    8192,
+    8192
+   ],
+   "v_rows": [
+    8192,
+    8192,
+    8192,
+    8192
+   ]
+  }
+ },
+ "context_fit": {
+  "work_fixed": 1746.0,
+  "work_per_row": 0.0,
+  "share": {
+   "1024": 0.0,
+   "4096": 0.0,
+   "8192": -0.0
+  }
+ },
+ "mutants": {
+  "mut_gmut1": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=1 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "must": "FAIL",
+   "caught": true
+  },
+  "mut_gmut2": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=2 nu=1 ctx=1024 fd=2 tile_fault=1 svc_fault=1 result_fault=1 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "must": "FAIL",
+   "caught": true
+  },
+  "mut_gmut4": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=4 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "must": "FAIL",
+   "caught": true
+  },
+  "mut_k_late": {
+   "verdict": "KVATTN_REL FAIL mode=k_late gmut=0 nu=1 ctx=1024 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000011010 timeout=0 period=0",
+   "must": "FAIL",
+   "caught": true
+  },
+  "mut_k_shift": {
+   "verdict": "KVATTN_REL FAIL mode=k_shift gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "must": "FAIL",
+   "caught": true
+  },
+  "mut_q_swap": {
+   "verdict": "KVATTN_REL FAIL mode=q_swap gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "must": "FAIL",
+   "caught": true
+  },
+  "mut_v_swap": {
+   "verdict": "KVATTN_REL FAIL mode=v_swap gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "must": "FAIL",
+   "caught": true
+  }
+ },
+ "bound_32k": "KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=32768 fd=2 tile_fault=1 svc_fault=0 result_fault=0 cal_fault=1 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+ "peaky": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=4096 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+ "runs": {
+  "cal_T1024": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=1024 fd=3 tile_fault=1 svc_fault=1 result_fault=1 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1877,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1743,
+     "start_to_retire": -133,
+     "start_to_status": -133,
+     "work_span": 1745
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1743 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "287.19 s 1136620 KB"
+  },
+  "mut_gmut1": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=1 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": false,
+     "data_errors": 127,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [
+    "MISMATCH user 0 word 0 got bc691da6 want bc691da5",
+    "MISMATCH user 0 word 1 got bc965079 want bc965078",
+    "MISMATCH user 0 word 2 got bdc517fd want bdc517fb"
+   ],
+   "exit": "0",
+   "time": "236.75 s 1135508 KB"
+  },
+  "mut_gmut2": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=2 nu=1 ctx=1024 fd=2 tile_fault=1 svc_fault=1 result_fault=1 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1878,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1745,
+     "start_to_retire": -133,
+     "start_to_status": -133,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1745 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "252.25 s 1135464 KB"
+  },
+  "mut_gmut4": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=4 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": false,
+     "data_errors": 512,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1023,
+     "v_rows": 1023,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [
+    "MISMATCH user 0 word 0 got bc686863 want bc691da5",
+    "MISMATCH user 0 word 1 got bc9614ec want bc965078",
+    "MISMATCH user 0 word 2 got bdc51a59 want bdc517fb"
+   ],
+   "exit": "0",
+   "time": "242.11 s 1136764 KB"
+  },
+  "mut_k_late": {
+   "verdict": "KVATTN_REL FAIL mode=k_late gmut=0 nu=1 ctx=1024 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000011010 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 1003,
+     "v_rows": 1024,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1878,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": -133,
+     "start_to_status": -133,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "236.85 s 1136304 KB"
+  },
+  "mut_k_shift": {
+   "verdict": "KVATTN_REL FAIL mode=k_shift gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": false,
+     "data_errors": 512,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [
+    "MISMATCH user 0 word 0 got bc646aa6 want bc691da5",
+    "MISMATCH user 0 word 1 got bc96e16b want bc965078",
+    "MISMATCH user 0 word 2 got bdc4ea34 want bdc517fb"
+   ],
+   "exit": "0",
+   "time": "260.29 s 1136484 KB"
+  },
+  "mut_q_swap": {
+   "verdict": "KVATTN_REL FAIL mode=q_swap gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": false,
+     "data_errors": 128,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [
+    "MISMATCH user 0 word 0 got 3d413cb6 want bc691da5",
+    "MISMATCH user 0 word 1 got be12d66f want bc965078",
+    "MISMATCH user 0 word 2 got 3d7d44df want bdc517fb"
+   ],
+   "exit": "0",
+   "time": "271.04 s 1136072 KB"
+  },
+  "mut_v_swap": {
+   "verdict": "KVATTN_REL FAIL mode=v_swap gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": false,
+     "data_errors": 508,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [
+    "MISMATCH user 0 word 0 got bc6932e3 want bc691da5",
+    "MISMATCH user 0 word 1 got bc9658f7 want bc965078",
+    "MISMATCH user 0 word 2 got bdc4f3de want bdc517fb"
+   ],
+   "exit": "0",
+   "time": "256.76 s 1135892 KB"
+  },
+  "u1_T1024": {
+   "verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "327.86 s 1136036 KB"
+  },
+  "u1_T32768_bound": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=32768 fd=2 tile_fault=1 svc_fault=0 result_fault=0 cal_fault=1 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 32768,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 0,
+     "v_rows": 0,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": -1,
+     "cyc_start_qk": -1,
+     "cyc_k_last": -1,
+     "cyc_v_first": -1,
+     "cyc_v_last": -1,
+     "cyc_pv0_out": -1,
+     "cyc_pv1_out": -1,
+     "cyc_final_out": -1,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 137,
+     "fin0_root_age": -1,
+     "start_to_retire": 0,
+     "start_to_status": 0,
+     "work_span": 0
+    }
+   ],
+   "fin0": [],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "16.14 s 1137244 KB"
+  },
+  "u1_T4096": {
+   "verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=4096 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 4096,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 4096,
+     "v_rows": 4096,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 283,
+     "cyc_v_first": 814,
+     "cyc_v_last": 1085,
+     "cyc_pv0_out": 1220,
+     "cyc_pv1_out": 1220,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "351.50 s 1135372 KB"
+  },
+  "u1_T4096_peaky": {
+   "verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=4096 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 4096,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 4096,
+     "v_rows": 4096,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 283,
+     "cyc_v_first": 814,
+     "cyc_v_last": 1085,
+     "cyc_pv0_out": 1220,
+     "cyc_pv1_out": 1220,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "237.23 s 1135828 KB"
+  },
+  "u1_T8191": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=8191 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000010011 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 8191,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 8191,
+     "v_rows": 8191,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 411,
+     "cyc_v_first": 990,
+     "cyc_v_last": 1517,
+     "cyc_pv0_out": 1652,
+     "cyc_pv1_out": 1652,
+     "cyc_final_out": 1878,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": -133,
+     "start_to_status": -133,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "349.51 s 1136392 KB"
+  },
+  "u1_T8192": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=8192 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000010011 timeout=0 period=0",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 8192,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 8192,
+     "v_rows": 8192,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 411,
+     "cyc_v_first": 990,
+     "cyc_v_last": 1517,
+     "cyc_pv0_out": 1652,
+     "cyc_pv1_out": 1652,
+     "cyc_final_out": 1878,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": -133,
+     "start_to_status": -133,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "259.75 s 1136724 KB"
+  },
+  "u4_T1024": {
+   "verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=4 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=2025",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 1024,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 187,
+     "cyc_v_first": 820,
+     "cyc_v_last": 899,
+     "cyc_pv0_out": 1034,
+     "cyc_pv1_out": 1034,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    },
+    {
+     "user": 1,
+     "ctx": 1024,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 2129,
+     "cyc_run": 2153,
+     "cyc_cmd": 2157,
+     "cyc_start_qk": 2160,
+     "cyc_k_last": 2212,
+     "cyc_v_first": 2845,
+     "cyc_v_last": 2924,
+     "cyc_pv0_out": 3059,
+     "cyc_pv1_out": 3059,
+     "cyc_final_out": 3903,
+     "cyc_result0": 3908,
+     "cyc_result31": 3939,
+     "cyc_status": 4154,
+     "cyc_idle": 4154,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    },
+    {
+     "user": 2,
+     "ctx": 1024,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 4154,
+     "cyc_run": 4178,
+     "cyc_cmd": 4182,
+     "cyc_start_qk": 4185,
+     "cyc_k_last": 4237,
+     "cyc_v_first": 4870,
+     "cyc_v_last": 4949,
+     "cyc_pv0_out": 5084,
+     "cyc_pv1_out": 5084,
+     "cyc_final_out": 5928,
+     "cyc_result0": 5933,
+     "cyc_result31": 5964,
+     "cyc_status": 6179,
+     "cyc_idle": 6179,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    },
+    {
+     "user": 3,
+     "ctx": 1024,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 1024,
+     "v_rows": 1024,
+     "cyc_go": 6179,
+     "cyc_run": 6203,
+     "cyc_cmd": 6207,
+     "cyc_start_qk": 6210,
+     "cyc_k_last": 6262,
+     "cyc_v_first": 6895,
+     "cyc_v_last": 6974,
+     "cyc_pv0_out": 7109,
+     "cyc_pv1_out": 7109,
+     "cyc_final_out": 7953,
+     "cyc_result0": 7958,
+     "cyc_result31": 7989,
+     "cyc_status": 8204,
+     "cyc_idle": 8204,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)",
+    "FIN0 user 1 root age 1744 face res_t 1745 (fin pin -> face core +1)",
+    "FIN0 user 2 root age 1744 face res_t 1745 (fin pin -> face core +1)",
+    "FIN0 user 3 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "817.71 s 1136172 KB"
+  },
+  "u4_T4096": {
+   "verdict": "KVATTN_REL PASS mode=steady gmut=0 nu=4 ctx=4096 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=2025",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 4096,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 4096,
+     "v_rows": 4096,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 283,
+     "cyc_v_first": 814,
+     "cyc_v_last": 1085,
+     "cyc_pv0_out": 1220,
+     "cyc_pv1_out": 1220,
+     "cyc_final_out": 1878,
+     "cyc_result0": 1883,
+     "cyc_result31": 1914,
+     "cyc_status": 2129,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    },
+    {
+     "user": 1,
+     "ctx": 4096,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 4096,
+     "v_rows": 4096,
+     "cyc_go": 2129,
+     "cyc_run": 2153,
+     "cyc_cmd": 2157,
+     "cyc_start_qk": 2160,
+     "cyc_k_last": 2308,
+     "cyc_v_first": 2839,
+     "cyc_v_last": 3110,
+     "cyc_pv0_out": 3245,
+     "cyc_pv1_out": 3245,
+     "cyc_final_out": 3903,
+     "cyc_result0": 3908,
+     "cyc_result31": 3939,
+     "cyc_status": 4154,
+     "cyc_idle": 4154,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    },
+    {
+     "user": 2,
+     "ctx": 4096,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 4096,
+     "v_rows": 4096,
+     "cyc_go": 4154,
+     "cyc_run": 4178,
+     "cyc_cmd": 4182,
+     "cyc_start_qk": 4185,
+     "cyc_k_last": 4333,
+     "cyc_v_first": 4864,
+     "cyc_v_last": 5135,
+     "cyc_pv0_out": 5270,
+     "cyc_pv1_out": 5270,
+     "cyc_final_out": 5928,
+     "cyc_result0": 5933,
+     "cyc_result31": 5964,
+     "cyc_status": 6179,
+     "cyc_idle": 6179,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    },
+    {
+     "user": 3,
+     "ctx": 4096,
+     "exact": true,
+     "data_errors": 0,
+     "result_words": 512,
+     "status_word": 9,
+     "k_rows": 4096,
+     "v_rows": 4096,
+     "cyc_go": 6179,
+     "cyc_run": 6203,
+     "cyc_cmd": 6207,
+     "cyc_start_qk": 6210,
+     "cyc_k_last": 6358,
+     "cyc_v_first": 6889,
+     "cyc_v_last": 7160,
+     "cyc_pv0_out": 7295,
+     "cyc_pv1_out": 7295,
+     "cyc_final_out": 7953,
+     "cyc_result0": 7958,
+     "cyc_result31": 7989,
+     "cyc_status": 8204,
+     "cyc_idle": 8204,
+     "fin0_root_age": 1744,
+     "start_to_retire": 1782,
+     "start_to_status": 1997,
+     "work_span": 1746
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)",
+    "FIN0 user 1 root age 1744 face res_t 1745 (fin pin -> face core +1)",
+    "FIN0 user 2 root age 1744 face res_t 1745 (fin pin -> face core +1)",
+    "FIN0 user 3 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "1091.16 s 1135932 KB"
+  },
+  "u4_T8192": {
+   "verdict": "KVATTN_REL FAIL mode=steady gmut=0 nu=4 ctx=8192 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000010011 timeout=0 period=2025",
+   "users": [
+    {
+     "user": 0,
+     "ctx": 8192,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 8192,
+     "v_rows": 8192,
+     "cyc_go": 104,
+     "cyc_run": 128,
+     "cyc_cmd": 132,
+     "cyc_start_qk": 135,
+     "cyc_k_last": 411,
+     "cyc_v_first": 990,
+     "cyc_v_last": 1517,
+     "cyc_pv0_out": 1652,
+     "cyc_pv1_out": 1652,
+     "cyc_final_out": 1878,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 2129,
+     "fin0_root_age": 1744,
+     "start_to_retire": -133,
+     "start_to_status": -133,
+     "work_span": 1746
+    },
+    {
+     "user": 1,
+     "ctx": 8192,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 8192,
+     "v_rows": 8192,
+     "cyc_go": 2129,
+     "cyc_run": 2153,
+     "cyc_cmd": 2157,
+     "cyc_start_qk": -1,
+     "cyc_k_last": -1,
+     "cyc_v_first": -1,
+     "cyc_v_last": -1,
+     "cyc_pv0_out": -1,
+     "cyc_pv1_out": -1,
+     "cyc_final_out": -1,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 4154,
+     "fin0_root_age": -1,
+     "start_to_retire": -2158,
+     "start_to_status": -2158,
+     "work_span": -2158
+    },
+    {
+     "user": 2,
+     "ctx": 8192,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 8192,
+     "v_rows": 8192,
+     "cyc_go": 4154,
+     "cyc_run": 4178,
+     "cyc_cmd": 4182,
+     "cyc_start_qk": -1,
+     "cyc_k_last": -1,
+     "cyc_v_first": -1,
+     "cyc_v_last": -1,
+     "cyc_pv0_out": -1,
+     "cyc_pv1_out": -1,
+     "cyc_final_out": -1,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 6179,
+     "fin0_root_age": -1,
+     "start_to_retire": -4183,
+     "start_to_status": -4183,
+     "work_span": -4183
+    },
+    {
+     "user": 3,
+     "ctx": 8192,
+     "exact": false,
+     "data_errors": 0,
+     "result_words": 0,
+     "status_word": -1,
+     "k_rows": 8192,
+     "v_rows": 8192,
+     "cyc_go": 6179,
+     "cyc_run": 6203,
+     "cyc_cmd": 6207,
+     "cyc_start_qk": -1,
+     "cyc_k_last": -1,
+     "cyc_v_first": -1,
+     "cyc_v_last": -1,
+     "cyc_pv0_out": -1,
+     "cyc_pv1_out": -1,
+     "cyc_final_out": -1,
+     "cyc_result0": -1,
+     "cyc_result31": -1,
+     "cyc_status": -1,
+     "cyc_idle": 8204,
+     "fin0_root_age": -1,
+     "start_to_retire": -6208,
+     "start_to_status": -6208,
+     "work_span": -6208
+    }
+   ],
+   "fin0": [
+    "FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)"
+   ],
+   "mismatch_sample": [],
+   "exit": "0",
+   "time": "1254.21 s 1137208 KB"
+  }
+ }
+}

@@ -16,8 +16,16 @@ Paths are relative to the plan file. The instance map JSON:
      "groups":   {"<group>": ["<partition>", ...]},           a census block re-derived as several partitions
      "collapse": ["<regex>", ...],                            pass-through endpoints (landing cells ld_*, relays):
                                                               merged onto their single upstream source
+     "bus_widths": {"<inst>.<bus>": nbits} or "<path.json[.gz]>",  optional: cap as-built bits per (source bus,
+                                                              destination partition) at the bus width (broadcast once)
      "exempt":   [{"match": "<regex on src_bus|dst_bus|kind>", "kind": "clock|reset",
-                   "replaced_by": "spine / per-partition sync", "reason": "..."}]}
+                   "replaced_by": "spine / per-partition sync", "reason": "..."}],
+     "forward_via": ["<partition / group name regex>", ...],  forwarding partitions (tap trees): a pair is carried
+                                                              by a lane chain through them (bottleneck width)
+     "forward_routes": [{"src": "host", "src_bus": "link_rst_n", "dst": "serdes_E", "dst_bus": "rst_n",
+                         "lanes": ["L745", "L746", "L747"]}],  optional exact control-route witnesses;
+                                                             validated lane/slot identity, not an exemption
+     "collapse_broadcast": true}                              count one driver bus once per sink partition/group
 
 How the check works:
 - Every census row whose endpoints map to different partitions (or groups) is inter-partition traffic. For each
@@ -95,11 +103,51 @@ def coverage(P, plan_dir, R):
         R.warn("census", f"census coverage not run: {spec['none']}")
         return dict(declared="none", reason=spec["none"])
     # plan lane bits per directed partition pair (data width, an ft lane once)
+    # Broadcast trees: a branch lane starts at a fork / re-launch leaf (contents module matching `fork_modules`,
+    # default hbm_ft_fork_reg) named <fk|rl>_<S>, fed by the lane of group <S> that ends in or crosses that partition.
+    # The branch then counts from the tree's ORIGIN partition (as-built rows are origin -> leaf, not fork -> leaf).
+    forkrx = re.compile(P.raw.get("census_fork_modules", r"^hbm_ft_fork_reg$"))
+    forkleaf = {}
+    for tn, t in P.types.items():
+        fl = {c["inst"] for c in t.get("contents", []) if forkrx.search(c.get("module", ""))}
+        for b in t.get("buses", []):
+            inst = b.get("leaf", "").split(".")[0]
+            if inst in fl:
+                forkleaf[(tn, b["name"])] = inst
+    by_group = defaultdict(list)
+    for lid, ln in P.lanes.items():
+        by_group[lid.rsplit("_", 1)[0]].append(lid)
+    parent = {}
+    for lid, ln in P.lanes.items():
+        a = P.ports[ln["ports"][0]]
+        part = a["src"]["part"]
+        if part == DIE_PART or part not in P.parts:
+            continue
+        inst = forkleaf.get((P.parts[part]["type"], a["src"]["bus"]))
+        if inst is None:
+            continue
+        grp = inst.split("_", 1)[1]
+        # a replicated type names the fork after one image of the lane group; mirrored instances carry the other
+        # images (same group name up to its last letter)
+        own = lid.rsplit("_", 1)[0]                     # the branch's own group (same image) first
+        cands = by_group.get(own, []) + by_group.get(grp, []) + [
+            o for x in "abcdefgh" for o in by_group.get(grp[:-1] + x, []) if grp[:-1] + x not in (grp, own)]
+        for o in cands:
+            if o != lid and any(P.ports[q]["dst"]["part"] == part for q in P.lanes[o]["ports"]):
+                parent[lid] = o
+                break
+
+    def origin(lid, seen=()):
+        if lid in parent and lid not in seen:
+            return origin(parent[lid], seen + (lid,))
+        return P.ports[P.lanes[lid]["ports"][0]]["src"]["part"]
     planned = defaultdict(int)
     for lid, ln in P.lanes.items():
         a = P.ports[ln["ports"][0]]
         b = P.ports[ln["ports"][-1]]
-        planned[(a["src"]["part"], b["dst"]["part"])] += int(a["width"])
+        planned[(origin(lid), b["dst"]["part"])] += int(a["width"])
+        if lid in parent:                                # the fork partition also receives the word
+            planned[(a["src"]["part"], b["dst"]["part"])] += int(a["width"])
     out = dict(declared=True, sources=[])
     for k, src in enumerate(spec):
         rows = load_rows(Path(plan_dir) / src["rows"])
@@ -129,10 +177,21 @@ def coverage(P, plan_dir, R):
                 if rx.search(inst):
                     return tgt
             return None
+        # optional source bus widths {"<inst>.<bus>": nbits} (or a JSON path): a broadcast / tapped source bus is on
+        # the wire once per destination partition, so as-built bits per (src bus, dst partition) are capped at the bus
+        # width (the FT census bits_unique rule; rows are per (src bus, dst inst, dst bus) and repeat broadcast nets)
+        bw = mp.get("bus_widths") or {}
+        if isinstance(bw, str):
+            bwp = Path(plan_dir) / bw
+            bw = json.load(gzip.open(bwp, "rt")) if bwp.name.endswith(".gz") else json.loads(bwp.read_text())
+        capped = defaultdict(int)
         unmapped = defaultdict(int)
         asb = defaultdict(int)
         exempt = defaultdict(int)
         intra = 0
+        seen = {}
+        collapsed = 0
+        collapse_bc = bool(mp.get("collapse_broadcast", False))
         for r in rows:
             s, d = where(r["src"]), where(r["dst"])
             if s is None or d is None:
@@ -149,7 +208,26 @@ def coverage(P, plan_dir, R):
             if hit is not None:
                 exempt[(hit["kind"], hit.get("replaced_by", ""), hit["match"])] += r["bits"]
                 continue
-            asb[(sg, dg)] += r["bits"]
+            w = bw.get(f"{r['src']}.{r['src_bus']}")
+            if w is not None:
+                key = (r["src"], r["src_bus"], sg, dg)
+                add = min(r["bits"], max(0, int(w) - capped[key]))
+                capped[key] += add
+                asb[(sg, dg)] += add
+            elif collapse_bc:
+                # PLAN-S81v3 (989ee4d63): one driver bus reaching several sinks in the same partition/group (a
+                # broadcast, or the tracer's src-bus x dst-bus cross product through one relay bundle) crosses the
+                # boundary once: count it once (max).  Opt-in: rows carry no bit ranges, so a bus SPLIT over
+                # several sinks of one group is under-counted; the collapsed bits are reported.
+                key = (r["src"], r["src_bus"], dg)
+                if r["bits"] > seen.get(key, 0):
+                    asb[(sg, dg)] += r["bits"] - seen.get(key, 0)
+                    collapsed += seen.get(key, 0)
+                    seen[key] = r["bits"]
+                else:
+                    collapsed += r["bits"]
+            else:
+                asb[(sg, dg)] += r["bits"]
         for inst, b in sorted(unmapped.items(), key=lambda x: -x[1])[:30]:
             R.err("census", f"census[{k}]: as-built instance '{inst}' ({b} bits) maps to no partition")
         if len(unmapped) > 30:
@@ -160,10 +238,134 @@ def coverage(P, plan_dir, R):
             ga, gb = g_of.get(a, a), g_of.get(b, b)
             if ga != gb:
                 pg[(ga, gb)] += w
-        dropped = {}
+        # forwarded lanes (KV-P2 10-23): a pair with no (or too narrow) direct lane is carried by a chain of planned
+        # lanes through partitions the map names as forwarders (`forward_via`: partition / group names or regexes,
+        # e.g. tap-tree hosts).  Credit = the chain's bottleneck width (broadcast trees reuse the same lanes).
+        fwd_rx = [re.compile(x) for x in mp.get("forward_via", [])]
+
+        def is_fwd(n):
+            return any(rx.fullmatch(n) for rx in fwd_rx)
+        adj = defaultdict(dict)
+        for (a, b), w in pg.items():
+            adj[a][b] = w
+
+        # A small control can travel independently beside a wide data route. Such additions require an
+        # explicit, source-bound route witness; aggregate capacity alone must not hide a missing control lane.
+        proven = defaultdict(list)
+        route_keys = set()
+        for ri, route in enumerate(mp.get("forward_routes", [])):
+            prefix = f"census[{k}] forward_routes[{ri}]"
+            if not isinstance(route, dict) or not all(isinstance(route.get(f), str)
+                    for f in ("src", "src_bus", "dst", "dst_bus")):
+                R.err("census", f"{prefix}: malformed source/destination identity")
+                continue
+            key = tuple(route[f] for f in ("src", "src_bus", "dst", "dst_bus"))
+            matches = [r for r in rows if tuple(r[f] for f in ("src", "src_bus", "dst", "dst_bus")) == key]
+            lids = route.get("lanes")
+            if key in route_keys or len(matches) != 1 or not isinstance(lids, list) or len(lids) < 2 or \
+                    not all(isinstance(lid, str) for lid in lids) or len(set(lids)) != len(lids):
+                R.err("census", f"{prefix}: needs one unique census row and at least two distinct ordered lanes")
+                continue
+            route_keys.add(key)
+            row = matches[0]
+            start, finish = where(row["src"]), where(row["dst"])
+            if start not in P.parts or finish not in P.parts or start == finish or row["bits"] <= 0:
+                R.err("census", f"{prefix}: endpoints must map to distinct real partitions with positive width")
+                continue
+            expected_bus = f"{row['src']}_{row['src_bus']}"
+            normalize = lambda bus: re.sub(r"_d[0-9]+$", "", re.sub(r"^[io]_", "", bus))
+            current, valid = start, True
+            for j, lid in enumerate(lids):
+                lane = P.lanes.get(lid)
+                if not lane or not lane.get("ports"):
+                    valid = False
+                    break
+                ports_ = [P.ports.get(pid) for pid in lane["ports"]]
+                if any(not pr or pr.get("width") != row["bits"] for pr in ports_) or \
+                        normalize(ports_[0]["src"]["bus"]) != expected_bus or \
+                        normalize(ports_[-1]["dst"]["bus"]) != expected_bus:
+                    valid = False
+                    break
+                for left, right in zip(ports_, ports_[1:]):
+                    mid = left["dst"]["part"]
+                    in_bus, out_bus = left["dst"]["bus"], right["src"]["bus"]
+                    slot = P.slot(mid, in_bus[:-2]) if in_bus.endswith("_i") else None
+                    if mid != right["src"]["part"] or not is_fwd(g_of.get(mid, mid)) or \
+                            not slot or out_bus != in_bus[:-2] + "_o" or slot.get("width") != row["bits"]:
+                        valid = False
+                        break
+                a_, b_ = ports_[0]["src"]["part"], ports_[-1]["dst"]["part"]
+                if a_ != current or (j and not is_fwd(g_of.get(a_, a_))):
+                    valid = False
+                    break
+                current = b_
+            if not valid or current != finish:
+                R.err("census", f"{prefix}: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route")
+                continue
+            pair = (g_of.get(start, start), g_of.get(finish, finish))
+            used = {lid for _, path in proven[pair] for lid in path}
+            if used.intersection(lids):
+                R.err("census", f"{prefix}: witnesses for {pair} reuse planned lane capacity")
+                continue
+            proven[pair].append((row["bits"], lids))
+
+        def bottleneck(a, b, graph=None):
+            """widest path a -> b through forwarders only (modified Dijkstra on min-capacity)."""
+            import heapq
+            graph = adj if graph is None else graph
+            best = {a: float("inf")}
+            hq = [(-best[a], a)]
+            while hq:
+                cap, u = heapq.heappop(hq)
+                cap = -cap
+                if u == b:
+                    return cap
+                if cap < best.get(u, 0):
+                    continue
+                if u != a and not is_fwd(u):
+                    continue
+                for v, w in graph.get(u, {}).items():
+                    c = min(cap, w)
+                    if c > best.get(v, 0):
+                        best[v] = c
+                        heapq.heappush(hq, (-c, v))
+            return 0
+        dropped, forwarded = {}, 0
         for pair, b in asb.items():
-            if pg.get(pair, 0) < b:
-                dropped[pair] = b - pg.get(pair, 0)
+            have = pg.get(pair, 0)
+            explicit = sum(w for w, _ in proven.get(pair, []))
+            graph = None
+            if explicit:
+                graph = {u: dict(vs) for u, vs in adj.items()}
+                # Remove witness lanes before measuring the remaining data capacity, so a shared trunk or
+                # the same control route cannot be counted twice.
+                required = defaultdict(int)
+                for w, lids in proven[pair]:
+                    for lid in lids:
+                        ln = P.lanes[lid]
+                        a_ = g_of.get(P.ports[ln["ports"][0]]["src"]["part"],
+                                      P.ports[ln["ports"][0]]["src"]["part"])
+                        b_ = g_of.get(P.ports[ln["ports"][-1]]["dst"]["part"],
+                                      P.ports[ln["ports"][-1]]["dst"]["part"])
+                        required[(a_, b_)] += w
+                if any(w > graph.get(a_, {}).get(b_, 0) for (a_, b_), w in required.items()):
+                    R.err("census", f"census[{k}] forward_routes for {pair}: witness capacity exceeds planned lanes")
+                    explicit, graph = 0, None
+                else:
+                    for (a_, b_), w in required.items():
+                        graph[a_][b_] -= w
+                    # A witnessed route may also include a direct lane for this pair. Its capacity must not
+                    # remain in the generic direct credit and then be added a second time as explicit credit.
+                    have = graph.get(pair[0], {}).get(pair[1], 0)
+            if have < b - explicit and fwd_rx:
+                f = bottleneck(*pair, graph)
+                if f > have:
+                    forwarded += min(b - explicit, f) - have
+                    have = max(have, f)
+            forwarded += min(explicit, max(0, b - have))
+            have += explicit
+            if have < b:
+                dropped[pair] = b - have
         tot = sum(dropped.values())
         for (a, b), v in sorted(dropped.items(), key=lambda x: -x[1])[:30]:
             R.err("census", f"census[{k}]: {a} -> {b}: as-built {asb[(a, b)]} bits, planned {pg.get((a, b), 0)} "
@@ -177,6 +379,7 @@ def coverage(P, plan_dir, R):
         out["sources"].append(dict(rows=src["rows"], map=src["map"], census_rows=len(rows),
                                    inter_bits=sum(asb.values()), intra_bits=intra, planned_pairs=len(pg),
                                    dropped_bits=tot, dropped_pairs=len(dropped), unmapped_instances=len(unmapped),
+                                   forwarded_bits=forwarded, broadcast_collapsed_bits=collapsed,
                                    exempt={f"{k_[0]}:{k_[2]}": v for k_, v in exempt.items()},
                                    groups_spanning=multi))
     out["dropped_bits"] = sum(s["dropped_bits"] for s in out["sources"])

@@ -351,7 +351,7 @@
           "pattern": "^M[1-9]$"
          },
          "minItems": 1,
-         "maxItems": 2
+         "maxItems": 3
         },
         "order": {
          "enum": [
@@ -443,7 +443,7 @@
           "pattern": "^M[1-9]$"
          },
          "minItems": 1,
-         "maxItems": 2
+         "maxItems": 3
         },
         "order": {
          "enum": [
@@ -477,6 +477,154 @@
        "insertion_tol_ps": {
         "type": "number",
         "minimum": 0
+       },
+       "taps": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "name",
+          "xy"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "name": {
+           "type": "string",
+           "minLength": 1
+          },
+          "xy": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          },
+          "kind": {
+           "enum": [
+            "core",
+            "glue",
+            "leaf"
+           ]
+          },
+          "orient": {
+           "enum": [
+            "R0",
+            "MX",
+            "MY",
+            "R180"
+           ]
+          },
+          "insertion_ps": {
+           "type": "number",
+           "exclusiveMinimum": 0
+          },
+          "insertion_tol_ps": {
+           "type": "number",
+           "minimum": 0
+          },
+          "budget_owner": {
+           "type": "string"
+          },
+          "from_root_um": {
+           "type": "number",
+           "minimum": 0
+          },
+          "note": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "hard_cores": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "inst",
+        "origin_um",
+        "outline_um"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "inst": {
+         "type": "string",
+         "minLength": 1
+        },
+        "module": {
+         "type": "string",
+         "minLength": 1
+        },
+        "origin_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "outline_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "orient": {
+         "enum": [
+          "R0",
+          "MX",
+          "MY",
+          "R180"
+         ]
+        },
+        "track_offset_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "pins": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "name",
+           "layer",
+           "xy"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "name": {
+            "type": "string",
+            "minLength": 1
+           },
+           "layer": {
+            "type": "string",
+            "pattern": "^M[1-9]$"
+           },
+           "xy": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+           }
+          }
+         }
+        },
+        "pins_file": {
+         "type": "string"
+        },
+        "note": {
+         "type": "string"
+        }
        }
       }
      },
@@ -628,6 +776,90 @@
       "type": "number",
       "minimum": 0,
       "maximum": 1
+     },
+     "face_layers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "N": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       },
+       "S": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       },
+       "E": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       },
+       "W": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       }
+      }
+     },
+     "spare_slots": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "face",
+        "window_um",
+        "layers"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "minLength": 1
+        },
+        "face": {
+         "enum": [
+          "N",
+          "S",
+          "E",
+          "W"
+         ]
+        },
+        "window_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1
+        },
+        "reason": {
+         "type": "string"
+        }
+       }
+      }
      }
     }
    }
@@ -753,7 +985,7 @@
        "pattern": "^M[1-9]$"
       },
       "minItems": 1,
-      "maxItems": 2
+      "maxItems": 3
      },
      "window_um": {
       "type": "array",

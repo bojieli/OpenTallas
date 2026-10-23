@@ -189,7 +189,30 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
         srcs.append(f"/work/rtl/{Path(f).name}")
     pins = type_pins(P, tn)
     (kd / "io.tcl").write_text(io_tcl(P, tn, pins))
-    (kd / "pdn.tcl").write_text(PDN)
+    top = P.type_top_layer(tn)
+    pdn = PDN
+    if int(top[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
+        # face_layers raised this type to M8: keep its own M8 wiring off the die M8 PG bands (schema.PART_PG_BANDS),
+        # so the die grid's M8 stripes run over the partition without shorts
+        obs = ["", "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
+        smax = int(P.layer_budget["partition_signal_max"][1:])
+        for li in range(smax + 1, int(top[1:]) + 1):
+            ln = f"M{li}"
+            pitch, cen, half = S.PART_PG_BANDS[ln]
+            horiz = P.layers[ln]["dir"] == "H"       # H layer: stripes along x -> y bands; V layer -> x bands
+            ext, oth = (h, w) if horiz else (w, h)
+            obs += [f"# face_layers {top}: obstruct the die {ln} PG bands in the partition (die stripes cross it)",
+                    f"set lay [[ord::get_db_tech] findLayer {ln}]"]
+            k = math.floor((0 - cen) / pitch)
+            while cen + k * pitch - half < ext:
+                a0, a1 = max(0.0, cen + k * pitch - half), min(ext, cen + k * pitch + half)
+                if a1 > a0:
+                    r = (0, a0, oth, a1) if horiz else (a0, 0, a1, oth)
+                    obs.append("odb::dbObstruction_create $blk $lay " +
+                               " ".join(f"[expr {{round({v:.4f}*$dbu)}}]" for v in r))
+                k += 1
+        pdn = PDN + "\n".join(obs) + "\n"
+    (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
     m = CORE_MARGIN_UM
@@ -204,9 +227,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
            f"export CORE_AREA = {m:g} {m:g} {w - m:g} {h - m:g}",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
-           "export MAKE_TRACKS = /work/make_tracks.tcl",
+           # override: platforms/asap7/config.mk (read AFTER the design config) sets MAKE_TRACKS with a plain
+           # export, which silently replaced the plan tracks (M7 offset 0.016, not 0.032) -> every plan pin off-track
+           "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
-           f"export MAX_ROUTING_LAYER = {P.layer_budget['partition_signal_max']}",
+           f"export MAX_ROUTING_LAYER = {top}",
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
@@ -220,7 +245,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
-               signal_max=P.layer_budget["partition_signal_max"],
+               signal_max=top,
                clock=dict(tap_um=t.get("clock", {}).get("tap_um"), insertion_ps=P.clock["insertion_ps"],
                           insertion_tol_ps=P.clock["insertion_tol_ps"]),
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
@@ -362,7 +387,9 @@ def write_assembly(raw, out, views, rtl_root=None):
            "export MACRO_PLACE_HALO = 0 0",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
-           "export MAKE_TRACKS = /work/make_tracks.tcl",
+           # override: platforms/asap7/config.mk (read AFTER the design config) sets MAKE_TRACKS with a plain
+           # export, which silently replaced the plan tracks (M7 offset 0.016, not 0.032) -> every plan pin off-track
+           "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
            "export MAX_ROUTING_LAYER = M9",
            "export SYNTH_HIERARCHICAL = 0",
