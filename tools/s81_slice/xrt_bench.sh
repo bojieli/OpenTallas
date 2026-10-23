@@ -15,9 +15,11 @@ grep -q "ot_s81sl_xrt[13] u (" $O/tb_s81sl_xrt.sv && grep -q "body\[44\] = 1'b0"
   && grep -q "i_vb\[n\]\[3:1\] = 3'd5" $O/tb_s81sl_xrt.sv || { echo "CONSTRAINT_NOT_APPLIED"; exit 4; }
 DEF=""; case $M in hops) DEF="+define+OT_S81SL_XR_MUT_HOPS";; row) DEF="+define+OT_S81SL_XR_MUT_ROW";;
   porder) DEF="+define+OT_S81SL_XR_MUT_PORDER";; nocol) DEF="+define+OT_S81SL_XR_MUT_NOCOL";;
-  bwide) DEF="+define+OT_S81SL_XR_MUT_BWIDE";; xhold) DEF="+define+OT_S81SL_XR_MUT_XHOLD";; base) ;; *) echo "BAD_MODE $M"; exit 2;; esac
+  bwide) DEF="+define+OT_S81SL_XR_MUT_BWIDE";;  bwsel) DEF="+define+OT_S81SL_XR_MUT_BWSEL";; xhold) DEF="+define+OT_S81SL_XR_MUT_XHOLD";; base) ;; *) echo "BAD_MODE $M"; exit 2;; esac
 [ "${XR_FOREG:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_FOREG"
 [ "${XR_PDC:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_PDC"   # STW-S81c-COLLA 10-22: pin predecode (XR8)
+[ "${XR_BW:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_BW"     # STW-S81e-XR 10-23: W-face body copy (xrt3u)
+[ "${XR_CDW:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_BW +define+OT_S81SL_XR_CDW"   # xrt3u FB: c_d from the W copy
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GHB=$H -GSEED=$S -GNC=$N --top-module tb_s81sl_xr \
   -Mdir $O/obj rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv $O/tb_s81sl_xrt.sv --build-jobs ${J:-4} \
   -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 || { echo "BUILD_FAILED"; tail -n 8 $O/build.log; exit 3; }

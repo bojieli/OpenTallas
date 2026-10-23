@@ -343,6 +343,34 @@ module ot_s81sl_xrt #(
         for (k = 0; k < 32; k = k + 1) bx_h[k] = bsex_c[5 + k / 8] ? ebx_h[k] : bswx_c[5 + k / 8] ? wbx_h[k] : vbx_h[k];
     end
     reg [1023:0] rdat; reg [159:0] body; reg [V-2:0] cix;
+`ifdef OT_S81SL_XR_BW
+    // XRT3U (STW-S81e-XR 10-23, COORD review: xrt3t routes TT -15 / FF -10 after ECO, worst bsw_c -> body mux -> c_d at the
+    // W face 574 um Manhattan from the select, rwb -> sw_d row write 424 um): the W-face consumers of the CTL body get their
+    // OWN stage-1 raw-word copies (ebw / wbw / vbw = eb2 / wb2 / vb2 bits 46 + BWL .., KEPT, same D) and their own one-hot
+    // select copies (bsew_c / bsww_c = bse_c / bsw_c, same D, own split leaves sp[4] / sp[5] so no node passes 32 loads),
+    // anchored beside sw_d by the kit's register floorplan: the long hop is the zero-logic pin-flop -> copy wire and the
+    // 3:1 select sits next to the W-face flops.  bw == body on its bits every cycle -> same values, same edges (0 cycles).
+    // MAIN: row write only (body[141:14]; c_d moves to the N face beside is_d / cfg_d).  OT_S81SL_XR_CDW (FB, faces as
+    // xrt3t): c_d stays on the W face and also leaves bw (all 160 bits).
+`ifdef OT_S81SL_XR_CDW
+    localparam integer BWL = 0, BWN = 160;
+`else
+    localparam integer BWL = 14, BWN = 128;
+`endif
+    (* keep *) reg [BWN-1:0] ebw, wbw, vbw; (* keep *) reg [BWN/8-1:0] bsew_c, bsww_c;
+    always @(posedge clk) begin
+        ebw <= eb[47 + BWL +: BWN]; wbw <= wb[47 + BWL +: BWN]; vbw <= vb[47 + BWL +: BWN];
+        for (k = 0; k < BWN / 8; k = k + 1) begin bsew_c[k] <= ce && sp[4]; bsww_c[k] <= !ce && cw && sp[5]; end
+    end
+    reg [BWN-1:0] bw;
+    always @(*)
+        for (k = 0; k < BWN; k = k + 1)
+`ifdef OT_S81SL_XR_MUT_BWSEL
+            bw[k] = bsew_c[k / 8] ? ebw[k] : vbw[k];                    // mutant: the W-sourced CTL body is lost on W copies
+`else
+            bw[k] = bsew_c[k / 8] ? ebw[k] : bsww_c[k / 8] ? wbw[k] : vbw[k];
+`endif
+`endif
     always @(*) begin
         for (k = 0; k < 1024; k = k + 1)
             rdat[k] = (k < 256 && rsv_c[k / 8]) ? vb2[16 + k] : rse_c[k / 8] ? eb2[51 + k] : rsw_c[k / 8] ? wb2[51 + k] : bb2[k];
@@ -549,7 +577,11 @@ module ot_s81sl_xrt #(
                 end
             end
         end
+`ifdef OT_S81SL_XR_BW
+    wire [255:0] rwb = {128'd0, bw[14 - BWL +: 128]};
+`else
     wire [255:0] rwb = {128'd0, body[141:14]};
+`endif
     always @(posedge clk)
         for (k = 0; k < 5; k = k + 1) begin
             if (rwe[k]) begin ul[k] <= rnp; ur[k] <= rrow; end
@@ -596,7 +628,11 @@ module ot_s81sl_xrt #(
             cfg_v <= tg[3];
         end
     always @(posedge clk) begin
+`ifdef OT_S81SL_XR_CDW
+        c_d <= bw;
+`else
         c_d <= body;
+`endif
         for (k = 0; k < 4; k = k + 1) begin
             x_eps_m[8 * k +: 8] <= tg1_c[k] ? bx_l[8 * k +: 8] : x_eps_m[8 * k +: 8];
             x_scale_m[8 * k +: 8] <= tg1_c[4 + k] ? bx_h[8 * k +: 8] : x_scale_m[8 * k +: 8];
