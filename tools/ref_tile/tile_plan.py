@@ -474,20 +474,25 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
             k += 1
         cnt = macro_pin_faces(m0["tm"])
         per = {face_after(o, f): cnt[f] for f in ("W", "E")}
+        tot = {"W": 0, "E": 0}           # the whole column's pins per tile face (mixed masters summed one by one)
+        for m, _s in c:
+            cm = macro_pin_faces(m["tm"])
+            for f in ("W", "E"):
+                tot[face_after(o, f)] += cm[f]
         stack = _stackable(m0["tm"])
         hts = [m["h"] for m, _ in c]
         h = sum(hts) + (len(hts) - 1) * (ABUT_PITCH_UM if stack else CHANNEL_MIN_UM)
         over_ok = False
         if logic_face and over and over.get("WE"):
             back = OPP[logic_face]
-            top = obs_top(m0["tm"])
+            top = max(obs_top(m["tm"]) for m, _ in c)
             lay = [pt for mt, pt in over["WE"].items() if mt > top]
-            if back in faces and lay:
-                cap_tr = min(m["h"] for m, _ in c) / min(lay) * OVER_MACRO_UTIL
-                over_ok = per[back] <= cap_tr
+            if back in faces and lay:      # every macro's back pins fit over its own height
+                over_ok = all(macro_pin_faces(m["tm"])[next(f for f in ("W", "E") if face_after(o, f) == back)]
+                              <= m["h"] / min(lay) * OVER_MACRO_UTIL for m, _ in c)
         spec_cols.append({"items": c, "o": o, "faces": faces, "w": max(m["w"] for m, _ in c), "h": h,
-                          "pins_w": per["W"] * len(c) if "W" in faces and not (over_ok and logic_face == "E") else 0,
-                          "pins_e": per["E"] * len(c) if "E" in faces and not (over_ok and logic_face == "W") else 0,
+                          "pins_w": tot["W"] if "W" in faces and not (over_ok and logic_face == "E") else 0,
+                          "pins_e": tot["E"] if "E" in faces and not (over_ok and logic_face == "W") else 0,
                           "stack": stack, "over": over_ok})
     gaps = []
     for a, b in zip(spec_cols, spec_cols[1:]):
