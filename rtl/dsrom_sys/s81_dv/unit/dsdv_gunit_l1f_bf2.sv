@@ -160,9 +160,10 @@ module dsdv_gunit_l1f_bf2 (
     (* keep *) reg [LW-1:0] s0a_q, s0b_q, s1a_q, s1b_q;
     (* keep *) reg [2:0] sf0_q; (* keep *) reg [23:0] vfl_q, vfh_q;
     always @(posedge clk) begin s0a_q <= s0a; s0b_q <= s0b; s1a_q <= s1a; s1b_q <= s1b; end
-    always @(posedge clk or negedge rq[12])
-        if (!rq[12]) begin sf0_q <= 3'd0; vfl_q <= 24'd0; vfh_q <= 24'd0; end
-        else begin sf0_q <= sf0; vfl_q <= vf_lo; vfh_q <= vf_hi; end
+    // valid / error landings reset on their own (otherwise unused) relay regions: rq[12] already drives 26 loads (census 32)
+    always @(posedge clk or negedge rq[12]) if (!rq[12]) sf0_q <= 3'd0; else sf0_q <= sf0;
+    always @(posedge clk or negedge rq[6]) if (!rq[6]) vfl_q <= 24'd0; else vfl_q <= vf_lo;
+    always @(posedge clk or negedge rq[7]) if (!rq[7]) vfh_q <= 24'd0; else vfh_q <= vf_hi;
     dsdv_seln_fold_cx #(.EW(EW)) u_m0 (.aa(s0a_q), .ab(s0b_q), .ba(s1a_q), .bb(s1b_q), .q(c1));
     (* keep *) reg [LW-1:0] m1a, m1b; reg [2:0] mf;
     always @(posedge clk or negedge rq[12]) if (!rq[12]) mf <= 3'd0; else mf <= sf0_q;
