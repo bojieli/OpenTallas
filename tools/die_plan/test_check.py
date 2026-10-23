@@ -205,3 +205,45 @@ def test_census_coverage():
         assert s["dropped_bits"] == 1, e
     R, _ = g0(lambda p: p.pop("census"))
     assert any(i["check"] == "census" for i in R.errors())                                # mandatory
+
+
+def test_census_forwarded_and_broadcast():
+    import tempfile
+
+    def row(s, sb, d_, db, bits):
+        return dict(src=s, src_bus=sb, dst=d_, dst_bus=db, bits=bits, kind="data")
+    MAP = {"parts": {"u_a": "pa", "u_b": "pb", "u_m1": "pm1", "u_m2": "pm2"}}
+    with tempfile.TemporaryDirectory() as d:
+        # pa -> pm2 directly in the census; the plan only has pa->pm1 (cfg 8) and pm1->pm2 (cfg 8)
+        rows = [row("u_a", "c", "u_m2", "c", 8)]
+        e, s = _census_case(d, rows, MAP)
+        assert s["dropped_bits"] == 8
+        e, s = _census_case(d, rows, dict(MAP, forward_via=["pm1"]))
+        assert s["dropped_bits"] == 0 and s["sources"][0]["forwarded_bits"] == 8, e
+        e, s = _census_case(d, [row("u_a", "c", "u_m2", "c", 9)], dict(MAP, forward_via=["pm1"]))
+        assert s["dropped_bits"] == 1                                    # bottleneck 8
+        # broadcast: one 64-bit driver bus to two sink buses in pb: 128 counted unless collapse_broadcast
+        bc = [row("u_a", "x", "u_b", "x0", 64), row("u_a", "x", "u_b", "x1", 64)]
+        e, s = _census_case(d, bc, MAP)
+        assert s["dropped_bits"] == 64
+        e, s = _census_case(d, bc, dict(MAP, collapse_broadcast=True))
+        assert s["dropped_bits"] == 0 and s["sources"][0]["broadcast_collapsed_bits"] == 64
+
+
+def test_face_layers_m8_and_spare_slots():
+    def m8(p, fl=True):
+        port(p, "x0")["layers"] = ["M8", "M4"]
+        if fl:
+            p["partition_types"]["src"]["face_layers"] = {"E": ["M8", "M6", "M4"]}
+            p["partition_types"]["mid"]["face_layers"] = {"W": ["M8", "M6", "M4"], "E": ["M6", "M4"]}
+    assert any("above partition_signal_max" in m for m in errs(lambda p: m8(p, False), "layers"))
+    assert errs(m8, "layers") == []
+    assert any("not in pa's face_layers" in m for m in errs(
+        lambda p: p["partition_types"]["src"].__setitem__("face_layers", {"E": ["M4"]}), "layers"))
+
+    def spare(lo, hi):
+        return lambda p: p["partition_types"]["src"].__setitem__(
+            "spare_slots", [dict(name="sp0", face="E", window_um=[lo, hi], layers=["M6"])])
+    assert any("spare slot sp0" in m for m in errs(spare(400, 420), "abutment"))
+    assert errs(spare(700, 720), "abutment") == []
+    assert any("outside face" in m for m in errs(spare(860, 900), "abutment"))
