@@ -12,7 +12,6 @@ E = "rtl/qwen_sys/static_embedding_20261014/"
 for name, cx, w, tag in (("qkd_kvs_emb_nc32a", 43.2, 282.96, "nc32a"), ("qkd_kvs_emb_nc32b", 86.4, 326.16, "nc32b")):
     s = copy.deepcopy(base)
     s["name"] = name
-    s["pins"]["S"] = s["pins"]["S"] + ["join__rope_sweep"]   # nc32 port (34a0f0e7e), beside i_ctl (join control)
     s["sources"] = ["rtl/lib/ot_rst_relay.sv", E + "qkd_embedding_static_join4_cal.sv", E + "qkd_embedding_static_join4.sv",
                     E + "qkd_embedding_static_join.sv", "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv"]
     s["outline"] = {"w": w, "h": 218.16, "exact": True}

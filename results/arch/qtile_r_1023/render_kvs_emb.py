@@ -5,7 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
-FB = {"S": 674, "E": 758, "W": 598, "N": 0}; CH = 216.0 * 151.2; STD = 2600.0
+FB = {"S": 673, "E": 758, "W": 598, "N": 0}; CH = 216.0 * 151.2; STD = 2600.0
 fig, axs = plt.subplots(1, 3, figsize=(20, 6)); out = {}
 for ax, k in zip(axs, ["qkd_kvs_emb", "qkd_kvs_emb_nc32a", "qkd_kvs_emb_nc32b"]):
     f = json.load(open(f"{ROOT}/physical/ref_tile/{k}/floorplan.json")); W, H = f["die"][2], f["die"][3]
