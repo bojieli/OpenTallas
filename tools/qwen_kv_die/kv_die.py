@@ -2179,6 +2179,16 @@ def build(*args, **kwargs):
     return m
 
 
+# FT-KV2 10-23 (OT_KV_ASTK_N_CTL_FACE=1, default off = byte-identical): the N-stack aggregator frame qkd_astk_n drew the hub
+# words ap / am on its S face (toward the hub), but the static ASTK expansion (kv_astk_expand.prepare) places their only
+# driver / load, the ctl leaf qkd_astk_ctl_s, at the strip TOP (local y = fh - h, R0 frames) -- next to kvs_attn (aq / cal,
+# 588 b) and 10.3 mm from the hub.  The generator then planned 2-3 stages for a ~10-mm wire and kv_lane_stations repaired it
+# one 1.18-mm station per iteration (meas_r1200 / gen_r1200: rly_pinfix_ap_EN_0 from astk_EN u_ctl at y 23561 to y 13180,
+# iteration cap -> PREP FAIL; WN the same wire unflagged).  With the knob the frame abstract tells the truth: ap / am on the
+# N face beside the ctl leaf; the 79 hub-word bits (not the 588 aq / cal bits) cross the 10 mm, in planned relay stages.
+ASTK_N_CTL_FACE = os.environ.get('OT_KV_ASTK_N_CTL_FACE', '0') == '1'
+
+
 def _build_plan(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None, v143=None):
     """qwen-1010/b 2026-10-10: plan actual relay chains from drawn pins."""
     if os.environ.get('OT_KV_STATIC', '0') == '1':
@@ -4660,6 +4670,8 @@ def masters(m, k=1, port_bits=None):
                 face = 'E' if dxp > 0 else 'W'
             if mst in ('qkd_astk', 'qkd_astk_n') and p[0] in 'ef' and p[1].isdigit():
                 face = 'W' if _astk_frame(int(p[1])) < 4 else 'E'     # the face toward the frame running engine p[1]
+            if ASTK_N_CTL_FACE and mst == 'qkd_astk_n' and p in ('ap', 'am'):
+                face = 'N'      # FT-KV2: the expanded ctl leaf (their only driver / load) sits at the strip TOP
             layer = 'M4' if face in ('E', 'W') else 'M5'
             # the control tile's horizontal pins all on M4: with M4 + M6 its legal origins sit on an 8.64-um lattice
             # (lcm 48 / 64 / 270 nm) that the 2.16-um tile gaps cannot absorb (die_kv10: no legal origin for ectl_WS_3)
