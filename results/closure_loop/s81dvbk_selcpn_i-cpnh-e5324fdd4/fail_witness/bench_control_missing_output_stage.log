@@ -1,0 +1,8 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81dvbk_selcpn_i-cpnh-e5324fdd4 bench bench_control_missing_output_stage host ot-gold1 run /srv/opentallas-scratch/claude/closure-loop/s81dvbk_selcpn_i-cpnh-e5324fdd4 log cl/bench_control_missing_output_stage.a1b1.log captured 2026-10-22T10:25:52-07:00
+# fail_regex '^CONTROL_CAUSAL_FAIL$'
+CONTROL_MISMATCH cycle=10 rn=1 command=0 valid=1 payload=0
+[106000] %Fatal: tb_control_miter.sv:25: Assertion failed in tb_control_miter: CONTROL_MITER_FAIL
+%Error: tools/s81_dv/control_export_1021/tb_control_miter.sv:25: Verilog $stop
+Aborting...
+CONTROL_CAUSAL_FAIL
