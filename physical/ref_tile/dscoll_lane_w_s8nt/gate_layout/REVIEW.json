@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T22:38:14.421149-07:00",
+  "gate_commit": "2026-10-22T21:56:53-0700",
+  "geometry_sha256": "de5726b62b2d72432d8c0b24dcbc65ef690a7eeee4a5b2677dfeec25aaf88f55",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "de5726b62b2d72432d8c0b24dcbc65ef690a7eeee4a5b2677dfeec25aaf88f55",
+    "components": {
+      "outline": "8e951694e406079eb6c5b89469d35b871c177090a3e698b37f4364ac67198bcb",
+      "macros": "33bb065bc6f6f581693d86450bb19d4b35f49af77232544dac93cb2c5b762413",
+      "pins": "ceceee6ad911a209c6e1671cdb44d89b91d8b0e2e13b6dfb78ab8b1b34746e0f",
+      "clock_entry": "ee4d667e029d69e2a7b068ebecb001bedb0eb80bc5d9842b2119649f7693e135"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Personally viewed55 SRAM macros in regular lattice columns with explicit horizontal and vertical cell channels; frozen selected s8nt geometry retained.",
+    "std_cell_band": "Continuous centre horizontal band and vertical cell lanes through macro columns; no isolated cell island. Some local orange density remains disclosed, trialGRT0.",
+    "pin_spread": "Exact packet reports2143 full-face signal pins, <=3.6/um and zero offtrack; rendered PG pins separate. Pin-bound17% fill accepted for SRAM face/channel needs. Native/pin checks mandatory.",
+    "clock_entry": "East centre clock entry beside centre band. TT/FF pin spread73.2/63.0ps passes; raw106.2/89.4ps disclosed separately, not a new all-register limit. Existing source-bound root/clock contracts remain unchanged.",
+    "shape": "725.76x583.2um aspect1.24,55SRAM outline and real channel margins retained."
+  },
+  "scope": "Normal route approval only for exact frozen s8nt CRED/K24 identity and truthful existing pin_register reroute evidence. Do not substitute incompatible s12h or fabricate native failure. No source, clock or timing waiver; parent binding waits actual closure.",
+  "diagnostics": "GateWARN0FAIL, trialGRT0. Residual placement lo_r-5.8ps and macro-reg-3.1ps retained; source-bound p9 parent context failure remains truthful. Route decides timing.",
+  "gate_result_sha256": "86f9dbd05dec6af08501e59e2f10c3d96fa6883d088ba07a0e48ca235fde8ea9",
+  "archive_sha256": "a3f981114248bbf9199a1a0d47f51e9b0f7dcdd4e2b28ce885c85dbc9db7bdf7",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}
