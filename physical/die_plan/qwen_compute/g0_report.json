@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/qc-fix-1023/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "/home/ubuntu/wt/codex-plan-g2-path-0858-1023/physical/die_plan/qwen_compute/die_plan.json",
  "verdict": "PASS",
  "errors": 0,
  "warnings": 84,
@@ -19,6 +19,12 @@
   "ports": 3300,
   "lanes": 2005,
   "bits": 1346028,
+  "taps_cores": {
+   "taps": 0,
+   "hard_cores": 0,
+   "core_pins": 0,
+   "core_pins_off_track": 0
+  },
   "geometry": {
    "partition_area_mm2": 768.5049415680004,
    "channel_area_mm2": 19.045352448,
@@ -6894,6 +6900,8 @@
      "dropped_bits": 0,
      "dropped_pairs": 0,
      "unmapped_instances": 0,
+     "forwarded_bits": 0,
+     "broadcast_collapsed_bits": 0,
      "exempt": {
       "reset:^reset$": 789,
       "fault:^fault$": 741
@@ -6972,6 +6980,8 @@
      "dropped_bits": 0,
      "dropped_pairs": 0,
      "unmapped_instances": 0,
+     "forwarded_bits": 0,
+     "broadcast_collapsed_bits": 0,
      "exempt": {},
      "groups_spanning": {
       "su_W5": 3,
@@ -6998,6 +7008,8 @@
      "dropped_bits": 0,
      "dropped_pairs": 0,
      "unmapped_instances": 0,
+     "forwarded_bits": 0,
+     "broadcast_collapsed_bits": 0,
      "exempt": {},
      "groups_spanning": {
       "slice_W5": 15
@@ -7005,8 +7017,7 @@
     }
    ],
    "dropped_bits": 0
-  },
-  "png": "/home/ubuntu/wt/qc-fix-1023/physical/die_plan/qwen_compute/die_plan.png"
+  }
  },
  "findings": [
   {
