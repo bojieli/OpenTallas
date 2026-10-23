@@ -42,6 +42,7 @@ identity=result['identity'];die_sha=sha(bind/'die.v')
 assert die_sha==identity.get(str(bind/'die.v')) or die_sha in identity.values()
 assert identity['connectivity_sha256']==hashlib.sha256(json.dumps(graph,sort_keys=True).encode()).hexdigest()
 pins={str(p.relative_to(root)):sha(p) for p in [bind/'die.v',bind/'place_hints.json',bind/'bind_case.json',root/'input/case/views/dsfd_rly_1_WN.lef',root/'calendar_sites.py',root/'calendar_sites_cap30.patch',run/'dv_rvcase_patched.py']}
+if (root/'calendar_sites_vacancy.py').exists():pins['calendar_sites_vacancy.py']=sha(root/'calendar_sites_vacancy.py')
 receipt=dict(verdict='PASS' if not (over or collisions or guard or outside) else 'FAIL',
              scope='physical reset placement only; no GRT/STA/clock closure',stages=len(st),hops=len(rows),
              over_reach=over,macro_overlaps=collisions,planner_guard_failures=guard,out_of_region=outside,

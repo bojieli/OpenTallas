@@ -1,0 +1,13 @@
+{
+ "verdict": "FAIL",
+ "scope": "initial calendar reservation with legacy repair; not adopted",
+ "baseline_over405": 154,
+ "baseline_max_hop_um": 842,
+ "candidate_over405": 206,
+ "candidate_max_hop_um": 937,
+ "candidate_fallback": 2042,
+ "baseline_fallback": 8048,
+ "result": "ot-epyc7:/srv/opentallas-scratch/claude/codex-s81-reset-sites-1022/replay4/result.json",
+ "result_sha256": "d0e222a2bdacea58e4f63c4133af9e8bbecf1b35bcfef04f555aac28cc0c8b2e",
+ "next": "running exact combined4 occupancy rebuild/float-safe repair and vacancy graph/run1 on corrected RTLGAP source"
+}
