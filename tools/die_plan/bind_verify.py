@@ -27,7 +27,7 @@ VERIFY_RULES = {
         {"module": "ot_dp_dly", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
         {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
     ],
-    "reducers": [{"module": "ot_dp_or", "out": "y"}],
+    "reducers": [{"module": "ot_dp_or", "out": "y"}, {"module": "ot_dp_and", "out": "y", "op": "and"}],
     "sources": [{"module": "ot_reset_sync", "kind": "reset", "outputs": {"sync_rst_n": "low"},
                  "drop_in": ["clk", "async_rst_n"]}],
 }
@@ -77,7 +77,7 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
         t = Path(f).read_text(errors="replace")
         mods = re.findall(r"^module\s+(\w+)", t, re.M)
         leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) -
-                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_rsync", "ot_reset_sync"})
+                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})
         cl, _ = E.closure(leafm, idx, prefer)
         for m in mods:
             byfile[m] = [f] + cells + [str(rs)] + cl
@@ -150,8 +150,8 @@ def cmd_verify(a):
             return ["top", s[1]]
         if k == "reset":
             return ["rst", s[1]]
-        if k == "or":
-            return ["or", sorted(gdesc(x)[1] for x in s[1] if x[0] == "pin")]
+        if k in ("or", "and"):
+            return [k, sorted(gdesc(x)[1] for x in s[1] if x[0] == "pin")]
         if k == "const":
             return ["tied", s[1]]
         return [k]
@@ -180,7 +180,7 @@ def cmd_verify(a):
                 if want and want[0] == "plan":
                     # a plan-cell driven input: a live driver; a same-partition plan cell / leaf must be the one named
                     cnt["plan_driven"] += 1
-                    if got[0] in ("pin", "clk", "rst", "or") and (want[1] is None or got[0] == "pin" and got[1] == want[1]):
+                    if got[0] in ("pin", "clk", "rst", "or", "and") and (want[1] is None or got[0] == "pin" and got[1] == want[1]):
                         cnt["compared"] += 1
                         cnt["matched"] += 1
                         continue

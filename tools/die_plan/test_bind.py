@@ -376,3 +376,30 @@ def test_param_regen_and_land_exclude(tmp_path):
     assert report(out)["lanes"]["landing_alignment"]["padded_groups"] == 0 and pr["record"]["d0"] == [2, 5]
     top = "".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
     assert f".ID({pr['changed'][0]['bound']})" in top
+
+
+def test_and_reducer(tmp_path):
+    """reducer op "and" (scoped by `inst`): the as-built join is re-emitted per sink partition as ot_dp_and; verify
+    compares it as an AND of the same leaf pins"""
+    def edit(p):
+        for r in p["asbuilt"]["reducers"]:
+            r["op"] = "and"
+            r["inst"] = "for0"
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0
+    top = "".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
+    assert "ot_dp_and #(.N(2))" in top and "ot_dp_or #(" not in top.split("module ot_dp_and")[1].split("endmodule", 1)[1]
+
+
+def test_lane_pad(tmp_path):
+    """a latency-table lane above its natural depth (R8 pad) is padded after the in-boundary flop (data + epoch);
+    the bound lane reaches the table cycles (no LANE_CYCLES error) and verify still passes"""
+    def edit(p):
+        p["latency"]["lanes"]["a1s"].update(cycles=6, pad=4)
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0
+    top = "".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
+    assert ".D(4)) u_lpad_" in top
+    assert not [e for e in report(out)["errors"] if e.startswith("LANE_CYCLES")]
+    lat = json.loads((out / "bind_latency.json").read_text())
+    assert any(b["lane"] == "a1s" and b["bound_stages"] == 6 for b in lat["buses"])

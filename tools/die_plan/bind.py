@@ -89,6 +89,13 @@ module ot_dp_or #(parameter integer N = 1) (
 );
     assign y = |a;
 endmodule
+// ot_dp_and: N-input AND of a re-emitted AND join (an as-built AND reducer, e.g. link-up, rebuilt per sink partition).
+module ot_dp_and #(parameter integer N = 1) (
+    input  wire [N-1:0] a,
+    output wire         y
+);
+    assign y = &a;
+endmodule
 // ot_dp_dly: D reset-less register stages (D >= 1): the as-built transport stages of an INTRA-partition path, kept.
 module ot_dp_dly #(parameter integer W = 1, parameter integer D = 1) (
     input  wire         clk,
@@ -140,6 +147,7 @@ class Rules:
         self.parts = dict(mp.get("parts", {}))
         self.rules = [(re.compile(a), b) for a, b in mp.get("rules", [])]
         self.ignore_out = [re.compile(r) for r in ab.get("open_outputs", [])]
+        self.keep_reducer = set()            # reducer instances the plan keeps as contents (stay leaves)
 
     @staticmethod
     def _first(lst, s):
@@ -151,8 +159,12 @@ class Rules:
     def transport_of(self, m):
         return self._first(self.transport, m)
 
-    def reducer_of(self, m):
-        return self._first(self.reducers, m)
+    def reducer_of(self, m, path=None):
+        """reducer rule of module m (optionally scoped to instances by the rule's `inst` regex on the cell path)"""
+        for rx, r in self.reducers:
+            if rx.fullmatch(m) and (not r.get("inst") or path is not None and re.fullmatch(r["inst"], path)):
+                return r
+        return None
 
     def source_of(self, m):
         return self._first(self.sources, m)
@@ -221,7 +233,9 @@ class Graph:
         self.leaf_src = {}                 # source cells kept as leaves (rule keep_leaf): ci -> rule
         for ci, c in enumerate(F.cells):
             t = rules.transport_of(c.module)
-            r = rules.reducer_of(c.module) if t is None else None
+            r = rules.reducer_of(c.module, c.path) if t is None else None
+            if r is not None and c.path in rules.keep_reducer and c.kind == "leaf":
+                r = None            # a plan content (status reuse): instantiated as a leaf in its partition
             s = rules.source_of(c.module) if t is None and r is None else None
             if t is not None:
                 k, sp = "transport", t
@@ -329,21 +343,25 @@ class Graph:
                         st = int(str(c.params.get(sp["stages_param"], st)).strip('"'))
                     res = _add_stages(up, st)
             elif k == "reducer":
+                # op or (default): fault OR tree; op and: an AND join (e.g. a link-up AND) re-emitted per sink partition
+                op = self.spec[ci].get("op", "or")
+                if op == "and" and len(c.ports[self.spec[ci]["out"]]) != 1:
+                    self.err.append(f"REDUCER_WIDTH {c.path}: an AND reducer must have a 1-bit output")
                 ups = []
                 for ip, bits in sorted(c.ports.items()):
                     if ip == self.spec[ci]["out"] or ip in self.spec[ci].get("drop_in", []):
                         continue
                     for b in bits:
                         u = self.source(b, depth + 1)
-                        if u[0] in ("const",) and u[1] == "0":
+                        if u[0] in ("const",) and u[1] == ("0" if op == "or" else "1"):
                             continue
                         if u[0] in ("dropped", "undriven"):
                             continue
-                        if u[0] == "or":
+                        if u[0] == op:
                             ups.extend(u[1])
                         else:
                             ups.append(u)
-                res = ("or", ups, int(self.spec[ci].get("stages", 0)))
+                res = (op, ups, int(self.spec[ci].get("stages", 0)))
             elif k == "source":
                 sp = self.spec[ci]
                 o = _src_out(sp, pn)
@@ -408,8 +426,8 @@ def _add_stages(s, n):
         return (s[0], s[1], s[2] + n)
     if s[0] == "top":
         return s[:3] + (s[3] + n,)
-    if s[0] == "or":
-        return ("or", s[1], s[2] + n)
+    if s[0] in ("or", "and"):
+        return (s[0], s[1], s[2] + n)
     return s
 
 
@@ -447,6 +465,21 @@ class Binder:
             if r["new_unconnected_ports"]:
                 self.errors.append(f"PARENT_VARIANT_NEW {r['inst']} -> {r['variant']}: ports not in the as-built "
                                    f"instance: {r['new_unconnected_ports'][:8]}")
+        if self.ab.get("reducers_keep_plan_contents"):
+            # asbuilt.reducers_keep_plan_contents: a reducer instance (fault OR ...) that the plan lists in its
+            # partition type's `contents` stays a leaf there instead of being dissolved and re-emitted per sink
+            cont = {}
+            for pp in plan["partitions"]:
+                t = plan["partition_types"].get(pp["type"], {})
+                cont[pp["name"]] = {x["inst"] for x in t.get("contents", []) if isinstance(x, dict) and "inst" in x}
+            for c in self.F.cells:
+                if self.R.reducer_of(c.module, c.path) is None:
+                    continue
+                p = self.R.part_of(c.path)
+                lo = self.R.local_of(c.path)
+                names = {c.path, c.path.split(".")[-1]} | ({lo} if lo else set())
+                if p in cont and names & cont[p]:
+                    self.R.keep_reducer.add(c.path)
         self.extra_lib, self.variants = [], []
         if self.ab.get("substitute_inst"):
             self.substitute_inst(base or str(E.REPO))
@@ -703,6 +736,7 @@ class Binder:
         self.sinks = {}                                      # (ci, port, bit) -> descriptor
         self.reset_age = defaultdict(list)                   # part -> as-built release stages of replaced resets
         cnt = defaultdict(int)
+        plan_rw = self.pc.rewired_keys() if self.pc else set()
         for ci, c in enumerate(F.cells):
             if ci not in self.cpart:
                 continue
@@ -712,6 +746,9 @@ class Binder:
                 if d.get(pn) != "input":
                     continue
                 for i, b in enumerate(bits):
+                    if (ci, pn, i) in plan_rw:
+                        self.sinks[(ci, pn, i)] = ("plan_rewired",)     # set by the plan cells below; no crossing
+                        continue
                     s = self.rewire.get((ci, pn, i)) or G.source(b)
                     self.sinks[(ci, pn, i)] = self._classify(p, ci, pn, i, s, cnt)
         self.counts = dict(cnt)
@@ -771,7 +808,7 @@ class Binder:
         return ("err", k)
 
     def _classify(self, p, ci, pn, i, s, cnt):
-        if s[0] == "or":
+        if s[0] in ("or", "and"):
             subs = [self._src_desc(p, u, cnt, ci, pn, i) for u in s[1]]
             subs = [x for x in subs if x[0] in ("int", "x", "strap", "tied", "top")]
             cnt["or_input"] += 1
@@ -779,7 +816,7 @@ class Binder:
                 cnt["or_empty"] += 1
                 self.errors.append(f"OR_EMPTY {self.F.cells[ci].path}.{pn}[{i}]: fault tree with no live source")
                 return ("err", "or_empty")
-            return ("or", tuple(sorted(subs, key=repr)))
+            return (s[0], tuple(sorted(subs, key=repr)))
         return self._src_desc(p, s, cnt, ci, pn, i)
 
     # -- buses
@@ -953,21 +990,24 @@ class Binder:
             rest = forward(sp, dp, sci, spn, rest, only=lambda L, ak=ak: affine(L, ak))
             if rest:
                 pend2.append((sp, dp, sci, spn, rest, other))
-        # pass 1b: the pair's remaining own lanes, packed by width
+        # pass 1b: the pair's remaining own lanes, packed by width.  A reset-spine pin (asbuilt.reset_spines) never takes
+        # data-lane width here or in pass 2b: unless a name-affine lane carries it (1a/2a) it rides the spine.
+        spines = [(re.compile(x["pin"]), int(x.get("sync_stages", 2))) for x in self.ab.get("reset_spines", [])]
+        spine_of = lambda sci, spn: next((ns for rx, ns in spines if rx.fullmatch(f"{F.cells[sci].path}.{spn}")), None)
         for sp, dp, sci, spn, rest, other in pend2:
             rest = [b for b in rest if (dp, sci, spn, b) not in recv]
-            for L in other:
+            for L in (other if spine_of(sci, spn) is None else []):
                 while rest and L["left"] > 0:
                     put(L, (sci, spn, rest.pop(0)), None)
             if rest:
                 todo.append((sp, dp, sci, spn, rest))
         # pass 2b: forwarded routes over any residual lane widths
-        spines = [(re.compile(x["pin"]), int(x.get("sync_stages", 2))) for x in self.ab.get("reset_spines", [])]
         spine = []
         self.spine_bits = defaultdict(int)
         for sp, dp, sci, spn, rest in todo:
-            rest = forward(sp, dp, sci, spn, rest)
-            sx = next((ns for rx, ns in spines if rx.fullmatch(f"{F.cells[sci].path}.{spn}")), None)
+            sx = spine_of(sci, spn)
+            if sx is None:
+                rest = forward(sp, dp, sci, spn, rest)
             if rest and sx is not None:
                 # a plan reset spine (asbuilt.reset_spines): async to the sink partition, released by its own clock
                 spine.append((sp, dp, sci, spn, rest, sx))
@@ -1111,7 +1151,7 @@ class Binder:
         obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((self.rel_of(it[1]), it[2], it[3]) if it[0] == "leaf" else
                                          ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
                       for L in self.out_bus[p])
-        ibus = sorted((L["iname"], L["width"]) for L in self.in_bus[p])     # the source is outside the module
+        ibus = sorted((L["iname"], L["width"], lane_pad(L)) for L in self.in_bus[p])     # the source is outside the module
         ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"]) for L, h in self.ft_bus[p])
         sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft, clocks=tuple(sorted(self.clk_dom[p])))
         return sig, inst_vals
@@ -1283,8 +1323,8 @@ class Binder:
         if k == "strap":
             inst_vals[("strap",) + where] = d[1]
             return ("strap",)
-        if k == "or":
-            return ("or", tuple(self._rel_desc(p, x, inst_vals, where + (j,)) for j, x in enumerate(d[1])))
+        if k in ("or", "and"):
+            return (k, tuple(self._rel_desc(p, x, inst_vals, where + (j,)) for j, x in enumerate(d[1])))
         return d
 
     def check_types(self):
@@ -1437,7 +1477,7 @@ class Binder:
                 if G.dirs[ci].get(pn) == "input":
                     for i in range(len(bits)):
                         d = self.sinks[(ci, pn, i)]
-                        for x in (d[1] if d[0] == "or" else [d]):
+                        for x in (d[1] if d[0] in ("or", "and") else [d]):
                             if x[0] == "top":
                                 io.add(x[1])
         self.io_used[tn] = sorted(io)
@@ -1461,6 +1501,16 @@ class Binder:
                 continue
             ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'in')}")
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
+            pad = lane_pad(L)
+            if pad > 0:
+                # the latency table's pad (R8 groups / replica depth): reset-less stages after the in-boundary flop,
+                # data and epoch together, so the lane lands at its table cycles
+                decl.append(f"    wire [{W - 1}:0] {n}_b;\n    wire {n}_eb;")
+                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
+                            f".q({n}_b), .eq({n}_eb));")
+                body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
+                            f".q({{{n}_eq, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
+                continue
             body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
                         f".q({n}_q), .eq({n}_eq));")
         # driver wires: one per (cell, output port)
@@ -1561,14 +1611,15 @@ class Binder:
                 ub.append(nm)
                 decl.append(f"    wire {nm};  // UNBOUND {k}: {self.F.cells[ci].path}.{pn}[{i}] (see bind_report errors)")
                 return nm
-            if k == "or":
+            if k in ("or", "and"):
                 key = d
                 if key not in orn:
-                    nm = f"or_{len(orn)}"
+                    nm = f"{k}_{len(orn)}"
                     orn[key] = nm
                     decl.append(f"    wire {nm};")
                     ins = [expr(x, ci, pn, i) for x in d[1]]
-                    body.append(f"    ot_dp_or #(.N({len(ins)})) u_{nm} (.a({_concat(ins)}), .y({nm}));  // re-emitted fault OR")
+                    body.append(f"    ot_dp_{k} #(.N({len(ins)})) u_{nm} (.a({_concat(ins)}), .y({nm}));  // re-emitted "
+                                + ("fault OR" if k == "or" else "AND join"))
                 return orn[key]
             raise BindError(f"no expression for {d}")
         insts = []
@@ -1691,7 +1742,7 @@ class Binder:
         lat = []
         for L in self.links:
             st = L["stages"]
-            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"])
+            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L)
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
@@ -1974,6 +2025,13 @@ def cmd_portbind(a):
     return r.returncode
 
 
+def lane_pad(L):
+    """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations), when positive"""
+    if L.get("spine") or not L.get("lane") or "cycles" not in L:
+        return 0
+    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])))
+
+
 def _desc_json(B, d, ci_part=None):
     k = d[0]
     if k == "int":
@@ -1981,8 +2039,8 @@ def _desc_json(B, d, ci_part=None):
     if k == "x":
         st = B.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)
         return ["pin", f"{B.F.cells[d[2]].path}.{d[3]}[{d[4]}]", st, B.G.kind[d[2]] == "glue"]
-    if k == "or":
-        return ["or", sorted(_desc_json(B, x)[1] for x in d[1] if x[0] in ("int", "x"))]
+    if k in ("or", "and"):
+        return [k, sorted(_desc_json(B, x)[1] for x in d[1] if x[0] in ("int", "x"))]
     if k == "plan":
         return ["plan", _plan_expect(B, ci_part, d[1])]
     return [k] + list(d[1:2])

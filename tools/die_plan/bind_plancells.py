@@ -146,6 +146,23 @@ class PlanCells:
                     r.add((p, b))
         return r
 
+    def rewired_keys(self):
+        """(ci, port, bit) of the leaf inputs a plan rewired[] entry re-points: their as-built source is not a crossing
+        of the bound die (the binder must not route it), the plan bus drives them"""
+        B = self.B
+        keys = set()
+        for p, members in B.members.items():
+            tn = self.ptype(p)
+            if tn not in self.leafdrv:
+                continue
+            rel = {B.rel_of(ci): ci for ci in members}
+            rw = {(s["sink"]["inst"], s["sink"]["port"]) for s in self.T[tn].get("rewired", [])}
+            for (inst, port, j) in self.leafdrv[tn]:
+                ci = rel.get(inst)
+                if ci is not None and (inst, port) in rw:
+                    keys.add((ci, port, j))
+        return keys
+
     def apply_sinks(self):
         """re-point the leaf input bits that plan cells drive: as-built constants become plan_driven"""
         B = self.B
