@@ -10,7 +10,7 @@ T=rtl/dsrom_sys/s81_dv/idx/test; I=rtl/dsrom_sys/s81_dv/idx
 sed 's/dsdv_idx_rg3 #(/dsdv_idx_rg3_lpw #(/' $T/tb_dsdv_idx_rg3.sv > "$D/tb_dsdv_idx_rg3.sv"
 grep -q 'dsdv_idx_rg3_lpw #(' "$D/tb_dsdv_idx_rg3.sv" || { echo "LP: tb sed failed"; exit 2; }
 L="rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_rst_copy.sv rtl/common/landed_parent/ot_pl_land_split.sv"
-sed -e "s#rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3.sv)#$I/dsdv_idx_rg3_br.sv $I/dsdv_idx_rg3_band.sv $L $I/lp/dsdv_idx_rg3_bf_lp.sv $I/dsdv_idx_rg3_lpw.sv $D/tb_dsdv_idx_rg3.sv)#" \
+sed -e "s#rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3.sv)#$I/dsdv_idx_rg3_br.sv $I/dsdv_idx_rg3_band.sv $I/dsdv_idx_rg3_bx.sv $L $I/lp/dsdv_idx_rg3_bf_lp.sv $I/dsdv_idx_rg3_lpw.sv $D/tb_dsdv_idx_rg3.sv)#" \
     $T/idxrd3_campaign.sh > "$D/campaign.sh"
 grep -q dsdv_idx_rg3_lpw.sv "$D/campaign.sh" || { echo "LP: campaign sed failed"; exit 2; }
 exec bash "$D/campaign.sh" "$O" "$BN" "$G" "$J" "$@"

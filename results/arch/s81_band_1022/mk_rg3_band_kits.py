@@ -15,6 +15,7 @@ SRAM = "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
 HS = "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5/views/ot_hdc_v41x_idx_hslice"
 SRC = [s for s in base["sources"] if not s.endswith("dsdv_idx_rg3.sv")]
 BR, BAND = "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_br.sv", "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_band.sv"
+BX = "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_bx.sv"   # the X band (own file since 10-22 20:5x)
 BENCH_LP = ("bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lp.sh {RUN} lpc0 '-GMUT=0 -GSRAM_MACRO=1 -GIH=0 -GOH=3 -GKR=1 -GRH=1' 8 "
             "'pass_small|+N=4096 +B=13 +T0=400 +P=3' 'pass_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4' "
             "'pass_open6|+N=4096 +B=13 +T0=400 +P=3 +OPEN=6' 'pass_l20|+N=87382 +B=13 +T0=400 +P=3' "
@@ -156,7 +157,7 @@ LSWX = dict(name="rg3b_bx_lsw", cmd="bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_
 LSWX_M = dict(name="rg3b_bx_lsw_mut5", cmd="bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 5", expect="fail",
               fail_regex="^BX_LSW MUTANT_CAUGHT$", threads=4, peak_ram_gb=8, needs=["verilator"])
 xn = common("s81dv_rg3b_xn", "dsdv_idx_rg3_bxn", "banded idx rg3 X successor: landing strip (rri pin flops, lane register, landing writes)")
-xn.update(kind="tile", sources=SRC + [BAND], params={"RH": 1}, outline={"w": 475.2, "h": 86.4, "exact": True}, macros=[],
+xn.update(kind="tile", sources=SRC + [BX], params={"RH": 1}, outline={"w": 475.2, "h": 86.4, "exact": True}, macros=[],
           children=[], pins={"N": ["rri"], "S": ["lw_v", "lw_h1", "lw_a", "lw_d"], "W": ["xr_o", "rst", "ck"]},
           pin_ranges={"rri": [21.6, 453.6], "lw_v": [21.6, 453.6], "lw_h1": [21.6, 453.6], "lw_a": [21.6, 453.6],
                       "lw_d": [21.6, 453.6], "xr_o": [10.8, 75.6], "rst": [10.8, 75.6], "ck": [40.0, 46.4]},
@@ -169,7 +170,7 @@ xn["job"]["benches"] = [LSWX, LSWX_M]
 specs[xn["name"]] = xn
 def xm_spec(name, ck_range, purpose, note, unclustered=True, ck_face="S", sx_face="W"):
     m = common(name, "dsdv_idx_rg3_bxm", purpose)
-    m.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1}, outline={"w": 475.2, "h": 432.0, "exact": True},
+    m.update(kind="tile", sources=SRC + [BX], params={"SRAM_MACRO": 1}, outline={"w": 475.2, "h": 432.0, "exact": True},
              macros=[dict(view=SRAM, inst=f"u_c{h}.g_land[{u}].u_h.g_m.u_mem", at=[[43.2, 257.04][h], round(43.2 + 90.72 * u, 2)],
                           orient=["R0", "MY"][h]) for h in range(2) for u in range(4)],
              children=[], pins={"N": ["lw_v", "lw_h1", "lw_a", "lw_d"],
@@ -208,7 +209,7 @@ xm_spec("s81dv_rg3b_xm2w", [194.4, 200.88], "banded idx rg3 X successor: SRAM / 
 # xn): 4 SRAM, ~400 flops, its kq half on its own S face, clock at that face's centre -- each tree spans one column only.
 for h in range(2):
     m = common(f"s81dv_rg3b_xmh{h}", "dsdv_idx_rg3_bxmh", f"banded idx rg3 X successor FB: SRAM column h{h} tile (4 SRAM, key half {h})")
-    m.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1, "H": h}, outline={"w": 237.6, "h": 432.0, "exact": True},
+    m.update(kind="tile", sources=SRC + [BX], params={"SRAM_MACRO": 1, "H": h}, outline={"w": 237.6, "h": 432.0, "exact": True},
              macros=[dict(view=SRAM, inst=f"g_land[{u}].u_h.g_m.u_mem", at=[[38.88, 23.76][h], round(43.2 + 90.72 * u, 2)],
                           orient=["R0", "MY"][h]) for u in range(4)],
              children=[], pins={"N": ["lw_v", "lw_h1", "lw_a", "lw_d"], "W": ["sx_i", "rst"], "S": ["kq_o", "ck"]},
@@ -229,6 +230,13 @@ xm_spec("s81dv_rg3b_xm3", [234.36, 240.84], "banded idx rg3 X successor: SRAM / 
         "with the S-stage capture flops (sx_i pins beside the clock) in the same band; default tree.", unclustered=False, sx_face="S")
 xm_spec("s81dv_rg3b_xm3u", [234.36, 240.84], "banded idx rg3 X successor: SRAM / key tile, ONE pin-flop band (kq + sx capture on S), unclustered CTS",
         "with the S-stage capture flops (sx_i pins beside the clock) in the same band; unclustered tree.", unclustered=True, sx_face="S")
+# gate 10-22 20:4x, per-sink dump of xm3u (TT): the S pin band (kq + sx capture) 325..347 ps -- but the 32 DECODED ssel
+# flops (boundary: D = f(sx_i)) sat at the h0 read channel (x 58, y 120) at 369..419.  RTL: the raw {su_b, s_lo} land in 5
+# pin flops at the S face and the 32-way decode follows them (cycle-identical; bx lockstep 0 mismatches, MUT 5 caught).
+xm_spec("s81dv_rg3b_xm4", [234.36, 240.84], "banded idx rg3 X successor: SRAM / key tile, ONE pin-flop band incl. the raw scale select, default CTS",
+        "with the S-stage capture flops (sx_i pins beside the clock; scale select captured raw) in the same band; default tree.", unclustered=False, sx_face="S")
+xm_spec("s81dv_rg3b_xm4u", [234.36, 240.84], "banded idx rg3 X successor: SRAM / key tile, ONE pin-flop band incl. the raw scale select, unclustered CTS",
+        "with the S-stage capture flops (sx_i pins beside the clock; scale select captured raw) in the same band; unclustered tree.", unclustered=True, sx_face="S")
 ONLY = None
 if "--only" in sys.argv:
     i = sys.argv.index("--only"); ONLY = set(sys.argv[i + 1].split(",")); del sys.argv[i:i + 2]
