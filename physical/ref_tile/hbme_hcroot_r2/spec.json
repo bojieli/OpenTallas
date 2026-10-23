@@ -1,0 +1,190 @@
+{
+ "name": "hbme_hcroot_r2",
+ "top": "ot_hbm_hc_root_static",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_root_xr4_p40_native.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M6",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "c86937",
+   "at": [
+    43.2,
+    453.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "c86938",
+   "at": [
+    239.76,
+    453.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "c86932",
+   "at": [
+    436.32,
+    466.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "c86933",
+   "at": [
+    552.96,
+    466.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "c86934",
+   "at": [
+    669.6,
+    466.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "outline": {
+  "w": 907.2,
+  "h": 550.8,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.45,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_x_um": 10.8
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Native graph retains RTL registered interfaces. No extra pin-edge; current parameter/source identity in assembly.json."
+ },
+ "pins": {
+  "W": [
+   "tgt",
+   "rst_n",
+   "program_done",
+   "cfg_target",
+   "configured",
+   "fault",
+   "program_active",
+   "cfg_v"
+  ],
+  "N": [
+   "gathered_mix_data",
+   "qps",
+   "qi_cnt",
+   "qd_wa",
+   "qd_xa",
+   "qi_word",
+   "qd_nv",
+   "gathered_mix_row",
+   "qi_lo",
+   "qi_w",
+   "gathered_mix_pos",
+   "result_position",
+   "qi_slot",
+   "gathered_mix_v",
+   "q_fault",
+   "qps_f",
+   "qps_v",
+   "qd_ss",
+   "qd_v",
+   "qi_kind",
+   "qi_v",
+   "result_v"
+  ],
+  "S": [
+   "cfg_data",
+   "desc_loops",
+   "desc_limit",
+   "cfg_addr",
+   "desc_base",
+   "clk",
+   "launch_v",
+   "desc_v"
+  ],
+  "E": [
+   "result"
+  ]
+ },
+ "inter": [],
+ "structural_change": "STEWARD-HBMe/HC 10-23 FB redesign of the BAD 950.4x777.6 root: 907.2 x 550.8 (die-slot-like height); tails R0 side by side, result -> E band, SRAM + core row on top; 0 edges changed.",
+ "job": {
+  "owner": "STEWARD-HBMe/HC",
+  "branch": "claude/hbme-hc-1023",
+  "tag": "r2",
+  "purpose": "STEWARD-HBMe/HC 10-23 FB redesign of the BAD 950.4x777.6 root: 907.2 x 550.8 (die-slot-like height); tails R0 side by side, result -> E band, SRAM + core row on top; 0 edges changed.",
+  "benches": [],
+  "extra_paths": [
+   "results/rtl/hbm_hc_xr4_assembly_1021"
+  ]
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_hc_root_xr4_diag/standins/ot_hbm_hc_tail_child_static",
+   "count": 1,
+   "inst": "c86935",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_hc_root_xr4_diag/standins/ot_hbm_hc_tail_child_static",
+   "count": 1,
+   "inst": "c86936",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "std_area_um2": 14052.99132,
+ "cluster_level": 2,
+ "child_lattice_um": 43.2,
+ "low_fill_reason": "hard-child-bound HC root (STEWARD-HBMe/HC 10-23, coordinator ack requested): 2 x 388.8 tails + 5 SRAMs; the W result face carries 3,072 b (>= 540 um at <= 5.7 pins/um)"
+}
