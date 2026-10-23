@@ -1897,7 +1897,11 @@ def bindings():
         cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] and not POR_LOCK else {}
         if POR_LOCK and 'por_n' in t['ports']:
             ports['por_n'] = ['por_n']        # KDIE5-RTL: driven by the die pll_lock word (_clocks_resets)
-        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else (RTL_FILE if GRP_SAFE2 or ROPE else PUBLIC_RTL_FILE)
+        # KDIE5-RTL2 10-23: under CTL_NC32 every other tile binds RTL_FILE (the '_nc32' tile file WITHOUT the ctl body):
+        # PUBLIC_RTL_FILE still declares qkd_kvs_ctl, and as a later binding file it out-ranked CTL_NC32_RTL in the bound
+        # netlist index (kv_bound_netlist: 'indexed module qkd_kvs_ctl does not come from selected source ..._nc32.sv')
+        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else \
+            (RTL_FILE if GRP_SAFE2 or ROPE or CTL_NC32 else PUBLIC_RTL_FILE)
         if GRP_SAFE2 and t['kind'] in ('grp', 'grp_h'):
             source_file = GRP_S6C_RTL[t['kind']] if GRP_S6C else GRP_SAFE2_RTL
         if GRP_R2 and t['kind'] in ('grp', 'grp_h'):
