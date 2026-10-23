@@ -167,7 +167,9 @@
  "std_area_um2": 2000,
  "why_floorplan": "SRAM tile of the X cluster (475.2 x 432 under xn): 8 SRAM in 2 columns x 4 rows (90.72 pitch: 20-um channels, the v1 SRAM LEF only sits on the snapped macro lattice so it cannot abut; y 43.2 .. 385.8: 43-um S halo over the kq pin band, 46-um N halo under the lw_* face); h0 column R0 at x 43.2 (read pins on the 43-um W channel), h1 column MY at x 257.04 (read pins on the E channel): each key half reads only its own column, so its mux runs down its own channel to the kq pin flops; write pins of both columns face the 39-um centre gap.  The ONLY pin-flop band is kq on the S face, with the S-stage capture flops (sx_i pins beside the clock; raw scale select replicated 8x) in the same band; default tree.",
  "hold_budget": "die",
- "tile_plan": {},
+ "tile_plan": {
+  "planner_version": 2
+ },
  "pin_hook_after_flops": [
   "physical/common_flow/pin_reg_face_fence.tcl"
  ],

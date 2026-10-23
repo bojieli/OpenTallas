@@ -192,6 +192,25 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    "b186a27836d6c95ee97964d637acff4be9a132ee": dict(kind="neutral", paths=('tools/ref_tile/outline_audit.py', 'tools/ref_tile/ref_tile.py', 'tools/ref_tile/tile_plan.py'),
+        what="TILE-FLOW2 version 2 explicit opt-in; missing-version recipe 5 retains exact legacy planner, density and pin policy"),
+    "69bfbaa5e43435c38a070b0330f9d1e052fbec92": dict(kind="neutral", paths=('tools/ref_tile/ref_tile.py',),
+        what="TILE-FLOW2 version 2 explicit opt-in; missing-version recipe 5 retains exact legacy planner, density and pin policy"),
+    "0f9432a5c4102c4d92d7a9ca0f5f2aabff6904ab": dict(kind="neutral", paths=('tools/ref_tile/ref_tile.py', 'tools/ref_tile/tile_plan.py'),
+        what="TILE-FLOW2 version 2 explicit opt-in; missing-version recipe 5 retains exact legacy planner, density and pin policy"),
+    "f8607c296d55e3d7b4fb396a440c8e253f5882e9": dict(kind="neutral", paths=('tools/ref_tile/ref_tile.py', 'tools/ref_tile/tile_plan.py'),
+        what="TILE-FLOW2 version 2 explicit opt-in; missing-version recipe 5 retains exact legacy planner, density and pin policy"),
+    "acf4a09dfe31bbb92b0556c6c7f016af6075f88b": dict(kind="neutral", paths=('tools/ref_tile/tile_plan.py',),
+        what="TILE-FLOW2 version 2 explicit opt-in; missing-version recipe 5 retains exact legacy planner, density and pin policy"),
+    "dfec8c8c213393e47b733434abd3b17933ab40d3": dict(kind="neutral", paths=('tools/ref_tile/tile_plan.py',),
+        what="TILE-FLOW2 version 2 explicit opt-in; missing-version recipe 5 retains exact legacy planner, density and pin policy"),
+    "aed7dc72bbc5ee122fd4bf510cfe5d4e6d8a0687": dict(kind="neutral", paths=('tools/ref_tile/ref_tile.py',),
+        what="TILE-FLOW2 version 2 explicit opt-in; missing-version recipe 5 retains exact legacy planner, density and pin policy"),
+    "1f8c1f460c75a83443d1b90a6699dddab879d1e0": dict(kind="neutral", paths=('tools/ref_tile/tie_audit.py',),
+        what="TILE-FLOW2 version 2 explicit opt-in; missing-version recipe 5 retains exact legacy planner, density and pin policy"),
+    "7e40a91cebad00a872c2f4336ffa24f1b51992ed": dict(kind="neutral", paths=('tools/ref_tile/tile_plan.py',),
+        what="TILE-FLOW2 version 2 explicit opt-in; missing-version recipe 5 retains exact legacy planner, density and pin policy"),
+
     # ROOT-MERGE-1023 10-23 batch 14: claude/gate-layout-review-1023 (COORD batch 14; OWNER 10-23 tile visual review).
     # The gate now FAILs std-cell fill < 20 % of free area / pin->register p90 > 150 um (layout_review) -> a real
     # TIGHTENING for every kit: a gate run before it carries no review.png / review_stats.json and is re-gated (the

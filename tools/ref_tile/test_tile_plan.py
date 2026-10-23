@@ -274,9 +274,20 @@ def spec_file(root, **kw):
 class Recipe5(unittest.TestCase):
     def gen(self, root, **kw):
         kw.setdefault("route", {"pd": 0.5})
+        kw.setdefault("tile_plan", {"planner_version": 2})
         r = RT.gen(spec_file(root, **kw), commit="c" * 40, out_root=Path(root))
         d = Path(root) / r["kit"]
         return r, {f.name: f.read_text() for f in d.iterdir()}
+
+    def test_unversioned_keeps_legacy_density_and_no_implicit_balance(self):
+        with tempfile.TemporaryDirectory() as a:
+            r, k = self.gen(a, name="tp5_legacy", tile_plan={}, std_area_um2=3000.0, outline=None)
+            s = json.loads(k["spec.json"])
+            self.assertEqual(s["tile_plan"]["planner_version"], 1)
+            self.assertEqual(s["tile_plan"]["pin_density"], 3.0)
+            self.assertFalse(s["tile_plan"]["pin_balance"])
+            self.assertNotIn("pin_balance", s["route"])
+            self.assertNotIn("pin_layers", json.loads(k["floorplan.json"])["tile_plan"])
 
     def test_new_tile_takes_tile_plan_and_fence(self):
         with tempfile.TemporaryDirectory() as a:
