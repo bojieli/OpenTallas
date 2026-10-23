@@ -7,8 +7,8 @@
   "master": "qkd_kvs_ctl",
   "granted_by": "STEWARD-QKc 2026-10-22 decision (b) (KDIE5-TV ctl_r1 grant, re-issued for the nc32 body; owner rule: M6 pin grants allowed when the tile does not grow)",
   "reason": "Pin-density grant, NOT growth: the relm frame W / E faces carry 2524 pins each on 172.776 um (14.6 / um on one layer > the 12 b/um/layer limit); M4 + M6 pin-only edge contacts = 7.3 / um / layer.  Outline 1123.176 x 172.776 and the M5 signal / PG cap unchanged; routed DEF / LEF M6 audit required.",
-  "source_commit": "8484d5772bf20394dff29eba54ba3903fb654630",
-  "source_spec_sha256": "5585ac7cefc87f2c525077aee958d5a3ffa1306fb5030f24fa6869af698028c3",
+  "source_commit": "558fba7b583c2081f52b2427b674e1afd3594135",
+  "source_spec_sha256": "408e3493893854e4529b55b6535960b23bb805ab64c5fa64988afc9e31528e38",
   "ports": [
    {
     "name": "i_hroot_EN[0]",
@@ -21673,7 +21673,7 @@
   ]
  },
  "owner": "Claude:KDIE5-RTL",
- "purpose": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG, verbatim c32i body, census PASS max 32 in gate c32k; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).",
+ "purpose": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG = c32i body + kept E-face copies of the 967 W/E-shared output registers, 0 edges; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
@@ -21693,7 +21693,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_ctl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv rtl/lib/ot_s32_cells.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_boot.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv rtl/physical/ot_qkd_kv_static_writer_native.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_ctl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv rtl/lib/ot_s32_cells.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_boot.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv rtl/physical/ot_qkd_kv_static_writer_native.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -21738,6 +21738,32 @@
     "pass_regex": "^C32 kb_n_m_tl rc=0: PASS",
     "fail_regex": "^C32 kb_n_m_tl rc=.*FAIL MU_KV_BOOT",
     "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/ctl_kb_n_m_tl.stdout"
+   },
+   {
+    "name": "ctl_mut_face_boot",
+    "cmd": "bash rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench tile_n_m_e",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^C32 tile_n_m_e rc=0: PASS",
+    "fail_regex": "^C32 tile_n_m_e rc=.*(FAIL|E-face copy differs)",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/ctl_tile_n_m_e.stdout"
+   },
+   {
+    "name": "ctl_mut_face_lprg",
+    "cmd": "bash rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench kb_n_m_l",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^C32 kb_n_m_l rc=0: PASS",
+    "fail_regex": "^C32 kb_n_m_l rc=.*(FAIL|E-face copy differs)",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/ctl_kb_n_m_l.stdout"
    }
   ],
   "calibrate": {
@@ -21799,5 +21825,5 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG, verbatim c32i body, census PASS max 32 in gate c32k; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG)."
+ "structural_change": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG = c32i body + kept E-face copies of the 967 W/E-shared output registers, 0 edges; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG)."
 }
