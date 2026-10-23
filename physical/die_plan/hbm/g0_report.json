@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/scratch/hbm-p3-1023/sm_off/die_plan.json",
+ "plan": "/home/ubuntu/scratch/hbm-p3-1023/pub2/die_plan.json",
  "verdict": "PASS",
  "errors": 0,
  "warnings": 1050,
@@ -20,7 +20,7 @@
   "lanes": 5604,
   "bits": 1416840,
   "taps_cores": {
-   "taps": 1355,
+   "taps": 1352,
    "hard_cores": 675,
    "core_pins": 236999,
    "core_pins_off_track": 0
@@ -9415,7 +9415,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/home/ubuntu/scratch/hbm-p3-1023/sm_off/g0/die_plan.png"
+  "png": "/home/ubuntu/scratch/hbm-p3-1023/pub2/g0/die_plan.png"
  },
  "findings": [
   {

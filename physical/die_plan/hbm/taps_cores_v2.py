@@ -137,6 +137,8 @@ def place_taps(w, h, cores, root):
             if all(any(inside(c['_box'], *p) for c in cores) for p in pts):
                 continue                                # region fully inside hard cores: their taps clock it
             cx, cy = off_core(cx, cy, w, h, cores)
+            if l1((cx, cy), root) < 1.0:
+                continue                                # the type's root tap (clock.tap_um) is already here
             taps.append(glue_tap(f'g{i}_{j}.ck', cx, cy, root))
     k = 0
     while True:                                         # refine: no lattice point farther than REACH from a tap

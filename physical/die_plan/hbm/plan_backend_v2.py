@@ -586,6 +586,8 @@ def build_graph(parts):
     adj = collections.defaultdict(list)
     for (a, b), s_ in segs.items():
         s_["cap"] = WIN_PER_UM * s_["len"] * 0.80     # routing margin for slice rounding
+        if fl3(a, b, s_['o']):
+            s_["cap"] *= 1.5                            # 3 pin layers (M7/M5 + die M9): 9/um
         adj[a].append((b, (a, b))); adj[b].append((a, (a, b)))
     return segs, adj
 
@@ -873,6 +875,24 @@ HARD = False
 NOHIST = False
 
 
+OS3 = os.environ.get('OT_HBM_OS3', '1') == '1' and SM_MODE != 'off'   # COORD 10-23 option (A)
+
+
+def os_part(n):
+    return re.match(r'^(NW|NE|SW|SE)_os\d$', n) is not None
+
+
+def fl3(a, b, o):
+    """COORD option (A): an H boundary (N/S faces) between two non-SM partitions, one of them in the os column, takes
+    a third (die M9) pin layer.  SM faces never do."""
+    return OS3 and o == 'H' and not (sm_part(a) or sm_part(b)) and (os_part(a) or os_part(b))
+
+
+def lay(face, k, o):
+    base = {'E': ['M6', 'M4'], 'W': ['M6', 'M4'], 'N': ['M7', 'M5'], 'S': ['M7', 'M5']}[face]
+    return base + ['M9'] if fl3(k[0], k[1], o) else base
+
+
 def quadn(n):
     q = n.split('_')[0]
     return q if q in ('NW', 'NE', 'SW', 'SE') else 'X'
@@ -1039,14 +1059,14 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
                 k = sk(u, v)
                 ck, h, selfsym = canon[k]
                 if selfsym and not full[oi]:   # V2: full orbits allocate mirror-consistently on self-symmetric segments too
-                    wlen = fit_len(s_['lo'] + seg_fill[k], wb + 1, LAY[face])     # + in-band epoch bit
+                    wlen = fit_len(s_['lo'] + seg_fill[k], wb + 1, lay(face, k, s_['o']))     # + in-band epoch bit
                     lo = s_['lo'] + seg_fill[k]; seg_fill[k] += wlen; flip = False
                     if seg_fill[k] > s_['len'] + 1e-6:
                         warn['window_overflow'] += 1
                 elif not full[oi]:
                     flip = (s_['o'] == 'V' and h & 2) or (s_['o'] == 'H' and h & 1)
                     F = seg_fill[ck]
-                    wlen = fit_len(s_['lo'] + F + own_fill[k], wb + 1, LAY[face])
+                    wlen = fit_len(s_['lo'] + F + own_fill[k], wb + 1, lay(face, k, s_['o']))
                     if flip:
                         lo = s_['hi'] - F - own_fill[k] - wlen
                     else:
@@ -1058,11 +1078,11 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
                     akey = (oi, sl, ck, (P[u]['mir'][h], P[v]['mir'][h]), gb ^ h)   # V2: direction-sensitive + relative image (two images of one orbit on one segment)
                     if akey not in alloc:
                         alloc[akey] = segs[ck]['lo'] + seg_fill[ck]
-                        seg_fill[ck] += max(fit_len(alloc[akey], w_ + 1, LAY[face]) for w_ in wset[(oi, sl)] if w_ > 0)   # V2: window length is not monotone in the pin count (parity)
+                        seg_fill[ck] += max(fit_len(alloc[akey], w_ + 1, lay(face, k, s_['o'])) for w_ in wset[(oi, sl)] if w_ > 0)   # V2: window length is not monotone in the pin count (parity)
                         if seg_fill[ck] > segs[ck]['len'] + 1e-6:
                             warn['window_overflow'] += 1
                     lc = alloc[akey]
-                    wlen = fit_len(lc, wb + 1, LAY[face])
+                    wlen = fit_len(lc, wb + 1, lay(face, k, s_['o']))
                     flip = (s_['o'] == 'V' and h & 2) or (s_['o'] == 'H' and h & 1)
                     if flip:
                         ext = H if s_['o'] == 'V' else W
@@ -1102,7 +1122,7 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
                 portid = f'{lid}{"abcd"[gb]}_{len(pid)}'
                 pid[(u, v)] = portid
                 ports.append(dict(id=portid, src=dict(part=u, bus=sbus), dst=dict(part=v, bus=dbus), width=wb,
-                                  kind=b['kind'], face=face, layers=LAY[face],
+                                  kind=b['kind'], face=face, layers=lay(face, k, s_['o']),
                                   window_um=[round(lo, 3), round(lo + wlen, 3)],
                                   order='lsb_high' if flip else 'lsb_low'))
                 # cut sweep (straight L between the two crossing points)

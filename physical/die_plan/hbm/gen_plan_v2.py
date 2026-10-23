@@ -91,7 +91,7 @@ def fit_len_v2(lo, pins, layers):
                 while cs[i] - cs[j] > 10.0 - 1e-6:
                     j += 1
                 mx = max(mx, i - j + 1)
-            if mx <= v1.FACE_LIM:
+            if mx <= v1.FACE_LIM * max(2, nl) / 2:
                 return b - lo
         b = next_edge(b + 1e-4)
 
@@ -465,7 +465,9 @@ def assign_roles(insts, groups, parts):
             k = int(re.match(r'^sm(\d)$', r).group(1))
             v1.SPLIT_OF[n] = [f'{q}_sm{k}{s}' for s in 'abcd']
             if v1.SM_MODE != 'off':
-                v1.SPLIT_LAND[n] = f'{q}_sm{k}c'       # COORD R6 R2-alt: SM ports at the front quarter c
+                # inner: COORD R6 R2-alt, SM ports at the front quarter c (reachable only laterally);
+                # inner_d: R2, SM ports at the svc-facing end quarter d (+ registered relay d<->c inside the SM)
+                v1.SPLIT_LAND[n] = f'{q}_sm{k}' + ('d' if v1.SM_MODE == 'inner_d' else 'c')
             where[n] = f'{q}_sm{k}a'
             continue
         if tgt:
@@ -591,7 +593,7 @@ def sm_internal_groups(where):
     sp = json.load(open(SM_SPLIT_JSON))
     per = collections.Counter()
     for x in sp['crossings']:
-        if str(x.get('rtl_change') or '').startswith('R2'):
+        if str(x.get('rtl_change') or '').startswith('R2') and v1.SM_MODE != 'inner_d':
             continue
         a_, b_ = x['dir'].split('->')
         per[(a_, b_)] += x['bits']
@@ -709,6 +711,14 @@ def main():
               open(os.path.join(a.out, 'census', 'map_v2.json'), 'w'), indent=0)
     plan['census'] = [dict(rows='census/hbm_r18h5_rows.tsv.gz', map='census/map_v2.json',
                            note='r18h5 FT census (hbm_census.json.gz, 35075 groups); SM = group of 4 stacked partitions')]
+    # COORD option (A): types with a 3-layer (M7/M5 + die M9) N/S face list it in face_layers (both ends must)
+    ptype = {p['name']: p['type'] for p in plist}
+    for pt in em['ports']:
+        if len(pt['layers']) > 2:
+            for e in ('src', 'dst'):
+                fl = types[ptype[pt[e]['part']]].setdefault('face_layers', {})
+                for f_ in ('N', 'S'):
+                    fl[f_] = ['M7', 'M5', 'M9']
     __import__('taps_cores_v2').apply(plan, a.out, where)   # HBM-P3-TAPS post-pass: hard cores, cells, clock taps
     json.dump(plan, open(os.path.join(a.out, 'die_plan.json'), 'w'), indent=None, separators=(',', ':'))
     mem = {}
