@@ -267,3 +267,31 @@ def test_reset_spine(tmp_path):
     ts = (out / "rtl" / "bt_ts.sv").read_text()
     assert "ot_dp_rsync #(.W(1), .S(2))" in ts
     assert verify(out)["verdict"] == "PASS"
+
+
+def test_land_align(tmp_path):
+    """asbuilt.land_align = cell: snk.d0 is split over a 2-cycle lane (5 b) and a forwarded 5-cycle route (3 b); the
+    5 early bits get 3 pad stages so the bus lands as built (all 8 bits at the same depth), and the proof holds"""
+    def edit(p):
+        p["asbuilt"]["land_align"] = "cell"
+        for x in p["ports"]:
+            if x["id"] == "a0s__0":
+                x["width"] = 5
+            if x["id"] == "a1s__0":
+                x["width"] = 16
+        for b in p["partition_types"]["ta"]["buses"]:
+            if b["name"] == "ys_o":
+                b["width"] = 16
+        for b in p["partition_types"]["ts"]["buses"]:
+            if b["name"] == "d1_i":
+                b["width"] = 16
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    la = r["lanes"]["landing_alignment"]
+    assert la["padded_bits"] == 5 and la["max_pad"] == 3 and r["lanes"]["unplanned_bits"] == 0
+    sinks = json.loads((out / "bind_sinks.json").read_text())
+    assert {sinks[f"snk.d0[{i}]"][2] for i in range(8)} == {5}
+    lat = json.loads((out / "bind_latency.json").read_text())
+    assert lat["landing_pads"]["snk.d0"] == {"src_part": "A0", "pads": [3, 3], "bits": 5}
+    assert verify(out)["verdict"] == "PASS"

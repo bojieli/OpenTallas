@@ -1108,13 +1108,53 @@ class Binder:
         sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft, clocks=tuple(sorted(self.clk_dom[p])))
         return sig, inst_vals
 
+    def align_landings(self):
+        """asbuilt.land_align = "cell": the crossing inputs of one sink leaf from one source partition keep their as-built
+        RELATIVE timing: each bit's bound latency minus its as-built latency is raised to the group's largest by
+        reset-less pad stages (ot_dp_dly) after the in-boundary flop, so a bus split over lanes of different depth (or a
+        valid that was one cycle ahead of its data) lands as built, shifted by one constant per group."""
+        self.pad_stats = dict(groups=0, padded_groups=0, padded_bits=0, pad_flops=0, max_pad=0)
+        self.land_pads = {}
+        if self.ab.get("land_align") != "cell":
+            return
+        grp = defaultdict(list)
+        for (ci, pn, i), d in self.sinks.items():
+            if d[0] == "x":
+                grp[(ci, d[1])].append((pn, i, d))
+        st = self.pad_stats
+        for (ci, sp), items in grp.items():
+            st["groups"] += 1
+            delta = [self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] - d[5] for _pn, _i, d in items]
+            top = max(delta)
+            if all(x == top for x in delta):
+                continue
+            st["padded_groups"] += 1
+            for (pn, i, d), x in zip(items, delta):
+                pad = top - x
+                if pad:
+                    self.sinks[(ci, pn, i)] = d + (pad,)
+                    st["padded_bits"] += 1
+                    st["max_pad"] = max(st["max_pad"], pad)
+                    lp = self.land_pads.setdefault(f"{self.F.cells[ci].path}.{pn}", dict(src_part=sp, pads=[pad, pad], bits=0))
+                    lp["pads"] = [min(lp["pads"][0], pad), max(lp["pads"][1], pad)]
+                    lp["bits"] += 1
+        # flops: one ot_dp_dly per (partition, in-bus bit, pad)
+        seen = set()
+        for (ci, pn, i), d in self.sinks.items():
+            if d[0] == "x" and len(d) > 7:
+                L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
+                k = (d[6], L["iname"], j, d[7])
+                if k not in seen:
+                    seen.add(k)
+                    st["pad_flops"] += d[7]
+
     def _rel_desc(self, p, d, inst_vals, where):
         k = d[0]
         if k == "int":
             return ("int", self.rel_of(d[1]), d[2], d[3], d[4])
         if k == "x":
             L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
-            return ("bus", L["iname"], j)
+            return ("bus", L["iname"], j) + ((d[7],) if len(d) > 7 else ())
         if k == "strap":
             inst_vals[("strap",) + where] = d[1]
             return ("strap",)
@@ -1354,6 +1394,7 @@ class Binder:
             decl.append(f"    wire [{W - 1}:0] {nm};")
             body.append(f"    ot_dp_dly #(.W({W}), .D({st})) u_{nm} (.clk(clk), .d({drv_w[(sci, spn)]}), .q({nm}));")
         orn = {}
+        pads = {}
 
         def expr(d, ci, pn, i):
             nonlocal need_rst
@@ -1363,6 +1404,15 @@ class Binder:
                 return f"{w}[{d[3]}]"
             if k == "x":
                 L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                if len(d) > 7:          # landing pad (land_align): shared per (in-bus bit, pad)
+                    key = (L["iname"], j, d[7])
+                    if key not in pads:
+                        nm = short_id(f"pd{d[7]}_{L['iname']}_{j}", 100)
+                        pads[key] = nm
+                        decl.append(f"    wire [0:0] {nm};")
+                        body.append(f"    ot_dp_dly #(.W(1), .D({d[7]})) u_{nm} (.clk(clk), .d({L['iname']}_q[{j}]), "
+                                    f".q({nm}));  // landing pad: as-built relative timing")
+                    return f"{pads[key]}[0]"
                 return f"{L['iname']}_q[{j}]"
             if k == "clk":
                 return "clk" if d[1] == self.default_domain(p) else f"clk_{sv_id(d[1])}"
@@ -1541,6 +1591,7 @@ class Binder:
                               unplanned_pairs={f"{a}->{b}": n for (a, b), n in sorted(self.unplanned.items())},
                               unplanned_bit_list=self.unplanned_bits,
                               reset_spine_bits=dict(self.spine_bits),
+                              landing_alignment=self.pad_stats,
                               ft_hops=sum(len(L["ft"]) for L in self.links),
                               forwarded_bits=sum(self.forwarded.values()),
                               forwarding_partitions=dict(sorted(self.fwd_parts.items(), key=lambda kv: -kv[1])[:60]),
@@ -1705,6 +1756,7 @@ def cmd_bind(a):
     B.map_cells()
     B.analyse()
     B.build_buses()
+    B.align_landings()
     B.check_types()
     files = []
     try:
@@ -1739,7 +1791,7 @@ def cmd_bind(a):
     (out / "bind_latency.json").write_text(json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
-                                                           buses=lat), indent=1))
+                                                           buses=lat, landing_pads=B.land_pads), indent=1))
     pr = rep["proof"]
     print(json.dumps(dict(partitions=rep["partitions"], types=len(rep["types"]), crossings=rep["crossings"],
                           crossing_bits=rep["crossing_bits"], errors=rep["n_errors"], **pr)))
@@ -1753,7 +1805,7 @@ def _desc_json(B, d, ci_part=None):
     if k == "int":
         return ["pin", f"{B.F.cells[d[1]].path}.{d[2]}[{d[3]}]", d[4], B.G.kind[d[1]] == "glue"]
     if k == "x":
-        st = B.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
+        st = B.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)
         return ["pin", f"{B.F.cells[d[2]].path}.{d[3]}[{d[4]}]", st, B.G.kind[d[2]] == "glue"]
     if k == "or":
         return ["or", sorted(_desc_json(B, x)[1] for x in d[1] if x[0] in ("int", "x"))]
