@@ -192,6 +192,23 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1023 10-23 batch 14: claude/gate-layout-review-1023 (COORD batch 14; OWNER 10-23 tile visual review).
+    # The gate now FAILs std-cell fill < 20 % of free area / pin->register p90 > 150 um (layout_review) -> a real
+    # TIGHTENING for every kit: a gate run before it carries no review.png / review_stats.json and is re-gated (the
+    # owner wants every unclosed tile rendered and judged).  0cf7fc33f relaxes parents to macro packing; cc59663f0 lets a
+    # GEOM-REVIEW PASS excuse fill (relaxing) but no longer lets fill reasons excuse far pin registers (tightening).
+    "52ac3504776512d603f25edc462ba58f07a34839": dict(
+        kind="tightening", rule="layout-review",
+        paths=('tools/ref_tile/layout_review.py', 'tools/ref_tile/layout_review.tcl', 'tools/ref_tile/pre_route_gate.py',
+               'tools/ref_tile/layout_dump.tcl'),
+        what="layout_review FAIL on low std fill / far pin registers + mandatory review render (new FAIL, all kits)"),
+    "0cf7fc33ffe923df8d16d9772fdc1fd58a6cffd2": dict(
+        kind="relaxing", paths=('tools/ref_tile/layout_review.py', 'tools/ref_tile/pre_route_gate.py'),
+        what="layout_review: parents/clusters judged by macro packing, not std-cell fill (relative to 52ac35047)"),
+    "cc59663f0755702f133bd72229f81516d3f7929e": dict(
+        kind="tightening", rule="layout-review",
+        paths=('tools/ref_tile/layout_review.py', 'tools/ref_tile/pre_route_gate.py'),
+        what="layout_review: fill reasons no longer excuse pin-register p90 > 150 um; GEOM FAIL revokes parent fill reasons"),
     # ROOT-MERGE-1023 10-23 batch 13: claude/ft-qc-1023 (COORD 02:35 approved).  Both changes act only on a spec with
     # pg_contract == "m7_passthrough" (new opt-in, first used by the do-not-bind pilot qfd_c_b8_ft1); default contract,
     # PDN text and gate layer audit unchanged for every older kit.
