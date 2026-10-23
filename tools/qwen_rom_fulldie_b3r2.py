@@ -5381,6 +5381,11 @@ RST_OK_UM = float(os.environ.get('OT_RST_OK_UM', RST_OK_UM))
 RST_GAP_UM = 2.16                # clearance to every other instance
 # SQC-QDIE3 10-22: OT_RST_PAD_CLUSTER=1 (default) keeps every reset pad chain in one pocket on its edge (see chain()).
 _rst_pad_cluster = os.environ.get('OT_RST_PAD_CLUSTER', '1') == '1'
+# QCHAIN 10-22: leave legal signal escape streets between reset equalisation islands.
+# Placement only: the pad masters, stages, equal depth and reach gates remain unchanged.
+RST_PAD_GAP_UM = float(os.environ.get('OT_RST_PAD_GAP_UM', RST_GAP_UM))
+if not math.isfinite(RST_PAD_GAP_UM) or RST_PAD_GAP_UM < RST_GAP_UM:
+    raise ValueError('OT_RST_PAD_GAP_UM must be finite and >= RST_GAP_UM')
 
 
 def _hp(pts):
@@ -5488,8 +5493,8 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         N = {}                                  # node id -> dict(x, y (frame corner), kids, sinks)
         seq = [0]
 
-        def new(tx, ty, box=None, _N=N, _seq=seq, _bid=bid, lim=600.0, budget=4000):
-            s = occ.site(tx, ty, box, lim=lim, budget=budget)
+        def new(tx, ty, box=None, _N=N, _seq=seq, _bid=bid, lim=600.0, budget=4000, gap=RST_GAP_UM):
+            s = occ.site(tx, ty, box, lim=lim, budget=budget, gap=gap)
             if s is None:
                 return None
             occ.add((s[0], s[1], s[0] + RST_W, s[1] + RST_H))
@@ -5724,19 +5729,19 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                     # 658 um, on two region clocks).  The chain is ONE pocket: the first cell on the edge p..k (midpoint
                     # first, both hops <= RST_NET_UM / 2 + d / 2), every later cell beside the previous one.
                     if prev is not None:
-                        a = new(*c_(prev), lim=RST_NET_UM / 4, budget=20000)
+                        a = new(*c_(prev), lim=RST_NET_UM / 4, budget=20000, gap=RST_PAD_GAP_UM)
                     else:
                         x0_, y0_ = c_(k)
                         for tx_, ty_ in ([((x0_ + far[0]) / 2, (y0_ + far[1]) / 2)] if far is not None else []) + [(x0_, y0_)]:
-                            a = new(tx_, ty_, lim=RST_NET_UM / 2 - 20, budget=20000)
+                            a = new(tx_, ty_, lim=RST_NET_UM / 2 - 20, budget=20000, gap=RST_PAD_GAP_UM)
                             if a is not None:
                                 break
                 if a is None:
-                    a = new(*c_(k))
+                    a = new(*c_(k), gap=RST_PAD_GAP_UM)
                 if a is None and far is not None:
                     (x0, y0), (x1, y1) = c_(k), far
                     for t in (0.25, 0.5, 0.75, 1.0):
-                        a = new(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t)
+                        a = new(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, gap=RST_PAD_GAP_UM)
                         if a is not None:
                             pad_moved[0] += 1
                             break
@@ -5753,7 +5758,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                         tries.append(((x0 + far[0]) / 2, (y0 + far[1]) / 2, RST_NET_UM / 2 - 20))
                     tries.append((x0, y0, RST_NET_UM - 40))
                     for tx_, ty_, lm_ in tries:
-                        a = new(tx_, ty_, lim=lm_, budget=200000)
+                        a = new(tx_, ty_, lim=lm_, budget=200000, gap=RST_PAD_GAP_UM)
                         if a is not None:
                             pad_moved[0] += 1
                             break
@@ -5798,7 +5803,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         for k in sorted(N):
             cells.append((name[k], N[k]['master'], N[k]['x'], N[k]['y'], bid, round(N[k]['mv'], 2)))
         per[bid] = dict(dom=net['dom'], sinks=len(net['sinks']), repeaters=len(N) - pads[0] - pads[1], pad_rep=pads[0],
-                        pad_p8=pads[1], pad_on_edge=pad_moved[0], nets=nn + 1, max_net_um=round(mx, 1), levels=ht[root] + 1,
+                        pad_p8=pads[1], pad_gap_um=RST_PAD_GAP_UM, pad_on_edge=pad_moved[0], nets=nn + 1, max_net_um=round(mx, 1), levels=ht[root] + 1,
                         depth_cycles=sorted(dep))
     return cells, wires, per, errors
 
