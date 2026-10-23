@@ -82,7 +82,7 @@ module dsdv_idx_rg3_bf_rsref #(
     wire [275:0] soi;
     wire [9:0]   sti;
     wire [56:0]  ql;
-    wire [14:0]  sx;
+    wire [17:0]  sx;
     wire [67:0]  xr;
     wire [16:0]  sc;
     wire [543:0] kq;
@@ -90,7 +90,7 @@ module dsdv_idx_rg3_bf_rsref #(
     wire lprs_g;  ot_pl_pad #(.W(1), .N(3)) u_lprs_g (.ck(ck), .d(rst), .q(lprs_g));
     wire [67:0] xr__rq_r, xr__rs_r;  ot_pl_pad #(.W(((67) - (0) + 1)), .N(2)) u_lprs_0 (.ck(ck), .d(xr), .q(xr__rq_r));  assign xr__rs_r = lprs_g ? xr__rq_r : {(((67) - (0) + 1)){1'b0}};
     wire [16:0] sc__rq_r, sc__rs_r;  ot_pl_pad #(.W(((16) - (0) + 1)), .N(2)) u_lprs_1 (.ck(ck), .d(sc), .q(sc__rq_r));  assign sc__rs_r = lprs_g ? sc__rq_r : {(((16) - (0) + 1)){1'b0}};
-    wire [14:0] sx__rq_x, sx__rs_x;  ot_pl_pad #(.W(((14) - (0) + 1)), .N(2)) u_lprs_2 (.ck(ck), .d(sx), .q(sx__rq_x));  assign sx__rs_x = lprs_g ? sx__rq_x : {(((14) - (0) + 1)){1'b0}};
+    wire [17:0] sx__rq_x, sx__rs_x;  ot_pl_pad #(.W(((17) - (0) + 1)), .N(2)) u_lprs_2 (.ck(ck), .d(sx), .q(sx__rq_x));  assign sx__rs_x = lprs_g ? sx__rq_x : {(((17) - (0) + 1)){1'b0}};
     wire [512:0] qoi__rq_s01, qoi__rs_s01;  ot_pl_pad #(.W(((512) - (0) + 1)), .N(2)) u_lprs_3 (.ck(ck), .d(qoi), .q(qoi__rq_s01));  assign qoi__rs_s01 = lprs_g ? qoi__rq_s01 : {(((512) - (0) + 1)){1'b0}};
     wire [56:0] ql__rq_s01, ql__rs_s01;  ot_pl_pad #(.W(((56) - (0) + 1)), .N(2)) u_lprs_4 (.ck(ck), .d(ql), .q(ql__rq_s01));  assign ql__rs_s01 = lprs_g ? ql__rq_s01 : {(((56) - (0) + 1)){1'b0}};
     wire [543:0] kq__rq_s01, kq__rs_s01;  ot_pl_pad #(.W(((543) - (0) + 1)), .N(2)) u_lprs_5 (.ck(ck), .d(kq), .q(kq__rq_s01));  assign kq__rs_s01 = lprs_g ? kq__rq_s01 : {(((543) - (0) + 1)){1'b0}};

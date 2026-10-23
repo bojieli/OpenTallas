@@ -51,7 +51,7 @@ cut("module dsdv_idx_rg3 #(", "    output reg  [9:0]    st\n);", """module dsdv_
     output wire [275:0]  soi_o,         // s chain (S23 relays it to so)
     output reg  [9:0]    st_o,          // status (S23 relays it to st)
     output wire [56:0]   ql_o,          // {ql_v, ql_h, ql_sw}: query load to the chunk columns
-    output wire [14:0]   sx_o,          // S stage to X: {gatk[1], s_v, s_it[34:25], s_it[2:0]}
+    output wire [17:0]   sx_o,          // S stage to X: {gatk[1], s_vx[3:0], s_it[34:25], s_it[2:0]}
     input  wire [67:0]   xr_i,          // from X: {rkc[3:0], rrr[3][15:0], .., rrr[0][15:0]}
     input  wire [16:0]   sc_i           // from S23: {o_fault, o_score}
 );""")
@@ -81,7 +81,10 @@ cut("    always @(posedge ck) for (u = 0; u < 4; u = u + 1) begin : g_rsp\n", " 
     "    always @(posedge ck) for (u = 0; u < 4; u = u + 1) lw_sl[u] <= {rt[u][5], rt[u][13:11]};\n")
 # ---- landing memories / key mux -> X (R keeps the S / C / K item stages and sends the S stage)
 cut("    (* keep = \"true\" *) reg [1:0] su_a, su_b;      // S-stage PC copies", "    end endgenerate\n\n    // ================================================================== item queue",
-    "    assign sx_o = {gatk[1], s_v, s_it[34:25], s_it[2:0]};\n\n    // ================================================================== item queue")
+    "    (* keep = \"true\" *) reg [3:0] s_vx;   // s_v copies, one per landing unit (X: <= 32 loads a copy)\n"
+    "    assign sx_o = {gatk[1], s_vx, s_it[34:25], s_it[2:0]};\n\n    // ================================================================== item queue")
+sub("s_v <= 1'b0; c_v <= 1'b0;", "s_v <= 1'b0; s_vx <= 4'd0; c_v <= 1'b0;")
+sub("s_v <= ipop_b; c_v <= s_v;", "s_v <= ipop_b; s_vx <= {4{ipop_b}}; c_v <= s_v;")
 sub("s_it <= ih; su_a <= ih[34:33]; su_b <= ih[34:33]; c_it <= s_it;", "s_it <= ih; c_it <= s_it;")
 cut("    // scale extraction select (C stage", "    assign k_key[543:512] = k_sc;\n", "")
 # ---- engine -> S bands; the score returns from S23

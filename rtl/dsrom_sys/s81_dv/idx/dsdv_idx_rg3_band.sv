@@ -24,7 +24,7 @@ module dsdv_idx_rg3_bx #(
     input  wire          ck,
     input  wire          rst,
     input  wire [1087:0] rri,           // 4 x 272-b response lanes {data 256, tag10, beat 4, pop, v}
-    input  wire [14:0]   sx_i,          // R's S stage {gatk[1], s_v, s_it[34:25], s_it[2:0]}
+    input  wire [17:0]   sx_i,          // R's S stage {gatk[1], s_v x4 (one copy a landing unit), s_it[34:25], s_it[2:0]}
     output wire [67:0]   xr_o,          // {rkc[3:0], rrr[3][15:0], .., rrr[0][15:0]}
     output wire [543:0]  kq_o           // key word, one edge after the K stage (= the old kr[0])
 );
@@ -84,13 +84,13 @@ module dsdv_idx_rg3_bx #(
     end
     always @(posedge ck or negedge rl[1]) if (!rl[1]) lw_v <= 4'd0; else lw_v <= mine;
     // read side: R's S stage, the C stage copy, the landing SRAMs, scale / key selects (as dsdv_idx_rg3)
-    wire        gatk1 = sx_i[14];
-    wire        s_v   = sx_i[13];
+    wire        gatk1 = sx_i[17];
+    wire [3:0]  s_vx  = sx_i[16:13];
     wire [34:25] s_hi = sx_i[12:3];
     wire [2:0]  s_lo  = sx_i[2:0];
     reg         c_v;
     reg  [34:25] c_hi;
-    always @(posedge ck or negedge rl[2]) if (!rl[2]) c_v <= 1'b0; else c_v <= s_v;
+    always @(posedge ck or negedge rl[2]) if (!rl[2]) c_v <= 1'b0; else c_v <= s_vx[0];
     always @(posedge ck) c_hi <= s_hi;
     wire [1:0]  su_b = s_hi[34:33];                 // == R's su_a / su_b (registered from ih[34:33] with s_it)
     wire [1:0]  c_u  = c_hi[34:33];
@@ -98,7 +98,7 @@ module dsdv_idx_rg3_bx #(
     wire [9:0]  c_row = {2'b00, c_hi[32:29], c_hi[28:25]};
     wire [3:0][255:0] h0q, h1q;
     generate for (gu = 0; gu < 4; gu = gu + 1) begin : g_land
-        wire rs0 = s_v && su_b == 2'(gu);
+        wire rs0 = s_vx[gu] && su_b == 2'(gu);
         wire rc  = c_v && c_u == 2'(gu);
         dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_h0 (
             .ck(ck), .re(rs0 || rc), .ra(rs0 ? s_row : c_row), .rd(h0q[gu]),

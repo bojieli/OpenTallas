@@ -30,7 +30,7 @@ module dsdv_idx_rg3_bf #(
     wire [275:0] soi;
     wire [9:0]   sti;
     wire [56:0]  ql;
-    wire [14:0]  sx;
+    wire [17:0]  sx;
     wire [67:0]  xr;
     wire [16:0]  sc;
     wire [543:0] kq;

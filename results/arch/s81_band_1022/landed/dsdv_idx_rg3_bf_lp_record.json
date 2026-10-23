@@ -80,7 +80,7 @@
    "src_nodes": [
     "u_r"
    ],
-   "width": 15,
+   "width": 18,
    "readers": [
     "u_x.sx_i"
    ],
@@ -272,7 +272,7 @@
   },
   "regional_reset_copies": {
    "r": {
-    "loads": 65,
+    "loads": 66,
     "copies": [
      {
       "net": "lpr_r_c0",
@@ -284,12 +284,12 @@
      },
      {
       "net": "lpr_r_c2",
-      "loads": 1
+      "loads": 2
      }
     ]
    },
    "x": {
-    "loads": 41,
+    "loads": 42,
     "copies": [
      {
       "net": "lpr_x_c0",
@@ -297,7 +297,7 @@
      },
      {
       "net": "lpr_x_c1",
-      "loads": 9
+      "loads": 10
      }
     ]
    },
@@ -340,7 +340,7 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 7458,
+  "landing": 7480,
   "pads": 0,
   "reset": 24
  },
@@ -410,7 +410,7 @@
     "readers": [
      "u_x.sx_i"
     ],
-    "width": 15,
+    "width": 18,
     "added_edges": 2
    },
    {

@@ -25,7 +25,7 @@ module dsdv_idx_rg3_br #(
     output wire [275:0]  soi_o,         // s chain (S23 relays it to so)
     output reg  [9:0]    st_o,          // status (S23 relays it to st)
     output wire [56:0]   ql_o,          // {ql_v, ql_h, ql_sw}: query load to the chunk columns
-    output wire [14:0]   sx_o,          // S stage to X: {gatk[1], s_v, s_it[34:25], s_it[2:0]}
+    output wire [17:0]   sx_o,          // S stage to X: {gatk[1], s_vx[3:0], s_it[34:25], s_it[2:0]}
     input  wire [67:0]   xr_i,          // from X: {rkc[3:0], rrr[3][15:0], .., rrr[0][15:0]}
     input  wire [16:0]   sc_i           // from S23: {o_fault, o_score}
 );
@@ -687,7 +687,8 @@ module dsdv_idx_rg3_br #(
     // consumer stages: S (scale row read on half 0) -> C (code read on both halves, scale extracted) -> K (key to engine)
     reg         s_v, c_v, k_v;
     reg  [IW-1:0] s_it, c_it, k_it;
-    assign sx_o = {gatk[1], s_v, s_it[34:25], s_it[2:0]};
+    (* keep = "true" *) reg [3:0] s_vx;   // s_v copies, one per landing unit (X: <= 32 loads a copy)
+    assign sx_o = {gatk[1], s_vx, s_it[34:25], s_it[2:0]};
 
     // ================================================================== item queue (macro) + 4-entry show-ahead head
     reg  [9:0]  iq_w, iq_r;
@@ -755,11 +756,11 @@ module dsdv_idx_rg3_br #(
             hn <= n1; hne <= {3{n1 != 3'd0}};
         end
     always @(posedge ck or negedge rl[25])
-        if (!rl[25]) begin cons_v <= 2'b00; s_v <= 1'b0; c_v <= 1'b0; k_v <= 1'b0; end
+        if (!rl[25]) begin cons_v <= 2'b00; s_v <= 1'b0; s_vx <= 4'd0; c_v <= 1'b0; k_v <= 1'b0; end
         else begin
             cons_v <= 2'b00;
             if (ipop_c && ih[34]) cons_v[h_q] <= 1'b1;
-            s_v <= ipop_b; c_v <= s_v; k_v <= c_v;
+            s_v <= ipop_b; s_vx <= {4{ipop_b}}; c_v <= s_v; k_v <= c_v;
         end
     always @(posedge ck) begin
         cons_s[0] <= h_s; cons_s[1] <= h_s; s_it <= ih; c_it <= s_it; k_it <= c_it;
