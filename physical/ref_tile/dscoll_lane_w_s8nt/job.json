@@ -14,10 +14,7 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
-   "physical/dscoll_cx/coll_s5_cell_band.tcl",
-   "physical/ref_tile/dscoll_lane_w_ltr/kit.env",
    "results/rtl/s81_coll_native32_1020/native_v8/bench",
-   "results/rtl/s81_coll_native32_1020/reach7/bench",
    "results/rtl/s81_coll_native32_1020/reach8n/bench",
    "rtl",
    "tools/xdie_s81"
@@ -220,6 +217,7 @@
   "launch_ps": 494.5,
   "capture_ps": 438.9,
   "pair_cost_ps": 933.4,
-  "fix": "Anchor existing beat_tx launch flops FIRM at W-face tx pins through GPL, release before DPL. Native receipt remains PASS under same-region guidance, but selected p9m/p9f parent contexts fail tx[398] reg->out -36.3/-80.1 ps with actual ring and80fF load. Same RTL, default parameters, ports, registers and edges."
+  "fix": "Anchor existing beat_tx launch flops FIRM at W-face tx pins through GPL, release before DPL. Native receipt remains PASS under same-region guidance, but selected p9m/p9f parent contexts fail tx[398] reg->out -36.3/-80.1 ps with actual ring and80fF load. Same RTL, default parameters, ports, registers and edges.",
+  "parent_context_source": "results/rtl/s81_headlane_pin_budget_1022/SOURCE.json"
  }
 }
