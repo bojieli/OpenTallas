@@ -1,0 +1,161 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qkd_embedding_row_tx#0: origin (28.104, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'qkd_embedding_row_tx': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['d2d__emb_tx_slot', 'rowtx__emb_tx_v']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list",
+   "fix": "use the actual RTL and mapped pin names"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc7 for 16 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qkd_kvs_emb_nc32a_20261023-024449.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qkd_kvs_emb_nc32a_20261023-024449.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_emb_nc32a-20261023-024449",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc7 in 135 s (gate total 1005 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2029, 'pin_rectangles': 2029, 'pin_track_checked': 2029, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 7a30d331ac675f6a434e148193d6470bf73b8d879e70119230502e2139bb4da9",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 2176 um2 + macros 32659 in core 51228: util 15% (std-cell density 15.0% of placeable 14487 um2; total fill 68.0%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "port_latency",
+   "message": "elaborated pin registers: 8 input / 4 output ports +1 edge; 1 ports pass through (clock/reset/excluded/inout)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS qkd_kvs_emb cells 14,049 flops 4,890 depth 473.4 ps util 0.679 reach 0.0 um (0.4 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 512.6..884.7 ps (spread 372.1), boundary mean 854.6; tt insertion all 385.4..624.6 ps (spread 239.2), boundary mean 605.2; ff insertion all 309.7..475.9 ps (spread 166.2), boundary mean 462.8; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "spine built on port ck",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 4 (fine) leaves 593 sinks 4705 cells 5289 leaf arrival 592.2..624.5 ps (spread 32.4) pad 60.9 / 16.3 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 5 (fine) leaves 593 sinks 4705 cells 5296 leaf arrival 595.9..624.5 ps (spread 28.6) pad 60.9 / 16.4 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qkd_kvs_emb_nc32a/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      324 paths, worst slack 118.8 ps (e.g. u_ot_pr_core.u_join.last[8]$_DFFE_PN0P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      276 paths, worst slack 281.5 ps (e.g. px_tok[15])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 1.1878198424852826e-10 hold WNS 2.5403457115658057e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck: 4,891 sinks on the largest root; measured TT insertion 624.6 ps, FF insertion 493.6 ps, TT pin-flop spread 31.4 ps, FF pin-flop spread 22.6 ps; WARN: insertion 624.6 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qtile-r-kvemb-1023/physical/ref_tile/qkd_kvs_emb_nc32a/gate_layout/floorplan.png; density /home/ubuntu/wt/qtile-r-kvemb-1023/physical/ref_tile/qkd_kvs_emb_nc32a/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 65% = (hard macros 32659.2 + synthesized std cells 2124.6) / outline 53225.2 um2; pin demand per face: S 686 pins over 229.1/267.8 um (86%), N 0 pins over 0.0/267.8 um (0%), W 616 pins over 127.8/198.7 um (64%), E 776 pins over 165.5/198.7 um (83%) (> 60%)",
+   "fix": "enlarge the outline toward fill 0.50-0.55"
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M3 12.68% used; GRT 373 s",
+   "fix": ""
+  }
+ ]
+}
