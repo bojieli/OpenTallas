@@ -75,6 +75,9 @@ class DiskReservation(unittest.TestCase):
         tool = root / 'systemctl'
         tool.write_text('#!/bin/sh\ncase "$*" in\n*list-units*) printf "oth-a.scope active\\noth-b.scope active\\noth-c.scope active\\noth-d.scope active\\n";;\n*show*) case "$*" in *oth-a*) echo /a;; *oth-b*) echo /b;; *oth-c*) echo /c;; *oth-d*) echo /d;; esac;;\nesac\n')
         tool.chmod(0o755)
+        pgrep = root / 'pgrep'
+        pgrep.write_text('#!/bin/sh\nexit 1\n')
+        pgrep.chmod(0o755)
         for i, (key, env) in enumerate([('a', b'OT_HEAVY_PRIO=die\0OT_HEAVY_DISK_GB=16\0'),
                                        ('b', b'OT_HEAVY_PRIO=die\0'), ('c', b'OT_HEAVY_PRIO=die\0'),
                                        ('d', b'OTHER=value\0')], 1):
@@ -95,6 +98,42 @@ class DiskReservation(unittest.TestCase):
         self.assertIn('DIEDISK oth-c.scope unknown', r.stdout)
         self.assertNotIn('DIEDISK oth-d.scope', r.stdout)
         self.assertEqual(self.reserved(r.stdout), 84)
+
+    def test_queued_launchers_are_reserved_and_active_pid_is_not_charged_twice(self):
+        root = self.jobs
+        tool = root / 'systemctl'
+        tool.write_text('#!/bin/sh\ncase "$*" in\n*list-units*) echo "oth-ubuntu-12-123.scope active";;\n*show*) echo /active;;\nesac\n')
+        tool.chmod(0o755)
+        tool = root / 'pgrep'
+        tool.write_text('#!/bin/sh\nprintf "10\\n11\\n12\\n13\\n14\\n"\n')
+        tool.chmod(0o755)
+        cg = root / 'cgroup' / 'active'
+        cg.mkdir(parents=True)
+        (cg / 'cgroup.procs').write_text('12')
+        for pid, env in [(10, b'OT_HEAVY_PRIO=die\0'),
+                         (11, b'OT_HEAVY_PRIO=die\0OT_HEAVY_DISK_GB=100\0'),
+                         (12, b'OT_HEAVY_PRIO=die\0OT_HEAVY_DISK_GB=16\0'),
+                         (13, b'OT_HEAVY_PRIO=die\0OT_HEAVY_DISK_GB=8\0'),
+                         (14, b'OTHER=value\0')]:
+            proc = root / 'proc' / str(pid)
+            proc.mkdir(parents=True)
+            (proc / 'environ').write_bytes(env)
+            (proc / 'cwd').symlink_to('/run/' + str(pid))
+            # A nested independent waiter is still inside its parent's scope.
+            (proc / 'cgroup').write_text('0::/active')
+        script = m.DIE_DISK_UNITS_SH.replace('/sys/fs/cgroup', str(root / 'cgroup')).replace('/proc/', str(root / 'proc') + '/')
+        r = subprocess.run(['bash', '-c', script], env=dict(os.environ, PATH=str(root) + ':' + os.environ['PATH']), text=True, capture_output=True, check=True)
+        self.assertIn('DIEDISK waiter-10 unknown', r.stdout)
+        self.assertIn('DIEDISK waiter-11 100', r.stdout)
+        self.assertIn('DIEDISK waiter-13 8', r.stdout)
+        self.assertNotIn('DIEDISK waiter-12 ', r.stdout)
+        self.assertNotIn('DIEDISK waiter-14 ', r.stdout)
+        self.assertLess(script.index('waiters=$(pgrep'), script.index('units=$(systemctl'))
+        self.assertEqual(self.reserved(r.stdout), 184)
+        # Without the queued 100 GB commitment, this would incorrectly admit.
+        with mock.patch.object(m, 'die_disk_reserved', return_value=self.reserved(r.stdout)):
+            self.assertEqual(m.drop_low_disk({'gold1': dict(disk_gb=250)}, True, 100), {})
+
 
 
 class WrapperAndDisplay(unittest.TestCase):
