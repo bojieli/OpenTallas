@@ -66,7 +66,7 @@ def spread(order, lo, hi, gap=0.36):
     return out, pitch
 
 
-def build(name, tag, W, x0, why, base=BASE):
+def build(name, tag, W, x0, why, base=BASE, vlay=None):
     s = json.load(open(os.path.join(ROOT, base)))
     head = s['top'] == 'qkd_kvs_pc_h'      # chain head (4 instances): no S chain words (no i_prev / o_prev)
     s = copy.deepcopy(s)
@@ -116,6 +116,18 @@ def build(name, tag, W, x0, why, base=BASE):
         f"{H - 2:.1f} um = {dens['E'] / (H - 2):.2f} /um, W 625 = PHY abutment ranges unchanged; height fixed by the die PC "
         "pitch 378.  Content (std ~14-17k + macros 12.7k um2) would fit ~220 x 220 at 60-70 %, which needs >= 7 pins/um on "
         "every face (sr12g at 5.9 /um failed); the width is the smallest that keeps every face <= ~4.7 /um.")}
+    if vlay:
+        # KVPC-R r4 (GEOM-REVIEW 02:05 FAIL of r3: empty SE quadrant, S / E-low face strips cut off from the logic mass):
+        # the N / S chain words alternate M3 / M5 (ref_tile pin_balance default layers, both <= the M5 cap), which halves
+        # the per-layer N / S density, so the width shrinks to the content: one PHY band W of the bank and ONE main band
+        # E of it spanning N to S (the chain words pass N <-> S through it), no empty quadrant.
+        s['route'] = dict(s['route'], pin_balance=dict(s['route']['pin_balance'], v=vlay))
+        nl = len(vlay.split())
+        s['fill_reason'] = {'pin_bound': (
+            f"KVPC-R r4 outline {W} x {H}: N {dens['N']} pins / {W - 2:.1f} um = {dens['N'] / (W - 2):.2f} /um over {nl} "
+            f"layers ({vlay}) = {dens['N'] / (W - 2) / nl:.2f} /um/layer, S {dens['S']} = {dens['S'] / (W - 2) / nl:.2f} "
+            f"/um/layer, E {dens['E']} / {H - 2:.1f} um = {dens['E'] / (H - 2):.2f} /um (M4; M6 is above the cap); height "
+            "fixed by the die PC pitch 378.  Width = PHY band + macro bank (84.3) + main band sized to the std content.")}
     s['kits_b'] = dict(s['kits_b'], frame=[round(W + 2.16, 2), 358.56], kit_outline=[W, H])
     bname = os.path.basename(os.path.dirname(base))
     s['pre_cts_extra'] = [p.replace(bname, name) for p in s['pre_cts_extra']]
@@ -149,5 +161,9 @@ if __name__ == '__main__':
     build('qkd_kvs_pc_r3b', 'r3b', 302.4, 64.8, 'ALT: 302.4 wide (N/S 4.1-4.2 /um), PHY band 63 um.')
     # PC_H (chain head, 4 instances, base qkd_kvs_pc_h_sr15b): same bank / bands / faces, no S chain words
     BH = 'physical/ref_tile/qkd_kvs_pc_h_sr15b/spec.json'
+    # r4 (after GEOM-REVIEW FAIL of r3): N / S pins on M3 + M5, width from content
+    for nm, b in (('qkd_kvs_pc', BASE), ('qkd_kvs_pc_h', BH)):
+        build(f'{nm}_r4a', nm[8:] + '_r4a', 205.2, 43.2, 'r4 MAIN: 205.2 wide, N/S on M3+M5, PHY band 41 um.', b, 'M3 M5')
+        build(f'{nm}_r4b', nm[8:] + '_r4b', 226.8, 43.2, 'r4 ALT: 226.8 wide (wider main band), N/S on M3+M5.', b, 'M3 M5')
     build('qkd_kvs_pc_h_r3a', 'h_r3a', 270.0, 43.2, 'PC_H MAIN: 270.0 wide, PHY band 41 um.', BH)
     build('qkd_kvs_pc_h_r3b', 'h_r3b', 302.4, 64.8, 'PC_H ALT: 302.4 wide, PHY band 63 um.', BH)
