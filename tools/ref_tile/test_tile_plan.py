@@ -213,6 +213,21 @@ class MacroPlan(unittest.TestCase):
         self.assertIn(r["edge"], ("W", "E"))
         self.assertTrue(all(p["pin_faces"][0] in ("N", "S") for p in r["placed"]))
 
+    def test_mixed_heights_pack_beside_the_tall_arrays(self):
+        # hr_core_prompt-like: 2 tall (178 x 160) + 1 mid (175 x 70) + 4 short (66 x 18) dual-face macros
+        tall, mid, short = (tm_box("t", 177.8, 160.4, "WE", 50), tm_box("m", 174.7, 70.5, "WE", 50),
+                            tm_box("s", 66.3, 17.8, "WE", 20))
+        ms = macros(tall, 2) + macros(mid, 1) + macros(short, 4)
+        for i, m in enumerate(ms):
+            m["key"] = i
+        r = TP.plan_macros(300.0, 300.0, ms, {"N": 300, "S": 300, "E": 300, "W": 300})
+        area = max(300.0, r["need"][0]) * max(300.0, r["need"][1])
+        seq = min(max(300.0, x["need"][0]) * max(300.0, x["need"][1])
+                  for x in (TP.plan_macros(300.0, 300.0, ms, {"N": 300, "S": 300, "E": 300, "W": 300}, rows=n)
+                            for n in range(1, 8)))
+        self.assertLessEqual(area, seq + 1e-6)
+        self.assertEqual(len(r["placed"]), 7)
+
     def test_content_outline_grows_for_the_array(self):
         tm = tm_box("sram_we", 170.0, 30.0, "WE", n=200)
         r = TP.content_outline(2000, macros(tm, 10), {"S": 100})
