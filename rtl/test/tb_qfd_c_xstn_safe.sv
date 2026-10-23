@@ -4,7 +4,14 @@ module tb;
  parameter integer MUT=0;
  reg ck=0;always #5 ck=~ck;
  reg rst=0,r0=0,r1=0;reg[2:0]sidx=0;reg[515:0]d=0;
- wire[515:0]a,ra;wire[507:0]t,rt;
+ wire[515:0]a,ra;wire[443:0]t;wire[507:0]rt;
+ wire[443:0]rtp;wire[63:0]rz;
+ genvar g;
+ generate for(g=0;g<4;g=g+1)begin:rp
+  assign rtp[380+16*g+:16]=rt[380+32*g+16+:16];
+  assign rz[16*g+:16]=rt[380+32*g+:16];
+ end endgenerate
+ assign rtp[379:0]=rt[379:0];
  wire[515:0]candidate_d=MUT?(d^516'h2):d;
  qfd_c_xstn_safe dut(ck,rst,sidx,candidate_d,a,t);
  always@(posedge ck)begin r0<=rst;r1<=r0;end
@@ -21,7 +28,7 @@ module tb;
    d[511:508]=n%3?{1'b1,3'(n%8)}:0;
    d[515:512]=n%5?{1'b1,3'((n+3)%8)}:0;
    @(posedge ck);#1;
-   if(n>5&&(a!==ra||t!==rt))begin errors=errors+1;if(errors<5)$display("SAFE_XSTN_MISMATCH n%0d",n);end
+   if(n>5&&(a!==ra||t!==rtp||rz[63:0]!==64'h0))begin errors=errors+1;if(errors<5)$display("SAFE_XSTN_MISMATCH n%0d",n);end
   end
   if(errors)$fatal(1,"SAFE_XSTN_FAIL MUT%0d errors%0d",MUT,errors);
   $display("SAFE_XSTN_PASS MUT%0d",MUT);$finish;
