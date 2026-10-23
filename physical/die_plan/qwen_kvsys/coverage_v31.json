@@ -1,0 +1,30 @@
+{
+ "asbuilt_interpartition_bits": 412179,
+ "planned_tree_bits": 379407,
+ "gather_chain_bits": 32772,
+ "dropped_bits": 0,
+ "dropped": [],
+ "n_dropped_keys": 0,
+ "spine_replaced": {
+  "reset qkd_host_rt.die_rst_n": 5760,
+  "clock qkd_pllm.pll_ES": 2089,
+  "clock qkd_pllm.pll_EN": 2089,
+  "clock qkd_pllm.pll_WN": 2087,
+  "clock qkd_pllm.pll_WS": 2086,
+  "clock qkd_pllm.pll_c": 775,
+  "clock qkd_pllm.pll_hbm_WS": 42,
+  "clock qkd_pllm.pll_hbm_WN": 42,
+  "clock qkd_pllm.pll_hbm_ES": 42,
+  "clock qkd_pllm.pll_hbm_EN": 42,
+  "clock qkd_pllm.pll_phy": 11,
+  "clock qkd_pllm.pll_host": 5,
+  "clock qkd_pllm.pll_ingest": 4,
+  "clock qkd_pllm.pll_fwd": 1
+ },
+ "spine_bits": {
+  "clock": 9315,
+  "reset": 5760
+ },
+ "plan_ports": 3759,
+ "plan_port_bits_all_hops": 610078
+}
