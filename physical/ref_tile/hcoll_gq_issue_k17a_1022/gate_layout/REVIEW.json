@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T21:59:58.290243-07:00",
+  "gate_commit": "2026-10-22T21:58:08-0700",
+  "geometry_sha256": "c769592cfab04675f101fd9d2214c6af8a78ff74a4f1cab9a9c13671e32656e7",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "c769592cfab04675f101fd9d2214c6af8a78ff74a4f1cab9a9c13671e32656e7",
+    "components": {
+      "outline": "1042b878bb4f7299705115c44b9957e4e76a319711cab6c7523a921c382ab3b6",
+      "macros": "7611e0ca41563df11fbbaa4c2c5d911fd74b28bf5fcfa5977db4600f3d66c8c8",
+      "pins": "c68209955aa09c49d13cc45acdd04d53a03c8fd1da38776ad5bfba52c387442c",
+      "clock_entry": "4fbd19303047aea8380b265b94f658138ea9d364cccc14555556625f80c6cbcd"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Viewed two regular four-high SRAM columns with129.6um pitch on43.2 lattice, plus two small central VM macros. Existing exact macro geometry retained.",
+    "std_cell_band": "Full connected central vertical band and49.128um horizontal channels; density has no red congestion bins.",
+    "pin_spread": "Full-face pins;8array macro pin density5.1/um; normal source/native and actual pin checks mandatory at submit.",
+    "clock_entry": "North entry adjacent central register mass; TT/FF pin spread63.8/58.8ps; raw all78.7/70.8ps.31779sinks and insertion735.7/607.0ps are disclosed guidance, no new all-sink-count veto.",
+    "shape": "475.2x561.6um aspect1.18, fill32.6% justified by SRAM pin-face channels and two4-high stacks."
+  },
+  "scope": "Approve normal route as parallel fallback; actual routed TT/FF timing decides closure. K18 structural successors remain live. No source-binding, bench or native waiver.",
+  "diagnostics": "WARN0FAIL; GRT0; native32. Known placement reg-reg-99.8ps toward rb_pin data retained; historical failures retained. No CLOSED or die promotion before route.",
+  "gate_result_sha256": "42d0e104cd51bfeef1011e505a1aa95ac8be7ee595282ec007ed81cc2f5d5111",
+  "archive_sha256": "be32b1d44408ad557f79d34f95b8846edd2b7089a719fb1b20eae956e430861d",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}
