@@ -2,22 +2,45 @@
 // Fixed calendar boundary; no credit, enable, occupancy or backpressure.
 // All pointers start at the same reset epoch. K is priced in the TX lookup pipe.
 // Separate narrow slices keep mux selects and slot enables local (<=16 bits).
+// Slot pointers are one-hot rotating registers (STW-S81d-TOPK 10-22): a binary
+// pointer decoded per bit gave 52-65 native loads per pointer bit (yr/ys census).
+// Each group of G data bits owns a kept copy of the write and read one-hot rings,
+// so one select flop drives only its G slot enables/read gates plus its rotation.
+// Stored XOR the reset pattern so every pointer flop resets to 0.
+// Cycle-identical to the binary form: wsel=onehot(wp), rsel=onehot(rp-K mod D).
 (* keep_hierarchy = "yes" *)
 module dsdv_tx_ring_slice #(parameter integer W=16, D=4, K=2, ID=0,
-    AW=$clog2(D)) (
+    AW=$clog2(D), G=(D<=4)?4:8, NG=(W+G-1)/G) (
     input wire src_ck,dst_ck,src_rn,dst_rn,input wire[W-1:0]d,output reg[W-1:0]q);
-    (* keep="true" *) reg[AW-1:0]wp,rp;
+    localparam [D-1:0] WR0 = {{(D-1){1'b0}},1'b1};
+    localparam [D-1:0] RR0 = WR0 << ((D-(K%D))%D);
+    if((1<<AW)!=D || K<0) begin:g_bad_param
+        initial $fatal(1,"dsdv_tx_ring_slice: D must be a power of two, K>=0");
+    end
     reg[$clog2(K+2)-1:0]warm;
     (* keep="true" *) reg[W-1:0]bank[0:D-1];
-    always @(posedge src_ck or negedge src_rn)
-        if(!src_rn)wp<=0;else wp<=wp+1'b1;
-    for(genvar s=0;s<D;s=s+1)begin:g_slot
-        always @(posedge src_ck)if(wp==AW'(s))bank[s]<=d;
+    wire[W-1:0]rd;
+    for(genvar g=0;g<NG;g=g+1)begin:g_sel
+        localparam integer LO=g*G, GW=(LO+G>W)?W-LO:G;
+        (* keep="true",dont_touch="true" *) reg[D-1:0]wx,rx;   // one-hot ^ reset pattern
+        wire[D-1:0]wsel=wx^WR0, rsel=rx^RR0;
+        always @(posedge src_ck or negedge src_rn)
+            if(!src_rn)wx<=0;else wx<={wsel[D-2:0],wsel[D-1]}^WR0;
+        always @(posedge dst_ck or negedge dst_rn)
+            if(!dst_rn)rx<=0;else rx<={rsel[D-2:0],rsel[D-1]}^RR0;
+        for(genvar s=0;s<D;s=s+1)begin:g_slot
+            always @(posedge src_ck)if(wsel[s])bank[s][LO+:GW]<=d[LO+:GW];
+        end
+        reg[GW-1:0]r;
+        always @* begin
+            r={GW{1'b0}};
+            for(integer s=0;s<D;s=s+1)r=r|({GW{rsel[s]}}&bank[s][LO+:GW]);
+        end
+        assign rd[LO+:GW]=r;
     end
     always @(posedge dst_ck or negedge dst_rn)
-        if(!dst_rn)begin rp<=0;warm<=0;end
-        else begin rp<=rp+1'b1;if(warm<K+1)warm<=warm+1'b1;end
-    always @(posedge dst_ck)q<=(warm>=K)?bank[AW'(rp-K)]:{W{1'b0}};
+        if(!dst_rn)warm<=0;else if(warm<K+1)warm<=warm+1'b1;
+    always @(posedge dst_ck)q<=(warm>=K)?rd:{W{1'b0}};
 endmodule
 
 (* keep_hierarchy="yes" *)
