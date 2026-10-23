@@ -525,6 +525,16 @@ def check_latency(P, R):
             R.err("latency", f"lane {lid}: missing from the latency table", lane=lid)
         elif got["cycles"] != want["cycles"]:
             R.err("latency", f"lane {lid}: table says {got['cycles']} cycles, plan gives {want['cycles']}", lane=lid)
+    # R8: one cycle per latency group (bus groups from BINDER2 + replicated consumers), checked on the TABLE (what the
+    # binder / compiler read), and pads realisable per type
+    for name, kind, lids in P.latency_groups():
+        got = {l: tab.get(l, {}).get("cycles") for l in lids if l in P.lanes}
+        if len(set(got.values())) > 1:
+            R.err("latency", f"{kind} group {name}: unequal delays {got} (regenerate: gen.py latency --inplace pads "
+                  "every member to the slowest)")
+    _, bad = P.bus_pads()
+    for m in bad:
+        R.err("latency", m)
     return {lid: P.lane_latency(lid)["cycles"] for lid in P.lanes}
 
 

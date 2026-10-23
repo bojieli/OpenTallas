@@ -68,7 +68,7 @@ def test_lane_continuity_and_membership():
 
 def test_latency_and_pins():
     P = schema.Plan(EX)
-    assert P.lane_latency("x") == dict(cycles=4, stations=2, boundary=2, faces=3, fixed=0)
+    assert P.lane_latency("x") == dict(cycles=4, stations=2, boundary=2, faces=3, fixed=0, natural=4, pad=0)
     assert P.lane_latency("r")["cycles"] == 5
     assert P.lane_latency("cfg01")["cycles"] == 2 and P.lane_latency("din")["cycles"] == 1
     pins = P.port_pins("x0")
