@@ -12,6 +12,8 @@ import schema as S  # noqa: E402
 
 
 def render(P, geo, R, out_png, title=None):
+    import warnings
+    warnings.filterwarnings("ignore", message="Unable to import Axes3D")
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

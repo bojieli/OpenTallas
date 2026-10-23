@@ -4,6 +4,8 @@
         (a) partition wrapper RTL per type + ot_dp_cells.sv + the die top netlist (gen_rtl.py docstring)
 
     python3 tools/die_plan/gen.py latency PLAN.json [--inplace] [--out DIR]
+    python3 tools/die_plan/gen.py phys PLAN.json --out DIR [--rtl-root REPO]      (b) partition ORFS kits (gen_phys.py)
+    python3 tools/die_plan/gen.py assembly PLAN.json --out DIR --views VDIR    (d) die assembly kit (gen_phys.py)
         (c) the latency table: writes the plan's `latency.lanes` (with --inplace), DIR/<die>_lat_pkg.sv (SV package,
             one localparam per lane) and DIR/<die>_latency.json (the compiler's input).  The table is computed by
             schema.Plan.lane_latency() only: src out flop + stations of the crossed ft slots + dst in flop + fixed_cycles.
@@ -89,7 +91,31 @@ def main(argv=None):
     a2.add_argument("--out", required=True)
     a2.add_argument("--rtl-root", help="repo root for the types' leaf `sources` (enables the leaf port-binding check)")
     a2.add_argument("--types", help="comma list of partition types (default all non-hard)")
+    a3 = sub.add_parser("phys")
+    a3.add_argument("plan")
+    a3.add_argument("--out", required=True)
+    a3.add_argument("--rtl-root")
+    a3.add_argument("--types")
+    a3.add_argument("--util", type=float, default=0.5)
+    a4 = sub.add_parser("assembly")
+    a4.add_argument("plan")
+    a4.add_argument("--out", required=True)
+    a4.add_argument("--views", required=True, help="DIR/<type>/<module>.lef|.lib (each kit's abstract)")
     a = ap.parse_args(argv)
+    if a.cmd in ("phys", "assembly"):
+        import gen_phys
+        import gen_rtl
+        try:
+            if a.cmd == "phys":
+                kits = gen_phys.write_phys(S.load(a.plan), a.out, a.rtl_root,
+                                           a.types.split(",") if a.types else None, a.util)
+            else:
+                kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views)]
+        except gen_rtl.GenError as e:
+            print(f"gen {a.cmd}: ERROR {e}")
+            return 1
+        print("\n".join(str(k) for k in kits))
+        return 0
     if a.cmd == "rtl":
         import gen_rtl
         try:

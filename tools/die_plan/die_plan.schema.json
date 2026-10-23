@@ -297,6 +297,37 @@
         "leaf": {
          "type": "string"
         },
+        "face": {
+         "enum": [
+          "N",
+          "S",
+          "E",
+          "W"
+         ]
+        },
+        "window_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1,
+         "maxItems": 2
+        },
+        "order": {
+         "enum": [
+          "lsb_low",
+          "lsb_high"
+         ]
+        },
         "note": {
          "type": "string"
         }
@@ -357,6 +388,37 @@
         "layer": {
          "type": "string",
          "pattern": "^M[1-9]$"
+        },
+        "in_window_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "out_window_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1,
+         "maxItems": 2
+        },
+        "order": {
+         "enum": [
+          "lsb_low",
+          "lsb_high"
+         ]
         }
        }
       }
@@ -585,10 +647,7 @@
      "id",
      "src",
      "dst",
-     "width",
-     "face",
-     "layers",
-     "window_um"
+     "width"
     ],
     "additionalProperties": false,
     "properties": {

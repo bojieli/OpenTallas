@@ -37,7 +37,9 @@ def part(p, n):
 
 def test_example_passes():
     R, summ = g0()
-    assert R.items == [], R.items
+    assert R.errors() == [] and [i["check"] for i in R.items] == ["types"], R.items   # mid: no type-frame windows
+    R2, _ = check.run(json.loads((HERE / "examples" / "tiny_plan_typegeo.json").read_text()))
+    assert R2.items == [], R2.items
     assert summ["geometry"]["fill"] == 1.0
     assert summ["latency"]["x"] == 4
 
@@ -156,3 +158,14 @@ def test_gen_rtl_refuses_open_ports():
         assert "not bound to any leaf port" in str(e)
     else:
         raise AssertionError("expected GenError")
+
+
+def test_near_duplicate_types():
+    def m(p):
+        t = copy.deepcopy(p["partition_types"]["mid"])
+        t["module"] = "tiny_mid2_part"
+        p["partition_types"]["mid2"] = t
+        part(p, "pm2")["type"] = "mid2"
+    R, summ = g0(m)
+    assert summ["types"]["near_duplicate_groups"] == 1 and summ["types"]["types"] == 4
+    assert any("near-duplicate types ['mid', 'mid2']" in i["msg"] for i in R.items)

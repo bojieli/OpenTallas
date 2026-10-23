@@ -17,8 +17,18 @@ python3 -m pytest -q tools/die_plan/
 - Units are um and ps. The die frame has its origin at the die's lower-left corner.
 - A partition instance has `origin_um`, the lower-left corner of its placed bbox, and `orient` (R0, MX, MY or R180).
   Every coordinate inside `partition_types` is in the type frame (R0, origin at the lower-left corner).
-- Put origins and outlines on `die.grid_um` (default 8.64 = lcm of row 0.27, site 0.054 and the M4-M9 pitches). Then
-  rows, sites and tracks are the same in the die frame and in the partition frame.
+- **Die lattice**: put origins and outlines on `die.grid_um` (default 8.64 = lcm of row 0.27, site 0.054, the M2-M9
+  pitches and the PG pitches). The pin layers M4-M9 use symmetric tracks (offset = pitch / 2; the generated kits write
+  them in `make_tracks.tcl`). Together these put every pin of a type on a die track in all four orients R0, MX, MY and
+  R180, at any lattice origin. Mirrored and shifted copies are therefore ONE type with one hardened view.
+- **Pins on the type (recommended for replicated types)**: a bus can declare `face`, `window_um`, `layers` and `order`
+  in the TYPE frame, and an ft slot can declare `in_window_um`, `out_window_um`, `layers` and `order`.
+  - A port with no geometry takes it from its src type, or else its dst type. The pins are computed in that type's frame
+    and transformed per instance (`Plan.port_pins`), so every instance carries the identical pin table.
+  - When both sides declare geometry, it must agree in the die frame (validate).
+  - The other side's instances must also map those pins onto one table (G0 abutment). A mirrored neighbour usually needs
+    the mirrored partner type, or windows that are symmetric with the opposite order.
+  - Example: `examples/tiny_plan_typegeo.json`.
 - **Port**: one signal bundle between two partitions, on one shared face.
   - `face` is the source partition's face in the die frame. When the source is `@die`, it is the destination's face on
     the die edge.
