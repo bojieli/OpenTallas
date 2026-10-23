@@ -1,0 +1,11 @@
+{
+ "element": "qfd_tt_ctlm_dv",
+ "kit": "physical/ref_tile/qfd_hp13_cpub39_rp_alt@dc9347ecd",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "5e1ce63a787c18eac884f20a86e67381824598436200eec4a2264106fccc2dea",
+ "reasons": "r5 = r4 geometry (PASS-COND 02:40) byte-identical in pins/outline/macros/RTL; verified git diff 779b47922..dc9347ecd: only spec clock_distribution=spine, job tag, pre_cts.tcl sourcing clock_spine.tcl (OT_SPINE_PORTS ck_core[0],ck_hr[0]), floorplan.json hook list. Viewed the r4 placed GPL render again (main 28.7% of free, buf/inv 36%; alt 26.7%/35%): logic wraps both SRAM blocks, pin regs FIRM at pins. Clock change is the right structural fix for the r4 TritonCTS 186-281 ps spread on a 16.8k-sink root.",
+ "fixes": "Route only after the --cts gate shows, for ck_core and ck_hr: boundary pin-flop spread <=80 ps TT+FF and insertion <=300 ps (16.8k/13.5k sinks > 15k, clock rule measured form); neighbour-matched boundary vs the parent. If the spine misses, split ck_core into 2 regional roots (W core / E strip) rather than padding further. Still owed from r4: the 69 load-less bits removed or listed.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:31:53-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
