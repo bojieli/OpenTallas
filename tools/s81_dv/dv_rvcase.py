@@ -67,6 +67,7 @@ def clock_sdc(table, top_ports):
     if not core:
         raise ValueError('bound die has no core clock ports')
     lines = [f'create_clock -name clk -period {T_PS} [get_ports {{{" ".join(core)}}}]']
+    groups = []
     for port, domain in sorted(domains.items()):
         period = domain['period_ps']
         if period <= 0:
@@ -79,8 +80,11 @@ def clock_sdc(table, top_ports):
                 if d.get('relationship') == 'same_pll_fixed_phase' and not d.get('asynchronous_to_core')]
                 if table.get('instance_clock_ports') else [])
             core_group = 'clk' if len(family) == 1 else '{' + ' '.join(family) + '}'
-            lines.append(f'set_clock_groups -asynchronous -group [get_clocks {core_group}] -group [get_clocks {port}]')
-    return '\n'.join(lines)
+            groups.append(f'set_clock_groups -asynchronous -group [get_clocks {core_group}] -group [get_clocks {port}]')
+    # STW-S81d-H11STA 10-23: every clock is created BEFORE any group names it.  Emitting the group right after its own
+    # create_clock put 'ck_hbm' (sorted before 'ck_head_lep_*') ahead of the same-PLL family clocks it names: STA-0351
+    # "clock 'ck_head_lep_A' not found" dropped them from the group, so ck_hbm <-> ck_head_lep_* were timed as related.
+    return '\n'.join(lines + groups)
 
 
 def const_bits(e):
@@ -359,6 +363,53 @@ def lef_pins(path):
     return size, pins
 
 
+def real_link_ends(out, insts, ibits, loc, kind, scell, links, orientations=None):
+    """STW-S81d-H11STA 10-23: the REAL source / destination pin centroid of every plan link on its block's bound view.
+    Plan endpoints are face seeds; a CLOSED view keeps its own pin map (H11f3: all 93 u_ctl lane endpoints sat
+    0.5-5.6 mm from their seeds, so hop 0 / the landing read crossed the 2.6 x 4.3 mm ctl body, 86k repeaters were
+    spread onto its perimeter and die STA failed by -8.5 ns setup / -10.4 ns hold while gen_safety said max_hop 384 um).
+    Returns {link: {'src': (x, y, npins), 'dst': (x, y, npins)}} from out/views/<cell>.lef (stand-ins: their generated
+    LEF, whose pins sit on the seeds by construction)."""
+    mst_of = {nm: m for m, nm, _, _ in insts}
+    cache, acc = {}, collections.defaultdict(lambda: [0.0, 0.0, 0])
+    for nm, ports in ibits.items():
+        if not nm.startswith('u_') or nm not in loc:
+            continue
+        bname = nm[2:]
+        cell = scell.get(nm) if kind.get(nm) == 'standin' else mst_of.get(nm)
+        lp = out / 'views' / f'{cell}.lef' if cell else None
+        if lp is None or not lp.exists():
+            continue
+        if cell not in cache:
+            cache[cell] = lef_pins(lp)
+        _, pins = cache[cell]
+        x0, y0, w0, h0 = loc[nm][:4]
+        orient = (orientations or {}).get(nm, 'R0')
+        for p, bl in ports.items():
+            w = len(bl)
+            for k, b in enumerate(bl):
+                m = LINK_RE.match(b[0]) if isinstance(b[0], str) else None
+                if not m:
+                    continue
+                ln, role = m.groups()
+                L = links.get(ln)
+                if not L:
+                    continue
+                side = 'src' if (role == 'src' and L['src'] == bname) else 'dst' if (role in ('dst', 'lnd') and L['dst'] == bname) else None
+                if side is None:
+                    continue
+                q = pins.get(f'{p}[{w - 1 - k}]') or pins.get(p)
+                if not q:
+                    continue
+                qx, qy = orient_point(q[0], q[1], w0, h0, orient)
+                a = acc[(ln, side)]
+                a[0] += x0 + qx; a[1] += y0 + qy; a[2] += 1
+    ends = collections.defaultdict(dict)
+    for (ln, side), (sx, sy, n) in acc.items():
+        ends[ln][side] = (sx / n, sy / n, n)
+    return dict(ends)
+
+
 def fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, gap=4.0, orientations=None):
     """move every fwd_<lane> (hop-0 forward cell) to the centroid of the pins that actually drive st_<lane>_0.i.
     Returns {lane: (moved_um, n_source_pins, pin_span_um)}; lanes whose source pins cannot be found keep the plan point."""
@@ -414,8 +465,10 @@ def fwd_relocate(out, insts, ibits, touch, loc, placer, kind, scell, gap=4.0, or
     return moves
 
 
-def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blocks, reach):
-    """ROOT14 10-20: GEN safety facts (opentallas.die_gen_safety_facts.v1) of a real-view S81 die case"""
+def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blocks, reach, ends=None):
+    """ROOT14 10-20: GEN safety facts (opentallas.die_gen_safety_facts.v1) of a real-view S81 die case.
+    ends (real_link_ends): the wire's first / last point is the REAL bound-view pin, not the plan face seed, so W1
+    measures hop 0 and the last hop as built (STW-S81d-H11STA 10-23)."""
     region = {}
     roots = {}
     abut_region = {}
@@ -443,7 +496,10 @@ def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blo
     lp = {r['link']: r for r in LP['links']}
     crossings, wires = [], []
     for ln, L in sorted(links.items()):
-        wires.append(dict(id=ln, kind=L['cls'], pts=[list(L['sxy'])] + [list(p) for p in L['pts']] + [list(L['dxy'])]))
+        e_ = (ends or {}).get(ln, {})
+        sxy = e_['src'][:2] if 'src' in e_ else L['sxy']
+        dxy = e_['dst'][:2] if 'dst' in e_ else L['dxy']
+        wires.append(dict(id=ln, kind=L['cls'], pts=[list(sxy)] + [list(p) for p in L['pts']] + [list(dxy)]))
         rs, rd = region.get(L['src'], f"?{L['src']}"), region.get(L['dst'], f"?{L['dst']}")
         rs = abut_region.get((L['src'], L.get('sport')), rs)
         rd = abut_region.get((L['dst'], L.get('dport')), rd)
@@ -1022,7 +1078,14 @@ def main():
     # region of a block = the die clock net on its clock pin (ck_<region> top port = the region root); a link between
     # two regions is a crossing and needs a landing ring (ld_<link> landing tile, or the crs4 ring inside a frame) whose
     # receiver clock is a region root; every link hop (source pin -> stations -> destination pin) <= the 405-um reach
-    gs_facts = gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blocks, a.reach_um)
+    ends = real_link_ends(out, insts, ibits, loc, kind, scell, links, orientations=orientations)
+    gs_facts = gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blocks, a.reach_um, ends=ends)
+    seed_moves = sorted(((round(abs(e_[sd][0] - links[ln][sd[0] + 'xy'][0]) + abs(e_[sd][1] - links[ln][sd[0] + 'xy'][1]), 1), ln, sd)
+                         for ln, e_ in ends.items() for sd in e_), reverse=True)
+    gs_facts['pin_seed_moves'] = dict(measured=len(seed_moves), over_reach=sum(1 for d_, _, _ in seed_moves if d_ > a.reach_um),
+                                      top=[list(x) for x in seed_moves[:40]])
+    print(f"GEN_PIN_SEED real-view pin vs plan seed: {len(seed_moves)} link ends, "
+          f"{gs_facts['pin_seed_moves']['over_reach']} > {a.reach_um:g} um, worst {seed_moves[0] if seed_moves else None}", flush=True)
     gs = DSG.check_facts(gs_facts, a.reach_um)
     if a.gen_safety_diag:
         gs['diagnostic'] = a.gen_safety_diag

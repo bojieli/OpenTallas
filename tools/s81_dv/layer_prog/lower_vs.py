@@ -158,7 +158,7 @@ def shares(sid, k):
     return s
 
 
-def plan(die, sched, sl, fixtures=None):
+def plan(die, sched, sl, fixtures=None, avoid=frozenset()):
     """the slice's whole vs programme for the layer: per op {templates, rows, leaf windows}, leaves serialised"""
     info = die.slices()[sl]
     sid, tier = info['sid'], sl[-1]
@@ -228,15 +228,27 @@ def plan(die, sched, sl, fixtures=None):
         if name == 'ffn.swiglu' and w_bound is not None and w_bound > t:
             rec['notes'].append(f'SW after the gunit weights rows: bound {w_bound} > {t}')
             t = w_bound
+        # S81d-TOK 10-22: issue edges whose CTL beat would meet a column-3 re-injected G-unit V CTL beat on the tier
+        # line (dv_layer_compile.line_slot_conflicts) are reserved: rows take the next free edge (one beat a cycle)
+        edges, e = [], t - len(pre)
+        while len(edges) < len(pre) + len(cmds):
+            if e not in avoid:
+                edges.append(e)
+            e += 1
+        if edges[len(pre)] != t:
+            rec['notes'].append(f'rows moved past reserved line slots {sorted(x for x in avoid if t - len(pre) <= x < e)}')
+        t = edges[len(pre)]
         t_cmd0 = t
         t0 = t - len(pre)
         lm_all = sum(1 << k for c in cmds for k, _, _ in cmds[c])
         for i, (k, body, what) in enumerate(pre):
             lmk = lm_all if k is None else 1 << k
             rec['templates'].append((f'{name}.row.s{sid}m{lmk:02x}.{i}', ctl_payload(1 << sid, 5, lmk, body)))
-            rec['rows'].append(dict(eng=eng, issue=t0 + i, arg=len(rec['templates']) - 1,
+            rec['rows'].append(dict(eng=eng, issue=edges[i], arg=len(rec['templates']) - 1,
                                     what=f'vs {name} target-5 {what} leaves {lmk:05b}'))
+        cmd_edges = iter(edges[len(pre):])
         for c, ks in cmds.items():
+            t = next(cmd_edges)
             lm = sum(1 << k for k, _, _ in ks)
             rec['templates'].append((f'{name}.{ks[0][1][:2]}.s{sid}m{lm:02x}', ctl_payload(1 << sid, 0, lm, c)))
             rec['rows'].append(dict(eng=eng, issue=t, arg=len(rec['templates']) - 1,
@@ -245,7 +257,6 @@ def plan(die, sched, sl, fixtures=None):
                 dur = VS_DUR['SW'](n, 1) if kind == 'SWR' else VS_DUR[kind](n)
                 rec['leaves'][k] = dict(cmd=t, op=kind[:2], wr=kind == 'SWR', n=n, dur=dur, end=t + dur, tix=len(rec['templates']) - 1)
                 free[k] = t + dur + GUARD
-            t += 1
         if t_cmd0 > t_op:
             rec['notes'].append(f'issue delayed {t_cmd0 - t_op} edges past the priced start (leaf busy)')
         out[name] = rec
@@ -313,9 +324,10 @@ def lower(die, op, ctx):
         sl0 = ctx['slice'] if ctx['slice'].startswith('u_') else 'u_' + ctx['slice']
         return lower_eng(die, op, ctx, sl0, die.slices()[sl0]['sid'])
     sl = ctx['slice'] if ctx['slice'].startswith('u_') else 'u_' + ctx['slice']
-    key = (id(die), ctx.get('layer'), sl, str(ctx.get('fixtures')))
+    avoid = (ctx.get('line_avoid') or {}).get(sl[-1], frozenset())
+    key = (id(die), ctx.get('layer'), sl, str(ctx.get('fixtures')), avoid)
     if key not in _cache:
-        _cache[key] = plan(die, ctx['sched'], sl, ctx.get('fixtures'))
+        _cache[key] = plan(die, ctx['sched'], sl, ctx.get('fixtures'), avoid)
     P = _cache[key]
     sid = die.slices()[sl]['sid']
     base = dict(unit=UNIT, insts=[sl], gunit_rows=[], svc_jobs=[], files={}, bench=BENCH)
