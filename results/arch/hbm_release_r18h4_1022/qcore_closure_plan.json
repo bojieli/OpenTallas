@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.hbm.closure_qcore_r19b.v1",
+  "basis": "9f73266f6 token-eligible r18h3 source plus exact CLOSED r19b source/views",
+  "closed_record": "6c866b28f",
+  "source_commit": "042177969",
+  "ports_bits": 1473,
+  "params": {
+    "MUT": 0,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1,
+    "ROW_EN": 2,
+    "WDEC": 1
+  },
+  "old_outline_um": [
+    189.864,
+    190.08
+  ],
+  "new_outline_um": [
+    302.4,
+    280.8
+  ],
+  "area_delta_mm2": 0.19529828351999998,
+  "interfaces_changed": false,
+  "added_rtl_cycles": 0,
+  "fit_at_existing_origin": [
+    {
+      "instance": "sucore_SW",
+      "at": [
+        10719.0,
+        9460.8
+      ],
+      "new_size": [
+        302.4,
+        280.8
+      ],
+      "hard_overlaps": [],
+      "relay_overlap_count": 74
+    },
+    {
+      "instance": "sucore_SE",
+      "at": [
+        15265.8,
+        9460.8
+      ],
+      "new_size": [
+        302.4,
+        280.8
+      ],
+      "hard_overlaps": [],
+      "relay_overlap_count": 40
+    },
+    {
+      "instance": "sucore_NW",
+      "at": [
+        10908.0,
+        23328.0
+      ],
+      "new_size": [
+        302.4,
+        280.8
+      ],
+      "hard_overlaps": [],
+      "relay_overlap_count": 44
+    },
+    {
+      "instance": "sucore_NE",
+      "at": [
+        14553.0,
+        23328.0
+      ],
+      "new_size": [
+        302.4,
+        280.8
+      ],
+      "hard_overlaps": [
+        {
+          "instance": "pgp_NE",
+          "m": "ot_hbm_su_programme_pslice_c5",
+          "x": 14838.768,
+          "y": 22851.72,
+          "o": "R0",
+          "w": 939.6,
+          "h": 760.32,
+          "rule": "grant slot pgp_NE"
+        }
+      ],
+      "relay_overlap_count": 76
+    }
+  ],
+  "NE_new_origin_um": [
+    14509.8,
+    23457.6
+  ],
+  "NE_shift_um": [
+    -43.2,
+    129.6
+  ],
+  "NE_hard_block_clearance_um": 10.8,
+  "relay_homes": "GEN must move occupied relay homes, then normal forest/reach/lockstep/token gates; no shortcut",
+  "qualification": "PROPOSED alternate; no GEN, reset or physical closure claim"
+}
