@@ -700,10 +700,33 @@ endmodule
 //   one AND-OR leg per bit of its slice (<= 29 loads), each group decode feeds 24 copies.  q_*_g keep only gt / ovf_v.
 //   CMUT (bench only, CREP 1): 1 = position 13 slice 1 takes hold where it should shift (must FAIL the lockstep).
 //   CMUT 3 (bench only, FAN32 >= 2): variant-1 GN of position 20 drops its k=1 compare leg (must FAIL the lockstep).
+// RT (STEWARD-HBMd/E86 2026-10-23, default 0 = every form above, unchanged): RETIMED STAGE-C COMPARE.  Route f67e2e265
+//   (FAN32 2 + SEAM 1, 302.4 sq, GRT 0, uniform 47% placement) TT -30.32 ps on 471 D pins and Codex v7/v7b placement
+//   -30.1 / -61.9 ps: every failing endpoint is a g_fan32_state gc copy and every path is u.SX[p] -> 85-b ot_tkm_lt_live
+//   (~470 ps) -> ot_tkm_gn_leaf (~110 ps) -> gc in ONE edge (logic depth, not fan-out or geometry).  RT = 1 moves every
+//   85-b compare one edge EARLIER and off the stage-C edge:
+//   * one added input edge N (kept): controls n_* <= s_* (clk); the block is captured per row group on its own regional
+//     root (nc0 / nc1: compare operands of the group's two half-groups, nk: block compares + p_bg); p_bg <= nk.  The
+//     block that sits in stage C at edge t is therefore in N at edge t-1, beside the array X(t-1) it will meet.
+//   * edge t-1 registers lt(X(t-1)[j], P) (RX, every position j), lt(0, P) (ZR, per group), lt(Q_j, P_k) (GB = the old
+//     gbf) and lt(R_j, P_k) (RB; R = the q-stage block that is inserted into X at edge t), all flop -> compare -> flop
+//     inside one regional root.
+//   * the select X took at edge t is registered beside it (SL, per position: hold / shift / clr / which of the five
+//     array legs SX[d-k] / which of the four R legs, from a kept copy ms of the X slice select and the word-0 count
+//     copies, i.e. exactly the `value` mux conditions), so at edge t the compare vector of position d is
+//     g2r[d] = SL-select of {RX[d], RX[d+4], ZR, RX[d-k], RB[j]} = lt(X(t)[d], P): a 2-level AND-OR of flops, then
+//     the unchanged GN leaf and gc copies.  Same values every edge (array legs are one-hot: counts are monotone).
+//   * the SEAM shadows (xs / cs) and the FAN32 compare captures (cap) are not built (no compare crosses a root).
+//   Cost: +1 input edge per chain hop (tkm_static TLAT 4 -> 5 for the e86 shape, SETTLE = 5 NT + 8, up-chain tap +1).
+//   Legality (static calendar: conv ... clr ... next insertion): no valid block may enter stage C on the edge right
+//   after a conv edge (the top four positions would take up_in, whose compare is not registered); checked in simulation.
+//   Requires PRE 1, CREP 1, FAN32 2, SEAM 0.
+//   CMUT 5 (bench only, RT 1): position 20 drops its R-element-1 select leg (must FAIL the lockstep).
+//   CMUT 6 (bench only, RT 1): position 41 holds with the compare vector of position 40 (must FAIL the lockstep).
 module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT = 64, parameter integer TW = 6,
                                  parameter integer LW = 7, parameter integer PRE = 0,
                                  parameter integer CREP = 0, parameter integer CMUT = 0, parameter integer FAN32 = 0,
-                                 parameter integer SEAM = 0) (
+                                 parameter integer SEAM = 0, parameter integer RT = 0) (
     input  wire              clk, clk_r0, clk_r1, clk_r2, clk_r3,
     input  wire [TW-1:0]     tid,
     input  wire              clr, conv,
@@ -742,12 +765,27 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         always @(posedge clk) begin
             s_clr <= clr; s_conv <= conv; s_v <= ins_v; s_tid <= tid; s_tt <= tau_t; s_tl <= tau_l; s_b <= ins_b;
         end
-        assign i_clr = s_clr; assign i_conv = s_conv; assign i_v = s_v; assign i_tid = s_tid; assign i_tt = s_tt;
-        assign i_tl = s_tl; assign i_b = s_b;
+        assign i_b = s_b;   // RT: only the regional N copies (g_pbg) read it
+        if (RT != 0) begin : g_n
+            // RT: the added input edge N (clk root, kept) for every control; s_vb = kept pin copy of the 4 valid bits
+            (* keep="true", dont_touch="true" *) reg n_clr, n_conv, n_v; reg [TW-1:0] n_tid, n_tt; reg [LW-1:0] n_tl;
+            always @(posedge clk) begin n_clr <= s_clr; n_conv <= s_conv; n_v <= s_v; n_tid <= s_tid; n_tt <= s_tt; n_tl <= s_tl; end
+            assign i_clr = n_clr; assign i_conv = n_conv; assign i_v = n_v; assign i_tid = n_tid; assign i_tt = n_tt;
+            assign i_tl = n_tl;
+        end else begin : g_s
+            assign i_clr = s_clr; assign i_conv = s_conv; assign i_v = s_v; assign i_tid = s_tid; assign i_tt = s_tt;
+            assign i_tl = s_tl;
+        end
         if (FAN32 >= 2) begin : g_s2
             (* keep="true", dont_touch="true" *) reg s_clr2, s_conv2, s_v2;
             always @(posedge clk) begin s_clr2 <= clr; s_conv2 <= conv; s_v2 <= ins_v; end
-            assign i_clr2 = s_clr2; assign i_conv2 = s_conv2; assign i_v2 = s_v2;
+            if (RT != 0) begin : g_n2
+                (* keep="true", dont_touch="true" *) reg n_clr2, n_conv2, n_v2;
+                always @(posedge clk) begin n_clr2 <= s_clr2; n_conv2 <= s_conv2; n_v2 <= s_v2; end
+                assign i_clr2 = n_clr2; assign i_conv2 = n_conv2; assign i_v2 = n_v2;
+            end else begin : g_s2d
+                assign i_clr2 = s_clr2; assign i_conv2 = s_conv2; assign i_v2 = s_v2;
+            end
         end else begin : g_s1
             assign i_clr2 = s_clr; assign i_conv2 = s_conv; assign i_v2 = s_v;
         end
@@ -759,9 +797,29 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     always @(posedge clk) begin
         p_clr <= i_clr; p_conv <= i_conv; p_v <= i_v; p_tid <= i_tid; p_tt <= i_tt; p_tl <= i_tl; q_v <= p_v;
     end
+    // RT: per-group regional N copies of the pin-stage block (nc0 / nc1 compare operands of half-groups 0 / 1, nk block
+    // compares + p_bg); the overflow group (no array positions) keeps only nk.  s_b drives <= 25 copies.
+    wire [4*EW-1:0] rt_nc [0:NGR-1][0:1];
+    wire [4*EW-1:0] rt_nk [0:NGR-1];
+    for (gg = 0; gg < NGR; gg = gg + 1) begin : g_ncp
+        if (RT != 0) begin : g_on
+            (* keep="true", dont_touch="true" *) reg [4*EW-1:0] nk;
+            always @(posedge ckr[rg(gg)]) nk <= i_b;
+            assign rt_nk[gg] = nk;
+            if (gg * GP < PT) begin : g_x
+                (* keep="true", dont_touch="true" *) reg [4*EW-1:0] nc0, nc1;
+                always @(posedge ckr[rg(gg)]) begin nc0 <= i_b; nc1 <= i_b; end
+                assign rt_nc[gg][0] = nc0; assign rt_nc[gg][1] = nc1;
+            end else begin : g_o
+                assign rt_nc[gg][0] = '0; assign rt_nc[gg][1] = '0;
+            end
+        end else begin : g_off
+            assign rt_nk[gg] = '0; assign rt_nc[gg][0] = '0; assign rt_nc[gg][1] = '0;
+        end
+    end
     for (gg = 0; gg < NGR; gg = gg + 1) begin : g_pbg
         if (PRE != 0) begin : g_r
-            always @(posedge ckr[rg(gg)]) begin p_vg[gg] <= i_v; p_bg[gg] <= i_b; end
+            always @(posedge ckr[rg(gg)]) begin p_vg[gg] <= i_v; p_bg[gg] <= (RT != 0) ? rt_nk[gg] : i_b; end
         end else begin : g_c
             always @(posedge clk) begin p_vg[gg] <= i_v; p_bg[gg] <= i_b; end
         end
@@ -777,7 +835,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     wire [4*EW-1:0] compare_bg [0:NGR-1][0:1];
     for (genvar fg = 0; fg < NGR; fg = fg + 1) begin : g_fan32_operand
         for (genvar fc = 0; fc < 2; fc = fc + 1) begin : g_copy
-            if (FAN32 != 0) begin : g_on
+            if (FAN32 != 0 && RT == 0) begin : g_on
                 (* keep="true", dont_touch="true" *) reg [4*EW-1:0] cap;
                 if (PRE != 0) begin : g_region
                     always @(posedge ckr[rg(fg)]) cap <= (CMUT==2&&fg==3&&fc==0)?0:i_b;
@@ -838,10 +896,20 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         // per-variant p-stage copies, then the q-stage copies of each (position, word).
         (* keep="true",dont_touch="true" *) reg [NPIN-1:0] pin_clr, pin_v;
         (* keep="true",dont_touch="true" *) reg [3:0] pin_valid [0:NPIN-1];
+        // RT: the pin copies sit one edge later (D = the PRE-stage copies), so the whole FAN32 state keeps its stage
+        wire pin_d_clr, pin_d_v; wire [3:0] pin_d_valid;
+        if (RT != 0) begin : g_pin_rt
+            (* keep="true",dont_touch="true" *) reg rc_, rv_; (* keep="true",dont_touch="true" *) reg [3:0] rvb_;
+            always @(posedge clk) begin rc_ <= clr; rv_ <= ins_v; for(integer b=0;b<4;b=b+1) rvb_[b] <= ins_b[b*EW+EW-1]; end
+            assign pin_d_clr = rc_; assign pin_d_v = rv_; assign pin_d_valid = rvb_;
+        end else begin : g_pin_dir
+            assign pin_d_clr = clr; assign pin_d_v = ins_v;
+            for(genvar b=0;b<4;b=b+1)begin:g_b assign pin_d_valid[b] = ins_b[b*EW+EW-1]; end
+        end
         for(genvar k=0;k<NPIN;k=k+1)begin:g_pin
             always @(posedge clk)begin
-                pin_clr[k]<=clr;pin_v[k]<=ins_v;
-                for(integer b=0;b<4;b=b+1)pin_valid[k][b]<=ins_b[b*EW+EW-1];
+                pin_clr[k]<=pin_d_clr;pin_v[k]<=pin_d_v;
+                for(integer b=0;b<4;b=b+1)pin_valid[k][b]<=pin_d_valid[b];
             end
         end
         for(genvar g=0;g<NP;g=g+1)begin:g_p
@@ -883,6 +951,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
 `ifndef SYNTHESIS
         initial if(PRE==0||NP>68||(NV>1&&FN!=5))$fatal(1,"FAN32 provenance requires PRE1, NP<=68 (V3: FN 5)");
         initial if(SEAM!=0&&(CREP==0||FAN32==0))$fatal(1,"SEAM requires CREP 1 and FAN32 != 0");
+        initial if(RT!=0&&(PRE!=1||CREP==0||FAN32!=2||SEAM!=0))$fatal(1,"RT requires PRE 1, CREP 1, FAN32 2, SEAM 0");
 `endif
     end else begin:g_old_state
         for(genvar g=0;g<NP;g=g+1)begin:g_g
@@ -912,6 +981,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     end
     for (gp = 0; gp < NP; gp = gp + 1) begin : g_pos
         if (gp < PT) begin : g_x assign SX[gp] = X[gp]; end else begin : g_e assign SX[gp] = {EW{1'b0}}; end
+        if (RT == 0) begin : g_cmp
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_c
             wire [KT-1:0] ka = SX[gp][EW-1:1];
             wire [KT-1:0] kb = compare_bg[gp / GP][(gp % GP) / 4][EW*gj + 1 +: KT];
@@ -919,8 +989,12 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             ot_tkm_lt_live #(.W(KT)) u_c (.a(ka), .b(kb), .lt(lt_));
             assign g2f[4*gp + gj] = lt_;
         end
+        end else begin : g_nocmp
+            assign g2f[4*gp +: 4] = 4'd0;   // RT: the stage-C compare vector is g2r (below)
+        end
         assign cp[gp] = valid_gn[gp] ? (3'(gt[gp][0]) + 3'(gt[gp][1]) + 3'(gt[gp][2]) + 3'(gt[gp][3])) : 3'd0;
     end
+    if (RT == 0) begin : g_bbo
     for (gg = 0; gg < NGR; gg = gg + 1) begin : g_bb
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_j
             for (gk = 0; gk < 4; gk = gk + 1) begin : g_k
@@ -931,6 +1005,92 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                 assign gbf[16*gg + 4*gj + gk] = lt_;
             end
         end
+    end
+    end
+    // ---- RT: the edge-early registered compares (RX / ZR / GB / RB), the registered X select (SL) and g2r ----
+    wire [3:0] dsel_position_rt [0:NGR-1][0:1];   // RT: the CREP slice-select decode (driven in g_crep)
+    wire [4*NP-1:0]   g2r;     // RT: stage-C compare vector of position d = lt(X(t)[d], P), from flops
+    wire [16*NGR-1:0] gbr;     // RT: registered block compares (the gbf of this edge)
+    if (RT != 0) begin : g_rt
+        wire [3:0]  rx [0:PT-1];
+        wire [3:0]  zr [0:NGR-1];
+        wire [15:0] rb [0:NGR-1];
+        for (gp = 0; gp < PT; gp = gp + 1) begin : g_rx
+            (* keep="true", dont_touch="true" *) reg [3:0] r;
+            wire [3:0] c_;
+            for (gj = 0; gj < 4; gj = gj + 1) begin : g_c
+                wire [KT-1:0] ka = X[gp][EW-1:1];
+                wire [KT-1:0] kb = rt_nc[gp / GP][(gp % GP) / 4][EW*gj + 1 +: KT];
+                ot_tkm_lt_live #(.W(KT)) u_c (.a(ka), .b(kb), .lt(c_[gj]));
+            end
+            always @(posedge ckr[rg(gp / GP)]) r <= c_;
+            assign rx[gp] = r;
+        end
+        for (gg = 0; gg < NGR; gg = gg + 1) begin : g_rbb
+            if (gg * GP < PT) begin : g_x
+                (* keep="true", dont_touch="true" *) reg [3:0] z;
+                (* keep="true", dont_touch="true" *) reg [15:0] gbq, rbq;
+                wire [15:0] gb_, rb_;
+                for (gj = 0; gj < 4; gj = gj + 1) begin : g_j
+                    for (gk = 0; gk < 4; gk = gk + 1) begin : g_k
+                        wire [KT-1:0] pa = p_bg[gg][EW*gj + 1 +: KT];   // Q (stage I next edge) element j
+                        wire [KT-1:0] ra = q_bg[gg][EW*gj + 1 +: KT];   // R (inserted into X at the next edge) element j
+                        wire [KT-1:0] kb = rt_nk[gg][EW*gk + 1 +: KT];  // P (stage C next edge) element k
+                        ot_tkm_lt_live #(.W(KT)) u_g (.a(pa), .b(kb), .lt(gb_[4*gj + gk]));
+                        ot_tkm_lt_live #(.W(KT)) u_r (.a(ra), .b(kb), .lt(rb_[4*gj + gk]));
+                    end
+                end
+                always @(posedge ckr[rg(gg)]) begin
+                    gbq <= gb_; rbq <= rb_;
+                    for (integer e = 0; e < 4; e = e + 1) z[e] <= |rt_nc[gg][0][EW*e + 1 +: KT];   // lt(0, P_e)
+                end
+                assign gbr[16*gg +: 16] = gbq; assign rb[gg] = rbq; assign zr[gg] = z;
+            end else begin : g_o
+                assign gbr[16*gg +: 16] = 16'd0; assign rb[gg] = 16'd0; assign zr[gg] = 4'd0;
+            end
+        end
+        for (gp = 0; gp < NP; gp = gp + 1) begin : g_sl
+            if (gp < PT) begin : g_x
+                // ms: kept copy of the X slice select (same D / root as the slices' m); sl: the select X took this edge
+                (* keep="true", dont_touch="true" *) reg [3:0] ms;
+                (* keep="true", dont_touch="true" *) reg sl_h, sl_s, sl_c;
+                (* keep="true", dont_touch="true" *) reg [4:0] sl_k;
+                (* keep="true", dont_touch="true" *) reg [3:0] sl_b;
+                wire [2:0] count [0:4];
+                for (genvar k = 0; k < 5; k = k + 1) begin : g_count
+                    wire [3:0] v = gt_copy[gp][0][k];
+                    assign count[k] = valid_copy[gp][0][k] ? (3'(v[0]) + 3'(v[1]) + 3'(v[2]) + 3'(v[3])) : 3'd0;
+                end
+                always @(posedge ckr[rg(gp / GP)]) begin
+                    ms <= dsel_position_rt[gp / GP][(gp % GP) / 4];
+                    sl_h <= ms[3]; sl_s <= ms[1]; sl_c <= ms[0];
+                    for (integer k = 0; k < 5; k = k + 1)
+                        sl_k[k] <= ms[2] && gp >= k && count[k] == 3'(k);
+                    for (integer k = 0; k < 4; k = k + 1)
+                        sl_b[k] <= ms[2] && !(CMUT == 5 && gp == 20 && k == 1) && valid_copy[gp][0][0] && gp >= k &&
+                                   count[k] > 3'(k) && (gp - k - 1 < 0 || count[(k < 4) ? k + 1 : 4] <= 3'(k));
+                end
+                wire [3:0] hv = (CMUT == 6 && gp == 41) ? rx[40] : rx[gp];
+                wire [3:0] sv = (gp < PT - 4) ? rx[(gp < PT - 4) ? gp + 4 : 0] : 4'd0;
+                reg [3:0] v_;
+                always @* begin
+                    v_ = ({4{sl_h}} & hv) | ({4{sl_s}} & sv) | ({4{sl_c}} & zr[gp / GP]);
+                    for (integer k = 0; k < 5; k = k + 1) if (gp >= k) v_ = v_ | ({4{sl_k[k]}} & rx[(gp >= k) ? gp - k : 0]);
+                    for (integer k = 0; k < 4; k = k + 1) v_ = v_ | ({4{sl_b[k]}} & rb[gp / GP][4*k +: 4]);
+                end
+                assign g2r[4*gp +: 4] = v_;
+`ifndef SYNTHESIS
+                // legality: the top four positions after a conv edge hold up_in, whose compare is not registered
+                always @(posedge ckr[rg(gp / GP)])
+                    if (gp >= PT - 4 && sl_s && p_vg[gp / GP])
+                        $error("ot_hgi_coll_tkm_tile_rg RT: a block sits in stage C on the edge after a conv (position %0d)", gp);
+`endif
+            end else begin : g_o
+                assign g2r[4*gp +: 4] = 4'd0;   // overflow positions: their compare vectors feed only the dead g_tail legs
+            end
+        end
+    end else begin : g_nort
+        assign g2r = '0; assign gbr = '0;
     end
     reg [EW-1:0] ins_legacy [0:NP-1];
     wire [EW-1:0] ins [0:NP-1];
@@ -965,13 +1125,13 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             for(genvar k=0;k<5;k=k+1)begin:g_in
                 assign cg_[4*k+:4]=gt_copy[d][FN+v][k];assign cv_[k]=valid_copy[d][FN+v][k];
                 localparam integer S2=(d>=k)?d-k:0;
-                wire [3:0] g2src=(seam_p(S2)&&rg(S2/GP)!=rg(d/GP))?g2s[4*S2+:4]:g2f[4*S2+:4];  // SEAM: consumer-root compare
+                wire [3:0] g2src=(RT!=0)?g2r[4*S2+:4]:(seam_p(S2)&&rg(S2/GP)!=rg(d/GP))?g2s[4*S2+:4]:g2f[4*S2+:4];  // SEAM: consumer-root compare; RT: registered
                 assign g2_[4*k+:4]=(d>=k&&!(CMUT==3&&d==20&&v==1&&k==1))?g2src:4'd0;  // CMUT 3 (bench only): V3 variant-1 GN of position 20 drops its k=1 compare leg
             end
             if(FAN32==2)begin:g_kh
-                (* keep_hierarchy *) ot_tkm_gn_leaf #(.DMIN((d<5)?d:5)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]));
+                (* keep_hierarchy *) ot_tkm_gn_leaf #(.DMIN((d<5)?d:5)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb((RT!=0)?gbr[16*(d/GP)+:16]:gbf[16*(d/GP)+:16]),.gn(gnv[d][v]));
             end else begin:g_flat
-                ot_tkm_gn_leaf #(.DMIN((d<5)?d:5)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]));
+                ot_tkm_gn_leaf #(.DMIN((d<5)?d:5)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb((RT!=0)?gbr[16*(d/GP)+:16]:gbf[16*(d/GP)+:16]),.gn(gnv[d][v]));
             end
         end
         end
@@ -1044,6 +1204,9 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     end
     wire [3:0] dsel_position[0:NGR-1][0:1];
     wire [3:0] dsel_face[0:1];
+    for (gg = 0; gg < NGR; gg = gg + 1) begin : g_dsrt
+        assign dsel_position_rt[gg][0] = dsel_position[gg][0]; assign dsel_position_rt[gg][1] = dsel_position[gg][1];
+    end
     if(FAN32!=0)begin:g_pc32
         for(genvar g=0;g<NGR;g=g+1)begin:g_g
             for(genvar c=0;c<2;c=c+1)begin:g_c

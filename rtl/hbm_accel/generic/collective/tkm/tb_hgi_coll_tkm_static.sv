@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_hgi_coll_tkm_static;
- parameter integer KMAX=2048,MUT=0,TP=96,TIE_W_MUT=0;
+ parameter integer KMAX=2048,MUT=0,TP=96,TIE_W_MUT=0,FAN32=0,RT=0;
  // HH-4 10-18: tile chain hop edges (tkm_static TLAT): 4 for the e86 shape (EW 86 = 78 + RANK_W 8), else 3.
  localparam integer RW_=TIE_W_MUT?7:$clog2(TP),TL=(78+RW_==86&&KMAX>=64)?4:3;
  reg clk=0,rst_n=0,start=0;always #0.4167 clk=~clk;
@@ -9,7 +9,7 @@ module tb_hgi_coll_tkm_static;
  wire wv,busy,done,fault;wire[39:0]wa;wire[15:0]wm;wire[511:0]wd;wire[31:0]cycles;
  integer G,N,K,PF,NOUT,HASR,OB,RB,GB,errs=0,words=0,elapsed=0,expected,slotmut=0,rotate=0;
  bit seeno[0:2047],seenr[0:2047];string dir;
- ot_hgi_coll_tkm_static #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.RANK_W(TIE_W_MUT?7:$clog2(TP)))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
+ ot_hgi_coll_tkm_static #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.RANK_W(TIE_W_MUT?7:$clog2(TP)),.FAN32(FAN32),.RT(RT))dut(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
  .cfg_n(12'(N)),.cfg_k(13'(K)),.cfg_nout(13'(NOUT)),.cfg_g(8'(G)),.cfg_gbase(8'(GB)),.cfg_pf(16'(PF)),
  .cfg_obase(40'(OB)),.cfg_rbase(40'(RB)),.cfg_has_r(1'(HASR)),.del_slot(slots),.del_valid(valids),.del_flit(flits),
  .w_v(wv),.w_addr(wa),.w_mask(wm),.w_data(wd),.busy(busy),.done(done),.fault(fault),.stat_cycles(cycles));

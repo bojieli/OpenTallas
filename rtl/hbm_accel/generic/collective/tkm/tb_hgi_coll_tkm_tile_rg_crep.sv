@@ -8,10 +8,15 @@
 // silent pass is impossible (ovf_v, up_out changes and nonzero tau_o hits must all occur).
 //   MUT 0: DUT CMUT 0 -> must PASS (cycle identity, every output every edge, ovf_b compared every edge too).
 //   MUT 1: DUT CMUT 1 (position 13 slice 1 holds where it should shift on conv) -> must FAIL.
+//   RT 1 (STEWARD-HBMd/E86 10-23): DUT = FAN32 2 + RT 1 (retimed stage-C compare, one added input edge).  The REF sees
+//   clr / conv / ins_v / ins_b / tid / tau one edge late (a bench register), up_in undelayed (the conveyor samples it at
+//   the shift edge in both), so every output is still compared at every edge.  MUT 5 / 6 = DUT CMUT 5 / 6 (RT select
+//   mutants) -> must FAIL.
 module tb_hgi_coll_tkm_tile_rg_crep;
     parameter integer MUT = 0;
     parameter integer FAN32 = 0;
     parameter integer SEAM = 0;
+    parameter integer RT = 0;
     parameter integer NCYC = 4000;
     parameter integer SEED = 17;
     localparam integer EW = 86, PT = 64, TW = 6, LW = 7;
@@ -25,11 +30,17 @@ module tb_hgi_coll_tkm_tile_rg_crep;
     wire ro_v, do_v, rbusy, dbusy;
     wire [4*EW-1:0] ro_b, do_b, rup, dup;
     wire [EW-2:0] rtau, dtau;
+    reg [TW-1:0] d_tid = 6'd5, d_tau_t = '0; reg [LW-1:0] d_tau_l = '0; reg d_clr = 1'b1, d_conv = 1'b0, d_ins_v = 1'b0;
+    reg [4*EW-1:0] d_ins_b = '0;
+    always @(posedge clk) begin d_tid <= tid; d_tau_t <= tau_t; d_tau_l <= tau_l; d_clr <= clr; d_conv <= conv; d_ins_v <= ins_v; d_ins_b <= ins_b; end
+    wire [TW-1:0] r_tid = RT ? d_tid : tid, r_tau_t = RT ? d_tau_t : tau_t; wire [LW-1:0] r_tau_l = RT ? d_tau_l : tau_l;
+    wire r_clr = RT ? d_clr : clr, r_conv = RT ? d_conv : conv, r_ins_v = RT ? d_ins_v : ins_v;
+    wire [4*EW-1:0] r_ins_b = RT ? d_ins_b : ins_b;
     ot_hgi_coll_tkm_tile_rg #(.EW(EW), .PT(PT), .TW(TW), .LW(LW), .PRE(1), .CREP(0)) u_ref (.clk(clk), .clk_r0(clk), .clk_r1(clk),
-        .clk_r2(clk), .clk_r3(clk), .tid(tid), .clr(clr), .conv(conv),
-        .tau_t(tau_t), .tau_l(tau_l), .ins_v(ins_v), .ins_b(ins_b), .ovf_v(ro_v), .ovf_b(ro_b), .up_in(up_in), .up_out(rup),
+        .clk_r2(clk), .clk_r3(clk), .tid(r_tid), .clr(r_clr), .conv(r_conv),
+        .tau_t(r_tau_t), .tau_l(r_tau_l), .ins_v(r_ins_v), .ins_b(r_ins_b), .ovf_v(ro_v), .ovf_b(ro_b), .up_in(up_in), .up_out(rup),
         .tau_o(rtau), .busy(rbusy));
-    ot_hgi_coll_tkm_tile_rg #(.EW(EW), .PT(PT), .TW(TW), .LW(LW), .PRE(1), .CREP(1), .CMUT(MUT), .FAN32(FAN32), .SEAM(SEAM)) u_dut (.clk(clk), .clk_r0(clk), .clk_r1(clk), .clk_r2(clk),
+    ot_hgi_coll_tkm_tile_rg #(.EW(EW), .PT(PT), .TW(TW), .LW(LW), .PRE(1), .CREP(1), .CMUT(MUT), .FAN32(FAN32), .SEAM(SEAM), .RT(RT)) u_dut (.clk(clk), .clk_r0(clk), .clk_r1(clk), .clk_r2(clk),
         .clk_r3(clk), .tid(tid), .clr(clr), .conv(conv), .tau_t(tau_t), .tau_l(tau_l), .ins_v(ins_v), .ins_b(ins_b),
         .ovf_v(do_v), .ovf_b(do_b), .up_in(up_in), .up_out(dup), .tau_o(dtau), .busy(dbusy));
     integer seed = SEED, cyc, err = 0, n_ovf = 0, n_up = 0, n_tau = 0, n_ins = 0, gap = 0;

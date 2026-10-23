@@ -16,7 +16,7 @@ src=("$C/tkm/tkm_tp192_hier.vlt" "$C/tkm/tb_hgi_coll_tkm_static.sv" "$C/tkm/ot_h
 HW=();if [ "${HIERWRAP:-0}" = 1 ];then src[0]="$C/tkm/tkm_tp192_hierwrap.vlt";src+=("$C/tkm/ot_hgi_coll_tkm_e86_hw.sv");HW=(-DOT_TKM_HIERWRAP);fi
 sha256sum "${src[@]}" tools/hgi_coll_tkm_tp192_vectors.py tools/hgi_coll_tkm_vectors.py > "$OUT/sources.sha256"
 for mut in 0 1; do
- vbuild "$OUT/obj$mut" -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT "${HW[@]}" --top-module tb_hgi_coll_tkm_static -GTP=192 -GKMAX=2048 -GTIE_W_MUT=$mut "${src[@]}" > "$OUT/build$mut.log" 2>&1
+ vbuild "$OUT/obj$mut" -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT "${HW[@]}" --top-module tb_hgi_coll_tkm_static -GTP=192 -GKMAX=2048 -GFAN32=${FAN32:-0} -GRT=${RT:-0} -GTIE_W_MUT=$mut "${src[@]}" > "$OUT/build$mut.log" 2>&1
  if [ "$mut" = 0 ];then
   for tc in syn_sel syn_cand rank128_zeros;do
    "$OUT/obj0/Vtb_hgi_coll_tkm_static" +DIR="$OUT/vec/$tc" +ROTATE=128 > "$OUT/$tc.log" 2>&1

@@ -13,6 +13,12 @@ module ot_hgi_coll_tkm_tile_e86_hw1(input wire clk,clk_r0,clk_r1,clk_r2,clk_r3,i
  input wire [343:0] up_in,output wire [343:0] up_out,output wire busy);
  ot_hgi_coll_tkm_tile_e86 #(.FAN32(1)) u(.*);
 endmodule
+// STEWARD-HBMd/E86 10-23: hw3 = FAN32 2 + RT 1 (retimed stage-C compare, 5-edge hop).
+module ot_hgi_coll_tkm_tile_e86_hw3(input wire clk,clk_r0,clk_r1,clk_r2,clk_r3,input wire clr,conv,
+ input wire ins_v,input wire [343:0] ins_b,output wire ovf_v,output wire [343:0] ovf_b,
+ input wire [343:0] up_in,output wire [343:0] up_out,output wire busy);
+ ot_hgi_coll_tkm_tile_e86 #(.FAN32(2),.RT(1)) u(.*);
+endmodule
 module ot_hgi_coll_tkm_tile_e86_hw2(input wire clk,clk_r0,clk_r1,clk_r2,clk_r3,input wire clr,conv,
  input wire ins_v,input wire [343:0] ins_b,output wire ovf_v,output wire [343:0] ovf_b,
  input wire [343:0] up_in,output wire [343:0] up_out,output wire busy);
