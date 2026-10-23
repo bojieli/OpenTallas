@@ -1,0 +1,7 @@
+TX_STATS cycles 2522 checks 56074 epochs 2 beats 48 done_edges 1521
+TX_MITER_PASS
+- tools/s81_dv/tx_export_1021/tb_tx_miter.sv:75: Verilog $finish
+TX_CLOCK_EDGES parent=2522 ga=2521
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 25us; walltime 0.085 s; speed 298.129 us/s
+- Verilator: cpu 0.085 s on 1 threads; allocated 8 MB
