@@ -721,6 +721,15 @@ module dsdv_idx_tx_n32 #(
     end else begin : g_popk0
         assign rf_pop_k = rf_pop_h;
     end endgenerate
+    // TOPK TX y (SPLIT, STW-S81c-TOK5 10-22; y gate census rf_pop 33 loads > 32): fifth pop predicate instance for the
+    // window open enables (g_valid / g_addr, 12 loads).  Same function, same edge; SPLIT = 0 keeps rf_pop there.
+    wire        rf_pop_e;
+    generate if (SPLIT != 0) begin : g_pope
+        dsdv_tx_pop_pred #(.ID(7004)) u_pope (.any(rf_n != 4'd0), .armed(armed), .hdr_q(hdr_q), .fin(fin), .wv(wv), .r_in(r_in),
+            .flush_ok(flush_ok), .pop(rf_pop_e));
+    end else begin : g_pope0
+        assign rf_pop_e = rf_pop;
+    end endgenerate
     wire        in_done = in_end && lk_idle && rf_n == 4'd0;
     wire        fl  = armed && hdr_q && !fin && flush_ok && ((rf_pop && wv && !r_in) || (in_done && rf_n == 4'd0));
     wire        o_ctl_c = okk[7];            // control copy
@@ -815,13 +824,13 @@ module dsdv_idx_tx_n32 #(
         wire acc=(b==0)?t_acc0:t_acc1;
         for(genvar f=0;f<4;f=f+1)begin:g_valid
             wire open;
-            dsdv_tx_open_enable #(.BANK(b),.ID(4*b+f))u_enable(.pop(rf_pop),.inwin(r_in),.target(nb_t),.en(open));
+            dsdv_tx_open_enable #(.BANK(b),.ID(4*b+f))u_enable(.pop(rf_pop_e),.inwin(r_in),.target(nb_t),.en(open));
             dsdv_tx_window_valid #(.ID(4*b+f))u(.ck(ck),.open(open),.acc(acc),.mask(r_oh[4*f+:4]),.q(wlvb[b][4*f+:4]));
         end
         wire[19:0]base={r_i[19:4],4'd0};
         for(genvar f=0;f<2;f=f+1)begin:g_addr
             wire open;
-            dsdv_tx_open_enable #(.BANK(b),.ID(100+2*b+f))u_enable(.pop(rf_pop),.inwin(r_in),.target(nb_t),.en(open));
+            dsdv_tx_open_enable #(.BANK(b),.ID(100+2*b+f))u_enable(.pop(rf_pop_e),.inwin(r_in),.target(nb_t),.en(open));
             dsdv_tx_window_addr #(.ID(2*b+f))u(.ck(ck),.open(open),.d(base[10*f+:10]),.q(w0b[b][10*f+:10]));
         end
     end endgenerate
