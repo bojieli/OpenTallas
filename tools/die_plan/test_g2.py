@@ -122,3 +122,38 @@ def test_pins_avoid_partition_pg_stripes():
     assert n > 500
     # band geometry: M6 VDD 1.968 +- 0.144 / VSS 2.352 +- 0.144 must be blocked, a mid-gap track free
     assert schema.pg_blocked("M6", 1.968) and schema.pg_blocked("M6", 2.352) and not schema.pg_blocked("M6", 4.0)
+
+
+def test_spread_uniform_at_budget_density():
+    """PLAN-HBM 10-23: a window sized at exactly the 6/um budget must pass the G0 face check (the old spreader packed
+    pins up to 1.2x the window average)."""
+    import copy
+    import check
+    raw = copy.deepcopy(PAIR)
+    pr = next(p for p in raw["ports"] if p["id"] == "x")
+    n = pr["width"] + 1                                   # + epoch
+    lo = 1800.0
+    pr["window_um"] = [lo, lo + n / 6.0]                  # exactly 6 pins/um over 2 layers
+    P = schema.Plan(raw)
+    pins = sorted(c for _, _, c in P.port_pins("x"))
+    assert len(pins) == n
+    win = 10.0
+    mx = max(sum(1 for c in pins if a <= c < a + win) for a in pins)
+    assert mx <= 6 * win + 4, mx                          # check.py allowance: 2 pins per layer
+    R, summ = check.run(raw)
+    assert not [f for f in R.errors() if f["check"] == "faces"], R.errors()
+    # uniform: per layer most gaps are the window average (1/3 um) to within one track; the rest sit at PG bands
+    for ln in pr["layers"]:
+        cs = sorted(c for _, l, c in P.port_pins("x") if l == ln)
+        gaps = [b - a for a, b in zip(cs, cs[1:])]
+        near = sum(1 for g in gaps if abs(g - 1 / 3.0) <= 0.065)
+        assert near >= 0.6 * len(gaps), (ln, near, len(gaps))
+
+
+def test_window_for_fits_after_pg_bands():
+    L = {x["name"]: x for x in schema.ASAP7_LAYERS}
+    for lo in (2.0, 4.1, 100.3):
+        for n in (1, 2, 9, 141):
+            hi = schema.window_for(lo, n, ["M7", "M5"])
+            port = dict(id="t", width=n, window_um=[lo, hi], layers=["M7", "M5"], epoch=False)
+            assert len(schema.pin_positions(port, L)) == n

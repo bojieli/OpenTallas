@@ -24,6 +24,7 @@ Conventions (binding for every tool):
   sum(stations of crossed slots) + destination in boundary flop + fixed_cycles (lane_latency()).
 - Part name "@die" in a port endpoint is the die boundary (bumps / die IO); its bus is the die-level port name.
 """
+import bisect
 import json
 import math
 import sys
@@ -225,6 +226,8 @@ SCHEMA = {
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
                                "param": {"type": "string"}}}}}},
+        # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
+        "census": {"type": ["array", "object"]},
         "budgets": {"type": "object", "additionalProperties": False, "properties": {
             k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS}},
     },
@@ -545,10 +548,11 @@ def port_pins_count(port):
 # Partition PG stripe bands per pin layer (gen_phys.PDN): (pitch, band centre offset, half exclusion width) in um.
 # Each band is a VDD+VSS stripe pair. Its centre (2.16 + 4.32k, or 4.32 + 8.64k) is mirror-symmetric in every lattice
 # frame (outlines are multiples of 8.64), so the same periodic pattern holds in the die frame and in every type frame,
-# for every orient. Half exclusion = half the pair span + half the pin width + the min spacing.
+# for every orient. Half exclusion = half the pair span + half the pin width + 2 track pitches. One pitch was too
+# tight: DRT-0073 (no access point) on an M5 pin 0.048 um from an M5 stripe in the CP1 mock run.
 # Pins on M5, M6 or M7 never sit on a stripe: the CP1 mock run on OpenROAD master found PSM-0043 shorts there
 # (check_power_grid), from M7 frame_int pins on the N face.
-PART_PG_BANDS = {"M5": (4.32, 2.16, 0.192), "M6": (4.32, 2.16, 0.384), "M7": (8.64, 4.32, 0.384)}
+PART_PG_BANDS = {"M5": (4.32, 2.16, 0.264), "M6": (4.32, 2.16, 0.48), "M7": (8.64, 4.32, 0.48)}
 
 
 def pg_blocked(ln, c):
@@ -558,6 +562,71 @@ def pg_blocked(ln, c):
     pitch, cen, half = b
     d = (c - cen) % pitch
     return min(d, pitch - d) < half - 1e-9
+
+
+def spread(A, n, lo, hi):
+    """n of the usable tracks A (sorted, track units), UNIFORM in coordinate over the window [lo, hi]: pin j goes to
+    the usable track nearest its cell centre lo + (j + 0.5) (hi - lo) / n, so any sub-window holds the window's average
+    density to within one pin (the G0 face check's measure).  Ties go toward the window centre and each half is picked
+    from its own end, so the pick commutes with the frame mirror (the usable set is mirror-symmetric).  When nearest-
+    track picks collide (window close to full), fall back to an even pick in index space.  Returns indices into A."""
+    m = len(A)
+    if n == 0:
+        return []
+    cen = (lo + hi) / 2.0
+    L = hi - lo
+
+    def nearest(t):
+        i = bisect.bisect_left(A, t)
+        best = None
+        for k in (i - 1, i):
+            if 0 <= k < m:
+                key = (abs(A[k] - t), abs(A[k] - cen))
+                if best is None or key < best[0]:
+                    best = (key, k)
+        return best[1]
+    # lower half from the left end, upper half mirrored from the right end; a pick that collides with the previous
+    # one (targets inside a PG band) moves to the next free usable track
+    half = n // 2
+    low, prev = [], -1
+    for j in range(half):
+        k = max(nearest(lo + (j + 0.5) * L / n), prev + 1)
+        low.append(k)
+        prev = k
+    high, prev = [], m
+    for j in range(half):
+        k = min(nearest(hi - (j + 0.5) * L / n), prev - 1)
+        high.append(k)
+        prev = k
+    mid = [nearest(cen)] if n % 2 else []
+    idx = low + mid + list(reversed(high))
+    if all(a < b for a, b in zip(idx, idx[1:])) and idx[0] >= 0 and idx[-1] < m:
+        return idx
+    if n == 1:
+        return [(m - 1) // 2]
+    lowh = [((j * (m - 1)) // (n - 1)) for j in range(n // 2)]
+    return lowh + ([(m - 1) // 2] if n % 2 else []) + [m - 1 - i for i in reversed(lowh)]
+
+
+def usable_tracks(L, ln, lo, hi):
+    """number of tracks of layer ln (dict L: pitch_um, offset_um) inside [lo, hi] off the partition PG bands."""
+    p, off = L["pitch_um"], L["offset_um"]
+    k0 = math.ceil((lo - off) / p - 1e-9)
+    k1 = math.floor((hi - off) / p + 1e-9)
+    return sum(1 for k in range(k0, k1 + 1) if not pg_blocked(ln, off + k * p))
+
+
+def window_for(lo, pins, names, layers=None, per_um=6.0, track_max=0.6):
+    """helper for plan generators: the smallest hi (on a 0.016-um step) so that `pins` pins over the layer list `names`
+    fit [lo, hi] at <= per_um pins/um and <= track_max of the usable (PG-band-free) tracks on every layer."""
+    layers = layers or {L["name"]: L for L in ASAP7_LAYERS}
+    nl = len(names)
+    need = [len(range(i, pins, nl)) for i in range(nl)]
+    hi = lo + max(pins / per_um, 0.016)
+    while True:
+        if all(usable_tracks(layers[ln], ln, lo, hi) * track_max >= n for ln, n in zip(names, need)):
+            return round(hi, 4)
+        hi += 0.016
 
 
 def pin_positions(port, layers):
@@ -588,13 +657,7 @@ def pin_positions(port, layers):
         if m < n:
             raise ValueError(f"port {port['id']}: {n} bits on {ln} need {n} tracks, window has {m} off the PG "
                              f"stripes ({max(k1 - k0 + 1, 0)} in all)")
-        # n of the m usable tracks, picked symmetrically from both ends (mirror-invariant: the usable set is
-        # symmetric under the frame mirror, and so is the pick)
-        if n == 1:
-            idx = [(m - 1) // 2]
-        else:
-            lowh = [((j * (m - 1)) // (n - 1)) for j in range(n // 2)]
-            idx = lowh + ([(m - 1) // 2] if n % 2 else []) + [m - 1 - i for i in reversed(lowh)]
+        idx = spread(A, n, (lo - off) / p, (hi - off) / p)
         for j, b in enumerate(bits):
             slot = (n - 1 - j) if rev else j
             out.append((b, ln, round(off + A[idx[slot]] * p, 6)))

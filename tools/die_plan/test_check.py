@@ -37,9 +37,9 @@ def part(p, n):
 
 def test_example_passes():
     R, summ = g0()
-    assert R.errors() == [] and [i["check"] for i in R.items] == ["types"], R.items   # mid: no type-frame windows
+    assert R.errors() == [] and [i["check"] for i in R.items] == ["types", "census"], R.items   # census: none
     R2, _ = check.run(json.loads((HERE / "examples" / "tiny_plan_typegeo.json").read_text()))
-    assert R2.items == [], R2.items
+    assert [i["check"] for i in R2.items] == ["census"], R2.items
     assert summ["geometry"]["fill"] == 1.0
     assert summ["latency"]["x"] == 4
 
@@ -169,3 +169,39 @@ def test_near_duplicate_types():
     R, summ = g0(m)
     assert summ["types"]["near_duplicate_groups"] == 1 and summ["types"]["types"] == 4
     assert any("near-duplicate types ['mid', 'mid2']" in i["msg"] for i in R.items)
+
+
+def _census_case(d, rows, mp):
+    p = copy.deepcopy(EX)
+    (Path(d) / "c.json").write_text(json.dumps({"groups": rows}))
+    (Path(d) / "m.json").write_text(json.dumps(mp))
+    p["census"] = [{"rows": "c.json", "map": "m.json"}]
+    R, summ = check.run(p, plan_dir=d)
+    return [i["msg"] for i in R.errors() if i["check"] == "census"], summ["census"]
+
+
+def test_census_coverage():
+    """COORD 10-23 06:45: every as-built inter-partition bit carried by the plan; unmapped = ERROR; exempt listed."""
+    import tempfile
+    MAP = {"parts": {"u_a": "pa", "u_b": "pb", "u_m1": "pm1"}, "rules": [["^u_m2", "pm2"]], "collapse": ["^ld_"],
+           "exempt": [{"match": "^rst", "kind": "reset", "replaced_by": "spine + per-partition sync",
+                       "reason": "reset spine"}]}
+
+    def row(s, sb, d_, db, bits, kind="data"):
+        return dict(src=s, src_bus=sb, dst=d_, dst_bus=db, bits=bits, kind=kind)
+    with tempfile.TemporaryDirectory() as d:
+        ok = [row("u_a", "x", "ld_0", "i", 64), row("ld_0", "o", "u_b", "x", 64),     # a landing cell in the middle
+              row("u_b", "r", "u_a", "r", 16), row("u_a", "cfg", "u_m1", "cfg", 8), row("u_m1", "cfg", "u_m2x", "c", 8),
+              row("u_a", "rst_q", "u_b", "rst_n", 1, "reset"), row("u_a", "loc", "u_a", "loc", 999)]
+        e, s = _census_case(d, ok, MAP)
+        assert e == [] and s["dropped_bits"] == 0, e
+        assert s["sources"][0]["exempt"] == {"reset:^rst": 1} and s["sources"][0]["intra_bits"] == 999
+        e, s = _census_case(d, ok + [row("u_a", "y", "u_b", "y", 100)], MAP)            # a bus the plan lacks
+        assert s["dropped_bits"] == 100 and any("pa -> pb" in m for m in e), e
+        e, _ = _census_case(d, ok + [row("u_zz", "q", "u_b", "y", 3)], MAP)              # unmapped -> ERROR
+        assert any("u_zz" in m and "maps to no partition" in m for m in e), e
+        mp2 = dict(MAP, exempt=[])
+        e, s = _census_case(d, ok, mp2)                                                   # reset not exempted
+        assert s["dropped_bits"] == 1, e
+    R, _ = g0(lambda p: p.pop("census"))
+    assert any(i["check"] == "census" for i in R.errors())                                # mandatory

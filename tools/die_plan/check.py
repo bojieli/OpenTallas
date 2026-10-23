@@ -256,7 +256,10 @@ def check_abutment(P, R):
 def check_faces(P, R, face_pins):
     B = P.budgets
     win = B["face_window_um"]
-    lim = B["face_pins_per_um"] * win
+    # allowance of 2 pins per pin layer, so a window spread at exactly the budget passes (PLAN-HBM 10-23):
+    # 1 pin for whole-track quantisation;
+    # 1 pin for pins pushed out of the partition PG bands (schema.spread, coordinate-uniform, nearest usable track).
+    lim = B["face_pins_per_um"] * win + 2 * B["face_pin_layers"]
     worst = []
     for (part, df), pins in face_pins.items():
         cs = sorted(c for c, _, _ in pins)
@@ -549,7 +552,7 @@ def check_types(P, R):
 
 
 # ------------------------------------------------------------------------------------------------------- run
-def run(raw, png=None):
+def run(raw, png=None, plan_dir=None):
     R = Report()
     errs = S.validate(raw)
     for e in errs:
@@ -569,6 +572,8 @@ def run(raw, png=None):
     summ["latency"] = check_latency(P, R)
     check_clock_reset(P, R)
     summ["seams"] = check_seams(P, R)
+    import census_cov
+    summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if png:
         import render
         render.render(P, geo, R, png)
@@ -587,7 +592,7 @@ def main(argv=None):
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
-    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None)
+    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)
