@@ -157,3 +157,12 @@ def test_window_for_fits_after_pg_bands():
             hi = schema.window_for(lo, n, ["M7", "M5"])
             port = dict(id="t", width=n, window_um=[lo, hi], layers=["M7", "M5"], epoch=False)
             assert len(schema.pin_positions(port, L)) == n
+
+
+def test_kit_overrides_platform_tracks():
+    import gen_phys
+    import tempfile
+    P = schema.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
+    with tempfile.TemporaryDirectory() as d:
+        kd = gen_phys.write_type_kit(P, "src", d, [])
+        assert "override export MAKE_TRACKS = /work/make_tracks.tcl" in (kd / "config.mk").read_text()

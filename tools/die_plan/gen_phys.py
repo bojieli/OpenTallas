@@ -221,7 +221,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
            f"export CORE_AREA = {m:g} {m:g} {w - m:g} {h - m:g}",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
-           "export MAKE_TRACKS = /work/make_tracks.tcl",
+           # override: platforms/asap7/config.mk (read AFTER the design config) sets MAKE_TRACKS with a plain
+           # export, which silently replaced the plan tracks (M7 offset 0.016, not 0.032) -> every plan pin off-track
+           "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
            f"export MAX_ROUTING_LAYER = {top}",
            f"export PLACE_DENSITY = {util:g}",
@@ -379,7 +381,9 @@ def write_assembly(raw, out, views, rtl_root=None):
            "export MACRO_PLACE_HALO = 0 0",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
-           "export MAKE_TRACKS = /work/make_tracks.tcl",
+           # override: platforms/asap7/config.mk (read AFTER the design config) sets MAKE_TRACKS with a plain
+           # export, which silently replaced the plan tracks (M7 offset 0.016, not 0.032) -> every plan pin off-track
+           "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
            "export MAX_ROUTING_LAYER = M9",
            "export SYNTH_HIERARCHICAL = 0",
