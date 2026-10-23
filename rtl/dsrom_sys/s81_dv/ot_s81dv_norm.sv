@@ -676,7 +676,13 @@ module ot_s81dv_xfin #(
 `endif
     // ---------------------------------------------------------------- NORM collector (closed x5 logic, gated by !md)
     reg [NVL*32-1:0] col; reg inj_v;
+`ifdef OT_S81DV_XFIN_N22
+    wire [7:0] si_cl;   // N22 second distinct-ID lane-index copy (leaf half of dec5 + inj_v; replaces si_c)
+    ot_s81dv_sicp #(.ID(7)) u_cl (.clk(clk), .d(s_i), .q(si_cl));
+    always @(posedge clk or negedge rt[0]) if (!rt[0]) inj_v <= 1'b0; else inj_v <= sv_c && !mdc[NENG+2] && si_cl == NVL - 1;
+`else
     always @(posedge clk or negedge rt[0]) if (!rt[0]) inj_v <= 1'b0; else inj_v <= sv_c && !mdc[NENG+2] && si_c == NVL - 1;
+`endif
 `ifdef OT_S81DV_XFIN_SRAM
     // N8: byte-lane capture owners (copies of sv_c / si_c, own md copy per lane); the same write, 8 bits per enable
     (* keep *) reg [3:0] sv_cb;
@@ -727,11 +733,23 @@ module ot_s81dv_xfin #(
 `else
     wire [7:0] si_cd = si_c;
 `endif
+`ifdef OT_S81DV_XFIN_N22
+    // N22 (N21 census u_cd q[3] 34): the vector/bad half of the decode reads u_cd, the leaf half (and inj_v) read a
+    // second distinct-ID copy u_cl; si_c is then unused (s_i load count unchanged: u_cl replaces si_c).
+    always @(*) begin : dec5
+        e1_bad = 1'b1; e1_vec = 4'd0; e1_l = 3'd0;
+        for (a = 0; a < NE; a = a + 1) begin
+            if (si_cd >= a * NVL && si_cd < (a + 1) * NVL) begin e1_bad = 1'b0; e1_vec = a; end
+            if (si_cl >= a * NVL && si_cl < (a + 1) * NVL) e1_l = si_cl - a * NVL;
+        end
+    end
+`else
     always @(*) begin : dec5                       // v = si_c / NVL, leaf = si_c % NVL (si_c < 256)
         e1_bad = 1'b1; e1_vec = 4'd0; e1_l = 3'd0;
         for (a = 0; a < NE; a = a + 1)
             if (si_cd >= a * NVL && si_cd < (a + 1) * NVL) begin e1_bad = 1'b0; e1_vec = a; e1_l = si_cd - a * NVL; end
     end
+`endif
     reg ev_q, ebad_q; reg [3:0] evec_q; reg [2:0] el_q; reg [31:0] ed_q;
     always @(posedge clk or negedge rt[0]) if (!rt[0]) ev_q <= 1'b0; else ev_q <= sv_c && mdc[NENG];
     always @(posedge clk) begin ebad_q <= e1_bad; evec_q <= e1_vec; el_q <= e1_l; ed_q <= s_c; end

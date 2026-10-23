@@ -650,6 +650,19 @@ module ot_s81dv_eng_finish_sram #(
     // N14 (STW-S81c-COLLA 10-22, N13 census: AND(u_t.line, !u_v.line) 51 loads): the value banks read their own kept
     // copy of the write tag / valid delay lines (same input, same depth, same reset as u_t / u_v -> identical values
     // every cycle); the local root logic keeps u_t / u_v.
+`ifdef OT_S81DV_XFIN_N22
+    // N22 (STW-S81c-COLLA3 10-22, N21 census: AND(vkl[5], !tkl[5][8]) still 45 loads in cp3 -- the plain kept vkl/tkl
+    // were merged back into u_v/u_t by synthesis, so the root compares and the banks shared one line): the bank copy
+    // of the write valid/tag delay line is a distinct keep_hierarchy cell (same D f_q/t_q, same reset rc[5] for v,
+    // same depth -> identical values every cycle); taps [LAV-2] (N21 early) and [LAV-1].
+    wire [CW-1:0] wr_n_e_x; wire wr_v_e_x;
+    ot_s81dv_fin_vtline #(.CW(CW), .D(LAV)) u_vtl (.clk(clk), .rst_n(rc[5]), .v(f_q), .t(t_q),
+        .v_e(wr_v_e_x), .t_e(wr_n_e_x), .v_o(wr_v_b), .t_o(wr_n_b));
+`ifdef OT_S81DV_XFIN_N21
+    assign wr_v_e = wr_v_e_x;
+    assign wr_n_e = wr_n_e_x;
+`endif
+`else
     (* keep *) reg [CW-1:0] tkl [0:LAV-1];
     (* keep *) reg [LAV-1:0] vkl;
     always @(posedge clk) begin : g_tkl
@@ -661,6 +674,7 @@ module ot_s81dv_eng_finish_sram #(
 `ifdef OT_S81DV_XFIN_N21
     assign wr_v_e = vkl[LAV-2];
     assign wr_n_e = tkl[LAV-2];
+`endif
 `endif
 `endif
     // roots: node 1 of each tree
@@ -3153,3 +3167,17 @@ module ot_s81dv_fin_lowpri #(parameter integer N = 48)(input wire [N-1:0] g, out
     end endgenerate
     assign s = sp[N-1:0];
 endmodule
+`ifdef OT_S81DV_XFIN_N22
+// N22: the finish engine's bank copy of the write valid / tag delay line behind a module boundary (plain kept regs with
+// the same D as u_v / u_t were merged).  v resets with rst_n (rc[5], as u_v / vkl); t has no reset (as u_t's data / tkl).
+(* keep_hierarchy=1 *) module ot_s81dv_fin_vtline #(parameter integer CW = 9, D = 6)(input wire clk, input wire rst_n,
+    input wire v, input wire [CW-1:0] t, output wire v_e, output wire [CW-1:0] t_e, output wire v_o, output wire [CW-1:0] t_o);
+    (* keep *) reg [CW-1:0] tl [0:D-1];
+    (* keep *) reg [D-1:0] vl;
+    always @(posedge clk) begin : g_t
+        integer z_; tl[0] <= t; for (z_ = 1; z_ < D; z_ = z_ + 1) tl[z_] <= tl[z_ - 1];
+    end
+    always @(posedge clk or negedge rst_n) if (!rst_n) vl <= {D{1'b0}}; else vl <= {vl[D-2:0], v};
+    assign v_e = vl[D-2]; assign t_e = tl[D-2]; assign v_o = vl[D-1]; assign t_o = tl[D-1];
+endmodule
+`endif

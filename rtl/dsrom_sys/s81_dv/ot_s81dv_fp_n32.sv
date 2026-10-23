@@ -286,14 +286,30 @@ module ot_s81dv_divc_n32 #(
     // byte (same D d3[2:0] / s3_m[7:0], same edge as s3b_r / s3b_m): q4 (d4 quotient, from s3b_rk / s3b_m), q5 (d5
     // quotient) and r5 (d5 remainder).  Same function dstep(dstep(r, m[7:4])[2:0], m[3:0]) -> bit and cycle identical.
     wire [2:0] s3b_rq, s3b_rr; wire [7:0] s3b_mq, s3b_mr;
+`ifndef OT_S81DV_XFIN_N22
     ot_s81dv_xfin_rcopy #(.W(3),.ID(1)) u_s3b_rq (.clk(clk), .d(d3[2:0]), .q(s3b_rq));
     ot_s81dv_xfin_rcopy #(.W(3),.ID(2)) u_s3b_rr (.clk(clk), .d(d3[2:0]), .q(s3b_rr));
     ot_s81dv_xfin_rcopy #(.W(8),.ID(3)) u_s3b_mq (.clk(clk), .d(s3_m[7:0]), .q(s3b_mq));
     ot_s81dv_xfin_rcopy #(.W(8),.ID(4)) u_s3b_mr (.clk(clk), .d(s3_m[7:0]), .q(s3b_mr));
+`endif
     wire [3:0] d4q_n16, d5q_n16; wire [2:0] d5r_n16;
     ot_s81dv_xfin_div2q4 u_d2q4 (.r(s3b_rk), .m(s3b_m[7:4]), .q4(d4q_n16));
+`ifdef OT_S81DV_XFIN_N22
+    // N22 (N21 census: u_s3b_mr q[2..4] 36-40, u_s3b_rq q[0] 35 -- one copy per whole cone is not enough): the d5
+    // quotient and remainder are built per OUTPUT BIT, each bit cone (keep_hierarchy, distinct parameters) reading its
+    // own distinct-ID register copies (same D, same edge).  Same function -> bit and cycle identical.
+    for (genvar qb = 0; qb < 7; qb = qb + 1) begin : g_s3b_bit
+        wire [2:0] rc_; wire [7:0] mc_;
+        ot_s81dv_xfin_rcopy #(.W(3),.ID(40 + 2*qb)) u_r (.clk(clk), .d(d3[2:0]),   .q(rc_));
+        ot_s81dv_xfin_rcopy #(.W(8),.ID(41 + 2*qb)) u_m (.clk(clk), .d(s3_m[7:0]), .q(mc_));
+        wire o_;
+        ot_s81dv_xfin_div2b #(.SEL(qb < 4 ? 0 : 1), .B(qb < 4 ? qb : qb - 4)) u_b (.r(rc_), .m(mc_), .o(o_));
+        if (qb < 4) begin : g_q assign d5q_n16[qb] = o_; end else begin : g_r assign d5r_n16[qb-4] = o_; end
+    end
+`else
     ot_s81dv_xfin_div2q5 u_d2q5 (.r(s3b_rq), .m(s3b_mq), .q5(d5q_n16));
     ot_s81dv_xfin_div2r  u_d2r  (.r(s3b_rr), .m(s3b_mr), .r5(d5r_n16));
+`endif
 `endif
 `ifdef OT_S81DV_XFIN_N13
     (* keep *) reg [15:8] s3_mk;      // same D (s2_m), same edge as s3_m: the S3b digit inputs own their copy
@@ -306,15 +322,31 @@ module ot_s81dv_divc_n32 #(
     // s3_r) and significand byte (same D s2_m[15:8], same edge as s3_m).  Same function -> bit and cycle identical.
     wire [2:0] s3_rq4, s3_rq5, s3_rr5; wire [7:0] s3_mq4, s3_mq5, s3_mr5;
     ot_s81dv_xfin_rcopy #(.W(3),.ID(5))  u_s3_rq4 (.clk(clk), .d(d1[2:0]),     .q(s3_rq4));
+`ifndef OT_S81DV_XFIN_N22
     ot_s81dv_xfin_rcopy #(.W(3),.ID(6))  u_s3_rq5 (.clk(clk), .d(d1[2:0]),     .q(s3_rq5));
     ot_s81dv_xfin_rcopy #(.W(3),.ID(7))  u_s3_rr5 (.clk(clk), .d(d1[2:0]),     .q(s3_rr5));
+`endif
     ot_s81dv_xfin_rcopy #(.W(8),.ID(8))  u_s3_mq4 (.clk(clk), .d(s2_m[15:8]),  .q(s3_mq4));
+`ifndef OT_S81DV_XFIN_N22
     ot_s81dv_xfin_rcopy #(.W(8),.ID(9))  u_s3_mq5 (.clk(clk), .d(s2_m[15:8]),  .q(s3_mq5));
     ot_s81dv_xfin_rcopy #(.W(8),.ID(10)) u_s3_mr5 (.clk(clk), .d(s2_m[15:8]),  .q(s3_mr5));
+`endif
     wire [3:0] d2q_n19, d3q_n19; wire [2:0] d3r_n19;
     ot_s81dv_xfin_div2q4 u_s3q4 (.r(s3_rq4), .m(s3_mq4[7:4]), .q4(d2q_n19));
+`ifdef OT_S81DV_XFIN_N22
+    // N22 (N21 census: u_s3_mr5 q[2..4] 36-40, u_s3_rq5 q[0] 35): per-output-bit cones, own copies (see S3b above)
+    for (genvar qb = 0; qb < 7; qb = qb + 1) begin : g_s3_bit
+        wire [2:0] rc_; wire [7:0] mc_;
+        ot_s81dv_xfin_rcopy #(.W(3),.ID(60 + 2*qb)) u_r (.clk(clk), .d(d1[2:0]),    .q(rc_));
+        ot_s81dv_xfin_rcopy #(.W(8),.ID(61 + 2*qb)) u_m (.clk(clk), .d(s2_m[15:8]), .q(mc_));
+        wire o_;
+        ot_s81dv_xfin_div2b #(.SEL(qb < 4 ? 0 : 1), .B(qb < 4 ? qb : qb - 4)) u_b (.r(rc_), .m(mc_), .o(o_));
+        if (qb < 4) begin : g_q assign d3q_n19[qb] = o_; end else begin : g_r assign d3r_n19[qb-4] = o_; end
+    end
+`else
     ot_s81dv_xfin_div2q5 u_s3q5 (.r(s3_rq5), .m(s3_mq5), .q5(d3q_n19));
     ot_s81dv_xfin_div2r  u_s3r5 (.r(s3_rr5), .m(s3_mr5), .r5(d3r_n19));
+`endif
 `endif
     always @(*) begin
         d0 = dstep(3'd0, s2_m[23:20]);
@@ -1160,6 +1192,11 @@ endmodule
 endmodule
 (* keep_hierarchy=1 *) module ot_s81dv_xfin_div2r(input wire[2:0] r,input wire[7:0] m,output wire[2:0] r5);
  wire [6:0] t4={r,m[7:4]}; wire [6:0] r4w=t4%7'd5; wire [6:0] t5={r4w[2:0],m[3:0]}; wire [6:0] b5=t5%7'd5; assign r5=b5[2:0];
+endmodule
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_div2b #(parameter integer SEL=0, B=0)(input wire[2:0] r,input wire[7:0] m,output wire o);
+ // N22: ONE output bit of the two-digit step (SEL 0: d5 quotient bit B, SEL 1: d5 remainder bit B)
+ wire [6:0] t4={r,m[7:4]}; wire [6:0] r4w=t4%7'd5; wire [6:0] t5={r4w[2:0],m[3:0]}; wire [6:0] a5=t5/7'd5; wire [6:0] b5=t5%7'd5;
+ assign o = (SEL == 0) ? a5[B] : b5[B];
 endmodule
 (* keep_hierarchy=1 *) module ot_s81dv_xfin_rcopy #(parameter integer W=1, ID=0)(input wire clk,input wire[W-1:0] d,output wire[W-1:0] q);
  (* keep *) reg [W-1:0] r; always @(posedge clk) r<=d; assign q=r;
