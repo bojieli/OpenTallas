@@ -192,6 +192,29 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22 batch 9: STW-S81c-TOK5 20:38 + STEWARD-S81c 20:05 GATE_RULE_GUARD asks (collect auto-merge refusals)
+    "127356adf225c23173c42e606c0215e7a041af36": dict(
+        kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),
+        what="S81 gunit lp kit spec generator respec_lp4.py (pin_balance / peak_ram / spec keys of dsdv_gunit_lp kits); kit specs + kit files + the unit's own RTL/benches; no shared gate rule"),
+    "687be27a4d389446033506b2ae9cddf5df7e6db3": dict(
+        kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),
+        what="S81 gunit lp kit spec generator respec_lp4.py (pin_balance / peak_ram / spec keys of dsdv_gunit_lp kits); kit specs + kit files + the unit's own RTL/benches; no shared gate rule"),
+    "3b8b264472a25910b43c69117603bfa0ff0122b2": dict(
+        kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),
+        what="S81 gunit lp kit spec generator respec_lp4.py (pin_balance / peak_ram / spec keys of dsdv_gunit_lp kits); kit specs + kit files + the unit's own RTL/benches; no shared gate rule"),
+    "676085b635759a98630c0df247be24351a29a09a": dict(
+        kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),
+        what="S81 gunit lp kit spec generator respec_lp4.py (pin_balance / peak_ram / spec keys of dsdv_gunit_lp kits); kit specs + kit files + the unit's own RTL/benches; no shared gate rule"),
+    "60db766f669b64af32828cca95aec0cba5d2a618": dict(
+        kind="neutral", paths=('physical/common_flow/macro_pin_flops.tcl',),
+        what="macro_pin_flops.tcl opt-in placement hook (kits with pin_hook_before_flops only): globals -> upvar 1 crash fix; places flops, judges nothing"),
+    "b80342fea3727b0d7f8e779f45b79fa364871551": dict(
+        kind="neutral", paths=('physical/common_flow/macro_pin_flops.tcl', 'physical/common_flow/macro_pin_flops_release.tcl'),
+        what="new opt-in macro-pin flop placement hooks (PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE) used only by s81dv_idxtx* kits listing pin_hook_before_flops; no check, SDC template or netlist change"),
+    # ROOT-MERGE-1022 10-22: s81-reftile-pin-boundary
+    "d3dddf08fb1f43cbcab1aadadfd4925d9f25d3ad": dict(
+        kind="neutral",
+        what="ref_tile _child_insertion: pin-mode multiple_cts_roots child without clock_measurements targets insertion tt.boundary.mean (kit generator spine target; no gate check change; no-op on main specs)"),
     # ROOT-MERGE-1022 10-22: tokc-sparse-keep2
     "fd50f64dbbfa30e99b39f83fab582b5ec5d7d01b": dict(
         kind="neutral",

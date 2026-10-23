@@ -222,6 +222,8 @@
  ],
  "hard_define": "OT_DSDV_TXGA_HARD",
  "pre_cts_extra": [
-  "tools/s81_dv/tx_internal_clock_1022/regional_roots.tcl"
- ]
+  "tools/s81_dv/tx_internal_clock_1022/regional_roots.tcl",
+  "tools/s81_dv/tx_internal_clock_1022/preserve_branches_cts.tcl"
+ ],
+ "post_synth_tcl": "tools/s81_dv/tx_internal_clock_1022/keep_branches.tcl"
 }
