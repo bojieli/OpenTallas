@@ -115,6 +115,8 @@ def tap_points(P, tn):
     rs = list(t.get("reset", {}).get("tap_um", ck))
     if any(abs(rs[0] - a) < 1.0 and abs(rs[1] - b) < 1.0 for a, b in cks):
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
+        if t.get("hard_cores"):     # S81-P8 10-23: the reset tap also sits in a channel, off the clock taps
+            rs = list(S.tap_clear(t, rs[0], rs[1], cks, clear=4.32))
     return [_snap_tap(P, *ck), _snap_tap(P, *rs)]
 
 
