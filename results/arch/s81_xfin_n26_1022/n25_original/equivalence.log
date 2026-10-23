@@ -1,0 +1,8 @@
+ot-run: ot-gold2       admits   143 GB (avail 291, growth 0, headroom 0, waiters 0/0 GB) load 60/112 running 36 disk 2265 GB 
+ot-run: -> ot-gold2
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-2160784-1792727889 after 1 s
+legal rc=0 XFIN_N12_EQ_PASS cycles=12000 norm_rv=20 eng_rv=20 faults=0
+sparse rc=0 XFIN_N12_EQ_PASS cycles=12000 norm_rv=12 eng_rv=12 faults=0
+dup rc=0 XFIN_N12_EQ_PASS cycles=12000 norm_rv=20 eng_rv=19 faults=580
+mut rc=1 XFIN_N12_EQ_MISMATCH t=203000 norm 0/439e1d28/0 vs 0/4270c9b8/0 eng 0/00000000/00000000/00000000/0/0000000 vs 0/00000000/00000000/00000000/0/0000000
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-2160784-1792727889): exit 0

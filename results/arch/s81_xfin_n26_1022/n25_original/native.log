@@ -1,0 +1,10 @@
+ot-run: ot-gold2       admits   143 GB (avail 291, growth 0, headroom 0, waiters 0/0 GB) load 60/112 running 36 disk 2265 GB 
+ot-run: -> ot-gold2
+ot-heavy: request 64G is charged 13G (class 'native.py' measured peak 4.4G, n=15+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-2160785-1792727889 after 1 s
+SYNTH_RC 2 NETLIST True
+ACTUAL_SRAM_INSTANCES 93
+PRE_GATE_NATIVE_CENSUS FAIL report=/work/native_census.json
+ACTUAL_NATIVE FAIL 42 12 0
+CHIP_AREA None
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-2160785-1792727889): exit 1
