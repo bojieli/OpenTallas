@@ -469,8 +469,9 @@ module dsdv_idx_tx_n32 #(
     // ------------------------------------------------------------------ reset forest (control / valid bits only)
     // rl[0] pins + lookup control (24), rl[1] job / staging control (19), rl[2] CTL copies + faults (23),
     // rl[3] output selects + lo[0] (25), rl[4] status (16).
-    wire [6:0] rl;
-    ot_rst_relay #(.REGIONS(7), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst), .rst_n(rl));
+    localparam integer RR_N=(RING!=0)?9:7;
+    wire [RR_N-1:0] rl;
+    ot_rst_relay #(.REGIONS(RR_N), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst), .rst_n(rl));
 
     // ------------------------------------------------------------------ pin registers
     reg [V-1:0] vi_r, vo_r;
@@ -624,7 +625,7 @@ module dsdv_idx_tx_n32 #(
         if(lk_go)lvl_next[ne]=1'b0;
     end
     wire [255:0] m_rd;
-    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT), .RIC(RIC),.RING((MUT==7)?0:RING),.RING_D(RING_D),.RING_K(RING_K)) u_sm (.rn(rl[0]),.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
+    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT), .RIC(RIC),.RING((MUT==7)?0:RING),.RING_D(RING_D),.RING_K(RING_K)) u_sm (.rn((RING!=0)?rl[8]:rl[0]),.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
         .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]),
         .we_b(m_we_b), .wa_b(m_wa_b), .wd_b(m_wd_b));
     localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0) + ((RIC != 0) ? 1 : 0) + ((RING != 0) ? 2*(RING_K+1) : 0);   // lookup pipe: issue -> rd valid
@@ -649,18 +650,22 @@ module dsdv_idx_tx_n32 #(
     wire        lk_idle = !iw_v && fw == 2'b00 && lp_v == '0 && ib_r == ib_w;
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) begin
-            fw <= 2'b00; iw_v <= 1'b0; lp_v <= '0; rf_w <= 3'd0; rf_r <= 3'd0; rf_n <= 4'd0; ib_r <= '0;
+            fw <= 2'b00; iw_v <= 1'b0; rf_w <= 3'd0; rf_r <= 3'd0; rf_n <= 4'd0; ib_r <= '0;
         end else begin
             fw <= {fw[0], ib_re};
             if (ib_re) ib_r <= ib_r + 1'b1;
             if (fw_ctl) iw_v <= 1'b1;
             if (lk_go && (lvl & ~(16'd1 << ne)) == 16'd0) iw_v <= 1'b0;
             if (iw_v && !ne_v) iw_v <= 1'b0;
-            lp_v <= LP'({lp_v, lk_go});
             if (lp_v[LP-1]) rf_w <= rf_w + 1'b1;
             if (rf_pop) rf_r <= rf_r + 1'b1;
             rf_n <= rf_n + (lp_v[LP-1] ? 4'd1 : 4'd0) - (rf_pop ? 4'd1 : 4'd0);
         end
+    // Ring variants have 10/12 lookup valids.  Give them their own same-edge
+    // relay leaf; extending the former 24-load lookup reset would exceed32.
+    wire lp_rn=(RING!=0)?rl[7]:rl[0];
+    always @(posedge ck or negedge lp_rn)
+        if(!lp_rn)lp_v<='0;else lp_v<=LP'({lp_v,lk_go});
     always @(posedge ck) begin : g_lk
         integer c_;
         fwk <= {20{fw[0]}};
