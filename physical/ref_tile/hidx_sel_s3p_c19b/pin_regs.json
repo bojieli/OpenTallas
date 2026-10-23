@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hidx_s3_flat_lpio",
+ "enable": false,
+ "reason": "C17: the RTL registers every pin (FACE=1): inputs land at the pin on the face-region root then on the consumer root; outputs leave a producer-root relay then a face-root relay."
+}

@@ -1,0 +1,418 @@
+{
+ "name": "hidx_sel_s3p_c19a",
+ "top": "ot_hidx_s3_flat_lpio",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lpio.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv",
+  "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_landing_native.sv"
+ ],
+ "params": {
+  "OUTST": 2,
+  "FACE": 1
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_ctl",
+ "clock_ports": [
+  "ck_ctl",
+  "ck_q0",
+  "ck_q1",
+  "ck_q2",
+  "ck_q3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ctl"
+   ],
+   "inputs": [
+    "rst_n",
+    "op",
+    "pass",
+    "addr",
+    "k"
+   ],
+   "outputs": [
+    "fault"
+   ]
+  },
+  "q0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_q0"
+   ],
+   "inputs": [
+    "in_line_0",
+    "in_line_1"
+   ],
+   "outputs": []
+  },
+  "q1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_q1"
+   ],
+   "inputs": [],
+   "outputs": [
+    "selected_v_0",
+    "selected_line_0",
+    "selected_v_1",
+    "selected_line_1"
+   ]
+  },
+  "q2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_q2"
+   ],
+   "inputs": [
+    "in_line_2",
+    "in_line_3"
+   ],
+   "outputs": []
+  },
+  "q3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_q3"
+   ],
+   "inputs": [],
+   "outputs": [
+    "selected_v_2",
+    "selected_line_2",
+    "selected_v_3",
+    "selected_line_3"
+   ]
+  }
+ },
+ "landed_record": "results/rtl/hbm_idx_static/selector_s3/ot_hidx_s3_flat_lpio_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rst_n -> u_rst_l0 -> u_rst_l1 (2 plain kept stages on ck_ctl, fenced in the ctl box) -> 5 kept equal-age root copies u_lpr_root_* -> regional pads; the port net has ONE sink; release +2 edges priced in the landed record (RB 4)"
+ },
+ "outline": {
+  "w": 630.72,
+  "h": 587.52,
+  "exact": true
+ },
+ "macros": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
+   "count": 1,
+   "inst": "u_q0",
+   "at": [
+    43.2,
+    345.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
+   "count": 1,
+   "inst": "u_q1",
+   "at": [
+    345.6,
+    345.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
+   "count": 1,
+   "inst": "u_q2",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
+   "count": 1,
+   "inst": "u_q3",
+   "at": [
+    345.6,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl",
+   "count": 1,
+   "inst": "u_ctl",
+   "at": [
+    302.4,
+    280.8
+   ],
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "W": [
+   "in_line_0",
+   "in_line_1",
+   "in_line_2",
+   "in_line_3",
+   "ck_q0",
+   "ck_q2"
+  ],
+  "E": [
+   "selected_v_0",
+   "selected_line_0",
+   "selected_v_1",
+   "selected_line_1",
+   "selected_v_2",
+   "selected_line_2",
+   "selected_v_3",
+   "selected_line_3",
+   "ck_q1",
+   "ck_q3"
+  ],
+  "S": [
+   "ck_ctl",
+   "rst_n",
+   "op",
+   "pass",
+   "addr",
+   "k",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "in_line_2": [
+   8.64,
+   151.2
+  ],
+  "in_line_3": [
+   151.6,
+   293.76
+  ],
+  "in_line_0": [
+   294.16,
+   436.32
+  ],
+  "in_line_1": [
+   436.72,
+   578.88
+  ],
+  "ck_q2": [
+   151.24,
+   151.44
+  ],
+  "ck_q0": [
+   436.36,
+   436.56
+  ],
+  "selected_v_3": [
+   8.64,
+   8.84
+  ],
+  "selected_line_3": [
+   9.04,
+   151.2
+  ],
+  "selected_v_2": [
+   151.6,
+   151.8
+  ],
+  "selected_line_2": [
+   152.0,
+   293.76
+  ],
+  "selected_v_1": [
+   294.16,
+   294.36
+  ],
+  "selected_line_1": [
+   294.56,
+   436.32
+  ],
+  "selected_v_0": [
+   436.72,
+   436.92
+  ],
+  "selected_line_0": [
+   437.12,
+   578.88
+  ],
+  "ck_q3": [
+   151.24,
+   151.44
+  ],
+  "ck_q1": [
+   436.36,
+   436.56
+  ],
+  "op": [
+   306.0,
+   307.0
+  ],
+  "pass": [
+   307.2,
+   307.8
+  ],
+  "addr": [
+   308.0,
+   310.0
+  ],
+  "k": [
+   310.2,
+   313.0
+  ],
+  "ck_ctl": [
+   316.0,
+   316.2
+  ],
+  "rst_n": [
+   318.0,
+   318.2
+  ],
+  "fault": [
+   320.0,
+   320.2
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M6",
+   "v": "M7"
+  }
+ },
+ "structural_change": "c19a (STEWARD-HBMe/IDX 10-23, coordinator tile review: c18 BAD = 734x648, input pin registers floated into the 130-um column gap, p90 pin->reg 506-534 um, quadrant roots spread 400-700 um -> clock_rule FAIL x4). GEOMETRY + FENCES ONLY on the c18 RTL (FACE=1 OUTST=2, 0 edges): 2x2 children on the 43.2 lattice with an 86.4 row gap holding u_ctl at the centre (child lattice 21.6 for u_ctl only; the gap is also a horizontal crossing channel), W band 43.2 / mid channel / E band; EXCLUSIVE band fences for every pin register (W: in pa + direct pr; mid: crossing pr + crossing fr; E: fd + direct fr; S: ctl pa + fault fd) and for the c13 landings beside their child's ctl pins; every W->E crossing is one registered hop routed on M6/M7 over the child. MAIN: 43.2-um mid channel",
+ "slot_change_request": "STEWARD-HBMe/IDX 10-23 c19a: selector cluster 630.72 x 587.52 REPLACES the c18 request 734.4 x 648 (die slot idx_sel 600 x 450 SYNTH in r18h5). Faces unchanged (W in_line / E selected / S ctl); RTL = c18 (0 edges).",
+ "job": {
+  "owner": "Claude:STEWARD-HBMe/IDX",
+  "branch": "claude/hbme-idx-1023",
+  "tag": "c19a",
+  "purpose": "c19a (STEWARD-HBMe/IDX 10-23, coordinator tile review: c18 BAD = 734x648, input pin registers floated into the 130-um column gap, p90 pin->reg 506-534 um, quadrant roots spread 400-700 um -> clock_rule FAIL x4). GEOMETRY + FENCES ONLY on the c18 RTL (FACE=1 OUTST=2, 0 edges): 2x2 children on the 43.2 lattice with an 86.4 row gap holding u_ctl at the centre (child lattice 21.6 for u_ctl only; the gap is also a horizontal crossing channel), W band 43.2 / mid channel / E band; EXCLUSIVE band fences for every pin register (W: in pa + direct pr; mid: crossing pr + crossing fr; E: fd + direct fr; S: ctl pa + fault fd) and for the c13 landings beside their child's ctl pins; every W->E crossing is one registered hop routed on M6/M7 over the child. MAIN: 43.2-um mid channel",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "rtl/lib",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/index/sel_s3",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_s3_selector_vectors.py",
+   "tools/landed_parent",
+   "results/rtl/hbm_idx_static/selector_s3",
+   "physical/ref_tile/hidx_sel_s3p_c18a",
+   "physical/common_flow/child_centre_tap.tcl"
+  ],
+  "benches": [
+   {
+    "name": "selector_s3_lp_lockstep",
+    "cmd": "LP_ROOT=$PWD SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp_bench.sh {RUN}/lp",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "pass_regex": "BENCH_EXIT 0",
+    "pass_witness": "results/rtl/hbm_idx_static/selector_s3/lp_c13/bench.log"
+   },
+   {
+    "name": "selector_s3_lp_causal_mutant",
+    "cmd": "LP_ROOT=$PWD SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator MUTS=1 bash rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp_bench.sh {RUN}/lp_mut1 && cat {RUN}/lp_mut1/mut1.log && exit 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/lp_c13/mut1.log"
+   },
+   {
+    "name": "selector_s3_lpio_lockstep",
+    "cmd": "LP_ROOT=$PWD VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator FACE=1 OUTST=2 bash rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lpio_bench.sh {RUN}/lpio",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "pass_regex": "BENCH_EXIT 0",
+    "pass_witness": "results/rtl/hbm_idx_static/selector_s3/lpio_c17/bench_face1_outst2.log"
+   }
+  ]
+ },
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "C17: the RTL registers every pin (FACE=1): inputs land at the pin on the face-region root then on the consumer root; outputs leave a producer-root relay then a face-root relay."
+ },
+ "pin_hook_before_flops": [
+  "tools/landed_parent/specs/hidx_sel_s3p_c19a_fences.tcl"
+ ],
+ "pre_dpl_extra": [
+  "tools/landed_parent/lp_fence_release.tcl"
+ ],
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "^(selected_v_[0-3]|selected_line_[0-3]|fault)$"
+ },
+ "safe_design_checklist": {
+  "1_pins": "every input lands in its pa flop inside the W/S face band fence, every output leaves its fd flop inside the E/S band fence (c18 had no fence on inputs)",
+  "2_reach": "W band -> mid channel (crossing pr) and mid channel -> E band (fd) ~280-300 um, one registered hop each on M6/M7 over the child; ctl landings <= ~280 um",
+  "3_fanout": "PASS: c12 native census max 32 kept (chunk12 landings unchanged); +2 reset stages drive 1 load each",
+  "4_depth": "PASS: datapath unchanged (c12 reg->reg +54 ps, in->macro / reg->macro repaired in route); no new logic",
+  "5_storage": "PASS: no parent storage beyond the D = 4 landing slots; SRAMs only inside the closed q children",
+  "6_floorplan": "630.72 x 587.52 (c18 734.4 x 648): 2x2 CLOSED children on the 43.2 lattice, macro packing 60%; bands W 43.2 / mid / E; u_ctl in the 86.4 row gap; no empty quadrant",
+  "7_clock": "5 roots as c18; each root's sinks now inside one quadrant + its own face bands (<= ~300 um span); entries at face-span midpoints; gate measures pin-flop spread <= 80 TT/FF",
+  "8_reset": "FIXED (c12 FAIL reset_landing 5 sinks): rst_n -> u_rst_l0 -> u_rst_l1 (2 plain kept stages, ck_ctl) -> 5 kept equal-age root copies -> regional pads; reset only on control / valid; release +2 edges uniform (record RB 4)",
+  "8_schedule": "Static: whole cluster shifted +4 edges at every port vs C15 (+1 vs C16b; rst_n included) -> STEWARD-TOK notice; lockstep vs rs reference delayed 4 PASS, MUT 9 / MUT 1 FAIL (lpio_c17/bench_face1_outst2.log)."
+ },
+ "child_centre_tap": {
+  "children": [
+   "u_q0",
+   "u_q1",
+   "u_q2",
+   "u_q3",
+   "u_ctl"
+  ],
+  "why": "Actual c14a full child clock pair failed TT130.5/FF113.2; current main CCT child-scoped corner classification and all-mode TT/FF minimax fixes actual tap structure. Same child views, source, phase and geometry."
+ },
+ "notes_c18": "HBMc/TILES4 10-22: c17a gate FAIL clock_rule pin-flop spread TT 120 / FF 101 ps on every quadrant root: ck_q0..3 entered at the S-face centre, ~400-600 um from their W/E face pin-register spans. c18 moves each quadrant clock entry to the middle of its own face span (q0/q2 W at 497.6/150.4, q1/q3 E). RTL unchanged, 0 edges.",
+ "purpose": "c19a (STEWARD-HBMe/IDX 10-23, coordinator tile review: c18 BAD = 734x648, input pin registers floated into the 130-um column gap, p90 pin->reg 506-534 um, quadrant roots spread 400-700 um -> clock_rule FAIL x4). GEOMETRY + FENCES ONLY on the c18 RTL (FACE=1 OUTST=2, 0 edges): 2x2 children on the 43.2 lattice with an 86.4 row gap holding u_ctl at the centre (child lattice 21.6 for u_ctl only; the gap is also a horizontal crossing channel), W band 43.2 / mid channel / E band; EXCLUSIVE band fences for every pin register (W: in pa + direct pr; mid: crossing pr + crossing fr; E: fd + direct fr; S: ctl pa + fault fd) and for the c13 landings beside their child's ctl pins; every W->E crossing is one registered hop routed on M6/M7 over the child. MAIN: 43.2-um mid channel",
+ "notes_c19": "c19a (STEWARD-HBMe/IDX 10-23, coordinator tile review: c18 BAD = 734x648, input pin registers floated into the 130-um column gap, p90 pin->reg 506-534 um, quadrant roots spread 400-700 um -> clock_rule FAIL x4). GEOMETRY + FENCES ONLY on the c18 RTL (FACE=1 OUTST=2, 0 edges): 2x2 children on the 43.2 lattice with an 86.4 row gap holding u_ctl at the centre (child lattice 21.6 for u_ctl only; the gap is also a horizontal crossing channel), W band 43.2 / mid channel / E band; EXCLUSIVE band fences for every pin register (W: in pa + direct pr; mid: crossing pr + crossing fr; E: fd + direct fr; S: ctl pa + fault fd) and for the c13 landings beside their child's ctl pins; every W->E crossing is one registered hop routed on M6/M7 over the child. MAIN: 43.2-um mid channel",
+ "child_lattice_um": 21.6
+}
