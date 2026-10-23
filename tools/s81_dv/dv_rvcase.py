@@ -903,6 +903,8 @@ def main():
     ap.add_argument('--signal-top-layer', choices=('M7', 'M8', 'M9'), default='M7',
                     help='M8 is die signals only; M9 (STW-S81c-DIE4 10-22, coord M9 probe: overflow 21.09M -> 0.74M) opens '
                          'M9 to die signals too, M9 stays clock/PG-capable: --m9-pg-reserve derates it for the PG straps')
+    ap.add_argument('--upper-adj', type=float, default=0.20,
+                    help='GRT capacity adjustment on M6..M8 (owner 19:45 / coord probe b: 0.10 with M9 signals)')
     ap.add_argument('--m9-pg-reserve', type=float, default=0.20,
                     help='with --signal-top-layer M9: GRT capacity adjustment on M9 reserved for PG straps / clock (0..1)')
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
@@ -1766,7 +1768,7 @@ proc ot_rv_place_rfw {listfile report} {
             reserve_tcl += (f'set ot_rsv_b [odb::dbBlockage_create $ot_rsv_blk {q}]; puts "OT_RESERVE {b["name"]} placement_blockage"\n'
                             f'foreach L {{M1 M2 M3 M4 M5 M6}} {{ odb::dbObstruction_create $ot_rsv_blk [$ot_rsv_tech findLayer $L] {q} }}\n')
     # STW-S81c-DIE4 10-22: M9 die signals (coord M9 probe) keep a PG/clock strap share on M9 as a GRT derate
-    m9_adj = (f'set_global_routing_layer_adjustment M9 {a.m9_pg_reserve:.2f}\n' if a.signal_top_layer == 'M9' else '')
+    m9_adj = (f'set_global_routing_layer_adjustment M9 {a.m9_pg_reserve:.2f}\n' if a.signal_top_layer == 'M9' and a.m9_pg_reserve > 0 else '')
     tcl = f'''# S81-DIE7 REAL-VIEW die case (tools/s81_dv/dv_rvcase.py) -- census in case.json (stand-ins labelled)
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
@@ -1810,7 +1812,7 @@ write_db /work/out/post_repair.odb
 set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-{'M8' if a.signal_top_layer == 'M9' else a.signal_top_layer} 0.20
+set_global_routing_layer_adjustment M6-{'M8' if a.signal_top_layer == 'M9' else a.signal_top_layer} {a.upper_adj:.2f}
 {m9_adj}set t0 [clock seconds]
 global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
