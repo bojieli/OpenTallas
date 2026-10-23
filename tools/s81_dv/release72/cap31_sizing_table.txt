@@ -1,0 +1,28 @@
+cap31 sizing (STW-S81d-GEN 10-22, RECORD ONLY: cap31 GEN held by COORD 00:20 before launch; nothing ran past plan checks + router trials)
+Inputs: cap24 rep600 GRT probe (ep5 coord-rep600-s81/grt, 4076 2D bins, 2D sum 54.6k: H 46.6k / V 8.0k) and 30-iteration residual
+(coord-rep600-s81/full: only 38 2D bins, sum 253, all at the s_0 centre street (9-9.5,17.5); the 203k 3D residual (M6 98k, M8 78k) is
+layer-assignment overflow and has NO per-bin map in the report). Model: cap31_streets.py on the routed plan; H tracks M4 14.58 + M6
+14.06 + M8 11.25 = 39.9/um, V M3+M5+M7+M9 = 55.0/um; ratio = lane bits crossing the street / tracks; target <= 0.6.
+Calibration: frame-column V streets at ratio 0.7-1.26 show ZERO probe overflow (lanes cross over blocks on M7/M9); H streets track the probe.
+
+cap30 routed plan, H streets > 0.6 with probe evidence (cap24 probe H in window):
+  rsv_01|s_0S  y~10.45 w 139.0 bits 7254 ratio 1.31 w06 303  probe 217  -> cap31: s_0S + s_0N +172.8 N (w 311.8, 0.58)
+  rsv_03|s_0S  y~10.45 w 139.0 bits 7184 ratio 1.29 w06 300  probe 953  -> same move (0.57)
+  s_6S|eng     y~24.6  w 129.6 bits 6558 ratio 1.27 w06 274  probe 636  -> NO rigid fix (eng at the seal; s_6 column budget below)
+  rsv_13|s_6N  y~10.3  w 182.2 bits 7596 ratio 1.04 w06 317  probe 156* -> NO rigid fix; cap30 s_6N -129.6 made it 311.8 -> 182.2
+  rsv_11|s_6N  y~10.3  w 182.2 bits 7044 ratio 0.97 w06 294  probe 161*    (*cap24 had 311.8 um here)
+  s_7S|s_7N    y~17.8  w 345.6 bits 12918 ratio 0.94 w06 540 probe 539+2417 (s_6/s_7 junction) -> cap31: s_7N +216 N (561.6, 0.58)
+  rsv_09/11|s_5N y~10.4 w 311.8 bits 9740 ratio 0.78 w06 407 probe 348/527 -> no rigid room (s_5 centre street 302 at its own limit)
+  f_2R01|f_3L10 x~6.2  w 259.2 bits 7596 ratio 0.73 probe 311; rsv_03|s_1N 0.64 probe 559; rsv_15|s_7S 0.61 probe 415 (marginal)
+  centre streets after cap30: s_0 0.58, s_1 0.58, s_6 0.55 (cap24 probe 4999 / 8125 there were the cap30 targets)
+V street with probe evidence: f_3L10|lk_WN3 x 7.63-7.72 y~18.3 w 86.4 bits 7596 ratio 1.60 probe V 316 (+670/441 at (6.5-7,18.25))
+  -> cap31: lk_WN3 + lk_WN1 +172.8 E (w 259.2, 0.53)
+s_6 column (rsv_13 top 10208.8 .. eng bottom 24690.2): free 743.8 um for three H streets that need 317 + 392 + 274 = 983 um at
+  current bits -> infeasible by rigid moves; needs fewer bits (re-route) or relays off the channel layers.
+y~6.5 row edge: NOT a street-width class. The overflow sits in the face gcell row of the 2133-bit sg_* (and 805-bit dn_*) 0-stage
+  rsv-to-rsv links: one net bus per gcell (w_sg_05_04_lnd 532 in cap 195), i.e. fan-in from the face pins to the landing stand-in
+  in the 86.4-um inter-row street. Widening is blocked (rsv_00/14 sit on irg_00/07 at 86.4; moving one rsv row lengthens 0-stage
+  sg/dn links past hop-max 340 -> a station = cycle change).
+Router (dv_route72c CAP_BPU 150.9 bits/um = 6x the GRT H supply at 0.6): cap31 at cap-margin 1.0: ROUTE_DONE failed 0, stations
+  21484; the margin 0.5/0.3/0.18 trials were stopped by the HOLD (ITER 13 of 0.5: 1475 overflow edges, wirelength +1%).
+cap31 at margin 1.0 leaves (H) rsv_13|s_6N 1.04, s_6S|eng 1.00, lk_WN1|f_3L01 0.95 (new: lk_WN1 now under f_3L01's S face), rsv_09/11|s_5N 0.78.
