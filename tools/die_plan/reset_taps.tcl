@@ -22,7 +22,15 @@ proc rt_is_buf {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "HB*" $m]}]
 }
-if {[llength $rt_taps] < 2 || [$rt_blk findNet rst_n_t0] eq "NULL"} {
+# tap 0's synchroniser net keeps the RTL alias name rst_n (wire rst_n = rst_n_t0)
+proc rt_tapnet {blk i} {
+  set n [$blk findNet rst_n_t$i]
+  if {$n eq "NULL" && $i == 0} { set n [$blk findNet rst_n] }
+  return $n
+}
+set rt_have 0
+foreach tp $rt_taps { if {[rt_tapnet $rt_blk [lindex $tp 0]] ne "NULL"} { incr rt_have } }
+if {[llength $rt_taps] < 2 || $rt_have < 2} {
   puts "OT_RESET_TAPS single tap or no per-tap synchronisers: nothing to do"
 } else {
   # synchroniser nets per tap and polarity: rst_n_t<i> (parity 0) and the buffer/inverter tree below it
@@ -31,7 +39,7 @@ if {[llength $rt_taps] < 2 || [$rt_blk findNet rst_n_t0] eq "NULL"} {
   set rt_bad {}
   foreach tp $rt_taps {
     set i [lindex $tp 0]
-    set n0 [$rt_blk findNet rst_n_t$i]
+    set n0 [rt_tapnet $rt_blk $i]
     if {$n0 eq "NULL"} { lappend rt_bad $i; continue }
     set todo [list [list $n0 0]]
     while {[llength $todo]} {
@@ -70,6 +78,7 @@ if {[llength $rt_taps] < 2 || [$rt_blk findNet rst_n_t0] eq "NULL"} {
     lassign [$ins getLocation] x y
     set best ""; set bd 0
     foreach tp $rt_taps {
+      if {[lindex $tp 0] in $rt_bad} continue
       set d [expr {abs($x - [lindex $tp 1]) + abs($y - [lindex $tp 2])}]
       if {$best eq "" || $d < $bd} { set best [lindex $tp 0]; set bd $d }
     }
@@ -86,5 +95,5 @@ if {[llength $rt_taps] < 2 || [$rt_blk findNet rst_n_t0] eq "NULL"} {
       incr rt_moved
     }
   }
-  puts "OT_RESET_TAPS [llength $rt_taps] taps, $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed to the nearest tap's synchroniser, $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt][expr {[llength $rt_bad] ? " MISSING rst_n_t$rt_bad" : ""}]"
+  puts "OT_RESET_TAPS [llength $rt_taps] taps ([llength $rt_bad] without a synchroniser: their flops use the nearest tap that has one), $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed to the nearest tap's synchroniser, $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt]"
 }
