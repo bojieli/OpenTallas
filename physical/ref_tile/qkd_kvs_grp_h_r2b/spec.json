@@ -256,5 +256,8 @@
  ],
  "pre_dpl_extra": [
   "physical/ref_tile/qkd_kvs_grp_h_r2b/relay_release.tcl"
- ]
+ ],
+ "fill_reason": {
+  "pin_bound": "Measured gate d957: E 2211 pins occupies1172/1188um (99%); W1869 pins occupies1062/1188um (89%). Frozen release slot222.576x1187.976um sets the perimeter; macro+std fill8-10% cannot shrink the E/W faces."
+ }
 }

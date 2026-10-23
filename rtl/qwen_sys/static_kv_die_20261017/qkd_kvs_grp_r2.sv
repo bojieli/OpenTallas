@@ -23,7 +23,8 @@
 //   EST / tok   x__est[0] / x__tok / x__tep -> entry flop -> y exit flop (W, beside)           = 2 core edges
 // Pass / delay flops have no reset (as the die relays qkd_rly_*): the regional reset hold (OT_KV_RST_HOLD 273 edges,
 // clock running) flushes them with the reset root's zeros (fan chain + local delay <= 29, gather <= 32 edges).
-// Every other port (kreq / vreq / rsp / krsp / i_pc / o_pc / af* / straps / clocks / resets) is u_core's, unchanged.
+// resets     landed in RTL: async assert, release +2 edges of their own clock (hrst_n: hr0 -> hr1, rst_n: cr0 -> cr1)
+// Every other port (kreq / vreq / rsp / krsp / i_pc / o_pc / af* / straps / clocks / rst_n) is u_core's, unchanged.
 // Bench: tools/qwen_kv_die/kvs_grp_r2_bench.sh (lockstep vs the release module on delayed inputs, mutants must FAIL).
 
 module qkd_kvs_grp_r2 (
@@ -140,7 +141,18 @@ module qkd_kvs_grp_r2 (
     wire [0:0] c_yest;
     wire [17:0] c_ytok;
     wire [15:0] c_ytep;
-    qkd_kvs_grp u_core (.ck(ck), .rst_n(rst_n), .afk(afk), .afv(afv), .afu(afu), .hck(hck), .hrst_n(hrst_n),
+    // ---- hrst_n landing (KDIE5-RTL census): async assert, release 2 hck edges later; hr1 is the ONE driver of the core's
+    // hck reset pins (the structural copy replicates it to <= 32 loads a copy; hrst_n then drives the copies only)
+    (* keep *) reg hr0, hr1;
+    always @(posedge hck or negedge hrst_n)
+        if (!hrst_n) {hr0, hr1} <= 2'b00;
+        else         {hr0, hr1} <= {1'b1, hr0};
+    // rst_n landing in RTL (the kit's flow landing is off): async assert, release 2 ck edges later (= ROOT-RST standard)
+    (* keep *) reg cr0, cr1;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) {cr0, cr1} <= 2'b00;
+        else        {cr0, cr1} <= {1'b1, cr0};
+    qkd_kvs_grp u_core (.ck(ck), .rst_n(cr1), .afk(afk), .afv(afv), .afu(afu), .hck(hck), .hrst_n(hr1),
         .slg__cfg_stack(slg__cfg_stack), .slg__cfg_group(slg__cfg_group), .kreq(kreq), .vreq(vreq),
         .x__est(x__est), .x__tok(x__tok), .x__tep(x__tep), .rsp(rsp), .krsp(krsp), .af__fault(af__fault),
         .y__est__0_1(c_yest), .y__tok(c_ytok), .y__tep(c_ytep), .i_ctl({q0[270:LW], lv}),
@@ -233,7 +245,18 @@ module qkd_kvs_grp_h_r2 (
     wire [0:0] c_yest;
     wire [17:0] c_ytok;
     wire [15:0] c_ytep;
-    qkd_kvs_grp_h u_core (.ck(ck), .rst_n(rst_n), .afk(afk), .afv(afv), .hck(hck), .hrst_n(hrst_n),
+    // ---- hrst_n landing (KDIE5-RTL census): async assert, release 2 hck edges later; hr1 is the ONE driver of the core's
+    // hck reset pins (the structural copy replicates it to <= 32 loads a copy; hrst_n then drives the copies only)
+    (* keep *) reg hr0, hr1;
+    always @(posedge hck or negedge hrst_n)
+        if (!hrst_n) {hr0, hr1} <= 2'b00;
+        else         {hr0, hr1} <= {1'b1, hr0};
+    // rst_n landing in RTL (the kit's flow landing is off): async assert, release 2 ck edges later (= ROOT-RST standard)
+    (* keep *) reg cr0, cr1;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) {cr0, cr1} <= 2'b00;
+        else        {cr0, cr1} <= {1'b1, cr0};
+    qkd_kvs_grp_h u_core (.ck(ck), .rst_n(cr1), .afk(afk), .afv(afv), .hck(hck), .hrst_n(hr1),
         .slg__cfg_stack(slg__cfg_stack), .slg__cfg_group(slg__cfg_group), .kreq(kreq), .vreq(vreq),
         .x__est(x__est), .x__tok(x__tok), .x__tep(x__tep), .rsp(rsp), .krsp(krsp), .af__fault(af__fault),
         .y__est__0_1(c_yest), .y__tok(c_ytok), .y__tep(c_ytep),

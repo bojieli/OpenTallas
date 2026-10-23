@@ -13,7 +13,7 @@ array set ot_rl_pt {39216 {39.55 560.0} 39217 {39.85 560.0} 39218 {40.15 560.0} 
 set ot_rl_list {}
 foreach i [$ot_rl_blk getInsts] {
   if {[[$i getMaster] isBlock]} continue
-  set name [string map {\ {}} [$i getName]]
+  set name [$i getName]
   if {![regexp {^u(\d+)_c\d+([/.]u_cell)?$} $name -> ci]} continue
   if {![info exists ot_rl_pt($ci)]} continue
   if {[$i isFixed]} continue

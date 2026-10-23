@@ -76,7 +76,7 @@ array set ot_rl_pt {{{table}}}
 set ot_rl_list {{}}
 foreach i [$ot_rl_blk getInsts] {{
   if {{[[$i getMaster] isBlock]}} continue
-  set name [string map {{\\ {{}}}} [$i getName]]
+  set name [$i getName]
   if {{![regexp {{^u(\d+)_c\d+([/.]u_cell)?$}} $name -> ci]}} continue
   if {{![info exists ot_rl_pt($ci)]}} continue
   if {{[$i isFixed]}} continue
@@ -187,6 +187,7 @@ def main():
                 'reset landing = ' + r1 + '. ' + ('MAIN: relays placed by GPL.' if var == 'a' else
                 ('FB: fan / gather relay stages FIRM at their 1/3 / 2/3 span points (relay_place.tcl).' if k == 'grp' else
                  'FB: cf1 fault relays f1 + own-status relays o1 / o2 FIRM on the W-mid -> N path (relay_place.tcl).')))
+            s['fill_reason'] = dict(pin_bound='Measured gate d957: E 2211 pins occupies1172/1188um (99%); W1869 pins occupies1062/1188um (89%). Frozen release slot222.576x1187.976um sets the perimeter; macro+std fill8-10% cannot shrink the E/W faces.')
             s['purpose'] = f'KDIE5-RTL 10-22: pin-registered successor of {m} for the release KV die ({"MAIN" if var == "a" else "FB"})'
             j = s['job']
             j.update(owner='Claude:KDIE5-RTL', branch='claude/kdie5-rtl-1022', tag=f'r2{var}', purpose=s['purpose'],
