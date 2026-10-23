@@ -1,0 +1,3 @@
+CTLM_PROG MUT=0 BMUT=0 HARD_HR=1 SEG_CAL=1 DECODE=3 DEFS=['TB_TRACE', 'TB_LANDED']: PASS 123/123  rom_go-issue [2] nat_go-issue [1] csr@1042 stage1_xt1 [True, True, True, True]
+    24851 LANDED_LOCKSTEP PASS LMUT=0 compared=24811 mismatches=0
+RC 0

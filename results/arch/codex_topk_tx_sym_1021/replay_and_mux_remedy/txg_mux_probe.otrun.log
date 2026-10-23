@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   128 GB (avail 259, growth 169, headroom 0, waiters 0/0 GB) load 49/128 running 33 disk 824 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/codex-s81-txg-grt-replay-2218
+ot-run: -> ot-epyc5
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 12 = 8 GB, admissible -9 GB: available 258 GB, growth charged 264 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 242 GB at x1), young 105 GB, floor 57 GB
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1024672-1792647689 after 40 s
+TX_MUX_FENCE seeds=256 comb=3756 box=248.4 43.2 345.6 496.8 (release before DPL and CTS)
+ACTUAL_FAILED_ENDPOINT_FENCED wire20421/A lp_fence_grp_tx_score_mux
+ACTUAL_FAILED_ENDPOINT_FENCED place18001/Y lp_fence_grp_tx_score_mux
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1024672-1792647689): exit 0

@@ -21,6 +21,8 @@ _ld = importlib.machinery.SourceFileLoader("ohr174", str(HERE / "ot-heavy-reconc
 _sp = importlib.util.spec_from_loader("ohr174", _ld)
 R = importlib.util.module_from_spec(_sp)
 _ld.exec_module(R)
+# OWNER 10-22 20:10 zeroed the growth reservation defaults; these tests pin the pre-20:10 values to keep the rules tested
+R.DEFAULTS.update(GROWTH_CAP_AVAIL_FRAC=0.25, SETTLED_FLOOR_FRAC=0.02, PHASE_MARGIN=1.0)
 FX = HERE / "evidence" / "admit_v174"
 R.PEAKS = str(FX / "no-local-peaks.tsv")   # class late growth from the fixtures only, never this host
 R._LATE.clear()
@@ -128,3 +130,17 @@ class V174Units(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OwnerZeroGrowthDefaults(unittest.TestCase):
+    """OWNER 10-22 20:10: growth reservation 0 %, hard invariant kept; a redeploy must not bring the reservation back"""
+
+    def test_defaults_zero(self):
+        _l = importlib.machinery.SourceFileLoader("ohr_defaults", str(Path(__file__).with_name("ot-heavy-reconcile")))
+        M = importlib.util.module_from_spec(importlib.util.spec_from_loader("ohr_defaults", _l))
+        _l.exec_module(M)
+        self.assertEqual(M.DEFAULTS["GROWTH_CAP_AVAIL_FRAC"], 0.0)
+        self.assertEqual(M.DEFAULTS["SETTLED_FLOOR_FRAC"], 0.0)
+        self.assertEqual(M.DEFAULTS["PHASE_MARGIN"], 0.0)
+        self.assertEqual(M.DEFAULTS["HARD_INVARIANT"], 1.0)
+        self.assertEqual(M.DEFAULTS["INV_HEADROOM_GB"], 64.0)

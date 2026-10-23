@@ -11,6 +11,8 @@ from unittest.mock import patch
 loader = importlib.machinery.SourceFileLoader('frontend_reconcile', str(pathlib.Path(__file__).with_name('ot-heavy-reconcile')))
 R = importlib.util.module_from_spec(importlib.util.spec_from_loader(loader.name, loader))
 loader.exec_module(R)
+# OWNER 10-22 20:10 zeroed the growth reservation defaults; these tests pin the pre-20:10 values to keep the rules tested
+R.DEFAULTS.update(GROWTH_CAP_AVAIL_FRAC=0.25, SETTLED_FLOOR_FRAC=0.02, PHASE_MARGIN=1.0)
 
 
 def scope(now, req, res=None, frontend=True, age=4000):

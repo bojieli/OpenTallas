@@ -1,0 +1,5 @@
+Source-pinned import of the seven CLOSED selected S81 HEAD lane subchildren.
+168 original record files preserved byte for byte. Only two new canonical physical RTL files are introduced.
+The complete original behavioural bench runner and its readset are archived under original_bench_readset with original repository paths. Run from that archive root after supplying Verilator 5.050; original command arguments remain unchanged. All 20 archived files have identical blobs at all seven routed source commits.
+The archived sc4/sc6 parent/reference RTL belongs to historical composition witnesses; neither unclosed p9 parent nor helper code is adopted. No simulation was rerun for this immutable record import. Witness logs and original verdicts remain source-pinned.
+All imported physical subchild tops are parameter-free. Existing RTL defaults are unchanged. New util helpers and lsc_parts are byte-identical to all seven routed source commits. The internal tx slice module is defined in lsc_parts; historical parents/reference files are archived only and must not be added to the canonical synthesis readset.

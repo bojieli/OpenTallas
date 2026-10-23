@@ -1,0 +1,91 @@
+{
+  "schema": "opentallas.hbm_dma_load_static.v1",
+  "status": "HAZARD8_COMPONENT_PASS_NATIVE_AND_PRODUCER_PENDING",
+  "required_formats": {
+    "0": "FP32",
+    "1": "BF16",
+    "2": "FP8E4M3",
+    "4": "INT8",
+    "5": "U32",
+    "6": "UE8M0"
+  },
+  "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv",
+  "capacity": {
+    "NPC": 2,
+    "double_buffer_banks": 2,
+    "sectors_per_PC_per_bank": 64,
+    "bytes_per_sector": 32,
+    "bytes_per_lane": 8192,
+    "macros_per_lane": 2,
+    "new_payload_pipeline_bits_by_stage": {
+      "registered_source_copies": 2048,
+      "normalized_quarter_copies": 1024,
+      "converted": 256,
+      "scatter": 256
+    }
+  },
+  "per_cycle": {
+    "read_commands": 1,
+    "source_bits_read": 256,
+    "destination_words_max": 8,
+    "destination_bits": 256,
+    "destination_packet_bits": 281,
+    "command_bits": 62,
+    "boundary_bits": 286,
+    "active_source_lanes_per_quadrant_route_limit": 1
+  },
+  "latency": {
+    "load_pin_to_output_edges_expected": 5,
+    "measurement": "EP9 unit 3079428-1792649864, exact source 1f9eb0eea: both banks 1480 commands each, six formats, II 1, five local edges. Full release/reuse/mutant/raw/checkpoint/overlap and baseline differential tests PASS.",
+    "HBM_window_latency": "real vmks CDC and drain dependent; not104",
+    "load_pin_to_output_edges_measured": 5,
+    "route_extra_edges": 5,
+    "raw_extra_route_edges": 1,
+    "command_to_routed_output_edges": 10,
+    "note": "5 local +5 route; actual die command/wire/regional crossings additional",
+    "integrated_producer_receipt": {
+      "commit": "6791d55e7",
+      "packet": "results/rtl/hbm_dma_producer_1021/successors/fb9122ac6/receipt.json",
+      "unit": "3161623-1792645642",
+      "source_commit": "fb9122ac6",
+      "HBM_period_ns": 1.4,
+      "stream_period_ns": 2,
+      "words": 384,
+      "native_VM_commits": 48,
+      "SRAM_readbacks": 48,
+      "sample_age": 10,
+      "preceding_drive_age": 11,
+      "negative_checks": [
+        "wrong destination bank",
+        "corrupt HBM source byte"
+      ],
+      "scope": "Eight actual KRL1 vmks and real CDC; controller/PHY boundary modeled; group and WB idle; not physical, full die transport or full-token qualification.",
+      "status": "PRIOR_SOURCE_ONLY_NEW_REPLAY_PENDING"
+    }
+  },
+  "replicas": {
+    "lanes_per_quadrant": 8,
+    "quadrants": 4,
+    "conversion_words_per_lane": 8
+  },
+  "routing": {
+    "route": "registered source8->1 gather per quadrant,4->8 destination scatter owned by die lead",
+    "source_lane_not_destination_bank": true,
+    "crossquadrant_required": true,
+    "collision_policy": "fault, compiler reserves fixed slots",
+    "tracks_and_area": "PENDING synthesis/native and dieGEN/GRT; no physical qualification"
+  },
+  "ownership": "source bank+epoch+full checked before read; release final read; invalid schedule faults; count0/release1 frees unused window lanes without reads or writes",
+  "schedule": "compiler lowers real MOVE descriptors to vmfc89 window and static62 read/convert commands; no lease, credit or ready; raw and converted output pipelines may overlap after distinct SRAM read edges, with destination collisions checked by the real route. Fill hazard candidate conservatively excludes the bank of any active raw/LOAD request; malformed post-fault fill side effects are explicitly documented in hazard8_contract.json.",
+  "safe_review": {
+    "storage": "same existing SRAM payload, no new large flop storage",
+    "pins": "same landing input/output registerband",
+    "reach": "new fixed registered route required; die lead owns actual geometry",
+    "fanout": "Native6 MAIN and fallback both PASS on fb9122ac6: max32, zero violations among78,733 roots.",
+    "depth": "Named MAIN7 TT write CE -207.3 ps and seen-state -171.5 ps motivate removal of read-validation reconvergence from fill acceptance. No added data edge or storage; exact source replay and native32 pending.",
+    "floorplan": "MAIN/fallback outlines and macro channels unchanged. Native5 MAIN gate WARN, overflow0, TT/FF pin-flop76.9/74.3 ps; TT setup -114.4 ps at macro read CE. Fallback clock105.7/99.0 ps fails. Native6 fallback uses8-sink20um CTS clusters. New area/timing pending.",
+    "clock": "Native6 MAIN TT/FF pin spreads96.9/92.0 ps; fallback85.2/80.2 ps, both fail80. Native7 keeps body/SRAM CTS and gives actual1744 boundary flops a five-level geometric BUFx24 tree, equal repeater count, repeat beyond80um. No data age change; actual insertions/spreads pending.",
+    "reset": "new pipeline valid reset only; datapath unreset"
+  },
+  "source_commit": "1f9eb0eea"
+}

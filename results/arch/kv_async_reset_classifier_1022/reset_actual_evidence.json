@@ -1,0 +1,1646 @@
+[
+  {
+    "label": "grp",
+    "sha256": "1dce12f208d502bd166a387abb4e1b5b1ec9edd0e6d2a59fb214254287bb3fda",
+    "top": "qkd_kvs_grp_r2c",
+    "ports": {
+      "rst_n": {
+        "net": 5,
+        "root_sinks": 3,
+        "landing_candidates": [
+          {
+            "name": "u44407_c0.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                4
+              ],
+              "D": [
+                62688
+              ],
+              "QN": [
+                23991
+              ],
+              "RESETN": [
+                5
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "net": 62688,
+              "cell": "u43152_c0.u_cell",
+              "type": "TIEHIx1_ASAP7_75t_R",
+              "pin": "H",
+              "pins": {
+                "H": [
+                  62688
+                ]
+              }
+            },
+            "out_loads": {
+              "23991": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:D": 2
+            },
+            "terminal_count": 2
+          },
+          {
+            "name": "u44408_c0.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                4
+              ],
+              "D": [
+                23992
+              ],
+              "QN": [
+                23993
+              ],
+              "RESETN": [
+                5
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23991,
+                "cell": "u44407_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    4
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23991
+                  ],
+                  "RESETN": [
+                    5
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "23993": 2
+            },
+            "terminal_roles": {
+              "NOR2x1_ASAP7_75t_R:A": 1,
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 12,
+              "DFFHQNx1_ASAP7_75t_R:D": 19
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u44408_c1.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                4
+              ],
+              "D": [
+                23992
+              ],
+              "QN": [
+                23995
+              ],
+              "RESETN": [
+                5
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23991,
+                "cell": "u44407_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    4
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23991
+                  ],
+                  "RESETN": [
+                    5
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "23995": 1
+            },
+            "terminal_roles": {
+              "DFFHQNx1_ASAP7_75t_R:D": 24
+            },
+            "terminal_count": 24
+          }
+        ]
+      },
+      "hrst_n": {
+        "net": 10,
+        "root_sinks": 12,
+        "landing_candidates": [
+          {
+            "name": "u48303_c0.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                62688
+              ],
+              "QN": [
+                23997
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "net": 62688,
+              "cell": "u43152_c0.u_cell",
+              "type": "TIEHIx1_ASAP7_75t_R",
+              "pin": "H",
+              "pins": {
+                "H": [
+                  62688
+                ]
+              }
+            },
+            "out_loads": {
+              "23997": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:D": 11
+            },
+            "terminal_count": 11
+          },
+          {
+            "name": "u48304_c0.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                23999
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "23999": 2
+            },
+            "terminal_roles": {
+              "NOR2x1_ASAP7_75t_R:B": 1,
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 31
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u48304_c1.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24001
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24001": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u48304_c10.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24003
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24003": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 3,
+              "DFFHQNx1_ASAP7_75t_R:D": 5
+            },
+            "terminal_count": 8
+          },
+          {
+            "name": "u48304_c2.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24005
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24005": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u48304_c3.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24007
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24007": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u48304_c4.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24009
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24009": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u48304_c5.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24011
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24011": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u48304_c6.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24013
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24013": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u48304_c7.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24015
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24015": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u48304_c8.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24017
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24017": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u48304_c9.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                9
+              ],
+              "D": [
+                23998
+              ],
+              "QN": [
+                24019
+              ],
+              "RESETN": [
+                10
+              ],
+              "SETN": [
+                62688
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 23997,
+                "cell": "u48303_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    9
+                  ],
+                  "D": [
+                    62688
+                  ],
+                  "QN": [
+                    23997
+                  ],
+                  "RESETN": [
+                    10
+                  ],
+                  "SETN": [
+                    62688
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "24019": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          }
+        ]
+      }
+    },
+    "clock_ports": {
+      "ck": 4,
+      "hck": 9
+    }
+  },
+  {
+    "label": "grph",
+    "sha256": "51f865feb148148e9588133a36b3ada0bc6a5ed249fac619ad87adc3b8fb2f5f",
+    "top": "qkd_kvs_grp_h_r2c",
+    "ports": {
+      "rst_n": {
+        "net": 5,
+        "root_sinks": 3,
+        "landing_candidates": [
+          {
+            "name": "u39210_c0.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                4
+              ],
+              "D": [
+                51573
+              ],
+              "QN": [
+                14821
+              ],
+              "RESETN": [
+                5
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "net": 51573,
+              "cell": "u37920_c0.u_cell",
+              "type": "TIEHIx1_ASAP7_75t_R",
+              "pin": "H",
+              "pins": {
+                "H": [
+                  51573
+                ]
+              }
+            },
+            "out_loads": {
+              "14821": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:D": 2
+            },
+            "terminal_count": 2
+          },
+          {
+            "name": "u39211_c0.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                4
+              ],
+              "D": [
+                14822
+              ],
+              "QN": [
+                14823
+              ],
+              "RESETN": [
+                5
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14821,
+                "cell": "u39210_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    4
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14821
+                  ],
+                  "RESETN": [
+                    5
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14823": 2
+            },
+            "terminal_roles": {
+              "NOR2x1_ASAP7_75t_R:A": 1,
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 12,
+              "DFFHQNx1_ASAP7_75t_R:D": 19
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39211_c1.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                4
+              ],
+              "D": [
+                14822
+              ],
+              "QN": [
+                14825
+              ],
+              "RESETN": [
+                5
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14821,
+                "cell": "u39210_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    4
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14821
+                  ],
+                  "RESETN": [
+                    5
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14825": 1
+            },
+            "terminal_roles": {
+              "DFFHQNx1_ASAP7_75t_R:D": 24
+            },
+            "terminal_count": 24
+          }
+        ]
+      },
+      "hrst_n": {
+        "net": 9,
+        "root_sinks": 12,
+        "landing_candidates": [
+          {
+            "name": "u39220_c0.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                51573
+              ],
+              "QN": [
+                14827
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "net": 51573,
+              "cell": "u37920_c0.u_cell",
+              "type": "TIEHIx1_ASAP7_75t_R",
+              "pin": "H",
+              "pins": {
+                "H": [
+                  51573
+                ]
+              }
+            },
+            "out_loads": {
+              "14827": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:D": 11
+            },
+            "terminal_count": 11
+          },
+          {
+            "name": "u39221_c0.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14829
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14829": 2
+            },
+            "terminal_roles": {
+              "NOR2x1_ASAP7_75t_R:B": 1,
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 31
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39221_c1.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14831
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14831": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39221_c10.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14833
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14833": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 3,
+              "DFFHQNx1_ASAP7_75t_R:D": 5
+            },
+            "terminal_count": 8
+          },
+          {
+            "name": "u39221_c2.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14835
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14835": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39221_c3.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14837
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14837": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39221_c4.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14839
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14839": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39221_c5.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14841
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14841": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39221_c6.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14843
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14843": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39221_c7.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14845
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14845": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39221_c8.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14847
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14847": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          },
+          {
+            "name": "u39221_c9.u_cell",
+            "type": "DFFASRHQNx1_ASAP7_75t_R",
+            "root_role": "RESETN",
+            "pins": {
+              "CLK": [
+                8
+              ],
+              "D": [
+                14828
+              ],
+              "QN": [
+                14849
+              ],
+              "RESETN": [
+                9
+              ],
+              "SETN": [
+                51573
+              ]
+            },
+            "D_origin": {
+              "unary": "INVxp67_ASAP7_75t_R",
+              "from": {
+                "net": 14827,
+                "cell": "u39220_c0.u_cell",
+                "type": "DFFASRHQNx1_ASAP7_75t_R",
+                "pin": "QN",
+                "pins": {
+                  "CLK": [
+                    8
+                  ],
+                  "D": [
+                    51573
+                  ],
+                  "QN": [
+                    14827
+                  ],
+                  "RESETN": [
+                    9
+                  ],
+                  "SETN": [
+                    51573
+                  ]
+                }
+              }
+            },
+            "out_loads": {
+              "14849": 1
+            },
+            "terminal_roles": {
+              "DFFASRHQNx1_ASAP7_75t_R:RESETN": 32
+            },
+            "terminal_count": 32
+          }
+        ]
+      }
+    },
+    "clock_ports": {
+      "ck": 4,
+      "hck": 8
+    }
+  }
+]

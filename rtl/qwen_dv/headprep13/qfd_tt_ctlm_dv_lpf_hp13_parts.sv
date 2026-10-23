@@ -296,8 +296,18 @@ module qfd_tt_ctlm_dv_gi_hp13 #(
                     NF[0]};
 endmodule
 
+// TOKc-SEGCAL 10-22 (TOK.QW.LAYER.3, lost unit QW-SEGCAL ff9abcf4f / claude/qw-h16y-1021 qfd_tt_ctlm_dv g_segx): the
+//   LM-head segment-G XPF schedule.  The hard head leaf u_hr is SEGCAL 1 (h16za native32_1r), so its parent must run the
+//   segment-G XPF calendar (qfd_dv_xpf_seg_loader on PW993..1003 + a 3-record static schedule started by the segment-G
+//   head start); without it the LM-head stage 37 issues on the base-0 XPF schedule (3317 landed-lockstep mismatches).
+//   Source-equivalent to the reviewed unit: every monitored issue goes to segment G while it is active, else base 0;
+//   hr_lo takes the G arm word when it is valid; g_ready joins control_stores_ready, g_fault joins core_fault.  0 port
+//   change, 0 added edge on any output, static (no handshake).  SEG_CAL 0 = the previous go (bench comparison only);
+//   MUT 37 (bench only) = no segment-G XPF start (must FAIL).
 module qfd_tt_ctlm_dv_go_hp13 #(
-    parameter integer XPF_TRANSPORT_EDGES = -1
+    parameter integer XPF_TRANSPORT_EDGES = -1,
+    parameter integer SEG_CAL = 1,
+    parameter integer MUT = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -348,21 +358,51 @@ module qfd_tt_ctlm_dv_go_hp13 #(
     ot_hdc_delay #(.W(16), .D(1), .RESET(1)) u_xpf_me_face (.clk(ck), .rst_n(monitor_rs), .d(me_observe), .q(monitor_me));
     wire xpf_me_event = monitor_me[15];
     wire [11:0] xpf_me_pc = monitor_me[11:0];
+    // every monitored issue goes to one schedule: segment G while it is active (SEG_CAL), else base 0
+    wire to_g, g_ready, g_fault;
+    wire [71:0] xpf_g;
+    wire ev_cp = monitor_me[15] && monitor_me[13:12] == 3, ev_me = xpf_me_event && monitor_me[13:12] == 1, ev_su = monitor_su[15];
     ot_qfd_xpf_static_schedule_p #(.N(4), .ARM_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_xpf_schedule (.clk(ck),
         .rst_n(monitor_rs), .cfg_clear(cfg_clear), .cfg_v(cfg_v), .cfg_seal(cfg_seal),
         .cfg_index(cfg_index[1:0]), .cfg_data(cfg_data), .cfg_count(cfg_count[2:0]),
         .start(dvm_stage_start), .stop(xpf_active && xpf_cycle == stop_cycle), .stage(xpf_stage),
-        .cp_issue(monitor_me[15] && monitor_me[13:12] == 3), .cp_pc(xpf_me_pc),
-        .me_issue(xpf_me_event && monitor_me[13:12] == 1), .me_pc(xpf_me_pc),
-        .su_issue(monitor_su[15]), .su_pc(monitor_su[11:0]),
+        .cp_issue(ev_cp && !to_g), .cp_pc(xpf_me_pc),
+        .me_issue(ev_me && !to_g), .me_pc(xpf_me_pc),
+        .su_issue(ev_su && !to_g), .su_pc(monitor_su[11:0]),
         .xpf(xpf), .image_ready(xpf_monitor_ready), .fault(xpf_schedule_fault), .active(xpf_active), .cycle(xpf_cycle));
-    assign control_stores_ready = me_image_ready && c_ready && xpf_loader_ready && xpf_monitor_ready;
+    // segment-G XPF schedule (SEG_CAL, see the header; QW-SEGCAL g_segx)
+    generate if (SEG_CAL != 0) begin : g_segx
+        wire gl_clear, gl_v, gl_seal, gl_present, gl_ready, gl_fault, gs_ready, gs_fault, gs_active;
+        wire [1:0] gl_index; wire [187:0] gl_data; wire [2:0] gl_count; wire [5:0] gl_stage; wire [11:0] gl_base;
+        wire [31:0] gl_stop, gs_cycle;
+        qfd_dv_xpf_seg_loader u_g_loader (.clk(ck), .rst_n(monitor_rs), .stage_active(gs_active),
+            .pw_v(monitor_pw[74]), .pw_addr(monitor_pw[73:64]), .pw_data(monitor_pw[63:0]),
+            .cfg_clear(gl_clear), .cfg_v(gl_v), .cfg_seal(gl_seal), .cfg_index(gl_index), .cfg_data(gl_data),
+            .cfg_count(gl_count), .stage(gl_stage), .stop_cycle(gl_stop), .base(gl_base), .present(gl_present),
+            .image_ready(gl_ready), .fault(gl_fault));
+        wire g_start = (MUT != 37) && gl_present && monitor_start[48] && monitor_start[11:0] != 12'd0 &&
+                       monitor_start[11:0] == gl_base;
+        ot_qfd_xpf_static_schedule_p #(.N(3), .ARM_TRANSPORT_EDGES(XPF_TRANSPORT_EDGES)) u_g_schedule (.clk(ck),
+            .rst_n(monitor_rs), .cfg_clear(gl_clear), .cfg_v(gl_v), .cfg_seal(gl_seal),
+            .cfg_index(gl_index), .cfg_data(gl_data), .cfg_count(gl_count),
+            .start(g_start), .stop(gs_active && gs_cycle == gl_stop), .stage(gl_stage),
+            .cp_issue(ev_cp && to_g), .cp_pc(xpf_me_pc), .me_issue(ev_me && to_g), .me_pc(xpf_me_pc),
+            .su_issue(ev_su && to_g), .su_pc(monitor_su[11:0]),
+            .xpf(xpf_g), .image_ready(gs_ready), .fault(gs_fault), .active(gs_active), .cycle(gs_cycle));
+        assign to_g = gs_active;
+        assign g_ready = gl_ready && (!gl_present || gs_ready);
+        assign g_fault = gl_fault | gs_fault;
+    end else begin : g_nosegx
+        assign to_g = 1'b0; assign g_ready = 1'b1; assign g_fault = 1'b0; assign xpf_g = 72'd0;
+    end endgenerate
+    wire [71:0] xpf_hr = xpf_g[0] ? xpf_g : xpf;
+    assign control_stores_ready = me_image_ready && c_ready && xpf_loader_ready && xpf_monitor_ready && g_ready;
     reg hv; reg [72:0] hr_lo_r;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin hv <= 1'b0; hr_lo_r <= 73'd0; end
-        else begin hv <= 1'b1; hr_lo_r <= {xpf, hv}; end
+        else begin hv <= 1'b1; hr_lo_r <= {xpf_hr, hv}; end
     assign hr_lo = hr_lo_r;
-    wire core_fault = hr_fault | cp_fault | start_fault | xpf_loader_fault | xpf_schedule_fault;
+    wire core_fault = hr_fault | cp_fault | start_fault | xpf_loader_fault | xpf_schedule_fault | g_fault;
     reg  tok_seen, xc_busy, arl_d;
     reg  [17:0] ntok;
     reg  [31:0] nval;
@@ -435,3 +475,79 @@ module qfd_tt_ctlm_dv_thru_hp13 (
     wire unused = &{1'b0, ck, rst_n};
 endmodule
 
+
+// TOKc-SEGCAL 10-22: copied verbatim from claude/qw-h16y-1021:rtl/qwen_dv/qfd_tt_ctlm_dv.sv (QW-SEGCAL ff9abcf4f), absent on main.
+// qfd_dv_xpf_seg_loader (QLB-C4b 10-18): the segment-G XPF table of the dense PW1024 image, beside the base-0 loader
+// (ot_qfd_xpf_dense_pw_loader, PW1004..1023, unchanged).  Ascending full image; PW0 clears.
+//   [993]        CALB {32'h43414c42, 4'b0, count4, 12'b0, base12}: the segment-G programme base (the head calendar reads
+//                the same word); absent = 0
+//   [994..1002]  three XPF188 records (3 beats each, top nibble 0, LSB valid, one stage; zero padding after)
+//   [1003]       XPTG {32'h58505447, stop32 != 0}: seals (present: >= 1 record; absent: every G word zero)
+// cfg_* drive an ot_qfd_xpf_static_schedule N 3 exactly as the base-0 loader drives its schedule.
+module qfd_dv_xpf_seg_loader (
+    input wire clk, rst_n, stage_active,
+    input wire pw_v, input wire [9:0] pw_addr, input wire [63:0] pw_data,
+    output reg cfg_clear, cfg_v, cfg_seal, output reg [1:0] cfg_index,
+    output reg [187:0] cfg_data, output reg [2:0] cfg_count,
+    output reg [5:0] stage, output reg [31:0] stop_cycle, output reg [11:0] base, output reg present,
+    output wire image_ready, output reg fault
+);
+    reg loading, sealed, desc_seen, padding; reg [3:0] beats; reg [1:0] part, index_r; reg [127:0] payload;
+    wire [187:0] record_word = {pw_data[59:0], payload};
+    assign image_ready = sealed && !fault;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            cfg_clear <= 0; cfg_v <= 0; cfg_seal <= 0; cfg_index <= 0; cfg_data <= 0; cfg_count <= 0; stage <= 0;
+            stop_cycle <= 0; base <= 0; present <= 0; fault <= 0; loading <= 0; sealed <= 0; desc_seen <= 0; padding <= 0;
+            beats <= 0; part <= 0; index_r <= 0; payload <= 0;
+        end else begin
+            cfg_clear <= 0; cfg_v <= 0; cfg_seal <= 0;
+            if (pw_v) begin
+                if (stage_active) fault <= 1;
+                else if (pw_addr == 0) begin
+                    if (loading) fault <= 1;
+                    else begin
+                        cfg_clear <= 1; loading <= 1; sealed <= 0; desc_seen <= 0; padding <= 0; beats <= 0; part <= 0;
+                        index_r <= 0; cfg_count <= 0; present <= 0; base <= 0; fault <= 0;
+                    end
+                end else if (pw_addr == 10'd993) begin
+                    if (!loading || desc_seen) fault <= 1;
+                    else begin
+                        desc_seen <= 1;
+                        if (pw_data != 0) begin
+                            if (pw_data[63:32] != 32'h43414c42 || pw_data[11:0] == 0) fault <= 1;
+                            present <= 1; base <= pw_data[11:0];
+                        end
+                    end
+                end else if (pw_addr >= 10'd994 && pw_addr <= 10'd1002) begin
+                    if (!loading || !desc_seen || pw_addr != 10'd994 + beats || beats >= 9) fault <= 1;
+                    else begin
+                        beats <= beats + 1'b1;
+                        if (part == 0) begin payload[63:0] <= pw_data; part <= 1; end
+                        else if (part == 1) begin payload[127:64] <= pw_data; part <= 2; end
+                        else begin
+                            if (pw_data[63:60] != 0) fault <= 1;
+                            else if (record_word == 0) padding <= 1;
+                            else if (!present || padding || !record_word[0] || (cfg_count != 0 && payload[91:86] != stage))
+                                fault <= 1;
+                            else begin
+                                cfg_data <= record_word; cfg_index <= index_r; cfg_v <= 1; cfg_count <= cfg_count + 1'b1;
+                                stage <= payload[91:86];
+                            end
+                            part <= 0; index_r <= index_r + 1'b1;
+                        end
+                    end
+                end else if (pw_addr == 10'd1003) begin
+                    if (!loading || fault || !desc_seen || part != 0 || beats != 9) fault <= 1;
+                    else if (present) begin
+                        if (pw_data[63:32] != 32'h58505447 || pw_data[31:0] == 0 || cfg_count == 0) fault <= 1;
+                        else begin stop_cycle <= pw_data[31:0]; cfg_seal <= 1; loading <= 0; sealed <= 1; end
+                    end else begin
+                        if (pw_data != 0 || cfg_count != 0) fault <= 1;
+                        else begin loading <= 0; sealed <= 1; end
+                    end
+                end
+            end
+        end
+    end
+endmodule

@@ -1,0 +1,28 @@
+ot-run: ot-epyc5       admits    43 GB (avail 293, growth 262, headroom 0, waiters 0/0 GB) load 53/128 running 28 disk 730 GB 
+ot-run: ot-epyc7       admits   227 GB (avail 302, growth 143, headroom 0, waiters 0/0 GB) load 302/96 running 62 disk 4144 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-tx-bank-proof-2250/src
+ot-run: ot-gold2       admits     3 GB (avail 429, growth 426, headroom 0, waiters 0/0 GB) load 27/112 running 20 disk 2702 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-tx-bank-proof-2250/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-tx-bank-proof-2250/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-tx-bank-proof-2250/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1240939-1792648200 after 1 s
+Referenced but unset environment variable evaluates to an empty string: m
+TX_STATS cycles 2502 checks 55734 epochs 2 beats 48 done_edges 1665
+TX_MITER_PASS
+- tools/s81_dv/tx_export_1021/tb_tx_miter.sv:57: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 25us; walltime 0.003 s; speed 9.402 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 8 MB
+TX_MISMATCH cycle=330 mut=1 status=0 valid=0 payload=1
+[3296000] %Fatal: tb_tx_miter.sv:18: Assertion failed in tb_tx_miter: TX_MITER_FAIL
+%Error: tools/s81_dv/tx_export_1021/tb_tx_miter.sv:18: Verilog $stop
+Aborting...
+TX_CAUSAL_FAIL
+TX_MISMATCH cycle=326 mut=3 status=0 valid=1 payload=1
+[3256000] %Fatal: tb_tx_miter.sv:18: Assertion failed in tb_tx_miter: TX_MITER_FAIL
+%Error: tools/s81_dv/tx_export_1021/tb_tx_miter.sv:18: Verilog $stop
+Aborting...
+TX_CAUSAL_FAIL
+TX_BANK_POSITIVE_AND_TWO_CAUSAL_PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1240939-1792648200): exit 0

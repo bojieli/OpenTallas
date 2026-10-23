@@ -1,0 +1,59 @@
+test_actual_primitive_and_five_structural_mutants (test_async_gray_fifo_constraints.ActualGraph.test_actual_primitive_and_five_structural_mutants) ... ok
+test_binary_pointer_and_one_stage_source_mutants_refused (test_async_gray_fifo_constraints.Admission.test_binary_pointer_and_one_stage_source_mutants_refused) ... ok
+test_exact_source_native_policy (test_async_gray_fifo_constraints.Admission.test_exact_source_native_policy) ... ok
+test_unsupported_parents_parameters_roots_and_ownership_refused (test_async_gray_fifo_constraints.Admission.test_unsupported_parents_parameters_roots_and_ownership_refused) ... ok
+test_actual_mapped_parent_and_undeclared_payload_consumer_mutant (test_async_fifo_parent_constraints.ParentAdmission.test_actual_mapped_parent_and_undeclared_payload_consumer_mutant) ... ok
+test_actual_mapped_reset_sync_inputs_bounded_and_unsynchronised_reset_refused (test_async_fifo_parent_constraints.ParentAdmission.test_actual_mapped_reset_sync_inputs_bounded_and_unsynchronised_reset_refused) ... ok
+test_actual_source_payload_targets_and_source_drift (test_async_fifo_parent_constraints.ParentAdmission.test_actual_source_payload_targets_and_source_drift) ... ok
+test_ascending_and_offset_vector_positive_and_swapped_bit_negative (test_async_fifo_parent_constraints.ParentAdmission.test_ascending_and_offset_vector_positive_and_swapped_bit_negative) ... ok
+test_ascending_offset_clock_bus_actual_source_ownership (test_async_fifo_parent_constraints.ParentAdmission.test_ascending_offset_clock_bus_actual_source_ownership) ... ok
+test_build_defines_and_hard_define_are_explicitly_refused (test_async_fifo_parent_constraints.ParentAdmission.test_build_defines_and_hard_define_are_explicitly_refused) ... ok
+test_exact_payload_bit_and_control_pin_mutants (test_async_fifo_parent_constraints.ParentAdmission.test_exact_payload_bit_and_control_pin_mutants) ... ok
+test_forged_primitive_source_metadata_and_unapproved_clone_refused (test_async_fifo_parent_constraints.ParentAdmission.test_forged_primitive_source_metadata_and_unapproved_clone_refused) ... ok
+test_reverse_direction_source_and_mapped_constraints (test_async_fifo_parent_constraints.ParentAdmission.test_reverse_direction_source_and_mapped_constraints) ... ok
+test_shared_input_clock_bypass_and_unknown_state_refused (test_async_fifo_parent_constraints.ParentAdmission.test_shared_input_clock_bypass_and_unknown_state_refused) ... ok
+test_actual_graph_normal_and_mutants (test_gray_fifo_cdc_constraints.ActualGraph.test_actual_graph_normal_and_mutants) ... ok
+test_actual_graph_events (test_gray_fifo_cdc_constraints.EventActualGraph.test_actual_graph_events) ... ok
+test_admitted (test_gray_fifo_cdc_constraints.EventLint.test_admitted) ... ok
+test_constant_chains_only_with_events (test_gray_fifo_cdc_constraints.EventLint.test_constant_chains_only_with_events) ... ok
+test_event_schema_refused (test_gray_fifo_cdc_constraints.EventLint.test_event_schema_refused) ... ok
+test_mutants_refused (test_gray_fifo_cdc_constraints.EventLint.test_mutants_refused) ... ok
+test_without_events_sdc_unchanged (test_gray_fifo_cdc_constraints.EventLint.test_without_events_sdc_unchanged) ... ok
+test_actual_graph_normal_and_mutants (test_gray_fifo_cdc_constraints.ExtActualGraph.test_actual_graph_normal_and_mutants) ... ok
+test_admitted_fifo_macro_level_strap (test_gray_fifo_cdc_constraints.ExtLint.test_admitted_fifo_macro_level_strap) ... ok
+test_macro_and_schema_refused (test_gray_fifo_cdc_constraints.ExtLint.test_macro_and_schema_refused) ... ok
+test_reviewed_fifo_source_pinned (test_gray_fifo_cdc_constraints.ExtLint.test_reviewed_fifo_source_pinned) ... ok
+test_structural_mutants_refused (test_gray_fifo_cdc_constraints.ExtLint.test_structural_mutants_refused) ... ok
+test_actual_kv_cdc_channel (test_gray_fifo_cdc_constraints.Lint.test_actual_kv_cdc_channel)
+The KV host-cluster channel ot_qwen_die_cdc_ch (phy -> core) at its real parameter shapes (W reduced). ... ok
+test_admitted_and_bounded_only (test_gray_fifo_cdc_constraints.Lint.test_admitted_and_bounded_only) ... ok
+test_existing_modes_unchanged (test_gray_fifo_cdc_constraints.Lint.test_existing_modes_unchanged) ... ok
+test_launch_aliases_carry_launch_roles_only (test_gray_fifo_cdc_constraints.Lint.test_launch_aliases_carry_launch_roles_only) ... ok
+test_reviewed_source_mutants_refused (test_gray_fifo_cdc_constraints.Lint.test_reviewed_source_mutants_refused) ... ok
+test_schema_refused (test_gray_fifo_cdc_constraints.Lint.test_schema_refused) ... ok
+test_structural_mutants_refused (test_gray_fifo_cdc_constraints.Lint.test_structural_mutants_refused) ... ok
+test_two_family_phy_leaf (test_gray_fifo_cdc_constraints.Lint.test_two_family_phy_leaf) ... ok
+test_broken_partner_refused (test_gray_fifo_cdc_constraints.MergedOnline.test_broken_partner_refused) ... ok
+test_merged_online_chain_admitted_once (test_gray_fifo_cdc_constraints.MergedOnline.test_merged_online_chain_admitted_once) ... ok
+test_real_missing_synchroniser_still_fails (test_gray_fifo_cdc_constraints.MergedOnline.test_real_missing_synchroniser_still_fails) ... ok
+test_wrapped_name_resolves_and_plain_name_unchanged (test_gray_fifo_cdc_constraints.PinRegWrapperNames.test_wrapped_name_resolves_and_plain_name_unchanged) ... ok
+test_pair_without_actual_path_still_fails (test_async_gray_tie_dedup.SoleLaunchProof.test_pair_without_actual_path_still_fails) ... ok
+test_sole_launch_unfiltered_other_fanin_filtered (test_async_gray_tie_dedup.SoleLaunchProof.test_sole_launch_unfiltered_other_fanin_filtered) ... ok
+test_different_net_rescanned (test_async_gray_tie_dedup.TieDriverDedup.test_different_net_rescanned) ... ok
+test_identical_pins_share_one_scan (test_async_gray_tie_dedup.TieDriverDedup.test_identical_pins_share_one_scan) ... ok
+test_matches_per_pin_oracle (test_async_gray_tie_dedup.TieDriverDedup.test_matches_per_pin_oracle) ... ok
+test_memo_cleared_every_ownership_pass (test_async_gray_tie_dedup.TieDriverDedup.test_memo_cleared_every_ownership_pass) ... ok
+test_seeded_failing_net_fails_its_pins_only (test_async_gray_tie_dedup.TieDriverDedup.test_seeded_failing_net_fails_its_pins_only) ... ok
+test_old_and_new_hash_kits_pass (test_reset_sync_607_admission.AsyncGray.test_old_and_new_hash_kits_pass) ... skipped 'ba140fd98^ not in this clone'
+test_parameter_check_unit (test_reset_sync_607_admission.AsyncGray.test_parameter_check_unit) ... ok
+test_tree_or_copies_inside_fifo_refused (test_reset_sync_607_admission.AsyncGray.test_tree_or_copies_inside_fifo_refused) ... ok
+test_unknown_hash_still_refused (test_reset_sync_607_admission.AsyncGray.test_unknown_hash_still_refused) ... ok
+test_old_and_new_hash_kits_pass (test_reset_sync_607_admission.GrayFifo.test_old_and_new_hash_kits_pass) ... skipped 'ba140fd98^ not in this clone'
+test_tree_inside_fifo_refused (test_reset_sync_607_admission.GrayFifo.test_tree_inside_fifo_refused) ... ok
+test_unknown_hash_still_refused (test_reset_sync_607_admission.GrayFifo.test_unknown_hash_still_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 52 tests in 14.785s
+
+OK (skipped=2)
+LAUNCH_ALIASES ['u_ci.rd_bin[2]', 'u_hc.rbin[2]', 'u_hc.wbin[2]', 'u_ih.rd_bin[3]']

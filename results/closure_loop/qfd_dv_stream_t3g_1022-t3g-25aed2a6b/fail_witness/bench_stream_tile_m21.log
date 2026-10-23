@@ -1,0 +1,12 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_dv_stream_t3g_1022-t3g-25aed2a6b bench bench_stream_tile_m21 host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/qfd_dv_stream_t3g_1022-t3g-25aed2a6b log cl/bench_stream_tile_m21.a1b1.log captured 2026-10-22T06:49:55-07:00
+# fail_regex 'STREAM_TILE_MISMATCH'
+Verilator 5.050 2026-07-01 rev v5.050
+81e02ae071db4739daed1988e105cfbc93b8763f0182a17999a876c2a8ff52f6  rtl/test/qwen_dv/static_stream/tb_stream_tile.sv
+83e07fccde5ac05d290c5e9c49190ce3c64a00b01dfafa153f01c3340af51e69  rtl/qwen_dv/qfd_dv_stream.sv
+bdb914aed2010300ff8f906c4d3c509e80c05ee3a21fefe0a612736a160b46da  rtl/qwen_dv/qfd_dv_stream_tile.sv
+xt detail v 1/1 a 000700/000700 bad 0/0 d_eq 0
+[2606000] %Fatal: tb_stream_tile.sv:80: Assertion failed in tb_stream_tile: STREAM_TILE_MISMATCH xt cycle261 MUT21
+%Error: rtl/test/qwen_dv/static_stream/tb_stream_tile.sv:80: Verilog $stop
+Aborting...
+MUT21 sim exit 1

@@ -39,7 +39,12 @@ module tb_idx_tree;
         dsdv_idx_vmux u_vm (.ck(clk), .rst(rst_n), .i_r({V{1'b0}}), .i_s(i_s[g]), .i_a(i_a[g]), .i_b(i_b[g]), .o(vi_s[g]), .fault(f_vm[g]));
         dsdv_bk_sel u_bk_sel (.clk(clk), .rst_n(rst_n), .tap_k(8'h11), .sink_k(8'h10), .ik(3'd4), .ek(3'd5), .uid(8'h5B),
             .eg_n(1'b0), .vi_s(vi_s[g]), .vo_n(vo_n[g]), .vi_n(vi_n[g]), .vo_s(vo_s[g]), .fault(f_sel[g]));
+`ifdef TX_LPX
+        // MU.S81.CAL (DIE4 10-22): reference with the booked TOPK TX x lookup pipe (LPX edges longer; needs RTL 100457dd6+)
+        dsdv_idx_tx #(.MUT(`TX_MUT), .SRAM_MACRO(`TX_SRAM), .LPX(`TX_LPX)) u_tx (.ck(clk), .rst(rst_n), .vi(vi_s[g]), .vo(vo_s[g]), .lo(lo[g]), .st(tst[g]));
+`else
         dsdv_idx_tx #(.MUT(`TX_MUT), .SRAM_MACRO(`TX_SRAM)) u_tx (.ck(clk), .rst(rst_n), .vi(vi_s[g]), .vo(vo_s[g]), .lo(lo[g]), .st(tst[g]));
+`endif
 `endif
     end endgenerate
     initial begin

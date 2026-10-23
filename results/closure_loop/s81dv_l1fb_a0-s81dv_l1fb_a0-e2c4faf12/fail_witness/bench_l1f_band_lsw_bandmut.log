@@ -1,0 +1,33 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12 bench bench_l1f_band_lsw_bandmut host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12 log cl/bench_l1f_band_lsw_bandmut.a1b1.log captured 2026-10-22T19:31:46-07:00
+# fail_regex '^L1F_LSW FAIL band mutant caught'
+L1F_LSW BANDMUT=1: banded copy MUT 1, reference MUT 0
+MUT=0: GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[3].u_l1f MISMATCH edge 146: band {v f l g flt}=11000 ref=11000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[2].u_l1f MISMATCH edge 146: band {v f l g flt}=11000 ref=11000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[1].u_l1f MISMATCH edge 146: band {v f l g flt}=11000 ref=11000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[0].u_l1f MISMATCH edge 146: band {v f l g flt}=11000 ref=11000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[3].u_l1f MISMATCH edge 147: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[2].u_l1f MISMATCH edge 147: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[1].u_l1f MISMATCH edge 147: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[0].u_l1f MISMATCH edge 147: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[3].u_l1f MISMATCH edge 148: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[2].u_l1f MISMATCH edge 148: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[1].u_l1f MISMATCH edge 148: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[0].u_l1f MISMATCH edge 148: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[3].u_l1f MISMATCH edge 149: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[2].u_l1f MISMATCH edge 149: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[1].u_l1f MISMATCH edge 149: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[0].u_l1f MISMATCH edge 149: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT FAIL 80 (MUT=0)
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[3].u_l1f checked 20779 live 56 mismatches 25
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[2].u_l1f checked 20779 live 56 mismatches 28
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[1].u_l1f checked 20779 live 56 mismatches 24
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[0].u_l1f checked 20779 live 56 mismatches 23
+L1F_LSW_CASE MUT=0 golden_pass=0 lockstep_mismatch_lines=16 live_edges=224
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[3].u_l1f MISMATCH edge 146: band {v f l g flt}=11000 ref=11000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[2].u_l1f MISMATCH edge 146: band {v f l g flt}=11000 ref=11000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[1].u_l1f MISMATCH edge 146: band {v f l g flt}=11000 ref=11000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[0].u_l1f MISMATCH edge 146: band {v f l g flt}=11000 ref=11000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[3].u_l1f MISMATCH edge 147: band {v f l g flt}=10000 ref=10000 d_eq=0
+GUNIT_LSW TOP.tb_dsdv_gunit.dut.g_l1f[2].u_l1f MISMATCH edge 147: band {v f l g flt}=10000 ref=10000 d_eq=0
+L1F_LSW FAIL band mutant caught (16 mismatch lines, 224 live edges)

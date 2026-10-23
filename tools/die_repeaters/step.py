@@ -15,9 +15,14 @@ before global_route.  This module generates the call and judges the report, for 
     python3 tools/die_repeaters/step.py copy DIR                          -> die_repeaters.tcl + cluster_bounds.tcl
 
 Rule (defaults; env OT_DIE_REPAIR_MAX_WIRE / _SLEW / _SKIP / _REPEAT_NETS / _OVER_REACH override for the shell flows):
-  * max wire 160 um: an unrepeated hop is slew-limited at ~175 um at the native ot_inhold first cell (H-REACH,
-    tools/s81/relay_native_pair.py on closed native netlists + routed SPEF); one repeater from ~175 um then every
-    ~160 um -> 600-750 um per cycle at TT 833 (repeated reach, M4/M5).  The 405-um planning hop is unchanged.
+  * max wire 160 um on the M4 RC: an unrepeated hop is slew-limited at ~175 um at the native ot_inhold first cell
+    (H-REACH, tools/s81/relay_native_pair.py on closed native netlists + routed SPEF); one repeater from ~175 um then
+    every ~160 um -> 600-750 um per cycle at TT 833 (repeated reach, M4/M5).  The 405-um planning hop is unchanged.
+  * max wire 450 um when the repeaters are spaced on the M7-M9 RC (owner 10-22, COORD): the 160-um spacing put a
+    BUFx8 every 160 um on every die net (S81 cap24: 9.76M repeaters, 1.72M of them on block bodies) and forced each
+    die wire down to the cell rows in the block seams, which is where the die GRT overflow sat.  On the M8 RC the
+    slew / cap limits still insert a repeater wherever the wire needs one; only the 160-um length rule is lifted.
+    An explicit --max-wire-um / OT_DIE_REPAIR_MAX_WIRE still wins.
   * max transition 260 ps = the closed views' max_transition at the native receiver first cell (ETM pins hide it);
     a per-master receiver table (--receiver-slew JSON {master: ps}) may only lower it.
   * buffers BUFx4..BUFx8 only, never a register / hold cell; pre-existing instances never removed or resized (checked);
@@ -42,6 +47,8 @@ sys.path.insert(0, str(ROOT / 'tools'))
 TCL = HERE / 'die_repeaters.tcl'
 BOUNDS_TCL = ROOT / 'tools/die_cluster/cluster_bounds.tcl'
 BUFFERS = ('BUFx4_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'BUFx5_ASAP7_75t_R', 'BUFx6f_ASAP7_75t_R', 'BUFx8_ASAP7_75t_R')
+UPPER_RC_LAYERS = ('M7', 'M8', 'M9')
+UPPER_MAX_WIRE_UM = 450.0     # repeater spacing on the M7-M9 RC (owner 10-22 asked 600; REACH-M89 10-23: 600 um edges 340-430 ps > the 320-ps slew limit, legal max ~450-500 um)
 DEFAULTS = dict(max_wire_um=160.0, slew_ps=260.0, over_reach='report', rc_layer='M4', legalize='spread',
                 long_wire_scan=5000)
 # per die flow: the die_reach design key and the clock / reset distribution net globs the step never touches
@@ -98,6 +105,7 @@ def config(design, report, **kw):
         c['fclk_globs'] = list(c.get('fclk_globs') or []) + env['OT_DIE_REPAIR_FCLK_GLOBS'].split()
     if env.get('OT_DIE_REPAIR_FCLK_POLICY'):
         c['fclk_policy'] = env['OT_DIE_REPAIR_FCLK_POLICY']
+    explicit_mw = bool(env.get('OT_DIE_REPAIR_MAX_WIRE')) or kw.get('max_wire_um') is not None
     if env.get('OT_DIE_REPAIR_MAX_WIRE'):
         c['max_wire_um'] = float(env['OT_DIE_REPAIR_MAX_WIRE'])
     if env.get('OT_DIE_REPAIR_SLEW'):
@@ -122,6 +130,8 @@ def config(design, report, **kw):
             c['skip_nets'] += list(v)
         else:
             c[k] = v
+    if not explicit_mw and str(c.get('rc_layer') or '').upper() in UPPER_RC_LAYERS:
+        c['max_wire_um'] = UPPER_MAX_WIRE_UM
     if c['max_wire_um'] <= 0 or c['slew_ps'] <= 0:
         raise SystemExit('die_repeaters: max_wire_um and slew_ps must be > 0')
     if c['over_reach'] not in ('report', 'fail'):

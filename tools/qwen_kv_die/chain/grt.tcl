@@ -29,8 +29,9 @@ if {[info exists ::env(OT_DIE_REPAIR)] && $::env(OT_DIE_REPAIR) == 1} {
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
 }
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
-# The top signal layer must match the repeater RC plan.  M9 remains PG/clock
-# under the owner's M8 signal plan; pass the selected layer into this container.
+# The top signal layer must match the repeater RC plan (die_repeaters/step.py: M8/M9 -> rc layer M8).  Default M8
+# (M9 PG/clock).  OWNER 10-22 19:25: release dies open M9 for die signals -> opt-in OT_DIE_SIGNAL_TOP_LAYER=M9
+# (die_chain.sh passes it to the repeater step and this container; M6-M9 adjustment 0.05 covers M9 vias/PG).
 set signal_top M8
 if {[info exists ::env(OT_DIE_SIGNAL_TOP_LAYER)]} { set signal_top $::env(OT_DIE_SIGNAL_TOP_LAYER) }
 if {![regexp {^M[4-9]$} $signal_top]} { error "Invalid die signal top layer: $signal_top" }

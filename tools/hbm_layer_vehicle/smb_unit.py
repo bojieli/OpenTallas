@@ -176,10 +176,14 @@ def put(v, lo, w, x, name):
 
 
 # ------------------------------------------------------------------------------------------------ row ABI
-def svg_word(cmd83=0, read=None, retire=None):
+def svg_word(cmd83=0, read=None, retire=None, att=False):
     """W135 envelope (feed_programmed): [82:0] cmd, [83] read_v [84] bank [100:85] epoch [106:101] row [116:107] tag,
-    [117] retire_v [118] bank [134:119] epoch.  Relative form: bank / epoch 0 (taken from the go context), tag = line."""
+    [117] retire_v [118] bank [134:119] epoch.  Relative form: bank / epoch 0 (taken from the go context), tag = line.
+    att (HBM-PV-ATTMARK, feed ATT_MARK=1, PREL only): bit [119] marks an attention-mode word whose issue bit [25] drains
+    buffered KV (no fresh packet); the feed's S1 copy then skips its normal-mode issue-implies-packet rule."""
     v = put(0, 0, 83, cmd83, "cmd83")
+    if att:
+        v |= 1 << 119
     if read is not None:
         row, tag = read
         v |= 1 << 83
