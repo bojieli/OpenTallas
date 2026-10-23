@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.s81_lane_clock_variant_compatibility.v1",
+  "main_source": "0b2ea3cf3",
+  "alternate_source": "d2ba639019520923da9d6f313f831efb13f6a87d",
+  "same_top": "dsfd_coll_lane_w_safe8_ntf",
+  "same_rtl_files": [
+    {
+      "path": "rtl/link/ot_link_crc32.sv",
+      "sha256": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+      "git_blob": "664a31b571419ab5998f7b842d9118f0a946eae3"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay_tree3.sv",
+      "sha256": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7",
+      "git_blob": "37e72d9c9d7857f6d99c2077deaa5166ffcc7627"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+      "sha256": "767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b",
+      "git_blob": "febe4f2c88a91e443056cbc3a619efdf89182dd1"
+    },
+    {
+      "path": "rtl/lib/ot_sram_oldread_b64.sv",
+      "sha256": "161f89764da3f079cb91164b269cb6f725348396b4644336318663d20e8e7a14",
+      "git_blob": "7567d06b6a4210357146411d4ecf286727b10b62"
+    },
+    {
+      "path": "rtl/lib/ot_sram_showahead_b64.sv",
+      "sha256": "cc40f94107dc230bec6fffbb5af17c781bf908ba3f243c4ead50a1aac6e47b9a",
+      "git_blob": "9a16968c970fdd3fd8022810c2c401d658d74737"
+    },
+    {
+      "path": "rtl/common/ot_link_credit_rx_b64.sv",
+      "sha256": "52076e97161fe616ea5f892f5bf9859a329b3ef753e7801a574e63e44e7e7b2d",
+      "git_blob": "e6288e332bb4d6bef49f17ed77aa7e042a04c710"
+    },
+    {
+      "path": "rtl/common/ot_link_credit_tx_rc.sv",
+      "sha256": "41108469675c237202611513fdc868ce4c026b556b8400e0a15bc2ccc8dbb25a",
+      "git_blob": "9514eebe153b21543bbb82aee4a72d57b22cfc75"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+      "sha256": "f7fe6c1c242eb7d96cf856bc2492fa5a090e825672ddffb73fb8ed9d73ca6536",
+      "git_blob": "a31661bf9f6aa4c362178e8f45c8949b359229e4"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+      "sha256": "87089dff259f7300acfec4969e6c0a1d0db83e31d2f5082dc54342676a8c5625",
+      "git_blob": "61314ae5a6982a7584b9e50c28922f278d4c7d95"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+      "sha256": "058960ccd28c3f635d1dcf5abb6b022eee111a1cd86071ade0d21d65b20625b5",
+      "git_blob": "f6f9aefdf9626362ef33733efc51576b1c0116f3"
+    }
+  ],
+  "params": {},
+  "defines_identical": true,
+  "external_ports_protocol": "Identical top+complete source blobs and empty explicit parameter overrides. Frozen default credit unchanged.",
+  "cts_cluster_count": {
+    "s8nt": "24",
+    "s8nv": "32",
+    "purpose": "OT_CKKM_K controls only k-means CTS local leaf clustering in physical/common_flow/clock_split_km.tcl. It is not an RTL parameter and adds no register or latency edge."
+  },
+  "placement_difference": "s8nt anchors existing tx launch flops; s8nv retains s8nu existing rx+tx anchoring and changes only K24 to K32 vs s8nu. No registers are inserted.",
+  "cycles_added": 0,
+  "incompatible_s12h": {
+    "CORE_CRED": 12,
+    "adopted": false
+  },
+  "parent_adoption": "Pending actual CLOSED selected view, current child clock references, p9m/p9f full boundary timing and clock qualification."
+}
