@@ -1,0 +1,34 @@
+{
+  "source_base": "572e0d5a9",
+  "production": {
+    "stacks": 2,
+    "quadrants": 4,
+    "lanes_per_quadrant": 8,
+    "real_candidates_per_beat": 32,
+    "source_beats": 171,
+    "real_candidate_slots": 5472,
+    "selector_declared_groups": 4,
+    "active_stack_groups": 2,
+    "bits_per_group": 592
+  },
+  "correction": "Pair-beat collector withdrawn: two absent stack groups are intentional in original N_Q=2 quad lineage; retain original171 writes and stack/tie order.",
+  "candidate": {
+    "parameter": "ACTIVE_GROUPS",
+    "default": 4,
+    "selected": 2,
+    "external_port_bits_unchanged": 2368,
+    "added_edges": 0,
+    "calendar_changes": 0,
+    "active_sram_macros": 6,
+    "inactive_input_bits_unconsumed": 1184,
+    "die_adoption": false,
+    "binder_change": false
+  },
+  "sources": {
+    "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_client_static_quad.sv": "2e5666ff9231b243434fb88a2c7b7b6cf1319e8c6b41206a77436ced8062d8c1",
+    "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static.sv": "5e8bca20789994495dcbf35ff6f43dc6e2df51261a67212fd14e482d55b6c395",
+    "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv": "ca8dbb193b5b22702e4aa4e952176bf60b7bdb583c58dab1158b7e29a0b5da7a",
+    "tools/hbm_idx_static_calendar.py": "7e33fab18bf8e1f710dd463a56b7cb6d1aba9ac853c576cc66bd71175668fe83",
+    "tools/hbm_die_v16/d4g_layers/l4_idx_quad.py": "ef83365ab010a5bb16c06891027a431b997e1ec07b09333b6c7e018901c76465"
+  }
+}
