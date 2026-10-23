@@ -2,12 +2,12 @@
  "name": "qfd_hp13_cpub39_full_main-hpfull1-COMMIT",
  "block": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
  "ref_tile": true,
- "owner": "CODEX-QK-2000",
+ "owner": "QDIE5-TLD-K",
  "purpose": "Full source-bound HP13 native-first physical qualification; not a die result",
  "threads": 8,
  "peak_ram_gb": 96,
  "source": {
-  "branch": "codex/qk-hp13-parent-2000",
+  "branch": "claude/qdie5-tld-kits-1022",
   "commit": "COMMIT",
   "extra_paths": [
    "results/arch/hp13_corepub39_1021",
