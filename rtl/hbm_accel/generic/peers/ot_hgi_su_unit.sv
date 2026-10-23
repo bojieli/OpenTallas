@@ -723,8 +723,11 @@ module ot_hgi_su_lgroup2 #(
                 // bank-equality leaf per (lane, bank) (N+3 loads), then the rr / rq enables AND its single output.
                 wire eq;
                 ot_hgi_su_lane_eq #(.LN(LN),.BANK(hb)) u_e(.bank(ra[hl*AW+:LN]),.eq(eq));
-                assign hit_a[hl*N+hb]=rr[hl] && eq;
-                assign hit_b[hl*N+hb]=rq[hl] && eq;
+                // k14r (k14q census: req[0]/req_f[0] still 94/109 -- the kept hit wires survived but abc re-expressed
+                // every row-mux AO221 term directly from rr[0]/rq[0]): each leaf is a keep_hierarchy AND cell, so the
+                // lane enable's loads are exactly its leaves.  Same function, same edge.
+                ot_hgi_su_hit_and u_ha(.a(rr[hl]),.b(eq),.y(hit_a[hl*N+hb]));
+                ot_hgi_su_hit_and u_hb(.a(rq[hl]),.b(eq),.y(hit_b[hl*N+hb]));
             end
         end
     end else begin:g_nohits
@@ -2995,4 +2998,9 @@ endmodule
 endmodule
 (* keep_hierarchy=1 *) module ot_hgi_su_lane_eq #(parameter integer LN=4, BANK=0)(input wire [LN-1:0] bank,output wire eq);
  assign eq=bank==LN'(BANK);
+endmodule
+
+// HBMc/TILES4 10-22 k14r: parameter-free keep_hierarchy AND leaf (a lane read enable AND its bank-equality leaf)
+(* keep_hierarchy=1 *) module ot_hgi_su_hit_and(input wire a,input wire b,output wire y);
+    assign y=a&&b;
 endmodule
