@@ -109,6 +109,8 @@ v17 HARD INVARIANT (S81c coordinator / TOKc-ADM 2026-10-22: earlyoom killed 44 G
 admitted five run_dv_slice.sh builds, 896 GB declared, against 291-279 GB available because v16 put the fresh charges
 inside the 25 %-of-MemAvailable growth cap).  On top of every rule above, for non-die AND die requests:
     committed = other + sum(max(now, peak so far)) + reserve (v16 running growth) + fresh (unstarted / < 5 min)
+    v17.2: a unit that ran verilator_bin / openroad (scope or its docker containers) holds max(now, declared --mem) until it
+    finishes (TOOL_DECLARED=1; 0 = v17.1 peak so far); a unit's peak includes its docker containers' cgroup peaks
     admit(RES) only if committed + RES <= MemTotal - INV_HEADROOM_GB (64); nothing while committed > MemTotal - 64
   (see invariant()).  --free reports admit_gb / die_admit_gb already bounded by it, plus inv_free_gb and committed_gb.
   HARD_INVARIANT=0 in /etc/ot-heavy.conf disables it.  --exit-report (called by ot-heavy-exit inside every scope when the
@@ -149,6 +151,7 @@ SEED = {"ref_gate_": 10}          # GB charged at first sight when the exact cla
 GB = 1 << 30
 WRAPPERS = {"bash", "sh", "dash", "tee", "tail", "time", "env", "timeout", "stdbuf", "nice", "cat", "sleep", "docker",
             "tini", "docker-init", "ot-heavy-exit", "sort"}   # v17: ot-heavy-exit + its pid sampler sit in every scope
+TOOL_COMMS = {"verilator_bin", "verilator_bin_dbg", "openroad"}   # v17.2: charged at the declared --mem cap
 BUILD = {"cc1plus", "cc1", "g++", "gcc", "c++", "clang", "clang++", "ld", "collect2", "lto1", "as", "ar", "make", "ninja",
          "cmake", "verilator", "verilator_bin", "iverilog", "ivl", "yosys", "yosys-abc", "abc"}
 DRY, VERBOSE = "--dry-run" in sys.argv, "--verbose" in sys.argv or "--dry-run" in sys.argv
@@ -499,6 +502,9 @@ def main():
             open(f"{D}/.use.{unit}.tmp", "w").write(f"{cuse // GB}\n")
             os.replace(f"{D}/.use.{unit}.tmp", f"{D}/use.{unit}")
         comms = sorted({p["comm"] for p in allp})
+        # v17.2 (coordinator 10-22, ep9 16:52 earlyoom): a unit that ever ran verilator / openroad (scope or its docker
+        # containers) is charged its declared --mem until it finishes; sticky, so a later phase change keeps it
+        s["tool"] = bool(s.get("tool")) or bool(set(comms) & TOOL_COMMS)
         building = sorted({p["comm"] for p in allp if p["comm"] in BUILD})
         sims = [p for p in ps if is_sim(p)]
         others = [p for p in allp if not is_sim(p) and p["comm"] not in WRAPPERS]
@@ -683,6 +689,7 @@ def read_units():
                              launcher_alive=launcher is not None and os.path.exists(f"/proc/{launcher[1]}")))
             continue
         cur = num(cg + "/memory.current") / GB + num(f"{D}/use.{unit}")
+        decl = int(meta[0]) if meta[:1] and meta[0].isdigit() else 0
         mx = rd(cg + "/memory.max").strip()
         req = int(mx) / GB if mx.isdigit() else float(max(m, s.get("launch", 0), int(meta[0]) if meta[:1] and meta[0].isdigit() else 0))
         try:
@@ -690,7 +697,10 @@ def read_units():
         except OSError:
             age = 0.0
         rows.append(dict(unit=unit, res=m, active=True, file=f, req=req, now=cur, age=max(0.0, age),
-                         obs=max(cur, num(cg + "/memory.peak") / GB),
+                         # v17.2: + the cron's scope + docker-container cgroup peak (s["peak"]); the scope's own
+                         # memory.peak never sees a docker unit's container (ep9 10-22: ORFS GRT 30 -> 84 GB unseen)
+                         obs=max(cur, num(cg + "/memory.peak") / GB, float(s.get("peak") or 0.0)),
+                         tool=bool(s.get("tool")), decl=float(decl),
                          cls=s.get("cls") or (meta[1] if len(meta) > 1 else None),
                          sampled=bool(s.get("rss_hist") or s.get("samples") or s.get("first")),
                          rate=float(s.get("rate_gbs") or 0.0),
@@ -709,7 +719,8 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 OLD_MIN_SPAN_S=200,                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
                 MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
                 GROWTH_CAP_AVAIL_FRAC=0.25, DIE_HEADROOM_GB=64.0,
-                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0,
+                TOOL_DECLARED=1.0)                                           # v17.2 declared cap for verilator/openroad                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -874,6 +885,10 @@ def invariant(rows, total, avail, b):
             fresh += r.get("grow", 0.0)
             continue
         h = max(r["now"], min(r.get("obs", r["now"]), r.get("req", r.get("obs", r["now"]))))
+        if r.get("tool") and conf("TOOL_DECLARED"):
+            # v17.2 (coordinator 10-22, ep9 16:52: verilator 30 -> 250 GB late in a 300 GB build, docker ORFS GRT
+            # 30 -> 84 GB): a running verilator / openroad unit holds its declared --mem until it finishes
+            h = max(h, r.get("decl") or r.get("declared") or r.get("req", h))
         held += h
         g = r.get("grow", 0.0)
         if r["age"] < YOUNG_S:                         # its fresh charge counts beyond what max(now, peak) already holds
@@ -1246,6 +1261,28 @@ def selftest():
     chk("v17 young unit: fresh counted beyond its held peak", invariant(
         [u(unit="y", age=60, req=100.0, res=100, now=10.0, obs=10.0, grow=90.0)], 1008, 900, dict(grow=90.0, fresh_gb=90.0))["committed"],
         98 + 0 + 10 + 90)
+    # v17.2 ep9 16:06 replay (coordinator 10-22: earlyoom 16:52 at 966/1007 GB killed m11 route, qcore r19a GPL, SFU
+    # k14q yosys, qfd_c_b8_rgx GRT 84 GB): the S81 h11r verilator build declared 300 GB, then held ~60 (peak so far 60,
+    # it reached 250 GB at 16:52); four docker ORFS gates declared 192/192/64/64 held 30/30/20/20 (container peaks
+    # 40/40/25/25, invisible to the scope's memory.peak); 154 GB available, other 600 GB in use.  v17.1 admitted a
+    # 192 GB qfd ref_gate (downsized to its 10 GB family seed); v17.2 charges the declared caps and refuses it.
+    e9 = [u(unit="h11r", age=7000, req=300.0, res=300, now=60.0, obs=60.0, tool=True, decl=300.0, rate=0.0005),
+          u(unit="g0", age=3000, req=192.0, res=10, now=30.0, obs=40.0, tool=True, decl=192.0),
+          u(unit="g1", age=3000, req=192.0, res=10, now=30.0, obs=40.0, tool=True, decl=192.0),
+          u(unit="g2", age=3000, req=64.0, res=10, now=20.0, obs=25.0, tool=True, decl=64.0),
+          u(unit="g3", age=3000, req=64.0, res=10, now=20.0, obs=25.0, tool=True, decl=64.0)]
+    os.environ.update(TOOL_DECLARED="0")
+    ok_old, inv_old = gate_sim(e9, 1007, 154, 10)
+    os.environ.update(TOOL_DECLARED="1")
+    ok_new, inv_new = gate_sim(e9, 1007, 154, 10)
+    chk("v17.2 ep9 16:06 replay: v17.1 (peak so far) admitted the 10 GB-seeded 192 GB qfd gate", ok_old, 1)
+    chk("v17.2 ep9 16:06 replay: declared caps for verilator/openroad units -> refused", ok_new, 0)
+    chk("v17.2 ep9: verilator/openroad units held at declared (300+192+192+64+64), not peak so far",
+        inv_new["held"], 300 + 192 + 192 + 64 + 64)
+    chk("v17.2 ep9: a die request is bound too", gate_sim(e9, 1007, 154, 10, die=True)[0], 0)
+    chk("v17.2: a non-tool unit keeps max(now, peak so far)",
+        invariant([u(unit="n", age=3000, req=192.0, res=192, now=30.0, obs=40.0, decl=192.0)], 1007, 900,
+                  books([u(unit="n", age=3000, req=192.0, res=192, now=30.0, obs=40.0, decl=192.0)], 1007, 900, tab))["held"], 40.0)
     os.environ.update(HARD_INVARIANT="0")
     chk("v17 HARD_INVARIANT=0: ep7 gate back to v16", gate_sim(e7, 1008, 106, 1)[0], 1)
     for k, v in saved.items():
