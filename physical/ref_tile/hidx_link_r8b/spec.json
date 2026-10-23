@@ -216,8 +216,8 @@
  "job": {
   "owner": "HBMc/TILES2",
   "branch": "claude/hbmc-link-r7-1022",
-  "tag": "r7b",
-  "purpose": "IDX link r7b (HBMc/TILES2 10-22): r6 GRT setup repair stalled -20.9 ps on all 196 SRAM wd_in (r4h half-cycle negedge write stage, registers placed in the slice logic). FB: WPE=0 negedge stage kept + every write-port register anchored at its macro pin (sram_wport_at_pins.tcl). Geometry = r6b. Prior: IDX link r6 b enlarged south landing area and full-face pin spacing after actual repair_design GRT0183 local S-band trap",
+  "tag": "r8b",
+  "purpose": "IDX link r8b (HBMc/TILES2 10-22): r6 GRT setup repair stalled -20.9 ps on all 196 SRAM wd_in (r4h half-cycle negedge write stage, registers placed in the slice logic). FB: WPE=1 negedge stage kept + every write-port register anchored at its macro pin (sram_wport_at_pins.tcl). Geometry = r6b. Prior: IDX link r6 b enlarged south landing area and full-face pin spacing after actual repair_design GRT0183 local S-band trap",
   "extra_paths": [
    "rtl/test/hbm_idx_static",
    "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
@@ -230,7 +230,7 @@
   "benches": [
    {
     "name": "link_pipe_exact",
-    "cmd": "SAFE=2 WPE=0 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m0 0",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m0 0",
     "expect": "pass",
     "pass_regex": "IDX_LINK_PIPE_TOTAL MUT0 records3072 miter1954 errors0 fillsff maxpack71 first_tx ref187 dut192 fault ref1954 dut1959",
     "threads": 4,
@@ -239,7 +239,7 @@
    },
    {
     "name": "link_pipe_mut1_halves",
-    "cmd": "SAFE=2 WPE=0 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m1 1",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m1 1",
     "expect": "fail",
     "fail_regex": "pipelined link exact/miter/latency mismatch",
     "threads": 4,
@@ -248,7 +248,7 @@
    },
    {
     "name": "link_pipe_mut2_seq",
-    "cmd": "SAFE=2 WPE=0 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m2 2",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m2 2",
     "expect": "fail",
     "fail_regex": "pipelined link exact/miter/latency mismatch",
     "threads": 4,
@@ -257,7 +257,7 @@
    },
    {
     "name": "link_pipe_mut3_carry",
-    "cmd": "SAFE=2 WPE=0 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m3 3",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m3 3",
     "expect": "fail",
     "fail_regex": "pipelined link exact/miter/latency mismatch",
     "threads": 4,
@@ -266,7 +266,7 @@
    },
    {
     "name": "link_pipe_mut4_latency",
-    "cmd": "SAFE=2 WPE=0 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m4 4",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m4 4",
     "expect": "fail",
     "fail_regex": "pipelined link exact/miter/latency mismatch",
     "threads": 4,
@@ -274,7 +274,7 @@
     "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe0_m4.log"
    }
   ],
-  "structural_change": "r7b: SRAM write-port registers anchored at the macro pins (negedge stage kept, WPE=0)",
+  "structural_change": "r8b: SRAM write-port registers anchored at the macro pins (negedge stage kept, WPE=1)",
   "views_to": "physical/ref_tile/hidx_link_r8b/views",
   "record_to": "results/rtl/ref_tile/hidx_link_r8b"
  },
@@ -297,7 +297,7 @@
   "enable": true,
   "stages": 2
  },
- "structural_change": "R5x actual third route terminal GRT0183 net46597 during repair_design despite initial GRT0/16.18% usage: driver wire46605/Y (201.47,11.07) -> S1_gc[55]/D (226.69,14.31), inside packed S pin-register band, not overall routing exhaustion. R6b: enlarge width650->864, height561.6->691.2; lower bank margin43.2->129.6 and expand bank centre corridor217.512->260.712; full S output/N tx faces expanded, local clock/reset ports at E register-mass midpoint. Keep 129.6 bank pitch (51.816 channels), MY/R0 orientation, source596d3557d SAFE2, symmetric spine, same cycle ABI (+5 historical) and constraints; no cycles added, no shrink or clock waiver.",
+ "structural_change": "R8 structural successor: r7b routed count path vrep -> S1 pcA -> s1_nqc TT -50.66 ps, long serial pc8 plus two 218 ps wire spans. Replace count-only pc8 with balanced kept pair/quad/octet add tree, same count, same register edges. Posedge WPE=1 retains full-cycle SRAM write (qualified in r7a bench). Alternate keeps r7b larger outline. FF -6.12 ps at selected_line capture requires 50 ps repair margin instead of 30; frozen signoff clocks and IO constraints unchanged.",
  "orfs_vars": {
   "OT_SPINE_SYM": "1"
  },

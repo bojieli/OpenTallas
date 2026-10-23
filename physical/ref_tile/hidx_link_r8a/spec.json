@@ -216,8 +216,8 @@
  "job": {
   "owner": "HBMc/TILES2",
   "branch": "claude/hbmc-link-r7-1022",
-  "tag": "r7a",
-  "purpose": "IDX link r7a (HBMc/TILES2 10-22): r6 GRT setup repair stalled -20.9 ps on all 196 SRAM wd_in (r4h half-cycle negedge write stage, registers placed in the slice logic). MAIN: WPE=1 posedge write register (full cycle; write lands +1 edge, outputs unchanged at +5, emit-right-after-flush covered) + every write-port register anchored at its macro pin (sram_wport_at_pins.tcl). Geometry = r6a. Prior: IDX link r6 a enlarged south landing area and full-face pin spacing after actual repair_design GRT0183 local S-band trap",
+  "tag": "r8a",
+  "purpose": "IDX link r8a (HBMc/TILES2 10-22): r6 GRT setup repair stalled -20.9 ps on all 196 SRAM wd_in (r4h half-cycle negedge write stage, registers placed in the slice logic). MAIN: WPE=1 posedge write register (full cycle; write lands +1 edge, outputs unchanged at +5, emit-right-after-flush covered) + every write-port register anchored at its macro pin (sram_wport_at_pins.tcl). Geometry = r6a. Prior: IDX link r6 a enlarged south landing area and full-face pin spacing after actual repair_design GRT0183 local S-band trap",
   "extra_paths": [
    "rtl/test/hbm_idx_static",
    "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
@@ -274,7 +274,7 @@
     "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe1_m4.log"
    }
   ],
-  "structural_change": "r7a: SRAM write-port registers anchored at the macro pins + posedge write stage (WPE=1)",
+  "structural_change": "r8a: SRAM write-port registers anchored at the macro pins + posedge write stage (WPE=1)",
   "views_to": "physical/ref_tile/hidx_link_r8a/views",
   "record_to": "results/rtl/ref_tile/hidx_link_r8a"
  },
@@ -297,7 +297,7 @@
   "enable": true,
   "stages": 2
  },
- "structural_change": "R5x actual third route terminal GRT0183 net46597 during repair_design despite initial GRT0/16.18% usage: driver wire46605/Y (201.47,11.07) -> S1_gc[55]/D (226.69,14.31), inside packed S pin-register band, not overall routing exhaustion. R6a: enlarge width650->777.6, height561.6->648; lower bank margin43.2->86.4 and expand bank centre corridor217.512->260.712; full S output/N tx faces expanded, local clock/reset ports at E register-mass midpoint. Keep 129.6 bank pitch (51.816 channels), MY/R0 orientation, source596d3557d SAFE2, symmetric spine, same cycle ABI (+5 historical) and constraints; no cycles added, no shrink or clock waiver.",
+ "structural_change": "R8 structural successor: r7b routed count path vrep -> S1 pcA -> s1_nqc TT -50.66 ps, long serial pc8 plus two 218 ps wire spans. Replace count-only pc8 with balanced kept pair/quad/octet add tree, same count, same register edges. Posedge WPE=1 retains full-cycle SRAM write (qualified in r7a bench). MAIN keeps r7a outline. FF -6.12 ps at selected_line capture requires 50 ps repair margin instead of 30; frozen signoff clocks and IO constraints unchanged.",
  "orfs_vars": {
   "OT_SPINE_SYM": "1"
  },
