@@ -7,7 +7,7 @@
                                         pin flops are local) and the E band moved in by the 43.2-um slice columns.
 Writes physical/ref_tile/<kit>/spec.json (+ hand hooks); run tools/ref_tile/ref_tile.py gen on each afterwards.
 """
-import copy, json, pathlib, sys
+import copy, json, pathlib, re, sys
 WT = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else '.').resolve()
 RT = WT / 'physical/ref_tile'
 CX = 'rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv'
@@ -85,6 +85,64 @@ def slice_spec(w):
         'job': dict(OWNER, tag=f'es{w}', purpose=f'CB16c-COLL: collective face edge slice {top} (ALT regional split of the COLLIO faces)',
                     benches=[lint(top, [CX]), bench('s0', 0, 'pass', f'{WIT}/s0_m0.log')]),
     }
+
+
+# COLLIO-SR2 10-23: SEAM landing sub-bands. Every body gate (S0/P/S1/S2/R @cfc200bfb/9bf8ffebe) failed cross_clock SETUP on
+# the same class: inter-entry flop->flop crossings across the 864 x 907 body (210-ps distinct-entry reserve) between bands
+# 600-1200 um apart (tx o_data W-top -> bank2 din_q E-bottom -181 ps; codec codec_data E-centre -> rx wd W-bottom -69 ps;
+# c_abort -> bank we_q -100 ps; tx o_valid -> codec cmd_ov -26 ps).  RTL unchanged (0 cycles): the CAPTURE ranks of those
+# crossings move out of their root's band into small seam sub-bands of the SAME root at the body centre-left, so each
+# path is one <= ~650-um crossing hop plus one intra-root hop (60-ps uncertainty):
+#   bank b landing (din_q/wa_q/we_q of g_bank[b].g_local.u_store, root codec(b+1)) -> seam SB_b next to the lcal band
+#   codec_data (codec0, the pure-copy rx_flit rank of rf) -> crx between the codec band and the rx band
+#   codec_valid (codec0) -> cval; tx o_valid (u_ctl.wr_observed_v, tx_rck) -> txov
+# Counts are the measured 9bf8ffebe/cfc200bfb netlists (P / R gate odbs): din_q 137 (bank3 135, R 103) + wa_q 6 + we_q 1.
+SEAM = {
+    'main': {'bank0': (340.2, 442.8, 378.0, 496.8), 'bank2': (383.4, 442.8, 421.2, 496.8),
+             'bank1': (340.2, 518.4, 378.0, 572.4), 'bank3': (383.4, 518.4, 421.2, 572.4),
+             'crx': (340.2, 302.4, 421.2, 399.6), 'cval': (480.6, 394.2, 518.4, 410.4), 'txov': (340.2, 588.6, 378.0, 604.8)},
+    # ALT (parallel fallback): seams 59.4 um further east (shorter c_abort/codec hops, longer tx hop), cval nearer the codec
+    'alt': {'bank0': (399.6, 442.8, 437.4, 496.8), 'bank2': (442.8, 442.8, 480.6, 496.8),
+            'bank1': (399.6, 518.4, 437.4, 572.4), 'bank3': (442.8, 518.4, 480.6, 572.4),
+            'crx': (340.2, 302.4, 421.2, 399.6), 'cval': (448.2, 394.2, 486.0, 410.4), 'txov': (399.6, 588.6, 437.4, 604.8)},
+}
+
+
+def seam_land(land, prof, variant):
+    """Split the seam ranks out of their roots' bands (exact counts) and lay them out in the SEAM boxes."""
+    fw = 514 if prof == 'r' else 546
+    b3 = fw - 3 * 137
+    n = {'bank0': 144, 'bank1': 144, 'bank2': 144, 'bank3': b3 + 7, 'crx': fw, 'cval': 1, 'txov': 1}
+    parent = {'bank0': 'bank0', 'bank1': 'bank1', 'bank2': 'bank2', 'bank3': 'bank3', 'crx': 'codec', 'cval': 'codec', 'txov': 'tx'}
+    rx = {f'bank{b}': r'g_bank\[%d\]\.g_local\.u_store\.(din_q|wa_q|we_q)(\[|\$)' % b for b in range(4)}
+    rx.update(crx=r'u_body\.codec_data\[', cval=r'u_body\.codec_valid\$', txov=r'u_ctl\.wr_observed_v\$')
+    box = SEAM[variant]
+    for s, par in parent.items():
+        m = re.search(r'\n (%s \{[^}]*\} \{[^}]*\}) (\d+)\n' % par, land)
+        assert m, par
+        land = land.replace(m.group(0), '\n %s %d\n' % (m.group(1), int(m.group(2)) - n[s]), 1)
+    sub = 'set ot_cl_sub {\n' + ''.join(' seam_%s %s {%s} {%s} %d\n' % (s, parent[s], rx[s], ' '.join('%.6f' % v for v in box[s]), n[s])
+                                      for s in parent) + '}\n'
+    a = '\nsource /src/physical/common_flow/anchor_row_packing.tcl'
+    assert land.count(a) == 1
+    land = land.replace(a, '\n' + sub.rstrip('\n') + a, 1)
+    a = ' set members [lsort -dictionary $members]\n'
+    assert land.count(a) == 1
+    land = land.replace(a, a + (' set ot_cl_groups [list $name $members $box $expected]\n'
+        ' foreach {sn sp sre sbox sexp} $ot_cl_sub {\n'
+        '  if {$sp ne $name} continue\n'
+        '  set sm {};set rest {}\n'
+        '  foreach n [lindex $ot_cl_groups 1] {if {[regexp $sre [string map {\\\\ {}} $n]]} {lappend sm $n} else {lappend rest $n}}\n'
+        '  lset ot_cl_groups 1 $rest;lappend ot_cl_groups $sn $sm $sbox $sexp\n'
+        ' }\n'
+        ' foreach {name members box expected} $ot_cl_groups {\n'), 1)
+    a = ' puts "OT_COLL_LAND planned $name roots={$ports} cells=[llength $members] columns=$cols rows=$nr box=$box"\n}\n'
+    assert land.count(a) == 1
+    land = land.replace(a, a[:-2] + '\n }\n}\n', 1)
+    a = 'ten landing bands, twelve roots'
+    assert land.count(a) == 1
+    land = land.replace(a, 'ten landing bands + seven seam sub-bands (COLLIO-SR2 %s), twelve roots' % variant)
+    return '# COLLIO-SR2 10-23 seam sub-bands (%s): bank landings / codec_data / codec_valid / tx o_valid moved to centre-left seams\n' % variant + land
 
 
 def body_spec(prof):
@@ -184,4 +242,13 @@ if __name__ == '__main__':
                 assert k == 1, band
         land = '# CB16c-COLL body: E bands moved in by the 43.2-um slice columns; counts = the measured body netlist (all bands\n# reported at once on a mismatch)\n' + land
         rel = (RT / 'qfd_coll_face_s0_regional7_main' / 'seq_release.tcl').read_text()
-        write(s, {'seq_landing.tcl': land, 'seq_release.tcl': rel})
+        s['structural_change'] += (' COLLIO-SR2 10-23: SEAM landing sub-bands (RTL and cycles unchanged): bank landing din_q/wa_q/we_q, '
+                                   'codec_data/codec_valid and tx o_valid placed in centre-left seams of their own roots, so no '
+                                   'inter-entry hop exceeds ~650 um (all 5 body gates failed cross_clock on 600-1200-um crossings).')
+        write(s, {'seq_landing.tcl': seam_land(land, prof, 'main'), 'seq_release.tcl': rel})
+        # ALT (parallel fallback route): same body, seams 59.4 um further east
+        a = json.loads(json.dumps(s).replace(f'physical/ref_tile/{s["name"]}/', f'physical/ref_tile/{s["name"]}x/'))
+        a['name'] = s['name'] + 'x'
+        a['job'] = dict(a['job'], tag=a['job']['tag'] + 'x', purpose=a['job']['purpose'] + ' -- ALT seam geometry (COLLIO-SR2)')
+        a['structural_change'] = a['structural_change'].replace('centre-left seams', 'centre seams (ALT, +59.4 um east)')
+        write(a, {'seq_landing.tcl': seam_land(land, prof, 'alt'), 'seq_release.tcl': rel})

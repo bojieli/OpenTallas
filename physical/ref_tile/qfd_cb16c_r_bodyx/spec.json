@@ -1,0 +1,602 @@
+{
+ "name": "qfd_cb16c_r_bodyx",
+ "top": "qfd_coll_face_r_cxb",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv",
+  "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx_body.sv",
+  "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s0_pl.sv",
+  "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+  "rtl/physical/ot_qfd_coll_static_face.sv",
+  "rtl/physical/ot_qfd_static_transport.sv",
+  "rtl/rom/ot_coll_static_linkcal.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "cal_ck",
+ "clock_ports": [
+  "cal_ck",
+  "tx_wck",
+  "rx_rck",
+  "cal_lck",
+  "tx_rck",
+  "rx_wck",
+  "codec0",
+  "codec1",
+  "codec2",
+  "codec3",
+  "codec4",
+  "codec0p"
+ ],
+ "clock": "multiple_cts_roots",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cal_ck"
+   ],
+   "inputs": [
+    "rst_n",
+    "peer_slot",
+    "tx_slot",
+    "tx_valid"
+   ],
+   "outputs": [
+    "cdc_fault"
+   ]
+  },
+  "txw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "tx_wck"
+   ],
+   "inputs": [
+    "tx_data"
+   ],
+   "outputs": []
+  },
+  "rxr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rx_rck"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rx_valid",
+    "rx_data"
+   ]
+  },
+  "lcal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cal_lck"
+   ],
+   "inputs": [],
+   "outputs": [
+    "phy_tx_slot",
+    "phy_rx_slot"
+   ]
+  },
+  "txr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "tx_rck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rxw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "rx_wck"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec3"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec4"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "codec0p": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "codec0p"
+   ],
+   "inputs": [
+    "phy_up",
+    "phy_rx_valid",
+    "phy_rx"
+   ],
+   "outputs": [
+    "phy_tx_valid",
+    "phy_tx",
+    "epoch_abort",
+    "fault_cause"
+   ]
+  }
+ },
+ "outline": {
+  "w": 864.0,
+  "h": 907.2
+ },
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "inst": "u_body.u_tx.u_mem",
+   "count": 1,
+   "at": [
+    43.2,
+    648.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "inst": "u_body.u_rx.u_mem",
+   "count": 1,
+   "at": [
+    43.2,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram",
+   "count": 1,
+   "at": [
+    345.6,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram",
+   "count": 1,
+   "at": [
+    345.6,
+    648.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram",
+   "count": 1,
+   "at": [
+    648.0,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram",
+   "count": 1,
+   "at": [
+    648.0,
+    648.0
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rx_data",
+   "rx_valid",
+   "rx_rck",
+   "rx_wck",
+   "cal_ck",
+   "cal_lck",
+   "rst_n",
+   "tx_slot",
+   "peer_slot",
+   "tx_valid",
+   "cdc_fault",
+   "tx_data",
+   "tx_wck",
+   "tx_rck",
+   "codec2"
+  ],
+  "E": [
+   "phy_rx",
+   "phy_rx_valid",
+   "phy_up",
+   "codec0p",
+   "epoch_abort",
+   "fault_cause",
+   "phy_tx_valid",
+   "phy_tx",
+   "phy_tx_slot",
+   "phy_rx_slot",
+   "codec3",
+   "codec4"
+  ],
+  "N": [],
+  "S": [
+   "codec1",
+   "codec0"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 10.8,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 12,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 40 -balance_levels"
+  }
+ },
+ "inhold": true,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "SAFE/TOK_REG registered owning roots; exact calendar neutral. PHY-up captured; no extra automatic data stages."
+ },
+ "structural_change": "CB16c-COLL2-SR 10-22 (ALT, STEWARD-QKc/SQC-CB16c): body of the regionally split R collective face qfd_coll_face_cx (RTL qfd_coll_static_face_x, generated by exact substitution from the face RTL at 2919e5896). The four pin-bound ranks moved to hardened edge slices with their own clock entries (tx_data td_q, rx CDC o_data: 0 cycles; phy_tx / phy_rx: +1 each, consumed by the calendar, face L+2). Geometry = qfd_coll_face_s0_regional7_main (6 macros, 12 roots, ten landing bands) on an 864.0 x 907.2 outline (E band moved in 43.2 um), with every bus pin CLUSTERED in the window of its owning band, so each root's pin flops are within one ~250-um band (was: tx_data / rx_data / phy pins spread over the whole 907-um edge on one root). R: FW 514 / PW 565 (slices es257 x2 W, es113 x5 E in qfd_coll_face_r_cx). COLLIO-SR2 10-23: SEAM landing sub-bands (RTL and cycles unchanged): bank landing din_q/wa_q/we_q, codec_data/codec_valid and tx o_valid placed in centre seams (ALT, +59.4 um east) of their own roots, so no inter-entry hop exceeds ~650 um (all 5 body gates failed cross_clock on 600-1200-um crossings).",
+ "slot_change_request": "body 864.0 x 907.2 inside the 907.2-square face slot of the Codex regional kits (unchanged slot)",
+ "job": {
+  "owner": "Claude:CB16c-COLL",
+  "branch": "claude/cb16c-sr-1022",
+  "tag": "rcxbx",
+  "purpose": "CB16c-COLL: R face body of the regional split (ALT) -- ALT seam geometry (COLLIO-SR2)",
+  "benches": [
+   {
+    "name": "lint",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_coll_face_r_cxb u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLL_BANK_LOCAL -DOT_COLL_REGIONAL --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx_body.sv rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s0_pl.sv rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv rtl/physical/ot_qfd_coll_static_face.sv rtl/physical/ot_qfd_static_transport.sv rtl/rom/ot_coll_static_linkcal.sv rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok"
+   },
+   {
+    "name": "cb16c_lockstep_r_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m0 r 0",
+    "pass_regex": "^CB16C_COLL_BENCH PASS MUT=0 PROFILE=r$",
+    "pass_witness": "results/rtl/cb16c_coll_1022/r_m0.log"
+   },
+   {
+    "name": "cb16c_lockstep_r_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m1 r 1",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=1 PROFILE=r$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/r_m1.log"
+   },
+   {
+    "name": "cb16c_lockstep_r_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m2 r 2",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=2 PROFILE=r$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/r_m2.log"
+   },
+   {
+    "name": "cb16c_lockstep_r_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m3 r 3",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=3 PROFILE=r$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/r_m3.log"
+   },
+   {
+    "name": "cb16c_lockstep_r_m4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m4 r 4",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=4 PROFILE=r$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/r_m4.log"
+   }
+  ]
+ },
+ "pin_ranges": {
+  "rx_data": [
+   97.2,
+   280.8
+  ],
+  "rx_valid": [
+   282.96,
+   286.2
+  ],
+  "rx_rck": [
+   288.36,
+   291.6
+  ],
+  "rx_wck": [
+   293.76,
+   297.0
+  ],
+  "cal_ck": [
+   437.4,
+   440.64
+  ],
+  "cal_lck": [
+   442.8,
+   446.04
+  ],
+  "rst_n": [
+   448.2,
+   451.44
+  ],
+  "tx_slot": [
+   453.6,
+   456.84
+  ],
+  "peer_slot": [
+   459.0,
+   462.24
+  ],
+  "tx_valid": [
+   464.4,
+   467.64
+  ],
+  "cdc_fault": [
+   469.8,
+   480.6
+  ],
+  "tx_data": [
+   637.2,
+   820.8
+  ],
+  "tx_wck": [
+   823.0,
+   826.2
+  ],
+  "tx_rck": [
+   828.4,
+   831.6
+  ],
+  "codec2": [
+   842.4,
+   845.64
+  ],
+  "phy_rx": [
+   345.6,
+   432.0
+  ],
+  "phy_rx_valid": [
+   434.16,
+   437.4
+  ],
+  "phy_up": [
+   439.56,
+   442.8
+  ],
+  "codec0p": [
+   469.8,
+   473.04
+  ],
+  "epoch_abort": [
+   475.2,
+   478.44
+  ],
+  "fault_cause": [
+   480.6,
+   491.4
+  ],
+  "phy_tx_valid": [
+   509.76,
+   513.0
+  ],
+  "phy_tx": [
+   518.4,
+   604.8
+  ],
+  "phy_tx_slot": [
+   448.2,
+   451.44
+  ],
+  "phy_rx_slot": [
+   453.6,
+   456.84
+  ],
+  "codec3": [
+   216.0,
+   219.24
+  ],
+  "codec4": [
+   691.2,
+   694.44
+  ]
+ },
+ "hard_define": "OT_QFD_FACE_HARD",
+ "children": [],
+ "pg_layer": "M5",
+ "defines": [
+  "OT_COLL_BANK_LOCAL",
+  "OT_COLL_REGIONAL"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "cal_ck",
+  "copies": {
+   "rst_n": 8
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 8,
+  "allow_none": true
+ },
+ "inter": [],
+ "layer_cap": "M5",
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "fill_reason": {
+  "pin_bound": "CB16c-COLL body of the split face: perimeter set by the face slot (907.2 square minus two 21.6-um slice columns), six fixed SRAM macros; std cells banded beside their roots."
+ },
+ "pin_hook_after_flops": [
+  "physical/ref_tile/qfd_cb16c_r_bodyx/seq_landing.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/qfd_cb16c_r_bodyx/seq_release.tcl"
+ ],
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w2c_64x546_m1",
+  "ot_sram_1r1w_64x512_m1_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "codec1"
+  },
+  "u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "codec2"
+  },
+  "u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "codec3"
+  },
+  "u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "codec4"
+  },
+  "u_body.u_rx.u_mem": {
+   "master": "ot_sram_1r1w2c_64x546_m1",
+   "clock_pins": {
+    "wclk": "rx_wck",
+    "rclk": "rx_rck"
+   }
+  },
+  "u_body.u_tx.u_mem": {
+   "master": "ot_sram_1r1w2c_64x546_m1",
+   "clock_pins": {
+    "wclk": "tx_wck",
+    "rclk": "tx_rck"
+   }
+  }
+ }
+}

@@ -1,19 +1,29 @@
+# COLLIO-SR2 10-23 seam sub-bands (main): bank landings / codec_data / codec_valid / tx o_valid moved to centre-left seams
 # CB16c-COLL body: E bands moved in by the 43.2-um slice columns; counts = the measured body netlist (all bands
 # reported at once on a mismatch)
 # Explicit source-owned register/control landings; combinational channels remain free.
 set ot_cl_spec {
- codec {codec0} {604.800000 388.800000 799.200000 561.600000} 3920
+ codec {codec0} {604.800000 388.800000 799.200000 561.600000} 3373
  phy {codec0p} {810.000000 345.600000 842.400000 604.800000} 1426
  cal {cal_ck} {10.800000 388.800000 97.200000 496.800000} 166
  lcal {cal_lck} {259.200000 388.800000 324.000000 496.800000} 167
- tx {tx_wck tx_rck} {10.800000 615.600000 32.400000 853.200000} 1565
+ tx {tx_wck tx_rck} {10.800000 615.600000 32.400000 853.200000} 1564
  rx {rx_wck rx_rck} {10.800000 54.000000 32.400000 334.800000} 1018
- bank0 {codec1} {302.400000 97.200000 334.800000 324.000000} 596
- bank1 {codec2} {302.400000 615.600000 334.800000 853.200000} 596
- bank2 {codec3} {604.800000 97.200000 637.200000 324.000000} 596
- bank3 {codec4} {604.800000 615.600000 637.200000 853.200000} 588
+ bank0 {codec1} {302.400000 97.200000 334.800000 324.000000} 452
+ bank1 {codec2} {302.400000 615.600000 334.800000 853.200000} 452
+ bank2 {codec3} {604.800000 97.200000 637.200000 324.000000} 452
+ bank3 {codec4} {604.800000 615.600000 637.200000 853.200000} 446
 }
 
+set ot_cl_sub {
+ seam_bank0 bank0 {g_bank\[0\]\.g_local\.u_store\.(din_q|wa_q|we_q)(\[|\$)} {340.200000 442.800000 378.000000 496.800000} 144
+ seam_bank1 bank1 {g_bank\[1\]\.g_local\.u_store\.(din_q|wa_q|we_q)(\[|\$)} {340.200000 518.400000 378.000000 572.400000} 144
+ seam_bank2 bank2 {g_bank\[2\]\.g_local\.u_store\.(din_q|wa_q|we_q)(\[|\$)} {383.400000 442.800000 421.200000 496.800000} 144
+ seam_bank3 bank3 {g_bank\[3\]\.g_local\.u_store\.(din_q|wa_q|we_q)(\[|\$)} {383.400000 518.400000 421.200000 572.400000} 142
+ seam_crx codec {u_body\.codec_data\[} {340.200000 302.400000 421.200000 399.600000} 546
+ seam_cval codec {u_body\.codec_valid\$} {480.600000 394.200000 518.400000 410.400000} 1
+ seam_txov tx {u_ctl\.wr_observed_v\$} {340.200000 588.600000 378.000000 604.800000} 1
+}
 source /src/physical/common_flow/anchor_row_packing.tcl
 namespace eval ot_coll_land {}
 proc ot_coll_land::target {inst tx ty rows} {
@@ -60,6 +70,14 @@ foreach {name ports box expected} $ot_cl_spec {
   }
  }
  set members [lsort -dictionary $members]
+ set ot_cl_groups [list $name $members $box $expected]
+ foreach {sn sp sre sbox sexp} $ot_cl_sub {
+  if {$sp ne $name} continue
+  set sm {};set rest {}
+  foreach n [lindex $ot_cl_groups 1] {if {[regexp $sre [string map {\\ {}} $n]]} {lappend sm $n} else {lappend rest $n}}
+  lset ot_cl_groups 1 $rest;lappend ot_cl_groups $sn $sm $sbox $sexp
+ }
+ foreach {name members box expected} $ot_cl_groups {
  if {[llength $members]!=$expected} {lappend ot_cl_miss "$name actual [llength $members] expected $expected"}
  dict set ot_cl_by $name $members;dict set ot_cl_boxes $name $box
  set mw 0;set mh 0
@@ -78,6 +96,8 @@ foreach {name ports box expected} $ot_cl_spec {
   lappend ot_cl_owned $n;incr k
  }
  puts "OT_COLL_LAND planned $name roots={$ports} cells=[llength $members] columns=$cols rows=$nr box=$box"
+
+ }
 }
 if {[llength $ot_cl_miss]} {error "OT_COLL_LAND counts differ from the measured source counts: [join $ot_cl_miss {; }]"}
 ot_anchor_pack::repair $ot_cl_b $ot_cl_owned
@@ -95,4 +115,4 @@ dict for {name members} $ot_cl_by {
  puts "OT_COLL_LAND actual $name cells=[llength $members] bbox={$ax $ay $bx $by}"
 }
 close $fh
-puts "OT_COLL_LAND PASS [llength $ot_cl_owned] exact source-owned sequential cells, ten landing bands, twelve roots; zero exclusion regions"
+puts "OT_COLL_LAND PASS [llength $ot_cl_owned] exact source-owned sequential cells, ten landing bands + seven seam sub-bands (COLLIO-SR2 main), twelve roots; zero exclusion regions"
