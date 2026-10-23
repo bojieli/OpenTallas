@@ -11,9 +11,17 @@ module ot_hdc_v41x_kreg #(
     input  wire [W-1:0] d,
     output reg  [W-1:0] q
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [0:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(1)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {1{rst_n}};
+`endif
+
     generate if (R != 0) begin : g_r
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) q <= {W{1'b0}};
+        always @(posedge clk or negedge attw_reset_leaf[0])
+            if (!attw_reset_leaf[0]) q <= {W{1'b0}};
             else q <= d;
     end else begin : g_n
         always @(posedge clk) q <= d;

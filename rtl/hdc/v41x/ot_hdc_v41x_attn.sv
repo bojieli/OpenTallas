@@ -84,6 +84,14 @@ module ot_hdc_v41x_attn_merge #(
     output wire [H*32-1:0]   oy,
     output wire [H-1:0]      of_
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [1:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(2)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {2{rst_n}};
+`endif
+
     wire [MLEV:0]          lv, lfin, llive;
     wire [(MLEV+1)*MLEV-1:0] lblk;
     wire [(MLEV+1)*H*32-1:0] lx;
@@ -116,7 +124,7 @@ module ot_hdc_v41x_attn_merge #(
                 wire [31:0] a = use_ ? head[gh*32 +: 32] : 32'd0;
                 wire [31:0] y;
                 wire af;
-                ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(a), .b(lx[(gl*H+gh)*32 +: 32]),
+                ot_hdc_qadd u_a (.clk(clk), .rst_n(attw_reset_leaf[1]), .v(1'b1), .a(a), .b(lx[(gl*H+gh)*32 +: 32]),
                                  .y(y), .fault(af));
                 reg [2:0] fd;
                 always @(posedge clk) fd <= {fd[1:0], lf[gl*H+gh] | (use_ & head[H*32+gh])};
@@ -125,8 +133,8 @@ module ot_hdc_v41x_attn_merge #(
             end
             reg [2:0] dv, dfin, dlive;
             reg [MLEV-1:0] dblk [0:2];
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) dv <= 3'd0;
+            always @(posedge clk or negedge attw_reset_leaf[0]) begin
+                if (!attw_reset_leaf[0]) dv <= 3'd0;
                 else dv <= {dv[1:0], v};
             end
             always @(posedge clk) begin
@@ -917,6 +925,14 @@ module ot_hdc_v41x_attn_tr #(
     output wire [TD*18-1:0]  col,
     output wire [TD*18-1:0]  eib
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [0:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(1)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {1{rst_n}};
+`endif
+
     localparam integer GW = 265;
     function automatic [17:0] elem(input [GW-1:0] gw, input integer x, input pad);
         begin
@@ -943,8 +959,8 @@ module ot_hdc_v41x_attn_tr #(
             (* keep *) reg [7:0]    rc_t;
             (* keep *) reg          sel_t;
             reg [TD*18-1:0]         eib_t;
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) begin fw_t <= 1'b0; sel_t <= 1'b0; end
+            always @(posedge clk or negedge attw_reset_leaf[0]) begin
+                if (!attw_reset_leaf[0]) begin fw_t <= 1'b0; sel_t <= 1'b0; end
                 else begin fw_t <= w_en_i; sel_t <= sel_i; end
             end
             always @(posedge clk) begin
@@ -992,12 +1008,20 @@ module ot_hdc_v41x_attn_tr_phs #(
     output wire [TD*18-1:0]  col,
     output reg  [TD*18-1:0]  eib
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [0:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(1)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {1{rst_n}};
+`endif
+
     (* keep *) reg fw_t, fb_t, rb_t, sel_t;
     (* keep *) reg [7:0] fc_t, rc_t;
     (* keep *) reg [NL-1:0] fp_t;
     reg [NL*(8*DPT+8)-1:0] g_t;        // the bytes of this tile's dims (FP8 view) and the scale, per row
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin fw_t <= 1'b0; sel_t <= 1'b0; end
+    always @(posedge clk or negedge attw_reset_leaf[0]) begin
+        if (!attw_reset_leaf[0]) begin fw_t <= 1'b0; sel_t <= 1'b0; end
         else begin fw_t <= w_en_i; sel_t <= sel_i; end
     end
     integer i;
@@ -1029,8 +1053,16 @@ module ot_hdc_v41x_attn_merge_phs #(
     output reg  [H*32-1:0]   oy,
     output reg  [H-1:0]      of_
 );
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) ov <= 1'b0;
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [0:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(1)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {1{rst_n}};
+`endif
+
+    always @(posedge clk or negedge attw_reset_leaf[0]) begin
+        if (!attw_reset_leaf[0]) ov <= 1'b0;
         else ov <= iv && ifin;
     end
     reg [31:0] f32;

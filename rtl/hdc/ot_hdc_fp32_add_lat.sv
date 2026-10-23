@@ -222,18 +222,26 @@ endmodule
 module ot_hdc_w11_cut #(parameter integer W = 1, parameter integer CUT = 0, parameter integer VB = -1) (
     input  wire clk, input wire rst_n, input wire [W-1:0] d, output wire [W-1:0] q
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [1:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(2)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {2{rst_n}};
+`endif
+
     generate if (CUT && VB < 0) begin : g_r
         reg [W-1:0] r;
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) r <= {W{1'b0}};
+        always @(posedge clk or negedge attw_reset_leaf[0]) begin
+            if (!attw_reset_leaf[0]) r <= {W{1'b0}};
             else r <= d;
         end
         assign q = r;
     end else if (CUT) begin : g_rv
         reg rv;
         reg [W-1:0] rd;
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) rv <= 1'b0;
+        always @(posedge clk or negedge attw_reset_leaf[1]) begin
+            if (!attw_reset_leaf[1]) rv <= 1'b0;
             else rv <= d[VB];
         end
         always @(posedge clk) rd <= d;

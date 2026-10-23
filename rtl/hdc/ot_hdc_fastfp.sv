@@ -167,6 +167,14 @@ module ot_hdc_fp32_add_fast (
     output reg  [1:0]  err,
     output reg         valid_out
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [2:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(3)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {3{rst_n}};
+`endif
+
     localparam [1:0] E_NONE = 2'd0;
     localparam [1:0] E_NONFINITE = 2'd1;
     localparam [1:0] E_OVERFLOW = 2'd2;
@@ -219,8 +227,8 @@ module ot_hdc_fp32_add_fast (
     reg [7:0]  s1_exp;
     reg [23:0] s1_big;
     reg [27:0] s1_small;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s1_v <= 1'b0;
+    always @(posedge clk or negedge attw_reset_leaf[0]) begin
+        if (!attw_reset_leaf[0]) s1_v <= 1'b0;
         else s1_v <= valid_in;
     end
     always @(posedge clk) begin
@@ -260,8 +268,8 @@ module ot_hdc_fp32_add_fast (
     reg [31:0] s2_code;
     reg [7:0]  s2_exp;
     reg [26:0] s2_val;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s2_v <= 1'b0;
+    always @(posedge clk or negedge attw_reset_leaf[1]) begin
+        if (!attw_reset_leaf[1]) s2_v <= 1'b0;
         else s2_v <= s1_v;
     end
     always @(posedge clk) begin
@@ -281,8 +289,8 @@ module ot_hdc_fp32_add_fast (
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {s2_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
     wire over = (s2_exp == 8'hff) || (e >= 9'd255);
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+    always @(posedge clk or negedge attw_reset_leaf[2]) begin
+        if (!attw_reset_leaf[2]) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
             valid_out <= s2_v;
             if (s2_byp) begin y <= s2_code; err <= s2_err; end
@@ -312,6 +320,14 @@ module ot_hdc_fp32_mul_fast (
     output reg  [1:0]  err,
     output reg         valid_out
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [2:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(3)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {3{rst_n}};
+`endif
+
     localparam [1:0] E_NONE = 2'd0;
     localparam [1:0] E_NONFINITE = 2'd1;
     localparam [1:0] E_OVERFLOW = 2'd2;
@@ -344,8 +360,8 @@ module ot_hdc_fp32_mul_fast (
     reg [1:0]  s1_err;
     reg [48*8-1:0] s1_rows;
     reg signed [11:0] s1_power;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s1_v <= 1'b0;
+    always @(posedge clk or negedge attw_reset_leaf[0]) begin
+        if (!attw_reset_leaf[0]) s1_v <= 1'b0;
         else s1_v <= valid_in;
     end
     always @(posedge clk) begin
@@ -381,8 +397,8 @@ module ot_hdc_fp32_mul_fast (
     reg [47:0] s2_prod, s2_mr, s2_ms;
     reg [5:0]  s2_sh;
     reg signed [11:0] s2_fl47, s2_fl46;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s2_v <= 1'b0;
+    always @(posedge clk or negedge attw_reset_leaf[1]) begin
+        if (!attw_reset_leaf[1]) s2_v <= 1'b0;
         else s2_v <= s1_v;
     end
     always @(posedge clk) begin
@@ -419,8 +435,8 @@ module ot_hdc_fp32_mul_fast (
     wire sub_carry = is_sub && rnd[23];
     wire [31:0] code = is_sub ? (sub_carry ? {s2_sign, 8'h01, 23'd0} : {s2_sign, 8'h00, rnd[22:0]})
                               : {s2_sign, field, man[22:0]};
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+    always @(posedge clk or negedge attw_reset_leaf[2]) begin
+        if (!attw_reset_leaf[2]) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
             valid_out <= s2_v;
             if (s2_byp) begin y <= 32'd0; err <= s2_err; end

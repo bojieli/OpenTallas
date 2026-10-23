@@ -302,7 +302,15 @@ endmodule
 
 // KCP copy of the C1 operand register: kept (SYNTH_KEEP_MODULES) so equal-D copies are never merged into one driver
 module ot_hdc_mul_kcp48 (input wire clk, input wire rst_n, input wire [47:0] d, output reg [47:0] q);
-    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 48'd0; else q <= d;
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [0:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(1)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {1{rst_n}};
+`endif
+
+    always @(posedge clk or negedge attw_reset_leaf[0]) if (!attw_reset_leaf[0]) q <= 48'd0; else q <= d;
 endmodule
 
 // ot_hdc_mul24_rows with the operands supplied as K copies: partial product i reads copy i*K/24 (identical values)

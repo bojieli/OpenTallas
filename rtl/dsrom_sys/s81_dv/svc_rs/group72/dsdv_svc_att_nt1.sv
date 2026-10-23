@@ -147,6 +147,14 @@ module dsdv_svc_att_nt1_core #(
     output wire [NTX*1618-1:0]  tx_i,
     input  wire [NTX*529-1:0]   tx_o
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [5:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(6)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {6{rst_n}};
+`endif
+
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
     localparam integer TR = 640;
@@ -163,8 +171,8 @@ module dsdv_svc_att_nt1_core #(
     wire [11:0] h_len  = q_d[491:480];
     wire is_hdr = q_v && !in_frame;
     wire is_pay = q_v && in_frame;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin in_frame <= 0; left <= 0; f_type <= 0; f_mine <= 0; f_idx <= 0; end
+    always @(posedge clk or negedge attw_reset_leaf[0]) begin
+        if (!attw_reset_leaf[0]) begin in_frame <= 0; left <= 0; f_type <= 0; f_mine <= 0; f_idx <= 0; end
         else if (is_hdr) begin
             f_type <= h_type; f_mine <= h_mask[0]; f_idx <= 0; left <= h_len; in_frame <= h_len != 0;
         end else if (is_pay) begin
@@ -181,8 +189,8 @@ module dsdv_svc_att_nt1_core #(
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
     wire start = hdr_mine && h_type == 4'd2;
     wire [9:0] tjob = 10'(wcount) + nsel;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
+    always @(posedge clk or negedge attw_reset_leaf[1])
+        if (!attw_reset_leaf[1]) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
         else begin
             if (hdr_mine && h_type == 4'd12) begin wb <= q_d[29:0]; if(q_d[32]) st_r <= q_d[31:30]; end
             if (start && !job_open) begin
@@ -229,8 +237,8 @@ module dsdv_svc_att_nt1_core #(
     wire hw_sec = hw_d[288] && hw_d[290:289] < 2'd2 && !hw_mark;
     wire [4:0] hw_pc = pcmap(hw_d[285:256]);
     wire hw_mine = hw_v && hw_sec && hw_pc[4:1] == sid;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) wpush <= 0;
+    always @(posedge clk or negedge attw_reset_leaf[2])
+        if (!attw_reset_leaf[2]) wpush <= 0;
         else wpush <= {hw_mine, ow_blk, ow_blk};
     always @(posedge clk) begin
         wpush_d[0] <= wr_req(ow_ring + 30'(ow_slot[6:1]), 32'hffffffff, q_d[255:0], 17'h1fffe);
@@ -453,8 +461,8 @@ module dsdv_svc_att_nt1_core #(
     // writer per job (window row: PC wfirst[0] ^ row[0]; selected row: its fetch PC or ROWS), so the newest copy of a
     // row the job reads is the one copy whose bit is set (same-cycle priority ROWS > PC 1 > PC 0 kept).
     reg [TR-1:0] lv0, lv1, lv2;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin lv0 <= '0; lv1 <= '0; lv2 <= '0; end
+    always @(posedge clk or negedge attw_reset_leaf[3])
+        if (!attw_reset_leaf[3]) begin lv0 <= '0; lv1 <= '0; lv2 <= '0; end
         else if (start) begin lv0 <= '0; lv1 <= '0; lv2 <= '0; end
         else begin
             if (lw_v[0]) lv0[lw_a[0]] <= 1'b1;
@@ -574,7 +582,7 @@ module dsdv_svc_att_nt1_core #(
                          .ILV(1), .REPL(2), .NSTAGE(2), .FPL(E_FPL), .FML(E_FML), .NBANKP(0), .TILE_S(E_TS),
                          .NARROW(E_NAR), .MFAN(E_MF), .TRX(E_TRX), .F12(E_F12), .FPLX(E_FX),
                          .SC_CRED(0), .PV_CRED(0), .TEXT(TEXT), .TLX(TLX), .TXD(TXD), .NTP(NTP)) u_eng (
-        .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
+        .clk(clk), .rst_n(attw_reset_leaf[4]), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(1'b0),
@@ -664,8 +672,8 @@ module dsdv_svc_att_nt1_core #(
         for (int k = 0; k < 2; k = k + 1) qrq[341*k +: 341] <= nv[k] ? nreq[k] : '0;
     end
 
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge attw_reset_leaf[5]) begin
+        if (!attw_reset_leaf[5]) begin
             for (int k = 0; k < 3; k = k + 1) begin wq_w[k][0] <= 0; wq_w[k][1] <= 0; wq_r[k][0] <= 0; wq_r[k][1] <= 0; end
             for (int k = 0; k < 2; k = k + 1) begin
                 cr[k] <= 4'(DQ); wk_w[k] <= 0; wk_r[k] <= 0; wr_on[k] <= 0; wr_r[k] <= 0; sc_n[k] <= 0;
@@ -872,12 +880,20 @@ module dsdv_svc_att_nt1 #(
     output wire [15:0] pio_o, pvo_o, jc_o, output wire [1:0] st_o,
     output wire [NTX*1618-1:0] tx_i, input wire [NTX*529-1:0] tx_o
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [1:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(2)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {2{rst_n}};
+`endif
+
 `ifdef OT_SVC_ATT_PINREG
     reg pq_v, phw_v; reg [511:0] pq_d; reg [290:0] phw_d;
     reg [1:0] pqrk, pqwd, pqrv; reg [2*256-1:0] pqr_data; reg [2*17-1:0] pqr_tag; reg [2*4-1:0] pqr_beat;
     reg fault_q; wire fault_c;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin pq_v <= 1'b0; phw_v <= 1'b0; pqrk <= '0; pqwd <= '0; pqrv <= '0; fault_q <= 1'b0; end
+    always @(posedge clk or negedge attw_reset_leaf[0])
+        if (!attw_reset_leaf[0]) begin pq_v <= 1'b0; phw_v <= 1'b0; pqrk <= '0; pqwd <= '0; pqrv <= '0; fault_q <= 1'b0; end
         else begin pq_v <= q_v; phw_v <= hw_v; pqrk <= qrk; pqwd <= qwd; pqrv <= qrv; fault_q <= fault_c; end
     always @(posedge clk) begin pq_d <= q_d; phw_d <= hw_d; pqr_data <= qr_data; pqr_tag <= qr_tag; pqr_beat <= qr_beat; end
     assign fault = fault_q;
@@ -890,7 +906,7 @@ module dsdv_svc_att_nt1 #(
     dsdv_svc_att_nt1_core #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .PFIFO(PFIFO), .PMEM(PMEM), .PVQ(PVQ), .DQ(DQ),
                         .SRAM_MACRO(SRAM_MACRO), .QMEM_SRAM(QMEM_SRAM), .TEXT(TEXT), .TLX(TLX), .TXD(TXD),
                         .NTP(NTP)) u_core (
-        .clk(clk), .rst_n(rst_n), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(root),
+        .clk(clk), .rst_n(attw_reset_leaf[1]), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(root),
         .q_v(pq_v), .q_d(pq_d), .hw_v(phw_v), .hw_d(phw_d),
         .qrq(qrq), .qrk(pqrk), .qwd(pqwd), .qrv(pqrv), .qr_data(pqr_data), .qr_tag(pqr_tag), .qr_beat(pqr_beat),
         .l_v(l_v), .l_d(l_d), .pv_ov(pv_ov), .pv_od(pv_od),

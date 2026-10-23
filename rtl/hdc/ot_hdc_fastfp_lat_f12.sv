@@ -23,24 +23,32 @@ module ot_hdc_qmul_lat #(
     output wire [31:0] y,
     output wire        fault
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [4:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(5)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {5{rst_n}};
+`endif
+
     wire [1:0] err;
     wire vo;
     generate if (LAT == 3) begin : g_l3
-        ot_hdc_fp32_mul_fast u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hdc_fp32_mul_fast u (.clk(clk), .rst_n(attw_reset_leaf[0]), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 4) begin : g_l4
         // the fixed LAT-4 top: a plain module name, so synthesis can keep it as its own hierarchy
         // (ORFS SYNTH_KEEP_MODULES) and ABC maps it as the standalone unit
-        ot_hdc_fp32_mul_lat4 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hdc_fp32_mul_lat4 u (.clk(clk), .rst_n(attw_reset_leaf[1]), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 5) begin : g_l5
         // 1.2 GHz: decode..normalise | rows + 5 CSA | 2 CSA + 48-bit add | select / subnormal | round + encode
-        ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hdc_fp32_mul_f12_l5 u (.clk(clk), .rst_n(attw_reset_leaf[2]), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 6) begin : g_l6
         // 1.2 GHz lane build: the lane's operand multiplexer + decode + fraction LZC | normalise, powers | rows + 5 CSA |
         // 2 CSA + 48-bit add | select / subnormal | round + encode (an input register in front of the LAT-5 unit
         // missed by 12 ps: its decode / LZC / normalise stage is the longest)
-        ot_hdc_fp32_mul_f12_l6 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hdc_fp32_mul_f12_l6 u (.clk(clk), .rst_n(attw_reset_leaf[3]), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else begin : g_ln
-        ot_hdc_fp32_mul_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+        ot_hdc_fp32_mul_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(attw_reset_leaf[4]), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
                                             .valid_out(vo));
     end endgenerate
     assign fault = vo && (err != 2'd0);
@@ -62,25 +70,33 @@ module ot_hdc_qadd_lat #(
     output wire [31:0] y,
     output wire        fault
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [5:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(6)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {6{rst_n}};
+`endif
+
     wire [1:0] err;
     wire vo;
     generate if (KEEP == 0) begin : g_fast
-        ot_hdc_fp32_add_fast u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hdc_fp32_add_fast u (.clk(clk), .rst_n(attw_reset_leaf[0]), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (KEEP == 2 && LAT == 5) begin : g_keep5s
         // S81-RERUN margin build: the LAT-4 cut set plus a cut between the sum and the renormalise / leading-zero
         // count (CUTS bit 2): the exp polynomial's add + LZC stage was the swiglu lane's only SS miss (-10 ps at 0.833)
-        ot_hdc_fp32_add_f12_l5s u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hdc_fp32_add_f12_l5s u (.clk(clk), .rst_n(attw_reset_leaf[1]), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 4) begin : g_keep4
         // 1.2 GHz: decode..swap | add + LZC | shift + round | encode
-        ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(attw_reset_leaf[2]), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 5) begin : g_keep5
         // 1.2 GHz lane build: the lane's operand multiplexer + decode + exponent differences | compare, alignments,
         // swap | add, LZC | shift, round | encode (an input register in front of the LAT-4 unit missed by 21-50 ps)
-        ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(attw_reset_leaf[3]), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else if (LAT == 3) begin : g_keep
-        ot_hdc_fp32_add_lat3 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+        ot_hdc_fp32_add_lat3 u (.clk(clk), .rst_n(attw_reset_leaf[4]), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else begin : g_keepn
-        ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+        ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(attw_reset_leaf[5]), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
                                             .valid_out(vo));
     end endgenerate
     assign fault = vo && (err != 2'd0);

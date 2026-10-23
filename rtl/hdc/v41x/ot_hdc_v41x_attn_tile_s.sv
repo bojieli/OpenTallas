@@ -47,6 +47,14 @@ module ot_hdc_v41x_attn_hgrp_s #(
     output reg  [HG*32-1:0]  oy,
     output reg  [HG-1:0]     oflt
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [9:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(10)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {10{rst_n}};
+`endif
+
     localparam integer NC = TD / 8;
     localparam integer LV = $clog2(NC);
     localparam integer R = TD / H;
@@ -61,8 +69,8 @@ module ot_hdc_v41x_attn_hgrp_s #(
     reg              r_iv;
     reg [BW-1:0]     r_ibank;
     reg [TD*18-1:0]  r_ib;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) r_iv <= 1'b0;
+    always @(posedge clk or negedge attw_reset_leaf[0]) begin
+        if (!attw_reset_leaf[0]) r_iv <= 1'b0;
         else r_iv <= iv;
     end
     always @(posedge clk) begin
@@ -106,8 +114,8 @@ module ot_hdc_v41x_attn_hgrp_s #(
     endgenerate
     always @(posedge clk) d1_bank <= r_ibank;
     ot_hdc_v41x_dly #(.W(BW), .D(DQX)) u_d2bank (.clk(clk), .d(d1_bank), .q(dq_bank));
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) d1_v <= 1'b0;
+    always @(posedge clk or negedge attw_reset_leaf[1]) begin
+        if (!attw_reset_leaf[1]) d1_v <= 1'b0;
         else d1_v <= r_iv;
     end
 
@@ -136,10 +144,10 @@ module ot_hdc_v41x_attn_hgrp_s #(
             wire [7:0]       r_ld_grp;
             wire [PWORDS*TD*16-1:0] r_ld_w;
             wire             r_ld_w2v;
-            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rv (.clk(clk), .rst_n(rst_n), .d(ld_v), .q(r_ld_v));
-            ot_hdc_v41x_kreg #(.W(1 + BW + 8 + 1), .R(0)) u_rc (.clk(clk), .rst_n(rst_n),
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rv (.clk(clk), .rst_n(attw_reset_leaf[2]), .d(ld_v), .q(r_ld_v));
+            ot_hdc_v41x_kreg #(.W(1 + BW + 8 + 1), .R(0)) u_rc (.clk(clk), .rst_n(attw_reset_leaf[3]),
                 .d({ld_mode, ld_bank, ld_grp, ld_w2v}), .q({r_ld_mode, r_ld_bank, r_ld_grp, r_ld_w2v}));
-            ot_hdc_v41x_kreg #(.W(PWORDS*TD*16), .R(0)) u_rw (.clk(clk), .rst_n(rst_n), .d(ld_w), .q(r_ld_w));
+            ot_hdc_v41x_kreg #(.W(PWORDS*TD*16), .R(0)) u_rw (.clk(clk), .rst_n(attw_reset_leaf[4]), .d(ld_w), .q(r_ld_w));
             // the head's tile index hh = gid*HG + gh and the group one-hot, registered from the static gid port
             // (constant after reset release: the registers only take gid out of the load paths)
             reg [7:0]      hh;
@@ -169,7 +177,7 @@ module ot_hdc_v41x_attn_hgrp_s #(
             end else begin : g_pp
                 // this head's own kept copy of its pre-selected columns (the R0 register of the p-mode words)
                 wire [PWORDS*R*16-1:0] r_ld_wp;
-                ot_hdc_v41x_kreg #(.W(PWORDS*R*16), .R(0)) u_rp (.clk(clk), .rst_n(rst_n),
+                ot_hdc_v41x_kreg #(.W(PWORDS*R*16), .R(0)) u_rp (.clk(clk), .rst_n(attw_reset_leaf[5]),
                     .d(ld_wp[gh*PWORDS*R*16 +: PWORDS*R*16]), .q(r_ld_wp));
                 always @* begin
                     pcol = r_ld_wp[0 +: R*16];
@@ -200,8 +208,8 @@ module ot_hdc_v41x_attn_hgrp_s #(
                 reg [TD-1:0]    we_r;
                 reg [TD*16-1:0] wd_r;
                 reg [BW-1:0]    wb_r;
-                always @(posedge clk or negedge rst_n) begin
-                    if (!rst_n) we_r <= {TD{1'b0}};
+                always @(posedge clk or negedge attw_reset_leaf[6]) begin
+                    if (!attw_reset_leaf[6]) we_r <= {TD{1'b0}};
                     else we_r <= we;
                 end
                 always @(posedge clk) begin
@@ -212,7 +220,7 @@ module ot_hdc_v41x_attn_hgrp_s #(
             wire [31:0] y;
             wire f;
             ot_hdc_v41x_attn_hdp_s #(.TD(TD), .NBANK(NBANK), .BW(BW), .FPL(FPL), .FML(BML), .F12(F12)) u_hdp (
-                .clk(clk), .rst_n(rst_n), .we(we_q), .wbank(wb_q), .wd(wd_q), .sk_bank(sk_bank), .sk_b(sk_b),
+                .clk(clk), .rst_n(attw_reset_leaf[8]), .we(we_q), .wbank(wb_q), .wd(wd_q), .sk_bank(sk_bank), .sk_b(sk_b),
                 .y(y), .f(f));
             always @(posedge clk) begin
                 oy[gh*32 +: 32] <= y;
@@ -222,9 +230,9 @@ module ot_hdc_v41x_attn_hgrp_s #(
     endgenerate
 
     wire v_core;
-    ot_hdc_v41x_vdly #(.D(LAT_CORE)) u_v (.clk(clk), .rst_n(rst_n), .d(d1_v), .q(v_core));
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) ov <= 1'b0;
+    ot_hdc_v41x_vdly #(.D(LAT_CORE)) u_v (.clk(clk), .rst_n(attw_reset_leaf[9]), .d(d1_v), .q(v_core));
+    always @(posedge clk or negedge attw_reset_leaf[7]) begin
+        if (!attw_reset_leaf[7]) ov <= 1'b0;
         else ov <= v_core;
     end
 endmodule
@@ -257,6 +265,14 @@ module ot_hdc_v41x_attn_tile_s #(
     output wire [H*32-1:0]   oy,
     output wire [H-1:0]      oflt
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [1:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(2)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {2{rst_n}};
+`endif
+
     localparam integer NG = H / HG;
     localparam integer RT = TD / H;
     wire [NG-1:0] gov;
@@ -297,13 +313,13 @@ module ot_hdc_v41x_attn_tile_s #(
 `else
             ot_hdc_v41x_attn_hgrp_s81 u_g (
 `endif
-                .clk(clk), .rst_n(rst_n), .gid(g[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+                .clk(clk), .rst_n(attw_reset_leaf[0]), .gid(g[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
                 .ld_grp(ld_grp), .ld_w(ld_w), .ld_wp(wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(gov[g]),
                 .oy(oy[g*HG*32 +: HG*32]), .oflt(oflt[g*HG +: HG]));
 `else
             ot_hdc_v41x_attn_hgrp_s #(.H(H), .HG(HG), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL),
                                       .FML(FML), .F12(F12), .PCOLP(PCOLP)) u_g (
-                .clk(clk), .rst_n(rst_n), .gid(g[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+                .clk(clk), .rst_n(attw_reset_leaf[1]), .gid(g[7:0]), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
                 .ld_grp(ld_grp), .ld_w(ld_w), .ld_wp(wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(gov[g]),
                 .oy(oy[g*HG*32 +: HG*32]), .oflt(oflt[g*HG +: HG]));
 `endif
@@ -442,6 +458,14 @@ module ot_hdc_v41x_attn_hdp_s #(
     output wire [31:0]       y,
     output wire              f
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [1:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(2)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {2{rst_n}};
+`endif
+
     localparam integer NC = TD / 8;
     wire [TD*32-1:0] p;
     wire [TD-1:0]    pf;
@@ -470,13 +494,13 @@ module ot_hdc_v41x_attn_hdp_s #(
         wire [(2*NC-1)*32-1:0] tn;      // heap order: leaves (chunk sums) at NC-1 .. 2NC-2
         wire [2*NC-2:0]        tf;
         for (gn = 0; gn < NC; gn = gn + 1) begin : g_c
-            ot_hdc_v41x_attn_chunk_s #(.FPL(FPL), .F12(F12)) u_c (.clk(clk), .rst_n(rst_n), .p(p[gn*256 +: 256]), .pf(pf[gn*8 +: 8]),
+            ot_hdc_v41x_attn_chunk_s #(.FPL(FPL), .F12(F12)) u_c (.clk(clk), .rst_n(attw_reset_leaf[0]), .p(p[gn*256 +: 256]), .pf(pf[gn*8 +: 8]),
                                         .y(tn[(NC-1+gn)*32 +: 32]), .f(tf[NC-1+gn]));
         end
         for (gn = 0; gn < NC - 1; gn = gn + 1) begin : g_node
             wire [31:0] s;
             wire sf;
-            ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
+            ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(attw_reset_leaf[1]), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
                              .b(tn[(2*gn+2)*32 +: 32]), .y(s), .fault(sf));
             wire fdq;
             ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(tf[2*gn+1] | tf[2*gn+2]), .q(fdq));
@@ -500,6 +524,14 @@ module ot_hdc_v41x_attn_chunk_s #(
     output wire [31:0]   y,
     output wire          f
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [0:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(1)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {1{rst_n}};
+`endif
+
     wire [8*32-1:0] acc;
     wire [7:0]      af;
     assign acc[31:0] = p[31:0];
@@ -509,7 +541,7 @@ module ot_hdc_v41x_attn_chunk_s #(
         for (gi = 1; gi < 8; gi = gi + 1) begin : g_a
             wire [31:0] s;
             wire sf;
-            ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(acc[(gi-1)*32 +: 32]),
+            ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(attw_reset_leaf[0]), .v(1'b1), .a(acc[(gi-1)*32 +: 32]),
                              .b(p[gi*32 +: 32]), .y(s), .fault(sf));
             wire fdq;
             ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(af[gi-1] | pf[gi]), .q(fdq));
@@ -537,17 +569,25 @@ module ot_hdc_v41x_qaddf #(
     output wire [31:0] y,
     output wire        fault
 );
+    // ATTW R3: same-edge, source-level reset distribution. No storage or cycle is added.
+    wire [4:0] attw_reset_leaf;
+`ifdef OT_S81_ATTW_RESET_R3
+    ot_s81_attw_reset_fork #(.N(5)) u_attw_reset_fork (.d(rst_n), .q(attw_reset_leaf));
+`else
+    assign attw_reset_leaf = {5{rst_n}};
+`endif
+
     generate
         if (F12 != 0 && LAT == 4) begin : g_f4
             wire [1:0] err;
             wire vo;
-            ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+            ot_hdc_fp32_add_f12_l4 u (.clk(clk), .rst_n(attw_reset_leaf[0]), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
                                       .valid_out(vo));
             assign fault = vo && (err != 2'd0);
         end else if (F12 != 0 && LAT == 5) begin : g_f5
             wire [1:0] err;
             wire vo;
-            ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+            ot_hdc_fp32_add_f12_l5x u (.clk(clk), .rst_n(attw_reset_leaf[1]), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
                                        .valid_out(vo));
             assign fault = vo && (err != 2'd0);
         end else if (F12 != 0 && LAT == 6) begin : g_f6
@@ -556,18 +596,18 @@ module ot_hdc_v41x_qaddf #(
             // by 172 ps on the LAT-4 decode/compare/align stage fed straight by the previous chain adder's output
             wire [1:0] err;
             wire vo;
-            ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+            ot_hdc_fp32_add_f12_l6x u (.clk(clk), .rst_n(attw_reset_leaf[2]), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
                                        .valid_out(vo));
             assign fault = vo && (err != 2'd0);
         end else if (F12 != 0 && LAT == 7) begin : g_f7
             // LAT 7: the six cuts of l6x plus one between the 28-bit sum/difference and the sentinel LZC (CUTS bit 2)
             wire [1:0] err;
             wire vo;
-            ot_hdc_fp32_add_f12 #(.CUTS(7'b1101111)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y),
+            ot_hdc_fp32_add_f12 #(.CUTS(7'b1101111)) u (.clk(clk), .rst_n(attw_reset_leaf[3]), .valid_in(v), .a(a), .b(b), .y(y),
                                                      .err(err), .valid_out(vo));
             assign fault = vo && (err != 2'd0);
         end else begin : g_l
-            ot_hdc_v41x_qaddl #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y), .fault(fault));
+            ot_hdc_v41x_qaddl #(.LAT(LAT)) u (.clk(clk), .rst_n(attw_reset_leaf[4]), .v(v), .a(a), .b(b), .y(y), .fault(fault));
         end
     endgenerate
 endmodule
