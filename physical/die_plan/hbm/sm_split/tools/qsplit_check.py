@@ -38,16 +38,16 @@ OUT_PORTS = {"rv", "rrow", "rdata", "fault", "schedule_fault"}
 SKIP_PORTS = {"clk", "rst_n", "request"}       # clock / reset trees are planned per quarter; request is unconnected on die
 
 
-def elaborate(qsplit, int8, int8w, work):
-    js = work / f"top_q{qsplit}.json"
+def elaborate(qsplit, int8, int8w, work, qsmut=0):
+    js = work / f"top_q{qsplit}_m{qsmut}.json"
     d = " ".join(f"-D{x}" for x in DEFINES)
     lib = " ".join(str(ROOT / f) for f in CHILD_FILES)
     ys = (f"read_verilog -sv -lib {d} {lib}\n"
           f"read_verilog -sv {d} {ROOT / 'rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv'}\n"
-          f"chparam -set QSPLIT {qsplit} -set ENABLE_INT8 {int8} -set INT8W {int8w} {TOP}\n"
+          f"chparam -set QSPLIT {qsplit} -set ENABLE_INT8 {int8} -set INT8W {int8w} -set QSMUT {qsmut} {TOP}\n"
           f"hierarchy -top {TOP}\nproc\nflatten\nopt -purge\nwrite_json {js}\n")
-    (work / f"top_q{qsplit}.ys").write_text(ys)
-    r = subprocess.run([YOSYS, "-q", "-s", str(work / f"top_q{qsplit}.ys")], capture_output=True, text=True)
+    (work / f"top_q{qsplit}_m{qsmut}.ys").write_text(ys)
+    r = subprocess.run([YOSYS, "-q", "-s", str(work / f"top_q{qsplit}_m{qsmut}.ys")], capture_output=True, text=True)
     (work / f"yosys_q{qsplit}.log").write_text(r.stdout + r.stderr)
     if r.returncode != 0:
         raise SystemExit(f"yosys failed, see {work}/yosys_q{qsplit}.log")
@@ -86,12 +86,13 @@ def main():
     ap.add_argument("--qsplit", type=int, required=True)
     ap.add_argument("--int8", type=int, default=1)
     ap.add_argument("--int8w", type=int, default=1)
+    ap.add_argument("--qsmut", type=int, default=0, help="QSMUT bench mutant (negative control of this check)")
     ap.add_argument("--work", default="/tmp/qsplit_check")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
-    J = elaborate(a.qsplit, a.int8, a.int8w, work)
+    J = elaborate(a.qsplit, a.int8, a.int8w, work, a.qsmut)
     M = J["modules"][TOP]
     split = json.loads((SPLIT / "sm_split.json").read_text())
     childq = {c["inst"]: c["quarter"] for c in split["children"]}
@@ -238,7 +239,7 @@ def main():
     for r in out:
         if r["src_q"] != r["dst_q"]:
             cross_bits["-".join(sorted((r["src_q"], r["dst_q"])))] += r["bits"]
-    res = dict(schema="opentallas.hbm.sm_qsplit_check.v1", qsplit=a.qsplit, int8=a.int8, int8w=a.int8w,
+    res = dict(schema="opentallas.hbm.sm_qsplit_check.v1", qsplit=a.qsplit, qsmut=a.qsmut, int8=a.int8, int8w=a.int8w,
                inputs_land=in_q, unknown_children=dict(unknown), crossing_bits=dict(cross_bits),
                unregistered_or_nonadjacent_bits=bad_bits, rows=out,
                verdict="PASS" if bad_bits == 0 and not unknown else "FAIL",
@@ -247,7 +248,7 @@ def main():
     for r in out:
         if r["verdict"] != "ok":
             print("BAD", r)
-    print(f"QSPLIT_CHECK {res['verdict']} qsplit={a.qsplit} crossing_bits={dict(cross_bits)} bad_bits={bad_bits}")
+    print(f"QSPLIT_CHECK {res['verdict']} qsplit={a.qsplit} qsmut={a.qsmut} crossing_bits={dict(cross_bits)} bad_bits={bad_bits}")
     return 0 if res["verdict"] == "PASS" else 1
 
 
