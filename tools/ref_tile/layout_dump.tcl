@@ -98,6 +98,10 @@ if {[info exists ::env(OT_LAYOUT_LINKS)] && $::env(OT_LAYOUT_LINKS) eq "1"} {
     lappend links "\[[ot_ld_q $a], [ot_ld_q $b], $ot_ld_l($k)\]"
   }
 }
+# TILE-REVIEW 10-23: pin registers / clock roots / macro facing for tools/ref_tile/layout_review.py
+set pin_regs {}; set clock_roots {}; set macro_faces {}; set macro_obs {}
+set ot_ld_lr [file join [file dirname [file normalize [info script]]] layout_review.tcl]
+if {[file exists $ot_ld_lr]} { source $ot_ld_lr }
 set clocks {}
 if {[info exists ::env(OT_LAYOUT_CLOCKS)]} { foreach c [split $::env(OT_LAYOUT_CLOCKS) ","] { if {$c ne ""} { lappend clocks [ot_ld_q $c] } } }
 set dA [expr {double($X1 - $X0) * ($Y1 - $Y0)}]
@@ -112,6 +116,10 @@ puts $f " \"clocks\": \[[join $clocks ", "]\],"
 puts $f " \"blocks\": \[[join $blocks ",\n  "]\],"
 puts $f " \"pins\": \[[join $pins ",\n  "]\],"
 puts $f " \"pg\": \[[join $pg ",\n  "]\],"
+puts $f " \"pin_regs\": \[[join $pin_regs ",\n  "]\],"
+puts $f " \"clock_roots\": \[[join $clock_roots ",\n  "]\],"
+puts $f " \"macro_faces\": \[[join $macro_faces ",\n  "]\],"
+puts $f " \"macro_obs\": {[join $macro_obs ", "]},"
 puts $f " \"links\": \[[join $links ",\n  "]\],\n \"density\": {\"nx\": $nb, \"ny\": $nb, \"grid\": \[[join $grid ", "]\]}}"
 close $f
 puts "OT_LAYOUT_DUMP $::env(OT_LAYOUT_OUT) blocks [llength $blocks] pins [llength $pins] pg [llength $pg] fill [format %.3f [expr {($std + $barea) / $dA}]]"
