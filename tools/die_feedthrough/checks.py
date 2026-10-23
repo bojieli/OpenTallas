@@ -133,14 +133,17 @@ def inside(pins, W, H):
     return [p for p in pins if all(r[1] >= 0 and r[2] >= 0 and r[3] <= W and r[4] <= H for r in (p[3], p[4]))]
 
 
-def abstract_def(spec, macro_name=None):
+def abstract_def(spec, macro_name=None, ft_layers=("M8", "M9")):
     W, H = spec["outline"]
     pins, _ = dedupe_pins(inside(ft_pins(spec), W, H))
     lines = ["VERSION 5.8 ;", "DIVIDERCHAR \"/\" ;", "BUSBITCHARS \"[]\" ;", "DESIGN ftprobe ;",
              f"UNITS DISTANCE MICRONS {DBU} ;", f"DIEAREA ( 0 0 ) ( {d(W)} {d(H)} ) ;"]
     # one placement row: GRT sizes its gcells from the row height (15 x 0.27 um); without rows it OOMs
     lines.append("ROW ROW_0 asap7sc7p5t 0 0 N DO 1 BY 1 STEP 54 0 ;")
-    for n, p, dr in LAYERS:
+    # GRT sizes its gcell as 15 x the lowest-layer track step; the abstract probe routes on the ft layers only, so the
+    # unused lower layers get a coarse 0.64-um track step -> 9.6-um gcells (as the die runs), not 0.54 um (OOM)
+    for n, p0, dr in LAYERS:
+        p = p0 if n in ft_layers else 0.64
         # GRT wants both track directions on every layer (preferred one first)
         ty = f"TRACKS Y {d(p)} DO {int(H / p)} STEP {d(p)} LAYER {n} ;"
         tx = f"TRACKS X {d(p)} DO {int(W / p)} STEP {d(p)} LAYER {n} ;"
@@ -158,6 +161,13 @@ def abstract_def(spec, macro_name=None):
         lines.append(f"- {net} ( PIN {a} ) ( PIN {b} ) + USE SIGNAL ;")
     lines += ["END NETS", "END DESIGN", ""]
     return "\n".join(lines)
+
+
+def layer_names(rng):
+    """'M8-M9' -> ('M8', 'M9')."""
+    lo, _, hi = rng.partition("-")
+    hi = hi or lo
+    return tuple(f"M{k}" for k in range(int(lo[1:]), int(hi[1:]) + 1))
 
 
 def run_sh(out, mem, cpus=4):
@@ -190,7 +200,7 @@ def cmd_abstract(a):
     out.mkdir(parents=True, exist_ok=True)
     lef = Path(a.lef).resolve()
     (out / "block.lef").write_text(lef.read_text())
-    (out / "ftprobe.def").write_text(abstract_def(spec, a.macro))
+    (out / "ftprobe.def").write_text(abstract_def(spec, a.macro, layer_names(a.layers)))
     (out / "probe.tcl").write_text(f"""read_lef {TECH_LEF}
 read_lef {SC_LEF}
 read_lef /work/block.lef

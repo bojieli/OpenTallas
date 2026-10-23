@@ -41,7 +41,7 @@ def test_bit_offsets_grid_and_range():
 def test_abstract_def_pairs():
     txt = checks.abstract_def(SPEC)
     assert "PINS 16 ;" in txt and "NETS 8 ;" in txt and "- u_blk m + FIXED ( 0 0 ) N ;" in txt
-    assert "ROW ROW_0" in txt and "TRACKS Y 80 DO 625 STEP 80 LAYER M8 ;" in txt
+    assert "ROW ROW_0" in txt and "TRACKS Y 80 DO 625 STEP 80 LAYER M8 ;" in txt and "STEP 640 LAYER M2" in txt
     assert "- ftn0_3 ( PIN ft0_i[3] ) ( PIN ft0_o[3] ) + USE SIGNAL ;" in txt
 
 
