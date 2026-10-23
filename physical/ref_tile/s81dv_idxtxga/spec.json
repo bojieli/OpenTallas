@@ -15,7 +15,8 @@
   "RDL": 1,
   "WDL": 1,
   "RIL": 1,
-  "RIL_MUT": 0
+  "RIL_MUT": 0,
+  "POUT": 1
  },
  "clock_port": "ck",
  "reset_ports": [],
@@ -95,7 +96,7 @@
  },
  "pin_regs": {
   "enable": false,
-  "reason": "Source-registered child of dsdv_idx_tx_n32 SPLIT (TOPK TX y): every input lands in a flop at the pin (RIL re_l/ra_l + ra_q, WDL we_l/wa_l/wd_l, wm_next mask copies); the output p is a 2-level AND-OR of flops (RDL q_l AND bank-select bsk1) registered by the parent rd (pa|pb). A pin stage would add a lookup edge (reference LPX 3) and move the compiled slot grid (lower_bk job_rank_tree_rd)."
+  "reason": "Source-registered child of dsdv_idx_tx_n32 SPLIT (TOPK TX y): every input lands in a flop at the pin (RIL re_l/ra_l + ra_q, WDL we_l/wa_l/wd_l, wm_next mask copies); POUT=1 (r2, STW-S81c-TOK5): the output p is a pin flop (the AND-OR of the RDL q_l under bsk1 registered here; the parent ORs pa|pb combinationally into rd, same edge, 0 cycles). A recipe pin stage would add a lookup edge (reference LPX 3)."
  },
  "keep_pin_regs": true,
  "io_flop_at_pins": {
@@ -110,7 +111,7 @@
  "inhold": false,
  "outhold": false,
  "inter": [],
- "structural_change": "s81dv_idxtxga (TOPK TX y FB child, STW-S81c-TOK4 10-22): column A of the TX score store (banks 0-4, 5 x ot_sram_1r1w_1024x256) as its own hardened tile with its own clock root, so the y parent spans only the other half with its root (v/w: one root over 626 x 562 um). Same per-bank structure as x (WDL write landing, RIL read landing, RDL capture, macro_pin_flops anchors), bank-select copies local. RTL 20f1e4be0, lockstep y == reference LPX=2. r1: OT_OFLOP_PORT_RE=^p (gate ODB-0359: every input port lands directly in a flop that also drives a macro pin, so io_flop_at_pins tried to move a macro_pin_flops FIRM anchor; inputs keep the macro-pin anchor, the timing-critical side (v/w r_ce_in -65.8); the port side is a flop-to-flop crossing from the parent with no logic).",
+ "structural_change": "s81dv_idxtxga (TOPK TX y FB child, STW-S81c-TOK4 10-22): column A of the TX score store (banks 0-4, 5 x ot_sram_1r1w_1024x256) as its own hardened tile with its own clock root, so the y parent spans only the other half with its root (v/w: one root over 626 x 562 um). Same per-bank structure as x (WDL write landing, RIL read landing, RDL capture, macro_pin_flops anchors), bank-select copies local. RTL 20f1e4be0, lockstep y == reference LPX=2. r1: OT_OFLOP_PORT_RE=^p (gate ODB-0359: every input port lands directly in a flop that also drives a macro pin, so io_flop_at_pins tried to move a macro_pin_flops FIRM anchor; inputs keep the macro-pin anchor, the timing-critical side (v/w r_ce_in -65.8); the port side is a flop-to-flop crossing from the parent with no logic). r2 (STW-S81c-TOK5 10-22): route s81dv_idxtxga-ga-df0b64d73 EARLY_FAIL_SETUP TT post-CTS -506 ps / 1461 ep: worst reg->out g_bsl.bsk1[0] -> p[1] (comb 5-bank AND-OR to the pin under a 0.6 T output budget, 435 ps wire); RTL POUT=1 registers p in the child (pin flop) and the parent ORs pa|pb combinationally (rd edge unchanged, 0 cycles).",
  "why_floorplan": "Left half of the x/v outline (313.2 x 561.6): col A x 72.576 as in v, rows pitch 95.04; W band 72.6 (read pins + wd low half), E band 65.9 (mask/wd high half, flops, 556 data pins on E toward the parent core).",
  "job": {
   "owner": "STW-S81c-TOK4",

@@ -154,13 +154,13 @@ module dsdv_idx_txm_n32 #(
         initial if (D % 1024 != 0 || NB <= WCB) $fatal(1, "dsdv_idx_txm_n32 SPLIT: D must be a multiple of 1024 with NB > WCB");
         wire [255:0] pa, pb;
         // column A (banks 0..WCB-1): the hardened child (own clock root)
-        dsdv_idx_txm_grp #(.D(D), .B0(0), .NG(WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT)) u_ga (
+        dsdv_idx_txm_grp #(.D(D), .B0(0), .NG(WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_ga (
             .ck(ck), .re(re), .ra(ra), .we(we), .wa(wa), .wd(wd), .wm_next(wm_next), .p(pa));
         // column B (banks WCB..NB-1, fed by the WDC copy of the write port when WDC = 1)
-        dsdv_idx_txm_grp #(.D(D), .B0(WCB), .NG(NB - WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT)) u_gb (
+        dsdv_idx_txm_grp #(.D(D), .B0(WCB), .NG(NB - WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_gb (
             .ck(ck), .re(re), .ra(ra), .we((WDC != 0) ? we_b : we), .wa((WDC != 0) ? wa_b : wa), .wd((WDC != 0) ? wd_b : wd),
             .wm_next(wm_next), .p(pb));
-        always @(posedge ck) rd <= pa | pb;
+        always @* rd = pa | pb;  // POUT = 1: pa / pb are the groups' pin flops (same edge as the former rd register)
     end endgenerate
     // STW-S81c-TOK4 10-22: independent generate ifs (yosys named an else-if branch genblk1.g_m -> kit macro paths u_sm.g_m.* not found)
     generate if (SRAM_MACRO && SPLIT == 0) begin : g_m
@@ -269,7 +269,12 @@ module dsdv_idx_txm_grp #(
     parameter integer RDL = 1,
     parameter integer WDL = 1,
     parameter integer RIL = 1,
-    parameter integer RIL_MUT = 0
+    parameter integer RIL_MUT = 0,
+    // STW-S81c-TOK5 10-22 (ga route EARLY_FAIL_SETUP -506 ps TT post-CTS: p was the AND-OR of the 5 banks' q_l under
+    // bsk1, unregistered, driving the pin with a 0.6 T output budget; worst g_bsl.bsk1[0] -> p[1] 435 ps wire): POUT = 1
+    // registers the AND-OR inside the group one stage later (p is a pin flop) and the SPLIT parent ORs pa | pb
+    // combinationally into rd.  rd sees the same edge as the old rd <= pa | pb (0 cycles).
+    parameter integer POUT = 0
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -348,11 +353,17 @@ module dsdv_idx_txm_grp #(
         assign bsk = bsk0;
     end
     integer k, g;
+    reg [255:0] p_c;
     always @* begin
-        p = 256'd0;
+        p_c = 256'd0;
         for (k = 0; k < NG; k = k + 1)
             for (g = 0; g < 8; g = g + 1)
-                p[32 * g +: 32] = p[32 * g +: 32] | (q[k][32 * g +: 32] & {32{bsk[8 * k + g]}});
+                p_c[32 * g +: 32] = p_c[32 * g +: 32] | (q[k][32 * g +: 32] & {32{bsk[8 * k + g]}});
+    end
+    if (POUT != 0) begin : g_po
+        always @(posedge ck) p <= p_c;
+    end else begin : g_pc
+        always @* p = p_c;
     end
 endmodule
 
