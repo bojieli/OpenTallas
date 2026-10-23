@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_pv_local_land_n32_276",
+ "enable": false,
+ "reason": "Actual ring slots capture i on ck_f, o and fault register on ck; k is identity strap. Preserve static landing timing; no additional data pin stage."
+}

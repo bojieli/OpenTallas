@@ -180,24 +180,78 @@ module ot_s81sl_xrt #(
     // later on these registers, so every CTL / RD / lo / V / SC consequence moves +1 cycle (partials and rstd do not).
     reg [15:0] sid_oh;
     always @(posedge clk) sid_oh <= 16'd1 << sid_c;          // sid is a strap: static from reset
+`ifndef OT_S81SL_XR_PDC
+    wire [3:0] sid_t = sid_c, sid_k = sid_c;
+`endif
+`ifdef OT_S81SL_XR_PDC
+    // XR8 (STW-S81c-COLLA 10-22, xrt3 / xrt3_b NEEDS_RTL TT -117 / -83: eb -> decode -> rdv0 / rl0 / tgt0 -> 640 rwe_c +
+    // 160 rwr_c kept copies, 578 paths): the kind / owner predicates are decoded from the input PINS into kept flags at
+    // the SAME edge as eb / wb / vb (input-to-reg slack +365 ps).  sid_oh is a static strap, so mine_* from dl_* equals
+    // mine_* from the registered words; the flags reset with ev / wv / vv (rs_c).  Same values, same edges.
+    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd;
+    // XRT3R (STW-S81c-COLLA3 10-22, xrt3p TT I2R dl_e -> pq_me -12.6): the owner match is captured as two byte halves
+    // (8-bit AND-OR at the pin) and OR-ed after the flops: mine_* = l | h == |(dl[36:21] & sid_ohp), same edge.
+    (* keep *) reg pq_me_l, pq_me_h, pq_mw_l, pq_mw_h, pq_mv_l, pq_mv_h;
+    wire pq_me = pq_me_l | pq_me_h, pq_mw = pq_mw_l | pq_mw_h, pq_mv = pq_mv_l | pq_mv_h;
+    wire pq_vrdc, pq_vrdm;   // same-D copies behind keep_hierarchy (plain keep regs were merged: 36-42 loads)
+    ot_s81sl_xr_rcp #(.ID(1)) u_vrdc (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdc));
+    ot_s81sl_xr_rcp #(.ID(2)) u_vrdm (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdm));
+    // xrt3p census #4 (sid_c 33-36, pq_vrdm 33): row-select copy for the stage-2 regs and two more strap captures
+    wire pq_vrdr; ot_s81sl_xr_rcp #(.ID(7)) u_vrdr (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdr));
+    wire [3:0] sid_t, sid_k;
+    ot_s81sl_xr_cp #(.W(4), .ID(5)) u_st (.clk(clk), .d(sid), .q(sid_t));   // transmit words (snd / so_b)
+    ot_s81sl_xr_cp #(.W(4), .ID(6)) u_sk (.clk(clk), .d(sid), .q(sid_k));   // RG-FFN / local transport checks
+    // own strap capture for the predecode (sid_c reached 44 loads when shared): sid is static from reset
+    wire [3:0] sid_p, sid_p2; (* keep *) reg [15:0] sid_ohp;
+    ot_s81sl_xr_cp #(.W(4), .ID(3)) u_sp1 (.clk(clk), .d(sid), .q(sid_p));
+    ot_s81sl_xr_cp #(.W(4), .ID(4)) u_sp2 (.clk(clk), .d(sid), .q(sid_p2));
+    always @(posedge clk) begin sid_ohp[7:0] <= 8'(16'd1 << sid_p); sid_ohp[15:8] <= 8'((16'd1 << sid_p2) >> 8); end
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) begin pq_ectl <= 1'b0; pq_wctl <= 1'b0; pq_vctl <= 1'b0; pq_erd <= 1'b0; pq_wrd <= 1'b0; pq_vrd <= 1'b0; end
+        else begin
+            pq_ectl <= dl_ev && dl_e[3:1] == K_CTL; pq_wctl <= dl_wv && dl_w[3:1] == K_CTL; pq_vctl <= dl_vv && dl_vb[3:1] == K_CTL;
+            pq_erd <= dl_ev && (dl_e[3:1] == K_RD || dl_e[3:1] == K_CL); pq_wrd <= dl_wv && (dl_w[3:1] == K_RD || dl_w[3:1] == K_CL);
+            pq_vrd <= dl_vv && dl_vb[3:1] == K_RD;
+        end
+    always @(posedge clk) begin
+        pq_me_l <= |(dl_e[28:21] & sid_ohp[7:0]);  pq_me_h <= |(dl_e[36:29] & sid_ohp[15:8]);
+        pq_mw_l <= |(dl_w[28:21] & sid_ohp[7:0]);  pq_mw_h <= |(dl_w[36:29] & sid_ohp[15:8]);
+        pq_mv_l <= |(dl_vb[28:21] & sid_ohp[7:0]); pq_mv_h <= |(dl_vb[36:29] & sid_ohp[15:8]);
+    end
+    wire e_ctl = pq_ectl, w_ctl = pq_wctl, v_ctl = pq_vctl;
+    wire e_rd = pq_erd, w_rd = pq_wrd;
+`else
     wire e_ctl = ev && eb[3:1] == K_CTL, w_ctl = wv && wb[3:1] == K_CTL, v_ctl = vv && vb[3:1] == K_CTL;
     wire e_rd = ev && (eb[3:1] == K_RD || eb[3:1] == K_CL), w_rd = wv && (wb[3:1] == K_RD || wb[3:1] == K_CL);
+`endif
     wire b_so = bv && bb[3:1] == 3'd2;                            // S81-SMWIRE: SO gather word (landing kind 2)
     wire b_rd = bv && !b_so;
     wire e_sc = ev && eb[3:1] == K_SC, w_sc = wv && wb[3:1] == K_SC;
     wire [185:0] pe = eb[21 +: 186], pw = wb[21 +: 186], pvv = vb[21 +: 186];
+`ifdef OT_S81SL_XR_PDC
+    wire mine_e = pq_me, mine_w = pq_mw, mine_v = pq_mv;
+`else
     wire mine_e = |(pe[15:0] & sid_oh), mine_w = |(pw[15:0] & sid_oh), mine_v = |(pvv[15:0] & sid_oh);
+`endif
     wire ce = e_ctl && mine_e, cw = w_ctl && mine_w, cv = v_ctl && mine_v;
     wire [185:0] cp = ce ? pe : cw ? pw : pvv;
     wire [4:0] tgt0 = cp[20:16], lmask0 = cp[25:21];
     wire re = e_rd && mine_e, rw_ = w_rd && mine_w;
     // RG-FFN transport (241f7b963): typed V row-pair word (partner only) and the in-XR registered ci loop-back (local copy)
     reg ci_v; reg [W-2:0] ci_r; reg s_local;
+`ifdef OT_S81SL_XR_PDC
+    wire v_rd = pq_vrd;
+`else
     wire v_rd = vv && vb[3:1] == K_RD;
+`endif
     wire local_rd = ci_v && s_local && ci_dir == 3'd0 && ci_r[2:0] == K_RD;
     wire rdv0 = re || rw_ || b_rd || v_rd || local_rd;
     wire [W-1:0] rdb0 = local_rd ? {ci_r, ci_v} : re ? eb : rw_ ? wb : bb;
+`ifdef OT_S81SL_XR_PDC
+    wire [2:0] rl0 = pq_vrdm ? vb[6:4] : rdb0[37 +: 3];
+`else
     wire [2:0] rl0 = v_rd ? vb[6:4] : rdb0[37 +: 3];
+`endif
     reg [2:0] nlo0; reg [255:0] lo_sel0;
     always @(*) begin
         nlo0 = 3'd0; lo_sel0 = 256'd0;
@@ -255,14 +309,38 @@ module ot_s81sl_xrt #(
         for (k = 0; k < 35; k = k + 1) begin
             cvc_c[k] <= v_ctl && sp[(k / 30 + 4) % NSP]; cse_c[k] <= !v_ctl && e_sc && sp[(k / 30 + 0) % NSP];
         end
+`ifdef OT_S81SL_XR_PDC
+        for (k = 0; k < 32; k = k + 1) rsv_c[k] <= pq_vrdc && sp[(k / 30 + 2) % NSP];
+`else
         for (k = 0; k < 32; k = k + 1) rsv_c[k] <= v_rd && sp[(k / 30 + 2) % NSP];
+`endif
         eb2 <= eb[W-1:1]; wb2 <= wb[W-1:1]; vb2 <= vb[V-1:1];
         // local copy: the ci loop-back word rides the B raw word (bb2 is only the RD-from-B source; a B RD and a local
         // RD in one cycle are the two-RD fault).  C1 (HB = 0) has no B port: bb2 is the local word only.
         for (k = 0; k < 1024; k = k + 1)
             bb2[k] <= lcl_c[k / LCG] ? ci_r[51 + k] : (HB != 0) ? bb[52 + k] : 1'b0;
+`ifdef OT_S81SL_XR_PDC
+        lmask <= lmask0; rnp <= pq_vrdr ? 2'd0 : rdb0[50 +: 2]; rrow <= pq_vrdr ? vb[16:7] : rdb0[40 +: 10];
+`else
         lmask <= lmask0; rnp <= v_rd ? 2'd0 : rdb0[50 +: 2]; rrow <= v_rd ? vb[16:7] : rdb0[40 +: 10];
+`endif
         lo_sel <= lo_sel0;
+    end
+    // XRT3R (STW-S81c-COLLA3 10-22, xrt3p/xrt3q NEEDS_RTL TT -40.1/-32.3: bsw_c/bse_c -> body mux -> 4 repeaters ->
+    // x_eps / x_scale / x_mode at the S face; one body bit fed c_d (W), is_d / cfg_d (N), sw_* and x_* (S)): the S-face
+    // consumers get their OWN stage-1 raw-word copies (ebx/wbx/vbx = eb2/wb2/vb2 bits 46+{0..32, 64..95}, KEPT, same D)
+    // and their own one-hot select copies (bsex_c/bswx_c = bse_c/bsw_c, same D), so the 3:1 select sits beside the
+    // x flops and the long hop is the zero-logic pin-flop -> copy wire.  bodyx == body on those bits every cycle.
+    (* keep *) reg [32:0] ebx_l, wbx_l, vbx_l; (* keep *) reg [31:0] ebx_h, wbx_h, vbx_h; (* keep *) reg [8:0] bsex_c, bswx_c;
+    always @(posedge clk) begin
+        ebx_l <= eb[47 +: 33]; wbx_l <= wb[47 +: 33]; vbx_l <= vb[47 +: 33];
+        ebx_h <= eb[111 +: 32]; wbx_h <= wb[111 +: 32]; vbx_h <= vb[111 +: 32];
+        for (k = 0; k < 9; k = k + 1) begin bsex_c[k] <= ce && sp[2]; bswx_c[k] <= !ce && cw && sp[3]; end
+    end
+    reg [32:0] bx_l; reg [31:0] bx_h;
+    always @(*) begin
+        for (k = 0; k < 33; k = k + 1) bx_l[k] = bsex_c[k / 8] ? ebx_l[k] : bswx_c[k / 8] ? wbx_l[k] : vbx_l[k];
+        for (k = 0; k < 32; k = k + 1) bx_h[k] = bsex_c[5 + k / 8] ? ebx_h[k] : bswx_c[5 + k / 8] ? wbx_h[k] : vbx_h[k];
     end
     reg [1023:0] rdat; reg [159:0] body; reg [V-2:0] cix;
     always @(*) begin
@@ -346,7 +424,7 @@ module ot_s81sl_xrt #(
         for (k = 0; k < 128; k = k + 1) if (pkw_c[k]) pk[8 * k +: 8] <= lo_sel[8 * (k % 32) +: 8];
     always @(*) begin
         snd = {W{1'b0}};
-        snd[0] = 1'b1; snd[3:1] = s_kind; snd[8:4] = s_hops; snd[12:9] = sid_c; snd[20:13] = 8'd0;
+        snd[0] = 1'b1; snd[3:1] = s_kind; snd[8:4] = s_hops; snd[12:9] = sid_t; snd[20:13] = 8'd0;
         snd[21 +: 16] = s_mask; snd[37 +: 3] = s_leaf; snd[40 +: 10] = s_row; snd[50 +: 2] = s_np; snd[52 +: 1024] = pk;
     end
     // S81-SMWIRE: SO gather words -> one XB ring beat (assembled from the B input flops; injected on the next edge)
@@ -396,7 +474,7 @@ module ot_s81sl_xrt #(
         assign so_lo = 512'd0; assign so_hi = 512'd0;
     end endgenerate
     assign so_go_nx = b_so && so_n == 2'd2 && bb[4] && bb[52 + 32 +: 8] == 8'h5A && bb[6:5] != 2'd0 && bb[6:5] != 2'd3;
-    wire [W-1:0] so_b = {{(W - 1045){1'b0}}, so_hi, so_lo, 1'b0, so_idx, sid_c, 5'd0, 3'd2, 1'b1};
+    wire [W-1:0] so_b = {{(W - 1045){1'b0}}, so_hi, so_lo, 1'b0, so_idx, sid_t, 5'd0, 3'd2, 1'b1};
     // V-from-G-unit CTL re-injection on the tier line (both sides, hops 0 = line default), SC relay to V
     wire sc_rel = s_scv && (esc || wsc);
     always @(posedge clk or negedge rs_s)
@@ -508,11 +586,11 @@ module ot_s81sl_xrt #(
         else begin
             c_v <= tg[0] ? lmask : 5'd0;
             x_go <= tg[1];
-            x_mode_m <= tg[1] ? body[32] : x_mode_m;
+            x_mode_m <= tg[1] ? bx_l[32] : x_mode_m;
 `ifdef OT_S81SL_XR_MUT_XHOLD
-            x_mode_q <= tg[1] ? body[32] : 1'b0;                    // mutant: output copy does not hold
+            x_mode_q <= tg[1] ? bx_l[32] : 1'b0;                    // mutant: output copy does not hold
 `else
-            x_mode_q <= tg[1] ? body[32] : x_mode_m;
+            x_mode_q <= tg[1] ? bx_l[32] : x_mode_m;
 `endif
             is_v <= tg[2];
             cfg_v <= tg[3];
@@ -520,14 +598,14 @@ module ot_s81sl_xrt #(
     always @(posedge clk) begin
         c_d <= body;
         for (k = 0; k < 4; k = k + 1) begin
-            x_eps_m[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : x_eps_m[8 * k +: 8];
-            x_scale_m[8 * k +: 8] <= tg1_c[4 + k] ? body[64 + 8 * k +: 8] : x_scale_m[8 * k +: 8];
+            x_eps_m[8 * k +: 8] <= tg1_c[k] ? bx_l[8 * k +: 8] : x_eps_m[8 * k +: 8];
+            x_scale_m[8 * k +: 8] <= tg1_c[4 + k] ? bx_h[8 * k +: 8] : x_scale_m[8 * k +: 8];
 `ifdef OT_S81SL_XR_MUT_XHOLD
-            x_eps_q[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : 8'd0;  // mutant: output copies do not hold
-            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? body[64 + 8 * k +: 8] : 8'd0;
+            x_eps_q[8 * k +: 8] <= tg1_c[k] ? bx_l[8 * k +: 8] : 8'd0;  // mutant: output copies do not hold
+            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? bx_h[8 * k +: 8] : 8'd0;
 `else
-            x_eps_q[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : x_eps_m[8 * k +: 8];
-            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? body[64 + 8 * k +: 8] : x_scale_m[8 * k +: 8];
+            x_eps_q[8 * k +: 8] <= tg1_c[k] ? bx_l[8 * k +: 8] : x_eps_m[8 * k +: 8];
+            x_scale_q[8 * k +: 8] <= tg1_c[4 + k] ? bx_h[8 * k +: 8] : x_scale_m[8 * k +: 8];
 `endif
         end
         is_d <= body; cfg_d <= body;
@@ -624,6 +702,14 @@ module ot_s81sl_xrt #(
     // (FOREG = 1: one more dedicated output flop, +2; no pin_reg_split needed).  Fault is a sticky check, never a
     // schedule input (header): 0 data cycles, 0 token-rate change.
     (* keep *) reg fa; (* keep *) reg fb; (* keep *) reg fc; reg fcore;
+    // XRT3R census (gate 14:14: u_sk q[1] / q[3] 34 loads = two 4:16 shift-compares on sid_k): sid is a strap (static
+    // from reset), so its one-hot is captured once in kept flops and the pair-partner mask is the same flops with adjacent
+    // bits swapped (1 << (k ^ 1) == pair-swap of 1 << k): wiring only, same values, same edges.
+    (* keep *) reg [15:0] sk_oh;
+    always @(posedge clk) sk_oh <= 16'd1 << sid_k;
+    wire [15:0] sk_ohx;
+    genvar skx;
+    generate for (skx = 0; skx < 16; skx = skx + 1) begin : g_skx assign sk_ohx[skx] = sk_oh[skx ^ 1]; end endgenerate
     always @(posedge clk or negedge rs_f)
         if (!rs_f) begin fa <= 1'b0; fb <= 1'b0; fc <= 1'b0; end
         else begin
@@ -632,8 +718,8 @@ module ot_s81sl_xrt #(
                   ((|pv) && erun);
             fc <= (vct && (pk_go || sc_rel)) | (pk_go && sc_rel) | (s_scv && esc && wsc) | (tg[4] && (|lov1)) | f_bw |
                   so_f | (so_go && (vct || pk_go || sc_rel))      // S81-SMWIRE / BIND mu4 terms (send/inject region)
-                  | (pair_v && (vct || sc_rel || so_go || s_mask != (16'd1 << (sid_c ^ 4'd1))))   // RG-FFN transport
-                  | (s_local && ((|s_dir) || s_kind != K_RD || s_mask != (16'd1 << sid_c)));
+                  | (pair_v && (vct || sc_rel || so_go || s_mask != sk_ohx))   // RG-FFN transport
+                  | (s_local && ((|s_dir) || s_kind != K_RD || s_mask != sk_oh));
         end
     generate if (FOREG != 0) begin : g_foreg
         always @(posedge clk or negedge rs_f)
@@ -691,3 +777,15 @@ module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF) (
         .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
         .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
 endmodule
+
+`ifdef OT_S81SL_XR_PDC
+// XR8 copy cells: distinct-ID keep_hierarchy registers so synthesis keeps same-D copies apart
+(* keep_hierarchy="yes" *)
+module ot_s81sl_xr_cp #(parameter integer W=1, ID=0)(input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
+ (* keep *) reg [W-1:0] r; always @(posedge clk) r<=d; assign q=r;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_xr_rcp #(parameter integer ID=0)(input wire clk, rst_n, d, output wire q);
+ (* keep *) reg r; always @(posedge clk or negedge rst_n) if(!rst_n) r<=1'b0; else r<=d; assign q=r;
+endmodule
+`endif

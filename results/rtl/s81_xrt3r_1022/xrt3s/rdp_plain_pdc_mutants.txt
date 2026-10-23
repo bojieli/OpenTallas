@@ -1,0 +1,26 @@
+plain mut 0: PASS RDPAIR errors=0 local_packets=1 mut=0
+plain mut 1: FAIL RDPAIR errors=9 local_packets=1 mut=1
+plain mut 2: FAIL RDPAIR errors=5 local_packets=1 mut=2
+plain mut 3: FAIL RDPAIR errors=17 local_packets=1 mut=3
+plain mut 4: FAIL RDPAIR errors=9 local_packets=1 mut=4
+plain mut 5: FAIL RDPAIR errors=16 local_packets=1 mut=5
+plain mut 6: FAIL RDPAIR errors=10 local_packets=1 mut=6
+plain mut 7: FAIL RDPAIR errors=3 local_packets=1 mut=7
+plain mut 8: FAIL RDPAIR errors=2 local_packets=1 mut=8
+plain mut 9: FAIL RDPAIR errors=1 local_packets=1 mut=9
+plain mut 10: FAIL RDPAIR errors=1 local_packets=1 mut=10
+plain mut 11: FAIL RDPAIR errors=3 local_packets=1 mut=11
+pdc mut 0: PASS RDPAIR errors=0 local_packets=1 mut=0
+pdc mut 1: FAIL RDPAIR errors=9 local_packets=1 mut=1
+pdc mut 2: FAIL RDPAIR errors=5 local_packets=1 mut=2
+pdc mut 3: FAIL RDPAIR errors=17 local_packets=1 mut=3
+pdc mut 4: FAIL RDPAIR errors=9 local_packets=1 mut=4
+pdc mut 5: FAIL RDPAIR errors=16 local_packets=1 mut=5
+pdc mut 6: FAIL RDPAIR errors=10 local_packets=1 mut=6
+pdc mut 7: FAIL RDPAIR errors=3 local_packets=1 mut=7
+pdc mut 8: FAIL RDPAIR errors=2 local_packets=1 mut=8
+pdc mut 9: FAIL RDPAIR errors=1 local_packets=1 mut=9
+pdc mut 10: FAIL RDPAIR errors=1 local_packets=1 mut=10
+pdc mut 11: FAIL RDPAIR errors=3 local_packets=1 mut=11
+
+[exited with code 0]

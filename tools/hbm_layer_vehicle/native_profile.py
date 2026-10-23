@@ -4,6 +4,46 @@ This prices a declared return contract. It does not prove the die lanes, PLL
 phase, reset epoch, or physical closure which implement that contract.
 """
 from dataclasses import asdict, dataclass
+import hashlib
+import json
+import re
+from pathlib import Path
+
+
+@dataclass(frozen=True)
+class NativePretreeTiming:
+    """Measured selected-source pre-tree ingress age; no revision-wide guess."""
+    tree_to_reducer: int
+    sources: tuple
+
+    @classmethod
+    def load(cls, path):
+        receipt = json.loads(Path(path).read_text())
+        if receipt.get("schema") != "opentallas.hbm.pretree-timing.v1":
+            raise ValueError("selected pre-tree timing receipt required")
+        if receipt.get("red_command_to_operand_sample") != 1:
+            raise ValueError("selected qcore registered command-to-operand age must be one edge")
+        age = receipt["join_sample_edge"] - receipt["input_sample_edge"] - 1
+        if type(age) is not int or age <= 0 or age != receipt["tree_to_reducer"]:
+            raise ValueError("pre-tree age differs from measured sample edges")
+        sources = receipt["sources"]
+        if set(sources) != {"slice", "join"}:
+            raise ValueError("both selected pre-tree source identities required")
+        for source in sources.values():
+            selected = Path(source["path"])
+            if not selected.is_absolute():
+                selected = Path(path).resolve().parent / selected
+            content = selected.read_bytes()
+            if hashlib.sha256(content).hexdigest() != source["sha256"]:
+                raise ValueError("selected pre-tree source changed; remeasure its observation age")
+            if not re.search(r"\bmodule\s+" + re.escape(source["module"]) + r"\b", content.decode()):
+                raise ValueError("measured pre-tree module absent from selected source")
+        return cls(age, tuple(sorted((k, v["module"], v["sha256"]) for k, v in sources.items())))
+
+    def as_dict(self):
+        return dict(tree_to_reducer=self.tree_to_reducer,
+                    sources={k: dict(module=m, sha256=h) for k, m, h in self.sources},
+                    scope="selected source functional timing; no physical closure claim")
 
 
 @dataclass(frozen=True)
