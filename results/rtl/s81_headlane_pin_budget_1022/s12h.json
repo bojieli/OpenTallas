@@ -1,0 +1,33 @@
+{
+ "cell": "dsfd_coll_lane_w_safe8_ntf",
+ "view": "physical/ref_tile/dscoll_lane_w_s12h/views/dsfd_coll_lane_w_safe8_ntf",
+ "lib_cell": "dsfd_coll_lane_w_safe8_ntf",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean"
+ ],
+ "R_ps": 693.1,
+ "spread_ps": 101.2,
+ "outputs": 1070,
+ "inputs": 1072,
+ "launch_ps": 474.5,
+ "launch_pin": "tx[444]",
+ "capture_ps": 428.3,
+ "capture_pin": "lo_d[472]",
+ "launch_over": 788,
+ "capture_over": 963,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pin_rule": "owner 10-20: registered at region crossings (none declared); same-region pins may connect directly (die / parent STA judges)",
+ "direct_pins": 1751,
+ "direct_first": [
+  "chb",
+  "li_d[0]",
+  "li_d[100]"
+ ],
+ "ff_spread_ps": 87.6,
+ "ff_launch_min_ps": 92.7,
+ "ff_hold_need_ps": -65.8,
+ "pass": false,
+ "fail_why": "TT pin-flop spread 101.2 > 80; FF pin-flop spread 87.6 > 80"
+}

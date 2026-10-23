@@ -1,0 +1,36 @@
+{
+  "view_source_commit": "47962969f5104ac62d0c9868caff013319cfda5f",
+  "files": {
+    "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf_tt.lib": {
+      "sha256": "8d296b41717596c96d37155e360ea63d320bf6d69ae437e939882164d625a439",
+      "source_commit": "47962969f5104ac62d0c9868caff013319cfda5f"
+    },
+    "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf_ff.lib": {
+      "sha256": "7b490a247ad5c567fa8ae3fdc8705b69cf1735abb69ebfa4e7614779bb99a93c",
+      "source_commit": "47962969f5104ac62d0c9868caff013319cfda5f"
+    },
+    "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/insertion.json": {
+      "sha256": "05dcbf08330331eca6cb75e8ad56070180c3506d63b093693031d2d322fdb0fe",
+      "source_commit": "47962969f5104ac62d0c9868caff013319cfda5f"
+    },
+    "physical/ref_tile/dscoll_lane_w_s12h/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf_tt.lib": {
+      "sha256": "fa6093bc58726f3a00071abcc025270a0b01cad21222e108c437ebec50c37c3b",
+      "source_commit": "47962969f5104ac62d0c9868caff013319cfda5f"
+    },
+    "physical/ref_tile/dscoll_lane_w_s12h/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf_ff.lib": {
+      "sha256": "f20edbb62b4d565efbcf94e18435e08bf5b39e41f4c85ad07cb1f3e1615b2fc1",
+      "source_commit": "47962969f5104ac62d0c9868caff013319cfda5f"
+    },
+    "physical/ref_tile/dscoll_lane_w_s12h/views/dsfd_coll_lane_w_safe8_ntf/insertion.json": {
+      "sha256": "2ad220139c8be351b3661541e02b5e9a8c059ace698209a96b733aa03a53223a",
+      "source_commit": "47962969f5104ac62d0c9868caff013319cfda5f"
+    }
+  },
+  "s8ng_params": {},
+  "s12h_params": {
+    "CORE_CRED": 12
+  },
+  "s8ng_native_result": "PASS under same-region direct pin guidance; launch494.5 and capture438.9 are measured, not standalone failures",
+  "actual_parent_context": "Accepted rx relay station gates9dc073dee p9m/p9f retain tx398 reg->out -36.3/-80.1. Standard native s8ng ETM launch494.5 tx398 plus parent ring and80fF load fails actual parent setup. Placement-only beat_tx W-face anchoring is necessary; no registers or edges added.",
+  "s12h": "Different CORE_CRED12; not a substitute, not used to justify s8ng reclosure"
+}

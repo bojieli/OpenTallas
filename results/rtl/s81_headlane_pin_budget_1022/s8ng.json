@@ -1,0 +1,33 @@
+{
+ "cell": "dsfd_coll_lane_w_safe8_ntf",
+ "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+ "lib_cell": "dsfd_coll_lane_w_safe8_ntf",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean"
+ ],
+ "R_ps": 698.4,
+ "spread_ps": 73.5,
+ "outputs": 1070,
+ "inputs": 1072,
+ "launch_ps": 494.5,
+ "launch_pin": "tx[398]",
+ "capture_ps": 438.9,
+ "capture_pin": "rx[81]",
+ "launch_over": 783,
+ "capture_over": 1025,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pin_rule": "owner 10-20: registered at region crossings (none declared); same-region pins may connect directly (die / parent STA judges)",
+ "direct_pins": 1808,
+ "direct_first": [
+  "chb",
+  "li_d[0]",
+  "li_d[100]"
+ ],
+ "ff_spread_ps": 67.6,
+ "ff_launch_min_ps": 108.6,
+ "ff_hold_need_ps": -62.9,
+ "pass": true,
+ "fail_why": ""
+}
