@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-gold1       admits     3 GB (avail 350, reserve 0, fresh 192.5, peak 89.5, headroom 0, waiters 1/100 GB) load 54/112 running 37 disk 1065 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022 (0.0 GB) ot-gold1 -> ot-epyc5 (no host with --dir admits 4 GB now)
+ot-run: SPILL: copied 22 changed entries in 7 s; running on ot-epyc5; written files go back to ot-gold1 after the run
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3258594-1792732844 after 0 s
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.006s
+
+OK
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3258594-1792732844): exit 0
+ot-run: SPILL: outputs copied back ot-epyc5 -> ot-gold1; RAN on ot-epyc5: exit 0

@@ -247,9 +247,11 @@ def _insts(text, names):
 
 def netlist_members(die_v_text, bundles=None):
     """-> ({bid: bundle}, {bid: dict(src_net, dst_net, key)}, problems) from the seam instances' pin nets."""
-    ins = _insts(die_v_text, {D2D, N59, SF})
+    declared = bundles or BUNDLES
+    endpoints = {inst for members in declared.values() for s, _, d, _ in members for inst in (s, d)}
+    ins = _insts(die_v_text, endpoints)
     bmap, info, problems = {}, {}, []
-    for b, mem in (bundles or BUNDLES).items():
+    for b, mem in declared.items():
         have = []
         for s, sp, d, dp in mem:
             if s not in ins or d not in ins:
