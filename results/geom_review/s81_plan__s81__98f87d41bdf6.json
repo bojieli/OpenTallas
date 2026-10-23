@@ -1,0 +1,11 @@
+{
+ "element": "s81_plan",
+ "kit": "physical/die_plan/s81@bc00e22aa",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "98f87d41bdf6ae9cc44ad96cc29a35e3075a63b97442847f3d03b6cebc418c7e",
+ "reasons": "[GEOM-REVIEW3 G1] v3 die_plan_g0.png viewed + g1_extra + census_cov/cells_est. GOOD: census coverage dropped 0 of 241,868 b (v2.1 dropped 8,960 HBM PHY->ctrl read return, now planned); W/E frame arrays unchanged clean abutted 1443x1227 lattice, one tap per cell; G0 PASS, worst full cut 0.077, worst segment 0.29 (s_7S_x13), faces <=5.7/um, worst hop 1469/1500; G2 die + 5 worst overflow 0; only channels = 3 SerDes corner keep-outs + seal ring (reasons). Max glue 365k / core 375k under the 400k cap. Svc = 8 vertical 1443x2454 pairs (bit-slice shown infeasible: P.V transposer, 1-kb p broadcast) accepted. PROBLEMS: (a) types 192 -> 167 with 140 singletons and 17 near-duplicate groups (G0 says 18 mergeable): the centre slice region is per-instance one-offs, far from the <=~40 plan; (b) one tap over long soft-glue spans: bk_sel 4329x1227 (aspect 3.5; 4 hard cores + 10k glue/face regs up to 2.2 mm from the tap), gunit 2886x1227 (3 cores), svc pairs 2454 tall with whole-svc glue, serdes 2886; phy 8657 accepted as hard-PHY edge (as v2.1); (c) synth counts still ESTIMATED/MISSING for svc attn engine, bk_col, frame b1/b2; (d) phy_hbm 8 direct neighbours = PHY fan-out to 8 svc channels (accepted, not a logic hub).",
+ "fixes": "G3 ALLOWED now for frame cells, slice segments, phy/serdes, svc pairs on their own REQs. Each G3 REQ for bk_sel, gunit, svc pairs and serdes must report measured partition clock insertion and boundary pin-flop spread (<=250+/-40 ps, <=80 ps neighbour) from the trial CTS; if over, split bk_sel/gunit at a core boundary into <=1.5-mm partitions with own taps. Before any svc/bk_col/frame-b1/b2 G3: replace the estimated cell counts with synth counts (cap 400k). Types: merge the 18 G0-mergeable near-duplicates now; land PLAN-TOOL spare-slot support for the 57 ft-class projection in v3.1 (not a G3 blocker).",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T07:39:16-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
