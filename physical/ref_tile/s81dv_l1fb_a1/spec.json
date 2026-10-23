@@ -182,6 +182,17 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "l1f_band_lsw_bandmut",
+    "cmd": "BANDMUT=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_l1f_band_lsw.sh {RUN} 8 '0'",
+    "expect": "fail",
+    "fail_regex": "^L1F_LSW FAIL$",
+    "threads": 12,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "views_to": "physical/ref_tile/s81dv_l1fb_a1/views",

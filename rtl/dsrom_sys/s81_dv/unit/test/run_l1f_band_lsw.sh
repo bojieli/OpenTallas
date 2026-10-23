@@ -8,11 +8,20 @@ set -u
 U=$(cd "$(dirname "$0")/.." && pwd); R=$(cd "$U/../../../.." && pwd)
 T=$(mkdir -p "$1" && cd "$1" && pwd); N=${2:-8}; MUTS=${3:-"0 1"}
 sed 's/^module dsdv_gunit_l1f #(/module dsdv_gunit_l1f_ref #(/' "$U/dsdv_gunit_l1f.sv" > "$T/l1f_ref.sv"
-grep -q "module dsdv_gunit_l1f_ref" "$T/l1f_ref.sv" || { echo "L1F_LSW FAIL rename"; exit 2; }
+grep -q "module dsdv_gunit_l1f_ref" "$T/l1f_ref.sv" || { echo "L1F_LSW ERROR rename"; exit 2; }
 REL=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$T/l1f_ref.sv" "$R")
-sed -e "s#rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv#$REL rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f_band.sv rtl/dsrom_sys/s81_dv/unit/test/dsdv_gunit_l1f_lsw.sv#" \
+# BANDMUT=1 (the kit's expect=fail mutant): the BANDED copy alone runs MUT 1 (bias forced 0), the reference stays MUT 0
+# -> the lockstep must report mismatches and the script must print L1F_LSW FAIL.
+SHIM=rtl/dsrom_sys/s81_dv/unit/test/dsdv_gunit_l1f_lsw.sv
+if [ "${BANDMUT:-0}" != 0 ]; then
+  sed 's/dsdv_gunit_l1f_bp #(.MUT(MUT))/dsdv_gunit_l1f_bp #(.MUT(1))/' "$R/$SHIM" > "$T/l1f_lsw_bandmut.sv"
+  grep -q 'dsdv_gunit_l1f_bp #(.MUT(1))' "$T/l1f_lsw_bandmut.sv" || { echo "L1F_LSW ERROR bandmut sed"; exit 2; }
+  SHIM=$(python3 -c "import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))" "$T/l1f_lsw_bandmut.sv" "$R")
+  echo "L1F_LSW BANDMUT=1: banded copy MUT 1, reference MUT 0"
+fi
+sed -e "s#rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv#$REL rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f_band.sv $SHIM#" \
     -e 's#^U=.*#U='"$U"'; R='"$R"'#' -e "s#| grep '^GUNIT')#| grep '^GUNIT'; true)#g" "$U/test/run_gunit_bench.sh" > "$T/bench.sh"
-grep -q dsdv_gunit_l1f_lsw "$T/bench.sh" || { echo "L1F_LSW FAIL bench rewrite"; exit 2; }
+grep -q "l1f_lsw" "$T/bench.sh" || { echo "L1F_LSW ERROR bench rewrite"; exit 2; }
 bash "$T/bench.sh" "$T/w" "$N" "$MUTS" > "$T/bench.out" 2>&1; cat "$T/bench.out"
 bad=0
 for m in $MUTS; do

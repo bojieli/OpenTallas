@@ -18,6 +18,9 @@ WHY = ("STW-S81c-TOK4-BAND 10-22 (STEWARD-S81c item, S81.STA.PAR.3): gunit l1f c
        "the dsdv_gunit golden bench, run_l1f_band_lsw.sh).")
 BENCH = dict(name="l1f_band_lsw", cmd="bash rtl/dsrom_sys/s81_dv/unit/test/run_l1f_band_lsw.sh {RUN} 8 '0 1'", expect="pass",
              pass_regex="^L1F_LSW PASS", threads=12, peak_ram_gb=48, needs=["verilator"])
+# expect=fail mutant (submit_exact BENCH-EVIDENCE): the banded copy alone runs MUT 1 (bias forced 0) -> lockstep mismatches
+BENCH_MUT = dict(name="l1f_band_lsw_bandmut", cmd="BANDMUT=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_l1f_band_lsw.sh {RUN} 8 '0'",
+                 expect="fail", fail_regex="^L1F_LSW FAIL$", threads=12, peak_ram_gb=48, needs=["verilator"])
 
 def kit(name, top, purpose, outline, macros, pins, pin_ranges, why):
     s = {k: copy.deepcopy(base[k]) for k in ("recipe", "clock", "hold_budget", "inter", "inhold", "outhold", "io_flop_at_pins",
@@ -26,7 +29,7 @@ def kit(name, top, purpose, outline, macros, pins, pin_ranges, why):
     if top != "dsdv_gunit_l1f_bf":   # the A bands hold no store / decode: only the select-network keeps apply
         s["route"]["synth_keep_modules"] = [m for m in s["route"]["synth_keep_modules"] if m.startswith("dsdv_seln")]
     j = copy.deepcopy(base["job"])
-    j.update(owner="Claude:STW-S81c-TOK4-BAND", branch="claude/s81-band-1022", tag=name, purpose=purpose, benches=[BENCH],
+    j.update(owner="Claude:STW-S81c-TOK4-BAND", branch="claude/s81-band-1022", tag=name, purpose=purpose, benches=[BENCH, BENCH_MUT],
              views_to=f"physical/ref_tile/{name}/views", record_to=f"results/rtl/ref_tile/{name}")
     j.pop("pass_witness", None)
     s.update(name=name, top=top, kind="tile", sources=SRC, params={}, clock_port="clk", reset_ports=["rst_n"],
