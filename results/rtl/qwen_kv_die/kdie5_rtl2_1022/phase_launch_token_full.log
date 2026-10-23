@@ -1,0 +1,5 @@
+PASS
+production: PHTOK PASS tokens=3 period=258048 launches=216 received=216 no fault
+unpadded: FATAL: /home/ubuntu/wt/kdie5-rtl2-1022/rtl/test/qwen_static_kv/tb_static_phase_launch_token.sv:36: PHTOK FAIL phase launch fault core 259193 (token 1) fc=1 fh=0
+unaligned: FATAL: /home/ubuntu/wt/kdie5-rtl2-1022/rtl/test/qwen_static_kv/tb_static_phase_launch_token.sv:36: PHTOK FAIL phase launch fault core 8502 (token 0) fc=1 fh=0
+rc=0
