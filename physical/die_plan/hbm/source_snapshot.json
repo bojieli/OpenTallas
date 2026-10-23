@@ -1,23 +1,34 @@
 {
  "scope": "plan stage only; not G3 ready and no RTL/physical closure claim",
  "python_hash_seed": 0,
- "plan_sha256": "5117214f6ebcfe8046dd4186aa455bcf205765a5afaab61b456391e82712d593",
- "prior_candidate_sha256": "011f4a80f3fb8ca3b70bb6e82d5f6a5e077a1406f4d8e649ba12f2ff96394576",
- "logical_lane_members_unchanged": true,
+ "plan_sha256": "d77e6ed59138b901469c58fdc6f3af15d0d181fcc58cbd5eb6dc31d146dafdf5",
+ "prior_candidate_sha256": "234696a2136165202be7cf307b43a78b58bcbfb15cd2ef7c1fc874be13e1aab4",
+ "logical_lane_members_unchanged": false,
  "inputs": {
   "census/hbm_census.json.gz": "010b8944b9a5711ad314852e545445d485eb8234d63d52e89008de4f701ceb6d",
   "dumps/dump-hbm/blocks.tsv": "35a824aa76d6cf7870fddea31c289d10029455d961060b85677bfbb4144831fb",
-  "dumps/dump-hbm/mpins.tsv.gz": "9a36ca54bbf5e6233a4fb51f34ee77a5dc65cc8c17922a8a2dec37dc4571d441"
+  "dumps/dump-hbm/mpins.tsv.gz": "9a36ca54bbf5e6233a4fb51f34ee77a5dc65cc8c17922a8a2dec37dc4571d441",
+  "inputs/cells_evidence.json": "cf840de65fc0da5c406b32ccf42783141138b22667bca4e921fb5181bd579f81",
+  "inputs/sm_split_cores.json": "364f802290cb9a0e656bfdf4249a2adf83a0d22e5f948e906d2004e36df9ccac",
+  "cores/pins/*.json (31 files, sha256 of \"name:sha\" lines)": "389cfaf194c3f721742e411bd95791109028326bf51e794513b67df1b01fe251",
+  "sm_split/sm_split.json (SM_MODE inner only; taps use inputs/sm_split_cores.json)": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56"
  },
  "generators": {
-  "gen_plan_v2.py": "aec36ee32d3c37d0261f6aa904f80ef083dc5b9651f36a26391c1356656749c8",
-  "plan_backend_v2.py": "2273c5d7e1a316f7b8494382ecefdbdf65ff2241a8b2a6e463bc1901fbc036f5"
+  "gen_plan_v2.py": "b380c927aaa42453a57b2ec6fa3617f80d85a1569f1022be7f53f13597060f38",
+  "plan_backend_v2.py": "9df6ec22d12e0dd361684cec74240fea95ba93a4e085e6a6e062111473d8d938",
+  "taps_cores_v2.py": "1d2b23d502df4c032bd429f75e09d8107d0b0ca4f6acbd93f7c588116cc6163a",
+  "collect_cells_v2.py": "d2dfae189e04d65747b4975ef0bd237cf8abe48609c67fc7bce9bd285924494c"
  },
  "conditions": [
-  "independent exact-source G1",
+  "independent exact-source G1 of taps/cores",
   "source-bound exact-pin G2",
-  "large-region clock/core/pin budgets",
+  "RTL splits of the over-cap leaves (plan_notes_v2.json over_cap) and SM R1-R4",
+  "M3-pinned as-built cores re-pinned (no pins_file)",
   "internal SM census and RTL binding",
-  "CP1 and per-partition G3"
- ]
+  "CP1 and per-partition G3",
+  "q_su2/3 glue tap coverage 743 um > 600",
+  "token/stage re-price of the inner_c latency table (max lane 78 cycles, pads 4.06M bits)"
+ ],
+ "taps_cores_post_pass": "HBM-P3-TAPS 10-23: plan = prior plan + clock.taps[] + hard_cores[] + type note cell budget (partitions/buses/ports/lanes/latency byte-identical to 5117214f); plan_notes_v2.json has cells, splits, tap metrics, C0 tree",
+ "hbm_p3": "HBM-P3 10-23: router quadrant containment + equal-depth reroute + land_pad landed groups (TOKg defect class); COORD R3 ft station spacing 750 um (REACH); COORD R4 glue tap grid 600 um (PHY per-channel taps); SM_MODE=off published: COORD R6 inner-SM-face rule + SM-internal lanes + land-on-c implemented behind OT_HBM_SM_MODE=inner, G0 FAIL 196 (os column faces 11.1/um, sm<k>c W face) on this floorplan -> COORD decision; 12:10 tap fix: glue taps on the type root tap dropped (die probe GRT-0080 duplicate pins); COORD option (A) os-column M9 third N/S face layer implemented (OT_HBM_SM_MODE=inner, OT_HBM_OS3=1): G0 FAIL 180 (sm<k>c W face 6.14/um = lateral SM access chain; 104k router overflow) -> reported to COORD; 12:40 PUBLISHED COORD option (C)+(A): OT_HBM_SM_MODE=inner_c default -- SM ports land on c (R2-alt), SM-internal quarter lanes planned from sm_split (census rows smq_*), die ft may use inner SM faces within the free capacity (inner faces 4.0-4.6 pins/um incl. SM internal), os column N/S faces + neighbours carry a 3rd M9 layer (face_layers, router cap x1.2). G0 PASS 0 err; land_pad 4.06M flop bits; max landed lane 78 cycles (L193 -> rc4): re-price open"
 }

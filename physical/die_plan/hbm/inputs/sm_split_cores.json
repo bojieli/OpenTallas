@@ -1,0 +1,621 @@
+{
+ "note": "snapshot of the SM four-way split (cells per planned core, measured Yosys) for taps_cores_v2.py; outlines/pins are not part of the split -> EST outlines, no pins",
+ "quarters": {
+  "a": {
+   "cells_measured": 3165858,
+   "cores": [
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[6].g_p[0].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[6].g_p[0].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[6].g_p[0].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[6].g_p[0].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[6].g_p[0].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[6].g_p[1].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[6].g_p[1].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[6].g_p[1].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[6].g_p[1].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[6].g_p[1].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[7].g_p[0].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[7].g_p[0].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[7].g_p[0].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[7].g_p[0].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[7].g_p[0].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[7].g_p[1].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[7].g_p[1].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[7].g_p[1].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[7].g_p[1].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[7].g_p[1].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    }
+   ],
+   "glue_cells": 83458,
+   "glue_note": "BEs + new pin/relay registers (EST 2 cells/bit)",
+   "srams": 40
+  },
+  "b": {
+   "cells_measured": 3164985,
+   "cores": [
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[4].g_p[0].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[4].g_p[0].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[4].g_p[0].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[4].g_p[0].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[4].g_p[0].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[4].g_p[1].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[4].g_p[1].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[4].g_p[1].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[4].g_p[1].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[4].g_p[1].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[5].g_p[0].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[5].g_p[0].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[5].g_p[0].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[5].g_p[0].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[5].g_p[0].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[5].g_p[1].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[5].g_p[1].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[5].g_p[1].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[5].g_p[1].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[5].g_p[1].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    }
+   ],
+   "glue_cells": 83185,
+   "glue_note": "BEs + new pin/relay registers (EST 2 cells/bit)",
+   "srams": 40
+  },
+  "c": {
+   "cells_measured": 3504611,
+   "cores": [
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[2].g_p[0].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[2].g_p[0].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[2].g_p[0].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[2].g_p[0].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[2].g_p[0].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[2].g_p[1].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[2].g_p[1].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[2].g_p[1].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[2].g_p[1].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[2].g_p[1].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[3].g_p[0].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[3].g_p[0].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[3].g_p[0].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[3].g_p[0].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[3].g_p[0].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[3].g_p[1].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[3].g_p[1].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[3].g_p[1].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[3].g_p[1].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[3].g_p[1].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 165789,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_smh_static_front",
+     "name": "u_front.u_normal",
+     "role": "fs"
+    },
+    {
+     "cells": 163494,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_front_static minus ot_smh_static_front",
+     "name": "u_front (attention: u_converter kv_line, u_i8w, u_p, u_desc, row launch, own)",
+     "role": "fa"
+    }
+   ],
+   "glue_cells": 130306,
+   "glue_note": "BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select",
+   "srams": 49
+  },
+  "d": {
+   "cells_measured": 3165858,
+   "cores": [
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[0].g_p[0].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[0].g_p[0].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[0].g_p[0].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[0].g_p[0].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[0].g_p[0].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[0].g_p[1].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[0].g_p[1].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[0].g_p[1].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[0].g_p[1].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[0].g_p[1].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[1].g_p[0].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[1].g_p[0].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[1].g_p[0].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[1].g_p[0].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[1].g_p[0].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[1].g_p[1].u_t.g_lf[0].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[1].g_p[1].u_t.g_lf[0].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 244462,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_native_col",
+     "name": "g_c[1].g_p[1].u_t.g_lf[1].u_lh.u_nc",
+     "role": "ln"
+    },
+    {
+     "cells": 119608,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_leafh minus native_col",
+     "name": "g_c[1].g_p[1].u_t.g_lf[1].u_lh (xs+bdc+leafh glue)",
+     "role": "lx"
+    },
+    {
+     "cells": 42460,
+     "label": "MEASURED-SYNTH",
+     "module": "ot_hbm_sm_attn_tile minus leafh",
+     "name": "g_c[1].g_p[1].u_t (pt_w+pt_e+pass/gather regs)",
+     "role": "tp"
+    }
+   ],
+   "glue_cells": 90294,
+   "glue_note": "BEs + new pin/relay registers (EST 2 cells/bit)",
+   "srams": 40
+  }
+ },
+ "sm_total": {
+  "cells": 13001312,
+  "dff": 2699351,
+  "finding": "13.0M cells: a quarter is 3.17-3.50M cells, i.e. 20-22 planned hard cores, not one <=400k core; the 4-partition plan is still right (one tap / reach per 1.74-mm quarter)",
+  "label": "MEASURED-SYNTH",
+  "srams": 169,
+  "std_area_um2": 1519802
+ },
+ "source": "physical/die_plan/hbm/sm_split/sm_split.json (HBM-P3-SM, uncommitted at snapshot time)",
+ "source_sha256": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56"
+}

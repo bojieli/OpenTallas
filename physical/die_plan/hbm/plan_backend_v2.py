@@ -31,7 +31,7 @@ W0, H0 = 25988.8, 32983.12            # as-built r18h5 die
 NX, NY = 3008, 3818                   # plan die = whole 8.64 grids, even counts (centre lines on grid)
 W, H = NX * G, NY * G                 # 25989.12 x 32987.52
 CX, CY = W / 2, H / 2
-REACH = 1000.0                        # HBM measured hop (REACH-M89), 1.2 mm only for >= 600-bit rows
+REACH = 750.0                         # COORD R3 10-23: max ft station spacing 750 um on all dies (HBM measured 1.0 mm)
 REACH_WIDE = 1200.0
 HOP_UM = 2000.0                       # fabric partition max side (L1 harden big partitions; L4 2-cycle hops)
 ANCHOR_MM2 = 0.2
@@ -586,6 +586,8 @@ def build_graph(parts):
     adj = collections.defaultdict(list)
     for (a, b), s_ in segs.items():
         s_["cap"] = WIN_PER_UM * s_["len"] * 0.80     # routing margin for slice rounding
+        if fl3(a, b, s_['o']):
+            s_["cap"] *= OS3_CAP                        # 3 pin layers (M7/M5 + die M9): up to 9/um; router margin
         adj[a].append((b, (a, b))); adj[b].append((a, (a, b)))
     return segs, adj
 
@@ -600,9 +602,25 @@ def md(p, q):
 
 # ------------------------------------------------------------------------------------------------ lanes
 SPLIT_OF = {}
+SPLIT_LAND = {}          # P3 (COORD R6 R2-alt): every external SM lane lands on the front quarter c
+SM_MODE = os.environ.get('OT_HBM_SM_MODE', 'inner_c')  # inner_c (published, COORD option C+A) | off: pre-R6 | inner: COORD R6 rule, G0 FAIL on the current floorplan | strict: no route
+# | inner_c: COORD option (C) 10-23 -- SM ports on c, SM-internal lanes planned, die ft may use the inner SM faces up to
+#   their free capacity (the SM-internal lanes are routed first-class and share the face budget), plus (A) os M9 faces
+
+
+def sm_part(v):
+    return re.match(r'^(NW|NE|SW|SE)_sm\d[a-d]$', v) is not None
+
+
+def sm_pair(u, v):
+    """u, v = two quarters of the same SM stack (an inner SM face)."""
+    a = re.match(r'^(NW|NE|SW|SE)_sm(\d)[a-d]$', u); b = re.match(r'^(NW|NE|SW|SE)_sm(\d)[a-d]$', v)
+    return bool(a and b and a.groups() == b.groups())
 
 
 def nearest_sub(inst, other_part, P):
+    if inst in SPLIT_LAND and other_part is not None:
+        return SPLIT_LAND[inst]
     subs = SPLIT_OF.get(inst)
     if not subs or other_part is None:
         return None
@@ -678,8 +696,10 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
     paths = {}
     load = collections.Counter()
 
-    def dijk(srcs, t, wbits, gbs=(0,)):
-        """State = (partition, entry face): a lane never leaves a partition through the face it entered."""
+    def dijk(srcs, t, wbits, gbs=(0,), allow=None, smint=False):
+        """State = (partition, entry face): a lane never leaves a partition through the face it entered.
+        P3: allow = quadrants a transit partition may belong to (quadrant containment: a lane only crosses partitions
+        of its own endpoint quadrants; cross-quadrant traffic stays on the planned rings)."""
         st0 = [(u, None) for u in srcs]
         dist = {x: 0.0 for x in st0}; prev = {}
         pq = [(0.0, i, x) for i, x in enumerate(st0)]
@@ -696,6 +716,12 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
             for v, sk in adj[u]:
                 if v in notransit and v != t:
                     continue
+                if allow is not None and v != t and quadn(v) not in allow:
+                    continue
+                if not smint and SM_MODE in ('inner', 'inner_d', 'strict') and sm_pair(u, v):
+                    continue                    # COORD R6 (2): die lanes stay off the inner SM faces
+                if SM_MODE == 'strict' and v != t and sm_part(v) and not smint:
+                    continue                    # strict: no die feedthrough in any SM quarter
                 if v in srcs:
                     continue                    # a branch never re-enters the tree (one parent per node)
                 sg = segs[sk]
@@ -711,7 +737,7 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
                     over = max(over, (load[mk] + wm) / segs[mk]['cap'] - 1.0)
                 if HARD and over > 0:
                     continue
-                c = base * (1.0 + hist[sk]) * (1.0 + PRES * over) + 1.0
+                c = base * (1.0 + (0.0 if NOHIST else hist[sk])) * (1.0 + PRES * over) + 1.0
                 nd = d_ + c
                 y = (v, sg['side'][v])
                 if nd < dist.get(y, 1e30):
@@ -732,8 +758,12 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
 
     def tree(rep, wbits, gbs):
         nodes = {rep['src']}; edges = []
+        allow = {quadn(rep['src'])} | {quadn(t) for t in rep['dsts']}
+        smint = all(sm_pair(rep['src'], t) for t in rep['dsts'])
         for t in sorted(rep['dsts'], key=lambda t: md(C[rep['src']], C[t])):
-            p_ = dijk(nodes, t, wbits, gbs)
+            p_ = dijk(nodes, t, wbits, gbs, allow, smint)
+            if p_ is None:
+                p_ = dijk(nodes, t, wbits, gbs, None, smint)   # no contained route: fall back (reported as a leak)
             if p_ is None:
                 return None
             edges += list(zip(p_, p_[1:])); nodes |= set(p_)
@@ -805,11 +835,70 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
                 break
         ovb = sum(max(0, load[k] - s_['cap']) for k, s_ in segs.items())
         log(f'repair {rnd}: rerouted {fixed}, overfull {len(hot)}, overflow bits {ovb:.0f}')
+    # P3 equal-depth pass: slices of one lane must land together (one landed group).  The negotiated history makes
+    # some slices detour (up to 39 cycles of skew on main 5850706a3).  Reroute every slice of a multi-slice orbit,
+    # longest first, on the shortest path that fits the hard face capacity with the history ignored; keep it only
+    # if it is not longer.  The residual skew is padded at the landing (finalize).
+    global NOHIST
+
+    def plen(edges):
+        return sum(md(C[u], C[v]) for u, v in edges)
+
+    def ovsum():
+        return sum(max(0, load[k] - s_['cap']) for k, s_ in segs.items())
+    for rnd in range(3):
+        better = 0
+        for (oi, sl), edges in sorted(paths.items(), key=lambda kv: -plen(kv[1])):
+            ns = next(n for o, n in jobs if o == oi)
+            if ns < 2:
+                continue
+            mem = orb[oi]; rep = B[mem[0]]
+            ovs0 = ovsum()
+            apply(oi, sl, ns, edges, -1)
+            NOHIST = True; PRES = 50.0
+            p_ = tree(rep, (rep['bits'] // ns + 1) * len(mem), tuple(mem))
+            NOHIST = False
+            if p_ is not None and plen(p_) < plen(edges) - 1e-6:
+                apply(oi, sl, ns, p_, +1)
+                if ovsum() <= ovs0 + 1e-6:        # shorter and the face overflow does not grow
+                    paths[(oi, sl)] = p_; better += 1
+                    continue
+                apply(oi, sl, ns, p_, -1)
+            apply(oi, sl, ns, edges, +1)
+        ovb = sum(max(0, load[k] - s_['cap']) for k, s_ in segs.items())
+        log(f'equalise {rnd}: shortened {better} slices, overflow bits {ovb:.0f}')
+        if not better:
+            break
     return paths, load
 
 
 PRES = 1.0
 HARD = False
+NOHIST = False
+
+
+OS3 = os.environ.get('OT_HBM_OS3', '1') == '1' and SM_MODE != 'off'   # COORD 10-23 option (A)
+OS3_CAP = float(os.environ.get('OT_HBM_OS3_CAP', '1.2'))
+
+
+def os_part(n):
+    return re.match(r'^(NW|NE|SW|SE)_os\d$', n) is not None
+
+
+def fl3(a, b, o):
+    """COORD option (A): an H boundary (N/S faces) between two non-SM partitions, one of them in the os column, takes
+    a third (die M9) pin layer.  SM faces never do."""
+    return OS3 and o == 'H' and not (sm_part(a) or sm_part(b)) and (os_part(a) or os_part(b))
+
+
+def lay(face, k, o):
+    base = {'E': ['M6', 'M4'], 'W': ['M6', 'M4'], 'N': ['M7', 'M5'], 'S': ['M7', 'M5']}[face]
+    return base + ['M9'] if fl3(k[0], k[1], o) else base
+
+
+def quadn(n):
+    q = n.split('_')[0]
+    return q if q in ('NW', 'NE', 'SW', 'SE') else 'X'
 
 
 # ------------------------------------------------------------------------------------------------ status
@@ -973,14 +1062,14 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
                 k = sk(u, v)
                 ck, h, selfsym = canon[k]
                 if selfsym and not full[oi]:   # V2: full orbits allocate mirror-consistently on self-symmetric segments too
-                    wlen = fit_len(s_['lo'] + seg_fill[k], wb + 1, LAY[face])     # + in-band epoch bit
+                    wlen = fit_len(s_['lo'] + seg_fill[k], wb + 1, lay(face, k, s_['o']))     # + in-band epoch bit
                     lo = s_['lo'] + seg_fill[k]; seg_fill[k] += wlen; flip = False
                     if seg_fill[k] > s_['len'] + 1e-6:
                         warn['window_overflow'] += 1
                 elif not full[oi]:
                     flip = (s_['o'] == 'V' and h & 2) or (s_['o'] == 'H' and h & 1)
                     F = seg_fill[ck]
-                    wlen = fit_len(s_['lo'] + F + own_fill[k], wb + 1, LAY[face])
+                    wlen = fit_len(s_['lo'] + F + own_fill[k], wb + 1, lay(face, k, s_['o']))
                     if flip:
                         lo = s_['hi'] - F - own_fill[k] - wlen
                     else:
@@ -992,11 +1081,11 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
                     akey = (oi, sl, ck, (P[u]['mir'][h], P[v]['mir'][h]), gb ^ h)   # V2: direction-sensitive + relative image (two images of one orbit on one segment)
                     if akey not in alloc:
                         alloc[akey] = segs[ck]['lo'] + seg_fill[ck]
-                        seg_fill[ck] += max(fit_len(alloc[akey], w_ + 1, LAY[face]) for w_ in wset[(oi, sl)] if w_ > 0)   # V2: window length is not monotone in the pin count (parity)
+                        seg_fill[ck] += max(fit_len(alloc[akey], w_ + 1, lay(face, k, s_['o'])) for w_ in wset[(oi, sl)] if w_ > 0)   # V2: window length is not monotone in the pin count (parity)
                         if seg_fill[ck] > segs[ck]['len'] + 1e-6:
                             warn['window_overflow'] += 1
                     lc = alloc[akey]
-                    wlen = fit_len(lc, wb + 1, LAY[face])
+                    wlen = fit_len(lc, wb + 1, lay(face, k, s_['o']))
                     flip = (s_['o'] == 'V' and h & 2) or (s_['o'] == 'H' and h & 1)
                     if flip:
                         ext = H if s_['o'] == 'V' else W
@@ -1036,7 +1125,7 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
                 portid = f'{lid}{"abcd"[gb]}_{len(pid)}'
                 pid[(u, v)] = portid
                 ports.append(dict(id=portid, src=dict(part=u, bus=sbus), dst=dict(part=v, bus=dbus), width=wb,
-                                  kind=b['kind'], face=face, layers=LAY[face],
+                                  kind=b['kind'], face=face, layers=lay(face, k, s_['o']),
                                   window_um=[round(lo, 3), round(lo + wlen, 3)],
                                   order='lsb_high' if flip else 'lsb_low'))
                 # cut sweep (straight L between the two crossing points)
@@ -1147,6 +1236,22 @@ def finalize(P, ports, lanes, lane_meta, pslot, lat):
         cyc = 2 + st + fixed
         node_cyc[(tk, PT[ch[-1]]['dst']['part'])] = cyc
         lat[ln['id']] = dict(cycles=cyc, stations=st, faces=len(ch), fixed=fixed)
+    # P3 equal-depth landed groups (STEWARD-TOKg 10-23 10:10 defect class): all slices of one lane orbit member
+    # (oi, gb) that end in the same partition land in the same cycle.  Shorter slices get land_pad delay registers
+    # in the destination partition (flattened glue at the landing, after any fork point); fixed_cycles carries it
+    # so the PLAN-TOOL formula (2 flops + stations + fixed) still holds.
+    grp = collections.defaultdict(list)
+    for ln in lanes:
+        (oi, sl, gb), u, kind = lane_meta[ln['id']]
+        grp[(oi, gb, PT[ln['ports'][-1]]['dst']['part'])].append(ln)
+    for k, lns in grp.items():
+        top = max(lat[l['id']]['cycles'] for l in lns)
+        for l in lns:
+            pad = top - lat[l['id']]['cycles']
+            if pad:
+                l['fixed_cycles'] += pad
+                e = lat[l['id']]; e['cycles'] += pad; e['fixed'] += pad
+                l['note'] = f'land_pad {pad}: equal-depth landed group with its sibling slices (fixed includes it)'
 
 
 def types_and_plan(parts, insts, where, em):

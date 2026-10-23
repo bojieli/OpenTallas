@@ -64,7 +64,10 @@ BASE_LATTICE_UM = 2.16
 GRID_UM = 8.64
 
 DEFAULT_BUDGETS = dict(face_pins_per_um=6.0, face_pin_layers=2, face_window_um=10.0, pin_track_max=0.6,
-                       cut_ratio_max=0.6, cut_step_um=250.0, pin_reg_p90_um=30.0)
+                       cut_ratio_max=0.6, cut_step_um=250.0, pin_reg_p90_um=30.0,
+                       # COORD 10-23 R3: ft stations at most 750 um apart on every die; R4: partition clock tap grid
+                       # pitch (the die spine delivers one tap per <= 600 x 600 cell, local trees <= ~300 um)
+                       ft_station_max_um=750.0, tap_pitch_um=600.0)
 DEFAULT_CLOCK = dict(insertion_ps=250.0, insertion_tol_ps=40.0, neighbour_skew_ps=80.0, face_xing="budgeted")
 DEFAULT_RESET = dict(sync_stages=2, data_reset=False, epoch_bit=True, release="counted")
 DEFAULT_LAYER_BUDGET = dict(partition_signal_max="M7", die_layers=["M8", "M9"],
@@ -118,6 +121,16 @@ SCHEMA = {
                     "die_use": {"type": "array", "items": {"enum": ["clock_spine", "pg", "ft_reserved", "reset"]}},
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}}}},
+                # die IO (COORD 10-23, S81-P5): pad / bump windows of every off-die signal (SerDes PMA pads, HBM PHY
+                # memory side, host).  Each window sits over its host partition (the PHY / IO partition), offers
+                # `sites` signal bumps/pads, and lists the @die ports it carries (bits <= sites).
+                "io": {"type": "array", "items": {
+                    "type": "object", "required": ["name", "kind", "rect_um", "sites", "part", "ports"],
+                    "additionalProperties": False,
+                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro"]}, "rect_um": _rect,
+                                   "sites": {"type": "integer", "minimum": 1}, "pitch_um": _pos, "layer": _layer,
+                                   "part": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
+                                   "note": {"type": "string"}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
                     # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
@@ -191,6 +204,9 @@ SCHEMA = {
                                            "additionalProperties": False,
                                            "properties": {"name": _name, "layer": _layer, "xy": _xy}}},
                                        "pins_file": {"type": "string"},   # JSON [{name|bus+bit, layer, x, y}]
+                                       # hardened views (repo-relative): the partition kit places the core as a
+                                       # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
+                                       "lef": {"type": "string"}, "lib": {"type": "string"},
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2}}},
@@ -199,6 +215,10 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
+                                       # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
+                                       # at origin_um (type frame) with orient (mandatory when lef is given)
+                                       "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
@@ -575,6 +595,26 @@ class Plan:
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
         return dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
+
+
+def tap_grid(P, tn):
+    """COORD 10-23 R4: the partition's clock taps, [(port, x, y)] in the type frame (unsnapped).  A grid of
+    ceil(w/pitch) x ceil(h/pitch) taps at the cell centres (pitch = budgets.tap_pitch_um, 600), so every sink is
+    within ~300 um of a tap.  A type that fits one cell keeps its clock.tap_um.  Tap 0 is the port 'clk', the others
+    'clk_t<i>' (row-major from the type's SW corner); the kit connects each flop to its nearest tap (clock_taps.tcl)."""
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    pitch = float(P.budgets.get("tap_pitch_um", 600.0))
+    nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))
+    if nx == 1 and ny == 1:
+        x, y = t.get("clock", {}).get("tap_um", [w / 2, h / 2])
+        return [("clk", float(x), float(y))]
+    out = []
+    for j in range(ny):
+        for i in range(nx):
+            k = len(out)
+            out.append(("clk" if k == 0 else f"clk_t{k}", (i + 0.5) * w / nx, (j + 0.5) * h / ny))
+    return out
 
 
 def has_epoch(port):

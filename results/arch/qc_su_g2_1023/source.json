@@ -1,0 +1,109 @@
+{
+ "plan": "physical/die_plan/qwen_compute/die_plan.json",
+ "plan_sha256": "46692a70ff155d89fdbd43e3285e59a97dbda538bd4715e297e822e59b27da49",
+ "source_commit": "ca2c92e47 (probe inputs identical from cc97ef3ea)",
+ "scope": "G2 virtual partition FT probes for the SU-split slice types + changed worst types; die probe inputs byte-identical to fb27cfd5d die probe (results/arch/qc_declared_taps_g2_1023, PASS) -> reused; part_coll_ftc probe inputs identical to the prior run -> reused",
+ "run": "QC-P3 10-23 ~10:25, epyc7 docker --memory 32g (read-only probes)",
+ "probes": {
+  "part_sle_sc": {
+   "total_overflow": 0,
+   "wirelength_um": 7131711.0,
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "done": true
+  },
+  "part_sle_stm": {
+   "total_overflow": 0,
+   "wirelength_um": 3885662.0,
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "done": true
+  },
+  "part_sle_su_c": {
+   "total_overflow": 0,
+   "wirelength_um": 5201391.0,
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "done": true
+  },
+  "part_sle_su_l0": {
+   "total_overflow": 0,
+   "wirelength_um": 2809677.0,
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "done": true
+  },
+  "part_sle_su_l1": {
+   "total_overflow": 0,
+   "wirelength_um": 2201611.0,
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "done": true
+  },
+  "part_sle_tap": {
+   "total_overflow": 0,
+   "wirelength_um": 4874243.0,
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "done": true
+  },
+  "part_slw_su_c": {
+   "total_overflow": 0,
+   "wirelength_um": 5201391.0,
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "done": true
+  },
+  "part_slw_su_l0": {
+   "total_overflow": 0,
+   "wirelength_um": 2809677.0,
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "done": true
+  },
+  "part_slw_su_l1": {
+   "total_overflow": 0,
+   "wirelength_um": 2201611.0,
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "done": true
+  }
+ },
+ "verdict": "PASS"
+}
