@@ -330,6 +330,16 @@ def seqhost_reset(tmp):
         ok(False, '--host-boot 64 before live 80 must be refused')
     except SystemExit as e:
         ok('lands before u_seqhost leaves reset' in str(e), '--host-boot 64 before live 80 is refused')
+    # TOKd-S81 10-23: the forward host landing goes live after the t_host alive edge lands (c14: words landing < ~139 dropped)
+    A.host_boot = 120
+    try:
+        R.host_boot_words(A(), D(), tmp, {}, [], C())
+        ok(False, '--host-boot 120 before alive landed 140 + 4 must be refused')
+    except SystemExit as e:
+        ok('host lane landing is live' in str(e), '--host-boot 120 before alive landed 140 + 4 is refused')
+    hdr = lambda sp, seal=0: ((0x10 | (((3 << 26) | (seal << 25) | (104 << 9) | (sp << 7)) << 32)) << 1) | 1
+    ok(R.calendar_start_phase([0x23, hdr(2, 1), hdr(2)]) == 2 and R.calendar_start_phase([0x23]) is None,
+       'calendar_start_phase reads the begin header (not the seal word)')
 
 
 def main():
