@@ -1,0 +1,2319 @@
+{
+ "schema": "opentallas.ft_kv_tree_chain.v1",
+ "date": "2026-10-23",
+ "tool": "tools/die_feedthrough plan.py @1d83f2821 (FT-KV copy), same settings as ft_kv_pv_chain_1023: straight, ft_reg inout, ft_clock block, reach 1200, rep 450, occupancy 0.6, ft M8/M9; census = FT-KV kv_census_pvchain (sqc3s f9b69ebb3 + PV chain); dump ft-tool/dumps/dump-kv",
+ "rewrite": "tools/qwen_kv_die/ft_kv_tree_chain.py rewrite --trees resp,cmd [--head-qslice]",
+ "basis_reproduced": {
+  "lanes": 84668,
+  "track_overflow_lanes": 14142,
+  "note": "plan of kv_census_pvchain reproduced to the lane"
+ },
+ "findings": {
+  "resp_cmd": "astk response_data (owner_7 -> 512 pv slices + 64 joins, 95 b each in the census) and pvw ctl cmd are ALREADY one registered 289-b column trunk in RTL (qkd_pvw_die_t / pv_trunk_gen.py: CL -> per block row X station + 2 pass-through M stations -> CP -> K per column group -> S/R -> 8 bank slices). The census treats relays as transparent and flattens it into 4,800 independent 0.4-13-mm lanes (1.08M bit-mm, 20% of the die); it also attributes the same K bits to every upstream source (EN, WN and ctl each 95 b a slice; the real K->slice wires are 56-58 b). Rewrite: trie of the census relay paths, wire widths from the dump bundles, pass-through stations collapsed (1,042 dropped, 168 kept: 4 entry lands, CL, one X a block row, K taps): 752 lanes, 69,760 b, 36.7k bit-mm. No RTL change needed beyond dropping the M / CP / S pass-through stations (pv_trunk_gen at 1.2-mm hops); static, fixed path a sink.",
+  "head": "head dr_o / f_t0-3 / kp / kp_o / cr_o: one-hop leaf-to-leaf wires inside each 1,030 x 540-um head (front 4 -> stin 16 -> lane8 16 -> stk 16 -> ktree), 150-400 um straight, sinks 135 um apart taking disjoint slices (except q). Not a broadcast over distance: a registered chain T2 -> front3..0 carries 1559/1303/1047/791 = 4,700 b-hops vs the star 4 x 809 = 3,236, so chaining adds wire. Per head the straight local demand is 3.73M track-um on M8 (54% of the footprint) / 1.87M on M9 (27%); the plan routes them at 6x that (22M / 23M) because the 250-um span bins and +-1.5-mm band shifts inflate 150-um lanes. Sensitivity (plan.py Tracks span 50 um, nothing else changed): head ovf lanes 10,433 -> 2,735 (basis) / 10,009 -> 1,457 (after). Fix belongs in the planner (span resolution / local-layer M6-M7 assignment for intra-cluster wires), not RTL.",
+  "hst_t2_ti_b": "hst t2 ti_b -> 4 fronts = the head input fan-out (T2 sits 150-180 um above the 4 fronts): same as head. hst g -> t1 -> t2 / ftg is already a registered chain (0 overflow). One structural lever: --head-qslice.",
+  "head_qslice": "RTL what-if: front g serves the 4 lanes whose BF16 Q fragment comes from q_data half (fragment j = t%4: j 0/2 <- q[255:0], j 1/3 <- q[511:256]), so T2 -> front q_data 512 -> 256 b (512 lanes, -131k b). Needs ot_qkh_head_frontq_native (q_data_in 256, f_t lane mapping) + head lane permutation (head_lane_perm / head plan) changes; rounding / pairing per element unchanged (bit-exact by construction, gate by the head bench)."
+ },
+ "plans": {
+  "basis_pvchain": {
+   "summary": {
+    "lanes": 84668,
+    "track_overflow_lanes": 14142,
+    "channel_relays_new": 124684,
+    "max_stages_new": 71,
+    "stages_new_bitw": 1.83,
+    "cap_M8_tmm": 4859491,
+    "cap_M9_tmm": 4859491
+   },
+   "all": {
+    "lanes": 84668,
+    "bits": 2929554,
+    "ovf_lanes": 14142,
+    "ovf_bits": 1018634,
+    "M8_tmm": 4424563,
+    "M8_pct": 91.0,
+    "M9_tmm": 4661793,
+    "M9_pct": 95.9,
+    "chan_relays": 124684,
+    "max_stages": 71
+   },
+   "head": {
+    "lanes": 35712,
+    "bits": 1098496,
+    "ovf_lanes": 10433,
+    "ovf_bits": 522329,
+    "M8_tmm": 1389971,
+    "M8_pct": 28.6,
+    "M9_tmm": 846759,
+    "M9_pct": 17.4,
+    "chan_relays": 6819,
+    "max_stages": 10
+   },
+   "hst_t2_ti_b": {
+    "lanes": 3584,
+    "bits": 413184,
+    "ovf_lanes": 937,
+    "ovf_bits": 124340,
+    "M8_tmm": 570545,
+    "M8_pct": 11.7,
+    "M9_tmm": 365355,
+    "M9_pct": 7.5,
+    "chan_relays": 1212,
+    "max_stages": 9
+   },
+   "resp_cmd": {
+    "lanes": 4800,
+    "bits": 142016,
+    "ovf_lanes": 1191,
+    "ovf_bits": 33532,
+    "M8_tmm": 620483,
+    "M8_pct": 12.8,
+    "M9_tmm": 1277467,
+    "M9_pct": 26.3,
+    "chan_relays": 16822,
+    "max_stages": 37
+   },
+   "pvw_ts": {
+    "lanes": 512,
+    "bits": 262144,
+    "ovf_lanes": 464,
+    "ovf_bits": 237568,
+    "M8_tmm": 339773,
+    "M8_pct": 7.0,
+    "M9_tmm": 147707,
+    "M9_pct": 3.0,
+    "chan_relays": 271,
+    "max_stages": 6
+   },
+   "other": {
+    "lanes": 40060,
+    "bits": 1013714,
+    "ovf_lanes": 1117,
+    "ovf_bits": 100865,
+    "M8_tmm": 1503790,
+    "M8_pct": 30.9,
+    "M9_tmm": 2024506,
+    "M9_pct": 41.7,
+    "chan_relays": 99560,
+    "max_stages": 71
+   }
+  },
+  "tree_chain": {
+   "summary": {
+    "lanes": 80620,
+    "track_overflow_lanes": 12207,
+    "channel_relays_new": 106556,
+    "max_stages_new": 71,
+    "stages_new_bitw": 1.38,
+    "cap_M8_tmm": 4859491,
+    "cap_M9_tmm": 4859491
+   },
+   "all": {
+    "lanes": 80620,
+    "bits": 2857298,
+    "ovf_lanes": 12207,
+    "ovf_bits": 789807,
+    "M8_tmm": 4111720,
+    "M8_pct": 84.6,
+    "M9_tmm": 3434073,
+    "M9_pct": 70.7,
+    "chan_relays": 106556,
+    "max_stages": 71
+   },
+   "head": {
+    "lanes": 35712,
+    "bits": 1098496,
+    "ovf_lanes": 10009,
+    "ovf_bits": 465904,
+    "M8_tmm": 1424736,
+    "M8_pct": 29.3,
+    "M9_tmm": 872877,
+    "M9_pct": 18.0,
+    "chan_relays": 7172,
+    "max_stages": 10
+   },
+   "hst_t2_ti_b": {
+    "lanes": 3584,
+    "bits": 413184,
+    "ovf_lanes": 859,
+    "ovf_bits": 96868,
+    "M8_tmm": 565127,
+    "M8_pct": 11.6,
+    "M9_tmm": 308190,
+    "M9_pct": 6.3,
+    "chan_relays": 991,
+    "max_stages": 7
+   },
+   "resp_cmd": {
+    "lanes": 752,
+    "bits": 69760,
+    "ovf_lanes": 166,
+    "ovf_bits": 10011,
+    "M8_tmm": 103501,
+    "M8_pct": 2.1,
+    "M9_tmm": 56809,
+    "M9_pct": 1.2,
+    "chan_relays": 262,
+    "max_stages": 15
+   },
+   "pvw_ts": {
+    "lanes": 512,
+    "bits": 262144,
+    "ovf_lanes": 291,
+    "ovf_bits": 148992,
+    "M8_tmm": 508082,
+    "M8_pct": 10.5,
+    "M9_tmm": 205590,
+    "M9_pct": 4.2,
+    "chan_relays": 438,
+    "max_stages": 6
+   },
+   "other": {
+    "lanes": 40060,
+    "bits": 1013714,
+    "ovf_lanes": 882,
+    "ovf_bits": 68032,
+    "M8_tmm": 1510274,
+    "M8_pct": 31.1,
+    "M9_tmm": 1990607,
+    "M9_pct": 41.0,
+    "chan_relays": 97693,
+    "max_stages": 71
+   }
+  },
+  "tree_chain_qslice": {
+   "summary": {
+    "lanes": 80620,
+    "track_overflow_lanes": 11043,
+    "channel_relays_new": 106858,
+    "max_stages_new": 71,
+    "stages_new_bitw": 1.37,
+    "cap_M8_tmm": 4859491,
+    "cap_M9_tmm": 4859491
+   },
+   "all": {
+    "lanes": 80620,
+    "bits": 2726226,
+    "ovf_lanes": 11043,
+    "ovf_bits": 672771,
+    "M8_tmm": 3957344,
+    "M8_pct": 81.4,
+    "M9_tmm": 3286760,
+    "M9_pct": 67.6,
+    "chan_relays": 106858,
+    "max_stages": 71
+   },
+   "head": {
+    "lanes": 35712,
+    "bits": 1098496,
+    "ovf_lanes": 9025,
+    "ovf_bits": 387173,
+    "M8_tmm": 1378429,
+    "M8_pct": 28.4,
+    "M9_tmm": 859735,
+    "M9_pct": 17.7,
+    "chan_relays": 7504,
+    "max_stages": 11
+   },
+   "hst_t2_ti_b": {
+    "lanes": 3584,
+    "bits": 282112,
+    "ovf_lanes": 730,
+    "ovf_bits": 63912,
+    "M8_tmm": 416057,
+    "M8_pct": 8.6,
+    "M9_tmm": 172186,
+    "M9_pct": 3.5,
+    "chan_relays": 921,
+    "max_stages": 9
+   },
+   "resp_cmd": {
+    "lanes": 752,
+    "bits": 69760,
+    "ovf_lanes": 164,
+    "ovf_bits": 9782,
+    "M8_tmm": 103468,
+    "M8_pct": 2.1,
+    "M9_tmm": 56809,
+    "M9_pct": 1.2,
+    "chan_relays": 249,
+    "max_stages": 15
+   }
+  },
+  "qslice_only_ovf_lanes": 13124,
+  "span50_sensitivity": {
+   "basis": {
+    "ovf_lanes": 5212,
+    "M8_pct": 82.7,
+    "M9_pct": 89.7,
+    "head_ovf_lanes": 2735
+   },
+   "tree_chain": {
+    "ovf_lanes": 2243,
+    "M8_pct": 75.8,
+    "M9_pct": 60.2,
+    "head_ovf_lanes": 1457,
+    "resp_cmd_ovf_lanes": 18
+   }
+  }
+ },
+ "arrival_stages": {
+  "note": "per sink: rtl = census relay count of the current die path; after = plan stages over the kept path + 1 a kept station (plan detours: X->X hops 734 um straight average 1,933 um routed, V band shifted off the congested PV column); ideal = same path, straight hops (ceil(L/1200)-1). ideal <= rtl at every one of the 4,800 sinks. N quadrants (EN/WN -> pvw_1): the census rtl count has NO stage on the 9.7-mm owner_7 -> rly_pve_*_0 hop, the rewrite stations it (plan 13-15), so after > rtl there.",
+  "summary": [
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "n": 800,
+    "rtl": [
+     13,
+     56
+    ],
+    "before": [
+     0,
+     10
+    ],
+    "after": [
+     5,
+     54
+    ],
+    "ideal": [
+     3,
+     18
+    ]
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "n": 800,
+    "rtl": [
+     12,
+     55
+    ],
+    "before": [
+     0,
+     10
+    ],
+    "after": [
+     7,
+     56
+    ],
+    "ideal": [
+     3,
+     18
+    ]
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "n": 800,
+    "rtl": [
+     23,
+     66
+    ],
+    "before": [
+     3,
+     31
+    ],
+    "after": [
+     21,
+     70
+    ],
+    "ideal": [
+     14,
+     29
+    ]
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "n": 800,
+    "rtl": [
+     23,
+     66
+    ],
+    "before": [
+     3,
+     37
+    ],
+    "after": [
+     9,
+     58
+    ],
+    "ideal": [
+     7,
+     22
+    ]
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "n": 800,
+    "rtl": [
+     21,
+     64
+    ],
+    "before": [
+     3,
+     30
+    ],
+    "after": [
+     23,
+     72
+    ],
+    "ideal": [
+     14,
+     29
+    ]
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "n": 800,
+    "rtl": [
+     21,
+     64
+    ],
+    "before": [
+     3,
+     37
+    ],
+    "after": [
+     11,
+     58
+    ],
+    "ideal": [
+     7,
+     22
+    ]
+   }
+  ],
+  "per_column": [
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 0,
+    "rtl": 56,
+    "after": 48,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 1,
+    "rtl": 50,
+    "after": 48,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 2,
+    "rtl": 44,
+    "after": 43,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 3,
+    "rtl": 38,
+    "after": 36,
+    "ideal": 13,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 4,
+    "rtl": 32,
+    "after": 35,
+    "ideal": 11,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 5,
+    "rtl": 26,
+    "after": 25,
+    "ideal": 9,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 6,
+    "rtl": 20,
+    "after": 20,
+    "ideal": 7,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 7,
+    "rtl": 14,
+    "after": 13,
+    "ideal": 5,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 8,
+    "rtl": 55,
+    "after": 54,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 9,
+    "rtl": 49,
+    "after": 51,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 10,
+    "rtl": 43,
+    "after": 50,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 11,
+    "rtl": 37,
+    "after": 44,
+    "ideal": 13,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 12,
+    "rtl": 31,
+    "after": 38,
+    "ideal": 11,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 13,
+    "rtl": 25,
+    "after": 32,
+    "ideal": 9,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 14,
+    "rtl": 19,
+    "after": 21,
+    "ideal": 7,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 15,
+    "rtl": 13,
+    "after": 18,
+    "ideal": 5,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 16,
+    "rtl": 56,
+    "after": 49,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 17,
+    "rtl": 50,
+    "after": 43,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 18,
+    "rtl": 44,
+    "after": 37,
+    "ideal": 14,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 19,
+    "rtl": 38,
+    "after": 32,
+    "ideal": 12,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 20,
+    "rtl": 32,
+    "after": 29,
+    "ideal": 10,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 21,
+    "rtl": 26,
+    "after": 23,
+    "ideal": 8,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 22,
+    "rtl": 20,
+    "after": 21,
+    "ideal": 6,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 23,
+    "rtl": 14,
+    "after": 14,
+    "ideal": 4,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 24,
+    "rtl": 55,
+    "after": 54,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 25,
+    "rtl": 49,
+    "after": 46,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 26,
+    "rtl": 43,
+    "after": 41,
+    "ideal": 14,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 27,
+    "rtl": 37,
+    "after": 37,
+    "ideal": 12,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 28,
+    "rtl": 31,
+    "after": 34,
+    "ideal": 10,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 29,
+    "rtl": 25,
+    "after": 24,
+    "ideal": 8,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 30,
+    "rtl": 19,
+    "after": 20,
+    "ideal": 6,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_0",
+    "pair": "pvw_0",
+    "col": 31,
+    "rtl": 13,
+    "after": 11,
+    "ideal": 4,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 0,
+    "rtl": 55,
+    "after": 55,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 1,
+    "rtl": 49,
+    "after": 50,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 2,
+    "rtl": 43,
+    "after": 50,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 3,
+    "rtl": 37,
+    "after": 44,
+    "ideal": 13,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 4,
+    "rtl": 31,
+    "after": 34,
+    "ideal": 11,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 5,
+    "rtl": 25,
+    "after": 25,
+    "ideal": 9,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 6,
+    "rtl": 19,
+    "after": 25,
+    "ideal": 7,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 7,
+    "rtl": 13,
+    "after": 15,
+    "ideal": 5,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 8,
+    "rtl": 54,
+    "after": 48,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 9,
+    "rtl": 48,
+    "after": 44,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 10,
+    "rtl": 42,
+    "after": 38,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 11,
+    "rtl": 36,
+    "after": 32,
+    "ideal": 13,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 12,
+    "rtl": 30,
+    "after": 25,
+    "ideal": 11,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 13,
+    "rtl": 24,
+    "after": 19,
+    "ideal": 9,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 14,
+    "rtl": 18,
+    "after": 16,
+    "ideal": 7,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 15,
+    "rtl": 12,
+    "after": 17,
+    "ideal": 5,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 16,
+    "rtl": 55,
+    "after": 56,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 17,
+    "rtl": 49,
+    "after": 48,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 18,
+    "rtl": 43,
+    "after": 44,
+    "ideal": 14,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 19,
+    "rtl": 37,
+    "after": 37,
+    "ideal": 12,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 20,
+    "rtl": 31,
+    "after": 30,
+    "ideal": 10,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 21,
+    "rtl": 25,
+    "after": 23,
+    "ideal": 8,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 22,
+    "rtl": 19,
+    "after": 20,
+    "ideal": 6,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 23,
+    "rtl": 13,
+    "after": 17,
+    "ideal": 4,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 24,
+    "rtl": 54,
+    "after": 48,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 25,
+    "rtl": 48,
+    "after": 42,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 26,
+    "rtl": 42,
+    "after": 35,
+    "ideal": 14,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 27,
+    "rtl": 36,
+    "after": 31,
+    "ideal": 12,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 28,
+    "rtl": 30,
+    "after": 24,
+    "ideal": 10,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 29,
+    "rtl": 24,
+    "after": 20,
+    "ideal": 8,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 30,
+    "rtl": 18,
+    "after": 17,
+    "ideal": 6,
+    "sinks": 25
+   },
+   {
+    "tree": "cmd",
+    "src": "pvw_1",
+    "pair": "pvw_1",
+    "col": 31,
+    "rtl": 12,
+    "after": 14,
+    "ideal": 4,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 0,
+    "rtl": 66,
+    "after": 69,
+    "ideal": 29,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 1,
+    "rtl": 60,
+    "after": 64,
+    "ideal": 28,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 2,
+    "rtl": 54,
+    "after": 64,
+    "ideal": 26,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 3,
+    "rtl": 48,
+    "after": 58,
+    "ideal": 24,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 4,
+    "rtl": 42,
+    "after": 48,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 5,
+    "rtl": 36,
+    "after": 39,
+    "ideal": 20,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 6,
+    "rtl": 30,
+    "after": 39,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 7,
+    "rtl": 24,
+    "after": 29,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 8,
+    "rtl": 65,
+    "after": 64,
+    "ideal": 29,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 9,
+    "rtl": 59,
+    "after": 60,
+    "ideal": 28,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 10,
+    "rtl": 53,
+    "after": 54,
+    "ideal": 26,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 11,
+    "rtl": 47,
+    "after": 48,
+    "ideal": 24,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 12,
+    "rtl": 41,
+    "after": 41,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 13,
+    "rtl": 35,
+    "after": 35,
+    "ideal": 20,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 14,
+    "rtl": 29,
+    "after": 32,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 15,
+    "rtl": 23,
+    "after": 33,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 16,
+    "rtl": 66,
+    "after": 70,
+    "ideal": 29,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 17,
+    "rtl": 60,
+    "after": 62,
+    "ideal": 27,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 18,
+    "rtl": 54,
+    "after": 58,
+    "ideal": 25,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 19,
+    "rtl": 48,
+    "after": 51,
+    "ideal": 23,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 20,
+    "rtl": 42,
+    "after": 44,
+    "ideal": 21,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 21,
+    "rtl": 36,
+    "after": 37,
+    "ideal": 19,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 22,
+    "rtl": 30,
+    "after": 34,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 23,
+    "rtl": 24,
+    "after": 31,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 24,
+    "rtl": 65,
+    "after": 64,
+    "ideal": 29,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 25,
+    "rtl": 59,
+    "after": 58,
+    "ideal": 27,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 26,
+    "rtl": 53,
+    "after": 51,
+    "ideal": 25,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 27,
+    "rtl": 47,
+    "after": 47,
+    "ideal": 23,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 28,
+    "rtl": 41,
+    "after": 40,
+    "ideal": 21,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 29,
+    "rtl": 35,
+    "after": 36,
+    "ideal": 19,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 30,
+    "rtl": 29,
+    "after": 33,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_EN",
+    "pair": "pvw_1",
+    "col": 31,
+    "rtl": 23,
+    "after": 30,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 0,
+    "rtl": 66,
+    "after": 52,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 1,
+    "rtl": 60,
+    "after": 52,
+    "ideal": 21,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 2,
+    "rtl": 54,
+    "after": 47,
+    "ideal": 19,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 3,
+    "rtl": 48,
+    "after": 40,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 4,
+    "rtl": 42,
+    "after": 39,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 5,
+    "rtl": 36,
+    "after": 29,
+    "ideal": 13,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 6,
+    "rtl": 30,
+    "after": 24,
+    "ideal": 11,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 7,
+    "rtl": 24,
+    "after": 17,
+    "ideal": 9,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 8,
+    "rtl": 65,
+    "after": 58,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 9,
+    "rtl": 59,
+    "after": 55,
+    "ideal": 21,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 10,
+    "rtl": 53,
+    "after": 54,
+    "ideal": 19,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 11,
+    "rtl": 47,
+    "after": 48,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 12,
+    "rtl": 41,
+    "after": 42,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 13,
+    "rtl": 35,
+    "after": 36,
+    "ideal": 13,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 14,
+    "rtl": 29,
+    "after": 25,
+    "ideal": 11,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 15,
+    "rtl": 23,
+    "after": 22,
+    "ideal": 9,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 16,
+    "rtl": 66,
+    "after": 53,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 17,
+    "rtl": 60,
+    "after": 47,
+    "ideal": 20,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 18,
+    "rtl": 54,
+    "after": 41,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 19,
+    "rtl": 48,
+    "after": 36,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 20,
+    "rtl": 42,
+    "after": 33,
+    "ideal": 14,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 21,
+    "rtl": 36,
+    "after": 27,
+    "ideal": 12,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 22,
+    "rtl": 30,
+    "after": 25,
+    "ideal": 10,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 23,
+    "rtl": 24,
+    "after": 18,
+    "ideal": 8,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 24,
+    "rtl": 65,
+    "after": 58,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 25,
+    "rtl": 59,
+    "after": 50,
+    "ideal": 20,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 26,
+    "rtl": 53,
+    "after": 45,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 27,
+    "rtl": 47,
+    "after": 41,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 28,
+    "rtl": 41,
+    "after": 38,
+    "ideal": 14,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 29,
+    "rtl": 35,
+    "after": 28,
+    "ideal": 12,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 30,
+    "rtl": 29,
+    "after": 24,
+    "ideal": 10,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_ES",
+    "pair": "pvw_0",
+    "col": 31,
+    "rtl": 23,
+    "after": 15,
+    "ideal": 8,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 0,
+    "rtl": 64,
+    "after": 71,
+    "ideal": 29,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 1,
+    "rtl": 58,
+    "after": 66,
+    "ideal": 28,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 2,
+    "rtl": 52,
+    "after": 66,
+    "ideal": 26,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 3,
+    "rtl": 46,
+    "after": 60,
+    "ideal": 24,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 4,
+    "rtl": 40,
+    "after": 50,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 5,
+    "rtl": 34,
+    "after": 41,
+    "ideal": 20,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 6,
+    "rtl": 28,
+    "after": 41,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 7,
+    "rtl": 22,
+    "after": 31,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 8,
+    "rtl": 63,
+    "after": 65,
+    "ideal": 29,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 9,
+    "rtl": 57,
+    "after": 61,
+    "ideal": 28,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 10,
+    "rtl": 51,
+    "after": 55,
+    "ideal": 26,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 11,
+    "rtl": 45,
+    "after": 49,
+    "ideal": 24,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 12,
+    "rtl": 39,
+    "after": 42,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 13,
+    "rtl": 33,
+    "after": 36,
+    "ideal": 20,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 14,
+    "rtl": 27,
+    "after": 33,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 15,
+    "rtl": 21,
+    "after": 34,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 16,
+    "rtl": 64,
+    "after": 72,
+    "ideal": 29,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 17,
+    "rtl": 58,
+    "after": 64,
+    "ideal": 27,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 18,
+    "rtl": 52,
+    "after": 60,
+    "ideal": 25,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 19,
+    "rtl": 46,
+    "after": 53,
+    "ideal": 23,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 20,
+    "rtl": 40,
+    "after": 46,
+    "ideal": 21,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 21,
+    "rtl": 34,
+    "after": 39,
+    "ideal": 19,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 22,
+    "rtl": 28,
+    "after": 36,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 23,
+    "rtl": 22,
+    "after": 33,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 24,
+    "rtl": 63,
+    "after": 65,
+    "ideal": 29,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 25,
+    "rtl": 57,
+    "after": 59,
+    "ideal": 27,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 26,
+    "rtl": 51,
+    "after": 52,
+    "ideal": 25,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 27,
+    "rtl": 45,
+    "after": 48,
+    "ideal": 23,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 28,
+    "rtl": 39,
+    "after": 41,
+    "ideal": 21,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 29,
+    "rtl": 33,
+    "after": 37,
+    "ideal": 19,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 30,
+    "rtl": 27,
+    "after": 34,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WN",
+    "pair": "pvw_1",
+    "col": 31,
+    "rtl": 21,
+    "after": 31,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 0,
+    "rtl": 64,
+    "after": 54,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 1,
+    "rtl": 58,
+    "after": 54,
+    "ideal": 21,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 2,
+    "rtl": 52,
+    "after": 49,
+    "ideal": 19,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 3,
+    "rtl": 46,
+    "after": 42,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 4,
+    "rtl": 40,
+    "after": 41,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 5,
+    "rtl": 34,
+    "after": 31,
+    "ideal": 13,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 6,
+    "rtl": 28,
+    "after": 26,
+    "ideal": 11,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 7,
+    "rtl": 22,
+    "after": 19,
+    "ideal": 9,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 8,
+    "rtl": 63,
+    "after": 58,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 9,
+    "rtl": 57,
+    "after": 55,
+    "ideal": 21,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 10,
+    "rtl": 51,
+    "after": 54,
+    "ideal": 19,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 11,
+    "rtl": 45,
+    "after": 48,
+    "ideal": 17,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 12,
+    "rtl": 39,
+    "after": 42,
+    "ideal": 15,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 13,
+    "rtl": 33,
+    "after": 36,
+    "ideal": 13,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 14,
+    "rtl": 27,
+    "after": 25,
+    "ideal": 11,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 15,
+    "rtl": 21,
+    "after": 22,
+    "ideal": 9,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 16,
+    "rtl": 64,
+    "after": 55,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 17,
+    "rtl": 58,
+    "after": 49,
+    "ideal": 20,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 18,
+    "rtl": 52,
+    "after": 43,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 19,
+    "rtl": 46,
+    "after": 38,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 20,
+    "rtl": 40,
+    "after": 35,
+    "ideal": 14,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 21,
+    "rtl": 34,
+    "after": 29,
+    "ideal": 12,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 22,
+    "rtl": 28,
+    "after": 27,
+    "ideal": 10,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 23,
+    "rtl": 22,
+    "after": 20,
+    "ideal": 8,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 24,
+    "rtl": 63,
+    "after": 58,
+    "ideal": 22,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 25,
+    "rtl": 57,
+    "after": 50,
+    "ideal": 20,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 26,
+    "rtl": 51,
+    "after": 45,
+    "ideal": 18,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 27,
+    "rtl": 45,
+    "after": 41,
+    "ideal": 16,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 28,
+    "rtl": 39,
+    "after": 38,
+    "ideal": 14,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 29,
+    "rtl": 33,
+    "after": 28,
+    "ideal": 12,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 30,
+    "rtl": 27,
+    "after": 24,
+    "ideal": 10,
+    "sinks": 25
+   },
+   {
+    "tree": "resp",
+    "src": "astk_WS",
+    "pair": "pvw_0",
+    "col": 31,
+    "rtl": 21,
+    "after": 15,
+    "ideal": 8,
+    "sinks": 25
+   }
+  ]
+ }
+}
