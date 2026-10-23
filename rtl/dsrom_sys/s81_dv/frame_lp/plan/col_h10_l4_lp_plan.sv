@@ -69832,7 +69832,7 @@ module col_h10_l4_lp_r2 #(
     dsfd_rly_63_NS u_y_rt_28b_sk (.i({n38616, n38615, n38614, n38613, n38612, n38611, n38610, n38609, n38608, n38607, n38606, n38605, n38604, n38603, n38602, n38601, n38600, n38599, n38598, n38597, n38596, n38595, n38594, n38593, n38592, n38591, n38590, n38589, n38588, n38587, n38586, n38585, n38584, n38583, n38582, n38581, n38580, n38579, n38578, n38577, n38576, n38575, n38574, n38573, n38572, n38571, n38570, n38569, n38568, n38567, n38566, n38565, n38564, n38563, n38562, n38561, n38560, n38559, n38558, n38557, n38556, n38555, n38554}), .o({sk_n28_0, sk_n28_1, sk_n28_2, sk_n28_3, sk_n28_4, sk_n28_5, sk_n28_6, sk_n28_7, sk_n28_8, sk_n28_9, sk_n28_10, sk_n28_11, sk_n28_12, sk_n28_13, sk_n28_14, sk_n28_15, sk_n28_16, sk_n28_17, sk_n28_18, sk_n28_19, sk_n28_20, sk_n28_21, sk_n28_22, sk_n28_23, sk_n28_24, sk_n28_25, sk_n28_26, sk_n28_27, sk_n28_28, sk_n28_29, sk_n28_30, sk_n28_31, sk_n28_32, sk_n28_33, sk_n28_34, sk_n28_35, sk_n28_36, sk_n28_37, sk_n28_38, sk_n28_39, sk_n28_40, sk_n28_41, sk_n28_42, sk_n28_43, sk_n28_44, sk_n28_45, sk_n28_46, sk_n28_47, sk_n28_48, sk_n28_49, sk_n28_50, sk_n28_51, sk_n28_52, sk_n28_53, sk_n28_54, sk_n28_55, sk_n28_56, sk_n28_57, sk_n28_58, sk_n28_59, sk_n28_60, sk_n28_61, sk_n28_62}), .ck(ck_r2), .rs(lpr_c_u_y_rt_28b_sk));
 endmodule
 module col_h10_l4_lp_r0_nx #(
-    parameter string INSTANCE = "col_h10",
+    parameter INSTANCE = "col_h10",
     parameter integer MUT = 0,
     parameter [11:0] LK = {4{3'd2}}
 ) (

@@ -272,7 +272,7 @@ def main():
     r0 = next(m for m in mods if m.startswith(f'module {a.master}_l4_lp_r0 '))
     hdr = r0[:r0.index(');')]
     pdecl = re.findall(r'^\s*(input |output) wire (\[\d+:0\] )?(\w+)', hdr, flags=re.M)
-    nx = [f'module {a.master}_l4_lp_r0_nx #(\n    parameter string INSTANCE = "{a.master}",\n    parameter integer MUT = 0,\n'
+    nx = [f'module {a.master}_l4_lp_r0_nx #(\n    parameter INSTANCE = "{a.master}",\n    parameter integer MUT = 0,\n'
           f'    parameter [11:0] LK = {LK_DEFAULT}\n) (']
     nx.append(',\n'.join(f'    {d} wire {w or ""}{n}' for d, w, n in pdecl if n != 'xo_o0') + '\n);')
     nx.append('    wire [1103:0] xo_o0;   // chain end: no x forward (unloaded)')

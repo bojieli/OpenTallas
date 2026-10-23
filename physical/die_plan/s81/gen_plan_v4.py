@@ -114,17 +114,31 @@ def frame_contents(contents, buses):
 def FRAME_SOURCES(contents):
     if len(contents) != 1 or not re.match(r"col_h(9|10)_l4_lp\.r\d$", contents[0]["module"]):
         return None
-    return ["rtl/dsrom_sys/s81_dv/frame_lp/plan/%s_plan.sv" % contents[0]["module"].split(".")[0]]
+    # the KIT form of the band contents (hard children without #() overrides, as the frame kits) + the soft leaves
+    # of the frame kits (physical/ref_tile/s81frame_col_h9_vgch_b*/spec.json sources) + the plan seam primitives
+    return ["rtl/common/landed_parent/ot_pl_land.sv",   # ot_reset_sync: the tool adds it
+            "rtl/common/landed_parent/ot_pl_land_field_copies.sv", "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+            "rtl/common/landed_parent/ot_pl_seam.sv", "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+            "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv"] + \
+        ["rtl/dsrom_sys/s81_glue/dsfd_rly_masters%s.sv" % x for x in ("", "_266ew", "_536", "_c26l", "_gen18", "_v16")] + \
+        ["rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col_kit.sv",
+         "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+         "rtl/dsrom_sys/s81_dv/frame_lp/plan/%s_plan_kit.sv" % contents[0]["module"].split(".")[0]]
 
 
-def frame_hard_cores(contents):
+def frame_hard_cores(contents, buses):
     """band macros / hardened children of a frame type at their plan sites (lattice origins, frame_band_macros.json)"""
     if len(contents) != 1 or not re.match(r"col_h(9|10)_l4_lp\.r\d$", contents[0]["module"]):
         return []
     m, b = contents[0]["module"].split(".")
     mac = json.load(open(FRAME_BAND_MACROS))["masters"][m.replace("_l4_lp", "")][b]
-    return [dict(inst=e["inst"], module=e["module"], lef=e["lef"], **({"lib": e["lib"]} if e["lib"] else {}),
-                 origin_um=e["origin_um"], outline_um=e["size_um"], orient=e["orient"]) for e in mac]
+    nx = b == "r0" and "xo_o0" not in {x["name"] for x in buses}
+    # the chain-end variant col_<M>_l4_lp_r0_nx wraps col_<M>_l4_lp_r0 as u_r0: one more hierarchy level
+    # ... and drops the x-forward stations u_xo<j> (they only drive xo, which a chain end does not have: synthesis
+    # removes them, so they are not placed)
+    return [dict(inst=("u_r0." + e["inst"]) if nx else e["inst"], module=e["module"], lef=e["lef"], **({"lib": e["lib"]} if e["lib"] else {}),
+                 origin_um=e["origin_um"], outline_um=e["size_um"], orient=e["orient"]) for e in mac
+            if not (nx and re.match(r"u_r0\.u_xo\d+$", e["inst"]))]
 
 
 def mir(c):
@@ -1188,7 +1202,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                   clock=dict(tap_um=[round(rep.w / 2 / G) * G, round(rep.h / 2 / G) * G], layer="M9"),
                   reset=dict(sync_stages=2), contents=frame_contents(rep.contents, buses),
                   **({"sources": FRAME_SOURCES(rep.contents)} if FRAME_SOURCES(rep.contents) else {}),
-                  **({"hard_cores": frame_hard_cores(rep.contents)} if frame_hard_cores(rep.contents) else {}),
+                  **({"hard_cores": frame_hard_cores(rep.contents, buses)} if frame_hard_cores(rep.contents, buses) else {}),
                   note="%s partition; %d instance(s) (%s)" % (rep.kind, len(names),
                                                               ",".join(sorted({P[n].orient for n in names}))))
         out_types[tn] = ty

@@ -63,8 +63,8 @@ def entry(c, k, dx, dy):
     lef, lib, sz = view_files(c['view'])
     o = c.get('orient', 'R0')
     w, h = (sz[1], sz[0]) if o in ('R90', 'R270', 'MXR90', 'MYR90') else sz
-    inst = c['inst'].replace('.', '/')
-    return dict(inst=f'u_r{k}/{inst}', module=c['view'].split('/')[-1], view=c['view'], lef=lef, lib=lib,
+    inst = c['inst']   # flat synthesis (SYNTH_HIERARCHICAL 0): Yosys names a nested instance u_r<k>.<path>
+    return dict(inst=f'u_r{k}.{inst}', module=c['view'].split('/')[-1], view=c['view'], lef=lef, lib=lib,
                 origin_um=[round(c['at'][0] + dx, 4), round(c['at'][1] + dy, 4)], orient=o, size_um=[w, h])
 
 
@@ -98,7 +98,7 @@ def render(lst, tag, png):
         ax.add_patch(Rectangle(e['origin_um'], *e['size_um'], fc=col.get(e['module'], '#55a868'), ec='k', lw=0.3,
                                alpha=0.8))
         if e['module'] != 'ot_rom_4096x72_m8':
-            ax.text(e['origin_um'][0] + 2, e['origin_um'][1] + 2, e['inst'].split('/', 1)[1], fontsize=5)
+            ax.text(e['origin_um'][0] + 2, e['origin_um'][1] + 2, e['inst'].split('.', 1)[1], fontsize=5)
     ax.set_xlim(-20, OUTLINE[0] + 20)
     ax.set_ylim(-20, OUTLINE[1] + 20)
     ax.set_aspect('equal')
