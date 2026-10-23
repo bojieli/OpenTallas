@@ -91,6 +91,14 @@ BINDA=(--rtl-root rtl \
   --allow-model qkd_hbm3e_phy_pc --allow-model qkd_ckbump --allow-model qkd_fwdbump --allow-model ot_qkvd_ucie_x64_phy \
   --allow-model ot_qkvd_ucie_x64_phy_model \
   --allow-model ot_qfd_serdes_112g_x12_phy --allow-model qkd_pll_analog_model)
+# STEWARD-QKd 10-23: KDIE5 GRP_R2_NATIVE32 binds the mapped structural copies qkd_kvs_grp[_h]_r2c (ASAP7 RVT cells):
+# their leaf cells resolve to the official ASAP7 cell models (results/arch/s81_hb1_cell_semantics_1019/official, the
+# same source-pinned library the S81 hb1 cell-semantics proof uses); dff.v is a subset duplicate and is not indexed.
+if [ "${OT_KV_GRP_R2_NATIVE32:-0}" = 1 ]; then
+  for CF in AO_RVT_TT_201020 INVBUF_RVT_TT_201020 OA_RVT_TT_201020 SEQ_RVT_TT_220101 SIMPLE_RVT_TT_201020; do
+    BINDA+=(--rtl-file "$R/results/arch/s81_hb1_cell_semantics_1019/official/asap7sc7p5t_$CF.v")
+  done
+fi
 python3 $R/tools/die_port_bind.py $O/die_bound.v "${BINDA[@]}" "${F[@]}" \
   --strap-file $O/straps.json --out $O/port_bind_v2.json > $O/port_bind_v2.txt 2>&1
 rc=$?
