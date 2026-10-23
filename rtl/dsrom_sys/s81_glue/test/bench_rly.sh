@@ -34,6 +34,7 @@ module tb;
 endmodule
 EOT
 DEF=""; [ "$mode" = mut ] && DEF="-DOT_S81_RLY_MUT"; [ "$mode" = rsmut ] && DEF="-DOT_S81_RLY_RSMUT"
+DEF="$DEF ${OT_RLY_DEF:-}"   # STW-S81c-DIE4-BLK 10-22: optional extra defines (e.g. -DOT_S81_RLY_RSSLICE)
 verilator --binary --timing -Wno-fatal -Wno-WIDTH $DEF --top-module tb -Mdir "$O/obj" -o tb \
   "$O/tb.sv" rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters*.sv ${OT_RLY_EXTRA_SRC:-} > "$O/build.log" 2>&1 || { echo BUILD_FAILED; tail -5 "$O/build.log"; exit 2; }
 "$O/obj/tb" | tee "$O/bench.log" | grep RLY_BENCH
