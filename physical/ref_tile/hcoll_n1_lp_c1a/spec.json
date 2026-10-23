@@ -1,0 +1,1662 @@
+{
+ "name": "hcoll_n1_lp_c1a",
+ "top": "ot_hfd_coll_n1s0_lp_ars256",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/landed/ot_hfd_coll_n1s0_lp_ars256.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves_r256.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_issuer_m256v8.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v7.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v6.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v7r128.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir/ot_sram_1rw_128x64_m2_r2c2_p192_mir_bb.v",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_capture_pin_v2.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ariter_tag.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_n32.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/common/landed_parent/ot_coll_lp_native_helpers.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_sw",
+ "clock_ports": [
+  "ck_sw",
+  "ck_wr",
+  "ck_rg",
+  "ck_hd",
+  "ck_lk"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_sw"
+   ],
+   "inputs": [
+    "rst_n",
+    "inj_d",
+    "rc_d",
+    "rc_tag",
+    "rc_v",
+    "vm_rr"
+   ],
+   "outputs": [
+    "del_flit",
+    "del_valid",
+    "hgi_del_obase",
+    "hgi_inj_addr",
+    "inj_idx",
+    "inj_rd",
+    "isa_lp_data",
+    "isa_ring",
+    "stat_cycles",
+    "vm_rq"
+   ]
+  },
+  "wr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_wr"
+   ],
+   "inputs": [
+    "qid_wr"
+   ],
+   "outputs": [
+    "vm_kq"
+   ]
+  },
+  "rg": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rg"
+   ],
+   "inputs": [
+    "pr_ccw_i",
+    "pr_cw_i",
+    "qid_rg",
+    "ra_add_rhs_acc",
+    "ra_add_src",
+    "ra_add_tag",
+    "ra_add_v",
+    "ra_lp_data",
+    "ra_lp_tag",
+    "ra_lp_we",
+    "ra_rr_local",
+    "ra_rr_local_tag",
+    "ra_rx_kind",
+    "ra_rx_slot",
+    "ra_rx_src",
+    "ra_rx_tag",
+    "ra_state_add_rhs_acc",
+    "ra_state_add_src",
+    "ra_state_add_tag",
+    "ra_state_read_add",
+    "ra_state_read_rr",
+    "ra_state_read_tx",
+    "ra_state_rr_tag",
+    "ra_state_tx_acc",
+    "ra_state_tx_tag",
+    "ra_tx_acc",
+    "ra_tx_dst",
+    "ra_tx_forward",
+    "ra_tx_gather",
+    "ra_tx_inject",
+    "ra_tx_result",
+    "ra_tx_tag",
+    "ra_tx_ttl"
+   ],
+   "outputs": [
+    "ag_d",
+    "ag_src",
+    "ag_tag",
+    "ag_v",
+    "pr_ccw_o",
+    "pr_cw_o",
+    "rr_d",
+    "rr_tag",
+    "rr_v"
+   ]
+  },
+  "hd": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hd"
+   ],
+   "inputs": [
+    "cfg_addr",
+    "cfg_data",
+    "cfg_target",
+    "cfg_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "desc_v",
+    "launch_v",
+    "qid"
+   ],
+   "outputs": [
+    "done",
+    "fault",
+    "fault_cause",
+    "hgi_busy",
+    "hgi_done",
+    "hgi_fault",
+    "program_configured",
+    "program_fault",
+    "program_init_busy"
+   ]
+  },
+  "lk": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_lk"
+   ],
+   "inputs": [
+    "phy_up",
+    "rx_pin_flit",
+    "rx_pin_v"
+   ],
+   "outputs": [
+    "retry_requested",
+    "tx_pin_flit",
+    "tx_pin_v"
+   ]
+  }
+ },
+ "landed_record": "results/arch/landed_parent_1018/collq/ot_hfd_coll_n1s0_lp_ars256_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_sw) -> u_lpr_<r> regional runs per region (sw/wr/rg/hd/lk) -> per-child u_lprc_* pads; the port net has ONE sink (ROOT-RST rule satisfied in RTL)"
+ },
+ "outline": {
+  "w": 1105.92,
+  "h": 1252.8,
+  "exact": true
+ },
+ "macros": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/hcoll_v7_ctl_n1s0/views/ot_hgi_coll_ctl_v5_n1s0",
+   "count": 1,
+   "inst": "u_control",
+   "at": [
+    190.08,
+    734.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_fj1_r256/views/ot_hgi_coll_fj_n1s0_r256",
+   "count": 1,
+   "inst": "u_fj",
+   "at": [
+    967.68,
+    1157.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_issuer_r256/views/ot_hgi_coll_issuer_m256v8",
+   "count": 1,
+   "inst": "u_issuer",
+   "at": [
+    561.6,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_link_e2u/views/ot_hgi_coll_link_e1",
+   "count": 1,
+   "inst": "u_link0",
+   "at": [
+    285.12,
+    25.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc0",
+   "at": [
+    285.12,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc1",
+   "at": [
+    371.52,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc2",
+   "at": [
+    457.92,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc3",
+   "at": [
+    544.32,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc4",
+   "at": [
+    630.72,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc5",
+   "at": [
+    717.12,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc6",
+   "at": [
+    803.52,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qcap/views/ot_hgi_coll_qslots_capture_pin_v2",
+   "count": 1,
+   "inst": "u_qc7",
+   "at": [
+    889.92,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo0",
+   "at": [
+    155.52,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo1",
+   "at": [
+    207.36,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo10",
+   "at": [
+    673.92,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo11",
+   "at": [
+    725.76,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo12",
+   "at": [
+    777.6,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo13",
+   "at": [
+    829.44,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo14",
+   "at": [
+    881.28,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo15",
+   "at": [
+    933.12,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo16",
+   "at": [
+    984.96,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2n/views/ot_hgi_coll_qso_n1s0_b1",
+   "count": 1,
+   "inst": "u_qo17",
+   "at": [
+    1036.8,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo2",
+   "at": [
+    259.2,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo3",
+   "at": [
+    311.04,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo4",
+   "at": [
+    362.88,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo5",
+   "at": [
+    414.72,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo6",
+   "at": [
+    466.56,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo7",
+   "at": [
+    518.4,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo8",
+   "at": [
+    570.24,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_v5_qso2w/views/ot_hgi_coll_qso_n1s0_b32",
+   "count": 1,
+   "inst": "u_qo9",
+   "at": [
+    622.08,
+    570.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_ag_ctl_1017/views/ot_hgi_coll_ring_ag_ctl",
+   "count": 1,
+   "inst": "u_rctl",
+   "at": [
+    25.92,
+    1097.28
+   ],
+   "orient": "MX"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl0",
+   "at": [
+    285.12,
+    397.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl1",
+   "at": [
+    371.52,
+    397.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl10",
+   "at": [
+    457.92,
+    483.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl11",
+   "at": [
+    544.32,
+    483.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl12",
+   "at": [
+    630.72,
+    483.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl13",
+   "at": [
+    717.12,
+    483.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl14",
+   "at": [
+    803.52,
+    483.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl15",
+   "at": [
+    889.92,
+    483.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl2",
+   "at": [
+    457.92,
+    397.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl3",
+   "at": [
+    544.32,
+    397.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl4",
+   "at": [
+    630.72,
+    397.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl5",
+   "at": [
+    717.12,
+    397.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl6",
+   "at": [
+    803.52,
+    397.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl7",
+   "at": [
+    889.92,
+    397.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl8",
+   "at": [
+    285.12,
+    483.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_reduce_lane_u/views/ot_hgi_coll_reduce_lane",
+   "count": 1,
+   "inst": "u_rdl9",
+   "at": [
+    371.52,
+    483.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst0",
+   "at": [
+    276.48,
+    1157.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst1",
+   "at": [
+    362.88,
+    1157.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst2",
+   "at": [
+    449.28,
+    1157.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst3",
+   "at": [
+    535.68,
+    1157.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst4",
+   "at": [
+    622.08,
+    1157.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst5",
+   "at": [
+    708.48,
+    1157.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst6",
+   "at": [
+    794.88,
+    1157.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane",
+   "count": 1,
+   "inst": "u_rst7",
+   "at": [
+    881.28,
+    1157.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up0",
+   "at": [
+    319.68,
+    734.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up1",
+   "at": [
+    380.16,
+    734.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up10",
+   "at": [
+    440.64,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up11",
+   "at": [
+    501.12,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up12",
+   "at": [
+    319.68,
+    915.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up13",
+   "at": [
+    380.16,
+    915.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up14",
+   "at": [
+    440.64,
+    915.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up15",
+   "at": [
+    501.12,
+    915.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up2",
+   "at": [
+    440.64,
+    734.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up3",
+   "at": [
+    501.12,
+    734.4
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up4",
+   "at": [
+    319.68,
+    794.88
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up5",
+   "at": [
+    380.16,
+    794.88
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up6",
+   "at": [
+    440.64,
+    794.88
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up7",
+   "at": [
+    501.12,
+    794.88
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up8",
+   "at": [
+    319.68,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_upipe96/views/ot_hgi_coll_uop_slice96",
+   "count": 1,
+   "inst": "u_up9",
+   "at": [
+    380.16,
+    855.36
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va0",
+   "at": [
+    25.92,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va1",
+   "at": [
+    86.4,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va10",
+   "at": [
+    146.88,
+    362.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va11",
+   "at": [
+    207.36,
+    362.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va12",
+   "at": [
+    25.92,
+    423.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va13",
+   "at": [
+    86.4,
+    423.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va14",
+   "at": [
+    146.88,
+    423.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va15",
+   "at": [
+    207.36,
+    423.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va2",
+   "at": [
+    146.88,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va3",
+   "at": [
+    207.36,
+    241.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va4",
+   "at": [
+    25.92,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va5",
+   "at": [
+    86.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va6",
+   "at": [
+    146.88,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va7",
+   "at": [
+    207.36,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va8",
+   "at": [
+    25.92,
+    362.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmasm16/views/ot_hgi_coll_vmasm_slice16",
+   "count": 1,
+   "inst": "u_va9",
+   "at": [
+    86.4,
+    362.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hcoll_vmwrite_static_v6_roots_fsw/views/ot_hgi_coll_static_vmwrite_roots_v6_physical",
+   "count": 1,
+   "inst": "u_writer",
+   "at": [
+    25.92,
+    570.24
+   ],
+   "orient": "MY"
+  }
+ ],
+ "pins": {
+  "N": [
+   "pr_cw_i",
+   "pr_ccw_o",
+   "isa_ring",
+   "isa_lp_data",
+   "rc_d",
+   "ra_lp_we",
+   "ra_lp_tag",
+   "ra_lp_data",
+   "ra_state_read_add",
+   "ra_state_read_tx",
+   "ra_state_read_rr",
+   "ra_state_add_tag",
+   "ra_state_tx_tag",
+   "ra_state_rr_tag",
+   "ra_state_add_src",
+   "ra_state_add_rhs_acc",
+   "ra_state_tx_acc",
+   "ra_add_v",
+   "ra_add_tag",
+   "ra_add_src",
+   "qid_rg",
+   "ra_add_rhs_acc",
+   "ra_tx_inject",
+   "ra_tx_forward",
+   "ra_tx_tag",
+   "ra_tx_dst",
+   "ra_tx_result",
+   "ra_tx_acc",
+   "ra_tx_gather",
+   "ra_tx_ttl",
+   "ra_rx_slot",
+   "ra_rx_kind",
+   "ra_rx_src",
+   "ra_rx_tag",
+   "ra_rr_local",
+   "ra_rr_local_tag",
+   "rr_v",
+   "rr_tag",
+   "rr_d",
+   "ag_v",
+   "ag_src",
+   "ag_tag",
+   "ag_d",
+   "pr_ccw_i",
+   "pr_cw_o",
+   "rc_v",
+   "rc_tag",
+   "stat_cycles",
+   "ck_rg"
+  ],
+  "S": [
+   "rst_n",
+   "phy_up",
+   "tx_pin_v",
+   "tx_pin_flit",
+   "rx_pin_v",
+   "rx_pin_flit",
+   "retry_requested",
+   "hgi_busy",
+   "hgi_done",
+   "done",
+   "ck_sw",
+   "ck_lk"
+  ],
+  "E": [
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "program_configured",
+   "program_init_busy",
+   "program_fault",
+   "qid",
+   "fault",
+   "fault_cause",
+   "hgi_fault",
+   "inj_rd",
+   "inj_idx",
+   "hgi_inj_addr",
+   "inj_d",
+   "del_valid",
+   "del_flit",
+   "hgi_del_obase",
+   "ck_hd"
+  ],
+  "W": [
+   "vm_rq",
+   "vm_rr",
+   "qid_wr",
+   "vm_kq",
+   "ck_wr"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 160,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.025
+ },
+ "structural_change": "STEWARD-HBMe/SMH 10-23 c1a (coordinator BAD 10-23 on hcoll_n1_lp_safe32: children scattered over 1270x1261, 26 facing away, 5.4k/3.1k pins with no face register): same RTL/landing record/5 clock roots; children in dataflow rows on the 8.64 lattice (S link band -> qcap row -> 2 reduce rows -> qso row -> writer W face / E del pins; uop 4x4 between issuer W face and control; vmasm 4x4 at the W vm_rr pins; ring_ag_ctl MX + 8 state lanes in the N band; fj on the issuer N face); pin table from the netlist centroid of each port's children (face density {\"N\": 4.0, \"S\": 4.0, \"E\": 4.0, \"W\": 4.0}/um); outline 1105.9 x 1252.8 (86% of the old)",
+ "job": {
+  "owner": "Claude:STEWARD-HBMe/SMH",
+  "branch": "claude/hbme-coll-1023",
+  "tag": "c1a",
+  "purpose": "COLL n1 landed parent ot_hfd_coll_n1s0_lp_ars256 re-plan (coordinator BAD 10-23): dataflow rows + content outline + netlist pin table; placement render first (GEOM-REVIEW), P&R only after PASS",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "results/arch/landed_parent_1018/collq",
+   "results/rtl/hbm_coll_lp256_1021",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/generic/collective",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys/split_20261014",
+   "tools/hbm_coll_c1",
+   "tools/landed_parent"
+  ],
+  "benches": [
+   {
+    "name": "coll_n1s0_lp_ars256_all",
+    "cmd": "LP_ROOT=. LP_SFX=ars256 bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh n1s0 {RUN}/bench/n1s0_all all",
+    "expect": "pass",
+    "pass_regex": "COLL_LP_ARS_ALL_EXIT 0",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "EQ (flat lpf_ars256 == v8x/v8g #(AR_ITER 1, ROWS 256)) + 3 EQ mutants rejected; LP lockstep landed == lagref flat (offsets / lag pins / loose sticky), MUT 1/2/4 + unland rejected, audit PASS; RS reduce split + mutants"
+   },
+   {
+    "name": "coll_n1s0_lp_mut_land",
+    "cmd": "LP_ROOT=. SIM=verilator MUTS=1 VL_JOBS=8 bash rtl/hbm_accel/generic/collective/p2p/landed/ot_hfd_coll_n1s0_lp_ars256_bench.sh {RUN}/mut_land; cat {RUN}/mut_land/mut1.log; if grep -q \"^LP_LOCKSTEP FAIL MUT=1\" {RUN}/mut_land/mut1.log; then exit 1; else exit 0; fi",
+    "expect": "fail",
+    "fail_regex": "LP_LOCKSTEP FAIL MUT=1",
+    "fail_witness": "results/rtl/hbm_coll_lp256_1021/takeover_2000/n1s0/mut1.log",
+    "needs": [
+     "verilator"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "note": "Actual landed-ring MUT1 from the same compiled RTL; composite bench also checks MUT2/4 and positive outcomes."
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_n1_lp_ars256/views",
+  "record_to": "results/rtl/ref_tile/hcoll_n1_lp_ars256"
+ },
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "child_lattice_um": 8.64,
+ "child_lattice_reason": "Existing 8.64um common M1-M7 track lattice for 25.92/34.56um tiny closed children; SRAMs remain encapsulated on their43.2um macro grid. Parent power-grid contracts and all normal PG/access checks retained. 43.2um child snapping collapsed intended20um channels to8.64um. Actualcoordinates legalized to8.64 with20um clearance, no squeezing; owner rulefreeze guidance and HBMlead technicalapproval.",
+ "defines": [
+  "OT_COLL_LP_PUB32",
+  "OT_COLL_RING_ADD_N32"
+ ],
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "orfs_vars": {
+  "OT_RST_COPIES_WIDE": "1",
+  "SYNTH_CANONICALIZE_TCL": "physical/ref_tile/hcoll_n1_lp_safe32/synth_canonicalize.tcl"
+ },
+ "pin_ranges": {
+  "ag_d": [
+   69.92,
+   197.92
+  ],
+  "ag_src": [
+   198.352,
+   199.432
+  ],
+  "ag_tag": [
+   199.864,
+   201.364
+  ],
+  "ag_v": [
+   201.796,
+   202.876
+  ],
+  "pr_ccw_i": [
+   203.308,
+   273.308
+  ],
+  "pr_ccw_o": [
+   273.74,
+   343.74
+  ],
+  "pr_cw_i": [
+   344.172,
+   414.172
+  ],
+  "pr_cw_o": [
+   414.604,
+   484.604
+  ],
+  "qid_rg": [
+   485.036,
+   486.116
+  ],
+  "ra_add_rhs_acc": [
+   486.548,
+   487.628
+  ],
+  "ra_add_src": [
+   488.06,
+   489.14
+  ],
+  "ra_add_tag": [
+   489.572,
+   490.652
+  ],
+  "ra_rr_local": [
+   491.084,
+   492.164
+  ],
+  "ra_rr_local_tag": [
+   492.596,
+   493.676
+  ],
+  "ra_rx_kind": [
+   494.108,
+   495.188
+  ],
+  "ra_rx_slot": [
+   495.62,
+   496.7
+  ],
+  "ra_rx_src": [
+   497.132,
+   498.212
+  ],
+  "ra_rx_tag": [
+   498.644,
+   500.144
+  ],
+  "ra_tx_acc": [
+   500.576,
+   501.656
+  ],
+  "ra_tx_dst": [
+   502.088,
+   503.168
+  ],
+  "ra_tx_forward": [
+   503.6,
+   504.68
+  ],
+  "ra_tx_gather": [
+   505.112,
+   506.192
+  ],
+  "ra_tx_inject": [
+   506.624,
+   507.704
+  ],
+  "ra_tx_result": [
+   508.136,
+   509.216
+  ],
+  "ra_tx_tag": [
+   509.648,
+   510.728
+  ],
+  "ra_tx_ttl": [
+   511.16,
+   512.24
+  ],
+  "rr_d": [
+   512.672,
+   576.672
+  ],
+  "rr_tag": [
+   577.104,
+   578.184
+  ],
+  "rr_v": [
+   578.616,
+   579.696
+  ],
+  "rc_tag": [
+   580.128,
+   581.208
+  ],
+  "rc_v": [
+   581.64,
+   582.72
+  ],
+  "stat_cycles": [
+   583.152,
+   591.152
+  ],
+  "isa_ring": [
+   591.584,
+   606.084
+  ],
+  "isa_lp_data": [
+   606.516,
+   670.516
+  ],
+  "rc_d": [
+   670.948,
+   734.948
+  ],
+  "ra_lp_tag": [
+   735.38,
+   736.46
+  ],
+  "ra_lp_we": [
+   736.892,
+   737.972
+  ],
+  "ra_state_add_rhs_acc": [
+   738.404,
+   739.484
+  ],
+  "ra_state_add_src": [
+   739.916,
+   740.996
+  ],
+  "ra_state_add_tag": [
+   741.428,
+   742.508
+  ],
+  "ra_state_read_add": [
+   742.94,
+   744.02
+  ],
+  "ra_state_read_rr": [
+   744.452,
+   745.532
+  ],
+  "ra_state_read_tx": [
+   745.964,
+   747.044
+  ],
+  "ra_state_rr_tag": [
+   747.476,
+   748.556
+  ],
+  "ra_state_tx_acc": [
+   748.988,
+   750.068
+  ],
+  "ra_state_tx_tag": [
+   750.5,
+   751.58
+  ],
+  "ra_add_v": [
+   752.012,
+   753.092
+  ],
+  "ra_lp_data": [
+   753.524,
+   817.524
+  ],
+  "rst_n": [
+   324.631,
+   325.711
+  ],
+  "phy_up": [
+   522.18,
+   523.26
+  ],
+  "retry_requested": [
+   523.692,
+   524.772
+  ],
+  "rx_pin_flit": [
+   525.204,
+   678.204
+  ],
+  "rx_pin_v": [
+   678.636,
+   679.716
+  ],
+  "tx_pin_flit": [
+   680.148,
+   833.148
+  ],
+  "tx_pin_v": [
+   833.58,
+   834.66
+  ],
+  "done": [
+   835.092,
+   836.172
+  ],
+  "hgi_done": [
+   836.604,
+   837.684
+  ],
+  "hgi_busy": [
+   838.116,
+   839.196
+  ],
+  "inj_d": [
+   178.72,
+   434.72
+  ],
+  "del_flit": [
+   435.152,
+   980.152
+  ],
+  "del_valid": [
+   980.584,
+   981.664
+  ],
+  "hgi_fault": [
+   982.096,
+   983.176
+  ],
+  "hgi_del_obase": [
+   983.608,
+   1023.608
+  ],
+  "hgi_inj_addr": [
+   1024.04,
+   1064.04
+  ],
+  "inj_idx": [
+   1064.472,
+   1072.472
+  ],
+  "inj_rd": [
+   1072.904,
+   1073.984
+  ],
+  "cfg_addr": [
+   1146.222,
+   1149.222
+  ],
+  "cfg_data": [
+   1149.654,
+   1213.654
+  ],
+  "cfg_target": [
+   1214.086,
+   1216.086
+  ],
+  "cfg_v": [
+   1216.518,
+   1217.598
+  ],
+  "desc_base": [
+   1218.03,
+   1221.03
+  ],
+  "desc_limit": [
+   1221.462,
+   1224.712
+  ],
+  "desc_loops": [
+   1225.144,
+   1229.144
+  ],
+  "desc_v": [
+   1229.576,
+   1230.656
+  ],
+  "fault": [
+   1231.088,
+   1232.168
+  ],
+  "fault_cause": [
+   1232.6,
+   1236.6
+  ],
+  "launch_v": [
+   1237.032,
+   1238.112
+  ],
+  "program_configured": [
+   1238.544,
+   1239.624
+  ],
+  "program_fault": [
+   1240.056,
+   1241.136
+  ],
+  "program_init_busy": [
+   1241.568,
+   1242.648
+  ],
+  "qid": [
+   1243.08,
+   1244.16
+  ],
+  "vm_rr": [
+   94.962,
+   608.962
+  ],
+  "qid_wr": [
+   646.216,
+   647.296
+  ],
+  "vm_kq": [
+   647.728,
+   1209.728
+  ],
+  "vm_rq": [
+   1210.16,
+   1244.16
+  ]
+ },
+ "low_fill_reason": "macro-bound landed parent: 88 hard children = 44.1% of the outline (53.9% with 5.4-um halos, 65.1% with 20-um channels); soft logic is landing/pad registers only (~52k um2 placed)",
+ "safe_design_checklist": {
+  "pins": "every top pin ranged beside the child/landing it feeds (netlist centroid); io_flop_at_pins kept",
+  "reach": "longest family-to-face distance <= ~600 um (issuer cfg <- fj adjacent; qso -> writer adjacent)",
+  "fanout": "RTL unchanged (safe32 census)",
+  "depth": "unchanged",
+  "storage": "children unchanged",
+  "floorplan": "regular rows on the 8.64 lattice, >= 20-um channels, no child within 20 um of a face",
+  "clock": "5 RTL roots unchanged; each region compact (lk = S band, wr = W column, rg = N band, hd = issuer/fj, sw = rows)",
+  "schedule": "static; 0 edges"
+ }
+}
