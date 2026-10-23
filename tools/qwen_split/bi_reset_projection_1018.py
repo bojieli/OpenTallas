@@ -25,4 +25,5 @@ out+='\n'.join('assign '+n+'=ck;' for n in clocks)+'\nassign n_rst_fwd=reset;\n'
 out+='\n'.join(lines+monitors)+'\nendmodule\n'
 out+='module qfd_rst_rep(input wire clk,d,output wire q0,q1); ot_qwen_rst_rep u(.clk(clk),.d(d),.q0(q0),.q1(q1));endmodule\n'
 out+='module qfd_rst_rep_p8(input wire clk,d,output wire q0,q1); ot_qwen_rst_rep #(.PAD(8)) u(.clk(clk),.d(d),.q0(q0),.q1(q1));endmodule\n'
+out+='module qfd_rst_rep_p62(input wire clk,d,output wire q0,q1); ot_qwen_rst_rep #(.PAD(62)) u(.clk(clk),.d(d),.q0(q0),.q1(q1));endmodule\n'
 Path(sys.argv[2]).write_text(out)
