@@ -47,8 +47,8 @@
    "count": 1,
    "orient": "MY",
    "at": [
-    86.4,
-    43.2
+    23.76,
+    28.08
    ],
    "inst": "*u_rowtx"
   }
@@ -77,20 +77,20 @@
   "cell": "HB2xp67_ASAP7_75t_R"
  },
  "outline": {
-  "w": 326.16,
-  "h": 218.16,
+  "w": 263.52,
+  "h": 203.04,
   "exact": true
  },
  "structural_change": "QTILE-R 10-23: kit of the BOUND nc32 qkd_kvs_emb (join4_cal NATIVE32+PIPE_JOIN, rope_sweep) with the outline from content (was the 388.8 x 302.4 frame slot, logic only at the faces); same faces, same every-pin registers as e1",
  "job": {
   "owner": "QTILE-R",
   "branch": "claude/qtile-r-kvemb-1023",
-  "tag": "nc32b",
+  "tag": "nc32b2",
   "purpose": "K.STA.EMB qkd_kvs_emb nc32 (die rtl3 binding) re-kit, outline from content",
   "benches": []
  },
  "fill_reason": {
-  "pin_bound": "content = hard u_rowtx 216 x 151.2 + ~1.9k um2 std + ~2.0k pin flops; the outline is the child plus one W join band (84.2 um), a 41-um S band (673 S pins, 2.4/um) and 21.6-um E/N bands (E 786 pins over 218 um = 3.6/um); smaller faces would exceed ~5 pins/um. Was 388.8 x 302.4 (frame slot)."
+  "pin_bound": "content = hard u_rowtx 216 x 151.2 + ~1.9k um2 std + ~2.0k pin flops; the outline is the child plus bands sized from demand: join band S ~26 um (join4_cal std + its face pin flops), every other band = the 20-um macro-edge rule; fill of free ~20%; faces <= 3.9 pins/um. Was 388.8 x 302.4 (frame slot)."
  },
  "child_clock_ref": "boundary",
  "child_clock_ref_reason": "HKV-EMBHOLD 10-18: e1-939c4f0de NEEDS_RTL FF hold -6.74 = 41 reg->reg pairs u_rowtx/emb_tx_payload[*] -> rowtx__emb_tx_payload[*] pin registers (launch child ck 535.8 + child boundary-flop insertion FF 159-221, capture parent flop 787.9): the spine targeted the child's TT lib max_clock_tree_path 293.5 ps, but the flops the parent talks to are the child's boundary pin registers at TT mean 226.0 (insertion.json), so the child launched ~67 ps TT / ~50 ps FF early against every parent capture flop. Target = the child's routed boundary-register insertion (the s81 die clock delivery rule).",
@@ -98,15 +98,16 @@
   "enable": false,
   "reason": "HKV-EMBHOLD2 10-19 (ROOT-RST rule): rst_n is not a declared reset port here; it is a registered data pin (pin_regs reset '^$'), landed by ONE S-face pin flop rst_n__ot_q (1 sink at the port, textbook_lint reset_landing measures 1 <= rst_land_max 2); the core reset tree hangs off that flop. A second landing stage would add an unpriced reset-release cycle to the KV die static schedule."
  },
- "low_fill_reason": "content = hard u_rowtx 216 x 151.2 + ~1.9k um2 std + ~2.0k pin flops; the outline is the child plus one W join band (84.2 um), a 41-um S band (673 S pins, 2.4/um) and 21.6-um E/N bands (E 786 pins over 218 um = 3.6/um); smaller faces would exceed ~5 pins/um. Was 388.8 x 302.4 (frame slot).",
+ "child_lattice_um": 2.16,
+ "low_fill_reason": "content = hard u_rowtx 216 x 151.2 + ~1.9k um2 std + ~2.0k pin flops; the outline is the child plus bands sized from demand: join band S ~26 um (join4_cal std + its face pin flops), every other band = the 20-um macro-edge rule; fill of free ~20%; faces <= 3.9 pins/um. Was 388.8 x 302.4 (frame slot).",
  "slot_change_request": {
   "from": [
    388.8,
    302.4
   ],
   "to": [
-   326.16,
-   218.16
+   263.52,
+   203.04
   ],
   "why": "COORD/OWNER 10-23 outline-from-content; KV die lead (STEWARD-QKd) re-derives the frame slot"
  }

@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  326.16,
-  218.16
+  263.52,
+  203.04
  ],
  "core": [
   2.16,
   2.16,
-  324.0,
-  216.0
+  261.35999999999996,
+  200.88
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 2600.0,
+ "std_area_um2": 3900.0,
  "layer_contract": {
   "children": {
    "qkd_embedding_row_tx": "M5"
@@ -58,8 +58,8 @@
    "master": "qkd_embedding_row_tx",
    "inst": "*u_rowtx",
    "idx": 0,
-   "x": 86.424,
-   "y": 43.2,
+   "x": 23.784,
+   "y": 28.08,
    "w": 216.0,
    "h": 151.2,
    "orient": "MY",
@@ -70,14 +70,14 @@
   [
    "WARN",
    "macro_grid",
-   "qkd_embedding_row_tx#0: origin (86.424, 43.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "qkd_embedding_row_tx#0: origin (23.784, 28.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
   ],
   [
    "WARN",
    "fill",
-   "fill 50% = (macros/children 32659 + std 2600) / outline 71155 um2 (pin-bound: content = hard u_rowtx 216 x 151.2 + ~1.9k um2 std + ~2.0k pin flops; the outline is the child plus one W join band (84.2 um), a 41-um S band (673 S pins, 2.4/um) and 21.6-um E/N bands (E 786 pins over 218 um = 3.6/um); smaller faces would exceed ~5 pins/um. Was 388.8 x 302.4 (frame slot).)",
-   ""
+   "fill 68% = (macros/children 32659 + std 3900) / outline 53505 um2 > 60%",
+   "enlarge the outline toward fill 0.50-0.55"
   ]
  ],
  "referenced": [

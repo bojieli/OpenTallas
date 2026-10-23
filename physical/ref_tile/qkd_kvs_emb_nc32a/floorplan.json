@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  282.96,
-  218.16
+  267.84,
+  198.72
  ],
  "core": [
   2.16,
   2.16,
-  280.79999999999995,
-  216.0
+  265.67999999999995,
+  196.56
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": 2600.0,
+ "std_area_um2": 3900.0,
  "layer_contract": {
   "children": {
    "qkd_embedding_row_tx": "M5"
@@ -58,8 +58,8 @@
    "master": "qkd_embedding_row_tx",
    "inst": "*u_rowtx",
    "idx": 0,
-   "x": 43.224,
-   "y": 43.2,
+   "x": 28.104,
+   "y": 23.76,
    "w": 216.0,
    "h": 151.2,
    "orient": "MY",
@@ -70,8 +70,14 @@
   [
    "WARN",
    "macro_grid",
-   "qkd_embedding_row_tx#0: origin (43.224, 43.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "qkd_embedding_row_tx#0: origin (28.104, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
    "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "fill",
+   "fill 69% = (macros/children 32659 + std 3900) / outline 53225 um2 > 60%",
+   "enlarge the outline toward fill 0.50-0.55"
   ]
  ],
  "referenced": [

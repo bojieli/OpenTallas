@@ -5,7 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
-FB = {"S": 673, "E": 758, "W": 598, "N": 0}; CH = 216.0 * 151.2; STD = 2600.0
+FB = {"S": 673, "E": 758, "W": 598, "N": 0}; CH = 216.0 * 151.2; STD = 3900.0
 fig, axs = plt.subplots(1, 3, figsize=(20, 6)); out = {}
 for ax, k in zip(axs, ["qkd_kvs_emb", "qkd_kvs_emb_nc32a", "qkd_kvs_emb_nc32b"]):
     f = json.load(open(f"{ROOT}/physical/ref_tile/{k}/floorplan.json")); W, H = f["die"][2], f["die"][3]
@@ -14,7 +14,8 @@ for ax, k in zip(axs, ["qkd_kvs_emb", "qkd_kvs_emb_nc32a", "qkd_kvs_emb_nc32b"])
         ax.add_patch(Rectangle((b["x"], b["y"]), b["w"], b["h"], fc="#4a90d9", ec="w"))
         ax.plot([b["x"]] * 2, [b["y"], b["y"] + b["h"]], "r-", lw=3); ax.plot([b["x"] + b["w"]] * 2, [b["y"], b["y"] + b["h"]], "r-", lw=3)
         ax.text(b["x"] + 5, b["y"] + b["h"] / 2, "u_rowtx (MY)\nW edge: 554 word pins (join)\nE edge: 550 payload pins", fontsize=7, color="w")
-        ax.text(b["x"] / 2 - 12, H / 2, "join\nband", fontsize=7)
+        if k.endswith("nc32b"): ax.text(b["x"] + 60, b["y"] / 2 - 4, "join band (S, beside i_hroot_ES/EN)", fontsize=7)
+        else: ax.text(2, H / 2, "join\nband\n(W)", fontsize=7)
     fl = {"W": H, "E": H, "S": W, "N": W}
     for fc, (x, y, r) in {"W": (-22, H / 3, 90), "E": (W + 3, H / 3, 90), "S": (W / 3, -14, 0), "N": (W / 3, H + 3, 0)}.items():
         ax.text(x, y, f"{fc}: {FB[fc]} ({FB[fc] / fl[fc]:.2f}/um)", fontsize=8, rotation=r)

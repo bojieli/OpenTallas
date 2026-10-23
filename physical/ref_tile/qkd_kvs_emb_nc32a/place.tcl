@@ -33,7 +33,7 @@ proc ot_ref_pick {by master pat} {
 }
 set ot_ref_n 0
 set i [ot_ref_pick $ot_ref_by qkd_embedding_row_tx {*u_rowtx}]
-$i setOrient MY; $i setLocation [expr {round(43.224 * $dbu)}] [expr {round(43.2 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] qkd_embedding_row_tx at 43.224 43.2 MY"
+$i setOrient MY; $i setLocation [expr {round(28.104 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] qkd_embedding_row_tx at 28.104 23.76 MY"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
 if {$nb != 1} { error "ref_tile place: expected 1 macros, netlist has $nb" }
