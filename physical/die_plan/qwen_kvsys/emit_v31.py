@@ -31,6 +31,7 @@ from cells_v3 import master_cells  # noqa: E402
 
 G = 8.64
 REACH = pv2.REACH
+ST_MAX = REACH                    # ft station spacing limit (v3.4 sets budgets.ft_station_max_um, COORD R3)
 OPP = pv2.OPP
 PINS_PER_UM = 5.2                 # v3.1: 4.8 -> 5.2 (windows grow for PG-band exclusion + usable centre track)
 GAP = 0.864
@@ -223,7 +224,7 @@ def main():
             A, Bp = pt(ci, w_, h_), pt(co, w_, h_)
             fs = {ri['tf'], ro['tf']}
             span = w_ if fs == {'E', 'W'} else h_ if fs == {'N', 'S'} else (w_ + h_) / 2
-            st = max(1, math.ceil(max(span, abs(A[0] - Bp[0]) + abs(A[1] - Bp[1])) / REACH - 1e-9))
+            st = max(1, math.ceil(max(span, abs(A[0] - Bp[0]) + abs(A[1] - Bp[1])) / ST_MAX - 1e-9))
             slots.append(((ri['tf'], ri['lo'], ri['hi'], ri['w']), (ro['tf'], ro['lo'], ro['hi'], ro['w']), st, pi, po))
         slotinfo[part] = slots
         contents = sorted((loc, B[blk]['m']) for blk, (pt_, loc) in where.items() if pt_ == part)
