@@ -1,0 +1,233 @@
+{
+ "name": "s81dv_idxtxn32ysm",
+ "top": "dsdv_idx_tx_n32",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_tx_region_ring.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "V": 276,
+  "IK": 4,
+  "EK": 5,
+  "UID": 92,
+  "D": 8192,
+  "IB": 64,
+  "SRAM_MACRO": 1,
+  "MUT": 0,
+  "RDL": 1,
+  "WDL": 1,
+  "WDC": 1,
+  "SCS": 1,
+  "RIL": 1,
+  "RHP": 1,
+  "SPLIT": 1,
+  "RING": 1,
+  "RING_D": 8,
+  "RING_K": 3
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 669.6,
+  "h": 628.56,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_ib0.g_m.g_b[0].u_mem",
+   "at": [
+    421.632,
+    466.56
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_ib1.g_m.g_b[0].u_mem",
+   "at": [
+    421.632,
+    371.52
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_s.u_gb.g_b[0].u_mem",
+   "at": [
+    421.632,
+    276.48
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_s.u_gb.g_b[1].u_mem",
+   "at": [
+    421.632,
+    181.44
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_s.u_gb.g_b[2].u_mem",
+   "at": [
+    421.632,
+    86.4
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "lo",
+   "st"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "vi": [
+   21.6,
+   302.4
+  ],
+  "vo": [
+   324.0,
+   604.8
+  ],
+  "lo": [
+   21.6,
+   518.4
+  ],
+  "st": [
+   529.2,
+   604.8
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (dsdv_idx_tx_n32, S81-RTLGAP 5cbd7d21c): every input lands in a flop at the pin (vi_r / vo_r), every output leaves a flop (lo / st); a recipe pin stage would shift the compiled tree-link slot grid (lower_bk job_rank_tree_rd)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "structural_change": "Complete300bit input and256bit return rings per score column; internal kept clock branches and local subtrees replace failed y cross-boundary paths; D8/K3,+8 lookupedges.",
+ "why_floorplan": "FB y parent (STW-S81c-TOK5 10-22): outline 669.6 x 628.56 (x + 43.2 W / + 67 H: the full-height child needs >= 20 um from the W (ck/rst) and N/S (vi/vo, lo/st) pin faces) with column A (banks 0-4) as the CLOSED hard child s81dv_idxtxga (313.2 x 561.6 at (43.2, 43.2) on the 43.2 child lattice, own clock root, POUT pin flops on its E face) and column B (banks 5-7, u_gb) at x 421.632 on the same 95.04 row pitch as x; the TX core + column-B landings sit in the 65-um band between the child's E face and column B plus the 71-um E band. The parent root spans only the E half + child boundary.",
+ "job": {
+  "owner": "STW-S81d-TOPK",
+  "branch": "claude/s81d-topk-1022",
+  "tag": "ysm",
+  "purpose": "Frozen-port TX complete input/return region rings D8 K3, lookup+8 edges; no adoption yet. + one-hot ring slice selects (222474aac) + scoped calendar-ring K-cycle MCP bank->q.",
+  "views_to": "physical/ref_tile/s81dv_idxtxn32ysm/views",
+  "record_to": "results/rtl/ref_tile/s81dv_idxtxn32ysm",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/lib",
+   "tools/s81_dv/tx_export_1021",
+   "tools/s81_dv/tx_internal_clock_1022",
+   "tools/s81_dv/tx_ring_mcp_1023",
+   "results/arch/s81_tx_region_ring_1022/source7_onehot"
+  ],
+  "benches": [
+   {
+    "name": "tx_ysm_lockstep",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=10 -GRING=1 -GRING_D=8 -GRING_K=3 -GSPLIT=1' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_ysm_lockstep 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^TX_MITER_PASS$"
+   },
+   {
+    "name": "tx_ysm_missing_ring",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=10 -GRING=1 -GRING_D=8 -GRING_K=3 -GSPLIT=1' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_ysm_missing_ring 7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TX_MISMATCH ",
+    "fail_witness": "results/arch/s81_tx_region_ring_1022/source7_onehot/alt_m7_p0/run.log"
+   }
+  ]
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81dv_idxtxga/views/dsdv_idx_txm_grp",
+   "count": 1,
+   "inst": "*u_sm.g_s.u_ga",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "hold_budget": "tile",
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_SPINE_LEAF_N": "16",
+  "OT_SPINE_BIN": "32",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_SEG": "80",
+  "OT_SPINE_SYM_MERGE": "60",
+  "OT_SPINE_SYM_FAN": "8",
+  "OT_MEG_OUT_UM": "1.2",
+  "OT_MEG_DEPTH_UM": "2.4"
+ },
+ "clock": "spine",
+ "pin_hook_before_flops": [
+  "physical/common_flow/macro_pin_flops.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/common_flow/macro_pin_flops_release.tcl"
+ ],
+ "hold_budget_reason": "cluster with one CLOSED hard child (hold_budget die is leaf/two-level only); every boundary pin is registered in RTL",
+ "defines": [
+  "OT_DSDV_TXGA_HARD"
+ ],
+ "hard_define": "OT_DSDV_TXGA_HARD",
+ "pre_cts_extra": [
+  "tools/s81_dv/tx_internal_clock_1022/regional_roots.tcl",
+  "tools/s81_dv/tx_internal_clock_1022/preserve_branches_cts.tcl"
+ ],
+ "post_synth_tcl": "tools/s81_dv/tx_internal_clock_1022/keep_branches.tcl",
+ "sdc_extra": [
+  "tools/s81_dv/tx_ring_mcp_1023/ring_calendar_k3_d8.sdc"
+ ]
+}

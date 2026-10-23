@@ -1,0 +1,6 @@
+# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl); cluster: balanced clock spine with child-insertion leaf targets (sourced FIRST, so the io_ref wrapper below wraps it)
+source /src/physical/common_flow/clock_spine.tcl
+source /src/physical/ref_tile/s81dv_idxtxn32ysm/spine_ins.tcl
+source /src/tools/s81_dv/tx_internal_clock_1022/regional_roots.tcl
+source /src/tools/s81_dv/tx_internal_clock_1022/preserve_branches_cts.tcl
+source /src/physical/qwen_die_masters/pre_cts_skew.tcl
