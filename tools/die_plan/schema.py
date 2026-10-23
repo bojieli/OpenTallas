@@ -226,6 +226,8 @@ SCHEMA = {
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
                                "param": {"type": "string"}}}}}},
+        # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
+        "census": {"type": ["array", "object"]},
         "budgets": {"type": "object", "additionalProperties": False, "properties": {
             k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS}},
     },
