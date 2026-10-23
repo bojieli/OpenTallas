@@ -287,3 +287,37 @@ def test_forwarded_clock_slot_widens_tight_range():
                 f"  END {p['pin']}"]
     lef += [f"END {sp['variant']}"]
     assert pd.check_abstract("\n".join(lef) + "\n", sp)["ok"]
+
+
+def test_pins_avoid_pg_stripes():
+    """FT-S81 10-23: 309 of 4,716 ft pins landed on the frame's M8 PG stripes (w 0.48 p 8.64 off 4.32).  With the PDN
+    stripes given, no ft pin (track width) comes within the clearance of a stripe, in/out still match, and the pdn.tcl
+    parser reads the same stripes."""
+    lay = pd.load_layers()
+    H = 200.0
+    spec = dict(variant="v", outline=[100.0, H], clock="block",
+                ports=[dict(name="ft0_i", path=0, dir="input", face="W", lo=10.0, hi=60.0, layer="M8", bits=300),
+                       dict(name="ft0_o", path=0, dir="output", face="E", lo=10.0, hi=60.0, layer="M8", bits=300)],
+                paths=[dict(path=0, **{"in": "ft0_i", "out": "ft0_o"}, bits=300, stages=1)])
+    pdn = ("add_pdn_stripe -grid {top} -layer {M2} -width {0.018} -pitch {0.54} -offset {0} -followpins\n"
+           "add_pdn_stripe -grid {top} -layer {M8} -width {0.48} -pitch {8.64} -offset {4.32}\n")
+    pg = pd.parse_pdn_stripes(pdn)
+    assert pg == {"M8": [dict(width=0.48, pitch=8.64, offset=4.32, spacing=None)]}
+    hw = lay["M8"]["width"] / 2
+    ko = pd.pg_keepout(pg["M8"], H, 0.064)
+    plain = pd.place_ports(spec, lay)
+    assert sum(pd.track_blocked(p["offset"], hw, ko) for p in plain) > 0        # the bug: some pins on stripes
+    pl = pd.place_ports(spec, lay, pg=pg)
+    assert not any(pd.track_blocked(p["offset"], hw, ko) for p in pl)
+    for p in pl:                                                               # clearance >= margin to every stripe
+        for j in range(30):
+            a = 4.32 + j * 8.64
+            assert p["offset"] + hw <= a - 0.064 + 1e-9 or p["offset"] - hw >= a + 0.48 + 0.064 - 1e-9
+    ins = [p["offset"] for p in pl if p["port"] == "ft0_i"]
+    outs = [p["offset"] for p in pl if p["port"] == "ft0_o"]
+    assert ins == outs and len(set(ins)) == 300
+    # VDD/VSS pair (-spacing): both stripes blocked
+    ko2 = pd.pg_keepout([dict(width=0.288, pitch=10.8, offset=1.0, spacing=5.112)], 30.0, 0.0)
+    assert (1.0, 1.288) in [(round(a, 3), round(b, 3)) for a, b in ko2]
+    assert (6.4, 6.688) in [(round(a, 3), round(b, 3)) for a, b in ko2]
+    assert "FT_PINS_PG" in pd.gen_pg_check(spec)

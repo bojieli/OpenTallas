@@ -105,6 +105,11 @@ Outputs (named after `spec["variant"]`):
   [lo, hi] at an integer multiple of the track pitch and snapped to `offset + k*pitch` (ASAP7 M8/M9: 0.116 + k*0.080).
   Equal ranges give equal offsets, so in/out ports and abutting neighbours line up. A forwarded clock takes the middle
   slot. `<variant>.pins.json` holds the pins plus register placement hints, which also appear as a commented-out Tcl block.
+  PG stripes: `--pdn-tcl KIT/pdn.tcl` (its `add_pdn_stripe` sets, -spacing = VDD/VSS pair) and/or `--pg M8:W:PITCH:OFFSET`
+  keep every ft pin (track width) `--pg-margin-um` (0.064) clear of the stripes on its layer; the port widens by pitch
+  steps if stripes eat its tracks. pdngen's -offset is read as the stripe's lower edge from `--pg-origin` (core
+  origin); `--pg-anchor both` blocks edge and centre readings when a kit's convention is unknown. `<variant>.pg_check.tcl`
+  (run after pdngen) checks the real PG shapes and errors on any hit (`FT_PINS_PG pins N overlaps M`).
 - `contract`: `<variant>.fastroute.tcl` is the ORFS `FASTROUTE_TCL`, with `MIN_ROUTING_LAYER=M2` and
   `MAX_ROUTING_LAYER=M9`. OpenROAD 26Q3 has no per-net layer range, so the contract routes signals on M2-M9 and applies
   `set_global_routing_region_adjustment ... -adjustment 1.0` on M8/M9 over the outline minus the ft corridors.

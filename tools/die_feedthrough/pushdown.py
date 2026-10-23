@@ -337,18 +337,81 @@ def gen_wrapper(spec, kit_top, kit_ports, station="ot_dvrly_st", hc=1, clock=Non
 
 
 # ---------------------------------------------------------------------------------------------------- 2. pins
-def pin_offsets(lo, hi, n, pitch, offset=0.0):
+def pin_offsets(lo, hi, n, pitch, offset=0.0, blocked=None, half_w=0.0):
     """n positions on the track grid (offset + k*pitch) inside [lo, hi], evenly spread at an integer multiple of the
-    pitch, centred in the range.  Pure function of its arguments (neighbours with equal ranges get equal offsets)."""
+    pitch, centred in the range.  Pure function of its arguments (neighbours with equal ranges get equal offsets).
+    blocked: [(a, b)] keep-out intervals on the same axis (PG stripes + clearance, see pg_keepout); a track whose pin
+    [t - half_w, t + half_w] touches one is not used, the free tracks are spread instead."""
     k_lo = math.ceil((lo - offset) / pitch - 1e-9)
     k_hi = math.floor((hi - offset) / pitch + 1e-9)
-    avail = k_hi - k_lo + 1
+    ks = list(range(k_lo, k_hi + 1))
+    if blocked:
+        ks = [k for k in ks if not track_blocked(offset + k * pitch, half_w, blocked)]
+    avail = len(ks)
     if n > avail:
-        raise ValueError(f"{n} bits do not fit [{lo}, {hi}] at pitch {pitch} ({avail} tracks)")
+        raise ValueError(f"{n} bits do not fit [{lo}, {hi}] at pitch {pitch} ({avail} free tracks)")
     step = 1 if n <= 1 else max(1, (avail - 1) // (n - 1))
     used = (n - 1) * step + 1
-    k0 = k_lo + (avail - used) // 2
-    return [round(offset + (k0 + i * step) * pitch, 6) for i in range(n)]
+    i0 = (avail - used) // 2
+    return [round(offset + ks[i0 + i * step] * pitch, 6) for i in range(n)]
+
+
+def track_blocked(t, half_w, blocked):
+    return any(t + half_w > a - 1e-9 and t - half_w < b + 1e-9 for a, b in blocked)
+
+
+_STRIPE_RE = re.compile(r"add_pdn_stripe\b(.*)")
+
+
+def parse_pdn_stripes(text):
+    """ORFS/pdngen pdn.tcl -> {layer: [dict(width, pitch, offset, spacing)]} (add_pdn_stripe without -followpins)."""
+    out = {}
+    for ln in text.splitlines():
+        m = _STRIPE_RE.search(ln.split("#", 1)[0])
+        if not m or "-followpins" in m.group(1):
+            continue
+        opts = dict(re.findall(r"-(\w+)\s+\{?([^\s}]+)\}?", m.group(1)))
+        if "layer" not in opts or "pitch" not in opts:
+            continue
+        out.setdefault(opts["layer"], []).append(dict(width=float(opts.get("width", 0)), pitch=float(opts["pitch"]),
+                                                      offset=float(opts.get("offset", 0)),
+                                                      spacing=float(opts["spacing"]) if "spacing" in opts else None))
+    return out
+
+
+def parse_pg_arg(items):
+    """['M8:0.48:8.64:4.32[:spacing]', ...] -> same shape as parse_pdn_stripes."""
+    out = {}
+    for it in items or []:
+        f = it.split(":")
+        out.setdefault(f[0], []).append(dict(width=float(f[1]), pitch=float(f[2]), offset=float(f[3]),
+                                             spacing=float(f[4]) if len(f) > 4 else None))
+    return out
+
+
+def pg_keepout(stripes, span, margin, origin=0.0, anchor="edge"):
+    """keep-out intervals along one axis of length span for a layer's stripe sets.  pdngen measures -offset from the
+    grid origin (block core origin, `origin`) to the stripe's lower EDGE; a stripe set with -spacing is a VDD/VSS
+    pair (second stripe at edge + width + spacing).  anchor 'centre' treats offset as the stripe centre, 'both'
+    blocks both readings (use when the origin convention of a kit is unknown).  margin = pin-to-stripe clearance."""
+    iv = []
+    for st in stripes:
+        w, p, o, sp = st["width"], st["pitch"], st["offset"], st["spacing"]
+        firsts = []
+        if anchor in ("edge", "both"):
+            firsts.append(origin + o)
+        if anchor in ("centre", "both"):
+            firsts.append(origin + o - w / 2)
+        for f0 in firsts:
+            subs = [f0] + ([f0 + w + sp] if sp is not None else [])
+            j0 = math.floor((0 - f0 - w) / p) - 1
+            j1 = math.ceil((span - f0) / p) + 1
+            for j in range(j0, j1 + 1):
+                for e in subs:
+                    a, b = e + j * p, e + j * p + w
+                    if b >= -margin and a <= span + margin:
+                        iv.append((a - margin, b + margin))
+    return sorted(iv)
 
 
 def slot_range(p, n, lay):
@@ -366,9 +429,16 @@ def port_bit_names(name, bits):
     return [f"{name}[{b}]" for b in range(bits)] if bits > 1 else [name]
 
 
-def place_ports(spec, layers, pin_len=0.32):
-    """-> [{port, pin, layer, face, location[x, y], size[w, h], offset}] in the master frame."""
+def place_ports(spec, layers, pin_len=0.32, pg=None, pg_margin=0.064, pg_origin=(0.0, 0.0), pg_anchor="edge"):
+    """-> [{port, pin, layer, face, location[x, y], size[w, h], offset}] in the master frame.
+    pg: {layer: stripe sets} (parse_pdn_stripes / parse_pg_arg): ft pins avoid those stripes + pg_margin."""
     W, H = spec["outline"]
+    keep = {}
+    for ln, sts in (pg or {}).items():
+        if ln in layers:
+            horiz = layers[ln]["dir"] == "HORIZONTAL"     # horizontal stripes: positions along y
+            keep[ln] = pg_keepout(sts, H if horiz else W, pg_margin, pg_origin[1] if horiz else pg_origin[0],
+                                  pg_anchor)
     ports = ft_ports(spec)
     clocks = {p["data_port"]: p for p in ports if p["role"] == "clock" and p.get("data_port")}
     out = []
@@ -388,8 +458,22 @@ def place_ports(spec, layers, pin_len=0.32):
         if widened:
             print(f"WARNING {spec['variant']}: {p['name']} widened to [{lo:.3f}, {hi:.3f}] for its clock slot "
                   "(plan.py: size forwarded ports for bits + 1)", file=sys.stderr)
-        offs = pin_offsets(lo, hi, len(names), lay["pitch"], lay.get("offset", 0.0))
         wdt = lay["width"]
+        blk = keep.get(p["layer"])
+        if blk:   # PG stripes take tracks: widen symmetrically (pitch steps) until the free tracks hold the bits
+            span = H if horiz else W
+            for _ in range(10000):
+                try:
+                    offs = pin_offsets(lo, hi, len(names), lay["pitch"], lay.get("offset", 0.0), blk, wdt / 2)
+                    break
+                except ValueError:
+                    if lo <= 0 and hi >= span:
+                        raise
+                    lo, hi = max(0.0, lo - lay["pitch"]), min(span, hi + lay["pitch"])
+            else:
+                raise ValueError(f"{p['name']}: no PG-free tracks")
+        else:
+            offs = pin_offsets(lo, hi, len(names), lay["pitch"], lay.get("offset", 0.0))
         for nm, o in zip(names, offs):
             if p["face"] == "W":
                 loc, size = (pin_len / 2, o), (pin_len, wdt)
@@ -405,8 +489,9 @@ def place_ports(spec, layers, pin_len=0.32):
     return out
 
 
-def gen_pins(spec, layers, pin_len=0.32, dbu=1000):
-    pl = place_ports(spec, layers, pin_len)
+def gen_pins(spec, layers, pin_len=0.32, dbu=1000, pg=None, pg_margin=0.064, pg_origin=(0.0, 0.0),
+             pg_anchor="edge"):
+    pl = place_ports(spec, layers, pin_len, pg, pg_margin, pg_origin, pg_anchor)
     by_pin = {p["pin"]: p for p in pl}
     T = [f"# GENERATED by pushdown.py pins: ft pins of {spec['variant']} (master frame, um; dbu {dbu}).",
          "# Tracks: offset + k*pitch per layer; in/out ranges equal -> equal offsets (neighbours abut on the same tracks)."]
@@ -444,8 +529,33 @@ def gen_pins(spec, layers, pin_len=0.32, dbu=1000):
             hints.append(dict(inst=f"ft{k}_s{j}", xy=xy, horiz=horiz, bit_tracks=tracks))
             T.append(f"# ft_place_stage ft{k}_s{j} {xy[0]} {xy[1]} {int(horiz)} {{{' '.join(f'{t:g}' for t in tracks)}}}")
     js = dict(schema="opentallas.die_feedthrough.pins.v1", variant=spec["variant"], outline=spec["outline"], dbu=dbu,
-              pins=pl, reg_hints=hints)
+              pins=pl, reg_hints=hints, pg_avoid=sorted(pg or {}), pg_margin_um=pg_margin, pg_anchor=pg_anchor)
     return "\n".join(T) + "\n", js
+
+
+def gen_pg_check(spec, margin=0.064):
+    """<variant>.pg_check.tcl, run AFTER pdngen (ORFS places pins at 2_2, PDN at 2_6): every ft pin shape against
+    the PG special wires on its layer (+ margin); prints FT_PINS_PG overlaps N and errors when N > 0 (set
+    ft_pg_check_warn 1 to only report).  Catches a wrong stripe origin / anchor assumption in the pins step."""
+    pats = sorted({re.escape(q["name"]) for q in ft_ports(spec)})
+    return "\n".join([
+        f"# GENERATED by pushdown.py pins: PG clearance check of the ft pins of {spec['variant']} (after pdngen).",
+        "if {![info exists ft_pg_check_warn]} { set ft_pg_check_warn 0 }",
+        "set ftb [ord::get_db_block]; set ftm [expr {round(%g * [$ftb getDbUnitsPerMicron])}]" % margin,
+        "set ftpg {}",
+        "foreach n [$ftb getNets] { if {[$n getSigType] ni {POWER GROUND}} continue",
+        "  foreach sw [$n getSWires] { foreach w [$sw getWires] { if {[$w isVia]} continue",
+        "    lappend ftpg [list [[$w getTechLayer] getName] [$w xMin] [$w yMin] [$w xMax] [$w yMax]] } } }",
+        "set ftre {^(" + "|".join(pats) + r")(\[[0-9]+\])?$}",
+        "set ftbad 0; set ftn 0",
+        "foreach bt [$ftb getBTerms] { if {![regexp $ftre [$bt getName]]} continue",
+        "  foreach bp [$bt getBPins] { foreach bx [$bp getBoxes] { incr ftn; set ln [[$bx getTechLayer] getName]",
+        "    foreach s $ftpg { lassign $s sl x0 y0 x1 y1; if {$sl ne $ln} continue",
+        "      if {[$bx xMax] + $ftm > $x0 && [$bx xMin] - $ftm < $x1 && [$bx yMax] + $ftm > $y0 && [$bx yMin] - $ftm < $y1} {",
+        "        incr ftbad; if {$ftbad <= 20} { puts \"FT_PINS_PG_HIT [$bt getName] $ln\" }; break } } } } }",
+        "puts \"FT_PINS_PG pins $ftn overlaps $ftbad\"",
+        "if {$ftbad && !$ft_pg_check_warn} { error \"FT_PINS_PG: $ftbad ft pins on or too close to PG stripes\" }",
+    ]) + "\n"
 
 
 # ---------------------------------------------------------------------------------------------------- 3. contract
@@ -902,6 +1012,13 @@ def main(argv=None):
     p.add_argument("--layers")
     p.add_argument("--dbu", type=int, default=1000)
     p.add_argument("--pin-len-um", type=float, default=0.32)
+    p.add_argument("--pdn-tcl", help="kit pdn.tcl: ft pins avoid its add_pdn_stripe stripes (PG-stripe avoidance)")
+    p.add_argument("--pg", action="append", default=[], metavar="LAYER:W:PITCH:OFFSET[:SPACING]",
+                   help="explicit PG stripe set (repeatable), e.g. M8:0.48:8.64:4.32")
+    p.add_argument("--pg-margin-um", type=float, default=0.064, help="pin-to-stripe clearance (M8 min spacing)")
+    p.add_argument("--pg-origin", default="0,0", help="pdn grid origin in the master frame (core origin), x,y um")
+    p.add_argument("--pg-anchor", choices=("edge", "centre", "both"), default="edge",
+                   help="pdngen -offset = stripe lower edge (default), centre, or block both readings")
     c = sub.add_parser("contract")
     c.add_argument("spec")
     c.add_argument("--out", required=True)
@@ -957,7 +1074,15 @@ def main(argv=None):
         _write(os.path.join(a.out, f"{v}.v"), text)
         _write(os.path.join(a.out, f"{v}.ft.json"), side)
     elif a.cmd == "pins":
-        tcl, js = gen_pins(spec, load_layers(a.layers), a.pin_len_um, a.dbu)
+        pg = parse_pdn_stripes(Path(a.pdn_tcl).read_text()) if a.pdn_tcl else {}
+        for k_, v_ in parse_pg_arg(a.pg).items():
+            pg.setdefault(k_, []).extend(v_)
+        lays = load_layers(a.layers)
+        ftl = {q["layer"] for q in spec["ports"]}
+        pg = {k_: v_ for k_, v_ in pg.items() if k_ in ftl}       # only the ft pin layers matter
+        tcl, js = gen_pins(spec, lays, a.pin_len_um, a.dbu, pg, a.pg_margin_um,
+                           tuple(float(x) for x in a.pg_origin.split(",")), a.pg_anchor)
+        _write(os.path.join(a.out, f"{v}.pg_check.tcl"), gen_pg_check(spec, a.pg_margin_um))
         _write(os.path.join(a.out, f"{v}.pins.tcl"), tcl)
         _write(os.path.join(a.out, f"{v}.pins.json"), js)
     elif a.cmd == "contract":
