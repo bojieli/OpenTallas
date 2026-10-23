@@ -40,3 +40,13 @@ follow-up without another GEN. Run this replay and tests on the fleet.
 Qualification is pending until the actual combined result has zero over-reach,
 collisions, and region violations. The original source and failed receipts are
 retained. No physical or clock closure follows from placement alone.
+
+The structural vacancy alternate uses calendar_sites_vacancy.py and
+calendar_sites_vacancy.patch. Its graph vertices are complete legal macro sites
+inside the intersection of endpoint reach diamonds and each station's own
+clock region. It reserves a complete serial path through those vacancies before
+other reset placement, allowing long calendars to follow narrow streets that
+cannot hold a rectangular packing window. Endpoint and internal hops retain
+the same six-micron margin. Insufficient capacity and disconnected paths leave
+no partial reservations and produce named failures. Its exact full-case replay
+and independent receipt are separate from the rectangular packing candidate.

@@ -1,0 +1,126 @@
+--- a/tools/s81_dv/dv_rvcase.py
++++ b/tools/s81_dv/dv_rvcase.py
+@@ -505,7 +505,7 @@
+ 
+ 
+ def _rs_repair(st, parent, kids, terms, placed, loc, placer, reach, box_of, margin=6.0, step=4.0, rmax=480.0,
+-               max_moves=400000):
++               max_moves=400000, remove_rect=None):
+     """STW-S81c-DIE-C23 cap23 reset-chain repair after the C22 tree DP: every station hop (station -> station child,
+     station -> fixed load) over `reach` is removed by moving stations ALONG their chain on legal free sites.
+     A violating station moves to the free site that minimises (sum of its hop excesses over reach - margin, then the
+@@ -517,6 +517,7 @@
+     (rope relaxation) instead of being packed in place.  Every site stays inside the station's clock-region box
+     (box_of[inst] = its root's geometric extent grown by reach - margin: the S81.CLK region gate cannot fail) and outside
+     every block / frame / landing / relay (the Placer).  Same stations, same nets, same stage counts."""
++    rm = remove_rect or _placer_remove
+     import time as _t
+     t0 = _t.time()
+     R = reach - margin
+@@ -569,7 +570,7 @@
+ 
+     def move(v, c):
+         w, h = loc[v][2], loc[v][3]
+-        _placer_remove(placer, (loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
++        rm(placer, (loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+         r = (c[0] - w / 2, c[1] - h / 2, c[0] + w / 2, c[1] + h / 2)
+         placer.add(r); placed[v] = c
+         loc[v] = (r[0], r[1], w, h, 'FIRM')
+@@ -586,7 +587,7 @@
+             continue
+         cur = placed[v]
+         w, h = loc[v][2], loc[v][3]
+-        _placer_remove(placer, (loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
++        rm(placer, (loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+         if mode == 'fix':
+             e0 = exc_r(cur, P)
+             if e0 == 0.0:
+@@ -630,7 +631,7 @@
+                 budget_hit=moves + pulls >= max_moves, seconds=round(_t.time() - t0, 1), boxed=sum(1 for v in st if v in box_of))
+ 
+ 
+-def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, reach, skip_loads=(), box_of=None, repair=False):
++def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, reach, skip_loads=(), box_of=None, repair=False, reserve_calendar=False, reserve_blockages=()):
+     """C22 --rs-chain-place: place every reset / gate-calendar station (dsfd_rly_1_WN, planned in hints['reset_place'],
+     provisional loc = planned point) by a DP over the reset TREE (every station has one station parent: rst_sync ->
+     street -> crossing -> leaf -> gate calendar -> ICG ENA / relay rs / landing rs / block rst_n).  Each station picks one
+@@ -644,10 +645,10 @@
+     cen = lambda i: (loc[i][0] + loc[i][2] / 2, loc[i][1] + loc[i][3] / 2)
+     plan_c = {i: cen(i) for i in st}
+     parent, kids, terms = {}, collections.defaultdict(list), collections.defaultdict(list)
+-    for i in st:
++    for i in (sorted(st) if reserve_calendar else st):
+         outs = {n_ for n_, _ in ibits[i].get('o', []) if n_ not in ('CONST', 'Z', 'UNDECL')}
+         for n_ in outs:
+-            for o in touch.get(n_, ()):
++            for o in (sorted(touch.get(n_, ())) if reserve_calendar else touch.get(n_, ())):
+                 if o == i:
+                     continue
+                 if o in st:
+@@ -675,8 +676,18 @@
+             seen.add(v); order.append(v); stk.extend(kids[v])
+     hop = lambda a_, b_: abs(a_[0] - b_[0]) + abs(a_[1] - b_[1])
+     hc = lambda h: 0.0 if h <= reach else 1e6 + 1e3 * (h - reach)
++    reserved, calendar_report = {}, None
++    if reserve_calendar:
++        from calendar_sites import frame_region_boxes, rebuild_occupancy
++        from calendar_sites_vacancy import reserve
++        rebuild_occupancy(placer, loc, st, reserve_blockages)
++        box_of = frame_region_boxes(st, ibits, blocks, reach, box_of or {})
++        reserved, calendar_report = reserve(st, parent, kids, terms, plan_c, loc, placer, reach, box_of or {},
++            explicit=[p['inst'] for p in hints['reset_place'] if p.get('kind') == 'frame_chain_reset_v2'])
+     cand, f = {}, {}
+-    for i in st:
++    for i in (sorted(st) if reserve_calendar else st):
++        if i in reserved:
++            cand[i] = [(*reserved[i], 0.0)]; continue
+         x0, y0, w, h, _ = loc[i]
+         cs = _free_cands(placer, x0, y0, w, h)
+         cand[i] = [(cx + w / 2, cy + h / 2, dd) for cx, cy, dd in cs] or [(x0 + w / 2, y0 + h / 2, 0.0)]
+@@ -693,6 +704,10 @@
+     W_, H_ = placer.W, placer.H
+     for v in order:
+         w, h = loc[v][2], loc[v][3]
++        if v in reserved:
++            placed[v] = reserved[v]
++            loc[v] = (placed[v][0]-w/2, placed[v][1]-h/2,w,h,"FIRM")
++            continue
+         if v in parent:
+             pc = placed[parent[v]]
+             ranks = sorted(range(len(cand[v])), key=lambda k: hc(hop(pc, cand[v][k][:2])) + f[v][k])
+@@ -712,7 +727,8 @@
+         sum(1 for v in st for t in terms[v] if hop(placed[v], t) > reach)
+     rrep = None
+     if repair:
+-        rrep = _rs_repair(st, parent, kids, terms, placed, loc, placer, reach, box_of or {})
++        rrep = _rs_repair(st, parent, kids, terms, placed, loc, placer, reach, box_of or {},
++                           remove_rect=__import__('calendar_sites').remove_rect if reserve_calendar else None)
+     over, over_plan, worst = [], 0, []
+     for v in st:
+         for u in kids[v]:
+@@ -730,7 +746,7 @@
+                placed_hops_over_reach=len(over), by_kind=dict(collections.Counter(o[0] for o in over)),
+                max_hop_um=max((o[3] for o in over), default=None), fallback_spiral=fallback,
+                disp_um=dict(median=round(disp[len(disp) // 2], 1), p99=round(disp[int(len(disp) * 0.99)], 1), max=round(disp[-1], 1)) if disp else None,
+-               reach_um=reach, seconds=round(_t.time() - t0, 1), dp_hops_over_reach=dp_over, repair=rrep,
++               calendar_reservation=calendar_report, reach_um=reach, seconds=round(_t.time() - t0, 1), dp_hops_over_reach=dp_over, repair=rrep,
+                rule='tree DP: candidates near each planned point (nearest free + 4 axis rays), cost 1e6/hop over reach '
+                     '+ 1e3 x excess + displacement; same stations, same stage counts')
+     return rep, sorted(over, key=lambda o: -o[3])
+@@ -944,6 +960,7 @@
+                     help='STW-S81c-DIE-C22 cap22: a stand-in forwarded-clock OUTPUT bit (slice ck_xc[k], no kit pin) that '
+                          'drives one hop-0 forward cell sits beside its lane data launch (as nX_fck lanes); was the '
+                          'centroid of the whole bus loads -> up to 6.8 mm unbuffered clock-pin nets to the fwd ICG')
++    ap.add_argument('--rs-calendar-reserve', action='store_true', help='reserve complete serial reset calendars before tree DP (requires --rs-chain-place)')
+     ap.add_argument('--rs-chain-place', action='store_true',
+                     help='STW-S81c-DIE-C22 cap22: reset / gate-calendar stations placed by a tree DP over the reset tree '
+                          '(candidates near each planned point, cost = hops over --reach-um, then displacement) after the '
+@@ -1474,7 +1491,7 @@
+                         box_of[p['inst']] = (e_[0] - g_, e_[1] - g_, e_[2] + g_, e_[3] + g_)
+         rsdp, rsdp_over = rs_chain_place([p['inst'] for p in hints['reset_place']], insts, ibits, touch, loc, placer,
+                                          hints, blocks, a.reach_um, skip_loads=set(rfw_rs) - rfw_first,
+-                                         box_of=box_of, repair=a.rs_repair)
++                                         box_of=box_of, repair=a.rs_repair, reserve_calendar=a.rs_calendar_reserve, reserve_blockages=plan.get('blockages', []))
+         (out / 'rs_chain_place.tsv').write_text('kind\tcapture\tsource\thop_um\tplanned_hop_um\n' +
+                                                 ''.join('\t'.join(map(str, o)) + '\n' for o in rsdp_over))
+         print('RS_CHAIN_PLACE', json.dumps(rsdp), flush=True)
