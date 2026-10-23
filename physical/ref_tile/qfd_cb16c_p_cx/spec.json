@@ -1,0 +1,480 @@
+{
+ "name": "qfd_cb16c_p_cx",
+ "top": "qfd_coll_face_cx",
+ "kind": "cluster",
+ "sources": [
+  "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv",
+  "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx_body.sv",
+  "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+  "rtl/physical/ot_qfd_coll_static_face.sv",
+  "rtl/physical/ot_qfd_static_transport.sv",
+  "rtl/rom/ot_coll_static_linkcal.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "defines": [
+  "OT_COLL_BANK_LOCAL",
+  "OT_COLL_REGIONAL"
+ ],
+ "params": {
+  "HARD": 2,
+  "PHY": 20,
+  "L": 58,
+  "R": 5,
+  "PEER_R": 5
+ },
+ "clock": "entries",
+ "clock_port": "cal_ck",
+ "clock_ports": [
+  "cal_ck",
+  "tx_wck",
+  "rx_rck",
+  "cal_lck",
+  "tx_rck",
+  "rx_wck",
+  "codec0",
+  "codec1",
+  "codec2",
+  "codec3",
+  "codec4",
+  "codec0p",
+  "cal_ck_t0",
+  "cal_ck_t1",
+  "cal_ck_t2",
+  "rx_rck_r0",
+  "rx_rck_r1",
+  "rx_rck_r2",
+  "codec0p_t0",
+  "codec0p_t1",
+  "codec0p_t2",
+  "codec0p_r0",
+  "codec0p_r1",
+  "codec0p_r2"
+ ],
+ "reset_ports": [],
+ "outline": {
+  "w": 933.12,
+  "h": 924.48
+ },
+ "child_lattice_um": 2.16,
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_cb16c_p_body/views/qfd_coll_face_p_cxb",
+   "count": 1,
+   "inst": "*u_core",
+   "at": [
+    34.56,
+    8.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es182/views/qfd_coll_eslice182",
+   "count": 1,
+   "inst": "*u_rxs0",
+   "at": [
+    8.64,
+    8.64
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es182/views/qfd_coll_eslice182",
+   "count": 1,
+   "inst": "*u_txs0",
+   "at": [
+    8.64,
+    462.24
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es199/views/qfd_coll_eslice199",
+   "count": 1,
+   "inst": "*u_prs0",
+   "at": [
+    902.88,
+    8.64
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es199/views/qfd_coll_eslice199",
+   "count": 1,
+   "inst": "*u_pts0",
+   "at": [
+    902.88,
+    462.24
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es182/views/qfd_coll_eslice182",
+   "count": 1,
+   "inst": "*u_rxs1",
+   "at": [
+    8.64,
+    159.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es182/views/qfd_coll_eslice182",
+   "count": 1,
+   "inst": "*u_txs1",
+   "at": [
+    8.64,
+    613.44
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es199/views/qfd_coll_eslice199",
+   "count": 1,
+   "inst": "*u_prs1",
+   "at": [
+    902.88,
+    159.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es199/views/qfd_coll_eslice199",
+   "count": 1,
+   "inst": "*u_pts1",
+   "at": [
+    902.88,
+    613.44
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es182/views/qfd_coll_eslice182",
+   "count": 1,
+   "inst": "*u_rxs2",
+   "at": [
+    8.64,
+    311.04
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es182/views/qfd_coll_eslice182",
+   "count": 1,
+   "inst": "*u_txs2",
+   "at": [
+    8.64,
+    764.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es199/views/qfd_coll_eslice199",
+   "count": 1,
+   "inst": "*u_prs2",
+   "at": [
+    902.88,
+    311.04
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es199/views/qfd_coll_eslice199",
+   "count": 1,
+   "inst": "*u_pts2",
+   "at": [
+    902.88,
+    764.64
+   ]
+  }
+ ],
+ "pins": {
+  "N": [],
+  "S": [
+   "codec1",
+   "codec0"
+  ],
+  "W": [
+   "rx_data",
+   "rx_valid",
+   "rx_rck",
+   "rx_wck",
+   "cal_ck",
+   "cal_lck",
+   "rst_n",
+   "tx_slot",
+   "peer_slot",
+   "tx_valid",
+   "cdc_fault",
+   "tx_data",
+   "tx_wck",
+   "tx_rck",
+   "codec2",
+   "rx_rck_r0",
+   "cal_ck_t0",
+   "rx_rck_r1",
+   "cal_ck_t1",
+   "rx_rck_r2",
+   "cal_ck_t2"
+  ],
+  "E": [
+   "phy_rx",
+   "phy_rx_valid",
+   "phy_up",
+   "codec0p",
+   "epoch_abort",
+   "fault_cause",
+   "phy_tx_valid",
+   "phy_tx",
+   "phy_tx_slot",
+   "phy_rx_slot",
+   "codec3",
+   "codec4",
+   "codec0p_r0",
+   "codec0p_t0",
+   "codec0p_r1",
+   "codec0p_t1",
+   "codec0p_r2",
+   "codec0p_t2"
+  ]
+ },
+ "pin_ranges": {
+  "rx_data": [
+   10.8,
+   454.68
+  ],
+  "rx_valid": [
+   291.6,
+   294.84
+  ],
+  "rx_rck": [
+   297.0,
+   300.24
+  ],
+  "rx_wck": [
+   302.4,
+   305.64
+  ],
+  "cal_ck": [
+   446.04,
+   449.28
+  ],
+  "cal_lck": [
+   451.44,
+   454.68
+  ],
+  "rst_n": [
+   456.84,
+   460.08
+  ],
+  "tx_slot": [
+   462.24,
+   465.48
+  ],
+  "peer_slot": [
+   467.64,
+   470.88
+  ],
+  "tx_valid": [
+   473.04,
+   476.28
+  ],
+  "cdc_fault": [
+   478.44,
+   489.24
+  ],
+  "tx_data": [
+   464.4,
+   908.28
+  ],
+  "tx_wck": [
+   831.64,
+   834.84
+  ],
+  "tx_rck": [
+   837.04,
+   840.24
+  ],
+  "codec2": [
+   851.04,
+   854.28
+  ],
+  "phy_rx": [
+   10.8,
+   454.68
+  ],
+  "phy_rx_valid": [
+   442.8,
+   446.04
+  ],
+  "phy_up": [
+   448.2,
+   451.44
+  ],
+  "codec0p": [
+   478.44,
+   481.68
+  ],
+  "epoch_abort": [
+   483.84,
+   487.08
+  ],
+  "fault_cause": [
+   489.24,
+   500.04
+  ],
+  "phy_tx_valid": [
+   518.4,
+   521.64
+  ],
+  "phy_tx": [
+   464.4,
+   908.28
+  ],
+  "phy_tx_slot": [
+   456.84,
+   460.08
+  ],
+  "phy_rx_slot": [
+   462.24,
+   465.48
+  ],
+  "codec3": [
+   224.64,
+   227.88
+  ],
+  "codec4": [
+   699.84,
+   703.08
+  ],
+  "rx_rck_r0": [
+   156.996,
+   157.284
+  ],
+  "codec0p_r0": [
+   156.996,
+   157.284
+  ],
+  "cal_ck_t0": [
+   610.596,
+   610.884
+  ],
+  "codec0p_t0": [
+   610.596,
+   610.884
+  ],
+  "rx_rck_r1": [
+   308.196,
+   308.484
+  ],
+  "codec0p_r1": [
+   308.196,
+   308.484
+  ],
+  "cal_ck_t1": [
+   761.796,
+   762.084
+  ],
+  "codec0p_t1": [
+   761.796,
+   762.084
+  ],
+  "rx_rck_r2": [
+   459.396,
+   459.684
+  ],
+  "codec0p_r2": [
+   459.396,
+   459.684
+  ],
+  "cal_ck_t2": [
+   912.996,
+   913.284
+  ],
+  "codec0p_t2": [
+   912.996,
+   913.284
+  ]
+ },
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4"
+ },
+ "child_clock_ref": "boundary",
+ "structural_change": "CB16c-COLL2 10-22: wires-only face cluster of the regionally split P collective face: hard body (12 local roots) + 12 hardened edge register slices (es182 x6 W, es199 x6 E), every child clock pin on its own face entry (24 entries; the 12 slice entries are new regional ports beside the slices); no parent tree, no parent logic; parent signals M2-M7 over the M5 children.",
+ "why_floorplan": "wires-only parent: body 864 x 907.2 + two 21.6-um slice columns, 4.32-um channels, 8.64-um margin",
+ "slot_change_request": "face slot 907.2 square -> 933.12 x 924.48 (the two slice columns + channels around the 864-um body)",
+ "job": {
+  "owner": "Claude:CB16c-COLL2",
+  "branch": "claude/cb16c-coll-1022",
+  "tag": "pcx",
+  "purpose": "CB16c-COLL2: P face cluster parent (regional split)",
+  "extra_paths": [
+   "physical/common_flow/clock_entries.tcl"
+  ],
+  "views_to": "physical/ref_tile/qfd_cb16c_p_cx/views",
+  "record_to": "results/rtl/ref_tile/qfd_cb16c_p_cx",
+  "benches": [
+   {
+    "name": "cb16c_lockstep_p_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m0 p 0",
+    "pass_regex": "^CB16C_COLL_BENCH PASS MUT=0 PROFILE=p$",
+    "pass_witness": "results/rtl/cb16c_coll_1022/p_m0.log"
+   },
+   {
+    "name": "cb16c_lockstep_p_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m1 p 1",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=1 PROFILE=p$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/p_m1.log"
+   },
+   {
+    "name": "cb16c_lockstep_p_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m2 p 2",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=2 PROFILE=p$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/p_m2.log"
+   },
+   {
+    "name": "cb16c_lockstep_p_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m3 p 3",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=3 PROFILE=p$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/p_m3.log"
+   },
+   {
+    "name": "cb16c_lockstep_p_m4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m4 p 4",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=4 PROFILE=p$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/p_m4.log"
+   }
+  ]
+ }
+}
