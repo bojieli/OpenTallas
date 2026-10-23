@@ -1,0 +1,121 @@
+{
+ "element": "s81dv_rg3b_x_tf2",
+ "outline_um": [
+  481.68,
+  352.08
+ ],
+ "aspect": 1.37,
+ "die_area_um2": 169589.9,
+ "macros": 8,
+ "macro_area_pct": 58.09,
+ "std_cells": 13195,
+ "unplaced_cells": 0,
+ "std_area_um2": 1767.2,
+ "std_fill_of_free_pct": 2.49,
+ "ff": 4021,
+ "buf_inv": 4887,
+ "buf_share_pct": 37.04,
+ "pin_regs_marked": 1715,
+ "clock_root_bufs": 0,
+ "clock_lvl2_bufs": 0,
+ "pins_per_face": {
+  "W": 91,
+  "S": 542,
+  "E": 3,
+  "N": 1084
+ },
+ "pins_per_um": {
+  "N": 2.25,
+  "S": 1.125,
+  "E": 0.009,
+  "W": 0.258
+ },
+ "pin_peak_per_um_10um": {
+  "W": 0.4,
+  "S": 1.2,
+  "E": 0.2,
+  "N": 2.3
+ },
+ "pin_layers": {
+  "M4": 44,
+  "M3": 816,
+  "M5": 816,
+  "M6": 44
+ },
+ "pins_registered": 1712,
+ "pins_to_macro": 0,
+ "pins_unregistered": 7,
+ "pin_to_reg_median_um": 4.43,
+ "pin_to_reg_p90_um": 4.7,
+ "pin_to_reg_max_um": 130.85,
+ "pins_reg_over_100um": 8,
+ "pin_to_macro_p90_um": null,
+ "empty_area_pct": 82.75,
+ "density_bin_um": 6.02,
+ "macro_masters": {
+  "ot_sram_1r1w_1024x256_m2_r2c2": {
+   "n": 8,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "pins": [
+    "M4"
+   ]
+  }
+ },
+ "macros_pins_facing_away": [
+  [
+   "u_ot_pr_core.u_m.u_c0.g_land\\[0\\].u_h.g_m.u_mem",
+   -0.33
+  ]
+ ],
+ "macros_with_face_info": 8,
+ "top_cells": [
+  [
+   "INVx1",
+   3994
+  ],
+  [
+   "DFFHQNx1",
+   3990
+  ],
+  [
+   "TIEHIx1",
+   2084
+  ],
+  [
+   "AO22x1",
+   840
+  ],
+  [
+   "BUFx2",
+   797
+  ],
+  [
+   "AO221x1",
+   704
+  ],
+  [
+   "TIELOx1",
+   312
+  ],
+  [
+   "OR4x1",
+   96
+  ]
+ ],
+ "kind": "tile",
+ "hard_children": 0,
+ "cells_at_origin": 0,
+ "placed": true,
+ "suspicion": [
+  "low fill 2.5% of free",
+  "empty 83%",
+  "1 macros pins face away"
+ ],
+ "score": 8.15,
+ "png": "./layout.png"
+}
