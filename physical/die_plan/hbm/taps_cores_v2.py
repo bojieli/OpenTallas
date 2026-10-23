@@ -22,7 +22,8 @@ Rules applied (TOPDOWN-PLAN.md):
 import collections, json, math, os, re, shutil, sys
 
 G = 8.64                       # die lattice
-REACH = 1200.0                 # tap coverage / spacing, L1 um
+REACH = 600.0                  # tap grid pitch / coverage, L1 um (COORD R4 10-23: tap grid pitch <= 600 um)
+PHY_REACH = 1200.0             # hard IP (HBM3E PHY): per channel-group DFI clock taps
 CAP = 400_000
 CORE_BUDGET = 350_000          # split target for a core (Yosys cells)
 HARDEN_MIN = 20_000            # leaves below this (and without macros) are flattened into the partition glue
@@ -139,8 +140,8 @@ def place_taps(w, h, cores, root):
             taps.append(glue_tap(f'g{i}_{j}.ck', cx, cy, root))
     k = 0
     while True:                                         # refine: no lattice point farther than REACH from a tap
-        worst, wp = tap_worst(w, h, taps)
-        if worst <= REACH:
+        worst, wp = tap_worst(w, h, taps, cores=cores)
+        if worst <= REACH or k > 400:
             break
         cx, cy = off_core(*wp, w, h, cores)
         taps.append(glue_tap(f'gr{k}.ck', cx, cy, root))
@@ -165,24 +166,29 @@ def off_core(cx, cy, w, h, cores):
     return min(cand, key=lambda p: l1(p, (cx, cy))) if cand else (cx, cy)
 
 
-def tap_worst(w, h, taps, step=3):
+def tap_worst(w, h, taps, step=3, cores=()):
+    """worst L1 distance from a glue lattice point to its nearest tap.  Points inside a hard core are skipped: the
+    core's own CTS clocks them from its core tap (R4 covers the partition glue / landed region)."""
     pts = [t['xy'] for t in taps]
+    boxes = [c['_box'] for c in cores]
     worst, wp = -1.0, None
     xs = [min(i * G, w) for i in range(0, int(w // G) + 1, step)] + [w]
     ys = [min(j * G, h) for j in range(0, int(h // G) + 1, step)] + [h]
     for x in xs:
         for y in ys:
+            if boxes and any(inside(b, x, y) for b in boxes):
+                continue
             d = min(abs(x - q[0]) + abs(y - q[1]) for q in pts) if pts else 1e9
             if d > worst:
                 worst, wp = d, (x, y)
     return worst, wp
 
 
-def tap_metrics(w, h, taps):
+def tap_metrics(w, h, taps, cores=()):
     if not taps:
         return None
     pts = [t['xy'] for t in taps]
-    cov, _ = tap_worst(w, h, taps, step=1)
+    cov, _ = tap_worst(w, h, taps, step=1, cores=cores)
     nn = 0.0
     if len(pts) > 1:
         nn = max(min(l1(p, q) for q in pts if q is not p) for p in pts)
@@ -376,8 +382,8 @@ def apply(plan, out_dir, where, ft=None):
         need = (w + h) / 2 > REACH or len(cores) > 1 or t.get('hard')
         taps = []
         if t.get('hard'):                               # hard IP: per channel-group taps along the PHY
-            n = max(1, math.ceil(w / (2 * REACH - h)))
-            n = max(n, math.ceil(w / REACH))
+            n = max(1, math.ceil(w / (2 * PHY_REACH - h)))
+            n = max(n, math.ceil(w / PHY_REACH))
             for i in range(n):
                 x = (i + 0.5) * w / n
                 taps.append(dict(name=f'ch{i}.ck', xy=[r3(x), r3(h / 2)], kind='leaf', orient='R0',
@@ -388,7 +394,7 @@ def apply(plan, out_dir, where, ft=None):
             taps = place_taps(w, h, cores, root)
         if taps:
             t['clock']['taps'] = taps
-        tinfo['taps'] = tap_metrics(w, h, taps)
+        tinfo['taps'] = tap_metrics(w, h, taps, cores=[] if t.get('hard') else cores)
         tinfo['taps_kinds'] = dict(collections.Counter(tp['kind'] for tp in taps))
         # ---------------- overlap audit of the cores
         ov = 0

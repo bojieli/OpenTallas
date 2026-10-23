@@ -464,6 +464,8 @@ def assign_roles(insts, groups, parts):
         if tgt == 'SPLIT':
             k = int(re.match(r'^sm(\d)$', r).group(1))
             v1.SPLIT_OF[n] = [f'{q}_sm{k}{s}' for s in 'abcd']
+            if v1.SM_MODE != 'off':
+                v1.SPLIT_LAND[n] = f'{q}_sm{k}c'       # COORD R6 R2-alt: SM ports at the front quarter c
             where[n] = f'{q}_sm{k}a'
             continue
         if tgt:
@@ -577,6 +579,33 @@ def xq_report(groups, where, parts):
 
 
 # ---------------------------------------------------------------------------------------------------- main
+SMQ_WHERE = {}
+SM_SPLIT_JSON = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sm_split', 'sm_split.json')
+
+
+def sm_internal_groups(where):
+    """SM-internal quarter-to-quarter traffic (sm_split/sm_split.json crossings, HBM-P3-SM) as census rows between
+    pseudo-instances smq_<Q><k><quarter> (one per SM quarter partition).  COORD R6 R2-alt: the die lanes into the SM
+    land on c directly, so the R2 rows (SM inputs relayed d -> c) are dropped; R1/R3/R4 rows stay (registered by the
+    Step C RTL changes).  Bits are summed per direction."""
+    sp = json.load(open(SM_SPLIT_JSON))
+    per = collections.Counter()
+    for x in sp['crossings']:
+        if str(x.get('rtl_change') or '').startswith('R2'):
+            continue
+        a_, b_ = x['dir'].split('->')
+        per[(a_, b_)] += x['bits']
+    rows = []
+    for n, subs in sorted(v1.SPLIT_OF.items()):
+        q, k = re.match(r'^(NW|NE|SW|SE)_sm(\d)a$', subs[0]).groups()
+        for (a_, b_), bits in sorted(per.items()):
+            sn, dn = f'smq_{q}{k}{a_}', f'smq_{q}{k}{b_}'
+            SMQ_WHERE[sn] = f'{q}_sm{k}{a_}'; SMQ_WHERE[dn] = f'{q}_sm{k}{b_}'
+            rows.append(dict(src=sn, src_bus=f'x_{a_}{b_}', dst=dn, dst_bus=f'x_{a_}{b_}', kind='data', bits=bits,
+                             wcap=bits))
+    return rows
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default=os.path.dirname(os.path.abspath(__file__)))
@@ -605,12 +634,14 @@ def main():
               open(os.path.join(a.out, 'v2_assign.json'), 'w'), indent=1)
     if a.geom_only:
         return
+    smrows = sm_internal_groups(where) if v1.SM_MODE != 'off' else []   # COORD R6 (1): SM-internal quarter lanes
+    groups = groups + smrows
     cen2 = dict(groups=groups)
     segs, adj = v1.build_graph(parts)
     for s_ in segs.values():
         s_['cap'] *= 0.92          # window parity / 10-um margins cost up to ~15% of the face over the routing estimate
     P = {p['name']: p for p in parts}
-    B = v1.bundles(cen2, where, P)
+    B = v1.bundles(cen2, {**where, **SMQ_WHERE}, P)
     orb = v1.orbits(B, P)
     widened = 0
     for mem in orb:                # identical quadrants: every image of a bundle carries the widest member's bits
@@ -620,7 +651,7 @@ def main():
     print('orbit width equalisation: +', widened, 'bits')
     print('segments', len(segs), 'bundles', len(B), 'orbits', len(orb), 'asym orbits', sum(1 for o in orb if len(o) == 1))
     paths, load = v1.route_all(parts, segs, adj, B, orb)
-    em = v1.emit(parts, segs, B, orb, paths, insts, where, cen2, a.out)
+    em = v1.emit(parts, segs, B, orb, paths, insts, {**where, **SMQ_WHERE}, cen2, a.out)
     for pt in em['ports']:
         lo, hi = pt['window_um']
         a_, b_ = snap_win(lo, hi)
@@ -658,7 +689,7 @@ def main():
     os.makedirs(os.path.join(a.out, 'census'), exist_ok=True)
     with gzip.open(os.path.join(a.out, 'census', 'hbm_r18h5_rows.tsv.gz'), 'wt') as fh:
         fh.write('src\tsrc_bus\tdst\tdst_bus\tkind\tbits\n')
-        for g in cen['groups']:
+        for g in cen['groups'] + smrows:
             fh.write(f"{g['src']}\t{g['src_bus']}\t{g['dst']}\t{g['dst_bus']}\t{g['kind']}\t{g['bits']}\n")
     smg = {}
     parts_map = {}
@@ -670,6 +701,7 @@ def main():
             smg[gname] = list(v1.SPLIT_OF[n]); parts_map[n] = gname
         else:
             parts_map[n] = pn
+    parts_map.update(SMQ_WHERE)                        # SM-internal quarter pseudo-instances (sm_split)
     json.dump(BUSW, gzip.open(os.path.join(a.out, 'census', 'bus_widths.json.gz'), 'wt'))
     json.dump(dict(parts=parts_map, groups=smg, rules=[], collapse=[], bus_widths='census/bus_widths.json.gz',
                    exempt=[dict(match='^clock$', kind='clock', replaced_by='die clock spine + per-partition tap',
