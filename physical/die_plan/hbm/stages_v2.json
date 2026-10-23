@@ -1,0 +1,111 @@
+{
+ "plan_v2": {
+  "HBM_K": 0.0,
+  "SM_X": 16.42,
+  "SM_HBM": 2.0,
+  "LG_SU": 0.09,
+  "LG_HC": 0.5,
+  "LG_SFU": 0.5,
+  "HC_CORE": 3.105,
+  "VM_RING": 18.91,
+  "COLL_VM": 8.115,
+  "VM_HUB": 2.0,
+  "HC_ENG": 14.005,
+  "COLL_RING": 5.45,
+  "COLL_EP": 8.25,
+  "EP_SERDES": 0.0,
+  "QUANT_VM": 0.0,
+  "SM_OUT": 3.97,
+  "HBM_VM": 15.4,
+  "VM_HBM": 14.43,
+  "SFU_CORE": 17.41,
+  "SU_CORE": 8.15,
+  "KV_DESC": 11.33
+ },
+ "plan_b": {
+  "HBM_K": 0.0,
+  "SM_X": 10.16,
+  "SM_HBM": 4.5,
+  "LG_SU": 0.09,
+  "LG_HC": 0.5,
+  "LG_SFU": 0.5,
+  "HC_CORE": 15.56,
+  "VM_RING": 9.5,
+  "COLL_VM": 14.91,
+  "VM_HUB": 16.41,
+  "HC_ENG": 5.54,
+  "COLL_RING": 9.38,
+  "COLL_EP": 9.6,
+  "EP_SERDES": 0.0,
+  "QUANT_VM": 0.0,
+  "SM_OUT": 9.0,
+  "HBM_VM": 18.88,
+  "VM_HBM": 18.69,
+  "SFU_CORE": 9.25,
+  "SU_CORE": 3.67,
+  "KV_DESC": 8.94
+ },
+ "detail": {
+  "SM_HBM": {
+   "cycles": 2.0,
+   "bits": 21680
+  },
+  "SM_X1": {
+   "cycles": 14.42,
+   "bits": 19260
+  },
+  "SM_X2": {
+   "cycles": 2.0,
+   "bits": 20656
+  },
+  "SM_OUT": {
+   "cycles": 3.97,
+   "bits": 4444
+  },
+  "HBM_VM": {
+   "cycles": 15.4,
+   "bits": 23032
+  },
+  "VM_HBM": {
+   "cycles": 14.43,
+   "bits": 19292
+  },
+  "VM_RING": {
+   "cycles": 18.91,
+   "bits": 17792
+  },
+  "COLL_VM": {
+   "cycles": 8.115,
+   "bits": 35664
+  },
+  "COLL_EP": {
+   "cycles": 8.25,
+   "bits": 9944
+  },
+  "COLL_RING": {
+   "cycles": 5.45,
+   "bits": 4880
+  },
+  "HC_CORE": {
+   "cycles": 3.105,
+   "bits": 17108
+  },
+  "HC_ENG": {
+   "cycles": 14.005,
+   "bits": 9160
+  },
+  "SFU_CORE": {
+   "cycles": 17.41,
+   "bits": 19520
+  },
+  "SU_CORE": {
+   "cycles": 8.15,
+   "bits": 102372
+  },
+  "KV_DESC": {
+   "cycles": 11.33,
+   "bits": 105052
+  }
+ },
+ "rule": "Per-class plan stages of HBM plan v2 for hgi_sim.plan_study_price_1017 (same class keys as stages.json plan_b).\n\nClass = (src partition role, dst partition role) pattern over the v2 lanes; value = bit-weighted mean of the lane\nlatency in cycles (2 boundary flops + stations, the PLAN-TOOL formula), so it is an upper bound on the relay stages\nthe v6_eval classes count.  Two-leg paths (VM -> svc xq/xc -> SM) add both legs.  VM_HUB is internal to the VM slice\npartition in v2 (hub and its 8 banks in one 2.3 x 2.9 mm partition): 2 stages assumed (one in-partition hop each\nway, to be measured).  LG_* (fixed-return engine faces) keep the plan_b values: the LG pairs are the same\nneighbour faces in v2.\n"
+}

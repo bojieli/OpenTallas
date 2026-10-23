@@ -1,0 +1,29 @@
+{
+ "rule": "hgi_sim.plan_study_price_1017 variant b, stages = stages_v2.json plan_v2 (lane cycles per class) vs the 10-17 plan_b stages; X 377.6 ns",
+ "v2": {
+  "table": {
+   "x_ns": 377.6,
+   "ar_cycles": 592000.2,
+   "ar_tok_s": 2027.0,
+   "mtp_step_cycles": 1428556.5,
+   "mtp_design_tok_s": 3493.6
+  },
+  "qwen": {
+   "cycles": 1254906.5,
+   "tok_s": 956.2
+  }
+ },
+ "plan_b": {
+  "table": {
+   "x_ns": 377.6,
+   "ar_cycles": 606563.8,
+   "ar_tok_s": 1978.4,
+   "mtp_step_cycles": 1480624.1,
+   "mtp_design_tok_s": 3370.7
+  },
+  "qwen": {
+   "cycles": 1256329.6,
+   "tok_s": 955.2
+  }
+ }
+}

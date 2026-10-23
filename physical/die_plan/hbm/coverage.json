@@ -1,0 +1,52 @@
+{
+ "blocks": {
+  "total": 83855,
+  "relays_replaced_by_stations": 83225,
+  "mapped": 630,
+  "clock_only": {
+   "hb_ckgen": "C0"
+  },
+  "unmapped": []
+ },
+ "groups": {
+  "covered": 14780,
+  "internal": 20295
+ },
+ "bits": {
+  "covered": 558028,
+  "internal": 490371
+ },
+ "inter_partition_bits_as_built": 558028,
+ "planned_lane_bits": 585740,
+ "unmapped_instances": [],
+ "examples": {
+  "covered": [
+   "calendar_NE.active->hleaf_NE 1b ctl",
+   "calendar_NE.active->hleaf_NE 1b ctl",
+   "calendar_NE.active->hleaf_NE 1b ctl",
+   "calendar_NE.bank_client->obs_NE 16b data",
+   "calendar_NE.calendar_v->obs_NE 1b ctl",
+   "calendar_NE.client_seq->obs_NE 8b ctl",
+   "calendar_NE.done->obs_NE 1b ctl",
+   "calendar_NE.fault->hleaf_NE 1b ctl",
+   "calendar_NE.fault->hleaf_NE 1b ctl",
+   "calendar_NE.fault->hleaf_NE 1b ctl",
+   "calendar_NE.hub_ring_client->obs_NE 4b ctl",
+   "calendar_NE.lg_local_read->su_NE0 2b ctl"
+  ],
+  "internal": [
+   "calendar_NE.bank_client->hb_vms_NE 8b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 8b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 2b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 2b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 2b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 1b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 1b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 1b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 2b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 2b ctl",
+   "calendar_NE.bank_client->hb_vms_NE 6b ctl",
+   "calendar_NE.bank_enable->hb_vms_NE 8b ctl"
+  ]
+ }
+}
