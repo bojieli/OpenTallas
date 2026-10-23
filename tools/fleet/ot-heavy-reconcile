@@ -403,14 +403,50 @@ def admit_size(mem, cls, table=None):
     e = (sizes() if table is None else table).get(cls)
     if cls not in ("?", "cd") and (not e or e["n"] + e.get("proved", 0) < 1):
         for pre, gb in SEED.items():
-            if cls.startswith(pre) and gb < mem:
-                return gb, f"family '{pre}*' seed {gb}G (class '{cls}' not measured yet)"
+            if cls.startswith(pre):
+                fam, why = family_seed(cls, pre, table if table is not None else sizes())
+                gb = max(gb, fam)
+                if gb < mem:
+                    return gb, f"family '{pre}*' seed {gb:g}G ({why}; class '{cls}' not measured yet)"
+                return None
     if cls in ("?", "cd") or not e or e["n"] + e.get("proved", 0) < 1 or mem <= 2 * e["peak_gb"]:
         return None
     res = math.ceil(max(1.5 * e["peak_gb"], e["peak_gb"] + 8))
     if res >= mem:
         return None
     return res, f"class '{cls}' measured peak {e['peak_gb']}G, n={e['n']}+{e.get('proved', 0)} proved"
+
+
+def family_seed(cls, pre, table):
+    """v17.4 (coordinator 10-22 (c)): GB charged to an unmeasured class of a seeded family.  ep9 16:06-16:12: three
+    192 GB qfd ref_gates were admitted at the 10 GB family seed while their openroad GRT reached 80-84 GB.  The seed is
+    the 75th percentile of the measured peaks of its sibling classes (same first SEED_STEM_TOKENS '_' tokens, e.g.
+    'ref_gate_qfd_c': p50 105 GB) when >= 2 are measured, else the one sibling, else the family's 90th percentile."""
+    meas = lambda c, e: c.startswith(pre) and e["n"] + e.get("proved", 0) >= 1 and e["peak_gb"] > 0
+    stem = "_".join(cls.split("_")[:int(conf("SEED_STEM_TOKENS"))])
+    sib = sorted(e["peak_gb"] for c, e in table.items() if meas(c, e) and c != cls and c.startswith(stem + "_"))
+    if sib:
+        v = sib[min(len(sib) - 1, int(0.75 * len(sib)))]
+        return math.ceil(v), f"siblings '{stem}_*' p75 {v}G of {len(sib)}"
+    fam = sorted(e["peak_gb"] for c, e in table.items() if meas(c, e))
+    if fam:
+        v = fam[min(len(fam) - 1, int(0.9 * len(fam)))]
+        return math.ceil(v), f"family p90 {v}G of {len(fam)}"
+    return 0, "no family measurement"
+
+
+GROW_SCRIPTS = re.compile(r"/(global_place|global_route|detail_route|detailed_route)\.tcl\b")
+
+
+def growth_phase(procs_all):
+    """v17.4 (coordinator 10-22 (b)): 'vl' while a Verilator frontend or its C++ compile runs, 'or' while an openroad
+    GPL / GRT / DRT step runs, else '' (settled: no margin).  compiling = a cc1plus/cc1 is running."""
+    comms = {p["comm"] for p in procs_all}
+    if comms & {"verilator_bin", "verilator_bin_dbg", "cc1plus", "cc1"}:
+        return "vl", bool(comms & {"cc1plus", "cc1"})
+    if any(p["comm"] == "openroad" and GROW_SCRIPTS.search(" ".join(p["argv"])) for p in procs_all):
+        return "or", False
+    return "", False
 
 
 def rebuild_sizes(st):
@@ -499,6 +535,17 @@ def main():
             open(f"{D}/.use.{unit}.tmp", "w").write(f"{cuse // GB}\n")
             os.replace(f"{D}/.use.{unit}.tmp", f"{D}/use.{unit}")
         comms = sorted({p["comm"] for p in allp})
+        # v17.4 (a): the current docker step's peak = the highest scope + container process RSS sampled while the
+        # current set of containers runs (reset when it changes; a finished step's peak is not carried).  RSS, not the
+        # containers' memory.peak: that counts their page cache (ep5 17:48: +418 GB of reclaimable cache).  (b) phase
+        # A step is one set of containers in one growth phase: a Verilator build that finished compiling and now
+        # simulates (phase 'vl' -> '') or an ORFS step that left GRT starts a new step; its peak is not carried.
+        ph, s["compiling"] = growth_phase(allp)
+        step = [sorted(cs), ph]
+        if s.get("step") != step:
+            s["step"], s["step_rss_gb"] = step, 0.0
+        s["phase"] = ph
+        s["step_rss_gb"] = round(max(float(s.get("step_rss_gb") or 0.0), rss / GB), 2)
         building = sorted({p["comm"] for p in allp if p["comm"] in BUILD})
         sims = [p for p in ps if is_sim(p)]
         others = [p for p in allp if not is_sim(p) and p["comm"] not in WRAPPERS]
@@ -690,7 +737,10 @@ def read_units():
         except OSError:
             age = 0.0
         rows.append(dict(unit=unit, res=m, active=True, file=f, req=req, now=cur, age=max(0.0, age),
-                         obs=max(cur, num(cg + "/memory.peak") / GB),
+                         # v17.4 (a): + the current docker step's container peak (the scope never holds the container)
+                         obs=max(cur, float(s["step_rss_gb"]) if "step_rss_gb" in s else num(cg + "/memory.peak") / GB),
+                         phase=s.get("phase") or "", compiling=bool(s.get("compiling")),
+                         decl=float(int(meta[0]) if meta[:1] and meta[0].isdigit() else 0),
                          cls=s.get("cls") or (meta[1] if len(meta) > 1 else None),
                          sampled=bool(s.get("rss_hist") or s.get("samples") or s.get("first")),
                          rate=float(s.get("rate_gbs") or 0.0),
@@ -709,7 +759,8 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 OLD_MIN_SPAN_S=200,                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
                 MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
                 GROWTH_CAP_AVAIL_FRAC=0.25, DIE_HEADROOM_GB=64.0,
-                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0,
+                PHASE_MARGIN=1.0, SEED_STEM_TOKENS=4.0)                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -850,7 +901,49 @@ def die_admissible(avail, b, floor, need, can):
     return max(can, avail - b.get("fresh_gb", b.get("unstarted", 0.0)) - conf("DIE_HEADROOM_GB"))
 
 
-def invariant(rows, total, avail, b):
+_LATE = {}
+
+
+def class_late(cls, table):
+    """v17.4: a class's measured late growth = the 75th percentile of its finished runs' peaks (peaks.tsv; table
+    entries may carry it as 'p75_gb') when >= 3 runs are recorded, else its measured peak (class_peak)"""
+    e = table.get(cls) if cls else None
+    if e and e.get("p75_gb"):
+        return e["p75_gb"]
+    if "_" not in _LATE:
+        runs = {}
+        for ln in rd(PEAKS).splitlines():
+            f = ln.split("\t")
+            if len(f) >= 5:
+                try:
+                    runs.setdefault(f[2], []).append(float(f[4]))
+                except ValueError:
+                    pass
+        _LATE["_"] = {c: sorted(v)[min(len(v) - 1, int(0.75 * len(v)))] for c, v in runs.items() if len(v) >= 3}
+    return _LATE["_"].get(cls) or class_peak(cls, table)
+
+
+def phase_target(r, table):
+    """v17.4 (coordinator 10-22 (b)/(c)) what a unit in a known growth phase may still reach, capped at its declared
+    --mem: its class's measured peak; with none, a Verilator build in its C++ compile (or frontend) holds its declared
+    cap (ep9 16:52: S81 run_h11r declared 300 GB, 30-60 GB for 2 h, then 250 GB) and an openroad GPL/GRT/DRT step its
+    family seed (family_seed).  Settled units (no growth phase) get nothing beyond max(now, peak)."""
+    ph = r.get("phase")
+    if not ph or not conf("PHASE_MARGIN"):
+        return 0.0
+    cap = r.get("decl") or r.get("declared") or r.get("req") or 0.0
+    cp = class_late(r.get("cls"), table or {})
+    if cp:
+        return min(cap, cp) if cap else cp
+    if ph == "vl":
+        return cap
+    for pre in SEED:
+        if (r.get("cls") or "").startswith(pre):
+            return min(cap, family_seed(r["cls"], pre, table or {})[0]) if cap else 0.0
+    return 0.0
+
+
+def invariant(rows, total, avail, b, table=None):
     """v17 HARD INVARIANT (S81c coordinator / TOKc-ADM 2026-10-22; ep5 14:12-14:22 and gold2 13:07 earlyoom cc1plus kills at
     mem 3 % / swap 100 % while every scope sat under its own cap): the host's committed memory, never above physical RAM
     minus INV_HEADROOM_GB (64):
@@ -874,6 +967,7 @@ def invariant(rows, total, avail, b):
             fresh += r.get("grow", 0.0)
             continue
         h = max(r["now"], min(r.get("obs", r["now"]), r.get("req", r.get("obs", r["now"]))))
+        h = max(h, phase_target(r, table))                # v17.4 (b)/(c): growth-phase units only
         held += h
         g = r.get("grow", 0.0)
         if r["age"] < YOUNG_S:                         # its fresh charge counts beyond what max(now, peak) already holds
@@ -946,7 +1040,7 @@ def gate_locked(mem, argv):
     # v9: a die job is admitted on current memory alone; v12: memory promised to units admitted in the last
     # GROW_WINDOW_S / still growing (b["pending"]) is not current memory, so it is charged to die jobs too
     # v13: and the settled floor (die jobs still never pay the settled units' growth itself)
-    inv = invariant(rows, total, avail, b)
+    inv = invariant(rows, total, avail, b, table)
     can = inv_cap(can, inv)                            # v17: committed + request <= physical - 64 GB, die jobs too
     can_die = inv_cap(die_admissible(avail, b, floor, need, can), inv)
     me_die = os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(argv, os.getcwd())
@@ -1042,7 +1136,7 @@ def free(path):
     b = books(rows, total, avail, table)
     head, floor = 0, floor_gb(total)
     can_v16 = admissible(total, avail, b, floor)
-    inv = invariant(rows, total, avail, b)
+    inv = invariant(rows, total, avail, b, table)
     can = inv_cap(can_v16, inv)                         # v17: admit_gb / die_admit_gb already include the invariant
     can_die = inv_cap(die_admissible(avail, b, floor, conf("NEED_FACTOR"), can), inv)
     wait, req = waiters(table)
@@ -1067,7 +1161,8 @@ def free(path):
 def units():
     total, avail = meminfo()
     rows = read_units()
-    b = books(rows, total, avail, sizes())
+    table = sizes()
+    b = books(rows, total, avail, table)
     la = launches()
     print(f"{'unit':34s} {'req':>5s} {'res':>5s} {'charge':>6s} {'grow':>5s} {'now':>5s} {'peak':>5s} {'clspk':>5s} {'age_s':>7s}  class | command")
     for r in sorted(rows, key=lambda r: -r["grow"]):
@@ -1078,8 +1173,8 @@ def units():
     floor = floor_gb(total)
     print(f"host {os.uname().nodename}: RAM {total:.0f} GB, MemAvailable {avail:.0f} GB ({100 * avail / total:.0f} %), units hold "
           f"{b['used']:.0f} GB, growth charged {b['grow']:.0f} GB (young {b['young']:.0f} GB, plenty={b['plenty']}), reservations "
-          f"{b['reserved']} GB, floor {floor:.0f} GB -> admits a declared {inv_cap(admissible(total, avail, b, floor), invariant(rows, total, avail, b)):.0f} GB "
-          f"(GROWTH_FACTOR {conf('GROWTH_FACTOR'):g}, NEED_FACTOR {conf('NEED_FACTOR'):g}); {inv_text(invariant(rows, total, avail, b))}")
+          f"{b['reserved']} GB, floor {floor:.0f} GB -> admits a declared {inv_cap(admissible(total, avail, b, floor), invariant(rows, total, avail, b, table)):.0f} GB "
+          f"(GROWTH_FACTOR {conf('GROWTH_FACTOR'):g}, NEED_FACTOR {conf('NEED_FACTOR'):g}); {inv_text(invariant(rows, total, avail, b, table))}")
 
 
 def selftest():
@@ -1246,6 +1341,16 @@ def selftest():
     chk("v17 young unit: fresh counted beyond its held peak", invariant(
         [u(unit="y", age=60, req=100.0, res=100, now=10.0, obs=10.0, grow=90.0)], 1008, 900, dict(grow=90.0, fresh_gb=90.0))["committed"],
         98 + 0 + 10 + 90)
+    # v17.4 (coordinator 10-22): seeds from measured siblings, growth-phase margin only, settled units none
+    ft = {f"ref_gate_qfd_c_k{i}.sh": dict(n=1, proved=0, peak_gb=float(p)) for i, p in enumerate((80, 90, 105, 120))}
+    chk("v17.4 seed: an unmeasured qfd ref_gate is charged its siblings' p75 (120), not 10 GB",
+        (admit_size(192, "ref_gate_qfd_c_new.sh", ft) or [0])[0], 120)
+    chk("v17.4 phase: settled unit -> no margin", phase_target(dict(cls="a", now=10.0, decl=160.0, phase=""), {}), 0.0)
+    chk("v17.4 phase: compiling verilator, no class peak -> declared cap",
+        phase_target(dict(cls="a", now=10.0, decl=160.0, phase="vl", compiling=True), {}), 160.0)
+    chk("v17.4 phase: openroad GRT of a measured class -> its peak",
+        phase_target(dict(cls="b", now=10.0, decl=160.0, phase="or"), {"b": dict(n=2, proved=0, peak_gb=50.0)}), 50.0)
+    chk("v17.4 growth_phase: openroad cts.tcl is settled", int(growth_phase([dict(comm="openroad", argv=["openroad", "/s/cts.tcl"])])[0] == ""), 1)
     os.environ.update(HARD_INVARIANT="0")
     chk("v17 HARD_INVARIANT=0: ep7 gate back to v16", gate_sim(e7, 1008, 106, 1)[0], 1)
     for k, v in saved.items():
