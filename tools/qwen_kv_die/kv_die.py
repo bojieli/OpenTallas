@@ -4735,6 +4735,16 @@ def masters(m, k=1, port_bits=None):
     for name, ports in m.get('assigned_ports', {}).items():
         if name in M:
             M[name].ports.update({p: tuple(v) for p, v in ports.items() if p in M[name].ports})
+    # The unclosed PC column's N landing sits in a 19.46-um row gap, which cannot hold a
+    # 30.24-um relay. Keep its slot and all other pins fixed; this free E interval exposes
+    # the landing to the relay street. The regular reach/overlap checks still judge it.
+    if __import__('os').environ.get('OT_KV_PC_IGRP_EAST', '0') == '1':
+        if not (KSD.ON and KSD.KITS and KSD.KIND_MASTER['pc'] == 'qkd_kvs_pc'):
+            raise ValueError('OT_KV_PC_IGRP_EAST requires the original unclosed KV PC master')
+        mm = M['qkd_kvs_pc']
+        if mm.ports['i_grp'][1] != 128:
+            raise ValueError('OT_KV_PC_IGRP_EAST requires the original 128-bit group word')
+        mm.ports['i_grp'] = ('face', 128, 'E', 'M4', 270.0, 1)
     return M
 
 
