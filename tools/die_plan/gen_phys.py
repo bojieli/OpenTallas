@@ -100,13 +100,18 @@ def tap_points(P, tn):
     rs = list(t.get("reset", {}).get("tap_um", ck))
     if abs(rs[0] - ck[0]) < 1.0 and abs(rs[1] - ck[1]) < 1.0:
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
+    # snap BOTH coordinates: across the pin to the top layer's tracks, along it to the layer below's (the pin centre
+    # must sit on a track crossing, else DRT-0422 "no routing tracks pass through the center" -> DRT-0255 unroutable)
+    Lb = P.layers.get(f"M{int(top[1:]) - 1}", L)
+
+    def snap(v, LL):
+        return round(LL["offset_um"] + round((v - LL["offset_um"]) / LL["pitch_um"]) * LL["pitch_um"], 4)
     out = []
     for x, y in (ck, rs):
         if L["dir"] == "V":
-            x = L["offset_um"] + round((x - L["offset_um"]) / L["pitch_um"]) * L["pitch_um"]
+            out.append((snap(x, L), snap(y, Lb)))
         else:
-            y = L["offset_um"] + round((y - L["offset_um"]) / L["pitch_um"]) * L["pitch_um"]
-        out.append((x, y))
+            out.append((snap(x, Lb), snap(y, L)))
     return out
 
 
@@ -242,6 +247,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; fi; \
   chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
+# a killed / OOM container skips its chown: hand the tree back anyway (else root-owned stale results survive)
+docker run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
 exit $rc
 """
