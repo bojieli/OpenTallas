@@ -48,6 +48,8 @@ import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
 from measured_band_fill import lattice_band_errors, measured_band_fill  # noqa: E402
+sys.path.insert(0, str(HERE))
+import tile_plan as TP  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -102,7 +104,19 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 #      are delayed by STAGES cycles: a scheduled constant, data latency unchanged.  Default ON for recipe >= 3 kits that
 #      declare reset_ports (tiles and clusters); the pre_route_gate FAILS a reset input reaching > 2 sinks without a
 #      landing (textbook_lint reset_landing).  Opt-out: {"enable": false, "reason": "<the RTL lands it: rst_l0/rst_l1>"}.
-RECIPE_LATEST = 4
+#   5  (TILE-FLOW 2026-10-23, coordinator review of 109 unclosed tiles: 2-15 % fill, pin registers 300-630 um inside,
+#      thousands of unregistered pins, macros facing away) recipe 4 + "tile_plan" (tools/ref_tile/tile_plan.py) for leaf
+#      tiles: the outline comes from the CONTENT (std / util 0.65 + macro footprints + pin-register band, aspect from the
+#      per-face pin demand at <= 3 pins/um, checked against the parent slot), macros without "at" form the compact array
+#      of tile_plan.plan_macros (abutted columns, pin faces into logic channels sized from their pin count), and every
+#      pin register is fenced in a <= 14 um band along its own face (physical/common_flow/pin_reg_face_fence.tcl).
+#      Registers come from the RTL: the flow-inserted pin-register wrapper (pin_regs) is off by default and a pin bit
+#      with no register of its own is a hard error unless the spec lists it in "unregistered_ok" {port: reason}.  An
+#      explicit spec "outline" larger than 1.3x the content outline FAILs without "outline_reason".
+RECIPE_LATEST = 5
+TILE_PLAN_FENCE_TCL = "physical/common_flow/pin_reg_face_fence.tcl"
+TILE_PLAN_PIN_RULE = ("TILE-FLOW recipe 5: registers come from the RTL; pin_reg_face_fence.tcl fences every pin register "
+                      "at its face and refuses an unregistered pin bit not listed in unregistered_ok")
 RESET_LANDING_RULE = ("ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth "
                       "fan-out; reset release latency is a scheduled constant")
 PIN_REGS_RULE_STRICT = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
@@ -246,6 +260,10 @@ def apply_recipe(s: dict, recipe: int) -> dict:
         if not r.get("hold_delay"):
             s.setdefault("inhold", True)
             s.setdefault("outhold", True)
+    if recipe >= 5 and s.get("kind") == "tile":
+        s.setdefault("tile_plan", {})
+        if tile_plan_on(s) is not None:
+            s.setdefault("pin_regs", {"enable": False, "reason": TILE_PLAN_PIN_RULE})
     if recipe >= 3 and s.get("kind") == "tile":
         s.setdefault("pin_regs", {"enable": True})
     if recipe >= 3 and s.get("reset_ports"):
@@ -256,7 +274,56 @@ def apply_recipe(s: dict, recipe: int) -> dict:
             s.setdefault("pin_reg_split", True)
     if (s.get("inhold") or s.get("outhold")) and "OT_INHOLD_MASTER" not in s.get("orfs_vars", {}):
         s.setdefault("hold_pad", {"cell": RECIPE_HOLD_PAD})
+    apply_tile_plan_hooks(s)
     return s
+
+
+def tile_plan_on(s: dict) -> dict | None:
+    """the spec's tile_plan settings (recipe 5 default for leaf tiles; any recipe may opt in) or None"""
+    tp = s.get("tile_plan")
+    if tp is None or tp is False:
+        return None
+    if not isinstance(tp, dict):
+        raise SpecError('spec: tile_plan must be an object ({} = defaults) or false')
+    if s.get("kind") != "tile":
+        raise SpecError("spec: tile_plan applies to leaf tiles")
+    return tp
+
+
+def unregistered_ok(s: dict) -> dict:
+    u = s.get("unregistered_ok") or {}
+    if not isinstance(u, dict) or any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", str(k)) or not str(v).strip()
+                                      for k, v in u.items()):
+        raise SpecError('spec: unregistered_ok must map port base names to a non-empty reason {"port": "why"}')
+    return u
+
+
+def apply_tile_plan_hooks(s: dict) -> None:
+    """recipe-5 / tile_plan kits: the face fence runs after the pin flops are fixed (pin_hook_after_flops), with the
+    spec's unregistered_ok ports as its only exemptions; the flow-inserted pin-register wrapper is refused"""
+    tp = tile_plan_on(s)
+    if tp is None or tp.get("fence") is False:
+        return
+    own = [k for k in ("PRE_GLOBAL_PLACE_TCL", "PRE_DETAIL_PLACE_TCL") if k in s.get("orfs_vars", {})]
+    if own:
+        raise SpecError(f"spec: tile_plan kits own PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE (face fence); move {own} into "
+                        "pin_hook_before_flops / pre_dpl_extra")
+    if (s.get("pin_regs") or {}).get("enable"):
+        raise SpecError("spec: tile_plan kits take their pin registers from the RTL; the pin_regs wrapper "
+                        "(ot_pin_regs.tcl) is not allowed -- add the registers in the RTL, or list the port in "
+                        "unregistered_ok with a reason")
+    if not s.get("io_flop_at_pins"):
+        s["io_flop_at_pins"] = {"cols": 4, "allow_none": True}
+    hooks = list(s.get("pin_hook_after_flops") or [])
+    if TILE_PLAN_FENCE_TCL not in hooks:
+        hooks.append(TILE_PLAN_FENCE_TCL)
+    s["pin_hook_after_flops"] = hooks
+    ov = s.setdefault("orfs_vars", {})
+    ok = sorted(unregistered_ok(s))
+    ov.setdefault("OT_FENCE_UNREG_OK", "|".join(re.escape(k) for k in ok))
+    ov.setdefault("OT_FENCE_STRICT", "1" if tp.get("strict", True) else "0")
+    clocks = [s["clock_port"]] + [c for c in (s.get("clock_ports") or []) if c != s["clock_port"]]
+    ov.setdefault("OT_FENCE_CLOCKS", ",".join(clocks))
 
 
 def pin_regs_plan(s: dict) -> dict | None:
@@ -581,8 +648,8 @@ def pin_hook_wrapper(s: dict) -> bool:
 def pin_hook_flops_only(s: dict) -> bool:
     """opt-in (S-ELEM BF lane16 2026-10-17): pin flops WITHOUT hold stages plus "pin_hook_before_flops" repo hooks (e.g.
     per-root placement regions) -> the same kit-local pre_gpl.tcl / pre_dpl.tcl, minus the hold-stage scripts"""
-    return bool(s.get("io_flop_at_pins") and not pin_hook_wrapper(s) and s.get("pin_hook_before_flops")
-                and s.get("recipe", 1) >= 2)
+    return bool(s.get("io_flop_at_pins") and not pin_hook_wrapper(s)
+                and (s.get("pin_hook_before_flops") or s.get("pin_hook_after_flops")) and s.get("recipe", 1) >= 2)
 
 
 def kit_pin_hooks(s: dict) -> bool:
@@ -590,18 +657,24 @@ def kit_pin_hooks(s: dict) -> bool:
 
 
 def gen_pin_hooks(s: dict) -> dict:
-    if s.get("pin_hook_after_flops") and not pin_hook_wrapper(s):
-        raise SpecError("pin_hook_after_flops needs the recipe-2 pin-hook wrapper")
+    if s.get("pin_hook_after_flops") and not kit_pin_hooks(s):
+        raise SpecError("pin_hook_after_flops needs the recipe-2 pin-hook wrapper (or io_flop_at_pins, recipe >= 2)")
     if pin_hook_flops_only(s):
         pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (pin flops, no hold stages): the spec's pin_hook_before_flops repo hooks, then",
                    "# every port's single launch / capture flop is fixed at its pin.  ORFS takes one hook per step."]
-        for rel in s["pin_hook_before_flops"]:
+        for rel in s.get("pin_hook_before_flops", []):
             if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
                 raise SpecError("pin_hook_before_flops must name safe relative repo Tcl files")
             if not (ROOT / rel).is_file():
                 raise SpecError(f"missing pin hook: {rel}")
             pre_gpl.append(f"source /src/{rel}")
         pre_gpl.append(f"source /src/{QDM}/io_flop_at_pins.tcl")
+        for rel in s.get("pin_hook_after_flops", []):     # TILE-FLOW 10-23: e.g. the recipe-5 face fence
+            if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+                raise SpecError("pin_hook_after_flops must name safe relative repo Tcl files")
+            if not (ROOT / rel).is_file():
+                raise SpecError(f"missing pin hook: {rel}")
+            pre_gpl.append(f"source /src/{rel}")
         pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (pin flops, no hold stages): release the pin flops for DPL",
                    f"source /src/{QDM}/out_flop_release.tcl"]
         for rel in s.get("pre_dpl_extra", []):
@@ -1254,7 +1327,46 @@ def gen_pdn(s: dict, lc: dict) -> str:
 
 
 # --------------------------------------------------------------------------------------------- floorplan
+def tile_plan_demand(s: dict) -> tuple[dict, bool]:
+    """({face: pin bits}, exact) of the spec's pin plan, widths from the top's header (tile_plan.port_widths)"""
+    texts = {}
+    for f in s["sources"]:
+        p = ROOT / f
+        if p.suffix in (".sv", ".v") and p.is_file():
+            texts[f] = p.read_text(errors="replace")
+    return TP.face_demand(s, TP.port_widths(texts, s["top"], s.get("params")))
+
+
+def tile_plan_outline(s: dict, slot: dict | None, std: float | None, blocks: list) -> dict | None:
+    """tile_plan.content_outline of the kit (None without a synthesized std area); s["_tp_demand"] is kept for the
+    macro plan"""
+    tp = tile_plan_on(s)
+    if tp is None or not std:
+        return None
+    demand, exact = tile_plan_demand(s)
+    s["_tp_demand"] = demand
+    halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
+    ms = [{"w": b["w"], "h": b["h"], "tm": track_macro(b["view"]), "key": i}
+          for i, b in enumerate(blocks) if b["kind"] == "macro" and not b.get("at")]
+    fixed = sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks if b["kind"] != "macro" or b.get("at"))
+    sl = (float(slot["outline"]["w"]), float(slot["outline"]["h"])) if slot else None
+    comp = TP.content_outline(float(std) + fixed * float(tp.get("util", TP.TARGET_UTIL)), ms, demand,
+                              util=float(tp.get("util", TP.TARGET_UTIL)), halo=halo, slot=sl,
+                              pin_density=float(tp.get("pin_density", TP.PIN_DENSITY)))
+    comp["widths_exact"] = exact
+    return comp
+
+
 def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) -> tuple[float, float, str]:
+    comp = tile_plan_outline(s, slot, area_um2 or s.get("std_area_um2"), blocks)
+    s["_tp_comp"] = comp
+    if comp and not s.get("outline"):
+        # TILE-FLOW: the content outline wins over a slot box (the slot is checked, and re-derived when it is short)
+        why = comp["why"]
+        if comp.get("slot"):
+            why += ("; fits slot " + "x".join(f"{v:g}" for v in comp["slot"]["slot"]) if comp["slot"]["fits"]
+                    else "; " + comp["slot"]["request"])
+        return comp["w"], comp["h"], why
     if slot:
         return float(slot["outline"]["w"]), float(slot["outline"]["h"]), f"contract {s['contract']['slot']}"
     og = TRACK_LATTICE_UM if s["kind"] == "cluster" else GRID_Y
@@ -1550,7 +1662,24 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
     hi_y = y1c - max(CHANNEL_UM, PIN_EDGE_UM if "N" in pin_faces else 0)
     def lat(b):
         return (float(s.get("child_lattice_um", CHILD_LATTICE_UM)),) * 2 if b["kind"] == "child" else (GRID_X, GRID_Y)
-    auto = [b for b in blocks if not b.get("at")]
+    tp_plan = None
+    if (tile_plan_on(s) is not None and (s.get("tile_plan") or {}).get("macro_plan", "content") == "content"
+            and any(b["kind"] == "macro" and not b.get("at") for b in blocks)):
+        # TILE-FLOW: the compact macro array (tile_plan.plan_macros), pin faces into logic channels
+        auto_m = [b for b in blocks if b["kind"] == "macro" and not b.get("at")]
+        halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
+        ms = [{"w": b["w"], "h": b["h"], "tm": track_macro(b["view"]), "key": k} for k, b in enumerate(auto_m)]
+        dem = s.get("_tp_demand")
+        if dem is None:
+            dem = tile_plan_demand(s)[0]
+        tp_plan = TP.plan_macros(W, H, ms, dem, halo)
+        if tp_plan["ok"]:
+            for p in tp_plan["placed"]:
+                auto_m[p["key"]].update(orient=p["orient"], _tp=p)
+        else:       # an explicit outline the array does not fit: the legacy row packing (the gate judges it)
+            tp_plan = dict(tp_plan, why="NOT USED (does not fit the outline): " + tp_plan["why"])
+        s["_tp_macro_plan"] = tp_plan
+    auto = [b for b in blocks if not b.get("at") and not b.get("_tp")]
     for b in blocks:
         if b.get("at"):
             b["_xy"] = (float(b["at"][0]), float(b["at"][1]))
@@ -1571,7 +1700,26 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
         sy = math.floor(max(0.0, (hi_y - by1) / 2) / gy) * gy
         for b in auto:      # centre the array in the free window, on the lattice
             b["_xy"] = (round(b["_xy"][0] + sx, 4), round(b["_xy"][1] + sy, 4))
+    col_shift = {}
+    for b in sorted(blocks, key=lambda c: (c["_tp"]["col"], c["_tp"]["y"], c["_tp"]["x"]) if c.get("_tp") else (-1, 0, 0)):
+        if not b.get("_tp"):
+            continue
+        p = b["_tp"]
+        if p["col"] not in col_shift:
+            # the first array of a column goes on the lattice + tracks; the column keeps its exact N-S / E-W pitch
+            bx, by = snap(p["x"], GRID_X), snap(p["y"], GRID_Y)
+            bx, by, off = on_track(b, bx, by)
+            col_shift[p["col"]] = (bx - p["x"], by - p["y"])
+        else:
+            dx, dy = col_shift[p["col"]]
+            bx, by = round(p["x"] + dx, 4), round(p["y"] + dy, 4)
+            r = cmta.check_placement(track_macro(b["view"]) if b.get("_tm") is None else b["_tm"], b["orient"],
+                                     round(bx * 1000), round(by * 1000))
+            off = sum(v["offtrack"] for v in r["layers"].values())
+        b.update(x=bx, y=by, offtrack=off)
     for b in blocks:
+        if b.get("_tp"):
+            continue
         if b["kind"] == "child":
             # a hard tile built on the same lattice: its origin on the common lattice keeps every layer's pins on track
             g = float(s.get("child_lattice_um", CHILD_LATTICE_UM))
@@ -2721,6 +2869,25 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     fills = fill_check(s, W, H, blocks, std)
     if fills:
         findings.append(fills)
+    tpc = s.get("_tp_comp")
+    if tile_plan_on(s) is not None:
+        if tpc is None:
+            findings.append(("WARN", "tile_plan", "no synthesized std area: the content outline is not computed (the "
+                             "remote gate reports it; put it in std_area_um2 and regenerate)", "set std_area_um2"))
+        else:
+            if s.get("outline"):
+                fl = TP.outline_flag((W, H), tpc, s)
+                if fl:
+                    findings.append((fl[0], "outline_ratio", fl[1], "" if fl[0] == "INFO" else
+                                     "drop 'outline' (tile_plan sizes it from the content) or give 'outline_reason'"))
+            if tpc.get("slot") and not tpc["slot"]["fits"]:
+                findings.append(("WARN", "slot_fit", tpc["slot"]["request"],
+                                 "put the request in spec slot_change_request; the die lead re-derives the parent slot"))
+            if tpc["bound"] == "pins":
+                findings.append(("WARN", "pin_bound", f"outline set by the pin demand ({tpc['pin_density']} pins/um at "
+                                 f"<= {TP.PIN_DENSITY:g}), std fill {tpc['fill']:.0%}: the tile is interface-limited",
+                                 "narrow / time-multiplex the interface or move pins to free faces; a lower fill is the "
+                                 "honest cost of this interface"))
     pgs = pg_stripe_spread(s, lc, W, H)
     if not pg_spread_ok(pgs):
         findings.append(("FAIL", "pg_spread",
@@ -2736,7 +2903,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
           **({"clock_cts_roots": list(s["clock_cts_roots"])} if s.get("clock") == "hybrid_entries" else {}),
           "blocks": [{k: b[k] for k in ("kind", "view", "master", "inst", "idx", "x", "y", "w", "h", "orient", "offtrack")}
                      for b in blocks],
-          "findings": [list(f) for f in findings], "referenced": referenced_paths(s, kd)}
+          "findings": [list(f) for f in findings], "referenced": referenced_paths(s, kd),
+          **({"tile_plan": {k: v for k, v in tpc.items() if k != "macro_plan"} | (
+              {"macro_plan": {k: v for k, v in s["_tp_macro_plan"].items() if k != "placed"}}
+              if s.get("_tp_macro_plan") else {})} if tpc else {})}
     # Canonical clock lint stores its keyed receipt while gen_sdc runs.
     # Fresh write-mode kits need their directory before that lint executes.
     if write:
@@ -2746,7 +2916,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
              "signoff.sdc": gen_signoff(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*"),
              **gen_hooks(s, kd), "floorplan.json": json.dumps(fp, indent=1) + "\n",
              "spec.json": json.dumps(({**raw_spec, "m6_pin_grant": lc["m6_pin_grant"]} if lc.get("m6_pin_grant")
-                                      else {k: v for k, v in s.items()}), indent=1) + "\n"}
+                                      else {k: v for k, v in s.items() if not k.startswith("_tp")}), indent=1) + "\n"}
     prp = pin_regs_plan(s)
     if prp is not None:
         files["pin_regs.json"] = json.dumps({"schema": "opentallas.ref_tile.pin_regs.v1", "top": s["top"], **prp},
