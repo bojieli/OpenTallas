@@ -329,8 +329,8 @@
   {
    "between": "lanes <-> ctl (vi/kv/ro/fault)",
    "bits": 2384,
-   "kind": "NOT VERIFIED",
-   "note": "VM bridge / reducer side; not analysed in this pass"
+   "kind": "REG on the lane side; ctl side NOT VERIFIED",
+   "note": "lane: vi_q captured in the OPR (c12) register, ro_v/ro_x output registers; the VM bridge / reducer side was not analysed in this pass"
   },
   {
    "between": "ctl -> opstore (stage/drain/scalar)",
