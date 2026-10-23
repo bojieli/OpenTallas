@@ -1,12 +1,6 @@
 {
  "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qkd_kvs_grp_h_r2",
- "enable": true,
- "stages": 2,
- "clock": "ck",
- "reset_ports": [
-  "rst_n"
- ],
- "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
- "reset_release_cycles": 2
+ "top": "qkd_kvs_grp_h_r2c",
+ "enable": false,
+ "reason": "KDIE5-RTL: the r2 RTL lands both resets (rst_n: cr0 -> cr1 on ck, hrst_n: hr0 -> hr1 on hck; async assert, release +2 own-clock edges) and the mapped structural copy preserves them (replicated landing copies, <= 32 loads each); benched in lockstep; a flow landing would add 2 more unbenched edges"
 }

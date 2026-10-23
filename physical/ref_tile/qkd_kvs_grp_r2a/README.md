@@ -1,0 +1,2 @@
+
+CODEX 10-22 recovery: mapped bounded-driver copy r2c preserves release+r2 interface cycles; original mapped inputs and structural copy certificate retained. Actual generated census certificate max 32 terminal loads; pre-gate mapped census remains mandatory. Both resets land in the RTL in two stages, no additional flow reset stages. Positive structural lockstep bench and four output mutants recovered from original sb build; all pass/fail witnesses committed. MAIN GPL and alternate anchored relay stages use the same r2c functional source. No physical closure claim.

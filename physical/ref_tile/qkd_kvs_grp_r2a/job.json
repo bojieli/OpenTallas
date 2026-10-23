@@ -1,6 +1,6 @@
 {
  "name": "qkd_kvs_grp_r2a-r2a-COMMIT",
- "block": "qkd_kvs_grp_r2",
+ "block": "qkd_kvs_grp_r2c",
  "ref_tile": true,
  "owner": "Claude:KDIE5-RTL",
  "purpose": "KDIE5-RTL 10-22: pin-registered successor of qkd_kvs_grp for the release KV die (MAIN)",
@@ -22,7 +22,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_grp_r2 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_grp_r2c u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2c.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -32,68 +32,68 @@
    },
    {
     "name": "grp_r2_eq",
-    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m0 grp 0 all 4000",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m0 grp 0 all 4000 struct",
     "expect": "pass",
     "threads": 2,
-    "peak_ram_gb": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^GRP_R2 PASS tile=grp_r2 .* failing=0 .* mut=0$",
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2c .* failing=0 .* mut=0$",
     "min_count_regex": "checks=(\\d+)",
-    "pass_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m0.log"
+    "pass_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_r2c_m0.log"
    },
    {
     "name": "grp_r2_mut1",
-    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m1 grp 1 all 4000",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m1 grp 1 all 4000 struct",
     "expect": "fail",
     "threads": 2,
-    "peak_ram_gb": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^GRP_R2 PASS tile=grp_r2 ",
-    "fail_regex": "^GRP_R2 FAIL tile=grp_r2 .* mut=1$",
-    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m1.log"
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2c ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_r2c .* mut=1$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_r2c_m1.log"
    },
    {
     "name": "grp_r2_mut2",
-    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m2 grp 2 all 4000",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m2 grp 2 all 4000 struct",
     "expect": "fail",
     "threads": 2,
-    "peak_ram_gb": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^GRP_R2 PASS tile=grp_r2 ",
-    "fail_regex": "^GRP_R2 FAIL tile=grp_r2 .* mut=2$",
-    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m2.log"
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2c ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_r2c .* mut=2$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_r2c_m2.log"
    },
    {
     "name": "grp_r2_mut3",
-    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m3 grp 3 all 4000",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m3 grp 3 all 4000 struct",
     "expect": "fail",
     "threads": 2,
-    "peak_ram_gb": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^GRP_R2 PASS tile=grp_r2 ",
-    "fail_regex": "^GRP_R2 FAIL tile=grp_r2 .* mut=3$",
-    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m3.log"
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2c ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_r2c .* mut=3$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_r2c_m3.log"
    },
    {
     "name": "grp_r2_mut4",
-    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m4 grp 4 all 4000",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m4 grp 4 all 4000 struct",
     "expect": "fail",
     "threads": 2,
-    "peak_ram_gb": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^GRP_R2 PASS tile=grp_r2 ",
-    "fail_regex": "^GRP_R2 FAIL tile=grp_r2 .* mut=4$",
-    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m4.log"
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2c ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_r2c .* mut=4$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_r2c_m4.log"
    }
   ],
   "calibrate": {
@@ -110,7 +110,7 @@
    "peak_ram_gb": 32
   },
   "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_grp_r2a --out {RUN}/record/views/qkd_kvs_grp_r2 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_grp_r2a --out {RUN}/record/views/qkd_kvs_grp_r2c --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
   }
  },
  "verdict": {
@@ -155,5 +155,5 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "KDIE5-RTL 10-22: top qkd_kvs_grp_r2 = the UNCHANGED release module qkd_kvs_grp (n32_pj) as u_core + face registers: no combinational in -> out path (o_dn 4 edges a hop, in-tile equalising delay so every group sees the fan word +29, gather own +3 / +4 a hop, cf1 fault inputs +2, EST / tok / tep +2). Frame, pins, macros, spine, reset landing = qkd_kvs_grp_r1. MAIN: relays placed by GPL."
+ "structural_change": "KDIE5-RTL 10-22: top qkd_kvs_grp_r2c = bounded-driver structural copy (kv_grp_safe5.py, max 32 loads) of the ORFS mapped netlist of qkd_kvs_grp_r2 = the UNCHANGED release module qkd_kvs_grp (n32_pj) as u_core + face registers: no combinational in -> out path (o_dn 4 edges a hop, in-tile equalising delay so every group sees the fan word +29, gather own +3 / +4 a hop, cf1 fault inputs +2, EST / tok / tep +2). Frame, pins, macros, spine, reset landing = qkd_kvs_grp_r1. MAIN: relays placed by GPL."
 }

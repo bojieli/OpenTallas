@@ -5,6 +5,18 @@
 // i_pc<q>[290] +2.  Checked every edge after the flush: rsp / krsp / af__fault / o_pc* equal on the same edge;
 // o_dn = rotated i_ctl +4 (grp_h +2); o_ctl[143:18] = i_up[125:0] +4; own o_ctl[17:0] = reference own +3 (grp_h: all 8
 // copies); y__* = x__* +2.  One line 'GRP_R2 PASS|FAIL ...'.  Mutants: compile with +define+KVS_GRP_R2_MUTn (must FAIL).
+// Structural mode (kvs_grp_r2_bench.sh STRUCT=1): +define+DUT_G=<top> / DUT_H=<top> binds the bounded-driver structural
+// copy (kv_grp_safe5.py on the mapped netlist); its negative controls are output mutants +define+OM=n (n = 1 o_dn,
+// 2 o_ctl, 3 rsp, 4 y__tok: bit 0 inverted after the DUT), since the netlist carries no RTL mutant ifdefs.
+`ifndef DUT_G
+`define DUT_G qkd_kvs_grp_r2
+`endif
+`ifndef DUT_H
+`define DUT_H qkd_kvs_grp_h_r2
+`endif
+`ifndef OM
+`define OM 0
+`endif
 module tb;
 `ifdef GRP_H
     localparam H = 1;
@@ -15,6 +27,10 @@ module tb;
     always #5 ck = ~ck;
     always #6.4 hck = ~hck;
     reg rst_n = 0, hrst_n = 0;
+    reg rh0 = 0, rh1 = 0;              // the reference sees hrst_n through the r2 landing's release delay
+    always @(posedge hck or negedge hrst_n) if (!hrst_n) {rh0, rh1} <= 2'b00; else {rh0, rh1} <= {1'b1, rh0};
+    reg rc0 = 0, rc1 = 0;
+    always @(posedge ck or negedge rst_n) if (!rst_n) {rc0, rc1} <= 2'b00; else {rc0, rc1} <= {1'b1, rc0};
     reg [2:0] grp;
     reg [0:0] afk, afv, afu;
     reg [37:0] kreq; reg [14:0] vreq; reg [12:0] x__est; reg [17:0] x__tok; reg [15:0] x__tep;
@@ -37,23 +53,23 @@ module tb;
     wire [304:0] r_pc2 = {i_pc2[304:291], flt_ref[2], i_pc2[289:0]};
     wire [304:0] r_pc3 = {i_pc3[304:291], flt_ref[3], i_pc3[289:0]};
 `ifdef GRP_H
-    qkd_kvs_grp_h_r2 dut (.ck(ck), .rst_n(rst_n), .afk(afk), .afv(afv), .hck(hck), .hrst_n(hrst_n), .slg__cfg_stack(2'd1),
+    `DUT_H dut (.ck(ck), .rst_n(rst_n), .afk(afk), .afv(afv), .hck(hck), .hrst_n(hrst_n), .slg__cfg_stack(2'd1),
         .slg__cfg_group(grp), .kreq(kreq), .vreq(vreq), .x__est(x__est), .x__tok(x__tok), .x__tep(x__tep), .rsp(rsp_d),
         .krsp(krsp_d), .af__fault(af_d), .y__est__0_1(ye_d), .y__tok(yt_d), .y__tep(yp_d), .i_ctl(i_ctl), .i_pc0(i_pc0),
         .i_pc1(i_pc1), .i_pc2(i_pc2), .i_pc3(i_pc3), .o_pc0(p0_d), .o_pc1(p1_d), .o_pc2(p2_d), .o_pc3(p3_d), .o_dn(dn_d),
         .o_ctl(oc_d));
-    qkd_kvs_grp_h ref0 (.ck(ck), .rst_n(rst_n), .afk(afk), .afv(afv), .hck(hck), .hrst_n(hrst_n), .slg__cfg_stack(2'd1),
+    qkd_kvs_grp_h ref0 (.ck(ck), .rst_n(rc1), .afk(afk), .afv(afv), .hck(hck), .hrst_n(rh1), .slg__cfg_stack(2'd1),
         .slg__cfg_group(grp), .kreq(kreq), .vreq(vreq), .x__est(x__est), .x__tok(x__tok), .x__tep(x__tep), .rsp(rsp_r),
         .krsp(krsp_r), .af__fault(af_r), .y__est__0_1(ye_r), .y__tok(yt_r), .y__tep(yp_r), .i_ctl(ctl_ref), .i_pc0(r_pc0),
         .i_pc1(r_pc1), .i_pc2(r_pc2), .i_pc3(r_pc3), .o_pc0(p0_r), .o_pc1(p1_r), .o_pc2(p2_r), .o_pc3(p3_r), .o_dn(dn_r),
         .o_ctl(oc_r));
 `else
-    qkd_kvs_grp_r2 dut (.ck(ck), .rst_n(rst_n), .afk(afk), .afv(afv), .afu(afu), .hck(hck), .hrst_n(hrst_n), .slg__cfg_stack(2'd1),
+    `DUT_G dut (.ck(ck), .rst_n(rst_n), .afk(afk), .afv(afv), .afu(afu), .hck(hck), .hrst_n(hrst_n), .slg__cfg_stack(2'd1),
         .slg__cfg_group(grp), .kreq(kreq), .vreq(vreq), .x__est(x__est), .x__tok(x__tok), .x__tep(x__tep), .rsp(rsp_d),
         .krsp(krsp_d), .af__fault(af_d), .y__est__0_1(ye_d), .y__tok(yt_d), .y__tep(yp_d), .i_ctl(i_ctl), .i_pc0(i_pc0),
         .i_pc1(i_pc1), .i_pc2(i_pc2), .i_pc3(i_pc3), .o_pc0(p0_d), .o_pc1(p1_d), .o_pc2(p2_d), .o_pc3(p3_d), .o_dn(dn_d),
         .i_up(i_up), .o_ctl(oc_d));
-    qkd_kvs_grp ref0 (.ck(ck), .rst_n(rst_n), .afk(afk), .afv(afv), .afu(afu), .hck(hck), .hrst_n(hrst_n), .slg__cfg_stack(2'd1),
+    qkd_kvs_grp ref0 (.ck(ck), .rst_n(rc1), .afk(afk), .afv(afv), .afu(afu), .hck(hck), .hrst_n(rh1), .slg__cfg_stack(2'd1),
         .slg__cfg_group(grp), .kreq(kreq), .vreq(vreq), .x__est(x__est), .x__tok(x__tok), .x__tep(x__tep), .rsp(rsp_r),
         .krsp(krsp_r), .af__fault(af_r), .y__est__0_1(ye_r), .y__tok(yt_r), .y__tep(yp_r), .i_ctl(ctl_ref), .i_pc0(r_pc0),
         .i_pc1(r_pc1), .i_pc2(r_pc2), .i_pc3(r_pc3), .o_pc0(p0_r), .o_pc1(p1_r), .o_pc2(p2_r), .o_pc3(p3_r), .o_dn(dn_r),
@@ -93,8 +109,9 @@ module tb;
                 oc_exp = H ? {8{own_h[2]}} : {up_h[3][125:0], own_h[2]};
                 y_exp = x_h[1];
                 checks = checks + 1;
-                if (rsp_d !== rsp_r || krsp_d !== krsp_r || af_d !== af_r || p0_d !== p0_r || p1_d !== p1_r ||
-                    p2_d !== p2_r || p3_d !== p3_r || dn_d !== dn_exp || oc_d !== oc_exp || {yp_d, yt_d, ye_d} !== y_exp) begin
+                if ((rsp_d ^ (`OM == 3)) !== rsp_r || krsp_d !== krsp_r || af_d !== af_r || p0_d !== p0_r || p1_d !== p1_r ||
+                    p2_d !== p2_r || p3_d !== p3_r || (dn_d ^ (`OM == 1)) !== dn_exp || (oc_d ^ (`OM == 2)) !== oc_exp ||
+                    {yp_d, yt_d ^ (`OM == 4), ye_d} !== y_exp) begin
                     if (err < 5) $display("MISMATCH cyc %0d rsp %0d krsp %0d af %0d pc %0d dn %0d oc %0d y %0d", cyc,
                         rsp_d !== rsp_r, krsp_d !== krsp_r, af_d !== af_r, {p0_d, p1_d, p2_d, p3_d} !== {p0_r, p1_r, p2_r, p3_r},
                         dn_d !== dn_exp, oc_d !== oc_exp, {yp_d, yt_d, ye_d} !== y_exp);
