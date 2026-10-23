@@ -32,7 +32,12 @@ def compile_service(*, record, op, probability_rows, latencies, go_at,
     svg=[];xc=[]
     for cyc,f in enumerate(cal.cyc):
         command=E.cmd_word(**f)
-        svg.append(SB.svg_word(command&((1<<83)-1),read=reads.get(cyc),
+        # Attention consumes buffered KV beats through XCAL bit 152.  Bit 25
+        # has a different meaning at the SVG feed: a MATVEC leaf valid that
+        # requires a fresh packet in this same edge. Do not issue that unrelated
+        # operation while attention drains its already buffered KV payload.
+        svg_command = (command & ((1 << 83) - 1)) & ~(1 << 25)
+        svg.append(SB.svg_word(svg_command,read=reads.get(cyc),
                                retire=(cyc==len(cal.cyc)-1)))
         xc.append((command>>83)|(cal.kvd.get(cyc,0)<<109))
     if len(svg)>SB.PSTORE or len(xc)+2>SB.PSTORE:
