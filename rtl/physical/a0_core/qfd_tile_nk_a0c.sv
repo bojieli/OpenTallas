@@ -18,6 +18,18 @@ module qfd_tile_nk_a0c #(
 `endif
 ) (
     input  wire          ck,
+`ifdef OT_A0_CK_TAPS
+    // QC-P5 10-23 (COORD A0 clock, R4 revised): 7 more taps of the SAME die clock (CB quad tap grid, equal arrival).
+    // No RTL loads: the kit (tools/qwen_romleaf/a0core/a0_clock_taps.tcl) moves each sink of ck to its nearest tap
+    // before CTS, so each tap drives one local tree (2 x 4 regions of ~229 x 289 um).  The CB quad drives each port from its own spine tap.
+    input  wire          ck_t1,
+    input  wire          ck_t2,
+    input  wire          ck_t3,
+    input  wire          ck_t4,
+    input  wire          ck_t5,
+    input  wire          ck_t6,
+    input  wire          ck_t7,
+`endif
     input  wire          rst_n,
     input  wire [15:0]   tile_id,
     output wire          tie_hi,
