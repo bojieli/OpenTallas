@@ -1,0 +1,47 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-epyc9       admits    12 GB (avail 136, reserve 0, fresh 44.4, peak 14.4, headroom 0, waiters 2/176 GB) load 65/128 running 34 disk 1245 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/codex-s81-tx-clock-2215/native
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2626518-1792732998 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+OT_SPINE_INTERNAL checked test ck -> clkbuf_sp_N479_r4/Y (BUFx24_ASAP7_75t_R)
+POSITIVE native root clkbuf_sp_N479_r4/Y BUFx24_ASAP7_75t_R A ck _901d5acff05c0000_p_odb__dbNet 363076 157815
+NEGATIVE missing CAUGHT OT_SPINE_INTERNAL: missing output absent/Y
+NEGATIVE wrong_master CAUGHT OT_SPINE_INTERNAL: wrong master or unplaced clkbuf_sp_N479_r4/Y
+NEGATIVE wrong_input CAUGHT OT_SPINE_INTERNAL: root must be an actual Liberty unary noninverting buffer clkbuf_sp_N479_r4/Y
+NEGATIVE data_source CAUGHT OT_SPINE_INTERNAL: source must be one actual clock rst
+NEGATIVE inverter CAUGHT OT_SPINE_INTERNAL: root must be an actual Liberty unary noninverting buffer _15561_/Y
+NEGATIVE wrong_pin CAUGHT OT_SPINE_INTERNAL: missing output clkbuf_sp_N479_r4/A
+NATIVE_CLOCK_GUARDS PASS positive1 negative6
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_SPINE_INTERNAL checked test ck -> clkbuf_sp_N479_r4/Y (BUFx24_ASAP7_75t_R)
+[ERROR ODB-0373] Attempt to connect iterm to dont_touch net clkbuf_sp_N479_r4_net
+Error: native_smoke.tcl, 42 ODB-0373
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2626518-1792732998): exit 1
