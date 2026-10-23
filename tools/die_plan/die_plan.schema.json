@@ -519,6 +519,10 @@
         "note": {
          "type": "string"
         },
+        "obs_max": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
         "bind": {
          "type": "object",
          "additionalProperties": {

@@ -163,6 +163,7 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
+                                       "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
                                        "bind": {"type": "object", "additionalProperties": {"type": "string"}},

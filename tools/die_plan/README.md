@@ -132,3 +132,36 @@ python3 tools/die_plan/gen.py latency PLAN.json [--inplace] [--out DIR]
 This writes `latency.lanes` back into the plan (with `--inplace`), `<die>_lat_pkg.sv` (one `localparam int` per lane,
 named by `lane.param` or `LAT_<ID>`) and `<die>_latency.json` (the compiler's input, which carries the plan digest).
 A die-IO lane counts 1 cycle: the boundary flop of its partition end.
+
+## G2 probes (`g2.py`, redefined by COORD on 10-23)
+
+```
+python3 tools/die_plan/g2.py all  PLAN.json --out DIR [--worst 5] [--adjust 0.5] --run   # -> DIR/g2_report.json
+python3 tools/die_plan/g2.py die  PLAN.json --out DIR --run
+python3 tools/die_plan/g2.py part PLAN.json --out DIR (--types a,b | --worst 5) --run
+```
+
+When partitions abut, the die has no signal route of its own, so G2 has two parts.
+
+**(a) Die probe.** This covers the die-level nets only: the clock spine (spine root to every partition's clock tap) and
+the reset spine (root to every reset tap), routed on the die layers.
+- The partitions block M1-M7. Areas listed in `die.channels` stay open.
+- `die.pg.grid` stripes are M8/M9 obstructions.
+- It reports GRT overflow per layer, wirelength, and root-to-tap reach (max and p90).
+
+**(b) Partition FT probes.** These run once per partition TYPE, on the N worst types by G0 (worst cut-segment ratio,
+then face pin density).
+- The partition gets its exact outline and pins (the kit `io.tcl` and `make_tracks.tcl`).
+- Each pin bit gets a flop beside its pin.
+- Each ft bit gets its station flops: data plus the epoch bit, at `regs_um` or spread evenly along the in-to-out route.
+- Leaf blockages come from `contents[].origin_um/outline_um`, as obstructions M1..`obs_max` (default M5) plus placement
+  blockages.
+- Then it runs detailed placement, GRT on M2..M7 with `--adjust` capacity left to the partition's own logic, and DRT
+  pin access.
+- It reports overflow, wirelength and no-access counts.
+
+PASS means every probe finished, total overflow is 0, and no pin is without access.
+
+Probes are read-only diagnostics, run directly in docker with `--memory` equal to `--memory-swap`. Memory is set by
+`--mem`: 64 GB by default for the die probe, 32 GB for a partition probe. The S81 frame-sized fa probe peaked at 33 GB
+(GRT about 4 min), so run it with `--mem 48` on a host that keeps at least 64 GB free.
