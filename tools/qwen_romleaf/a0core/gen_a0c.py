@@ -80,6 +80,9 @@ def spec(k, var):
     for key in ("clock", "clock_ports", "clock_cts_roots", "required_hybrid_roots"):
         s.pop(key, None)
     s["clock_port"] = "ck"
+    # one clock domain: Yosys merges the per-entry reset relays (r3 kept them apart by clock), so one landing copy
+    # fanned out to 38 loads (native census FAIL > 32, nk_a0cs 07:57).  Twice the landing copies -> <= ~19 each.
+    s["reset_landing"]["copies"] = {"rst_n": 32}
     s["pins"] = {f: [p for p in v if not p.startswith("ck_")] for f, v in base["pins"].items()}
     s["io_tcl"] = f"tools/qwen_romleaf/a0core/{kit}_pins.tcl"
     ov = dict(s.get("orfs_vars") or {})
