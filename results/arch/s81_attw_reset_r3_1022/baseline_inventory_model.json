@@ -1,0 +1,51 @@
+{
+  "status": "BASELINE_INVENTORY_AREA_BOUND_ONLY",
+  "source_commit": "e6455d4b0",
+  "ROOT": 1,
+  "macros": [
+    {
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "count": 32,
+      "width_um": 172.8,
+      "height_um": 41.04,
+      "bits": 65536
+    },
+    {
+      "master": "ot_sram_1r1w_32x128_m1",
+      "count": 38,
+      "width_um": 51.408,
+      "height_um": 20.79,
+      "bits": 4096
+    }
+  ],
+  "macro_area_um2": 267548.13216000004,
+  "standard_cell_area_um2": 165582.523,
+  "storage_bits": 2252800,
+  "area_lower_bound_um2_at_standard_cell_utilization": {
+    "0.4": 681504.4396599999,
+    "0.5": 598713.17816,
+    "0.6": 543519.0038266666
+  },
+  "excluded": [
+    "R3/R4 additional buffer area until actual synthesis",
+    "macro face channels and relay cell rows",
+    "landing rings",
+    "clock and power tree",
+    "physical reach qualification"
+  ],
+  "schedule": {
+    "control_source_added_edges": 0,
+    "startup_release_edges": 2,
+    "existing_parent_landing_each_direction_edges": 3
+  },
+  "parent_hgrp_children": {
+    "count": 4,
+    "provisional_shape_um": [
+      432,
+      432
+    ],
+    "area_um2": 746496,
+    "qualified": false
+  },
+  "conclusion": "A narrow control strip is not justified by the actual 70 SRAM and 165582.523 um2 standard-cell inventory. Parent placement needs explicit controller space and measured regional reach. No standalone control view or parent is qualified."
+}
