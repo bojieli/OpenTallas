@@ -192,6 +192,10 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: s81-reftile-pin-boundary
+    "d3dddf08fb1f43cbcab1aadadfd4925d9f25d3ad": dict(
+        kind="neutral",
+        what="ref_tile _child_insertion: pin-mode multiple_cts_roots child without clock_measurements targets insertion tt.boundary.mean (kit generator spine target; no gate check change; no-op on main specs)"),
     # ROOT-MERGE-1022 10-22: tokc-sparse-keep2
     "fd50f64dbbfa30e99b39f83fab582b5ec5d7d01b": dict(
         kind="neutral",
