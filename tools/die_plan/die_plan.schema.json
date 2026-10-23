@@ -1,0 +1,835 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "opentallas.die_plan.v1",
+ "title": "OpenTallas die plan (TOPDOWN-PLAN)",
+ "type": "object",
+ "required": [
+  "schema",
+  "die",
+  "partition_types",
+  "partitions",
+  "ports",
+  "lanes"
+ ],
+ "additionalProperties": false,
+ "properties": {
+  "schema": {
+   "const": "opentallas.die_plan.v1"
+  },
+  "note": {
+   "type": "string"
+  },
+  "die": {
+   "type": "object",
+   "required": [
+    "name",
+    "outline_um",
+    "period_ps",
+    "reach_um"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "type": "string",
+     "minLength": 1
+    },
+    "label": {
+     "type": "string"
+    },
+    "tech": {
+     "enum": [
+      "asap7"
+     ]
+    },
+    "outline_um": {
+     "type": "array",
+     "items": {
+      "type": "number",
+      "exclusiveMinimum": 0
+     },
+     "minItems": 2,
+     "maxItems": 2
+    },
+    "period_ps": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "reach_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "rep_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "grid_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "rows": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "site": {
+       "type": "string",
+       "minLength": 1
+      },
+      "height_um": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "site_w_um": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      }
+     }
+    },
+    "layers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "name",
+       "dir",
+       "pitch_um",
+       "offset_um"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "name": {
+        "type": "string",
+        "pattern": "^M[1-9]$"
+       },
+       "dir": {
+        "enum": [
+         "H",
+         "V"
+        ]
+       },
+       "pitch_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "offset_um": {
+        "type": "number",
+        "minimum": 0
+       }
+      }
+     }
+    },
+    "layer_budget": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "partition_signal_max": {
+       "type": "string",
+       "pattern": "^M[1-9]$"
+      },
+      "die_layers": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "pattern": "^M[1-9]$"
+       }
+      },
+      "die_use": {
+       "type": "array",
+       "items": {
+        "enum": [
+         "clock_spine",
+         "pg",
+         "ft_reserved",
+         "reset"
+        ]
+       }
+      },
+      "cut_avail": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+       }
+      }
+     }
+    },
+    "pg": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "partition_pg_max": {
+       "type": "string",
+       "pattern": "^M[1-9]$"
+      },
+      "grid": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "layer",
+         "width_um",
+         "pitch_um",
+         "offset_um"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "layer": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "width_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
+         "pitch_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
+         "offset_um": {
+          "type": "number",
+          "minimum": 0
+         },
+         "nets": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "partition_types": {
+   "type": "object",
+   "minProperties": 1,
+   "additionalProperties": {
+    "type": "object",
+    "required": [
+     "module",
+     "outline_um"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "module": {
+      "type": "string",
+      "minLength": 1
+     },
+     "outline_um": {
+      "type": "array",
+      "items": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "hard": {
+      "type": "boolean"
+     },
+     "kit": {
+      "type": "string"
+     },
+     "note": {
+      "type": "string"
+     },
+     "buses": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "dir",
+        "width"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "minLength": 1
+        },
+        "dir": {
+         "enum": [
+          "in",
+          "out"
+         ]
+        },
+        "width": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "kind": {
+         "enum": [
+          "data",
+          "ctl",
+          "clock",
+          "reset"
+         ]
+        },
+        "leaf": {
+         "type": "string"
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "ft_slots": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "in_face",
+        "out_face",
+        "width"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "minLength": 1
+        },
+        "in_face": {
+         "enum": [
+          "N",
+          "S",
+          "E",
+          "W"
+         ]
+        },
+        "out_face": {
+         "enum": [
+          "N",
+          "S",
+          "E",
+          "W"
+         ]
+        },
+        "width": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "stations": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "regs_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
+        },
+        "layer": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        }
+       }
+      }
+     },
+     "clock": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "tap_um": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+       },
+       "layer": {
+        "type": "string",
+        "pattern": "^M[1-9]$"
+       },
+       "insertion_ps": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "insertion_tol_ps": {
+        "type": "number",
+        "minimum": 0
+       }
+      }
+     },
+     "reset": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "tap_um": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+       },
+       "sync_stages": {
+        "type": "integer",
+        "minimum": 2
+       }
+      }
+     },
+     "contents": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "inst",
+        "module",
+        "status"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "inst": {
+         "type": "string",
+         "minLength": 1
+        },
+        "module": {
+         "type": "string",
+         "minLength": 1
+        },
+        "status": {
+         "enum": [
+          "reuse",
+          "rework",
+          "new"
+         ]
+        },
+        "kit": {
+         "type": "string"
+        },
+        "geom_pass": {
+         "type": "string"
+        },
+        "origin_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "outline_um": {
+         "type": "array",
+         "items": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "channels": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "rect_um",
+        "reason"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "rect_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        },
+        "reason": {
+         "type": "string",
+         "minLength": 3
+        }
+       }
+      }
+     },
+     "ft_track_frac": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     }
+    }
+   }
+  },
+  "partitions": {
+   "type": "array",
+   "minItems": 1,
+   "items": {
+    "type": "object",
+    "required": [
+     "name",
+     "type",
+     "origin_um"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "name": {
+      "type": "string",
+      "minLength": 1
+     },
+     "type": {
+      "type": "string",
+      "minLength": 1
+     },
+     "origin_um": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "orient": {
+      "enum": [
+       "R0",
+       "MX",
+       "MY",
+       "R180"
+      ]
+     },
+     "note": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "ports": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "src",
+     "dst",
+     "width",
+     "face",
+     "layers",
+     "window_um"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "id": {
+      "type": "string",
+      "minLength": 1
+     },
+     "src": {
+      "type": "object",
+      "required": [
+       "part",
+       "bus"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "part": {
+        "type": "string",
+        "minLength": 1
+       },
+       "bus": {
+        "type": "string",
+        "minLength": 1
+       }
+      }
+     },
+     "dst": {
+      "type": "object",
+      "required": [
+       "part",
+       "bus"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "part": {
+        "type": "string",
+        "minLength": 1
+       },
+       "bus": {
+        "type": "string",
+        "minLength": 1
+       }
+      }
+     },
+     "width": {
+      "type": "integer",
+      "minimum": 1
+     },
+     "kind": {
+      "enum": [
+       "data",
+       "ctl",
+       "clock",
+       "reset"
+      ]
+     },
+     "face": {
+      "enum": [
+       "N",
+       "S",
+       "E",
+       "W"
+      ]
+     },
+     "layers": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "pattern": "^M[1-9]$"
+      },
+      "minItems": 1,
+      "maxItems": 2
+     },
+     "window_um": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "order": {
+      "enum": [
+       "lsb_low",
+       "lsb_high"
+      ]
+     },
+     "note": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "lanes": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "ports"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "id": {
+      "type": "string",
+      "minLength": 1
+     },
+     "ports": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "minLength": 1
+      },
+      "minItems": 1
+     },
+     "fixed_cycles": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "reach_um": {
+      "type": "number",
+      "exclusiveMinimum": 0
+     },
+     "param": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+     },
+     "note": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "clock": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "source": {
+     "type": "object",
+     "required": [
+      "part",
+      "bus"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "part": {
+       "type": "string",
+       "minLength": 1
+      },
+      "bus": {
+       "type": "string",
+       "minLength": 1
+      }
+     }
+    },
+    "insertion_ps": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "insertion_tol_ps": {
+     "type": "number",
+     "minimum": 0
+    },
+    "neighbour_skew_ps": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "face_xing": {
+     "enum": [
+      "budgeted",
+      "forwarded_landing"
+     ]
+    },
+    "spine": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "layers": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "pattern": "^M[1-9]$"
+       }
+      },
+      "root_um": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       },
+       "minItems": 2,
+       "maxItems": 2
+      },
+      "topology": {
+       "enum": [
+        "htree",
+        "fishbone",
+        "mesh"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "reset": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "source": {
+     "type": "object",
+     "required": [
+      "part",
+      "bus"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "part": {
+       "type": "string",
+       "minLength": 1
+      },
+      "bus": {
+       "type": "string",
+       "minLength": 1
+      }
+     }
+    },
+    "sync_stages": {
+     "type": "integer",
+     "minimum": 2
+    },
+    "data_reset": {
+     "const": false
+    },
+    "epoch_bit": {
+     "const": true
+    },
+    "release": {
+     "enum": [
+      "counted"
+     ]
+    }
+   }
+  },
+  "latency": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "lanes": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "cycles"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "cycles": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "stations": {
+        "type": "integer"
+       },
+       "faces": {
+        "type": "integer"
+       },
+       "fixed": {
+        "type": "integer"
+       },
+       "param": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "budgets": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "face_pins_per_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "face_pin_layers": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "face_window_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "pin_track_max": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "cut_ratio_max": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "cut_step_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "pin_reg_p90_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    }
+   }
+  }
+ }
+}
