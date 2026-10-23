@@ -85,6 +85,18 @@ class LogicFace(unittest.TestCase):
         self.assertEqual(o5["over_macro_cols"], [])
 
 
+class TiedPins(unittest.TestCase):
+    def test_strip_repair_and_tied_mask(self):
+        tm = tm_box("m", 100.0, 30.0, "WE", n=4)
+        tm["pins"] += [{"name": f"rr_addr[{i}]", "use": "SIGNAL", "rects": [("M4", (99976, 500 + 30 * i, 100000, 524 + 30 * i))]}
+                       for i in range(5)]
+        tm["pins"] += [{"name": f"w_mask_in[{i}]", "use": "SIGNAL", "rects": [("M4", (99976, 800 + 30 * i, 100000, 824 + 30 * i))]}
+                       for i in range(7)]
+        self.assertEqual(TP.macro_pin_faces(tm)["E"], 16)
+        self.assertEqual(TP.macro_pin_faces(TP.strip_pins(tm))["E"], 11)
+        self.assertEqual(TP.macro_pin_faces(TP.strip_pins(tm, TP.REPAIR_PINS + ("w_mask_in",)))["E"], 4)
+
+
 class PinDensity(unittest.TestCase):
     """COORD 10-23: 6 pins/um per face averaged, <= 6 in any 10-um window, alternating over 2 layers, pin/track <= 0.6"""
     def test_face_pin_layers_under_the_cap(self):

@@ -332,6 +332,18 @@ def _transpose_tm(tm: dict) -> dict:
     return {**tm, "W": tm["H"], "H": tm["W"], "pins": pins}
 
 
+REPAIR_PINS = ("cr_en", "cr_sel", "rr_en", "rr_addr")   # ASAP7 fakeram redundancy-repair pins: always tied (tie_audit)
+
+
+def strip_pins(tm: dict, tied=REPAIR_PINS) -> dict:
+    """the macro without the pins its instances tie to constants (bus base names; repair pins by default, plus the spec's
+    tile_plan.tied_macro_pins, e.g. a full-word w_mask_in the RTL ties to all-ones): they need no channel or band"""
+    tied = set(tied or ())
+    if not tied:
+        return tm
+    return {**tm, "pins": [p for p in tm["pins"] if re.sub(r"\[.*$", "", str(p.get("name", ""))) not in tied]}
+
+
 def obs_top(tm: dict) -> int:
     """highest metal the macro obstructs (pins included), 0 when unknown"""
     top = 0
