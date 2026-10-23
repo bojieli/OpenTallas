@@ -16,6 +16,8 @@ Paths are relative to the plan file. The instance map JSON:
      "groups":   {"<group>": ["<partition>", ...]},           a census block re-derived as several partitions
      "collapse": ["<regex>", ...],                            pass-through endpoints (landing cells ld_*, relays):
                                                               merged onto their single upstream source
+     "bus_widths": {"<inst>.<bus>": nbits} or "<path.json[.gz]>",  optional: cap as-built bits per (source bus,
+                                                              destination partition) at the bus width (broadcast once)
      "exempt":   [{"match": "<regex on src_bus|dst_bus|kind>", "kind": "clock|reset",
                    "replaced_by": "spine / per-partition sync", "reason": "..."}],
      "forward_via": ["<partition / group name regex>", ...],  forwarding partitions (tap trees): a pair is carried
@@ -98,11 +100,51 @@ def coverage(P, plan_dir, R):
         R.warn("census", f"census coverage not run: {spec['none']}")
         return dict(declared="none", reason=spec["none"])
     # plan lane bits per directed partition pair (data width, an ft lane once)
+    # Broadcast trees: a branch lane starts at a fork / re-launch leaf (contents module matching `fork_modules`,
+    # default hbm_ft_fork_reg) named <fk|rl>_<S>, fed by the lane of group <S> that ends in or crosses that partition.
+    # The branch then counts from the tree's ORIGIN partition (as-built rows are origin -> leaf, not fork -> leaf).
+    forkrx = re.compile(P.raw.get("census_fork_modules", r"^hbm_ft_fork_reg$"))
+    forkleaf = {}
+    for tn, t in P.types.items():
+        fl = {c["inst"] for c in t.get("contents", []) if forkrx.search(c.get("module", ""))}
+        for b in t.get("buses", []):
+            inst = b.get("leaf", "").split(".")[0]
+            if inst in fl:
+                forkleaf[(tn, b["name"])] = inst
+    by_group = defaultdict(list)
+    for lid, ln in P.lanes.items():
+        by_group[lid.rsplit("_", 1)[0]].append(lid)
+    parent = {}
+    for lid, ln in P.lanes.items():
+        a = P.ports[ln["ports"][0]]
+        part = a["src"]["part"]
+        if part == DIE_PART or part not in P.parts:
+            continue
+        inst = forkleaf.get((P.parts[part]["type"], a["src"]["bus"]))
+        if inst is None:
+            continue
+        grp = inst.split("_", 1)[1]
+        # a replicated type names the fork after one image of the lane group; mirrored instances carry the other
+        # images (same group name up to its last letter)
+        own = lid.rsplit("_", 1)[0]                     # the branch's own group (same image) first
+        cands = by_group.get(own, []) + by_group.get(grp, []) + [
+            o for x in "abcdefgh" for o in by_group.get(grp[:-1] + x, []) if grp[:-1] + x not in (grp, own)]
+        for o in cands:
+            if o != lid and any(P.ports[q]["dst"]["part"] == part for q in P.lanes[o]["ports"]):
+                parent[lid] = o
+                break
+
+    def origin(lid, seen=()):
+        if lid in parent and lid not in seen:
+            return origin(parent[lid], seen + (lid,))
+        return P.ports[P.lanes[lid]["ports"][0]]["src"]["part"]
     planned = defaultdict(int)
     for lid, ln in P.lanes.items():
         a = P.ports[ln["ports"][0]]
         b = P.ports[ln["ports"][-1]]
-        planned[(a["src"]["part"], b["dst"]["part"])] += int(a["width"])
+        planned[(origin(lid), b["dst"]["part"])] += int(a["width"])
+        if lid in parent:                                # the fork partition also receives the word
+            planned[(a["src"]["part"], b["dst"]["part"])] += int(a["width"])
     out = dict(declared=True, sources=[])
     for k, src in enumerate(spec):
         rows = load_rows(Path(plan_dir) / src["rows"])
@@ -132,6 +174,14 @@ def coverage(P, plan_dir, R):
                 if rx.search(inst):
                     return tgt
             return None
+        # optional source bus widths {"<inst>.<bus>": nbits} (or a JSON path): a broadcast / tapped source bus is on
+        # the wire once per destination partition, so as-built bits per (src bus, dst partition) are capped at the bus
+        # width (the FT census bits_unique rule; rows are per (src bus, dst inst, dst bus) and repeat broadcast nets)
+        bw = mp.get("bus_widths") or {}
+        if isinstance(bw, str):
+            bwp = Path(plan_dir) / bw
+            bw = json.load(gzip.open(bwp, "rt")) if bwp.name.endswith(".gz") else json.loads(bwp.read_text())
+        capped = defaultdict(int)
         unmapped = defaultdict(int)
         asb = defaultdict(int)
         exempt = defaultdict(int)
@@ -155,7 +205,13 @@ def coverage(P, plan_dir, R):
             if hit is not None:
                 exempt[(hit["kind"], hit.get("replaced_by", ""), hit["match"])] += r["bits"]
                 continue
-            if collapse_bc:
+            w = bw.get(f"{r['src']}.{r['src_bus']}")
+            if w is not None:
+                key = (r["src"], r["src_bus"], sg, dg)
+                add = min(r["bits"], max(0, int(w) - capped[key]))
+                capped[key] += add
+                asb[(sg, dg)] += add
+            elif collapse_bc:
                 # PLAN-S81v3 (989ee4d63): one driver bus reaching several sinks in the same partition/group (a
                 # broadcast, or the tracer's src-bus x dst-bus cross product through one relay bundle) crosses the
                 # boundary once: count it once (max).  Opt-in: rows carry no bit ranges, so a bus SPLIT over

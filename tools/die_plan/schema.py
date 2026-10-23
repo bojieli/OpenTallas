@@ -636,7 +636,11 @@ def spread(A, n, lo, hi):
         best = None
         for k in (i - 1, i):
             if 0 <= k < m:
-                key = (abs(A[k] - t), abs(A[k] - cen))
+                # exact ties (fp-noise-free) -> nearer the window centre -> nearer the middle usable track (index
+                # (m-1)/2): all three commute with the frame mirror, so the pick is mirror-equivariant whenever m is
+                # odd (an odd pin count on an even usable-track count with the centre between two tracks has no
+                # mirror-symmetric pick: generators size such windows to an odd track count)
+                key = (round(abs(A[k] - t), 6), round(abs(A[k] - cen), 6), abs(2 * k - (m - 1)))
                 if best is None or key < best[0]:
                     best = (key, k)
         return best[1]
