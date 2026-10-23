@@ -124,6 +124,21 @@ GRP_S6C = os.environ.get('OT_KV_GRP_S6C', '0') == '1'
 if GRP_S6C and not (GRP_SAFE2 and os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'):
     raise ValueError('GRP_S6C requires OT_KV_GRP_SAFE2=1 (DS private ABI + parent connections) and OT_KV_NATIVE_SLOTS=1 '
                      '(the closed group tiles are 388.8 wide; the legacy group frame is narrower)')
+# KDIE5-RTL 10-22 (OT_KV_GRP_R2=1; default off: every tile file and generator output is unchanged): the 32 groups of the
+# RELEASE point (FANFOLD + TILE_KITS, no DS / private ABI) bind the pin-registered successors qkd_kvs_grp_r2 /
+# qkd_kvs_grp_h_r2 (GRP_R2_RTL), which instantiate the UNCHANGED generated tile modules qkd_kvs_grp / qkd_kvs_grp_h of
+# RTL_FILE as u_core (same ports).  No combinational in -> out path is left; added core edges (die schedule /
+# compiler, kv_static_programme.cal_deltas grp_r2): fan word +29 uniform at every group's local view (in-tile
+# equalising delay 4 x (7 - depth)), o_dn chain 4 a hop, gather own +3 / pass +4 a hop (depth d: +3 + 4d, max +31),
+# cf1 fault +2, EST +2, y__tok / y__tep +2; K / V request -> response, i_pc / o_pc data and af* unchanged.
+GRP_R2 = os.environ.get('OT_KV_GRP_R2', '0') == '1'
+if GRP_R2 and (GRP_PRIVATE0 or GRP_SAFE2 or GRP_S6C or not (FANFOLD and KITS)):
+    raise ValueError('GRP_R2 is the release FANFOLD + TILE_KITS point successor (not with GRP_PRIVATE0 / SAFE2 / S6C)')
+GRP_R2_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv'
+GRP_R2_HOP, GRP_R2_DEPTH = 4, 7
+GRP_R2_EDGES = dict(fan=1 + GRP_R2_HOP * GRP_R2_DEPTH, chain_hop=GRP_R2_HOP, gather_own=3, gather_hop=GRP_R2_HOP,
+                    gather_max=3 + GRP_R2_HOP * GRP_R2_DEPTH, cf1_fault=2, est=2, tok_tep=2) if GRP_R2 else \
+    dict(fan=0, chain_hop=0, gather_own=0, gather_hop=0, gather_max=0, cf1_fault=0, est=0, tok_tep=0)
 GRP_S6C_RTL = dict(grp='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv',
                    grp_h='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv')
 GROUP_SLOT = dict(grp=(388.8, float(os.environ.get('OT_KV_GRP_SLOT_H', '432.0')) if GRP_S6C else 388.8),
@@ -237,6 +252,10 @@ if GRP_SAFE2:
     KIND_MASTER.update(grp='qkd_kvs_grp_s2', grp_h='qkd_kvs_grp_h_s2')
 if GRP_S6C:
     KIND_MASTER.update(grp='qkd_kvs_grp_s6c', grp_h='qkd_kvs_grp_h_s6c')
+# KDIE5-RTL: TILE_MODULE = the generated module name of a kind in RTL_FILE (the r2 successors wrap it as u_core)
+TILE_MODULE = dict(KIND_MASTER)
+if GRP_R2:
+    KIND_MASTER.update(grp='qkd_kvs_grp_r2', grp_h='qkd_kvs_grp_h_r2')
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
@@ -1702,7 +1721,7 @@ def rtl_text():
         # with the same module name into the active compilation unit.
         if GRP_S6C and t['kind'] in GRP_S6C_RTL:
             continue
-        name = KIND_MASTER[t['kind']]
+        name = TILE_MODULE[t['kind']]
         txt = module_text(t, name)
         if name in mods and mods[name][0] != txt:
             a, b = mods[name][0].splitlines(), txt.splitlines()
@@ -1726,6 +1745,8 @@ def sources():
             s.add(ins()[n]['source'])
     if GRP_S6C:
         s.update(GRP_S6C_RTL.values())
+    if GRP_R2:
+        s.add(GRP_R2_RTL)
     s.update(K.pc_emb_sources())
     if BOOT:
         s.update(BOOT_PC_DEPS)
@@ -1756,6 +1777,8 @@ def bindings():
         source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else RTL_FILE
         if GRP_SAFE2 and t['kind'] in ('grp', 'grp_h'):
             source_file = GRP_S6C_RTL[t['kind']] if GRP_S6C else GRP_SAFE2_RTL
+        if GRP_R2 and t['kind'] in ('grp', 'grp_h'):
+            source_file = GRP_R2_RTL
         if PC_SRAM and KITS and t['kind'] in PC_RLAND_KINDS:
             ports['pc__hfx'] = ['pc__hfx']      # KV-BIND4: pc_hfx_text port; read by the health plane (PC family)
         out[mst] = dict(module=mst, file=source_file, ports=ports, sliced={}, classed=cls)

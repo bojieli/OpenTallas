@@ -1521,6 +1521,8 @@ if KSD.ON:
                'kvn_word_identity', 'kvn_word_generation'):
         BINDINGS['qkd_d2ds']['ports'][_p] = [_p]
     RTL.update({k_: KSD.RTL_FILE for k_ in KSD.KIND_MASTER.values()}, qkd_ectlk=KSD.bindings()['qkd_ectlk']['file'])
+    if KSD.GRP_R2:     # KDIE5-RTL: the pin-registered group successors (their u_core is the RTL_FILE module)
+        RTL.update({KSD.KIND_MASTER[k_]: KSD.GRP_R2_RTL for k_ in ('grp', 'grp_h')})
     if KSD.PVFIN:      # KV-PLAN-FIN: the stream PV final join element pvfin
         RTL.update(qkd_pvfin=KSD.PVFIN_FILE)
     if KSD.BOOT:       # KV-WIRE2 / RTL-BUILD-KV BOOT (note s5.1): the gateway successor; emf / emr gone, boot word bw -> kvs_ctl

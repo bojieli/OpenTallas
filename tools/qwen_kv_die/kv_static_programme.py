@@ -352,9 +352,15 @@ def hroot_landing(ksd=None):
 #             0 compiler edges (the attention calendar already runs at the hub's offsets; fr_ofs read from the binding).
 #   seam      OT_KV_SEAM_PIN=1: the K seam is padded to the PAIR image (TXDP_K 22 by contract, KV-D2D3): 0 compiler edges;
 #             link_image_check stays fail-closed on the bound image.
+#   grp_r2    OT_KV_GRP_R2=1 (KDIE5-RTL 10-22, qkd_kvs_grp{,_h}_r2: pin-registered group successors, kv_static_die
+#             GRP_R2_EDGES): fan +29 (every group's local view of the root fan word, uniform by the in-tile equalising
+#             delay: group launch age pr['groups']), gather own +3 / +4 a hop (depth d: +3 + 4d, max +31) -> the
+#             ownership leave root moves +gather_max so the drain guard samples the same drained state; cf1 fault +2,
+#             EST +2 (boot-ready level), y__tok / y__tep +2 (unread): no compiler consumer.
 CTL_OWN_GUARD_LEAD = 2
+GRP_R2_ZERO = dict(fan=0, chain_hop=0, gather_own=0, gather_hop=0, gather_max=0, cf1_fault=0, est=0, tok_tep=0)
 CAL_DELTAS_ZERO = dict(hroot=dict(chain=0, fan=0, gather=0, embedding=0), emb_join=0, ctl_own_leave=0, ctl_boot_setup_ready=0,
-                       ahub=dict(compiler_edges=0, pad=False), seam=dict(compiler_edges=0, pin=False))
+                       ahub=dict(compiler_edges=0, pad=False), seam=dict(compiler_edges=0, pin=False), grp_r2=GRP_R2_ZERO)
 
 
 def final_reset_calendar():
@@ -366,6 +372,18 @@ def final_reset_calendar():
     return dict(data, ledger_path=path)
 
 
+def grp_r2_edges(ksd=None):
+    """KDIE5-RTL: the r2 group successors' edges (kv_static_die.GRP_R2_EDGES), zero when OT_KV_GRP_R2 is off"""
+    if os.environ.get('OT_KV_GRP_R2', '0') != '1':
+        return dict(GRP_R2_ZERO)
+    if ksd is None or not hasattr(ksd, 'GRP_R2_EDGES'):
+        from tools.qwen_kv_die import kv_static_die as ksd
+    e = dict(ksd.GRP_R2_EDGES)
+    if set(e) != set(GRP_R2_ZERO) or e['fan'] != 29 or e['gather_max'] != 31:
+        raise ValueError(f'grp_r2 edges {e}: no calendar law (fan 29 / gather_max 31 expected)')
+    return e
+
+
 def cal_deltas(ksd=None):
     env = os.environ.get
     ctl = env('OT_KV_CTL_C32', '0')
@@ -375,7 +393,8 @@ def cal_deltas(ksd=None):
     deltas = dict(hroot=hl, emb_join=1 if env('OT_KV_EMB_PJ', '0') == '1' else 0,
                 ctl_own_leave=CTL_OWN_GUARD_LEAD if ctl != '0' else 0, ctl_boot_setup_ready=2 if ctl != '0' else 0,
                 ahub=dict(compiler_edges=0, pad=env('OT_KV_AHUB_PAD', '0') == '1', proof='kv_static_params AHUB_OFS_BOUND'),
-                seam=dict(compiler_edges=0, pin=env('OT_KV_SEAM_PIN', '0') == '1', proof='link_image_check (TXDP_K 22)'))
+                seam=dict(compiler_edges=0, pin=env('OT_KV_SEAM_PIN', '0') == '1', proof='link_image_check (TXDP_K 22)'),
+                grp_r2=grp_r2_edges(ksd))
     reset = final_reset_calendar()
     if reset is not None: deltas['final_reset_stations'] = reset
     return deltas
@@ -483,10 +502,11 @@ def profile(kind, ages=None):
     from tools.qwen_kv_die import kv_static_die as KSD
     ofs = KSD.ahub_ofs_bound()
     hl = hroot_landing(KSD)
+    g2 = grp_r2_edges(KSD)
     return dict(kind='die', fr_ofs=ofs['FR_OFS'] if ofs else None, start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'] + fl['i_ctl'],
                 face_land=fl, hroot_landing=hl, cal_deltas=cal_deltas(KSD),
                 rx=L['d2d_to_attention_rx']['edges'], writer=L['programme_to_writer']['edges'], kvn=L['d2d_to_writer']['edges'],
-                groups=L['programme_to_groups']['edges'] + hl['fan'], crossing=True,
+                groups=L['programme_to_groups']['edges'] + hl['fan'] + g2['fan'], crossing=True,
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
                 v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
                 phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
@@ -1055,6 +1075,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     quiet36 = max(e['token_cycle'] for e in img['events'] if e['kind'] == 'expected_quiet')
     cd = pr.get('cal_deltas') or CAL_DELTAS_ZERO
     own_lead = cd['ctl_own_leave']                     # KV-CAL15: c32 drain guards 2 edges earlier -> leave +2
+    own_lead += (cd.get('grp_r2') or GRP_R2_ZERO)['gather_max']   # KDIE5-RTL: r2 drained status reaches the ctl later
     own = [3, quiet36 + 1 + own_lead, img['token_core_cycles'], OWN_SEAL]
     if not 3 <= own[0] < own[1] < own[2]:
         raise ValueError('ownership roots out of order')

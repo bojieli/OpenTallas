@@ -1,0 +1,8 @@
+%Warning-DECLFILENAME: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv:176:8: Filename 'qkd_kvs_grp_r2' does not match MODULE name: 'qkd_kvs_grp_h_r2'
+%Warning-UNUSEDSIGNAL: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv:231:18: Signal is not used: 'c_dn'
+%Warning-UNUSEDSIGNAL: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv:232:18: Bits of signal are not used: 'c_ctl'[143:18]
+%Warning-UNUSEDSIGNAL: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv:233:16: Signal is not used: 'c_yest'
+%Warning-UNUSEDSIGNAL: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv:234:17: Signal is not used: 'c_ytok'
+%Warning-UNUSEDSIGNAL: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv:235:17: Signal is not used: 'c_ytep'
+%Warning-SYNCASYNCNET: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv:178:16: Signal flopped as both synchronous and async: 'rst_n'
+%Warning-SYNCASYNCNET: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv:182:16: Signal flopped as both synchronous and async: 'hrst_n'

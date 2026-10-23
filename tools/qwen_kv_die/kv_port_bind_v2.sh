@@ -59,6 +59,11 @@ if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
     [ -f "$R/$NATIVE" ] || { echo "missing selected native RTL: $NATIVE"; exit 3; }
     F+=(--rtl-file "$R/$NATIVE")
   done
+  # KDIE5-RTL (OT_KV_GRP_R2=1): the pin-registered group successors (they wrap the RTL_FILE group modules)
+  for NATIVE in $(cd "$R/tools/qwen_kv_die" && python3 -c 'import kv_static_die as S; print(S.GRP_R2_RTL if S.GRP_R2 else "")'); do
+    [ -f "$R/$NATIVE" ] || { echo "missing selected native RTL: $NATIVE"; exit 3; }
+    F+=(--rtl-file "$R/$NATIVE")
+  done
   if [ "${OT_KV_GRP_S6C:-0}" = 1 ]; then
     # Exact canonical functional PDK model already used by S6C qualification.
     # SRAM behavioral models are loaded by die_port_bind's normal macro roots.

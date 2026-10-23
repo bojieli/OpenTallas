@@ -1,0 +1,63 @@
+{
+ "note": "kv_static_programme die compile (relm die_ages_fwd.json, relm kv_flags.env, OT_KV_RETIRE_LOGICAL=1, MU frame images skipped: pre-existing kv_frame_search failure on both settings)",
+ "layer_relative_roots": {
+  "off": {
+   "ctrl_go": 263,
+   "kgo": 263,
+   "vgo": 1316,
+   "attention_issue": 610,
+   "attention_run": 614,
+   "writer_start": 648,
+   "link_start": 3,
+   "expected_quiet": 2617,
+   "stage_end": 7057
+  },
+  "on": {
+   "ctrl_go": 234,
+   "kgo": 234,
+   "vgo": 1287,
+   "attention_issue": 610,
+   "attention_run": 614,
+   "writer_start": 648,
+   "link_start": 3,
+   "expected_quiet": 2617,
+   "stage_end": 7057
+  }
+ },
+ "stage1_roots": {
+  "off": {
+   "ctrl_go": 860,
+   "kgo": 860,
+   "vgo": 1913,
+   "attention_issue": 1205,
+   "attention_run": 1209,
+   "writer_start": 1243,
+   "link_start": 3,
+   "expected_quiet": 3212,
+   "stage_end": 7392
+  },
+  "on": {
+   "ctrl_go": 831,
+   "kgo": 831,
+   "vgo": 1884,
+   "attention_issue": 1205,
+   "attention_run": 1209,
+   "writer_start": 1243,
+   "link_start": 3,
+   "expected_quiet": 3212,
+   "stage_end": 7392
+  }
+ },
+ "boot_targets_changed": [
+  "target1 (ctrl_go / kgo / vgo roots -29 in all 36 layers: 108 words)",
+  "target3 (ownership leave +31)"
+ ],
+ "boot_targets_identical": [
+  "0",
+  "2",
+  "4 (landing calendars)",
+  "5 (front calendars)",
+  "6-9 (PC controllers)",
+  "11-13"
+ ]
+}
