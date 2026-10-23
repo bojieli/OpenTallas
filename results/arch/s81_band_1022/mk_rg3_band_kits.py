@@ -20,8 +20,10 @@ BENCH_LP = ("bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lp.sh {RUN} lpc0 '-
             "'pass_open6|+N=4096 +B=13 +T0=400 +P=3 +OPEN=6' 'pass_l20|+N=87382 +B=13 +T0=400 +P=3' "
             "'closed_g2048p3|+GATHER=1 +N=2048 +T0=1500 +P=3' 'closed_late|+N=4096 +B=13 +T0=60 +P=3' "
             "'fail_slothit|+N=4096 +B=13 +T0=400 +P=3 +SLOTHIT=1'")
-BENCH_LPM = ("bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lp.sh {RUN} lpm1k '-GMUT=0 -GSRAM_MACRO=1 -GIH=0 -GOH=3 -GKR=1 -GRH=1 "
-             "-DOT_LPW_LPMUT=1' 8 'pass_small|+N=4096 +B=13 +T0=400 +P=3' 'pass_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4'")
+# band datapath mutant MUT 5 (X drops the landing write of tags with rt[7]) under the PASS cases.  NOT the lp's MUT 1 (xr landing
+# bypass): campaign lpm1 (10-22 18:5x) PASSES under it -- xr (pop / beat counts) is slack-tolerant on this schedule.
+BENCH_LPM = ("bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lp.sh {RUN} lpx5 '-GMUT=5 -GSRAM_MACRO=1 -GIH=0 -GOH=3 -GKR=1 -GRH=1' 8 "
+             "'pass_small|+N=4096 +B=13 +T0=400 +P=3' 'pass_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4'")
 WHY = ("STW-S81c-TOK4-BAND 10-22 (STEWARD-S81c item, MU.BAL.SX.3): idx rg3 clock-rule successor. rg3p / rg3nqq2 hung 27-32k "
        "sinks on ONE ck over 1.04 x 1.21 mm (TT spread 223-233 ps; k-means under one port cannot fix it). The reader is cut at "
        "existing registers into 4 hard bands (R control / X response + landing + key mux / S01 / S23 engine halves), each "
@@ -37,8 +39,8 @@ def job(name, purpose):
                              SRAM, "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5"],
                 benches=[dict(name="rg3b_lpc0", cmd=BENCH_LP, expect="pass", pass_regex="^IDXRD_CAMPAIGN PASS",
                               threads=16, peak_ram_gb=64, needs=["verilator"]),
-                         # expect=fail mutant: the landed parent's MUT 1 (xr landing bypass) under the PASS cases
-                         dict(name="rg3b_lpm1", cmd=BENCH_LPM, expect="fail", fail_regex="^IDXRD_CASE BAD lpm1k/pass_[a-z0-9]+: TB_IDXRD FAIL . TB_IDXRD_STATS",
+                         # expect=fail mutant: band MUT 5 under the PASS cases (BENCH_LPM)
+                         dict(name="rg3b_lpx5", cmd=BENCH_LPM, expect="fail", fail_regex="^IDXRD_CASE BAD lpx5/pass_[a-z0-9]+: TB_IDXRD FAIL . TB_IDXRD_STATS",
                               threads=16, peak_ram_gb=64, needs=["verilator"])])
 
 def common(name, top, purpose):

@@ -71,10 +71,10 @@
     ]
    },
    {
-    "name": "rg3b_lpm1",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lp.sh {RUN} lpm1k '-GMUT=0 -GSRAM_MACRO=1 -GIH=0 -GOH=3 -GKR=1 -GRH=1 -DOT_LPW_LPMUT=1' 8 'pass_small|+N=4096 +B=13 +T0=400 +P=3' 'pass_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4'",
+    "name": "rg3b_lpx5",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lp.sh {RUN} lpx5 '-GMUT=5 -GSRAM_MACRO=1 -GIH=0 -GOH=3 -GKR=1 -GRH=1' 8 'pass_small|+N=4096 +B=13 +T0=400 +P=3' 'pass_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4'",
     "expect": "fail",
-    "fail_regex": "^IDXRD_CASE BAD lpm1k/pass_[a-z0-9]+: TB_IDXRD FAIL . TB_IDXRD_STATS",
+    "fail_regex": "^IDXRD_CASE BAD lpx5/pass_[a-z0-9]+: TB_IDXRD FAIL . TB_IDXRD_STATS",
     "threads": 16,
     "peak_ram_gb": 64,
     "needs": [
