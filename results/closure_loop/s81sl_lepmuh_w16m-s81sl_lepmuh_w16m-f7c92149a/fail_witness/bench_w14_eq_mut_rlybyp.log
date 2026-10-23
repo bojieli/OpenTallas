@@ -1,0 +1,16 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a bench bench_w14_eq_mut_rlybyp host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a log cl/bench_w14_eq_mut_rlybyp.a1b1.log captured 2026-10-22T23:39:11-07:00
+# fail_regex '^MISMATCH cyc \\d+ ml_wv/ml_wd \\(LL 1\\)'
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH cyc 10 ml_wv/ml_wd (LL 1)
+MISMATCH cyc 11 ml_wv/ml_wd (LL 1)
+MISMATCH cyc 12 ml_wv/ml_wd (LL 1)
+MISMATCH cyc 13 ml_wv/ml_wd (LL 1)
+MISMATCH cyc 14 ml_wv/ml_wd (LL 1)
+MISMATCH cyc 15 ml_wv/ml_wd (LL 1)
+MISMATCH cyc 16 ml_wv/ml_wd (LL 1)
+MISMATCH cyc 17 ml_wv/ml_wd (LL 1)
+MISMATCH cyc 18 ml_wv/ml_wd (LL 1)
+LEPMUH_W14_EQ cycles 20000 bad 12370 | ml_wv 611 ri 4442 f_host 2462 f_ks 1153 lo 7921 mu_rt 1063 (activity counts)
+EQ_FAIL lepmuh w14 lockstep bad 12370
+BENCH_FAIL w14eq MUT=RLYBYP seed 1

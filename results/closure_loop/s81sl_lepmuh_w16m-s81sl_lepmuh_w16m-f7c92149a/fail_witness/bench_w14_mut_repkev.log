@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a bench bench_w14_mut_repkev host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a log cl/bench_w14_mut_repkev.a1b1.log captured 2026-10-22T23:38:00-07:00
+# fail_regex 'PUSHREP replica differs'
+Verilator 5.050 2026-07-01 rev v5.050
+[6690000] %Fatal: ot_s81sl_slice_lep.sv:406: Assertion failed in tb_s81sl_lep_muh.lm.u.g_frame_local.g_slice[18].g_rep: PUSHREP replica differs slice 18: rep 00 slice 01
+BENCH_FAIL lepmuh MUT=REPKEV seed 1

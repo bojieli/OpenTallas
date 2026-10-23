@@ -1,0 +1,265 @@
+{
+  "name": "ot_s81sl_lep_mu_h",
+  "orfs_dir": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/routes/s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.7148727710368803e-10 min 2.362066098271498e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/routes/s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/record/views/ot_s81sl_lep_mu_h:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/ref_tile/s81sl_lepmuh_w16m/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/eco/pass1/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1:/mv0:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.2577894281662338e-10 min 9.142908652393089e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/routes/s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/record/views/ot_s81sl_lep_mu_h:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/ref_tile/s81sl_lepmuh_w16m/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/eco/pass1/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1:/mv0:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 5.919154055789022e-12 min 2.7911895017496136e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/routes/s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/record/views/ot_s81sl_lep_mu_h:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/ref_tile/s81sl_lepmuh_w16m/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/eco/pass1/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1:/mv0:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/ref_tile/s81sl_lepmuh_w16m/signoff.sdc",
+    "sha256": "09af7db347504437546d5ab50467d8a301c94bb05b6ad5e3aed38938cca93e5b",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/routed_ioref.a1.json",
+    "sha256": "1f68c0c87f5867ec8284311e212fbabad50b2e4a873f4be4c6981c170aab9d2f",
+    "expect_ps": {
+      "tt": 5.92,
+      "ff": 9.14
+    },
+    "tol_ps": 0.05,
+    "work": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/eco/pass1/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib",
+        "sha256": "a98066b7e8130854b9300f617dd9be0546499a6cbd84397aa30a1629400608a0"
+      },
+      "/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+        "sha256": "fff564af30de7be97939931864886b378892f7bac57ff77853813f9704af7cf7"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+        "sha256": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+        "sha256": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1"
+      },
+      "/src/physical/common_flow/io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/common_flow/io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/src/physical/ref_tile/s81sl_lepmuh_w16m/signoff.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/ref_tile/s81sl_lepmuh_w16m/signoff.sdc",
+        "sha256": "09af7db347504437546d5ab50467d8a301c94bb05b6ad5e3aed38938cca93e5b"
+      },
+      "/work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.odb": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/eco/pass1/orfs/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.odb",
+        "sha256": "8d4a3b98629c3df106b4d2614606129dd28e2b48bee041e4175e0965c6a8253d"
+      },
+      "/work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/eco/pass1/orfs/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.sdc",
+        "sha256": "256bb85705ed5ee6c042c2af597891a0d93decb2dd44a435d0cda791ffa9f064"
+      },
+      "/work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.spef": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/cl/eco/pass1/orfs/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.spef",
+        "sha256": "3cd6db09f38a6bd3e3e1df8d4315911c1ec431f530df25bc1f7912b8cc770368"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 9.14290865239309,
+        "verdict_ps": 9.14,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 5.919154055789022,
+        "verdict_ps": 5.92,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib]",
+        "read_db /work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/s81sl_lepmuh_w16m/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib]",
+        "read_db /work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/s81sl_lepmuh_w16m/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib]",
+        "read_db /work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/s81sl_lepmuh_w16m/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+    "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "abstract": {
+    "mode": "exact_windows",
+    "default_pin_access_violations": 12,
+    "exact_returncode": 0,
+    "exact_command": [
+      "docker",
+      "run",
+      "--rm",
+      "-v",
+      "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/routes/s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/work/orfs/results/asap7/opentallas_ot_s81sl_lep_mu_h_asap7_ref_s81sl_lepmuh_w16m_s81sl_lepmuh_w16m_f7c92149a/base:/base:ro",
+      "-v",
+      "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_lepmuh_w16m-s81sl_lepmuh_w16m-f7c92149a/record/views/ot_s81sl_lep_mu_h:/out",
+      "openroad/orfs:latest",
+      "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+      "-no_init",
+      "-exit",
+      "/out/export_exact_abstract.tcl"
+    ],
+    "exact_rects": 3690739,
+    "exact_pin_access_violations": null,
+    "window_patch": {
+      "windows": 5963,
+      "default_rects_cut": 100,
+      "exact_rects_added": 5963
+    },
+    "window_pin_access_violations": 0,
+    "default_sha256": "330f08ee775defe55fb15565fc02ba78fb475972dfb3413e1130e3470a927d19",
+    "exact_sha256": "d7660803897d95580c894df16dc46bee10f2e21f5cc9ef9ee24b32d7841a7899",
+    "why": "default (closing-bloat) abstract leaves 12 signal pins without DRC-clean access (e.g. l0_f[0] M4 0.048, l0_f[0] M4 0.048, l0_f[1] M4 0.048, l0_f[1] M4 0.048); exact shapes in 5963 pin windows leave 0"
+  },
+  "files": {
+    "ot_s81sl_lep_mu_h.lef": "cb6b795f0628647cadb4a2b7a76e06a6b04a0fba1705ee2c1dcfd9c9261edb9c",
+    "ot_s81sl_lep_mu_h_ff.lib": "198adad2c6f98c953bf35db28a801953557be5082d64929c2cf7c0ef05db27a0",
+    "ot_s81sl_lep_mu_h_ss.lib": "f34a88c229e51601a96f81a719fdf42b1a6eccce23ca5c5b696fb2cfb06db8d3",
+    "ot_s81sl_lep_mu_h_tt.lib": "d5bac41acdfaa300427c57b54e1090ccbd7ee23e3b81d989d74789ef9e969ff0"
+  },
+  "ok": true,
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "1911bbb7421076e2152713e95bb45f7665fe7c52d0657d034243353f65d66f0d",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "4683d7dc4b53e7255afe63031399499514cb4a4543871cdcb636fb74ad69b592"
+  }
+}
