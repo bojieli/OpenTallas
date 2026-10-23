@@ -18,7 +18,7 @@
 //  6 Floorplan: smaller pin face (die soft SYNTH block, no hard view); outline from synthesis           PASS (re-synth)
 //  7 Clock: one clk_ctl root as canonical (IDX-SMALL)                                                  PASS
 //  8 Schedule: static; no added cycle; compiler unchanged (op 8 never issued)                         PASS
-module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0)(
+module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0, parameter integer ACTIVE_GROUPS=4)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
  input wire [7:0] addr,input wire [9:0] k,
@@ -66,6 +66,21 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0)(
   end
  end
  for(genvar q=0;q<4;q=q+1)begin:gq
+ if(q>=ACTIVE_GROUPS)begin:ginactive
+  // An absent physical stack has no candidate store or input consumer.
+  // Retain the fixed output protocol: compact pulses carry invalid lanes.
+  reg rv;reg[3:0]rop;
+  always @(posedge clk_q[q] or negedge rst_n)begin
+   if(!rst_n)begin rv<=0;selected_v[q]<=0;end
+   else begin rv<=op==4||op==6;rop<=op;selected_v[q]<=rv&&rop==6;end
+  end
+  assign selected_line[q*LW+:LW]={LW{1'b0}};
+  assign qfault[q]=1'b0;
+  assign selected[q]=14'd0;
+  for(genvar b=0;b<64;b=b+1)begin:ghist
+   assign hist[q][b]=14'd0;
+  end
+ end else begin:gactive
   reg rv;reg[3:0]rop;reg[1:0]rpass;reg[7:0]raddr;
   wire re=op==4||op==6;
   wire [767:0] raw;
@@ -144,10 +159,11 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0)(
    end
   end
  end
+ end
 endmodule
 `default_nettype wire
 `default_nettype none
-module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0)(
+module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0, parameter integer ACTIVE_GROUPS=4)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
  input wire [7:0] addr,input wire [9:0] k,
@@ -167,7 +183,7 @@ module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0)(
   op_r<=op;pass_r<=pass;addr_r<=addr;k_r<=k;in_r<=in_line;
   selected_v<=c_sel_v;selected_line<=c_sel_line;fault<=c_fault;
  end
- ot_hbm_idx_selector_static_sel_core #(.MUT(MUT)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),
+ ot_hbm_idx_selector_static_sel_core #(.MUT(MUT),.ACTIVE_GROUPS(ACTIVE_GROUPS)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),
   .op(op_r),.pass(pass_r),.addr(addr_r),.k(k_r),.in_line(in_r),
   .selected_v(c_sel_v),.selected_line(c_sel_line),.fault(c_fault));
 endmodule
