@@ -101,7 +101,14 @@ def main(argv=None):
     a4.add_argument("plan")
     a4.add_argument("--out", required=True)
     a4.add_argument("--views", required=True, help="DIR/<type>/<module>.lef|.lib (each kit's abstract)")
+    a5 = sub.add_parser("mockview", help="mock abstract LEFs (exact pins + PG + OBS) for a dry die-flow run")
+    a5.add_argument("plan")
+    a5.add_argument("--out", required=True)
     a = ap.parse_args(argv)
+    if a.cmd == "mockview":
+        import gen_phys
+        print("\n".join(str(d) for d in gen_phys.write_mock_views(S.load(a.plan), a.out)))
+        return 0
     if a.cmd in ("phys", "assembly"):
         import gen_phys
         import gen_rtl

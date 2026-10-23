@@ -100,13 +100,18 @@ def tap_points(P, tn):
     rs = list(t.get("reset", {}).get("tap_um", ck))
     if abs(rs[0] - ck[0]) < 1.0 and abs(rs[1] - ck[1]) < 1.0:
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
+    # snap BOTH coordinates: across the pin to the top layer's tracks, along it to the layer below's (the pin centre
+    # must sit on a track crossing, else DRT-0422 "no routing tracks pass through the center" -> DRT-0255 unroutable)
+    Lb = P.layers.get(f"M{int(top[1:]) - 1}", L)
+
+    def snap(v, LL):
+        return round(LL["offset_um"] + round((v - LL["offset_um"]) / LL["pitch_um"]) * LL["pitch_um"], 4)
     out = []
     for x, y in (ck, rs):
         if L["dir"] == "V":
-            x = L["offset_um"] + round((x - L["offset_um"]) / L["pitch_um"]) * L["pitch_um"]
+            out.append((snap(x, L), snap(y, Lb)))
         else:
-            y = L["offset_um"] + round((y - L["offset_um"]) / L["pitch_um"]) * L["pitch_um"]
-        out.append((x, y))
+            out.append((snap(x, Lb), snap(y, L)))
     return out
 
 
@@ -242,6 +247,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; fi; \
   chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
+# a killed / OOM container skips its chown: hand the tree back anyway (else root-owned stale results survive)
+docker run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
 exit $rc
 """
@@ -459,10 +466,10 @@ def die_flow_tcl(P, lefs, libs):
           f"initialize_floorplan -die_area {{0 0 {P.W:g} {P.H:g}}} -core_area {{0 0 {P.W:g} {P.H:g}}} "
           "-site asap7sc7p5t",
           "source /work/make_tracks.tcl",
-          f"place_pin -pin_name clk -layer {L9} -location {{{root[0]:.3f} {root[1]:.3f}}} -pin_size {{0.04 0.32}}",
-          f"place_pin -pin_name rst_n -layer {L8} -location {{{root[0] + 8.64:.3f} {root[1]:.3f}}} "
-          "-pin_size {0.32 0.04}",
           "source /work/io.tcl"]
+    for name, L, x, y in die_root_pins(P):
+        sz = "{0.04 0.32}" if P.layers[L]["dir"] == "V" else "{0.32 0.04}"
+        t.append(f"place_pin -pin_name {name} -layer {L} -location {{{x:.4f} {y:.4f}}} -pin_size {sz}")
     for n, p in sorted(P.parts.items()):
         x, y = p["origin_um"]
         t.append(f"place_macro -macro_name {gen_rtl.sv_id(n)} -location {{{x:g} {y:g}}} -orientation "
@@ -505,3 +512,90 @@ docker run --rm --name dpdie-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   chown -R \$HUID:\$HGID /work"
 tail -3 "$K/die_flow.log"; tail -2 "$K/abut_audit.log"; tail -n 3 "$K"/sta_*.txt 2>/dev/null
 """
+
+
+def mock_lef(P, tn):
+    """mock abstract of a partition type (bazel-orfs 'mock abstract'): exact plan pins (same rectangles as io.tcl),
+    interior clk / arst_n tap pins, VDD / VSS M7 stripes as the kit PDN writes them, full OBS on M1..M7.  Lets the die
+    flow and the seam audit run before the partitions are hardened.  No timing view."""
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    top = P.layer_budget["partition_signal_max"]
+    L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {t['module']}", "  CLASS BLOCK ;",
+         "  ORIGIN 0 0 ;", f"  SIZE {w:.4f} BY {h:.4f} ;"]
+
+    def pin(name, d, use, rects):
+        out = [f"  PIN {name}", f"    DIRECTION {d} ;", f"    USE {use} ;", "    PORT"]
+        for ln, x0, y0, x1, y1 in rects:
+            out += [f"      LAYER {ln} ;", f"        RECT {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f} ;"]
+        return out + ["    END", f"  END {name}"]
+    dirs = {}
+    for b in t.get("buses", []):
+        dirs[b["name"]] = "INPUT" if b["dir"] == "in" else "OUTPUT"
+    for sl in t.get("ft_slots", []):
+        dirs[sl["name"] + "_i"], dirs[sl["name"] + "_o"] = "INPUT", "OUTPUT"
+    for bus, bit, ln, x, y, f in sorted(type_pins(P, tn), key=lambda p: (p[0], p[1])):
+        lw = LAYER_W.get(ln, 0.04) / 2
+        r = {"E": (x - PIN_LEN_UM, y - lw, x, y + lw), "W": (x, y - lw, x + PIN_LEN_UM, y + lw),
+             "N": (x - lw, y - PIN_LEN_UM, x + lw, y), "S": (x - lw, y, x + lw, y + PIN_LEN_UM)}[f]
+        L += pin(f"{bus}[{bit}]", dirs.get(bus, "INPUT"), "SIGNAL", [(ln, *r)])
+    tw = LAYER_W.get(top, 0.032) / 2
+    for name, (x, y) in zip(("clk", "arst_n"), tap_points(P, tn)):
+        L += pin(name, "INPUT", "CLOCK" if name == "clk" else "SIGNAL",
+                 [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
+    # PG: the kit's M5 / M6 / M7 stripes (gen_phys.PDN; VSS one width + spacing after VDD)
+    for net, j in (("VDD", 0), ("VSS", 1)):
+        rects = []
+        for ln, dr, pitch, off, wid, sp in (("M5", "V", 4.32, 2.064, 0.12, 0.072), ("M6", "H", 4.32, 1.968, 0.288, 0.096),
+                                            ("M7", "V", 8.64, 4.128, 0.288, 0.096)):
+            c = off + j * (wid + sp)
+            ext = w if dr == "V" else h
+            while c + wid / 2 < ext:
+                rects.append((ln, c - wid / 2, 0.0, c + wid / 2, h) if dr == "V" else (ln, 0.0, c - wid / 2, w, c + wid / 2))
+                c += pitch
+        L += pin(net, "INOUT", "POWER" if net == "VDD" else "GROUND", rects)
+    L += ["  OBS"] + [f"    LAYER M{i} ;\n      RECT 0 0 {w:.4f} {h:.4f} ;" for i in range(1, int(top[1:]) + 1)]
+    L += ["  END", f"END {t['module']}", "END LIBRARY", ""]
+    return "\n".join(L)
+
+
+def write_mock_views(raw, out):
+    P = S.Plan(raw)
+    res = []
+    for tn, t in P.types.items():
+        d = Path(out) / tn
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{t['module']}.lef").write_text(mock_lef(P, tn))
+        res.append(d)
+    return res
+
+
+def pg_free(P, layer, c):
+    """coordinate c (across a stripe of `layer`) moved off the die PG stripes of that layer: to the midpoint between
+    the two neighbouring stripe centres (all nets), snapped to the layer's track grid."""
+    L = P.layers[layer]
+    for g in P.die.get("pg", {}).get("grid", []):
+        if g["layer"] != layer:
+            continue
+        k = max(1, len(g.get("nets", ["VDD", "VSS"])))
+        step = g["pitch_um"] / k
+        j = math.floor((c - g["offset_um"]) / step)
+        lo = g["offset_um"] + j * step
+        if min(c - lo, lo + step - c) < g["width_um"] / 2 + 0.5:
+            c = lo + step / 2
+    return round(L["offset_um"] + round((c - L["offset_um"]) / L["pitch_um"]) * L["pitch_um"], 4)
+
+
+def die_root_pins(P):
+    """die clk / rst_n entry pins at the spine root, off the die PG stripes: [(name, layer, x, y)]."""
+    root = P.clock.get("spine", {}).get("root_um") or [P.W / 2, P.H / 2]
+    L8, L9 = P.layer_budget["die_layers"][0], P.layer_budget["die_layers"][-1]
+    out = []
+    for name, L, dx in (("clk", L9, 0.0), ("rst_n", L8, 8.64)):
+        x, y = root[0] + dx, root[1]
+        if P.layers[L]["dir"] == "V":
+            x = pg_free(P, L, x)
+        else:
+            y = pg_free(P, L, y)
+        out.append((name, L, x, y))
+    return out
