@@ -361,7 +361,7 @@ def main():
     ap.add_argument('--contract', type=Path, default=CONTRACT, help='source contract (default: main); freeze it to the synthesis snapshot')
     ap.add_argument('--die-repeaters', action='store_true',
                     help='shared die-net repeater step (tools/die_repeaters, DIE-FLOW 10-17, owner 0cl)')
-    ap.add_argument('--repeater-max-wire-um', type=float, default=None, help='repeater spacing (default tools/die_repeaters/step.py: 160 um on the M4 RC, 600 um on M7-M9)')
+    ap.add_argument('--repeater-max-wire-um', type=float, default=None, help='repeater spacing (default tools/die_repeaters/step.py: 160 um on the M4 RC, 450 um on M7-M9)')
     ap.add_argument('--legacy-die-repeaters', action='store_true',
                     help='old repair_design -max_wire_length = reach (no native-aware spacing, no checks)')
     ap.add_argument('--paths', type=int, default=200000)
