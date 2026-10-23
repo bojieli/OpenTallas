@@ -1,0 +1,453 @@
+{
+ "schema": "opentallas.die_plan.g2.v1",
+ "plan": "/home/ubuntu/scratch/plan-s81v3/v3/die_plan.json",
+ "probes": {
+  "die": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 914778612,
+     "demand": 17892,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 914516064,
+     "demand": 89077,
+     "usage_pct": 0.01,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1034908.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {},
+   "pin_access_done": false,
+   "reach": {
+    "clk": {
+     "max_um": 26084.1,
+     "p90_um": 21461.8,
+     "taps": 400
+    },
+    "rst": {
+     "max_um": 26092.8,
+     "p90_um": 21453.1,
+     "taps": 400
+    }
+   },
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-die",
+   "die": "s81",
+   "taps": 400,
+   "pg_stripes": 13122,
+   "channels": 7,
+   "route_layers": [
+    "M8",
+    "M9"
+   ],
+   "root_um": [
+    15975.36,
+    12372.48
+   ]
+  },
+  "part_slice_station__t23": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 38113696,
+     "demand": 4264829,
+     "usage_pct": 11.19,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 42652179,
+     "demand": 3719248,
+     "usage_pct": 8.72,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 31991850,
+     "demand": 1843296,
+     "usage_pct": 5.76,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 31989672,
+     "demand": 2625406,
+     "usage_pct": 8.21,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 21783300,
+     "demand": 572489,
+     "usage_pct": 2.63,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 21781026,
+     "demand": 846355,
+     "usage_pct": 3.89,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 7925184.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "s81",
+   "type": "slice_station__t23",
+   "instance": "s_7S_x13",
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "pins": 9384,
+   "flops": 7330,
+   "leaf_blockages": 0,
+   "adjust": 0.5,
+   "route_layers": "M2-M7"
+  },
+  "part_slice_station__t7": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 38111791,
+     "demand": 4326979,
+     "usage_pct": 11.35,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 42652179,
+     "demand": 5104962,
+     "usage_pct": 11.97,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 31991850,
+     "demand": 1777125,
+     "usage_pct": 5.55,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 31989672,
+     "demand": 4841876,
+     "usage_pct": 15.14,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 21783300,
+     "demand": 584946,
+     "usage_pct": 2.69,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 21781026,
+     "demand": 1666057,
+     "usage_pct": 7.65,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 10457310.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "s81",
+   "type": "slice_station__t7",
+   "instance": "s_0N_x03",
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "pins": 13496,
+   "flops": 9386,
+   "leaf_blockages": 0,
+   "adjust": 0.5,
+   "route_layers": "M2-M7"
+  },
+  "part_ot_s81sl_leaf__t65": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 38110919,
+     "demand": 2119615,
+     "usage_pct": 5.56,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 42652179,
+     "demand": 4495641,
+     "usage_pct": 10.54,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 31991850,
+     "demand": 3571480,
+     "usage_pct": 11.16,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 31989672,
+     "demand": 1446737,
+     "usage_pct": 4.52,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 21783300,
+     "demand": 2418155,
+     "usage_pct": 11.1,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 21781026,
+     "demand": 336203,
+     "usage_pct": 1.54,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 8221899.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "s81",
+   "type": "ot_s81sl_leaf__t65",
+   "instance": "s_7S_L2",
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "pins": 12365,
+   "flops": 9731,
+   "leaf_blockages": 0,
+   "adjust": 0.5,
+   "route_layers": "M2-M7"
+  },
+  "part_ot_s81sl_leaf__t8": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 38108444,
+     "demand": 2485830,
+     "usage_pct": 6.52,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 42652179,
+     "demand": 6366670,
+     "usage_pct": 14.93,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 31991850,
+     "demand": 3972431,
+     "usage_pct": 12.42,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 31989672,
+     "demand": 3318516,
+     "usage_pct": 10.37,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 21783300,
+     "demand": 2400299,
+     "usage_pct": 11.02,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 21781026,
+     "demand": 1449603,
+     "usage_pct": 6.66,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 11425348.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "s81",
+   "type": "ot_s81sl_leaf__t8",
+   "instance": "s_0N_L1",
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "pins": 16879,
+   "flops": 13049,
+   "leaf_blockages": 0,
+   "adjust": 0.5,
+   "route_layers": "M2-M7"
+  },
+  "part_ot_s81sl_leaf__t72": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 38108421,
+     "demand": 2480636,
+     "usage_pct": 6.51,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 42652179,
+     "demand": 6392222,
+     "usage_pct": 14.99,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 31991850,
+     "demand": 3975843,
+     "usage_pct": 12.43,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 31989672,
+     "demand": 3265196,
+     "usage_pct": 10.21,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 21783300,
+     "demand": 2402002,
+     "usage_pct": 11.03,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 21781026,
+     "demand": 1477160,
+     "usage_pct": 6.78,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 11425058.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "s81",
+   "type": "ot_s81sl_leaf__t72",
+   "instance": "s_7N_L1",
+   "outline_um": [
+    1442.88,
+    1226.88
+   ],
+   "pins": 16879,
+   "flops": 13049,
+   "leaf_blockages": 0,
+   "adjust": 0.5,
+   "route_layers": "M2-M7"
+  }
+ },
+ "verdict": "PASS"
+}
