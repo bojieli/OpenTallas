@@ -56,9 +56,9 @@ r.update(kind="tile", sources=SRC + [BR], params={"SRAM_MACRO": 1, "KR": 1, "IH"
          outline={"w": 475.2, "h": 345.6, "exact": True},
          macros=[dict(view=SRAM, inst=i, at=[43.2 + 216.0 * (n % 2), round(43.2 + 90.72 * (n // 2), 2)]) for n, i in
                  enumerate(["u_sq.g_m.u_mem", "u_mq.g_m.u_mem", "u_iq.g_m.u_mem", "g_lm[0].u_mem.g_m.u_mem", "g_lm[1].u_mem.g_m.u_mem"])],
-         children=[], pins={"W": ["qi", "si", "sid", "rst", "ck"], "N": ["rqo"],
-                            "S": ["qoi_o", "soi_o", "st_o", "ql_o", "sc_i"], "E": ["sx_o", "xr_i"]},
-         pin_ranges={"qi": [43.2, 302.4], "si": [43.2, 302.4], "sid": [43.2, 302.4], "rst": [43.2, 302.4], "ck": [43.2, 302.4],
+         children=[], pins={"W": ["qi", "si", "sid", "rst"], "N": ["rqo"],
+                            "S": ["qoi_o", "soi_o", "st_o", "ql_o", "sc_i", "ck"], "E": ["sx_o", "xr_i"]},
+         pin_ranges={"qi": [43.2, 302.4], "si": [43.2, 302.4], "sid": [43.2, 302.4], "rst": [43.2, 302.4], "ck": [229.68, 236.16],
                      "rqo": [21.6, 453.6], "qoi_o": [21.6, 410.4], "soi_o": [21.6, 410.4], "st_o": [21.6, 410.4],
                      "ql_o": [21.6, 410.4], "sc_i": [410.4, 453.6], "sx_o": [43.2, 302.4], "xr_i": [43.2, 302.4]},
          layer_cap="M5", defines=[], std_area_um2=4000,
@@ -70,6 +70,10 @@ r.update(kind="tile", sources=SRC + [BR], params={"SRAM_MACRO": 1, "KR": 1, "IH"
 r["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
 r["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aware"}   # sparse SRAM tile, pin-band sinks (qkd_d2d_static recipe); R gate 10-22: clustered tree 462..725 ps
 specs[r["name"]] = r
+# R fallback (parallel): same tile, H-tree buffers every 40 um (qkd_astk_ep: long leaf strings left far leaves late)
+rb = copy.deepcopy(r); rb["name"] = "s81dv_rg3b_rb"; rb["job"] = job("s81dv_rg3b_rb", r["job"]["purpose"] + " (FB: CTS buffer pitch 40 um)")
+rb["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aware -distance_between_buffers 40"}
+specs[rb["name"]] = rb
 x = common("s81dv_rg3b_x", "dsdv_idx_rg3_bx", "banded idx rg3 MAIN: X band (response lanes, landing SRAMs, key mux)")
 x.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1, "RH": 1},
          outline={"w": 475.2, "h": 432.0, "exact": True},
