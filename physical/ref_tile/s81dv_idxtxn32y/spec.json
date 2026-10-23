@@ -223,5 +223,6 @@
  "hold_budget_reason": "cluster with one CLOSED hard child (hold_budget die is leaf/two-level only); every boundary pin is registered in RTL",
  "defines": [
   "OT_DSDV_TXGA_HARD"
- ]
+ ],
+ "hard_define": "OT_DSDV_TXGA_HARD"
 }
