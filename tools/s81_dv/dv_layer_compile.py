@@ -771,6 +771,57 @@ def row_ctl_events(die, prog):
     return added
 
 
+def _line_hop(die, tier, a, b):
+    """one line stop a -> b on a tier: the slowest lane of the 1,104-b bundle + the rstop (as ctl_path)"""
+    cand = [L for L in die.links.values() if any(x[0] == f'u_s_{a}{tier}' for x in L['src'])
+            and any(x[0] == f'u_s_{b}{tier}' for x in L['dst'])]
+    assert cand, f'no line link u_s_{a}{tier} -> u_s_{b}{tier}'
+    return max(L['age_edges'] for L in cand) + RSTOP_HOP
+
+
+def line_slot_conflicts(die, prog):
+    """S81d-TOK 10-22 (cap30 L0..L20): the column-3 slice re-injects EVERY G-unit V CTL beat (vo_s -> u_s_3S, vo_n ->
+    u_s_3N) on its tier line both ways (ot_s81sl_xr ci_dir 3'b011, hops 0), while every seq_host V calendar row's beat
+    is injected both ways at column 4 (ctl_path).  ot_s81sl_rstop takes ONE source per line side and cycle (two = sticky
+    fault), so a seq_host beat forwarded through column 3 (W) on the edge column 3 injects a G-unit beat -- or a G-unit
+    beat forwarded through column 4 (E) on the edge column 4 injects a calendar beat -- is a static-schedule collision.
+    Both copies then travel the same stops on the same edges, so an equal landed edge at any stop beyond both injectors
+    (W: columns 2..0 on ri_e, E: columns 5..7 on ri_w) is the collision test.  G-unit beat model = dv_cut_replay
+    derive_vctl_line_events (V landed edge = vo edge + tv<T>_gunit age; line out = landed - RSTOP_HOP + v_ctl_inject).
+    Returns [(row issue, engine tier, stop, port, edge, G-unit tag, row what)]."""
+    inj = die.timing_contract['v_ctl_inject']
+    occ = {}
+    for e in prog.events:
+        if e.get('inst') != 'u_gunit' or e.get('dir') != 'out' or e.get('kind') != 'CTL' or e.get('port') not in ('vo_s', 'vo_n'):
+            continue
+        tier = 'S' if e['port'] == 'vo_s' else 'N'
+        L = die.links.get(f'tv{tier}_gunit')
+        if L is None:
+            continue
+        t_out = e['cycle'] + L['age_edges'] - RSTOP_HOP + inj
+        for path, port in ((range(2, -1, -1), 'ri_e'), (range(4, 8), 'ri_w')):
+            t, prev = t_out, 3
+            for c in path:
+                t += _line_hop(die, tier, prev, c)
+                prev = c
+                occ.setdefault((tier, c, port), {})[t] = e['tag']
+    if not occ:
+        return []
+    paths, out = {}, []
+    for r in prog.rows:
+        if r['eng'] not in (ENG['VN'], ENG['VS']):
+            continue
+        tier = 'N' if r['eng'] == ENG['VN'] else 'S'
+        for c in (2, 1, 0, 5, 6, 7):
+            cp = paths.setdefault((tier, c), ctl_path(die, f'u_s_{c}{tier}'))
+            t = r['issue'] + cp['edges'] - RSTOP_HOP      # the row's CTL event edge is the landed line pin + RSTOP_HOP
+            tag = occ.get((tier, c, cp['entry_port']), {}).get(t)
+            if tag is not None:
+                out.append((r['issue'], tier, c, cp['entry_port'], t, tag, r.get('what', '')))
+                break
+    return out
+
+
 class CalendarFull(Exception):
     pass
 
@@ -888,7 +939,7 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None):
     if dense_stage is not None and mu_ctx:
         raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
     if svc_owner_epoch is not None and mu_ctx:
@@ -911,7 +962,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     low = []
     fams = family_lowerings()
     ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag,
-               svc_owner_epoch=svc_owner_epoch)
+               svc_owner_epoch=svc_owner_epoch, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -951,6 +1002,21 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                                         dict(zip(('module', 'port', 'missing'), GAP_XS_ROM))])
         (out / 'prog/frame_cfg7' / f'{f}.json').write_text(json.dumps(rec, indent=1) + '\n')
     n_row_ctl = row_ctl_events(die, prog)
+    clash = line_slot_conflicts(die, prog)
+    if clash:
+        # the vs calendar rows are free to move (their unit-side events follow the row); any other V row is pinned by a
+        # family-stated arrival -> fail closed.  Re-lower with the clashing issue edges reserved (lower_vs skips them).
+        pinned = [c for c in clash if ': vs ' not in c[6]]
+        if pinned:
+            raise ValueError(f'line slot collision of a pinned V calendar row with a G-unit V CTL re-injection: {pinned[:4]}')
+        avoid = {k: set(v) for k, v in (line_avoid or {}).items()}
+        for issue, tier, *_ in clash:
+            avoid.setdefault(tier, set()).add(issue)
+        if sum(len(v) for v in avoid.values()) > 64:
+            raise ValueError(f'line slot reservation does not converge: {clash[:4]}')
+        return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
+                             mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid)
+    prog.line_avoid = {k: sorted(v) for k, v in (line_avoid or {}).items()}
     files = {}
     for rel, text in prog.files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -987,7 +1053,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
-                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage)
+                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1029,7 +1095,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     'scheduled event (op schedule span below = the priced critical slice)',
         price=dict(span=sched['span'], crit=sched['crit'], source=sched['price_source'],
                    capture_extra_edges=sched['capture_extra_edges']),
-        ops=sched['ops'], deps=sched['deps'], smoke=sub, events=sorted(prog.events, key=lambda e: e['cycle']),
+        ops=sched['ops'], deps=sched['deps'], smoke=sub, line_slot_reserved=getattr(prog, 'line_avoid', {}), events=sorted(prog.events, key=lambda e: e['cycle']),
         event_words='LB2-S81/EVENTS: an encoded boundary event carries words [[edge, value hex, mask hex]] on `ports` '
                     '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '
                     'edge the producer\'s output register takes it; boundary offdie = beyond the die\'s elastic link '
