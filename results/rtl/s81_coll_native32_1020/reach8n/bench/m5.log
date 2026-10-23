@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       admits   145 GB (avail 215, growth 113, headroom 0, waiters 0/0 GB) load 96/128 running 47 disk 178 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/drives81-ntf/src
+ot-run: ot-epyc7       admits  1005 GB (avail 805, growth 101, headroom 0, waiters 113/5072 GB) load 85/96 running 29 disk 4986 GB 
+ot-run: ot-epyc9       admits   313 GB (avail 437, growth 218, headroom 0, waiters 0/0 GB) load 302/128 running 54 disk 68 GB 
+ot-run: ot-pve1        admits   258 GB (avail 204, growth 24, headroom 0, waiters 0/0 GB) load 95/28 running 14 disk 1172 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/drives81-ntf/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1397840-1792562656 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+COLL_REACH7_STATS ref4 sent=37025 received=36912 mean_latency=122.51 | safe7 sent=32 received=0 mean_latency=0.00 | faults ref4=000/000 safe7=000/000 | naks=0/0 replays=0/0 timeouts=0/0
+COLL_REACH7 FAIL errors=0 received=0/36912 faults=000/000 vs 000/000
+- rtl/dsrom_sys/s81_ph/test/tb_coll_reach7.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 1.868 s; speed 21.412 us/s
+- Verilator: cpu 1.868 s on 1 threads; allocated 9 MB
+sim exit 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1397840-1792562656): exit 1
