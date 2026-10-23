@@ -58,6 +58,44 @@ def lint(out, top, files, defines=(), waive=()):
                 waived=waived, waivers=list(waive))
 
 
+def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
+    """asbuilt.lint_split: a die too large for one Verilator run is linted in pieces that together cover it:
+    the bound top + every partition module against leaf INTERFACE stubs, then each partition module with the real
+    RTL closure of its own leaves (one run per partition module, jobs in parallel)."""
+    from concurrent.futures import ThreadPoolExecutor
+    defines, waive = ab0.get("defines", []), ab0.get("lint_waive", [])
+    ldir = Path(out) / "lint"
+    ldir.mkdir(exist_ok=True)
+    stubs = E.lib_stubs(lib, ldir / "leaf_stubs.sv")
+    runs = {"top": [stubs, str(rs)] + gen_rtl}
+    cells = [f for f in gen_rtl if Path(f).name == "bind_cells.sv"]
+    byfile = {}
+    for f in gen_rtl:
+        if f.endswith("_bound_top.sv") or f in cells:
+            continue
+        t = Path(f).read_text(errors="replace")
+        mods = re.findall(r"^module\s+(\w+)", t, re.M)
+        leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) -
+                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_reset_sync"})
+        cl, _ = E.closure(leafm, idx, prefer)
+        for m in mods:
+            byfile[m] = [f] + cells + [str(rs)] + cl
+    runs.update(byfile)
+
+    def one(item):
+        name, files = item
+        d = ldir / name
+        d.mkdir(exist_ok=True)
+        return name, lint(d, top if name == "top" else name, files, defines, waive)
+    res = dict(ThreadPoolExecutor(int(ab0.get("lint_jobs", 4))).map(one, sorted(runs.items())))
+    errs = sum(r.get("errors", 0) for r in res.values() if r.get("ran"))
+    first = [f"[{n}] {e}" for n, r in sorted(res.items()) for e in r.get("first_errors", [])][:20]
+    return dict(ran=all(r.get("ran") for r in res.values()), split=True, runs=len(res), errors=errs,
+                warnings=sum(r.get("warnings", 0) for r in res.values()), first_errors=first,
+                failed_runs=sorted(n for n, r in res.items() if r.get("errors")),
+                waived=[w for r in res.values() for w in r.get("waived", [])][:50], waivers=list(waive))
+
+
 def cmd_verify(a):
     import bind as _b
     _b._AB_OVERRIDE["path"] = getattr(a, "asbuilt", None)
@@ -171,7 +209,10 @@ def cmd_verify(a):
     prefer += rep.get("extra_lib", [])
     cl, cl_missing = E.closure(leafm, idx, prefer)
     gen_rtl = [f for f in rep["files"]]
-    lt = lint(out, top, cl + gen_rtl + [str(rs)], ab0.get("defines", []), ab0.get("lint_waive", []))
+    if not ab0.get("lint_split"):
+        lt = lint(out, top, cl + gen_rtl + [str(rs)], ab0.get("defines", []), ab0.get("lint_waive", []))
+    else:
+        lt = lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0)
     lt["closure_files"], lt["closure_missing"] = len(cl), cl_missing
     v = dict(top=top, cells=len(F.cells), leaves_missing=len(missing), leaves_missing_examples=missing[:20],
              counts=cnt, mismatches=mism[:200], tied_examples=tied_ex, graph_errors=errs[:50], lint=lt,

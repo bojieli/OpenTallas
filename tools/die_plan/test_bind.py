@@ -165,3 +165,14 @@ def test_substitute_inst_variant(tmp_path):
     assert any(t["type"] == "ta" for t in r["type_splits"])
     assert verify(out)["verdict"] == "PASS"
     assert "lf_b_nid u_u_b" in "".join(f.read_text() for f in (out / "rtl").glob("bt_ta*.sv"))
+
+
+def test_lint_split(tmp_path):
+    """asbuilt.lint_split: top against leaf interface stubs + one run per partition module with its own leaf closure"""
+    def edit(p):
+        p["asbuilt"]["lint_split"] = True
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan.json", edit), out, "elab", "bind", "verify") == 0
+    lt = verify(out)["lint"]
+    if lt.get("ran"):
+        assert lt["split"] and lt["errors"] == 0 and lt["runs"] >= 3

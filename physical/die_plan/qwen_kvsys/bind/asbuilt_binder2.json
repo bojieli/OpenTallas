@@ -267,5 +267,7 @@
    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
   }
  ],
- "files_note": "BINDER2: ASAP7 std-cell verilog models (ORFS asap7 platform verilog/stdcell) for the gate-level qkd_kvs_grp_r2c / grp_h_r2c leaves (lint closure)"
+ "files_note": "BINDER2: ASAP7 std-cell verilog models (ORFS asap7 platform verilog/stdcell) for the gate-level qkd_kvs_grp_r2c / grp_h_r2c leaves (lint closure)",
+ "lint_split": true,
+ "lint_jobs": 6
 }
