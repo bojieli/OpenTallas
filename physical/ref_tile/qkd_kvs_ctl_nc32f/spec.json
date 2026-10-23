@@ -4,6 +4,7 @@
  "kind": "tile",
  "sources": [
   "rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv",
   "rtl/lib/ot_s32_cells.sv",
   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv",
@@ -7273,14 +7274,14 @@
   "OT_SPINE_LEAF_N": "16",
   "OT_RST_COPIES_WIDE": "1"
  },
- "structural_change": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG, verbatim c32i body, census PASS max 32 in gate c32k; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).",
- "purpose": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG, verbatim c32i body, census PASS max 32 in gate c32k; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).",
+ "structural_change": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG = c32i body + kept E-face copies of the 967 W/E-shared output registers, 0 edges; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).",
+ "purpose": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG = c32i body + kept E-face copies of the 967 W/E-shared output registers, 0 edges; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).",
  "safe_design_checklist": "see physical/ref_tile/qkd_kvs_ctl_nc32f/README.md",
  "job": {
   "owner": "Claude:KDIE5-RTL",
   "branch": "claude/kdie5-rtl-ctl-1022",
   "tag": "nc32f",
-  "purpose": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG, verbatim c32i body, census PASS max 32 in gate c32k; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).",
+  "purpose": "KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG = c32i body + kept E-face copies of the 967 W/E-shared output registers, 0 edges; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).",
   "extra_paths": [
    "rtl",
    "tools/qwen_kv_die",
@@ -7339,7 +7340,7 @@
   "granted_by": "STEWARD-QKc 2026-10-22 decision (b) (KDIE5-TV ctl_r1 grant, re-issued for the nc32 body; owner rule: M6 pin grants allowed when the tile does not grow)",
   "reason": "Pin-density grant, NOT growth: the relm frame W / E faces carry 2524 pins each on 172.776 um (14.6 / um on one layer > the 12 b/um/layer limit); M4 + M6 pin-only edge contacts = 7.3 / um / layer.  Outline 1123.176 x 172.776 and the M5 signal / PG cap unchanged; routed DEF / LEF M6 audit required.",
   "source_commit": "8484d5772bf20394dff29eba54ba3903fb654630",
-  "source_spec_sha256": "5585ac7cefc87f2c525077aee958d5a3ffa1306fb5030f24fa6869af698028c3",
+  "source_spec_sha256": "02a4629d052419658fabf479e882e00a012ec1a800267609932fb83395cb65d8",
   "ports": [
    {
     "name": "i_hroot_EN[0]",

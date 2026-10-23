@@ -22,6 +22,7 @@ TILE = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv'
 SRAM = 'physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192'
 SOURCES = [   # = the c32k kit sources (census PASS) with the c32i tile file replaced by the standalone ctl body
     'rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv',
+    'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv',
     'rtl/lib/ot_s32_cells.sv',
     'rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv',
     'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv',
@@ -146,7 +147,7 @@ def main():
                                      capture_output=True, text=True, check=True).stdout)
     why = ('KDIE5-RTL 10-22 (' + ('MAIN' if VAR == 'm' else 'FB') + '): die-bindable native-census kit of the release KV die '
            'qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv '
-           '(KV-CTL10 c32 members + DSTG, verbatim c32i body, census PASS max 32 in gate c32k; die knob OT_KV_CTL_NC32=1 with '
+           '(KV-CTL10 c32 members + DSTG = c32i body + kept E-face copies of the 967 W/E-shared output registers, 0 edges; die knob OT_KV_CTL_NC32=1 with '
            'OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 '
            + ('in one centre row; pin registers ON (c32k: every port except the o_hroot member output flops, +1 in / +1 '
               'out edge, the die schedule must charge them)' if VAR == 'm' else

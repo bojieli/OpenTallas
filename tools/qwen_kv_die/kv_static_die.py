@@ -126,7 +126,8 @@ if GRP_S6C and not (GRP_SAFE2 and os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '
                      '(the closed group tiles are 388.8 wide; the legacy group frame is narrower)')
 # KDIE5-RTL 10-22 (OT_KV_CTL_NC32=1; default off: every tile file / binding unchanged): the release-point control tile
 # qkd_kvs_ctl binds the native-census successor body (KV-CTL10 c32 members + DSTG, census PASS max 32 in gate c32k) from
-# its own file CTL_NC32_RTL (same master name / 62 ports; the generated tile file omits the ctl body, suffix '_nc32').
+# its own file CTL_NC32_RTL (same master name / 62 ports; the generated tile file omits the ctl body, suffix '_nc32'),
+# with per-face (E) kept copies of the 967 output registers shared by the W and E words (kv_ctl_nc32_face.py, 0 edges).
 # The generator's own ctl body must equal the frozen release body the successor derives from (refuses otherwise).
 # Schedule deltas (kv_static_programme.cal_deltas prices them under OT_KV_CTL_C32=2, which this knob requires):
 # own leave guard +2 ck, boot setup_ready +2 (host boundary), +1 boot-write edge (DSTG); token-path port edges +0.
@@ -135,7 +136,7 @@ if CTL_NC32 and os.environ.get('OT_KV_CTL_C32', '0') != '2':
     raise ValueError('CTL_NC32 requires OT_KV_CTL_C32=2 (the compiler prices the c32 own / boot deltas under it)')
 CTL_NC32_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv'
 CTL_NC32_BASE_SHA256 = 'cc153f58e9e00348699ffe78e852449db1ff7efed939156000097ef511981d38'
-CTL_NC32_DEPS = ('rtl/lib/ot_s32_cells.sv', 'rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv',
+CTL_NC32_DEPS = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv', 'rtl/lib/ot_s32_cells.sv', 'rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv',
                  'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv',
                  'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv',
                  'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_boot.sv',

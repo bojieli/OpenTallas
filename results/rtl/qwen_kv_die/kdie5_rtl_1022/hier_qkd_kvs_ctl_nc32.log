@@ -6,7 +6,7 @@
  \----------------------------------------------------------------------------/
  Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
 
--- Running command `read_verilog -sv -defer -DSYNTHESIS rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv rtl/lib/ot_s32_cells.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_boot.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv rtl/physical/ot_qkd_kv_static_writer_native.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192_bb.v; hierarchy -check -top qkd_kvs_ctl; stat' --
+-- Running command `read_verilog -sv -defer -DSYNTHESIS rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv rtl/lib/ot_s32_cells.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_boot.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv rtl/physical/ot_qkd_kv_static_writer_native.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192_bb.v rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv; hierarchy -check -top qkd_kvs_ctl; stat' --
 
 1. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv
 Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv' to AST representation.
@@ -164,12 +164,20 @@ Parsing SystemVerilog input from `physical/asap7_memory_macros_v2/ctl_sram_1r1w_
 Storing AST representation for module `$abstract\ctl_sram_1r1w_64x128_p192'.
 Successfully finished Verilog frontend.
 
-28. Executing HIERARCHY pass (managing design hierarchy).
+28. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_es_fan_root2_b_nc32'.
+Storing AST representation for module `$abstract\qkd_static_kv_boot_dispatch_nc32'.
+Storing AST representation for module `$abstract\qkd_static_kv_boot_dispatch_mu_nc32'.
+Storing AST representation for module `$abstract\qkd_static_kv_layer_programme_nc32'.
+Successfully finished Verilog frontend.
 
-29. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kvs_ctl'.
+29. Executing HIERARCHY pass (managing design hierarchy).
+
+30. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kvs_ctl'.
 Generating RTLIL representation for module `\qkd_kvs_ctl'.
 
-29.1. Analyzing design hierarchy..
+30.1. Analyzing design hierarchy..
 Top module:  \qkd_kvs_ctl
 Parameter \MUT = 0
 Parameter \VMAP = 1
@@ -177,7 +185,7 @@ Parameter \MU = 1
 Parameter \NC = 4
 Parameter \RST_COPIES = 12
 
-29.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_static_writer_native_mu_s32'.
+30.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_static_writer_native_mu_s32'.
 Parameter \MUT = 0
 Parameter \VMAP = 1
 Parameter \MU = 1
@@ -191,7 +199,7 @@ Parameter \SRAM = 1
 Parameter \CTLSRAM = 2
 Parameter \NC = 4
 
-29.3. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_native_programme_s32'.
+30.3. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_native_programme_s32'.
 Parameter \MUT = 0
 Parameter \VMAP = 1
 Parameter \RCOPIES = 20
@@ -206,7 +214,7 @@ Parameter \SAFE = 1
 Parameter \RCOPIES = 12
 Parameter \S32 = 1
 
-29.4. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_ownership_calendar_mu_c32'.
+30.4. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_ownership_calendar_mu_c32'.
 Parameter \MUT = 0
 Parameter \MU = 1
 Parameter \PIPE = 1
@@ -218,7 +226,7 @@ Parameter \QUIET_WIN = 16
 Parameter \MUT = 0
 Parameter \RCOPIES = 2
 
-29.5. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ownership_obs_c32'.
+30.5. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ownership_obs_c32'.
 Parameter \QUIET_WIN = 16
 Parameter \MUT = 0
 Parameter \RCOPIES = 2
@@ -228,30 +236,30 @@ Parameter \MU = 1
 Parameter \CTLSRAM = 2
 Parameter \RCOPIES = 32
 
-29.6. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_layer_programme_s32'.
+30.6. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_layer_programme_nc32'.
 Parameter \MUT = 0
 Parameter \MU = 1
 Parameter \CTLSRAM = 2
 Parameter \RCOPIES = 32
-Generating RTLIL representation for module `$paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_s32'.
-Warning: Replacing memory \c_stage with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv:188
+Generating RTLIL representation for module `$paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_nc32'.
+Warning: Replacing memory \c_stage with list of registers. See rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv:793
 Parameter \MUT = 0
-Parameter \RCOPIES = 32
+Parameter \RCOPIES = 64
 Parameter \PH1C = 1
 Parameter \S32 = 1
 
-29.7. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_es_fan_root2_b_c32'.
+30.7. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_es_fan_root2_b_nc32'.
 Parameter \MUT = 0
-Parameter \RCOPIES = 32
+Parameter \RCOPIES = 64
 Parameter \PH1C = 1
 Parameter \S32 = 1
-Generating RTLIL representation for module `$paramod$6396d2ca9c0ad25739da9d4ad0bfed2c4691c99c\qkd_kv_es_fan_root2_b_c32'.
+Generating RTLIL representation for module `$paramod$062ec98ede6b2d71ed0da3d01bedd1c89532c5c2\qkd_kv_es_fan_root2_b_nc32'.
 Parameter \NRST = 43
 Parameter \CAP = 1
 Parameter \AGES = 1
 Parameter \MUT = 0
 
-29.8. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_a_c32'.
+30.8. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_a_c32'.
 Parameter \NRST = 43
 Parameter \CAP = 1
 Parameter \AGES = 1
@@ -261,7 +269,7 @@ Parameter \R = 2
 Parameter \STAGES = 1
 Parameter \MUT = 0
 
-29.9. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_cfault_node'.
+30.9. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_cfault_node'.
 Parameter \R = 2
 Parameter \STAGES = 1
 Parameter \MUT = 0
@@ -270,7 +278,7 @@ Parameter \R = 4
 Parameter \STAGES = 1
 Parameter \MUT = 0
 
-29.10. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_cfault_node'.
+30.10. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_cfault_node'.
 Parameter \R = 4
 Parameter \STAGES = 1
 Parameter \MUT = 0
@@ -322,7 +330,7 @@ Parameter \WMUT = 0
 Parameter \SRQ = 2
 Parameter \DSTG = 1
 
-29.11. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_boot_dispatch_mu_c32'.
+30.11. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_boot_dispatch_mu_nc32'.
 Parameter \MUT = 0
 Parameter \DIECFG = 1
 Parameter \NRST = 43
@@ -333,28 +341,28 @@ Parameter \MU = 1
 Parameter \WMUT = 0
 Parameter \SRQ = 2
 Parameter \DSTG = 1
-Generating RTLIL representation for module `$paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_c32'.
+Generating RTLIL representation for module `$paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_nc32'.
 
-29.12. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_boot_observe_c32'.
+30.12. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_boot_observe_c32'.
 Generating RTLIL representation for module `\qkd_static_kv_boot_observe_c32'.
 
-29.13. Analyzing design hierarchy..
+30.13. Analyzing design hierarchy..
 Top module:  \qkd_kvs_ctl
 Used module:     $paramod$198a2871d83d798c2504946874f07d7b94cd6313\qkd_kv_static_writer_native_mu_s32
 Used module:     $paramod$69178634fa43ada59b1466db8d76855b8116177c\qkd_kv_native_programme_s32
 Used module:     $paramod$5f6402184ce594caa761aa3b21d0b227a724edfd\qkd_static_kv_ownership_calendar_mu_c32
 Used module:     $paramod$76d8809765948ccf5270834417e57acf6f258d90\qkd_kv_ownership_obs_c32
-Used module:     $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_s32
-Used module:     $paramod$6396d2ca9c0ad25739da9d4ad0bfed2c4691c99c\qkd_kv_es_fan_root2_b_c32
+Used module:     $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_nc32
+Used module:     $paramod$062ec98ede6b2d71ed0da3d01bedd1c89532c5c2\qkd_kv_es_fan_root2_b_nc32
 Used module:     $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a_c32
 Used module:     $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
 Used module:     $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
-Used module:     $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_c32
+Used module:     $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_nc32
 Used module:     \qkd_static_kv_boot_observe_c32
 Parameter \MU = 1
 Parameter \NL = 4
 
-29.14. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_mu_wrow'.
+30.14. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_mu_wrow'.
 Parameter \MU = 1
 Parameter \NL = 4
 Generating RTLIL representation for module `$paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow'.
@@ -366,7 +374,7 @@ Parameter \VMAP = 1
 Parameter \NC = 4
 Parameter \RST_COPIES = 12
 
-29.15. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_static_writer_s32'.
+30.15. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_static_writer_s32'.
 Parameter \MUT = 0
 Parameter \VMAP = 1
 Parameter \NC = 4
@@ -374,12 +382,12 @@ Parameter \RST_COPIES = 12
 Generating RTLIL representation for module `$paramod$714be58f62e5cbab92aa49d3a270f267151b42b5\qkd_kv_static_writer_s32'.
 Parameter \W = 8
 
-29.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_and'.
+30.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_and'.
 Parameter \W = 8
 Generating RTLIL representation for module `$paramod\ot_s32_and\W=s32'00000000000000000000000000001000'.
 Parameter \W = 8
 
-29.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 8
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001000'.
 Parameter \W = 8
@@ -396,12 +404,12 @@ Parameter \W = 8
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001000'.
 Parameter \W = 3
 
-29.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 3
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000000011'.
 Parameter \W = 14
 
-29.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 14
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001110'.
 Parameter \W = 14
@@ -414,12 +422,12 @@ Parameter \W = 14
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001110'.
 Parameter \W = 10
 
-29.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 10
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001010'.
 Parameter \W = 11
 
-29.21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 11
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001011'.
 Parameter \W = 11
@@ -444,7 +452,7 @@ Parameter \W = 11
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001011'.
 Parameter \W = 16
 
-29.22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 16
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000010000'.
 Parameter \W = 16
@@ -483,7 +491,7 @@ Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000010000'.
 Parameter \W = 16
 
-29.23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_and'.
+30.23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_and'.
 Parameter \W = 16
 Generating RTLIL representation for module `$paramod\ot_s32_and\W=s32'00000000000000000000000000010000'.
 Parameter \W = 16
@@ -570,14 +578,14 @@ Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\ot_s32_and\W=s32'00000000000000000000000000010000'.
 Parameter \W = 4
 
-29.24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 4
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000000100'.
 Parameter \W = 4
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000000100'.
 Parameter \W = 4
 
-29.25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_and'.
+30.25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_and'.
 Parameter \W = 4
 Generating RTLIL representation for module `$paramod\ot_s32_and\W=s32'00000000000000000000000000000100'.
 Parameter \W = 4
@@ -636,7 +644,7 @@ Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\ot_s32_and\W=s32'00000000000000000000000000010000'.
 Parameter \W = 5
 
-29.26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 5
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000000101'.
 Parameter \W = 16
@@ -653,7 +661,7 @@ Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000010000'.
 Parameter \W = 2
 
-29.27. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.27. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 2
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000000010'.
 Parameter \W = 16
@@ -1031,7 +1039,7 @@ Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000
 Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000010000'.
 
-29.28. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_s32_priority4'.
+30.28. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_s32_priority4'.
 Generating RTLIL representation for module `\qkd_kv_ctl_s32_priority4'.
 Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000010000'.
@@ -1041,7 +1049,7 @@ Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000010000'.
 Parameter \W = 16
 
-29.29. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_c32_age'.
+30.29. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_c32_age'.
 Parameter \W = 16
 Generating RTLIL representation for module `$paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000010000'.
 Parameter \W = 16
@@ -1076,14 +1084,14 @@ Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000010000'.
 Parameter \W = 8
 
-29.30. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_c32_age'.
+30.30. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_c32_age'.
 Parameter \W = 8
 Generating RTLIL representation for module `$paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000001000'.
 Parameter \W = 8
 Found cached RTLIL representation for module `$paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000001000'.
 Parameter \W = 8
 
-29.31. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_c32_fld'.
+30.31. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_c32_fld'.
 Parameter \W = 8
 Generating RTLIL representation for module `$paramod\qkd_kv_die_cfg_c32_fld\W=s32'00000000000000000000000000001000'.
 Parameter \W = 8
@@ -1172,7 +1180,7 @@ Parameter \W = 8
 Found cached RTLIL representation for module `$paramod\qkd_kv_die_cfg_c32_fld\W=s32'00000000000000000000000000001000'.
 Parameter \W = 15
 
-29.32. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_c32_fld'.
+30.32. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_c32_fld'.
 Parameter \W = 15
 Generating RTLIL representation for module `$paramod\qkd_kv_die_cfg_c32_fld\W=s32'00000000000000000000000000001111'.
 Parameter \W = 15
@@ -1243,7 +1251,7 @@ Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000010000'.
 Parameter \W = 9
 
-29.33. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.33. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 9
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001001'.
 Parameter \W = 9
@@ -1267,7 +1275,7 @@ Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000
 Parameter \W = 8
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001000'.
 
-29.34. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_c32_div6r'.
+30.34. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_c32_div6r'.
 Generating RTLIL representation for module `\qkd_kv_ctl_c32_div6r'.
 Parameter \W = 10
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000001010'.
@@ -1282,7 +1290,7 @@ Parameter \DIECAP = 1
 Parameter \SRQ = 2
 Parameter \DSTG = 1
 
-29.35. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_boot_dispatch_c32'.
+30.35. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_boot_dispatch_nc32'.
 Parameter \MUT = 0
 Parameter \DIECFG = 1
 Parameter \NRST = 43
@@ -1291,9 +1299,9 @@ Parameter \ESCFG = 1
 Parameter \DIECAP = 1
 Parameter \SRQ = 2
 Parameter \DSTG = 1
-Generating RTLIL representation for module `$paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_c32'.
+Generating RTLIL representation for module `$paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_nc32'.
 
-29.36. Analyzing design hierarchy..
+30.36. Analyzing design hierarchy..
 Top module:  \qkd_kvs_ctl
 Used module:     $paramod$198a2871d83d798c2504946874f07d7b94cd6313\qkd_kv_static_writer_native_mu_s32
 Used module:         $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
@@ -1308,14 +1316,14 @@ Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000001011
 Used module:     $paramod$5f6402184ce594caa761aa3b21d0b227a724edfd\qkd_static_kv_ownership_calendar_mu_c32
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000010000
 Used module:     $paramod$76d8809765948ccf5270834417e57acf6f258d90\qkd_kv_ownership_obs_c32
-Used module:     $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_s32
+Used module:     $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_nc32
 Used module:         $paramod\ot_s32_and\W=s32'00000000000000000000000000010000
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000000100
 Used module:         $paramod\ot_s32_and\W=s32'00000000000000000000000000000100
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000000101
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000000010
 Used module:         \qkd_kv_ctl_s32_priority4
-Used module:     $paramod$6396d2ca9c0ad25739da9d4ad0bfed2c4691c99c\qkd_kv_es_fan_root2_b_c32
+Used module:     $paramod$062ec98ede6b2d71ed0da3d01bedd1c89532c5c2\qkd_kv_es_fan_root2_b_nc32
 Used module:     $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a_c32
 Used module:         $paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000010000
 Used module:         $paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000001000
@@ -1323,22 +1331,22 @@ Used module:         $paramod\qkd_kv_die_cfg_c32_fld\W=s32'000000000000000000000
 Used module:         $paramod\qkd_kv_die_cfg_c32_fld\W=s32'00000000000000000000000000001111
 Used module:     $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
 Used module:     $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
-Used module:     $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_c32
+Used module:     $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_nc32
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000001001
 Used module:         \qkd_kv_ctl_c32_div6r
-Used module:         $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_c32
+Used module:         $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_nc32
 Used module:     \qkd_static_kv_boot_observe_c32
 
-29.37. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_c32_div6_step'.
+30.37. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_c32_div6_step'.
 Generating RTLIL representation for module `\qkd_kv_ctl_c32_div6_step'.
 
-29.38. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_c32_rem6'.
+30.38. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_c32_rem6'.
 Generating RTLIL representation for module `\qkd_kv_ctl_c32_rem6'.
 Reprocessing module qkd_kv_ctl_c32_div6r because instantiated module qkd_kv_ctl_c32_div6_step has become available.
 Generating RTLIL representation for module `\qkd_kv_ctl_c32_div6r'.
 Parameter \W = 7
 
-29.39. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.39. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 7
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000000111'.
 Parameter \W = 14
@@ -1413,7 +1421,7 @@ Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000010000'.
 Parameter \W = 6
 
-29.40. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
+30.40. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_sel'.
 Parameter \W = 6
 Generating RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000000110'.
 Parameter \W = 16
@@ -1478,14 +1486,14 @@ Parameter \W = 16
 Found cached RTLIL representation for module `$paramod\ot_s32_sel\W=s32'00000000000000000000000000010000'.
 Parameter \W = 14
 
-29.41. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_and'.
+30.41. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s32_and'.
 Parameter \W = 14
 Generating RTLIL representation for module `$paramod\ot_s32_and\W=s32'00000000000000000000000000001110'.
 
-29.42. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_c32_tpre'.
+30.42. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ctl_c32_tpre'.
 Generating RTLIL representation for module `\qkd_kv_ctl_c32_tpre'.
 
-29.43. Analyzing design hierarchy..
+30.43. Analyzing design hierarchy..
 Top module:  \qkd_kvs_ctl
 Used module:     $paramod$198a2871d83d798c2504946874f07d7b94cd6313\qkd_kv_static_writer_native_mu_s32
 Used module:         $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
@@ -1501,14 +1509,14 @@ Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000001011
 Used module:     $paramod$5f6402184ce594caa761aa3b21d0b227a724edfd\qkd_static_kv_ownership_calendar_mu_c32
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000010000
 Used module:     $paramod$76d8809765948ccf5270834417e57acf6f258d90\qkd_kv_ownership_obs_c32
-Used module:     $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_s32
+Used module:     $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_nc32
 Used module:         $paramod\ot_s32_and\W=s32'00000000000000000000000000010000
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000000100
 Used module:         $paramod\ot_s32_and\W=s32'00000000000000000000000000000100
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000000101
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000000010
 Used module:         \qkd_kv_ctl_s32_priority4
-Used module:     $paramod$6396d2ca9c0ad25739da9d4ad0bfed2c4691c99c\qkd_kv_es_fan_root2_b_c32
+Used module:     $paramod$062ec98ede6b2d71ed0da3d01bedd1c89532c5c2\qkd_kv_es_fan_root2_b_nc32
 Used module:     $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a_c32
 Used module:         $paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000010000
 Used module:         $paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000001000
@@ -1516,18 +1524,18 @@ Used module:         $paramod\qkd_kv_die_cfg_c32_fld\W=s32'000000000000000000000
 Used module:         $paramod\qkd_kv_die_cfg_c32_fld\W=s32'00000000000000000000000000001111
 Used module:     $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
 Used module:     $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
-Used module:     $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_c32
+Used module:     $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_nc32
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000001001
 Used module:         \qkd_kv_ctl_c32_div6r
 Used module:             \qkd_kv_ctl_c32_div6_step
 Used module:             \qkd_kv_ctl_c32_rem6
-Used module:         $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_c32
+Used module:         $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_nc32
 Used module:             $paramod\ot_s32_sel\W=s32'00000000000000000000000000000110
 Used module:             $paramod\ot_s32_and\W=s32'00000000000000000000000000001110
 Used module:             \qkd_kv_ctl_c32_tpre
 Used module:     \qkd_static_kv_boot_observe_c32
 
-29.44. Analyzing design hierarchy..
+30.44. Analyzing design hierarchy..
 Top module:  \qkd_kvs_ctl
 Used module:     $paramod$198a2871d83d798c2504946874f07d7b94cd6313\qkd_kv_static_writer_native_mu_s32
 Used module:         $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
@@ -1543,14 +1551,14 @@ Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000001011
 Used module:     $paramod$5f6402184ce594caa761aa3b21d0b227a724edfd\qkd_static_kv_ownership_calendar_mu_c32
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000010000
 Used module:     $paramod$76d8809765948ccf5270834417e57acf6f258d90\qkd_kv_ownership_obs_c32
-Used module:     $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_s32
+Used module:     $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_nc32
 Used module:         $paramod\ot_s32_and\W=s32'00000000000000000000000000010000
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000000100
 Used module:         $paramod\ot_s32_and\W=s32'00000000000000000000000000000100
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000000101
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000000010
 Used module:         \qkd_kv_ctl_s32_priority4
-Used module:     $paramod$6396d2ca9c0ad25739da9d4ad0bfed2c4691c99c\qkd_kv_es_fan_root2_b_c32
+Used module:     $paramod$062ec98ede6b2d71ed0da3d01bedd1c89532c5c2\qkd_kv_es_fan_root2_b_nc32
 Used module:     $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a_c32
 Used module:         $paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000010000
 Used module:         $paramod\qkd_kv_die_cfg_c32_age\W=s32'00000000000000000000000000001000
@@ -1558,16 +1566,20 @@ Used module:         $paramod\qkd_kv_die_cfg_c32_fld\W=s32'000000000000000000000
 Used module:         $paramod\qkd_kv_die_cfg_c32_fld\W=s32'00000000000000000000000000001111
 Used module:     $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
 Used module:     $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
-Used module:     $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_c32
+Used module:     $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_nc32
 Used module:         $paramod\ot_s32_sel\W=s32'00000000000000000000000000001001
 Used module:         \qkd_kv_ctl_c32_div6r
 Used module:             \qkd_kv_ctl_c32_div6_step
 Used module:             \qkd_kv_ctl_c32_rem6
-Used module:         $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_c32
+Used module:         $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_nc32
 Used module:             $paramod\ot_s32_sel\W=s32'00000000000000000000000000000110
 Used module:             $paramod\ot_s32_and\W=s32'00000000000000000000000000001110
 Used module:             \qkd_kv_ctl_c32_tpre
 Used module:     \qkd_static_kv_boot_observe_c32
+Removing unused module `$abstract\qkd_static_kv_layer_programme_nc32'.
+Removing unused module `$abstract\qkd_static_kv_boot_dispatch_mu_nc32'.
+Removing unused module `$abstract\qkd_static_kv_boot_dispatch_nc32'.
+Removing unused module `$abstract\qkd_kv_es_fan_root2_b_nc32'.
 Removing unused module `$abstract\qkd_kvs_ctl'.
 Removing unused module `$abstract\qkd_static_kv_ownership_calendar'.
 Removing unused module `$abstract\qkd_static_kv_drain_guard4'.
@@ -1615,86 +1627,9 @@ Removing unused module `$abstract\qkd_static_kv_layer_programme_s32'.
 Removing unused module `$abstract\ot_s32_and'.
 Removing unused module `$abstract\ot_s32_sel'.
 Removing unused module `$abstract\qkd_kv_die_cfg'.
-Removed 47 unused modules.
+Removed 51 unused modules.
 
-30. Printing statistics.
-
-=== qkd_kv_ctl_c32_div6_step ===
-
-        +----------Local Count, excluding submodules.
-        | 
-        8 wires
-       20 wire bits
-        5 public wires
-       12 public wire bits
-        4 ports
-        8 port bits
-        3 cells
-        1   $ge
-        1   $mux
-        1   $sub
-
-=== $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_c32 ===
-
-        +----------Local Count, excluding submodules.
-        | 
-      632 wires
-     6322 wire bits
-      181 public wires
-     4516 public wire bits
-       52 ports
-     1381 port bits
-       21 processes
-      395 cells
-        2   $add
-       10   $and
-       63   $eq
-        1   $ge
-      163   $logic_and
-       44   $logic_not
-       50   $logic_or
-        2   $lt
-        5   $mux
-       21   $ne
-       13   $or
-        3   $reduce_and
-        2   $reduce_or
-       16   $xor
-       65 submodules
-        1   $paramod\ot_s32_and\W=s32'00000000000000000000000000001110
-       22   $paramod\ot_s32_and\W=s32'00000000000000000000000000010000
-        1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000000010
-        1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000000110
-        5   $paramod\ot_s32_sel\W=s32'00000000000000000000000000001000
-        1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000001001
-       32   $paramod\ot_s32_sel\W=s32'00000000000000000000000000010000
-        2   qkd_kv_ctl_c32_tpre
-
-=== qkd_kv_ctl_c32_rem6 ===
-
-        +----------Local Count, excluding submodules.
-        | 
-        3 wires
-       13 wire bits
-        2 public wires
-        8 public wire bits
-        2 ports
-        8 port bits
-        1 cells
-        1   $mod
-
-=== $paramod\ot_s32_sel\W=s32'00000000000000000000000000001001 ===
-
-        +----------Local Count, excluding submodules.
-        | 
-        5 wires
-       37 wire bits
-        4 public wires
-       28 public wire bits
-        4 ports
-       28 port bits
-        1 cells
-        1   $mux
+31. Printing statistics.
 
 === $paramod\qkd_kv_die_cfg_c32_fld\W=s32'00000000000000000000000000001111 ===
 
@@ -1981,16 +1916,16 @@ Removed 47 unused modules.
         5   $mux
         2   $reduce_or
 
-=== $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_c32 ===
+=== $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_nc32 ===
 
         +----------Local Count, excluding submodules.
         | 
-      210 wires
-     2723 wire bits
-       92 public wires
-     2327 public wire bits
-       47 ports
-     1352 port bits
+      214 wires
+     2867 wire bits
+       96 public wires
+     2471 public wire bits
+       51 ports
+     1496 port bits
         7 processes
       102 cells
         1   $add
@@ -2005,7 +1940,7 @@ Removed 47 unused modules.
         1   $or
         1   $sub
        15 submodules
-        1   $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_c32
+        1   $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_nc32
         1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000001000
         2   $paramod\ot_s32_sel\W=s32'00000000000000000000000000001001
         2   $paramod\ot_s32_sel\W=s32'00000000000000000000000000001010
@@ -2070,16 +2005,16 @@ Removed 47 unused modules.
        43   $paramod\qkd_kv_die_cfg_c32_fld\W=s32'00000000000000000000000000001000
        32   $paramod\qkd_kv_die_cfg_c32_fld\W=s32'00000000000000000000000000001111
 
-=== $paramod$6396d2ca9c0ad25739da9d4ad0bfed2c4691c99c\qkd_kv_es_fan_root2_b_c32 ===
+=== $paramod$062ec98ede6b2d71ed0da3d01bedd1c89532c5c2\qkd_kv_es_fan_root2_b_nc32 ===
 
         +----------Local Count, excluding submodules.
         | 
-      302 wires
-    10327 wire bits
-       76 public wires
-     6706 public wire bits
-       22 ports
-     2539 port bits
+      304 wires
+    11991 wire bits
+       77 public wires
+     7554 public wire bits
+       23 ports
+     3323 port bits
        11 processes
       196 cells
         2   $eq
@@ -2091,38 +2026,38 @@ Removed 47 unused modules.
         8   $or
         9   $reduce_or
 
-=== $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_s32 ===
+=== $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_nc32 ===
 
         +----------Local Count, excluding submodules.
         | 
-     2327 wires
-    24366 wire bits
-      534 public wires
-    15955 public wire bits
-       39 ports
-      385 port bits
+     2378 wires
+    24606 wire bits
+      543 public wires
+    16030 public wire bits
+       45 ports
+      424 port bits
        40 processes
-     1434 cells
-       28   $add
+     1448 cells
+       29   $add
        18   $and
-      113   $eq
+      114   $eq
        13   $ge
         3   $gt
         8   $le
-      718   $logic_and
-      265   $logic_not
+      721   $logic_and
+      266   $logic_not
        59   $logic_or
        37   $lt
-       12   $mux
+       14   $mux
        15   $ne
        14   $neg
        10   $not
        60   $or
-       17   $reduce_or
+       20   $reduce_or
        14   $shift
-       11   $shiftx
+       13   $shiftx
         3   $shl
-       12   $sub
+       13   $sub
         4   ctl_sram_1r1w_64x128_p192
       273 submodules
         4   $paramod\ot_s32_and\W=s32'00000000000000000000000000000100
@@ -2243,21 +2178,21 @@ Removed 47 unused modules.
 
         +----------Local Count, excluding submodules.
         | 
-      767 wires
-    12531 wire bits
-      767 public wires
-    12531 public wire bits
+      778 wires
+    13498 wire bits
+      778 public wires
+    13498 public wire bits
        62 ports
      7099 port bits
        20 submodules
+        1   $paramod$062ec98ede6b2d71ed0da3d01bedd1c89532c5c2\qkd_kv_es_fan_root2_b_nc32
         1   $paramod$198a2871d83d798c2504946874f07d7b94cd6313\qkd_kv_static_writer_native_mu_s32
-        1   $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_c32
+        1   $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_nc32
         1   $paramod$5f6402184ce594caa761aa3b21d0b227a724edfd\qkd_static_kv_ownership_calendar_mu_c32
-        1   $paramod$6396d2ca9c0ad25739da9d4ad0bfed2c4691c99c\qkd_kv_es_fan_root2_b_c32
         1   $paramod$69178634fa43ada59b1466db8d76855b8116177c\qkd_kv_native_programme_s32
         1   $paramod$76d8809765948ccf5270834417e57acf6f258d90\qkd_kv_ownership_obs_c32
        10   $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
-        1   $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_s32
+        1   $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_nc32
         1   $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a_c32
         1   $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
         1   qkd_static_kv_boot_observe_c32
@@ -2329,18 +2264,96 @@ Removed 47 unused modules.
         8 cells
         8   $eq
 
+=== qkd_kv_ctl_c32_div6_step ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        8 wires
+       20 wire bits
+        5 public wires
+       12 public wire bits
+        4 ports
+        8 port bits
+        3 cells
+        1   $ge
+        1   $mux
+        1   $sub
+
+=== $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_nc32 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      642 wires
+     6756 wire bits
+      187 public wires
+     4804 public wire bits
+       56 ports
+     1525 port bits
+       23 processes
+      397 cells
+        2   $add
+       10   $and
+       63   $eq
+        1   $ge
+      163   $logic_and
+       46   $logic_not
+       50   $logic_or
+        2   $lt
+        5   $mux
+       21   $ne
+       13   $or
+        3   $reduce_and
+        2   $reduce_or
+       16   $xor
+       65 submodules
+        1   $paramod\ot_s32_and\W=s32'00000000000000000000000000001110
+       22   $paramod\ot_s32_and\W=s32'00000000000000000000000000010000
+        1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000000010
+        1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000000110
+        5   $paramod\ot_s32_sel\W=s32'00000000000000000000000000001000
+        1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000001001
+       32   $paramod\ot_s32_sel\W=s32'00000000000000000000000000010000
+        2   qkd_kv_ctl_c32_tpre
+
+=== qkd_kv_ctl_c32_rem6 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+       13 wire bits
+        2 public wires
+        8 public wire bits
+        2 ports
+        8 port bits
+        1 cells
+        1   $mod
+
+=== $paramod\ot_s32_sel\W=s32'00000000000000000000000000001001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       37 wire bits
+        4 public wires
+       28 public wire bits
+        4 ports
+       28 port bits
+        1 cells
+        1   $mux
+
 === design hierarchy ===
 
         +----------Count including submodules.
         | 
-     3736 qkd_kvs_ctl
+     3752 qkd_kvs_ctl
+      196 $paramod$062ec98ede6b2d71ed0da3d01bedd1c89532c5c2\qkd_kv_es_fan_root2_b_nc32
         3 $paramod$198a2871d83d798c2504946874f07d7b94cd6313\qkd_kv_static_writer_native_mu_s32
        15   $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
       376   $paramod$714be58f62e5cbab92aa49d3a270f267151b42b5\qkd_kv_static_writer_s32
         1     $paramod\ot_s32_sel\W=s32'00000000000000000000000000000111
         1     $paramod\ot_s32_sel\W=s32'00000000000000000000000000001110
-      102 $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_c32
-      395   $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_c32
+      102 $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_nc32
+      397   $paramod$5d55b6f85581eac076c034e4b12b0a2e17eb5492\qkd_static_kv_boot_dispatch_nc32
         1     $paramod\ot_s32_and\W=s32'00000000000000000000000000001110
         1     $paramod\ot_s32_and\W=s32'00000000000000000000000000010000
         1     $paramod\ot_s32_sel\W=s32'00000000000000000000000000000010
@@ -2357,7 +2370,6 @@ Removed 47 unused modules.
         1     qkd_kv_ctl_c32_rem6
       111 $paramod$5f6402184ce594caa761aa3b21d0b227a724edfd\qkd_static_kv_ownership_calendar_mu_c32
         1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000010000
-      196 $paramod$6396d2ca9c0ad25739da9d4ad0bfed2c4691c99c\qkd_kv_es_fan_root2_b_c32
       206 $paramod$69178634fa43ada59b1466db8d76855b8116177c\qkd_kv_native_programme_s32
         1   $paramod\ot_s32_and\W=s32'00000000000000000000000000001000
         1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000000011
@@ -2367,7 +2379,7 @@ Removed 47 unused modules.
         1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000001110
        27 $paramod$76d8809765948ccf5270834417e57acf6f258d90\qkd_kv_ownership_obs_c32
         2 $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
-     1434 $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_s32
+     1448 $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_nc32
         1   $paramod\ot_s32_and\W=s32'00000000000000000000000000000100
         1   $paramod\ot_s32_and\W=s32'00000000000000000000000000010000
         1   $paramod\ot_s32_sel\W=s32'00000000000000000000000000000010
@@ -2383,54 +2395,54 @@ Removed 47 unused modules.
 
         +----------Count including submodules.
         | 
-     9280 wires
-   117150 wire bits
-     4294 public wires
-    86574 public wire bits
-     2388 ports
-    42982 port bits
+     9358 wires
+   120599 wire bits
+     4325 public wires
+    88896 public wire bits
+     2403 ports
+    44093 port bits
         5 memories
      5760 memory bits
-      665 processes
-     3736 cells
-       43   $add
+      667 processes
+     3752 cells
+       44   $add
       131   $and
-      300   $eq
+      301   $eq
        25   $ge
         4   $gt
        13   $le
-     1332   $logic_and
-      887   $logic_not
+     1335   $logic_and
+      890   $logic_not
       190   $logic_or
        50   $lt
         1   $mod
-      422   $mux
+      424   $mux
        61   $ne
        14   $neg
        13   $not
        95   $or
         8   $reduce_and
-       53   $reduce_or
+       56   $reduce_or
        14   $shift
-       11   $shiftx
+       13   $shiftx
         5   $shl
-       37   $sub
+       38   $sub
        21   $xor
         6   ctl_sram_1r1w_64x128_p192
        20 submodules
+        1   $paramod$062ec98ede6b2d71ed0da3d01bedd1c89532c5c2\qkd_kv_es_fan_root2_b_nc32
         1   $paramod$198a2871d83d798c2504946874f07d7b94cd6313\qkd_kv_static_writer_native_mu_s32
-        1   $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_c32
+        1   $paramod$4f0dfc747f3b006aed40bcbb1ca340672f0f2e23\qkd_static_kv_boot_dispatch_mu_nc32
         1   $paramod$5f6402184ce594caa761aa3b21d0b227a724edfd\qkd_static_kv_ownership_calendar_mu_c32
-        1   $paramod$6396d2ca9c0ad25739da9d4ad0bfed2c4691c99c\qkd_kv_es_fan_root2_b_c32
         1   $paramod$69178634fa43ada59b1466db8d76855b8116177c\qkd_kv_native_programme_s32
         1   $paramod$76d8809765948ccf5270834417e57acf6f258d90\qkd_kv_ownership_obs_c32
        10   $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
-        1   $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_s32
+        1   $paramod$b3b005010539b3ee22bf657580ab139239c33dbf\qkd_static_kv_layer_programme_nc32
         1   $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a_c32
         1   $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
         1   qkd_static_kv_boot_observe_c32
 
 Warnings: 1 unique messages, 1 total
-End of script. Logfile hash: dec749a823, time: 0.29s, user: 0.28s, system: 0.01s, MEM: 65.50 MB peak
+End of script. Logfile hash: 5bb9c1ff86, time: 0.34s, user: 0.32s, system: 0.02s, MEM: 69.75 MB peak
 Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
-Time spent: 76% 1x hierarchy (0 sec), 21% 28x read_verilog (0 sec), ...
+Time spent: 73% 1x hierarchy (0 sec), 24% 29x read_verilog (0 sec), ...

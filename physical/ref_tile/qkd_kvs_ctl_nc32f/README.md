@@ -1,6 +1,6 @@
 # qkd_kvs_ctl_nc32f (KDIE5-RTL 10-22) -- native-census release KV die qkd_kvs_ctl at the relm frame
 
-KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG, verbatim c32i body, census PASS max 32 in gate c32k; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).
+KDIE5-RTL 10-22 (FB): die-bindable native-census kit of the release KV die qkd_kvs_ctl at the relm frame 1123.176 x 172.776: body = rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (KV-CTL10 c32 members + DSTG = c32i body + kept E-face copies of the 967 W/E-shared output registers, 0 edges; die knob OT_KV_CTL_NC32=1 with OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1).  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).
 
 SAFE checklist (pre-gate):
 1 Pins: frame faces / bit order (ctl_r1 plan, M4 + pin-only M6 on W/E, 2166 M6 contacts); pin registers
