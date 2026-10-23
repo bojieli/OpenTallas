@@ -32,19 +32,19 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_sm.g_s.u_gb.g_b[0].u_mem}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_ib0.g_m.g_b[0].u_mem}]
 $i setOrient R0; $i setLocation [expr {round(421.632 * $dbu)}] [expr {round(466.56 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 421.632 466.56 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_sm.g_s.u_gb.g_b[1].u_mem}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_ib1.g_m.g_b[0].u_mem}]
 $i setOrient R0; $i setLocation [expr {round(421.632 * $dbu)}] [expr {round(371.52 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 421.632 371.52 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_sm.g_s.u_gb.g_b[2].u_mem}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_sm.g_s.u_gb.g_b[0].u_mem}]
 $i setOrient R0; $i setLocation [expr {round(421.632 * $dbu)}] [expr {round(276.48 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 421.632 276.48 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_sm.g_s.u_gb.g_b[3].u_mem}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_sm.g_s.u_gb.g_b[1].u_mem}]
 $i setOrient R0; $i setLocation [expr {round(421.632 * $dbu)}] [expr {round(181.44 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 421.632 181.44 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_sm.g_s.u_gb.g_b[4].u_mem}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {u_sm.g_s.u_gb.g_b[2].u_mem}]
 $i setOrient R0; $i setLocation [expr {round(421.632 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 421.632 86.4 R0"
 set i [ot_ref_pick $ot_ref_by dsdv_idx_txm_grp {*u_sm.g_s.u_ga}]

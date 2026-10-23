@@ -37,7 +37,7 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "u_sm.g_s.u_gb.g_b[0].u_mem",
+   "inst": "u_ib0.g_m.g_b[0].u_mem",
    "at": [
     421.632,
     466.56
@@ -45,7 +45,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "u_sm.g_s.u_gb.g_b[1].u_mem",
+   "inst": "u_ib1.g_m.g_b[0].u_mem",
    "at": [
     421.632,
     371.52
@@ -53,7 +53,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "u_sm.g_s.u_gb.g_b[2].u_mem",
+   "inst": "u_sm.g_s.u_gb.g_b[0].u_mem",
    "at": [
     421.632,
     276.48
@@ -61,7 +61,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "u_sm.g_s.u_gb.g_b[3].u_mem",
+   "inst": "u_sm.g_s.u_gb.g_b[1].u_mem",
    "at": [
     421.632,
     181.44
@@ -69,7 +69,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "u_sm.g_s.u_gb.g_b[4].u_mem",
+   "inst": "u_sm.g_s.u_gb.g_b[2].u_mem",
    "at": [
     421.632,
     86.4
@@ -220,5 +220,8 @@
  "pre_dpl_extra": [
   "physical/common_flow/macro_pin_flops_release.tcl"
  ],
- "hold_budget_reason": "cluster with one CLOSED hard child (hold_budget die is leaf/two-level only); every boundary pin is registered in RTL"
+ "hold_budget_reason": "cluster with one CLOSED hard child (hold_budget die is leaf/two-level only); every boundary pin is registered in RTL",
+ "defines": [
+  "OT_DSDV_TXGA_HARD"
+ ]
 }

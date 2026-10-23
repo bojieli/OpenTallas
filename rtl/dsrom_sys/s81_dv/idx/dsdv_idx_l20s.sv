@@ -110,6 +110,12 @@ module dsdv_tx_priority_mux #(parameter integer W=10,OFF=0,ID=0)(
  end
 endmodule
 
+// OT_TXGRP_SOFT: the soft dsdv_idx_txm_grp module name (renamed under OT_DSDV_TXGA_HARD, see dsdv_idx_txm_grp)
+`ifdef OT_DSDV_TXGA_HARD
+`define OT_TXGRP_SOFT dsdv_idx_txm_grp_b
+`else
+`define OT_TXGRP_SOFT dsdv_idx_txm_grp
+`endif
 module dsdv_idx_txm_n32 #(
     parameter integer D = 8192,
     parameter bit SRAM_MACRO = 0,
@@ -159,10 +165,14 @@ module dsdv_idx_txm_n32 #(
         initial if (D % 1024 != 0 || NB <= WCB) $fatal(1, "dsdv_idx_txm_n32 SPLIT: D must be a multiple of 1024 with NB > WCB");
         wire [255:0] pa, pb;
         // column A (banks 0..WCB-1): the hardened child (own clock root)
+`ifdef OT_DSDV_TXGA_HARD
+        dsdv_idx_txm_grp u_ga (   // hard view: hardened with D, B0 0, NG WCB, RDL, WDL, RIL, RIL_MUT, POUT 1
+`else
         dsdv_idx_txm_grp #(.D(D), .B0(0), .NG(WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_ga (
+`endif
             .ck(ck), .re(re), .ra(ra), .we(we), .wa(wa), .wd(wd), .wm_next(wm_next), .p(pa));
         // column B (banks WCB..NB-1, fed by the WDC copy of the write port when WDC = 1)
-        dsdv_idx_txm_grp #(.D(D), .B0(WCB), .NG(NB - WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_gb (
+        `OT_TXGRP_SOFT #(.D(D), .B0(WCB), .NG(NB - WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_gb (
             .ck(ck), .re(re), .ra(ra), .we((WDC != 0) ? we_b : we), .wa((WDC != 0) ? wa_b : wa), .wd((WDC != 0) ? wd_b : wd),
             .wm_next(wm_next), .p(pb));
         always @* rd = pa | pb;  // POUT = 1: pa / pb are the groups' pin flops (same edge as the former rd register)
@@ -279,7 +289,10 @@ endmodule
 // capture), plus this group's own bank-select copies; p = OR over the group's banks of (captured word AND bank select):
 // the parent registers pa | pb into rd.  Every input lands in a flop of this group before any logic (re/ra/we/wa/wd/
 // wm_next), every output comes from flops through one AND-OR: a clean hardened child with its own clock root.
-module dsdv_idx_txm_grp #(
+// OT_DSDV_TXGA_HARD (TOPK TX y parent s81dv_idxtxn32y): u_ga is the hardened s81dv_idxtxga view (module dsdv_idx_txm_grp,
+// no parameters); the soft column B group keeps this body under the name dsdv_idx_txm_grp_b.  Without the define the
+// module is dsdv_idx_txm_grp exactly as before (the ga view and every other user unchanged).
+module `OT_TXGRP_SOFT #(
     parameter integer D = 8192,
     parameter integer B0 = 0,
     parameter integer NG = 5,
