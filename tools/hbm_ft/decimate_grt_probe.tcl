@@ -1,4 +1,5 @@
 # FT-HBM die what-if probe: r18h5 place.odb with relay/landing tiles DECIMATED to <= HOP um along current routes
+# (no liberty is read: setRC/set_wire_rc need liberty units and are not used by global_route)
 # (tools/hbm_ft/decimate_plan.py drop list), then the same GRT probe settings as the r18h5 die case (norep, iterations 0).
 # Dropped tile: every output bit net merged into its input bit net (o<-i, b<-a, ck_o<-ckf, eb<-ea); the tile is deleted.
 read_db /work/place.odb
@@ -34,11 +35,8 @@ foreach nm_ $names {
   incr nd
 }
 puts "OT_FT_DECIMATE dropped=$nd merged_nets=$nm missing=$nmiss undriven_outputs=$nundr secs=[expr {[clock seconds]-$t0}] insts=[llength [$blk getInsts]]"
-source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
 foreach n [$blk getNets] { if {[string match dk?_* [$n getName]] || [string match n_dk?_* [$n getName]] || [string match ckg_pll_* [$n getName]]} { $n setSigType CLOCK } }
 if {[$blk findNet p_host_N__pma_rck] != "NULL"} { [$blk findNet p_host_N__pma_rck] setSigType CLOCK }
-set_wire_rc -clock -layer M8
-set_wire_rc -signal -layer M8
 set_routing_layers -signal M4-M9 -clock M7-M9
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M7 0.146
