@@ -1,0 +1,43 @@
+{
+ "element": "ot_hbm_svc_wb_kport_q",
+ "kit": "hbm_wbk_q9b_1023",
+ "kind": "PLAN (floorplan-only, from spec.json; no placement yet)",
+ "outline_um": [
+  907.2,
+  604.8
+ ],
+ "area_um2": 548675,
+ "macros": 32,
+ "macro_halo_area_um2": 193133,
+ "free_um2": 355541,
+ "std_nd_placed_um2": 229460,
+ "std_nd_synth_um2": 106600,
+ "std_fill_of_free_est_pct": 64.5,
+ "std_fill_of_free_est_synth_only_pct": 30.0,
+ "bands_um": {
+  "N": 154.3,
+  "E": 240.0,
+  "S": 59.4
+ },
+ "pins_per_face": {
+  "N": 2314,
+  "E": 2312,
+  "S": 2452,
+  "W": 0
+ },
+ "pins_per_um": {
+  "N": 2.55,
+  "E": 3.82,
+  "S": 2.7
+ },
+ "unregistered_pins_rtl": {
+  "w_k_rdy": 16,
+  "why": "named exception: K valid/ready handshake ready input"
+ },
+ "nd_long_wire_buffers": {
+  "wire_BUFx16f": 186884,
+  "wire_BUFx12f": 107180,
+  "share_of_nd_cells_pct": 23.3,
+  "q10_trigger": "> 15% of cells at 3_4 -> per-PC FIFO + K ring hierarchy (q10)"
+ }
+}
