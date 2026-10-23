@@ -1,0 +1,310 @@
+{
+ "pll_hbm_WS": {
+  "width": 1,
+  "pass_sinks": 0,
+  "parts": {
+   "?phy_WS": 1,
+   "pc_WS_0": 5,
+   "pc_WS_1": 5,
+   "pc_WS_2": 5,
+   "pc_WS_3": 5,
+   "pc_WS_4": 5,
+   "pc_WS_5": 5,
+   "pc_WS_6": 5,
+   "pc_WS_7": 5,
+   "hroot_WS": 1
+  },
+  "ports": [
+   "qkd_ctrl_kc.pll_hbm",
+   "qkd_hbm3e_phy_pc.clk",
+   "qkd_kvs_grp_h_r2c.hck",
+   "qkd_kvs_grp_r2c.hck",
+   "qkd_kvs_pc.hck",
+   "qkd_kvs_pc_h.hck"
+  ]
+ },
+ "pll_hbm_WN": {
+  "width": 1,
+  "pass_sinks": 0,
+  "parts": {
+   "?phy_WN": 1,
+   "pc_WN_0": 5,
+   "pc_WN_1": 5,
+   "pc_WN_2": 5,
+   "pc_WN_3": 5,
+   "pc_WN_4": 5,
+   "pc_WN_5": 5,
+   "pc_WN_6": 5,
+   "pc_WN_7": 5,
+   "hroot_WN": 1
+  },
+  "ports": [
+   "qkd_ctrl_kc.pll_hbm",
+   "qkd_hbm3e_phy_pc.clk",
+   "qkd_kvs_grp_h_r2c.hck",
+   "qkd_kvs_grp_r2c.hck",
+   "qkd_kvs_pc.hck",
+   "qkd_kvs_pc_h.hck"
+  ]
+ },
+ "pll_hbm_ES": {
+  "width": 1,
+  "pass_sinks": 0,
+  "parts": {
+   "?phy_ES": 1,
+   "pc_ES_0": 5,
+   "pc_ES_1": 5,
+   "pc_ES_2": 5,
+   "pc_ES_3": 5,
+   "pc_ES_4": 5,
+   "pc_ES_5": 5,
+   "pc_ES_6": 5,
+   "pc_ES_7": 5,
+   "hroot_ES": 1
+  },
+  "ports": [
+   "qkd_ctrl_kc.pll_hbm",
+   "qkd_hbm3e_phy_pc.clk",
+   "qkd_kvs_grp_h_r2c.hck",
+   "qkd_kvs_grp_r2c.hck",
+   "qkd_kvs_pc.hck",
+   "qkd_kvs_pc_h.hck"
+  ]
+ },
+ "pll_hbm_EN": {
+  "width": 1,
+  "pass_sinks": 0,
+  "parts": {
+   "?phy_EN": 1,
+   "pc_EN_0": 5,
+   "pc_EN_1": 5,
+   "pc_EN_2": 5,
+   "pc_EN_3": 5,
+   "pc_EN_4": 5,
+   "pc_EN_5": 5,
+   "pc_EN_6": 5,
+   "pc_EN_7": 5,
+   "hroot_EN": 1
+  },
+  "ports": [
+   "qkd_ctrl_kc.pll_hbm",
+   "qkd_hbm3e_phy_pc.clk",
+   "qkd_kvs_grp_h_r2c.hck",
+   "qkd_kvs_grp_r2c.hck",
+   "qkd_kvs_pc.hck",
+   "qkd_kvs_pc_h.hck"
+  ]
+ },
+ "pll_phy": {
+  "width": 1,
+  "pass_sinks": 0,
+  "parts": {
+   "hub_Wi": 11
+  },
+  "ports": [
+   "qkd_host_rt.ck_pad",
+   "qkd_host_rt.ck_phy0",
+   "qkd_host_rt.ck_phy1",
+   "qkd_host_rt.ck_phy2",
+   "qkd_host_rt.ck_phy3",
+   "qkd_host_rt.ck_phy4",
+   "qkd_host_rt.ck_phy5",
+   "qkd_host_rt.ck_phy6",
+   "qkd_host_rt.ck_phy7",
+   "qkd_host_rt.ck_phy_rx_w",
+   "qkd_host_rt.ck_phy_tx_r"
+  ]
+ },
+ "pll_host": {
+  "width": 1,
+  "pass_sinks": 0,
+  "parts": {
+   "hub_Wi": 5
+  },
+  "ports": [
+   "qkd_host_rt.ck_fence_host",
+   "qkd_host_rt.ck_qm_credit",
+   "qkd_host_rt.ck_qm_done_w",
+   "qkd_host_rt.ck_qm_host",
+   "qkd_host_rt.ck_qm_ing_r"
+  ]
+ },
+ "pll_ingest": {
+  "width": 1,
+  "pass_sinks": 0,
+  "parts": {
+   "hub_Wi": 4
+  },
+  "ports": [
+   "qkd_host_rt.ck_qm_bank0",
+   "qkd_host_rt.ck_qm_bank1",
+   "qkd_host_rt.ck_qm_ingest",
+   "qkd_host_rt.ck_qm_out"
+  ]
+ },
+ "pll_fwd": {
+  "width": 1,
+  "pass_sinks": 0,
+  "parts": {
+   "sys_c": 1
+  },
+  "ports": [
+   "qkd_ckbump.pll_ck"
+  ]
+ },
+ "pll_c": {
+  "width": 1,
+  "pass_sinks": 11135,
+  "parts": {
+   "sys_c": 3,
+   "hub_Wo": 20,
+   "hub_Eo": 42,
+   "hub_C": 43,
+   "hub_Wi": 35,
+   "?serdes_host": 1,
+   "pv_S_0": 36,
+   "pv_S_2": 36,
+   "pv_S_3": 36,
+   "pv_S_4": 36,
+   "pv_S_5": 36,
+   "pv_S_6": 36,
+   "pv_S_7": 36,
+   "pv_S_1": 36,
+   "pv_N_0": 36,
+   "pv_N_2": 36,
+   "pv_N_3": 36,
+   "pv_N_4": 36,
+   "pv_N_5": 36,
+   "pv_N_6": 36,
+   "pv_N_7": 36,
+   "pv_N_1": 36,
+   "hroot_WS": 1,
+   "hroot_ES": 1,
+   "hroot_WN": 1,
+   "hroot_EN": 1,
+   "hub_Ei": 93
+  },
+  "ports": [
+   "ot_qfd_serdes_112g_x12_phy.clk",
+   "ot_qkvd_ucie_x64_phy.clk",
+   "ot_qwen_tp8_pv_join_t.clk",
+   "ot_qwen_tp8_pv_slice_t.clk",
+   "ot_qwen_tp8_pv_wide_ctl_tbf.clk",
+   "qkd_ahub.ck_c",
+   "qkd_astk_fault_join.ck",
+   "qkd_d2ds.ck0",
+   "qkd_dcal.ck",
+   "qkd_embgw.ck",
+   "qkd_host_rt.ck_axi",
+   "qkd_host_rt.ck_bootbarrier",
+   "qkd_host_rt.ck_coordinator_codec",
+   "qkd_host_rt.ck_coordinator_lifecycle",
+   "qkd_host_rt.ck_coordinator_post",
+   "qkd_host_rt.ck_csr",
+   "qkd_host_rt.ck_ctl",
+   "qkd_host_rt.ck_ctrl",
+   "qkd_host_rt.ck_dispatch",
+   "qkd_host_rt.ck_fence_core",
+   "qkd_host_rt.ck_guard",
+   "qkd_host_rt.ck_hc",
+   "qkd_host_rt.ck_host",
+   "qkd_host_rt.ck_map",
+   "qkd_host_rt.ck_native",
+   "qkd_host_rt.ck_order",
+   "qkd_host_rt.ck_peer",
+   "qkd_host_rt.ck_phy_rx_r",
+   "qkd_host_rt.ck_phy_tx_w",
+   "qkd_host_rt.ck_program_loader",
+   "qkd_host_rt.ck_program_rx",
+   "qkd_host_rt.ck_prompt",
+   "qkd_host_rt.ck_qm_core",
+   "qkd_host_rt.ck_qm_done_r",
+   "qkd_host_rt.ck_qm_ing_w",
+   "qkd_host_rt.ck_qm_queue",
+   "qkd_host_rt.ck_records",
+   "qkd_host_rt.ck_retire",
+   "qkd_host_rt.ck_root_mux",
+   "qkd_host_rt.ck_rst",
+   "qkd_host_rt.ck_rx",
+   "qkd_host_rt.ck_sum",
+   "qkd_host_rt.ck_tx",
+   "qkd_hp_or2.ck",
+   "qkd_kvs_attn.ck",
+   "qkd_kvs_ctl.ck",
+   "qkd_kvs_emb.ck",
+   "qkd_kvs_hroot.ck",
+   "qkd_pv_rs_hd_f.ck",
+   "qkd_pvfin.ck",
+   "qkd_seq_core_static_s.ck",
+   "qkd_seq_fan_s.ck",
+   "qkd_seq_xs_s.ck"
+  ]
+ },
+ "pll_WS": {
+  "width": 1,
+  "pass_sinks": 3954,
+  "parts": {
+   "hub_Wo": 41,
+   "hg_WS_0": 127,
+   "hg_WS_1": 127,
+   "hg_WS_2": 127,
+   "hg_WS_3": 127,
+   "hg_WS_4": 127,
+   "hg_WS_5": 127,
+   "hg_WS_6": 127,
+   "hg_WS_7": 127,
+   "hgi_WS_2": 118,
+   "hgi_WS_3": 118,
+   "hgi_WS_4": 118,
+   "hgi_WS_5": 118,
+   "hgi_WS_0": 118,
+   "hgi_WS_1": 118,
+   "hgi_WS_6": 118,
+   "hgi_WS_7": 118,
+   "pv_S_3": 1,
+   "pv_S_5": 1,
+   "pv_S_1": 1,
+   "pv_S_7": 1,
+   "pc_WS_0": 9,
+   "pc_WS_1": 9,
+   "pc_WS_2": 9,
+   "pc_WS_3": 9,
+   "pc_WS_4": 9,
+   "pc_WS_5": 9,
+   "pc_WS_6": 9,
+   "pc_WS_7": 9,
+   "hroot_WS": 1,
+   "hub_Wi": 8,
+   "hub_C": 4
+  },
+  "ports": [
+   "ot_qkh_head_frontq_native.clk",
+   "ot_qkh_head_score4_native.clk",
+   "ot_qkh_head_stin_native.clk",
+   "ot_qkh_head_stk_native.clk",
+   "ot_qkh_ktree_lk.clk",
+   "ot_qkh_lane8.clk",
+   "qkd_astk_ctl_s.ck",
+   "qkd_astk_ep_s.ck",
+   "qkd_astk_er_owner_st.ck",
+   "qkd_astk_ex_s.ck",
+   "qkd_astk_fault_join.ck",
+   "qkd_astk_zn.ck",
+   "qkd_ctrl_kc.ck",
+   "qkd_ectlk.ck_a",
+   "qkd_ectlk.ck_b",
+   "qkd_ectlk.ck_c",
+   "qkd_hgs.ck",
+   "qkd_hp_or2.ck",
+   "qkd_hslice.ck",
+   "qkd_hss.ck",
+   "qkd_kvs_grp_h_r2c.ck",
+   "qkd_kvs_grp_r2c.ck",
+   "qkd_kvs_pc.ck",
+   "qkd_kvs_pc_h.ck",
+   "qkd_pv16_vport.ck",
+   "qkh_head_gather_stage.ck",
+   "qkh_head_sstage.ck"
+  ]
+ }
+}

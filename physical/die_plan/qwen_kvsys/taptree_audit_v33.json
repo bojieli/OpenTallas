@@ -1,0 +1,8812 @@
+{
+ "summary": {
+  "schema": "opentallas.kv_p3b.taptree_audit.v1",
+  "groups": 94,
+  "lanes": 656,
+  "under_carrying_lanes": 0,
+  "deficit_bits": 0,
+  "worst": []
+ },
+ "lanes": [
+  {
+   "group": "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L49",
+   "src_part": "hg_EN_7",
+   "dst_part": "pv_N_7",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L50",
+   "src_part": "pv_N_7",
+   "dst_part": "pv_N_6",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L51",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_5",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L52",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_4",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L53",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_3",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L54",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_2",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L55",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_1",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L56",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L72",
+   "src_part": "hg_EN_7",
+   "dst_part": "hub_Eo",
+   "width": 138,
+   "needed_bits": 138,
+   "downstream": [
+    "hub_Eo"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L73",
+   "src_part": "hg_EN_7",
+   "dst_part": "hg_EN_6",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L74",
+   "src_part": "hg_EN_6",
+   "dst_part": "hg_EN_5",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L75",
+   "src_part": "hg_EN_5",
+   "dst_part": "hg_EN_4",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L76",
+   "src_part": "hg_EN_4",
+   "dst_part": "hg_EN_3",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L77",
+   "src_part": "hg_EN_3",
+   "dst_part": "hg_EN_2",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L78",
+   "src_part": "hg_EN_2",
+   "dst_part": "hg_EN_1",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L79",
+   "src_part": "hg_EN_1",
+   "dst_part": "hg_EN_0",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_EN_0"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L81",
+   "src_part": "hub_Eo",
+   "dst_part": "hg_EN_7",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6",
+    "hg_EN_7"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L82",
+   "src_part": "hg_EN_7",
+   "dst_part": "hg_EN_6",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L83",
+   "src_part": "hg_EN_6",
+   "dst_part": "hg_EN_5",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L84",
+   "src_part": "hg_EN_5",
+   "dst_part": "hg_EN_4",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L85",
+   "src_part": "hg_EN_4",
+   "dst_part": "hg_EN_3",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L86",
+   "src_part": "hg_EN_3",
+   "dst_part": "hg_EN_2",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L87",
+   "src_part": "hg_EN_2",
+   "dst_part": "hg_EN_1",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1"
+   ]
+  },
+  {
+   "group": "astk_EN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L88",
+   "src_part": "hg_EN_1",
+   "dst_part": "hg_EN_0",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_EN_0"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L133",
+   "src_part": "hg_ES_7",
+   "dst_part": "pv_S_7",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L134",
+   "src_part": "pv_S_7",
+   "dst_part": "pv_S_6",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L135",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_5",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L136",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_4",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L137",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_3",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L138",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_2",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L139",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_1",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L140",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L156",
+   "src_part": "hg_ES_7",
+   "dst_part": "hub_Eo",
+   "width": 138,
+   "needed_bits": 138,
+   "downstream": [
+    "hub_Eo"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L157",
+   "src_part": "hg_ES_7",
+   "dst_part": "hg_ES_6",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L158",
+   "src_part": "hg_ES_6",
+   "dst_part": "hg_ES_5",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L159",
+   "src_part": "hg_ES_5",
+   "dst_part": "hg_ES_4",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L160",
+   "src_part": "hg_ES_4",
+   "dst_part": "hg_ES_3",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L161",
+   "src_part": "hg_ES_3",
+   "dst_part": "hg_ES_2",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L162",
+   "src_part": "hg_ES_2",
+   "dst_part": "hg_ES_1",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L163",
+   "src_part": "hg_ES_1",
+   "dst_part": "hg_ES_0",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_ES_0"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_u_ctl.qo",
+   "lane": "L165",
+   "src_part": "hub_Eo",
+   "dst_part": "hg_ES_7",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6",
+    "hg_ES_7"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_u_ctl.qo",
+   "lane": "L166",
+   "src_part": "hg_ES_7",
+   "dst_part": "hg_ES_6",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_u_ctl.qo",
+   "lane": "L167",
+   "src_part": "hg_ES_6",
+   "dst_part": "hg_ES_5",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_u_ctl.qo",
+   "lane": "L168",
+   "src_part": "hg_ES_5",
+   "dst_part": "hg_ES_4",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_u_ctl.qo",
+   "lane": "L169",
+   "src_part": "hg_ES_4",
+   "dst_part": "hg_ES_3",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_u_ctl.qo",
+   "lane": "L170",
+   "src_part": "hg_ES_3",
+   "dst_part": "hg_ES_2",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_u_ctl.qo",
+   "lane": "L171",
+   "src_part": "hg_ES_2",
+   "dst_part": "hg_ES_1",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1"
+   ]
+  },
+  {
+   "group": "astk_ES__u_strip_u_strip_u_ctl.qo",
+   "lane": "L172",
+   "src_part": "hg_ES_1",
+   "dst_part": "hg_ES_0",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_ES_0"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L217",
+   "src_part": "hg_WN_7",
+   "dst_part": "pv_N_7",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L218",
+   "src_part": "pv_N_7",
+   "dst_part": "pv_N_6",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L219",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_5",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L220",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_4",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L221",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_3",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L222",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_2",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L223",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_1",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L224",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L240",
+   "src_part": "hg_WN_7",
+   "dst_part": "hub_Wo",
+   "width": 138,
+   "needed_bits": 138,
+   "downstream": [
+    "hub_Wo"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L241",
+   "src_part": "hg_WN_7",
+   "dst_part": "hg_WN_6",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L242",
+   "src_part": "hg_WN_6",
+   "dst_part": "hg_WN_5",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L243",
+   "src_part": "hg_WN_5",
+   "dst_part": "hg_WN_4",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L244",
+   "src_part": "hg_WN_4",
+   "dst_part": "hg_WN_3",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L245",
+   "src_part": "hg_WN_3",
+   "dst_part": "hg_WN_2",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L246",
+   "src_part": "hg_WN_2",
+   "dst_part": "hg_WN_1",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L247",
+   "src_part": "hg_WN_1",
+   "dst_part": "hg_WN_0",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WN_0"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L249",
+   "src_part": "hub_Wo",
+   "dst_part": "hg_WN_7",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6",
+    "hg_WN_7"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L250",
+   "src_part": "hg_WN_7",
+   "dst_part": "hg_WN_6",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L251",
+   "src_part": "hg_WN_6",
+   "dst_part": "hg_WN_5",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L252",
+   "src_part": "hg_WN_5",
+   "dst_part": "hg_WN_4",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L253",
+   "src_part": "hg_WN_4",
+   "dst_part": "hg_WN_3",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L254",
+   "src_part": "hg_WN_3",
+   "dst_part": "hg_WN_2",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L255",
+   "src_part": "hg_WN_2",
+   "dst_part": "hg_WN_1",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1"
+   ]
+  },
+  {
+   "group": "astk_WN__u_strip_u_strip_u_ctl.qo",
+   "lane": "L256",
+   "src_part": "hg_WN_1",
+   "dst_part": "hg_WN_0",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WN_0"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L301",
+   "src_part": "hg_WS_7",
+   "dst_part": "pv_S_7",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L302",
+   "src_part": "pv_S_7",
+   "dst_part": "pv_S_6",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L303",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_5",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L304",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_4",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L305",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_3",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L306",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_2",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L307",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_1",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_data",
+   "lane": "L308",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L324",
+   "src_part": "hg_WS_7",
+   "dst_part": "hub_Wo",
+   "width": 138,
+   "needed_bits": 138,
+   "downstream": [
+    "hub_Wo"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L325",
+   "src_part": "hg_WS_7",
+   "dst_part": "hg_WS_6",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L326",
+   "src_part": "hg_WS_6",
+   "dst_part": "hg_WS_5",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L327",
+   "src_part": "hg_WS_5",
+   "dst_part": "hg_WS_4",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L328",
+   "src_part": "hg_WS_4",
+   "dst_part": "hg_WS_3",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L329",
+   "src_part": "hg_WS_3",
+   "dst_part": "hg_WS_2",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L330",
+   "src_part": "hg_WS_2",
+   "dst_part": "hg_WS_1",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_g_ep_7__u_ep.zo",
+   "lane": "L331",
+   "src_part": "hg_WS_1",
+   "dst_part": "hg_WS_0",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "hg_WS_0"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_u_ctl.qo",
+   "lane": "L333",
+   "src_part": "hub_Wo",
+   "dst_part": "hg_WS_7",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6",
+    "hg_WS_7"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_u_ctl.qo",
+   "lane": "L334",
+   "src_part": "hg_WS_7",
+   "dst_part": "hg_WS_6",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_u_ctl.qo",
+   "lane": "L335",
+   "src_part": "hg_WS_6",
+   "dst_part": "hg_WS_5",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_u_ctl.qo",
+   "lane": "L336",
+   "src_part": "hg_WS_5",
+   "dst_part": "hg_WS_4",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_u_ctl.qo",
+   "lane": "L337",
+   "src_part": "hg_WS_4",
+   "dst_part": "hg_WS_3",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_u_ctl.qo",
+   "lane": "L338",
+   "src_part": "hg_WS_3",
+   "dst_part": "hg_WS_2",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_u_ctl.qo",
+   "lane": "L339",
+   "src_part": "hg_WS_2",
+   "dst_part": "hg_WS_1",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1"
+   ]
+  },
+  {
+   "group": "astk_WS__u_strip_u_strip_u_ctl.qo",
+   "lane": "L340",
+   "src_part": "hg_WS_1",
+   "dst_part": "hg_WS_0",
+   "width": 572,
+   "needed_bits": 572,
+   "downstream": [
+    "hg_WS_0"
+   ]
+  },
+  {
+   "group": "d2d_kv.svc",
+   "lane": "L354",
+   "src_part": "sys_c",
+   "dst_part": "hub_Wi",
+   "width": 174,
+   "needed_bits": 174,
+   "downstream": [
+    "hub_Wi"
+   ]
+  },
+  {
+   "group": "d2d_kv.svc",
+   "lane": "L355",
+   "src_part": "sys_c",
+   "dst_part": "hub_C",
+   "width": 174,
+   "needed_bits": 174,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L502",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Wo",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7",
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L503",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WS_7",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L504",
+   "src_part": "pc_WS_7",
+   "dst_part": "pc_WS_6",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L505",
+   "src_part": "pc_WS_6",
+   "dst_part": "pc_WS_5",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L506",
+   "src_part": "pc_WS_5",
+   "dst_part": "pc_WS_4",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L507",
+   "src_part": "pc_WS_4",
+   "dst_part": "pc_WS_3",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L508",
+   "src_part": "pc_WS_3",
+   "dst_part": "pc_WS_2",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L509",
+   "src_part": "pc_WS_2",
+   "dst_part": "pc_WS_1",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L510",
+   "src_part": "pc_WS_1",
+   "dst_part": "pc_WS_0",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WS_0"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L511",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WN_7",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L512",
+   "src_part": "pc_WN_7",
+   "dst_part": "pc_WN_6",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L513",
+   "src_part": "pc_WN_6",
+   "dst_part": "pc_WN_5",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L514",
+   "src_part": "pc_WN_5",
+   "dst_part": "pc_WN_4",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L515",
+   "src_part": "pc_WN_4",
+   "dst_part": "pc_WN_3",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L516",
+   "src_part": "pc_WN_3",
+   "dst_part": "pc_WN_2",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L517",
+   "src_part": "pc_WN_2",
+   "dst_part": "pc_WN_1",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L518",
+   "src_part": "pc_WN_1",
+   "dst_part": "pc_WN_0",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_WN_0"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L519",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Eo",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7",
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L520",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_ES_7",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L521",
+   "src_part": "pc_ES_7",
+   "dst_part": "pc_ES_6",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L522",
+   "src_part": "pc_ES_6",
+   "dst_part": "pc_ES_5",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L523",
+   "src_part": "pc_ES_5",
+   "dst_part": "pc_ES_4",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L524",
+   "src_part": "pc_ES_4",
+   "dst_part": "pc_ES_3",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L525",
+   "src_part": "pc_ES_3",
+   "dst_part": "pc_ES_2",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L526",
+   "src_part": "pc_ES_2",
+   "dst_part": "pc_ES_1",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L527",
+   "src_part": "pc_ES_1",
+   "dst_part": "pc_ES_0",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_ES_0"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L528",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_EN_7",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L529",
+   "src_part": "pc_EN_7",
+   "dst_part": "pc_EN_6",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L530",
+   "src_part": "pc_EN_6",
+   "dst_part": "pc_EN_5",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L531",
+   "src_part": "pc_EN_5",
+   "dst_part": "pc_EN_4",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L532",
+   "src_part": "pc_EN_4",
+   "dst_part": "pc_EN_3",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L533",
+   "src_part": "pc_EN_3",
+   "dst_part": "pc_EN_2",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L534",
+   "src_part": "pc_EN_2",
+   "dst_part": "pc_EN_1",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1"
+   ]
+  },
+  {
+   "group": "embgw.est",
+   "lane": "L535",
+   "src_part": "pc_EN_1",
+   "dst_part": "pc_EN_0",
+   "width": 13,
+   "needed_bits": 13,
+   "downstream": [
+    "pc_EN_0"
+   ]
+  },
+  {
+   "group": "host.boot_go",
+   "lane": "L637",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Wo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_7"
+   ]
+  },
+  {
+   "group": "host.boot_go",
+   "lane": "L638",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WS_7",
+   "width": 1,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "host.boot_go",
+   "lane": "L639",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WN_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_7"
+   ]
+  },
+  {
+   "group": "host.boot_go",
+   "lane": "L640",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Eo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_7"
+   ]
+  },
+  {
+   "group": "host.boot_go",
+   "lane": "L641",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_ES_7",
+   "width": 1,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "host.boot_go",
+   "lane": "L642",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_EN_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_7"
+   ]
+  },
+  {
+   "group": "host.boot_go",
+   "lane": "L643",
+   "src_part": "hub_Wi",
+   "dst_part": "sys_c",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "sys_c"
+   ]
+  },
+  {
+   "group": "host.die_rst_n",
+   "lane": "L656",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Wo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_WN",
+    "hroot_WS",
+    "hub_Wo"
+   ]
+  },
+  {
+   "group": "host.die_rst_n",
+   "lane": "L657",
+   "src_part": "hub_Wo",
+   "dst_part": "hroot_WS",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_WS"
+   ]
+  },
+  {
+   "group": "host.die_rst_n",
+   "lane": "L658",
+   "src_part": "hub_Wo",
+   "dst_part": "hroot_WN",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_WN"
+   ]
+  },
+  {
+   "group": "host.die_rst_n",
+   "lane": "L659",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Eo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_EN",
+    "hroot_ES",
+    "hub_Eo"
+   ]
+  },
+  {
+   "group": "host.die_rst_n",
+   "lane": "L660",
+   "src_part": "hub_Eo",
+   "dst_part": "hroot_ES",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_ES"
+   ]
+  },
+  {
+   "group": "host.die_rst_n",
+   "lane": "L661",
+   "src_part": "hub_Eo",
+   "dst_part": "hroot_EN",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_EN"
+   ]
+  },
+  {
+   "group": "host.die_rst_n",
+   "lane": "L662",
+   "src_part": "hub_Wi",
+   "dst_part": "sys_c",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "sys_c"
+   ]
+  },
+  {
+   "group": "host.fdi",
+   "lane": "L663",
+   "src_part": "hub_Wi",
+   "dst_part": "io_W3",
+   "width": 1044,
+   "needed_bits": 1044,
+   "downstream": [
+    "sys_SE",
+    "sys_SW"
+   ]
+  },
+  {
+   "group": "host.fdi",
+   "lane": "L664",
+   "src_part": "io_W3",
+   "dst_part": "sys_SE",
+   "width": 522,
+   "needed_bits": 522,
+   "downstream": [
+    "sys_SE"
+   ]
+  },
+  {
+   "group": "host.fdi",
+   "lane": "L665",
+   "src_part": "io_W3",
+   "dst_part": "sys_SW",
+   "width": 523,
+   "needed_bits": 523,
+   "downstream": [
+    "sys_SW"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L666",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Wo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_WN",
+    "hroot_WS",
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7",
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7",
+    "phy_WN_0",
+    "phy_WS_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L667",
+   "src_part": "hub_Wo",
+   "dst_part": "hroot_WS",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_WS",
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7",
+    "phy_WS_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L668",
+   "src_part": "hroot_WS",
+   "dst_part": "phy_WS_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "phy_WS_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L669",
+   "src_part": "hroot_WS",
+   "dst_part": "pc_WS_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L670",
+   "src_part": "pc_WS_7",
+   "dst_part": "pc_WS_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L671",
+   "src_part": "pc_WS_6",
+   "dst_part": "pc_WS_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L672",
+   "src_part": "pc_WS_5",
+   "dst_part": "pc_WS_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L673",
+   "src_part": "pc_WS_4",
+   "dst_part": "pc_WS_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L674",
+   "src_part": "pc_WS_3",
+   "dst_part": "pc_WS_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L675",
+   "src_part": "pc_WS_2",
+   "dst_part": "pc_WS_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L676",
+   "src_part": "pc_WS_1",
+   "dst_part": "pc_WS_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L677",
+   "src_part": "hub_Wo",
+   "dst_part": "hroot_WN",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_WN",
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7",
+    "phy_WN_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L678",
+   "src_part": "hroot_WN",
+   "dst_part": "phy_WN_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "phy_WN_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L679",
+   "src_part": "hroot_WN",
+   "dst_part": "pc_WN_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L680",
+   "src_part": "pc_WN_7",
+   "dst_part": "pc_WN_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L681",
+   "src_part": "pc_WN_6",
+   "dst_part": "pc_WN_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L682",
+   "src_part": "pc_WN_5",
+   "dst_part": "pc_WN_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L683",
+   "src_part": "pc_WN_4",
+   "dst_part": "pc_WN_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L684",
+   "src_part": "pc_WN_3",
+   "dst_part": "pc_WN_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L685",
+   "src_part": "pc_WN_2",
+   "dst_part": "pc_WN_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L686",
+   "src_part": "pc_WN_1",
+   "dst_part": "pc_WN_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L687",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Eo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_EN",
+    "hroot_ES",
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7",
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7",
+    "phy_EN_0",
+    "phy_ES_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L688",
+   "src_part": "hub_Eo",
+   "dst_part": "hroot_ES",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_ES",
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7",
+    "phy_ES_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L689",
+   "src_part": "hroot_ES",
+   "dst_part": "phy_ES_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "phy_ES_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L690",
+   "src_part": "hroot_ES",
+   "dst_part": "pc_ES_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L691",
+   "src_part": "pc_ES_7",
+   "dst_part": "pc_ES_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L692",
+   "src_part": "pc_ES_6",
+   "dst_part": "pc_ES_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L693",
+   "src_part": "pc_ES_5",
+   "dst_part": "pc_ES_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L694",
+   "src_part": "pc_ES_4",
+   "dst_part": "pc_ES_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L695",
+   "src_part": "pc_ES_3",
+   "dst_part": "pc_ES_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L696",
+   "src_part": "pc_ES_2",
+   "dst_part": "pc_ES_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L697",
+   "src_part": "pc_ES_1",
+   "dst_part": "pc_ES_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L698",
+   "src_part": "hub_Eo",
+   "dst_part": "hroot_EN",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hroot_EN",
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7",
+    "phy_EN_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L699",
+   "src_part": "hroot_EN",
+   "dst_part": "phy_EN_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "phy_EN_0"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L700",
+   "src_part": "hroot_EN",
+   "dst_part": "pc_EN_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L701",
+   "src_part": "pc_EN_7",
+   "dst_part": "pc_EN_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L702",
+   "src_part": "pc_EN_6",
+   "dst_part": "pc_EN_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L703",
+   "src_part": "pc_EN_5",
+   "dst_part": "pc_EN_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L704",
+   "src_part": "pc_EN_4",
+   "dst_part": "pc_EN_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L705",
+   "src_part": "pc_EN_3",
+   "dst_part": "pc_EN_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L706",
+   "src_part": "pc_EN_2",
+   "dst_part": "pc_EN_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1"
+   ]
+  },
+  {
+   "group": "host.hbm_rst_n",
+   "lane": "L707",
+   "src_part": "pc_EN_1",
+   "dst_part": "pc_EN_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L710",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Wo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7",
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L711",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WS_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L712",
+   "src_part": "pc_WS_7",
+   "dst_part": "pc_WS_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L713",
+   "src_part": "pc_WS_6",
+   "dst_part": "pc_WS_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L714",
+   "src_part": "pc_WS_5",
+   "dst_part": "pc_WS_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L715",
+   "src_part": "pc_WS_4",
+   "dst_part": "pc_WS_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L716",
+   "src_part": "pc_WS_3",
+   "dst_part": "pc_WS_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L717",
+   "src_part": "pc_WS_2",
+   "dst_part": "pc_WS_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L718",
+   "src_part": "pc_WS_1",
+   "dst_part": "pc_WS_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L719",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WN_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L720",
+   "src_part": "pc_WN_7",
+   "dst_part": "pc_WN_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L721",
+   "src_part": "pc_WN_6",
+   "dst_part": "pc_WN_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L722",
+   "src_part": "pc_WN_5",
+   "dst_part": "pc_WN_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L723",
+   "src_part": "pc_WN_4",
+   "dst_part": "pc_WN_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L724",
+   "src_part": "pc_WN_3",
+   "dst_part": "pc_WN_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L725",
+   "src_part": "pc_WN_2",
+   "dst_part": "pc_WN_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L726",
+   "src_part": "pc_WN_1",
+   "dst_part": "pc_WN_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L727",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Eo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7",
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L728",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_ES_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L729",
+   "src_part": "pc_ES_7",
+   "dst_part": "pc_ES_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L730",
+   "src_part": "pc_ES_6",
+   "dst_part": "pc_ES_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L731",
+   "src_part": "pc_ES_5",
+   "dst_part": "pc_ES_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L732",
+   "src_part": "pc_ES_4",
+   "dst_part": "pc_ES_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L733",
+   "src_part": "pc_ES_3",
+   "dst_part": "pc_ES_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L734",
+   "src_part": "pc_ES_2",
+   "dst_part": "pc_ES_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L735",
+   "src_part": "pc_ES_1",
+   "dst_part": "pc_ES_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L736",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_EN_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L737",
+   "src_part": "pc_EN_7",
+   "dst_part": "pc_EN_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L738",
+   "src_part": "pc_EN_6",
+   "dst_part": "pc_EN_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L739",
+   "src_part": "pc_EN_5",
+   "dst_part": "pc_EN_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L740",
+   "src_part": "pc_EN_4",
+   "dst_part": "pc_EN_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L741",
+   "src_part": "pc_EN_3",
+   "dst_part": "pc_EN_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L742",
+   "src_part": "pc_EN_2",
+   "dst_part": "pc_EN_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1"
+   ]
+  },
+  {
+   "group": "host.host_rst_n",
+   "lane": "L743",
+   "src_part": "pc_EN_1",
+   "dst_part": "pc_EN_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0"
+   ]
+  },
+  {
+   "group": "host.link_rst_n",
+   "lane": "L745",
+   "src_part": "hub_Wi",
+   "dst_part": "io_W3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "sys_SE",
+    "sys_SW",
+    "sys_c"
+   ]
+  },
+  {
+   "group": "host.link_rst_n",
+   "lane": "L746",
+   "src_part": "io_W3",
+   "dst_part": "sys_c",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "sys_SE",
+    "sys_c"
+   ]
+  },
+  {
+   "group": "host.link_rst_n",
+   "lane": "L747",
+   "src_part": "sys_c",
+   "dst_part": "sys_SE",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "sys_SE"
+   ]
+  },
+  {
+   "group": "host.link_rst_n",
+   "lane": "L748",
+   "src_part": "io_W3",
+   "dst_part": "sys_SW",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "sys_SW"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_EN",
+   "lane": "L1391",
+   "src_part": "hub_C",
+   "dst_part": "hub_Eo",
+   "width": 48,
+   "needed_bits": 48,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6",
+    "hg_EN_7",
+    "hub_Eo"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_EN",
+   "lane": "L1392",
+   "src_part": "hub_Eo",
+   "dst_part": "hg_EN_7",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6",
+    "hg_EN_7"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_EN",
+   "lane": "L1393",
+   "src_part": "hg_EN_7",
+   "dst_part": "hg_EN_6",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_EN",
+   "lane": "L1394",
+   "src_part": "hg_EN_6",
+   "dst_part": "hg_EN_5",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_EN",
+   "lane": "L1395",
+   "src_part": "hg_EN_5",
+   "dst_part": "hg_EN_4",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_EN",
+   "lane": "L1396",
+   "src_part": "hg_EN_4",
+   "dst_part": "hg_EN_3",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_EN",
+   "lane": "L1397",
+   "src_part": "hg_EN_3",
+   "dst_part": "hg_EN_2",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_EN",
+   "lane": "L1398",
+   "src_part": "hg_EN_2",
+   "dst_part": "hg_EN_1",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_EN",
+   "lane": "L1399",
+   "src_part": "hg_EN_1",
+   "dst_part": "hg_EN_0",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_EN_0"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_ES",
+   "lane": "L1400",
+   "src_part": "hub_C",
+   "dst_part": "hub_Eo",
+   "width": 48,
+   "needed_bits": 48,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6",
+    "hg_ES_7",
+    "hub_Eo"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_ES",
+   "lane": "L1401",
+   "src_part": "hub_Eo",
+   "dst_part": "hg_ES_7",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6",
+    "hg_ES_7"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_ES",
+   "lane": "L1402",
+   "src_part": "hg_ES_7",
+   "dst_part": "hg_ES_6",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_ES",
+   "lane": "L1403",
+   "src_part": "hg_ES_6",
+   "dst_part": "hg_ES_5",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_ES",
+   "lane": "L1404",
+   "src_part": "hg_ES_5",
+   "dst_part": "hg_ES_4",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_ES",
+   "lane": "L1405",
+   "src_part": "hg_ES_4",
+   "dst_part": "hg_ES_3",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_ES",
+   "lane": "L1406",
+   "src_part": "hg_ES_3",
+   "dst_part": "hg_ES_2",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_ES",
+   "lane": "L1407",
+   "src_part": "hg_ES_2",
+   "dst_part": "hg_ES_1",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_ES",
+   "lane": "L1408",
+   "src_part": "hg_ES_1",
+   "dst_part": "hg_ES_0",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_ES_0"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WN",
+   "lane": "L1409",
+   "src_part": "hub_C",
+   "dst_part": "hub_Wo",
+   "width": 48,
+   "needed_bits": 48,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6",
+    "hg_WN_7",
+    "hub_Wo"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WN",
+   "lane": "L1410",
+   "src_part": "hub_Wo",
+   "dst_part": "hg_WN_7",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6",
+    "hg_WN_7"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WN",
+   "lane": "L1411",
+   "src_part": "hg_WN_7",
+   "dst_part": "hg_WN_6",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WN",
+   "lane": "L1412",
+   "src_part": "hg_WN_6",
+   "dst_part": "hg_WN_5",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WN",
+   "lane": "L1413",
+   "src_part": "hg_WN_5",
+   "dst_part": "hg_WN_4",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WN",
+   "lane": "L1414",
+   "src_part": "hg_WN_4",
+   "dst_part": "hg_WN_3",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WN",
+   "lane": "L1415",
+   "src_part": "hg_WN_3",
+   "dst_part": "hg_WN_2",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WN",
+   "lane": "L1416",
+   "src_part": "hg_WN_2",
+   "dst_part": "hg_WN_1",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WN",
+   "lane": "L1417",
+   "src_part": "hg_WN_1",
+   "dst_part": "hg_WN_0",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WN_0"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WS",
+   "lane": "L1418",
+   "src_part": "hub_C",
+   "dst_part": "hub_Wo",
+   "width": 48,
+   "needed_bits": 48,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6",
+    "hg_WS_7",
+    "hub_Wo"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WS",
+   "lane": "L1419",
+   "src_part": "hub_Wo",
+   "dst_part": "hg_WS_7",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6",
+    "hg_WS_7"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WS",
+   "lane": "L1420",
+   "src_part": "hg_WS_7",
+   "dst_part": "hg_WS_6",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WS",
+   "lane": "L1421",
+   "src_part": "hg_WS_6",
+   "dst_part": "hg_WS_5",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WS",
+   "lane": "L1422",
+   "src_part": "hg_WS_5",
+   "dst_part": "hg_WS_4",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WS",
+   "lane": "L1423",
+   "src_part": "hg_WS_4",
+   "dst_part": "hg_WS_3",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WS",
+   "lane": "L1424",
+   "src_part": "hg_WS_3",
+   "dst_part": "hg_WS_2",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WS",
+   "lane": "L1425",
+   "src_part": "hg_WS_2",
+   "dst_part": "hg_WS_1",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1"
+   ]
+  },
+  {
+   "group": "kvs_attn.acal_WS",
+   "lane": "L1426",
+   "src_part": "hg_WS_1",
+   "dst_part": "hg_WS_0",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "hg_WS_0"
+   ]
+  },
+  {
+   "group": "kvs_attn.prg",
+   "lane": "L1429",
+   "src_part": "hub_C",
+   "dst_part": "hub_Wo",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "hub_Wo"
+   ]
+  },
+  {
+   "group": "kvs_attn.prg",
+   "lane": "L1430",
+   "src_part": "hub_C",
+   "dst_part": "hub_Eo",
+   "width": 256,
+   "needed_bits": 256,
+   "downstream": [
+    "hub_Eo"
+   ]
+  },
+  {
+   "group": "kvs_ctl.dcfg__age_vport__#_#",
+   "lane": "L1437",
+   "src_part": "hub_C",
+   "dst_part": "pv_S_7",
+   "width": 128,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_ctl.dcfg__age_vport__#_#",
+   "lane": "L1438",
+   "src_part": "pv_S_7",
+   "dst_part": "pv_S_5",
+   "width": 96,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_ctl.dcfg__age_vport__#_#",
+   "lane": "L1439",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_3",
+   "width": 64,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_ctl.dcfg__age_vport__#_#",
+   "lane": "L1440",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_1",
+   "width": 32,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_ctl.dcfg__age_vport__#_#",
+   "lane": "L1441",
+   "src_part": "hub_C",
+   "dst_part": "pv_N_7",
+   "width": 128,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_ctl.dcfg__age_vport__#_#",
+   "lane": "L1442",
+   "src_part": "pv_N_7",
+   "dst_part": "pv_N_5",
+   "width": 96,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_ctl.dcfg__age_vport__#_#",
+   "lane": "L1443",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_3",
+   "width": 64,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_ctl.dcfg__age_vport__#_#",
+   "lane": "L1444",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_1",
+   "width": 32,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1456",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Wo",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7",
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1457",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WS_7",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1458",
+   "src_part": "pc_WS_7",
+   "dst_part": "pc_WS_6",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1459",
+   "src_part": "pc_WS_6",
+   "dst_part": "pc_WS_5",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1460",
+   "src_part": "pc_WS_5",
+   "dst_part": "pc_WS_4",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1461",
+   "src_part": "pc_WS_4",
+   "dst_part": "pc_WS_3",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1462",
+   "src_part": "pc_WS_3",
+   "dst_part": "pc_WS_2",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1463",
+   "src_part": "pc_WS_2",
+   "dst_part": "pc_WS_1",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1464",
+   "src_part": "pc_WS_1",
+   "dst_part": "pc_WS_0",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WS_0"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1465",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WN_7",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1466",
+   "src_part": "pc_WN_7",
+   "dst_part": "pc_WN_6",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1467",
+   "src_part": "pc_WN_6",
+   "dst_part": "pc_WN_5",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1468",
+   "src_part": "pc_WN_5",
+   "dst_part": "pc_WN_4",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1469",
+   "src_part": "pc_WN_4",
+   "dst_part": "pc_WN_3",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1470",
+   "src_part": "pc_WN_3",
+   "dst_part": "pc_WN_2",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1471",
+   "src_part": "pc_WN_2",
+   "dst_part": "pc_WN_1",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1472",
+   "src_part": "pc_WN_1",
+   "dst_part": "pc_WN_0",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_WN_0"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1473",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Eo",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7",
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1474",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_ES_7",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1475",
+   "src_part": "pc_ES_7",
+   "dst_part": "pc_ES_6",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1476",
+   "src_part": "pc_ES_6",
+   "dst_part": "pc_ES_5",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1477",
+   "src_part": "pc_ES_5",
+   "dst_part": "pc_ES_4",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1478",
+   "src_part": "pc_ES_4",
+   "dst_part": "pc_ES_3",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1479",
+   "src_part": "pc_ES_3",
+   "dst_part": "pc_ES_2",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1480",
+   "src_part": "pc_ES_2",
+   "dst_part": "pc_ES_1",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1481",
+   "src_part": "pc_ES_1",
+   "dst_part": "pc_ES_0",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_ES_0"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1482",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_EN_7",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1483",
+   "src_part": "pc_EN_7",
+   "dst_part": "pc_EN_6",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1484",
+   "src_part": "pc_EN_6",
+   "dst_part": "pc_EN_5",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1485",
+   "src_part": "pc_EN_5",
+   "dst_part": "pc_EN_4",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1486",
+   "src_part": "pc_EN_4",
+   "dst_part": "pc_EN_3",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1487",
+   "src_part": "pc_EN_3",
+   "dst_part": "pc_EN_2",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1488",
+   "src_part": "pc_EN_2",
+   "dst_part": "pc_EN_1",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tep",
+   "lane": "L1489",
+   "src_part": "pc_EN_1",
+   "dst_part": "pc_EN_0",
+   "width": 16,
+   "needed_bits": 16,
+   "downstream": [
+    "pc_EN_0"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1490",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Wo",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7",
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1491",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WS_7",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6",
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1492",
+   "src_part": "pc_WS_7",
+   "dst_part": "pc_WS_6",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5",
+    "pc_WS_6"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1493",
+   "src_part": "pc_WS_6",
+   "dst_part": "pc_WS_5",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4",
+    "pc_WS_5"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1494",
+   "src_part": "pc_WS_5",
+   "dst_part": "pc_WS_4",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3",
+    "pc_WS_4"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1495",
+   "src_part": "pc_WS_4",
+   "dst_part": "pc_WS_3",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2",
+    "pc_WS_3"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1496",
+   "src_part": "pc_WS_3",
+   "dst_part": "pc_WS_2",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1",
+    "pc_WS_2"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1497",
+   "src_part": "pc_WS_2",
+   "dst_part": "pc_WS_1",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WS_0",
+    "pc_WS_1"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1498",
+   "src_part": "pc_WS_1",
+   "dst_part": "pc_WS_0",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WS_0"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1499",
+   "src_part": "hub_Wo",
+   "dst_part": "pc_WN_7",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6",
+    "pc_WN_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1500",
+   "src_part": "pc_WN_7",
+   "dst_part": "pc_WN_6",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5",
+    "pc_WN_6"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1501",
+   "src_part": "pc_WN_6",
+   "dst_part": "pc_WN_5",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4",
+    "pc_WN_5"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1502",
+   "src_part": "pc_WN_5",
+   "dst_part": "pc_WN_4",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3",
+    "pc_WN_4"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1503",
+   "src_part": "pc_WN_4",
+   "dst_part": "pc_WN_3",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2",
+    "pc_WN_3"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1504",
+   "src_part": "pc_WN_3",
+   "dst_part": "pc_WN_2",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1",
+    "pc_WN_2"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1505",
+   "src_part": "pc_WN_2",
+   "dst_part": "pc_WN_1",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WN_0",
+    "pc_WN_1"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1506",
+   "src_part": "pc_WN_1",
+   "dst_part": "pc_WN_0",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_WN_0"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1507",
+   "src_part": "hub_Wi",
+   "dst_part": "hub_Eo",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7",
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1508",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_ES_7",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1509",
+   "src_part": "pc_ES_7",
+   "dst_part": "pc_ES_6",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1510",
+   "src_part": "pc_ES_6",
+   "dst_part": "pc_ES_5",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1511",
+   "src_part": "pc_ES_5",
+   "dst_part": "pc_ES_4",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1512",
+   "src_part": "pc_ES_4",
+   "dst_part": "pc_ES_3",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2",
+    "pc_ES_3"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1513",
+   "src_part": "pc_ES_3",
+   "dst_part": "pc_ES_2",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1",
+    "pc_ES_2"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1514",
+   "src_part": "pc_ES_2",
+   "dst_part": "pc_ES_1",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_ES_0",
+    "pc_ES_1"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1515",
+   "src_part": "pc_ES_1",
+   "dst_part": "pc_ES_0",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_ES_0"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1516",
+   "src_part": "hub_Eo",
+   "dst_part": "pc_EN_7",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1517",
+   "src_part": "pc_EN_7",
+   "dst_part": "pc_EN_6",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1518",
+   "src_part": "pc_EN_6",
+   "dst_part": "pc_EN_5",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1519",
+   "src_part": "pc_EN_5",
+   "dst_part": "pc_EN_4",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1520",
+   "src_part": "pc_EN_4",
+   "dst_part": "pc_EN_3",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2",
+    "pc_EN_3"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1521",
+   "src_part": "pc_EN_3",
+   "dst_part": "pc_EN_2",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1",
+    "pc_EN_2"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1522",
+   "src_part": "pc_EN_2",
+   "dst_part": "pc_EN_1",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_EN_0",
+    "pc_EN_1"
+   ]
+  },
+  {
+   "group": "kvs_emb.px_tok",
+   "lane": "L1523",
+   "src_part": "pc_EN_1",
+   "dst_part": "pc_EN_0",
+   "width": 18,
+   "needed_bits": 18,
+   "downstream": [
+    "pc_EN_0"
+   ]
+  },
+  {
+   "group": "kvs_hroot_EN.o_c#",
+   "lane": "L1526",
+   "src_part": "hroot_EN",
+   "dst_part": "hg_EN_7",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_EN.o_c#",
+   "lane": "L1527",
+   "src_part": "hg_EN_7",
+   "dst_part": "hg_EN_6",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_EN.o_c#",
+   "lane": "L1528",
+   "src_part": "hg_EN_6",
+   "dst_part": "hg_EN_5",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_EN.o_c#",
+   "lane": "L1529",
+   "src_part": "hg_EN_5",
+   "dst_part": "hg_EN_4",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_EN.o_c#",
+   "lane": "L1530",
+   "src_part": "hg_EN_4",
+   "dst_part": "hg_EN_3",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_EN.o_c#",
+   "lane": "L1531",
+   "src_part": "hg_EN_3",
+   "dst_part": "hg_EN_2",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_EN.o_c#",
+   "lane": "L1532",
+   "src_part": "hg_EN_2",
+   "dst_part": "hg_EN_1",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_EN.o_c#",
+   "lane": "L1533",
+   "src_part": "hg_EN_1",
+   "dst_part": "hg_EN_0",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_EN.o_kg",
+   "lane": "L1537",
+   "src_part": "hroot_EN",
+   "dst_part": "hg_EN_7",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6",
+    "hg_EN_7"
+   ]
+  },
+  {
+   "group": "kvs_hroot_EN.o_kg",
+   "lane": "L1538",
+   "src_part": "hg_EN_7",
+   "dst_part": "hg_EN_6",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5",
+    "hg_EN_6"
+   ]
+  },
+  {
+   "group": "kvs_hroot_EN.o_kg",
+   "lane": "L1539",
+   "src_part": "hg_EN_6",
+   "dst_part": "hg_EN_5",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4",
+    "hg_EN_5"
+   ]
+  },
+  {
+   "group": "kvs_hroot_EN.o_kg",
+   "lane": "L1540",
+   "src_part": "hg_EN_5",
+   "dst_part": "hg_EN_4",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3",
+    "hg_EN_4"
+   ]
+  },
+  {
+   "group": "kvs_hroot_EN.o_kg",
+   "lane": "L1541",
+   "src_part": "hg_EN_4",
+   "dst_part": "hg_EN_3",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2",
+    "hg_EN_3"
+   ]
+  },
+  {
+   "group": "kvs_hroot_EN.o_kg",
+   "lane": "L1542",
+   "src_part": "hg_EN_3",
+   "dst_part": "hg_EN_2",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1",
+    "hg_EN_2"
+   ]
+  },
+  {
+   "group": "kvs_hroot_EN.o_kg",
+   "lane": "L1543",
+   "src_part": "hg_EN_2",
+   "dst_part": "hg_EN_1",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_EN_0",
+    "hg_EN_1"
+   ]
+  },
+  {
+   "group": "kvs_hroot_EN.o_kg",
+   "lane": "L1544",
+   "src_part": "hg_EN_1",
+   "dst_part": "hg_EN_0",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_EN_0"
+   ]
+  },
+  {
+   "group": "kvs_hroot_ES.o_c#",
+   "lane": "L1546",
+   "src_part": "hroot_ES",
+   "dst_part": "hg_ES_7",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_ES.o_c#",
+   "lane": "L1547",
+   "src_part": "hg_ES_7",
+   "dst_part": "hg_ES_6",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_ES.o_c#",
+   "lane": "L1548",
+   "src_part": "hg_ES_6",
+   "dst_part": "hg_ES_5",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_ES.o_c#",
+   "lane": "L1549",
+   "src_part": "hg_ES_5",
+   "dst_part": "hg_ES_4",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_ES.o_c#",
+   "lane": "L1550",
+   "src_part": "hg_ES_4",
+   "dst_part": "hg_ES_3",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_ES.o_c#",
+   "lane": "L1551",
+   "src_part": "hg_ES_3",
+   "dst_part": "hg_ES_2",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_ES.o_c#",
+   "lane": "L1552",
+   "src_part": "hg_ES_2",
+   "dst_part": "hg_ES_1",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_ES.o_c#",
+   "lane": "L1553",
+   "src_part": "hg_ES_1",
+   "dst_part": "hg_ES_0",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_ES.o_kg",
+   "lane": "L1557",
+   "src_part": "hroot_ES",
+   "dst_part": "hg_ES_7",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6",
+    "hg_ES_7"
+   ]
+  },
+  {
+   "group": "kvs_hroot_ES.o_kg",
+   "lane": "L1558",
+   "src_part": "hg_ES_7",
+   "dst_part": "hg_ES_6",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5",
+    "hg_ES_6"
+   ]
+  },
+  {
+   "group": "kvs_hroot_ES.o_kg",
+   "lane": "L1559",
+   "src_part": "hg_ES_6",
+   "dst_part": "hg_ES_5",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4",
+    "hg_ES_5"
+   ]
+  },
+  {
+   "group": "kvs_hroot_ES.o_kg",
+   "lane": "L1560",
+   "src_part": "hg_ES_5",
+   "dst_part": "hg_ES_4",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3",
+    "hg_ES_4"
+   ]
+  },
+  {
+   "group": "kvs_hroot_ES.o_kg",
+   "lane": "L1561",
+   "src_part": "hg_ES_4",
+   "dst_part": "hg_ES_3",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2",
+    "hg_ES_3"
+   ]
+  },
+  {
+   "group": "kvs_hroot_ES.o_kg",
+   "lane": "L1562",
+   "src_part": "hg_ES_3",
+   "dst_part": "hg_ES_2",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1",
+    "hg_ES_2"
+   ]
+  },
+  {
+   "group": "kvs_hroot_ES.o_kg",
+   "lane": "L1563",
+   "src_part": "hg_ES_2",
+   "dst_part": "hg_ES_1",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_ES_0",
+    "hg_ES_1"
+   ]
+  },
+  {
+   "group": "kvs_hroot_ES.o_kg",
+   "lane": "L1564",
+   "src_part": "hg_ES_1",
+   "dst_part": "hg_ES_0",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_ES_0"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WN.o_c#",
+   "lane": "L1566",
+   "src_part": "hroot_WN",
+   "dst_part": "hg_WN_7",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WN.o_c#",
+   "lane": "L1567",
+   "src_part": "hg_WN_7",
+   "dst_part": "hg_WN_6",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WN.o_c#",
+   "lane": "L1568",
+   "src_part": "hg_WN_6",
+   "dst_part": "hg_WN_5",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WN.o_c#",
+   "lane": "L1569",
+   "src_part": "hg_WN_5",
+   "dst_part": "hg_WN_4",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WN.o_c#",
+   "lane": "L1570",
+   "src_part": "hg_WN_4",
+   "dst_part": "hg_WN_3",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WN.o_c#",
+   "lane": "L1571",
+   "src_part": "hg_WN_3",
+   "dst_part": "hg_WN_2",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WN.o_c#",
+   "lane": "L1572",
+   "src_part": "hg_WN_2",
+   "dst_part": "hg_WN_1",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WN.o_c#",
+   "lane": "L1573",
+   "src_part": "hg_WN_1",
+   "dst_part": "hg_WN_0",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WN.o_kg",
+   "lane": "L1577",
+   "src_part": "hroot_WN",
+   "dst_part": "hg_WN_7",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6",
+    "hg_WN_7"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WN.o_kg",
+   "lane": "L1578",
+   "src_part": "hg_WN_7",
+   "dst_part": "hg_WN_6",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5",
+    "hg_WN_6"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WN.o_kg",
+   "lane": "L1579",
+   "src_part": "hg_WN_6",
+   "dst_part": "hg_WN_5",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4",
+    "hg_WN_5"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WN.o_kg",
+   "lane": "L1580",
+   "src_part": "hg_WN_5",
+   "dst_part": "hg_WN_4",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3",
+    "hg_WN_4"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WN.o_kg",
+   "lane": "L1581",
+   "src_part": "hg_WN_4",
+   "dst_part": "hg_WN_3",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2",
+    "hg_WN_3"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WN.o_kg",
+   "lane": "L1582",
+   "src_part": "hg_WN_3",
+   "dst_part": "hg_WN_2",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1",
+    "hg_WN_2"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WN.o_kg",
+   "lane": "L1583",
+   "src_part": "hg_WN_2",
+   "dst_part": "hg_WN_1",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WN_0",
+    "hg_WN_1"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WN.o_kg",
+   "lane": "L1584",
+   "src_part": "hg_WN_1",
+   "dst_part": "hg_WN_0",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WN_0"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WS.o_c#",
+   "lane": "L1586",
+   "src_part": "hroot_WS",
+   "dst_part": "hg_WS_7",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WS.o_c#",
+   "lane": "L1587",
+   "src_part": "hg_WS_7",
+   "dst_part": "hg_WS_6",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WS.o_c#",
+   "lane": "L1588",
+   "src_part": "hg_WS_6",
+   "dst_part": "hg_WS_5",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WS.o_c#",
+   "lane": "L1589",
+   "src_part": "hg_WS_5",
+   "dst_part": "hg_WS_4",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WS.o_c#",
+   "lane": "L1590",
+   "src_part": "hg_WS_4",
+   "dst_part": "hg_WS_3",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WS.o_c#",
+   "lane": "L1591",
+   "src_part": "hg_WS_3",
+   "dst_part": "hg_WS_2",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WS.o_c#",
+   "lane": "L1592",
+   "src_part": "hg_WS_2",
+   "dst_part": "hg_WS_1",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WS.o_c#",
+   "lane": "L1593",
+   "src_part": "hg_WS_1",
+   "dst_part": "hg_WS_0",
+   "width": 40,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "kvs_hroot_WS.o_kg",
+   "lane": "L1597",
+   "src_part": "hroot_WS",
+   "dst_part": "hg_WS_7",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6",
+    "hg_WS_7"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WS.o_kg",
+   "lane": "L1598",
+   "src_part": "hg_WS_7",
+   "dst_part": "hg_WS_6",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5",
+    "hg_WS_6"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WS.o_kg",
+   "lane": "L1599",
+   "src_part": "hg_WS_6",
+   "dst_part": "hg_WS_5",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4",
+    "hg_WS_5"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WS.o_kg",
+   "lane": "L1600",
+   "src_part": "hg_WS_5",
+   "dst_part": "hg_WS_4",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3",
+    "hg_WS_4"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WS.o_kg",
+   "lane": "L1601",
+   "src_part": "hg_WS_4",
+   "dst_part": "hg_WS_3",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2",
+    "hg_WS_3"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WS.o_kg",
+   "lane": "L1602",
+   "src_part": "hg_WS_3",
+   "dst_part": "hg_WS_2",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1",
+    "hg_WS_2"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WS.o_kg",
+   "lane": "L1603",
+   "src_part": "hg_WS_2",
+   "dst_part": "hg_WS_1",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WS_0",
+    "hg_WS_1"
+   ]
+  },
+  {
+   "group": "kvs_hroot_WS.o_kg",
+   "lane": "L1604",
+   "src_part": "hg_WS_1",
+   "dst_part": "hg_WS_0",
+   "width": 23,
+   "needed_bits": 23,
+   "downstream": [
+    "hg_WS_0"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.cmd",
+   "lane": "L1831",
+   "src_part": "hub_C",
+   "dst_part": "pv_S_7",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.cmd",
+   "lane": "L1832",
+   "src_part": "pv_S_7",
+   "dst_part": "pv_S_6",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.cmd",
+   "lane": "L1833",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_5",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.cmd",
+   "lane": "L1834",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_4",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.cmd",
+   "lane": "L1835",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_3",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.cmd",
+   "lane": "L1836",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_2",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.cmd",
+   "lane": "L1837",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_1",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_S_0",
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.cmd",
+   "lane": "L1838",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.req_t",
+   "lane": "L1839",
+   "src_part": "hub_C",
+   "dst_part": "pv_S_7",
+   "width": 112,
+   "needed_bits": 112,
+   "downstream": [
+    "pv_S_1",
+    "pv_S_3",
+    "pv_S_5",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.req_t",
+   "lane": "L1840",
+   "src_part": "pv_S_7",
+   "dst_part": "pv_S_5",
+   "width": 84,
+   "needed_bits": 84,
+   "downstream": [
+    "pv_S_1",
+    "pv_S_3",
+    "pv_S_5"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.req_t",
+   "lane": "L1841",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_3",
+   "width": 56,
+   "needed_bits": 56,
+   "downstream": [
+    "pv_S_1",
+    "pv_S_3"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.req_t",
+   "lane": "L1842",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_1",
+   "width": 28,
+   "needed_bits": 28,
+   "downstream": [
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.req_valid",
+   "lane": "L1843",
+   "src_part": "hub_C",
+   "dst_part": "pv_S_7",
+   "width": 8,
+   "needed_bits": 8,
+   "downstream": [
+    "pv_S_1",
+    "pv_S_3",
+    "pv_S_5",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.req_valid",
+   "lane": "L1844",
+   "src_part": "pv_S_7",
+   "dst_part": "pv_S_5",
+   "width": 6,
+   "needed_bits": 6,
+   "downstream": [
+    "pv_S_1",
+    "pv_S_3",
+    "pv_S_5"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.req_valid",
+   "lane": "L1845",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_3",
+   "width": 4,
+   "needed_bits": 4,
+   "downstream": [
+    "pv_S_1",
+    "pv_S_3"
+   ]
+  },
+  {
+   "group": "pvw_0__u_ctl.req_valid",
+   "lane": "L1846",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_1",
+   "width": 2,
+   "needed_bits": 2,
+   "downstream": [
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.cmd",
+   "lane": "L1943",
+   "src_part": "hub_C",
+   "dst_part": "pv_N_7",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.cmd",
+   "lane": "L1944",
+   "src_part": "pv_N_7",
+   "dst_part": "pv_N_6",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.cmd",
+   "lane": "L1945",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_5",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.cmd",
+   "lane": "L1946",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_4",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.cmd",
+   "lane": "L1947",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_3",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.cmd",
+   "lane": "L1948",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_2",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.cmd",
+   "lane": "L1949",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_1",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_N_0",
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.cmd",
+   "lane": "L1950",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 32,
+   "needed_bits": 32,
+   "downstream": [
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.req_t",
+   "lane": "L1951",
+   "src_part": "hub_C",
+   "dst_part": "pv_N_7",
+   "width": 112,
+   "needed_bits": 112,
+   "downstream": [
+    "pv_N_1",
+    "pv_N_3",
+    "pv_N_5",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.req_t",
+   "lane": "L1952",
+   "src_part": "pv_N_7",
+   "dst_part": "pv_N_5",
+   "width": 84,
+   "needed_bits": 84,
+   "downstream": [
+    "pv_N_1",
+    "pv_N_3",
+    "pv_N_5"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.req_t",
+   "lane": "L1953",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_3",
+   "width": 56,
+   "needed_bits": 56,
+   "downstream": [
+    "pv_N_1",
+    "pv_N_3"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.req_t",
+   "lane": "L1954",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_1",
+   "width": 28,
+   "needed_bits": 28,
+   "downstream": [
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.req_valid",
+   "lane": "L1955",
+   "src_part": "hub_C",
+   "dst_part": "pv_N_7",
+   "width": 8,
+   "needed_bits": 8,
+   "downstream": [
+    "pv_N_1",
+    "pv_N_3",
+    "pv_N_5",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.req_valid",
+   "lane": "L1956",
+   "src_part": "pv_N_7",
+   "dst_part": "pv_N_5",
+   "width": 6,
+   "needed_bits": 6,
+   "downstream": [
+    "pv_N_1",
+    "pv_N_3",
+    "pv_N_5"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.req_valid",
+   "lane": "L1957",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_3",
+   "width": 4,
+   "needed_bits": 4,
+   "downstream": [
+    "pv_N_1",
+    "pv_N_3"
+   ]
+  },
+  {
+   "group": "pvw_1__u_ctl.req_valid",
+   "lane": "L1958",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_1",
+   "width": 2,
+   "needed_bits": 2,
+   "downstream": [
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "seq__u_core.s_qpop",
+   "lane": "L2040",
+   "src_part": "hub_C",
+   "dst_part": "hub_Wo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hub_Wo"
+   ]
+  },
+  {
+   "group": "seq__u_core.s_qpop",
+   "lane": "L2041",
+   "src_part": "hub_C",
+   "dst_part": "hub_Eo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hub_Eo"
+   ]
+  },
+  {
+   "group": "seq__u_core.x_v",
+   "lane": "L2043",
+   "src_part": "hub_C",
+   "dst_part": "hub_Wo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hub_Wo"
+   ]
+  },
+  {
+   "group": "seq__u_core.x_v",
+   "lane": "L2044",
+   "src_part": "hub_C",
+   "dst_part": "hub_Eo",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "hub_Eo"
+   ]
+  },
+  {
+   "group": "serdes_E.tx_up",
+   "lane": "L2046",
+   "src_part": "sys_SE",
+   "dst_part": "sys_c",
+   "width": 1,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "serdes_E.tx_up",
+   "lane": "L2047",
+   "src_part": "sys_c",
+   "dst_part": "hub_Wi",
+   "width": 1,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "serdes_W.tx_up",
+   "lane": "L2049",
+   "src_part": "sys_SW",
+   "dst_part": "io_W3",
+   "width": 1,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "serdes_W.tx_up",
+   "lane": "L2050",
+   "src_part": "io_W3",
+   "dst_part": "sys_c",
+   "width": 1,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "serdes_W.tx_up",
+   "lane": "L2051",
+   "src_part": "io_W3",
+   "dst_part": "hub_Wi",
+   "width": 1,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_EN_0.f",
+   "lane": "L2208",
+   "src_part": "pv_N_3",
+   "dst_part": "pc_EN_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_2"
+   ]
+  },
+  {
+   "group": "vport_EN_0.f",
+   "lane": "L2209",
+   "src_part": "pv_N_3",
+   "dst_part": "pc_EN_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_3"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vo",
+   "lane": "L2210",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_4",
+   "width": 543,
+   "needed_bits": 543,
+   "downstream": [
+    "hub_C",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vo",
+   "lane": "L2211",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_5",
+   "width": 415,
+   "needed_bits": 415,
+   "downstream": [
+    "hub_C",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vo",
+   "lane": "L2212",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vo",
+   "lane": "L2213",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vo",
+   "lane": "L2214",
+   "src_part": "pv_N_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vo",
+   "lane": "L2215",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vo",
+   "lane": "L2216",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vo",
+   "lane": "L2217",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vo",
+   "lane": "L2218",
+   "src_part": "pv_N_0",
+   "dst_part": "hg_EN_0",
+   "width": 396,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_EN_0"
+   ]
+  },
+  {
+   "group": "vport_EN_0.vq#",
+   "lane": "L2219",
+   "src_part": "pv_N_3",
+   "dst_part": "pc_EN_2",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_EN_0.vq#",
+   "lane": "L2220",
+   "src_part": "pv_N_3",
+   "dst_part": "pc_EN_3",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_EN_1.f",
+   "lane": "L2221",
+   "src_part": "pv_N_5",
+   "dst_part": "pc_EN_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_4"
+   ]
+  },
+  {
+   "group": "vport_EN_1.f",
+   "lane": "L2222",
+   "src_part": "pv_N_5",
+   "dst_part": "pc_EN_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_5"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vo",
+   "lane": "L2223",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vo",
+   "lane": "L2224",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vo",
+   "lane": "L2225",
+   "src_part": "pv_N_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vo",
+   "lane": "L2226",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_4",
+   "width": 652,
+   "needed_bits": 652,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vo",
+   "lane": "L2227",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_3",
+   "width": 524,
+   "needed_bits": 524,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vo",
+   "lane": "L2228",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vo",
+   "lane": "L2229",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vo",
+   "lane": "L2230",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vo",
+   "lane": "L2231",
+   "src_part": "pv_N_0",
+   "dst_part": "hg_EN_0",
+   "width": 652,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_EN_0"
+   ]
+  },
+  {
+   "group": "vport_EN_1.vq#",
+   "lane": "L2232",
+   "src_part": "pv_N_5",
+   "dst_part": "pc_EN_4",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_EN_1.vq#",
+   "lane": "L2233",
+   "src_part": "pv_N_5",
+   "dst_part": "pc_EN_5",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_EN_2.f",
+   "lane": "L2234",
+   "src_part": "pv_N_1",
+   "dst_part": "pc_EN_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_0"
+   ]
+  },
+  {
+   "group": "vport_EN_2.f",
+   "lane": "L2235",
+   "src_part": "pv_N_1",
+   "dst_part": "pc_EN_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_1"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vo",
+   "lane": "L2236",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_2",
+   "width": 799,
+   "needed_bits": 799,
+   "downstream": [
+    "hub_C",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vo",
+   "lane": "L2237",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_3",
+   "width": 671,
+   "needed_bits": 671,
+   "downstream": [
+    "hub_C",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vo",
+   "lane": "L2238",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_4",
+   "width": 543,
+   "needed_bits": 543,
+   "downstream": [
+    "hub_C",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vo",
+   "lane": "L2239",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_5",
+   "width": 415,
+   "needed_bits": 415,
+   "downstream": [
+    "hub_C",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vo",
+   "lane": "L2240",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vo",
+   "lane": "L2241",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vo",
+   "lane": "L2242",
+   "src_part": "pv_N_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vo",
+   "lane": "L2243",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vo",
+   "lane": "L2244",
+   "src_part": "pv_N_0",
+   "dst_part": "hg_EN_0",
+   "width": 140,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_EN_0"
+   ]
+  },
+  {
+   "group": "vport_EN_2.vq#",
+   "lane": "L2245",
+   "src_part": "pv_N_1",
+   "dst_part": "pc_EN_0",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_EN_2.vq#",
+   "lane": "L2246",
+   "src_part": "pv_N_1",
+   "dst_part": "pc_EN_1",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_EN_3.f",
+   "lane": "L2247",
+   "src_part": "pv_N_7",
+   "dst_part": "pc_EN_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_6"
+   ]
+  },
+  {
+   "group": "vport_EN_3.f",
+   "lane": "L2248",
+   "src_part": "pv_N_7",
+   "dst_part": "pc_EN_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_EN_7"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vo",
+   "lane": "L2249",
+   "src_part": "pv_N_7",
+   "dst_part": "pv_N_6",
+   "width": 908,
+   "needed_bits": 908,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vo",
+   "lane": "L2250",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_5",
+   "width": 780,
+   "needed_bits": 780,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vo",
+   "lane": "L2251",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_4",
+   "width": 652,
+   "needed_bits": 652,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vo",
+   "lane": "L2252",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_3",
+   "width": 524,
+   "needed_bits": 524,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vo",
+   "lane": "L2253",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vo",
+   "lane": "L2254",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0",
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vo",
+   "lane": "L2255",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_EN_0",
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vo",
+   "lane": "L2256",
+   "src_part": "pv_N_0",
+   "dst_part": "hg_EN_0",
+   "width": 908,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_EN_0"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vo",
+   "lane": "L2257",
+   "src_part": "pv_N_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_EN_3.vq#",
+   "lane": "L2258",
+   "src_part": "pv_N_7",
+   "dst_part": "pc_EN_6",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_EN_3.vq#",
+   "lane": "L2259",
+   "src_part": "pv_N_7",
+   "dst_part": "pc_EN_7",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_ES_0.f",
+   "lane": "L2260",
+   "src_part": "pv_S_3",
+   "dst_part": "pc_ES_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_2"
+   ]
+  },
+  {
+   "group": "vport_ES_0.f",
+   "lane": "L2261",
+   "src_part": "pv_S_3",
+   "dst_part": "pc_ES_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_3"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vo",
+   "lane": "L2262",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_4",
+   "width": 543,
+   "needed_bits": 543,
+   "downstream": [
+    "hub_C",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vo",
+   "lane": "L2263",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_5",
+   "width": 415,
+   "needed_bits": 415,
+   "downstream": [
+    "hub_C",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vo",
+   "lane": "L2264",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vo",
+   "lane": "L2265",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vo",
+   "lane": "L2266",
+   "src_part": "pv_S_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vo",
+   "lane": "L2267",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vo",
+   "lane": "L2268",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vo",
+   "lane": "L2269",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vo",
+   "lane": "L2270",
+   "src_part": "pv_S_0",
+   "dst_part": "hg_ES_0",
+   "width": 396,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_ES_0"
+   ]
+  },
+  {
+   "group": "vport_ES_0.vq#",
+   "lane": "L2271",
+   "src_part": "pv_S_3",
+   "dst_part": "pc_ES_2",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_ES_0.vq#",
+   "lane": "L2272",
+   "src_part": "pv_S_3",
+   "dst_part": "pc_ES_3",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_ES_1.f",
+   "lane": "L2273",
+   "src_part": "pv_S_5",
+   "dst_part": "pc_ES_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_4"
+   ]
+  },
+  {
+   "group": "vport_ES_1.f",
+   "lane": "L2274",
+   "src_part": "pv_S_5",
+   "dst_part": "pc_ES_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_5"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vo",
+   "lane": "L2275",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vo",
+   "lane": "L2276",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vo",
+   "lane": "L2277",
+   "src_part": "pv_S_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vo",
+   "lane": "L2278",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_4",
+   "width": 652,
+   "needed_bits": 652,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vo",
+   "lane": "L2279",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_3",
+   "width": 524,
+   "needed_bits": 524,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vo",
+   "lane": "L2280",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vo",
+   "lane": "L2281",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vo",
+   "lane": "L2282",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vo",
+   "lane": "L2283",
+   "src_part": "pv_S_0",
+   "dst_part": "hg_ES_0",
+   "width": 652,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_ES_0"
+   ]
+  },
+  {
+   "group": "vport_ES_1.vq#",
+   "lane": "L2284",
+   "src_part": "pv_S_5",
+   "dst_part": "pc_ES_4",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_ES_1.vq#",
+   "lane": "L2285",
+   "src_part": "pv_S_5",
+   "dst_part": "pc_ES_5",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_ES_2.f",
+   "lane": "L2286",
+   "src_part": "pv_S_1",
+   "dst_part": "pc_ES_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_0"
+   ]
+  },
+  {
+   "group": "vport_ES_2.f",
+   "lane": "L2287",
+   "src_part": "pv_S_1",
+   "dst_part": "pc_ES_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_1"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vo",
+   "lane": "L2288",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_2",
+   "width": 799,
+   "needed_bits": 799,
+   "downstream": [
+    "hub_C",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vo",
+   "lane": "L2289",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_3",
+   "width": 671,
+   "needed_bits": 671,
+   "downstream": [
+    "hub_C",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vo",
+   "lane": "L2290",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_4",
+   "width": 543,
+   "needed_bits": 543,
+   "downstream": [
+    "hub_C",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vo",
+   "lane": "L2291",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_5",
+   "width": 415,
+   "needed_bits": 415,
+   "downstream": [
+    "hub_C",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vo",
+   "lane": "L2292",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vo",
+   "lane": "L2293",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vo",
+   "lane": "L2294",
+   "src_part": "pv_S_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vo",
+   "lane": "L2295",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vo",
+   "lane": "L2296",
+   "src_part": "pv_S_0",
+   "dst_part": "hg_ES_0",
+   "width": 140,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_ES_0"
+   ]
+  },
+  {
+   "group": "vport_ES_2.vq#",
+   "lane": "L2297",
+   "src_part": "pv_S_1",
+   "dst_part": "pc_ES_0",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_ES_2.vq#",
+   "lane": "L2298",
+   "src_part": "pv_S_1",
+   "dst_part": "pc_ES_1",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_ES_3.f",
+   "lane": "L2299",
+   "src_part": "pv_S_7",
+   "dst_part": "pc_ES_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_6"
+   ]
+  },
+  {
+   "group": "vport_ES_3.f",
+   "lane": "L2300",
+   "src_part": "pv_S_7",
+   "dst_part": "pc_ES_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_ES_7"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vo",
+   "lane": "L2301",
+   "src_part": "pv_S_7",
+   "dst_part": "pv_S_6",
+   "width": 908,
+   "needed_bits": 908,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vo",
+   "lane": "L2302",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_5",
+   "width": 780,
+   "needed_bits": 780,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vo",
+   "lane": "L2303",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_4",
+   "width": 652,
+   "needed_bits": 652,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vo",
+   "lane": "L2304",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_3",
+   "width": 524,
+   "needed_bits": 524,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vo",
+   "lane": "L2305",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vo",
+   "lane": "L2306",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0",
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vo",
+   "lane": "L2307",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_ES_0",
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vo",
+   "lane": "L2308",
+   "src_part": "pv_S_0",
+   "dst_part": "hg_ES_0",
+   "width": 908,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_ES_0"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vo",
+   "lane": "L2309",
+   "src_part": "pv_S_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_ES_3.vq#",
+   "lane": "L2310",
+   "src_part": "pv_S_7",
+   "dst_part": "pc_ES_6",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_ES_3.vq#",
+   "lane": "L2311",
+   "src_part": "pv_S_7",
+   "dst_part": "pc_ES_7",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WN_0.f",
+   "lane": "L2312",
+   "src_part": "pv_N_3",
+   "dst_part": "pc_WN_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_2"
+   ]
+  },
+  {
+   "group": "vport_WN_0.f",
+   "lane": "L2313",
+   "src_part": "pv_N_3",
+   "dst_part": "pc_WN_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_3"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vo",
+   "lane": "L2314",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_4",
+   "width": 543,
+   "needed_bits": 543,
+   "downstream": [
+    "hub_C",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vo",
+   "lane": "L2315",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_5",
+   "width": 415,
+   "needed_bits": 415,
+   "downstream": [
+    "hub_C",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vo",
+   "lane": "L2316",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vo",
+   "lane": "L2317",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vo",
+   "lane": "L2318",
+   "src_part": "pv_N_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vo",
+   "lane": "L2319",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vo",
+   "lane": "L2320",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vo",
+   "lane": "L2321",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vo",
+   "lane": "L2322",
+   "src_part": "pv_N_0",
+   "dst_part": "hg_WN_0",
+   "width": 396,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_WN_0"
+   ]
+  },
+  {
+   "group": "vport_WN_0.vq#",
+   "lane": "L2323",
+   "src_part": "pv_N_3",
+   "dst_part": "pc_WN_2",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WN_0.vq#",
+   "lane": "L2324",
+   "src_part": "pv_N_3",
+   "dst_part": "pc_WN_3",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WN_1.f",
+   "lane": "L2325",
+   "src_part": "pv_N_5",
+   "dst_part": "pc_WN_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_4"
+   ]
+  },
+  {
+   "group": "vport_WN_1.f",
+   "lane": "L2326",
+   "src_part": "pv_N_5",
+   "dst_part": "pc_WN_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_5"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vo",
+   "lane": "L2327",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vo",
+   "lane": "L2328",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vo",
+   "lane": "L2329",
+   "src_part": "pv_N_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vo",
+   "lane": "L2330",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_4",
+   "width": 652,
+   "needed_bits": 652,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vo",
+   "lane": "L2331",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_3",
+   "width": 524,
+   "needed_bits": 524,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vo",
+   "lane": "L2332",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vo",
+   "lane": "L2333",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vo",
+   "lane": "L2334",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vo",
+   "lane": "L2335",
+   "src_part": "pv_N_0",
+   "dst_part": "hg_WN_0",
+   "width": 652,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_WN_0"
+   ]
+  },
+  {
+   "group": "vport_WN_1.vq#",
+   "lane": "L2336",
+   "src_part": "pv_N_5",
+   "dst_part": "pc_WN_4",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WN_1.vq#",
+   "lane": "L2337",
+   "src_part": "pv_N_5",
+   "dst_part": "pc_WN_5",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WN_2.f",
+   "lane": "L2338",
+   "src_part": "pv_N_1",
+   "dst_part": "pc_WN_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_0"
+   ]
+  },
+  {
+   "group": "vport_WN_2.f",
+   "lane": "L2339",
+   "src_part": "pv_N_1",
+   "dst_part": "pc_WN_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_1"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vo",
+   "lane": "L2340",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_2",
+   "width": 799,
+   "needed_bits": 799,
+   "downstream": [
+    "hub_C",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vo",
+   "lane": "L2341",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_3",
+   "width": 671,
+   "needed_bits": 671,
+   "downstream": [
+    "hub_C",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vo",
+   "lane": "L2342",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_4",
+   "width": 543,
+   "needed_bits": 543,
+   "downstream": [
+    "hub_C",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vo",
+   "lane": "L2343",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_5",
+   "width": 415,
+   "needed_bits": 415,
+   "downstream": [
+    "hub_C",
+    "pv_N_5",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vo",
+   "lane": "L2344",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_N_6",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vo",
+   "lane": "L2345",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_N_7"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vo",
+   "lane": "L2346",
+   "src_part": "pv_N_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vo",
+   "lane": "L2347",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vo",
+   "lane": "L2348",
+   "src_part": "pv_N_0",
+   "dst_part": "hg_WN_0",
+   "width": 140,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_WN_0"
+   ]
+  },
+  {
+   "group": "vport_WN_2.vq#",
+   "lane": "L2349",
+   "src_part": "pv_N_1",
+   "dst_part": "pc_WN_0",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WN_2.vq#",
+   "lane": "L2350",
+   "src_part": "pv_N_1",
+   "dst_part": "pc_WN_1",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WN_3.f",
+   "lane": "L2351",
+   "src_part": "pv_N_7",
+   "dst_part": "pc_WN_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_6"
+   ]
+  },
+  {
+   "group": "vport_WN_3.f",
+   "lane": "L2352",
+   "src_part": "pv_N_7",
+   "dst_part": "pc_WN_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WN_7"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vo",
+   "lane": "L2353",
+   "src_part": "pv_N_7",
+   "dst_part": "pv_N_6",
+   "width": 908,
+   "needed_bits": 908,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5",
+    "pv_N_6"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vo",
+   "lane": "L2354",
+   "src_part": "pv_N_6",
+   "dst_part": "pv_N_5",
+   "width": 780,
+   "needed_bits": 780,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4",
+    "pv_N_5"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vo",
+   "lane": "L2355",
+   "src_part": "pv_N_5",
+   "dst_part": "pv_N_4",
+   "width": 652,
+   "needed_bits": 652,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3",
+    "pv_N_4"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vo",
+   "lane": "L2356",
+   "src_part": "pv_N_4",
+   "dst_part": "pv_N_3",
+   "width": 524,
+   "needed_bits": 524,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2",
+    "pv_N_3"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vo",
+   "lane": "L2357",
+   "src_part": "pv_N_3",
+   "dst_part": "pv_N_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1",
+    "pv_N_2"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vo",
+   "lane": "L2358",
+   "src_part": "pv_N_2",
+   "dst_part": "pv_N_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0",
+    "pv_N_1"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vo",
+   "lane": "L2359",
+   "src_part": "pv_N_1",
+   "dst_part": "pv_N_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_WN_0",
+    "pv_N_0"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vo",
+   "lane": "L2360",
+   "src_part": "pv_N_0",
+   "dst_part": "hg_WN_0",
+   "width": 908,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_WN_0"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vo",
+   "lane": "L2361",
+   "src_part": "pv_N_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_WN_3.vq#",
+   "lane": "L2362",
+   "src_part": "pv_N_7",
+   "dst_part": "pc_WN_6",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WN_3.vq#",
+   "lane": "L2363",
+   "src_part": "pv_N_7",
+   "dst_part": "pc_WN_7",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WS_0.f",
+   "lane": "L2364",
+   "src_part": "pv_S_3",
+   "dst_part": "pc_WS_2",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_2"
+   ]
+  },
+  {
+   "group": "vport_WS_0.f",
+   "lane": "L2365",
+   "src_part": "pv_S_3",
+   "dst_part": "pc_WS_3",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_3"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vo",
+   "lane": "L2366",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_4",
+   "width": 543,
+   "needed_bits": 543,
+   "downstream": [
+    "hub_C",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vo",
+   "lane": "L2367",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_5",
+   "width": 415,
+   "needed_bits": 415,
+   "downstream": [
+    "hub_C",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vo",
+   "lane": "L2368",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vo",
+   "lane": "L2369",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vo",
+   "lane": "L2370",
+   "src_part": "pv_S_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vo",
+   "lane": "L2371",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vo",
+   "lane": "L2372",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vo",
+   "lane": "L2373",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vo",
+   "lane": "L2374",
+   "src_part": "pv_S_0",
+   "dst_part": "hg_WS_0",
+   "width": 396,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_WS_0"
+   ]
+  },
+  {
+   "group": "vport_WS_0.vq#",
+   "lane": "L2375",
+   "src_part": "pv_S_3",
+   "dst_part": "pc_WS_2",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WS_0.vq#",
+   "lane": "L2376",
+   "src_part": "pv_S_3",
+   "dst_part": "pc_WS_3",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WS_1.f",
+   "lane": "L2377",
+   "src_part": "pv_S_5",
+   "dst_part": "pc_WS_4",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_4"
+   ]
+  },
+  {
+   "group": "vport_WS_1.f",
+   "lane": "L2378",
+   "src_part": "pv_S_5",
+   "dst_part": "pc_WS_5",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_5"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vo",
+   "lane": "L2379",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vo",
+   "lane": "L2380",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vo",
+   "lane": "L2381",
+   "src_part": "pv_S_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vo",
+   "lane": "L2382",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_4",
+   "width": 652,
+   "needed_bits": 652,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vo",
+   "lane": "L2383",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_3",
+   "width": 524,
+   "needed_bits": 524,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vo",
+   "lane": "L2384",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vo",
+   "lane": "L2385",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vo",
+   "lane": "L2386",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vo",
+   "lane": "L2387",
+   "src_part": "pv_S_0",
+   "dst_part": "hg_WS_0",
+   "width": 652,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_WS_0"
+   ]
+  },
+  {
+   "group": "vport_WS_1.vq#",
+   "lane": "L2388",
+   "src_part": "pv_S_5",
+   "dst_part": "pc_WS_4",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WS_1.vq#",
+   "lane": "L2389",
+   "src_part": "pv_S_5",
+   "dst_part": "pc_WS_5",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WS_2.f",
+   "lane": "L2390",
+   "src_part": "pv_S_1",
+   "dst_part": "pc_WS_0",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_0"
+   ]
+  },
+  {
+   "group": "vport_WS_2.f",
+   "lane": "L2391",
+   "src_part": "pv_S_1",
+   "dst_part": "pc_WS_1",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_1"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vo",
+   "lane": "L2392",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_2",
+   "width": 799,
+   "needed_bits": 799,
+   "downstream": [
+    "hub_C",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vo",
+   "lane": "L2393",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_3",
+   "width": 671,
+   "needed_bits": 671,
+   "downstream": [
+    "hub_C",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vo",
+   "lane": "L2394",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_4",
+   "width": 543,
+   "needed_bits": 543,
+   "downstream": [
+    "hub_C",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vo",
+   "lane": "L2395",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_5",
+   "width": 415,
+   "needed_bits": 415,
+   "downstream": [
+    "hub_C",
+    "pv_S_5",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vo",
+   "lane": "L2396",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_6",
+   "width": 287,
+   "needed_bits": 287,
+   "downstream": [
+    "hub_C",
+    "pv_S_6",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vo",
+   "lane": "L2397",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_7",
+   "width": 159,
+   "needed_bits": 159,
+   "downstream": [
+    "hub_C",
+    "pv_S_7"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vo",
+   "lane": "L2398",
+   "src_part": "pv_S_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vo",
+   "lane": "L2399",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vo",
+   "lane": "L2400",
+   "src_part": "pv_S_0",
+   "dst_part": "hg_WS_0",
+   "width": 140,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_WS_0"
+   ]
+  },
+  {
+   "group": "vport_WS_2.vq#",
+   "lane": "L2401",
+   "src_part": "pv_S_1",
+   "dst_part": "pc_WS_0",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WS_2.vq#",
+   "lane": "L2402",
+   "src_part": "pv_S_1",
+   "dst_part": "pc_WS_1",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WS_3.f",
+   "lane": "L2403",
+   "src_part": "pv_S_7",
+   "dst_part": "pc_WS_6",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_6"
+   ]
+  },
+  {
+   "group": "vport_WS_3.f",
+   "lane": "L2404",
+   "src_part": "pv_S_7",
+   "dst_part": "pc_WS_7",
+   "width": 1,
+   "needed_bits": 1,
+   "downstream": [
+    "pc_WS_7"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vo",
+   "lane": "L2405",
+   "src_part": "pv_S_7",
+   "dst_part": "pv_S_6",
+   "width": 908,
+   "needed_bits": 908,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5",
+    "pv_S_6"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vo",
+   "lane": "L2406",
+   "src_part": "pv_S_6",
+   "dst_part": "pv_S_5",
+   "width": 780,
+   "needed_bits": 780,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4",
+    "pv_S_5"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vo",
+   "lane": "L2407",
+   "src_part": "pv_S_5",
+   "dst_part": "pv_S_4",
+   "width": 652,
+   "needed_bits": 652,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3",
+    "pv_S_4"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vo",
+   "lane": "L2408",
+   "src_part": "pv_S_4",
+   "dst_part": "pv_S_3",
+   "width": 524,
+   "needed_bits": 524,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2",
+    "pv_S_3"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vo",
+   "lane": "L2409",
+   "src_part": "pv_S_3",
+   "dst_part": "pv_S_2",
+   "width": 396,
+   "needed_bits": 396,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1",
+    "pv_S_2"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vo",
+   "lane": "L2410",
+   "src_part": "pv_S_2",
+   "dst_part": "pv_S_1",
+   "width": 268,
+   "needed_bits": 268,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0",
+    "pv_S_1"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vo",
+   "lane": "L2411",
+   "src_part": "pv_S_1",
+   "dst_part": "pv_S_0",
+   "width": 140,
+   "needed_bits": 140,
+   "downstream": [
+    "hg_WS_0",
+    "pv_S_0"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vo",
+   "lane": "L2412",
+   "src_part": "pv_S_0",
+   "dst_part": "hg_WS_0",
+   "width": 908,
+   "needed_bits": 12,
+   "downstream": [
+    "hg_WS_0"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vo",
+   "lane": "L2413",
+   "src_part": "pv_S_7",
+   "dst_part": "hub_C",
+   "width": 31,
+   "needed_bits": 31,
+   "downstream": [
+    "hub_C"
+   ]
+  },
+  {
+   "group": "vport_WS_3.vq#",
+   "lane": "L2414",
+   "src_part": "pv_S_7",
+   "dst_part": "pc_WS_6",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  },
+  {
+   "group": "vport_WS_3.vq#",
+   "lane": "L2415",
+   "src_part": "pv_S_7",
+   "dst_part": "pc_WS_7",
+   "width": 15,
+   "needed_bits": 0,
+   "downstream": []
+  }
+ ]
+}
