@@ -3,11 +3,12 @@
 # read-only NO-PDN M9 signal-only GRT probe (congestion_iterations 0, recipe bs) via ot-run; per-layer summary to lane.
 T=$1; H=ot-gold1; R=/srv/opentallas-scratch/claude/codex-qdie-2000/$T; L=/home/ubuntu/claude-takeover-20261007/lanes
 D=/home/ubuntu/scratch/sqc-qdie3/grtprobe; M=/home/ubuntu/scratch/qdie-r56
+N0=$(ssh -n -o ControlPath=none $H "wc -l < $R/PILOT.log")
 scp -q -o ControlPath=none $D/grt_probe_np.sh $D/grt_probe_summ.py $M/padband.py $H:/tmp/ || exit 1
 until ssh -n -o ControlPath=none $H "grep -q 'real case:' $R/chain/STATUS.log && [ -s $R/chain/case_r22k/floorplan.odb ]" 2>/dev/null; do
   if ssh -n -o ControlPath=none $H "grep -q 'chain rc=\|REAL CASE FAIL' $R/chain.log $R/chain/STATUS.log" 2>/dev/null; then
     echo "[QDIE-R56 $(date +%H:%M)] $T chain ended before a placed case (no probe): $(ssh -n -o ControlPath=none $H "tail -2 $R/PILOT.log" | tr '\n' ' ' | cut -c1-300)" >> $L/STEWARD-QK.md; exit 0; fi
-  ssh -n -o ControlPath=none $H "grep -q 'follow: GEN failed\|strict bind not PASS\|diag follow: bind FAIL\|phase2 FAIL\|reset projection rc=[1-9]' $R/PILOT.log" 2>/dev/null && {
+  ssh -n -o ControlPath=none $H "tail -n +$((N0+1)) $R/PILOT.log | grep -q 'follow: GEN failed\|strict bind not PASS\|diag follow: bind FAIL\|phase2 FAIL\|reset projection rc=[1-9]'" 2>/dev/null && {
     echo "[QDIE-R56 $(date +%H:%M)] $T follow stopped before placement: $(ssh -n -o ControlPath=none $H "tail -2 $R/PILOT.log" | tr '\n' ' ' | cut -c1-300)" >> $L/STEWARD-QK.md; exit 0; }
   sleep 300; done
 RC=bs; O=$R-grtprobe-nopdn-$RC
