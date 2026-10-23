@@ -1,0 +1,11 @@
+{
+ "element": "qfd_tile_nl_a0c",
+ "kit": "physical/ref_tile/qfd_tile_nl_a0cv2@78e162b88",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "37ae180f77d8189ab7e4f7158f3ed0d88458318b3b9f19b3ec0262a9cc9f302a",
+ "reasons": "[10-23 12:03] [GEOM-REVIEW4] Pre-P&R renders viewed (core + quad context). regions.tcl and kit.env read; the NK/NL region files are identical apart from the name; kit hash recomputed (gate scheme; QC-P3 cat-sorted 796545892e566a59 also matches). The change is regions-only, plus GPL_ROUTABILITY_DRIVEN=1. HOTSPOT 1 (230,410) is addressed structurally: each L1 ring reader now sits beside its writer in the same y span (S: rsw|lsw|lse|rse at 14.1 um each, y 32-383; N: rnw|lnw|dw|de|lne|rne at 8.6-10.4 um, y 397/413-659). The 2,048-b 4-slot banks then cross 14 um horizontally instead of 4,096 b crossing the y 383-413 cut vertically. The cut drops to about 2.0k b (S read words 1,024 + gs/gn to LSL). Strip fill estimate: S writer about 2k flops in 4.9k um2 (about 20%); N strips 2.4k um2 each (about 35%). OK. OPEN: (a) 2.0k b over the aisle-only derated about 2.9k tracks is 0.69, above the 0.6 planning limit. It relies on M7 (and M6 jogs) over the romleaf macros, which OBS only M1-M5, so the capacity is there but not counted. (b) HOTSPOT 2 (220-320,720) is NOT addressed structurally: the dwr/der boxes (206-330 x 660-729) and hub (732-808) are unchanged, and the extra 20-um band from your 11:57 refined plan is not in v2. Only routability-driven GPL is added. The W-pin window condition is closed (COORD 11:44).",
+ "fixes": "P&R gate via ot-run allowed (a measurement iteration). Report: GRT overflow bins in x 195-263 at y 383-413 and at (220-320,720), M7 usage over the romleaf columns, and the CTS insertion/spread for single ck. If (220-320,720) still has >0 hot bins, v3 = dwr/der boxes 2x taller (660-760) and hub plus one LSL row-gap band (your own 11:57 item 3). Do this before any widening of the 457.92 outline. The full PASS needs GRT overflow 0 at both spots plus the measured insertion/spread.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T12:03:53-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
