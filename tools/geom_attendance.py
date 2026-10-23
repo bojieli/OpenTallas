@@ -44,6 +44,7 @@ TERMINAL = {"CLOSED", "CANCELLED", "REFUSED", "INVALID"}
 REQ_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?REQ\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)", re.M)
 VER_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?VERDICT\s+(\S+)\s+(\S+)\s+(PASS|FAIL)\b", re.M)
 STALE_H = 2.0
+STAMP_RE = re.compile(r"\[(\d\d-\d\d) (\d\d:\d\d)\]")
 STEWARDS = (("STEWARD-S81", ("dsdv_", "dsfd_", "ot_s81", "s81", "col_h")), ("STEWARD-QK", ("qfd_", "qkd_", "ot_coll_", "ot_qwen")),
             ("STEWARD-HBM", ("ot_hbm", "hfd_", "ot_hgi", "ot_hfd", "ot_hidx", "hnx_", "hdie", "ot_hdie")))
 
@@ -116,8 +117,17 @@ def review_state(text: str, verdicts):
     mt = G.LANE.stat().st_mtime if G.LANE.exists() else 0.0
     ev = [(m.start(), m.group(1), "requested", f"REQ {m.group(2)} by {m.group(5)}") for m in REQ_RE.finditer(text)]
     ev += [(m.start(), m.group(1), m.group(3), f"{m.group(3)} {m.group(2)}") for m in VER_RE.finditer(text)]
-    for _, e, state, det in sorted(ev):
-        st[e] = (state, det, mt)
+    for pos, e, state, det in sorted(ev):
+        # GEOM-REVIEW stamps its VERDICT lines "[MM-DD HH:MM]"; REQ lines carry no reliable time (lane mtime)
+        line = text[pos:text.find("\n", pos) if text.find("\n", pos) >= 0 else len(text)]
+        m = STAMP_RE.search(line)
+        t = mt
+        if m:
+            try:
+                t = dt.datetime.strptime(f"{dt.date.today().year}-{m.group(1)} {m.group(2)}", "%Y-%m-%d %H:%M").timestamp()
+            except ValueError:
+                pass
+        st[e] = (state, det, t)
     return st
 
 
@@ -154,7 +164,8 @@ def owner_of(names, tree_lines, lanes, api_owner):
 def lane_touch(names, lanes):
     t = 0.0
     for stem, mt, lines in lanes:
-        if any(n in ln for ln in lines[-60:] for n in names):
+        # lines written by GEOM-REVIEW (verdict broadcasts, notices) are not an owner action
+        if any(n in ln for ln in lines[-60:] if "GEOM-REVIEW" not in ln for n in names):
             t = max(t, mt)
     return t
 
