@@ -1,0 +1,24 @@
+{
+  "source_commit": "96d96401e",
+  "die": "dv2f21g5r56cxc",
+  "selected_top": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+  "selected_leaf": "ot_qfd_tt_ctlm_static_hr_safe32_native32_1r",
+  "selected_params": {
+    "STAGE_ME": 1,
+    "SEGCAL": 1
+  },
+  "files": {
+    "rtl/qwen_dv/headprep13/h16za/native32_1r_param.v": {
+      "r56_sha256": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
+      "matches_main_a970": true
+    },
+    "rtl/qwen_dv/headprep13/h16za/native32_helpers.sv": {
+      "r56_sha256": "1e021ff33742ef24529373bfab456eeb95f90c693f597963cd8c2f368c3bec88",
+      "matches_main_a970": true
+    },
+    "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv": {
+      "r56_sha256": "5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04",
+      "matches_main_a970": true
+    }
+  }
+}
