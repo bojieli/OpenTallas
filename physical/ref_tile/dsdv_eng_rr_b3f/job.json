@@ -1,0 +1,154 @@
+{
+ "name": "dsdv_eng_rr_b3f-dsdv_eng_rr_b3f-COMMIT",
+ "block": "dsdv_eng_rr",
+ "ref_tile": true,
+ "owner": "Claude:S81-ELEM2-ENGRR",
+ "purpose": "S81 G9 dsdv_eng_rr (Engram row-read cluster eng_00, flat with RA640 lookup) to closure: TT setup / FF hold / DRC 0 + native census 32 [FALLBACK: larger outline, lower density]",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/s81-engrr2-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/dsrom_sys/engram",
+   "rtl/dsrom_sys/s81_dv",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/lib/ot_rst_relay_bounded32.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/s81_dv/eng_rr"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_eng_rr u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_ENGRAM_CRCMAT -DOT_S81ENG_RR_N32 -DOT_S81ENG_RR_MUL_N32 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra512.sv rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra512.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra640.sv rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_relay_bounded32.sv rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv rtl/hdc/v41/ot_hdc_engram_gather.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/dsrom_sys/s81_dv/eng/ot_s81eng_rr_n32.sv rtl/dsrom_sys/s81_dv/eng/ot_s81eng_aq_n32.sv rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "engrr_exact",
+    "cmd": "bash tools/s81_dv/eng_rr/bench_rr_snapshot.sh {RUN}/engrr_exact base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ENG_RR_BENCH PASS base$",
+    "min_count_regex": "^TB_ENG_RR_STATS .* row_beats (\\d+) "
+   },
+   {
+    "name": "engrr_seed2",
+    "cmd": "bash tools/s81_dv/eng_rr/bench_rr_snapshot.sh {RUN}/engrr_seed2 base +SEED=2 +LAT=160",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ENG_RR_BENCH PASS base$",
+    "min_count_regex": "^TB_ENG_RR_STATS .* row_beats (\\d+) "
+   },
+   {
+    "name": "engrr_mut_xq",
+    "cmd": "bash tools/s81_dv/eng_rr/bench_rr_snapshot.sh {RUN}/engrr_mut_xq xq1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^ENG_RR_BENCH FAIL xq1$"
+   },
+   {
+    "name": "engrr_mut_onescale",
+    "cmd": "bash tools/s81_dv/eng_rr/bench_rr_snapshot.sh {RUN}/engrr_mut_onescale onesc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^ENG_RR_BENCH FAIL onesc$"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsdv_eng_rr_b3f/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsdv_eng_rr_b3f/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_eng_rr_b3f --out {RUN}/record/views/dsdv_eng_rr --macro-view physical/asap7_memory_macros/ot_rom_4096x72_m8 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsdv_eng_rr_b3f/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsdv_eng_rr_b2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsdv_eng_rr_b2/dsdv_eng_rr_b3f-dsdv_eng_rr_b3f-COMMIT"
+  }
+ ],
+ "cycles_added": 2,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "hold_merge": "New G9 cluster view (no old view): die_chain binds by exact source/instance; parent bbox/face grant owed.",
+ "structural_change": "dsdv_eng_rr_b3f (STW-S81c-COLLA3 10-22, FB; from dsdv_eng_rr_b2 @c9c114fd3, same RTL @b8508b4d3 / pins / macros / 561.6 outline / cycles): one TritonCTS tree over 59,180 sinks -> k-means regional CTS (clock_split_km, K=48, port ck). Why: the b2 --cts gate (gold2 20261022-065614) FAILED only clock_rule: TT insertion 666.8..886.7 ps, pin-flop spread TT 121.4 / FF 116.4 ps (trial GRT overflow 0, native32 PASS, setup at placement -28 ps reg->reg = repairable). Same class + fix as dscoll_lane s8nk -> s8nq/s8nr (K=16 83-88 ps -> K=24/32 55/52) and xrt3t: equal-load local roots under the balanced top tree. No constraint relaxed. | b2 FB (STW-S81c-COLLA 10-22): dsdv_eng_rr_b @b8508b4d3 (census-fixed source, gate passed native+CTS: TT spread 59.8/FF 55.5) FAILED trial GRT: GRT-0183 maze router boxed in during the post-repair incremental route (initial overflow 0, M3 22.8%, fill 46% at 518.4). Same RTL/pins/macro positions, outline 518.4 -> 561.6 (fill ~39%) for local routing room. Prev: S81-ELEM2-ENGRR 10-21 successor of Codex R6 80b6d5334 (native PASS32 52120018d; zero-wire intrinsic 082fa3d2b TT -84.4 ps): head rco 3 registered stages (+2 edges request chain, priced) with carry-select adds; XQ wait-line decode registered + line read 1 edge earlier (same AQ age); token map cid range fault 1 edge later; hash_n32 generator all adders 8-bit carry-select. Flat whole-RR cluster: the RA640 lookup has no CLOSED leaf view, so it is placed flat (single ck root, lookup clock pins are ck branches)."
+}
