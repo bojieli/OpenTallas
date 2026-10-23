@@ -25,9 +25,15 @@ cpr=${HC_CPR:-1}; raw0=$((165 + 11 * cpr))
 sha256sum "${src[@]}" "$0" tools/rtl_hbm_hc_eng_static_gate.py > "$out/sources.sha256"
 python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case" --split --npos 1 --raw0 $raw0 --rs 104 --tail-extra $tx > "$out/vectors.log"
 "$vl" --binary --timing --hierarchical -j "${HC_BUILD_JOBS:-16}" -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
-  --top-module tb_hbm_hc_eng4_static +define+MUT=0 +define+HC_SMUT=$smut +define+HC_CPR=$cpr +define+OT_FP_DATA_NORST -Mdir "$out/obj" -o Vring \
+  ${HC_VL_EXTRA:-} --top-module tb_hbm_hc_eng4_static +define+MUT=0 +define+HC_SMUT=$smut +define+HC_CPR=$cpr +define+OT_FP_DATA_NORST -Mdir "$out/obj" -o Vring \
   rtl/test/tb_hbm_hc_eng4_static_hier.vlt "${src[@]}" > "$out/build.log" 2>&1 || { tail -30 "$out/build.log"; exit 3; }
 set +e; (cd "$out/case" && "$out/obj/Vring" $(cat plus.txt)) > "$out/run.log" 2>&1; rc=$?; set -e
+# negative control on the same binary: the programme with emits NOT moved (tail launch + 497) must FAIL
+if [ "$smut" = 0 ] && [ "$tx" != 0 ]; then
+ python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case_neg" --split --npos 1 --raw0 $raw0 --rs 104 --tail-extra 0 > "$out/vectors_neg.log"
+ set +e; (cd "$out/case_neg" && "$out/obj/Vring" $(cat plus.txt)) > "$out/run_neg.log" 2>&1; rcn=$?; set -e
+ grep -E "HC_ENG_DONE|HC_ENG PASS|HC_ENG FAIL|FAULT" "$out/run_neg.log" | head -3; echo "HC_ROOT_S NEG (emit +0) rc=$rcn (must be non-zero)"
+fi
 grep -E "HC_ENG_DONE|HC_ENG PASS|HC_ENG FAIL|FAULT" "$out/run.log" | head -4
 echo "HC_ROOT_S SMUT=$smut TAIL_EXTRA=$tx rc=$rc (CPR=$cpr RAW0=$raw0)"
 rm -rf "$out/obj"
