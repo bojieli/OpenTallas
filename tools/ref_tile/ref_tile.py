@@ -50,6 +50,7 @@ import raw_macro_clocks  # noqa: E402
 from measured_band_fill import lattice_band_errors, measured_band_fill  # noqa: E402
 sys.path.insert(0, str(HERE))
 import tile_plan as TP  # noqa: E402
+import tile_plan_v1 as TP_V1  # noqa: E402  (frozen recipe-5 planner of kits generated before TILE-FLOW2)
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -179,10 +180,11 @@ def kit_recipe(s: dict, out_root: Path | None = None, spec_path: str | None = No
     regenerates a kit extracted at its commit into a temporary directory, with ROOT = the daemon tree (no kits there), and
     an old kit must not be judged against the new-kit defaults."""
     v = s.get("recipe")
+    env = (out_root or ROOT) / kit_dir(s) / "kit.env"
+    if spec_path and Path(spec_path).name == "spec.json" and (Path(spec_path).parent / "kit.env").is_file():
+        env = Path(spec_path).parent / "kit.env"
+    s["_tp_version_default"] = kit_tile_plan_version(env)
     if v is None:
-        env = (out_root or ROOT) / kit_dir(s) / "kit.env"
-        if spec_path and Path(spec_path).name == "spec.json" and (Path(spec_path).parent / "kit.env").is_file():
-            env = Path(spec_path).parent / "kit.env"
         if env.is_file():
             m = re.search(r"^RECIPE=(\d+)\s*$", env.read_text(errors="replace"), re.M)
             v = int(m.group(1)) if m else 1
@@ -190,6 +192,31 @@ def kit_recipe(s: dict, out_root: Path | None = None, spec_path: str | None = No
             v = RECIPE_LATEST
     if isinstance(v, bool) or not isinstance(v, int) or not 1 <= v <= RECIPE_LATEST:
         raise SpecError(f"spec: recipe must be an integer 1..{RECIPE_LATEST}, got {v!r}")
+    return v
+
+
+TILE_PLAN_LATEST = 2
+
+
+def kit_tile_plan_version(env: Path) -> int:
+    """tile_plan planner version of a spec that does not name one (ROOT-MERGE2 10-23, COORD batch 15 condition: in-flight
+    recipe-5 kits must not change silently): a NEW kit takes TILE_PLAN_LATEST (TILE-FLOW2: 6 pins/um on two layers,
+    balanced pin generator, macro area of fixed blocks, tied macro pins); an EXISTING kit (kit.env present) keeps the
+    version its own spec.json recorded, else 1 (the frozen tile_plan_v1 planner, 3 pins/um, no implied pin_balance)."""
+    if not env.is_file():
+        return TILE_PLAN_LATEST
+    try:
+        v = ((json.loads((env.parent / "spec.json").read_text()).get("tile_plan") or {}).get("planner_version"))
+    except (OSError, ValueError, AttributeError):
+        v = None
+    return v if v in (1, 2) and not isinstance(v, bool) else 1
+
+
+def tile_plan_version(s: dict) -> int:
+    """the spec's tile_plan.planner_version, else the kit default kit_recipe() found (new kit: TILE_PLAN_LATEST)"""
+    v = (s.get("tile_plan") or {}).get("planner_version", s.get("_tp_version_default", TILE_PLAN_LATEST))
+    if isinstance(v, bool) or v not in (1, 2):
+        raise SpecError(f"spec: tile_plan.planner_version must be 1 or 2, got {v!r}")
     return v
 
 
@@ -296,6 +323,7 @@ def tile_plan_on(s: dict) -> dict | None:
     pd = tp.get("pin_density")
     if pd is not None and not (isinstance(pd, (int, float)) and 0 < float(pd) <= TP.PIN_WINDOW_MAX):
         raise SpecError(f"spec: tile_plan.pin_density must be in (0, {TP.PIN_WINDOW_MAX:g}] pins/um")
+    tile_plan_version(s)
     return tp
 
 
@@ -311,7 +339,15 @@ def apply_tile_plan_hooks(s: dict) -> None:
     """recipe-5 / tile_plan kits: the face fence runs after the pin flops are fixed (pin_hook_after_flops), with the
     spec's unregistered_ok ports as its only exemptions; the flow-inserted pin-register wrapper is refused"""
     tp = tile_plan_on(s)
-    if tp is None or tp.get("fence") is False:
+    if tp is None:
+        return
+    # the planner policy the kit was generated with, written into its spec (COORD batch 15): version 1 = 3 pins/um and
+    # no implied pin_balance (exact pre-TILE-FLOW2 output); version 2 = TP.PIN_DENSITY on two layers + balanced pins
+    ver = tile_plan_version(s)
+    tp["planner_version"] = ver
+    tp.setdefault("pin_density", TP_V1.PIN_DENSITY if ver == 1 else TP.PIN_DENSITY)
+    tp.setdefault("pin_balance", ver >= 2)
+    if tp.get("fence") is False:
         return
     own = [k for k in ("PRE_GLOBAL_PLACE_TCL", "PRE_DETAIL_PLACE_TCL") if k in s.get("orfs_vars", {})]
     if own:
@@ -325,7 +361,7 @@ def apply_tile_plan_hooks(s: dict) -> None:
         s["io_flop_at_pins"] = {"cols": 4, "allow_none": True}
     # the pin generator (COORD 10-23): balanced place_pin, layers alternating pin by pin (group_max 1) over the face's
     # two layers (pin_balance_env defaults = tile_plan.face_pin_layers of the cap: E/W M4 [+M6], N/S M3+M5)
-    if "pin_balance" not in s.get("route", {}) and tp.get("pin_balance", True) is not False:
+    if "pin_balance" not in s.get("route", {}) and tp.get("pin_balance") is True:
         s.setdefault("route", {})["pin_balance"] = {"group_max": 1}
     hooks = list(s.get("pin_hook_after_flops") or [])
     if TILE_PLAN_FENCE_TCL not in hooks:
@@ -335,10 +371,15 @@ def apply_tile_plan_hooks(s: dict) -> None:
     # spec.json carried back, so a later unregistered_ok edit was silently ignored)
     ov = s.setdefault("orfs_vars", {})
     ok = sorted(unregistered_ok(s))
-    ov["OT_FENCE_UNREG_OK"] = "|".join(re.escape(k) for k in ok)
-    ov["OT_FENCE_STRICT"] = "1" if tp.get("strict", True) else "0"
-    clocks = [s["clock_port"]] + [c for c in (s.get("clock_ports") or []) if c != s["clock_port"]]
-    ov["OT_FENCE_CLOCKS"] = ",".join(clocks)
+    fence = {"OT_FENCE_UNREG_OK": "|".join(re.escape(k) for k in ok),
+             "OT_FENCE_STRICT": "1" if tp.get("strict", True) else "0",
+             "OT_FENCE_CLOCKS": ",".join([s["clock_port"]] + [c for c in (s.get("clock_ports") or [])
+                                                              if c != s["clock_port"]])}
+    for k, v in fence.items():
+        if ver >= 2:
+            ov[k] = v
+        else:           # version 1 kits: the pre-TILE-FLOW2 setdefault (byte-identical regeneration)
+            ov.setdefault(k, v)
 
 
 def pin_regs_plan(s: dict) -> dict | None:
@@ -1393,6 +1434,8 @@ def tile_plan_pin_checks(s: dict, W: float, H: float, slot: dict | None) -> list
     """TP.face_pin_check of every pinned face on the kit's actual pin regions (pin_regions; widths from the header,
     unknown = 1 bit)"""
     tp = tile_plan_on(s) or {}
+    if tp and tile_plan_version(s) < 2:
+        return []
     widths = tile_plan_widths(s) or {}
     layers = tile_plan_pin_layers(s, slot)
     per = {}
@@ -1407,6 +1450,8 @@ def tile_plan_pin_checks(s: dict, W: float, H: float, slot: dict | None) -> list
 def tile_plan_macro(s: dict, view: str) -> dict:
     """the LEF macro as the planner sees it: without the pins the RTL ties to constants (TP.REPAIR_PINS + spec
     tile_plan.tied_macro_pins: [bus base name]); they need no channel"""
+    if tile_plan_version(s) < 2:
+        return track_macro(view)
     tied = list(TP.REPAIR_PINS) + list((s.get("tile_plan") or {}).get("tied_macro_pins") or [])
     return TP.strip_pins(track_macro(view), tied)
 
@@ -1422,10 +1467,17 @@ def tile_plan_outline(s: dict, slot: dict | None, std: float | None, blocks: lis
     halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
     ms = [{"w": b["w"], "h": b["h"], "tm": tile_plan_macro(s, b["view"]), "key": i}
           for i, b in enumerate(blocks) if b["kind"] == "macro" and not b.get("at")]
+    sl = (float(slot["outline"]["w"]), float(slot["outline"]["h"])) if slot else None
+    if tile_plan_version(s) < 2:      # the frozen pre-TILE-FLOW2 planner (fixed blocks folded into std / util)
+        fixed1 = sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks if b["kind"] != "macro" or b.get("at"))
+        comp = TP_V1.content_outline(float(std) + fixed1 * float(tp.get("util", TP_V1.TARGET_UTIL)), ms, demand,
+                                     util=float(tp.get("util", TP_V1.TARGET_UTIL)), halo=halo, slot=sl,
+                                     pin_density=float(tp.get("pin_density", TP_V1.PIN_DENSITY)))
+        comp["widths_exact"] = exact
+        return comp
     # GEOM-REVIEW 10-23 (s81dv_rg3b_xm6 'std 80412 + macros 0'): macros at fixed spec positions and hard children are
     # MACRO area from their LEF footprint, never std cells; std stays the synthesized std-cell area without macros
     fixed = [{"w": b["w"], "h": b["h"]} for b in blocks if b["kind"] != "macro" or b.get("at")]
-    sl = (float(slot["outline"]["w"]), float(slot["outline"]["h"])) if slot else None
     comp = TP.content_outline(float(std), ms, demand, util=float(tp.get("util", TP.TARGET_UTIL)), halo=halo, slot=sl,
                               pin_density=float(tp.get("pin_density", TP.PIN_DENSITY)), fixed=fixed,
                               pin_layers=tile_plan_pin_layers(s, slot), logic_face=tp.get("logic_face"))
@@ -1754,9 +1806,12 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
         dem = s.get("_tp_demand")
         if dem is None:
             dem = tile_plan_demand(s)[0]
-        pl = tile_plan_pin_layers(s, contract_slot(s))
-        tp_plan = TP.plan_macros(W, H, ms, dem, halo, logic_face=(s.get("tile_plan") or {}).get("logic_face"),
-                                 over={"WE": TP.over_pitch_for(pl, "WE"), "NS": TP.over_pitch_for(pl, "NS")})
+        if tile_plan_version(s) < 2:
+            tp_plan = TP_V1.plan_macros(W, H, ms, dem, halo)
+        else:
+            pl = tile_plan_pin_layers(s, contract_slot(s))
+            tp_plan = TP.plan_macros(W, H, ms, dem, halo, logic_face=(s.get("tile_plan") or {}).get("logic_face"),
+                                     over={"WE": TP.over_pitch_for(pl, "WE"), "NS": TP.over_pitch_for(pl, "NS")})
         if tp_plan["ok"]:
             for p in tp_plan["placed"]:
                 auto_m[p["key"]].update(orient=p["orient"], _tp=p)
@@ -2993,7 +3048,7 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
                                  "put the request in spec slot_change_request; the die lead re-derives the parent slot"))
             if tpc["bound"] == "pins":
                 findings.append(("WARN", "pin_bound", f"outline set by the pin demand ({tpc['pin_density']} pins/um at "
-                                 f"<= {tpc.get('pin_cap')}), std fill {tpc['fill']:.0%}: the tile is interface-limited",
+                                 f"<= {tpc.get('pin_cap', format(TP_V1.PIN_DENSITY, 'g'))}), std fill {tpc['fill']:.0%}: the tile is interface-limited",
                                  "narrow / time-multiplex the interface or move pins to free faces; a lower fill is the "
                                  "honest cost of this interface"))
         # COORD 10-23 pin-density rule on the kit's ACTUAL pin regions: <= 6/um averaged on two alternating layers, <= 6

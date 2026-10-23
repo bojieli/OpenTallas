@@ -278,6 +278,32 @@ class Recipe5(unittest.TestCase):
         d = Path(root) / r["kit"]
         return r, {f.name: f.read_text() for f in d.iterdir()}
 
+    def test_planner_version_recorded_new_kit_v2_existing_kit_v1(self):
+        # COORD batch 15 condition: in-flight recipe-5 kits must not change silently; tile_plan writes the policy used
+        with tempfile.TemporaryDirectory() as a:
+            r, k = self.gen(a, name="tp5_v", std_area_um2=3000.0, outline=None)
+            tp = json.loads(k["spec.json"])["tile_plan"]
+            self.assertEqual((tp["planner_version"], tp["pin_density"], tp["pin_balance"]), (2, TP.PIN_DENSITY, True))
+            self.assertEqual(json.loads(k["spec.json"])["route"]["pin_balance"], {"group_max": 1})
+            # a v2 kit regenerated from its SOURCE spec (no version in it) keeps v2 (read from the kit's spec.json)
+            r2 = RT.gen(str(Path(a) / "tp5_v.json"), commit="c" * 40, out_root=Path(a))
+            self.assertEqual(json.loads((Path(a) / r2["kit"] / "spec.json").read_text())["tile_plan"]["planner_version"], 2)
+        with tempfile.TemporaryDirectory() as a:
+            r, k1 = self.gen(a, name="tp5_old", tile_plan={"planner_version": 1}, std_area_um2=3000.0, outline=None)
+            kd = Path(a) / r["kit"]
+            sp = json.loads(k1["spec.json"])
+            self.assertEqual((sp["tile_plan"]["pin_density"], sp["tile_plan"]["pin_balance"]), (3.0, False))
+            self.assertNotIn("pin_balance", sp["route"])
+            for x in ("planner_version", "pin_density", "pin_balance"):     # a kit generated before TILE-FLOW2
+                del sp["tile_plan"][x]
+            (kd / "spec.json").write_text(json.dumps(sp, indent=1) + "\n")
+            RT.gen(str(kd / "spec.json"), commit="c" * 40, out_root=Path(a))
+            k2 = {f.name: f.read_text() for f in kd.iterdir()}
+            self.assertEqual(json.loads(k2["spec.json"])["tile_plan"]["planner_version"], 1)
+            self.assertEqual({n: v for n, v in k1.items() if n != "spec.json"},
+                             {n: v for n, v in k2.items() if n != "spec.json"})
+            self.assertNotIn("pin_layers", json.loads(k2["floorplan.json"])["tile_plan"])
+
     def test_new_tile_takes_tile_plan_and_fence(self):
         with tempfile.TemporaryDirectory() as a:
             r, k = self.gen(a, name="tp5_a", std_area_um2=3000.0, outline=None)
