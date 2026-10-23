@@ -56,7 +56,7 @@
   "macro_halo_um": 5.4
  },
  "io_tcl": "physical/s81_die_pins/dvrlyh_m46/dsfd_dvrlyh_512_EW_m46.tcl",
- "structural_change": "STW-S81c-DIE4-BLK 10-22 (owner 19:25/19:45: two-layer pin spread at the die H hot channels, coord M9 probe coord-m9-s81-a residual H on M4/M8): PIN-ONLY successor of the closed s81dv_rlyh_512_ew (dsfd_dvrlyh_512_EW): data bits on both data faces at identical y and layer, even bits M4 / odd bits M6 (pin-only M6 grant, M6 obstructed inside the tile except the E/W stubs, m6_pin_access), 0.192-um pair slots centred, ck_o in the centre slot of the o face; neighbour stations i[b]/o[b] exactly opposite (straight bundles). Same RTL, ports, registers, outline, recipe, hold budget; 0 cycles (no pin register stage, no edge for MU.S81.CAL). | S81-LAND2 10-17 (LANDING-CONTRACT H3, hold fix (a)): half-cycle successor of the closed s81dv_rly_512_ew (dsfd_dvrly_512_EW): ot_dvrly_st W=512 HC=1, the same one-stage ot_s81_rly RSREG=1 body, ck_o = ~ck through ONE kept ot_dvrly_ckinv (inverted generated clock ck_o_fwd), so station k+1 captures half a period after station k: the p4j pilot relay->relay hold (-120..-195 ps, clock leg > data leg) gains ~T/2 and the lane is two stations per root cycle (half the lane latency). Same outline / pins / recipe 4 flop-first / hold_budget die / M5 cap. | base: S81-CTRL 10-17 (p4i relay views owed, lanes/S81-DIE.md): 512-b lane station E->W, the closed s81dv_rly_276_ew kit at width 512 (dsfd_rly_masters_dvw.sv: ot_s81_rly W=512 RSREG=1, one register stage, rs regional reset leaf through the reset pin register, ck = the lane forwarded clock, ck_o through the kept ckinv pair); recipe 4 flop-first, hold_budget die; data faces at the 276 kit pin pitch, depth 17.28 um. 0 cycles vs the plan (one stage per 405-um hop).",
+ "structural_change": "STW-S81c-DIE4-BLK 10-22 (owner 19:25/19:45: two-layer pin spread at the die H hot channels, coord M9 probe coord-m9-s81-a residual H on M4/M8): PIN-ONLY successor of the closed s81dv_rlyh_512_ew (dsfd_dvrlyh_512_EW): data bits on both data faces at identical y and layer, even bits M4 / odd bits M6 (pin-only M6 grant, M6 obstructed inside the tile except the E/W stubs, m6_pin_access), 0.192-um pair slots centred, ck_o in the centre slot of the o face; neighbour stations i[b]/o[b] exactly opposite (straight bundles). Same RTL, ports, registers, outline, recipe, hold budget; + opt-in OT_S81_RLY_RSSLICE (ceil(W/32) kept reset pin register copies, cycle-identical to the single rq for RSREG=1: the current native census refuses the single rq at W RESETN loads); 0 cycles (no pin register stage, no edge for MU.S81.CAL). | S81-LAND2 10-17 (LANDING-CONTRACT H3, hold fix (a)): half-cycle successor of the closed s81dv_rly_512_ew (dsfd_dvrly_512_EW): ot_dvrly_st W=512 HC=1, the same one-stage ot_s81_rly RSREG=1 body, ck_o = ~ck through ONE kept ot_dvrly_ckinv (inverted generated clock ck_o_fwd), so station k+1 captures half a period after station k: the p4j pilot relay->relay hold (-120..-195 ps, clock leg > data leg) gains ~T/2 and the lane is two stations per root cycle (half the lane latency). Same outline / pins / recipe 4 flop-first / hold_budget die / M5 cap. | base: S81-CTRL 10-17 (p4i relay views owed, lanes/S81-DIE.md): 512-b lane station E->W, the closed s81dv_rly_276_ew kit at width 512 (dsfd_rly_masters_dvw.sv: ot_s81_rly W=512 RSREG=1, one register stage, rs regional reset leaf through the reset pin register, ck = the lane forwarded clock, ck_o through the kept ckinv pair); recipe 4 flop-first, hold_budget die; data faces at the 276 kit pin pitch, depth 17.28 um. 0 cycles vs the plan (one stage per 405-um hop).",
  "job": {
   "owner": "Claude:STW-S81c-DIE4-BLK",
   "branch": "claude/s81-relay-m46-1022",
@@ -65,7 +65,7 @@
   "benches": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_dvrlyh_512_EW u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_dvrlyh_512_EW u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_S81_RLY_RSSLICE --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -75,7 +75,7 @@
    },
    {
     "name": "exact_words",
-    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_dvrlyh_512_EW 512 {RUN}/bench_p 1",
+    "cmd": "OT_RLY_DEF=-DOT_S81_RLY_RSSLICE bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_dvrlyh_512_EW 512 {RUN}/bench_p 1",
     "expect": "pass",
     "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
     "threads": 2,
@@ -83,7 +83,7 @@
    },
    {
     "name": "neg_bit0_mutant",
-    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_dvrlyh_512_EW 512 {RUN}/bench_m 1",
+    "cmd": "OT_RLY_DEF=-DOT_S81_RLY_RSSLICE bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_dvrlyh_512_EW 512 {RUN}/bench_m 1",
     "expect": "fail",
     "fail_regex": "RLY_BENCH FAIL",
     "threads": 2,
@@ -91,7 +91,7 @@
    },
    {
     "name": "reset_register_bypass_mutant",
-    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_dvrlyh_512_EW 512 {RUN}/bench_r 1",
+    "cmd": "OT_RLY_DEF=-DOT_S81_RLY_RSSLICE bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_dvrlyh_512_EW 512 {RUN}/bench_r 1",
     "expect": "fail",
     "fail_regex": "RLY_BENCH FAIL",
     "threads": 2,
@@ -99,7 +99,7 @@
    },
    {
     "name": "half_cycle_chain",
-    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rlyh.sh pass dsfd_dvrlyh_512_EW 512 {RUN}/bench_h 3",
+    "cmd": "OT_RLY_DEF=-DOT_S81_RLY_RSSLICE bash rtl/dsrom_sys/s81_glue/test/bench_rlyh.sh pass dsfd_dvrlyh_512_EW 512 {RUN}/bench_h 3",
     "expect": "pass",
     "pass_regex": "RLYH_BENCH PASS 0 errors in 60000 checks",
     "threads": 2,
@@ -107,7 +107,7 @@
    },
    {
     "name": "full_cycle_ck_o_mutant",
-    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rlyh.sh mut dsfd_dvrlyh_512_EW 512 {RUN}/bench_hm 3",
+    "cmd": "OT_RLY_DEF=-DOT_S81_RLY_RSSLICE bash rtl/dsrom_sys/s81_glue/test/bench_rlyh.sh mut dsfd_dvrlyh_512_EW 512 {RUN}/bench_hm 3",
     "expect": "fail",
     "fail_regex": "RLYH_BENCH FAIL",
     "threads": 2,
@@ -136,6 +136,9 @@
  "pin_access": {
   "m6_stub_um": 0.384
  },
+ "defines": [
+  "OT_S81_RLY_RSSLICE"
+ ],
  "reset_landing": {
   "enable": false,
   "reason": "FROZEN interface, same registers as the closed base kit: rs is a leaf of the die reset-station tree (dsfd_rly_1_WN, landed per region by the die) and is registered in the body (ot_s81_rly RSREG=1); a flow landing would add 2 reset-release edges the die calendar does not price"
@@ -145,8 +148,8 @@
   "master": "dsfd_dvrlyh_512_EW",
   "granted_by": "OWNER 2026-10-22 19:25/19:45 (die M9 signal routing approved; two-layer M4+M6 face pin spread for the blocks bordering the H hot channels), relayed by STW-S81c-DIE4 to STW-S81c-DIE4-BLK",
   "reason": "H lane relay data faces at 8.5-8.9 pins/um all on M4 sit in every residual H hot channel of the cap24 MAIN M2-M9 probe (gcells within 10 um of an H relay carry 41.5% of the H congestion); odd bits move to pin-only M6 edge contacts, M5 signal/PG interior cap stands.",
-  "source_commit": "b676ab716f737f8b52a1f75067723955267d9af8",
-  "source_spec_sha256": "a09ec70fcf497d8950432230b3caec71e9d145d6ffd02120a57a0a56681e2880",
+  "source_commit": "198f25a58e689c10d7b673cb9ae62851f09845ef",
+  "source_spec_sha256": "bc65405c016892198a27060dac336669916ef69eaa275d8745a5a3078bb665ad",
   "ports": [
    {
     "name": "i[1]",

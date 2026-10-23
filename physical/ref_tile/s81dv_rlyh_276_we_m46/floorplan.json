@@ -32,8 +32,8 @@
    "master": "dsfd_dvrlyh_276_WE",
    "granted_by": "OWNER 2026-10-22 19:25/19:45 (die M9 signal routing approved; two-layer M4+M6 face pin spread for the blocks bordering the H hot channels), relayed by STW-S81c-DIE4 to STW-S81c-DIE4-BLK",
    "reason": "H lane relay data faces at 8.5-8.9 pins/um all on M4 sit in every residual H hot channel of the cap24 MAIN M2-M9 probe (gcells within 10 um of an H relay carry 41.5% of the H congestion); odd bits move to pin-only M6 edge contacts, M5 signal/PG interior cap stands.",
-   "source_commit": "b676ab716f737f8b52a1f75067723955267d9af8",
-   "source_spec_sha256": "5607d230d6ac52b1911267ff11bd9952347ec6c362412061bcf7ccc59f0b3100",
+   "source_commit": "198f25a58e689c10d7b673cb9ae62851f09845ef",
+   "source_spec_sha256": "a2ed230f0ea9d786bb589db6fae35eb881109c9e6e652cb02e45ee153a1d828e",
    "ports": [
     {
      "name": "i[1]",
