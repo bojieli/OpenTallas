@@ -1,7 +1,0 @@
-WAVE FAIL: stub 101->2 word 0 of (p0, t5651) last 0
-WAVE FAIL: fault s0 0 stg 0000 stub 000010 lane 0000 p2l 000000 a 00 p2core 0 seedl 0000 hrow 000 racc 0000 at 810
-- /srv/opentallas-scratch/claude/wave1011/src/rtl/dsrom_sys/mtp/tb/tb_mtp_wave.sv:489: Verilog $finish
-WAVE FAIL: stub 101->2 word 1 of (p0, t5651) last 0
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.090 s; speed 27.156 us/s
-- Verilator: cpu 0.090 s on 1 threads; allocated 20 MB

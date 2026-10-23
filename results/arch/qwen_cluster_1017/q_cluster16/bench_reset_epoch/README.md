@@ -1,1 +1,0 @@
-Unbound diagnostic reset epoch counter. Verilator5.050 release latency PASS at2,3,4,18,36,60,78 edges under repeated long reset transactions; +1release mutant fails. Assertion cancels within3edges; this intentionally differs from long shift padding and requires full parent epoch/MUT8 contract review before adoption. No physical result yet.

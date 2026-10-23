@@ -1,1 +1,0 @@
-module mini(input ck,input in,output q,output serial); wire ab,bc; hfd_rly_10 a(.ck(ck),.d(in),.q(ab)); hfd_rly_10 b(.ck(ck),.d(ab),.q(bc)); hfd_rly_10 d(.ck(ck),.d(bc),.q(q)); hfd_rly_10 c(.ck(ck),.d(bc),.q(serial)); endmodule

@@ -1,7 +1,0 @@
-# LEP MU distributed-rows native census, 2026-10-20
-
-Read-only census of the existing epyc7 mapped netlists of s81sl_lepmua_dr and s81sl_lepmuh_dr, kits from claude/s81-lepcap-1019 e2ced5d46. Source objects and progressing CTS jobs were untouched. The original textbook reports used hf_report=256 and hf_max=3000, which hid 33..255-load drivers. This census sets hf_report/hf_max/hf_port_refuse/hf_reset_refuse/hf_refuse=32 and reach_um=405. Reset is included; clock remains separately judged by the measured spread rule. Actual netlist hashes are recorded.
-
-Binding FAIL: A has 2 over-limit drivers (66 and 37 loads); H has 21 (maximum 65). H includes thq[64] at 51, many thq[] bits at 41 and st_l[] bits at 39. A's 66-load OR2 drives the li1_r path, while its 37-load OR3 requires source-cone tracing. H's 65-load NAND3 and li1_r OR2 also require source-cone tracing. Raw JSON retains driver names and the complete list. These require kept consumer-region control/decode copies before a new layout gate. A clean legacy gate WARN is insufficient to admit these exact sources.
-
-This mapped census uses no placement dump: it establishes fanout/logic findings only. No reach, pin-clock, PG, SRAM inventory, or layout approval is claimed. Original floorplan textbook measured depth 368.4/375.1ps and reach 111.8um, but that is limited to its checked fixed-terminal cones. Existing CTS jobs are preserved for evidence; no submit/bind is authorized by this packet.

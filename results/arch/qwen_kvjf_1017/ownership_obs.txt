@@ -1,8 +1,0 @@
-scn0 (must PASS): PASS kv_ownership_obs scn0 mut0 compares819 go2 windows2 fault_code20
-scn1 (must PASS): PASS kv_ownership_obs scn1 mut0 compares412 go1 windows1 fault_code10
-scn2 (must PASS): PASS kv_ownership_obs scn2 mut0 compares412 go1 windows0 fault_code08
-mut1 (must FAIL): FAIL kv_ownership_obs scn0 mut1 errors71 compares819
-mut2 (must FAIL): FAIL kv_ownership_obs scn0 mut2 errors94 compares819
-mut3 (must FAIL): FAIL kv_ownership_obs scn0 mut3 errors2 compares819
-mut4 (must FAIL): FAIL kv_ownership_obs scn0 mut4 errors8 compares819
-PASS ownership_obs: 3 scenarios exact, 4 mutants caught

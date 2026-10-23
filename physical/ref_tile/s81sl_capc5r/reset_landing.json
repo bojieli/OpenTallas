@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "ot_s81sl_capc5r",
- "enable": false,
- "reason": "S81-CAPRST 10-21 regional_reset_ports: the lp.py RTL lands each regional reset port 2 stages on its OWN region clock beside its pin (u_lpr_cw/ce/rn/rs N=2; rt = u_lpr_rt_p + 2 kept copies u_lpr_rt_c0/c1 <=32 loads); no reset root, no cross-region reset path; each port net has ONE sink"
-}

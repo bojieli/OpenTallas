@@ -1,7 +1,0 @@
-{
-  "source_commit": "681179c1d",
-  "host": "ot-agidock128",
-  "exit": 1,
-  "terminal": "FATAL: tb.sv:44: decoded event mismatch 0; Time:3340000",
-  "cause": "Emitter placed staging block before DYNS macro definition; Icarus warned macro undefined. No timing or hardware claim."
-}

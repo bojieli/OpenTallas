@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_su_bridge_release_s",
- "enable": false,
- "reason": "RTL registers every pin: prog_busy -> b_s (pin flop), bridge_rst_n is a serial negedge flop and fault a posedge flop; a kit stage would move the release edge out of [E0-3q, E0) (tb_hbm_su_bridge_release SERIAL=1)"
-}

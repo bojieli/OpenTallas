@@ -1,4 +1,0 @@
-# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC
-source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
-source /src/physical/qwen_die_masters/post_plain.tcl
-source /src/physical/s81_die_views/hend/negcap/dsfd_r2l_vr_512x1__hcol_boundary.tcl

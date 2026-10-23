@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_su_programme_root_h5",
- "enable": false,
- "reason": "ot_hbm_su_programme_root5 is itself the root register stage of the SU programme (root + cluster head pin stage): every output is a register output (r_start/r_len/r_we/r_bank/r_row/r_data/fault), start/length land on the SDLY 2 delay registers, cfg_* on the root register (cfg_bank through the per-part range compare / base subtract, as root_h), p_fault on the fault OR register, rst_n drives only ot_rst_relay (release +3, as the r5 leaves). A kit flop stage would add an edge the start-advance contract does not price."
-}

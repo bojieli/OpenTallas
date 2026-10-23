@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/audit/analyze_hist32_native.py", line 63, in <module>
-    assert (name,pn) in xy,('missing actual sequential output coordinate',name,pn)
-AssertionError: ('missing actual sequential output coordinate', 'g_clc[0].g_r.rc$_DFF_PN0_', 'QN')

@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_static_ectla_k4-rt80-2a3a97cb2 bench bench_ectl_kiss_st_k_late_landing_mutant host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_static_ectla_k4-rt80-2a3a97cb2 log cl/bench_ectl_kiss_st_k_late_landing_mutant.a1b1.log captured 2026-10-18T21:52:34-07:00
-# fail_regex 'late landing response faulted'
-Verilator 5.050 2026-07-01 rev v5.050
-TRACE c15 localstart0 rq1 rs0 captured0 slot0
-[586000] %Fatal: tb_qkd_static_k_issuer.sv:133: Assertion failed in tb_qkd_static_k_issuer.unnamedblk4: late landing response faulted (RL 80 + 1)
-%Error: /srv/opentallas-scratch/claude/closure-loop/qkd_static_ectla_k4-rt80-2a3a97cb2/bench_src_a1/rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv:133: Verilog $stop
-Aborting...
-FAIL ectl_kiss_st_k RL 80 QK 91 mut 8: 0 layers

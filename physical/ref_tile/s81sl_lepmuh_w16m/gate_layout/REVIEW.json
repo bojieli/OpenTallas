@@ -1,0 +1,33 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T22:52:03.248602-07:00",
+  "gate_commit": "2026-10-22T22:42:52-0700",
+  "geometry_sha256": "b73bf53fb0d3c847ca8052fb79f30e9dbea3b7101e6027a467d7186272835caf",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "b73bf53fb0d3c847ca8052fb79f30e9dbea3b7101e6027a467d7186272835caf",
+    "components": {
+      "outline": "eae217f09dfa700dc502d3117ef542dd1e3433e31d48790a9bda7a43db173688",
+      "macros": "1a8813a35a39bd874c7dc404980990c6113f129f5949b2421f0c5b9fe1206a44",
+      "pins": "499b6eb65d248f9901a5b7a20e65715def8ab3fff2ea99e23b7d33219ad36c56",
+      "clock_entry": "3d550c6537bbeac89d73dcc93e7d865ab05bba2fc85cf4ba3db6a681a1f597d3"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Viewed twenty SRAM macros in two five-high TX columns and ten-high east RX column; explicit regular macro lattice and85.08um channel separation. Existing frozen-interface geometry retained.",
+    "std_cell_band": "Viewed floorplan+density; continuous broad centre band with horizontal cross channels, no power island or red density region.",
+    "pin_spread": "7424 actual signal/clock pins accessible, zero missing/outside/inaccessible. Maximum face2386 over604.8um below6/um. Low19% fill justified by pin and channel capacity.",
+    "clock_entry": "Current w16m actual pin spread24.0/19.8ps, raw24.6/29.2ps; trialGRT0. Exact unchanged reviewed geometry b73bf53f reused under existing geometry-bound review policy.",
+    "shape": "648x604.8um, aspect1.071; outline chosen for real face demand and SRAM escape channels, accepted."
+  },
+  "scope": "Normal route approval reuses prior personally viewed w15f2 geometry; independently recomputed w16m geometry is byte-equivalent in all outline/macro/pin/clock components. Current source/bench/native checks mandatory; no source waiver or CLOSED credit.",
+  "diagnostics": "Current gateWARN0FAIL, native32/all7424pinsaccessible. Reported current macro-reg+64.5ps, reg-reg-33.0ps, setup-32.97ps/hold-3.51ps disclosed; w16f remains live.",
+  "gate_result_sha256": "83452f76b1c8240df6e8cb83614a43b921c46626ed97cdbe17e18dc4c9a55d4e",
+  "archive_sha256": "623a58ca28f0abf924377ff6459ae27f3e43fcb54ddc40cee7b3c8b607749bc1",
+  "viewed_images": [
+    "prior w15f2 floorplan.png",
+    "prior w15f2 density.png"
+  ],
+  "geometry_reuse_basis": "Existing submit_exact geometry-bound review: exact same hash b73bf53fb0d3c847ca8052fb79f30e9dbea3b7101e6027a467d7186272835caf. Current w16 images viewed by steward; coordinator reused its previous personal geometry review."
+}

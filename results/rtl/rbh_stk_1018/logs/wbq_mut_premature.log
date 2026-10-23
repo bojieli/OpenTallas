@@ -1,4 +1,0 @@
-BLOCK 0: 640 of 640 sectors not in DRAM at the completing wa (premature posted count)
-[267500000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:117: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=1 wb=0 kshare=0000 controller=0
-%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:117: Verilog $stop
-Aborting...

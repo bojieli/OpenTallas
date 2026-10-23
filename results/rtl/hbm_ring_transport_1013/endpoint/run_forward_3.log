@@ -1,5 +1,0 @@
-PASS endpoint FORWARD=1 D=3 HF=2 count=1000 steady_cycles=1333 rate=0.750188 total_cycles=1337
-- source/tb_vms_endpoint_rate_forward.sv:40: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 3us; walltime 0.004 s; speed 648.516 us/s
-- Verilator: cpu 0.004 s on 1 threads; alloced 1017 MB

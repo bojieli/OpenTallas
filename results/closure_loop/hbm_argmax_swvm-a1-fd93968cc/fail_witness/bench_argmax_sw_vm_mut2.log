@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hbm_argmax_swvm-a1-fd93968cc bench bench_argmax_sw_vm_mut2 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hbm_argmax_swvm-a1-fd93968cc log cl/bench_argmax_sw_vm_mut2.a1b1.log captured 2026-10-18T23:19:08-07:00
-# fail_regex '^ARGMAX_SW_VM_BENCH MUT=2 FAIL$'
-MISMATCH cyc 14 busy 1/0 done 0/0 fault 0/0
-MISMATCH cyc 15 busy 1/0 done 0/0 fault 0/0
-vm records 228 (done 0) stream records 72 (fault 72, bad 0) mismatching edges 11878
-ARGMAX_SW_VM FAIL
-rtl/test/hbm_netlist_v16/tb_argmax_sw_vm.sv:86: $finish called at 24364000 (1ps)
-ARGMAX_SW_VM_BENCH MUT=2 FAIL

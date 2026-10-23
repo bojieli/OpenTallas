@@ -1,7 +1,0 @@
-OPEN c=4 bank=0 epoch=70 count=64 ok=1 running=0 emitted=0 rows=0 received=0 total=0
-LAST_SECTOR c=84 rows=64 busy=1 emitted=63 received=272
-OPEN c=87 bank=1 epoch=71 count=64 ok=1 running=0 emitted=64 rows=64 received=272 total=272
-LAST_SECTOR c=167 rows=64 busy=1 emitted=63 received=272
-RETIRE c=235 bank=0 epoch=999 expected=70 owned=11 running=0
-FATAL: tools/hbm_layer_vehicle/cache_tail/tb_cache_tail.sv:48: RETIRE_REJECT sticky
-       Time: 2346000  Scope: tb_cache_tail.read_all

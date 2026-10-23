@@ -1,9 +1,0 @@
-{
-  "command": "/home/ubuntu/bin/python -m pytest -q tests/test_ds_hbm_atomic_checkpoint_r67.py tests/test_ds_hbm_per_pc_r67.py tests/test_ds_hbm_pc01_r68.py tests/test_ds_pc01_checkpoint_fastpath_review.py",
-  "elapsed_seconds": 55.71,
-  "exit_code": 0,
-  "post_guard_elapsed_seconds": 0.53,
-  "post_source_root_guard_focused_tests": 13,
-  "scope": "source/protocol/actual compact codec and finite-provider checkpoint component; no released-checkpoint PC01 arithmetic",
-  "tests": 53
-}

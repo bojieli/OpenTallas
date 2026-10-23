@@ -1,5 +1,0 @@
-region audit: 374 register edges, 78 seam crossings (28834 b) over 27 region pairs (3 diagonal)
-FAIL R1 u_dn0_rly1 clocked by ck_c3r3 but sits in {'c0r0'} at [43.2, 871.932]
-FAIL R3 u_x_0_0 (c0r0) -> u_dn0_rly1 (c3r3): not neighbouring regions
-FAIL R3 u_dn0_rly1 (c3r3) -> u_dn0_rly2 (c0r0): not neighbouring regions
-REGION_AUDIT_FAIL 3

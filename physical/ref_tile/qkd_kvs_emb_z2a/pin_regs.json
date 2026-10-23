@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_kvs_emb",
- "enable": false,
- "reason": "KV-EMB4 z1 10-20: the KV die static schedule charges 0 edges at every kvs_emb face (kv_tile_views EDGES rule; i2 reason: every tile<->tile / die-master hop is priced in the compiled join ages with the die relays only). Owner 10-20 09:05: pin registers only at region crossings / wires > 405 um; the e1 recipe-3 pin registers (+1 in / +1 out on every pin) made the e1 view unbindable (tile_views edges, LEC != die RTL). Crossings land at die level (die relays / landing slots, priced)."
-}

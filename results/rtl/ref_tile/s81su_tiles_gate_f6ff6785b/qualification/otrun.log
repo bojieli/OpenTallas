@@ -1,8 +1,0 @@
-ot-run: ot-epyc1tb     free   744 GB (avail 860, growth 52, headroom 64, waiters 0/0 GB) running 5 disk 1138 GB 
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81su-tilegate/f6ff6785b
-ot-run: ot-pve1        free    82 GB (avail 182, growth 68, headroom 32, waiters 0/0 GB) running 6 disk 1318 GB 
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81su-tilegate/f6ff6785b
-ot-run: -> ot-epyc1tb
-ot-heavy: request 384G is charged 224G (class 'tg.sh:rtl' measured peak 149.1G, n=1+0 proved); the cap stays 384G
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1521351-1791918344 after 0 s
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1521351-1791918344): exit 0

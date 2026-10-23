@@ -1,1 +1,0 @@
-IDXRD_CASE OK rstfix_tt/x_t0s500: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1443 end_to_last 1378 nerr 257 nopen 257 qerr 0 slice_err 16 | maxrss_kb=188428 wall=2:50.86

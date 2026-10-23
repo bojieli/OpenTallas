@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch2/scratch/claude/codex-takeover-1013/clock-ref/qkd_cdc_wleaf
-ot-run: ot-epyc4       free   839 GB (avail 1002, growth 115, headroom 48, waiters 0/0 GB) running 8 disk 1424 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/scratch/claude/codex-takeover-1013/clock-ref/qkd_cdc_wleaf
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/scratch/claude/codex-takeover-1013/clock-ref/qkd_cdc_wleaf
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-1848603-1791914932 after 0 s
-core_clk TT boundary {'n': 585, 'mean': 210.3, 'min': 190.6, 'max': 238.0}
-hclk TT boundary {'n': 632, 'mean': 278.5, 'min': 267.1, 'max': 312.5}
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1848603-1791914932): exit 0

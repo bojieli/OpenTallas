@@ -1,5 +1,0 @@
-#!/bin/bash
-set -e
-cd /srv/opentallas/repos/euclid-svc-aq-block-directed-5f308-20261005
-iverilog -g2012 -s tb_svc_aq_block_nonempty_lockstep -P tb_svc_aq_block_nonempty_lockstep.PULLIN=16 -P tb_svc_aq_block_nonempty_lockstep.AQR=1 -P tb_svc_aq_block_nonempty_lockstep.REFM=1 -P tb_svc_aq_block_nonempty_lockstep.PCI=0 -P tb_svc_aq_block_nonempty_lockstep.WQN=4 -P tb_svc_aq_block_nonempty_lockstep.WP=2 -o /srv/opentallas-scratch/jobs/euclid-svc-aq-block-directed-r1/directed.vvp rtl/test/hbm_fmax_svc/tb_svc_aq_block_nonempty_lockstep.sv rtl/hbm_accel/svc/aq_block_nonempty_cut/ot_hbm_r14_stream_pc_aq_block_nonempty_cut.sv results/rtl/hbm_accel_fmax_inventory_20261004/svc/closure_handoff_20261004/source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv > /srv/opentallas-scratch/jobs/euclid-svc-aq-block-directed-r1/compile.log 2>&1
-vvp /srv/opentallas-scratch/jobs/euclid-svc-aq-block-directed-r1/directed.vvp +DIRECTED_ONLY +CYC=0 > /srv/opentallas-scratch/jobs/euclid-svc-aq-block-directed-r1/runtime.log 2>&1

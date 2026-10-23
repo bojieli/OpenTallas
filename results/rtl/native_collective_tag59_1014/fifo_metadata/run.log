@@ -1,6 +1,0 @@
-ERROR: /srv/opentallas-scratch/claude/r3b/native_tag59/rtl/physical/ot_qwen_async_fifo_w.sv:99: ot_qwen_async_fifo_w RSEL2: DEPTH <= 64 (level 2 <= 8:1); MEMM has no read select
-       Time: 0  Scope: tb_qfd_coll_xfifo_native59.dut.u_port.u_cq.g_afw.u_af
-ERROR: /srv/opentallas-scratch/claude/r3b/native_tag59/rtl/physical/ot_qwen_async_fifo_w.sv:99: ot_qwen_async_fifo_w RSEL2: DEPTH <= 64 (level 2 <= 8:1); MEMM has no read select
-       Time: 0  Scope: tb_qfd_coll_xfifo_native59.ref_reg_store.u_port.u_cq.g_afw.u_af
-PASS native_coll_port messages=512 words=2899 cycles=3218 rank3 exact posted everybeat; data everybit0and1 pair_mismatch=0
-/srv/opentallas-scratch/claude/r3b/native_tag59/rtl/test/tb_qfd_coll_xfifo_native59.sv:87: $finish called at 3645136 (1ps)

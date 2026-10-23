@@ -1,8 +1,0 @@
-ot-run: ot-epyc4       admits   683 GB (avail 910, growth 124, headroom 48, waiters 0/0 GB) load 22/128 running 12 disk 1114 GB 
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-1649890-1791970291 after 0 s
-[1047000] %Fatal: tb_dsfd_vm_be_reset_ack.sv:12: Assertion failed in tb_dsfd_vm_be_reset_ack.require_down: ACK before actual local reset release
-%Error: tb_dsfd_vm_be_reset_ack.sv:12: Verilog $stop
-Aborting...
-bash: line 1: 1649890 Aborted                    (core dumped) /usr/local/bin/ot-heavy --mem 8 --tag otrun-ubuntu-4068115-970290747 -- bash -lc 'verilator --binary --timing -Wno-fatal --top-module tb_dsfd_vm_be_reset_ack -DOT_SPVM_RESET_ACK -DOT_SPVM_MUT_ACK_EPOCH_FORWARD -j 4 --Mdir obj_epoch_mut dsfd_sp_vm.sv tb_dsfd_vm_be_reset_ack.sv > compile_epoch_mut.log 2>&1 && obj_epoch_mut/Vtb_dsfd_vm_be_reset_ack'
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1649890-1791970291): exit 134

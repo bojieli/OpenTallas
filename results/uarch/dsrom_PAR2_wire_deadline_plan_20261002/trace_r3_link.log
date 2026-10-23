@@ -1,6 +1,0 @@
-/home/ubuntu/w17-dsrom-fixed4096-owner-compiler/rtl/test/dsrom_PAR2_wholephase_source_trace/host.cpp: In function ‘int main(int, char**)’:
-/home/ubuntu/w17-dsrom-fixed4096-owner-compiler/rtl/test/dsrom_PAR2_wholephase_source_trace/host.cpp:238:57: error: no match for ‘operator!’ (operand type is ‘VlWide<4>’)
-  238 |    if(done&&allquiet&&!cut.obs_ld_run&&!cut.obs_sm_run&&!cut.o_we&&roots==576&&writes==576)++stable;else stable=0;
-      |                                                         ^~~~~~~~~
-/home/ubuntu/w17-dsrom-fixed4096-owner-compiler/rtl/test/dsrom_PAR2_wholephase_source_trace/host.cpp:238:57: note: candidate: ‘operator!(bool)’ (built-in)
-/home/ubuntu/w17-dsrom-fixed4096-owner-compiler/rtl/test/dsrom_PAR2_wholephase_source_trace/host.cpp:238:57: note:   no known conversion for argument 1 from ‘VlWide<4>’ to ‘bool’

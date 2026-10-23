@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_kvs_attn-fl1-8e7ae12fb bench bench_attn_mut2 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_attn-fl1-8e7ae12fb log cl/bench_attn_mut2.a1b1.log captured 2026-10-19T00:52:11-07:00
-# fail_regex '^KVS_TILE FAIL tile=attn .* mut=2 '
-MISMATCH t=3 child u_attn.compiled_rx_cmd
-MISMATCH t=3 child u_attn.compiled_tx_first
-MISMATCH t=4 child u_attn.compiled_rx_cmd
-MISMATCH t=4 child u_attn.compiled_tx_first
-MISMATCH t=5 child u_attn.compiled_rx_cmd
-KVS_TILE FAIL tile=attn edges=4000 checks=287784 errors=7992 mut=2 (swapped .compiled_rx_cmd(w_attn_cal__rx_cmd[15:0]) <-> .compiled_tx_first(w_attn_cal__tx_first[15:0]))

@@ -1,7 +1,0 @@
-FORWARD_MISMATCH n16 phase0 mut1
-FORWARD_MISMATCH n17 phase0 mut1
-FORWARD_MISMATCH n18 phase0 mut1
-FORWARD_MISMATCH n19 phase0 mut1
-[15005000] %Fatal: tb_qfd_c_bank_forward_safe.sv:23: Assertion failed in tb: BANK_FORWARD_FAIL MUT1 PHASE0 errors1443
-%Error: rtl/test/tb_qfd_c_bank_forward_safe.sv:23: Verilog $stop
-Aborting...

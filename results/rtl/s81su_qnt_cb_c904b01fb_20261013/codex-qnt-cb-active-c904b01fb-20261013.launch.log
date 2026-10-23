@@ -1,8 +1,0 @@
-{"mutant": 0, "build_exit": 0, "run_exit": 0, "verdict": "PASS", "negative_control": false, "summary": "PASS QNT_CB N=256 S_RD=16 NFI=33 MUT=0 cycles=18678 checks=18670 jobs=106 starts=106 resets=10 valid_rows=121727 valid_cycles=14452 parameter_pulses=47 fault_cycles=3078 empty=3328 full=775 uneven=14262 qn_selectors=f gq_selectors=f added_cycles=0", "counts": {"cycles": 18678, "checks": 18670, "jobs": 106, "starts": 106, "resets": 10, "valid_rows": 121727, "valid_cycles": 14452, "parameter_pulses": 47, "fault_cycles": 3078, "empty": 3328, "full": 775, "uneven": 14262, "added_cycles": 0}}
-Traceback (most recent call last):
-  File "/tmp/codex-qnt-active-minimal-20261013/tools/s81_suhc/qnt_cb_gate.py", line 102, in <module>
-    main()
-    ~~~~^^
-  File "/tmp/codex-qnt-active-minimal-20261013/tools/s81_suhc/qnt_cb_gate.py", line 85, in main
-    raise RuntimeError(f'build failed: {run}')
-RuntimeError: build failed: /tmp/codex-qnt-cb-active-c904b01fb-20261013/m6

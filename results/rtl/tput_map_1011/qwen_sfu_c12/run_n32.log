@@ -1,8 +1,0 @@
-REC 0 0 accept 0 retire 391
-CASE 0 service 392 span 31 stage 39 compute 285 drain 29 other 0
-summary: 1 production-shape cases, 3072 sink-sector words checked (written = golden, rest = pre-op)
-HGI_SU_PROD PASS
-- rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_prod.sv:368: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 22us; walltime 120.785 s; speed 184.790 ns/s
-- Verilator: cpu 120.736 s on 1 threads; allocated 115 MB

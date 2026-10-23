@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "/tmp/ds-continuation-independent-evidence-20261003/audit_replay.py", line 34, in <module>
-    assert all(v['git_tracked'] for v in repo.values()),'untracked dependency'
-AssertionError: untracked dependency

@@ -1,8 +1,0 @@
-ot-run: ot-epyc1tb     free   634 GB (avail 885, growth 187, headroom 64, waiters 0/0 GB) running 8 disk 1110 GB 
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/codex-takeover-1013/qwen-vm-probes
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-takeover-1013/qwen-vm-probes
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-takeover-1013/qwen-vm-probes
-ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1465589-1791913169 after 0 s
-{"mode": "L3", "exact": true, "cycles": 17392, "next_token": null, "winning_logit_bits": null, "layer_x_mismatches": 0, "kv_mismatches": 0}
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1465589-1791913169): exit 0

@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_astk_er_owner_st-v1-7fc9f17f8 bench bench_er_chain_m2 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/qkd_astk_er_owner_st-v1-7fc9f17f8 log cl/bench_er_chain_m2.a1b1.log captured 2026-10-18T23:58:13-07:00
-# fail_regex '^FAIL qkd_astk_er_chain_st errors='
-FAIL production fault=1 reads=2048
-FAIL qkd_astk_er_chain_st errors=1
