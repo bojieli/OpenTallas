@@ -19,6 +19,10 @@ HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE)]
 import geom_review_gate as G  # noqa: E402
 
+G.LANE = Path(_TMP + "/GEOM-REVIEW.md")
+G.VERDICT_DIR = Path(_TMP + "/verdicts")
+G.COORD_VERDICTS = Path(_TMP + "/COORD_VERDICTS.tsv")
+
 
 def git(repo, *a):
     return subprocess.run(["git", "-C", repo, *a], check=True, capture_output=True, text=True).stdout.strip()
@@ -60,9 +64,9 @@ class GeomReviewGate(unittest.TestCase):
         cls.repo, cls.c1, cls.c2, cls.c3 = make_repo()
 
     def setUp(self):
-        for p in Path(os.environ["GEOM_REVIEW_DIR"]).glob("*.json") if Path(os.environ["GEOM_REVIEW_DIR"]).exists() else []:
+        for p in G.VERDICT_DIR.glob("*.json") if G.VERDICT_DIR.exists() else []:
             p.unlink()
-        Path(os.environ["GEOM_REVIEW_LANE"]).write_text("# lane\n")
+        G.LANE.write_text("# lane\n")
 
     def test_hash_ignores_views_and_matches_working_tree(self):
         h1 = G.kit_hash_git(self.repo, self.c1, "physical/ref_tile/k1")
@@ -94,10 +98,10 @@ class GeomReviewGate(unittest.TestCase):
         self.assertEqual(G.failure_history("ot_t", [], {"ot_t": {"category": "closed (TT era)"}}, coord), [])
 
     def test_coord_bad_parse(self):
-        Path(os.environ["GEOM_REVIEW_COORD_VERDICTS"]).write_text(
+        G.COORD_VERDICTS.write_text(
             "element\tdie\tverdict\tfill\tp90\toutline\treason\n"
             "ot_t__k1\tNone\tBAD\t2\t3\t[1,1]\toversized\nother\tNone\tOK\t30\t5\t[1,1]\tfine\n")
-        cb = G.coord_bad(Path(os.environ["GEOM_REVIEW_COORD_VERDICTS"]))
+        cb = G.coord_bad(G.COORD_VERDICTS)
         self.assertIn("ot_t", cb)
         self.assertNotIn("other", cb)
 
@@ -125,11 +129,11 @@ class GeomReviewGate(unittest.TestCase):
     def test_lane_verdict_line_and_latest_wins(self):
         fails = [job("ot_t", "NEEDS_HUMAN", "2026-10-22T10:00:00-07:00")]
         h3 = G.kit_hash_git(self.repo, self.c3, "physical/ref_tile/k1")
-        Path(os.environ["GEOM_REVIEW_LANE"]).write_text(
+        G.LANE.write_text(
             f"## Verdicts\n- VERDICT ot_t physical/ref_tile/k1@{self.c3[:9]} FAIL hash={h3[:16]} fill 3% | FIX: shrink\n"
             f"- VERDICT ot_t physical/ref_tile/k1@{self.c3[:9]} PASS hash={h3[:16]} rebuilt | FIX: -\n")
         self.assertEqual(self.check(self.c3, fails)["verdict"], "PASS")
-        Path(os.environ["GEOM_REVIEW_LANE"]).write_text(
+        G.LANE.write_text(
             f"- VERDICT ot_t physical/ref_tile/k1@{self.c3[:9]} PASS hash={h3[:16]} x\n"
             f"- VERDICT ot_t physical/ref_tile/k1@{self.c3[:9]} FAIL hash={h3[:16]} y\n")
         self.assertEqual(self.check(self.c3, fails)["verdict"], "REFUSE")
