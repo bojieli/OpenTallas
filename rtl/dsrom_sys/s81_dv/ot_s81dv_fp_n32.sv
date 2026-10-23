@@ -202,8 +202,15 @@ module ot_s81dv_fp32_mul_f12_n32 #(parameter integer CUTS=8'b01101010,NYC=0,DUAL
  input wire[31:0]a2,b2);
  // Same existing two release edges from raw finish reset. Six independent
  // physical leaves serve pipeline valid, four output bytes and err/valid.
- wire[5:0] rl;
- ot_s81dv_finish_reset2 #(.LEAVES(6)) u_rl(.clk(clk),.rst_n(rst_n),.q(rl));
+`ifdef OT_S81DV_XFIN_N26
+ // N26: each NYC output byte owns a same-depth leaf instead of adding
+ // another eight reset pins to the original byte's reset leaf.
+ localparam integer RESET_LEAVES = 6 + 4*NYC;
+`else
+ localparam integer RESET_LEAVES = 6;
+`endif
+ wire[RESET_LEAVES-1:0] rl;
+ ot_s81dv_finish_reset2 #(.LEAVES(RESET_LEAVES)) u_rl(.clk(clk),.rst_n(rst_n),.q(rl));
  ot_s81dv_xfin_fp_mul_n32 #(.CUTS(CUTS),.NYC(NYC),.DUALIN(DUALIN)) u_partition(.clk(clk),.rst_n(rl),.valid_in(valid_in),.a(a),.b(b),.y(y),.yc(yc),.err(err),.valid_out(valid_out),.a2(a2),.b2(b2));
 endmodule
 
@@ -798,7 +805,11 @@ module ot_s81dv_xfin_fp_mul_n32 #(
     parameter integer DUALIN = 0       // N24: a2 / b2 are equal same-edge copies of a / b (K0 = 0 only)
 ) (
     input  wire        clk,
-    input  wire [5:0]  rst_n,
+    `ifdef OT_S81DV_XFIN_N26
+    input wire [5+4*NYC:0] rst_n,
+`else
+    input wire [5:0] rst_n,
+`endif
     input  wire        valid_in,
     input  wire [31:0] a,
     input  wire [31:0] b,
@@ -1036,11 +1047,16 @@ module ot_s81dv_xfin_fp_mul_n32 #(
       ot_s81dv_xfin_fp_out_zero u_e(.byp(o_byp),.over(over),.nz(nz),.code(code[8*g+:8]),.y(nd));
       always @(posedge clk or negedge rst_n[g+1])if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
     for(genvar c=0;c<NYC;c=c+1)begin:g_yc
+`ifdef OT_S81DV_XFIN_N26
+        wire copy_rst = rst_n[6+4*c+g];
+`else
+        wire copy_rst = rst_n[g+1];
+`endif
 `ifdef OT_S81DV_XFIN_N10
-        ot_s81dv_xfin_owned_output8 u_copy(.clk(clk),.rst_n(rst_n[g+1]),.d(nd),.q(yc[32*c+8*g+:8]));
+        ot_s81dv_xfin_owned_output8 u_copy(.clk(clk),.rst_n(copy_rst),.d(nd),.q(yc[32*c+8*g+:8]));
 `else
         (* keep *) reg[7:0] r;
-        always @(posedge clk or negedge rst_n[g+1]) if(!rst_n[g+1])r<=0;else r<=nd;
+        always @(posedge clk or negedge copy_rst) if(!copy_rst)r<=0;else r<=nd;
         assign yc[32*c+8*g+:8]=r;
 `endif
       end
@@ -1259,9 +1275,26 @@ endmodule
 endmodule
 (* keep_hierarchy=1 *) module ot_s81dv_xfin_div2b #(parameter integer SEL=0, B=0)(input wire[2:0] r,input wire[7:0] m,output wire o);
  // N22: ONE output bit of the two-digit step (SEL 0: d5 quotient bit B, SEL 1: d5 remainder bit B)
- wire [6:0] t4={r,m[7:4]}; wire [6:0] r4w=t4%7'd5; wire [6:0] t5={r4w[2:0],m[3:0]}; wire [6:0] a5=t5/7'd5; wire [6:0] b5=t5%7'd5;
+ wire [6:0] t4={r,m[7:4]}; wire [6:0] r4w;
+`ifdef OT_S81DV_XFIN_N26
+ if(SEL==1 && B==2)begin:g_mod_partition
+   wire[2:0] rem4;
+   ot_s81dv_xfin_mod5_7_n26 u_first(.x(t4),.r(rem4));
+   assign r4w={4'd0,rem4};
+ end else begin:g_mod_direct assign r4w=t4%7'd5;end
+`else
+ assign r4w=t4%7'd5;
+`endif
+ wire [6:0] t5={r4w[2:0],m[3:0]}; wire [6:0] a5=t5/7'd5; wire [6:0] b5=t5%7'd5;
  assign o = (SEL == 0) ? a5[B] : b5[B];
 endmodule
 (* keep_hierarchy=1 *) module ot_s81dv_xfin_rcopy #(parameter integer W=1, ID=0)(input wire clk,input wire[W-1:0] d,output wire[W-1:0] q);
  (* keep *) reg [W-1:0] r; always @(posedge clk) r<=d; assign q=r;
+endmodule
+
+// N26: preserve the first radix-16 modulo step as a combinational partition.
+// This prevents ABC flattening two /5 steps into 36-42 loads on one owned
+// remainder capture bit. No register, arithmetic, rounding or edge change.
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_mod5_7_n26(input wire[6:0]x,output wire[2:0]r);
+ assign r=x%7'd5;
 endmodule
