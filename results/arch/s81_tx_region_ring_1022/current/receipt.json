@@ -1,0 +1,66 @@
+{
+  "source_commit": "626faab46",
+  "old_y_source": "dcd37342d",
+  "ports_byte_identical": true,
+  "ports": "input  wire          ck,\n    input  wire          rst,       // active low (as dsdv_idx_tx / the bk_sel rst_n)\n    input  wire [V-1:0]  vi,        // tap: u_sel.vi_s (the vmux output)\n    input  wire [V-1:0]  vo,        // tap: u_sel.vo_s\n    output reg  [V-1:0]  lo,        // tree link to the parent die\n    output reg  [15:0]   st",
+  "main": {
+    "D": 4,
+    "K": 2,
+    "lookup_edges_added": 6,
+    "reference_LPX": 8,
+    "unit": "ot-epyc5:oth-ubuntu-3266377-1792732891",
+    "actual": "PASS 2522 cycles 56074 checks 2 epochs 48 beats"
+  },
+  "alternate": {
+    "D": 8,
+    "K": 3,
+    "lookup_edges_added": 8,
+    "reference_LPX": 10,
+    "unit": "ot-epyc5:oth-ubuntu-3266380-1792732891",
+    "actual": "PASS 2522 cycles 56074 checks 2 epochs 48 beats"
+  },
+  "causal_mutant": {
+    "MUT": 7,
+    "unit": "ot-epyc5:oth-ubuntu-3266576-1792732891",
+    "actual": "CAUGHT TX_MISMATCH cycle340 missing real boundary rings"
+  },
+  "files": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv": "f6410057c32cc6a5a9fc41a7387610078274bd022573f43201b77f66b1fe7804",
+    "rtl/dsrom_sys/s81_dv/idx/dsdv_tx_region_ring.sv": "ef1d5e849f8c1ed1a546db4c737478065ab145d91f2b09be67fb597f30cb6b7f",
+    "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv": "ca0933149a2bc52fbfc71e8aa9c117ccf1a336f1e216e5a57a27f817ea3ed4f4",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "tools/s81_dv/tx_export_1021/tb_tx_miter.sv": "a92b22fb648f506f2754fde1d72eee838ed017d05c15bda5be8ee222758cefba",
+    "run.log": "87994ec39dada9b16b7dd6035314ef24d81b7fe16e6f77c3f12a6d2d5cde6f66",
+    "alt.run.log": "6803695a8ca18b8a7ab099383365a482c6ebaac3ea06474ea3e61e8cc67b2a58",
+    "mut7.run.log": "66213edbf5eacedef5ddbfe86283e0729bdece445728b24258994d116b8d4ae4",
+    "sources.sha256": "1eb1ba26a41ff092974d4f39bc67e66fd6f9e196280897333f8234dcab866dca",
+    "original_y_cts_head.rpt": "4a351a8cc4dc373a6b28878f604fb87584705df19ba82e40622c27c535e31960",
+    "phase.otrun.log": "a6c3e31f856a09e579dffb53579c553178129549abdd9705afa31857dfe7e0e8",
+    "run_4_2_-9000.log": "4589b854b906cd6c5a447e4559352de73c2e21f51e5160ef6be8b01539738fd3",
+    "run_8_3_-9000.log": "76962e96e33f9ce09055301d0d1dc2ff2204c921169feaa9fbe6ae108902bc92",
+    "run_4_2_0.log": "dcbad5be68fb585bcf3fb19b313a3546e9350687ad8223cb370002cbb9a59638",
+    "alt.mut7.run.log": "66213edbf5eacedef5ddbfe86283e0729bdece445728b24258994d116b8d4ae4",
+    "run_4_2_9000.log": "52e805855050544df6d8d7e9af163883226ca94231c5156c8613c04b017e9688",
+    "verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "run_8_3_9000.log": "618b38bc2dcae6e9c85c15b24294b6772edd882a0dd1bf6e7ceca89fc0648269",
+    "run_8_3_0.log": "fa21f4193d5ff745be8abae610cc2f95227467b8488b3a21c2a38273b1eaf882"
+  },
+  "alternate_causal_mutant": {
+    "MUT": 7,
+    "unit": "ot-epyc9:oth-ubuntu-2665716-1792733199",
+    "actual": "CAUGHT TX_MISMATCH cycle340 missing realboundaryrings"
+  },
+  "phase": {
+    "unit": "ot-epyc5:oth-ubuntu-3282418-1792733078",
+    "cases": [
+      "D4K2 PH0",
+      "D4K2 PH9000",
+      "D4K2 PH-9000",
+      "D8K3 PH0",
+      "D8K3 PH9000",
+      "D8K3 PH-9000"
+    ],
+    "actual": "six PASS, two resetepochs each, >=228 checks/case"
+  }
+}
