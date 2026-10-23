@@ -46,6 +46,8 @@ set ot_ff_die [$ot_ff_blk getDieArea]
 set ot_ff_dx0 [expr {double([$ot_ff_die xMin]) / $ot_ff_u}]; set ot_ff_dx1 [expr {double([$ot_ff_die xMax]) / $ot_ff_u}]
 set ot_ff_dy0 [expr {double([$ot_ff_die yMin]) / $ot_ff_u}]; set ot_ff_dy1 [expr {double([$ot_ff_die yMax]) / $ot_ff_u}]
 
+# ORFS sources hooks inside a proc: publish what ot_ff_face reads as true globals
+foreach ot_ff_v {ot_ff_u ot_ff_dx0 ot_ff_dx1 ot_ff_dy0 ot_ff_dy1} { set ::$ot_ff_v [set $ot_ff_v] }
 proc ot_ff_isff {inst} { return [regexp {^(DFF|ASYNC_DFF|SDF|DHL|DLL)} [[$inst getMaster] getName]] }
 proc ot_ff_isbuf {inst} { return [regexp {^(INV|BUF|HB|CKINV|CKBUF)} [[$inst getMaster] getName]] }
 # input bit: data captures through buffer / inverter branches (D pin only); {regs macro other}
