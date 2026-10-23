@@ -133,7 +133,12 @@ module dsdv_idx_txm_n32 #(
     // (dsdv_idx_txm_grp: banks [0, WCB) = column A, a hardened child with its own clock root; banks [WCB, NB) = column B
     // in the parent).  Each group lands its read/write ports (RIL/WDL), captures rd_out (RDL) and ORs its banks under its
     // own bank-select copies; the parent ORs the two partial words into rd.  Same function, same edges (0 cycles).
-    parameter integer SPLIT = 0
+    parameter integer SPLIT = 0,
+    // STW-S81c-TOK5 10-22 (x r3 gate: placement reg->reg -69.8 ps g_b[6].g_ril.re_l/D = lk_go/ra from the centre to the
+    // far bank's RIL landing, the v/w reject class): RIC = 1 (with RIL, SPLIT = 0) lands re/ra first in ONE kept copy a
+    // macro column (banks < WCB / >= WCB) and the per-bank RIL landing then decodes from its column copy: +1 lookup edge
+    // (reference LPX + 1), the bank select and the consumer pipe follow like RIL.
+    parameter integer RIC = 0
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -166,7 +171,11 @@ module dsdv_idx_txm_n32 #(
     generate if (SRAM_MACRO && SPLIT == 0) begin : g_m
         localparam integer NB = D / 1024;
         initial if (D % 1024 != 0 || D < 1024) $fatal(1, "dsdv_idx_txm_n32: D must be a multiple of 1024");
+        initial if (RIC != 0 && RIL == 0) $fatal(1, "dsdv_idx_txm_n32: RIC needs RIL");
         wire [255:0] q [0:NB-1];
+        // RIC: one kept re/ra copy a macro column (0 = banks < WCB, 1 = banks >= WCB)
+        (* keep = "true" *) reg re_c [0:1]; (* keep = "true" *) reg [AW-1:0] ra_c [0:1];
+        always @(posedge ck) begin re_c[0] <= re; re_c[1] <= re; ra_c[0] <= ra; ra_c[1] <= ra; end
         genvar b, c;
         for (b = 0; b < NB; b = b + 1) begin : g_b
             wire[255:0]wm_bank;
@@ -194,9 +203,11 @@ module dsdv_idx_txm_n32 #(
             end
             wire [255:0] q_raw;
             wire re_m; wire [9:0] ra_m;
+            wire re_s = (RIC != 0) ? re_c[(b >= WCB) ? 1 : 0] : re;
+            wire [AW-1:0] ra_s = (RIC != 0) ? ra_c[(b >= WCB) ? 1 : 0] : ra;
             if (RIL != 0) begin : g_ril
                 (* keep = "true" *) reg re_l; (* keep = "true" *) reg [9:0] ra_l;
-                always @(posedge ck) begin re_l <= re && (NB == 1 || ra[AW-1:10] == b); ra_l <= ra[9:0]; end
+                always @(posedge ck) begin re_l <= re_s && (NB == 1 || ra_s[AW-1:10] == b); ra_l <= ra_s[9:0]; end
                 assign re_m = re_l; assign ra_m = ra_l;
             end else begin : g_ri0
                 assign re_m = re && (NB == 1 || ra[AW-1:10] == b); assign ra_m = ra[9:0];
@@ -220,7 +231,13 @@ module dsdv_idx_txm_n32 #(
         if (RIL != 0) begin : g_rabs
             reg [AW-1:0] ra_q;                       // RIL: the read reaches the macros one edge later
             always @(posedge ck) ra_q <= ra;
-            assign ra_bs = (RIL_MUT != 0) ? ra : ra_q;
+            if (RIC != 0) begin : g_ric
+                reg [AW-1:0] ra_q2;                  // RIC: and one more (the column copy)
+                always @(posedge ck) ra_q2 <= ra_q;
+                assign ra_bs = (RIL_MUT != 0) ? ra_q : ra_q2;
+            end else begin : g_noric
+                assign ra_bs = (RIL_MUT != 0) ? ra : ra_q;
+            end
         end else begin : g_rabs0
             assign ra_bs = ra;
         end
@@ -393,7 +410,8 @@ module dsdv_idx_tx_n32 #(
     parameter integer SCS = 0,      // STW-S81c-COLLA2-TX 10-22: grid-slot count compare carry-selected off slot_q (0 cycles)
     parameter integer RIL = 0,      // STW-S81c-COLLA2 10-22: score-store read issue landed at the macro pins (+1 lookup edge)
     parameter integer RHP = 0,      // STW-S81c-COLLA2 10-22: result-FIFO head prefetched into a register (0 cycles)
-    parameter integer SPLIT = 0     // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
+    parameter integer SPLIT = 0,    // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
+    parameter integer RIC = 0       // STW-S81c-TOK5 10-22: read issue landed once a macro column before the bank landing (+1 lookup edge)
 ) (
     input  wire          ck,
     input  wire          rst,       // active low (as dsdv_idx_tx / the bk_sel rst_n)
@@ -563,10 +581,10 @@ module dsdv_idx_tx_n32 #(
         if(lk_go)lvl_next[ne]=1'b0;
     end
     wire [255:0] m_rd;
-    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
+    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT), .RIC(RIC)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
         .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]),
         .we_b(m_we_b), .wa_b(m_wa_b), .wd_b(m_wd_b));
-    localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
+    localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0) + ((RIC != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
     reg  [LP-1:0] lp_v; reg [19:0] lp_i [0:LP-1];
     reg  [35:0] rf [0:7];
     reg  [2:0]  rf_w, rf_r; reg [3:0] rf_n;
