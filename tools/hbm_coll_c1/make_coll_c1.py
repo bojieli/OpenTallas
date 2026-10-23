@@ -176,6 +176,8 @@ def main():
                    "same plan with pin ranges dropped (tool face spread) to separate pin-table risk from row risk" if fb else ""))
             if fb:
                 s.pop("pin_ranges", None)
+            else:                                     # disjoint per-port ranges: one pin group per port (gate pin_order)
+                s["route"] = dict(s["route"], pin_balance={"group_max": 1, "h": "M4 M6", "v": "M5 M7"})
             j = s["job"]
             j.update(owner="Claude:STEWARD-HBMe/SMH", branch="claude/hbme-coll-1023", tag="c1" + tag,
                      purpose="COLL %s landed parent %s re-plan (coordinator BAD 10-23): dataflow rows + content outline + "

@@ -1225,7 +1225,12 @@
   "period_ps": 833.333333,
   "macro_halo_um": 5.4,
   "hold_margin_ns": 0.03,
-  "io_hold_margin_ns": 0.025
+  "io_hold_margin_ns": 0.025,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5 M7"
+  }
  },
  "structural_change": "STEWARD-HBMe/SMH 10-23 c1a (coordinator BAD 10-23 on hcoll_n1_lp_safe32: children scattered over 1270x1261, 26 facing away, 5.4k/3.1k pins with no face register): same RTL/landing record/5 clock roots; children in dataflow rows on the 8.64 lattice (S link band -> qcap row -> 2 reduce rows -> qso row -> writer W face / E del pins; uop 4x4 between issuer W face and control; vmasm 4x4 at the W vm_rr pins; ring_ag_ctl MX + 8 state lanes in the N band; fj on the issuer N face); pin table from the netlist centroid of each port's children (face density {\"N\": 4.0, \"S\": 4.0, \"E\": 4.0, \"W\": 4.0}/um); outline 1105.9 x 1252.8 (86% of the old)",
  "job": {
