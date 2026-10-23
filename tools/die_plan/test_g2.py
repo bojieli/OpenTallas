@@ -56,7 +56,7 @@ def test_part_probe_files_and_worst():
         out = g2.part_probe(P, "fa", d)
         meta = json.loads((out / "probe.json").read_text())
         # boundary flops for din (64), x_o (277), r_i (71) + one station per bit of fz (65)
-        assert meta["flops"] == 64 + 277 + 71 + 65
+        assert meta["flops"] == 64 + 277 + 71 + 65 + 2          # + clk / arst_n tap buffers
         v = (out / "probe.v").read_text()
         assert "st_fz_64_0" in v and "CLK" not in v
         assert (out / "io.tcl").read_text().count("place_pin") == 64 + 277 + 71 + 64 + 65 + 2   # fz_i from die IO: no epoch
@@ -73,3 +73,16 @@ def test_assembly_die_flow():
         v = (kd / "die_top_struct.v").read_text()
         assert "endmodule :" not in v and "w_x" in v
         assert (kd / "abut_audit.py").is_file() and (kd / "run_die.sh").is_file()
+
+
+def test_coincident_taps_split():
+    import copy
+    import gen_phys
+    raw = copy.deepcopy(PAIR)
+    t = raw["partition_types"][0] if isinstance(raw["partition_types"], list) else next(iter(raw["partition_types"].values()))
+    ck = t.setdefault("clock", {}).setdefault("tap_um", [700.0, 1800.0])
+    t.setdefault("reset", {})["tap_um"] = list(ck)
+    P = schema.Plan(raw)
+    tn = t.get("name") or next(iter(P.types))
+    a, b = gen_phys.tap_points(P, tn)
+    assert a != b and abs(a[1] - b[1]) > 8

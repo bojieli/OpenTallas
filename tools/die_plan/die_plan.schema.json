@@ -158,7 +158,6 @@
      "items": {
       "type": "object",
       "required": [
-       "rect_um",
        "reason"
       ],
       "additionalProperties": false,
@@ -174,6 +173,38 @@
        "reason": {
         "type": "string",
         "minLength": 3
+       },
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "between": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        },
+        "minItems": 2,
+        "maxItems": 2
+       },
+       "width_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "layers": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       },
+       "ports": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
        }
       }
      }

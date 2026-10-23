@@ -40,6 +40,7 @@ PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 TECH_LEF = f"{PLAT}/lef/asap7_tech_1x_201209.lef"
 SC_LEF = f"{PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef"
 FLOP = "DFFHQNx1_ASAP7_75t_R"
+TAPBUF = "BUFx24_ASAP7_75t_R"
 FLOP_INSET_UM = 1.0
 GRT_ROW = re.compile(r"^\s*(M\d+|Total)\s+(\d+)\s+(\d+)\s+([\d.]+)%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)")
 
@@ -110,10 +111,7 @@ def die_probe(P, out, mem=64):
     root = P.clock.get("spine", {}).get("root_um") or [W / 2, H / 2]
     taps = {"clk": [], "rst": []}
     for n, p in sorted(P.parts.items()):
-        t = P.ptype(n)
-        w, h = t["outline_um"]
-        ck = t.get("clock", {}).get("tap_um", [w / 2, h / 2])
-        rs = t.get("reset", {}).get("tap_um", [ck[0] + 8.64 if ck[0] + 8.64 < w else ck[0] - 8.64, ck[1]])
+        ck, rs = gen_phys.tap_points(P, P.parts[n]["type"])
         taps["clk"].append((n, P.to_die(n, ck)))
         taps["rst"].append((n, P.to_die(n, rs)))
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}", "read_verilog /work/probe.v", "link_design die_probe",
@@ -176,7 +174,7 @@ def die_probe(P, out, mem=64):
     (out / "run.sh").write_text(run_sh(mem, 8, "g2die"))
     os.chmod(out / "run.sh", 0o755)
     meta = dict(kind="g2-die", die=P.name, taps=len(taps["clk"]), pg_stripes=nst, channels=len(chans),
-                layers=die_l, root_um=root)
+                route_layers=die_l, root_um=root)
     (out / "probe.json").write_text(json.dumps(meta, indent=1) + "\n")
     return out
 
@@ -188,6 +186,8 @@ def worst_types(P, summ, n):
     for o in ("vertical", "horizontal"):
         for rec in summ.get("cuts", {}).get(o, []):
             if rec.get("worst_part"):
+                if rec["worst_part"] not in P.parts:
+                    continue
                 t = P.parts[rec["worst_part"]]["type"]
                 score[t] = max(score[t], rec["worst_part_ratio"])
     dens = defaultdict(float)
@@ -225,6 +225,11 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         ports.append(f"  {d} [{width[bus] - 1}:0] {bus}")
     ports.append("  input clk")
     ports.append("  input arst_n")
+    # clock / reset entry: the interior tap pin (die spine drop) feeds a pre-placed tap buffer = partition tree root
+    for nm, (x, y) in zip(("clk", "arst_n"), gen_phys.tap_points(P, tn)):
+        cells.append(f"  {TAPBUF} tap_{nm} (.A({nm}), .Y(tapq_{nm}));")
+        nets.append(f"tapq_{nm}")
+        place.append((f"tap_{nm}", x + 1.0, y))
     # functional buses: one boundary flop per pin bit beside its pin
     for bus, lst in sorted(by_bus.items()):
         if bus in buses:
@@ -293,7 +298,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
     (out / "run.sh").write_text(run_sh(mem, 8, "g2part"))
     os.chmod(out / "run.sh", 0o755)
     meta = dict(kind="g2-partition", die=P.name, type=tn, instance=inst, outline_um=[w, h], pins=len(pins),
-                flops=len(place), leaf_blockages=nobs, adjust=adjust, layers=f"M2-{top}")
+                flops=len(place), leaf_blockages=nobs, adjust=adjust, route_layers=f"M2-{top}")
     (out / "probe.json").write_text(json.dumps(meta, indent=1) + "\n")
     return out
 
@@ -355,6 +360,9 @@ def main(argv=None):
             rep["probes"][d.name] = r
             print(f"{d.name}: {r.get('exit')} overflow {r.get('total_overflow')} wl {r.get('wirelength_um')} "
                   f"reach {r.get('reach')} no-access {r.get('pin_access_no_ap')} errors {r.get('errors')}")
+        for d in sorted(out.iterdir()):          # keep earlier probes of this DIR (die / part runs done separately)
+            if d.is_dir() and d.name not in rep["probes"] and (d / "grt.json").exists():
+                rep["probes"][d.name] = json.loads((d / "grt.json").read_text())
         ok = all(r.get("done") and r.get("total_overflow") == 0 and not any(r.get("pin_access_no_ap", {}).values())
                  for r in rep["probes"].values())
         rep["verdict"] = "PASS" if ok else "FAIL"

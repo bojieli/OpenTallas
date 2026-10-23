@@ -82,16 +82,32 @@ def io_tcl(P, tn, pins):
         lines.append(f"place_pin -pin_name {{{bus}[{bit}]}} -layer {ln} -location {{{cx:.4f} {cy:.4f}}} "
                      f"-pin_size {{{size[0]:.4f} {size[1]:.4f}}}")
     top = P.layer_budget["partition_signal_max"]
-    ck = t.get("clock", {}).get("tap_um", [w / 2, h / 2])
-    rs = t.get("reset", {}).get("tap_um", [ck[0] + 8.64 if ck[0] + 8.64 < w else ck[0] - 8.64, ck[1]])
-    for name, (x, y) in (("clk", ck), ("arst_n", rs)):
-        L = P.layers[top]
-        # snap to a track of the top partition layer (V layer -> x tracks)
-        k = round((x - L["offset_um"]) / L["pitch_um"])
-        xs = L["offset_um"] + k * L["pitch_um"]
-        lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{xs:.4f} {y:.4f}}} "
+    for name, (x, y) in zip(("clk", "arst_n"), tap_points(P, tn)):
+        lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: die spine tap")
     return "\n".join(lines) + "\n"
+
+
+def tap_points(P, tn):
+    """(clock tap, reset tap) of a type in its frame, snapped to the top partition layer's tracks.  The die spine
+    drops onto these interior pins.  A reset tap missing, or on the clock tap (two pins on one spot = GRT-0080),
+    sits one lattice step (8.64 um) away along the pin layer."""
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    top = P.layer_budget["partition_signal_max"]
+    L = P.layers[top]
+    ck = list(t.get("clock", {}).get("tap_um", [w / 2, h / 2]))
+    rs = list(t.get("reset", {}).get("tap_um", ck))
+    if abs(rs[0] - ck[0]) < 1.0 and abs(rs[1] - ck[1]) < 1.0:
+        rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
+    out = []
+    for x, y in (ck, rs):
+        if L["dir"] == "V":
+            x = L["offset_um"] + round((x - L["offset_um"]) / L["pitch_um"]) * L["pitch_um"]
+        else:
+            y = L["offset_um"] + round((y - L["offset_um"]) / L["pitch_um"]) * L["pitch_um"]
+        out.append((x, y))
+    return out
 
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036

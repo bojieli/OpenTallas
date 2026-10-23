@@ -55,6 +55,10 @@ ASAP7_LAYERS = [
 # partition and die kits write these tracks (gen_phys.make_tracks_tcl); M1-M3 keep the platform cell-access tracks.
 # 8.64 um = lcm(row 0.27, site 0.054, M2..M9 pitches, PG 4.32/8.64): the DIE LATTICE.  Partition origins and outlines
 # on it keep rows, sites, tracks and PG identical in the die and every partition frame, for every orient.
+# ORFS base unit (COORD 10-23, mock-array): 2.16 um = 45 x 0.048 = 40 x 0.054 = 8 x 0.27.  grid_um must be a multiple of
+# it AND of every pin-layer pitch: 2.16 alone is NOT a multiple of the M6/M7 pitch 0.064 (33.75 tracks), so pins on
+# M6/M7 need the 8.64 lattice (4 base units).  Channel widths are multiples of grid_um (8.64 = 4 units, 17.28 = 8).
+BASE_LATTICE_UM = 2.16
 GRID_UM = 8.64
 
 DEFAULT_BUDGETS = dict(face_pins_per_um=6.0, face_pin_layers=2, face_window_um=10.0, pin_track_max=0.6,
@@ -113,8 +117,16 @@ SCHEMA = {
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
-                    "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
-                    "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
+                    # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
+                    # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
+                    # on both sides; their pins keep the same along-face windows; rect_um is derived
+                    "type": "object", "required": ["reason"], "additionalProperties": False,
+                    "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3},
+                                   "name": _name,
+                                   "between": {"type": "array", "items": _name, "minItems": 2, "maxItems": 2},
+                                   "width_um": _pos,
+                                   "layers": {"type": "array", "items": _layer, "minItems": 1},
+                                   "ports": {"type": "array", "items": _name}}}},
                 "pg": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_pg_max": _layer,
                     "grid": {"type": "array", "items": {
@@ -372,6 +384,26 @@ class Plan:
     def orient(self, part):
         return self.parts[part].get("orient", "R0")
 
+    def channel_of(self, pid):
+        """the planned die.channels entry carrying port pid (or None = abutted)."""
+        if not hasattr(self, "_chan_of"):
+            self._chan_of = {}
+            for c in self.die.get("channels", []):
+                for q in c.get("ports", []):
+                    self._chan_of[q] = c
+        return self._chan_of.get(pid)
+
+    def channel_rect(self, c):
+        """rect of a channel: rect_um, or the gap between its two partitions' facing faces."""
+        if "rect_um" in c:
+            return tuple(c["rect_um"])
+        a, b = (self.rect(n) for n in c["between"])
+        if a[2] <= b[0] + 1e-6 or b[2] <= a[0] + 1e-6:          # side by side: vertical channel
+            l, r = (a, b) if a[2] <= b[0] + 1e-6 else (b, a)
+            return (l[2], max(l[1], r[1]), r[0], min(l[3], r[3]))
+        lo, hi = (a, b) if a[3] <= b[1] + 1e-6 else (b, a)
+        return (max(lo[0], hi[0]), lo[3], min(lo[2], hi[2]), hi[1])
+
     def rect(self, part):
         """placed bbox in the die frame: (x0, y0, x1, y1)."""
         if part == DIE_PART:
@@ -590,6 +622,27 @@ def validate(raw):
             errs.append(f"partition {p['name']}: unknown type '{p['type']}'")
         if p["name"] == DIE_PART:
             errs.append(f"partition name '{DIE_PART}' is reserved")
+    pids = {pr["id"] for pr in raw["ports"]}
+    owned = {}
+    for i, c in enumerate(raw["die"].get("channels", [])):
+        nm = c.get("name", f"channels[{i}]")
+        planned = any(k in c for k in ("between", "width_um", "layers", "ports"))
+        if not planned and "rect_um" not in c:
+            errs.append(f"die channel {nm}: needs rect_um (reserved gap) or between/width_um/layers/ports (planned)")
+        if planned:
+            miss = [k for k in ("between", "width_um", "layers", "ports") if k not in c]
+            if miss:
+                errs.append(f"die channel {nm}: planned channel lacks {miss}")
+                continue
+            for n in c["between"]:
+                if n not in P.parts:
+                    errs.append(f"die channel {nm}: unknown partition '{n}'")
+            for q in c["ports"]:
+                if q not in pids:
+                    errs.append(f"die channel {nm}: unknown port '{q}'")
+                elif q in owned:
+                    errs.append(f"die channel {nm}: port '{q}' already in channel {owned[q]}")
+                owned[q] = nm
     if errs:
         return errs
     # ports: endpoints, buses, widths, directions
