@@ -105,9 +105,10 @@ module ot_hbm_static_cfg_collar #(
     // rst_s_n = rst_c_n). Assert and release both take +2 clk edges; no datapath / event latency changes (cycles 0).
     // MUT 8 (bench): a mid-run reset does not reach the core state (configuration, armed, hwm, records).
     // XSER=1 elaboration is unchanged (g_rst_sync below, byte-identical text; col_su r3 closed view).
-    wire rst_c_n, rst_s_n;
+    wire rst_c_n, rst_s_n, rst_stage1;
     generate if (XSER == 0) begin : g_rst_same
         reg [1:0] rc;
+        assign rst_stage1=rc[0];
         always @(posedge clk) rc <= {rc[0], rst_n};
         if (MUT == 8) begin : g_mut8   // bench mutant: only the power-on reset reaches the core state
             reg por_done = 1'b0;
@@ -119,6 +120,7 @@ module ot_hbm_static_cfg_collar #(
         assign rst_s_n = rc[1];
     end else begin : g_rst_sync
         reg [1:0] rc, rs;
+        assign rst_stage1=rc[0];
         always @(posedge clk)    rc <= {rc[0], rst_n};
         always @(posedge clk_in) rs <= {rs[0], rc[1]};
         assign rst_c_n = rc[1];
@@ -182,7 +184,12 @@ module ot_hbm_static_cfg_collar #(
         // folded the serial-domain rst_n into the stream-domain DFFE enable (a reset on the datapath, crossing domains;
         // OT_MULTI_ROOT). pv_* are cleared by the stream reset, so the enable is low under reset exactly as before: bit-identical.
         always @(posedge clk_in)
-            if (pv_cv || pv_dv || pv_lv) begin h_ct <= p_ct; h_ca <= p_ca; h_cd <= p_cd; end
+            if (pv_cv || pv_dv || pv_lv) begin h_ct <= p_ct; h_ca <= p_ca; end
+        if (SPARSE_SU) begin:g_hold_words
+            for(genvar w=0;w<16;w=w+1) begin:g_word
+                ot_hbm_collar_sparse_word u_word(.clk(clk_in),.en(pv_cv || pv_dv || pv_lv),.d(p_cd[w*16+:16]),.q(h_cd[w*16+:16]));
+            end
+        end else always @(posedge clk_in) if(pv_cv || pv_dv || pv_lv) h_cd<=p_cd;
         reg [1:0] x1_seq, x2_seq, x3_seq;
         always @(posedge clk or negedge rst_c_n)
             if (!rst_c_n) begin x1_seq <= 0; x2_seq <= 0; x3_seq <= 0; end
@@ -192,7 +199,12 @@ module ot_hbm_static_cfg_collar #(
         wire [1:0] q_old = (MUT == 7) ? x2_seq : x3_seq;
         wire ev = q_new != q_old;
         wire [1:0] b_new = {q_new[1], q_new[1] ^ q_new[0]}, b_old = {q_old[1], q_old[1] ^ q_old[0]};
-        always @(posedge clk) if (ev) begin ct <= h_ct; ca <= h_ca; cd <= h_cd; end
+        always @(posedge clk) if (ev) begin ct <= h_ct; ca <= h_ca; end
+        if (SPARSE_SU) begin:g_capture_words
+            for(genvar w=0;w<16;w=w+1) begin:g_word
+                ot_hbm_collar_sparse_word u_word(.clk(clk),.en(ev),.d(h_cd[w*16+:16]),.q(cd[w*16+:16]));
+            end
+        end else always @(posedge clk) if(ev) cd<=h_cd;
         always @(posedge clk or negedge rst_c_n)
             if (!rst_c_n) begin cv <= 0; dv <= 0; lv <= 0; xfault <= 0; end
             else begin
@@ -235,6 +247,179 @@ module ot_hbm_static_cfg_collar #(
     wire recs_done = (NREC == 0) || (rptr >= NREC) || !r_val[rptr];
     wire [31:0] cur_off = r_off[(NREC == 0) ? 0 : rptr];
     wire [31:0] cmp_cnt = (MUT == 3) ? cnt + 1 : cnt;
+    generate if(SPARSE_SU && XSER==1 && NPR==1 && NREC==0) begin:g_sparse_bounded
+        // Same-edge copies of the existing second reset stage, not an extra reset or data cycle.
+        // Each state vector has an independent reset leaf; widths are <=32 after dead-record pruning.
+        (* keep *) reg [24:0] reset_leaf;
+        always @(posedge clk) reset_leaf <= {25{rst_stage1}};
+        reg programme_write, operand_write;
+        integer k;
+        reg [NS-1:0] n_pw_we;
+        reg [1-1:0] n_start_v;
+        reg [NGO-1:0] n_go;
+        reg [1-1:0] n_ready;
+        reg [1-1:0] n_active;
+        reg [1-1:0] n_fault;
+        reg [SW-1:0] n_sel;
+        reg [1-1:0] n_need_set;
+        reg [1-1:0] n_wait_mask;
+        reg [1-1:0] n_wait_done;
+        reg [NPR-1:0] n_loaded;
+        reg [1-1:0] n_armed;
+        reg [1-1:0] n_run;
+        reg [32-1:0] n_cnt;
+        reg [RW-1:0] n_rptr;
+        reg [8-1:0] n_tail;
+        reg [RN-1:0] n_r_val;
+        reg [AW-1:0] n_sparse_last;
+        reg [1-1:0] n_sparse_seen;
+        reg [AW-1:0] n_pw_addr;
+        reg [221-1:0] n_rec;
+        reg [AW+1-1:0] n_hwm [0:NS-1];
+        reg [AW+1-1:0] n_need [0:NS-1];
+        reg [PAGE_W-1:0] n_page [0:NS-1];
+        reg [32-1:0] n_r_off [0:RN-1];
+        reg [2-1:0] n_r_go [0:RN-1];
+        reg [221-1:0] n_r_pay [0:RN-1];
+        always @* begin
+            programme_write=0; operand_write=0;
+            n_pw_we=pw_we;
+            n_start_v=start_v;
+            n_go=go;
+            n_ready=ready;
+            n_active=active;
+            n_fault=fault;
+            n_sel=sel;
+            n_need_set=need_set;
+            n_wait_mask=wait_mask;
+            n_wait_done=wait_done;
+            n_loaded=loaded;
+            n_armed=armed;
+            n_run=run;
+            n_cnt=cnt;
+            n_rptr=rptr;
+            n_tail=tail;
+            n_r_val=r_val;
+            n_sparse_last=sparse_last;
+            n_sparse_seen=sparse_seen;
+            n_pw_addr=pw_addr;
+            n_rec=rec;
+            for(k=0;k<NS;k=k+1) n_hwm[k]=hwm[k];
+            for(k=0;k<NS;k=k+1) n_need[k]=need[k];
+            for(k=0;k<NS;k=k+1) n_page[k]=page[k];
+            for(k=0;k<RN;k=k+1) n_r_off[k]=r_off[k];
+            for(k=0;k<RN;k=k+1) n_r_go[k]=r_go[k];
+            for(k=0;k<RN;k=k+1) n_r_pay[k]=r_pay[k];
+            n_pw_we = 0; n_start_v = 0; n_go = 0;
+            if (|cf_q || xfault) n_fault = 1;
+            // ------------ configuration frames
+            if (hit) begin
+                n_armed = 0;
+                if (run) n_fault = 1;
+                else if (!ca[11]) begin
+                    if (SPARSE_SU) begin
+                        if (!sparse_address_ok || hwm[sel][AW]) n_fault = 1;
+                        else begin
+                            programme_write = rst_c_n; n_pw_we[sel] = 1; n_pw_addr = lin[AW-1:0]; 
+                            n_sparse_last = lin[AW-1:0]; n_sparse_seen = 1;
+                            if(lin==0) begin
+                                n_hwm[sel] = 1; n_need_set = 0; n_loaded = 0;
+                            end else n_hwm[sel] = hwm[sel]+1'b1;
+                        end
+                    end else if (lin == hwm[sel] || MUT == 1) begin
+                        if (hwm[sel][AW]) n_fault = 1;
+                        else begin programme_write = rst_c_n; n_pw_we[sel] = 1; n_pw_addr = lin[AW-1:0];  n_hwm[sel] = lin + 1'b1; end
+                    end else if (lin == 0) begin
+                        programme_write = rst_c_n; n_pw_we[sel] = 1; n_pw_addr = 0;  n_hwm[sel] = 1;
+                    end else n_fault = 1;
+                end else if (ca[11:10] == 2'b10) begin
+                    if (ca[9:0] >= NPR) n_fault = 1;
+                    else begin  operand_write = rst_c_n; n_loaded[ca[9:0]] = 1; end
+                end else if (ca[11:9] == 3'b110) begin
+                    if (ca[8:0] >= NREC) n_fault = 1;
+                    else begin
+                        n_r_off[ca[8:0]] = cd[31:0]; n_r_val[ca[8:0]] = cd[32];
+                        n_r_go[ca[8:0]] = cd[34:33]; n_r_pay[ca[8:0]] = cd[255:35];
+                        if (NGO < 2 && cd[34]) n_fault = 1;
+                    end
+                end else if (ca == 12'hE00) begin
+                    if (cd[7:0] >= NS) n_fault = 1;
+                    else begin n_sel = cd[SW-1:0]; n_page[cd[SW-1:0]] = cd[8 +: PAGE_W]; end
+                end else if (ca == 12'hE01) begin
+                    for (k = 0; k < NS; k = k + 1) n_need[k] = cd[k*32 +: AW+1];
+                    n_wait_mask = cd[128]; n_need_set = 1;
+                end else n_fault = 1;
+            end
+            if (dhit) begin
+                if (run || hit) n_fault = 1; else n_armed = 1;
+            end
+            // ------------ launch: only an armed target participates
+            if (lv && armed) begin
+                n_armed = 0;
+                if (!(inst_ok && !fault && !run)) n_fault = 1;
+                else begin
+                    n_start_v = 1; n_run = 1; n_cnt = 0; n_rptr = 0; n_tail = TAIL[7:0];
+                    n_wait_done = wait_mask;
+                end
+            end
+            // ------------ execution: fixed record calendar
+            if (run) begin
+                n_cnt = cnt + 1'b1;
+                if (tail != 0 && !start_v) n_tail = tail - 1'b1;
+                if (done_q) n_wait_done = 0;
+                if (!recs_done) begin
+                    if (cur_off == cmp_cnt) begin
+                        n_go = r_go[rptr][NGO-1:0]; n_rec = r_pay[rptr]; n_rptr = rptr + 1'b1; n_tail = TAIL[7:0];
+                    end else if (cur_off < cnt) n_fault = 1;
+                end else if (!start_v && tail == 0 && !(|busy_q) && !wait_done && go == 0) n_run = 0;
+            end
+            n_active = run || (lv && armed);
+            n_ready = armed && inst_ok && !fault && !run && !hit;
+        end
+        always @(posedge clk or negedge reset_leaf[0]) if(!reset_leaf[0]) pw_we<=0; else pw_we<=n_pw_we;
+        always @(posedge clk or negedge reset_leaf[1]) if(!reset_leaf[1]) start_v<=0; else start_v<=n_start_v;
+        always @(posedge clk or negedge reset_leaf[2]) if(!reset_leaf[2]) go<=0; else go<=n_go;
+        always @(posedge clk or negedge reset_leaf[3]) if(!reset_leaf[3]) ready<=0; else ready<=n_ready;
+        always @(posedge clk or negedge reset_leaf[4]) if(!reset_leaf[4]) active<=0; else active<=n_active;
+        always @(posedge clk or negedge reset_leaf[5]) if(!reset_leaf[5]) fault<=0; else fault<=n_fault;
+        always @(posedge clk or negedge reset_leaf[6]) if(!reset_leaf[6]) sel<=0; else sel<=n_sel;
+        always @(posedge clk or negedge reset_leaf[7]) if(!reset_leaf[7]) need_set<=0; else need_set<=n_need_set;
+        always @(posedge clk or negedge reset_leaf[8]) if(!reset_leaf[8]) wait_mask<=0; else wait_mask<=n_wait_mask;
+        always @(posedge clk or negedge reset_leaf[9]) if(!reset_leaf[9]) wait_done<=0; else wait_done<=n_wait_done;
+        always @(posedge clk or negedge reset_leaf[10]) if(!reset_leaf[10]) loaded<=0; else loaded<=n_loaded;
+        always @(posedge clk or negedge reset_leaf[11]) if(!reset_leaf[11]) armed<=0; else armed<=n_armed;
+        always @(posedge clk or negedge reset_leaf[12]) if(!reset_leaf[12]) run<=0; else run<=n_run;
+        always @(posedge clk or negedge reset_leaf[13]) if(!reset_leaf[13]) cnt<=0; else cnt<=n_cnt;
+        always @(posedge clk or negedge reset_leaf[14]) if(!reset_leaf[14]) rptr<=0; else rptr<=n_rptr;
+        always @(posedge clk or negedge reset_leaf[15]) if(!reset_leaf[15]) tail<=0; else tail<=n_tail;
+        always @(posedge clk or negedge reset_leaf[16]) if(!reset_leaf[16]) r_val<=0; else r_val<=n_r_val;
+        always @(posedge clk or negedge reset_leaf[17]) if(!reset_leaf[17]) sparse_last<=0; else sparse_last<=n_sparse_last;
+        always @(posedge clk or negedge reset_leaf[18]) if(!reset_leaf[18]) sparse_seen<=0; else sparse_seen<=n_sparse_seen;
+        always @(posedge clk) if(rst_c_n) pw_addr<=n_pw_addr;
+        always @(posedge clk) if(rst_c_n) rec<=n_rec;
+        for(genvar a_hwm=0;a_hwm<NS;a_hwm=a_hwm+1) begin:g_hwm
+            always @(posedge clk or negedge reset_leaf[19]) if(!reset_leaf[19]) hwm[a_hwm]<=0; else hwm[a_hwm]<=n_hwm[a_hwm];
+        end
+        for(genvar a_need=0;a_need<NS;a_need=a_need+1) begin:g_need
+            always @(posedge clk or negedge reset_leaf[20]) if(!reset_leaf[20]) need[a_need]<=0; else need[a_need]<=n_need[a_need];
+        end
+        for(genvar a_page=0;a_page<NS;a_page=a_page+1) begin:g_page
+            always @(posedge clk or negedge reset_leaf[21]) if(!reset_leaf[21]) page[a_page]<=0; else page[a_page]<=n_page[a_page];
+        end
+        for(genvar a_r_off=0;a_r_off<RN;a_r_off=a_r_off+1) begin:g_r_off
+            always @(posedge clk) if(rst_c_n) r_off[a_r_off]<=n_r_off[a_r_off];
+        end
+        for(genvar a_r_go=0;a_r_go<RN;a_r_go=a_r_go+1) begin:g_r_go
+            always @(posedge clk) if(rst_c_n) r_go[a_r_go]<=n_r_go[a_r_go];
+        end
+        for(genvar a_r_pay=0;a_r_pay<RN;a_r_pay=a_r_pay+1) begin:g_r_pay
+            always @(posedge clk) if(rst_c_n) r_pay[a_r_pay]<=n_r_pay[a_r_pay];
+        end
+        for(genvar w=0;w<16;w=w+1) begin:g_payload
+            ot_hbm_collar_sparse_word u_programme(.clk(clk),.en(programme_write),.d(cd[w*16+:16]),.q(pw_data[w*16+:16]));
+            ot_hbm_collar_sparse_word u_operand(.clk(clk),.en(operand_write),.d(cd[w*16+:16]),.q(prm[w*16+:16]));
+        end
+    end else begin:g_legacy_state
     integer k;
     always @(posedge clk or negedge rst_c_n) begin
         if (!rst_c_n) begin
@@ -310,5 +495,11 @@ module ot_hbm_static_cfg_collar #(
             ready <= armed && inst_ok && !fault && !run && !hit;
         end
     end
+    end endgenerate
+endmodule
+// Retained word scope prevents ABC from absorbing a shared enable into hundreds of bit muxes.
+(* keep_hierarchy *) module ot_hbm_collar_sparse_word #(parameter integer W=16)(
+    input wire clk,en,input wire [W-1:0] d,output reg [W-1:0] q);
+    always @(posedge clk) if(en) q<=d;
 endmodule
 `default_nettype wire

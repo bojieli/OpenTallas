@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hbm.host-su-install.v1",
- "source_revision": "40861499b",
+ "source_revision": "candidate retained-word structural successor; pending exact proof",
  "contract_sha256": "4a0fcc2d49e833d32aa2194a1169bd8a7d91fef2b47a1533dd2651bc065db2e4",
  "programme_sha256": "0a11e8db5559aedae1d9baadf89f192065eb50eba34deacbb9d587f1d4f1e9d3",
  "words": 462,
@@ -12,7 +12,7 @@
   },
   "collar_sparse_final": {
    "path": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
-   "sha256": "adbc963c28e1c1cca67d65f0cb8ac8931e40b2ac7cb909e7e9821a2b3d8cb6e9"
+   "sha256": "ef3cc5f5e7d75f5b77b5e7c88bd29236fa5f14299760b4fb9720d9ace2b025e2"
   },
   "root": {
    "path": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv",
@@ -52,5 +52,7 @@
    "SB": 2470
   }
  },
- "scope": "F20 ingress to executed SU commands; no link-PMA or die timing claim"
+ "scope": "F20 ingress to executed SU commands; no link-PMA or die timing claim",
+ "qualified_parent_source_revision": "40861499b",
+ "qualified_parent_collar_sha256": "adbc963c28e1c1cca67d65f0cb8ac8931e40b2ac7cb909e7e9821a2b3d8cb6e9"
 }
