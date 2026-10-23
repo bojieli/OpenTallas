@@ -2667,8 +2667,14 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
     pb = r.get("pin_balance")
     if not pb:
         return []
+    cap = (lc or {}).get("rlayers", ("", "M6"))[1]
+    dh, dv = ("M4" if cap == "M5" else "M4 M6"), "M3 M5"
+    cn = metal(cap)
+    if cn is not None and cn < 5:       # a lowered signal cap (signal_max_layer M4 / M3): default layers under it only
+        dh = " ".join(x for x in dh.split() if metal(x) <= cn) or " ".join(TP.face_pin_layers(cap)["h"]) or cap
+        dv = " ".join(x for x in dv.split() if metal(x) <= cn) or " ".join(TP.face_pin_layers(cap)["v"]) or cap
     return [f"export OT_PIN_GROUP_MAX={int(pb.get('group_max', 1))}",
-            f"export OT_PIN_BALANCE_H={shq(pb.get('h', 'M4' if (lc or {}).get('rlayers', ('', 'M6'))[1] == 'M5' else 'M4 M6'))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', 'M3 M5'))}"]
+            f"export OT_PIN_BALANCE_H={shq(pb.get('h', dh))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', dv))}"]
 
 
 def referenced_paths(s: dict, kd: str) -> list:
