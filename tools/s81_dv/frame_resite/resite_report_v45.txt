@@ -1,0 +1,198 @@
+S81-P8-C frame-band macro re-site PROPOSAL (2026-10-23)  -- no P&R run; model estimates
+Model: connectivity from the plan RTL rtl/dsrom_sys/s81_dv/frame_lp/plan/col_<M>_l4_lp_plan.sv (bit-level, assigns +
+  seam_w_pl/pad N=0 merged as wires; reset forest / lprc pads / ck/rs/rsi excluded), macro pins from the view LEFs
+  (bf_col via the dsfd_bf_col_kit pin map), port bits at their die_plan window position (lsb_low, boundary flop on the face).
+  Soft register nodes (u_y_* relays, lpl_*_r seams, pads N>=1) sit at the L1-minimax centre of their terminals
+  (= midpoint of source and sink for a 2-terminal relay), pushed out of macro boxes; hop = max Manhattan pin-to-pin over the
+  bits of an instance pair.  r0 bands are scored against EVERY r0 plan type (p1..p6 windows differ); worst type reported.
+  Fixed: ROMs, q elements (qxpq), bf_col views, bf_front_roots.  Movable: qbank N/S, cfg7(_bfp), sstn base/payload,
+  nodes, rstg, cfifo, xo stations.  Legal: 8.64 lattice, >= 8.64 from outline, no overlap, facing gaps >= 13.8,
+  not on the 30-um boundary-flop strip of any bus/ft window.
+Validation (h9_r1 current sites): model reproduces the measured placed >750 macro hops: bs7->e7 1055 (meas 1055), s5->bs5 916 (916),
+  s6->t3 972 (972), rg0->o1 1212 (1206), n13->o1 1195 (1191), c8_0->s8 767 (767), e7->bn7 753 (753). Soft relay hops come out
+  shorter than measured (GPL stacked them, e.g. xa_4_0->bs6 meas 928, model 640) - the relay-midpoint assumption.
+
+== col_h9_r0  (col_h9_r0_p1__t1, col_h9_r0_p2__t1, col_h9_r0_p3__t1, col_h9_r0_p4__t1, col_h9_r0_p5__t1, col_h9_r0_p6__t1)
+  max hop before 2424 um -> after 1160 um (excluding stage-bound x-bus hops); stage-bound x hops before 2424 after 2424
+  total bit-distance 6.7e+07 -> 5.63e+07 bit-um;  moved macros: 6;  legality errors: 0 []; off-lattice: 0
+    u_r0.u_bs2               dsfd_qbank_S               (1252.80, 518.40) -> ( 267.84, 570.24)
+    u_r0.u_cf                dsfd_cfifo_crs4            (1123.20,  86.40) -> (1131.84, 129.60)
+    u_r0.u_s3                ot_s81_cfg7_seq            (1339.20, 475.20) -> ( 648.00, 457.92)
+    u_r0.u_s4                ot_s81_cfg7_seq_bfp        ( 777.60, 864.00) -> ( 328.32, 846.72)
+    u_r0.u_t0                ot_s81_sstn_base566        ( 388.80, 129.60) -> (1010.88,  51.84)
+    u_r0.u_t0__payload       ot_s81_sstn_payload536     ( 518.40, 129.60) -> (1157.76, 216.00)
+  before: 13 instance pairs > 750 um (worst plan type):
+      2424   276 b  P:x_i0.x_i0 -> u_xo3.i  [col_h9_r0_p4__t1]
+      2398   276 b  P:x_i0.x_i0 -> u_xo2.i  [col_h9_r0_p4__t1]
+      2373   276 b  P:x_i0.x_i0 -> u_xo1.i  [col_h9_r0_p4__t1]
+      2348   276 b  P:x_i0.x_i0 -> u_xo0.i  [col_h9_r0_p4__t1]
+      1212  1104 b  P:x_i0.x_i0 -> u_cf.xl0,xl1  [col_h9_r0_p4__t1]
+      1055   604 b  u_bs2.o_cfg,o_go -> u_e2.cfg_a,cfg_d  [col_h9_r0_p1__t1]
+      1021     2 b  u_t0.so -> u_cf.st  [col_h9_r0_p1__t1]
+      1016   564 b  u_cf.cc,xa -> u_t0.cci,xai  [col_h9_r0_p1__t1]
+       972     2 b  u_s3.st -> u_t1.c1  [col_h9_r0_p1__t1]
+       916    55 b  u_s2.cfg,go_e -> u_bs2.i_cfg,i_go  [col_h9_r0_p1__t1]
+       805   536 b  u_cf.x2 -> u_t0__payload.i  [col_h9_r0_p1__t1]
+       767    72 b  u_c4_0.rd_out -> u_s4.q0  [col_h9_r0_p1__t1]
+       753   128 b  u_e2.busy,fault -> u_bn2.e_r0,e_r1  [col_h9_r0_p1__t1]
+  after: 6 instance pairs still > 750 um -> need an RTL stage:
+      2424   276 b  P:x_i0.x_i0 -> u_xo3.i  [col_h9_r0_p4__t1]  (stage-bound)
+      2398   276 b  P:x_i0.x_i0 -> u_xo2.i  [col_h9_r0_p4__t1]  (stage-bound)
+      2373   276 b  P:x_i0.x_i0 -> u_xo1.i  [col_h9_r0_p4__t1]  (stage-bound)
+      2348   276 b  P:x_i0.x_i0 -> u_xo0.i  [col_h9_r0_p4__t1]  (stage-bound)
+      1160  1104 b  P:x_i0.x_i0 -> u_cf.xl0,xl1  [col_h9_r0_p4__t1]
+       753   128 b  u_e2.busy,fault -> u_bn2.e_r0,e_r1  [col_h9_r0_p1__t1]
+
+== col_h9_r1  (col_h9_r1__t1)
+  max hop before 1212 um -> after 746 um (excluding stage-bound x-bus hops)
+  total bit-distance 9.82e+06 -> 6.69e+06 bit-um;  moved macros: 16;  legality errors: 0 []; off-lattice: 0
+    u_r1.u_bn7               dsfd_qbank_N               ( 864.00, 777.60) -> ( 414.72, 829.44)
+    u_r1.u_bs5               dsfd_qbank_S               (1252.80,  86.40) -> ( 380.16,  95.04)
+    u_r1.u_bs6               dsfd_qbank_S               (1252.80,  43.20) -> (1080.00,  95.04)
+    u_r1.u_bs7               dsfd_qbank_S               (1252.80, 432.00) -> ( 267.84, 483.84)
+    u_r1.u_bs9               dsfd_qbank_S               (1252.80, 388.80) -> ( 768.96, 483.84)
+    u_r1.u_n12               dsfd_node_LLfu             (1166.40, 129.60) -> ( 380.16, 371.52)
+    u_r1.u_n13               dsfd_node_NNfd             (1252.80, 172.80) -> ( 604.80, 371.52)
+    u_r1.u_n14               dsfd_node_LLfd             (1166.40, 259.20) -> (1131.84, 501.12)
+    u_r1.u_n17               dsfd_node_NNfu             (1296.00, 561.60) -> (1105.92, 768.96)
+    u_r1.u_n19               dsfd_node_NNfu             (1252.80, 734.40) -> (1149.12,1088.64)
+    u_r1.u_n22               dsfd_node_LLfd             (1252.80, 993.60) -> ( 812.16,1080.00)
+    u_r1.u_rg0               dsfd_rstg                  (1339.20, 129.60) -> ( 622.08,  77.76)
+    u_r1.u_s6                ot_s81_cfg7_seq            (1339.20,  43.20) -> ( 648.00,   8.64)
+    u_r1.u_s8                ot_s81_cfg7_seq_bfp        ( 777.60, 777.60) -> ( 328.32, 760.32)
+    u_r1.u_s9                ot_s81_cfg7_seq            (1339.20, 388.80) -> (1088.64, 449.28)
+    u_r1.u_t4                ot_s81_sstn_base566        ( 388.80, 388.80) -> ( 596.16, 466.56)
+  before: 13 instance pairs > 750 um (worst plan type):
+      1212    66 b  u_rg0.o -> P:frame_int_o1.frame_int_o1  [col_h9_r1__t1]
+      1195    66 b  u_n13.o -> P:frame_int_o1.frame_int_o1  [col_h9_r1__t1]
+      1055   604 b  u_bs7.o_cfg,o_go -> u_e7.cfg_a,cfg_d  [col_h9_r1__t1]
+      1043     1 b  u_n12.fo -> P:frame_int_o1.frame_int_o1  [col_h9_r1__t1]
+      1012   604 b  u_bs5.o_cfg,o_go -> u_e5.cfg_a,cfg_d  [col_h9_r1__t1]
+       972     2 b  u_s6.st -> u_t3.c1  [col_h9_r1__t1]
+       972     2 b  u_s9.st -> u_t4.c1  [col_h9_r1__t1]
+       916    55 b  u_s5.cfg,go_e -> u_bs5.i_cfg,i_go  [col_h9_r1__t1]
+       916    55 b  u_s7.cfg,go_e -> u_bs7.i_cfg,i_go  [col_h9_r1__t1]
+       849    66 b  u_n19.o -> u_y_rt_23a_0.u_y_rt_23a_0  [col_h9_r1__t1]
+       849    66 b  u_y_rt_23a_0.u_y_rt_23a_0 -> P:frame_int_o0.frame_int_o0  [col_h9_r1__t1]
+       767    72 b  u_c8_0.rd_out -> u_s8.q0  [col_h9_r1__t1]
+       753   128 b  u_e7.busy,fault -> u_bn7.e_r0,e_r1  [col_h9_r1__t1]
+  after: 0 instance pairs still > 750 um -> need an RTL stage:
+
+== col_h9_r2  (col_h9_r2__t1)
+  max hop before 1055 um -> after 592 um (excluding stage-bound x-bus hops)
+  total bit-distance 8.56e+06 -> 5.63e+06 bit-um;  moved macros: 11;  legality errors: 0 []; off-lattice: 0
+    u_r2.u_bn12              dsfd_qbank_N               ( 864.00, 777.60) -> ( 414.72, 829.44)
+    u_r2.u_bs10              dsfd_qbank_S               (1252.80,  86.40) -> ( 380.16,  95.04)
+    u_r2.u_bs11              dsfd_qbank_S               (1252.80,  43.20) -> (1131.84, 155.52)
+    u_r2.u_bs12              dsfd_qbank_S               (1252.80, 432.00) -> ( 267.84, 483.84)
+    u_r2.u_bs14              dsfd_qbank_S               (1252.80, 388.80) -> ( 768.96, 483.84)
+    u_r2.u_n23               dsfd_node_NNfd             (1166.40, 129.60) -> ( 622.08,  34.56)
+    u_r2.u_n24               dsfd_node_LLfu             (1252.80, 129.60) -> (1209.60, 112.32)
+    u_r2.u_s11               ot_s81_cfg7_seq            (1339.20,  43.20) -> ( 570.24, 103.68)
+    u_r2.u_s13               ot_s81_cfg7_seq_bfp        ( 777.60, 777.60) -> ( 336.96, 760.32)
+    u_r2.u_s14               ot_s81_cfg7_seq            (1339.20, 388.80) -> (1088.64, 449.28)
+    u_r2.u_t7                ot_s81_sstn_base566        ( 388.80, 388.80) -> ( 596.16, 466.56)
+  before: 9 instance pairs > 750 um (worst plan type):
+      1055   604 b  u_bs12.o_cfg,o_go -> u_e12.cfg_a,cfg_d  [col_h9_r2__t1]
+      1039    67 b  u_n23.fo,o -> P:frame_int_o0.frame_int_o0  [col_h9_r2__t1]
+      1012   604 b  u_bs10.o_cfg,o_go -> u_e10.cfg_a,cfg_d  [col_h9_r2__t1]
+       972     2 b  u_s11.st -> u_t6.c1  [col_h9_r2__t1]
+       972     2 b  u_s14.st -> u_t7.c1  [col_h9_r2__t1]
+       916    55 b  u_s10.cfg,go_e -> u_bs10.i_cfg,i_go  [col_h9_r2__t1]
+       916    55 b  u_s12.cfg,go_e -> u_bs12.i_cfg,i_go  [col_h9_r2__t1]
+       767    72 b  u_c13_0.rd_out -> u_s13.q0  [col_h9_r2__t1]
+       753   128 b  u_e12.busy,fault -> u_bn12.e_r0,e_r1  [col_h9_r2__t1]
+  after: 0 instance pairs still > 750 um -> need an RTL stage:
+
+== col_h10_r0  (col_h10_r0_p1__t1, col_h10_r0_p4__t1)
+  max hop before 2424 um -> after 1143 um (excluding stage-bound x-bus hops); stage-bound x hops before 2424 after 2424
+  total bit-distance 2.53e+07 -> 2.25e+07 bit-um;  moved macros: 10;  legality errors: 0 []; off-lattice: 0
+    u_r0.u_bn3               dsfd_qbank_N               ( 864.00,1140.48) -> ( 138.24, 864.00)
+    u_r0.u_bn4               dsfd_qbank_N               ( 864.00,1183.68) -> ( 414.72,1192.32)
+    u_r0.u_bs3               dsfd_qbank_S               (1252.80, 846.72) -> ( 380.16, 855.36)
+    u_r0.u_cf                dsfd_cfifo_crs4            (1123.20,  86.40) -> (1149.12, 129.60)
+    u_r0.u_n7                dsfd_node_NNfu             (1252.80, 682.56) -> (1019.52,1131.84)
+    u_r0.u_s1                ot_s81_cfg7_seq_bfp        ( 777.60, 466.56) -> ( 328.32, 457.92)
+    u_r0.u_s4                ot_s81_cfg7_seq            (1339.20, 803.52) -> ( 648.00, 760.32)
+    u_r0.u_s5                ot_s81_cfg7_seq_bfp        ( 777.60,1140.48) -> ( 328.32,1131.84)
+    u_r0.u_t0                ot_s81_sstn_base566        ( 388.80, 129.60) -> (1019.52,  51.84)
+    u_r0.u_t0__payload       ot_s81_sstn_payload536     ( 518.40, 129.60) -> (1226.88, 432.00)
+  before: 16 instance pairs > 750 um (worst plan type):
+      2424   276 b  P:x_i0.x_i0 -> u_xo3.i  [col_h10_r0_p4__t1]
+      2398   276 b  P:x_i0.x_i0 -> u_xo2.i  [col_h10_r0_p4__t1]
+      2373   276 b  P:x_i0.x_i0 -> u_xo1.i  [col_h10_r0_p4__t1]
+      2348   276 b  P:x_i0.x_i0 -> u_xo0.i  [col_h10_r0_p4__t1]
+      1212  1104 b  P:x_i0.x_i0 -> u_cf.xl0,xl1  [col_h10_r0_p4__t1]
+      1021     2 b  u_t0.so -> u_cf.st  [col_h10_r0_p1__t1]
+      1016   564 b  u_cf.cc,xa -> u_t0.cci,xai  [col_h10_r0_p1__t1]
+      1012   604 b  u_bs3.o_cfg,o_go -> u_e3.cfg_a,cfg_d  [col_h10_r0_p1__t1]
+       972     2 b  u_s4.st -> u_t2.c1  [col_h10_r0_p1__t1]
+       916    55 b  u_s3.cfg,go_e -> u_bs3.i_cfg,i_go  [col_h10_r0_p1__t1]
+       909    66 b  u_y_rt_15a_0.u_y_rt_15a_0 -> P:frame_int_o0.frame_int_o0  [col_h10_r0_p1__t1]
+       861     2 b  u_bn3.d_st -> P:frame_int_o0.frame_int_o0  [col_h10_r0_p1__t1]
+       818     2 b  u_bn4.d_st -> P:frame_int_o0.frame_int_o0  [col_h10_r0_p1__t1]
+       805   536 b  u_cf.x2 -> u_t0__payload.i  [col_h10_r0_p1__t1]
+  after: 5 instance pairs still > 750 um -> need an RTL stage:
+      2424   276 b  P:x_i0.x_i0 -> u_xo3.i  [col_h10_r0_p4__t1]  (stage-bound)
+      2398   276 b  P:x_i0.x_i0 -> u_xo2.i  [col_h10_r0_p4__t1]  (stage-bound)
+      2373   276 b  P:x_i0.x_i0 -> u_xo1.i  [col_h10_r0_p4__t1]  (stage-bound)
+      2348   276 b  P:x_i0.x_i0 -> u_xo0.i  [col_h10_r0_p4__t1]  (stage-bound)
+      1143  1104 b  P:x_i0.x_i0 -> u_cf.xl0,xl1  [col_h10_r0_p4__t1]
+
+== col_h10_r1  (col_h10_r1__t1)
+  max hop before 1270 um -> after 1158 um (excluding stage-bound x-bus hops)
+  total bit-distance 1.06e+07 -> 9.26e+06 bit-um;  moved macros: 9;  legality errors: 0 []; off-lattice: 0
+    u_r1.u_bs6               dsfd_qbank_S               (1252.80, 293.76) -> ( 466.56, 656.64)
+    u_r1.u_bs8               dsfd_qbank_S               (1252.80, 613.44) -> ( 267.84, 656.64)
+    u_r1.u_n12               dsfd_node_LLfu             (1166.40,  17.28) -> (1157.76,   8.64)
+    u_r1.u_n13               dsfd_node_NNfd             (1252.80,  60.48) -> ( 622.08, 233.28)
+    u_r1.u_n23               dsfd_node_NNfd             (1166.40, 933.12) -> (1313.28, 648.00)
+    u_r1.u_n24               dsfd_node_LLfu             (1166.40,1045.44) -> ( 604.80, 596.16)
+    u_r1.u_s10               ot_s81_cfg7_seq_bfp        ( 777.60, 933.12) -> ( 328.32, 933.12)
+    u_r1.u_s7                ot_s81_cfg7_seq            (1339.20, 259.20) -> ( 656.64, 164.16)
+    u_r1.u_s9                ot_s81_cfg7_seq            (1339.20, 578.88) -> ( 570.24, 509.76)
+  before: 10 instance pairs > 750 um (worst plan type):
+      1270    66 b  u_n24.o -> P:frame_int_o0.frame_int_o0  [col_h10_r1__t1]
+      1046   604 b  u_bs8.o_cfg,o_go -> u_e8.cfg_a,cfg_d  [col_h10_r1__t1]
+      1034    66 b  u_n13.o -> P:frame_int_o1.frame_int_o1  [col_h10_r1__t1]
+      1012   604 b  u_bs6.o_cfg,o_go -> u_e6.cfg_a,cfg_d  [col_h10_r1__t1]
+       972     2 b  u_s7.st -> u_t4.c1  [col_h10_r1__t1]
+       972     2 b  u_s9.st -> u_t5.c1  [col_h10_r1__t1]
+       925    55 b  u_s6.cfg,go_e -> u_bs6.i_cfg,i_go  [col_h10_r1__t1]
+       925    55 b  u_s8.cfg,go_e -> u_bs8.i_cfg,i_go  [col_h10_r1__t1]
+       881     1 b  u_n12.fo -> P:frame_int_o1.frame_int_o1  [col_h10_r1__t1]
+       758    72 b  u_c10_0.rd_out -> u_s10.q0  [col_h10_r1__t1]
+  after: 5 instance pairs still > 750 um -> need an RTL stage:
+      1158    66 b  u_n24.o -> P:frame_int_o0.frame_int_o0  [col_h10_r1__t1]
+       864     1 b  u_n12.fo -> P:frame_int_o1.frame_int_o1  [col_h10_r1__t1]
+       838     1 b  u_n24.fo -> u_n23.fi  [col_h10_r1__t1]
+       776    66 b  P:frame_int_i0.frame_int_i0 -> u_lpl_6_r.u_lpl_6_r  [col_h10_r1__t1]
+       776    66 b  u_lpl_6_r.u_lpl_6_r -> u_n23.b  [col_h10_r1__t1]
+
+== col_h10_r2  (col_h10_r2__t1)
+  max hop before 1055 um -> after 554 um (excluding stage-bound x-bus hops)
+  total bit-distance 8.86e+06 -> 6.05e+06 bit-um;  moved macros: 11;  legality errors: 0 []; off-lattice: 0
+    u_r2.u_bn13              dsfd_qbank_N               ( 864.00, 924.48) -> ( 190.08, 639.36)
+    u_r2.u_bs11              dsfd_qbank_S               (1252.80, 233.28) -> ( 380.16, 241.92)
+    u_r2.u_bs13              dsfd_qbank_S               (1252.80, 578.88) -> ( 267.84, 630.72)
+    u_r2.u_bs14              dsfd_qbank_S               (1252.80, 535.68) -> ( 768.96, 630.72)
+    u_r2.u_n25               dsfd_node_NNfu             (1252.80,  17.28) -> ( 829.44,   8.64)
+    u_r2.u_n27               dsfd_node_NNfd             (1166.40, 276.48) -> (1010.88,  77.76)
+    u_r2.u_s12               ot_s81_cfg7_seq            (1339.20, 190.08) -> ( 794.88, 103.68)
+    u_r2.u_s14               ot_s81_cfg7_seq            (1339.20, 535.68) -> (1088.64, 596.16)
+    u_r2.u_s15               ot_s81_cfg7_seq_bfp        ( 777.60, 924.48) -> ( 336.96, 907.20)
+    u_r2.u_t7__payload       ot_s81_sstn_payload536     (1123.20, 190.08) -> ( 889.92,   8.64)
+    u_r2.u_t8                ot_s81_sstn_base566        ( 388.80, 535.68) -> ( 596.16, 613.44)
+  before: 9 instance pairs > 750 um (worst plan type):
+      1055   604 b  u_bs13.o_cfg,o_go -> u_e13.cfg_a,cfg_d  [col_h10_r2__t1]
+      1012   604 b  u_bs11.o_cfg,o_go -> u_e11.cfg_a,cfg_d  [col_h10_r2__t1]
+       977     1 b  u_n25.fo -> P:frame_int_o0.frame_int_o0  [col_h10_r2__t1]
+       972     2 b  u_s12.st -> u_t7.c1  [col_h10_r2__t1]
+       972     2 b  u_s14.st -> u_t8.c1  [col_h10_r2__t1]
+       916    55 b  u_s11.cfg,go_e -> u_bs11.i_cfg,i_go  [col_h10_r2__t1]
+       916    55 b  u_s13.cfg,go_e -> u_bs13.i_cfg,i_go  [col_h10_r2__t1]
+       767    72 b  u_c15_0.rd_out -> u_s15.q0  [col_h10_r2__t1]
+       753   128 b  u_e13.busy,fault -> u_bn13.e_r0,e_r1  [col_h10_r2__t1]
+  after: 0 instance pairs still > 750 um -> need an RTL stage:
+
+candidate legality (frame_band_macros.py check + gap_check, all bands): 0 errors

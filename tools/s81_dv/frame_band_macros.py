@@ -28,6 +28,12 @@ MIN_GAP = 13.8                     # S81-P8 10-23 (GEOM-REVIEW5 15:14 h10_r1 FAI
 # the N (i) / S (o) edges only) sit next to the W-face xo_o0 window of every r0 frame type (plan windows y 24-336 in the
 # type frame), stacked along the free W strip (x 0-43.2) below u_e0 -- not bottom-right, where 1104 b of x/xo crossed the
 # ROM field twice.  Origins on the 8.64 lattice; >= 17.28 um to c0_0 (x 51.84) and to each other.
+# S81-P8 10-23 plan v4.5 (COORD 15:45 spot-check: internal reg-reg hops > 750 um need a stage; measured 1.2-2.5k per kit):
+# connectivity-driven re-site of the E-column macros (qbank_S/N, cfg7, nodes, rstg, sstn, cfifo) next to the elements /
+# stations they talk to; ROMs, q elements, bf cols / front roots fixed.  Moves from tools/s81_dv/frame_resite (bit-level
+# band netlist + view LEF pins; report resite_report_v45.txt): max modelled hop h9 r1 1212 -> 746, r2 1055 -> 592,
+# h10 r2 1055 -> 554; r0 (x bus) and h10 r1 (u_n24) still need RTL stages.
+RESITE = Path(__file__).resolve().parents[2] / 'physical/die_plan/s81/inputs/frame_band_resite.json'
 XO_SITES = {f'u_r0.u_xo{j}': [8.64, round(86.4 + 34.56 * j, 4)] for j in range(4)}
 
 
@@ -210,7 +216,11 @@ def main():
         for e in bands.get('r0', []):
             if e['inst'] in XO_SITES:
                 e['origin_um'] = list(XO_SITES[e['inst']])
+        rs = json.loads(RESITE.read_text()) if RESITE.is_file() else {}
         for b, lst in bands.items():
+            for e in lst:
+                if e['inst'] in rs.get(f'{m}.{b}', {}):
+                    e['origin_um'] = list(rs[f'{m}.{b}'][e['inst']])
             n = spread_rows(lst)
             if n:
                 res['sources'][f'{m}_{b}'] += f', {n} row(s) lifted to the {MIN_GAP}-um macro gap'
