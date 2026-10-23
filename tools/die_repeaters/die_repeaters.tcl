@@ -476,7 +476,7 @@ proc ot_die_repeaters {cfg} {
   set wn {}; foreach n $warnings { lappend wn [ot_die_rep_json_str $n] }
   set ex {}; foreach n $examples { lappend ex [ot_die_rep_json_str $n] }
   puts $f "{\"schema\": \"opentallas.die_repeaters.v1\", \"design\": [ot_die_rep_json_str $design], \"verdict\": \"$verdict\", \"violations\": $viol,"
-  puts $f " \"rule\": \"repair_design on die nets only, buffers only, between relay registers; one repeater from ~175 um then every ~160 um on the M4 RC (owner 0cl, H-REACH); every 600 um on the M7-M9 RC (owner 10-22)\","
+  puts $f " \"rule\": \"repair_design on die nets only, buffers only, between relay registers; one repeater from ~175 um then every ~160 um on the M4 RC (owner 0cl, H-REACH); every 450 um on the M7-M9 RC (owner 10-22)\","
   puts $f " \"max_wire_um\": $max_wire_um, \"max_transition_ps\": $slew, \"max_transition_source\": [ot_die_rep_json_str $slew_src], \"rc_layer\": [ot_die_rep_json_str $rc_layer],"
   puts $f " \"repair_args\": [ot_die_rep_json_str $repair_args], \"legalize\": [ot_die_rep_json_str $legal], \"repeaters_ideal_on_obstacle\": $::ot_die_rep_onobs, \"on_obstacle_note\": \"repair_design put these on a macro / relay body: the net crosses a block (plan path over a block, routed on M7+ or detoured) -- a planning defect, the spread moves them to the nearest free channel\","
   puts $f " \"instances_pre\": [dict size $pre], \"instances_post\": [dict size $post], \"repeaters\": $repeaters, \"repeaters_by_master\": {[join $bm {, }]},"

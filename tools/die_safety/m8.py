@@ -4,7 +4,7 @@ PG/clock, regular PG straps kept on M8; COORD 21:24: the M8 RC/repeater model is
 
 S81 repair 66736dcff made it opt-in (--signal-top-layer M8).  This is the one rule every die flow uses, default ON:
 a die whose signal routing reaches M8 (or M9) gets
-  * repeater step  rc_layer M8, max wire 600 um (owner 10-22; tools/die_repeaters: repair_design spaces repeaters on
+  * repeater step  rc_layer M8, max wire 450 um (owner 10-22; tools/die_repeaters: repair_design spaces repeaters on
                                  the M8 wire RC, slew / cap decide extra stages; the post-GRT
                                  audit then re-judges slew / cap on the real per-layer GRT parasitics),
   * die STA        set_wire_rc -signal -layer M8 for every placement-estimate fallback, and GRT parasitics
@@ -37,7 +37,7 @@ def model(signal_top='M7'):
     m8 = top in M8_TOPS
     return dict(signal_top_layer=top, m8_signals=m8,
                 repeater_rc_layer='M8' if m8 else 'M4',
-                repeater_max_wire_um=600.0 if m8 else 160.0,      # owner 10-22 (tools/die_repeaters/step.py)
+                repeater_max_wire_um=450.0 if m8 else 160.0,      # owner 10-22 (tools/die_repeaters/step.py)
                 sta_wire_rc_layer='M8' if m8 else 'M6',
                 sta_parasitics='global_routing (per-layer setRC.tcl incl. M8); placement fallback = NOT a die result' if m8
                 else 'global_routing',
