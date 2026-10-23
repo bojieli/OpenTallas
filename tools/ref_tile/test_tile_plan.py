@@ -47,12 +47,84 @@ class Outline(unittest.TestCase):
         self.assertLessEqual(max(r["w"], r["h"]) / min(r["w"], r["h"]), TP.ASPECT_MAX + 1e-9)
 
     def test_pin_bound_tile_reports_pins(self):
-        # 6000 pins on W / E, little logic: H from 3 pins/um, aspect capped at 2
+        # 6000 pins on W / E, little logic: H from 6 pins/um (two layers), aspect capped at 2
         r = TP.content_outline(5000, [], {"N": 0, "S": 0, "E": 3000, "W": 3000})
+        self.assertEqual(TP.PIN_DENSITY, 6.0)
         self.assertEqual(r["bound"], "pins")
         self.assertGreaterEqual(r["h"] - 4.32, 3000 / TP.PIN_DENSITY - 1e-6)
         self.assertLessEqual(max(r["pin_density"].values()), TP.PIN_DENSITY + 1e-6)
         self.assertLessEqual(r["h"] / r["w"], TP.ASPECT_MAX + 1e-6)
+        self.assertTrue(all(c["ok"] for c in r["pin_check"].values()))
+
+
+class LogicFace(unittest.TestCase):
+    def test_dual_face_banks_face_one_logic_band(self):
+        # lep-like: dual-face SRAMs (clock on the W LEF face): logic_face E -> MY, array against the W keep-off
+        tm = tm_box("dual", 174.0, 29.7, "WE", n=100)
+        tm["pins"].append({"name": "clk", "use": "CLOCK", "rects": [("M4", (0, 1000, 24, 1024))]})
+        dem = {"N": 0, "S": 700, "E": 2200, "W": 2200}
+        r = TP.plan_macros(500.0, 420.0, macros(tm, 10), dem, logic_face="E")
+        self.assertTrue(r["ok"], r)
+        self.assertEqual({p["orient"] for p in r["placed"]}, {"MY"})
+        self.assertEqual(TP.primary_face(tm), "W")
+        x_max = max(p["x"] + p["w"] for p in r["placed"])
+        self.assertGreater(500.0 - x_max, 200.0)                    # the free width is ONE band at the E side
+        c = TP.plan_macros(500.0, 420.0, macros(tm, 10), dem)       # default: centred, R0
+        self.assertEqual({p["orient"] for p in c["placed"]}, {"R0"})
+        with self.assertRaises(ValueError):
+            TP.plan_macros(500.0, 420.0, macros(tm, 10), dem, logic_face="N")
+
+
+class PinDensity(unittest.TestCase):
+    """COORD 10-23: 6 pins/um per face averaged, <= 6 in any 10-um window, alternating over 2 layers, pin/track <= 0.6"""
+    def test_face_pin_layers_under_the_cap(self):
+        self.assertEqual(TP.face_pin_layers("M5"), {"h": ["M4"], "v": ["M3", "M5"]})
+        self.assertEqual(TP.face_pin_layers("M6"), {"h": ["M4", "M6"], "v": ["M3", "M5"]})
+        self.assertEqual(TP.face_pin_layers("M7"), {"h": ["M4", "M6"], "v": ["M5", "M7"]})
+
+    def test_one_layer_face_keeps_3_per_um(self):
+        dem = {"N": 0, "S": 0, "E": 3000, "W": 3000}
+        m5 = TP.content_outline(5000, [], dem, pin_layers=TP.face_pin_layers("M5"))      # E/W only M4
+        m6 = TP.content_outline(5000, [], dem, pin_layers=TP.face_pin_layers("M6"))      # E/W M4 + M6
+        self.assertGreaterEqual(m5["h"] - 4.32, 3000 / 3.0 - 1e-6)
+        self.assertLess(m6["h"] - 4.32, 3000 / 6.0 + 2.2)
+        self.assertEqual(m5["pin_cap"]["E"], 3.0)
+        self.assertEqual((m6["pin_cap"]["E"], m6["pin_cap"]["N"]), (6.0, 6.0))
+
+    def test_average_window_layers_ratio(self):
+        two = TP.face_pin_layers("M6")
+        ok = TP.face_pin_check("W", 502.0, [(3000, None, None)], two)
+        self.assertTrue(ok["ok"], ok["why"])
+        self.assertAlmostEqual(ok["ratio"], ok["peak"] / (1 / 0.048 + 1 / 0.064), places=2)
+        self.assertLessEqual(ok["ratio"], TP.PIN_TRACK_RATIO_MAX)
+        # same 3000 pins on ONE layer (M5 cap, E/W = M4 only): above 3/um -> FAIL
+        one = TP.face_pin_check("W", 502.0, [(3000, None, None)], TP.face_pin_layers("M5"))
+        self.assertFalse(one["ok"])
+        self.assertTrue(any("ONE layer" in w for w in one["why"]))
+        # average fine (0.5/um) but 300 pins squeezed into 20 um: the 10-um window catches it
+        loc = TP.face_pin_check("N", 600.0, [(300, 100.0, 120.0)], two)
+        self.assertLess(loc["avg"], 1.0)
+        self.assertGreater(loc["peak"], 14.0)
+        self.assertFalse(loc["ok"])
+        self.assertTrue(any("window" in w for w in loc["why"]))
+        # two balanced regions on the same range stack their pins
+        ov = TP.face_pin_check("N", 600.0, [(40, 100.0, 300.0), (40, 100.0, 300.0)], two)
+        self.assertFalse(ov["ok"])
+        self.assertTrue(any("overlapping" in w for w in ov["why"]))
+        # a lone clock pin inside the face region is reported, not failed
+        ck = TP.face_pin_check("N", 600.0, [(1, 299.0, 301.0), (500, None, None)], two)
+        self.assertTrue(ck["ok"], ck["why"])
+        self.assertEqual(len(ck["overlap"]), 1)
+
+    def test_fixed_macros_count_as_macro_area_not_std(self):
+        # GEOM-REVIEW 10-23 flow bug: macros at fixed positions were folded into std ('std 80412 + macros 0')
+        fx = [{"w": 60.0, "h": 50.0}] * 8
+        r = TP.content_outline(2000, [], {"N": 100, "S": 100}, fixed=fx)
+        self.assertIn("std 2000/", r["why"])
+        self.assertEqual(r["breakdown"]["macros"], 8)
+        self.assertAlmostEqual(r["breakdown"]["macro_um2"], 8 * (60 + 10.8) * (50 + 10.8), places=0)
+        free = (r["w"] - 4.32) * (r["h"] - 4.32) - 8 * 60 * 50
+        self.assertAlmostEqual(r["fill"], round(2000 / free, 3), places=3)
 
     def test_aspect_follows_pin_demand(self):
         r = TP.content_outline(200000, [], {"N": 1500, "S": 1500, "E": 200, "W": 200})
@@ -192,6 +264,11 @@ class Recipe5(unittest.TestCase):
             r, k = self.gen(a, name="tp5_u", std_area_um2=3000.0, outline=None,
                             unregistered_ok={"sr": "status strap read by the die once at boot"})
             self.assertIn("OT_FENCE_UNREG_OK=sr", k["kit.env"])
+            # a stale derived value carried in the spec's orfs_vars never wins over unregistered_ok
+            r, k = self.gen(a, name="tp5_v", std_area_um2=3000.0, outline=None, orfs_vars={"OT_FENCE_UNREG_OK": "old"},
+                            unregistered_ok={"sr": "status strap read by the die once at boot"})
+            self.assertIn("OT_FENCE_UNREG_OK=sr", k["kit.env"])
+            self.assertNotIn("OT_FENCE_UNREG_OK=old", k["kit.env"])
 
     def test_explicit_big_outline_fails_without_reason(self):
         with tempfile.TemporaryDirectory() as a:
@@ -201,6 +278,47 @@ class Recipe5(unittest.TestCase):
             r, _ = self.gen(a, name="tp5_c", std_area_um2=1500.0, outline={"w": 500.0, "h": 500.0},
                             outline_reason="die slot hole: pins abut the neighbours")
             self.assertEqual([f[0] for f in r["findings"] if f[1] == "outline_ratio"], ["INFO"])
+
+    def test_pin_generator_alternates_two_layers(self):
+        with tempfile.TemporaryDirectory() as a:
+            r, k = self.gen(a, name="tp5_pb", std_area_um2=3000.0, outline=None)
+            self.assertIn("export OT_PIN_GROUP_MAX=1", k["kit.env"])          # layer alternates pin by pin
+            self.assertIn("export OT_PIN_BALANCE_V='M3 M5'", k["kit.env"])
+            self.assertIn("export OT_PIN_BALANCE_H='M4'", k["kit.env"])        # M5 cap: one E/W layer -> 3/um there
+            self.assertFalse([f for f in r["findings"] if f[1] == "pin_density" and f[0] == "FAIL"])
+            r, k = self.gen(a, name="tp5_pb6", std_area_um2=3000.0, outline=None, layer_cap="M6",
+                            layer_cap_grant="TEST: tile_plan 6 pins/um on E/W M4+M6")
+            self.assertIn("export OT_PIN_BALANCE_H='M4 M6'", k["kit.env"])
+            tp = json.loads(k["floorplan.json"])["tile_plan"]
+            self.assertEqual(tp["pin_layers"], {"h": ["M4", "M6"], "v": ["M3", "M5"]})
+            self.assertEqual(tp["pin_cap"]["W"], 6.0)
+
+    def test_pin_density_fail_on_dense_range(self):
+        with tempfile.TemporaryDirectory() as a:
+            # 'pdata' etc. squeezed into a 2-um range of the S face: window peak far above 6/um -> FAIL
+            from unittest import mock
+            with mock.patch.object(TP, "port_widths", return_value={"pdata": 256, "pv": 1, "pgi": 8, "pbeat": 4,
+                                                                    "sr": 1, "clk": 1, "rst_n": 1, "ra": 16}):
+                r, _ = self.gen(a, name="tp5_pd", std_area_um2=3000.0, outline=None,
+                                pin_ranges={"pdata": [10.0, 12.0]})
+            f = [x for x in r["findings"] if x[1] == "pin_density"]
+            self.assertTrue(f and f[0][0] == "FAIL", f)
+
+    def test_rg3b_spec_counts_srams_as_macros(self):
+        # GEOM-REVIEW 10-23: s81dv_rg3b_xm6 (8 x ot_sram_1r1w_1024x256 at fixed 'at') said 'std 80412 um2 + macros 0'
+        with tempfile.TemporaryDirectory() as a:
+            sp = json.loads((HERE / "examples" / "s81dv_rg3b_xm6_tp.json").read_text())
+            p = Path(a) / "xm6.json"
+            p.write_text(json.dumps(sp))
+            r = RT.gen(str(p), commit="c" * 40, out_root=Path(a))
+            tp = json.loads((Path(a) / r["kit"] / "floorplan.json").read_text())["tile_plan"]
+            lef = RT.track_macro("physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2")
+            w, h = lef["W"] / 1000, lef["H"] / 1000
+            self.assertEqual(tp["breakdown"]["macros"], 8)
+            self.assertAlmostEqual(tp["breakdown"]["macro_um2"], 8 * (w + 10.8) * (h + 10.8), delta=1.0)
+            self.assertIn(f"std {sp['std_area_um2']:.0f}/", tp["why"])      # std = synthesized std cells only
+            self.assertLess(tp["breakdown"]["logic_um2"], 2 * sp["std_area_um2"] / 0.65)
+            self.assertLess(tp["fill"], 0.2)
 
     def test_tile_plan_off_keeps_recipe_4_behaviour(self):
         with tempfile.TemporaryDirectory() as a:

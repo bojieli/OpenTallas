@@ -1,0 +1,138 @@
+{
+ "element": "qkd_hr_core_prompt_tf1",
+ "outline_um": [
+  522.72,
+  522.72
+ ],
+ "aspect": 1.0,
+ "die_area_um2": 273236.2,
+ "macros": 7,
+ "macro_area_pct": 27.11,
+ "std_cells": 68223,
+ "unplaced_cells": 0,
+ "std_area_um2": 9666.9,
+ "std_fill_of_free_pct": 4.85,
+ "ff": 16644,
+ "buf_inv": 13257,
+ "buf_share_pct": 19.43,
+ "pin_regs_marked": 4136,
+ "clock_root_bufs": 0,
+ "clock_lvl2_bufs": 0,
+ "pins_per_face": {
+  "N": 669,
+  "W": 1556,
+  "E": 1555,
+  "S": 1555
+ },
+ "pins_per_um": {
+  "N": 1.28,
+  "S": 2.975,
+  "E": 2.975,
+  "W": 2.977
+ },
+ "pin_peak_per_um_10um": {
+  "N": 6.9,
+  "W": 4.4,
+  "E": 4.3,
+  "S": 4.3
+ },
+ "pin_layers": {
+  "M5": 2224,
+  "M4": 3111
+ },
+ "pins_registered": 4131,
+ "pins_to_macro": 0,
+ "pins_unregistered": 1203,
+ "pin_to_reg_median_um": 4.68,
+ "pin_to_reg_p90_um": 7.66,
+ "pin_to_reg_max_um": 7.95,
+ "pins_reg_over_100um": 0,
+ "pin_to_macro_p90_um": null,
+ "empty_area_pct": 81.88,
+ "density_bin_um": 6.53,
+ "macro_masters": {
+  "ot_sram_1r1w_1024x256_m2_r2c2": {
+   "n": 1,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "pins": [
+    "M4"
+   ]
+  },
+  "ot_sram_1r1w_32x546_m1_p192_mir": {
+   "n": 2,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "pins": [
+    "M4"
+   ]
+  },
+  "ot_sram_1rw_256x64_m4_r2c2": {
+   "n": 4,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "pins": [
+    "M4"
+   ]
+  }
+ },
+ "macros_pins_facing_away": [],
+ "macros_with_face_info": 5,
+ "top_cells": [
+  [
+   "INVxp67",
+   10748
+  ],
+  [
+   "DFFHQNx1",
+   10074
+  ],
+  [
+   "TIEHIx1",
+   7925
+  ],
+  [
+   "DFFASRHQNx1",
+   6569
+  ],
+  [
+   "NAND2x1",
+   4435
+  ],
+  [
+   "OA21x2",
+   3375
+  ],
+  [
+   "OA211x2",
+   2901
+  ],
+  [
+   "BUFx2",
+   2509
+  ]
+ ],
+ "kind": "tile",
+ "hard_children": 0,
+ "cells_at_origin": 0,
+ "placed": true,
+ "suspicion": [
+  "low fill 4.8% of free",
+  "empty 82%",
+  "1203 pins w/o register"
+ ],
+ "score": 6.98,
+ "png": "/home/ubuntu/scratch/tile-flow-1023/render/hr_tf1/layout.png"
+}
