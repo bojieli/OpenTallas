@@ -1,0 +1,80 @@
+{
+ "qfd_hp13_cpub39_rp_main": {
+  "kit": "qfd_hp13_cpub39_rp_main",
+  "outline_um": [
+   486.0,
+   514.08
+  ],
+  "area_um2": 249843,
+  "macros": 19,
+  "macro_um2": 135470,
+  "std_um2_synth_est": 43100.0,
+  "std_density_of_placeable": 0.579,
+  "placeable_um2": 74398,
+  "fill_of_free": 0.377,
+  "outline_vs_content": 1.205,
+  "aspect": 1.058,
+  "W_core_um": 75.6,
+  "S_core_um": 54.0,
+  "mid_channel_um": 40.39,
+  "E_strip_um": 26.78,
+  "N_band_um": 23.01,
+  "pins_per_um": {
+   "W": 3.46,
+   "S": 1.58,
+   "E": 0.82,
+   "N": 0.4
+  },
+  "pin_regs": {
+   "rtl_added_bits": 1144,
+   "rtl_added_ports": 15,
+   "already_flop_direct_bits": 2388,
+   "unregistered_after": "0 data bits (69 bits have no load at all: dh_user, parts of native_ret/ss5/ag5/dh)",
+   "placement": "io_flop_at_pins cols 4 (FIRM at the pin before GPL)"
+  },
+  "clock_roots": {
+   "ck_core[0]": "16.8k sinks (wtnbal24 synth)",
+   "ck_hr[0]": "13.5k sinks"
+  },
+  "layer_cap": "M5 (signals M2-M5)"
+ },
+ "qfd_hp13_cpub39_rp_alt": {
+  "kit": "qfd_hp13_cpub39_rp_alt",
+  "outline_um": [
+   501.12,
+   514.08
+  ],
+  "area_um2": 257616,
+  "macros": 19,
+  "macro_um2": 135470,
+  "std_um2_synth_est": 43100.0,
+  "std_density_of_placeable": 0.525,
+  "placeable_um2": 82106,
+  "fill_of_free": 0.353,
+  "outline_vs_content": 1.243,
+  "aspect": 1.026,
+  "W_core_um": 86.4,
+  "S_core_um": 54.0,
+  "mid_channel_um": 44.71,
+  "E_strip_um": 26.78,
+  "N_band_um": 23.01,
+  "pins_per_um": {
+   "W": 3.46,
+   "S": 1.53,
+   "E": 0.82,
+   "N": 0.38
+  },
+  "pin_regs": {
+   "rtl_added_bits": 1144,
+   "rtl_added_ports": 15,
+   "already_flop_direct_bits": 2388,
+   "unregistered_after": "0 data bits (69 bits have no load at all: dh_user, parts of native_ret/ss5/ag5/dh)",
+   "placement": "io_flop_at_pins cols 4 (FIRM at the pin before GPL)"
+  },
+  "clock_roots": {
+   "ck_core[0]": "16.8k sinks (wtnbal24 synth)",
+   "ck_hr[0]": "13.5k sinks"
+  },
+  "layer_cap": "M5 (signals M2-M5)"
+ }
+}

@@ -1,0 +1,13 @@
+MISMATCH cyc=316 port=dc new=5c0808101ca044 exp=5c0809101ca044
+MISMATCH cyc=317 port=dc new=dc0808101ca044 exp=dc0809101ca044
+MISMATCH cyc=318 port=dc new=1c0808101ca044 exp=1c0809101ca044
+MISMATCH cyc=319 port=dc new=5c0808101ca044 exp=5c0809101ca044
+MISMATCH cyc=320 port=dc new=5c0808101ca044 exp=5c0809101ca044
+MISMATCH cyc=321 port=dc new=1c0808101ca044 exp=1c0809101ca044
+MISMATCH cyc=322 port=dc new=5c0d85bc020100 exp=5c0d84bc020100
+MISMATCH cyc=323 port=dc new=580d85bc020100 exp=580d84bc020100
+HP13PR_LOCKSTEP FAIL mut=3 seed=7 cycles=20000 mismatching_edges=19685 first=316 release_output_change_edges=19952
+- /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/results/arch/qtile_r_1023/bench/tb_hp13_pr_lockstep.sv:214: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 4.238 s; speed 47.196 us/s
+- Verilator: cpu 4.238 s on 1 threads; allocated 13 MB

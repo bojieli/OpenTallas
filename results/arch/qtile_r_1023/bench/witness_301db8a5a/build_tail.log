@@ -1,0 +1,25 @@
+- Verilator: Built from 288.548 MB sources in 48 modules, into 65.354 MB in 71 C++ files needing 0.054 MB
+- Verilator: Walltime 976.559 s (elab=10.238, cvt=75.172, bld=882.239); cpu 96.503 s on 16 threads; allocated 3049.715 MB
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary -j 16 --top-module tb_hp13_pr_lockstep -GNCYC=20000 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN --x-assign 0 --x-initial 0 -O2 -Mdir obj /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/results/arch/qtile_r_1023/bench/tb_hp13_pr_lockstep.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_physical.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_physical_wtnbal24_pr.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/headprep13/corepub39/qfd_hp13_corepub39.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/headprep13/h16za/native32_1r_param.v /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/headprep13/h16za/native32_helpers.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/headprep13/wtn_balanced24/helpers.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/headprep13/wtn_balanced24/qfd_tt_ctlm_dv_wtn_balanced24.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/rtl/qwen_dv/headprep13/physical_abi/qfd_dv_typed_witness_control_frozen.sv /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+	User time (seconds): 953.81
+	System time (seconds): 29.98
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 16:21.74
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3075208
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 8544977
+	Voluntary context switches: 943
+	Involuntary context switches: 3534
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 692280
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

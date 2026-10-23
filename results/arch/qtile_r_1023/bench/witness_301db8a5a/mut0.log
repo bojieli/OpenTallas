@@ -1,0 +1,5 @@
+HP13PR_LOCKSTEP PASS mut=0 seed=7 cycles=20000 mismatching_edges=0 first=-1 release_output_change_edges=19952
+- /srv/opentallas-scratch/claude/qtile-r/src_301db8a5a/results/arch/qtile_r_1023/bench/tb_hp13_pr_lockstep.sv:214: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 4.238 s; speed 47.193 us/s
+- Verilator: cpu 4.238 s on 1 threads; allocated 13 MB
