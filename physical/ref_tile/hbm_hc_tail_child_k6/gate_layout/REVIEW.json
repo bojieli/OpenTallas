@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T22:20:10.240909-07:00",
+  "gate_commit": "2026-10-22T22:08:58-0700",
+  "geometry_sha256": "73386a006cae091e6c69956cd4b4fd42267626d026038753e2df5996fcf0cd17",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "73386a006cae091e6c69956cd4b4fd42267626d026038753e2df5996fcf0cd17",
+    "components": {
+      "outline": "0d09d120ce6a973be4188e6c1841c9c274d5daf7f1d5ecb53f728d4742c01301",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "c1cc6bf1d1fd85815697e544427815e7d6cc246a02665e05135ec67c58f16e5a",
+      "clock_entry": "4fbd19303047aea8380b265b94f658138ea9d364cccc14555556625f80c6cbcd"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "No hard macros; lattice not applicable. Viewed full-face floorplan and actual cell-density image.",
+    "std_cell_band": "Single continuous cell region, mostly green with limited northwest orange bins, no blockage or power island.",
+    "pin_spread": "2549 full-face pins in the exact gate; normal pin geometry/native checks mandatory. About35% fill is roomy and accepted.",
+    "clock_entry": "South clock entry retained; actual TT/FF pin spread54.8/52.2ps and all66.2/63.0ps.47648sinks and insertion555.4/463.7ps disclosed guidance. Actual two-stage reset landing passes.",
+    "shape": "388.8um square; no macro obstacles, continuous available placement area."
+  },
+  "scope": "Approve normal route parallel to k6b after exact source/behavioural/native checks. No clock, source-binding or timing waiver; no CLOSED or die credit before actual route.",
+  "diagnostics": "WARN0FAIL; exact packet reports native maximum24, trialGRT0 worstM2usage38.01%. Placement Sinkhorn reg-reg-51.7ps,20levels and hold+25.3ps retained.",
+  "gate_result_sha256": "448cff26c6d4920f739630291420a3fa74fc20d44845ac8cb8d9d416e35f3751",
+  "archive_sha256": "80c448569e0c6397e0ea43faffd5d3d32b05a1624b4eba886bcd4febceb98fde",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}
