@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """STW-S81c-COLLA3-LEP2 10-22 (lep_mu_h w15): TX macro-face capture stations for relay_chain_place.tcl (re: keys).
 
-  station_plan.py BASE_relay_place.txt m|f > relay_place.txt
+  station_plan.py BASE_relay_place.txt m|f [fh] > relay_place.txt
+
+rev2 (fh, coordinator 18:50): + f_host launch flops (w14f reg->out -140: f_host[166] stayed at (629.9,66.8) beside the
+RX SRAM, 350 um from its S-face pin (279.3,0); io_flop_at_pins anchored none of them) boxed FIRM on the S pin face over
+their own pins (re+: key, port-net cells included), 32-bit groups, pin x from f_host_pin_x.json (w14m gate dump).
 
 w14m --cts gate (4_1_cts ODB, TT placement RC), the two rejected classes:
   (a) macro->reg -164.7: TX lane-1 bank-0 rd_out[79] (W face 302.4,52.6) -> g_rp.odr[79] placed at (379.8,288.2); the
@@ -20,7 +24,10 @@ Cells are FIRM through global placement and released before DPL (relay_chain_rel
 """
 import sys
 
+import json, os
+
 base, mode = sys.argv[1], sys.argv[2]
+fh = len(sys.argv) > 3 and sys.argv[3] == "fh"
 HALO = 12.8
 XF = {0: 43.2, 1: 302.4}
 NG, NBANK, H1 = 18, 5, 553          # address groups, banks, word bits (H+1)
@@ -64,4 +71,12 @@ for c in range(NG):
     out.append(f"u_ot_pr_core.u.g_frame_local.g_slice[{c}].g_rep.u_rep {x:.2f} {y:.2f} push{c}")
     out.append(f"u_ot_pr_core.u.g_push_groups.g_group[{c}].u_push {x:.2f} {y:.2f} push{c}")
     out.append(f"re:^u_ot_pr_core\\.u\\.g_push_groups\\.g_group\\[{c}\\]\\.ring_r {x:.2f} {y:.2f}")
+if fh:
+    px = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "f_host_pin_x.json")))
+    G = 32 if mode == "m" else 16
+    fy0, fy1 = (4.0, 10.0) if mode == "m" else (3.5, 7.5)
+    for g0 in range(0, 515, G):
+        g1 = min(515, g0 + G)
+        xa, xb = max(2.5, px[g0] - 1.0), px[g1 - 1] + 1.0
+        out.append(f"re+:^u_ot_pr_core\\.u\\.f_host\\[{alt(g0, g1)}\\]\\$ {xa:.2f} {fy0:.2f} {xb:.2f} {fy1:.2f}")
 print("\n".join(out))

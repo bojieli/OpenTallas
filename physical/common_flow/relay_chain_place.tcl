@@ -16,13 +16,17 @@ set fh [open $::env(OT_RELAY_PLACE) r]
 # hierarchy keys, "x0 y0 x1 y1" = the matched cells spread over that box (um).  The first matching re: key (plan order)
 # wins.  Plans without re: keys behave exactly as before.
 set ot_rc_re {}
+set ot_rc_reports {}
 foreach ln [split [read $fh] "\n"] {
   if {$ln eq "" || [string index $ln 0] eq "#"} continue
-  if {[string match re:* $ln]} {
-    # split on white space, not as a Tcl list: the pattern's backslashes must reach regexp unchanged
+  if {[string match re:* $ln] || [string match re+:* $ln]} {
+    # split on white space, not as a Tcl list: the pattern's backslashes must reach regexp unchanged.
+    # "re+:" = the same, but cells on a port net are stationed too (pin-face capture / launch boxes, w15 rev2 f_host).
     set f [regexp -all -inline {\S+} $ln]
-    lappend ot_rc_re [string range [lindex $f 0] 3 end]
-    dict set ot_rc_plan re:[string range [lindex $f 0] 3 end] [lrange $f 1 4]
+    set k0 [lindex $f 0]; set r [string range $k0 [expr {[string first : $k0] + 1}] end]
+    lappend ot_rc_re $r
+    if {[string match re+:* $k0]} { dict set ot_rc_reports re:$r 1 }
+    dict set ot_rc_plan re:$r [lrange $f 1 4]
     continue
   }
   dict set ot_rc_plan [lindex $ln 0] [list [lindex $ln 1] [lindex $ln 2]]
@@ -68,6 +72,7 @@ foreach i [$ot_rc_blk getInsts] {
   } elseif {![regexp {^u_ot_pr_core[./](u_[A-Za-z0-9_]+)/} $n -> pfx]} continue
   if {![dict exists $ot_rc_plan $pfx]} continue
   if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} continue
+  if {[dict exists $ot_rc_reports $pfx]} { dict lappend ot_rc_cells $pfx $i; continue }
   set port 0
   foreach it [$i getITerms] {
     set nt [$it getNet]
