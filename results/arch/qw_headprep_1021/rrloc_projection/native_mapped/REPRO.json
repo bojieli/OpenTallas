@@ -1,0 +1,20 @@
+{
+  "status": "NATIVE32_PASS_TEXTBOOK_LOGIC_DEPTH_WARN",
+  "unit": "oth-ubuntu-1547263-1792620890",
+  "exit": 0,
+  "native_max_dynamic_loads": 32,
+  "actual_new_head_full_source_sha256": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
+  "old_head_timing_view_used": false,
+  "actual_nested_memory": "ot_sram_1r1w_32x128_m1 exact production BB/RTL/TTlib plus originalfiveparentmacroTTlibs",
+  "textbook_depth_ps": 718.5,
+  "textbook_depth_levels": 24,
+  "mapped_cells": 168147,
+  "flops": 24386,
+  "maximum_clock_root_sinks": 12344,
+  "scope": "Source mapping/load admission only. No RRloc placement/CTS/timing/view/localage/GENtransport qualification. Historical source fixtures remain separate.",
+  "sha256": {
+    "mapped_hp13_mem/mapped.v": "0ff637472b90a2b68a64a32dd2e3bc7b376a14f88834666cb486e8d3d8debb5b",
+    "mapped_hp13_mem/native.json": "a5c97863b0c342d27b1e451d31557941e8f4450f9ab9f81a242c693fa39b3b69",
+    "mapped_hp13_mem/textbook.json": "38004007430a8c05a01a63d53b163f9338ba7cad191c837ed42f517afc81e251"
+  }
+}

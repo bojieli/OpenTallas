@@ -40,7 +40,10 @@ import dv_rtl_kit as K  # noqa: E402
 
 RELAY_RE = re.compile(r'^(dsfd_dvrlyh_|dsfd_rly_|dsfd_dvland_|BUFx|INVx|ICGx)')   # ICGx: hop-0 lane clock gate (S81-LBGAP/G1)
 RESET_RE = re.compile(r'^dsfd_rly_1_')
-CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|cr|cr_s|CLK)$')
+# RTLGAP-G9 (10-22): ck_r<k> = the H9/H10 frame region roots (col_h9_l4_lp ck_r0/ck_r1/ck_r2).  Without it ck_r1/ck_r2
+# (which reach no other clock pin) were classed die_input and the bench held them at 0: two of the three frame regions
+# never clocked on every G9 cut.
+CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|ck_r\d+|cr|cr_s|CLK)$')
 
 
 FLIGHT_SIM = """// dv_flight_sim (S81-LBGAP/G1, bench side): F whole periods of lane flight between the last relay station and its
@@ -82,6 +85,8 @@ module dv_rst_land #(parameter integer N = 2) (input wire ck, input wire rs, out
     assign o = q[N-1];
 endmodule
 """
+
+
 
 
 def load_masters(kit, D, names):
@@ -357,6 +362,71 @@ def main(argv=None):
             lines[i] = ln
             lane_dl[i] = dict(F=F, F_raw=f_raw, clipped=F - a.flight_shift != f_raw, s1_ps=float(s1), E=E_, D=D_, K=K_,
                               corner=a.corner, flight_shift=a.flight_shift, source=src)
+    # TOKc-S81b (10-22): frame x-lane flight.  A landed frame (col_h*_l4_lp: ports xk / x / lk) lands each 276-b lane in
+    # its OWN ot_s81_land ring inside dsfd_cfifo_crs4, read at the frame strap K = lk[3k +: 3] (bind_case frame_lk: max
+    # land-plan K over the frame's x lanes, every lane at K).  The strap assumes the lane's routed flight, exactly as
+    # a dsfd_dvland strap does, but the zero-delay RTL cut delivered xk / x with NO flight, so every K = 5 frame (long
+    # station chains, F 3-4 at TT) faulted its lane ring at warm-up (occupancy K - 1 - F = 4 > D - 1) and the fault
+    # reached the slice capc2 on the frame's ret word (rd[69]) -> slice block_fault (G9 HOST u_s_3S/4S, KV u_s_3N).
+    # Same cycle model and window clamp as the landings above; land-plan link x_<frame>_l<k>; a lane without a row is
+    # a no-station lane (K 1 -> F 0) or, with --land-model, F = K - 1 (the flight the strap assumes).
+    frame_dl = {}
+    if a.land_plan:
+        def split_concat(e):
+            e = e.strip()
+            if not (e.startswith('{') and e.endswith('}')):
+                return [e]
+            return [s.strip() for s in e[1:-1].split(',')]
+        for i in sorted(lines):
+            cm = byname[i][3]
+            if not all(p in cm for p in ('xk', 'x', 'lk')) or byname[i][0].startswith('dsfd_'):
+                continue
+            xk, xs = split_concat(cm['xk']), split_concat(cm['x'])
+            km = re.fullmatch(r"(\d+)'([dhb])([0-9a-fA-F_]+)", cm['lk'].strip())
+            if len(xk) != len(xs) or not km:
+                raise SystemExit(f'dv_slice_cut: frame {i} xk/x/lk not per-lane literals: {cm["lk"][:40]}')
+            nl = len(xk)
+            lkv = int(km.group(3).replace('_', ''), {'d': 10, 'h': 16, 'b': 2}[km.group(2)])
+            kw = int(km.group(1)) // nl
+            fname = i[2:] if i.startswith('u_') else i
+            nk, nx, rows = [], [], {}
+            for pos, (ke, xe) in enumerate(zip(xk, xs)):
+                lane = nl - 1 - pos                      # concatenation is high lane first
+                K_ = (lkv >> (kw * lane)) & ((1 << kw) - 1)
+                r = LP.get(f'x_{fname}_l{lane}')
+                if r is not None and r.get('s1', {}).get(a.corner) is not None:
+                    s1, src = float(r['s1'][a.corner]), 'land_plan'
+                elif K_ <= 1:
+                    s1, src = 0.0, 'no_row_K1'
+                elif a.land_model:
+                    s1, src = -(K_ - 1) * T_ps, 'model'
+                else:
+                    raise SystemExit(f'dv_slice_cut: frame lane x_{fname}_l{lane} (K {K_}) has no land-plan row at {a.corner}')
+                D_ = int(LPJ.get('D', 4))
+                f_raw = math.ceil(-s1 / T_ps)
+                F = max(min(max(f_raw, K_ - D_ + 1), K_ - 1) + a.flight_shift, 0)
+                rows[lane] = dict(F=F, F_raw=f_raw, clipped=F - a.flight_shift != f_raw, s1_ps=s1, K=K_, D=D_,
+                                  corner=a.corner, flight_shift=a.flight_shift, source=src)
+                if F == 0:
+                    nk.append(ke); nx.append(xe); continue
+                mw = re.fullmatch(r'([\w\\]+)\s*\[(\d+):(\d+)\]', xe)
+                w = (int(mw.group(2)) - int(mw.group(3)) + 1) if mw else (nets[xe][0] if xe in nets else None)
+                if w is None:
+                    raise SystemExit(f'dv_slice_cut: frame {i} lane {lane} data is not a net / slice: {xe[:60]}')
+                p = f'{i}__xl{lane}'
+                body.append(f'  wire {p}__ckf_d; wire [{w - 1}:0] {p}__i_d;   // frame lane flight {F} cycles '
+                            f'({a.corner}: S1 {s1:.1f} ps, K {K_}, D {D_}, {src})')
+                body.append(f'  dv_flight_sim #(.W({w}), .F({F})) {p}__flight (.ck_in({ke}), .rs({cm["rst_n"]}), '
+                            f'.i_in({xe}), .ck_out({p}__ckf_d), .i_out({p}__i_d));')
+                nk.append(f'{p}__ckf_d'); nx.append(f'{p}__i_d')
+            ln = lines[i]
+            for port, old, new in (('xk', cm['xk'], nk), ('x', cm['x'], nx)):
+                pat = f'.{port}({old})'
+                if ln.count(pat) != 1:
+                    raise SystemExit(f'dv_slice_cut: frame {i} .{port}(...) not found verbatim once')
+                ln = ln.replace(pat, f'.{port}({{{", ".join(new)}}})', 1)
+            lines[i] = ln
+            frame_dl[i] = rows
     land_rl, land_rl_src = {}, None
     lr_path = (Path(a.die_v).parent / 'landing_reset_check.json') if a.landing_reset == 'auto' else \
         (None if a.landing_reset == 'none' else Path(a.landing_reset))
@@ -392,7 +462,7 @@ def main(argv=None):
           f'{len(ports)} ports -- instance lines verbatim from the die netlist\nmodule {a.name} (\n' + \
           ',\n'.join(f'  {p}' for p in ports) + '\n);'
     sv = [hdr] + decl + body + [lines[i] for i in sorted(S, key=lambda x: list(byname).index(x))] + ['endmodule', '']
-    if lane_dl:
+    if lane_dl or any(r['F'] for rows in frame_dl.values() for r in rows.values()):
         sv += [FLIGHT_SIM]
     if land_rl:
         sv += [RST_LAND]
@@ -401,7 +471,7 @@ def main(argv=None):
                                                           die_v=a.die_v, ports=ports), indent=1) + '\n')
     cnt = Counter(byname[i][0] for i in S)
     (out / 'slice_insts.json').write_text(json.dumps(dict(instances=len(S), by_master=dict(sorted(cnt.items())),
-                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst, lane_flight_time=lane_dl,
+                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst, lane_flight_time=lane_dl, frame_lane_flight=frame_dl,
                                                           landing_reset=dict(source=land_rl_src, stages=land_rl)), indent=1) + '\n')
     nin = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'input')
     nout = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'output')

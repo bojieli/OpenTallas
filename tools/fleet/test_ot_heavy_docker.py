@@ -18,7 +18,7 @@ class Shim(unittest.TestCase):
 
     def test_default_cap(self):
         self.assertEqual(self.run_('run', '--rm', '-v', 'a:b', 'img', 'python', '-m', 'x'),
-                         ['run', '--memory-swap=12g', '--memory=12g', '--rm', '-v', 'a:b', 'img', 'python', '-m', 'x'])
+                         ['run', '--memory-swap=12g', '--oom-score-adj=0', '--memory=12g', '--rm', '-v', 'a:b', 'img', 'python', '-m', 'x'])
 
     def test_larger_lowered_smaller_kept(self):
         self.assertIn('12g', self.run_('run', '-e', 'A=1', '-m', '200g', 'img'))

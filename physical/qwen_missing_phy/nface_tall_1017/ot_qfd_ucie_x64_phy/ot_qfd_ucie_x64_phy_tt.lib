@@ -73,6 +73,12 @@ library (ot_qfd_ucie_x64_phy_tt) {
     cell_leakage_power : 0.0000;
     pg_pin (VDD) { voltage_name : VDD; pg_type : primary_power; }
     pg_pin (VSS) { voltage_name : VSS; pg_type : primary_ground; }
+    pin (lclk) {
+      direction : output;
+      related_power_pin : VDD;
+      related_ground_pin : VSS;
+      max_capacitance : 46.08;
+    }
     pin (clk) {
       direction : input;
       clock : true;

@@ -1,0 +1,5 @@
+PROGRAM_PASS currentq cfg1 params5 launch1 passthrough default0
+- tools/s81_dv/pv_so_assembly_1021/tb_pv_so_program.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 23ns; walltime 0.000 s; speed 268.736 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

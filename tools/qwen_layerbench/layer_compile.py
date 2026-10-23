@@ -80,9 +80,21 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+def git_cache(commit, path):
+    """QW-G5RELAUNCH 10-20: a git-less die-chain src/ (rsync'd run tree, 'not a git repository') reads the committed
+    file from OT_GIT_SHOW_CACHE/<commit>/<path>, a tree exported with `git show <commit>:<path>` by the submitter."""
+    import os
+    c = os.environ.get('OT_GIT_SHOW_CACHE')
+    q = Path(c) / commit / path if c else None
+    return q.read_text(errors='replace') if q and q.is_file() else None
+
+
 def git_show(commit, path):
     r = subprocess.run(['git', '-C', str(ROOT), 'show', f'{commit}:{path}'], capture_output=True, text=True)
     if r.returncode:
+        t = git_cache(commit, path)
+        if t is not None:
+            return t
         raise SystemExit(f'layer_compile: git show {commit}:{path}: {r.stderr.strip()[:200]}')
     return r.stdout
 
@@ -220,7 +232,7 @@ def txdp_bound(rtl, image, end):
 
 def git_show_opt(commit, path):
     r = subprocess.run(['git', '-C', str(ROOT), 'show', f'{commit}:{path}'], capture_output=True, text=True)
-    return r.stdout if r.returncode == 0 else None
+    return r.stdout if r.returncode == 0 else git_cache(commit, path)
 
 
 def rtl_txdp(compute_commit, kv_commit=None, compute_params=None):

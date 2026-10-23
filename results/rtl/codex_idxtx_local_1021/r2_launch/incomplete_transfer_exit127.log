@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-epyc9       admits    75 GB (avail 323, growth 271, headroom 0, waiters 0/0 GB) load 107/128 running 34 disk 2200 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: -> ot-epyc9
+ot-heavy: request 64G is charged 32G (class 'run_idx_tree.sh' measured peak 20.9G, n=17+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-311320-1792619954 after 0 s
+bash: tools/s81_dv/layer_prog/bk/run_idx_tree.sh: No such file or directory
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-311320-1792619954): exit 127

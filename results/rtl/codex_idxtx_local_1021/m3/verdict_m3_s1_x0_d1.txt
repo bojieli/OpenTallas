@@ -1,0 +1,1 @@
+TREE_RD FAIL {"pass_": false, "mismatches": 2, "first": [{"die": 1, "kind": "tx-window", "got": [17964, 19406], "exp": [17963, 19562]}, {"die": 2, "kind": "tx-window", "got": [19565, 20988], "exp": [19564, 21163]}], "faults": [], "tx_span": {"1": [17964, 19406, 1431], "2": [19565, 20988, 1424]}}

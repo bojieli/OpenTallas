@@ -328,6 +328,9 @@ def choose(res, mem, threads=THREADS, die=False):
     ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem)}
     if not ok:
         return None, False
+    if die:     # v16 MEASURED RESERVE (coordinator 10-22): a die job is admitted on MemAvailable - 64 GB (die_admit_gb)
+        ok = {h: (dict(r, admit_gb=max(r.get("admit_gb", r["free_gb"]), r["die_admit_gb"])) if "die_admit_gb" in r else r)
+              for h, r in ok.items()}
     tput = lambda h: HOST_ROLE.get(h) == "throughput"
     nodie = lambda h: HOST_ROLE.get(h) in ("throughput", "smalldisk")
     fits = [h for h in ok if ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem]

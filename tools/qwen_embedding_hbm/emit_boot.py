@@ -11,6 +11,7 @@ def digest(p):
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('image',type=Path);p.add_argument('out',type=Path)
+ p.add_argument('--rope',type=Path,help='directory containing canonical rope_manifest.json and4MiBpayload')
  p.add_argument('--format',choices=['boot281','hb283'],default='boot281')
  p.add_argument('--tokens',type=int,nargs='+',help='Selected rows plus their complete scale sectors; otherwise full image')
  a=p.parse_args();m=json.loads((a.image/'manifest.json').read_text());v,h=m['source_shape']
@@ -20,6 +21,12 @@ def main():
  toks=range(v) if a.tokens is None else sorted(set(a.tokens))
  if any(t<0 or t>=v for t in toks):raise ValueError('token outside actual vocabulary')
  groups=range(v//16) if a.tokens is None else sorted({t//16 for t in toks})
+ rope_raw=None
+ if a.rope:
+  if a.tokens is not None:raise ValueError('RoPE fullbootstrap requires completeembeddingimage')
+  rm=json.loads((a.rope/'rope_manifest.json').read_text());rp=a.rope/rm['file']
+  if digest(rp)!=rm['sha256'] or rp.stat().st_size!=4194304:raise ValueError('RoPE payload identity/size mismatch')
+  rope_raw=rp.read_bytes()
  count=checksum=0
  with code.open('rb') as c,scale.open('rb') as s,a.out.open('x') as out:
   def emit(e,data):
@@ -34,8 +41,10 @@ def main():
   for g in groups:
    s.seek(g*32);emit(v*128+g,s.read(32))
   if a.tokens is None and (count!=m['hbm']['sectors'] or checksum!=m['hbm']['boot_checksum']):raise ValueError('full bootstrap checksum mismatch')
+  if rope_raw is not None:
+   for i in range(131072):emit(19457304+i,rope_raw[i*32:(i+1)*32])
   if a.format=='hb283':out.write(f'{(((checksum<<32)|count)<<27)|3:071x}\n')
  rec=dict(schema='opentallas.qwen-embedding-hbm-boot.v1',format=a.format,sectors=count,checksum=checksum,
-  image_manifest_sha256=digest(a.image/'manifest.json'),output_sha256=digest(a.out),tokens=a.tokens)
+  image_manifest_sha256=digest(a.image/'manifest.json'),output_sha256=digest(a.out),tokens=a.tokens,rope_manifest_sha256=digest(a.rope/'rope_manifest.json') if a.rope else None)
  a.out.with_suffix(a.out.suffix+'.json').write_text(json.dumps(rec,indent=1)+'\n');print(json.dumps(rec))
 if __name__=='__main__':main()

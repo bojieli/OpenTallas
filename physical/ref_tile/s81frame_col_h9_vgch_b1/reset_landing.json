@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "col_h9_l4_lp_b1",
+ "enable": false,
+ "reason": "band of a landed frame: its resets are the frame lp reset-forest leaves / lpr_root run (registered kept leaves on this band clock), not a port reset"
+}

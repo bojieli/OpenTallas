@@ -29,7 +29,7 @@ from hdc_golden_v41 import csum  # noqa: E402
 from hdc_golden import add  # noqa: E402
 
 BLOCK = 128
-PT_RED = 80          # tree_cmd edge E -> red_cmd edge that takes the subtree (bench-measured, LAT 6 + OPR 1: was 69 before HBM-PRETREE 10-19)
+PT_RED = 69          # tree_cmd edge E -> red_cmd edge that takes the subtree (bench-measured, LAT 6)
 DEP = 10             # reducer same-address dependent issue distance (ot_hbm_su_reduce_static r1)
 OP_LOAD, OP_ADD_EXT, OP_ADD_TREE, OP_MAX_EXT, OP_EXPORT, OP_MAX_TREE = 0, 1, 2, 3, 4, 5
 

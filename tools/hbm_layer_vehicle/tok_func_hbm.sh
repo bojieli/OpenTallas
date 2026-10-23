@@ -13,6 +13,7 @@
 #
 #   env: OUT (local work dir) SRC_REV CONTRACT [DIE_V] [L12_OVERLAY] [OVERLAY] [REPLAYS] [MEM=256] [JOBS=48]
 #        [STAGE_HOSTS="ot-gold1 ot-gold2"] (data staged there; ot-run unpinned picks among hosts that have it)
+#        [PRIO=die] (ot-run --priority die for the BUILD: die-netlist / release token gate builds; 10-22 STEWARD-HBMc)
 #        [RUN=1] (0 = assemble + emit only)
 #   Emission: DS L0/L2/L14 (layer_images, fixtures FIX_DS=<dir with L00 L02 L14>) and Qwen L0 + L0->L1 chain ranks 0/5
 #   (qwen_layer_images emit, operands QOP=<dir with operands_{L0,chain}.npz>), SU native READ/WRITE_RETURN read from
@@ -171,6 +172,7 @@ for o in $OVERLAY; do f=${o%@*}; r=${o#*@}; [ "$r" = "$o" ] && r=origin/main
   git -C "$REPO" show "$r:$f" > "$OUT/bundle/$f" || { say "OVERLAY_FAIL $o"; exit 3; }
   say "OVERLAY $f <- $r $(git -C "$REPO" rev-parse "$r") sha256=$(sha256sum "$OUT/bundle/$f" | cut -d' ' -f1)"; done
 cp "$T/check_slice_run.py" "$OUT/bundle/"
+[ "${HIERWRAP:-0}" = 1 ] && cp "$T/hier_param_wrap.py" "$T/run_slice_vehicle.sh" "$OUT/bundle/"
 
 # 2. SW quadrant slice (input pads/relays pulled in: the die's own lane latency in front of the slice) --------------
 RLX=${RELAY_RE:-'^(l12p_|rf\d+_)'}
@@ -256,7 +258,7 @@ fi
 
 # 4. stage + build + run (fleet, unpinned) ---------------------------------------------------------------------------
 for h in $STAGE_HOSTS; do timeout 600 ssh "$h" "mkdir -p $REMOTE" && timeout 1800 rsync -a --delete "$OUT/bundle/" "$h:$REMOTE/" && say "STAGED $h:$REMOTE"; done
-/home/ubuntu/bin/ot-run --mem "$MEM" --threads "$JOBS" --disk 200 --dir "$REMOTE" -- env SRC="$REMOTE" OUT="$REMOTE/out" JOBS="$JOBS" BUILD_ONLY=1 bash run_slice_vehicle.sh > "$L/build.log" 2>&1
+/home/ubuntu/bin/ot-run ${PRIO:+--priority $PRIO} --mem "$MEM" --threads "$JOBS" --disk 200 --dir "$REMOTE" -- env SRC="$REMOTE" OUT="$REMOTE/out" JOBS="$JOBS" HIERWRAP="${HIERWRAP:-0}" BUILD_ONLY=1 bash run_slice_vehicle.sh > "$L/build.log" 2>&1
 BRC=$?; H=$(grep -o 'RAN on [a-z0-9-]*' "$L/build.log" | tail -1 | awk '{print $3}'); say "BUILD rc=$BRC host=$H"
 [ -n "$H" ] && timeout 120 ssh "$H" "test -x $REMOTE/out/obj/Vtb_hbm_slice" || { say NO_BINARY; exit 4; }
 ATT_RC=0

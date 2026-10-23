@@ -17,6 +17,7 @@
 module ot_s81sl_kv_bank #(
     parameter integer MUT=0,
     parameter integer CNIK=0,
+    parameter integer HARD_RQ=0, // reuse exact CLOSED D512 LM5/LA4 reduce and quant masters
     parameter integer CNIK_MUT=0      // bench negative controls only (0 in every build): 1 IK applies the D512 QNR rstd
                                       // (wrong tree / divisor); 2 CN norm rows carry the neighbour block's norm
 )(
@@ -126,9 +127,15 @@ module ot_s81sl_kv_bank #(
                 .clk(sk), .rst_in(rst[0]), .i_go(go), .p_v(kp_v[16 * hh +: 16]), .p_p(16'd0),
                 .p_d(kp_d[512 * hh +: 512]), .s_v(hv[hh]), .s_p(hp[hh]), .s_d(hd[32 * hh +: 32]), .o_f(hf[hh]));
         end
+        if(HARD_RQ!=0)begin:g_closed
+        dsfd_su_t_kvr u_kvr (
+            .ck(sk), .rst(rst[0]), .i_go(go), .i_eps(eps), .p_v(hv), .p_p(hp), .p_d(hd), .p_f(hf), .r_v(kr_v),
+            .r_d(kr_d), .o_f(rf));
+        end else begin:g_rtl
         ot_s81_su_qnr #(.NE(NKH), .NV(1), .D(KV_N), .LM(LM), .LA(LA)) u_kvr (
             .clk(sk), .rst_in(rst[0]), .i_go(go), .i_eps(eps), .p_v(hv), .p_p(hp), .p_d(hd), .p_f(hf), .r_v(kr_v),
             .r_d(kr_d), .o_f(rf));
+        end
         ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rf (.clk(sk), .rst_n(rst[0]), .d(rf), .q(kv_f[NKE]));
     end endgenerate
     genvar kb;
@@ -184,11 +191,19 @@ module ot_s81sl_kv_bank #(
             assign kv_on = 1'b1;
         end
         wire ov, ofu, ofo, oal, ode, ord; wire [13:0] oa; wire [15:0] om; wire [511:0] od; wire [7:0] orj;
+        if(HARD_RQ!=0)begin:g_closed
+        dsfd_su_t_kvq u_kvq (
+            .ck(sk), .rst(rst[0]), .cfg_b(CB), .i_v(rv && kv_on), .i_y(ry), .i_ob(rob), .nx_i_v(kqxv[kb ^ 1]),
+            .nx_i_q(kqxq[kb ^ 1]), .nx_o_v(kqxv[kb]), .nx_o_q(kqxq[kb]), .e_o_v(kq_ev[kb]), .e_o_e(kq_ee[10 * kb +: 10]),
+            .g_i_v(gv), .g_i_e(ge), .o_v(ov), .o_a(oa), .o_m(om), .o_d(od), .o_fu(ofu), .o_fo(ofo), .o_alive(oal),
+            .o_den(ode), .o_rdy(ord), .o_rjid(orj));
+        end else begin:g_rtl
         ot_s81_su_kvq #(.N(KV_N), .MLAT(LM)) u_kvq (
             .clk(sk), .rst_in(rst[0]), .cfg_b(CB), .i_v(rv && kv_on), .i_y(ry), .i_ob(rob), .nx_i_v(kqxv[kb ^ 1]),
             .nx_i_q(kqxq[kb ^ 1]), .nx_o_v(kqxv[kb]), .nx_o_q(kqxq[kb]), .e_o_v(kq_ev[kb]), .e_o_e(kq_ee[10 * kb +: 10]),
             .g_i_v(gv), .g_i_e(ge), .o_v(ov), .o_a(oa), .o_m(om), .o_d(od), .o_fu(ofu), .o_fo(ofo), .o_alive(oal),
             .o_den(ode), .o_rdy(ord), .o_rjid(orj));
+        end
         // to the KV stop: equal-depth relays + (S_WR < NKQ, reduced shapes only) a phase of 8 cycles a slot group so
         // the engines sharing slot kb % S_WR never write in the same cycle (full shape: 0)
         localparam integer PH = ERL + 8 * (kb / S_WR);

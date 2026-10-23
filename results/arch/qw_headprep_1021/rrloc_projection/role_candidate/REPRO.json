@@ -1,0 +1,19 @@
+{
+  "status": "SOURCE_ONLY_SIDE_CANDIDATE_NOT_ADOPTED",
+  "transform_ref": "8cde48c9d",
+  "scripts": {
+    "replica_role_split.py": "95c7fcd1fbd0a4bf891a0af7ace07401ddc41ce689ebf7db26240c7bbfcb0130",
+    "replica_role_equiv.py": "aec21b2cd813b837eea36fade0795158814b3123c9edf48be00cce00b8d5742d"
+  },
+  "input_source": "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_native32.sv",
+  "input_sha256": "66cd44bf35e5bbb8a3f2cf9bf0698ca9c75f7e2f676dcf4ee2727c46627eb9da",
+  "output_sha256": "623f041838ce0b77e9ffc7ef261bdafe202ea3c5695380a3e6a562d680729c22",
+  "stats": {
+    "groups": 43,
+    "copies_added": 24,
+    "sink_pins_moved": 2138,
+    "non_identical_drivers": 0
+  },
+  "sequential_or_latency_changes": 0,
+  "scope": "Existing role-only combinational replica redistribution, actual new-source pure canonical-driver equivalence check. No RRloc placement due no fresh source-bound XY; no heavy job/bench/newmapped campaign. Qualified base native/source-local ledger remains unchanged. Any adoption requires sourceSHA rebind and actual finalnative gate; no old view/XY alias."
+}

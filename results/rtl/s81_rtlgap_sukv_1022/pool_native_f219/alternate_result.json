@@ -1,0 +1,235 @@
+{
+  "variant": "alternate",
+  "source_sha256": {
+    "pool_native_alternate.sv": "192f80ff4a820ee911f60fb91dc777d9110b30bb65f6cc284b88f1dbe91d9635",
+    "tb_pool_native.sv": "a1e12bffeda93872b954befe180a1352b729ecb24a8c9dabc846c6811fe7895d",
+    "pool_native_run.py": "81b19783ab1066e8ad7d8c60f0292483e0bd3cd1056a706e0c43a7b8792808e3"
+  },
+  "numerical": {
+    "positive": {
+      "returncode": 0,
+      "ok": true,
+      "lines": [
+        "POOL_RESULT cycles 391 reads 256 writes 64 groups 64 bad 0 fault 0",
+        "POOL_NATIVE_PASS"
+      ]
+    },
+    "swap_kv": {
+      "returncode": 1,
+      "ok": true,
+      "lines": [
+        "POOL_MISMATCH feature 0 actual 3e77065c expected bcf60450",
+        "POOL_MISMATCH feature 1 actual 3e2540ea expected 3e5b1e54",
+        "POOL_MISMATCH feature 2 actual bd902a36 expected bd4b36dc",
+        "POOL_MISMATCH feature 3 actual be7b8c02 expected be2fa7c3",
+        "POOL_MISMATCH feature 4 actual bf1a30e5 expected bebc88f7",
+        "POOL_MISMATCH feature 5 actual bec59ff5 expected bf664a70",
+        "POOL_RESULT cycles 391 reads 256 writes 64 groups 64 bad 1022 fault 0"
+      ]
+    }
+  },
+  "native": {
+    "status": "FAIL",
+    "limit": 32,
+    "max_dynamic_loads": 193,
+    "roots_examined": 620660,
+    "report_sha256": "0f6ee24a6ed303b70b5f201c838f0560f095b315117c907a19beacdbec75ca92",
+    "worst": [
+      {
+        "driver": "_0937496_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[0].u_l.sc1",
+        "loads": 193
+      },
+      {
+        "driver": "_0953937_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[1].u_l.sc1",
+        "loads": 193
+      },
+      {
+        "driver": "_0969984_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[2].u_l.sc1",
+        "loads": 193
+      },
+      {
+        "driver": "_0985851_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[3].u_l.sc1",
+        "loads": 193
+      },
+      {
+        "driver": "_1002211_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[4].u_l.sc1",
+        "loads": 193
+      },
+      {
+        "driver": "_1018446_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[5].u_l.sc1",
+        "loads": 193
+      },
+      {
+        "driver": "_1034649_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[6].u_l.sc1",
+        "loads": 193
+      },
+      {
+        "driver": "_1050755_/Y",
+        "driver_role": "combinational_or_macro",
+        "net": "g_lane[7].u_l.sc1",
+        "loads": 193
+      },
+      {
+        "driver": "g_lane[0].u_l.u_exp.m_t.genblk1.genblk1.g_l5.u.u.y[31]$_SDFF_PP0_/QN",
+        "driver_role": "sequential",
+        "net": "_0003499_",
+        "loads": 137
+      },
+      {
+        "driver": "g_lane[1].u_l.u_exp.m_t.genblk1.genblk1.g_l5.u.u.y[31]$_SDFF_PP0_/QN",
+        "driver_role": "sequential",
+        "net": "_0008969_",
+        "loads": 137
+      },
+      {
+        "driver": "g_lane[2].u_l.u_exp.m_t.genblk1.genblk1.g_l5.u.u.y[31]$_SDFF_PP0_/QN",
+        "driver_role": "sequential",
+        "net": "_0008211_",
+        "loads": 137
+      },
+      {
+        "driver": "g_lane[3].u_l.u_exp.m_t.genblk1.genblk1.g_l5.u.u.y[31]$_SDFF_PP0_/QN",
+        "driver_role": "sequential",
+        "net": "_0007447_",
+        "loads": 137
+      },
+      {
+        "driver": "g_lane[4].u_l.u_exp.m_t.genblk1.genblk1.g_l5.u.u.y[31]$_SDFF_PP0_/QN",
+        "driver_role": "sequential",
+        "net": "_0006686_",
+        "loads": 137
+      },
+      {
+        "driver": "g_lane[5].u_l.u_exp.m_t.genblk1.genblk1.g_l5.u.u.y[31]$_SDFF_PP0_/QN",
+        "driver_role": "sequential",
+        "net": "_0005972_",
+        "loads": 137
+      },
+      {
+        "driver": "g_lane[6].u_l.u_exp.m_t.genblk1.genblk1.g_l5.u.u.y[31]$_SDFF_PP0_/QN",
+        "driver_role": "sequential",
+        "net": "_0005193_",
+        "loads": 137
+      },
+      {
+        "driver": "g_lane[7].u_l.u_exp.m_t.genblk1.genblk1.g_l5.u.u.y[31]$_SDFF_PP0_/QN",
+        "driver_role": "sequential",
+        "net": "_0004429_",
+        "loads": 137
+      },
+      {
+        "driver": "g_lane[0].u_l.u_dvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0011534_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[0].u_l.u_yvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0019405_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[1].u_l.u_dvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0021273_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[1].u_l.u_yvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0029174_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[2].u_l.u_dvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0031044_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[2].u_l.u_yvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0038951_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[3].u_l.u_dvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0040819_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[3].u_l.u_yvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0048694_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[4].u_l.u_dvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0050562_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[4].u_l.u_yvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0058433_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[5].u_l.u_dvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0060301_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[5].u_l.u_yvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0068172_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[6].u_l.u_dvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0070039_",
+        "loads": 129
+      },
+      {
+        "driver": "g_lane[6].u_l.u_yvd.vd[4]$_DFF_PN0_/QN",
+        "driver_role": "sequential",
+        "net": "_0077907_",
+        "loads": 129
+      }
+    ]
+  },
+  "build_returncode": 0,
+  "binary_sha256": "99e69212caec5f98fc4e4fd856a171b5560baaa1ee7056442f53f519da117c17",
+  "runtime_images_sha256": {
+    "positive": {
+      "img_main.mem": "4a30990c2e2dbc4392112743eef318097cc2ca8e7e01545cf2d28fc3ee30e148",
+      "exp_cp.mem": "7ff3085d40a64c111e996ead74493b57b69fed23f32e60be432472d88fda08e3",
+      "exp_cp32.mem": "6545ea9526b6112fc7fc6053f7bb40e12d25bf046a1b183502913e023e16d026"
+    },
+    "swap_kv": {
+      "img_main.mem": "4a30990c2e2dbc4392112743eef318097cc2ca8e7e01545cf2d28fc3ee30e148",
+      "exp_cp.mem": "7ff3085d40a64c111e996ead74493b57b69fed23f32e60be432472d88fda08e3",
+      "exp_cp32.mem": "6545ea9526b6112fc7fc6053f7bb40e12d25bf046a1b183502913e023e16d026"
+    }
+  },
+  "synth_returncode": 0
+}

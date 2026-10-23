@@ -32,6 +32,8 @@
 #   --reuse-objs DIR  no Verilator build: DIR/{rel,pos,mut} are finished obj_n12 dirs of the SAME source (+ overlay);
 #                     calibrations and every run are redone on them (current per-K LAST-K bench protocol)
 #   --overlay DIR     copy DIR/<repo path> over the tree before the builds (RTL fix branches not yet in the assembly)
+#   --su-lt 0|1       slice kit SU_LT for rel/pos/mut (default 1 = the stg4 builds).  TOKc-QW2/QW3 10-22: the die release kit
+#                     (slice2_w PARAMS=()) is SU_LT=0 -> the TOK.QW release compose uses --su-lt 0 (stg5lt0 / QW3 rerun).
 set -u
 # Internal pure provenance operations. They never compile or run a simulator.
 # A manifest is made prospectively, then bound to the finished binary; an old
@@ -101,7 +103,7 @@ PY
   exit $?
 fi
 RUNROOT=$(readlink -f "$1"); shift
-NET=""; LAYERS=$(seq -s ' ' 0 35); PAR=24; STAGE=stg; FXRE=""; REUSE=""; OVL=""
+NET=""; LAYERS=$(seq -s ' ' 0 35); PAR=24; STAGE=stg; FXRE=""; REUSE=""; OVL=""; SULT=1
 while [ $# -gt 0 ]; do case "$1" in
   --stage) STAGE=$2; shift 2;;
   --fx) FXRE=$(readlink -f "$2"); shift 2;;
@@ -110,7 +112,9 @@ while [ $# -gt 0 ]; do case "$1" in
   --die-netlist) NET=$(readlink -f "$2"); shift 2;;
   --layers) LAYERS=$2; shift 2;;
   --par) PAR=$2; shift 2;;
+  --su-lt) SULT=$2; shift 2;;
   *) echo "bad arg $1"; exit 2;; esac; done
+case $SULT in 0|1) ;; *) echo "--su-lt must be 0 or 1"; exit 2;; esac
 [ -n "$NET" ] && { echo "--die-netlist: not wired yet (see header); RTL-functional run only"; exit 4; }
 SRC=$RUNROOT/src; S=$RUNROOT/$STAGE; FXIN=$RUNROOT/stg/fx_in; FX=$S/fx; T=$S/tree; HERE=$(dirname "$(readlink -f "$0")")
 [ ! -e "$T" ] || { echo "stage tree already exists: preserve $T and select a fresh --stage"; exit 5; }
@@ -163,7 +167,7 @@ fixtures() {
 }
 export -f fixtures; export FX FXIN T REUSE
 
-declare -A VF=( [rel]='-GMU_NU=4 -GSU_LT=1' [pos]='-GMU_NU=4 -GSU_LT=1 -GARF=1 -GRP=1' [mut]='-GMU_NU=4 -GSU_LT=1 -GARF=2 -GRP=2' )
+declare -A VF=( [rel]="-GMU_NU=4 -GSU_LT=$SULT" [pos]="-GMU_NU=4 -GSU_LT=$SULT -GARF=1 -GRP=1" [mut]="-GMU_NU=4 -GSU_LT=$SULT -GARF=2 -GRP=2" )
 VB=$T/rtl/test/qwen_dv/dv_lower_vec_bench.py; MB=$T/rtl/test/qwen_dv/dv_lower_mat_bench.py
 # Validate every requested object before any fixture calculation or simulation.
 # Do not backfill a manifest for historical objects whose build inputs were not

@@ -41,9 +41,11 @@ TXS=${TXS:-0}; XINIT=${XINIT:-0}
 # S81-RTLGAP/RG-L20 (10-21): DIEM=1 builds each die as the 72-frame die master dsdv_bk_sel_vmtx (vmux + bk_sel +
 # dsdv_idx_tx_n32) instead of the 3 separate units; same stimulus, same checker.
 DIEM=${DIEM:-0}; DF=""; [ "$DIEM" = 1 ] && DF="-DTREE_DIEM"
+# MU.S81.CAL (DIE4 10-22): LPX=<n> builds the reference dsdv_idx_tx with LPX n (TOPK TX x booking = 2; RTL 100457dd6+)
+LPX=${LPX:-}; [ -n "$LPX" ] && DF="$DF -DTX_LPX=$LPX"
 XF=""; RF=""
 [ "$XINIT" = 1 ] && { XF="-DOT_MEM_NO_INIT --x-initial unique --x-assign unique"; RF="+verilator+rand+reset+2 +verilator+seed+${SEED:-7}"; }
-B="$OUT/build_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}"
+B="$OUT/build_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}${LPX:+_l$LPX}"
 mkdir -p "$B"
 ( sha256sum $SRC tools/s81_dv/layer_prog/lower_bk.py; $VL --version ) > "$B/sources.sha256"
 if [ ! -x "$B/obj/Vtb_idx_tree" ]; then

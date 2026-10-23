@@ -1,0 +1,24 @@
+{
+ "status": "PASS",
+ "edges": {
+  "scalar_d": 637,
+  "hard_rst_n": 32,
+  "hard_sidx": 48,
+  "soft_rsi": 138
+ },
+ "max_um": {
+  "scalar_d": 486.0,
+  "hard_rst_n": 369.062,
+  "hard_sidx": 83.492,
+  "soft_rsi": 488.16
+ },
+ "overall_max_um": 488.16,
+ "nodes": 653,
+ "static_straps": 16,
+ "unknown": 0,
+ "max_ffs_same_site": 2,
+ "errors": [],
+ "solution_sha256": "079274361f10570a0ea7a127f3f18414f0da763a05c1c5792ec3c4af9c90255b",
+ "reach_bound_um": 490.0,
+ "scope": "scalar/reset/control FF sites (site = FF centre target; FIRM compact block then released for DPL)"
+}

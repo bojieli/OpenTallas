@@ -1,0 +1,8 @@
+rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv:19: warning: Port 4 (vld) of ot_pl_land_field_copies expects 4 bits, got 12.
+rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv:19:        : Pruning 8 high bits of the expression.
+rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv:19: warning: Port 5 (epo) of ot_pl_land_field_copies expects 12 bits, got 4.
+rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv:19:        : Padding 8 high bits of the port.
+rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv:20: warning: Port 4 (vld) of ot_pl_land_field_copies expects 4 bits, got 12.
+rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv:20:        : Pruning 8 high bits of the expression.
+rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv:20: warning: Port 5 (epo) of ot_pl_land_field_copies expects 12 bits, got 4.
+rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv:20:        : Padding 8 high bits of the port.

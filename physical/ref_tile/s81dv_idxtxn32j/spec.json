@@ -1,0 +1,209 @@
+{
+ "name": "s81dv_idxtxn32j",
+ "top": "dsdv_idx_tx_n32",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "V": 276,
+  "IK": 4,
+  "EK": 5,
+  "UID": 92,
+  "D": 8192,
+  "IB": 64,
+  "SRAM_MACRO": 1,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 691.2,
+  "h": 583.2,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[0].u_mem",
+   "at": [
+    64.8,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[1].u_mem",
+   "at": [
+    64.8,
+    133.92
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[2].u_mem",
+   "at": [
+    64.8,
+    224.64
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[3].u_mem",
+   "at": [
+    64.8,
+    315.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[4].u_mem",
+   "at": [
+    64.8,
+    406.08
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_ib0.g_m.g_b[0].u_mem",
+   "at": [
+    421.2,
+    406.08
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_ib1.g_m.g_b[0].u_mem",
+   "at": [
+    421.2,
+    315.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[5].u_mem",
+   "at": [
+    421.2,
+    224.64
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[6].u_mem",
+   "at": [
+    421.2,
+    133.92
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[7].u_mem",
+   "at": [
+    421.2,
+    43.2
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "lo",
+   "st"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "vi": [
+   21.6,
+   334.8
+  ],
+  "vo": [
+   356.4,
+   669.6
+  ],
+  "lo": [
+   21.6,
+   583.2
+  ],
+  "st": [
+   594,
+   669.6
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (dsdv_idx_tx_n32, S81-RTLGAP 5cbd7d21c): every input lands in a flop at the pin (vi_r / vo_r), every output leaves a flop (lo / st); a recipe pin stage would shift the compiled tree-link slot grid (lower_bk job_rank_tree_rd)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "structural_change": "Exact g original plus one canonical fresh-process retry both failed GRT-0183 net18000. Actual AO22 score read-mux receiver at (59.057,52.827) sat west of bank0 (64.8..239.544,43.2..113.67), while bank-select driver was across the body at (277.594,52.245). Fence the full actual score read cone and 256 receiver registers in the central macro-free channel. Release exclusive groups before DPL/CTS. Fallback widens that channel and outline. No RTL, reset, data age, clock target, timing hook, or constraint-limit change; actual native/clock/route requalification required.",
+ "why_floorplan": "MAIN = the PlanA parent slot 596.16 x 540 (fits dsdv_bk_sel_vmtx TX slot unchanged). 10 x 1024x256 SRAM (174.744 x 70.47, pins on BOTH W (415) and E (414) faces, lower 40 um) in two R0 columns of 5: W band 62.6 | col A x 64.8 | mid band 116.9 (serves col A E + col B W faces) | col B x 356.4 | E band 62.9; rows pitch 90.72 -> 20.25-um channels; S band 41 (lo/st output flops), N band 61 (vi/vo input flops). Fill 39.1% = macro-bound (std cells 2878 um2 only); N 552 pins ~1.0 pin/um, S 312 ~0.6/um (<=4/um).",
+ "job": {
+  "owner": "CODEX-S81-COLLB-2000",
+  "branch": "codex/s81-topk-tx-spine-2000",
+  "tag": "s81dv_idxtxn32j",
+  "purpose": "Actual failed-net structural repair: localize score read mux and registered receiver in the macro-free central channel; preserve real symmetric clock tree and every protocol edge.",
+  "views_to": "physical/ref_tile/s81dv_idxtxn32j/views",
+  "record_to": "results/rtl/ref_tile/s81dv_idxtxn32j",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/lib",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/s81_dv/tx_mux_fences_1021",
+   "tools/landed_parent/lp_fence_release.tcl"
+  ]
+ },
+ "children": [],
+ "hold_budget": "die",
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_SPINE_LEAF_N": "8",
+  "OT_SPINE_BIN": "24",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_SEG": "80",
+  "OT_SPINE_SYM_MERGE": "40",
+  "OT_SPINE_SYM_FAN": "8"
+ },
+ "clock": "spine",
+ "pin_hook_before_flops": [
+  "tools/s81_dv/tx_mux_fences_1021/j_fence.tcl"
+ ],
+ "pre_dpl_extra": [
+  "tools/landed_parent/lp_fence_release.tcl"
+ ]
+}

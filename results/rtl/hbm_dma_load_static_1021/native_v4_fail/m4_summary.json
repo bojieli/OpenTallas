@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "hbm_dma_load_static_m4",
+  "top": "ot_hbm_svc_vmdel_lane_load_static",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 78717,
+  "max_dynamic_loads": 34,
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true,
+  "sha256": "45294d0439969cf0b275f375bdc937d04a3ac4e47013e264e535fc4fdd7a251a",
+  "violations": [
+    {
+      "driver": "_2909_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_1303_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.window_decode[0].u.bank$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_ot_pr_core.window_decode[0].u._000_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.window_decode[1].u.bank$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_ot_pr_core.window_decode[1].u._000_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.window_decode[2].u.bank$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_ot_pr_core.window_decode[2].u._000_",
+      "loads": 34
+    },
+    {
+      "driver": "u_ot_pr_core.window_decode[3].u.bank$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "u_ot_pr_core.window_decode[3].u._000_",
+      "loads": 34
+    }
+  ]
+}
