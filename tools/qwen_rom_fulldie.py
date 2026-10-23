@@ -1053,6 +1053,9 @@ def lef_text(mst, k, wmap):
     for i in range(1, mst.obs_top + 1):
         L += [f'    LAYER M{i} ;']
         L += [f'      RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;' for a, b, c_, d in _minus(mst.w, mst.h, holes.get(i, []))]
+    # FT-KV 10-23: optional measured PG-strap OBS above obs_top (kv_die OT_KV_OBS_CONTRACT); absent -> byte-identical
+    for ly_, (a, b, c_, d) in getattr(mst, 'obs_extra', None) or []:
+        L += [f'    LAYER {ly_} ;', f'      RECT {a:.3f} {b:.3f} {c_:.3f} {d:.3f} ;']
     L += ['  END', f'END {mst.name}', '']
     return '\n'.join(L), len(pins)
 
