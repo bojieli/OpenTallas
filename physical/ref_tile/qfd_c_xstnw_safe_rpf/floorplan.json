@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qfd_c_xstnw_safe_rpf",
+ "top": "qfd_c_xstnw_safe",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  43.2,
+  194.4
+ ],
+ "core": [
+  2.16,
+  2.16,
+  41.040000000000006,
+  192.24
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 378.0,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "E": [
+   "b_d",
+   "ck"
+  ],
+  "W": [
+   "a_d",
+   "tap_d",
+   "rst_n",
+   "sidx"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [
+  [
+   "INFO",
+   "util",
+   "utilisation 5% outside 40%-60% (std 378 + macro 0 in core 7390 um2); outline roomy; acceptable",
+   ""
+  ]
+ ],
+ "referenced": [
+  "rtl/physical/qcluster/qfd_c_xstn_safe.sv",
+  "rtl/test/tb_qfd_c_xstn_safe.sv",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/kit.env",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/clock.sdc",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/signoff.sdc",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/pdn.tcl",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/pre_cts.tcl",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/post_cts.tcl",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/post_grt.tcl",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/pre_drt.tcl",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/pre_fill.tcl",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/post_fill.tcl",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/pre_grt.tcl",
+  "physical/ref_tile/qfd_c_xstnw_safe_rpf/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl"
+ ]
+}
