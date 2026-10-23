@@ -33,4 +33,10 @@ for m in $MUTS; do
   [ "$nm" = 0 ] && [ "$nl" -gt 0 ] || bad=1
   if [ $m = 0 ]; then [ "$g" -ge 1 ] || bad=1; else [ "$g" = 0 ] || bad=1; fi
 done
+if [ "${BANDMUT:-0}" != 0 ]; then
+  # the expect=fail mutant: FAIL only when the lockstep really ran (live edges) and saw the band differ; a build / vector
+  # error is an ERROR, never a detected mutant
+  if [ "${nm:-0}" -gt 0 ] && [ "${nl:-0}" -gt 0 ]; then echo "L1F_LSW FAIL band mutant caught ($nm mismatch lines, $nl live edges)"; exit 1; fi
+  echo "L1F_LSW ERROR band mutant not caught or bench did not run (mismatch lines ${nm:-0}, live edges ${nl:-0})"; exit 2
+fi
 [ $bad = 0 ] && echo "L1F_LSW PASS" || echo "L1F_LSW FAIL"; exit $bad

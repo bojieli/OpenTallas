@@ -38,7 +38,7 @@ def job(name, purpose):
                 benches=[dict(name="rg3b_lpc0", cmd=BENCH_LP, expect="pass", pass_regex="^IDXRD_CAMPAIGN PASS",
                               threads=16, peak_ram_gb=64, needs=["verilator"]),
                          # expect=fail mutant: the landed parent's MUT 1 (xr landing bypass) under the PASS cases
-                         dict(name="rg3b_lpm1", cmd=BENCH_LPM, expect="fail", fail_regex="^IDXRD_CAMPAIGN FAIL$",
+                         dict(name="rg3b_lpm1", cmd=BENCH_LPM, expect="fail", fail_regex="^IDXRD_CASE BAD lpm1k/pass_[a-z0-9]+: TB_IDXRD FAIL . TB_IDXRD_STATS",
                               threads=16, peak_ram_gb=64, needs=["verilator"])])
 
 def common(name, top, purpose):

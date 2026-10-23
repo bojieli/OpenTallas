@@ -20,7 +20,7 @@ BENCH = dict(name="l1f_band_lsw", cmd="bash rtl/dsrom_sys/s81_dv/unit/test/run_l
              pass_regex="^L1F_LSW PASS", threads=12, peak_ram_gb=48, needs=["verilator"])
 # expect=fail mutant (submit_exact BENCH-EVIDENCE): the banded copy alone runs MUT 1 (bias forced 0) -> lockstep mismatches
 BENCH_MUT = dict(name="l1f_band_lsw_bandmut", cmd="BANDMUT=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_l1f_band_lsw.sh {RUN} 8 '0'",
-                 expect="fail", fail_regex="^L1F_LSW FAIL$", threads=12, peak_ram_gb=48, needs=["verilator"])
+                 expect="fail", fail_regex="^L1F_LSW FAIL band mutant caught", threads=12, peak_ram_gb=48, needs=["verilator"])
 
 def kit(name, top, purpose, outline, macros, pins, pin_ranges, why):
     s = {k: copy.deepcopy(base[k]) for k in ("recipe", "clock", "hold_budget", "inter", "inhold", "outhold", "io_flop_at_pins",
