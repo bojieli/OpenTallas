@@ -217,6 +217,41 @@ def _wcol_rebind(v, m, M, keep, out, wrtl):
     return rec
 
 
+def _d2d_late_pins(v, m, M, keep):
+    """SQC-QDIE5 10-22 (OT_PIN_D2D_LATE_PEERS=1): re-assign the ASSIGNED d2d_rom pins on the FINAL dv buses and positions.
+    static_link_bind assigns them at the home placement, before dv adds the head-user links (lnk_tx_user / lnk_rx_user ->
+    native59) and the STATUS observer words; a port with no bus then got the default N face, which under d2d_rom MX is
+    the face AWAY from native59 (r47/r48: rx_user on the far face, 624-um 3-hop lane, record bundle C.rx_record / tx_slot
+    E 1 -> 2, compute seam CS_TXS/RXV/RXP 2 -> 3 against the frozen pair image).  Same pattern as _wcol_rebind: the
+    top-down pins of a NEW unclosed parent face the peers they actually have.  Closed-view d2d_rom: untouched."""
+    from qwen_split import static_link_bind as SLB
+    from qwen_split.native_graph_bind import assign_pins
+    from qwen_split.direct_up4 import partition_master
+    by = {i.name: i for i in keep}
+    d = by.get('d2d_rom')
+    if d is None or d.master != SLB.MASTER or 'static_link_bind' not in m:
+        return None
+    if os.environ.get('OT_QWEN_HEAD_PREP', '0') != '1' and SLB.view_enabled() and SLB.view_frame(SLB.MASTER) is not None:
+        return None                                   # closed view pins: never re-assigned
+    peers = {}
+    for bid, cl, bits, eps in m['buses']:
+        if cl in ('clock_trunk', 'reset'):
+            continue
+        for i_, p_ in eps:
+            others = [by[x] for x, _ in eps if x != i_ and x in by]
+            if others:
+                peers.setdefault((i_, p_), []).extend(others)
+    old = M[SLB.MASTER].ports if SLB.MASTER in M else {}
+    before = {p: (sp[2], sp[4][:1]) for p, sp in old.items() if sp[0] == 'pins'}
+    pxy = SLB._peer_pin_xy(m, by, v.Master) if os.environ.get('OT_PIN_PEER_PIN', '0') == '1' else None
+    assign_pins(M, m, v.Master, d, SLB.MASTER, SLB.SOURCE, peers, partition_master, peer_xy=pxy)
+    after = {p: (sp[2], sp[4][:1]) for p, sp in M[SLB.MASTER].ports.items() if sp[0] == 'pins'}
+    moved = sorted(p for p in after if before.get(p, (None,))[0] != after[p][0])
+    m.setdefault('q3h', {})['d2d_late_pins'] = dict(moved_face=moved, peers=len([k for k in peers if k[0] == 'd2d_rom']))
+    print(f'D2D_LATE_PINS d2d_rom re-assigned on final buses: face changed {moved}', flush=True)
+    return moved
+
+
 def _dhobs_inst(v, m, M, keep):
     """MU-DQ-DHUSER: the observer instance on the MU die (None on a single-user die or without tt_ctlm.dh_user).
     Placed in the tt_ctlm | native59 channel, DHOBS_DX W of tt_ctlm's NE corner; OT_SPLIT_DV_DHOBS_XY=x,y overrides.  Fail closed on any overlap."""
@@ -983,6 +1018,8 @@ def apply_dv(v, m):
             m['dv_one_net_per_driver'] = merged
             print('DV_ONE_NET_PER_DRIVER', [(r_['kept'], r_['merged']) for r_ in merged], flush=True)
     m['buses'] = out
+    if os.environ.get('OT_PIN_D2D_LATE_PEERS', '0') == '1':
+        _d2d_late_pins(v, m, M, keep)
     # relay routing on the dv array (b3r2 _poly0): field-to-field links stay in their band gap / the W|E seam
     m['dv_gap_route'] = True
     w0, e0 = DI['dvs_W0'], DI['dvs_E0']
