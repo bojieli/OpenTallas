@@ -13,6 +13,7 @@ spine + per-partition reset sync and are reported, not counted.  Rows whose endp
 usage: census_cov.py PLAN.json INSTANCE_MAP.json CENSUS.tsv [--out OUT.json]
 """
 import argparse
+import os
 import collections
 import csv
 import json
@@ -172,8 +173,26 @@ def main():
         if b > seen_bus.get(key, 0):
             asb[(gs, gd)] += b - seen_bus.get(key, 0)
             seen_bus[key] = b
+    # S81-P6 10-23: frame-band lanes vs the band RTL census (inputs/frame_band_census.json, frame_band_census.py)
+    fbc_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "frame_band_census.json")
+    fbc = json.load(open(fbc_path))["masters"] if os.path.exists(fbc_path) else None
+    ptype = {p["name"]: p["type"] for p in plan["partitions"]}
+    fband = collections.defaultdict(dict)
+    for ln in plan["lanes"]:
+        if not ln["id"].startswith("fi_") or not ln["ports"]:
+            continue
+        p0 = ports[ln["ports"][0]]
+        sp, dp = p0["src"]["part"], ports[ln["ports"][-1]]["dst"]["part"]
+        mod = plan["partition_types"][ptype[sp]]["contents"][0]["module"]          # col_h10_l4_lp.r0
+        m = re.match(r"col_(h\d+)_l4_lp\.r(\d)", mod).group(1)
+        fband[(sp.rsplit("_b", 1)[0], m)]["r%s->r%s" % (sp[-1], dp[-1])] = p0["width"]
+    fb_drop = []
+    for (fr, m), got in sorted(fband.items()):
+        for k, need in (fbc or {}).get(m, {}).items():
+            if got.get(k, 0) < need:
+                fb_drop.append(dict(frame=fr, master=m, pair=k, band_rtl=need, planned=got.get(k, 0)))
     pairs = []
-    dropped = 0
+    dropped = sum(x["band_rtl"] - x["planned"] for x in fb_drop)
     for k, b in asb.items():
         p = planned.get(k, 0)
         d = max(0, b - p)
@@ -189,7 +208,8 @@ def main():
         unmapped=[dict(src=k[0], dst=k[1], bits=v) for k, v in unmapped.items()],
         unresolved_landing=unresolved,
         planned_only_pairs=extra, retopo_x_via_xo_bits=sum(retopo.values()), retopo_pairs=len(retopo), split_internal_lane_bits=dict(internal),
-        census_rows=len(rows), group_pairs=len(asb))
+        census_rows=len(rows), group_pairs=len(asb),
+        frame_band=dict(source=fbc_path if fbc else None, frames=len(fband), dropped=fb_drop[:50], dropped_bits=sum(x["band_rtl"] - x["planned"] for x in fb_drop)))
     js = json.dumps(res, indent=1)
     if a.out:
         open(a.out, "w").write(js)

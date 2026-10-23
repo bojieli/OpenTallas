@@ -65,7 +65,15 @@ GAP = 2.0
 XW, RW = 1104, 70
 OPP = dict(N="S", S="N", E="W", W="E")
 STEP = dict(E=(1, 0), W=(-1, 0), N=(0, 1), S=(0, -1))
-FRAME_INTERNAL = [("r0", "r1", 1263), ("r1", "r2", 1229), ("r2", "r1", 384), ("r1", "r0", 141)]
+# S81-P6 10-23 (COORD: census from the band RTL): frame-internal lane widths per master = the band-to-band bits of the
+# banded seam kits (frame_seam_pipe.py: band seams at plan width), via inputs/frame_band_census.json
+# (frame_band_census.py).  The v1 constant (1263 / 1229 / 384 / 141) had no basis and r1 -> r0 was 120-126 b short.
+FRAME_BAND_CENSUS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "frame_band_census.json")
+
+
+def frame_internal(h):
+    m = json.load(open(FRAME_BAND_CENSUS))["masters"][h]
+    return [(k.split("->")[0], k.split("->")[1], w) for k, w in sorted(m.items())]
 
 
 def mir(c):
@@ -327,9 +335,9 @@ def lanes_all(ab, census, parts, frames, serdes, slices):
     lanes = []
     fmap = {}
 
-    def L(lid, src, sbus, dst, dbus, width, kind="data", cls="data", role=None, path=None):
+    def L(lid, src, sbus, dst, dbus, width, kind="data", cls="data", role=None, path=None, fixed=0):
         lanes.append(dict(id=lid, src=(src, sbus), dst=(dst, dbus), width=int(width), kind=kind, cls=cls,
-                          role=role or cls, path=path))
+                          role=role or cls, path=path, fixed=fixed))
 
     def cell_of(seg):
         return (seg.c0, seg.r0)
@@ -357,10 +365,10 @@ def lanes_all(ab, census, parts, frames, serdes, slices):
                     p.ckey = "col_%s.r%d" % (h, b) + ((".p%d" % pos) if b == 0 else "")
                     p.group = f
                 fb = [frames[(side, fr, pos, b)].name for b in range(3)]
-                for a, bb, w in FRAME_INTERNAL:
+                for a, bb, w in frame_internal(h):
                     ia, ib = int(a[1]), int(bb[1])
                     L("fi_%s%d_p%d_%s%s" % (side, fr, pos, a, bb), fb[ia], "%s%s_o" % (a, bb), fb[ib], "%s%s_i" % (a, bb),
-                      w, cls="frame_int", role="fi_%s%s" % (a, bb))
+                      w, cls="frame_int", role="fi_%s%s" % (a, bb), fixed=1)   # band RTL seam = K + 1 = 3 edges
             b0 = {pos: frames[(side, fr, pos, 0)].name for pos in range(1, 7)}
             xr = x_row(fr)
             for chain, (half, base) in (("in", (inner, 1)), ("out", (outer, 4))):
@@ -1164,7 +1172,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
                            kind=pt["kind"], face=pt["face"], layers=face_layers(P[pt["a"]], P[pt["b"]], pt["face"]),
                            window_um=[w0, w1],
                            order=pt["order"]))
-    olanes = [dict(id=l["id"], ports=lane_ports[l["id"]]) for l in lanes]
+    olanes = [dict(id=l["id"], ports=lane_ports[l["id"]], **({"fixed_cycles": l["fixed"]} if l.get("fixed") else {}))
+              for l in lanes]
     plan = {
         "schema": "opentallas.die_plan.v1",
         "note": "S81 72-frame MU release die, plan v3 (PLAN-S81v3 10-23; v2 base): one 1442.88 x 1226.88 lattice, MY-mirrored "
