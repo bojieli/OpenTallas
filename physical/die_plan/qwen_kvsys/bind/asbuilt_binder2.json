@@ -290,5 +290,5 @@
   }
  ],
  "port_names": "/home/ubuntu/scratch/binder2-1023/kv_bound/bound_netlist.json",
- "land_align": "cell"
+ "land_align_note": "off for KV (BINDER2 10-23): land_align=cell trial = 969 groups, 180,979 pad flops, max pad 77 (kreq/x__tep/col_valid: plan v3.4 rewired + regrouped edges far from as-built depth) and 88->103 types; timing for KV is the plan latency schedule (KV-P5 R8 latency_groups), bus_groups_binder2.json.gz lists the groups"
 }
