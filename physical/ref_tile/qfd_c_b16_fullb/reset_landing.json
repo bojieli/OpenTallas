@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_c_b16_fullb",
+ "enable": false,
+ "reason": "RTL lands every rst_<q> in its rpin register + equal-depth soft tree (qc_gen)"
+}

@@ -43,9 +43,25 @@ NOTE_T = ("corridors A / T / B are 64.8 um and the L / R edge strips 32.4 um (ou
 DW, BW = 516, 514      # corridor word, tree / block word
 IBW = 3 * 18 + 13 * 24 + 13   # 379
 # columns: L | col0 MY | A | col1 R0 | T | col2 MY | B | col3 R0 | R
+NC, NR = 4, 4          # SQC-CB8 10-22: tile columns x tile rows (set_grid); module defaults = the 4 x 4 block
+
+
+def col_layout(nc):
+    """L | c0 MY | A | c1 R0 | T | c2 MY | B | c3 R0 | R for nc = 4; MY | R0 pairs share their W-face corridor (A, B, ..),
+    neighbouring pairs share an E-face corridor (T; T<k> when there are several); nc = 2: L | c0 MY | A | c1 R0 | R."""
+    assert nc % 2 == 0 and nc >= 2, nc
+    seq = ["L"]
+    for c in range(nc):
+        seq.append(c)
+        if c < nc - 1:
+            seq.append("ABCDEFGH"[c // 2] if c % 2 == 0 else ("T" if nc == 4 else f"T{c // 2}"))
+    return seq + ["R"]
+
+
+LAYOUT = col_layout(4)
 CORR, COLX = {}, {}
 _x = 0.0
-for _n in ["L", 0, "A", 1, "T", 2, "B", 3, "R"]:
+for _n in LAYOUT:
     if isinstance(_n, str):
         w = WIDE.get(_n, CW)
         CORR[_n] = (_x, _x + w)
@@ -67,6 +83,32 @@ RST_Y = 435.708
 W_FACE_CORR = {0: "A", 1: "A", 2: "B", 3: "B"}
 E_FACE_CORR = {0: "L", 1: "T", 2: "T", 3: "R"}
 SPARE_DEFAULT = (2, 0)
+RS_CORRS = ("T",)      # corridors the rs exit may come down besides the root's own W-face corridor
+RST_ROOT_COR = "T"     # corridor of the single-tree reset pin register (S face)
+
+
+def set_grid(nc, nr):
+    """SQC-CB8 10-22: re-derive every NC x NR dependent global (orientation, face corridors, morton leaves, tree nodes).
+    Geometry (CORR / COLX / ROWY / ...) is set by the caller (qc_gen.setup).  set_grid(4, 4) == the module defaults."""
+    global NC, NR, NT, LEVELS, COL_ORIENT, W_FACE_CORR, E_FACE_CORR, LEAVES, NODES, STAGGER, RS_CORRS, RST_ROOT_COR, LAYOUT
+    NC, NR, NT = nc, nr, nc * nr
+    LEVELS = NT.bit_length() - 1
+    assert 1 << LEVELS == NT, NT
+    LAYOUT = col_layout(nc)
+    COL_ORIENT = {c: "MY" if c % 2 == 0 else "R0" for c in range(nc)}
+    W_FACE_CORR, E_FACE_CORR = {}, {}
+    for j, n in enumerate(LAYOUT):
+        if isinstance(n, int):
+            left, right = LAYOUT[j - 1], LAYOUT[j + 1]
+            W_FACE_CORR[n], E_FACE_CORR[n] = (right, left) if COL_ORIENT[n] == "MY" else (left, right)
+    LEAVES = sorted(((c, r) for c in range(nc) for r in range(nr)), key=lambda s: morton(*s))
+    NODES = [(l, i) for l in range(1, LEVELS + 1) for i in range(NT >> l)]
+    if nc != 4:
+        STAGGER = {}       # stations staggered only where two column runs share one E-face corridor (T of the 4 x 4)
+    RS_CORRS = tuple(k for k in ("T",) if k in LAYOUT)
+    # single-tree reset root: the S-face centre corridor (T for 4 x 4, A for 2 x N)
+    mids = [n for n in LAYOUT if isinstance(n, str)]
+    RST_ROOT_COR = mids[len(mids) // 2]
 
 
 def ccx(name: str) -> float:
@@ -77,8 +119,8 @@ def ccx(name: str) -> float:
 def run_x(c: int) -> float:
     """x of column c's corridor run (stations + relays)."""
     lo, hi = CORR[E_FACE_CORR[c]]
-    if E_FACE_CORR[c] == "T":
-        return lo + T_CW / 4 if c == 1 else hi - T_CW / 4   # two run lanes in T
+    if E_FACE_CORR[c].startswith("T"):
+        return lo + T_CW / 4 if c % 2 == 1 else hi - T_CW / 4   # two run lanes in T
     return (lo + hi) / 2
 
 
@@ -139,7 +181,7 @@ TAP_C = 0.5 * sum(TAP_Y)
 
 def down_chain():
     pts = [("entry", STRIP / 2)]
-    targets = [("xcst%d" % r, ROWY[r] + TAP_C) for r in range(4)] + [("exit", HEIGHT - STRIP / 2)]
+    targets = [("xcst%d" % r, ROWY[r] + TAP_C) for r in range(NR)] + [("exit", HEIGHT - STRIP / 2)]
     y, nrel = pts[0][1], 0
     for name, ty in targets:
         d = ty - y
@@ -181,9 +223,20 @@ def tap_time(r):
 
 # ------------------------------------------------------------------ up tree
 def morton(c, r):
-    return (c & 1) | ((r & 1) << 1) | (((c >> 1) & 1) << 2) | (((r >> 1) & 1) << 3)
+    if NC == 4 and NR == 4:
+        return (c & 1) | ((r & 1) << 1) | (((c >> 1) & 1) << 2) | (((r >> 1) & 1) << 3)
+    # SQC-CB8: generic interleave x0 y0 x1 y1 .. (an axis that runs out of bits drops out): 2 x 4 -> c0 | r0 << 1 | r1 << 2
+    bx, by = (NC - 1).bit_length(), (NR - 1).bit_length()
+    m, k = 0, 0
+    for b in range(max(bx, by)):
+        if b < bx:
+            m |= ((c >> b) & 1) << k; k += 1
+        if b < by:
+            m |= ((r >> b) & 1) << k; k += 1
+    return m
 
 
+NT, LEVELS = 16, 4
 LEAVES = sorted(((c, r) for c in range(4) for r in range(4)), key=lambda s: morton(*s))
 NODES = [(l, i) for l in range(1, 5) for i in range(16 >> l)]
 
@@ -210,7 +263,7 @@ def rs_route(root):
     src = pin(c, r, "n_y")
     X = W_FACE_CORR[c]
     best = None
-    for z in ("T", X):
+    for z in RS_CORRS + (X,):
         xp = rs_pin_x(z)
         if z == X:
             p = [src, (ccx(X), src[1]), (ccx(X), STRIP / 2), (xp, STRIP / 2)]
@@ -248,10 +301,10 @@ def evaluate(host, detail=False):
             x["k"] = a - x["ts"] - 1
             legs.append(dict(node=(l, i), host=(hc, hr), **x))
         t[(l, i)] = a
-    root = host[(4, 0)]
+    root = host[(LEVELS, 0)]
     p, rz = rs_route(root)
     k = relays(plen(p))
-    rs_t = t[(4, 0)] + 1 + k
+    rs_t = t[(LEVELS, 0)] + 1 + k
     bits = sum(x["k"] for x in legs) * BW + (k + 1) * BW
     if detail:
         return rs_t, bits, legs, dict(root=root, d=plen(p), k=k, poly=p, corridor=rz), t
@@ -264,7 +317,7 @@ CUT_TARGET = 0.55
 def vcut_over(legs, rsx):
     """Bits above CUT_TARGET x (M3 + M5 tracks) at the worst 20-um bin of the tree corridors A / B."""
     over = 0.0
-    for cor in ("A", "B"):
+    for cor in sorted(set(W_FACE_CORR.values())):
         lo, hi = CORR[cor]
         xc = (lo + hi) / 2
         cap = CUT_TARGET * ((hi - lo) / 0.048 + (hi - lo) / 0.036)
@@ -281,11 +334,11 @@ def vcut_over(legs, rsx):
 
 def anneal(seed=1, iters=80000):
     rnd = random.Random(seed)
-    slots = [(c, r) for c in range(4) for r in range(4)]
+    slots = [(c, r) for c in range(NC) for r in range(NR)]
     perm = slots[:]
     rnd.shuffle(perm)
     host = {n: perm[j] for j, n in enumerate(NODES)}
-    spare = perm[15]
+    spare = perm[NT - 1]
 
     def cost(h):
         a, b, legs, rsx, _ = evaluate(h, True)
@@ -321,24 +374,25 @@ def ordered_ast(host):
         if l == 0:
             return morton(*LEAVES[i])
         return (ex(l - 1, 2 * i), ex(l - 1, 2 * i + 1))
-    return ex(4, 0)
+    return ex(LEVELS, 0)
 
 
 # ------------------------------------------------------------------ reset tree (1 b, equal depth to every leaf)
 def reset_tree():
     """Pin register at the S face (T), runs to the L / T / R corridors, a tap register at each row's tile rst_n y,
     a pad run to the common depth.  Returns nodes [(name, parent, (x, y))], leaves {row-corridor: name}, depth."""
-    root = (ccx("T"), STRIP / 2)
+    root = (ccx(RST_ROOT_COR), STRIP / 2)
     nodes = [("rst_pin", None, root)]
     leaves = {}
-    for cor in ["L", "T", "R"]:
+    cors = [n for n in LAYOUT if n in set(E_FACE_CORR.values())]       # 4 x 4: L, T, R
+    for cor in cors:
         x = ccx(cor)
         prev, pp = "rst_pin", root
         # horizontal in the S strip first (L / R), then up the corridor; a tap register at each row
         pts = []
-        if cor != "T":
+        if cor != RST_ROOT_COR:
             pts.append(((x, STRIP / 2), None))
-        for r in range(4):
+        for r in range(NR):
             pts.append(((x, ROWY[r] + RST_Y), r))
         for (tx, ty), r in pts:
             d = abs(tx - pp[0]) + abs(ty - pp[1])
