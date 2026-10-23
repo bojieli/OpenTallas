@@ -17,5 +17,10 @@
     "max_segment_um": 140.002
   },
   "units": "python3 -m pytest tools/s81_dv/test_ctrl_corner.py: 3 passed",
-  "limits": "Scoped controller reach repair PASS. Full forwarded-clock/GRT/STA/IR not qualified by this receipt."
+  "limits": "Scoped controller reach repair PASS. Full forwarded-clock/GRT/STA/IR not qualified by this receipt.",
+  "evidence_sha256": {
+    "actual_rep600_corner.log": "746ce6c483999f7370dd806be8abbe2b566aa41283efd033c07152aa279cc9d8",
+    "rep600_escape_only_failure.json": "76be52a0cb9f6e302e01731f43ca02731258678d9bf97277e9a05d3179e52282",
+    "rep600_fixed.json": "c8e29f842e49922b2d1b455dc60d45f065d042e199398276a1451e3448c706fd"
+  }
 }
