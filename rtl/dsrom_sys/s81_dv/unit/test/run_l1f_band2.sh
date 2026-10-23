@@ -22,7 +22,7 @@ if [ "${BANDMUT:-0}" != 0 ]; then
 fi
 sed -e "s#rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv#$REL rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f_band.sv rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f_bf2.sv $SHIM#" \
     -e 's#^U=.*#U='"$U"'; R='"$R"'#' -e "s#| grep '^GUNIT')#| grep '^GUNIT'; true)#g" "$U/test/run_gunit_bench.sh" > "$T/bench.sh"
-grep -q "l1f_lsw2" "$T/bench.sh" || { echo "L1F_LSW ERROR bench rewrite"; exit 2; }
+grep -q "l1f_lsw" "$T/bench.sh" || { echo "L1F_LSW ERROR bench rewrite"; exit 2; }
 bash "$T/bench.sh" "$T/w" "$N" "$MUTS" > "$T/bench.out" 2>&1; cat "$T/bench.out"
 bad=0
 for m in $MUTS; do
