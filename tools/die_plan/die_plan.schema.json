@@ -541,6 +541,10 @@
         "type": "number",
         "minimum": 0
        },
+       "tap_pitch_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
        "taps": {
         "type": "array",
         "items": {
@@ -1133,6 +1137,43 @@
     }
    }
   },
+  "latency_groups": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "name",
+     "lanes"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "name": {
+      "type": "string",
+      "minLength": 1
+     },
+     "kind": {
+      "enum": [
+       "bus",
+       "replica"
+      ]
+     },
+     "lanes": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "minLength": 1
+      },
+      "minItems": 2
+     },
+     "source": {
+      "type": "string"
+     },
+     "note": {
+      "type": "string"
+     }
+    }
+   }
+  },
   "clock": {
    "type": "object",
    "additionalProperties": false,
@@ -1270,6 +1311,13 @@
        },
        "boundary": {
         "type": "integer"
+       },
+       "natural": {
+        "type": "integer"
+       },
+       "pad": {
+        "type": "integer",
+        "minimum": 0
        },
        "param": {
         "type": "string"
