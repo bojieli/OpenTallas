@@ -3188,7 +3188,8 @@ endmodule
 `ifdef OT_S81DV_XFIN_N22
 // N22: the finish engine's bank copy of the write valid / tag delay line behind a module boundary (plain kept regs with
 // the same D as u_v / u_t were merged).  v resets with rst_n (rc[5], as u_v / vkl); t has no reset (as u_t's data / tkl).
-(* keep_hierarchy=1 *) module ot_s81dv_fin_vtline #(parameter integer CW = 9, D = 6, ID = 0)(   // ID: distinct copies (N23)input wire clk, input wire rst_n,
+// ID (N23): distinct copies survive opt_merge as separate paramods
+(* keep_hierarchy=1 *) module ot_s81dv_fin_vtline #(parameter integer CW = 9, D = 6, ID = 0)(input wire clk, input wire rst_n,
     input wire v, input wire [CW-1:0] t, output wire v_e, output wire [CW-1:0] t_e, output wire v_o, output wire [CW-1:0] t_o);
     (* keep *) reg [CW-1:0] tl [0:D-1];
     (* keep *) reg [D-1:0] vl;
