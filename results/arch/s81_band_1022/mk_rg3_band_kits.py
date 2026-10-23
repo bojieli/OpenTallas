@@ -189,6 +189,23 @@ xm_spec("s81dv_rg3b_xm2", [234.36, 240.84], "banded idx rg3 X successor: SRAM / 
         "clock entry at its centre; default (obstruction-aware) tree.", unclustered=False)
 xm_spec("s81dv_rg3b_xm2w", [194.4, 200.88], "banded idx rg3 X successor: SRAM / key tile, default CTS, clock at the W-face middle",
         "clock entry at the W-face middle between the two column read channels' feeds; default tree.", unclustered=False, ck_face="W")
+# FB (structural, 3 tiles in X): one hard tile per SRAM column (dsdv_idx_rg3_bxmh H 0 / 1, 237.6 x 432, side by side under
+# xn): 4 SRAM, ~400 flops, its kq half on its own S face, clock at that face's centre -- each tree spans one column only.
+for h in range(2):
+    m = common(f"s81dv_rg3b_xmh{h}", "dsdv_idx_rg3_bxmh", f"banded idx rg3 X successor FB: SRAM column h{h} tile (4 SRAM, key half {h})")
+    m.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1, "H": h}, outline={"w": 237.6, "h": 432.0, "exact": True},
+             macros=[dict(view=SRAM, inst=f"g_land[{u}].u_h.g_m.u_mem", at=[[38.88, 23.76][h], round(43.2 + 90.72 * u, 2)],
+                          orient=["R0", "MY"][h]) for u in range(4)],
+             children=[], pins={"N": ["lw_v", "lw_h1", "lw_a", "lw_d"], "W": ["sx_i", "rst"], "S": ["kq_o", "ck"]},
+             pin_ranges={"lw_v": [10.8, 226.8], "lw_h1": [10.8, 226.8], "lw_a": [10.8, 226.8], "lw_d": [10.8, 226.8],
+                         "sx_i": [86.4, 172.8], "rst": [86.4, 172.8], "kq_o": [10.8, 226.8], "ck": [115.56, 122.04]},
+             layer_cap="M5", defines=[], std_area_um2=1000,
+             why_floorplan=f"column h{h} of the X SRAM tile as its own hard tile (237.6 x 432): 4 SRAM {['R0', 'MY'][h]} at x "
+                           f"{[38.88, 23.76][h]} (read pins on the 37-um {['W', 'E'][h]} channel), 90.72 pitch from y 43.2; its key "
+                           "half muxes down that channel to its kq pin band on the S face; clock at the S-face centre.")
+    m["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
+    m["job"]["benches"] = [LSWX, LSWX_M]
+    specs[m["name"]] = m
 ONLY = None
 if "--only" in sys.argv:
     i = sys.argv.index("--only"); ONLY = set(sys.argv[i + 1].split(",")); del sys.argv[i:i + 2]
