@@ -75,7 +75,7 @@
   "NF": 1,
   "XSER": 1,
   "SPARSE_SU": 1,
-  "SU_DICT_CAP": "{32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3}"
+  "SU_DICT_CAP": 497323236525578731419658390243819566640659256139484589856024879643754498265956025892867
  },
  "route": {
   "pd": 0.5,
@@ -337,5 +337,28 @@
    "sync_max_delay_ps": 250,
    "why": "serial core reset rc[1] re-timed by two clk_in flops into the stream-domain reset"
   }
- ]
+ ],
+ "parameter_identity": {
+  "SU_DICT_CAP": {
+   "expression": "{32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3}",
+   "integer": 497323236525578731419658390243819566640659256139484589856024879643754498265956025892867,
+   "bits": 320,
+   "columns_lsb_first": [
+    3,
+    10,
+    9,
+    13,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  }
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
 }

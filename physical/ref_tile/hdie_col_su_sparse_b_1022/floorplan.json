@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
- "name": "hdie_col_su_r1",
+ "name": "hdie_col_su_sparse_b_1022",
  "top": "ot_hbm_static_cfg_collar",
  "kind": "tile",
  "die": [
@@ -70,18 +70,18 @@
  "findings": [],
  "referenced": [
   "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
-  "physical/ref_tile/hdie_col_su_r1/kit.env",
-  "physical/ref_tile/hdie_col_su_r1/clock.sdc",
-  "physical/ref_tile/hdie_col_su_r1/signoff.sdc",
-  "physical/ref_tile/hdie_col_su_r1/pdn.tcl",
-  "physical/ref_tile/hdie_col_su_r1/pre_cts.tcl",
-  "physical/ref_tile/hdie_col_su_r1/post_cts.tcl",
-  "physical/ref_tile/hdie_col_su_r1/post_grt.tcl",
-  "physical/ref_tile/hdie_col_su_r1/pre_drt.tcl",
-  "physical/ref_tile/hdie_col_su_r1/pre_fill.tcl",
-  "physical/ref_tile/hdie_col_su_r1/post_fill.tcl",
-  "physical/ref_tile/hdie_col_su_r1/pre_grt.tcl",
-  "physical/ref_tile/hdie_col_su_r1/post_drt.tcl",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/kit.env",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/clock.sdc",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/signoff.sdc",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/pdn.tcl",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/pre_cts.tcl",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/post_cts.tcl",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/post_grt.tcl",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/pre_drt.tcl",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/pre_fill.tcl",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/post_fill.tcl",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/pre_grt.tcl",
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
   "physical/qwen_die_masters/io_ref_skew.sdc",
   "physical/qwen_die_masters/io_plain.sdc",
@@ -91,9 +91,11 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/common_flow/native_pg_binding.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/common_flow/clock_entries.tcl",
-  "physical/ref_tile/hdie_col_su_r1/clock_entry.sdc"
+  "physical/ref_tile/hdie_col_su_sparse_b_1022/clock_entry.sdc"
  ]
 }

@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.hbm.collar.sparse.physical_budget.v1",
+  "purpose": "functional bug fix; no rate optimization",
+  "baseline": {
+    "outline_um": [
+      51.84,
+      51.84
+    ],
+    "placed_core_um2": 2258,
+    "std_area_um2": 761,
+    "largest_clock_domain_sinks": 915
+  },
+  "change": {
+    "source_sha256": "adbc963c28e1c1cca67d65f0cb8ac8931e40b2ac7cb909e7e9821a2b3d8cb6e9",
+    "address_seen_ff_bits": 24,
+    "new_data_edges": 0,
+    "memory_ports_changed": 0,
+    "external_bits_changed": 0
+  },
+  "admission_envelope": {
+    "native_before_floorplan": true,
+    "old_footprint_retained": true,
+    "area_budget_um2": 1522,
+    "basis": "two times measured baseline logic fits within 2258um2 core; actual synthesis and native census decide before layout",
+    "no_old_view_binding": true
+  },
+  "actual_shape_parameter_receipt": "physical_parameter_identity.json"
+}

@@ -1,3 +1,12 @@
+# PG binding is required before protection in standard mode too. This is a
+# source-owned CTS boundary, not a native birth-callback capability.
+set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
+if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
+source $ot_pg_helper
+ot_pg_install_final_write_guard
+ot_pg_install_rc_observers
+ot_pg_install_unsupported_birth_guards
+
 # CLAUDE el1011-hbm-attn 2026-10-11: pre-placed equal-delay CLOCK SPINE in place of TritonCTS for one clock port.
 #
 # Why (textbook class 1, hfd_attn_half_lo v10c 4_1_cts): one TritonCTS tree from ck[0] on the E face over a 1,778 x 1,264 um
@@ -406,7 +415,12 @@ proc ot_sp_tree_pad {root need} {
   ot_sp_tree_apply $root 0
   return $::ot_sp_tpads
 }
+proc ot_sp_bind_pg {} {
+  # All source-created spine/pad instances bind before the next estimator.
+  if {[ot_pg_strict_enabled]} {ot_pg_bind_batch_before_protect [ord::get_db_block] $::ot_sp_insts} else {ot_pg_standard_bind clock_spine}
+}
 proc ot_sp_leaf_arrivals {} {
+  ot_sp_bind_pg
   estimate_parasitics -placement
   # build the timing graph for the new cells before reading pin properties (pinArrival on an un-graphed pin segfaults)
   sta::find_timing_paths -path_delay max -group_path_count 1
@@ -441,6 +455,12 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     if {$bt2 ne "NULL" && $bt2 ne ""} { puts "OT_SPINE port $port not found, using $alt"; set bt $bt2; set port $alt }
   }
   if {$bt eq "NULL" || $bt eq ""} { puts "OT_SPINE skipped: no port $port"; return 0 }
+  if {[ot_pg_strict_enabled]} {
+    ot_pg_require_cts_placement_or_empty_context
+    # Existing port buffers must also be bound before this source-owned estimator.
+    ot_pg_bind_batch_before_protect $::ot_sp_blk [$::ot_sp_blk getInsts]
+    ot_pg_assert_all_native $::ot_sp_blk [ot_pg_prepare $::ot_sp_blk]
+  }
   set net0 [$bt getNet]
   # OT_SPINE_THROUGH_ICG=1 (el1011-hbm-smt 2026-10-12): the port clock enters ONE tile clock gate (ICG*, e.g. the SM tile's
   # ot_cg_tile) that clocks everything else.  A spine on the port net would see only the ICG and its few enable flops and
@@ -546,6 +566,7 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     set qx [expr {([$pb0 xMin] + [$pb0 xMax]) / 2}]; set qy [expr {([$pb0 yMin] + [$pb0 yMax]) / 2}]
     set qx [expr {min(max($qx, $::ot_sp_cx0), $::ot_sp_cx1 - 20 * $u)}]; set qy [expr {min(max($qy, $::ot_sp_cy0), $::ot_sp_cy1 - 20 * $u)}]
     set cw0 $::ot_sp_cw
+    if {[ot_pg_strict_enabled]} {set pg_mapping [ot_pg_prepare [ord::get_db_block]]} else {ot_pg_standard_bind clock_spine_icg}
     foreach i $::ot_sp_icg_move {
       set ::ot_sp_cw [[$i getMaster] getWidth]; set ::ot_sp_retry 0
       lassign [ot_sp_legal $qx $qy] lx ly
@@ -556,7 +577,7 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
       # repair_timing over the abutting FIRM AND3 -> DPL-0033 at 4_1_cts in both tiles).  The enable cone itself is left
       # movable (PLACED on the free sites found here), so any later sizing is legalised by detailed_placement.
       $i setLocation $lx $ly
-      if {[lsearch -exact $::ot_sp_icg_port $i] >= 0} { $i setPlacementStatus FIRM; $i setDoNotTouch 1 } else { $i setPlacementStatus PLACED }
+      if {[lsearch -exact $::ot_sp_icg_port $i] >= 0} { if {[ot_pg_strict_enabled]} {ot_pg_bind_before_protect $pg_mapping $i}; $i setPlacementStatus FIRM; $i setDoNotTouch 1 } else { $i setPlacementStatus PLACED }
     }
     foreach i $::ot_sp_icg_move {
       if {[$i getPlacementStatus] in {FIRM LOCKED} && ![$i isDoNotTouch]} { error "OT_SPINE: moved cell [$i getName] is fixed but resizable" }
@@ -684,6 +705,7 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     }
     if {[dict size $padded] == 0} break
   }
+  ot_sp_bind_pg
   if {$ot_rcc} { ot_rc_cal_restore; estimate_parasitics -placement }
   foreach b $::ot_sp_insts { $b setDoNotTouch 1 }
   foreach n [concat [list $net0] [lmap b $::ot_sp_insts {[$b findITerm $::ot_sp_out] getNet}]] { $n setDoNotTouch 1 }

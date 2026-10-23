@@ -1,0 +1,578 @@
+
+-- Running command `read_verilog -sv -DSYNTHESIS collar.sv; hierarchy -check -top ot_hbm_static_cfg_collar -chparam PAGE_W 12 -chparam NS 1 -chparam NPR 1 -chparam NREC 0 -chparam NGO 1 -chparam NB 2 -chparam NF 1 -chparam XSER 1 -chparam SPARSE_SU 1 -chparam SU_DICT_CAP 497323236525578731419658390243819566640659256139484589856024879643754498265956025892867; proc; write_json integer.json' --
+
+1. Executing Verilog-2005 frontend: collar.sv
+Parsing SystemVerilog input from `collar.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_static_cfg_collar'.
+Warning: Replacing memory \r_pay with list of registers. See collar.sv:275
+Warning: Replacing memory \r_go with list of registers. See collar.sv:275
+Warning: Replacing memory \r_off with list of registers. See collar.sv:274
+Warning: Replacing memory \page with list of registers. See collar.sv:244
+Warning: Replacing memory \need with list of registers. See collar.sv:244
+Warning: Replacing memory \hwm with list of registers. See collar.sv:244
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \PAGE_W = 12
+Parameter \NS = 1
+Parameter \NPR = 1
+Parameter \NREC = 0
+Parameter \NGO = 1
+Parameter \NB = 2
+Parameter \NF = 1
+Parameter \XSER = 1
+Parameter \SPARSE_SU = 1
+Parameter \SU_DICT_CAP = 290'01000000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000001000000000000000000000000000000010000000000000000000000000000001000000000000000000000000000001101000000000000000000000000000010010000000000000000000000000000101000000000000000000000000000000011
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar'.
+Parameter \PAGE_W = 12
+Parameter \NS = 1
+Parameter \NPR = 1
+Parameter \NREC = 0
+Parameter \NGO = 1
+Parameter \NB = 2
+Parameter \NF = 1
+Parameter \XSER = 1
+Parameter \SPARSE_SU = 1
+Parameter \SU_DICT_CAP = 290'01000000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000001000000000000000000000000000000010000000000000000000000000000001000000000000000000000000000001101000000000000000000000000000010010000000000000000000000000000101000000000000000000000000000000011
+Generating RTLIL representation for module `$paramod$e6a58cc64e8db75cea816455035e7c38e28db0ed\ot_hbm_static_cfg_collar'.
+Warning: Replacing memory \r_pay with list of registers. See collar.sv:275
+Warning: Replacing memory \r_go with list of registers. See collar.sv:275
+Warning: Replacing memory \r_off with list of registers. See collar.sv:274
+Warning: Replacing memory \page with list of registers. See collar.sv:244
+Warning: Replacing memory \need with list of registers. See collar.sv:244
+Warning: Replacing memory \hwm with list of registers. See collar.sv:244
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_static_cfg_collar
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_hbm_static_cfg_collar
+Removing unused module `$paramod$e6a58cc64e8db75cea816455035e7c38e28db0ed\ot_hbm_static_cfg_collar'.
+Removed 1 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+Found and cleaned up 1 empty switch in `\ot_hbm_static_cfg_collar.$proc$collar.sv:71$909'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:71$909'.
+Found and cleaned up 1 empty switch in `\ot_hbm_static_cfg_collar.$proc$collar.sv:75$910'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:75$910'.
+Cleaned up 3 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$collar.sv:230$493 in module ot_hbm_static_cfg_collar.
+Marked 22 switch rules as full_case in process $proc$collar.sv:239$511 in module ot_hbm_static_cfg_collar.
+Marked 1 switch rules as full_case in process $proc$collar.sv:171$807 in module ot_hbm_static_cfg_collar.
+Marked 1 switch rules as full_case in process $proc$collar.sv:187$815 in module ot_hbm_static_cfg_collar.
+Marked 1 switch rules as full_case in process $proc$collar.sv:196$821 in module ot_hbm_static_cfg_collar.
+Marked 4 switch rules as full_case in process $proc$collar.sv:211$830 in module ot_hbm_static_cfg_collar.
+Marked 1 switch rules as full_case in process $proc$collar.sv:227$906 in module ot_hbm_static_cfg_collar.
+Marked 1 switch rules as full_case in process $proc$collar.sv:135$473 in module ot_hbm_static_cfg_collar.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 17 redundant assignments.
+Promoted 49 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_c_n in `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+Found async reset \rst_s_n in `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+Found async reset \rst_c_n in `\ot_hbm_static_cfg_collar.$proc$collar.sv:187$815'.
+Found async reset \rst_c_n in `\ot_hbm_static_cfg_collar.$proc$collar.sv:196$821'.
+Found async reset \rst_c_n in `\ot_hbm_static_cfg_collar.$proc$collar.sv:135$473'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~45 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:230$493'.
+     1/2: $2\inst_ok[0:0]
+     2/2: $1\inst_ok[0:0]
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+     1/216: $5$mem2reg_rd$\r_pay$collar.sv:305$471_DATA[220:0]$782
+     2/216: $5$mem2reg_rd$\r_go$collar.sv:305$470_DATA[1:0]$781
+     3/216: $4$mem2reg_rd$\r_pay$collar.sv:305$471_DATA[220:0]$780
+     4/216: $4$mem2reg_rd$\r_pay$collar.sv:305$471_ADDR[0:0]$779
+     5/216: $4$mem2reg_rd$\r_go$collar.sv:305$470_DATA[1:0]$778
+     6/216: $4$mem2reg_rd$\r_go$collar.sv:305$470_ADDR[0:0]$777
+     7/216: $3$mem2reg_rd$\r_pay$collar.sv:305$471_DATA[220:0]$775
+     8/216: $3$mem2reg_rd$\r_pay$collar.sv:305$471_ADDR[0:0]$774
+     9/216: $3$mem2reg_rd$\r_go$collar.sv:305$470_DATA[1:0]$773
+    10/216: $3$mem2reg_rd$\r_go$collar.sv:305$470_ADDR[0:0]$772
+    11/216: $2$mem2reg_rd$\r_pay$collar.sv:305$471_DATA[220:0]$765
+    12/216: $2$mem2reg_rd$\r_pay$collar.sv:305$471_ADDR[0:0]$764
+    13/216: $2$mem2reg_rd$\r_go$collar.sv:305$470_DATA[1:0]$763
+    14/216: $2$mem2reg_rd$\r_go$collar.sv:305$470_ADDR[0:0]$762
+    15/216: $8\k[31:0]
+    16/216: $8$mem2reg_wr$\page$collar.sv:280$469_DATA[11:0]$753
+    17/216: $8$mem2reg_wr$\page$collar.sv:280$469_ADDR[0:0]$752
+    18/216: $7$mem2reg_wr$\page$collar.sv:280$469_DATA[11:0]$750
+    19/216: $7$mem2reg_wr$\page$collar.sv:280$469_ADDR[0:0]$749
+    20/216: $7\k[31:0]
+    21/216: $7$lookahead\r_val$510[0:0]$739
+    22/216: $7$mem2reg_wr$\r_pay$collar.sv:275$468_DATA[220:0]$738
+    23/216: $7$mem2reg_wr$\r_pay$collar.sv:275$468_ADDR[0:0]$737
+    24/216: $7$mem2reg_wr$\r_go$collar.sv:275$467_DATA[1:0]$736
+    25/216: $7$mem2reg_wr$\r_go$collar.sv:275$467_ADDR[0:0]$735
+    26/216: $7$mem2reg_wr$\r_off$collar.sv:274$466_DATA[31:0]$734
+    27/216: $7$mem2reg_wr$\r_off$collar.sv:274$466_ADDR[0:0]$733
+    28/216: $7$bitselwrite$pos$collar.sv:274$459[8:0]$732
+    29/216: $6$lookahead\r_val$510[0:0]$730
+    30/216: $6$mem2reg_wr$\r_pay$collar.sv:275$468_DATA[220:0]$727
+    31/216: $6$mem2reg_wr$\r_pay$collar.sv:275$468_ADDR[0:0]$726
+    32/216: $6$mem2reg_wr$\r_go$collar.sv:275$467_DATA[1:0]$725
+    33/216: $6$mem2reg_wr$\r_go$collar.sv:275$467_ADDR[0:0]$724
+    34/216: $6$mem2reg_wr$\r_off$collar.sv:274$466_DATA[31:0]$723
+    35/216: $6$mem2reg_wr$\r_off$collar.sv:274$466_ADDR[0:0]$722
+    36/216: $6$bitselwrite$pos$collar.sv:274$459[8:0]$721
+    37/216: $6$mem2reg_wr$\page$collar.sv:280$469_DATA[11:0]$729
+    38/216: $6$mem2reg_wr$\page$collar.sv:280$469_ADDR[0:0]$728
+    39/216: $6\k[31:0]
+    40/216: $9$lookahead\loaded$509[0:0]$703
+    41/216: $6$lookahead\prm$508[255:0]$702
+    42/216: $6$bitselwrite$pos$collar.sv:270$458[9:0]$701
+    43/216: $6$bitselwrite$pos$collar.sv:270$457[31:0]$700
+    44/216: $8$lookahead\loaded$509[0:0]$697
+    45/216: $5$lookahead\prm$508[255:0]$696
+    46/216: $5$bitselwrite$pos$collar.sv:270$458[9:0]$686
+    47/216: $5$bitselwrite$pos$collar.sv:270$457[31:0]$685
+    48/216: $5$lookahead\r_val$510[0:0]$698
+    49/216: $5$mem2reg_wr$\page$collar.sv:280$469_DATA[11:0]$695
+    50/216: $5$mem2reg_wr$\page$collar.sv:280$469_ADDR[0:0]$694
+    51/216: $5$mem2reg_wr$\r_pay$collar.sv:275$468_DATA[220:0]$693
+    52/216: $5$mem2reg_wr$\r_pay$collar.sv:275$468_ADDR[0:0]$692
+    53/216: $5$mem2reg_wr$\r_go$collar.sv:275$467_DATA[1:0]$691
+    54/216: $5$mem2reg_wr$\r_go$collar.sv:275$467_ADDR[0:0]$690
+    55/216: $5$mem2reg_wr$\r_off$collar.sv:274$466_DATA[31:0]$689
+    56/216: $5$mem2reg_wr$\r_off$collar.sv:274$466_ADDR[0:0]$688
+    57/216: $5$bitselwrite$pos$collar.sv:274$459[8:0]$687
+    58/216: $5\k[31:0]
+    59/216: $8$mem2reg_rd$\hwm$collar.sv:260$465_DATA[23:0]$682
+    60/216: $7$lookahead\loaded$509[0:0]$681
+    61/216: $7$mem2reg_wr$\hwm$collar.sv:259$463_ADDR[0:0]$675
+    62/216: $7$mem2reg_wr$\hwm$collar.sv:259$463_DATA[23:0]$676
+    63/216: $7$mem2reg_rd$\hwm$collar.sv:260$465_DATA[23:0]$680
+    64/216: $7$mem2reg_rd$\hwm$collar.sv:260$465_ADDR[0:0]$679
+    65/216: $7$mem2reg_wr$\hwm$collar.sv:260$464_DATA[23:0]$678
+    66/216: $7$mem2reg_wr$\hwm$collar.sv:260$464_ADDR[0:0]$677
+    67/216: $6$lookahead\loaded$509[0:0]$666
+    68/216: $6$lookahead\pw_we$507[0:0]$665
+    69/216: $6$mem2reg_rd$\hwm$collar.sv:260$465_DATA[23:0]$664
+    70/216: $6$mem2reg_rd$\hwm$collar.sv:260$465_ADDR[0:0]$663
+    71/216: $6$mem2reg_wr$\hwm$collar.sv:260$464_DATA[23:0]$662
+    72/216: $6$mem2reg_wr$\hwm$collar.sv:260$464_ADDR[0:0]$661
+    73/216: $6$mem2reg_wr$\hwm$collar.sv:259$463_DATA[23:0]$660
+    74/216: $6$mem2reg_wr$\hwm$collar.sv:259$463_ADDR[0:0]$659
+    75/216: $6$bitselwrite$pos$collar.sv:256$456[0:0]$658
+    76/216: $6$mem2reg_rd$\hwm$collar.sv:254$462_DATA[23:0]$655
+    77/216: $5$lookahead\loaded$509[0:0]$654
+    78/216: $5$lookahead\pw_we$507[0:0]$653
+    79/216: $5$mem2reg_rd$\hwm$collar.sv:260$465_DATA[23:0]$652
+    80/216: $5$mem2reg_rd$\hwm$collar.sv:260$465_ADDR[0:0]$651
+    81/216: $5$mem2reg_wr$\hwm$collar.sv:260$464_DATA[23:0]$650
+    82/216: $5$mem2reg_wr$\hwm$collar.sv:260$464_ADDR[0:0]$649
+    83/216: $5$mem2reg_wr$\hwm$collar.sv:259$463_DATA[23:0]$648
+    84/216: $5$mem2reg_wr$\hwm$collar.sv:259$463_ADDR[0:0]$647
+    85/216: $5$bitselwrite$pos$collar.sv:256$456[0:0]$644
+    86/216: $5$mem2reg_rd$\hwm$collar.sv:254$462_DATA[23:0]$646
+    87/216: $5$mem2reg_rd$\hwm$collar.sv:254$462_ADDR[0:0]$645
+    88/216: $4$lookahead\loaded$509[0:0]$642
+    89/216: $4$lookahead\pw_we$507[0:0]$640
+    90/216: $4$mem2reg_rd$\hwm$collar.sv:260$465_DATA[23:0]$631
+    91/216: $4$mem2reg_rd$\hwm$collar.sv:260$465_ADDR[0:0]$630
+    92/216: $4$mem2reg_wr$\hwm$collar.sv:260$464_DATA[23:0]$629
+    93/216: $4$mem2reg_wr$\hwm$collar.sv:260$464_ADDR[0:0]$628
+    94/216: $4$mem2reg_wr$\hwm$collar.sv:259$463_DATA[23:0]$627
+    95/216: $4$mem2reg_wr$\hwm$collar.sv:259$463_ADDR[0:0]$626
+    96/216: $4$mem2reg_rd$\hwm$collar.sv:254$462_DATA[23:0]$625
+    97/216: $4$mem2reg_rd$\hwm$collar.sv:254$462_ADDR[0:0]$624
+    98/216: $4$bitselwrite$pos$collar.sv:256$456[0:0]$620
+    99/216: $4$lookahead\r_val$510[0:0]$643
+   100/216: $4$lookahead\prm$508[255:0]$641
+   101/216: $4$mem2reg_wr$\page$collar.sv:280$469_DATA[11:0]$639
+   102/216: $4$mem2reg_wr$\page$collar.sv:280$469_ADDR[0:0]$638
+   103/216: $4$mem2reg_wr$\r_pay$collar.sv:275$468_DATA[220:0]$637
+   104/216: $4$mem2reg_wr$\r_pay$collar.sv:275$468_ADDR[0:0]$636
+   105/216: $4$mem2reg_wr$\r_go$collar.sv:275$467_DATA[1:0]$635
+   106/216: $4$mem2reg_wr$\r_go$collar.sv:275$467_ADDR[0:0]$634
+   107/216: $4$mem2reg_wr$\r_off$collar.sv:274$466_DATA[31:0]$633
+   108/216: $4$mem2reg_wr$\r_off$collar.sv:274$466_ADDR[0:0]$632
+   109/216: $4$bitselwrite$pos$collar.sv:274$459[8:0]$623
+   110/216: $4$bitselwrite$pos$collar.sv:270$458[9:0]$622
+   111/216: $4$bitselwrite$pos$collar.sv:270$457[31:0]$621
+   112/216: $4\k[31:0]
+   113/216: $3$lookahead\r_val$510[0:0]$618
+   114/216: $3$lookahead\loaded$509[0:0]$617
+   115/216: $3$lookahead\prm$508[255:0]$616
+   116/216: $3$lookahead\pw_we$507[0:0]$615
+   117/216: $3$mem2reg_wr$\page$collar.sv:280$469_DATA[11:0]$614
+   118/216: $3$mem2reg_wr$\page$collar.sv:280$469_ADDR[0:0]$613
+   119/216: $3$mem2reg_wr$\r_pay$collar.sv:275$468_DATA[220:0]$612
+   120/216: $3$mem2reg_wr$\r_pay$collar.sv:275$468_ADDR[0:0]$611
+   121/216: $3$mem2reg_wr$\r_go$collar.sv:275$467_DATA[1:0]$610
+   122/216: $3$mem2reg_wr$\r_go$collar.sv:275$467_ADDR[0:0]$609
+   123/216: $3$mem2reg_wr$\r_off$collar.sv:274$466_DATA[31:0]$608
+   124/216: $3$mem2reg_wr$\r_off$collar.sv:274$466_ADDR[0:0]$607
+   125/216: $3$mem2reg_rd$\hwm$collar.sv:260$465_DATA[23:0]$606
+   126/216: $3$mem2reg_rd$\hwm$collar.sv:260$465_ADDR[0:0]$605
+   127/216: $3$mem2reg_wr$\hwm$collar.sv:260$464_DATA[23:0]$604
+   128/216: $3$mem2reg_wr$\hwm$collar.sv:260$464_ADDR[0:0]$603
+   129/216: $3$mem2reg_wr$\hwm$collar.sv:259$463_DATA[23:0]$602
+   130/216: $3$mem2reg_wr$\hwm$collar.sv:259$463_ADDR[0:0]$601
+   131/216: $3$mem2reg_rd$\hwm$collar.sv:254$462_DATA[23:0]$600
+   132/216: $3$mem2reg_rd$\hwm$collar.sv:254$462_ADDR[0:0]$599
+   133/216: $3$bitselwrite$pos$collar.sv:274$459[8:0]$598
+   134/216: $3$bitselwrite$pos$collar.sv:270$458[9:0]$597
+   135/216: $3$bitselwrite$pos$collar.sv:270$457[31:0]$596
+   136/216: $3$bitselwrite$pos$collar.sv:256$456[0:0]$595
+   137/216: $3\k[31:0]
+   138/216: $2$lookahead\r_val$510[0:0]$594
+   139/216: $2$lookahead\loaded$509[0:0]$593
+   140/216: $2$lookahead\prm$508[255:0]$592
+   141/216: $2$lookahead\pw_we$507[0:0]$591
+   142/216: $2$mem2reg_wr$\page$collar.sv:280$469_DATA[11:0]$590
+   143/216: $2$mem2reg_wr$\page$collar.sv:280$469_ADDR[0:0]$589
+   144/216: $2$mem2reg_wr$\r_pay$collar.sv:275$468_DATA[220:0]$588
+   145/216: $2$mem2reg_wr$\r_pay$collar.sv:275$468_ADDR[0:0]$587
+   146/216: $2$mem2reg_wr$\r_go$collar.sv:275$467_DATA[1:0]$586
+   147/216: $2$mem2reg_wr$\r_go$collar.sv:275$467_ADDR[0:0]$585
+   148/216: $2$mem2reg_wr$\r_off$collar.sv:274$466_DATA[31:0]$584
+   149/216: $2$mem2reg_wr$\r_off$collar.sv:274$466_ADDR[0:0]$583
+   150/216: $2$mem2reg_rd$\hwm$collar.sv:260$465_DATA[23:0]$582
+   151/216: $2$mem2reg_rd$\hwm$collar.sv:260$465_ADDR[0:0]$581
+   152/216: $2$mem2reg_wr$\hwm$collar.sv:260$464_DATA[23:0]$580
+   153/216: $2$mem2reg_wr$\hwm$collar.sv:260$464_ADDR[0:0]$579
+   154/216: $2$mem2reg_wr$\hwm$collar.sv:259$463_DATA[23:0]$578
+   155/216: $2$mem2reg_wr$\hwm$collar.sv:259$463_ADDR[0:0]$577
+   156/216: $2$mem2reg_rd$\hwm$collar.sv:254$462_DATA[23:0]$576
+   157/216: $2$mem2reg_rd$\hwm$collar.sv:254$462_ADDR[0:0]$575
+   158/216: $2$bitselwrite$pos$collar.sv:274$459[8:0]$574
+   159/216: $2$bitselwrite$pos$collar.sv:270$458[9:0]$573
+   160/216: $2$bitselwrite$pos$collar.sv:270$457[31:0]$572
+   161/216: $2$bitselwrite$pos$collar.sv:256$456[0:0]$571
+   162/216: $2\k[31:0]
+   163/216: $0\ready[0:0]
+   164/216: $0\active[0:0]
+   165/216: $1$mem2reg_rd$\r_pay$collar.sv:305$471_DATA[220:0]$564
+   166/216: $1$mem2reg_rd$\r_pay$collar.sv:305$471_ADDR[0:0]$563
+   167/216: $1$mem2reg_rd$\r_go$collar.sv:305$470_DATA[1:0]$562
+   168/216: $1$mem2reg_rd$\r_go$collar.sv:305$470_ADDR[0:0]$561
+   169/216: $1$lookahead\r_val$510[0:0]$568
+   170/216: $1$lookahead\loaded$509[0:0]$567
+   171/216: $1$lookahead\prm$508[255:0]$566
+   172/216: $1$lookahead\pw_we$507[0:0]$565
+   173/216: $1$mem2reg_wr$\page$collar.sv:280$469_DATA[11:0]$560
+   174/216: $1$mem2reg_wr$\page$collar.sv:280$469_ADDR[0:0]$559
+   175/216: $1$mem2reg_wr$\r_pay$collar.sv:275$468_DATA[220:0]$558
+   176/216: $1$mem2reg_wr$\r_pay$collar.sv:275$468_ADDR[0:0]$557
+   177/216: $1$mem2reg_wr$\r_go$collar.sv:275$467_DATA[1:0]$556
+   178/216: $1$mem2reg_wr$\r_go$collar.sv:275$467_ADDR[0:0]$555
+   179/216: $1$mem2reg_wr$\r_off$collar.sv:274$466_DATA[31:0]$554
+   180/216: $1$mem2reg_wr$\r_off$collar.sv:274$466_ADDR[0:0]$553
+   181/216: $1$mem2reg_rd$\hwm$collar.sv:260$465_DATA[23:0]$552
+   182/216: $1$mem2reg_rd$\hwm$collar.sv:260$465_ADDR[0:0]$551
+   183/216: $1$mem2reg_wr$\hwm$collar.sv:260$464_DATA[23:0]$550
+   184/216: $1$mem2reg_wr$\hwm$collar.sv:260$464_ADDR[0:0]$549
+   185/216: $1$mem2reg_wr$\hwm$collar.sv:259$463_DATA[23:0]$548
+   186/216: $1$mem2reg_wr$\hwm$collar.sv:259$463_ADDR[0:0]$547
+   187/216: $1$mem2reg_rd$\hwm$collar.sv:254$462_DATA[23:0]$546
+   188/216: $1$mem2reg_rd$\hwm$collar.sv:254$462_ADDR[0:0]$545
+   189/216: $1$bitselwrite$pos$collar.sv:274$459[8:0]$544
+   190/216: $1$bitselwrite$pos$collar.sv:270$458[9:0]$543
+   191/216: $1$bitselwrite$pos$collar.sv:270$457[31:0]$542
+   192/216: $1$bitselwrite$pos$collar.sv:256$456[0:0]$541
+   193/216: $1\k[31:0]
+   194/216: $0\go[0:0]
+   195/216: $0\start_v[0:0]
+   196/216: $0\r_pay[0][220:0]
+   197/216: $0\r_go[0][1:0]
+   198/216: $0\r_off[0][31:0]
+   199/216: $0\page[0][11:0]
+   200/216: $0\need[0][23:0]
+   201/216: $0\hwm[0][23:0]
+   202/216: $0\tail[7:0]
+   203/216: $0\rptr[0:0]
+   204/216: $0\cnt[31:0]
+   205/216: $0\run[0:0]
+   206/216: $0\armed[0:0]
+   207/216: $0\wait_done[0:0]
+   208/216: $0\wait_mask[0:0]
+   209/216: $0\need_set[0:0]
+   210/216: $0\sparse_seen[0:0]
+   211/216: $0\sparse_last[22:0]
+   212/216: $0\sel[0:0]
+   213/216: $0\fault[0:0]
+   214/216: $0\rec[220:0]
+   215/216: $0\pw_data[255:0]
+   216/216: $0\pw_addr[22:0]
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:122$804'.
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:123$805'.
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:170$806'.
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+     1/7: $0\g_xser.pv_lv[0:0]
+     2/7: $0\g_xser.pv_dv[0:0]
+     3/7: $0\g_xser.pv_cv[0:0]
+     4/7: $0\g_xser.h_lv[0:0]
+     5/7: $0\g_xser.h_dv[0:0]
+     6/7: $0\g_xser.h_cv[0:0]
+     7/7: $0\g_xser.h_seq[1:0]
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:184$812'.
+     1/3: $0\g_xser.h_cd[255:0]
+     2/3: $0\g_xser.h_ca[11:0]
+     3/3: $0\g_xser.h_ct[7:0]
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:187$815'.
+     1/3: $0\g_xser.x3_seq[1:0]
+     2/3: $0\g_xser.x2_seq[1:0]
+     3/3: $0\g_xser.x1_seq[1:0]
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:195$820'.
+     1/3: $0\cd[255:0]
+     2/3: $0\ca[11:0]
+     3/3: $0\ct[7:0]
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:196$821'.
+     1/4: $0\xfault[0:0]
+     2/4: $0\lv[0:0]
+     3/4: $0\dv[0:0]
+     4/4: $0\cv[0:0]
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:211$830'.
+     1/16: $4\su_bank_valid$func$collar.sv:211$460.$result[0:0]$892
+     2/16: $4\su_bank_valid$func$collar.sv:211$460.cap[31:0]$895
+     3/16: $4\su_bank_valid$func$collar.sv:211$460.column[31:0]$894
+     4/16: $4\su_bank_valid$func$collar.sv:211$460.local_bank[31:0]$893
+     5/16: $3\su_bank_valid$func$collar.sv:211$460.$result[0:0]$875
+     6/16: $3\su_bank_valid$func$collar.sv:211$460.cap[31:0]$878
+     7/16: $3\su_bank_valid$func$collar.sv:211$460.column[31:0]$877
+     8/16: $3\su_bank_valid$func$collar.sv:211$460.local_bank[31:0]$876
+     9/16: $2\su_bank_valid$func$collar.sv:211$460.$result[0:0]$858
+    10/16: $2\su_bank_valid$func$collar.sv:211$460.cap[31:0]$861
+    11/16: $2\su_bank_valid$func$collar.sv:211$460.column[31:0]$860
+    12/16: $2\su_bank_valid$func$collar.sv:211$460.local_bank[31:0]$859
+    13/16: $1\su_bank_valid$func$collar.sv:211$460.$result[0:0]$841
+    14/16: $1\su_bank_valid$func$collar.sv:211$460.cap[31:0]$844
+    15/16: $1\su_bank_valid$func$collar.sv:211$460.column[31:0]$843
+    16/16: $1\su_bank_valid$func$collar.sv:211$460.local_bank[31:0]$842
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:227$906'.
+     1/1: $1$mem2reg_rd$\page$collar.sv:227$461_DATA[11:0]$908
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:134$472'.
+Creating decoders for process `\ot_hbm_static_cfg_collar.$proc$collar.sv:135$473'.
+     1/3: $0\cf_q[0:0]
+     2/3: $0\busy_q[1:0]
+     3/3: $0\done_q[0:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_hbm_static_cfg_collar.\inst_ok' from process `\ot_hbm_static_cfg_collar.$proc$collar.sv:230$493'.
+No latch inferred for signal `\ot_hbm_static_cfg_collar.\s' from process `\ot_hbm_static_cfg_collar.$proc$collar.sv:230$493'.
+No latch inferred for signal `\ot_hbm_static_cfg_collar.\su_bank_valid$func$collar.sv:211$455.$result' from process `\ot_hbm_static_cfg_collar.$proc$collar.sv:211$830'.
+No latch inferred for signal `\ot_hbm_static_cfg_collar.$mem2reg_rd$\page$collar.sv:227$461_DATA' from process `\ot_hbm_static_cfg_collar.$proc$collar.sv:227$906'.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hbm_static_cfg_collar.\pw_we' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$2938' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\pw_addr' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $dff cell `$procdff$2945' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\pw_data' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $dff cell `$procdff$2952' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\prm' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $dff cell `$procdff$2959' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\start_v' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$2964' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\go' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$2969' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\rec' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $dff cell `$procdff$2976' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\ready' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$2981' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\active' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$2986' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\fault' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$2991' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\sel' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$2996' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\sparse_last' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3001' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\sparse_seen' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3006' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\need_set' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3011' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\wait_mask' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3016' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\wait_done' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3021' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\loaded' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3026' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\armed' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3031' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\run' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3036' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\cnt' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3041' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\rptr' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3046' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\tail' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3051' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\r_val' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3056' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\k' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3061' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\hwm[0]' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3066' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\need[0]' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3071' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\page[0]' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3076' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\r_off[0]' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $dff cell `$procdff$3083' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\r_go[0]' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $dff cell `$procdff$3090' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\r_pay[0]' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $dff cell `$procdff$3097' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.$bitselwrite$pos$collar.sv:256$456' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3102' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$bitselwrite$pos$collar.sv:270$457' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3107' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$bitselwrite$pos$collar.sv:270$458' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3112' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$bitselwrite$pos$collar.sv:274$459' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3117' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_rd$\hwm$collar.sv:254$462_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3122' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_rd$\hwm$collar.sv:254$462_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3127' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\hwm$collar.sv:259$463_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3132' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\hwm$collar.sv:259$463_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3137' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\hwm$collar.sv:260$464_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3142' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\hwm$collar.sv:260$464_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3147' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_rd$\hwm$collar.sv:260$465_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3152' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_rd$\hwm$collar.sv:260$465_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3157' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\r_off$collar.sv:274$466_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3162' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\r_off$collar.sv:274$466_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3167' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\r_go$collar.sv:275$467_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3172' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\r_go$collar.sv:275$467_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3177' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\r_pay$collar.sv:275$468_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3182' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\r_pay$collar.sv:275$468_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3187' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\page$collar.sv:280$469_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3192' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_wr$\page$collar.sv:280$469_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3197' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_rd$\r_go$collar.sv:305$470_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3202' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_rd$\r_go$collar.sv:305$470_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3207' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_rd$\r_pay$collar.sv:305$471_ADDR' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3212' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$mem2reg_rd$\r_pay$collar.sv:305$471_DATA' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3217' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$lookahead\pw_we$507' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3222' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$lookahead\prm$508' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3227' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$lookahead\loaded$509' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3232' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.$lookahead\r_val$510' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+  created $adff cell `$procdff$3237' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_rst_sync.rc' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:122$804'.
+  created $dff cell `$procdff$3238' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_rst_sync.rs' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:123$805'.
+  created $dff cell `$procdff$3239' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.p_ct' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:170$806'.
+  created $dff cell `$procdff$3240' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.p_ca' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:170$806'.
+  created $dff cell `$procdff$3241' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.p_cd' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:170$806'.
+  created $dff cell `$procdff$3242' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.pv_cv' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+  created $adff cell `$procdff$3247' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.pv_dv' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+  created $adff cell `$procdff$3252' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.pv_lv' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+  created $adff cell `$procdff$3257' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.h_seq' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+  created $adff cell `$procdff$3262' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.h_cv' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+  created $adff cell `$procdff$3267' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.h_dv' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+  created $adff cell `$procdff$3272' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.h_lv' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+  created $adff cell `$procdff$3277' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.h_ct' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:184$812'.
+  created $dff cell `$procdff$3278' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.h_ca' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:184$812'.
+  created $dff cell `$procdff$3279' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.h_cd' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:184$812'.
+  created $dff cell `$procdff$3280' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.x1_seq' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:187$815'.
+  created $adff cell `$procdff$3285' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.x2_seq' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:187$815'.
+  created $adff cell `$procdff$3290' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\g_xser.x3_seq' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:187$815'.
+  created $adff cell `$procdff$3295' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\ct' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:195$820'.
+  created $dff cell `$procdff$3296' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\ca' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:195$820'.
+  created $dff cell `$procdff$3297' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\cd' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:195$820'.
+  created $dff cell `$procdff$3298' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\cv' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:196$821'.
+  created $adff cell `$procdff$3303' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\dv' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:196$821'.
+  created $adff cell `$procdff$3308' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\lv' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:196$821'.
+  created $adff cell `$procdff$3313' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\xfault' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:196$821'.
+  created $adff cell `$procdff$3318' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\tg' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:134$472'.
+  created $dff cell `$procdff$3319' with positive edge clock.
+Creating register for signal `\ot_hbm_static_cfg_collar.\done_q' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:135$473'.
+  created $adff cell `$procdff$3324' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\busy_q' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:135$473'.
+  created $adff cell `$procdff$3329' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_static_cfg_collar.\cf_q' using process `\ot_hbm_static_cfg_collar.$proc$collar.sv:135$473'.
+  created $adff cell `$procdff$3334' with positive edge clock and positive level reset.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\ot_hbm_static_cfg_collar.$proc$collar.sv:230$493'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:230$493'.
+Found and cleaned up 35 empty switches in `\ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:239$511'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:122$804'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:123$805'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:170$806'.
+Found and cleaned up 1 empty switch in `\ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:171$807'.
+Found and cleaned up 1 empty switch in `\ot_hbm_static_cfg_collar.$proc$collar.sv:184$812'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:184$812'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:187$815'.
+Found and cleaned up 1 empty switch in `\ot_hbm_static_cfg_collar.$proc$collar.sv:195$820'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:195$820'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:196$821'.
+Found and cleaned up 4 empty switches in `\ot_hbm_static_cfg_collar.$proc$collar.sv:211$830'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:211$830'.
+Found and cleaned up 1 empty switch in `\ot_hbm_static_cfg_collar.$proc$collar.sv:227$906'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:227$906'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:134$472'.
+Removing empty process `ot_hbm_static_cfg_collar.$proc$collar.sv:135$473'.
+Cleaned up 45 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_static_cfg_collar.
+<suppressed ~335 debug messages>
+
+5. Executing JSON backend.
