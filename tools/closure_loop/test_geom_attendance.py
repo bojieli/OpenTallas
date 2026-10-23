@@ -65,5 +65,22 @@ class Attendance(unittest.TestCase):
         self.assertEqual([x["element"] for x in A.awaiting(r.values())], ["qfd_new"])
 
 
+    def test_superseded(self):
+        rows = [row("qfd_coll_face_s0_cxb", design="qwen_compute"), row("qkd_hr_ingest_eng_sp6", design="qwen_kvsys"),
+                row("qkd_kvs_emb_rope_ovl", design="qwen_kvsys"), row("qkd_kvs_emb_ctx", design="qwen_kvsys"),
+                row("ot_hbm_keep")]
+        lane = "- SUPERSEDED qfd_coll_face_s0_cxb by qfd_collective_static_io_production (COORD)\n"
+        tree = ["  - [ ] K.STA.HOST ingest_qm · STEWARD-QKd · WAITS · NEXT: sp6/sp7f/sp7g + hr_cluster_e p10a SUPERSEDED/off-die",
+                "  - [ ] K.STA.EMB kvs_emb · QTILE-R · REVIEW · NEXT: nc32 kit; rope_ovl/rope73_c7m SUPERSEDED/off-die",
+                "  - [ ] H.GRT.IR · STEWARD · WAITS · ot_hbm_keep r18h2 stopped (superseded) · NEXT: ir"]
+        r = {x["element"]: x for x in A.build(rows, {}, {}, [], lane, tree, [], "")}
+        self.assertNotIn("qfd_coll_face_s0_cxb", r)
+        self.assertNotIn("qkd_hr_ingest_eng_sp6", r)
+        self.assertNotIn("qkd_kvs_emb_rope_ovl", r)
+        self.assertIn("qkd_kvs_emb_ctx", r)          # not named before the mark
+        self.assertIn("ot_hbm_keep", r)              # lowercase prose 'superseded' is not a mark
+        self.assertTrue(r["ot_hbm_keep"]["unattended"])
+
+
 if __name__ == "__main__":
     unittest.main()

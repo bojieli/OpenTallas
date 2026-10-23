@@ -13,6 +13,9 @@ marked BAD (COORD_VERDICTS.tsv), with
   hours             since the last action (loop job update, fleet-viz latest, lane file touched with the element in its
                     last 60 lines, GEOM-REVIEW REQ/VERDICT);
   UNATTENDED        a failure, no live job, no review in flight (none / FAIL) and no action in < 2 h.
+  superseded        dropped from the audit: a lanes/GEOM-REVIEW.md line "SUPERSEDED <element> by <successor>", or a
+                    RELEASE_TREE.md line carrying an uppercase SUPERSEDED or an off-die mark after a list of element /
+                    kit names or name suffixes ("NEXT: sp6/sp7f + rope_ovl SUPERSEDED/off-die").
 Writes <coord>/ATTENDANCE.md, rewrites the "AWAITING REDESIGN" section of lanes/GEOM-REVIEW.md (COORD BAD tops with no
 REQ yet: "AWAITING REDESIGN <element> <owner>") and prints the UNATTENDED lines (for the coordinator's hourly check).
 """
@@ -44,6 +47,8 @@ TERMINAL = {"CLOSED", "CANCELLED", "REFUSED", "INVALID"}
 REQ_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?REQ\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)", re.M)
 VER_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?VERDICT\s+(\S+)\s+(\S+)\s+(PASS-CONDITIONAL|PASS|FAIL)(?![\w-])", re.M)
 STALE_H = 2.0
+SUP_LANE_RE = re.compile(r"\bSUPERSEDED\s+(\S+)\s+by\s+(\S+)")
+SUP_TREE_RE = re.compile(r"\bSUPERSEDED\b(?!-)|\boff-die\b", re.I)
 STAMP_RE = re.compile(r"\[(\d\d-\d\d) (\d\d:\d\d)\]")
 STEWARDS = (("STEWARD-S81", ("dsdv_", "dsfd_", "ot_s81", "s81", "col_h")), ("STEWARD-QK", ("qfd_", "qkd_", "ot_coll_", "ot_qwen")),
             ("STEWARD-HBM", ("ot_hbm", "hfd_", "ot_hgi", "ot_hfd", "ot_hidx", "hnx_", "hdie", "ot_hdie")))
@@ -177,12 +182,42 @@ def ps_args():
         return ""
 
 
+def superseded_lane(text: str) -> dict:
+    """{element: successor} from 'SUPERSEDED <element> by <successor>' lines (latest wins)."""
+    return {m.group(1): m.group(2).rstrip(".,;)") for m in SUP_LANE_RE.finditer(text or "")}
+
+
+def _tree_tokens(lines):
+    """Name tokens listed before a SUPERSEDED / off-die mark on a RELEASE_TREE line (back to the previous field)."""
+    toks = set()
+    for ln in lines:
+        for m in SUP_TREE_RE.finditer(ln):
+            if m.group(0).lower() == "superseded" and m.group(0) != "SUPERSEDED":
+                continue                     # lowercase 'superseded' is prose ('runs superseded'), not a mark
+            seg = re.split(r"·|NEXT:|;|\|", ln[:m.start()])[-1]
+            toks |= {x for x in re.split(r"[\s/+,()]+", seg) if len(x) >= 3 and re.fullmatch(r"[A-Za-z0-9_.-]+", x)}
+    return toks
+
+
+def superseded_by(e, names, lane_sup, tree_toks):
+    """Successor (or 'RELEASE_TREE') when the element or one of its kits is marked superseded / off-die, else ''."""
+    for n in names:
+        if n in lane_sup:
+            return lane_sup[n]
+    for n in names:
+        for tk in tree_toks:
+            if n == tk or n.endswith("_" + tk):
+                return f"RELEASE_TREE ({tk})"
+    return ""
+
+
 def build(rows, cmap, lidx, verdicts, lane_text, tree_lines, lanes, psout):
     opened = open_on_dies(rows)
     byname = {x["element"]: x for x in rows}
     bad_tops = {t for t, v in cmap.items() if any(r[1] in G.BAD for r in v)}
     elements = sorted(set(opened) | bad_tops)
     rstate = review_state(lane_text, verdicts)
+    lane_sup, tree_toks = superseded_lane(lane_text), _tree_tokens(tree_lines)
     out = []
     for e in elements:
         row = byname.get(e) or {}
@@ -193,6 +228,8 @@ def build(rows, cmap, lidx, verdicts, lane_text, tree_lines, lanes, psout):
         kits = {Path(j["kit"]).name for j in jobs if j.get("kit")}
         kits |= {r[0].split("__", 1)[1] for r in cmap.get(e, []) if "__" in r[0]}
         names = [e] + sorted(kits)
+        if superseded_by(e, names, lane_sup, tree_toks):
+            continue            # superseded / off-die: not open work
         fails = [j for j in jobs if G.is_fail_state(j["status"] or "")]
         closed_t = max((j["t"] for j in jobs if j["status"] == "CLOSED"), default=0.0)
         lf = max(fails, key=lambda j: j["t"]) if fails else None
