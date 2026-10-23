@@ -73,7 +73,9 @@ def die_sources_tree(bundle: Path, int8: bool, i8w: bool = False):
 def build(work: Path, bundle: Path, mut_sign=False, int8=True, i8w=False, rtl_mut=""):
     name = ("obj_i8w" + ("_" + rtl_mut if rtl_mut else "")) if i8w else \
         (("obj_i8_sign" if mut_sign else "obj_i8") if int8 else "obj_default")
-    obj = work / name
+    # HBM-P4-SM (10-23): QSM_DEFINES=OT_SM_QSPLIT[,OT_SM_QSPLIT_MUT=n] = extra build defines (opt-in RTL variants)
+    xdef = [d for d in os.environ.get("QSM_DEFINES", "").split(",") if d]
+    obj = work / (name + "".join("_" + d.replace("=", "") for d in xdef))
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
         return exe
@@ -83,7 +85,7 @@ def build(work: Path, bundle: Path, mut_sign=False, int8=True, i8w=False, rtl_mu
     defs = SM.DIE_DEFINES + (["OT_SMH_ATTN_I8W"] if i8w else ["OT_SMH_ATTN_INT8"] if int8 else []) + \
         (["OT_INT8_MUT_SIGN"] if mut_sign else []) + \
         ({"sign": ["OT_I8W_MUT_SIGN"], "noswap": ["OT_I8W_MUT_NOSWAP"], "half": ["OT_I8W_MUT_HALF"]}.get(rtl_mut, [])
-         if i8w else [])
+         if i8w else []) + xdef
     inc = sorted({str(Path(s).parent) for s in srcs})
     cmd = [vl, "--binary", "-j", os.environ.get("VL_JOBS", "16"), "-O1", "-CFLAGS", "-O1", "--x-assign", "fast",
            "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "256",

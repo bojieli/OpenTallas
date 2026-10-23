@@ -1,0 +1,397 @@
+{
+ "schema": "opentallas.hbm.sm_qsplit_check.v1",
+ "qsplit": 0,
+ "int8": 1,
+ "int8w": 1,
+ "inputs_land": "d",
+ "unknown_children": {},
+ "crossing_bits": {
+  "c-d": 13189,
+  "a-c": 330,
+  "b-c": 7652,
+  "a-b": 7548
+ },
+ "unregistered_or_nonadjacent_bits": 8122,
+ "rows": [
+  {
+   "src": "command",
+   "src_q": "d",
+   "dst": "g_int8.g_hard.u_int8.i_v",
+   "dst_q": "c",
+   "via_top_glue": true,
+   "bits": 1,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "command",
+   "src_q": "d",
+   "dst": "top_reg",
+   "dst_q": "c",
+   "via_top_glue": true,
+   "bits": 1,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "command",
+   "src_q": "d",
+   "dst": "u_front.command",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 191,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "command",
+   "src_q": "d",
+   "dst": "u_front.packet",
+   "dst_q": "c",
+   "via_top_glue": true,
+   "bits": 1099,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "kv_desc",
+   "src_q": "d",
+   "dst": "u_front.kv_desc",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 64,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "packet",
+   "src_q": "d",
+   "dst": "g_int8.g_hard.u_int8.i_v",
+   "dst_q": "c",
+   "via_top_glue": true,
+   "bits": 1,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "packet",
+   "src_q": "d",
+   "dst": "top_reg",
+   "dst_q": "c",
+   "via_top_glue": true,
+   "bits": 1,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "packet",
+   "src_q": "d",
+   "dst": "u_front.packet",
+   "dst_q": "c",
+   "via_top_glue": true,
+   "bits": 1099,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[6].u_be.command",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "non-adjacent"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[7].u_be.command",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "non-adjacent"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "schedule_fault",
+   "dst_q": "a",
+   "via_top_glue": true,
+   "bits": 1,
+   "verdict": "launch=logic,non-adjacent"
+  },
+  {
+   "src": "u_front.fault",
+   "src_q": "c",
+   "dst": "fault",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 1,
+   "verdict": "non-adjacent"
+  },
+  {
+   "src": "u_front.rdata",
+   "src_q": "c",
+   "dst": "rdata",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 256,
+   "verdict": "launch=logic,non-adjacent"
+  },
+  {
+   "src": "u_front.rr",
+   "src_q": "c",
+   "dst": "g_c[4].g_p[0].u_t.rin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "launch=logic"
+  },
+  {
+   "src": "u_front.rr",
+   "src_q": "c",
+   "dst": "g_c[4].g_p[1].u_t.rin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "launch=logic"
+  },
+  {
+   "src": "u_front.rrow",
+   "src_q": "c",
+   "dst": "rrow",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 12,
+   "verdict": "non-adjacent"
+  },
+  {
+   "src": "u_front.rv",
+   "src_q": "c",
+   "dst": "rv",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 1,
+   "verdict": "non-adjacent"
+  },
+  {
+   "src": "u_front.schedule_fault",
+   "src_q": "c",
+   "dst": "schedule_fault",
+   "dst_q": "a",
+   "via_top_glue": true,
+   "bits": 1,
+   "verdict": "launch=logic,non-adjacent"
+  },
+  {
+   "src": "xw_addr",
+   "src_q": "d",
+   "dst": "u_front.xw_addr",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 7,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "xw_data",
+   "src_q": "d",
+   "dst": "u_front.xw_data",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 2048,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "xw_en",
+   "src_q": "d",
+   "dst": "u_front.xw_en",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 1,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "xw_grp",
+   "src_q": "d",
+   "dst": "u_front.xw_grp",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 7,
+   "verdict": "capture=logic"
+  },
+  {
+   "src": "command",
+   "src_q": "d",
+   "dst": "top_reg",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[1].u_be.qout",
+   "src_q": "d",
+   "dst": "g_c[2].u_be.qin",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 138,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[2].g_p[0].u_t.bout",
+   "src_q": "c",
+   "dst": "g_c[1].g_p[0].u_t.bin",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[2].g_p[0].u_t.rout",
+   "src_q": "c",
+   "dst": "g_c[1].g_p[0].u_t.rin",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[2].g_p[1].u_t.bout",
+   "src_q": "c",
+   "dst": "g_c[1].g_p[1].u_t.bin",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[2].g_p[1].u_t.rout",
+   "src_q": "c",
+   "dst": "g_c[1].g_p[1].u_t.rin",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[4].u_be.qout",
+   "src_q": "b",
+   "dst": "u_front.qr",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 184,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[5].g_p[0].u_t.bout",
+   "src_q": "b",
+   "dst": "g_c[6].g_p[0].u_t.bin",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[5].g_p[0].u_t.rout",
+   "src_q": "b",
+   "dst": "g_c[6].g_p[0].u_t.rin",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[5].g_p[1].u_t.bout",
+   "src_q": "b",
+   "dst": "g_c[6].g_p[1].u_t.bin",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[5].g_p[1].u_t.rout",
+   "src_q": "b",
+   "dst": "g_c[6].g_p[1].u_t.rin",
+   "dst_q": "a",
+   "via_top_glue": false,
+   "bits": 1636,
+   "verdict": "ok"
+  },
+  {
+   "src": "g_c[6].u_be.qout",
+   "src_q": "a",
+   "dst": "g_c[5].u_be.qin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 138,
+   "verdict": "ok"
+  },
+  {
+   "src": "packet",
+   "src_q": "d",
+   "dst": "g_int8.g_hard.u_int8.i_codes",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 1024,
+   "verdict": "ok"
+  },
+  {
+   "src": "packet",
+   "src_q": "d",
+   "dst": "g_int8.g_hard.u_int8.i_tag",
+   "dst_q": "c",
+   "via_top_glue": false,
+   "bits": 10,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[0].u_be.command",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[1].u_be.command",
+   "dst_q": "d",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[4].u_be.command",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "top_reg",
+   "src_q": "c",
+   "dst": "g_c[5].u_be.command",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 29,
+   "verdict": "ok"
+  },
+  {
+   "src": "u_front.br",
+   "src_q": "c",
+   "dst": "g_c[4].g_p[0].u_t.bin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  },
+  {
+   "src": "u_front.br",
+   "src_q": "c",
+   "dst": "g_c[4].g_p[1].u_t.bin",
+   "dst_q": "b",
+   "via_top_glue": false,
+   "bits": 2069,
+   "verdict": "ok"
+  }
+ ],
+ "verdict": "FAIL",
+ "method": "HBM-P4-SM (10-23): structural quarter-crossing check of ot_hbm_accel_smh_attn (COORD R6(1), README \"RTL changes\")."
+}
