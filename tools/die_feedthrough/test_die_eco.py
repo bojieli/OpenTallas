@@ -180,3 +180,22 @@ def test_station_local_reset_register_recreated(tmp_path):
     st3 = "ft_L0_0_3_r0"                               # after both blocks: clocked by u_b2's forwarded clock out
     assert conn[(f"{st3}_lr_rs", "CLK")] == "u_b2_ft0_ck_o"
     assert "{rfw_0} {rfw_1} {rfw_2}" in tcl
+
+
+def test_reset_pipeline_rechained(tmp_path):
+    """S81 reset pipeline: rfw_k.D = rs of station k-1.  The new stages chain the same way and the kept element after
+    the run takes the last new stage's rs."""
+    sd, plan, chains, _ = case(tmp_path)
+    sc = chains["lanes"][0]["subchains"][0]
+    for i, r in enumerate(sc["dropped"]):
+        sc["static"][r]["pins"]["rs"] = f"rs_{i}"
+        sc["static"][r]["local_regs"] = {"rs": dict(flop=f"rfw_{i}", flop_master="DFFHQNx1_ASAP7_75t_R", flop_out="QN",
+                                                    d_net="rst_in" if i == 0 else f"rs_{i - 1}", path=[f"rfwi_{i}"],
+                                                    n_inv=1)}
+    sc["reset_chain"] = {"rs": dict(head="rst_in", tails=["u_dst/rfw_D"])}
+    js, tcl = die_eco.gen(sd, plan, chains, relay_masters())
+    conn, _ = netlist(tcl)
+    s0, s3 = "ft_L0_0_0_r0", "ft_L0_0_3_r0"
+    assert conn[(f"{s0}_lr_rs", "D")] == "rst_in"
+    assert conn[(f"{s3}_lr_rs", "D")] == conn[(s0, "rs")]          # pipelined: stage 3 resets from stage 0
+    assert conn[("u_dst", "rfw_D")] == conn[(s3, "rs")]

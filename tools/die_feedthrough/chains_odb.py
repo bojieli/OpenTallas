@@ -343,8 +343,27 @@ def main():
                                            local_regs=units.get(r.getName(), {}))
             width = max((sum(1 for it in chain[0].getITerms() if split_bit(it.getMTerm().getName())[0] == ib)
                          for ib in minfo(chain[0].getMaster())["data"]), default=0)
+            # reset PIPELINE: a station-local register whose D is the previous dropped station's pin net (rfwq of
+            # station k-1 -> rfw_k.D).  reset_chain[pin] = {head: D net of the first station, tails: kept sinks of the
+            # last station's pin net (through buffers) outside the dropped run}.
+            reset_chain = {}
+            run_flops = {lr["flop"] for r in sc["dropped"] for lr in units.get(r, {}).values()}
+            for pin in sorted({p for r in chain for p in static[r.getName()]["local_regs"]}):
+                piped = any(static[r1.getName()]["local_regs"].get(pin, {}).get("d_net") ==
+                            static[r0.getName()]["pins"].get(pin) for r0, r1 in zip(chain, chain[1:]))
+                if not piped:
+                    continue
+                lr0 = static[chain[0].getName()]["local_regs"].get(pin, {})
+                tails = []
+                lit = last.findITerm(pin)
+                if lit is not None and lit.getNet() is not None:
+                    sk, _ = sinks(lit.getNet())
+                    tails = [iname(x) for x in sk if not isinstance(x, odb.dbBTerm)
+                             and x.getInst().getName() not in sc["dropped"]
+                             and x.getInst().getName() not in run_flops]
+                reset_chain[pin] = dict(head=lr0.get("d_net"), tails=tails)
             recs.append(dict(dropped=sc["dropped"], masters=masters, width=width, bits=sc["bits"], chained=ch,
-                             static=static))
+                             static=static, reset_chain=reset_chain))
         out_lanes.append(dict(lane=lid, status=status.get(lid, "?") if recs else (status.get(lid) or "no droppable run"),
                               bits_traced=len(paths.get(lid, [])), bits_uncut=bad, subchains=recs))
     dropped_cells = sorted({c for r in dropped_all for lr in units.get(r, {}).values()

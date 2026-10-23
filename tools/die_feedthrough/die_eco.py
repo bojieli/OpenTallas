@@ -203,6 +203,8 @@ def gen(spec_dir, plan, chains, relay_masters, blocks_as_wire=False, data_in_pin
             if any(x is None for x in cur_side + cur_fclk):
                 rec["problems"].append(f"sub-chain {si}: a chained side input of the first dropped relay is open")
             ref_master = sc["masters"][sc["dropped"][0]]
+            rchain = sc.get("reset_chain", {})
+            cur_rst = {p: v["head"] for p, v in rchain.items() if v.get("head")}
             statics = list(sc["static"].values())
             for ei, (kind, t, seg) in enumerate(elems):
                 tag = f"ft_{cl['lane']}_{si}_{ei}"
@@ -222,6 +224,7 @@ def gen(spec_dir, plan, chains, relay_masters, blocks_as_wire=False, data_in_pin
                                 relay_masters.setdefault("__outputs__", {})[m] = _outputs(relay_masters, ref_master)
                     pick = [(m, w) for m, w, _ in pick]
                     near = min(statics, key=lambda s: geom.manhattan(s["xy"], (x, y))) if statics else None
+                    nxt_rst = {}
                     nxt = []
                     off = 0
                     first_inst = None
@@ -268,7 +271,8 @@ def gen(spec_dir, plan, chains, relay_masters, blocks_as_wire=False, data_in_pin
                                 fl = f"{inst}_lr_{pin}"
                                 T.append(f"ft_inst {{{fl}}} {lr['flop_master']} {x:.3f} {y + ri * 2.0 + 1.0:.3f}")
                                 T.append(f"ft_conn {{{cur_fclk[0]}}} {{{fl}}} {{CLK}}")
-                                T.append(f"ft_conn {{{lr['d_net']}}} {{{fl}}} {{D}}")
+                                dsrc = cur_rst.get(pin, lr["d_net"]) if pin in rchain else lr["d_net"]
+                                T.append(f"ft_conn {{{dsrc}}} {{{fl}}} {{D}}")
                                 q = f"{fl}_q"
                                 T.append(f"ft_conn {{{q}}} {{{fl}}} {{{lr['flop_out']}}}")
                                 if lr.get("n_inv", 0) % 2:
@@ -278,6 +282,8 @@ def gen(spec_dir, plan, chains, relay_masters, blocks_as_wire=False, data_in_pin
                                     q = f"{iv}_y"
                                     T.append(f"ft_conn {{{q}}} {{{iv}}} {{Y}}")
                                 T.append(f"ft_conn {{{q}}} {{{inst}}} {{{pin}}}")
+                                if pin in rchain and ri == 0:
+                                    nxt_rst[pin] = q
                                 n_lr[0] += 1
                                 continue
                             net = (near or {}).get("pins", {}).get(pin)
@@ -290,6 +296,7 @@ def gen(spec_dir, plan, chains, relay_masters, blocks_as_wire=False, data_in_pin
                             T.append(f"ft_conn {{{net}}} {{{inst}}} {{{pin}}}")
                         off += w
                     cur = nxt
+                    cur_rst.update(nxt_rst)
                     for j, c in enumerate(side):
                         if c["out_pin"] in relay_masters.get(pick[0][0], {}):
                             cur_side[j] = f"{first_inst}_{c['out_pin']}"
@@ -364,6 +371,11 @@ def gen(spec_dir, plan, chains, relay_masters, blocks_as_wire=False, data_in_pin
                         inst, pin = tsink.rsplit("/", 1)
                         if lst[j]:
                             T.append(f"ft_conn {{{lst[j]}}} {{{inst}}} {{{pin}}}")
+            for pin, v in rchain.items():      # reset pipeline continues into the kept element after the run
+                for tsink in v.get("tails", []):
+                    if cur_rst.get(pin):
+                        inst, tp = tsink.rsplit("/", 1)
+                        T.append(f"ft_conn {{{cur_rst[pin]}}} {{{inst}}} {{{tp}}}")
             rec["subchains"].append(srec)
         rec["problems"] = sorted(set(rec["problems"]))
         for k_ in ("warnings", "notes"):
