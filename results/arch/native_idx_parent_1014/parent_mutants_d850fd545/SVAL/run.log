@@ -1,9 +1,0 @@
-HBMIDX_FRAME 0 done=1 fault=0 cycles=990 first_score=301 last_score=471
-HBMIDX_FRAME 1 done=1 fault=0 cycles=641 first_score=292 last_score=462
-HBMIDX_FRAME 2 done=1 fault=0 cycles=722 first_score=304 last_score=474
-HBMIDX_FRAME 3 done=1 fault=1 cycles=305 first_score=297 last_score=299
-HBMIDX_END frames=4
-- rtl/test/hbm_idx_chunk_el/tb_hbm_idx_parent_owned_native.sv:174: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 30.638 s; speed 75.113 ns/s
-- Verilator: cpu 30.633 s on 66 threads; allocated 92 MB

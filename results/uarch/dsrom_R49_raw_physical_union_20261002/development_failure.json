@@ -1,5 +1,0 @@
-{
-  "cause": "First generator incorrectly required M2 power pins for the capture abstract; actual pinned capture LEF uses M1 and rejected that requirement",
-  "repair": "Use literal M1 rails; do not transfer complete-element M2 projection",
-  "scope": "Source-template binding error, no STA or physical timing conclusion"
-}

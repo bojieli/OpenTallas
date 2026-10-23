@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "ot_hbm_pc_refresh_cfg",
- "enable": false,
- "reason": "HBMc/CHAIN2 10-22 freeze item 3: port- and schedule-identical re-harden of the die-bound closed hbm_refcfg_q_1018 (pre-ROOT-RST kit, no landing); the die's boot reset schedule is bound to it. rst_n already lands in RTL through ot_rst_relay (2 sync + 1 relay); rst_hbm_n clears only the HBM release path (ls, hold_c, prst). Adding 2 landing stages would move reset assertion/release by 2 edges, which is outside the approved functional fix"
-}

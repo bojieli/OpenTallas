@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "ot_hidx_meta_sram146",
- "enable": false,
- "reason": "Data and circular address pointer are unreset; valid calendar owns warmup. No reset input."
-}

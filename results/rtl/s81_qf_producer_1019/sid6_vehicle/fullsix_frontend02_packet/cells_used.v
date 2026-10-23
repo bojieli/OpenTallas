@@ -1,1 +1,0 @@
-module ICGx4_ASAP7_75t_R (input CLK, input ENA, input SE, output GCLK); reg en_l; /* verilator lint_off COMBDLY */ always_latch if (!CLK) en_l = ENA | SE; /* verilator lint_on COMBDLY */ assign GCLK = CLK & en_l; endmodule

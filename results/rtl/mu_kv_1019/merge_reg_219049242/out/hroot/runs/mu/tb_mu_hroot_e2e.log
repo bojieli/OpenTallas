@@ -1,5 +1,0 @@
-PASS MU_HROOT_E2E rounds=3 steps=12 writer_stages=432 rows=64+l+256u epochs={seq14,user2} retire=acceptance order
-- rtl/test/mu_qwen_1018/tb_mu_hroot_e2e.sv:187: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 8us; walltime 0.025 s; speed 322.662 us/s
-- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB

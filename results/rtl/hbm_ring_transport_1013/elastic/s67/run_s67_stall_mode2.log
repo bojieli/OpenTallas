@@ -1,5 +1,0 @@
-PASS elastic S=67 D=8 STALL=1 MODE=2 count=4096 steady_cycles=5891 rate=0.695298 total=6194
-- source/tb_vms_elastic_d8.sv:59: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 12us; walltime 0.130 s; speed 94.797 us/s
-- Verilator: cpu 0.131 s on 1 threads; alloced 1018 MB

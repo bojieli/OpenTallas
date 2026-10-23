@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "dsdv_idx_qf",
- "enable": false,
- "reason": "the RTL lands it: rst -> rs0 (only sink) -> 4 kept copies rnk (<= 28 async pins each); kit landing would add 2 unpriced release edges."
-}

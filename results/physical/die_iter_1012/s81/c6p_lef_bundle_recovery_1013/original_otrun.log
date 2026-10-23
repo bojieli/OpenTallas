@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     free  -987 GB (avail 589, growth 574, headroom 64, waiters 74/938 GB) running 30 disk 1124 GB 
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81-die-iter/src_2c095be7
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-die-iter/src_2c095be7
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-die-iter/src_2c095be7
-ot-run: -> ot-epyc1tb (will queue: -987 GB free < 160 GB)
-ot-heavy: request 160G is charged 9G (class 'c#_launch.sh:src_#' measured peak 0.7G, n=1+0 proved); the cap stays 160G
-ot-heavy: waiting for memory on ot-epyc1tb: need 9+64 GB, available 617 GB minus 553 GB reserved growth (real floor 226 GB)
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2949924-1791925444 after 297 s
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2949924-1791925444): exit 0

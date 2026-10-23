@@ -1,6 +1,0 @@
-COUNTS n=22438 pr=27960 pt=18705
-PASS samecycle checks=100000 normal=22438 peer_rx=27960 peer_tx=18705
-- rtl/test/host_peer_main_fixture_1020/mechanism/tb.sv:66: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1ms; walltime 0.130 s; speed 7.666 ms/s
-- Verilator: cpu 0.130 s on 1 threads; allocated 7 MB

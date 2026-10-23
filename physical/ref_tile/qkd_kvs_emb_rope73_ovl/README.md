@@ -1,1 +1,0 @@
-Actual coherent MU HEAD + OVL callback source, two SRAMs. DRAFT: no gate launched; final sole image, native census, source-bound callback ages, full MU playback and physical timing required. Older embedding views do not bind this master.

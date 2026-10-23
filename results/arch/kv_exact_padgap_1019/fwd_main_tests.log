@@ -1,8 +1,0 @@
-test_main_migrates_exact_pads_after_render (test_kv_fwd_pad_migration.PadMigration.test_main_migrates_exact_pads_after_render) ... ok
-test_main_refuses_wrong_source_master (test_kv_fwd_pad_migration.PadMigration.test_main_refuses_wrong_source_master) ... ok
-
-----------------------------------------------------------------------
-Ran 2 tests in 0.003s
-
-OK
-{"totals": {"lanes": 1, "stations": 1, "bits": 36, "c->ES": 1}, "skipped": {}, "per_master": {"qkd_landsh0_36": 1}, "missing": ["qkd_landsh0_36"], "land_slots": {"reserved": 0, "slotted": 0, "unslotted": 1, "unslotted_wide": 1, "reserved_unused_count": 0}}

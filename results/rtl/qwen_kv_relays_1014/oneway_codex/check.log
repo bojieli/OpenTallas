@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     admits   269 GB (avail 495, growth 106, headroom 64, waiters 0/0 GB) load 181/128 running 38 disk 898 GB 
-ot-run: ot-epyc4       admits   589 GB (avail 816, growth 84, headroom 48, waiters 0/0 GB) load 201/128 running 37 disk 733 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kv-relay-check-1014-pm/ready
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kv-relay-check-1014-pm/ready
-ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1668940-1792012493 after 0 s
-{"crosscheck_real_ends": 256, "conflicts": 7, "examples": [["rly_kc_WS_0", "seq.kc_WS", 32, "rev", "output"], ["rly_kc_WN_0", "seq.kc_WN", 32, "rev", "output"], ["rly_kc_ES_0", "seq.kc_ES", 32, "rev", "output"], ["rly_kc_EN_0", "seq.kc_EN", 32, "rev", "output"], ["rly_gr_0", "lnk.gr", 512, "rev", "input"], ["rly_hc_0", "seq.hc", 181, "rev", "input"]]}
-relay direction conflicts with a REAL end (fix the die bus class): rly_kc_WS_0 end seq.kc_WS bit 32 relay rev rtl output; rly_kc_WN_0 end seq.kc_WN bit 32 relay rev rtl output; rly_kc_ES_0 end seq.kc_ES bit 32 relay rev rtl output; rly_kc_EN_0 end seq.kc_EN bit 32 relay rev rtl output; rly_gr_0 end lnk.gr bit 512 relay rev rtl input; rly_hc_0 end seq.hc bit 181 relay rev rtl input
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1668940-1792012493): exit 1

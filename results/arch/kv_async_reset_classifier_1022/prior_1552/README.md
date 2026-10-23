@@ -1,3 +1,0 @@
-Prior matched full-source pair, before test-discovery correction
-
-Fleet ep7 unit oth-ubuntu-746381-1792732640, source d3b64cd692856a35f8b5292c046874699a23d454. Both trees extracted independently from the same full git archive. Candidate overwrote only textbook_lint.py and the nine-case causal test, initially placed below a non-package tests directory. Consequently these commands ran 1552 cases each; all four suites have identical failure/error IDs and identical totals (2 failures, 17 errors, 17 skips). This is inherited-failure comparison, not a blanket pass. The separate focused nine-case run and actual four mapped reset graphs passed. Corrected discoverable-suite evidence follows separately; do not use this prior pair to claim causal tests were discovered.

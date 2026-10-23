@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_coll_inj_idx_join_rg",
- "enable": false,
- "reason": "RTL registers every data pin: inj_rd/inj_idx/inj_addr/idx_tx_v/idx_tx/su_inj_d are captured by RTL pin flops at P+1/T+1 and inj_d/fault are flop Q; INJLAT=12 is the d4f contract's priced latency (coll_0030 edges), a synthesis pin stage would add an unpriced +1/+1."
-}

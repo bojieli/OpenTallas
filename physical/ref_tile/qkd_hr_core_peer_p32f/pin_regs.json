@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_hr_core_peer_n32",
- "enable": false,
- "reason": "Exact source qkd_hr_core_peer_n32 (sha 1277bb49) is the mapped primitive-copy of the flow-wrapped peer (u_ot_pr_core): every input/output already has its registered station edge (1/1, rtl/test/host_peer_main_fixture_1020/primitive32/README.md); a second flow wrapper would add a cycle and re-merge copies."
-}

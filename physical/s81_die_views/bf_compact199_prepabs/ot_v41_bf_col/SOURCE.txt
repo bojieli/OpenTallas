@@ -1,7 +1,0 @@
-ROUTED view of CLOSED bfh_compact199_col_pinreg_prepabs_1019 (ot_v41_bf_col compact199 pinreg, TT +63.59 / FF +6.24, DRC 0; source 24cf7e2e3, record 21594c5af).
-LEF + SS/FF/TT Liberty by verdict replay (tools/tt_views/view_export.py of main 15db15f65, --verdict-json cl/routed_ioref.a2.json, checked=true);
-run copied ot-epyc4 (drained) -> ot-epyc5 at the same path (cl, src, orfs config + base 6_final.{odb,sdc,spef,v}); trimmed src restored from git archive 24cf7e2e3.
-insertion.json = cl/ck_insertion.py --routed --raw-source --clock core_clk.
-native_receipt.json (own R 544.0, spread TT 44.4 / FF 32.6): capture PASS (worst i2x_q0[8] 180.9; was 206.7 on kreg a1200), launch FAIL on ALL 64 outputs
-(pval/pseg/prow 263..281 ps, clock->out ~825 ps): outputs not registered at the face. Relative C cannot fit (launch C>=605, capture C<=553).
--> structural successor: output pin-flop band at the PQ output face (QXPQ-FIX ob pattern), SAFE item 1.

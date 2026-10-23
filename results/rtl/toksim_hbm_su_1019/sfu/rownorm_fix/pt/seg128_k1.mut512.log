@@ -1,7 +1,0 @@
-MISMATCH 0: edge 111 (exp 111) tag 00000305 (exp 00000305) x 00000000 (exp 44131862)
-FAULT slices 0000 core 1
-FAIL tb_hbm_su_red_pretree MUT=512: 2 errors
-- rtl/test/hbm_accel/generic/tb_hbm_su_red_pretree.sv:68: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 281ns; walltime 0.132 s; speed 2.128 us/s
-- Verilator: cpu 0.066 s on 1 threads; allocated 16 MB

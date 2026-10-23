@@ -1,6 +1,0 @@
-LATENCY proxy first_send=10 first_recv=-1 delta=-11
-RATE qfd_link_adp512 RXD=512 LAT=223 SRAM=1 rate=0/1000 words-per-cycle (min 0)
-FAIL qfd_link_adp512 bad=1 a_got=0 b_got=0 fault=1/0 cycles=34
-EPOCH proxy epoch=0 discarded_inflight_before_reset=0
-FAIL proxy_reset_epochs epochs=1 bad=1
-/srv/opentallas-scratch/codex/qwen-txcap-h2-873/rtl/test/tb_qfd_link_proxy_txcap_h2_candidate.sv:78: $finish called at 38000 (1ps)

@@ -1,4 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hidx_rootctl_am_1018-r4-49a5acb8f bench bench_idx_rootctl_am_path_ties1_mut4 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hidx_rootctl_am_1018-r4-49a5acb8f-bench log cl/bench_idx_rootctl_am_path_ties1_mut4.a1b1.log captured 2026-10-18T18:33:44-07:00
-# fail_regex '^PATH TIES=1 AMMUT=4 .* errors [1-9][0-9]* IDX_AM_PATH FAIL'
-PATH TIES=1 AMMUT=4 requests 3207 writes 474 events 300 (done 204) offsets rq 1 write 6 event 7 share_fault 0/0 ties 1 errors 163 IDX_AM_PATH FAIL 

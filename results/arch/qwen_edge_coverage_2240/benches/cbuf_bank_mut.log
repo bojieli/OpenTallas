@@ -1,7 +1,0 @@
-MISMATCH lane 0 got 0000000000000000 want 000000003a510000 at 333
-MISMATCH lane 10 got 0000000000000000 want 000000003a5c0000 at 333
-MISMATCH lane 11 got 0000000000000000 want 000000003a530000 at 333
-MISMATCH lane 12 got 0000000000000000 want 000000003a590000 at 333
-MISMATCH lane 14 got 0000000000000000 want 000000003a530000 at 333
-FAIL cbuf_native_l0 checks=38152 bad=19188 fault=0 code=0 waits=319
-rtl/test/redesign_qwen/tb_qfd_cbuf_native_l0.sv:152: $finish called at 1554993 (1ps)

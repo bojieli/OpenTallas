@@ -1,7 +1,0 @@
-EARLY_X_TELEMETRY c4 rst1 dutrn0 anchorrn0 dutrr000000000000000000000000 anchorrr000000000000000000000000
-EARLY_X_TELEMETRY candidate c=0000000000000000000000000000000000 rc=00000000000 wf=00 unknown=000 xor=000
-EARLY_X_TELEMETRY anchor c=0000000000000000000000000000000000 rc=00000000000 wf=00 unknown=000 xor=000
-EARLY_X_TELEMETRY count candidate valid=0 evld=0 rec=0 recq=0 armed=0 anchor valid=0 evld=0 rec=0 recq=0 armed=0
-FATAL: /srv/opentallas-scratch/claude/s81-hwin-early-source-1019/src_diag03/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin_early_capture.sv:88: EARLY_X observable output/fault after external reset release c4
-       Time: 4000  Scope: tb_dsdv_mu_hwin_early_capture
-EARLY_MITER edges 3

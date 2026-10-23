@@ -1,0 +1,27 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/tokd-qw-main-1023
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/tokd-qw-main-1023
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/tokd-qw-main-1023
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/tokd-qw-main-1023
+ot-run: ot-gold1       admits   524 GB (avail 675, reserve 0, fresh 70.1, peak 16.1, headroom 0, waiters 0/0 GB) load 58/112 running 43 disk 958 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/tokd-qw-main-1023
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/tokd-qw-main-1023
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-2760246-1792748462 after 2 s
+h16y_bmut3: 
+h16y_img0: 
+h16y_imgh: 
+src_landed: 
+{
+ "verdict": "FAIL",
+ "runs": {
+  "h16y_img0": "NO_RESULT (build/run error, see log)",
+  "h16y_imgh": "NO_RESULT (build/run error, see log)",
+  "h16y_bmut3": "NO_RESULT (build/run error, see log)",
+  "src_landed": "NO_RESULT (build/run error, see log)"
+ },
+ "cycles": {},
+ "mutants": {
+  "h16y_bmut3 (LM-head segment-G first row one cycle late)": "NOT CAUGHT (NO_RESULT (build/run error, see log))"
+ }
+}
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-2760246-1792748462): exit 0

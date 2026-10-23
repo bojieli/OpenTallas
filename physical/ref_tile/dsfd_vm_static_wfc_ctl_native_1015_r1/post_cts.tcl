@@ -1,1 +1,0 @@
-source /src/physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r1/clock_entry.sdc

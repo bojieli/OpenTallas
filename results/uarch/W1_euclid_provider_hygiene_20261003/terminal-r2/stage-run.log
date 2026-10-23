@@ -1,6 +1,0 @@
-HBM_BACKING stack=0 cyc=42 sector=4096 tag=0 beat=0
-PASS_W1_TWO_TRANSACTIONS accepts=2 commits=1 WR=1 RD=1 owned=3 reverse=1 off_checks=164 cycle=162
-- /tmp/opentallas-W1-provider-hygiene-20261003/rtl/test/model_ready_hbm_w1_euclid_20261003/tb_W1_provider.sv:81: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 165ns; walltime 0.007 s; speed 25.285 us/s
-- Verilator: cpu 0.007 s on 1 threads; allocated 9 MB

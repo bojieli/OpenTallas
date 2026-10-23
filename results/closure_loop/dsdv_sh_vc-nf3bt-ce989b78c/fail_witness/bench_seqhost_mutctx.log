@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job dsdv_sh_vc-nf3bt-ce989b78c bench bench_seqhost_mutctx host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/dsdv_sh_vc-nf3bt-ce989b78c log cl/bench_seqhost_mutctx.a1b1.log captured 2026-10-18T01:56:08-07:00
-# fail_regex '^SEQHOST FAIL$'
-SEQHOST seed=1 MUT=1 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1633 frag N/S=161/185 mism n/s/j/k/hw/tc/cw=60/48/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
-SEQHOST FAIL

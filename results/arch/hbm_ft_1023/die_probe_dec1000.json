@@ -1,6 +1,0 @@
-{"schema": "opentallas.hbm_ft.die_probe.v1", "date": "2026-10-23", "kind": "DIAGNOSTIC what-if GRT probe (congestion_iterations 0, no die repeaters), not a gate",
- "input": "ep5 codex-hbmc-r18h5-2140-1022/chainsM/probe600/out/place.odb (src d34578d6f)", "transform": "tools/hbm_ft/decimate_plan.py --hop 1000 + decimate_grt_probe.tcl: 51,406 of 83,223 relay/landing tiles removed by merging output nets into input nets (7.12M nets), heads/tails/forks kept, max kept hop 1000 um along current routes",
- "settings": "signal M4-M9, clock M7-M9, adjustment M4-M5 0.30, M6-M7 0.146, M8 0.346, M9 0.146 (same as die case)",
- "baseline": {"run": "ep5 steward-hbmd-r18h5-norep", "overflow_total": 5109090, "M4": 1367788, "M5": 463098, "M6": 2025662, "M7": 135404, "M8": 965098, "M9": 152040, "wirelength_um": 4480425868, "vias": 116753760, "usage_pct": 38.88},
- "relays_1000um": {"run": "ep5 ft-hbm-1023/probe_dec1000", "overflow_total": 1310510, "M4": 98232, "M5": 101170, "M6": 725632, "M7": 54716, "M8": 284766, "M9": 45994, "wirelength_um": 3732671366, "vias": 47572218, "usage_pct": 32.94, "grt_s": 395},
- "stage_sum_paths": {"now": 83486, "kept_1000": 32725}}

@@ -1,5 +1,0 @@
-FAIL qkd_ctrl_kc                        x4      OUTPUT_OPEN 
-FAIL qkd_d2d_cal_seq_pin_bc             x1      OUTPUT_OPEN 
-FAIL qkd_d2d_static                     x1      OUTPUT_OPEN 
-FAIL qkd_host_root_admission            x1      OUTPUT_OPEN 
-DIE_PORT_BIND FAIL masters=68 instances=44903 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=9670 output_open_ports=50 top_assigns=0 params_not_in_rtl=0 strap_ports=36 pad_bits=212103 spare_out_bits=645433 unresolved_children=0 ambiguous_children=0 variant_children=12

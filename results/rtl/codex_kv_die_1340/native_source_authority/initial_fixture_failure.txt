@@ -1,2 +1,0 @@
-Preserved required validation attempt: ep5 oth-ubuntu-3288309-1792624153, exit1. Actual native paths/params resolved before fixture assertion. Fixture incorrectly required an always statement in native structural gate-level top; native source is structural register-cell RTL. Source unchanged for corrected check_v2.
-Traceback: check.py line16: assert 'always' in m.body -> AssertionError.

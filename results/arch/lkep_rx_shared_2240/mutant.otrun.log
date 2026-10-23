@@ -1,7 +1,0 @@
-ot-run: ot-epyc4       admits   794 GB (avail 1020, growth 70, headroom 48, waiters 0/0 GB) load 41/128 running 11 disk 1114 GB 
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-1506502-1791969395 after 0 s
-[70000000] %Fatal: tb_hfd_lk_ep_shared.sv:49: Assertion failed in tb_hfd_lk_ep_shared: LKEP_SHARED  EXACT FAIL edge=66
-%Error: rtl/hbm_accel/tu/lk_ep_20261010/tb_hfd_lk_ep_shared.sv:49: Verilog $stop
-Aborting...
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1506502-1791969395): exit 1

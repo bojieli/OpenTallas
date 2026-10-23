@@ -1,7 +1,0 @@
-EPOCH_BAD phase0 mut1 rc2 slot0 tag0 age1.000000
-EPOCH_BAD phase0 mut1 rc3 slot1 tag1 age1.000000
-EPOCH_BAD phase0 mut1 rc4 slot2 tag2 age1.000000
-EPOCH_BAD phase0 mut1 rc5 slot3 tag3 age1.000000
-[10005000] %Fatal: tb_qfd_c_safe_epoch.sv:43: Assertion failed in tb: SAFE_EPOCH_FAIL MUT1 PHASE0 errors937 checks937
-%Error: rtl/test/tb_qfd_c_safe_epoch.sv:43: Verilog $stop
-Aborting...

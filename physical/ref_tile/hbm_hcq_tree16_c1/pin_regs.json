@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_hc_qtree16_static",
- "enable": false,
- "reason": "ot_hbm_hc_qtree16_static registers every input in RTL (s_q = the SAFE 1 s_i pin register slice, vq = the leaf valid) and every output is an adder output register (y / err / valid_out of the native LAT-7 graph); a kit flop stage would add an edge to the quarter subtree"
-}

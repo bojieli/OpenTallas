@@ -1,1 +1,0 @@
-source /src/physical/ref_tile/hcoll_vmwrite_static_v6_roots_wmid/clock_entry.sdc

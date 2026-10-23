@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_sys_face_mu_dhobs_b-d2b-e8b70d4a1 bench bench_stage_check_mutant host ot-epyc6 run /srv/opentallas-scratch/claude/closure-loop/qfd_sys_face_mu_dhobs_b-d2b-e8b70d4a1 log cl/bench_stage_check_mutant.a1b1.log captured 2026-10-21T00:38:48-07:00
-# fail_regex '^TB_DHOBS FAIL \\(bad stage at 50 not detected'
-Verilator 5.050 2026-07-01 rev v5.050
-TB_DHOBS FAIL (bad stage at 50 not detected: det -1 err 1749)

@@ -1,4 +1,0 @@
-kv die K_RT_EQ: target 80 (QK_ISSUE_AGE 91), natural 12..70, 1435 pad relays
-kv die VPORT_SIDE_EQ: RT [16, 17] (tile 8), 72 pad relays
-kv die STATIC_SCHEDULE FAIL: VPORT_RT 16 V ports: die round trip 9 + relays != the hardened RT 8; PV_FIRST_INPUT_AGE 16 V ports: 4 + W + DQ + RT_die + 1 != the pair ctl FIRST_INPUT_AGE 95 (derived 107, W [82, 83, 84, 85, 86]); PV_LEAD 1 PV pairs: D(ks_pvst) [37, 0] != the attention tile PV_LEAD 0; PVFIN_START_ALIGN 2 pvfin start vs pair result trunks: D(ks_pvfst) - PV_LEAD - D(ks_pvp_p) != 0; F_DLY 1 attention face: 1 + (D(ks_pvfst) - PV_LEAD) + D(ks_pvfin) = 49 != the tile F_DLY 1
-kv die: STATIC_SCHEDULE FAIL (plan ages vs the closed tiles; static_model.json static_schedule.fails; OT_KV_STATIC_SCHED_STRICT=0 records and continues)

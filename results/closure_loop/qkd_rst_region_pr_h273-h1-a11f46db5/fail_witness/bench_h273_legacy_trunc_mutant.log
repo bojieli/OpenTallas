@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_rst_region_pr_h273-h1-a11f46db5 bench bench_h273_legacy_trunc_mutant host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_rst_region_pr_h273-h1-a11f46db5 log cl/bench_h273_legacy_trunc_mutant.a1b1.log captured 2026-10-19T17:03:22-07:00
-# fail_regex 'H273_HOLD_SHORT'
-Verilator 5.050 2026-07-01 rev v5.050
-H273_HOLD_SHORT held 17 < 273
-H273_FAIL errors=1
-[675000] %Fatal: tb_qkd_rst_region_pr_h273.sv:35: Assertion failed in tb_qkd_rst_region_pr_h273
-%Error: rtl/test/qwen_split/tb_qkd_rst_region_pr_h273.sv:35: Verilog $stop
-Aborting...
