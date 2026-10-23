@@ -322,12 +322,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
            "export PRE_CTS_TCL = /work/clock_taps.tcl",
+           # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
+           "export POST_CTS_TCL = /work/tap_balance.tcl",
+           f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
            *([f"export ADDITIONAL_LEFS = {' '.join(mlef)}", f"export ADDITIONAL_LIBS = {' '.join(mlib)}",
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl"):
+    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
     ft = ["# slot stations in_face out_face [x y ...]  (GENERATED; type frame um)"]

@@ -175,6 +175,9 @@ def test_kit_overrides_platform_tracks():
         assert "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl" in cfg
         assert "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl" in cfg
         assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
+        # COORD 10-23: tap trees balanced to the plan insertion after CTS
+        assert "export POST_CTS_TCL = /work/tap_balance.tcl" in cfg and "export OT_TAP_TARGET_PS = 250" in cfg
+        assert (kd / "tap_balance.tcl").is_file()
 
 
 def test_die_sta_flat_in_opensta_etm_with_tech():
