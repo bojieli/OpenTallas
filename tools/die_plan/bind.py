@@ -1808,6 +1808,47 @@ def cmd_bind(a):
     return 1 if (B.errors and a.strict) else 0
 
 
+def cmd_portbind(a):
+    """the strict port-bind check (tools/die_port_bind.py, owner NO STUBS rule) on the bound top: indexed against the
+    as-built source tree (asbuilt base: rtl roots, files, prefer) + the generated RTL + the plan-cell / variant files."""
+    import subprocess
+    raw = load_plan(a.plan)
+    ab = raw["asbuilt"]
+    base = Path(plan_base(a.plan, raw)).resolve()
+    out = Path(a.out).resolve()
+    rep = json.loads((out / "bind_report.json").read_text())
+    top = next((out / "rtl").glob("*_bound_top.sv"))
+    # die_port_bind indexes relative to its own repo root: run a copy in a root that mirrors the as-built base
+    root = out / "portbind_root"
+    if root.exists():
+        shutil.rmtree(root)
+    (root / "tools").mkdir(parents=True)
+    shutil.copy(HERE.parent / "die_port_bind.py", root / "tools" / "die_port_bind.py")
+    for x in base.iterdir():
+        if x.name != "tools":
+            (root / x.name).symlink_to(x)
+    absf = lambda f: str(Path(f) if Path(f).is_absolute() else base / f)
+    cmd = [sys.executable, str(root / "tools" / "die_port_bind.py"), str(top), "--top", top.stem]
+    for r in ab.get("rtl_roots", ["rtl"]):
+        cmd += ["--rtl-root", r]
+    for f in [f for f in ab.get("files", []) if Path(absf(f)).is_file()] + rep.get("extra_lib", []) + \
+            [f for f in rep["files"] if f != str(top)] + [str(E.REPO / "rtl/lib/ot_reset_sync.sv")]:
+        cmd += ["--rtl-file", absf(f)]
+    for f in ab.get("prefer", []) + ab.get("portbind_prefer", []):
+        if Path(absf(f)).is_file():
+            cmd += ["--prefer", absf(f)]
+    for d in ab.get("defines", []):
+        cmd += ["--define", d]
+    for m in ab.get("portbind_allow_model", []):
+        cmd += ["--allow-model", m]
+    cmd += ["--out", str(out / "port_bind_strict.json")]
+    r = subprocess.run(cmd, capture_output=True, text=True, cwd=root)
+    (out / "port_bind_strict.txt").write_text(r.stdout + r.stderr)
+    shutil.rmtree(root)
+    print((r.stdout.strip().splitlines() or [r.stderr[-500:]])[0])
+    return r.returncode
+
+
 def _desc_json(B, d, ci_part=None):
     k = d[0]
     if k == "int":
@@ -1836,7 +1877,7 @@ def _plan_expect(B, p, a):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for n in ("elab", "bind", "verify", "all"):
+    for n in ("elab", "bind", "verify", "all", "portbind"):
         s = sub.add_parser(n)
         s.add_argument("plan")
         s.add_argument("--out", required=True)
@@ -1850,6 +1891,8 @@ def main(argv=None):
             return cmd_elab(a)
         if a.cmd == "bind":
             return cmd_bind(a)
+        if a.cmd == "portbind":
+            return cmd_portbind(a)
         if a.cmd == "verify":
             import bind_verify
             return bind_verify.cmd_verify(a)

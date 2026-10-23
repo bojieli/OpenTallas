@@ -310,3 +310,12 @@ def test_substitute_parent(tmp_path):
     assert r["proof"]["straps"] == 4 and r["proof"]["tied"] == 0 and r["n_errors"] == 0
     assert "lf_b_nid u_u_b" in "".join(f.read_text() for f in (out / "rtl").glob("bt_ta*.sv"))
     assert verify(out)["verdict"] == "PASS"
+
+
+def test_portbind_strict(tmp_path):
+    """bind.py portbind: the strict tools/die_port_bind.py check on the generated top passes (no stubs, no unbound,
+    tied, undriven or multiply-driven bits) and writes port_bind_strict.json / .txt"""
+    out = tmp_path / "o"
+    assert run(EX / "die_plan_lanes.json", out, "elab", "bind", "portbind") == 0
+    assert (out / "port_bind_strict.txt").read_text().startswith("DIE_PORT_BIND PASS")
+    assert (out / "port_bind_strict.json").exists()
