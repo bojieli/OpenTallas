@@ -1,0 +1,121 @@
+{
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "macros": [],
+ "name": "s81dv_rly_70_we",
+ "top": "dsfd_dvrly_70_WE",
+ "sources": [
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv70h.sv"
+ ],
+ "outline": {
+  "w": 17.28,
+  "h": 12.96
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "rs"
+  ],
+  "E": [
+   "o",
+   "ck_o"
+  ],
+  "W": [
+   "i"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "io_tcl": "physical/s81_die_pins/dvrlyw/dsfd_dvrly_70_WE.tcl",
+ "structural_change": "FT-S81 10-23 (S81 frame feedthrough stations): 70-b horizontal lane station W->E, the closed s81dv_rly_276_we kit at width 70 (dsfd_rly_masters_dv70h.sv: ot_s81_rly W=70 RSREG=1, one register stage (full cycle), rs regional reset leaf through the reset pin register, ck = the lane forwarded clock, ck_o through the kept ckinv pair; body = dsfd_dvrly_70_NS); recipe 4 flop-first, hold_budget die; E/W data faces at the 276 kit pin pitch, depth 17.28 um. 0 cycles vs the plan (one stage per hop).",
+ "job": {
+  "owner": "Claude:FT-S81 sub",
+  "branch": "claude/ft-s81-1023",
+  "tag": "h1",
+  "purpose": "S81-DV 70-b horizontal lane relay station dsfd_dvrly_70_WE (recipe 4 flop-first, S81 frame feedthrough)",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_dvrly_70_WE u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv70h.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_words",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh pass dsfd_dvrly_70_WE 70 {RUN}/bench_p 1",
+    "expect": "pass",
+    "pass_regex": "RLY_BENCH PASS 0 errors in 20000 words",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "neg_bit0_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh mut dsfd_dvrly_70_WE 70 {RUN}/bench_m 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "reset_register_bypass_mutant",
+    "cmd": "bash rtl/dsrom_sys/s81_glue/test/bench_rly.sh rsmut dsfd_dvrly_70_WE 70 {RUN}/bench_r 1",
+    "expect": "fail",
+    "fail_regex": "RLY_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4
+   }
+  ],
+  "views_to": "physical/ref_tile/s81dv_rly_70_we/views",
+  "record_to": "results/rtl/ref_tile/s81dv_rly_70_we",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_glue",
+   "physical/s81_die_pins/dvrly276",
+   "physical/s81_die_pins/dvrlyw"
+  ]
+ },
+ "forwarded_clock": true,
+ "sdc_extra": [
+  "physical/s81_die_pins/dvrly276/fwd_ck_o.tcl"
+ ],
+ "boundary_tcl": [
+  "physical/s81_die_pins/dvrly276/fwd_ck_o.tcl"
+ ],
+ "children": [],
+ "inter": [],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}
