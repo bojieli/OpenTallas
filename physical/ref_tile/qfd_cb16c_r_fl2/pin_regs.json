@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_coll_face_r_fx",
+ "enable": false,
+ "reason": "RTL registers every bus pin: the split face edge slices (tx_data cal_ck, rx_data rx_rck, phy_tx / phy_rx codec0p) are the face pin registers; scalar control ports land on SAFE/TOK_REG owning-root ranks; exact calendar neutral."
+}

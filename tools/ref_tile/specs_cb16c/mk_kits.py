@@ -374,10 +374,13 @@ def _pack(lo, names, step=3.24, gap=2.16, wide=None):
     return out
 
 
-def fx_spec(prof, variant, landed=False):
+def fx_spec(prof, variant, landed=False, rev=1):
     g = FX[variant]
     s, _src = body_spec(prof)
     name = f'qfd_cb16c_{prof}_' + ('fl' if landed else 'fx') + ('x' if variant == 'alt' else '')
+    if rev >= 2:
+        assert landed and variant == 'alt'
+        name = f'qfd_cb16c_{prof}_fl2'
     s = json.loads(json.dumps(s).replace(f'physical/ref_tile/qfd_cb16c_{prof}_body/', f'physical/ref_tile/{name}/'))
     s['name'] = name
     s['top'] = f'qfd_coll_face_{prof}_fx'
@@ -451,7 +454,7 @@ def fx_spec(prof, variant, landed=False):
     if landed:
         s['pin_hook_after_flops'] = [f'physical/ref_tile/{name}/seq_landing.tcl']
         s['pre_dpl_extra'] = [f'physical/ref_tile/{name}/seq_release.tcl']
-        bands, subs = fl_bands(variant)
+        bands, subs = fl_bands(variant, rev)
         s['structural_change'] = (
             f'COLLIO-F 10-23: fx geometry with ONE LANDING BAND PER CLOCK ROOT (RTL / cycles unchanged, L+2 as benched, '
             f'witnesses {WIT}/{prof}_m*.log). All 10 fx gates failed CTS pin-flop spread (84-154 ps > 80): with the band fences '
@@ -462,10 +465,14 @@ def fx_spec(prof, variant, landed=False):
             f'edge faces the W channel like u_rx), spine = bank0 strip | codec | bank1-3 strips, E channel = phy (codec0p) + lcal PHY '
             f'slots; rst_n/cdc_fault pins moved to the NW corner beside the tx_data pin registers (cal_ck boundary set compact), '
             f'tx/cal entries NW, cal_lck W, codec entries at the spine foot. Outline unchanged {W} x {H}.')
-        s['job'] = dict(s['job'], owner='Claude:COLLIO-F', tag=f'{prof}fl' + ('x' if variant == 'alt' else ''),
+        if rev >= 2:
+            s['structural_change'] += (' REV2 (GEOM PASS-COND 02:24, flx = MAIN on routing demand; flx gates 10-23: CTS PASS all 12 roots '
+                                       '<= 48 ps, cross_clock codec0 u_tx_land -> codec0p b_ptx -51/-117 ps on P/S0): b_ptx (the PHY-TX '
+                                       '+1 rank) lands at the W end of the bank2/bank3 col-B gap beside the codec band.')
+        s['job'] = dict(s['job'], owner='Claude:COLLIO-F', tag=f'{prof}fl' + ('2' if rev >= 2 else 'x' if variant == 'alt' else ''),
                         purpose=f'COLLIO-F: {prof.upper()} compact face tile, landed roots ({variant.upper()})')
         s['landing_plan'] = {'bands': [[n, p, bx] for n, p, bx in bands], 'subs': [[n, pa, rx, bx] for n, pa, rx, bx in subs],
-                             'counts': FLCNT[prof]}
+                             'counts': (FLCNT2 if rev >= 2 else FLCNT)[prof]}
     return s
 
 
@@ -476,7 +483,7 @@ def fx_spec(prof, variant, landed=False):
 #   E channel bx+171.3+10.8 .. W-2.16: phy (codec0p) + lcal PHY-slot sub-band at the slot pins
 # Members = every sequential cell reached from the root port through BUF/INV/HB (exact counts below, fixed pin flops counted
 # but left where io_flop_at_pins put them); sub-bands split a root by regex (name without backslashes).
-def fl_bands(variant):
+def fl_bands(variant, rev=1):
     g = FX[variant]
     W, H, ax, bx, h = g['W'], g['H'], g['ax'], g['bx'], 10.8
     a1 = round(ax + 178.632 + h, 2)          # spine left edge (u_rx / u_tx halo)
@@ -501,6 +508,13 @@ def fl_bands(variant):
     subs = [
         ('cal_io', 'cal', r'^(cdc_fault\[|rst_n__ot_rl\d)', [wf, round(H - 21.6, 2), 40.0, round(H - 2.16, 2)]),
         ('lcal_e', 'lcal', r'(g_safe_phy_slots\.|ot_prs_|phy_(tx|rx)_slot\$)', [ex0, round(e1 - 5.4, 2), ex1, round(e1 + 43.2, 2)])]
+    if rev >= 2:
+        # COLLIO-F rev2 (flx gate 10-23: codec0 u_tx_land sl_q -> codec0p b_ptx crossing -51 / -117 ps on P / S0 under the
+        # 150-ps distinct-entry reserve; b_ptx landed bit-sorted in the 367-um E strip, so some pairs ran diagonal ~550 um):
+        # the PHY-TX +1 rank b_ptx lands at the W end of the col-B gap between bank2 and bank3, next to the codec band; its
+        # same-root hop to the E-face u_pts pin slices (codec0p, no entry reserve) takes the ~200-um run instead.
+        y0, y1 = round(g['b2'] + 77.784 + h, 2), round(g['b3'] - h, 2)
+        subs.append(('ptx', 'phy', r'u_face\.b_ptx\[', [sr, y0, round(sr + 64.8, 2), y1]))
     for n, _, bx_ in bands:
         assert bx_[2] > bx_[0] + 5 and bx_[3] > bx_[1] + 5, (variant, n, bx_)
     return bands, subs
@@ -514,6 +528,14 @@ FLCNT = {
     's1': {"rx": 2111, "cal_io": 6, "cal": 1263, "lcal_e": 25, "lcal": 672, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "phy": 3203},
     's2': {"rx": 2111, "cal_io": 6, "cal": 1244, "lcal_e": 25, "lcal": 686, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "phy": 3203},
     'r': {"rx": 2015, "cal_io": 6, "cal": 682, "lcal_e": 25, "lcal": 144, "tx": 2015, "bank0": 596, "codec": 3715, "bank1": 596, "bank2": 596, "bank3": 454, "phy": 3030},
+}
+
+FLCNT2 = {  # rev2: + ptx sub-band (b_ptx) out of phy
+    's0': {"rx": 2111, "cal_io": 6, "cal": 1263, "lcal_e": 25, "lcal": 697, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "ptx": 584, "phy": 2619},
+    'p': {"rx": 2111, "cal_io": 6, "cal": 714, "lcal_e": 25, "lcal": 144, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "ptx": 584, "phy": 2619},
+    's1': {"rx": 2111, "cal_io": 6, "cal": 1263, "lcal_e": 25, "lcal": 672, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "ptx": 584, "phy": 2619},
+    's2': {"rx": 2111, "cal_io": 6, "cal": 1244, "lcal_e": 25, "lcal": 686, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "ptx": 584, "phy": 2619},
+    'r': {"rx": 2015, "cal_io": 6, "cal": 682, "lcal_e": 25, "lcal": 144, "tx": 2015, "bank0": 596, "codec": 3715, "bank1": 596, "bank2": 596, "bank3": 454, "ptx": 552, "phy": 2478},
 }
 
 
@@ -623,9 +645,9 @@ puts "OT_COLL_LAND PASS [llength $ot_cl_owned] landed + $ot_cl_fixed fixed pin f
 '''
 
 
-def fl_land(prof, variant):
-    bands, subs = fl_bands(variant)
-    cnt = FLCNT[prof]
+def fl_land(prof, variant, rev=1):
+    bands, subs = fl_bands(variant, rev)
+    cnt = (FLCNT2 if rev >= 2 else FLCNT)[prof]
     assert cnt, prof
     bl = '\n'.join(' %s {%s} {%s} %d' % (n, ' '.join(p), ' '.join('%.6f' % v for v in bx), cnt[n]) for n, p, bx in bands)
     sl = '\n'.join(' %s %s {%s} {%s} %d' % (n, pa, rx, ' '.join('%.6f' % v for v in bx), cnt[n]) for n, pa, rx, bx in subs)
@@ -642,6 +664,7 @@ if __name__ == '__main__':
         for prof in sys.argv[3:] or ('s0', 'p', 's1', 's2', 'r'):
             for v in ('main', 'alt'):
                 write(fx_spec(prof, v, landed=True), {'seq_landing.tcl': fl_land(prof, v), 'seq_release.tcl': rel})
+            write(fx_spec(prof, 'alt', landed=True, rev=2), {'seq_landing.tcl': fl_land(prof, 'alt', 2), 'seq_release.tcl': rel})
         sys.exit(0)
     if len(sys.argv) > 2 and sys.argv[2] == 'cx':
         for prof in sys.argv[3:] or ('s0', 'p'):
