@@ -571,6 +571,13 @@ def bases(st, users, col, svc=None):
 
 NB_WIN = 80             # lead 10-21: s_0N keeps NB 80 (existing lep / land masters); h = 4 back-to-back tag windows
 H_BEATS = 320
+# MU.S81.CAL booking (STW-S81c-DIE4 10-22): lep_mu_h w14m/w14f (529e315d6, STW-S81c-COLLA3-LEP) relays every byte of
+# the MU landing write ml_wv / ml_wd by one placed flop between the RX SRAM head and the N face: a LANDED (land 1) beat
+# reaches dsdv_mu_land one edge later; every other lep port is on the same edge (lockstep eq vs current RTL, 0 bad).
+# Effect on this calendar: none today -- both record calendars cut every hop window through (land 0, NS 1 landing slot
+# unused by stage hops; hop_land_plan), so no compiled event uses ml_wv.  If a group ever needs land 1, its replay
+# command (mu_rc) must sit >= last landed beat + LEP_ML_W_EDGES + the land leaf's rc -> rv 4 edges.
+LEP_ML_W_EDGES = 1
 
 
 def hop_land_plan(st, cal, mode):
