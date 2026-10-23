@@ -501,13 +501,22 @@ def cells_core_plan(p):
                 band, v)
         return [], H9[band], "col_h9 band %s %d Yosys measured (col_h9_l4_lp_b%s); flattened" % (band, H9[band], band[1])
     if p.kind == "svc":
-        cores = [("sx_hrow_a", 4 * 50502), ("sx_hrow_b", 4 * 50502)] + \
-            [("attn_h%d" % i, 1103302 // 4) for i in range(4)] + [("se_sm_pv", 18044 + 2 * 1247)]
+        # S81-P5 10-23: MEASURED attention engine (fresh ORFS Yosys, asap7lock RVT WC, hierarchical, ep9
+        # plan-s81v4-syn2/jobs/svc_tile): one tile ot_hdc_v41x_attn_tile_s (H16 TD32 NBANK5 PWORDS2 FPL4 FML6 F12, the
+        # dsdv_svc_att engine config) = 3,097,168 cells / 353,319 um2 = 4 head groups hgrp_s (774,424 max: 30,272 local
+        # + 4 head datapaths hdp_s of 183,981 max / 20,721 um2).  The engine has NT = NL = 4 tiles -> 12.39 M cells,
+        # 1.413 mm2 std area per svc partition.  Cores <= 400k: 64 hdp cores + 16 hgrp cores (local logic, the 4 hdp
+        # as macros).  sx_hrow fresh synth 51,397 cells.  Engine staging / P.V glue (dsdv_svc_att whole) still MISSING.
+        cores = [("sx_hrow_a", 4 * 51397), ("sx_hrow_b", 4 * 51397)] + \
+            [("attn_t%d_g%d" % (t, g), 30272) for t in range(4) for g in range(4)] + \
+            [("attn_t%d_g%d_h%d" % (t, g, h), 183981) for t in range(4) for g in range(4) for h in range(4)] + \
+            [("se_sm_pv", 18044 + 2 * 1247)]
         glue = 60000
         if any(c["module"].startswith("dsfd_ctrl") for c in p.contents):
             cores.append(("ctrl_etap_irg", 2 * 21592 + 21759 + 21834 + 79867))
-        return cores, glue, ("svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x "
-                             "hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4")
+        return cores, glue, ("svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; "
+                             "one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; "
+                             "hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)")
     if p.kind == "slice":
         role = getattr(p, "role", "X")
         m = p.contents[0]["module"] if p.contents else ""
