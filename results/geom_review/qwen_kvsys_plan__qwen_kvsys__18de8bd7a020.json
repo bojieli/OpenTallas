@@ -1,0 +1,11 @@
+{
+ "element": "qwen_kvsys_plan",
+ "kit": "physical/die_plan/qwen_kvsys@592a81960",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "18de8bd7a02059473fb645879d7c606250ea89a331f052d59c60f0453c9a1562",
+ "reasons": "[10-23 10:37] [GEOM-REVIEW4 G1] die_plan_v33.png viewed; tool G0 run by me (kv-p3b tools): PASS 0 err/1588 warn, census 396,969 b, dropped 0, unmapped 0, 51,031 forwarded; worst cut 0.071, seg 0.259. Delta vs v3.2 checked by plan diff: 5 types changed (hgi_v6/v7/v8, hub_Wi, io_cor) with ports/windows only; outlines and all 160 partition placements are unchanged. The L663 split-bus fix (523 -> 1,044 b) is a real correctness gain, and the bit-level tap-tree audit is the right check. Layout unchanged: symmetric, centre root, two straight corridors.",
+ "fixes": "All v3.2 conditions carry over (F_DLY=3, strap/ID/fault, core clocks, RTL binding, exact G2, G3). NEW before any KV G3 P&R: (a) ft station placement must realize the G0 L/k model (see the kv3_io_* FAILs: GPL stacks the chains mid-partition, and all 33 io ft slots span >1.2 mm face to face); (b) gen.py phys fails on 37 of 45 types with open-input/output bus errors (BINDER2 binding), so only the 3 io ft types can be kitted today. PLAN-TOOL should adopt the bit-level split-bus census check, as KV-P3b asked.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T10:37:21-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
