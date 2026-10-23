@@ -192,6 +192,38 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE2 10-23 batch 15: claude/tile-flow2-1023 @6f0229425 (COORD 03:26 approved, condition: in-flight recipe-5
+    # kits must not change silently).  Every planner change is behind tile_plan.planner_version 2: a kit generated before
+    # this merge (kit.env present, no version in its spec) regenerates with the frozen tile_plan_v1 planner, 3 pins/um, no
+    # implied pin_balance -> byte-identical kit files (measured: rg3b xm6/xmh0u/xmh1u, hr_core_prompt_tf1, lep_tf1; only
+    # spec.json gains planner_version 1 / pin_density 3 / pin_balance false).  New kits take version 2.
+    "1c53dcf809907d4e1b5f5aa04660184d6bf2a5dc": dict(
+        kind="neutral", paths=('tools/ref_tile/tile_plan.py',),
+        what="TILE-FLOW2 dual-face macro columns (plan_macros, version 2 only)"),
+    "980a5d3b443960d457b2dc171b8bbaf861160814": dict(
+        kind="neutral", paths=('tools/ref_tile/tie_audit.py',),
+        what="TILE-FLOW2 tie_audit.py new report tool + opt-in SKIP_REPAIR_TIE_FANOUT (spec opt-in only)"),
+    "1e63ff060d5487b0b306a36bddc477036a92363e": dict(
+        kind="neutral", paths=('tools/ref_tile/ref_tile.py',),
+        what="TILE-FLOW2 pin_balance default layers kept under a lowered signal cap (only kits with signal cap < M5 and pin_balance without h/v; old default was above the cap)"),
+    "a415508d2b62d70667fbf6c2ec3cda39dcc1eb8b": dict(
+        kind="neutral", paths=('tools/ref_tile/tile_plan.py',),
+        what="TILE-FLOW2 mixed-column per-macro pin sum (plan_macros, version 2 only)"),
+    "528708dbc611f143b4a2a5b51e19d1b929133aaa": dict(
+        kind="neutral", paths=('tools/ref_tile/tile_plan.py',),
+        what="TILE-FLOW2 FFD height-capped columns (plan_macros, version 2 only)"),
+    "da7f261378cace6cf26af3a129b38edb38682be1": dict(
+        kind="neutral", paths=('tools/ref_tile/ref_tile.py', 'tools/ref_tile/tile_plan.py'),
+        what="TILE-FLOW2 tied macro pins ignored by the planner (version 2 only)"),
+    "c094f6cee0b6c7eac0d388aa271e50644eb9c712": dict(
+        kind="neutral", paths=('tools/ref_tile/ref_tile.py', 'tools/ref_tile/tile_plan.py'),
+        what="TILE-FLOW2 logic_face over-macro back-face reach (version 2 only)"),
+    "4ad9f0de4ca301b47510ad9e6e768ac7b7727ab1": dict(
+        kind="neutral", paths=('tools/ref_tile/ref_tile.py',),
+        what="TILE-FLOW2 face-fence orfs_vars re-derived every gen (version 2 only; version 1 keeps setdefault)"),
+    "da5561a4627864abaf267e6b50f55ac56743d392": dict(
+        kind="neutral", paths=('tools/ref_tile/outline_audit.py', 'tools/ref_tile/ref_tile.py', 'tools/ref_tile/tile_plan.py'),
+        what="TILE-FLOW2 6 pins/um on two layers + pin-density FAIL + fixed-block macro area (version 2 only) + outline_audit report"),
     # ROOT-MERGE-1023 10-23 batch 14: claude/gate-layout-review-1023 (COORD batch 14; OWNER 10-23 tile visual review).
     # The gate now FAILs std-cell fill < 20 % of free area / pin->register p90 > 150 um (layout_review) -> a real
     # TIGHTENING for every kit: a gate run before it carries no review.png / review_stats.json and is re-gated (the

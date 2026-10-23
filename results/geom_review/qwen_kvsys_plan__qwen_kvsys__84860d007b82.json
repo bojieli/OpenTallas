@@ -1,0 +1,11 @@
+{
+ "element": "qwen_kvsys_plan",
+ "kit": "physical/die_plan/qwen_kvsys@1bf4cda41",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "84860d007b8268b9cebe3542e1e0d3e464b82279824b761ceb61aa26eb5ba13e",
+ "reasons": "[GEOM-REVIEW2 G1] die_plan_v1.png viewed + g1_extra. GOOD: 100% abutted 10.82x28.65 mm, no channels; mirrored W/E halves (pcrow column | hgrp 2 columns | astk strip | centre pvrow chain), N sys band + mid hub/bandft band; PHY on the outer edges facing its 8 pcrow (PHY channel fan-out, not a star); worst cut 0.071, faces <=6/um; taps one per partition. PROBLEMS: (a) astk = 346 x 12,165 um (aspect 35) and phy = 864 x 12,165 (aspect 14): one clock tap/reset region over 12 mm (tap 6 mm from each end), against one-partition-one-hop (reach 1.2 mm) and the 250+/-40 ps budget; (b) hgrp 1106 x 3041 and pcrow 1037 x 1521 exceed the 1.2-mm reach along the N-S lane direction (stations exist, but one tap over 3 mm); (c) pvrow_N_0 holds ~4 point-to-point lanes to EACH of pvrow_N_1..15 (7.2k bits, 22 peers) - a logical star laid along the chain; the centre column carries all of them in parallel (dense vertical bundle in the render), up to 41-cycle lanes; (d) 113 types for 120 partitions (no replication yet; author-noted).",
+ "fixes": "G2 probe ALLOWED now. Before G3 of the affected partitions (v2): cut astk and phy into <=1.2-mm segments aligned with the pcrow/hgrp row pitch (one tap + reset sync each, stations at each cut); split hgrp into <=1.2-mm tall partitions (3 per column cell) or show measured insertion within budget for a 3-mm region; turn the pvrow broadcast into ONE tapped chain lane per stream (register + tap per row) instead of per-row point-to-point lanes; cut types by making pvrow/pcrow/hgrp rows identical (uniform ft population) as planned in v2. sys/hub/band/pvrow partitions within reach may go to G3 on their own REQs.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T04:48:01-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
