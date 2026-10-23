@@ -1,0 +1,5 @@
+TKM_STATIC_PT PASS words=2 cycles=628 pinned=1 pipe=0
+- rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm_static_pt.sv:84: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 545ns; walltime 42.062 s; speed 12.947 ns/s
+- Verilator: cpu 42.061 s on 33 threads; allocated 38391 MB

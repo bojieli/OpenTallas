@@ -6,6 +6,7 @@ Input : stats_summary.json (measured Yosys cell counts per module, parsed by sta
         ASAP7 RVT TT, the v16w wrappers of the r18h5 die views).
 Output: <master>.split.json per distinct master + index.json.  Each split.json:
   status       RTL-UNBENCHED = cut + twin written, bench not completed;
+               BENCH-PARTIAL = bench PASS + mutant FAIL on part of the vector set, the rest still running;
                DONE (cut + every crossing register to register, RTL twin benched or no RTL change needed) |
                CUT-ONLY (cores measured, but some crossings are not register to register; fix named) | OPEN
   cores        [{master, core_label, members, module, cells, srams, pins_bits}]   (one entry per hard core)
@@ -105,7 +106,7 @@ cores = [dict(part='tile', master=tk, core_label=f'tile{t}', module='ot_hgi_coll
 cores.append(dict(part='root', master=tk, core_label='root', module='ot_hgi_coll_tkm_static_p (own logic) + ot_hgi_coll_tkm_buffer',
                   members=['u.u (root logic: tick/calendar, decode + 4-sort, pass-1 capture, output lines)', 'u.u.u_buffer'],
                   cells=root, srams=2, pins_bits=dict(inp=2980 - 2 - 40 - 16 - 512 - 3 - 32 + 344 + 2, out=1 + 40 + 16 + 512 + 3 + 32 + 345 + 2)))
-out[tk] = entry(tk, ['c0'], 'RTL-UNBENCHED', cores, 0, [
+out[tk] = entry(tk, ['c0'], 'BENCH-PARTIAL', cores, 0, [
     dict(between='tile t -> tile t+1 (ins chain)', bits=345, kind='REG->REG', note='ovf_v/ovf_b output regs -> p_vg/p_bg input regs'),
     dict(between='tile t+1 -> tile t (up chain)', bits=344, kind='REG->LOGIC->REG', note='up_out reg -> X shift-register mux (conv) -> X regs: one 2:1 mux level, kept'),
     dict(between='root -> all 32 tiles (clr, conv broadcast)', bits=2, kind='COMB in pinned; REG->REG with PIPE 1',
@@ -114,9 +115,10 @@ out[tk] = entry(tk, ['c0'], 'RTL-UNBENCHED', cores, 0, [
     dict(between='root -> tile 0 (entry)', bits=345, kind='REG->REG', note='entry/entry_v regs (PIPE 1: one more launch reg so it stays aligned with clr/conv)'),
     dict(between='tile 0 -> root (up[0])', bits=344, kind='REG->LOGIC->REG in pinned; REG->REG with PIPE 1', note='PIPE 1: up0_q pin register, consumers moved 2 edges later')],
     dict(twin='rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv (ot_hgi_coll_tkm_static_p #(PIPE 1); PIPE 0 = pinned)',
-         cycle_cost_edges=2, cost_note='TKM finish/done/stat_cycles +2 edges (same words, same addresses, same order); compiler TKM latency +2',
-         bench='rtl/hbm_accel/generic/collective/tkm/run_tp192_static_p.sh OUT (golden O/R vectors syn_sel/syn_cand/rank128_zeros + lock-step vs pinned root delayed 2 edges; PIPE 0 identity; mutant MUTP 1 must FAIL)',
-         bench_result='NOT RUN TO COMPLETION: the TP192 lock-step tb (twin + pinned reference root, KMAX 2048, hier tiles) needs >290 GB in the top-level verilator_bin; memcg-OOM at 128 and 300 GB on ot-gold2. Next: drop the in-tb pinned reference (golden O/R vectors only) or run at TP 96 / KMAX 512; lint-clean only so far'),
+         cycle_cost_edges=2,
+         cost_note='TKM finish/done/stat_cycles +2 edges (same words, same addresses, same order); compiler TKM latency +2',
+         bench='rtl/hbm_accel/generic/collective/tkm/run_tp192_static_pt.sh OUT {vec|build_pin|build_p1|build_p0|build_mut|sim} (tb_hgi_coll_tkm_static_pt: ONE engine per model -- pinned ot_hgi_coll_tkm_static or the twin -- golden O/R vectors + timeline, every write/done/fault event traced; tkm_trace_lockstep.py: twin PIPE 1 == pinned at +2 edges event for event, PIPE 0 == pinned at +0; mutant MUTP 1 (up[0] consumed one edge early) must FAIL golden or lock-step). tkm_tp192_e86_hier.vlt makes the e86 wrapper the hier block',
+         bench_result='PARTIAL @e03ce0eb5 on ot-gold1 (ot-run): all 4 TP192/KMAX2048 models build in 24 min at 8.4 GB peak RSS each (the earlier >290 GB OOM was Verilator 5.050 flattening all 32 tile_rg bodies through the e86 wrapper -- qtkm_hier.vlt hier-blocks tile_rg, not e86 -- not the in-tb pinned reference). rank128_zeros: pinned PASS cycles 628, twin PIPE1 PASS cycles 630, TKM_LOCKSTEP PASS shift 2 (3 events, 2 writes); PIPE0 PASS + lock-step shift 0; mutant MUTP1 golden-pass but TKM_LOCKSTEP FAIL (writes 1 edge early) => gate FAILS as required. syn_sel (1024 words) / syn_cand (4096 words) pinned+twin+PIPE0+mutant sims: each model needs 39 GB and runs ~12 ns/s (hier model), still RUNNING on gold1 at hand-off (out /srv/opentallas-scratch/claude/hbm-p5-rtla-1023/run_tkm_e03ce0eb5, traces tr_<model>_<case>.txt). Logs: physical/die_plan/hbm/over_cap_split/bench/tkm_pt_e03ce0eb5/'),
     '32 x the TP192 tile (260k, already a hardened shape) + root (34k + 2 SRAM): the tile chain is the dataflow; tile pins are '
     'registered both ways; PIPE 1 registers the root side.  Root core 34k is small (could merge with its neighbouring tile: 294k).',
     tk, S[tk]['total'])
