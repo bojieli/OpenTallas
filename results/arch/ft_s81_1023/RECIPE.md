@@ -28,6 +28,24 @@ Files: `census_direct_1500.json` (direct Manhattan paths), `stage_model_v0.json`
 - The hottest GRT spot is the H street between s_0S and s_0N at (9.25k, 17.4k). It is the only path for W-frame lanes
   to the s_1..s_3 hubs. ft through s_0S/s_0N removes it.
 
+### 1b. Stand-in master status (sub-agent sweep of lanes + main @3ef3208d9, 10-23 ~00:30)
+| master (inst) | kit / contract | latest | ft impact |
+|---|---|---|---|
+| col_h9_l4_lp (60) / col_h10 (12) | s81frame_col_h9_vgsr/_vgcsr, h10_vgsr/_vgysr @d09a59d18; RLAYERS M2-M7, PG pins M8 stripes | never closed. All earlier gates FAIL at CTS (forwarded xk spread 125-143 ps, spine target) or GPL. vgsr family verdict pending. Children all closed except the q-elem stand-in view | add ft at first close; keep the corridor clocks separate from xk |
+| slice c1x/c3x k8 cap5r_w (9+1) | k8c/k8d, k8e/k8f (branch claude/s81-slicep-k8c-1021); M2-M7, PG pins M8 | no parent gate; children partly closed | ft added to the parent wrapper |
+| slice lepw/lepe mu_72 x4, iq, sukv_raw512 | assembly specs only / no kit | no parent gate | ft at kit creation |
+| svc_rs (14) + pvso_entry (2) | successor pair72 x6 + entry (claude/s81-svcpair72-1021) | children failing (attw ROOT1, hgrp8r) | V ft (M9) in pair72 |
+| ot_pdie_serdes_col (10) | s81lk_serdes_col_sp11a | **CLOSED 10-22 08:46**, never swapped into the die | the only closed big view: re-harden with ft (H 3.7-8.2k bits over a 518 um column) or route lanes around it |
+| idx_rg3 (7) / _nq (1) | flat kits M2-M7 PG M7; rg3b band successors | flat kits all FAIL clock_rule; bands mixed | small ft (1-2 bundles) |
+| bk_sel_vmtx, eng_rr, gunit, seqhost_mux | children gating (selcpn_i CLOSED, eng_rr b3m/b3f, l1fb, seq_host) | no parent closed | ft at the parent |
+| svc_busland x5 masters, pv_local_land | no kit (busland) / d32c gate WARN | - | small, not crossed |
+
+Layer-budget note: frame, slice and gunit kits put PG pins on M8 as stripes (0.48/8.64, ~6% of M8, aligned to the
+die grid). The FT-PLAN target is PG at or below M7.
+- Recommendation: keep the M8 stripes, because the ft corridors fit between them (M8 ft ratio at most 0.12-0.2).
+- Moving the PG pins to M7 would change the contract of every cluster kit for about 6% of M8. Not worth it unless the
+  plan.py ratio says otherwise.
+
 ## 2. Target layer budget (S81)
 | element | signals | PG / straps | die over it |
 |---|---|---|---|
