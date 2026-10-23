@@ -5424,7 +5424,7 @@ class _RstOcc:
     def free(self, r, gap):
         return r[0] >= gap and r[1] >= gap and r[2] <= self.W - gap and r[3] <= self.H - gap and self.hit(r, gap) is None
 
-    def site(self, tx, ty, box=None, lim=600.0, w=RST_W, h=RST_H, gap=RST_GAP_UM, budget=4000):
+    def site(self, tx, ty, box=None, lim=600.0, w=RST_W, h=RST_H, gap=RST_GAP_UM, budget=4000, spaced=None, spaced_gap=0.0):
         """lower-left corner (on the GX / GY lattice) of a free w x h frame near the centre (tx, ty); `box` =
         (x0, y0, x1, y1) limits the frame centre.  Best-first over edge projections: a blocked candidate is pushed
         past each edge of the block that stops it (so a target inside a block, or between abutting blocks, walks out
@@ -5447,13 +5447,17 @@ class _RstOcc:
             if box and not (box[0] <= x0 + w / 2 <= box[2] and box[1] <= y0 + h / 2 <= box[3]):
                 continue
             q = self.hit(r, gap)
+            q_gap = gap
+            if q is None and spaced is not None:
+                q = spaced.hit(r, spaced_gap)
+                q_gap = spaced_gap
             if q is None:
                 dd = abs(x0 + w / 2 - tx) + abs(y0 + h / 2 - ty)
                 if best is None or dd < best[0]:
                     best = (dd, x0, y0)
                 continue
-            for nx, ny in ((q[0] - gap - w / 2 - gx, cy), (q[2] + gap + w / 2 + gx, cy),
-                           (cx, q[1] - gap - h / 2 - gy), (cx, q[3] + gap + h / 2 + gy)):
+            for nx, ny in ((q[0] - q_gap - w / 2 - gx, cy), (q[2] + q_gap + w / 2 + gx, cy),
+                           (cx, q[1] - q_gap - h / 2 - gy), (cx, q[3] + q_gap + h / 2 + gy)):
                 key = (round(nx, 1), round(ny, 1))
                 if key not in seen:
                     seen.add(key)
@@ -5485,6 +5489,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
     caller supplies pin positions and the placement rectangles, and re-checks the emitted pins."""
     import collections
     occ = _RstOcc(rects, W, H, gx, gy)
+    pad_occ = _RstOcc([], W, H, gx, gy)
     P = pitch
     cells, wires, errors, per = [], [], [], {}
     trees = []
@@ -5494,10 +5499,13 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         seq = [0]
 
         def new(tx, ty, box=None, _N=N, _seq=seq, _bid=bid, lim=600.0, budget=4000, gap=RST_GAP_UM):
-            s = occ.site(tx, ty, box, lim=lim, budget=budget, gap=gap)
+            s = occ.site(tx, ty, box, lim=lim, budget=budget,
+                         spaced=pad_occ if gap > RST_GAP_UM else None, spaced_gap=gap)
             if s is None:
                 return None
             occ.add((s[0], s[1], s[0] + RST_W, s[1] + RST_H))
+            if gap > RST_GAP_UM:
+                pad_occ.add((s[0], s[1], s[0] + RST_W, s[1] + RST_H))
             k = _seq[0]
             _seq[0] += 1
             _N[k] = dict(x=s[0], y=s[1], kids=[], sinks=[], pad=0, master=RST_REP,
@@ -5728,7 +5736,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                     # alternated between two free pockets on either side of k (rstt_rst_field_6044 x 3481 -> 6045 x 2823,
                     # 658 um, on two region clocks).  The chain is ONE pocket: the first cell on the edge p..k (midpoint
                     # first, both hops <= RST_NET_UM / 2 + d / 2), every later cell beside the previous one.
-                    if prev is not None:
+                    if prev is not None and RST_PAD_GAP_UM == RST_GAP_UM:
                         a = new(*c_(prev), lim=RST_NET_UM / 4, budget=20000, gap=RST_PAD_GAP_UM)
                     else:
                         x0_, y0_ = c_(k)
