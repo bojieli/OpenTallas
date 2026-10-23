@@ -1,0 +1,162 @@
+{
+ "element": "s81sl_lep_tf2",
+ "outline_um": [
+  326.16,
+  574.56
+ ],
+ "aspect": 1.76,
+ "die_area_um2": 187398.5,
+ "macros": 20,
+ "macro_area_pct": 33.33,
+ "std_cells": 61255,
+ "unplaced_cells": 0,
+ "std_area_um2": 8771.2,
+ "std_fill_of_free_pct": 7.02,
+ "ff": 17691,
+ "buf_inv": 16308,
+ "buf_share_pct": 26.62,
+ "pin_regs_marked": 5184,
+ "clock_root_bufs": 0,
+ "clock_lvl2_bufs": 0,
+ "pins_per_face": {
+  "W": 2236,
+  "S": 701,
+  "E": 2210
+ },
+ "pins_per_um": {
+  "S": 2.149,
+  "E": 3.846,
+  "W": 3.892
+ },
+ "pin_peak_per_um_10um": {
+  "W": 4.0,
+  "S": 2.2,
+  "E": 3.9
+ },
+ "pin_layers": {
+  "M4": 2221,
+  "M3": 353,
+  "M5": 352,
+  "M6": 2221
+ },
+ "pins_registered": 5144,
+ "pins_to_macro": 0,
+ "pins_unregistered": 2,
+ "pin_to_reg_median_um": 6.34,
+ "pin_to_reg_p90_um": 7.84,
+ "pin_to_reg_max_um": 267.61,
+ "pins_reg_over_100um": 3,
+ "pin_to_macro_p90_um": null,
+ "empty_area_pct": 67.14,
+ "density_bin_um": 7.18,
+ "macro_masters": {
+  "ot_sram_1r1w_32x128_m1": {
+   "n": 10,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "pins": [
+    "M4"
+   ]
+  },
+  "ot_sram_1r1w_512x128_m4_r2c2": {
+   "n": 10,
+   "obs": [
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+   ],
+   "pins": [
+    "M4"
+   ]
+  }
+ },
+ "macros_pins_facing_away": [
+  [
+   "u_ot_pr_core.u.g_tx\\[0\\].g_safe_write.u_m.g_bank\\[1\\].u_m",
+   -0.91
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[0\\].g_safe_write.u_m.g_bank\\[2\\].u_m",
+   -0.96
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[0\\].g_safe_write.u_m.g_bank\\[3\\].u_m",
+   -0.96
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[0\\].g_safe_write.u_m.g_bank\\[4\\].u_m",
+   -0.79
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[0\\].u_m",
+   -0.93
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[1\\].u_m",
+   -0.95
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[2\\].u_m",
+   -0.75
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[3\\].u_m",
+   -0.97
+  ],
+  [
+   "u_ot_pr_core.u.g_tx\\[1\\].g_safe_write.u_m.g_bank\\[4\\].u_m",
+   -0.95
+  ]
+ ],
+ "macros_with_face_info": 10,
+ "top_cells": [
+  [
+   "DFFHQNx1",
+   13416
+  ],
+  [
+   "INVx1",
+   11820
+  ],
+  [
+   "TIEHIx1",
+   7585
+  ],
+  [
+   "DFFASRHQNx1",
+   4275
+  ],
+  [
+   "NOR2x1",
+   3249
+  ],
+  [
+   "BUFx2",
+   2878
+  ],
+  [
+   "AO21x1",
+   2260
+  ],
+  [
+   "NAND2x1",
+   2062
+  ]
+ ],
+ "kind": "tile",
+ "hard_children": 0,
+ "cells_at_origin": 0,
+ "placed": true,
+ "suspicion": [
+  "low fill 7.0% of free",
+  "empty 67%",
+  "9 macros pins face away"
+ ],
+ "score": 9.46,
+ "png": "./layout.png"
+}
