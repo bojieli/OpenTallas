@@ -151,11 +151,19 @@ close $ot_ff_tsv
 
 # band depth per face from the register area it holds
 set ot_ff_area [dict create N 0.0 S 0.0 E 0.0 W 0.0]
+set ot_ff_stolen [dict create]
 set ot_ff_list [dict create N {} S {} E {} W {}]
 dict for {rn f} $ot_ff_of {
   set i [$ot_ff_blk findInst $rn]
   if {$i eq "NULL"} continue
-  if {[$i getGroup] ne "NULL"} { continue }
+  set og [$i getGroup]
+  if {$og ne "NULL"} {
+    # a pin register inside a kit's own GPL region (e.g. the HC hub's central std-cell band) is taken out of it: pin
+    # registers belong at their face (owner rule), the kit region keeps the rest of its logic
+    if {[string match ot_face_fence_* [$og getName]]} continue
+    $og removeInst $i
+    dict incr ot_ff_stolen [$og getName]
+  }
   set m [$i getMaster]
   dict set ot_ff_area $f [expr {[dict get $ot_ff_area $f] + double([$m getWidth]) * [$m getHeight] / $ot_ff_u / $ot_ff_u}]
   dict lappend ot_ff_list $f $rn
@@ -191,19 +199,27 @@ foreach f {N S E W} {
   odb::dbBox_create $r [expr {round($x0 * $ot_ff_u)}] [expr {round($y0 * $ot_ff_u)}] [expr {round($x1 * $ot_ff_u)}] [expr {round($y1 * $ot_ff_u)}]
   set g [odb::dbGroup_create $r $nm]
   $g setType VOLTAGE_DOMAIN
-  foreach rn $names { $g addInst [$ot_ff_blk findInst $rn] }
-  # a FIRM pin flop (io_flop_at_pins) already inside its band keeps its spot; one outside is moved to the band centre
+  # a FIRM pin flop (io_flop_at_pins) sits AT its pin already and stays FIRM (releasing it lets GPL slide it along the
+  # band, measured p90 7.7 -> 127 um); every other pin register (several captures, untraced, no io_flop_at_pins) is
+  # fenced.  A face with no movable register gets no region (GPL-0304 -nan on a region without a movable instance).
+  set mov {}
   foreach rn $names {
     set i [$ot_ff_blk findInst $rn]
-    set bb [$i getBBox]
-    set ix [expr {double([$bb xMin]) / $ot_ff_u}]; set iy [expr {double([$bb yMin]) / $ot_ff_u}]
-    if {[$i getPlacementStatus] in {FIRM LOCKED} && ($ix < $x0 || $ix > $x1 || $iy < $y0 || $iy > $y1)} {
-      $i setPlacementStatus PLACED
-    }
+    if {[$i getPlacementStatus] ni {FIRM LOCKED}} { lappend mov $i }
   }
+  if {![llength $mov]} {
+    odb::dbGroup_destroy $g
+    odb::dbRegion_destroy $r
+    puts "FACE_FENCE face $f: all [llength $names] pin registers FIRM at their pins (io_flop_at_pins), no fence needed"
+    incr ot_ff_n [llength $names]
+    continue
+  }
+  foreach i $mov { $g addInst $i }
+  dict set ot_ff_list $f [lmap i $mov {$i getName}]
   incr ot_ff_n [llength $names]
   puts "FACE_FENCE region $nm box [format {%.2f %.2f %.2f %.2f} $x0 $y0 $x1 $y1] depth [format %.2f [dict get $ot_ff_dep $f]] um flops [llength $names] area [format %.0f [dict get $ot_ff_area $f]] um2"
 }
+dict for {gn c} $ot_ff_stolen { puts "FACE_FENCE took $c pin registers out of the kit region $gn (pin registers sit at their face)" }
 puts "FACE_FENCE fenced $ot_ff_n flops; pin bits reg [dict get $ot_ff_cls reg] multi [dict get $ot_ff_cls multi] macro [dict get $ot_ff_cls macro] unregistered [dict get $ot_ff_cls none]; face conflicts $ot_ff_conf; not-ok [llength $ot_ff_bad] (table $::env(RESULTS_DIR)/ot_face_fence.tsv)"
 if {[llength $ot_ff_bad] && $ot_ff_strict} {
   error "FACE_FENCE: [llength $ot_ff_bad] boundary pin bits have no register of their own and are not in spec unregistered_ok ([lrange $ot_ff_bad 0 7] ...): add the register in the RTL (registers come from RTL, never from the flow), or list the port in unregistered_ok with a reason"
