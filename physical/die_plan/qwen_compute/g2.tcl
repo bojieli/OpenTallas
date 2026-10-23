@@ -5,12 +5,12 @@ read_def /work/die.def
 make_tracks M1 -x_offset 0.018 -x_pitch 1.333333 -y_offset 0.018 -y_pitch 1.333333
 make_tracks M2 -x_offset 0.045 -x_pitch 1.333333 -y_offset 0.045 -y_pitch 1.333333
 make_tracks M3 -x_offset 0.009 -x_pitch 1.333333 -y_offset 0.009 -y_pitch 1.333333
-make_tracks M4 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048
-make_tracks M5 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048
-make_tracks M6 -x_offset 0.016 -x_pitch 0.064 -y_offset 0.016 -y_pitch 0.064
-make_tracks M7 -x_offset 0.016 -x_pitch 0.064 -y_offset 0.016 -y_pitch 0.064
-make_tracks M8 -x_offset 0.116 -x_pitch 0.08 -y_offset 0.116 -y_pitch 0.08
-make_tracks M9 -x_offset 0.116 -x_pitch 0.08 -y_offset 0.116 -y_pitch 0.08
+make_tracks M4 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048
+make_tracks M5 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048
+make_tracks M6 -x_offset 0.032 -x_pitch 0.064 -y_offset 0.032 -y_pitch 0.064
+make_tracks M7 -x_offset 0.032 -x_pitch 0.064 -y_offset 0.032 -y_pitch 0.064
+make_tracks M8 -x_offset 0.04 -x_pitch 0.08 -y_offset 0.04 -y_pitch 0.08
+make_tracks M9 -x_offset 0.04 -x_pitch 0.08 -y_offset 0.04 -y_pitch 0.08
 set_routing_layers -signal M2-M9 -clock M2-M9
 set_global_routing_layer_adjustment M2-M7 0.0
 set_global_routing_layer_adjustment M8-M9 0.0

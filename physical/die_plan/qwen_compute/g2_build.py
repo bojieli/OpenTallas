@@ -42,16 +42,17 @@ for pid, pr in P.ports.items():
         for part, bus, df, dr in ends:
             tn = P.parts[part]["type"]
             w, h = P.ptype(part)["outline_um"]
-            ox, oy = P.parts[part]["origin_um"]
+            x0d, y0d, x1d, y1d = P.rect(part)
+            dpt = {"E": (x1d, c), "W": (x0d, c), "N": (c, y1d), "S": (c, y0d)}[df]
+            tx, ty = P.to_type(part, dpt)
+            tf = P.type_face(part, df)
             hw = HW[ln]
-            if df in "EW":
-                y = c - oy
-                x0, x1 = (w - DEPTH, w) if df == "E" else (0.0, DEPTH)
-                r = (x0, y - hw, x1, y + hw)
+            if tf in "EW":
+                x0, x1 = (w - DEPTH, w) if tf == "E" else (0.0, DEPTH)
+                r = (x0, ty - hw, x1, ty + hw)
             else:
-                x = c - ox
-                y0, y1 = (h - DEPTH, h) if df == "N" else (0.0, DEPTH)
-                r = (x - hw, y0, x + hw, y1)
+                y0, y1 = (h - DEPTH, h) if tf == "N" else (0.0, DEPTH)
+                r = (tx - hw, y0, tx + hw, y1)
             name = f"{bus}[{bit}]" if pr["width"] > 1 else bus
             tpins[tn][name] = (ln, r, dr)
             conn.append((part, name))
@@ -93,7 +94,8 @@ D = ["VERSION 5.8 ;", "DIVIDERCHAR \"/\" ;", "BUSBITCHARS \"[]\" ;", "DESIGN qc_
      f"DIEAREA ( 0 0 ) ( {round(P.W * U)} {round(P.H * U)} ) ;", f"COMPONENTS {len(P.parts)} ;"]
 for n, p in P.parts.items():
     x, y = p["origin_um"]
-    D.append(f"- {n} P_{p['type']} + FIXED ( {round(x * U)} {round(y * U)} ) N ;")
+    o = {"R0": "N", "MX": "FS", "MY": "FN", "R180": "S"}[p.get("orient", "R0")]
+    D.append(f"- {n} P_{p['type']} + FIXED ( {round(x * U)} {round(y * U)} ) {o} ;")
 D += ["END COMPONENTS", f"NETS {len(nets)} ;"]
 for nm, conn in nets:
     D.append(f"- {nm} " + " ".join(f"( {i} {pn} )" for i, pn in conn) + " + USE SIGNAL ;")

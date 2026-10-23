@@ -8,8 +8,7 @@ Writes die_plan.json (schema opentallas.die_plan.v1, tools/die_plan) plus plan_n
 open items).  Inputs: the as-built die connectivity (FT-TOOL census of the r50/r56 Qwen compute die: same cluster,
 slice and IO connectivity; r56 differs only in reset padding) and the slice kit floorplans (leaf inventory).
 
-Structure (every instance R0: mirrored placements put M4-M7 pins off-track for any 8.64-grid outline, so a mirrored
-copy is its own type):
+Structure (bottom-half clusters are MX copies of the top types; PLAN-TOOL @764076fe6 symmetric pin tracks):
   * West IO strip (x 0 .. 2341.44): macro column (serdes x3, io_collective + clk_rx strip, ucie_kv) and a 777.6-um
     column (io_ucie, glue, native59, tt_ctlm, and station partitions s* that carry the W-strip lanes at <= 1 hop).
   * 12 compute columns, 2471.04 um pitch, each: far | near | slice | near | far (bottom to top).  Every CB16 cluster
@@ -32,7 +31,7 @@ from pathlib import Path
 G = 8.64
 REACH = 1000.0
 ST_LEN = 900.0                       # one station per <= 900 um of slot route (hop margin for window jogs)
-DENS = 4.8                           # pins / um per port window (budget 6 incl. track rounding)
+DENS = 4.2                           # pins / um per port window (budget 6 incl. track rounding)
 GAP = 0.96
 EDGE = 4.32
 
@@ -85,10 +84,18 @@ class Plan:
         self.types[name] = t
         return t
 
-    def add_part(self, name, tname, x, y):
+    def add_part(self, name, tname, x, y, orient="R0"):
         assert name not in self.parts, name
         w, h = self.types[tname]["outline_um"]
-        self.parts[name] = dict(type=tname, origin=(round(x, 4), round(y, 4)), wh=(w, h))
+        self.parts[name] = dict(type=tname, origin=(round(x, 4), round(y, 4)), wh=(w, h), orient=orient)
+
+    def tface(self, n, die_face):
+        o = self.parts[n]["orient"]
+        if o in ("MX", "R180") and die_face in "NS":
+            return OPP[die_face]
+        if o in ("MY", "R180") and die_face in "EW":
+            return OPP[die_face]
+        return die_face
 
     def rect(self, n):
         (x, y), (w, h) = self.parts[n]["origin"], self.parts[n]["wh"]
@@ -123,8 +130,8 @@ def shared_face(P, a, b):
 OPP = dict(N="S", S="N", E="W", W="E")
 
 
-def wlen(width):
-    n = math.ceil(width / DENS / 0.192) * 0.192
+def wlen(width, dens=None):
+    n = math.ceil(width / (dens or DENS) / 0.192) * 0.192
     return max(round(n, 4), 0.384)
 
 
@@ -145,13 +152,13 @@ def build_geometry(P, slice_leaves):
             clusters.append(dict(name=cname, col=k, kind=kind, half=half, x=cx, y=y0))
             for c in range(4):
                 for r in range(4):
-                    tn = cb_type(P, kind, half, c, r)
+                    tn = cb_type(P, kind, "t", c, r)      # bottom half = MX copies of the top types
                     # cluster frame row r -> die row: top half rows go up; bottom half rows go down (S face up)
                     if half == "t":
                         py = y0 + sum(RH[:r])
                     else:
                         py = y0 + CLH - sum(RH[:r + 1])
-                    P.add_part(f"{cname}_{c}{r}", tn, cx + sum(CW[:c]), py)
+                    P.add_part(f"{cname}_{c}{r}", tn, cx + sum(CW[:c]), py, "R0" if half == "t" else "MX")
         # slice
         side = "w" if k < 6 else "e"
         # l9 pair link (514 b): producers W5/W3/W1/E1/E3/E5 drive l9_eo, consumers W4/W2/W0/E0/E2/E4 take l9_wi
@@ -221,9 +228,9 @@ WS_BLOCKS = {
     "io_serdes": ("phy_serdes3", "ot_qfd_serdes_112g_x12_phy_s597", (MC_W, 2324.16), (0.0, 9218.88), True),
     "ucie_kv": ("phy_ucie_kv", "ot_qkvd_ucie_x64_phy", (777.6, 777.6), (786.24, 11543.04), True),
     "io_ucie": ("phy_ucie_coll", "ot_qfd_ucie_x64_phy", (777.6, 777.6), (MC_W, 5443.2), True),
-    "glue": ("glue", "qfd_qc_wglue", (777.6, 1209.6), (MC_W, 10886.4), False),
-    "native59": ("native59", "qfd_native59_dv_headprep_obs1", (777.6, 518.4), (MC_W, 12096.0), False),
-    "tt_ctlm": ("tt_ctlm", "qfd_tt_ctlm_dv_hp13_rp", (777.6, 518.4), (MC_W, 12614.4), False),
+    "glue": ("glue", "qfd_qc_wglue", (777.6, 1209.6), (MC_W, 11404.8), False),
+    "native59": ("native59", "qfd_native59_dv_headprep_obs1", (777.6, 518.4), (MC_W, 12614.4), False),
+    "tt_ctlm": ("tt_ctlm", "qfd_tt_ctlm_dv_hp13_rp", (777.6, 518.4), (MC_W, 10886.4), False),
 }
 STN = {"s2": 1555.2, "s3": 2332.8, "s4": 3110.4, "s5": 3888.0, "s6": 4665.6, "s9": 7776.0, "s10": 8553.6,
        "s11": 9331.2, "s12": 10108.8}
@@ -233,8 +240,8 @@ COLL_INSTS = ("io_collective", "clk_rx", "ckdiv_coll_blk", "bump_pkg_s0", "bump_
 WS_PATHS = {   # partition sequences for non-abutting W-strip pairs (station column)
     ("io_serdes_2", "io_collective"): ["io_serdes_2", "s2", "s3", "s4", "s5", "s6", "io_collective"],
     ("io_collective", "SLW"): ["io_collective", "s9", "s10", "s11", "s12", "SLW"],
-    ("glue", "io_collective"): ["glue", "s12", "s11", "s10", "s9", "io_collective"],
-    ("tt_ctlm", "glue"): ["tt_ctlm", "native59", "glue"],
+    ("glue", "io_collective"): ["glue", "tt_ctlm", "s12", "s11", "s10", "s9", "io_collective"],
+    ("tt_ctlm", "native59"): ["tt_ctlm", "glue", "native59"],
 }
 
 
@@ -312,9 +319,9 @@ def cb_links(P, geo):
                        src_leaf=f"u_slice.cw_{fs}{c}", dst_leaf="u_xstn.b_i")
                 P.link(f"bcf{c}", [f"{near}_{c}3", f"{far}_{c}0"], "bc_o", "bc_i", BW,
                        src_leaf="u_xstn.b_o", dst_leaf="u_xstn.b_i")
-            P.link(f"rs{fs}0", [f"{near}_00", sl], "y_o", f"rs_{fs}0", RSW, src_leaf="u_t.n_y",
+            P.link("rsn", [f"{near}_00", sl], "y_o", f"rs_{fs}0", RSW, src_leaf="u_t.n_y",
                    dst_leaf=f"u_slice.rs_{fs}0")
-            P.link(f"rs{fs}1", [f"{far}_00", f"{near}_03", f"{near}_02", f"{near}_01", f"{near}_00", sl], "y_o",
+            P.link("rsf", [f"{far}_00", f"{near}_03", f"{near}_02", f"{near}_01", f"{near}_00", sl], "y_o",
                    f"rs_{fs}1", RSW, src_leaf="u_t.n_y", dst_leaf=f"u_slice.rs_{fs}1")
 
 
@@ -440,18 +447,35 @@ def materialize(P):
             part = path[j]
             fin = OPP[shared_face(P, path[j - 1], part)[0]]
             fout = shared_face(P, part, path[j + 1])[0]
-            slot_req.setdefault((P.parts[part]["type"], role), dict(name=role, in_face=fin, out_face=fout, width=w))
+            slot_req.setdefault((P.parts[part]["type"], role), dict(name=role, in_face=P.tface(part, fin),
+                                                                   out_face=P.tface(part, fout), width=w))
         lanes.append({"id": lid, "ports": pids, **({"param": lk["param"]} if lk.get("param") else {})})
     # windows: per face pair, in the coordinates of the lower-left partition so replicated types match
     for (a, b), prs in facepairs.items():
         f, lo, hi = shared_face(P, a, b)
         ra, rb = P.rect(a), P.rect(b)
-        ll = a if (ra[0], ra[1]) < (rb[0], rb[1]) else b
+        # reference partition: the one whose TYPE-frame face is N / E (type-frame lower-left); else the R0 one.
+        # Windows are laid out from the reference's type-frame low end so every copy (R0 / MX) has one pin table.
+        fb = OPP[f]
+        cand = [x for x, df in ((a, f), (b, fb)) if P.tface(x, df) in "NE"]
+        if len(cand) == 1:
+            ll = cand[0]
+        else:
+            r0 = [x for x in (a, b) if P.parts[x]["orient"] == "R0"]
+            ll = r0[0] if r0 else (a if (ra[0], ra[1]) < (rb[0], rb[1]) else b)
+        o = P.parts[ll]["orient"]
+        flip = (o in ("MX", "R180") and f in "EW") or (o in ("MY", "R180") and f in "NS")
         prs.sort(key=lambda pr: pr["src"]["bus"] if pr["src"]["part"] == ll else pr["dst"]["bus"])
+        dens = DENS
+        while sum(wlen(pr["width"], dens) + GAP for pr in prs) + 2 * EDGE > hi - lo and dens < 5.6:
+            dens += 0.1                            # only a crowded face packs denser (budget 6)
         cur = lo + EDGE
         for pr in prs:
-            L = wlen(pr["width"])
-            pr["window_um"] = [round(cur, 4), round(cur + L, 4)]
+            L = wlen(pr["width"], dens)
+            win = [round(cur, 4), round(cur + L, 4)]
+            pr["window_um"] = win if not flip else [round(lo + hi - win[1], 4), round(lo + hi - win[0], 4)]
+            if flip:
+                pr["order"] = "lsb_high"          # bit 0 stays at the type-frame low end of the window
             cur += L + GAP
         if cur - GAP > hi - EDGE + 1e-6:
             raise SystemExit(f"face {a}/{b} ({f}) overfull: {cur - lo:.1f} um needed, {hi - lo:.1f} available")
@@ -467,9 +491,36 @@ def materialize(P):
             L = abs(ca[0] - cb[0]) + abs(ca[1] - cb[1])
             k = max(1, math.ceil(L / ST_LEN))
             slot_req[ka]["stations"] = max(slot_req[ka].get("stations", 1), k)
+    # pins on the TYPE (PLAN-TOOL @764076fe6): every out bus / slot out window is declared once in its type frame,
+    # taken from an R0 instance; ports carry no geometry and derive it per instance (one pin table per type)
+    tgeo = {}
+    for pr in ports:
+        a = pr["src"]["part"]
+        if P.parts[a]["orient"] != "R0":
+            continue
+        tn, bus = P.parts[a]["type"], pr["src"]["bus"]
+        ox, oy = P.parts[a]["origin"]
+        base = oy if pr["face"] in "EW" else ox
+        win = [round(pr["window_um"][0] - base, 4), round(pr["window_um"][1] - base, 4)]
+        g = dict(face=pr["face"], window_um=win, layers=pr["layers"], order=pr.get("order", "lsb_low"))
+        if tgeo.setdefault((tn, bus), g) != g:
+            raise SystemExit(f"type {tn} bus {bus}: R0 instances disagree on the window")
+    for pr in ports:
+        if (P.parts[pr["src"]["part"]]["type"], pr["src"]["bus"]) not in tgeo:
+            raise SystemExit(f"port {pr['id']}: src type has no R0 instance")
+        for k in ("face", "window_um", "layers", "order"):
+            pr.pop(k, None)
     for (tn, bn), b in bus_req.items():
+        if (tn, bn) in tgeo:
+            b.update(tgeo[(tn, bn)])
         P.types[tn]["buses"].append(b)
     for (tn, sn), s in slot_req.items():
+        g = tgeo.get((tn, sn + "_o"))
+        if g:
+            s["out_window_um"] = g["window_um"]
+            s["layers"] = g["layers"]
+            if g["order"] != "lsb_low":
+                s["order"] = g["order"]
         P.types[tn]["ft_slots"].append(s)
     return ports, lanes
 
@@ -530,7 +581,7 @@ def main():
                     {"layer": "M8", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]},
                     {"layer": "M9", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]}]}},
         "partition_types": P.types,
-        "partitions": [{"name": n, "type": p["type"], "origin_um": list(p["origin"]), "orient": "R0"}
+        "partitions": [{"name": n, "type": p["type"], "origin_um": list(p["origin"]), "orient": p["orient"]}
                        for n, p in P.parts.items()],
         "ports": ports, "lanes": lanes,
         "clock": {"source": {"part": "io_collective", "bus": "clk_rx"}, "insertion_ps": 250, "insertion_tol_ps": 40,
