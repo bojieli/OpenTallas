@@ -569,10 +569,14 @@ def sta_die_tcl(P):
               # R4 revised: seam skew on RC = rise-edge clock arrival at the capture CK minus the launch CK (OpenSTA
               # arrival_max_rise of a CK pin can be the falling-edge arrival, + T/2)
               "proc ot_ck {pin} { if {[catch {set a [get_property $pin arrival_max_rise]}] || $a eq \"\"} { return \"\" }; "
-              "set h [expr {[get_property [get_clocks clk] period] / 2.0}]; if {$a >= $h} { set a [expr {$a - $h}] }; return $a }",
-              "proc ot_skew {p} { set s [get_property $p startpoint]; set e [get_property $p endpoint_clock_pin]; "
-              "if {[catch {set a [ot_ck $s]; set b [ot_ck $e]}] || $a eq \"\" || $b eq \"\"} { return NA }; "
-              "return [format %.1f [expr {$b - $a}]] }"]
+              f"set h {per / 2.0:.4f}; if {{$a >= $h}} {{ set a [expr {{$a - $h}}] }}; return $a }}",
+              # (endpoint_clock_pin segfaults OpenSTA here: go through the instances' CLK pins by name)
+              "proc ot_ckpin {pin} { set i [file dirname $pin]; "
+              "foreach c {CLK CK clk} { set q [get_pins -quiet $i/$c]; if {$q ne \"\"} { return $q } }; return \"\" }",
+              # skew from NAMES: an arrival query re-runs the search and frees the PathEnd objects (segfault)
+              "proc ot_skew {sp ep} { set s [ot_ckpin $sp]; set e [ot_ckpin $ep]; "
+              "if {$s eq \"\" || $e eq \"\"} { return NA }; set a [ot_ck $s]; set b [ot_ck $e]; "
+              "if {$a eq \"\" || $b eq \"\"} { return NA }; return [format %.1f [expr {$b - $a}]] }"]
     # every abutment port: the worst setup + hold path through its destination pins
     for pid, pr in sorted(P.ports.items()):
         if S.DIE_PART in (pr["src"]["part"], pr["dst"]["part"]):
@@ -580,9 +584,10 @@ def sta_die_tcl(P):
         thr = f"{gen_rtl.sv_id(pr['dst']['part'])}/{gen_rtl.sv_id(pr['dst']['bus'])}[*]"
         for dly in ("max", "min"):
             lines.append(f"set ps [find_timing_paths -through [get_pins {thr}] -path_delay {dly} -group_path_count 1]")
-            lines.append(f"foreach p $ps {{ puts $fh \"PORT {pid} {dly} slack [get_property $p slack] "
-                         f"skew [ot_skew $p] from [get_full_name [get_property $p startpoint]] to "
-                         f"[get_full_name [get_property $p endpoint]]\" }}")
+            lines.append(f"set rows {{}}; foreach p $ps {{ lappend rows [list [get_property $p slack] "
+                         f"[get_full_name [get_property $p startpoint]] [get_full_name [get_property $p endpoint]]] }}")
+            lines.append(f"foreach r $rows {{ lassign $r sl sp ep; puts $fh \"PORT {pid} {dly} slack $sl "
+                         f"skew [ot_skew $sp $ep] from $sp to $ep\" }}")
             lines.append(f"if {{[llength $ps] == 0}} {{ puts $fh \"PORT {pid} {dly} NO_PATH\" }}")
     lines += ["puts $fh \"WNS [sta::worst_slack_cmd max] WHS [sta::worst_slack_cmd min]\"",
               "close $fh",
