@@ -767,6 +767,20 @@ def seqhost_live(die, cut, idle_run):
     raise SystemExit(f'--idle-run: t_host alive never seen on {port["port"]} in {tr}')
 
 
+KS_PHASE_OFFSET = 3     # landed f_ks edge - u_seqhost live edge, mod 4, at start_phase 0 (measured 10-23, see below)
+
+
+def calendar_start_phase(hs):
+    """start_phase pw_d[8:7] of the calendar header (CSR 0x10 word with pw_d[27:26] == 3, begin form pw_d[25] == 0)."""
+    for w in hs:
+        d = w >> 1
+        if w & 1 and (w >> 513) & 3 == 0 and d & 0xFF == 0x10:
+            p = (d >> 32) & ((1 << 28) - 1)
+            if p >> 26 == 3 and not (p >> 25) & 1:
+                return (p >> 7) & 3
+    return None
+
+
 def host_boot_words(a, die, prog, S, words, cut=None):
     """--host-boot B: the compiled host boot stream (prog/host_boot.memh, 515-b host words, the dsdv_seq_host L0
     format) delivered on u_seqhost.f_host one word every 5th edge from bench cycle B (tb_dv_prog_seqhost's host slots),
@@ -781,12 +795,28 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     hs = [int(x, 16) for x in (prog / 'prog/host_boot.memh').read_text().split()]
     live = seqhost_live(die, cut, a.idle_run) if getattr(a, 'idle_run', None) else None
     if live is not None:
+        # TOKd-S81 10-23 (cap14 c14fx cut_3S_ctl, job15 CTL monitor): u_seqhost's own rn (live 99) is NOT the binding
+        # edge.  The forward host lane's landing (ld_hf_7N_l*, on the receiving frame's landing reset, released later
+        # since the chained-frame calendar fix v2) dropped every word landing before ~139 while t_host alive landed at
+        # 138: the 0x11 length + calendar header were lost -> walk_issue code 4, no job, no V CTL.  The boot stream
+        # therefore starts after BOTH edges: seqhost live + 8 and the landed t_host alive edge + 8.
+        floor = max(live['live'] + 8, live['alive_landed'] + 8)
         if a.host_boot is None:
-            a.host_boot = live['live'] + 8
+            a.host_boot = floor
         if a.host_boot < live['live'] + 2:
             raise SystemExit(f'--host-boot {a.host_boot} lands before u_seqhost leaves reset (live at {live["live"]}, '
                              f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
+        if a.host_boot < live['alive_landed'] + 4:
+            raise SystemExit(f'--host-boot {a.host_boot} lands before the host lane landing is live (t_host alive '
+                             f'landed {live["alive_landed"]}): the boot header would be dropped; use >= {floor}')
     ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
+    sp = calendar_start_phase(hs)
+    if a.ks is None and live is not None and sp is not None:
+        # walk_issue accepts a start only when (phase_q + 1) == start_phase at the sampling edge, phase_q = edges since
+        # the issuer's reset (mod 4).  Measured on the unit (c14 cut_3S_ctl, start_phase 0, live 99): the landed KS is
+        # accepted iff (KS - live) % 4 == 3 (2298 PASS; 2295/2296/2297/2299 code 5).  The issuer/L0 reset relays are
+        # fixed inside dsdv_seq_host, so the offset is a unit constant: KS = live + 3 + start_phase (mod 4).
+        ks += (live['live'] + KS_PHASE_OFFSET + sp - ks) % 4
     a.t0 = ks + 5
     from ks_descriptor import encode as encode_ks, fixture_word
     meta_path = getattr(a, 'ks_fixture_meta', None)
@@ -824,6 +854,7 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
             for c in range(c0, end)]
     return out, dict(boot_start=a.host_boot, seqhost_live=live, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
+                     start_phase=sp, ks_phase_aligned=bool(a.ks is None and live is not None and sp is not None),
                      ks_word=f'{ksw:x}', ks_provenance=provenance, t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
                      memh_sha256=hashlib.sha256((prog / 'prog/host_boot.memh').read_bytes()).hexdigest())
 
