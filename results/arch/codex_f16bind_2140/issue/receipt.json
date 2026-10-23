@@ -1,0 +1,66 @@
+{
+  "status": "ACTUAL_SOURCE_DISPATCH_CUT_PASS",
+  "source_commit": "7b4d2392e",
+  "selected_source": "rtl/qwen_dv/qfd_dv_slice2.sv",
+  "selected_source_sha256": "7d62b03b1239e9fd040bf1e8cf0c796c05cb6b149525a09414ac2c9aae6a3613",
+  "producer": "actual existing PROG .p_re(c_su), .p_idx(cmd_q[12:4]); c_su from real SETID-qualified target/kind/valid decode",
+  "user": "actual selected PC[8:7] under existing release PIDX128 relocation",
+  "context_lane": "22b {actual command stage6,actual token16}; upstream calendar producer remains unbound, supplied as test stimulus here",
+  "ports": {
+    "cmd_context_i": 22,
+    "cmd_context_o": 22,
+    "f16_issue_o": 38
+  },
+  "ages": {
+    "context_relative_cmd": 0,
+    "PROG_read_request_to_registered_event": 1,
+    "return_transport": null,
+    "final_to_witness": null
+  },
+  "run": {
+    "unit": "oth-ubuntu-3222048-1792732517",
+    "host": "ot-epyc5",
+    "mem_gb": 8,
+    "threads": 1,
+    "exit": 0,
+    "selected": "PASS real SETID, selectedPC, user, slice, stage, token, broadcast, wrongtarget, nonSU, same context hop, reset",
+    "mutants": {
+      "wrong_user": "FAIL ACTUAL_DISPATCH_ID",
+      "installed_epoch": "FAIL ACTUAL_DISPATCH_ID",
+      "wrong_pc": "FAIL ACTUAL_DISPATCH_ID"
+    }
+  },
+  "limitations": [
+    "Minimum actual source dispatch cut, no arithmetic engine/PROG data simulation.",
+    "Candidate full slice source generated but not yet full-hierarchy compiled/native/physical qualified.",
+    "No final ME/XPF-read or completion receipt constructed. PROG read selection proves dispatch only.",
+    "No merged production binding, actual upstream context producer or static return transport yet.",
+    "Actual F16 witness consumer integration still required."
+  ],
+  "sources": [
+    {
+      "path": "rtl/qwen_dv/f16/qfd_dv_f16_issue_tap.sv",
+      "sha256": "1a02739b20f7a54e5aae47b529a2946900c69ee056203015d9dcd611b735feca"
+    },
+    {
+      "path": "rtl/qwen_dv/f16/qfd_dv_slice2_f16.sv",
+      "sha256": "7fef52b05a36d33408bf1f750b786e309d4e52f68f85219039f95bbf0fb8bd4a"
+    },
+    {
+      "path": "rtl/qwen_dv/f16/qfd_dv_f16_dispatch_cut.sv",
+      "sha256": "fb8ac3ccba37d16779aa524cdd1f5eb0e29f73089064ac2ceb1b2692d74661cd"
+    },
+    {
+      "path": "tools/qwen_split/f16_issue_source.py",
+      "sha256": "1104795a39c87da3a6fee57ae5a6ac61f437561588fdb4ad3abb28c0d9c25325"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/tb_issue.sv",
+      "sha256": "8f156d72c1e7b1c8cfef213fc6e4f5c6b1fc5700d435ed2d62815b3fe0ac89fa"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/run_issue.sh",
+      "sha256": "54eea3b6f2ee43ca33edfc536c3910613f409e355acf0c26ec9016c2e111250c"
+    }
+  ]
+}
