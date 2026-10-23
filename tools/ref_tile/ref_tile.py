@@ -1720,7 +1720,9 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
         dem = s.get("_tp_demand")
         if dem is None:
             dem = tile_plan_demand(s)[0]
-        tp_plan = TP.plan_macros(W, H, ms, dem, halo, logic_face=(s.get("tile_plan") or {}).get("logic_face"))
+        pl = tile_plan_pin_layers(s, contract_slot(s))
+        tp_plan = TP.plan_macros(W, H, ms, dem, halo, logic_face=(s.get("tile_plan") or {}).get("logic_face"),
+                                 over={"WE": TP.over_pitch_for(pl, "WE"), "NS": TP.over_pitch_for(pl, "NS")})
         if tp_plan["ok"]:
             for p in tp_plan["placed"]:
                 auto_m[p["key"]].update(orient=p["orient"], _tp=p)

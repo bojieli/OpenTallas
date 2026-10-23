@@ -73,6 +73,16 @@ class LogicFace(unittest.TestCase):
         self.assertEqual({p["orient"] for p in c["placed"]}, {"R0"})
         with self.assertRaises(ValueError):
             TP.plan_macros(500.0, 420.0, macros(tm, 10), dem, logic_face="N")
+        # back-face pins (100 / macro on a 29.7-um macro: 464 M6 tracks x 0.45 = 209) cross over the macro on M6
+        ov = {"WE": TP.over_pitch_for(TP.face_pin_layers("M6"), "WE")}
+        o = TP.plan_macros(500.0, 420.0, macros(tm, 10), dem, logic_face="E", over=ov)
+        self.assertEqual(o["over_macro_cols"], [0])
+        self.assertEqual(o["lead"], 0.0)
+        self.assertLess(o["need"][0], r["need"][0])
+        # M5 cap: no horizontal layer above the M4 OBS -> the back channel stays
+        o5 = TP.plan_macros(500.0, 420.0, macros(tm, 10), dem, logic_face="E",
+                            over={"WE": TP.over_pitch_for(TP.face_pin_layers("M5"), "WE")})
+        self.assertEqual(o5["over_macro_cols"], [])
 
 
 class PinDensity(unittest.TestCase):

@@ -52,6 +52,8 @@ CH_LAYERS = 2               # vertical / horizontal layers of a channel under th
 CH_UTIL = 0.5               # channel track utilisation
 CH_ESCAPE_FRAC = 0.5        # share of a channel's facing macro pins whose wires run ALONG the channel (the rest end
                             # on logic placed in the channel itself)
+OVER_MACRO_UTIL = 0.45      # share of the over-macro layer's tracks the back-face wires may take (the PG stripes of the
+                            # cap layer and the 0.6 cut rule keep the rest)
 GRID = 2.16                 # tile outline lattice (ref_tile.GRID_Y)
 FACES = ("N", "S", "E", "W")
 OPP = {"N": "S", "S": "N", "E": "W", "W": "E"}
@@ -330,8 +332,28 @@ def _transpose_tm(tm: dict) -> dict:
     return {**tm, "W": tm["H"], "H": tm["W"], "pins": pins}
 
 
+def obs_top(tm: dict) -> int:
+    """highest metal the macro obstructs (pins included), 0 when unknown"""
+    top = 0
+    for lay in list((tm.get("obs") or {}).keys()) + [l for p in tm["pins"] for l, _r in p["rects"]]:
+        m = re.fullmatch(r"M(\d+)", str(lay))
+        if m:
+            top = max(top, int(m.group(1)))
+    return top
+
+
+def over_pitch_for(pin_layers: dict | None, axis: str) -> dict | None:
+    """{metal: pitch} of the layers that can cross OVER a macro array to its back face: E-W wires over N-S columns need
+    a horizontal layer (M6 when the tile cap allows it: pin_layers h), N-S wires over E-W rows a vertical one (M5 /
+    M7 from pin_layers v); plan_macros keeps only layers above the macro's own OBS"""
+    if pin_layers is None:
+        return None
+    lays = pin_layers.get("h" if axis == "WE" else "v") or []
+    return {int(x[1:]): PIN_PITCH_UM[x] for x in lays if x in PIN_PITCH_UM and int(x[1:]) >= 5}
+
+
 def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.4, rows: int | None = None,
-                logic_face: str | None = None) -> dict:
+                logic_face: str | None = None, over: dict | None = None) -> dict:
     """Macro ARRAY plan: macros pinned on W / E faces (SRAM / ROM arrays) form N-S abutted COLUMNS of `rows` arrays;
     columns sit side by side with a LOGIC CHANNEL in front of every pin face, sized from the pins facing it
     (channel_um), and a 20 um gap where both faces are pin-free; the array hangs from the N or S face with the lower
@@ -344,7 +366,10 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
     logic_face ("E" / "W" for column arrays, "N" / "S" for row arrays; spec tile_plan.logic_face): ONE logic band
     between the macro array and that face -- every macro's control face (primary_face) is oriented toward it, no
     mirrored pairs, and the array sits against the opposite face (its keep-off and back channel), so the whole free
-    width is the band (GEOM-REVIEW 10-23 lep: 10 dual-face banks with their pins away from the logic)."""
+    width is the band (GEOM-REVIEW 10-23 lep: 10 dual-face banks with their pins away from the logic).  over ({metal:
+    pitch} per axis {"WE": columns, "NS": rows} of the layers crossing the array, over_pitch_for): with logic_face, a column's BACK-face pins (the face away
+    from the band) whose wires fit over the macro (pins per macro <= OVER_MACRO_UTIL x its height / pitch on a layer
+    above its OBS) are reached over the macro from the band -- their channel shrinks to the keep-off."""
     if logic_face is not None and logic_face not in FACES:
         raise ValueError(f"tile_plan logic_face {logic_face!r}: one of N S E W")
     if not macros:
@@ -356,7 +381,8 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
         tms = [{**m, "w": m["h"], "h": m["w"], "tm": _transpose_tm(m["tm"])} for m in macros]
         if logic_face in ("E", "W"):
             raise ValueError(f"tile_plan logic_face {logic_face}: N / S pinned macros form E-W rows (logic_face N or S)")
-        r = plan_macros(H, W, tms, tdem, halo, rows, _T_FACE.get(logic_face) if logic_face else None)
+        r = plan_macros(H, W, tms, tdem, halo, rows, _T_FACE.get(logic_face) if logic_face else None,
+                        {"WE": (over or {}).get("NS")} if over else None)
         for p in r["placed"]:
             p["x"], p["y"] = p["y"], p["x"]
             p["w"], p["h"] = p["h"], p["w"]
@@ -377,7 +403,7 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
         if logic_face in ("N", "S"):
             raise ValueError(f"tile_plan logic_face {logic_face}: W / E pinned macros form N-S columns (logic_face E or W)")
         for n in range(1, len(macros) + 1):
-            r = plan_macros(W, H, macros, demand, halo, n, logic_face)
+            r = plan_macros(W, H, macros, demand, halo, n, logic_face, over)
             nw, nh = max(W, r["need"][0]), max(H, r["need"][1])
             # one logic band: among equal outlines the fewest columns (the band keeps the width)
             key = (round(nw * nh, 1), -n if logic_face else 0, max(nw, nh) / min(nw, nh))
@@ -415,9 +441,18 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
         stack = _stackable(m0["tm"])
         hts = [m["h"] for m, _ in c]
         h = sum(hts) + (len(hts) - 1) * (ABUT_PITCH_UM if stack else CHANNEL_MIN_UM)
+        over_ok = False
+        if logic_face and over and over.get("WE"):
+            back = OPP[logic_face]
+            top = obs_top(m0["tm"])
+            lay = [pt for mt, pt in over["WE"].items() if mt > top]
+            if back in faces and lay:
+                cap_tr = min(m["h"] for m, _ in c) / min(lay) * OVER_MACRO_UTIL
+                over_ok = per[back] <= cap_tr
         spec_cols.append({"items": c, "o": o, "faces": faces, "w": max(m["w"] for m, _ in c), "h": h,
-                          "pins_w": per["W"] * len(c) if "W" in faces else 0,
-                          "pins_e": per["E"] * len(c) if "E" in faces else 0, "stack": stack})
+                          "pins_w": per["W"] * len(c) if "W" in faces and not (over_ok and logic_face == "E") else 0,
+                          "pins_e": per["E"] * len(c) if "E" in faces and not (over_ok and logic_face == "W") else 0,
+                          "stack": stack, "over": over_ok})
     gaps = []
     for a, b in zip(spec_cols, spec_cols[1:]):
         dem = a["pins_e"] + b["pins_w"]
@@ -451,11 +486,12 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
     return {"ok": ok, "edge": edge, "axis": "WE", "rows": rows, "bbox": [round(v, 4) for v in box],
             "need": [round(need_w, 4), round(need_h, 4)], "placed": placed, "gaps": [round(g, 3) for g in gaps],
             "lead": round(lead, 3), "trail": round(trail, 3),
-            "logic_face": logic_face,
+            "logic_face": logic_face, "over_macro_cols": [j for j, c in enumerate(spec_cols) if c.get("over")],
             "why": (f"{len(macros)} macros in {len(spec_cols)} N-S columns of <= {rows} (abutted) hung from the {edge} "
                     f"face; logic channels {', '.join(f'{g:.0f}' for g in [lead] + gaps + [trail])} um in front of the "
                     "pin faces" + (f"; control faces toward ONE logic band at the {logic_face} face" if logic_face
-                                   else ""))}
+                                   else "") + ("; back-face pins reached over the macros" if any(
+                                       c.get("over") for c in spec_cols) else ""))}
 
 
 # ------------------------------------------------------------------------------------------------ outline
@@ -473,6 +509,7 @@ def content_outline(std_area: float, macros: list, demand: dict, util: float = T
     if not UTIL_RANGE[0] - 1e-9 <= util <= UTIL_RANGE[1] + 1e-9:
         raise ValueError(f"tile_plan util {util} outside {UTIL_RANGE}")
     fixed = list(fixed or [])
+    over = {"WE": over_pitch_for(pin_layers, "WE"), "NS": over_pitch_for(pin_layers, "NS")}
     n_regs = sum(demand.values())
     reg_area = min(std_area, n_regs * FF_AREA_UM2)
     band = n_regs * FF_AREA_UM2 / BAND_FILL
@@ -498,7 +535,7 @@ def content_outline(std_area: float, macros: list, demand: dict, util: float = T
             h, w = hmin, max(wmin, core / hmin)
             bound = "pins"
     W, H = snap_up(w + 2 * CORE_MARGIN), snap_up(h + 2 * CORE_MARGIN)
-    plan = plan_macros(W, H, macros, demand, halo, logic_face=logic_face)
+    plan = plan_macros(W, H, macros, demand, halo, logic_face=logic_face, over=over)
     if macros and not plan["ok"]:
         # the macro array fixes one side; the other keeps the content area (never below its own minimum)
         nw, nh = max(W, plan["need"][0]), max(H, plan["need"][1])
@@ -510,7 +547,7 @@ def content_outline(std_area: float, macros: list, demand: dict, util: float = T
                      snap_up(core / (nh - 2 * CORE_MARGIN) + 2 * CORE_MARGIN))
         W, H = snap_up(nw), snap_up(nh)
         bound = "macros" if bound == "area" else bound
-        plan = plan_macros(W, H, macros, demand, halo, logic_face=logic_face)
+        plan = plan_macros(W, H, macros, demand, halo, logic_face=logic_face, over=over)
     capped = False
     if max(W, H) / min(W, H) > ASPECT_MAX:      # a pin- / macro-bound long-thin tile: widen (the low fill shows)
         capped = True
@@ -518,7 +555,7 @@ def content_outline(std_area: float, macros: list, demand: dict, util: float = T
             H = snap_up(W / ASPECT_MAX)
         else:
             W = snap_up(H / ASPECT_MAX)
-        plan = plan_macros(W, H, macros, demand, halo, logic_face=logic_face)
+        plan = plan_macros(W, H, macros, demand, halo, logic_face=logic_face, over=over)
     slot_v = None
     if slot:
         sw, sh = float(slot[0]), float(slot[1])
