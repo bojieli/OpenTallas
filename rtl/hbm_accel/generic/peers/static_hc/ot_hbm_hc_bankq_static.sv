@@ -21,6 +21,11 @@
 // face; CPO 1 registers the chain outputs (o_*, sum_out, f_out) at the face.  +1 edge each on the bank's chain hop
 // (descriptor and partial sums move together, so the bank computes exactly as before, CPI edges later); the centre /
 // root add the ring's total (ot_hbm_hc_qeng_static CPR, ot_hbm_hc_qcen_static CHX, ot_hbm_hc_root_static QCHX).
+// FAN32 (STEWARD-HBMe/HC 10-23, default 0 = unchanged): 1 = the bank core is ot_hbm_hc_bankrc_core
+// (ot_hbm_hc_bankrc_static.sv: the census-safe FAN32 kept copies of the beat-landing / lane-enable drivers, <= 32 loads,
+// "same function, same edges, same pins") with EVERY clock entry tied to clk, so the hardened tile keeps exactly the
+// die's port list (single clk) and passes the mandatory native32 census.  Cycle-identical (lockstep bench
+// rtl/test/tb_hbm_hc_bankq_fan32_lockstep.sv, FAN32 0 vs 1, every output every edge).
 module ot_hbm_hc_bankq_core #(parameter integer MUT = 0, parameter integer CPI = 0, parameter integer CPO = 0)(
     input  wire          clk, rst_n, first,
     input  wire          d_v, d_ss, input wire [6:0] d_nv, input wire [9:0] d_wa, d_xa,
@@ -76,7 +81,8 @@ module ot_hbm_hc_bankq_core #(parameter integer MUT = 0, parameter integer CPI =
         .wv(wv), .xv(xv), .j(j), .wa(wa), .wd(asm_q));
 endmodule
 
-module ot_hbm_hc_bankq_static #(parameter integer MUT = 0, parameter integer CPI = 0, parameter integer CPO = 0)(
+module ot_hbm_hc_bankq_static #(parameter integer MUT = 0, parameter integer CPI = 0, parameter integer CPO = 0,
+    parameter integer FAN32 = 0)(
     input  wire          clk, rst_n,
     input  wire          d_v, d_ss, input wire [6:0] d_nv, input wire [9:0] d_wa, d_xa,
     output wire          o_v, o_ss, output wire [6:0] o_nv, output wire [9:0] o_wa, o_xa,
@@ -86,14 +92,22 @@ module ot_hbm_hc_bankq_static #(parameter integer MUT = 0, parameter integer CPI
     input  wire          wv, xv, j, input wire [9:0] wa,
     output wire          wfault
 );
+    if (FAN32 != 0) begin : g_f32
+        ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPI(CPI), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk), .clk_o(clk), .clk_ri({4{clk}}), .clk_a(clk), .clk_rw({4{clk}}), .clk_rx({4{clk}}),
+            .clk_re({4{clk}}), .clk_q({4{clk}}), .clk_d({4{clk}}), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}), .rst_n(rst_n), .first(1'b0),
+            .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv),
+            .o_wa(o_wa), .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out),
+            .xb_v(xb_v), .xb_beat(xb_beat), .xb_d(xb_d), .wv(wv), .xv(xv), .j(j), .wa(wa), .wfault(wfault));
+    end else begin : g_core
     ot_hbm_hc_bankq_core #(.MUT(MUT), .CPI(CPI), .CPO(CPO)) u_c (.clk(clk), .rst_n(rst_n), .first(1'b0),
         .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv),
         .o_wa(o_wa), .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out),
         .xb_v(xb_v), .xb_beat(xb_beat), .xb_d(xb_d), .wv(wv), .xv(xv), .j(j), .wa(wa), .wfault(wfault));
+    end
 endmodule
 
 // edge bank with the registered feed of two corner banks (a = previous ring position, b = next ring position)
-module ot_hbm_hc_bankq_ft_static #(parameter integer MUT = 0)(
+module ot_hbm_hc_bankq_ft_static #(parameter integer MUT = 0, parameter integer FAN32 = 0)(
     input  wire          clk, rst_n,
     input  wire          d_v, d_ss, input wire [6:0] d_nv, input wire [9:0] d_wa, d_xa,
     output wire          o_v, o_ss, output wire [6:0] o_nv, output wire [9:0] o_wa, o_xa,
@@ -128,14 +142,23 @@ module ot_hbm_hc_bankq_ft_static #(parameter integer MUT = 0)(
         fa_xb_beat_o <= fa_xb_beat; fa_xb_d_o <= fa_xb_d; fa_j_o <= fa_j; fa_wa_o <= fa_wa;
         fb_xb_beat_o <= fb_xb_beat; fb_xb_d_o <= fb_xb_d; fb_j_o <= fb_j; fb_wa_o <= fb_wa;
     end
+    if (FAN32 != 0) begin : g_f32
+        ot_hbm_hc_bankrc_core #(.MUT(MUT)) u_c (.clk(clk), .clk_c(clk), .clk_o(clk), .clk_ri({4{clk}}), .clk_a(clk), .clk_rw({4{clk}}), .clk_rx({4{clk}}),
+            .clk_re({4{clk}}), .clk_q({4{clk}}), .clk_d({4{clk}}), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}), .rst_n(rst_n), .first(1'b0),
+            .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv),
+            .o_wa(o_wa), .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out),
+            .xb_v(xb_v), .xb_beat(xb_beat), .xb_d(xb_d), .wv(wv), .xv(xv), .j(j), .wa(wa), .wfault(wfault));
+    end else begin : g_core
     ot_hbm_hc_bankq_core #(.MUT(MUT)) u_c (.clk(clk), .rst_n(rst_n), .first(1'b0),
         .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv),
         .o_wa(o_wa), .o_xa(o_xa), .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out),
         .xb_v(xb_v), .xb_beat(xb_beat), .xb_d(xb_d), .wv(wv), .xv(xv), .j(j), .wa(wa), .wfault(wfault));
+    end
 endmodule
 
 // first ring bank: chain start (desc from the centre) + bank 7's chain-exit relay (s_i -> s_o, DRLY registers)
-module ot_hbm_hc_bankq0_static #(parameter integer MUT = 0, parameter integer DRLY = 1, parameter integer CPO = 0)(
+module ot_hbm_hc_bankq0_static #(parameter integer MUT = 0, parameter integer DRLY = 1, parameter integer CPO = 0,
+    parameter integer FAN32 = 0)(
     input  wire          clk, rst_n,
     input  wire          d_v, d_ss, input wire [6:0] d_nv, input wire [9:0] d_wa, d_xa,
     output wire          o_v, o_ss, output wire [6:0] o_nv, output wire [9:0] o_wa, o_xa,
@@ -153,9 +176,17 @@ module ot_hbm_hc_bankq0_static #(parameter integer MUT = 0, parameter integer DR
         for (integer i = 1; i < DRLY; i = i + 1) sr[i] <= sr[i-1];
     end
     assign s_o = sr[DRLY-1];
+    if (FAN32 != 0) begin : g_f32
+        ot_hbm_hc_bankrc_core #(.MUT(MUT), .CPO(CPO)) u_c (.clk(clk), .clk_c(clk), .clk_o(clk), .clk_ri({4{clk}}), .clk_a(clk), .clk_rw({4{clk}}), .clk_rx({4{clk}}),
+            .clk_re({4{clk}}), .clk_q({4{clk}}), .clk_d({4{clk}}), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}), .rst_n(rst_n), .first(1'b1),
+            .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv),
+            .o_wa(o_wa), .o_xa(o_xa), .sum_in(2048'd0), .sum_out(sum_out), .f_in(1'b0), .f_out(f_out),
+            .xb_v(xb_v), .xb_beat(xb_beat), .xb_d(xb_d), .wv(wv), .xv(xv), .j(j), .wa(wa), .wfault(wfault));
+    end else begin : g_core
     ot_hbm_hc_bankq_core #(.MUT(MUT), .CPO(CPO)) u_c (.clk(clk), .rst_n(rst_n), .first(1'b1),
         .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa), .o_v(o_v), .o_ss(o_ss), .o_nv(o_nv),
         .o_wa(o_wa), .o_xa(o_xa), .sum_in(2048'd0), .sum_out(sum_out), .f_in(1'b0), .f_out(f_out),
         .xb_v(xb_v), .xb_beat(xb_beat), .xb_d(xb_d), .wv(wv), .xv(xv), .j(j), .wa(wa), .wfault(wfault));
+    end
 endmodule
 `default_nettype wire

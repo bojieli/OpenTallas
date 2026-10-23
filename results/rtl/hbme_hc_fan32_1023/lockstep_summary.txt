@@ -1,0 +1,21 @@
+fan32_v0_m0: Verilator 5.050 2026-07-01 rev v5.050
+fan32_v0_m0: HCB_FAN32_LOCKSTEP PASS var=0 mutb=0 cycles=20000 compared=93468564 active_edges=19989
+fan32_v0_m0: - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+fan32_v0_m0: ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3744694-1792749582): exit 0
+fan32_v0_m2: Verilator 5.050 2026-07-01 rev v5.050
+fan32_v0_m2: HCB_FAN32_LOCKSTEP FAIL var=0 mutb=2 cycles=20000 mismatching_edges=7930 first=91
+fan32_v0_m2: - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+fan32_v0_m2: ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3744664-1792749582): exit 0
+fan32_v1_m0: Verilator 5.050 2026-07-01 rev v5.050
+fan32_v1_m0: HCB_FAN32_LOCKSTEP PASS var=1 mutb=0 cycles=20000 compared=93468564 active_edges=19989
+fan32_v1_m0: - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+fan32_v1_m0: ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1036072-1792750413): exit 0
+fan32_v2_m0: Verilator 5.050 2026-07-01 rev v5.050
+fan32_v2_m0: HCB_FAN32_LOCKSTEP PASS var=2 mutb=0 cycles=20000 compared=93468564 active_edges=19984
+fan32_v2_m0: - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+fan32_v2_m0: ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3743718-1792749581): exit 0
+fan32_v2_m2: Verilator 5.050 2026-07-01 rev v5.050
+fan32_v2_m2: HCB_FAN32_LOCKSTEP FAIL var=2 mutb=2 cycles=20000 mismatching_edges=8766 first=116
+fan32_v2_m2: - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+fan32_v2_m2: ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1036077-1792750413): exit 0
+note: first var=1 run (pre diff-print build) reported 1 mismatching edge at cyc 11 (first compared edge after reset release); rebuilt run PASS; repeat run fan32_v1_m0b pending

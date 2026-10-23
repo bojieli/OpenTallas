@@ -83,6 +83,12 @@ def mk(base, name, top_note, W, H, pins, pr, ch, mc, extra=None):
     s["child_lattice_um"] = 2.16
     if extra:
         s.update(extra)
+    # FAN32 (10-23 gate 021230: PRE_GATE_NATIVE_CENSUS refused, beat-slot hold enable 512 loads): the top's FAN32 = 1 core
+    # is ot_hbm_hc_bankrc_core (census-safe kept copies, all clock entries tied to clk; lockstep-proved vs FAN32 0).
+    s["params"] = dict(s.get("params", {}), FAN32=1)
+    rc = "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankrc_static.sv"
+    if rc not in s["sources"]:
+        s["sources"].insert(2, rc)
     kd = RT / name
     kd.mkdir(exist_ok=True)
     (kd / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
