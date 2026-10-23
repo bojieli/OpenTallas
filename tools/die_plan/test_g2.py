@@ -258,3 +258,28 @@ def test_die_probe_empty_declared_taps_preserves_outputs(tmp_path):
     empty = g2.die_probe(schema.Plan(raw), tmp_path/'empty')
     for name in ('probe.v', 'probe.tcl', 'probe.json', 'run.sh'):
         assert (original/name).read_bytes() == (empty/name).read_bytes()
+
+
+def test_kit_places_content_macros(tmp_path):
+    """COORD 10-23: partition kits place SRAM / ROM / hard cores at their plan sites (lef views)."""
+    import copy
+    import gen_phys
+    import pytest
+    raw = copy.deepcopy(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
+    (tmp_path / "m.lef").write_text("VERSION 5.8 ;\n")
+    (tmp_path / "m.lib").write_text("library(m) {}\n")
+    t = raw["partition_types"]["src"]
+    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m.lib",
+                                             origin_um=[17.28, 25.92], orient="MX"))
+    t["hard_cores"] = [dict(inst="u_core", module="core_m", origin_um=[8.64, 8.64], outline_um=[8.64, 8.64],
+                            track_offset_um=[0.0, 0.012], lef="m.lef")]
+    P = schema.Plan(raw)
+    kd = gen_phys.write_type_kit(P, "src", tmp_path / "k", [], root=tmp_path)
+    mp = (kd / "macro_place.tcl").read_text()
+    assert "place_macro -macro_name {u_sram} -location {17.2800 25.9200} -orientation MX -exact" in mp
+    assert "-macro_name {u_core} -location {8.6400 8.6520} -orientation R0" in mp
+    cfg = (kd / "config.mk").read_text()
+    assert "ADDITIONAL_LEFS = /work/macros/m.lef" in cfg and "MACRO_PLACEMENT_TCL = /work/macro_place.tcl" in cfg
+    del t["contents"][-1]["origin_um"]
+    with pytest.raises(ValueError):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "k2", [], root=tmp_path)

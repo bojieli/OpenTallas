@@ -121,6 +121,16 @@ SCHEMA = {
                     "die_use": {"type": "array", "items": {"enum": ["clock_spine", "pg", "ft_reserved", "reset"]}},
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}}}},
+                # die IO (COORD 10-23, S81-P5): pad / bump windows of every off-die signal (SerDes PMA pads, HBM PHY
+                # memory side, host).  Each window sits over its host partition (the PHY / IO partition), offers
+                # `sites` signal bumps/pads, and lists the @die ports it carries (bits <= sites).
+                "io": {"type": "array", "items": {
+                    "type": "object", "required": ["name", "kind", "rect_um", "sites", "part", "ports"],
+                    "additionalProperties": False,
+                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro"]}, "rect_um": _rect,
+                                   "sites": {"type": "integer", "minimum": 1}, "pitch_um": _pos, "layer": _layer,
+                                   "part": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
+                                   "note": {"type": "string"}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
                     # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
@@ -194,6 +204,9 @@ SCHEMA = {
                                            "additionalProperties": False,
                                            "properties": {"name": _name, "layer": _layer, "xy": _xy}}},
                                        "pins_file": {"type": "string"},   # JSON [{name|bus+bit, layer, x, y}]
+                                       # hardened views (repo-relative): the partition kit places the core as a
+                                       # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
+                                       "lef": {"type": "string"}, "lib": {"type": "string"},
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2}}},
@@ -202,6 +215,10 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
+                                       # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
+                                       # at origin_um (type frame) with orient (mandatory when lef is given)
+                                       "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
