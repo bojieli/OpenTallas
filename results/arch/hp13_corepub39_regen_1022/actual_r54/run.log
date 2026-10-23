@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-headage-r54-bounded-1022
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-headage-r54-bounded-1022
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-headage-r54-bounded-1022
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-headage-r54-bounded-1022
+ot-run: ot-gold1       admits   229 GB (avail 457, reserve 0, fresh 37.4, peak 126.4, headroom 0, waiters 0/0 GB) load 58/112 running 44 disk 1057 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-headage-r54-bounded-1022
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-headage-r54-bounded-1022
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-496735-1792735005 after 1 s
+HEAD_PREPARE_EDGES=13
+HEAD_PREPARE_EDGES=13
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-496735-1792735005): exit 0

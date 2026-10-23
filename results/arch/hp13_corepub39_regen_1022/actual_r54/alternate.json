@@ -1,0 +1,136 @@
+{
+  "schema": "opentallas.qwen.head_prepare_age.v1",
+  "source": "actual CTLM c_emb stored token/position/user; source epoch from per-user prepare or matching HOST",
+  "die_sha256": "7385f729bfef4ff2d4a3e1fce5eca9324f407fda9d61b0f2fe4cf5d9f2417d0f",
+  "selected_masters": [
+    "qfd_native59_dv_headprep_obs1",
+    "qfd_sys_face_lctx3_wrapped",
+    "qfd_d2d_static_ovl_sf7_obs1"
+  ],
+  "lanes_sha256": "de8b846154be2a782ef36a110a1b7a07c8dd5f760a08c58f8936cd9ea5c8c09d",
+  "source_intrinsic_edges": {
+    "ct_lm_sample": 2,
+    "native_prepare_descriptor": 3,
+    "face_held_bank": 1,
+    "face_input_capture": 1,
+    "face_output_capture": 1
+  },
+  "tt_source": {
+    "status": "QUALIFIED_SOURCE_LOCAL_EDGES",
+    "schema": "opentallas.qwen.tt_source_local.v1",
+    "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+    "calendar_sample_edges": 1,
+    "producer_instance": "u_gi",
+    "producer_offset_edges": 0,
+    "output_offset_edges": 1,
+    "source_to_output_edges": 1,
+    "receipt_sha256": "c4d3bf7beddf720aaa4ca0fff311a8d8217b304b1e15c24188dd67c5d1cd85e7",
+    "rtl_sha256": "5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04",
+    "source_record_sha256": "7325ef53be570be75a63590fcb26ffeb68970de34ec02fa3a35e59722d5d999e",
+    "bench_receipt_sha256": "92b3b786d8179c523bd9b53c597eb94bd9cc5fde629825542967744fbe2c9a46"
+  },
+  "actual_transport_edges": {
+    "TT.head_prepare": 3,
+    "SF.head_descriptor": 3
+  },
+  "head_prepare_edges": 13,
+  "host_user0_contract": "HOST O61 token/position/epoch must match actual prepare before publication; compiler must price actual HOST availability",
+  "scope": "GEN-derived fixed schedule age; physical timing and final sole calendar qualification remain separate",
+  "bundles": {
+    "TT.head_prepare": {
+      "cycles": [
+        3
+      ],
+      "consistent": true,
+      "members": {
+        "dvw_tt_ctlm_emb_start__fo1": {
+          "cycles": 3,
+          "kind": "fwd",
+          "n": 1,
+          "E": 2,
+          "K": 7,
+          "basis": "E from fwd_lanes.json",
+          "pins": "tt_ctlm.emb_start->native59.head_prepare_v"
+        },
+        "dvw_tt_ctlm_emb_token__fo1": {
+          "cycles": 3,
+          "kind": "fwd",
+          "n": 1,
+          "E": 2,
+          "K": 7,
+          "basis": "E from fwd_lanes.json",
+          "pins": "tt_ctlm.emb_token->native59.head_prepare_token"
+        },
+        "hp_tt_emb_position": {
+          "cycles": 3,
+          "kind": "fwd",
+          "n": 1,
+          "E": 2,
+          "K": 7,
+          "basis": "E from fwd_lanes.json",
+          "pins": "tt_ctlm.emb_position->native59.head_prepare_position"
+        },
+        "hp_tt_emb_user": {
+          "cycles": 3,
+          "kind": "fwd",
+          "n": 1,
+          "E": 2,
+          "K": 7,
+          "basis": "E from fwd_lanes.json",
+          "pins": "tt_ctlm.emb_user->native59.head_prepare_user"
+        }
+      }
+    },
+    "SF.head_descriptor": {
+      "cycles": [
+        3
+      ],
+      "consistent": true,
+      "members": {
+        "hp_native_head_descriptor_generation": {
+          "cycles": 3,
+          "kind": "fwd",
+          "n": 1,
+          "E": 2,
+          "K": 6,
+          "basis": "E from fwd_lanes.json",
+          "pins": "native59.head_descriptor_generation->sys_face.head_descriptor_generation"
+        },
+        "hp_native_head_descriptor_tag": {
+          "cycles": 3,
+          "kind": "fwd",
+          "n": 1,
+          "E": 2,
+          "K": 6,
+          "basis": "E from fwd_lanes.json",
+          "pins": "native59.head_descriptor_tag->sys_face.head_descriptor_tag"
+        },
+        "hp_native_head_descriptor_v": {
+          "cycles": 3,
+          "kind": "fwd",
+          "n": 1,
+          "E": 2,
+          "K": 6,
+          "basis": "E from fwd_lanes.json",
+          "pins": "native59.head_descriptor_v->sys_face.head_descriptor_v"
+        }
+      }
+    }
+  },
+  "sysface_wrapper": {
+    "master": "qfd_sys_face_lctx3_wrapped",
+    "source": "rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv",
+    "rtl_sha256": "b25c0bdd8ad7f14fe0f5fac605fb87e441c6ce2bbae793b46d685b3973cf8b40",
+    "binding_sha256": "f2c4b4a87497067c37a9fbc80488624f4d138b112c3940a1bf6807faa0ef1a8f",
+    "capture_receipt_sha256": "715c4ebdbf475494d09cd2e5b902660141ad19827ad2792656072e1d6513da38",
+    "input_capture_edges": 1,
+    "output_capture_edges": 1,
+    "reset_input_relay_edges": 2,
+    "core_reset_release_edges": 3,
+    "automatic_pin_regs": false,
+    "scope": "source-local boundary proof only; actual GEN and final programme required",
+    "params_sha256": "00558ffba1f242b1b727c18dab38a2c6cda81a8e92930bed4c72ca9f7a1ab519"
+  },
+  "head_prepare_edges_scope": "internal held-bank availability; face output capture belongs to later published head-TX/codec-wire ledger",
+  "verdict": "PASS"
+}
