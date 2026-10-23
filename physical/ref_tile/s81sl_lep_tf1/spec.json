@@ -1,0 +1,257 @@
+{
+ "name": "s81sl_lep_tf1",
+ "top": "ot_s81sl_lep",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/lib/ot_sram_oldread_wreg.sv",
+  "rtl/lib/ot_sram_showahead_1r1w.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv"
+ ],
+ "params": {
+  "NATIVE32_STD": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.g_safe_write.u_m.g_bank?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.g_safe_write.u_m.g_bank?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.g_safe_write.u_m.g_bank?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.g_safe_write.u_m.g_bank?3?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?0?.g_safe_write.u_m.g_bank?4?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?3?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?0?.g_sa.g_true_sram.u_rx_mem.g_bank?4?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.g_safe_write.u_m.g_bank?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.g_safe_write.u_m.g_bank?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.g_safe_write.u_m.g_bank?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.g_safe_write.u_m.g_bank?3?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "inst": "*g_tx?1?.g_safe_write.u_m.g_bank?4?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?0?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?1?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?2?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?3?.u_m"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "inst": "*g_rx?1?.g_sa.g_true_sram.u_rx_mem.g_bank?4?.u_m"
+  }
+ ],
+ "pins": {
+  "W": [
+   "lo0_v",
+   "lo0_r",
+   "lo0_d",
+   "li0_v",
+   "li0_r",
+   "li0_d",
+   "lo1_v",
+   "lo1_r",
+   "lo1_d",
+   "li1_v",
+   "li1_r",
+   "li1_d",
+   "rxv",
+   "l0_f",
+   "l1_f",
+   "l0_st",
+   "l1_st",
+   "clk",
+   "rst_n"
+  ],
+  "S": [
+   "sl_f",
+   "fault",
+   "t_host",
+   "t_kd",
+   "f_host",
+   "f_lf",
+   "f_ks"
+  ],
+  "N": [],
+  "E": [
+   "ro",
+   "ri"
+  ]
+ },
+ "recipe": 5,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.045,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_sram_showahead_hit5",
+   "ot_s81sl_lep_host_event",
+   "ot_s81sl_lep_tx_push",
+   "ot_s81sl_lep_host_enable",
+   "ot_s81sl_lep_stamp",
+   "ot_s81sl_lep_host_hold8",
+   "ot_s81sl_lep_key_hold8",
+   "ot_s81sl_lep_host_preserve",
+   "ot_s81sl_lep_vcopy",
+   "ot_s81sl_lep_status_region",
+   "ot_s81sl_lep_pair_ready",
+   "ot_sram_showahead_readptr",
+   "ot_s81sl_lep_std_enable",
+   "ot_s81sl_std_tx_qualify"
+  ],
+  "period_ps": 833.333,
+  "cts_sink": {
+   "sink_clustering": false,
+   "extra": "-distance_between_buffers 15 -balance_levels"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered as s81sl_lep / s81sl_lepmua (ro / li / ml_rd / t_host / t_kd / mu_c land in pin flops, ri / lo / ml_wd / mu_rt / f_host / f_ks / f_lf / fault leave flops); recipe pin_regs would add an unpriced stage."
+ },
+ "job": {
+  "owner": "Claude:TILE-FLOW",
+  "branch": "claude/tile-flow-pilot-1023",
+  "tag": "tf1",
+  "purpose": "TILE-FLOW 10-23 pilot of s81sl_lepwd_r5u: recipe 5 tile_plan (content outline, macro array, pin-register face fence, fence report-only: unregistered pins listed for the RTL owner)",
+  "hold_merge": "TILE-FLOW pilot: diagnostic gate / render only, not a closure candidate"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pre_cts_extra": [],
+ "orfs_vars": {
+  "CORNER": "WC",
+  "OT_FENCE_UNREG_OK": "",
+  "OT_FENCE_STRICT": "0",
+  "OT_FENCE_CLOCKS": "clk"
+ },
+ "pin_reg_split": false,
+ "pin_ranges": {
+  "l0_f": [
+   4.3,
+   28.9
+  ],
+  "l1_f": [
+   4.3,
+   28.9
+  ],
+  "l0_st": [
+   4.3,
+   28.9
+  ],
+  "l1_st": [
+   4.3,
+   28.9
+  ],
+  "sl_f": [
+   2.3,
+   15.6
+  ],
+  "fault": [
+   2.3,
+   15.6
+  ],
+  "f_lf": [
+   2.3,
+   15.6
+  ],
+  "clk": [
+   369.0,
+   380.5
+  ],
+  "rst_n": [
+   380.5,
+   392.1
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "std_area_um2": 8397.39474,
+ "tile_plan": {
+  "strict": false
+ },
+ "purpose": "TILE-FLOW 10-23 pilot of s81sl_lepwd_r5u: recipe 5 tile_plan (content outline, macro array, pin-register face fence, fence report-only: unregistered pins listed for the RTL owner)",
+ "std_area_provenance": "r5u spec std_area_um2 (exact 1_synth native master area, results/arch/s81_fullrows_source_1020)",
+ "tile_plan_note": "pin_ranges scaled from r5u 561.6 x 518.4 to the content outline 438.48 x 749.52",
+ "pin_hook_after_flops": [
+  "physical/common_flow/pin_reg_face_fence.tcl"
+ ]
+}
