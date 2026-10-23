@@ -43,6 +43,7 @@ def spec(name, wc, sb, mid, estrip, tag):
     s["sources"] = ["rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_physical_wtnbal24_pr.sv"] + srcs + [
         "rtl/qwen_dv/headprep13/wtn_balanced24/helpers.sv", "rtl/qwen_dv/headprep13/wtn_balanced24/qfd_tt_ctlm_dv_wtn_balanced24.sv"]
     s["outline"] = {"w": w, "h": h}
+    s["std_area_um2"] = 43100.0   # full_main synth 42,714 + 1,144 pin-reg flops
     s["macros"] = macros(xa, xb, sb)
     s["fill_reason"] = {"macro_bound": f"19 authentic macros (135.5k um2) in two abutted N-S columns at the NE; outline from content "
                         f"{w} x {h} um (was 864 x 561.6): W core {wc}, S core {sb}, mid channel {round(xb - xa - W_SR, 2)}, E strip >= {estrip}"}
