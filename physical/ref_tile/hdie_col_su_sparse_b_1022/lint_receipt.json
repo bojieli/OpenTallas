@@ -3,7 +3,7 @@
   "cdc_synchronizers": {
    "components": {
     "inputs": {
-     "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "ef3cc5f5e7d75f5b77b5e7c88bd29236fa5f14299760b4fb9720d9ace2b025e2"
+     "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "b97676d8062f9e812fc458485b029536e2ef0ba8315892885066cb109e631463"
     },
     "policy": "cdc_synchronizers",
     "spec": {
@@ -149,9 +149,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-22T22:48:16-0700",
-   "host": "ot-gold1",
-   "key": "171560086e312234ce9e4c6207af4abb0b612872ae44930e4d3fdf9358069fa7",
+   "created": "2026-10-22T22:50:55-0700",
+   "host": "ot-epyc9",
+   "key": "1e48eb76a3defe878b77ba8eca913702297b8d005899910d3702a897b4e42a10",
    "record": {
     "counts": {
      "capture": 279,
@@ -9575,10 +9575,10 @@
      ]
     },
     "source_sha256": {
-     "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "ef3cc5f5e7d75f5b77b5e7c88bd29236fa5f14299760b4fb9720d9ace2b025e2"
+     "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "b97676d8062f9e812fc458485b029536e2ef0ba8315892885066cb109e631463"
     }
    },
-   "seconds": 7
+   "seconds": 6
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"

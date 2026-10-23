@@ -119,7 +119,7 @@ module ot_hbm_static_cfg_collar #(
         end
         assign rst_s_n = rc[1];
     end else begin : g_rst_sync
-        reg [1:0] rc, rs;
+        (* keep *) reg [1:0] rc, rs;
         assign rst_stage1=rc[0];
         always @(posedge clk)    rc <= {rc[0], rst_n};
         always @(posedge clk_in) rs <= {rs[0], rc[1]};
