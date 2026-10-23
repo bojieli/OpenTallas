@@ -177,7 +177,9 @@ def t_lib(ps):
     return float(ps) / LIB_TIME_UNIT_PS
 
 
-FT_HOP_IN_SHARE = 0.25   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop
+FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
+# COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
+# keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
 
 
 def sdc(P, tn, pins):
@@ -335,7 +337,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl"):
+    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
     ft = ["# slot stations in_face out_face [x y ...]  (GENERATED; type frame um)"]

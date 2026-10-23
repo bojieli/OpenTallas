@@ -220,4 +220,6 @@ foreach bt [$ff_blk getBTerms] {
 }
 close $ff_out
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
+# per-tap reset synchronisers (gen_rtl ot_dp_rsync_s<N>): place them at their taps, re-point FIRM flops (reset_taps.tcl)
+if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 }
