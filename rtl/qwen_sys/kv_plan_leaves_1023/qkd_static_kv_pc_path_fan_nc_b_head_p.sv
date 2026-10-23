@@ -3,6 +3,7 @@
 // qkd_static_kv_pc_path_fan_nc_b_head_p: plan variant of qkd_static_kv_pc_path_fan_nc_b (rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv, sha256 0b2f67cac099b079).
 // As-built die strap(s): qkd_kvs_pc_h.pc__pc + pc__fi (tile qkd_kvs_pc_h u_pc).
 // registers of a constant only (keep dropped where present; folded by synthesis, no tie cell): pc_sr.
+// child u_chain: qkd_kv_pc_chain_station_b -> plan variant qkd_kv_pc_chain_station_b_p #(.PC(PC)); connections .pc(PC) removed.
 // class A: port pc -> parameter PC (same width; the body reads the parameter).
 // class C chain head: predecessor ports fi removed; the body sees them as a zero localparam of the same name (no predecessor), folded by synthesis.
 module qkd_static_kv_pc_path_fan_nc_b_head_p #(
@@ -119,8 +120,8 @@ module qkd_static_kv_pc_path_fan_nc_b_head_p #(
     (* keep *) reg [1:0] st_sr;
     always @(posedge ck) begin pc_sr <= PC; st_sr <= cfg_stack; end
     // hard child: no #() overrides (MUT 0 is the production value)
-    qkd_kv_pc_chain_station_b u_chain (
-        .ck(ck), .rst_n(rsi), .pc(PC), .cfg_stack(cfg_stack), .di(chain_i), .dout(chain_o),
+    qkd_kv_pc_chain_station_b_p #(.PC(PC)) u_chain (
+        .ck(ck), .rst_n(rsi), .cfg_stack(cfg_stack), .di(chain_i), .dout(chain_o),
         .land_es(land_es), .land_er(land_er),
         .wes(s_wes), .es_context(s_es_context), .es_expected_valid(s_es_expected_valid),
         .es_expected_identity(s_es_expected_identity), .es_expected_address(s_es_expected_address),

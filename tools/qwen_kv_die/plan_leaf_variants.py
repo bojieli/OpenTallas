@@ -47,6 +47,13 @@ PCPATH_LIBS = ['rtl/qwen_sys/static_embedding_20261014/' + n + '.sv' for n in (
     'rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv', 'rtl/lib/ot_async_fifo.sv', 'rtl/lib/ot_reset_sync.sv',
     'rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv', 'rtl/qwen_sys/q5_20261009/ot_qfd_kv_landing_ecc.sv']
 
+TILE_SRC = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv'
+GRP_LIBS = ['physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
+            'rtl/lib/ot_async_fifo.sv', 'rtl/lib/ot_reset_sync.sv'] + ['rtl/qwen_sys/static_kv_20261014/' + n + '.sv' for n in (
+                'qkd_kv_cfault_tree', 'qkd_kv_front_cal', 'qkd_kv_landing_cal', 'qkd_static_kv_boot_cdc',
+                'qkd_static_kv_hop', 'qkd_static_kv_landing', 'qkd_static_kv_landing_seg', 'qkd_static_kv_ownership',
+                'qkd_static_kv_phase_launch')]
+
 # ep_s: rare starts and small EXP base ages so the schedule trigger / calendar check (exp_age = cal_exp + eo) fire
 EP_BIAS = ['i_qi[0] = ($urandom % 64) == 0;', "i_cal_exp = 16'($urandom % 48);"]
 # name: variant module; src/module: the original; die: the as-built die master(s) and port names; param: [(port, NAME)];
@@ -101,7 +108,37 @@ VARIANTS = [
          src='rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv',
          module='qkd_static_kv_pc_path_fan_nc_b',
          die='qkd_kvs_pc_h.pc__pc + pc__fi (tile qkd_kvs_pc_h u_pc)', param=[('pc', 'PC')], head=['fi'],
-         ov={'MU': '1'}, vals=[[0], [17]], mut=[[0], [1]], libs=PCPATH_LIBS),
+         children=[dict(inst='u_chain', module='qkd_kv_pc_chain_station_b', new='qkd_kv_pc_chain_station_b_p',
+                        params={'PC': 'PC'}, drop={'pc': 'PC'})],
+         ov={'MU': '1'}, vals=[[0], [17]], mut=[[0], [1]], libs=PCPATH_LIBS + [f'{OUT}/qkd_kv_pc_chain_station_b_p.sv']),
+    # u_chain of the pc_path head: its pc strap pin register spc (kept) becomes the folded PC parameter
+    dict(name='qkd_kv_pc_chain_station_b_p', src='rtl/qwen_sys/static_embedding_20261014/qkd_kv_pc_chain_station_b.sv',
+         module='qkd_kv_pc_chain_station_b', die='u_chain.pc of every pc_path (tile pc__pc)', param=[('pc', 'PC')],
+         ov={'MUT': '0'}, vals=[[0], [5], [17]], mut=[[0], [1]], probes=['spc'], libs=[]),
+    # TILE level (KV-P3b-TILE 10-23): the as-built die masters.  qkd_kvs_pc_h comes from ..._n32_pj_nc32.sv (gen_source_ports
+    # @ e33504a6f); its module text is byte-identical to the one in ..._n32_pj.sv used here.  qkd_kvs_grp_h_r2c is the mapped
+    # structural copy (kv_grp_safe5.py) of qkd_kvs_grp_h_r2 (qkd_kvs_grp_r2.sv) whose u_core is qkd_kvs_grp_h of ..._n32_pj.sv.
+    dict(name='qkd_kvs_pc_h_head_p', src=TILE_SRC, module='qkd_kvs_pc_h',
+         die='qkd_kvs_pc_h.pc__pc (0) + pc__fi (chain head kvpc_*_0)', param=[('pc__pc', 'PC')], head=['pc__fi'],
+         children=[dict(inst='u_pc', module='qkd_static_kv_pc_path_fan_nc_b', new='qkd_static_kv_pc_path_fan_nc_b_head_p',
+                        params={'PC': 'PC'}, drop={'pc': 'PC', 'fi': 'pc__fi'})],
+         vals=[[0], [17]], mut=[[0], [1]], probes=['u_pc.u_chain.spc'],
+         libs=PCPATH_LIBS + ['rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_head.sv',
+                             'rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_path_fan_nc_b.sv',
+                             f'{OUT}/qkd_static_kv_pc_path_fan_nc_b_head_p.sv', f'{OUT}/qkd_kv_pc_chain_station_b_p.sv']),
+    dict(name='qkd_kvs_grp_h_p', src=TILE_SRC, module='qkd_kvs_grp_h',
+         die='qkd_kvs_grp_h.slg__cfg_group (u_core of qkd_kvs_grp_h_r2 -> r2c)', param=[('slg__cfg_group', 'CFG_GROUP')],
+         children=[dict(inst='u_slg', module='qkd_static_kv_landing_seg', new='qkd_static_kv_landing_seg_p',
+                        params={'CFG_GROUP': 'CFG_GROUP'}, drop={'cfg_group': 'CFG_GROUP'})],
+         vals=[[4], [0]], mut=[[4], [5]], probes=[f'u_slg.g_pc[{q}].u_pc.group_q' for q in range(4)],
+         libs=GRP_LIBS + [f'{OUT}/qkd_static_kv_landing_seg_p.sv']),
+    dict(name='qkd_kvs_grp_h_r2_p', src='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv', module='qkd_kvs_grp_h_r2',
+         die='qkd_kvs_grp_h_r2c.slg__cfg_group (4; r2c = mapped copy of this module)',
+         param=[('slg__cfg_group', 'CFG_GROUP')],
+         children=[dict(inst='u_core', module='qkd_kvs_grp_h', new='qkd_kvs_grp_h_p', params={'CFG_GROUP': 'CFG_GROUP'},
+                        drop={'slg__cfg_group': 'CFG_GROUP'})],
+         vals=[[4], [0]], mut=[[4], [5]], probes=[f'u_core.u_slg.g_pc[{q}].u_pc.group_q' for q in range(4)],
+         libs=[TILE_SRC] + GRP_LIBS + [f'{OUT}/qkd_kvs_grp_h_p.sv', f'{OUT}/qkd_static_kv_landing_seg_p.sv']),
 ]
 
 
@@ -210,6 +247,41 @@ def subst_body(body, mapping):
     return ''.join(out)
 
 
+def code_balanced(text, i):
+    """index after the paren group that opens at text[i] == '(' (parens inside comments ignored)"""
+    pos, depth = 0, 0
+    for code, seg in split_code(text):
+        if code:
+            for k, ch in enumerate(seg):
+                if pos + k < i:
+                    continue
+                depth += {'(': 1, ')': -1}.get(ch, 0)
+                if depth == 0:
+                    return pos + k + 1
+        pos += len(seg)
+    raise ValueError('unbalanced')
+
+
+def rebind_child(body, c):
+    """child instance c['inst'] of c['module'] -> c['new'] with parameter overrides c['params'] {child param: expr}; its
+    named connections c['drop'] {child port: expr} are removed (each must be connected to exactly that expression)"""
+    code = strip_comments(body)
+    pat = re.compile(r'(?<![\w.])' + c['module'] + r'(\s*#\s*\(.*?\))?\s+' + c['inst'] + r'\s*\(', re.S)
+    assert len(pat.findall(code)) == 1, (c, 'instance not unique')
+    m = pat.search(body)
+    end = code_balanced(body, m.end() - 1)
+    inst = body[m.end():end]
+    for port, expr in c['drop'].items():
+        conn = r'\.\s*' + port + r'\s*\(\s*' + re.escape(expr) + r'\s*\)'
+        n_mid = len(re.findall(conn + r'\s*,\s*', inst))
+        inst, k = re.subn(conn + r'\s*,\s*', '', inst) if n_mid else re.subn(r'\s*,\s*' + conn, '', inst)
+        assert k == 1 and not re.search(r'\.\s*' + port + r'\s*\(', inst), (c, port, 'connection')
+    ov = ', '.join(f'.{n}({e})' for n, e in c['params'].items())
+    head = c['new'] + (m.group(1)[:-1].rstrip() + ', ' + ov + ')' if m.group(1) else ' #(' + ov + ')') + \
+        body[m.start() + len(c['module']) + len(m.group(1) or ''):m.end()]
+    return body[:m.start()] + head + inst + body[end:]
+
+
 def unkeep(body, consts):
     """drop the keep attribute of registers whose every assignment is a constant (a replaced parameter / head localparam):
     a kept flop of a constant would be a tie cell again; unkept, synthesis folds it"""
@@ -278,12 +350,22 @@ def variant(v):
     lines.append(') (')
     lines += [f'    {p["prefix"]} {p["name"]}{"," if k < len(keep) - 1 else ""}' for k, p in enumerate(keep)]
     lines.append(');')
+    body = subst_body(body, pmap)
+    for c in v.get('children', []):
+        body = rebind_child(body, c)
+        lines.insert(4, f'// child {c["inst"]}: {c["module"]} -> plan variant {c["new"]} #(' + ', '.join(
+            f'.{n}({e})' for n, e in c['params'].items()) + '); connections ' + ', '.join(
+            f'.{p}({e})' for p, e in c['drop'].items()) + ' removed.')
     for h in heads:
-        lines.append(f'    localparam {byname[h]["range"] or "[0:0]"} {h} = 0;   // chain head: no predecessor')
+        if re.search(r'(?<![.\w$`])\b' + h + r'\b', strip_comments(body)):
+            lines.append(f'    localparam {byname[h]["range"] or "[0:0]"} {h} = 0;   // chain head: no predecessor')
+        else:
+            lines = [ln.replace(f' {h} removed; the body sees them', f' {h} removed (read only by the rebound child, now in'
+                                ' its head form: no localparam left); the body sees any other') for ln in lines]
     if v.get('eo'):
         lines.append('    wire [2:0] eo_e = sq[2:0];   // the strip row (sq = {st, e})')
         lines.append("    wire [7:0] eo = 8'(EO_E) * {5'd0, eo_e} + 8'(EO_RL) * ({5'd0, eo_e} + {6'd0, eo_e[2:1]});")
-    body, folded = unkeep(subst_body(body, pmap), list(pmap.values()) + heads)
+    body, folded = unkeep(body, list(pmap.values()) + heads)
     if folded:
         lines.insert(4, '// registers of a constant only (keep dropped where present; folded by synthesis, no tie cell): ' + ', '.join(folded) + '.')
     lines.append(body.rstrip('\n').lstrip('\n'))
@@ -384,6 +466,15 @@ def bench(v, ports, params):
     return '\n'.join(t) + '\n'
 
 
+def child_renames(v):
+    """[(child variant, its original)] of every rebound child, recursively"""
+    out = []
+    for c in v.get('children', []):
+        out.append((c['new'], c['module']))
+        out += child_renames(next(w for w in VARIANTS if w['name'] == c['new']))
+    return out
+
+
 def run_script():
     s = ['#!/bin/bash',
          '# GENERATED by tools/qwen_kv_die/plan_leaf_variants.py: equivalence benches of the KV plan leaf variants.',
@@ -419,15 +510,17 @@ def run_script():
             runs += [('h', ''), ('mut', '-GTMUT=1')]
         for tag, g in runs:
             s.append(f'job {v["name"]}_{tag} {top} {srcs} -- {g}'.rstrip())
-    s += ['lint() {  # name orig variant_file srcs...: -Wall warnings (code + message, locations dropped) of the variant',
-          '  local name=$1 orig=$2 vf=$3; shift 3; local src=(); for f in "$@"; do src+=("$R/$f"); done',
-          '  "$V" --lint-only -Wall --top-module "$orig" "${src[@]}" 2>&1 | grep -E "^%(Warning|Error)" | sed -E "s/^(%[A-Za-z]+-?[A-Z0-9_]*): [^ ]+ /\\1 /" | sed "s/$orig/MOD/g" | sort -u > "$OUT/$name.lint_orig"',
-          '  "$V" --lint-only -Wall --top-module "$name" "$R/$vf" "${src[@]}" 2>&1 | grep -E "^%(Warning|Error)" | sed -E "s/^(%[A-Za-z]+-?[A-Z0-9_]*): [^ ]+ /\\1 /" | sed "s/$name/MOD/g" | sort -u > "$OUT/$name.lint_var"',
+    s += ['lint() {  # name orig variant_file renames srcs...: -Wall warnings (code + message, locations dropped) of the variant;',
+          '  # renames (sed): child plan variants -> their originals, so messages naming a child compare equal',
+          '  local name=$1 orig=$2 vf=$3 rn=$4; shift 4; local src=(); for f in "$@"; do src+=("$R/$f"); done',
+          '  "$V" --lint-only -Wall --top-module "$orig" "${src[@]}" 2>&1 | grep -E "^%(Warning|Error)" | sed -E "s/^(%[A-Za-z]+-?[A-Z0-9_]*): [^ ]+ /\\1 /" | sed "s/\\b$orig\\b/MOD/g" | sort -u > "$OUT/$name.lint_orig"',
+          '  "$V" --lint-only -Wall --top-module "$name" "$R/$vf" "${src[@]}" 2>&1 | grep -E "^%(Warning|Error)" | sed -E "s/^(%[A-Za-z]+-?[A-Z0-9_]*): [^ ]+ /\\1 /" | sed "$rn" | sed "s/\\b$name\\b/MOD/g" | sort -u > "$OUT/$name.lint_var"',
           '  local new; new=$(comm -13 "$OUT/$name.lint_orig" "$OUT/$name.lint_var" | grep -v DECLFILENAME | wc -l); new=$((new + $(grep "^%Error" "$OUT/$name.lint_var" | grep -vc " due to ")))',
           '  if [ "$new" = 0 ]; then NL=$((NL+1)); echo "LINT   $name no new warnings ($(wc -l < "$OUT/$name.lint_orig") orig / $(wc -l < "$OUT/$name.lint_var") variant)"; else NF=$((NF+1)); echo "LINTNEW $name $new new warnings:"; comm -13 "$OUT/$name.lint_orig" "$OUT/$name.lint_var" | grep -v DECLFILENAME | head -5; fi',
           '}', 'NL=0']
     for v in VARIANTS:
-        s.append(f'lint {v["name"]} {v["module"]} {OUT}/{v["name"]}.sv {" ".join([v["src"]] + v["libs"])}')
+        rn = ';'.join(f's/\\b{n}\\b/{o}/g' for n, o in child_renames(v)) or 's/^//'
+        s.append(f'lint {v["name"]} {v["module"]} {OUT}/{v["name"]}.sv \'{rn}\' {" ".join([v["src"]] + v["libs"])}')
     for tag, g in (('h', ''), ('mut1', '-GMUT=1'), ('mut2', '-GMUT=2')):
         s.append(f'job ot_dp_id_{tag} tb_ot_dp_id {TBD}/tb_ot_dp_id.sv rtl/lib/ot_dp_id.sv -- {g}'.rstrip())
         s.append(f'job ot_dp_efault_{tag} tb_ot_dp_efault {TBD}/tb_ot_dp_efault.sv rtl/lib/ot_dp_efault.sv -- {g}'.rstrip())
