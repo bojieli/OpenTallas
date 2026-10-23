@@ -364,6 +364,19 @@ def over_pitch_for(pin_layers: dict | None, axis: str) -> dict | None:
     return {int(x[1:]): PIN_PITCH_UM[x] for x in lays if x in PIN_PITCH_UM and int(x[1:]) >= 5}
 
 
+def _over_fits(col: list, pf: str | None, over: dict | None, o: str | None = None) -> bool:
+    """every macro of the column can have the pins of its back face (the LEF face opposite its control face pf)
+    reached OVER the macro: a crossing layer above its OBS, back pins <= OVER_MACRO_UTIL x height / pitch"""
+    if not pf or not over or not over.get("WE"):
+        return False
+    back_lef = OPP[pf]
+    for m, _s in col:
+        lay = [pt for mt, pt in over["WE"].items() if mt > obs_top(m["tm"])]
+        if not lay or macro_pin_faces(m["tm"])[back_lef] > m["h"] / min(lay) * OVER_MACRO_UTIL:
+            return False
+    return True
+
+
 def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.4, rows: int | None = None,
                 logic_face: str | None = None, over: dict | None = None, pack_cap: float | None = None) -> dict:
     """Macro ARRAY plan: macros pinned on W / E faces (SRAM / ROM arrays) form N-S abutted COLUMNS of `rows` arrays;
@@ -461,10 +474,19 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
     for c in cols:
         m0, s0 = c[0]
         we = s0 & {"W", "E"}
+        front = None
+        pf = primary_face(m0["tm"])
         if logic_face and we:   # one logic band: the control face points at it
-            pf = primary_face(m0["tm"])
+            front = logic_face
             o = orient_for(pf if pf in we else sorted(we)[0], logic_face)
             faces = {face_after(o, f) for f in we}
+        elif we == {"W", "E"} and pf in we and _over_fits(c, pf, over):
+            # dual-face arrays whose back face (data half / tied mask) can be reached over the macro: mirrored pairs
+            # like single-face arrays, control faces sharing one channel (rg3 bx 10-23: 2 x 4 SRAM, read faces centred)
+            front = "E" if k % 2 == 0 else "W"
+            o = orient_for(pf, front)
+            faces = {"W", "E"}
+            k += 1
         elif we == {"W", "E"} or not we:
             o, faces = "R0", set(we)
         else:                    # single-face arrays alternate: pairs of pin faces share one channel
@@ -482,17 +504,10 @@ def plan_macros(W: float, H: float, macros: list, demand: dict, halo: float = 5.
         stack = _stackable(m0["tm"])
         hts = [m["h"] for m, _ in c]
         h = sum(hts) + (len(hts) - 1) * (ABUT_PITCH_UM if stack else CHANNEL_MIN_UM)
-        over_ok = False
-        if logic_face and over and over.get("WE"):
-            back = OPP[logic_face]
-            top = max(obs_top(m["tm"]) for m, _ in c)
-            lay = [pt for mt, pt in over["WE"].items() if mt > top]
-            if back in faces and lay:      # every macro's back pins fit over its own height
-                over_ok = all(macro_pin_faces(m["tm"])[next(f for f in ("W", "E") if face_after(o, f) == back)]
-                              <= m["h"] / min(lay) * OVER_MACRO_UTIL for m, _ in c)
+        over_ok = bool(front) and OPP[front] in faces and _over_fits(c, pf if pf in we else None, over, o)
         spec_cols.append({"items": c, "o": o, "faces": faces, "w": max(m["w"] for m, _ in c), "h": h,
-                          "pins_w": tot["W"] if "W" in faces and not (over_ok and logic_face == "E") else 0,
-                          "pins_e": tot["E"] if "E" in faces and not (over_ok and logic_face == "W") else 0,
+                          "pins_w": tot["W"] if "W" in faces and not (over_ok and front == "E") else 0,
+                          "pins_e": tot["E"] if "E" in faces and not (over_ok and front == "W") else 0,
                           "stack": stack, "over": over_ok})
     gaps = []
     for a, b in zip(spec_cols, spec_cols[1:]):

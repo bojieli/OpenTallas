@@ -79,6 +79,11 @@ class LogicFace(unittest.TestCase):
         self.assertEqual(o["over_macro_cols"], [0])
         self.assertEqual(o["lead"], 0.0)
         self.assertLess(o["need"][0], r["need"][0])
+        # no logic_face, M6 over the macros: dual-face columns mirror in pairs, control faces share the middle channel
+        pr = TP.plan_macros(500.0, 300.0, macros(tm, 8), dem, over=ov, rows=4)
+        self.assertEqual([p["orient"] for p in pr["placed"] if p["col"] == 0][0], "MY")
+        self.assertEqual([p["orient"] for p in pr["placed"] if p["col"] == 1][0], "R0")
+        self.assertEqual((pr["lead"], pr["trail"]), (0.0, 0.0))
         # M5 cap: no horizontal layer above the M4 OBS -> the back channel stays
         o5 = TP.plan_macros(500.0, 420.0, macros(tm, 10), dem, logic_face="E",
                             over={"WE": TP.over_pitch_for(TP.face_pin_layers("M5"), "WE")})
