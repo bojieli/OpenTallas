@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-xfin-n26-1022/native
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-xfin-n26-1022/native
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-xfin-n26-1022/native
+ot-run: ot-gold2       admits     2 GB (avail 169, reserve 0, fresh 0, peak 103, headroom 0, waiters 0/0 GB) load 53/112 running 30 disk 2181 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-xfin-n26-1022/native
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-xfin-n26-1022/native
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-xfin-n26-1022/native
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-xfin-n26-1022 (0.4 GB) ot-gold2 -> ot-epyc5 (no host with --dir admits 32 GB now)
+ot-run: SPILL: copied 2357 changed entries in 15 s; running on ot-epyc5; written files go back to ot-gold2 after the run
+ot-heavy: request 32G is charged 13G (class 'native.py' measured peak 4.4G, n=18+0 proved); the cap stays 32G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3264959-1792732882 after 1 s
+SYNTH_RC 0 NETLIST True
+ACTUAL_SRAM_INSTANCES 93
+PRE_GATE_NATIVE_CENSUS PASS report=/work/native_census.json
+ACTUAL_NATIVE PASS 32 0 0
+CHIP_AREA None
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3264959-1792732882): exit 0
+ot-run: SPILL: outputs copied back ot-epyc5 -> ot-gold2; RAN on ot-epyc5: exit 0
