@@ -20,8 +20,8 @@ Conventions (binding for every tool):
 - A feedthrough slot `S` of a partition type defines two buses `S_i` (in, on `in_face`) and `S_o` (out, on `out_face`),
   with `stations` reset-less data registers (+ one reset epoch bit) between them.
 - A lane is an ordered list of ports; consecutive ports meet inside a partition at the `_i`/`_o` buses of one ft slot.
-  Latency (cycles from the source's out flop to the destination's in flop) = sum(stations of crossed slots) + 1
-  + fixed_cycles (lane_latency()).
+  Latency (register stages the lane adds between source leaf and destination leaf) = source out boundary flop +
+  sum(stations of crossed slots) + destination in boundary flop + fixed_cycles (lane_latency()).
 - Part name "@die" in a port endpoint is the die boundary (bumps / die IO); its bus is the die-level port name.
 """
 import json
@@ -148,7 +148,16 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
-                                       "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"}}}},
+                                       "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
+                                       # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
+                                       #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
+                                       "bind": {"type": "object", "additionalProperties": {"type": "string"}},
+                                       "params": {"type": "object",
+                                                  "additionalProperties": {"type": ["integer", "string"]}}}}},
+                    "sources": {"type": "array", "items": {"type": "string"}},   # leaf RTL files (repo paths)
+                    "nets": {"type": "array", "items": {                         # internal leaf-to-leaf nets
+                        "type": "object", "required": ["name", "width"], "additionalProperties": False,
+                        "properties": {"name": _name, "width": {"type": "integer", "minimum": 1}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
@@ -165,7 +174,8 @@ SCHEMA = {
                            "kind": {"enum": list(KINDS)}, "face": {"enum": list(FACES)},
                            "layers": {"type": "array", "items": _layer, "minItems": 1, "maxItems": 2},
                            "window_um": {"type": "array", "items": _num, "minItems": 2, "maxItems": 2},
-                           "order": {"enum": ["lsb_low", "lsb_high"]}, "note": {"type": "string"}}}},
+                           "order": {"enum": ["lsb_low", "lsb_high"]}, "epoch": {"type": "boolean"},
+                           "note": {"type": "string"}}}},
         "lanes": {"type": "array", "items": {
             "type": "object", "required": ["id", "ports"], "additionalProperties": False,
             "properties": {"id": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
@@ -186,6 +196,7 @@ SCHEMA = {
                 "type": "object", "required": ["cycles"], "additionalProperties": False,
                 "properties": {"cycles": {"type": "integer", "minimum": 1}, "stations": {"type": "integer"},
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
+                               "boundary": {"type": "integer"},
                                "param": {"type": "string"}}}}}},
         "budgets": {"type": "object", "additionalProperties": False, "properties": {
             k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS}},
@@ -209,9 +220,11 @@ def _check(v, s, path, errs):
           "string": lambda x: isinstance(x, str), "boolean": lambda x: isinstance(x, bool),
           "integer": lambda x: isinstance(x, int) and not isinstance(x, bool),
           "number": lambda x: isinstance(x, (int, float)) and not isinstance(x, bool)}
-    if t and not ok[t](v):
+    if t and not any(ok[x](v) for x in (t if isinstance(t, list) else [t])):
         errs.append(f"{path}: expected {t}, got {type(v).__name__}")
         return
+    if isinstance(t, list):
+        t = next(x for x in t if ok[x](v))
     if t == "object":
         for r in s.get("required", ()):
             if r not in v:
@@ -381,14 +394,30 @@ class Plan:
         return out
 
     def lane_latency(self, lid):
-        """dict(cycles, stations, faces, fixed): cycles from the source out flop to the destination in flop."""
+        """dict(cycles, stations, boundary, faces, fixed).  cycles = the register stages a lane adds between the source
+        leaf and the destination leaf: the source partition's out boundary flop + the stations of every crossed ft
+        slot + the destination's in boundary flop (a die-IO end has no partition flop) + fixed_cycles."""
         ln = self.lanes[lid]
         st = 0
         for part, slot, _, _ in self.lane_crossings(lid):
             s = self.slot(part, slot) if slot else None
             st += int(s.get("stations", 1)) if s else 1
         fixed = int(ln.get("fixed_cycles", 0))
-        return dict(cycles=st + 1 + fixed, stations=st, faces=len(ln["ports"]), fixed=fixed)
+        a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
+        bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
+        return dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
+
+
+def has_epoch(port):
+    """a lane bundle carries one in-band reset epoch bit (bit index `width`, the MSB of the generated port) unless it is
+    a clock/reset port, a die-IO port, or `epoch` is set false."""
+    if "epoch" in port:
+        return bool(port["epoch"])
+    return port.get("kind", "data") in ("data", "ctl") and DIE_PART not in (port["src"]["part"], port["dst"]["part"])
+
+
+def port_pins_count(port):
+    return int(port["width"]) + (1 if has_epoch(port) else 0)
 
 
 def pin_positions(port, layers):
@@ -400,7 +429,7 @@ def pin_positions(port, layers):
     the bits on whole tracks."""
     lo, hi = sorted(port["window_um"])
     names = port["layers"]
-    w = int(port["width"])
+    w = port_pins_count(port)
     nl = len(names)
     rev = port.get("order", "lsb_low") == "lsb_high"
     out = []

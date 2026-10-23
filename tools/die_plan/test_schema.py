@@ -68,11 +68,11 @@ def test_lane_continuity_and_membership():
 
 def test_latency_and_pins():
     P = schema.Plan(EX)
-    assert P.lane_latency("x") == dict(cycles=3, stations=2, faces=3, fixed=0)
-    assert P.lane_latency("r")["cycles"] == 4
-    assert P.lane_latency("cfg01")["cycles"] == 1
+    assert P.lane_latency("x") == dict(cycles=4, stations=2, boundary=2, faces=3, fixed=0)
+    assert P.lane_latency("r")["cycles"] == 5
+    assert P.lane_latency("cfg01")["cycles"] == 2 and P.lane_latency("din")["cycles"] == 1
     pins = P.port_pins("x0")
-    assert len(pins) == 64 and len({b for b, _, _ in pins}) == 64
+    assert len(pins) == 65 and len({b for b, _, _ in pins}) == 65   # 64 data + epoch bit 64
     for b, ln, c in pins:
         L = P.layers[ln]
         k = (c - L["offset_um"]) / L["pitch_um"]

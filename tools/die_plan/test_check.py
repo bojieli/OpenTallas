@@ -39,7 +39,7 @@ def test_example_passes():
     R, summ = g0()
     assert R.items == [], R.items
     assert summ["geometry"]["fill"] == 1.0
-    assert summ["latency"]["x"] == 3
+    assert summ["latency"]["x"] == 4
 
 
 def test_not_abutted():
@@ -86,7 +86,7 @@ def test_hop_reach():
 
 def test_latency_checks():
     assert any("missing from the latency table" in x for x in errs(lambda p: p["latency"]["lanes"].pop("x")))
-    assert any("plan gives 4" in x for x in errs(lambda p: p["latency"]["lanes"]["r"].update(cycles=3)))
+    assert any("plan gives 5" in x for x in errs(lambda p: p["latency"]["lanes"]["r"].update(cycles=3)))
     assert any("no latency table" in x for x in errs(lambda p: p.pop("latency")))
 
 
@@ -111,7 +111,48 @@ def test_gen_latency_and_render():
         p = copy.deepcopy(EX)
         p.pop("latency")
         tab, sv, js = gen.write_latency(p, d)
-        assert "localparam int LAT_X = 3;" in sv.read_text()
-        assert json.loads(js.read_text())["lanes"]["r"]["cycles"] == 4
+        assert "localparam int LAT_X = 4;" in sv.read_text()
+        assert json.loads(js.read_text())["lanes"]["r"]["cycles"] == 5
         R, summ = check.run(copy.deepcopy(EX), png=Path(d) / "p.png")
         assert (Path(d) / "p.png").stat().st_size > 10000
+
+
+def test_gen_rtl_lint_and_bench():
+    import shutil
+    import subprocess
+    import gen_rtl
+    root = HERE.parent.parent
+    rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
+    with tempfile.TemporaryDirectory() as d:
+        files = [str(f) for f in gen_rtl.write_rtl(copy.deepcopy(EX), d, rtl_root=str(root))]
+        src = files + [str(HERE / "examples" / "tiny_leaves.sv"), str(rs)]
+        if shutil.which("verilator") and rs.is_file():
+            r = subprocess.run(["verilator", "--lint-only", "-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED",
+                                "--top-module", "tiny_top"] + src, capture_output=True, text=True)
+            assert r.returncode == 0, r.stderr
+        if shutil.which("iverilog") and rs.is_file():
+            exe = str(Path(d) / "a.out")
+            subprocess.run(["iverilog", "-g2012", "-o", exe, str(HERE / "examples" / "tb_tiny.sv")] + src, check=True)
+            out = subprocess.run(["vvp", "-n", exe], capture_output=True, text=True).stdout
+            assert "TB_TINY PASS" in out, out
+
+
+def test_gen_rtl_refuses_open_ports():
+    import gen_rtl
+    root = HERE.parent.parent
+    p = copy.deepcopy(EX)
+    p["partition_types"]["sink"]["contents"][0]["bind"].pop("x_ep")
+    try:
+        gen_rtl.write_rtl(p, tempfile.mkdtemp(), rtl_root=str(root))
+    except gen_rtl.GenError as e:
+        assert "unbound ports ['x_ep']" in str(e)
+    else:
+        raise AssertionError("expected GenError")
+    p = copy.deepcopy(EX)
+    p["partition_types"]["mid"]["buses"][0].pop("leaf")
+    try:
+        gen_rtl.write_rtl(p, tempfile.mkdtemp())
+    except gen_rtl.GenError as e:
+        assert "not bound to any leaf port" in str(e)
+    else:
+        raise AssertionError("expected GenError")

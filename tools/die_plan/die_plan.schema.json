@@ -456,6 +456,48 @@
         },
         "note": {
          "type": "string"
+        },
+        "bind": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "string"
+         }
+        },
+        "params": {
+         "type": "object",
+         "additionalProperties": {
+          "type": [
+           "integer",
+           "string"
+          ]
+         }
+        }
+       }
+      }
+     },
+     "sources": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "nets": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "width"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "minLength": 1
+        },
+        "width": {
+         "type": "integer",
+         "minimum": 1
         }
        }
       }
@@ -632,6 +674,9 @@
        "lsb_low",
        "lsb_high"
       ]
+     },
+     "epoch": {
+      "type": "boolean"
      },
      "note": {
       "type": "string"
@@ -812,6 +857,9 @@
         "type": "integer"
        },
        "fixed": {
+        "type": "integer"
+       },
+       "boundary": {
         "type": "integer"
        },
        "param": {

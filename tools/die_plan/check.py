@@ -239,7 +239,7 @@ def check_faces(P, R, face_pins):
         for li, ln in enumerate(pr["layers"]):
             if ln not in P.layers:
                 continue
-            nb = len(range(li, pr["width"], nl))
+            nb = len(range(li, S.port_pins_count(pr), nl))
             tr = max(1, int((hi - lo) / P.layers[ln]["pitch_um"]) + 1)
             if nb / tr > B["pin_track_max"] + EPS:
                 R.err("faces", f"port {pid}: {nb} pins on {tr} {ln} tracks = {nb / tr:.2f} > {B['pin_track_max']}",

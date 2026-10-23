@@ -38,8 +38,8 @@ python3 -m pytest -q tools/die_plan/
 - **Lane**: an ordered list of ports. Consecutive ports meet inside one partition, at `S_i` -> `S_o` of one slot. The
   lane starts at a functional out bus and ends at a functional in bus. Every port belongs to exactly one lane, and a
   neighbour link is a 1-port lane.
-- **Latency** of a lane is counted in cycles, from the source's out flop to the destination's in flop:
-  `sum(stations of the crossed slots) + 1 + fixed_cycles`. `Plan.lane_latency()` is the only formula. The table in
+- **Latency** of a lane is the register stages it adds between the source leaf and the destination leaf:
+  `out boundary flop + sum(stations of the crossed slots) + in boundary flop + fixed_cycles` (a die-IO end has no partition flop). `Plan.lane_latency()` is the only formula. The table in
   `latency.lanes` is generated, and G0 checks that it is complete and equal to the formula. `param` names the SV/compiler
   parameter.
 - **Clock**: there is one root per partition, at the type's `clock.tap_um` on a die layer (M8/M9). Insertion at the
@@ -121,4 +121,4 @@ python3 tools/die_plan/gen.py latency PLAN.json [--inplace] [--out DIR]
 
 This writes `latency.lanes` back into the plan (with `--inplace`), `<die>_lat_pkg.sv` (one `localparam int` per lane,
 named by `lane.param` or `LAT_<ID>`) and `<die>_latency.json` (the compiler's input, which carries the plan digest).
-Die IO lanes count 1 cycle: the boundary flop of the partition endpoint.
+A die-IO lane counts 1 cycle: the boundary flop of its partition end.

@@ -106,8 +106,15 @@
     {
      "inst": "u_core",
      "module": "tiny_src_core",
-     "status": "new"
+     "status": "new",
+     "bind": {
+      "clk": "clk",
+      "rst_n": "rst_n"
+     }
     }
+   ],
+   "sources": [
+    "tools/die_plan/examples/tiny_leaves.sv"
    ]
   },
   "mid": {
@@ -164,8 +171,14 @@
      "module": "tiny_mid_core",
      "status": "reuse",
      "kit": "physical/ref_tile/tiny_mid",
-     "geom_pass": "results/geom_review/tiny_mid.json"
+     "geom_pass": "results/geom_review/tiny_mid.json",
+     "bind": {
+      "clk": "clk"
+     }
     }
+   ],
+   "sources": [
+    "tools/die_plan/examples/tiny_leaves.sv"
    ]
   },
   "sink": {
@@ -218,8 +231,15 @@
     {
      "inst": "u_s",
      "module": "tiny_sink_core",
-     "status": "new"
+     "status": "new",
+     "bind": {
+      "clk": "clk",
+      "x_ep": "epoch:x_i"
+     }
     }
+   ],
+   "sources": [
+    "tools/die_plan/examples/tiny_leaves.sv"
    ]
   }
  },
@@ -600,41 +620,47 @@
    "din": {
     "cycles": 1,
     "stations": 0,
+    "boundary": 1,
     "faces": 1,
     "fixed": 0,
     "param": "LAT_DIN"
    },
    "x": {
-    "cycles": 3,
+    "cycles": 4,
     "stations": 2,
+    "boundary": 2,
     "faces": 3,
     "fixed": 0,
     "param": "LAT_X"
    },
    "r": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
+    "boundary": 2,
     "faces": 3,
     "fixed": 1,
     "param": "LAT_R"
    },
    "cfg01": {
-    "cycles": 1,
+    "cycles": 2,
     "stations": 0,
+    "boundary": 2,
     "faces": 1,
     "fixed": 0,
     "param": "LAT_CFG01"
    },
    "cfg12": {
-    "cycles": 1,
+    "cycles": 2,
     "stations": 0,
+    "boundary": 2,
     "faces": 1,
     "fixed": 0,
     "param": "LAT_CFG12"
    },
    "cfg23": {
-    "cycles": 1,
+    "cycles": 2,
     "stations": 0,
+    "boundary": 2,
     "faces": 1,
     "fixed": 0,
     "param": "LAT_CFG23"
@@ -642,6 +668,7 @@
    "dout": {
     "cycles": 1,
     "stations": 0,
+    "boundary": 1,
     "faces": 1,
     "fixed": 0,
     "param": "LAT_DOUT"
