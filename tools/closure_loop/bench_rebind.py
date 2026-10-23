@@ -1,7 +1,9 @@
 """Route-preserving recovery of the reviewed SEQHOST file-path declaration bug.
 
 This deliberately supports one instrumentation-only transformation, not arbitrary
-replacement benchmarks. The routed source/attempt and every acceptance check stay
+replacement benchmarks. The only additional recovery restores one exact historical
+S81 benchmark source-list dependency, missing from the routed source.
+The routed source/attempt and every acceptance check stay
 fixed. No running stage can be stopped through this operation.
 """
 import base64
@@ -13,6 +15,11 @@ import shlex
 import subprocess
 
 TB = 'rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_seq_host_mu.sv'
+MISSING_DEP = 'physical/ref_tile/dscoll_lane_w_ltr/kit.env'
+MISSING_HISTORY = '444609b856402f8f7bf6cc5cd7b1c10095b066fc'
+MISSING_BLOB = 'e726993830bdbdd72a7a64bbcb135508fcbd3dc2'
+MISSING_SHA256 = '9cc934687b2b3bb7c8e324cb7dc855341e976d47e4e8ec0d66af524c9241fd2a'
+MISSING_READERS = ('tools/xdie_s81/coll_reach7.sh', 'tools/xdie_s81/coll_safe4_boundary.sh')
 NOTE = '    // Fleet closure paths can exceed128bytes; strings preserve full manifest paths.\n'
 
 
@@ -40,28 +47,52 @@ def plan(repo, job, target, keys, stages):
     old = git(repo, 'rev-parse', job['commit_full'] + '^{commit}').decode().strip()
     new = git(repo, 'rev-parse', target + '^{commit}').decode().strip()
     changed = git(repo, 'diff', '--name-only', '-z', '--no-renames', old, new).split(b'\0')[:-1]
-    if changed != [TB.encode()]:
-        raise ValueError('only the reviewed testbench path declaration may differ; route inputs must be identical')
-    a, b = git(repo, 'show', old + ':' + TB), git(repo, 'show', new + ':' + TB)
-    if a.count(b'    reg [1023:0] dir, mufile, cfgfile;\n') != 1:
-        raise ValueError('requires exactly the reviewed path declaration')
-    expected = a.decode().replace('    reg [1023:0] dir, mufile, cfgfile;\n',
-                                 NOTE + '    string dir, mufile, cfgfile;\n')
-    if expected == a.decode() or expected.encode() != b:
-        raise ValueError('unsupported testbench change: only the reviewed path registers to strings is allowed')
-    # Compare all other repository objects, not just an operator-selected RTL list.
+    missing = changed == [MISSING_DEP.encode()]
+    path = MISSING_DEP if missing else TB
+    if missing:
+        if job.get('spec', {}).get('block') != 'dsfd_coll_lane_w_safe8_ntf':
+            raise ValueError('missing readset recovery is scoped to the S81 lane')
+        if git(repo, 'ls-tree', old, '--', path):
+            raise ValueError('missing readset recovery refuses existing file overwrite')
+        historical = git(repo, 'rev-parse', MISSING_HISTORY + ':' + path).decode().strip()
+        new_entry = git(repo, 'ls-tree', new, '--', path).decode().split()
+        if historical != MISSING_BLOB or new_entry[:3] != ['100644', 'blob', MISSING_BLOB]:
+            raise ValueError('missing readset requires the exact historical blob and file mode')
+        b = git(repo, 'show', new + ':' + path)
+        if hashlib.sha256(b).hexdigest() != MISSING_SHA256:
+            raise ValueError('missing readset historical SHA mismatch')
+        for key in keys:
+            readers = [r for r in MISSING_READERS if 'bash ' + r + ' ' in stages[key]['cmd']]
+            if len(readers) != 1 or ('source ' + path + '\n').encode() not in git(repo, 'show', old + ':' + readers[0]):
+                raise ValueError('missing readset is not declared by the selected original benchmark')
+        a = None
+    else:
+        if changed != [TB.encode()]:
+            raise ValueError('only the reviewed testbench path declaration may differ; route inputs must be identical')
+        a, b = git(repo, 'show', old + ':' + TB), git(repo, 'show', new + ':' + TB)
+        if a.count(b'    reg [1023:0] dir, mufile, cfgfile;\n') != 1:
+            raise ValueError('requires exactly the reviewed path declaration')
+        expected = a.decode().replace('    reg [1023:0] dir, mufile, cfgfile;\n',
+                                     NOTE + '    string dir, mufile, cfgfile;\n')
+        if expected == a.decode() or expected.encode() != b:
+            raise ValueError('unsupported testbench change: only the reviewed path registers to strings is allowed')
+    # Compare every other repository object, not an operator-selected RTL list.
     def inventory(commit):
         rows = git(repo, 'ls-tree', '-r', '-z', commit).split(b'\0')
-        return b'\0'.join(row for row in rows if row and row.rsplit(b'\t', 1)[-1] != TB.encode())
+        return b'\0'.join(row for row in rows if row and row.rsplit(b'\t', 1)[-1] != path.encode())
     frozen, candidate = inventory(old), inventory(new)
     if frozen != candidate:
         raise ValueError('a routed input object changed')
-    return dict(schema='opentallas.bench_path_rebind.v1', route_commit=old, source_commit=new,
-                route_attempt=job.get('route_attempt', job['attempt']), keys=keys,
-                host=job['host'], run=job['run'],
-                unchanged_tree_sha256=hashlib.sha256(frozen).hexdigest(),
-                testbench=TB, old_sha256=hashlib.sha256(a).hexdigest(),
-                new_sha256=hashlib.sha256(b).hexdigest(), payload=base64.b64encode(b).decode())
+    receipt = dict(schema='opentallas.bench_path_rebind.v1', route_commit=old, source_commit=new,
+                   route_attempt=job.get('route_attempt', job['attempt']), keys=keys,
+                   host=job['host'], run=job['run'],
+                   unchanged_tree_sha256=hashlib.sha256(frozen).hexdigest(),
+                   testbench=path, old_sha256=hashlib.sha256(a).hexdigest() if a is not None else None,
+                   new_sha256=hashlib.sha256(b).hexdigest(), payload=base64.b64encode(b).decode())
+    if missing:
+        receipt.update(recovery_kind='missing_bench_readset', historical_commit=MISSING_HISTORY,
+                       historical_blob=MISSING_BLOB)
+    return receipt
 
 
 def source_for_stage(job, key):
@@ -122,7 +153,10 @@ def snapshot():
  base=finals[0].parent
  files=[base/x for x in ('6_final.odb','6_final.sdc','6_final.spef','5_route.odb')]
  if any(not x.is_file() or not x.resolve().is_relative_to(run/'routes') for x in files):raise ValueError('missing/outside routed artifact')
- if sha(src/p['testbench'])!=p['old_sha256']:raise ValueError('frozen original testbench differs')
+ if p.get('recovery_kind')=='missing_bench_readset':
+  if os.path.lexists(src/p['testbench']):raise ValueError('missing readset already exists in frozen source')
+ else:
+  if sha(src/p['testbench'])!=p['old_sha256']:raise ValueError('frozen original testbench differs')
  return {str(x.relative_to(run)):sha(x) for x in files}
 for rel in p.get('outputs',[]):
  q=Path(rel)
@@ -136,7 +170,12 @@ if home.exists():raise ValueError('recovery already exists; refusing overwrite')
 home.mkdir(parents=True)
 private=home/'source'
 subprocess.run(['cp','-a','--reflink=auto',str(src),str(private)],check=True)
-tb=private/p['testbench']; temp=tb.with_name(tb.name+'.rebind-tmp');temp.write_bytes(base64.b64decode(p['payload']));os.replace(temp,tb)
+tb=private/p['testbench']
+if p.get('recovery_kind')=='missing_bench_readset':
+ if os.path.lexists(tb):raise ValueError('private readset overwrite refused')
+ if not tb.resolve().is_relative_to(private.resolve()):raise ValueError('private readset escapes source')
+ tb.parent.mkdir(parents=True,exist_ok=True)
+temp=tb.with_name(tb.name+'.rebind-tmp');temp.write_bytes(base64.b64decode(p['payload']));os.replace(temp,tb)
 if sha(tb)!=p['new_sha256']:raise ValueError('replacement testbench SHA mismatch')
 saved=[]
 for rel in p['outputs']:
