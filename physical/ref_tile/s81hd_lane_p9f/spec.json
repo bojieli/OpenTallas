@@ -144,7 +144,8 @@
     789.696,
     43.2
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "clock_tap_ps": 33
   },
   {
    "view": "physical/ref_tile/s81hd_lsc_t12/views/ot_s81hd_lsc_t12",
@@ -154,7 +155,8 @@
     789.696,
     172.8
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "clock_tap_ps": 33
   },
   {
    "view": "physical/ref_tile/s81hd_lsc_t11/views/ot_s81hd_lsc_t11",
@@ -164,7 +166,8 @@
     789.696,
     302.4
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "clock_tap_ps": 32
   },
   {
    "view": "physical/ref_tile/s81hd_lsc_rf/views/ot_s81hd_lsc_rf",
@@ -174,7 +177,8 @@
     789.696,
     432.0
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "clock_tap_ps": 22
   }
  ],
  "inter": [],
@@ -221,8 +225,10 @@
   ]
  },
  "reset_landing": {
-  "enable": false,
-  "reason": "every hard sub-child lands rst_n itself (2 stages + own tree3, identical in each), so the parent adds no landing (same release edge as the flat lane: 2 + tree3)."
+  "enable": true,
+  "stages": 2,
+  "clock": "ck",
+  "reason": "rst_n lands in 2 ck flops at the parent's E (core) face, then fans out to the lane child and every hard sub-child (each still lands its own copy in 2 stages + tree3 inside its closed view). Reset-only change: the lane's reset release is 2 ck edges later (block_release_depth +2, booked for MU.S81.CAL); ports, data edges and latency unchanged (freeze)."
  },
  "fill_reason": {
   "pin_bound": "child-bound: the CLOSED 725.76 x 583.2 lane view + 43.2-um ring + the stacked adapter sub-children band (x 789.696-876.096: 20.7-um channel to the lane view, 20.3 um to the E core edge); parent soft = rxen only; never shrink."
@@ -235,7 +241,8 @@
   "reason": "H10 reserve ln_* is 518.4 x 1123.2 R0; the closed lane child is 725.76 x 583.2 (no R90 for SRAM views), so the head die re-slots the 13 lanes to 898.56 x 669.6 (area 0.602 mm2 vs 0.582 reserve). Ports / widths / protocol / cycles unchanged (freeze). Faces: SerDes rx/tx on W (MY for the E-SerDes lanes); core tx_d/rx_d/v/flt/ck/rst_n/chb on E (as m/f)."
  },
  "orfs_vars": {
-  "OT_SPINE_PAD_CELL": "BUFx4_ASAP7_75t_R"
+  "OT_SPINE_PAD_CELL": "BUFx24_ASAP7_75t_R"
  },
- "child_lattice_um": 1.728
+ "child_lattice_um": 1.728,
+ "clock_spine_reason": "STW-S81c-DIE4-LANE2 10-22 (gate 16:38 FF linked-pair FAIL u_ln-u_t0 110.2 / u_ln-u_t1 102.6): the closed lane child's own boundary insertion is wire-heavy (FF/TT 568.7/698.4 = 0.81) while the ~600-ps TT spine pad that brings each sub-child up to it was HB/BUFx4 (FF/TT ~0.74), so the sub-children sat ~30-45 ps early at FF.  Pad cell BUFx24_ASAP7_75t_R (FF/TT 0.78-0.79, load-flat, same RVT as the trunk) + per-master clock_tap_ps (TT target centred in each child's TT AND FF window vs the lane's 74-ps boundary span).  Measured in place on the 16:27 gate placed DBs (ot-gold2 lane2_cts): BUFx24 + tap 30 -> p9m TT worst 61.2 / FF 69.2, p9f TT 66.1 / FF 62.8 (was 75.6/110.2 and 71.5/102.6); BUFx4 + tap 40 -> FF 76.8 (rejected, thin); BUFx24 alone -> FF 95.2 (rejected)."
 }
