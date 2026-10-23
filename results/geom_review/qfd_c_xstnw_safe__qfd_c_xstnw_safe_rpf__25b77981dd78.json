@@ -1,0 +1,11 @@
+{
+ "element": "qfd_c_xstnw_safe",
+ "kit": "physical/ref_tile/qfd_c_xstnw_safe_rpf@edaf893fd",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "25b77981dd78f780b08e33d961896ebaf2c4ff5b689e6bab27a4b78db1d56b9b",
+ "reasons": "Independent visually inspected current child PLAN. Exact-source mapped synthesis area reused with all source hashes matching; no source/params/cycles changed. XSTN43.2x194.4 fits86.4um corridor with21.6um side clearances; aspect4.5 and~5%freecore fill accepted provisionally because opposed514/508-bit face windows86.4um set pin/corridor floor. Windows explicitly alternateM2/M4 at<=6pins/um; shape narrower and shorter than original proposal.",
+ "fixes": "Conditional permission is for this child rehardening only. Current native fanout<=32 and actual placed pin-register p90<=30um/fill/clockTT+FF spread<=80ps remain required. Inspect actual two-layer pin alternation/local density<=6 and source-owned register mass at clock/face bands. No old physical timing/native results transferred. Parent237-child plan still requires actual pin-to-pin reach,clock,reset and scalar placement;769um displacement is not qualified wire reach and this child record grants no parent route permission.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T04:10:04-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
