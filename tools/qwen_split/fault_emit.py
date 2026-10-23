@@ -711,6 +711,8 @@ def pre(v, m, G):
     if os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1':
         from qwen_split.fault_face_bind import install
         install(v, m, rec)
+    if os.environ.get('OT_QWEN_MU_FAULT_OR', '0') == '1':
+        _mu_fault_or(v, m, M, by, pos, occ, zn, ckx, rsx, follow, rec)
     M_ = dict(M)
     v.masters = lambda model, k=1, port_bits=None: dict(M_)
     rec['wide_end_keepclear'] = dict(bits=WIDE_BITS, um=KEEP_UM, boxes=kc)
@@ -783,6 +785,89 @@ def _cover_clock(v, m, o, cj0, pts, roots, by, q, occ, occ_g, occ_0, zn, follow,
     return n_new
 
 
+MU_FAULT_SRC = (('mu_dhobs', 'mu_fault'), ('mu_ctxrx', 'mu_fault'))
+MU_FAULT_DST = ('tt_ctlm', 'mu_fault')
+
+
+def _mu_fault_or(v, m, M, by, pos, occ, zn, ckx, rsx, follow, rec):
+    """SQC-QDIE5 10-22 (QDIE5-HP13 PORTS.json mu_fault, choice A = die GEN; opt-in OT_QWEN_MU_FAULT_OR=1):
+    tt_ctlm.mu_fault (registered MU observer fault -> op_fault -> dcs start_fault -> dc status / cf) is driven by
+    OR(mu_dhobs.mu_fault, mu_ctxrx.mu_fault) through ONE qfd_fault_or_n2 on tt_ctlm's HR clock (ck_hr) beside the
+    tt_ctlm.mu_fault pin: its input pin registers are the landing on the hr region.  The two source -> OR wires are
+    fault-tree edges (relayed / landed by _relays like every tree edge: a zero-stage cross-root edge gets the landing
+    station); post() keeps the existing fault-tree reads of both sources as further sinks of the same nets.  NOT
+    n_flt_t_mu_dhobs: that subtree contains tt_ctlm's own cf (loop)."""
+    if MU_FAULT_DST[0] not in by:
+        raise ValueError('mu_fault OR: tt_ctlm not on this GEN')
+    dm = M[by[MU_FAULT_DST[0]].master].ports
+    if MU_FAULT_DST[1] not in dm:
+        raise ValueError(f'mu_fault OR: {by[MU_FAULT_DST[0]].master} has no mu_fault port (needs the HP13 netlists of '
+                         'claude/qdie5-hp13-1022 00ff9c80b)')
+    for inst, p in MU_FAULT_SRC:
+        if inst not in by or p not in M[by[inst].master].ports:
+            raise ValueError(f'mu_fault OR: source {inst}.{p} not on this GEN')
+    used = {(e[0], e[1].lstrip('*')) for bid, cl, bits, eps in m['buses'] for e in eps}
+    for e in MU_FAULT_SRC + (MU_FAULT_DST,):
+        if e in used:
+            raise ValueError(f'mu_fault OR: {e[0]}.{e[1]} already connected')
+    cj = ckx.get((MU_FAULT_DST[0], 'ck_hr'))
+    rj = _reset_bus(rsx, MU_FAULT_DST[0])
+    if cj is None or rj is None:
+        raise ValueError(f'mu_fault OR: tt_ctlm ck_hr ({cj}) / reset ({rj}) bus absent')
+    px, py = pos(*MU_FAULT_DST)
+    okz = lambda b: zn.of_box(b) is not None
+    s = (occ.site(v, px, py, rmax=CAP_UM, step=4.32, ok=okz) or occ.site(v, px, py, rmax=1200.0, step=8.64, ok=okz))
+    if s is None:
+        raise ValueError(f'mu_fault OR: no free site near tt_ctlm.mu_fault ({px:.1f}, {py:.1f})')
+    q2 = make_master(v, 2)
+    M[q2.name] = q2
+    nm = 'flt_mu_or'
+    it = v.Inst(nm, q2.name, s[0], s[1], W, H, orient='R0', kind='fault', region=by[MU_FAULT_DST[0]].region,
+                domain='stream_1p2')
+    occ.add((s[0], s[1], s[0] + W, s[1] + H))
+    m['insts'].append(it)
+    by[nm] = it
+    _join(m, cj, (nm, 'ck'))
+    _join(m, rj, (nm, 'rs'))
+    _follow_fault_clock(m, follow, (nm, 'ck'), MU_FAULT_DST[0], cj)
+    dst_ck = m['buses'][cj][0]
+    rows = []
+    for j, (inst, p) in enumerate(MU_FAULT_SRC):
+        bid = f'flt_mu_{inst}'
+        sck = _fault_clock_bus(m, ckx, inst)
+        m['buses'].append((bid, CLS, 1, [(inst, p), (nm, f'f{j}')]))
+        L = _man(pos(inst, p), _ctr(it))
+        rec['edges'].append(dict(bid=bid, child=inst, parent=MU_FAULT_DST[0], um=round(L, 1),
+                                 src_ck=m['buses'][sck][0] if sck is not None else None, dst_ck=dst_ck, mu_fault=True))
+        rows.append(dict(bid=bid, src=f'{inst}.{p}', um=round(L, 1), src_ck=rec['edges'][-1]['src_ck']))
+    m['buses'].append(('flt_mu_o', CLS, 1, [(nm, 'o'), MU_FAULT_DST]))
+    rec['mu_fault_or'] = dict(inst=nm, at=[round(s[0], 3), round(s[1], 3)], clock=dst_ck, reset=m['buses'][rj][0],
+                              pin_um=round(_man((px, py), _ctr(it)), 1), inputs=rows, sink='tt_ctlm.mu_fault')
+    print(f'FAULT_EMIT mu_fault OR: {nm} ({q2.name}) at ({s[0]:.1f}, {s[1]:.1f}) on {dst_ck}, '
+          f'{_man((px, py), _ctr(it)):.0f} um from tt_ctlm.mu_fault; inputs {rows}', flush=True)
+
+
+def _mu_fault_merge(m, alias):
+    """post(): the fault tree's own source wire of mu_dhobs / mu_ctxrx.mu_fault (flt_s_*) merges into the OR edge's
+    driver net (one output pin = one net): its sinks become further sinks of the (relayed) flt_mu_<inst> first segment."""
+    if 'mu_fault_or' not in (m.get('fault_emit') or {}):
+        return
+    for drv in MU_FAULT_SRC:
+        own = [j for j, b in enumerate(m['buses']) if b[0].startswith('flt_s_')
+               and alias.get(tuple(b[3][0]), tuple(b[3][0])) == drv]
+        tgt = [j for j, b in enumerate(m['buses']) if not b[0].startswith('flt_s_') and tuple(b[3][0]) == drv]
+        if len(tgt) != 1:
+            raise ValueError(f'mu_fault OR: {drv[0]}.{drv[1]} drives {len(tgt)} non-tree nets (expected the one OR edge)')
+        t = tgt[0]
+        for j in own:
+            bid, cl, bits, eps = m['buses'][t]
+            m['buses'][t] = (bid, cl, bits, list(eps) + list(m['buses'][j][3][1:]))
+        for j in sorted(own, reverse=True):
+            del m['buses'][j]
+        m['fault_emit']['mu_fault_or'].setdefault('merged_tree_reads', []).append(dict(src=f'{drv[0]}.{drv[1]}',
+                                                                                         tree_nets=len(own)))
+
+
 def land_edges(m):
     """bids of the zero-stage cross-root tree edges (_relays gives each a landing station)."""
     rec = m.get('fault_emit')
@@ -821,6 +906,8 @@ def post(v, m, G):
     ckx, rsx = _bus_index(m, 'clock_trunk'), _reset_index(m)
     used = set()
     for bid, cl, bits, eps in m['buses']:
+        if bid.startswith('flt_mu_') and bid != 'flt_mu_o':
+            continue     # OT_QWEN_MU_FAULT_OR: the tree keeps reading mu_dhobs / mu_ctxrx.mu_fault (_mu_fault_merge)
         for e in eps:
             used.add((e[0], e[1].lstrip('*')))
     # sources: (inst, die port, real port, bit, clock bus, reset bus, pin xy)
@@ -1289,6 +1376,7 @@ def post(v, m, G):
                 over.append((bid, round(L, 1)))
     if over:
         raise ValueError(f'fault emit: {len(over)} new fault wires over 405 um: {over[:8]}')
+    _mu_fault_merge(m, alias)
     kinds = collections.Counter(nm.split('_')[1].rstrip('0123456789') for nm in nodes)
     rec.update(sources=len(src), source_bits_landing=sum(1 for s in src if s[2] == 'fault' and s[0].startswith('rly')),
                source_bits_hard=sum(1 for s in src if not by[s[0]].master.startswith('qfd_landh')),
