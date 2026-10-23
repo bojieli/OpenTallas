@@ -48,14 +48,28 @@
 module ot_hbm_idx_link_mux_leaf #(parameter integer W=6)(input wire sel,input wire[W-1:0]a,b,output wire[W-1:0]y);
  assign y=sel?a:b;
 endmodule
+// Unary prefix state avoids repeating binary popcounts for each candidate.
+// x[k] only selects the S+1 local prefix bits, then the next k owns them.
 module ot_hbm_idx_link_compact_leaf #(parameter integer BW=6,S=0)(input wire[7:0]gm,input wire[8*BW-1:0]pay,output reg[BW-1:0]v);
- function automatic [3:0] pc8(input [7:0]x);
-  integer t;begin pc8=0;for(t=0;t<8;t=t+1)pc8=pc8+{3'd0,x[t]};end
- endfunction
- integer k;
+ localparam integer NS=S+1;
+ wire[9*NS-1:0]pr;
+ wire[7:0]hot;
+ assign pr[0+:NS]={{(NS-1){1'b0}},1'b1};
+ genvar k,n;
+ for(k=0;k<8;k=k+1)begin:pos
+  for(n=0;n<NS;n=n+1)begin:cnt
+   if(n==0)begin:zero
+    assign pr[(k+1)*NS+n]=!gm[k]&&pr[k*NS+n];
+   end else begin:nonzero
+    (* keep_hierarchy *) ot_hbm_idx_link_mux_leaf #(.W(1)) u(.sel(gm[k]),.a(pr[k*NS+n-1]),.b(pr[k*NS+n]),.y(pr[(k+1)*NS+n]));
+   end
+  end
+  assign hot[k]=gm[k]&&pr[k*NS+S];
+ end
+ integer j;
  always @*begin
   v=0;
-  for(k=S;k<8;k=k+1)if(gm[k]&&pc8(gm&((8'd1<<k)-8'd1))==4'(S))v=v|pay[k*BW+:BW];
+  for(j=S;j<8;j=j+1)v=v|(pay[j*BW+:BW]&{BW{hot[j]}});
  end
 endmodule
 module ot_hbm_idx_link_p_merge #(parameter integer NA=8,parameter integer NB=8,parameter integer CW=4,
