@@ -10,6 +10,7 @@
 // hc_<q> output flop -> receiver pin flop).  Bank slices: W face bank 0; N face bank 2 + corners 1, 3 (fed through
 // bank 2); E face bank 4; S face bank 6 + corners 5, 7.  Every other port is the two sub-blocks' own (registered) pin.
 module ot_hbm_hc_qhub_static #(
+    parameter integer RLEAF = 0,     // HBMc/TILES4 10-22 c12: ot_hbm_hc_q_static RLEAF (result-writer local reset leaf)
     parameter integer K = 20480,
     parameter integer DRLY = 1,
     parameter integer TLA = 7,
@@ -80,7 +81,7 @@ module ot_hbm_hc_qhub_static #(
     wire xv; wire [9:0] xw; wire [2047:0] xd; wire [1:0] xbt; wire [7:0] rb; wire [4:0] xfv; wire [9:0] xfb;
     wire gm_v_i, gd_i; wire [4:0] gm_r_i; wire [2:0] gm_p_i; wire [31:0] gm_d_i;
     assign rstb_w = rb[0]; assign rstb_n = rb[3:1]; assign rstb_e = rb[4]; assign rstb_s = rb[7:5];
-    ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .GATHER_PERIOD(GATHER_PERIOD), .DONE_LAT(DONE_LAT), .XW_BEATS(4), .SAFE(SAFE), .TARGET_SCAN_BOUNDARY(TARGET_SCAN_BOUNDARY)) u_q (
+    ot_hbm_hc_q_static #(.RD_CAPTURE(RD_CAPTURE), .GATHER_PHASE(GATHER_PHASE), .GATHER_PERIOD(GATHER_PERIOD), .DONE_LAT(DONE_LAT), .XW_BEATS(4), .SAFE(SAFE), .TARGET_SCAN_BOUNDARY(TARGET_SCAN_BOUNDARY), .RLEAF(RLEAF)) u_q (
         .clk(clk), .rst_n(rst_n), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .configured(configured), .lg_rq(lg_rq), .lg_wq(lg_wq), .lg_rr(lg_rr), .lg_w_done(lg_w_done),

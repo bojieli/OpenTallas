@@ -51,7 +51,13 @@ module ot_hbm_hc_q_static #(
     //   ot_hgi_hc_gathered_mix_reader_f32_static (per-group launch accepts, predicted response / request copies, one-hot
     //   row select), ot_hgi_hc_result_vm_f32_static (kept store-lane selects), residual capture enables 128 x 16 b.
     parameter integer SAFE=0,
-    parameter integer TARGET_SCAN_BOUNDARY=0
+    parameter integer TARGET_SCAN_BOUNDARY=0,
+    // RLEAF (HBMc/TILES4 10-22, kit hbm_hcq_hub_c12a/b; default 0 = unchanged bit for bit; landed-regions standard): the
+    //   result writer (lg_wq valid bits, local_write, fault -- the E-face pin registers) resets from ONE kept local leaf
+    //   u_wq_leaf (async assert from rr_n[4], deassert one clk edge later) placed with its loads, instead of from the
+    //   synthesis reset copies of rr_n[4] (c11a post-GRT worst: copy c16 at 728 ps insertion -> lg_wq[1123] recovery -83 ps).
+    //   Reset only: deassertion of these 10 flops moves +1 edge; 0 data edges.  MUT 8 (bench): leaf held in reset (must FAIL).
+    parameter integer RLEAF=0
 )(
     input wire clk,rst_n,
     input wire [7:0] tgt,              // identity strap: F20 target id (108+q)
@@ -193,14 +199,20 @@ module ot_hbm_hc_q_static #(
             .gathered_mix_v(gathered_mix_v),.gathered_mix_row(gathered_mix_row),
             .gathered_mix_pos(gathered_mix_pos),.gathered_mix_data(gathered_mix_data),.done(gather_done),.fault(gat_fault));
     end endgenerate
+    wire wq_rst_n;
+    generate if(RLEAF!=0)begin:g_wq_leaf
+        ot_hbm_hc_rst_leaf #(.HOLD((MUT==8)?1:0)) u_wq_leaf(.clk(clk),.rst_n_in(rr_n[4]),.rst_n(wq_rst_n));
+    end else begin:g_wq_copy
+        assign wq_rst_n=rr_n[4];
+    end endgenerate
     generate if(SAFE>=2)begin:g_st2
         ot_hgi_hc_result_vm_f32_static #(.NWS(NWS)) store(
-            .clk(clk),.rst_n(rr_n[4]),.store_slot(store_slot),.base_sector(result_base+((MUT==2)?16'd1:16'd0)),
+            .clk(clk),.rst_n(wq_rst_n),.store_slot(store_slot),.base_sector(result_base+((MUT==2)?16'd1:16'd0)),
             .store_position(store_position),.wsel(wsel),.result_v(result_v_q),.result_position(result_pos_q),.result(result_q),
             .local_wq(lg_wq),.local_write(write_sel),.fault(wr_fault));
     end else begin:g_st1
     ot_hgi_hc_result_vm_static store(
-            .clk(clk),.rst_n(rr_n[4]),.store_slot(store_slot),.base_sector(result_base+((MUT==2)?16'd1:16'd0)),
+            .clk(clk),.rst_n(wq_rst_n),.store_slot(store_slot),.base_sector(result_base+((MUT==2)?16'd1:16'd0)),
             .store_position(store_position),.result_v(result_v_q),.result_position(result_pos_q),.result(result_q),
             .local_wq(lg_wq),.local_write(write_sel),.fault(wr_fault));
     end endgenerate
@@ -239,3 +251,10 @@ module ot_hbm_hc_q_static #(
         end
 endmodule
 `default_nettype wire
+
+// HBMc/TILES4 10-22 RLEAF: parameter-light keep_hierarchy local reset leaf (async assert, deassert one edge later).
+// HOLD=1 is the bench mutant (never deasserts).
+(* keep_hierarchy=1 *) module ot_hbm_hc_rst_leaf #(parameter integer HOLD=0)(input wire clk, input wire rst_n_in, output reg rst_n);
+    always @(posedge clk or negedge rst_n_in)
+        if(!rst_n_in) rst_n<=1'b0; else rst_n<=(HOLD!=0)?1'b0:1'b1;
+endmodule

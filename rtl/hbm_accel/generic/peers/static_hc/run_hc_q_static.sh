@@ -16,7 +16,7 @@ SRC="rtl/test/tb_hbm_hc_q_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm
 for m in ${MUTS:-0 1 2 3 4}; do  # MUTS=<n> runs one case (closure-loop mutant benches)
   # HBM-HCBANK6 10-20: HCQ_SAFE=2 benches the native32 form (kit hbm_hcq_hub_c1)
   # QHUB-S1 10-19: HCQ_SAFE=1 benches ot_hbm_hc_q_static SAFE 1 (kit hbm_hcq_hub_s1); MUT 7 is its SAFE-only mutant
-  iverilog -g2012 -P tb_hbm_hc_q_static.MUT=$m -P tb_hbm_hc_q_static.SAFE=${HCQ_SAFE:-0} -P tb_hbm_hc_q_static.GSTR=${HCQ_GSTR:-40} -o $O/tb$m.vvp $SRC || exit 2
+  iverilog -g2012 -P tb_hbm_hc_q_static.MUT=$m -P tb_hbm_hc_q_static.SAFE=${HCQ_SAFE:-0} -P tb_hbm_hc_q_static.GSTR=${HCQ_GSTR:-40} -P tb_hbm_hc_q_static.RLEAF=${HCQ_RLEAF:-0} -o $O/tb$m.vvp $SRC || exit 2
   r=$(vvp -n $O/tb$m.vvp | grep TB_HBM_HC_Q_STATIC); echo "$r"
   if [ $m = 0 ]; then [[ "$r" == *PASS* ]] || rc=1; else [[ "$r" == *FAIL* ]] || rc=1; fi
 done

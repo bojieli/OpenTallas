@@ -17,10 +17,11 @@
 // The programme target is folded into the DUT (TGT_PIN, strap tgt=108); the F20 broadcast drives the DUT directly.
 module tb_hbm_hc_q_static;
     parameter integer MUT=0;
+    parameter integer RLEAF=0;   // HBMc/TILES4 10-22: DUT RLEAF; MUT 8 = its leaf held in reset (must FAIL)
     parameter integer XWB=4;
     parameter integer SAFE=0;
     parameter integer GSTR=40;   // QHUB-S1: gathered position stride (43: return sectors cross banks, exercises the RSC copies)
-    localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:(MUT==5)?4:(MUT==6)?5:(MUT==7)?6:0;
+    localparam integer TAP_MUT=(MUT==4)?2:0, DUT_MUT=(MUT>=1&&MUT<=3)?MUT:(MUT==5)?4:(MUT==6)?5:(MUT==7)?6:(MUT==8)?8:0;
     localparam integer VM_RD=15, VM_WR=12;
     reg clk=0,rst_n=0;
     always #1 clk=~clk;
@@ -51,7 +52,7 @@ module tb_hbm_hc_q_static;
     reg [2:0] result_position=0;
     reg [767:0] result=0;
     wire [4:0] xfv; wire [9:0] xfb;
-    ot_hbm_hc_q_static #(.MUT(DUT_MUT),.XW_BEATS(XWB),.SAFE(SAFE)) dut(
+    ot_hbm_hc_q_static #(.MUT(DUT_MUT),.XW_BEATS(XWB),.SAFE(SAFE),.RLEAF(RLEAF)) dut(
         .clk(clk),.rst_n(rst_n),.tgt(8'd108),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .configured(t_conf),
