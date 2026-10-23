@@ -54,6 +54,28 @@ STEWARDS = (("STEWARD-S81", ("dsdv_", "dsfd_", "ot_s81", "s81", "col_h")), ("STE
             ("STEWARD-HBM", ("ot_hbm", "hfd_", "ot_hgi", "ot_hfd", "ot_hidx", "hnx_", "hdie", "ot_hdie")))
 
 
+# TOPDOWN-PLAN (COORD 10-23): parents/clusters/frames/hubs of the stopped bottom-up lineage are re-derived from the die
+# plan, so they count as attended by the PLAN-<die> agent (never UNATTENDED, owner rewritten).
+PLAN_AGENT = {"s81": "PLAN-S81", "qwen_compute": "PLAN-QC", "qwen_kvsys": "PLAN-KV", "hbm": "PLAN-HBM"}
+PLAN_PREFIX = (("PLAN-S81", ("dsdv_", "dsfd_", "ot_s81", "s81", "col_h")), ("PLAN-QC", ("qfd_", "ot_coll_", "ot_qwen")),
+               ("PLAN-KV", ("qkd_",)), ("PLAN-HBM", ("ot_hbm", "hfd_", "ot_hgi", "ot_hfd", "ot_hidx", "hnx_", "hdie", "ot_hdie")))
+LINEAGE_RE = re.compile(r"(?:^|_)(?:hub|qhub|frame|ft|slice\w*|gunit|b8|b16|rgx|rgm|root|parent|cluster|hc|grp\w*|"
+                        r"bk_sel|seq_host|svc_rs|tt_ctlm\w*|collective_static_io\w*)(?:_|$)")
+
+
+def plan_agent(e: str, dies: str, category: str) -> str | None:
+    """PLAN-<die> when the element belongs to the stopped bottom-up lineage (parent / cluster / frame / hub)."""
+    if not (category.startswith("parent") or LINEAGE_RE.search(e)):
+        return None
+    for d in dies.split(","):
+        if d in PLAN_AGENT:
+            return PLAN_AGENT[d]
+    for agent, pre in PLAN_PREFIX:
+        if e.startswith(pre):
+            return agent
+    return None
+
+
 def steward(e: str, dies: str) -> str:
     for st, pre in STEWARDS:
         if e.startswith(pre):
@@ -258,6 +280,9 @@ def build(rows, cmap, lidx, verdicts, lane_text, tree_lines, lanes, psout):
         dies = ",".join(sorted({d.get("design") for d in (row.get("dies") or []) if isinstance(d, dict)})) or "-"
         if owner == "-" or "(viz)" in owner:
             owner = f"{steward(e, dies)} (steward; {owner})"
+        pa = plan_agent(e, dies, cat)
+        if pa:
+            owner, unatt = f"{pa} (TOPDOWN re-derive; was {owner})", False
         out.append(dict(element=e, dies=dies, category=cat or "-", failure=failure or "-", review=rs[0],
                         review_detail=rs[1], live="y" if live else "n", live_what=livewhat, owner=owner,
                         hours=round(hours, 1), unattended=unatt, coord_bad=bool(coordbad), kits=sorted(kits)))
