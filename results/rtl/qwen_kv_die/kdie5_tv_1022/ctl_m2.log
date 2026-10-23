@@ -1,0 +1,6 @@
+MISMATCH t=2000 child u_fanr.dest_pc
+MISMATCH t=2000 child u_fanr.expected_pc
+MISMATCH t=2001 child u_fanr.dest_pc
+MISMATCH t=2001 child u_fanr.expected_pc
+MISMATCH t=2002 child u_fanr.dest_pc
+KVS_TILE FAIL tile=ctl edges=4000 checks=691481 errors=4000 mut=2 (swapped .dest_pc(w_wrn__dest_pc[19:0]) <-> .expected_pc(w_wrn__expected_pc[19:0]))

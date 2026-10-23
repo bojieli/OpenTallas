@@ -1,0 +1,6 @@
+MISMATCH t=2000 out dcfg__age_vport__0_16
+MISMATCH t=2001 out dcfg__age_vport__0_16
+MISMATCH t=2002 out dcfg__age_vport__0_16
+MISMATCH t=2003 out dcfg__age_vport__0_16
+MISMATCH t=2004 out dcfg__age_vport__0_16
+KVS_TILE FAIL tile=ctl edges=4000 checks=691481 errors=2000 mut=1 (dropped w_dcfg__age_vport[15:0] in assign dcfg__age_vport__0_16)

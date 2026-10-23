@@ -51,8 +51,11 @@ def io_tcl(kit, W, H, pins):
                 out[name] = (f, L, p)
             prev_hi = lo + span
             assert prev_hi < edge - 2.0, (kit, f, port, prev_hi, edge)
+    nbits = collections.Counter(n.split('[')[0] for n in out)
     for name, (f, L, p) in sorted(out.items()):
-        pn = re.sub(r'\[0\]$', '', name) if name.split('[')[0] in SCALARS else name
+        # a width-1 port is a scalar BTerm: the recipe-3 wrapper (ot_pin_regs.tcl e3919f90e) declares it scalar
+        # (route 7dc9135b2 failed PPL-0061 'Pins {af__fault[0]} ... not found')
+        pn = re.sub(r'\[0\]$', '', name) if nbits[name.split('[')[0]] == 1 else name
         x, y = {'W': (0.042, p), 'E': (round(W - 0.042, 3), p), 'S': (p, 0.042), 'N': (p, round(H - 0.042, 3))}[f]
         lines.append(f'place_pin -pin_name {pn} -layer {L} -location {{{x} {y}}}')
     return '\n'.join(lines) + '\n', out
