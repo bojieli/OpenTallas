@@ -118,6 +118,8 @@ def dedupe_pins(pins):
     used = set()
     kept = []
     for p in pins:
+        if any(min(r[1:]) < 0 for r in (p[3], p[4])):      # band hangs off the outline corner
+            continue
         ka = (p[3][0], round(p[3][1], 3), round(p[3][2], 3))
         kb = (p[4][0], round(p[4][1], 3), round(p[4][2], 3))
         if ka in used or kb in used:
@@ -127,9 +129,13 @@ def dedupe_pins(pins):
     return kept, len(pins) - len(kept)
 
 
+def inside(pins, W, H):
+    return [p for p in pins if all(r[1] >= 0 and r[2] >= 0 and r[3] <= W and r[4] <= H for r in (p[3], p[4]))]
+
+
 def abstract_def(spec, macro_name=None):
     W, H = spec["outline"]
-    pins, _ = dedupe_pins(ft_pins(spec))
+    pins, _ = dedupe_pins(inside(ft_pins(spec), W, H))
     lines = ["VERSION 5.8 ;", "DIVIDERCHAR \"/\" ;", "BUSBITCHARS \"[]\" ;", "DESIGN ftprobe ;",
              f"UNITS DISTANCE MICRONS {DBU} ;", f"DIEAREA ( 0 0 ) ( {d(W)} {d(H)} ) ;"]
     # one placement row: GRT sizes its gcells from the row height (15 x 0.27 um); without rows it OOMs
@@ -192,11 +198,15 @@ read_def /work/ftprobe.def
 """ + grt_tail(a.layers, a.adjust, a.iters))
     (out / "run.sh").write_text(run_sh(out, a.mem))
     os.chmod(out / "run.sh", 0o755)
-    _, dropped = dedupe_pins(ft_pins(spec))
+    W, H = spec["outline"]
+    allp = ft_pins(spec)
+    ins = inside(allp, W, H)
+    _, dropped = dedupe_pins(ins)
+    dropped += len(allp) - len(ins)
     meta = dict(kind="abstract-probe", spec=str(a.spec), lef=str(lef), ft_bits=sum(q["bits"] for q in spec["paths"]),
                 layers=a.layers, overlapping_bits_dropped=dropped)
     if dropped:
-        print(f"WARNING {dropped} ft bits overlap another port band on the same face (plan track overflow); dropped")
+        print(f"WARNING {dropped} ft bits overlap another port band on the same face or hang off the outline (plan track overflow); dropped")
     (out / "probe.json").write_text(json.dumps(meta, indent=1))
     return finish(a, out)
 
