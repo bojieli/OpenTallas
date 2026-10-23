@@ -964,6 +964,12 @@
     }
    }
   },
+  "census": {
+   "type": [
+    "array",
+    "object"
+   ]
+  },
   "budgets": {
    "type": "object",
    "additionalProperties": false,

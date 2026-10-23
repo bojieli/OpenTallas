@@ -552,7 +552,7 @@ def check_types(P, R):
 
 
 # ------------------------------------------------------------------------------------------------------- run
-def run(raw, png=None):
+def run(raw, png=None, plan_dir=None):
     R = Report()
     errs = S.validate(raw)
     for e in errs:
@@ -572,6 +572,8 @@ def run(raw, png=None):
     summ["latency"] = check_latency(P, R)
     check_clock_reset(P, R)
     summ["seams"] = check_seams(P, R)
+    import census_cov
+    summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if png:
         import render
         render.render(P, geo, R, png)
@@ -590,7 +592,7 @@ def main(argv=None):
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
-    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None)
+    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)
