@@ -133,8 +133,10 @@ foreach pass {INPUT OUTPUT} {
     }
     if {!$placed} { incr ff_miss; continue }
     set cx [expr {$ff_x0 + (($cx - $ff_x0) / $ff_sw) * $ff_sw}]
-    $f setLocation $cx $cy
+    # orient BEFORE location: dbInst::setOrient keeps the bbox, so a later MX flip moved the flop one row down (onto
+    # its neighbour: KV-P5 10-23, two FIRM flops in one site -> DPL-0033)
     if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
+    $f setLocation $cx $cy
     $f setPlacementStatus FIRM
     puts $ff_out "[$f getName]\t$face\t[expr {$cx / double($ff_dbu)}]\t[expr {$cy / double($ff_dbu)}]\t$nm"
     incr ff_n
@@ -175,8 +177,8 @@ proc ff_put_near {f x y} {
         if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"]} continue
         dict set ff_gocc "$c,$r" 1
         set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
-        $f setLocation $cx $cy
         if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
+        $f setLocation $cx $cy
         $f setPlacementStatus FIRM
         return [list $cx $cy]
       }

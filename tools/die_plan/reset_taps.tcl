@@ -61,14 +61,22 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     }
   }
   # (1) synchroniser flops FIRM at their tap
+  # listed in ot_face_flops.txt like the face flops, so face_flops_release.tcl hands them back to DPL (PLACED) to
+  # legalise next to where GPL kept them (a FIRM DFFASRHQN pair is not row/padding-legal for check_placement)
   set rt_sync 0
+  set rt_out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
   foreach ins [$rt_blk getInsts] {
     if {![regexp {^u_rsync_t([0-9]+)[/.]} [$ins getName] -> i]} continue
     if {![string match "*DFF*" [[$ins getMaster] getName]]} continue
     foreach tp $rt_taps {
-      if {[lindex $tp 0] == $i} { ff_put_near $ins [lindex $tp 1] [lindex $tp 2]; incr rt_sync; break }
+      if {[lindex $tp 0] == $i} {
+        set got [ff_put_near $ins [lindex $tp 1] [lindex $tp 2]]
+        if {$got ne ""} { puts $rt_out "[$ins getName]\trsync$i\t[expr {[lindex $got 0] / double($rt_dbu)}]\t[expr {[lindex $got 1] / double($rt_dbu)}]\tclk_t$i"; incr rt_sync }
+        break
+      }
     }
   }
+  close $rt_out
   # (2) FIRM flops -> nearest tap's synchroniser nets
   set rt_moved 0; set rt_keep 0; set rt_nopol 0
   set rt_cnt {}
