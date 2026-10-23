@@ -223,7 +223,8 @@ def whole_tile(r, master, vm, kit, src, spec, charge, KSD):
     if b.get('module') != vm or b.get('file') != wf[0]:
         return dict(r, verdict='REFUSE', why=f'die binds {b.get("module")} from {b.get("file")}, the view is {vm} from {wf[0]}')
     try:
-        aliases = KSD.selected_view_source_map(kit=kit, master=master, source_commit=src)
+        alias_fn = getattr(KSD, 'selected_view_source_map', None)
+        aliases = alias_fn(kit=kit, master=master, source_commit=src) if alias_fn else {}
     except (ValueError, OSError) as error:
         return dict(r, verdict='REFUSE', why=f'selected source identity refused: {error}')
     if aliases:
