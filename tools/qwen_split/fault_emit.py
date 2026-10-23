@@ -712,7 +712,7 @@ def pre(v, m, G):
         from qwen_split.fault_face_bind import install
         install(v, m, rec)
     if os.environ.get('OT_QWEN_MU_FAULT_OR', '0') == '1':
-        _mu_fault_or(v, m, M, by, pos, occ, zn, ckx, rsx, follow, rec)
+        _mu_fault_or(v, m, M, by, _mu_fault_pos(v, m, G), occ, zn, ckx, rsx, follow, rec)
     M_ = dict(M)
     v.masters = lambda model, k=1, port_bits=None: dict(M_)
     rec['wide_end_keepclear'] = dict(bits=WIDE_BITS, um=KEEP_UM, boxes=kc)
@@ -787,6 +787,22 @@ def _cover_clock(v, m, o, cj0, pts, roots, by, q, occ, occ_g, occ_0, zn, follow,
 
 MU_FAULT_SRC = (('mu_dhobs', 'mu_fault'), ('mu_ctxrx', 'mu_fault'))
 MU_FAULT_DST = ('tt_ctlm', 'mu_fault')
+
+
+def _mu_fault_pos(v, m, G):
+    """strict pin geometry for the mu_fault ends: they have no bus yet, so port_widths() gives them width 0 and an
+    assigned (HP13 tt_ctlm) master has no pin rect for them (r51 GEN: 'no pin geometry for tt_ctlm/mu_fault').
+    Same view as source_bit_geometry: the live widths plus the three 1-bit mu_fault ports."""
+    from types import SimpleNamespace
+    by = {i.name: i for i in m['insts']}
+    masters = v.masters(m, 1)
+    widths = dict(v.port_widths(m, 1))
+    for inst, p in MU_FAULT_SRC + (MU_FAULT_DST,):
+        if inst in by:
+            widths[(by[inst].master, p)] = 1
+    view = SimpleNamespace(masters=lambda *a: masters, port_widths=lambda *a: widths,
+                           pin_rects=v.pin_rects, PIN_POS_EXTRA=getattr(v, 'PIN_POS_EXTRA', {}))
+    return G._pin_pos(view, m, strict=True)
 
 
 def _mu_fault_or(v, m, M, by, pos, occ, zn, ckx, rsx, follow, rec):
