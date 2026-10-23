@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.kv_p4.plan_rewires.v1",
+ "note": "bind_tiny test: the plan swaps the sink ports of the two partition outputs (snk.d0 <- p1, snk.d1 <- p0)",
+ "classes": {
+  "swap": {
+   "removed": [{"s": "p0.u_b", "sp": "o", "d": "snk", "dp": "d0", "bits": 8},
+               {"s": "p1.u_b", "sp": "o", "d": "snk", "dp": "d1", "bits": 8}],
+   "added": [{"s": "p0.u_b", "sp": "o", "d": "snk", "dp": "d1", "bits": 8},
+             {"s": "p1.u_b", "sp": "o", "d": "snk", "dp": "d0", "bits": 8}]
+  }
+ }
+}

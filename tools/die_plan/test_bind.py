@@ -204,3 +204,17 @@ def test_plan_cells_replace_constants(tmp_path):
     ta = (out / "rtl" / "bt_ta.sv").read_text()
     assert ".id(id_i_q[3:0])" in ta and "4'b" not in ta.split(");", 1)[1]
     assert v["verdict"] == "PASS" and v["counts"]["plan_driven"] == 8, (v["counts"], v["mismatches"][:3])
+
+
+def test_rewires_swap(tmp_path):
+    """asbuilt.rewires: a plan-declared connectivity change (snk.d0 <-> d1 sources swapped) is applied, recorded with
+    the as-built register stages of its template edge, and proven against the bound netlist"""
+    def edit(p):
+        p["asbuilt"]["rewires"] = {"file": str(EX / "rewires.json"), "classes": ["swap"]}
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    assert r["rewires"]["bits"] == {"swap (same-sink template)": 16, "swap dropped": 0} and r["n_errors"] == 0
+    sinks = json.loads((out / "bind_sinks.json").read_text())
+    assert sinks["snk.d0[3]"][1] == "p1.u_b.o[3]" and sinks["snk.d1[3]"][1] == "p0.u_b.o[3]"
+    assert verify(out)["verdict"] == "PASS"

@@ -424,12 +424,87 @@ class Binder:
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
+        self.rewire, self.rewire_stats = {}, {}
+        if self.ab.get("rewires"):
+            self.apply_rewires(base or str(E.REPO))
         self.pc = None
         if self.ab.get("plan_cells"):
             import bind_plancells
             f = self.ab["plan_cells"]
             f = f if Path(f).is_absolute() else str(Path(base or str(E.REPO)) / f)
             self.pc = bind_plancells.PlanCells(self, f, base or str(E.REPO))
+
+    def apply_rewires(self, base):
+        """asbuilt.rewires {"file": plan rewires (schema *.plan_rewires.v1), "classes": [names]}: connectivity the plan
+        declares different from the as-built die (e.g. a static-schedule relabel, a reversed chain).  Each class lists
+        as-built block edges removed and plan edges added ({s, sp, d, dp, bits}: block = flattened instance path).  An
+        added edge s.sp -> d.dp takes its per-bit map from a TEMPLATE: the removed edge with the same s.sp and d port
+        (its as-built bit map and register stages, e.g. host.chf0 -> hsl_0.fi for host.chf0 -> hsl_31.fi), else the
+        removed edge into the same d.dp from the same source port (bit for bit).  The sink bits of every removed edge
+        must be re-driven by an added edge; a bit that is not stays as built and is an error (never tied)."""
+        rw = self.ab["rewires"]
+        f = rw["file"] if Path(rw["file"]).is_absolute() else str(Path(base) / rw["file"])
+        doc = json.loads(Path(f).read_text())
+        G = self.G
+        byp = {c.path: ci for ci, c in enumerate(self.F.cells)}
+        st = defaultdict(int)
+
+        def asb_map(e):
+            """as-built bits of edge e: {sink bit i: (source bit, stages)}"""
+            sc, dc = byp.get(e["s"]), byp.get(e["d"])
+            if sc is None or dc is None or e["dp"] not in self.F.cells[dc].ports:
+                return None
+            m = {}
+            for i, b in enumerate(self.F.cells[dc].ports[e["dp"]]):
+                src = G.source(b)
+                if src[0] == "pin" and src[1] == sc and src[2] == e["sp"]:
+                    m[i] = (src[3], src[4])
+            return m
+        for cl in rw.get("classes", []):
+            c = doc["classes"].get(cl)
+            if c is None:
+                self.errors.append(f"REWIRE_CLASS {cl}: not in {rw['file']}")
+                continue
+            rem = c["removed"]
+            by_sport = defaultdict(list)
+            by_dport = defaultdict(list)
+            for e in rem:
+                by_sport[(e["s"], e["sp"], e["dp"])].append(e)
+                by_dport[(e["d"], e["dp"])].append(e)
+            covered = set()
+            for e in c["added"]:
+                sc, dc = byp.get(e["s"]), byp.get(e["d"])
+                if sc is None or dc is None:
+                    self.errors.append(f"REWIRE_BLOCK {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}: no such instance")
+                    continue
+                tmpl = [t for t in by_sport.get((e["s"], e["sp"], e["dp"]), []) if t["d"] != e["d"]]
+                same = False
+                if not tmpl:
+                    tmpl = [t for t in by_dport.get((e["d"], e["dp"]), []) if t["sp"] == e["sp"]]
+                    same = True
+                m = asb_map(tmpl[0]) if tmpl else None
+                if not m:
+                    self.errors.append(f"REWIRE_NO_TEMPLATE {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}")
+                    continue
+                if len(m) != e["bits"]:
+                    self.errors.append(f"REWIRE_WIDTH {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}: template "
+                                       f"{tmpl[0]['s']}->{tmpl[0]['d']} maps {len(m)} b, edge says {e['bits']}")
+                for i, (sb, stg) in m.items():
+                    self.rewire[(dc, e["dp"], i)] = ("pin", sc, e["sp"], sb, stg)
+                    covered.add((dc, e["dp"], i))
+                st[cl + (" (same-sink template)" if same else "")] += len(m)
+            dropped = 0
+            for e in rem:
+                m = asb_map(e)
+                dc = byp.get(e["d"])
+                for i in (m or {}):
+                    if (dc, e["dp"], i) not in covered:
+                        dropped += 1
+                        if dropped <= 20:
+                            self.errors.append(f"REWIRE_DROPPED {cl}: {e['d']}.{e['dp']}[{i}] loses {e['s']}.{e['sp']} "
+                                               f"and no added edge drives it (kept as built)")
+            st[cl + " dropped"] = dropped
+        self.rewire_stats = dict(st)
 
     def substitute_inst(self, base):
         """asbuilt.substitute_inst [{"inst": regex on the flattened instance path, "module": variant, "reason": ...}]:
@@ -551,7 +626,7 @@ class Binder:
                 if d.get(pn) != "input":
                     continue
                 for i, b in enumerate(bits):
-                    s = G.source(b)
+                    s = self.rewire.get((ci, pn, i)) or G.source(b)
                     self.sinks[(ci, pn, i)] = self._classify(p, ci, pn, i, s, cnt)
         self.counts = dict(cnt)
         if self.pc:
@@ -1515,6 +1590,8 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    if B.rewire_stats:
+        rep["rewires"] = dict(file=B.ab["rewires"]["file"], bits=B.rewire_stats)
     if B.pc:
         rep["plan_cells"] = dict(file=B.ab["plan_cells"], **B.pc.stats)
     rep["tied_by_port"] = dict(sorted(B.tied_by_port.items(), key=lambda kv: -kv[1]))
