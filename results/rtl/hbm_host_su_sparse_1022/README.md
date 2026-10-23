@@ -60,3 +60,12 @@ SU/SFU/IDX shapes, XSER=0/1, and reset while stream events are in flight.
 The dense row-zero/restart branch is unchanged; clearing need/operand
 ownership at a new generation occurs only inside the opt-in sparse branch.
 See `legacy_default_identity.json` and the three committed logs.
+
+`coherent_408/` retains the complete immutable prepared source readset,
+actual TARGET_MASK and SU_DICT_CAP testbench, input image/commands, run script,
+identity, hashes, and seven raw logs from coherent W3+fix export 40861499b.
+Gold1 unit 267925-1792733581 exited zero: all 462 words / 125 commands and
+all six causal cases passed. The archive can replay without scratch or
+unpublished source ancestry. Its source dependencies remain isolated from
+main's canonical files. All 28 tracked Verilog instantiations in that source
+revision use named parameters; see `parameter_users.json`.
