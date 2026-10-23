@@ -58,8 +58,7 @@
     "rst_n",
     "peer_slot",
     "tx_slot",
-    "tx_valid",
-    "tx_data"
+    "tx_valid"
    ],
    "outputs": [
     "cdc_fault"
@@ -73,7 +72,9 @@
    "ports": [
     "tx_wck"
    ],
-   "inputs": [],
+   "inputs": [
+    "tx_data"
+   ],
    "outputs": []
   },
   "rxr": {

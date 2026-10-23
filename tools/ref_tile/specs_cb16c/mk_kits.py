@@ -104,6 +104,10 @@ def body_spec(prof):
                     benches=[lint(s['top'], s['sources'], '-DOT_COLL_BANK_LOCAL -DOT_COLL_REGIONAL'),
                              bench(prof_args, 0, 'pass', f'{WIT}/{prof}_m0.log')]
                     + [bench(prof_args, m, 'fail', f'{WIT}/{prof}_m{m}.log') for m in (1, 2, 3, 4)])
+    # tx_data is now captured by the TX CDC write rank wd (tx_wck): the td_q cal_ck rank is the face slice
+    d = s['clock_entry_domains']
+    d['core']['inputs'] = [x for x in d['core']['inputs'] if x != 'tx_data']
+    d['txw']['inputs'] = ['tx_data']
     s['pin_hook_after_flops'] = [f'physical/ref_tile/{name}/seq_landing.tcl']
     s['pre_dpl_extra'] = [f'physical/ref_tile/{name}/seq_release.tcl']
     return s, src
