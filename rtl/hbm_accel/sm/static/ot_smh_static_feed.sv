@@ -6,7 +6,11 @@
 // command[28:26] = {format_launch,format2}.
 // command[25:0] = {valid,first,last,row12,group_last,slot3,xaddr7}.
 // packet[1098:0] = {valid,tag10,scale64,weights1024}.
-module ot_smh_static_feed #(parameter integer MUT=0)(
+// MVPKT (default 1 = unchanged): fault a MATVEC issue (command[25]) without a fresh packet in the same edge.  That is the
+//   rule of the SM's NORMAL (streaming) front only.  An attention SM (ot_hbm_accel_smh_attn) consumes BUFFERED converter
+//   slots: arithmetic_v = command[25] must equal the xc consume bit with no packet that edge (it checks that itself, and
+//   its normal / dual fronts keep this rule).  A copy that cannot see the SM mode (the svg S1 consumer copy) sets MVPKT 0.
+module ot_smh_static_feed #(parameter integer MUT=0,parameter integer MVPKT=1)(
  input wire clk,rst_n,input wire [82:0] command,input wire [1098:0] packet,
  output reg [42:0] expected_request,output reg fault,
  output wire [1081:0] lt0,lt1,output wire [569:0] lb0,lb1,
@@ -35,7 +39,7 @@ module ot_smh_static_feed #(parameter integer MUT=0)(
    for(k=0;k<4;k=k+1)fm[3*k+:3]<=command[28:26];
    if(packet[1098]!=command[29] ||
       (command[29] && packet[1097:1088]!=command[39:30]) ||
-      (command[25] && !command[29]))fault<=1;
+      (MVPKT!=0 && command[25] && !command[29]))fault<=1;
   end
  assign lt0={hc[0],hw0};assign lb0={hc[1],hw1};
  assign lt1={hc[2],hw2};assign lb1={hc[3],hw3};

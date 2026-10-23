@@ -168,7 +168,11 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
  // HBM-QINT8: the packet the SM front sees (the raw packet when no INT8 mark is in flight)
  wire[1098:0]s1_packet={i8_conv||(raw_v&&!i8_c),i8_conv?i8_t2:raw_tag,packet_observe[1087:0]};
- ot_smh_static_feed consumer(
+ // HBM-SVGATT 2026-10-22 (functional fix, PV full replay 367452): MVPKT 0.  The copy cannot see the SM mode (xc bits
+ //   [191:83]); an attention PV issues command[25] (= SM arithmetic_v, must equal xc consume[152]) on BUFFERED KV slots
+ //   with no packet that edge, which the streaming rule faulted (sticky svg fault at the first PV consume edge).  The SM
+ //   front keeps the rule for its normal and dual modes and checks consume==arithmetic_v / b_valid in attention.
+ ot_smh_static_feed #(.MVPKT(0)) consumer(
   .clk(stream_clk),.rst_n(stream_rst_n),.command(sm_command),.packet(s1_packet),
   .expected_request(expected_request),.fault(feed_fault),.lt0(lt0),.lt1(lt1),.lb0(lb0),.lb1(lb1),.fm(fm));
  assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault||inj_f||i8_f;
