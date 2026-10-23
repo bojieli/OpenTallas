@@ -144,6 +144,13 @@ def main():
             s['top'] = f'{m}_r2c'
             assert MACRO_BB in s['sources'], s['sources']
             s['sources'] = [R2C[k], MACRO_BB]
+            cert = json.loads((WT / R2C[k]).with_suffix('.json').read_text())
+            for slot in s['macros']:
+                hits = [m for m in cert['macros'] if __import__('fnmatch').fnmatchcase(m['original'], slot['inst'])]
+                if len(hits) != 1:
+                    raise ValueError(f"macro identity mapping is not unique: {slot['inst']}: {hits}")
+                slot['inst'] = hits[0]['instance']
+
             # hclk boundary: every o_ctl bit is now a core-clock exit flop (own status re-registered on ck)
             for kind_, ext in (('sdc', '_hck.sdc'), ('tcl', '_hck_boundary.tcl')):
                 src = (WT / f'physical/qkd_kvs_kits/{r1}{ext}').read_text().replace(r1, kit)

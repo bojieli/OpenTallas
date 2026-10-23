@@ -28,16 +28,16 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*g_pc?0?*u_rows}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {u58332_c0.u_cell}]
 $i setOrient R0; $i setLocation [expr {round(85.536 * $dbu)}] [expr {round(82.08 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 85.536 82.08 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*g_pc?1?*u_rows}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {u59773_c0.u_cell}]
 $i setOrient R0; $i setLocation [expr {round(85.536 * $dbu)}] [expr {round(367.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 85.536 367.2 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*g_pc?2?*u_rows}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {u61214_c0.u_cell}]
 $i setOrient R0; $i setLocation [expr {round(85.536 * $dbu)}] [expr {round(693.36 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 85.536 693.36 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {*g_pc?3?*u_rows}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {u62655_c0.u_cell}]
 $i setOrient R0; $i setLocation [expr {round(85.536 * $dbu)}] [expr {round(980.64 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 85.536 980.64 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
