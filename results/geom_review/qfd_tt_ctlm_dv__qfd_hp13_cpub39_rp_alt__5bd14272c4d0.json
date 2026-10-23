@@ -1,0 +1,11 @@
+{
+ "element": "qfd_tt_ctlm_dv",
+ "kit": "physical/ref_tile/qfd_hp13_cpub39_rp_alt@6d90c813d",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "5bd14272c4d0d4562b9928b8f3c584e6ca4b9ee2b27ee37d04b4748f2941d3fa",
+ "reasons": "plan-only PASS of 02:05 made provisional per COORD rule 02:32 (geometry judgement unchanged)",
+ "fixes": "full PASS on the placed render: fill of free >=20%, buf/inv <=40%, pin->reg p90 <=30; re-REQ with gate review.png/review_stats.json",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:34:34-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

@@ -1,0 +1,11 @@
+{
+ "element": "dsdv_idx_rg3_bxm",
+ "kit": "physical/ref_tile/s81dv_rg3b_xm6@6d0c266ce",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "b6ba8a0f090440f561e9bcd1cb657fb545d284f9da9598b4680eb01e336f8d17",
+ "reasons": "PLAN (provisional). 02:11 FAIL cause fixed structurally: LWL=2 (RTL param) lands lw_* in N-face pin regs and then in one landing reg per SRAM anchored beside its write face (green), so no SRAM pin net reaches a tile port (bank_distance n/a); every landing hop <= 300 um (reach 405); +2 write-visibility edges booked by STEWARD-S81e (MU.S81.CAL). Abutted 4-high SRAM stacks kept; 480.8x352.1, centre read channel 82 um: 1,890 b pessimistic / 3,460 tracks = 0.55 (0.25 with the column OR-chain), outer channels narrowed 46.7 -> 24.6 um for 150 b (0.15) - demand numbers posted (macro-bound rule met)",
+ "fixes": "full PASS on the placed render: landing regs at their anchors (p90 of pin reg -> landing reg <= 300 um), pin->reg p90 <=30, buf/inv <=40%, fill reported",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:14:18-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

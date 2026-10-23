@@ -1,0 +1,11 @@
+{
+ "element": "qkd_kvs_grp_h",
+ "kit": "physical/ref_tile/qkd_kvs_grp_h_r4b@f7ab3cbb6",
+ "verdict": "FAIL",
+ "hash": "e3500acd0dc437634423bfabd9f7dffc4ec98b305d63e97cc1ce5ff13e7eae03",
+ "reasons": "est fill 16.4% < 20%; b grows BOTH H (pin relief 5.49 -> 4.97/um, both under the limit) and W 151.2 -> 164.16 (E band 32.6 -> 45.4 um) with no demand number for the wider E band",
+ "fixes": "keep W 151.2 (E band from the K/V word logic at ~50%) and re-estimate; or drop the b fallback of grp_h and run a second seed / pin_min_tracks variant of r4a",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:24:29-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

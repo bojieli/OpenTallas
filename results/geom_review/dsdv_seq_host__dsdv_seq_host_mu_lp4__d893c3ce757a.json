@@ -1,0 +1,11 @@
+{
+ "element": "dsdv_seq_host",
+ "kit": "physical/ref_tile/dsdv_seq_host_mu_lp4@da7a5d14a",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "d893c3ce757aeb0754aed808f8cb039315f7440e6b0740b42717eb857e7fc0f6",
+ "reasons": "PLACED (light gate 3_place). Fixes the COORD BAD r3d (518x1426, 36% packing): 6 CLOSED children stacked N-S in landed-chain order on the 43.2 lattice, channels 21.6-43.2 (20-um minimum), packing 63%, wires-only parent (port -> one child pin; children flop-first/last) + E-channel reset stations; pins <=1.9/um avg, 10-um peak <=4.1; ties 0. tvr flags explained (empty channel = wires-only parent; u_l0/u_l2 'face away' = nearest parent cells are the E reset stations). Open items: aspect 3.26 (>3) from the single stack; port->child-pin wire p90 240 um inside the parent (unregistered there by design); 26 pins with neither a register nor a child pin; 533 pins on M6 (above the M5 default)",
+ "fixes": "before route: (1) list the 26 pins (must be clock/reset/strap only); (2) show the worst port->child wire <=405 um and that die-side + parent wire fits the child boundary budget at the trial STA; (3) cite the M6 pin grant for the 533 M6 pins; (4) trial GRT overflow 0. If the die slot allows ~900 um width, a 2-column snake of the chain would cut aspect to ~1.7 and halve the port wires - consider for the next revision only",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:07:53-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
