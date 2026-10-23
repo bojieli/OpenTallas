@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T21:48:22.105552-07:00",
+  "gate_commit": "2026-10-22T09:54:33-0700",
+  "geometry_sha256": "74fe82027213481927897f0b789713a7046ed4cc236b6df53db5b3ae25596e9c",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "74fe82027213481927897f0b789713a7046ed4cc236b6df53db5b3ae25596e9c",
+    "components": {
+      "outline": "87d50ba1755fc59a9bad840049c1eb879ef04c81baef336ef6af7bad23ca5c22",
+      "macros": "f42f3297b8c2afc40b1455f6cb61e2889af12574c9065475dcac383280011078",
+      "pins": "e7ab7d41da274409885bec016e51fc1b4e3f6318c4e8589c192d017afdde1587",
+      "clock_entry": "ba9885eba8bff077b8f432fe32fe32e1320ac64fef2c5753d2fd46d04027cae9"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Viewed18 actual hard blocks in regular mirrored columns; frozen existing geometry and child pin-obstruction warnings retained, trial GRT0.",
+    "std_cell_band": "Viewed floorplan+density: connected vertical bands with horizontal cross channels; cell density modest, no isolated island.",
+    "pin_spread": "Actual1076 physical signal/clock pins accessible, no outside/missing geometry; W/E face density below6/um.",
+    "clock_entry": "35 declared hybrid regional entries; reported root ck boundary one sink0/0ps, other actual roots and child clock references retained. Raw root all109.3/103.6ps is disclosed diagnostic, no new all-register80ps rule. All routed crossings require actual STA.",
+    "shape": "820.8 x907.2um,44% total fill; regular symmetric18-block geometry."
+  },
+  "scope": "Geometry approval for normal route submission after exact immutable source binding and native/bench checks pass. QK must recover missing two shipped Tcl dependencies; review does not waive source drift or authorize missing provenance. No CLOSED or parent/die timing credit.",
+  "diagnostics": "Original main NLrc14a failed cross-clock setup. This alternate WARN has native32, GRT0. Child partial face-OBS warnings, estimated635ps stage and raw clock envelope remain disclosed; routed STA decides.",
+  "gate_result_sha256": "d2ae62ac492a41c41a9cd182e9ca6807c0903207d499a3505d5faa6edd605fb9",
+  "archive_sha256": "423314d3dc81252d49b1f61eed57f948ed017349678de80ad7a4920cf871c59f",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}

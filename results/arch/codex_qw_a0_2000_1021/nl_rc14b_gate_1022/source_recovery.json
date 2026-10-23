@@ -1,0 +1,13 @@
+{
+  "gate_archive_sha256": "423314d3dc81252d49b1f61eed57f948ed017349678de80ad7a4920cf871c59f",
+  "files_checked": 6513,
+  "all_exact_sha256": true,
+  "source_path_map": {
+    "tools/fp_margin_lint.tcl": "results/arch/codex_qw_a0_2000_1021/nl_rc14b_gate_1022/fp_margin_lint.tcl",
+    "tools/orfs_hold_mm.tcl": "results/arch/codex_qw_a0_2000_1021/nl_rc14b_gate_1022/orfs_hold_mm.tcl",
+    "physical/ref_tile/qfd_tile_nl_romleaf_rc14b/spec.json": "results/arch/codex_qw_a0_2000_1021/nl_rc14b_gate_1022/spec_consumed.json",
+    "physical/ref_tile/qfd_tile_nl_romleaf_rc14b/job.json": "results/arch/codex_qw_a0_2000_1021/nl_rc14b_gate_1022/job_consumed.json"
+  },
+  "metadata_only_drift": "spec/job output paths rc12->rc14 and same bench witness log destinations; RTL, constraints, geometry, physical helpers unchanged. Original consumed spec/job archived byte-identical.",
+  "source_tools_scope": "Archived historical Tcl dependencies; not canonical helper replacement. Submit requires current ROOT provenance acceptance; approval does not waive exact input identity."
+}
