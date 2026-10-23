@@ -302,7 +302,12 @@ def coverage(P, plan_dir, R):
             if not valid or current != finish:
                 R.err("census", f"{prefix}: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route")
                 continue
-            proven[(g_of.get(start, start), g_of.get(finish, finish))].append((row["bits"], lids))
+            pair = (g_of.get(start, start), g_of.get(finish, finish))
+            used = {lid for _, path in proven[pair] for lid in path}
+            if used.intersection(lids):
+                R.err("census", f"{prefix}: witnesses for {pair} reuse planned lane capacity")
+                continue
+            proven[pair].append((row["bits"], lids))
 
         def bottleneck(a, b, graph=None):
             """widest path a -> b through forwarders only (modified Dijkstra on min-capacity)."""
@@ -334,6 +339,7 @@ def coverage(P, plan_dir, R):
                 graph = {u: dict(vs) for u, vs in adj.items()}
                 # Remove witness lanes before measuring the remaining data capacity, so a shared trunk or
                 # the same control route cannot be counted twice.
+                required = defaultdict(int)
                 for w, lids in proven[pair]:
                     for lid in lids:
                         ln = P.lanes[lid]
@@ -341,7 +347,16 @@ def coverage(P, plan_dir, R):
                                       P.ports[ln["ports"][0]]["src"]["part"])
                         b_ = g_of.get(P.ports[ln["ports"][-1]]["dst"]["part"],
                                       P.ports[ln["ports"][-1]]["dst"]["part"])
+                        required[(a_, b_)] += w
+                if any(w > graph.get(a_, {}).get(b_, 0) for (a_, b_), w in required.items()):
+                    R.err("census", f"census[{k}] forward_routes for {pair}: witness capacity exceeds planned lanes")
+                    explicit, graph = 0, None
+                else:
+                    for (a_, b_), w in required.items():
                         graph[a_][b_] -= w
+                    # A witnessed route may also include a direct lane for this pair. Its capacity must not
+                    # remain in the generic direct credit and then be added a second time as explicit credit.
+                    have = graph.get(pair[0], {}).get(pair[1], 0)
             if have < b - explicit and fwd_rx:
                 f = bottleneck(*pair, graph)
                 if f > have:
