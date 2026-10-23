@@ -1,0 +1,172 @@
+{
+ "name": "s81sl_lepmuh_w15m-s81sl_lepmuh_w15m-COMMIT",
+ "block": "ot_s81sl_lep_mu_h",
+ "ref_tile": true,
+ "owner": "Claude:STW-S81c-COLLA3-LEP",
+ "purpose": "MU-S81-2/HOSTEP: host-plane multi-user end-slice link endpoint (s_7N of non-duplicated dies; MU_EN 1, AB_EN 0, HOST_EN 1) to closure (TT setup / FF hold / DRC 0 + native audit).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81-lepmuh-w15-1022",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/common_flow/clock_split_km.tcl",
+   "physical/common_flow/relay_chain_place.tcl",
+   "physical/common_flow/relay_chain_release.tcl",
+   "physical/ref_tile/s81sl_lepmuh_w15m/relay_place.txt",
+   "results/rtl/s81_lep_c12_1021",
+   "results/rtl/s81_lepmuh_w14_1022",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/lib",
+   "rtl/link",
+   "tools/s81_dv",
+   "tools/s81_dv/cred12_1021",
+   "tools/s81_dv/lepmuh_w14_1022",
+   "tools/s81_dv/lepmuh_w15_1022"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_lep_mu_h #(.RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1), .CRED(12), .DR(12)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_S81SL_LEP_NFACE -DOT_S81SL_LEP_RSTHD -DOT_S81SL_LEP_RPRLY -DOT_S81SL_LEP_META4 -DOT_S81SL_LEP_WRLY -DOT_S81SL_LEP_VQREP -DOT_S81SL_LEP_SELST -DOT_S81SL_LEP_PUSHREP -DOT_S81SL_LEP_FHLA --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lepmuh_exact_s1",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_WRLY +define+OT_S81SL_LEP_VQREP +define+OT_S81SL_LEP_SELST +define+OT_S81SL_LEP_PUSHREP +define+OT_S81SL_LEP_FHLA' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s1 lepmuh none 1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^BENCH_PASS lepmuh MUT=none seed 1$",
+    "min_count_regex": "^PASS lep_muh: host-plane MU endpoint == single-user lep: (\\d+) H->die ring beats"
+   },
+   {
+    "name": "lepmuh_exact_s5",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_WRLY +define+OT_S81SL_LEP_VQREP +define+OT_S81SL_LEP_SELST +define+OT_S81SL_LEP_PUSHREP +define+OT_S81SL_LEP_FHLA' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s5 lepmuh none 5",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^BENCH_PASS lepmuh MUT=none seed 5$"
+   },
+   {
+    "name": "w14_lockstep_eq_s1",
+    "cmd": "J=2 bash tools/s81_dv/lepmuh_w14_1022/run_eq.sh {RUN}/w14_eq_s1 1 none 40000",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "pass_regex": "^BENCH_PASS w14eq MUT=none seed 1$",
+    "min_count_regex": "^LEPMUH_W14_EQ cycles (\\d+) bad 0"
+   },
+   {
+    "name": "lepmuh_mut_tagdrop",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_WRLY +define+OT_S81SL_LEP_VQREP +define+OT_S81SL_LEP_SELST +define+OT_S81SL_LEP_PUSHREP +define+OT_S81SL_LEP_FHLA' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_tagdrop lepmuh TAGDROP 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^FAIL lep_muh: ok 1 rx 0 tx [1-9]",
+    "fail_witness": "results/rtl/s81_lepmuh_w14_1022/lepmuh_mut_tagdrop.log"
+   },
+   {
+    "name": "lepmuh_mut_landcut",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_WRLY +define+OT_S81SL_LEP_VQREP +define+OT_S81SL_LEP_SELST +define+OT_S81SL_LEP_PUSHREP +define+OT_S81SL_LEP_FHLA' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_landcut lepmuh LANDCUT 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^FAIL lep_muh: ok 0 rx [1-9]",
+    "fail_witness": "results/rtl/s81_lepmuh_w14_1022/lepmuh_mut_landcut.log"
+   },
+   {
+    "name": "w14_mut_repkev",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_WRLY +define+OT_S81SL_LEP_VQREP +define+OT_S81SL_LEP_SELST +define+OT_S81SL_LEP_PUSHREP +define+OT_S81SL_LEP_FHLA' bash tools/s81_dv/cred12_1021/run.sh {RUN}/w14_mut_repkev lepmuh REPKEV 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "PUSHREP replica differs",
+    "fail_witness": "results/rtl/s81_lepmuh_w14_1022/w14_mut_repkev.log"
+   },
+   {
+    "name": "w14_eq_mut_rlybyp",
+    "cmd": "J=2 bash tools/s81_dv/lepmuh_w14_1022/run_eq.sh {RUN}/w14_eq_rlybyp 1 RLYBYP 20000",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "fail_regex": "^MISMATCH cyc \\d+ ml_wv/ml_wd \\(LL 1\\)",
+    "fail_witness": "results/rtl/s81_lepmuh_w14_1022/w14_eq_mut_rlybyp.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.045 OT_MM_FF_SDC='physical/ref_tile/s81sl_lepmuh_w15m/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_lepmuh_w15m/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_lepmuh_w15m --out {RUN}/record/views/ot_s81sl_lep_mu_h --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_lepmuh_w15m/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_lepmuh_w15m/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_lepmuh_w15m/s81sl_lepmuh_w15m-s81sl_lepmuh_w15m-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.045,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "w15 MAIN (STW-S81c-COLLA3-LEP2 10-22) = w14m RTL/floorplan/pins/clock unchanged + TX macro-face capture stations. w14m --cts gate (REJECTED 17:45): (a) macro->reg -164.7 TX1 bank0 rd_out[79] (302.4,52.6) -> g_rp.odr[79] placed at (379.8,288.2), q mux at (403,513) (313 um + 460-um detour; odr of each bank spread 150-490 um); (b) reg->reg -124.5 PUSHREP replica g_slice[4] (494.5,112.5) -> u_push -> push_group shared ABC inverter at the TX0 face (27,152) -> TX1 g_address[4].wp_r[8] (284.6,145.9). Fix (placement only, no RTL/latency change): relay_chain_place.tcl re: keys (flat flops) FIRM through GPL, released before DPL: per TX lane/bank a DATA box (odr + oldread slice forwarded/select_r/valid_r/addr_r) at the macro W-face rd_out pins (22 x 22 um, <= ~20 um from the pins) and an ADDR box (g_address wp_r/rp_r/count_r/credit_r + address_r) above it; push group c replica + u_push + ring_r stationed in the TX0|TX1 channel (x 247) at its bank row (y <= 275: status->replica leg <= ~560 um). WRLY/SELST stations as w14m (F 0.5/0.5)."
+}

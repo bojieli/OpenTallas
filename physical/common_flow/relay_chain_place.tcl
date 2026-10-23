@@ -11,11 +11,24 @@ set ot_rc_blk [ord::get_db_block]
 set ot_rc_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ot_rc_plan {}
 set fh [open $::env(OT_RELAY_PLACE) r]
+# STW-S81c-COLLA3-LEP2 10-22 (lep_mu_h w15): a plan key "re:<Tcl regexp>" matches whole (backslash-stripped) instance
+# names, so FLAT flops (no kept hierarchy) can be stationed too (macro-face capture boxes); "x y" = compact cluster as for
+# hierarchy keys, "x0 y0 x1 y1" = the matched cells spread over that box (um).  The first matching re: key (plan order)
+# wins.  Plans without re: keys behave exactly as before.
+set ot_rc_re {}
 foreach ln [split [read $fh] "\n"] {
   if {$ln eq "" || [string index $ln 0] eq "#"} continue
+  if {[string match re:* $ln]} {
+    # split on white space, not as a Tcl list: the pattern's backslashes must reach regexp unchanged
+    set f [regexp -all -inline {\S+} $ln]
+    lappend ot_rc_re [string range [lindex $f 0] 3 end]
+    dict set ot_rc_plan re:[string range [lindex $f 0] 3 end] [lrange $f 1 4]
+    continue
+  }
   dict set ot_rc_plan [lindex $ln 0] [list [lindex $ln 1] [lindex $ln 2]]
 }
 close $fh
+set ot_rc_re_all [join $ot_rc_re |]
 set ot_rc_rows [$ot_rc_blk getRows]
 set ot_rc_r0 [lindex $ot_rc_rows 0]
 set ot_rc_site [$ot_rc_r0 getSite]
@@ -41,7 +54,12 @@ set ot_rc_skip 0
 foreach i [$ot_rc_blk getInsts] {
   if {[[$i getMaster] isBlock]} continue
   set n [string map {\\ {}} [$i getName]]
-  if {[info exists ::env(OT_RELAY_HIER)] && $::env(OT_RELAY_HIER) eq "1"} {
+  set pfx ""
+  if {[llength $ot_rc_re] && [regexp -- $ot_rc_re_all $n]} {
+    foreach r $ot_rc_re { if {[regexp -- $r $n]} { set pfx re:$r; break } }
+  }
+  if {$pfx ne ""} {
+  } elseif {[info exists ::env(OT_RELAY_HIER)] && $::env(OT_RELAY_HIER) eq "1"} {
     # STW-S81c-COLLA3-LEP 10-22 (lep_mu_h w14): plan keys are full kept-instance paths (e.g.
     # u_ot_pr_core.u.g_rxm.g_ml_nface_out[3].u_relay); a cell belongs to the key before its first '/'
     set sl [string first / $n]
@@ -64,7 +82,38 @@ set ot_rc_stack {}
 set ot_rc_out [open $::env(RESULTS_DIR)/ot_relay_chain_place.txt w]
 set ot_rc_n 0
 foreach pfx [lsort [dict keys $ot_rc_cells]] {
-  lassign [dict get $ot_rc_plan $pfx] xu yu
+  lassign [dict get $ot_rc_plan $pfx] xu yu xu1 yu1
+  if {[string match re:* $pfx] && $yu1 ne ""} {
+    # box: rows of the box, cells (name order) row-major at ~50% x fill when the box allows it
+    set cells {}
+    foreach e [lsort -dictionary -index 0 [lmap c [dict get $ot_rc_cells $pfx] {list [$c getName] $c}]] { lappend cells [lindex $e 1] }
+    set nc [llength $cells]
+    set bx0 [expr {$ot_rc_x0 + ((int($xu * $ot_rc_dbu) - $ot_rc_x0) / $ot_rc_sw) * $ot_rc_sw}]
+    set by0 [expr {$ot_rc_y0 + ((int($yu * $ot_rc_dbu) - $ot_rc_y0 + $ot_rc_rh - 1) / $ot_rc_rh) * $ot_rc_rh}]
+    set bw [expr {int($xu1 * $ot_rc_dbu) - $bx0}]; set bh [expr {int($yu1 * $ot_rc_dbu) - $by0}]
+    set wsum 0; foreach c $cells { incr wsum [[$c getMaster] getWidth] }
+    set wavg [expr {max(1, $wsum / max(1, $nc))}]
+    set rows [expr {max(1, $bh / $ot_rc_rh)}]
+    set per [expr {max(1, $bw / (2 * $wavg))}]
+    if {$per * $rows < $nc} { set per [expr {int(ceil(double($nc) / $rows))}] }
+    set need [expr {int(ceil(double($nc) / $per))}]
+    set ystep [expr {max(1, $rows / $need) * $ot_rc_rh}]
+    set xstep [expr {max($ot_rc_sw, (($bw / $per) / $ot_rc_sw) * $ot_rc_sw)}]
+    set k 0
+    foreach c $cells {
+      set cx [expr {$bx0 + ($k % $per) * $xstep}]
+      set cy [expr {$by0 + ($k / $per) * $ystep}]
+      set cx [expr {min(max($cx, $ot_rc_x0), $ot_rc_x1 - [[$c getMaster] getWidth])}]
+      set cy [expr {min(max($cy, $ot_rc_y0), $ot_rc_y1 - $ot_rc_rh)}]
+      $c setLocation $cx $cy
+      if {[dict exists $ot_rc_orient $cy]} { $c setOrient [dict get $ot_rc_orient $cy] }
+      $c setPlacementStatus FIRM
+      puts $ot_rc_out [$c getName]
+      incr k; incr ot_rc_n
+    }
+    puts "OT_RELAY_PLACE box $pfx: $nc cells in [format %.1f,%.1f-%.1f,%.1f $xu $yu $xu1 $yu1] ($per x $need, row step [expr {$ystep / $ot_rc_rh}])"
+    continue
+  }
   set x [expr {int($xu * $ot_rc_dbu)}]; set y [expr {int($yu * $ot_rc_dbu)}]
   foreach m $ot_rc_mac {
     lassign $m mx0 my0 mx1 my1
