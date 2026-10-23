@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_hc_bankq_ft_static",
+ "enable": false,
+ "reason": "every bank-tile input lands in RTL pin flops (beat landing v/beat/data, the stage's descriptor/partial-sum seam flops, the write-port flops wv_q/xv_q/j_q/wa_q in ot_hbm_hc_bank_static, feed registers) and every output is a flop (stage SOR seam register, feed registers, wfault); a kit flop stage would shift the compiled systolic schedule"
+}
