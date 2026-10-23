@@ -1,0 +1,522 @@
+{
+ "schema": "opentallas.die_plan.g2.v1",
+ "plan": "physical/die_plan/s81/die_plan.json",
+ "source_commit": "5a1dff89e",
+ "plan_sha256": "b6aa89812e0cfc3714dfe4752370e6e4ae8dbce27e667efd152b2e8e07b6025c",
+ "verdict": "PASS",
+ "scope": "fresh virtual die/worst4/three SVC M9 fold probes only; real core/tap insertion, grouped internal binding, CP1 and G3 remain open",
+ "probes": {
+  "die": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 914778612,
+     "demand": 17892,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 914516064,
+     "demand": 89077,
+     "usage_pct": 0.01,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1034908.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {},
+   "pin_access_done": false,
+   "reach": {
+    "clk": {
+     "max_um": 26084.1,
+     "p90_um": 21461.8,
+     "taps": 400
+    },
+    "rst": {
+     "max_um": 26092.8,
+     "p90_um": 21453.1,
+     "taps": 400
+    }
+   },
+   "done": true
+  },
+  "part_ot_s81sl_leaf__t33": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 38114020,
+     "demand": 745344,
+     "usage_pct": 1.96,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 42652179,
+     "demand": 2329236,
+     "usage_pct": 5.46,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 31991850,
+     "demand": 987352,
+     "usage_pct": 3.09,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 31989672,
+     "demand": 4375833,
+     "usage_pct": 13.68,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 21783300,
+     "demand": 575191,
+     "usage_pct": 2.64,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 21781026,
+     "demand": 1811387,
+     "usage_pct": 8.32,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 6185152.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true
+  },
+  "part_ot_s81sl_leaf__t57": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 38113434,
+     "demand": 976302,
+     "usage_pct": 2.56,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 42652179,
+     "demand": 1062371,
+     "usage_pct": 2.49,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 31991850,
+     "demand": 3205375,
+     "usage_pct": 10.02,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 31989672,
+     "demand": 3021545,
+     "usage_pct": 9.45,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 21783300,
+     "demand": 2496908,
+     "usage_pct": 11.46,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 21781026,
+     "demand": 2228933,
+     "usage_pct": 10.23,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 7418200.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true
+  },
+  "part_ot_s81sl_leaf__t73": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 38111625,
+     "demand": 976790,
+     "usage_pct": 2.56,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 42652179,
+     "demand": 1591361,
+     "usage_pct": 3.73,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 31991850,
+     "demand": 3207785,
+     "usage_pct": 10.03,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 31989672,
+     "demand": 5517932,
+     "usage_pct": 17.25,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 21783300,
+     "demand": 2499034,
+     "usage_pct": 11.47,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 21781026,
+     "demand": 4024487,
+     "usage_pct": 18.48,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 10174134.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true
+  },
+  "part_slice_station__t7": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 38113561,
+     "demand": 975994,
+     "usage_pct": 2.56,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 42652179,
+     "demand": 1818849,
+     "usage_pct": 4.26,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 31991850,
+     "demand": 3241306,
+     "usage_pct": 10.13,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 31989672,
+     "demand": 4402978,
+     "usage_pct": 13.76,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 21783300,
+     "demand": 2462539,
+     "usage_pct": 11.3,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 21781026,
+     "demand": 2625018,
+     "usage_pct": 12.05,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 8864292.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true
+  },
+  "part_svc_hi_dsdv_svc_rs__t3": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 76223168,
+     "demand": 1192464,
+     "usage_pct": 1.56,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 85324187,
+     "demand": 14705,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 63986230,
+     "demand": 1174415,
+     "usage_pct": 1.84,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 63994216,
+     "demand": 27968,
+     "usage_pct": 0.04,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 43566600,
+     "demand": 559708,
+     "usage_pct": 1.28,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 43572178,
+     "demand": 25105,
+     "usage_pct": 0.06,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 34036090,
+     "demand": 637,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 34041033,
+     "demand": 23099,
+     "usage_pct": 0.07,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1746802.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true
+  },
+  "part_svc_lo_dsdv_svc_rs__t3": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 76221404,
+     "demand": 25224,
+     "usage_pct": 0.03,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 85324187,
+     "demand": 15065,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 63986230,
+     "demand": 47178,
+     "usage_pct": 0.07,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 63994216,
+     "demand": 33627,
+     "usage_pct": 0.05,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 43566600,
+     "demand": 12601,
+     "usage_pct": 0.03,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 43572178,
+     "demand": 30969,
+     "usage_pct": 0.07,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 34036090,
+     "demand": 1150,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 34041033,
+     "demand": 22590,
+     "usage_pct": 0.07,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 135489.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true
+  },
+  "part_svc_lo_dsdv_svc_rs_w__t1": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 76229134,
+     "demand": 22459,
+     "usage_pct": 0.03,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 85324187,
+     "demand": 2056489,
+     "usage_pct": 2.41,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 63986230,
+     "demand": 15063,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 63994216,
+     "demand": 184509,
+     "usage_pct": 0.29,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 43566600,
+     "demand": 2114,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 43572178,
+     "demand": 32214,
+     "usage_pct": 0.07,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 34036090,
+     "demand": 372,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 34041033,
+     "demand": 14338,
+     "usage_pct": 0.04,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1343584.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true
+  }
+ }
+}
