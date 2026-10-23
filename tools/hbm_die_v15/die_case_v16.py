@@ -338,8 +338,10 @@ def main():
     ap.add_argument('--clock-region-max-um', type=float, default=4000.0,
                     help="regional: two regions joined by a communicating entry pair within --clock-near-um are merged "
                          "when the merged sink box stays within this side (adjacent communicating tiles share a root)")
-    ap.add_argument('--signal-top-layer', default='M8', choices=('M7', 'M8'),
-                    help='die signal top layer; M9 is reserved for PG/clock; STA and repeater RC follow this model')
+    ap.add_argument('--signal-top-layer', default='M9', choices=('M7', 'M8', 'M9'),
+                    help='die signal top layer (OWNER 10-22 19:25: M9 open for die SIGNAL routing on every release die; '
+                         'owner1020 keeps the M8 PG-strap share and M9 adjustment 0.146); STA and repeater RC follow '
+                         'tools/die_safety/m8.py (M9 -> repeater RC M8, STA RC M8, IR required)')
     ap.add_argument('--clock-near-um', type=float, default=405.0, help='regional: near-pair distance (measured reach)')
     ap.add_argument('--diagnostic-param-alias', action='store_true',
                     help='DIAGNOSTIC ONLY: accept same-port parameter aliases (listed in manifest.param_aliases_diagnostic); '
