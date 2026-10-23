@@ -338,6 +338,21 @@ def ahub_post_on():
     return os.environ.get('OT_KV_AHUB_PAD', '0') == '1'
 
 
+# FT-KV2 10-23 (OT_KV_AHUB_MEASURE=1 with OT_KV_AHUB_PAD=0, default off = byte-identical): record the hub's NATURAL
+# post-station ages (no pads, no enforcement) and the AP_OFS / FR_OFS they give (kv_static_die.ahub_ages formulas), so the
+# hub kit can be re-hardened at the die's own stage table (RUN/ahub_post_ages.json).  Diagnostic GEN only: the die still
+# binds whatever hub view it binds, and kv_static_params AHUB_OFS_BOUND judges the binding later.
+def ahub_measure_on():
+    return os.environ.get('OT_KV_AHUB_MEASURE', '0') == '1' and not ahub_post_on()
+
+
+def ahub_measure_offsets(ages, pv_lead=0):
+    dh, df, dp = int(ages['ks_ahs']), int(ages['ks_ahfr']), int(ages['ks_pvfst'])
+    ap = [2 + int(ages[f'ap_{s}']) - dh for s in ('WS', 'WN', 'ES', 'EN')]
+    return dict(AP_OFS=ap, FR_OFS=dp - pv_lead - df - dh - 1, PV_LEAD=pv_lead, stacks=['WS', 'WN', 'ES', 'EN'],
+                AP_OFS_hex='{' + ', '.join(f"16'h{x & 0xffff:04x}" for x in reversed(ap)) + '}')
+
+
 def ahub_post_ages(pre, F, dirs, sinks=None):
     """core-edge age of every AHUB_SINKS bus on the replica netlist pre with the lanes F (the netlist exporter's rule:
     each forwarded lane on the path = LG.lane_cycles(row) = E + 1, each plain relay flop = 1).  Walks every live bit of
@@ -551,6 +566,13 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
         # final netlist; the final audit in main() measures it (the in-loop status is not final).
         F = form(pre, dirs, slots)
         incident = None
+    if ahub_measure_on() and F is not None:
+        ages, _e, probs = ahub_post_ages(pre, F, dirs)
+        rec_ = dict(schema='opentallas.qwen_kv.ahub_post_ages.v1', mode='measure (OT_KV_AHUB_MEASURE=1, no pads)',
+                    ages=ages, problems=probs, offsets=None if probs or len(ages) < 7 else ahub_measure_offsets(ages))
+        (run / 'ahub_post_ages.json').write_text(json.dumps(rec_, indent=1) + '\n')
+        print(f'kv_lane_stations: AHUB_MEASURE natural post-station ages {ages} -> {rec_["offsets"]} problems {probs[:4]}',
+              flush=True)
     if ahub:
         # KV-AHUB10: fail closed unless the FINAL netlist gives the hub's exact offsets (AHUB_OFS_BOUND re-checks the table)
         import kv_bundle_eq as KBE
