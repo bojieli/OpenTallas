@@ -157,7 +157,7 @@ def main(argv=None):
                 rule = 'TIE'
             elif mst == 'qfd_c_b16_dv' and (pn.startswith('bco') or pn == 'rs_o') and const_val(cm, 'far', nets) == 1:
                 rule = 'FAR'
-            elif mst in ('qfd_rst_rep', 'qfd_rst_rep_p8') and pn == 'q1' and 'q0' in cm:
+            elif mst in ('qfd_rst_rep', 'qfd_rst_rep_p8', 'qfd_rst_rep_p62') and pn == 'q1' and 'q0' in cm:
                 rule = 'REP2'
             elif mst == 'qfd_ckbump' and pn == 'rs':
                 others = [i for m2, i, _, c2 in insts if m2 == 'qfd_ckbump' and i != inst and 'rs' in c2]

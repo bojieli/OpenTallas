@@ -28,10 +28,10 @@ def audit(netlist, lanes, roots):
             master, name = match.groups()
             ports = dict(re.findall(r'\.(\w+)\((\w+)\)', line))
             instances[name] = master, ports
-            if master in ('qfd_rst_rep', 'qfd_rst_rep_p8'):
+            if master in ('qfd_rst_rep', 'qfd_rst_rep_p8', 'qfd_rst_rep_p62'):
                 for port in ('q0', 'q1'):
                     if port in ports:
-                        drivers[ports[port]] = ports['d'], 10 if master.endswith('_p8') else 2
+                        drivers[ports[port]] = ports['d'], 64 if master.endswith('_p62') else 10 if master.endswith('_p8') else 2
         match = re.match(r'\s*assign\s+(\w+)(?:\[0:0\])?\s*=\s*(\w+)(?:\[0:0\])?\s*;', line)
         if match:
             aliases[match[1]] = match[2]
@@ -114,9 +114,9 @@ def finalize_model(model, root_release=None):
         if endpoint in seen:
             raise ValueError(f'reset calendar cycle at {key}')
         master = masters.get(endpoint[0])
-        if master in ('qfd_rst_rep', 'qfd_rst_rep_p8') and endpoint[1] in ('q0', 'q1'):
+        if master in ('qfd_rst_rep', 'qfd_rst_rep_p8', 'qfd_rst_rep_p62') and endpoint[1] in ('q0', 'q1'):
             root, edge = trace((endpoint[0], 'd'), (*seen, endpoint))
-            return root, edge + (10 if master.endswith('_p8') else 2)
+            return root, edge + (64 if master.endswith('_p62') else 10 if master.endswith('_p8') else 2)
         if endpoint in incoming:
             return trace(incoming[endpoint], (*seen, endpoint))
         return key, 0

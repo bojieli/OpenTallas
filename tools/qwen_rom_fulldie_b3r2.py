@@ -5362,6 +5362,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 # exceeds RELAY_REACH_UM is replaced by a registered tree of 1-bit repeaters, clocked by the domain of its sinks.
 RST_REP = 'qfd_rst_rep'          # ot_qwen_rst_rep PAD=0: 1 input flop + 2 registered outputs (q0, q1) = 2 cycles
 RST_PAD = 'qfd_rst_rep_p8'       # ot_qwen_rst_rep PAD=8: 8 pad flops between the input and the output rank = 10 cycles
+RST_PAD64 = 'qfd_rst_rep_p62'
+RST_PAD64_VARIANT = os.environ.get('OT_RST_PAD64', '')
+if RST_PAD64_VARIANT not in ('', 'a', 'b'):
+    raise ValueError('OT_RST_PAD64 must be empty, a, or b')
 RST_PAD_LV = 5                   # one pad cell = 5 repeater levels (10 cycles)
 RST_W, RST_H = 5.184, 2.16       # 12 GX x 1 GY (<= 5.4 x 2.16: 96 sites x 8 rows), M1-M3
 # Q-DIE13 10-18: OT_RST_REP_VIEW=closed plans the CLOSED qfd_rst_rep / _p8 frames (physical/ref_tile/qfd_rst_rep*,
@@ -5387,6 +5391,16 @@ _rst_pad_street = os.environ.get('OT_RST_PAD_STREET', '0') == '1'
 RST_PAD_GAP_UM = float(os.environ.get('OT_RST_PAD_GAP_UM', RST_GAP_UM))
 if not math.isfinite(RST_PAD_GAP_UM) or RST_PAD_GAP_UM < RST_GAP_UM:
     raise ValueError('OT_RST_PAD_GAP_UM must be finite and >= RST_GAP_UM')
+
+
+def _rst_frame(master):
+    if master == RST_PAD64:
+        return (43.2 if RST_PAD64_VARIANT == 'a' else 25.92), 12.96
+    return RST_W, RST_H
+
+
+def _rst_cycles(master):
+    return {RST_REP: 2, RST_PAD: 10, RST_PAD64: 64}[master]
 
 
 def _hp(pts):
@@ -5499,22 +5513,23 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         N = {}                                  # node id -> dict(x, y (frame corner), kids, sinks)
         seq = [0]
 
-        def new(tx, ty, box=None, _N=N, _seq=seq, _bid=bid, lim=600.0, budget=4000, gap=RST_GAP_UM):
-            s = occ.site(tx, ty, box, lim=lim, budget=budget,
+        def new(tx, ty, box=None, _N=N, _seq=seq, _bid=bid, lim=600.0, budget=4000, gap=RST_GAP_UM, master=RST_REP):
+            w, h = _rst_frame(master)
+            s = occ.site(tx, ty, box, lim=lim, budget=budget, w=w, h=h,
                          spaced=pad_occ if gap > RST_GAP_UM else None, spaced_gap=gap)
             if s is None:
                 return None
-            occ.add((s[0], s[1], s[0] + RST_W, s[1] + RST_H))
+            occ.add((s[0], s[1], s[0] + w, s[1] + h))
             if gap > RST_GAP_UM:
-                pad_occ.add((s[0], s[1], s[0] + RST_W, s[1] + RST_H))
+                pad_occ.add((s[0], s[1], s[0] + w, s[1] + h))
             k = _seq[0]
             _seq[0] += 1
-            _N[k] = dict(x=s[0], y=s[1], kids=[], sinks=[], pad=0, master=RST_REP,
-                         mv=abs(s[0] + RST_W / 2 - tx) + abs(s[1] + RST_H / 2 - ty))
+            _N[k] = dict(x=s[0], y=s[1], kids=[], sinks=[], pad=0, master=master, w=w, h=h,
+                         mv=abs(s[0] + w / 2 - tx) + abs(s[1] + h / 2 - ty))
             return k
 
         def c_(k, _N=N):
-            return (_N[k]['x'] + RST_W / 2, _N[k]['y'] + RST_H / 2)
+            return (_N[k]['x'] + _N[k]['w'] / 2, _N[k]['y'] + _N[k]['h'] / 2)
         # 1. leaf repeaters: the sinks of one RST_LEAF_UM cell, the repeater at the free site nearest their centroid;
         #    a group that does not fit one net is split per sink (repeater nearest each pin)
         grp = collections.defaultdict(list)
@@ -5717,7 +5732,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
     for t in trees:
         net, N, root, ht, new, c_ = t['net'], t['N'], t['root'], t['ht'], t['new'], t['c_']
         bid = net['bid']
-        pads = [0, 0]
+        pads = {RST_REP: 0, RST_PAD: 0, RST_PAD64: 0}
         pad_moved = [0]
 
         def chain(k, lv, p=None, pxy=None):
@@ -5728,7 +5743,8 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
             straight segment p..k (every hop of the chain then stays within the p -> k net span; the emitted pins are
             re-checked at RST_OK_UM by _reset_reach_gate as before).  Same levels / cycles / equal depth."""
             head, prev = None, None
-            for mst in [RST_PAD] * (lv // RST_PAD_LV) + [RST_REP] * (lv % RST_PAD_LV):
+            compact, remaining = divmod(lv, 32) if RST_PAD64_VARIANT else (0, lv)
+            for mst in [RST_PAD64] * compact + [RST_PAD] * (remaining // RST_PAD_LV) + [RST_REP] * (remaining % RST_PAD_LV):
                 far = c_(p) if p is not None else pxy
                 a = None
                 if _rst_pad_cluster:
@@ -5738,19 +5754,19 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                     # 658 um, on two region clocks).  The chain is ONE pocket: the first cell on the edge p..k (midpoint
                     # first, both hops <= RST_NET_UM / 2 + d / 2), every later cell beside the previous one.
                     if prev is not None and RST_PAD_GAP_UM == RST_GAP_UM and not _rst_pad_street:
-                        a = new(*c_(prev), lim=RST_NET_UM / 4, budget=20000, gap=RST_PAD_GAP_UM)
+                        a = new(*c_(prev), lim=RST_NET_UM / 4, budget=20000, gap=RST_PAD_GAP_UM, master=mst)
                     else:
                         x0_, y0_ = c_(k)
                         for tx_, ty_ in ([((x0_ + far[0]) / 2, (y0_ + far[1]) / 2)] if far is not None else []) + [(x0_, y0_)]:
-                            a = new(tx_, ty_, lim=RST_NET_UM / 2 - 20, budget=20000, gap=RST_PAD_GAP_UM)
+                            a = new(tx_, ty_, lim=RST_NET_UM / 2 - 20, budget=20000, gap=RST_PAD_GAP_UM, master=mst)
                             if a is not None:
                                 break
                 if a is None:
-                    a = new(*c_(k), gap=RST_PAD_GAP_UM)
+                    a = new(*c_(k), gap=RST_PAD_GAP_UM, master=mst)
                 if a is None and far is not None:
                     (x0, y0), (x1, y1) = c_(k), far
                     for t in (0.25, 0.5, 0.75, 1.0):
-                        a = new(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, gap=RST_PAD_GAP_UM)
+                        a = new(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, gap=RST_PAD_GAP_UM, master=mst)
                         if a is not None:
                             pad_moved[0] += 1
                             break
@@ -5767,7 +5783,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                         tries.append(((x0 + far[0]) / 2, (y0 + far[1]) / 2, RST_NET_UM / 2 - 20))
                     tries.append((x0, y0, RST_NET_UM - 40))
                     for tx_, ty_, lm_ in tries:
-                        a = new(tx_, ty_, lim=lm_, budget=200000, gap=RST_PAD_GAP_UM)
+                        a = new(tx_, ty_, lim=lm_, budget=200000, gap=RST_PAD_GAP_UM, master=mst)
                         if a is not None:
                             pad_moved[0] += 1
                             break
@@ -5775,7 +5791,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                     raise ValueError(f'reset tree: {bid} pad chain of {lv} levels has no free site within one net of '
                                      f'child {[round(q, 1) for q in c_(k)]} / parent {None if far is None else [round(q, 1) for q in far]}')
                 N[a]['master'] = mst
-                pads[mst == RST_PAD] += 1
+                pads[mst] += 1
                 if prev is None:
                     head = a
                 else:
@@ -5794,7 +5810,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         dep, todo, nn, mx = set(), [(first, 0)], 0, _hp([net['drv'][2], c_(first)])
         while todo:
             k, cyc = todo.pop()
-            cyc += 10 if N[k]['master'] == RST_PAD else 2
+            cyc += _rst_cycles(N[k]['master'])
             for j, g_ in enumerate(N[k]['outs']):
                 nn += 1
                 eps, pts = [(name[k], f'q{j}')], [c_(k)]
@@ -5811,8 +5827,8 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                 wires.append((f'{bid}__t{nn}', bid, eps))
         for k in sorted(N):
             cells.append((name[k], N[k]['master'], N[k]['x'], N[k]['y'], bid, round(N[k]['mv'], 2)))
-        per[bid] = dict(dom=net['dom'], sinks=len(net['sinks']), repeaters=len(N) - pads[0] - pads[1], pad_rep=pads[0],
-                        pad_p8=pads[1], pad_gap_um=RST_PAD_GAP_UM, pad_on_edge=pad_moved[0], nets=nn + 1, max_net_um=round(mx, 1), levels=ht[root] + 1,
+        per[bid] = dict(dom=net['dom'], sinks=len(net['sinks']), repeaters=len(N) - sum(pads.values()), pad_rep=pads[RST_REP],
+                        pad_p8=pads[RST_PAD], pad_p62=pads[RST_PAD64], pad_gap_um=RST_PAD_GAP_UM, pad_on_edge=pad_moved[0], nets=nn + 1, max_net_um=round(mx, 1), levels=ht[root] + 1,
                         depth_cycles=sorted(dep))
     return cells, wires, per, errors
 
@@ -5931,7 +5947,7 @@ def _reset_tree(v, m):
     dom_inst = {n['bid']: n['domain'] for n in nets}
     ck_add = {}
     for nm, mst, x, y, bid, _ in cells:
-        m['insts'].append(v.Inst(nm, mst, x, y, RST_W, RST_H, kind='reset_rep', region='reset_tree', domain=dom_inst[bid]))
+        m['insts'].append(v.Inst(nm, mst, x, y, *_rst_frame(mst), kind='reset_rep', region='reset_tree', domain=dom_inst[bid]))
         ck_add.setdefault(rsync['reclock'].get(nm, ck_of_bus[bid]), []).append((nm, 'clk'))
     # DIE-QWEN-GEN16 (Q-CB16RST 10-19): a repeater whose output drops on a cluster's regional reset pin (qfd_c_b16_dv
     # rst_c<c>r<r>) is the LAST hop of that drop: it is clocked from the cluster's own root (re-filed with the cluster),
@@ -5953,10 +5969,19 @@ def _reset_tree(v, m):
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
-        for mn, pad in ((RST_REP, 0), (RST_PAD, 8)):
-            M = v.Master(mn, RST_W, RST_H, 3, f'reset tree repeater (ot_qwen_rst_rep PAD={pad}): 1 input flop + {pad} pad '
+        for mn, pad in [(RST_REP, 0), (RST_PAD, 8)] + ([(RST_PAD64, 62)] if RST_PAD64_VARIANT else []):
+            w, h = _rst_frame(mn)
+            M = v.Master(mn, w, h, 3, f'reset tree repeater (ot_qwen_rst_rep PAD={pad}): 1 input flop + {pad} pad '
                          f'flops + 2 registered outputs, standard cells M1-M3, clk + d on W, q0 on E, q1 on N')
-            if RST_CLOSED:              # the closed view's own pin centres (bind_real swaps in its LEF)
+            if mn == RST_PAD64:
+                # Measured native gate geometry, tied to the separately routed real variant.
+                clk_y, d_y, q0_y, q1_x = ((5.340, 5.436, 7.548, 27.516) if RST_PAD64_VARIANT == 'a'
+                                           else (5.148, 5.244, 7.836, 18.396))
+                M.face('clk', 1, 'W', 'M4', clk_y)
+                M.face('d', 1, 'W', 'M4', d_y)
+                M.face('q0', 1, 'E', 'M4', q0_y)
+                M.face('q1', 1, 'N', 'M5', q1_x)
+            elif RST_CLOSED:              # the closed view's own pin centres (bind_real swaps in its LEF)
                 M.face('clk', 1, 'W', 'M4', 3.132)
                 M.face('d', 1, 'W', 'M4', 3.228)
                 M.face('q0', 1, 'E', 'M4', 3.228)
@@ -5996,10 +6021,10 @@ def _reset_tree(v, m):
     # centroid for a leaf, the node it pads / fans out for a pad or auxiliary cell) to the legal site taken
     moved = sorted(c[5] for c in cells)
     rec.update(repeaters=sum(r['repeaters'] for r in per.values()), pad_rep=sum(r['pad_rep'] for r in per.values()),
-               pad_p8=sum(r['pad_p8'] for r in per.values()), cells=len(cells), nets=len(wires), max_net_um=round(mx, 1),
+               pad_p8=sum(r['pad_p8'] for r in per.values()), pad_p62=sum(r['pad_p62'] for r in per.values()), cells=len(cells), nets=len(wires), max_net_um=round(mx, 1),
                depth_cycles={d_: sorted(s) for d_, s in deps.items()}, max_depth_cycles=max(max(s) for s in deps.values()),
-               pads='pad chains beside the child of each slack edge: qfd_rst_rep_p8 (10 cycles) + qfd_rst_rep (2 cycles)',
-               masters=[RST_REP, RST_PAD], frame_um=[RST_W, RST_H], gap_um=RST_GAP_UM, lattice_um=RST_PITCH_UM,
+               pads='pad chains on slack edges: optional qfd_rst_rep_p62 (64 cycles), qfd_rst_rep_p8 (10 cycles), qfd_rst_rep (2 cycles)',
+               masters=[RST_REP, RST_PAD] + ([RST_PAD64] if RST_PAD64_VARIANT else []), compact_variant=RST_PAD64_VARIANT, compact_frame_um=list(_rst_frame(RST_PAD64)) if RST_PAD64_VARIANT else None, frame_um=[RST_W, RST_H], gap_um=RST_GAP_UM, lattice_um=RST_PITCH_UM,
                clock_of={b_: ck_of_bus[b_] for b_ in sorted(ck_of_bus)}, per_net=per, over=over,
                legalised=dict(sites=len(moved), moved_over_1um=sum(1 for q in moved if q > 1.0), median_um=moved[len(moved) // 2],
                               p90_um=moved[len(moved) * 9 // 10], max_um=moved[-1]),

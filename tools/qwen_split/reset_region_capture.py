@@ -11,7 +11,7 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-REP = ('qfd_rst_rep', 'qfd_rst_rep_p8')
+REP = ('qfd_rst_rep', 'qfd_rst_rep_p8', 'qfd_rst_rep_p62')
 RTL = 'rtl/qwen_sys/reset_tree_20261013/ot_qwen_rst_rep.sv'
 
 
@@ -88,7 +88,7 @@ def finalize(model, per, source_root=None):
             continue
         candidates.append(dict(pin=rep+'/d', master=by[rep].master, net=net,
                                source=si+'/'+sp, source_clocks=sorted(rs), clocks=sorted(rd),
-                               latency_edges=10 if by[rep].master.endswith('_p8') else 2,
+                               latency_edges=64 if by[rep].master.endswith('_p62') else 10 if by[rep].master.endswith('_p8') else 2,
                                qualification='HOLD: receiving-clock source proof and boot/calendar interval evidence required'))
     # Reuse the source proof already performed by _reset_tree; no new gate.
     proof = dict(path=RTL, sha256=None,

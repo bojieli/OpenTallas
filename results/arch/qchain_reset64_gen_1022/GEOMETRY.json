@@ -1,0 +1,33 @@
+{
+  "scope": "source geometry and exact delay only; real routed master must bind by exact variant, never old-view alias",
+  "source_master_commit": "36f2f5ed6",
+  "gate_roots": {
+    "a": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_rst_rep_p62_a-20261022-222911/routes/gate/work/orfs/gate_dump.json",
+    "b": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_rst_rep_p62_b-20261022-222911/routes/gate/work/orfs/gate_dump.json"
+  },
+  "variants": {
+    "a": {
+      "frame": [
+        43.2,
+        12.96
+      ],
+      "clk_w_y": 5.34,
+      "d_w_y": 5.436,
+      "q0_e_y": 7.548,
+      "q1_n_x": 27.516
+    },
+    "b": {
+      "frame": [
+        25.92,
+        12.96
+      ],
+      "clk_w_y": 5.148,
+      "d_w_y": 5.244,
+      "q0_e_y": 7.836,
+      "q1_n_x": 18.396
+    }
+  },
+  "unit": "oth-ubuntu-367961-1792734144",
+  "knob": "OT_RST_PAD64=a|b (empty preserves prior placement)",
+  "proof": "exact default geometry/master/wire tuple and both variant equal sink release/reach PASS"
+}

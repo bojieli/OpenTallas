@@ -91,7 +91,7 @@ def main(die_v, out_sv):
             continue
         mn, conns = m.group(1), dict(CONN.findall(m.group(3)))
         ports = {p: width_of(e, wires) for p, e in conns.items()}
-        if mn in ('qfd_rst_rep', 'qfd_rst_rep_p8'):
+        if mn in ('qfd_rst_rep', 'qfd_rst_rep_p8', 'qfd_rst_rep_p62'):
             # reset-tree repeater (ot_qwen_rst_rep): an instance may leave its second output q1 open, so the
             # master's port set is the union over its instances
             ports = {**masters.get(mn, {}), **ports}
@@ -156,12 +156,12 @@ def main(die_v, out_sv):
                   '    always @(posedge ck) b <= a;',
                   'endmodule']
             kinds['data'] = kinds.get('data', 0) + 1
-        elif mn in ('qfd_rst_rep', 'qfd_rst_rep_p8'):
+        elif mn in ('qfd_rst_rep', 'qfd_rst_rep_p8', 'qfd_rst_rep_p62'):
             # Q-BIND 10-17: the reset-tree repeaters of qwen_rom_fulldie_b3r2 (RST_REP / RST_PAD) are the real
             # ot_qwen_rst_rep (rtl/qwen_sys/reset_tree_20261013) at PAD 0 (2 cycles) / PAD 8 (10 cycles)
             if set(ports) - {'clk', 'd', 'q0', 'q1'} or not {'clk', 'd', 'q0'} <= set(ports) or any(w != 1 for w in ports.values()):
                 raise SystemExit(f'{mn}: unexpected reset repeater ports {ports}')
-            pad = 8 if mn.endswith('_p8') else 0
+            pad = 62 if mn.endswith('_p62') else 8 if mn.endswith('_p8') else 0
             L += [f'module {mn} (input wire clk, input wire d, output wire q0, output wire q1);',
                   f'    ot_qwen_rst_rep #(.PAD({pad})) u_rep (.clk(clk), .d(d), .q0(q0), .q1(q1));',
                   'endmodule']
