@@ -165,7 +165,9 @@ def calibrate(work):
                         cw_edges={m: v['cw'][m][:2] for m in range(3)}, xl_edges=len(v['xl'][0]))
     # sweeps: the smallest passing go_lag (with a generous XPF lead) and xpf_lead (with a generous go lag)
     sweep = dict(go_lag={}, xpf_lead={})
-    for g in range(-2, 7):
+    import os
+    g0 = int(os.environ.get('OT_XH_GO_MIN', '-2'))      # TOKd-QW 10-22: widen when -2 still passes (no FAIL edge)
+    for g in range(g0, 7):
         rc, st = run_family(work, consumer, plan_free(consumer, g, 12, x_tap), f'cal_go{g}')
         sweep['go_lag'][g] = verdict(consumer, st, rc)['ok']
     for L in range(-2, 7):
