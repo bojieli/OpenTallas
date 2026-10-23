@@ -37,6 +37,9 @@ if [ "${FRAME_LP:-0}" = 1 ]; then
   # place of <MASTER>_l4_lp.sv (same module name); its xk reset synchronisers need ot_reset_sync
   LPSV=${FRAME_LP_SV:-$FR/${MASTER}_l4_lp.sv}
   grep -q ot_reset_sync $LPSV && TOPF="$TOPF rtl/lib/ot_reset_sync.sv"
+  # S81-P7 10-23: a banded seam twin (vgcs, tools/s81_dv/frame_seam_pipe.py) uses ot_pl_seam_w/r; SEAM_SV = a re-timed
+  # seam primitive (bench mutant, tools/s81_dv/frame_seam_bench.sh)
+  grep -q ot_pl_seam_ $LPSV && TOPF="$TOPF ${SEAM_SV:-rtl/common/landed_parent/ot_pl_seam.sv}"
   VFLAGS="${VFLAGS:-} -DLP_MUT=$LM -DLK=${LK:-2} -DTB_FWD_GATE -DTB_LDLY=${LDLY:-0}"
   # STW-S81c-DIE-FRAME 10-22: FRAME_SCHED = the schedule of a re-cut LP variant (default: the committed one)
   LANDE="--land-e ${LK:-2} --frame-schedule ${FRAME_SCHED:-results/arch/s81_dv_1016/frame_l4_cluster/compiler/${MASTER}_schedule.json}"

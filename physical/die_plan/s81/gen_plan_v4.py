@@ -77,6 +77,56 @@ def frame_internal(h):
     return [(k.split("->")[0], k.split("->")[1], w) for k, w in sorted(m.items())]
 
 
+# S81-P7 10-23 (COORD G3 band blockers): frame-band contents bound to the plan buses.  The band RTL
+# rtl/dsrom_sys/s81_dv/frame_lp/plan/col_<M>_l4_lp_plan.sv (tools/s81_dv/frame_band_plan.py) has exactly the plan
+# ports (frame_int_*, x/xo/ret, clk, rst_n; LK parameter; xk = clk; registered lpr_root ft), and the band macros /
+# hard children sit at the positions of inputs/frame_band_macros.json (tools/s81_dv/frame_band_macros.py).
+FRAME_BAND_MACROS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "frame_band_macros.json")
+
+
+def frame_contents(contents, buses):
+    if len(contents) != 1 or not re.match(r"col_h(9|10)_l4_lp\.r\d$", contents[0]["module"]):
+        return contents
+    c = dict(contents[0])
+    m, b = c["module"].split(".")
+    k = int(b[1:])
+    names = {x["name"] for x in buses}
+    xo = "xo_o0" in names
+    c["module"] = "%s_r%d%s" % (m, k, "_nx" if (k == 0 and not xo) else "")
+    bind = {"clk": "clk"}
+    if k == 0:
+        bind.update(rst_n="rst_n", x_i0="bus:" + ("x_i0" if "x_i0" in names else "xo_i0"), ret_o0="bus:ret_o0")
+        if xo:
+            bind["xo_o0"] = "bus:xo_o0"
+    for n in sorted(names):
+        if n.startswith("frame_int_"):
+            bind[n] = "bus:" + n
+    c["bind"] = bind
+    c.pop("status", None)
+    c["status"] = "new"
+    # LK: the x-lane landing strap of every frame = E 2 (the framed seam bench value); XO_EN is the module variant
+    c["params"] = {"LK": "{4{3'd2}}"} if k == 0 else None
+    if c["params"] is None:
+        c.pop("params")
+    return [c]
+
+
+def FRAME_SOURCES(contents):
+    if len(contents) != 1 or not re.match(r"col_h(9|10)_l4_lp\.r\d$", contents[0]["module"]):
+        return None
+    return ["rtl/dsrom_sys/s81_dv/frame_lp/plan/%s_plan.sv" % contents[0]["module"].split(".")[0]]
+
+
+def frame_hard_cores(contents):
+    """band macros / hardened children of a frame type at their plan sites (lattice origins, frame_band_macros.json)"""
+    if len(contents) != 1 or not re.match(r"col_h(9|10)_l4_lp\.r\d$", contents[0]["module"]):
+        return []
+    m, b = contents[0]["module"].split(".")
+    mac = json.load(open(FRAME_BAND_MACROS))["masters"][m.replace("_l4_lp", "")][b]
+    return [dict(inst=e["inst"], module=e["module"], lef=e["lef"], **({"lib": e["lib"]} if e["lib"] else {}),
+                 origin_um=e["origin_um"], outline_um=e["size_um"], orient=e["orient"]) for e in mac]
+
+
 def mir(c):
     return NC - 1 - c
 
@@ -1136,7 +1186,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 s_.pop("layers")
         ty = dict(module="s81p_" + tn, outline_um=[rep.w, rep.h], hard=rep.hard, buses=buses, ft_slots=ftsl,
                   clock=dict(tap_um=[round(rep.w / 2 / G) * G, round(rep.h / 2 / G) * G], layer="M9"),
-                  reset=dict(sync_stages=2), contents=rep.contents,
+                  reset=dict(sync_stages=2), contents=frame_contents(rep.contents, buses),
+                  **({"sources": FRAME_SOURCES(rep.contents)} if FRAME_SOURCES(rep.contents) else {}),
+                  **({"hard_cores": frame_hard_cores(rep.contents)} if frame_hard_cores(rep.contents) else {}),
                   note="%s partition; %d instance(s) (%s)" % (rep.kind, len(names),
                                                               ",".join(sorted({P[n].orient for n in names}))))
         out_types[tn] = ty

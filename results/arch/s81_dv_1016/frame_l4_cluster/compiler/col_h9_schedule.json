@@ -3,7 +3,7 @@
  "source_sha256": {
   "rtl/dsrom_sys/s81_dv/frame_l4/col_h9_l4.sv": "b55f3e9a08362281581729d3d93db56837c752c8bdb3563a43f637a56c6833a5",
   "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
-  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "4b2fd9fc0a323bef02e84691517cdc3886ec60921aa7228c6ddd0a5a5bc6a8df",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "27c5011a850421fb85f3b653e9a07e5165b7544d5c4322dd388e6749635efdde",
   "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv": "df18dbcd870f952acb0f4fa4a3f77fb51641b283ff3879943e2601d35ab8963c",
   "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv": "18bdaf923dcedd45bd34617fcd26e592461a2c974c2ebc09898f199f1ca0551c",
   "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv": "1cd45a7d8bfab8880024cfdc093bf02f6419b37c6e35dc20990f50bcd6345cf7",
@@ -26,7 +26,8 @@
   "rtl/v41die/ot_s81_cfg7_seq.sv": "bb89a1970734008e238547af70af68cb1d0f02ab5cab89e0bc1a607898cb7e5a",
   "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "35c2f3e0186c5ca793db5a228fff75a71a0a1f4d5f995219d51dadaa911b1fc4",
   "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "517e501dd6a505871302dc93cf31b87f9dc5cfcc771a9564c07b58b662014d96",
-  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878"
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878",
+  "rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv": "f3db079b569c686ee026feb5b3cdd78131da158e83a33e676ed4bde65efcbcd6"
  },
  "spec": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h9_spec.json",
  "added_edges_per_crossing": 3,
