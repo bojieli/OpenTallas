@@ -1,0 +1,188 @@
+{
+ "name": "s81frame_col_h9_vgcsr-vgc-COMMIT",
+ "block": "col_h9_l4_lp",
+ "ref_tile": true,
+ "owner": "Claude:STW-S81c-DIE4-FRAME",
+ "purpose": "S81 col_h9 landed frame cluster -- vgc: vector landings + row re-cut + spine clock (ck_r0..2, child-insertion leaf targets) + forwarded soft tap",
+ "threads": 32,
+ "peak_ram_gb": 192,
+ "source": {
+  "branch": "claude/s81c-frame-1022",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/s81_dv_1016/frame_l4_cluster/compiler",
+   "results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc",
+   "results/arch/s81_frrst_1020",
+   "rtl/dsrom_sys/s81_dv/frame_lp/vgc"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; col_h9_l4_lp u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_S81_RLY_RSSLICE --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_reset_sync.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv rtl/common/landed_parent/ot_pl_land_n32.sv rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_vgc.sv rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col_kit.sv physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "frame_h9_plan_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgc/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=plan KK=2048 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_plan col_h9 0"
+   },
+   {
+    "name": "frame_h9_each_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgc/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=each KK=1024 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_each col_h9 0"
+   },
+   {
+    "name": "frame_h9_unland_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED\\ MUT=unland\\ col_h9$",
+    "cmd": "mkdir -p {RUN}; VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgc/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=plan KK=2048 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_unland col_h9 unland > {RUN}/mutant.log 2>&1; frame_rc=$?; cat {RUN}/mutant.log; if [ \"$frame_rc\" -eq 0 ] && grep -qx \"NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=unland col_h9\" {RUN}/mutant.log; then exit 1; fi; exit 0"
+   },
+   {
+    "name": "frame_h9_landread_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED\\ MUT=landread\\ col_h9$",
+    "cmd": "mkdir -p {RUN}; VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgc/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=plan KK=2048 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_landread col_h9 landread > {RUN}/mutant.log 2>&1; frame_rc=$?; cat {RUN}/mutant.log; if [ \"$frame_rc\" -eq 0 ] && grep -qx \"NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=landread col_h9\" {RUN}/mutant.log; then exit 1; fi; exit 0"
+   },
+   {
+    "name": "frame_h9_reset_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED\\ MUT=reset\\ col_h9$",
+    "cmd": "mkdir -p {RUN}; VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgc/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=plan KK=2048 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_reset col_h9 reset > {RUN}/mutant.log 2>&1; frame_rc=$?; cat {RUN}/mutant.log; if [ \"$frame_rc\" -eq 0 ] && grep -qx \"NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=reset col_h9\" {RUN}/mutant.log; then exit 1; fi; exit 0"
+   },
+   {
+    "name": "reset_crossing_audit",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "cmd": "python3 tools/s81_dv/frame_reset_audit.py rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_vgc.sv"
+   },
+   {
+    "name": "reset_crossing_audit_mutant_rf3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "fail_regex": "^RESET_AUDIT FAIL .* foreign=[1-9]",
+    "cmd": "python3 tools/s81_dv/frame_reset_audit.py rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_rf3.sv"
+   },
+   {
+    "name": "lp_audit_vs_rf3r",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "cmd": "python3 tools/s81_dv/frame_vg_kit.py --audit-compare results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_spec.json results/arch/s81_dv_1016/frame_l4_cluster/compiler/rf3r/col_h9_spec.json rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81frame_col_h9_vgcsr/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81frame_col_h9_vgcsr/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 32,
+   "peak_ram_gb": 192
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81frame_col_h9_vgcsr --out {RUN}/record/views/col_h9_l4_lp --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x72_m8 --macro-view physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536 --macro-view physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp --macro-view physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq --macro-view physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4 --macro-view physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS --macro-view physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N --macro-view physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S --macro-view physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd --macro-view physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd --macro-view physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu --macro-view physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd --macro-view physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu --macro-view physical/ref_tile/s81net_rstg/views/dsfd_rstg --macro-view physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col --macro-view physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots --macro-view physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566 --macro-view physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81frame_col_h9_vgcsr/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536",
+   "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp",
+   "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq",
+   "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4",
+   "physical/ref_tile/s81dv_rly_276_ns/views/dsfd_dvrly_276_NS",
+   "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N",
+   "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S",
+   "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd",
+   "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "physical/ref_tile/s81net_rstg/views/dsfd_rstg",
+   "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col",
+   "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots",
+   "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566",
+   "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81frame_col_h9_vgcsr/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81frame_col_h9_vgcsr/s81frame_col_h9_vgcsr-vgc-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "TW3-S81-FRAMEGATE 10-19 (COORD 0jy option A): col_h9 landed frame (3 regions r0/r1/r2, every crossing landed as a compiler re-schedule, 3017 landings, reset hops {'r0': 0, 'r1': 3, 'r2': 6} at reach 405 from measured region centres {'r0': [629.1, 493.4], 'r1': [619.4, 1588.5], 'r2': [601.5, 2805.5]}); hard children legalised from the c26l GEN placement (tools/s81_dv/frame_kit.py) | rf2 (S81-TILES-A 10-20): opt-in OT_S81_RLY_RSSLICE -- every relay wider than 32 bits clears its data flops from ceil(W/32) kept reset pin register copies (<=32 RESETN loads each; forest leaf -> <=17 rq loads), fixing the rffwd h10 native census (203 RESETN violations, max 536) | s81frame_col_h9_rf3rl (DRIVE-S81-FRH10 10-20): raw ROM CTS-root bindings (105), rst_n 2-stage kit-RTL landing, lk/rst_n E pins beside crs4, u_xo reset landed on xk (DRIVE-S81-FRRST) | rf3rl: lattice-width bf_col view bf_compact199_prepabs_lat (DRIVE-S81-BFCOL 19cd8ab4d) | FRRST2: actual xk soft-clock timing and exact ownership using ROOT91178c38e; no geometry or RTL change from rf3rl. | fs1x (S81-ELEM2-COLH9 10-21): fs1 placed (GP/DPL PASS, 51.8% util) but CTS refused it twice: (1) pre_cts lacked the generated forwarded-soft metadata (fixed on main 99eff96d0, merged here); (2) the saved-placement continuation then measured forwarded clock xk[0] child-flop spread 309 ps > 80 (u_cf/xk[0] 394-412 ps vs u_xo0/ck 699-703 ps, u_xrl0 ~590 ps): the 4 u_xo lane relays sat 600-900 um west of the cfifo at (518-864, 43-86) while their xk[k] also clocks u_cf/xk[k] on the cfifo S face. Structural fix, geometry only: u_cf R0 43.2 -> 86.4 um up; u_n0 (LLfu node, was directly above u_cf) 1166.4,172.8 -> 1339.2,216.0 to keep the 20 um channel; u_xo0..3 directly under u_cf at y 43.2, x 1123.2/1209.6/1296.0/1382.4 (60.5 um channels) so each relay ck pin sits within ~10-55 um x / 40 um y of u_cf/xk[k] and its x lane bits enter beside u_cf/xl[k]; xo leaves 300-600 um to the E face instead of 900-1200. RTL, pins, outline 1436.832x3369.6, clocks and every other child unchanged (no die slot change). | s81frame_col_h9_vgcsr (STW-S81c-DIE-FRAME 10-22): VECTOR LANDINGS (lp landing_vector_group): 23 vector ring/read pairs carry the 2914 crossing bits (was one 1-bit ring per bit: 3,017 h9 / 3,143 h10, ~38 flops + 20 ring->read wires each, piled on the bf-row region boundaries = the GPL routability failure); landing flops 17363, reset forest 628; per-net D/E/K, +3 edges and reset age unchanged; regions re-cut at y 1170,2250 (3 element rows each, boundaries off the bf rows) | 10-22 DIE3-FRAME: regional roots ck_r0..2 as pre-placed balanced spines with child-insertion leaf targets (TritonCTS whole-root spread 155-1122 ps, soft-only 400-558 ps on 1.1-mm roots); post-CTS delay tap on the xk soft synchroniser groups (spread 122-126 > 80). RTL, ports, pins, outline, latency unchanged. | 10-22 DIE4-FRAME (successor of s81frame_col_h9_vgcs): spine child targets on the gate's own basis -- a child without per-pin clock_measurements (ot_v41_bf_col, q element) targets its insertion.json tt.boundary mean (544.0 / 510.3), not the lib max_clock_tree_path (697.5 / 598.0) that put their flops 153 / 88 ps early vs the soft leaves (deterministic per-pair clock_rule FAIL). RTL, ports, pins, outline, latency unchanged.",
+ "reroute_reason": {
+  "kind": "structural_change",
+  "reason": "s81frame_col_h9_rf3rlfs1x: GPL 3_3 routability non-convergence from 3k one-bit landings on the bf-row region boundaries -> vector landings (same ports, pins, outline, clocks), regions re-cut 1170,2250"
+ }
+}
