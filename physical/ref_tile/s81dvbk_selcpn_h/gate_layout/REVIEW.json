@@ -1,0 +1,19 @@
+{
+ "reviewer": "codex coordinator",
+ "time": "2026-10-21T22:32:12-07:00",
+ "gate_commit": "2026-10-21T22:08:34-0700",
+ "geometry_sha256": "788f169001162f72b02ed9820b95d1cc9f8e92b3033ead92d8f3abe7b25f70fd",
+ "verdict": "APPROVED",
+ "authority": "Coordinator personally viewed floorplan and density PNGs plus raw gate, and explicitly approved this exact source and geometry for normal qualification. The lane records that approval without changing the immutable gate.",
+ "source_commit": "f4e387d86f6ffa8d0f226d4772ec720b80b07ad4",
+ "source_archive_sha256": "d69df128591688d1ca9e0e24ba42453c01b9194d4a4c7b599db9258e45190a2b",
+ "source_manifest_sha256": "8b1fb356836a3940e210bde472a8fa52ab27c77a0a7012ada52ffdd1062ff540",
+ "checklist": {
+  "lattice": "388.8 by 475.2 um; twelve 51.408 by 39.96 SRAMs on the 86.4 um grid; no off-track bodies.",
+  "std_cell_band": "Central 3 by 4 SRAM block, continuous 34.992 / 46.44 um channels and broad >=78 um pin-flop bands. Actual 23.3 percent total fill is explicitly accepted as pin-bound; local warm density is disclosed, with no dense annulus.",
+  "pin_spread": "All four functional faces span approximately 99 percent. Actual 6072 signal / clock pins are accessible with zero outside or missing geometry.",
+  "clock_entry": "W-centre entry feeds the real spine. Native max 32 PASS; TT / FF pin-flop spread 46.4 / 46.3 ps. 30482 sinks and 550.7 / 452.2 ps insertion remain guidance risks and require real parent compensation / landing.",
+  "shape": "388.8 by 475.2 central 3 by 4 SRAM geometry. Exact qualified source is preserved; no squeeze or old-view alias."
+ },
+ "qualification_scope": "Normal route qualification may proceed after source-specific positive and causal metadata checks. This approval does not claim CLOSED or qualify a composed parent."
+}

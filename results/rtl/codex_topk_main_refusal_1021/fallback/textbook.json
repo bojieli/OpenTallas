@@ -1,0 +1,2584 @@
+{
+ "cells": 229074,
+ "flops": 30470,
+ "icgs": 0,
+ "macros": 12,
+ "findings": {
+  "clock_domain": [
+   "clock root port ck: 30,470 flops > 15,000 on one root (+0 ICGs, 12 macro clock pins; e.g. u_c.act[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+  ],
+  "clock_guidance": [
+   "clock root port:ck: 30,482 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 30,482 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+  ]
+ },
+ "refuse": {},
+ "metrics": {
+  "core_um": [
+   470.9,
+   298.1
+  ],
+  "clock_roots": [
+   {
+    "root": "port:ck",
+    "ff": 30470,
+    "icg": 0,
+    "macro_pins": 12,
+    "example": "u_c.act[0]$_DFF_PN0_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 30482,
+  "clock_max_root": "port:ck",
+  "high_fanout_top": [],
+  "hf_max_port": 0,
+  "hf_max_reset": 0,
+  "hf_max_net": 0,
+  "reset_landing": [
+   {
+    "port": "rst_profile[0]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[100]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[101]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[102]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[103]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[104]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[105]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[106]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[107]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[108]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[109]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[10]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[110]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[111]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[112]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[113]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[114]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[115]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[116]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[117]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[118]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[119]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[11]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[120]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[121]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[122]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[123]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[124]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[125]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[126]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[127]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[128]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[129]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[12]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[130]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[131]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[132]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[133]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[134]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[135]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[136]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[137]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[138]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[139]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[13]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[140]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[141]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[142]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[143]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[144]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[145]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[146]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[147]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[148]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[149]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[14]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[150]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[151]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[152]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[153]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[154]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[155]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[156]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[157]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[158]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[159]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[15]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[160]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[161]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[162]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[163]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[164]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[165]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[166]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[167]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[168]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[169]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[16]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[170]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[171]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[172]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[173]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[174]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[175]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[176]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[177]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[178]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[179]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[17]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[180]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[181]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[182]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[183]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[184]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[185]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[186]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[187]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[188]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[189]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[18]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[190]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[191]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[192]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[193]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[194]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[195]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[196]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[197]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[198]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[199]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[19]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[1]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[200]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[201]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[202]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[203]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[204]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[205]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[206]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[207]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[208]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[209]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[20]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[210]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[211]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[212]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[213]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[214]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[215]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[216]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[217]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[218]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[219]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[21]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[220]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[221]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[222]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[223]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[224]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[225]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[226]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[227]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[228]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[229]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[22]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[230]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[231]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[232]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[233]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[234]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[235]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[236]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[237]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[238]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[239]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[23]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[240]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[241]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[242]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[243]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[244]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[245]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[246]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[247]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[248]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[249]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[24]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[250]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[251]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[252]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[253]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[254]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[255]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[256]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[257]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[258]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[259]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[25]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[260]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[261]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[262]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[263]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[264]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[265]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[266]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[267]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[268]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[269]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[26]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[270]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[271]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[272]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[273]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[274]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[275]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[276]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[277]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[278]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[279]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[27]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[280]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[281]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[282]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[283]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[284]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[285]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[286]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[287]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[288]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[289]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[28]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[290]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[291]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[292]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[293]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[294]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[295]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[296]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[297]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[298]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[299]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[29]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[2]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[300]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[301]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[302]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[303]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[304]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[305]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[306]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[307]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[308]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[309]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[30]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[310]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[311]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[312]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[313]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[314]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[315]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[316]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[317]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[318]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[319]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[31]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[320]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[321]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[322]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[323]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[324]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[325]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[326]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[327]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[328]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[329]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[32]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[330]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[331]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[332]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[333]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[334]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[335]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[336]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[337]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[338]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[339]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[33]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[340]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[341]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[342]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[343]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[344]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[345]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[346]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[347]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[348]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[349]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[34]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[350]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[351]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[352]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[353]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[354]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[355]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[356]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[357]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[358]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[359]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[35]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[360]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[361]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[362]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[363]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[364]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[365]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[366]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[367]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[368]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[369]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[36]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[370]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[371]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[372]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[373]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[374]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[375]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[376]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[377]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[378]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[379]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[37]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[380]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[381]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[382]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[383]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[384]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[385]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[386]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[387]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[388]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[389]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[38]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[390]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[391]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[392]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[393]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[394]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[395]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[396]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[397]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[398]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[399]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[39]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[3]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[400]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[401]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[402]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[403]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[404]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[405]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[406]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[407]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[408]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[409]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[40]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[410]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[411]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[412]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[41]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[42]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[43]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[44]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[45]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[46]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[47]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[48]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[49]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[4]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[50]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[51]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[52]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[53]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[54]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[55]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[56]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[57]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[58]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[59]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[5]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[60]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[61]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[62]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[63]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[64]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[65]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[66]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[67]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[68]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[69]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[6]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[70]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[71]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[72]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[73]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[74]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[75]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[76]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[77]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[78]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[79]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[7]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[80]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[81]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[82]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[83]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[84]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[85]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[86]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[87]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[88]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[89]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[8]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[90]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[91]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[92]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[93]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[94]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[95]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[96]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[97]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[98]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[99]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   },
+   {
+    "port": "rst_profile[9]",
+    "sinks": 2,
+    "flops": 2,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 0,
+  "in_to_reg_levels": 0,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 533.4,
+  "depth_path": [
+   "u_c.u_ctl.eq[1]$_DFFE_PN0P_",
+   "u_c.u_ctl.pre_r[52]$_DFF_P_/D"
+  ],
+  "depth_levels": 14,
+  "reach_worst_um": 0.0,
+  "reach_violations": 0,
+  "util": 0.3067,
+  "std_density": 0.1661,
+  "total_fill": 0.3067,
+  "narrow_channels": 0,
+  "narrow_channel_min_um": null
+ },
+ "top": "dsdv_bksel_c_pa_n32",
+ "netlist": "/srv/opentallas-scratch/claude/ref_gate/s81dvbk_selcpn_d-20261021-132442/routes/gate/work/orfs/results/asap7/opentallas_dsdv_bksel_c_pa_n32_asap7_ref_gate/base/1_2_yosys.v",
+ "seconds": 6.6,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "bnd_strict_pin_regs": 0,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.45,
+  "util_max": 0.65,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0,
+  "reset_ports": "rst_profile"
+ },
+ "clock_rule": {
+  "max_root_sinks": 30482,
+  "root": "port:ck",
+  "ok": true,
+  "text": "30,482 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 30,482 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+  "enforce": false,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [],
+ "waived": [],
+ "verdict": "WARN",
+ "refusing_checks": [],
+ "summary": "clock_domain: clock root port ck: 30,470 flops > 15,000 on one root (+0 ICGs, 12 macro clock pins; e.g. u_c.act[0]$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | clock_guidance: clock root port:ck: 30,482 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 30,482 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate"
+}
