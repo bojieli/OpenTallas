@@ -1,0 +1,180 @@
+{
+  "qualification": "CONTROL_SYNTH_INVENTORY_ONLY",
+  "top": "dsdv_svc_rs_attw1",
+  "ROOT": 1,
+  "params": {
+    "MUT": 0,
+    "DIE_ID": 0,
+    "ST": 0,
+    "SRAM_MACRO": 1,
+    "PMEM": 1,
+    "TEXT": 1,
+    "TLX": 6,
+    "TXD": 0,
+    "NTP": 1,
+    "ROLE_EXT": 1
+  },
+  "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 32,
+    "ot_sram_1r1w_32x128_m1": 38
+  },
+  "cells": 1527092,
+  "ports": {
+    "ck": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst": {
+      "direction": "input",
+      "width": 1
+    },
+    "sid": {
+      "direction": "input",
+      "width": 4
+    },
+    "cs": {
+      "direction": "input",
+      "width": 805
+    },
+    "qrq": {
+      "direction": "output",
+      "width": 682
+    },
+    "qrk": {
+      "direction": "input",
+      "width": 2
+    },
+    "qwd": {
+      "direction": "input",
+      "width": 2
+    },
+    "qrv": {
+      "direction": "input",
+      "width": 2
+    },
+    "qr_data": {
+      "direction": "input",
+      "width": 512
+    },
+    "qr_tag": {
+      "direction": "input",
+      "width": 34
+    },
+    "qr_beat": {
+      "direction": "input",
+      "width": 8
+    },
+    "l_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "l_d": {
+      "direction": "output",
+      "width": 2132
+    },
+    "pv_ov": {
+      "direction": "output",
+      "width": 1
+    },
+    "pv_od": {
+      "direction": "output",
+      "width": 513
+    },
+    "sm_st": {
+      "direction": "output",
+      "width": 1
+    },
+    "sm_kind": {
+      "direction": "output",
+      "width": 4
+    },
+    "sm_jid": {
+      "direction": "output",
+      "width": 8
+    },
+    "sm_rv": {
+      "direction": "output",
+      "width": 1
+    },
+    "sm_rp": {
+      "direction": "output",
+      "width": 1
+    },
+    "sm_rj": {
+      "direction": "output",
+      "width": 3
+    },
+    "sm_rd": {
+      "direction": "output",
+      "width": 512
+    },
+    "go_o": {
+      "direction": "output",
+      "width": 1
+    },
+    "tjob_o": {
+      "direction": "output",
+      "width": 10
+    },
+    "done": {
+      "direction": "output",
+      "width": 1
+    },
+    "tagj": {
+      "direction": "output",
+      "width": 8
+    },
+    "hcr": {
+      "direction": "output",
+      "width": 2
+    },
+    "hack": {
+      "direction": "output",
+      "width": 2
+    },
+    "fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "fault_code": {
+      "direction": "output",
+      "width": 32
+    },
+    "pio_o": {
+      "direction": "output",
+      "width": 16
+    },
+    "pvo_o": {
+      "direction": "output",
+      "width": 16
+    },
+    "jc_o": {
+      "direction": "output",
+      "width": 16
+    },
+    "st_o": {
+      "direction": "output",
+      "width": 2
+    },
+    "role_i": {
+      "direction": "input",
+      "width": 22
+    },
+    "pvs_i": {
+      "direction": "input",
+      "width": 8
+    },
+    "tx_i0": {
+      "direction": "output",
+      "width": 1618
+    },
+    "tx_o0": {
+      "direction": "input",
+      "width": 529
+    }
+  },
+  "native_status": "FAIL",
+  "max_dynamic_loads": 15376,
+  "violation_count": 7542,
+  "parent_closed": false
+}

@@ -1,0 +1,252 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "top": "dsdv_svc_rs_attw1",
+  "status": "FAIL",
+  "max_dynamic_loads": 15376,
+  "role_errors": [],
+  "violation_count": 7542,
+  "worst_drivers": [
+    {
+      "driver": "_2352624_/QN",
+      "driver_role": "sequential",
+      "net": "_0277483_",
+      "loads": 15376
+    },
+    {
+      "driver": "_2345330_/QN",
+      "driver_role": "sequential",
+      "net": "_0241558_",
+      "loads": 4268
+    },
+    {
+      "driver": "_2351259_/QN",
+      "driver_role": "sequential",
+      "net": "_0276119_",
+      "loads": 3600
+    },
+    {
+      "driver": "_2586107_/QN",
+      "driver_role": "sequential",
+      "net": "_0057714_",
+      "loads": 2288
+    },
+    {
+      "driver": "_2552017_/QN",
+      "driver_role": "sequential",
+      "net": "_0240848_",
+      "loads": 2049
+    },
+    {
+      "driver": "_2309205_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0986886_",
+      "loads": 2048
+    },
+    {
+      "driver": "_2313314_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0989963_",
+      "loads": 2048
+    },
+    {
+      "driver": "_2590822_/QN",
+      "driver_role": "sequential",
+      "net": "_0279504_",
+      "loads": 2048
+    },
+    {
+      "driver": "_1924396_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0809891_",
+      "loads": 1951
+    },
+    {
+      "driver": "_2344315_/QN",
+      "driver_role": "sequential",
+      "net": "_0241253_",
+      "loads": 1537
+    },
+    {
+      "driver": "_2351303_/QN",
+      "driver_role": "sequential",
+      "net": "_0064284_",
+      "loads": 1062
+    },
+    {
+      "driver": "_1650081_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0651099_",
+      "loads": 1057
+    },
+    {
+      "driver": "_2351287_/QN",
+      "driver_role": "sequential",
+      "net": "_0196096_",
+      "loads": 1046
+    },
+    {
+      "driver": "_2061449_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0856933_",
+      "loads": 1033
+    },
+    {
+      "driver": "_2586734_/QN",
+      "driver_role": "sequential",
+      "net": "_0199179_",
+      "loads": 1014
+    },
+    {
+      "driver": "_2351304_/QN",
+      "driver_role": "sequential",
+      "net": "_0189369_",
+      "loads": 1008
+    },
+    {
+      "driver": "_2351288_/QN",
+      "driver_role": "sequential",
+      "net": "_0100009_",
+      "loads": 987
+    },
+    {
+      "driver": "_2351305_/QN",
+      "driver_role": "sequential",
+      "net": "_0103981_",
+      "loads": 804
+    },
+    {
+      "driver": "_2351289_/QN",
+      "driver_role": "sequential",
+      "net": "_0100012_",
+      "loads": 800
+    },
+    {
+      "driver": "_2034770_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0847477_",
+      "loads": 712
+    },
+    {
+      "driver": "_1569118_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0604899_",
+      "loads": 671
+    },
+    {
+      "driver": "_2600347_/QN",
+      "driver_role": "sequential",
+      "net": "_1084091_",
+      "loads": 636
+    },
+    {
+      "driver": "_2602787_/QN",
+      "driver_role": "sequential",
+      "net": "_1085311_",
+      "loads": 620
+    },
+    {
+      "driver": "_2601567_/QN",
+      "driver_role": "sequential",
+      "net": "_1084701_",
+      "loads": 588
+    },
+    {
+      "driver": "_2604007_/QN",
+      "driver_role": "sequential",
+      "net": "_1085921_",
+      "loads": 588
+    },
+    {
+      "driver": "_1966349_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0824673_",
+      "loads": 583
+    },
+    {
+      "driver": "_2060439_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_att.u_core.g_wqh[0].g_p[0].g_m.u_wqm.we",
+      "loads": 583
+    },
+    {
+      "driver": "_2060559_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_0856559_",
+      "loads": 583
+    },
+    {
+      "driver": "_2060715_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "u_att.u_core.g_wqh[2].g_p[0].g_m.u_wqm.we",
+      "loads": 583
+    },
+    {
+      "driver": "_2351255_/QN",
+      "driver_role": "sequential",
+      "net": "_0274646_",
+      "loads": 572
+    },
+    {
+      "driver": "_2351256_/QN",
+      "driver_role": "sequential",
+      "net": "_0275191_",
+      "loads": 572
+    },
+    {
+      "driver": "_2351257_/QN",
+      "driver_role": "sequential",
+      "net": "_0275278_",
+      "loads": 572
+    },
+    {
+      "driver": "_2351258_/QN",
+      "driver_role": "sequential",
+      "net": "_0275724_",
+      "loads": 572
+    },
+    {
+      "driver": "_2600346_/QN",
+      "driver_role": "sequential",
+      "net": "_1084092_",
+      "loads": 544
+    },
+    {
+      "driver": "_2604006_/QN",
+      "driver_role": "sequential",
+      "net": "_1085922_",
+      "loads": 544
+    },
+    {
+      "driver": "_2601566_/QN",
+      "driver_role": "sequential",
+      "net": "_1084702_",
+      "loads": 542
+    },
+    {
+      "driver": "_2586058_/QN",
+      "driver_role": "sequential",
+      "net": "_0279432_",
+      "loads": 539
+    },
+    {
+      "driver": "_2602786_/QN",
+      "driver_role": "sequential",
+      "net": "_1085312_",
+      "loads": 539
+    },
+    {
+      "driver": "_2597839_/QN",
+      "driver_role": "sequential",
+      "net": "_1082838_",
+      "loads": 530
+    },
+    {
+      "driver": "_2597971_/QN",
+      "driver_role": "sequential",
+      "net": "_1082904_",
+      "loads": 530
+    }
+  ],
+  "full_receipt_sha256": "87fbec6a9cc9d677de3d8d54cf49f68365bb53ec8f4160218b012eb09385a6eb",
+  "full_receipt_path": "/srv/opentallas-scratch/claude/codex-s81-attw-control-1022/control_r1_2/native_census.json"
+}
