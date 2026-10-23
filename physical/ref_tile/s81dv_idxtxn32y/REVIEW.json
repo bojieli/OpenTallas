@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T21:42:09.331726-07:00",
+  "gate_commit": "2026-10-22T20:38:35-0700",
+  "geometry_sha256": "168b92dadc41af51644c939911290d9e2669ef6db6585e654ad4c84d9fd377ff",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "168b92dadc41af51644c939911290d9e2669ef6db6585e654ad4c84d9fd377ff",
+    "components": {
+      "outline": "c9d5730ddbe8bf1b7c7a9b13050a1f1d67cacf4222c023e297af5e38cb09f006",
+      "macros": "dda3e7f6e2809c37e3934be22e9141784552d3e0a76ef3246237ac416f21360b",
+      "pins": "ef261a4f251c88e7608f68f5953b9a643e5f8d204b26294efd323df2050a33d2",
+      "clock_entry": "fc4c0aca2d18bc91e1492164e1a9b49b55a7db6190bc4b445c402fbcd48b011b"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Reviewed exact existing macro locations and track-accessible pins; existing SRAM placement geometry accepted under frozen owner die-results policy. No new lattice requirement.",
+    "std_cell_band": "Viewed floorplan and density PNGs; connected cell area around hard blocks and through centre; no isolated power island.",
+    "pin_spread": "846/846 physical signal-clock pins accessible, no missing/outside rectangles; N/S face density below 6 pins/um.",
+    "clock_entry": "TT/FF pin-flop spread 25.1/32.0 ps; local spine root. Parent/child clock alignment remains routed STA obligation.",
+    "shape": "669.6 x628.56 um; total fill57.3%; five SRAM plus CLOSED ga child."
+  },
+  "scope": "Normal route submission only; no timing closure or die binding credit. Preserve original failures and source-binding refusal; exact submit checks must pass.",
+  "diagnostics": "TT placement reg-reg -439.6ps to child ga and hold -117.7ps; route decides timing. Structural SPLIT parent with CLOSED child is parallel fallback.",
+  "gate_result_sha256": "16721e736e47737f13164d79509bbdd835df4da83eaee47e698c1d424c839277",
+  "archive_sha256": "fb2862ac61164443a4075bd418908aa6790a69f8844ef791de6a397c736a7166",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}
