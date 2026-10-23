@@ -138,6 +138,15 @@ class GeomReviewGate(unittest.TestCase):
             f"- VERDICT ot_t physical/ref_tile/k1@{self.c3[:9]} FAIL hash={h3[:16]} y\n")
         self.assertEqual(self.check(self.c3, fails)["verdict"], "REFUSE")
 
+    def test_pass_conditional_lets_route_run(self):
+        fails = [job("ot_t", "NEEDS_RTL", "2026-10-22T10:00:00-07:00")]
+        h3 = G.kit_hash_git(self.repo, self.c3, "physical/ref_tile/k1")
+        G.LANE.write_text(f"- VERDICT ot_t physical/ref_tile/k1@{self.c3[:9]} PASS-CONDITIONAL hash={h3[:16]} x | FIX: numbers\n")
+        r = self.check(self.c3, fails)
+        self.assertEqual(r["verdict"], "PASS")
+        self.assertTrue(r["conditional"])
+        self.assertIn("PASS-CONDITIONAL", r["message"])
+
     def test_unhashable_kit_refuses_failing(self):
         fails = [job("ot_t", "NEEDS_RTL", "2026-10-22T10:00:00-07:00")]
         r = G.check(spec(self.c3, kit="nokit"), self.repo, fails, {}, {}, verdicts=[])

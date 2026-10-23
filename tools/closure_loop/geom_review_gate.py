@@ -56,7 +56,7 @@ API_CACHE_S = 600
 FAIL_STATES = {"NEEDS_RTL", "NEEDS_HUMAN", "FLOORPLAN_MARGIN", "PREROUTE_MARGIN"}
 EXCLUDED_DIRS = ("views/", "gate_layout/", "record/")
 KIT_RE = re.compile(r"physical/ref_tile/([A-Za-z0-9_.-]+)/kit\.env")
-VERDICT_RE = re.compile(r"^\s*-?\s*VERDICT\s+(\S+)\s+(\S+)\s+(PASS|FAIL)\b.*?\bhash=([0-9a-f]{12,64})", re.M)
+VERDICT_RE = re.compile(r"^\s*-?\s*VERDICT\s+(\S+)\s+(\S+)\s+(PASS-CONDITIONAL|PASS|FAIL)(?![\w-]).*?\bhash=([0-9a-f]{12,64})", re.M)
 BAD = ("BAD", "BAD-PARENT")
 
 
@@ -143,7 +143,7 @@ def load_verdicts(repo: str | None = None, extra_dirs=()) -> list[dict]:
                 r = json.loads(Path(p).read_text())
             except (OSError, ValueError):
                 continue
-            if isinstance(r, dict) and r.get("hash") and r.get("verdict") in ("PASS", "FAIL"):
+            if isinstance(r, dict) and r.get("hash") and r.get("verdict") in ("PASS", "PASS-CONDITIONAL", "FAIL"):
                 out.append(dict(r, at=_ts(r.get("at")), src=p))
     if repo:
         try:
@@ -157,7 +157,7 @@ def load_verdicts(repo: str | None = None, extra_dirs=()) -> list[dict]:
                         r = json.loads(s.stdout)
                     except ValueError:
                         continue
-                    if isinstance(r, dict) and r.get("hash") and r.get("verdict") in ("PASS", "FAIL"):
+                    if isinstance(r, dict) and r.get("hash") and r.get("verdict") in ("PASS", "PASS-CONDITIONAL", "FAIL"):
                         out.append(dict(r, at=_ts(r.get("at")), src=f"origin/main:{p}"))
         except (OSError, subprocess.SubprocessError):
             pass
@@ -278,12 +278,13 @@ def check(spec: dict, repo: str, jobs, api: dict | None = None, coord: dict | No
         return {"verdict": "REFUSE", "kit": kit, "hash": h, "failing": why,
                 "message": f"GEOM_REVIEW: {block} is a FAILING element ({'; '.join(why)}); no GEOM-REVIEW verdict for "
                            f"kit {kit}@{commit[:9]} hash={h[:16]}. File: {req}"}
-    if v["verdict"] != "PASS":
+    if v["verdict"] not in ("PASS", "PASS-CONDITIONAL"):
         return {"verdict": "REFUSE", "kit": kit, "hash": h, "failing": why,
                 "message": f"GEOM_REVIEW: kit {kit}@{commit[:9]} hash={h[:16]} has a GEOM-REVIEW FAIL ({v['src']}): "
                            f"apply its required fixes, then file a new {req}"}
-    return {"verdict": "PASS", "kit": kit, "hash": h, "failing": why,
-            "message": f"GEOM_REVIEW PASS for {kit}@{commit[:9]} hash={h[:16]} ({v['src']})"}
+    cond = v["verdict"] == "PASS-CONDITIONAL"
+    return {"verdict": "PASS", "kit": kit, "hash": h, "failing": why, "conditional": cond,
+            "message": f"GEOM_REVIEW {v['verdict']}{' (route allowed; open condition logged, see the verdict)' if cond else ''} for {kit}@{commit[:9]} hash={h[:16]} ({v['src']})"}
 
 
 def load_jobs(state: Path = STATE) -> list[dict]:
@@ -317,7 +318,7 @@ def main(argv=None):
     s = sub.add_parser("check"); s.add_argument("spec")
     s = sub.add_parser("history"); s.add_argument("block")
     s = sub.add_parser("record"); s.add_argument("element"); s.add_argument("kitref")
-    s.add_argument("verdict", choices=("PASS", "FAIL")); s.add_argument("--reasons", required=True)
+    s.add_argument("verdict", choices=("PASS", "PASS-CONDITIONAL", "FAIL")); s.add_argument("--reasons", required=True)
     s.add_argument("--fixes", default="-"); s.add_argument("--hash"); s.add_argument("--out", action="append", default=[])
     a = ap.parse_args(argv)
     if a.cmd == "hash":

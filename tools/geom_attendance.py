@@ -42,7 +42,7 @@ LIVE_STATES = {"QUEUED", "RUNNING", "READY", "BENCH", "WAITING", "INGESTED", "PE
                "SMOKE_OK"}
 TERMINAL = {"CLOSED", "CANCELLED", "REFUSED", "INVALID"}
 REQ_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?REQ\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)", re.M)
-VER_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?VERDICT\s+(\S+)\s+(\S+)\s+(PASS|FAIL)\b", re.M)
+VER_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?VERDICT\s+(\S+)\s+(\S+)\s+(PASS-CONDITIONAL|PASS|FAIL)(?![\w-])", re.M)
 STALE_H = 2.0
 STAMP_RE = re.compile(r"\[(\d\d-\d\d) (\d\d:\d\d)\]")
 STEWARDS = (("STEWARD-S81", ("dsdv_", "dsfd_", "ot_s81", "s81", "col_h")), ("STEWARD-QK", ("qfd_", "qkd_", "ot_coll_", "ot_qwen")),
