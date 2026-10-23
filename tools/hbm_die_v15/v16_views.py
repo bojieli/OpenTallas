@@ -141,6 +141,33 @@ def default_param_miss(m, params, source):
     return miss
 
 
+def su_dict_cap_int(value):
+    """Canonical bits of the source-defined ten-by-32-bit SU aperture."""
+    if isinstance(value, (int, bool)):
+        result = int(value)
+    else:
+        text = str(value).strip()
+        if text.startswith('{') and text.endswith('}'):
+            fields = text[1:-1].split(',')
+            if len(fields) != 10:
+                return None
+            result = 0
+            for field in fields:
+                item = re.fullmatch(r"\s*32\s*'\s*([dDhHbB])\s*([0-9a-fA-F_]+)\s*", field)
+                if not item:
+                    return None
+                try:
+                    word = int(item.group(2).replace('_', ''), {'d': 10, 'h': 16, 'b': 2}[item.group(1).lower()])
+                except ValueError:
+                    return None
+                if not 0 <= word < 2**32:
+                    return None
+                result = (result << 32) | word
+        else:
+            result = _int_lit(text)
+    return result if result is not None and 0 <= result < 2**320 else None
+
+
 def real_view(m, ports=None, params=None, physical_view=None, source=None):
     """H-DIE-R8b 10-17: a master with several hardened parameter variants (ot_hbm_static_cfg_collar = col_sfu / col_su /
     col_idx) has one routed view per variant tile; pick the candidate whose LEF pins equal this variant's ports and whose
@@ -175,7 +202,14 @@ def real_view(m, ports=None, params=None, physical_view=None, source=None):
             if want is None or have is None or want != have:
                 param_miss = True
                 continue
-        if sp and params is not None and any(str(params.get(k, v)) != str(v) for k, v in sp.items()):
+            if want != 0:
+                requested_cap = su_dict_cap_int((params or {}).get('SU_DICT_CAP'))
+                hardened_cap = su_dict_cap_int((sp or {}).get('SU_DICT_CAP'))
+                if requested_cap is None or hardened_cap is None or requested_cap != hardened_cap:
+                    param_miss = True
+                    continue
+        if sp and params is not None and any(str(params.get(k, v)) != str(v) for k, v in sp.items()
+                                            if not (m == 'ot_hbm_static_cfg_collar' and k == 'SU_DICT_CAP')):
             param_miss = True
             continue
         if sp == {} and default_param_miss(m, params, source):
