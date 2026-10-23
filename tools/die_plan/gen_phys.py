@@ -543,12 +543,16 @@ def mock_lef(P, tn):
     for name, (x, y) in zip(("clk", "arst_n"), tap_points(P, tn)):
         L += pin(name, "INPUT", "CLOCK" if name == "clk" else "SIGNAL",
                  [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
-    # PG: the kit's M7 stripes (pitch 8.64, offset 4.128, width 0.288, VSS 0.384 after VDD)
-    for net, off in (("VDD", 4.128), ("VSS", 4.128 + 0.384)):
-        rects, c = [], off
-        while c + 0.144 < w:
-            rects.append(("M7", c - 0.144, 0.0, c + 0.144, h))
-            c += 8.64
+    # PG: the kit's M5 / M6 / M7 stripes (gen_phys.PDN; VSS one width + spacing after VDD)
+    for net, j in (("VDD", 0), ("VSS", 1)):
+        rects = []
+        for ln, dr, pitch, off, wid, sp in (("M5", "V", 4.32, 2.064, 0.12, 0.072), ("M6", "H", 4.32, 1.968, 0.288, 0.096),
+                                            ("M7", "V", 8.64, 4.128, 0.288, 0.096)):
+            c = off + j * (wid + sp)
+            ext = w if dr == "V" else h
+            while c + wid / 2 < ext:
+                rects.append((ln, c - wid / 2, 0.0, c + wid / 2, h) if dr == "V" else (ln, 0.0, c - wid / 2, w, c + wid / 2))
+                c += pitch
         L += pin(net, "INOUT", "POWER" if net == "VDD" else "GROUND", rects)
     L += ["  OBS"] + [f"    LAYER M{i} ;\n      RECT 0 0 {w:.4f} {h:.4f} ;" for i in range(1, int(top[1:]) + 1)]
     L += ["  END", f"END {t['module']}", "END LIBRARY", ""]

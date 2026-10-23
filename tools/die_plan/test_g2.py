@@ -110,3 +110,15 @@ def test_seam_audit_catches_or11810():
             pytest.skip("image missing")
         a = json.loads((Path(d) / "a.json").read_text())
         assert a["ok"] == 1 and a["fails"] == {"abut_no_same_layer_overlap": 1}
+
+
+def test_pins_avoid_partition_pg_stripes():
+    P = schema.Plan(PAIR)
+    n = 0
+    for pid in P.ports:
+        for bit, ln, c in P.port_pins(pid):
+            assert not schema.pg_blocked(ln, c), (pid, bit, ln, c)
+            n += 1
+    assert n > 500
+    # band geometry: M6 VDD 1.968 +- 0.144 / VSS 2.352 +- 0.144 must be blocked, a mid-gap track free
+    assert schema.pg_blocked("M6", 1.968) and schema.pg_blocked("M6", 2.352) and not schema.pg_blocked("M6", 4.0)

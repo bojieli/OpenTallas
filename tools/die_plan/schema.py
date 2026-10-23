@@ -542,6 +542,24 @@ def port_pins_count(port):
     return int(port["width"]) + (1 if has_epoch(port) else 0)
 
 
+# Partition PG stripe bands per pin layer (gen_phys.PDN): (pitch, band centre offset, half exclusion width) in um.
+# Each band is a VDD+VSS stripe pair. Its centre (2.16 + 4.32k, or 4.32 + 8.64k) is mirror-symmetric in every lattice
+# frame (outlines are multiples of 8.64), so the same periodic pattern holds in the die frame and in every type frame,
+# for every orient. Half exclusion = half the pair span + half the pin width + the min spacing.
+# Pins on M5, M6 or M7 never sit on a stripe: the CP1 mock run on OpenROAD master found PSM-0043 shorts there
+# (check_power_grid), from M7 frame_int pins on the N face.
+PART_PG_BANDS = {"M5": (4.32, 2.16, 0.192), "M6": (4.32, 2.16, 0.384), "M7": (8.64, 4.32, 0.384)}
+
+
+def pg_blocked(ln, c):
+    b = PART_PG_BANDS.get(ln)
+    if not b:
+        return False
+    pitch, cen, half = b
+    d = (c - cen) % pitch
+    return min(d, pitch - d) < half - 1e-9
+
+
 def pin_positions(port, layers):
     """Deterministic pin assignment of one port, die frame: [(bit, layer, coord_um)] with coord along the face.
 
@@ -564,20 +582,22 @@ def pin_positions(port, layers):
             continue
         k0 = math.ceil((lo - off) / p - 1e-9)
         k1 = math.floor((hi - off) / p + 1e-9)
-        ntr = k1 - k0 + 1
-        if ntr < n:
-            raise ValueError(f"port {port['id']}: {n} bits on {ln} need {n} tracks, window has {max(ntr, 0)}")
-        # the used tracks are placed symmetrically about the window's centre track (mirror-invariant: a mirrored
-        # instance of a type maps every pin back onto the same type-frame track); a step parity fix keeps the
-        # centre exact, except for an exactly full window with the wrong parity (then the span sits half a track low)
-        step = max(1, ntr // n)
-        twoc = k0 + k1
-        if (twoc - (n - 1) * step) % 2 and step > 1:
-            step -= 1
-        first = (twoc - (n - 1) * step) // 2
+        # usable tracks: in the window and off the partition PG stripe bands (PART_PG_BANDS)
+        A = [k for k in range(k0, k1 + 1) if not pg_blocked(ln, off + k * p)]
+        m = len(A)
+        if m < n:
+            raise ValueError(f"port {port['id']}: {n} bits on {ln} need {n} tracks, window has {m} off the PG "
+                             f"stripes ({max(k1 - k0 + 1, 0)} in all)")
+        # n of the m usable tracks, picked symmetrically from both ends (mirror-invariant: the usable set is
+        # symmetric under the frame mirror, and so is the pick)
+        if n == 1:
+            idx = [(m - 1) // 2]
+        else:
+            lowh = [((j * (m - 1)) // (n - 1)) for j in range(n // 2)]
+            idx = lowh + ([(m - 1) // 2] if n % 2 else []) + [m - 1 - i for i in reversed(lowh)]
         for j, b in enumerate(bits):
             slot = (n - 1 - j) if rev else j
-            out.append((b, ln, round(off + (first + slot * step) * p, 6)))
+            out.append((b, ln, round(off + A[idx[slot]] * p, 6)))
     out.sort()
     return out
 
