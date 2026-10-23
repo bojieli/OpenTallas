@@ -1,0 +1,243 @@
+{
+  "name": "dsdv_gunit_l1f_ba0",
+  "orfs_dir": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.579758628939999e-10 min 3.195760323038144e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/record/views/dsdv_gunit_l1f_ba0:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/ref_tile/s81dv_l1fb_a0/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.33495889290225e-10 min 1.627989409946906e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/record/views/dsdv_gunit_l1f_ba0:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/ref_tile/s81dv_l1fb_a0/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 8.664702288996295e-11 min 3.453579089374159e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/record/views/dsdv_gunit_l1f_ba0:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/ref_tile/s81dv_l1fb_a0/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/ref_tile/s81dv_l1fb_a0/signoff.sdc",
+    "sha256": "4cf9299ab10aa11820cee267a88b67d0518586f7fc11e2673449c0d4543136ea",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/cl/routed_ioref.a1.json",
+    "sha256": "e530d500100e1a4de2ac279ee8dc41fb6e8fa5e0dd647f6ec67349b68bf49c50",
+    "expect_ps": {
+      "tt": 86.65,
+      "ff": 16.28
+    },
+    "tol_ps": 0.05,
+    "work": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+        "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+        "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48"
+      },
+      "/work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.odb": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.odb",
+        "sha256": "0651416295762d17902ed4ec9a46ea679d901630b7dc63e15ce96f1e8dcb44be"
+      },
+      "/work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.sdc",
+        "sha256": "451bade59d7630f9ba989ed812fea7c97d5866786842492119d16f43e8c1ccaf"
+      },
+      "/work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.spef": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.spef",
+        "sha256": "55c404922595d0821087da2638e5c69926bd3a86aba09916c08fa69da0de033e"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs/w18_extra.sdc",
+        "sha256": "4cf9299ab10aa11820cee267a88b67d0518586f7fc11e2673449c0d4543136ea"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 16.27989409946906,
+        "verdict_ps": 16.28,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 86.64702288996295,
+        "verdict_ps": 86.65,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib]",
+        "read_db /work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib]",
+        "read_db /work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib]",
+        "read_db /work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "abstract": {
+    "mode": "exact_windows",
+    "default_pin_access_violations": 422,
+    "exact_returncode": 0,
+    "exact_command": [
+      "docker",
+      "run",
+      "--rm",
+      "-v",
+      "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/routes/s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/work/orfs/results/asap7/opentallas_dsdv_gunit_l1f_ba0_asap7_ref_s81dv_l1fb_a0_s81dv_l1fb_a0_e2c4faf12/base:/base:ro",
+      "-v",
+      "/home/ubuntu/ot-scratch/claude/closure-loop/s81dv_l1fb_a0-s81dv_l1fb_a0-e2c4faf12/record/views/dsdv_gunit_l1f_ba0:/out",
+      "openroad/orfs:latest",
+      "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+      "-no_init",
+      "-exit",
+      "/out/export_exact_abstract.tcl"
+    ],
+    "exact_rects": 2671330,
+    "exact_pin_access_violations": null,
+    "window_patch": {
+      "windows": 1221,
+      "default_rects_cut": 145,
+      "exact_rects_added": 1221
+    },
+    "window_pin_access_violations": 0,
+    "default_sha256": "b2dce00be0c83b2c1c028ffcdfadd4f1b4f2065cdfdfa61ba59bb39bfdab2b7e",
+    "exact_sha256": "b16469eb4d27205b03e14979cf1a5fac6284718a7ca9a2edd99a3c6ecd38311e",
+    "why": "default (closing-bloat) abstract leaves 422 signal pins without DRC-clean access (e.g. bw_a[0] M4 0.048, bw_a[1] M4 0.048, bw_a[2] M4 0.048, bw_a[3] M4 0.048); exact shapes in 1221 pin windows leave 0"
+  },
+  "files": {
+    "dsdv_gunit_l1f_ba0.lef": "ef38e52ef0d72239518009c01fff902b68bfb20b5978c3fbd9093a880793c4f6",
+    "dsdv_gunit_l1f_ba0_ff.lib": "07dc353f76df337a93e1ba69d38d4afbde8d628daf1c80f5312d671b5bdd9f95",
+    "dsdv_gunit_l1f_ba0_ss.lib": "973590d6b0b534ad193c1f661683197b515cde804471ba8b563c2bbfd1cf3360",
+    "dsdv_gunit_l1f_ba0_tt.lib": "4342a1058e8cf3c4c42ea0adacf638e9b00e7dae88faa908f5c5612aadef4464"
+  },
+  "ok": true,
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "20539db37848eda8a94021409acf95f1812a8c4e7d472a157ee7b7d605547528",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "96cfd509bef5947c8d7315bd31308392d4a98cbd4a5909339595ec6bf1e755fb"
+  }
+}
