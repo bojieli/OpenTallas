@@ -1,0 +1,391 @@
+{
+ "name": "s81sl_xrt3u",
+ "top": "ot_s81sl_xrt3",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv"
+ ],
+ "params": {
+  "FOREG": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "E": [
+   "dl_ev",
+   "dl_e",
+   "clk",
+   "rst_n",
+   "ci_dir",
+   "ci_b"
+  ],
+  "N": [
+   "sid",
+   "dl_wv",
+   "dl_w",
+   "dl_vv",
+   "dl_vb",
+   "c_v",
+   "c_d",
+   "is_v",
+   "is_d",
+   "cfg_v",
+   "cfg_d"
+  ],
+  "W": [
+   "sw_v",
+   "sw_a",
+   "sw_m",
+   "sw_d",
+   "e_v",
+   "e_c",
+   "e_d",
+   "g_v",
+   "g_c",
+   "g_d"
+  ],
+  "S": [
+   "bi",
+   "eg_v",
+   "eg_c",
+   "eg_d",
+   "x_go",
+   "x_eps",
+   "x_sv",
+   "x_si",
+   "x_s",
+   "x_rbv",
+   "x_rbd",
+   "fault",
+   "x_mode",
+   "x_scale",
+   "rb_v",
+   "rb_d",
+   "p_v",
+   "p_d",
+   "lo_v",
+   "lo_d",
+   "bo"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.06,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "s81sl_xrt3u (STW-S81e-XR 10-23, MAIN; COORD review 10-23: xrt3t/xrt3t_b failed 6x, ECO TT -15 / FF -10, worst TT bsw_c -> body mux -> c_d 574 um Manhattan (select at x 390, c_d at the W-face SW corner), rwb -> sw_d row write 424 um with logic, lo_sel -> pk 357 um (placement reg->reg -41): logic hops spanning the pin-bound 570x395 outline.  Structural: (1) W-face CTL-body copy (RTL OT_S81SL_XR_BW: ebw/wbw/vbw + bsew_c/bsww_c kept, same D, 0 cycles) for the sw_d row write; (2) register floorplan: the copies anchored FIRM pre-GPL in a box beside sw_d (reg_floorplan_place.tcl), so the long hop is the zero-logic pin-flop -> copy wire (<= ~440 um) and the select hop <= ~310 um; (3) consumer-adjacent pin plan: c_v/c_d W -> N beside is_d/cfg_d (all three body copies on one face), S face reordered bi | eg/x/rb/p | lo_d | bo (bi beside the RD unpackers, lo_d beside pk -> ci_b/bo); same bits per face except c_d (N 3.3/um, W 4.8/um); (4) k-means CTS K=32 (xrt3t_b: TT/FF spread 43.9/35.7). Same RTL cycles, benches base x2 seeds PASS, mutants hops/xhold/bwsel caught.",
+ "job": {
+  "owner": "Claude:STW-S81e-XR",
+  "branch": "claude/s81-xrt3u-1023",
+  "tag": "s81sl_xrt3",
+  "purpose": "S81 slice u_xr (C3, ot_s81sl_xrt3) structural rebuild xrt3u MAIN: consumer-adjacent pin plan (c_d W->N beside is_d/cfg_d, S face bi | x/p | lo_d | bo), W-face CTL-body copy with an anchored register floorplan; same cycles. COORD 10-23 review: xrt3t/_b ECO TT -15 / FF -10 = structural.",
+  "extra_paths": [
+   "results/rtl/s81_rtlgap_ffn_1021",
+   "results/rtl/s81_xrt3r_1022",
+   "results/rtl/s81_xrt3u_1023",
+   "results/rtl/s81_xrt_leaf_1021",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "tools/s81_slice"
+  ],
+  "benches": [
+   {
+    "name": "s81sl_xrt3_exact",
+    "cmd": "XR_PDC=1 XR_FOREG=0 XR_BW=1 bash tools/s81_slice/xrt_bench.sh {RUN}/s81sl_xrt3_exact base 1 1 6000",
+    "expect": "pass",
+    "pass_regex": "^PASS xrt base hb=1 seed=1$",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "s81sl_xrt3_muthops",
+    "cmd": "XR_PDC=1 XR_FOREG=0 XR_BW=1 bash tools/s81_slice/xrt_bench.sh {RUN}/s81sl_xrt3_muthops hops 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/s81_xrt3u_1023/bench/m_hops/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "s81sl_xrt3_mutbwide",
+    "cmd": "XR_PDC=1 XR_FOREG=0 XR_BW=1 bash tools/s81_slice/xrt_bench.sh {RUN}/s81sl_xrt3_mutbwide bwide 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRILL missed=[1-9][0-9]* of",
+    "fail_witness": "results/rtl/s81_xrt_leaf_1021/bench/f0_bwide_h1/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "s81sl_xrt3_mutxhold",
+    "cmd": "XR_PDC=1 XR_FOREG=0 XR_BW=1 bash tools/s81_slice/xrt_bench.sh {RUN}/s81sl_xrt3_mutxhold xhold 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/s81_xrt3u_1023/bench/m_xhold/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "s81sl_xrt3_mutbwsel",
+    "cmd": "XR_PDC=1 XR_FOREG=0 XR_BW=1 bash tools/s81_slice/xrt_bench.sh {RUN}/s81sl_xrt3_mutbwsel bwsel 1 1 6000 raw",
+    "expect": "fail",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
+    "fail_witness": "results/rtl/s81_xrt3u_1023/bench/m_bwsel/run.log",
+    "threads": 4,
+    "peak_ram_gb": 4
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_xrt3/views",
+  "record_to": "results/rtl/ref_tile/s81sl_xrt3"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81-SLICE): every input lands in a flop at the pin and every output is a flop (ot_s81sl_xr header); recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+ },
+ "outline": {
+  "w": 570.24,
+  "h": 395.28
+ },
+ "std_area_um2": 16000,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_ranges": {
+  "dl_ev": [
+   6.48,
+   8.64
+  ],
+  "dl_e": [
+   8.64,
+   196.305
+  ],
+  "clk": [
+   196.305,
+   198.465
+  ],
+  "rst_n": [
+   198.465,
+   200.625
+  ],
+  "ci_dir": [
+   200.625,
+   201.135
+  ],
+  "ci_b": [
+   201.135,
+   388.8
+  ],
+  "sid": [
+   6.48,
+   7.654
+  ],
+  "dl_wv": [
+   7.654,
+   9.814
+  ],
+  "dl_w": [
+   9.814,
+   333.89
+  ],
+  "dl_vv": [
+   333.89,
+   336.05
+  ],
+  "dl_vb": [
+   336.05,
+   417.07
+  ],
+  "c_v": [
+   417.07,
+   418.537
+  ],
+  "c_d": [
+   418.537,
+   465.505
+  ],
+  "is_v": [
+   465.505,
+   467.665
+  ],
+  "is_d": [
+   467.665,
+   514.632
+  ],
+  "cfg_v": [
+   514.632,
+   516.792
+  ],
+  "cfg_d": [
+   516.792,
+   563.76
+  ],
+  "sw_v": [
+   6.48,
+   7.478
+  ],
+  "sw_a": [
+   7.478,
+   17.462
+  ],
+  "sw_m": [
+   17.462,
+   25.448
+  ],
+  "sw_d": [
+   25.448,
+   281.018
+  ],
+  "e_v": [
+   281.018,
+   282.016
+  ],
+  "e_c": [
+   282.016,
+   284.013
+  ],
+  "e_d": [
+   284.013,
+   379.851
+  ],
+  "g_v": [
+   379.851,
+   382.011
+  ],
+  "g_c": [
+   382.011,
+   382.411
+  ],
+  "g_d": [
+   382.411,
+   388.8
+  ],
+  "bi": [
+   6.48,
+   189.577
+  ],
+  "eg_v": [
+   189.577,
+   191.737
+  ],
+  "eg_c": [
+   191.737,
+   192.069
+  ],
+  "eg_d": [
+   192.069,
+   197.376
+  ],
+  "x_go": [
+   197.376,
+   199.536
+  ],
+  "x_eps": [
+   199.536,
+   204.843
+  ],
+  "x_sv": [
+   204.843,
+   207.003
+  ],
+  "x_si": [
+   207.003,
+   208.33
+  ],
+  "x_s": [
+   208.33,
+   213.637
+  ],
+  "x_rbv": [
+   213.637,
+   215.797
+  ],
+  "x_rbd": [
+   215.797,
+   221.104
+  ],
+  "fault": [
+   221.104,
+   223.264
+  ],
+  "x_mode": [
+   223.264,
+   225.424
+  ],
+  "x_scale": [
+   225.424,
+   230.731
+  ],
+  "rb_v": [
+   230.731,
+   232.891
+  ],
+  "rb_d": [
+   232.891,
+   238.199
+  ],
+  "p_v": [
+   238.199,
+   239.028
+  ],
+  "p_d": [
+   239.028,
+   265.564
+  ],
+  "lo_v": [
+   265.564,
+   266.393
+  ],
+  "lo_d": [
+   266.393,
+   478.68
+  ],
+  "bo": [
+   478.68,
+   563.76
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "32",
+  "OT_REG_PLACE": "physical/ref_tile/s81sl_xrt3u/reg_place.txt"
+ },
+ "pin_reg_split": false,
+ "pin_reg_split_why": "XR6 fallback (FOREG=1): fault leaves a dedicated output flop (fault <= fcore), no recirculation at the pin flop, so io_flop_at_pins anchors it; no pin_reg_split.",
+ "outline_why": "ROOT4-S81POST 10-19: first xr3 (C3, HB 1) kit, from the closed s81sl_xr1f kit: same faces + the band port B (bi 1104 in, bo 513 out) on S (the slice band face: pvrd lands bi from below, bo feeds the svc entry q below). Pin-bound: 9,268 pins; S 3,276 on 570.24 um = 5.9/um sets the width, E 2,214 on 395.28 = 5.7/um the height (as xr1f); ranges spread uniformly per face, scalars 2.16 um, clk at the E-face centre. Util ~7% (std ~16k um2 est.): the 40-60% target is unreachable without cutting boundary bits (slice seam architecture), as xr1f. xrt3u MAIN: same outline 570.24 x 395.28; c_d moved W -> N (slot pin offsets change, slot_change_request filed).",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "defines": [
+  "OT_S81SL_XR_PDC",
+  "OT_S81SL_XR_BW"
+ ],
+ "pin_hook_before_flops": [
+  "physical/common_flow/reg_floorplan_place.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/common_flow/reg_floorplan_release.tcl"
+ ]
+}
