@@ -1,0 +1,9 @@
+s1_m0_phi0_pph0 CB16C_COLL_FACE_CX FW=546 HARD=3 PHY=339 L0=381 R=0 PEER_R=0 PHI=0 PPH=0 words 240 240 | REF got 240 240 lat 381 err 0 flt 0 unx 0 | DUT got 240 240 lat 383 err 0 flt 0 unx 0 | lockstep cycles 1004 tx frames 480 rx words 480 mismatches 0
+s1_m0_phi0_pph0 CB16C_COLL_FACE_CX PASS
+s1_m0_phi1_pph0 CB16C_COLL_FACE_CX FW=546 HARD=3 PHY=339 L0=381 R=0 PEER_R=0 PHI=1 PPH=0 words 240 240 | REF got 240 240 lat 381 err 0 flt 0 unx 0 | DUT got 240 240 lat 383 err 0 flt 0 unx 0 | lockstep cycles 1004 tx frames 480 rx words 480 mismatches 0
+s1_m0_phi1_pph0 CB16C_COLL_FACE_CX PASS
+s1_m0_phi0_pph2 CB16C_COLL_FACE_CX FW=546 HARD=3 PHY=339 L0=381 R=0 PEER_R=0 PHI=0 PPH=2 words 240 240 | REF got 240 240 lat 381 err 0 flt 0 unx 0 | DUT got 240 240 lat 383 err 0 flt 0 unx 0 | lockstep cycles 1004 tx frames 480 rx words 480 mismatches 0
+s1_m0_phi0_pph2 CB16C_COLL_FACE_CX PASS
+s1_m0_phi1_pph2 CB16C_COLL_FACE_CX FW=546 HARD=3 PHY=339 L0=381 R=0 PEER_R=0 PHI=1 PPH=2 words 240 240 | REF got 240 240 lat 381 err 0 flt 0 unx 0 | DUT got 240 240 lat 383 err 0 flt 0 unx 0 | lockstep cycles 1004 tx frames 480 rx words 480 mismatches 0
+s1_m0_phi1_pph2 CB16C_COLL_FACE_CX PASS
+CB16C_COLL_BENCH PASS MUT=0 PROFILE=s1
