@@ -2,7 +2,7 @@
   "source_commit": "6733e5ccabed246fae32cbf4b8df44be9741e4ea",
   "original_record": "183536967f8c40e5986bba14974fabbb279f4b22",
   "qualification": "original committed CLOSED component evidence only",
-  "recollection": "Original routed files no longer existed; re-verdict succeeded on committed metrics but collect failed. Automatic reroute fallback cancelled by exact job name before any replacement route was launched.",
+  "recollection": "Original routed files no longer existed; re-verdict succeeded on committed metrics but collect failed. Automatic reroute fallback launched at21:51:42 while the exact cancellation waited for the source-sync job lock; cancellation completed21:51:45. No replacement closure or route result is adopted.",
   "job_status": "CANCELLED",
   "events": [
     "2026-10-22T20:12:45-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81dv_rg3b_xn-s81dv_rg3b_xn-6733e5cca.json",
