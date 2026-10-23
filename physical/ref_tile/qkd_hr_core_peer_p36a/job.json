@@ -1,5 +1,5 @@
 {
- "name": "qkd_hr_core_peer_p36a-p36a-COMMIT",
+ "name": "qkd_hr_core_peer_p36a-p36a-191db9a21",
  "block": "qkd_hr_core_peer_mu_n32",
  "ref_tile": true,
  "owner": "Claude:QDIE5-HC",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qdie5-hc-1022",
-  "commit": "COMMIT",
+  "commit": "191db9a21",
   "extra_paths": [
    "rtl/qwen_sys/host_peer_mu_sram_1021p35",
    "rtl/qwen_sys/host_peer_mu_n32_1021p35",
@@ -117,7 +117,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_hr_core_peer_p36a/qkd_hr_core_peer_p36a-p36a-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_hr_core_peer_p36a/qkd_hr_core_peer_p36a-p36a-191db9a21"
   }
  ],
  "cycles_added": 0,
