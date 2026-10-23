@@ -152,6 +152,13 @@ FIXED = [
     (r'^hb_coll_Q$', 'rc4'),
     (r'^(lk_|ep_|epcal_)', 'io'),
 ]
+# P5 (COORD HBM PRICE RULING 10-23 14:44 (1)): the VM -> SM x data path is routed directly.  The x-load egress /
+# broadcast-dequeue engines (xq_Q_p<k>_bd/eg; all inputs come from the VM slice: xl aq/ctl, bfq) sit IN the VM slice
+# partition, which abuts the SM a quarters, instead of the svc row 7 mm away on the far side of the SM stacks.  The
+# xw lanes then run VM -> sm<k>c through the SM's own a/b quarters (COORD option C inner-face capacity).
+XDIRECT = os.environ.get('OT_HBM_XDIRECT', '1') == '1'
+if XDIRECT:
+    FIXED.insert(0, (r'^(xq_Q_p\d_(bd|eg|bfq\d)|xl_Q_(ctl|aqhi|aqlo))$', 'vm'))
 CTL_RE = re.compile(r'^ctl_p(\d\d)$')
 
 # ---------------------------------------------------------------------------------------------------- labels / roles
@@ -602,10 +609,10 @@ def sm_internal_groups(where):
         per[(a_, b_)] += x['bits']
     rows = []
     xa = collections.Counter()       # P4 XLAND=a: VM-side SM lane bits that land on a and are relayed to/from c
-    if v1.XLAND == 'a':
+    if v1.XLAND in ('a', 'xw'):
         for g in GROUPS_FOR_XLAND:
-            for sm, peer, d in ((g['dst'], g['src'], 'in'), (g['src'], g['dst'], 'out')):
-                if sm in v1.SPLIT_OF and v1.xland_a(where.get(peer)):
+            for sm, peer, d, bus in ((g['dst'], g['src'], 'in', g['dst_bus']), (g['src'], g['dst'], 'out', g['src_bus'])):
+                if sm in v1.SPLIT_OF and v1.xland_a(where.get(peer), bus):
                     xa[(sm, d)] = max(xa[(sm, d)], 0) + g['bits']
     for n, subs in sorted(v1.SPLIT_OF.items()):
         q, k = re.match(r'^(NW|NE|SW|SE)_sm(\d)a$', subs[0]).groups()
