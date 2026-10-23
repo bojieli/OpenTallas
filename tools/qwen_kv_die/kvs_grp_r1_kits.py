@@ -66,6 +66,16 @@ def main():
     for k in ('grp', 'grp_h'):
         m = f'qkd_kvs_{k}'; kit = f'{m}_r1'; k1 = f'{m}_k1'
         W, H, pins = frame(m)
+        # ports the die leaves unread have no frame pin (port_bind rtl_outputs_unread): y__tok / y__tep = x__tok / x__tep
+        # pass words -> W beside x__tok; grp_h o_dn (= i_ctl permuted) -> N between i_ctl and o_ctl (short feed-through)
+        have = {re.sub(r'\[\d+\]$', '', n) for n, *_ in pins}
+        xt = max(t for n, f, L, t in pins if n.startswith('x__tok['))
+        extra = [('y__tok', 18, 'W', 'M4', xt + 12.0), ('y__tep', 16, 'W', 'M4', xt + 14.0),
+                 ('o_dn', 271, 'N', 'M5', 128.0)]
+        for port, w, f, L, c in extra:
+            if port in have:
+                continue
+            pins += [(f'{port}[{i}]', f, L, c + (i - w / 2) * 0.001) for i in range(w)]
         s = json.loads(git_show(base, f'physical/ref_tile/{k1}/spec.json'))
         s['name'] = kit
         s['sources'] = [TILE if x.endswith('qkd_kvs_tiles_hroot_ff_k.sv') else x for x in s['sources']]
