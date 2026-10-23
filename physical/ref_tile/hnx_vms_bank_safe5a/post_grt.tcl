@@ -1,0 +1,1 @@
+source /src/physical/ref_tile/hnx_vms_bank_safe5a/clock_entry.sdc
