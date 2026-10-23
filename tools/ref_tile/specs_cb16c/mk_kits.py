@@ -59,7 +59,8 @@ def slice_spec(w):
                               'Outline = one third of the face bus (145.8 um of pins at the face pin pitch); recipe 4 flop-first, '
                               'hold_budget die.'),
         'job': dict(OWNER, tag=f'es{w}', purpose=f'CB16c-COLL: collective face edge slice {top} (ALT regional split of the COLLIO faces)',
-                    benches=[lint(top, [CX]), bench('s0', 0, 'pass', f'{WIT}/s0_m0.log')]),
+                    benches=[lint(top, [CX]), bench('s0', 0, 'pass', f'{WIT}/s0_m0.log')]
+                    + [bench('s0', m, 'fail', f'{WIT}/s0_m{m}.log') for m in (1, 2)]),   # slice-path mutants: bit swap, rx slice skip
     }
 
 
@@ -131,7 +132,7 @@ def write(spec, hand=None):
 # W column: rx slices (MY: d faces the body) at the bottom under the body rx band, tx slices on top under the tx band;
 # E column: phy_rx slices (MY) at the bottom beside the phy_rx window, phy_tx slices on top.  Parent signals M2-M7.
 CX_PROF = {'s0': dict(HARD=1, PHY=350, L=383, R=0, PEER_R=5), 'p': dict(HARD=2, PHY=20, L=58, R=5, PEER_R=5)}
-CX_M, CX_CH, CX_SW, CX_SH, CX_PITCH = 8.64, 4.32, 21.6, 145.8, 151.2
+CX_M, CX_CH, CX_SW, CX_SH, CX_PITCH = 8.64, 4.32, 21.6, 146.88, 151.2   # slice view 21.6 x 146.88
 
 
 def cx_spec(prof):

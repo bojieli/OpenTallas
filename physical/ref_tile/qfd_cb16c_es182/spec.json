@@ -89,6 +89,30 @@
     "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/s0_m0 s0 0",
     "pass_regex": "^CB16C_COLL_BENCH PASS MUT=0 PROFILE=s0$",
     "pass_witness": "results/rtl/cb16c_coll_1022/s0_m0.log"
+   },
+   {
+    "name": "cb16c_lockstep_s0_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/s0_m1 s0 1",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=1 PROFILE=s0$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/s0_m1.log"
+   },
+   {
+    "name": "cb16c_lockstep_s0_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/s0_m2 s0 2",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=2 PROFILE=s0$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/s0_m2.log"
    }
   ]
  },
