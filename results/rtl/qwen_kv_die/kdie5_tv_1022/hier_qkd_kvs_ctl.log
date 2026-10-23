@@ -1,0 +1,912 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv -defer -DSYNTHESIS rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv rtl/physical/ot_qkd_kv_static_writer_native.sv rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv rtl/lib/ot_rst_relay.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv; hierarchy -check -top qkd_kvs_ctl; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_es_fan_root2_b'.
+Storing AST representation for module `$abstract\qkd_kv_es_fan_stack_b'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_die_cfg_a'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_static_kv_ownership_calendar_mu'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_static_kv_boot_dispatch_mu'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_static_kv_boot_cdc'.
+Storing AST representation for module `$abstract\qkd_static_kv_boot_observe'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_static_writer_native_mu'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_ownership_obs'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_cfault_node'.
+Storing AST representation for module `$abstract\qkd_kv_cfault_tree'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_native_programme'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_static_kv_layer_programme_mu'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_static_kv_layer_programme'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: rtl/physical/ot_qkd_kv_static_writer_native.sv
+Parsing SystemVerilog input from `rtl/physical/ot_qkd_kv_static_writer_native.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_static_writer_native'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_mu_wrow'.
+Storing AST representation for module `$abstract\qkd_kv_mu_rrow'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kv_static_writer'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: rtl/lib/ot_rst_relay.sv
+Parsing SystemVerilog input from `rtl/lib/ot_rst_relay.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_rst_relay'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_static_kv_boot_dispatch'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_static_kv_drain_guard4'.
+Storing AST representation for module `$abstract\qkd_static_kv_ownership_calendar'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_kvs_ctl'.
+Storing AST representation for module `$abstract\qkd_kvs_attn'.
+Storing AST representation for module `$abstract\qkd_kvs_grp'.
+Storing AST representation for module `$abstract\qkd_kvs_pc'.
+Storing AST representation for module `$abstract\qkd_kvs_grp_h'.
+Storing AST representation for module `$abstract\qkd_kvs_pc_h'.
+Storing AST representation for module `$abstract\qkd_kvs_emb'.
+Storing AST representation for module `$abstract\qkd_kvs_hroot'.
+Successfully finished Verilog frontend.
+
+19. Executing HIERARCHY pass (managing design hierarchy).
+
+20. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kvs_ctl'.
+Generating RTLIL representation for module `\qkd_kvs_ctl'.
+
+20.1. Analyzing design hierarchy..
+Top module:  \qkd_kvs_ctl
+Parameter \MUT = 0
+Parameter \VMAP = 1
+Parameter \MU = 1
+
+20.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_static_writer_native_mu'.
+Parameter \MUT = 0
+Parameter \VMAP = 1
+Parameter \MU = 1
+Generating RTLIL representation for module `$paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu'.
+Parameter \MUT = 0
+Parameter \VMAP = 1
+
+20.3. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_native_programme'.
+Parameter \MUT = 0
+Parameter \VMAP = 1
+Generating RTLIL representation for module `$paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme'.
+Warning: Replacing memory \table_stop with list of registers. See rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:76
+Warning: Replacing memory \table3 with list of registers. See rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:75
+Warning: Replacing memory \table2 with list of registers. See rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:74
+Warning: Replacing memory \table1 with list of registers. See rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:73
+Warning: Replacing memory \table0 with list of registers. See rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv:72
+Parameter \MUT = 0
+Parameter \MU = 1
+
+20.4. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_ownership_calendar_mu'.
+Parameter \MUT = 0
+Parameter \MU = 1
+Generating RTLIL representation for module `$paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu'.
+Parameter \QUIET_WIN = 16
+Parameter \MUT = 0
+
+20.5. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_ownership_obs'.
+Parameter \QUIET_WIN = 16
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs'.
+Parameter \MUT = 0
+Parameter \MU = 1
+
+20.6. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_layer_programme_mu'.
+Parameter \MUT = 0
+Parameter \MU = 1
+Generating RTLIL representation for module `$paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu'.
+make 1
+Warning: Replacing memory \g_mu.r_end with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:197
+Warning: Replacing memory \g_mu.r_quiet with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:197
+Warning: Replacing memory \g_mu.r_link with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:196
+Warning: Replacing memory \g_mu.r_writer with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:196
+Warning: Replacing memory \g_mu.r_run with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:196
+Warning: Replacing memory \g_mu.r_issue with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:195
+Warning: Replacing memory \g_mu.r_v with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:195
+Warning: Replacing memory \g_mu.r_k with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:195
+Warning: Replacing memory \g_mu.r_ctrl with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:195
+Warning: Replacing memory \g_mu.shadow with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:147
+Warning: Replacing memory \g_mu.c_gen with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:136
+Warning: Replacing memory \g_mu.c_ctx with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:136
+Warning: Replacing memory \g_mu.c_pos with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:136
+Warning: Replacing memory \g_mu.c_token with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:136
+Warning: Replacing memory \g_mu.c_epoch with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:136
+Warning: Replacing memory \g_mu.c_stage with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:136
+Warning: Replacing memory \g_mu.c_tc with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:136
+Warning: Replacing memory \g_mu.c_age with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:136
+Warning: Replacing memory \g_mu.c_cnt with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:136
+Warning: Replacing memory \g_mu.t_end with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:91
+Warning: Replacing memory \g_mu.t_quiet with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:90
+Warning: Replacing memory \g_mu.t_link with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:90
+Warning: Replacing memory \g_mu.t_writer with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:89
+Warning: Replacing memory \g_mu.t_run with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:89
+Warning: Replacing memory \g_mu.t_issue with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:88
+Warning: Replacing memory \g_mu.t_v with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:88
+Warning: Replacing memory \g_mu.t_k with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:87
+Warning: Replacing memory \g_mu.t_ctrl with list of registers. See rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_mu.sv:87
+Parameter \MUT = 0
+
+20.7. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_es_fan_root2_b'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000'.
+Parameter \NRST = 43
+Parameter \CAP = 1
+Parameter \AGES = 1
+Parameter \MUT = 0
+
+20.8. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_die_cfg_a'.
+Parameter \NRST = 43
+Parameter \CAP = 1
+Parameter \AGES = 1
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a'.
+Parameter \R = 2
+Parameter \STAGES = 1
+Parameter \MUT = 0
+
+20.9. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_cfault_node'.
+Parameter \R = 2
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+
+20.10. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \R = 4
+Parameter \STAGES = 1
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node'.
+Parameter \MUT = 0
+Parameter \DIECFG = 1
+Parameter \NRST = 43
+Parameter \LINKCFG = 1
+Parameter \ESCFG = 1
+Parameter \DIECAP = 1
+Parameter \MU = 1
+Parameter \WMUT = 0
+
+20.11. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_boot_dispatch_mu'.
+Parameter \MUT = 0
+Parameter \DIECFG = 1
+Parameter \NRST = 43
+Parameter \LINKCFG = 1
+Parameter \ESCFG = 1
+Parameter \DIECAP = 1
+Parameter \MU = 1
+Parameter \WMUT = 0
+Generating RTLIL representation for module `$paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu'.
+
+20.12. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_boot_observe'.
+Generating RTLIL representation for module `\qkd_static_kv_boot_observe'.
+
+20.13. Analyzing design hierarchy..
+Top module:  \qkd_kvs_ctl
+Used module:     $paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu
+Used module:     $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu
+Used module:     $paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu
+Used module:     $paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000
+Used module:     $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a
+Used module:     $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
+Used module:     $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
+Used module:     $paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu
+Used module:     \qkd_static_kv_boot_observe
+Parameter \MU = 1
+Parameter \NL = 4
+
+20.14. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_mu_wrow'.
+Parameter \MU = 1
+Parameter \NL = 4
+Generating RTLIL representation for module `$paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow'.
+Parameter \MU = 1
+Parameter \NL = 4
+Found cached RTLIL representation for module `$paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow'.
+Parameter \MUT = 0
+Parameter \VMAP = 1
+
+20.15. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_static_writer_native'.
+Parameter \MUT = 0
+Parameter \VMAP = 1
+Generating RTLIL representation for module `$paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_static_writer_native'.
+Parameter \MUT = 0
+Parameter \DIECFG = 1
+Parameter \NRST = 43
+Parameter \LINKCFG = 1
+Parameter \ESCFG = 1
+Parameter \DIECAP = 1
+
+20.16. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_boot_dispatch'.
+Parameter \MUT = 0
+Parameter \DIECFG = 1
+Parameter \NRST = 43
+Parameter \LINKCFG = 1
+Parameter \ESCFG = 1
+Parameter \DIECAP = 1
+Generating RTLIL representation for module `$paramod$50f4cfc87f4f7e32750259ef48263049df6b9c1d\qkd_static_kv_boot_dispatch'.
+
+20.17. Analyzing design hierarchy..
+Top module:  \qkd_kvs_ctl
+Used module:     $paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu
+Used module:         $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
+Used module:         $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_static_writer_native
+Used module:     $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu
+Used module:     $paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu
+Used module:     $paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000
+Used module:     $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a
+Used module:     $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
+Used module:     $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
+Used module:     $paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu
+Used module:         $paramod$50f4cfc87f4f7e32750259ef48263049df6b9c1d\qkd_static_kv_boot_dispatch
+Used module:     \qkd_static_kv_boot_observe
+Parameter \MUT = 0
+Parameter \RST_RELAY = 1
+Parameter \VMAP = 1
+
+20.18. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_kv_static_writer'.
+Parameter \MUT = 0
+Parameter \RST_RELAY = 1
+Parameter \VMAP = 1
+Generating RTLIL representation for module `$paramod$0daac2a841dfb5a2fc6d3ddbcdd56b42d969390e\qkd_kv_static_writer'.
+
+20.19. Analyzing design hierarchy..
+Top module:  \qkd_kvs_ctl
+Used module:     $paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu
+Used module:         $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
+Used module:         $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_static_writer_native
+Used module:             $paramod$0daac2a841dfb5a2fc6d3ddbcdd56b42d969390e\qkd_kv_static_writer
+Used module:     $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu
+Used module:     $paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu
+Used module:     $paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000
+Used module:     $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a
+Used module:     $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
+Used module:     $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
+Used module:     $paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu
+Used module:         $paramod$50f4cfc87f4f7e32750259ef48263049df6b9c1d\qkd_static_kv_boot_dispatch
+Used module:     \qkd_static_kv_boot_observe
+Parameter \REGIONS = 12
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+20.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 12
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$0997ab2af8b138d4dde5f5abc8ecb3633ecc78f8\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See rtl/lib/ot_rst_relay.sv:42
+
+20.21. Analyzing design hierarchy..
+Top module:  \qkd_kvs_ctl
+Used module:     $paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu
+Used module:         $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
+Used module:         $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_static_writer_native
+Used module:             $paramod$0daac2a841dfb5a2fc6d3ddbcdd56b42d969390e\qkd_kv_static_writer
+Used module:                 $paramod$0997ab2af8b138d4dde5f5abc8ecb3633ecc78f8\ot_rst_relay
+Used module:     $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu
+Used module:     $paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu
+Used module:     $paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000
+Used module:     $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a
+Used module:     $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
+Used module:     $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
+Used module:     $paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu
+Used module:         $paramod$50f4cfc87f4f7e32750259ef48263049df6b9c1d\qkd_static_kv_boot_dispatch
+Used module:     \qkd_static_kv_boot_observe
+
+20.22. Analyzing design hierarchy..
+Top module:  \qkd_kvs_ctl
+Used module:     $paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu
+Used module:         $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
+Used module:         $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_static_writer_native
+Used module:             $paramod$0daac2a841dfb5a2fc6d3ddbcdd56b42d969390e\qkd_kv_static_writer
+Used module:                 $paramod$0997ab2af8b138d4dde5f5abc8ecb3633ecc78f8\ot_rst_relay
+Used module:     $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu
+Used module:     $paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs
+Used module:     $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu
+Used module:     $paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000
+Used module:     $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a
+Used module:     $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
+Used module:     $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
+Used module:     $paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu
+Used module:         $paramod$50f4cfc87f4f7e32750259ef48263049df6b9c1d\qkd_static_kv_boot_dispatch
+Used module:     \qkd_static_kv_boot_observe
+Removing unused module `$abstract\qkd_kvs_hroot'.
+Removing unused module `$abstract\qkd_kvs_emb'.
+Removing unused module `$abstract\qkd_kvs_pc_h'.
+Removing unused module `$abstract\qkd_kvs_grp_h'.
+Removing unused module `$abstract\qkd_kvs_pc'.
+Removing unused module `$abstract\qkd_kvs_grp'.
+Removing unused module `$abstract\qkd_kvs_attn'.
+Removing unused module `$abstract\qkd_kvs_ctl'.
+Removing unused module `$abstract\qkd_static_kv_ownership_calendar'.
+Removing unused module `$abstract\qkd_static_kv_drain_guard4'.
+Removing unused module `$abstract\qkd_static_kv_boot_dispatch'.
+Removing unused module `$abstract\ot_rst_relay'.
+Removing unused module `$abstract\qkd_kv_static_writer'.
+Removing unused module `$abstract\qkd_kv_mu_rrow'.
+Removing unused module `$abstract\qkd_kv_mu_wrow'.
+Removing unused module `$abstract\qkd_kv_static_writer_native'.
+Removing unused module `$abstract\qkd_static_kv_layer_programme'.
+Removing unused module `$abstract\qkd_static_kv_layer_programme_mu'.
+Removing unused module `$abstract\qkd_kv_native_programme'.
+Removing unused module `$abstract\qkd_kv_cfault_tree'.
+Removing unused module `$abstract\qkd_kv_cfault_node'.
+Removing unused module `$abstract\qkd_kv_ownership_obs'.
+Removing unused module `$abstract\qkd_kv_static_writer_native_mu'.
+Removing unused module `$abstract\qkd_static_kv_boot_observe'.
+Removing unused module `$abstract\qkd_static_kv_boot_cdc'.
+Removing unused module `$abstract\qkd_static_kv_boot_dispatch_mu'.
+Removing unused module `$abstract\qkd_static_kv_ownership_calendar_mu'.
+Removing unused module `$abstract\qkd_kv_die_cfg_a'.
+Removing unused module `$abstract\qkd_kv_es_fan_stack_b'.
+Removing unused module `$abstract\qkd_kv_es_fan_root2_b'.
+Removed 30 unused modules.
+
+21. Printing statistics.
+
+=== $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      139 wires
+      870 wire bits
+       46 public wires
+      412 public wire bits
+       19 ports
+      151 port bits
+        5 processes
+       64 cells
+        1   $add
+        4   $eq
+        2   $le
+       19   $logic_and
+       14   $logic_not
+       13   $logic_or
+        1   $lt
+        2   $ne
+        1   $or
+        2   $reduce_and
+        2   $reduce_or
+        3   $sub
+
+=== $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      676 wires
+    14924 wire bits
+      264 public wires
+     6871 public wire bits
+       27 ports
+      348 port bits
+       45 processes
+      132 cells
+        5   $add
+       15   $eq
+        3   $ge
+        1   $gt
+        1   $le
+       53   $logic_and
+       14   $logic_not
+       13   $logic_or
+        6   $lt
+        6   $mux
+        1   $ne
+        1   $reduce_and
+        2   $shl
+        7   $sub
+        4   $xor
+
+=== $paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       37 wires
+     4389 wire bits
+       33 public wires
+     4385 public wire bits
+       24 ports
+     2011 port bits
+        1 processes
+        3 cells
+        1   $logic_not
+        2   $or
+        3 submodules
+        2   $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
+        1   $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_static_writer_native
+
+=== qkd_kvs_ctl ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      765 wires
+    12519 wire bits
+      765 public wires
+    12519 public wire bits
+       62 ports
+     7099 port bits
+       20 submodules
+        1   $paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu
+        1   $paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu
+        1   $paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs
+       10   $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
+        1   $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme
+        1   $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a
+        1   $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
+        1   $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu
+        1   $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu
+        1   $paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000
+        1   qkd_static_kv_boot_observe
+
+=== $paramod$0997ab2af8b138d4dde5f5abc8ecb3633ecc78f8\ot_rst_relay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       44 wire bits
+        5 public wires
+       28 public wire bits
+        3 ports
+       14 port bits
+        2 processes
+        2 cells
+        2   $logic_not
+
+=== $paramod$0daac2a841dfb5a2fc6d3ddbcdd56b42d969390e\qkd_kv_static_writer ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      328 wires
+    13538 wire bits
+      106 public wires
+     7985 public wire bits
+       28 ports
+     3418 port bits
+       13 processes
+      102 cells
+        3   $add
+       14   $eq
+        1   $ge
+        1   $le
+       45   $logic_and
+       21   $logic_not
+        1   $logic_or
+        6   $mux
+        1   $ne
+        3   $sub
+        6   $xor
+        1 submodules
+        1   $paramod$0997ab2af8b138d4dde5f5abc8ecb3633ecc78f8\ot_rst_relay
+
+=== $paramod$50f4cfc87f4f7e32750259ef48263049df6b9c1d\qkd_static_kv_boot_dispatch ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      290 wires
+     4042 wire bits
+       72 public wires
+     1561 public wire bits
+       47 ports
+     1352 port bits
+        1 processes
+      126 cells
+        3   $add
+        1   $and
+        1   $div
+       16   $eq
+        1   $ge
+        1   $le
+       30   $logic_and
+       15   $logic_not
+       20   $logic_or
+        1   $lt
+        2   $mod
+        1   $mul
+        2   $mux
+       16   $ne
+        2   $neg
+        1   $not
+        1   $or
+        3   $reduce_and
+        2   $shift
+        5   $shl
+        2   $sub
+
+=== $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_static_writer_native ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       24 wires
+     2011 wire bits
+       24 public wires
+     2011 public wire bits
+       24 ports
+     2011 port bits
+        1 submodules
+        1   $paramod$0daac2a841dfb5a2fc6d3ddbcdd56b42d969390e\qkd_kv_static_writer
+
+=== $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       23 wires
+     2391 wire bits
+        8 public wires
+     2371 public wire bits
+        6 ports
+     2365 port bits
+       15 cells
+        5   $logic_and
+        4   $ne
+        5   $or
+        1   $reduce_or
+
+=== qkd_static_kv_boot_observe ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       26 wires
+     2729 wire bits
+       13 public wires
+     1603 public wire bits
+        7 ports
+      643 port bits
+        1 processes
+        5 cells
+        1   $logic_not
+        2   $logic_or
+        2   $reduce_or
+
+=== $paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      149 wires
+     2522 wire bits
+       70 public wires
+     1752 public wire bits
+       47 ports
+     1352 port bits
+        2 processes
+       67 cells
+        1   $add
+        7   $eq
+        1   $ge
+       26   $logic_and
+       15   $logic_not
+        6   $logic_or
+        1   $lt
+        6   $mux
+        2   $ne
+        1   $or
+        1   $sub
+        1 submodules
+        1   $paramod$50f4cfc87f4f7e32750259ef48263049df6b9c1d\qkd_static_kv_boot_dispatch
+
+=== $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       10 wires
+       17 wire bits
+        7 public wires
+       14 public wire bits
+        4 ports
+        7 port bits
+        1 processes
+        2 cells
+        1   $logic_not
+        1   $reduce_or
+
+=== $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       10 wires
+       13 wire bits
+        7 public wires
+       10 public wire bits
+        4 ports
+        5 port bits
+        1 processes
+        2 cells
+        1   $logic_not
+        1   $reduce_or
+
+=== $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      258 wires
+    18333 wire bits
+       36 public wires
+     1652 public wire bits
+       15 ports
+     1206 port bits
+        4 processes
+      125 cells
+        9   $add
+        6   $and
+        6   $eq
+        1   $ge
+       16   $logic_and
+        9   $logic_not
+       12   $logic_or
+        6   $lt
+        6   $mul
+        5   $mux
+        9   $ne
+       12   $neg
+        6   $not
+        6   $or
+       12   $shift
+        4   $sub
+
+=== $paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      134 wires
+     8946 wire bits
+       56 public wires
+     5098 public wire bits
+       22 ports
+     2539 port bits
+        6 processes
+       53 cells
+        8   $add
+        2   $eq
+        9   $logic_and
+        6   $logic_not
+        4   $logic_or
+        6   $mul
+        7   $mux
+        1   $ne
+        2   $or
+        2   $reduce_or
+        6   $shiftx
+
+=== $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2297 wires
+    38615 wire bits
+      500 public wires
+    13584 public wire bits
+       39 ports
+      385 port bits
+        1 memories
+     4608 memory bits
+       47 processes
+      632 cells
+       39   $add
+        9   $and
+       83   $eq
+        9   $ge
+        1   $gt
+        8   $le
+      208   $logic_and
+       89   $logic_not
+       14   $logic_or
+       14   $lt
+       15   $memrd
+        3   $mul
+        9   $mux
+       13   $ne
+       12   $neg
+        7   $not
+       15   $or
+       12   $reduce_or
+       12   $shift
+       11   $shiftx
+        2   $shl
+       47   $sub
+
+=== $paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       80 wires
+      363 wire bits
+       34 public wires
+      204 public wire bits
+       19 ports
+       97 port bits
+        6 processes
+       27 cells
+        1   $eq
+        1   $le
+        5   $logic_and
+        7   $logic_not
+        4   $logic_or
+        2   $mux
+        1   $ne
+        2   $reduce_and
+        3   $reduce_or
+        1   $sub
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+     1390 qkd_kvs_ctl
+        3 $paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu
+       15   $paramod$08ab088f5cadbb3aa103c5605255c329c377b06e\qkd_kv_mu_wrow
+      102     $paramod$0daac2a841dfb5a2fc6d3ddbcdd56b42d969390e\qkd_kv_static_writer
+        2       $paramod$0997ab2af8b138d4dde5f5abc8ecb3633ecc78f8\ot_rst_relay
+       67 $paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu
+      126   $paramod$50f4cfc87f4f7e32750259ef48263049df6b9c1d\qkd_static_kv_boot_dispatch
+       27 $paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs
+        2 $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
+      132 $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme
+      125 $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a
+        2 $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
+      632 $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu
+       64 $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu
+       53 $paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000
+        5 qkd_static_kv_boot_observe
+
+        +----------Count including submodules.
+        | 
+     5368 wires
+   128810 wire bits
+     2117 public wires
+    64557 public wire bits
+      439 ports
+    27431 port bits
+        1 memories
+     4608 memory bits
+      144 processes
+     1390 cells
+       69   $add
+       16   $and
+        1   $div
+      148   $eq
+       16   $ge
+        2   $gt
+       14   $le
+      421   $logic_and
+      205   $logic_not
+       89   $logic_or
+       29   $lt
+       15   $memrd
+        2   $mod
+       16   $mul
+       43   $mux
+       54   $ne
+       26   $neg
+       14   $not
+       38   $or
+        8   $reduce_and
+       34   $reduce_or
+       26   $shift
+       17   $shiftx
+        9   $shl
+       68   $sub
+       10   $xor
+       20 submodules
+        1   $paramod$20145b6372a8d34f320c8987976daba18ed40e74\qkd_kv_static_writer_native_mu
+        1   $paramod$84b8f8f446417807a335fd99d58a985cebd6a8f3\qkd_static_kv_boot_dispatch_mu
+        1   $paramod$87740f63355cecf51de9399a76f4bbddfbcd6337\qkd_kv_ownership_obs
+       10   $paramod$978d89f31251d4c1a07d84bcbb9fc7f8dfce0648\qkd_kv_cfault_node
+        1   $paramod$a898c7b27f8353e873db149295aeecb9b05e20dd\qkd_kv_native_programme
+        1   $paramod$d11e03a64b1c2671136286de58b3f9e8e549f5d4\qkd_kv_die_cfg_a
+        1   $paramod$e26876f5c107bb119d225b3eaea773b0e5a14285\qkd_kv_cfault_node
+        1   $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_layer_programme_mu
+        1   $paramod$ff40edb8d331f3ea9cd6c3e9176f856d61052b97\qkd_static_kv_ownership_calendar_mu
+        1   $paramod\qkd_kv_es_fan_root2_b\MUT=s32'00000000000000000000000000000000
+        1   qkd_static_kv_boot_observe
+
+Warnings: 34 unique messages, 34 total
+End of script. Logfile hash: 2168ee477a, time: 0.20s, user: 0.20s, system: 0.01s, MEM: 52.50 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 78% 1x hierarchy (0 sec), 21% 19x read_verilog (0 sec), ...
