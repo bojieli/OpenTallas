@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.hbm.l34_relay_hop.v1",
+ "inp": "/srv/opentallas-scratch/claude/codex-hbmc-r18h5-2140-1022/chainsM/views/contract.json",
+ "hop_um": 1000.0,
+ "hop_wide_um": 1200.0,
+ "wide_min_bits": 600,
+ "tiles": 83223,
+ "rows": 72532,
+ "kept_rows": 26534,
+ "forced_rows": 8764,
+ "dropped_tiles": 53745,
+ "composed_edges": 112684,
+ "removed_edges": 111067,
+ "undriven_bits": 0,
+ "edges_out": 73892,
+ "stages_now": 83486,
+ "stages_kept": 31248,
+ "kept_hop_um": {
+  "median": 900.0,
+  "p99": 1200.0,
+  "max": 1200.0
+ }
+}

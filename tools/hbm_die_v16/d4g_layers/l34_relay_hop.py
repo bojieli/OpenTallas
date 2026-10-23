@@ -69,7 +69,7 @@ def main():
     for r in order:
         if r in forced: acc[r] = 0.0; continue
         (p,) = tuple(pred[r]); (s,) = tuple(succ[r])
-        if CT[s] is None: keep.add(r); acc[r] = 0.0; continue
+        if CT[s] is None or CT[p] is None: keep.add(r); acc[r] = 0.0; continue
         hop = a.hop_wide if (a.hop_wide and rbits[r] >= a.wide_min_bits) else a.hop
         acc[r] = acc.get(p, 0.0) + d(p, r)
         if acc[r] + d(r, s) > hop: keep.add(r); acc[r] = 0.0
