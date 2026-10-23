@@ -134,7 +134,8 @@ def die_probe(P, out, mem=64):
     for net, lst in taps.items():
         L = pin_l[net]
         sz = "{0.04 0.32}" if P.layers[L]["dir"] == "V" else "{0.32 0.04}"
-        tcl.append(f"place_pin -pin_name {net}_root -layer {L} -location {{{root[0]:.3f} {root[1]:.3f}}} -pin_size {sz}")
+        rp = {n: (x, y) for n, _, x, y in gen_phys.die_root_pins(P)}["clk" if net == "clk" else "rst_n"]
+        tcl.append(f"place_pin -pin_name {net}_root -layer {L} -location {{{rp[0]:.4f} {rp[1]:.4f}}} -pin_size {sz}")
         for part, (x, y) in lst:
             tcl.append(f"place_pin -pin_name {net}_tap_{part} -layer {L} -location {{{x:.3f} {y:.3f}}} -pin_size {sz}")
     # partitions block M1..partition_signal_max (die.channels stay open)
