@@ -3,7 +3,7 @@
  "plan_types": [
   "c0"
  ],
- "status": "DONE",
+ "status": "RTL-UNBENCHED",
  "measured_total": 8357315,
  "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_m_tp192.stat (r18h5 recipe)",
  "n_cores": 33,
@@ -511,7 +511,8 @@
   "twin": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv (ot_hgi_coll_tkm_static_p #(PIPE 1); PIPE 0 = pinned)",
   "cycle_cost_edges": 2,
   "cost_note": "TKM finish/done/stat_cycles +2 edges (same words, same addresses, same order); compiler TKM latency +2",
-  "bench": "rtl/hbm_accel/generic/collective/tkm/run_tp192_static_p.sh OUT (golden O/R vectors syn_sel/syn_cand/rank128_zeros + lock-step vs pinned root delayed 2 edges; PIPE 0 identity; mutant MUTP 1 must FAIL)"
+  "bench": "rtl/hbm_accel/generic/collective/tkm/run_tp192_static_p.sh OUT (golden O/R vectors syn_sel/syn_cand/rank128_zeros + lock-step vs pinned root delayed 2 edges; PIPE 0 identity; mutant MUTP 1 must FAIL)",
+  "bench_result": "NOT RUN TO COMPLETION: the TP192 lock-step tb (twin + pinned reference root, KMAX 2048, hier tiles) needs >290 GB in the top-level verilator_bin; memcg-OOM at 128 and 300 GB on ot-gold2. Next: drop the in-tb pinned reference (golden O/R vectors only) or run at TP 96 / KMAX 512; lint-clean only so far"
  },
  "note": "32 x the TP192 tile (260k, already a hardened shape) + root (34k + 2 SRAM): the tile chain is the dataflow; tile pins are registered both ways; PIPE 1 registers the root side.  Root core 34k is small (could merge with its neighbouring tile: 294k).",
  "splits_entry": {
