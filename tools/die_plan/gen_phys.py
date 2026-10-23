@@ -177,7 +177,10 @@ def t_lib(ps):
     return float(ps) / LIB_TIME_UNIT_PS
 
 
-FT_HOP_IN_SHARE = 0.25   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop
+FT_HOP_IN_SHARE = 0.25
+# min input delay (hold) of every partition input vs vclk (= budgeted insertion): neighbour launch at ins - tol
+# (-40 ps) + min clk-to-q + abutted wire (~+40 ps) -> 0 ps
+HOLD_IN_MIN_PS = 0.0   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop
 
 
 def sdc(P, tn, pins):
@@ -207,6 +210,10 @@ def sdc(P, tn, pins):
         out += (f"# ft slots: hop share {FT_HOP_IN_SHARE:g} T at the face, the rest is the last station segment\n"
                 f"set_input_delay {(1 - FT_HOP_IN_SHARE) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
                 f"set_output_delay {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+    # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
+    # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
+    # short clk-to-q + abutted wire, i.e. ~at the budgeted insertion: min input delay HOLD_IN_MIN_PS on every input
+    out += (f"set_input_delay -min {t_lib(HOLD_IN_MIN_PS):.4f} -clock vclk $non_clk_in\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -311,7 +318,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
            "export LEC_CHECK = 0",
-           "export HOLD_SLACK_MARGIN = 0",
+           # FF hold margin over the TT kit corner (CP1 r6: FF seam hold 8 ps worse than TT)
+           "export HOLD_SLACK_MARGIN = 15",
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
