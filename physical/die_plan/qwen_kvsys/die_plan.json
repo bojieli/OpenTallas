@@ -152494,5 +152494,12 @@
   "pin_track_max": 0.6,
   "cut_ratio_max": 0.6,
   "cut_step_um": 250
- }
+ },
+ "census": [
+  {
+   "rows": "census/census_rows_v31.tsv.gz",
+   "map": "census/census_map_v31.json",
+   "note": "as-built rtl6 e33504a6f (census_rows_v31.py); gathers as qkd_rlyi_258s T-chain hops"
+  }
+ ]
 }

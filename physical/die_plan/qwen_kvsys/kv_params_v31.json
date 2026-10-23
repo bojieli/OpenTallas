@@ -98,5 +98,11 @@
   "detour_p90": 1.235,
   "detour_max": 1.313,
   "multi_hop_lanes": 441
+ },
+ "F_DLY_bench": {
+  "verdict": "F_DLY=2 NOT bit-exact at long context",
+  "branch": "claude/kv-p2-rtl-1023@ef0304185",
+  "evidence": "results/rtl/kv_p2_fdly2_1023 (tb_kvattn_rel plan-frame, Verilator 5.050): FD=2 PASS u1 T1024/T4096/T4096-peaky, u4 T1024/T4096; FAIL u1 T8191/T8192, u4 T8192 (stack faults st0/st1); FD=3 vehicle 10/10 PASS; 7/7 mutants caught",
+  "consequence": "keep D(pvp)=1 (F_DLY 3) in the schedule until the r17 root PV launch or the stack read schedule changes (new RTL + re-closure)"
  }
 }

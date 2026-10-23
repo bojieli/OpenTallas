@@ -368,6 +368,8 @@ def main():
         'budgets': dict(face_pins_per_um=6, face_pin_layers=2, face_window_um=10, pin_track_max=0.6, cut_ratio_max=0.6,
                         cut_step_um=250),
     }
+    plan['census'] = [dict(rows='census/census_rows_v31.tsv.gz', map='census/census_map_v31.json',
+                           note='as-built rtl6 e33504a6f (census_rows_v31.py); gathers as qkd_rlyi_258s T-chain hops')]
     Path(a.out).write_text(json.dumps(plan, indent=1) + '\n')
     rep = dict(partitions=len(P), types=len(ptypes),
                types_by_class=dict(collections.Counter(P[min(q for q in P if part_type[q] == tn)]['cls'] for tn in ptypes)),

@@ -91,3 +91,13 @@ COORD 06:33 open items + census coverage (scripts plan_v31.py / emit_v31.py / co
   from landing cells the plan removes; 128 qkd_rlyi_258s MUX relays (the PV result T-chain behind the 8 RH gathers) were
   collapsed as pass cells by extract_asbuilt (so the census above counts the gathers as wires, not as select stages);
   8 non-core clocks and the reset root (host.die_rst_n) have no plan spine.
+- 10-23 tip re-emit (plan-tool @5dd34afa0, uniform spreader + PG-band windows + mandatory census): die_plan.json is
+  unchanged except the new `census` key (census_rows_v31.py -> census/; 2,849 rows, gathers as qkd_rlyi_258s T-chain
+  hops). G0 on the tip checker: 0 pin/abutment errors; census_cov reports 51,031 b "dropped" over 264 pairs, ALL of
+  them tap-tree destinations reached through forwarding partitions (hub_Eo -> hg_EN_7 -> ... -> hg_EN_0): census_cov
+  credits only lane END pairs and a tap tree is a chain of per-hop lanes (census/census_taptree_v31.json: 0 b not
+  carried by a tree). Needs a census_cov rule for forwarded lanes (PLAN-TOOL), not a plan change.
+- G2 (g2_v31_report.json): die probe + FT probes of the 5 worst types and all IO types: every probe EXIT 0, GRT overflow 0
+  (max layer use 21 %, hub_Ei M2).
+- F_DLY: the plan law gives 2, but the bit-exact bench (kv_params_v31.json F_DLY_bench) fails at T8191/T8192 with 2;
+  the schedule keeps F_DLY 3 until new root/stack RTL.
