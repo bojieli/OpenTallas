@@ -3,7 +3,7 @@
  "name": "qfd_c_xstn_safe_rpf",
  "outline": {
   "w": 43.2,
-  "h": 302.4,
+  "h": 194.4,
   "exact": true
  },
  "pins": {
@@ -20,8 +20,8 @@
  },
  "pin_ranges": {
   "b_d": [
-   21.6,
-   151.2
+   43.2,
+   129.6
   ],
   "ck": [
    2.16,
@@ -29,19 +29,19 @@
   ],
   "a_d": [
    0.54,
-   130.14
+   86.94
   ],
   "tap_d": [
-   151.2,
-   280.8
+   97.2,
+   183.6
   ],
   "rst_n": [
-   282.96,
-   283.26
+   185.76,
+   186.06
   ],
   "sidx": [
-   284.4,
-   285.48
+   187.2,
+   188.28
   ]
  },
  "sources": [
@@ -51,10 +51,16 @@
   }
  ],
  "source_parameters": {},
- "std_area_um2": null,
+ "std_area_um2": 378,
  "gate_ready": false,
  "native_source_unchanged": true,
  "added_cycles": 0,
  "changed_pin_faces": "xstn only; parent physical connectivity must be regenerated",
- "note": "PLAN only: source-preserving shape re-hardening, no current view alias, unknown synthesis density and current pin-to-pin reach prohibit gate until completed"
+ "note": "PLAN only: source-preserving shape re-hardening, no current view alias, unknown synthesis density and current pin-to-pin reach prohibit gate until completed",
+ "source_bound_area_receipt": "source_bound_fill_model.json",
+ "pin_alternation": {
+  "group_max": 1,
+  "h": "M2 M4",
+  "v": "M3 M5"
+ }
 }

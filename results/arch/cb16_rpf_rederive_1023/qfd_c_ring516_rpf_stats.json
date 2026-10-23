@@ -3,7 +3,7 @@
  "name": "qfd_c_ring516_rpf",
  "outline": {
   "w": 90.72,
-  "h": 64.8,
+  "h": 43.2,
   "exact": true
  },
  "pins": {
@@ -55,10 +55,16 @@
   }
  ],
  "source_parameters": {},
- "std_area_um2": null,
+ "std_area_um2": 1627,
  "gate_ready": false,
  "native_source_unchanged": true,
  "added_cycles": 0,
  "changed_pin_faces": "xstn only; parent physical connectivity must be regenerated",
- "note": "PLAN only: source-preserving shape re-hardening, no current view alias, unknown synthesis density and current pin-to-pin reach prohibit gate until completed"
+ "note": "PLAN only: source-preserving shape re-hardening, no current view alias, unknown synthesis density and current pin-to-pin reach prohibit gate until completed",
+ "source_bound_area_receipt": "source_bound_fill_model.json",
+ "pin_alternation": {
+  "group_max": 1,
+  "h": "M4",
+  "v": "M3 M5"
+ }
 }

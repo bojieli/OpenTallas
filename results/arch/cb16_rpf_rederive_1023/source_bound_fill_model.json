@@ -1,0 +1,118 @@
+[
+ {
+  "old_kit": "qfd_c_ring514",
+  "new_kit": "qfd_c_ring514_rpf",
+  "source_checks": [
+   {
+    "path": "rtl/physical/qcluster/qfd_c_land_k.sv",
+    "current_sha256": "d67cf92197fe694e9cd7cd46cbd537c08ee72c99a3d03beb7270dff9e0e7988e",
+    "gate_sha256": "d67cf92197fe694e9cd7cd46cbd537c08ee72c99a3d03beb7270dff9e0e7988e",
+    "exact": true
+   },
+   {
+    "path": "rtl/physical/qcluster/qfd_c_ring_t.sv",
+    "current_sha256": "e14ac6fcf84ecb4c87bc4fe9d6914949e3f30a6b3d8358d963493d20beb9e4db",
+    "gate_sha256": "e14ac6fcf84ecb4c87bc4fe9d6914949e3f30a6b3d8358d963493d20beb9e4db",
+    "exact": true
+   }
+  ],
+  "all_sources_exact": true,
+  "std_area_um2_from_original_mapped_gate": 1614.0,
+  "new_core_um2": 5225.472,
+  "fill_estimate": 0.3088716196355085,
+  "raw_area_evidence": [
+   "utilisation 40.1% outside 45%-65% (std 1614 + macro 0 um2 in 4031 um2): shrink the outline (long wires / sparse placement)"
+  ],
+  "old_gate_host": "ot-epyc7",
+  "old_gate_remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_c_ring514-20261020-230840",
+  "old_gate_commit": null,
+  "note": "Area model only. Existing exact-source synthesis reused if all source hashes match; no physical timing transferred. Old gate area rounded to 1 um2."
+ },
+ {
+  "old_kit": "qfd_c_ring516",
+  "new_kit": "qfd_c_ring516_rpf",
+  "source_checks": [
+   {
+    "path": "rtl/physical/qcluster/qfd_c_land_k.sv",
+    "current_sha256": "d67cf92197fe694e9cd7cd46cbd537c08ee72c99a3d03beb7270dff9e0e7988e",
+    "gate_sha256": "d67cf92197fe694e9cd7cd46cbd537c08ee72c99a3d03beb7270dff9e0e7988e",
+    "exact": true
+   },
+   {
+    "path": "rtl/physical/qcluster/qfd_c_ring_t.sv",
+    "current_sha256": "e14ac6fcf84ecb4c87bc4fe9d6914949e3f30a6b3d8358d963493d20beb9e4db",
+    "gate_sha256": "e14ac6fcf84ecb4c87bc4fe9d6914949e3f30a6b3d8358d963493d20beb9e4db",
+    "exact": true
+   }
+  ],
+  "all_sources_exact": true,
+  "std_area_um2_from_original_mapped_gate": 1627.0,
+  "new_core_um2": 5225.472,
+  "fill_estimate": 0.31135943317656284,
+  "raw_area_evidence": [
+   "utilisation 40.4% outside 45%-65% (std 1627 + macro 0 um2 in 4031 um2): shrink the outline (long wires / sparse placement)"
+  ],
+  "old_gate_host": "ot-epyc7",
+  "old_gate_remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_c_ring516-20261020-230840",
+  "old_gate_commit": null,
+  "note": "Area model only. Existing exact-source synthesis reused if all source hashes match; no physical timing transferred. Old gate area rounded to 1 um2."
+ },
+ {
+  "old_kit": "qfd_c_xstn_safe",
+  "new_kit": "qfd_c_xstn_safe_rpf",
+  "source_checks": [
+   {
+    "path": "rtl/physical/qcluster/qfd_c_xstn_safe.sv",
+    "current_sha256": "e26771cb20d99df1fafa03c016d3a330b05670b37a66d63a7dbe4039e38f14df",
+    "gate_sha256": "e26771cb20d99df1fafa03c016d3a330b05670b37a66d63a7dbe4039e38f14df",
+    "exact": true
+   },
+   {
+    "path": "rtl/test/tb_qfd_c_xstn_safe.sv",
+    "current_sha256": "c4238e6de54751418a7dfef998174f93b20f1aab73b3af08cb27f25726a8de86",
+    "gate_sha256": "c4238e6de54751418a7dfef998174f93b20f1aab73b3af08cb27f25726a8de86",
+    "exact": true
+   }
+  ],
+  "all_sources_exact": true,
+  "std_area_um2_from_original_mapped_gate": 378.0,
+  "new_core_um2": 11589.3504,
+  "fill_estimate": 0.03261615077235045,
+  "raw_area_evidence": [
+   "utilisation 3.5% outside 45%-65% (std 378 + macro 0 um2 in 10824 um2): shrink the outline (long wires / sparse placement)"
+  ],
+  "old_gate_host": "ot-agidock128",
+  "old_gate_remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_c_xstn_safe-20261019-095116",
+  "old_gate_commit": null,
+  "note": "Area model only. Existing exact-source synthesis reused if all source hashes match; no physical timing transferred. Old gate area rounded to 1 um2."
+ },
+ {
+  "old_kit": "qfd_c_xstnw_safe",
+  "new_kit": "qfd_c_xstnw_safe_rpf",
+  "source_checks": [
+   {
+    "path": "rtl/physical/qcluster/qfd_c_xstn_safe.sv",
+    "current_sha256": "e26771cb20d99df1fafa03c016d3a330b05670b37a66d63a7dbe4039e38f14df",
+    "gate_sha256": "e26771cb20d99df1fafa03c016d3a330b05670b37a66d63a7dbe4039e38f14df",
+    "exact": true
+   },
+   {
+    "path": "rtl/test/tb_qfd_c_xstn_safe.sv",
+    "current_sha256": "c4238e6de54751418a7dfef998174f93b20f1aab73b3af08cb27f25726a8de86",
+    "gate_sha256": "c4238e6de54751418a7dfef998174f93b20f1aab73b3af08cb27f25726a8de86",
+    "exact": true
+   }
+  ],
+  "all_sources_exact": true,
+  "std_area_um2_from_original_mapped_gate": 378.0,
+  "new_core_um2": 11589.3504,
+  "fill_estimate": 0.03261615077235045,
+  "raw_area_evidence": [
+   "utilisation 3.5% outside 45%-65% (std 378 + macro 0 um2 in 10824 um2): shrink the outline (long wires / sparse placement)"
+  ],
+  "old_gate_host": "ot-agidock128",
+  "old_gate_remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_c_xstnw_safe-20261019-095118",
+  "old_gate_commit": null,
+  "note": "Area model only. Existing exact-source synthesis reused if all source hashes match; no physical timing transferred. Old gate area rounded to 1 um2."
+ }
+]
