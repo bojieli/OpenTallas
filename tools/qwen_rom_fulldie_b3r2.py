@@ -4494,7 +4494,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             _nfr.update({b_: 1 for b_ in _rbadd})
             _lpq = json.loads(Path(_os.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os.environ.get('OT_SPLIT_LAND_PLAN') else {}
             _esq = {r_['bid']: int(r_['E']) for r_ in _lpq.get('links', []) if r_.get('E') is not None}
-            _rbfp = _RB.frame_pads(_rbm, _nfr, _esq, 4)
+            # TREQ joins the already measured command lane. Retain its actual
+            # hold-qualified E_sta; the new request still has the D-1 limit.
+            _treq_h0 = {r_['bid']: r_['h0'] for r_ in _lpq.get('links', [])
+                        if _rbm.get(r_['bid']) == 'DV.treq.ctlm' and r_.get('h0')}
+            _rbfp = _RB.frame_pads(_rbm, _nfr, _esq, 4, h0=_treq_h0)
             for b_, p_ in _rbfp.items():
                 tpads[b_] = int(tpads.get(b_, 0)) + p_
             _rbadd = list(_rbadd) + [f'{b_}+{p_}' for b_, p_ in sorted(_rbfp.items())]

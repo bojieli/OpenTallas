@@ -176,12 +176,13 @@ def plain_pads(bmap, nframes):
     return pads
 
 
-def frame_pads(bmap, nframes, esta=None, D=4):
+def frame_pads(bmap, nframes, esta=None, D=4, h0=None):
     """GEN step (1b), forwarded lanes: the bundle's one E is reached by ring wait (landing MCP E_sta + dE) only up to
     E_sta <= D - 1 (lane_groups.equalize, no die STA: one slot of margin); a member further behind gets extra frames
     (half-cycle stations at its sink end) until fwd_e_est(n + p) + E_sta - 2 >= E - (D - 1 - E_sta).  nframes: frames
     after close_zero_stage; esta: {bid: landing MCP (land plan E)}, default 2.  -> {bid: extra frames}."""
     esta = esta or {}
+    h0 = h0 or {}
     by = {}
     for bid, b in bmap.items():
         by.setdefault(b, []).append(bid)
@@ -192,7 +193,17 @@ def frame_pads(bmap, nframes, esta=None, D=4):
         es = {x: int(esta.get(x, 2)) for x in bids}
         E = max(fwd_e_est(nframes[x]) + es[x] - 2 for x in bids)
         for x in bids:
-            need, p = E - (D - 1 - es[x]), 0
+            limit = D - 1
+            if x in h0:
+                holds = h0[x]
+                if not {'tt', 'ff'} <= set(holds) or any(not math.isfinite(holds[c]) for c in ('tt', 'ff')):
+                    raise ValueError('record frame pads: actual TT/FF hold facts required for ' + x)
+                # The same measured hold window used by lane_groups.equalize.
+                # Do not add latency to an already-qualified source landing.
+                limit = D + math.floor(min(holds[c] for c in ('tt', 'ff')) / LG.T_PS)
+                if es[x] > limit:
+                    raise ValueError('record frame pads: measured landing hold fails for ' + x)
+            need, p = E - (limit - es[x]), 0
             while fwd_e_est(nframes[x] + p) + es[x] - 2 < need:
                 p += 1
             if p:

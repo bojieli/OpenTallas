@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-gold1       admits   109 GB (avail 321, reserve 0, fresh 48.5, peak 99.8, headroom 0, waiters 2/400 GB) load 55/112 running 44 disk 1059 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qk-bundle-endpoints-1022
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-314634-1792733841 after 0 s
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.020s
+
+OK
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.003s
+
+OK
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-314634-1792733841): exit 0
