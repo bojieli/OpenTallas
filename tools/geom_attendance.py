@@ -60,7 +60,7 @@ PLAN_AGENT = {"s81": "PLAN-S81", "qwen_compute": "PLAN-QC", "qwen_kvsys": "PLAN-
 PLAN_PREFIX = (("PLAN-S81", ("dsdv_", "dsfd_", "ot_s81", "s81", "col_h")), ("PLAN-QC", ("qfd_", "ot_coll_", "ot_qwen")),
                ("PLAN-KV", ("qkd_",)), ("PLAN-HBM", ("ot_hbm", "hfd_", "ot_hgi", "ot_hfd", "ot_hidx", "hnx_", "hdie", "ot_hdie")))
 LINEAGE_RE = re.compile(r"(?:^|_)(?:hub|qhub|frame|ft|slice\w*|gunit|b8|b16|rgx|rgm|root|parent|cluster|hc|grp\w*|"
-                        r"bk_sel|seq_host|svc_rs|tt_ctlm\w*|collective_static_io\w*)(?:_|$)")
+                        r"bk_sel|seq_host|svc_rs|tt_ctlm\w*|collective_static_io\w*|glue|merge)(?:_|$)")
 
 
 def plan_agent(e: str, dies: str, category: str) -> str | None:
