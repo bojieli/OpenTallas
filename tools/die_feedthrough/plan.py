@@ -188,7 +188,7 @@ def where(t, blocks_on_path):
 
 def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", ft_clock="block",
         kinds=("data", "ctl"), forbid_re=FORBID_RE, slot_um=0.0, occupancy=0.6, max_shift_um=1500.0, png=True,
-        min_track_bits=8, band_jogs=False,
+        min_track_bits=8, band_jogs=False, variant_base=None,
         **over):
     t0 = time.time()
     cen = load_census(census_path)
@@ -391,8 +391,9 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
                      for p in sp_["ports"]) + sorted((q["bits"], q["stages"]) for q in sp_["paths"])
         h = hashlib.sha1(json.dumps(sig).encode()).hexdigest()[:8]
         master = b["master"]
-        variant = f"{master}__ft{h}"
-        variants[master][variant].append(rid)
+        base = re.sub(variant_base[0], variant_base[1], master) if variant_base else master
+        variant = f"{base}__ft{h}"
+        variants[base][variant].append(rid)
         W, H = (dump.masters[inst.master].w, dump.masters[inst.master].h) if inst is not None and \
             inst.master in dump.masters else (b["w"], b["h"])
         spec = dict(schema=SPEC_SCHEMA, die=die, block=rid, master=master, variant=variant, outline=[W, H],
@@ -501,13 +502,16 @@ def main(argv=None):
     ap.add_argument("--max-shift-um", type=float, default=1500.0)
     ap.add_argument("--reach-um", type=float)
     ap.add_argument("--rep-um", type=float)
+    ap.add_argument("--variant-base", help="'REGEX=>REPL' maps a master to its base master for variant keys "
+                    "(S81 per-instance stand-ins, e.g. '^rv_f_\\d[LR]\\d\\d$=>col_frame')")
     ap.add_argument("--band-jogs", action="store_true", help="give pin->band jogs their own bands (more overflow)")
     ap.add_argument("--no-png", action="store_true")
     a = ap.parse_args(argv)
     ft_clock = a.ft_clock or ("forwarded" if a.die == "s81" else "block")
     js = run(a.die, a.census, a.dump, a.out, policy=a.policy, ft_reg=a.ft_reg, ft_clock=ft_clock,
              kinds=tuple(a.kinds.split(",")), forbid_re=a.forbid_re, slot_um=a.slot_um, occupancy=a.occupancy,
-             max_shift_um=a.max_shift_um, png=not a.no_png, band_jogs=a.band_jogs, reach_um=a.reach_um, rep_um=a.rep_um)
+             max_shift_um=a.max_shift_um, png=not a.no_png, band_jogs=a.band_jogs,
+             variant_base=tuple(a.variant_base.split('=>', 1)) if a.variant_base else None, reach_um=a.reach_um, rep_um=a.rep_um)
     print(json.dumps(js["summary"], indent=1))
 
 
