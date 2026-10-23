@@ -1,0 +1,376 @@
+{
+ "plan": "physical/die_plan/qwen_kvsys/die_plan.json (v3)",
+ "host": "ot-epyc9 docker openroad/orfs:asap7lock (die 64g, parts 56g caps)",
+ "tool": "tools/die_plan/g2.py @8e1a16a50 all --worst 5",
+ "probes": {
+  "die": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 346686750,
+     "demand": 25078,
+     "usage_pct": 0.01,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 347149152,
+     "demand": 15571,
+     "usage_pct": 0.0,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 393254.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {},
+   "pin_access_done": false,
+   "reach": {
+    "clk": {
+     "max_um": 17686.1,
+     "p90_um": 15111.3,
+     "taps": 155
+    },
+    "rst": {
+     "max_um": 17694.8,
+     "p90_um": 15102.7,
+     "taps": 155
+    }
+   },
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_kv3_hgi_v3": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 41859851,
+     "demand": 4622948,
+     "usage_pct": 11.04,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 46849618,
+     "demand": 4717038,
+     "usage_pct": 10.07,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 35138866,
+     "demand": 1931932,
+     "usage_pct": 5.5,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 35137880,
+     "demand": 1623462,
+     "usage_pct": 4.62,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 23926624,
+     "demand": 588587,
+     "usage_pct": 2.46,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 23924684,
+     "demand": 961117,
+     "usage_pct": 4.02,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 8258536.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_kv3_hgi_v4": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 41863243,
+     "demand": 1502039,
+     "usage_pct": 3.59,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 46849618,
+     "demand": 3585849,
+     "usage_pct": 7.65,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 35138866,
+     "demand": 875197,
+     "usage_pct": 2.49,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 35137880,
+     "demand": 1419130,
+     "usage_pct": 4.04,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 23926624,
+     "demand": 52227,
+     "usage_pct": 0.22,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 23924684,
+     "demand": 1007083,
+     "usage_pct": 4.21,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 4826084.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_kv3_hub_Ei": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 46138753,
+     "demand": 9788321,
+     "usage_pct": 21.21,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 51647047,
+     "demand": 7117970,
+     "usage_pct": 13.78,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 38732792,
+     "demand": 5124079,
+     "usage_pct": 13.23,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 38736020,
+     "demand": 1224714,
+     "usage_pct": 3.16,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 26372646,
+     "demand": 640359,
+     "usage_pct": 2.43,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 26374586,
+     "demand": 9503,
+     "usage_pct": 0.04,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 13663381.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_kv3_hub_Eo": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 46142016,
+     "demand": 5667704,
+     "usage_pct": 12.28,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 51647047,
+     "demand": 3822136,
+     "usage_pct": 7.4,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 38732792,
+     "demand": 3001227,
+     "usage_pct": 7.75,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 38736020,
+     "demand": 1106542,
+     "usage_pct": 2.86,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 26372646,
+     "demand": 639051,
+     "usage_pct": 2.42,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 26374586,
+     "demand": 47394,
+     "usage_pct": 0.18,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 8169825.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_kv3_hub_Wo": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 46141842,
+     "demand": 5387117,
+     "usage_pct": 11.68,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 51647047,
+     "demand": 3716109,
+     "usage_pct": 7.2,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 38732792,
+     "demand": 3057632,
+     "usage_pct": 7.89,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 38736020,
+     "demand": 1205533,
+     "usage_pct": 3.11,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 26372646,
+     "demand": 871518,
+     "usage_pct": 3.3,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 26374586,
+     "demand": 51847,
+     "usage_pct": 0.2,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 8173470.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  }
+ },
+ "verdict": "PASS"
+}
