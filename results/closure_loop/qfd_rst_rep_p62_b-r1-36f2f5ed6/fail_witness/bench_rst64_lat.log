@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_rst_rep_p62_b-r1-36f2f5ed6 bench bench_rst64_lat host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/qfd_rst_rep_p62_b-r1-36f2f5ed6 log cl/bench_rst64_lat.a1b1.log captured 2026-10-22T22:44:21-07:00
+# fail_regex 'RST64_FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+RST64_MISMATCH edge68 q01 q11 old0 expected0
+RST64_MISMATCH edge70 q00 q10 old1 expected1
+RST64_MISMATCH edge72 q01 q11 old0 expected0
+RST64_MISMATCH edge76 q00 q10 old1 expected1
+RST64_FAIL errors675 checks19934
+- /srv/opentallas-scratch2/claude/closure-loop/qfd_rst_rep_p62_b-r1-36f2f5ed6/bench_lat/tb.sv:31: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.006 s; speed 36.189 ms/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB
