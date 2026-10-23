@@ -5,6 +5,7 @@
   "defines": [
     "OT_S81SL_VP_HARD"
   ],
+  "hard_define": "OT_S81SL_VP_HARD",
   "sources": [
     "rtl/lib/ot_rst_relay.sv",
     "rtl/hdc/ot_hdc_delay.sv",
@@ -21,8 +22,8 @@
       "inst": "u_b0",
       "count": 1,
       "at": [
-        43.2,
-        604.8
+        129.6,
+        734.4
       ],
       "orient": "R0"
     },
@@ -31,8 +32,8 @@
       "inst": "u_b1",
       "count": 1,
       "at": [
-        345.6,
-        604.8
+        432.0,
+        734.4
       ],
       "orient": "R0"
     }
@@ -52,7 +53,7 @@
       "count": 1,
       "inst": "*g_ln?1?.u_l",
       "at": [
-        172.8,
+        216.0,
         43.2
       ]
     },
@@ -61,7 +62,7 @@
       "count": 1,
       "inst": "*g_ln?2?.u_l",
       "at": [
-        302.4,
+        388.8,
         43.2
       ]
     },
@@ -70,7 +71,7 @@
       "count": 1,
       "inst": "*g_ln?3?.u_l",
       "at": [
-        432.0,
+        561.6,
         43.2
       ]
     },
@@ -80,7 +81,7 @@
       "inst": "*g_ln?4?.u_l",
       "at": [
         43.2,
-        172.8
+        216.0
       ]
     },
     {
@@ -88,8 +89,8 @@
       "count": 1,
       "inst": "*g_ln?5?.u_l",
       "at": [
-        172.8,
-        172.8
+        216.0,
+        216.0
       ]
     },
     {
@@ -97,8 +98,8 @@
       "count": 1,
       "inst": "*g_ln?6?.u_l",
       "at": [
-        302.4,
-        172.8
+        388.8,
+        216.0
       ]
     },
     {
@@ -106,8 +107,8 @@
       "count": 1,
       "inst": "*g_ln?7?.u_l",
       "at": [
-        432.0,
-        172.8
+        561.6,
+        216.0
       ]
     },
     {
@@ -116,7 +117,7 @@
       "inst": "*g_ln?8?.u_l",
       "at": [
         43.2,
-        302.4
+        388.8
       ]
     },
     {
@@ -124,8 +125,8 @@
       "count": 1,
       "inst": "*g_ln?9?.u_l",
       "at": [
-        172.8,
-        302.4
+        216.0,
+        388.8
       ]
     },
     {
@@ -133,8 +134,8 @@
       "count": 1,
       "inst": "*g_ln?10?.u_l",
       "at": [
-        302.4,
-        302.4
+        388.8,
+        388.8
       ]
     },
     {
@@ -142,8 +143,8 @@
       "count": 1,
       "inst": "*g_ln?11?.u_l",
       "at": [
-        432.0,
-        302.4
+        561.6,
+        388.8
       ]
     },
     {
@@ -152,7 +153,7 @@
       "inst": "*g_ln?12?.u_l",
       "at": [
         43.2,
-        432.0
+        561.6
       ]
     },
     {
@@ -160,8 +161,8 @@
       "count": 1,
       "inst": "*g_ln?13?.u_l",
       "at": [
-        172.8,
-        432.0
+        216.0,
+        561.6
       ]
     },
     {
@@ -169,8 +170,8 @@
       "count": 1,
       "inst": "*g_ln?14?.u_l",
       "at": [
-        302.4,
-        432.0
+        388.8,
+        561.6
       ]
     },
     {
@@ -178,8 +179,8 @@
       "count": 1,
       "inst": "*g_ln?15?.u_l",
       "at": [
-        432.0,
-        432.0
+        561.6,
+        561.6
       ]
     }
   ],
@@ -238,8 +239,8 @@
   "layer_cap": "M5",
   "util": 0.5,
   "outline": {
-    "w": 604.8,
-    "h": 734.4
+    "w": 734.4,
+    "h": 864.0
   },
   "route": {
     "pd": 0.4,
@@ -247,12 +248,12 @@
     "peak_ram_gb": 24,
     "hold_margin_ns": 0.03
   },
-  "structural_change": "S81-SLICE (stream 0cm): beat-leaf store + hc_post sub-leaf of the DV slice: command sequencer, 2 x 512x128 leaf-store banks, 16 hard s81sl_hcpl lanes (closed lane_pr re-kit).",
+  "structural_change": "S81-SLICE (stream 0cm): beat-leaf store + hc_post sub-leaf of the DV slice: command sequencer, 2 x 512x128 leaf-store banks, 16 hard s81sl_hcpl lanes (closed lane_pr re-kit). 10-18: vp op 7 NORMR (hc_pre = leaf row a0, one-step sequencer read) + POST coefficient rows in the G-unit's order (post a0, comb a0+1..a0+4).",
   "job": {
     "owner": "Claude:S81-SLICE",
-    "branch": "claude/owners-s81-vp-1018",
+    "branch": "claude/s81-vpnorm-1018",
     "tag": "s81sl_vp",
-    "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
+    "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit). 10-18 S81-SLICE vp NORMR (op 7: hc_pre from the G-unit's leaf row R) + POST row order = the G-unit's (post R+1, comb R+2..R+5).",
     "extra_paths": [
       "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
       "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
@@ -279,6 +280,14 @@
         "peak_ram_gb": 6
       },
       {
+        "name": "slbeat_exact_imm",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_exact_imm baseimm 37 L0",
+        "expect": "pass",
+        "pass_regex": "^PASS beat baseimm B=37 L0$",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
         "name": "slbeat_muttree",
         "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37 L0 raw",
         "expect": "fail",
@@ -295,6 +304,24 @@
         "fail_witness": "results/rtl/s81_slice_1017/beat/g_mc/run.log",
         "threads": 4,
         "peak_ram_gb": 6
+      },
+      {
+        "name": "slbeat_mutpostlast",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutpostlast mutpostlast 37 L0 raw",
+        "expect": "fail",
+        "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+        "fail_witness": "results/rtl/s81_slice_1017/beat/g_mpl/run.log",
+        "threads": 4,
+        "peak_ram_gb": 6
+      },
+      {
+        "name": "slbeat_mutnormimm",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutnormimm mutnormimm 37 L0 raw",
+        "expect": "fail",
+        "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+        "fail_witness": "results/rtl/s81_slice_1017/beat/g_mni/run.log",
+        "threads": 4,
+        "peak_ram_gb": 6
       }
     ],
     "views_to": "physical/ref_tile/s81sl_vp/views",
@@ -307,172 +334,172 @@
   "pin_ranges": {
     "c_v": [
       6.48,
-      8.64
+      9.113
     ],
     "c_d": [
-      8.64,
-      127.246
+      9.113,
+      153.691
     ],
     "sw_v": [
-      127.246,
-      129.406
+      153.691,
+      156.324
     ],
     "sw_a": [
-      129.406,
-      136.819
+      156.324,
+      165.36
     ],
     "sw_m": [
-      136.819,
-      142.749
+      165.36,
+      172.589
     ],
     "sw_d": [
-      142.749,
-      332.518
+      172.589,
+      403.913
     ],
     "clk": [
-      332.518,
-      334.678
+      403.913,
+      406.546
     ],
     "rst_n": [
-      334.678,
-      336.838
+      406.546,
+      409.179
     ],
     "fault": [
-      336.838,
-      338.998
+      409.179,
+      411.812
     ],
     "lo_v": [
-      338.998,
-      341.158
+      411.812,
+      414.445
     ],
     "lo_d": [
-      341.158,
-      530.927
+      414.445,
+      645.769
     ],
     "cw_v": [
-      530.927,
-      533.087
+      645.769,
+      648.402
     ],
     "cw_a": [
-      533.087,
-      550.878
+      648.402,
+      670.089
     ],
     "cw_d": [
-      550.878,
-      598.32
+      670.089,
+      727.92
     ],
     "hw_v": [
       6.48,
-      8.64
+      9.028
     ],
     "hw_j": [
-      8.64,
-      10.8
+      9.028,
+      11.576
     ],
     "hw_hf": [
-      10.8,
-      12.96
+      11.576,
+      14.124
     ],
     "hw_d": [
-      12.96,
-      209.31
+      14.124,
+      245.747
     ],
     "hr_v": [
-      209.31,
-      211.47
+      245.747,
+      248.295
     ],
     "hr_j": [
-      211.47,
-      213.63
+      248.295,
+      250.843
     ],
     "hr_hf": [
-      213.63,
-      215.79
+      250.843,
+      253.391
     ],
     "hq_v": [
-      215.79,
-      217.95
+      253.391,
+      255.939
     ],
     "hq_d": [
-      217.95,
-      414.299
+      255.939,
+      487.56
     ],
     "n_go": [
-      414.299,
-      416.459
+      487.56,
+      490.108
     ],
     "n_pre": [
-      416.459,
-      514.634
+      490.108,
+      605.919
     ],
     "m_v": [
-      514.634,
-      516.794
+      605.919,
+      608.467
     ],
     "m_q": [
-      516.794,
-      518.954
+      608.467,
+      611.015
     ],
     "m_b": [
-      518.954,
-      521.114
+      611.015,
+      613.563
     ],
     "m_i": [
-      521.114,
-      527.25
+      613.563,
+      620.801
     ],
     "wl_v": [
-      527.25,
-      529.41
+      620.801,
+      623.35
     ],
     "wl_i": [
-      529.41,
-      531.57
+      623.35,
+      625.898
     ],
     "wl_d": [
-      531.57,
-      727.92
+      625.898,
+      857.52
     ],
     "s_v": [
       6.48,
-      8.64
+      9.028
     ],
     "s_d": [
-      8.64,
-      171.566
+      9.028,
+      201.222
     ],
     "x_rv": [
-      171.566,
-      173.726
+      201.222,
+      203.77
     ],
     "x_ra": [
-      173.726,
-      183.909
+      203.77,
+      215.782
     ],
     "x_qv": [
-      183.909,
-      186.069
+      215.782,
+      218.33
     ],
     "x_qd": [
-      186.069,
-      446.75
+      218.33,
+      525.84
     ],
     "x_wv": [
-      446.75,
-      448.91
+      525.84,
+      528.388
     ],
     "x_wa": [
-      448.91,
-      459.093
+      528.388,
+      540.401
     ],
     "x_wm": [
-      459.093,
-      467.239
+      540.401,
+      550.01
     ],
     "x_wd": [
-      467.239,
-      727.92
+      550.01,
+      857.52
     ]
   },
-  "kit_note": "OWNERS-S81/VP 10-18 (kit spec, gate only after the s81sl_hcpl view closes): 16 hard hcpl lanes on a 129.6 um pitch (43.2 lattice, 15.12 um channels) in the lower 4x4 grid y 43.2..546.5; the 2 leaf-store SRAMs on the 43.2 lattice in the top band (y 604.8, x 43.2 / 345.6, pins N toward the centre-facing face, 128 um channel between them down to the lanes); one contiguous std-cell band y 546.5..734.4 (sequencer, bank ports, lane feed) plus the face pin-flop ring; every port on a full face, ranges proportional to bits (N 783 / E 923 / W 704 pins: <=1.3 pins/um); clk / rst_n at the N-face centre, beside the sequencer + bank-port register mass. N = slice centre (c, sw, cw, lo), E = vn seam, W = vs seam."
+  "kit_note": "S81-SLICE 10-18 (s81-vpnorm): 16 hard hcpl lanes (114.48 sq, pins on all 4 faces) on a 172.8 um pitch (43.2 lattice; the earlier 129.6 pitch left 15.1 um channels < the 20 um rule) in a 4x4 grid x,y 43.2..676.1; the 2 leaf-store SRAMs on the 43.2 lattice in the top band (y 734.4, x 129.6 / 432.0, 128 um channel between them down to the lanes); one contiguous std-cell band y 676..864 (sequencer, bank ports, lane feed) plus the face pin-flop ring and the 58 um lane channels; every port on a full face, ranges proportional to bits, rescaled to the 734.4 x 864 outline (N <=1.1 / E,W <=1.1 pins/um); clk / rst_n at the N face centre region beside the sequencer + bank-port register mass. N = slice centre (c, sw, cw, lo), E = vn seam, W = vs seam. Previous: OWNERS-S81/VP 10-18 (kit spec, gate only after the s81sl_hcpl view closes): 16 hard hcpl lanes on a 129.6 um pitch (43.2 lattice, 15.12 um channels) in the lower 4x4 grid y 43.2..546.5; the 2 leaf-store SRAMs on the 43.2 lattice in the top band (y 604.8, x 43.2 / 345.6, pins N toward the centre-facing face, 128 um channel between them down to the lanes); one contiguous std-cell band y 546.5..734.4 (sequencer, bank ports, lane feed) plus the face pin-flop ring; every port on a full face, ranges proportional to bits (N 783 / E 923 / W 704 pins: <=1.3 pins/um); clk / rst_n at the N-face centre, beside the sequencer + bank-port register mass. N = slice centre (c, sw, cw, lo), E = vn seam, W = vs seam."
 }

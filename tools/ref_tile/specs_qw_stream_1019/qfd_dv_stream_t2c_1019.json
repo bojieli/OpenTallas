@@ -1,0 +1,337 @@
+{
+ "name": "qfd_dv_stream_t2c_1019",
+ "top": "qfd_dv_stream_tile",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/qfd_dv_stream_tile.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "recipe": 4,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 20
+  },
+  "why": "2 registered face stages, last stage 20 kept copies (~545 control reset loads incl. the packer complete copies, <=28 each); payload registers carry no reset"
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The RTL registers every pin: every input bit is captured at its face in qfd_dv_stream_tile (sw/se payload, sid, cfg, SU write ports; the valid / tap-hit / write-any / config-enable bits as (* keep *) per-32-bit-group copies decoded from the pins), every output is driven directly by a register (so_e/so_w relay, tw_*/xt_* tap output registers after the interior tap relay, fault).  A flow pin stage would add a second edge and fold the kept select copies into one flop per pin (1,088-load relay select)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "outline": {
+  "w": 259.2,
+  "h": 380.16
+ },
+ "std_area_um2": 7000,
+ "fill_reason": {
+  "pin_bound": "6,946 external pins: W/E 2,176 each (1,088-bit relay in + out), S 1,482 (low tap halves + SU write ports), N 1,113; <= 6 pins/um needs >= 371 um on W/E, so a 40-60 % outline (~120 x 120 um) cannot carry them. Compact fallback 259.2 x 380.16 (aspect 1.47): W/E 5.85 pins/um, S 5.9, N 4.4; relay W->E 259 um, shorter packer / tap wires (the larger s1 fallback 345.6 x 440.64 stretched the pin-flop ring to 147 ps spread). Pin-bound, waived (low util costs wire only)."
+ },
+ "pins": {
+  "W": [
+   "sw_lo",
+   "sw_v",
+   "sw_hi",
+   "so_w"
+  ],
+  "E": [
+   "so_e",
+   "se_lo",
+   "se_v",
+   "se_hi"
+  ],
+  "S": [
+   "tw_data_lo",
+   "xw_we",
+   "xw_addr",
+   "ck",
+   "rst_n",
+   "xw_data",
+   "xt_d_lo"
+  ],
+  "N": [
+   "tw_data_hi",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "sid",
+   "cfg_v",
+   "cfg_dir",
+   "cfg_tag",
+   "fault",
+   "xt_v",
+   "xt_a",
+   "xt_bad",
+   "xt_d_hi"
+  ]
+ },
+ "pin_ranges": {
+  "sw_lo": [
+   4.0,
+   96.827
+  ],
+  "sw_v": [
+   96.827,
+   97.851
+  ],
+  "sw_hi": [
+   97.851,
+   190.507
+  ],
+  "so_w": [
+   190.507,
+   376.16
+  ],
+  "so_e": [
+   4.0,
+   189.653
+  ],
+  "se_lo": [
+   189.653,
+   282.48
+  ],
+  "se_v": [
+   282.48,
+   283.504
+  ],
+  "se_hi": [
+   283.504,
+   376.16
+  ],
+  "tw_data_lo": [
+   4.0,
+   90.203
+  ],
+  "xw_we": [
+   90.203,
+   91.55
+  ],
+  "xw_addr": [
+   91.55,
+   123.876
+  ],
+  "ck": [
+   123.876,
+   124.886
+  ],
+  "rst_n": [
+   124.886,
+   125.896
+  ],
+  "xw_data": [
+   125.896,
+   168.997
+  ],
+  "xt_d_lo": [
+   168.997,
+   255.2
+  ],
+  "tw_data_hi": [
+   4.0,
+   116.033
+  ],
+  "tw_we": [
+   116.033,
+   117.346
+  ],
+  "tw_kind": [
+   117.346,
+   118.659
+  ],
+  "tw_addr": [
+   118.659,
+   123.911
+  ],
+  "sid": [
+   123.911,
+   125.224
+  ],
+  "cfg_v": [
+   125.224,
+   126.537
+  ],
+  "cfg_dir": [
+   126.537,
+   127.849
+  ],
+  "cfg_tag": [
+   127.849,
+   133.976
+  ],
+  "fault": [
+   133.976,
+   135.289
+  ],
+  "xt_v": [
+   135.289,
+   136.602
+  ],
+  "xt_a": [
+   136.602,
+   141.854
+  ],
+  "xt_bad": [
+   141.854,
+   143.167
+  ],
+  "xt_d_hi": [
+   143.167,
+   255.2
+  ]
+ },
+ "layer_cap": "M5",
+ "pg_layer": "M5",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "h": "M4",
+   "v": "M3 M5",
+   "group_max": 1
+  }
+ },
+ "structural_change": "QW-STREAM2 10-19: structural successor of qfd_dv_stream_t_1019 (route s1-2c97be786 TT -47.5 ps on the packer cone wa_q -> decode -> priority -> OR8 -> &nm -> 1,024-bit eword enable, 17 levels + ~1,100-load combinational enable): packer pipelined P1 (BF16 RNE + registered slot x lane one-hot select + slot hit + partial faults, kept 2x lane copies <=32 loads) / P2 (state from the one-hot select, complete into 69 kept copies) / P3 (eword on its own copy, emit copies); +2 edges on the SU own-write path xw_* (priced, static, II unchanged); relay / taps / cfg timing unchanged.",
+ "job": {
+  "owner": "Claude:LEAD3-QW/QW-STREAM2",
+  "branch": "claude/qw-stream2-1019",
+  "tag": "c2",
+  "purpose": "Qwen compute MU die Q-DV slice stream face (Q.SAFE.STREAM): relay + static x packer + table/x taps",
+  "record_to": "results/rtl/ref_tile/qfd_dv_stream_t2c_1019",
+  "views_to": "physical/ref_tile/qfd_dv_stream_t2c_1019/views",
+  "auto_merge": false,
+  "extra_paths": [
+   "rtl/qwen_dv/qfd_dv_stream.sv",
+   "rtl/test/qwen_dv/static_stream/tb_stream_tile.sv",
+   "rtl/test/qwen_dv/static_stream/run_tile.sh",
+   "results/rtl/qw_stream2_1019/bench"
+  ],
+  "benches": [
+   {
+    "name": "stream_tile_m0",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m0 0",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "STREAM_TILE_EQ PASS edges10000",
+    "min_count_regex": "emits(\\d+)",
+    "pass_witness": "results/rtl/qw_stream2_1019/bench/m0.log"
+   },
+   {
+    "name": "stream_tile_m2",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m2 2",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m2.log",
+    "why": "BF16 truncation instead of RNE"
+   },
+   {
+    "name": "stream_tile_m21",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m21 21",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m21.log",
+    "why": "no highest-lane priority"
+   },
+   {
+    "name": "stream_tile_m22",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m22 22",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m22.log",
+    "why": "no duplicate-address fault"
+   },
+   {
+    "name": "stream_tile_m31",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m31 31",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m31.log",
+    "why": "relay group 17 selects on the E valid copy"
+   },
+   {
+    "name": "stream_tile_m32",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m32 32",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m32.log",
+    "why": "table-tap group 5 drops the SID match"
+   },
+   {
+    "name": "stream_tile_m33",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m33 33",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m33.log",
+    "why": "emit copy of relay group 9 stuck 0"
+   },
+   {
+    "name": "stream_tile_m34",
+    "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m34 34",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "fail_regex": "STREAM_TILE_MISMATCH",
+    "fail_witness": "results/rtl/qw_stream2_1019/bench/m34.log",
+    "why": "write-any copy of xb group 3 stuck 0"
+   }
+  ]
+ }
+}

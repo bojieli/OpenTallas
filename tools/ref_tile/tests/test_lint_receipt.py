@@ -119,5 +119,76 @@ class Receipt(unittest.TestCase):
         self.assertIn('refusing', res['error'])
 
 
+class FreshKitGeneration(unittest.TestCase):
+    def test_write_creates_receipt_before_sdc_and_preview_keeps_directory_absent(self):
+        import ref_tile as RT
+        # Run real kit generation; only the expensive lint inside SDC generation
+        # is replaced by a deterministic lint using the real keyed receipt store.
+        template = RT.HERE / 'specs_hcoll_v5/hcoll_v5_ctl2.json'
+        for write in (False, True):
+            with self.subTest(write=write), tempfile.TemporaryDirectory() as d:
+                root, yosys = make_root(d, kit=False)
+                raw = json.loads(template.read_text())
+                raw.update(name='kit_a', top='a', sources=['rtl/a.v'])
+                io_fixture = root / RT.QDM / 'io_ref_skew.sdc'
+                io_fixture.parent.mkdir(parents=True)
+                io_fixture.write_text('# IO constraint fixture\n')
+                path = root / 'input.json'; path.write_text(json.dumps(raw))
+                calls = []
+                def lint(s, repo):
+                    calls.append(1)
+                    return {'counts': {'consumer': 3}}
+                def sdc(s, period):
+                    L.record('reviewed_gray_fifos', lint, Boom, s, root, yosys)
+                    return '# deterministic SDC fixture\n'
+                L._MEMO.clear()
+                with mock.patch.object(RT, 'ROOT', root), mock.patch.object(RT, 'gen_sdc', side_effect=sdc):
+                    result = RT.gen(str(path), out_root=root, write=write)
+                kit = root / result['kit']
+                self.assertEqual(kit.exists(), write)
+                self.assertEqual(len(calls), 1)
+                if write:
+                    receipt = json.loads((kit / L.RECEIPT).read_text())
+                    self.assertIn('reviewed_gray_fifos', receipt['lints'])
+                    self.assertTrue((kit / 'clock.sdc').is_file())
+                    L._MEMO.clear()
+                    with mock.patch.object(RT, 'ROOT', root), mock.patch.object(RT, 'gen_sdc', side_effect=sdc):
+                        RT.gen(str(path), out_root=root, write=True)
+                    self.assertEqual(len(calls), 1, 'matching keyed receipt must be reusable')
+
+
+
+
+class NativeDataDependency(unittest.TestCase):
+    def test_helper_only_edit_changes_receipt_identity(self):
+        with tempfile.TemporaryDirectory() as d:
+            root, yosys = make_root(d)
+            here = root/'tools/ref_tile'; here.mkdir(parents=True)
+            for name in L.TOOL_FILES:
+                (here/name).write_text('# immutable Python implementation\n')
+            data = root/L.TOOL_DATA_FILES[0]; data.parent.mkdir(parents=True)
+            data.write_text('# native family implementation one\n')
+            with mock.patch.object(L, 'HERE', here):
+                a = L.key_of(L.components('policy',spec(),root,yosys))
+                data.write_text('# native family implementation two\n')
+                b = L.key_of(L.components('policy',spec(),root,yosys))
+            self.assertNotEqual(a,b)
+
+    def test_extracted_fleet_archive_imports_actual_generator(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as extracted:
+            root, _ = make_root(d)
+            payload = L.payload('policy',spec(),root,'test-key')
+            with tarfile.open(fileobj=io.BytesIO(payload),mode='r:gz') as archive:
+                self.assertTrue(set(L.TOOL_DATA_FILES) <= set(archive.getnames()))
+                archive.extractall(extracted)
+            script = ('import sys; sys.path.insert(0,'+repr(str(Path(extracted)/'tools/ref_tile'))+'); '
+                      'import clock_entry_constraints as C; '
+                      'assert "proc ot_cf_refresh" in C.CLOCK_FAMILY_TCL; print("GENERATOR_IMPORT_PASS")')
+            result = subprocess.run([sys.executable,'-I','-c',script],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            self.assertIn('GENERATOR_IMPORT_PASS',result.stdout)
+
+
 if __name__ == '__main__':
     unittest.main()

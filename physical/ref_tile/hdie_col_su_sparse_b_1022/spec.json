@@ -1,0 +1,346 @@
+{
+ "name": "hdie_col_su_sparse_b_1022",
+ "top": "ot_hbm_static_cfg_collar",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv"
+ ],
+ "clock_port": "clk_in",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 51.84,
+  "h": 51.84,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "clk",
+   "clk_in",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "launch_v",
+   "ready",
+   "active",
+   "fault"
+  ],
+  "N": [
+   "c_busy",
+   "c_done",
+   "c_fault",
+   "pw_we",
+   "pw_addr",
+   "pw_data",
+   "start_v"
+  ],
+  "E": [
+   "prm"
+  ],
+  "W": [
+   "go",
+   "rec"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin: every input lands in an unconditional pin flop (data) or a reset pin flop (valid/strobe/status), every output is a flop Q (HBMA-HOST 2026-10-17 audit of the source); a kit flop stage would add a redundant edge",
+  "clock": "clk"
+ },
+ "params": {
+  "PAGE_W": 12,
+  "NS": 1,
+  "NPR": 1,
+  "NREC": 0,
+  "NGO": 1,
+  "NB": 2,
+  "NF": 1,
+  "XSER": 1,
+  "SPARSE_SU": 1,
+  "SU_DICT_CAP": "{32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3}"
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_min_tracks": 3
+ },
+ "job": {
+  "owner": "CODEX-HBM-TILES-2140-1022",
+  "branch": "codex/hbm-collar-sparse-2140-1022",
+  "tag": "sparse_b",
+  "purpose": "Correctness closure: dense collar rejects actual sparse SU F20 word9 bank4row0. Qualified port-identical SPARSE_SU1 source adbc963c28e1c1cca67d65f0cb8ac8931e40b2ac7cb909e7e9821a2b3d8cb6e9 accepts only source-derived bank apertures, exact462-word generation and contiguous bank rows; actual125 executed commands pass with six causal refusals and count/data mutants caught. Same frozen51.84sq/ports/clock ratios/IO budgets, +24 address/seen FF, no new data edge. Alternate uses a separate balanced spine for each existing domain.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+   "rtl/hbm_accel/host_static_20261015/run_cp2_one.sh",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_packet_static.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_host_phy_adapt.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_hbm_static_cfg_collar.sv",
+   "rtl/hbm_accel/host_static_20261015/tb_static_cmd_target.sv",
+   "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress_obs.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "rtl/test/run_hbm_host_su_sparse_tile.sh",
+   "results/rtl/hbm_host_su_sparse_1022"
+  ],
+  "benches": [
+   {
+    "name": "sparse_actual",
+    "cmd": "bash rtl/test/run_hbm_host_su_sparse_tile.sh {RUN}/sparse0 0",
+    "expect": "pass",
+    "pass_regex": "HOSTPROG_SPARSE_PASS exact_actual_words=462 launch=1 executed_commands=125",
+    "pass_witness": "results/rtl/hbm_host_su_sparse_1022/final0.log",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "python3"
+    ]
+   },
+   {
+    "name": "sparse_refuse_2",
+    "cmd": "bash rtl/test/run_hbm_host_su_sparse_tile.sh {RUN}/sparse2 2",
+    "expect": "pass",
+    "pass_regex": "HOSTPROG_NEGATIVE_CAUGHT case=2 ",
+    "pass_witness": "results/rtl/hbm_host_su_sparse_1022/final2.log",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "python3"
+    ]
+   },
+   {
+    "name": "sparse_refuse_3",
+    "cmd": "bash rtl/test/run_hbm_host_su_sparse_tile.sh {RUN}/sparse3 3",
+    "expect": "pass",
+    "pass_regex": "HOSTPROG_NEGATIVE_CAUGHT case=3 ",
+    "pass_witness": "results/rtl/hbm_host_su_sparse_1022/final3.log",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "python3"
+    ]
+   },
+   {
+    "name": "sparse_refuse_4",
+    "cmd": "bash rtl/test/run_hbm_host_su_sparse_tile.sh {RUN}/sparse4 4",
+    "expect": "pass",
+    "pass_regex": "HOSTPROG_NEGATIVE_CAUGHT case=4 ",
+    "pass_witness": "results/rtl/hbm_host_su_sparse_1022/final4.log",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "python3"
+    ]
+   },
+   {
+    "name": "sparse_refuse_5",
+    "cmd": "bash rtl/test/run_hbm_host_su_sparse_tile.sh {RUN}/sparse5 5",
+    "expect": "pass",
+    "pass_regex": "HOSTPROG_NEGATIVE_CAUGHT case=5 ",
+    "pass_witness": "results/rtl/hbm_host_su_sparse_1022/final5.log",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "python3"
+    ]
+   },
+   {
+    "name": "sparse_refuse_6",
+    "cmd": "bash rtl/test/run_hbm_host_su_sparse_tile.sh {RUN}/sparse6 6",
+    "expect": "pass",
+    "pass_regex": "HOSTPROG_NEGATIVE_CAUGHT case=6 ",
+    "pass_witness": "results/rtl/hbm_host_su_sparse_1022/final6.log",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "python3"
+    ]
+   },
+   {
+    "name": "sparse_refuse_7",
+    "cmd": "bash rtl/test/run_hbm_host_su_sparse_tile.sh {RUN}/sparse7 7",
+    "expect": "pass",
+    "pass_regex": "HOSTPROG_NEGATIVE_CAUGHT case=7 ",
+    "pass_witness": "results/rtl/hbm_host_su_sparse_1022/final7.log",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "python3"
+    ]
+   },
+   {
+    "name": "sparse_mut_count",
+    "cmd": "bash rtl/test/run_hbm_host_su_sparse_tile.sh {RUN}/mut_count 2 2 0",
+    "expect": "fail",
+    "fail_regex": "HOSTPROG_NEGATIVE_ESCAPED",
+    "fail_witness": "results/rtl/hbm_host_su_sparse_1022/mutant_count.log",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "python3"
+    ]
+   },
+   {
+    "name": "sparse_mut_data",
+    "cmd": "bash rtl/test/run_hbm_host_su_sparse_tile.sh {RUN}/mut_data 0 0 1",
+    "expect": "fail",
+    "fail_regex": "HOSTPROG_DATA_FAIL",
+    "fail_witness": "results/rtl/hbm_host_su_sparse_1022/mutant_data.log",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "python3"
+    ]
+   }
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_col_su_sparse_b_1022",
+  "views_to": "physical/ref_tile/hdie_col_su_sparse_b_1022/views",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "Fix actual sparse SU programme installation, dense old view is not bindable for SPARSE_SU1"
+  }
+ },
+ "slot_change_request": "HBMA-HOST 10-17 -> H-DIE: d4f slot 34.344x34.56 (pv1) is pin-bound (N 541 at 15.7/um); needs 51.84x51.84 (S host 293, N su_prog 285, E prm 256 at <=5.7/um)",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk_in",
+  "clk"
+ ],
+ "clock_data_paths": "related_pll_ratio",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   4,
+   3
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_in"
+   ],
+   "inputs": [
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "launch_v"
+   ],
+   "outputs": []
+  },
+  "serial": {
+   "ratio": [
+    4,
+    3
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "tgt",
+    "c_busy",
+    "c_done",
+    "c_fault"
+   ],
+   "outputs": [
+    "pw_we",
+    "pw_addr",
+    "pw_data",
+    "prm",
+    "start_v",
+    "go",
+    "rec",
+    "ready",
+    "active",
+    "fault"
+   ]
+  }
+ },
+ "structural_change": "Correctness closure: dense collar rejects actual sparse SU F20 word9 bank4row0. Qualified port-identical SPARSE_SU1 source adbc963c28e1c1cca67d65f0cb8ac8931e40b2ac7cb909e7e9821a2b3d8cb6e9 accepts only source-derived bank apertures, exact462-word generation and contiguous bank rows; actual125 executed commands pass with six causal refusals and count/data mutants caught. Same frozen51.84sq/ports/clock ratios/IO budgets, +24 address/seen FF, no new data edge. Alternate uses a separate balanced spine for each existing domain.",
+ "cdc_synchronizers": [
+  {
+   "name": "xser_event",
+   "src_domain": "core",
+   "dst_domain": "serial",
+   "source": "g_xser.h_seq",
+   "chain": [
+    "g_xser.x1_seq",
+    "g_xser.x2_seq",
+    "g_xser.x3_seq"
+   ],
+   "payload": [
+    "g_xser.h_cv",
+    "g_xser.h_dv",
+    "g_xser.h_lv",
+    "g_xser.h_ct",
+    "g_xser.h_ca",
+    "g_xser.h_cd"
+   ],
+   "sync_max_delay_ps": 250,
+   "payload_max_delay_ps": 833,
+   "why": "stream->serial config event: Gray h_seq, x1/x2/x3 serial synchroniser, ct/ca/cd/cv/dv/lv load h_* only when x2 != x3 (h_* stable >= 2 serial periods); 250 ps keeps the launch latency fixed on the compiler's issue phases"
+  },
+  {
+   "name": "stream_reset",
+   "src_domain": "serial",
+   "dst_domain": "core",
+   "source": "g_rst_sync.rc[1]",
+   "chain": [
+    "g_rst_sync.rs[0]",
+    "g_rst_sync.rs[1]"
+   ],
+   "sync_max_delay_ps": 250,
+   "why": "serial core reset rc[1] re-timed by two clk_in flops into the stream-domain reset"
+  }
+ ],
+ "clock_distribution": "spine",
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_LEAF_N": "16"
+ }
+}

@@ -47,6 +47,7 @@ import pin_fit  # noqa: E402
 import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 import raw_macro_clocks  # noqa: E402
+from measured_band_fill import lattice_band_errors, measured_band_fill  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -62,7 +63,7 @@ CORE_MARGIN = 2.16
 CHANNEL_UM = 20.0       # macro-macro and macro-core-edge channel
 PIN_EDGE_UM = 20.0      # no macro within this distance of a face that carries pins
 HALO_UM = 2.16          # placement halo around every macro (hard blockage)
-UTIL_LO, UTIL_HI = 0.45, 0.60
+UTIL_LO, UTIL_HI = 0.40, 0.60   # OWNER 10-19/10-21: target fill 40-60%; below = roomy (INFO), never shrink
 FILL_MAX = 0.90         # sanity bound on total (cells + macros) / core of a kit with macros
 UTIL_TARGET = 0.52
 FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
@@ -104,7 +105,19 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 RECIPE_LATEST = 4
 RESET_LANDING_RULE = ("ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth "
                       "fan-out; reset release latency is a scheduled constant")
-PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
+PIN_REGS_RULE_STRICT = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
+# OWNER 10-20 ~09:05 (supersedes the 10-15 rule): pin registers are required only at region crossings (landing rings)
+# and on wires over the 405 um reach; touching tiles in the SAME region may connect directly when the combined path
+# meets timing (die / parent STA checks it).  The strict 10-15 form stays available: spec "pin_regs_rule": "every_pin"
+# (or env OT_PIN_REGS_STRICT=1).  Spec "region_crossing_ports": "<regexp>" names ports that cross a region boundary
+# with no landing ring inside the kit: those still need pin registers (the gate refuses a kit without them).
+PIN_REGS_RULE = ("OWNER RULE 10-20 09:05: pin registers only at region crossings (landing rings) and on wires over "
+                 "405 um; same-region touching tiles may connect directly when the path meets timing")
+
+
+def pin_regs_strict(s: dict) -> bool:
+    """True when the kit asks for the strict 10-15 every-pin form (spec pin_regs_rule / env OT_PIN_REGS_STRICT=1)"""
+    return s.get("pin_regs_rule") == "every_pin" or os.environ.get("OT_PIN_REGS_STRICT") == "1"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
 PIN_REG_SPLIT_TCL = "physical/common_flow/pin_reg_split.tcl"
@@ -186,8 +199,14 @@ def check_hold_budget(s: dict) -> None:
     pr = s.get("pin_regs") or {}
     # Q-CLUSTER 2026-10-17 (coordinator): a two-level cluster (cluster_level 2) whose own RTL registers every boundary pin
     # (pin_regs off with that reason) qualifies under the same rule and the same native audit
-    if s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
-        raise SpecError('spec: hold_budget "die" applies to leaf tiles (kind "tile") and two-level clusters only')
+    if s.get("kind") == "cluster" and s.get("cluster_level", 1) == 1 and s.get("registered_cluster_candidate"):
+        from registered_cluster_budget import check as check_registered_cluster
+        try:
+            check_registered_cluster(s, ROOT)
+        except (ValueError, KeyError, TypeError, OSError) as exc:
+            raise SpecError(str(exc)) from exc
+    elif s.get("kind") != "tile" and not (s.get("kind") == "cluster" and s.get("cluster_level") == 2):
+        raise SpecError('spec: hold_budget "die" applies to leaf tiles, two-level clusters, or evidence-guarded level 1 candidates')
     if not isinstance(pr, dict) or pr.get("exclude") or not (pr.get("enable") or str(pr.get("reason") or "").strip()):
         raise SpecError('spec: hold_budget "die" needs every data pin registered (pin_regs enabled without exclude, '
                         'or disabled with the reason the RTL registers them)')
@@ -248,9 +267,10 @@ def pin_regs_plan(s: dict) -> dict | None:
     if not isinstance(pr, dict):
         raise SpecError('spec: pin_regs must be an object ({"enable": true} | {"enable": false, "reason": ...})')
     if pr.get("enable") is False:
-        if not str(pr.get("reason", "")).strip():
-            raise SpecError(f"spec: pin_regs opt-out needs a recorded reason ({PIN_REGS_RULE})")
-        return {"enable": False, "reason": pr["reason"]}
+        if not str(pr.get("reason", "")).strip() and (pin_regs_strict(s) or s.get("region_crossing_ports")):
+            why = PIN_REGS_RULE_STRICT if pin_regs_strict(s) else PIN_REGS_RULE + " (this kit declares region_crossing_ports)"
+            raise SpecError(f"spec: pin_regs opt-out needs a recorded reason ({why})")
+        return {"enable": False, "reason": pr.get("reason") or PIN_REGS_RULE}
     if pr.get("exclude") and not str(pr.get("reason", "")).strip():
         raise SpecError("spec: pin_regs.exclude needs a recorded reason")
     declared = s.get("clock_ports", [])
@@ -272,7 +292,7 @@ def pin_regs_plan(s: dict) -> dict | None:
         raise SpecError("spec: pin_regs.clock must name a declared clock port or bit")
     return {"enable": True, "clock": ck, "clock_ports": cks, "reset_ports": resets, "exclude": pr.get("exclude", ""),
             "reset": pr.get("reset", ""), "reason": pr.get("reason", ""),
-            "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE,
+            "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE_STRICT,
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
 
 
@@ -294,6 +314,77 @@ def pin_regs_vars(s: dict) -> list:
     return out
 
 
+SOURCE_NATIVE_RESET_LANDINGS = {
+    # This source already contains the two plain-FF landing levels. Counts
+    # remain a mandatory balanced_reset_proof obligation on the actual map.
+    "host_order_n32_1020": {
+        "source": "rtl/qwen_sys/host_order_codex_1020/qkd_hr_core_order_n32.sv",
+        "sha256": "c3de9cf6aeab78cbf4a01c9b6dd6b6cbf15f8f9f0839cf7f3f18bf47616a8b75",
+        "top": "qkd_hr_core_order_n32", "clock": "ck_core", "reset_ports": ["host_rst_n"],
+        "first_copies": {"host_rst_n": 12}, "copies": {"host_rst_n": 288},
+        "source_dependencies": {
+            "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v":
+                "abcda04ef59dc8c8056b48e3d1b1aab255d4d3713d658644e57a6638974799ba",
+        },
+    },
+    "host_prompt_n32_1020": {
+        # MU0 component only. A production MU4 source/shape needs a separate
+        # fingerprint and its own exactness, cold-state and mapped proof.
+        "source": "rtl/qwen_sys/host_cluster_20261017/prompt_native32/qkd_hr_core_prompt_n32.sv",
+        "sha256": "ddced4a80043ea79b4f2b95c47f745ea946f4646d9dba0fb1d5b28e793697426",
+        "top": "qkd_hr_core_prompt_n32", "clock": "ck_core", "reset_ports": ["u_rank__u_control__por_n"],
+        "first_copies": {"u_rank__u_control__por_n": 1}, "copies": {"u_rank__u_control__por_n": 4},
+        "source_dependencies": {
+            "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v":
+                "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+            "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v":
+                "f9074a0e2e16dacebdc30e8c8e8e66386165c6b2cf704da4ceb26209e4ade77c",
+            "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v":
+                "68ae182bc55607412d5dc4a5adf117adb3fd8acb863a28e3155af85691e10c8d",
+        },
+    },
+}
+
+
+def source_native_reset_landing(s: dict, rl: dict) -> dict | None:
+    """Exact source admission for an existing forest, never a proof/threshold waiver."""
+    if "source_native" not in rl:
+        return None
+    key = rl["source_native"]
+    if not isinstance(key, str) or key not in SOURCE_NATIVE_RESET_LANDINGS:
+        raise SpecError("spec: reset_landing.source_native must name a reviewed source fingerprint")
+    entry = SOURCE_NATIVE_RESET_LANDINGS[key]
+    if type(rl.get("stages", 2)) is not int or any(
+            not isinstance(rl.get(k), dict) or any(type(n) is not int for n in rl[k].values())
+            for k in ("first_copies", "copies")):
+        raise SpecError("spec: source-native reset stages and copy counts must be exact integers")
+    if (s.get("top") != entry["top"] or s.get("params", {}) != {} or s.get("defines", []) != []
+            or s.get("reset_ports") != entry["reset_ports"] or rl.get("enable") is not True
+            or rl.get("stages", 2) != 2 or rl.get("clock", entry["clock"]) != entry["clock"]
+            or s.get("clock_port") != entry["clock"]
+            or any(rl.get(k) != entry[k] for k in ("first_copies", "copies"))):
+        raise SpecError("spec: source-native reset top/parameters/defines/clock/counts differ from reviewed source")
+    if any(k in rl for k in ("waive", "max_sinks")) or s.get("reset_relay_split") is not None:
+        raise SpecError("spec: source-native reset forbids threshold waivers and reset-copy rewiring")
+    overrides = s.get("orfs_vars") or {}
+    if any(k in overrides for k in ("SYNTH_PARAMETERS", "SYNTH_DEFINES", "VERILOG_DEFINES", "VERILOG_FILES", "SYNTH_ARGS")) \
+            or any(k.startswith(("OT_RST_", "OT_PIN_REGS")) for k in overrides):
+        raise SpecError("spec: source-native reset forbids source/landing ORFS overrides")
+    pr = s.get("pin_regs") or {}
+    if pr.get("enable") is not False:
+        raise SpecError("spec: source-native reset requires existing source pin registers")
+    closure = {entry["source"]: entry["sha256"], **entry.get("source_dependencies", {})}
+    sources = s.get("sources", [])
+    if (not isinstance(sources, list) or any(not isinstance(p, str) for p in sources)
+            or len(sources) != len(closure) or set(sources) != set(closure)):
+        raise SpecError("spec: source-native reset complete source closure differs from reviewed source")
+    for path, digest in closure.items():
+        source = ROOT / path
+        if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+            raise SpecError("spec: source-native reset source fingerprint changed or missing: " + path)
+    return {"id": key, "source": entry["source"], "sha256": entry["sha256"], "source_closure": closure}
+
+
 def reset_landing_plan(s: dict) -> dict | None:
     """the kit's reset landing plan or None; SpecError on a malformed record or an opt-out without a reason"""
     rl = s.get("reset_landing")
@@ -302,6 +393,7 @@ def reset_landing_plan(s: dict) -> dict | None:
     if not isinstance(rl, dict):
         raise SpecError('spec: reset_landing must be an object ({"enable": true, "stages": 2} | {"enable": false, '
                         '"reason": ...})')
+    native = source_native_reset_landing(s, rl)
     if not rl.get("enable"):
         if not str(rl.get("reason") or rl.get("waive") or "").strip():
             raise SpecError(f"spec: reset_landing opt-out needs a recorded reason ({RESET_LANDING_RULE})")
@@ -317,13 +409,81 @@ def reset_landing_plan(s: dict) -> dict | None:
     ck = pr.get("clock") or rl.get("clock") or (cks[0] if len(cks) == 1 else None)
     if not ck or ck not in cks:
         raise SpecError(f"spec: multi-clock kit ({', '.join(cks)}): name the landing clock in reset_landing.clock")
-    return {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
+    plan = {"enable": True, "stages": st, "clock": ck, "reset_ports": list(resets), "rule": RESET_LANDING_RULE,
             "reset_release_cycles": st}
+    if native:
+        if ck != SOURCE_NATIVE_RESET_LANDINGS[native["id"]]["clock"]:
+            raise SpecError("spec: source-native reset effective landing clock differs from reviewed source")
+        plan["source_native"] = native
+    fc = rl.get("first_copies")
+    if fc is not None:
+        if (not isinstance(fc, dict) or not fc or any(p not in resets for p in fc)
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 32 for n in fc.values())):
+            raise SpecError('spec: reset_landing.first_copies must map declared resets to integers 1..32')
+        if st != 2:
+            raise SpecError('spec: balanced first_copies requires exactly two landing stages')
+        if not native and (not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32):
+            raise SpecError('spec: balanced first_copies requires reset_relay_split.max_loads <=32')
+        plan['first_copies'] = dict(fc)
+    cp = rl.get("copies")
+    if cp is not None:
+        # KV-RELAYGEN 2026-10-19: {"<reset port>": N} -> the last landing stage has N KEPT identical copies, spread over the
+        # core's reset loads by reset_relay_split (ot_rst_copies.tcl); latency unchanged (the copies are the last stage)
+        if (not isinstance(cp, dict) or not cp or any(p not in resets for p in cp)
+                or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= (1024 if fc is not None else 64) for n in cp.values())):
+            raise SpecError('spec: reset_landing.copies must map declared reset_ports to integers 1..64')
+        if st < 2:
+            raise SpecError("spec: reset_landing.copies needs stages >= 2")
+        if not native and not reset_relay_split_plan(s):
+            raise SpecError('spec: reset_landing.copies needs "reset_relay_split" (the synthesis pass that uses them)')
+        if fc is not None and (set(fc) != set(cp) or any(cp[p] > 32*fc[p] for p in fc)):
+            raise SpecError('spec: balanced copies requires matching first/final ports and <=32 final copies per first')
+        plan["copies"] = dict(cp)
+    elif fc is not None:
+        raise SpecError('spec: first_copies requires final copies')
+    return plan
+
+
+RESET_RELAY_SPLIT_RULE = ("KV-RELAYGEN 2026-10-19 / SAFE-DESIGN item 3: a reset relay copy drives <= ~256 loads; the "
+                          "RTL's kept identical relay copies take the loads by region (physical/common_flow/ot_rst_copies.tcl)")
+
+
+def reset_relay_split_plan(s: dict) -> dict | None:
+    """spec "reset_relay_split": {"max_loads": 256[, "re": "<family wire regexp>"]} -> plan, None when absent"""
+    rs = s.get("reset_relay_split")
+    if rs is None:
+        return None
+    if not isinstance(rs, dict):
+        raise SpecError('spec: reset_relay_split must be an object ({"max_loads": 256})')
+    mx = rs.get("max_loads", 256)
+    if not isinstance(mx, int) or isinstance(mx, bool) or not 16 <= mx <= 4096:
+        raise SpecError("spec: reset_relay_split.max_loads must be an integer 16..4096")
+    rx = rs.get("re")
+    if rx is not None:
+        if not isinstance(rx, str) or not rx or any(c in rx for c in "'\"\n"):
+            raise SpecError("spec: reset_relay_split.re must be a plain regexp string")
+        re.compile(rx)
+    return {"max_loads": mx, **({"re": rx} if rx else {})}
+
+
+def reset_relay_split_vars(s: dict) -> list:
+    plan = reset_relay_split_plan(s)
+    if not plan:
+        return []
+    out = [f"--orfs-var OT_RST_COPIES_MAX={plan['max_loads']}"]
+    if plan.get("re"):
+        out.append(f"--orfs-var OT_RST_COPIES_RE={shq(plan['re'])}")
+    rl = reset_landing_plan(s)
+    if rl and rl.get("enable") and rl.get("copies"):
+        out.append("--orfs-var OT_RST_LAND_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["copies"].items())))
+    if rl and rl.get("enable") and rl.get("first_copies"):
+        out.append("--orfs-var OT_RST_LAND_FIRST_COPIES=" + ",".join(f"{p}={n}" for p, n in sorted(rl["first_copies"].items())))
+    return out
 
 
 def reset_landing_vars(s: dict) -> list:
     plan = reset_landing_plan(s)
-    if not plan or not plan["enable"]:
+    if not plan or not plan["enable"] or plan.get("source_native"):
         return []
     out = ["--orfs-var OT_RST_LAND=1", f"--orfs-var OT_RST_LAND_STAGES={plan['stages']}"]
     pp = pin_regs_plan(s)
@@ -430,6 +590,8 @@ def kit_pin_hooks(s: dict) -> bool:
 
 
 def gen_pin_hooks(s: dict) -> dict:
+    if s.get("pin_hook_after_flops") and not pin_hook_wrapper(s):
+        raise SpecError("pin_hook_after_flops needs the recipe-2 pin-hook wrapper")
     if pin_hook_flops_only(s):
         pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (pin flops, no hold stages): the spec's pin_hook_before_flops repo hooks, then",
                    "# every port's single launch / capture flop is fixed at its pin.  ORFS takes one hook per step."]
@@ -477,6 +639,15 @@ def gen_pin_hooks(s: dict) -> dict:
         if not (ROOT / rel).is_file():
             raise SpecError(f"missing pin hook: {rel}")
         pre_gpl.insert(-1, f"source /src/{rel}")
+    # spec "pin_hook_after_flops" (KV-RST3 2026-10-20): repo Tcl hooks sourced AFTER the pin flops are fixed, so they can
+    # read ot_out_flop_at_pins.txt / ot_inhold_firm.txt (e.g. a hard central placement fence for every non-boundary cell);
+    # safe relative repo paths only, and they join the source-sync list.  Kits without the key regenerate byte-identically.
+    for rel in s.get("pin_hook_after_flops", []):
+        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+            raise SpecError("pin_hook_after_flops must name safe relative repo Tcl files")
+        if not (ROOT / rel).is_file():
+            raise SpecError(f"missing pin hook: {rel}")
+        pre_gpl.append(f"source /src/{rel}")
     pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
                "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
                f"source /src/{QDM}/out_flop_release.tcl"]
@@ -494,6 +665,8 @@ def gen_pin_hooks(s: dict) -> dict:
 # --------------------------------------------------------------------------------------------- spec
 def load_spec(path: str) -> dict:
     s = json.loads(Path(path).read_text())
+    if type(s.get("pg_strict", False)) is not bool:
+        raise SpecError("pg_strict must be a boolean")
     for k in ("name", "top", "sources", "clock_port", "pins"):
         if k not in s:
             raise SpecError(f"spec: missing '{k}'")
@@ -519,6 +692,7 @@ def load_spec(path: str) -> dict:
     # child gets its clock from its OWN port on the cluster face ("clock_ports": one scalar port per child clock pin, the
     # RTL wires port -> child clock pin).  The die delivers phi - R_i at each entry (R_i = entry wire + the child's routed
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
+    multiport_spine(s)
     if s.get("cdc_synchronizers") is not None and (s.get("clock") != "multiple_cts_roots" or s["kind"] != "tile"):
         raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
@@ -585,20 +759,24 @@ def literal_pin_bits(s: dict) -> bool:
 
 
 def validate_literal_pin_plan(s: dict, ports=None, root=None) -> dict:
-    """Narrow exact-bit admission: real widths + exhaustive IO Tcl + named M6 grant.
+    """Narrow exact-bit admission: real widths + exhaustive IO Tcl + named M6 grant when M6 pins exist.
 
     Base-only plans retain the existing path. Scalar [0] aliases and ranges stay
     forbidden. The post-synthesis caller supplies the measured port bounds too;
     raw-DEF/LEF geometry, PG/vias and native timing still need their normal gates.
+    An M5-only plan (no M6 line in io_tcl) needs no m6_pin_grant (coordinator 10-22,
+    SQC-SLICE option a): with no grant, granted is empty, so any M6 line still fails.
     """
     root = Path(root or ROOT)
-    if not s.get("io_tcl") or not s.get("m6_pin_grant"):
-        raise SpecError("literal pin bits require exact io_tcl and a named M6 contact grant; scalar [0] aliases remain forbidden")
-    import m6_pin_grant as M6
-    try:
-        granted = M6.validate(s["m6_pin_grant"], s["top"])
-    except ValueError as e:
-        raise SpecError(f"literal pin grant: {e}") from e
+    if not s.get("io_tcl"):
+        raise SpecError("literal pin bits require exact io_tcl (and a named M6 contact grant if any pin is M6); scalar [0] aliases remain forbidden")
+    granted = {}
+    if s.get("m6_pin_grant"):
+        import m6_pin_grant as M6
+        try:
+            granted = M6.validate(s["m6_pin_grant"], s["top"])
+        except ValueError as e:
+            raise SpecError(f"literal pin grant: {e}") from e
     if ports is None:
         if s.get("defines"):
             raise SpecError("literal pin plan needs resolved actual port widths; conditional interfaces are not admitted by this parser")
@@ -1054,12 +1232,24 @@ def gen_pdn(s: dict, lc: dict) -> str:
               f"  define_pdn_grid -name {{hard_{top.lower()}}} -voltage_domains {{CORE}} -macro -cells $ot_c "
               f"-orient {{R0 R180 MX MY}} -halo {{2.0 2.0 2.0 2.0}}\n"
               f"  add_pdn_connect -grid {{hard_{top.lower()}}} -layers {{M{L} M{L + 1}}}\n}}\n")
-    srams = sorted({view_name(m["view"]) for m in s["macros"]})
-    if srams:
-        t += (f"set ot_s [ot_ref_present {{{' '.join(srams)}}}]\n"
+    macro_layers: dict = {}
+    macro_owner: dict = {}
+    for m in s["macros"]:
+        master = view_name(m["view"])
+        top = m.get("pg_layer", "M4")
+        L = metal(top)
+        if master in macro_owner and macro_owner[master] != top:
+            raise SpecError(f"macro {master} has conflicting PG layers")
+        macro_owner[master] = top
+        macro_layers.setdefault(top, set()).add(master)
+    for top, cells in sorted(macro_layers.items()):
+        L = metal(top)
+        grid = "sram" if top == "M4" else f"macro_{top.lower()}"
+        t += (f"set ot_s [ot_ref_present {{{' '.join(sorted(cells))}}}]\n"
               "if {[llength $ot_s]} {\n"
-              "  define_pdn_grid -name {sram} -voltage_domains {CORE} -macro -cells $ot_s -orient {R0 R180 MX MY} "
-              "-halo {2.0 2.0 2.0 2.0}\n  add_pdn_connect -grid {sram} -layers {M4 M5}\n}\n")
+              f"  define_pdn_grid -name {{{grid}}} -voltage_domains {{CORE}} -macro -cells $ot_s -orient {{R0 R180 MX MY}} "
+              "-halo {2.0 2.0 2.0 2.0}\n"
+              f"  add_pdn_connect -grid {{{grid}}} -layers {{M{L} M{L + 1}}}\n}}\n")
     return t
 
 
@@ -1106,15 +1296,17 @@ def util_metrics(std_area, blocks, core, halo=HALO_UM, halo_x=None):
 
 
 def util_severity(m):
-    """-> (severity, in_band).  Density gate: old band UTIL_LO..UTIL_HI+0.05, FAIL above 0.70 (kits without macros
-    unchanged); with macros only the upper side applies (a macro-dominated tile is placed sparsely by construction) plus
-    the total-fill sanity bound."""
+    """-> (severity, in_band).  Density gate: WARN above UTIL_HI (enlarge the outline), FAIL above 0.70; below UTIL_LO is
+    INFO only (outline roomy; acceptable -- OWNER 10-19/10-21 never shrink for area); with macros only the upper side
+    applies (a macro-dominated tile is placed sparsely by construction) plus the total-fill sanity bound."""
     u = m["density"]
     if m["macro_um2"] > 0:
         if m["total_fill"] > FILL_MAX:
             return "FAIL", False
-        return ("INFO", True) if u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
-    return ("INFO", True) if UTIL_LO <= u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
+        return ("INFO", True) if u <= UTIL_HI else ("FAIL" if u > 0.70 else "WARN", False)
+    if u < UTIL_LO:
+        return "INFO", False                 # roomy: informational, no shrink advice
+    return ("INFO", True) if u <= UTIL_HI else ("FAIL" if u > 0.70 else "WARN", False)
 
 
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
@@ -1153,12 +1345,15 @@ def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
 
 
 FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 2026-10-15: parent / cluster kits
+FILL_ROOMY, FILL_HI = 0.40, 0.60       # OWNER 10-19/10-21: target 40-60%; below = roomy (INFO), above = WARN enlarge
 
 
 def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | None:
     """(severity, 'fill', message, fix) for a parent / cluster kit (kind cluster, hardened children, or >= 4 macros):
-    fill = (hard macro + child area + synthesized std-cell area) / outline.  WARN < 50 %, FAIL < 35 % unless the spec
-    records "fill_reason": {"pin_bound": "..."} (the pre-route gate prints the measured pin demand per face)."""
+    fill = (hard macro + child area + synthesized std-cell area) / outline.  FAIL < 35 % unless the spec records
+    "fill_reason": {"pin_bound": "..."} (the pre-route gate prints the measured pin demand per face; a recorded reason
+    below 50 % is a WARN); otherwise < 40 % is INFO (outline roomy; acceptable), > 60 % WARNs toward enlarging.  Never
+    advise shrinking (OWNER 10-19/10-21)."""
     if not (s.get("kind") == "cluster" or s.get("children") or len(s.get("macros") or []) >= 4):
         return None
     if not std_area:
@@ -1166,13 +1361,31 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
                 "pass --area-um2 / std_area_um2 from the synthesis smoke")
     mac = sum(b["w"] * b["h"] for b in blocks)
     fill = (mac + float(std_area)) / (W * H)
-    reason = str((s.get("fill_reason") or {}).get("pin_bound", "")).strip()
+    fr = s.get("fill_reason") or {}
+    reason = str(fr.get("pin_bound", "")).strip()
+    reason_kind = "pin-bound"
+    structural = fr.get("lattice_channel_bound")
+    if structural is not None:
+        errors = lattice_band_errors(s, W, H, blocks, float(std_area), planning=True, root=ROOT)
+        if errors:
+            return ("FAIL", "fill", "invalid lattice/channel band: " + "; ".join(errors),
+                    "fix measured sizing geometry; actual placement verification is also required")
+        reason = str(structural["why"]).strip()
+        reason_kind = "lattice/channel-bound gate-rule exception (placement verification required)"
+        if "planning_birth_budget" in s:
+            reason_kind += (f"; PLANNING ONLY birth budget {s['planning_std_area_um2']:.3f} um2, "
+                            f"source {float(std_area):.3f} um2; actual placed 40..60% still required")
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
-                "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand")
-    if fill < FILL_WARN:
-        return ("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
+                "do not shrink for area: regroup the macros / children so links stay short, or record "
+                "fill_reason.pin_bound with the measured pin demand")
+    if reason and fill < FILL_WARN:
+        return ("WARN", "fill", msg + f" ({reason_kind}: {reason})", "")
+    if fill < FILL_ROOMY:
+        return ("INFO", "fill", msg + f" < {FILL_ROOMY:.0%}: outline roomy; acceptable", "")
+    if fill > FILL_HI:
+        return ("WARN", "fill", msg + f" > {FILL_HI:.0%}", "enlarge the outline toward fill 0.50-0.55")
     return None
 
 
@@ -1454,11 +1667,12 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
         sev, ok = util_severity(um)
         if not ok:
             msg = (f"utilisation: std-cell density {um['density']:.0%} of placeable {um['placeable_um2']:.0f} um2, total fill "
-                   f"{um['total_fill']:.0%} (limits {UTIL_HI + 0.05:.0%} density, {FILL_MAX:.0%} fill; std {std_area:.0f} + "
+                   f"{um['total_fill']:.0%} (limits {UTIL_HI:.0%} density, {FILL_MAX:.0%} fill; std {std_area:.0f} + "
                    f"macro {um['macro_um2']:.0f} in core {core:.0f} um2)") if um["macro_um2"] else \
                 (f"utilisation {um['util']:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro 0 "
-                 f"in core {core:.0f} um2)")
-            out.append((sev, "util", msg, "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
+                 f"in core {core:.0f} um2)" + ("; outline roomy; acceptable" if um["util"] < UTIL_LO else ""))
+            out.append((sev, "util", msg, "" if sev == "INFO" else
+                        "enlarge the outline to util 0.50-0.55 (drop 'outline', set util); never shrink for area"))
     long_side = max(W, H)
     if long_side > 600 and s["kind"] == "tile":
         out.append(("WARN", "clock_span", f"{W} x {H} um: one clock root over > 600 um",
@@ -1498,7 +1712,7 @@ def pin_wrapper(s: dict) -> bool:
     reset_landing on (a landing-only wrapper); the design's core is then instance u_ot_pr_core of <top>__ot_pr_core"""
     pr = pin_regs_plan(s)
     rl = reset_landing_plan(s)
-    return bool((pr and pr.get("enable")) or (rl and rl.get("enable")))
+    return bool((pr and pr.get("enable")) or (rl and rl.get("enable") and not rl.get("source_native")))
 
 
 def gen_place(s: dict, blocks: list) -> str:
@@ -1568,7 +1782,7 @@ def spec_io_budget(s: dict) -> tuple:
 def io_budget_env(s: dict) -> dict:
     """OT_IO_*_BUDGET_PS for a tightened single-clock boundary ({} = nominal 0.2 T, kits unchanged)"""
     fin, fout = spec_io_budget(s)
-    if (fin, fout) == (0.2, 0.2):
+    if (fin, fout) == (0.2, 0.2) and not s.get('single_clock_contract'):
         return {}
     signoff = clock_entry_constraints.signoff_period(s)
     return {"OT_IO_IN_BUDGET_PS": round(signoff * fin, 3), "OT_IO_OUT_BUDGET_PS": round(signoff * fout, 3)}
@@ -1590,7 +1804,8 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             # Extra SDC may declare secondary clocks. Data slew must exclude
             # their sources; explicit source-clock transitions in extra SDC stand.
             + "set_input_transition 150 [all_inputs -no_clocks]\n"
-            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT))
+            + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
+            + clock_entry_constraints.single_clock_contract.guard(s))
 
 
 def sdc_extra(s: dict) -> str:
@@ -1623,7 +1838,8 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + io + sdc_extra(s)
             + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else "")
             + ce_generate(s) + clock_entry_constraints.landed_sdc(s, ROOT)
-            + "\nset_propagated_clock [all_clocks]\n")
+            + "\nset_propagated_clock [all_clocks]\n"
+            + clock_entry_constraints.single_clock_contract.guard(s))
 
 
 def io_hold_relief_ps(s: dict) -> int:
@@ -1690,13 +1906,24 @@ def _child_insertion(s: dict, ch: dict, out: dict) -> None:
         # target: insertion.json clock_measurements[pin].tt.boundary.mean, else that pin's TT-lib clock-tree max
         name = view_name(v)
         ij = ROOT / v / "insertion.json"
-        cm = (json.loads(ij.read_text()).get("clock_measurements") or {}) if ij.exists() else {}
+        ijd = json.loads(ij.read_text()) if ij.exists() else {}
+        cm = ijd.get("clock_measurements") or {}
         p = ROOT / v / f"{name}_tt.lib"
         ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+        # STW-S81c-DIE4-FRAME 10-22: a child WITHOUT per-pin clock_measurements (single-clock legacy view) is judged by
+        # pre_route_gate root_child_flops on its insertion.json tt.boundary (min..max around the mean), so that mean is
+        # its spine target too.  The lib max_clock_tree_path (latest sink of the whole tree) handed ot_v41_bf_col 697.5
+        # vs boundary 544.0 and the q element 598.0 vs 510.3: their flops landed 153 / 88 ps EARLY against the soft
+        # leaves on every frame spine root (s81frame_col_h9/h10 vgs/vgcs/vgys), a deterministic pair FAIL > 80 ps.
+        # Scope: multiple_cts_roots only (the root_child_flops judge); single-root clock=spine kits (qfd_c_b16_dv_diag*)
+        # keep the lib-max target byte-identical.
+        top = ((ijd.get("tt") or {}).get("boundary") or {}) if not cm and s.get("clock") == "multiple_cts_roots" else {}
         for pin in sorted(set(cm) | set(ins)):
             b = (cm.get(pin) or {}).get("tt", {}).get("boundary", {})
             if b.get("n") and b.get("mean") is not None:
                 out[f"{name}/{pin}"] = round(float(b["mean"]), 1)
+            elif top.get("n") and top.get("mean") is not None:
+                out[f"{name}/{pin}"] = round(float(top["mean"]), 1)
             elif ins.get(pin):
                 out[f"{name}/{pin}"] = round(float(ins[pin]["max_ps"]), 1)
         return
@@ -1753,12 +1980,37 @@ SPINE_PIN_LOOKUP = """        regexp {[^/]+$} [get_full_name $pin] pn
 HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 
+def forwarded_soft_tap_tcl(s: dict) -> list:
+    """pre_cts.tcl lines arming physical/common_flow/forwarded_soft_tap.tcl ([] without the spec key: kits byte-identical).
+    Spec "forwarded_soft_tap": {"why": "<reason>"}; requires a landed cluster with forwarded_soft_clocks (the tap reads
+    ::ot_ce_fwd_soft / ::ot_ce_refs, set by the landed pre-CTS lines)."""
+    cfg = s.get("forwarded_soft_tap")
+    if cfg is None:
+        return []
+    if not isinstance(cfg, dict) or set(cfg) != {"why"} or not isinstance(cfg["why"], str) or not cfg["why"].strip():
+        raise SpecError('forwarded_soft_tap: {"why": "<reason>"}')
+    if not s.get("forwarded_soft_clocks") or not clock_entry_constraints.landed_cluster(s):
+        raise SpecError("forwarded_soft_tap requires a landed multiple_cts_roots cluster with forwarded_soft_clocks")
+    return ["source /src/physical/common_flow/forwarded_soft_tap.tcl"]
+
+
+def multiport_spine(s: dict) -> bool:
+    """Opt-in physical trees; domain ownership and timing remain with clock_entries."""
+    distribution = s.get("clock_distribution")
+    if distribution is None:
+        return False
+    if distribution != "spine" or s.get("clock") != "multiple_cts_roots" or s.get("kind") not in ("tile", "cluster"):
+        raise SpecError("clock_distribution=spine requires multiple_cts_roots on a tile or hard-child cluster")
+    return True
+
+
 def gen_hooks(s: dict, kd: str) -> dict:
     try:
         raw_bindings, _ = raw_macro_clocks.contract(s, ROOT)
     except (ValueError, OSError) as error:
         raise SpecError(str(error)) from error
     fwd = bool(s.get("forwarded_clock"))
+    entry_sdc = ce_generate(s) if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else None
     spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
                + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else "")
@@ -1774,10 +2026,39 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
                 pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
+        pre_cts.extend(clock_entry_constraints.forwarded_pre_cts_tcl(s, entry_sdc))
+        if multiport_spine(s):
+            # Install FIRST: clock_entries must still wrap the physical builder,
+            # validate every source root and measure every domain after its tree.
+            pre_cts += ["set ::env(OT_SPINE_PORTS) {" + ",".join(clock_ports(s)) + "}",
+                        "set ::env(OT_SPINE_CTS_REST) 0",
+                        "source /src/physical/common_flow/clock_spine.tcl"]
+            if s["kind"] == "cluster":
+                # Each real macro clock pin gets its own physical leaf. Targets
+                # include the exact child boundary insertion; raw PMA pins have
+                # no internal offset. This adds real buffers, without SDC shifts.
+                pre_cts += ["set ::env(OT_SPINE_MACRO_LEAF) 1",
+                            "set ::env(OT_SPINE_MACRO_PIN_LEAF) 1",
+                            f"source /src/{kd}/spine_ins.tcl"]
+                ins = child_insertions(s)
+                tk = lambda k: "{" + k + "}" if re.search(r"[\[\]$\\{}\s;\"]", k) else k
+                files["spine_ins.tcl"] = SPINE_INS.format(
+                    ins=" ".join(f"{tk(k)} {v}" for k, v in sorted(ins.items())),
+                    pinlookup=SPINE_PIN_LOOKUP if s.get("child_clock_ref") == "pin" else "")
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
         # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
         pre_cts.extend(clock_entry_constraints.landed_raw_tcl(s, ROOT))
+        # HBM-ELEM13/SU-PSLICE14 10-21 (opt-in "child_centre_tap"): centre a hard child's boundary range on its root's soft
+        # registers after CTS (wraps the CTS above; the boundary wrapper below re-applies clock_entry.sdc after it)
+        try:
+            pre_cts.extend(clock_entry_constraints.child_centre_tcl(s, ROOT))
+        except (ValueError, OSError) as error:
+            raise SpecError(str(error)) from error
+        # STW-S81c-DIE3-FRAME 10-22 (opt-in "forwarded_soft_tap": {"why": ..}): post-CTS minimax delay chain in front of
+        # each forwarded_soft_clocks group so the bare soft flops match the forwarded port's hard-child insertion (S81
+        # frame xk[k] u_xrl<k> 273 vs u_xo<k>/u_cf 380-399 ps); wraps the CTS above, before the boundary wrapper below
+        pre_cts.extend(forwarded_soft_tap_tcl(s))
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
@@ -1802,7 +2083,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
-        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + entry_sdc
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
@@ -1901,6 +2182,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         # macros whose pins sit on their W/E faces free of cells without widening the N/S gaps between stacked macros
         hx = float(s["route"].get("macro_halo_x_um", h))
         extra.append(f"--macro-place-halo {hx:g} {h:g}" if hx != h else f"--macro-place-halo {h} {h}")
+        # Fixed macro placement bypasses rtl_macro_placer: tapcell cuts rows using these separate variables.
+        # Honour declared pin-face halos; retain the platform's 2 um default when no halo was declared.
+        if "macro_halo_um" in s["route"] or "macro_halo_x_um" in s["route"]:
+            rows_y = float(s["route"].get("macro_halo_um", 2.0))
+            rows_x = float(s["route"].get("macro_halo_x_um", rows_y))
+            extra += [f"--orfs-var MACRO_ROWS_HALO_X={rows_x:g}",
+                      f"--orfs-var MACRO_ROWS_HALO_Y={rows_y:g}"]
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         extra.append(f"--orfs-var OT_SPINE_PORT={s['clock_port']}")
         # el1011-q-kvd 2026-10-12: a hard child's clock pin is its OWN spine leaf.  Shared bins balanced the leaf to the
@@ -2038,6 +2326,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     extra += hold_budget_vars(s)
     extra += pin_regs_vars(s)
     extra += reset_landing_vars(s)
+    extra += reset_relay_split_vars(s)
     # reviewed CDC kits: the lint-tagged registers keep their RTL names through yosys fsm (cdc_fsm_guard.py)
     extra += cdc_fsm_guard.orfs_vars(s, ROOT)
     if s.get("keep_pin_regs"):
@@ -2055,6 +2344,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({shell_array(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
+        *(["export OT_PG_STRICT=1"] if s.get("pg_strict", False) else []),
         *pin_order_desc_env(s),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
@@ -2156,12 +2446,18 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
+    out += clock_entry_constraints.single_clock_contract.evidence_paths(s)
+    if multiport_spine(s):
+        out += ["physical/common_flow/clock_spine.tcl", "physical/common_flow/native_pg_binding.tcl"]
+        if s["kind"] == "cluster":
+            out.append(f"{kd}/spine_ins.tcl")
+    out += [p for p, _, _ in clock_entry_constraints.gray_fifo_cdc_constraints.tech_cell_libraries(s, ROOT)]
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
     if ((s["kind"] == "tile" and s.get("signal_max_layer")) or
@@ -2207,6 +2503,10 @@ def referenced_paths(s: dict, kd: str) -> list:
                 out += ["physical/common_flow/landed_raw_tap.tcl"] + sorted({v["record"] for v in raw.values()})
                 out += sorted({f"{ch['view']}/port_latency.json" for ch in s["children"]})
                 out += sorted({v["verdict"] for v in raw.values()})
+            if s.get("child_centre_tap") is not None:
+                out += ["physical/common_flow/child_centre_tap.tcl", "physical/common_flow/native_pg_binding.tcl"]
+            if s.get("forwarded_soft_tap") is not None:
+                out += ["physical/common_flow/forwarded_soft_tap.tcl", "physical/common_flow/native_pg_binding.tcl"]
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
@@ -2218,6 +2518,13 @@ def referenced_paths(s: dict, kd: str) -> list:
         except (ValueError, OSError) as error:
             raise SpecError(str(error)) from error
         out += ["tools/ref_tile/raw_macro_clocks.py", *raw_paths]
+    pg_strict = s.get("pg_strict", False)
+    if type(pg_strict) is not bool:
+        raise SpecError("pg_strict must be a boolean")
+    if pg_strict:
+        out += ["physical/common_flow/native_pg_binding.tcl",
+                "physical/common_flow/native_pg_bootstrap.tcl",
+                "physical/common_flow/audit_native_pg.tcl", "tools/closure_loop/pg_receipt.py"]
     return out
 
 
@@ -2270,7 +2577,15 @@ def route_hold_context(s: dict, kd: str) -> dict:
 
 
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
-    r, j = s["route"], s.get("job", {})
+    r, j = s["route"], dict(s.get("job", {}))
+    if s.get("single_clock_contract"):
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(clock_entry_constraints.single_clock_contract.evidence_paths(s)))
+    if s.get("registered_cluster_candidate"):
+        from registered_cluster_budget import evidence_paths
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
+    if s.get("planning_birth_budget"):
+        from planning_birth_budget import evidence_paths
+        j["extra_paths"] = sorted(set(j.get("extra_paths", [])) | set(evidence_paths(s, ROOT)))
     hold = route_hold_context(s, kd)
     hm = float(hold["HM"])
     tag = j.get("tag", "ref")
@@ -2288,6 +2603,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     mv = " ".join(f"--macro-view {v}" for v in views)
     spec = {
         "name": name, "block": s["top"], "ref_tile": True,
+        **({"pg_strict": True} if s.get("pg_strict", False) else {}),
         **({"m6_pin_grant": s["m6_pin_grant"]} if s.get("m6_pin_grant") else {}),
         "owner": j.get("owner", "Claude:ref-flow"),
         "purpose": j.get("purpose", f"reference tile flow ({s['kind']}) kit {kd}"),
@@ -2421,6 +2737,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
           "blocks": [{k: b[k] for k in ("kind", "view", "master", "inst", "idx", "x", "y", "w", "h", "orient", "offtrack")}
                      for b in blocks],
           "findings": [list(f) for f in findings], "referenced": referenced_paths(s, kd)}
+    # Canonical clock lint stores its keyed receipt while gen_sdc runs.
+    # Fresh write-mode kits need their directory before that lint executes.
+    if write:
+        (out_root / kd).mkdir(parents=True, exist_ok=True)
     files = {"kit.env": gen_env(s, kd, W, H, lc, blocks), "pdn.tcl": gen_pdn(s, lc),
              "clock.sdc": gen_sdc(s, float(s["route"].get("period_ps", 770))),
              "signoff.sdc": gen_signoff(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*"),
