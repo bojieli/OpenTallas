@@ -906,7 +906,12 @@ ASTK_CHAN = float(__import__('os').environ.get('OT_KV_ASTK_CHAN', '0') or 0)
 # EXACT spec (centre, layer, pitch) of their N-face peer port: o_prev = i_next, i_prev = o_next, pc__ko = pc__ki,
 # pc__fi = pc__fo (bit k at the same x; every column's PCs share one orientation, so the 19.5-um inter-frame gap is
 # crossed straight).  The N face (shared with qkd_kvs_pc_h, PC 0, whose S face has no chain word) is unchanged.
-PINFACE = __import__('os').environ.get('OT_KV_PINFACE', '0') == '1'
+# OT_KV_PINFACE=2: full-face spread instead.  Every chain bit pair (S pin, N pin) gets ONE x, on M5, the pairs spread
+# evenly over every free M5 track of the frame's N / S faces (free = clear of the faces' other pins by 1 um); qkd_kvs_pc_h
+# (PC 0) draws its N-face chain pins at the same x.  ONE vertical layer on purpose: the E-stack PCs are placed FN (MY)
+# with the same master as the W-stack N ones, and on-track pins on two vertical layers (M5 + M7: O + W = 24 mod 48 and
+# 32 mod 64 nm, which disagree mod 16) have no legal origin under an X mirror (kv_place_orient.py, ep_s M3 + M5).
+PINFACE = int(__import__('os').environ.get('OT_KV_PINFACE', '0') or 0)
 PINFACE_PAIRS = (('o_prev', 'i_next'), ('i_prev', 'o_next'), ('pc__ko', 'pc__ki'), ('pc__fi', 'pc__fo'))
 # OT_KV_ASTK_CHAN_SIDES=1: the channel only on the head-column-0 (landing) side of the astk, where 10 of the 14 astk hot
 # spots sit; the column-1 heads / ECTL keep abutting the astk (their krq routes are unchanged: a both-sides channel moved
@@ -4359,7 +4364,9 @@ def masters(m, k=1, port_bits=None):
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
-    if PINFACE and 'qkd_kvs_pc' in M:
+    if PINFACE == 2 and 'qkd_kvs_pc' in M:
+        _pinface_spread(M)
+    if PINFACE == 1 and 'qkd_kvs_pc' in M:
         mm = M['qkd_kvs_pc']
         for s_, n_ in PINFACE_PAIRS:
             ps, pn = mm.ports.get(s_), mm.ports.get(n_)
@@ -4372,6 +4379,43 @@ def masters(m, k=1, port_bits=None):
         if name in M:
             M[name].ports.update({p: tuple(v) for p, v in ports.items() if p in M[name].ports})
     return M
+
+
+def _pinface_spread(M):
+    """OT_KV_PINFACE=2: explicit per-bit x (7th spec element, F.pin_rects) of the PC chain words, see PINFACE"""
+    mm = M['qkd_kvs_pc']
+    chain = {p for pr in PINFACE_PAIRS for p in pr}
+    groups = []
+    for s_, n_ in PINFACE_PAIRS:
+        ps, pn = mm.ports.get(s_), mm.ports.get(n_)
+        if not (ps and pn):
+            continue
+        if ps[0] != 'face' or pn[0] != 'face' or ps[2] != 'S' or pn[2] != 'N' or ps[1] != pn[1]:
+            raise ValueError(f'OT_KV_PINFACE: qkd_kvs_pc {s_} {ps} / {n_} {pn} not an S / N pair of equal width')
+        groups += [(s_, n_, i) for i in range(pn[1])]
+    blocked = []
+    for nm, ly, (a, b, c, d) in F.pin_rects(mm, 1, {}):
+        if nm.split('[')[0] not in chain and (b < 0.5 or d > mm.h - 0.5):
+            blocked.append((a - 1.0, c + 1.0))
+    off, p = F.TRK['M5']
+    tracks = [off + t * p for t in range(int((mm.w - off) / p) + 1)]
+    tracks = [x for x in tracks if 2.0 <= x <= mm.w - 2.0 and not any(lo <= x <= hi for lo, hi in blocked)]
+    if len(tracks) < len(groups):
+        raise ValueError(f'OT_KV_PINFACE=2: {len(groups)} chain pairs > {len(tracks)} free M5 tracks on qkd_kvs_pc')
+    xs = {}
+    for j, (s_, n_, i) in enumerate(groups):
+        x = round(tracks[j * len(tracks) // len(groups)], 3)
+        xs.setdefault(s_, []).append(x)
+        xs.setdefault(n_, []).append(x)
+    for name in ('qkd_kvs_pc', 'qkd_kvs_pc_h'):
+        if name not in M:
+            continue
+        m_ = M[name]
+        for port, v in xs.items():
+            sp = m_.ports.get(port)
+            if sp is None or (name == 'qkd_kvs_pc_h' and sp[2] == 'S'):
+                continue      # PC 0's S face has no chain word (pc__fi comes from the stack root): unchanged
+            m_.ports[port] = ('face', sp[1], sp[2], 'M5', round(sum(v) / len(v), 3), 1, tuple(v))
 
 
 # kvsys v1.1: die-assigned pins of the native head frame and the three-leaf control frame (top-down, owner 10-13).

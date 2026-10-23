@@ -124,7 +124,10 @@ def scan(m, M, win, per_bit=True, tops=None):
             return [orient(it, it.w, y) for y in ys]
         if sp[0] != 'face':
             return None
-        _, w_, face, layer, centre, pitch = sp
+        _, w_, face, layer, centre, pitch = sp[:6]
+        if len(sp) > 6 and sp[6]:       # kv_die OT_KV_PINFACE=2: explicit per-bit centres
+            pts = [{'E': (it.w, c), 'W': (0.0, c), 'N': (c, it.h), 'S': (c, 0.0)}[face] for c in sp[6][:min(n, w_)]]
+            return [orient(it, x, y) for x, y in pts]
         off, pp = K.F.TRK.get(layer, (0.012, 0.048))
         step = pp * pitch
         along = it.h if face in 'EW' else it.w
