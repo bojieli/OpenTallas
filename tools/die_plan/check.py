@@ -158,10 +158,25 @@ def check_abutment(P, R):
     smax = lnum(P.layer_budget["partition_signal_max"])
     for pid, pr in P.ports.items():
         f = pr["face"]
+        # per-face layer sets (COORD 10-23): a type may list face_layers[type face]; then every pin layer on that
+        # face must be in the set, and a layer above partition_signal_max (M8 on S81 svc fold / rail faces) is
+        # allowed only when EVERY partition end lists it for its face
+        pend = []
+        if pr["src"]["part"] != DIE_PART:
+            pend.append((pr["src"]["part"], f))
+        if pr["dst"]["part"] != DIE_PART:
+            pend.append((pr["dst"]["part"], OPP[f] if pr["src"]["part"] != DIE_PART else f))
+        fl = [(pt, P.type_face(pt, df), P.ptype(pt).get("face_layers", {}).get(P.type_face(pt, df)))
+              for pt, df in pend]
         for ln in pr["layers"]:
-            if ln in P.layers and lnum(ln) > smax:
+            for pt, tf, allowed in fl:
+                if allowed is not None and ln not in allowed:
+                    R.err("layers", f"port {pid}: pin layer {ln} not in {pt}'s face_layers[{tf}] {allowed}",
+                          port=pid)
+            if ln in P.layers and lnum(ln) > smax and not (fl and all(a and ln in a for _, _, a in fl)):
                 R.err("layers", f"port {pid}: pin layer {ln} above partition_signal_max "
-                      f"{P.layer_budget['partition_signal_max']}", port=pid)
+                      f"{P.layer_budget['partition_signal_max']} (allowed only via the type's face_layers)",
+                      port=pid)
         try:
             pins = P.port_pins(pid)
         except (ValueError, KeyError) as e:
@@ -225,6 +240,33 @@ def check_abutment(P, R):
                 tab[(e["bus"], bit)] = (ln, tf, round(tc, 4))
             for bit, ln, c in pins:
                 face_pins[(part, df)].append((c, ln, pid))
+    # spare slots (COORD 10-23): reserved type-face windows with NO pins
+    for tn, t in P.types.items():
+        sp = t.get("spare_slots", [])
+        if not sp:
+            continue
+        w, h = t["outline_um"]
+        for s_ in sp:
+            lo, hi = sorted(s_["window_um"])
+            ext = h if s_["face"] in "EW" else w
+            if lo < -EPS or hi > ext + EPS:
+                R.err("abutment", f"type {tn} spare slot {s_['name']}: window [{lo:g},{hi:g}] outside face "
+                      f"{s_['face']} [0,{ext:g}]", type=tn)
+            for fs in t.get("ft_slots", []):
+                for fk, wk in (("in_face", "in_window_um"), ("out_face", "out_window_um")):
+                    if fs.get(fk) == s_["face"] and fs.get(wk):
+                        a, b = sorted(fs[wk])
+                        if a < hi and lo < b and set(fs.get("layers") or s_["layers"]) & set(s_["layers"]):
+                            R.err("abutment", f"type {tn} spare slot {s_['name']} overlaps ft slot {fs['name']} "
+                                  f"{wk} [{a:g},{b:g}]", type=tn)
+        for part, tab in type_tables.get(tn, {}).items():
+            for (bus, bit), (ln, tf, tc) in tab.items():
+                for s_ in sp:
+                    lo, hi = sorted(s_["window_um"])
+                    if s_["face"] == tf and ln in s_["layers"] and lo - EPS <= tc <= hi + EPS:
+                        R.err("abutment", f"{part}.{bus}[{bit}] {ln} at type {tf} {tc:g} lies in spare slot "
+                              f"{s_['name']} [{lo:g},{hi:g}] (a spare slot carries no pins)", part=part)
+                        break
     # overlapping ports on one face + layer
     for (part, df), pins in face_pins.items():
         by = defaultdict(list)
@@ -281,7 +323,7 @@ def check_faces(P, R, face_pins):
             if ln not in P.layers:
                 continue
             nb = len(range(li, S.port_pins_count(pr), nl))
-            tr = max(1, int((hi - lo) / P.layers[ln]["pitch_um"]) + 1)
+            tr = max(1, S.usable_tracks(P.layers[ln], ln, lo, hi))     # tracks off the PG stripes (M5-M8)
             if nb / tr > B["pin_track_max"] + EPS:
                 R.err("faces", f"port {pid}: {nb} pins on {tr} {ln} tracks = {nb / tr:.2f} > {B['pin_track_max']}",
                       port=pid)

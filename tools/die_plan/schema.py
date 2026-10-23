@@ -190,6 +190,18 @@ SCHEMA = {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
                     "ft_track_frac": {"type": "number", "minimum": 0, "maximum": 1},
+                    # per-face pin layer sets (type frame faces); a layer above partition_signal_max (e.g. M8 on an
+                    # S81 svc fold / rail face) is allowed only when listed here for that face (COORD 10-23)
+                    "face_layers": {"type": "object", "additionalProperties": False, "properties": {
+                        f: {"type": "array", "items": _layer, "minItems": 1} for f in FACES}},
+                    # spare slots: reserved face windows WITHOUT ports, so partitions of one slot class keep one
+                    # face layout (no tie-offs: a spare is not a port; COORD 10-23)
+                    "spare_slots": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "face", "window_um", "layers"],
+                        "additionalProperties": False,
+                        "properties": {"name": _name, "face": {"enum": list(FACES)}, "window_um": _win,
+                                       "layers": {"type": "array", "items": _layer, "minItems": 1},
+                                       "reason": {"type": "string"}}}},
                 }}},
         "partitions": {"type": "array", "minItems": 1, "items": {
             "type": "object", "required": ["name", "type", "origin_um"], "additionalProperties": False,
@@ -442,6 +454,15 @@ class Plan:
             return OPP[die_face]
         return die_face
 
+    def type_top_layer(self, tn):
+        """highest pin / route layer of a type: partition_signal_max, raised by its face_layers (M8 faces)."""
+        top = self.layer_budget["partition_signal_max"]
+        for ls in self.types[tn].get("face_layers", {}).values():
+            for ln in ls:
+                if int(ln[1:]) > int(top[1:]):
+                    top = ln
+        return top
+
     def die_face(self, part, type_face):
         return self.type_face(part, type_face)   # involution
 
@@ -552,7 +573,13 @@ def port_pins_count(port):
 # tight: DRT-0073 (no access point) on an M5 pin 0.048 um from an M5 stripe in the CP1 mock run.
 # Pins on M5, M6 or M7 never sit on a stripe: the CP1 mock run on OpenROAD master found PSM-0043 shorts there
 # (check_power_grid), from M7 frame_int pins on the N face.
-PART_PG_BANDS = {"M5": (4.32, 2.16, 0.264), "M6": (4.32, 2.16, 0.48), "M7": (8.64, 4.32, 0.48)}
+PART_PG_BANDS = {"M5": (4.32, 2.16, 0.264), "M6": (4.32, 2.16, 0.48), "M7": (8.64, 4.32, 0.48),
+                 # M8 (face_layers only): the DIE PG grid's M8 stripes (default die.pg: 0.48 wide, pitch 8.64,
+                 # offset 4.32, VDD/VSS -> a stripe every 4.32 at 0 mod 4.32) run over every partition
+                 "M8": (4.32, 0.0, 0.66)}
+# M8 band: die.pg default M8 stripes w0.48 pitch 8.64 offset 4.32, VDD + VSS (spacing pitch/2) -> one stripe every
+# 4.32.  The band covers the stripe whether pdngen's offset names its edge ([4.32, 4.80]) or its centre ([4.08, 4.56])
+# plus 2 M8 pitches; a plan with a different die.pg M8 grid must keep its stripes inside these bands.
 
 
 def pg_blocked(ln, c):

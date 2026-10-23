@@ -273,7 +273,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         [f"  wire {n};" for n in sorted(set(x for x in nets if x))] + cells + ["endmodule"]
     (out / "probe.v").write_text("\n".join(v) + "\n")
     m = gen_phys.CORE_MARGIN_UM
-    top = P.layer_budget["partition_signal_max"]
+    top = P.type_top_layer(tn)
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}", "read_verilog /work/probe.v", "link_design ftprobe",
            f"initialize_floorplan -die_area {{0 0 {w:g} {h:g}}} -core_area {{{m:g} {m:g} {w - m:g} {h - m:g}}} "
            "-site asap7sc7p5t", "source /work/make_tracks.tcl", "source /work/io.tcl"]

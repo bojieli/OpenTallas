@@ -628,6 +628,90 @@
       "type": "number",
       "minimum": 0,
       "maximum": 1
+     },
+     "face_layers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "N": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       },
+       "S": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       },
+       "E": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       },
+       "W": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       }
+      }
+     },
+     "spare_slots": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "face",
+        "window_um",
+        "layers"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "minLength": 1
+        },
+        "face": {
+         "enum": [
+          "N",
+          "S",
+          "E",
+          "W"
+         ]
+        },
+        "window_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1
+        },
+        "reason": {
+         "type": "string"
+        }
+       }
+      }
      }
     }
    }
