@@ -279,18 +279,24 @@ PC_SR13 = os.environ.get('OT_KV_PC_SR13', '0') == '1'
 # (claude/kvpc-r-1023, tools/qwen_kv_die/kvs_pc_r3_kits.py): same module text (sr13a RTL), same height and pitch, a
 # narrower slot (kit width + the 2.16-um die shave) and the group return word o_grp on the E face (N end, toward the
 # group column) instead of N.  0 cycles (every live PC pin is flop-direct already), so no schedule edge changes.
-# The PC_H tiles (k = 0) keep the sr13 slot until a PC_H r3 kit exists: the column x is the PC's (PHY face aligned).
+# The PC_H tiles (k = 0) keep the sr13 slot unless OT_KV_PC_H_R3=1 binds the r3 PC_H kit; PHY faces stay column-aligned.
 PC_R3 = os.environ.get('OT_KV_PC_R3', '0')
 PC_R3_KITS = {'a': ('qkd_kvs_pc_r3a', 270.0, 356.4), 'b': ('qkd_kvs_pc_r3b', 302.4, 356.4)}
 if PC_R3 not in ('0', '') and PC_R3 not in PC_R3_KITS:
     raise ValueError(f"OT_KV_PC_R3={PC_R3!r}: expected one of 0, {', '.join(sorted(PC_R3_KITS))}")
 PC_R3 = PC_R3 if PC_R3 in PC_R3_KITS else None
+# OT_KV_PC_H_R3=1 (default off; needs OT_KV_PC_R3): the 4 chain-head PC_H tiles bind the matching r3 PC_H kit
+# (qkd_kvs_pc_h_r3a / r3b, claude/kvpc-r-1023 @48873b625: same bank / outline as the PC, no S chain words)
+PC_H_R3 = os.environ.get('OT_KV_PC_H_R3', '0') == '1'
+if PC_H_R3 and not PC_R3:
+    raise ValueError('OT_KV_PC_H_R3=1 needs OT_KV_PC_R3=a|b (the PC_H r3 kit matches the PC r3 width)')
+PC_H_R3_KITS = {'a': ('qkd_kvs_pc_h_r3a', 270.0, 356.4), 'b': ('qkd_kvs_pc_h_r3b', 302.4, 356.4)}
 
 
 def pc_slot(kind='pc'):
     """(w, h) of a PC / PC_H die slot: the hardened body + the 2.16-um die shave (KVPC-R: OT_KV_PC_R3 narrows the PC slot)"""
-    if PC_R3 and kind == 'pc':
-        _k, w, h = PC_R3_KITS[PC_R3]
+    if PC_R3 and (kind == 'pc' or (kind == 'pc_h' and PC_H_R3)):
+        _k, w, h = (PC_R3_KITS if kind == 'pc' else PC_H_R3_KITS)[PC_R3]
         return round(w + 2.16, 4), round(h + 2.16, 4)
     if PC_SR13 or os.environ.get('OT_KV_PC_SR13_SLOTS', '0') == '1' or PC_R3:
         return 390.96, 358.56
@@ -2833,6 +2839,8 @@ if DOMSPLIT:     # KV-DOMSPLIT: the hck half of a split word sits beside its ck 
 KIT_FACE['qkd_kvs_pc_h'] = dict(KIT_FACE['qkd_kvs_pc'])   # PC_H keeps the sr13 faces (no r3 PC_H kit yet)
 if PC_R3:        # KVPC-R: the r3 PC kit carries o_grp on its E face (N end)
     KIT_FACE['qkd_kvs_pc'] = dict(KIT_FACE['qkd_kvs_pc'], o_grp='E')
+if PC_H_R3:     # KVPC-R: so does the r3 PC_H kit
+    KIT_FACE['qkd_kvs_pc_h'] = dict(KIT_FACE['qkd_kvs_pc_h'], o_grp='E')
 KIT_FACE['qkd_kvs_grp_h'] = KIT_FACE['qkd_kvs_grp']
 KIT_DEFAULT_FACE = dict(qkd_kvs_grp='W', qkd_kvs_grp_h='W', qkd_kvs_pc='E', qkd_kvs_pc_h='E', qkd_kvs_hroot='W')
 # Selected S6C masters retain their exact source/view names. Their physical

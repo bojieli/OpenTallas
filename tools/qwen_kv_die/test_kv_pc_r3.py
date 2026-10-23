@@ -12,7 +12,7 @@ sys.path.insert(0, str(HERE))
 
 
 def load(**env):
-    keep = {k: os.environ.get(k) for k in ('OT_KV_PC_R3', 'OT_KV_PC_SR13')}
+    keep = {k: os.environ.get(k) for k in ('OT_KV_PC_R3', 'OT_KV_PC_SR13', 'OT_KV_PC_H_R3')}
     try:
         for k in keep:
             os.environ.pop(k, None)
@@ -51,3 +51,15 @@ def test_r3_slot_and_face(v, w):
 def test_bad_value_refused():
     with pytest.raises(ValueError, match='OT_KV_PC_R3'):
         load(OT_KV_PC_R3='c')
+
+
+@pytest.mark.parametrize('v,w', [('a', 272.16), ('b', 304.56)])
+def test_pc_h_r3(v, w):
+    K = load(OT_KV_PC_R3=v, OT_KV_PC_H_R3='1', OT_KV_PC_SR13='1')
+    assert K.pc_slot('pc_h') == (w, 358.56) and K.pc_slot('pc') == (w, 358.56)
+    assert K.KIT_FACE['qkd_kvs_pc_h']['o_grp'] == 'E' and K.KIT_FACE['qkd_kvs_pc']['o_grp'] == 'E'
+
+
+def test_pc_h_r3_needs_pc_r3():
+    with pytest.raises(ValueError, match='OT_KV_PC_H_R3'):
+        load(OT_KV_PC_H_R3='1')
