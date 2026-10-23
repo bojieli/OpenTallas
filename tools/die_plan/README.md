@@ -60,7 +60,7 @@ python3 -m pytest -q tools/die_plan/
 | key | content |
 |---|---|
 | `schema` | `"opentallas.die_plan.v1"` |
-| `die` | `name`, `label`, `tech`, `outline_um` [W,H], `period_ps`, `reach_um` (S81 1500, KV 1200, QC 1000, HBM 1000), `rep_um` (450), `grid_um`, `rows`, `layers[]` (name, dir H/V, pitch_um, offset_um; ASAP7 default), `layer_budget` (`partition_signal_max` M7, `die_layers` [M8,M9], `die_use`, `cut_avail` {layer: fraction of tracks the die/ft traffic may use}), `pg` (`partition_pg_max`, `grid[]` layer/width/pitch/offset/nets, continuous across abutment) |
+| `die` | `name`, `label`, `tech`, `outline_um` [W,H], `channels[]` {rect_um, reason} (die-level gaps; anything else uncovered is a G0 warning), `period_ps`, `reach_um` (S81 1500, KV 1200, QC 1000, HBM 1000), `rep_um` (450), `grid_um`, `rows`, `layers[]` (name, dir H/V, pitch_um, offset_um; ASAP7 default), `layer_budget` (`partition_signal_max` M7, `die_layers` [M8,M9], `die_use`, `cut_avail` {layer: fraction of tracks the die/ft traffic may use}), `pg` (`partition_pg_max`, `grid[]` layer/width/pitch/offset/nets, continuous across abutment) |
 | `partition_types` | `{type: {module, outline_um, hard, kit, buses[], ft_slots[], clock{tap_um, layer, insertion_ps, insertion_tol_ps}, reset{tap_um, sync_stages}, contents[]{inst, module, status reuse/rework/new, kit, geom_pass, origin_um, outline_um}, channels[]{rect_um, reason}, ft_track_frac}}`. A replicated type is listed once. |
 | `partitions` | `[{name, type, origin_um, orient}]` |
 | `ports` | `[{id, src{part,bus}, dst{part,bus}, width, kind data/ctl/clock/reset, face, layers, window_um, order lsb_low/lsb_high}]` |
@@ -81,3 +81,44 @@ python3 -m pytest -q tools/die_plan/
 - latency keys are known lanes.
 
 The geometric and budget checks are G0 (`check.py`).
+
+## G0 check and G1 render (`check.py`, `render.py`)
+
+```
+python3 tools/die_plan/check.py PLAN.json [--out DIR] [--png] [--strict]   # exit 1 on any ERROR; writes DIR/g0_report.json, DIR/die_plan.png
+```
+
+The checks are listed in the `check.py` docstring:
+- schema;
+- geometry and grid;
+- abutment (faces coincide, pins on track in both frames, no shared tracks, identical pin tables across a replicated
+  type);
+- layers <= M7;
+- face density (<= 6 pins/um over any 10-um window, <= 2 layers, pin/track <= 0.6);
+- cut sweep every 250 um, as full line and as per-partition segment. Capacity counts the partition ft layers M4-M7
+  times `ft_track_frac` (default 0.25), plus the die layers times `cut_avail`. The M8/M9-only ratio is also reported, in
+  the research-sweep form;
+- hops <= reach;
+- latency table complete and equal;
+- a clock tap and a reset synchronizer per partition type;
+- leaf bindings.
+
+A synthetic 24x24-partition plan (22k ports, 960 lanes) checks in about 5 s, including the render.
+
+The render (G1, for GEOM-REVIEW) shows:
+- partitions coloured by type, with names and orients;
+- port windows;
+- lanes, with width as line weight;
+- stations (dots), clock taps (stars) and the spine root;
+- channels (hatched);
+- G0 errors in red.
+
+## Generators (`gen.py`)
+
+```
+python3 tools/die_plan/gen.py latency PLAN.json [--inplace] [--out DIR]
+```
+
+This writes `latency.lanes` back into the plan (with `--inplace`), `<die>_lat_pkg.sv` (one `localparam int` per lane,
+named by `lane.param` or `LAT_<ID>`) and `<die>_latency.json` (the compiler's input, which carries the plan digest).
+Die IO lanes count 1 cycle: the boundary flop of the partition endpoint.

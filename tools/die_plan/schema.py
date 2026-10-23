@@ -104,6 +104,9 @@ SCHEMA = {
                     "die_use": {"type": "array", "items": {"enum": ["clock_spine", "pg", "ft_reserved", "reset"]}},
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}}}},
+                "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
+                    "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
+                    "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
                 "pg": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_pg_max": _layer,
                     "grid": {"type": "array", "items": {
@@ -325,7 +328,15 @@ class Plan:
         """{bus name: dict(dir, width, kind, slot?)} incl. the _i/_o buses of every ft slot."""
         if part == DIE_PART:
             return None
-        t = self.ptype(part)
+        tn = self.parts[part]["type"]
+        if not hasattr(self, "_bus_cache"):
+            self._bus_cache = {}
+        if tn not in self._bus_cache:
+            self._bus_cache[tn] = self._type_buses(tn)
+        return self._bus_cache[tn]
+
+    def _type_buses(self, tn):
+        t = self.types[tn]
         out = {b["name"]: dict(b) for b in t.get("buses", [])}
         for s in t.get("ft_slots", []):
             out[s["name"] + "_i"] = dict(name=s["name"] + "_i", dir="in", width=s["width"], kind="data",
