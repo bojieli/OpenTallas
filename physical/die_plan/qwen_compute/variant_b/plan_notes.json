@@ -1,0 +1,526 @@
+{
+ "variant": "B",
+ "partitions": 380,
+ "types": 48,
+ "types_merged": 148,
+ "ports": 2967,
+ "lanes": 1761,
+ "die_um": [
+  31216.32,
+  25228.8
+ ],
+ "die_mm2": 787.6,
+ "content_status_per_instance": {
+  "reuse": 1715,
+  "rework": 901,
+  "new": 375
+ },
+ "max_cells_type": [
+  900000,
+  "coll"
+ ],
+ "cells_per_type": {
+  "cbf_q00": {
+   "cells": 782764,
+   "instances": 23,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 40
+  },
+  "cbf_q00_s2": {
+   "cells": 782764,
+   "instances": 1,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 40
+  },
+  "cbf_q01": {
+   "cells": 782764,
+   "instances": 23,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 40
+  },
+  "cbf_q01_s2": {
+   "cells": 782764,
+   "instances": 1,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 40
+  },
+  "cbf_q11": {
+   "cells": 782764,
+   "instances": 24,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 40
+  },
+  "cbn_q00": {
+   "cells": 782764,
+   "instances": 24,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 40
+  },
+  "cbn_q01": {
+   "cells": 782764,
+   "instances": 24,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 40
+  },
+  "cbn_q11": {
+   "cells": 782764,
+   "instances": 24,
+   "outline_um": [
+    1235.52,
+    2617.92
+   ],
+   "macros": 40
+  },
+  "cbx_q10": {
+   "cells": 782764,
+   "instances": 48,
+   "outline_um": [
+    1235.52,
+    2609.28
+   ],
+   "macros": 40
+  },
+  "coll": {
+   "cells": 900000,
+   "instances": 1,
+   "outline_um": [
+    786.24,
+    9097.92
+   ],
+   "macros": 0
+  },
+  "glue": {
+   "cells": 120000,
+   "instances": 1,
+   "outline_um": [
+    777.6,
+    1209.6
+   ],
+   "macros": 0
+  },
+  "native59": {
+   "cells": 60000,
+   "instances": 1,
+   "outline_um": [
+    777.6,
+    518.4
+   ],
+   "macros": 0
+  },
+  "phy_serdes": {
+   "cells": 0,
+   "instances": 2,
+   "outline_um": [
+    1563.84,
+    2324.16
+   ],
+   "macros": 1
+  },
+  "phy_serdes_b": {
+   "cells": 0,
+   "instances": 1,
+   "outline_um": [
+    1563.84,
+    2324.16
+   ],
+   "macros": 1
+  },
+  "phy_ucie_kv": {
+   "cells": 0,
+   "instances": 1,
+   "outline_um": [
+    777.6,
+    777.6
+   ],
+   "macros": 1
+  },
+  "sle_ctl": {
+   "cells": 183360,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_fe": {
+   "cells": 50000,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_fw_v1": {
+   "cells": 60000,
+   "instances": 5,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_fw_v2": {
+   "cells": 60000,
+   "instances": 1,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_hc0": {
+   "cells": 15000,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_hc1": {
+   "cells": 15000,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_hc2": {
+   "cells": 15000,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_hc3": {
+   "cells": 15000,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_sc": {
+   "cells": 40000,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_st_a": {
+   "cells": 125514,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_st_b": {
+   "cells": 115514,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_stm": {
+   "cells": 270598,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_su_c": {
+   "cells": 711174,
+   "instances": 6,
+   "outline_um": [
+    1226.88,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_su_l0": {
+   "cells": 433443,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_su_l1": {
+   "cells": 433443,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_tap": {
+   "cells": 70000,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_ctl": {
+   "cells": 183360,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_fe": {
+   "cells": 50000,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_fw_v1": {
+   "cells": 60000,
+   "instances": 5,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_fw_v2": {
+   "cells": 60000,
+   "instances": 1,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_hc0": {
+   "cells": 205356,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_hc1": {
+   "cells": 205356,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_hc2": {
+   "cells": 205356,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_hc3": {
+   "cells": 205356,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_sc": {
+   "cells": 40000,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_st_a": {
+   "cells": 141126,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_st_b": {
+   "cells": 131126,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_stm": {
+   "cells": 270598,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_su_c": {
+   "cells": 711174,
+   "instances": 6,
+   "outline_um": [
+    1226.88,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_su_l0": {
+   "cells": 463590,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_su_l1": {
+   "cells": 463590,
+   "instances": 6,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_tap": {
+   "cells": 70000,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "tt_ctlm": {
+   "cells": 190000,
+   "instances": 1,
+   "outline_um": [
+    777.6,
+    518.4
+   ],
+   "macros": 0
+  }
+ },
+ "internal_bits_absorbed": {
+  "bc00": 24768,
+  "bc02": 24768,
+  "bc10": 24768,
+  "bc12": 24768,
+  "bc20": 24768,
+  "bc22": 24768,
+  "bc30": 24768,
+  "bc32": 24768,
+  "t00": 24672,
+  "t30": 24672,
+  "t01": 24672,
+  "t31": 24672,
+  "t02": 24672,
+  "t32": 24672,
+  "t03": 24672,
+  "t33": 24672,
+  "l1a": 24672,
+  "l1b": 24672,
+  "l1c": 24672,
+  "l1d": 24672,
+  "l1e": 24672,
+  "l1f": 24672,
+  "l1g": 24672,
+  "l1h": 24672,
+  "l2a": 24672,
+  "l2c": 24672
+ },
+ "cell_estimate_method": "A0 = 187991 cells (NL rpf synth_stat incl. 10 ROM leaf macros); other leaves = outline area x 0.6 / 0.52 um2 per cell (A0 calibration); soft slice glue / W-strip blocks = per-region guesses (SOFT_CELLS/WS_CELLS)",
+ "census_dropped_bits": {
+  "d2d|flt|ctl": 8,
+  "dvs|dvs|ctl": 99,
+  "dvs|dvs|data": 57809,
+  "dvs|io|ctl": 5,
+  "dvs|io|data": 592,
+  "dvs|native59|data": 548,
+  "dvs|tt|data": 117,
+  "flt|flt|ctl": 484,
+  "flt|sys|ctl": 1,
+  "io|dvs|ctl": 6,
+  "io|dvs|data": 512,
+  "io|flt|ctl": 70,
+  "mu|flt|ctl": 2,
+  "native59|dvs|data": 520,
+  "reset|d2d_rom|ucie_kv": 1,
+  "reset|rstseq_rom|ckdiv_coll_blk": 1,
+  "reset|rstseq_rom|dvs_E0": 1,
+  "reset|rstseq_rom|dvs_E1": 1,
+  "reset|rstseq_rom|dvs_E2": 1,
+  "reset|rstseq_rom|dvs_E3": 1,
+  "reset|rstseq_rom|dvs_E4": 1,
+  "reset|rstseq_rom|dvs_E5": 1,
+  "reset|rstseq_rom|dvs_W0": 1,
+  "reset|rstseq_rom|dvs_W1": 1,
+  "reset|rstseq_rom|dvs_W2": 1,
+  "reset|rstseq_rom|dvs_W3": 1,
+  "reset|rstseq_rom|dvs_W4": 1,
+  "reset|rstseq_rom|dvs_W5": 1,
+  "reset|rstseq_rom|io_collective": 1,
+  "reset|rstseq_rom|io_serdes": 1,
+  "reset|rstseq_rom|io_serdes_1": 1,
+  "reset|rstseq_rom|io_serdes_2": 1,
+  "reset|rstseq_rom|io_ucie": 1,
+  "reset|rstseq_rom|native59": 1,
+  "reset|rstseq_rom|tt_ctlm": 1,
+  "rstseq|flt|reset": 485,
+  "sys|flt|ctl": 1,
+  "tt|dvs|data": 1657,
+  "tt|flt|ctl": 1
+ }
+}
