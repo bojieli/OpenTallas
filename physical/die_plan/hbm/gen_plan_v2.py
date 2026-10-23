@@ -585,6 +585,9 @@ SMQ_WHERE = {}
 SM_SPLIT_JSON = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sm_split', 'sm_split.json')
 
 
+GROUPS_FOR_XLAND = []
+
+
 def sm_internal_groups(where):
     """SM-internal quarter-to-quarter traffic (sm_split/sm_split.json crossings, HBM-P3-SM) as census rows between
     pseudo-instances smq_<Q><k><quarter> (one per SM quarter partition).  COORD R6 R2-alt: the die lanes into the SM
@@ -598,9 +601,19 @@ def sm_internal_groups(where):
         a_, b_ = x['dir'].split('->')
         per[(a_, b_)] += x['bits']
     rows = []
+    xa = collections.Counter()       # P4 XLAND=a: VM-side SM lane bits that land on a and are relayed to/from c
+    if v1.XLAND == 'a':
+        for g in GROUPS_FOR_XLAND:
+            for sm, peer, d in ((g['dst'], g['src'], 'in'), (g['src'], g['dst'], 'out')):
+                if sm in v1.SPLIT_OF and v1.xland_a(where.get(peer)):
+                    xa[(sm, d)] = max(xa[(sm, d)], 0) + g['bits']
     for n, subs in sorted(v1.SPLIT_OF.items()):
         q, k = re.match(r'^(NW|NE|SW|SE)_sm(\d)a$', subs[0]).groups()
-        for (a_, b_), bits in sorted(per.items()):
+        pn = collections.Counter(per)
+        if xa:
+            pn[('a', 'b')] += xa[(n, 'in')]; pn[('b', 'c')] += xa[(n, 'in')]
+            pn[('c', 'b')] += xa[(n, 'out')]; pn[('b', 'a')] += xa[(n, 'out')]
+        for (a_, b_), bits in sorted(pn.items()):
             sn, dn = f'smq_{q}{k}{a_}', f'smq_{q}{k}{b_}'
             SMQ_WHERE[sn] = f'{q}_sm{k}{a_}'; SMQ_WHERE[dn] = f'{q}_sm{k}{b_}'
             rows.append(dict(src=sn, src_bus=f'x_{a_}{b_}', dst=dn, dst_bus=f'x_{a_}{b_}', kind='data', bits=bits,
@@ -636,6 +649,7 @@ def main():
               open(os.path.join(a.out, 'v2_assign.json'), 'w'), indent=1)
     if a.geom_only:
         return
+    GROUPS_FOR_XLAND[:] = groups
     smrows = sm_internal_groups(where) if v1.SM_MODE != 'off' else []   # COORD R6 (1): SM-internal quarter lanes
     groups = groups + smrows
     cen2 = dict(groups=groups)
