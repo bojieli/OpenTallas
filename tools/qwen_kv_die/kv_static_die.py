@@ -124,6 +124,13 @@ GRP_S6C = os.environ.get('OT_KV_GRP_S6C', '0') == '1'
 if GRP_S6C and not (GRP_SAFE2 and os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'):
     raise ValueError('GRP_S6C requires OT_KV_GRP_SAFE2=1 (DS private ABI + parent connections) and OT_KV_NATIVE_SLOTS=1 '
                      '(the closed group tiles are 388.8 wide; the legacy group frame is narrower)')
+# KDIE5-RTL 10-22 (COORD via STEWARD-QKc: release fix, DEFAULT ON; OT_KV_POR_LOCK=0 = the legacy pad class): kvs_ctl.por_n
+# (u_dcfg qkd_kv_die_cfg_a: POR-only register reset, 2-flop synchronised release inside) was a 'pad' class port: die.v left
+# it without a net (an open input on the physical die / frame) and only the strict bound netlist tied it to pad_por_n.  It
+# now joins the die's on-chip POR-domain word, the PLL lock (bus pll_lock: pll.locked -> host.pll_locked, the reference the
+# HOST reset sequencer releases rst_die / rst_link from), with the GEN's own landed relays.  POR-only semantics kept: locked
+# never drops on a HOST functional re-reset, so the dcfg reset-region delay words survive it (qkd_kv_die_cfg_a contract).
+POR_LOCK = os.environ.get('OT_KV_POR_LOCK', '1') == '1'
 GRP_S6C_RTL = dict(grp='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv',
                    grp_h='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv')
 GROUP_SLOT = dict(grp=(388.8, float(os.environ.get('OT_KV_GRP_SLOT_H', '432.0')) if GRP_S6C else 388.8),
@@ -1752,7 +1759,9 @@ def bindings():
             continue
         seen[mst] = d
         ports = {pn: [pn] for pn, v in t['ports'].items() if v['cls'] != 'pad'}
-        cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
+        cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] and not POR_LOCK else {}
+        if POR_LOCK and 'por_n' in t['ports']:
+            ports['por_n'] = ['por_n']        # KDIE5-RTL: driven by the die pll_lock word (_clocks_resets)
         source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else RTL_FILE
         if GRP_SAFE2 and t['kind'] in ('grp', 'grp_h'):
             source_file = GRP_S6C_RTL[t['kind']] if GRP_S6C else GRP_SAFE2_RTL
@@ -2282,6 +2291,8 @@ def _clocks_resets(m, B, add, rec):
                 extra[f'clk_core_{reg}' if v['domain'] == 'core' else f'clk_hbm_{reg}'].append((d, pn))
             elif v['cls'] == 'reset':
                 extra['rst_die' if v['domain'] == 'core' else 'rst_hbm'].append((d, pn))
+            elif v['cls'] == 'pad' and pn == 'por_n' and POR_LOCK:
+                extra['pll_lock'].append((d, pn))       # KDIE5-RTL: POR-domain word (see POR_LOCK)
             elif v['cls'] == 'strap':
                 cb = f'kvsid_{d}__{pn}'
                 add((cb, 'constant', v['width'], [(d, pn)]))
@@ -2300,6 +2311,9 @@ def _clocks_resets(m, B, add, rec):
         if k_ not in names:
             if k_ == 'clk_hbm_c':
                 raise ValueError('kv_static_die: a centre tile has an HBM clock entry')
+            if k_ == 'pll_lock':
+                raise ValueError('kv_static_die POR_LOCK: no pll_lock bus (needs the v1.4 HOST root, --host-v14); '
+                                 'OT_KV_POR_LOCK=0 restores the legacy pad class (an OPEN por_n on the die)')
             raise ValueError(f'kv_static_die: no trunk {k_}')
     for i_, (bid, cl, bits, eps) in enumerate(B):
         if bid in extra:
