@@ -21,3 +21,5 @@ python3 tools/s81_dv/frame_chain_reset_v2.py --bind-dir "$W/bind/bind" --plan "$
 ```
 
 Overlay only die.v, bind_case.json and place_hints.json into that freshly generated, owned bind directory; retain frame_chain_reset_v2.json as the receipt. Rerun the existing recorded port_bind_cmd on this new die before proceeding to dv_rvcase. The helper never edits its input directory. Preserve current running physical receipts and source directories. The GEN reference census must account explicitly for the22 additional one-bit reset masters. The source/data changes are restricted to the frame-reset correction; this does not repair unrelated old reset-placement misses.
+
+The complete measured probe readset is retained under probe_sources/ with probe_readset.json and probe_commands.sh. In particular, the actual cap30 ot_s81_rly source differs from current main; the canonical relay source was not changed. Reconstruct this measured vehicle from the snapshot rather than substituting current RTL. No new simulation was run to complete this record.
