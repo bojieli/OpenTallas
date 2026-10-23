@@ -361,7 +361,7 @@ def main():
                     tails = [iname(x) for x in sk if not isinstance(x, odb.dbBTerm)
                              and x.getInst().getName() not in sc["dropped"]
                              and x.getInst().getName() not in run_flops]
-                reset_chain[pin] = dict(head=lr0.get("d_net"), tails=tails)
+                reset_chain[pin] = dict(head=lr0.get("d_net") or static[chain[0].getName()]["pins"].get(pin), tails=tails)
             recs.append(dict(dropped=sc["dropped"], masters=masters, width=width, bits=sc["bits"], chained=ch,
                              static=static, reset_chain=reset_chain))
         out_lanes.append(dict(lane=lid, status=status.get(lid, "?") if recs else (status.get(lid) or "no droppable run"),

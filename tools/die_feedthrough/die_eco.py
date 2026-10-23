@@ -204,7 +204,11 @@ def gen(spec_dir, plan, chains, relay_masters, blocks_as_wire=False, data_in_pin
                 rec["problems"].append(f"sub-chain {si}: a chained side input of the first dropped relay is open")
             ref_master = sc["masters"][sc["dropped"][0]]
             rchain = sc.get("reset_chain", {})
-            cur_rst = {p: v["head"] for p, v in rchain.items() if v.get("head")}
+            st0 = sc["static"].get(sc["dropped"][0], {})
+            # pipeline head: D of the first station's register, else (first station has no local register: it takes
+            # the reset tree directly) that station's own pin net
+            cur_rst = {p: v.get("head") or st0.get("pins", {}).get(p) for p, v in rchain.items()}
+            cur_rst = {p: v for p, v in cur_rst.items() if v}
             statics = list(sc["static"].values())
             for ei, (kind, t, seg) in enumerate(elems):
                 tag = f"ft_{cl['lane']}_{si}_{ei}"
