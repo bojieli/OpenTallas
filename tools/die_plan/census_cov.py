@@ -17,7 +17,10 @@ Paths are relative to the plan file. The instance map JSON:
      "collapse": ["<regex>", ...],                            pass-through endpoints (landing cells ld_*, relays):
                                                               merged onto their single upstream source
      "exempt":   [{"match": "<regex on src_bus|dst_bus|kind>", "kind": "clock|reset",
-                   "replaced_by": "spine / per-partition sync", "reason": "..."}]}
+                   "replaced_by": "spine / per-partition sync", "reason": "..."}],
+     "forward_via": ["<partition / group name regex>", ...],  forwarding partitions (tap trees): a pair is carried
+                                                              by a lane chain through them (bottleneck width)
+     "collapse_broadcast": true}                              count one driver bus once per sink partition/group
 
 How the check works:
 - Every census row whose endpoints map to different partitions (or groups) is inter-partition traffic. For each
@@ -134,6 +137,8 @@ def coverage(P, plan_dir, R):
         exempt = defaultdict(int)
         intra = 0
         seen = {}
+        collapsed = 0
+        collapse_bc = bool(mp.get("collapse_broadcast", False))
         for r in rows:
             s, d = where(r["src"]), where(r["dst"])
             if s is None or d is None:
@@ -150,12 +155,20 @@ def coverage(P, plan_dir, R):
             if hit is not None:
                 exempt[(hit["kind"], hit.get("replaced_by", ""), hit["match"])] += r["bits"]
                 continue
-            # one driver bus reaching several sinks in the same partition/group (a broadcast, or the tracer's
-            # src-bus x dst-bus cross product through one relay bundle) crosses the boundary once: count it once
-            key = (r["src"], r["src_bus"], dg)
-            if r["bits"] > seen.get(key, 0):
-                asb[(sg, dg)] += r["bits"] - seen.get(key, 0)
-                seen[key] = r["bits"]
+            if collapse_bc:
+                # PLAN-S81v3 (989ee4d63): one driver bus reaching several sinks in the same partition/group (a
+                # broadcast, or the tracer's src-bus x dst-bus cross product through one relay bundle) crosses the
+                # boundary once: count it once (max).  Opt-in: rows carry no bit ranges, so a bus SPLIT over
+                # several sinks of one group is under-counted; the collapsed bits are reported.
+                key = (r["src"], r["src_bus"], dg)
+                if r["bits"] > seen.get(key, 0):
+                    asb[(sg, dg)] += r["bits"] - seen.get(key, 0)
+                    collapsed += seen.get(key, 0)
+                    seen[key] = r["bits"]
+                else:
+                    collapsed += r["bits"]
+            else:
+                asb[(sg, dg)] += r["bits"]
         for inst, b in sorted(unmapped.items(), key=lambda x: -x[1])[:30]:
             R.err("census", f"census[{k}]: as-built instance '{inst}' ({b} bits) maps to no partition")
         if len(unmapped) > 30:
@@ -166,10 +179,47 @@ def coverage(P, plan_dir, R):
             ga, gb = g_of.get(a, a), g_of.get(b, b)
             if ga != gb:
                 pg[(ga, gb)] += w
-        dropped = {}
+        # forwarded lanes (KV-P2 10-23): a pair with no (or too narrow) direct lane is carried by a chain of planned
+        # lanes through partitions the map names as forwarders (`forward_via`: partition / group names or regexes,
+        # e.g. tap-tree hosts).  Credit = the chain's bottleneck width (broadcast trees reuse the same lanes).
+        fwd_rx = [re.compile(x) for x in mp.get("forward_via", [])]
+
+        def is_fwd(n):
+            return any(rx.fullmatch(n) for rx in fwd_rx)
+        adj = defaultdict(dict)
+        for (a, b), w in pg.items():
+            adj[a][b] = w
+
+        def bottleneck(a, b):
+            """widest path a -> b through forwarders only (modified Dijkstra on min-capacity)."""
+            import heapq
+            best = {a: float("inf")}
+            hq = [(-best[a], a)]
+            while hq:
+                cap, u = heapq.heappop(hq)
+                cap = -cap
+                if u == b:
+                    return cap
+                if cap < best.get(u, 0):
+                    continue
+                if u != a and not is_fwd(u):
+                    continue
+                for v, w in adj[u].items():
+                    c = min(cap, w)
+                    if c > best.get(v, 0):
+                        best[v] = c
+                        heapq.heappush(hq, (-c, v))
+            return 0
+        dropped, forwarded = {}, 0
         for pair, b in asb.items():
-            if pg.get(pair, 0) < b:
-                dropped[pair] = b - pg.get(pair, 0)
+            have = pg.get(pair, 0)
+            if have < b and fwd_rx:
+                f = bottleneck(*pair)
+                if f > have:
+                    forwarded += min(b, f) - have
+                    have = max(have, f)
+            if have < b:
+                dropped[pair] = b - have
         tot = sum(dropped.values())
         for (a, b), v in sorted(dropped.items(), key=lambda x: -x[1])[:30]:
             R.err("census", f"census[{k}]: {a} -> {b}: as-built {asb[(a, b)]} bits, planned {pg.get((a, b), 0)} "
@@ -183,6 +233,7 @@ def coverage(P, plan_dir, R):
         out["sources"].append(dict(rows=src["rows"], map=src["map"], census_rows=len(rows),
                                    inter_bits=sum(asb.values()), intra_bits=intra, planned_pairs=len(pg),
                                    dropped_bits=tot, dropped_pairs=len(dropped), unmapped_instances=len(unmapped),
+                                   forwarded_bits=forwarded, broadcast_collapsed_bits=collapsed,
                                    exempt={f"{k_[0]}:{k_[2]}": v for k_, v in exempt.items()},
                                    groups_spanning=multi))
     out["dropped_bits"] = sum(s["dropped_bits"] for s in out["sources"])
