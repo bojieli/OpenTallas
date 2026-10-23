@@ -192,6 +192,15 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1023 10-23 batch 12: claude/geom-review-gate-1023 (COORD 02:02/02:15 approved, enforcing).  The GEOM-REVIEW
+    # intake check is a separate submit-time policy keyed on review verdicts + kit content hash, judged by the CURRENT
+    # code at every intake; it changes no pre_route_gate verdict, so an older gate stays as valid as before.
+    "bfc589005a25959d56e7646c8da5c7f314a6ea9b": dict(
+        kind="neutral", paths=('tools/closure_loop/closure_loop.py', 'tools/closure_loop/geom_review_gate.py'),
+        what="GEOM-REVIEW route intake gate (new module + intake/validate hook); no gate report verdict changes"),
+    "99d25d3f279399b207389f9a52df85178a479052": dict(
+        kind="neutral", paths=('tools/closure_loop/geom_review_gate.py',),
+        what="GEOM-REVIEW PASS-CONDITIONAL verdict class (intake only); no gate report verdict changes"),
     # ROOT-MERGE-1022 10-22 batch 9: STW-S81c-TOK5 20:38 + STEWARD-S81c 20:05 GATE_RULE_GUARD asks (collect auto-merge refusals)
     "127356adf225c23173c42e606c0215e7a041af36": dict(
         kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),
