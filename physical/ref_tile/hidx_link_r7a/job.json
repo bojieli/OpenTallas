@@ -1,0 +1,140 @@
+{
+ "name": "hidx_link_r7a-r7a-COMMIT",
+ "block": "ot_hbm_idx_topk_link_static_p",
+ "ref_tile": true,
+ "owner": "HBMc/TILES2",
+ "purpose": "IDX link r7a (HBMc/TILES2 10-22): r6 GRT setup repair stalled -20.9 ps on all 196 SRAM wd_in (r4h half-cycle negedge write stage, registers placed in the slice logic). MAIN: WPE=1 posedge write register (full cycle; write lands +1 edge, outputs unchanged at +5, emit-right-after-flush covered) + every write-port register anchored at its macro pin (sram_wport_at_pins.tcl). Geometry = r6a. Prior: IDX link r6 a enlarged south landing area and full-face pin spacing after actual repair_design GRT0183 local S-band trap",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbmc-link-r7-1022",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/rtl/hbm_idx_static/link_pipe_1018",
+   "physical/common_flow/sram_wport_at_pins.tcl",
+   "physical/common_flow/sram_wport_release.tcl",
+   "results/rtl/ref_tile/hidx_link_r7/"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_topk_link_static_p #(.SAFE(2), .WPE(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "link_pipe_exact",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m0 0",
+    "expect": "pass",
+    "pass_regex": "IDX_LINK_PIPE_TOTAL MUT0 records3072 miter1954 errors0 fillsff maxpack71 first_tx ref187 dut192 fault ref1954 dut1959",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "pass_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe1_m0.log"
+   },
+   {
+    "name": "link_pipe_mut1_halves",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m1 1",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe1_m1.log"
+   },
+   {
+    "name": "link_pipe_mut2_seq",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m2 2",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe1_m2.log"
+   },
+   {
+    "name": "link_pipe_mut3_carry",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m3 3",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe1_m3.log"
+   },
+   {
+    "name": "link_pipe_mut4_latency",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m4 4",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe1_m4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_link_r7a/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_link_r7a/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_link_r7a --out {RUN}/record/views/ot_hbm_idx_topk_link_static_p --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_link_r7a/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_link_r7a/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_link_r7a/hidx_link_r7a-r7a-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "R5x actual third route terminal GRT0183 net46597 during repair_design despite initial GRT0/16.18% usage: driver wire46605/Y (201.47,11.07) -> S1_gc[55]/D (226.69,14.31), inside packed S pin-register band, not overall routing exhaustion. R6a: enlarge width650->777.6, height561.6->648; lower bank margin43.2->86.4 and expand bank centre corridor217.512->260.712; full S output/N tx faces expanded, local clock/reset ports at E register-mass midpoint. Keep 129.6 bank pitch (51.816 channels), MY/R0 orientation, source596d3557d SAFE2, symmetric spine, same cycle ABI (+5 historical) and constraints; no cycles added, no shrink or clock waiver."
+}

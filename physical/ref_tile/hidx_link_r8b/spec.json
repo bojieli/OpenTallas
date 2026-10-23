@@ -1,0 +1,324 @@
+{
+ "name": "hidx_link_r8b",
+ "top": "ot_hbm_idx_topk_link_static_p",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clear",
+   "ingest_v",
+   "flush",
+   "emit_v",
+   "emit_group",
+   "rank",
+   "gbase",
+   "tx_v",
+   "tx",
+   "fault",
+   "selected_count"
+  ],
+  "S": [
+   "selected_line"
+  ],
+  "E": [
+   "clk",
+   "clk_mem",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.05,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  },
+  "io_hold_margin_ns": 0.05
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_p.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "clear": [
+   10.0,
+   10.2
+  ],
+  "ingest_v": [
+   10.2,
+   10.4
+  ],
+  "flush": [
+   10.4,
+   10.6
+  ],
+  "emit_v": [
+   10.6,
+   10.8
+  ],
+  "emit_group": [
+   10.8,
+   11.4
+  ],
+  "rank": [
+   11.4,
+   12.6
+  ],
+  "gbase": [
+   12.6,
+   13.8
+  ],
+  "tx_v": [
+   14.0,
+   14.6
+  ],
+  "tx": [
+   15.0,
+   850.0
+  ],
+  "fault": [
+   850.5,
+   850.8
+  ],
+  "selected_count": [
+   851.0,
+   854.0
+  ],
+  "selected_line": [
+   10.0,
+   854.0
+  ],
+  "clk": [
+   345.6,
+   345.8
+  ],
+  "clk_mem": [
+   345.8,
+   347.0
+  ],
+  "rst_n": [
+   347.0,
+   347.20000000000005
+  ]
+ },
+ "outline": {
+  "w": 864,
+  "h": 691.2,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "g_safe.core.gm[0].mem",
+   "at": [
+    129.6,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "g_safe.core.gm[1].mem",
+   "at": [
+    129.6,
+    259.2
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "g_safe.core.gm[2].mem",
+   "at": [
+    129.6,
+    388.79999999999995
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "g_safe.core.gm[3].mem",
+   "at": [
+    129.6,
+    518.4
+   ],
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "g_safe.core.gm[4].mem",
+   "at": [
+    561.6,
+    129.6
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "g_safe.core.gm[5].mem",
+   "at": [
+    561.6,
+    259.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "g_safe.core.gm[6].mem",
+   "at": [
+    561.6,
+    388.79999999999995
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "g_safe.core.gm[7].mem",
+   "at": [
+    561.6,
+    518.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "clock": "spine",
+ "hold_budget": "die",
+ "slot_change_request": "R6b actual hardened candidate needs 864x691.2 slot, enlarged from650x561.6. RTL/top/ports and historical +5 latency unchanged; all8 SRAMs remain on43.2 lattice. Parent die re-plans exact CLOSED view before bind.",
+ "job": {
+  "owner": "HBMc/TILES2",
+  "branch": "claude/hbmc-link-r7-1022",
+  "tag": "r8b",
+  "purpose": "IDX link r8b (HBMc/TILES2 10-22): r6 GRT setup repair stalled -20.9 ps on all 196 SRAM wd_in (r4h half-cycle negedge write stage, registers placed in the slice logic). FB: WPE=1 negedge stage kept + every write-port register anchored at its macro pin (sram_wport_at_pins.tcl). Geometry = r6b. Prior: IDX link r6 b enlarged south landing area and full-face pin spacing after actual repair_design GRT0183 local S-band trap",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/rtl/hbm_idx_static/link_pipe_1018",
+   "physical/common_flow/sram_wport_at_pins.tcl",
+   "physical/common_flow/sram_wport_release.tcl",
+   "results/rtl/ref_tile/hidx_link_r7/"
+  ],
+  "benches": [
+   {
+    "name": "link_pipe_exact",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m0 0",
+    "expect": "pass",
+    "pass_regex": "IDX_LINK_PIPE_TOTAL MUT0 records3072 miter1954 errors0 fillsff maxpack71 first_tx ref187 dut192 fault ref1954 dut1959",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "pass_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe0_m0.log"
+   },
+   {
+    "name": "link_pipe_mut1_halves",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m1 1",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe0_m1.log"
+   },
+   {
+    "name": "link_pipe_mut2_seq",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m2 2",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe0_m2.log"
+   },
+   {
+    "name": "link_pipe_mut3_carry",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m3 3",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe0_m3.log"
+   },
+   {
+    "name": "link_pipe_mut4_latency",
+    "cmd": "SAFE=2 WPE=1 bash rtl/test/hbm_idx_static/run_link_pipe.sh {RUN}/m4 4",
+    "expect": "fail",
+    "fail_regex": "pipelined link exact/miter/latency mismatch",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "fail_witness": "results/rtl/ref_tile/hidx_link_r7/bench/wpe0_m4.log"
+   }
+  ],
+  "structural_change": "r8b: SRAM write-port registers anchored at the macro pins (negedge stage kept, WPE=1)",
+  "views_to": "physical/ref_tile/hidx_link_r8b/views",
+  "record_to": "results/rtl/ref_tile/hidx_link_r8b"
+ },
+ "params": {
+  "SAFE": 2,
+  "WPE": 1
+ },
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "spine_macro_leaf": false,
+ "floorplan_note": "S pin band enlarged after exact native net46597 endpoint localisation. Bank channels >=51.816um; centre corridor260.712um; S macro margin129.6um; N margin95.016um. No reduced-density target or area squeeze.",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "structural_change": "R8 structural successor: r7b routed count path vrep -> S1 pcA -> s1_nqc TT -50.66 ps, long serial pc8 plus two 218 ps wire spans. Replace count-only pc8 with balanced kept pair/quad/octet add tree, same count, same register edges. Posedge WPE=1 retains full-cycle SRAM write (qualified in r7a bench). Alternate keeps r7b larger outline. FF -6.12 ps at selected_line capture requires 50 ps repair margin instead of 30; frozen signoff clocks and IO constraints unchanged.",
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1"
+ },
+ "fill_reason": {
+  "pin_bound": "Full S2400 output and N2219 pin faces, plus enlarged escape/landing area after exact local S-band GRT0183. Width and South macro clearances derive from pin access, no area-utilisation shrink."
+ },
+ "safe_design_checklist": {
+  "1_pins": "Full N/S data faces; S2400bits over844um <=3.2pins/um. E clock/reset beside centre of register body.",
+  "2_reach": "R5x failure is a25.2um local S-band connection. Expanded escape/landing area; inter-stack reach +43.2um priced geometry only, no cycle change.",
+  "3_fanout": "RTL byte-identical596d3557d SAFE2; original mapped native<=32, new gate decides.",
+  "4_depth": "Existing pipelined count/rotate/compact carry unchanged; exact physical gate setup still required.",
+  "5_storage": "Same8 real64x512 SRAMs; no stubs/ties or capacity reduction.",
+  "6_floorplan": "Enlarged outline and S margin, MY/R0 banks,51.816um vertical bank channels,260.712um centre corridor; no squeeze.",
+  "7_clock": "Existing symmetric centre-node spine on compact enlarged tile; must pass actual TT/FF spread<=80 and boundary matched, no insertion waiver.",
+  "8_schedule": "Exact same RTL source/parameters and historical +5 edges; source bench3072records/miter1954 and four causal negatives retained; reset2 unchanged."
+ },
+ "pin_hook_before_flops": [
+  "physical/common_flow/sram_wport_at_pins.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/common_flow/sram_wport_release.tcl"
+ ],
+ "purpose": "R8 structural successor: r7b routed count path vrep -> S1 pcA -> s1_nqc TT -50.66 ps, long serial pc8 plus two 218 ps wire spans. Replace count-only pc8 with balanced kept pair/quad/octet add tree, same count, same register edges. Posedge WPE=1 retains full-cycle SRAM write (qualified in r7a bench). Alternate keeps r7b larger outline. FF -6.12 ps at selected_line capture requires 50 ps repair margin instead of 30; frozen signoff clocks and IO constraints unchanged."
+}

@@ -1607,17 +1607,23 @@ def report_stopped_waiters(host, rows):
 # (global) OOM killer as the largest process -- EPYC3 18:54:23 PDT openroad 122.5 GB, EPYC1 21:49:01 PDT openroad
 # 123.5 GB (dmesg 'Out of memory: Killed process'), not by stuckscan (its KILL_STAGE / EARLY_FAIL at those minutes hit
 # other hosts' or other jobs' own run dirs).  Memory-only admission does not reserve for a die run's growth, so every
-# host probe marks die-level containers (names / run mounts below) oom_score_adj -1000: the kernel then picks a block
-# route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
+# host probe marks die-level containers (names / run mounts below) oom_score_adj DIE_OOM_SCORE_ADJ: the kernel then picks
+# a block route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
+# OOMADJ_999_1022 (fleet 2026-10-22): -999, never -1000.  -1000 (OOM_SCORE_ADJ_MIN) also exempts the process from the
+# memcg OOM killer of its own docker --memory / scope MemoryMax, so a die job at its cap livelocked (neither finished
+# nor failed) and flooded kern.log with memcg dumps (ep5 +44 GB in 13 min).  At -999 the global OOM killer still picks
+# every other process first, and a job at its own cap fails visibly.  A process already at -1000 (launched before the
+# fix) is left as it is: raising it could kill a job livelocked at its cap; ot-protect-die reports it.
 DIE_CONTAINER_RE = r"^/?(qfd_dietop_|qfd_die_|qfd_gw_|dieev_|de2_|die_|dsrom_s81|s81_l1|s81_grt_|r25gp|hbm_r25gp|qwen_r22k)"
 DIE_MOUNT_RE = r"/(die-evidence[^/ ]*|kv-die)/"
+DIE_OOM_SCORE_ADJ = -999
+_DIE_OOM_SET = (f"case \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" in {DIE_OOM_SCORE_ADJ}|-1000|'') ;; "
+                f"*) echo {DIE_OOM_SCORE_ADJ} | sudo -n tee /proc/$p/oom_score_adj;; esac; ")
 DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect --format '{{.Name}} {{range .Mounts}}{{.Source}} {{end}}' $c 2>/dev/null); "
                  f"echo \"$i\" | grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' || continue; "
-                 "for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -1000 ] || "
-                 "echo -1000 | sudo -n tee /proc/$p/oom_score_adj; done; done; "
+                 f"for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do {_DIE_OOM_SET}done; done; "
                  # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
-                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -1000 ] || "
-                 "echo -1000 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
+                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do {_DIE_OOM_SET}done) >/dev/null 2>&1; true")
 # HOST-EMERGENCY (drive-1010 2026-10-10): EPYC2 (6 GB), EPYC4 (7 GB) and EPYC3 (2 GB, 13:26) hung -- the biggest
 # consumers were agent benches OUTSIDE the loop (verilator 75-120 GB at oom_score_adj 0) that MEM-GUARD cannot stop, and
 # the kernel OOM killer acted too late (sshd stalls first).  Every host probe now runs this early-OOM step: below
