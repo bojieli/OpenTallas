@@ -1350,6 +1350,39 @@ def ref_gate_at_submit(j, jobs=None):
     else:
         event(j, f"ref gate PASS: {res.get('message', '')[:200]}")
 
+# GEOM-REVIEW (OWNER RULE 2026-10-23): "For the failing elements, you must perform thorough and independent visual geometry
+# review before submitting another place and route."  A ref_tile route of an element with failure history (failed loop
+# route not followed by a CLOSED one, open fleet-viz row with failed jobs, or a COORD BAD layout verdict) is REFUSED
+# unless GEOM-REVIEW recorded a PASS for the kit's content hash (tools/closure_loop/geom_review_gate.py,
+# lanes/GEOM-REVIEW.md).  STATE/geom_review.json {"mode": "refuse"|"warn"|"off"}, default refuse.
+def geom_review_at_submit(j, jobs=None):
+    mode = _state_mode("geom_review.json", "refuse")
+    if j["status"] != "QUEUED" or mode == "off" or not j["spec"].get("ref_tile"):
+        return
+    try:
+        import geom_review_gate
+        res = geom_review_gate.check(j["spec"], str(REPO), jobs if jobs is not None else all_jobs())
+    except Exception as ex:  # noqa: BLE001  (the gate's own failure never blocks intake)
+        event(j, f"geom review gate skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    v = res.get("verdict")
+    if v == "SKIP":
+        return
+    if v == "REFUSE" and mode != "refuse":
+        v = "WARN"
+    j.setdefault("submit_checks", {})["geom_review"] = {"verdict": v, "mode": mode, "hash": res.get("hash"),
+                                                        "message": res.get("message", "")[:1500]}
+    if v == "REFUSE":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT {res['message']}"[:1500]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    elif v == "WARN":
+        event(j, f"GEOM_REVIEW WARN ({mode}): {res['message'][:1200]}")
+    else:
+        event(j, res.get("message", "")[:300])
+
+
 # BENCH-REQUIRED (owner 2026-10-13, el1013-bench-required): lint-only ref_tile jobs routed for hours, CLOSED on timing and
 # were then refused by the guarded auto-merge ("no behavioral positive + negative mutant": s81su_qnt_cb32,
 # s81su_swe_gfix, s81hc_ctnl_l0/l1/l2, smn FS r1, HC crooty Y v4) -- validate() let them in on a no_bench_reason.
@@ -1568,6 +1601,8 @@ def ingest():
                 if j["status"] == "QUEUED":
                     ref_gate_at_submit(j, hist)
                 if j["status"] == "QUEUED":
+                    geom_review_at_submit(j, hist)   # failing element: independent visual review PASS (OWNER 10-23)
+                if j["status"] == "QUEUED":
                     bench_paths_at_submit(j)
         save_job(j)
 
@@ -1607,17 +1642,23 @@ def report_stopped_waiters(host, rows):
 # (global) OOM killer as the largest process -- EPYC3 18:54:23 PDT openroad 122.5 GB, EPYC1 21:49:01 PDT openroad
 # 123.5 GB (dmesg 'Out of memory: Killed process'), not by stuckscan (its KILL_STAGE / EARLY_FAIL at those minutes hit
 # other hosts' or other jobs' own run dirs).  Memory-only admission does not reserve for a die run's growth, so every
-# host probe marks die-level containers (names / run mounts below) oom_score_adj -1000: the kernel then picks a block
-# route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
+# host probe marks die-level containers (names / run mounts below) oom_score_adj DIE_OOM_SCORE_ADJ: the kernel then picks
+# a block route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
+# OOMADJ_999_1022 (fleet 2026-10-22): -999, never -1000.  -1000 (OOM_SCORE_ADJ_MIN) also exempts the process from the
+# memcg OOM killer of its own docker --memory / scope MemoryMax, so a die job at its cap livelocked (neither finished
+# nor failed) and flooded kern.log with memcg dumps (ep5 +44 GB in 13 min).  At -999 the global OOM killer still picks
+# every other process first, and a job at its own cap fails visibly.  A process already at -1000 (launched before the
+# fix) is left as it is: raising it could kill a job livelocked at its cap; ot-protect-die reports it.
 DIE_CONTAINER_RE = r"^/?(qfd_dietop_|qfd_die_|qfd_gw_|dieev_|de2_|die_|dsrom_s81|s81_l1|s81_grt_|r25gp|hbm_r25gp|qwen_r22k)"
 DIE_MOUNT_RE = r"/(die-evidence[^/ ]*|kv-die)/"
+DIE_OOM_SCORE_ADJ = -999
+_DIE_OOM_SET = (f"case \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" in {DIE_OOM_SCORE_ADJ}|-1000|'') ;; "
+                f"*) echo {DIE_OOM_SCORE_ADJ} | sudo -n tee /proc/$p/oom_score_adj;; esac; ")
 DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect --format '{{.Name}} {{range .Mounts}}{{.Source}} {{end}}' $c 2>/dev/null); "
                  f"echo \"$i\" | grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' || continue; "
-                 "for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -1000 ] || "
-                 "echo -1000 | sudo -n tee /proc/$p/oom_score_adj; done; done; "
+                 f"for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do {_DIE_OOM_SET}done; done; "
                  # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
-                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -1000 ] || "
-                 "echo -1000 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
+                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do {_DIE_OOM_SET}done) >/dev/null 2>&1; true")
 # HOST-EMERGENCY (drive-1010 2026-10-10): EPYC2 (6 GB), EPYC4 (7 GB) and EPYC3 (2 GB, 13:26) hung -- the biggest
 # consumers were agent benches OUTSIDE the loop (verilator 75-120 GB at oom_score_adj 0) that MEM-GUARD cannot stop, and
 # the kernel OOM killer acted too late (sshd stalls first).  Every host probe now runs this early-OOM step: below
@@ -9912,6 +9953,16 @@ def cmd_validate(a):
               + (f" (estimate {res.get('est')} b/um, with fix {res.get('est_fix')})" if res.get("est") else ""))
         if res["verdict"] == "REFUSE":
             errs.append(f"SUBMIT_LINT FLOORPLAN_MARGIN: the loop would REFUSE this job: {res['message']}")
+        if spec.get("ref_tile") and _state_mode("geom_review.json", "refuse") != "off":
+            try:
+                import geom_review_gate
+                gr = geom_review_gate.check(spec, str(REPO), geom_review_gate.jobs_for_block(spec.get("block", ""), STATE))
+            except Exception as ex:  # noqa: BLE001
+                gr = {"verdict": "SKIP", "message": f"geom review gate skipped: {type(ex).__name__}: {ex}"}
+            if gr["verdict"] == "REFUSE" and _state_mode("geom_review.json", "refuse") == "refuse":
+                errs.append(f"the loop would REFUSE this job: {gr['message']}")
+            elif gr["verdict"] != "SKIP" or "skipped" in gr.get("message", ""):
+                print(f"geom review {gr['verdict']}: {gr['message']}")
         elif res["verdict"] == "FIX":
             print(f"  the loop will add {res['fix']} {res['fix_env']} to the route_master stage commands at intake")
         commit = str((spec.get("source") or {}).get("commit", ""))

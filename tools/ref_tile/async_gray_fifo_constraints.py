@@ -33,9 +33,32 @@ SOURCES = {
          # QF-SFAULT 10-18: ot_hbm_svc_fault_cdc per-domain ot_reset_sync (FIFO module lines 6-51 byte-identical)
          '08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b'),
     'rtl/lib/ot_reset_sync.sv':
-        ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',),
+        ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',
+         # coordinator 10-22 (ba140fd98 seq-b1): OUTPUT_COPIES/TREE added; defaults (1, 0) select g_original, which is
+         # byte-for-byte the old logic.  Admitted ONLY with every instance at OUTPUT_COPIES=1, TREE=0 (reset_sync_scopes)
+         '607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a'),
 }
+# ot_reset_sync parameters a reviewed instance must elaborate with (g_original); absent = the 489e493c source (none)
+RESET_SYNC_ORIGINAL = {'OUTPUT_COPIES': 1, 'TREE': 0}
+
+
+def reset_sync_original(values, scope):
+    """refuse an ot_reset_sync instance unless OUTPUT_COPIES=1 and TREE=0 (g_original, the reviewed logic)"""
+    for name, want in RESET_SYNC_ORIGINAL.items():
+        raw = values.get(name)
+        got = want if raw is None else int(str(raw), 2) if re.fullmatch(r'[01]+', str(raw)) else None
+        if got != want:
+            raise ValueError(f'async_gray_fifo ot_reset_sync {scope or "<top>"} elaborates {name}={raw!r}; only the reviewed '
+                             'g_original form (OUTPUT_COPIES=1, TREE=0) is admitted')
 RESET_SYNC_SOURCE = 'rtl/lib/ot_reset_sync.sv'
+# COORD review 2026-10-22 10:45 (kshare r5a, APPROVED WITH CONDITIONS): the shared-pointer bit-sliced FIFO is admitted
+# ONLY as this exact module from this exact source (sha256 + Yosys src range); it is OPTIONAL (a parent that does not
+# declare it is checked exactly as before).  Control is the reviewed FIFO's verbatim; one Gray pair crosses; per-slice
+# wa/ra are same-domain copies; payload = g_s[s].mem[slot][b] -> rd_data[s*SW+b].
+SHP_SOURCE = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv'
+OPTIONAL_SOURCES = {SHP_SOURCE: ('16f29b89797521bd683cd58735590492a09e5f49b18da1d04acced37e85a6819',)}
+FIFO_SRC_RANGE = {'ot_hbm_svc_async_fifo': (next(iter(SOURCES)), '6.1-51.10'),
+                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '33.1-131.10')}
 # destination period - 60 ps setup uncertainty (gray_fifo_cdc_constraints rule (c) reset bound)
 RESET_BOUND_PS = {'core': 773.333, 'hbm': 964.0}
 RELATIONSHIP = dict(kind='hbm_phy_async_gray_fifo', stream_period_ps=833.333,
@@ -70,6 +93,11 @@ def load(spec, root):
         actual_hashes[path] = hashlib.sha256((Path(root) / path).read_bytes()).hexdigest()
         if actual_hashes[path] not in expected:
             raise ValueError(f'async_gray_fifo reviewed source changed: {path}')
+    for path, expected in OPTIONAL_SOURCES.items():
+        if path in declared:
+            actual_hashes[path] = hashlib.sha256((Path(root) / path).read_bytes()).hexdigest()
+            if actual_hashes[path] not in expected:
+                raise ValueError(f'async_gray_fifo reviewed source changed: {path}')
     if not primitive:
         return parent_load(spec, root, actual_hashes)
     params = spec.get('params', {})
@@ -95,6 +123,42 @@ def load(spec, root):
                 reset_aliases=['rd_reset','u_rd_reset.sync_rst_n','u_wr_reset.sync_rst_n','wr_reset'],payload_output_bits={'':{str(i):(['rd_data','rd_data[0]']if params.get('WIDTH',32)==1 else['rd_data['+str(i)+']'])for i in range(params.get('WIDTH',32))}},primitive=True)
 
 
+def _shp_reset_wiring(module):
+    """SHP v4 re-ack (COORD 10-22): every group / slice reset is driven by the kept leaf u_gw_leaf / u_gr_leaf, whose
+    rst_n_in is u_wr_reset / u_rd_reset.sync_rst_n, whose d is wr_online / rd_online and whose clk is wr_clk / rd_clk;
+    every g_s[*].wa flop resets from a u_gw_leaf output and every g_s[*].rs flop from a u_gr_leaf output.  Any other
+    wiring (e.g. an extra leaf stage, a group reset from a different sync) is refused."""
+    cells=module.get('cells',{});nets=module.get('netnames',{})
+    def bits(name):
+        if name not in nets:raise ValueError('async_gray_fifo shp reset wiring: missing net '+name)
+        return tuple(nets[name]['bits'])
+    con=lambda c,pin:tuple(cells[c]['connections'].get(pin,()))
+    for side,leaf,sync,online,clk in (('w','u_gw_leaf','u_wr_reset','wr_online','wr_clk'),('r','u_gr_leaf','u_rd_reset','rd_online','rd_clk')):
+        if (con(leaf,'rst_n_in')!=con(sync,'sync_rst_n') or not con(leaf,'rst_n_in') or con(leaf,'d')!=bits(online)
+                or con(leaf,'clk')!=bits(clk)):
+            raise ValueError('async_gray_fifo shp '+leaf+' is not the reviewed '+sync+' / '+online+' / '+clk+' leaf')
+    leaf_out={'w':set(con('u_gw_leaf','rst_n')),'r':set(con('u_gr_leaf','rst_n'))}
+    want={}
+    for name,net in nets.items():
+        m=re.fullmatch(r'g_s\[\d+\]\.(wa|rs)',name)
+        if m:
+            for b in net['bits']:
+                if isinstance(b,int):want[b]=('w' if m.group(1)=='wa' else 'r',name)
+    seen=set()
+    for cname,cell in cells.items():
+        conn=cell.get('connections',{})
+        if not cell.get('type','').startswith('$_DFF') or 'Q' not in conn or 'R' not in conn and 'S' not in conn:
+            continue
+        for q in conn['Q']:
+            if q in want:
+                side,name=want[q];rst=tuple(conn.get('R',[]))+tuple(conn.get('S',[]))
+                if not rst or not set(rst)<=leaf_out[side]:
+                    raise ValueError('async_gray_fifo shp '+name+' reset is not driven by its reviewed group leaf')
+                seen.add(q)
+    if set(want)-seen:
+        raise ValueError('async_gray_fifo shp slot-index flops without a reviewed async group reset: '+str(len(set(want)-seen)))
+
+
 @lru_cache(maxsize=16)
 def elaborate(root, top, sources, params):
     # The cache key includes every input byte hash. No caller-supplied graph or
@@ -110,7 +174,7 @@ def elaborate(root, top, sources, params):
         content=p.read_bytes()
         if hashlib.sha256(content).hexdigest()!=digest:
             raise ValueError('async_gray_fifo source changed during elaboration')
-        if path not in SOURCES:
+        if path not in SOURCES and path not in OPTIONAL_SOURCES:
             for attribute in re.findall(rb'\(\*(.*?)\*\)',content,re.S):
                 if re.search(rb'\b(?:src|hdlname)\s*=',attribute):
                     raise ValueError('async_gray_fifo reserved source metadata attributes are unsupported')
@@ -134,14 +198,27 @@ def elaborate(root, top, sources, params):
         run=subprocess.run([yosys,'-Q','-T','-p',command],capture_output=True,text=True)
         if run.returncode:raise ValueError('async_gray_fifo actual source elaboration failed: '+(run.stdout+run.stderr)[-1800:])
         document=json.loads(out.read_text())
-    fifo_src=str((root/next(iter(SOURCES))).resolve())+':6.1-51.10'
     for name,module in document['modules'].items():
-        claimed=module.get('attributes',{}).get('hdlname')=='ot_hbm_svc_async_fifo'
+        claimed=module.get('attributes',{}).get('hdlname')in async_fifo_hierarchy_audit.REVIEWED_FIFOS
         if claimed and not async_fifo_hierarchy_audit.fifo_module_type(name):
             raise ValueError('async_gray_fifo untrusted FIFO source identity alias')
-        if async_fifo_hierarchy_audit.fifo_module_type(name):
-            if module.get('attributes',{}).get('src')!=fifo_src:
+        base=async_fifo_hierarchy_audit.fifo_base(name)
+        if base:
+            src_path,src_range=FIFO_SRC_RANGE[base]
+            if base!='ot_hbm_svc_async_fifo' and src_path not in dict(sources):
+                raise ValueError('async_gray_fifo '+base+' requires its reviewed source declared')
+            if module.get('attributes',{}).get('src')!=str((root/src_path).resolve())+':'+src_range:
                 raise ValueError('async_gray_fifo module identity does not bind reviewed source')
+            if base=='ot_hbm_svc_async_fifo_shp':
+                # review (b): exactly the two reviewed syncs u_wr_reset / u_rd_reset (same module, same parameters), and
+                # the per-group release leaves are the kept same-domain ot_hbm_svc_shp_leaf u_gw_leaf / u_gr_leaf behind them
+                cells=module.get('cells',{})
+                syncs={c:x['type']for c,x in cells.items()if 'reset_sync' in x['type']}
+                leaves={c:x['type']for c,x in cells.items()if 'shp_leaf' in x['type']}
+                if (set(syncs)!={'u_wr_reset','u_rd_reset'} or len(set(syncs.values()))!=1
+                        or set(leaves)!={'u_gw_leaf','u_gr_leaf'}):
+                    raise ValueError('async_gray_fifo shp reset structure differs from the reviewed one: '+json.dumps([syncs,leaves],sort_keys=True)[:600])
+                _shp_reset_wiring(module)
             values=module.get('parameter_default_values',{})
             if int(values.get('DEPTH','0'),2)not in (4,8) or int(values.get('WIDTH','0'),2)<1:
                 raise ValueError('async_gray_fifo actual instance exceeds reviewed parameter shape')
@@ -183,6 +260,7 @@ def reset_sync_scopes(document,top,root):
                     raise ValueError('async_gray_fifo ot_reset_sync identity does not bind reviewed source')
                 stages=int(mod.get('parameter_default_values',{}).get('ASYNC_STAGES','10'),2)
                 if stages<2:raise ValueError('async_gray_fifo ot_reset_sync requires >= 2 stages')
+                reset_sync_original(mod.get('parameter_default_values',{}),full)
                 if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_.\[\]]*',full):raise ValueError('async_gray_fifo unsupported reset scope '+full)
                 found.append(full)
                 # the last stage drives sync_rst_n; synthesis may name that flop after the output or a parent net of it
@@ -207,10 +285,17 @@ def bindings(record):
     def exact_rows(key):
         return ' '.join(word(f['path'])+' {'+' '.join('{'+str(i)+'} {'+' '.join(word(v)for v in values)+'}'for i,values in record[key].get(f['path'],{}).items())+'}'for f in record['fifo_instances'])
     targets=exact_rows('payload_consumer_bits');outputs=exact_rows('payload_output_bits')
+    def slice_sw(f):
+        if f.get('base')!='ot_hbm_svc_async_fifo_shp':return 0
+        sw=int(f['parameters']['SW'],2)if isinstance(f['parameters'].get('SW'),str)else int(f['parameters'].get('SW',7))
+        if sw<1:raise ValueError('async_gray_fifo shp slice width')
+        return sw
+    sws=' '.join(word(f['path'])+' '+str(slice_sw(f))for f in record['fifo_instances'])
     return ('set ::ot_ag_fifo_domains [dict create '+fifo+']\n'
             +'set ::ot_ag_pointer_msb [dict create '+msbs+']\n'
             +'set ::ot_ag_targets [dict create '+targets+']\n'
             +'set ::ot_ag_outputs [dict create '+outputs+']\n'
+            +'set ::ot_ag_slice_sw [dict create '+sws+']\n'
             +'set ::ot_ag_primitive '+str(int(record['primitive']))+'\n'
             +'set ::ot_ag_reset_syncs [list '+' '.join(word(r)for r in record.get('reset_syncs',[]))+']\n'
             +'set ::ot_ag_reset_alias [list '+' '.join(word(r)for r in record.get('reset_aliases',[]))+']\n'
@@ -241,7 +326,7 @@ def extend(body, spec, root):
         raise ValueError('async_gray_fifo ownership gate changed; revalidate extension')
     body = body.replace(marker, '  ot_ag_complete\n' + marker)
     body = body.replace('  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}',
-                        '  set ::ot_ag_seen {}\n  set ::ot_ag_pending {}\n  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}')
+                        '  set ::ot_ag_seen {}\n  set ::ot_ag_pending {}\n  set ::ot_ag_tie_memo {}\n  set ::ot_ag_tie_stats {}\n  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}')
     return bindings(record) + TCL + '\n' + body
 
 
@@ -256,13 +341,47 @@ set ::ot_ag_reset_seen {}
 # (hdie_svc_vm_kshare: >10k pairs, 11+ h in synth_odb and again at every hook re-source).  The checks, the error and
 # PATH_DEFERRED messages are identical; a BOUNDED line is printed only after that pair's proof passed.
 set ::ot_ag_pending {}
+set ::ot_ag_tie_memo {}
+set ::ot_ag_tie_stats {}
+proc ot_ag_owner {object} {
+  # A path startpoint/launch named by what owns it: a top port (or top-level pin) by its own name, else its cell.
+  if {[sta::object_type $object] eq "Port" || ([sta::object_type $object] eq "Pin" && [$object is_top_level_port])} {
+    return [list port [get_full_name $object]]
+  }
+  if {[sta::object_type $object] eq "Instance"} {return [list cell [get_full_name $object]]}
+  set cell [get_cells -quiet -of_objects $object]
+  if {[llength $cell] != 1} {return {}}
+  return [list cell [get_full_name $cell]]
+}
+proc ot_ag_sole_launch {launch target} {
+  # TOKc-GRAY 10-22: 1 iff every actual startpoint of the target's fanin belongs to the launch itself.  Then every path
+  # that ends at the target starts at the launch, so "-to target" reports exactly the path set of "-from launch -to
+  # target" while reusing the one full arrival update; the "-from" filter re-searches the launch's whole fanout cone per
+  # query (a reset-tree flop's clear arcs reach most of its lane: ~6 s per reset pair on hdie_svc_vm_kshare_r4).  Any
+  # other fanin (a second launch, the pin itself, an unowned object) keeps the original filtered query.
+  set own [ot_ag_owner [lindex $launch 0]]
+  if {[llength $launch] != 1 || ![llength $own]} {return 0}
+  set starts [get_fanin -flat -startpoints_only -to $target]
+  if {![llength $starts]} {return 0}
+  foreach start $starts {
+    if {[ot_ag_owner $start] ne $own} {return 0}
+  }
+  return 1
+}
 proc ot_ag_verify {} {
   set pending $::ot_ag_pending
   set ::ot_ag_pending {}
+  set direct 0
   foreach row $pending {
     lassign $row kind launch target start_name target_name done
+    set sole [ot_ag_sole_launch $launch $target]
+    incr direct $sole
     foreach k {max min} {
-      set paths [find_timing_paths -from $launch -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      if {$sole} {
+        set paths [find_timing_paths -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      } else {
+        set paths [find_timing_paths -from $launch -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      }
       if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
         if {$kind eq "reset"} {
           puts "OT_ASYNC_GRAY PATH_DEFERRED reset $start_name -> $target_name $k (strict at sign-off)"
@@ -280,6 +399,7 @@ proc ot_ag_verify {} {
     }
     if {$done ne ""} {puts $done}
   }
+  puts "OT_ASYNC_GRAY VERIFY_DEDUP pairs=[llength $pending] sole_launch_unfiltered=$direct filtered=[expr {[llength $pending] - $direct}]"
 }
 proc ot_ag_public_nets {cell} {
   set result {}
@@ -329,9 +449,14 @@ proc ot_ag_role {cell} {
       if {[regexp {^(wr|rd)_bin\[([0-9]+)\]$} $local unused direction index] && $index == [dict get $::ot_ag_pointer_msb $scope]} {
         dict set roles [list $scope ${direction}_gray $index] 1
       }
-      if {[regexp {^mem\[[0-9]+\](?:\[([0-9]+)\])?$} $local unused payload_bit]} {
+      if {[regexp {^mem\[[0-9]+\](?:\[([0-9]+)\])?$} $local unused payload_bit] && [dict get $::ot_ag_slice_sw $scope] == 0} {
         if {$payload_bit eq ""} {set payload_bit 0}
         dict set roles [list $scope payload $payload_bit] 1
+      }
+      # ot_hbm_svc_async_fifo_shp (review 10-22): slice s storage bit b is rd_data[s*SW+b]
+      if {[dict get $::ot_ag_slice_sw $scope] > 0 && [regexp {^g_s\[([0-9]+)\]\.mem\[[0-9]+\](?:\[([0-9]+)\])?$} $local unused slice_i slice_b]} {
+        if {$slice_b eq ""} {set slice_b 0}
+        dict set roles [list $scope payload [expr {$slice_i * [dict get $::ot_ag_slice_sw $scope] + $slice_b}]] 1
       }
     }
   }
@@ -378,6 +503,27 @@ proc ot_ag_reset_bound {start pin bound {done {}}} {
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $pin
   lappend ::ot_ag_pending [list reset $launch $pin [get_full_name $start] [get_full_name $pin] $done]
 }
+proc ot_ag_tie_driven {nets} {
+  # 1 iff every driver (output pin) on the pin's actual net(s) is a TIEHI/TIELO cell (vacuously 1 without a net).
+  # TOKc-GRAY 10-22: the verdict is a function of the net alone, so it is computed once per net per SDC read and
+  # shared by every async pin on that net.  hdie_svc_vm_kshare_r4 ties thousands of DFFASRHQNx1 SET/RESET pins to a
+  # few tie nets; re-scanning the whole tie net for each pin was O(pins x net fanout) (~0.12 s per async pin, hours).
+  # The memo is cleared at the start of every ownership pass (the netlist is fixed while the SDC is read).
+  set key {}
+  foreach n $nets {lappend key [get_full_name $n]}
+  if {[dict exists $::ot_ag_tie_memo $key]} {
+    dict incr ::ot_ag_tie_stats reused
+    return [dict get $::ot_ag_tie_memo $key]
+  }
+  set tied 1
+  foreach d [get_pins -quiet -of_objects $nets] {
+    if {[get_property $d direction] ne "output"} continue
+    if {![regexp {^TIE(HI|LO)x} [get_property [get_cells -quiet -of_objects $d] ref_name]]} {set tied 0}
+  }
+  dict set ::ot_ag_tie_memo $key $tied
+  dict incr ::ot_ag_tie_stats scanned
+  return $tied
+}
 proc ot_ag_async_control {pin cells inputs} {
   # Reset recovery/removal stays timed within a domain. A FIFO data/pointer publication must
   # never acquire an async-control exception by sharing a legitimate D target.  A cross-domain asynchronous control
@@ -390,12 +536,9 @@ proc ot_ag_async_control {pin cells inputs} {
     # the pin itself as its only startpoint (HBMA-SVC 10-17, hdie_svc_stack_fault SETN of u_ca.u_status.rd_bin[2]).
     # Admit exactly that case, and only when every driver of the pin's net is a tie cell.
     if {[get_full_name $start] eq [get_full_name $pin]} {
-      set tied 1
-      foreach d [get_pins -quiet -of_objects [get_nets -quiet -of_objects $pin]] {
-        if {[get_property $d direction] ne "output"} continue
-        if {![regexp {^TIE(HI|LO)x} [get_property [get_cells -quiet -of_objects $d] ref_name]]} {set tied 0}
+      if {![ot_ag_tie_driven [get_nets -quiet -of_objects $pin]]} {
+        error "OT_ASYNC_GRAY: asynchronous control without a register or tie driver [get_full_name $pin]"
       }
-      if {!$tied} {error "OT_ASYNC_GRAY: asynchronous control without a register or tie driver [get_full_name $pin]"}
       continue
     }
     set name [get_full_name $start]
@@ -502,6 +645,9 @@ proc ot_ag_complete {} {
     }
   }
   if {$::ot_ag_primitive && ![dict exists $::ot_ag_seen [list {} payload]]} {error "OT_ASYNC_GRAY: missing primitive payload crossing"}
+  set scanned [expr {[dict exists $::ot_ag_tie_stats scanned] ? [dict get $::ot_ag_tie_stats scanned] : 0}]
+  set reused [expr {[dict exists $::ot_ag_tie_stats reused] ? [dict get $::ot_ag_tie_stats reused] : 0}]
+  puts "OT_ASYNC_GRAY TIE_DRIVER_DEDUP nets_scanned=$scanned pins_covered=[expr {$scanned + $reused}]"
   puts "OT_ASYNC_GRAY STRUCTURAL_PASS $::ot_ag_seen reset_sync_inputs=$::ot_ag_reset_seen (bounded CDC; no physical closure claim)"
 }
 '''
