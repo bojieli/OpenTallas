@@ -16,6 +16,9 @@ extra='rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv rtl/dsrom_sys/s81_dv/ot_s81d
 s=s.replace('srcs="','srcs="'+extra,1)
 s=s.replace('$DEF --top-module',df+' $DEF --top-module').replace('$DEF -GORD=', df+' $DEF -GORD=')
 s=s.replace('verilator --binary','"$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator" --binary')
+# STW-S81e-COLLA2 10-23: XFIN_VFLAGS (e.g. -fno-dfg, as the N26 equivalence vehicle): Verilator 5.050 DFG internal fault on the N26 eng build
+vf=__import__('os').environ.get('XFIN_VFLAGS','')
+if vf: s=s.replace('--binary','--binary '+vf).replace('$V --binary','$V --binary')
 Path(out,'existing_runner.sh').write_text(s)
 P
 J=${J:-8} bash "$out/existing_runner.sh" "$out" "$@"
