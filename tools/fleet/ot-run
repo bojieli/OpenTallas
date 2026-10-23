@@ -258,10 +258,13 @@ def die_running(host):
     return n + daemon_die_jobs(host)
 
 
-# One record per active scope, never a second charge for its ot-heavy launcher or
+# One record per active scope or unstarted launcher, never a second charge for its
 # closure-daemon state. Legacy scopes can carry an owner-verified disk.UNIT file
 # containing their declared lifetime scratch GB; unknown declarations retain 60 GB.
-DIE_DISK_UNITS_SH = r"""units=$(systemctl --user list-units --type=scope --state=active --no-legend --plain 'oth-*') || exit 1
+DIE_DISK_UNITS_SH = r"""# Snapshot launchers first: if one admits during the probe, its PID-derived
+# scope below represents it; an exec transition cannot disappear between lists.
+waiters=$(pgrep -f '^(/(usr/)?bin/)?bash /usr/local/bin/ot-heavy ')
+units=$(systemctl --user list-units --type=scope --state=active --no-legend --plain 'oth-*') || exit 1
 for u in $(printf '%s\n' "$units" | awk '{print $1}'); do
     cg=$(systemctl --user show -p ControlGroup --value "$u") || exit 1
     prio=; disk=; dirs=
@@ -282,12 +285,29 @@ DIEDIR $u $v"
     echo "DIEDISK $u ${disk:-unknown}"
     printf '%s\n' "$dirs"
 done
+for p in $waiters; do
+    represented=
+    for u in $(printf '%s\n' "$units" | awk '{print $1}'); do
+        # ot-heavy sets UNIT=oth-$(id -un)-$$-$(date +%s). An unstarted
+        # nested waiter may share its PARENT scope; cgroup membership alone
+        # must never erase that waiter's independent scratch commitment.
+        case "$u" in oth-*-$p-*.scope) represented=1; break;; esac
+    done
+    [ -z "$represented" ] || continue
+    e=$(tr '\0' '\n' <"/proc/$p/environ" 2>/dev/null)
+    printf '%s\n' "$e" | grep -qx OT_HEAVY_PRIO=die || continue
+    disk=$(printf '%s\n' "$e" | sed -n 's/^OT_HEAVY_DISK_GB=//p' | head -1)
+    case "$disk" in ''|*[!0-9]*) disk=unknown;; esac
+    echo "DIEDISK waiter-$p $disk"
+    v=$(readlink "/proc/$p/cwd" 2>/dev/null)
+    [ -z "$v" ] || echo "DIEDIR waiter-$p $v"
+done
 echo DIEDISK_DONE
 """
 
 
 def die_disk_reserved(host):
-    """Declared GB still budgeted to active die scopes; None if the probe failed.
+    """Declared GB budgeted to active die scopes and queued launchers; None if the probe failed.
 
     Existing output already reduces df free space. Retain the full declaration as
     a conservative future-write budget; this does not infer remaining use from du.
@@ -311,7 +331,7 @@ def die_disk_reserved(host):
                 if len(parts) == 3:
                     dirs.setdefault(parts[1], []).append(parts[2])
         # Daemon jobs can use a standalone docker path outside an ot-heavy scope.
-        # Keep their conservative budget unless an active charged scope actually
+        # Keep their conservative budget unless a charged scope or queued launcher actually
         # has a process under that exact job run directory.
         extra = 0
         try:
@@ -338,7 +358,7 @@ def die_disk_reserved(host):
 
 
 def drop_low_disk(ok, die, need, say=None):
-    """Reserve each active die scope's --disk once; unknown old scopes use 60 GB.
+    """Reserve active die scopes and queued launchers once; unknowns use 60 GB.
 
     Hosts below DISK_RESERVE_BELOW_GB retain this future-write budget in addition
     to the new request. If the declaration probe fails, retain the legacy count
@@ -357,7 +377,7 @@ def drop_low_disk(ok, die, need, say=None):
         if free - reserve < need:
             out.pop(h)
             if say:
-                say(f"ot-run: {h} skipped for this die job: DISK {free} GB free - {reserve} GB running die reservations < {need} GB")
+                say(f"ot-run: {h} skipped for this die job: DISK {free} GB free - {reserve} GB running/queued die reservations < {need} GB")
     return out
 
 
