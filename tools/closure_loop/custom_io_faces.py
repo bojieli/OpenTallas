@@ -23,6 +23,16 @@ PLACE = re.compile(
     r"(?:\s+-force_to_die_boundary)?\s*;?\s*"
 )
 
+# (SQC-CB16b 2026-10-22) the canonical literal-bit exact assignment that tools/ref_tile/ref_tile.py itself emits and
+# validates (physical/common_flow/assigned_pin_exact.tcl): the face and the along-face centre are literal, so the
+# face map is read from the statement, under the same exhaustive/duplicate/outline rules as place_pin.
+ASSIGNED_PIN_EXACT_TCL = "physical/common_flow/assigned_pin_exact.tcl"
+EXACT = re.compile(
+    r"ot_assigned_pin_exact\s+\{(?P<pin>[A-Za-z_][A-Za-z_0-9]*(?:\[\d+\])?)\}\s+(?P<layer>M\d+)\s+"
+    r"(?P<face>[NSEW])\s+(?P<c>" + NUMBER + r")\s*;?\s*"
+)
+EXACT_SOURCE = re.compile(r"source\s+(?:/src/)?" + re.escape(ASSIGNED_PIN_EXACT_TCL) + r"\s*;?\s*")
+
 
 def outline(geometry):
     """Only known, finite positive physical widths/heights prove an outline."""
@@ -121,11 +131,36 @@ def read(kit_text, commit, show):
         if not all(math.isfinite(v) and v > 0 for v in (width, height)):
             return fail("custom IO outline is invalid")
         faces = {}
-        for number, line in enumerate(text.splitlines(), 1):
+        first, helper_ok = 1, False
+        if "ot_assigned_pin_exact" in text:
+            # the helper is either sourced from the pinned commit or inlined byte-exactly (ref_tile.py's form)
+            helper = show(commit, ASSIGNED_PIN_EXACT_TCL)
+            if helper and text.startswith(helper):
+                first += helper.count("\n")
+                text = text[len(helper):]
+                helper_ok = True
+        for number, line in enumerate(text.splitlines(), first):
             line = line.strip()
             if line.endswith("\\"):
                 return fail(f"unsupported custom IO continuation on line {number}")
             if not line or line.startswith("#"):
+                continue
+            if EXACT_SOURCE.fullmatch(line):
+                if not show(commit, ASSIGNED_PIN_EXACT_TCL):
+                    return fail("custom IO exact-assignment helper is missing from the pinned commit")
+                helper_ok = True
+                continue
+            exact = EXACT.fullmatch(line)
+            if exact is not None:
+                if not helper_ok:
+                    return fail(f"custom IO exact assignment on line {number} without the canonical helper")
+                pin, face, c = exact["pin"], exact["face"], float(exact["c"])
+                if pin in faces:
+                    return fail(f"duplicate custom IO pin {pin}")
+                span = width if face in "NS" else height
+                if not (math.isfinite(c) and 0 < c < span):
+                    return fail(f"custom IO pin {pin} lies outside its outline")
+                faces[pin] = face
                 continue
             match = PLACE.fullmatch(line)
             if match is None:
