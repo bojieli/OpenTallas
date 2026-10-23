@@ -1,0 +1,134 @@
+{
+  "scope": "Source-only restoration of actual SYSFACE joined authentication export. Actual full hierarchy elaborated; existing receipt Q forced for boundary proof. No programme installation, native, physical, GEN or whole-token qualification.",
+  "master": "qfd_sys_face_lctx3_wrapped_f16",
+  "core": "qfd_sys_face_lctx3_core_f16",
+  "base": "4b215c0b3 lineage selected lctx3 wrapper; current checkout tracked hashes below",
+  "auth_format": "{begin_v, rp_program_ready, rp_cap, rp_program_digest[63:0], rp_program_epoch[15:0]}",
+  "transport": {
+    "core_edges": 0,
+    "output_capture_edges": 1,
+    "gen_edges": null,
+    "total_to_witness": null,
+    "reset": "output capture clears synchronously under existing rst_n__ot_rl1 relay"
+  },
+  "run": {
+    "unit": "oth-ubuntu-3121691-1792731432",
+    "host": "ot-epyc5",
+    "mem_gb": 8,
+    "threads": 1,
+    "ot_run_exit": 0,
+    "selected": "PASS 128 capture edges plus reset reassertion",
+    "mutants": {
+      "raw_auth_instead_of_joined_ready": "FAIL AUTH_CAPTURE known-bit discrepancy edge0",
+      "combinational_export_instead_of_capture": "FAIL AUTH_COMB_LEAK edge0"
+    }
+  },
+  "limitations": [
+    "Distinct new port ABI needs selected GEN binding and actual native/physical qualification. Existing source, wrapper selector and CLOSED views unchanged.",
+    "Typed slice receipt producer, init admission packet selector, final ME/XPF read receipt and GEN F16 status/transport still open.",
+    "Forced producer Q proves export packing and capture only; does not prove authorization join correctness.",
+    "Icarus ROM model retains canonical behavior and only removes typed string parameter syntax. Failed harness/missing-asset logs preserved."
+  ],
+  "sources": [
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+      "sha256": "713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl_rope.sv",
+      "sha256": "077d2495c3092744f5f455c72d1f2809db9a5ac4af0a4db81e71dc1ac57d55bd"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv",
+      "sha256": "c95d2e34a217a5eb15051de213c28e5c7917ba415ef899603d2db83bb62a01e9"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv",
+      "sha256": "5edaee7a8c1650c6babfd9fae99b4f83a2cafc3eaed557934721778a5f977688"
+    },
+    {
+      "path": "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+      "sha256": "a1b8c49fe64f11100fe3fc6fbc4f9f4a7695c157ea26671d221dd4c95843bdeb"
+    },
+    {
+      "path": "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+      "sha256": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/ot_rom_4096x72_m8_iverilog.v",
+      "sha256": "8a758e4980d151938fc4777c04ac111a01ace1a45ca55be03da6939ac4cce3ab"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sysface_reset_same3.sv",
+      "sha256": "d9931ae40c466f0a99afea550e9f2082ba5edfd88b87c43437130ce3d4b444d4"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sysface32.sv",
+      "sha256": "86f24f5ffca743777bafdc26dfe8541c81db28e446046bb3f70cf5345ab340b8"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sysface_cfg_copy.sv",
+      "sha256": "619494c1aaa1124550f0a4eeb8531229c9ac65a64c3a9bd1d65be98e90478fd7"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sysface_select_local.sv",
+      "sha256": "16305fe6d3e3faa9200efb55699f7401e7d635f630acbb65dc2494ac4773e120"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sys_face_record_port_n32.sv",
+      "sha256": "cf7147081b7cec40583d8849a51d3669e63253307fd02f8576873fc4282b1da0"
+    },
+    {
+      "path": "rtl/qwen_split/mu/qfd_mu_head_context_tx_lctx32.sv",
+      "sha256": "e17a6fa5320c4d13e300556d78e42aab0f52c66f0cd1e84bab0181f7672248b2"
+    },
+    {
+      "path": "rtl/qwen_split/mu/qfd_mu_head_context_tx_lctx32_helpers.sv",
+      "sha256": "a0e34c8e1770d1dc5e85f3dbe3062c51af3362f3a343658ee63e2ef10dcc6419"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/qfd_syscal_lctx3.sv",
+      "sha256": "30d81d178256505b6a88b299e3fd3277851115ef0274754034b8c7f60b0400d8"
+    },
+    {
+      "path": "rtl/qwen_split/f16/qfd_sys_face_lctx3_core_f16.sv",
+      "sha256": "db12b4d87c3c0f666e61fc9b8c8e0b316df6f30940ba336a13d3db27ebe405bf"
+    },
+    {
+      "path": "rtl/qwen_split/f16/qfd_sys_face_lctx3_wrapped_f16.sv",
+      "sha256": "36f44f2dc7195c02a78797cd5b39d5ad5af93a79113413d835c950c03bd894f3"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sys_face_lctx3_core.sv",
+      "sha256": "e5ffb716604dbb212cc9bcc80db796a25e5ce7b8538dd78a656bc5810c5c9ff8"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv",
+      "sha256": "b25c0bdd8ad7f14fe0f5fac605fb87e441c6ce2bbae793b46d685b3973cf8b40"
+    },
+    {
+      "path": "tools/qwen_split/f16_auth_source.py",
+      "sha256": "88ed225755d8f279e7a872e224049bec2060874674e4b6375a212b485bbb52fb"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/tb_auth_export.sv",
+      "sha256": "a891976a9581bad29b4438d54b38c31ad6812330e29ad11c0a694df6c9b3cd07"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ovl_release_rope/ovl_release_img.svh",
+      "sha256": "727a476053f3965616e90efe6b4396ec3a28b07bf6c10e4bef71af70ca4c6d86"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu_ew1627_r16_rope.svh",
+      "sha256": "72bd0e4f1641325de69b108564477b5e92bbec9587b8b938a51230c5eb01144b"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ovl_release_rope/ovl_c_tx.viamap.hex",
+      "sha256": "f83d3f61b2bdf0a40b11e443d391ac9e9ec458585193bfa471c6f7bce400ad1e"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ovl_release_rope/ovl_c_rx.viamap.hex",
+      "sha256": "adf3a32d884063134b44e6a8b1adbfedc7cf7f6390d725d96736441dbb25ccb7"
+    }
+  ]
+}

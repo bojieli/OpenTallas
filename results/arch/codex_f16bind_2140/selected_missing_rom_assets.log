@@ -1,0 +1,4 @@
+ERROR: results/arch/codex_f16bind_2140/ot_rom_4096x72_m8_iverilog.v:36: $readmemh: Unable to open rtl/qwen_sys/d2d_static_20261015/ovl_release_rope/ovl_c_tx.viamap.hex for reading.
+ERROR: results/arch/codex_f16bind_2140/ot_rom_4096x72_m8_iverilog.v:36: $readmemh: Unable to open rtl/qwen_sys/d2d_static_20261015/ovl_release_rope/ovl_c_rx.viamap.hex for reading.
+PASS F16_AUTH_EXPORT actual_full_hierarchy edges=128 reset_reassert; producer Q forced, no programme claim
+results/arch/codex_f16bind_2140/tb_auth_export.sv:31: $finish called at 1440000 (1ps)
