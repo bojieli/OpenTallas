@@ -79,5 +79,60 @@ The rules:
   between at most `reach` apart. `single` uses one register for a short crossing.
 - Port width is `bits x pitch / occupancy`.
 
+
+## 4. pushdown.py (per-block wrapper, ft pins, layer contract, abstract check, die ECO)
+
+    python3 tools/die_feedthrough/pushdown.py wrapper  SPEC.json --kit-top MOD (--kit-verilog F | --kit-ports P.json) --out DIR
+            [--station-module ot_dvrly_st|ft_pipe_reg] [--hc 1] [--clock PORT] [--reset PORT] [--kit-param N=V]
+    python3 tools/die_feedthrough/pushdown.py pins     SPEC.json --out DIR [--layers die.json] [--dbu 1000] [--pin-len-um 0.32]
+    python3 tools/die_feedthrough/pushdown.py contract SPEC.json --out DIR [--margin-um 2] [--signal-min M2] [--adjust 0.5]
+    python3 tools/die_feedthrough/pushdown.py check    SPEC.json --lef BLOCK.lef [--max-cover 0.05] [--allow-stripes 0.48:8.64]
+    python3 tools/die_feedthrough/pushdown.py die      SPEC_DIR --plan PLAN.json --die-verilog die.v --out DIR
+
+Outputs (named after `spec["variant"]`):
+- `wrapper`: `<variant>.v`. The wrapper instantiates the UNMODIFIED kit top as `u_kit` and passes every port through.
+  Per path k it adds a chain of `stages` station instances `ft<k>_s<j>`, either `ot_dvrly_st #(W, HC)` or the emitted
+  `ft_pipe_reg` (same ports; posedge D-flops, no data reset). Clock `block` uses the kit clock; `forwarded` adds
+  `ft<k>_ck_i`/`ft<k>_ck_o` and chains ck -> ck_o. `<variant>.ft.json` lists the register names and the repeater sites,
+  which block P&R inserts (they are not RTL).
+- `pins`: `<variant>.pins.tcl` writes one `place_pin` per bit on the spec layer and face. The bits are spread over
+  [lo, hi] at an integer multiple of the track pitch and snapped to `offset + k*pitch` (ASAP7 M8/M9: 0.116 + k*0.080).
+  Equal ranges give equal offsets, so in/out ports and abutting neighbours line up. A forwarded clock takes the middle
+  slot. `<variant>.pins.json` holds the pins plus register placement hints, which also appear as a commented-out Tcl block.
+- `contract`: `<variant>.fastroute.tcl` is the ORFS `FASTROUTE_TCL`, with `MIN_ROUTING_LAYER=M2` and
+  `MAX_ROUTING_LAYER=M9`. OpenROAD 26Q3 has no per-net layer range, so the contract routes signals on M2-M9 and applies
+  `set_global_routing_region_adjustment ... -adjustment 1.0` on M8/M9 over the outline minus the ft corridors.
+  `<variant>.contract.json` holds signal_max, ft_layers, pg_max, ft_nets, obs_rule, corridors and fence.
+  `<variant>.ft_audit.tcl` runs after global_route and lists non-ft nets with M8/M9 guides outside the corridors
+  (`FT_AUDIT PASS|FAIL`). Known limit: GRT keeps capacity in the last gcell column/row at the outline's max edges, and
+  regions past the die are refused (GRT-0067). The audit catches any leak there.
+- `check`: `check_abstract(lef_text, spec)` returns FAIL for an ft-layer OBS over 5% of the outline (stripes up to the
+  allowed width are excluded, up to 1.25x their nominal density), and for an ft pin bit that is missing, on the wrong
+  layer, on the wrong face or outside [lo, hi]. Exit 1 on FAIL.
+- `die` (best-effort skeleton): `die_eco.json` + `die_eco.tcl` cover every lane with block segments and
+  keep_channel false. They delete the lane's relays (`lanes[].relays`) and their inter-relay nets, then connect
+  src -> blk/ft_i ... blk/ft_o -> dst (and the forwarded clocks) with `delete_instance`, `delete_net`, `make_net` and
+  `connect_pin`. die.v is only read. The JSON lists TODOs per lane: new channel relays are not inserted yet, only the
+  census longest chain is removed (taps need review), and MX/MY blocks may mirror bit order.
+
+## 5. checks.py (GRT probe harness; every probe writes DIR/run.sh + probe.tcl, --run executes it -> DIR/grt.json)
+
+    python3 tools/die_feedthrough/checks.py extract-lef --odb DIE.odb --masters M1,M2 --out DIR [--run]
+    python3 tools/die_feedthrough/checks.py abstract-probe SPEC.json --lef MASTER.lef --out DIR [--layers M8-M9] [--run]
+    python3 tools/die_feedthrough/checks.py block-probe SPEC.json --odb BLOCK_PLACED.odb --out DIR [--signal M2-M9] [--run]
+    python3 tools/die_feedthrough/checks.py die-probe --odb DIE.odb --out DIR [--plan PLAN.json --drop-pushed] [--eco die_eco.tcl] [--run]
+    python3 tools/die_feedthrough/checks.py parse GRT.log
+
+- `extract-lef`: runs `odb.write_lef` on the die-case library that holds each master. Use it when the abstract only
+  exists inside the die ODB.
+- `abstract-probe`: ft traffic over the exported abstract. The DEF has die = outline, the macro FIXED, and one
+  in -> out 2-pin net per ft bit on the spec pins. GRT runs on the ft layers only. Overflow > 0 means the abstract's
+  M8/M9 OBS or the face width cannot carry the ft.
+- `block-probe`: the block's placed ODB plus the ft pins and nets, with GRT on the block's signal layers.
+- `die-probe`: a read-only die GRT. `--drop-pushed` deletes the channel relays of the pushed lanes, which gives an
+  UPPER BOUND on the channel relief. `--eco` sources pushdown.py's die ECO instead.
+- Docker uses `--memory = --memory-swap`. This is a short diagnostic (owner 10-23); keep >= 64 GB physical headroom.
+
 ## Tests
     python3 -m pytest -q tools/die_feedthrough/
+

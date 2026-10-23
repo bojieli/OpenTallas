@@ -332,7 +332,8 @@ def run(die, census_path, dump_dir, out_dir, policy="straight", ft_reg="inout", 
                 face = geom.nearest_face(mx, my, 0, 0, W, H)
                 horiz = face in ("W", "E")
                 pitch = pitch_h if horiz else pitch_v
-                width = lane["bits"] * pitch / occupancy
+                # a forwarded-clock path carries its clock bit beside the data bits
+                width = (lane["bits"] + (1 if ft_clock == "forwarded" else 0)) * pitch / occupancy
                 off = my if horiz else mx
                 return dict(name=name, path=k, dir=d, face=face, lo=round(off - width / 2, 3),
                             hi=round(off + width / 2, 3), layer=lay_h if horiz else lay_v, bits=lane["bits"],
