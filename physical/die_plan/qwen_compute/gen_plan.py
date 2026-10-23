@@ -36,6 +36,12 @@ import json
 import math
 import re
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "tools" / "die_plan"))
+import schema as _S  # noqa: E402  (PLAN-TOOL pin rule: window sizing uses the exact G0 pin placement)
+
+_LAYERS = {L["name"]: L for L in _S.ASAP7_LAYERS}
 
 G = 8.64                             # die lattice: PLAN-TOOL G0 needs a multiple of every M2-M9 pitch (2.16 is not a multiple of 0.064)
 G8 = 8.64
@@ -161,6 +167,7 @@ def shared_face(P, a, b, quiet=False):
 
 PITCH = {"M4": (0.048, 0.024), "M5": (0.048, 0.024), "M6": (0.064, 0.032), "M7": (0.064, 0.032)}
 PIN_MAX = 5.8                          # pins/um the laid window may reach at its worst 10-um span (G0 budget 6)
+FACE_MAX = 6.0                         # QC-P2: per-window pins/um by the tool rule (G0 = 6/um + 2 pins/layer allowance)
 _QL = {}
 
 
@@ -188,31 +195,30 @@ def _pins(lo, hi, w, layers):
 
 
 def qlen(width, dens, layers, lo=100.0, flip=False):
-    """smallest window length (from width/PIN_MAX up) whose pins stay <= PIN_MAX/um in every 10-um span, for a window
-    starting at lo and at the other track phases a 2.16-um-lattice instance of the same type can have."""
-    lo = lo % 0.192
-    key = (width, tuple(layers), round(lo, 4), flip)
+    """smallest window length (from width/FACE_MAX up, 0.016 steps) at its ACTUAL die position (lattice 8.64: the same
+    pins in every frame) whose pins, laid by the PLAN-TOOL rule itself (schema.pin_positions: coordinate-uniform
+    spread, never on a partition PG stripe band), stay <= FACE_MAX/um in every 10-um span.  QC-P2: the old replica of
+    the pin rule ignored the PG bands (G0 failed 1-bit ports whose window sat inside an M5/M7 band)."""
+    key = (width, tuple(layers), round(lo % G, 4), flip)
     if key in _QL:
         return _QL[key]
-    L = max(0.384, math.ceil(width / PIN_MAX / 0.016) * 0.016)
+    L = max(0.384, math.ceil(width / FACE_MAX / 0.016) * 0.016)
     while True:
-        ok = True
-        for ph in range(4):
-            a = 100.0 + lo + ph * 2.16 - (L if flip else 0.0)
-            cs = _pins(a, a + L, width, layers)
-            if cs is None:
-                ok = False
-                break
+        win = [lo - L, lo] if flip else [lo, lo + L]
+        try:
+            cs = sorted(c for _, _, c in _S.pin_positions(
+                {"id": "q", "window_um": win, "layers": list(layers), "width": width, "epoch": False}, _LAYERS))
+        except ValueError:
+            cs = None
+        ok = cs is not None
+        if ok:
             j = 0
             for i in range(len(cs)):
                 while cs[i] - cs[j] > 10.0 - 1e-6:
                     j += 1
-                if (i - j + 1) > PIN_MAX * 10.0 + 1e-6:
+                if (i - j + 1) > FACE_MAX * 10.0 + 1e-6:
                     ok = False
                     break
-            if not ok or len(cs) > PIN_MAX * (L + GAP) + 1e-6:
-                ok = False
-                break
         if ok:
             _QL[key] = round(L, 4)
             return _QL[key]
@@ -348,8 +354,11 @@ SL_CELLS_W = {"hc0": (0, 3), "hc1": (1, 3), "hc2": (2, 3), "hc3": (3, 3),
               "st_b": (0, 2), "ctl": (1, 2), "tap": (2, 2), "st_a": (3, 2),
               "fw": (0, 1), "stm": (1, 1), "sc": (2, 1), "fe": (3, 1),
               "su_l1": (0, 0), "su_c": [(1, 0), (2, 0)], "su_l0": (3, 0)}
-SL_CELLS_E = {r: ([(3 - c, y) for c, y in v] if isinstance(v, list) else (3 - v[0], v[1])) for r, v in SL_CELLS_W.items()}
-SL_CELLS_E.update({"hc0": (0, 3), "hc1": (1, 3), "hc2": (2, 3), "hc3": (3, 3)})
+# E slices: SAME layout as W (QC-P2 10-23, census coverage).  The as-built die places the e16real kit MY, so every
+# slice has its dn face (fw: ch_dn/st_dn/l9/... = census *_eo on E slices) physically on the W edge: the inter-slice
+# chain is linear E5 -> .. -> E0 -> W0 -> .. -> W5 (census pins: dvs_E1 ard_eo leaves at E1's W edge x=20001.6).  The
+# v2 mirrored E layout put fw on the E edge, so slice-to-slice traffic could not abut (57.8k bits were dropped).
+SL_CELLS_E = dict(SL_CELLS_W)
 REGION_OF = {"r_fw": "fw", "r_fe": "fe", "r_stm": "stm", "r_ctl": "ctl", "r_sc": "sc", "r_su": "su_c",
              "r_tap": "tap", **{f"r_hc{i}": f"hc{i}" for i in range(4)},
              **{f"r_st{i}": ("st_a" if i < 4 else "st_b") for i in range(8)}}
@@ -656,19 +665,29 @@ def build_west(P, census_blocks):
         P.add_part(n, tn, *xy, orient)
 
 
-def census_links(P, geo, census, fp_pins):
+def census_links(P, geo, census, fp_pins, face_map):
     cname = geo["col_name"]
     col_of = {f"dvs_{n}": k for k, n in enumerate(cname)}
     face_reg = {"w": {"W": "fw", "E": "fe"}, "e": {"W": "fe", "E": "fw"}}
+    brect = {b["inst"]: (b["x"], b["y"], b["w"], b["h"]) for b in census["blocks"]}
+    l9_flip = collections.Counter()
 
-    def part_of(inst, bus):
+    def part_of(inst, bus, pt=None):
         if inst in col_of:
+            # slice: the census pin's PHYSICAL face picks the face partition (W edge = fw, E edge = fw's neighbour fe;
+            # every slice has the same layout, SL_CELLS_E).  The kit face (die bus -> core port via the face wrapper
+            # -> fp pins) agrees for every bus except the l9 pair word on E slices (paired toward the die centre:
+            # E1 -> E0 leaves W, W1 -> W0 leaves E); counted in plan_notes census_coverage.l9_face_flip_bits.
             k = col_of[inst]
             side = "w" if k < 6 else "e"
-            f = fp_pins[side].get(bus)
-            if f not in ("W", "E"):
+            x, y, w, h = brect[inst]
+            f = "W" if abs(pt[0] - x) < 1.0 else ("E" if abs(pt[0] - x - w) < 1.0 else None)
+            if f is None:
                 return None
-            return sl(geo, k, face_reg[side][f])
+            fk = fp_pins[side].get(face_map[side].get(bus, bus))
+            if fk in face_reg[side] and face_reg[side][fk] != {"W": "fw", "E": "fe"}[f]:
+                l9_flip[(inst, bus)] += 1
+            return sl(geo, k, {"W": "fw", "E": "fe"}[f])
         if inst in GLUE_INSTS:
             return "glue"
         if inst in COLL_INSTS or inst == "io_ucie":
@@ -678,21 +697,30 @@ def census_links(P, geo, census, fp_pins):
         return None
     seen = set()
     dropped = collections.Counter()
+    cov = P.cov
     for g in census["groups"]:
         if g["src"].startswith("c16") or g["dst"].startswith("c16"):
+            cov["c16"].append(g)                  # CB groups: checked against the plan CB/slice links (coverage())
             continue
-        s, d = part_of(g["src"], g["src_bus"]), part_of(g["dst"], g["dst_bus"])
-        if s is None or d is None:
-            dropped[(g["src"].split("_")[0], g["dst"].split("_")[0], g["kind"])] += g["bits"]
-            continue
-        if s == d:
-            continue
-        if g["kind"] == "reset":
-            dropped[("reset", g["src"], g["dst"])] += g["bits"]
+        fs, fd = g["src"].startswith("flt_"), g["dst"].startswith("flt_")
+        if g["kind"] == "reset" or g["src"].startswith("rstseq"):
+            cov["replaced_reset"].append(g)       # per-partition 2-stage reset sync on the die async net
             continue
         if g["src"] == "clk_rx":
-            dropped[("clock", g["src"], g["dst"])] += g["bits"]
+            cov["replaced_clock"].append(g)       # die clock spine + per-partition tap
             continue
+        if fs or fd:
+            cov["fault_tree"].append(g)           # as-built flt_root/hop chain -> the plan 1-bit OR tree
+            continue
+        s, d = part_of(g["src"], g["src_bus"], g["src_pt"]), part_of(g["dst"], g["dst_bus"], g["dst_pt"])
+        if s is None or d is None:
+            dropped[(g["src"].split("_")[0], g["dst"].split("_")[0], g["kind"])] += g["bits"]
+            cov["dropped"].append(g)
+            continue
+        if s == d:
+            cov["internal"].append(g)
+            continue
+        cov["planned"].append(g)
         key = (s, g["src"], g["src_bus"], d, g["dst"], g["dst_bus"])
         if key in seen:
             continue
@@ -706,6 +734,7 @@ def census_links(P, geo, census, fp_pins):
         P.link(role, path, sb, db, g["bits"], kind=kind,
                src_leaf=f"u_{g['src'] if not s.startswith('sl_') else 'f'}.{g['src_bus']}",
                dst_leaf=f"u_{g['dst'] if not d.startswith('sl_') else 'f'}.{g['dst_bus']}")
+    P.l9_flip = sorted({b for (_, b) in l9_flip})
     cnt = collections.Counter((lk["path"][0], lk["src_bus"]) for lk in P.links)
     for lk in P.links:
         if cnt[(lk["path"][0], lk["src_bus"])] > 1:
@@ -731,6 +760,59 @@ def clone_s2_types(P):
             P.types[new]["note"] += "; W5 far-bottom: carries the serdes S2 <-> coll ft slots"
             P.cells[new] = P.cells.get(tn)
         P.parts[n]["type"] = new
+
+
+def coverage(P, census):
+    """census coverage (GEOM-REVIEW2 06:26 FAIL, COORD 06:4x): every as-built bit is a planned port/lane, internal to one
+    partition, or replaced by plan structure (reset sync, clock spine, fault OR tree).  CB groups (c16_*) are matched
+    to the plan CB / slice links by role: bco_k -> bc_k = bcf{k} (near -> far); cw_{n,s}{k} = cw{n,s}{k}; rs / rs_o =
+    rsn / rsf (the census types the 514-b level-7 rs word as 'reset' by name; it is data, planned at RSW)."""
+    roles = collections.Counter()
+    width = collections.defaultdict(int)
+    for lk in P.links:
+        roles[lk["role"]] += 1
+        width[lk["role"]] = max(width[lk["role"]], lk["width"])
+    out = collections.Counter()
+    bad = []
+    need = collections.Counter()
+    for g in P.cov["c16"]:
+        sb, db = g["src_bus"], g["dst_bus"]
+        if g["src"].startswith("rstseq") or sb.startswith("rso"):
+            out["replaced_reset"] += g["bits"]
+            continue
+        m = re.match(r"^bco(\d)$", sb)
+        mc = re.match(r"^cw_([ns])(\d)$", sb)
+        if m:
+            role = f"bcf{m.group(1)}"
+        elif mc:
+            role = f"cw{mc.group(1)}{mc.group(2)}"
+        elif sb in ("rs", "rs_o"):
+            role = "rsn" if (sb == "rs" and g["dst"].startswith("dvs")) else "rsf"
+        else:
+            role = None
+        if role is None or roles[role] == 0 or width[role] < g["bits"]:
+            bad.append((g["src"], sb, g["dst"], db, g["bits"]))
+            out["dropped"] += g["bits"]
+            continue
+        need[role] += 1
+        out["planned_cb"] += g["bits"]
+    for role, n in need.items():
+        if role != "rsf" and roles[role] < n:
+            bad.append((role, f"{roles[role]} plan links < {n} census groups"))
+    for k in ("planned", "internal", "replaced_reset", "replaced_clock", "fault_tree", "dropped"):
+        out[k] += sum(g["bits"] for g in P.cov.get(k, []))
+    # every fault source outside the chain reaches a plan fault lane from its partition
+    fsrc = sorted({g["src"] for g in P.cov.get("fault_tree", []) if not g["src"].startswith("flt_")})
+    lane_from = {lk["path"][0] for lk in P.links if lk["role"].startswith("flt")}
+    owner = {i: "io_collective" for i in COLL_INSTS}
+    owner.update({i: "glue" for i in GLUE_INSTS})
+    unplanned = [i for i in fsrc if owner.get(i, i) not in lane_from and owner.get(i, i) != "glue"]
+    total = sum(g["bits"] for g in census["groups"])
+    rep = {"census_bits": total, **{k: out[k] for k in sorted(out)},
+           "accounted": sum(out.values()), "unaccounted": total - sum(out.values()),
+           "fault_sources": fsrc, "fault_sources_without_plan_lane": unplanned,
+           "l9_face_flip_buses": getattr(P, "l9_flip", []), "cb_mismatches": bad[:20]}
+    return rep
 
 
 def ws_path(P, s, d):
@@ -775,7 +857,7 @@ def fault_links(P, variant, geo):
             P.link("flt", [chain[-1], entry], "flt_o", f"flt_{fs}_i", 1, kind="ctl", src_leaf="u_pstn.flt_o",
                    dst_leaf="u_pstn.flt_cl")
         # slice: BFS tree to the W-flowing face partition (fw on W slices, fe on E slices)
-        root = sl(geo, k, "fw" if side == "w" else "fe")
+        root = sl(geo, k, "fw")                          # fw is the W-edge partition of every slice
         names = [n for n in P.parts if n.startswith(f"sl_{geo['col_name'][k]}_")]
         seen, q = {root}, [root]
         while q:
@@ -788,7 +870,7 @@ def fault_links(P, variant, geo):
                            src_leaf="u_pstn.flt_o", dst_leaf="u_pstn.flt_i")
         # slice -> W neighbour (E -> W chain: its E-face partition is fe on W slices, fw on E slices); W5 -> coll
         if k > 0:
-            dst = sl(geo, k - 1, "fe" if k - 1 < 6 else "fw")
+            dst = sl(geo, k - 1, "fe")
             P.link("flte", [root, dst], "flt_wo", "flt_e_i", 1, kind="ctl", src_leaf="u_pstn.flt_o",
                    dst_leaf="u_pstn.flt_e")
         else:
@@ -1061,12 +1143,15 @@ def merge_types(P):
 # ====================================================================== main
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--variant", choices=("A", "B"), default="A")
+    ap.add_argument("--variant", choices=("A", "B"), default="B",
+                    help="B = CB quads (COORD 10-23 06:41 VARIANT B CHOSEN, the main plan); A = per-A0 CB partitions (archived: regenerate on demand)")
     ap.add_argument("--census", required=True)
     ap.add_argument("--slice-fp-w", required=True)
     ap.add_argument("--slice-fp-e", required=True)
     ap.add_argument("--slice-record", required=True)
     ap.add_argument("--su-split", required=True, help="slice_grid.json (su core <-> lane-group bits)")
+    ap.add_argument("--slice-face-map", required=True,
+                    help="slice2_face_map.json (slice_face_map.py: die slice bus -> slice core port)")
     ap.add_argument("--out", default=str(Path(__file__).with_name("die_plan.json")))
     a = ap.parse_args()
     global VARIANT
@@ -1078,6 +1163,7 @@ def main():
     su_split = json.loads(Path(a.su_split).read_text())["su_split_bits"]
     cblocks = {b["inst"]: b["master"] for b in census["blocks"]}
     P = Plan()
+    P.cov = collections.defaultdict(list)
     col_x = [WS_W + k * CLW for k in range(NCOL)]
     col_name = [f"W{5 - k}" for k in range(6)] + [f"E{k}" for k in range(6)]
     y_sl = 2 * CLH
@@ -1091,8 +1177,10 @@ def main():
     cb_links(P, a.variant, geo)
     slice_cluster_links(P, a.variant, geo)
     slice_internal_links(P, geo, record, su_split)
-    dropped = census_links(P, geo, census, fp_pins)
+    face_map = json.loads(Path(a.slice_face_map).read_text())
+    dropped = census_links(P, geo, census, fp_pins, face_map)
     fault_links(P, a.variant, geo)
+    cov = coverage(P, census)
     ports, lanes = materialize(P)
     merged = merge_types(P)
     bind_leaves(P)
@@ -1156,6 +1244,7 @@ def main():
              "cell_estimate_method": f"A0 = {A0_CELLS} cells (NL rpf synth_stat incl. 10 ROM leaf macros); other "
                                      f"leaves = outline area x {UTIL} / {CELL_UM2} um2 per cell (A0 calibration); "
                                      "soft slice glue / W-strip blocks = per-region guesses (SOFT_CELLS/WS_CELLS)",
+             "census_coverage": cov,
              "census_dropped_bits": {"|".join(map(str, k)): v for k, v in sorted(dropped.items())}}
     Path(a.out).with_name("plan_notes.json").write_text(json.dumps(notes, indent=1) + "\n")
     print(json.dumps({k: v for k, v in notes.items() if k not in ("census_dropped_bits", "cells_per_type")}))
