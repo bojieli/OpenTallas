@@ -44,9 +44,10 @@ SNAP = 0.192
 TR = dict(M4=(0.048, 0.024), M5=(0.048, 0.024), M6=(0.064, 0.032), M7=(0.064, 0.032),
           M8=(0.080, 0.040), M9=(0.080, 0.040))   # pitch, offset (PLAN-TOOL symmetric tracks)
 # COORD S81 ruling (1)(b) 10-23 07:43: the svc fold faces (svc_2k N | svc_2k+1 S, ~9.0 kb on a 1.44-mm face) take a
-# third pin layer from the reserved die budget: M8 (PLAN-TOOL @7f9f10e1d partition_types.<t>.face_layers; M8 pins
-# avoid the die M8 PG bands; the kit routes M2-M8).  On the N/S fold face an M8 pin is reached by via7 down to M7.
-FOLD_GRANT = [] if os.environ.get("S81_V4_NOGRANT") else ["M8"]
+# third pin layer from the reserved die budget via partition_types.<t>.face_layers (PLAN-TOOL @7f9f10e1d).  The fold
+# face is N/S, and the tool requires a vertical pin layer there (M8 is H -> 'layer M8 is H, a S face needs V'), so the
+# grant is M9, the vertical die layer (die M9 PG bands avoided; the kit routes M2-M9 and obstructs the die M8/M9 bands).
+FOLD_GRANT = [] if os.environ.get("S81_V4_NOGRANT") else ["M9"]
 STATS_V4 = {}
 
 
