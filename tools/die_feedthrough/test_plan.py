@@ -60,7 +60,7 @@ def test_plan_neighbour_alignment_and_specs():
     bi = [x for x in b["ports"] if x["dir"] == "input"][0]
     assert ao["face"] == "E" and bi["face"] == "W" and ao["layer"] == "M8"
     assert (ao["lo"], ao["hi"]) == (bi["lo"], bi["hi"])                      # abutting ports line up
-    assert ao["hi"] - ao["lo"] == 64 * 0.08 / 0.6 or abs(ao["hi"] - ao["lo"] - 64 * 0.08 / 0.6) < 1e-3
+    assert abs(ao["hi"] - ao["lo"] - 107 * 0.08) < 1e-3                      # ceil(64 / 0.6) tracks
     assert a["variant"] == b["variant"]                                       # identical crossings: one hardening
     assert a["paths"][0]["stages"] == 3 and lane["stages_new"] >= 6
     assert js["summary"]["keep_channel"] == 0

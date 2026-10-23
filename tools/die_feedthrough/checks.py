@@ -26,6 +26,7 @@ memory on the host; keep >= 64 GB physical headroom).
 """
 import argparse
 import json
+import math
 import os
 import re
 import subprocess
@@ -76,7 +77,7 @@ def bit_offsets(lo, hi, bits, pitch):
         return []
     first = round(lo / pitch + 0.5) * pitch
     span = max(0.0, hi - lo - pitch)
-    step = max(pitch, round((span / max(1, bits - 1)) / pitch) * pitch) if bits > 1 else pitch
+    step = max(pitch, math.floor((span / max(1, bits - 1)) / pitch + 1e-9) * pitch) if bits > 1 else pitch
     return [round(first + k * step, 4) for k in range(bits)]
 
 
@@ -111,17 +112,33 @@ def d(v):
     return int(round(v * DBU))
 
 
+def dedupe_pins(pins):
+    """drop ft bits whose in or out pin lands on a track already taken on that face (overlapping port bands in the
+    spec = plan track overflow); -> (kept, dropped count)."""
+    used = set()
+    kept = []
+    for p in pins:
+        ka = (p[3][0], round(p[3][1], 3), round(p[3][2], 3))
+        kb = (p[4][0], round(p[4][1], 3), round(p[4][2], 3))
+        if ka in used or kb in used:
+            continue
+        used.update((ka, kb))
+        kept.append(p)
+    return kept, len(pins) - len(kept)
+
+
 def abstract_def(spec, macro_name=None):
     W, H = spec["outline"]
-    pins = ft_pins(spec)
+    pins, _ = dedupe_pins(ft_pins(spec))
     lines = ["VERSION 5.8 ;", "DIVIDERCHAR \"/\" ;", "BUSBITCHARS \"[]\" ;", "DESIGN ftprobe ;",
              f"UNITS DISTANCE MICRONS {DBU} ;", f"DIEAREA ( 0 0 ) ( {d(W)} {d(H)} ) ;"]
+    # one placement row: GRT sizes its gcells from the row height (15 x 0.27 um); without rows it OOMs
+    lines.append("ROW ROW_0 asap7sc7p5t 0 0 N DO 1 BY 1 STEP 54 0 ;")
     for n, p, dr in LAYERS:
-        # horizontal layer -> TRACKS Y (wires run along x)
-        if dr == "H":
-            lines.append(f"TRACKS Y {d(p)} DO {int(H / p)} STEP {d(p)} LAYER {n} ;")
-        else:
-            lines.append(f"TRACKS X {d(p)} DO {int(W / p)} STEP {d(p)} LAYER {n} ;")
+        # GRT wants both track directions on every layer (preferred one first)
+        ty = f"TRACKS Y {d(p)} DO {int(H / p)} STEP {d(p)} LAYER {n} ;"
+        tx = f"TRACKS X {d(p)} DO {int(W / p)} STEP {d(p)} LAYER {n} ;"
+        lines += [ty, tx] if dr == "H" else [tx, ty]
     lines += ["COMPONENTS 1 ;", f"- u_blk {macro_name or spec['master']} + FIXED ( 0 0 ) N ;", "END COMPONENTS"]
     lines.append(f"PINS {2 * len(pins)} ;")
     for net, a, b, ra, rb in pins:
@@ -175,8 +192,11 @@ read_def /work/ftprobe.def
 """ + grt_tail(a.layers, a.adjust, a.iters))
     (out / "run.sh").write_text(run_sh(out, a.mem))
     os.chmod(out / "run.sh", 0o755)
+    _, dropped = dedupe_pins(ft_pins(spec))
     meta = dict(kind="abstract-probe", spec=str(a.spec), lef=str(lef), ft_bits=sum(q["bits"] for q in spec["paths"]),
-                layers=a.layers)
+                layers=a.layers, overlapping_bits_dropped=dropped)
+    if dropped:
+        print(f"WARNING {dropped} ft bits overlap another port band on the same face (plan track overflow); dropped")
     (out / "probe.json").write_text(json.dumps(meta, indent=1))
     return finish(a, out)
 
@@ -243,12 +263,32 @@ def cmd_die(a):
         plan = json.load(gzip.open(p, "rt") if p.suffix == ".gz" else open(p))
         rel = pushed_relays(plan)
         (out / "drop_relays.txt").write_text("\n".join(rel) + "\n")
-        pre += ["set nd 0",
+        pre += ["set nd 0; set nb 0",
+                "# the repeater (buffer) trees on a dropped relay's DATA nets go with it (reset / clock trees are shared: kept)",
+                "proc ft_buf_tree {net} {",
+                "  set out {}; set todo [list $net]; set seen [dict create]",
+                "  while {[llength $todo]} {",
+                "    set n [lindex $todo end]; set todo [lrange $todo 0 end-1]",
+                "    if {$n eq \"NULL\" || [dict exists $seen [$n getName]]} continue",
+                "    dict set seen [$n getName] 1",
+                "    foreach it [$n getITerms] {",
+                "      set i [$it getInst]; set m [[$i getMaster] getName]",
+                "      if {![regexp {^(BUF|INV|HB\\d|CKBUF|CKINV)} $m]} continue",
+                "      if {[lsearch -exact $out $i] >= 0} continue",
+                "      lappend out $i",
+                "      foreach o [$i getITerms] { if {[[$o getMTerm] getSigType] ni {POWER GROUND}} { lappend todo [$o getNet] } }",
+                "    }",
+                "  }",
+                "  return $out",
+                "}",
                 "foreach nm [split [string trim [read [open /work/drop_relays.txt]]] \"\\n\"] {",
                 "  set i [$blk findInst $nm]; if {$i eq \"NULL\"} continue",
+                "  set bufs {}",
+                "  foreach it [$i getITerms] { if {![regexp {^(i|o|a|b|y|d|q[0-9]*)(\\[|$)} [[$it getMTerm] getName]]} continue; set n [$it getNet]; if {$n ne \"NULL\" && [$n getSigType] eq \"SIGNAL\"} { set bufs [concat $bufs [ft_buf_tree $n]] } }",
                 "  odb::dbInst_destroy $i; incr nd",
+                "  foreach b [lsort -unique $bufs] { if {![catch {odb::dbInst_destroy $b}]} { incr nb } }",
                 "}",
-                "puts \"OT_DROPPED_RELAYS $nd\""]
+                "puts \"OT_DROPPED_RELAYS $nd OT_DROPPED_BUFFERS $nb\""]
         meta.update(drop_pushed=True, dropped=len(rel), plan=str(p),
                     note="upper bound: the pushed lanes' die wiring is removed (absorbed by the hosting blocks)")
     if a.eco:
@@ -320,7 +360,7 @@ def main(argv=None):
     s.add_argument("--layers", default="M8-M9")
     s.add_argument("--adjust", default="")
     s.add_argument("--iters", type=int, default=30)
-    s.add_argument("--mem", type=int, default=16)
+    s.add_argument("--mem", type=int, default=48)
     s.add_argument("--run", action="store_true")
     s = sub.add_parser("block-probe")
     s.add_argument("spec")
