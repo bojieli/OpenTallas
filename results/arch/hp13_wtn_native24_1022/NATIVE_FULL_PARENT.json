@@ -1,0 +1,52 @@
+[
+  {
+    "kind": "main-20261022-215157",
+    "path": "/srv/opentallas-scratch/claude/ref_gate/qfd_hp13_cpub39_wtn24_main-20261022-215157/routes/gate/work/orfs/native_census.json",
+    "sha256": "f1f56c82183c385bb8511c1d3d191b614ed3771f9dc19259cc9150ba6a800957",
+    "summary": {
+      "schema": "opentallas.pre_gate_native_census.v1",
+      "kit": "qfd_hp13_cpub39_wtn24_main",
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "be848b157283c1c3b0697ff4367cea295945f164fa1701a5c7ac4304d31ae482"
+      },
+      "top": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+      "status": "PASS",
+      "limit": 32,
+      "roots_examined": 156434,
+      "max_dynamic_loads": 32,
+      "constant_output_bits": [],
+      "constant_conflicts": [],
+      "functional_pin_contract": "NOT_EVALUATED",
+      "pin_registration_contract": "NOT_EVALUATED",
+      "storage_contract": "NOT_EVALUATED",
+      "role_errors": [],
+      "violations": []
+    }
+  },
+  {
+    "kind": "alt-20261022-215200",
+    "path": "/srv/opentallas-scratch/claude/ref_gate/qfd_hp13_cpub39_wtn24_alt-20261022-215200/routes/gate/work/orfs/native_census.json",
+    "sha256": "3243c4dc35ec3e2c5d07b9f5b5bbbd9005140127abeb48f5494132f9ab7d9a9d",
+    "summary": {
+      "schema": "opentallas.pre_gate_native_census.v1",
+      "kit": "qfd_hp13_cpub39_wtn24_alt",
+      "netlist": {
+        "path": "/work/results/asap7/opentallas_qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2_asap7_ref_gate/base/1_2_yosys.v",
+        "sha256": "9a47f93a2ec35b209d5f1c5b7fbd2665bed4993cf8a645cf167c6f404614b3fd"
+      },
+      "top": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2",
+      "status": "PASS",
+      "limit": 32,
+      "roots_examined": 156473,
+      "max_dynamic_loads": 32,
+      "constant_output_bits": [],
+      "constant_conflicts": [],
+      "functional_pin_contract": "NOT_EVALUATED",
+      "pin_registration_contract": "NOT_EVALUATED",
+      "storage_contract": "NOT_EVALUATED",
+      "role_errors": [],
+      "violations": []
+    }
+  }
+]

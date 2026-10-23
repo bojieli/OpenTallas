@@ -6,8 +6,8 @@ This candidate expands the exact frozen F16 wrapper/controller using the existin
 
 The parent reset witness input moves from leaf n96145 (native33) to spare n96154. Both leaf Q signals have exactly the same clock and same-age D; their two upstream D producers have identical C,D. SOURCE.json records that proof. No reset stage is added or removed.
 
-Two new kits qfd_hp13_cpub39_wtn24_main/alt retain the original outlines,19 genuine memory macros, source interfaces, clocks and uncertainties. Actual mapped-native and layout results are pending. These candidates are not qualified or adopted by a die yet. Originals remain unchanged.
+Two new kits qfd_hp13_cpub39_wtn24_main/alt retain the original outlines,19 genuine memory macros, source interfaces, clocks and uncertainties. Actual mapped-native census passes on both full parents: max32, zero violations; immutable report hashes and mapped netlist hashes are in NATIVE_FULL_PARENT.json. Layout and timing remain pending. These candidates are not qualified or adopted by a die yet. Originals remain unchanged.
 
-Safe-design checklist: pins/source ages preserved; reach/clock/area require actual gate; no new storage; kept native copies target fanout<=32 with internal cap24; SRAM/ROM unchanged; no schedule latency change. Source provenance and exact lockstep evidence are attached. Full native/layout closure remains required.
+Safe-design checklist: pins/source ages preserved; reach/clock/area require actual gate; no new storage; kept native copies target fanout<=32 with internal cap24; SRAM/ROM unchanged; no schedule latency change. Source provenance and exact lockstep evidence are attached. Layout/timing closure remains required.
 
 Reproduction: run the frozen witness/wrapper through wtn.ys using Yosys0.68, then construct.py with the pinned constructor. Mechanical helper prefix change is recorded in SOURCE.json. bench.sh compares the resulting native face against the exact source SAFE_PHYS controller over the committed28 stimuli and BEGIN. All heavy work was admitted through ot-run.
