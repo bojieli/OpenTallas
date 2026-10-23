@@ -1,0 +1,61 @@
+{
+  "rtl/physical/ot_qw_land4_n32.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32.sv",
+    "sha256": "329c3402f1d790546f3d9a15fd1e67233b379cc0c6d4655bdf8e59fcba262e6a",
+    "source_commit": "9873bd831"
+  },
+  "rtl/physical/ot_qw_land4_n32_select.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32_select.sv",
+    "sha256": "0d37babe0091da00211a2f4f1f6f5e17b2fd8aaa9995919bc0b329590f55d4ec",
+    "source_commit": "9873bd831"
+  },
+  "rtl/hdc/ot_qwen_me_array_w12.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/ot_qwen_me_array_w12.sv",
+    "sha256": "8be46265367a6b6879783cf3ffeeee2bbb62bbc6125f3839bbf083d34a418f5d",
+    "source_commit": "9873bd831",
+    "scope": "existing component bench dependency"
+  },
+  "rtl/hdc/ot_qwen_rom_tile_w12_land32.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+    "sha256": "3fedd812665e6c9d8aa633e25372bc5569de70e20537c6590036ecff01a20503",
+    "source_commit": "9873bd831"
+  },
+  "rtl/hdc/ot_qwen_w12_matvec_land32.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+    "sha256": "42495df5c86f684ef4865db1e48af715fcc65d33fd0e69f032a2b645b3edc37f",
+    "source_commit": "9873bd831"
+  },
+  "rtl/physical/qfd_tile_nk_rp2_45.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+    "sha256": "a67e2be7ab583dc43fc16aa34fb3f79817003cd2a96b68b7a0cd32fd31242c68",
+    "source_commit": "9873bd831",
+    "scope": "existing component bench dependency"
+  },
+  "rtl/physical/qfd_tile_nk_rp2_romleaf_rr.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv",
+    "sha256": "1027a061b0776678c74809ac0a781df1c088783a6ececa4af5d1bc0b66c8015a",
+    "source_commit": "9873bd831"
+  },
+  "rtl/physical/qfd_tile_nl_rp2_45.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
+    "sha256": "ab8c811cd31f99c992bd8bde8323b6d7b15c02e8027742b239aa99db64518455",
+    "source_commit": "9873bd831"
+  },
+  "rtl/physical/qfd_tile_nl_rp2_romleaf_rr.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_romleaf_rr.sv",
+    "sha256": "c5a2a44092544921f7b2a83653966c6e5da8e63056fcd9393455e70c7d6bfcab",
+    "source_commit": "9873bd831"
+  },
+  "rtl/hdc/ot_qwen_rom_tile_w12.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12.sv",
+    "sha256": "1a15bff269c40148093d0f7792d1e49825fc929b66efe153e3fe3f2ee79e90be",
+    "source_commit": "9873bd831",
+    "scope": "existing component bench dependency"
+  },
+  "rtl/hdc/ot_qwen_w12_matvec.sv": {
+    "selected": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+    "sha256": "aaa6b61c5df3d475b67d4be2ca9593b55bc00c167035aba61b9ed2b27338b5b6",
+    "source_commit": "9873bd831",
+    "scope": "existing component bench dependency"
+  }
+}
