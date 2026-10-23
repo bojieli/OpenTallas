@@ -212,7 +212,144 @@ def write(spec, hand=None):
     print('wrote', d / 'spec.json')
 
 
+# ---------------------------------------------------------------------------------------------- face cluster parent
+# CB16c-COLL2 10-22: wires-only parent qfd_coll_face_cx = body + 12 edge slices, every child clock pin on its own face
+# entry (clock "entries"): the body's 12 roots + 12 regional slice entries (cal_ck_t* / rx_rck_r* / codec0p_t* / codec0p_r*,
+# fed by the die from the same face_ck bits as cal_ck / rx_rck / codec0p).  Slice columns 21.6 um W and E, 4.32-um channels
+# to the body, 8.64-um core margin; slices stacked at a 151.2 pitch (5.4-um channel above each slice carries its ck entry).
+# W column: rx slices (MY: d faces the body) at the bottom under the body rx band, tx slices on top under the tx band;
+# E column: phy_rx slices (MY) at the bottom beside the phy_rx window, phy_tx slices on top.  Parent signals M2-M7.
+CX_PROF = {'s0': dict(HARD=1, PHY=350, L=383, R=0, PEER_R=5), 'p': dict(HARD=2, PHY=20, L=58, R=5, PEER_R=5),
+           'r': dict(HARD=1, PHY=20, L=58, R=5, PEER_R=5)}   # COLLIO-SR2: R face (FW 514), bench profile r L0 56 + 2
+CX_M, CX_CH, CX_SW, CX_SH, CX_PITCH = 8.64, 4.32, 21.6, 146.88, 151.2   # slice view 21.6 x 146.88
+
+
+def cx_spec(prof):
+    body = json.loads((RT / f'qfd_cb16c_{prof}_body' / 'spec.json').read_text())
+    xw, xb = CX_M, CX_M + CX_SW + CX_CH
+    xe = xb + W_BODY + CX_CH
+    W, Hh = round(xe + CX_SW + CX_M, 2), round(H + 2 * CX_M, 2)
+    ys = [round(CX_M + i * CX_PITCH, 2) for i in range(6)]
+    v = lambda kit, top: f'physical/ref_tile/{kit}/views/{top}'
+    ch = [{'view': v(f'qfd_cb16c_{prof}_body', f'qfd_coll_face_{prof}_cxb'), 'count': 1, 'inst': '*u_core', 'at': [xb, CX_M]}]
+    for i in range(3):
+        ch.append({'view': v('qfd_cb16c_es182', 'qfd_coll_eslice182'), 'count': 1, 'inst': f'*u_rxs{i}', 'at': [xw, ys[i]], 'orient': 'MY'})
+        ch.append({'view': v('qfd_cb16c_es182', 'qfd_coll_eslice182'), 'count': 1, 'inst': f'*u_txs{i}', 'at': [xw, ys[3 + i]]})
+        ch.append({'view': v('qfd_cb16c_es199', 'qfd_coll_eslice199'), 'count': 1, 'inst': f'*u_prs{i}', 'at': [xe, ys[i]], 'orient': 'MY'})
+        ch.append({'view': v('qfd_cb16c_es199', 'qfd_coll_eslice199'), 'count': 1, 'inst': f'*u_pts{i}', 'at': [xe, ys[3 + i]]})
+    ent = {}
+    for i in range(3):
+        g_lo, g_hi = ys[i] + CX_SH, ys[i] + CX_PITCH          # the channel above slice i / 3+i: its ck pin (N face) sits there
+        G_lo, G_hi = ys[3 + i] + CX_SH, ys[3 + i] + CX_PITCH
+        c = lambda a, b: [round((a + b) / 2 - 0.144, 3), round((a + b) / 2 + 0.144, 3)]
+        ent[f'rx_rck_r{i}'] = ('W', c(g_lo, g_hi))
+        ent[f'codec0p_r{i}'] = ('E', c(g_lo, g_hi))
+        ent[f'cal_ck_t{i}'] = ('W', c(G_lo, min(G_hi, Hh - CX_M / 2)))
+        ent[f'codec0p_t{i}'] = ('E', c(G_lo, min(G_hi, Hh - CX_M / 2)))
+    pins = {f: list(body['pins'].get(f, [])) for f in ('N', 'S', 'W', 'E')}
+    rng = {k: [round(a + CX_M, 2), round(b + CX_M, 2)] for k, (a, b) in body['pin_ranges'].items()}
+    rng['rx_data'] = [round(ys[0] + 2.16, 2), round(ys[2] + CX_SH - 2.16, 2)]
+    rng['tx_data'] = [round(ys[3] + 2.16, 2), round(ys[5] + CX_SH - 2.16, 2)]
+    rng['phy_rx'] = list(rng['rx_data'])
+    rng['phy_tx'] = list(rng['tx_data'])
+    for k, (f, r) in ent.items():
+        pins[f].append(k)
+        rng[k] = r
+    body_ck = list(body['clock_ports'])
+    ports = body_ck + [f'cal_ck_t{i}' for i in range(3)] + [f'rx_rck_r{i}' for i in range(3)] + \
+        [f'codec0p_t{i}' for i in range(3)] + [f'codec0p_r{i}' for i in range(3)]
+    name = f'qfd_cb16c_{prof}_cx'
+    return {
+        'name': name, 'top': 'qfd_coll_face_cx', 'kind': 'cluster', 'sources': [CX, BODY] + [x for x in body['sources'] if x not in (CX, BODY)],
+        'defines': list(body.get('defines', [])), 'params': CX_PROF[prof],
+        'clock': 'entries', 'clock_port': ports[0], 'clock_ports': ports, 'reset_ports': [],
+        'outline': {'w': W, 'h': Hh}, 'child_lattice_um': 2.16, 'children': ch, 'pins': pins, 'pin_ranges': rng,
+        'route': {'pd': 0.3, 'threads': 8, 'peak_ram_gb': 32, 'pin_h': 'M4'},
+        'child_clock_ref': 'boundary',
+        'structural_change': (f'CB16c-COLL2 10-22: wires-only face cluster of the regionally split {prof.upper()} collective face: '
+                              'hard body (12 local roots) + 12 hardened edge register slices (es182 x6 W, es199 x6 E), every child '
+                              'clock pin on its own face entry (24 entries; the 12 slice entries are new regional ports beside the '
+                              'slices); no parent tree, no parent logic; parent signals M2-M7 over the M5 children.'),
+        'why_floorplan': 'wires-only parent: body 864 x 907.2 + two 21.6-um slice columns, 4.32-um channels, 8.64-um margin',
+        'slot_change_request': f'face slot 907.2 square -> {W} x {Hh} (the two slice columns + channels around the 864-um body)',
+        'job': dict(OWNER, owner='Claude:CB16c-COLL2', tag=f'{prof}cx', purpose=f'CB16c-COLL2: {prof.upper()} face cluster parent (regional split)',
+                    extra_paths=['physical/common_flow/clock_entries.tcl'],
+                    views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}',
+                    benches=[bench(prof, 0, 'pass', f'{WIT}/{prof}_m0.log')] + [bench(prof, m, 'fail', f'{WIT}/{prof}_m{m}.log') for m in (1, 2, 3, 4)]),
+    }
+
+# COLLIO-SR2 10-23: R face cluster parent qfd_coll_face_r_cx (FW 514): body + 14 hardened edge slices on their own entries
+# (W: es257 x2 rx (MY, bottom, under the body rx band) + x2 tx (top, under the tx band), view 21.6 x 146.88 at the S0
+# 151.2 pitch; E: es113 x5 phy_rx (MY, bottom) + x5 phy_tx (top), view 21.6 x 86.4 at a 91.2 pitch, the 4.8-um channel
+# above each slice carrying its ck entry).  26 clock entries = 12 body roots + cal_ck_t0..1 / rx_rck_r0..1 /
+# codec0p_t0..4 / codec0p_r0..4.  Same frame as S0/P (933.12 x 924.48); kit gen once the R body view exists.
+CX_SH13, CX_P13 = 86.4, 91.2
+
+
+def cx_spec_r():
+    prof = 'r'
+    body = json.loads((RT / f'qfd_cb16c_{prof}_body' / 'spec.json').read_text())
+    xw, xb = CX_M, CX_M + CX_SW + CX_CH
+    xe = xb + W_BODY + CX_CH
+    W, Hh = round(xe + CX_SW + CX_M, 2), round(H + 2 * CX_M, 2)
+    yw = [round(CX_M + i * CX_PITCH, 2) for i in (0, 1, 4, 5)]          # rx0 rx1 | tx0 tx1
+    ye = [round(CX_M + i * CX_P13, 2) for i in range(10)]               # prx0..4 | ptx0..4
+    assert ye[9] + CX_SH13 <= Hh - CX_M + 1e-6
+    v = lambda kit, top: f'physical/ref_tile/{kit}/views/{top}'
+    ch = [{'view': v('qfd_cb16c_r_body', 'qfd_coll_face_r_cxb'), 'count': 1, 'inst': '*u_core', 'at': [xb, CX_M]}]
+    for i in range(2):
+        ch.append({'view': v('qfd_cb16c_es257', 'qfd_coll_eslice257'), 'count': 1, 'inst': f'*u_rxs{i}', 'at': [xw, yw[i]], 'orient': 'MY'})
+        ch.append({'view': v('qfd_cb16c_es257', 'qfd_coll_eslice257'), 'count': 1, 'inst': f'*u_txs{i}', 'at': [xw, yw[2 + i]]})
+    for i in range(5):
+        ch.append({'view': v('qfd_cb16c_es113', 'qfd_coll_eslice113'), 'count': 1, 'inst': f'*u_prs{i}', 'at': [xe, ye[i]], 'orient': 'MY'})
+        ch.append({'view': v('qfd_cb16c_es113', 'qfd_coll_eslice113'), 'count': 1, 'inst': f'*u_pts{i}', 'at': [xe, ye[5 + i]]})
+    c = lambda a, b: [round((a + b) / 2 - 0.144, 3), round((a + b) / 2 + 0.144, 3)]
+    ent = {}
+    for i in range(2):
+        ent[f'rx_rck_r{i}'] = ('W', c(yw[i] + CX_SH, yw[i] + CX_PITCH))
+        ent[f'cal_ck_t{i}'] = ('W', c(yw[2 + i] + CX_SH, min(yw[2 + i] + CX_PITCH, Hh - CX_M / 2)))
+    for i in range(5):
+        ent[f'codec0p_r{i}'] = ('E', c(ye[i] + CX_SH13, ye[i] + CX_P13))
+        ent[f'codec0p_t{i}'] = ('E', c(ye[5 + i] + CX_SH13, min(ye[5 + i] + CX_P13, Hh - CX_M / 2)))
+    pins = {f: list(body['pins'].get(f, [])) for f in ('N', 'S', 'W', 'E')}
+    rng = {k: [round(a + CX_M, 2), round(b + CX_M, 2)] for k, (a, b) in body['pin_ranges'].items()}
+    rng['rx_data'] = [round(yw[0] + 2.16, 2), round(yw[1] + CX_SH - 2.16, 2)]
+    rng['tx_data'] = [round(yw[2] + 2.16, 2), round(yw[3] + CX_SH - 2.16, 2)]
+    rng['phy_rx'] = [round(ye[0] + 2.16, 2), round(ye[4] + CX_SH13 - 2.16, 2)]
+    rng['phy_tx'] = [round(ye[5] + 2.16, 2), round(ye[9] + CX_SH13 - 2.16, 2)]
+    for k, (f, r) in ent.items():
+        pins[f].append(k)
+        rng[k] = r
+    ports = list(body['clock_ports']) + [f'cal_ck_t{i}' for i in range(2)] + [f'rx_rck_r{i}' for i in range(2)] + \
+        [f'codec0p_t{i}' for i in range(5)] + [f'codec0p_r{i}' for i in range(5)]
+    assert len(ports) == 26
+    name = 'qfd_cb16c_r_cx'
+    return {
+        'name': name, 'top': 'qfd_coll_face_r_cx', 'kind': 'cluster', 'sources': [CX, BODY] + [x for x in body['sources'] if x not in (CX, BODY)],
+        'defines': ['OT_COLL_BANK_LOCAL', 'OT_COLL_REGIONAL'], 'params': CX_PROF[prof],
+        'clock': 'entries', 'clock_port': ports[0], 'clock_ports': ports, 'reset_ports': [],
+        'outline': {'w': W, 'h': Hh}, 'child_lattice_um': 2.16, 'children': ch, 'pins': pins, 'pin_ranges': rng,
+        'route': {'pd': 0.3, 'threads': 8, 'peak_ram_gb': 32, 'pin_h': 'M4'},
+        'child_clock_ref': 'boundary',
+        'structural_change': ('COLLIO-SR2 10-23: wires-only face cluster of the regionally split R collective face (FW 514): hard '
+                              'body (12 local roots) + 14 hardened edge register slices (es257 x4 W, es113 x10 E), every child '
+                              'clock pin on its own face entry (26 entries; the 14 slice entries are new regional ports beside the '
+                              'slices); no parent tree, no parent logic; parent signals M2-M7 over the M5 children.'),
+        'why_floorplan': 'wires-only parent: body 864 x 907.2 + two 21.6-um slice columns, 4.32-um channels, 8.64-um margin',
+        'slot_change_request': f'face slot 907.2 square -> {W} x {Hh} (the two slice columns + channels around the 864-um body)',
+        'job': dict(OWNER, owner='Claude:COLLIO-SR2', branch='claude/cb16c-sr-1022', tag='rcx',
+                    purpose='COLLIO-SR2: R face cluster parent (regional split)',
+                    extra_paths=['physical/common_flow/clock_entries.tcl'],
+                    views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}',
+                    benches=[bench(prof, 0, 'pass', f'{WIT}/{prof}_m0.log')] + [bench(prof, m, 'fail', f'{WIT}/{prof}_m{m}.log') for m in (1, 2, 3, 4)]),
+    }
+
+
 if __name__ == '__main__':
+    if len(sys.argv) > 2 and sys.argv[2] == 'cx':
+        for prof in sys.argv[3:] or ('s0', 'p'):
+            write(cx_spec_r() if prof == 'r' else cx_spec(prof))
+        sys.exit(0)
     for w in (182, 199, 257, 113):
         write(slice_spec(w))
     for prof in ('s0', 'p', 's1', 's2', 'r'):

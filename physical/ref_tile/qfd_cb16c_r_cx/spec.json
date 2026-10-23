@@ -1,0 +1,512 @@
+{
+ "name": "qfd_cb16c_r_cx",
+ "top": "qfd_coll_face_r_cx",
+ "kind": "cluster",
+ "sources": [
+  "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv",
+  "rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx_body.sv",
+  "rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s0_pl.sv",
+  "rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv",
+  "rtl/physical/ot_qfd_coll_static_face.sv",
+  "rtl/physical/ot_qfd_static_transport.sv",
+  "rtl/rom/ot_coll_static_linkcal.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "defines": [
+  "OT_COLL_BANK_LOCAL",
+  "OT_COLL_REGIONAL"
+ ],
+ "params": {
+  "HARD": 1,
+  "PHY": 20,
+  "L": 58,
+  "R": 5,
+  "PEER_R": 5
+ },
+ "clock": "entries",
+ "clock_port": "cal_ck",
+ "clock_ports": [
+  "cal_ck",
+  "tx_wck",
+  "rx_rck",
+  "cal_lck",
+  "tx_rck",
+  "rx_wck",
+  "codec0",
+  "codec1",
+  "codec2",
+  "codec3",
+  "codec4",
+  "codec0p",
+  "cal_ck_t0",
+  "cal_ck_t1",
+  "rx_rck_r0",
+  "rx_rck_r1",
+  "codec0p_t0",
+  "codec0p_t1",
+  "codec0p_t2",
+  "codec0p_t3",
+  "codec0p_t4",
+  "codec0p_r0",
+  "codec0p_r1",
+  "codec0p_r2",
+  "codec0p_r3",
+  "codec0p_r4"
+ ],
+ "reset_ports": [],
+ "outline": {
+  "w": 933.12,
+  "h": 924.48
+ },
+ "child_lattice_um": 2.16,
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_cb16c_r_body/views/qfd_coll_face_r_cxb",
+   "count": 1,
+   "inst": "*u_core",
+   "at": [
+    34.56,
+    8.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es257/views/qfd_coll_eslice257",
+   "count": 1,
+   "inst": "*u_rxs0",
+   "at": [
+    8.64,
+    8.64
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es257/views/qfd_coll_eslice257",
+   "count": 1,
+   "inst": "*u_txs0",
+   "at": [
+    8.64,
+    613.44
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es257/views/qfd_coll_eslice257",
+   "count": 1,
+   "inst": "*u_rxs1",
+   "at": [
+    8.64,
+    159.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es257/views/qfd_coll_eslice257",
+   "count": 1,
+   "inst": "*u_txs1",
+   "at": [
+    8.64,
+    764.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_prs0",
+   "at": [
+    902.88,
+    8.64
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_pts0",
+   "at": [
+    902.88,
+    464.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_prs1",
+   "at": [
+    902.88,
+    99.84
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_pts1",
+   "at": [
+    902.88,
+    555.84
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_prs2",
+   "at": [
+    902.88,
+    191.04
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_pts2",
+   "at": [
+    902.88,
+    647.04
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_prs3",
+   "at": [
+    902.88,
+    282.24
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_pts3",
+   "at": [
+    902.88,
+    738.24
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_prs4",
+   "at": [
+    902.88,
+    373.44
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_cb16c_es113/views/qfd_coll_eslice113",
+   "count": 1,
+   "inst": "*u_pts4",
+   "at": [
+    902.88,
+    829.44
+   ]
+  }
+ ],
+ "pins": {
+  "N": [],
+  "S": [
+   "codec1",
+   "codec0"
+  ],
+  "W": [
+   "rx_data",
+   "rx_valid",
+   "rx_rck",
+   "rx_wck",
+   "cal_ck",
+   "cal_lck",
+   "rst_n",
+   "tx_slot",
+   "peer_slot",
+   "tx_valid",
+   "cdc_fault",
+   "tx_data",
+   "tx_wck",
+   "tx_rck",
+   "codec2",
+   "rx_rck_r0",
+   "cal_ck_t0",
+   "rx_rck_r1",
+   "cal_ck_t1"
+  ],
+  "E": [
+   "phy_rx",
+   "phy_rx_valid",
+   "phy_up",
+   "codec0p",
+   "epoch_abort",
+   "fault_cause",
+   "phy_tx_valid",
+   "phy_tx",
+   "phy_tx_slot",
+   "phy_rx_slot",
+   "codec3",
+   "codec4",
+   "codec0p_r0",
+   "codec0p_t0",
+   "codec0p_r1",
+   "codec0p_t1",
+   "codec0p_r2",
+   "codec0p_t2",
+   "codec0p_r3",
+   "codec0p_t3",
+   "codec0p_r4",
+   "codec0p_t4"
+  ]
+ },
+ "pin_ranges": {
+  "rx_data": [
+   10.8,
+   304.56
+  ],
+  "rx_valid": [
+   291.6,
+   294.84
+  ],
+  "rx_rck": [
+   297.0,
+   300.24
+  ],
+  "rx_wck": [
+   302.4,
+   305.64
+  ],
+  "cal_ck": [
+   446.04,
+   449.28
+  ],
+  "cal_lck": [
+   451.44,
+   454.68
+  ],
+  "rst_n": [
+   456.84,
+   460.08
+  ],
+  "tx_slot": [
+   462.24,
+   465.48
+  ],
+  "peer_slot": [
+   467.64,
+   470.88
+  ],
+  "tx_valid": [
+   473.04,
+   476.28
+  ],
+  "cdc_fault": [
+   478.44,
+   489.24
+  ],
+  "tx_data": [
+   615.6,
+   909.36
+  ],
+  "tx_wck": [
+   831.64,
+   834.84
+  ],
+  "tx_rck": [
+   837.04,
+   840.24
+  ],
+  "codec2": [
+   851.04,
+   854.28
+  ],
+  "phy_rx": [
+   10.8,
+   457.68
+  ],
+  "phy_rx_valid": [
+   442.8,
+   446.04
+  ],
+  "phy_up": [
+   448.2,
+   451.44
+  ],
+  "codec0p": [
+   478.44,
+   481.68
+  ],
+  "epoch_abort": [
+   483.84,
+   487.08
+  ],
+  "fault_cause": [
+   489.24,
+   500.04
+  ],
+  "phy_tx_valid": [
+   518.4,
+   521.64
+  ],
+  "phy_tx": [
+   466.8,
+   913.68
+  ],
+  "phy_tx_slot": [
+   456.84,
+   460.08
+  ],
+  "phy_rx_slot": [
+   462.24,
+   465.48
+  ],
+  "codec3": [
+   224.64,
+   227.88
+  ],
+  "codec4": [
+   699.84,
+   703.08
+  ],
+  "rx_rck_r0": [
+   157.536,
+   157.824
+  ],
+  "cal_ck_t0": [
+   762.336,
+   762.624
+  ],
+  "rx_rck_r1": [
+   308.736,
+   309.024
+  ],
+  "cal_ck_t1": [
+   913.536,
+   913.824
+  ],
+  "codec0p_r0": [
+   97.296,
+   97.584
+  ],
+  "codec0p_t0": [
+   553.296,
+   553.584
+  ],
+  "codec0p_r1": [
+   188.496,
+   188.784
+  ],
+  "codec0p_t1": [
+   644.496,
+   644.784
+  ],
+  "codec0p_r2": [
+   279.696,
+   279.984
+  ],
+  "codec0p_t2": [
+   735.696,
+   735.984
+  ],
+  "codec0p_r3": [
+   370.896,
+   371.184
+  ],
+  "codec0p_t3": [
+   826.896,
+   827.184
+  ],
+  "codec0p_r4": [
+   462.096,
+   462.384
+  ],
+  "codec0p_t4": [
+   917.856,
+   918.144
+  ]
+ },
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4"
+ },
+ "child_clock_ref": "boundary",
+ "structural_change": "COLLIO-SR2 10-23: wires-only face cluster of the regionally split R collective face (FW 514): hard body (12 local roots) + 14 hardened edge register slices (es257 x4 W, es113 x10 E), every child clock pin on its own face entry (26 entries; the 14 slice entries are new regional ports beside the slices); no parent tree, no parent logic; parent signals M2-M7 over the M5 children.",
+ "why_floorplan": "wires-only parent: body 864 x 907.2 + two 21.6-um slice columns, 4.32-um channels, 8.64-um margin",
+ "slot_change_request": "face slot 907.2 square -> 933.12 x 924.48 (the two slice columns + channels around the 864-um body)",
+ "job": {
+  "owner": "Claude:COLLIO-SR2",
+  "branch": "claude/cb16c-sr-1022",
+  "tag": "rcx",
+  "purpose": "COLLIO-SR2: R face cluster parent (regional split)",
+  "extra_paths": [
+   "physical/common_flow/clock_entries.tcl"
+  ],
+  "views_to": "physical/ref_tile/qfd_cb16c_r_cx/views",
+  "record_to": "results/rtl/ref_tile/qfd_cb16c_r_cx",
+  "benches": [
+   {
+    "name": "cb16c_lockstep_r_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m0 r 0",
+    "pass_regex": "^CB16C_COLL_BENCH PASS MUT=0 PROFILE=r$",
+    "pass_witness": "results/rtl/cb16c_coll_1022/r_m0.log"
+   },
+   {
+    "name": "cb16c_lockstep_r_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m1 r 1",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=1 PROFILE=r$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/r_m1.log"
+   },
+   {
+    "name": "cb16c_lockstep_r_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m2 r 2",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=2 PROFILE=r$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/r_m2.log"
+   },
+   {
+    "name": "cb16c_lockstep_r_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m3 r 3",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=3 PROFILE=r$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/r_m3.log"
+   },
+   {
+    "name": "cb16c_lockstep_r_m4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/r_m4 r 4",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=4 PROFILE=r$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/r_m4.log"
+   }
+  ]
+ }
+}
