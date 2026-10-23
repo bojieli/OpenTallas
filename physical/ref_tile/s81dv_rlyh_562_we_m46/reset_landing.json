@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "dsfd_dvrlyh_562_WE",
+ "enable": false,
+ "reason": "FROZEN interface, same registers as the closed base kit: rs is a leaf of the die reset-station tree (dsfd_rly_1_WN, landed per region by the die) and is registered in the body (ot_s81_rly RSREG=1); a flow landing would add 2 reset-release edges the die calendar does not price"
+}
