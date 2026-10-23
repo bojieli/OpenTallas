@@ -5,7 +5,8 @@ Input : stats_summary.json (measured Yosys cell counts per module, parsed by sta
         synthesis .stat files named in each entry's `basis`; r18h5 recipe = tools/hbm_die_v15/synth_master.sh HIER=1,
         ASAP7 RVT TT, the v16w wrappers of the r18h5 die views).
 Output: <master>.split.json per distinct master + index.json.  Each split.json:
-  status       DONE (cut + every crossing register to register, RTL twin benched or no RTL change needed) |
+  status       RTL-UNBENCHED = cut + twin written, bench not completed;
+               DONE (cut + every crossing register to register, RTL twin benched or no RTL change needed) |
                CUT-ONLY (cores measured, but some crossings are not register to register; fix named) | OPEN
   cores        [{master, core_label, members, module, cells, srams, pins_bits}]   (one entry per hard core)
   glue         cells left flat in the partition (< 20k pieces, pin / seam registers, top-level glue)
@@ -104,7 +105,7 @@ cores = [dict(part='tile', master=tk, core_label=f'tile{t}', module='ot_hgi_coll
 cores.append(dict(part='root', master=tk, core_label='root', module='ot_hgi_coll_tkm_static_p (own logic) + ot_hgi_coll_tkm_buffer',
                   members=['u.u (root logic: tick/calendar, decode + 4-sort, pass-1 capture, output lines)', 'u.u.u_buffer'],
                   cells=root, srams=2, pins_bits=dict(inp=2980 - 2 - 40 - 16 - 512 - 3 - 32 + 344 + 2, out=1 + 40 + 16 + 512 + 3 + 32 + 345 + 2)))
-out[tk] = entry(tk, ['c0'], 'DONE', cores, 0, [
+out[tk] = entry(tk, ['c0'], 'RTL-UNBENCHED', cores, 0, [
     dict(between='tile t -> tile t+1 (ins chain)', bits=345, kind='REG->REG', note='ovf_v/ovf_b output regs -> p_vg/p_bg input regs'),
     dict(between='tile t+1 -> tile t (up chain)', bits=344, kind='REG->LOGIC->REG', note='up_out reg -> X shift-register mux (conv) -> X regs: one 2:1 mux level, kept'),
     dict(between='root -> all 32 tiles (clr, conv broadcast)', bits=2, kind='COMB in pinned; REG->REG with PIPE 1',
@@ -114,7 +115,8 @@ out[tk] = entry(tk, ['c0'], 'DONE', cores, 0, [
     dict(between='tile 0 -> root (up[0])', bits=344, kind='REG->LOGIC->REG in pinned; REG->REG with PIPE 1', note='PIPE 1: up0_q pin register, consumers moved 2 edges later')],
     dict(twin='rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv (ot_hgi_coll_tkm_static_p #(PIPE 1); PIPE 0 = pinned)',
          cycle_cost_edges=2, cost_note='TKM finish/done/stat_cycles +2 edges (same words, same addresses, same order); compiler TKM latency +2',
-         bench='rtl/hbm_accel/generic/collective/tkm/run_tp192_static_p.sh OUT (golden O/R vectors syn_sel/syn_cand/rank128_zeros + lock-step vs pinned root delayed 2 edges; PIPE 0 identity; mutant MUTP 1 must FAIL)'),
+         bench='rtl/hbm_accel/generic/collective/tkm/run_tp192_static_p.sh OUT (golden O/R vectors syn_sel/syn_cand/rank128_zeros + lock-step vs pinned root delayed 2 edges; PIPE 0 identity; mutant MUTP 1 must FAIL)',
+         bench_result='NOT RUN TO COMPLETION: the TP192 lock-step tb (twin + pinned reference root, KMAX 2048, hier tiles) needs >290 GB in the top-level verilator_bin; memcg-OOM at 128 and 300 GB on ot-gold2. Next: drop the in-tb pinned reference (golden O/R vectors only) or run at TP 96 / KMAX 512; lint-clean only so far'),
     '32 x the TP192 tile (260k, already a hardened shape) + root (34k + 2 SRAM): the tile chain is the dataflow; tile pins are '
     'registered both ways; PIPE 1 registers the root side.  Root core 34k is small (could merge with its neighbouring tile: 294k).',
     tk, S[tk]['total'])
