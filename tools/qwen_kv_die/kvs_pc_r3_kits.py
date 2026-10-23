@@ -66,8 +66,9 @@ def spread(order, lo, hi, gap=0.36):
     return out, pitch
 
 
-def build(name, tag, W, x0, why):
-    s = json.load(open(os.path.join(ROOT, BASE)))
+def build(name, tag, W, x0, why, base=BASE):
+    s = json.load(open(os.path.join(ROOT, base)))
+    head = s['top'] == 'qkd_kvs_pc_h'      # chain head (4 instances): no S chain words (no i_prev / o_prev)
     s = copy.deepcopy(s)
     s['name'] = name
     s['outline'] = {'w': W, 'h': H, 'exact': True}
@@ -75,6 +76,8 @@ def build(name, tag, W, x0, why):
     nord = ['o_next', 'pc__fo', 'i_next', 'x__est__0_1', 'pc__ki', 'i_grp', 'i_grp_h', 'o_grp_h']
     rng, pn = spread(nord, 1.0, W - 1.0)
     srng = {'i_prev': rng['o_next'], 'pc__fi': rng['pc__fo'], 'o_prev': rng['i_next'], 'pc__ko': rng['pc__ki']}
+    if head:
+        del srng['i_prev'], srng['o_prev']
     hx = rng['i_grp'][0]
     srng['pc__hfx'] = [round(hx, 4), round(hx + 1.0, 4)]
     eord = ['hrst_n', 'pc__cfg_stack', 'pc__completion_v', 'pc__completion_we', 'pc__er', 'pc__hcompletion_v',
@@ -114,9 +117,10 @@ def build(name, tag, W, x0, why):
         "pitch 378.  Content (std ~14-17k + macros 12.7k um2) would fit ~220 x 220 at 60-70 %, which needs >= 7 pins/um on "
         "every face (sr12g at 5.9 /um failed); the width is the smallest that keeps every face <= ~4.7 /um.")}
     s['kits_b'] = dict(s['kits_b'], frame=[round(W + 2.16, 2), 358.56], kit_outline=[W, H])
-    s['pre_cts_extra'] = [p.replace('qkd_kvs_pc_sr15f', name) for p in s['pre_cts_extra']]
+    bname = os.path.basename(os.path.dirname(base))
+    s['pre_cts_extra'] = [p.replace(bname, name) for p in s['pre_cts_extra']]
     s['safe_design_checklist'] = f'see physical/ref_tile/{name}/README.md'
-    pur = (f"KVPC-R 10-23 {tag}: COORD-review redesign of qkd_kvs_pc (sr15f geometry: 23 SRAMs gridded, pins away from "
+    pur = (f"KVPC-R 10-23 {tag}: COORD-review redesign of {'qkd_kvs_pc_h (sr15b' if head else 'qkd_kvs_pc (sr15f'} geometry: 23 SRAMs gridded, pins away from "
            f"logic, 13% fill / 61% empty). One macro bank (2 abutted back-to-back stacks of 12 R0 + 11 MY arrays at x "
            f"{x0}), PHY band W of the bank faces column A (front/return/tq), main band E faces column B (ecdc); outline "
            f"{W} x {H} (pin-bound; o_grp N -> E); chain pins abutment-aligned N/S (FT-KV); RTL = sr13a byte-identical "
@@ -143,3 +147,7 @@ def build(name, tag, W, x0, why):
 if __name__ == '__main__':
     build('qkd_kvs_pc_r3a', 'r3a', 270.0, 43.2, 'MAIN: 270.0 wide, PHY band 41 um.')
     build('qkd_kvs_pc_r3b', 'r3b', 302.4, 64.8, 'ALT: 302.4 wide (N/S 4.1-4.2 /um), PHY band 63 um.')
+    # PC_H (chain head, 4 instances, base qkd_kvs_pc_h_sr15b): same bank / bands / faces, no S chain words
+    BH = 'physical/ref_tile/qkd_kvs_pc_h_sr15b/spec.json'
+    build('qkd_kvs_pc_h_r3a', 'h_r3a', 270.0, 43.2, 'PC_H MAIN: 270.0 wide, PHY band 41 um.', BH)
+    build('qkd_kvs_pc_h_r3b', 'h_r3b', 302.4, 64.8, 'PC_H ALT: 302.4 wide, PHY band 63 um.', BH)
