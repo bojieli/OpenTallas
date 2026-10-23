@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm_slice_run_check.v1",
+  "scope": "component_probe",
+  "requested_scope": "component_probe",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "state_seed_provenance": [
+    "authentic_native_score_and_KV_inputs_only"
+  ],
+  "passed": false,
+  "errors": [
+    "missing unique SLICE_PASS or explicit failure",
+    "fails: 2",
+    "rec_fail: 2",
+    "per-record commit checks differ from the complete replay schedule",
+    "HBM preload INIT: loaded [], expected 136"
+  ],
+  "expected": {
+    "drives": 5774,
+    "checks": 181
+  },
+  "last_scheduled_cycles": {
+    "stream_edges": 85497,
+    "serial_edges": 3959,
+    "hbm_edges": -1
+  },
+  "summary": {
+    "drives": 5774,
+    "checks": 181,
+    "fails": 2,
+    "rec_commit_ok": 179,
+    "rec_fail": 2,
+    "stream_edges": 86000,
+    "serial_edges": 64499,
+    "hbm_edges": 69986
+  },
+  "expected_record_checks": 181,
+  "replay_hdr_sha256": "a5a2d97c2669ac5a676981f92e89c0c06792dc1e17b68d3296b959c96a7a076f",
+  "run_log_sha256": "6e4d58a69e6c94e78d4bc16c6e599c8c69bf635854787a1bfe2a0279d1455abc",
+  "fault_observation": {
+    "source_bound": false,
+    "errors": [
+      "missing source-bound fault observer boundary/TB"
+    ]
+  }
+}
