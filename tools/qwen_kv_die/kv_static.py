@@ -95,6 +95,11 @@ ROLES = {
     'emb_return_hop': (E+'qkd_embedding_static_return_hop.sv', 'qkd_embedding_static_return_hop', 124),
     # KVJ-C3: join4 + its compiled beat_slot calendar (qkd_embedding_static_join4_cal)
     'emb_join': (E+'qkd_embedding_static_join4_cal.sv', 'qkd_embedding_static_join4_cal', 1),
+    # STEWARD-QKd 10-23: the release KV die point (OT_KV_CTL_NC32=1, no OT_KV_ROPE) has no RoPE context: its join is the
+    # RoPE-free calendar without a rope_sweep port (no tie-off; COORD 10-23). Other points keep the RoPE-capable join.
+    **({'emb_join': (E+'qkd_embedding_static_join4_cal_nr.sv', 'qkd_embedding_static_join4_cal_nr', 1)}
+       if __import__('os').environ.get('OT_KV_CTL_NC32', '0') == '1' and __import__('os').environ.get('OT_KV_ROPE', '0') != '1'
+       else {}),
     'row_tx': (E+'qkd_embedding_row_tx.sv', 'qkd_embedding_row_tx', 1),
     # KVJ-C3 2026-10-17: root of the four per-stack static PC chains, beside the writer and the d2d KV end
     'es_fan_root': (S+'qkd_kv_es_fan_root.sv', 'qkd_kv_es_fan_root', 1),

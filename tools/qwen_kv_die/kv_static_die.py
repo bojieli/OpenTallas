@@ -962,12 +962,6 @@ def tile(die_inst):
                     pn = add_port('hrst_n' if dom == 'hbm' else 'rst_n', dir='input', width=1, cls='reset', domain=dom)
                 elif p == 'por_n':
                     pn = add_port('por_n', dir='input', width=1, cls='pad')
-                elif p == 'rope_sweep' and loc[n] == 'join' and not ROPE:
-                    # STEWARD-QKd 10-23: without the RoPE context (OT_KV_ROPE=0) the join's RoPE sweep select is constant
-                    # 0 (rope_mode stays 0: the pre-deac9e511 join), as deac9e511 tied it in every committed tile file;
-                    # an open tile input here has no die driver (strict bind INPUT_UNCONNECTED).
-                    cs.append(".rope_sweep(1'b0)")
-                    continue
                 else:
                     pn = add_port(f'{loc[n]}__{p}', dir='input', width=v['width'], cls='open', owner=open_owner(n, p))
                 cs.append(f'.{p}({pn})')

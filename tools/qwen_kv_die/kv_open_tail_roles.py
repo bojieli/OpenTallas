@@ -93,7 +93,7 @@ SOURCES = {
 # STEWARD-QKd 10-23: GENERATOR re-pinned (was 451274ba...) after the opt-in KDIE5-RTL kv_static_die switches (GRP_R2 / NATIVE32 /
 # CTL_NC32 / POR_LOCK, rv5 archive binding, rope+native32 suffix composition; all default off); GEN_ASSERT strings re-checked
 # at the release-line flags (relm + GRP_R2/NATIVE32/CTL_NC32/C32=2/POR_LOCK) with check_sources: PASS.
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '72ad6df7340fc4ad476a774d57027b0fa17496738047df6900745889288c3634')
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'e463ae4c0fa0e18d91f3eaeb47f6336028e10a1645ffdee9fc9c7991bd1c64a7')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -287,7 +287,7 @@ if __import__('os').environ.get('OT_KV_EMB_N32', '0') == '1' and not (
 if __import__('os').environ.get('OT_KV_CTL_NC32', '0') == '1' and __import__('os').environ.get('OT_KV_GRP_S6C', '0') != '1':
     _NC32_TILES = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv': (
         'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv',
-        '378584666ffb8d4be3a89c078566fe368800169242f778c77efd65655c6b5d5e')}
+        '394cbda4451e6121e0e0091ec8ec1fc5fbf704386c3844d6f47e249f29f87981')}
     if TILES not in _NC32_TILES or __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
         raise ValueError('kv_open_tail_roles: OT_KV_CTL_NC32=1 is pinned for the HROOT_LAND N32/PJ point only: ' + TILES)
     _T0 = TILES
