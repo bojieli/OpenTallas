@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits    31 GB (avail 238, growth 68, headroom 0, waiters 4/384 GB) load 50/128 running 20 disk 645 GB 
+ot-run: -> ot-epyc5 (will queue: admits 31 GB < 160 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 160 = 112 GB, admissible 32 GB: available 238 GB, growth charged 68 GB (v16 measured reserve, running growth cap 25 % of available, settled floor 23 GB; pending 68 GB at x1), young 9 GB, floor 57 GB; invariant: committed 1037 GB (in use 895, other 380, units max(now, peak) 640, + reserve 9 + fresh 9) vs physical - 64 = 1069 GB -> headroom 32 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3531288-1792709159 after 3755 s
+rc=0 peak_gb=118
+TKM_STATIC PASS words=4096 cycles=34865
+TKM_STATIC PASS words=2 cycles=692
+TKM_TP192_STATIC_GATE_PASS
+[541000] %Fatal: tb_hgi_coll_tkm_static.sv:59: Assertion failed in tb_hgi_coll_tkm_static: TKM_STATIC FAIL errors=1 words=2 cycles=628
+TKM_STATIC PASS words=2 cycles=692
+TKM_STATIC PASS words=4096 cycles=34865
+TKM_STATIC PASS words=1024 cycles=25265
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3531288-1792709159): exit 0
