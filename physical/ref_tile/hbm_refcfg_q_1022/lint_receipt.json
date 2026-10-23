@@ -1,0 +1,181 @@
+{
+ "lints": {
+  "cdc_synchronizers": {
+   "components": {
+    "inputs": {
+     "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv": "f43194b2c7c7a114de5c3beabf34b026afa7c0666449c25cb903c1945946832f",
+     "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    "policy": "cdc_synchronizers",
+    "spec": {
+     "cdc_synchronizers": [
+      {
+       "chain": [
+        "ls[0]",
+        "ls[1]"
+       ],
+       "dst_domain": "hbm",
+       "name": "pc_release",
+       "source": "loaded",
+       "src_domain": "core",
+       "sync_max_delay_ps": 250,
+       "why": "row-loaded level (1-bit, set once per power-on) -> 2-flop clk_hbm synchroniser -> prst = pc_rst_n flop; release lands on a fixed HBM edge window, absorbed at the HBM K boundary (RBH-STK refcfg decision)"
+      },
+      {
+       "chain": [
+        "rel_seen_s1",
+        "rel_seen"
+       ],
+       "dst_domain": "core",
+       "name": "release_seen",
+       "source": "prst",
+       "src_domain": "hbm",
+       "sync_max_delay_ps": 250,
+       "why": "pc_rst_n release level back into the stream domain (status 'active' clears); 2-flop clk synchroniser"
+      }
+     ],
+     "children": [],
+     "clock": "multiple_cts_roots",
+     "clock_data_paths": "cdc_synchronizers_async",
+     "clock_entry_domains": {
+      "core": {
+       "inputs": [
+        "rst_n",
+        "tgt",
+        "cfg_v",
+        "cfg_target",
+        "cfg_addr",
+        "cfg_data"
+       ],
+       "outputs": [
+        "refresh_reload",
+        "ready",
+        "active",
+        "fault"
+       ],
+       "ports": [
+        "clk"
+       ],
+       "ratio": [
+        1,
+        1
+       ]
+      },
+      "hbm": {
+       "inputs": [
+        "rst_hbm_n"
+       ],
+       "outputs": [
+        "pc_rst_n"
+       ],
+       "ports": [
+        "clk_hbm"
+       ],
+       "ratio": [
+        3072000,
+        2499999
+       ]
+      }
+     },
+     "clock_relationship": {
+      "hbm_period_ps": 1024.0,
+      "kind": "hbm_phy_async_synchronizers",
+      "stream_period_ps": 833.333
+     },
+     "kind": "tile",
+     "macros": [],
+     "name": "hbm_refcfg_q_1022",
+     "params": {
+      "NPC": 16
+     },
+     "route": {
+      "period_ps": 833.333
+     },
+     "sources": [
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv"
+     ],
+     "top": "ot_hbm_pc_refresh_cfg"
+    },
+    "tool": {
+     "cdc_sync_constraints.py": "eae479d05e11ce815d43b0e44b65b17d1b8a5d61664c28a97e499f39644b76e5",
+     "clock_entry_constraints.py": "f721d458ac1e160b5f949ef7ec97a69ac77bcf4242329cff2fc5e865cdc85a66",
+     "gray_fifo_cdc_constraints.py": "567e0e04231a4c9f88ee9eb144358340c9effd41cd4b925bd514680cf8b951c8"
+    },
+    "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+   },
+   "created": "2026-10-22T20:36:39-0700",
+   "host": "ot-pve1",
+   "key": "b91ac115613a47780c45a800d527cfc2d8cd393879b0a554be6033124d7ba359",
+   "record": {
+    "counts": {
+     "capture": 0,
+     "payload": 0,
+     "source": 2,
+     "sync1": 2
+    },
+    "groups": {
+     "pc_release": {
+      "dst_domain": "hbm",
+      "payload_bits": 0,
+      "payload_max_delay_ps": 0.0,
+      "src_domain": "core",
+      "sync_max_delay_ps": 250.0,
+      "width": 1
+     },
+     "release_seen": {
+      "dst_domain": "core",
+      "payload_bits": 0,
+      "payload_max_delay_ps": 0.0,
+      "src_domain": "hbm",
+      "sync_max_delay_ps": 250.0,
+      "width": 1
+     }
+    },
+    "roles": {
+     "loaded": [
+      "pc_release",
+      "source",
+      0
+     ],
+     "ls[0]": [
+      "pc_release",
+      "sync1",
+      0
+     ],
+     "ls[1]": [
+      "pc_release",
+      "stage2",
+      0
+     ],
+     "pc_rst_n": [
+      "release_seen",
+      "source",
+      0
+     ],
+     "prst": [
+      "release_seen",
+      "source",
+      0
+     ],
+     "rel_seen": [
+      "release_seen",
+      "stage2",
+      0
+     ],
+     "rel_seen_s1": [
+      "release_seen",
+      "sync1",
+      0
+     ]
+    },
+    "source_sha256": {
+     "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv": "f43194b2c7c7a114de5c3beabf34b026afa7c0666449c25cb903c1945946832f",
+     "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    }
+   },
+   "seconds": 4
+  }
+ },
+ "schema": "opentallas.ref_tile.lint_receipt.v1"
+}
