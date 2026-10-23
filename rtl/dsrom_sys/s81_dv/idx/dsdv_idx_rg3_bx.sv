@@ -16,7 +16,8 @@
 module dsdv_idx_rg3_bx #(
     parameter integer MUT = 0,
     parameter bit SRAM_MACRO = 0,
-    parameter integer RH = 1
+    parameter integer RH = 1,
+    parameter integer LWL = 0
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -28,7 +29,7 @@ module dsdv_idx_rg3_bx #(
     wire [3:0] lw_v, lw_h1; wire [39:0] lw_a; wire [1023:0] lw_d;
     dsdv_idx_rg3_bxn #(.MUT(MUT), .RH(RH)) u_n (.ck(ck), .rst(rst), .rri(rri), .xr_o(xr_o),
         .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d));
-    dsdv_idx_rg3_bxm #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO)) u_m (.ck(ck), .rst(rst), .sx_i(sx_i),
+    dsdv_idx_rg3_bxm #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .LWL(LWL)) u_m (.ck(ck), .rst(rst), .sx_i(sx_i),
         .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d), .kq_o(kq_o));
 endmodule
 
@@ -105,7 +106,8 @@ endmodule
 
 module dsdv_idx_rg3_bxm #(
     parameter integer MUT = 0,
-    parameter bit SRAM_MACRO = 0
+    parameter bit SRAM_MACRO = 0,
+    parameter integer LWL = 0
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -118,9 +120,9 @@ module dsdv_idx_rg3_bxm #(
 );
     wire [287:0] k0;                                // {k_sc, key[255:0]}
     wire [255:0] k1;                                // key[511:256]
-    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .H(0)) u_c0 (.ck(ck), .rst(rst), .sx_i(sx_i),
+    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .H(0), .LWL(LWL)) u_c0 (.ck(ck), .rst(rst), .sx_i(sx_i),
         .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d), .kq_o(k0));
-    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .H(1)) u_c1 (.ck(ck), .rst(rst), .sx_i(sx_i),
+    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .H(1), .LWL(LWL)) u_c1 (.ck(ck), .rst(rst), .sx_i(sx_i),
         .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d), .kq_o(k1));
     assign kq_o = {k0[287:256], k1, k0[255:0]};
 endmodule
@@ -130,7 +132,8 @@ endmodule
 module dsdv_idx_rg3_bxmh #(
     parameter integer MUT = 0,
     parameter bit SRAM_MACRO = 0,
-    parameter integer H = 0
+    parameter integer H = 0,
+    parameter integer LWL = 0       // STW-S81e-XR 10-23: lw_* N-face pin regs + per-SRAM landing regs (LWL edges)
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -164,10 +167,44 @@ module dsdv_idx_rg3_bxmh #(
     generate for (gu = 0; gu < 4; gu = gu + 1) begin : g_land
         wire rs0 = H == 0 && s_vx[gu] && su_b == 2'(gu);
         wire rc  = c_v && c_u == 2'(gu);
-        wire we  = lw_v[gu] && (H ? lw_h1[gu] : !lw_h1[gu]);
+        wire we0 = lw_v[gu] && (H ? lw_h1[gu] : !lw_h1[gu]);
+        wire        we;
+        wire [9:0]  wa;
+        wire [255:0] wd;
+        if (LWL == 0) begin : g_lw0
+            assign we = we0; assign wa = lw_a[10 * gu +: 10]; assign wd = lw_d[256 * gu +: 256];
+        end else begin : g_lwl
+            // stages 0 .. LWL-2 = the N-face pin registers (+ relay); the LAST stage = the landing registers at this SRAM's
+            // write ports, split by LEF face: lw_lw {we, wa, wd[135:0]} -> W face, lw_le wd[255:136] -> E face
+            wire [266:0] lw_in = {we0, lw_a[10 * gu +: 10], lw_d[256 * gu +: 256]};
+            wire [266:0] lw_pre;
+            if (LWL == 1) begin : g_l1
+                assign lw_pre = lw_in;
+            end else begin : g_ln
+                (* keep = "true" *) reg [LWL-2:0][266:0] lw_p;
+                always @(posedge ck or negedge rl2)
+                    if (!rl2) for (int q = 0; q < LWL - 1; q++) lw_p[q][266] <= 1'b0;
+                    else begin lw_p[0][266] <= lw_in[266]; for (int q = 1; q < LWL - 1; q++) lw_p[q][266] <= lw_p[q - 1][266]; end
+                always @(posedge ck) begin
+                    lw_p[0][265:0] <= lw_in[265:0];
+                    for (int q = 1; q < LWL - 1; q++) lw_p[q][265:0] <= lw_p[q - 1][265:0];
+                end
+                assign lw_pre = lw_p[LWL-2];
+            end
+            (* keep = "true" *) reg         lw_lv;
+            (* keep = "true" *) reg [145:0] lw_lw;
+            (* keep = "true" *) reg [119:0] lw_le;
+            always @(posedge ck or negedge rl2) if (!rl2) lw_lv <= 1'b0; else lw_lv <= lw_pre[266];
+            always @(posedge ck) begin lw_lw <= {lw_pre[265:256], lw_pre[135:0]}; lw_le <= lw_pre[255:136]; end
+            if (MUT == 7) begin : g_m7       // mutant: the landing stage bypassed (one write-visibility edge early)
+                assign we = lw_pre[266]; assign wa = lw_pre[265:256]; assign wd = lw_pre[255:0];
+            end else begin : g_lok
+                assign we = lw_lv; assign wa = lw_lw[145:136]; assign wd = {lw_le, lw_lw[135:0]};
+            end
+        end
         dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_h (
             .ck(ck), .re(rs0 || rc), .ra(rs0 ? s_row : c_row), .rd(hq[gu]),
-            .we(we), .wa(lw_a[10 * gu +: 10]), .wd(lw_d[256 * gu +: 256]));
+            .we(we), .wa(wa), .wd(wd));
     end endgenerate
     // key half H: lane gk = 16 H + j reads hH of the unit its select names (select from cu = the old cu_a (H 0) / cu_b (H 1))
     (* keep = "true" *) reg [1:0] cu;

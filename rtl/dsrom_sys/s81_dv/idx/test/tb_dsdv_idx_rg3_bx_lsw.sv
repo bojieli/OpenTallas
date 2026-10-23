@@ -5,12 +5,13 @@
 module tb_dsdv_idx_rg3_bx_lsw;
     parameter integer MUTN = 0;
     parameter integer N = 20000;
+    parameter integer LWL = 0;
     reg ck = 0, rst = 0;
     always #1 ck = ~ck;
     reg [1087:0] rri; reg [17:0] sx;
     wire [67:0] xr_a, xr_b; wire [543:0] kq_a, kq_b;
-    dsdv_idx_rg3_bx     #(.MUT(MUTN), .SRAM_MACRO(1), .RH(1)) u_b (.ck(ck), .rst(rst), .rri(rri), .sx_i(sx), .xr_o(xr_b), .kq_o(kq_b));
-    dsdv_idx_rg3_bx_ref #(.MUT(0),    .SRAM_MACRO(1), .RH(1)) u_a (.ck(ck), .rst(rst), .rri(rri), .sx_i(sx), .xr_o(xr_a), .kq_o(kq_a));
+    dsdv_idx_rg3_bx     #(.MUT(MUTN), .SRAM_MACRO(1), .RH(1), .LWL(LWL)) u_b (.ck(ck), .rst(rst), .rri(rri), .sx_i(sx), .xr_o(xr_b), .kq_o(kq_b));
+    dsdv_idx_rg3_bx_ref #(.MUT(0),    .SRAM_MACRO(1), .RH(1), .LWL(LWL)) u_a (.ck(ck), .rst(rst), .rri(rri), .sx_i(sx), .xr_o(xr_a), .kq_o(kq_a));
     integer i, k, bad = 0, live = 0, wr = 0, seed = 1;
     initial begin
         rri = 0; sx = 0;

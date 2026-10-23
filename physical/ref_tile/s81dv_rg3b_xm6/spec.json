@@ -27,7 +27,8 @@
  "inter": [],
  "orfs_vars": {
   "GPL_ROUTABILITY_DRIVEN": "0",
-  "OT_FENCE_UNREG_OK": "lw_a|lw_d|lw_h1|lw_v|sx_i",
+  "OT_REG_PLACE": "physical/ref_tile/s81dv_rg3b_xm6/reg_place.txt",
+  "OT_FENCE_UNREG_OK": "sx_i",
   "OT_FENCE_STRICT": "1",
   "OT_FENCE_CLOCKS": "ck"
  },
@@ -37,10 +38,10 @@
  "reset_ports": [
   "rst"
  ],
- "structural_change": "STW-S81c-TOK4-BAND 10-22 (STEWARD-S81c item, MU.BAL.SX.3): idx rg3 clock-rule successor. rg3p / rg3nqq2 hung 27-32k sinks on ONE ck over 1.04 x 1.21 mm (TT spread 223-233 ps; k-means under one port cannot fix it). The reader is cut at existing registers into 4 hard bands (R control / X response + landing + key mux / S01 / S23 engine halves), each its own small tree with registered faces, under an lp.py landed parent (D2/E1, +2 edges a crossing; cut analysis results/arch/s81_band_1022/cut_analysis.json: every seam <= 0.16 of its tracks). Flat band composition = dsdv_idx_rg3 #(IH 0, OH 1, KR 1) cycle-exact (tb lockstep); landed = flat + 2-edge landings (lp.py lockstep) with LX 8 / PD 2.",
+ "structural_change": "STW-S81e-XR 10-23 (GEOM-REVIEW FAIL fix (a)): lw_* landing writes now land in N-face pin registers + one landing register per SRAM at its write faces (LWL 2: +2 write-visibility edges, booked MU.S81.CAL; lockstep vs the flat X with the same write edges, mut7 = landing bypass caught). No macro pin is wired to a tile port any more (bank_distance n/a). STW-S81c-TOK4-BAND 10-22 (STEWARD-S81c item, MU.BAL.SX.3): idx rg3 clock-rule successor. rg3p / rg3nqq2 hung 27-32k sinks on ONE ck over 1.04 x 1.21 mm (TT spread 223-233 ps; k-means under one port cannot fix it). The reader is cut at existing registers into 4 hard bands (R control / X response + landing + key mux / S01 / S23 engine halves), each its own small tree with registered faces, under an lp.py landed parent (D2/E1, +2 edges a crossing; cut analysis results/arch/s81_band_1022/cut_analysis.json: every seam <= 0.16 of its tracks). Flat band composition = dsdv_idx_rg3 #(IH 0, OH 1, KR 1) cycle-exact (tb lockstep); landed = flat + 2-edge landings (lp.py lockstep) with LX 8 / PD 2.",
  "job": {
-  "owner": "Claude:STW-S81c-TOK4-BAND",
-  "branch": "claude/s81-band-1022",
+  "owner": "Claude:STW-S81e-XR",
+  "branch": "claude/s81-rg3t-1023",
   "tag": "s81dv_rg3b_xm5",
   "purpose": "banded idx rg3 X successor: SRAM / key tile, ONE S pin-flop band, select capture replicated (census)",
   "views_to": "physical/ref_tile/s81dv_rg3b_xm5/views",
@@ -59,8 +60,8 @@
   ],
   "benches": [
    {
-    "name": "rg3b_bx_lsw",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 0",
+    "name": "rg3b_bx_lsw_lwl2",
+    "cmd": "env LWL=2 bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 0",
     "expect": "pass",
     "pass_regex": "^BX_LSW PASS$",
     "threads": 4,
@@ -70,8 +71,19 @@
     ]
    },
    {
-    "name": "rg3b_bx_lsw_mut5",
-    "cmd": "bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 5",
+    "name": "rg3b_bx_lsw_lwl2_mut5",
+    "cmd": "env LWL=2 bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 5",
+    "expect": "fail",
+    "fail_regex": "^BX_LSW MUTANT_CAUGHT$",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg3b_bx_lsw_lwl2_mut7",
+    "cmd": "env LWL=2 bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 7",
     "expect": "fail",
     "fail_regex": "^BX_LSW MUTANT_CAUGHT$",
     "threads": 4,
@@ -103,14 +115,15 @@
   "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_bx.sv"
  ],
  "params": {
-  "SRAM_MACRO": 1
+  "SRAM_MACRO": 1,
+  "LWL": 2
  },
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_c0.g_land[0].u_h.g_m.u_mem",
    "at": [
-    46.656,
+    24.624,
     23.76
    ],
    "orient": "MY",
@@ -120,7 +133,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_c0.g_land[1].u_h.g_m.u_mem",
    "at": [
-    46.656,
+    24.624,
     94.272
    ],
    "orient": "MY",
@@ -130,7 +143,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_c0.g_land[2].u_h.g_m.u_mem",
    "at": [
-    46.656,
+    24.624,
     164.784
    ],
    "orient": "MY",
@@ -140,7 +153,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_c0.g_land[3].u_h.g_m.u_mem",
    "at": [
-    46.656,
+    24.624,
     235.296
    ],
    "orient": "MY",
@@ -150,7 +163,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_c1.g_land[0].u_h.g_m.u_mem",
    "at": [
-    303.696,
+    281.448,
     23.76
    ],
    "orient": "R0",
@@ -160,7 +173,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_c1.g_land[1].u_h.g_m.u_mem",
    "at": [
-    303.696,
+    281.448,
     94.272
    ],
    "orient": "R0",
@@ -170,7 +183,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_c1.g_land[2].u_h.g_m.u_mem",
    "at": [
-    303.696,
+    281.448,
     164.784
    ],
    "orient": "R0",
@@ -180,7 +193,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_c1.g_land[3].u_h.g_m.u_mem",
    "at": [
-    303.696,
+    281.448,
     235.296
    ],
    "orient": "R0",
@@ -213,17 +226,19 @@
   "physical/common_flow/pin_reg_face_fence.tcl"
  ],
  "outline": {
-  "w": 524.88,
+  "w": 480.816,
   "h": 352.08,
   "exact": true
  },
- "outline_reason": "tile_plan content outline (macros-bound, 8 SRAM abutted 2x4, channels 42/82/42 from pin counts); left column mirrored (MY) so both read faces share the centre channel",
- "slot_change_request": "s81dv_idxrg3nq band column: bxm 475.2 x 432.0 -> 524.88 x 352.08 (W +49.68, H -79.92)",
+ "outline_reason": "8 SRAM abutted 2x4 (pitch 70.512); centre read channel 82.08 (both LEF-W read/write-lo faces, M3+M5 ~3,460 tracks vs <= 1,890 b crossing, 0.55 pessimistic / 0.25 with the column OR-chain); outer channels 24.6 um (120 b wd hi + landing regs); N 46 um (1,080 lw pin regs + fan-out to 8 SRAM landing), S 23.8 um (544 kq pin regs)",
+ "slot_change_request": "s81dv_idxrg3nq band column: bxm 475.2 x 432.0 -> 480.816 x 352.08 (W +5.616, H -79.92)",
  "unregistered_ok": {
-  "sx_i": "R's S-stage read select: drives the landing SRAM read enable/row through 1-2 gates; the macro's synchronous read port is the capture register (band schedule edge, frozen)",
-  "lw_v": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)",
-  "lw_h1": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)",
-  "lw_a": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)",
-  "lw_d": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)"
- }
+  "sx_i": "R's S-stage read select: drives the landing SRAM read enable/row through 1-2 gates; the macro's synchronous read port is the capture register (band schedule edge, frozen)"
+ },
+ "pin_hook_before_flops": [
+  "physical/common_flow/reg_floorplan_place.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/common_flow/reg_floorplan_release.tcl"
+ ]
 }

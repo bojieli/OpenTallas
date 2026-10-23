@@ -3,7 +3,8 @@
 module dsdv_idx_rg3_bx_ref #(
     parameter integer MUT = 0,
     parameter bit SRAM_MACRO = 0,
-    parameter integer RH = 1
+    parameter integer RH = 1,
+    parameter integer LWL = 0       // STW-S81e-XR 10-23: the booked write-visibility edges of the split bxmh landing (LWL)
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -84,12 +85,18 @@ module dsdv_idx_rg3_bx_ref #(
     generate for (gu = 0; gu < 4; gu = gu + 1) begin : g_land
         wire rs0 = s_vx[gu] && su_b == 2'(gu);
         wire rc  = c_v && c_u == 2'(gu);
+        reg [LWL:0] dv, dh; reg [9:0] da [0:LWL]; reg [255:0] dd [0:LWL];
+        always @(*) begin dv[0] = lw_v[gu]; dh[0] = lw_h1[gu]; da[0] = lw_a[gu]; dd[0] = lw_d[gu]; end
+        for (genvar q = 1; q <= LWL; q++) begin : g_wd
+            always @(posedge ck or negedge rl[1]) if (!rl[1]) dv[q] <= 1'b0; else dv[q] <= dv[q - 1];
+            always @(posedge ck) begin dh[q] <= dh[q - 1]; da[q] <= da[q - 1]; dd[q] <= dd[q - 1]; end
+        end
         dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_h0 (
             .ck(ck), .re(rs0 || rc), .ra(rs0 ? s_row : c_row), .rd(h0q[gu]),
-            .we(lw_v[gu] && !lw_h1[gu]), .wa(lw_a[gu]), .wd(lw_d[gu]));
+            .we(dv[LWL] && !dh[LWL]), .wa(da[LWL]), .wd(dd[LWL]));
         dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_h1 (
             .ck(ck), .re(rc), .ra(c_row), .rd(h1q[gu]),
-            .we(lw_v[gu] && lw_h1[gu]), .wa(lw_a[gu]), .wd(lw_d[gu]));
+            .we(dv[LWL] && dh[LWL]), .wa(da[LWL]), .wd(dd[LWL]));
     end endgenerate
     (* keep = "true" *) reg [31:0] ssel;
     always @(posedge ck) begin : g_ss
