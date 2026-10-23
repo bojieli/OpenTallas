@@ -7080,6 +7080,7 @@
      "rows": "census/die_rows.tsv.gz",
      "map": "census/die_map.json",
      "census_rows": 2494,
+     "taptree": null,
      "inter_bits": 194157,
      "intra_bits": 5267,
      "planned_pairs": 163,
@@ -7160,6 +7161,7 @@
      "rows": "census/slice_rows.tsv.gz",
      "map": "census/slice_map.json",
      "census_rows": 3276,
+     "taptree": null,
      "inter_bits": 379200,
      "intra_bits": 6480,
      "planned_pairs": 1502,
@@ -7175,6 +7177,7 @@
      "rows": "census/coll_rows.tsv.gz",
      "map": "census/coll_map.json",
      "census_rows": 39,
+     "taptree": null,
      "inter_bits": 7997,
      "intra_bits": 6548,
      "planned_pairs": 1431,
@@ -7187,6 +7190,22 @@
      "groups_spanning": {
       "slice_W5": 15
      }
+    },
+    {
+     "rows": "census/cb_rows.tsv.gz",
+     "map": "census/cb_map.json",
+     "census_rows": 1440,
+     "taptree": null,
+     "inter_bits": 123360,
+     "intra_bits": 616800,
+     "planned_pairs": 1502,
+     "dropped_bits": 0,
+     "dropped_pairs": 0,
+     "unmapped_instances": 0,
+     "forwarded_bits": 0,
+     "broadcast_collapsed_bits": 0,
+     "exempt": {},
+     "groups_spanning": {}
     }
    ],
    "dropped_bits": 0

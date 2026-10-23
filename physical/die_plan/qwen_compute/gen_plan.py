@@ -1710,12 +1710,29 @@ def write_census(P, geo, census, record, outdir, su_directed):
                        "rtl/physical/ot_qfd_collective_static_io.sv: record W+3/W+1, PW = W+51, slots 1+1)",
                "parts": parts2, "groups": {"slice_W5": groups["slice_W5"]}},
               open(cdir / "coll_map.json", "w"), indent=1)
+    # [3] CB16 cluster internals (R7, 10-23): the as-built reduction tree CB_TREE (traced from qfd_c_b16_dv_fabric)
+    # per cluster (the bc relay chain u_dn<c>_rly* is BINDER2-clean and not re-traced here); parts = the tile cell's CB unit, so the 4-quad cl_* groups of [0] are
+    # covered bit-for-bit (BINDER2 found 73,968 b of tree crossings the coarse group hid).
+    rows3, parts3 = [], {}
+    for cl in geo["clusters"]:
+        n = cl["name"]
+        for c in range(4):
+            for r in range(4):
+                parts3[f"{n}.t{c}{r}"] = cb_part(VARIANT, n, c, r)
+        for (dc, dr), dport, (sc, sr), sport in CB_TREE:
+            rows3.append(dict(src=f"{n}.t{sc}{sr}", src_bus=sport, dst=f"{n}.t{dc}{dr}", dst_bus=dport, kind="data",
+                              bits=RSW))
+    _tsv(cdir / "cb_rows.tsv.gz", rows3)
+    json.dump({"note": "QC-P3 R7 CB16 cluster-internal census map (gen_plan.py write_census [3]; CB_TREE)",
+               "parts": parts3, "groups": {}}, open(cdir / "cb_map.json", "w"), indent=1)
     return [{"rows": "census/die_rows.tsv.gz", "map": "census/die_map.json",
              "note": "as-built die census (FT-TOOL, r50 die; inputs/qc_census.json.gz), kind relabels only"},
             {"rows": "census/slice_rows.tsv.gz", "map": "census/slice_map.json",
              "note": "slice landed-region census (inputs/s8_lp_record.json) x 12 slices"},
             {"rows": "census/coll_rows.tsv.gz", "map": "census/coll_map.json",
-             "note": "io_collective internals from the RTL (face cores, share, UCIe, PHY flits)"}]
+             "note": "io_collective internals from the RTL (face cores, share, UCIe, PHY flits)"},
+            {"rows": "census/cb_rows.tsv.gz", "map": "census/cb_map.json",
+             "note": "CB16 cluster internals: as-built reduction tree (qfd_c_b16_dv_fabric trace)"}]
 
 
 # ====================================================================== main
