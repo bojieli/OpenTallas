@@ -7366,7 +7366,7 @@
   "master": "qkd_kvs_ctl",
   "granted_by": "STEWARD-QKc 2026-10-22 decision (b) (KDIE5-TV ctl_r1 grant, re-issued for the nc32 body; owner rule: M6 pin grants allowed when the tile does not grow)",
   "reason": "Pin-density grant, NOT growth: the relm frame W / E faces carry 2524 pins each on 172.776 um (14.6 / um on one layer > the 12 b/um/layer limit); M4 + M6 pin-only edge contacts = 7.3 / um / layer.  Outline 1123.176 x 172.776 and the M5 signal / PG cap unchanged; routed DEF / LEF M6 audit required.",
-  "source_commit": "e2aa80d02db56a945c76b0dd75f5ca872a7e82bd",
+  "source_commit": "558fba7b583c2081f52b2427b674e1afd3594135",
   "source_spec_sha256": "75bf816519e8803aac670f7715eaedbbf117b31bf50b74495a5cb9a22433e091",
   "ports": [
    {
