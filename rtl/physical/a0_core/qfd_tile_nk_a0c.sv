@@ -42,6 +42,12 @@ module qfd_tile_nk_a0c #(
     input  wire          ck_t17,
     input  wire          ck_t18,
     input  wire          ck_t19,
+`ifdef OT_A0_CK_TAPS24
+    input  wire          ck_t20,
+    input  wire          ck_t21,
+    input  wire          ck_t22,
+    input  wire          ck_t23,
+`endif
 `endif
     input  wire          rst_n,
     input  wire [15:0]   tile_id,
