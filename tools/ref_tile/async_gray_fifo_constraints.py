@@ -51,6 +51,14 @@ def reset_sync_original(values, scope):
             raise ValueError(f'async_gray_fifo ot_reset_sync {scope or "<top>"} elaborates {name}={raw!r}; only the reviewed '
                              'g_original form (OUTPUT_COPIES=1, TREE=0) is admitted')
 RESET_SYNC_SOURCE = 'rtl/lib/ot_reset_sync.sv'
+# COORD review 2026-10-22 10:45 (kshare r5a, APPROVED WITH CONDITIONS): the shared-pointer bit-sliced FIFO is admitted
+# ONLY as this exact module from this exact source (sha256 + Yosys src range); it is OPTIONAL (a parent that does not
+# declare it is checked exactly as before).  Control is the reviewed FIFO's verbatim; one Gray pair crosses; per-slice
+# wa/ra are same-domain copies; payload = g_s[s].mem[slot][b] -> rd_data[s*SW+b].
+SHP_SOURCE = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv'
+OPTIONAL_SOURCES = {SHP_SOURCE: ('16f29b89797521bd683cd58735590492a09e5f49b18da1d04acced37e85a6819',)}
+FIFO_SRC_RANGE = {'ot_hbm_svc_async_fifo': (next(iter(SOURCES)), '6.1-51.10'),
+                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '33.1-131.10')}
 # destination period - 60 ps setup uncertainty (gray_fifo_cdc_constraints rule (c) reset bound)
 RESET_BOUND_PS = {'core': 773.333, 'hbm': 964.0}
 RELATIONSHIP = dict(kind='hbm_phy_async_gray_fifo', stream_period_ps=833.333,
@@ -85,6 +93,11 @@ def load(spec, root):
         actual_hashes[path] = hashlib.sha256((Path(root) / path).read_bytes()).hexdigest()
         if actual_hashes[path] not in expected:
             raise ValueError(f'async_gray_fifo reviewed source changed: {path}')
+    for path, expected in OPTIONAL_SOURCES.items():
+        if path in declared:
+            actual_hashes[path] = hashlib.sha256((Path(root) / path).read_bytes()).hexdigest()
+            if actual_hashes[path] not in expected:
+                raise ValueError(f'async_gray_fifo reviewed source changed: {path}')
     if not primitive:
         return parent_load(spec, root, actual_hashes)
     params = spec.get('params', {})
@@ -110,6 +123,42 @@ def load(spec, root):
                 reset_aliases=['rd_reset','u_rd_reset.sync_rst_n','u_wr_reset.sync_rst_n','wr_reset'],payload_output_bits={'':{str(i):(['rd_data','rd_data[0]']if params.get('WIDTH',32)==1 else['rd_data['+str(i)+']'])for i in range(params.get('WIDTH',32))}},primitive=True)
 
 
+def _shp_reset_wiring(module):
+    """SHP v4 re-ack (COORD 10-22): every group / slice reset is driven by the kept leaf u_gw_leaf / u_gr_leaf, whose
+    rst_n_in is u_wr_reset / u_rd_reset.sync_rst_n, whose d is wr_online / rd_online and whose clk is wr_clk / rd_clk;
+    every g_s[*].wa flop resets from a u_gw_leaf output and every g_s[*].rs flop from a u_gr_leaf output.  Any other
+    wiring (e.g. an extra leaf stage, a group reset from a different sync) is refused."""
+    cells=module.get('cells',{});nets=module.get('netnames',{})
+    def bits(name):
+        if name not in nets:raise ValueError('async_gray_fifo shp reset wiring: missing net '+name)
+        return tuple(nets[name]['bits'])
+    con=lambda c,pin:tuple(cells[c]['connections'].get(pin,()))
+    for side,leaf,sync,online,clk in (('w','u_gw_leaf','u_wr_reset','wr_online','wr_clk'),('r','u_gr_leaf','u_rd_reset','rd_online','rd_clk')):
+        if (con(leaf,'rst_n_in')!=con(sync,'sync_rst_n') or not con(leaf,'rst_n_in') or con(leaf,'d')!=bits(online)
+                or con(leaf,'clk')!=bits(clk)):
+            raise ValueError('async_gray_fifo shp '+leaf+' is not the reviewed '+sync+' / '+online+' / '+clk+' leaf')
+    leaf_out={'w':set(con('u_gw_leaf','rst_n')),'r':set(con('u_gr_leaf','rst_n'))}
+    want={}
+    for name,net in nets.items():
+        m=re.fullmatch(r'g_s\[\d+\]\.(wa|rs)',name)
+        if m:
+            for b in net['bits']:
+                if isinstance(b,int):want[b]=('w' if m.group(1)=='wa' else 'r',name)
+    seen=set()
+    for cname,cell in cells.items():
+        conn=cell.get('connections',{})
+        if not cell.get('type','').startswith('$_DFF') or 'Q' not in conn or 'R' not in conn and 'S' not in conn:
+            continue
+        for q in conn['Q']:
+            if q in want:
+                side,name=want[q];rst=tuple(conn.get('R',[]))+tuple(conn.get('S',[]))
+                if not rst or not set(rst)<=leaf_out[side]:
+                    raise ValueError('async_gray_fifo shp '+name+' reset is not driven by its reviewed group leaf')
+                seen.add(q)
+    if set(want)-seen:
+        raise ValueError('async_gray_fifo shp slot-index flops without a reviewed async group reset: '+str(len(set(want)-seen)))
+
+
 @lru_cache(maxsize=16)
 def elaborate(root, top, sources, params):
     # The cache key includes every input byte hash. No caller-supplied graph or
@@ -125,7 +174,7 @@ def elaborate(root, top, sources, params):
         content=p.read_bytes()
         if hashlib.sha256(content).hexdigest()!=digest:
             raise ValueError('async_gray_fifo source changed during elaboration')
-        if path not in SOURCES:
+        if path not in SOURCES and path not in OPTIONAL_SOURCES:
             for attribute in re.findall(rb'\(\*(.*?)\*\)',content,re.S):
                 if re.search(rb'\b(?:src|hdlname)\s*=',attribute):
                     raise ValueError('async_gray_fifo reserved source metadata attributes are unsupported')
@@ -149,14 +198,27 @@ def elaborate(root, top, sources, params):
         run=subprocess.run([yosys,'-Q','-T','-p',command],capture_output=True,text=True)
         if run.returncode:raise ValueError('async_gray_fifo actual source elaboration failed: '+(run.stdout+run.stderr)[-1800:])
         document=json.loads(out.read_text())
-    fifo_src=str((root/next(iter(SOURCES))).resolve())+':6.1-51.10'
     for name,module in document['modules'].items():
-        claimed=module.get('attributes',{}).get('hdlname')=='ot_hbm_svc_async_fifo'
+        claimed=module.get('attributes',{}).get('hdlname')in async_fifo_hierarchy_audit.REVIEWED_FIFOS
         if claimed and not async_fifo_hierarchy_audit.fifo_module_type(name):
             raise ValueError('async_gray_fifo untrusted FIFO source identity alias')
-        if async_fifo_hierarchy_audit.fifo_module_type(name):
-            if module.get('attributes',{}).get('src')!=fifo_src:
+        base=async_fifo_hierarchy_audit.fifo_base(name)
+        if base:
+            src_path,src_range=FIFO_SRC_RANGE[base]
+            if base!='ot_hbm_svc_async_fifo' and src_path not in dict(sources):
+                raise ValueError('async_gray_fifo '+base+' requires its reviewed source declared')
+            if module.get('attributes',{}).get('src')!=str((root/src_path).resolve())+':'+src_range:
                 raise ValueError('async_gray_fifo module identity does not bind reviewed source')
+            if base=='ot_hbm_svc_async_fifo_shp':
+                # review (b): exactly the two reviewed syncs u_wr_reset / u_rd_reset (same module, same parameters), and
+                # the per-group release leaves are the kept same-domain ot_hbm_svc_shp_leaf u_gw_leaf / u_gr_leaf behind them
+                cells=module.get('cells',{})
+                syncs={c:x['type']for c,x in cells.items()if 'reset_sync' in x['type']}
+                leaves={c:x['type']for c,x in cells.items()if 'shp_leaf' in x['type']}
+                if (set(syncs)!={'u_wr_reset','u_rd_reset'} or len(set(syncs.values()))!=1
+                        or set(leaves)!={'u_gw_leaf','u_gr_leaf'}):
+                    raise ValueError('async_gray_fifo shp reset structure differs from the reviewed one: '+json.dumps([syncs,leaves],sort_keys=True)[:600])
+                _shp_reset_wiring(module)
             values=module.get('parameter_default_values',{})
             if int(values.get('DEPTH','0'),2)not in (4,8) or int(values.get('WIDTH','0'),2)<1:
                 raise ValueError('async_gray_fifo actual instance exceeds reviewed parameter shape')
@@ -223,10 +285,17 @@ def bindings(record):
     def exact_rows(key):
         return ' '.join(word(f['path'])+' {'+' '.join('{'+str(i)+'} {'+' '.join(word(v)for v in values)+'}'for i,values in record[key].get(f['path'],{}).items())+'}'for f in record['fifo_instances'])
     targets=exact_rows('payload_consumer_bits');outputs=exact_rows('payload_output_bits')
+    def slice_sw(f):
+        if f.get('base')!='ot_hbm_svc_async_fifo_shp':return 0
+        sw=int(f['parameters']['SW'],2)if isinstance(f['parameters'].get('SW'),str)else int(f['parameters'].get('SW',7))
+        if sw<1:raise ValueError('async_gray_fifo shp slice width')
+        return sw
+    sws=' '.join(word(f['path'])+' '+str(slice_sw(f))for f in record['fifo_instances'])
     return ('set ::ot_ag_fifo_domains [dict create '+fifo+']\n'
             +'set ::ot_ag_pointer_msb [dict create '+msbs+']\n'
             +'set ::ot_ag_targets [dict create '+targets+']\n'
             +'set ::ot_ag_outputs [dict create '+outputs+']\n'
+            +'set ::ot_ag_slice_sw [dict create '+sws+']\n'
             +'set ::ot_ag_primitive '+str(int(record['primitive']))+'\n'
             +'set ::ot_ag_reset_syncs [list '+' '.join(word(r)for r in record.get('reset_syncs',[]))+']\n'
             +'set ::ot_ag_reset_alias [list '+' '.join(word(r)for r in record.get('reset_aliases',[]))+']\n'
@@ -380,9 +449,14 @@ proc ot_ag_role {cell} {
       if {[regexp {^(wr|rd)_bin\[([0-9]+)\]$} $local unused direction index] && $index == [dict get $::ot_ag_pointer_msb $scope]} {
         dict set roles [list $scope ${direction}_gray $index] 1
       }
-      if {[regexp {^mem\[[0-9]+\](?:\[([0-9]+)\])?$} $local unused payload_bit]} {
+      if {[regexp {^mem\[[0-9]+\](?:\[([0-9]+)\])?$} $local unused payload_bit] && [dict get $::ot_ag_slice_sw $scope] == 0} {
         if {$payload_bit eq ""} {set payload_bit 0}
         dict set roles [list $scope payload $payload_bit] 1
+      }
+      # ot_hbm_svc_async_fifo_shp (review 10-22): slice s storage bit b is rd_data[s*SW+b]
+      if {[dict get $::ot_ag_slice_sw $scope] > 0 && [regexp {^g_s\[([0-9]+)\]\.mem\[[0-9]+\](?:\[([0-9]+)\])?$} $local unused slice_i slice_b]} {
+        if {$slice_b eq ""} {set slice_b 0}
+        dict set roles [list $scope payload [expr {$slice_i * [dict get $::ot_ag_slice_sw $scope] + $slice_b}]] 1
       }
     }
   }
