@@ -89,6 +89,8 @@ def collapse_landing(rows):
             s = srcs.pop()
             seen += 1
         rr = dict(r)
+        if s != r["src"]:
+            rr["src_bus"] = "%s/%s" % (r["src"], r["kind"])   # every ld output is "o": key by landing cell + kind
         rr["src"] = s
         out.append(rr)
     return out, unresolved

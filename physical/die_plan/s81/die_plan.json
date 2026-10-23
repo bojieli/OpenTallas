@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "S81 72-frame MU release die, plan v2 (PLAN-S81v2 10-23): one 1442.88 x 1226.88 lattice, MY-mirrored halves, frames as MX r0/r1/r2 bands in E-W 3-frame chains, slices as N-S 1-cell segment chains, svc 2x8 cells, no lane columns. physical/die_plan/s81/gen_plan_v2.py.",
+ "note": "S81 72-frame MU release die, plan v3 (PLAN-S81v3 10-23; v2 base): one 1442.88 x 1226.88 lattice, MY-mirrored halves, frames as MX r0/r1/r2 bands in E-W 3-frame chains, slices as N-S 1-cell segment chains, svc 2x8 cells, no lane columns. physical/die_plan/s81/gen_plan_v2.py.",
  "die": {
   "name": "s81",
   "label": "DeepSeek ROM S81 72-frame MU release die",
@@ -3282,12 +3282,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 1076,
+     "width": 1882,
      "kind": "data",
      "face": "N",
      "window_um": [
-      471.744,
-      705.764
+      587.136,
+      996.26
      ],
      "layers": [
       "M7",
@@ -3302,8 +3302,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      707.904,
-      856.092
+      998.592,
+      1146.396
      ],
      "layers": [
       "M7",
@@ -3318,8 +3318,8 @@
      "kind": "ctl",
      "face": "N",
      "window_um": [
-      1085.568,
-      1096.868
+      1376.256,
+      1393.316
      ],
      "layers": [
       "M7",
@@ -3410,12 +3410,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 2663,
      "kind": "data",
      "face": "N",
      "window_um": [
       6.144,
-      466.524
+      584.996
      ],
      "layers": [
       "M7",
@@ -3430,8 +3430,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      858.432,
-      969.756
+      1149.12,
+      1259.108
      ],
      "layers": [
       "M7",
@@ -3462,10 +3462,10 @@
      "in_face": "N",
      "out_face": "S",
      "width": 513,
-     "stations": 2,
+     "stations": 3,
      "in_window_um": [
-      971.904,
-      1083.428
+      1262.592,
+      1370.276
      ],
      "out_window_um": [
       665.088,
@@ -3535,12 +3535,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 1076,
+     "width": 1882,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      704.996
+      587.136,
+      996.26
      ],
      "layers": [
       "M6",
@@ -3555,8 +3555,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      707.904,
-      718.436
+      998.592,
+      1015.268
      ],
      "layers": [
       "M6",
@@ -3567,12 +3567,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 2132,
+     "width": 2663,
      "kind": "data",
      "face": "S",
      "window_um": [
       6.144,
-      466.524
+      584.996
      ],
      "layers": [
       "M7",
@@ -3587,8 +3587,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      858.432,
-      969.756
+      1149.12,
+      1259.108
      ],
      "layers": [
       "M7",
@@ -3599,12 +3599,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 2663,
      "kind": "data",
      "face": "E",
      "window_um": [
       6.144,
-      469.596
+      584.996
      ],
      "layers": [
       "M6",
@@ -3631,12 +3631,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 1076,
+     "width": 1882,
      "kind": "data",
      "face": "S",
      "window_um": [
-      471.744,
-      705.764
+      587.136,
+      996.26
      ],
      "layers": [
       "M7",
@@ -3651,8 +3651,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      707.904,
-      856.092
+      998.592,
+      1146.396
      ],
      "layers": [
       "M7",
@@ -3673,8 +3673,8 @@
       117.284
      ],
      "out_window_um": [
-      971.904,
-      1083.428
+      1262.592,
+      1370.276
      ],
      "layers": [
       "M7",
@@ -3693,8 +3693,8 @@
       252.644
      ],
      "out_window_um": [
-      1085.568,
-      1096.868
+      1376.256,
+      1393.316
      ],
      "layers": [
       "M7",
@@ -3878,12 +3878,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "N",
      "window_um": [
       6.144,
-      466.524
+      645.084
      ],
      "layers": [
       "M7",
@@ -3898,8 +3898,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      937.536,
-      1085.724
+      1243.776,
+      1351.076
      ],
      "layers": [
       "M7",
@@ -4022,12 +4022,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "N",
      "window_um": [
-      471.744,
-      934.044
+      646.848,
+      1242.012
      ],
      "layers": [
       "M7",
@@ -4042,8 +4042,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1087.872,
-      1199.196
+      1353.792,
+      1434.98
      ],
      "layers": [
       "M7",
@@ -4142,12 +4142,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 1076,
+     "width": 1882,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      704.996
+      587.136,
+      996.26
      ],
      "layers": [
       "M6",
@@ -4162,8 +4162,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      707.904,
-      718.436
+      998.592,
+      1015.268
      ],
      "layers": [
       "M6",
@@ -4174,12 +4174,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "S",
      "window_um": [
-      471.744,
-      934.044
+      646.848,
+      1242.012
      ],
      "layers": [
       "M7",
@@ -4194,8 +4194,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1087.872,
-      1199.196
+      1353.792,
+      1434.98
      ],
      "layers": [
       "M7",
@@ -4206,12 +4206,12 @@
     {
      "name": "attn_i2",
      "dir": "in",
-     "width": 2132,
+     "width": 2663,
      "kind": "data",
      "face": "W",
      "window_um": [
       6.144,
-      469.596
+      584.996
      ],
      "layers": [
       "M6",
@@ -4222,12 +4222,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 2663,
      "kind": "data",
      "face": "E",
      "window_um": [
       6.144,
-      469.596
+      584.996
      ],
      "layers": [
       "M6",
@@ -4238,12 +4238,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "S",
      "window_um": [
       6.144,
-      466.524
+      645.084
      ],
      "layers": [
       "M7",
@@ -4258,8 +4258,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      937.536,
-      1085.724
+      1243.776,
+      1351.076
      ],
      "layers": [
       "M7",
@@ -4270,12 +4270,12 @@
     {
      "name": "attn_o2",
      "dir": "out",
-     "width": 1076,
+     "width": 1882,
      "kind": "data",
      "face": "W",
      "window_um": [
-      471.744,
-      704.996
+      587.136,
+      996.26
      ],
      "layers": [
       "M6",
@@ -4290,8 +4290,8 @@
      "kind": "ctl",
      "face": "W",
      "window_um": [
-      707.904,
-      718.436
+      998.592,
+      1015.268
      ],
      "layers": [
       "M6",
@@ -4332,12 +4332,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 3210,
      "kind": "data",
      "face": "E",
      "window_um": [
       6.144,
-      469.596
+      703.836
      ],
      "layers": [
       "M6",
@@ -4352,8 +4352,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      1171.776,
-      1188.836
+      1640.448,
+      1657.508
      ],
      "layers": [
       "M6",
@@ -4364,12 +4364,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "N",
      "window_um": [
       6.144,
-      466.524
+      645.084
      ],
      "layers": [
       "M7",
@@ -4384,8 +4384,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      937.536,
-      1085.724
+      1243.776,
+      1351.076
      ],
      "layers": [
       "M7",
@@ -4460,12 +4460,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 3210,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      935.196
+      706.176,
+      1403.868
      ],
      "layers": [
       "M6",
@@ -4480,8 +4480,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      937.536,
-      1108.964
+      1406.208,
+      1576.484
      ],
      "layers": [
       "M6",
@@ -4496,8 +4496,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      1111.296,
-      1169.444
+      1579.968,
+      1635.812
      ],
      "layers": [
       "M6",
@@ -4512,8 +4512,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      1190.976,
-      1203.044
+      1659.648,
+      1676.324
      ],
      "layers": [
       "M6",
@@ -4524,12 +4524,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "N",
      "window_um": [
-      471.744,
-      934.044
+      646.848,
+      1242.012
      ],
      "layers": [
       "M7",
@@ -4544,8 +4544,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1087.872,
-      1199.196
+      1353.792,
+      1434.98
      ],
      "layers": [
       "M7",
@@ -4644,12 +4644,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 1076,
+     "width": 1607,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      704.996
+      647.04,
+      996.26
      ],
      "layers": [
       "M6",
@@ -4664,8 +4664,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      707.904,
-      830.18
+      998.592,
+      1120.668
      ],
      "layers": [
       "M6",
@@ -4680,8 +4680,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      956.736,
-      970.724
+      1247.424,
+      1259.108
      ],
      "layers": [
       "M6",
@@ -4724,12 +4724,12 @@
     {
      "name": "attn_i3",
      "dir": "in",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "S",
      "window_um": [
-      471.744,
-      934.044
+      646.848,
+      1242.012
      ],
      "layers": [
       "M7",
@@ -4744,8 +4744,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1087.872,
-      1199.196
+      1353.792,
+      1434.98
      ],
      "layers": [
       "M7",
@@ -4756,12 +4756,12 @@
     {
      "name": "attn_i4",
      "dir": "in",
-     "width": 2132,
+     "width": 2663,
      "kind": "data",
      "face": "W",
      "window_um": [
       6.144,
-      469.596
+      584.996
      ],
      "layers": [
       "M6",
@@ -4772,12 +4772,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 2938,
      "kind": "data",
      "face": "E",
      "window_um": [
       6.144,
-      469.596
+      644.7
      ],
      "layers": [
       "M6",
@@ -4792,8 +4792,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      832.32,
-      954.396
+      1123.008,
+      1245.084
      ],
      "layers": [
       "M6",
@@ -4836,12 +4836,12 @@
     {
      "name": "attn_o3",
      "dir": "out",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "S",
      "window_um": [
       6.144,
-      466.524
+      645.084
      ],
      "layers": [
       "M7",
@@ -4856,8 +4856,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      937.536,
-      1085.724
+      1243.776,
+      1351.076
      ],
      "layers": [
       "M7",
@@ -4868,12 +4868,12 @@
     {
      "name": "attn_o4",
      "dir": "out",
-     "width": 1076,
+     "width": 1882,
      "kind": "data",
      "face": "W",
      "window_um": [
-      471.744,
-      704.996
+      587.136,
+      996.26
      ],
      "layers": [
       "M6",
@@ -4888,8 +4888,8 @@
      "kind": "ctl",
      "face": "W",
      "window_um": [
-      707.904,
-      718.436
+      998.592,
+      1015.268
      ],
      "layers": [
       "M6",
@@ -4946,12 +4946,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "N",
      "window_um": [
       6.144,
-      466.524
+      645.084
      ],
      "layers": [
       "M7",
@@ -4966,8 +4966,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      937.536,
-      1085.724
+      1243.776,
+      1351.076
      ],
      "layers": [
       "M7",
@@ -4994,12 +4994,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 2132,
+     "width": 3210,
      "kind": "data",
      "face": "W",
      "window_um": [
-      471.744,
-      935.196
+      706.176,
+      1403.868
      ],
      "layers": [
       "M6",
@@ -5014,8 +5014,8 @@
      "kind": "data",
      "face": "W",
      "window_um": [
-      937.536,
-      1108.964
+      1406.208,
+      1576.484
      ],
      "layers": [
       "M6",
@@ -5030,8 +5030,8 @@
      "kind": "data",
      "face": "W",
      "window_um": [
-      1111.296,
-      1169.444
+      1579.968,
+      1635.812
      ],
      "layers": [
       "M6",
@@ -5046,8 +5046,8 @@
      "kind": "ctl",
      "face": "W",
      "window_um": [
-      1190.976,
-      1203.044
+      1659.648,
+      1676.324
      ],
      "layers": [
       "M6",
@@ -5106,12 +5106,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "N",
      "window_um": [
-      471.744,
-      934.044
+      646.848,
+      1242.012
      ],
      "layers": [
       "M7",
@@ -5126,8 +5126,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1087.872,
-      1199.196
+      1353.792,
+      1434.98
      ],
      "layers": [
       "M7",
@@ -5154,12 +5154,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 2132,
+     "width": 3210,
      "kind": "data",
      "face": "W",
      "window_um": [
       6.144,
-      469.596
+      703.836
      ],
      "layers": [
       "M6",
@@ -5174,8 +5174,8 @@
      "kind": "data",
      "face": "W",
      "window_um": [
-      1171.776,
-      1188.836
+      1640.448,
+      1657.508
      ],
      "layers": [
       "M6",
@@ -5242,12 +5242,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 1076,
+     "width": 1591,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      704.996
+      471.936,
+      817.884
      ],
      "layers": [
       "M6",
@@ -5262,8 +5262,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      956.736,
-      970.724
+      1068.864,
+      1083.236
      ],
      "layers": [
       "M6",
@@ -5274,12 +5274,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "S",
      "window_um": [
-      471.744,
-      934.044
+      646.848,
+      1242.012
      ],
      "layers": [
       "M7",
@@ -5294,8 +5294,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1087.872,
-      1199.196
+      1353.792,
+      1434.98
      ],
      "layers": [
       "M7",
@@ -5306,12 +5306,12 @@
     {
      "name": "attn_i2",
      "dir": "in",
-     "width": 2132,
+     "width": 2938,
      "kind": "data",
      "face": "W",
      "window_um": [
       6.144,
-      469.596
+      644.7
      ],
      "layers": [
       "M6",
@@ -5322,12 +5322,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 2133,
      "kind": "data",
      "face": "E",
      "window_um": [
       6.144,
-      469.596
+      469.796
      ],
      "layers": [
       "M6",
@@ -5338,12 +5338,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "S",
      "window_um": [
       6.144,
-      466.524
+      645.084
      ],
      "layers": [
       "M7",
@@ -5358,8 +5358,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      937.536,
-      1085.724
+      1243.776,
+      1351.076
      ],
      "layers": [
       "M7",
@@ -5370,12 +5370,12 @@
     {
      "name": "attn_o2",
      "dir": "out",
-     "width": 1076,
+     "width": 1607,
      "kind": "data",
      "face": "W",
      "window_um": [
-      471.744,
-      704.996
+      647.04,
+      996.26
      ],
      "layers": [
       "M6",
@@ -5390,8 +5390,8 @@
      "kind": "ctl",
      "face": "W",
      "window_um": [
-      956.736,
-      970.724
+      1247.424,
+      1259.108
      ],
      "layers": [
       "M6",
@@ -5406,14 +5406,14 @@
      "in_face": "E",
      "out_face": "W",
      "width": 562,
-     "stations": 1,
+     "stations": 2,
      "in_window_um": [
-      707.904,
-      830.18
+      820.032,
+      942.308
      ],
      "out_window_um": [
-      707.904,
-      830.18
+      998.592,
+      1120.668
      ],
      "layers": [
       "M6",
@@ -5426,14 +5426,14 @@
      "in_face": "W",
      "out_face": "E",
      "width": 562,
-     "stations": 1,
+     "stations": 2,
      "in_window_um": [
-      832.32,
-      954.396
+      1123.008,
+      1245.084
      ],
      "out_window_um": [
-      832.32,
-      954.396
+      944.448,
+      1066.724
      ],
      "layers": [
       "M6",
@@ -5521,12 +5521,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 2938,
      "kind": "data",
      "face": "N",
      "window_um": [
       6.144,
-      466.524
+      644.316
      ],
      "layers": [
       "M7",
@@ -5541,8 +5541,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      707.904,
-      856.092
+      998.592,
+      1146.396
      ],
      "layers": [
       "M7",
@@ -5569,12 +5569,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 1076,
+     "width": 1077,
      "kind": "data",
      "face": "W",
      "window_um": [
-      471.744,
-      704.996
+      471.936,
+      704.988
      ],
      "layers": [
       "M6",
@@ -5589,8 +5589,8 @@
      "kind": "data",
      "face": "W",
      "window_um": [
-      942.144,
-      959.204
+      942.528,
+      959.588
      ],
      "layers": [
       "M6",
@@ -5617,12 +5617,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 1076,
+     "width": 1607,
      "kind": "data",
      "face": "N",
      "window_um": [
-      471.744,
-      705.764
+      647.04,
+      996.26
      ],
      "layers": [
       "M7",
@@ -5637,8 +5637,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      858.432,
-      969.756
+      1149.12,
+      1259.108
      ],
      "layers": [
       "M7",
@@ -5665,12 +5665,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 2132,
+     "width": 2133,
      "kind": "data",
      "face": "W",
      "window_um": [
       6.144,
-      469.596
+      469.796
      ],
      "layers": [
       "M6",
@@ -5685,8 +5685,8 @@
      "kind": "data",
      "face": "W",
      "window_um": [
-      707.904,
-      875.292
+      708.288,
+      879.9
      ],
      "layers": [
       "M6",
@@ -5701,8 +5701,8 @@
      "kind": "data",
      "face": "W",
      "window_um": [
-      881.664,
-      939.996
+      882.048,
+      940.38
      ],
      "layers": [
       "M6",
@@ -5717,8 +5717,8 @@
      "kind": "ctl",
      "face": "W",
      "window_um": [
-      961.344,
-      974.948
+      961.92,
+      974.372
      ],
      "layers": [
       "M6",
@@ -5785,12 +5785,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 2133,
      "kind": "data",
      "face": "E",
      "window_um": [
       6.144,
-      469.596
+      469.796
      ],
      "layers": [
       "M6",
@@ -5801,12 +5801,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 1076,
+     "width": 1607,
      "kind": "data",
      "face": "S",
      "window_um": [
-      471.744,
-      705.764
+      647.04,
+      996.26
      ],
      "layers": [
       "M7",
@@ -5821,8 +5821,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      858.432,
-      969.756
+      1149.12,
+      1259.108
      ],
      "layers": [
       "M7",
@@ -5833,12 +5833,12 @@
     {
      "name": "attn_i2",
      "dir": "in",
-     "width": 2132,
+     "width": 2938,
      "kind": "data",
      "face": "W",
      "window_um": [
       6.144,
-      469.596
+      644.7
      ],
      "layers": [
       "M6",
@@ -5853,8 +5853,8 @@
      "kind": "ctl",
      "face": "W",
      "window_um": [
-      956.736,
-      970.724
+      1247.424,
+      1259.108
      ],
      "layers": [
       "M6",
@@ -5865,12 +5865,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 1076,
+     "width": 1591,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      704.996
+      471.936,
+      817.884
      ],
      "layers": [
       "M6",
@@ -5885,8 +5885,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      956.736,
-      970.724
+      1068.864,
+      1083.236
      ],
      "layers": [
       "M6",
@@ -5897,12 +5897,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 2132,
+     "width": 2938,
      "kind": "data",
      "face": "S",
      "window_um": [
       6.144,
-      466.524
+      644.316
      ],
      "layers": [
       "M7",
@@ -5917,8 +5917,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      707.904,
-      856.092
+      998.592,
+      1146.396
      ],
      "layers": [
       "M7",
@@ -5929,12 +5929,12 @@
     {
      "name": "attn_o2",
      "dir": "out",
-     "width": 1076,
+     "width": 1607,
      "kind": "data",
      "face": "W",
      "window_um": [
-      471.744,
-      704.996
+      647.04,
+      996.26
      ],
      "layers": [
       "M6",
@@ -5951,12 +5951,12 @@
      "width": 562,
      "stations": 2,
      "in_window_um": [
-      832.32,
-      954.396
+      944.448,
+      1066.724
      ],
      "out_window_um": [
-      707.904,
-      830.18
+      998.592,
+      1120.668
      ],
      "layers": [
       "M6",
@@ -5971,12 +5971,12 @@
      "width": 562,
      "stations": 2,
      "in_window_um": [
-      832.32,
-      954.396
+      1123.008,
+      1245.084
      ],
      "out_window_um": [
-      707.904,
-      830.18
+      820.032,
+      942.308
      ],
      "layers": [
       "M6",
@@ -6016,12 +6016,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 2133,
      "kind": "data",
      "face": "E",
      "window_um": [
       6.144,
-      469.596
+      469.796
      ],
      "layers": [
       "M6",
@@ -6036,8 +6036,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      707.904,
-      875.292
+      708.288,
+      879.9
      ],
      "layers": [
       "M6",
@@ -6052,8 +6052,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      881.664,
-      939.996
+      882.048,
+      940.38
      ],
      "layers": [
       "M6",
@@ -6068,8 +6068,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      961.344,
-      974.948
+      961.92,
+      974.372
      ],
      "layers": [
       "M6",
@@ -6080,12 +6080,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 1076,
+     "width": 1882,
      "kind": "data",
      "face": "N",
      "window_um": [
-      471.744,
-      705.764
+      587.136,
+      996.26
      ],
      "layers": [
       "M7",
@@ -6100,8 +6100,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      707.904,
-      856.092
+      998.592,
+      1146.396
      ],
      "layers": [
       "M7",
@@ -6128,12 +6128,12 @@
     {
      "name": "attn_i2",
      "dir": "in",
-     "width": 2132,
+     "width": 3210,
      "kind": "data",
      "face": "W",
      "window_um": [
       6.144,
-      469.596
+      703.836
      ],
      "layers": [
       "M6",
@@ -6148,8 +6148,8 @@
      "kind": "data",
      "face": "W",
      "window_um": [
-      1171.776,
-      1188.836
+      1640.448,
+      1657.508
      ],
      "layers": [
       "M6",
@@ -6160,12 +6160,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 1076,
+     "width": 1077,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      704.996
+      471.936,
+      704.988
      ],
      "layers": [
       "M6",
@@ -6180,8 +6180,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      942.144,
-      959.204
+      942.528,
+      959.588
      ],
      "layers": [
       "M6",
@@ -6192,12 +6192,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 2132,
+     "width": 2663,
      "kind": "data",
      "face": "N",
      "window_um": [
       6.144,
-      466.524
+      584.996
      ],
      "layers": [
       "M7",
@@ -6212,8 +6212,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      858.432,
-      969.756
+      1149.12,
+      1259.108
      ],
      "layers": [
       "M7",
@@ -6240,12 +6240,12 @@
     {
      "name": "attn_o2",
      "dir": "out",
-     "width": 2132,
+     "width": 3210,
      "kind": "data",
      "face": "W",
      "window_um": [
-      471.744,
-      935.196
+      706.176,
+      1403.868
      ],
      "layers": [
       "M6",
@@ -6260,8 +6260,8 @@
      "kind": "data",
      "face": "W",
      "window_um": [
-      937.536,
-      1108.964
+      1406.208,
+      1576.484
      ],
      "layers": [
       "M6",
@@ -6276,8 +6276,8 @@
      "kind": "data",
      "face": "W",
      "window_um": [
-      1111.296,
-      1169.444
+      1579.968,
+      1635.812
      ],
      "layers": [
       "M6",
@@ -6292,8 +6292,8 @@
      "kind": "ctl",
      "face": "W",
      "window_um": [
-      1190.976,
-      1203.044
+      1659.648,
+      1676.324
      ],
      "layers": [
       "M6",
@@ -6360,12 +6360,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 1076,
+     "width": 1607,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      704.996
+      647.04,
+      996.26
      ],
      "layers": [
       "M6",
@@ -6380,8 +6380,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      707.904,
-      830.18
+      998.592,
+      1120.668
      ],
      "layers": [
       "M6",
@@ -6424,12 +6424,12 @@
     {
      "name": "attn_i3",
      "dir": "in",
-     "width": 2132,
+     "width": 2663,
      "kind": "data",
      "face": "S",
      "window_um": [
       6.144,
-      466.524
+      584.996
      ],
      "layers": [
       "M7",
@@ -6444,8 +6444,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      858.432,
-      969.756
+      1149.12,
+      1259.108
      ],
      "layers": [
       "M7",
@@ -6456,12 +6456,12 @@
     {
      "name": "attn_i4",
      "dir": "in",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "W",
      "window_um": [
-      6.144,
-      469.596
+      881.088,
+      1694.18
      ],
      "layers": [
       "M6",
@@ -6476,8 +6476,8 @@
      "kind": "ctl",
      "face": "W",
      "window_um": [
-      937.536,
-      954.596
+      1696.32,
+      1708.772
      ],
      "layers": [
       "M6",
@@ -6488,12 +6488,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 2938,
      "kind": "data",
      "face": "E",
      "window_um": [
       6.144,
-      469.596
+      644.7
      ],
      "layers": [
       "M6",
@@ -6508,8 +6508,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      832.32,
-      954.396
+      1123.008,
+      1245.084
      ],
      "layers": [
       "M6",
@@ -6524,8 +6524,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      956.736,
-      970.724
+      1247.424,
+      1259.108
      ],
      "layers": [
       "M6",
@@ -6568,12 +6568,12 @@
     {
      "name": "attn_o3",
      "dir": "out",
-     "width": 1076,
+     "width": 1882,
      "kind": "data",
      "face": "S",
      "window_um": [
-      471.744,
-      705.764
+      587.136,
+      996.26
      ],
      "layers": [
       "M7",
@@ -6588,8 +6588,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      707.904,
-      856.092
+      998.592,
+      1146.396
      ],
      "layers": [
       "M7",
@@ -6600,12 +6600,12 @@
     {
      "name": "attn_o4",
      "dir": "out",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "W",
      "window_um": [
-      471.744,
-      935.196
+      6.144,
+      878.94
      ],
      "layers": [
       "M6",
@@ -6646,12 +6646,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 3210,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      935.196
+      706.176,
+      1403.868
      ],
      "layers": [
       "M6",
@@ -6666,8 +6666,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      937.536,
-      1108.964
+      1406.208,
+      1576.484
      ],
      "layers": [
       "M6",
@@ -6682,8 +6682,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      1111.296,
-      1169.444
+      1579.968,
+      1635.812
      ],
      "layers": [
       "M6",
@@ -6698,8 +6698,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      1190.976,
-      1203.044
+      1659.648,
+      1676.324
      ],
      "layers": [
       "M6",
@@ -6730,8 +6730,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      297.216,
-      445.604
+      300.672,
+      449.06
      ],
      "layers": [
       "M7",
@@ -6774,12 +6774,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 3210,
      "kind": "data",
      "face": "E",
      "window_um": [
       6.144,
-      469.596
+      703.836
      ],
      "layers": [
       "M6",
@@ -6794,8 +6794,8 @@
      "kind": "data",
      "face": "E",
      "window_um": [
-      1171.776,
-      1188.836
+      1640.448,
+      1657.508
      ],
      "layers": [
       "M6",
@@ -6806,12 +6806,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 514,
+     "width": 530,
      "kind": "data",
      "face": "N",
      "window_um": [
       183.36,
-      294.3
+      298.524
      ],
      "layers": [
       "M7",
@@ -6826,8 +6826,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      447.744,
-      559.068
+      451.2,
+      562.524
      ],
      "layers": [
       "M7",
@@ -6908,8 +6908,8 @@
      "width": 276,
      "stations": 2,
      "in_window_um": [
-      623.424,
-      678.884
+      626.88,
+      686.948
      ],
      "out_window_um": [
       465.6,
@@ -6928,8 +6928,8 @@
       236.7
      ],
      "out_window_um": [
-      561.216,
-      620.132
+      564.672,
+      624.74
      ],
      "order": "lsb_low"
     },
@@ -6944,8 +6944,8 @@
       401.052
      ],
      "out_window_um": [
-      685.632,
-      745.7
+      689.088,
+      749.156
      ],
      "order": "lsb_low"
     },
@@ -6960,8 +6960,8 @@
       462.492
      ],
      "out_window_um": [
-      747.84,
-      807.908
+      751.488,
+      809.82
      ],
      "order": "lsb_low"
     }
@@ -7023,12 +7023,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      935.196
+      6.144,
+      878.94
      ],
      "layers": [
       "M6",
@@ -7039,12 +7039,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 514,
+     "width": 530,
      "kind": "data",
      "face": "S",
      "window_um": [
       183.36,
-      294.3
+      298.524
      ],
      "layers": [
       "M7",
@@ -7059,8 +7059,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      447.744,
-      559.068
+      451.2,
+      562.524
      ],
      "layers": [
       "M7",
@@ -7071,12 +7071,12 @@
     {
      "name": "attn_i2",
      "dir": "in",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "W",
      "window_um": [
-      6.144,
-      469.596
+      881.088,
+      1694.18
      ],
      "layers": [
       "M6",
@@ -7091,8 +7091,8 @@
      "kind": "ctl",
      "face": "W",
      "window_um": [
-      937.536,
-      954.596
+      1696.32,
+      1708.772
      ],
      "layers": [
       "M6",
@@ -7103,12 +7103,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "E",
      "window_um": [
-      6.144,
-      469.596
+      881.088,
+      1694.18
      ],
      "layers": [
       "M6",
@@ -7123,8 +7123,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      937.536,
-      954.596
+      1696.32,
+      1708.772
      ],
      "layers": [
       "M6",
@@ -7155,8 +7155,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      297.216,
-      445.604
+      300.672,
+      449.06
      ],
      "layers": [
       "M7",
@@ -7167,12 +7167,12 @@
     {
      "name": "attn_o2",
      "dir": "out",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "W",
      "window_um": [
-      471.744,
-      935.196
+      6.144,
+      878.94
      ],
      "layers": [
       "M6",
@@ -7193,8 +7193,8 @@
       127.836
      ],
      "out_window_um": [
-      623.424,
-      678.884
+      626.88,
+      686.948
      ],
      "layers": [
       "M7",
@@ -7209,8 +7209,8 @@
      "width": 276,
      "stations": 3,
      "in_window_um": [
-      561.216,
-      620.132
+      564.672,
+      624.74
      ],
      "out_window_um": [
       6.144,
@@ -7229,8 +7229,8 @@
      "width": 276,
      "stations": 3,
      "in_window_um": [
-      685.632,
-      745.7
+      689.088,
+      749.156
      ],
      "out_window_um": [
       130.56,
@@ -7249,8 +7249,8 @@
      "width": 276,
      "stations": 3,
      "in_window_um": [
-      747.84,
-      807.908
+      751.488,
+      809.82
      ],
      "out_window_um": [
       192.768,
@@ -7342,12 +7342,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "N",
      "window_um": [
       6.144,
-      466.524
+      613.796
      ],
      "layers": [
       "M7",
@@ -7362,8 +7362,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      937.536,
-      1085.724
+      1182.912,
+      1286.172
      ],
      "layers": [
       "M7",
@@ -7438,12 +7438,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "N",
      "window_um": [
-      471.744,
-      934.044
+      615.36,
+      1181.34
      ],
      "layers": [
       "M7",
@@ -7458,8 +7458,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1087.872,
-      1199.196
+      1287.744,
+      1362.588
      ],
      "layers": [
       "M7",
@@ -7474,8 +7474,8 @@
      "kind": "ctl",
      "face": "N",
      "window_um": [
-      1220.736,
-      1237.796
+      1380.288,
+      1389.668
      ],
      "layers": [
       "M7",
@@ -7540,8 +7540,8 @@
      "width": 53,
      "stations": 3,
      "in_window_um": [
-      1201.536,
-      1218.596
+      1366.848,
+      1378.532
      ],
      "out_window_um": [
       611.904,
@@ -7558,10 +7558,10 @@
      "in_face": "N",
      "out_face": "S",
      "width": 276,
-     "stations": 2,
+     "stations": 3,
      "in_window_um": [
-      1240.128,
-      1299.996
+      1393.728,
+      1435.364
      ],
      "out_window_um": [
       774.912,
@@ -7663,12 +7663,12 @@
     {
      "name": "attn_i0",
      "dir": "in",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "E",
      "window_um": [
-      471.744,
-      935.196
+      6.144,
+      878.94
      ],
      "layers": [
       "M6",
@@ -7679,12 +7679,12 @@
     {
      "name": "attn_i1",
      "dir": "in",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "S",
      "window_um": [
-      471.744,
-      934.044
+      615.36,
+      1181.34
      ],
      "layers": [
       "M7",
@@ -7699,8 +7699,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1087.872,
-      1199.196
+      1287.744,
+      1362.588
      ],
      "layers": [
       "M7",
@@ -7715,8 +7715,8 @@
      "kind": "ctl",
      "face": "S",
      "window_um": [
-      1220.736,
-      1237.796
+      1380.288,
+      1389.668
      ],
      "layers": [
       "M7",
@@ -7727,12 +7727,12 @@
     {
      "name": "attn_o0",
      "dir": "out",
-     "width": 2132,
+     "width": 3740,
      "kind": "data",
      "face": "E",
      "window_um": [
-      6.144,
-      469.596
+      881.088,
+      1694.18
      ],
      "layers": [
       "M6",
@@ -7747,8 +7747,8 @@
      "kind": "ctl",
      "face": "E",
      "window_um": [
-      937.536,
-      954.596
+      1696.32,
+      1708.772
      ],
      "layers": [
       "M6",
@@ -7759,12 +7759,12 @@
     {
      "name": "attn_o1",
      "dir": "out",
-     "width": 2132,
+     "width": 4015,
      "kind": "data",
      "face": "S",
      "window_um": [
       6.144,
-      466.524
+      613.796
      ],
      "layers": [
       "M7",
@@ -7779,8 +7779,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      937.536,
-      1085.724
+      1182.912,
+      1286.172
      ],
      "layers": [
       "M7",
@@ -7801,8 +7801,8 @@
       138.788
      ],
      "out_window_um": [
-      1201.536,
-      1218.596
+      1366.848,
+      1378.532
      ],
      "layers": [
       "M7",
@@ -7853,8 +7853,8 @@
       685.404
      ],
      "out_window_um": [
-      1240.128,
-      1299.996
+      1393.728,
+      1435.364
      ],
      "layers": [
       "M7",
@@ -74347,8 +74347,8 @@
     "M5"
    ],
    "window_um": [
-    11175.744,
-    11287.268
+    11466.432,
+    11574.116
    ],
    "order": "lsb_low"
   },
@@ -76693,8 +76693,8 @@
     "M5"
    ],
    "window_um": [
-    19683.868,
-    19742.784
+    19679.26,
+    19739.328
    ],
    "order": "lsb_low"
   },
@@ -79629,7 +79629,7 @@
     "part": "svc_2",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 4015,
    "kind": "data",
    "face": "S",
    "layers": [
@@ -79638,7 +79638,7 @@
    ],
    "window_um": [
     11652.864,
-    12113.244
+    12291.804
    ],
    "order": "lsb_low"
   },
@@ -79652,7 +79652,7 @@
     "part": "svc_6",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 4015,
    "kind": "data",
    "face": "S",
    "layers": [
@@ -79661,7 +79661,7 @@
    ],
    "window_um": [
     14538.624,
-    14999.004
+    15177.564
    ],
    "order": "lsb_low"
   },
@@ -79675,7 +79675,7 @@
     "part": "svc_8",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 2938,
    "kind": "data",
    "face": "S",
    "layers": [
@@ -79683,7 +79683,7 @@
     "M5"
    ],
    "window_um": [
-    16951.716,
+    16773.924,
     17412.096
    ],
    "order": "lsb_high"
@@ -79698,7 +79698,7 @@
     "part": "svc_14",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 4015,
    "kind": "data",
    "face": "S",
    "layers": [
@@ -79706,7 +79706,7 @@
     "M5"
    ],
    "window_um": [
-    21280.356,
+    21133.084,
     21740.736
    ],
    "order": "lsb_high"
@@ -79882,7 +79882,7 @@
     "part": "svc_4",
     "bus": "attn_i1"
    },
-   "width": 2132,
+   "width": 4015,
    "kind": "data",
    "face": "S",
    "layers": [
@@ -79891,7 +79891,7 @@
    ],
    "window_um": [
     13095.744,
-    13556.124
+    13734.684
    ],
    "order": "lsb_low"
   },
@@ -80028,8 +80028,8 @@
     "M5"
    ],
    "window_um": [
-    10911.744,
-    11059.932
+    11202.432,
+    11350.236
    ],
    "order": "lsb_low"
   },
@@ -80235,8 +80235,8 @@
     "M5"
    ],
    "window_um": [
-    20661.156,
-    20809.344
+    20460.708,
+    20563.968
    ],
    "order": "lsb_high"
   },
@@ -80250,7 +80250,7 @@
     "part": "svc_10",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 2133,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -80259,7 +80259,7 @@
    ],
    "window_um": [
     1336.704,
-    1800.156
+    1800.356
    ],
    "order": "lsb_low"
   },
@@ -80557,8 +80557,8 @@
     "M5"
    ],
    "window_um": [
-    12584.256,
-    12732.444
+    12890.496,
+    12997.796
    ],
    "order": "lsb_low"
   },
@@ -80572,7 +80572,7 @@
     "part": "svc_3",
     "bus": "attn_i2"
    },
-   "width": 2132,
+   "width": 2663,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -80581,7 +80581,7 @@
    ],
    "window_um": [
     3790.464,
-    4253.916
+    4369.316
    ],
    "order": "lsb_low"
   },
@@ -80595,7 +80595,7 @@
     "part": "svc_6",
     "bus": "attn_i1"
    },
-   "width": 2132,
+   "width": 3210,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -80603,8 +80603,8 @@
     "M4"
    ],
    "window_um": [
-    1802.304,
-    2265.756
+    2036.736,
+    2734.428
    ],
    "order": "lsb_low"
   },
@@ -80618,7 +80618,7 @@
     "part": "svc_5",
     "bus": "attn_i3"
    },
-   "width": 2132,
+   "width": 3740,
    "kind": "data",
    "face": "N",
    "layers": [
@@ -80626,8 +80626,8 @@
     "M5"
    ],
    "window_um": [
-    13561.344,
-    14023.644
+    13736.448,
+    14331.612
    ],
    "order": "lsb_low"
   },
@@ -80641,7 +80641,7 @@
     "part": "svc_5",
     "bus": "attn_i4"
    },
-   "width": 2132,
+   "width": 2663,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -80650,7 +80650,7 @@
    ],
    "window_um": [
     3790.464,
-    4253.916
+    4369.316
    ],
    "order": "lsb_low"
   },
@@ -80664,7 +80664,7 @@
     "part": "svc_3",
     "bus": "attn_i1"
    },
-   "width": 2132,
+   "width": 3740,
    "kind": "data",
    "face": "N",
    "layers": [
@@ -80672,8 +80672,8 @@
     "M5"
    ],
    "window_um": [
-    12118.464,
-    12580.764
+    12293.568,
+    12888.732
    ],
    "order": "lsb_low"
   },
@@ -80687,7 +80687,7 @@
     "part": "svc_7",
     "bus": "attn_i1"
    },
-   "width": 2132,
+   "width": 3740,
    "kind": "data",
    "face": "N",
    "layers": [
@@ -80695,8 +80695,8 @@
     "M5"
    ],
    "window_um": [
-    15004.224,
-    15466.524
+    15179.328,
+    15774.492
    ],
    "order": "lsb_low"
   },
@@ -80710,7 +80710,7 @@
     "part": "svc_11",
     "bus": "attn_i3"
    },
-   "width": 2132,
+   "width": 2663,
    "kind": "data",
    "face": "N",
    "layers": [
@@ -80718,7 +80718,7 @@
     "M5"
    ],
    "window_um": [
-    18394.596,
+    18276.124,
     18854.976
    ],
    "order": "lsb_high"
@@ -80733,7 +80733,7 @@
     "part": "svc_1",
     "bus": "attn_i1"
    },
-   "width": 2132,
+   "width": 2663,
    "kind": "data",
    "face": "N",
    "layers": [
@@ -80742,7 +80742,7 @@
    ],
    "window_um": [
     10209.984,
-    10670.364
+    10788.836
    ],
    "order": "lsb_low"
   },
@@ -80756,7 +80756,7 @@
     "part": "svc_15",
     "bus": "attn_i1"
    },
-   "width": 2132,
+   "width": 3740,
    "kind": "data",
    "face": "N",
    "layers": [
@@ -80764,8 +80764,8 @@
     "M5"
    ],
    "window_um": [
-    20812.836,
-    21275.136
+    20565.54,
+    21131.52
    ],
    "order": "lsb_high"
   },
@@ -80779,7 +80779,7 @@
     "part": "svc_7",
     "bus": "attn_i2"
    },
-   "width": 2132,
+   "width": 2938,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -80788,7 +80788,7 @@
    ],
    "window_um": [
     3790.464,
-    4253.916
+    4429.02
    ],
    "order": "lsb_low"
   },
@@ -80802,7 +80802,7 @@
     "part": "svc_9",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 2133,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -80811,7 +80811,7 @@
    ],
    "window_um": [
     3790.464,
-    4253.916
+    4254.116
    ],
    "order": "lsb_low"
   },
@@ -80825,7 +80825,7 @@
     "part": "svc_15",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 4015,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -80833,8 +80833,8 @@
     "M4"
    ],
    "window_um": [
-    4256.064,
-    4719.516
+    3790.464,
+    4663.26
    ],
    "order": "lsb_low"
   },
@@ -80848,7 +80848,7 @@
     "part": "svc_13",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 4015,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -80856,8 +80856,8 @@
     "M4"
    ],
    "window_um": [
-    4256.064,
-    4719.516
+    3790.464,
+    4663.26
    ],
    "order": "lsb_low"
   },
@@ -80879,8 +80879,8 @@
     "M5"
    ],
    "window_um": [
-    16562.148,
-    16710.336
+    16271.844,
+    16419.648
    ],
    "order": "lsb_high"
   },
@@ -80894,7 +80894,7 @@
     "part": "svc_12",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 3210,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -80902,8 +80902,8 @@
     "M4"
    ],
    "window_um": [
-    1802.304,
-    2265.756
+    2036.736,
+    2734.428
    ],
    "order": "lsb_low"
   },
@@ -80925,8 +80925,8 @@
     "M5"
    ],
    "window_um": [
-    19858.396,
-    20006.784
+    19854.94,
+    20003.328
    ],
    "order": "lsb_high"
   },
@@ -80948,8 +80948,8 @@
     "M5"
    ],
    "window_um": [
-    11062.272,
-    11173.596
+    11352.96,
+    11462.948
    ],
    "order": "lsb_low"
   },
@@ -80971,8 +80971,8 @@
     "M5"
    ],
    "window_um": [
-    14027.136,
-    14175.324
+    14333.376,
+    14440.676
    ],
    "order": "lsb_low"
   },
@@ -81224,8 +81224,8 @@
     "M5"
    ],
    "window_um": [
-    15470.016,
-    15618.204
+    15776.256,
+    15883.556
    ],
    "order": "lsb_low"
   },
@@ -81477,8 +81477,8 @@
     "M5"
    ],
    "window_um": [
-    12734.592,
-    12845.916
+    13000.512,
+    13081.7
    ],
    "order": "lsb_low"
   },
@@ -81500,8 +81500,8 @@
     "M5"
    ],
    "window_um": [
-    20547.684,
-    20659.008
+    20384.292,
+    20459.136
    ],
    "order": "lsb_high"
   },
@@ -81638,8 +81638,8 @@
     "M5"
    ],
    "window_um": [
-    18005.028,
-    18153.216
+    17714.724,
+    17862.528
    ],
    "order": "lsb_high"
   },
@@ -81822,8 +81822,8 @@
     "M5"
    ],
    "window_um": [
-    19558.3,
-    19618.368
+    19554.844,
+    19614.912
    ],
    "order": "lsb_low"
   },
@@ -82328,8 +82328,8 @@
     "M5"
    ],
    "window_um": [
-    20446.884,
-    20506.752
+    20311.516,
+    20353.152
    ],
    "order": "lsb_low"
   },
@@ -82374,8 +82374,8 @@
     "M5"
    ],
    "window_um": [
-    16448.484,
-    16559.808
+    16159.132,
+    16269.12
    ],
    "order": "lsb_high"
   },
@@ -82696,8 +82696,8 @@
     "M4"
    ],
    "window_um": [
-    4616.64,
-    4738.716
+    4907.328,
+    5029.404
    ],
    "order": "lsb_low"
   },
@@ -82719,8 +82719,8 @@
     "M4"
    ],
    "window_um": [
-    4492.224,
-    4614.5
+    4604.352,
+    4726.628
    ],
    "order": "lsb_low"
   },
@@ -82742,8 +82742,8 @@
     "M4"
    ],
    "window_um": [
-    4492.224,
-    4614.5
+    4782.912,
+    4904.988
    ],
    "order": "lsb_low"
   },
@@ -82765,8 +82765,8 @@
     "M5"
    ],
    "window_um": [
-    14177.472,
-    14288.796
+    14443.392,
+    14524.58
    ],
    "order": "lsb_low"
   },
@@ -82788,8 +82788,8 @@
     "M5"
    ],
    "window_um": [
-    19744.932,
-    19856.256
+    19741.476,
+    19852.8
    ],
    "order": "lsb_high"
   },
@@ -82811,8 +82811,8 @@
     "M4"
    ],
    "window_um": [
-    4616.64,
-    4738.716
+    4907.328,
+    5029.404
    ],
    "order": "lsb_low"
   },
@@ -82834,8 +82834,8 @@
     "M4"
    ],
    "window_um": [
-    4616.64,
-    4738.716
+    4728.768,
+    4851.044
    ],
    "order": "lsb_low"
   },
@@ -82857,8 +82857,8 @@
     "M4"
    ],
    "window_um": [
-    4492.224,
-    4614.5
+    4782.912,
+    4904.988
    ],
    "order": "lsb_low"
   },
@@ -82872,7 +82872,7 @@
     "part": "svc_9",
     "bus": "attn_i1"
    },
-   "width": 1076,
+   "width": 1607,
    "kind": "data",
    "face": "N",
    "layers": [
@@ -82880,8 +82880,8 @@
     "M5"
    ],
    "window_um": [
-    16712.476,
-    16946.496
+    16421.98,
+    16771.2
    ],
    "order": "lsb_high"
   },
@@ -82903,8 +82903,8 @@
     "M5"
    ],
    "window_um": [
-    17891.364,
-    18002.688
+    17602.012,
+    17712.0
    ],
    "order": "lsb_high"
   },
@@ -82926,8 +82926,8 @@
     "M5"
    ],
    "window_um": [
-    15620.352,
-    15731.676
+    15886.272,
+    15967.46
    ],
    "order": "lsb_low"
   },
@@ -82941,7 +82941,7 @@
     "part": "svc_0",
     "bus": "attn_i0"
    },
-   "width": 1076,
+   "width": 1882,
    "kind": "data",
    "face": "S",
    "layers": [
@@ -82949,8 +82949,8 @@
     "M5"
    ],
    "window_um": [
-    10675.584,
-    10909.604
+    10790.976,
+    11200.1
    ],
    "order": "lsb_low"
   },
@@ -83723,7 +83723,7 @@
     "part": "svc_10",
     "bus": "attn_i1"
    },
-   "width": 1076,
+   "width": 1882,
    "kind": "data",
    "face": "S",
    "layers": [
@@ -83731,8 +83731,8 @@
     "M5"
    ],
    "window_um": [
-    18155.356,
-    18389.376
+    17864.86,
+    18273.984
    ],
    "order": "lsb_high"
   },
@@ -83746,7 +83746,7 @@
     "part": "svc_13",
     "bus": "attn_i2"
    },
-   "width": 2132,
+   "width": 3740,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -83754,8 +83754,8 @@
     "M4"
    ],
    "window_um": [
-    3790.464,
-    4253.916
+    4665.408,
+    5478.5
    ],
    "order": "lsb_low"
   },
@@ -83769,7 +83769,7 @@
     "part": "svc_10",
     "bus": "attn_i2"
    },
-   "width": 2132,
+   "width": 3210,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -83778,7 +83778,7 @@
    ],
    "window_um": [
     1336.704,
-    1800.156
+    2034.396
    ],
    "order": "lsb_low"
   },
@@ -83792,7 +83792,7 @@
     "part": "svc_4",
     "bus": "attn_i0"
    },
-   "width": 2132,
+   "width": 3210,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -83801,7 +83801,7 @@
    ],
    "window_um": [
     1336.704,
-    1800.156
+    2034.396
    ],
    "order": "lsb_low"
   },
@@ -83815,7 +83815,7 @@
     "part": "svc_8",
     "bus": "attn_i1"
    },
-   "width": 1076,
+   "width": 1077,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -83823,8 +83823,8 @@
     "M4"
    ],
    "window_um": [
-    1802.304,
-    2035.556
+    1802.496,
+    2035.548
    ],
    "order": "lsb_low"
   },
@@ -83838,7 +83838,7 @@
     "part": "svc_1",
     "bus": "attn_i0"
    },
-   "width": 1076,
+   "width": 1882,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -83846,8 +83846,8 @@
     "M4"
    ],
    "window_um": [
-    4256.064,
-    4489.316
+    4371.456,
+    4780.58
    ],
    "order": "lsb_low"
   },
@@ -83861,7 +83861,7 @@
     "part": "svc_3",
     "bus": "attn_i0"
    },
-   "width": 1076,
+   "width": 1882,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -83869,8 +83869,8 @@
     "M4"
    ],
    "window_um": [
-    4256.064,
-    4489.316
+    4371.456,
+    4780.58
    ],
    "order": "lsb_low"
   },
@@ -83884,7 +83884,7 @@
     "part": "svc_5",
     "bus": "attn_i0"
    },
-   "width": 1076,
+   "width": 1607,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -83892,8 +83892,8 @@
     "M4"
    ],
    "window_um": [
-    4256.064,
-    4489.316
+    4431.36,
+    4780.58
    ],
    "order": "lsb_low"
   },
@@ -83907,7 +83907,7 @@
     "part": "svc_7",
     "bus": "attn_i0"
    },
-   "width": 1076,
+   "width": 1591,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -83915,8 +83915,8 @@
     "M4"
    ],
    "window_um": [
-    4256.064,
-    4489.316
+    4256.256,
+    4602.204
    ],
    "order": "lsb_low"
   },
@@ -83930,7 +83930,7 @@
     "part": "svc_11",
     "bus": "attn_i4"
    },
-   "width": 2132,
+   "width": 3740,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -83938,8 +83938,8 @@
     "M4"
    ],
    "window_um": [
-    3790.464,
-    4253.916
+    4665.408,
+    5478.5
    ],
    "order": "lsb_low"
   },
@@ -84367,7 +84367,7 @@
     "part": "svc_9",
     "bus": "attn_i2"
    },
-   "width": 2132,
+   "width": 2938,
    "kind": "data",
    "face": "W",
    "layers": [
@@ -84376,7 +84376,7 @@
    ],
    "window_um": [
     3790.464,
-    4253.916
+    4429.02
    ],
    "order": "lsb_low"
   },
@@ -85379,7 +85379,7 @@
     "part": "svc_11",
     "bus": "attn_i0"
    },
-   "width": 1076,
+   "width": 1607,
    "kind": "data",
    "face": "E",
    "layers": [
@@ -85387,8 +85387,8 @@
     "M4"
    ],
    "window_um": [
-    4256.064,
-    4489.316
+    4431.36,
+    4780.58
    ],
    "order": "lsb_low"
   },
@@ -85494,7 +85494,7 @@
     "part": "svc_13",
     "bus": "attn_i1"
    },
-   "width": 514,
+   "width": 530,
    "kind": "data",
    "face": "N",
    "layers": [
@@ -85502,7 +85502,7 @@
     "M5"
    ],
    "window_um": [
-    20009.7,
+    20005.476,
     20120.64
    ],
    "order": "lsb_high"
@@ -85640,8 +85640,8 @@
     "M5"
    ],
    "window_um": [
-    19625.116,
-    19680.576
+    19617.052,
+    19677.12
    ],
    "order": "lsb_high"
   },
@@ -85755,8 +85755,8 @@
     "M5"
    ],
    "window_um": [
-    19496.092,
-    19556.16
+    19494.18,
+    19552.512
    ],
    "order": "lsb_low"
   },
@@ -86468,8 +86468,8 @@
     "M4"
    ],
    "window_um": [
-    2038.464,
-    2205.852
+    2038.848,
+    2210.46
    ],
    "order": "lsb_low"
   },
@@ -87181,8 +87181,8 @@
     "M4"
    ],
    "window_um": [
-    2268.096,
-    2439.524
+    2736.768,
+    2907.044
    ],
    "order": "lsb_low"
   },
@@ -88170,8 +88170,8 @@
     "M5"
    ],
    "window_um": [
-    20528.284,
-    20545.344
+    20368.348,
+    20380.032
    ],
    "order": "lsb_low"
   },
@@ -88906,8 +88906,8 @@
     "M4"
    ],
    "window_um": [
-    2268.096,
-    2439.524
+    2736.768,
+    2907.044
    ],
    "order": "lsb_low"
   },
@@ -88975,8 +88975,8 @@
     "M4"
    ],
    "window_um": [
-    2441.856,
-    2500.004
+    2910.528,
+    2966.372
    ],
    "order": "lsb_low"
   },
@@ -88998,8 +88998,8 @@
     "M4"
    ],
    "window_um": [
-    2212.224,
-    2270.556
+    2212.608,
+    2270.94
    ],
    "order": "lsb_low"
   },
@@ -89021,8 +89021,8 @@
     "M4"
    ],
    "window_um": [
-    2441.856,
-    2500.004
+    2910.528,
+    2966.372
    ],
    "order": "lsb_low"
   },
@@ -89113,8 +89113,8 @@
     "M4"
    ],
    "window_um": [
-    2502.336,
-    2519.396
+    2971.008,
+    2988.068
    ],
    "order": "lsb_low"
   },
@@ -89136,8 +89136,8 @@
     "M4"
    ],
    "window_um": [
-    2272.704,
-    2289.764
+    2273.088,
+    2290.148
    ],
    "order": "lsb_low"
   },
@@ -89159,8 +89159,8 @@
     "M4"
    ],
    "window_um": [
-    2502.336,
-    2519.396
+    2971.008,
+    2988.068
    ],
    "order": "lsb_low"
   },
@@ -90217,8 +90217,8 @@
     "M5"
    ],
    "window_um": [
-    11289.408,
-    11300.708
+    11580.096,
+    11597.156
    ],
    "order": "lsb_low"
   },
@@ -90286,8 +90286,8 @@
     "M4"
    ],
    "window_um": [
-    2521.536,
-    2533.604
+    2990.208,
+    3006.884
    ],
    "order": "lsb_low"
   },
@@ -90332,8 +90332,8 @@
     "M4"
    ],
    "window_um": [
-    2291.904,
-    2305.508
+    2292.48,
+    2304.932
    ],
    "order": "lsb_low"
   },
@@ -90355,8 +90355,8 @@
     "M4"
    ],
    "window_um": [
-    2521.536,
-    2533.604
+    2990.208,
+    3006.884
    ],
    "order": "lsb_low"
   },
@@ -90401,8 +90401,8 @@
     "M5"
    ],
    "window_um": [
-    20509.084,
-    20526.144
+    20357.212,
+    20366.592
    ],
    "order": "lsb_high"
   },
@@ -90424,8 +90424,8 @@
     "M4"
    ],
    "window_um": [
-    4721.856,
-    4738.916
+    5480.64,
+    5493.092
    ],
    "order": "lsb_low"
   },
@@ -90447,8 +90447,8 @@
     "M4"
    ],
    "window_um": [
-    4721.856,
-    4738.916
+    5480.64,
+    5493.092
    ],
    "order": "lsb_low"
   },
@@ -90470,8 +90470,8 @@
     "M4"
    ],
    "window_um": [
-    4741.056,
-    4755.044
+    5031.744,
+    5043.428
    ],
    "order": "lsb_low"
   },
@@ -90493,8 +90493,8 @@
     "M4"
    ],
    "window_um": [
-    4741.056,
-    4755.044
+    4853.184,
+    4867.556
    ],
    "order": "lsb_low"
   },
@@ -90516,8 +90516,8 @@
     "M4"
    ],
    "window_um": [
-    4741.056,
-    4755.044
+    5031.744,
+    5043.428
    ],
    "order": "lsb_low"
   },
@@ -90539,8 +90539,8 @@
     "M4"
    ],
    "window_um": [
-    4492.224,
-    4502.756
+    4782.912,
+    4799.588
    ],
    "order": "lsb_low"
   },
@@ -90562,8 +90562,8 @@
     "M4"
    ],
    "window_um": [
-    4492.224,
-    4502.756
+    4782.912,
+    4799.588
    ],
    "order": "lsb_low"
   },
@@ -96902,6 +96902,13 @@
   "epoch_bit": true,
   "release": "counted"
  },
+ "census": [
+  {
+   "rows": "census/s81_lanes.tsv",
+   "map": "census_map.json",
+   "note": "FT census of the bound as-built die (1364 rows); finer partition-level check incl. bus-aware lep rx/tx and src-bus dedup: census_cov.py -> v3/census_cov.json"
+  }
+ ],
  "budgets": {
   "face_pins_per_um": 6,
   "face_pin_layers": 2,
@@ -101713,8 +101720,8 @@
     "param": "LAT_KU_S_7N"
    },
    "idx__s_3S_C__iqf": {
-    "cycles": 15,
-    "stations": 13,
+    "cycles": 16,
+    "stations": 14,
     "boundary": 2,
     "faces": 9,
     "fixed": 0,
@@ -102329,8 +102336,8 @@
     "param": "LAT_XTIER__ENG__S_6N_C"
    },
    "xtier__s_6N_C__eng": {
-    "cycles": 24,
-    "stations": 22,
+    "cycles": 25,
+    "stations": 23,
     "boundary": 2,
     "faces": 13,
     "fixed": 0,
@@ -102353,8 +102360,8 @@
     "param": "LAT_UNIT__S_7N_C__SEQHOST"
    },
    "attn__svc_11__svc_5": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 6,
+    "stations": 4,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
@@ -102377,8 +102384,8 @@
     "param": "LAT_HBM__SVC_12__SVC_13"
    },
    "attn__svc_5__svc_11": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 6,
+    "stations": 4,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,

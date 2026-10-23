@@ -133,6 +133,7 @@ def coverage(P, plan_dir, R):
         asb = defaultdict(int)
         exempt = defaultdict(int)
         intra = 0
+        seen = {}
         for r in rows:
             s, d = where(r["src"]), where(r["dst"])
             if s is None or d is None:
@@ -149,7 +150,12 @@ def coverage(P, plan_dir, R):
             if hit is not None:
                 exempt[(hit["kind"], hit.get("replaced_by", ""), hit["match"])] += r["bits"]
                 continue
-            asb[(sg, dg)] += r["bits"]
+            # one driver bus reaching several sinks in the same partition/group (a broadcast, or the tracer's
+            # src-bus x dst-bus cross product through one relay bundle) crosses the boundary once: count it once
+            key = (r["src"], r["src_bus"], dg)
+            if r["bits"] > seen.get(key, 0):
+                asb[(sg, dg)] += r["bits"] - seen.get(key, 0)
+                seen[key] = r["bits"]
         for inst, b in sorted(unmapped.items(), key=lambda x: -x[1])[:30]:
             R.err("census", f"census[{k}]: as-built instance '{inst}' ({b} bits) maps to no partition")
         if len(unmapped) > 30:

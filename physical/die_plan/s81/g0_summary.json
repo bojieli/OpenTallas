@@ -6,13 +6,13 @@
   "partitions": 400,
   "singleton_types": 140,
   "max_instances": 60,
-  "near_duplicate_groups": 17,
-  "near_duplicate_types": 35,
-  "mergeable_saving": 18
+  "near_duplicate_groups": 16,
+  "near_duplicate_types": 33,
+  "mergeable_saving": 17
  },
  "ports": 2109,
  "lanes": 820,
- "bits": 1022244,
+ "bits": 1057395,
  "geometry": {
   "partition_area_mm2": 768.2844266496062,
   "channel_area_mm2": 22.334861721600017,
@@ -22,6 +22,46 @@
  },
  "worst_faces": [
   {
+   "part": "svc_15",
+   "face": "S",
+   "pins_per_um": 7.2
+  },
+  {
+   "part": "svc_14",
+   "face": "N",
+   "pins_per_um": 7.2
+  },
+  {
+   "part": "svc_7",
+   "face": "S",
+   "pins_per_um": 6.7
+  },
+  {
+   "part": "svc_6",
+   "face": "N",
+   "pins_per_um": 6.7
+  },
+  {
+   "part": "svc_5",
+   "face": "S",
+   "pins_per_um": 6.7
+  },
+  {
+   "part": "svc_4",
+   "face": "N",
+   "pins_per_um": 6.7
+  },
+  {
+   "part": "svc_3",
+   "face": "S",
+   "pins_per_um": 6.7
+  },
+  {
+   "part": "svc_2",
+   "face": "N",
+   "pins_per_um": 6.7
+  },
+  {
    "part": "s_5S_L2",
    "face": "N",
    "pins_per_um": 5.7
@@ -30,46 +70,6 @@
    "part": "s_5S_L0",
    "face": "S",
    "pins_per_um": 5.7
-  },
-  {
-   "part": "svc_15",
-   "face": "N",
-   "pins_per_um": 5.5
-  },
-  {
-   "part": "svc_1",
-   "face": "N",
-   "pins_per_um": 5.5
-  },
-  {
-   "part": "s_7S_x05",
-   "face": "S",
-   "pins_per_um": 5.5
-  },
-  {
-   "part": "s_7S_x05",
-   "face": "N",
-   "pins_per_um": 5.5
-  },
-  {
-   "part": "s_7S_L2",
-   "face": "S",
-   "pins_per_um": 5.5
-  },
-  {
-   "part": "s_7N_x06",
-   "face": "S",
-   "pins_per_um": 5.5
-  },
-  {
-   "part": "s_7N_L4",
-   "face": "N",
-   "pins_per_um": 5.5
-  },
-  {
-   "part": "s_2N_L1",
-   "face": "S",
-   "pins_per_um": 5.5
   }
  ],
  "worst_hops": [
@@ -550,20 +550,20 @@
    },
    {
     "at_um": 11250,
-    "bits": 15910,
+    "bits": 16936,
     "tracks": 409237,
-    "ratio": 0.0389,
-    "m89_only_ratio": 0.0514,
+    "ratio": 0.0414,
+    "m89_only_ratio": 0.0548,
     "worst_part": "s_0N_L1",
     "worst_part_ratio": 0.2372,
     "worst_part_bits": 4836
    },
    {
     "at_um": 11500,
-    "bits": 14802,
+    "bits": 15832,
     "tracks": 409237,
-    "ratio": 0.0362,
-    "m89_only_ratio": 0.0479,
+    "ratio": 0.0387,
+    "m89_only_ratio": 0.0512,
     "worst_part": "s_0N_L1",
     "worst_part_ratio": 0.1831,
     "worst_part_bits": 3732
@@ -920,10 +920,10 @@
    },
    {
     "at_um": 20500,
-    "bits": 15994,
+    "bits": 16100,
     "tracks": 409237,
-    "ratio": 0.0391,
-    "m89_only_ratio": 0.0517,
+    "ratio": 0.0393,
+    "m89_only_ratio": 0.0521,
     "worst_part": "s_7N_L1",
     "worst_part_ratio": 0.1831,
     "worst_part_bits": 3732
@@ -1544,10 +1544,10 @@
    },
    {
     "at_um": 4750,
-    "bits": 16566,
+    "bits": 17690,
     "tracks": 528958,
-    "ratio": 0.0313,
-    "m89_only_ratio": 0.0415,
+    "ratio": 0.0334,
+    "m89_only_ratio": 0.0443,
     "worst_part": "s_7S_x13",
     "worst_part_ratio": 0.2413,
     "worst_part_bits": 5784
@@ -2969,7 +2969,7 @@
   "up_s_7N_L4": 6,
   "kd_s_7N": 2,
   "ku_s_7N": 2,
-  "idx__s_3S_C__iqf": 15,
+  "idx__s_3S_C__iqf": 16,
   "xring__s_7N_C__s_6N_C": 2,
   "xring__s_0N_C__s_1N_C": 2,
   "xring__s_1N_C__s_0N_C": 2,
@@ -3046,13 +3046,13 @@
   "hbm__svc_11__svc_10": 2,
   "xtier__s_1N_C__bk_col": 9,
   "xtier__eng__s_6N_C": 23,
-  "xtier__s_6N_C__eng": 24,
+  "xtier__s_6N_C__eng": 25,
   "hbm__svc_8__svc_9": 2,
   "unit__s_7N_C__seqhost": 22,
-  "attn__svc_11__svc_5": 5,
+  "attn__svc_11__svc_5": 6,
   "hbm__svc_4__svc_5": 2,
   "hbm__svc_12__svc_13": 2,
-  "attn__svc_5__svc_11": 5,
+  "attn__svc_5__svc_11": 6,
   "attn__svc_8__svc_9": 2,
   "hbm__svc_10__svc_11": 2,
   "hbm__svc_6__svc_7": 2,
@@ -3192,7 +3192,7 @@
  },
  "seams": {
   "nets": {
-   "abutted": 1024353,
+   "abutted": 1059504,
    "channel": 0
   },
   "pairs": {
@@ -4565,7 +4565,7 @@
     "channel": 0
    },
    "svc_0|svc_1": {
-    "abutted": 4925,
+    "abutted": 6262,
     "channel": 0
    },
    "iqf|svc_0": {
@@ -4709,7 +4709,7 @@
     "channel": 0
    },
    "svc_12|svc_13": {
-    "abutted": 3625,
+    "abutted": 3641,
     "channel": 0
    },
    "s_6S_L4|svc_13": {
@@ -4817,27 +4817,27 @@
     "channel": 0
    },
    "svc_2|svc_3": {
-    "abutted": 5462,
+    "abutted": 8953,
     "channel": 0
    },
    "svc_6|svc_7": {
-    "abutted": 5462,
+    "abutted": 8953,
     "channel": 0
    },
    "svc_8|svc_9": {
-    "abutted": 4406,
+    "abutted": 5743,
     "channel": 0
    },
    "svc_14|svc_15": {
-    "abutted": 5798,
+    "abutted": 9289,
     "channel": 0
    },
    "svc_4|svc_5": {
-    "abutted": 5462,
+    "abutted": 8953,
     "channel": 0
    },
    "svc_10|svc_8": {
-    "abutted": 4318,
+    "abutted": 4320,
     "channel": 0
    },
    "s_1N_L2|s_1S_x06": {
@@ -4849,39 +4849,39 @@
     "channel": 0
    },
    "svc_1|svc_3": {
-    "abutted": 3215,
+    "abutted": 4552,
     "channel": 0
    },
    "svc_4|svc_6": {
-    "abutted": 5374,
+    "abutted": 7530,
     "channel": 0
    },
    "svc_3|svc_5": {
-    "abutted": 3215,
+    "abutted": 4552,
     "channel": 0
    },
    "svc_10|svc_11": {
-    "abutted": 4406,
+    "abutted": 5743,
     "channel": 0
    },
    "svc_5|svc_7": {
-    "abutted": 4341,
+    "abutted": 5678,
     "channel": 0
    },
    "svc_7|svc_9": {
-    "abutted": 4341,
+    "abutted": 4857,
     "channel": 0
    },
    "svc_13|svc_15": {
-    "abutted": 4271,
+    "abutted": 7762,
     "channel": 0
    },
    "svc_11|svc_13": {
-    "abutted": 4271,
+    "abutted": 7762,
     "channel": 0
    },
    "svc_10|svc_12": {
-    "abutted": 5374,
+    "abutted": 7530,
     "channel": 0
    },
    "s_3N_L2|s_3S_L4": {
@@ -4913,7 +4913,7 @@
     "channel": 0
    },
    "svc_11|svc_9": {
-    "abutted": 4341,
+    "abutted": 5678,
     "channel": 0
    },
    "s_2S_C|s_3S_C": {
@@ -5022,5 +5022,67 @@
    }
   }
  },
- "png": "/home/ubuntu/scratch/plan-s81v3/v3/g0/die_plan.png"
+ "census": {
+  "declared": true,
+  "sources": [
+   {
+    "rows": "census/s81_lanes.tsv",
+    "map": "census_map.json",
+    "census_rows": 1364,
+    "inter_bits": 219547,
+    "intra_bits": 162218,
+    "planned_pairs": 207,
+    "dropped_bits": 0,
+    "dropped_pairs": 0,
+    "unmapped_instances": 0,
+    "exempt": {
+     "reset:^reset$": 260
+    },
+    "groups_spanning": {
+     "xch_fW0_p1_fW0_p2_fW0_p3": 9,
+     "xch_fW0_p4_fW0_p5_fW0_p6": 9,
+     "xch_fW1_p1_fW1_p2_fW1_p3": 9,
+     "xch_fW1_p4_fW1_p5_fW1_p6": 9,
+     "xch_fW2_p1_fW2_p2_fW2_p3": 9,
+     "xch_fW2_p4_fW2_p5_fW2_p6": 9,
+     "xch_fW3_p1_fW3_p2_fW3_p3": 9,
+     "xch_fW3_p4_fW3_p5_fW3_p6": 9,
+     "xch_fW4_p1_fW4_p2_fW4_p3": 9,
+     "xch_fW4_p4_fW4_p5_fW4_p6": 9,
+     "xch_fW5_p1_fW5_p2_fW5_p3": 9,
+     "xch_fW5_p4_fW5_p5_fW5_p6": 9,
+     "xch_fE0_p1_fE0_p2_fE0_p3": 9,
+     "xch_fE0_p4_fE0_p5_fE0_p6": 9,
+     "xch_fE1_p1_fE1_p2_fE1_p3": 9,
+     "xch_fE1_p4_fE1_p5_fE1_p6": 9,
+     "xch_fE2_p1_fE2_p2_fE2_p3": 9,
+     "xch_fE2_p4_fE2_p5_fE2_p6": 9,
+     "xch_fE3_p1_fE3_p2_fE3_p3": 9,
+     "xch_fE3_p4_fE3_p5_fE3_p6": 9,
+     "xch_fE4_p1_fE4_p2_fE4_p3": 9,
+     "xch_fE4_p4_fE4_p5_fE4_p6": 9,
+     "xch_fE5_p1_fE5_p2_fE5_p3": 9,
+     "xch_fE5_p4_fE5_p5_fE5_p6": 9,
+     "s_0S": 19,
+     "s_0N": 14,
+     "s_1S": 7,
+     "s_1N": 7,
+     "s_2S": 7,
+     "s_2N": 7,
+     "s_3S": 6,
+     "s_3N": 7,
+     "s_4S": 7,
+     "s_4N": 7,
+     "s_5S": 7,
+     "s_5N": 7,
+     "s_6S": 7,
+     "s_6N": 7,
+     "s_7S": 19,
+     "s_7N": 16
+    }
+   }
+  ],
+  "dropped_bits": 0
+ },
+ "png": "/home/ubuntu/scratch/plan-s81v3/v3b/g0/die_plan.png"
 }

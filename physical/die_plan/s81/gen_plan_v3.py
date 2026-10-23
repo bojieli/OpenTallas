@@ -18,6 +18,7 @@ Inputs (read-only): cap30 gen-main plan.json (blocks + data links), FT census la
 Output: OUT/die_plan.json + OUT/v2_stats.json + OUT/instance_map.json.
 """
 import argparse
+import shutil
 import os
 import sys
 import collections
@@ -525,6 +526,10 @@ def census_collapse(rows):
                 raise SystemExit("landing cell %s has sources %s" % (s, sorted(src)))
             s = next(iter(src))
         rr = dict(r)
+        if s != r["src"]:
+            # keep landing cells apart in the per-driver-bus dedup: every ld output bus is named "o", so the
+            # collapsed row is keyed by the landing cell + kind (go_d / so_d / dn_o of one svc land on 3 cells)
+            rr["src_bus"] = "%s/%s" % (r["src"], r["kind"])
         rr["src"] = s
         out.append(rr)
     return out
@@ -723,6 +728,69 @@ def to_type_win(p, face, lo, hi):
 
 
 KPRIO = dict(frame=0, serdes=1, svc=2, cte=2, idx=2, slice=3, unit=4, phy=5)
+
+
+def census_map(plan, lanes, fmap, out):
+    """G0 census map (PLAN-TOOL census_cov.py schema): as-built instance -> partition or group.
+    groups: a slice (hub C + leaf bands + LP + X stations) is one as-built block; the frames fed by one x relay chain
+    (slice -> fA, then xo fA -> fB -> fC) form one group, because the plan re-topologises the as-built slice -> fB/fC x
+    broadcast through fA's relay port (the extra hop is in the latency table).  Traffic inside a group is checked at
+    partition level by physical/die_plan/s81/census_cov.py (v3/census_cov.json, dropped 0)."""
+    names = [p_["name"] for p_ in plan["partitions"]]
+    frame_of = {}                                   # plan frame position fW0_p1 -> as-built f_0L01
+    for pos, ab in fmap["frames"].items():
+        frame_of[pos] = ab
+    par = {pos: pos for pos in frame_of}
+
+    def find(x):
+        while par[x] != x:
+            x = par[x]
+        return x
+    for ln in lanes:
+        if ln["id"].startswith("xo_"):
+            a_, b_ = (re.match(r"(f[WE]\d_p\d)_b\d$", n).group(1) for n in (ln["src"][0], ln["dst"][0]))
+            par[find(a_)] = find(b_)
+    comp = collections.defaultdict(list)
+    for pos in frame_of:
+        comp[find(pos)].append(pos)
+    groups, parts_ = {}, {}
+    for root, poss in comp.items():
+        g = "xch_" + "_".join(sorted(poss))
+        groups[g] = sorted(n for n in names if re.match(r"(f[WE]\d_p\d)_b\d$", n) and n[:6] in poss)
+        for pos in poss:
+            parts_["u_" + frame_of[pos]] = g
+    for hn in fmap["slice_part"]:
+        g = hn[2:]
+        groups[g] = sorted(n for n in names if n.startswith(g + "_"))
+        parts_[hn] = g
+    parts_.update(fmap["inst_part"])
+    for n in names:
+        parts_.setdefault("u_" + n, n)
+    parts_["PORT"] = "@die"
+    # landing cells (ld_*: the as-built receive-side landing register of a long link) live in the partition of the
+    # instance they drive (their data/ctl outputs); a landing cell has data + ctl + reset inputs, so it is mapped,
+    # not collapsed
+    sink = {}
+    for r in CENSUS_ROWS:
+        if r["src"].startswith("ld_") and r["kind"] != "reset" and r["dst"] in parts_:
+            sink.setdefault(r["src"], set()).add(parts_[r["dst"]])
+    for ld, ps in sink.items():
+        if len(ps) != 1:
+            raise SystemExit("landing cell %s drives %s" % (ld, sorted(ps)))
+        parts_[ld] = ps.pop()
+    cm = {"note": "S81 v3 census map (gen_plan_v3.py census_map)", "parts": parts_, "groups": groups,
+          "rules": [["^CELL:", "@die"]],          # as-built die-level reset tree cells (replaced by the reset spine)
+          "exempt": [{"match": "^reset$", "kind": "reset", "replaced_by": "per-partition reset sync (reset.sync_stages)",
+                      "reason": "as-built reset fan-out trees are replaced by the plan reset spine + 2-stage syncs"},
+                     {"match": "^(rst_n|clk)$", "kind": "clock", "replaced_by": "clock spine / reset spine",
+                      "reason": "die clock/reset ports"}]}
+    json.dump(cm, open(out / "census_map.json", "w"), indent=0)
+    (out / "census").mkdir(exist_ok=True)
+    shutil.copy(CENSUS_SRC[0], out / "census" / "s81_lanes.tsv")
+
+
+CENSUS_SRC = []
+CENSUS_ROWS = []
 
 
 def emit(parts, lanes, routes, chans, fmap, out):
@@ -958,7 +1026,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
     olanes = [dict(id=l["id"], ports=lane_ports[l["id"]]) for l in lanes]
     plan = {
         "schema": "opentallas.die_plan.v1",
-        "note": "S81 72-frame MU release die, plan v2 (PLAN-S81v2 10-23): one 1442.88 x 1226.88 lattice, MY-mirrored "
+        "note": "S81 72-frame MU release die, plan v3 (PLAN-S81v3 10-23; v2 base): one 1442.88 x 1226.88 lattice, MY-mirrored "
                 "halves, frames as MX r0/r1/r2 bands in E-W 3-frame chains, slices as N-S 1-cell segment chains, svc "
                 "2x8 cells, no lane columns. physical/die_plan/s81/gen_plan_v2.py.",
         "die": {"name": "s81", "label": "DeepSeek ROM S81 72-frame MU release die", "tech": "asap7",
@@ -985,11 +1053,15 @@ def emit(parts, lanes, routes, chans, fmap, out):
                             "topology": "htree"}},
         "reset": {"source": {"part": "@die", "bus": "rst_n"}, "sync_stages": 2, "data_reset": False,
                   "epoch_bit": True, "release": "counted"},
+        "census": [{"rows": "census/s81_lanes.tsv", "map": "census_map.json",
+                    "note": "FT census of the bound as-built die (1364 rows); finer partition-level check incl. "
+                            "bus-aware lep rx/tx and src-bus dedup: census_cov.py -> v3/census_cov.json"}],
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
                     "cut_ratio_max": 0.6, "cut_step_um": 250},
     }
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
+    census_map(plan, lanes, fmap, out)
     # ---- metrics ----
     lb, det = [], []
     for lk in lanes:
@@ -1057,6 +1129,8 @@ def main():
     a = ap.parse_args()
     ab = json.load(open(a.asbuilt))
     census = list(csv.DictReader(open(a.census), delimiter="\t"))
+    CENSUS_SRC.append(a.census)
+    CENSUS_ROWS.extend(census)
     parts, frames, serdes, slices, chans, svcg = build(ab)
     lanes, fmap = lanes_all(ab, census, parts, frames, serdes, slices)
     grid = Grid(parts)
