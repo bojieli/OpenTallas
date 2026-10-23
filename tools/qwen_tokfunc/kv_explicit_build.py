@@ -19,6 +19,9 @@ ap = argparse.ArgumentParser()
 ap.add_argument('--tree', type=Path, required=True)
 ap.add_argument('--out', type=Path, required=True)
 ap.add_argument('--archives', type=Path, required=True)
+# KV-P2-RTL 10-23: a named data-path overlay variant (e.g. kv_planframe/kvattn_rel_dp.sv, the KV die plan v3 PV frame);
+# the tree's kvattn_rel_dp.sv must then hash to THIS file instead of the approved overlay; recorded in explicit_build.json.
+ap.add_argument('--overlay-dp', type=Path, default=None)
 a = ap.parse_args()
 E = Path(__file__).resolve().parent / 'kv_explicit_r17'
 spec = json.loads((E / 'spec.json').read_text())
@@ -32,7 +35,8 @@ TOP_ONLY = {'rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv'}
 B = 'rtl/test/qwen_kv_die/kvattn_rel_1019/'
 for f, h in spec['selected_r17_sources'].items():
     if sha(T / f) != h: fail(f'assembly {f} differs from the approved r17 source')
-if sha(T / (B + 'kvattn_rel_dp.sv')) != spec['overlay_dp_sha256']: fail('overlay dp sha')
+dp_want = sha(a.overlay_dp) if a.overlay_dp else spec['overlay_dp_sha256']
+if sha(T / (B + 'kvattn_rel_dp.sv')) != dp_want: fail('overlay dp sha')
 if sha(T / (B + 'kvattn_rel_pv_bound.sv')) != spec['pv_alias_sha256']: fail('pv alias sha')
 # 2. child readset == assembly bytes
 rs = {}
@@ -67,7 +71,7 @@ if 'hier_launch_verilator' in dry or 'make -C' in dry or 'make -f' in dry: fail(
 call(['make', '-j6', '-f', 'Vtb_kvattn_rel.mk', *flags, 'Vtb_kvattn_rel'], 'build.log', obj)
 for lib, h in spec['libraries'].items():
     if sha(obj / lib) != h: fail(f'archive {lib} changed by make')
-rec = dict(scope='current r17 KV attention vehicle built on the source assembly tree, explicit genuine-archive binding (b0cc8cdca)',
+rec = dict(overlay_dp=(dict(variant=str(a.overlay_dp), sha256=dp_want) if a.overlay_dp else 'approved'), scope='current r17 KV attention vehicle built on the source assembly tree, explicit genuine-archive binding (b0cc8cdca)',
            binary_sha256=sha(obj / 'Vtb_kvattn_rel'), top_params=spec['top_params'], libraries=spec['libraries'],
            child_readset=rs, top_sources={l: sha(T / l) for l in (T / 'tools/qwen_layerbench/kvattn_rel/sources.txt').read_text().split()
                                            if l and not l.startswith('#')})
