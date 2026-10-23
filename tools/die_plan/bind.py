@@ -67,6 +67,21 @@ module ot_dp_st #(parameter integer W = 1) (
     always @(posedge clk or negedge rst_n)
         if (!rst_n) eq <= 1'b0; else eq <= ea;
 endmodule
+// ot_dp_rsync: a reset spine landing (asbuilt.reset_spines): W active-low resets, each asserted asynchronously and
+// released after S (>= 2) clocks of the receiving partition.
+module ot_dp_rsync #(parameter integer W = 1, parameter integer S = 2) (
+    input  wire         clk,
+    input  wire [W-1:0] a,
+    output wire [W-1:0] q
+);
+    genvar g;
+    generate for (g = 0; g < W; g = g + 1) begin : b
+        reg [S-1:0] r;
+        always @(posedge clk or negedge a[g])
+            if (!a[g]) r <= {S{1'b0}}; else r <= {r[S-2:0], 1'b1};
+        assign q[g] = r[S-1];
+    end endgenerate
+endmodule
 // ot_dp_or: N-input OR of a re-emitted fault tree (an as-built reducer chain, removed and rebuilt per sink partition).
 module ot_dp_or #(parameter integer N = 1) (
     input  wire [N-1:0] a,
@@ -927,8 +942,17 @@ class Binder:
             if rest:
                 todo.append((sp, dp, sci, spn, rest))
         # pass 2b: forwarded routes over any residual lane widths
+        spines = [(re.compile(x["pin"]), int(x.get("sync_stages", 2))) for x in self.ab.get("reset_spines", [])]
+        spine = []
+        self.spine_bits = defaultdict(int)
         for sp, dp, sci, spn, rest in todo:
             rest = forward(sp, dp, sci, spn, rest)
+            sx = next((ns for rx, ns in spines if rx.fullmatch(f"{F.cells[sci].path}.{spn}")), None)
+            if rest and sx is not None:
+                # a plan reset spine (asbuilt.reset_spines): async to the sink partition, released by its own clock
+                spine.append((sp, dp, sci, spn, rest, sx))
+                self.spine_bits[f"{F.cells[sci].path}.{spn}"] += len(rest)
+                continue
             if rest:
                 self.unplanned[(sp, dp)] += len(rest)
                 direct.append((sp, dp, sci, spn, rest))
@@ -960,18 +984,26 @@ class Binder:
             for k, b in enumerate(bl):
                 recv[(dp, sci, spn, b)] = (D, k, 2)
             dl.append(D)
+        for sp, dp, sci, spn, bl, ns in spine:
+            dr, dpn = min(self.cross_sinks[(sp, dp, sci, spn)])
+            D = dict(src=sp, dst=dp, items=[("leaf", sci, spn, b) for b in bl], width=len(bl), lane=None, ft=[],
+                     cycles=ns, spine=True, srel=self.rel_of(sci), port=spn, dsink=f"{dr}__{dpn}",
+                     stages=self.cross_stages[(sp, dp, sci, spn)])
+            for k, b in enumerate(bl):
+                recv[(dp, sci, spn, b)] = (D, k, ns)
+            dl.append(D)
         for side, pk in (("o", "src"), ("i", "dst")):
             per = defaultdict(lambda: defaultdict(list))
             for L in dl:
-                per[L[pk]][(L["srel"], L["port"]) if side == "o" else (L["dsink"],)].append(L)
+                per[L[pk]][((L["srel"], L["port"]) if side == "o" else (L["dsink"],)) + (bool(L.get("spine")),)].append(L)
             for part, d in per.items():
                 for key, ls in d.items():
                     if side == "o":
                         ls.sort(key=lambda L: (L["dsink"], self.parts[L["dst"]]["type"], L["dst"]))
-                        base = f"xo__{key[0]}__{key[1]}"
+                        base = f"{'rs' if key[-1] else 'xo'}__{key[0]}__{key[1]}"
                     else:
                         ls.sort(key=lambda L: (L["srel"], L["port"], self.parts[L["src"]]["type"], L["src"]))
-                        base = f"xi__{key[0]}"
+                        base = f"{'ri' if key[-1] else 'xi'}__{key[0]}"
                     for n, L in enumerate(ls):
                         L[f"{side}name"] = short_id(base, 72) + (f"__{n}" if len(ls) > 1 else "")
         self.links += dl
@@ -1245,6 +1277,11 @@ class Binder:
         ibus = sorted(self.in_bus[p], key=lambda L: L["iname"])
         for L in ibus:
             n, W = L["iname"], L["width"]
+            if L.get("spine"):
+                ports.append(f"    input  wire [{W - 1}:0] {n}   // reset spine: {_bus_note(L, 'in')}")
+                decl.append(f"    wire [{W - 1}:0] {n}_q;")
+                body.append(f"    ot_dp_rsync #(.W({W}), .S({L['cycles']})) u_rs_{n} (.clk(clk), .a({n}), .q({n}_q));")
+                continue
             ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'in')}")
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
             body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
@@ -1267,6 +1304,11 @@ class Binder:
         for L in obus:
             n, W = L["oname"], L["width"]
             ports.append(f"    output wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'out')}")
+            if L.get("spine"):
+                ports[-1] = f"    output wire [{W - 1}:0] {n}   // reset spine: {_bus_note(L, 'out')}"
+                d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
+                body.append(f"    assign {n} = {d};  // reset spine (async; landed by ot_dp_rsync in the sink)")
+                continue
             if L.get("plan"):
                 body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
                             f".q({n}[{W - 1}:0]), .eq({n}[{W}]));  // plan-cell driven")
@@ -1397,7 +1439,8 @@ class Binder:
             hops = L.get("hops") or [(L["src"], L["oname"], L["dst"], L["iname"])]
             for sp, sb, dp, db in hops:
                 nm = short_id(f"x_{sp}__{sb}__{dp}", 120)
-                wires.append(f"    wire [{L['width']}:0] {nm};" + (f"  // lane {L['lane']}" if L.get("lane") else ""))
+                wires.append(f"    wire [{L['width'] - (1 if L.get('spine') else 0)}:0] {nm};" +
+                             (f"  // lane {L['lane']}" if L.get("lane") else "  // reset spine" if L.get("spine") else ""))
                 conn[sp].append((sb, nm))
                 conn[dp].append((db, nm))
         for p in sorted(self.members):
@@ -1461,7 +1504,7 @@ class Binder:
         lat = []
         for L in self.links:
             st = L["stages"]
-            bound = 2 + sum(h["stations"] for h in L["ft"])
+            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"])
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
@@ -1485,6 +1528,7 @@ class Binder:
                               unplanned_bits=sum(self.unplanned.values()),
                               unplanned_pairs={f"{a}->{b}": n for (a, b), n in sorted(self.unplanned.items())},
                               unplanned_bit_list=self.unplanned_bits,
+                              reset_spine_bits=dict(self.spine_bits),
                               ft_hops=sum(len(L["ft"]) for L in self.links),
                               forwarded_bits=sum(self.forwarded.values()),
                               forwarding_partitions=dict(sorted(self.fwd_parts.items(), key=lambda kv: -kv[1])[:60]),
@@ -1526,6 +1570,8 @@ def _seg_summary(L, F):
 def _bus_note(L, side):
     sg = _seg_summary(L, None)
     segs = ", ".join(sg[:3]) + (" ..." if len(sg) > 3 else "")
+    if L.get("spine"):
+        return f"reset spine {L['src']} -> {L['dst']}, released after {L['cycles']} clocks"
     if L.get("plan"):
         return f"lane {L['lane']}, {L.get('cycles', 2)} cycles: plan-cell bus {L['src']} -> {L['dst']}"
     lane = f"lane {L['lane']}, {L.get('cycles', 2)} cycles" if L.get("lane") else \

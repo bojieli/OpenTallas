@@ -251,3 +251,19 @@ def test_die_io_and_kept_source_leaf(tmp_path):
     assert "input  wire [3:0] pad_id;" in top and ".io_pad_id(pad_id)" in top and ".io_pad_ref(pad_ref)" in top
     assert "tclkrx u_clk_rx" in (out / "rtl" / "bt_ts.sv").read_text()
     assert v["verdict"] == "PASS", (v["counts"], v["mismatches"][:3])
+
+
+def test_reset_spine(tmp_path):
+    """asbuilt.reset_spines: a crossing bit with no lane whose driver matches a spine pin rides an async spine landed
+    by ot_dp_rsync in the sink partition (not UNPLANNED); the proof counts its 2 release stages"""
+    def edit(p):
+        p["ports"] = [x for x in p["ports"] if x["id"] != "a1f__0"]
+        p["lanes"] = [x for x in p["lanes"] if x["id"] != "a1f"]
+        p["asbuilt"]["reset_spines"] = [{"pin": r"p1\.u_b\.flt", "sync_stages": 2}]
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    assert r["lanes"]["unplanned_bits"] == 0 and r["lanes"]["reset_spine_bits"] == {"p1.u_b.flt": 1} and r["n_errors"] == 0
+    ts = (out / "rtl" / "bt_ts.sv").read_text()
+    assert "ot_dp_rsync #(.W(1), .S(2))" in ts
+    assert verify(out)["verdict"] == "PASS"
