@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T22:07:07.840216-07:00",
+  "gate_commit": "2026-10-22T18:51:39-0700",
+  "geometry_sha256": "d5031a8930aac4b0cbc4c9de0de50c7f6fbfd7bd19972b701ab9f99341e88107",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "d5031a8930aac4b0cbc4c9de0de50c7f6fbfd7bd19972b701ab9f99341e88107",
+    "components": {
+      "outline": "97cfbf4b0d63a899d07a563fd147e0adf5dd9cd3362060a63916167a599559af",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "a1dd07b5f672d79ac558bcd895bf9aaa0efb382fe26dfdb79a2a0456c1645466",
+      "clock_entry": "4951c7deb0c8512a344c3f1ed90557eb23a6618f6d60f5eb07cc6501df6fc350"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "No hard macros; lattice is not applicable. Viewed exact empty-block floorplan and actual placed-cell density.",
+    "std_cell_band": "One continuous available standard-cell region, modest density with no red bins or power islands.",
+    "pin_spread": "Full-face pin placement retained. Normal physical pin-access and native source checks remain mandatory; 10% fill is accepted as existing roomy pin-bound geometry.",
+    "clock_entry": "North clock entry beside actual upper register mass. TT/FF pin and raw spread53/47ps; insertion490.1/404ps and24618sinks disclosed guidance. Two reset inputs each have one sink and pass landing check.",
+    "shape": "432x388.8um, aspect1.11; no macros and no channel obstructions. Roomy existing outline accepted."
+  },
+  "scope": "Approve normal route submission after exact helper sync and source/bench checks. No CLOSED or die promotion before routed timing; all historical failures remain.",
+  "diagnostics": "WARN0FAIL; native maximum32 reported in exact packet, GRT0. Placement input+8.2ps, reg-reg+86ps, reg-out+140.7ps and hold+46.7ps are diagnostic.",
+  "gate_result_sha256": "e5d89a842dc8e41221ad31d69b02999f74760a6e02ce89a7e54e612f6a146358",
+  "archive_sha256": "92be63c70fea634456e9cfd2e1c40508d2fb91e5532f7eb5f5e2df6b099fe71c",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}
