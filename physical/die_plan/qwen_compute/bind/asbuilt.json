@@ -330,5 +330,14 @@
  "portbind_prefer": [
   "rtl/hdc/ot_hdc_fastfp.sv",
   "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+ ],
+ "param_regen": {
+  "file": "physical/die_plan/qwen_compute/bind/coll_regen.py",
+  "note": "COORD R8: collective LS/PHY/R/PEER_R from the bound lanes"
+ },
+ "land_align_exclude": [
+  "io_collective\\.u_io\\.g_face\\[[2-4]\\]\\.u_face\\.(phy_rx|phy_rx_valid|phy_up|tx_data|tx_valid|tx_slot|peer_slot)",
+  "io_collective\\.u_io\\.u_collective\\.sr[0-2]_(rec|valid)",
+  "io_serdes(_[12])?\\.(tx_flit|tx_v)"
  ]
 }

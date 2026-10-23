@@ -344,3 +344,35 @@ def test_bus_groups(tmp_path):
     d0 = [m for m in g["members"] if m["sink_port"] == "d0"]
     assert {m["bound_stages"] for m in d0} == {2, 5} and {m["landed_stages"] for m in d0} == {5}
     assert g["aligned_landed"] and bg["summary"]["landing_groups"] >= 2
+
+
+def test_param_regen_and_land_exclude(tmp_path):
+    """asbuilt.param_regen: a die hook re-derives a leaf parameter from the bound lane depth (ctx.depth) before the
+    types form, recorded in param_regen.json; land_align_exclude keeps the excluded sink unpadded"""
+    hook = tmp_path / "regen.py"
+    hook.write_text("def regen(ctx):\n"
+                    "    d = ctx.depth('snk', 'd0')\n"
+                    "    return dict(params={'p0.u_a': {'ID': max(d.values())}}, record=dict(d0=sorted(set(d.values()))))\n")
+
+    def edit(p):
+        p["asbuilt"]["land_align"] = "cell"
+        p["asbuilt"]["land_align_exclude"] = [r"snk\.d[01]"]
+        p["asbuilt"]["param_regen"] = {"file": str(hook)}
+        for x in p["ports"]:            # split snk.d0 over two lanes of different depth (as test_bus_groups)
+            if x["id"] == "a0s__0":
+                x["width"] = 5
+            if x["id"] == "a1s__0":
+                x["width"] = 16
+        for b in p["partition_types"]["ta"]["buses"]:
+            if b["name"] == "ys_o":
+                b["width"] = 16
+        for b in p["partition_types"]["ts"]["buses"]:
+            if b["name"] == "d1_i":
+                b["width"] = 16
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind") == 0
+    pr = json.loads((out / "param_regen.json").read_text())
+    assert pr["changed"] and pr["changed"][0]["inst"] == "p0.u_a"
+    assert report(out)["lanes"]["landing_alignment"]["padded_groups"] == 0 and pr["record"]["d0"] == [2, 5]
+    top = "".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
+    assert f".ID({pr['changed'][0]['bound']})" in top

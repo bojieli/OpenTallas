@@ -436,6 +436,7 @@ class Binder:
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
         self.ab = plan["asbuilt"]
+        self.base = base or str(E.REPO)
         self.errors, self.warns = [], []
         self.R = Rules(self.ab)
         self.F = E.flatten(yjs, self.ab["top"], self.ab.get("substitute_parent", []))
@@ -1119,14 +1120,17 @@ class Binder:
         """asbuilt.land_align = "cell": the crossing inputs of one sink leaf from one source partition keep their as-built
         RELATIVE timing: each bit's bound latency minus its as-built latency is raised to the group's largest by
         reset-less pad stages (ot_dp_dly) after the in-boundary flop, so a bus split over lanes of different depth (or a
-        valid that was one cycle ahead of its data) lands as built, shifted by one constant per group."""
+        valid that was one cycle ahead of its data) lands as built, shifted by one constant per group.
+        asbuilt.land_align_exclude: regexes on "<sink leaf path>.<port>" whose bits are not padded (e.g. ports whose
+        leaf parameters are re-derived from the bound lanes by param_regen instead)."""
         self.pad_stats = dict(groups=0, padded_groups=0, padded_bits=0, pad_flops=0, max_pad=0)
         self.land_pads = {}
         if self.ab.get("land_align") != "cell":
             return
         grp = defaultdict(list)
+        excl = [re.compile(x) for x in self.ab.get("land_align_exclude", [])]
         for (ci, pn, i), d in self.sinks.items():
-            if d[0] == "x":
+            if d[0] == "x" and not any(x.fullmatch(f"{self.F.cells[ci].path}.{pn}") for x in excl):
                 grp[(ci, d[1])].append((pn, i, d))
         st = self.pad_stats
         for (ci, sp), items in grp.items():
@@ -1154,6 +1158,58 @@ class Binder:
                 if k not in seen:
                     seen.add(k)
                     st["pad_flops"] += d[7]
+
+    def depth(self, path, port):
+        """bound landed depth (register stages incl. landing pads) per bit of input `port` of leaf `path`:
+        {bit: stages}; a bit not on a crossing is 0 (same partition)."""
+        ci = self.cell_index()[path]
+        out = {}
+        for i in range(len(self.F.cells[ci].ports[port])):
+            d = self.sinks[(ci, port, i)]
+            out[i] = (self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)) if d[0] == "x" else 0
+        return out
+
+    def cell_index(self):
+        if not hasattr(self, "_cidx"):
+            self._cidx = {c.path: i for i, c in enumerate(self.F.cells)}
+        return self._cidx
+
+    def regen_params(self):
+        """asbuilt.param_regen {file, ...}: a die hook `regen(ctx)` that re-derives leaf parameters from the BOUND lane
+        latencies (e.g. the collective calendar LS / face PHY / R from the SerDes and core<->face lanes) and returns
+        {"params": {leaf path: {param: value}}, "record": {...}}; ctx = this binder (ctx.depth(path, port), ctx.F,
+        ctx.base, ctx.ab).  Values replace the as-built parameters before the types are formed."""
+        self.param_regen = None
+        spec = self.ab.get("param_regen")
+        if not spec:
+            return
+        import importlib.util
+        f = Path(spec["file"])
+        f = f if f.is_absolute() else Path(self.base) / f
+        m = importlib.util.spec_from_file_location("bind_param_regen", f)
+        mod = importlib.util.module_from_spec(m)
+        m.loader.exec_module(mod)
+        try:
+            r = mod.regen(self)
+        except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
+            self.errors.append(f"PARAM_REGEN {f.name}: {e}")
+            return
+        changed = []
+        for path, ps in r["params"].items():
+            ci = self.cell_index().get(path)
+            if ci is None:
+                self.errors.append(f"PARAM_REGEN {path}: no such leaf")
+                continue
+            c = self.F.cells[ci]
+            for k, v in ps.items():
+                if k not in c.params:
+                    self.errors.append(f"PARAM_REGEN {path}.{k}: not a parameter of the leaf")
+                    continue
+                old = str(c.params[k]).strip('"')
+                if old != str(v):
+                    changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
+                c.params[k] = str(v)
+        self.param_regen = dict(file=str(spec["file"]), changed=changed, record=r.get("record", {}))
 
     def bus_groups(self):
         """as-built timing groups for the planner (COORD R8): bits that must keep their as-built relative timing.
@@ -1826,6 +1882,7 @@ def cmd_bind(a):
     B.analyse()
     B.build_buses()
     B.align_landings()
+    B.regen_params()
     B.check_types()
     files = []
     try:
@@ -1843,6 +1900,9 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    if B.param_regen:
+        rep["param_regen"] = B.param_regen
+        (out / "param_regen.json").write_text(json.dumps(B.param_regen, indent=1))
     if B.rewire_stats:
         rep["rewires"] = dict(file=B.ab["rewires"]["file"], bits=B.rewire_stats)
     if B.pc:
