@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T22:10:30.117933-07:00",
+  "gate_commit": "2026-10-22T21:44:26-0700",
+  "geometry_sha256": "797e4c47a14a69607ac26874c0b8091dd436f7228b64ef2c39dec177a6f1f12a",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "797e4c47a14a69607ac26874c0b8091dd436f7228b64ef2c39dec177a6f1f12a",
+    "components": {
+      "outline": "ca563d8852f0b878811bfa3f932e54c4c605e919b47b659e6d5c0038e4c0c841",
+      "macros": "bf00fc0aa950655015edf178946f3b6861846f1367467300c455f99144fd47cf",
+      "pins": "ef261a4f251c88e7608f68f5953b9a643e5f8d204b26294efd323df2050a33d2",
+      "clock_entry": "fc4c0aca2d18bc91e1492164e1a9b49b55a7db6190bc4b445c402fbcd48b011b"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Reviewed exact existing macro locations and track-accessible pins; existing SRAM placement geometry accepted under frozen owner die-results policy. No new lattice requirement.",
+    "std_cell_band": "Viewed floorplan and density PNGs; connected cell area around hard blocks and through centre; no isolated power island.",
+    "pin_spread": "846/846 physical signal-clock pins accessible, no missing/outside rectangles; N/S face density below 6 pins/um.",
+    "clock_entry": "Actual x2 pin spread TT28.2/FF21.2ps, raw30.1/32.4ps. Same physical geometry as reviewed x (hash797e4c47), source-specific native32 and trialGRT0. Viewed both actual x2 images.",
+    "shape": "626.4 x561.6 um; total fill36.3%; roomy geometry accepted; ten SRAM."
+  },
+  "scope": "Approve x2 normal parallel routing after exact current gate source and behavioural/mutant checks pass. Exact geometry equals reviewed x, and actual x2 floorplan+density images personally viewed. Preserve y failure and progressing x; no CLOSED credit.",
+  "diagnostics": "Current x2 placement reg-reg-113.5ps, input-reg+8.2ps and hold+20.3ps. Original x route remains live and failed y retained; route decides timing. Receipt is geometry approval only and never waives source drift.",
+  "gate_result_sha256": "d332bd3b3ad078369ea89111e2406f9b3970d6f2d51a2a6cb3e99382130aa287",
+  "archive_sha256": "78b4f6c5a6abd0a3c02f498d1249a5b2b4230a50645e907e33537c0bf114bacd",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}
