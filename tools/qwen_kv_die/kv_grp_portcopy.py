@@ -67,6 +67,50 @@ def main(k):
                     remap[(pp, i)] = y2
             rec[p] += 1
             dload[dnet] += 1
+    # the copies of async-reset exit flops (RESETN / SETN) load the landed reset nets of r2c (each <= 32 there): every
+    # such net the copies push over 32 gets extra driver copies (its landing flop + keep INV, same D / CLK = the same
+    # release edge), the copies' reset pins move to them in groups of <= 32.  Constant (tie) nets are not dynamic.
+    rloads = collections.Counter()
+    for m in re.finditer(r'\.(?:RESETN|SETN)\((\w+)\)', top):
+        rloads[m.group(1)] += 1
+    radd = collections.Counter()
+    for line in add:
+        for m in re.finditer(r'\.(?:RESETN|SETN)\((\w+)\)', line):
+            radd[m.group(1)] += 1
+    rfix = {}
+    for net, c in radd.items():
+        if rloads[net] + c <= MAXL:
+            continue
+        if rloads[net] > MAXL and re.search(rf'^  (?:\(\* keep \*\) )?\w+ \w+ \(\.[LH]\({net}\)\);$', top, re.M):
+            continue    # a tie cell (constant SETN / RESETN level), not a dynamic driver
+        if rloads[net] > MAXL and re.search(rf'\.[LH]\({net}\)', top):
+            continue
+        if net not in invy or invy[net][2] not in flops:
+            raise SystemExit(f'{k}: reset net {net} over {MAXL} after copies and not a flop -> INV landing driver')
+        ityp, iname, qn = invy[net]
+        ftyp, fname, conn = flops[qn]
+        n_new = -(-c // MAXL)
+        drivers = []
+        for r in range(n_new):
+            qn2, y2 = f'{qn}_rc{r}', f'{net}_rc{r}'
+            conn2 = re.sub(r'\.QN\(\w+\)', f'.QN({qn2})', conn)
+            add.append(f'  wire {qn2};\n  wire {y2};\n  {ftyp} {fname}_rc{r} ({conn2});\n'
+                       f'  (* keep *) {ityp} {iname}_rc{r} (.A({qn2}), .Y({y2}));\n')
+            dload[re.search(r'\.D\((\w+)\)', conn).group(1)] += 1
+            drivers.append(y2)
+        rfix[net] = drivers
+    if rfix:
+        cnt = collections.Counter()
+
+        def rsub(m):
+            net = m.group(2)
+            if net not in rfix:
+                return m.group(0)
+            d = rfix[net][cnt[net] // MAXL]
+            cnt[net] += 1
+            return f'.{m.group(1)}({d})'
+        add = [re.sub(r'\.(RESETN|SETN)\((\w+)\)', rsub, line) if f'_rc' not in line.split('(')[0] else line for line in add]
+        rec['reset_driver_copies'] = sum(len(v) for v in rfix.values())
     over = {n: loads[n] + c for n, c in dload.items() if loads[n] + c > MAXL}
     if over:
         raise SystemExit(f'{k}: D nets over {MAXL} loads after copies: {list(over.items())[:5]}')

@@ -5,14 +5,14 @@
  "top": "qkd_kvs_grp_h_r2d",
  "source_sha256": "73999def3896346c696cbfaad2e091457c108ad17a45b57b802912ec03441326",
  "parser_sha256": "a2e56b491d8a1e237f3c2b10c6e8918b0cbada019bf186862c72090341dada72",
- "generated_sha256": "443a640f4d085a11ad405b126b1f3d5294537db8a2389a45ef00b6c8493709b3",
+ "generated_sha256": "5ad3e85c24c379e5a1615a2a20e4560397fe866f44806e915f4f7e4cd2570ffc",
  "fixedpoint_history": [
   40713,
   40718,
   40718
  ],
  "original_cells": 39868,
- "generated_cells": 43166,
+ "generated_cells": 43176,
  "max_terminal_loads": 32,
  "copied_cells": [
   {
@@ -2320,10 +2320,11 @@
    "krsp": 1056,
    "o_pc1": 56,
    "o_pc2": 56,
-   "o_pc3": 56
+   "o_pc3": 56,
+   "reset_driver_copies": 5
   },
-  "total": 1224,
-  "d_net_max_loads": 10,
+  "total": 1229,
+  "d_net_max_loads": 32,
   "skipped": [
    {
     "net": "n57060_c0",
