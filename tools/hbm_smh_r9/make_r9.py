@@ -149,6 +149,8 @@ def main():
                 for k in [k for k in ov if k.startswith("OT_SPINE")]:
                     ov.pop(k)
                 s["clock"] = "cts"
+            if half == "n":                           # gate 10-23 02:28: TD GPL diverged (GPL-0307, +58% TD inflation) under the
+                ov["GPL_TIMING_DRIVEN"] = "0"         # face fences; the r7 fence kits run GPL non-TD for the same reason
             s["orfs_vars"] = ov
             s["pin_hook_before_flops"] = [fence]
             s["pre_dpl_extra"] = ["physical/hbm_smh_r7/fence_dissolve.tcl"]
