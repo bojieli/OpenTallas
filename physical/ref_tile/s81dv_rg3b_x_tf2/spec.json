@@ -73,35 +73,35 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[0].u_h0.g_m.u_mem"
+   "inst": "u_m.u_c0.g_land[0].u_h.g_m.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[0].u_h1.g_m.u_mem"
+   "inst": "u_m.u_c1.g_land[0].u_h.g_m.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[1].u_h0.g_m.u_mem"
+   "inst": "u_m.u_c0.g_land[1].u_h.g_m.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[1].u_h1.g_m.u_mem"
+   "inst": "u_m.u_c1.g_land[1].u_h.g_m.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[2].u_h0.g_m.u_mem"
+   "inst": "u_m.u_c0.g_land[2].u_h.g_m.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[2].u_h1.g_m.u_mem"
+   "inst": "u_m.u_c1.g_land[2].u_h.g_m.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[3].u_h0.g_m.u_mem"
+   "inst": "u_m.u_c0.g_land[3].u_h.g_m.u_mem"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": "g_land[3].u_h1.g_m.u_mem"
+   "inst": "u_m.u_c1.g_land[3].u_h.g_m.u_mem"
   }
  ],
  "children": [],
