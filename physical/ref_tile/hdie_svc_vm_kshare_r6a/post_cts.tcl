@@ -1,0 +1,1 @@
+source /src/physical/ref_tile/hdie_svc_vm_kshare_r6a/clock_entry.sdc

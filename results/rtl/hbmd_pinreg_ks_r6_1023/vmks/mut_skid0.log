@@ -1,0 +1,24 @@
+GROUP lane 2 unexpected beat tag 0001d beat 0
+GROUP lane 1 unexpected beat tag 00039 beat 1
+GROUP lane 2 unexpected beat tag 0005c beat 1
+GROUP lane 2 unexpected beat tag 0005c beat 2
+GROUP lane 2 unexpected beat tag 00071 beat 2
+GROUP lane 3 unexpected beat tag 00009 beat 0
+GROUP lane 2 unexpected beat tag 00078 beat 1
+GROUP lane 2 unexpected beat tag 0008d beat 2
+GROUP lane 3 unexpected beat tag 00086 beat 3
+window 0 timed out: 0000000000000000 ffffffffffffffff 3fffffffffffffff ffffffffffffffff
+window 1 timed out: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+window 2 timed out: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+window 3 timed out: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+window 4 timed out: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+window 5 timed out: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+window 6 timed out: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+window 7 timed out: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+lane 0 group done 54/400 fills 0/512
+lane 1 group done 334/400 fills 64/512
+lane 2 group done 336/400 fills 64/512
+lane 3 group done 323/400 fills 64/512
+fault raised
+FAIL tb_hbm_svc_vm_kshare MUT=0 errors=253
+/srv/opentallas-scratch/claude/hbmd-pinreg-ks-r6-bench/src/rtl/hbm_accel/loader/service_native/tb_hbm_svc_vm_kshare.sv:145: $finish called at 209426500 (1ps)

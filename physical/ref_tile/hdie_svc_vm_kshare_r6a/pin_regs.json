@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_vm_kshare_splitstrap",
+ "enable": false,
+ "reason": "PINREG=1 (STEWARD-HBMd/PINREG-KS 10-23, r6): the RTL registers every pin itself -- every data/valid INPUT (g_k_*, w_k_*, c_kr_*, c_k_wr_done) lands in ONE plain flop (pin -> flop D, no gate; data free-running, valid async-cleared), every OUTPUT leaves a flop (skid / ring head, rdy flops, wr_done / fill / fault flops); io_flop_at_pins anchors them FIRM at their faces. Named exception: ready inputs c_k_rdy / g_kr_rdy (8 pins) stay direct (registering them changes the controller / svg protocol), reset pins land on one async-clear flop per domain. A kit pin stage cannot span the two async_gray_fifo domains and would add unpriced K-port latency."
+}

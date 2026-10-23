@@ -1,0 +1,16 @@
+GROUP lane 3 unexpected beat tag 00009 beat 2
+GROUP lane 0 unexpected beat tag 000b7 beat 0
+GROUP lane 2 unexpected beat tag 0004e beat 1
+GROUP lane 0 unexpected beat tag 0000c beat 2
+GROUP lane 0 unexpected beat tag 0000e beat 0
+GROUP lane 3 unexpected beat tag 0000e beat 0
+GROUP lane 2 unexpected beat tag 00270 beat 0
+GROUP lane 3 unexpected beat tag 0000d beat 0
+GROUP lane 1 unexpected beat tag 00285 beat 0
+lane 0 group done 386/400 fills 512/512
+lane 1 group done 385/400 fills 512/512
+lane 2 group done 389/400 fills 512/512
+lane 3 group done 391/400 fills 512/512
+fault raised
+FAIL tb_hbm_svc_vm_kshare MUT=6 errors=54
+/srv/opentallas-scratch/claude/hbmd-pinreg-ks-r6-bench/src/rtl/hbm_accel/loader/service_native/tb_hbm_svc_vm_kshare.sv:145: $finish called at 50871500 (1ps)

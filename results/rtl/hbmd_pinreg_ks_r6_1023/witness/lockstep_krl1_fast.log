@@ -1,0 +1,8 @@
+krl1_fast: PASS tb_hbm_svc_vm_kshare_pinreg_lockstep KRL1=1 MUT1=0 GN=600 NWIN=9 hbm_half=400 str_half=700
+LATENCY group_req g_k->c_k (hbm edges, min) PINREG0=2 PINREG1=3 offset=1
+LATENCY wb_write w_k->c_k (hbm edges, min) PINREG0=2 PINREG1=3 offset=1
+LATENCY response c_kr->g_kr (hbm edges, min) PINREG0=2 PINREG1=3 offset=1
+LATENCY wr_done c_k_wr_done->g_k_wr_done (hbm edges, min) PINREG0=1 PINREG1=2 offset=1
+LATENCY vm_beat c_kr->fill (ps, min, CDC) PINREG0=5100 PINREG1=5900 offset=800 (hbm period 800)
+STREAM 160 back-to-back group writes per lane took (edges, min over lanes) PINREG0=159 PINREG1=159 (II=1 -> 159)
+EXIT 0

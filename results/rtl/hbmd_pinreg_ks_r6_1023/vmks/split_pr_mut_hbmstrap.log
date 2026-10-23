@@ -1,0 +1,11 @@
+ILLEGAL K request lane 0 addr 392d8c00 len 4
+ILLEGAL K request lane 0 addr 392d9c04 len 4
+ILLEGAL K request lane 0 addr 392dac08 len 4
+ILLEGAL K request lane 0 addr 392dbc0c len 4
+ILLEGAL K request lane 0 addr 392dcc10 len 4
+FILL lane 0 slot 1 bad (bank 0 epoch 0100 dup 0)
+ILLEGAL K request lane 0 addr 392ddc14 len 4
+ILLEGAL K request lane 0 addr 392dec18 len 4
+FILL lane 0 slot 0 bad (bank 0 epoch 0100 dup 0)
+FAIL tb_hbm_svc_vm_kshare MUT=7 errors=2560
+/srv/opentallas-scratch/claude/hbmd-pinreg-ks-r6-bench/src/rtl/hbm_accel/loader/service_native/tb_hbm_svc_vm_kshare.sv:145: $finish called at 3237500 (1ps)

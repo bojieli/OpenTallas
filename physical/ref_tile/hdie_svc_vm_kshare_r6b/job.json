@@ -1,0 +1,246 @@
+{
+ "name": "hdie_svc_vm_kshare_r6b-ks-r6b-COMMIT",
+ "block": "ot_hbm_svc_vm_kshare_splitstrap",
+ "ref_tile": true,
+ "owner": "STEWARD-HBMd/PINREG-KS",
+ "purpose": "kshare r6b (FB; STEWARD-HBMd/PINREG 01:40 PLAN, coordinator tile review 10-23: r5a blob far from the S pins, 3,647 inputs entering skid D-muxes): r5a + PINREG=1 -- every data/valid input pin lands in ONE plain flop anchored FIRM at its face (io_flop_at_pins cols 6), group / WB skids -> 3-entry rings with registered rdy, KRL1 response ring 3 -> 4, c_k_wr_done pin flop; +1 hbm edge on group req / WB write / response / VM beat / wr_done (COORD-REVIEW-QUEUE sign-off); ready inputs c_k_rdy / g_kr_rdy direct (named exception). Outline 540.0 x 367.2, faces as r5a (E svg, S controllers, N long-haul, W WB). Proof: PINREG 0 vs 1 lockstep (results/rtl/hbmd_pinreg_ks_r6_1023).",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hbmd-pinreg-ks-r6-1023",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_splitstrap_q.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
+   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_vm_kshare.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv",
+   "rtl/test/hbm_svc_shp/",
+   "results/rtl/hbm_svc_shp_1022/",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_vm_kshare_pinreg_lockstep.sv",
+   "rtl/hbm_accel/loader/service_native/run_vm_kshare_pinreg_lockstep.sh",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_kshare_sl.sv",
+   "rtl/lib/ot_rst_fanout.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+   "results/rtl/hbmd_pinreg_ks_r6_1023/"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_vm_kshare_splitstrap #(.MUT(0), .KRL1(1), .PINREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv rtl/lib/ot_reset_sync.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv rtl/lib/ot_rst_fanout.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_kshare_sl.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vmks_krl1_exact",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/pos split_pr_pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_pos: PASS tb_hbm_svc_vm_kshare",
+    "min_count_regex": "^split_pr_pos: PASS tb_hbm_svc_vm_kshare .*fills=(\\d+)",
+    "pass_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_pos.log"
+   },
+   {
+    "name": "vmks_krl1_slowhbm",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/slow split_pr_pos_slow",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_pos_slow: PASS tb_hbm_svc_vm_kshare",
+    "min_count_regex": "^split_pr_pos_slow: PASS tb_hbm_svc_vm_kshare .*fills=(\\d+)",
+    "pass_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_pos_slow.log"
+   },
+   {
+    "name": "vmks_wb_exact",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh {RUN}/bench/exact pr_baseline",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "QUALIFIED pr_baseline expected_exit=0",
+    "pass_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/wb_pr_baseline.log",
+    "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q .*group_req=(\\d+)"
+   },
+   {
+    "name": "vmks_pinreg_lockstep",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_pinreg_lockstep.sh {RUN}/bench/ls krl1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^krl1: PASS tb_hbm_svc_vm_kshare_pinreg_lockstep",
+    "pass_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/lockstep_krl1.log"
+   },
+   {
+    "name": "vmks_mut_depth2",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/depth2 split_pr_mut_depth2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_mut_depth2: PASS",
+    "fail_regex": "^split_pr_mut_depth2: FAIL",
+    "note": "MUT=6 (PINREG, KRL1): controller-side response ring depth 4 -> 3 -> overflow under back-pressure",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_mut_depth2.log"
+   },
+   {
+    "name": "vmks_mut_ring2",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/ring2 split_pr_mut_ring2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_mut_ring2: PASS",
+    "fail_regex": "^split_pr_mut_ring2: FAIL",
+    "note": "MUT=9 (PINREG): group / WB request rings depth 3 -> 2 -> overflow fault under back-pressure",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_mut_ring2.log"
+   },
+   {
+    "name": "vmks_mut_hbmstrap",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/hbmstrap split_pr_mut_hbmstrap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_mut_hbmstrap: PASS",
+    "fail_regex": "^split_pr_mut_hbmstrap: FAIL",
+    "note": "MUT=7: hbm-domain strap ignored (VM reads to the wrong PCs)",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_mut_hbmstrap.log"
+   },
+   {
+    "name": "vmks_mut_streamstrap",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh {RUN}/bench/streamstrap raw_pr_streamstrap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q",
+    "fail_regex": "RAW_FAIL pr_streamstrap",
+    "note": "KSMUT=8: stream-domain strap ignored (WB lane counts of SM 0)",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/wb_raw_pr_streamstrap.log"
+   },
+   {
+    "name": "vmks_mut_overlap",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh {RUN}/bench/overlap raw_pr_overlap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q",
+    "fail_regex": "RAW_FAIL pr_overlap",
+    "note": "KSMUT=3: WB window does not wait for outstanding group writes",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/wb_raw_pr_overlap.log"
+   },
+   {
+    "name": "shp_fifo_lockstep",
+    "cmd": "bash rtl/test/hbm_svc_shp/run_shp_bench.sh {RUN}/bench/shp",
+    "expect": "pass",
+    "pass_regex": "SHP_BENCH_EXIT 0",
+    "pass_witness": "results/rtl/hbm_svc_shp_1022/witness/shp_bench.log",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hdie_svc_vm_kshare_r6b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hdie_svc_vm_kshare_r6b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hdie_svc_vm_kshare_r6b --out {RUN}/record/views/ot_hbm_svc_vm_kshare_splitstrap  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hdie_svc_vm_kshare_r6b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hdie_svc_vm_kshare_r6b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hdie_svc_vm_kshare_r6b/hdie_svc_vm_kshare_r6b-ks-r6b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

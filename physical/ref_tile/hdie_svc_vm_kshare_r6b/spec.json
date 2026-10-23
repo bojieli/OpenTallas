@@ -1,0 +1,395 @@
+{
+ "name": "hdie_svc_vm_kshare_r6b",
+ "top": "ot_hbm_svc_vm_kshare_splitstrap",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+  "rtl/lib/ot_rst_fanout.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_kshare_sl.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv"
+ ],
+ "params": {
+  "MUT": 0,
+  "KRL1": 1,
+  "PINREG": 1
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "stream_clk",
+ "clock_ports": [
+  "stream_clk",
+  "hbm_clk"
+ ],
+ "reset_ports": [
+  "stream_rst_n",
+  "hbm_rst_n"
+ ],
+ "clock_data_paths": "async_gray_fifo",
+ "clock_relationship": {
+  "kind": "hbm_phy_async_gray_fifo",
+  "stream_period_ps": 833.333,
+  "hbm_period_ps": 1024.0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "stream_clk"
+   ],
+   "inputs": [
+    "stream_rst_n",
+    "sm_stream",
+    "vm_v",
+    "vm_bank",
+    "vm_epoch",
+    "vm_row",
+    "vm_col",
+    "wbw_v",
+    "wbw_base",
+    "wbw_total"
+   ],
+   "outputs": [
+    "fill_v",
+    "fill_bank",
+    "fill_slot",
+    "fill_epoch",
+    "fill_data",
+    "fault"
+   ]
+  },
+  "hbm": {
+   "ratio": [
+    3072000,
+    2499999
+   ],
+   "ports": [
+    "hbm_clk"
+   ],
+   "inputs": [
+    "hbm_rst_n",
+    "sm_hbm",
+    "g_k_v",
+    "g_k_addr",
+    "g_k_len",
+    "g_k_tag",
+    "g_k_we",
+    "g_k_wdata",
+    "g_k_wstrb",
+    "g_kr_rdy",
+    "c_k_rdy",
+    "c_k_wr_done",
+    "c_kr_v",
+    "c_kr_tag",
+    "c_kr_beat",
+    "c_kr_data",
+    "w_k_v",
+    "w_k_addr",
+    "w_k_wdata"
+   ],
+   "outputs": [
+    "g_k_rdy",
+    "g_k_wr_done",
+    "g_kr_v",
+    "g_kr_tag",
+    "g_kr_beat",
+    "g_kr_data",
+    "c_k_v",
+    "c_k_addr",
+    "c_k_len",
+    "c_k_tag",
+    "c_k_we",
+    "c_k_wdata",
+    "c_k_wstrb",
+    "c_kr_rdy",
+    "w_k_rdy",
+    "w_k_wr_done"
+   ]
+  }
+ },
+ "pins": {
+  "E": [
+   "g_k_v",
+   "g_k_rdy",
+   "g_k_addr",
+   "g_k_len",
+   "g_k_tag",
+   "g_k_we",
+   "g_k_wdata",
+   "g_k_wstrb",
+   "g_k_wr_done",
+   "g_kr_v",
+   "g_kr_rdy"
+  ],
+  "N": [
+   "g_kr_tag",
+   "g_kr_beat",
+   "g_kr_data",
+   "vm_v",
+   "vm_bank",
+   "vm_epoch",
+   "vm_row",
+   "vm_col",
+   "wbw_v",
+   "wbw_base",
+   "wbw_total",
+   "fill_v",
+   "fill_bank",
+   "fill_slot",
+   "fill_epoch",
+   "fill_data",
+   "fault",
+   "sm_stream",
+   "sm_hbm",
+   "stream_clk",
+   "stream_rst_n",
+   "hbm_clk",
+   "hbm_rst_n"
+  ],
+  "S": [
+   "c_k_v",
+   "c_k_rdy",
+   "c_k_addr",
+   "c_k_len",
+   "c_k_tag",
+   "c_k_we",
+   "c_k_wdata",
+   "c_k_wstrb",
+   "c_k_wr_done",
+   "c_kr_v",
+   "c_kr_rdy",
+   "c_kr_tag",
+   "c_kr_beat",
+   "c_kr_data"
+  ],
+  "W": [
+   "w_k_v",
+   "w_k_rdy",
+   "w_k_addr",
+   "w_k_wdata",
+   "w_k_wr_done"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "CDC leaf (hbm/stream async_gray_fifo profile: cmd/wcmd/fill Gray FIFOs + fault_cdc)",
+ "inhold": false,
+ "outhold": false,
+ "outline": {
+  "w": 540.0,
+  "h": 367.2
+ },
+ "slot_change_request": "SVC-SMALL 10-18 (from HBMA-SVC 10-17): d4g GEN0 binds ot_hbm_svc_vm_kshare #(.MUT(0),.KRL1(1)) x16 (vmks_SW0..7, vmks_NW0..7; SYNTH, no slot in grants_d4g). 7,340 port bits cannot sit on the d4f 146.88 x 146.88 slot (12.5 pins/um); pin-derived outline 432 x 388.8 (10 x 9 lattice cells): E svg K request 1,380 b (3.5/um), S controller K 2,488 b (5.8/um), N svg K response + VM/WB command + fills 2,319 b (5.4/um), W WB K port 1,156 b (3.0/um). Top = ot_hbm_svc_vm_kshare_splitstrap #(.KRL1(1)) (byte-identical to ot_hbm_svc_vm_kshare except strap sm -> sm_stream + sm_hbm, both tied to the same SM index): die.v rebind needed (H-D4G: cell + 2 strap pins); vmks_NW* placed MX (controllers north of the NW band). r6 (STEWARD-HBMd/PINREG-KS 10-23): outline 540.0 x 367.2 (FB), same faces; pin-bound (r5a 432 x 388.8 has 1,642 um perimeter for 7,343 pins) -> die slot update with the HBMd chain.",
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: stream_rst_n -> srst_q (stream_clk), hbm_rst_n -> hrst_q (hbm_clk), one flop per domain at entry, so each reset port has one sink and core fan-out starts at a register; the kit landing has one clock and cannot land two async domains (ROOT-HBM 10-19)"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "PINREG=1 (STEWARD-HBMd/PINREG-KS 10-23, r6): the RTL registers every pin itself -- every data/valid INPUT (g_k_*, w_k_*, c_kr_*, c_k_wr_done) lands in ONE plain flop (pin -> flop D, no gate; data free-running, valid async-cleared), every OUTPUT leaves a flop (skid / ring head, rdy flops, wr_done / fill / fault flops); io_flop_at_pins anchors them FIRM at their faces. Named exception: ready inputs c_k_rdy / g_kr_rdy (8 pins) stay direct (registering them changes the controller / svg protocol), reset pins land on one async-clear flop per domain. A kit pin stage cannot span the two async_gray_fifo domains and would add unpriced K-port latency."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "STEWARD-HBMd/PINREG-KS",
+  "branch": "claude/hbmd-pinreg-ks-r6-1023",
+  "tag": "ks-r6b",
+  "purpose": "kshare r6b (FB; STEWARD-HBMd/PINREG 01:40 PLAN, coordinator tile review 10-23: r5a blob far from the S pins, 3,647 inputs entering skid D-muxes): r5a + PINREG=1 -- every data/valid input pin lands in ONE plain flop anchored FIRM at its face (io_flop_at_pins cols 6), group / WB skids -> 3-entry rings with registered rdy, KRL1 response ring 3 -> 4, c_k_wr_done pin flop; +1 hbm edge on group req / WB write / response / VM beat / wr_done (COORD-REVIEW-QUEUE sign-off); ready inputs c_k_rdy / g_kr_rdy direct (named exception). Outline 540.0 x 367.2, faces as r5a (E svg, S controllers, N long-haul, W WB). Proof: PINREG 0 vs 1 lockstep (results/rtl/hbmd_pinreg_ks_r6_1023).",
+  "record_to": "results/rtl/ref_tile/hdie_svc_vm_kshare_r6b",
+  "benches": [
+   {
+    "name": "vmks_krl1_exact",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/pos split_pr_pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_pos: PASS tb_hbm_svc_vm_kshare",
+    "min_count_regex": "^split_pr_pos: PASS tb_hbm_svc_vm_kshare .*fills=(\\d+)",
+    "pass_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_pos.log"
+   },
+   {
+    "name": "vmks_krl1_slowhbm",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/slow split_pr_pos_slow",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_pos_slow: PASS tb_hbm_svc_vm_kshare",
+    "min_count_regex": "^split_pr_pos_slow: PASS tb_hbm_svc_vm_kshare .*fills=(\\d+)",
+    "pass_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_pos_slow.log"
+   },
+   {
+    "name": "vmks_wb_exact",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh {RUN}/bench/exact pr_baseline",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "QUALIFIED pr_baseline expected_exit=0",
+    "pass_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/wb_pr_baseline.log",
+    "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q .*group_req=(\\d+)"
+   },
+   {
+    "name": "vmks_pinreg_lockstep",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_pinreg_lockstep.sh {RUN}/bench/ls krl1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^krl1: PASS tb_hbm_svc_vm_kshare_pinreg_lockstep",
+    "pass_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/lockstep_krl1.log"
+   },
+   {
+    "name": "vmks_mut_depth2",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/depth2 split_pr_mut_depth2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_mut_depth2: PASS",
+    "fail_regex": "^split_pr_mut_depth2: FAIL",
+    "note": "MUT=6 (PINREG, KRL1): controller-side response ring depth 4 -> 3 -> overflow under back-pressure",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_mut_depth2.log"
+   },
+   {
+    "name": "vmks_mut_ring2",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/ring2 split_pr_mut_ring2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_mut_ring2: PASS",
+    "fail_regex": "^split_pr_mut_ring2: FAIL",
+    "note": "MUT=9 (PINREG): group / WB request rings depth 3 -> 2 -> overflow fault under back-pressure",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_mut_ring2.log"
+   },
+   {
+    "name": "vmks_mut_hbmstrap",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh {RUN}/bench/hbmstrap split_pr_mut_hbmstrap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^split_pr_mut_hbmstrap: PASS",
+    "fail_regex": "^split_pr_mut_hbmstrap: FAIL",
+    "note": "MUT=7: hbm-domain strap ignored (VM reads to the wrong PCs)",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/vmks_split_pr_mut_hbmstrap.log"
+   },
+   {
+    "name": "vmks_mut_streamstrap",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh {RUN}/bench/streamstrap raw_pr_streamstrap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q",
+    "fail_regex": "RAW_FAIL pr_streamstrap",
+    "note": "KSMUT=8: stream-domain strap ignored (WB lane counts of SM 0)",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/wb_raw_pr_streamstrap.log"
+   },
+   {
+    "name": "vmks_mut_overlap",
+    "cmd": "bash rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh {RUN}/bench/overlap raw_pr_overlap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS tb_hbm_svc_wb_kshare_splitstrap_q",
+    "fail_regex": "RAW_FAIL pr_overlap",
+    "note": "KSMUT=3: WB window does not wait for outstanding group writes",
+    "fail_witness": "results/rtl/hbmd_pinreg_ks_r6_1023/witness/wb_raw_pr_overlap.log"
+   },
+   {
+    "name": "shp_fifo_lockstep",
+    "cmd": "bash rtl/test/hbm_svc_shp/run_shp_bench.sh {RUN}/bench/shp",
+    "expect": "pass",
+    "pass_regex": "SHP_BENCH_EXIT 0",
+    "pass_witness": "results/rtl/hbm_svc_shp_1022/witness/shp_bench.log",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/loader/service_native/run_wb_kshare_splitstrap_bench.sh",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_splitstrap_q.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
+   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/lib/ot_reset_sync.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "rtl/hbm_accel/loader/service_native/run_vm_kshare_krl1_bench.sh",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_vm_kshare.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv",
+   "rtl/test/hbm_svc_shp/",
+   "results/rtl/hbm_svc_shp_1022/",
+   "rtl/hbm_accel/loader/service_native/tb_hbm_svc_vm_kshare_pinreg_lockstep.sv",
+   "rtl/hbm_accel/loader/service_native/run_vm_kshare_pinreg_lockstep.sh",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_kshare_sl.sv",
+   "rtl/lib/ot_rst_fanout.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+   "results/rtl/hbmd_pinreg_ks_r6_1023/"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "safe_design_checklist": {
+  "1_pins": "PINREG=1: every data/valid input lands on one plain face flop (pin -> D, no gate), every output already leaves a flop; exception 8 ready inputs (c_k_rdy, g_kr_rdy: controller / svg protocol, coordinator sign-off) + 2 reset pins (async-clear landing). io_flop_at_pins cols 6 (S face 2,484 face flops > 4 x 560). <= 4.6 pins/um every face.",
+  "2_reach": "max face-to-face lane path E -> S ~600 um split by pin flop -> ring -> B skid head flop -> pin; each hop <= ~300 um at 833/1024 ps. Gate measures.",
+  "3_fanout": "rings / skids keep the r5a slicing (12-bit ring slices with kept wp/rp, kept slice ANDs; new A/E rings 29/24 slices take in_v/pop through 2 kept group ANDs); pin flops load the ring entries (3/4 loads). Native census in gate.",
+  "4_depth": "unchanged logic; the pin -> head/tail D-mux IO path becomes pin -> flop; ring read = 3:1 / 4:1 mux on rp before the B select (was the skid head flop).",
+  "5_storage": "no macros; A/E 3-entry rings, C 4-entry ring (KRL1), sliced.",
+  "6_floorplan": "enlarged to the pin-legal perimeter (7,343 pins need >= 1,836 um at 4/um; r5a 1,642): never squeezed; fill ~10% is the pin-bound consequence; lanes 0..3 in order along each face. Gate PNG decides.",
+  "7_clock": "two roots (stream, hbm) as r5a; span grows to the outline; gate --cts measures pin-flop spread <= 80 ps TT/FF.",
+  "8_schedule": "static; +1 hbm edge (recorded, COORD-REVIEW-QUEUE): group request -> controller, WB write -> controller, controller response -> group, controller VM beat -> fill CDC, c_k_wr_done -> g/w_k_wr_done; stream pins unchanged; II=1 kept (lockstep stream phase). r5a 2-level kept reset leaves unchanged; new pin valid flops on new leaves from hr1[4l+1] (unused by r5a), <= 32 loads."
+ }
+}

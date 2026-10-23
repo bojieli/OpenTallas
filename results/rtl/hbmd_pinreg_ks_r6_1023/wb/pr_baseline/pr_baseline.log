@@ -1,0 +1,12 @@
+WB_BLOCK 0 sectors 640 fence_stream_edges 823 window_hbm_edges max 657 mean 627
+WB_BLOCK 1 sectors 1 fence_stream_edges 3133 window_hbm_edges max 1080 mean 256
+WB_BLOCK 2 sectors 13 fence_stream_edges 2467 window_hbm_edges max 53 mean 31
+WB_BLOCK 3 sectors 2048 fence_stream_edges 3584 window_hbm_edges max 2866 mean 1611
+WB_BLOCK 4 sectors 640 fence_stream_edges 6398 window_hbm_edges max 2530 mean 1953
+WB_BLOCK 5 sectors 300 fence_stream_edges 6169 window_hbm_edges max 1096 mean 514
+WB_BLOCK 6 sectors 1 fence_stream_edges 5015 window_hbm_edges max 372 mean 58
+PASS tb_hbm_svc_wb_kshare_splitstrap_q KSMUT=0 WBMUT=0 WOPEN=0 PINREG=1 blocks=7 group_req=3840 vm_windows=4
+- rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_splitstrap_q.sv:256: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 19.792 s; speed 784.192 ns/s
+- Verilator: cpu 19.790 s on 1 threads; allocated 17 MB

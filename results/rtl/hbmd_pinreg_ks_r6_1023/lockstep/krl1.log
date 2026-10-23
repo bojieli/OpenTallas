@@ -1,0 +1,15 @@
+LANE 0 grp_req 600 vm_req 96 wb_wr 79 gkr_beats 833 fills 384 g_wr_done 261 w_wr_done 79
+LANE 1 grp_req 600 vm_req 96 wb_wr 80 gkr_beats 788 fills 384 g_wr_done 270 w_wr_done 80
+LANE 2 grp_req 600 vm_req 96 wb_wr 84 gkr_beats 855 fills 384 g_wr_done 273 w_wr_done 84
+LANE 3 grp_req 600 vm_req 96 wb_wr 84 gkr_beats 821 fills 384 g_wr_done 268 w_wr_done 84
+LATENCY group_req g_k->c_k (hbm edges, min) PINREG0=2 PINREG1=3 offset=1
+LATENCY wb_write w_k->c_k (hbm edges, min) PINREG0=2 PINREG1=3 offset=1
+LATENCY response c_kr->g_kr (hbm edges, min) PINREG0=2 PINREG1=3 offset=1
+LATENCY wr_done c_k_wr_done->g_k_wr_done (hbm edges, min) PINREG0=1 PINREG1=2 offset=1
+LATENCY vm_beat c_kr->fill (ps, min, CDC) PINREG0=3529 PINREG1=4551 offset=1022 (hbm period 1024)
+STREAM 160 back-to-back group writes per lane took (edges, min over lanes) PINREG0=159 PINREG1=159 (II=1 -> 159)
+PASS tb_hbm_svc_vm_kshare_pinreg_lockstep KRL1=1 MUT1=0 GN=600 NWIN=9 hbm_half=512 str_half=417
+- rtl/hbm_accel/loader/service_native/tb_hbm_svc_vm_kshare_pinreg_lockstep.sv:258: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.384 s; speed 7.145 us/s
+- Verilator: cpu 0.384 s on 1 threads; allocated 9 MB
