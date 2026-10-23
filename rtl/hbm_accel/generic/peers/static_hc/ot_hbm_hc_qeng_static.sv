@@ -46,6 +46,14 @@ module ot_hbm_hc_qeng_static #(
     // (ot_hbm_hc_bankq_static) CPI = CPO = 1, bank 0 CPO = 1, edge banks 2 / 6 unchanged -> the chain is CHX = 11
     // edges longer (centre CHX, root QCHX = 11).  Default 0 = unchanged.
     parameter integer CPR  = 0,
+    // QHUB-S1 10-19: SAFE 1 = the hub centre's safe form (ot_hbm_hc_qcen_static SAFE: s_i pin register, +1 subtree edge ->
+    // root QCHX + 1, programme RAW0 + 1; MUT 6 = that register without the valid delay).  Default 0 = unchanged.
+    // HBM-HCBANK6 10-20: SAFE 2 = the centre's hard tree slices (same edges as SAFE 1; slices clocked by clk here).
+    parameter integer SAFE = 0,
+    // HBMc/QHUB4 10-22: LAND = the hub's landed form (ot_hbm_hc_qhub_static LAND bits 0, 1): bit 0 landed slice
+    // crossings (+2 subtree edges), bit 1 bank-face registers on bd / wc (centre) and the x beats to the banks (here, as
+    // the hub's xb_* face registers): the ring +1 edge.  Root QCHX + 2 * bit0 + bit1.  Default 0 = unchanged.
+    parameter integer LAND = 0,
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -72,14 +80,24 @@ module ot_hbm_hc_qeng_static #(
     output reg            fault
 );
     localparam integer XB = 8192 / XW_BEATS;
+    // bank-side x beats (LAND bit 1: the hub's face registers; the centre keeps the unregistered control copy)
+    wire xbv; wire [1:0] xbb; wire [8192/XW_BEATS-1:0] xbd;
+    if ((LAND & 2) != 0) begin : g_xbf
+        reg xbv_q; reg [1:0] xbb_q; reg [8192/XW_BEATS-1:0] xbd_q;
+        always @(posedge clk) begin xbv_q <= x_wave_v; xbb_q <= x_wave_beat; xbd_q <= x_wave; end
+        assign xbv = xbv_q; assign xbb = xbb_q; assign xbd = xbd_q;
+    end else begin : g_xbd
+        assign xbv = x_wave_v; assign xbb = x_wave_beat; assign xbd = x_wave;
+    end
     localparam integer CP = (CPR != 0) ? 1 : 0, CHX = 11 * CP;
     initial if (XW_BEATS != 4) $fatal(1, "ring form: XW_BEATS must be 4 (2,048-b beats, 256-b bank slices)");
     initial if (XRLY < 0 || DRLY - XRLY < 1) $fatal(1, "XRLY: 0 <= XRLY <= DRLY - 1 (bank 0 registers the exit)");
     // ------------------------------------------------------------------ centre
     wire [7:0] rb, wf; wire [12:0] wc_w, wc_n, wc_e, wc_s; wire [2048:0] s_c;
     wire bd_v, bd_ss; wire [6:0] bd_nv; wire [9:0] bd_wa, bd_xa;
-    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .MUT((MUT == 3 || MUT == 4) ? MUT : 0)) u_cen (
-        .clk(clk), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
+    ot_hbm_hc_qcen_static #(.K(K), .DRLY(DRLY), .TLA(TLA), .CHX(CHX), .MUT((MUT == 3 || MUT == 4 || MUT == 6 || MUT == 7) ? MUT : 0),
+        .SAFE(SAFE), .LAND(LAND & 3)) u_cen (
+        .clk(clk), .clk_t({4{clk}}), .rst_n(rst_n), .d_v(d_v), .d_ss(d_ss), .d_nv(d_nv), .d_wa(d_wa), .d_xa(d_xa),
         .i_v(i_v), .i_kind(i_kind), .i_slot(i_slot), .i_lo(i_lo), .i_w(i_w), .i_cnt(i_cnt), .i_word(i_word),
         .x_v(x_wave_v), .x_beat(x_wave_beat), .x_word(x_wave_word), .s_i(s_c), .wfault_i(wf), .rst_b(rb),
         .bd_v(bd_v), .bd_ss(bd_ss), .bd_nv(bd_nv), .bd_wa(bd_wa), .bd_xa(bd_xa),
@@ -88,7 +106,7 @@ module ot_hbm_hc_qeng_static #(
     wire [8*256-1:0] xs;
     for (genvar k = 0; k < 8; k = k + 1) begin : g_xs
         for (genvar i = 0; i < 8; i = i + 1) begin : g_i
-            assign xs[k*256 + i*32 +: 32] = x_wave[i*256 + k*32 +: 32];
+            assign xs[k*256 + i*32 +: 32] = xbd[i*256 + k*32 +: 32];
         end
     end
     // ------------------------------------------------------------------ ring chain 0 -> 7
@@ -222,7 +240,7 @@ module ot_hbm_hc_qeng_static #(
     `define OT_HCQ_BFCK `OT_HCQ_BCK
 `endif
     `OT_HCQ_B0 #(.MUT(0), .DRLY(DRLY - XRLY), .CPO(CP)) u_b0 (.clk(clk), `OT_HCQ_BCK `OT_HCQ_B0CK .rst_n(rb[0]), `OT_HCQ_CHAIN(0),
-        .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[0 +: 256]),
+        .xb_v(xbv), .xb_beat(xbb), .xb_d(xs[0 +: 256]),
         .wv(wc_w[12]), .xv(wc_w[11]), .j(wc_w[10]), .wa(wc_w[9:0]), .wfault(wf[0]),
         .s_i(s_x[XRLY]), .s_o(s_c));
     for (genvar e = 0; e < 2; e = e + 1) begin : g_ft          // e 0: bank 2 (N, wc_n), e 1: bank 6 (S, wc_s)
@@ -230,13 +248,13 @@ module ot_hbm_hc_qeng_static #(
         wire [12:0] wc = (e == 0) ? wc_n : wc_s;
         `OT_HCQ_BF #(.MUT(0)) u_b (.clk(clk), `OT_HCQ_BFCK .rst_n(rb[K0]), `OT_HCQ_CHAIN(K0),
             .sum_in(jsum[K0*2048 +: 2048]), .f_in(jf[K0]),
-            .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[K0*256 +: 256]),
+            .xb_v(xbv), .xb_beat(xbb), .xb_d(xs[K0*256 +: 256]),
             .wv(wc[12]), .xv(wc[11]), .j(wc[10]), .wa(wc[9:0]), .wfault(wf[K0]),
-            .fa_xb_v(x_wave_v), .fa_xb_beat(x_wave_beat), .fa_xb_d(xs[(K0-1)*256 +: 256]),
+            .fa_xb_v(xbv), .fa_xb_beat(xbb), .fa_xb_d(xs[(K0-1)*256 +: 256]),
             .fa_wv(wc[12]), .fa_xv(wc[11]), .fa_j(wc[10]), .fa_wa(wc[9:0]),
             .fa_xb_v_o(fx_v[2*e]), .fa_xb_beat_o(fx_b[4*e +: 2]), .fa_xb_d_o(fx_d[(2*e)*256 +: 256]),
             .fa_wv_o(fwv[2*e]), .fa_xv_o(fxv[2*e]), .fa_j_o(fj[2*e]), .fa_wa_o(fwa[(2*e)*10 +: 10]),
-            .fb_xb_v(x_wave_v), .fb_xb_beat(x_wave_beat), .fb_xb_d(xs[(K0+1)*256 +: 256]),
+            .fb_xb_v(xbv), .fb_xb_beat(xbb), .fb_xb_d(xs[(K0+1)*256 +: 256]),
             .fb_wv(wc[12]), .fb_xv(wc[11]), .fb_j(wc[10]), .fb_wa(wc[9:0]),
             .fb_xb_v_o(fx_v[2*e+1]), .fb_xb_beat_o(fx_b[4*e+2 +: 2]), .fb_xb_d_o(fx_d[(2*e+1)*256 +: 256]),
             .fb_wv_o(fwv[2*e+1]), .fb_xv_o(fxv[2*e+1]), .fb_j_o(fj[2*e+1]), .fb_wa_o(fwa[(2*e+1)*10 +: 10]),
@@ -253,7 +271,7 @@ module ot_hbm_hc_qeng_static #(
     end
     `OT_HCQ_BQ #(.MUT(0), .CPI(CP), .CPO(CP)) u_b4 (.clk(clk), `OT_HCQ_BQCK .rst_n(rb[4]), `OT_HCQ_CHAIN(4),
         .sum_in(jsum[4*2048 +: 2048]), .f_in(jf[4]),
-        .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[4*256 +: 256]),
+        .xb_v(xbv), .xb_beat(xbb), .xb_d(xs[4*256 +: 256]),
         .wv(wc_e[12]), .xv(wc_e[11]), .j(wc_e[10]), .wa(wc_e[9:0]), .wfault(wf[4]));
     `undef OT_HCQ_CHAIN
     `undef OT_HCQ_B0
