@@ -582,7 +582,8 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
                            emission=plan['emission'], placement=plan['placement'], plan=plan, sel=sel, gi=gi))
     bfo = [o for o in ops if o in XB.BF_OPS]
     if bfo:
-        phases += compile_bf(field, fx, bfo, g, j, LX.base_master(master), LX.land_e(lk), bf, len(qa))
+        phases += compile_bf(field, fx, bfo, g, j, LX.base_master(master), LX.land_e(lk), bf, len(qa),
+                             frame=XB.frame_variant(master))
     if LX.aproj_topology_enabled():
         field.aproj_rank_rows = list(p0['rows'])
         phases[0]['row_index'] = list(p0['rows'])
@@ -609,13 +610,13 @@ def bf_phase_list(fx, ops, npairs):
     return seq
 
 
-def compile_bf(field, fx, ops, g, j, master, land_e, bf, off):
+def compile_bf(field, fx, ops, g, j, master, land_e, bf, off, frame=None):
     """the BF16 pair phases of this frame (xs_bf.py): one BSEG segment of up to 2 x 3 rows per phase, super row R on BF
     pair R; the programme (measured descriptor of the master / lane latency, this phase's ROM base) rides the cfg spare
     columns.  A frame without rows in a die-wide phase gets the phase's stream and an EMPTY configuration."""
     import v41_die_images_w17w10 as I
     import xs_bf as XB
-    meas, how = XB.meas_for(XB.load_meas(), master, land_e)
+    meas, how = XB.meas_for(XB.load_meas(), master, land_e, frame)     # frame 'lp': the LP frame's own measurement
     if meas is not None:
         meas = dict(meas, calendar=how)
     out = []
@@ -633,7 +634,7 @@ def compile_bf(field, fx, ops, g, j, master, land_e, bf, off):
         mat = FMatBF(grp['mat'], np.ascontiguousarray(u[:, cols]), list(range(len(u))), op)
         nsr = -(-mat.rows // 2)
         base = [int(field.fill[off + R_]) + (int(field.fill[off + R_]) & 1) for R_ in range(nsr)]   # PP: even start
-        plan = XB.bf_plan(master, bf, vals, s, n, meas if sel else None, base)
+        plan = XB.bf_plan(master, bf, vals, s, n, meas if sel else None, base, frame=frame)
         orig = I._place
         I._place = XB.place_bf([(off + R_, R_) for R_ in range(nsr)], s, n)
         try:
@@ -657,7 +658,7 @@ def compile_bf(field, fx, ops, g, j, master, land_e, bf, off):
                         tie=[grp['tie'][i] for i in sel], tie_kind=grp['tie_kind'], rows_per_phase=R,
                         nbeat=ph['nbeat'], sbase=ph['sbase'], faults=plan['faults'], ret_words=plan['ret_words'],
                         calendar=plan['calendar'], elem_class=['bf16', XB.BSEG], ret=plan['ret'],
-                        shape=XB.shape_key(master, land_e), bf_pairs=plan['pairs'], assign=plan['assign'],
+                        shape=XB.shape_key(master, land_e, frame), bf_pairs=plan['pairs'], assign=plan['assign'],
                         desc=plan['desc'], plan=dict(plan, rows_vals={str(r): v for r, v in enumerate(vals)},
                                                      acc=acc if sel else [], bf16=b16 if sel else []),
                         sel=sel, gi=gi))
@@ -1083,9 +1084,10 @@ def lower_placed_bf(die, op, ctx, rec, fx, sl, g):
     unm = set()
     for j, fr in enumerate(die.frames_of(sl)):
         master, E = LX.base_master(die.inst[fr]['master']), LX.land_e(die.strap(fr, 'lk'))
+        fv = XB.frame_variant(die.inst[fr]['master'])
         _, bfp = B.frame_pairs(master)
-        key = XB.shape_key(master, E)
-        _, how = XB.meas_for(meas, master, E)
+        key = XB.shape_key(master, E, fv)
+        _, how = XB.meas_for(meas, master, E, fv)
         if how is None:
             unm.add(key)
         rows = [len(XB.bf_groups(fx, op_)[gi]['groups'][g][j][c * R:(c + 1) * R]) for op_, gi, c, s, n, R, most in seq]

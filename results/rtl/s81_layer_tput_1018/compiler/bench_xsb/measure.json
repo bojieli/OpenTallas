@@ -1,4 +1,241 @@
 {
+ "col_h10_lp|E2|bseg1024": {
+  "bench": {
+   "base_commit": "be0f6e7c8",
+   "host": "ot-epyc9",
+   "ldly": 0,
+   "lk": 2,
+   "script": "tools/s81_dv/frame_bf_measure.sh",
+   "twin": "rtl/dsrom_sys/s81_dv/frame_lp/vgcs/col_h10_l4_lp_rf3r.sv"
+  },
+  "calendar": "measured_shape",
+  "desc": {
+   "1": 33057144058417342709824,
+   "10": 33057144058417342709824,
+   "5": 33057144058417342709824
+  },
+  "die_frame": "u_f_0L01",
+  "field_phase": 65,
+  "fits": {
+   "1": {
+    "descriptor": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 150,
+    "go_edge": 145,
+    "issues": 64,
+    "last_issue_edge": 213,
+    "mismatches": 0
+   },
+   "10": {
+    "descriptor": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 163,
+    "go_edge": 158,
+    "issues": 64,
+    "last_issue_edge": 226,
+    "mismatches": 0
+   },
+   "5": {
+    "descriptor": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 157,
+    "go_edge": 152,
+    "issues": 64,
+    "last_issue_edge": 220,
+    "mismatches": 0
+   }
+  },
+  "frame": "lp",
+  "key": "col_h10_lp|E2|bseg1024",
+  "land_e": 2,
+  "lat_issue_to_pv": {
+   "e10e.r": 106,
+   "e10w.r": 106,
+   "e1e.r": 106,
+   "e1w.r": 106,
+   "e5e.r": 106,
+   "e5w.r": 106
+  },
+  "leaf_ret_corr": {},
+  "log": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/lp_vgcs_1023/m_h10_k2/run_measure.log",
+  "ok": true,
+  "op": "attn.wo_a",
+  "pv": {
+   "e10e.r": [
+    332
+   ],
+   "e10w.r": [
+    332
+   ],
+   "e1e.r": [
+    319
+   ],
+   "e1w.r": [
+    319
+   ],
+   "e5e.r": [
+    326
+   ],
+   "e5w.r": [
+    326
+   ]
+  },
+  "pv_all": {
+   "e10e.r": [
+    {
+     "edge": 332,
+     "n": 4,
+     "row": 5,
+     "seg": 3
+    }
+   ],
+   "e10w.r": [
+    {
+     "edge": 332,
+     "n": 4,
+     "row": 4,
+     "seg": 3
+    }
+   ],
+   "e1e.r": [
+    {
+     "edge": 319,
+     "n": 4,
+     "row": 1,
+     "seg": 3
+    }
+   ],
+   "e1w.r": [
+    {
+     "edge": 319,
+     "n": 4,
+     "row": 0,
+     "seg": 3
+    }
+   ],
+   "e5e.r": [
+    {
+     "edge": 326,
+     "n": 4,
+     "row": 3,
+     "seg": 3
+    }
+   ],
+   "e5w.r": [
+    {
+     "edge": 326,
+     "n": 4,
+     "row": 2,
+     "seg": 3
+    }
+   ]
+  },
+  "ret_composed": [
+   407,
+   410,
+   417,
+   418,
+   420,
+   426
+  ],
+  "ret_lat": {
+   "e10e.r": 86,
+   "e10w.r": 94,
+   "e1e.r": 88,
+   "e1w.r": 91,
+   "e5e.r": 91,
+   "e5w.r": 94
+  },
+  "ret_run": [
+   407,
+   410,
+   417,
+   418,
+   420,
+   426
+  ],
+  "ret_self_check": true,
+  "ret_uncorrected": [
+   407,
+   410,
+   417,
+   418,
+   420,
+   426
+  ]
+ },
  "col_h10|E2|bseg1024": {
   "desc": {
    "1": 33057144057455270035520,
@@ -189,6 +426,488 @@
     }
    ]
   }
+ },
+ "col_h9_lp|E2|bseg1024": {
+  "bench": {
+   "base_commit": "be0f6e7c8",
+   "host": "ot-epyc9",
+   "ldly": 0,
+   "lk": 2,
+   "script": "tools/s81_dv/frame_bf_measure.sh",
+   "twin": "rtl/dsrom_sys/s81_dv/frame_lp/vgcs/col_h9_l4_lp_rf3r.sv"
+  },
+  "calendar": "measured_shape",
+  "desc": {
+   "13": 33057144058417342709824,
+   "4": 33057144058417342709824,
+   "8": 33057144058417342709824
+  },
+  "die_frame": "u_f_0L00",
+  "field_phase": 65,
+  "fits": {
+   "13": {
+    "descriptor": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 169,
+    "go_edge": 164,
+    "issues": 64,
+    "last_issue_edge": 232,
+    "mismatches": 0
+   },
+   "4": {
+    "descriptor": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 152,
+    "go_edge": 147,
+    "issues": 64,
+    "last_issue_edge": 215,
+    "mismatches": 0
+   },
+   "8": {
+    "descriptor": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 161,
+    "go_edge": 156,
+    "issues": 64,
+    "last_issue_edge": 224,
+    "mismatches": 0
+   }
+  },
+  "frame": "lp",
+  "key": "col_h9_lp|E2|bseg1024",
+  "land_e": 2,
+  "lat_issue_to_pv": {
+   "e13e.r": 106,
+   "e13w.r": 106,
+   "e4e.r": 106,
+   "e4w.r": 106,
+   "e8e.r": 106,
+   "e8w.r": 106
+  },
+  "leaf_ret_corr": {
+   "e4e.r": -3,
+   "e4w.r": -3,
+   "e8w.r": -6
+  },
+  "log": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/lp_vgcs_1023/m_h9_k2/run_measure.log",
+  "ok": true,
+  "op": "attn.wo_a",
+  "pv": {
+   "e13e.r": [
+    338
+   ],
+   "e13w.r": [
+    338
+   ],
+   "e4e.r": [
+    321
+   ],
+   "e4w.r": [
+    321
+   ],
+   "e8e.r": [
+    330
+   ],
+   "e8w.r": [
+    330
+   ]
+  },
+  "pv_all": {
+   "e13e.r": [
+    {
+     "edge": 338,
+     "n": 4,
+     "row": 5,
+     "seg": 3
+    }
+   ],
+   "e13w.r": [
+    {
+     "edge": 338,
+     "n": 4,
+     "row": 4,
+     "seg": 3
+    }
+   ],
+   "e4e.r": [
+    {
+     "edge": 321,
+     "n": 4,
+     "row": 1,
+     "seg": 3
+    }
+   ],
+   "e4w.r": [
+    {
+     "edge": 321,
+     "n": 4,
+     "row": 0,
+     "seg": 3
+    }
+   ],
+   "e8e.r": [
+    {
+     "edge": 330,
+     "n": 4,
+     "row": 3,
+     "seg": 3
+    }
+   ],
+   "e8w.r": [
+    {
+     "edge": 330,
+     "n": 4,
+     "row": 2,
+     "seg": 3
+    }
+   ]
+  },
+  "ret_composed": [
+   408,
+   411,
+   422,
+   424,
+   427,
+   430
+  ],
+  "ret_lat": {
+   "e13e.r": 89,
+   "e13w.r": 92,
+   "e4e.r": 87,
+   "e4w.r": 90,
+   "e8e.r": 92,
+   "e8w.r": 94
+  },
+  "ret_run": [
+   408,
+   411,
+   422,
+   424,
+   427,
+   430
+  ],
+  "ret_self_check": true,
+  "ret_uncorrected": [
+   411,
+   414,
+   422,
+   427,
+   430,
+   430
+  ]
+ },
+ "col_h9_lp|E5|bseg1024": {
+  "bench": {
+   "base_commit": "be0f6e7c8",
+   "host": "ot-epyc9",
+   "ldly": 3,
+   "lk": 5,
+   "script": "tools/s81_dv/frame_bf_measure.sh",
+   "twin": "rtl/dsrom_sys/s81_dv/frame_lp/vgcs/col_h9_l4_lp_rf3r.sv"
+  },
+  "calendar": "measured_shape",
+  "desc": {
+   "13": 33057144058417342709824,
+   "4": 33057144058417342709824,
+   "8": 33057144058417342709824
+  },
+  "die_frame": "u_f_0L00",
+  "field_phase": 65,
+  "fits": {
+   "13": {
+    "descriptor": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 174,
+    "go_edge": 169,
+    "issues": 64,
+    "last_issue_edge": 237,
+    "mismatches": 0
+   },
+   "4": {
+    "descriptor": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 157,
+    "go_edge": 152,
+    "issues": 64,
+    "last_issue_edge": 220,
+    "mismatches": 0
+   },
+   "8": {
+    "descriptor": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 4,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "descriptor_fit": {
+     "am": 63,
+     "base": 448,
+     "cm": 7,
+     "fam": 1,
+     "lb": 0,
+     "lu": 0,
+     "n": 64,
+     "off": 5,
+     "per": 1,
+     "sm": 0,
+     "ssh": 0
+    },
+    "first_issue_edge": 166,
+    "go_edge": 161,
+    "issues": 64,
+    "last_issue_edge": 229,
+    "mismatches": 0
+   }
+  },
+  "frame": "lp",
+  "key": "col_h9_lp|E5|bseg1024",
+  "land_e": 5,
+  "lat_issue_to_pv": {
+   "e13e.r": 106,
+   "e13w.r": 106,
+   "e4e.r": 106,
+   "e4w.r": 106,
+   "e8e.r": 106,
+   "e8w.r": 106
+  },
+  "leaf_ret_corr": {
+   "e4e.r": -3,
+   "e4w.r": -3,
+   "e8w.r": -6
+  },
+  "log": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/lp_vgcs_1023/m_h9_k5/run_measure.log",
+  "ok": true,
+  "op": "attn.wo_a",
+  "pv": {
+   "e13e.r": [
+    343
+   ],
+   "e13w.r": [
+    343
+   ],
+   "e4e.r": [
+    326
+   ],
+   "e4w.r": [
+    326
+   ],
+   "e8e.r": [
+    335
+   ],
+   "e8w.r": [
+    335
+   ]
+  },
+  "pv_all": {
+   "e13e.r": [
+    {
+     "edge": 343,
+     "n": 4,
+     "row": 5,
+     "seg": 3
+    }
+   ],
+   "e13w.r": [
+    {
+     "edge": 343,
+     "n": 4,
+     "row": 4,
+     "seg": 3
+    }
+   ],
+   "e4e.r": [
+    {
+     "edge": 326,
+     "n": 4,
+     "row": 1,
+     "seg": 3
+    }
+   ],
+   "e4w.r": [
+    {
+     "edge": 326,
+     "n": 4,
+     "row": 0,
+     "seg": 3
+    }
+   ],
+   "e8e.r": [
+    {
+     "edge": 335,
+     "n": 4,
+     "row": 3,
+     "seg": 3
+    }
+   ],
+   "e8w.r": [
+    {
+     "edge": 335,
+     "n": 4,
+     "row": 2,
+     "seg": 3
+    }
+   ]
+  },
+  "ret_composed": [
+   413,
+   416,
+   427,
+   429,
+   432,
+   435
+  ],
+  "ret_lat": {
+   "e13e.r": 89,
+   "e13w.r": 92,
+   "e4e.r": 87,
+   "e4w.r": 90,
+   "e8e.r": 92,
+   "e8w.r": 94
+  },
+  "ret_run": [
+   413,
+   416,
+   427,
+   429,
+   432,
+   435
+  ],
+  "ret_self_check": true,
+  "ret_uncorrected": [
+   416,
+   419,
+   427,
+   432,
+   435,
+   435
+  ]
  },
  "col_h9|E5|bseg1024": {
   "desc": {
