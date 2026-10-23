@@ -228,7 +228,20 @@ def form(lines, dirs, slots):
 
     def fallback_rst(t):
         return tree_rst[t].most_common(1)[0][0] if tree_rst[t] else None
+    # K.RST 10-21: a clock generator (the PLL drives every n_clk_core_* trunk) is on no single tree; a lane formed from it
+    # is a mis-clocked first relay (kv_pin_repair.relay_trunk) and would gate a boot precondition (pll_locked: the HOST
+    # releases every die reset only after it) with a released die reset -> boot deadlock.  Fail closed, never lane it.
+    gen_trees = defaultdict(set)
+    for b, d_ in drv.items():
+        m_ = CORE.match(b.split('[')[0])
+        if m_:
+            gen_trees[d_[0]].add(m_.group(1))
+    clockgen = {nm for nm, ts in gen_trees.items() if len(ts) > 1}
     for ln_ in lanes:
+        if ln_['src'] in clockgen:
+            raise SystemExit(f"kv_fwd_lanes: lane {ln_['chain'][0]} launches from the clock generator {ln_['src']} "
+                             f"(tree {ln_['src_tree']} -> {ln_['dst_tree']}): its first relay must take the receiving "
+                             'trunk (kv_pin_repair.relay_trunk K.RST), never a die-reset-gated hop-0 lane')
         ch, S, n = ln_['chain'], ln_['S'], ln_['n']
         X, Y = ln_['src_tree'], ln_['dst_tree']
         en = (rst_of(ln_['src']) if ln_['src'] and ln_['src'] not in std else None) or fallback_rst(X)

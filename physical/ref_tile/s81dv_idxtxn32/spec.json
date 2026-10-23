@@ -1,0 +1,191 @@
+{
+ "name": "s81dv_idxtxn32",
+ "top": "dsdv_idx_tx_n32",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "V": 276,
+  "IK": 4,
+  "EK": 5,
+  "UID": 92,
+  "D": 8192,
+  "IB": 64,
+  "SRAM_MACRO": 1,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 596.16,
+  "h": 540.0,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[0].u_mem",
+   "at": [
+    64.8,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[1].u_mem",
+   "at": [
+    64.8,
+    133.92
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[2].u_mem",
+   "at": [
+    64.8,
+    224.64
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[3].u_mem",
+   "at": [
+    64.8,
+    315.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[4].u_mem",
+   "at": [
+    64.8,
+    406.08
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_ib0.g_m.g_b[0].u_mem",
+   "at": [
+    356.4,
+    406.08
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_ib1.g_m.g_b[0].u_mem",
+   "at": [
+    356.4,
+    315.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[5].u_mem",
+   "at": [
+    356.4,
+    224.64
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[6].u_mem",
+   "at": [
+    356.4,
+    133.92
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_sm.g_m.g_b[7].u_mem",
+   "at": [
+    356.4,
+    43.2
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "lo",
+   "st"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "vi": [
+   21.6,
+   287.3
+  ],
+  "vo": [
+   308.90000000000003,
+   574.56
+  ],
+  "lo": [
+   21.6,
+   488.15999999999997
+  ],
+  "st": [
+   498.96,
+   574.56
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (dsdv_idx_tx_n32, S81-RTLGAP 5cbd7d21c): every input lands in a flop at the pin (vi_r / vo_r), every output leaves a flop (lo / st); a recipe pin stage would shift the compiled tree-link slot grid (lower_bk job_rank_tree_rd)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "structural_change": "TOK-FUNC2-BK_SEL 10-21: NEW hard tile for u_tx of the 72-frame die master dsdv_bk_sel_vmtx (G8IQ 553741303; module + params byte-identical, blob c91af6aa = main). RTL unchanged (safe-design TX successor from S81-RTLGAP 5cbd7d21c: n32 kept one-hot enables, 5 reset relay leaves, SRAM score store / IDX buffer). MAIN.",
+ "why_floorplan": "Two SRAM columns of 5 (1024x256, pins on BOTH W and E faces -> std bands both sides): W band 64.8 | col A x 64.8 (score store banks 0-4) | mid band 116.9 | col B x 356.4 (IDX buffers ib0/ib1 at the top under the vo pins, score banks 5-7) | E band 65.0. 20.25-um N-S channels (pitch 90.72, as s81dv_idxrg3). N face vi (W half) / vo (E half) = 552 pins on 596 um; N band 63.5 for the pin flops / staging; S band 43.2 = lo / st output flops.",
+ "job": {
+  "owner": "Claude:TOK-FUNC2-BK_SEL",
+  "branch": "claude/s81-bksel-vtx-1021",
+  "tag": "s81dv_idxtxn32",
+  "purpose": "S81 72-frame die master dsdv_bk_sel_vmtx child u_tx = dsdv_idx_tx_n32 (tree transmit, 10 SRAM) hardened",
+  "views_to": "physical/ref_tile/s81dv_idxtxn32/views",
+  "record_to": "results/rtl/ref_tile/s81dv_idxtxn32",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/lib",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "children": [],
+ "hold_budget": "die"
+}

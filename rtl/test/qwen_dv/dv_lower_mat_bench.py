@@ -322,17 +322,35 @@ def run_vm(work, name, ages, rng, mutant):
     ok, n = check_vm(low, dd_by_slice(log), gm['y'], errs, name)
     go, gn, ginfo = gold_y(gm, errs)
     last = max(f for d in low['deliveries'] for f in d['far'])
+    vw = vm_writes(log, low)
     return ok + go, n + gn, errs, dict(stn=len(low['stn']), slices=sorted(low['expected_vm']), isa_gold=ginfo,
-                                       delivery_span_cycles=None, legacy_schedule_anchor_span_cycles=last - base,
+                                       delivery_span_cycles=None if vw['last'] is None else vw['last'] - base,
+                                       delivery_span_origin='chain schedule base (same origin as od span_cycles and the legacy anchor)',
+                                       legacy_schedule_anchor_span_cycles=last - base,
                                        first_stn_command_edge=base + min(c['edge'] for c in ch.commands()),
                                        first_cluster_word_edge=min(d['far'][0] - low['prefix_edges'] - SK for d in low['deliveries']),
                                        last_cluster_word_edge=last,
-                                       first_vm_write_edge=None, last_vm_write_edge=None,
-                                       vm_write_observability='reused tb has no VM-write probe; exact readback and final drain bound only',
+                                       first_vm_write_edge=vw['first'], last_vm_write_edge=vw['last'],
+                                       vm_write_window_cycles=None if vw['last'] is None else vw['last'] - vw['first'],
+                                       vm_writes_observed=vw['observed'], vm_writes_expected=vw['expected'],
+                                       vm_write_addresses_missing=vw['missing'], vm_write_observability=vw['scope'],
                                        producer_kc=low['kc'],
                                        producer_words_per_cluster_per_round=8 * low['kc'],
                                        producer_scope='STN/VM cut-boundary protocol; upstream MAC arithmetic not simulated here',
                                        span_note='legacy anchor span is not measured VM latency; input pin edges and readback/drain bounds are recorded separately')
+
+
+def vm_writes(log, low):
+    """Actual VM-write edges of the station results (tb_qfd_dv2 S<k>VW: st_vm write port, 24-bit word address).
+    Only writes to this matvec's expected VM words count; edges stay None when the binary has no probe."""
+    want = {(s, a) for s, amap in low['expected_vm'].items() for a in amap}
+    hits = [(c, s, a) for s in low['expected_vm'] for c, a in log.get(f'S{s}VW', []) if (s, a & 0xFFFFFF) in want]
+    probed = any(k.endswith('VW') and k[1:-2].isdigit() for k in log)
+    seen = {(s, a) for _, s, a in hits}
+    return dict(first=min(c for c, _, _ in hits) if hits else None, last=max(c for c, _, _ in hits) if hits else None,
+                observed=len(hits), expected=len(want), missing=len(want - seen),
+                scope=('tb_qfd_dv2 S<k>VW probe: station-result VM write (st_vm) edges at the expected word addresses'
+                       if probed else 'binary has no S<k>VW VM-write probe lines; edges unknown'))
 
 
 def run_od(work, ages, rng, mutant):

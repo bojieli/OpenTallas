@@ -1,0 +1,288 @@
+{
+ "name": "s81bf_front_five_roots_n32_soq_roomy",
+ "top": "dsfd_bf_front_roots",
+ "kind": "tile",
+ "sources": [
+  "rtl/s81/ot_s81_bf_native.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul2.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv",
+  "rtl/v41rom/ot_v41_chain.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+  "rtl/v41rom/ot_v41_segtree.sv",
+  "rtl/v41rom/ot_v41_segtree2.sv",
+  "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+  "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv",
+  "rtl/v41rom/ot_v41_chain2u2.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_bterm3_w10.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes3.sv",
+  "rtl/v41rom/ot_v41_tile_clk.sv",
+  "rtl/v41rom/ot_bf_hdly.sv",
+  "rtl/v41rom/ot_v41_bf_col.sv",
+  "rtl/v41rom/ot_v41_segtree3.sv",
+  "rtl/v41rom/ot_v41_segtree4.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "rtl/v41rom/ot_v41_segtree6.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+  "rtl/s81/ot_s81_bf_front_roots.sv",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv",
+  "rtl/v41rom/ot_v41_bf_front_core_roots.sv",
+  "rtl/s81/ot_s81_bf_seam_roots.sv",
+  "rtl/v41rom/ot_s81_so_label_q.sv",
+  "rtl/v41rom/ot_bf6_n32.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 116.64,
+  "h": 246.24,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "c0",
+   "io_w"
+  ],
+  "E": [
+   "c1",
+   "io_e"
+  ],
+  "N": [
+   "xb_data",
+   "io_n"
+  ],
+  "S": [
+   "qy0",
+   "qy1",
+   "x0",
+   "x1",
+   "go",
+   "cfg",
+   "st",
+   "ck",
+   "rs",
+   "f_prog",
+   "io_clk",
+   "xb_meta"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/front_five_roots_n32_soq_roomy/pins.tcl",
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.55,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-BF6 native-census redesign of the BF front (pre-existing FAIL: max 3,224 loads on one gate-enable copy, 206 drivers > 32) folded with the S81-RTAG router-tag widening P231->P130 (SOQ=1 SWD=160) in ONE re-closure. N32=1: chunked kept gate-enable copies (16 bits each, 2-level u_z/ze_d pools), kept go_e / issue / reset / half-select / walker-state copies per <= 32-load group, per-group selects as keep_hierarchy cells, registered configuration write decodes, x FIFO banked per slice with registered write enables and one-hot kept read pointers; every copy is the same register function of the same inputs: 0 added cycles. Pre-gate native census (ASAP7 TT, latch-mapped) PASS max 32. Roomy replacement grows only height 198.72 -> 246.24 um after actual normal closure measured 14152 um2 / 64.8% utilization; all 3272 pins retain identity, only north-face y shifts47.52 um. Same RTL and zero added sequential edges.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "native census FAIL max 3224 (pre-existing) + BF segment-label floor P231 (rate plan F4); exact N32/SOQ normal closure also stopped FLOORPLAN_MARGIN at64.8%, requiring measured-area outline growth",
+  "fix": "S81-BF6 native-census redesign of the BF front (pre-existing FAIL: max 3,224 loads on one gate-enable copy, 206 drivers > 32) folded with the S81-RTAG router-tag widening P231->P130 (SOQ=1 SWD=160) in ONE re-closure. N32=1: chunked kept gate-enable copies (16 bits each, 2-level u_z/ze_d pools), kept go_e / issue / reset / half-select / walker-state copies per <= 32-load group, per-group selects as keep_hierarchy cells, registered configuration write decodes, x FIFO banked per slice with registered write enables and one-hot kept read pointers; every copy is the same register function of the same inputs: 0 added cycles. Pre-gate native census (ASAP7 TT, latch-mapped) PASS max 32. Roomy replacement grows only height 198.72 -> 246.24 um after actual normal closure measured 14152 um2 / 64.8% utilization; all 3272 pins retain identity, only north-face y shifts47.52 um. Same RTL and zero added sequential edges."
+ },
+ "job": {
+  "owner": "Codex:TOK-2000",
+  "purpose": "S81-BF6 native-census redesign of the BF front (pre-existing FAIL: max 3,224 loads on one gate-enable copy, 206 drivers > 32) folded with the S81-RTAG router-tag widening P231->P130 (SOQ=1 SWD=160) in ONE re-closure. N32=1: chunked kept gate-enable copies (16 bits each, 2-level u_z/ze_d pools), kept go_e / issue / reset / half-select / walker-state copies per <= 32-load group, per-group selects as keep_hierarchy cells, registered configuration write decodes, x FIFO banked per slice with registered write enables and one-hot kept read pointers; every copy is the same register function of the same inputs: 0 added cycles. Pre-gate native census (ASAP7 TT, latch-mapped) PASS max 32. Roomy replacement grows only height 198.72 -> 246.24 um after actual normal closure measured 14152 um2 / 64.8% utilization; all 3272 pins retain identity, only north-face y shifts47.52 um. Same RTL and zero added sequential edges.",
+  "benches": [
+   {
+    "name": "n32soq_front_full_shape",
+    "cmd": "python3 tools/s81/bf6_front_n32_bench.py --case n32soq --work {RUN}/n32soq",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "PASS BF6 front N32\\+SOQ five roots: exact transactions"
+   },
+   {
+    "name": "mutant_n32_read_copy_stall",
+    "cmd": "python3 tools/s81/bf6_front_n32_bench.py --case mroh --work {RUN}/mroh",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "MUTANT BF6 mroh FAIL: DIFF TXN",
+    "fail_witness": "results/rtl/s81_bf6_1020/bench/txn_mroh.log"
+   },
+   {
+    "name": "mutant_n32_fp8_write_select_lost",
+    "cmd": "python3 tools/s81/bf6_front_n32_bench.py --case mwself --work {RUN}/mwself",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "MUTANT BF6 mwself FAIL: DIFF TXN",
+    "fail_witness": "results/rtl/s81_bf6_1020/bench/txn_mwself.log"
+   }
+  ],
+  "extra_paths": [
+   "tools/s81",
+   "rtl/s81",
+   "rtl/v41rom",
+   "rtl/common",
+   "rtl/hdc",
+   "rtl/proto",
+   "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
+   "rtl/dsrom_sys/s81_die_bind",
+   "tests/s81",
+   "physical/ref_tile_specs/s81_bf_native_1015/front_five_roots",
+   "results/rtl/s81_bf_programme_1015",
+   "physical/ref_tile_specs/s81_bf_native_1015/front_five_roots_n32_soq_roomy"
+  ],
+  "views_to": "physical/s81_die_views/bf_roots_1016/front_five_roots_n32_soq_roomy",
+  "record_to": "results/physical/s81_bf_roots_1016/front_five_roots_n32_soq_roomy"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck",
+  "io_clk",
+  "io_n",
+  "io_w",
+  "io_e"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "qy0",
+    "qy1"
+   ],
+   "outputs": []
+  },
+  "south": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "io_clk"
+   ],
+   "inputs": [
+    "x0",
+    "x1",
+    "go",
+    "cfg",
+    "rs",
+    "xb_meta",
+    "f_prog"
+   ],
+   "outputs": [
+    "st"
+   ]
+  },
+  "north": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "io_n"
+   ],
+   "inputs": [
+    "xb_data"
+   ],
+   "outputs": []
+  },
+  "west": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "io_w"
+   ],
+   "inputs": [],
+   "outputs": [
+    "c0"
+   ]
+  },
+  "east": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "io_e"
+   ],
+   "inputs": [],
+   "outputs": [
+    "c1"
+   ]
+  }
+ },
+ "slot_change_request": {
+  "name": "Explicit roomy N32/SOQ front after measured floorplan failure",
+  "status": "REQUESTED_EXPLICIT_NEW_OUTLINE",
+  "request_file": "physical/ref_tile_specs/s81_bf_native_1015/front_five_roots_n32_soq_roomy/pin_request.json",
+  "outline_um": [
+   116.64,
+   246.24
+  ],
+  "owner": "S81 die",
+  "old_grant_reused": false,
+  "parent_pin_and_clock_relay_regeneration_required": true
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL already registers every data port at the pin (inputs: PINREG pin flops on io_clk -> lockup latch -> core; f_prog programme_pin_q; qy0/qy1 dedicated face capture; outputs: CPIN seam flops on io_clk for c0/c1, st from registered busy/fault through source-ck lockups). A synthesis pin register would add a second edge on every port and break the fixed 1-edge seam contract (producer DELTA -1, c0/c1 column lockstep, 3-edge status pulse). Native audit of the routed view checks comb 0 pins."
+ },
+ "defines": [
+  "DSFD_BF_SOQ=1",
+  "DSFD_BF_SOQ_SWD=160",
+  "DSFD_BF_N32=1"
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "io_clk"
+ },
+ "std_area_um2": 14152
+}

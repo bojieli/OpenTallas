@@ -1,0 +1,38 @@
+#!/bin/bash
+# ot-heavy-exit v17 (TOKc-ADM 2026-10-22): runs INSIDE an ot-heavy scope as `ot-heavy-exit UNIT CMD...` (ot-heavy execs
+# systemd-run --scope ... -- ot-heavy-exit UNIT CMD...).  It runs CMD as its child with the same stdin/stdout/stderr,
+# forwards TERM/INT/HUP to it, returns CMD's exit status unchanged, and when CMD ends non-zero asks
+# `ot-heavy-reconcile --exit-report` whether earlyoom (host memory) or the scope's own memcg OOM killed one of the job's
+# processes, so a waiter reports "EARLYOOM on <host> at <time>: ... cc1plus VmRSS 43 GiB" instead of a bare 143 / make
+# error 2.  The scope's pids are sampled every 5 s into /var/tmp/ot-heavy/pids.UNIT (earlyoom names only the pid).
+UNIT="$1"; shift
+D=/var/tmp/ot-heavy; T0=$(date +%s); PF="$D/pids.$UNIT"
+CG=/sys/fs/cgroup$(awk -F: '$1=="0"{print $3}' /proc/self/cgroup 2>/dev/null)
+exec 9<&0
+"$@" 0<&9 9<&- &
+CH=$!
+exec 9<&-
+GOT=0
+trap 'GOT=1; kill -TERM $CH 2>/dev/null' TERM
+trap 'GOT=1; kill -INT $CH 2>/dev/null' INT
+trap 'GOT=1; kill -HUP $CH 2>/dev/null' HUP
+( n=0; while kill -0 $CH 2>/dev/null; do cat "$CG/cgroup.procs" >> "$PF" 2>/dev/null; n=$((n + 1))
+    [ $((n % 120)) = 0 ] && sort -un -o "$PF" "$PF" 2>/dev/null; sleep 5; done ) </dev/null >/dev/null 2>&1 &
+SAMP=$!
+while :; do
+  GOT=0; wait $CH; rc=$?
+  [ $GOT = 1 ] && kill -0 $CH 2>/dev/null && continue
+  [ $GOT = 1 ] && { wait $CH 2>/dev/null; r2=$?; [ $r2 != 127 ] && rc=$r2; }
+  break
+done
+trap - TERM INT HUP
+if [ $rc != 0 ]; then
+  kill $SAMP 2>/dev/null; wait $SAMP 2>/dev/null
+  echo $CH >> "$PF"
+  grep -q -- '--exit-report' /usr/local/bin/ot-heavy-reconcile 2>/dev/null && \
+    timeout 40 /usr/local/bin/ot-heavy-reconcile --exit-report "$UNIT" "$T0" "$rc" "$PF" "$CG" >&2 2>/dev/null
+else
+  kill $SAMP 2>/dev/null
+fi
+rm -f "$PF"
+exit $rc

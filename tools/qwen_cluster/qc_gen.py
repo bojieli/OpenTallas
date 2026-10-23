@@ -34,11 +34,41 @@ _spec = importlib.util.spec_from_file_location("cb_base", Path(__file__).with_na
 g = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(g)
 
+# SQC-CB8 10-22: the generator is parametrised by NC x NR tile columns x rows (VARIANTS, --variant).  'b16' (default) is the
+# 4 x 4 qfd_c_b16_dv and regenerates its committed outputs byte-identically; 'b8' / 'b8n' = CB8 (2 x 4 real A0 820.8 x 907.2,
+# die slot 2445.12 x 5227.2; PENDING-COORD: no die contract ruling yet): MY | R0 pair sharing corridor A, no vertical T
+# corridor (no x room); the spare 820.8-um y band is a HORIZONTAL T band (b8: the centre row gap, b8n: the N strip).
+A0_LIVE = dict(TW=820.8, TH=907.2, PIN_Y0={"n_a": 454.956, "n_b": 559.98, "t_out": 770.028, "n_y": 665.004},
+               TAP_Y=(120.012, 217.356), RST_Y=228.012)    # live A0 rc14 FINAL rc2 faces (a0_rc14face LEF, M4 0.192 pitch)
+_B8 = dict(nc=2, nr=4, arch="results/arch/qw_cb8_1022", corr={"L": 172.8, "A": 432.0, "R": 172.8}, strip=129.6,
+           a0=A0_LIVE, src_dy=767.0, dst_dy=557.0, ft_corr="A", ft_off=133.92, land_mut=None, lockstep=None, lanes="A")
+VARIANTS = {
+    "b16": dict(nc=4, nr=4, master="qfd_c_b16_dv", fabric="qfd_c_b16_dv_fabric", arch="results/arch/qwen_cluster_1017",
+                contract="cluster_contract_dv.json", relay="relay_sites_dv.json", png="cluster_dv_plan.png",
+                sites="physical/qcluster/qfd_c_b16_dv_sites.tsv", tb="rtl/test/tb_qcluster_fabric.sv",
+                lockstep="rtl/test/tb_qcluster_lockstep.sv", lat="rtl/test/qcluster_lat.svh", hosts="cb16_hosts.json",
+                corr=None, strip=None, gaps=None, top_band=0.0, a0=None, xstn_dy=414.72, src_dy=362.0, dst_dy=160.0,
+                ft_corr="T", ft_off=0.0, land_mut="leg_3_1b_1", lanes=None),
+    # MAIN: T band = the centre row gap (172.8 + 820.8)
+    "b8": dict(_B8, master="qfd_c_b8_dv", fabric="qfd_c_b8_dv_fabric", contract="cluster_contract_b8.json",
+               relay="relay_sites_b8.json", png="cluster_b8_plan.png", sites="physical/qcluster/qfd_c_b8_dv_sites.tsv",
+               tb="rtl/test/tb_qcluster_b8_fabric.sv", lat="rtl/test/qcluster_b8_lat.svh", hosts="cb8_hosts.json",
+               gaps=[172.8, 993.6, 172.8], top_band=0.0),
+    # ALT: T band at the N edge (N strip 129.6 + 820.8)
+    "b8n": dict(_B8, master="qfd_c_b8n_dv", fabric="qfd_c_b8n_dv_fabric", contract="cluster_contract_b8n.json",
+                relay="relay_sites_b8n.json", png="cluster_b8n_plan.png", sites="physical/qcluster/qfd_c_b8n_dv_sites.tsv",
+                tb="rtl/test/tb_qcluster_b8n_fabric.sv", lat="rtl/test/qcluster_b8n_lat.svh", hosts="cb8n_hosts.json",
+                gaps=[172.8, 172.8, 172.8], top_band=820.8),
+}
+V = VARIANTS["b16"]
+OUT_ROOT = ROOT          # --out-root: every generated file goes under this root (regression into scratch)
 MASTER = "qfd_c_b16_dv"
 FABRIC = "qfd_c_b16_dv_fabric"
 OUT_RTL = ROOT / "rtl/physical/qcluster"
 OUT_ARCH = ROOT / "results/arch/qwen_cluster_1017"
 KIT = ROOT / "physical/ref_tile/qfd_c_b16_dv"
+NC, NR, NT = 4, 4, 16
+WORD = {2: "two", 4: "four", 8: "eight", 16: "sixteen"}
 # tile checklist 10-17 (macros on the 43.2-um lattice): every A0 origin a multiple of 43.2 -> L = R = 43.2,
 # A = T = B = 146.88 (>= the 129.6 of SPEC 1), S / N strips 86.4 (row pitch 1,296 = 30 x 43.2)
 # Q-CLUSTER4 (coordinator 0de+6 (3)): L / R 43.2 -> 86.4 so the widened stations (51.84 / 56.16, faces <= 0.096 um/bit)
@@ -54,6 +84,7 @@ BW, DW = g.BW, g.DW
 # entry of tile (c, r) takes ck_c<c>r<r>.  Region seams are crossed only by single registered hops <= 405 um between
 # neighbouring regions (region_audit.py), each a fixed one-edge link: no added latency, no flow control.
 QUADS = tuple(f"c{c}r{r}" for c in range(4) for r in range(4))   # regional clock roots (name kept: was the four quadrants)
+XSTN_DY0 = 414.72
 REF_QUADS = ("w0", "w1", "w2", "w3", "e0", "e1", "e2", "e3")      # the c392aa534 reference fabric's eight roots
 # Q-CLUSTER-LANDALL (coordinator 0fy 10-18, owner 0fd): the cluster is clocked like the die.  Each of the 16 regions has
 # its OWN small local tree, and EVERY multi-bit region-to-region crossing is LANDED (LANDING-CONTRACT L1-L7,
@@ -70,12 +101,14 @@ REF_QUADS = ("w0", "w1", "w2", "w3", "e0", "e1", "e2", "e3")      # the c392aa53
 LAND_E, LAND_D = 2, 4
 LAND_A = LAND_E + 1                # added edges per landed crossing (ring write + E)
 LAND_MUT = "leg_3_1b_1"            # the landing the bench mutants 6 / 7 act on (the Q-CL16-EARLY failing crossing)
+MUT3_COL = 2                       # bench mutant 3's column (4 x 4: column 2; NC < 4: the last column)
 FW_UM, ROW_UM = 1.08, 0.27         # fabric_sites_place.tcl soft-block geometry (DFF width, row height)
 
 
 def setup():
+    g.CORR.clear(); g.COLX.clear()
     x = 0.0
-    for n in ["L", 0, "A", 1, "T", 2, "B", 3, "R"]:
+    for n in g.LAYOUT:
         if isinstance(n, str):
             g.CORR[n] = (round(x, 4), round(x + CORR_W[n], 4))
             x += CORR_W[n]
@@ -84,25 +117,66 @@ def setup():
             x += g.TW
     g.WIDTH = round(x, 4)
     g.STRIP = STRIP_UM
-    g.ROWY = {r: round(g.STRIP + r * (g.TH + g.GAP), 4) for r in range(4)}
-    g.HEIGHT = round(2 * g.STRIP + 4 * g.TH + 3 * g.GAP, 4)
-    g.CHANNELS = [(0.0, g.STRIP)] + [(g.ROWY[r] + g.TH, g.ROWY[r + 1]) for r in range(3)] + [(g.HEIGHT - g.STRIP, g.HEIGHT)]
-    g.GAPS = g.CHANNELS[1:4]
-    for v in [lo for lo, _ in g.COLX.values()] + list(g.ROWY.values()) + [g.WIDTH - g.COLX[c][1] for c in range(4)]:
+    if V["gaps"] is None:
+        g.ROWY = {r: round(g.STRIP + r * (g.TH + g.GAP), 4) for r in range(NR)}
+        g.HEIGHT = round(2 * g.STRIP + NR * g.TH + (NR - 1) * g.GAP, 4)
+    else:     # SQC-CB8: per-gap heights (the T band widens one row gap) and an optional band under the N strip
+        y, g.ROWY = g.STRIP, {}
+        for r in range(NR):
+            g.ROWY[r] = round(y, 4)
+            y += g.TH + (V["gaps"][r] if r < NR - 1 else 0.0)
+        g.HEIGHT = round(y + V["top_band"] + g.STRIP, 4)
+    # the last channel = the N strip (+ the T band of the N-edge variant): N-face registers stay at HEIGHT - STRIP / 2
+    g.CHANNELS = [(0.0, g.STRIP)] + [(g.ROWY[r] + g.TH, g.ROWY[r + 1]) for r in range(NR - 1)] + \
+        [(g.HEIGHT - g.STRIP - V["top_band"], g.HEIGHT)]
+    g.GAPS = g.CHANNELS[1:-1]
+    for v in [lo for lo, _ in g.COLX.values()] + list(g.ROWY.values()) + [g.WIDTH - g.COLX[c][1] for c in range(NC)]:
         if abs(v / LATTICE - round(v / LATTICE)) > 1e-6:
             raise SystemExit(f"A0 origin {v} (or its mirror) off the {LATTICE}-um lattice")
-    g.T_CW = CORR_W["T"] * 2 / 3          # c1 / c2 lanes at T.lo + 21.6 / T.hi - 21.6; the feedthrough at the T centre
+    if "T" in CORR_W:
+        g.T_CW = CORR_W["T"] * 2 / 3          # c1 / c2 lanes at T.lo + 21.6 / T.hi - 21.6; the feedthrough at the T centre
     g.HOP, g.LIMIT = HOP, LIMIT
     g.CHAIN = g.down_chain()
     g.STAGE = {n: i + 1 for i, (n, _) in enumerate(g.CHAIN)}
 
 
-setup()
-WIDTH, HEIGHT = g.WIDTH, g.HEIGHT
-XT = g.ccx("T")
-YSEAM = [(g.ROWY[r] + g.TH + g.ROWY[r + 1]) / 2 for r in range(3)]   # region seams = row-gap centres
-YMID = YSEAM[1]
-XSEAM = [g.ccx("A"), XT, g.ccx("B")]                                 # column-band seams = A / T / B corridor centres
+def configure(name, out_root=None):
+    """select a VARIANTS entry: grid, A0 geometry, corridors, names, output paths; then the derived geometry globals"""
+    global V, MASTER, FABRIC, OUT_RTL, OUT_ARCH, OUT_ROOT, NC, NR, NT, CORR_W, STRIP_UM, QUADS, WIDTH, HEIGHT, XT, YSEAM, \
+        YMID, XSEAM, FT_X, XSTN_DY, LAND_MUT, MUT3_COL
+    V = VARIANTS[name]
+    OUT_ROOT = Path(out_root) if out_root else ROOT
+    MASTER, FABRIC = V["master"], V["fabric"]
+    OUT_RTL, OUT_ARCH = OUT_ROOT / "rtl/physical/qcluster", OUT_ROOT / V["arch"]
+    NC, NR = V["nc"], V["nr"]
+    NT = NC * NR
+    if (NC, NR) != (4, 4):
+        g.set_grid(NC, NR)
+    if V["a0"]:
+        a = V["a0"]
+        g.TW, g.TH, g.PIN_Y0, g.TAP_Y, g.RST_Y = a["TW"], a["TH"], dict(a["PIN_Y0"]), a["TAP_Y"], a["RST_Y"]
+        g.TAP_C = 0.5 * sum(g.TAP_Y)
+    CORR_W = V["corr"] or CORR_W
+    STRIP_UM = V["strip"] or STRIP_UM
+    QUADS = tuple(f"c{c}r{r}" for c in range(NC) for r in range(NR))
+    setup()
+    WIDTH, HEIGHT = g.WIDTH, g.HEIGHT
+    mids = [n for n in g.LAYOUT if isinstance(n, str)][1:-1]          # inter-column corridors (4 x 4: A, T, B)
+    XT = g.ccx("T") if "T" in g.CORR else g.ccx(mids[len(mids) // 2])
+    YSEAM = [(g.ROWY[r] + g.TH + g.ROWY[r + 1]) / 2 for r in range(NR - 1)]   # region seams = row-gap centres
+    YMID = YSEAM[NR // 2 - 1]
+    XSEAM = [g.ccx(k) for k in mids]                                     # column-band seams = A / T / B corridor centres
+    # the far-band feedthrough lane: the T centre (4 x 4); CB8: a lane in corridor A beside the tree-leg lane
+    FT_X = XT if V["ft_corr"] == "T" else round(g.ccx(V["ft_corr"]) + V["ft_off"], 4)
+    # xstn origin above its A0 row origin: tap pins centred on the A0 tap band (4 x 4: 414.72, tap centre - 46.812)
+    XSTN_DY = XSTN_DY0 if V["a0"] is None else round(round((g.TAP_C - (0.5 * (437.196 + 485.868) - XSTN_DY0)) / 8.64) * 8.64, 4)
+    LAND_MUT = V["land_mut"] or LAND_MUT
+    if V["a0"] is not None:
+        g.run_x = run_x_xstn
+    MUT3_COL = min(2, NC - 1)
+
+
+configure("b16")
 
 
 def col_of(x):
@@ -146,10 +220,64 @@ def ft_chain(rs_x):
     the T centre lane and down T to rs_o on the S face.  Registers every <= LIMIT along that path (pin registers at both
     ends)."""
     yN, yS = HEIGHT - g.STRIP / 2, g.STRIP / 2
-    P = [(rs_x, yN), (XT, yN), (XT, yS)]
+    P = [(rs_x, yN), (FT_X, yN), (FT_X, yS)]
     L = g.plen(P)
     k = max(0, math.ceil(L / (LIMIT - 40.0)) - 1)   # Q-CLUSTER4: 40-um margin: T-lane stations step around the 56.16-wide xstn pairs
     return [g.along(P, i / (k + 1)) for i in range(k + 2)]
+
+
+def run_x_xstn(c):
+    """SQC-CB8 (172.8-um edge strips): a column run's relays sit in line with its xstn (tap face GAP_TAP from the A0 tap
+    face), so every run hop is straight; the 4 x 4 keeps cb_base.run_x"""
+    lo, hi = g.CORR[g.E_FACE_CORR[c]]
+    x0 = hi - GAP_TAP - XW if g.COL_ORIENT[c] == "MY" else lo + GAP_TAP
+    return round(x0 + XW / 2, 4)
+
+
+LANES = {}    # SQC-CB8: {(l, i, side) | "rs": x} -- the vertical lane of a run in the shared W-face corridor (assign_lanes)
+
+
+def lane_poly(p, key):
+    """a same-corridor run [src, (xc, ys), (xc, yd), dst] moved to its assigned lane x (identity when unassigned)"""
+    x = LANES.get(key)
+    if x is None:
+        return p
+    if key == "rs":          # rs: root n_y -> lane -> straight down to the S strip; the rs pin sits under the lane
+        return [p[0], (x, p[0][1]), (x, g.STRIP / 2)]
+    assert len(p) == 4 and abs(p[1][0] - p[2][0]) < 1e-9, p
+    return [p[0], (x, p[1][1]), (x, p[2][1]), p[3]]
+
+
+def assign_lanes(host):
+    """SQC-CB8 (NC = 2: every tree leg and the rs exit come down the ONE W-face corridor A): station lanes in A at the
+    hard-station pitch (51.84 + 8.64, 21.6 to both A0 faces), the feedthrough lane reserved; greedy interval colouring:
+    longest vertical span first, each run on the free lane (no y overlap within one station pitch) that adds the least
+    wire; a run that finds no free lane takes the least-loaded one (stations then step in y)."""
+    LANES.clear()
+    if not V.get("lanes"):
+        return {}
+    lo, hi = g.CORR[V["lanes"]]
+    xs = []
+    v = lo + GAP_A0 + SW / 2
+    while v + SW / 2 <= hi - GAP_A0 + 1e-6:
+        xs.append(round(v, 4)); v += SW + GAP_X
+    xs = [x for x in xs if abs(x - FT_X) > SW / 2 + GAP_X]
+    _, _, legs, rsx, _ = evaluate(host)
+    runs = [((x["node"][0], x["node"][1], x["side"]), x["poly"]) for x in legs] + [("rs", rsx["poly"])]
+    span = {}
+    for key, P in runs:
+        ys = [q[1] for q in P[1:3]]
+        span[key] = (min(ys), max(ys), P[0][0], P[-1][0] if key != "rs" else P[0][0])
+    used = {x: [] for x in xs}
+    for key in sorted(span, key=lambda k_: -(span[k_][1] - span[k_][0])):
+        y0, y1, xa, xb = span[key]
+        def extra(x):
+            return abs(xa - x) + abs(xb - x)
+        free = [x for x in xs if all(y1 + SW + GAP_Y <= a or b + SW + GAP_Y <= y0 for a, b in used[x])]
+        x = min(free or xs, key=lambda x_: (0 if free else len(used[x_]), extra(x_), x_))
+        used[x].append((y0, y1))
+        LANES[key] = x
+    return dict(LANES)
 
 
 def lname(L):
@@ -176,7 +304,7 @@ def evaluate(host, land=None, tap_add=None, kfloor=None, rs_land=0):
                 c, r = host[ref]
                 ts, src, sname = t[ref], g.pin(c, r, "n_y"), ("n_y", (c, r))
             dst = g.pin(hc, hr, "n_a" if side == "a" else "n_b")
-            p = g.poly(src, g.W_FACE_CORR[c], dst, g.W_FACE_CORR[hc])
+            p = lane_poly(g.poly(src, g.W_FACE_CORR[c], dst, g.W_FACE_CORR[hc]), (l, i, side))
             d = g.plen(p)
             arr.append(dict(side=side, src=sname, ts=ts, d=d, kmin=max(g.relays(d), kfloor.get((l, i, side), 0)), poly=p,
                             land=LAND_A * land.get((l, i, side), 0), nland=land.get((l, i, side), 0)))
@@ -186,10 +314,11 @@ def evaluate(host, land=None, tap_add=None, kfloor=None, rs_land=0):
             assert x["k"] >= x["kmin"]
             legs.append(dict(node=(l, i), host=(hc, hr), **x))
         t[(l, i)] = a
-    root = host[(4, 0)]
+    root = host[(g.LEVELS, 0)]
     p, rz = g.rs_route(root)
+    p = lane_poly(p, "rs")
     k = g.relays(g.plen(p))
-    rs_t = t[(4, 0)] + 1 + k + LAND_A * rs_land
+    rs_t = t[(g.LEVELS, 0)] + 1 + k + LAND_A * rs_land
     bits = sum(x["k"] for x in legs) * BW + (k + 1) * BW
     return rs_t, bits, legs, dict(root=root, d=g.plen(p), k=k, poly=p, corridor=rz), t
 
@@ -411,9 +540,9 @@ def rpin_default(q):
     (columns 0 / 1) or E (2 / 3) face at the tile-row centre"""
     c, r = int(q[1]), int(q[3])
     x0, y0, x1, y1 = region_box(q)
-    if r in (0, 3):
+    if r in (0, NR - 1):
         return ("S" if r == 0 else "N", (x0 + x1) / 2)
-    return ("W" if c < 2 else "E", g.ROWY[r] + g.TH / 2)
+    return ("W" if c < NC // 2 else "E", g.ROWY[r] + g.TH / 2)
 
 
 def emit_rpin(E, q, pin):
@@ -497,20 +626,20 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
     regional = mode == "all"      # Q-CB16RST: die-delivered regional resets (16 rst_<q> pins) with the landed fabric
     w = E.w
     w("`timescale 1ns/1ps")
-    w(f"// GENERATED by tools/qwen_cluster/qc_gen.py -- do not edit.  {FABRIC}: every register of qfd_c_b16_dv outside the")
-    w("// tiles (Q-CLUSTER 2026-10-17, results/arch/qwen_cluster_1017/SPEC.md): the four column runs (entry / relays /")
+    w(f"// GENERATED by tools/qwen_cluster/qc_gen.py -- do not edit.  {FABRIC}: every register of {MASTER} outside the")
+    w(f"// tiles (Q-CLUSTER 2026-10-17, results/arch/qwen_cluster_1017/SPEC.md): the {WORD[NC]} column runs (entry / relays /")
     w("// qfd_xcst_n / exit), the morton reduction legs, the rs exit run, the DV far-band feedthrough rs_i -> rs_o and the")
-    w("// equal-depth reset tree.  Each register sits in one of 16 clock regions (one per A0 tile) and takes its root.")
+    w(f"// equal-depth reset tree.  Each register sits in one of {NT} clock regions (one per A0 tile) and takes its root.")
     if mode == "all":
         w(f"// Q-CLUSTER-LANDALL: EVERY multi-bit region-seam crossing is LANDED (qfd_c_land_w ring on the source root ->")
         w(f"// qfd_c_land_r read on the destination root, D {LAND_D}, E = K = {LAND_E}, +{LAND_A} edges each); soft pad stages")
         w("// re-align the tree.  Q-CB16RST: NO register hop crosses a seam unlanded: each region has its own reset pin rst_<q>")
-        w("// (registered at its entry on ck_<q>) and its own in-region equal-depth tree; the die releases all 16 on the same")
+        w(f"// (registered at its entry on ck_<q>) and its own in-region equal-depth tree; the die releases all {NT} on the same")
         w("// calendar edge.  Static schedule: no ready / credit.")
     else:
         w("// Seams are crossed only by registered hops <= 405 um.  Static schedule: no ready / credit / backpressure.")
     w("// MUT (bench only, default 0 = the design): 1 = one extra relay on leg a of node (2,0); 2 = leaves of nodes (1,0).a")
-    w("//   and (1,2).a exchanged; 3 = one extra relay on column 2's run before its row-1 station; 4 = one extra relay on")
+    w(f"//   and (1,2).a exchanged; 3 = one extra relay on column {MUT3_COL}'s run before its row-1 station; 4 = one extra relay on")
     w(f"//   the rs_i -> rs_o feedthrough; 5 = feedthrough bits 0 / 1 exchanged; landing mutants (on {LAND_MUT}): 6 = read")
     w("//   slot K = E + 1 (wrong read slot), 7 = read-side epoch one edge late (released reset re-registered twice).")
     if regional:
@@ -518,11 +647,11 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
     w(f"module {FABRIC} #(parameter integer MUT = 0) (")
     ports = [f"    input  wire ck_{q}" for q in QUADS] + \
         ([f"    input  wire rst_{q}" for q in QUADS] if regional else ["    input  wire rst_n"]) + ["    input  wire far"]
-    for c in range(4):
+    for c in range(NC):
         ports += [f"    input  wire [{DW-1}:0] bc{c}", f"    output wire [{DW-1}:0] bco{c}"]
     ports += [f"    output wire [{BW-1}:0] rs", f"    input  wire [{BW-1}:0] rs_i", f"    output wire [{BW-1}:0] rs_o"]
-    for c in range(4):
-        for r in range(4):
+    for c in range(NC):
+        for r in range(NR):
             s = g.sname(c, r)
             ports += [f"    output wire [{DW-9}:0] tap_{s}", f"    output wire trst_{s}", f"    input  wire [{BW-1}:0] t_out_{s}"]
             if (c, r) != spare:
@@ -534,16 +663,16 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
     # reset
     if regional:
         w(f"    // ---- reset (Q-CB16RST): per region, the rst_<q> pin register + in-region runs; every tile / station sees its")
-        w(f"    // region's rst_<q> exactly {RD} edges after the pin (the die releases the 16 pins on the same calendar edge)")
+        w(f"    // region's rst_<q> exactly {RD} edges after the pin (the die releases the {NT} pins on the same calendar edge)")
         for q in QUADS:
             emit_rpin(E, q, (rpins or {}).get(q) or rpin_default(q))
         xst = {}
-        for c in range(4):
+        for c in range(NC):
             for nm, y in g.chain_for(c):
                 if nm.startswith("xcst"):
                     xst[(c, int(nm[4:]))] = (g.run_x(c), y)
-        for c in range(4):
-            for r in range(4):
+        for c in range(NC):
+            for r in range(NR):
                 q = tile_quad(c, r)
                 emit_rrun(E, q, f"rstl_t_{c}_{r}", tile_rst_at(c, r), RD, f"t_{c}_{r}")
                 xq = quad(*xst[(c, r)])
@@ -561,12 +690,12 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
             E.stage(f"u_rpad_{cor}_{r}_{j}", 1, prev, f"rpad_{cor}_{r}_{j}_q", x, y)
             prev = f"rpad_{cor}_{r}_{j}_q"
         w(f"    wire rstl_{cor}_{r} = {prev};")
-    for c in range(4):
-        for r in range(0 if regional else 4):
+    for c in range(NC):
+        for r in range(0 if regional else NR):
             w(f"    assign trst_{g.sname(c, r)} = rstl_{g.E_FACE_CORR[c]}_{r};")
     # column runs
     w("    // ---- column runs {tag 8, xl 128, ib 379, go}: entry pin register, relays, one qfd_xcst_n per row, exit pin register")
-    for c in range(4):
+    for c in range(NC):
         prev, preg, pat = f"bc{c}", None, None
         x = g.run_x(c)
         for nm, y in g.chain_for(c):
@@ -576,17 +705,18 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
                 r = int(nm[4:])
                 s = g.sname(c, r)
                 cin = prev
-                if c == 2 and r == 1:
+                if c == MUT3_COL and r == 1:
                     w(f"    wire [{DW-1}:0] dm3_{c};  qfd_q3h_run #(.W({DW}), .D(MUT == 3 ? 1 : 0)) u_dm3_{c} (.ck(ck_{q}), .d({prev}), .q(dm3_{c}));")
                     cin = f"dm3_{c}"
                 xrst = f"rstl_x_{c}_{r}" if regional else f"rstl_{g.E_FACE_CORR[c]}_{r}"
                 b1 = "far_n" if (r >> 1) & 1 else "far"
                 b0 = "far_n" if r & 1 else "far"
                 E.regions[q] += DW
+                xm = "qfd_c_xstnw" if g.COL_ORIENT[c] == "R0" else "qfd_c_xstn"      # R0 column: tap face W (4 x 4: c 1 / 3)
                 E.sites.append(dict(inst=f"u_fab.u_x_{s}", at=[round(x, 3), round(y, 3)], region=q, bits=DW, station=True,
-                                    master="qfd_c_xstnw" if c in (1, 3) else "qfd_c_xstn", d=cin, q=f"dn{c}_{nm}", col=c, row=r))
+                                    master=xm, d=cin, q=f"dn{c}_{nm}", col=c, row=r))
                 w(f"    wire [{DW-1}:0] dn{c}_{nm};")
-                w(f"    {'qfd_c_xstnw' if c in (1, 3) else 'qfd_c_xstn'} u_x_{s} (.ck(ck_{q}), .rst_n({xrst}), .sidx({{far, {b1}, {b0}}}), .b_d({cin}),"
+                w(f"    {xm} u_x_{s} (.ck(ck_{q}), .rst_n({xrst}), .sidx({{far, {b1}, {b0}}}), .b_d({cin}),"
                   f" .a_d(dn{c}_{nm}), .tap_d(tap_{s}));   // ({x:.2f}, {y:.2f}) {q}")
             else:
                 E.stage(f"u_dn{c}_{nm}", DW, prev, f"dn{c}_{nm}", x, y)
@@ -630,7 +760,7 @@ def gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mo
         else:
             w(f"    assign {dst} = {prev};")
     # rs exit
-    rc, rr = host[(4, 0)]
+    rc, rr = host[(g.LEVELS, 0)]
     k = rsx["k"]
     w(f"    // ---- rs: root n_y ({rc},{rr}) -> {k} relays + the rs pin register (S face): {rsx['d']:.1f} um")
     prev, preg, pat = f"n_y_{g.sname(rc, rr)}", tile_quad(rc, rr), rsx["poly"][0]
@@ -666,17 +796,17 @@ def gen_cluster(spare):
     w = L.append
     w("`timescale 1ns/1ps")
     w(f"// GENERATED by tools/qwen_cluster/qc_gen.py -- do not edit.  {MASTER}: the dv2r8f compute-die cluster (Q-CLUSTER")
-    w("// 2026-10-17) = one 4 x 4 reduction block of 16 A0 ROM-leaf tiles (hard children; nk = node host, one nl) + the fabric.")
-    w("// Sixteen regional clock roots (Q-CLUSTER16): tile (c, r) takes ck_c<c>r<r> on every clock entry; each root is")
+    w(f"// 2026-10-17) = one {NC} x {NR} reduction block of {NT} A0 ROM-leaf tiles (hard children; nk = node host, one nl) + the fabric.")
+    w(f"// {WORD[NT].capitalize()} regional clock roots (Q-CLUSTER16): tile (c, r) takes ck_c<c>r<r> on every clock entry; each root is")
     w("// centre-fed (die area pin) and its tree balances to the child flops (A0 / station ETM insertion).  Straps cid /")
     w("// far come from the instance's own tie_hi / tie_lo (die); far clusters tie rs_i to tie_lo and leave rs_o open.")
-    w("// Q-CB16RST: sixteen regional resets rst_c<c>r<r> (one per region, beside its clock pin), released by the die on the")
+    w(f"// Q-CB16RST: {WORD[NT]} regional resets rst_c<c>r<r> (one per region, beside its clock pin), released by the die on the")
     w("// same calendar edge; each is registered at its region's entry on ck_c<c>r<r> (no reset hop crosses a region seam).")
     w(f"module {MASTER} (")
     rin = [f"rst_{q}" for q in QUADS] if REGIONAL[0] else ["rst_n"]
     ports = [f"    input  wire ck_{q}" for q in QUADS] + [f"    input  wire {n}" for n in rin] + \
         ["    input  wire far", "    input  wire [11:0] cid"]
-    for c in range(4):
+    for c in range(NC):
         ports += [f"    input  wire [{DW-1}:0] bc{c}", f"    output wire [{DW-1}:0] bco{c}"]
     ports += [f"    output wire [{BW-1}:0] rs", f"    input  wire [{BW-1}:0] rs_i", f"    output wire [{BW-1}:0] rs_o",
               "    output wire tie_hi", "    output wire tie_lo"]
@@ -687,8 +817,8 @@ def gen_cluster(spare):
     w("    assign tie_hi = tie_hi_w;")
     w("    assign tie_lo = tie_lo_w;")
     conn = []
-    for c in range(4):
-        for r in range(4):
+    for c in range(NC):
+        for r in range(NR):
             s = g.sname(c, r)
             w(f"    wire [{DW-9}:0] tap_{s};  wire trst_{s};  wire [{BW-1}:0] t_out_{s};  wire th_{s}, tl_{s};")
             conn += [f".tap_{s}(tap_{s})", f".trst_{s}(trst_{s})", f".t_out_{s}(t_out_{s})"]
@@ -696,11 +826,11 @@ def gen_cluster(spare):
                 w(f"    wire [{BW-1}:0] n_a_{s}, n_b_{s}, n_y_{s};")
                 conn += [f".n_a_{s}(n_a_{s})", f".n_b_{s}(n_b_{s})", f".n_y_{s}(n_y_{s})"]
     conn = [f".ck_{q}(ck_{q})" for q in QUADS] + [f".{n}({n})" for n in rin] + [".far(far)"] + \
-           [f".bc{c}(bc{c})" for c in range(4)] + \
-           [f".bco{c}(bco{c})" for c in range(4)] + [".rs(rs)", ".rs_i(rs_i)", ".rs_o(rs_o)"] + conn
+           [f".bc{c}(bc{c})" for c in range(NC)] + \
+           [f".bco{c}(bco{c})" for c in range(NC)] + [".rs(rs)", ".rs_i(rs_i)", ".rs_o(rs_o)"] + conn
     w(f"    {FABRIC} u_fab (\n        " + ",\n        ".join(conn) + ");")
-    for c in range(4):
-        for r in range(4):
+    for c in range(NC):
+        for r in range(NR):
             s = g.sname(c, r)
             m = g.morton(c, r)
             bits = ", ".join(f"th_{s}" if (m >> b) & 1 else f"tl_{s}" for b in (3, 2, 1, 0))
@@ -722,8 +852,8 @@ def gen_tb(spare):
     """Fabric bench top: CB bench (real fabric, real qfd_xcst_n, real node leaves) + quadrant clocks + feedthrough checks."""
     src = (ROOT / "tools/qwen_cluster/tb_template.sv").read_text()
     decl, conn, faces = [], [], []
-    for c in range(4):
-        for r in range(4):
+    for c in range(NC):
+        for r in range(NR):
             s = g.sname(c, r)
             decl.append(f"    wire [507:0] tap_{s}; wire trst_{s}; wire [513:0] t_out_{s};")
             conn += [f".tap_{s}(tap_{s})", f".trst_{s}(trst_{s})", f".t_out_{s}(t_out_{s})"]
@@ -736,10 +866,19 @@ def gen_tb(spare):
                          f".LAT(Q3H_LAT_TAP{r}), .NOPS(NOPS)) u_f_{s} (.ck(ck), .rst_n(trst_{s}), .tap(tap_{s}), "
                          f".t_out(t_out_{s}), .n_a({na}), .n_b({nb}), .n_y({ny}));")
     conn = [f".ck_{q}(ck)" for q in QUADS] + ([f".rst_{q}(rst_n)" for q in QUADS] if REGIONAL[0] else [".rst_n(rst_n)"]) + [".far(far)"] + \
-           [f".bc{c}(bcw[{c}])" for c in range(4)] + \
-           [f".bco{c}(bco{c})" for c in range(4)] + [".rs(rs)", ".rs_i(rsi)", ".rs_o(rso)"] + conn
+           [f".bc{c}(bcw[{c}])" for c in range(NC)] + \
+           [f".bco{c}(bco{c})" for c in range(NC)] + [".rs(rs)", ".rs_i(rsi)", ".rs_o(rso)"] + conn
     inst = f"    {FABRIC} #(.MUT(MUT)) u_fab (\n        " + ",\n        ".join(conn) + ");"
-    gs = " + ".join(f"(u_f_{g.sname(c, r)}.gseen != NOPS)" for c in range(4) for r in range(4))
+    gs = " + ".join(f"(u_f_{g.sname(c, r)}.gseen != NOPS)" for c in range(NC) for r in range(NR))
+    # SQC-CB8: NC column words, LEVELS node levels, the variant's latency header (identity for the 4 x 4)
+    lat = Path(V["lat"]).name
+    for a_, b_ in [('`include "qcluster_lat.svh"', f'`include "{lat}"'), ("Q3H_LAT_RS_FABRIC + T_TILE + 4 * LN", f"Q3H_LAT_RS_FABRIC + T_TILE + {g.LEVELS} * LN"),
+                   ("[0:3]", f"[0:{NC - 1}]"), ("c < 4;", f"c < {NC};"),
+                   ("wire [515:0] bco0, bco1, bco2, bco3;", "wire [515:0] " + ", ".join(f"bco{c}" for c in range(NC)) + ";"),
+                   ("wire [3:0] bgo = {bco3[0], bco2[0], bco1[0], bco0[0]};",
+                    f"wire [{NC - 1}:0] bgo = {{" + ", ".join(f"bco{c}[0]" for c in reversed(range(NC))) + "};")]:
+        assert a_ in src, a_
+        src = src.replace(a_, b_)
     return (src.replace("//@DECL", "\n".join(decl)).replace("//@FABRIC", inst).replace("//@FACES", "\n".join(faces))
             .replace("/*@GSEEN*/", gs))
 
@@ -747,7 +886,7 @@ def gen_tb(spare):
 # ---- Q-CLUSTER3: hard station placement (qc_stn_kit.py masters) -------------------------------------------------------
 SW, XW, XH = 51.84, 56.16, 86.4   # qfd_c_stn5xx 51.84 x 51.84; qfd_c_xstn(w) 56.16 x 86.4 (qc_stn_kit.py, Q-CLUSTER4)
 SL = 8.64                    # station snapping step in the corridors / y (on the 4.32 child lattice: track-safe for M3 / M4 / M5)
-XSTN_DY = 414.72             # xstn origin above its A0 row origin: tap pins at the A0 tap y range 437.184..485.856
+# XSTN_DY (configure): xstn origin above its A0 row origin: tap pins at the A0 tap y range 437.184..485.856 (4 x 4: 414.72)
 # Q-CLUSTER4 channel rule (coordinator 0de+6 (4)): < 20 um only between pin-free sides; a channel facing pins is sized to
 # the bits crossing it.  Station E / W sides are pin-free (data on S / N), the A0 W / E faces carry pins.
 GAP_A0 = 21.6                # station side <-> A0 face (A0 pins: >= 20 um)
@@ -791,15 +930,15 @@ def place_stations(E, fabric_rtl, spare):
             return 0.0 if n.startswith("bc") else HEIGHT
         mm = re.match(r"(t_out|n_y)_(\d)_(\d)", n)
         if mm:
-            return g.ROWY[int(mm.group(3))] + 362.0
+            return g.ROWY[int(mm.group(3))] + V["src_dy"]
         return None
     out_y = {}         # q net -> consumer endpoint y (pins / tiles) when no station consumes it
     for m in re.finditer(r"assign (bco\d|rs|rs_o) = (\w+);", fabric_rtl):
         out_y[res(m.group(2))] = HEIGHT if m.group(1).startswith("bco") else 0.0
     for m in re.finditer(r"assign (n_[ab])_(\d)_(\d) = (\w+);", fabric_rtl):
-        out_y[res(m.group(4))] = g.ROWY[int(m.group(3))] + 160.0
+        out_y[res(m.group(4))] = g.ROWY[int(m.group(3))] + V["dst_dy"]
     for m in re.finditer(r"\.d\((\w+)\), \.q\((n_a_(\d)_(\d))\)", fabric_rtl):
-        out_y[res(m.group(1))] = g.ROWY[int(m.group(4))] + 160.0
+        out_y[res(m.group(1))] = g.ROWY[int(m.group(4))] + V["dst_dy"]
     kids = []
     corr = {k: v for k, v in g.CORR.items()}
     for st in hard:
@@ -807,9 +946,9 @@ def place_stations(E, fabric_rtl, spare):
         if st["master"].startswith("qfd_c_xstn"):
             c, r = st["col"], st["row"]
             # tap face GAP_TAP from its tile: lanes L / T(c2) have the tile E of the station, T(c1) / R W of it
-            x0 = {0: corr["L"][1] - GAP_TAP - XW, 1: corr["T"][0] + GAP_TAP, 2: corr["T"][1] - GAP_TAP - XW,
-                  3: corr["R"][0] + GAP_TAP}[c]
-            if c in (1, 3):    # tile W of the lane: the tap-W master (no MY: track lattice), R0
+            ec = corr[g.E_FACE_CORR[c]]       # 4 x 4: L / T(c2) MY tile E of the lane, T(c1) / R R0 tile W of it
+            x0 = ec[1] - GAP_TAP - XW if g.COL_ORIENT[c] == "MY" else ec[0] + GAP_TAP
+            if g.COL_ORIENT[c] == "R0":    # tile W of the lane: the tap-W master (no MY: track lattice), R0
                 st["master"] = "qfd_c_xstnw"
             kids.append(dict(st=st, x=round(x0, 4), y=round(g.ROWY[r] + XSTN_DY, 4), w=XW, h=XH, orient="R0"))
             continue
@@ -822,9 +961,9 @@ def place_stations(E, fabric_rtl, spare):
         x0 = _sn(x - SW / 2)
         if k is not None:
             lo, hi = corr[k]
-            if k == "L":          # 86.4-um strip: GAP_EDGE to the cluster edge, 25.92 (>= GAP_A0) to the A0 face
+            if k == "L" and hi - lo <= 86.4 + 1e-6:          # 86.4-um strip: GAP_EDGE to the cluster edge, 25.92 (>= GAP_A0) to the A0 face
                 lo_ok = hi_ok = lo + GAP_EDGE
-            elif k == "R":
+            elif k == "R" and hi - lo <= 86.4 + 1e-6:     # (SQC-CB8: a wider edge strip is an ordinary corridor)
                 lo_ok = hi_ok = hi - GAP_EDGE - SW
             else:
                 lo_ok, hi_ok = lo + GAP_A0, hi - SW - GAP_A0
@@ -838,24 +977,40 @@ def place_stations(E, fabric_rtl, spare):
         y0 = min(max(y0, 12.96), HEIGHT - 12.96 - SW)
         kids.append(dict(st=st, x=round(x0, 4), y=round(y0, 4), w=SW, h=SW, orient=o))
     # overlap: stations among themselves (GAP) and against the A0 tiles (GAP); resolve station-station by stepping y
-    tiles = [(g.COLX[c][0], g.ROWY[r], g.TW, g.TH) for c in range(4) for r in range(4)]
+    tiles = [(g.COLX[c][0], g.ROWY[r], g.TW, g.TH) for c in range(NC) for r in range(NR)]
     def clash(a, b, gap, gy=None):
         gy = gap if gy is None else gy
         return not (a[0] + a[2] + gap <= b[0] + 1e-6 or b[0] + b[2] + gap <= a[0] + 1e-6 or
                     a[1] + a[3] + gy <= b[1] + 1e-6 or b[1] + b[3] + gy <= a[1] + 1e-6)
     placed = []
+    def lanes_of(kd):
+        """the planned x first; SQC-CB8: then the other station lanes of the same corridor (nearest first) -- only tried
+        when the planned lane has no free y within +-29 steps (never reached by the 4 x 4)"""
+        out = [kd["x"]]
+        k = next((k for k, (lo, hi) in corr.items() if lo - 1e-6 <= kd["x"] <= hi + 1e-6), None)
+        if k is None or kd["st"]["master"].startswith("qfd_c_xstn"):
+            return out
+        lo, hi = corr[k]
+        xs = [_sn(v) for v in [lo + GAP_A0 + j * (SW + GAP_X) for j in range(40)] if _sn(v) + SW <= hi - GAP_A0 + 1e-6]
+        return out + sorted((v for v in xs if abs(v - kd["x"]) > 1e-6), key=lambda v: (abs(v - kd["x"]), v))
     for kd in sorted(kids, key=lambda k: (not k["st"]["master"].startswith("qfd_c_xstn"), k["y"])):
         base = kd["y"]
-        for step in [0] + [s * j for j in range(1, 30) for s in (1, -1)]:
-            kd["y"] = round(base + step * SL, 4)
-            box = (kd["x"], kd["y"], kd["w"], kd["h"])
-            if kd["y"] < 12.96 - 1e-6 or kd["y"] + kd["h"] > HEIGHT - 12.96 + 1e-6:
-                continue
-            tg = GAP_TAP if kd["st"]["master"].startswith("qfd_c_xstn") else GAP_A0
-            if all(not clash(box, (p["x"], p["y"], p["w"], p["h"]), GAP_X, GAP_Y) for p in placed) and \
-               all(not clash(box, t, tg - 1e-6, GAP_Y - 1e-6) for t in tiles):
+        ok = False
+        for lx in lanes_of(kd):
+            kd["x"] = lx
+            for step in [0] + [s * j for j in range(1, 30) for s in (1, -1)]:
+                kd["y"] = round(base + step * SL, 4)
+                box = (kd["x"], kd["y"], kd["w"], kd["h"])
+                if kd["y"] < 12.96 - 1e-6 or kd["y"] + kd["h"] > HEIGHT - 12.96 + 1e-6:
+                    continue
+                tg = GAP_TAP if kd["st"]["master"].startswith("qfd_c_xstn") else GAP_A0
+                if all(not clash(box, (p["x"], p["y"], p["w"], p["h"]), GAP_X, GAP_Y) for p in placed) and \
+                   all(not clash(box, t, tg - 1e-6, GAP_Y - 1e-6) for t in tiles):
+                    ok = True
+                    break
+            if ok:
                 break
-        else:
+        if not ok:
             raise SystemExit(f"station overlap unresolved: {kd['st']['inst']} at {kd['x']},{base}")
         placed.append(kd)
     if any(p["x"] < -1e-6 or p["x"] + p["w"] > WIDTH + 1e-6 or p["y"] < -1e-6 or p["y"] + p["h"] > HEIGHT + 1e-6 for p in placed):
@@ -997,7 +1152,7 @@ def legalize_soft(E, stations, gap=4.32, radius=320.0):
     """Q-CLUSTER-LANDALL: every wide soft site (landing ring / read halves, re-alignment pads) -> the nearest point to its
     target whose fabric_sites_place.tcl block lies wholly inside its clock region, inside the outline, and clears every
     hard station, A0 tile and other soft block by 'gap'.  Returns {inst: (x, y)}."""
-    tiles = [(g.COLX[c][0], g.ROWY[r], g.TW, g.TH) for c in range(4) for r in range(4)]
+    tiles = [(g.COLX[c][0], g.ROWY[r], g.TW, g.TH) for c in range(NC) for r in range(NR)]
     obst = [(p_["x"], p_["y"], p_["w"], p_["h"]) for p_ in stations] + tiles
     n = int(radius / LATTICE * 10)
     offs = sorted(((i * 4.32, j * 4.32) for i in range(-n, n + 1) for j in range(-n, n + 1)
@@ -1026,7 +1181,7 @@ def legalize_soft(E, stations, gap=4.32, radius=320.0):
 
 def landing_record(E, stations, legs, leg_add, port_add, lat, lat0, nflops_land, hops):
     """contract record of every landed crossing (consumed by region_audit.py R5 and qc_kit.py's SDC)"""
-    tiles = [(g.COLX[c][0], g.ROWY[r], g.TW, g.TH) for c in range(4) for r in range(4)]
+    tiles = [(g.COLX[c][0], g.ROWY[r], g.TW, g.TH) for c in range(NC) for r in range(NR)]
     boxes = [(p_["x"], p_["y"], p_["w"], p_["h"]) for p_ in stations] + tiles
     for st in E.sites:     # final check: every wide soft block clears the hard children (legalize_soft did the search)
         if not st.get("master") and st["bits"] > 1:
@@ -1049,11 +1204,11 @@ def landing_record(E, stations, legs, leg_add, port_add, lat, lat0, nflops_land,
     return dict(
         mode="all", resets="region",
         rule="every region-seam crossing landed (Q-CLUSTER-LANDALL, coordinator 0fy; Q-CB16RST 10-19: no reset hop crosses a "
-             "seam: 16 die-delivered regional resets rst_<q>, each registered at its region entry with an in-region tree)",
+             f"seam: {NT} die-delivered regional resets rst_<q>, each registered at its region entry with an in-region tree)",
         D=LAND_D, E=LAND_E, K=LAND_E, added_edges_per_crossing=LAND_A,
         window_ps=f"({LAND_E} - {LAND_D}) T + t_hold < dL < {LAND_E} T - t_cq - t_setup (T = 833.3: about -1666 .. +1666 ps)",
         epochs="released reset (L3): each half's rsi = a run in its OWN region's reset tree (from rst_<q>), both halves at "
-               "the landing's common depth after their pins; the die releases the 16 rst_<q> on the same calendar edge: "
+               f"the landing's common depth after their pins; the die releases the {NT} rst_<q> on the same calendar edge: "
                "G == R0, E = K",
         fault="assertion only ($error LAND_FAULT in simulation; synthesis drops the epoch tags)",
         rtl="rtl/physical/qcluster/qfd_c_land.sv", count=len(rec), bits=sum(r["bits"] for r in rec), flops=nflops_land,
@@ -1075,16 +1230,16 @@ def pin_plan(rsx, E):
         ss = [x for x in E.sites if x["region"] == q]
         cen[q] = sum(x["at"][0] * x["bits"] for x in ss) / sum(x["bits"] for x in ss)
         ceny[q] = sum(x["at"][1] * x["bits"] for x in ss) / sum(x["bits"] for x in ss)
-    lane = {f"bc{c}": g.run_x(c) for c in range(4)}
-    lane.update({f"bco{c}": g.run_x(c) for c in range(4)})
-    lane.update(rs=rsx["poly"][-1][0], rs_o=XT, rs_i=rsx["poly"][-1][0])   # rs_i above rs (Q-DV dv2r8f5)
+    lane = {f"bc{c}": g.run_x(c) for c in range(NC)}
+    lane.update({f"bco{c}": g.run_x(c) for c in range(NC)})
+    lane.update(rs=rsx["poly"][-1][0], rs_o=FT_X, rs_i=rsx["poly"][-1][0])   # rs_i above rs (Q-DV dv2r8f5)
     note = {"bc": "column word (corridor run)", "bco": "registered feed-through to the far cluster",
             "rs": "block word {fault, valid, 512}", "rs_i": "DV: far-band rs word in", "rs_o": "DV: far-band rs word out (rs_i + 15 edges)"}
-    faces = {"S": ["bc0", "rs", "bc1", "rs_o", "bc2", "bc3"], "N": ["bco0", "rs_i", "bco1", "bco2", "bco3"]}
+    faces = {"S": [f"bc{c}" for c in range(NC)] + ["rs", "rs_o"], "N": [f"bco{c}" for c in range(NC)] + ["rs_i"]}   # sorted by lane x
     # Q-CB16RST: each region's reset pin rst_<q> sits in its clock entry island, beside ck_<q>
     islands = {"S": [(QUADS[0], [f"ck_{QUADS[0]}", f"rst_{QUADS[0]}", "far", "cid", "tie_hi", "tie_lo"])] +
-                    [(f"c{c}r0", [f"ck_c{c}r0", f"rst_c{c}r0"]) for c in (1, 2, 3)],
-               "N": [(f"c{c}r3", [f"ck_c{c}r3", f"rst_c{c}r3"]) for c in range(4)]}
+                    [(f"c{c}r0", [f"ck_c{c}r0", f"rst_c{c}r0"]) for c in range(1, NC)],
+               "N": [(f"c{c}r{NR - 1}", [f"ck_c{c}r{NR - 1}", f"rst_c{c}r{NR - 1}"]) for c in range(NC)]}
     pins = []
     lo0, hi0 = 4.32, WIDTH - 4.32
     for f, names in faces.items():
@@ -1129,10 +1284,10 @@ def pin_plan(rsx, E):
     # register centroid y; the die delivers them along the inter-cluster sliver (no data pin on W / E)
     # Q-CLUSTER16: these face entries only seed the IO placer; the centre-fed kits move every ck_<q> to an M7 area pin
     # inside its region at PRE_CTS (qfd_c_b16_dv_centre_feed.tcl).  Columns 0 / 1 enter on W, 2 / 3 on E (offset 3 um).
-    for q in [f"c{c}r{r}" for r in (1, 2) for c in range(4)]:
+    for q in [f"c{c}r{r}" for r in range(1, NR - 1) for c in range(NC)]:
         c = int(q[1])
-        f = "W" if c < 2 else "E"
-        y0 = round(ceny[q] + (3.0 if c in (1, 2) else 0.0), 3)
+        f = "W" if c < NC // 2 else "E"
+        y0 = round(ceny[q] + (3.0 if c in (NC // 2 - 1, NC // 2) else 0.0), 3)
         pins.append(dict(port=f"ck_{q}", bits=1, face=f, layer="M4", range_um=[y0, round(y0 + 0.3, 3)], pins_per_um=None,
                          note=f"region {q} entry (register centroid y {ceny[q]:.0f}, x {cen[q]:.0f})"))
         pins.append(dict(port=f"rst_{q}", bits=1, face=f, layer="M4", range_um=[round(y0 + 1.0, 3), round(y0 + 1.3, 3)],
@@ -1157,9 +1312,9 @@ def plot(path, host, spare, legs, rsx, E, pins, stations=()):
     fig, ax = plt.subplots(figsize=(8, 17))
     _lt = ["#e8f0fb", "#fbf1e4", "#eaf7e8", "#f5e8f7"]
     _dk = ["#1f4e9c", "#b26b00", "#2a7a2a", "#8a2a9c"]
-    qcol = {f"c{c}r{r}": _lt[(c + r) % 2 + 2 * (c % 2)] for c in range(4) for r in range(4)}
-    for c in range(4):
-        for r in range(4):
+    qcol = {f"c{c}r{r}": _lt[(c + r) % 2 + 2 * (c % 2)] for c in range(NC) for r in range(NR)}
+    for c in range(NC):
+        for r in range(NR):
             x0, y0 = g.COLX[c][0], g.ROWY[r]
             ax.add_patch(Rectangle((x0, y0), g.TW, g.TH, fc=qcol[tile_quad(c, r)], ec="#555", lw=0.6))
             hs = [f"{l},{i}" for (l, i), h in host.items() if h == (c, r)]
@@ -1175,7 +1330,7 @@ def plot(path, host, spare, legs, rsx, E, pins, stations=()):
     for x in legs + [rsx]:
         p = x["poly"]
         ax.plot([q[0] for q in p], [q[1] for q in p], color="#06c" if x is not rsx else "#a0a", lw=0.7)
-    colr = {f"c{c}r{r}": _dk[(c + r) % 2 + 2 * (c % 2)] for c in range(4) for r in range(4)}
+    colr = {f"c{c}r{r}": _dk[(c + r) % 2 + 2 * (c % 2)] for c in range(NC) for r in range(NR)}
     for s in E.sites:
         if not s.get("master") and s["bits"] > 1:     # Q-CLUSTER-LANDALL: landing rings (red) / reads (green), pads (grey)
             b = soft_block(*s["at"], s["bits"])
@@ -1199,7 +1354,7 @@ def plot(path, host, spare, legs, rsx, E, pins, stations=()):
     ax.set_xlim(-140, WIDTH + 140)
     ax.set_ylim(-260, HEIGHT + 200)
     ax.set_aspect("equal")
-    ax.set_title(f"{MASTER} {WIDTH} x {HEIGHT} um: tile fill = clock region (16 roots, one per A0); dots = registers coloured by\n"
+    ax.set_title(f"{MASTER} {WIDTH} x {HEIGHT} um: tile fill = clock region ({NT} roots, one per A0); dots = registers coloured by\n"
                  "region root (squares = hard station tiles, dots = soft reset stages); red = W/E clock entries; blue = tree legs, purple = rs / rs_i->rs_o; dotted = region seams\n"
                  f"Q-CLUSTER-LANDALL: {len(E.lands)} landed crossings: red blocks = rings (source region), green = reads (destination region), grey = re-alignment pads", fontsize=8)
     fig.tight_layout()
@@ -1208,26 +1363,39 @@ def plot(path, host, spare, legs, rsx, E, pins, stations=()):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["gen"])
-    ap.add_argument("--hosts", default=str(Path(__file__).with_name("cb16_hosts.json")))
+    ap.add_argument("cmd", choices=["gen", "anneal"])
+    ap.add_argument("--hosts", default=None, help="node -> host map (default: the variant's tools/qwen_cluster/<hosts>)")
+    ap.add_argument("--variant", choices=sorted(VARIANTS), default="b16", help="SQC-CB8: b16 (4 x 4 default) / b8 / b8n (2 x 4)")
+    ap.add_argument("--out-root", default=None, help="write every output under this root instead of the repo (regression)")
+    ap.add_argument("--seeds", type=int, default=16, help="anneal: seeds")
     # Q-CLUSTER-LANDALL (coordinator 0fy 10-18): 'all' (default) lands every multi-bit region-seam crossing; 'off'
     # regenerates the unlanded Q-CLUSTER16 fabric (only comment changes)
     ap.add_argument("--landings", choices=["all", "off"], default="all")
     a = ap.parse_args()
+    configure(a.variant, a.out_root)
+    hosts = a.hosts or str(Path(__file__).with_name(V["hosts"]))
+    if a.cmd == "anneal":       # SQC-CB8: cb_base.anneal on this variant's grid / geometry (min rs latency, cut, relay bits)
+        res = sorted((g.anneal(sd) for sd in range(a.seeds)), key=lambda r_: r_[0])
+        c_, h_, sp_ = res[0]
+        Path(hosts).write_text(json.dumps(dict(host={"%d_%d" % k: list(v) for k, v in sorted(h_.items())}, spare=list(sp_),
+                                               cost=c_), indent=1) + "\n")
+        print(hosts, c_)
+        return
     mode = a.landings
     REGIONAL[0] = mode == "all"
-    host, spare = g.load_hosts(a.hosts)
-    assert len(set(host.values())) == 15 and spare not in host.values()
+    host, spare = g.load_hosts(hosts)
+    assert len(set(host.values())) == NT - 1 and spare not in host.values()
+    lanes = assign_lanes(host)
     rs_t0, _, legs0, rsx0, t0 = evaluate(host)
     assert g.evaluate(host, True)[0] == rs_t0          # evaluate() with no landing is exactly cb_base.evaluate
     k0 = {(x["node"], x["side"]): x["k"] for x in legs0}
     ch0 = ft_chain(rsx0["poly"][-1][0])
-    land, tap_add, col_exit, rs_land, ft_land = {}, {r: 0 for r in range(4)}, 0, 0, 0
+    land, tap_add, col_exit, rs_land, ft_land = {}, {r: 0 for r in range(NR)}, 0, 0, 0
     if mode == "all":
         # landed crossings from the UNLANDED geometry: the hard station sites (and so every register's region) stay put
         land = {(x["node"][0], x["node"][1], x["side"]): ncross(leg_regions(x)) for x in legs0}
         per_col = []
-        for c in range(4):
+        for c in range(NC):
             seq, xs_ = [], g.run_x(c)
             for nm, y in g.chain_for(c):
                 seq.append((nm, quad(xs_, y)))
@@ -1239,7 +1407,7 @@ def main():
             per_col.append((row_add, cum))
         if any(pc != per_col[0] for pc in per_col):
             raise SystemExit(f"column runs cross the row seams differently: {per_col}")
-        tap_add = {r: LAND_A * per_col[0][0].get(r, 0) for r in range(4)}
+        tap_add = {r: LAND_A * per_col[0][0].get(r, 0) for r in range(NR)}
         col_exit = LAND_A * per_col[0][1]
         rs_land = ncross([tile_quad(*rsx0["root"])] + [quad(*p_) for p_ in rs_points(rsx0)])
         ft_land = ncross([quad(*p_) for p_ in ch0])
@@ -1256,6 +1424,11 @@ def main():
     lb = next(x for x in legs if x["node"] == (1, 2) and x["side"] == "a")
     mut_swap = {(1, 0, "a"): "t_out_%s" % g.sname(*lb["src"][1]), (1, 2, "a"): "t_out_%s" % g.sname(*la["src"][1])}
     rnodes, rleaves, rdepth, RD = g.reset_tree()
+    global LAND_MUT
+    if V["land_mut"] is None and mode == "all":
+        # SQC-CB8: bench mutants 6 / 7 act on the last landed crossing of the root's leg a (on the path to rs)
+        E0 = gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mode)[1]
+        LAND_MUT = [L["name"] for L in E0.lands if L["name"].startswith(f"leg_{g.LEVELS}_0a_")][-1]
     # pass 1: provisional soft sites -> hard station placement -> legal soft sites; pass 2: the final RTL / sites
     fab1, E1, _ = gen_fabric(host, spare, legs, rsx, rnodes, rleaves, rdepth, RD, mut_swap, mode)
     st1, _ = place_stations(E1, fab1, spare)
@@ -1279,22 +1452,23 @@ def main():
             nl[k_] = nl.get(k_, 0) + 1
     if mode == "all":
         assert {k_: v for k_, v in land.items() if v} == nl, (land, nl)
-        assert sum(L["name"].startswith("dn") for L in E.lands) == 4 * col_exit // LAND_A
+        assert sum(L["name"].startswith("dn") for L in E.lands) == NC * col_exit // LAND_A
         assert sum(L["name"].startswith("rs_") for L in E.lands) == rs_land
         assert sum(L["name"].startswith("ft_") for L in E.lands) == ft_land
     OUT_RTL.mkdir(parents=True, exist_ok=True)
     (OUT_RTL / f"{FABRIC}.sv").write_text(fab)
     (OUT_RTL / f"{MASTER}.sv").write_text(gen_cluster(spare))
-    (ROOT / "rtl/test/tb_qcluster_fabric.sv").write_text(gen_tb(spare))
+    (OUT_ROOT / V["tb"]).parent.mkdir(parents=True, exist_ok=True)
+    (OUT_ROOT / V["tb"]).write_text(gen_tb(spare))
     warm = (max(E.ldepth.values()) + LAND_E + 2) if E.lands else 0
-    lat = dict(tap={r: g.tap_time(r) + tap_add[r] for r in range(4)}, bco=g.STAGE["exit"] + col_exit, rs_fabric=rs_t,
+    lat = dict(tap={r: g.tap_time(r) + tap_add[r] for r in range(NR)}, bco=g.STAGE["exit"] + col_exit, rs_fabric=rs_t,
                rs_i_to_rs_o=nft + LAND_A * ft_land, reset=RD, landing_warm_after_rst=warm)
-    lat0 = dict(tap={r: g.tap_time(r) for r in range(4)}, bco=g.STAGE["exit"], rs_fabric=rs_t0, rs_i_to_rs_o=nft, reset=RD)
+    lat0 = dict(tap={r: g.tap_time(r) for r in range(NR)}, bco=g.STAGE["exit"], rs_fabric=rs_t0, rs_i_to_rs_o=nft, reset=RD)
     # lockstep vs the 8-region reference: every output port = the reference delayed by its documented offset; ports fed
     # through a landing are not compared while the landings are in reset / warm-up (bubbles by contract L3)
     delay = dict(port_add)
-    for c in range(4):
-        for r in range(4):
+    for c in range(NC):
+        for r in range(NR):
             if tap_add[r]:
                 delay[f"tap_{g.sname(c, r)}"] = tap_add[r]
         if col_exit:
@@ -1307,15 +1481,16 @@ def main():
              [f"n_{x['side']}_{g.sname(*x['host'])}" for x in legs if x["nland"]]
     longest = max([x["k"] + x["land"] + 1 for x in legs] + [lat["bco"], lat["rs_i_to_rs_o"], rsx["k"] + 1 + LAND_A * rs_land])
     mask = (warm + longest + 8) if E.lands else 0
-    (ROOT / "rtl/test/tb_qcluster_lockstep.sv").write_text(gen_lockstep_tb(spare, delay, masked, mask))
-    hdr = ["// GENERATED by tools/qwen_cluster/qc_gen.py: compiled fixed latencies of qfd_c_b16_dv_fabric (edges)"] + \
-          [f"localparam integer Q3H_LAT_TAP{r} = {lat['tap'][r]};" for r in range(4)] + \
+    if V["lockstep"]:      # the 8-region reference fabric exists for the 4 x 4 only
+        (OUT_ROOT / V["lockstep"]).write_text(gen_lockstep_tb(spare, delay, masked, mask))
+    hdr = [f"// GENERATED by tools/qwen_cluster/qc_gen.py: compiled fixed latencies of {FABRIC} (edges)"] + \
+          [f"localparam integer Q3H_LAT_TAP{r} = {lat['tap'][r]};" for r in range(NR)] + \
           [f"localparam integer Q3H_LAT_BCO = {lat['bco']};",
            f"localparam integer Q3H_LAT_RS_FABRIC = {rs_t};",
            f"localparam integer QC_LAT_FT = {lat['rs_i_to_rs_o']};",
            f"localparam integer Q3H_RST_DEPTH = {RD};",
            f"localparam integer QC_LAT_WARM = {warm};"]
-    (ROOT / "rtl/test/qcluster_lat.svh").write_text("\n".join(hdr) + "\n")
+    (OUT_ROOT / V["lat"]).write_text("\n".join(hdr) + "\n")
     pins, cen, ceny = pin_plan(rsx, E)
     rst_pin_um = {}
     if mode == "all":
@@ -1347,7 +1522,7 @@ def main():
     for s in E.sites:
         by[s["inst"]] = s["at"]
     hops = [x["d"] / (x["k"] - x.get("pad", 0) + 1) for x in legs] + [rsx["d"] / (rsx["k"] + 1)]
-    for c in range(4):
+    for c in range(NC):
         ch = g.chain_for(c)
         hops += [b[1] - a[1] for a, b in zip(ch, ch[1:])]
     ft = ft_chain(rsx["poly"][-1][0])
@@ -1363,11 +1538,11 @@ def main():
         quadrant_seams=dict(x=XT, y=YMID), region_seams=dict(x=[round(v, 3) for v in XSEAM], y=[round(v, 3) for v in YSEAM],
                           rule="column = #x-seams <= x (a register on a seam takes the higher column); row = #y-seams <= y"),
         register_centroid={q: [round(cen[q], 1), round(ceny[q], 1)] for q in QUADS},
-        tiles=[dict(inst=f'u_t_{c}_{r}', at=[g.COLX[c][0], g.ROWY[r]], orient=g.COL_ORIENT[c]) for c in range(4) for r in range(4)],
+        tiles=[dict(inst=f'u_t_{c}_{r}', at=[g.COLX[c][0], g.ROWY[r]], orient=g.COL_ORIENT[c]) for c in range(NC) for r in range(NR)],
         clocks={q: dict(pin=f"ck_{q}", fabric_flops=E.regions[q],
-                        tiles=[g.sname(c, r) for c in range(4) for r in range(4) if tile_quad(c, r) == q],
+                        tiles=[g.sname(c, r) for c in range(NC) for r in range(NR) if tile_quad(c, r) == q],
                         tile_entry_pins=sum(len(NK_CLOCKS if (c, r) != spare else NL_CLOCKS)
-                                            for c in range(4) for r in range(4) if tile_quad(c, r) == q)) for q in QUADS},
+                                            for c in range(NC) for r in range(NR) if tile_quad(c, r) == q)) for q in QUADS},
         fabric_flops=nflops, latency_edges=lat,
         hop_um=dict(limit=LIMIT, plan=HOP, max=round(max(hops), 1)),
         tree=dict(hosts={f"{l}_{i}": list(h) for (l, i), h in host.items()}, nl_slot=list(spare)),
@@ -1383,16 +1558,18 @@ def main():
                                      orient=p_["orient"], region=p_["st"]["region"]) for p_ in stations]),
         a0=dict(ref=A0_REF, nk=A0_NK, nl=A0_NL, nk_clocks=NK_CLOCKS, nl_clocks=NL_CLOCKS),
         die_crossing=dict(
-            rule="(a) + (c): no die link crosses a qfd_c_b16_dv outline (die repeaters never sit inside it; M9 over the "
-                 "cluster carries die PG only in dv2r8f).  Die links run in the band gaps, the slice / head row and the W "
-                 "column; the only data that passes through a cluster is its own registered feedthroughs bc -> bco "
-                 "(4 x 516 b, 17 edges) and rs_i -> rs_o (514 b, 15 edges).  No die feedthrough repeater sites are reserved.",
-            registered_feedthroughs={"bc0..3->bco0..3": g.STAGE["exit"], "rs_i->rs_o": nft}),
+            rule=(f"(a) + (c): no die link crosses a {MASTER} outline (die repeaters never sit inside it; M9 over the "
+                  "cluster carries die PG only in dv2r8f).  Die links run in the band gaps, the slice / head row and the W "
+                  "column; the only data that passes through a cluster is its own registered feedthroughs bc -> bco "
+                  + ("(4 x 516 b, 17 edges) and rs_i -> rs_o (514 b, 15 edges)" if NC == 4 else
+                     f"({NC} x 516 b, {lat['bco']} edges) and rs_i -> rs_o (514 b, {lat['rs_i_to_rs_o']} edges)")
+                  + ".  No die feedthrough repeater sites are reserved."),
+            registered_feedthroughs={f"bc0..{NC - 1}->bco0..{NC - 1}": g.STAGE["exit"], "rs_i->rs_o": nft}),
         regional_resets=(dict(
-            rule="Q-CB16RST (10-19): 16 die-delivered regional resets rst_<q> (pin beside ck_<q>); pin register u_fab.u_rpin_<q> "
+            rule=f"Q-CB16RST (10-19): {NT} die-delivered regional resets rst_<q> (pin beside ck_<q>); pin register u_fab.u_rpin_<q> "
                  "on ck_<q> at the region entry nearest the pin; in-region trees only (corridor / channel lanes, never over "
                  "the A0 tile); every tile / xstn rst_n exactly reset edges after its region pin, every landing half at the "
-                 "landing's reset_depth.  Die obligation: release all 16 of an instance on the SAME calendar edge (each "
+                 f"landing's reset_depth.  Die obligation: release all {NT} of an instance on the SAME calendar edge (each "
                  "timed against its own region tree, the die reset tree lands each); MUT 8 (bench) = one region one edge late.",
             pins={q: f"rst_{q}" for q in QUADS}, pin_register_um=rst_pin_um,
             pin_register_sites={q: list(v) for q, v in E.rpins.items()},
@@ -1403,7 +1580,10 @@ def main():
         gating=["A0 views qfd_tile_nk_romleaf_a0 / nl twin not CLOSED (Q-ROMPARENT-2): diagnostics only, no binding"],
         landings=land_rec)
     OUT_ARCH.mkdir(parents=True, exist_ok=True)
-    (OUT_ARCH / "cluster_contract_dv.json").write_text(json.dumps(contract, indent=1) + "\n")
+    if V is not VARIANTS["b16"]:
+        contract.update(variant=a.variant, pending="PENDING-COORD: CB8 die contract (2 column words, 8 K-slices, die slot "
+                        "2445.12 x 5227.2) not ruled by COORD", t_band=dict(gaps=V["gaps"], top_band=V["top_band"], ft_x=FT_X))
+    (OUT_ARCH / V["contract"]).write_text(json.dumps(contract, indent=1) + "\n")
     tsv = ["# prefix\tx\ty\txlo\txhi  (qc_gen.py; fabric_sites_place.tcl)"]
     for st in E.sites:
         if st.get("master"):
@@ -1411,9 +1591,10 @@ def main():
         x, y = st["at"]
         cor = next(((lo, hi) for lo, hi in g.CORR.values() if lo - 1e-6 <= x <= hi + 1e-6), (max(0.0, x - 15), min(WIDTH, x + 15)))
         tsv.append(f"{st['inst']}\t{x}\t{y}\t{cor[0]}\t{cor[1]}")
-    (ROOT / "physical/qcluster/qfd_c_b16_dv_sites.tsv").write_text("\n".join(tsv) + "\n")
-    (OUT_ARCH / "relay_sites_dv.json").write_text(json.dumps(dict(schema="opentallas.qcluster.sites.v1", sites=E.sites), indent=1) + "\n")
-    plot(OUT_ARCH / "cluster_dv_plan.png", host, spare, legs, rsx, E, pins, stations)
+    (OUT_ROOT / V["sites"]).parent.mkdir(parents=True, exist_ok=True)
+    (OUT_ROOT / V["sites"]).write_text("\n".join(tsv) + "\n")
+    (OUT_ARCH / V["relay"]).write_text(json.dumps(dict(schema="opentallas.qcluster.sites.v1", sites=E.sites), indent=1) + "\n")
+    plot(OUT_ARCH / V["png"], host, spare, legs, rsx, E, pins, stations)
     print(json.dumps(dict(outline=[WIDTH, HEIGHT], mode=mode, landings=len(E.lands), landing_flops=nflops_land,
                           pad_stages=sum(x["pad"] for x in legs), latency=lat, latency_unlanded=lat0,
                           landing_hop_max=max(lhops.values()) if lhops else None,

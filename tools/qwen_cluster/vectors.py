@@ -19,7 +19,9 @@ def hex512(lanes):
     return "".join("%08x" % int(u[15 - i]) for i in range(16))
 
 
-def main(out):
+def main(out, nk=16):
+    # SQC-CB8 10-22: nk = K-slices of the block (16: C_B16, 8: CB8); vec.hex keeps 16 rows per op (tile face reads
+    # vec[op * 16 + K]), gold = the reference morton pair tree over slices 0 .. nk - 1
     rng = np.random.default_rng(20261016)
     vec, gold = [], []
     for o in range(NOPS):
@@ -32,10 +34,10 @@ def main(out):
         v[4, 2], v[0, 2] = np.float32(1e30), np.float32(-1e30)
         for k in range(16):
             vec.append(hex512(v[k]))
-        gold.append(hex512(tree(v)))
+        gold.append(hex512(tree(v[:nk])))
     open(f"{out}/vec.hex", "w").write("\n".join(vec) + "\n")
     open(f"{out}/gold.hex", "w").write("\n".join(gold) + "\n")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 16)

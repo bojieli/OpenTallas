@@ -1,0 +1,9 @@
+baseline closure_loop rc=1
+baseline ref_tile rc=1
+baseline hier_contract rc=1
+baseline tt_views rc=0
+candidate closure_loop rc=1
+candidate ref_tile rc=1
+candidate hier_contract rc=1
+candidate tt_views rc=0
+focused rc=0

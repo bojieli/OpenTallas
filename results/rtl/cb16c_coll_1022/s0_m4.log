@@ -1,0 +1,9 @@
+s0_m4_phi0_pph0 ERR lockstep face 0 at 105: ptv 0/0 pts 1/0 prs 0/0 ptx  ok rxv 0/0 rxd  ok
+s0_m4_phi0_pph0 ERR lockstep face 0 at 118: ptv 1/1 pts 0/1 prs 0/0 ptx  ok rxv 0/0 rxd  ok
+s0_m4_phi0_pph0 ERR lockstep face 1 at 119: ptv 0/0 pts 1/0 prs 0/0 ptx  ok rxv 0/0 rxd  ok
+s0_m4_phi0_pph0 ERR lockstep face 0 at 123: ptv 0/0 pts 1/0 prs 0/0 ptx  ok rxv 0/0 rxd  ok
+s0_m4_phi0_pph0 ERR lockstep face 1 at 134: ptv 1/1 pts 0/1 prs 0/0 ptx  ok rxv 0/0 rxd  ok
+s0_m4_phi0_pph0 ERR lockstep face 0 at 138: ptv 1/1 pts 0/1 prs 0/0 ptx  ok rxv 0/0 rxd  ok
+s0_m4_phi0_pph0 CB16C_COLL_FACE_CX HARD=1 PHY=350 L0=381 R=0 PEER_R=5 PHI=0 PPH=0 words 240 240 | REF got 240 240 lat 381 err 0 flt 0 unx 0 | DUT got 240 240 lat 383 err 0 flt 0 unx 0 | lockstep cycles 1004 tx frames 480 rx words 480 mismatches 92
+s0_m4_phi0_pph0 CB16C_COLL_FACE_CX FAIL
+CB16C_COLL_BENCH FAIL MUT=4 PROFILE=s0

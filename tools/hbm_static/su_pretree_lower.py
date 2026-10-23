@@ -29,7 +29,7 @@ from hdc_golden_v41 import csum  # noqa: E402
 from hdc_golden import add  # noqa: E402
 
 BLOCK = 128
-PT_RED = 80          # tree_cmd edge E -> red_cmd edge that takes the subtree (bench-measured, LAT 6 + OPR 1: was 69 before HBM-PRETREE 10-19)
+PT_RED = 69          # tree_cmd edge E -> red_cmd edge that takes the subtree (bench-measured, LAT 6)
 DEP = 10             # reducer same-address dependent issue distance (ot_hbm_su_reduce_static r1)
 OP_LOAD, OP_ADD_EXT, OP_ADD_TREE, OP_MAX_EXT, OP_EXPORT, OP_MAX_TREE = 0, 1, 2, 3, 4, 5
 
@@ -83,7 +83,10 @@ def block_subtree(kind, blk, cnt):
 class Schedule:
     """per-quarter command image: tree_cmd / block words by emission edge, red_cmd by edge, expected exports"""
 
-    def __init__(self):
+    def __init__(self, pt_red=PT_RED):
+        if type(pt_red) is not int or pt_red <= 0:
+            raise ValueError("pre-tree observation age must be a positive measured edge count")
+        self.pt_red = pt_red
         self.tree = {}          # edge -> (max, cnt, words[128])
         self.red = {}           # edge -> dict(op, a, b, d, tag, osel, lane)
         self.exps = []          # (export red_cmd edge, tag, value)
@@ -127,15 +130,15 @@ class Schedule:
                 self.tree[ee] = (mx, cnt, blk)
                 v = block_subtree(kind, blk, cnt)
                 d = self._new_addr()
-                self._red(ee + PT_RED, op=OP_LOAD, a=0, b=0, d=d, tag=0, osel=1, lane=0x20)
-                ready = ee + PT_RED + DEP
+                self._red(ee + self.pt_red, op=OP_LOAD, a=0, b=0, d=d, tag=0, osel=1, lane=0x20)
+                ready = ee + self.pt_red + DEP
                 if bo < nb:
                     blk, cnt = blocks[bo]
                     self.tree[eo] = (mx, cnt, blk)
                     vo = block_subtree(kind, blk, cnt)
-                    self._red(eo + PT_RED, op=ext, a=d, b=0, d=d, tag=0, osel=1, lane=0x20)
+                    self._red(eo + self.pt_red, op=ext, a=d, b=0, d=d, tag=0, osel=1, lane=0x20)
                     v = fmax(v, vo) if mx else fadd(v, vo)
-                    ready = eo + PT_RED + DEP
+                    ready = eo + self.pt_red + DEP
                 level.append((d, ready, v))
             t += DEP + P
         # tree over pair sums in free reducer slots (left-to-right, odd leftover carried up)

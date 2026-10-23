@@ -847,7 +847,7 @@ endmodule
 //               [35] KVN
 // epoch-begin copies: [17:0] end  [23:18] STATUS held result groups  [24] KVN   (STATUS TX register uses [23])
 // ---------------------------------------------------------------------------------------------------------------------
-module qfd_d2d_static_core_s7 #(parameter [31:0] TXDP = {8'd2, 8'd1, 8'd2, 8'd1}, parameter integer SFMUT = 0) (
+module qfd_d2d_static_core_s7 #(parameter [31:0] TXDP = {8'd2, 8'd1, 8'd2, 8'd1}, parameter integer SFMUT = 0, parameter integer HEAD_CONTEXT = 0) (
     input  wire         ck,
     input  wire         por_n, rst_n,
     input  wire         cfg_tx_we, cfg_rx_we, input wire [5:0] cfg_addr,
@@ -864,6 +864,7 @@ module qfd_d2d_static_core_s7 #(parameter [31:0] TXDP = {8'd2, 8'd1, 8'd2, 8'd1}
     output wire         native_rx_v,
     output wire         native_rx_slot, output wire [3:0] native_rx_slot_kind, output wire [4:0] native_rx_slot_beat,
     output wire         prog_witness_slot, output wire prog_auth_slot, output wire prog_context_slot,
+    output wire         prog_head_context_slot,
     input  wire         prog_tx_observed_v, input wire [547:0] prog_tx_record,
     output wire         prog_rx_v,
     output wire         emb_rx_v, output wire emb_rx_slot,
@@ -921,7 +922,8 @@ module qfd_d2d_static_core_s7 #(parameter [31:0] TXDP = {8'd2, 8'd1, 8'd2, 8'd1}
     assign rx_payload = rxp;
     assign native_rx_v = rxe[0];
     assign native_rx_slot = rxs[0]; assign native_rx_slot_kind = rk; assign native_rx_slot_beat = rb;
-    assign prog_witness_slot = txs[1];
+    assign prog_witness_slot = txs[1] && (HEAD_CONTEXT == 0 || tk == 4'd14);
+    assign prog_head_context_slot = HEAD_CONTEXT != 0 && txs[1] && tk == 4'd12;
     assign tv[1] = prog_tx_observed_v; assign tp[FW +: FW] = prog_tx_record;
     assign prog_rx_v = rxe[1];
     assign emb_rx_v = rxe[2]; assign emb_rx_slot = rxs[2];

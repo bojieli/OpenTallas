@@ -863,6 +863,127 @@ def reset_sinks(g, A, x):
     return tot, ff, mac, ex
 
 
+def async_two_stage_reset_proof(g, A, port, net):
+    """Recognise the exact ASAP7 async-assert/two-edge release landing shape.
+
+    Raw reset is permitted only on RESETN of these landing flops. First D
+    is tied high; every final D is the positive first-stage value. This is
+    structural classification, not a sink-count exemption or an RTL waiver.
+    The supported master has QN=!state, active-low RESETN/SETN, reset priority;
+    SETN stays inactive. Other masters/control roles retain the legacy rule.
+    """
+    def fail(reason):
+        return {'pass': False, 'reason': reason}
+
+    def unary_origin(q):
+        seen = set(); parity = 0
+        while True:
+            if q in seen:
+                return None, parity
+            seen.add(q)
+            drv = A['driver'].get(q)
+            if drv is None or drv[0] < 0 or A['kind'][drv[0]] != 'buf':
+                return q, parity
+            ci, _ = drv[:2]
+            typ, _, pins = g.cells[ci]
+            ins = [v for pn, bs in pins.items() if A['pin_dir'][ci].get(pn) == 'in' for v in bs]
+            outs = list(_out_nets(g, A, ci))
+            if len(ins) != 1 or outs != [q] or not re.match(r'^(INV|BUF|CKINV|CKBUF)', typ):
+                return None, parity
+            parity ^= bool(re.match(r'^(INV|CKINV)', typ))
+            q = ins[0]
+
+    def high(q):
+        q, parity = unary_origin(q)
+        if q is None or parity:
+            return False
+        if q == 1 and g.net_name[q] == "1'1":
+            return True
+        drv = A['driver'].get(q)
+        if drv is None or drv[0] < 0:
+            return False
+        typ, _, pins = g.cells[drv[0]]
+        return typ == 'TIEHIx1_ASAP7_75t_R' and pins == {'H': [q]}
+
+    def terminals(q):
+        todo = [(q, 0)]; seen = set(); ends = []; ports = 0
+        while todo:
+            x, parity = todo.pop()
+            if (x, parity) in seen:
+                continue
+            seen.add((x, parity)); ports += len(A['out_ports'].get(x, ()))
+            for ci, pn, _ in A['loads'].get(x, ()):
+                if A['kind'][ci] == 'buf':
+                    typ, _, pins = g.cells[ci]
+                    ins = [v for k, bs in pins.items() if A['pin_dir'][ci].get(k) == 'in' for v in bs]
+                    outs = list(_out_nets(g, A, ci))
+                    if ins != [x] or len(outs) != 1 or not re.match(r'^(INV|BUF|CKINV|CKBUF)', typ):
+                        return None, ports
+                    neg = bool(re.match(r'^(INV|CKINV)', typ))
+                    todo.append((outs[0], parity ^ neg))
+                else:
+                    ends.append((ci, pn, parity))
+        return ends, ports
+
+    roots = A['loads'].get(net, ())
+    if A['out_ports'].get(net) or not 2 <= len(roots) <= 32:
+        return fail('raw reset exported or root count outside bounded shape')
+    cells = set(); clock = None
+    for ci, pn, _ in roots:
+        typ, _, pins = g.cells[ci]
+        if (typ != 'DFFASRHQNx1_ASAP7_75t_R' or pn != 'RESETN'
+                or set(pins) != {'CLK', 'D', 'QN', 'RESETN', 'SETN'}
+                or any(len(v) != 1 for v in pins.values())
+                or pins['RESETN'] != [net] or not high(pins['SETN'][0])):
+            return fail('raw reset reaches a foreign cell/control/data role')
+        if clock is None:
+            clock = pins['CLK'][0]
+        if pins['CLK'] != [clock]:
+            return fail('landing clocks differ')
+        cells.add(ci)
+    clock_ports = [n for n, (direction, q) in g.ports.items() if direction == 'input' and q == clock]
+    if len(clock_ports) != 1 or clock == net or len(cells) != len(roots):
+        return fail('clock is not one literal input or root roles repeat')
+    first = {ci for ci in cells if high(g.cells[ci][2]['D'][0])}
+    final = cells - first
+    if not first or not final:
+        return fail('missing first or final landing stage')
+    qfirst = {g.cells[ci][2]['QN'][0]: ci for ci in first}
+    used = set()
+    for ci in final:
+        q, parity = unary_origin(g.cells[ci][2]['D'][0])
+        if q not in qfirst or parity != 1:
+            return fail('final D is not positive first-stage Q')
+        used.add(qfirst[q])
+    if used != first:
+        return fail('orphan first-stage copy')
+    first_max = final_max = 0
+    for ci in first:
+        ends, ports = terminals(g.cells[ci][2]['QN'][0])
+        if ends is None or ports or not ends or len(ends) > 32:
+            return fail('first stage exported, empty, or exceeds32')
+        if any(cj not in final or pn != 'D' or parity != 1 for cj, pn, parity in ends):
+            return fail('first stage reaches another role, stage, or polarity')
+        first_max = max(first_max, len(ends))
+    for ci in final:
+        ends, ports = terminals(g.cells[ci][2]['QN'][0])
+        if ends is None or ports or not ends or len(ends) > 32:
+            return fail('final stage exported, empty, or exceeds32')
+        if any(cj in cells for cj, _, _ in ends):
+            return fail('landing feedback or extra landing stage')
+        # RESETN publications must retain positive active-low reset polarity.
+        # Ordinary downstream control/data logic is outside this two-stage
+        # landing; it is still subject to the ordinary timing/native checks.
+        if any(pn in ASYNC_PINS and (pn != 'RESETN' or parity != 1) for _, pn, parity in ends):
+            return fail('wrong asynchronous publication role or polarity')
+        final_max = max(final_max, len(ends))
+    return dict({'pass': True}, first=len(first), final=len(final), edges=2,
+                root_loads=len(roots), clock=clock_ports[0], first_max_loads=first_max,
+                final_max_loads=final_max, master='DFFASRHQNx1_ASAP7_75t_R',
+                first_cells=sorted(g.cells[ci][1] for ci in first),
+                final_cells=sorted(g.cells[ci][1] for ci in final))
+
+
 def balanced_reset_proof(g, A, port, net, profile):
     """Opt-in mapped proof, never a threshold waiver: exactly two plain-FF levels.
 
@@ -1030,6 +1151,11 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
             continue
         tot, ff, mac, ex = reset_sinks(g, A, x)
         land.append({"port": b, "sinks": tot, "flops": ff, "macros": mac})
+        if tot > T['rst_land_max']:
+            async_proof = async_two_stage_reset_proof(g, A, base, x)
+            land[-1]['async_two_stage_proof'] = async_proof
+            if async_proof['pass']:
+                continue
         profile = T.get('_balanced_reset_profile')
         if profile and base in (profile.get('first_copies') or {}):
             proof=balanced_reset_proof(g,A,base,x,profile)

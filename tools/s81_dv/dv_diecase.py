@@ -133,7 +133,7 @@ def main():
     ap.add_argument('--die-repair', action='store_true', help='splice DIE-FLOW step output (die_repeaters_step.tcl)')
     ap.add_argument('--congestion-iterations', type=int, default=30)
     ap.add_argument('--dieflow-ref', default='origin/main')
-    ap.add_argument('--signal-top-layer', choices=('M7', 'M8'), default='M7', help='M8 is die signals only; M9 stays clock/PG')
+    ap.add_argument('--signal-top-layer', choices=('M7', 'M8', 'M9'), default='M7', help='M8/M9 carry die signals (M9 opt-in, COORD 10-22: probe cap24 21.09M -> 0.74M overflow; M9 PG mesh ~4%% of tracks)')
     ap.add_argument('--relay-ref', default=None, help='git ref holding the closed dsfd_dvrly_276_{EW,WE,NS,SN} views '
                     '(276-b lane stations become real relay macros; other widths stay DFF stand-ins)')
     ap.add_argument('--relay-widths', type=int, nargs='+', default=[276],
@@ -346,7 +346,7 @@ def main():
     (out / 'place.tcl').write_text('\n'.join(pl) + '\n')
     repair = '# no die repair (pure GRT diagnostic)\n'
     if a.die_repair:
-        repair = die_repair_tcl(out, a.dieflow_ref, rc_layer='M8' if a.signal_top_layer == 'M8' else 'M4')
+        repair = die_repair_tcl(out, a.dieflow_ref, rc_layer='M8' if a.signal_top_layer in ('M8', 'M9') else 'M4')
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
             if a.die_repair else 'estimate_parasitics -global_routing\n')
@@ -375,7 +375,7 @@ puts "OT_PLACE_S [expr {{[clock seconds]-$p0}}] insts [llength [get_cells *]]"
 {CB.legalize_tcl('place', max_dpl_gsites=2.0)}
 write_db /work/out/place.odb
 source {PLAT}/setRC.tcl
-set_wire_rc -signal -layer {'M8' if a.signal_top_layer == 'M8' else 'M6'}
+set_wire_rc -signal -layer {'M8' if a.signal_top_layer in ('M8', 'M9') else 'M6'}
 create_clock -name clk -period 833.333 [get_ports clk]
 set ck [[ord::get_db_block] findNet clk]
 if {{$ck ne "NULL"}} {{ $ck setSpecial }}
@@ -384,7 +384,7 @@ foreach rn {{rst n_rst_dv}} {{ set r [[ord::get_db_block] findNet $rn]; if {{$r 
 {repair}set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-{a.signal_top_layer} 0.20
+set_global_routing_layer_adjustment M6-{min(a.signal_top_layer, 'M8')} 0.20
 set t0 [clock seconds]
 global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"

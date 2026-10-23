@@ -130,7 +130,7 @@ def build(die,schedule,binding,ledger,transport_receipt,unit_receipt):
         # supplies missing row ready/consumer release dates.
         wanted=[owner+'::input_rows']
         if kind!='CP':wanted+=[owner+'::gain_upload_rows',owner+'::parameters']
-        absent=[key for key in wanted if key not in ledger['producers']]
+        absent=[key for key in wanted if key not in ledger['producers'] or ledger['producers'][key].get('status')!='PASS']
         if absent:
             missing.append(dict(owner=owner,kind=kind,missing_producer_receipts=absent,
                 required_native_rows=([[0,511]] if kind=='CP' else [[672,819]]),
@@ -211,17 +211,57 @@ def build(die,schedule,binding,ledger,transport_receipt,unit_receipt):
     return program
 
 
+def relative_constraints(schedule,ledger):
+    """Keep measured component readiness useful without inventing a die epoch."""
+    if ledger.get('schema')!='opentallas.s81.native_producer_ledger.v1' or not ledger.get('source_relative_only'):
+        raise ValueError('actual source-relative producer ledger required')
+    if ledger.get('edge_convention')!='replay_native_command_epoch_relative_sampled_edges' or ledger.get('physical_projection_applied'):
+        raise ValueError('component observations must retain their separate replay edge domain')
+    groups=[]
+    for group in selected_groups(schedule):
+        kind=group['kind'];owner=group['owner']
+        required=set(range(512)) if kind=='CP' else set(range(692,820))
+        available=[r for r in ledger.get('row_availability',[]) if r.get('intended_consumer_owner')==owner
+                   and r['row'] in required and r.get('known_mask')==15 and r.get('ready_edge') is not None]
+        rows={r['row'] for r in available};missing=sorted(required-rows)
+        gain=ledger.get('producers',{}).get(owner+'::gain_upload_rows') if kind!='CP' else None
+        groups.append(dict(group,observed_input_rows=available,missing_input_rows=missing,
+            observed_input_values=4*len(rows),missing_input_values=4*len(missing),
+            complete_input_ready_edge=max((r['ready_edge'] for r in available),default=None) if not missing else None,
+            source_gain_record=gain,arithmetic_dispatch_admitted=False,
+            required_next=['Complete actual native operand and parameter commits',
+                           'Matched finite row and gain leases for the actual arithmetic consumer',
+                           'Explicit selected die clock/route projection into the native issuer epoch']))
+    return dict(schema='opentallas.s81.kv_relative_constraints.v1',status='PARTIAL',
+        run_id=ledger['run_id'],event_stream_sha256=ledger.get('event_stream_sha256'),
+        edge_convention=ledger['edge_convention'],native_clock_domain=ledger['native_clock_domain'],
+        physical_epoch_mapping=ledger.get('physical_epoch_mapping'),physical_projection_applied=False,
+        native_command_epoch_seq_edge=None,source_sha256=ledger['source_sha256'],
+        observed_native_commands=ledger.get('native_commands',[]),groups=groups,
+        ranks_observed=ledger.get('ranks_observed',[]),required_ranks_for_D512=[0,1,2,3],
+        calendar_qualified=False,production_enabled=False,jobs=[],
+        next='Use measured relative source events; keep missing operands, consumer leases and physical clock origin explicit')
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--tree',type=Path,required=True)
+    p.add_argument('--tree',type=Path)
     p.add_argument('--schedule',type=Path,required=True)
-    p.add_argument('--binding',type=Path,required=True)
+    p.add_argument('--binding',type=Path)
     p.add_argument('--producer-ledger',type=Path,required=True)
-    p.add_argument('--transport-receipt',type=Path,required=True)
-    p.add_argument('--unit-receipt',type=Path,required=True)
+    p.add_argument('--transport-receipt',type=Path)
+    p.add_argument('--unit-receipt',type=Path)
+    p.add_argument('--source-relative-only',action='store_true',help='emit actual partial producer constraints with no physical epoch or native jobs')
     p.add_argument('--out',type=Path,required=True)
     a=p.parse_args()
     if a.out.exists():raise ValueError('preserve prior programme; choose fresh output')
+    if a.source_relative_only:
+        result=relative_constraints(json.loads(a.schedule.read_text()),json.loads(a.producer_ledger.read_text()))
+        a.out.write_text(json.dumps(result,indent=2)+'\n')
+        print('PARTIAL source-relative constraints;',sum(g['observed_input_values'] for g in result['groups']),'observed input values; no physical epoch or full command admission')
+        return 2
+    if any(x is None for x in (a.tree,a.binding,a.transport_receipt,a.unit_receipt)):
+        p.error('full programme emission requires --tree, --binding, --transport-receipt and --unit-receipt')
     result=build(Die(a.tree),json.loads(a.schedule.read_text()),json.loads(a.binding.read_text()),
                  json.loads(a.producer_ledger.read_text()),a.transport_receipt,a.unit_receipt)
     a.out.write_text(json.dumps(result,indent=2)+'\n')

@@ -1,0 +1,13 @@
+MUT=3 PHI=0 ERR fault at 444 cdc 0000/0000 abort 10 cause 00000000/00000100
+MUT=3 PHI=0 ERR fault at 445 cdc 0000/0000 abort 10 cause 00000000/00000100
+MUT=3 PHI=0 ERR fault at 446 cdc 0000/0100 abort 10 cause 00000000/00000100
+MUT=3 PHI=0 ERR fault at 447 cdc 0000/0100 abort 10 cause 00000000/00000100
+MUT=3 PHI=0 ERR face 1 word 1 at 468 (sent 90, expected 468) data BAD
+MUT=3 PHI=0 ERR face 1 word 2 at 469 (sent 91, expected 469) data BAD
+MUT=3 PHI=0 ERR face 1 word 3 at 470 (sent 92, expected 470) data BAD
+MUT=3 PHI=0 ERR face 1 word 4 at 471 (sent 93, expected 471) data BAD
+MUT=3 PHI=0 ERR face 1 word 5 at 472 (sent 94, expected 472) data BAD
+MUT=3 PHI=0 ERR face 1 word 6 at 473 (sent 95, expected 473) data BAD
+MUT=3 PHI=0 COLL_FACE_BENCH TOK_REG=1 FW=546 PHY=339 L=378 R=0 PEER_R=0 XS=1 PHI=0 words 240 240 got 240 240 latency 378 errors 448 faults 596 unexpected 0
+MUT=3 PHI=0 COLL_STATIC_FACE FAIL
+COLL_STATIC_FACE_BENCH FAIL MUT=3

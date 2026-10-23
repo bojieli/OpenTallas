@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits    21 GB (avail 471, growth 456, headroom 0, waiters 0/0 GB) load 52/128 running 35 disk 925 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r18-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r18-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r18-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r18-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r18-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r18-2000
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1322609-1792643427 after 0 s
+QCORE_RG PASS checks=9104 scalars=312 valid_reads=5918 fault_lags=0 fault_edges=9094
+- rtl/test/hbm_qcore_physical_1016/tb_qcore_r13_lockstep.sv:70: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 91us; walltime 0.221 s; speed 413.947 us/s
+- Verilator: cpu 0.221 s on 1 threads; allocated 11 MB
+QCORE_ROW1 MUT256 REJECTED actual_rc=0
+QCORE_ROW1 MUT128 REJECTED actual_rc=0
+QCORE_ROW1 GATE PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1322609-1792643427): exit 0

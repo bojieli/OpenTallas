@@ -14,6 +14,7 @@ SOURCE_HASHES = {
 ROW_INTERVAL = 256  # tested source3a855; 80/81 are latency, not sustainable II
 COMMAND_TO_WRITE = 81
 TABLE_CAPACITY = 128
+R15_RD_LAT = [37, 40, 27, 29, 53, 55, 43, 45]
 
 
 def source_contract(source_root, contract):
@@ -22,9 +23,11 @@ def source_contract(source_root, contract):
         if hashlib.sha256((root/rel).read_bytes()).hexdigest() != want:
             raise ValueError(f'actual probability-producer source mismatch: {rel}')
     p = contract['instances']['xl_SW_ctl']['params']
-    if p != dict(PMAX=8, RD_LAT=[37,40,27,29,53,55,43,45], NR=32, LEAD=8):
-        raise ValueError('selected SW RLM55/LEAD8 probability timing contract required')
-    return dict(sources=SOURCE_HASHES, parameters=p, pair_control_T=0,
+    # r15 bind (ref 6, RLM55) or the r18 bind of the xl RD_LAT fix fe7f400ac (ref 7: every bank +1, RLM56). The fixed
+    # client request edge is 3 + RLM - RD_LAT[b] in both, so the probability-row calendar does not move.
+    if p not in (dict(PMAX=8, RD_LAT=R15_RD_LAT, NR=32, LEAD=8), dict(PMAX=8, RD_LAT=[d + 1 for d in R15_RD_LAT], NR=32, LEAD=8)):
+        raise ValueError('selected SW RLM55/LEAD8 (r15) or RLM56/LEAD8 (r18 ref 7) probability timing contract required')
+    return dict(sources=SOURCE_HASHES, parameters=p, pair_control_T=0, rlm=max(p['RD_LAT']),
                 source_qualification='existing VM-boundary component proof only; physical and SU join open')
 
 
@@ -71,7 +74,7 @@ def plan(*, logical_words, producer_entry, producer_record, contract, source_roo
             sectors = [sector0+((bank-sector0)%8) for bank in range(8)]
             footprints.append(dict(row=row, logical_word=logical, physical_word=physical,
                 command_slot=slot, source_client=2, vm_sectors_by_bank=sectors,
-                client_request_after_command=[3+55-d for d in profile['parameters']['RD_LAT']],
+                client_request_after_command=[3+profile['rlm']-d for d in profile['parameters']['RD_LAT']],
                 physical_bank_calendar='OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch',
                 xw_after_command=80, pstore_write_after_command=COMMAND_TO_WRITE))
         table = SI.cmd_table_rows(entries, SI.XL_CW)

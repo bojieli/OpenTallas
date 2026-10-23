@@ -13,6 +13,37 @@ ROOT = Path(__file__).resolve().parents[3]
 BASE = Path('rtl/dsrom_sys/s81_dv/slice')
 
 
+def bind_defines():
+    """the die bind's +define set (port_bind.json defines), e.g. cap14 OT_S81SL_KV_TRANSPORT selects xrt1/xrt3:
+    OT_S81_SELECTED_DEFINES=A,B,... (TOKc-S81 10-22); unset = none"""
+    return {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}
+
+
+def preprocess(text, defines=None):
+    """resolve `ifdef / `ifndef / `elsif / `else / `endif with the bind defines (no macro expansion)"""
+    defines = bind_defines() if defines is None else defines
+    out, stack = [], []          # stack of (parent_active, this_branch_taken, active)
+    for line in text.split('\n'):
+        m = re.match(r'\s*`(ifdef|ifndef|elsif|else|endif)\b\s*(\w*)', line)
+        active = all(a for _, _, a in stack)
+        if not m:
+            if active:
+                out.append(line)
+            continue
+        kw, name = m.groups()
+        if kw in ('ifdef', 'ifndef'):
+            c = (name in defines) == (kw == 'ifdef')
+            stack.append((active, c, c))
+        elif kw == 'elsif':
+            pa, taken, _ = stack.pop(); c = (not taken) and name in defines
+            stack.append((pa, taken or c, c))
+        elif kw == 'else':
+            pa, taken, _ = stack.pop(); stack.append((pa, True, not taken))
+        else:
+            stack.pop()
+    return '\n'.join(out)
+
+
 def resolve(die, slice_inst, source_root=None):
     explicit = source_root is not None or bool(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT'))
     source_root = Path(source_root or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)
@@ -33,7 +64,7 @@ def resolve(die, slice_inst, source_root=None):
         path = paths[0]
         raw = path.read_text()
         sources[str(path.relative_to(source_root))] = hashlib.sha256(path.read_bytes()).hexdigest()
-        clean = re.sub(r'/\*.*?\*/|//[^\n]*', '', raw, flags=re.S)
+        clean = preprocess(re.sub(r'/\*.*?\*/|//[^\n]*', '', raw, flags=re.S))
         match = re.search(r'\bmodule\s+' + re.escape(master) + r'\b(.*?)\bendmodule\b', clean, re.S)
         if not match:
             raise ValueError('selected source does not define master ' + master)
@@ -59,10 +90,13 @@ def resolve(die, slice_inst, source_root=None):
         xg = child(text, 'u_xg')
         if xg:
             break
-        nested = re.findall(r'(?m)^\s*(ot_s81sl_slice[A-Za-z0-9_]*)\s*(?:#\s*\([^;]*?\)\s*)?(u_[A-Za-z0-9_]+)\s*\(', text, re.S)
-        if len(nested) != 1:
+        # instance names: u_<x> or the bare wrapper core `u` (ot_s81sl_slice_lepw: `ot_s81sl_slice_lep #(...) u (...)`)
+        nested = re.findall(r'(?m)^\s*(ot_s81sl_slice[A-Za-z0-9_]*)\s*(?:#\s*\([^;]*?\)\s*)?(u(?:_[A-Za-z0-9_]+)?)\s*\(', text, re.S)
+        # generate branches may instantiate the same child master more than once (lep: u_sl in both HOST_EN arms)
+        masters = sorted({m for m, _ in nested})
+        if len(masters) != 1:
             raise ValueError('selected slice wrapper child is ambiguous: ' + master)
-        master = nested[0][0]
+        master = masters[0]
     cap = child(text, 'u_cap')
     if cap is None:
         raise ValueError('selected source CAP instance is unresolved')
@@ -90,8 +124,15 @@ def resolve(die, slice_inst, source_root=None):
     body(cap)
     added = 0
     if streamer == 'ot_s81sl_xs4':
-        known = '974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9'
-        if sources[str(BASE / (streamer + '.sv'))] != known:
+        # capture-stage receipts: XS4 sources whose streamer capture adds exactly ONE edge.
+        #   974ec6f3 = the native xs4 (xg5 lineage ab6b3f7b4), capture stage measured.
+        #   50485a59 = the G9 GEN-selected physical xs4 (bind rtl_extra 8a495768, S81-FIX2/XG 5feb5dc07 + ELEM-XFV):
+        #     974ec6f3 plus kept same-D/same-enable/same-edge register copies only (act_g, hb_q1 -> hbk_o, wps0,
+        #     keep_hierarchy bdec predecode = combinational) for native fanout <= 32; no register stage added on any
+        #     path (diff-reviewed TOKc-S81 10-22: every new reg is loaded on the same edge/enable as the reg it copies).
+        known = {'974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9',
+                 '50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808'}
+        if sources[str(BASE / (streamer + '.sv'))] not in known:
             raise ValueError('changed XS4 source has no matching capture-stage receipt')
         added = 1
     return dict(schema='opentallas.s81.selected_slice_source.v1', slice=slice_inst,

@@ -609,6 +609,17 @@ CHILD_LANES = (2, 3)
 TX_UID, TX_OP = 0x5C, 2
 TX_SM = 1600             # worst-case tx beats: HDR + 512 x (REBASE + 2 BEAT) = 1,537 + the first-IDX lead (~15) + margin
 TX_R = 1
+# MU.S81.CAL booking (STW-S81c-DIE4 10-22): TOPK TX x (dsdv_idx_tx_n32 RIL+RDL, RTL 100457dd6 / census b7b57b3d4) has the
+# TX lookup pipe LP 4 = reference dsdv_idx_tx LP 2 + LPX 2 (x == reference LPX=2 cycle-exact, 55,734 checks).  Effect at
+# the tx pins: beats 1-3 unchanged, beat 4 onward and done one 4-cycle beat slot later (+4 edges, once a job).  The
+# compiled slot grid absorbs it: the FIRST slot (checked edge-exact) is unchanged and the parent waits for the RESERVED
+# grid end (TX_SM slots), so the worst-case stream + the shift must fit TX_SM.  TX_LPX = the bound TX's LPX (0 = today's
+# die, dsdv_idx_tx_n32 v; 2 = TOPK TX x/y once bound); the tree bench builds the reference with it (run_idx_tree.sh LPX=).
+TX_LPX = 0
+TX_LPX_BOOKED = 2
+TX_WORST = 1537 + 15     # HDR + 512 x (REBASE + 2 BEAT) + the first-IDX lead
+TX_LPX_SHIFT = {0: 0, 1: 0, 2: 4}   # measured at the tx pins (LPX 1 invisible, LPX 2 = one 4-cycle beat slot)
+assert TX_WORST + max(TX_LPX_SHIFT[TX_LPX], TX_LPX_SHIFT[TX_LPX_BOOKED]) <= TX_SM * TX_R, 'TX grid cannot absorb LPX'
 TX_OFF = 5               # tx-job CTL at the bk_sel vi_n pin edge c -> first grid slot printed (lo) at c + TX_OFF + DLY
 TX_LINK = 3              # tx lo printed at t -> parent bk_sel vi_s ingress edge t + TX_LINK + leg (vmux 2 + pin 1)
 VMUX_LAT = 2             # dsdv_idx_vmux pin -> pin

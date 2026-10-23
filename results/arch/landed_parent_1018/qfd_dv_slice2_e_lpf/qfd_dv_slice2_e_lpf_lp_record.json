@@ -811,6 +811,12 @@
    "stages": 6
   }
  ],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
  "reset": {
   "port": "rst_n",
   "root_region": "core",
@@ -940,6 +946,9 @@
    "cw_s3": 9
   },
   "reset_release_added_edges": 9,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
   "max_added_edges": 12
  },
  "warnings": [],

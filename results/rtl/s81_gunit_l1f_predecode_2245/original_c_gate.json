@@ -1,0 +1,191 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source-registered: every input lands in a flop at the pin and every output is a flop (dsdv_gunit_l* input/output flops, dsdv_gunit_pass feedthroughs, ot_dsdv_vstop's own flops); recipe pin_regs would add an unpriced stage on the router's critical path and on every rung hop.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-gold2 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_dsdv_gunit_l1f_c_20261021-095543.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_dsdv_gunit_l1f_c_20261021-095543.log; host dir ot-gold2:/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l1f_c-20261021-095543",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-gold2 in 610 s (gate total 40479 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 1054, 'pin_rectangles': 1054, 'pin_track_checked': 1054, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 b81a1c170f2950439be436d74ad27ccce0de1aedb5e3c50eb773cf8020052b50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 31332 um2 + macros 7788 in core 114606: util 31% (std-cell density 31.3% of placeable 100015 um2; total fill 34.1%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_l1f_wdec8: dsdv_l1f_wdec8 survives synthesis (256 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_l1f_term8: dsdv_l1f_term8 survives synthesis (256 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_l1f_or8: dsdv_l1f_or8 survives synthesis (512 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_l1f_mux8: dsdv_l1f_mux8 survives synthesis (64 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_l1f_dec64: dsdv_l1f_dec64 survives synthesis (18 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_l1f_dec7: dsdv_l1f_dec7 survives synthesis (32 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_seln_gt40: dsdv_seln_gt40 survives synthesis (416 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_seln_cmp4: dsdv_seln_cmp4 survives synthesis (4160 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "keep_modules",
+   "message": "keep dsdv_seln_mux1: dsdv_seln_mux1 survives synthesis (5248 instances)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN dsdv_gunit_l1f cells 267,838 flops 24,210 depth 710.1 ps util 0.323 reach 0.0 um (10.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 24,210 flops > 15,000 on one root (+0 ICGs, 2 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_ot_pr_core.g_add[4].pa[28]$_DFF_P_ -> u_ot_pr_core.g_add[4].u.u.x_sb[0]$_DFF_P_/D: ~710 ps estimated (19 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "1 macro channel(s) narrower than 20 um with placement rows (e.g. u_ot_pr_core.g_m\\[0\\].u_b|u_ot_pr_core.g_m\\[1\\].u_b 0.0 um): widen to >= 20 um or block the channel",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 24,212 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 24,212 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 547.2..628.6 ps (spread 81.4), boundary mean 590.3; tt insertion all 399.0..493.0 ps (spread 94.0), boundary mean 456.1; ff insertion all 312.0..409.7 ps (spread 97.7), boundary mean 373.8; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.450 vs spec PD 0.45",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/dsdv_gunit_l1f_c/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      580 paths, worst slack 31.2 ps (e.g. u_ot_pr_core.o_d[139]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 3.123090674961304e-11 hold WNS 3.8122449641520006e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 24,212 sinks on the largest root; measured TT insertion 493.0 ps, FF insertion 409.7 ps, TT pin-flop spread 54.1 ps, FF pin-flop spread 52.3 ps; WARN: 24,212 sinks on one clock root > 15,000 (guidance); insertion 493.0 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-gunit-channels-1021/physical/ref_tile/dsdv_gunit_l1f_c/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-s81-gunit-channels-1021/physical/ref_tile/dsdv_gunit_l1f_c/gate_layout/density.png; congestion /home/ubuntu/wt/codex-s81-gunit-channels-1021/physical/ref_tile/dsdv_gunit_l1f_c/gate_layout/congestion.png",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "trial_route",
+   "message": "trial global route failed (GATE_GRT_RC=2); trial GRT: total overflow 341; worst layer M2 63.41% used; worst-overflow layer M4 (236); worst gcell Horizontal congestion overflow 2 (cap 15 use 17) at (83.22,107.73)-(83.79,108.3) um; 325 markers span (39.9,0)-(202.92,163.02) um; congestion map /home/ubuntu/wt/codex-s81-gunit-channels-1021/physical/ref_tile/dsdv_gunit_l1f_c/gate_layout/congestion.png; GRT 34187 s",
+   "fix": "read the remote grt.log; preserve this failed run"
+  }
+ ]
+}

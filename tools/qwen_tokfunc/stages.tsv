@@ -7,3 +7,4 @@ ovl4u    stage_ovl4u.sh  64      stage_link_fixtures.sh (OVL bench + compiler pa
 ctx4u    stage_ctx4u.sh  32      stage_link_fixtures.sh
 head     stage_head.sh   16      head fixtures (stage_head.sh header)
 kv       stage_kv.sh     700     reuse KV-MU7 job4b when its source matches (stage_kv.collect.py)
+chain    stage_chain.sh  160     run_tok_func_qw.sh relays RUNROOT/stg/fx + stg/fx_in/P8191 to --kvroot (KV vehicle binary host)

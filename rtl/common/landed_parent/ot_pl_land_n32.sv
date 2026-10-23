@@ -101,4 +101,39 @@ module ot_pl_land_n32_chunk_w #(
     initial if (CHUNK_BITS < 1 || CHUNK_BITS > 24) $fatal(1, "ot_pl_land_n32_chunk_w: CHUNK_BITS must be 1..24");
 `endif
 endmodule
+// Opt-in vector-reset form: identical per-chunk reset ages to ot_pl_land_split_w.
+module ot_pl_land_n32_split_w #(
+    parameter integer W = 1088, D = 4, CHUNK_BITS = 24, RG = 32,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D),
+    parameter integer NC = (W + CHUNK_BITS - 1) / CHUNK_BITS
+) (
+    input wire ck,
+    input wire [(NC + RG - 1) / RG - 1:0] rsi,
+    input wire [W-1:0] i,
+    output wire [D*W-1:0] bank,
+    output wire [D*(AW+1)-1:0] epo,
+    output wire [D*NC-1:0] vld
+);
+    genvar c, s;
+    generate for (c = 0; c < NC; c = c + 1) begin : g_chunk
+        localparam integer CW = (W - c*CHUNK_BITS < CHUNK_BITS) ? W - c*CHUNK_BITS : CHUNK_BITS;
+        wire [D*CW-1:0] cb;
+        wire [D*(AW+1)-1:0] ce;
+        wire [D-1:0] cv;
+        (* keep_hierarchy = "yes" *) ot_pl_land_n32_local_w #(.W(CW), .D(D)) u_local (
+            .ck(ck), .rsi(rsi[c / RG]), .i(i[c*CHUNK_BITS +: CW]), .bank(cb), .epo(ce), .vld(cv));
+        for (s = 0; s < D; s = s + 1) begin : g_slot
+            assign bank[s*W + c*CHUNK_BITS +: CW] = cb[s*CW +: CW];
+        end
+        assign vld[c*D +: D] = cv;
+        if (c == 0) begin : g_tags
+            assign epo = ce;
+        end
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (CHUNK_BITS < 1 || CHUNK_BITS > 24 || RG < 1 || RG > 32)
+        $fatal(1, "ot_pl_land_n32_split_w: CHUNK_BITS must be 1..24, RG 1..32");
+`endif
+endmodule
+
 `default_nettype wire

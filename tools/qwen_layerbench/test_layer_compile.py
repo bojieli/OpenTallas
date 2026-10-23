@@ -68,6 +68,35 @@ endmodule'''
             self.assertEqual(doc['buses'][0]['src_nets'], ['n_src'])
             self.assertEqual(doc['problem_count'] == 0, expected is not None, doc['problems'])
 
+    def test_single_polarity_k_strap_is_tied(self):
+        """SQ-QB2-RELAY 10-21: K 7 / K 0 landings carry only the used tie output (the reset-calendar GEN emits
+        ftk_<bid>_<pol> only for a polarity with k pins); a k pin on any other net still fails closed."""
+        rtl = RTL + '''
+module dst1(input wire ck, input wire i); endmodule
+module qkd_rlysh0_1(input wire ck, a, output wire b); endmodule
+module qkd_landsh_1(input wire ck, a, k0, k1, k2, output wire b, tie_hi, tie_lo); endmodule
+'''
+        for k, ties, expected in [(7, '.tie_hi(t)', 7), (0, '.tie_lo(t)', 0), (7, '.tie_lo(u)', None)]:
+            die = f'''module die();
+wire n_clk_core_c, a0, b0, t, u; wire [3:0] n_src;
+src s (.ck(n_clk_core_c), .o(n_src));
+qkd_rlysh0_1 h0 (.ck(n_clk_core_c), .a(n_src[0]), .b(a0));
+qkd_landsh_1 l0 (.ck(n_clk_core_c), .a(a0), .b(b0), .k0(t), .k1(t), .k2(t), {ties});
+dst1 d (.ck(n_clk_core_c), .i(b0));
+endmodule'''
+            rows = dict(l0=dict(E=k, K=k, cal=0, n=2, stations=['h0', 'l0']))
+            with tempfile.TemporaryDirectory() as tdir:
+                Path(tdir, 'm.sv').write_text(rtl)
+                Path(tdir, 'die.v').write_text(die)
+                pb = dict(masters={m: dict(rtl=f'{tdir}/m.sv', kind='real')
+                                   for m in ('src', 'dst1', 'qkd_rlysh0_1', 'qkd_landsh_1')}, defines=[])
+                doc = N.export(f'{tdir}/die.v', pb, 'qwen_kv', 'HEAD', [], [tdir], 'strap', land_e=rows)
+            landed = [b for b in doc['buses'] if b['stages'] == 2]
+            self.assertEqual(len(landed), 1, doc['buses'])
+            self.assertEqual(landed[0]['landing_k'], expected)
+            self.assertEqual(landed[0]['age_edges'] is not None, expected is not None, doc['problems'])
+            self.assertEqual(any('landing K strap not tied' in p for p in doc['problems']), expected is None)
+
     def test_native_trunk_inject_has_independent_v_and_token_ages(self):
         trunk = ROOT / 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv'
         die = '''module die();

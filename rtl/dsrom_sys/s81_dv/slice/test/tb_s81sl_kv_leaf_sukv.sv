@@ -7,14 +7,14 @@
 //   16 raw, 16 norm rows), img_ik.mem: IK job (params 672, operands 692 with 24 zero rows, obase 168) vs exp_ik.mem.
 //   [+KV] KV regression on the same build: img_kvg.mem GK gsel 0, img_kv.mem KV job vs exp_kv.mem (25 rows).
 // Every job: no output event before its last input read (KV-class), fixed finish ages printed (calendar pricing).
-module tb_s81sl_kv_leaf_sukv #(parameter integer VLAT = 4, CNIK_MUT = 0, CP_MUT = 0);
+module tb_s81sl_kv_leaf_sukv #(parameter integer VLAT = 4, CNIK_MUT = 0, CP_MUT = 0, HARD_RQ = 0);
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0,c_v=0;reg[159:0]c_d=0;
  wire busy,done,fault,xrv,xwv;wire[9:0]xra,xwa;wire[7:0]xwm;wire[255:0]xwd;
  reg xqv;reg[255:0]xqd;
  reg[127:0]mem[0:1023];reg[127:0]img[0:1023];
  reg[511:0]ecp[0:31];reg[31:0]ecp32[0:511];reg[511:0]ecn[0:47];reg[511:0]eik[0:7];reg[511:0]ekv[0:24];
- ot_s81sl_kv_leaf #(.CNIK(1),.CP(1),.CP_MUT(CP_MUT),.CNIK_MUT(CNIK_MUT)) dut(.clk(clk),.rst_n(rst_n),.c_v(c_v),.c_d(c_d),
+ ot_s81sl_kv_leaf #(.CNIK(1),.CP(1),.HARD_RQ(HARD_RQ),.CP_MUT(CP_MUT),.CNIK_MUT(CNIK_MUT)) dut(.clk(clk),.rst_n(rst_n),.c_v(c_v),.c_d(c_d),
   .busy(busy),.done(done),.fault(fault),.x_rv(xrv),.x_ra(xra),.x_qv(xqv),.x_qd(xqd),.x_wv(xwv),.x_wa(xwa),.x_wm(xwm),.x_wd(xwd));
  // VM: VLAT-edge pair reads, masked pair writes
  reg [VLAT:1] qv_l; reg [255:0] qd_l [1:VLAT];

@@ -1,0 +1,18 @@
+{
+  "tested_candidate": "7480e2a2bfe46fdc6f233fc4ec7a2e0fc62efbb6",
+  "tested_baseline": "b0e20d30e76ea4793da6e801928648398dcca975",
+  "source_change": "a46ac9dec95d8345b7617417c8905b2f03944631",
+  "command": "python3 -m pytest -q -p no:cacheprovider --continue-on-collection-errors tools/die_repeaters tools/die_safety tools/hbm_die_v15 tools/s81_dv tools/qwen_kv_die/chain",
+  "origin": "Existing Claude paired test process preserved unchanged; both complete outputs reused, no duplicate build.",
+  "baseline_pass_progress": 239,
+  "candidate_pass_progress": 240,
+  "unchanged_errors": [
+    "ERROR tools/hbm_die_v15/test_ep_calendar_host_2330.py - subprocess.CalledProc...",
+    "ERROR tools/s81_dv/layer_prog/test_gu_prop.py::test_gu_prop"
+  ],
+  "new_failures": [],
+  "focused": "41 tests passed (die_repeaters/test_step.py + die_safety), controller Tcl geometry3 tests passed",
+  "candidate_sha256": "76471b3c3f0c9c6e3017fb258eb4f27bc8a946b33b05902f9c96b8199fcb39b0",
+  "baseline_sha256": "bb5727be22005671a61eb57abe16c3028a7a6fa376e60d46272c2bbb5e919393",
+  "qualification": "Owner-approved600um die repeater default on upper-metal RC; exact five changed source files match tested candidate. Separate controller helper actual600b and failure provenance retained; no full die GRT/STA/IR closure claimed."
+}

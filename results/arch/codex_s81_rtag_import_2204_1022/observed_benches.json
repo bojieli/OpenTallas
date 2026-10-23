@@ -1,0 +1,54 @@
+{
+  "from_record": "8ed8a5a22",
+  "source_commit": "257fcb812f86c888b06bf24bcfa5aa5369495962",
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "al logic process\n                                                         : ... This will be executed as a blocking assignment '='!\n  292 |             always_latch if (!clk) begin busy_l <= busy_e; fault_l <= fault_e; end\n      |                                                                    ^~\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 11.107 MB sources in 65 modules, into 0.016 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 1.181 s (elab=0.239, cvt=0.764, bld=0.000); cpu 1.181 s on 1 threads; allocated 125.707 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_n32soq_front_full_shape": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "n32soq ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350', 'PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418', 'TXN LAG ns min=6.664 max=15.827 mean=9.923 n=456']\nPASS BF6 front N32+SOQ five roots: exact transactions\n",
+      "track": "parallel"
+    },
+    "bench_mutant_n32_read_copy_stall": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "mroh ok ['[2284000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=1 ref=34772dd840404010 shadow=347a9fc400404010']\nMUTANT BF6 mroh FAIL: DIFF TXN\n",
+      "track": "parallel"
+    },
+    "bench_mutant_n32_fp8_write_select_lost": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "mwself ok ['[2250000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=345b5b5980400010']\nMUTANT BF6 mwself FAIL: DIFF TXN\n",
+      "track": "parallel"
+    }
+  },
+  "fail_witnesses": {
+    "bench_mutant_n32_read_copy_stall": {
+      "path": "results/closure_loop/s81bf_front_five_roots_n32_soq_roomy-ref-257fcb812/fail_witness/bench_mutant_n32_read_copy_stall.log",
+      "sha256": "1034e1ce9f61f32879f516f311d71916c7168cf71fb419469ee96f29bea79115",
+      "fail_regex": "MUTANT BF6 mroh FAIL: DIFF TXN",
+      "matched": "MUTANT BF6 mroh FAIL: DIFF TXN",
+      "captured_at": "2026-10-22T19:44:57-07:00",
+      "declared": null
+    },
+    "bench_mutant_n32_fp8_write_select_lost": {
+      "path": "results/closure_loop/s81bf_front_five_roots_n32_soq_roomy-ref-257fcb812/fail_witness/bench_mutant_n32_fp8_write_select_lost.log",
+      "sha256": "e5dde77903e900fed61d8cf232cf346e47c59132d8a8f3d99dda8f9d64f7e24b",
+      "fail_regex": "MUTANT BF6 mwself FAIL: DIFF TXN",
+      "matched": "MUTANT BF6 mwself FAIL: DIFF TXN",
+      "captured_at": "2026-10-22T19:47:57-07:00",
+      "declared": null
+    }
+  },
+  "historical_terminal_source_commit": "515864134f159baa79e49932e90d522e3755bbe2",
+  "note": "The archived terminal.json files retain their historical source5158641. Current257fcb812 bench results are copied without alteration from the CLOSED verdict here; no historical source credit is transferred."
+}

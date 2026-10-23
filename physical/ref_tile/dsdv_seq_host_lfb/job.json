@@ -1,0 +1,131 @@
+{
+ "name": "dsdv_seq_host_lfb-dsdv_seq_host_lfb-COMMIT",
+ "block": "dsdv_seq_host_c",
+ "ref_tile": true,
+ "owner": "CODEX-S81-COLLB-2000",
+ "purpose": "S81-ELEM2-SEQ dsdv_seq_host_hw (FALLBACK, 86.4 lk|sq channel): CLOSED lk s10hq (649101c0d) + CLOSED sq + vc views",
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/s81-seq-linked-taps-2000",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/dsdv_sh_lk_s10hq/views",
+   "physical/rom_host_ingest/rtl",
+   "results/arch/landed_parent_1018/dsdv_seq_host/core_b",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/dsrom_sys/s81_static_control",
+   "rtl/hdc/ingest",
+   "rtl/lib",
+   "rtl/link",
+   "results/arch/codex_seq_linked_taps_1021",
+   "tools/s81_dv/seqhost_branch_1021"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_seq_host_c u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_DSDV_SEQHOST_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host_c.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "seqhost_c_gate",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_c_bench.sh {RUN}/seqhost_c",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^SEQHOST_C_GATE PASS$",
+    "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/"
+   },
+   {
+    "name": "seqhost_mut1",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" J=4 bash tools/s81_dv/seqhost_branch_1021/run_mutant.sh {RUN}/seqhost_mut1",
+    "expect": "fail",
+    "fail_regex": "SEQHOST_EXPLICIT_MUT1_CAUGHT",
+    "fail_witness": "results/arch/codex_seq_linked_taps_1021/seqhost_mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsdv_seq_host_lfb/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsdv_seq_host_lfb/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_seq_host_lfb --out {RUN}/record/views/dsdv_seq_host_c --macro-view physical/ref_tile/dsdv_sh_lk_s10hq/views/dsdv_sh_lk --macro-view physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq --macro-view physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsdv_seq_host_lfb/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/dsdv_sh_lk_s10hq/views/dsdv_sh_lk",
+   "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq",
+   "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsdv_seq_host_lfb/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsdv_seq_host_lfb/dsdv_seq_host_lfb-dsdv_seq_host_lfb-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Physical linked-face clock branch compensation from exact failed TT/FF paired pin-flop extrema: L0 preplaced spine branch targets35ps earlier using supported negative physical clock_tap_ps. Real TT/FF buffers/parasitics measured at gate. Same sources, views, SDC/uncertainty/hold and0addededges. TT/FF modeled79.2/77.8 vs95.5/105.8 is a hypothesis only. S81-ELEM2-SEQ 10-21 FALLBACK of dsdv_seq_host_h: lk|sq channel 43.2 -> 86.4 (lk N -> sq S ~1,000 nets + spine delay for lk TT insertion 647.6 vs sq 315.4 / vc 376.6), sq/vc moved N by 43.2, ck/rst_n centred in the wider channel; outline 475.2x1036.8. S81-ELEM2-SEQ gate2 10-21: clock spine targets each child's ROUTED boundary-register insertion (child_clock_ref boundary: lk 551.1 / sq 269.1 / vc 300.4 TT) instead of the lib max_clock_tree_path (lk 647.6 / sq 315.4 / vc 376.6; offsets 96.5 / 46.3 / 76.2 ps differ, so gate1 handed lk boundary flops ~50 ps early vs sq: TT pin-flop spread 101.3 > 80, FF 64.3, GRT ovf 0). S81-ELEM2-SEQ 10-21: child view swap -- u_l0 dsdv_sh_lk = CLOSED s10hq view (job dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d, src 649101c0d, TT +33.16 / FF +17.42 / DRC 0, 388.8x453.6, pins = the stand-in's plan within 0.72 um; stand-in lacked s_hw_e[216]) replaces the s10f-timed DECLARED PIN STAND-IN; parent bench simulates the exact lk RTL of 649101c0d with its defines (APIPE10/S10B..S10E, TB_HSH 8) + lk mutants. Same outline/pins/placement/SDC as the S81-SEQHP gate. Prior: S81-SEQHP-1021 re-pack of dsdv_seq_host_c for the RL1 lk successor s10h (388.8x453.6, p192 masters, claude/s81-shlk-1021 @254543064): vertical stack on the 43.2 lattice, lk DECLARED PIN STAND-IN (43.2,43.2) / sq CLOSED (86.4,540.0) / vc CLOSED (86.4,734.4); 43.2 channels (lk N face -> sq S face ~1,000 nets; parent M6/M7 over the M5-capped children); outline 475.2x993.6 = S81 die seqhost slot for s10h. Parent S/W/E pins = lk faces, N pins = vc N face; ck/rst_n on E in the lk|sq channel."
+}

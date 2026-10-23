@@ -9,10 +9,22 @@ from collections import defaultdict
 import re
 
 
+# Reviewed FIFO module names, EXACT (no pattern): the original reviewed FIFO and (COORD review 2026-10-22 10:45, kshare r5a)
+# the shared-pointer bit-sliced variant ot_hbm_svc_async_fifo_shp.  Both are source-sha / src-range bound by the caller.
+REVIEWED_FIFOS=('ot_hbm_svc_async_fifo','ot_hbm_svc_async_fifo_shp')
+
+
+def fifo_base(name):
+    """The reviewed FIFO module name behind an actual (possibly parameterised) Yosys module name, or None."""
+    for base in REVIEWED_FIFOS:
+        if (name==base or re.fullmatch(r'\$paramod\$[0-9a-f]{40}\\'+base,name)is not None or
+                name.startswith('$paramod\\'+base+'\\')):
+            return base
+    return None
+
+
 def fifo_module_type(name):
-    return (name=='ot_hbm_svc_async_fifo' or
-            re.fullmatch(r'\$paramod\$[0-9a-f]{40}\\ot_hbm_svc_async_fifo',name)is not None or
-            name.startswith('$paramod\\ot_hbm_svc_async_fifo\\'))
+    return fifo_base(name) is not None
 
 
 def hdl_index(info, position):
@@ -72,10 +84,10 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None,requ
             typ=cell['type']
             if typ in modules:
                 child=modules[typ]
-                claimed=child.get('attributes',{}).get('hdlname')=='ot_hbm_svc_async_fifo'
+                claimed=child.get('attributes',{}).get('hdlname')in REVIEWED_FIFOS
                 if claimed and not fifo_module_type(typ):raise ValueError(f'{full}: untrusted FIFO source identity alias {typ}')
                 if fifo_module_type(typ):
-                    fifos.append(dict(path=full,module=typ,connections=con,parameters=child.get('parameter_default_values',{})))
+                    fifos.append(dict(path=full,module=typ,base=fifo_base(typ),connections=con,parameters=child.get('parameter_default_values',{})))
                     continue
                 for p,info in child['ports'].items():
                     if not con.get(p) and info['direction']=='output':continue
@@ -143,7 +155,7 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None,requ
         for index,b in enumerate(canon(con['rd_data'])):origins[b].add('payload:'+f['path']+':'+str(index))
         for domain,ports in ((wr,('wr_valid','wr_data')),(rd,('rd_ready',))):
             consumers.append((f['path']+':'+domain,domain,canon(sum((con[p]for p in ports),[])),[]))
-        fifo_records.append(dict(path=f['path'],writer_domain=wr,reader_domain=rd,parameters=f['parameters']))
+        fifo_records.append(dict(path=f['path'],writer_domain=wr,reader_domain=rd,parameters=f['parameters'],base=f['base']))
     # Monotone finite union; no iteration cut-off can hide an unresolved cone.
     changed=True
     while changed:

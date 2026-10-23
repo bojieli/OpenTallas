@@ -79,7 +79,8 @@ def main(argv=None):
         else:
             v.append(f'    wire {rng} {n};')
             if 'fault' in p['net']:
-                bits = ' | '.join(f'(|{n}[{h}:{l}])' for h, l in p['bits'])
+                # a 1-bit port at lo 0 is declared without a range: select the whole wire (a [0:0] select is illegal)
+                bits = ' | '.join((f'(|{n}[{h}:{l}])' if rng else f'(|{n})') for h, l in p['bits'])
                 flt.append(bits)
         conn.append(f'.{n}({n})')
     v.append(f'    {a.top} u_slice ({", ".join(conn)});')
@@ -137,8 +138,16 @@ def main(argv=None):
           '            end',
           '            next_out();',
           '        end']
+    # STEWARD-TOK-S81 (10-21): the trace reads each output through its own zero-extended MAXW wire, not get(i).  get() is
+    # an N-way case over every output; Verilator inlined it at all 3 x N trace call sites with a runtime idx local, so a
+    # ~1,800-output cut emitted one 35M-line act function (3.25 GB __4434.cpp, cc1plus >3.4 h / 79 GB at -O1).  The
+    # trace text is byte-identical (same MAXW-wide %h of the same zero-extended value).
+    v.append('    end')
     for i, n in outs:
-        v.append(f'        if (ftr != 0 && get({i}) !== prev[{i}]) begin $fdisplay(ftr, "%0d {i} %h", cyc, get({i})); prev[{i}] = get({i}); end')
+        v.append(f'    wire [MAXW-1:0] trw{i} = {n};')
+    v.append('    always @(negedge ck) if (rst_n && cyc >= 0) begin')
+    for i, n in outs:
+        v.append(f'        if (ftr != 0 && trw{i} !== prev[{i}]) begin $fdisplay(ftr, "%0d {i} %h", cyc, trw{i}); prev[{i}] = trw{i}; end')
     if flt:
         v.append(f'        if ({" | ".join(flt)}) begin n_flt = n_flt + 1; if (first_flt < 0) first_flt = cyc; end')
     v.append('    end')

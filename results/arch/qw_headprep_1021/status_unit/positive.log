@@ -1,0 +1,4 @@
+NATIVE DEBUG completed=1 fault=0 held=00148201c2001c0 expect=00148201c2001c0 active=0 ok=1 req=1 done=1 q=ffffffff r=ffffffff c=ffffffff
+NATIVE DEBUG completed=1 fault=0 held=00170201c2801c0 expect=00170201c2801c0 active=0 ok=1 req=1 done=1 q=ffffffff r=ffffffff c=ffffffff
+OBS_CALLBACK_UNIT_PASS checks=215 real_native_completions=2 context_loads=3 result_events=1 original_output_differential=PASS
+tb.sv:118: $finish called at 1075000 (1ps)

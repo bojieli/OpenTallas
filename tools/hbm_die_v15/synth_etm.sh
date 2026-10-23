@@ -25,7 +25,18 @@ for c, C in (('tt', 'TT'), ('ff', 'FF')):
     for b in macro_libs:
         L.append(f'read_liberty /src/{b}_{c}.lib')
     L += [f'read_verilog /out/{name}.sta.v', f'link_design {top}',
-          'set ck [get_ports -quiet {clk clk_* *_clk *_clk_* pg_clk*}]', 'set n 0',
+          'set ck [get_ports -quiet {clk clk_* *_clk *_clk_* pg_clk*}]',
+          # ETM-CK (10-22): relay / landing kits (hbfd_rly/lh/land) clock on ck / ckf; without them OT_ETM_CLOCKS 0 and
+          # write_timing_model emits NO arcs (die STA silently untimed every relay hop).  Input ports only (lh ck_o is
+          # the forwarded-clock OUTPUT).
+          'set fck {}',
+          'foreach p [get_ports -quiet {ck ckf ck_* ckf_*}] { if {[get_property $p direction] == "input"} { lappend ck $p; lappend fck $p } }',
+          'set fckn {}', 'foreach p $fck { lappend fckn [get_full_name $p] }', 'puts "OT_ETM_CK_PORTS [llength $fck] [lsort $fckn]"',
+          # forwarded-clock outputs (lh ck_o = ~ck) must stay COMBINATIONAL clock pass-through arcs so the die clock
+          # propagates hop to hop: write the clock-less model first; etm_fck_merge.py keeps its ck/ckf-related
+          # combinational output arcs in place of the clocked model's edge arcs for those pins.
+          f'if {{[llength $fck]}} {{ write_timing_model -library_name {top}_synth_{c} /out/{top}_synth_{c}.noclk.lib; puts OT_ETM_FCK_NOCLK_{c} }}',
+          'set n 0',
           'foreach p $ck { create_clock -name ck_$n -period 833.333 $p; incr n }', 'puts "OT_ETM_CLOCKS $n"',
           'set_clock_uncertainty -setup 60 [all_clocks]', 'set_clock_uncertainty -hold 25 [all_clocks]',
           f'report_checks -path_delay {"max" if c == "tt" else "min"} -group_path_count 3 > /out/etm_worst_{c}.rpt',
@@ -36,10 +47,12 @@ PY
 # OpenSTA's verilog reader rejects 'wire signed' (yosys keeps it on hierarchical netlists): drop the keyword only.
 sed -E 's/^(\s*)(wire|input|output|inout) signed /\1\2 /' $OUT/$NAME.netlist.v > $OUT/$NAME.sta.v
 L=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
-docker run --rm --name hdie15-etm-$NAME-$$ --cpus=2 --memory=${MEMG:-24}g -v $SRC:/src:ro -v $OUT:/out -w /out openroad/orfs:asap7lock bash -lc "
+TOOLD=$(dirname $(readlink -f $0))
+docker run --rm --name hdie15-etm-$NAME-$$ --cpus=2 --memory=${MEMG:-24}g -v $SRC:/src:ro -v $OUT:/out -v $TOOLD:/tool:ro -w /out openroad/orfs:asap7lock bash -lc "
   source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; mkdir -p /tmp/lib
   for f in \$(ls $L | grep -E 'RVT_(TT|FF)'); do b=\${f%.gz}; case \$f in *.gz) zcat $L/\$f > /tmp/lib/\$b;; *) cp $L/\$f /tmp/lib/\$b;; esac; done
-  openroad -no_init -exit /out/etm_tt.tcl > /out/etm.log 2>&1 && openroad -no_init -exit /out/etm_ff.tcl >> /out/etm.log 2>&1"
+  openroad -no_init -exit /out/etm_tt.tcl > /out/etm.log 2>&1 && openroad -no_init -exit /out/etm_ff.tcl >> /out/etm.log 2>&1 &&
+  for c in tt ff; do if [ -s /out/${TOP}_synth_\$c.noclk.lib ]; then python3 /tool/etm_fck_merge.py /out/${TOP}_synth_\$c.lib /out/${TOP}_synth_\$c.noclk.lib >> /out/etm.log 2>&1 || exit 7; fi; done"
 rc=$?
-echo "$NAME etm rc=$rc $(grep -E 'OT_ETM_(CLOCKS|DONE)' $OUT/etm.log | tr '\n' ' ')"
+echo "$NAME etm rc=$rc $(grep -E 'OT_ETM_(CLOCKS|DONE|FCK|CK_PORTS)|ETM_FCK_MERGE' $OUT/etm.log | tr '\n' ' ')"
 exit $rc

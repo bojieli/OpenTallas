@@ -1,0 +1,6192 @@
+[
+  {
+    "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+    "rtl": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv",
+    "rtl_sha256": "5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04",
+    "status": "QUALIFIED_SOURCE_REGISTER_RELATIONS_NOT_DIE_ROUTE_AUTHORITY",
+    "clock_port": "ck_hr",
+    "ARM72": {
+      "source_checkpoint": "actual registered u_go.xpf scheduler source Qs",
+      "source_to_HR_output_edges": 1,
+      "proof": "72 distinct HR capture Qs on ck_hr; each D is a combinational cone (QW-SEGCAL xpf_hr = xpf_g[0] ? xpf_g : xpf) of ck_hr scheduler register Qs: still exactly 1 register edge source -> HR output",
+      "bit_rows": [
+        {
+          "bit": 1,
+          "hr_bit": 1,
+          "output_register": {
+            "instance": "u_10352",
+            "C": "n_3160",
+            "D": "n_22312",
+            "Q": "n_1199",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4820",
+              "C": "n_3160",
+              "D": "n_12803",
+              "Q": "n_12804",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 2,
+          "hr_bit": 2,
+          "output_register": {
+            "instance": "u_10353",
+            "C": "n_3160",
+            "D": "n_22313",
+            "Q": "n_1200",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4821",
+              "C": "n_3160",
+              "D": "n_12805",
+              "Q": "n_12806",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5550",
+              "C": "n_3160",
+              "D": "n_14267",
+              "Q": "n_14268",
+              "R": "n_96180",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 3,
+          "hr_bit": 3,
+          "output_register": {
+            "instance": "u_10354",
+            "C": "n_3160",
+            "D": "n_22314",
+            "Q": "n_1201",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4822",
+              "C": "n_3160",
+              "D": "n_12807",
+              "Q": "n_12808",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5551",
+              "C": "n_3160",
+              "D": "n_14269",
+              "Q": "n_14270",
+              "R": "n_96180",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 4,
+          "hr_bit": 4,
+          "output_register": {
+            "instance": "u_10355",
+            "C": "n_3160",
+            "D": "n_22315",
+            "Q": "n_1202",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4823",
+              "C": "n_3160",
+              "D": "n_12809",
+              "Q": "n_12810",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5552",
+              "C": "n_3160",
+              "D": "n_14271",
+              "Q": "n_14272",
+              "R": "n_96180",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 5,
+          "hr_bit": 5,
+          "output_register": {
+            "instance": "u_10356",
+            "C": "n_3160",
+            "D": "n_22316",
+            "Q": "n_1203",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4824",
+              "C": "n_3160",
+              "D": "n_12811",
+              "Q": "n_12812",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5553",
+              "C": "n_3160",
+              "D": "n_14273",
+              "Q": "n_14274",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 6,
+          "hr_bit": 6,
+          "output_register": {
+            "instance": "u_10357",
+            "C": "n_3160",
+            "D": "n_22317",
+            "Q": "n_1204",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4825",
+              "C": "n_3160",
+              "D": "n_12813",
+              "Q": "n_12814",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5554",
+              "C": "n_3160",
+              "D": "n_14275",
+              "Q": "n_14276",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 7,
+          "hr_bit": 7,
+          "output_register": {
+            "instance": "u_10358",
+            "C": "n_3160",
+            "D": "n_22318",
+            "Q": "n_1205",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4826",
+              "C": "n_3160",
+              "D": "n_12815",
+              "Q": "n_12816",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5555",
+              "C": "n_3160",
+              "D": "n_14277",
+              "Q": "n_14278",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 8,
+          "hr_bit": 8,
+          "output_register": {
+            "instance": "u_10359",
+            "C": "n_3160",
+            "D": "n_22319",
+            "Q": "n_1206",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4827",
+              "C": "n_3160",
+              "D": "n_12817",
+              "Q": "n_12818",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5556",
+              "C": "n_3160",
+              "D": "n_14279",
+              "Q": "n_14280",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 9,
+          "hr_bit": 9,
+          "output_register": {
+            "instance": "u_10360",
+            "C": "n_3160",
+            "D": "n_22320",
+            "Q": "n_1207",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4828",
+              "C": "n_3160",
+              "D": "n_12819",
+              "Q": "n_12820",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5557",
+              "C": "n_3160",
+              "D": "n_14281",
+              "Q": "n_14282",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 10,
+          "hr_bit": 10,
+          "output_register": {
+            "instance": "u_10361",
+            "C": "n_3160",
+            "D": "n_22321",
+            "Q": "n_1208",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4829",
+              "C": "n_3160",
+              "D": "n_12821",
+              "Q": "n_12822",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5558",
+              "C": "n_3160",
+              "D": "n_14283",
+              "Q": "n_14284",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 11,
+          "hr_bit": 11,
+          "output_register": {
+            "instance": "u_10362",
+            "C": "n_3160",
+            "D": "n_22322",
+            "Q": "n_1209",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4830",
+              "C": "n_3160",
+              "D": "n_12823",
+              "Q": "n_12824",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5559",
+              "C": "n_3160",
+              "D": "n_14285",
+              "Q": "n_14286",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 12,
+          "hr_bit": 12,
+          "output_register": {
+            "instance": "u_10363",
+            "C": "n_3160",
+            "D": "n_22323",
+            "Q": "n_1210",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4831",
+              "C": "n_3160",
+              "D": "n_12825",
+              "Q": "n_12826",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5560",
+              "C": "n_3160",
+              "D": "n_14287",
+              "Q": "n_14288",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 13,
+          "hr_bit": 13,
+          "output_register": {
+            "instance": "u_10364",
+            "C": "n_3160",
+            "D": "n_22324",
+            "Q": "n_1211",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4832",
+              "C": "n_3160",
+              "D": "n_12827",
+              "Q": "n_12828",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5561",
+              "C": "n_3160",
+              "D": "n_14289",
+              "Q": "n_14290",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 14,
+          "hr_bit": 14,
+          "output_register": {
+            "instance": "u_10365",
+            "C": "n_3160",
+            "D": "n_22325",
+            "Q": "n_1212",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4833",
+              "C": "n_3160",
+              "D": "n_12829",
+              "Q": "n_12830",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5562",
+              "C": "n_3160",
+              "D": "n_14291",
+              "Q": "n_14292",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 15,
+          "hr_bit": 15,
+          "output_register": {
+            "instance": "u_10366",
+            "C": "n_3160",
+            "D": "n_22326",
+            "Q": "n_1213",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4834",
+              "C": "n_3160",
+              "D": "n_12831",
+              "Q": "n_12832",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5563",
+              "C": "n_3160",
+              "D": "n_14293",
+              "Q": "n_14294",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 16,
+          "hr_bit": 16,
+          "output_register": {
+            "instance": "u_10367",
+            "C": "n_3160",
+            "D": "n_22327",
+            "Q": "n_1214",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4835",
+              "C": "n_3160",
+              "D": "n_12833",
+              "Q": "n_12834",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5564",
+              "C": "n_3160",
+              "D": "n_14295",
+              "Q": "n_14296",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 17,
+          "hr_bit": 17,
+          "output_register": {
+            "instance": "u_10368",
+            "C": "n_3160",
+            "D": "n_22328",
+            "Q": "n_1215",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4836",
+              "C": "n_3160",
+              "D": "n_12835",
+              "Q": "n_12836",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5565",
+              "C": "n_3160",
+              "D": "n_14297",
+              "Q": "n_14298",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 18,
+          "hr_bit": 18,
+          "output_register": {
+            "instance": "u_10369",
+            "C": "n_3160",
+            "D": "n_22329",
+            "Q": "n_1216",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4837",
+              "C": "n_3160",
+              "D": "n_12837",
+              "Q": "n_12838",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5566",
+              "C": "n_3160",
+              "D": "n_14299",
+              "Q": "n_14300",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 19,
+          "hr_bit": 19,
+          "output_register": {
+            "instance": "u_10370",
+            "C": "n_3160",
+            "D": "n_22330",
+            "Q": "n_1217",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4838",
+              "C": "n_3160",
+              "D": "n_12839",
+              "Q": "n_12840",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5567",
+              "C": "n_3160",
+              "D": "n_14301",
+              "Q": "n_14302",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 20,
+          "hr_bit": 20,
+          "output_register": {
+            "instance": "u_10371",
+            "C": "n_3160",
+            "D": "n_22331",
+            "Q": "n_1218",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4839",
+              "C": "n_3160",
+              "D": "n_12841",
+              "Q": "n_12842",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5568",
+              "C": "n_3160",
+              "D": "n_14303",
+              "Q": "n_14304",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 21,
+          "hr_bit": 21,
+          "output_register": {
+            "instance": "u_10372",
+            "C": "n_3160",
+            "D": "n_22332",
+            "Q": "n_1219",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4840",
+              "C": "n_3160",
+              "D": "n_12843",
+              "Q": "n_12844",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5569",
+              "C": "n_3160",
+              "D": "n_14305",
+              "Q": "n_14306",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 22,
+          "hr_bit": 22,
+          "output_register": {
+            "instance": "u_10373",
+            "C": "n_3160",
+            "D": "n_22333",
+            "Q": "n_1220",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4841",
+              "C": "n_3160",
+              "D": "n_12845",
+              "Q": "n_12846",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5570",
+              "C": "n_3160",
+              "D": "n_14307",
+              "Q": "n_14308",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 23,
+          "hr_bit": 23,
+          "output_register": {
+            "instance": "u_10374",
+            "C": "n_3160",
+            "D": "n_22334",
+            "Q": "n_1221",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4842",
+              "C": "n_3160",
+              "D": "n_12847",
+              "Q": "n_12848",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5571",
+              "C": "n_3160",
+              "D": "n_14309",
+              "Q": "n_14310",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 24,
+          "hr_bit": 24,
+          "output_register": {
+            "instance": "u_10375",
+            "C": "n_3160",
+            "D": "n_22335",
+            "Q": "n_1222",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4843",
+              "C": "n_3160",
+              "D": "n_12849",
+              "Q": "n_12850",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5572",
+              "C": "n_3160",
+              "D": "n_14311",
+              "Q": "n_14312",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 25,
+          "hr_bit": 25,
+          "output_register": {
+            "instance": "u_10376",
+            "C": "n_3160",
+            "D": "n_22336",
+            "Q": "n_1223",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4844",
+              "C": "n_3160",
+              "D": "n_12851",
+              "Q": "n_12852",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5573",
+              "C": "n_3160",
+              "D": "n_14313",
+              "Q": "n_14314",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 26,
+          "hr_bit": 26,
+          "output_register": {
+            "instance": "u_10377",
+            "C": "n_3160",
+            "D": "n_22337",
+            "Q": "n_1224",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4845",
+              "C": "n_3160",
+              "D": "n_12853",
+              "Q": "n_12854",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5574",
+              "C": "n_3160",
+              "D": "n_14315",
+              "Q": "n_14316",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 27,
+          "hr_bit": 27,
+          "output_register": {
+            "instance": "u_10378",
+            "C": "n_3160",
+            "D": "n_22338",
+            "Q": "n_1225",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4846",
+              "C": "n_3160",
+              "D": "n_12855",
+              "Q": "n_12856",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5575",
+              "C": "n_3160",
+              "D": "n_14317",
+              "Q": "n_14318",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 28,
+          "hr_bit": 28,
+          "output_register": {
+            "instance": "u_10379",
+            "C": "n_3160",
+            "D": "n_22339",
+            "Q": "n_1226",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4847",
+              "C": "n_3160",
+              "D": "n_12857",
+              "Q": "n_12858",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5576",
+              "C": "n_3160",
+              "D": "n_14319",
+              "Q": "n_14320",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 29,
+          "hr_bit": 29,
+          "output_register": {
+            "instance": "u_10380",
+            "C": "n_3160",
+            "D": "n_22340",
+            "Q": "n_1227",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4848",
+              "C": "n_3160",
+              "D": "n_12859",
+              "Q": "n_12860",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5577",
+              "C": "n_3160",
+              "D": "n_14321",
+              "Q": "n_14322",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 30,
+          "hr_bit": 30,
+          "output_register": {
+            "instance": "u_10381",
+            "C": "n_3160",
+            "D": "n_22341",
+            "Q": "n_1228",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4849",
+              "C": "n_3160",
+              "D": "n_12861",
+              "Q": "n_12862",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5578",
+              "C": "n_3160",
+              "D": "n_14323",
+              "Q": "n_14324",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 31,
+          "hr_bit": 31,
+          "output_register": {
+            "instance": "u_10382",
+            "C": "n_3160",
+            "D": "n_22342",
+            "Q": "n_1229",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4850",
+              "C": "n_3160",
+              "D": "n_12863",
+              "Q": "n_12864",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5579",
+              "C": "n_3160",
+              "D": "n_14325",
+              "Q": "n_14326",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 32,
+          "hr_bit": 32,
+          "output_register": {
+            "instance": "u_10383",
+            "C": "n_3160",
+            "D": "n_22343",
+            "Q": "n_1230",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4851",
+              "C": "n_3160",
+              "D": "n_12865",
+              "Q": "n_12866",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5580",
+              "C": "n_3160",
+              "D": "n_14327",
+              "Q": "n_14328",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 33,
+          "hr_bit": 33,
+          "output_register": {
+            "instance": "u_10384",
+            "C": "n_3160",
+            "D": "n_22344",
+            "Q": "n_1231",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4852",
+              "C": "n_3160",
+              "D": "n_12867",
+              "Q": "n_12868",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5581",
+              "C": "n_3160",
+              "D": "n_14329",
+              "Q": "n_14330",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 34,
+          "hr_bit": 34,
+          "output_register": {
+            "instance": "u_10385",
+            "C": "n_3160",
+            "D": "n_22345",
+            "Q": "n_1232",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4853",
+              "C": "n_3160",
+              "D": "n_12869",
+              "Q": "n_12870",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5582",
+              "C": "n_3160",
+              "D": "n_14331",
+              "Q": "n_14332",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 35,
+          "hr_bit": 35,
+          "output_register": {
+            "instance": "u_10386",
+            "C": "n_3160",
+            "D": "n_22346",
+            "Q": "n_1233",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4854",
+              "C": "n_3160",
+              "D": "n_12871",
+              "Q": "n_12872",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5583",
+              "C": "n_3160",
+              "D": "n_14333",
+              "Q": "n_14334",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 36,
+          "hr_bit": 36,
+          "output_register": {
+            "instance": "u_10387",
+            "C": "n_3160",
+            "D": "n_22347",
+            "Q": "n_1234",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4855",
+              "C": "n_3160",
+              "D": "n_12873",
+              "Q": "n_12874",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5584",
+              "C": "n_3160",
+              "D": "n_14335",
+              "Q": "n_14336",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 37,
+          "hr_bit": 37,
+          "output_register": {
+            "instance": "u_10388",
+            "C": "n_3160",
+            "D": "n_22348",
+            "Q": "n_1235",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4856",
+              "C": "n_3160",
+              "D": "n_12875",
+              "Q": "n_12876",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5585",
+              "C": "n_3160",
+              "D": "n_14337",
+              "Q": "n_14338",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 38,
+          "hr_bit": 38,
+          "output_register": {
+            "instance": "u_10389",
+            "C": "n_3160",
+            "D": "n_22349",
+            "Q": "n_1236",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4857",
+              "C": "n_3160",
+              "D": "n_12877",
+              "Q": "n_12878",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5586",
+              "C": "n_3160",
+              "D": "n_14339",
+              "Q": "n_14340",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 39,
+          "hr_bit": 39,
+          "output_register": {
+            "instance": "u_10390",
+            "C": "n_3160",
+            "D": "n_22350",
+            "Q": "n_1237",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4858",
+              "C": "n_3160",
+              "D": "n_12879",
+              "Q": "n_12880",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5587",
+              "C": "n_3160",
+              "D": "n_14341",
+              "Q": "n_14342",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 40,
+          "hr_bit": 40,
+          "output_register": {
+            "instance": "u_10391",
+            "C": "n_3160",
+            "D": "n_22351",
+            "Q": "n_1238",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4859",
+              "C": "n_3160",
+              "D": "n_12881",
+              "Q": "n_12882",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5588",
+              "C": "n_3160",
+              "D": "n_14343",
+              "Q": "n_14344",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 41,
+          "hr_bit": 41,
+          "output_register": {
+            "instance": "u_10392",
+            "C": "n_3160",
+            "D": "n_22352",
+            "Q": "n_1239",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4860",
+              "C": "n_3160",
+              "D": "n_12883",
+              "Q": "n_12884",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5589",
+              "C": "n_3160",
+              "D": "n_14345",
+              "Q": "n_14346",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 42,
+          "hr_bit": 42,
+          "output_register": {
+            "instance": "u_10393",
+            "C": "n_3160",
+            "D": "n_22353",
+            "Q": "n_1240",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4861",
+              "C": "n_3160",
+              "D": "n_12885",
+              "Q": "n_12886",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5590",
+              "C": "n_3160",
+              "D": "n_14347",
+              "Q": "n_14348",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 43,
+          "hr_bit": 43,
+          "output_register": {
+            "instance": "u_10394",
+            "C": "n_3160",
+            "D": "n_22354",
+            "Q": "n_1241",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4862",
+              "C": "n_3160",
+              "D": "n_12887",
+              "Q": "n_12888",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5591",
+              "C": "n_3160",
+              "D": "n_14349",
+              "Q": "n_14350",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 44,
+          "hr_bit": 44,
+          "output_register": {
+            "instance": "u_10395",
+            "C": "n_3160",
+            "D": "n_22355",
+            "Q": "n_1242",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4863",
+              "C": "n_3160",
+              "D": "n_12889",
+              "Q": "n_12890",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5592",
+              "C": "n_3160",
+              "D": "n_14351",
+              "Q": "n_14352",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 45,
+          "hr_bit": 45,
+          "output_register": {
+            "instance": "u_10396",
+            "C": "n_3160",
+            "D": "n_22356",
+            "Q": "n_1243",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4864",
+              "C": "n_3160",
+              "D": "n_12891",
+              "Q": "n_12892",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5593",
+              "C": "n_3160",
+              "D": "n_14353",
+              "Q": "n_14354",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 46,
+          "hr_bit": 46,
+          "output_register": {
+            "instance": "u_10397",
+            "C": "n_3160",
+            "D": "n_22357",
+            "Q": "n_1244",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4865",
+              "C": "n_3160",
+              "D": "n_12893",
+              "Q": "n_12894",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5594",
+              "C": "n_3160",
+              "D": "n_14355",
+              "Q": "n_14356",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 47,
+          "hr_bit": 47,
+          "output_register": {
+            "instance": "u_10398",
+            "C": "n_3160",
+            "D": "n_22358",
+            "Q": "n_1245",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4866",
+              "C": "n_3160",
+              "D": "n_12895",
+              "Q": "n_12896",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5595",
+              "C": "n_3160",
+              "D": "n_14357",
+              "Q": "n_14358",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 48,
+          "hr_bit": 48,
+          "output_register": {
+            "instance": "u_10399",
+            "C": "n_3160",
+            "D": "n_22359",
+            "Q": "n_1246",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4867",
+              "C": "n_3160",
+              "D": "n_12897",
+              "Q": "n_12898",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5596",
+              "C": "n_3160",
+              "D": "n_14359",
+              "Q": "n_14360",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 49,
+          "hr_bit": 49,
+          "output_register": {
+            "instance": "u_10400",
+            "C": "n_3160",
+            "D": "n_22360",
+            "Q": "n_1247",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4868",
+              "C": "n_3160",
+              "D": "n_12899",
+              "Q": "n_12900",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5597",
+              "C": "n_3160",
+              "D": "n_14361",
+              "Q": "n_14362",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 50,
+          "hr_bit": 50,
+          "output_register": {
+            "instance": "u_10401",
+            "C": "n_3160",
+            "D": "n_22361",
+            "Q": "n_1248",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4869",
+              "C": "n_3160",
+              "D": "n_12901",
+              "Q": "n_12902",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5598",
+              "C": "n_3160",
+              "D": "n_14363",
+              "Q": "n_14364",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 51,
+          "hr_bit": 51,
+          "output_register": {
+            "instance": "u_10402",
+            "C": "n_3160",
+            "D": "n_22362",
+            "Q": "n_1249",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4870",
+              "C": "n_3160",
+              "D": "n_12903",
+              "Q": "n_12904",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5599",
+              "C": "n_3160",
+              "D": "n_14365",
+              "Q": "n_14366",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 52,
+          "hr_bit": 52,
+          "output_register": {
+            "instance": "u_10403",
+            "C": "n_3160",
+            "D": "n_22363",
+            "Q": "n_1250",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4871",
+              "C": "n_3160",
+              "D": "n_12905",
+              "Q": "n_12906",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5600",
+              "C": "n_3160",
+              "D": "n_14367",
+              "Q": "n_14368",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 53,
+          "hr_bit": 53,
+          "output_register": {
+            "instance": "u_10404",
+            "C": "n_3160",
+            "D": "n_22364",
+            "Q": "n_1251",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4872",
+              "C": "n_3160",
+              "D": "n_12907",
+              "Q": "n_12908",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5601",
+              "C": "n_3160",
+              "D": "n_14369",
+              "Q": "n_14370",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 54,
+          "hr_bit": 54,
+          "output_register": {
+            "instance": "u_10405",
+            "C": "n_3160",
+            "D": "n_22365",
+            "Q": "n_1252",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4873",
+              "C": "n_3160",
+              "D": "n_12909",
+              "Q": "n_12910",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5602",
+              "C": "n_3160",
+              "D": "n_14371",
+              "Q": "n_14372",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 55,
+          "hr_bit": 55,
+          "output_register": {
+            "instance": "u_10406",
+            "C": "n_3160",
+            "D": "n_22366",
+            "Q": "n_1253",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4874",
+              "C": "n_3160",
+              "D": "n_12911",
+              "Q": "n_12912",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5603",
+              "C": "n_3160",
+              "D": "n_14373",
+              "Q": "n_14374",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 56,
+          "hr_bit": 56,
+          "output_register": {
+            "instance": "u_10407",
+            "C": "n_3160",
+            "D": "n_22367",
+            "Q": "n_1254",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4875",
+              "C": "n_3160",
+              "D": "n_12913",
+              "Q": "n_12914",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5604",
+              "C": "n_3160",
+              "D": "n_14375",
+              "Q": "n_14376",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 57,
+          "hr_bit": 57,
+          "output_register": {
+            "instance": "u_10408",
+            "C": "n_3160",
+            "D": "n_22368",
+            "Q": "n_1255",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4876",
+              "C": "n_3160",
+              "D": "n_12915",
+              "Q": "n_12916",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5605",
+              "C": "n_3160",
+              "D": "n_14377",
+              "Q": "n_14378",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 58,
+          "hr_bit": 58,
+          "output_register": {
+            "instance": "u_10409",
+            "C": "n_3160",
+            "D": "n_22369",
+            "Q": "n_1256",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4877",
+              "C": "n_3160",
+              "D": "n_12917",
+              "Q": "n_12918",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5606",
+              "C": "n_3160",
+              "D": "n_14379",
+              "Q": "n_14380",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 59,
+          "hr_bit": 59,
+          "output_register": {
+            "instance": "u_10410",
+            "C": "n_3160",
+            "D": "n_22370",
+            "Q": "n_1257",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4878",
+              "C": "n_3160",
+              "D": "n_12919",
+              "Q": "n_12920",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5607",
+              "C": "n_3160",
+              "D": "n_14381",
+              "Q": "n_14382",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 60,
+          "hr_bit": 60,
+          "output_register": {
+            "instance": "u_10411",
+            "C": "n_3160",
+            "D": "n_22371",
+            "Q": "n_1258",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4879",
+              "C": "n_3160",
+              "D": "n_12921",
+              "Q": "n_12922",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5608",
+              "C": "n_3160",
+              "D": "n_14383",
+              "Q": "n_14384",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 61,
+          "hr_bit": 61,
+          "output_register": {
+            "instance": "u_10412",
+            "C": "n_3160",
+            "D": "n_22372",
+            "Q": "n_1259",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4880",
+              "C": "n_3160",
+              "D": "n_12923",
+              "Q": "n_12924",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5609",
+              "C": "n_3160",
+              "D": "n_14385",
+              "Q": "n_14386",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 62,
+          "hr_bit": 62,
+          "output_register": {
+            "instance": "u_10413",
+            "C": "n_3160",
+            "D": "n_22373",
+            "Q": "n_1260",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4881",
+              "C": "n_3160",
+              "D": "n_12925",
+              "Q": "n_12926",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5610",
+              "C": "n_3160",
+              "D": "n_14387",
+              "Q": "n_14388",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 63,
+          "hr_bit": 63,
+          "output_register": {
+            "instance": "u_10414",
+            "C": "n_3160",
+            "D": "n_22374",
+            "Q": "n_1261",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4882",
+              "C": "n_3160",
+              "D": "n_12927",
+              "Q": "n_12928",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5611",
+              "C": "n_3160",
+              "D": "n_14389",
+              "Q": "n_14390",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 64,
+          "hr_bit": 64,
+          "output_register": {
+            "instance": "u_10415",
+            "C": "n_3160",
+            "D": "n_22375",
+            "Q": "n_1262",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4883",
+              "C": "n_3160",
+              "D": "n_12929",
+              "Q": "n_12930",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5612",
+              "C": "n_3160",
+              "D": "n_14391",
+              "Q": "n_14392",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 65,
+          "hr_bit": 65,
+          "output_register": {
+            "instance": "u_10416",
+            "C": "n_3160",
+            "D": "n_22376",
+            "Q": "n_1263",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4884",
+              "C": "n_3160",
+              "D": "n_12931",
+              "Q": "n_12932",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5613",
+              "C": "n_3160",
+              "D": "n_14393",
+              "Q": "n_14394",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 66,
+          "hr_bit": 66,
+          "output_register": {
+            "instance": "u_10417",
+            "C": "n_3160",
+            "D": "n_22377",
+            "Q": "n_1264",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4885",
+              "C": "n_3160",
+              "D": "n_12933",
+              "Q": "n_12934",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5614",
+              "C": "n_3160",
+              "D": "n_14395",
+              "Q": "n_14396",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 67,
+          "hr_bit": 67,
+          "output_register": {
+            "instance": "u_10418",
+            "C": "n_3160",
+            "D": "n_22378",
+            "Q": "n_1265",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4886",
+              "C": "n_3160",
+              "D": "n_12935",
+              "Q": "n_12936",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5615",
+              "C": "n_3160",
+              "D": "n_14397",
+              "Q": "n_14398",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 68,
+          "hr_bit": 68,
+          "output_register": {
+            "instance": "u_10419",
+            "C": "n_3160",
+            "D": "n_22379",
+            "Q": "n_1266",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4887",
+              "C": "n_3160",
+              "D": "n_12937",
+              "Q": "n_12938",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5616",
+              "C": "n_3160",
+              "D": "n_14399",
+              "Q": "n_14400",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 69,
+          "hr_bit": 69,
+          "output_register": {
+            "instance": "u_10420",
+            "C": "n_3160",
+            "D": "n_22380",
+            "Q": "n_1267",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4888",
+              "C": "n_3160",
+              "D": "n_12939",
+              "Q": "n_12940",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5617",
+              "C": "n_3160",
+              "D": "n_14401",
+              "Q": "n_14402",
+              "R": "n_96183",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 70,
+          "hr_bit": 70,
+          "output_register": {
+            "instance": "u_10421",
+            "C": "n_3160",
+            "D": "n_22381",
+            "Q": "n_1268",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4889",
+              "C": "n_3160",
+              "D": "n_12941",
+              "Q": "n_12942",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5618",
+              "C": "n_3160",
+              "D": "n_14403",
+              "Q": "n_14404",
+              "R": "n_96183",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 71,
+          "hr_bit": 71,
+          "output_register": {
+            "instance": "u_10422",
+            "C": "n_3160",
+            "D": "n_22382",
+            "Q": "n_1269",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4890",
+              "C": "n_3160",
+              "D": "n_12943",
+              "Q": "n_12944",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5619",
+              "C": "n_3160",
+              "D": "n_14405",
+              "Q": "n_14406",
+              "R": "n_96183",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 72,
+          "hr_bit": 72,
+          "output_register": {
+            "instance": "u_10423",
+            "C": "n_3160",
+            "D": "n_22383",
+            "Q": "n_1270",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4891",
+              "C": "n_3160",
+              "D": "n_12945",
+              "Q": "n_12946",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5620",
+              "C": "n_3160",
+              "D": "n_14407",
+              "Q": "n_14408",
+              "R": "n_96183",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        }
+      ]
+    },
+    "HR_valid": {
+      "startup_edges": 2,
+      "producer": {
+        "instance": "u_75482",
+        "C": "n_3160",
+        "D": "1'b1",
+        "Q": "n_96255",
+        "R": "n_96293"
+      },
+      "output": {
+        "instance": "u_75416",
+        "C": "n_3160",
+        "D": "n_96255",
+        "Q": "n_96189",
+        "R": "n_96257"
+      }
+    },
+    "head380": {
+      "source_checkpoint": "actualu_hr.rom_cmd hardchildoutput",
+      "post_source_edges": 0,
+      "bit_bijection": {
+        "73": 356,
+        "74": 357,
+        "75": 358,
+        "76": 359,
+        "77": 360,
+        "78": 361,
+        "79": 362,
+        "80": 363,
+        "81": 364,
+        "82": 365,
+        "83": 366,
+        "84": 367,
+        "85": 368,
+        "86": 369,
+        "87": 370,
+        "88": 371,
+        "89": 372,
+        "90": 373,
+        "91": 374,
+        "92": 375,
+        "93": 376,
+        "94": 377,
+        "95": 378,
+        "96": 379,
+        "97": 355,
+        "98": 354,
+        "99": 353,
+        "100": 352,
+        "101": 328,
+        "102": 329,
+        "103": 330,
+        "104": 331,
+        "105": 332,
+        "106": 333,
+        "107": 334,
+        "108": 335,
+        "109": 336,
+        "110": 337,
+        "111": 338,
+        "112": 339,
+        "113": 340,
+        "114": 341,
+        "115": 342,
+        "116": 343,
+        "117": 344,
+        "118": 345,
+        "119": 346,
+        "120": 347,
+        "121": 348,
+        "122": 349,
+        "123": 350,
+        "124": 351,
+        "125": 304,
+        "126": 305,
+        "127": 306,
+        "128": 307,
+        "129": 308,
+        "130": 309,
+        "131": 310,
+        "132": 311,
+        "133": 312,
+        "134": 313,
+        "135": 314,
+        "136": 315,
+        "137": 316,
+        "138": 317,
+        "139": 318,
+        "140": 319,
+        "141": 320,
+        "142": 321,
+        "143": 322,
+        "144": 323,
+        "145": 324,
+        "146": 325,
+        "147": 326,
+        "148": 327,
+        "149": 280,
+        "150": 281,
+        "151": 282,
+        "152": 283,
+        "153": 284,
+        "154": 285,
+        "155": 286,
+        "156": 287,
+        "157": 288,
+        "158": 289,
+        "159": 290,
+        "160": 291,
+        "161": 292,
+        "162": 293,
+        "163": 294,
+        "164": 295,
+        "165": 296,
+        "166": 297,
+        "167": 298,
+        "168": 299,
+        "169": 300,
+        "170": 301,
+        "171": 302,
+        "172": 303,
+        "173": 279,
+        "174": 255,
+        "175": 256,
+        "176": 257,
+        "177": 258,
+        "178": 259,
+        "179": 260,
+        "180": 261,
+        "181": 262,
+        "182": 263,
+        "183": 264,
+        "184": 265,
+        "185": 266,
+        "186": 267,
+        "187": 268,
+        "188": 269,
+        "189": 270,
+        "190": 271,
+        "191": 272,
+        "192": 273,
+        "193": 274,
+        "194": 275,
+        "195": 276,
+        "196": 277,
+        "197": 278,
+        "198": 251,
+        "199": 252,
+        "200": 253,
+        "201": 254,
+        "202": 248,
+        "203": 249,
+        "204": 250,
+        "205": 224,
+        "206": 225,
+        "207": 226,
+        "208": 227,
+        "209": 228,
+        "210": 229,
+        "211": 230,
+        "212": 231,
+        "213": 232,
+        "214": 233,
+        "215": 234,
+        "216": 235,
+        "217": 236,
+        "218": 237,
+        "219": 238,
+        "220": 239,
+        "221": 240,
+        "222": 241,
+        "223": 242,
+        "224": 243,
+        "225": 244,
+        "226": 245,
+        "227": 246,
+        "228": 247,
+        "229": 200,
+        "230": 201,
+        "231": 202,
+        "232": 203,
+        "233": 204,
+        "234": 205,
+        "235": 206,
+        "236": 207,
+        "237": 208,
+        "238": 209,
+        "239": 210,
+        "240": 211,
+        "241": 212,
+        "242": 213,
+        "243": 214,
+        "244": 215,
+        "245": 216,
+        "246": 217,
+        "247": 218,
+        "248": 219,
+        "249": 220,
+        "250": 221,
+        "251": 222,
+        "252": 223,
+        "253": 176,
+        "254": 177,
+        "255": 178,
+        "256": 179,
+        "257": 180,
+        "258": 181,
+        "259": 182,
+        "260": 183,
+        "261": 184,
+        "262": 185,
+        "263": 186,
+        "264": 187,
+        "265": 188,
+        "266": 189,
+        "267": 190,
+        "268": 191,
+        "269": 192,
+        "270": 193,
+        "271": 194,
+        "272": 195,
+        "273": 196,
+        "274": 197,
+        "275": 198,
+        "276": 199,
+        "277": 152,
+        "278": 153,
+        "279": 154,
+        "280": 155,
+        "281": 156,
+        "282": 157,
+        "283": 158,
+        "284": 159,
+        "285": 160,
+        "286": 161,
+        "287": 162,
+        "288": 163,
+        "289": 164,
+        "290": 165,
+        "291": 166,
+        "292": 167,
+        "293": 168,
+        "294": 169,
+        "295": 170,
+        "296": 171,
+        "297": 172,
+        "298": 173,
+        "299": 174,
+        "300": 175,
+        "301": 128,
+        "302": 129,
+        "303": 130,
+        "304": 131,
+        "305": 132,
+        "306": 133,
+        "307": 134,
+        "308": 135,
+        "309": 136,
+        "310": 137,
+        "311": 138,
+        "312": 139,
+        "313": 140,
+        "314": 141,
+        "315": 142,
+        "316": 143,
+        "317": 144,
+        "318": 145,
+        "319": 146,
+        "320": 147,
+        "321": 148,
+        "322": 149,
+        "323": 150,
+        "324": 151,
+        "325": 104,
+        "326": 105,
+        "327": 106,
+        "328": 107,
+        "329": 108,
+        "330": 109,
+        "331": 110,
+        "332": 111,
+        "333": 112,
+        "334": 113,
+        "335": 114,
+        "336": 115,
+        "337": 116,
+        "338": 117,
+        "339": 118,
+        "340": 119,
+        "341": 120,
+        "342": 121,
+        "343": 122,
+        "344": 123,
+        "345": 124,
+        "346": 125,
+        "347": 126,
+        "348": 127,
+        "349": 80,
+        "350": 81,
+        "351": 82,
+        "352": 83,
+        "353": 84,
+        "354": 85,
+        "355": 86,
+        "356": 87,
+        "357": 88,
+        "358": 89,
+        "359": 90,
+        "360": 91,
+        "361": 92,
+        "362": 93,
+        "363": 94,
+        "364": 95,
+        "365": 96,
+        "366": 97,
+        "367": 98,
+        "368": 99,
+        "369": 100,
+        "370": 101,
+        "371": 102,
+        "372": 103,
+        "373": 56,
+        "374": 57,
+        "375": 58,
+        "376": 59,
+        "377": 60,
+        "378": 61,
+        "379": 62,
+        "380": 63,
+        "381": 64,
+        "382": 65,
+        "383": 66,
+        "384": 67,
+        "385": 68,
+        "386": 69,
+        "387": 70,
+        "388": 71,
+        "389": 72,
+        "390": 73,
+        "391": 74,
+        "392": 75,
+        "393": 76,
+        "394": 77,
+        "395": 78,
+        "396": 79,
+        "397": 55,
+        "398": 37,
+        "399": 38,
+        "400": 39,
+        "401": 40,
+        "402": 41,
+        "403": 42,
+        "404": 43,
+        "405": 44,
+        "406": 45,
+        "407": 46,
+        "408": 47,
+        "409": 48,
+        "410": 49,
+        "411": 50,
+        "412": 51,
+        "413": 52,
+        "414": 53,
+        "415": 54,
+        "416": 19,
+        "417": 20,
+        "418": 21,
+        "419": 22,
+        "420": 23,
+        "421": 24,
+        "422": 25,
+        "423": 26,
+        "424": 27,
+        "425": 28,
+        "426": 29,
+        "427": 30,
+        "428": 31,
+        "429": 32,
+        "430": 33,
+        "431": 34,
+        "432": 35,
+        "433": 36,
+        "434": 1,
+        "435": 2,
+        "436": 3,
+        "437": 4,
+        "438": 5,
+        "439": 6,
+        "440": 7,
+        "441": 8,
+        "442": 9,
+        "443": 10,
+        "444": 11,
+        "445": 12,
+        "446": 13,
+        "447": 14,
+        "448": 15,
+        "449": 16,
+        "450": 17,
+        "451": 18,
+        "452": 0
+      },
+      "clock_port": "ck_hr via actualu_hr.ck_head(n3160)"
+    },
+    "compiled_XPF_TRANSPORT_EDGES": 21,
+    "compiled_construction_receipt": "results/arch/qdie5_hp13_1022/source_candidate.json",
+    "compiled_construction_receipt_sha256": "b4ae961b77f8bb22ffbd7978ebd412f8950ce509fe3b9f71aa76740a49432748",
+    "fixed_route_reconciliation": {
+      "law": "sourceARMcapture1 +actualGEN TT.hr->slice lane age must equal fixed21",
+      "required_lane_age": 20,
+      "actual_GEN_lane_age": null,
+      "guard": "RETAIN rejection for missing/mismatched actualroute; no parameter override of fixednative",
+      "next_action_if_mismatch": "sourceowner regenerates parameterized LP/native from actual measured routeXPF then repeats bounded component/source checks; qdie owns actualroute receipt"
+    },
+    "existing_functional_support": {
+      "receipt": "results/arch/qw_headprep_1021/rrloc_projection/realcalendar_native/REPRO.json",
+      "bench": "samefolder/tb_hp13_native.sv line214 compares all453 HR bits against flat delay6 in both existing CALR10 modes",
+      "scope": "Recorded component native/flat phase equivalence only; no arm/source event timestamp or full selected73 schedule/GEN proof"
+    },
+    "scope": "Thisactualsource local one-register relation does not inherit historical HR_PIN_REG1, commonclock4 or safe16physicalages; no absolute H16issue->rom_cmd latency or diephase/transport qualification",
+    "regenerated": {
+      "by": "QDIE5-HP13 10-22 regen_hr_contract.py",
+      "previous_rtl_sha256": "e95e85e7b41551258e3b50b5bed95806d7968a548540d2dffedfc1af59fb8806",
+      "method": "positional (hr bit) re-derivation on the new netlist + structural re-proof"
+    }
+  },
+  {
+    "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2",
+    "rtl": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2.sv",
+    "rtl_sha256": "fc00de4fcc3ddf6c31e1fc8ddcfd9231958812b433b9a46d6af8d43562eef8f0",
+    "status": "QUALIFIED_SOURCE_REGISTER_RELATIONS_NOT_DIE_ROUTE_AUTHORITY",
+    "clock_port": "ck_hr",
+    "ARM72": {
+      "source_checkpoint": "actual registered u_go.xpf scheduler source Qs",
+      "source_to_HR_output_edges": 1,
+      "proof": "72 distinct HR capture Qs on ck_hr; each D is a combinational cone (QW-SEGCAL xpf_hr = xpf_g[0] ? xpf_g : xpf) of ck_hr scheduler register Qs: still exactly 1 register edge source -> HR output",
+      "bit_rows": [
+        {
+          "bit": 1,
+          "hr_bit": 1,
+          "output_register": {
+            "instance": "u_10352",
+            "C": "n_3160",
+            "D": "n_22312",
+            "Q": "n_1199",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4820",
+              "C": "n_3160",
+              "D": "n_12803",
+              "Q": "n_12804",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 2,
+          "hr_bit": 2,
+          "output_register": {
+            "instance": "u_10353",
+            "C": "n_3160",
+            "D": "n_22313",
+            "Q": "n_1200",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4821",
+              "C": "n_3160",
+              "D": "n_12805",
+              "Q": "n_12806",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5550",
+              "C": "n_3160",
+              "D": "n_14267",
+              "Q": "n_14268",
+              "R": "n_96180",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 3,
+          "hr_bit": 3,
+          "output_register": {
+            "instance": "u_10354",
+            "C": "n_3160",
+            "D": "n_22314",
+            "Q": "n_1201",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4822",
+              "C": "n_3160",
+              "D": "n_12807",
+              "Q": "n_12808",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5551",
+              "C": "n_3160",
+              "D": "n_14269",
+              "Q": "n_14270",
+              "R": "n_96180",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 4,
+          "hr_bit": 4,
+          "output_register": {
+            "instance": "u_10355",
+            "C": "n_3160",
+            "D": "n_22315",
+            "Q": "n_1202",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4823",
+              "C": "n_3160",
+              "D": "n_12809",
+              "Q": "n_12810",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5552",
+              "C": "n_3160",
+              "D": "n_14271",
+              "Q": "n_14272",
+              "R": "n_96180",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 5,
+          "hr_bit": 5,
+          "output_register": {
+            "instance": "u_10356",
+            "C": "n_3160",
+            "D": "n_22316",
+            "Q": "n_1203",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4824",
+              "C": "n_3160",
+              "D": "n_12811",
+              "Q": "n_12812",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5553",
+              "C": "n_3160",
+              "D": "n_14273",
+              "Q": "n_14274",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 6,
+          "hr_bit": 6,
+          "output_register": {
+            "instance": "u_10357",
+            "C": "n_3160",
+            "D": "n_22317",
+            "Q": "n_1204",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4825",
+              "C": "n_3160",
+              "D": "n_12813",
+              "Q": "n_12814",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5554",
+              "C": "n_3160",
+              "D": "n_14275",
+              "Q": "n_14276",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 7,
+          "hr_bit": 7,
+          "output_register": {
+            "instance": "u_10358",
+            "C": "n_3160",
+            "D": "n_22318",
+            "Q": "n_1205",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4826",
+              "C": "n_3160",
+              "D": "n_12815",
+              "Q": "n_12816",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5555",
+              "C": "n_3160",
+              "D": "n_14277",
+              "Q": "n_14278",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 8,
+          "hr_bit": 8,
+          "output_register": {
+            "instance": "u_10359",
+            "C": "n_3160",
+            "D": "n_22319",
+            "Q": "n_1206",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4827",
+              "C": "n_3160",
+              "D": "n_12817",
+              "Q": "n_12818",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5556",
+              "C": "n_3160",
+              "D": "n_14279",
+              "Q": "n_14280",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 9,
+          "hr_bit": 9,
+          "output_register": {
+            "instance": "u_10360",
+            "C": "n_3160",
+            "D": "n_22320",
+            "Q": "n_1207",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4828",
+              "C": "n_3160",
+              "D": "n_12819",
+              "Q": "n_12820",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5557",
+              "C": "n_3160",
+              "D": "n_14281",
+              "Q": "n_14282",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 10,
+          "hr_bit": 10,
+          "output_register": {
+            "instance": "u_10361",
+            "C": "n_3160",
+            "D": "n_22321",
+            "Q": "n_1208",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4829",
+              "C": "n_3160",
+              "D": "n_12821",
+              "Q": "n_12822",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5558",
+              "C": "n_3160",
+              "D": "n_14283",
+              "Q": "n_14284",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 11,
+          "hr_bit": 11,
+          "output_register": {
+            "instance": "u_10362",
+            "C": "n_3160",
+            "D": "n_22322",
+            "Q": "n_1209",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4830",
+              "C": "n_3160",
+              "D": "n_12823",
+              "Q": "n_12824",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5559",
+              "C": "n_3160",
+              "D": "n_14285",
+              "Q": "n_14286",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 12,
+          "hr_bit": 12,
+          "output_register": {
+            "instance": "u_10363",
+            "C": "n_3160",
+            "D": "n_22323",
+            "Q": "n_1210",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4831",
+              "C": "n_3160",
+              "D": "n_12825",
+              "Q": "n_12826",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5560",
+              "C": "n_3160",
+              "D": "n_14287",
+              "Q": "n_14288",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 13,
+          "hr_bit": 13,
+          "output_register": {
+            "instance": "u_10364",
+            "C": "n_3160",
+            "D": "n_22324",
+            "Q": "n_1211",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4832",
+              "C": "n_3160",
+              "D": "n_12827",
+              "Q": "n_12828",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5561",
+              "C": "n_3160",
+              "D": "n_14289",
+              "Q": "n_14290",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 14,
+          "hr_bit": 14,
+          "output_register": {
+            "instance": "u_10365",
+            "C": "n_3160",
+            "D": "n_22325",
+            "Q": "n_1212",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4833",
+              "C": "n_3160",
+              "D": "n_12829",
+              "Q": "n_12830",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5562",
+              "C": "n_3160",
+              "D": "n_14291",
+              "Q": "n_14292",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 15,
+          "hr_bit": 15,
+          "output_register": {
+            "instance": "u_10366",
+            "C": "n_3160",
+            "D": "n_22326",
+            "Q": "n_1213",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4834",
+              "C": "n_3160",
+              "D": "n_12831",
+              "Q": "n_12832",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5563",
+              "C": "n_3160",
+              "D": "n_14293",
+              "Q": "n_14294",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 16,
+          "hr_bit": 16,
+          "output_register": {
+            "instance": "u_10367",
+            "C": "n_3160",
+            "D": "n_22327",
+            "Q": "n_1214",
+            "R": "n_96018"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4835",
+              "C": "n_3160",
+              "D": "n_12833",
+              "Q": "n_12834",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5564",
+              "C": "n_3160",
+              "D": "n_14295",
+              "Q": "n_14296",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5549",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_14266",
+              "R": "n_96180",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 17,
+          "hr_bit": 17,
+          "output_register": {
+            "instance": "u_10368",
+            "C": "n_3160",
+            "D": "n_22328",
+            "Q": "n_1215",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4836",
+              "C": "n_3160",
+              "D": "n_12835",
+              "Q": "n_12836",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5565",
+              "C": "n_3160",
+              "D": "n_14297",
+              "Q": "n_14298",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 18,
+          "hr_bit": 18,
+          "output_register": {
+            "instance": "u_10369",
+            "C": "n_3160",
+            "D": "n_22329",
+            "Q": "n_1216",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4837",
+              "C": "n_3160",
+              "D": "n_12837",
+              "Q": "n_12838",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5566",
+              "C": "n_3160",
+              "D": "n_14299",
+              "Q": "n_14300",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 19,
+          "hr_bit": 19,
+          "output_register": {
+            "instance": "u_10370",
+            "C": "n_3160",
+            "D": "n_22330",
+            "Q": "n_1217",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4838",
+              "C": "n_3160",
+              "D": "n_12839",
+              "Q": "n_12840",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5567",
+              "C": "n_3160",
+              "D": "n_14301",
+              "Q": "n_14302",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 20,
+          "hr_bit": 20,
+          "output_register": {
+            "instance": "u_10371",
+            "C": "n_3160",
+            "D": "n_22331",
+            "Q": "n_1218",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4839",
+              "C": "n_3160",
+              "D": "n_12841",
+              "Q": "n_12842",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5568",
+              "C": "n_3160",
+              "D": "n_14303",
+              "Q": "n_14304",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 21,
+          "hr_bit": 21,
+          "output_register": {
+            "instance": "u_10372",
+            "C": "n_3160",
+            "D": "n_22332",
+            "Q": "n_1219",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4840",
+              "C": "n_3160",
+              "D": "n_12843",
+              "Q": "n_12844",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5569",
+              "C": "n_3160",
+              "D": "n_14305",
+              "Q": "n_14306",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 22,
+          "hr_bit": 22,
+          "output_register": {
+            "instance": "u_10373",
+            "C": "n_3160",
+            "D": "n_22333",
+            "Q": "n_1220",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4841",
+              "C": "n_3160",
+              "D": "n_12845",
+              "Q": "n_12846",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5570",
+              "C": "n_3160",
+              "D": "n_14307",
+              "Q": "n_14308",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 23,
+          "hr_bit": 23,
+          "output_register": {
+            "instance": "u_10374",
+            "C": "n_3160",
+            "D": "n_22334",
+            "Q": "n_1221",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4842",
+              "C": "n_3160",
+              "D": "n_12847",
+              "Q": "n_12848",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5571",
+              "C": "n_3160",
+              "D": "n_14309",
+              "Q": "n_14310",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 24,
+          "hr_bit": 24,
+          "output_register": {
+            "instance": "u_10375",
+            "C": "n_3160",
+            "D": "n_22335",
+            "Q": "n_1222",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4843",
+              "C": "n_3160",
+              "D": "n_12849",
+              "Q": "n_12850",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5572",
+              "C": "n_3160",
+              "D": "n_14311",
+              "Q": "n_14312",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 25,
+          "hr_bit": 25,
+          "output_register": {
+            "instance": "u_10376",
+            "C": "n_3160",
+            "D": "n_22336",
+            "Q": "n_1223",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4844",
+              "C": "n_3160",
+              "D": "n_12851",
+              "Q": "n_12852",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5573",
+              "C": "n_3160",
+              "D": "n_14313",
+              "Q": "n_14314",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 26,
+          "hr_bit": 26,
+          "output_register": {
+            "instance": "u_10377",
+            "C": "n_3160",
+            "D": "n_22337",
+            "Q": "n_1224",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4845",
+              "C": "n_3160",
+              "D": "n_12853",
+              "Q": "n_12854",
+              "R": "n_96177",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5574",
+              "C": "n_3160",
+              "D": "n_14315",
+              "Q": "n_14316",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 27,
+          "hr_bit": 27,
+          "output_register": {
+            "instance": "u_10378",
+            "C": "n_3160",
+            "D": "n_22338",
+            "Q": "n_1225",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4846",
+              "C": "n_3160",
+              "D": "n_12855",
+              "Q": "n_12856",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5575",
+              "C": "n_3160",
+              "D": "n_14317",
+              "Q": "n_14318",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 28,
+          "hr_bit": 28,
+          "output_register": {
+            "instance": "u_10379",
+            "C": "n_3160",
+            "D": "n_22339",
+            "Q": "n_1226",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4847",
+              "C": "n_3160",
+              "D": "n_12857",
+              "Q": "n_12858",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5576",
+              "C": "n_3160",
+              "D": "n_14319",
+              "Q": "n_14320",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 29,
+          "hr_bit": 29,
+          "output_register": {
+            "instance": "u_10380",
+            "C": "n_3160",
+            "D": "n_22340",
+            "Q": "n_1227",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4848",
+              "C": "n_3160",
+              "D": "n_12859",
+              "Q": "n_12860",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5577",
+              "C": "n_3160",
+              "D": "n_14321",
+              "Q": "n_14322",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 30,
+          "hr_bit": 30,
+          "output_register": {
+            "instance": "u_10381",
+            "C": "n_3160",
+            "D": "n_22341",
+            "Q": "n_1228",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4849",
+              "C": "n_3160",
+              "D": "n_12861",
+              "Q": "n_12862",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5578",
+              "C": "n_3160",
+              "D": "n_14323",
+              "Q": "n_14324",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 31,
+          "hr_bit": 31,
+          "output_register": {
+            "instance": "u_10382",
+            "C": "n_3160",
+            "D": "n_22342",
+            "Q": "n_1229",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4850",
+              "C": "n_3160",
+              "D": "n_12863",
+              "Q": "n_12864",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5579",
+              "C": "n_3160",
+              "D": "n_14325",
+              "Q": "n_14326",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 32,
+          "hr_bit": 32,
+          "output_register": {
+            "instance": "u_10383",
+            "C": "n_3160",
+            "D": "n_22343",
+            "Q": "n_1230",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4851",
+              "C": "n_3160",
+              "D": "n_12865",
+              "Q": "n_12866",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5580",
+              "C": "n_3160",
+              "D": "n_14327",
+              "Q": "n_14328",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74304",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95077",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 33,
+          "hr_bit": 33,
+          "output_register": {
+            "instance": "u_10384",
+            "C": "n_3160",
+            "D": "n_22344",
+            "Q": "n_1231",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4852",
+              "C": "n_3160",
+              "D": "n_12867",
+              "Q": "n_12868",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5581",
+              "C": "n_3160",
+              "D": "n_14329",
+              "Q": "n_14330",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 34,
+          "hr_bit": 34,
+          "output_register": {
+            "instance": "u_10385",
+            "C": "n_3160",
+            "D": "n_22345",
+            "Q": "n_1232",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4853",
+              "C": "n_3160",
+              "D": "n_12869",
+              "Q": "n_12870",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5582",
+              "C": "n_3160",
+              "D": "n_14331",
+              "Q": "n_14332",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 35,
+          "hr_bit": 35,
+          "output_register": {
+            "instance": "u_10386",
+            "C": "n_3160",
+            "D": "n_22346",
+            "Q": "n_1233",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4854",
+              "C": "n_3160",
+              "D": "n_12871",
+              "Q": "n_12872",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5583",
+              "C": "n_3160",
+              "D": "n_14333",
+              "Q": "n_14334",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 36,
+          "hr_bit": 36,
+          "output_register": {
+            "instance": "u_10387",
+            "C": "n_3160",
+            "D": "n_22347",
+            "Q": "n_1234",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4855",
+              "C": "n_3160",
+              "D": "n_12873",
+              "Q": "n_12874",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5584",
+              "C": "n_3160",
+              "D": "n_14335",
+              "Q": "n_14336",
+              "R": "n_96181",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 37,
+          "hr_bit": 37,
+          "output_register": {
+            "instance": "u_10388",
+            "C": "n_3160",
+            "D": "n_22348",
+            "Q": "n_1235",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4856",
+              "C": "n_3160",
+              "D": "n_12875",
+              "Q": "n_12876",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5585",
+              "C": "n_3160",
+              "D": "n_14337",
+              "Q": "n_14338",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 38,
+          "hr_bit": 38,
+          "output_register": {
+            "instance": "u_10389",
+            "C": "n_3160",
+            "D": "n_22349",
+            "Q": "n_1236",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4857",
+              "C": "n_3160",
+              "D": "n_12877",
+              "Q": "n_12878",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5586",
+              "C": "n_3160",
+              "D": "n_14339",
+              "Q": "n_14340",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 39,
+          "hr_bit": 39,
+          "output_register": {
+            "instance": "u_10390",
+            "C": "n_3160",
+            "D": "n_22350",
+            "Q": "n_1237",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4858",
+              "C": "n_3160",
+              "D": "n_12879",
+              "Q": "n_12880",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5587",
+              "C": "n_3160",
+              "D": "n_14341",
+              "Q": "n_14342",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 40,
+          "hr_bit": 40,
+          "output_register": {
+            "instance": "u_10391",
+            "C": "n_3160",
+            "D": "n_22351",
+            "Q": "n_1238",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4859",
+              "C": "n_3160",
+              "D": "n_12881",
+              "Q": "n_12882",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5588",
+              "C": "n_3160",
+              "D": "n_14343",
+              "Q": "n_14344",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 41,
+          "hr_bit": 41,
+          "output_register": {
+            "instance": "u_10392",
+            "C": "n_3160",
+            "D": "n_22352",
+            "Q": "n_1239",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4860",
+              "C": "n_3160",
+              "D": "n_12883",
+              "Q": "n_12884",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5589",
+              "C": "n_3160",
+              "D": "n_14345",
+              "Q": "n_14346",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 42,
+          "hr_bit": 42,
+          "output_register": {
+            "instance": "u_10393",
+            "C": "n_3160",
+            "D": "n_22353",
+            "Q": "n_1240",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4861",
+              "C": "n_3160",
+              "D": "n_12885",
+              "Q": "n_12886",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5590",
+              "C": "n_3160",
+              "D": "n_14347",
+              "Q": "n_14348",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 43,
+          "hr_bit": 43,
+          "output_register": {
+            "instance": "u_10394",
+            "C": "n_3160",
+            "D": "n_22354",
+            "Q": "n_1241",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4862",
+              "C": "n_3160",
+              "D": "n_12887",
+              "Q": "n_12888",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5591",
+              "C": "n_3160",
+              "D": "n_14349",
+              "Q": "n_14350",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 44,
+          "hr_bit": 44,
+          "output_register": {
+            "instance": "u_10395",
+            "C": "n_3160",
+            "D": "n_22355",
+            "Q": "n_1242",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4863",
+              "C": "n_3160",
+              "D": "n_12889",
+              "Q": "n_12890",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5592",
+              "C": "n_3160",
+              "D": "n_14351",
+              "Q": "n_14352",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 45,
+          "hr_bit": 45,
+          "output_register": {
+            "instance": "u_10396",
+            "C": "n_3160",
+            "D": "n_22356",
+            "Q": "n_1243",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4864",
+              "C": "n_3160",
+              "D": "n_12891",
+              "Q": "n_12892",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5593",
+              "C": "n_3160",
+              "D": "n_14353",
+              "Q": "n_14354",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 46,
+          "hr_bit": 46,
+          "output_register": {
+            "instance": "u_10397",
+            "C": "n_3160",
+            "D": "n_22357",
+            "Q": "n_1244",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4865",
+              "C": "n_3160",
+              "D": "n_12893",
+              "Q": "n_12894",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5594",
+              "C": "n_3160",
+              "D": "n_14355",
+              "Q": "n_14356",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 47,
+          "hr_bit": 47,
+          "output_register": {
+            "instance": "u_10398",
+            "C": "n_3160",
+            "D": "n_22358",
+            "Q": "n_1245",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4866",
+              "C": "n_3160",
+              "D": "n_12895",
+              "Q": "n_12896",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5595",
+              "C": "n_3160",
+              "D": "n_14357",
+              "Q": "n_14358",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 48,
+          "hr_bit": 48,
+          "output_register": {
+            "instance": "u_10399",
+            "C": "n_3160",
+            "D": "n_22359",
+            "Q": "n_1246",
+            "R": "n_96019"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4867",
+              "C": "n_3160",
+              "D": "n_12897",
+              "Q": "n_12898",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5596",
+              "C": "n_3160",
+              "D": "n_14359",
+              "Q": "n_14360",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74305",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95078",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 49,
+          "hr_bit": 49,
+          "output_register": {
+            "instance": "u_10400",
+            "C": "n_3160",
+            "D": "n_22360",
+            "Q": "n_1247",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4868",
+              "C": "n_3160",
+              "D": "n_12899",
+              "Q": "n_12900",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5597",
+              "C": "n_3160",
+              "D": "n_14361",
+              "Q": "n_14362",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 50,
+          "hr_bit": 50,
+          "output_register": {
+            "instance": "u_10401",
+            "C": "n_3160",
+            "D": "n_22361",
+            "Q": "n_1248",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4869",
+              "C": "n_3160",
+              "D": "n_12901",
+              "Q": "n_12902",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5598",
+              "C": "n_3160",
+              "D": "n_14363",
+              "Q": "n_14364",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 51,
+          "hr_bit": 51,
+          "output_register": {
+            "instance": "u_10402",
+            "C": "n_3160",
+            "D": "n_22362",
+            "Q": "n_1249",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4870",
+              "C": "n_3160",
+              "D": "n_12903",
+              "Q": "n_12904",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5599",
+              "C": "n_3160",
+              "D": "n_14365",
+              "Q": "n_14366",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 52,
+          "hr_bit": 52,
+          "output_register": {
+            "instance": "u_10403",
+            "C": "n_3160",
+            "D": "n_22363",
+            "Q": "n_1250",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4871",
+              "C": "n_3160",
+              "D": "n_12905",
+              "Q": "n_12906",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5600",
+              "C": "n_3160",
+              "D": "n_14367",
+              "Q": "n_14368",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 53,
+          "hr_bit": 53,
+          "output_register": {
+            "instance": "u_10404",
+            "C": "n_3160",
+            "D": "n_22364",
+            "Q": "n_1251",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4872",
+              "C": "n_3160",
+              "D": "n_12907",
+              "Q": "n_12908",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5601",
+              "C": "n_3160",
+              "D": "n_14369",
+              "Q": "n_14370",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 54,
+          "hr_bit": 54,
+          "output_register": {
+            "instance": "u_10405",
+            "C": "n_3160",
+            "D": "n_22365",
+            "Q": "n_1252",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4873",
+              "C": "n_3160",
+              "D": "n_12909",
+              "Q": "n_12910",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5602",
+              "C": "n_3160",
+              "D": "n_14371",
+              "Q": "n_14372",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 55,
+          "hr_bit": 55,
+          "output_register": {
+            "instance": "u_10406",
+            "C": "n_3160",
+            "D": "n_22366",
+            "Q": "n_1253",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4874",
+              "C": "n_3160",
+              "D": "n_12911",
+              "Q": "n_12912",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5603",
+              "C": "n_3160",
+              "D": "n_14373",
+              "Q": "n_14374",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 56,
+          "hr_bit": 56,
+          "output_register": {
+            "instance": "u_10407",
+            "C": "n_3160",
+            "D": "n_22367",
+            "Q": "n_1254",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4875",
+              "C": "n_3160",
+              "D": "n_12913",
+              "Q": "n_12914",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5604",
+              "C": "n_3160",
+              "D": "n_14375",
+              "Q": "n_14376",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 57,
+          "hr_bit": 57,
+          "output_register": {
+            "instance": "u_10408",
+            "C": "n_3160",
+            "D": "n_22368",
+            "Q": "n_1255",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4876",
+              "C": "n_3160",
+              "D": "n_12915",
+              "Q": "n_12916",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5605",
+              "C": "n_3160",
+              "D": "n_14377",
+              "Q": "n_14378",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 58,
+          "hr_bit": 58,
+          "output_register": {
+            "instance": "u_10409",
+            "C": "n_3160",
+            "D": "n_22369",
+            "Q": "n_1256",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4877",
+              "C": "n_3160",
+              "D": "n_12917",
+              "Q": "n_12918",
+              "R": "n_96178",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5606",
+              "C": "n_3160",
+              "D": "n_14379",
+              "Q": "n_14380",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 59,
+          "hr_bit": 59,
+          "output_register": {
+            "instance": "u_10410",
+            "C": "n_3160",
+            "D": "n_22370",
+            "Q": "n_1257",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4878",
+              "C": "n_3160",
+              "D": "n_12919",
+              "Q": "n_12920",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5607",
+              "C": "n_3160",
+              "D": "n_14381",
+              "Q": "n_14382",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 60,
+          "hr_bit": 60,
+          "output_register": {
+            "instance": "u_10411",
+            "C": "n_3160",
+            "D": "n_22371",
+            "Q": "n_1258",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4879",
+              "C": "n_3160",
+              "D": "n_12921",
+              "Q": "n_12922",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5608",
+              "C": "n_3160",
+              "D": "n_14383",
+              "Q": "n_14384",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 61,
+          "hr_bit": 61,
+          "output_register": {
+            "instance": "u_10412",
+            "C": "n_3160",
+            "D": "n_22372",
+            "Q": "n_1259",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4880",
+              "C": "n_3160",
+              "D": "n_12923",
+              "Q": "n_12924",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5609",
+              "C": "n_3160",
+              "D": "n_14385",
+              "Q": "n_14386",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 62,
+          "hr_bit": 62,
+          "output_register": {
+            "instance": "u_10413",
+            "C": "n_3160",
+            "D": "n_22373",
+            "Q": "n_1260",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4881",
+              "C": "n_3160",
+              "D": "n_12925",
+              "Q": "n_12926",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5610",
+              "C": "n_3160",
+              "D": "n_14387",
+              "Q": "n_14388",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 63,
+          "hr_bit": 63,
+          "output_register": {
+            "instance": "u_10414",
+            "C": "n_3160",
+            "D": "n_22374",
+            "Q": "n_1261",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4882",
+              "C": "n_3160",
+              "D": "n_12927",
+              "Q": "n_12928",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5611",
+              "C": "n_3160",
+              "D": "n_14389",
+              "Q": "n_14390",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 64,
+          "hr_bit": 64,
+          "output_register": {
+            "instance": "u_10415",
+            "C": "n_3160",
+            "D": "n_22375",
+            "Q": "n_1262",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4883",
+              "C": "n_3160",
+              "D": "n_12929",
+              "Q": "n_12930",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5612",
+              "C": "n_3160",
+              "D": "n_14391",
+              "Q": "n_14392",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74306",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95079",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 65,
+          "hr_bit": 65,
+          "output_register": {
+            "instance": "u_10416",
+            "C": "n_3160",
+            "D": "n_22376",
+            "Q": "n_1263",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4884",
+              "C": "n_3160",
+              "D": "n_12931",
+              "Q": "n_12932",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5613",
+              "C": "n_3160",
+              "D": "n_14393",
+              "Q": "n_14394",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 66,
+          "hr_bit": 66,
+          "output_register": {
+            "instance": "u_10417",
+            "C": "n_3160",
+            "D": "n_22377",
+            "Q": "n_1264",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4885",
+              "C": "n_3160",
+              "D": "n_12933",
+              "Q": "n_12934",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5614",
+              "C": "n_3160",
+              "D": "n_14395",
+              "Q": "n_14396",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 67,
+          "hr_bit": 67,
+          "output_register": {
+            "instance": "u_10418",
+            "C": "n_3160",
+            "D": "n_22378",
+            "Q": "n_1265",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4886",
+              "C": "n_3160",
+              "D": "n_12935",
+              "Q": "n_12936",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5615",
+              "C": "n_3160",
+              "D": "n_14397",
+              "Q": "n_14398",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 68,
+          "hr_bit": 68,
+          "output_register": {
+            "instance": "u_10419",
+            "C": "n_3160",
+            "D": "n_22379",
+            "Q": "n_1266",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4887",
+              "C": "n_3160",
+              "D": "n_12937",
+              "Q": "n_12938",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5616",
+              "C": "n_3160",
+              "D": "n_14399",
+              "Q": "n_14400",
+              "R": "n_96182",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 69,
+          "hr_bit": 69,
+          "output_register": {
+            "instance": "u_10420",
+            "C": "n_3160",
+            "D": "n_22380",
+            "Q": "n_1267",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4888",
+              "C": "n_3160",
+              "D": "n_12939",
+              "Q": "n_12940",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5617",
+              "C": "n_3160",
+              "D": "n_14401",
+              "Q": "n_14402",
+              "R": "n_96183",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 70,
+          "hr_bit": 70,
+          "output_register": {
+            "instance": "u_10421",
+            "C": "n_3160",
+            "D": "n_22381",
+            "Q": "n_1268",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4889",
+              "C": "n_3160",
+              "D": "n_12941",
+              "Q": "n_12942",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5618",
+              "C": "n_3160",
+              "D": "n_14403",
+              "Q": "n_14404",
+              "R": "n_96183",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 71,
+          "hr_bit": 71,
+          "output_register": {
+            "instance": "u_10422",
+            "C": "n_3160",
+            "D": "n_22382",
+            "Q": "n_1269",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4890",
+              "C": "n_3160",
+              "D": "n_12943",
+              "Q": "n_12944",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5619",
+              "C": "n_3160",
+              "D": "n_14405",
+              "Q": "n_14406",
+              "R": "n_96183",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        },
+        {
+          "bit": 72,
+          "hr_bit": 72,
+          "output_register": {
+            "instance": "u_10423",
+            "C": "n_3160",
+            "D": "n_22383",
+            "Q": "n_1270",
+            "R": "n_96020"
+          },
+          "source_registers": [
+            {
+              "instance": "u_4891",
+              "C": "n_3160",
+              "D": "n_12945",
+              "Q": "n_12946",
+              "R": "n_96179",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_5620",
+              "C": "n_3160",
+              "D": "n_14407",
+              "Q": "n_14408",
+              "R": "n_96183",
+              "comb_depth": 1
+            },
+            {
+              "instance": "u_74307",
+              "C": "n_3160",
+              "D": "n_14265",
+              "Q": "n_95080",
+              "R": "n_96278",
+              "comb_depth": 1
+            }
+          ]
+        }
+      ]
+    },
+    "HR_valid": {
+      "startup_edges": 2,
+      "producer": {
+        "instance": "u_75482",
+        "C": "n_3160",
+        "D": "1'b1",
+        "Q": "n_96255",
+        "R": "n_96293"
+      },
+      "output": {
+        "instance": "u_75416",
+        "C": "n_3160",
+        "D": "n_96255",
+        "Q": "n_96189",
+        "R": "n_96257"
+      }
+    },
+    "head380": {
+      "source_checkpoint": "actualu_hr.rom_cmd hardchildoutput",
+      "post_source_edges": 0,
+      "bit_bijection": {
+        "73": 356,
+        "74": 357,
+        "75": 358,
+        "76": 359,
+        "77": 360,
+        "78": 361,
+        "79": 362,
+        "80": 363,
+        "81": 364,
+        "82": 365,
+        "83": 366,
+        "84": 367,
+        "85": 368,
+        "86": 369,
+        "87": 370,
+        "88": 371,
+        "89": 372,
+        "90": 373,
+        "91": 374,
+        "92": 375,
+        "93": 376,
+        "94": 377,
+        "95": 378,
+        "96": 379,
+        "97": 355,
+        "98": 354,
+        "99": 353,
+        "100": 352,
+        "101": 328,
+        "102": 329,
+        "103": 330,
+        "104": 331,
+        "105": 332,
+        "106": 333,
+        "107": 334,
+        "108": 335,
+        "109": 336,
+        "110": 337,
+        "111": 338,
+        "112": 339,
+        "113": 340,
+        "114": 341,
+        "115": 342,
+        "116": 343,
+        "117": 344,
+        "118": 345,
+        "119": 346,
+        "120": 347,
+        "121": 348,
+        "122": 349,
+        "123": 350,
+        "124": 351,
+        "125": 304,
+        "126": 305,
+        "127": 306,
+        "128": 307,
+        "129": 308,
+        "130": 309,
+        "131": 310,
+        "132": 311,
+        "133": 312,
+        "134": 313,
+        "135": 314,
+        "136": 315,
+        "137": 316,
+        "138": 317,
+        "139": 318,
+        "140": 319,
+        "141": 320,
+        "142": 321,
+        "143": 322,
+        "144": 323,
+        "145": 324,
+        "146": 325,
+        "147": 326,
+        "148": 327,
+        "149": 280,
+        "150": 281,
+        "151": 282,
+        "152": 283,
+        "153": 284,
+        "154": 285,
+        "155": 286,
+        "156": 287,
+        "157": 288,
+        "158": 289,
+        "159": 290,
+        "160": 291,
+        "161": 292,
+        "162": 293,
+        "163": 294,
+        "164": 295,
+        "165": 296,
+        "166": 297,
+        "167": 298,
+        "168": 299,
+        "169": 300,
+        "170": 301,
+        "171": 302,
+        "172": 303,
+        "173": 279,
+        "174": 255,
+        "175": 256,
+        "176": 257,
+        "177": 258,
+        "178": 259,
+        "179": 260,
+        "180": 261,
+        "181": 262,
+        "182": 263,
+        "183": 264,
+        "184": 265,
+        "185": 266,
+        "186": 267,
+        "187": 268,
+        "188": 269,
+        "189": 270,
+        "190": 271,
+        "191": 272,
+        "192": 273,
+        "193": 274,
+        "194": 275,
+        "195": 276,
+        "196": 277,
+        "197": 278,
+        "198": 251,
+        "199": 252,
+        "200": 253,
+        "201": 254,
+        "202": 248,
+        "203": 249,
+        "204": 250,
+        "205": 224,
+        "206": 225,
+        "207": 226,
+        "208": 227,
+        "209": 228,
+        "210": 229,
+        "211": 230,
+        "212": 231,
+        "213": 232,
+        "214": 233,
+        "215": 234,
+        "216": 235,
+        "217": 236,
+        "218": 237,
+        "219": 238,
+        "220": 239,
+        "221": 240,
+        "222": 241,
+        "223": 242,
+        "224": 243,
+        "225": 244,
+        "226": 245,
+        "227": 246,
+        "228": 247,
+        "229": 200,
+        "230": 201,
+        "231": 202,
+        "232": 203,
+        "233": 204,
+        "234": 205,
+        "235": 206,
+        "236": 207,
+        "237": 208,
+        "238": 209,
+        "239": 210,
+        "240": 211,
+        "241": 212,
+        "242": 213,
+        "243": 214,
+        "244": 215,
+        "245": 216,
+        "246": 217,
+        "247": 218,
+        "248": 219,
+        "249": 220,
+        "250": 221,
+        "251": 222,
+        "252": 223,
+        "253": 176,
+        "254": 177,
+        "255": 178,
+        "256": 179,
+        "257": 180,
+        "258": 181,
+        "259": 182,
+        "260": 183,
+        "261": 184,
+        "262": 185,
+        "263": 186,
+        "264": 187,
+        "265": 188,
+        "266": 189,
+        "267": 190,
+        "268": 191,
+        "269": 192,
+        "270": 193,
+        "271": 194,
+        "272": 195,
+        "273": 196,
+        "274": 197,
+        "275": 198,
+        "276": 199,
+        "277": 152,
+        "278": 153,
+        "279": 154,
+        "280": 155,
+        "281": 156,
+        "282": 157,
+        "283": 158,
+        "284": 159,
+        "285": 160,
+        "286": 161,
+        "287": 162,
+        "288": 163,
+        "289": 164,
+        "290": 165,
+        "291": 166,
+        "292": 167,
+        "293": 168,
+        "294": 169,
+        "295": 170,
+        "296": 171,
+        "297": 172,
+        "298": 173,
+        "299": 174,
+        "300": 175,
+        "301": 128,
+        "302": 129,
+        "303": 130,
+        "304": 131,
+        "305": 132,
+        "306": 133,
+        "307": 134,
+        "308": 135,
+        "309": 136,
+        "310": 137,
+        "311": 138,
+        "312": 139,
+        "313": 140,
+        "314": 141,
+        "315": 142,
+        "316": 143,
+        "317": 144,
+        "318": 145,
+        "319": 146,
+        "320": 147,
+        "321": 148,
+        "322": 149,
+        "323": 150,
+        "324": 151,
+        "325": 104,
+        "326": 105,
+        "327": 106,
+        "328": 107,
+        "329": 108,
+        "330": 109,
+        "331": 110,
+        "332": 111,
+        "333": 112,
+        "334": 113,
+        "335": 114,
+        "336": 115,
+        "337": 116,
+        "338": 117,
+        "339": 118,
+        "340": 119,
+        "341": 120,
+        "342": 121,
+        "343": 122,
+        "344": 123,
+        "345": 124,
+        "346": 125,
+        "347": 126,
+        "348": 127,
+        "349": 80,
+        "350": 81,
+        "351": 82,
+        "352": 83,
+        "353": 84,
+        "354": 85,
+        "355": 86,
+        "356": 87,
+        "357": 88,
+        "358": 89,
+        "359": 90,
+        "360": 91,
+        "361": 92,
+        "362": 93,
+        "363": 94,
+        "364": 95,
+        "365": 96,
+        "366": 97,
+        "367": 98,
+        "368": 99,
+        "369": 100,
+        "370": 101,
+        "371": 102,
+        "372": 103,
+        "373": 56,
+        "374": 57,
+        "375": 58,
+        "376": 59,
+        "377": 60,
+        "378": 61,
+        "379": 62,
+        "380": 63,
+        "381": 64,
+        "382": 65,
+        "383": 66,
+        "384": 67,
+        "385": 68,
+        "386": 69,
+        "387": 70,
+        "388": 71,
+        "389": 72,
+        "390": 73,
+        "391": 74,
+        "392": 75,
+        "393": 76,
+        "394": 77,
+        "395": 78,
+        "396": 79,
+        "397": 55,
+        "398": 37,
+        "399": 38,
+        "400": 39,
+        "401": 40,
+        "402": 41,
+        "403": 42,
+        "404": 43,
+        "405": 44,
+        "406": 45,
+        "407": 46,
+        "408": 47,
+        "409": 48,
+        "410": 49,
+        "411": 50,
+        "412": 51,
+        "413": 52,
+        "414": 53,
+        "415": 54,
+        "416": 19,
+        "417": 20,
+        "418": 21,
+        "419": 22,
+        "420": 23,
+        "421": 24,
+        "422": 25,
+        "423": 26,
+        "424": 27,
+        "425": 28,
+        "426": 29,
+        "427": 30,
+        "428": 31,
+        "429": 32,
+        "430": 33,
+        "431": 34,
+        "432": 35,
+        "433": 36,
+        "434": 1,
+        "435": 2,
+        "436": 3,
+        "437": 4,
+        "438": 5,
+        "439": 6,
+        "440": 7,
+        "441": 8,
+        "442": 9,
+        "443": 10,
+        "444": 11,
+        "445": 12,
+        "446": 13,
+        "447": 14,
+        "448": 15,
+        "449": 16,
+        "450": 17,
+        "451": 18,
+        "452": 0
+      },
+      "clock_port": "ck_hr via actualu_hr.ck_head(n3160)"
+    },
+    "compiled_XPF_TRANSPORT_EDGES": 21,
+    "compiled_construction_receipt": "results/arch/qdie5_hp13_1022/source_candidate.json",
+    "compiled_construction_receipt_sha256": "b4ae961b77f8bb22ffbd7978ebd412f8950ce509fe3b9f71aa76740a49432748",
+    "fixed_route_reconciliation": {
+      "law": "sourceARMcapture1 +actualGEN TT.hr->slice lane age must equal fixed21",
+      "required_lane_age": 20,
+      "actual_GEN_lane_age": null,
+      "guard": "RETAIN rejection for missing/mismatched actualroute; no parameter override of fixednative",
+      "next_action_if_mismatch": "sourceowner regenerates parameterized LP/native from actual measured routeXPF then repeats bounded component/source checks; qdie owns actualroute receipt"
+    },
+    "existing_functional_support": {
+      "receipt": "results/arch/qw_headprep_1021/rrloc_projection/realcalendar_native/REPRO.json",
+      "bench": "samefolder/tb_hp13_native.sv line214 compares all453 HR bits against flat delay6 in both existing CALR10 modes",
+      "scope": "Recorded component native/flat phase equivalence only; no arm/source event timestamp or full selected73 schedule/GEN proof"
+    },
+    "scope": "Thisactualsource local one-register relation does not inherit historical HR_PIN_REG1, commonclock4 or safe16physicalages; no absolute H16issue->rom_cmd latency or diephase/transport qualification",
+    "regenerated": {
+      "by": "QDIE5-HP13 10-22 regen_hr_contract.py",
+      "previous_rtl_sha256": "6b6c3fa18de62ec8528099c0edae4db6f3069f91976f81dd23eda29fbcbbb974",
+      "method": "positional (hr bit) re-derivation on the new netlist + structural re-proof"
+    }
+  }
+]

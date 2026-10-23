@@ -1,0 +1,13 @@
+{
+  "commands": [
+    "ssh",
+    "ot-gold1",
+    "make -n -C /srv/opentallas-scratch/claude/codex-tok-head-b-connected-2100/out/obj_b -f Vtb_s81hd_diecut.mk -j2 OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O1"
+  ],
+  "remaining_compile_commands": 11,
+  "frontend_commands": [],
+  "link_commands": [
+    "g++    verilated.o verilated_dpi.o verilated_timing.o verilated_threads.o Vtb_s81hd_diecut__ALL.a    -pthread -lpthread -latomic   -o Vtb_s81hd_diecut"
+  ],
+  "stderr": ""
+}
