@@ -344,7 +344,7 @@
    },
    {
     "name": "kvpc_tile_pc",
-    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 0 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m0",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 0 --edges 20000 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m0",
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -355,7 +355,7 @@
    },
    {
     "name": "kvpc_tile_pc_mut4",
-    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 4 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m4",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 4 --edges 20000 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m4",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -381,7 +381,7 @@
    },
    {
     "name": "kvpc_tile_pc_mut7",
-    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 7 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m7",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 7 --edges 20000 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m7",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -394,7 +394,7 @@
    },
    {
     "name": "kvpc_tile_pc_mut8",
-    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 8 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m8",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 8 --edges 20000 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m8",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
@@ -407,7 +407,7 @@
    },
    {
     "name": "kvpc_tile_pc_mut5",
-    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 5 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m5",
+    "cmd": "PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH python3 tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --mut 5 --edges 20000 --threads 4 --out {RUN}/bench/kvpc_tile_pc_m5",
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,

@@ -14,3 +14,8 @@ reset-landing contracts unchanged; only the floorplan changes:
 
 Safe-design checklist: as sr15a (lanes/SQC-PC.md SAFE 8-pt) except item 5 (storage: one bank, pins facing the logic
 bands) and item 6 (outline shrunk to the pin bound).
+
+## Tile lockstep witness (KVPC-R 10-23, Verilator 5.050, tools/qwen_kv_die/kvpc_sram_bench.py --unit tile --tile pc --edges 20000)
+RTL is unchanged vs sr15f (DUT = qkd_kvs_tiles_hroot_ff_k_mu_ds_rl_sr.sv, REF = _ds_rl.sv).
+m0 PASS (528046 checks, 0 errors); m4 FAIL 19986, m5 FAIL 55921, m7 FAIL 7476, m8 FAIL 9166.
+At the bench default of 3000 edges, m7 is NOT detected (PASS). The job tile benches therefore run --edges 20000.

@@ -123,6 +123,12 @@ def build(name, tag, W, x0, why):
            f"(every live pin flop-direct: 0 cycles). {why}")
     s['purpose'] = pur
     s['job'] = dict(s['job'], owner='Claude:KVPC-R', branch='claude/kvpc-r-1023', tag=tag, purpose=pur)
+    # KVPC-R 10-23: the tile lockstep runs 20k edges (the sr9 witness length).  At the bench default 3k edges mutant 7
+    # (static-row match without lookahead) is NOT detected (KVPC_TILE PASS mut=7); at 20k it FAILs (7476 errors) and
+    # the positive still PASSes (528046 checks, 0 errors).
+    for b in s['job']['benches']:
+        if '--unit tile' in b['cmd'] and '--edges' not in b['cmd']:
+            b['cmd'] = b['cmd'].replace(' --threads ', ' --edges 20000 --threads ', 1)
     s['structural_change'] = pur
     d = os.path.join(ROOT, 'physical/ref_tile', name)
     os.makedirs(d, exist_ok=True)
