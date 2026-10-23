@@ -194,17 +194,23 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
     if int(top[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
         # face_layers raised this type to M8: keep its own M8 wiring off the die M8 PG bands (schema.PART_PG_BANDS),
         # so the die grid's M8 stripes run over the partition without shorts
-        pitch, cen, half = S.PART_PG_BANDS[top]
-        obs = ["", f"# face_layers {top}: obstruct the die {top} PG bands in the partition (die stripes cross it)",
-               "set blk [ord::get_db_block]", f"set lay [[ord::get_db_tech] findLayer {top}]",
-               "set dbu [$blk getDbUnitsPerMicron]"]
-        k = math.floor((0 - cen) / pitch)
-        while cen + k * pitch - half < h:
-            y0, y1 = max(0.0, cen + k * pitch - half), min(h, cen + k * pitch + half)
-            if y1 > y0:
-                obs.append(f"odb::dbObstruction_create $blk $lay 0 [expr {{round({y0:.4f}*$dbu)}}] "
-                           f"[expr {{round({w:g}*$dbu)}}] [expr {{round({y1:.4f}*$dbu)}}]")
-            k += 1
+        obs = ["", "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
+        smax = int(P.layer_budget["partition_signal_max"][1:])
+        for li in range(smax + 1, int(top[1:]) + 1):
+            ln = f"M{li}"
+            pitch, cen, half = S.PART_PG_BANDS[ln]
+            horiz = P.layers[ln]["dir"] == "H"       # H layer: stripes along x -> y bands; V layer -> x bands
+            ext, oth = (h, w) if horiz else (w, h)
+            obs += [f"# face_layers {top}: obstruct the die {ln} PG bands in the partition (die stripes cross it)",
+                    f"set lay [[ord::get_db_tech] findLayer {ln}]"]
+            k = math.floor((0 - cen) / pitch)
+            while cen + k * pitch - half < ext:
+                a0, a1 = max(0.0, cen + k * pitch - half), min(ext, cen + k * pitch + half)
+                if a1 > a0:
+                    r = (0, a0, oth, a1) if horiz else (a0, 0, a1, oth)
+                    obs.append("odb::dbObstruction_create $blk $lay " +
+                               " ".join(f"[expr {{round({v:.4f}*$dbu)}}]" for v in r))
+                k += 1
         pdn = PDN + "\n".join(obs) + "\n"
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))

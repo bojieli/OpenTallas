@@ -81,7 +81,7 @@ _rect = {"type": "array", "items": _num, "minItems": 4, "maxItems": 4}
 _name = {"type": "string", "minLength": 1}
 _layer = {"type": "string", "pattern": "^M[1-9]$"}
 _win = {"type": "array", "items": _num, "minItems": 2, "maxItems": 2}
-_lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 2}
+_lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3}   # 3 only on a face_layers face (G0 faces)
 _order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
@@ -169,7 +169,29 @@ SCHEMA = {
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
                                        "layers": _lays, "order": _order}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
-                        "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg}},
+                        "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
+                        # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
+                        # landed glue region (COORD 10-23 07:24; QC-FIX)
+                        "taps": {"type": "array", "items": {
+                            "type": "object", "required": ["name", "xy"], "additionalProperties": False,
+                            "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf"]},
+                                           "orient": {"enum": list(ORIENTS)}, "insertion_ps": _pos,
+                                           "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
+                                           "from_root_um": _nonneg, "note": {"type": "string"}}}}}},
+                    # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
+                    # boundary pins on the plan tracks (COORD 10-23 08:36; A0: y +0.012)
+                    "hard_cores": {"type": "array", "items": {
+                        "type": "object", "required": ["inst", "origin_um", "outline_um"],
+                        "additionalProperties": False,
+                        "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
+                                       "orient": {"enum": list(ORIENTS)},
+                                       "track_offset_um": _xy,      # added to origin_um (lattice) at placement
+                                       "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
+                                           "type": "object", "required": ["name", "layer", "xy"],
+                                           "additionalProperties": False,
+                                           "properties": {"name": _name, "layer": _layer, "xy": _xy}}},
+                                       "pins_file": {"type": "string"},   # JSON [{name|bus+bit, layer, x, y}]
+                                       "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2}}},
                     "contents": {"type": "array", "items": {
@@ -213,7 +235,7 @@ SCHEMA = {
             "additionalProperties": False,
             "properties": {"id": _name, "src": _end, "dst": _end, "width": {"type": "integer", "minimum": 1},
                            "kind": {"enum": list(KINDS)}, "face": {"enum": list(FACES)},
-                           "layers": {"type": "array", "items": _layer, "minItems": 1, "maxItems": 2},
+                           "layers": {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3},
                            "window_um": {"type": "array", "items": _num, "minItems": 2, "maxItems": 2},
                            "order": {"enum": ["lsb_low", "lsb_high"]}, "epoch": {"type": "boolean"},
                            "note": {"type": "string"}}}},
@@ -577,7 +599,9 @@ def port_pins_count(port):
 PART_PG_BANDS = {"M5": (4.32, 2.16, 0.264), "M6": (4.32, 2.16, 0.48), "M7": (8.64, 4.32, 0.48),
                  # M8 (face_layers only): the DIE PG grid's M8 stripes (default die.pg: 0.48 wide, pitch 8.64,
                  # offset 4.32, VDD/VSS -> a stripe every 4.32 at 0 mod 4.32) run over every partition
-                 "M8": (4.32, 0.0, 0.66)}
+                 "M8": (4.32, 0.0, 0.66),
+                 # M9 (face_layers only, N/S faces: the vertical die layer): die M9 stripes, same default grid as M8
+                 "M9": (4.32, 0.0, 0.66)}
 # M8 band: die.pg default M8 stripes w0.48 pitch 8.64 offset 4.32, VDD + VSS (spacing pitch/2) -> one stripe every
 # 4.32.  The band covers the stripe whether pdngen's offset names its edge ([4.32, 4.80]) or its centre ([4.08, 4.56])
 # plus 2 M8 pitches; a plan with a different die.pg M8 grid must keep its stripes inside these bands.

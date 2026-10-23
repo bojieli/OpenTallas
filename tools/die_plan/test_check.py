@@ -247,3 +247,21 @@ def test_face_layers_m8_and_spare_slots():
     assert any("spare slot sp0" in m for m in errs(spare(400, 420), "abutment"))
     assert errs(spare(700, 720), "abutment") == []
     assert any("outside face" in m for m in errs(spare(860, 900), "abutment"))
+
+
+def test_hard_core_track_offset_and_taps():
+    def core(off, o="R0"):
+        def m(p):
+            p["partition_types"]["src"]["hard_cores"] = [dict(
+                inst="u_core", origin_um=[8.64, 8.64], outline_um=[21.6, 21.6], orient=o, track_offset_um=off,
+                pins=[dict(name="a[0]", layer="M4", xy=[1.0, 0.012]), dict(name="b", layer="M5", xy=[0.012, 21.6])])]
+        return m
+    e = errs(core([0, 0]), "hard_cores")
+    assert any("pin a[0] M4" in m for m in e) and any("pin b M5" in m for m in e)
+    assert errs(core([0.012, 0.012]), "hard_cores") == []
+    assert any("pin a[0] M4" in m for m in errs(core([0.012, 0.012], "MX"), "hard_cores"))   # MX flips the phase
+    assert errs(core([0.012, -0.012], "MX"), "hard_cores") == []
+    tap = lambda xy: lambda p: p["partition_types"]["src"].setdefault("clock", {}).__setitem__(  # noqa: E731
+        "taps", [dict(name="u_core.ck", kind="core", xy=xy, insertion_ps=250)])
+    assert errs(tap([10.0, 10.0]), "clock") == []
+    assert any("outside the outline" in m for m in errs(tap([10.0, 9000.0]), "clock"))
