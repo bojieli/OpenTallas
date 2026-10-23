@@ -1,0 +1,129 @@
+{
+  "schema": "opentallas.hbm.r18h4.gen_result.v1",
+  "time": "2026-10-22T22:16:25.038757-07:00",
+  "source_commit": "1801aac79",
+  "launch": {
+    "pid": 96422,
+    "command": [
+      "/home/ubuntu/bin/ot-run",
+      "--mem",
+      "30",
+      "--threads",
+      "1",
+      "--disk",
+      "30",
+      "--priority",
+      "die",
+      "--dir",
+      "/srv/opentallas-scratch/claude/codex-hbmc-r18h4-2140-1022/chainsM",
+      "--",
+      "env",
+      "OT_GEN2_CASE=case_b",
+      "OT_RESET_GATE=diag",
+      "OT_DIE_CASE_EXTRA=--prior-place /srv/opentallas-scratch/claude/hbmc-r18h-1022/chainsM/case_b/run.tcl --relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M9 --repeater-max-wire-um 600 --carve-reserved all --reserve-homes /srv/opentallas-scratch/claude/codex-hbmc-r18h4-2140-1022/chainsM/reserve_need_r18h_nwsw.json --coord-map results/arch/hbm_release_r16_1021/plansM/coord_map.json --slot-map cij_NE=exact_p_cij_NE,cij_NW=exact_p_cij_NW,cij_SE=exact_p_cij_SE,cij_SW=exact_p_cij_SW,hb_vms_SW=grid_hb_vms_SW,refcfg_NW=exact_p_refcfg_NW,refcfg_SW=exact_p_refcfg_SW,sfault_NW=corridor_sfault_NW,sfault_SW=corridor_sfault_SW,svg_NW0=grid_svg_NW0,svg_NW1=exact_p_svg_NW1,svg_NW2=grid_svg_NW2,svg_NW3=grid_svg_NW3,svg_NW4=grid_svg_NW4,svg_NW5=grid_svg_NW5,svg_NW6=grid_svg_NW6,svg_NW7=grid_svg_NW7,svg_SW0=grid_svg_SW0,svg_SW1=grid_svg_SW1,svg_SW2=grid_svg_SW2,svg_SW3=grid_svg_SW3,svg_SW4=grid_svg_SW4,svg_SW5=grid_svg_SW5,svg_SW6=grid_svg_SW6,svg_SW7=grid_svg_SW7,vmdel_SW0=pack_vmdel_SW0,vmdel_SW1=pack_vmdel_SW1,vmdel_SW2=pack_vmdel_SW2,vmdel_SW3=pack_vmdel_SW3,vmdel_SW4=pack_vmdel_SW4,vmdel_SW5=pack_vmdel_SW5,vmdel_SW6=pack_vmdel_SW6,vmdel_SW7=pack_vmdel_SW7,vmks_NW0=side_vmks_NW0,vmks_NW1=exact_p_vmks_NW1,vmks_NW2=side_vmks_NW2,vmks_NW3=side_vmks_NW3,vmks_NW4=side_vmks_NW4,vmks_NW5=side_vmks_NW5,vmks_NW6=side_vmks_NW6,vmks_NW7=side_vmks_NW7,vmks_SW0=side_vmks_SW0,vmks_SW1=side_vmks_SW1,vmks_SW2=side_vmks_SW2,vmks_SW3=side_vmks_SW3,vmks_SW4=side_vmks_SW4,vmks_SW5=side_vmks_SW5,vmks_SW6=side_vmks_SW6,vmks_SW7=side_vmks_SW7,wbc_NW=exact_p_wbc_NW,xc_NW0=side_xc_NW0,xc_NW1=exact_p_xc_NW1,xc_NW2=exact_p_xc_NW2,xc_NW3=side_xc_NW3,xc_NW4=side_xc_NW4,xc_NW5=side_xc_NW5,xc_NW6=side_xc_NW6,xc_NW7=side_xc_NW7,xc_SW0=side_xc_SW0,xc_SW1=side_xc_SW1,xc_SW2=side_xc_SW2,xc_SW3=side_xc_SW3,xc_SW4=side_xc_SW4,xc_SW5=side_xc_SW5,xc_SW6=side_xc_SW6,xc_SW7=side_xc_SW7,hb_coll_SW=exact_q_hb_coll_SW,hb_coll_SE=exact_q_hb_coll_SE,hb_coll_NW=exact_q_hb_coll_NW,hb_coll_NE=exact_q_hb_coll_NE --coord-map-re ^(std|stu)_",
+      "bash",
+      "/srv/opentallas-scratch/claude/codex-hbmc-r18h4-2140-1022/chainsM/gen_d4g2e9.sh"
+    ],
+    "contract_sha256": "abb703b1b42e18ebc4780a6a51ff3cd34e20f39a3931472496d4d42e9ce43dae",
+    "source_commit": "8b1c6d9375f796640f586ea70a655c7374ff1174",
+    "generator_overlay_helper": "1ecf99953:tools/hbm_die_v15/die_case.py",
+    "fully_pinned_source_commit": "1801aac796240b6c3d5c396bd53fc50e062f444e"
+  },
+  "gen_status": "PASS",
+  "actual_instances": 83855,
+  "baseline_instances": 83855,
+  "placement_problems": [],
+  "qcore_and_stl": {
+    "sucore_SW": {
+      "m": "ot_hbm_su_static_qcore_r13",
+      "x": 10713.6,
+      "y": 9466.2,
+      "o": "R0",
+      "w": 302.4,
+      "h": 280.8,
+      "rule": "region sucore_SW"
+    },
+    "sucore_SE": {
+      "m": "ot_hbm_su_static_qcore_r13",
+      "x": 15260.4,
+      "y": 9466.2,
+      "o": "R0",
+      "w": 302.4,
+      "h": 280.8,
+      "rule": "region sucore_SE"
+    },
+    "sucore_NW": {
+      "m": "ot_hbm_su_static_qcore_r13",
+      "x": 10902.6,
+      "y": 23333.4,
+      "o": "R0",
+      "w": 302.4,
+      "h": 280.8,
+      "rule": "region sucore_NW"
+    },
+    "sucore_NE": {
+      "m": "ot_hbm_su_static_qcore_r13",
+      "x": 14504.4,
+      "y": 23452.2,
+      "o": "R0",
+      "w": 302.4,
+      "h": 280.8,
+      "rule": "region sucore_NE"
+    },
+    "stl_SW": {
+      "m": "ot_hbm_su_stree_leaf",
+      "x": 10843.2,
+      "y": 9423.0,
+      "o": "R0",
+      "w": 43.2,
+      "h": 43.2,
+      "rule": "region sucore_SW"
+    },
+    "stl_SE": {
+      "m": "ot_hbm_su_stree_leaf",
+      "x": 15390.0,
+      "y": 9423.0,
+      "o": "R0",
+      "w": 43.2,
+      "h": 43.2,
+      "rule": "region sucore_SE"
+    },
+    "stl_NW": {
+      "m": "ot_hbm_su_stree_leaf",
+      "x": 11032.2,
+      "y": 23290.2,
+      "o": "R0",
+      "w": 43.2,
+      "h": 43.2,
+      "rule": "region sucore_NW"
+    },
+    "stl_NE": {
+      "m": "ot_hbm_su_stree_leaf",
+      "x": 14634.0,
+      "y": 23733.0,
+      "o": "R0",
+      "w": 43.2,
+      "h": 43.2,
+      "rule": "region sucore_NE"
+    }
+  },
+  "view_kinds": {
+    "ot_hbm_pc_refresh_cfg": "ROUTED_UNBOUND",
+    "ot_hbm_su_static_qcore_r13": "ROUTED_UNBOUND"
+  },
+  "manifest_sha256": "987fac33f26aaf207ddaae0987c7a99947a9803be1b88b5cfbdb9bb09bce4c6f",
+  "run_tcl_sha256": "0f345f13452d5a31d34aa58f67e8c7c3f81b6041d678e2db9681998acd79ef9a",
+  "actual_tcl": {
+    "signal_layers": "M4-M9",
+    "rc_layer": "M8",
+    "repeater_max_wire_um": 600,
+    "repair_args": ""
+  },
+  "metadata_note": "The manifest generic RC defaults to M4; actual emitted run.tcl uses M8. Proposed stl clearance10.8 was consumed by allocation; actual shared boundary clearance0, no overlap. GRT/clock must decide the physical result.",
+  "next_jobs": {
+    "probe600": 2122277,
+    "forest_NE3": 2124439,
+    "forest_NE4": 2127261
+  },
+  "qualification": "Pre-forest integration GEN only; no GRT/STA/clock/IR/functional token closure claim."
+}

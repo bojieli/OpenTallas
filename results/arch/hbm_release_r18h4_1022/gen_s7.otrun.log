@@ -1,0 +1,34 @@
+ot-run: ot-epyc5       admits    45 GB (avail 208, reserve 0, fresh 55.9, peak 43.3, headroom 0, waiters 0/0 GB) load 36/128 running 26 disk 908 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbmc-r18h4-2140-1022/chainsM
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbmc-r18h4-2140-1022/chainsM
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbmc-r18h4-2140-1022/chainsM
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbmc-r18h4-2140-1022/chainsM
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbmc-r18h4-2140-1022/chainsM
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbmc-r18h4-2140-1022/chainsM
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3160589-1792731776 after 0 s
+GEN_OK case_b
+lane rows repair {'repair_moves': 31, 'repair_ripped': 30, 'repair_round0_fixed': 28, 'repair_round0_tried': 266, 'repair_round1_fixed': 3, 'repair_round1_tried': 238, 'repair_round2_fixed': 0, 'repair_round2_tried': 235}
+lane rows (reach) 70440 tiles 81131 {'slid along': 22294, 'reach window': 13703, 'REACH_FAIL least-violating': 235, 'slid across': 20646, 'exact site': 13155, 'relaxed window': 376, 'repair (rip-up': 31} REACH_FAIL rows 235 not_inserted hops 148
+lane rows 70440 tiles 81131 {'slid along': 22294, 'reach window': 13703, 'REACH_FAIL least-violating': 235, 'slid across': 20646, 'exact site': 13155, 'relaxed window': 376, 'repair (rip-up': 31}
+reset_reach_gate {"reach_gate": "FAIL_DIAG", "por_direct_sinks": 43157, "forest_sinks": 0, "relay_row_sinks": 0, "errors": 43152, "kinds": {"no_regional_tree": 40471, "sink_unreachable": 2681}}
+clock_regions hbm {"seed_regions": 21, "regions": 19, "merges": 2, "merges_refused_box": 194, "near_entry_pairs": 5045, "near_tile_pairs": 5013, "near_tile_pairs_cross_region": 194, "max_region_um": 4000.0, "near_um": 405.0}
+clock_check hbm regional {"pairs": 7221, "noncommon_ps": {"median": 384.6, "p90": 1170.0, "max": 5350.2}, "ocv_10pct_max_ps": 535.0, "insertion_ps": [10663.9, 11418.4]}
+clock hbm sinks 5235 buffers 8766
+clock_regions serial {"seed_regions": 22, "regions": 22, "merges": 0, "merges_refused_box": 177, "near_entry_pairs": 7135, "near_tile_pairs": 6491, "near_tile_pairs_cross_region": 177, "max_region_um": 4000.0, "near_um": 405.0}
+clock_check serial regional {"pairs": 3324613, "noncommon_ps": {"median": 720.6, "p90": 1391.2, "max": 8026.1}, "ocv_10pct_max_ps": 802.6, "insertion_ps": [8632.0, 9662.1]}
+clock serial sinks 16850 buffers 15705
+clock_regions stream {"seed_regions": 45, "regions": 45, "merges": 0, "merges_refused_box": 4298, "near_entry_pairs": 45336, "near_tile_pairs": 30543, "near_tile_pairs_cross_region": 1545, "max_region_um": 4000.0, "near_um": 405.0}
+clock_check stream regional {"pairs": 273858, "noncommon_ps": {"median": 398.9, "p90": 1791.4, "max": 10216.5}, "ocv_10pct_max_ps": 1021.6, "insertion_ps": [10958.6, 12398.3]}
+clock stream sinks 33447 buffers 56863
+clock_check stream regional {"pairs": 273858, "noncommon_ps": {"median": 398.9, "p90": 1791.4, "max": 10216.5}, "ocv_10pct_max_ps": 1021.6, "insertion_ps": [10958.6, 12398.3]}
+clock stream sinks 33447 buffers 56863
+GEN_OPEN_INPUT_CHECK PASS contract ends emitted 25749349 open input bits = straps only
+{"insts": 83855, "nets": 12778012, "excluded": 0, "homes": 83300, "problems": 0, "clock": {"hbm": 8766, "serial": 15705, "stream": 56863}}
+OVERREACH rc=0
+{"hop_um": 405.0, "nets_over": 463773, "by_class": {"RESET": 10, "RELAY": 463724, "STATUS": 39}, "worst": {"RESET": [25425.2, "ckg_por_hbm"], "RELAY": [1792.1, "n12453223"], "STATUS": [1761.2, "n12436435"]}}
+{'cls': 'RELAY', 'driver': 'hbfd_rly_624_WE.o', 'loads': 'hbfd_rly_624_WE', 'nets': 65232}
+{'cls': 'RELAY', 'driver': 'hbfd_rly_624_EW.o', 'loads': 'hbfd_rly_624_EW', 'nets': 60864}
+{'cls': 'RELAY', 'driver': 'hbfd_rly_624_SN.o', 'loads': 'hbfd_rly_624_SN', 'nets': 19232}
+{'cls': 'RELAY', 'driver': 'hbfd_lh_624_NS.b', 'loads': 'hbfd_lh_624_NS', 'nets': 15286}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3160589-1792731776): exit 0
