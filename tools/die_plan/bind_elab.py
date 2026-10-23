@@ -260,13 +260,39 @@ def lib_stubs(lib, out_path):
             hdr = t[m.start():hdr_end + 1]
             body_end = t.find("endmodule", hdr_end)
             body = t[hdr_end + 1:body_end]
-            decl = []
             ansi = re.search(r"\b(input|output|inout)\b", hdr) is not None
+            decl, lp = [], []
             for st in re.finditer(r"(?:^|(?<=;))\s*((?:parameter|localparam|input|output|inout)\b[^;]*;)", body):
                 txt = st.group(1)
-                if not ansi or txt.startswith(("parameter", "localparam")):
-                    decl.append("    " + txt)
-            out.append(hdr + "\n" + "\n".join(decl) + "\nendmodule")
+                if txt.startswith("localparam"):
+                    lp.append(txt)
+                elif not ansi or txt.startswith("parameter"):
+                    decl.append(txt)
+            # localparams / constant functions only when the interface needs them (a body localparam may sit in a
+            # generate block and name a genvar)
+            fall = {m2.group(1): m2.group(0) for m2 in
+                    re.finditer(r"\bfunction\b(?:\s+automatic)?(?:\s+\w+)?(?:\s*\[[^\]]*\])?\s+(\w+).*?\bendfunction\b",
+                                body, re.S)}
+            need_txt = hdr + " ".join(decl)
+            keep_lp, keep_fn = [], []
+            changed = True
+            while changed:
+                changed = False
+                for x in lp:
+                    nm = re.match(r"localparam\b[^=]*?(\w+)\s*=", x)
+                    if x not in keep_lp and nm and re.search(rf"\b{nm.group(1)}\b", need_txt):
+                        keep_lp.append(x)
+                        need_txt += " " + x
+                        changed = True
+                for nm, x in fall.items():
+                    if x not in keep_fn and re.search(rf"\b{nm}\s*\(", need_txt):
+                        keep_fn.append(x)
+                        need_txt += " " + x
+                        changed = True
+            keep_lp.sort(key=lp.index)
+            decl = ["    " + x for x in keep_lp + decl]
+            fns = keep_fn
+            out.append(hdr + "\n" + "\n".join(fns + decl) + "\nendmodule")
     Path(out_path).write_text("\n".join(out) + "\n")
     return str(out_path)
 
