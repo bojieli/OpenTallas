@@ -64,7 +64,7 @@ def write_latency(raw, out_dir, inplace_path=None):
         a, b = P.ports[ln["ports"][0]], P.ports[ln["ports"][-1]]
         lines.append(f"  localparam int {d['param']} = {d['cycles']};  // {lid}: {a['src']['part']}.{a['src']['bus']}"
                      f" -> {b['dst']['part']}.{b['dst']['bus']} ({d['stations']} st, {d['faces']} faces, "
-                     f"{d['boundary']} boundary, {d['fixed']} fixed)")
+                     f"{d['boundary']} boundary, {d['fixed']} fixed" + (f", +{d['pad']} R8 group pad" if d.get("pad") else "") + ")")
     lines.append(f"endpackage : {pkg}")
     (out_dir / f"{pkg}.sv").write_text("\n".join(lines) + "\n")
     js = dict(schema="opentallas.die_plan.latency.v1", die=P.name, plan_digest=dig, period_ps=P.die["period_ps"],
