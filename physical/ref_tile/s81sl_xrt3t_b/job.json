@@ -59,7 +59,7 @@
     "name": "s81sl_xrt3_b_mutxhold",
     "cmd": "XR_PDC=1 XR_FOREG=1 bash tools/s81_slice/xrt_bench.sh {RUN}/s81sl_xrt3_b_mutxhold xhold 1 1 6000 raw",
     "expect": "fail",
-    "fail_regex": "^FAIL",
+    "fail_regex": "^XRB hb=1 .* err=[1-9][0-9]*$",
     "fail_witness": "results/rtl/s81_xrt3r_1022/bench/f1_xhold_h1/run.log",
     "threads": 4,
     "peak_ram_gb": 4
