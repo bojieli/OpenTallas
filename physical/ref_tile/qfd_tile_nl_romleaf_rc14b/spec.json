@@ -447,8 +447,8 @@
       "results/arch/codex_qw_a0_2000_1021",
       "physical/ref_tile/qw_a0_rc14_children"
     ],
-    "views_to": "physical/ref_tile/qfd_tile_nl_romleaf_rc14b/views",
-    "record_to": "results/rtl/ref_tile/qfd_tile_nl_romleaf_rc14b",
+    "views_to": "physical/ref_tile/qfd_tile_nl_romleaf_rc12b/views",
+    "record_to": "results/rtl/ref_tile/qfd_tile_nl_romleaf_rc12b",
     "benches": [
       {
         "name": "parent_native_0",
@@ -460,7 +460,7 @@
           "verilator"
         ],
         "pass_regex": "^ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560",
-        "pass_witness": "results/arch/codex_qw_a0_2000_1021/parent_native_PASS.log"
+        "pass_witness": "results/arch/qwen_romleaf_1552/bench/parent_nk_positive.log"
       },
       {
         "name": "parent_native_leaf_clock_4",
@@ -472,7 +472,7 @@
           "verilator"
         ],
         "fail_regex": "ROMLEAF_PARENT_NK_NATIVE_FAIL|ROMLEAF_PARENT_NK_MISMATCH",
-        "fail_witness": "results/arch/codex_qw_a0_2000_1021/parent_native_clock_MUT4_FAIL.log"
+        "fail_witness": "results/arch/qwen_romleaf_1552/bench/parent_nk_clock_mutant.log"
       }
     ],
     "cycles_added": 0,
