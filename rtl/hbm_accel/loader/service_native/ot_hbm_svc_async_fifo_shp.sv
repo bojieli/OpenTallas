@@ -1,0 +1,132 @@
+`default_nettype none
+// SPSC Gray-pointer FIFO, SHARED-POINTER bit-sliced storage (HBMc/TILES2 kshare r5a, 2026-10-22; REVIEW REQUIRED before
+// any gate: a new reviewed_gray/async_gray primitive).
+// Control = ot_hbm_svc_async_fifo verbatim (same register names, same Gray/online publication and 2-stage synchronisers,
+// same full/empty/ready/valid/flags).  Only the storage changes: the WIDTH-bit word is split into NS <= SW-bit slices;
+// each slice owns DEPTH x B storage plus PRIVATE same-domain copies of the binary write / read slot index (wa / ra),
+// advanced on the same fire as wr_bin / rd_bin and reset by a per-group ot_reset_sync on the same both_reset, so
+// wa == wr_bin[AW-1:0] and ra == rd_bin[AW-1:0] on every edge after reset (no fire can occur before both online flags
+// have crossed, i.e. long after every group sync released).  rd_data slice = mem_s[ra] (FWFT, as mem[rd_bin]).
+// Why: r4/r4c used NS lockstep copies of the whole reviewed FIFO per lane (80 x 4 CDC FIFOs) only to keep every pointer
+// / decode net <= 32 loads; here ONE pointer pair crosses per FIFO and the fan-out is carried by same-domain copies.
+// Census shape: wr_fire -> NG kept group ANDs -> one kept AND per slice; read select rs[d] -> B AND pins + 1 (B <= 7);
+// v4 (r5a gate 10-22, census max 57): a binary read index ra[AW-1:0] -> mem[ra] is flattened by abc into AOI terms that
+// reuse every ra bit up to 2 x DEPTH/2 x B times (ra[2] QN 57 loads at DEPTH 8, B 7); the read slot is now a kept
+// one-hot ring rs (rs == 1 << rd_bin[AW-1:0] every edge) and rd_data = OR_d (rs[d] & mem[d]).
+// Resets: gw_reset / gr_reset (u_gw_leaf / u_gr_leaf outputs) are FLOP-DRIVEN async resets of wa / rs: they assert
+// asynchronously with wr_reset / rd_reset and DEASSERT SYNCHRONOUSLY on a wr_clk / rd_clk edge (the leaf flop's D =
+// wr_online / rd_online), on the same edge as rd_online_w1 / wr_online_r1 capture; the first fire needs the _w2 / _r2
+// flag, i.e. >= 1 edge later (bench margin).  The tool admits this exact wiring only (COORD re-ack 10-22 (b)).
+// group reset leaf -> GE slices x (DEPTH + 1) + 1 <= 32.
+// Leaf flops (NG per side) share u_wr/rd_reset with ~20 control flops: callers keep NG <= 11 (kshare u_fill SW 14, NG 7).
+(* keep_hierarchy = "yes" *)
+module ot_hbm_svc_shp_and2(input wire a,b,output wire y); assign y=a&b; endmodule
+// Group release leaf: N kept copies of the side's own online flag (D = wr_online / rd_online, NOT a constant 1: a D=1
+// leaf on the same reset is logically identical to wr_online / rd_online and synthesis merged them, r5a gate 10-22).
+(* keep_hierarchy = "yes" *)
+module ot_hbm_svc_shp_leaf #(parameter integer N=1)(input wire clk,rst_n_in,d,output wire [N-1:0] rst_n);
+ (* keep="true",dont_touch="true" *) reg [N-1:0] q;
+ always @(posedge clk or negedge rst_n_in) if(!rst_n_in) q<={N{1'b0}}; else q<={N{d}};
+ assign rst_n=q;
+endmodule
+
+module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)(
+ input wire wr_clk,wr_rst_n,wr_valid,output wire wr_ready,
+ input wire [WIDTH-1:0] wr_data,output reg wr_overflow,
+ input wire rd_clk,rd_rst_n,output wire rd_valid,input wire rd_ready,
+ output wire [WIDTH-1:0] rd_data,output reg rd_underflow
+);
+ localparam integer AW=$clog2(DEPTH),PW=AW+1;
+ // v4 census (gate 2298644: u_gr_leaf rst_n 64 loads = 1 + 7 x (8 rs + 1)): effective group size GE so that one leaf
+ // output drives 1 + GE x (DEPTH + 1) <= 32 pins (rs ring + u_rf + u_gr); write side shares it (wa AW + u_wf, fewer).
+ localparam integer GE=(GS<31/(DEPTH+1))?GS:31/(DEPTH+1);
+ localparam integer NS=(WIDTH+SW-1)/SW,NG=(NS+GE-1)/GE;
+ initial if(DEPTH<4||(DEPTH&(DEPTH-1))!=0)$error("FIFO depth must be power-of-two >=4");
+ wire both_reset=wr_rst_n&&rd_rst_n;wire wr_reset,rd_reset;
+ ot_reset_sync u_wr_reset(.clk(wr_clk),.async_rst_n(both_reset),.sync_rst_n(wr_reset));
+ ot_reset_sync u_rd_reset(.clk(rd_clk),.async_rst_n(both_reset),.sync_rst_n(rd_reset));
+ reg [PW-1:0] wr_bin,wr_gray,rd_bin,rd_gray;
+ (* async_reg="true" *)reg [PW-1:0] rd_gray_w1,rd_gray_w2,wr_gray_r1,wr_gray_r2;
+ reg wr_online,rd_online;
+ (* async_reg="true" *)reg rd_online_w1,rd_online_w2,wr_online_r1,wr_online_r2;
+ wire full=wr_gray=={~rd_gray_w2[PW-1:PW-2],rd_gray_w2[PW-3:0]};
+ wire empty=rd_gray==wr_gray_r2;
+ assign wr_ready=wr_reset&&rd_online_w2&&!full;
+ assign rd_valid=rd_reset&&wr_online_r2&&!empty;
+ wire wr_fire=wr_valid&&wr_ready,rd_fire=rd_valid&&rd_ready;
+ wire [PW-1:0] wr_next=wr_bin+wr_fire,rd_next=rd_bin+rd_fire;
+ always @(posedge wr_clk or negedge wr_reset)begin
+  if(!wr_reset)begin
+   wr_bin<=0;wr_gray<=0;rd_gray_w1<=0;rd_gray_w2<=0;
+   wr_online<=0;rd_online_w1<=0;rd_online_w2<=0;wr_overflow<=0;
+  end else begin
+   wr_online<=1;rd_online_w1<=rd_online;rd_online_w2<=rd_online_w1;
+   rd_gray_w1<=rd_gray;rd_gray_w2<=rd_gray_w1;
+   if(wr_valid&&!wr_ready)wr_overflow<=1;
+   if(wr_fire)begin wr_bin<=wr_next;wr_gray<=(wr_next>>1)^wr_next;end
+  end
+ end
+ always @(posedge rd_clk or negedge rd_reset)begin
+  if(!rd_reset)begin
+   rd_bin<=0;rd_gray<=0;wr_gray_r1<=0;wr_gray_r2<=0;
+   rd_online<=0;wr_online_r1<=0;wr_online_r2<=0;rd_underflow<=0;
+  end else begin
+   rd_online<=1;wr_online_r1<=wr_online;wr_online_r2<=wr_online_r1;
+   wr_gray_r1<=wr_gray;wr_gray_r2<=wr_gray_r1;
+   if(rd_ready&&!rd_valid)rd_underflow<=1;
+   if(rd_fire)begin rd_bin<=rd_next;rd_gray<=(rd_next>>1)^rd_next;end
+  end
+ end
+ // ---- shared-pointer storage
+ genvar g,s;
+ wire [NG-1:0] gw_reset,gr_reset,gw_fire,gr_fire;
+ // Group reset leaves (r5a gate 10-22: per-group ot_reset_sync copies are logically identical and synthesis merged them
+ // back into one 140-load flop): ONE ot_reset_sync per side (u_wr_reset / u_rd_reset, above) resets a KEPT same-domain
+ // leaf per group that copies the side's online flag (release = wr_reset / rd_reset + 2 edges).  A write fire needs
+ // rd_online_w2, a read fire wr_online_r2: both are themselves reset by wr_reset / rd_reset, so they rise >= 2 own-clock
+ // edges after it and the slot-index copies are out of reset by the first fire (bench invariant + release margin).
+ // Bench-only mutant OT_SHP_MUT_RS_DEEP adds one more leaf stage (review 10:45 (b)).
+ wire [NG-1:0] gw_l0,gr_l0;
+ ot_hbm_svc_shp_leaf #(.N(NG)) u_gw_leaf(.clk(wr_clk),.rst_n_in(wr_reset),.d(wr_online),.rst_n(gw_l0));
+ ot_hbm_svc_shp_leaf #(.N(NG)) u_gr_leaf(.clk(rd_clk),.rst_n_in(rd_reset),.d(rd_online),.rst_n(gr_l0));
+`ifdef OT_SHP_MUT_RS_DEEP
+ ot_rst_fanout #(.N(1)) u_gw_mut[NG-1:0](.clk(wr_clk),.rst_n_in(gw_l0),.rst_n(gw_reset));
+ ot_rst_fanout #(.N(1)) u_gr_mut[NG-1:0](.clk(rd_clk),.rst_n_in(gr_l0),.rst_n(gr_reset));
+`else
+ assign gw_reset=gw_l0; assign gr_reset=gr_l0;
+`endif
+ // v4d (r5a v4c gate 10-22, census max 40): wr_fire was one abc net shared by the control (wr_bin/gray/overflow), the
+ // caller's wr_ready users and the NG group ANDs (14 + 26 pins).  The group ANDs now hang off a KEPT private fire copy
+ // (u_wfg / u_rfg, same wr_valid & wr_ready / rd_valid & rd_ready), so the shared net carries one extra pin only.
+ wire wr_fire_g,rd_fire_g;
+ (* keep="true" *) ot_hbm_svc_shp_and2 u_wfg(.a(wr_valid),.b(wr_ready),.y(wr_fire_g));
+ (* keep="true" *) ot_hbm_svc_shp_and2 u_rfg(.a(rd_valid),.b(rd_ready),.y(rd_fire_g));
+ generate for(g=0;g<NG;g=g+1)begin:g_g
+  (* keep="true" *) ot_hbm_svc_shp_and2 u_gw(.a(wr_fire_g),.b(gw_reset[g]),.y(gw_fire[g]));
+  (* keep="true" *) ot_hbm_svc_shp_and2 u_gr(.a(rd_fire_g),.b(gr_reset[g]),.y(gr_fire[g]));
+ end
+ for(s=0;s<NS;s=s+1)begin:g_s
+  localparam integer B=(WIDTH-s*SW<SW)?WIDTH-s*SW:SW;
+  wire wf,rf;
+  // u_wf / u_rf re-AND the group reset already inside gw_fire / gr_fire (logically redundant, review 10:45 (d)): kept on
+  // purpose as the per-slice kept driver, so each group fire net drives GS AND pins, not GS x (B write enables + AW).
+  (* keep="true" *) ot_hbm_svc_shp_and2 u_wf(.a(gw_fire[s/GE]),.b(gw_reset[s/GE]),.y(wf));
+  (* keep="true" *) ot_hbm_svc_shp_and2 u_rf(.a(gr_fire[s/GE]),.b(gr_reset[s/GE]),.y(rf));
+  (* keep="true",dont_touch="true" *) reg [AW-1:0] wa;   // per-slice copy: must not be merged
+  // per-slice one-hot read slot (v4): rs == 1 << rd_bin[AW-1:0]; each rs[d] drives B AND pins + the next ring stage
+  (* keep="true",dont_touch="true",fsm_encoding="none" *) reg [DEPTH-1:0] rs;
+  (* mem2reg *) reg [B-1:0] mem[0:DEPTH-1];   // explicit flops, like the reviewed FIFO (async_fifo_hierarchy_audit)
+  always @(posedge wr_clk or negedge gw_reset[s/GE]) if(!gw_reset[s/GE]) wa<=0; else if(wf) wa<=wa+1'b1;
+  always @(posedge wr_clk) if(wf) mem[wa]<=wr_data[s*SW+:B];
+  always @(posedge rd_clk or negedge gr_reset[s/GE]) if(!gr_reset[s/GE]) rs<={{(DEPTH-1){1'b0}},1'b1};
+`ifdef OT_SHP_MUT_RS_TWICE   // bench-only mutant (COORD re-ack (a)): slice 0's read ring rotates twice per fire
+   else if(rf) rs<=(s==0)?{rs[DEPTH-3:0],rs[DEPTH-1:DEPTH-2]}:{rs[DEPTH-2:0],rs[DEPTH-1]};
+`else
+   else if(rf) rs<={rs[DEPTH-2:0],rs[DEPTH-1]};
+`endif
+  reg [B-1:0] rdm; integer d;
+  always @* begin rdm={B{1'b0}}; for(d=0;d<DEPTH;d=d+1) rdm=rdm|({B{rs[d]}}&mem[d]); end
+  assign rd_data[s*SW+:B]=rdm;
+ end endgenerate
+endmodule
+`default_nettype wire

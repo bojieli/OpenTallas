@@ -1,0 +1,5 @@
+SHP_LOCKSTEP PASS WIDTH=36 DEPTH=4 SW=5 checks=445584 pops=126911
+- rtl/test/hbm_svc_shp/tb_svc_async_fifo_shp.sv:41: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 205us; walltime 0.231 s; speed 885.649 us/s
+- Verilator: cpu 0.231 s on 1 threads; allocated 6 MB

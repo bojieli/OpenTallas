@@ -1,0 +1,5 @@
+v4d actual (SW 14): ADMITTED
+leaf d=1 : REFUSED: async_gray_fifo shp u_gw_leaf is not the reviewed u_wr_reset / wr_online / wr_clk leaf
+rs reset from rd_reset : REFUSED: async_gray_fifo shp g_s[5].rs reset is not driven by its reviewed group leaf
+leaf rst from both_reset : REFUSED: async_gray_fifo shp u_gr_leaf is not the reviewed u_rd_reset / rd_online / rd_clk leaf
+EXIT 0
