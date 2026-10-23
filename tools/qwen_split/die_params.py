@@ -154,7 +154,7 @@ def gen_params(insts, hr_rows, image=IMAGE):
         # D2D return chain).  STG3 c0f8097f3: ARF/RP 0 -> od/lm --arf + qk --rope rx FAIL; ARF/RP 1 -> 36 layers PASS.
         # The slice2_e / slice2_wh kits carry the same params.  OT_QWEN_SLICE_LAYERGAP=0 = the old ARF/RP 0 views (diag).
         lg = int(os.environ.get('OT_QWEN_SLICE_LAYERGAP', '1') or 0)
-        for sm in ('qfd_dv_slice2_w', 'qfd_dv_slice2_e'):
+        for sm in ('qfd_dv_slice2_w', 'qfd_dv_slice2_e', 'qfd_dv_slice2_wt', 'qfd_dv_slice2_et'):   # _wt/_et: OT_SPLIT_DV_TREQ
             if sm in masters:
                 out[sm] = dict(MU_NU=nu, _source=src)
                 if lg:

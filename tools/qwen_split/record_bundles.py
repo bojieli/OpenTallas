@@ -91,6 +91,16 @@ if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
     BUNDLES['SF.head_slot'] = [(D2D,'prog_head_context_slot',SF,'prog_head_context_slot'),
                                (D2D,'tx_user',SF,'prog_head_context_user')]
     BUNDLES['SF.cal'] += _same(SF,D2D,('cal_start_rx','cal_seg_rx','cal_user_tx','cal_user_rx'))
+# QDIE5-TLD 10-22 (OT_SPLIT_DV_TREQ=1, tools/qwen_split/dv_case.py): the CALR table-load request rides beside the slice
+# command on EVERY hop with ONE lane E (the slice consumer contract: QW-TLPROD CONSUMER_GAP needs table_req at the cmd
+# lane latency).  Endpoint pins: tt_ctlm -> W5, W row W5 -> W0 (cmd_eo -> cmd_wi), the W0 | E0 seam (cmd_eo -> cmd_ei),
+# E row E0 -> E5 (cmd_wo -> cmd_ei).  A hop present on the die must carry both members (bundle_map fails closed).
+if os.environ.get('OT_SPLIT_DV_TREQ', '0') == '1':
+    BUNDLES['DV.treq.ctlm'] = [('tt_ctlm', 'cmd', 'dvs_W5', 'cmd_wi'), ('tt_ctlm', 'table_req', 'dvs_W5', 'treq_wi')]
+    _hops = ([(f'dvs_W{i}', 'e', f'dvs_W{i - 1}', 'w') for i in range(5, 0, -1)] + [('dvs_W0', 'e', 'dvs_E0', 'e')] +
+             [(f'dvs_E{i}', 'w', f'dvs_E{i + 1}', 'e') for i in range(5)])
+    for _s, _o, _d, _i in _hops:
+        BUNDLES[f'DV.treq.{_s[4:]}_{_d[4:]}'] = [(_s, f'{k}_{_o}o', _d, f'{k}_{_i}i') for k in ('cmd', 'treq')]
 # the compiler's own bundle names (layer_compile.py BUNDLES, compute side): every one of them is a bundle here
 COMPILER_BUNDLES = ('C.tx_slot', 'C.rx_record', 'C.tx_record', 'C.x3_record')
 INDEX = {(s, sp, d): b for b, mem in BUNDLES.items() for s, sp, d, _ in mem}

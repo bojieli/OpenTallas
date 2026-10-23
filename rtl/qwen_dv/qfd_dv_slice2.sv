@@ -60,7 +60,20 @@ module qfd_dv_slice2 #(
     parameter integer HD_W130 = 0,              // 1: the heads are qfd_dv_heads_w130 (closed qfd_xs_leaf_w130 leaves)
     parameter integer MU_NU = 1,                // MU-QWEN R4: users of the LM-head running argmax (1 = single-user, today)
     parameter integer ARF = 0,                  // QW-LAYERGAP: 1 = AR message framer (header), 2 = mutant
-    parameter integer RP = 0                    // QW-LAYERGAP: 1 = per-token RoPE row from the return chain, 2 = mutant
+    parameter integer RP = 0,                   // QW-LAYERGAP: 1 = per-token RoPE row from the return chain, 2 = mutant
+    // QDIE5-TLD 10-22 (Q.STA.TTC.HP13 owed port table_req, class A): the CALR per-layer slice-table load consumer.
+    //   PRIVATE_CALR 1: the slice's own table-ROM loader qfd_dv_slice_tload (4 x 4096x266 mask ROMs table_s<TSLICE>_m0..3,
+    //   fixed 88 reads) joined at the VM table-write port.  Request lane treq_i = {valid, stage 6, user 2} = the HP13
+    //   tt_ctlm table_req output, carried slice to slice EXACTLY like cmd: treq_q is the pin register (the edge cmd_q
+    //   lands), treq_o its own register (the edge cmd_o leaves) -> 2 edges a hop = the cmd hop, so at every slice the
+    //   request reaches the loader face on the edge cmd_q holds the stage-start command (QW-TLPROD CONSUMER_GAP: "table_req
+    //   rides beside cmd, die lane / row hops cancel").  The loader takes treq_i into its own face register (= the cmd_q
+    //   edge).  Static: no ready, no credit; a stream table write on a loader-write edge is a schedule fault (sticky
+    //   tld_fault -> any_fault), never arbitrated.  0 = the benched / hardened RTL bit-for-bit (treq_i unused, treq_o 0).
+    parameter integer PRIVATE_CALR = 0,
+    parameter integer TSLICE = 0,               // table-ROM mask set of this slice (sim: ROM INSTANCE table_s<TSLICE>_m*)
+    parameter integer TQ_MUT = 0                // bench only: 1 = treq hop of ONE edge (treq_o = treq_q, the QW-F16PROG4 /
+                                                //   s8_lp form), 2 = loader stage bit 0 dropped (qfd_dv_slice_tload MUT 2)
 ) (
     input  wire           ck,
     input  wire           rst_n,
@@ -89,7 +102,9 @@ module qfd_dv_slice2 #(
     output reg  [106:0]   st,           // status {ar_land, tok_val 32, sid 4, (qfd_dv_slice st)}: to tt_ctlm
     output reg  [49:0]    cc_o,         // collective command {v, mode, words 16, tag 32}
     input  wire [9:0]     ag_up_i,
-    output reg  [9:0]     ag_dn_o
+    output reg  [9:0]     ag_dn_o,
+    input  wire [8:0]     treq_i,       // QDIE5-TLD: CALR table-load request lane (PRIVATE_CALR 1), W5 side
+    output wire [8:0]     treq_o        //   -> the up neighbour, 2 edges a hop beside cmd_o
 );
     // ------------------------------------------------------------------ regional reset (sync release)
     reg rs1, rst;
@@ -250,12 +265,32 @@ module qfd_dv_slice2 #(
     wire [1:0]  tw_kind;
     wire [23:0] tw_addr;
     wire [1023:0] tw_data;
+    wire        stm_tw_we;                       // the stream's own table write (joined with the loader below)
+    wire [1:0]  stm_tw_kind;
+    wire [23:0] stm_tw_addr;
+    wire [1023:0] stm_tw_data;
     qfd_dv_stream #(.MUT(MUT)) u_stm (.ck(ck), .rst_n(rst), .sid(sid_q),
         .cfg_v(c_stm), .cfg_dir(cmd_q[5:4]), .cfg_tag(cmd_q[33:6]),
         .sw_i(sw_q), .se_i(se_q), .so_e(st_up_o), .so_w(st_dn_o),
         .xw_we(su_x_we), .xw_addr(vm_waddr), .xw_data(vm_wdata),
-        .tw_we(tw_we), .tw_kind(tw_kind), .tw_addr(tw_addr), .tw_data(tw_data),
+        .tw_we(stm_tw_we), .tw_kind(stm_tw_kind), .tw_addr(stm_tw_addr), .tw_data(stm_tw_data),
         .xt_v(xt_v), .xt_a(xt_a), .xt_d(xt_d), .xt_bad(xt_bad), .fault(stm_fault));
+    // ------------------------------------------------------------------ QDIE5-TLD: CALR table-ROM load + VM join
+    wire tld_fault;
+    generate if (PRIVATE_CALR != 0) begin : g_tld
+        reg [8:0] treq_q, treq_oq;               // pin register (cmd_q edge) + forwarded register (cmd_o edge)
+        always @(posedge ck or negedge rst)
+            if (!rst) begin treq_q <= 9'd0; treq_oq <= 9'd0; end
+            else begin treq_q <= treq_i; treq_oq <= treq_q; end
+        assign treq_o = (TQ_MUT == 1) ? treq_q : treq_oq;
+        qfd_dv_slice_tload #(.SLICE(TSLICE), .MUT((TQ_MUT == 2) ? 2 : 0)) u_tld (.ck(ck), .rst_n(rst), .treq(treq_i),
+            .s_we(stm_tw_we), .s_kind(stm_tw_kind), .s_addr(stm_tw_addr), .s_data(stm_tw_data),
+            .tw_we(tw_we), .tw_kind(tw_kind), .tw_addr(tw_addr), .tw_data(tw_data), .busy(), .done(), .fault(tld_fault));
+    end else begin : g_no_tld
+        assign treq_o = 9'd0; assign tld_fault = 1'b0;
+        assign tw_we = stm_tw_we; assign tw_kind = stm_tw_kind; assign tw_addr = stm_tw_addr; assign tw_data = stm_tw_data;
+        wire unused_treq = &{1'b0, treq_i};
+    end endgenerate
     // ------------------------------------------------------------------ the quad's 4 column heads + 32 x leaves
     reg  [64*32-1:0] xt_f;                       // stream BF16 -> the 64-lane write {bf16, 16'h0}
     always @(*) for (l = 0; l < 64; l = l + 1) xt_f[32*l +: 32] = {xt_d[16*l +: 16] ^ ((MUT == 9) ? 16'd1 : 16'd0), 16'h0000};
@@ -415,7 +450,7 @@ module qfd_dv_slice2 #(
         else if (c_stn) begin stn_left <= {1'b0, cmd_q[14:7]}; stn_snd <= cmd_q[5:4] == 2'd3; end
         else if (stn_busy && (stn_snd ? l9_o[512] : r_v)) stn_left <= stn_left - 9'd1;
     always @(posedge ck or negedge rst) if (!rst) tok_g <= 1'b0; else if (g_tok_v) tok_g <= 1'b1; else if (tok_v) tok_g <= 1'b0;
-    wire any_fault = su_fault | vm_fault | stn_fault | sc_fault | stm_fault | port_fault | hd_fault;
+    wire any_fault = su_fault | vm_fault | stn_fault | sc_fault | stm_fault | port_fault | hd_fault | tld_fault;
     // MU-QW-AMIX: st[27:26] = user of the token on a tok_v edge (MU_NU > 1), else ar_rank[1:0] (MU_NU 1: always)
     wire [1:0] st_ru = (MU_NU > 1 && (tok_v || g_tok_v)) ? (tsel ? g_user : tok_user) : ar_rank[1:0];
     always @(posedge ck or negedge rst)

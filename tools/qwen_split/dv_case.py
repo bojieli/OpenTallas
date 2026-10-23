@@ -55,6 +55,18 @@ W5_PEERS = [('dd_wo', 'native59', 'dd_i'), ('dr_wi', 'native59', 'dr_o'), ('hr_w
             # TLOAD entries play them from the installed image onto the up-travelling stream at W5 (was a tie: no load
             # path for the slice tables on the die)
             ('st_wi', 'tt_ctlm', 'tl')]
+# QDIE5-TLD 10-22 (Q.STA.TTC.HP13 owed port table_req, class A; opt-in OT_SPLIT_DV_TREQ=1, off = byte-identical GEN):
+# the HP13 tt_ctlm's CALR table-load request table_req {valid, stage 6, user 2} reaches EVERY slice's table-ROM loader
+# (qfd_dv_slice2 PRIVATE_CALR 1, face variants qfd_dv_slice2_wt / _et) on the cmd path: tt_ctlm.table_req -> W5.treq_wi
+# beside tt_ctlm.cmd -> W5.cmd_wi, then slice to slice beside cmd (link kind 'treq', travels 'up' like cmd, every dv_st_*
+# hop and the W0 | E0 seam).  Each (cmd, treq) pair of one hop is a RECORD BUNDLE (tools/qwen_split/record_bundles.py
+# DV.treq.*): the GEN gives both ONE lane E (frame pads + lane_groups.equalize), so table_req arrives at every slice with
+# exactly the cmd lane latency (QW-TLPROD CONSUMER_GAP: "table_req rides beside cmd, die lane / row hops cancel").
+TREQ = os.environ.get('OT_SPLIT_DV_TREQ', '0') == '1'
+if TREQ:
+    SLICE_W, SLICE_E = 'qfd_dv_slice2_wt', 'qfd_dv_slice2_et'
+    LINKS = LINKS + [('treq', 'up', [('treq', 9)])]
+    W5_PEERS = W5_PEERS + [('treq_wi', 'tt_ctlm', 'table_req')]
 CDV = 'qfd_c_b16_dv'
 WCOL = ('io_collective', 'native59', 'tt_ctlm', 'embed_prov', 'sys_face')
 # Q-DIEPLAN6 10-17 (face mode, OT_SPLIT_DV_WCOL_RTL != 0): the W-column masters re-ported to the DV slices, bound on
@@ -780,7 +792,7 @@ def apply_dv(v, m):
                 return ('w' if role == 'dn' else 'e') if n.startswith('dvs_W') else ('e' if role == 'dn' else 'w')
             # dv_x0 (the W0 | E0 seam) carries the outbound / return chains too: the Q-DV model has no dv_ch seam bus,
             # so without this the E row's AR / D2D words would never reach W5
-            ch_k, st_k = ('ar', 'dd', 'rt', 'dr', 'ag'), ('cmd', 'hr', 'st_d', 'st_u', 'sc_d', 'sc_u')
+            ch_k, st_k = ('ar', 'dd', 'rt', 'dr', 'ag'), ('cmd', 'hr', 'st_d', 'st_u', 'sc_d', 'sc_u') + (('treq',) if TREQ else ())
             kinds = ch_k if bid.startswith('dv_ch_') else st_k + ch_k if bid.startswith('dv_x0') else st_k
             for kind, trav, parts in LINKS:
                 if kind not in kinds:

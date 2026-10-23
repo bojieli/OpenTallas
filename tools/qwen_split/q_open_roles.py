@@ -51,7 +51,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import die_port_bind as DPB  # noqa: E402
 
 SCHEMA = 'opentallas.q_open_roles.v2'
-SLICE = ('qfd_dv_slice2_e', 'qfd_dv_slice2_w')
+SLICE = ('qfd_dv_slice2_e', 'qfd_dv_slice2_w', 'qfd_dv_slice2_et', 'qfd_dv_slice2_wt')   # _et/_wt: QDIE5-TLD OT_SPLIT_DV_TREQ
 RELAY = re.compile(r'^(qfd_rly[a-z0-9]*_|qfd_landh0?_)')
 STATUS_FACE = re.compile(r'^(ccv|ccm|ccw|cct|ss)_[ew]o$')
 
