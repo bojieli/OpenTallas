@@ -1,0 +1,27 @@
+{
+  "source": "215e97b30",
+  "reason": "macro SRAM read -> kq -150..-344ps diagnostic; new capture bank splits access from mux",
+  "opt_in": "READ_STAGE=1",
+  "default": 0,
+  "columns": 2,
+  "macros_per_column": 4,
+  "macro_capacity_bytes": 32768,
+  "read_bits_per_column_per_cycle": 1024,
+  "write_bits_per_column_per_cycle": 1024,
+  "boundary_bits_unchanged": true,
+  "added_datapath_flops_per_column": 1024,
+  "added_select_flops_h0": 128,
+  "added_select_flops_h1": 64,
+  "kq_added_cycles": 1,
+  "xr_added_cycles": 0,
+  "clock_period_ns": 0.833333,
+  "added_kq_latency_ns": 0.833333,
+  "sustained_words_per_cycle": 1,
+  "die_calendar_adoption": false,
+  "geometry_um": [
+    237.6,
+    432
+  ],
+  "route_layer": "M5",
+  "reach_max_planned_um": 405
+}

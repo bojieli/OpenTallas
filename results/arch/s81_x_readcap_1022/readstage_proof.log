@@ -1,0 +1,32 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-colla-2140-1022
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-colla-2140-1022
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-colla-2140-1022
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-colla-2140-1022
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-colla-2140-1022
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-colla-2140-1022
+ot-run: ot-agidock128  admits    19 GB (avail 84, growth 0, headroom 0, waiters 0/0 GB) load 5/64 running 3 disk 222 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1058347-1792730640 after 0 s
+BX_LSW MUTN=0 cycles 20000 live_key 19274 writes 19857 mismatches 0
+BX_LSW PASS
+- /srv/opentallas-scratch/claude/codex-s81-colla-2140-1022/rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3_bx_lsw.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.223 s; speed 179.392 us/s
+- Verilator: cpu 0.223 s on 1 threads; allocated 7 MB
+BX_LSW MISMATCH cycle 100 xr_eq 1 kq_eq 0
+BX_LSW MISMATCH cycle 101 xr_eq 1 kq_eq 0
+BX_LSW MISMATCH cycle 122 xr_eq 1 kq_eq 0
+BX_LSW MISMATCH cycle 125 xr_eq 1 kq_eq 0
+BX_LSW MUTN=5 cycles 20000 live_key 19274 writes 19857 mismatches 14698
+BX_LSW MUTANT_CAUGHT
+- /srv/opentallas-scratch/claude/codex-s81-colla-2140-1022/rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3_bx_lsw.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.208 s; speed 191.884 us/s
+- Verilator: cpu 0.208 s on 1 threads; allocated 7 MB
+BX_LSW MUTN=0 cycles 20000 live_key 19274 writes 19857 mismatches 0
+BX_LSW PASS
+- /srv/opentallas-scratch/claude/codex-s81-colla-2140-1022/rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3_bx_lsw.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.225 s; speed 178.080 us/s
+- Verilator: cpu 0.225 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1058347-1792730640): exit 0
