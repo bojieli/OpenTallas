@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.cb16_rpf_child_shape_plan.v1",
+ "name": "qfd_c_xstnw_safe_rpf",
+ "outline": {
+  "w": 43.2,
+  "h": 302.4,
+  "exact": true
+ },
+ "pins": {
+  "E": [
+   "b_d",
+   "ck"
+  ],
+  "W": [
+   "a_d",
+   "tap_d",
+   "rst_n",
+   "sidx"
+  ]
+ },
+ "pin_ranges": {
+  "b_d": [
+   21.6,
+   151.2
+  ],
+  "ck": [
+   2.16,
+   2.46
+  ],
+  "a_d": [
+   0.54,
+   130.14
+  ],
+  "tap_d": [
+   151.2,
+   280.8
+  ],
+  "rst_n": [
+   282.96,
+   283.26
+  ],
+  "sidx": [
+   284.4,
+   285.48
+  ]
+ },
+ "sources": [
+  {
+   "path": "rtl/physical/qcluster/qfd_c_xstn_safe.sv",
+   "sha256": "e26771cb20d99df1fafa03c016d3a330b05670b37a66d63a7dbe4039e38f14df"
+  }
+ ],
+ "source_parameters": {},
+ "std_area_um2": null,
+ "gate_ready": false,
+ "native_source_unchanged": true,
+ "added_cycles": 0,
+ "changed_pin_faces": "xstn only; parent physical connectivity must be regenerated",
+ "note": "PLAN only: source-preserving shape re-hardening, no current view alias, unknown synthesis density and current pin-to-pin reach prohibit gate until completed"
+}

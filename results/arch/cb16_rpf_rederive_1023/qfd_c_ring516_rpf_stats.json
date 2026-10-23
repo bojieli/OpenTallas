@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.cb16_rpf_child_shape_plan.v1",
+ "name": "qfd_c_ring516_rpf",
+ "outline": {
+  "w": 90.72,
+  "h": 64.8,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "i",
+   "ck_w",
+   "rsi_w"
+  ],
+  "N": [
+   "o",
+   "ck_r",
+   "rsi_r"
+  ]
+ },
+ "pin_ranges": {
+  "i": [
+   0.54,
+   86.94
+  ],
+  "o": [
+   0.54,
+   86.94
+  ],
+  "ck_w": [
+   87.48,
+   87.78
+  ],
+  "ck_r": [
+   87.48,
+   87.78
+  ],
+  "rsi_w": [
+   88.56,
+   88.86
+  ],
+  "rsi_r": [
+   88.56,
+   88.86
+  ]
+ },
+ "sources": [
+  {
+   "path": "rtl/physical/qcluster/qfd_c_land_k.sv",
+   "sha256": "d67cf92197fe694e9cd7cd46cbd537c08ee72c99a3d03beb7270dff9e0e7988e"
+  },
+  {
+   "path": "rtl/physical/qcluster/qfd_c_ring_t.sv",
+   "sha256": "e14ac6fcf84ecb4c87bc4fe9d6914949e3f30a6b3d8358d963493d20beb9e4db"
+  }
+ ],
+ "source_parameters": {},
+ "std_area_um2": null,
+ "gate_ready": false,
+ "native_source_unchanged": true,
+ "added_cycles": 0,
+ "changed_pin_faces": "xstn only; parent physical connectivity must be regenerated",
+ "note": "PLAN only: source-preserving shape re-hardening, no current view alias, unknown synthesis density and current pin-to-pin reach prohibit gate until completed"
+}

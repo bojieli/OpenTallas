@@ -1,0 +1,3 @@
+# CB16 rpf child structural shape
+
+Same RTL and parameters as qfd_c_xstn_safe. This is a new physical child candidate, not a qualified view. Ring width90.72 fits the146.88um vertical channel with28.08um each side, and output/input face density is at most516/86.4=5.972pins/um on existing layers. XSTN width43.2 fits the86.4um outside margin with21.6um on each side; height302.4 keeps b_d514 and a_d514/tap508 on separate <=4pins/um vertical face windows. All paths still require real physical qualification; changed pin faces need parent connectivity regeneration. No gate before independent geometry PASS. No source/interface/cycle change.
