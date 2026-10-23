@@ -138,7 +138,7 @@ def bankq_ft(name, ch_v, ch_row):
     return mk("hbm_hcq_bank_e2_1017", name, note, W, H, pins, pr, ch, mc)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and "b0" not in sys.argv[1:]:
     out = [bankq("hbme_hcbq_b1", 21.6, 0), bankq("hbme_hcbq_b2", 32.4, 0),
            bankq_ft("hbme_hcbft_b1", 21.6, 0), bankq_ft("hbme_hcbft_b2", 32.4, 0)]
     for kd in out:
@@ -146,3 +146,47 @@ if __name__ == "__main__":
         o = s["outline"]
         print(kd.name, o["w"], o["h"], round(o["w"] * o["h"] / 1e3, 1), "k um2",
               {f: len(v) for f, v in s["pins"].items()})
+
+
+def bankq0(name, ch_a=32.4, ch_x=21.6, ch_b=32.4):
+    """b0 (W-mid, chain start + bank 7's chain-exit relay): faces of r18h5 = s_i S, s_o + beat + ctl E, sum_out N.
+    Same pair rows; leaf outputs (E side of each leaf) climb the leaf-A channel / the E band to the N CPO band; the
+    s_i -> s_o relay (DRLY 1) flops in the S / E bands with bit 0 at the SE corner on both faces (s_i descending)."""
+    L = 43.2
+    xa = L
+    xs = round(xa + LEAF + ch_a, 3)
+    xx = snap(xs + WS_W + ch_x)
+    xb = math.ceil((xx + XS_W + ch_b) / L - 1e-9) * L
+    W = round(math.ceil((xb + LEAF + 34.56) / 10.8 - 1e-9) * 10.8, 3)
+    stack = WS_P + WS_H
+    rows = [round(L + r * 4 * L, 3) for r in range(4)]
+    H = round(math.ceil((rows[-1] + stack + 31.8) / 10.8 - 1e-9) * 10.8, 3)
+    ch, mc = [], []
+    for r, y in enumerate(rows):
+        ch.append({"view": LEAF_V, "count": 1, "inst": f"*g_grp?{2*r}?.u_lg", "at": [xa, y], "orient": "R0"})
+        ch.append({"view": LEAF_V, "count": 1, "inst": f"*g_grp?{2*r+1}?.u_lg", "at": [round(xb, 3), y], "orient": "R0"})
+        mc.append({"view": WS_V, "count": 1, "inst": f"*g_w?{2*r+1}?.u_m", "at": [xs, y], "orient": "MY", "at_exact": True})
+        mc.append({"view": WS_V, "count": 1, "inst": f"*g_w?{2*r}?.u_m", "at": [xs, round(y + WS_P, 3)], "orient": "R0",
+                   "at_exact": True})
+        mc.append({"view": XS_V, "count": 1, "inst": f"*g_x?{r}?.u_m", "at": [xx, snap(y + (stack - XS_H) / 2)],
+                   "orient": "MY", "at_exact": True})
+    top = rows[-1] + stack
+    e_small = [("xb_v", 1), ("xb_beat", 2), ("xb_d", 256), ("wv", 1), ("xv", 1), ("j", 1), ("wa", 10), ("d_v", 1),
+               ("d_ss", 1), ("d_nv", 7), ("d_wa", 10), ("d_xa", 10), ("wfault", 1), ("rst_n", 1)]
+    n_small = [("o_v", 1), ("o_ss", 1), ("o_nv", 7), ("o_wa", 10), ("o_xa", 10), ("f_out", 1)]
+    faces = {"S": [("s_i", [L, W - L]), ("clk", [21.0, 22.0])],
+             "E": [("s_o", [21.6, 561.6])] + pack(e_small, 562.6, H - 2.0),
+             "N": [("sum_out", [L, W - 140.0])] + pack(n_small, W - 139.0, W - 2.0)}
+    pins, pr = ranges(faces, W, H, 0, 0)
+    note = (f"STEWARD-HBMe/HC 10-23 pair-rows redesign of the BAD 777.6x734.4 b0 bank: {W} x {H} (= die slot); die faces "
+            "s_i S / s_o + beat + ctl E / sum_out N; leaf outputs climb the leaf-A channel and the E band to the N CPO band; "
+            "chain-exit relay flops in the S/E bands, bit 0 at the SE corner on both faces. Layout only, DRLY 1 / CPO 1 as "
+            "the die (l3_vm_hc_coll.py:210), 0 edges changed.")
+    return mk("hbm_hcq_bank_b0_1017", name, note, W, H, pins, pr, ch, mc,
+              {"params": {"DRLY": 1, "CPO": 1}, "pin_order_desc": ["s_i"]})
+
+
+if __name__ == "__main__" and "b0" in sys.argv[1:]:
+    kd = bankq0("hbme_hcbq0_b1")
+    s = json.loads((kd / "spec.json").read_text())
+    print(kd.name, s["outline"], {f: len(v) for f, v in s["pins"].items()})

@@ -1,0 +1,470 @@
+{
+ "name": "hbme_hcbq0_b1",
+ "top": "ot_hbm_hc_bankq0_static",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "DRLY": 1,
+  "CPO": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 734.4,
+  "h": 734.4,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?0?.u_lg",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?1?.u_lg",
+   "at": [
+    561.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?2?.u_lg",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?3?.u_lg",
+   "at": [
+    561.6,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?4?.u_lg",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?5?.u_lg",
+   "at": [
+    561.6,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?6?.u_lg",
+   "at": [
+    43.2,
+    561.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes",
+   "count": 1,
+   "inst": "*g_grp?7?.u_lg",
+   "at": [
+    561.6,
+    561.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?1?.u_m",
+   "at": [
+    213.84,
+    43.2
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?0?.u_m",
+   "at": [
+    213.84,
+    113.712
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_x?0?.u_m",
+   "at": [
+    410.4,
+    92.88
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?3?.u_m",
+   "at": [
+    213.84,
+    216.0
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?2?.u_m",
+   "at": [
+    213.84,
+    286.512
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_x?1?.u_m",
+   "at": [
+    410.4,
+    265.68
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?5?.u_m",
+   "at": [
+    213.84,
+    388.8
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?4?.u_m",
+   "at": [
+    213.84,
+    459.312
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_x?2?.u_m",
+   "at": [
+    410.4,
+    438.48
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?7?.u_m",
+   "at": [
+    213.84,
+    561.6
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_w?6?.u_m",
+   "at": [
+    213.84,
+    632.112
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_x?3?.u_m",
+   "at": [
+    410.4,
+    611.28
+   ],
+   "orient": "MY",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "S": [
+   "s_i",
+   "clk"
+  ],
+  "E": [
+   "s_o",
+   "xb_v",
+   "xb_beat",
+   "xb_d",
+   "wv",
+   "xv",
+   "j",
+   "wa",
+   "d_v",
+   "d_ss",
+   "d_nv",
+   "d_wa",
+   "d_xa",
+   "wfault",
+   "rst_n"
+  ],
+  "N": [
+   "sum_out",
+   "o_v",
+   "o_ss",
+   "o_nv",
+   "o_wa",
+   "o_xa",
+   "f_out"
+  ]
+ },
+ "inter": [],
+ "refglob": "*",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "every bank-tile input lands in an RTL flop and every output is a flop: the chain pins in the CPI/CPO face registers (HH-9), the write/beat pins in the landing/write-port flops; a kit flop stage would shift the compiled systolic schedule"
+ },
+ "structural_change": "STEWARD-HBMe/HC 10-23 pair-rows redesign of the BAD 777.6x734.4 b0 bank: 734.4 x 734.4 (= die slot); die faces s_i S / s_o + beat + ctl E / sum_out N; leaf outputs climb the leaf-A channel and the E band to the N CPO band; chain-exit relay flops in the S/E bands, bit 0 at the SE corner on both faces. Layout only, DRLY 1 / CPO 1 as the die (l3_vm_hc_coll.py:210), 0 edges changed.",
+ "job": {
+  "owner": "STEWARD-HBMe/HC",
+  "branch": "claude/hbme-hc-1023",
+  "tag": "b1",
+  "purpose": "STEWARD-HBMe/HC 10-23 pair-rows redesign of the BAD 777.6x734.4 b0 bank: 734.4 x 734.4 (= die slot); die faces s_i S / s_o + beat + ctl E / sum_out N; leaf outputs climb the leaf-A channel and the E band to the N CPO band; chain-exit relay flops in the S/E bands, bit 0 at the SE corner on both faces. Layout only, DRLY 1 / CPO 1 as the die (l3_vm_hc_coll.py:210), 0 edges changed.",
+  "views_to": "physical/ref_tile/hbm_hcq_bank_b0_1017/views",
+  "record_to": "results/rtl/ref_tile/hbm_hcq_bank_b0_1017",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_eng4_ring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/hbm_hc_ring_1019_cpr",
+   "results/rtl/hbm_hc_ring_1019_joint",
+   "results/rtl/hbm_hc_ring_1019_drly2"
+  ],
+  "benches": [
+   {
+    "name": "hc_ring_exact",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=0 rc=0",
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_ring_mut1",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=1 rc=0",
+    "fail_regex": "HC_ENG FAIL",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "note": "bank 3 (ring corner, fed through bank 2) weight slice rotated",
+    "fail_witness": "results/rtl/hbm_hc_ring_1019_drly2/ring_mut1.log"
+   }
+  ]
+ },
+ "pin_ranges": {
+  "s_i": [
+   43.2,
+   691.2
+  ],
+  "clk": [
+   21.0,
+   22.0
+  ],
+  "s_o": [
+   21.6,
+   561.6
+  ],
+  "xb_v": [
+   562.6,
+   563.16
+  ],
+  "xb_beat": [
+   563.16,
+   564.281
+  ],
+  "xb_d": [
+   564.281,
+   707.743
+  ],
+  "wv": [
+   707.743,
+   708.303
+  ],
+  "xv": [
+   708.303,
+   708.863
+  ],
+  "j": [
+   708.863,
+   709.424
+  ],
+  "wa": [
+   709.424,
+   715.028
+  ],
+  "d_v": [
+   715.028,
+   715.588
+  ],
+  "d_ss": [
+   715.588,
+   716.149
+  ],
+  "d_nv": [
+   716.149,
+   720.071
+  ],
+  "d_wa": [
+   720.071,
+   725.675
+  ],
+  "d_xa": [
+   725.675,
+   731.279
+  ],
+  "wfault": [
+   731.279,
+   731.84
+  ],
+  "rst_n": [
+   731.84,
+   732.4
+  ],
+  "sum_out": [
+   43.2,
+   594.4
+  ],
+  "o_v": [
+   595.4,
+   599.967
+  ],
+  "o_ss": [
+   599.967,
+   604.533
+  ],
+  "o_nv": [
+   604.533,
+   636.5
+  ],
+  "o_wa": [
+   636.5,
+   682.167
+  ],
+  "o_xa": [
+   682.167,
+   727.833
+  ],
+  "f_out": [
+   727.833,
+   732.4
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "low_fill_reason": "macro-bound HC bank (STEWARD-HBMe/HC 10-23, coordinator ack requested): 8 hard leaves + 12 SRAMs ~60% of the outline; the 2,048-b chain faces set H >= 512 um at 4 pins/um; parent std 5.3k um2 synth lives in the face bands + row channels",
+ "child_lattice_um": 2.16,
+ "pin_order_desc": [
+  "s_i"
+ ]
+}
