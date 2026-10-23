@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.qwen.tt_emb_source.v1",
+  "status": "SOURCE_ONLY_NOT_SELECTED",
+  "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32",
+  "calendar_sample_edges": 1,
+  "producer_instance": "u_gi",
+  "rtl": "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_native32.sv",
+  "rtl_sha256": "22b5059010fb02abbca2bb9bce1d8773b3e372c1917d2e8ef01164d4da0cbe16",
+  "lp_record": "results/arch/qw_headprep_1021/tt_lp_recipe/generated/qfd_tt_ctlm_dv_lpf_hp13_lp_record.json",
+  "lp_record_sha256": "468a9704f3fb5f0df53e8a4e7d0d89e860fdee6597d5b052f2f800ec67f9807f",
+  "XPF_TRANSPORT_EDGES": 21,
+  "source_local_edges_candidate": 4,
+  "scope": "Actualcurrent21/nativefunctional proof present; exact selectedsource adoption and newGEN binding absent. Compiler must reject this candidate.",
+  "regenerated": {
+    "by": "QDIE5-HP13 10-22",
+    "base": "main 4b215c0b3 (QW-SEGCAL go port in qfd_tt_ctlm_dv_lpf_hp13_parts.sv)",
+    "previous_rtl_sha256": "66cd44bf35e5bbb8a3f2cf9bf0698ca9c75f7e2f676dcf4ee2727c46627eb9da",
+    "pipeline": "frozen HP13 frontend full_generic_hp13.ys + construct_hp13_2.py on yosys 0.68 (reproduces 66cd44bf bit-exact on the frozen parts); LP record unchanged (lp.py output byte-identical per TOKc-SEGCAL)"
+  }
+}

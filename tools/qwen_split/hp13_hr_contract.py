@@ -11,7 +11,7 @@ def compiled_params(root, master):
     if len(variants) != 1: raise ValueError('unknown fixed native source: ' + master)
     select(root, variants[0])
     p = Path(root) / 'results/arch/qw_headprep_1021/rrloc_projection/native_frontend/input_source_inventory.json'
-    if hashlib.sha256(p.read_bytes()).hexdigest() != '29d6f21d40ca66248ccb2d102446aea167cf208e4b7151273dbb0329ab76b673':
+    if hashlib.sha256(p.read_bytes()).hexdigest() != '0628894976428558b8d60901f44d4a739113b1598740c867dd0d3db51051e8c3':
         raise ValueError('fixed native construction parameter inventory differs')
     return json.loads(p.read_text())['params']
 
@@ -30,9 +30,17 @@ def reconcile(root, master, hr_rows):
     if c['clock_port']!='ck_hr' or arm['source_to_HR_output_edges']!=1 or len(bits)!=72:
         raise ValueError('HP13 actual ARM source relation differs')
     for b in bits:
-        s,o=b['source_register'],b['output_register']
-        if o['D']!=s['Q'] or o['C']!=s['C']:
-            raise ValueError('HP13 actual ARM capture relation differs')
+        o=b['output_register']
+        if 'source_registers' in b:
+            # QDIE5-HP13 10-22 (QW-SEGCAL xpf_hr = xpf_g[0] ? xpf_g : xpf): the HR capture D is a combinational cone of
+            # ck_hr scheduler register Qs (regen_hr_contract.py proves it on the netlist) -- still ONE register edge
+            srcs=b['source_registers']
+            if not srcs or any(s['C']!=o['C'] for s in srcs):
+                raise ValueError('HP13 actual ARM capture relation differs')
+        else:
+            s=b['source_register']
+            if o['D']!=s['Q'] or o['C']!=s['C']:
+                raise ValueError('HP13 actual ARM capture relation differs')
     if not hr_rows:raise ValueError('HP13 actual HR GEN route is missing')
     actual={bid:LG.lane_cycles(row) for bid,row in hr_rows}
     if any(v is None for v in actual.values()) or len(set(actual.values()))!=1:
