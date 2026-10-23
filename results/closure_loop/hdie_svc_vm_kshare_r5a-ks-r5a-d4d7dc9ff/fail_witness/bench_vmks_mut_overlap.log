@@ -1,0 +1,6 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hdie_svc_vm_kshare_r5a-ks-r5a-d4d7dc9ff bench bench_vmks_mut_overlap host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hdie_svc_vm_kshare_r5a-ks-r5a-d4d7dc9ff log cl/bench_vmks_mut_overlap.a1b1.log captured 2026-10-22T22:38:03-07:00
+# fail_regex 'RAW_FAIL overlap'
+RAW overlap rc=1
+[301667000] %Fatal: tb_hbm_svc_wb_kshare_splitstrap_q.sv:78: Assertion failed in tb_hbm_svc_wb_kshare_splitstrap_q: WB_INTEGRITY errors=0 wb=1 kshare=00000000 controller=0
+RAW_FAIL overlap
