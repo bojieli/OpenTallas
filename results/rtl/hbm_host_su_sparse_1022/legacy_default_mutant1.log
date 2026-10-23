@@ -1,0 +1,4 @@
+FAIL out-of-sequence row faults t=587631000
+FAIL join program_fault from target t=587631000
+FAIL errors=2 checks=35
+tb.sv:200: $finish called at 587883000 (1ps)

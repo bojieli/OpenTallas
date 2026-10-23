@@ -1,0 +1,20 @@
+{
+ "unit": "285491-1792733685",
+ "source_old": "9f73266f6:rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+ "source_new": "217ce4f09:rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+ "source_sha256": {
+  "old.sv": "e24af398774ed829314db25d68960b67832f0802437df19f46df24f62cd62e9e",
+  "new.sv": "adbc963c28e1c1cca67d65f0cb8ac8931e40b2ac7cb909e7e9821a2b3d8cb6e9",
+  "tb.sv": "b87d2c671c154c2cff0d250aa6242d42aecce0870384c55c2204719e96fbed91",
+  "ingress.sv": "0ffcaf501a08d69ffe4af48cad2aa4f2eacd0cebd0dffbd6b4ed3e78c502a0ee",
+  "join.sv": "f63a819c48d8db4f1b973fd43748defada7d6f27724a534239bcabb4b15468f4"
+ },
+ "command": "iverilog -g2012 -s tb_hbm_static_cfg_collar -P tb_hbm_static_cfg_collar.CMUT=M tb.sv ingress.sv join.sv SOURCE.sv; vvp; cmp oldM.log newM.log",
+ "mutants": [
+  0,
+  1,
+  2
+ ],
+ "result": "all three complete output logs byte-identical old vs new; default SPARSE_SU=0; positive35checks, sequence mutant2 failures, need mutant4 failures",
+ "coverage": "existing SU/SFU/IDX dense shapes, XSER0/1, reset with events in flight; no new sweep"
+}
