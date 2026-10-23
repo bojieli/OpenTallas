@@ -30,6 +30,12 @@
  },
  "pins": {
   "N": [
+   "dh_user",
+   "emb_position",
+   "emb_start",
+   "emb_token",
+   "emb_user",
+   "pw",
    "init_u0",
    "kok",
    "control_stores_ready",
@@ -66,14 +72,8 @@
    "cal_program_obs",
    "native_cmd",
    "tl",
-   "emb_token",
    "f16_auth",
-   "ck_core",
-   "dh_user",
-   "emb_position",
-   "emb_start",
-   "emb_user",
-   "pw"
+   "ck_core"
   ]
  },
  "clock_port": "ck_core[0]",
