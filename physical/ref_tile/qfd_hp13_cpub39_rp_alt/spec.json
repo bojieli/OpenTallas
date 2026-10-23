@@ -509,13 +509,13 @@
   "4_depth": "Unchanged source math and833.333ps target; measured CTS timing required.",
   "5_storage": "19 actual SRAM/ROM macros, no inferred replacement.",
   "6_floorplan": "Outline from content 501.12 x 514.08; 2 abutted macro columns NE, L core W 86.4 / S 54.0; channels >= 21.6 um.",
-  "7_clock": "Two real source roots ck_core/ck_hr, same PLL intended1:1/phase0, measured qualification open.",
+  "7_clock": "Two related roots ck_core / ck_hr (same PLL, phase 0), each a pre-placed balanced spine with leaves padded to equal measured arrival (r5; r4 TritonCTS gave boundary spread 186-281 ps); pin-flop spread <= 80 ps TT+FF judged per root.",
   "8_schedule": "Variant1/2 retain exact publisher stages; all existing source ages unchanged, actual routed ages required."
  },
  "job": {
-  "owner": "QTILE-R",
+  "owner": "QTILE-S",
   "branch": "claude/qtile-r-1023",
-  "tag": "rp1a",
+  "tag": "rp5a",
   "purpose": "HP13 cpub39 tt_ctlm re-pack (outline from content + face pin regs); qualification candidate, not a die result",
   "extra_paths": [
    "results/arch/hp13_corepub39_1021",
@@ -529,5 +529,6 @@
   "allow_none": true
  },
  "keep_pin_regs": true,
+ "clock_distribution": "spine",
  "std_area_um2": 43100.0
 }

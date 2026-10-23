@@ -54,6 +54,12 @@ def spec(name, wc, sb, mid, estrip, tag):
     s["sources"] = ["rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_physical_wtnbal24_pr.sv"] + srcs + [
         "rtl/qwen_dv/headprep13/wtn_balanced24/helpers.sv", "rtl/qwen_dv/headprep13/wtn_balanced24/qfd_tt_ctlm_dv_wtn_balanced24.sv"]
     s["outline"] = {"w": w, "h": h}
+    # r5 (QTILE-S 10-23, r4 --cts FAIL: ck_core boundary pin-flop spread TT 281.2 / 186.5 ps, 1,088 tl flops on the 514-um
+    # W face under ONE 16,862-sink TritonCTS tree, ~800 ps insertion): each root (ck_core, ck_hr) gets the pre-placed
+    # balanced clock SPINE (physical/common_flow/clock_spine.tcl via ref_tile clock_distribution "spine": sinks binned into
+    # leaves, bisection tree, every leaf padded to equal MEASURED arrival) instead of TritonCTS.  Same ports, pins, outline,
+    # macros and RTL as r4 (no added cycle, no die-interface change); domain ownership and the gate's per-root judge unchanged.
+    s["clock_distribution"] = "spine"
     s["std_area_um2"] = 43100.0   # full_main synth 42,714 + 1,144 pin-reg flops
     s["macros"] = macros(xa, xb, sb)
     s["fill_reason"] = {"macro_bound": f"19 authentic macros (135.5k um2) in two abutted N-S columns at the NE; outline from content "
@@ -66,14 +72,16 @@ def spec(name, wc, sb, mid, estrip, tag):
                               "mid channel / E strip, one L logic core on the pin-dense W and S faces, face pin registers in RTL (+1 cycle on 15 ports); "
                               "core = Codex wtnbal24 (f160a99d3, same function, passes the native census that the cpub39_1 full kit failed)")
     c = s["safe_design_checklist"]
+    c["7_clock"] = ("Two related roots ck_core / ck_hr (same PLL, phase 0), each a pre-placed balanced spine with leaves padded to "
+                    "equal measured arrival (r5; r4 TritonCTS gave boundary spread 186-281 ps); pin-flop spread <= 80 ps TT+FF judged per root.")
     c["1_pins"] = "Every data pin registered: 15 ports +1 cycle (pin_regs.json), the rest already flop-direct; io_flop_at_pins anchors them."
     c["6_floorplan"] = f"Outline from content {w} x {h}; 2 abutted macro columns NE, L core W {wc} / S {sb}; channels >= 21.6 um."
-    s["job"] = {"owner": "QTILE-R", "branch": "claude/qtile-r-1023", "tag": tag,
+    s["job"] = {"owner": "QTILE-S", "branch": "claude/qtile-r-1023", "tag": tag,
                 "purpose": "HP13 cpub39 tt_ctlm re-pack (outline from content + face pin regs); qualification candidate, not a die result",
                 "extra_paths": ["results/arch/hp13_corepub39_1021", "rtl/qwen_dv/headprep13/corepub39", "results/arch/qtile_r_1023"], "benches": []}
     return s
 
-for name, args in (("qfd_hp13_cpub39_rp_main", (75.6, 54.0, 38.88, 25.0, "rp1")), ("qfd_hp13_cpub39_rp_alt", (86.4, 54.0, 43.2, 25.0, "rp1a"))):
+for name, args in (("qfd_hp13_cpub39_rp_main", (75.6, 54.0, 38.88, 25.0, "rp5")), ("qfd_hp13_cpub39_rp_alt", (86.4, 54.0, 43.2, 25.0, "rp5a"))):
     s = spec(name, *args)
     d = f"{ROOT}/physical/ref_tile/{name}"; os.makedirs(d, exist_ok=True)
     json.dump(s, open(f"{d}/spec.json", "w"), indent=1)
