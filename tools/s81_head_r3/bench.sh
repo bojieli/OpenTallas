@@ -23,7 +23,9 @@ SRCS="$O/cells.v rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hd
  rtl/dsrom_sys/s81_head/ot_s81hd_key.sv rtl/dsrom_sys/s81_head/ot_s81hd_fadd.sv rtl/dsrom_sys/s81_head/ot_s81hd_tile_r3.sv
  rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv tools/s81_head_r3/tb_s81hd_mini.sv"
 D=""; [ "$M" != none ] && D="+define+OT_S81HD_MUT_$M"
-OBJ=$O/obj_$M
+# optional 4th arg: comma-separated extra opt-in defines (STW-S81e-COLLA2 10-23, e.g. OT_S81HD_XO_KEPT)
+for x in $(echo "${4:-}" | tr , " "); do D="$D +define+$x"; done
+OBJ=$O/obj_$M${4:+_$(echo $4 | tr , _)}
 if [ ! -x $OBJ/Vtb_s81hd_mini ]; then
   $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
     -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build_$M.log 2>&1 || { grep -m10 %Error $O/build_$M.log; echo "BUILD_FAILED $M"; exit 3; }

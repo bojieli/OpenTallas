@@ -614,7 +614,17 @@ module ot_s81hd_tile_r3_core #(
 `else
         else begin goo_q <= go_q; xvo_q <= xv_q; end
 `endif
+`ifdef OT_S81HD_XO_KEPT
+    // STW-S81e-COLLA2 10-23 (COORD tile review: r7kf E-face pin regs p90 151 um): yosys opt_merge merged xo_q with the
+    // bundle's first x line stage (same D x_q, same clock), so the E-face output flop also fed the bundle and GPL pulled it
+    // to the tile middle (io_flop_at_pins skips multi-sink port flops).  A keep_hierarchy E-face copy cannot be merged:
+    // same D, same edge, the port is its only load -> anchored at the E face.  0 cycles, no port change.
+    wire [511:0] xo_w;
+    ot_s81hd_xo512 u_xo (.ck(ck), .d(x_q), .q(xo_w));
+    always @(*) xo_q = xo_w;
+`else
     always @(posedge ck) xo_q <= x_q;
+`endif
 
     // ---------------- bundle -----------------------------------------------------------------------------------------
     wire        b_go = go_q & ten_q;
@@ -706,3 +716,11 @@ module ot_s81hd_tile_r3_core #(
 
     assign o = {o_flt, o_bits, o_row, o_rv, xvo_q, goo_q, xo_q};
 endmodule
+
+`ifdef OT_S81HD_XO_KEPT
+// keep_hierarchy E-face output register of the x pass-through stream (see ot_s81hd_tile_r3_core); not parameterised so the
+// keep survives elaboration under its own name.
+(* keep_hierarchy *) module ot_s81hd_xo512 (input wire ck, input wire [511:0] d, output reg [511:0] q);
+    always @(posedge ck) q <= d;
+endmodule
+`endif
