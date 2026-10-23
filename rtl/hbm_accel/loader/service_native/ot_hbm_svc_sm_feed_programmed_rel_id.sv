@@ -24,12 +24,23 @@
 //   ot_hbm_accel_smh_attn g_int8 (mark without a packet, mark on the converter's busy edge, raw packet on a converted
 //   edge = i8_fault).  Valid/tag only (the copy's lt/lb/fm data outputs are unread on the die).  No mark = the raw packet
 //   exactly (bit-identical behaviour for every non-INT8 stream).  No stall, no backpressure: faults are sticky.
+// HBM-PV-ATTMARK 2026-10-22 ATT_MARK (default 0 = unchanged netlist): attention-mode words.  The SM attention front
+//   (ot_hbm_sm_attn_front_static) defines arithmetic_v = attention && command[25] and requires consume (xc [152]) ==
+//   arithmetic_v; a PV/QK consume drains KV lines the converter already buffered, so its issue edge carries command[25]
+//   WITHOUT a fresh packet (command[29] = 0).  The S1 consumer copy here applies the normal-mode rule "issue implies
+//   packet" (ot_smh_static_feed) and so faulted on every PV consume edge (PV r18 unit8293: cp_svg -> hleaf 84955 -> fs
+//   84957), while clearing [25] in the compiler kills the SM arithmetic (unit367452: 512/512 SM values 0, sm schedule_fault
+//   84951).  ATT_MARK=1: PREL programme word bit [119] (unused in PREL, as [118]) marks an attention word; the copy
+//   sees that word's issue bit cleared (the SM front itself checks the attention consume/arithmetic/packet calendar), and
+//   the packet-valid / tag rules stay exact on every edge.  A mark together with an INT8 mark is a sticky fault (the SM
+//   rejects an INT8 mark on an attention word).  sm_command to the SM is unchanged; only the copy's unread lt/lb hc bit 25.
 module ot_hbm_svc_sm_feed_programmed_rel_id #(
  parameter integer PAW=11,PREL=1,
  parameter integer OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=4,
  parameter integer LB=(LBANKS>2)?2:1,
  parameter integer XSLOT=0,parameter integer CTXW=(XSLOT!=0)?53:46,
- parameter integer OPEN_IL=0   // HBM-SMXL: producer open interlock (ot_hbm_svc_sm4pc_cdc_rel_id OPEN_IL)
+ parameter integer OPEN_IL=0,  // HBM-SMXL: producer open interlock (ot_hbm_svc_sm4pc_cdc_rel_id OPEN_IL)
+ parameter integer ATT_MARK=0  // HBM-PV-ATTMARK: programme word [119] = attention word (S1 copy issue rule exempt)
 )(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
@@ -117,6 +128,7 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
  reg[82:0]cmd_r,cmd_c;reg ret_r,ret_c;reg[16:0]retf_r,retf_c;reg inj_f;
  reg[134:0]programme;reg programme_v_q;
  reg i8_r,i8_c,i8_p1,i8_p2,i8_p3,i8_f;reg[9:0]i8_t1,i8_t2;   // HBM-QINT8 mark (R, C) + converter view
+ reg at_r,at_c,at_f;   // HBM-PV-ATTMARK attention mark (R, C) + mark-conflict fault
  wire raw_v=packet_observe[1098];wire[9:0]raw_tag=packet_observe[1097:1088];
  wire i8_conv=i8_p2||i8_p3;   // halves of the marked packet 2 / 3 edges ago; its tag = i8_t2 on both edges
  always @(posedge stream_clk)begin
@@ -141,7 +153,8 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   if(PREL!=0&&word_v&&ordinal==0&&c_fl)begin cmd_c[28]<=1'b1;cmd_c[27:26]<=c_fmt;end
  end
  always @(posedge stream_clk or negedge stream_rst_n)
-  if(!stream_rst_n)begin programme_v_q<=0;inj_f<=0;i8_r<=0;i8_c<=0;i8_p1<=0;i8_p2<=0;i8_p3<=0;i8_f<=0;i8_t1<=0;i8_t2<=0;end
+  if(!stream_rst_n)begin programme_v_q<=0;inj_f<=0;i8_r<=0;i8_c<=0;i8_p1<=0;i8_p2<=0;i8_p3<=0;i8_f<=0;i8_t1<=0;i8_t2<=0;
+   at_r<=0;at_c<=0;at_f<=0;end
   else begin
    programme_v_q<=word_v;
    if(PREL!=0&&word_v&&ordinal==0&&c_fl&&(cmd_r!=0||ret_r))inj_f<=1;     // format launch slot not idle
@@ -150,6 +163,9 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
    i8_p1<=i8_c&&raw_v;i8_p2<=i8_p1;i8_p3<=i8_p2;
    if(i8_c&&raw_v)i8_t1<=raw_tag;i8_t2<=i8_t1;     // held tag (as ot_smh_static_int8), 2 deep: no delay line
    if((i8_c&&(!raw_v||i8_p1))||(!i8_c&&raw_v&&i8_conv))i8_f<=1;
+   // HBM-PV-ATTMARK: the mark travels with its word's command (C edge)
+   at_r<=(ATT_MARK!=0)&&(PREL!=0)&&word_v&&word[119];at_c<=at_r;
+   if(at_c&&i8_c)at_f<=1;
   end
  always @* begin
   programme=0;
@@ -168,9 +184,11 @@ module ot_hbm_svc_sm_feed_programmed_rel_id #(
   .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
  // HBM-QINT8: the packet the SM front sees (the raw packet when no INT8 mark is in flight)
  wire[1098:0]s1_packet={i8_conv||(raw_v&&!i8_c),i8_conv?i8_t2:raw_tag,packet_observe[1087:0]};
+ // HBM-PV-ATTMARK: an attention word's issue bit is not a normal-mode issue (no packet implied); at_c = 0 without ATT_MARK
+ wire[82:0]s1_command={sm_command[82:26],sm_command[25]&&!at_c,sm_command[24:0]};
  ot_smh_static_feed consumer(
-  .clk(stream_clk),.rst_n(stream_rst_n),.command(sm_command),.packet(s1_packet),
+  .clk(stream_clk),.rst_n(stream_rst_n),.command(s1_command),.packet(s1_packet),
   .expected_request(expected_request),.fault(feed_fault),.lt0(lt0),.lt1(lt1),.lb0(lb0),.lb1(lb1),.fm(fm));
- assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault||inj_f||i8_f;
+ assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault||inj_f||i8_f||at_f;
 endmodule
 `default_nettype wire

@@ -32,13 +32,17 @@ def compile_service(*, record, op, probability_rows, latencies, go_at,
     svg=[];xc=[]
     for cyc,f in enumerate(cal.cyc):
         command=E.cmd_word(**f)
-        # Attention consumes buffered KV beats through XCAL bit 152.  Bit 25
-        # has a different meaning at the SVG feed: a MATVEC leaf valid that
-        # requires a fresh packet in this same edge. Do not issue that unrelated
-        # operation while attention drains its already buffered KV payload.
-        svg_command = (command & ((1 << 83) - 1)) & ~(1 << 25)
-        svg.append(SB.svg_word(svg_command,read=reads.get(cyc),
-                               retire=(cyc==len(cal.cyc)-1)))
+        # Attention consumes buffered KV beats through XCAL bit 152 and the SM
+        # front requires arithmetic_v = attention && command[25] == consume, so
+        # bit 25 stays in the SVG word (clearing it zeroed all 512 PV values,
+        # unit367452).  Attention words carry the SVG ATT_MARK bit [119] so the
+        # feed's S1 copy does not apply its normal issue-implies-packet rule.
+        attention = bool((command >> 183) & 1)
+        if (command >> 152) & 1 and not ((command >> 25) & 1 and attention):
+            raise ValueError('attention consume without SM arithmetic issue')
+        svg.append(SB.svg_word(command&((1<<83)-1),read=reads.get(cyc),
+                               retire=(cyc==len(cal.cyc)-1),
+                               att=attention and bool((command>>25)&1)))
         xc.append((command>>83)|(cal.kvd.get(cyc,0)<<109))
     if len(svg)>SB.PSTORE or len(xc)+2>SB.PSTORE:
         raise ValueError('real2048-row service programme capacity exceeded')
