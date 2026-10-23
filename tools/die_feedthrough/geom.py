@@ -115,7 +115,7 @@ def path_crossings(pts, rects, skip=()):
     res = []
     t0 = 0.0
     for i in range(len(pts) - 1):
-        for rid, ln, fi, fo, ti, to in seg_crossings(pts[i], pts[i + 1], rects, skip):
+        for rid, ln, fi, fo, ti, to in sorted(seg_crossings(pts[i], pts[i + 1], rects, skip), key=lambda c: c[4]):
             if res and res[-1][0] == rid and abs(res[-1][5] - (t0 + ti)) < 1e-6:
                 r = res[-1]
                 res[-1] = (rid, r[1] + ln, r[2], fo, r[4], t0 + to)

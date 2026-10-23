@@ -40,8 +40,44 @@ Definitions:
 - **Ideal stages**: `ceil(straight / reach) - 1`, placed evenly at j * L / (n + 1). `stages_in` counts the stages
   that fall inside a block.
 
-## 3. plan.py, pushdown, checks
-Not built yet. The interfaces will be added here when those tools land.
+## 3. plan.py (lane routing, stage placement, per-block ft spec)
+
+    python3 tools/die_feedthrough/plan.py --die D --census OUT/<die>_census.json.gz --dump DUMPDIR --out PLANDIR
+            [--policy straight|row] [--ft-reg inout|single] [--ft-clock block|forwarded] [--kinds data,ctl]
+            [--forbid-re REGEX] [--slot-um S] [--occupancy 0.6]
+
+Outputs:
+- `PLANDIR/<die>_plan.json`, schema `opentallas.die_feedthrough.plan.v1`, with these keys:
+  - `summary`
+  - `lanes[]`: per lane, `id`, `src`, `src_bus`, `dst`, `dst_bus`, `bits`, `pts` (the final rectilinear route after
+    track assignment), `segments[]` (kind channel or block, `block`, `len_um`, `stages`, `reps`), `stages_old`,
+    `stages_new` and `keep_channel`
+  - `variants{}`
+- `PLANDIR/<die>_schedule.tsv`: `src src_bus dst dst_bus bits stages_old stages_new` (input to the static schedule).
+- `PLANDIR/ftspec/<block_inst>.json`: one per block that hosts feedthroughs (the pushdown input below).
+
+### ft spec (schema `opentallas.die_feedthrough.ftspec.v1`), the stable pushdown interface
+```
+{ "schema": ..., "die": "s81", "block": "<inst>", "master": "<master>", "variant": "<master>__ft<8 hex>",
+  "outline": [w_um, h_um],            # master frame; every coordinate below is MASTER frame (orientation undone)
+  "orient": "R0",
+  "layer_contract": {"signal_max": "M7", "ft_layers": ["M8", "M9"], "pg_max": "M7"},
+  "clock": "block" | "forwarded",     # forwarded: each path also has a 1-bit clock port pair <name>_ck_i/_ck_o
+  "ports": [ {"name": "ft3_i", "path": 3, "dir": "input",  "face": "W", "lo": 812.4, "hi": 857.6,
+              "layer": "M8", "bits": 276},
+             {"name": "ft3_o", "path": 3, "dir": "output", "face": "E", "lo": 812.4, "hi": 857.6,
+              "layer": "M8", "bits": 276}, ... ],
+  "paths": [ {"path": 3, "lane": "<lane id>", "in": "ft3_i", "out": "ft3_o", "bits": 276,
+              "stages": 3,                       # registers inside the block from in pin to out pin (latency cycles)
+              "len_um": 2410.0, "rep_sites": 5,  # buffers the block P&R inserts between registers (<= rep_um apart)
+              "regs_um": [[20.0, 835.0], [1205.0, 835.0], [2390.0, 835.0]] } ] }   # register positions, master frame
+```
+The rules:
+- Port offsets of abutting neighbours are equal in die coordinates. The tracks are assigned once, per lane leg, in
+  the die frame.
+- `inout` registers every ft path at its in pin and at its out pin (the pin-register rule), with more registers in
+  between at most `reach` apart. `single` uses one register for a short crossing.
+- Port width is `bits x pitch / occupancy`.
 
 ## Tests
     python3 -m pytest -q tools/die_feedthrough/

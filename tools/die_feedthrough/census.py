@@ -65,8 +65,8 @@ class RectIndex:
         res = []
         t0 = 0.0
         for i in range(len(pts) - 1):
-            for rid, ln, fi, fo, ti, to in geom.seg_crossings(pts[i], pts[i + 1], self.cands(pts[i], pts[i + 1]),
-                                                               skip):
+            for rid, ln, fi, fo, ti, to in sorted(geom.seg_crossings(pts[i], pts[i + 1], self.cands(pts[i], pts[i + 1]),
+                                                                      skip), key=lambda c: c[4]):
                 if res and res[-1][0] == rid and abs(res[-1][5] - (t0 + ti)) < 1e-6:
                     r = res[-1]
                     res[-1] = (rid, r[1] + ln, r[2], fo, r[4], t0 + to)
@@ -292,6 +292,16 @@ def run(die, dump_dir, out_dir, png=True, **over):
                                                if n in members else None)))
     blocks_out.sort(key=lambda r: -r["bits"])
 
+    # unique bits: a broadcast / tapped source bus is on the wire once -> per source bus min(sum of groups, bus width)
+    per_src = defaultdict(int)
+    for g in out_groups:
+        per_src[(g["src"], g["src_bus"])] += g["bits"]
+    bits_unique = 0
+    for (si, sb), b in per_src.items():
+        inst = dump.insts.get(si)
+        m = dump.masters.get(inst.master) if inst else None
+        w = m.buses[sb].nbits if m and sb in m.buses else b
+        bits_unique += min(b, w)
     die_box = dump.die["die"]
     die_area = (die_box[2] - die_box[0]) * (die_box[3] - die_box[1])
     big_area = sum(i.w * i.h for i in big.values())
@@ -302,7 +312,7 @@ def run(die, dump_dir, out_dir, png=True, **over):
         big_blocks=len(big), big_area_frac=round(big_area / die_area, 3),
         big_blocks_ft_blocked=sum(1 for b in blocks_out if b["ft_blocked"]),
         relays=len(relay_names), relays_by_kind=dict(relays_by_kind), relays_inside_big_pct=round(100.0 * rel_inside / max(1, len(relay_names)), 2),
-        lane_groups=len(out_groups), data_groups=len(data), bits=int(tot["bits"]),
+        lane_groups=len(out_groups), data_groups=len(data), bits=int(tot["bits"]), bits_unique=int(bits_unique),
         stages_cur_bitw=round(tot["bit_stages_cur"] / max(1, tot["bits"]), 2),
         stages_ideal_bitw=round(tot["bit_stages_ideal"] / max(1, tot["bits"]), 2),
         stage_reduction=round(tot["bit_stages_cur"] / max(1, tot["bit_stages_ideal"]), 2),
