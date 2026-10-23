@@ -22,11 +22,11 @@
     3728.8
    ],
    "placement_hops_um": [
-    2.0,
-    0.5,
-    0.5
+    9.15,
+    17.79,
+    17.79
    ],
-   "placement_load_hop_um": 3.0,
+   "placement_load_hop_um": 44.73,
    "new_reset": "rsfc2_u_f_0L03_2"
   },
   "u_f_0R13": {
@@ -46,9 +46,9 @@
     14917.6
    ],
    "placement_hops_um": [
-    2.0
+    9.15
    ],
-   "placement_load_hop_um": 2.0,
+   "placement_load_hop_um": 9.15,
    "new_reset": "rsfc2_u_f_0R13_0"
   },
   "u_f_2L13": {
@@ -68,11 +68,11 @@
     3728.8
    ],
    "placement_hops_um": [
-    2.0,
-    0.5,
-    0.5
+    9.15,
+    17.79,
+    17.79
    ],
-   "placement_load_hop_um": 3.0,
+   "placement_load_hop_um": 44.73,
    "new_reset": "rsfc2_u_f_2L13_2"
   },
   "u_f_2R03": {
@@ -92,11 +92,11 @@
     14917.6
    ],
    "placement_hops_um": [
-    2.0,
-    0.5,
-    0.5
+    9.15,
+    17.79,
+    17.79
    ],
-   "placement_load_hop_um": 3.0,
+   "placement_load_hop_um": 44.73,
    "new_reset": "rsfc2_u_f_2R03_2"
   },
   "u_f_3L03": {
@@ -116,11 +116,11 @@
     7357.6
    ],
    "placement_hops_um": [
-    2.0,
-    0.5,
-    0.5
+    9.15,
+    17.79,
+    17.79
    ],
-   "placement_load_hop_um": 3.0,
+   "placement_load_hop_um": 44.73,
    "new_reset": "rsfc2_u_f_3L03_2"
   },
   "u_f_4R03": {
@@ -140,11 +140,11 @@
     3728.8
    ],
    "placement_hops_um": [
-    2.0,
-    0.5,
-    0.5
+    9.15,
+    17.79,
+    17.79
    ],
-   "placement_load_hop_um": 3.0,
+   "placement_load_hop_um": 44.73,
    "new_reset": "rsfc2_u_f_4R03_2"
   },
   "u_f_5R13": {
@@ -164,9 +164,9 @@
     7357.6
    ],
    "placement_hops_um": [
-    2.0
+    9.15
    ],
-   "placement_load_hop_um": 2.0,
+   "placement_load_hop_um": 9.15,
    "new_reset": "rsfc2_u_f_5R13_0"
   },
   "u_f_6R13": {
@@ -186,10 +186,10 @@
     3728.8
    ],
    "placement_hops_um": [
-    2.0,
-    0.5
+    9.15,
+    17.79
    ],
-   "placement_load_hop_um": 2.5,
+   "placement_load_hop_um": 26.94,
    "new_reset": "rsfc2_u_f_6R13_1"
   },
   "u_f_7R03": {
@@ -209,16 +209,24 @@
     7357.6
    ],
    "placement_hops_um": [
-    2.0,
-    0.5,
-    0.5
+    9.15,
+    17.79,
+    17.79
    ],
-   "placement_load_hop_um": 3.0,
+   "placement_load_hop_um": 44.73,
    "new_reset": "rsfc2_u_f_7R03_2"
   }
  },
  "added_stations": 22,
  "plan_sha256": "8fad03e68699dc6ac48501573ea5499a80b6e3833ece6dda924103d6903fe8b5",
- "placement_rule": "2 um outside nearest receiving frame face, 0.5 um station spacing; outside all hard bodies and every new source/load Manhattan hop <=405 um",
+ "reset_master_lefs": {
+  "dsfd_rly_1_WN": {
+   "width_um": 17.28,
+   "height_um": 17.28,
+   "sha256": "ea3b49f5a008c33aa7dfb2401cccb0f7ce889ee12ca05eb9dbcb6ce4e6f52118",
+   "path": "/srv/opentallas-scratch/claude/stw-s81c-cap30/gen-main/case/views/dsfd_rly_1_WN.lef"
+  }
+ },
+ "placement_rule": "actual LEF-sized rectangles: target 0.51 um clearance (>=0.5) from hard bodies and other new reset macros; every new source/load Manhattan hop <=405 um",
  "ret_lane_rule": "all preexisting reset stations, ICGs and lane relay connections unchanged"
 }

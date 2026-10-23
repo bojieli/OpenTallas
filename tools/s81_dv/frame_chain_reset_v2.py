@@ -66,7 +66,7 @@ def inspect(text, sync_edges):
     return frames, changes, relays, aliases
 
 
-def correct(bind, output=None, plan_path=None):
+def correct(bind, output=None, plan_path=None, views_dir=None):
     bind = Path(bind)
     text = (bind / 'die.v').read_text()
     case = json.loads((bind / 'bind_case.json').read_text())
@@ -78,11 +78,26 @@ def correct(bind, output=None, plan_path=None):
     plan = json.loads(plan_path.read_text())
     bodies = {b['name']: b for b in plan['blocks']}
     reset_positions = {r['inst']: r['xy'] for r in hints['reset_place']}
+    views_dir = Path(views_dir) if views_dir else bind.parents[1] / 'case/views'
+    lef_shapes = {}
+    def shape(master):
+        if master not in lef_shapes:
+            p = views_dir / (master + '.lef')
+            lef = p.read_text()
+            match = re.search(r'\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)\s*;', lef)
+            assert match, ('actual relay LEF SIZE missing', p)
+            lef_shapes[master] = dict(width_um=float(match[1]), height_um=float(match[2]),
+                sha256=hashlib.sha256(p.read_bytes()).hexdigest(), path=str(p))
+        return lef_shapes[master]
+    def overlaps(a, b):
+        return a[0] < b[2]-1e-6 and b[0] < a[2]-1e-6 and a[1] < b[3]-1e-6 and b[1] < a[3]-1e-6
+    new_boxes = []
     original = text
     additions, placement = [], []
     for inst, row in changes.items():
         f = frames[inst]
         old = f['rst']; master = relays[old]['master']
+        size = shape(master); mw, mh = size['width_um'], size['height_um']
         pin = hints['block_rst_pin'][inst.removeprefix('u_')]
         body = bodies[inst.removeprefix('u_')]
         x, y, w, h = (body[k] for k in ('x', 'y', 'w', 'h'))
@@ -96,11 +111,17 @@ def correct(bind, output=None, plan_path=None):
             net = f'rsfc2_{inst}_{k}'
             assert not re.search(r'\b' + net + r'\b', original), ('already patched', net)
             additions += [f'  wire {net};', f'  {master} st_{net} (.ck({f["root"]}), .rs({old}), .i({old}), .o({net}));   // chained-frame calendar v2']
-            xy = dict(W=[x-2, pin[1]+k*0.5], E=[x+w+2, pin[1]+k*0.5],
-                      S=[pin[0]+k*0.5, y-2], N=[pin[0]+k*0.5, y+h+2])[face]
+            # Leave 0.01 um beyond the placer's 0.5 um clearance: exact 0.5
+            # gaps can round below the threshold in double/0.001-um DBU math.
+            clearance = 0.51
+            xy = dict(W=[x-mw/2-clearance, pin[1]+k*(mh+clearance)], E=[x+w+mw/2+clearance, pin[1]+k*(mh+clearance)],
+                      S=[pin[0]+k*(mw+clearance), y-mh/2-clearance], N=[pin[0]+k*(mw+clearance), y+h+mh/2+clearance])[face]
             xy = [round(v, 3) for v in xy]
-            assert not any(b['x'] <= xy[0] <= b['x']+b['w'] and b['y'] <= xy[1] <= b['y']+b['h']
-                           for b in plan['blocks']), ('reset station falls on hard body', inst, xy)
+            box = [xy[0]-mw/2, xy[1]-mh/2, xy[0]+mw/2, xy[1]+mh/2]
+            assert not any(overlaps(box, [b['x']-0.5,b['y']-0.5,b['x']+b['w']+0.5,b['y']+b['h']+0.5])
+                           for b in plan['blocks']), ('reset macro footprint collides with hard body', inst, xy)
+            assert not any(overlaps(box, [b[0]-0.5,b[1]-0.5,b[2]+0.5,b[3]+0.5]) for b in new_boxes), ('new reset macro footprints collide', inst, xy)
+            new_boxes.append(box)
             hop = abs(xy[0]-previous[0]) + abs(xy[1]-previous[1])
             assert hop <= 405, ('new reset source hop exceeds reach', inst, hop)
             row['placement_hops_um'].append(round(hop, 3)); previous = xy
@@ -119,7 +140,8 @@ def correct(bind, output=None, plan_path=None):
     report = dict(schema='opentallas.s81.frame_chain_reset_v2.v1', source_die_sha256=digest(original),
         corrected_die_sha256=digest(text), receiver_reset_edges=sync, frames=len(frames), changes=changes,
         added_stations=len(placement), plan_sha256=hashlib.sha256(plan_path.read_bytes()).hexdigest(),
-        placement_rule='2 um outside nearest receiving frame face, 0.5 um station spacing; outside all hard bodies and every new source/load Manhattan hop <=405 um',
+        reset_master_lefs=lef_shapes,
+        placement_rule='actual LEF-sized rectangles: target 0.51 um clearance (>=0.5) from hard bodies and other new reset macros; every new source/load Manhattan hop <=405 um',
         ret_lane_rule='all preexisting reset stations, ICGs and lane relay connections unchanged')
     # Prove the mutation envelope by removing only the recorded new stations and
     # restoring only each receiving frame reset pin. All other bytes must match.
@@ -161,5 +183,6 @@ if __name__ == '__main__':
     ap.add_argument('--bind-dir', required=True)
     ap.add_argument('--out-dir', help='new output directory: corrected die and changed metadata; original remains immutable')
     ap.add_argument('--plan', help='actual GEN plan; defaults to ../../plan.json from the bind directory')
+    ap.add_argument('--views-dir', help='actual consumed relay LEF directory; defaults to ../../case/views')
     a = ap.parse_args()
-    print(json.dumps(correct(a.bind_dir, a.out_dir, a.plan), indent=1))
+    print(json.dumps(correct(a.bind_dir, a.out_dir, a.plan, a.views_dir), indent=1))
