@@ -15,7 +15,8 @@
 # TWIN = the frame RTL under test (default the vgcs twin; the plan contents bench twin: frame_band_plan.py --bench-top).
 # SEAM_REF (always on): tools/s81_dv/frame_seam_ref.py adds the vgch reference twin and compares every seam output every
 # edge from SEAM_T0 (default 0) -- the ret calendar alone missed the x-seam mutants (x lands with slack before go).
-# Env: MUTS (default: base + all), J (build jobs), PAR (parallel builds, default 1).  Exit 0 = base PASS and every mutant FAIL.
+# Env: MUTS (default: base + all), J (build jobs), PAR (parallel builds, default 1), BFVEC (BF phase vector dir: also run
+# the BF framed traffic on each build -- required to exercise the 536-b x2 payload seams).  Exit 0 = base PASS and every mutant FAIL.
 set -u
 O=$1; M=${2:-h9}; MASTER=col_$M; mkdir -p $O
 TW=${TWIN:-rtl/dsrom_sys/s81_dv/frame_lp/vgcs/${MASTER}_l4_lp_rf3r.sv}
@@ -53,7 +54,17 @@ PY
   local line; line=$(grep -m1 '^FRAME_SET' $od/frame_bench.log)
   local chk; chk=$(grep -h -m2 -E 'PLAN_MISMATCH|MISMATCH|FAULT|COVERAGE|BAD_' $od/check_plan.log 2>/dev/null | head -2 | cut -c1-200 | tr '\n' ' ')
   local nsm; nsm=$(grep -c 'SEAM_MISMATCH' $od/run_plan.log 2>/dev/null); chk="seam_mismatch_lines=${nsm:-0} $chk"
-  echo "SEAM_BENCH $M $mu: ${line:-NO_RESULT $(tail -n 2 $od/frame_bench.log | tr '\n' ' ')} ${chk}"
+  # BF framed traffic (BFVEC: an xs_place.py gen BF phase vector dir, e.g. attn.wo_a phase 65 of this master's frame): the
+  # 536-b x2 payload seams (h9 9/13, h10 17/32) only carry data in BF phases -- the q-only plan set leaves them at 0
+  # toggles (SEAM_ACT).  Same build; caught = seam mismatches or a frame FAULT (the BF programme check faults on a late word)
+  local bf=""
+  if [ -n "${BFVEC:-}" ] && [ -x $od/obj/Vtb_s81dv_frame ]; then
+    $od/obj/Vtb_s81dv_frame $(sed "s#+OT_ROM_DIR=[^ ]*#+OT_ROM_DIR=$(realpath $BFVEC)#" $BFVEC/ARGS) > $od/run_bf.log 2>&1
+    local bsm bft bact; bsm=$(grep -c 'SEAM_MISMATCH' $od/run_bf.log); bft=$(grep -m1 '^END' $od/run_bf.log | sed -E 's/.*fault=([0-9]+).*/\1/')
+    bact=$(grep -E 'SEAM_ACT' $od/run_bf.log | awk '$4 > 0' | wc -l)
+    bf="bf_seam_mismatch_lines=$bsm bf_fault=${bft:-NA} bf_active_seams=$bact"
+  fi
+  echo "SEAM_BENCH $M $mu: ${line:-NO_RESULT $(tail -n 2 $od/frame_bench.log | tr '\n' ' ')} ${chk} ${bf}"
 }
 export -f run_one 2>/dev/null
 for mu in $MUTS; do
@@ -64,7 +75,8 @@ wait
 rc=0
 for mu in $MUTS; do
   r=$(cat $O/$mu.res); echo "$r"
-  if [ $mu = base ]; then echo "$r" | grep -q 'pass=1 fail=0' || rc=1
-  else echo "$r" | grep -q 'fail=1' || rc=1; fi
+  if [ $mu = base ]; then echo "$r" | grep -q 'pass=1 fail=0 seam_mismatch_lines=0' || rc=1
+    [ -z "${BFVEC:-}" ] || echo "$r" | grep -q 'bf_seam_mismatch_lines=0 bf_fault=0' || rc=1
+  else echo "$r" | grep -qE 'fail=1|bf_seam_mismatch_lines=[1-9]|bf_fault=[1-9]' || rc=1; fi
 done
 echo "SEAM_BENCH_EXIT $M $rc"; exit $rc
