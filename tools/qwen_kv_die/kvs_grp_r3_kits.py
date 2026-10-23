@@ -71,6 +71,7 @@ def build(base, name, tag, W, H, orient, why):
         pr.update(r)
         dens[f] = round(sum(bits[p] for p in ports) / (L - 2), 2)
     s['pin_ranges'] = pr
+    s['route'] = dict(s['route'], pin_balance={'group_max': 1, 'h': 'M4', 'v': 'M5'})   # bit order judged + kept
     x0 = 43.2 if orient == 'MY' else 86.4
     y0 = round(((H - 4 * PITCH) / 2) // 2.16 * 2.16, 4)
     mac = s['macros']

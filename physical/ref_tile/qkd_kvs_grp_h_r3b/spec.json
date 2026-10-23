@@ -108,7 +108,12 @@
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
  },
  "recipe": 3,
  "purpose": "KVPC-R 10-23 r3b: COORD-review redesign of qkd_kvs_grp_h on the r2d RTL (byte-identical, 0 edges): outline 259.2 x 518.4 (was 222.6 x 1188, AR 5.3, fill 4-7 %), 4 SRAMs as one abutted N-S stack R0 at x 86.4, explicit face ranges (W pc0/1 low, pc2/3 high; E kreq/krsp/rsp/vreq; N/S fan chain). ALT: macros face the W PC landing band, E 4.2 /um.",
