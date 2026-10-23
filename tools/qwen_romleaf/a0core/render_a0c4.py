@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """QC-P5 10-23 A0 v4 render: (left) the core kit -- outline, hard children, soft-root fences, pin buses per face, the
-8 clock tap pins (ck + ck_t1..ck_t7) and the nearest-tap regions (what a0_clock_taps.tcl builds pre-CTS), with an
+interior clock tap pins (ck + ck_t<i>) and the nearest-tap regions (what a0_clock_taps.tcl builds pre-CTS), with an
 optional sampled placed-sink overlay (a v2 4_1_cts clock probe: OT_SINK lines) coloured by tap, per-tap sink share and
 max Manhattan pin->sink reach; (right) the CB quad cbf_q00 of the current plan with its 4 cores (hard_cores, orient)
 and the 32 core tap points the quad tap grid must deliver.
@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 COL = {"ot_qwen_tile_romleaf": "#8fb3d9", "ot_qwen_tile_lsl_fp1": "#e6b07a", "ot_qwen_tile_node": "#a8d5a2"}
-TC = ["#d62728", "#1f77b4", "#2ca02c", "#9467bd", "#ff7f0e", "#17becf", "#8c564b", "#e377c2"]
+TC = ["#d62728", "#1f77b4", "#2ca02c", "#9467bd", "#ff7f0e", "#17becf", "#8c564b", "#e377c2", "#bcbd22", "#7f7f7f"]
 
 
 def main(kit, out, stats_out, plan=None, probe=None):
@@ -33,7 +33,7 @@ def main(kit, out, stats_out, plan=None, probe=None):
     for i in range(int(W / st) + 1):
         for j in range(int(H / st) + 1):
             k = near(i * st, j * st)
-            ax.add_patch(Rectangle((i * st, j * st), st, st, fc=TC[k % 8], alpha=0.10, lw=0))
+            ax.add_patch(Rectangle((i * st, j * st), st, st, fc=TC[k % len(TC)], alpha=0.10, lw=0))
     ax.add_patch(Rectangle((0, 0), W, H, fill=False, lw=1.5))
     hard = 0.0
     for b in fp["blocks"]:
@@ -51,9 +51,9 @@ def main(kit, out, stats_out, plan=None, probe=None):
     face = {"W": 0, "E": 0}
     for n, ps in pins.items():
         xs = [p[0] for p in ps]; ys = [p[1] for p in ps]
-        f = "W" if xs[0] < 1 else "E"; face[f] += len(ps)
         if re.fullmatch(r"ck(_t\d+)?", n):
             continue
+        f = "W" if xs[0] < 1 else "E"; face[f] += len(ps)
         x = 0 if f == "W" else W
         ax.plot([x, x], [min(ys), max(ys)], lw=4, color="green" if f == "W" else "teal", alpha=0.5)
         ax.text(x + (5 if f == "W" else -5), (min(ys) + max(ys)) / 2, f"{n}[{len(ps)}]", fontsize=7,
@@ -65,16 +65,16 @@ def main(kit, out, stats_out, plan=None, probe=None):
                 f_ = l.split(); x, y = int(f_[2]) / 1000, int(f_[3]) / 1000
                 k = near(x, y); n = taps[k][0]
                 cnt[n] += 1; reach[n] = max(reach[n], abs(x - taps[k][1]) + abs(y - taps[k][2]))
-                ax.plot([x], [y], ".", ms=2.5, color=TC[k % 8])
+                ax.plot([x], [y], ".", ms=2.5, color=TC[k % len(TC)])
     for b in fp["blocks"]:
         if b.get("kind") == "child":
             k = near(b["x"] + b["w"] / 2, b["y"] + b["h"] / 2); mac[taps[k][0]] += 1
     for k, (n, x, y) in enumerate(taps):
-        ax.plot([x], [y], marker="*", ms=18, color=TC[k % 8], mec="k", zorder=6)
-        ax.text(x + (8 if x < 1 else -8), y + 8, f"{n}" + (f"\n{cnt[n]} smp, reach {reach[n]:.0f}" if probe else ""),
-                fontsize=8, ha="left" if x < 1 else "right", color=TC[k % 8], fontweight="bold")
+        ax.plot([x], [y], marker="*", ms=18, color=TC[k % len(TC)], mec="k", zorder=6)
+        ax.text(x + 4, y + 4, f"{n}" + (f"\n{cnt[n]} smp, reach {reach[n]:.0f}" if probe else ""),
+                fontsize=6.5, ha="left", color="k", fontweight="bold")
     ax.set_xlim(-30, W + 30); ax.set_ylim(-20, H + 20); ax.set_aspect("equal")
-    ax.set_title(f"{kit} core {W} x {H} um, hard fill {hard / (W * H):.2f}\n{len(taps)} clock taps (2 x 4 grid, "
+    ax.set_title(f"{kit} core {W} x {H} um, hard fill {hard / (W * H):.2f}\n{len(taps)} interior M7 clock taps (sink-count sized, "
                  f"shading = nearest-tap sink regions; dots = sampled v2 placed sinks); pins W {face['W']} / E {face['E']}",
                  fontsize=9)
     qt = []
@@ -90,7 +90,7 @@ def main(kit, out, stats_out, plan=None, probe=None):
             for k, (n, x, y) in enumerate(taps):
                 tx, ty = ox + (W - x if my else x), oy + y
                 qt.append([c["inst"] + "." + n, round(tx, 3), round(ty, 3)])
-                bx.plot([tx], [ty], marker="*", ms=11, color=TC[k % 8], mec="k")
+                bx.plot([tx], [ty], marker="*", ms=11, color=TC[k % len(TC)], mec="k")
         tp = t["clock"]["tap_um"]
         bx.plot([tp[0]], [tp[1]], marker="P", ms=14, color="purple")
         bx.text(tp[0] + 10, tp[1] + 10, "plan partition tap (spine)", color="purple", fontsize=8)

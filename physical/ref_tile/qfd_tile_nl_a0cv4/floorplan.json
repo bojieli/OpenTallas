@@ -31,22 +31,36 @@
  },
  "pins": {
   "W": [
-   "t_out",
-   "ck_t1",
-   "ck_t3",
-   "ck_t5",
-   "ck_t6"
+   "t_out"
   ],
   "E": [
-   "ck",
    "rst_n",
    "tap",
    "tie_hi",
    "tie_lo",
-   "tile_id",
+   "tile_id"
+  ],
+  "ANY": [
+   "ck",
+   "ck_t1",
    "ck_t2",
+   "ck_t3",
    "ck_t4",
-   "ck_t7"
+   "ck_t5",
+   "ck_t6",
+   "ck_t7",
+   "ck_t8",
+   "ck_t9",
+   "ck_t10",
+   "ck_t11",
+   "ck_t12",
+   "ck_t13",
+   "ck_t14",
+   "ck_t15",
+   "ck_t16",
+   "ck_t17",
+   "ck_t18",
+   "ck_t19"
   ]
  },
  "clock_port": "ck",

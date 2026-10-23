@@ -1,11 +1,12 @@
-# QC-P5 10-23 A0 v4 (COORD A0-clock concern; R4 revised): local clock trees under the core's tap pins.
-# The A0 core has 8 clock ports (ck + ck_t1..ck_t7, OT_A0_CK_TAPS): 2 columns (W/E faces) x 4 rows of ~229 x 289 um
-# regions.  All carry the same die clock from the CB quad's tap grid (equal arrival, neighbour <= 80 ps).  The RTL
-# clocks every flop/macro from ck; here (PRE_CTS) every sink moves to its NEAREST tap port (die_plan clock_taps.tcl,
-# PLAN-TOOL2 claude/plan-tool-1023 @4992d4f30, port names ck/ck_t<i>), taps over OT_TAP_MAX_SINKS split into slabs,
-# and after clock_tree_synthesis the tap trees are balanced to 250 +/- 40 ps (die_plan tap_balance.tcl, same tip).
-# Replaces the v1-v3 single ck pin + 48 k-means roots under one TritonCTS top tree (NK v2 1,133 ps: 17-level top tree
-# 558 ps + 313 ps balance pads; probe QC-P5 10-23).
+# QC-P5 10-23 A0 v4 (COORD A0 clock concern; R4 revised + sink-count rule 15:33): local clock trees under the core's
+# 20 interior tap pins (ck + ck_t1..ck_t19, OT_A0_CK_TAPS; M7, placed at equal-sink-count centroids of the v2 placed
+# sinks, ~2.2k sinks and <= ~265 um reach each).  Every pin carries the SAME die clock: the die spine drops M8 -> M7
+# onto it (partition_signal_max M7, so a quad-level tree cannot reach an interior core pin; a face pin would add the
+# quad's own tree to the 290-ps tap budget).  The RTL clocks every flop/macro from ck; here (PRE_CTS) every sink moves
+# to its nearest tap, capacity-constrained at OT_TAP_MAX_SINKS (die_plan clock_taps.tcl, PLAN-TOOL2
+# claude/plan-tool-1023 @71e64b85e, port names ck/ck_t<i>), and after clock_tree_synthesis the tap trees are balanced
+# to 250 +/- 40 ps (die_plan tap_balance.tcl, same tip, clock core_clk).  Replaces the v1-v3 single ck pin + 48
+# k-means roots under one TritonCTS top tree (NK v2 1,133 ps: 17-level top tree 558 ps + 313 ps balance pads).
 # The type has one clock port per die-spine tap (clk, clk_t1, ...; pitch <= 600 um, schema.tap_grid).  The RTL
 # clocks every flop from 'clk'; here every sink on the clk net moves to the net of its NEAREST tap port, so CTS builds
 # one local tree per tap (radius <= ~300 um) instead of one tree from one interior tap (CP1: 1176 ps, 29-32 levels).
@@ -48,52 +49,73 @@ if {[llength $ct_taps] < 2} {
   }
   puts "OT_CLOCK_TAPS [llength $ct_taps] taps, $moved sinks moved off clk: [lsort -stride 2 -index 0 $cnt]"
 }
-# COORD 10-23: size taps by SINK COUNT.  A tap whose nearest-sink set exceeds OT_TAP_MAX_SINKS (~3k) is split into
-# k = ceil(n / cap) equal-count slabs along the wider axis of its sinks; each slab hangs off its own net behind one
-# split buffer placed at the slab centroid, so CTS builds k smaller trees (CP1 r6: 3.6-4.8k-sink taps 300-313 ps).
+# COORD 10-23: size taps by SINK COUNT.  No tap keeps more than OT_TAP_MAX_SINKS (~3k): the sinks of an over-full
+# tap that cost the least extra distance move to their next-nearest tap with room (capacity-constrained nearest
+# assignment), so dense regions spread over the neighbouring taps instead of one deep tree (CP1 r6: 3.6-4.8k-sink
+# taps 300-313 ps while 9 of 16 taps were empty; a buffer split behind the tap measured worse, 437 ps).
 set ct_cap [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINKS) : 3000}]
-set ct_bufm [[ord::get_db] findMaster [expr {[info exists ::env(OT_TAP_SPLIT_BUF)] ? $::env(OT_TAP_SPLIT_BUF) : "BUFx24_ASAP7_75t_R"}]]
-set ct_split {}
-foreach tp $ct_taps {
-  set n [lindex $tp 0]; set net [lindex $tp 1]
-  set sinks {}
-  foreach it [$net getITerms] {
-    if {[[$it getMTerm] getIoType] ne "INPUT"} continue
-    set loc [[$it getInst] getLocation]
-    lappend sinks [list $it [lindex $loc 0] [lindex $loc 1]]
-  }
-  set ns [llength $sinks]
-  set k [expr {int(ceil($ns / double($ct_cap)))}]
-  if {$k < 2} continue
-  set xs [lmap e $sinks {lindex $e 1}]; set ys [lmap e $sinks {lindex $e 2}]
-  set ax [expr {([tcl::mathfunc::max {*}$xs] - [tcl::mathfunc::min {*}$xs]) >= ([tcl::mathfunc::max {*}$ys] - [tcl::mathfunc::min {*}$ys]) ? 1 : 2}]
-  set sinks [lsort -integer -index $ax $sinks]
-  set per [expr {int(ceil($ns / double($k)))}]
-  for {set s 0} {$s < $k} {incr s} {
-    set chunk [lrange $sinks [expr {$s * $per}] [expr {min($ns, ($s + 1) * $per) - 1}]]
-    if {![llength $chunk]} continue
-    set sx 0; set sy 0
-    foreach e $chunk { set sx [expr {$sx + [lindex $e 1]}]; set sy [expr {$sy + [lindex $e 2]}] }
-    set cx [expr {int($sx / [llength $chunk])}]; set cy [expr {int($sy / [llength $chunk])}]
-    set snet [odb::dbNet_create $ct_blk "${n}_split$s"]
-    $snet setSigType CLOCK
-    set b [odb::dbInst_create $ct_blk $ct_bufm "${n}_splitbuf$s"]
-    foreach t [$b getITerms] {
-      set mt [$t getMTerm]
-      if {[$mt getSigType] in {POWER GROUND}} continue
-      if {[$mt getIoType] eq "INPUT"} { $t connect $net } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $snet }
+# a re-assigned sink may add at most half a tap pitch of distance (CP1 r6 probe: sinks moved ~300 um to an empty
+# tap gave 465-ps trees); a dense region beyond that needs a finer tap pitch, not longer trees
+set ct_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+set ct_maxx [expr {0.5 * ([info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0) * $ct_dbu}]
+if {[llength $ct_taps] >= 2} {
+  set ct_by {}
+  foreach tp $ct_taps {
+    set l {}
+    foreach it [[lindex $tp 1] getITerms] {
+      if {[[$it getMTerm] getIoType] eq "INPUT"} { lappend l $it }
     }
-    $b setLocation $cx $cy
-    $b setPlacementStatus PLACED
-    foreach e $chunk { set it [lindex $e 0]; $it disconnect; $it connect $snet }
+    dict set ct_by [lindex $tp 0] $l
   }
-  lappend ct_split "$n:$ns->${k}x$per"
-}
-if {[llength $ct_split]} {
-  detailed_placement
-  puts "OT_CLOCK_TAPS split dense taps (cap $ct_cap sinks): $ct_split"
-} else {
-  puts "OT_CLOCK_TAPS no tap over $ct_cap sinks"
+  set ct_moves 0
+  set ct_stuck {}
+  for {set pass 0} {$pass < 8 * [llength $ct_taps]} {incr pass} {
+    set over ""
+    foreach tp $ct_taps {
+      if {[lindex $tp 0] ni $ct_stuck && [llength [dict get $ct_by [lindex $tp 0]]] > $ct_cap} { set over $tp; break }
+    }
+    if {$over eq ""} break
+    set on [lindex $over 0]
+    set excess [expr {[llength [dict get $ct_by $on]] - $ct_cap}]
+    # extra distance of each sink to every other tap with room
+    set cand {}
+    foreach it [dict get $ct_by $on] {
+      set loc [[$it getInst] getLocation]; set x [lindex $loc 0]; set y [lindex $loc 1]
+      set d0 [expr {abs($x - [lindex $over 2]) + abs($y - [lindex $over 3])}]
+      set best ""; set bd 0
+      foreach tp $ct_taps {
+        if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] >= $ct_cap} continue
+        set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3]) - $d0}]
+        if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
+      }
+      if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $it $best] }
+    }
+    if {![llength $cand]} {
+      puts "OT_CLOCK_TAPS FAIL $on keeps [llength [dict get $ct_by $on]] sinks > cap $ct_cap: no tap with room within [format %.0f [expr {$ct_maxx / $ct_dbu}]] um (finer clock.tap_pitch_um)"
+      lappend ct_stuck $on
+      continue
+    }
+    set cand [lsort -real -index 0 $cand]
+    # move the cheapest sinks toward ONE target per pass (keeps targets under cap), then re-evaluate
+    set tgt [lindex $cand 0 2]; set tn [lindex $tgt 0]
+    set room [expr {$ct_cap - [llength [dict get $ct_by $tn]]}]
+    set keep [dict get $ct_by $on]; set add [dict get $ct_by $tn]
+    set n 0
+    foreach c $cand {
+      if {$n >= $excess || $n >= $room} break
+      if {[lindex $c 2 0] ne $tn} continue
+      set it [lindex $c 1]
+      $it disconnect; $it connect [lindex $tgt 1]
+      set keep [lsearch -all -inline -not -exact $keep $it]
+      lappend add $it
+      incr n
+    }
+    dict set ct_by $on $keep; dict set ct_by $tn $add
+    incr ct_moves $n
+  }
+  set l {}
+  foreach tp $ct_taps { lappend l "[lindex $tp 0] [llength [dict get $ct_by [lindex $tp 0]]]" }
+  puts "OT_CLOCK_TAPS cap $ct_cap sinks/tap: $ct_moves sinks re-assigned; per tap: [join $l {, }]"
 }
 # ---- post-CTS tap balance (die_plan tap_balance.tcl body, ck ports, clock core_clk), run right after CTS
 set ::ot_a0_tb_src {
