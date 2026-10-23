@@ -651,6 +651,20 @@ endmodule
 // registered one-hot words from per-q keep_hierarchy decode leaves; emit read_v / read_group[0] copies per 12-bit chunk.
 // Same edges and function as SAFE=1 (historical +5).
 // ---------------------------------------------------------------------------------------------------------------
+// R8: balanced kept 2/4/8-bit population-count tree for S1 pair counts.
+// The former serial pc8 accumulator plus pair add cost the r7b count path
+// 50.66 ps of TT slack. No register, interface or event edge changes.
+module ot_hbm_idx_link_pc8_bal(input wire[7:0]x,output wire[3:0]y);
+ wire[7:0]p2;wire[5:0]p4;
+ genvar i;
+ for(i=0;i<4;i=i+1)begin:p
+  (* keep_hierarchy *) ot_hbm_idx_link_kadd #(.W(1)) u(.a(x[i*2]),.b(x[i*2+1]),.y(p2[i*2+:2]));
+ end
+ for(i=0;i<2;i=i+1)begin:q
+  (* keep_hierarchy *) ot_hbm_idx_link_kadd #(.W(2)) u(.a(p2[i*4+:2]),.b(p2[i*4+2+:2]),.y(p4[i*3+:3]));
+ end
+ (* keep_hierarchy *) ot_hbm_idx_link_kadd #(.W(3)) u(.a(p4[0+:3]),.b(p4[3+:3]),.y(y));
+endmodule
 module ot_hbm_idx_link_kadd #(parameter integer W=4)(input wire[W-1:0]a,b,output wire[W:0]y);
  assign y={1'b0,a}+{1'b0,b};
 endmodule
@@ -677,7 +691,7 @@ module ot_hbm_idx_link_t_slice #(parameter integer BW=6,parameter integer MUT=0)
  // ---------------- S1: compaction from slot copies 0..3 (2 slots each); counts from copy 4 only
  wire[64*BW-1:0]gc;wire[8*4-1:0]gcnt;
  for(g=0;g<8;g=g+1)begin:grp
-  assign gcnt[g*4+:4]=pc8(vc[4*64+g*8+:8]);
+  (* keep_hierarchy *) ot_hbm_idx_link_pc8_bal cnt(.x(vc[4*64+g*8+:8]),.y(gcnt[g*4+:4]));
   for(s=0;s<8;s=s+1)begin:sl
    wire[7:0]gm=vc[(s/2)*64+g*8+:8];
    reg[BW-1:0]v;integer k;
