@@ -1,0 +1,16 @@
+# STW-S81e-FP 10-23 dsdv_seq_host_mu_lp rev4 (rev3 plan, E channel x 445) reset-run stations (um; outline 457.92 x 1494.72; E channel x 432..457.92 beside
+# the hard children u_l0 / u_blk / u_bvc (x 43.2..432), u_hs at x 172.8..432 y 43.2..172.8).  Hops <= ~150 um.
+# u_l0 run (rr[0] -> 4 stages -> u_l0/rst_n at (431.9, 272.1))
+^u_l0r0[./]  445.0 680.0
+^u_l0r1[./]  445.0 550.0
+^u_l0r2[./]  445.0 420.0
+^u_l0r3[./]  445.0 292.0
+# hslot run (rst_l1 at the E face y~694 -> sync 2 + tree 7 -> u_hs/rst_n at (241.4, 43.2) on its S face)
+^u_rh\.sync_q   445.0 690.0
+^u_rh\.relay_q\[0\]  445.0 600.0
+^u_rh\.relay_q\[1\]  445.0 505.0
+^u_rh\.relay_q\[2\]  445.0 410.0
+^u_rh\.relay_q\[3\]  445.0 315.0
+^u_rh\.relay_q\[4\]  445.0 220.0
+^u_rh\.relay_q\[5\]  445.0 125.0
+^u_rh\.rst_n  300.0 22.0

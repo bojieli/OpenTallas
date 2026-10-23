@@ -1,0 +1,350 @@
+{
+ "name": "dsdv_seq_host_mu_lp4",
+ "top": "dsdv_seq_host_mu_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv",
+  "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
+  "rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_c_r3_lb3.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_mu_lp.sv"
+ ],
+ "params": {
+  "NSLOT": 47
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 457.92,
+  "h": 1494.72
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/dsdv_sh_lk_s10hq/views/dsdv_sh_lk",
+   "count": 1,
+   "inst": "u_core.u_l0",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq",
+   "count": 1,
+   "inst": "u_core.u_l1",
+   "at": [
+    86.4,
+    864.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc",
+   "count": 1,
+   "inst": "u_core.u_l2",
+   "at": [
+    86.4,
+    1252.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_lb_lk_b1m/views/dsdv_sh_lb_lk",
+   "count": 1,
+   "inst": "u_core.u_blk",
+   "at": [
+    43.2,
+    691.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_lb_vc_b1m/views/dsdv_sh_lb_vc",
+   "count": 1,
+   "inst": "u_core.u_bvc",
+   "at": [
+    43.2,
+    1036.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_mu_hslot/views/dsdv_mu_hslot",
+   "count": 1,
+   "inst": "u_hs",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "S": [
+   "s_hc_e",
+   "s_hw_e",
+   "s_jd_e",
+   "st_rg_e",
+   "vi_s",
+   "vo_s"
+  ],
+  "N": [
+   "cw_v",
+   "cw_a",
+   "cw_d",
+   "vi_n",
+   "vo_n",
+   "tap_k",
+   "sink_k"
+  ],
+  "W": [
+   "f_host",
+   "f_lf",
+   "t_host"
+  ],
+  "E": [
+   "f_ks",
+   "s_hc_w",
+   "s_hw_w",
+   "s_j",
+   "s_jd_w",
+   "st_rg_w",
+   "t_kd",
+   "f_mc",
+   "t_mf",
+   "ck",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "f_host": [
+   216.0,
+   607.2
+  ],
+  "f_lf": [
+   605.0,
+   612.0
+  ],
+  "t_host": [
+   610.0,
+   669.6
+  ],
+  "f_ks": [
+   129.6,
+   259.2
+  ],
+  "s_hc_w": [
+   272.0,
+   282.0
+  ],
+  "s_hw_w": [
+   281.6,
+   576.8
+  ],
+  "s_j": [
+   576.4,
+   610.2
+  ],
+  "s_jd_w": [
+   609.6,
+   612.4
+  ],
+  "st_rg_w": [
+   611.6,
+   614.4
+  ],
+  "t_kd": [
+   172.8,
+   302.4
+  ],
+  "f_mc": [
+   43.2,
+   172.8
+  ],
+  "t_mf": [
+   43.2,
+   172.8
+  ],
+  "ck": [
+   680.4,
+   686.88
+  ],
+  "rst_n": [
+   691.2,
+   697.68
+  ],
+  "cw_v": [
+   86.4,
+   96.0
+  ],
+  "cw_a": [
+   86.4,
+   96.0
+  ],
+  "cw_d": [
+   93.6,
+   160.4
+  ],
+  "vi_n": [
+   160.4,
+   232.6
+  ],
+  "vo_n": [
+   232.4,
+   304.6
+  ],
+  "tap_k": [
+   304.0,
+   312.0
+  ],
+  "sink_k": [
+   304.0,
+   312.0
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "wires-only cluster: every parent port goes straight to one leaf pin, and every seq_host leaf is flop-first / flop-last at its pins (lk RL 1 rung landed at both faces); a recipe pin register would add an unpriced stage on the rung / host / status paths"
+ },
+ "structural_change": "mu_lp rev4 (STW-S81e-FP 10-23, COORD tile review: parent outline from content): rev3 RTL / benches / children / child origins unchanged (8eaa2860c).  The children stack IS the content: hslot | lk | blk | sq | bvc | vc abut in landed-chain order on the 43.2-um child lattice (gaps 43.2 / 21.6 / 21.6 / 21.6 / 21.6 um, every consumer next to its producer), so the outline is that stack plus the minimum rule channels: W 43.2 (the f_host / f_lf / t_host pin channel, 1,000+ pins), E 475.2 -> 457.92 (25.92-um reset-station channel, >= 20 um pin-edge rule), N top 45.36 -> 28.08.  Child packing 60% -> 63%; the remaining white space is the narrower sq / vc / hslot (227-259 um) under the 388.8-um lk / bands column.  The reviewed render (r3d, 518 x 1426, 3 leaves, 36% packing) is obsolete.  Same ports, same latency on every port.  rev3: mu_lp rev3 (STW-S81c-COLLA4-SEQ 10-22, STEWARD-S81c order 21:00, from rev2 075604603 gate classes): (1) pin ranges = the child pin spans (t_host -1,522.9 / s_j -381.8 / vo_n -154.3 were pin-order detours, not logic); (2) u_l0 reset run rebuilt in the parent from rr[0] (same 4 edges, OT_MU_LP_R3 + derived core lb3) as 4 stationed stages instead of the band pin -> u_l0 ~680 um hop (-702.9); hslot run u_rh stationed along the E channel to the hslot S face (-175.1); (3) clock: symmetric insertion-aware spine (OT_SPINE_SYM).  Same ports, same latency on every port, same outline 475.2 x 1512, same CLOSED children.",
+ "job": {
+  "owner": "Claude:STW-S81e-FP",
+  "branch": "claude/s81e-fp-seq-1023",
+  "tag": "dsdv_seq_host_mu_lp4",
+  "purpose": "seq (b) dsdv_seq_host_mu_lp rev4 (outline from content) (exact host_mu ports) for die cap28",
+  "views_to": "physical/ref_tile/dsdv_seq_host_mu_lp4/views",
+  "record_to": "results/rtl/ref_tile/dsdv_seq_host_mu_lp4",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/dsdv_sh_lk_s10hq/views",
+   "physical/rom_host_ingest/rtl",
+   "results/arch/landed_parent_1018/dsdv_seq_host/core_b",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/dsrom_sys/s81_static_control",
+   "rtl/hdc/ingest",
+   "rtl/lib",
+   "rtl/link",
+   "results/arch/codex_seq_linked_taps_1021",
+   "tools/s81_dv/seq_three_roots_1021",
+   "results/arch/codex_seq_three_roots_1021",
+   "rtl/common/landed_parent",
+   "tools/landed_parent/lp_fence_release.tcl",
+   "physical/ref_tile/dsdv_sh_lb_lk_b1m/views",
+   "physical/ref_tile/dsdv_sh_lb_vc_b1m/views",
+   "results/closure_loop/dsdv_sh_lb_lk_b1m-dsdv_sh_lb_lk_b1m-a8b9dc305",
+   "results/closure_loop/dsdv_sh_lb_vc_b1m-dsdv_sh_lb_vc_b1m-a8b9dc305",
+   "results/rtl/ref_tile/dsdv_sh_lb_lk_b1m",
+   "results/rtl/ref_tile/dsdv_sh_lb_vc_b1m",
+   "tools/s81_dv/seq_mu_lp4_1023"
+  ],
+  "benches": [
+   {
+    "name": "mu_lp_lockstep",
+    "cmd": "MULP_R3=1 VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_JOBS=4 MULP_CASES=0:0 bash rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_mu_lp_bench.sh {RUN}/m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "pass_regex": "MU_LP_LOCKSTEP PASS",
+    "pass_witness": "results/arch/seq_mu_lp3_1022/mu_lp_run_m0_l0.log"
+   },
+   {
+    "name": "mu_lp_mut_m1_l0",
+    "cmd": "MULP_R3=1 VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_JOBS=4 MULP_CASES=1:0 bash rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_mu_lp_bench.sh {RUN}/m1_l0; grep -q 'MU_LP_LOCKSTEP FAIL' {RUN}/m1_l0/run_m1_l0.log && exit 1; exit 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "fail_regex": "MU_LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/seq_mu_lp3_1022/mu_lp_run_m1_l0.log",
+    "why": "hslot reset epoch slip"
+   },
+   {
+    "name": "mu_lp_mut_m2_l0",
+    "cmd": "MULP_R3=1 VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_JOBS=4 MULP_CASES=2:0 bash rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_mu_lp_bench.sh {RUN}/m2_l0; grep -q 'MU_LP_LOCKSTEP FAIL' {RUN}/m2_l0/run_m2_l0.log && exit 1; exit 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "fail_regex": "MU_LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/seq_mu_lp3_1022/mu_lp_run_m2_l0.log",
+    "why": "t_kd without slot word"
+   },
+   {
+    "name": "mu_lp_mut_m0_l1",
+    "cmd": "MULP_R3=1 VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_JOBS=4 MULP_CASES=0:1 bash rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_mu_lp_bench.sh {RUN}/m0_l1; grep -q 'MU_LP_LOCKSTEP FAIL' {RUN}/m0_l1/run_m0_l1.log && exit 1; exit 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "fail_regex": "MU_LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/seq_mu_lp3_1022/mu_lp_run_m0_l1.log",
+    "why": "r3_lp landing mutant"
+   },
+   {
+    "name": "mu_lp_mut_m3_l0",
+    "cmd": "MULP_R3=1 VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_JOBS=4 MULP_CASES=3:0 bash rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_mu_lp_bench.sh {RUN}/m3_l0; grep -q 'MU_LP_LOCKSTEP FAIL' {RUN}/m3_l0/run_m3_l0.log && exit 1; exit 0",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "fail_regex": "MU_LP_LOCKSTEP FAIL",
+    "fail_witness": "results/arch/seq_mu_lp3_1022/mu_lp_run_m3_l0.log",
+    "why": "rev3 u_l0 reset run one stage short (epoch slip)"
+   }
+  ]
+ },
+ "defines": [
+  "OT_MU_LP_R3"
+ ],
+ "hard_define": "OT_DSDV_SEQHOST_HARD",
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "reset_landing": {
+  "enable": false,
+  "reason": "Actual generated source has four-stage independent regional reset ports and kept bounded final copies. No additional reset alias or physical hidden stage."
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "child_clock_ref": "boundary",
+ "clock": "spine",
+ "clock_why": "rev3 MAIN: OT_SPINE_SYM=1 (clock_spine.tcl symmetric insertion-aware topology, used by the closed smh tiles): bounding-box-centre bisection nodes, and each hard child taps the node that lets it arrive no later than the latest flop leaf, so u_l0 (551 ps own insertion vs 246-300 for the others) gets a SHORT trunk instead of HB4 pad chains; rev2 count-bisection + pads balanced TT (child boundary flops 1006-1028 ps) but drifted at FF (u_blk-u_l1 pair 82 ps, u_l0-u_hs 79; limit 80).  rev2 (gate 15:57, ep5 cts.log): \"cts\" + child_centre_tap left the six hard children unbalanced -- child_centre_tap is armed only for landed multiple_cts_roots kits, so the tap never ran; child clock pins arrived 838..1674 ps (u_l0 internal insertion 551 ps vs 233-300 for the others), FF hold -589 ps on 2,434 IO endpoints (u_l2/vi_n), 23k hold buffers, DPL-0033 overlaps.  The cluster default \"spine\" puts each hard child clock pin on its own leaf with the child insertion (Liberty max_clock_tree_path) as target, so every child boundary lands at one arrival.",
+ "pin_ranges_why": "rev3 (STW-S81c-COLLA4-SEQ 10-22): rev2 gave every W/E/N group the whole 216-669.6 window (or the whole face), so the pin placer interleaved them and t_host (u_l0 W face y 610.6-668.2) landed down to y 219 -> t_host[7] reg->out -1,522.9 ps through ~1.8 ns of buffered detour in the 43-um W channel; s_j -381.8, vo_n -154.3.  Each group now spans exactly its child pins (u_l0 W: f_host 217-607, f_lf 608-610, t_host 611-668; u_l0 E: s_hc_w 273-281, s_hw_w 282-576, s_j 577-610, s_jd_w 611, st_rg_w 613; u_l2 N: cw_v/cw_a 91-94, cw_d 94-160, vi_n 160-232, vo_n 233-304, tap_k/sink_k 305-309), so every child-pin -> port run is a straight ~45 um hop on its own track; f_ks / t_kd / f_mc / t_mf / S face unchanged (rev2).",
+ "orfs_vars": {
+  "OT_STATION_PLAN": "tools/s81_dv/seq_mu_lp4_1023/stations.txt",
+  "OT_SPINE_SYM": "1"
+ },
+ "pin_hook_after_flops": [
+  "tools/s81_dv/seq_mu_lp4_1023/station_place.tcl"
+ ],
+ "pre_dpl_extra": [
+  "tools/s81_dv/seq_mu_lp4_1023/station_release.tcl"
+ ]
+}
