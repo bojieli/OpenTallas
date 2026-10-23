@@ -190,14 +190,14 @@ module dsdv_idx_rg3_bxmh #(
         // native census (gate 10-22 21:xx: one shared decode drove 59 / 38 loads): the raw capture is replicated 8x
         // (keep, like ks0..3); copy c decodes its own 32 selects for k_sc[4c +: 4], so every sl_r bit and every
         // decoded select stays <= 32 loads.  Cycle-identical to the single copy.
-        (* keep = "true" *) reg [7:0][4:0] sl_r;
+        (* keep = "true" *) reg [39:0] sl_r;               // copy c = sl_r[5c +: 5] (flat: yosys)
         always @(posedge ck) sl_r <= {8{su_b, s_lo}};
         reg [31:0] k_sc;
         genvar gc, ga;
         for (gc = 0; gc < 8; gc = gc + 1) begin : g_sc8
             wire [31:0] ssel;
             for (ga = 0; ga < 32; ga = ga + 1) begin : g_ss
-                assign ssel[ga] = sl_r[gc][4:3] == 2'(ga / 8) && sl_r[gc][2:0] == 3'(ga % 8);
+                assign ssel[ga] = sl_r[5 * gc + 3 +: 2] == 2'(ga / 8) && sl_r[5 * gc +: 3] == 3'(ga % 8);
             end
             always @(posedge ck) begin : g_scr
                 reg [3:0] x; integer a_;
