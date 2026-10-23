@@ -124,6 +124,24 @@ GRP_S6C = os.environ.get('OT_KV_GRP_S6C', '0') == '1'
 if GRP_S6C and not (GRP_SAFE2 and os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'):
     raise ValueError('GRP_S6C requires OT_KV_GRP_SAFE2=1 (DS private ABI + parent connections) and OT_KV_NATIVE_SLOTS=1 '
                      '(the closed group tiles are 388.8 wide; the legacy group frame is narrower)')
+# KDIE5-RTL 10-22 (OT_KV_CTL_NC32=1; default off: every tile file / binding unchanged): the release-point control tile
+# qkd_kvs_ctl binds the native-census successor body (KV-CTL10 c32 members + DSTG, census PASS max 32 in gate c32k) from
+# its own file CTL_NC32_RTL (same master name / 62 ports; the generated tile file omits the ctl body, suffix '_nc32').
+# The generator's own ctl body must equal the frozen release body the successor derives from (refuses otherwise).
+# Schedule deltas (kv_static_programme.cal_deltas prices them under OT_KV_CTL_C32=2, which this knob requires):
+# own leave guard +2 ck, boot setup_ready +2 (host boundary), +1 boot-write edge (DSTG); token-path port edges +0.
+CTL_NC32 = os.environ.get('OT_KV_CTL_NC32', '0') == '1'
+if CTL_NC32 and os.environ.get('OT_KV_CTL_C32', '0') != '2':
+    raise ValueError('CTL_NC32 requires OT_KV_CTL_C32=2 (the compiler prices the c32 own / boot deltas under it)')
+CTL_NC32_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv'
+CTL_NC32_BASE_SHA256 = 'cc153f58e9e00348699ffe78e852449db1ff7efed939156000097ef511981d38'
+CTL_NC32_DEPS = ('rtl/lib/ot_s32_cells.sv', 'rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv',
+                 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv',
+                 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv',
+                 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_boot.sv',
+                 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv',
+                 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv',
+                 'rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv')
 GRP_S6C_RTL = dict(grp='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv',
                    grp_h='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv')
 GROUP_SLOT = dict(grp=(388.8, float(os.environ.get('OT_KV_GRP_SLOT_H', '432.0')) if GRP_S6C else 388.8),
@@ -185,7 +203,7 @@ PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroo
             ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + ('_sr' if PC_SRAM else '') +
             '.sv')   # KV-DOMSPLIT; KV-PC
 RTL_FILE = (PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + ('_gs2' if GRP_SAFE2 else '') +
-            ('_g6c' if GRP_S6C else '') + '.sv')
+            ('_g6c' if GRP_S6C else '') + ('_nc32' if CTL_NC32 else '') + '.sv')
 GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
 GRP_SAFE2_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s2.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
@@ -1704,6 +1722,12 @@ def rtl_text():
             continue
         name = KIND_MASTER[t['kind']]
         txt = module_text(t, name)
+        if CTL_NC32 and t['kind'] == 'ctl':
+            import hashlib
+            if hashlib.sha256(txt[txt.index('module qkd_kvs_ctl ('):].encode()).hexdigest() != CTL_NC32_BASE_SHA256:
+                raise ValueError('kv_static_die CTL_NC32: generator ctl body differs from the frozen release body the '
+                                 'native32 successor derives from')
+            continue
         if name in mods and mods[name][0] != txt:
             a, b = mods[name][0].splitlines(), txt.splitlines()
             diff = next((i for i in range(min(len(a), len(b))) if a[i] != b[i]), min(len(a), len(b)))
@@ -1726,6 +1750,9 @@ def sources():
             s.add(ins()[n]['source'])
     if GRP_S6C:
         s.update(GRP_S6C_RTL.values())
+    if CTL_NC32:
+        s.add(CTL_NC32_RTL)
+        s.update(CTL_NC32_DEPS)
     s.update(K.pc_emb_sources())
     if BOOT:
         s.update(BOOT_PC_DEPS)
@@ -1756,6 +1783,8 @@ def bindings():
         source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else RTL_FILE
         if GRP_SAFE2 and t['kind'] in ('grp', 'grp_h'):
             source_file = GRP_S6C_RTL[t['kind']] if GRP_S6C else GRP_SAFE2_RTL
+        if CTL_NC32 and t['kind'] == 'ctl':
+            source_file = CTL_NC32_RTL
         if PC_SRAM and KITS and t['kind'] in PC_RLAND_KINDS:
             ports['pc__hfx'] = ['pc__hfx']      # KV-BIND4: pc_hfx_text port; read by the health plane (PC family)
         out[mst] = dict(module=mst, file=source_file, ports=ports, sliced={}, classed=cls)
