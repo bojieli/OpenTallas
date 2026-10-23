@@ -401,6 +401,19 @@ def check_hops(P, R, geo):
             i = hops.index(h)
             R.err("hops", f"lane {lid}: hop {i} is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
                   "partition's slot or shorten it)", lane=lid)
+    # COORD 10-23 R3: ft stations at most budgets.ft_station_max_um (750) apart inside every crossed partition
+    smax = float(P.budgets.get("ft_station_max_um", 750.0))
+    seen = set()
+    for lid, (pts, regs, xs) in geo.items():
+        for x in xs:
+            key = (P.parts[x["part"]]["type"], x["slot"])
+            if key in seen:
+                continue
+            seen.add(key)
+            sp = x["len_um"] / max(1, x["stations"])
+            if sp > smax + EPS:
+                R.err("stations", f"type {key[0]} slot {key[1]}: {x['len_um']:.0f} um route / {x['stations']} "
+                      f"station(s) = {sp:.0f} um > ft_station_max_um {smax:.0f} (R3: add stations)", type=key[0])
     worst.sort(reverse=True)
     return [dict(lane=l, hop_um=round(h, 1), reach_um=r) for _, l, h, r in worst[:10]]
 

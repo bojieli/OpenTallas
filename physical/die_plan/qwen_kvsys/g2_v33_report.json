@@ -1,0 +1,69 @@
+{
+ "schema": "opentallas.die_plan.g2.v1",
+ "plan": "physical/die_plan/qwen_kvsys/die_plan.json (v3.3)",
+ "plan_sha256": "9cc45cfc0affb9341cf64eeb29b06edd27eaf1f22561bb65b32d966220d0b762",
+ "verdict": "PASS",
+ "scope": "fresh FT probes (tools/die_plan/g2.py part, --adjust 0.5, localhost docker 40 GB, openroad/orfs:asap7lock) of the 5 types v3.3 changes (hgi_v6/v7/v8 = the v3.2 worst-3, hub_Wi, io_cor); all other types, partition outlines, clock/reset taps are byte-unchanged from v3.2, so the v3.2 die probe and the other v3.2 FT probes (g2_v32_report.json) and the clock-region probe (g2_clocks_v32_report.json) carry over",
+ "probes": {
+  "part_kv3_hgi_v6": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "errors": [],
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "max_layer_use_pct": 17.57,
+   "wirelength_um": 11229817.0,
+   "probe_tcl_sha256": "8bdf868aa363e62659819b8748fee4ce0016df2ff35a8c472ff0fe5cf8e7ca44"
+  },
+  "part_kv3_hgi_v7": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "errors": [],
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "max_layer_use_pct": 14.88,
+   "wirelength_um": 7852540.0,
+   "probe_tcl_sha256": "f274e5a3679ca9b47bc488d61b33ddb0f3073b811007eeea950829c79cb8ca6a"
+  },
+  "part_kv3_hgi_v8": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "errors": [],
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "max_layer_use_pct": 15.31,
+   "wirelength_um": 8177902.0,
+   "probe_tcl_sha256": "5c4c956d5d66962e44feb74506e4654f84b2ee7f503d11762028742d608ab09e"
+  },
+  "part_kv3_hub_Wi": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "errors": [],
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "max_layer_use_pct": 11.03,
+   "wirelength_um": 5387992.0,
+   "probe_tcl_sha256": "97378294351252a220b953b14aebfc59e2cadb2caeedacdfdb32936fc630ae4f"
+  },
+  "part_kv3_io_cor": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "errors": [],
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "max_layer_use_pct": 11.06,
+   "wirelength_um": 3458245.0,
+   "probe_tcl_sha256": "283ed4cbfabf2352c0ecda04d095223c5d6a65ce1a89194402e602970d7d33c3"
+  }
+ }
+}

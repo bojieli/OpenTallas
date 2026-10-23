@@ -151,12 +151,13 @@ def desc_vm_range(d):
 
 
 class Cx:
-    def __init__(s, fixtures, rank, priced, place, *, contract, l12, checkpoint, boundary, ops, skip=(), chapters=(), hc_source_profile=None):
+    def __init__(s, fixtures, rank, priced, place, *, contract, l12, checkpoint, boundary, ops, skip=(), chapters=(), hc_source_profile=None, coll_transport=None):
         s.meta, s.z, s.frecs = CI.load_fixture_records(fixtures, rank)
         if hc_source_profile is not None and (rank != 0 or int(s.meta["layer"]) != 0):
             raise ValueError("explicit SAFE2 HC profile covers only rank0/layer0/k31")
         s.place, s.bnd, s.ops = place, boundary, ops
         s.vm_rt = CI.vm_rt_from_contract(contract)
+        s.coll_transport = coll_transport  # TOKg 10-23: coll_transport.load() profile (None = GEN2 timing)
         s.tim = HI.timing_from_contract(contract, l12)
         s.hc_source_profile, s.profile_contract = hc_source_profile, contract
         s.checkpoint = checkpoint
@@ -397,7 +398,7 @@ class Cx:
         the component runs in a standalone part on its own VM allocation, inputs imaged from the fixture."""
         def build(base):
             if c["kind"] == "coll":
-                g = CI.gather_record(c["O"], c["i"], R=2, t_start=40, dst_idx=base, vm_rt=s.vm_rt)
+                g = CI.gather_record(c["O"], c["i"], R=2, t_start=40, dst_idx=base, vm_rt=s.vm_rt, transport=s.coll_transport)
                 if g["status"] != "emitted":
                     raise ValueError(g.get("reasons"))
                 return g["events"] + g["chk_vm"] + g["chk_misc"] + g["chk_ring"], 4 * g["stride"]
@@ -484,7 +485,7 @@ class Cx:
 
     def _coll(s, c):
         x, O = c["x"], c["O"]
-        g = CI.gather_record(O, c["i"], R=2, t_start=40, dst_idx=c["dst"], vm_rt=s.vm_rt, src_idx=c["src"])
+        g = CI.gather_record(O, c["i"], R=2, t_start=40, dst_idx=c["dst"], vm_rt=s.vm_rt, src_idx=c["src"], transport=s.coll_transport)
         if g["status"] != "emitted":
             return g
         F, ls0 = c["F"], c["ls0"]

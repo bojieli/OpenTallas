@@ -1842,32 +1842,336 @@
   "max_core": 69671
  },
  "svc_0": {
-  "cells": 1754498,
+  "cells": 12917494,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
@@ -1878,74 +2182,682 @@
     "cells": 166644
    }
   ],
-  "n_cores": 8,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 84,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_1": {
-  "cells": 1587854,
+  "cells": 12750850,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
     "cells": 20538
    }
   ],
-  "n_cores": 7,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 83,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_2": {
-  "cells": 1754498,
+  "cells": 12917494,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
@@ -1956,74 +2868,682 @@
     "cells": 166644
    }
   ],
-  "n_cores": 8,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 84,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_3": {
-  "cells": 1587854,
+  "cells": 12750850,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
     "cells": 20538
    }
   ],
-  "n_cores": 7,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 83,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_4": {
-  "cells": 1754498,
+  "cells": 12917494,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
@@ -2034,74 +3554,682 @@
     "cells": 166644
    }
   ],
-  "n_cores": 8,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 84,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_5": {
-  "cells": 1587854,
+  "cells": 12750850,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
     "cells": 20538
    }
   ],
-  "n_cores": 7,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 83,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_6": {
-  "cells": 1754498,
+  "cells": 12917494,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
@@ -2112,74 +4240,682 @@
     "cells": 166644
    }
   ],
-  "n_cores": 8,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 84,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_7": {
-  "cells": 1587854,
+  "cells": 12750850,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
     "cells": 20538
    }
   ],
-  "n_cores": 7,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 83,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_8": {
-  "cells": 1754498,
+  "cells": 12917494,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
@@ -2190,74 +4926,682 @@
     "cells": 166644
    }
   ],
-  "n_cores": 8,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 84,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_9": {
-  "cells": 1587854,
+  "cells": 12750850,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
     "cells": 20538
    }
   ],
-  "n_cores": 7,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 83,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_10": {
-  "cells": 1754498,
+  "cells": 12917494,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
@@ -2268,74 +5612,682 @@
     "cells": 166644
    }
   ],
-  "n_cores": 8,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 84,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_11": {
-  "cells": 1587854,
+  "cells": 12750850,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
     "cells": 20538
    }
   ],
-  "n_cores": 7,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 83,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_12": {
-  "cells": 1754498,
+  "cells": 12917494,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
@@ -2346,74 +6298,682 @@
     "cells": 166644
    }
   ],
-  "n_cores": 8,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 84,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_13": {
-  "cells": 1587854,
+  "cells": 12750850,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
     "cells": 20538
    }
   ],
-  "n_cores": 7,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 83,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_14": {
-  "cells": 1754498,
+  "cells": 12917494,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
@@ -2424,46 +6984,350 @@
     "cells": 166644
    }
   ],
-  "n_cores": 8,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 84,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "svc_15": {
-  "cells": 1587854,
+  "cells": 12750850,
   "glue": 60000,
   "cores": [
    {
     "name": "sx_hrow_a",
-    "cells": 202008
+    "cells": 205588
    },
    {
     "name": "sx_hrow_b",
-    "cells": 202008
+    "cells": 205588
    },
    {
-    "name": "attn_h0",
-    "cells": 275825
+    "name": "attn_t0_g0",
+    "cells": 30272
    },
    {
-    "name": "attn_h1",
-    "cells": 275825
+    "name": "attn_t0_g1",
+    "cells": 30272
    },
    {
-    "name": "attn_h2",
-    "cells": 275825
+    "name": "attn_t0_g2",
+    "cells": 30272
    },
    {
-    "name": "attn_h3",
-    "cells": 275825
+    "name": "attn_t0_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t1_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t2_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g0",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g1",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g2",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t3_g3",
+    "cells": 30272
+   },
+   {
+    "name": "attn_t0_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t0_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t1_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t2_g3_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g0_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g1_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g2_h3",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h0",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h1",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h2",
+    "cells": 183981
+   },
+   {
+    "name": "attn_t3_g3_h3",
+    "cells": 183981
    },
    {
     "name": "se_sm_pv",
     "cells": 20538
    }
   ],
-  "n_cores": 7,
-  "basis": "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4",
-  "max_core": 275825
+  "n_cores": 83,
+  "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
+  "max_core": 205588
  },
  "s_0S_x00": {
   "cells": 5000,

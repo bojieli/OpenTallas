@@ -1233,6 +1233,14 @@
     "pin_reg_p90_um": {
      "type": "number",
      "exclusiveMinimum": 0
+    },
+    "ft_station_max_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "tap_pitch_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
     }
    }
   }

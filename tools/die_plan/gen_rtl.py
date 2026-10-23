@@ -132,8 +132,11 @@ def wrapper(P, tn, epochs, rtl_root=None):
     for b in t.get("buses", []):
         buses.append(dict(b, ep=epochs.get((tn, b["name"]), b.get("kind", "data") in ("data", "ctl"))))
     slots = t.get("ft_slots", [])
-    ports = [("input  wire clk", "clock entry: the partition's spine tap (one root per partition)"),
-             ("input  wire arst_n", "die reset: asynchronous assert; released through u_rst_sync")]
+    ports = [("input  wire clk", "clock entry: spine tap 0 (one root per tap; R4 tap grid)")]
+    for n, x, y in S.tap_grid(P, tn)[1:]:
+        ports.append((f"input  wire {n}", f"spine tap at ({x:.0f}, {y:.0f}) um: the kit (clock_taps.tcl) moves the "
+                      "nearest sinks onto it before CTS; same die clock"))
+    ports.append(("input  wire arst_n", "die reset: asynchronous assert; released through u_rst_sync"))
     decl, body = [], []
     for b in buses:
         w = b["width"] + (1 if b["ep"] else 0)
@@ -266,7 +269,8 @@ def die_top(P, epochs):
                 conn.setdefault(pr[side]["part"], []).append((pr[side]["bus"], net))
     for name, p in P.parts.items():
         t = P.types[p["type"]]
-        cs = ["        .clk(clk)", "        .arst_n(rst_n)"] + \
+        cs = ["        .clk(clk)"] + [f"        .{n}(clk)" for n, _, _ in S.tap_grid(P, p["type"])[1:]] + \
+            ["        .arst_n(rst_n)"] + \
             [f"        .{sv_id(b)}({net})" for b, net in sorted(conn.get(name, []))]
         insts.append(f"    {t['module']} {sv_id(name)} (\n" + ",\n".join(cs) + "\n    );")
     mod = f"{sv_id(P.name)}_top"
