@@ -7,6 +7,18 @@ O=$(realpath -m "$1"); M=${2:-0}; mkdir -p "$O"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 verilator --version
 source physical/ref_tile/dscoll_lane_w_ltr/kit.env
+# OT_COLL_P1REF_DIR (opt-in): take the legacy P1 reference side (dsfd_coll_lane_w/e RXSRAM 1 and its endpoint / landing
+# memory) from a pinned snapshot instead of the live legacy files, which on main-derived branches no longer carry the
+# RXSRAM landing (b5c03d49e is not on main).  Each <dir>/*.sv replaces the SRCS entry with the same basename; the safe4
+# side under test is untouched.  Unset = unchanged behaviour.
+if [ -n "${OT_COLL_P1REF_DIR:-}" ]; then
+  for f in "$OT_COLL_P1REF_DIR"/*.sv; do
+    b=$(basename "$f"); n=$(printf '%s\n' $SRCS | grep -c "/$b\$" || true)
+    [ "$n" = 1 ] || { echo "P1REF: $b matches $n SRCS entries (need 1)"; exit 2; }
+    SRCS=$(printf '%s\n' $SRCS | sed "s#^.*/$b\$#$f#" | tr '\n' ' ')
+  done
+  echo "P1REF SRCS: $SRCS"
+fi
 D=()
 [ "${OT_COLL_NATIVE32:-0}" != 1 ] || D+=(-DOT_COLL_NATIVE32)
 [ "${OT_COLL_NATIVE32_OFF:-0}" != 1 ] || D+=(-DOT_COLL_NATIVE32_OFF)   # v8 offset-register successor (needs OT_COLL_NATIVE32)

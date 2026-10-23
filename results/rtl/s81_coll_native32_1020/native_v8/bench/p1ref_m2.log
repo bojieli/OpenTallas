@@ -1,0 +1,6 @@
+Verilator 5.050 2026-07-01 rev v5.050
+P1REF SRCS: rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_split.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/dsrom_sys/s81_ph/test/p1ref_rxsram/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/test/p1ref_rxsram/ot_s81ph_coll_lane.sv rtl/common/ot_link_credit_rx_sram.sv rtl/dsrom_sys/s81_ph/test/p1ref_rxsram/ot_sram_showahead_1r1w.sv 
+[58000] %Fatal: ot_sram_oldread_b64.sv:54: Assertion failed in tb_coll_safe4_boundary.variant[1].safe.e.u.u_ep.g_fifo_safe.u_m.g_bank[0].g_depth[0]: COLL_COLLISION_UNSAFE bank64 macro read/write same address bank0 depth0
+%Error: rtl/lib/ot_sram_oldread_b64.sv:54: Verilog $stop
+Aborting...
+sim exit 1
