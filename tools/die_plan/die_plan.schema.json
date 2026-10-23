@@ -622,6 +622,12 @@
         "pins_file": {
          "type": "string"
         },
+        "lef": {
+         "type": "string"
+        },
+        "lib": {
+         "type": "string"
+        },
         "note": {
          "type": "string"
         }
@@ -697,6 +703,20 @@
         },
         "note": {
          "type": "string"
+        },
+        "lef": {
+         "type": "string"
+        },
+        "lib": {
+         "type": "string"
+        },
+        "orient": {
+         "enum": [
+          "R0",
+          "MX",
+          "MY",
+          "R180"
+         ]
         },
         "obs_max": {
          "type": "string",

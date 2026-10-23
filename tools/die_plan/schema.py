@@ -194,6 +194,9 @@ SCHEMA = {
                                            "additionalProperties": False,
                                            "properties": {"name": _name, "layer": _layer, "xy": _xy}}},
                                        "pins_file": {"type": "string"},   # JSON [{name|bus+bit, layer, x, y}]
+                                       # hardened views (repo-relative): the partition kit places the core as a
+                                       # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
+                                       "lef": {"type": "string"}, "lib": {"type": "string"},
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2}}},
@@ -202,6 +205,10 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
+                                       # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
+                                       # at origin_um (type frame) with orient (mandatory when lef is given)
+                                       "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
