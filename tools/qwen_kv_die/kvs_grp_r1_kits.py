@@ -127,8 +127,16 @@ def main():
         j = s['job']
         j.update(owner='Claude:KDIE5-TV', branch='claude/kdie5-tv-1022', tag='r1', purpose=s['purpose'],
                  views_to=f'physical/ref_tile/{kit}/views', record_to=f'results/rtl/ref_tile/{kit}')
-        j['extra_paths'] = ['rtl', 'tools/qwen_kv_die', 'results/arch/qwen_kv_kits_b_1018', 'results/rtl/qwen_kv_die/kvs_kits_1018',
+        j['extra_paths'] = ['rtl', 'tools/qwen_kv_die', 'results/arch', 'results/rtl/qwen_kv_die/kvs_kits_1018',
                             'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2', 'physical/qkd_kvs_kits']
+        # benches: lockstep vs the die-bound tile (bench tile text == the release module, checked), Verilator 5.050
+        for b in j['benches']:
+            b['cmd'] = b['cmd'].replace('bash tools/qwen_kv_die/kvs_tile_bench.sh', 'KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh')
+            b['needs'] = ['verilator']
+            for w in ('pass_witness', 'fail_witness'):
+                if w in b:
+                    b[w] = b[w].replace('results/rtl/qwen_kv_die/kvs_kits_1018/', 'results/rtl/qwen_kv_die/kdie5_tv_1022/')
+        j['extra_paths'] = [x.replace('results/rtl/qwen_kv_die/kvs_kits_1018', 'results/rtl/qwen_kv_die/kdie5_tv_1022') for x in j['extra_paths']]
         d = WT / 'physical/ref_tile' / kit
         d.mkdir(parents=True, exist_ok=True)
         (d / 'spec.json').write_text(json.dumps(s, indent=1) + '\n')

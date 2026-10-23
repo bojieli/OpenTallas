@@ -1,0 +1,6 @@
+MISMATCH t=3 child u_slg.epoch
+MISMATCH t=3 child u_slg.req_epoch
+MISMATCH t=4 child u_slg.epoch
+MISMATCH t=4 child u_slg.req_epoch
+MISMATCH t=5 child u_slg.epoch
+KVS_TILE FAIL tile=grp edges=4000 checks=507619 errors=11976 mut=2 (swapped .epoch(w_lcal__l_epoch[15:0]) <-> .req_epoch(kreq[31:16]))

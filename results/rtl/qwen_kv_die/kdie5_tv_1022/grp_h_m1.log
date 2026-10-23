@@ -1,0 +1,6 @@
+MISMATCH t=4 out o_pc0
+MISMATCH t=5 out o_pc0
+MISMATCH t=6 out o_pc0
+MISMATCH t=7 out o_pc0
+MISMATCH t=9 out o_pc0
+KVS_TILE FAIL tile=grp_h edges=4000 checks=507619 errors=3300 mut=1 (dropped w_lcal__r_sector[9:0] in assign o_pc0)
