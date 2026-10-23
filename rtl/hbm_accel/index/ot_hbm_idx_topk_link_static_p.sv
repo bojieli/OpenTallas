@@ -43,6 +43,21 @@
 // MUT (bench only): 1 record halves swapped (emit side), 2 flit sequence header, 3 carry slots from the beat instead of W,
 //                   4 emit read tap one edge early (latency mutant).
 // ---------------------------------------------------------------------------------------------------------------
+// R8N: small kept Boolean leaves prevent flat ABC from sharing a select
+// across unrelated slots (R8 native s1_nac 33/35, lane valid 33 loads).
+module ot_hbm_idx_link_mux_leaf #(parameter integer W=6)(input wire sel,input wire[W-1:0]a,b,output wire[W-1:0]y);
+ assign y=sel?a:b;
+endmodule
+module ot_hbm_idx_link_compact_leaf #(parameter integer BW=6,S=0)(input wire[7:0]gm,input wire[8*BW-1:0]pay,output reg[BW-1:0]v);
+ function automatic [3:0] pc8(input [7:0]x);
+  integer t;begin pc8=0;for(t=0;t<8;t=t+1)pc8=pc8+{3'd0,x[t]};end
+ endfunction
+ integer k;
+ always @*begin
+  v=0;
+  for(k=S;k<8;k=k+1)if(gm[k]&&pc8(gm&((8'd1<<k)-8'd1))==4'(S))v=v|pay[k*BW+:BW];
+ end
+endmodule
 module ot_hbm_idx_link_p_merge #(parameter integer NA=8,parameter integer NB=8,parameter integer CW=4,
                                  parameter integer RW=36,parameter integer NC=1)(
  input wire[NA*RW-1:0]a,input wire[NC*CW-1:0]na,input wire[NB*RW-1:0]b,output wire[(NA+NB)*RW-1:0]y
@@ -58,9 +73,17 @@ module ot_hbm_idx_link_p_merge #(parameter integer NA=8,parameter integer NB=8,p
    localparam integer C=(q*NC)/N;
    localparam integer SH=(1<<i);
    if(q>=SH)begin:mv
+    if(RW<=6)begin:small
+     (* keep_hierarchy *) ot_hbm_idx_link_mux_leaf #(.W(RW)) u(.sel(na[C*CW+i]),.a(st[i*W+(q-SH)*RW+:RW]),.b(st[i*W+q*RW+:RW]),.y(st[(i+1)*W+q*RW+:RW]));
+    end else begin:wide
     assign st[(i+1)*W+q*RW+:RW]=na[C*CW+i]?st[i*W+(q-SH)*RW+:RW]:st[i*W+q*RW+:RW];
+    end
    end else begin:lo
+    if(RW<=6)begin:small
+     (* keep_hierarchy *) ot_hbm_idx_link_mux_leaf #(.W(RW)) u(.sel(na[C*CW+i]),.a({RW{1'b0}}),.b(st[i*W+q*RW+:RW]),.y(st[(i+1)*W+q*RW+:RW]));
+    end else begin:wide
     assign st[(i+1)*W+q*RW+:RW]=na[C*CW+i]?{RW{1'b0}}:st[i*W+q*RW+:RW];
+    end
    end
   end
  end
@@ -694,12 +717,7 @@ module ot_hbm_idx_link_t_slice #(parameter integer BW=6,parameter integer MUT=0)
   (* keep_hierarchy *) ot_hbm_idx_link_pc8_bal cnt(.x(vc[4*64+g*8+:8]),.y(gcnt[g*4+:4]));
   for(s=0;s<8;s=s+1)begin:sl
    wire[7:0]gm=vc[(s/2)*64+g*8+:8];
-   reg[BW-1:0]v;integer k;
-   always @*begin
-    v={BW{1'b0}};
-    for(k=s;k<8;k=k+1)if(gm[k]&&pc8(gm&((8'd1<<k)-8'd1))==4'(s))v=v|pay[(g*8+k)*BW+:BW];
-   end
-   assign gc[(g*8+s)*BW+:BW]=v;
+   (* keep_hierarchy *) ot_hbm_idx_link_compact_leaf #(.BW(BW),.S(s)) u(.gm(gm),.pay(pay[g*8*BW+:8*BW]),.v(gc[(g*8+s)*BW+:BW]));
   end
  end
  // pair counts: leaf A of every pair -> s1_pcnt (and 16 quad-select copies for even pairs); leaf B (even pairs) -> 16 more
