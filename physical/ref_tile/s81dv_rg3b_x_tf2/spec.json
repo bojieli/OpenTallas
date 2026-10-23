@@ -1,0 +1,137 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "sink_clustering": false,
+   "extra": "-no_obstruction_aware"
+  },
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "recipe": 5,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_FENCE_UNREG_OK": "",
+  "OT_FENCE_STRICT": "0",
+  "OT_FENCE_CLOCKS": "ck"
+ },
+ "name": "s81dv_rg3b_x_tf2",
+ "top": "dsdv_idx_rg3_bx",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "job": {
+  "owner": "Claude:TILE-FLOW2",
+  "branch": "claude/tile-flow2-pilot-1023",
+  "tag": "tf2",
+  "purpose": "TILE-FLOW2 10-23 pilot: recipe 5 tile_plan at 6 pins/um on two alternating pin layers (layer_cap M6 grant), content outline, macro array, pin-register face fence (report-only: unregistered pins listed for the RTL owner)",
+  "hold_merge": "TILE-FLOW2 pilot: placement probe / GEOM-REVIEW render only, not a closure candidate"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "band of the banded idx rg3: source-registered faces (every band input lands in a flop, every output leaves one: the landed parent's ring / read halves sit outside); a recipe pin stage would add an unpriced edge on the landed schedule (lp record)."
+ },
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_band.sv"
+ ],
+ "params": {
+  "SRAM_MACRO": 1,
+  "RH": 1
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[0].u_h0.g_m.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[0].u_h1.g_m.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[1].u_h0.g_m.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[1].u_h1.g_m.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[2].u_h0.g_m.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[2].u_h1.g_m.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[3].u_h0.g_m.u_mem"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[3].u_h1.g_m.u_mem"
+  }
+ ],
+ "children": [],
+ "pins": {
+  "N": [
+   "rri"
+  ],
+  "W": [
+   "sx_i",
+   "xr_o",
+   "rst",
+   "ck"
+  ],
+  "S": [
+   "kq_o"
+  ]
+ },
+ "layer_cap": "M6",
+ "defines": [],
+ "std_area_um2": 3000,
+ "hold_budget": "die",
+ "layer_cap_grant": "COORD 10-23 02:33 (TILE-FLOW pin density): 6 pins/um per face on two alternating layers, E/W M4+M6, N/S M3+M5; block layer budget <= M7 (FT-PLAN), parent strap M7",
+ "tile_plan": {
+  "strict": false,
+  "tied_macro_pins": [
+   "w_mask_in"
+  ]
+ },
+ "purpose": "TILE-FLOW2 10-23 pilot: recipe 5 tile_plan at 6 pins/um on two alternating pin layers (layer_cap M6 grant), content outline, macro array, pin-register face fence (report-only: unregistered pins listed for the RTL owner)",
+ "pin_hook_after_flops": [
+  "physical/common_flow/pin_reg_face_fence.tcl"
+ ]
+}

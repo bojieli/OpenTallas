@@ -1,0 +1,226 @@
+{
+ "name": "qkd_hr_core_prompt_tf2",
+ "top": "qkd_hr_core_prompt_mu4p6_n32",
+ "kind": "tile",
+ "recipe": 5,
+ "clock_port": "ck_core",
+ "reset_ports": [
+  "u_rank__u_control__por_n"
+ ],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M6",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true,
+  "macro_out_pins": [
+   "rd_out"
+  ]
+ },
+ "sources": [
+  "rtl/qwen_sys/host_prompt_mu4p6_n32_1021/qkd_hr_core_prompt_mu4p6_n32.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v"
+ ],
+ "params": {},
+ "defines": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "N": [
+   "static_setup_ready",
+   "boot_image_target",
+   "boot_image_ready",
+   "boot_image_fault",
+   "token_epoch_valid",
+   "token_epoch",
+   "service_abort",
+   "ingest_permission",
+   "crom_fault",
+   "record_send_kind",
+   "record_witness_slot",
+   "record_rx_v",
+   "record_tx_v",
+   "record_tx_observed_v",
+   "record_fault",
+   "execution_active",
+   "program_ready",
+   "program_authorized_footer_v",
+   "program_begin_v",
+   "program_auth_v",
+   "program_expected_pw",
+   "program_expected_dw",
+   "hc",
+   "irq",
+   "host_rst_n",
+   "link_rst_n",
+   "hbm_rst_n",
+   "boot_go",
+   "die_rst_n",
+   "sys_ready",
+   "source_cr",
+   "available",
+   "service_faults",
+   "host_link_reset_req",
+   "host_interface_idle",
+   "allocated_valid",
+   "native_context_owned",
+   "u_rank__u_control__por_n",
+   "u_rank__u_control__service_ready",
+   "u_rank__program_fault",
+   "u_rank__ingress_fault",
+   "u_rank__commit_fault",
+   "host_observer_fault",
+   "u_rank__source_fault",
+   "cq_client_tag",
+   "cq_commit_v",
+   "cq_slot",
+   "cq_token",
+   "native_request_pos",
+   "native_request_tag",
+   "native_request_token",
+   "native_request_v",
+   "step_client_tag",
+   "step_issue_v",
+   "step_pos",
+   "step_retire_client_tag",
+   "step_retire_cq",
+   "step_retire_pos",
+   "step_retire_slot",
+   "step_retire_token",
+   "step_retire_v",
+   "step_slot",
+   "u_rank__u_control__begin_epoch",
+   "u_rank__begin_fault",
+   "u_rank__u_control__ctrl_begin_available",
+   "u_rank__u_control__begin_cr",
+   "u_rank__u_control__begin_v",
+   "u_rank__u_control__boot8",
+   "u_rank__peer_pending_ack",
+   "u_rank__guarded_physical",
+   "u_rank__peer_service_epoch",
+   "u_rank__peer_service_ready",
+   "u_rank__u_control__startup_allowed",
+   "u_rank__guarded_transport",
+   "u_rank__u_control__cmd_cr",
+   "u_rank__u_control__cmd_v",
+   "u_rank__u_control__u_packet__hr",
+   "u_rank__u_control__u_packet__hv",
+   "u_rank__u_control__u_packet__htc",
+   "u_rank__u_control__u_packet__ht",
+   "u_rank__rx_cr",
+   "u_rank__rx_v",
+   "u_rank__program_rx_cr",
+   "u_rank__program_rx_v"
+  ],
+  "S": [
+   "die_id",
+   "u_rank__u_control__u_packet__hd",
+   "u_rank__u_control__u_packet__htd",
+   "u_rank__rx_d"
+  ],
+  "E": [
+   "package_abort",
+   "cq_pos",
+   "native_request_gen",
+   "u_rank__u_control__kst8",
+   "u_rank__u_control__tk8",
+   "u_rank__u_control__cmd_hc",
+   "u_rank__program_rx_d"
+  ],
+  "W": [
+   "ck_core",
+   "boot_pr",
+   "program_epoch",
+   "program_digest",
+   "service_diag_raw",
+   "service_status",
+   "link_up",
+   "record_rx",
+   "record_tx",
+   "program_authorized_footer64",
+   "program_auth_epoch",
+   "program_auth_digest",
+   "fault_src"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Exact native32 source 434cb160, mapped from production MU4 ps6 flow pin registers; every pin already registered."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Actual mapped reset profile first1/final4/2edges PASS; final max31; all6 inherited graph negatives refused; evidence/reset_profile.json."
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "inst": "u55089_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u57542_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "inst": "u59274_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "inst": "u59809_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "inst": "u59810_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "inst": "u59811_c0/u_cell"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "inst": "u59812_c0/u_cell"
+  }
+ ],
+ "job": {
+  "owner": "Claude:TILE-FLOW2",
+  "branch": "claude/tile-flow2-pilot-1023",
+  "tag": "tf2",
+  "purpose": "TILE-FLOW2 10-23 pilot: recipe 5 tile_plan at 6 pins/um on two alternating pin layers (layer_cap M6 grant), content outline, macro array, pin-register face fence (report-only: unregistered pins listed for the RTL owner)",
+  "hold_merge": "TILE-FLOW2 pilot: placement probe / GEOM-REVIEW render only, not a closure candidate"
+ },
+ "pre_cts_extra": [
+  "physical/ref_tile/qkd_hr_core_prompt_n39a/clock_tree.tcl"
+ ],
+ "std_area_um2": 15864.0,
+ "tile_plan": {
+  "strict": false,
+  "tied_macro_pins": [
+   "w_mask_in"
+  ]
+ },
+ "pin_hook_after_flops": [
+  "physical/common_flow/pin_reg_face_fence.tcl"
+ ],
+ "orfs_vars": {
+  "OT_FENCE_UNREG_OK": "",
+  "OT_FENCE_STRICT": "0",
+  "OT_FENCE_CLOCKS": "ck_core"
+ },
+ "layer_cap_grant": "COORD 10-23 02:33 (TILE-FLOW pin density): 6 pins/um per face on two alternating layers, E/W M4+M6, N/S M3+M5; block layer budget <= M7 (FT-PLAN), parent strap M7",
+ "purpose": "TILE-FLOW2 10-23 pilot: recipe 5 tile_plan at 6 pins/um on two alternating pin layers (layer_cap M6 grant), content outline, macro array, pin-register face fence (report-only: unregistered pins listed for the RTL owner)"
+}
