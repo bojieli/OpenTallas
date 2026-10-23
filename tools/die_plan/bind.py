@@ -655,10 +655,20 @@ class Binder:
     def _norm(s):
         return re.sub(r"[^0-9a-z]", "", s.lower())
 
+    @staticmethod
+    def _aff(s):
+        """name-affinity key of a plan bus name or an as-built source pin: direction prefix, replica tokens (Q, N, p,
+        quadrant, digits) and separators removed, e.g. o_astk_Q__u_strip_u_ctl_qo == astk_WN__u_strip_u_ctl.qo"""
+        s = re.sub(r"^[oi]_", "", s)
+        toks = [t for t in re.split(r"[_.\[\]]+", s) if t and not re.fullmatch(r"Q|N|p|[EW][NS]|[NS]|\d+", t)]
+        return "".join(toks).lower()
+
     def build_buses(self):
         """every crossing bit rides plan lanes from its source partition to each sink partition.
 
-        Pass 1: the pair's own lanes (chosen by leaf name, then packed by width).  Pass 2: bits left over are routed over
+        Pass 1a: the pair's own lanes matching the source pin by name (plan bus name / leaf, replica tokens ignored);
+        pass 2a: forwarding over name-matching lanes only (a plan chain carrying that signal keeps its width for it);
+        pass 1b: the pair's other own lanes, packed by width.  Pass 2b: bits left over are routed over
         the lane graph (multi-source shortest path from every partition that already holds the bits, residual lane
         widths; a lane carries a bit once however many sinks it serves): the plan's forwarding stations (u_pstn trees).
         Bits with no lane path are UNPLANNED (an error) and get a direct boundary-flop pair.  A plan without lanes binds
@@ -704,6 +714,13 @@ class Binder:
             return k
         direct = []
         todo = []
+        laff = {L["id"]: {self._aff(L["oname"]), self._aff(L["iname"])} for L in allL}
+
+        def affine(L, key):
+            return key in laff[L["id"]]
+
+        # pass 1a: the pair's own lanes whose plan name / leaf matches the source pin (bits reserved for their bus)
+        pend = []
         for (sp, dp), groups in sorted(self.cross.items()):
             items = sorted(groups.items(), key=lambda kv: (F.cells[kv[0][0]].path, kv[0][1]))
             if not use_lanes:
@@ -713,9 +730,10 @@ class Binder:
             for (sci, spn), bits in items:
                 srel = self.rel_of(sci)
                 sinks = self.cross_sinks[(sp, dp, sci, spn)]
+                ak = self._aff(f"{F.cells[sci].path}.{spn}")
 
                 def score(L):
-                    s = 0
+                    s = 4 * affine(L, ak)
                     if L["sleaf"]:
                         s += 4 * (self._norm(L["sleaf"]) == self._norm(f"{srel}.{spn}")) + \
                             2 * (L["sleaf"].rpartition(".")[2] == spn)
@@ -724,20 +742,23 @@ class Binder:
                             any(L["dleaf"].rpartition(".")[2] == q for r, q in sinks)
                     return s
                 rest = sorted(bits)
-                for L in sorted(cand, key=lambda L: (-score(L), L["id"])):
+                ranked = sorted(cand, key=lambda L: (-score(L), L["id"]))
+                for L in ranked:
+                    if score(L) <= 0:
+                        break
                     while rest and L["left"] > 0:
                         put(L, (sci, spn, rest.pop(0)), None)
                 if rest:
-                    todo.append((sp, dp, sci, spn, rest))
-        # pass 2: forwarded routes over residual lane widths
-        for sp, dp, sci, spn, rest in todo:
+                    pend.append((sp, dp, sci, spn, rest, ak, [L for L in ranked if score(L) <= 0]))
+
+        def forward(sp, dp, sci, spn, rest, only=None):
             rest = [b for b in rest if (dp, sci, spn, b) not in recv]
             guard = 0
             while rest and guard < 64:
                 guard += 1
                 keys = [(sci, spn, b) for b in rest]
                 srcs = {sp} | {x for x in holders.get(keys[0], ()) if all(x in holders.get(k, ()) for k in keys)}
-                path = self._route(srcs, dp, keys, out_of, heapq)
+                path = self._route(srcs, dp, keys, out_of, heapq, only)
                 if path is None:
                     break
                 nb = min(len(rest), min(L["left"] + sum(1 for k in keys if k in L["carried"]) for L in path))
@@ -749,6 +770,24 @@ class Binder:
                 if len(path) > 1 or path[0]["src"] != sp:
                     self.forwarded[(sp, dp)] += nb
                 rest = rest[nb:]
+            return rest
+        # pass 2a: forwarded routes over name-affine lanes only (a plan chain / tree carrying this signal)
+        pend2 = []
+        for sp, dp, sci, spn, rest, ak, other in pend:
+            rest = forward(sp, dp, sci, spn, rest, only=lambda L, ak=ak: affine(L, ak))
+            if rest:
+                pend2.append((sp, dp, sci, spn, rest, other))
+        # pass 1b: the pair's remaining own lanes, packed by width
+        for sp, dp, sci, spn, rest, other in pend2:
+            rest = [b for b in rest if (dp, sci, spn, b) not in recv]
+            for L in other:
+                while rest and L["left"] > 0:
+                    put(L, (sci, spn, rest.pop(0)), None)
+            if rest:
+                todo.append((sp, dp, sci, spn, rest))
+        # pass 2b: forwarded routes over any residual lane widths
+        for sp, dp, sci, spn, rest in todo:
+            rest = forward(sp, dp, sci, spn, rest)
             if rest:
                 self.unplanned[(sp, dp)] += len(rest)
                 direct.append((sp, dp, sci, spn, rest))
@@ -810,7 +849,7 @@ class Binder:
             if not m:
                 self.root[p] = ""
 
-    def _route(self, srcs, dst, keys, out_of, heapq):
+    def _route(self, srcs, dst, keys, out_of, heapq, only=None):
         """fewest-hop lane path from any partition holding `keys` to dst over lanes with room for the bits they do not
         already carry (ties: lane id).  Falls back to the widest path when no lane path has room for the whole block."""
         best = None
@@ -825,6 +864,8 @@ class Binder:
                 if dist.get(x, (1 << 30, ""))[:2] < (d, tie):
                     continue
                 for L in out_of.get(x, []):
+                    if only is not None and not only(L):
+                        continue
                     room = L["left"] + sum(1 for k in keys if k in L["carried"])
                     if room <= 0 or (need_all and room < len(keys)):
                         continue
