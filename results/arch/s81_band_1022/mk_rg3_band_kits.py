@@ -155,12 +155,13 @@ xn.update(kind="tile", sources=SRC + [BAND], params={"RH": 1}, outline={"w": 475
 xn["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
 xn["job"]["benches"] = [LSWX, LSWX_M]
 specs[xn["name"]] = xn
-def xm_spec(name, ck_range, purpose, note):
+def xm_spec(name, ck_range, purpose, note, unclustered=True, ck_face="S"):
     m = common(name, "dsdv_idx_rg3_bxm", purpose)
     m.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1}, outline={"w": 475.2, "h": 432.0, "exact": True},
              macros=[dict(view=SRAM, inst=f"u_c{h}.g_land[{u}].u_h.g_m.u_mem", at=[[43.2, 257.04][h], round(43.2 + 90.72 * u, 2)],
                           orient=["R0", "MY"][h]) for h in range(2) for u in range(4)],
-             children=[], pins={"N": ["lw_v", "lw_h1", "lw_a", "lw_d"], "W": ["sx_i", "rst"], "S": ["kq_o", "ck"]},
+             children=[], pins={"N": ["lw_v", "lw_h1", "lw_a", "lw_d"], "W": ["sx_i", "rst"] + (["ck"] if ck_face == "W" else []),
+                         "S": ["kq_o"] + (["ck"] if ck_face == "S" else [])},
              pin_ranges={"lw_v": [21.6, 453.6], "lw_h1": [21.6, 453.6], "lw_a": [21.6, 453.6], "lw_d": [21.6, 453.6],
                          "sx_i": [86.4, 172.8], "rst": [86.4, 172.8], "kq_o": [21.6, 453.6], "ck": ck_range},
              layer_cap="M5", defines=[], std_area_um2=2000,
@@ -172,13 +173,22 @@ def xm_spec(name, ck_range, purpose, note):
                            "write pins of both columns face the 39-um centre gap.  The ONLY pin-flop band is kq on the S face, "
                            + note)
     m["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
-    m["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aware"}
+    if unclustered:
+        m["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aware"}
     m["job"]["benches"] = [LSWX, LSWX_M]
     specs[name] = m
 xm_spec("s81dv_rg3b_xm", [234.36, 240.84], "banded idx rg3 X successor MAIN: SRAM / key tile, clock at the kq face centre",
         "clock entry at its centre.")
 xm_spec("s81dv_rg3b_xmb", [10.8, 17.28], "banded idx rg3 X successor FB: SRAM / key tile, clock at the SW corner of the kq face",
         "clock entry at its SW corner (the rb geometry that passed R at 52 / 79 ps).")
+# gate 10-22 19:1x: xm 125 / 102 ps, xmb 129 / 106 (772 sinks; soft flops alone TT 342..441, the 8 SRAM clk pins 315..365
+# early).  The unclustered / obstruction-blind recipe came from the sparse R tile; this tile is 60 % SRAM, and xn on the
+# default (obstruction-aware, clustered) tree came in at 48 ps -> the same split tile on the default tree, S-centre and
+# W-middle entry.
+xm_spec("s81dv_rg3b_xm2", [234.36, 240.84], "banded idx rg3 X successor: SRAM / key tile, default CTS, clock at the kq face centre",
+        "clock entry at its centre; default (obstruction-aware) tree.", unclustered=False)
+xm_spec("s81dv_rg3b_xm2w", [194.4, 200.88], "banded idx rg3 X successor: SRAM / key tile, default CTS, clock at the W-face middle",
+        "clock entry at the W-face middle between the two column read channels' feeds; default tree.", unclustered=False, ck_face="W")
 ONLY = None
 if "--only" in sys.argv:
     i = sys.argv.index("--only"); ONLY = set(sys.argv[i + 1].split(",")); del sys.argv[i:i + 2]
