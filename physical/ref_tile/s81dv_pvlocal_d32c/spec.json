@@ -133,7 +133,7 @@
     "cmd": "PV_TOP=dsdv_pv_local_land_n32alt_276 PV_RTL=rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_n32_alt.sv bash tools/s81_dv/pv_local_d32_n32/run.sh {RUN}/invalid invalid_k",
     "expect": "fail",
     "fail_regex": "PV_LOCAL_INVALID_K_CAUGHT",
-    "fail_witness": "results/rtl/s81_pv_local_d32_alt/invalid_k.log",
+    "fail_witness": "results/rtl/s81_pv_local_d32_alt/invalid_k_bench.log",
     "threads": 2,
     "peak_ram_gb": 4,
     "needs": [
