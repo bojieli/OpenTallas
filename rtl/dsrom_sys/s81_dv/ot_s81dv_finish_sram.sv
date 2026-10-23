@@ -429,6 +429,13 @@ module ot_s81dv_eng_finish_sram #(
     wire [T*P*NV-1:0] dcb;
     wire        wr_v;
     wire [CW-1:0] wr_n;
+`ifdef OT_S81DV_XFIN_N23
+    // N23 (STW-S81c-COLLA3 10-22, N22 census: AND(u_t.line[53] = wr_n MSB, u_v.line[6] = wr_v) 64 / 38 loads into the
+    // tree node valid regs VD of cp0 / cp3): each (tree, half) of node-valid regs reads its own write valid/tag delay
+    // line (distinct keep_hierarchy fin_vtline, ID 1..2T; same D f_q/t_q, reset rc[5], depth LAV -> nv_v == wr_v and
+    // nv_t == wr_n on every cycle).  Same values, same edges.
+    wire [2*T-1:0] nv_v; wire [2*T*CW-1:0] nv_t;
+`endif
     wire [31:0] wr_d;
     wire [NC-1:0] rdy, iss_v, win;
     wire [T*NVP-1:0] dup;
@@ -491,7 +498,11 @@ module ot_s81dv_eng_finish_sram #(
                 reg vld;
                 always @(posedge clk or negedge rsr[n % NRS])
                     if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t[(t * NVP + n + 11) % NGO]) vld <= 1'b0;
+`ifdef OT_S81DV_XFIN_N23
+                    else if (nv_v[t * 2 + (n >= NVP / 2)] && nv_t[(t * 2 + (n >= NVP / 2)) * CW +: CW] == t * NVP + n) vld <= 1'b1;
+`else
                     else if (wr_v && wr_n == t * NVP + n) vld <= 1'b1;
+`endif
 
                  assign VD[t][n] = vld;
             end else begin : g_pass
@@ -661,6 +672,13 @@ module ot_s81dv_eng_finish_sram #(
 `ifdef OT_S81DV_XFIN_N21
     assign wr_v_e = wr_v_e_x;
     assign wr_n_e = wr_n_e_x;
+`endif
+`ifdef OT_S81DV_XFIN_N23
+    for (genvar nh = 0; nh < 2 * T; nh = nh + 1) begin : g_nvl
+        wire ve_u; wire [CW-1:0] te_u;
+        ot_s81dv_fin_vtline #(.CW(CW), .D(LAV), .ID(nh + 1)) u_nvl (.clk(clk), .rst_n(rc[5]), .v(f_q), .t(t_q),
+            .v_e(ve_u), .t_e(te_u), .v_o(nv_v[nh]), .t_o(nv_t[nh * CW +: CW]));
+    end
 `endif
 `else
     (* keep *) reg [CW-1:0] tkl [0:LAV-1];
@@ -3170,7 +3188,7 @@ endmodule
 `ifdef OT_S81DV_XFIN_N22
 // N22: the finish engine's bank copy of the write valid / tag delay line behind a module boundary (plain kept regs with
 // the same D as u_v / u_t were merged).  v resets with rst_n (rc[5], as u_v / vkl); t has no reset (as u_t's data / tkl).
-(* keep_hierarchy=1 *) module ot_s81dv_fin_vtline #(parameter integer CW = 9, D = 6)(input wire clk, input wire rst_n,
+(* keep_hierarchy=1 *) module ot_s81dv_fin_vtline #(parameter integer CW = 9, D = 6, ID = 0)(   // ID: distinct copies (N23)input wire clk, input wire rst_n,
     input wire v, input wire [CW-1:0] t, output wire v_e, output wire [CW-1:0] t_e, output wire v_o, output wire [CW-1:0] t_o);
     (* keep *) reg [CW-1:0] tl [0:D-1];
     (* keep *) reg [D-1:0] vl;
