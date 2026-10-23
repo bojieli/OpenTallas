@@ -32,7 +32,9 @@
   "qfd_dv_slice2_w",
   "qfd_dv_slice2_e",
   "qfd_dv_slice2",
-  "qfd_dv_s8_flat"
+  "qfd_dv_s8_flat",
+  "qfd_collective_static_io_production",
+  "qfd_collective_static_io"
  ],
  "substitute": {
   "qfd_dv_slice2": {
@@ -199,6 +201,29 @@
     "vld"
    ],
    "stages": 2
+  },
+  {
+   "module": "qfd_coll_static_relay",
+   "map": {
+    "q": "d"
+   },
+   "drop_in": [
+    "ck",
+    "rst_n"
+   ],
+   "stages": 1,
+   "stages_param": "N"
+  },
+  {
+   "module": "qfd_dv_s5_fs",
+   "map": {
+    "cw_s(\\d)": "cs\\1"
+   },
+   "drop_in": [
+    "ck"
+   ],
+   "stages": 0,
+   "note": "slice cs -> cw_s wire forwarder (assign only); the plan replaces it by the hc u_pstn cw_s/cw_n lanes (gen_plan SOFT stm: 'u_fs (cs->cw_s forwarder: becomes plan lane)')"
   }
  ],
  "reducers": [
@@ -283,6 +308,10 @@
   {
    "rx": "D2D_TXDP_NOT_COMPILED",
    "reason": "elaboration trap module in a generate-if that is false for the as-built TXDP parameters (Yosys elaborates it lazily; Verilator resolves every instantiated name before parameter evaluation)"
+  },
+  {
+   "rx": "ot_sram_1r1w_64x137_m1_r2c2_p192",
+   "reason": "AS-BUILT RTL DEFECT (reported): ot_qwen_d2d_safe7.sv ot_qkvd_llr_replay_sram_leaf_s7 instantiates ot_sram_1r1w_64x137_m1_r2c2_p192, which no file on main defines (the macro is d2d_sram_1r1w_64x137_m1_r2c2_p192); the closed ucie_kv d2d view was built from a kit copy"
   }
  ]
 }

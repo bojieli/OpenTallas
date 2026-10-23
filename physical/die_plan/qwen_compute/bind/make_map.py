@@ -26,8 +26,11 @@ for leaf, reg in SL:
     rules.append([S + leaf, rf"sl_\1_{reg}"])
 for h in range(4):
     rules.append([S + rf"u_x(h{h}|l{h}_\d)", rf"sl_\1_hc{h}"])
-parts = {"io_collective": "io_collective", "io_ucie": "io_collective", "bump_pkg_s0": "io_collective",
-         "bump_pkg_s1": "io_collective", "bump_die_ps": "io_collective",
+# collective (QC-FIX coll split, gen_plan COLL_INST_SEG / coll census map): faces S1/S2 -> coll_s, S0 -> coll_n, P/R
+# faces + u_collective + u_shared + gearbox + UCIe PHY + bumps -> coll_core; coll_f0-5 are ft-only (plan lanes)
+CO = r"io_collective\.u_io\."
+rules += [[CO + r"g_face\[[34]\]\..*", "coll_s"], [CO + r"g_face\[2\]\..*", "coll_n"], [r"io_collective\..*", "coll_core"]]
+parts = {"io_ucie": "coll_core", "bump_pkg_s0": "coll_core", "bump_pkg_s1": "coll_core", "bump_die_ps": "coll_core",
          "io_serdes": "io_serdes", "io_serdes_1": "io_serdes_1", "io_serdes_2": "io_serdes_2", "ucie_kv": "ucie_kv",
          "tt_ctlm": "tt_ctlm", "native59": "native59",
          **{x: "glue" for x in ("d2d_rom", "sys_face", "embed_prov", "mu_ctxrx", "mu_dhobs", "bump_fwd_epoch",

@@ -232,7 +232,7 @@ def plan_sources(ab, base, idx=None, shim_dir=None):
     return tops, full, lib, rec
 
 
-def yosys_script(ab, tops, full, lib, out_json):
+def yosys_script(ab, tops, full, lib, out_json, check=False):
     dflags = " ".join(f"-D{d}" for d in ab.get("defines", []))
     incs = sorted({str(Path(f).parent) for f in tops + full + lib})
     iflags = " ".join(f"-I{d}" for d in incs)
@@ -244,7 +244,7 @@ def yosys_script(ab, tops, full, lib, out_json):
     subst = ab.get("substitute", {})
     keep = [ab["top"]] + sorted(set(ab.get("dissolve", [])) | set(subst))
     sel = " ".join(f"={m} =A:hdlname={m}" for m in keep)
-    lines += [f"hierarchy -top {ab['top']}",
+    lines += [f"hierarchy {'-check ' if check else ''}-top {ab['top']}",
               f"select -set keep {sel}",
               "blackbox =* @keep %d",
               "proc",

@@ -9,8 +9,9 @@
 Inputs (die_plan.json, key `asbuilt`; README "As-built binding"):
   netlist / top / rtl_roots / files / prefer / defines / substitute   the as-built die top and its RTL
   dissolve      structural parents descended through (their leaves go to different partitions)
-  transport     die transport the plan replaces (relays, landings, reset repeaters, stations): module regex -> the
-                out <- in bit map and the register stages; removed, every path through them collapsed to its source
+  transport     die transport the plan replaces (relays, landings, reset repeaters, stations, wire forwarders): module
+                regex -> the out <- in port map (output regex: input, backrefs allowed) and the register stages (0 = a
+                wire); removed, every path through them collapsed to its source
   reducers      fault-OR trees: module regex -> OR of the inputs; removed and re-emitted per sink partition
   clocks        clock source pins (regex on "path.port") -> domain; a partition loads one die clock per domain
   resets        reset source pins replaced by the partition's own synchroniser (polarity low/high)
@@ -232,7 +233,7 @@ class Graph:
     def _rule_dirs(self, c, k, sp, d):
         if k == "transport":
             outs = {p for p in c.ports if _tmap(sp, p)} | set(sp.get("drop_out", []))
-            ins = set(sp.get("map", {}).values()) | set(sp.get("drop_in", []))
+            ins = {_tmap(sp, p) for p in c.ports if _tmap(sp, p)} | set(sp.get("drop_in", []))
         elif k == "reducer":
             outs = {sp["out"]}
             ins = {p for p in c.ports if p != sp["out"]}
@@ -344,8 +345,9 @@ def _tmap(sp, pn):
     if pn in m:
         return m[pn]
     for rx, ip in m.items():
-        if re.fullmatch(rx, pn):
-            return ip
+        mm = re.fullmatch(rx, pn)
+        if mm:
+            return mm.expand(ip) if "\\" in ip else ip
     return None
 
 
@@ -427,9 +429,6 @@ class Binder:
         if len(unmapped) > 200:
             self.errors.append(f"UNMAPPED ... {len(unmapped) - 200} more")
         self.n_unmapped = len(unmapped)
-        empty = [p for p in self.parts if p not in self.members]
-        for p in empty:
-            self.errors.append(f"EMPTY_PARTITION {p}: no as-built cell maps to it")
         self.root = {p: (F.cells[m[0]].path if len(m) == 1 else common_root([F.cells[ci].path for ci in m]))
                      for p, m in self.members.items()}
 
@@ -482,7 +481,7 @@ class Binder:
             self.cross_sinks[(sp, p, sci, spn)].add((self.rel_of(ci), pn))
             self.cross_stages[(sp, p, sci, spn)].append(st)
             cnt["crossing"] += 1
-            return ("x", sp, sci, spn, sb, st)
+            return ("x", sp, sci, spn, sb, st, p)
         if k == "clock":
             self.clk_dom[p].add(s[1])
             cnt["clock"] += 1
@@ -528,43 +527,234 @@ class Binder:
         return self._src_desc(p, s, cnt, ci, pn, i)
 
     # -- buses
+    def plan_lanes(self):
+        """the plan's lanes: (src part, dst part) -> [lane]; a lane = its hop ports, the end buses (name, leaf), the ft
+        hops (intermediate partition, in bus, out bus, stations) and the planned latency."""
+        P = self.plan
+        ports = {x["id"]: x for x in P.get("ports", [])}
+        lat = P.get("latency", {}).get("lanes", {})
+        slots = {tn: {f["name"]: f for f in t.get("ft_slots", [])} for tn, t in P["partition_types"].items()}
+        buses = {tn: {b["name"]: b for b in t.get("buses", [])} for tn, t in P["partition_types"].items()}
+        ptype = {x["name"]: x["type"] for x in P["partitions"]}
+        by_pair = defaultdict(list)
+        for ln in P.get("lanes", []):
+            hp = [ports[q] for q in ln["ports"]]
+            a, b = hp[0], hp[-1]
+            ft = []
+            for x, y in zip(hp, hp[1:]):
+                part = x["dst"]["part"]
+                ib, ob = x["dst"]["bus"], y["src"]["bus"]
+                sl = slots[ptype[part]].get(ob.rsplit("_", 1)[0]) or slots[ptype[part]].get(ib.rsplit("_", 1)[0])
+                if sl is None:
+                    self.errors.append(f"LANE_FT {ln['id']}: {part}.{ib} -> {ob} is not an ft slot of type {ptype[part]}")
+                    st = 0
+                else:
+                    st = int(sl.get("stations", 0))
+                ft.append(dict(part=part, ibus=ib, obus=ob, stations=st, slot=sl["name"] if sl else ob))
+            sb = buses[ptype[a["src"]["part"]]].get(a["src"]["bus"], {})
+            db = buses[ptype[b["dst"]["part"]]].get(b["dst"]["bus"], {})
+            L = lat.get(ln["id"], {})
+            st = sum(f["stations"] for f in ft)
+            if L and int(L.get("stations", st)) != st:
+                self.errors.append(f"LANE_LATENCY {ln['id']}: ft slot stations {st} != latency table {L.get('stations')}")
+            by_pair[(a["src"]["part"], b["dst"]["part"])].append(dict(
+                id=ln["id"], src=a["src"]["part"], dst=b["dst"]["part"], oname=a["src"]["bus"], iname=b["dst"]["bus"],
+                cap=min(int(x["width"]) for x in hp), sleaf=sb.get("leaf", ""), dleaf=db.get("leaf", ""), ft=ft,
+                hops=[(x["src"]["part"], x["src"]["bus"], x["dst"]["part"], x["dst"]["bus"]) for x in hp],
+                cycles=int(L.get("cycles", 2 + st)), param=L.get("param"), kind=a.get("kind", "data")))
+        return by_pair
+
+    @staticmethod
+    def _norm(s):
+        return re.sub(r"[^0-9a-z]", "", s.lower())
+
     def build_buses(self):
-        """one out bus per (src part, dst part, src cell port) on the source, one in bus on the destination."""
+        """every crossing bit rides plan lanes from its source partition to each sink partition.
+
+        Pass 1: the pair's own lanes (chosen by leaf name, then packed by width).  Pass 2: bits left over are routed over
+        the lane graph (multi-source shortest path from every partition that already holds the bits, residual lane
+        widths; a lane carries a bit once however many sinks it serves): the plan's forwarding stations (u_pstn trees).
+        Bits with no lane path are UNPLANNED (an error) and get a direct boundary-flop pair.  A plan without lanes binds
+        every crossing directly.  bus = {src, dst, items [("leaf", cell, port, bit) | ("fwd", in bus, index)], ...}"""
+        import heapq
         self.out_bus = defaultdict(list)     # part -> [bus]
         self.in_bus = defaultdict(list)
+        self.ft_bus = defaultdict(list)      # part -> [(bus, hop)]
         self.links = []
+        self.bitpos = {}                     # (src part, dst part, src cell, port, bit) -> (bus, lane bit)
+        self.bitcyc = {}                     # same key -> bound register stages
+        self.unplanned = defaultdict(int)
+        self.forwarded = defaultdict(int)    # (src part, dst part) -> bits carried over >1 lane
+        self.fwd_parts = defaultdict(int)    # forwarding partition -> bits forwarded
+        lanes = self.plan_lanes()
+        use_lanes = bool(self.plan.get("lanes"))
+        F = self.F
+        allL = [L for ls in lanes.values() for L in ls]
+        for L in allL:
+            L.update(items=[], carried={}, left=L["cap"])
+        out_of = defaultdict(list)
+        for L in sorted(allL, key=lambda L: L["id"]):
+            out_of[L["src"]].append(L)
+        recv = {}                            # (part, cell, port, bit) -> (bus, index, stages)
+        holders = defaultdict(set)           # (cell, port, bit) -> partitions that receive it
+
+        def put(L, key, b):
+            """bit (cell, port, bit) onto lane L (once); returns its lane index"""
+            if key in L["carried"]:
+                return L["carried"][key]
+            if L["src"] == self.cpart[key[0]]:
+                L["items"].append(("leaf",) + key)
+                st = 0
+            else:
+                iL, ik, st = recv[(L["src"],) + key]
+                L["items"].append(("fwd", iL, ik))
+                self.fwd_parts[L["src"]] += 1
+            k = len(L["items"]) - 1
+            L["carried"][key] = k
+            L["left"] -= 1
+            recv.setdefault((L["dst"],) + key, (L, k, st + L["cycles"]))
+            holders[key].add(L["dst"])
+            return k
+        direct = []
+        todo = []
         for (sp, dp), groups in sorted(self.cross.items()):
-            for (sci, spn), bits in sorted(groups.items(), key=lambda kv: (self.F.cells[kv[0][0]].path, kv[0][1])):
-                bl = sorted(bits)
+            items = sorted(groups.items(), key=lambda kv: (F.cells[kv[0][0]].path, kv[0][1]))
+            if not use_lanes:
+                direct += [(sp, dp, sci, spn, sorted(bits)) for (sci, spn), bits in items]
+                continue
+            cand = lanes.get((sp, dp), [])
+            for (sci, spn), bits in items:
                 srel = self.rel_of(sci)
-                link = dict(src=sp, dst=dp, sci=sci, port=spn, bits=bl, width=len(bl),
-                            srel=srel, stages=self.cross_stages[(sp, dp, sci, spn)])
-                self.links.append(link)
-        # names, stable across replicas and mirrored halves: an out bus is named by its source pin (relative to the
-        # source partition), an in bus by its first sink pin (relative to the destination): the same module serves
-        # replicas whose sinks are fed from different partitions
-        for L in self.links:
-            dr, dpn = min(self.cross_sinks[(L["src"], L["dst"], L["sci"], L["port"])])
-            L["dsink"] = f"{dr}__{dpn}"
-            L["okey"] = (L["srel"], L["port"])
-            L["ikey"] = (L["dsink"],)
-        for side, kk, pk in (("o", "okey", "src"), ("i", "ikey", "dst")):
+                sinks = self.cross_sinks[(sp, dp, sci, spn)]
+
+                def score(L):
+                    s = 0
+                    if L["sleaf"]:
+                        s += 4 * (self._norm(L["sleaf"]) == self._norm(f"{srel}.{spn}")) + \
+                            2 * (L["sleaf"].rpartition(".")[2] == spn)
+                    if L["dleaf"]:
+                        s += 4 * any(self._norm(L["dleaf"]) == self._norm(f"{r}.{q}") for r, q in sinks) + \
+                            any(L["dleaf"].rpartition(".")[2] == q for r, q in sinks)
+                    return s
+                rest = sorted(bits)
+                for L in sorted(cand, key=lambda L: (-score(L), L["id"])):
+                    while rest and L["left"] > 0:
+                        put(L, (sci, spn, rest.pop(0)), None)
+                if rest:
+                    todo.append((sp, dp, sci, spn, rest))
+        # pass 2: forwarded routes over residual lane widths
+        for sp, dp, sci, spn, rest in todo:
+            rest = [b for b in rest if (dp, sci, spn, b) not in recv]
+            guard = 0
+            while rest and guard < 64:
+                guard += 1
+                keys = [(sci, spn, b) for b in rest]
+                srcs = {sp} | {x for x in holders.get(keys[0], ()) if all(x in holders.get(k, ()) for k in keys)}
+                path = self._route(srcs, dp, keys, out_of, heapq)
+                if path is None:
+                    break
+                nb = min(len(rest), min(L["left"] + sum(1 for k in keys if k in L["carried"]) for L in path))
+                if nb <= 0:
+                    break
+                for b in rest[:nb]:
+                    for L in path:
+                        put(L, (sci, spn, b), None)
+                if len(path) > 1 or path[0]["src"] != sp:
+                    self.forwarded[(sp, dp)] += nb
+                rest = rest[nb:]
+            if rest:
+                self.unplanned[(sp, dp)] += len(rest)
+                direct.append((sp, dp, sci, spn, rest))
+        self.lanes_unused = sorted(L["id"] for L in allL if not L["items"])
+        for L in sorted(allL, key=lambda L: L["id"]):
+            if L["items"]:
+                L.update(width=len(L["items"]), lane=L["id"],
+                         stages=sorted({st for it in L["items"] if it[0] == "leaf"
+                                        for st in self.cross_stages.get((L["src"], L["dst"], it[1], it[2]), [])} or {0}))
+                self.links.append(L)
+        for sp, dp in sorted(self.unplanned):
+            self.errors.append(f"UNPLANNED {sp} -> {dp}: {self.unplanned[(sp, dp)]} as-built crossing bits with no plan lane "
+                               f"path ({sum(L['cap'] for L in lanes.get((sp, dp), []))} b planned on direct lanes)")
+        # direct pairs (no lane): one per (src part, dst part, src cell port), named by the source pin / first sink pin
+        dl = []
+        for sp, dp, sci, spn, bl in direct:
+            dr, dpn = min(self.cross_sinks[(sp, dp, sci, spn)])
+            D = dict(src=sp, dst=dp, items=[("leaf", sci, spn, b) for b in bl], width=len(bl), lane=None, ft=[],
+                     cycles=2, unplanned=use_lanes, srel=self.rel_of(sci), port=spn, dsink=f"{dr}__{dpn}",
+                     stages=self.cross_stages[(sp, dp, sci, spn)])
+            for k, b in enumerate(bl):
+                recv[(dp, sci, spn, b)] = (D, k, 2)
+            dl.append(D)
+        for side, pk in (("o", "src"), ("i", "dst")):
             per = defaultdict(lambda: defaultdict(list))
-            for L in self.links:
-                per[L[pk]][L[kk]].append(L)
+            for L in dl:
+                per[L[pk]][(L["srel"], L["port"]) if side == "o" else (L["dsink"],)].append(L)
             for part, d in per.items():
                 for key, ls in d.items():
                     if side == "o":
                         ls.sort(key=lambda L: (L["dsink"], self.parts[L["dst"]]["type"], L["dst"]))
-                        base = f"o__{key[0]}__{key[1]}"
+                        base = f"xo__{key[0]}__{key[1]}"
                     else:
                         ls.sort(key=lambda L: (L["srel"], L["port"], self.parts[L["src"]]["type"], L["src"]))
-                        base = f"i__{key[0]}"
+                        base = f"xi__{key[0]}"
                     for n, L in enumerate(ls):
                         L[f"{side}name"] = short_id(base, 72) + (f"__{n}" if len(ls) > 1 else "")
+        self.links += dl
+        for (sp, dp), groups in self.cross.items():
+            for (sci, spn), bits in groups.items():
+                for b in bits:
+                    L, k, st = recv[(dp, sci, spn, b)]
+                    self.bitpos[(sp, dp, sci, spn, b)] = (L, k)
+                    self.bitcyc[(sp, dp, sci, spn, b)] = st
         for L in self.links:
             self.out_bus[L["src"]].append(L)
             self.in_bus[L["dst"]].append(L)
+            for h in L["ft"]:
+                self.ft_bus[h["part"]].append((L, h))
+                self.members.setdefault(h["part"], [])
+            if L["src"] not in self.members:
+                self.members[L["src"]] = []
+            if L["dst"] not in self.members:
+                self.members[L["dst"]] = []
+        for p in self.parts:
+            if p not in self.members:
+                self.errors.append(f"EMPTY_PARTITION {p}: no as-built cell maps to it and no lane passes through it")
+        for p, m in self.members.items():
+            if not m:
+                self.root[p] = ""
+
+    def _route(self, srcs, dst, keys, out_of, heapq):
+        """fewest-hop lane path from any partition holding `keys` to dst over lanes with room for the bits they do not
+        already carry (ties: lane id).  Falls back to the widest path when no lane path has room for the whole block."""
+        best = None
+        for need_all in (True, False):
+            dist = {s: (0, "") for s in srcs}
+            prev = {}
+            pq = [(0, "", s) for s in sorted(srcs)]
+            while pq:
+                d, tie, x = heapq.heappop(pq)
+                if x == dst:
+                    break
+                if dist.get(x, (1 << 30, ""))[:2] < (d, tie):
+                    continue
+                for L in out_of.get(x, []):
+                    room = L["left"] + sum(1 for k in keys if k in L["carried"])
+                    if room <= 0 or (need_all and room < len(keys)):
+                        continue
+                    nd = (d + 1, tie + "|" + L["id"])
+                    if L["dst"] not in dist or nd < dist[L["dst"]]:
+                        dist[L["dst"]] = nd
+                        prev[L["dst"]] = L
+                        heapq.heappush(pq, (nd[0], nd[1], L["dst"]))
+            if dst in prev:
+                path, x = [], dst
+                while x not in srcs:
+                    L = prev[x]
+                    path.append(L)
+                    x = L["src"]
+                best = path[::-1]
+                break
+        return best
 
     # -- types
     def type_signature(self, p):
@@ -589,9 +779,12 @@ class Binder:
                     d = self.sinks[(ci, pn, i)]
                     row.append(self._rel_desc(p, d, inst_vals, (r, pn, i)))
                 conns[(r, pn)] = tuple(row)
-        obus = sorted((L["oname"], L["srel"], L["port"], tuple(L["bits"])) for L in self.out_bus[p])
+        obus = sorted((L["oname"], tuple((self.rel_of(it[1]), it[2], it[3]) if it[0] == "leaf" else
+                                         ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
+                      for L in self.out_bus[p])
         ibus = sorted((L["iname"], L["width"]) for L in self.in_bus[p])     # the source is outside the module
-        sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, clocks=tuple(sorted(self.clk_dom[p])))
+        ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"]) for L, h in self.ft_bus[p])
+        sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft, clocks=tuple(sorted(self.clk_dom[p])))
         return sig, inst_vals
 
     def _rel_desc(self, p, d, inst_vals, where):
@@ -599,20 +792,14 @@ class Binder:
         if k == "int":
             return ("int", self.rel_of(d[1]), d[2], d[3], d[4])
         if k == "x":
-            L = self._link_for(d[1], p, d[2], d[3])
-            return ("bus", L["iname"], L["bits"].index(d[4]))
+            L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+            return ("bus", L["iname"], j)
         if k == "strap":
             inst_vals[("strap",) + where] = d[1]
             return ("strap",)
         if k == "or":
             return ("or", tuple(self._rel_desc(p, x, inst_vals, where + (j,)) for j, x in enumerate(d[1])))
         return d
-
-    def _link_for(self, sp, dp, sci, spn):
-        key = (sp, dp, sci, spn)
-        if not hasattr(self, "_lk"):
-            self._lk = {(L["src"], L["dst"], L["sci"], L["port"]): L for L in self.links}
-        return self._lk[key]
 
     def check_types(self):
         self.tsig, self.tvals, self.tparams = {}, {}, {}
@@ -648,8 +835,8 @@ class Binder:
                     elif "conns" in diff:
                         ks = [k for k in s0["conns"] if s0["conns"].get(k) != s["conns"].get(k)][:2]
                         detail = f" e.g. input {ks}"
-                    elif "obus" in diff or "ibus" in diff:
-                        kk = "obus" if "obus" in diff else "ibus"
+                    elif "obus" in diff or "ibus" in diff or "ft" in diff:
+                        kk = "obus" if "obus" in diff else "ibus" if "ibus" in diff else "ft"
                         a, b = set(s0[kk]), set(s[kk])
                         detail = f" {kk} only-in-{ref} {[x[0] for x in sorted(a - b)][:3]} only-in-{p} {[x[0] for x in sorted(b - a)][:3]}"
                     bad.append(f"{p} ({', '.join(diff)}{detail})")
@@ -767,7 +954,7 @@ class Binder:
         ibus = sorted(self.in_bus[p], key=lambda L: L["iname"])
         for L in ibus:
             n, W = L["iname"], L["width"]
-            ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {L['src']} {L['srel']}.{L['port']}")
+            ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'in')}")
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
             body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
                         f".q({n}_q), .eq({n}_eq));")
@@ -782,11 +969,27 @@ class Binder:
                     decl.append(f"    wire [{len(bits) - 1}:0] {nm};")
         for L in obus:
             n, W = L["oname"], L["width"]
-            ports.append(f"    output wire [{W}:0] {n}   // {W} data + epoch [{W}]: {L['srel']}.{L['port']} -> {L['dst']}")
-            src = drv_w[(L["sci"], L["port"])]
-            d = "{" + ", ".join(f"{src}[{b}]" for b in reversed(L["bits"])) + "}" if L["bits"] != list(range(len(F.cells[L['sci']].ports[L['port']]))) else src
-            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({_compress(d)}), .ea(rst_n), "
+            ports.append(f"    output wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'out')}")
+            d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
+                         for it in L["items"]])
+            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea(rst_n), "
                         f".q({n}[{W - 1}:0]), .eq({n}[{W}]));")
+        # plan feedthrough slots: the lane's stations in this partition (reset-less data + epoch), no leaf touches them
+        for L, h in sorted(self.ft_bus[p], key=lambda x: x[1]["ibus"]):
+            W, i, o, n = L["width"], h["ibus"], h["obus"], h["stations"]
+            ports.append(f"    input  wire [{W}:0] {i}   // ft {h['slot']} lane {L['lane']}: {L['src']} -> {L['dst']}")
+            ports.append(f"    output wire [{W}:0] {o}   // ft {h['slot']}: {n} station(s)")
+            if n == 0:
+                body.append(f"    assign {o} = {i};")
+                continue
+            prev = i
+            for k in range(n):
+                nxt = o if k == n - 1 else f"{o}_s{k}"
+                if k < n - 1:
+                    decl.append(f"    wire [{W}:0] {nxt};")
+                body.append(f"    ot_dp_st #(.W({W})) u_ft_{o}_{k} (.clk(clk), .rst_n(rst_n), .d({prev}[{W - 1}:0]), "
+                            f".ea({prev}[{W}]), .q({nxt}[{W - 1}:0]), .eq({nxt}[{W}]));")
+                prev = nxt
         # intra-partition kept transport stages
         dly_w = {}
         for (sci, spn, st) in sorted(self.intra_dly[p], key=lambda x: (F.cells[x[0]].path, x[1], x[2])):
@@ -805,8 +1008,8 @@ class Binder:
                 w = dly_w[(d[1], d[2], d[4])] if d[4] else drv_w[(d[1], d[2])]
                 return f"{w}[{d[3]}]"
             if k == "x":
-                L = self._link_for(d[1], p, d[2], d[3])
-                return f"{L['iname']}_q[{L['bits'].index(d[4])}]"
+                L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                return f"{L['iname']}_q[{j}]"
             if k == "clk":
                 return "clk" if d[1] == self.default_domain(p) else f"clk_{sv_id(d[1])}"
             if k == "rst":
@@ -881,10 +1084,14 @@ class Binder:
         doms = sorted({d for p in self.members for d in self.clk_dom[p]} | {self.ab.get("default_clock", "core")})
         ports = ["    input  wire rst_n"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
         wires, insts = [], []
+        conn = defaultdict(list)            # part -> [(port, wire)]
         for L in self.links:
-            nm = short_id(f"x_{L['src']}__{L['oname']}__{L['dst']}", 120)
-            L["wire"] = nm
-            wires.append(f"    wire [{L['width']}:0] {nm};")
+            hops = L.get("hops") or [(L["src"], L["oname"], L["dst"], L["iname"])]
+            for sp, sb, dp, db in hops:
+                nm = short_id(f"x_{sp}__{sb}__{dp}", 120)
+                wires.append(f"    wire [{L['width']}:0] {nm};" + (f"  // lane {L['lane']}" if L.get("lane") else ""))
+                conn[sp].append((sb, nm))
+                conn[dp].append((db, nm))
         for p in sorted(self.members):
             tn = self.parts[p]["type"]
             t = self.types[tn]
@@ -906,10 +1113,8 @@ class Binder:
             cs = [f"        .clk(clk_{sv_id(dd)})", "        .arst_n(rst_n)"]
             for d in sorted(self.clk_dom[p] - {dd}):
                 cs.append(f"        .clk_{sv_id(d)}(clk_{sv_id(d)})")
-            for L in sorted(self.out_bus[p], key=lambda L: L["oname"]):
-                cs.append(f"        .{L['oname']}({L['wire']})")
-            for L in sorted(self.in_bus[p], key=lambda L: L["iname"]):
-                cs.append(f"        .{L['iname']}({L['wire']})")
+            for port, w in sorted(conn[p]):
+                cs.append(f"        .{port}({w})")
             pstr = (" #(" + ", ".join(ov) + ")") if ov else ""
             insts.append(f"    {t['module']}{pstr} {sv_id(p)} (\n" + ",\n".join(cs) + "\n    );")
         return (f"// GENERATED by tools/die_plan/bind.py: bound die top of {self.plan['die']['name']} (as-built "
@@ -944,9 +1149,14 @@ class Binder:
         lat = []
         for L in self.links:
             st = L["stages"]
-            lat.append(dict(src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"], width=L["width"],
-                            leaf=f"{F.cells[L['sci']].path}.{L['port']}", asbuilt_stages=[min(st), max(st)],
-                            bound_stages=2, delta=2 - max(st)))
+            bound = 2 + sum(h["stations"] for h in L["ft"])
+            lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
+                            width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
+                            leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
+                            asbuilt_stages=[min(st), max(st)], bound_stages=bound,
+                            plan_cycles=L.get("cycles", 2), delta=bound - max(st)))
+            if L["lane"] and bound != L.get("cycles"):
+                self.errors.append(f"LANE_CYCLES {L['lane']}: bound {bound} != latency table {L.get('cycles')}")
         types = {tn: dict(instances=len(ps), module=self.types[tn]["module"],
                           leaves=len(self.tsig[tn]["leaves"]), params=len([k for k in self.tparams[tn] if k[0] == "param"]),
                           straps=len({(k[1], k[2]) for k in self.tparams[tn] if k[0] == "strap"}),
@@ -956,8 +1166,19 @@ class Binder:
         rep = dict(schema=SCHEMA, die=self.plan["die"]["name"], top=self.ab["top"],
                    cells=dict(kinds), dissolved=len(F.dissolved), partitions=len(self.members), types=types,
                    load_bits=dict(c), crossings=len(self.links), crossing_bits=sum(L["width"] for L in self.links),
+                   lanes=dict(planned=sum(1 for _ in self.plan.get("lanes", [])),
+                              carrying=sum(1 for L in self.links if L["lane"]),
+                              unused=len(self.lanes_unused), unused_examples=self.lanes_unused[:40],
+                              lane_bits=sum(L["width"] for L in self.links if L["lane"]),
+                              unplanned_bits=sum(self.unplanned.values()),
+                              unplanned_pairs={f"{a}->{b}": n for (a, b), n in sorted(self.unplanned.items())},
+                              ft_hops=sum(len(L["ft"]) for L in self.links),
+                              forwarded_bits=sum(self.forwarded.values()),
+                              forwarding_partitions=dict(sorted(self.fwd_parts.items(), key=lambda kv: -kv[1])[:60]),
+                              forwarded_pairs={f"{a}->{b}": n for (a, b), n in sorted(self.forwarded.items())}),
                    unmapped=self.n_unmapped, open_outputs=open_out, open_output_examples=open_list,
-                   proof=dict(unbound=c.get("undriven", 0) + c.get("source_unmapped", 0), tied=c.get("tied", 0),
+                   proof=dict(unbound=c.get("undriven", 0) + c.get("source_unmapped", 0) + sum(self.unplanned.values()),
+                              tied=c.get("tied", 0),
                               undriven=c.get("undriven", 0), multiply_bound=c.get("multi_driven", 0),
                               straps=c.get("strap", 0)),
                    errors=self.errors[:2000], n_errors=len(self.errors), warnings=self.warns[:500])
@@ -977,8 +1198,24 @@ def _strip_comment_comma(ports):
     return out
 
 
-def _compress(e):
-    return e
+def _seg_summary(L, F):
+    """a bus's payload as runs: 'path.port[n]' per leaf pin (F given) or 'port[n]', 'fwd <in bus>[n]'"""
+    runs = []
+    for it in L["items"]:
+        k = (("leaf", F.cells[it[1]].path + "." + it[2] if F else it[2]) if it[0] == "leaf" else ("fwd", "fwd " + it[1]["iname"]))
+        if runs and runs[-1][0] == k:
+            runs[-1][1] += 1
+        else:
+            runs.append([k, 1])
+    return [f"{k[1]}[{n}]" for k, n in runs]
+
+
+def _bus_note(L, side):
+    sg = _seg_summary(L, None)
+    segs = ", ".join(sg[:3]) + (" ..." if len(sg) > 3 else "")
+    lane = f"lane {L['lane']}, {L.get('cycles', 2)} cycles" if L.get("lane") else \
+        "UNPLANNED direct" if L.get("unplanned") else "direct (plan has no lanes)"
+    return f"{lane}: {L['src']} {segs} -> {L['dst']}" if side == "in" else f"{lane}: {segs} -> {L['dst']}"
 
 
 def _concat(bits):
@@ -1136,7 +1373,8 @@ def _desc_json(B, d):
     if k == "int":
         return ["pin", f"{B.F.cells[d[1]].path}.{d[2]}[{d[3]}]", d[4], B.G.kind[d[1]] == "glue"]
     if k == "x":
-        return ["pin", f"{B.F.cells[d[2]].path}.{d[3]}[{d[4]}]", 2, B.G.kind[d[2]] == "glue"]
+        st = B.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
+        return ["pin", f"{B.F.cells[d[2]].path}.{d[3]}[{d[4]}]", st, B.G.kind[d[2]] == "glue"]
     if k == "or":
         return ["or", sorted(_desc_json(B, x)[1] for x in d[1] if x[0] in ("int", "x"))]
     return [k] + list(d[1:2])

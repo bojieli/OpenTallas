@@ -77,7 +77,7 @@ def cmd_verify(a):
     vdir.mkdir(exist_ok=True)
     sc = vdir / "bound.ys"
     js = vdir / "bound.json"
-    sc.write_text(E.yosys_script(ab, ab["netlist"], full, lib, js))
+    sc.write_text(E.yosys_script(ab, ab["netlist"], full, lib, js, check=True))
     mounts = [out, E.REPO] + [Path(f).parent for f in lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)
     mounts = [m for i, m in enumerate(roots) if not any(m.startswith(r + "/") for r in roots[:i])]

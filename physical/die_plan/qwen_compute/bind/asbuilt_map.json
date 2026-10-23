@@ -1,10 +1,9 @@
 {
  "parts": {
-  "io_collective": "io_collective",
-  "io_ucie": "io_collective",
-  "bump_pkg_s0": "io_collective",
-  "bump_pkg_s1": "io_collective",
-  "bump_die_ps": "io_collective",
+  "io_ucie": "coll_core",
+  "bump_pkg_s0": "coll_core",
+  "bump_pkg_s1": "coll_core",
+  "bump_die_ps": "coll_core",
   "io_serdes": "io_serdes",
   "io_serdes_1": "io_serdes_1",
   "io_serdes_2": "io_serdes_2",
@@ -187,6 +186,18 @@
   [
    "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_x(h3|l3_\\d)",
    "sl_\\1_hc3"
+  ],
+  [
+   "io_collective\\.u_io\\.g_face\\[[34]\\]\\..*",
+   "coll_s"
+  ],
+  [
+   "io_collective\\.u_io\\.g_face\\[2\\]\\..*",
+   "coll_n"
+  ],
+  [
+   "io_collective\\..*",
+   "coll_core"
   ]
  ]
 }
