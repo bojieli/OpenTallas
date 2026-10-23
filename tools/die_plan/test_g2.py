@@ -44,7 +44,8 @@ def test_die_probe_files():
         assert tcl.count("create_obstruction") > 2 * 7          # partitions on M1-M7 + PG stripes
         assert "set_routing_layers -signal M8-M9" in tcl
         meta = json.loads((out / "probe.json").read_text())
-        assert meta["taps"] == 2 and meta["pg_stripes"] > 100
+        grid = sum(len(schema.tap_grid(P, p["type"])) for p in P.parts.values())     # R4 tap grid per partition
+        assert meta["taps"] == grid and grid > 2 and meta["pg_stripes"] > 100
 
 
 def test_part_probe_files_and_worst():
@@ -56,10 +57,13 @@ def test_part_probe_files_and_worst():
         out = g2.part_probe(P, "fa", d)
         meta = json.loads((out / "probe.json").read_text())
         # boundary flops for din (64), x_o (277), r_i (71) + one station per bit of fz (65)
-        assert meta["flops"] == 64 + 277 + 71 + 65 + 2          # + clk / arst_n tap buffers
+        import gen_phys
+        nt = len(gen_phys.tap_pins(P, "fa"))                    # R4 clock tap grid + the reset tap
+        assert nt == len(schema.tap_grid(P, "fa")) + 1 and nt > 2
+        assert meta["flops"] == 64 + 277 + 71 + 65 + nt          # + one tap buffer per clock / reset tap
         v = (out / "probe.v").read_text()
         assert "st_fz_64_0" in v and "CLK" not in v
-        assert (out / "io.tcl").read_text().count("place_pin") == 64 + 277 + 71 + 64 + 65 + 2   # fz_i from die IO: no epoch
+        assert (out / "io.tcl").read_text().count("place_pin") == 64 + 277 + 71 + 64 + 65 + nt  # fz_i from die IO: no epoch
 
 
 def test_assembly_die_flow():
@@ -233,7 +237,8 @@ def test_die_probe_declared_taps_share_spine_and_transform_once(tmp_path):
     out = g2.die_probe(schema.Plan(raw), tmp_path/'extra')
     tcl = (out/'probe.tcl').read_text()
     meta = json.loads((out/'probe.json').read_text())
-    assert meta['partition_root_taps'] == 2 and meta['declared_clock_taps'] == 2 and meta['taps'] == 4
+    assert meta['partition_root_taps'] == 2 and meta['declared_clock_taps'] == 2
+    assert meta['taps'] == meta['grid_taps'] + 2
     assert tcl.count('odb::dbNet_create') == 2  # same virtual clock/reset spines, no new regional clock net
     assert 'clk_tap_pfa__declared_0' in tcl and 'clk_tap_pfa' in tcl and 'rst_tap_pfa' in tcl
     tap = meta['declared_taps'][0]

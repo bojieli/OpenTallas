@@ -4,6 +4,10 @@
 # capture partition, setup -1.27 ns at 833 ps) although the plan budgets pin_reg_p90_um.  Here every flop that is
 # reached from a signal port through at most 2 buffer/inverter cells is placed FIRM in a band along its face, at the
 # row / column nearest its pin; face_flops_release.tcl (PRE_DETAIL_PLACE) releases them to PLACED for DPL.
+# ft slots (COORD 10-23 R3): station 0 is the in-port face flop; station j (j >= 1) of k sits FIRM at L*j/k along the
+# slot's planned route (G0 lane_geometry: Z through the midpoint, first leg along the in face's normal) or at its
+# regs_um site; the out port is NOT face-registered here (the neighbour's station 0 registers it).  Table:
+# ft_stations.txt (slot k in_face [x y ...]).
 set ff_blk [ord::get_db_block]
 set ff_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ff_core [$ff_blk getCoreArea]
@@ -13,7 +17,22 @@ set ff_site [[lindex $ff_rows 0] getSite]
 set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
-set ff_skip {clk arst_n}
+set ff_skip_re {^(clk(_t[0-9]+)?|arst_n)$}
+# ft slots: name -> {k in_face regs}
+set ff_ft {}
+if {[file exists /work/ft_stations.txt]} {
+  set fh [open /work/ft_stations.txt r]
+  foreach ln [split [read $fh] "\n"] {
+    if {$ln eq "" || [string index $ln 0] eq "#"} continue
+    dict set ff_ft [lindex $ln 0] [list [lindex $ln 1] [lindex $ln 2] [lrange $ln 3 end]]
+  }
+  close $fh
+}
+proc ff_slot_of {nm sfx} {
+  global ff_ft
+  if {[regexp "^(.*)${sfx}(\\\[\[0-9\]+\\\])?\$" $nm -> base]} { if {[dict exists $ff_ft $base]} { return $base } }
+  return ""
+}
 # column pitch along the depth of an E/W band and along an N/S face (a DFFHQNx1 is 20 sites wide; the rest is room for its INV / port buffer)
 set ff_cpitch [expr {$ff_sw * 40}]
 proc ff_is_ff {inst} { return [string match "*DFF*" [[$inst getMaster] getName]] }
@@ -69,7 +88,9 @@ foreach pass {INPUT OUTPUT} {
   foreach bt [$ff_blk getBTerms] {
     if {[$bt getSigType] ne "SIGNAL" || [$bt getIoType] ne $pass} continue
     set nm [$bt getName]
-    if {[lsearch -exact $ff_skip $nm] >= 0} continue
+    if {[regexp $ff_skip_re $nm]} continue
+    # ft out ports: registered by the neighbour's station 0; the last station is placed by the station pass
+    if {$pass eq "OUTPUT" && [ff_slot_of $nm _o] ne ""} continue
     set f [expr {$pass eq "INPUT" ? [ff_from_in [$bt getNet] 0] : [ff_from_out [$bt getNet] 0]}]
     if {$f eq ""} { incr ff_miss; continue }
     if {[dict exists $ff_done [$f getName]]} continue
@@ -117,5 +138,78 @@ foreach pass {INPUT OUTPUT} {
     incr ff_n
   }
 }
+# ---- ft stations j >= 1 (R3)
+proc ff_zroute {ax ay bx by fin} {
+  if {abs($ax - $bx) < 1 || abs($ay - $by) < 1} { return [list $ax $ay $bx $by] }
+  if {$fin in {E W}} { set xm [expr {($ax + $bx) / 2}]; return [list $ax $ay $xm $ay $xm $by $bx $by] }
+  set ym [expr {($ay + $by) / 2}]; return [list $ax $ay $ax $ym $bx $ym $bx $by]
+}
+proc ff_point_at {pts t} {
+  set n [expr {[llength $pts] / 2}]
+  for {set i 0} {$i < $n - 1} {incr i} {
+    lassign [lrange $pts [expr {2*$i}] [expr {2*$i+3}]] px py qx qy
+    set d [expr {abs($px - $qx) + abs($py - $qy)}]
+    if {$t <= $d} { set f [expr {$d == 0 ? 0.0 : double($t) / $d}]; return [list [expr {$px + $f*($qx-$px)}] [expr {$py + $f*($qy-$py)}]] }
+    set t [expr {$t - $d}]
+  }
+  return [lrange $pts end-1 end]
+}
+set ff_gocc {}
+proc ff_put_near {f x y} {
+  # nearest free (column, row) cell of the global station grid around (x, y), spiral search
+  global ff_gocc ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_cpitch ff_orient
+  set w [[$f getMaster] getWidth]
+  set c0 [expr {int(($x - $ff_x0) / $ff_cpitch)}]; set r0 [expr {int(($y - $ff_y0) / $ff_rh)}]
+  set cmax [expr {int(($ff_x1 - $ff_x0 - $w) / $ff_cpitch)}]; set rmax [expr {int(($ff_y1 - $ff_y0) / $ff_rh) - 1}]
+  for {set rad 0} {$rad < 200} {incr rad} {
+    for {set dr [expr {-$rad}]} {$dr <= $rad} {incr dr} {
+      foreach dc [lsort -unique [list [expr {$rad - abs($dr)}] [expr {abs($dr) - $rad}]]] {
+        set c [expr {$c0 + $dc}]; set r [expr {$r0 + $dr}]
+        if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"]} continue
+        dict set ff_gocc "$c,$r" 1
+        set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
+        $f setLocation $cx $cy
+        if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
+        $f setPlacementStatus FIRM
+        return [list $cx $cy]
+      }
+    }
+  }
+  return ""
+}
+set ff_st 0; set ff_st_miss 0
+foreach bt [$ff_blk getBTerms] {
+  if {[$bt getSigType] ne "SIGNAL" || [$bt getIoType] ne "INPUT"} continue
+  set nm [$bt getName]
+  set slot [ff_slot_of $nm _i]
+  if {$slot eq ""} continue
+  lassign [dict get $ff_ft $slot] k fin regs
+  set onm [string map [list "${slot}_i" "${slot}_o"] $nm]
+  set ob [$ff_blk findBTerm $onm]
+  set f [ff_from_in [$bt getNet] 0]
+  if {$f eq "" || $ob eq "NULL" || $ob eq ""} { incr ff_st_miss; continue }
+  set bb [$bt getBBox]; set ab [$ob getBBox]
+  set ax [expr {([$bb xMin] + [$bb xMax]) / 2}]; set ay [expr {([$bb yMin] + [$bb yMax]) / 2}]
+  set bx [expr {([$ab xMin] + [$ab xMax]) / 2}]; set by [expr {([$ab yMin] + [$ab yMax]) / 2}]
+  set pts [ff_zroute $ax $ay $bx $by $fin]
+  set L 0
+  for {set i 0} {$i + 3 < [llength $pts]} {incr i 2} { set L [expr {$L + abs([lindex $pts $i] - [lindex $pts $i+2]) + abs([lindex $pts $i+1] - [lindex $pts $i+3])}] }
+  for {set j 1} {$j < $k} {incr j} {
+    set q ""
+    foreach o [ff_sig_iterms $f out] { set q [ff_from_in [$o getNet] 0]; if {$q ne ""} break }
+    if {$q eq "" || [dict exists $ff_done [$q getName]]} { incr ff_st_miss; break }
+    set f $q
+    dict set ff_done [$f getName] 1
+    if {[llength $regs] >= 2 * $k} {
+      set xy [list [expr {round([lindex $regs [expr {2*$j}]] * $ff_dbu)}] [expr {round([lindex $regs [expr {2*$j+1}]] * $ff_dbu)}]]
+    } else {
+      set xy [ff_point_at $pts [expr {$L * double($j) / $k}]]
+    }
+    set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
+    if {$got eq ""} { incr ff_st_miss; continue }
+    puts $ff_out "[$f getName]\tst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
+    incr ff_st
+  }
+}
 close $ff_out
-puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers)"
+puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
