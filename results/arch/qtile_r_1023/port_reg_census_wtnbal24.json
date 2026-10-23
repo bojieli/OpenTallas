@@ -1,0 +1,197 @@
+{
+"rst_n": {
+"dir": "input",
+"w": 1,
+"R": 1
+},
+"pw": {
+"dir": "input",
+"w": 75,
+"N": 75
+},
+"dh": {
+"dir": "input",
+"w": 187,
+"N": 186,
+"U": 1
+},
+"init_u0": {
+"dir": "input",
+"w": 1,
+"N": 1
+},
+"ctx_x": {
+"dir": "input",
+"w": 129,
+"N": 129
+},
+"mu_fault": {
+"dir": "input",
+"w": 1,
+"N": 1
+},
+"dh_user": {
+"dir": "input",
+"w": 2,
+"U": 2
+},
+"kok": {
+"dir": "input",
+"w": 1,
+"R": 1
+},
+"kwd": {
+"dir": "input",
+"w": 1,
+"R": 1
+},
+"fab": {
+"dir": "input",
+"w": 1,
+"N": 1
+},
+"program_obs": {
+"dir": "output",
+"w": 76,
+"R": 76
+},
+"control_stores_ready": {
+"dir": "output",
+"w": 1,
+"R": 1
+},
+"layer_context_v": {
+"dir": "output",
+"w": 1,
+"N": 1
+},
+"native_tok": {
+"dir": "output",
+"w": 18,
+"N": 18
+},
+"native_pos": {
+"dir": "output",
+"w": 18,
+"N": 18
+},
+"command_stage": {
+"dir": "output",
+"w": 6,
+"R": 6
+},
+"cal_program_obs": {
+"dir": "output",
+"w": 76,
+"R": 76
+},
+"cal_descriptor_obs": {
+"dir": "output",
+"w": 69,
+"R": 69
+},
+"cal_image_ready": {
+"dir": "output",
+"w": 1,
+"R": 1
+},
+"dc": {
+"dir": "output",
+"w": 56,
+"R": 56
+},
+"native_cmd": {
+"dir": "output",
+"w": 380,
+"N": 1,
+"R": 379
+},
+"native_ret": {
+"dir": "input",
+"w": 95,
+"N": 54,
+"U": 41
+},
+"hr": {
+"dir": "output",
+"w": 453,
+"R": 453
+},
+"cmd": {
+"dir": "output",
+"w": 116,
+"R": 116
+},
+"tl": {
+"dir": "output",
+"w": 1088,
+"R": 1088
+},
+"ss5": {
+"dir": "input",
+"w": 107,
+"N": 87,
+"U": 20
+},
+"ag5": {
+"dir": "input",
+"w": 10,
+"U": 5,
+"N": 5
+},
+"emb_start": {
+"dir": "output",
+"w": 1,
+"R": 1
+},
+"emb_token": {
+"dir": "output",
+"w": 18,
+"R": 18
+},
+"emb_position": {
+"dir": "output",
+"w": 18,
+"R": 18
+},
+"emb_user": {
+"dir": "output",
+"w": 2,
+"R": 2
+},
+"cf": {
+"dir": "output",
+"w": 1,
+"R": 1
+},
+"f16_auth": {
+"dir": "input",
+"w": 83,
+"N": 83
+},
+"f16_obs": {
+"dir": "input",
+"w": 38,
+"N": 38
+},
+"f16_st": {
+"dir": "output",
+"w": 17,
+"R": 17
+},
+"table_req": {
+"dir": "output",
+"w": 9,
+"R": 9
+},
+"ck_core": {
+"dir": "input",
+"w": 1,
+"MX": 1
+},
+"ck_hr": {
+"dir": "input",
+"w": 1,
+"MX": 1
+}
+}

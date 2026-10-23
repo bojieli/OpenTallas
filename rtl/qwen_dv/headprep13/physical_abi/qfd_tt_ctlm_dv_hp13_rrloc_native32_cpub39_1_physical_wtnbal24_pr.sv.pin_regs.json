@@ -1,0 +1,114 @@
+{
+ "schema": "opentallas.qtile_r.pin_regs.v1",
+ "top": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_pr",
+ "base_top": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+ "ports": [
+  {
+   "port": "pw",
+   "dir": "input",
+   "width": 75,
+   "clock": "ck_core",
+   "added_cycles": 1
+  },
+  {
+   "port": "dh",
+   "dir": "input",
+   "width": 187,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "init_u0",
+   "dir": "input",
+   "width": 1,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "ctx_x",
+   "dir": "input",
+   "width": 129,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "mu_fault",
+   "dir": "input",
+   "width": 1,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "fab",
+   "dir": "input",
+   "width": 1,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "native_ret",
+   "dir": "input",
+   "width": 95,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "ss5",
+   "dir": "input",
+   "width": 107,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "ag5",
+   "dir": "input",
+   "width": 10,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "f16_auth",
+   "dir": "input",
+   "width": 83,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "f16_obs",
+   "dir": "input",
+   "width": 38,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "layer_context_v",
+   "dir": "output",
+   "width": 1,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "native_tok",
+   "dir": "output",
+   "width": 18,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "native_pos",
+   "dir": "output",
+   "width": 18,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  },
+  {
+   "port": "native_cmd",
+   "dir": "output",
+   "width": 380,
+   "clock": "ck_hr",
+   "added_cycles": 1
+  }
+ ],
+ "bits_in": 727,
+ "bits_out": 417
+}
