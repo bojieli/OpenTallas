@@ -104,7 +104,7 @@ module dsdv_idx_rg3_br #(
     reg [11:0] left, pw;
     // S81-IDXRD-1021: same-edge kept replicas of infr (identical next state; [0] left, [1] pw, [2] leftk) and of left
     // (leftk: the window clock replica tch's job-end clear), so no infr / end-of-job node drives > 32 loads
-    (* keep = "true" *) reg [3:0] infk;            // [3]: end_wk
+    (* keep = "true" *) reg [4:0] infk;            // [3]: end_wk; [4]: leftk[11:6] (STW-S81e-COLLA 10-23: infk[2] QN drove 34 > 32)
     (* keep = "true" *) reg [11:0] leftk;
     wire       q_v = qr[0];
     wire [511:0] q_d = qr[512:1];
@@ -124,16 +124,18 @@ module dsdv_idx_rg3_br #(
     always @(posedge ck) begin
         if (qvk[0] && !infk[0]) left <= q_d[491:480]; else if (qvk[0]) left <= left - 12'd1;
         if (qvk[1] && !infk[1]) pw <= 12'd0; else if (qvk[1]) pw <= pw + 12'd1;
-        if (qvk[2] && !infk[2]) leftk <= q_d[491:480]; else if (qvk[2]) leftk <= leftk - 12'd1;
+        // leftk load/decrement split over two same-state replicas: infk[2] -> leftk[5:0], infk[4] -> leftk[11:6]
+        if (qvk[2] && !infk[2]) leftk[5:0] <= q_d[485:480]; else if (qvk[2]) leftk[5:0] <= leftk[5:0] - 6'd1;
+        if (qvk[2] && !infk[4]) leftk[11:6] <= q_d[491:486]; else if (qvk[2]) leftk[11:6] <= leftk[11:6] - {5'd0, leftk[5:0] == 6'd0};
     end
     // the copies carry no reset: during reset qr[0] is held 0, so they settle to 0 within 3 edges of the reset
     always @(posedge ck) begin hen <= {15{hdr_job && !act}}; hj1 <= {6{hdr_job && !act}}; hj2 <= {12{hj1[0]}}; hj3 <= {9{hj2[0]}}; hj4 <= {5{hj3[0]}}; end
     always @(posedge ck or negedge rl[2])
-        if (!rl[2]) begin infr <= 1'b0; infk <= 4'd0; isj <= 1'b0; act <= 1'b0; hbad1 <= 1'b0; end
+        if (!rl[2]) begin infr <= 1'b0; infk <= 5'd0; isj <= 1'b0; act <= 1'b0; hbad1 <= 1'b0; end
         else begin : g_fp
             integer i_;
             hbad1 <= hdr_job && act;
-            for (i_ = 0; i_ < 4; i_ = i_ + 1)
+            for (i_ = 0; i_ < 5; i_ = i_ + 1)
                 if (q_v && !infk[i_]) infk[i_] <= q_d[491:480] != 12'd0;
                 else if (q_v && infk[i_] && (i_ >= 2 ? leftk : left) == 12'd1) infk[i_] <= 1'b0;
             if (is_h) begin
