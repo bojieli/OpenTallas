@@ -180,6 +180,79 @@ def forwarded_soft_clocks(spec):
     return out
 
 
+BAND_GENERATOR = "tools/s81_dv/frame_hier_kit.py"
+
+
+def landed_band_record(spec, root, rec, path):
+    """S81 frame MAIN-hier (b2, STW-S81c-DIE-FRAME 10-22): the record of ONE hard row band of an lp landed parent.
+    A band is a single region (one root) of the parent; a landing whose ring and read both sit in it would be whole
+    (impossible: a landing joins two regions, so "landings" is empty); every landing is a HALF ("landing_halves": side "w" =
+    ring here, its bank / epo / vld leave on output ports; side "r" = read here, they arrive on input ports), timed by
+    landed_sdc as the same -setup E / -hold D-1 multicycle against the port.  Validated against the parent lp record
+    (fail closed): every half exists there, with this band's region on the right side."""
+    if rec.get("kind") != "landed_band" or rec.get("top") != spec.get("top"):
+        raise ValueError(f'{path}: not the landed_band record of {spec.get("top")}')
+    regions = rec.get("regions")
+    if not isinstance(regions, dict) or len(regions) != 1:
+        raise ValueError(f"{path}: a band is exactly one region of its parent")
+    (rname, reg), = regions.items()
+    if [reg.get("clock_port")] != list(spec["clock_ports"]) or reg.get("clock_port") != spec["clock_port"]:
+        raise ValueError(f"{path}: band clock port {reg.get('clock_port')} differs from clock_ports")
+    parent = json.loads((Path(root) / rec["parent_record"]).read_text())
+    if parent.get("generator") != "tools/landed_parent/lp.py":
+        raise ValueError(f"{path}: parent_record is not an lp.py record")
+    if (rec.get("D"), rec.get("E")) != (parent.get("D"), parent.get("E")):
+        raise ValueError(f"{path}: D / E differ from the parent record")
+    if rec.get("landing_implementation") != parent.get("landing_implementation"):
+        raise ValueError(f"{path}: landing_implementation differs from the parent record")
+    pl = {L["name"]: L for L in parent.get("landings") or []}
+    if rec.get("landings"):
+        # a landing crosses two regions and a band is one region: every landing of a band is a half
+        raise ValueError(f"{path}: a band holds no whole landing (ring and read sit on different region roots)")
+    seen = set()
+    for h in rec.get("landing_halves") or []:
+        P = pl.get(h.get("name"))
+        side = h.get("side")
+        if P is None or side not in ("w", "r") or h["name"] in seen:
+            raise ValueError(f"{path}: invalid landing half {h}")
+        if (side == "w" and P["src_region"] != rname) or (side == "r" and P["dst_region"] != rname):
+            raise ValueError(f"{path}: half {h['name']}/{side} is on the wrong region (band region {rname})")
+        ports = h.get("ports")
+        if not isinstance(ports, list) or sorted(ports) != sorted(f"lpl_{h['name']}_{k}" for k in ("bank", "epo", "vld")):
+            raise ValueError(f"{path}: half {h['name']} must carry exactly its bank / epo / vld ports")
+        seen.add(h["name"])
+    names = [L.get("name") for L in rec.get("landings") or []]
+    if any(not isinstance(n, str) or not re.fullmatch(r"[A-Za-z0-9_]+", n) for n in names) or len(set(names)) != len(names):
+        raise ValueError(f"{path}: invalid landing names")
+    return rec
+
+
+def half_landing_sdc(rec):
+    """port-side multicycles of a band's landing halves (see landed_band_record); [] without halves"""
+    hs = rec.get("landing_halves") or []
+    if not hs:
+        return []
+    D, E = rec["D"], rec["E"]
+    o = [f"# ---- landed band: {len(hs)} landing halves at the band face, multicycle -setup {E} -hold {D - 1} against the port",
+         "set ot_lh_miss 0"]
+    for h in hs:
+        n = h["name"]
+        cells = f"u_lpl_{n}_{h['side']}"
+        ports = " ".join(f"lpl_{n}_{k}*" for k in ("bank", "epo", "vld"))
+        o += [f"set ot_lh_c [get_cells -quiet {cells}.*]",
+              f"if {{[llength $ot_lh_c] == 0}} {{ set ot_lh_c [get_cells -quiet {cells}/*] }}",
+              f"set ot_lh_p [get_ports -quiet {{{ports}}}]",
+              "if {[llength $ot_lh_c] == 0 || [llength $ot_lh_p] == 0} { incr ot_lh_miss } else {"]
+        if h["side"] == "r":
+            o += [f"  set_multicycle_path -setup {E} -from $ot_lh_p -to $ot_lh_c",
+                  f"  set_multicycle_path -hold {D - 1} -from $ot_lh_p -to $ot_lh_c", "}"]
+        else:
+            o += [f"  set_multicycle_path -setup {E} -from $ot_lh_c -to $ot_lh_p",
+                  f"  set_multicycle_path -hold {D - 1} -from $ot_lh_c -to $ot_lh_p", "}"]
+    o.append(f'puts "OT_LP_HALF_SDC [expr {{{len(hs)} - $ot_lh_miss}}] of {len(hs)} landing halves constrained"')
+    return o
+
+
 def landed_record(spec, root):
     """The lp.py record (<top>_lp_record.json) of a landed cluster, validated against the spec (fail closed)."""
     if not landed_cluster(spec):
@@ -198,6 +271,10 @@ def landed_record(spec, root):
     if spec.get("cdc_synchronizers") is not None:
         raise ValueError("landed cluster: CDC synchronizers are leaf-tile features")
     rec = json.loads((Path(root) / path).read_text())
+    if (rec.get("generator") == BAND_GENERATOR) != (spec.get("landed_band") is True):
+        raise ValueError(f'{path}: spec "landed_band": true iff the record is a {BAND_GENERATOR} landed_band record')
+    if rec.get("generator") == BAND_GENERATOR:
+        return landed_band_record(spec, root, rec, path)
     if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
         raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')
     regions = rec.get("regions")
@@ -653,6 +730,8 @@ def landed_sdc(spec, root):
                 " }\n}\n" + seam)
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
+    if rec.get("kind") == "landed_band" and not impl.get("no_data_multicycle"):
+        seam = "\n".join(half_landing_sdc(rec)) + ("\n" if rec.get("landing_halves") else "") + seam
     if impl.get("no_data_multicycle"):
         # QW-CTLM3 10-19 (lp.py landing_mcp false): no exception at all -- every ring -> read cone (slot data, valid,
         # selectors, reset-adjacent) is timed single-cycle at full STA, which is conservative for a read K >= 1 edges
@@ -775,7 +854,10 @@ def domains(spec):
         related_data(spec)
     # a cluster qualifies only as a LANDED cluster (lp.py record named; landed_record() validates it in load_spec)
     landed = landed_cluster(spec) and isinstance(spec.get('landed_record'), str) and bool(spec.get('children'))
-    if leaf and (spec.get('kind') != 'tile' and not landed or declared is None or len(spec.get('clock_ports', [])) < 2):
+    # a landed BAND (landed_band_record: one region of an lp parent, "landed_band": true) has exactly one root
+    band = landed and spec.get('landed_band') is True
+    if leaf and (spec.get('kind') != 'tile' and not landed or declared is None
+                 or len(spec.get('clock_ports', [])) < (1 if band else 2)):
         raise ValueError('multiple_cts_roots requires a leaf tile, at least two roots and explicit IO domains')
     if declared is None:
         return {'core': dict(ratio=[1, 1], ports=list(spec['clock_ports']),
@@ -1030,6 +1112,9 @@ def _generate(spec, root):
         domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
     body = (landed_raw_body(LANDED_BODY, bool(cotimed)) if raw else LANDED_BODY) if landed else LEAF_BODY if native_leaf(spec) else BODY
+    mrc = multi_root_children(spec, root) if landed else []
+    if mrc:
+        body = multi_root_body(body)
     fwd = forwarded_clock_ports(spec)
     if fwd:
         body = forwarded_body(body)
@@ -1048,6 +1133,7 @@ def _generate(spec, root):
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
             + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '')
             + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '')
+            + ('set ::ot_ce_multi_root_children {' + ' '.join('{' + c + '}' for c in mrc) + '}\n' if landed and mrc else '')
             + ('set ::ot_ce_fwd_ports {' + ' '.join('{' + p + '}' for p in fwd) + '}\n' if fwd else '')
             + ('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
                 '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
@@ -2168,3 +2254,127 @@ def forwarded_soft_body(body):
             raise ValueError('forwarded soft clock body changed; revalidate extension')
         body = body.replace(old, new)
     return FORWARDED_SOFT_PROCS + body
+
+
+# STW-S81c-COLLA2 10-22 (STEWARD-S81c decision (A), seq (B) parents): a landed cluster may DECLARE closed hard children
+# that own clock pins on SEVERAL region roots (the seq (B) landing bands: lk+sq / sq+vc).  Opt-in spec key
+# "multi_root_children": [{"inst": <child inst>, "job": <its CLOSED daemon job>}]; absent = byte-identical SDC.  Only the
+# landed_body "one hard child = one region root" ownership assertion is lifted for the declared instances; every pin is
+# still a sink of the root it is wired to, judged at ITS OWN child insertion (refs <master>/<pin>, per corner), and the
+# per-root 80 ps TT+FF pin-flop spread / neighbour-matched boundary rules are unchanged.  A declared child must be a
+# CLOSED record (results/closure_loop/<job>/verdict.json status CLOSED) whose views record is this child's view dir and
+# whose routed sign-off SDC names exactly the child's measured clock pins as its CTS roots (>= 2): no stand-ins.
+MULTI_ROOT_OWNER = ('if {[dict exists $::ot_ce_landed_owner $cname] && [dict get $::ot_ce_landed_owner $cname] ne '
+                    '[dict get $::ot_ce_source_domains $name]} {')
+
+
+def multi_root_children(spec, root):
+    decl = spec.get("multi_root_children")
+    if decl is None:
+        return []
+    if not landed_cluster(spec):
+        raise ValueError("multi_root_children: only a landed cluster (kind cluster + multiple_cts_roots) declares them")
+    if not isinstance(decl, list) or not decl:
+        raise ValueError("multi_root_children: a nonempty list of {inst, job}")
+    kids = {c.get("inst"): c for c in spec.get("children", [])}
+    out = []
+    for d in decl:
+        if not isinstance(d, dict) or set(d) != {"inst", "job"} or not all(isinstance(d[k], str) and d[k] for k in d):
+            raise ValueError(f"multi_root_children: entry {d!r} must be exactly {{inst, job}}")
+        inst, job = d["inst"], d["job"]
+        child = kids.get(inst)
+        if child is None or int(child.get("count", 1)) != 1 or inst in out:
+            raise ValueError(f"multi_root_children: {inst} is not one unique hard child of this parent")
+        view = Path(root) / child["view"]
+        where = f"multi_root_children {inst} ({child['view']})"
+        cm = json.loads((view / "insertion.json").read_text()).get("clock_measurements") or {}
+        if len(cm) < 2:
+            raise ValueError(f"{where}: fewer than two measured clock pins; declare only multi-root children")
+        try:
+            verdict = json.loads((Path(root) / "results/closure_loop" / job / "verdict.json").read_text())
+        except (OSError, ValueError) as e:
+            raise ValueError(f"{where}: CLOSED record of {job} unreadable ({e})")
+        if verdict.get("status") != "CLOSED" or verdict.get("job") != job:
+            raise ValueError(f"{where}: {job} is not a CLOSED record")
+        recs = (verdict.get("job_spec") or {}).get("record") or []
+        views = [r.get("to") for r in recs if isinstance(r, dict) and str(r.get("from", "")).endswith("/record/views")]
+        routes = [r.get("to") for r in recs if isinstance(r, dict) and str(r.get("from", "")).endswith("/record/route")]
+        if views != [str(Path(child["view"]).parent)]:
+            raise ValueError(f"{where}: {job} record views {views} are not this child's view dir")
+        if len(routes) != 1:
+            raise ValueError(f"{where}: {job} names no unique record route directory")
+        try:
+            sdc = (Path(root) / routes[0] / "signoff.sdc").read_text()
+        except OSError as e:
+            raise ValueError(f"{where}: record sign-off SDC missing ({e})")
+        if sorted(_tcl_words(sdc, "ot_ce_cts_roots")) != sorted(cm):
+            raise ValueError(f"{where}: record CTS roots {_tcl_words(sdc, 'ot_ce_cts_roots')} differ from the measured "
+                             f"clock pins {sorted(cm)}")
+        out.append(inst)
+    return out
+
+
+# STW-S81c-COLLA3 10-22 (seq b1m/b1f2 gate "OT_LANDED: 11 of 7 bound hard-child clock pins reached"): OpenSTA's
+# all_registers -clock <root> -clock_pins returns EVERY clock pin of a multi-root child's ETM for each of its roots
+# (u_blk/ck_lk and u_blk/ck_sq under both ck_lk and ck_sq), so each band pin was measured and counted on both roots.  A
+# declared multi-root child's pin is a sink ONLY of the root its net is structurally wired to (ot_ce_net_root_port, the
+# same walk the check-only pins use); the other roots drop it from their sink list BEFORE measuring (a `continue` in
+# the measure loop left it in $pins and the boundary pass then missed its arrival: b1m gate 14:30 'key "u_blk/ck_sq" not
+# known in dictionary').  Only multi_root_children instances are filtered.
+MULTI_ROOT_SINK = '    set ot_ce_pin_seen [dict create]\n'
+MULTI_ROOT_FILTER = ('    set ot_ce_mr_keep {}\n'
+                     '    foreach pin $pins {\n'
+                     '      if {[lsearch -exact $::ot_ce_multi_root_children [get_full_name [get_cells -of_objects $pin]]] >= 0'
+                     ' && [ot_ce_net_root_port $pin] ne $name} continue\n'
+                     '      lappend ot_ce_mr_keep $pin\n'
+                     '    }\n'
+                     '    set pins $ot_ce_mr_keep\n')
+
+
+# STW-S81c-COLLA3 10-22 rev3 (b1f2 regate 14:55 'OT_MULTI_ROOT: duplicate clock ownership u_blk'): the leaf ownership
+# proof (ot_ce_leaf_ownership) keys every register CELL to one domain.  A declared multi-root child is one cell whose ETM
+# clock pins sit on several region roots, so it owns the SET of those domains: a data/IO path to or from it is in-domain
+# when the domain sets meet (each pin's own timing stays ordinary STA on its own root, and the child's record closed it).
+# Every other cell keeps the single-domain rules; only multi_root_children instances get a set.
+MULTI_ROOT_LEAF_SUBS = [
+    ("proc ot_ce_leaf_ownership {inputs outputs} {\n",
+     "proc ot_ce_mr_doms {mrd cells c} {\n"
+     "  if {[dict exists $mrd $c]} {return [lsort -unique [dict get $mrd $c]]}\n"
+     "  return [list [dict get $cells $c]]\n"
+     "}\n"
+     "proc ot_ce_mr_meet {la lb} {foreach x $la {if {[lsearch -exact $lb $x] >= 0} {return 1}}; return 0}\n"
+     "proc ot_ce_leaf_ownership {inputs outputs} {\n"),
+    ("  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}\n",
+     "  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}\n  set ot_ce_mrd {}\n"),
+    ('      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain || ',
+     '      if {[lsearch -exact $::ot_ce_multi_root_children $cell] >= 0} {\n'
+     '        if {[ot_ce_net_root_port $pin] eq $root} {\n'
+     '          dict lappend ot_ce_mrd $cell $domain\n'
+     '          if {![dict exists $cells $cell]} {dict set cells $cell $domain}\n'
+     '        }\n'
+     '        continue\n'
+     '      }\n'
+     '      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain || '),
+    ("        if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {\n",
+     "        if {![dict exists $inputs $name] || ([dict get $inputs $name] ne $expected && "
+     "![ot_ce_mr_meet [list [dict get $inputs $name]] [ot_ce_mr_doms $ot_ce_mrd $cells $cell]])} {\n"),
+    ("        if {$source_domain ne $expected} {\n",
+     "        if {$source_domain ne $expected && "
+     "![ot_ce_mr_meet [ot_ce_mr_doms $ot_ce_mrd $cells $source] [ot_ce_mr_doms $ot_ce_mrd $cells $cell]]} {\n"),
+    ("      if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {\n",
+     "      if {![dict exists $cells $source] || ([dict get $cells $source] ne $domain && "
+     "![ot_ce_mr_meet [ot_ce_mr_doms $ot_ce_mrd $cells $source] [list $domain]])} {\n"),
+]
+
+
+def multi_root_body(body):
+    if body.count(MULTI_ROOT_OWNER) != 1 or body.count(MULTI_ROOT_SINK) != 1:
+        raise ValueError("landed body changed; revalidate multi_root_children")
+    body = body.replace(MULTI_ROOT_SINK, MULTI_ROOT_FILTER + MULTI_ROOT_SINK)
+    if 'proc ot_ce_leaf_ownership {inputs outputs} {' in body:
+        for a, b in MULTI_ROOT_LEAF_SUBS:
+            if body.count(a) != 1:
+                raise ValueError("leaf ownership body changed; revalidate multi_root_children")
+            body = body.replace(a, b)
+    return body.replace(MULTI_ROOT_OWNER, MULTI_ROOT_OWNER[:-3] +
+                        ' && [lsearch -exact $::ot_ce_multi_root_children $cname] < 0} {')

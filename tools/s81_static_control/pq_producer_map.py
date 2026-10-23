@@ -3,6 +3,7 @@
 
 Area/count evidence only. No outline, phase, pin or physical-view inheritance.
 """
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parents[1])); from yosys_pin import pinned_yosys  # TOKc-YOSYS 10-22: Yosys >= 0.68 or fail
 import argparse,collections,hashlib,json,re,subprocess
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('--top',choices=['dsfd_stage_seq_static_c9','dsfd_host_c'],required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
@@ -13,14 +14,14 @@ sources=[root/'rtl/dsrom_sys/s81_static_control'/x for x in static] if a.top.end
 libs=sorted(Path('/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM').glob('*RVT_TT_nldm*.lib'));assert len(libs)==5
 seq=next(x for x in libs if 'SEQ_' in x.name);flags=' '.join('-liberty '+str(x)for x in libs)
 sha=lambda x:hashlib.sha256(x.read_bytes()).hexdigest()
-provenance=dict(sources_sha256={str(x.relative_to(root)):sha(x)for x in sources},library_sha256={x.name:sha(x)for x in libs},script_sha256=sha(Path(__file__)),yosys=subprocess.check_output(['yosys','-V'],text=True).strip(),top=a.top,parameters={'NOPS':128}if a.top.endswith('c9')else{'NS':1},scope='source-pinned mapped area and clocks only; no route/native pin/clock/parent qualification')
+provenance=dict(sources_sha256={str(x.relative_to(root)):sha(x)for x in sources},library_sha256={x.name:sha(x)for x in libs},script_sha256=sha(Path(__file__)),yosys=subprocess.check_output([pinned_yosys(),'-V'],text=True).strip(),top=a.top,parameters={'NOPS':128}if a.top.endswith('c9')else{'NS':1},scope='source-pinned mapped area and clocks only; no route/native pin/clock/parent qualification')
 (out/'provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
 y='read_verilog -sv -DSYNTHESIS -DDSFD_HOST_C_STATIC -DDSFD_HOST_PQ_BOOT '+' '.join(map(str,sources))+'\n'
 y+=f'hierarchy -check -top {a.top}\nsynth -top {a.top} -flatten -noabc\n'
 y+=''.join('read_liberty -lib '+str(x)+'\n'for x in libs)
 y+=f'dfflibmap -liberty {seq}\nabc {flags} -D 833\nclean\ncheck -assert\nstat {flags}\nwrite_json {out}/mapped.json\n'
 (out/'map.ys').write_text(y)
-with(out/'map.log').open('w')as f:rc=subprocess.run(['yosys','-s',str(out/'map.ys')],stdout=f,stderr=subprocess.STDOUT).returncode
+with(out/'map.log').open('w')as f:rc=subprocess.run([pinned_yosys(),'-s',str(out/'map.ys')],stdout=f,stderr=subprocess.STDOUT).returncode
 if rc:raise SystemExit(rc)
 m=json.loads((out/'mapped.json').read_text())['modules'][a.top]
 areas={}

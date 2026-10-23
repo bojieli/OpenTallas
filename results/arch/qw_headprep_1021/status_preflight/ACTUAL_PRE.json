@@ -1,0 +1,136 @@
+{
+  "scope": "STATUS callback source PRE only; stopped before both relay planners; no GEN/age/physical claim",
+  "source": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r16pre/src",
+  "callbacks": {
+    "obs_ctx": {
+      "source_master": "qfd_mu_ctx_rx_die_obs1",
+      "bus": [
+        "status_obs_ctx",
+        62,
+        [
+          [
+            "mu_ctxrx",
+            "obs_ctx"
+          ],
+          [
+            "d2d_rom",
+            "obs_ctx"
+          ]
+        ]
+      ]
+    },
+    "obs_res": {
+      "source_master": "qfd_sys_face_mu_dhobs_obs1",
+      "bus": [
+        "status_obs_res",
+        47,
+        [
+          [
+            "mu_dhobs",
+            "obs_res"
+          ],
+          [
+            "d2d_rom",
+            "obs_res"
+          ]
+        ]
+      ]
+    },
+    "obs_native": {
+      "source_master": "qfd_native59_dv_headprep_obs1",
+      "bus": [
+        "status_obs_native",
+        60,
+        [
+          [
+            "native59",
+            "obs_native"
+          ],
+          [
+            "d2d_rom",
+            "obs_native"
+          ]
+        ]
+      ]
+    }
+  },
+  "masters": {
+    "native59": "qfd_native59_dv_headprep_obs1",
+    "d2d_rom": "qfd_d2d_static_ovl_sf7_obs1",
+    "mu_ctxrx": "qfd_mu_ctx_rx_die_obs1",
+    "mu_dhobs": "qfd_sys_face_mu_dhobs_obs1"
+  },
+  "buses": 739,
+  "descriptor_bound": [
+    "head_descriptor_generation",
+    "head_descriptor_tag",
+    "head_descriptor_v"
+  ],
+  "flags": {
+    "OT_QWEN_STATUS_OBS": "1",
+    "OT_SPLIT_FWD_CLASSES": "0",
+    "OT_QWEN_D2D_IMAGE": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu_ew595_r16.svh",
+    "OT_SPLIT_FWD_RST_SYNC": "1",
+    "OT_QWEN_HEAD_PREP": "1",
+    "OT_SPLIT_FWD_LAND_EW_MASTERS": "qfd_dv_slice2",
+    "OT_QWEN_ROPE": "1",
+    "OT_SPLIT_RST_REGION_LAND": "1",
+    "OT_SPLIT_FWD_CLASS_PACK": "0",
+    "OT_SPLIT_FWD_BUMP_FEED": "1",
+    "OT_SPLIT_COLL_BLK_DIV": "1",
+    "OT_SPLIT_UCIE_PHY_CLK": "1",
+    "OT_SPLIT_CORE_FEED_XY": "17280.0,12096.0",
+    "OT_SPLIT_DV_NATIVE_ORIGINS": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r16pre/src/results/arch/qw_diechain_recovery_1020/native_origins_g4r1.json",
+    "OT_SPLIT_DV_WCOL_VIEW": "sys_face",
+    "OT_SPLIT_FWD_CK_FACE": "1",
+    "OT_QWEN_MU_NU": "4",
+    "OT_SPLIT_LAND_LIST": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r16pre/src/results/arch/qw_dieclk2_1019/landing_list.json",
+    "OT_SPLIT_REGION_ONE_HARD": "1",
+    "OT_SPLIT_REGION_HARD": "qfd_c_b16_dv,qfd_dv_slice2",
+    "OT_SPLIT_LAND_LIST_IN_FACE": "",
+    "OT_SPLIT_LAND_CROSS_RINGS": "400",
+    "OT_SPLIT_DV_CTXRX_XY": "1555.2,22809.6",
+    "OT_SPLIT_RESET_RELEASE": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r16pre/reset_release_prior_g4try3.json",
+    "OT_SPLIT_CK_COROOT": "tt_ctlm,native59,embed_prov",
+    "OT_SPLIT_B2": "1",
+    "OT_SPLIT_B2_PHYSICAL_TRIAL": "1",
+    "OT_SPLIT_B2_COMPACT_SELECTOR": "1",
+    "OT_SPLIT_Q3H": "1",
+    "OT_SPLIT_Q3H_CONTRACT": "results/arch/qwen_split_compute_1014/dieplan2_1016/q3h_cluster_contract_cb.json",
+    "OT_SPLIT_Q3H_GRID": "results/arch/qwen_split_compute_1014/dieplan2_1016/q3h4_grid.json",
+    "OT_SPLIT_XCOL_WH": "129.6,920.16",
+    "OT_SPLIT_PHY_TALL": "1",
+    "OT_SPLIT_DV_RSI_AT_RS": "1",
+    "OT_SPLIT_DV_SEAM_LANE": "1",
+    "OT_SPLIT_DV_ORIENT": "d2d_rom=MX,ucie_kv=MX",
+    "OT_SPLIT_DV_D2D_DX": "0",
+    "OT_SPLIT_DV_FACES": "rtl/qwen_dv/qfd_dv_slice2_faces.json",
+    "OT_SPLIT_DV": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r16pre/receiver_plan.json",
+    "OT_SPLIT_DV_CLUSTER_CENTRE_CLOCKS": "results/arch/qwen_split_compute_1014/dieplan2_1016/die_clock16_cb16rst.json",
+    "OT_SPLIT_DV_CLUSTER_CLOCK_AT": "face",
+    "OT_SPLIT_DV_CONTRACT": "results/arch/qwen_split_compute_1014/dieplan2_1016/cluster_contract_dv_cb16rst_ac8e4c483.json",
+    "OT_SPLIT_DV_OBS_TOP": "8",
+    "OT_SPLIT_DV_SLICE_GAP_UM": "129.6",
+    "OT_SPLIT_DV_SLICE_OBS_TOP": "5",
+    "OT_SPLIT_DV_PIN_WINDOW_UM": "9.6",
+    "OT_SPLIT_FWD_LANES": "1",
+    "OT_SPLIT_FWD_LANES_FDI": "1",
+    "OT_SPLIT_FWD_LANES_RST": "1",
+    "OT_SPLIT_FWD_LANES_BUMP": "1",
+    "OT_SPLIT_LAND_CROSS": "d2d_rom,sys_face",
+    "OT_SPLIT_DV_D2D_DY": "259.2",
+    "OT_SPLIT_DV_SYSFACE_DX": "129.6",
+    "OT_SPLIT_LAND_PLAN": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r16pre/land_plan_bi_chain.json",
+    "OT_SPLIT_FWD_LAND_SHAPE": "ns",
+    "OT_SPLIT_HOMES": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r16pre/src/results/arch/qw_headprep_1021/homes_obs1.json",
+    "OT_SPLIT_HOMES_REBASE": "1",
+    "OT_SPLIT_VM_WH": "4872.024,3239.384",
+    "OT_SPLIT_PHY_NFACE": "1",
+    "OT_SPLIT_SYSFACE_XY": "17921.52,13865.04",
+    "OT_SPLIT_TILE_GRANT": "results/arch/qwen_split_compute_1014/dieplan2_1016/proxy_t1166_a0r_held_grant_rr.json",
+    "OT_SPLIT_PIN_GRANT": "results/arch/qwen_split_compute_1014/dieplan2_1016/q2o2d_grant.json",
+    "OT_SPLIT_BW_SPREAD": "1",
+    "OT_SPLIT_TREE_HOSTS": "dp",
+    "OT_SPLIT_ALIGN_BAND_WORDS": "0"
+  }
+}

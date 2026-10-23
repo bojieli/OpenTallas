@@ -15,15 +15,18 @@ hold_budget "die", no inhold / outhold.
 """
 import argparse
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import qc_cluster_cfg as CF      # SQC-CB8: OT_QC_CLUSTER = b16 (default, unchanged) / b8 / b8n
 
 ROOT = Path(__file__).resolve().parents[2]
 ARCH = ROOT / "results/arch/qwen_cluster_1017"
 STANDIN = "physical/ref_tile/qfd_c_b16_dv_diag/a0_standin"
 STN_STANDIN = "physical/ref_tile/qfd_c_b16_dv_diag/stn_standin"
 # Q-CLUSTER3: the stations are hard children (blackboxes here); only the 1-bit reset stages (qfd_q3h_stn W=1) stay soft
-FABRIC_SRC = ["rtl/physical/qcluster/qfd_q3h_stn.sv", "rtl/physical/qcluster/qfd_c_land.sv",
-              "rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv", "rtl/physical/qcluster/qfd_c_b16_dv.sv"]
+FABRIC_SRC = ["rtl/physical/qcluster/qfd_q3h_stn.sv", "rtl/physical/qcluster/qfd_c_land.sv", CF.FAB, CF.TOPSRC]
 # Q-CL16-LAND (10-18): die delivery residual between communicating region clocks (die_clock_contract.json obligation 2,
 # as rewritten by Q-CL16-EARLY cc6c1f3ae: drops phase-aligned within +/-60 ps at TT and FF), ON TOP of the per-clock
 # 60 setup / 25 hold uncertainty: inter-clock uncertainty overrides the per-clock value, so the pair gets 120 / 85.
@@ -49,18 +52,18 @@ def main():
     ap.add_argument("--tag", default="", help="kit name infix after 'diag' (e.g. 16)")
     ap.add_argument("--branch", help="job branch (default by tag)")
     a = ap.parse_args()
-    C = json.loads((ARCH / "cluster_contract_dv.json").read_text())
+    C = json.loads((ROOT / CF.CONTRACT).read_text())
     W, H = C["outline_um"]["w"], C["outline_um"]["h"]
     nkm, nlm = C["a0"]["nk"], C["a0"]["nl"]
     if a.mode == "diag":
         nk, nl = f"{STANDIN}/{nkm}", f"{STANDIN}/{nlm}"
-        name = "qfd_c_b16_dv_diag" + a.tag + ("c" if a.feed == "centre" else "") + ("" if a.engine == "spine" else "t")
+        name = CF.MASTER + "_diag" + a.tag + ("c" if a.feed == "centre" else "") + ("" if a.engine == "spine" else "t")
         bb = [f"{STANDIN}/a0_rr_bb.v", f"{STN_STANDIN}/stn_bb.v"]
         stn = STN_STANDIN
     else:
         if not (a.nk and a.nl and a.stn):
             raise SystemExit("real mode needs --nk / --nl CLOSED native-PASS A0 views and --stn station views")
-        nk, nl, name, bb = a.nk, a.nl, "qfd_c_b16_dv" + ("_c" if a.feed == "centre" else "") + ("" if a.engine == "spine" else "_t"), []
+        nk, nl, name, bb = a.nk, a.nl, CF.MASTER + ("_c" if a.feed == "centre" else "") + ("" if a.engine == "spine" else "_t"), []
         stn = a.stn
     tiles = []
     spare = tuple(C["tree"]["nl_slot"])
@@ -78,7 +81,7 @@ def main():
     xs = C["region_seams"]["x"]
     xs = xs if isinstance(xs, list) else [xs]
     regions = list(C["clocks"])
-    sixteen = len(regions) == 16
+    sixteen = len(regions) == CF.NT      # one region per A0 tile (16 for the 4 x 4)
     cks = [f"ck_{q}" for q in regions]
     dom = {q: dict(inputs=[], outputs=[]) for q in regions}
     for p in ports:
@@ -91,7 +94,7 @@ def main():
         if p.get("region"):   # Q-CB16RST: regional reset pins name their region (pin register u_fab.u_rpin_<q> on ck_<q>)
             q = p["region"]
         elif sixteen:   # qc_gen.quad: column = #x-seams <= x (on-seam -> higher column); S-face pin registers row 0, N row 3
-            q = f"c{sum(x >= v - 1e-6 for v in xs)}r{0 if p['face'] == 'S' else 3}"
+            q = f"c{sum(x >= v - 1e-6 for v in xs)}r{0 if p['face'] == 'S' else CF.NR - 1}"
         else:
             q = ("w" if x < xs[0] - 1e-6 else "e") + ("0" if p["face"] == "S" else "3")
         dom[q]["outputs" if n.startswith(("bco", "rs_o")) or n == "rs" else "inputs"].append(n)
@@ -132,7 +135,10 @@ def main():
     if sixteen:
         # communicating region pairs (both directions) from the die-clock contract; core region = core_clk
         clk = {q: ("core_clk" if q == core else f"ck_{q}") for q in regions}
-        pairs = json.loads(DIE_CLOCK.read_text())["communicating_pairs"]
+        if CF.IS16:
+            pairs = json.loads(DIE_CLOCK.read_text())["communicating_pairs"]
+        else:     # SQC-CB8: the communicating region pairs = the landed crossings of this cluster's contract
+            pairs = sorted({"-".join(sorted((L["src_region"], L["dst_region"]))) for L in C["landings"]["list"]})
         sdc.append(f"# Q-CL16-LAND: die delivery residual {DIE_RESIDUAL_PS} ps between the {len(pairs)} communicating region "
                    "pairs (both directions), setup and hold, on top of 60 / 25 (die_clock_contract.json obligation 2)")
         for k in sorted(pairs):
@@ -248,13 +254,13 @@ def main():
     # Q-CLUSTER4 (coordinator 0de+6 (2)): cid / far are identity straps from the instance's own tie cells (constant per
     # instance; they reach only hard-child pins: A0 tile_id, xstn sidx), so case analysis is the true constraint, not a mask
     sdc += ["set_case_analysis 0 [get_ports {cid[*]}]", "set_case_analysis 0 [get_ports far]"]
-    (ROOT / "physical/qcluster/qfd_c_b16_dv_quadrants.sdc").write_text("\n".join(sdc) + "\n")
+    (ROOT / CF.DIAG_SDC).write_text("\n".join(sdc) + "\n")
     if a.feed == "centre" and sixteen:
         # 16 x 'ck_<q>:x:y' overflows an env value the kit generator path-checks (ENAMETOOLONG): one line per pin in a file
         (ROOT / f"physical/qcluster/{name}_ck_centres.txt").write_text(
             "".join(f"ck_{q}:{centres[q][0]}:{centres[q][1]}\n" for q in regions))
     spec = dict(
-        name=name, top="qfd_c_b16_dv", kind="cluster",
+        name=name, top=CF.MASTER, kind="cluster",
         diagnostic=a.mode == "diag",
         sources=bb + FABRIC_SRC,
         params={}, clock=a.engine, child_clock_ref="pin" if a.engine == "spine" else None,
@@ -263,7 +269,7 @@ def main():
                    if a.engine == "spine" else {}) | {
                    "PRE_GLOBAL_PLACE_TCL": "physical/qcluster/fabric_sites_place.tcl",
                    "PRE_DETAIL_PLACE_TCL": "physical/qcluster/fabric_sites_release.tcl",
-                   "OT_QC_SITES": "physical/qcluster/qfd_c_b16_dv_sites.tsv",
+                   "OT_QC_SITES": CF.DIAG_SITES,
                    # diag1 (10-17): timing-driven GPL inserted 142,847 buffers on the not-yet-placed station logic
                    # (+279% area) and the step ran out of its 48 GB; the fabric is site-placed, so GPL only spreads the
                    # remaining station / tie logic: no timing- or routability-driven passes
@@ -274,7 +280,7 @@ def main():
                    if a.feed == "centre" else {}),
         **({"pre_cts_extra": ["physical/qcluster/qfd_c_b16_dv_centre_feed.tcl"]} if a.feed == "centre" else {}),
         io_flop_at_pins=False,
-        sdc_extra=["physical/qcluster/qfd_c_b16_dv_quadrants.sdc"],
+        sdc_extra=[CF.DIAG_SDC],
         reset_ports=[p["port"] for p in ports if p["port"].startswith("rst_")] or ["rst_n"],
         # 4.32: the station tiles sit on the 4.32 lattice (L / R strip stations 4.32 from the A0 faces and the edge cannot
         # be on 43.2); the A0 origins stay multiples of 43.2.  4.32 is track-safe for the station pins (M3 / M4 / M5).
@@ -294,7 +300,7 @@ def main():
         pin_regs=dict(enable=False, reason="qc_gen.py RTL registers every data pin in the S / N strip (bc / rs_i entry "
                                            "flops, bco / rs / rs_o exit flops, rst_n pin register); cid / far are static "
                                            "straps from the instance's own tie cells"),
-        relay_sites="results/arch/qwen_cluster_1017/relay_sites_dv.json",
+        relay_sites=CF.RELAY,
         structural_change="Q-CLUSTER3 (coordinator 0de+5): the ~78k fabric flops at 282 stage sites are hardened into 167 "
                           "replicated station tiles (qfd_c_stn516 x52, qfd_c_stn514 x83, qfd_c_xstn/xstnw x8+8; own clock "
                           "pin + local tree, flop-first / flop-last); each regional root drives only child clock pins "

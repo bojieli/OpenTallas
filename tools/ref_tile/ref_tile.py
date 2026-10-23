@@ -1906,13 +1906,24 @@ def _child_insertion(s: dict, ch: dict, out: dict) -> None:
         # target: insertion.json clock_measurements[pin].tt.boundary.mean, else that pin's TT-lib clock-tree max
         name = view_name(v)
         ij = ROOT / v / "insertion.json"
-        cm = (json.loads(ij.read_text()).get("clock_measurements") or {}) if ij.exists() else {}
+        ijd = json.loads(ij.read_text()) if ij.exists() else {}
+        cm = ijd.get("clock_measurements") or {}
         p = ROOT / v / f"{name}_tt.lib"
         ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+        # STW-S81c-DIE4-FRAME 10-22: a child WITHOUT per-pin clock_measurements (single-clock legacy view) is judged by
+        # pre_route_gate root_child_flops on its insertion.json tt.boundary (min..max around the mean), so that mean is
+        # its spine target too.  The lib max_clock_tree_path (latest sink of the whole tree) handed ot_v41_bf_col 697.5
+        # vs boundary 544.0 and the q element 598.0 vs 510.3: their flops landed 153 / 88 ps EARLY against the soft
+        # leaves on every frame spine root (s81frame_col_h9/h10 vgs/vgcs/vgys), a deterministic pair FAIL > 80 ps.
+        # Scope: multiple_cts_roots only (the root_child_flops judge); single-root clock=spine kits (qfd_c_b16_dv_diag*)
+        # keep the lib-max target byte-identical.
+        top = ((ijd.get("tt") or {}).get("boundary") or {}) if not cm and s.get("clock") == "multiple_cts_roots" else {}
         for pin in sorted(set(cm) | set(ins)):
             b = (cm.get(pin) or {}).get("tt", {}).get("boundary", {})
             if b.get("n") and b.get("mean") is not None:
                 out[f"{name}/{pin}"] = round(float(b["mean"]), 1)
+            elif top.get("n") and top.get("mean") is not None:
+                out[f"{name}/{pin}"] = round(float(top["mean"]), 1)
             elif ins.get(pin):
                 out[f"{name}/{pin}"] = round(float(ins[pin]["max_ps"]), 1)
         return
@@ -1967,6 +1978,20 @@ SPINE_PIN_LOOKUP = """        regexp {[^/]+$} [get_full_name $pin] pn
 """
 
 HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
+
+
+def forwarded_soft_tap_tcl(s: dict) -> list:
+    """pre_cts.tcl lines arming physical/common_flow/forwarded_soft_tap.tcl ([] without the spec key: kits byte-identical).
+    Spec "forwarded_soft_tap": {"why": "<reason>"}; requires a landed cluster with forwarded_soft_clocks (the tap reads
+    ::ot_ce_fwd_soft / ::ot_ce_refs, set by the landed pre-CTS lines)."""
+    cfg = s.get("forwarded_soft_tap")
+    if cfg is None:
+        return []
+    if not isinstance(cfg, dict) or set(cfg) != {"why"} or not isinstance(cfg["why"], str) or not cfg["why"].strip():
+        raise SpecError('forwarded_soft_tap: {"why": "<reason>"}')
+    if not s.get("forwarded_soft_clocks") or not clock_entry_constraints.landed_cluster(s):
+        raise SpecError("forwarded_soft_tap requires a landed multiple_cts_roots cluster with forwarded_soft_clocks")
+    return ["source /src/physical/common_flow/forwarded_soft_tap.tcl"]
 
 
 def multiport_spine(s: dict) -> bool:
@@ -2030,6 +2055,10 @@ def gen_hooks(s: dict, kd: str) -> dict:
             pre_cts.extend(clock_entry_constraints.child_centre_tcl(s, ROOT))
         except (ValueError, OSError) as error:
             raise SpecError(str(error)) from error
+        # STW-S81c-DIE3-FRAME 10-22 (opt-in "forwarded_soft_tap": {"why": ..}): post-CTS minimax delay chain in front of
+        # each forwarded_soft_clocks group so the bare soft flops match the forwarded port's hard-child insertion (S81
+        # frame xk[k] u_xrl<k> 273 vs u_xo<k>/u_cf 380-399 ps); wraps the CTS above, before the boundary wrapper below
+        pre_cts.extend(forwarded_soft_tap_tcl(s))
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
@@ -2476,6 +2505,8 @@ def referenced_paths(s: dict, kd: str) -> list:
                 out += sorted({v["verdict"] for v in raw.values()})
             if s.get("child_centre_tap") is not None:
                 out += ["physical/common_flow/child_centre_tap.tcl", "physical/common_flow/native_pg_binding.tcl"]
+            if s.get("forwarded_soft_tap") is not None:
+                out += ["physical/common_flow/forwarded_soft_tap.tcl", "physical/common_flow/native_pg_binding.tcl"]
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]

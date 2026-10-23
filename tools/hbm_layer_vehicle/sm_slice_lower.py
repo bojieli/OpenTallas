@@ -59,8 +59,30 @@ NPC_SW = 16                    # refcfg_SW #(NPC 16): PCs 0..15 of the SW stack
 
 def refresh_reload(p):
     """die per-PC refresh phase (tools/hbm_die_v15/full_die_v16.py _pc_refresh_reload; tb_toksim_smhbm g_pc)."""
-    rp = (p * 118 // 32) % 118
-    return 118 + rp + ((rp + 118 + p) % 2)
+    return SB.refresh_reload(p)
+
+
+# refcfg_SW boot row -> PC reset release (hbm edges after the cfg_v pin edge): hleaf CFG_LAT 2 + refcfg cfg flop +
+# loaded (stream), ls[0], ls[1], prst (hbm) + the PC leaf reset relay; SB.REF_PAD absorbs the estimate error.
+REF_REL_STREAM, REF_REL_HBM = 5, 7
+
+
+def lower_comps_refresh(compile_k, nsm, *args, **kw):
+    """two-pass lowering with the refresh-aware residency bound (smb_unit.REFRESH): pass 1 fixes the absolute launch
+    (it does not depend on go values: same install rows), pass 2 recompiles every SM against the refresh hazard windows
+    of the quadrant's PCs at that launch.  SMB_REFRESH=0 -> pass 1 only (refresh-blind, diagnostic)."""
+    SB.REFRESH = None
+    rep, per, summ = lower_comps([compile_k(k) for k in range(nsm)], *args, **kw)
+    if not SB.REFRESH_ON:
+        return rep, per, summ
+    SB.REFRESH = dict(summ["refresh_abs"], pcs=list(range(4 * nsm)))
+    try:
+        rep2, per2, summ2 = lower_comps([compile_k(k) for k in range(nsm)], *args, **kw)
+    finally:
+        SB.REFRESH = None
+    if summ2["launch_stream"] != summ["launch_stream"]:
+        raise AssertionError(f"refresh pass moved the launch {summ['launch_stream']} -> {summ2['launch_stream']} (cal rows {summ['calendar_rows']} -> {summ2['calendar_rows']}, layer {summ['layer_rel_cycles']} -> {summ2['layer_rel_cycles']})")
+    return rep2, per2, summ2
 
 
 def compile_sm(fix_dir: Path, smw_dir: Path, layer: int, k: int):
@@ -132,9 +154,9 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
     fix_dir, smw_dir = Path(fix_dir), Path(smw_dir)
     if fix_dir.name != smw_dir.name:
         raise ValueError("fixture and SM weight dirs must name the same layer")
-    comps = [compile_sm(fix_dir, smw_dir, layer, k) for k in range(nsm)]
-    return lower_comps(comps, layer, boundary, design="ds", t_start=t_start, quarter=quarter,
-                       priced_by_tag=priced_by_tag, provenance="released_checkpoint_fixture")
+    return lower_comps_refresh(lambda k: compile_sm(fix_dir, smw_dir, layer, k), nsm, layer, boundary, design="ds",
+                               t_start=t_start, quarter=quarter, priced_by_tag=priced_by_tag,
+                               provenance="released_checkpoint_fixture")
 
 
 QWEN_TAGS = ("qkv", "o", "gu", "down")
@@ -185,9 +207,8 @@ def compile_qwen_sm(kv_dir: Path, L: int, k: int, rank=0, tags=QWEN_TAGS):
 
 
 def lower_qwen(kv_dir, L, boundary, nsm=4, t_start=4):
-    comps = [compile_qwen_sm(Path(kv_dir), L, k) for k in range(nsm)]
-    return lower_comps(comps, L, boundary, design="qwen", t_start=t_start,
-                       provenance="captured_qwen_sm_operands (qwen_sm_mv_kv, rank 0)")
+    return lower_comps_refresh(lambda k: compile_qwen_sm(Path(kv_dir), L, k), nsm, L, boundary, design="qwen",
+                               t_start=t_start, provenance="captured_qwen_sm_operands (qwen_sm_mv_kv, rank 0)")
 
 
 GO_LO, GO_W = 119, 24          # issuer descriptor go_at field (smb_unit.desc_row)
@@ -334,6 +355,9 @@ def lower_comps(comps, layer, boundary, design, t_start=4, quarter=0, priced_by_
     bus.desc(CAL_TGT, 0, cal_rows, cal_loops)
     c_launch = bus.launch()
     S = c_launch + COLLAR
+    ref_pin = min(e["cyc"] for e in bus.ev if e["port"] == "host_cp_ingress__cfg_target" and int(e["val"], 16) == REF_TGT)
+    refresh_abs = dict(rc0_abs=S + SB.OFF - 1,                  # issuer rc 0 (E1 = t_launch + 1 maps to S)
+                       r0_hbm=int((ref_pin + REF_REL_STREAM) * SB.HBM_PER_STREAM) + REF_REL_HBM)
     ev = [dict(e) for e in bus.ev]
     # ---- router top-k broadcast (central hb_router_ids, outside the slice): fixture router result, compiler slot
     for t, v in c0["ids"]:
@@ -395,7 +419,8 @@ def lower_comps(comps, layer, boundary, design, t_start=4, quarter=0, priced_by_
                    events=sum(e["k"] != "M" for e in ev), launch_stream=c_launch,
                    first_cmd_stream=rel(ops[0]["first_cmd_abs"]) + S, last_cmd_stream=rel(ops[-1]["last_cmd_abs"]) + S,
                    layer_rel_cycles=rel(ops[-1]["last_cmd_abs"]) - rel(ops[0]["first_cmd_abs"]) if ops else 0,
-                   static_schedule=c0["budget"].get("static_schedule"), x_margin=X_MARGIN, result_latency_bound=RES_LAT)
+                   static_schedule=c0["budget"].get("static_schedule"), x_margin=X_MARGIN, result_latency_bound=RES_LAT,
+                   refresh_abs=refresh_abs)
     per = []
     for op in ops:
         per.append(dict(k=op["k"], tag=op["tag"], fmt=op["fmt"], O_fmt=op["O_fmt"], R=op["R"], Gn=op["Gn"],

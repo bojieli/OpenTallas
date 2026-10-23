@@ -5,6 +5,7 @@ Parent admission: 64 GiB / 2 threads. Docker limit: 60 GiB / 2 CPUs.
 Preparation verifies every staged source/library SHA before creating scripts.
 Execution requires --execute; this tool never changes RTL or replaces SRAMs.
 """
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parents[2])); from yosys_pin import pinned_yosys  # TOKc-YOSYS 10-22: Yosys >= 0.68 or fail
 import argparse
 from collections import Counter
 import gzip
@@ -180,14 +181,14 @@ def main():
             mode="mapping only; no RTL read or full synth repeated"),indent=2)+"\n")
     else:
         write(out/"frontend.ys",front)
-        p=run(["yosys","-Q","-T","-s",str(out/"frontend.ys")],out/"frontend.log")
+        p=run([pinned_yosys(),"-Q","-T","-s",str(out/"frontend.ys")],out/"frontend.log")
         if p.returncode:raise RuntimeError("strict deferred actual root frontend failed")
         # Derive the ACTUAL native-engine source at invalid native geometries.
         negatives=[]
         for name,qp,kv in [("wrong_qpipe",1,2),("wrong_kvhmax",2,8)]:
             script=read+f"hierarchy -check -top qkd_host_native_engine -chparam NATIVE_ROWS 1 -chparam HDMAX 128 -chparam QPIPE {qp} -chparam KVHMAX {kv}\n"
             write(out/(name+".ys"),script)
-            p=run(["yosys","-Q","-T","-s",str(out/(name+".ys"))],out/(name+".log"))
+            p=run([pinned_yosys(),"-Q","-T","-s",str(out/(name+".ys"))],out/(name+".log"))
             log=p.stdout+p.stderr
             guard_failure=("native ingest requires full32-macro QPIPE2 provider" in log or
                 re.search(r"qkd_host_native_engine\.sv:133[^\n]*\$(?:fatal|error)",log) is not None)
@@ -196,7 +197,7 @@ def main():
             negatives.append(dict(case=name,exit_code=p.returncode,log_sha256=sha(log.encode())))
         write(out/"source_guard_negatives.json",json.dumps(negatives,indent=2)+"\n")
         write(out/"generic.ys",front+f"synth -top {TOP} -flatten\nwrite_json {out}/generic.json\n")
-        p=run(["yosys","-Q","-T","-s",str(out/"generic.ys")],out/"generic.log")
+        p=run([pinned_yosys(),"-Q","-T","-s",str(out/"generic.ys")],out/"generic.log")
         if p.returncode:raise RuntimeError("actual generic synthesis failed")
     statlibs=[str(out/"lib"/(stem+".lib")) for stem in stems]
     statlibs += [str(plan/"src"/m["tt_liberty"]) for m in manifest["physical_macros"]]
@@ -204,7 +205,7 @@ def main():
     comb=" ".join("-liberty "+str(out/"lib"/(stem+".lib")) for stem in stems[:-1])
     script=f"read_json {out}/generic.json\ndfflibmap -liberty {out}/lib/seq.lib\nabc {comb}\nopt_clean\ncheck\nwrite_json {out}/mapped.json\ntee -o {out}/mapped.stat stat {stats}\n"
     write(out/"mapped.ys",script)
-    p=run(["yosys","-Q","-T","-s",str(out/"mapped.ys")],out/"mapped.log")
+    p=run([pinned_yosys(),"-Q","-T","-s",str(out/"mapped.ys")],out/"mapped.log")
     if p.returncode:raise RuntimeError("actual mapped synthesis failed")
     report(out,plan,manifest,a.stdlib_area_scale_to_um2)
 

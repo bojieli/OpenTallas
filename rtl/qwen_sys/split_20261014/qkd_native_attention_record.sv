@@ -6,7 +6,16 @@
 // a separate mandatory real-RTL/compiled-phase integration obligation.
 module qkd_native_attention_record #(
     parameter integer KV_SIDE=1,
-    parameter integer MUT=0
+    parameter integer MUT=0,
+    // QW-N59-4 (10-19, default 0 = as built): RX_FREE 1 = rx_data captures rx_payload[511:0] on EVERY edge (no 512-bit
+    // enable from the record checks; native59 svc placed STA: rx header / legal() / tx checks -> 512-flop enable = -220 ps).
+    // Consumers read rx_data only on the edge after a valid, non-faulting rx_event (rx_valid / result slot), where both
+    // forms hold the same word; after a bad record the codec faults and no consumer uses rx_data again.
+    parameter integer RX_FREE=0,
+    // QW-N59-4 v3 (default 0 = as built): TX_FREE 1 = tx_payload captures {kind, layer, epoch, beat, data} on EVERY edge
+    // (no 548-bit enable from the tx record checks).  Only for a consumer that reads tx_payload qualified by tx_valid
+    // (native59 MCTX 1: the slot merge ORs a payload only with its tx_valid).
+    parameter integer TX_FREE=0
 )(
     input wire ck,rst_n,
     input wire tx_event,tx_expected,
@@ -60,16 +69,18 @@ module qkd_native_attention_record #(
             tx_valid<=0;tx_payload<=0;rx_valid<=0;rx_kind<=0;rx_epoch<=0;rx_layer<=0;rx_beat<=0;rx_data<=0;
             fault<=0;fault_cause<=0;
         end else begin
+            if(RX_FREE!=0)rx_data<=rx_payload[511:0];
+            if(TX_FREE!=0)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
             tx_valid<=0;rx_valid<=0;
             if(!fault)begin
                 if(bad)begin
                     fault<=1;fault_cause<={rx_record_bad,tx_record_bad,rx_time_bad,tx_time_bad};
                 end else begin
                     tx_valid<=tx_event;
-                    if(tx_event)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
+                    if(tx_event&&TX_FREE==0)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
                     rx_valid<=rx_event;
                     if(rx_event)begin
-                        rx_kind<=rk;rx_epoch<=re;rx_layer<=rl;rx_beat<=rb;rx_data<=rx_payload[511:0];
+                        rx_kind<=rk;rx_epoch<=re;rx_layer<=rl;rx_beat<=rb;if(RX_FREE==0)rx_data<=rx_payload[511:0];
                     end
                 end
             end

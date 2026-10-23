@@ -54,3 +54,28 @@ function automatic [7:0] rs_pface(input [3:0] sid);
         default: rs_pface = 8'h00;
     endcase
 endfunction
+`ifdef OT_SVC_ALLQ
+// RTLGAP-SO (10-21, svc_rs_tree.py --allq): all-owner P.V drain slot (CFG [54] ALLQ: every slice drains its tile;
+// per half the 8 tiles in tile order, window k = 40 k: PVW * k + HOP * (DMAX - depth) + (OFFMAX - sx_off))
+function automatic [9:0] rs_pvslot_all(input [3:0] sid);
+    case (sid)
+        4'd0: rs_pvslot_all = 10'd176;   // tile 12 W
+        4'd1: rs_pvslot_all = 10'd216;   // tile 13 W
+        4'd2: rs_pvslot_all = 10'd296;   // tile 15 W
+        4'd3: rs_pvslot_all = 10'd272;   // tile 14 W
+        4'd4: rs_pvslot_all = 10'd32;   // tile 8 W
+        4'd5: rs_pvslot_all = 10'd88;   // tile 9 W
+        4'd6: rs_pvslot_all = 10'd152;   // tile 11 W
+        4'd7: rs_pvslot_all = 10'd112;   // tile 10 W
+        4'd8: rs_pvslot_all = 10'd88;   // tile 2 E
+        4'd9: rs_pvslot_all = 10'd144;   // tile 3 E
+        4'd10: rs_pvslot_all = 10'd24;   // tile 0 E
+        4'd11: rs_pvslot_all = 10'd200;   // tile 4 E
+        4'd12: rs_pvslot_all = 10'd48;   // tile 1 E
+        4'd13: rs_pvslot_all = 10'd224;   // tile 5 E
+        4'd14: rs_pvslot_all = 10'd248;   // tile 6 E
+        4'd15: rs_pvslot_all = 10'd304;   // tile 7 E
+        default: rs_pvslot_all = 10'd1023;
+    endcase
+endfunction
+`endif

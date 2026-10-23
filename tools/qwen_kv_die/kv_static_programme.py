@@ -112,19 +112,20 @@ if LINK_EMB_WIN:
     if not LINK_EMB_WIN.isdigit():
         raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN!r}: an integer edge count expected')
     LINK_IMAGE = LINK_IMAGE.replace('.svh', f'_ew{int(LINK_EMB_WIN)}.svh')
-    if not (ROOT / LINK_IMAGE).is_file():
-        raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN}: no committed pair image {LINK_IMAGE} '
-                         f'(D2D_MU={int(LINK_MU)} D2D_EMB_WINDOW={LINK_EMB_WIN} tools/qwen_split/d2d_cal_image_production.sh)')
 # KV-PROG17 10-20: the r16 attention tile (OT_KV_ATTN_R16=1, kv_static_die.ATTN_R16) moves the K RESULT burst +1 (TX_SHIFT)
 # and the K STATUS +213 (STATUS_DELAY) in every layer, so target 11 must load the r16 pair image
 # d2d_cal_image[_mu][_ew<N>]_r16.svh (d2d_cal_image_production.sh D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213); fail closed.
 LINK_R16 = os.environ.get('OT_KV_ATTN_R16', '0') == '1'
 if LINK_R16:
     LINK_IMAGE = LINK_IMAGE.replace('.svh', '_r16.svh')
-    if not (ROOT / LINK_IMAGE).is_file():
-        raise SystemExit(f'OT_KV_ATTN_R16=1: no committed r16 pair image {LINK_IMAGE} (D2D_MU={int(LINK_MU)} '
-                         f'D2D_EMB_WINDOW={LINK_EMB_WIN or ""} D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 '
-                         'tools/qwen_split/d2d_cal_image_production.sh)')
+# The OVL source uses the actual RoPE pair image, not an intermediate scalar variant.
+LINK_ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL', '0') == '1'
+if LINK_ROPE_OVL:
+    LINK_IMAGE = LINK_IMAGE.replace('.svh', '_rope.svh')
+if not (ROOT / LINK_IMAGE).is_file():
+    raise SystemExit(f'no committed selected pair image {LINK_IMAGE} '
+                     f'(MU={int(LINK_MU)}, EMB_WINDOW={LINK_EMB_WIN!r}, '
+                     f'R16={int(LINK_R16)}, ROPE_OVL={int(LINK_ROPE_OVL)})')
 
 
 def image_die_stages(img=None, root=None):
@@ -156,7 +157,7 @@ LINK_DIE_STAGES = image_die_stages()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else [])
+             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else []) + (['--rope'] if LINK_ROPE_OVL else [])
 #            + --token-path (decompressed in link_calendar)
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768

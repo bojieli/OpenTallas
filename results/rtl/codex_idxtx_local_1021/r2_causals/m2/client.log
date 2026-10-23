@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-epyc9       admits   329 GB (avail 435, growth 204, headroom 0, waiters 0/0 GB) load 84/128 running 30 disk 2194 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r2-1501/src
+ot-run: -> ot-epyc9
+ot-heavy: request 64G is charged 32G (class 'run_idx_tree.sh' measured peak 20.9G, n=17+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1835873-1792620983 after 0 s
+TREE_RD FAIL {"pass_": false, "mismatches": 72, "first": [{"die": 1, "kind": "tx-seq", "n_got": 1431, "n_exp": 1431, "first_diff": 1430}, {"die": 2, "kind": "tx-seq", "n_got": 1424, "n_exp": 1424, "first_diff": 1423}, {"die": 0, "kind": "vo", "edge": 22538, "exp": "1343012ee0124c011180", "got": "0"}, {"die": 0, "kind": "vo", "edge": 22539, "exp": "33000000000000000000", "got": "0"}, {"die": 0, "kind": "vo", "edge": 22540, "exp": "34d50332702f0c02e230", "got": "0"}, {"die": 0, "kind": "vo", "edge": 22541, "exp": "33000000000000000000", "got": "0"}, {"die": 0, "kind": "vo", "edge": 22542, "exp": "58af057a805796053340", "got": "0"}, {"die": 0, "kind": "vo", "edge": 22543, "exp": "33000000000000000000", "got": "0"}], "faults": [], "tx_span": {"1": [17963, 19406, 1431], "2": [19564, 20987, 1424]}}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1835873-1792620983): exit 1

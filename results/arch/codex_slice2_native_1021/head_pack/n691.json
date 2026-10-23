@@ -1,0 +1,125 @@
+{
+  "label": "n691",
+  "box_um": [
+    561.6,
+    691.2
+  ],
+  "status": "OPTIMAL",
+  "wall_s": 0.6369471699999849,
+  "input_sha256": "fb15dc4d8ee2d0683df3cd4d62d49288167793974cd9c7bbada260b103ad48f3",
+  "scope": "One real head plus8real leafs; all10136matching-bit edges; orientationsR0/MY/MX/R180; box constraints; pin-centre Manhattan no routed detour; no new stage/cycle. Includes516actual parentN cw_n0 bit contacts to exact head n_d pins, Nboundary=boxH-0.024,2.16um Nmargin.",
+  "channels_um": 20,
+  "origin_lattice_um": 43.2,
+  "reach_um": 405,
+  "placements": {
+    "u_xh0": {
+      "x": 172.8,
+      "y": 216.0,
+      "orientation": 0
+    },
+    "u_xl0_0": {
+      "x": 0.0,
+      "y": 388.8,
+      "orientation": 0
+    },
+    "u_xl0_1": {
+      "x": 0.0,
+      "y": 129.60000000000002,
+      "orientation": 2
+    },
+    "u_xl0_2": {
+      "x": 86.4,
+      "y": 0.0,
+      "orientation": 1
+    },
+    "u_xl0_3": {
+      "x": 432.0,
+      "y": 43.2,
+      "orientation": 1
+    },
+    "u_xl0_4": {
+      "x": 0.0,
+      "y": 259.20000000000005,
+      "orientation": 2
+    },
+    "u_xl0_5": {
+      "x": 259.20000000000005,
+      "y": 86.4,
+      "orientation": 2
+    },
+    "u_xl0_6": {
+      "x": 432.0,
+      "y": 172.8,
+      "orientation": 2
+    },
+    "u_xl0_7": {
+      "x": 432.0,
+      "y": 302.40000000000003,
+      "orientation": 3
+    }
+  },
+  "independent_matching_bit_max_um": 398.86199999999997,
+  "worst": [
+    [
+      398.86199999999997,
+      "u_xh0.lr_v[6]",
+      "u_xl0_6.r_v"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_v",
+      "u_xl0_5.w_v"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_m[52]",
+      "u_xl0_5.w_m[52]"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_m[50]",
+      "u_xl0_5.w_m[50]"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_m[42]",
+      "u_xl0_5.w_m[42]"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_m[40]",
+      "u_xl0_5.w_m[40]"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_m[38]",
+      "u_xl0_5.w_m[38]"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_m[36]",
+      "u_xl0_5.w_m[36]"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_m[16]",
+      "u_xl0_5.w_m[16]"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_m[14]",
+      "u_xl0_5.w_m[14]"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_d[88]",
+      "u_xl0_5.w_d[88]"
+    ],
+    [
+      397.4400000000001,
+      "u_xl0_4.wo_d[86]",
+      "u_xl0_5.w_d[86]"
+    ]
+  ],
+  "independent_N_boundary_max_um": 325.129
+}

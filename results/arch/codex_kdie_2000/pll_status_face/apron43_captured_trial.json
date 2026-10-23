@@ -1,0 +1,310 @@
+{
+  "scope": "Captured model host-only apron trial86.4->43.2, not full new GEN",
+  "pickle_sha256": "009480cd90d1d06865a7b74d055e424140305060249b4095dd2759aee919835b",
+  "pin_before": [
+    7333.524,
+    27380.787999999997
+  ],
+  "pin_after": [
+    7731.912,
+    27646.030988881623
+  ],
+  "pin_definition": [
+    "face",
+    1,
+    "E",
+    "M4",
+    473.2309888816219,
+    1
+  ],
+  "existing_500um_check": {
+    "hops": 19511,
+    "reach_um": 500.0,
+    "violations": 0,
+    "worst": [],
+    "all": []
+  },
+  "reach_405um": {
+    "hops": 19511,
+    "reach_um": 405.0,
+    "violations": 0,
+    "worst": [],
+    "all": []
+  },
+  "repair_seconds": 2.354588900001545,
+  "added": [
+    {
+      "bus": "kst__r1__pinfix1",
+      "relay": "rly_pinfix_kst_r1_pinfix1_0",
+      "clock_source": "rly_pinfix_kst_r1_0",
+      "launch": [
+        "rly_pinfix_kst_r1_0",
+        "b"
+      ],
+      "sink": [
+        "host",
+        "kst"
+      ],
+      "stages_added": 1,
+      "before_um": 407.779,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "hb",
+      "relay": "rly_pinfix_hb_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "hb"
+      ],
+      "sink": [
+        "rly_pinfix_hb_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 428.604,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "hchf_WS",
+      "relay": "rly_pinfix_hchf_WS_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "chf0"
+      ],
+      "sink": [
+        "rly_pinfix_hchf_WS_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 423.473,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "hchc_WS__r87",
+      "relay": "rly_pinfix_hchc_WS_r87_0",
+      "clock_source": "rly_hchc_WS_86",
+      "launch": [
+        "rly_hchc_WS_86",
+        "b"
+      ],
+      "sink": [
+        "host",
+        "chc0"
+      ],
+      "stages_added": 1,
+      "before_um": 410.052,
+      "domain": "core",
+      "clock": "clk_core_WS"
+    },
+    {
+      "bus": "hchf_WN",
+      "relay": "rly_pinfix_hchf_WN_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "chf1"
+      ],
+      "sink": [
+        "rly_pinfix_hchf_WN_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 428.46,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "hchf_EN",
+      "relay": "rly_pinfix_hchf_EN_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "chf3"
+      ],
+      "sink": [
+        "rly_pinfix_hchf_EN_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 432.24,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "hcha_EN__r19",
+      "relay": "rly_pinfix_hcha_EN_r19_0",
+      "clock_source": "rly_hcha_EN_18",
+      "launch": [
+        "rly_hcha_EN_18",
+        "b"
+      ],
+      "sink": [
+        "host",
+        "cha3"
+      ],
+      "stages_added": 1,
+      "before_um": 427.845,
+      "domain": "core",
+      "clock": "clk_core_EN"
+    },
+    {
+      "bus": "ks_lprg_auth",
+      "relay": "rly_pinfix_ks_lprg_auth_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "auth_lp"
+      ],
+      "sink": [
+        "rly_ks_lprg_auth_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 415.104,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "ks_lprg_cht",
+      "relay": "rly_pinfix_ks_lprg_cht_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "cohort_tag"
+      ],
+      "sink": [
+        "rly_pinfix_ks_lprg_cht_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 439.039,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "ks_lprg_chg",
+      "relay": "rly_pinfix_ks_lprg_chg_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "cohort_gen"
+      ],
+      "sink": [
+        "rly_pinfix_ks_lprg_chg_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 429.768,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "ks_lprg_chg__pinfix1",
+      "relay": "rly_pinfix_ks_lprg_chg_pinfix1_0",
+      "clock_source": "rly_pinfix_ks_lprg_chg_0",
+      "launch": [
+        "rly_pinfix_ks_lprg_chg_0",
+        "b"
+      ],
+      "sink": [
+        "rly_pinfix_ks_lprg_chg_1",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 418.608,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "ks_host_boot_image_target",
+      "relay": "rly_pinfix_ks_host_boot_image_target_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "boot_image_target"
+      ],
+      "sink": [
+        "rly_pinfix_ks_host_boot_image_target_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 440.408,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "ks_host_boot_image_ready",
+      "relay": "rly_pinfix_ks_host_boot_image_ready_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "boot_image_ready"
+      ],
+      "sink": [
+        "rly_pinfix_ks_host_boot_image_ready_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 428.601,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "ks_host_boot_image_fault",
+      "relay": "rly_pinfix_ks_host_boot_image_fault_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "boot_image_fault"
+      ],
+      "sink": [
+        "rly_pinfix_ks_host_boot_image_fault_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 438.997,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "ks_host_host_launch_quiet",
+      "relay": "rly_pinfix_ks_host_host_launch_quiet_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "host_launch_quiet"
+      ],
+      "sink": [
+        "rly_pinfix_ks_host_host_launch_quiet_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 428.61,
+      "domain": "core",
+      "clock": "clk_core_c"
+    },
+    {
+      "bus": "ks_host_host_upstream_quiet",
+      "relay": "rly_pinfix_ks_host_host_upstream_quiet_0",
+      "clock_source": "host",
+      "launch": [
+        "host",
+        "host_upstream_quiet"
+      ],
+      "sink": [
+        "rly_pinfix_ks_host_host_upstream_quiet_0",
+        "a"
+      ],
+      "stages_added": 1,
+      "before_um": 441.656,
+      "domain": "core",
+      "clock": "clk_core_c"
+    }
+  ],
+  "unresolved": []
+}
