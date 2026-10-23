@@ -20,9 +20,21 @@
 // 2..36 keep stale constants); 2 treq hop of one edge (QW-F16PROG4 / s8_lp form, cmd hop is 2); 3 treq die lane one edge
 // longer than cmd (ctlm -> W5); 4 loader stage bit 0 dropped (qfd_dv_slice_tload MUT 2); 5 the stage-17 table_req
 // dropped at the producer.  Every VAR != 0 must print TLD_CHAIN FAIL.
-module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0, parameter integer DLANE = 20,
+module tb_qdie5_tld_chain #(parameter integer NS = 2, parameter integer SHAPE = 2, parameter integer VAR = 0, parameter integer DLANE = 20,
                             parameter integer DHOP = 3, parameter integer NTR = 262144);
     reg ck = 0; always #5 ck = ~ck;
+    // run variant: VAR (build) selects the structure (0 consumer, 1 old masters, 2 TQ_MUT 1, 4 TQ_MUT 2); the tb-only
+    // mutants 3 / 5 run on the VAR 0 build with +RUNVAR=3 / +RUNVAR=5 (one shared build, owner/COORD 21:12 memory order)
+    integer rv = VAR;
+    initial if (!$value$plusargs("RUNVAR=%d", rv)) rv = VAR;
+    // MINIMUM-COMPONENT form (AGENTS "simulate the minimum component"; a 12-slice chain build exceeds 60 GB): NS
+    // consecutive die slices starting at chain position K0 (runtime +K0, W5 = 0 .. W0 = 5 | E0 = 6 .. E5 = 11).
+    // SHAPE (build): 0 all W masters (qfd_dv_slice2_wt), 1 all E (_et), 2 the seam (slice 0 W, the rest E: W0 -> E0).
+    // The ctlm SETID enumerates from 0 at W5; the bench adds K0 to the injected SETID id, so slice i holds id K0 + i
+    // exactly as on the die, and loads mask set table_s<K0+i> (golden s<K0+i>).  Every hop is the same equalized
+    // lane (record bundles), so 2 slices prove the per-hop lockstep and the 12 positions' tables are covered by K0 runs.
+    integer k0 = 0;
+    initial if (!$value$plusargs("K0=%d", k0)) k0 = 0;
     reg rst_n = 0;
     integer cyc = 0; always @(posedge ck) cyc <= cyc + 1;
     // ------------------------------------------------------------------ producer replay
@@ -48,8 +60,9 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
     always @(negedge ck) begin                       // value presented before posedge `cyc`+1 ... sampled at that edge
         p_cmd <= 0; p_tq <= 0;
         if (tr_i < tr_n && tr_c[tr_i] == cyc + 1 + ofs) begin
-            p_cmd <= tr_cmd[tr_i];
-            p_tq <= (VAR == 5 && tr_tq[tr_i][8] && tr_tq[tr_i][7:2] == 6'd17) ? 9'd0 : tr_tq[tr_i];
+            p_cmd <= (tr_cmd[tr_i][0] && tr_cmd[tr_i][3:1] == 3'd7) ? {tr_cmd[tr_i][115:8], tr_cmd[tr_i][7:4] + 4'(k0), tr_cmd[tr_i][3:0]}
+                                                                  : tr_cmd[tr_i];
+            p_tq <= (rv == 5 && tr_tq[tr_i][8] && tr_tq[tr_i][7:2] == 6'd17) ? 9'd0 : tr_tq[tr_i];
             tr_i <= tr_i + 1;
         end
     end
@@ -68,8 +81,15 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
     wire [115:0] c_in [0:NS-1]; wire [115:0] c_out [0:NS-1];
     wire [8:0]   t_in [0:NS-1]; wire [8:0]   t_out [0:NS-1];
     tld_dly #(116, DLANE) u_lc (.ck(ck), .i(p_cmd), .o(c_in[0]));
-    tld_dly #(9, DLANE + ((VAR == 3) ? 1 : 0)) u_lt (.ck(ck), .i(p_tq), .o(t_in[0]));
-    string fx; initial if (!$value$plusargs("FX=%s", fx)) $fatal(1, "FX required");
+    wire [8:0] t_l0, t_l1;
+    tld_dly #(9, DLANE) u_lt (.ck(ck), .i(p_tq), .o(t_l0));
+    tld_dly #(9, 1) u_lt1 (.ck(ck), .i(t_l0), .o(t_l1));
+    assign t_in[0] = (rv == 3) ? t_l1 : t_l0;
+    string fx, romdir;
+    initial begin
+        if (!$value$plusargs("FX=%s", fx)) $fatal(1, "FX required");
+        if (!$value$plusargs("OT_ROM_DIR=%s", romdir)) $fatal(1, "OT_ROM_DIR required");
+    end
     integer pass_k [0:NS-1];
     genvar k;
     generate for (k = 0; k < NS; k = k + 1) begin : g_s
@@ -79,7 +99,7 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
         end
         wire mwe, mfault, sok; wire [3:0] sid; wire [1:0] mkind; wire [23:0] maddr; wire [1023:0] mdata; wire swe;
         if (VAR == 1) begin : g_old
-            if (k < 6) begin : g_w
+            if (SHAPE == 0 || (SHAPE == 2 && k == 0)) begin : g_w
                 qfd_dv_slice2_w #(.MU_NU(4), .ARF(1), .RP(1)) u_s (.ck(ck), .rst_n(rst_n), .cmd_wi(c_in[k]), .cmd_eo(c_out[k]),
                     .hr_wi(453'd0), .st_wi(1088'd0), .st_ei(1088'd0), .sc_wi(48'd0), .sc_ei(48'd0), .arv_ei(1'b0), .art_ei(32'd0),
                     .arm_ei(1'b0), .arl_ei(1'b0), .ard_ei(512'd0), .dd_ei(548'd0), .rv_wi(1'b0), .re_wi(1'b0), .rr_wi(3'd0),
@@ -101,23 +121,35 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
             assign t_out[k] = 9'd0;
         end else begin : g_new
             localparam integer TQ = (VAR == 2) ? 1 : (VAR == 4) ? 2 : 0;
-            if (k < 6) begin : g_w
-                qfd_dv_slice2_wt #(.MU_NU(4), .ARF(1), .RP(1), .TSLICE(k), .TQ_MUT(TQ)) u_s (.ck(ck), .rst_n(rst_n),
+            if (SHAPE == 0 || (SHAPE == 2 && k == 0)) begin : g_w
+                qfd_dv_slice2_wt #(.MU_NU(4), .ARF(1), .RP(1), .TSLICE(0), .TQ_MUT(TQ)) u_s (.ck(ck), .rst_n(rst_n),
                     .cmd_wi(c_in[k]), .cmd_eo(c_out[k]), .treq_wi(t_in[k]), .treq_eo(t_out[k]),
                     .hr_wi(453'd0), .st_wi(1088'd0), .st_ei(1088'd0), .sc_wi(48'd0), .sc_ei(48'd0), .arv_ei(1'b0), .art_ei(32'd0),
                     .arm_ei(1'b0), .arl_ei(1'b0), .ard_ei(512'd0), .dd_ei(548'd0), .rv_wi(1'b0), .re_wi(1'b0), .rr_wi(3'd0),
                     .rl_wi(1'b0), .rd_wi(512'd0), .dr_wi(520'd0), .ag_ei(10'd0), .l9_wi(514'd0), .rs_n0(514'd0), .rs_n1(514'd0),
                     .rs_s0(514'd0), .rs_s1(514'd0));
+                initial begin #1;
+                    $readmemh($sformatf("%s/table_s%0d_m0.viamap.hex", romdir, k0 + k), u_s.u_core.g_tld.u_tld.u_ld.m0.arr);
+                    $readmemh($sformatf("%s/table_s%0d_m1.viamap.hex", romdir, k0 + k), u_s.u_core.g_tld.u_tld.u_ld.m1.arr);
+                    $readmemh($sformatf("%s/table_s%0d_m2.viamap.hex", romdir, k0 + k), u_s.u_core.g_tld.u_tld.u_ld.m2.arr);
+                    $readmemh($sformatf("%s/table_s%0d_m3.viamap.hex", romdir, k0 + k), u_s.u_core.g_tld.u_tld.u_ld.m3.arr);
+                end
                 assign mwe = u_s.u_core.tw_we; assign mkind = u_s.u_core.tw_kind; assign maddr = u_s.u_core.tw_addr;
                 assign sid = u_s.u_core.sid_q; assign sok = u_s.u_core.sid_ok;
                 assign mdata = u_s.u_core.tw_data; assign mfault = u_s.u_core.tld_fault; assign swe = u_s.u_core.stm_tw_we;
             end else begin : g_e
-                qfd_dv_slice2_et #(.MU_NU(4), .ARF(1), .RP(1), .TSLICE(k), .TQ_MUT(TQ)) u_s (.ck(ck), .rst_n(rst_n),
+                qfd_dv_slice2_et #(.MU_NU(4), .ARF(1), .RP(1), .TSLICE(0), .TQ_MUT(TQ)) u_s (.ck(ck), .rst_n(rst_n),
                     .cmd_ei(c_in[k]), .cmd_wo(c_out[k]), .treq_ei(t_in[k]), .treq_wo(t_out[k]),
                     .hr_ei(453'd0), .st_ei(1088'd0), .st_wi(1088'd0), .sc_ei(48'd0), .sc_wi(48'd0), .arv_wi(1'b0), .art_wi(32'd0),
                     .arm_wi(1'b0), .arl_wi(1'b0), .ard_wi(512'd0), .dd_wi(548'd0), .rv_ei(1'b0), .re_ei(1'b0), .rr_ei(3'd0),
                     .rl_ei(1'b0), .rd_ei(512'd0), .dr_ei(520'd0), .ag_wi(10'd0), .l9_wi(514'd0), .rs_n0(514'd0), .rs_n1(514'd0),
                     .rs_s0(514'd0), .rs_s1(514'd0));
+                initial begin #1;
+                    $readmemh($sformatf("%s/table_s%0d_m0.viamap.hex", romdir, k0 + k), u_s.u_core.g_tld.u_tld.u_ld.m0.arr);
+                    $readmemh($sformatf("%s/table_s%0d_m1.viamap.hex", romdir, k0 + k), u_s.u_core.g_tld.u_tld.u_ld.m1.arr);
+                    $readmemh($sformatf("%s/table_s%0d_m2.viamap.hex", romdir, k0 + k), u_s.u_core.g_tld.u_tld.u_ld.m2.arr);
+                    $readmemh($sformatf("%s/table_s%0d_m3.viamap.hex", romdir, k0 + k), u_s.u_core.g_tld.u_tld.u_ld.m3.arr);
+                end
                 assign mwe = u_s.u_core.tw_we; assign mkind = u_s.u_core.tw_kind; assign maddr = u_s.u_core.tw_addr;
                 assign sid = u_s.u_core.sid_q; assign sok = u_s.u_core.sid_ok;
                 assign mdata = u_s.u_core.tw_data; assign mfault = u_s.u_core.tld_fault; assign swe = u_s.u_core.stm_tw_we;
@@ -125,7 +157,7 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
         end
         // ---------------------------------------------------------------- per-slice checker
         reg [1050:0] gold [0:12671];
-        initial $readmemh($sformatf("%s/s%0d/expected.hex", fx, k), gold);
+        initial begin #1; $readmemh($sformatf("%s/s%0d/expected.hex", fx, k0 + k), gold); end
         integer dcmd = -1, first_c = -1, nld = 0, req = -1, st = 0, u = 0, slot, nedge = 0, ncmd = 0;
         integer bad_cmd = 0, bad_align = 0, bad_order = 0, bad_tab = 0, bad_flt = 0, bad_coll = 0, st_ok2 = 0;
         reg [1050:0] want, got;
@@ -183,11 +215,11 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
         fails = 0; tot_ld = 0;
         $display("PRODUCER table_req pulses=%0d (cpub39_1 trace)", pn);
         for (kk = 0; kk < pn && kk < 64; kk = kk + 1) if (ps[kk] != kk + 1) begin $display("PRODUCER_ORDER load=%0d stage=%0d", kk, ps[kk]); end
-        if (pn != 36 && VAR != 5) begin $display("PRODUCER_COUNT %0d != 36", pn); fails = fails + 1; end
-        if (VAR == 5 && pn != 35) begin $display("PRODUCER_COUNT(drop17) %0d", pn); end
+        if (pn != 36 && rv != 5) begin $display("PRODUCER_COUNT %0d != 36", pn); fails = fails + 1; end
+        if (rv == 5 && pn != 35) begin $display("PRODUCER_COUNT(drop17) %0d", pn); end
         for (kk = 0; kk < NS; kk = kk + 1) fails = fails + sfail[kk];
-        if (fails == 0) $display("TLD_CHAIN PASS VAR=%0d NS=%0d DLANE=%0d DHOP=%0d", VAR, NS, DLANE, DHOP);
-        else $display("TLD_CHAIN FAIL VAR=%0d NS=%0d fails=%0d", VAR, NS, fails);
+        if (fails == 0) $display("TLD_CHAIN PASS VAR=%0d NS=%0d SHAPE=%0d K0=%0d DLANE=%0d DHOP=%0d", rv, NS, SHAPE, k0, DLANE, DHOP);
+        else $display("TLD_CHAIN FAIL VAR=%0d NS=%0d SHAPE=%0d K0=%0d fails=%0d", rv, NS, SHAPE, k0, fails);
         $finish;
     end
     integer sfail [0:NS-1];
@@ -196,10 +228,10 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
     generate for (k = 0; k < NS; k = k + 1) begin : g_sum
         always @(negedge ck) if (tr_n > 0 && tr_i >= tr_n && cyc == tr_c[tr_n - 1] - ofs + 590) begin
             $display("SLICE %0d TSLICE=%0d cmd_lane=%0d cmd_checks=%0d bad_cmd=%0d loads=%0d bad_align=%0d bad_order=%0d table_edges=%0d bad_table=%0d stages2_36_loaded=%0d faults=%0d stream_tw=%0d setid=%0d/%0d",
-                k, k, g_s[k].dcmd, g_s[k].ncmd, g_s[k].bad_cmd, g_s[k].nld, g_s[k].bad_align, g_s[k].bad_order, g_s[k].nedge, g_s[k].bad_tab,
+                k, k0 + k, g_s[k].dcmd, g_s[k].ncmd, g_s[k].bad_cmd, g_s[k].nld, g_s[k].bad_align, g_s[k].bad_order, g_s[k].nedge, g_s[k].bad_tab,
                 g_s[k].st_ok2, g_s[k].bad_flt, g_s[k].bad_coll, g_s[k].sok, g_s[k].sid);
             if (g_s[k].bad_cmd || g_s[k].bad_align || g_s[k].bad_order || g_s[k].bad_tab || g_s[k].bad_flt || g_s[k].bad_coll
-                || g_s[k].nld != 36 || !g_s[k].sok || g_s[k].sid != 4'(k) || g_s[k].st_ok2 != 35 || g_s[k].nedge != 36 * 88)
+                || g_s[k].nld != 36 || !g_s[k].sok || g_s[k].sid != 4'(k0 + k) || g_s[k].st_ok2 != 35 || g_s[k].nedge != 36 * 88)
             begin $display("SLICE_FAIL %0d", k); sfail[k] = 1; end
         end
     end endgenerate

@@ -1,6 +1,6 @@
 #!/bin/bash
 # QDIE5-TLD consumer bench (tb_qdie5_tld_chain.sv), Verilator 5.050 (the closure daemon's version), from the repo root.
-#   run_tld_chain.sh WORK VAR NS FX TRACE
+#   [SHAPE=0/1/2] [PLUSARGS="+K0=k +RUNVAR=3/5"] run_tld_chain.sh WORK VAR NS FX TRACE
 #     FX    = mk_fixture.sh output (images/ + fixture/s<k>/expected.hex)
 #     TRACE = producer trace of the release tt_ctlm cpub39_1 (results/arch/qdie5_tld_1022/producer/trace_calr2.txt.gz)
 #   VAR 0 must print TLD_CHAIN PASS; VAR 1..5 must print TLD_CHAIN FAIL.
@@ -19,10 +19,10 @@ SRCS="rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_s
  rtl/qwen_dv/qfd_dv_slice_tload.sv rtl/qwen_dv/qfd_dv_table_rom_loader.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
  $BD/tb_qdie5_tld_chain.sv"
 sha256sum $SRCS > "$W/srcs.sha256"
-[ -x "$W/obj/Vtb_qdie5_tld_chain" ] && cmp -s "$W/srcs.sha256" "$W/obj/srcs.sha256" || { "$V" --binary --timing -O2 -j ${VJOBS:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN --x-assign 0 --x-initial 0 \
-  -GNS=$NS -GVAR=$VAR --top-module tb_qdie5_tld_chain $SRCS -Mdir "$W/obj" > "$W/build.log" 2>&1 \
+[ -x "$W/obj/Vtb_qdie5_tld_chain" ] && cmp -s "$W/srcs.sha256" "$W/obj/srcs.sha256" || { "$V" --binary --timing -O2 -j ${VJOBS:-2} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN --x-assign 0 --x-initial 0 \
+  -GNS=$NS -GSHAPE=${SHAPE:-2} -GVAR=$VAR --top-module tb_qdie5_tld_chain $SRCS -Mdir "$W/obj" > "$W/build.log" 2>&1 \
   || { grep -m20 '%Error' "$W/build.log"; echo "TLD_CHAIN BUILD_FAIL VAR=$VAR"; exit 3; }; cp "$W/srcs.sha256" "$W/obj/srcs.sha256"; }
 [ "${BUILD_ONLY:-0}" = 1 ] && { echo "TLD_CHAIN BUILT VAR=$VAR"; exit 0; }
-"$W/obj/Vtb_qdie5_tld_chain" +TRACE="$TR" +FX="$FX/fixture" +OT_ROM_DIR="$FX/images" ${PLUSARGS:-} > "$W/run.log" 2>&1
-grep -E "^TRACE|^PRODUCER|^SLICE|TLD_[A-Z_]+ " "$W/run.log" | head -60
-grep -o "TLD_CHAIN [A-Z_]*.*" "$W/run.log" | tail -1
+"$W/obj/Vtb_qdie5_tld_chain" +TRACE="$TR" +FX="$FX/fixture" +OT_ROM_DIR="$FX/images" ${PLUSARGS:-} > "$W/run${RUNTAG:-}.log" 2>&1
+grep -E "^TRACE|^PRODUCER|^SLICE|TLD_[A-Z_]+ " "$W/run${RUNTAG:-}.log" | head -60
+grep -o "TLD_CHAIN [A-Z_]*.*" "$W/run${RUNTAG:-}.log" | tail -1

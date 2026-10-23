@@ -1,0 +1,37 @@
+{
+  "source_sha256": "737c772b892baf869ed19a58665d7792ef3a0281d82632a053f35af8fc0afac7",
+  "wrapper_sha256": "c904c97c3b3f40de76f0d9d280d393bc700bc26fca34decd6bec9e68e9af340c",
+  "constructor_path": "tools/qwen_dv/ctlm6_bound_macro.py",
+  "constructor_sha256": "072449c62767ad121bfb23f1024d23a44fc1a0fa42de26054bd0ccbec5842b78",
+  "input_json_sha256": "257e265366bb5fb393768a0f135443e879281f45bec96727bc1c0bc2e9b13383",
+  "output_namespace_change": "qfd_bmath_ -> qfd_wtnmath_ to avoid parent helper collisions",
+  "reset_rebalance": {
+    "old": "n_96145",
+    "new": "n_96154",
+    "old_leaf": {
+      "C": "n_3159",
+      "D": "n_96268",
+      "Q": "n_96145"
+    },
+    "new_leaf": {
+      "C": "n_3159",
+      "D": "n_96269",
+      "Q": "n_96154"
+    },
+    "same_age_D_proof": {
+      "u_75495": {
+        "C": "n_3159",
+        "D": "n_17658",
+        "Q": "n_96268"
+      },
+      "u_75496": {
+        "C": "n_3159",
+        "D": "n_17658",
+        "Q": "n_96269"
+      }
+    },
+    "extra_stages": 0
+  },
+  "parent_source_commit": "378ad6fc2",
+  "status": "SOURCE_LOCKSTEP_PASS_PHYSICAL_PENDING"
+}

@@ -1,0 +1,40 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hp13-native32-2140-1022
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hp13-native32-2140-1022
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hp13-native32-2140-1022
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hp13-native32-2140-1022
+ot-run: ot-gold1       admits    46 GB (avail 272, growth 138, headroom 0, waiters 0/0 GB) load 45/112 running 34 disk 1028 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hp13-native32-2140-1022
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hp13-native32-2140-1022
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-4077329-1792730860 after 0 s
+TWC_VECTORS 114 witnesses offsets [0, 16, 32, 168] mutants 27
+NATIVE EXACT stim_auth_drop_active
+NATIVE EXACT stim_auth_drop_idle
+NATIVE EXACT stim_bad_stage
+NATIVE EXACT stim_digest
+NATIVE EXACT stim_double_start
+NATIVE EXACT stim_dup_pw
+NATIVE EXACT stim_duplicate
+NATIVE EXACT stim_early
+NATIVE EXACT stim_early_auth
+NATIVE EXACT stim_header
+NATIVE EXACT stim_late
+NATIVE EXACT stim_missing
+NATIVE EXACT stim_nominal
+NATIVE EXACT stim_nonzero_pad
+NATIVE EXACT stim_observer_slice
+NATIVE EXACT stim_profile_epoch
+NATIVE EXACT stim_pw_while_active
+NATIVE EXACT stim_retire_early
+NATIVE EXACT stim_retire_no_mexpf
+NATIVE EXACT stim_skip_pw
+NATIVE EXACT stim_start_before_seal
+NATIVE EXACT stim_stray_after_complete
+NATIVE EXACT stim_wrong_epoch
+NATIVE EXACT stim_wrong_pidx
+NATIVE EXACT stim_wrong_slice
+NATIVE EXACT stim_wrong_stage
+NATIVE EXACT stim_wrong_user
+NATIVE EXACT stim_zero_mask
+WTN_NATIVE_LOCKSTEP_PASS
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-4077329-1792730860): exit 0
