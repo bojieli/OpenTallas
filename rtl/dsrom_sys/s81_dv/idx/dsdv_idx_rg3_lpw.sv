@@ -28,7 +28,11 @@ module dsdv_idx_rg3_lpw #(
     input  wire [1087:0] rri,
     output wire [9:0]    st
 );
-    dsdv_idx_rg3_bf_lp #(.MUTR(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .IQD(IQD), .SQD(SQD), .RH(1), .KR(1), .LX(8), .PD(2)) u_lp (
+    dsdv_idx_rg3_bf_lp #(.MUTR(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .IQD(IQD), .SQD(SQD), .RH(1), .KR(1), .LX(8), .PD(2)
+`ifdef OT_LPW_LPMUT
+        , .MUT(`OT_LPW_LPMUT)                     // lp.py's own landing / reset mutants (negative campaigns only)
+`endif
+    ) u_lp (
         .ck_r(ck), .ck_x(ck), .ck_s01(ck), .ck_s23(ck), .rst(rst), .sid(sid), .qi(qi), .qo(qo), .si(si), .so(so),
         .rqo(rqo), .rri(rri), .st(st));
 endmodule
