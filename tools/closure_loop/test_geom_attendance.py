@@ -84,3 +84,11 @@ class Attendance(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_plan_agent_maps_bottom_up_lineage():
+    assert A.plan_agent("dsdv_gunit", "s81", "parent open, leaves under way") == "PLAN-S81"
+    assert A.plan_agent("ot_hbm_hc_bankq0_static", "-", "cancelled only") == "PLAN-HBM"
+    assert A.plan_agent("qfd_c_b16_rgx", "-", "-") == "PLAN-QC"
+    assert A.plan_agent("qkd_kvs_grp_h", "qwen_kvsys", "needs redesign") == "PLAN-KV"
+    assert A.plan_agent("qkd_kvs_emb", "qwen_kvsys", "needs redesign") is None   # leaf: stays with its owner
