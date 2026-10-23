@@ -70557,7 +70557,7 @@ module col_h10_l4_lp #(
     assign n28617__l_r1 = lpg_0_i__l_r1[280];
     assign n28618__l_r1 = lpg_0_i__l_r1[281];
     assign n28619__l_r1 = lpg_0_i__l_r1[282];
-    col_h10_l4_lp_b0 #(.MUT(MUT)) u_b0 (
+    col_h10_l4_lp_b0 #(.INSTANCE(INSTANCE), .MUT(MUT)) u_b0 (
         .ck_r0(ck_r0),
         .lk(lk),
         .lpg_0_i(lpg_0_i),
@@ -70909,7 +70909,7 @@ module col_h10_l4_lp #(
         .xo(xo),
         .xok(xok)
     );
-    col_h10_l4_lp_b1 #(.MUT(MUT)) u_b1 (
+    col_h10_l4_lp_b1 #(.INSTANCE(INSTANCE), .MUT(MUT)) u_b1 (
         .ck_r1(ck_r1),
         .lpl_0_bank(lpl_0_bank),
         .lpl_0_epo(lpl_0_epo),
@@ -71297,7 +71297,7 @@ module col_h10_l4_lp #(
         .n28619__l_r1(n28619__l_r1),
         .lpr_root__ft1(lpr_root__ft1)
     );
-    col_h10_l4_lp_b2 #(.MUT(MUT)) u_b2 (
+    col_h10_l4_lp_b2 #(.INSTANCE(INSTANCE), .MUT(MUT)) u_b2 (
         .ck_r2(ck_r2),
         .lpl_10_bank(lpl_10_bank),
         .lpl_10_epo(lpl_10_epo),
