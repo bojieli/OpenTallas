@@ -1,0 +1,120 @@
+{
+  "name": "s81dv_idxtxn32y-y-dcd37342d",
+  "source": {
+    "branch": "codex/s81-topk-submit-2140-1022",
+    "commit": "dcd37342d",
+    "extra_paths": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "rtl/dsrom_sys/s81_dv/idx",
+      "rtl/lib",
+      "tools/s81_dv/tx_export_1021"
+    ]
+  },
+  "early_fail": {
+    "verdict": "EARLY_FAIL_SETUP",
+    "why": "post-cts TT setup WNS -439.6 ps at 833.333 (route-period -502.9 at 770), 782 failing endpoints, TNS -94703.4; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (path register clock arrival)",
+    "at": "2026-10-22T22:08:28-07:00",
+    "detail": {
+      "name": "s81dv_idxtxn32y-y-dcd37342d",
+      "verdict": "EARLY_FAIL_SETUP",
+      "why": [
+        "post-cts TT setup WNS -439.6 ps at 833.333 (route-period -502.9 at 770), 782 failing endpoints, TNS -94703.4; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (path register clock arrival)"
+      ],
+      "orfs": "/srv/opentallas-scratch2/claude/closure-loop/s81dv_idxtxn32y-y-dcd37342d/routes/s81dv_idxtxn32y_y_dcd37342d/work/orfs",
+      "corner": "TT",
+      "step": "5_1_grt",
+      "setup": {
+        "stage": "cts",
+        "ws": -439.559,
+        "raw_ws": -502.892,
+        "period": 770.0,
+        "count": 782,
+        "tns": -94703.4
+      },
+      "hold": {
+        "found": [],
+        "guard": false,
+        "hm_auto": [],
+        "hm_proj": [],
+        "sync": [],
+        "stall": false,
+        "hold_stop": false,
+        "chunks": []
+      },
+      "congestion": [],
+      "drt": [],
+      "paths": [
+        {
+          "cls": "reg->macro",
+          "slack_ps": -502.89,
+          "group": "core_clk",
+          "dominated": "logic",
+          "wire_ps": 70.1,
+          "cell_ps": 349.0,
+          "max_fanout": 7,
+          "start": "u_ot_pr_core.u_pim0/lv[13]$_DFF_P_",
+          "end": "u_ot_pr_core.u_sm.g_s.u_ga",
+          "check": "rising edge-triggered flip-flop clocked by core_clk"
+        },
+        {
+          "cls": "reg->out",
+          "slack_ps": 57.93,
+          "group": "ot_lb_v_core_clk",
+          "dominated": "logic",
+          "wire_ps": 7.7,
+          "cell_ps": 132.5,
+          "max_fanout": 1,
+          "start": "u_ot_pr_core.lo[212]$_DFF_P_",
+          "end": "lo[212]",
+          "check": "output port clocked by ot_lb_v_core_clk"
+        },
+        {
+          "cls": "reg->reg",
+          "slack_ps": 133.53,
+          "group": "asynchronous",
+          "dominated": "logic",
+          "wire_ps": 186.7,
+          "cell_ps": 396.3,
+          "max_fanout": 15,
+          "start": "u_ot_pr_core.u_rr.rst_n[0]$_DFF_PN0_",
+          "end": "u_ot_pr_core.vi_r[0]$_DFF_PN0_",
+          "check": "recovery check against rising-edge clock core_clk"
+        }
+      ],
+      "block": "dsdv_idx_tx_n32",
+      "owner": "STW-S81c-TOK5",
+      "gates": {
+        "setup_cts_ws_ps": -400.0,
+        "setup_cts_count": 500,
+        "setup_tns_ps": -1000000.0,
+        "setup_place_ws_ps": -900.0,
+        "setup_place_count": 2000,
+        "hold_buf_cap": 100000,
+        "hold_buf_frac": 0.3,
+        "hold_buf_min": 20000,
+        "hold_buf_improve_dwns": 5.0,
+        "hold_buf_improve_frac": 0.6,
+        "hold_buf_improve_min": 60000,
+        "hold_stall_it": 2000,
+        "hold_stall_dwns": 1.0,
+        "hold_stall_tns_pct": 2.0,
+        "hold_pad_s": 3600,
+        "hold_pad_proj_x": 1.5,
+        "hold_pad_max_s": 10800,
+        "hold_call_min_it": 500,
+        "hold_real_ws_ps": -150.0,
+        "hold_real_after_s": 3600,
+        "hold_deep_it": 2000,
+        "hold_deep_dwns": 5.0,
+        "hold_nearmiss_ps": -15.0,
+        "grt_min_iter": 20,
+        "grt_markers": 1000,
+        "grt_flat": 0.95,
+        "drt_min_iter": 20,
+        "drt_k": 8,
+        "drt_min_viol": 100,
+        "stall_after_s": 10800
+      }
+    }
+  }
+}
