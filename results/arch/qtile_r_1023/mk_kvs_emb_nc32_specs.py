@@ -15,7 +15,7 @@ E = "rtl/qwen_sys/static_embedding_20261014/"
 for name, cx, cy, w, h, tag in (("qkd_kvs_emb_nc32a", 28.08, 23.76, 267.84, 198.72, "nc32a2"), ("qkd_kvs_emb_nc32b", 23.76, 28.08, 263.52, 203.04, "nc32b2")):
     s = copy.deepcopy(base)
     s["name"] = name
-    s["sources"] = ["rtl/lib/ot_rst_relay.sv", E + "qkd_embedding_static_join4_cal.sv", E + "qkd_embedding_static_join4.sv",
+    s["sources"] = ["rtl/lib/ot_rst_relay.sv", E + "qkd_embedding_static_join4_cal_nr.sv", E + "qkd_embedding_static_join4.sv",
                     E + "qkd_embedding_static_join.sv", "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv"]
     s["outline"] = {"w": w, "h": h, "exact": True}
     s["child_lattice_um"] = 2.16   # child origin on the 2.16 row/site lattice; the 43.2 lattice would force 43-um empty bands (GEOM-REVIEW: size bands from demand)
