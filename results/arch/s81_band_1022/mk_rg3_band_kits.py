@@ -130,6 +130,18 @@ for nm, top, extra_pins, cap in (("s81dv_rg3b_s01", "dsdv_idx_rg3_bs01", {"N": [
                             + ("; layer cap M5 so the R -> S23 landings cross this band on M6." if cap == "M5" else
                                "; q / s / st output stage spans the band W -> E above the columns (E pins = the reader's qo / so / st).")))
     specs[nm] = s
+# S23 successor (gate 10-22 17:05 -> 20:4x: clock PASS 30 / 58 ps, but textbook.wire_reach FAIL: the q / s / st output stage
+# sits between its qoi_i / soi_i N-face pins and qo / so E-face pins spread over y 43..1037 -> 744 um a stage; trial GRT
+# overflow at the top centre, where the 1,400 N-face pins meet the 30-um band above hslice 0).  Structural: the band
+# grows 43.2 um at the top (a 73-um input band over the columns; slices keep their lattice), and qo / so / st leave on the
+# UPPER E face [604.8, 1101.6] beside the output stage (<= ~465 um to either terminal).
+s23b = copy.deepcopy(specs["s81dv_rg3b_s23"]); s23b["name"] = "s81dv_rg3b_s23b"
+s23b["job"] = job("s81dv_rg3b_s23b", s23b["job"]["purpose"] + " (taller input band, qo / so / st on the upper E face)")
+s23b["outline"] = {"w": 475.2, "h": 1123.2, "exact": True}
+for k_ in ("qo", "so", "st"):
+    s23b["pin_ranges"][k_] = [604.8, 1101.6]
+s23b["why_floorplan"] += " Successor: 43.2 um taller (73-um input band over slice 0); qo / so / st on the upper E face [604.8, 1101.6]."
+specs["s81dv_rg3b_s23b"] = s23b
 # ---- X successor (gate 10-22 18:2x: flat X FAIL TT / FF pin-flop spread 230.6 / 201.2 ps, 4,021 sinks: the N rri pin flops
 # and the S kq pin flops sat 432 um apart around 8 SRAM covering ~60 % of the tile, one root).  STRUCTURAL: X is cut at its
 # existing registers into two hard tiles under a wires-only X cluster (475.2 x 518.4, parent grows 86.4 at the top):
