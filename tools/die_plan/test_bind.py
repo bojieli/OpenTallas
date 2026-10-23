@@ -319,3 +319,28 @@ def test_portbind_strict(tmp_path):
     assert run(EX / "die_plan_lanes.json", out, "elab", "bind", "portbind") == 0
     assert (out / "port_bind_strict.txt").read_text().startswith("DIE_PORT_BIND PASS")
     assert (out / "port_bind_strict.json").exists()
+
+
+def test_bus_groups(tmp_path):
+    """bus_groups.json (COORD R8): the split snk.d0 bus is one landing group, misaligned by the lanes (2 vs 5 cycles)
+    and aligned after the land_align pads; A0's y goes to A1 and S at the same as-built depth = a replica set"""
+    def edit(p):
+        p["asbuilt"]["land_align"] = "cell"
+        for x in p["ports"]:
+            if x["id"] == "a0s__0":
+                x["width"] = 5
+            if x["id"] == "a1s__0":
+                x["width"] = 16
+        for b in p["partition_types"]["ta"]["buses"]:
+            if b["name"] == "ys_o":
+                b["width"] = 16
+        for b in p["partition_types"]["ts"]["buses"]:
+            if b["name"] == "d1_i":
+                b["width"] = 16
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind") == 0
+    bg = json.loads((out / "bus_groups.json").read_text())
+    g = next(x for x in bg["landing"] if x["sink"] == "snk" and x["src_part"] == "A0")
+    d0 = [m for m in g["members"] if m["sink_port"] == "d0"]
+    assert {m["bound_stages"] for m in d0} == {2, 5} and {m["landed_stages"] for m in d0} == {5}
+    assert g["aligned_landed"] and bg["summary"]["landing_groups"] >= 2

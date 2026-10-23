@@ -1155,6 +1155,68 @@ class Binder:
                     seen.add(k)
                     st["pad_flops"] += d[7]
 
+    def bus_groups(self):
+        """as-built timing groups for the planner (COORD R8): bits that must keep their as-built relative timing.
+        landing: per sink leaf and source partition, its crossing input bits with their as-built register stages (bits
+          with equal stages were same-cycle as built; different stages = a fixed as-built offset, e.g. valid one cycle
+          ahead of data), the lanes they ride and the bound depth per bit (before / after landing pads);
+        replica: per source pin, the sink partitions that received it at the SAME as-built depth (broadcast to replicas,
+          e.g. heads hc0..hc3): their bound depths must stay equal too."""
+        F = self.F
+
+        def ranges(xs):
+            xs = sorted(set(xs))
+            out = []
+            for x in xs:
+                if out and out[-1][1] + 1 == x:
+                    out[-1][1] = x
+                else:
+                    out.append([x, x])
+            return out
+        land = defaultdict(lambda: defaultdict(list))
+        rep = defaultdict(lambda: defaultdict(set))
+        for (ci, pn, i), d in self.sinks.items():
+            if d[0] != "x":
+                continue
+            L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
+            b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
+            pad = d[7] if len(d) > 7 else 0
+            land[(ci, d[1])][(pn, f"{F.cells[d[2]].path}.{d[3]}", d[5], b0, b0 + pad,
+                              L.get("lane") or ("spine" if L.get("spine") else "UNPLANNED"))].append((i, d[4]))
+            rep[(d[2], d[3], d[4], d[5])][d[6]].add(b0 + pad)
+        groups = []
+        for (ci, sp), m in sorted(land.items(), key=lambda kv: (F.cells[kv[0][0]].path, kv[0][1])):
+            mem = []
+            for (pn, src, st, b0, b1, lane), bl in sorted(m.items()):
+                mem.append(dict(sink_port=pn, sink_bits=ranges(x for x, _ in bl), source=src,
+                                source_bits=ranges(y for _, y in bl), asbuilt_stages=st, bound_stages=b0,
+                                landed_stages=b1, lane=lane))
+            off = {x["landed_stages"] - x["asbuilt_stages"] for x in mem}
+            off0 = {x["bound_stages"] - x["asbuilt_stages"] for x in mem}
+            groups.append(dict(sink=F.cells[ci].path, sink_part=self.cpart[ci], src_part=sp,
+                               aligned_by_lanes=len(off0) == 1, aligned_landed=len(off) == 1,
+                               asbuilt_stage_set=sorted({x["asbuilt_stages"] for x in mem}), members=mem))
+        reps = []
+        for (sci, spn, b, st), parts in rep.items():
+            if len(parts) > 1:
+                reps.append((F.cells[sci].path, spn, b, st, {p: sorted(v) for p, v in sorted(parts.items())}))
+        rg = defaultdict(list)
+        for path, spn, b, st, parts in reps:
+            rg[(path, spn, st, tuple(sorted(parts)))].append((b, parts))
+        replicas = []
+        for (path, spn, st, ps), bl in sorted(rg.items()):
+            depth = {p: sorted({x for _, pp in bl for x in pp[p]}) for p in ps}
+            replicas.append(dict(source=f"{path}.{spn}", source_bits=ranges(b for b, _ in bl), asbuilt_stages=st,
+                                 sink_parts=list(ps), bound_depths=depth,
+                                 equal=len({x for v in depth.values() for x in v}) == 1))
+        return dict(schema="opentallas.die_plan.bus_groups.v1", die=self.plan["die"]["name"],
+                    note=self.bus_groups.__doc__.split("\n\n")[0],
+                    summary=dict(landing_groups=len(groups),
+                                 landing_misaligned_by_lanes=sum(1 for g in groups if not g["aligned_by_lanes"]),
+                                 landing_misaligned_after_pads=sum(1 for g in groups if not g["aligned_landed"]),
+                                 replica_sets=len(replicas), replica_unequal=sum(1 for r in replicas if not r["equal"])),
+                    landing=groups, replica=replicas)
+
     def _rel_desc(self, p, d, inst_vals, where):
         k = d[0]
         if k == "int":
@@ -1795,6 +1857,9 @@ def cmd_bind(a):
     for (ci, pn, i), d in B.sinks.items():
         sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d, B.cpart.get(ci))
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
+    bg = B.bus_groups()
+    rep["bus_groups"] = bg["summary"]
+    (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
     (out / "bind_latency.json").write_text(json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
                                                            note="per crossing bus: as-built stages (relays / landings "

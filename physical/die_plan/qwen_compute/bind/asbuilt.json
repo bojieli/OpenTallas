@@ -326,5 +326,9 @@
    "reason": "QC-P4 14:47: far chain end (no l9_i / st_dn_i / ch_up_i / ag_up_i)"
   }
  ],
- "land_align": "cell"
+ "land_align": "cell",
+ "portbind_prefer": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+ ]
 }
