@@ -8,6 +8,8 @@
 # slot's planned route (G0 lane_geometry: Z through the midpoint, first leg along the in face's normal) or at its
 # regs_um site; the out port is NOT face-registered here (the neighbour's station 0 registers it).  Table:
 # ft_stations.txt (slot k in_face [x y ...]).
+# ORFS sources hooks inside a proc: run at global scope so the helper procs below can use `global`
+uplevel #0 {
 set ff_blk [ord::get_db_block]
 set ff_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ff_core [$ff_blk getCoreArea]
@@ -213,3 +215,4 @@ foreach bt [$ff_blk getBTerms] {
 }
 close $ff_out
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
+}
