@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_c_b16_reg1b",
+ "enable": false,
+ "reason": "RTL lands rst_c1r1 in rpin_q + kept rr_* stages; every closed half lands rsi in 2 stages"
+}
