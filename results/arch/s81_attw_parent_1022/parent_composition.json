@@ -1,0 +1,254 @@
+{
+  "schema": "opentallas.s81_attw.parent_composition.v1",
+  "base_parent_source": "rtl/dsrom_sys/s81_dv/svc_rs/attw/lp/dsdv_svc_attw_n1_f_lp.sv",
+  "base_parent_sha256": "097fe94a5bbb23cde7a18612e162219d77d4f69c1a7794006d0d4fb03b73fa28",
+  "child_source_commit": "e533c6506",
+  "parent_closed": false,
+  "parent_gate_running": false,
+  "plans": [
+    {
+      "name": "s81svc_attw_g4_main",
+      "top": "dsdv_svc_attw_n1_hgrp8x_lp",
+      "source_files": [
+        "results/arch/s81_attw_parent_1022/dsdv_svc_attw_n1_hgrp8x_lp.sv",
+        "results/arch/s81_attw_parent_1022/dsdv_svc_attw_hgrp8x_tile.sv",
+        "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_glue.sv",
+        "rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_att_nt1.sv",
+        "rtl/common/landed_parent/ot_pl_land.sv"
+      ],
+      "clock_ports": [
+        "ck_c",
+        "ck_t0"
+      ],
+      "params": {
+        "AMUT": 0,
+        "DIE_ID": 0,
+        "ST": 0,
+        "SRAM_MACRO": 1,
+        "ROOT": 0,
+        "PMEM": 1,
+        "TLX": 6,
+        "TXD": 0,
+        "ROLE_EXT": 1,
+        "MUT": 0
+      },
+      "hard_children": [
+        {
+          "instance": "u_t0.g_g[0].u_g",
+          "master": "ot_s81svc8_hgrp8x_s81_bounded",
+          "view": "physical/ref_tile/s81svc_attn_hgrp8x/views/ot_s81svc8_hgrp8x_s81_bounded",
+          "grid_xy": [
+            0,
+            0
+          ],
+          "clock": "ck_t0",
+          "provisional_shape_um": [
+            432,
+            432
+          ],
+          "qualified": false
+        },
+        {
+          "instance": "u_t0.g_g[1].u_g",
+          "master": "ot_s81svc8_hgrp8x_s81_bounded",
+          "view": "physical/ref_tile/s81svc_attn_hgrp8x/views/ot_s81svc8_hgrp8x_s81_bounded",
+          "grid_xy": [
+            1,
+            0
+          ],
+          "clock": "ck_t0",
+          "provisional_shape_um": [
+            432,
+            432
+          ],
+          "qualified": false
+        },
+        {
+          "instance": "u_t0.g_g[2].u_g",
+          "master": "ot_s81svc8_hgrp8x_s81_bounded",
+          "view": "physical/ref_tile/s81svc_attn_hgrp8x/views/ot_s81svc8_hgrp8x_s81_bounded",
+          "grid_xy": [
+            0,
+            1
+          ],
+          "clock": "ck_t0",
+          "provisional_shape_um": [
+            432,
+            432
+          ],
+          "qualified": false
+        },
+        {
+          "instance": "u_t0.g_g[3].u_g",
+          "master": "ot_s81svc8_hgrp8x_s81_bounded",
+          "view": "physical/ref_tile/s81svc_attn_hgrp8x/views/ot_s81svc8_hgrp8x_s81_bounded",
+          "grid_xy": [
+            1,
+            1
+          ],
+          "clock": "ck_t0",
+          "provisional_shape_um": [
+            432,
+            432
+          ],
+          "qualified": false
+        }
+      ],
+      "control": {
+        "instance": "u_c",
+        "master": "dsdv_svc_rs_attw1",
+        "mode": "source until independently hardened",
+        "old_native_graph": "lpb_r0/r1 superseded; not live"
+      },
+      "landed_crossings": [
+        {
+          "source": "t0",
+          "dest": "c",
+          "width": 529,
+          "depth": 4,
+          "K": 2,
+          "added_edges": 3
+        },
+        {
+          "source": "c",
+          "dest": "t0",
+          "width": 1618,
+          "depth": 4,
+          "K": 2,
+          "added_edges": 3
+        }
+      ],
+      "schedule_delta_edges": 0,
+      "standins_allowed": true,
+      "qualification": "INTEGRATION_PLAN_ONLY",
+      "launch_blockers": [
+        "supply explicitly labelled source-bound stand-in abstracts or CLOSED leaf view",
+        "price/place control SRAM inventory and actual synthesized standard-cell area",
+        "materialize exact existing landed-parent library dependencies and frozen production defines",
+        "native-first source-bound parent gate after concrete floorplan; no whole-core graph campaign"
+      ]
+    },
+    {
+      "name": "s81svc_attw_g4_alternate",
+      "top": "dsdv_svc_attw_n1_hgrp8x_lp",
+      "source_files": [
+        "results/arch/s81_attw_parent_1022/dsdv_svc_attw_n1_hgrp8x_lp.sv",
+        "results/arch/s81_attw_parent_1022/dsdv_svc_attw_hgrp8x_tile.sv",
+        "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_glue.sv",
+        "rtl/dsrom_sys/s81_dv/svc_rs/group72/dsdv_svc_att_nt1.sv",
+        "rtl/common/landed_parent/ot_pl_land.sv"
+      ],
+      "clock_ports": [
+        "ck_c",
+        "ck_t0"
+      ],
+      "params": {
+        "AMUT": 0,
+        "DIE_ID": 0,
+        "ST": 0,
+        "SRAM_MACRO": 1,
+        "ROOT": 0,
+        "PMEM": 1,
+        "TLX": 6,
+        "TXD": 0,
+        "ROLE_EXT": 1,
+        "MUT": 0
+      },
+      "hard_children": [
+        {
+          "instance": "u_t0.g_g[0].u_g",
+          "master": "ot_s81svc8_hgrp8x_s81_bounded",
+          "view": "physical/ref_tile/s81svc_attn_hgrp8x/views/ot_s81svc8_hgrp8x_s81_bounded",
+          "grid_xy": [
+            0,
+            0
+          ],
+          "clock": "ck_t0",
+          "provisional_shape_um": [
+            432,
+            432
+          ],
+          "qualified": false
+        },
+        {
+          "instance": "u_t0.g_g[1].u_g",
+          "master": "ot_s81svc8_hgrp8x_s81_bounded",
+          "view": "physical/ref_tile/s81svc_attn_hgrp8x/views/ot_s81svc8_hgrp8x_s81_bounded",
+          "grid_xy": [
+            0,
+            1
+          ],
+          "clock": "ck_t0",
+          "provisional_shape_um": [
+            432,
+            432
+          ],
+          "qualified": false
+        },
+        {
+          "instance": "u_t0.g_g[2].u_g",
+          "master": "ot_s81svc8_hgrp8x_s81_bounded",
+          "view": "physical/ref_tile/s81svc_attn_hgrp8x/views/ot_s81svc8_hgrp8x_s81_bounded",
+          "grid_xy": [
+            0,
+            2
+          ],
+          "clock": "ck_t0",
+          "provisional_shape_um": [
+            432,
+            432
+          ],
+          "qualified": false
+        },
+        {
+          "instance": "u_t0.g_g[3].u_g",
+          "master": "ot_s81svc8_hgrp8x_s81_bounded",
+          "view": "physical/ref_tile/s81svc_attn_hgrp8x/views/ot_s81svc8_hgrp8x_s81_bounded",
+          "grid_xy": [
+            0,
+            3
+          ],
+          "clock": "ck_t0",
+          "provisional_shape_um": [
+            432,
+            432
+          ],
+          "qualified": false
+        }
+      ],
+      "control": {
+        "instance": "u_c",
+        "master": "dsdv_svc_rs_attw1",
+        "mode": "source until independently hardened",
+        "old_native_graph": "lpb_r0/r1 superseded; not live"
+      },
+      "landed_crossings": [
+        {
+          "source": "t0",
+          "dest": "c",
+          "width": 529,
+          "depth": 4,
+          "K": 2,
+          "added_edges": 3
+        },
+        {
+          "source": "c",
+          "dest": "t0",
+          "width": 1618,
+          "depth": 4,
+          "K": 2,
+          "added_edges": 3
+        }
+      ],
+      "schedule_delta_edges": 0,
+      "standins_allowed": true,
+      "qualification": "INTEGRATION_PLAN_ONLY",
+      "launch_blockers": [
+        "supply explicitly labelled source-bound stand-in abstracts or CLOSED leaf view",
+        "price/place control SRAM inventory and actual synthesized standard-cell area",
+        "materialize exact existing landed-parent library dependencies and frozen production defines",
+        "native-first source-bound parent gate after concrete floorplan; no whole-core graph campaign"
+      ]
+    }
+  ]
+}

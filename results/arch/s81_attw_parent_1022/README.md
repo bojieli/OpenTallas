@@ -1,0 +1,7 @@
+# Frozen G4 attw parent composition
+
+This packet prepares the actual landed parent source while the hgrp8x/y gates run. It copies the existing dsdv_svc_attw_n1_f_lp parent without changing its control/landing/reset logic, replaces only its parameterized H16 tile with an explicit four-HG4 wrapper, and selects the source-pinned bounded hgrp8x master. The p-column wiring and group indexing match the existing tile_s H16/HG4/TD32/PWORDS2 loops. Clock ports, external ports, two landing bundles, K2/D4, and six-edge round trip are unchanged. The source is an integration candidate, not an adopted replacement.
+
+parent_composition.json supplies MAIN 2x2 and alternate 1x4 group placement identities and complete child/clock/parameter maps. This is a preparation packet, not a generated runnable kit: control SRAM placement/area and explicitly marked stand-in abstracts must be supplied before a source-bound native-first parent gate. No new whole-core graph or behavioral campaign is needed merely to prepare this composition. Existing control lpb_r0/r1 jobs are superseded and must not be represented as live. An attention child closure does not close attw or svc_rs.
+
+The parent still needs current control source equivalence and exact production-define/parameter transport checked in its integration gate; PMEM/ROOT variants cannot be silently substituted. Full svc_rs then binds this attw parent together with service glue, SM, PCs and score exchange. Full-die stand-ins may exercise integration early but cannot qualify these parents.
