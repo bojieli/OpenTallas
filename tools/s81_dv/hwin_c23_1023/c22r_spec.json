@@ -1,0 +1,990 @@
+{
+ "name": "dsdv_mu_hwin_c22r",
+ "top": "dsdv_mu_hwin_capture_1019",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv"
+ ],
+ "params": {
+  "NSLOT": 47,
+  "NEV": 16,
+  "NEP": 4,
+  "NRT": 2,
+  "MUT": 0,
+  "HEAD_STAGE": 1,
+  "COMPACT_PTR": 1,
+  "CHECK_STAGE": 1,
+  "LIVE_COUNT": 1,
+  "RAW_SELECT": 1,
+  "LOCAL_BOOT": 1,
+  "EARLY_HEAD_CAPTURE": 1,
+  "CFG_RELAY": 1,
+  "DUE_COPIES": 2,
+  "SAFE_NATIVE": 1,
+  "LOCAL_RECORD": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 10536.9,
+ "pins": {
+  "S": [
+   "f_ks",
+   "f_mc",
+   "f_mw",
+   "mu_rt",
+   "ck",
+   "rst_n"
+  ],
+  "N": [
+   "mu_c",
+   "mu_rc",
+   "t_wf"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 8.64,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "dsdv_mu_hwin_capture_1019_boot_enable",
+   "dsdv_mu_hwin_capture_1019_retire_due",
+   "dsdv_mu_hwin_capture_1019_retire_advance",
+   "dsdv_mu_hwin_capture_1019_slot_step",
+   "dsdv_mu_hwin_capture_1019_record",
+   "dsdv_mu_hwin_capture_1019_decode24",
+   "dsdv_mu_hwin_capture_1019_fire_flag",
+   "dsdv_mu_hwin_capture_1019_cfg_bad",
+   "dsdv_mu_hwin_capture_1019_phase_action",
+   "dsdv_mu_hwin_capture_1019_early_current_hit",
+   "dsdv_mu_hwin_capture_1019_cfg_accept"
+  ],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "tag": "c22r"
+ },
+ "structural_change": "S81-ELEM2-HWIN successor of dsdv_mu_hwin_c21r (daemon NEEDS_RTL: c21q TT -148.19 / FF -8.26, c21r TT -141.73 / FF -11.76, DRC 0). Failing class: g_compare_copy.cmp_r -> 47-entry identity compare + OR reduce -> global duplicate flag udup -> distributed to all 16x2 event rec_r + slot record_group across the 561.6 um band (two 113/148 ps buffer hops, arrival 1222.75 vs required 1081.02). Fix (RTL, codex adf49d4f8 LOCAL_RECORD=1): each of the (NEV/4 event + 6 slot) record consumer groups gets its own kept duplicate-region cone (2 local 10-bit user landing flops, 47 compares, 8-entry partial ORs), so admission drives <= 8 local record flops instead of a band-wide broadcast; 0 cycles added (waveform miter vs frozen HWIN21cb + anchor). NEV 16 fallback on the unchanged c21r 84-SRAM geometry (superset of the die's 8 events). Physical: c21j hash-locked native manifests/fences dropped (cannot qualify changed RTL); c21h row-pruned band + GPL row envelope instead; pd 0.55; OPT_POST_GRT_WNS=0 pre_grt kept (EST-0104 class).",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: f_ks / f_mc / f_mw / mu_rt land in pin flops (ks_q / mc_q / mw_q / rt_q), mu_c / mu_rc / t_wf leave flops (c_q / rc_q / t_wf)."
+ },
+ "job": {
+  "owner": "Claude:S81-ELEM2-HWIN",
+  "branch": "claude/s81-elem2-hwin-1021",
+  "tag": "c22r",
+  "purpose": "HWIN c22r FB: LOCAL_RECORD=1 regional duplicate admission (c21q/c21r cmp_r->rec_r TT -148), NEV 16 on c21r 84-SRAM geometry, row-pruned band, pd 0.55.",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "rtl/dsrom_sys/s81_ph",
+   "tools/hwin_private_package_1019",
+   "tools/s81_dv/hwin_struct_1021",
+   "results/arch/s81_hwin_struct_1021"
+  ],
+  "benches": [
+   {
+    "name": "c22_ns47",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/ns47 ns47",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^MUWIN PASS$",
+    "min_count_regex": "^MUWIN starts (\\d+) fires \\d+ expected \\d+ K \\d+ t_mf 0000 hslot 0000 hwin 00$"
+   },
+   {
+    "name": "c22_ns2",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/ns2 ns2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^MUWIN PASS$"
+   },
+   {
+    "name": "c22_norelay",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/norelay norelay",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "EARLY_MITER|CBREF_MITER",
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/norelay/run.log"
+   },
+   {
+    "name": "c22_eastcopy",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/eastcopy eastcopy",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "EARLY_MITER|CBREF_MITER",
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/eastcopy/run.log"
+   },
+   {
+    "name": "c22_mut2",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/mut2 mut2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "EARLY_MITER|CBREF_MITER",
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/mut2/run.log"
+   },
+   {
+    "name": "c22_eastdue",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/eastdue eastdue",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "event boot count differs",
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/eastdue/run.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_mu_hwin_c22r/views",
+  "record_to": "results/rtl/ref_tile/dsdv_mu_hwin_c22r"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": false,
+ "keep_pin_regs": true,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    43.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    43.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?0?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    86.4,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    86.4,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?1?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    86.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    86.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    86.4,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    86.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    86.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?2?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    129.6,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    129.6,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    129.6,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?3?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    129.6,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    172.8,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    172.8,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?4?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    172.8,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    172.8,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    216.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?5?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    216.0,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    216.0,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    216.0,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    216.0,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    216.0,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?6?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    259.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    259.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?7?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    259.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_gap.g_bank?0?.u_m",
+   "at": [
+    259.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_gap.g_bank?1?.u_m",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_retire.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*u_retire.g_bank?1?.u_m",
+   "at": [
+    302.4,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    302.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    302.4,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    302.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?8?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    345.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    345.6,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?9?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    345.6,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    345.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    388.8,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    388.8,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?10?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    388.8,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    388.8,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    388.8,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    388.8,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    388.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?11?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    432.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    432.0,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    432.0,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    432.0,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    432.0,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?12?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    432.0,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    432.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    475.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    475.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?13?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    475.2,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    475.2,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    518.4,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?14?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    518.4,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_attr.g_bank?0?.u_m",
+   "at": [
+    518.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_payload.g_bank?0?.u_m",
+   "at": [
+    518.4,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_payload.g_bank?1?.u_m",
+   "at": [
+    518.4,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_payload.g_bank?2?.u_m",
+   "at": [
+    518.4,
+    86.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "inst": "*g_event_mem?15?.g_early.u_payload.g_bank?3?.u_m",
+   "at": [
+    518.4,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "outline": {
+  "w": 561.6,
+  "h": 388.8
+ },
+ "fill_reason": {
+  "lattice_channel_bound": {
+   "why": "S81-ELEM2-HWIN dsdv_mu_hwin_c22r: the ratified HWIN lattice/channel exception class (c21d..c21q, approved_by codex coordinator): SRAM origins on the c21q 43.2 lattice (84 macros, 561.6 x 388.8, >=24.8 um channels, halo 8.64), ONE full-width standard-cell band y159.84..206.28 (rows outside it pruned before tapcell, c21h hook). Source std area 10536.9 um2 = c21q 9151.137 x -noabc cell ratio 80098/69564 (NEV 16, LOCAL_RECORD=1); placed 40..60% band density is measured by the gate.",
+   "lattice_um": 43.2,
+   "min_channel_um": 24.84,
+   "std_band_util": 0.4071,
+   "approved_by": "codex coordinator",
+   "std_band_y_um": [
+    159.84,
+    206.28
+   ]
+  }
+ },
+ "pin_ranges": {
+  "f_ks": [
+   238.4,
+   258.4
+  ],
+  "f_mc": [
+   258.8,
+   270.8
+  ],
+  "ck": [
+   271.2,
+   273.2
+  ],
+  "rst_n": [
+   273.6,
+   275.6
+  ],
+  "f_mw": [
+   276.0,
+   288.0
+  ],
+  "mu_rt": [
+   288.4,
+   323.2
+  ],
+  "mu_c": [
+   238.4,
+   298.4
+  ],
+  "mu_rc": [
+   299.0,
+   320.0
+  ],
+  "t_wf": [
+   320.4,
+   323.2
+  ]
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/ref_tile/dsdv_mu_hwin_c22r/hwin_gpl_row_envelope.tcl",
+  "PRE_GLOBAL_PLACE_SKIP_IO_TCL": "physical/ref_tile/dsdv_mu_hwin_c22r/hwin_gpl_row_envelope.tcl"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "note": "dsdv_mu_hwin_c21r NEEDS_RTL TT -148/-142 (cmp_r -> rec_r global duplicate admission); LOCAL_RECORD=1 regional admission successor, codex adf49d4f8."
+ },
+ "owner": "Claude:S81-ELEM2-HWIN"
+}

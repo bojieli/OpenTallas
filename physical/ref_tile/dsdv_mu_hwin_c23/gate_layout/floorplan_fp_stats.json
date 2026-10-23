@@ -1,0 +1,30 @@
+{
+ "element": "dsdv_mu_hwin_c23",
+ "outline_um": [
+  457.92,
+  259.2
+ ],
+ "area_um2": 118693,
+ "macros": 84,
+ "macro_area_pct": 27.0,
+ "std_area_um2": 10536.9,
+ "std_fill_of_free_pct": 12.2,
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "fill 36% = (macros/children 32063 + std 10537) / outline 118693 um2 < 50%",
+   ""
+  ]
+ ],
+ "vs_c21n": {
+  "outline_um": [
+   561.6,
+   388.8
+  ],
+  "area_um2": 218350,
+  "std_fill_of_free_pct": 5.96,
+  "empty_area_pct": 86.7,
+  "pin_to_reg_p90_um": 233.7
+ }
+}
