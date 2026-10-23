@@ -1,0 +1,24 @@
+SLICE_START slice=hbm_v16_die_slice_sw replay=slice/replay/ds_l0 cycles=20795
+SLICE_VM_PRELOAD words=1250
+SLICE_REC rec=2 cyc=94 COMMIT_OK
+SLICE_CHECK_FAIL out=59 dom=0 cyc=264 rec=2
+SLICE_REC rec=2 cyc=264 FAIL
+SLICE_CHECK_FAIL out=85 dom=0 cyc=264 rec=2
+SLICE_REC rec=2 cyc=264 FAIL
+SLICE_CHECK_FAIL out=58 dom=0 cyc=265 rec=2
+SLICE_REC rec=2 cyc=265 FAIL
+SLICE_CHECK_FAIL out=84 dom=0 cyc=265 rec=2
+SLICE_REC rec=2 cyc=265 FAIL
+SLICE_CHECK_FAIL out=59 dom=0 cyc=266 rec=2
+SLICE_REC rec=2 cyc=266 FAIL
+SLICE_CHECK_FAIL out=85 dom=0 cyc=266 rec=2
+SLICE_REC rec=2 cyc=266 FAIL
+SLICE_CHECK_FAIL out=58 dom=0 cyc=267 rec=2
+SLICE_REC rec=2 cyc=267 FAIL
+SLICE_CHECK_FAIL out=59 dom=0 cyc=267 rec=2
+SLICE_REC rec=2 cyc=267 FAIL
+SLICE_CHECK_FAIL out=84 dom=0 cyc=267 rec=2
+SLICE_REC rec=2 cyc=267 FAIL
+SLICE_CHECK_FAIL out=85 dom=0 cyc=267 rec=2
+SLICE_REC rec=2 cyc=267 FAIL
+SLICE_CHECK_FAIL out=58 dom=0 cyc=268 rec=2

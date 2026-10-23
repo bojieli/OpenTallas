@@ -1,0 +1,56 @@
+{
+  "scope": "exact d34578d6f source-functional rec2 profile only; NOT physical-clock qualification",
+  "binary_sha256": "273a0824d5a41776fad17c2c0ddb990a3fb8dd41c797381edd28fe81644d87e0",
+  "die_sha256": "5b10bf720c5d04699477894dbce2c587368d5ab6f6a02618d7e17f4babcce639",
+  "contract_sha256": "92ed43a3327f1a9c8b52961e94387b94d3215c0a5961af338d9994626b6b1c75",
+  "lane_latency_source": "tools/hbm_die_v16/d4g_bank_latency.py: Graph.lane_latency",
+  "model_terms": {
+    "calendar_SW.launch_v": {
+      "latency_edges": 24,
+      "notes": [
+        "rf2585_k00_00_l0: K 3 NO_E placeholder (E 1 derived from K)"
+      ]
+    },
+    "hb_coll_SW.pr_ccw_i": {
+      "latency_edges": 18,
+      "notes": [
+        "rf1030_k00_00_l0: K 1 NO_E placeholder (E 1 derived from K)"
+      ]
+    },
+    "hb_coll_SW.pr_cw_i": {
+      "latency_edges": 6,
+      "notes": [
+        "rf1029_k00_00_l0: K 5 NO_E placeholder (E 1 derived from K)"
+      ]
+    },
+    "hcollb_SW.ccw_i": {
+      "latency_edges": 20,
+      "notes": [
+        "rf1038_k00_00_l0: K 3 NO_E placeholder (E 1 derived from K)"
+      ]
+    },
+    "hcollb_SW.cw_i": {
+      "latency_edges": 4,
+      "notes": [
+        "rf1037_k00_00_l0: K 3 NO_E placeholder (E 1 derived from K)"
+      ]
+    },
+    "hcollgi_SW.desc_v": {
+      "latency_edges": 10,
+      "notes": [
+        "rf2003_k03_00_l0: K 1 NO_E placeholder (E 1 derived from K)"
+      ]
+    },
+    "hcollgi_SW.launch_v": {
+      "latency_edges": 48,
+      "notes": [
+        "rf2842_k03_00_l0: K 1 NO_E placeholder (E 1 derived from K)"
+      ]
+    }
+  },
+  "measured_own_flit_identity": {
+    "count": 40,
+    "shift_edges": 48
+  },
+  "limitations": "NO_E/K placeholders retained; source model predicts three ingress terms; positive/negative not run yet"
+}

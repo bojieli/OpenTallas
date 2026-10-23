@@ -1,0 +1,338 @@
+{
+  "scope": "DIAGNOSTIC/TRUNCATED, expected FAIL; not functional acceptance",
+  "summary": "drives=151 checks=3616 fails=1337 rec_commit_ok=0 rec_fail=0 stream_edges=450 serial_edges=337 hbm_edges=365",
+  "diagnostic_fail": true,
+  "own_flit_matches": [
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 264,
+      "observed": 312,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 264,
+      "observed": 312,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 265,
+      "observed": 313,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 265,
+      "observed": 313,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 267,
+      "observed": 315,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 267,
+      "observed": 315,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 268,
+      "observed": 316,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 268,
+      "observed": 316,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 270,
+      "observed": 318,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 270,
+      "observed": 318,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 271,
+      "observed": 319,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 271,
+      "observed": 319,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 273,
+      "observed": 321,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 273,
+      "observed": 321,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 274,
+      "observed": 322,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 274,
+      "observed": 322,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 276,
+      "observed": 324,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 276,
+      "observed": 324,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 277,
+      "observed": 325,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 277,
+      "observed": 325,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 279,
+      "observed": 327,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 279,
+      "observed": 327,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 280,
+      "observed": 328,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 280,
+      "observed": 328,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 282,
+      "observed": 330,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 282,
+      "observed": 330,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 283,
+      "observed": 331,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 283,
+      "observed": 331,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 285,
+      "observed": 333,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 285,
+      "observed": 333,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 286,
+      "observed": 334,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 286,
+      "observed": 334,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 288,
+      "observed": 336,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 288,
+      "observed": 336,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 289,
+      "observed": 337,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 289,
+      "observed": 337,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_cw_o",
+      "expected": 291,
+      "observed": 339,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__cw_o",
+      "expected": 291,
+      "observed": 339,
+      "delta": 48
+    },
+    {
+      "port": "hb_coll_SW__pr_ccw_o",
+      "expected": 292,
+      "observed": 340,
+      "delta": 48
+    },
+    {
+      "port": "hcollb_SW__ccw_o",
+      "expected": 292,
+      "observed": 340,
+      "delta": 48
+    }
+  ],
+  "own_flits_exact_280bits": 40,
+  "own_shift_edges": 48,
+  "first_fault_samples": {
+    "89": null,
+    "90": null,
+    "86": 270,
+    "93": null
+  },
+  "reference_clock_limit": "rf0024 visible clocks sampled at stream/serial edges; not issuer-internal edges",
+  "farend_forwarded": [
+    {
+      "out": 84,
+      "dom": 0,
+      "cyc": 315,
+      "value": "f41000bd9000003de100003d7b0000bd3400003d1200003d9300003daf0000bbfe0000",
+      "src": 2,
+      "ttl": 0,
+      "tag": 1,
+      "data": "bd9000003de100003d7b0000bd3400003d1200003d9300003daf0000bbfe0000"
+    },
+    {
+      "out": 84,
+      "dom": 0,
+      "cyc": 318,
+      "value": "f43000bd4b00003ccb0000bd5f0000bd2100003c850000be130000bd4b00003ad40000",
+      "src": 2,
+      "ttl": 0,
+      "tag": 3,
+      "data": "bd4b00003ccb0000bd5f0000bd2100003c850000be130000bd4b00003ad40000"
+    }
+  ],
+  "clock_samples": {
+    "153:dom0": {
+      "nonzero_samples": 0,
+      "total_samples": 241,
+      "observed_values": [
+        0
+      ]
+    },
+    "153:dom1": {
+      "nonzero_samples": 121,
+      "total_samples": 181,
+      "observed_values": [
+        0,
+        3
+      ]
+    },
+    "177:dom0": {
+      "nonzero_samples": 0,
+      "total_samples": 241,
+      "observed_values": [
+        0
+      ]
+    },
+    "177:dom1": {
+      "nonzero_samples": 121,
+      "total_samples": 181,
+      "observed_values": [
+        0,
+        3
+      ]
+    },
+    "154:dom0": {
+      "nonzero_samples": 241,
+      "total_samples": 241,
+      "observed_values": [
+        3
+      ]
+    },
+    "154:dom1": {
+      "nonzero_samples": 181,
+      "total_samples": 181,
+      "observed_values": [
+        3
+      ]
+    },
+    "178:dom0": {
+      "nonzero_samples": 241,
+      "total_samples": 241,
+      "observed_values": [
+        3
+      ]
+    },
+    "178:dom1": {
+      "nonzero_samples": 181,
+      "total_samples": 181,
+      "observed_values": [
+        3
+      ]
+    }
+  }
+}

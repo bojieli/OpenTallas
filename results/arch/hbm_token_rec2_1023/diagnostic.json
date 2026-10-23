@@ -1,0 +1,74 @@
+{
+  "scope": "DIAGNOSTIC/TRUNCATED; expected acceptance failures; never functional PASS",
+  "source": "/home/ubuntu/scratch/tokd-hbm2/r18h5_src/bundle/slice/replay/ds_l0",
+  "stream_horizon": 450,
+  "monitor_stream": [
+    200,
+    440
+  ],
+  "monitor_serial": [
+    150,
+    330
+  ],
+  "events": 3767,
+  "capacity": 11843,
+  "unchanged_prefix_drives": 151,
+  "source_drive_sha256": "ce6188291c0e64f2bb57a5766435c5240434470b47d4cf8172384c5180781a1c",
+  "preload_sha256": "0c23227fdc8d1f3f5bcad10f48fe4fe3164cd4f28d2155d9cba2f3c6a6200478",
+  "ports": {
+    "hb_coll_SW__pr_cw_o": [
+      59,
+      280
+    ],
+    "hb_coll_SW__pr_ccw_o": [
+      58,
+      280
+    ],
+    "hcollb_SW__cw_o": [
+      85,
+      280
+    ],
+    "hcollb_SW__ccw_o": [
+      84,
+      280
+    ],
+    "rf0024_s042_l0__ck_o": [
+      153,
+      2
+    ],
+    "rf0024_s042_l1__ck_o": [
+      177,
+      2
+    ],
+    "rf0024_s042_l0__eb": [
+      154,
+      2
+    ],
+    "rf0024_s042_l1__eb": [
+      178,
+      2
+    ],
+    "hcollgi_SW__fault": [
+      89,
+      1
+    ],
+    "hcollgi_SW__tgt_fault": [
+      90,
+      1
+    ],
+    "hcollb_SW__fault": [
+      86,
+      1
+    ],
+    "hcollrs_SW__fault": [
+      93,
+      1
+    ]
+  },
+  "flags": [
+    "+SHOWVAL",
+    "+CYCLES=450",
+    "+verilator+rand+reset+0"
+  ],
+  "limits": "forwarded clock samples are available rf0024 boundary clocks, not direct hcollgi internal clocks; phase at domain sampling edges only"
+}
