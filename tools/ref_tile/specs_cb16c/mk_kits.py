@@ -36,7 +36,8 @@ def lint(top, srcs, defs=''):
 
 WIT = 'results/rtl/cb16c_coll_1022'
 # measured per-band source-owned sequential counts of each body netlist (None = the S0 face's counts, first gate reports)
-COUNTS = {'p': {'codec': 3920, 'phy': 1426, 'cal': 166, 'lcal': 167, 'tx': 1565, 'rx': 1018}}
+COUNTS = {'s0': {'codec': 3920, 'phy': 1426, 'cal': 715, 'lcal': 720, 'tx': 1565, 'rx': 1018},
+          'p': {'codec': 3920, 'phy': 1426, 'cal': 166, 'lcal': 167, 'tx': 1565, 'rx': 1018}}
 
 
 def slice_spec(w):
@@ -88,7 +89,7 @@ def body_spec(prof):
         'epoch_abort': [475.2, 478.44], 'fault_cause': [480.6, 491.4], 'phy_tx_valid': [509.76, 513.0],
         'phy_tx': [518.4, 604.8], 'phy_tx_slot': [448.2, 451.44], 'phy_rx_slot': [453.6, 456.84],
         'codec3': [216.0, 219.24], 'codec4': [691.2, 694.44]}
-    s['fill_reason'] = {'regional_split': 'CB16c-COLL body of the split face: perimeter set by the face slot (907.2 square minus two '
+    s['fill_reason'] = {'pin_bound': 'CB16c-COLL body of the split face: perimeter set by the face slot (907.2 square minus two '
                         '21.6-um slice columns), six fixed SRAM macros; std cells banded beside their roots.'}
     s.pop('std_area_um2', None)
     s['structural_change'] = (

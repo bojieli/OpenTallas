@@ -550,7 +550,7 @@
   "max_loads": 32
  },
  "fill_reason": {
-  "regional_split": "CB16c-COLL body of the split face: perimeter set by the face slot (907.2 square minus two 21.6-um slice columns), six fixed SRAM macros; std cells banded beside their roots."
+  "pin_bound": "CB16c-COLL body of the split face: perimeter set by the face slot (907.2 square minus two 21.6-um slice columns), six fixed SRAM macros; std cells banded beside their roots."
  },
  "pin_hook_after_flops": [
   "physical/ref_tile/qfd_cb16c_s0_body/seq_landing.tcl"
