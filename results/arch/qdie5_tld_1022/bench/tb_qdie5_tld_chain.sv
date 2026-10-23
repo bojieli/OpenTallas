@@ -20,7 +20,7 @@
 // longer than cmd (ctlm -> W5); 4 loader stage bit 0 dropped (qfd_dv_slice_tload MUT 2); 5 the stage-17 table_req
 // dropped at the producer.  Every VAR != 0 must print TLD_CHAIN FAIL.
 module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0, parameter integer DLANE = 20,
-                            parameter integer DHOP = 3, parameter integer NTR = 65536);
+                            parameter integer DHOP = 3, parameter integer NTR = 262144);
     reg ck = 0; always #5 ck = ~ck;
     reg rst_n = 0;
     integer cyc = 0; always @(posedge ck) cyc <= cyc + 1;
@@ -29,17 +29,20 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
     integer tr_c [0:NTR-1]; reg [115:0] tr_cmd [0:NTR-1]; reg [8:0] tr_tq [0:NTR-1];
     reg [115:0] lo_c, co_c; reg [8:0] lo_t, co_t;
     reg [115:0] p_cmd = 0; reg [8:0] p_tq = 0;
-    string trf, fxd;
+    string trf, fxd; reg use_lo = 0;
     initial begin
         if (!$value$plusargs("TRACE=%s", trf)) $fatal(1, "TRACE required");
+        use_lo = $test$plusargs("PRODUCER_NATIVE32");   // default: the release master cpub39_1 columns
         fd = $fopen(trf, "r"); if (fd == 0) $fatal(1, "TRACE open");
         while (!$feof(fd) && tr_n < NTR) begin
             r = $fscanf(fd, "%d %h %h %h %h\n", tc, lo_c, lo_t, co_c, co_t);
-            if (r == 5) begin tr_c[tr_n] = tc; tr_cmd[tr_n] = co_c; tr_tq[tr_n] = co_t; tr_n = tr_n + 1; end
+            if (r == 5 && (use_lo ? (lo_c != 0 || lo_t != 0) : (co_c != 0 || co_t != 0))) begin
+                tr_c[tr_n] = tc; tr_cmd[tr_n] = use_lo ? lo_c : co_c; tr_tq[tr_n] = use_lo ? lo_t : co_t; tr_n = tr_n + 1;
+            end
         end
         $fclose(fd);
         ofs = tr_c[0] - 40;
-        $display("TRACE entries=%0d first=%0d last=%0d", tr_n, tr_c[0], tr_c[tr_n - 1]);
+        $display("TRACE entries=%0d first=%0d last=%0d producer=%s", tr_n, tr_c[0], tr_c[tr_n - 1], use_lo ? "native32" : "cpub39_1");
     end
     always @(negedge ck) begin                       // value presented before posedge `cyc`+1 ... sampled at that edge
         p_cmd <= 0; p_tq <= 0;
