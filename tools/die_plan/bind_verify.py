@@ -154,7 +154,7 @@ def cmd_verify(a):
             return ["tied", s[1]]
         return [k]
 
-    cnt = dict(compared=0, matched=0, mismatched=0, glue_unmatched=0, unbound=0, tied=0, undriven=0, multiply_driven=0)
+    cnt = dict(compared=0, matched=0, mismatched=0, glue_unmatched=0, unbound=0, tied=0, undriven=0, multiply_driven=0, plan_driven=0)
     mism, tied_ex = [], []
     seen = set()
     for ci, c in enumerate(F.cells):
@@ -175,6 +175,13 @@ def cmd_verify(a):
                 if got[0] in ("undriven", "dropped"):
                     cnt["undriven"] += 1
                     cnt["unbound"] += 1
+                if want and want[0] == "plan":
+                    # a plan-cell driven input: a live driver; a same-partition plan cell / leaf must be the one named
+                    cnt["plan_driven"] += 1
+                    if got[0] in ("pin", "clk", "rst", "or") and (want[1] is None or got[0] == "pin" and got[1] == want[1]):
+                        cnt["compared"] += 1
+                        cnt["matched"] += 1
+                        continue
                 if got[0] == "tied" and not (want and want[0] == "strap" and want[1] == got[1]):
                     cnt["tied"] += 1
                     if len(tied_ex) < 50:

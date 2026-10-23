@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.kv_p4.cell_conns.v1",
+ "note": "bind_tiny test: the u_b.id constants (A0 = 5, A1 = 6) become a counted ID: S sources 5, adds 1, and sends each value over a plan lane",
+ "types": {
+  "ts": {
+   "cells": {
+    "u_id_src": {"module": "ot_dp_id_src", "params": {"W": 4, "V": 5},
+                 "conns": {"y": [{"bus": "id0_o", "bits": [0, 3]}]}},
+    "u_id_add": {"module": "ot_dp_id_add", "params": {"W": 4, "K": 1},
+                 "conns": {"a": [{"cell": "u_id_src", "port": "y", "bits": [0, 3]}],
+                           "y": [{"bus": "id1_o", "bits": [0, 3]}]}}
+   },
+   "leaf_binds": [], "bus_drivers": [], "rewired": []
+  },
+  "ta": {
+   "cells": {},
+   "leaf_binds": [{"inst": "u_b", "port": "id", "drivers": [{"bus": "id_i", "bits": [0, 3]}]}],
+   "bus_drivers": [], "rewired": []
+  }
+ }
+}

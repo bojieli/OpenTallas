@@ -269,5 +269,6 @@
  ],
  "files_note": "BINDER2: ASAP7 std-cell verilog models (ORFS asap7 platform verilog/stdcell) for the gate-level qkd_kvs_grp_r2c / grp_h_r2c leaves (lint closure)",
  "lint_split": true,
- "lint_jobs": 6
+ "lint_jobs": 6,
+ "plan_cells": "physical/die_plan/qwen_kvsys/bind/plan_cell_conns_v34.json"
 }

@@ -424,6 +424,12 @@ class Binder:
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
+        self.pc = None
+        if self.ab.get("plan_cells"):
+            import bind_plancells
+            f = self.ab["plan_cells"]
+            f = f if Path(f).is_absolute() else str(Path(base or str(E.REPO)) / f)
+            self.pc = bind_plancells.PlanCells(self, f, base or str(E.REPO))
 
     def substitute_inst(self, base):
         """asbuilt.substitute_inst [{"inst": regex on the flattened instance path, "module": variant, "reason": ...}]:
@@ -548,6 +554,8 @@ class Binder:
                     s = G.source(b)
                     self.sinks[(ci, pn, i)] = self._classify(p, ci, pn, i, s, cnt)
         self.counts = dict(cnt)
+        if self.pc:
+            self.pc.apply_sinks()
 
     def _src_desc(self, p, s, cnt, ci, pn, i):
         """a non-OR logical source as seen from partition p"""
@@ -690,6 +698,10 @@ class Binder:
         allL = [L for ls in lanes.values() for L in ls]
         for L in allL:
             L.update(items=[], carried={}, left=L["cap"])
+        resv = self.pc.reserved_buses() if self.pc else set()
+        for L in allL:
+            if (L["src"], L["oname"]) in resv:
+                L.update(left=0, plan=True)     # a plan-cell bus: its payload comes from plan cells, no as-built bit
         out_of = defaultdict(list)
         for L in sorted(allL, key=lambda L: L["id"]):
             out_of[L["src"]].append(L)
@@ -797,9 +809,12 @@ class Binder:
                     for b in rest:
                         self.unplanned_bits.append(dict(src_part=sp, dst_part=dp, driver=f"{F.cells[sci].path}.{spn}[{b}]",
                                                         sink_ports=[f"{r}.{q}" for r, q in sk]))
-        self.lanes_unused = sorted(L["id"] for L in allL if not L["items"])
+        self.lanes_unused = sorted(L["id"] for L in allL if not L["items"] and not L.get("plan"))
         for L in sorted(allL, key=lambda L: L["id"]):
-            if L["items"]:
+            if L.get("plan"):
+                L.update(width=L["cap"], lane=L["id"], stages=[0])
+                self.links.append(L)
+            elif L["items"]:
                 L.update(width=len(L["items"]), lane=L["id"],
                          stages=sorted({st for it in L["items"] if it[0] == "leaf"
                                         for st in self.cross_stages.get((L["src"], L["dst"], it[1], it[2]), [])} or {0}))
@@ -913,7 +928,7 @@ class Binder:
                     d = self.sinks[(ci, pn, i)]
                     row.append(self._rel_desc(p, d, inst_vals, (r, pn, i)))
                 conns[(r, pn)] = tuple(row)
-        obus = sorted((L["oname"], tuple((self.rel_of(it[1]), it[2], it[3]) if it[0] == "leaf" else
+        obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((self.rel_of(it[1]), it[2], it[3]) if it[0] == "leaf" else
                                          ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
                       for L in self.out_bus[p])
         ibus = sorted((L["iname"], L["width"]) for L in self.in_bus[p])     # the source is outside the module
@@ -1101,9 +1116,19 @@ class Binder:
                     nm = short_id(f"w_{self.rel_of(ci)}__{pn}", 90)
                     drv_w[(ci, pn)] = nm
                     decl.append(f"    wire [{len(bits) - 1}:0] {nm};")
+        ub = []
+        render = None
+        if self.pc:
+            render = self.pc.emit(p, tn, {L["iname"]: L["width"] for L in ibus},
+                                  {L["oname"]: L["width"] for L in obus if L.get("plan")}, drv_w,
+                                  {self.rel_of(ci): ci for ci in self.members[p]}, decl, body, ub)
         for L in obus:
             n, W = L["oname"], L["width"]
             ports.append(f"    output wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'out')}")
+            if L.get("plan"):
+                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
+                            f".q({n}[{W - 1}:0]), .eq({n}[{W}]));  // plan-cell driven")
+                continue
             d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
                          for it in L["items"]])
             body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea(rst_n), "
@@ -1133,7 +1158,6 @@ class Binder:
             decl.append(f"    wire [{W - 1}:0] {nm};")
             body.append(f"    ot_dp_dly #(.W({W}), .D({st})) u_{nm} (.clk(clk), .d({drv_w[(sci, spn)]}), .q({nm}));")
         orn = {}
-        ub = []
 
         def expr(d, ci, pn, i):
             nonlocal need_rst
@@ -1154,6 +1178,10 @@ class Binder:
             if k == "strap":
                 nm, _w = pnames[("strap", self.rel_of(ci), pn)]
                 return f"{nm}[{i}]"
+            if k == "plan":
+                if render is None:
+                    raise BindError(f"plan-driven sink {self.F.cells[ci].path}.{pn}[{i}] in a partition without plan cells")
+                return render(d[1])
             if k in ("tied", "top", "err"):
                 # never a constant: an unresolved bit stays an undriven wire, reported (bind_report proof)
                 nm = f"ub_{len(ub)}"
@@ -1317,7 +1345,7 @@ class Binder:
                    proof=dict(unbound=c.get("undriven", 0) + c.get("source_unmapped", 0) + sum(self.unplanned.values()),
                               tied=c.get("tied", 0),
                               undriven=c.get("undriven", 0), multiply_bound=c.get("multi_driven", 0),
-                              straps=c.get("strap", 0)),
+                              straps=c.get("strap", 0), plan_driven=c.get("plan_driven", 0)),
                    errors=self.errors[:2000], n_errors=len(self.errors), warnings=self.warns[:500])
         return rep, lat
 
@@ -1350,6 +1378,8 @@ def _seg_summary(L, F):
 def _bus_note(L, side):
     sg = _seg_summary(L, None)
     segs = ", ".join(sg[:3]) + (" ..." if len(sg) > 3 else "")
+    if L.get("plan"):
+        return f"lane {L['lane']}, {L.get('cycles', 2)} cycles: plan-cell bus {L['src']} -> {L['dst']}"
     lane = f"lane {L['lane']}, {L.get('cycles', 2)} cycles" if L.get("lane") else \
         "UNPLANNED direct" if L.get("unplanned") else "direct (plan has no lanes)"
     return f"{lane}: {L['src']} {segs} -> {L['dst']}" if side == "in" else f"{lane}: {segs} -> {L['dst']}"
@@ -1485,6 +1515,8 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    if B.pc:
+        rep["plan_cells"] = dict(file=B.ab["plan_cells"], **B.pc.stats)
     rep["tied_by_port"] = dict(sorted(B.tied_by_port.items(), key=lambda kv: -kv[1]))
     names = {}
     for ci, p in B.cpart.items():
@@ -1493,7 +1525,7 @@ def cmd_bind(a):
     (out / "bind_names.json").write_text(json.dumps(names, indent=0))
     sinks = {}
     for (ci, pn, i), d in B.sinks.items():
-        sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d)
+        sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d, B.cpart.get(ci))
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
     (out / "bind_latency.json").write_text(json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
@@ -1508,7 +1540,7 @@ def cmd_bind(a):
     return 1 if (B.errors and a.strict) else 0
 
 
-def _desc_json(B, d):
+def _desc_json(B, d, ci_part=None):
     k = d[0]
     if k == "int":
         return ["pin", f"{B.F.cells[d[1]].path}.{d[2]}[{d[3]}]", d[4], B.G.kind[d[1]] == "glue"]
@@ -1517,7 +1549,20 @@ def _desc_json(B, d):
         return ["pin", f"{B.F.cells[d[2]].path}.{d[3]}[{d[4]}]", st, B.G.kind[d[2]] == "glue"]
     if k == "or":
         return ["or", sorted(_desc_json(B, x)[1] for x in d[1] if x[0] in ("int", "x"))]
+    if k == "plan":
+        return ["plan", _plan_expect(B, ci_part, d[1])]
     return [k] + list(d[1:2])
+
+
+def _plan_expect(B, p, a):
+    """the bound driver a plan-driven leaf input must see: a plan cell / leaf of its own partition (None: a bus or a
+    net -- any live driver, the plan's own chain connectivity)"""
+    if a[0] == "cell":
+        return f"{sv_id(p)}.u_{a[1]}.{a[2]}[{a[3]}]"
+    if a[0] == "leaf":
+        ci = {B.rel_of(c): c for c in B.members[p]}.get(a[1])
+        return f"{B.F.cells[ci].path}.{a[2]}[{a[3]}]" if ci is not None else "?"
+    return None
 
 
 def main(argv=None):

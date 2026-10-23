@@ -54,7 +54,7 @@ def test_tiny_binds_and_proves(tmp_path, name):
     out = tmp_path / "o"
     assert run(EX / name, out, "elab", "bind", "verify") == 0
     r, v = report(out), verify(out)
-    assert r["proof"] == dict(unbound=0, tied=0, undriven=0, multiply_bound=0, straps=8)
+    assert r["proof"] == dict(unbound=0, tied=0, undriven=0, multiply_bound=0, straps=8, plan_driven=0)
     assert r["n_errors"] == 0
     assert v["verdict"] == "PASS" and v["counts"]["mismatched"] == 0 and v["counts"]["matched"] == 64
     if v["lint"].get("ran"):
@@ -176,3 +176,31 @@ def test_lint_split(tmp_path):
     lt = verify(out)["lint"]
     if lt.get("ran"):
         assert lt["split"] and lt["errors"] == 0 and lt["runs"] >= 3
+
+
+def test_plan_cells_replace_constants(tmp_path):
+    """asbuilt.plan_cells: no strap declared; the plan's ID cells in S drive u_b.id of A0 / A1 over two plan lanes.  The
+    8 as-built constant bits become plan_driven (not tied), the cells are emitted, and the proof passes"""
+    def edit(p):
+        a = p["asbuilt"]
+        a["straps"] = []
+        a["plan_cells"] = str(EX / "plan_cells.json")
+        a["files"] = a["files"] + [str(HERE.parents[1] / "rtl" / "lib" / "ot_dp_id.sv")]
+        t = p["partition_types"]
+        t["ts"]["buses"] += [dict(name="id0_o", dir="out", width=4, kind="ctl"), dict(name="id1_o", dir="out", width=4, kind="ctl")]
+        t["ta"]["buses"] += [dict(name="id_i", dir="in", width=4, kind="ctl")]
+        for k, dst in ((0, "A0"), (1, "A1")):
+            p["ports"].append({"id": f"id{k}__0", "src": {"part": "S", "bus": f"id{k}_o"}, "dst": {"part": dst, "bus": "id_i"},
+                               "width": 4, "kind": "ctl"})
+            p["lanes"].append({"id": f"id{k}", "ports": [f"id{k}__0"]})
+            p["latency"]["lanes"][f"id{k}"] = {"cycles": 2, "stations": 0, "boundary": 2}
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r, v = report(out), verify(out)
+    assert r["proof"]["tied"] == 0 and r["proof"]["straps"] == 0 and r["proof"]["plan_driven"] == 8 and r["n_errors"] == 0
+    assert r["plan_cells"]["cells_emitted"] == 2
+    ts = (out / "rtl" / "bt_ts.sv").read_text()
+    assert "ot_dp_id_src #(.V(5), .W(4)) u_u_id_src" in ts and "ot_dp_id_add #(.K(1), .W(4)) u_u_id_add" in ts
+    ta = (out / "rtl" / "bt_ta.sv").read_text()
+    assert ".id(id_i_q[3:0])" in ta and "4'b" not in ta.split(");", 1)[1]
+    assert v["verdict"] == "PASS" and v["counts"]["plan_driven"] == 8, (v["counts"], v["mismatches"][:3])
