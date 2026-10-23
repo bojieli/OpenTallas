@@ -103,6 +103,11 @@ def main(argv=None):
     ap.add_argument('--bind-snapshot-bytes', action='store_true',
                     help='with --bind-case: a bound file whose executed snapshot bytes differ from (or are absent at) --ref '
                          'is taken from the snapshot (what the die was bound from), recorded in executed_bind_index.snapshot_overrides')
+    ap.add_argument('--bind-root-bytes', action='store_true',
+                    help='with --bind-case --bind-snapshot-bytes: also index every source file under the recorded rtl_roots '
+                         'of the executed snapshot on disk (die_port_bind resolved masters from the whole root, not only '
+                         'rtl_files): a root file absent at --ref or with different bytes is taken from the snapshot, '
+                         'recorded in executed_bind_index.root_overrides (S81d-TOK 10-22: cap30 u_s_0N hbc_prod / lepw_mu_72)')
     ap.add_argument('--bind-case', help='original executed bind_case.json: honor recorded index roots/final file precedence')
     ap.add_argument('--top-v', required=True)
     ap.add_argument('--top', default=None)
@@ -207,6 +212,25 @@ def main(argv=None):
                     continue
                 assert rel in texts, ('recorded bind input absent at source ref', rel)
                 assert texts[rel] == body, ('recorded bind input differs from immutable ref', rel)
+        if a.bind_root_bytes:
+            assert a.bind_snapshot_bytes, '--bind-root-bytes needs --bind-snapshot-bytes'
+            bound_set = {rel for rel, _ in bound_files}
+            for root in pb['rtl_roots']:
+                rp = Path(root)
+                if not rp.is_absolute() or not rp.is_dir():
+                    continue
+                for f in sorted(rp.rglob('*')):
+                    if not f.is_file() or not re.search(r'\.s?v$', f.name) or f.name.endswith('_bb.v'):
+                        continue
+                    rel = str(f.relative_to(snapshot))
+                    if rel in bound_set or '/test/' in rel or '/tests/' in rel or f.name.startswith('tb_') or f.name.startswith('tb.'):
+                        continue
+                    body = f.read_bytes()
+                    if texts.get(rel) != body:
+                        bind_index.setdefault('root_overrides', {})[rel] = dict(
+                            ref_sha256=hashlib.sha256(texts[rel]).hexdigest() if rel in texts else None,
+                            snapshot_sha256=hashlib.sha256(body).hexdigest())
+                        texts[rel] = body
         bind_index['original_snapshot_file_sha256'] = hashes
         bind_index['cells_used_projection'] = 'existing functional ASAP7 library models; original bind declarations separately hashed'
 
