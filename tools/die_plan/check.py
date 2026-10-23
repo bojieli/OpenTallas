@@ -256,7 +256,10 @@ def check_abutment(P, R):
 def check_faces(P, R, face_pins):
     B = P.budgets
     win = B["face_window_um"]
-    lim = B["face_pins_per_um"] * win
+    # allowance of 2 pins per pin layer, so a window spread at exactly the budget passes (PLAN-HBM 10-23):
+    # 1 pin for whole-track quantisation;
+    # 1 pin for pins pushed out of the partition PG bands (schema.spread, coordinate-uniform, nearest usable track).
+    lim = B["face_pins_per_um"] * win + 2 * B["face_pin_layers"]
     worst = []
     for (part, df), pins in face_pins.items():
         cs = sorted(c for c, _, _ in pins)
