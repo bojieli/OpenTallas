@@ -72,7 +72,9 @@ def cmd_verify(a):
               defines=raw["asbuilt"].get("defines", []), substitute={})
     full = [f for f in gen if not f.endswith("_bound_top.sv")]
     rs = Path(E.REPO / "rtl/lib/ot_reset_sync.sv")
-    lib = [f for f in srcs.get("lib", []) + rep.get("extra_lib", []) if f not in full] + \
+    # leaf interfaces: lib files, files of dissolved parents that also define leaves (not the die top / shims), variants
+    pfull = [f for f in srcs.get("full", []) if f not in srcs.get("tops", []) and not Path(f).name.startswith("shim_")]
+    lib = [f for f in srcs.get("lib", []) + pfull + rep.get("extra_lib", []) if f not in full] + \
         ([str(rs)] if str(rs) not in srcs.get("lib", []) else [])
     vdir = out / "verify"
     vdir.mkdir(exist_ok=True)
