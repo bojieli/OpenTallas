@@ -27,7 +27,7 @@
   },
   "ot_hgi_sfu_core_split3": {
    "file": "ot_hgi_sfu_core_split3.split.json",
-   "status": "CUT-ONLY",
+   "status": "DONE",
    "plan_types": [
     "q_sfuc"
    ],
@@ -35,7 +35,7 @@
    "n_cores": 19,
    "max_core_cells": 306861,
    "glue_cells": 0,
-   "cycle_cost": null
+   "cycle_cost": 3
   },
   "ot_hbm_su_static_pgslice_lg__pv0": {
    "file": "ot_hbm_su_static_pgslice_lg__pv0.split.json",
