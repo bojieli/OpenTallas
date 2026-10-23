@@ -1,0 +1,201 @@
+{
+  "name": "ot_s81sl_xrt3",
+  "orfs_dir": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/routes/s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -3.048408192540819e-10 min 2.2756740936102915e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/routes/s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/record/views/ot_s81sl_xrt3:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/src/physical/ref_tile/s81sl_xrt3t_b/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/eco-combo1/pass1/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.6355805598777806e-10 min 1.0858647314648806e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/routes/s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/record/views/ot_s81sl_xrt3:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/src/physical/ref_tile/s81sl_xrt3t_b/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/eco-combo1/pass1/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 9.497180819550977e-12 min 2.379713093247915e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/routes/s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/record/views/ot_s81sl_xrt3:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/src/physical/ref_tile/s81sl_xrt3t_b/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/eco-combo1/pass1/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/src/physical/ref_tile/s81sl_xrt3t_b/signoff.sdc",
+    "sha256": "6e64a4ba6b799e2b9f91f7cf9d9c52399ab3906f67464e0aac8c2d60fd35d346",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/routed_ioref.a1.json",
+    "sha256": "23761e52b19fe141677babd08883d74dfbfdf5f2b5c1f1037f301249bd52fd24",
+    "expect_ps": {
+      "tt": 9.5,
+      "ff": 10.86
+    },
+    "tol_ps": 0.05,
+    "work": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/eco-combo1/pass1/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/src/physical/common_flow/io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/src/physical/common_flow/io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/src/physical/ref_tile/s81sl_xrt3t_b/signoff.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/src/physical/ref_tile/s81sl_xrt3t_b/signoff.sdc",
+        "sha256": "6e64a4ba6b799e2b9f91f7cf9d9c52399ab3906f67464e0aac8c2d60fd35d346"
+      },
+      "/work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.odb": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/eco-combo1/pass1/orfs/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.odb",
+        "sha256": "4981fd0d14c837cd01087f67f1935d0130d721d165f79dcfbf5b912efc6b9bf2"
+      },
+      "/work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/eco-combo1/pass1/orfs/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.sdc",
+        "sha256": "e151f7755f3de09c45c300fea405984eccea253e97eef93acc58beab64fc6256"
+      },
+      "/work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.spef": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/s81sl_xrt3t_b-s81sl_xrt3_b-812f089d9/cl/eco-combo1/pass1/orfs/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.spef",
+        "sha256": "da8073a19cd12a3b2f9fae2f5631dbc3a9ee8d3d1b755f6305c48744ffe81a62"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 10.858647314648806,
+        "verdict_ps": 10.86,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 9.497180819550977,
+        "verdict_ps": 9.5,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/s81sl_xrt3t_b/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/s81sl_xrt3t_b/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_s81sl_xrt3_asap7_ref_s81sl_xrt3t_b_s81sl_xrt3_b_812f089d9/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/s81sl_xrt3t_b/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "L"
+  ],
+  "abstract": {
+    "mode": "default",
+    "default_pin_access_violations": 0
+  },
+  "files": {
+    "ot_s81sl_xrt3.lef": "7007cbead12b5fb87adc8b4cd4daff875171807359c32acb75b9a28fca9c2d69",
+    "ot_s81sl_xrt3_ff.lib": "15989a99052df09baeda288d7a0964aa170850dbbe41e1df301843a37bc07343",
+    "ot_s81sl_xrt3_ss.lib": "26d8dbb528fa90de0c95628cddbe644f6bc8955f8d85050349e3c24f5d055132",
+    "ot_s81sl_xrt3_tt.lib": "8fcbe9f838e68e9aad6d8ca52d747348ee89662a5a78dfb184367eee46edde06"
+  },
+  "ok": true,
+  "checked": true
+}
