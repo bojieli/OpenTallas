@@ -344,6 +344,8 @@ def main(argv=None):
                 if j >= n_ck_rep:
                     ck_ = hck_net
                     rep['grp_pc_hck']['split_relays'].setdefault(inst, []).append(nm)
+                ain = [A[i] for i in idx] + ['0'] * (s - len(idx))
+                bout = [B[i] for i in idx]
             elif role == 'fwd':
                 idx = fwd[k_f:k_f + s]
                 k_f += len(idx)
