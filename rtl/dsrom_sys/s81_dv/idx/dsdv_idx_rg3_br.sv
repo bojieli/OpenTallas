@@ -221,6 +221,14 @@ module dsdv_idx_rg3_br #(
     reg          lfr_e, lfd1, lfd2;
     reg  [LFW-1:0] lfr_a;
     wire [511:0] lf_q;
+    // The list response already waits through lfd1/lfd2 before ws=5.
+    // Capture the 17 used bits of each entry during that existing wait,
+    // separating SRAM access from the priority mux without adding an edge.
+    (* keep = "true" *) reg [15:0][16:0] lf_pick_q;
+    genvar lc;
+    generate for (lc = 0; lc < 16; lc = lc + 1) begin : g_list_capture
+        always @(posedge ck) lf_pick_q[lc] <= lf_q[32 * lc +: 17];
+    end endgenerate
     genvar gh;
     generate for (gh = 0; gh < 2; gh = gh + 1) begin : g_lm
         dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mem (
@@ -450,8 +458,8 @@ module dsdv_idx_rg3_br #(
     always @* begin
         g_b = 17'd0; g_e = 4'd0;
         for (e2 = 0; e2 < 16; e2 = e2 + 1) begin
-            g_b[8:0]  = g_b[8:0]  | ({9{g_ohp[e2]}} & lf_q[32 * e2 +: 9]);
-            g_b[16:9] = g_b[16:9] | ({8{g_ohr[e2]}} & lf_q[32 * e2 + 9 +: 8]);
+            g_b[8:0]  = g_b[8:0]  | ({9{g_ohp[e2]}} & lf_pick_q[e2][8:0]);
+            g_b[16:9] = g_b[16:9] | ({8{g_ohr[e2]}} & lf_pick_q[e2][16:9]);
             g_e = g_e | ({4{g_oh[e2]}} & 4'(e2));
         end
     end
