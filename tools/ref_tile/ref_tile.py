@@ -1476,6 +1476,12 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
     fr = s.get("fill_reason") or {}
     reason = str(fr.get("pin_bound", "")).strip()
     reason_kind = "pin-bound"
+    tpc = s.get("_tp_comp")
+    if not reason and tpc and not s.get("outline") and tpc["bound"] in ("pins", "macros"):
+        # TILE-FLOW: the outline IS the content minimum (tile_plan.content_outline): the fill is the interface's /
+        # macro array's honest cost, measured, not a hand number
+        reason = f"tile_plan content outline, {tpc['bound']}-bound ({tpc['why']})"
+        reason_kind = "tile_plan"
     structural = fr.get("lattice_channel_bound")
     if structural is not None:
         errors = lattice_band_errors(s, W, H, blocks, float(std_area), planning=True, root=ROOT)
@@ -1700,7 +1706,7 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
         sy = math.floor(max(0.0, (hi_y - by1) / 2) / gy) * gy
         for b in auto:      # centre the array in the free window, on the lattice
             b["_xy"] = (round(b["_xy"][0] + sx, 4), round(b["_xy"][1] + sy, 4))
-    col_shift = {}
+    col_shift, col_last = {}, {}
     for b in sorted(blocks, key=lambda c: (c["_tp"]["col"], c["_tp"]["y"], c["_tp"]["x"]) if c.get("_tp") else (-1, 0, 0)):
         if not b.get("_tp"):
             continue
@@ -1713,10 +1719,28 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
         else:
             dx, dy = col_shift[p["col"]]
             bx, by = round(p["x"] + dx, 4), round(p["y"] + dy, 4)
-            r = cmta.check_placement(track_macro(b["view"]) if b.get("_tm") is None else b["_tm"], b["orient"],
-                                     round(bx * 1000), round(by * 1000))
-            off = sum(v["offtrack"] for v in r["layers"].values())
+            prev = col_last.get(p["col"])
+            tm = track_macro(b["view"]) if b.get("_tm") is None else b["_tm"]
+            off = 1
+            if prev is not None and p.get("abut_below"):
+                # abutted N-S stack: the smallest gap in [0, ABUT_UM] that keeps this array's pins on the tracks
+                y0 = prev["y"] + prev["h"]
+                for g in range(0, int(ABUT_UM * 1000) + 1, 2):
+                    yy = round(y0 + g / 1000.0, 4)
+                    r = cmta.check_placement(tm, b["orient"], round(bx * 1000), round(yy * 1000))
+                    off = sum(v["offtrack"] for v in r["layers"].values())
+                    if not off:
+                        by = yy
+                        break
+            if off:
+                if prev is not None and p.get("abut_below"):      # no on-track abutment: a legal channel instead
+                    by = prev["y"] + prev["h"] + CHANNEL_UM
+                r = cmta.check_placement(tm, b["orient"], round(bx * 1000), round(by * 1000))
+                off = sum(v["offtrack"] for v in r["layers"].values())
+                if off:
+                    bx, by, off = on_track(b, snap(bx, GRID_X), snap_up(by, GRID_Y))
         b.update(x=bx, y=by, offtrack=off)
+        col_last[p["col"]] = b
     for b in blocks:
         if b.get("_tp"):
             continue
