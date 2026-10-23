@@ -201,13 +201,15 @@ def audit_kit(g: Git, ref: str, kit: str, review: dict, rtlchk: dict) -> dict | 
     widths = TP.port_widths(texts, s.get("top", ""), s.get("params")) if texts else None
     demand, exact = TP.face_demand(s, widths)
     blocks = (fp or {}).get("blocks") or []
-    macros = []
+    macros, fixed = [], []
     for b in blocks:
         if b.get("kind") not in ("macro", "child"):
             continue
         tm = lef_macro(g, ref, b["view"])
         if tm:
             macros.append({"w": b["w"], "h": b["h"], "tm": tm})
+        else:       # no LEF at this ref: still a hard block (its footprint), never std area
+            fixed.append({"w": b["w"], "h": b["h"]})
     if not blocks:
         for m in s.get("macros", []):
             tm = lef_macro(g, ref, m["view"])
@@ -218,10 +220,12 @@ def audit_kit(g: Git, ref: str, kit: str, review: dict, rtlchk: dict) -> dict | 
     comp = None
     if std:
         try:
-            comp = TP.content_outline(float(std), macros, demand, halo=halo)
+            cap = str(s.get("layer_cap") or "M5")
+            comp = TP.content_outline(float(std), macros, demand, halo=halo, fixed=fixed,
+                                      pin_layers=TP.face_pin_layers(cap if cap in ("M5", "M6") else "M5"))
         except Exception as e:  # noqa: BLE001
             comp = {"error": str(e)[:80]}
-    mac_area = sum(m["w"] * m["h"] for m in macros)
+    mac_area = sum(m["w"] * m["h"] for m in macros + fixed)
     fill = (float(std) / max(1e-9, W * H - mac_area)) if (std and W) else None
     pr = s.get("pin_regs")
     mode = ("wrapper" if isinstance(pr, dict) and pr.get("enable") else

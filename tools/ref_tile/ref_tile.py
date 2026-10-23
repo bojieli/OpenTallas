@@ -107,7 +107,7 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 #   5  (TILE-FLOW 2026-10-23, coordinator review of 109 unclosed tiles: 2-15 % fill, pin registers 300-630 um inside,
 #      thousands of unregistered pins, macros facing away) recipe 4 + "tile_plan" (tools/ref_tile/tile_plan.py) for leaf
 #      tiles: the outline comes from the CONTENT (std / util 0.65 + macro footprints + pin-register band, aspect from the
-#      per-face pin demand at <= 3 pins/um, checked against the parent slot), macros without "at" form the compact array
+#      per-face pin demand at <= 6 pins/um on two alternating pin layers (3 on one), checked against the parent slot), macros without "at" form the compact array
 #      of tile_plan.plan_macros (abutted columns, pin faces into logic channels sized from their pin count), and every
 #      pin register is fenced in a <= 14 um band along its own face (physical/common_flow/pin_reg_face_fence.tcl).
 #      Registers come from the RTL: the flow-inserted pin-register wrapper (pin_regs) is off by default and a pin bit
@@ -287,6 +287,11 @@ def tile_plan_on(s: dict) -> dict | None:
         raise SpecError('spec: tile_plan must be an object ({} = defaults) or false')
     if s.get("kind") != "tile":
         raise SpecError("spec: tile_plan applies to leaf tiles")
+    if tp.get("logic_face") not in (None, "N", "S", "E", "W"):
+        raise SpecError("spec: tile_plan.logic_face is one of N S E W (the face the one logic band runs along)")
+    pd = tp.get("pin_density")
+    if pd is not None and not (isinstance(pd, (int, float)) and 0 < float(pd) <= TP.PIN_WINDOW_MAX):
+        raise SpecError(f"spec: tile_plan.pin_density must be in (0, {TP.PIN_WINDOW_MAX:g}] pins/um")
     return tp
 
 
@@ -314,6 +319,10 @@ def apply_tile_plan_hooks(s: dict) -> None:
                         "unregistered_ok with a reason")
     if not s.get("io_flop_at_pins"):
         s["io_flop_at_pins"] = {"cols": 4, "allow_none": True}
+    # the pin generator (COORD 10-23): balanced place_pin, layers alternating pin by pin (group_max 1) over the face's
+    # two layers (pin_balance_env defaults = tile_plan.face_pin_layers of the cap: E/W M4 [+M6], N/S M3+M5)
+    if "pin_balance" not in s.get("route", {}) and tp.get("pin_balance", True) is not False:
+        s.setdefault("route", {})["pin_balance"] = {"group_max": 1}
     hooks = list(s.get("pin_hook_after_flops") or [])
     if TILE_PLAN_FENCE_TCL not in hooks:
         hooks.append(TILE_PLAN_FENCE_TCL)
@@ -1327,14 +1336,43 @@ def gen_pdn(s: dict, lc: dict) -> str:
 
 
 # --------------------------------------------------------------------------------------------- floorplan
+def tile_plan_widths(s: dict) -> dict | None:
+    """{port: width} of the kit's top from its header (tile_plan.port_widths), None when unresolved; cached in the spec"""
+    if "_tp_widths" not in s:
+        texts = {}
+        for f in s["sources"]:
+            p = ROOT / f
+            if p.suffix in (".sv", ".v") and p.is_file():
+                texts[f] = p.read_text(errors="replace")
+        s["_tp_widths"] = TP.port_widths(texts, s["top"], s.get("params"))
+    return s["_tp_widths"]
+
+
 def tile_plan_demand(s: dict) -> tuple[dict, bool]:
     """({face: pin bits}, exact) of the spec's pin plan, widths from the top's header (tile_plan.port_widths)"""
-    texts = {}
-    for f in s["sources"]:
-        p = ROOT / f
-        if p.suffix in (".sv", ".v") and p.is_file():
-            texts[f] = p.read_text(errors="replace")
-    return TP.face_demand(s, TP.port_widths(texts, s["top"], s.get("params")))
+    return TP.face_demand(s, tile_plan_widths(s))
+
+
+def tile_plan_pin_layers(s: dict, slot: dict | None) -> dict:
+    """{"h": E / W layers, "v": N / S layers} the route places the kit's pins on (route_pin_settings: the balanced
+    placer of a tile_plan kit alternates over them pin by pin)"""
+    st = route_pin_settings(s, layer_contract(s, slot))
+    return {"h": list(st["h"]), "v": list(st["v"])}
+
+
+def tile_plan_pin_checks(s: dict, W: float, H: float, slot: dict | None) -> list:
+    """TP.face_pin_check of every pinned face on the kit's actual pin regions (pin_regions; widths from the header,
+    unknown = 1 bit)"""
+    tp = tile_plan_on(s) or {}
+    widths = tile_plan_widths(s) or {}
+    layers = tile_plan_pin_layers(s, slot)
+    per = {}
+    for r in pin_regions(s):
+        n = sum(int(widths.get(x, 1)) for x in r["names"])
+        lo, hi = r["range"] if r["range"] else (None, None)
+        per.setdefault(r["face"], []).append((n, lo, hi))
+    return [TP.face_pin_check(f, W if f in ("N", "S") else H, regs, layers,
+                              float(tp.get("pin_density", TP.PIN_DENSITY))) for f, regs in sorted(per.items())]
 
 
 def tile_plan_outline(s: dict, slot: dict | None, std: float | None, blocks: list) -> dict | None:
@@ -1348,11 +1386,13 @@ def tile_plan_outline(s: dict, slot: dict | None, std: float | None, blocks: lis
     halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
     ms = [{"w": b["w"], "h": b["h"], "tm": track_macro(b["view"]), "key": i}
           for i, b in enumerate(blocks) if b["kind"] == "macro" and not b.get("at")]
-    fixed = sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks if b["kind"] != "macro" or b.get("at"))
+    # GEOM-REVIEW 10-23 (s81dv_rg3b_xm6 'std 80412 + macros 0'): macros at fixed spec positions and hard children are
+    # MACRO area from their LEF footprint, never std cells; std stays the synthesized std-cell area without macros
+    fixed = [{"w": b["w"], "h": b["h"]} for b in blocks if b["kind"] != "macro" or b.get("at")]
     sl = (float(slot["outline"]["w"]), float(slot["outline"]["h"])) if slot else None
-    comp = TP.content_outline(float(std) + fixed * float(tp.get("util", TP.TARGET_UTIL)), ms, demand,
-                              util=float(tp.get("util", TP.TARGET_UTIL)), halo=halo, slot=sl,
-                              pin_density=float(tp.get("pin_density", TP.PIN_DENSITY)))
+    comp = TP.content_outline(float(std), ms, demand, util=float(tp.get("util", TP.TARGET_UTIL)), halo=halo, slot=sl,
+                              pin_density=float(tp.get("pin_density", TP.PIN_DENSITY)), fixed=fixed,
+                              pin_layers=tile_plan_pin_layers(s, slot), logic_face=tp.get("logic_face"))
     comp["widths_exact"] = exact
     return comp
 
@@ -1678,7 +1718,7 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
         dem = s.get("_tp_demand")
         if dem is None:
             dem = tile_plan_demand(s)[0]
-        tp_plan = TP.plan_macros(W, H, ms, dem, halo)
+        tp_plan = TP.plan_macros(W, H, ms, dem, halo, logic_face=(s.get("tile_plan") or {}).get("logic_face"))
         if tp_plan["ok"]:
             for p in tp_plan["placed"]:
                 auto_m[p["key"]].update(orient=p["orient"], _tp=p)
@@ -2909,9 +2949,19 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
                                  "put the request in spec slot_change_request; the die lead re-derives the parent slot"))
             if tpc["bound"] == "pins":
                 findings.append(("WARN", "pin_bound", f"outline set by the pin demand ({tpc['pin_density']} pins/um at "
-                                 f"<= {TP.PIN_DENSITY:g}), std fill {tpc['fill']:.0%}: the tile is interface-limited",
+                                 f"<= {tpc.get('pin_cap')}), std fill {tpc['fill']:.0%}: the tile is interface-limited",
                                  "narrow / time-multiplex the interface or move pins to free faces; a lower fill is the "
                                  "honest cost of this interface"))
+        # COORD 10-23 pin-density rule on the kit's ACTUAL pin regions: <= 6/um averaged on two alternating layers, <= 6
+        # in any 10-um window, pin/track <= 0.6, no stacked (overlapping) balanced regions
+        for c in tile_plan_pin_checks(s, W, H, slot):
+            if not c["ok"]:
+                findings.append(("FAIL", "pin_density", f"{c['face']} face {c['pins']} pins: " + "; ".join(c["why"]),
+                                 "longer face / second pin layer (face_pin_layers: E/W M4+M6 needs layer_cap M6) / "
+                                 "disjoint pin_ranges / narrower interface"))
+            elif c["overlap"]:
+                findings.append(("WARN", "pin_density", f"{c['face']} face: {len(c['overlap'])} small pin regions "
+                                 "overlap a wider one (<= 2 pins each): balanced positions may coincide", ""))
     pgs = pg_stripe_spread(s, lc, W, H)
     if not pg_spread_ok(pgs):
         findings.append(("FAIL", "pg_spread",
