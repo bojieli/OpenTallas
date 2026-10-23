@@ -50,3 +50,13 @@ CURRENT_CONTRACT --programme CURRENT_EMIT/images/su_prog00 --out OUT` prepares
 this same minimum vehicle for an actual current programme. It requires the
 real contract's SPARSE_SU=1, pins selected source hashes, and copies the actual
 compiled image and commands. Run its generated `run.sh` on the fleet.
+
+Default SPARSE_SU=0 preservation: existing `tb_hbm_static_cfg_collar` ran
+against the exact old and new sources (gold1 unit 285491-1792733685).
+All three entire output logs compare byte-identically: positive 35 checks
+(A0=2100/A1=5/B=10), sequence mutant 1 with two expected failures, and need
+mutant 2 with four expected failures. This bench covers existing dense
+SU/SFU/IDX shapes, XSER=0/1, and reset while stream events are in flight.
+The dense row-zero/restart branch is unchanged; clearing need/operand
+ownership at a new generation occurs only inside the opt-in sparse branch.
+See `legacy_default_identity.json` and the three committed logs.
