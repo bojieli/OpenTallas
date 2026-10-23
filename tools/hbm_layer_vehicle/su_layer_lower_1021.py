@@ -398,7 +398,7 @@ class TreeLines:
 
 
 def reduce_to_rf(ql, *, a_base, nwords, kind, lane_m1, imm1, rf_addr, q, data, place, tag, timing,
-                 fill_row0=0, edge0=0, b_base=None):
+                 fill_row0=0, edge0=0, b_base=None, pretree_profile=None):
     """Lane arithmetic -> pretree -> reducer -> EXPORT -> stree -> RF word rf_addr, programmed into ql from edge0.
 
     Returns dict(value, rf_commit, ...) or dict(refusal=why).  Every operand word enters through real VM fills of its
@@ -458,7 +458,7 @@ def reduce_to_rf(ql, *, a_base, nwords, kind, lane_m1, imm1, rf_addr, q, data, p
     first_issue = setup + 8
     issue_to_tree = LI.FIRST_OUT - LI.SETUP_TO_EMIT + 1
     tree_first = first_issue + issue_to_tree
-    schedule = PT.Schedule()
+    schedule = PT.Schedule(**({"pt_red": pretree_profile.tree_to_reducer} if pretree_profile else {}))
     schedule.lower(kind, lane_bits, 0x100 | rf_addr, tree_first)
     block_edges = pretree_blocks(nb, tree_first)
     if set(block_edges) != set(schedule.tree):
@@ -885,15 +885,15 @@ def pretree_lower_blocks(sched, kind, blocks, tag, t0):
             sched.tree[ee] = (mx, cnt, blk)
             v = PT.block_subtree(kind, blk, cnt)
             d = sched._new_addr()
-            sched._red(ee + PT.PT_RED, op=PT.OP_LOAD, a=0, b=0, d=d, tag=0, osel=1, lane=0x20)
-            ready = ee + PT.PT_RED + PT.DEP
+            sched._red(ee + sched.pt_red, op=PT.OP_LOAD, a=0, b=0, d=d, tag=0, osel=1, lane=0x20)
+            ready = ee + sched.pt_red + PT.DEP
             if bo < nb:
                 blk, cnt = blocks[bo]
                 sched.tree[eo] = (mx, cnt, blk)
                 vo = PT.block_subtree(kind, blk, cnt)
-                sched._red(eo + PT.PT_RED, op=ext, a=d, b=0, d=d, tag=0, osel=1, lane=0x20)
+                sched._red(eo + sched.pt_red, op=ext, a=d, b=0, d=d, tag=0, osel=1, lane=0x20)
                 v = PT.fmax(v, vo) if mx else PT.fadd(v, vo)
-                ready = eo + PT.PT_RED + PT.DEP
+                ready = eo + sched.pt_red + PT.DEP
             level.append((d, ready, v))
         t += PT.DEP + P
     last = 0
@@ -917,7 +917,7 @@ def pretree_lower_blocks(sched, kind, blocks, tag, t0):
 
 
 def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_local=None, layout=False,
-                    expected_reduction_word=None, **unused):
+                    expected_reduction_word=None, pretree_profile=None, **unused):
     """SU.VOP on the quarter's 32 KIND>=1 lanes: 32-element sub-issues, sector 4s+j <-> store group j / VM port j.
 
     Elementwise records: quarter q's share (as the 128-lane mapping), or -- layout=True / reductions -- the WHOLE
@@ -977,7 +977,8 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
             return refusal("broadcast_scalar_VM_word_unknown")
         rf_b = b.base & 255
         pro_core = reduce_to_rf(ql, a_base=b.base, nwords=1, kind="sum", lane_m1=0, imm1=0, rf_addr=rf_b, q=q,
-                                data=data, place=place, tag=tag + ":Bxfer", timing=timing)
+                                data=data, place=place, tag=tag + ":Bxfer", timing=timing,
+                                pretree_profile=pretree_profile)
         if "refusal" in pro_core:
             return refusal("broadcast_transfer: " + pro_core["refusal"])
         if pro_core["value"] != int(np.float32(data[b.base]).view(np.uint32)):
@@ -1065,7 +1066,7 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
         for st in subs:
             cnt = min(SFU_LANES, n - st)
             blocks.append(([int(x) for x in outbits[st:st + cnt]] + [0] * (PT.BLOCK - cnt), cnt))
-        sched = PT.Schedule()
+        sched = PT.Schedule(**({"pt_red": pretree_profile.tree_to_reducer} if pretree_profile else {}))
         rf_r = desc["R"].base & 255
         tree_first = setup + LI.SETUP_TO_EMIT + lat + 1
         val = pretree_lower_blocks(sched, kind, blocks, 0x100 | rf_r, tree_first)
@@ -1147,6 +1148,18 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
     hold = pack(dict(ctl, vb=vb_of(0)))
     for e in range(0, commit + 1):
         ql.f["control"].setdefault(e, hold)
+    # The pre-tree samples tree_cmd and lane ro_v at the same edge.  The
+    # scheduler's slots include a publication edge that the KIND1 lanes do not
+    # need: align their commands (including the scalar B transfer) one edge
+    # earlier. The reducer consumes valid pulses, so advance its graph with the
+    # pre-tree. Lane issues and guarded RF reads, drains and checks stay fixed.
+    for field in ("tree", "red"):
+        ql.f[field] = {edge - 1: word for edge, word in ql.f[field].items()}
+    for event in rf_events:
+        if event["kind"] == "export":
+            for key in ("command_serial", "scalar_capture_serial", "rf_write_pins_serial", "rf_commit_serial"):
+                if key in event:
+                    event[key] -= 1
     lines = ql.lines()
     if len(lines) > LI.EDGES_MAX:
         return refusal("native_programme_capacity_exceeded")
@@ -1177,6 +1190,7 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
         expected_reference=dict(role="comparison_only", source="hdc_golden(+v41 div) KIND-1 lane model"
                                 + (" + csum8/ordered max" if red else "")),
         source_contract=dict(lanes="quarter-local 0..31 (KIND 1/2)", divider_depth=19, exp_depth=56,
+                             pretree_timing=pretree_profile.as_dict() if pretree_profile else None,
                              sigmoid_silu_depth=78, MLAT=4, ALAT=3, RF_LOCAL=rf_local, B_srcs_code=1 if bcast else 0),
         timing_obligations=dict(issue_to_output=lat, serial_edges=len(lines), stream_edges=math.ceil(4 * len(lines) / 3),
                                 old_price_preserved=False, connected_selected_case_RTL_required=True))
