@@ -1350,6 +1350,39 @@ def ref_gate_at_submit(j, jobs=None):
     else:
         event(j, f"ref gate PASS: {res.get('message', '')[:200]}")
 
+# GEOM-REVIEW (OWNER RULE 2026-10-23): "For the failing elements, you must perform thorough and independent visual geometry
+# review before submitting another place and route."  A ref_tile route of an element with failure history (failed loop
+# route not followed by a CLOSED one, open fleet-viz row with failed jobs, or a COORD BAD layout verdict) is REFUSED
+# unless GEOM-REVIEW recorded a PASS for the kit's content hash (tools/closure_loop/geom_review_gate.py,
+# lanes/GEOM-REVIEW.md).  STATE/geom_review.json {"mode": "refuse"|"warn"|"off"}, default refuse.
+def geom_review_at_submit(j, jobs=None):
+    mode = _state_mode("geom_review.json", "refuse")
+    if j["status"] != "QUEUED" or mode == "off" or not j["spec"].get("ref_tile"):
+        return
+    try:
+        import geom_review_gate
+        res = geom_review_gate.check(j["spec"], str(REPO), jobs if jobs is not None else all_jobs())
+    except Exception as ex:  # noqa: BLE001  (the gate's own failure never blocks intake)
+        event(j, f"geom review gate skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    v = res.get("verdict")
+    if v == "SKIP":
+        return
+    if v == "REFUSE" and mode != "refuse":
+        v = "WARN"
+    j.setdefault("submit_checks", {})["geom_review"] = {"verdict": v, "mode": mode, "hash": res.get("hash"),
+                                                        "message": res.get("message", "")[:1500]}
+    if v == "REFUSE":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT {res['message']}"[:1500]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    elif v == "WARN":
+        event(j, f"GEOM_REVIEW WARN ({mode}): {res['message'][:1200]}")
+    else:
+        event(j, res.get("message", "")[:300])
+
+
 # BENCH-REQUIRED (owner 2026-10-13, el1013-bench-required): lint-only ref_tile jobs routed for hours, CLOSED on timing and
 # were then refused by the guarded auto-merge ("no behavioral positive + negative mutant": s81su_qnt_cb32,
 # s81su_swe_gfix, s81hc_ctnl_l0/l1/l2, smn FS r1, HC crooty Y v4) -- validate() let them in on a no_bench_reason.
@@ -1567,6 +1600,8 @@ def ingest():
                     hier_lint_at_submit(j)
                 if j["status"] == "QUEUED":
                     ref_gate_at_submit(j, hist)
+                if j["status"] == "QUEUED":
+                    geom_review_at_submit(j, hist)   # failing element: independent visual review PASS (OWNER 10-23)
                 if j["status"] == "QUEUED":
                     bench_paths_at_submit(j)
         save_job(j)
@@ -9918,6 +9953,16 @@ def cmd_validate(a):
               + (f" (estimate {res.get('est')} b/um, with fix {res.get('est_fix')})" if res.get("est") else ""))
         if res["verdict"] == "REFUSE":
             errs.append(f"SUBMIT_LINT FLOORPLAN_MARGIN: the loop would REFUSE this job: {res['message']}")
+        if spec.get("ref_tile") and _state_mode("geom_review.json", "refuse") != "off":
+            try:
+                import geom_review_gate
+                gr = geom_review_gate.check(spec, str(REPO), geom_review_gate.jobs_for_block(spec.get("block", ""), STATE))
+            except Exception as ex:  # noqa: BLE001
+                gr = {"verdict": "SKIP", "message": f"geom review gate skipped: {type(ex).__name__}: {ex}"}
+            if gr["verdict"] == "REFUSE" and _state_mode("geom_review.json", "refuse") == "refuse":
+                errs.append(f"the loop would REFUSE this job: {gr['message']}")
+            elif gr["verdict"] != "SKIP" or "skipped" in gr.get("message", ""):
+                print(f"geom review {gr['verdict']}: {gr['message']}")
         elif res["verdict"] == "FIX":
             print(f"  the loop will add {res['fix']} {res['fix_env']} to the route_master stage commands at intake")
         commit = str((spec.get("source") or {}).get("commit", ""))
