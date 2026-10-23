@@ -3,7 +3,7 @@
   "cdc_synchronizers": {
    "components": {
     "inputs": {
-     "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "b97676d8062f9e812fc458485b029536e2ef0ba8315892885066cb109e631463"
+     "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "3a95302e9e9be64d2ecbe31a06be589e62f28420d45439d019da85c151cc01bd"
     },
     "policy": "cdc_synchronizers",
     "spec": {
@@ -145,9 +145,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-22T22:50:49-0700",
+   "created": "2026-10-22T23:00:40-0700",
    "host": "ot-pve1",
-   "key": "df1c851caaf2337c79e447ce30b9498577d234aa1ad8d1b87fcb8fb5bc0fddca",
+   "key": "7250342dc8c43a4d806ba27b7ccc5c9fc8aeb2731c60d7f3897ed2f0cee6a95f",
    "record": {
     "counts": {
      "capture": 279,
@@ -1577,6 +1577,276 @@
      "g_rst_sync.rs[1]": [
       "stream_reset",
       "stage2",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[0]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[10]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[1]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[2]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[3]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[4]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[5]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[6]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[7]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[8]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_addr_word[0].u_addr.d[9]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[0]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[10]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[11]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[12]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[13]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[14]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[15]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[1]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[2]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[3]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[4]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[5]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[6]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[7]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[8]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[0].u_need.d[9]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[0]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[10]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[11]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[12]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[13]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[14]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[15]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[1]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[2]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[3]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[4]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[5]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[6]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[7]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[8]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_count_word[1].u_need.d[9]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[0]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[10]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[1]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[2]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[3]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[4]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[5]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[6]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[7]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[8]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.g_last_word[0].u_last.d[9]": [
+      "xser_event",
+      "capture",
       0
      ],
      "g_sparse_bounded.g_payload[0].u_operand.d[0]": [
@@ -4135,6 +4405,61 @@
       0
      ],
      "g_sparse_bounded.g_payload[9].u_programme.d[9]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[0]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[10]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[1]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[2]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[3]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[4]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[5]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[6]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[7]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[8]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_sparse_bounded.linear_words[9]": [
       "xser_event",
       "capture",
       0
@@ -6709,6 +7034,206 @@
       "capture",
       0
      ],
+     "g_xser.g_capture_words.u_ca.d[0]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[10]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[11]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[1]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[2]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[3]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[4]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[5]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[6]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[7]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[8]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.d[9]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[0]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[10]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[11]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[1]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[2]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[3]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[4]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[5]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[6]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[7]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[8]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ca.q[9]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.d[0]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.d[1]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.d[2]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.d[3]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.d[4]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.d[5]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.d[6]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.d[7]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.q[0]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.q[1]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.q[2]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.q[3]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.q[4]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.q[5]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.q[6]": [
+      "xser_event",
+      "capture",
+      0
+     ],
+     "g_xser.g_capture_words.u_ct.q[7]": [
+      "xser_event",
+      "capture",
+      0
+     ],
      "g_xser.g_hold_words.g_word[0].u_word.q[0]": [
       "xser_event",
       "payload",
@@ -6787,6 +7312,11 @@
      "g_xser.g_hold_words.g_word[0].u_word.q[9]": [
       "xser_event",
       "payload",
+      0
+     ],
+     "g_xser.g_hold_words.g_word[0].u_word.qual": [
+      "stream_reset",
+      "stage2",
       0
      ],
      "g_xser.g_hold_words.g_word[10].u_word.q[0]": [
@@ -6869,6 +7399,11 @@
       "payload",
       0
      ],
+     "g_xser.g_hold_words.g_word[10].u_word.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
      "g_xser.g_hold_words.g_word[11].u_word.q[0]": [
       "xser_event",
       "payload",
@@ -6947,6 +7482,11 @@
      "g_xser.g_hold_words.g_word[11].u_word.q[9]": [
       "xser_event",
       "payload",
+      0
+     ],
+     "g_xser.g_hold_words.g_word[11].u_word.qual": [
+      "stream_reset",
+      "stage2",
       0
      ],
      "g_xser.g_hold_words.g_word[12].u_word.q[0]": [
@@ -7029,6 +7569,11 @@
       "payload",
       0
      ],
+     "g_xser.g_hold_words.g_word[12].u_word.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
      "g_xser.g_hold_words.g_word[13].u_word.q[0]": [
       "xser_event",
       "payload",
@@ -7107,6 +7652,11 @@
      "g_xser.g_hold_words.g_word[13].u_word.q[9]": [
       "xser_event",
       "payload",
+      0
+     ],
+     "g_xser.g_hold_words.g_word[13].u_word.qual": [
+      "stream_reset",
+      "stage2",
       0
      ],
      "g_xser.g_hold_words.g_word[14].u_word.q[0]": [
@@ -7189,6 +7739,11 @@
       "payload",
       0
      ],
+     "g_xser.g_hold_words.g_word[14].u_word.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
      "g_xser.g_hold_words.g_word[15].u_word.q[0]": [
       "xser_event",
       "payload",
@@ -7267,6 +7822,11 @@
      "g_xser.g_hold_words.g_word[15].u_word.q[9]": [
       "xser_event",
       "payload",
+      0
+     ],
+     "g_xser.g_hold_words.g_word[15].u_word.qual": [
+      "stream_reset",
+      "stage2",
       0
      ],
      "g_xser.g_hold_words.g_word[1].u_word.q[0]": [
@@ -7349,6 +7909,11 @@
       "payload",
       0
      ],
+     "g_xser.g_hold_words.g_word[1].u_word.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
      "g_xser.g_hold_words.g_word[2].u_word.q[0]": [
       "xser_event",
       "payload",
@@ -7427,6 +7992,11 @@
      "g_xser.g_hold_words.g_word[2].u_word.q[9]": [
       "xser_event",
       "payload",
+      0
+     ],
+     "g_xser.g_hold_words.g_word[2].u_word.qual": [
+      "stream_reset",
+      "stage2",
       0
      ],
      "g_xser.g_hold_words.g_word[3].u_word.q[0]": [
@@ -7509,6 +8079,11 @@
       "payload",
       0
      ],
+     "g_xser.g_hold_words.g_word[3].u_word.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
      "g_xser.g_hold_words.g_word[4].u_word.q[0]": [
       "xser_event",
       "payload",
@@ -7587,6 +8162,11 @@
      "g_xser.g_hold_words.g_word[4].u_word.q[9]": [
       "xser_event",
       "payload",
+      0
+     ],
+     "g_xser.g_hold_words.g_word[4].u_word.qual": [
+      "stream_reset",
+      "stage2",
       0
      ],
      "g_xser.g_hold_words.g_word[5].u_word.q[0]": [
@@ -7669,6 +8249,11 @@
       "payload",
       0
      ],
+     "g_xser.g_hold_words.g_word[5].u_word.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
      "g_xser.g_hold_words.g_word[6].u_word.q[0]": [
       "xser_event",
       "payload",
@@ -7747,6 +8332,11 @@
      "g_xser.g_hold_words.g_word[6].u_word.q[9]": [
       "xser_event",
       "payload",
+      0
+     ],
+     "g_xser.g_hold_words.g_word[6].u_word.qual": [
+      "stream_reset",
+      "stage2",
       0
      ],
      "g_xser.g_hold_words.g_word[7].u_word.q[0]": [
@@ -7829,6 +8419,11 @@
       "payload",
       0
      ],
+     "g_xser.g_hold_words.g_word[7].u_word.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
      "g_xser.g_hold_words.g_word[8].u_word.q[0]": [
       "xser_event",
       "payload",
@@ -7909,6 +8504,11 @@
       "payload",
       0
      ],
+     "g_xser.g_hold_words.g_word[8].u_word.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
      "g_xser.g_hold_words.g_word[9].u_word.q[0]": [
       "xser_event",
       "payload",
@@ -7987,6 +8587,121 @@
      "g_xser.g_hold_words.g_word[9].u_word.q[9]": [
       "xser_event",
       "payload",
+      0
+     ],
+     "g_xser.g_hold_words.g_word[9].u_word.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[0]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[10]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[11]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[1]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[2]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[3]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[4]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[5]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[6]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[7]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[8]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.q[9]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ca.qual": [
+      "stream_reset",
+      "stage2",
+      0
+     ],
+     "g_xser.g_hold_words.u_ct.q[0]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ct.q[1]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ct.q[2]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ct.q[3]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ct.q[4]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ct.q[5]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ct.q[6]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ct.q[7]": [
+      "xser_event",
+      "payload",
+      0
+     ],
+     "g_xser.g_hold_words.u_ct.qual": [
+      "stream_reset",
+      "stage2",
       0
      ],
      "g_xser.h_ca[0]": [
@@ -9571,7 +10286,7 @@
      ]
     },
     "source_sha256": {
-     "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "b97676d8062f9e812fc458485b029536e2ef0ba8315892885066cb109e631463"
+     "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv": "3a95302e9e9be64d2ecbe31a06be589e62f28420d45439d019da85c151cc01bd"
     }
    },
    "seconds": 8

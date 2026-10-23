@@ -106,6 +106,8 @@ module ot_hbm_static_cfg_collar #(
     // MUT 8 (bench): a mid-run reset does not reach the core state (configuration, armed, hwm, records).
     // XSER=1 elaboration is unchanged (g_rst_sync below, byte-identical text; col_su r3 closed view).
     wire rst_c_n, rst_s_n, rst_stage1;
+    (* keep *) reg rst_c_payload_n;
+    always @(posedge clk) rst_c_payload_n<=rst_stage1;
     generate if (XSER == 0) begin : g_rst_same
         reg [1:0] rc;
         assign rst_stage1=rc[0];
@@ -183,11 +185,14 @@ module ot_hbm_static_cfg_collar #(
         // held payload: plain enabled flops outside the async-reset block (HBMA-HOST 2026-10-17). Inside it, synthesis
         // folded the serial-domain rst_n into the stream-domain DFFE enable (a reset on the datapath, crossing domains;
         // OT_MULTI_ROOT). pv_* are cleared by the stream reset, so the enable is low under reset exactly as before: bit-identical.
-        always @(posedge clk_in)
-            if (pv_cv || pv_dv || pv_lv) begin h_ct <= p_ct; h_ca <= p_ca; end
+        if(!SPARSE_SU) begin:g_legacy_hold_meta
+            always @(posedge clk_in) if(pv_cv || pv_dv || pv_lv) begin h_ct<=p_ct; h_ca<=p_ca; end
+        end
         if (SPARSE_SU) begin:g_hold_words
+            ot_hbm_collar_sparse_word #(.W(8)) u_ct(.clk(clk_in),.en(pv_cv || pv_dv || pv_lv),.qual(rst_s_n),.d(p_ct),.q(h_ct));
+            ot_hbm_collar_sparse_word #(.W(12)) u_ca(.clk(clk_in),.en(pv_cv || pv_dv || pv_lv),.qual(rst_s_n),.d(p_ca),.q(h_ca));
             for(genvar w=0;w<16;w=w+1) begin:g_word
-                ot_hbm_collar_sparse_word u_word(.clk(clk_in),.en(pv_cv || pv_dv || pv_lv),.d(p_cd[w*16+:16]),.q(h_cd[w*16+:16]));
+                ot_hbm_collar_sparse_word u_word(.clk(clk_in),.en(pv_cv || pv_dv || pv_lv),.qual(rst_s_n),.d(p_cd[w*16+:16]),.q(h_cd[w*16+:16]));
             end
         end else always @(posedge clk_in) if(pv_cv || pv_dv || pv_lv) h_cd<=p_cd;
         reg [1:0] x1_seq, x2_seq, x3_seq;
@@ -199,10 +204,14 @@ module ot_hbm_static_cfg_collar #(
         wire [1:0] q_old = (MUT == 7) ? x2_seq : x3_seq;
         wire ev = q_new != q_old;
         wire [1:0] b_new = {q_new[1], q_new[1] ^ q_new[0]}, b_old = {q_old[1], q_old[1] ^ q_old[0]};
-        always @(posedge clk) if (ev) begin ct <= h_ct; ca <= h_ca; end
+        if(!SPARSE_SU) begin:g_legacy_capture_meta
+            always @(posedge clk) if(ev) begin ct<=h_ct; ca<=h_ca; end
+        end
         if (SPARSE_SU) begin:g_capture_words
+            ot_hbm_collar_sparse_word #(.W(8)) u_ct(.clk(clk),.en(ev),.qual(rst_c_payload_n),.d(h_ct),.q(ct));
+            ot_hbm_collar_sparse_word #(.W(12)) u_ca(.clk(clk),.en(ev),.qual(rst_c_payload_n),.d(h_ca),.q(ca));
             for(genvar w=0;w<16;w=w+1) begin:g_word
-                ot_hbm_collar_sparse_word u_word(.clk(clk),.en(ev),.d(h_cd[w*16+:16]),.q(cd[w*16+:16]));
+                ot_hbm_collar_sparse_word u_word(.clk(clk),.en(ev),.qual(rst_c_payload_n),.d(h_cd[w*16+:16]),.q(cd[w*16+:16]));
             end
         end else always @(posedge clk) if(ev) cd<=h_cd;
         always @(posedge clk or negedge rst_c_n)
@@ -215,8 +224,8 @@ module ot_hbm_static_cfg_collar #(
     // ---------------- state
     reg [SW-1:0] sel;
     reg [PAGE_W-1:0] page [0:NS-1];
-    reg [AW:0] hwm [0:NS-1];
-    reg [AW:0] need [0:NS-1];
+    (* mem2reg *) reg [AW:0] hwm [0:NS-1];
+    (* mem2reg *) reg [AW:0] need [0:NS-1];
     reg [AW-1:0] sparse_last;
     reg sparse_seen;
     wire [22:0] sparse_linear=23'(lin), sparse_previous=23'(sparse_last);
@@ -393,15 +402,26 @@ module ot_hbm_static_cfg_collar #(
         always @(posedge clk or negedge reset_leaf[14]) if(!reset_leaf[14]) rptr<=0; else rptr<=n_rptr;
         always @(posedge clk or negedge reset_leaf[15]) if(!reset_leaf[15]) tail<=0; else tail<=n_tail;
         always @(posedge clk or negedge reset_leaf[16]) if(!reset_leaf[16]) r_val<=0; else r_val<=n_r_val;
-        always @(posedge clk or negedge reset_leaf[17]) if(!reset_leaf[17]) sparse_last<=0; else sparse_last<=n_sparse_last;
-        always @(posedge clk or negedge reset_leaf[18]) if(!reset_leaf[18]) sparse_seen<=0; else sparse_seen<=n_sparse_seen;
-        always @(posedge clk) if(rst_c_n) pw_addr<=n_pw_addr;
-        always @(posedge clk) if(rst_c_n) rec<=n_rec;
-        for(genvar a_hwm=0;a_hwm<NS;a_hwm=a_hwm+1) begin:g_hwm
-            always @(posedge clk or negedge reset_leaf[19]) if(!reset_leaf[19]) hwm[a_hwm]<=0; else hwm[a_hwm]<=n_hwm[a_hwm];
+        wire [31:0] last_words;
+        wire [31:0] linear_words=32'(lin);
+        assign sparse_last=last_words[AW-1:0];
+        for(genvar sl=0;sl<2;sl=sl+1) begin:g_last_word
+            ot_hbm_collar_sparse_reset_word u_last(.clk(clk),.en(programme_write),.rst_n(reset_leaf[17]),.d(linear_words[sl*16+:16]),.q(last_words[sl*16+:16]));
         end
-        for(genvar a_need=0;a_need<NS;a_need=a_need+1) begin:g_need
-            always @(posedge clk or negedge reset_leaf[20]) if(!reset_leaf[20]) need[a_need]<=0; else need[a_need]<=n_need[a_need];
+        always @(posedge clk or negedge reset_leaf[18]) if(!reset_leaf[18]) sparse_seen<=0; else sparse_seen<=n_sparse_seen;
+        for(genvar aw=0;aw<AW;aw=aw+16) begin:g_addr_word
+            localparam integer WW=(AW-aw<16)?AW-aw:16;
+            ot_hbm_collar_sparse_word #(.W(WW)) u_addr(.clk(clk),.en(programme_write),.qual(reset_leaf[23]),.d(lin[aw+:WW]),.q(pw_addr[aw+:WW]));
+        end
+        always @(posedge clk) if(rst_c_n) rec<=n_rec;
+        wire [31:0] incremented_hwm=32'(hwm[0]+1'b1);
+        wire [31:0] count_words,need_words;
+        assign hwm[0]=count_words[AW:0];
+        assign need[0]=need_words[AW:0];
+        wire need_write=hit && !run && ca==12'hE01;
+        for(genvar hw=0;hw<2;hw=hw+1) begin:g_count_word
+            ot_hbm_collar_sparse_count_word u_count(.clk(clk),.en(programme_write),.rst_n(reset_leaf[19]),.restart(lin==0),.restart_value(hw==0?16'd1:16'd0),.incremented(incremented_hwm[hw*16+:16]),.q(count_words[hw*16+:16]));
+            ot_hbm_collar_sparse_reset_word u_need(.clk(clk),.en(need_write),.rst_n(reset_leaf[20]),.d(cd[hw*16+:16]),.q(need_words[hw*16+:16]));
         end
         for(genvar a_page=0;a_page<NS;a_page=a_page+1) begin:g_page
             always @(posedge clk or negedge reset_leaf[21]) if(!reset_leaf[21]) page[a_page]<=0; else page[a_page]<=n_page[a_page];
@@ -416,8 +436,8 @@ module ot_hbm_static_cfg_collar #(
             always @(posedge clk) if(rst_c_n) r_pay[a_r_pay]<=n_r_pay[a_r_pay];
         end
         for(genvar w=0;w<16;w=w+1) begin:g_payload
-            ot_hbm_collar_sparse_word u_programme(.clk(clk),.en(programme_write),.d(cd[w*16+:16]),.q(pw_data[w*16+:16]));
-            ot_hbm_collar_sparse_word u_operand(.clk(clk),.en(operand_write),.d(cd[w*16+:16]),.q(prm[w*16+:16]));
+            ot_hbm_collar_sparse_word u_programme(.clk(clk),.en(programme_write),.qual(reset_leaf[22]),.d(cd[w*16+:16]),.q(pw_data[w*16+:16]));
+            ot_hbm_collar_sparse_word u_operand(.clk(clk),.en(operand_write),.qual(reset_leaf[22]),.d(cd[w*16+:16]),.q(prm[w*16+:16]));
         end
     end else begin:g_legacy_state
     integer k;
@@ -499,7 +519,20 @@ module ot_hbm_static_cfg_collar #(
 endmodule
 // Retained word scope prevents ABC from absorbing a shared enable into hundreds of bit muxes.
 (* keep_hierarchy *) module ot_hbm_collar_sparse_word #(parameter integer W=16)(
-    input wire clk,en,input wire [W-1:0] d,output reg [W-1:0] q);
-    always @(posedge clk) if(en) q<=d;
+    input wire clk,en,qual,input wire [W-1:0] d,output reg [W-1:0] q);
+    // Real domain-reset qualification. Preserve this local Boolean boundary so mux select fanout stays within one word.
+    (* keep *) wire local_enable=en && qual;
+    always @(posedge clk) if(local_enable) q<=d;
+endmodule
+(* keep_hierarchy *) module ot_hbm_collar_sparse_reset_word(
+    input wire clk,en,rst_n,input wire [15:0] d,output reg [15:0] q);
+    (* keep *) wire local_enable=en && rst_n;
+    always @(posedge clk or negedge rst_n) if(!rst_n) q<=0; else if(local_enable) q<=d;
+endmodule
+(* keep_hierarchy *) module ot_hbm_collar_sparse_count_word(
+    input wire clk,en,rst_n,restart,input wire [15:0] incremented,restart_value,output reg [15:0] q);
+    (* keep *) wire local_enable=en && rst_n;
+    (* keep *) wire local_restart=restart && rst_n;
+    always @(posedge clk or negedge rst_n) if(!rst_n) q<=0; else if(local_enable) q<=local_restart?restart_value:incremented;
 endmodule
 `default_nettype wire

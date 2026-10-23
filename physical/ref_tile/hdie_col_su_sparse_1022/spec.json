@@ -87,7 +87,9 @@
   "io_hold_margin_ns": 0.03,
   "pin_min_tracks": 3,
   "synth_keep_modules": [
-   "ot_hbm_collar_sparse_word"
+   "ot_hbm_collar_sparse_word",
+   "ot_hbm_collar_sparse_reset_word",
+   "ot_hbm_collar_sparse_count_word"
   ]
  },
  "job": {
