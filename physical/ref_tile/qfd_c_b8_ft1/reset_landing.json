@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_c_b8_ft",
+ "enable": false,
+ "reason": "FT-QC: rst_n lands in u_rst (qfd_q3h_stn on ck_c0r0) and fans out through equal-depth D=15 region chains to the existing u_fab.u_rpin_<q> registers"
+}

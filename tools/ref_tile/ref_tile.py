@@ -1074,6 +1074,18 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
             if metal(top) is None or metal(top) > 7:
                 raise SpecError(f"layer contract (two-level): child {view_name(ch['view'])} PG top layer {top} must be <= M7")
             out["children"][view_name(ch["view"])] = top
+        if s.get("pg_contract") == "m7_passthrough":
+            # FT-PLAN (owner-approved 2026-10-23, FT-QC): die layer budget top-down -- clusters keep PG and signals at
+            # or below M7; M8/M9 are the die's (die + feedthrough wires).  The cluster's PG pins are its M7 stripes;
+            # the hard children's own M7 PG stripes are exported unchanged and strapped by the die M8 grid directly
+            # (no cluster M8 stripes, no M7->M8 child strap).  Opt-in per spec; default contract unchanged.
+            if pg not in (None, "M7"):
+                raise SpecError("layer contract (m7_passthrough): the cluster PG layer is M7")
+            if s.get("signal_max_layer") not in (None, "M7"):
+                raise SpecError("layer contract (m7_passthrough): signals are M2-M7")
+            out.update(pg_layer="M7", rlayers=("M2", "M7"), strap_layer="M8", cluster_level=2,
+                       pg_contract="m7_passthrough")
+            return out
         if (pg or "M8") != "M8":
             raise SpecError("layer contract (two-level): the cluster PG layer is M8")
         if s.get("signal_max_layer") not in (None, "M7"):
@@ -1198,6 +1210,14 @@ def gen_pdn(s: dict, lc: dict) -> str:
                 "add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}\n"
                 "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
                 "add_pdn_connect -grid {top} -layers {M5 M6}\nadd_pdn_connect -grid {top} -layers {M6 M7}\n")
+    elif lc.get("pg_contract") == "m7_passthrough":
+        note = ("two-level cluster, FT-PLAN m7_passthrough: M5/M6 stripes + M7 stripes (pins) in the std-cell corridors; "
+                "the hard children (PG M7) keep their own M7 stripes as exported PG pins, strapped by the die M8 grid; "
+                "no M8 in the cluster (die M8/M9 only).")
+        body = ("add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {5.4} -offset {0.513}\n"
+                "add_pdn_stripe -grid {top} -layer {M7} -width {0.288} -spacing {5.112} -pitch {10.8} -offset {1.0}\n"
+                "add_pdn_connect -grid {top} -layers {M1 M2}\nadd_pdn_connect -grid {top} -layers {M2 M5}\n"
+                "add_pdn_connect -grid {top} -layers {M5 M6}\nadd_pdn_connect -grid {top} -layers {M6 M7}\n")
     elif lc.get("cluster_level") == 2:
         m8 = dict(M8_PG, **{k[6:]: v for k, v in s.get("route", {}).items() if k.startswith("m8_pg_")})
         note = (f"two-level cluster: M5/M6/M7 stripes (std-cell corridors; trimmed over the cluster children) + M8 stripes "
@@ -1227,6 +1247,9 @@ def gen_pdn(s: dict, lc: dict) -> str:
         by_layer.setdefault(top, []).append(cell)
     for top, cells in sorted(by_layer.items()):
         L = metal(top)
+        if lc.get("pg_contract") == "m7_passthrough" and L >= 7:
+            t += f"# m7_passthrough: {' '.join(sorted(cells))} PG {top} exported as cluster PG pins (die M8 straps)\n"
+            continue
         t += (f"set ot_c [ot_ref_present {{{' '.join(sorted(cells))}}}]\n"
               f"if {{[llength $ot_c]}} {{\n"
               f"  define_pdn_grid -name {{hard_{top.lower()}}} -voltage_domains {{CORE}} -macro -cells $ot_c "
