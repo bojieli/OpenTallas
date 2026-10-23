@@ -76,6 +76,14 @@ ZONE_SPLIT = {}
 ROOT_CAPACITY = 0
 
 
+def split_zone(z, x, domain=None):
+    """Use an explicit domain split without perturbing other reset domains."""
+    key = f'{domain}/{z}' if f'{domain}/{z}' in ZONE_SPLIT else z
+    if key in ZONE_SPLIT:
+        return z + 'abcdefgh'[sum(x >= b for b in ZONE_SPLIT[key])]
+    return z
+
+
 def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False, max_root_tries=40,
           survey=None, relay_rows=False, overfly=None, host_hops=None, compact=False, carrier=None, host_form='hop'):
     if reach <= 0 or fanout < 1:
@@ -135,16 +143,14 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         report['host_hops'] = dict(mode=host_hops, form=host_form, age_per_hosted_stage=host_age, stations=len(g.hosts),
                                    stations_by_domain=dict(collections.Counter(h['dom'] for h in g.hosts)))
 
-    def zone(xy):
+    def zone(xy, domain=None):
         x, y = xy
         if zones != 'quadrant' and CB0 <= x <= CB1:
             # FOREST2: the centre column spans the full die height (~31.8 mm); one root at its middle gave 16 mm
             # root->leaf chains (44 release stages on GEN2a).  Split it N/S like the quadrants.
             return 'C' + ('N' if y >= H / 2 else 'S')
         z = ('N' if y >= H / 2 else 'S') + ('W' if x < (W / 2 if zones == 'quadrant' else CB0) else 'E')
-        if z in ZONE_SPLIT:
-            z += 'abcdefgh'[sum(x >= b for b in ZONE_SPLIT[z])]
-        return z
+        return split_zone(z, x, domain)
 
     # HBM-RSTROW (coordinator 0jp, Proposal A): relay rows carry their own reset (reset_rows.py).  Only row heads are
     # forest sinks; their leaves release at domain age + off (off <= 0) so every station releases by D + 1 + depth.
@@ -460,7 +466,7 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
         log('flood done, reachable cells', sum(allowed))
         groups = collections.defaultdict(list)
         for ref, xy in S:
-            groups[zone(xy)].append((ref, xy))
+            groups[zone(xy, dom)].append((ref, xy))
         plans = []
         for z, Z in sorted(groups.items()):
             plan, errs = None, []
@@ -659,7 +665,7 @@ def main():
     ap.add_argument('--route-reuse', action='store_true',
                     help='L2H-GEN2D-RST 10-19: stage a chain along ONE routed path (re-route only when the suffix is unusable)')
     ap.add_argument('--zone-split', action='append', default=[],
-                    help='NW-FIX: ZONE:x1[,x2..] split a forest region into x-bands (e.g. NW:10020)')
+                    help='NW-FIX: [DOMAIN/]ZONE:x1[,x2..] split a forest region into x-bands (e.g. NW:10020 or serial/NW:3700,7400,12600)')
     ap.add_argument('--root-capacity', type=int, default=0,
                     help='NW-FIX: try regional-root sites with >= K free homes in the stage budget diamond first')
     ap.add_argument('--route-max-pops', type=int, default=3_000_000)
