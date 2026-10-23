@@ -5,7 +5,7 @@
 // x store (u_xs), the block-dot column (u_bdc), the BF16 launch registers, the publish pipe and the G1 select.  The
 // body is ot_hbm_sm_attn_leafh's verbatim; u_tcc's pins become the tcc_* ports.  ot_hbm_sm_attn_leafh_q composes
 // lx + native_col back into a drop-in ot_hbm_sm_attn_leafh (same ports, same cycle behaviour; lock-step bench
-// rtl/hbm_accel/sm/attn/qsplit/tb_sm_attn_tile_q.sv).
+// rtl/hbm_accel/sm/attn/qsplit/tbv_sm_attn_tile_q.sv).
 // Boundary registers: every lx -> ln pin is launched from a flop (fv/ffirst/.../fw/fx, pub_pipe, fold0*), except
 //   tcc_pub_slot = a 3:1 select of pub_pipe flops by the static attn_column strap (a flop bit or a constant once
 //   the strap is tied).  ln -> lx: native_col's result flops -> the G1 select -> gv_q/gy_q/gt_q (the as-built
