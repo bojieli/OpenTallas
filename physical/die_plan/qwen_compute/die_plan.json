@@ -17121,6 +17121,86 @@
      "note": "COLLIO carry-over (fl2/flx all FAIL, STEWARD-QK 06:26): landed register bank at the codec_pl clock-domain boundary (ot_entry_6 -> ot_entry_11 cross-clock setup -50 to -117 ps in P/S0); the crossing becomes landed + 1 cycle, scheduled statically"
     },
     {
+     "inst": "u_coll_face_s1",
+     "module": "qfd_coll_static_face",
+     "status": "rework",
+     "outline_um": [
+      518.4,
+      388.8
+     ],
+     "origin_um": [
+      8.64,
+      8.64
+     ],
+     "obs_max": "M7",
+     "kit": "physical/ref_tile/qfd_cb16c_s1_fx (codex/collio-fl2-render-1023; gates FAIL, re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one codec spine band)",
+     "note": "PLANNED HARD CORE coll_face_s1 (~116k cells est.): u_io_collective.u_io.g[3].u_face, collective face S1"
+    },
+    {
+     "inst": "u_coll_face_s2",
+     "module": "qfd_coll_static_face",
+     "status": "rework",
+     "outline_um": [
+      518.4,
+      388.8
+     ],
+     "origin_um": [
+      267.84,
+      406.08
+     ],
+     "obs_max": "M7",
+     "kit": "physical/ref_tile/qfd_cb16c_s2_fx (codex/collio-fl2-render-1023; gates FAIL, re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one codec spine band)",
+     "note": "PLANNED HARD CORE coll_face_s2 (~116k cells est.): u_io_collective.u_io.g[4].u_face, collective face S2"
+    },
+    {
+     "inst": "u_coll_face_p",
+     "module": "qfd_coll_static_face",
+     "status": "rework",
+     "outline_um": [
+      518.4,
+      388.8
+     ],
+     "origin_um": [
+      8.64,
+      4199.04
+     ],
+     "obs_max": "M7",
+     "kit": "physical/ref_tile/qfd_cb16c_p_fx (codex/collio-fl2-render-1023; gates FAIL, re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one codec spine band)",
+     "note": "PLANNED HARD CORE coll_face_p (~116k cells est.): u_io_collective.u_io.g[0].u_face, collective face P"
+    },
+    {
+     "inst": "u_coll_face_r",
+     "module": "qfd_coll_static_face",
+     "status": "rework",
+     "outline_um": [
+      518.4,
+      388.8
+     ],
+     "origin_um": [
+      8.64,
+      5382.72
+     ],
+     "obs_max": "M7",
+     "kit": "physical/ref_tile/qfd_cb16c_r_fx (codex/collio-fl2-render-1023; gates FAIL, re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one codec spine band)",
+     "note": "PLANNED HARD CORE coll_face_r (~116k cells est.): u_io_collective.u_io.g[1].u_face, collective face R"
+    },
+    {
+     "inst": "u_coll_face_s0",
+     "module": "qfd_coll_static_face",
+     "status": "rework",
+     "outline_um": [
+      518.4,
+      388.8
+     ],
+     "origin_um": [
+      8.64,
+      8700.48
+     ],
+     "obs_max": "M7",
+     "kit": "physical/ref_tile/qfd_cb16c_s0_fx (codex/collio-fl2-render-1023; gates FAIL, re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one codec spine band)",
+     "note": "PLANNED HARD CORE coll_face_s0 (~116k cells est.): u_io_collective.u_io.g[2].u_face, collective face S0"
+    },
+    {
      "inst": "u_io_ucie",
      "module": "ot_qfd_ucie_x64_phy",
      "status": "reuse",
@@ -17135,7 +17215,7 @@
      "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits inside the coll partition, so its forwarded FDI clocks (lclk -> fdi_ck / fdi_rx_ck) stay inside one partition (a seam carries no clock)"
     }
    ],
-   "note": "west strip: io_collective; COLLIO re-derivation OPEN (~900k est. > 400k L1 cap: >= 3 planned cores, one per face group P/R/S0-S2). Carry-over defects: (1) M4 congestion hotspot on the PHY/E side (flx R GRT overflow x471 y162; E face 1,217 pins at 92%) -> E/W seam pins on M6 only (no M4), ft_track_frac 0.25; (2) codec_pl cross-clock ot_entry_6 -> ot_entry_11 -> landed register u_codec_pl_land",
+   "note": "west strip: io_collective; QC-P2 split: 5 planned hard face cores (P/R/S0/S1/S2, ~116k cells each) + the UCIe PHY hard core; glue (collective core, gearbox, share, clkrx, land) flattened. Carry-over defects: (1) M4 congestion hotspot on the PHY/E side (flx R GRT overflow x471 y162; E face 1,217 pins at 92%) -> E/W seam pins on M6 only (no M4), ft_track_frac 0.25; (2) codec_pl cross-clock ot_entry_6 -> ot_entry_11 -> landed register u_codec_pl_land",
    "clock": {
     "tap_um": [
      388.8,

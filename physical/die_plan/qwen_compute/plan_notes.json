@@ -12,12 +12,12 @@
  "die_mm2": 787.6,
  "content_status_per_instance": {
   "reuse": 1715,
-  "rework": 901,
+  "rework": 906,
   "new": 375
  },
  "max_cells_type": [
-  900000,
-  "coll"
+  782764,
+  "cbx_q10"
  ],
  "cells_per_type": {
   "cbf_q00": {
@@ -102,7 +102,7 @@
    "macros": 40
   },
   "coll": {
-   "cells": 900000,
+   "cells": 150000,
    "instances": 1,
    "outline_um": [
     786.24,
@@ -507,6 +507,95 @@
    "l9_wi"
   ],
   "cb_mismatches": []
+ },
+ "planned_cores": [
+  {
+   "partition_type": "coll",
+   "core": "coll_face_s1",
+   "inst": "u_coll_face_s1",
+   "rtl_path": "u_io_collective.u_io.g[3].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    8.64,
+    8.64
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  },
+  {
+   "partition_type": "coll",
+   "core": "coll_face_s2",
+   "inst": "u_coll_face_s2",
+   "rtl_path": "u_io_collective.u_io.g[4].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    267.84,
+    406.08
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  },
+  {
+   "partition_type": "coll",
+   "core": "coll_face_p",
+   "inst": "u_coll_face_p",
+   "rtl_path": "u_io_collective.u_io.g[0].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    8.64,
+    4199.04
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  },
+  {
+   "partition_type": "coll",
+   "core": "coll_face_r",
+   "inst": "u_coll_face_r",
+   "rtl_path": "u_io_collective.u_io.g[1].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    8.64,
+    5382.72
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  },
+  {
+   "partition_type": "coll",
+   "core": "coll_face_s0",
+   "inst": "u_coll_face_s0",
+   "rtl_path": "u_io_collective.u_io.g[2].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    8.64,
+    8700.48
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  }
+ ],
+ "coll_split": {
+  "cores": 6,
+  "max_core_cells_est": 116000,
+  "glue_cells_est": 150000,
+  "cap": 400000,
+  "note": "5 face cores + the UCIe PHY hard core; face cells from the COLLIO-F face kits (std ~15k um2 each); glue = collective core + gearbox + share + clkrx + land (estimate; a synth count is owed)"
  },
  "census_dropped_bits": {}
 }

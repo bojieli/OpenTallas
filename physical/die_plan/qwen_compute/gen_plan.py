@@ -619,7 +619,12 @@ WS = {  # name: (type, module, (w, h), (x, y), orient, hard)
     "native59": ("native59", "qfd_native59_dv_headprep_obs1", (SUB_W, 518.4), (0.0, 11232.0), "R0", False),
     "tt_ctlm": ("tt_ctlm", "qfd_tt_ctlm_dv_hp13_rp", (SUB_W, 518.4), (0.0, 11750.4), "R0", False),
 }
-WS_CELLS = {"coll": 900000, "glue": 120000, "native59": 60000, "tt_ctlm": 190000}
+COLL_FACE_WH = (518.4, 388.8)
+COLL_FACE_CELLS = 116000
+COLL_FIDX = {"p": 0, "r": 1, "s0": 2, "s1": 3, "s2": 4}
+COLL_CORES = {"s1": (8.64, 8.64), "s2": (267.84, 406.08), "p": (8.64, 4199.04), "r": (8.64, 5382.72),
+              "s0": (8.64, 8700.48)}
+WS_CELLS = {"coll": 150000, "glue": 120000, "native59": 60000, "tt_ctlm": 190000}
 GLUE_INSTS = ("d2d_rom", "sys_face", "embed_prov", "mu_ctxrx", "mu_dhobs", "rstseq_rom", "ckb_rom",
               "rs_bump", "bump_fwd_epoch", "bump_fwd_lrst")
 COLL_INSTS = ("io_collective", "clk_rx", "ckdiv_coll_blk", "bump_pkg_s0", "bump_pkg_s1", "bump_die_ps", "ckb_core")
@@ -641,6 +646,27 @@ def build_west(P, census_blocks):
                          "note": "COLLIO carry-over (fl2/flx all FAIL, STEWARD-QK 06:26): landed register bank at the "
                                  "codec_pl clock-domain boundary (ot_entry_6 -> ot_entry_11 cross-clock setup -50 to "
                                  "-117 ps in P/S0); the crossing becomes landed + 1 cycle, scheduled statically"})
+            # QC-P2: coll split by connectivity into planned hard cores (TOPDOWN L1 amend: outline, position and pins
+            # from the partition plan).  The collective's five link faces (rtl/physical/ot_qfd_collective_static_io.sv
+            # g[f].u_face = qfd_coll_static_face, f = P R S0 S1 S2) are the natural cores: each owns its PHY frame,
+            # 6 SRAM banks and 11 clock roots, and talks to the collective core only by its tx (W+3) / rx (W+1) record
+            # through qfd_coll_static_relay.  Each sits beside its PHY: S0 at the N face (io_serdes), S1 at the S face
+            # (io_serdes_1), S2 at the SE corner (io_serdes_2 via the W5 CB column, E face y 4-220), P below and R
+            # above the shared UCIe PHY core.  Outline = COLLIO-F face kit (qfd_cb16c_<f>_fx, 518.4 x 388.8; std
+            # ~15k um2 = ~116k cells at 0.129 um2/cell, macro-bound).  The collective core, gearbox, UCIe share,
+            # clkrx/ckdiv, bumps and u_codec_pl_land stay flattened in the partition (glue).
+            for f, (ox, oy) in COLL_CORES.items():
+                cont.append({"inst": f"u_coll_face_{f}", "module": "qfd_coll_static_face", "status": "rework",
+                             "outline_um": list(COLL_FACE_WH), "origin_um": [ox, oy], "obs_max": "M7",
+                             "kit": f"physical/ref_tile/qfd_cb16c_{f}_fx (codex/collio-fl2-render-1023; gates FAIL, "
+                                    "re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one "
+                                    "codec spine band)",
+                             "note": f"PLANNED HARD CORE coll_face_{f} (~{COLL_FACE_CELLS // 1000}k cells est.): "
+                                     f"u_io_collective.u_io.g[{COLL_FIDX[f]}].u_face, collective face {f.upper()}"})
+                P.cores.append({"partition_type": "coll", "core": f"coll_face_{f}", "inst": f"u_coll_face_{f}",
+                                "rtl_path": f"u_io_collective.u_io.g[{COLL_FIDX[f]}].u_face",
+                                "module": "qfd_coll_static_face", "origin_um": [ox, oy],
+                                "outline_um": list(COLL_FACE_WH), "cells_est": COLL_FACE_CELLS})
             cont.append({"inst": "u_io_ucie", "module": "ot_qfd_ucie_x64_phy", "status": "reuse",
                          "outline_um": [777.6, 777.6], "origin_um": [0.0, 4596.48],
                          "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits inside the coll "
@@ -655,8 +681,8 @@ def build_west(P, census_blocks):
                          "note": "hard IP used as-is (die-edge PHY)" if hard else "reuse candidate"})
         note = f"west strip: {n}"
         if n == "io_collective":
-            note += ("; COLLIO re-derivation OPEN (~900k est. > 400k L1 cap: >= 3 planned cores, one per face group "
-                     "P/R/S0-S2). Carry-over defects: (1) M4 congestion hotspot on the PHY/E side (flx R GRT overflow "
+            note += ("; QC-P2 split: 5 planned hard face cores (P/R/S0/S1/S2, ~116k cells each) + the UCIe PHY "
+                     "hard core; glue (collective core, gearbox, share, clkrx, land) flattened. Carry-over defects: (1) M4 congestion hotspot on the PHY/E side (flx R GRT overflow "
                      "x471 y162; E face 1,217 pins at 92%) -> E/W seam pins on M6 only (no M4), ft_track_frac 0.25; "
                      "(2) codec_pl cross-clock ot_entry_6 -> ot_entry_11 -> landed register u_codec_pl_land")
         if tn not in P.types:
@@ -1164,6 +1190,7 @@ def main():
     cblocks = {b["inst"]: b["master"] for b in census["blocks"]}
     P = Plan()
     P.cov = collections.defaultdict(list)
+    P.cores = []
     col_x = [WS_W + k * CLW for k in range(NCOL)]
     col_name = [f"W{5 - k}" for k in range(6)] + [f"E{k}" for k in range(6)]
     y_sl = 2 * CLH
@@ -1245,6 +1272,12 @@ def main():
                                      f"leaves = outline area x {UTIL} / {CELL_UM2} um2 per cell (A0 calibration); "
                                      "soft slice glue / W-strip blocks = per-region guesses (SOFT_CELLS/WS_CELLS)",
              "census_coverage": cov,
+             "planned_cores": P.cores,
+             "coll_split": {"cores": len(P.cores) + 1, "max_core_cells_est": max([c["cells_est"] for c in P.cores] or [0]),
+                            "glue_cells_est": WS_CELLS["coll"], "cap": 400000,
+                            "note": "5 face cores + the UCIe PHY hard core; face cells from the COLLIO-F face kits "
+                                    "(std ~15k um2 each); glue = collective core + gearbox + share + clkrx + land "
+                                    "(estimate; a synth count is owed)"},
              "census_dropped_bits": {"|".join(map(str, k)): v for k, v in sorted(dropped.items())}}
     Path(a.out).with_name("plan_notes.json").write_text(json.dumps(notes, indent=1) + "\n")
     print(json.dumps({k: v for k, v in notes.items() if k not in ("census_dropped_bits", "cells_per_type")}))
