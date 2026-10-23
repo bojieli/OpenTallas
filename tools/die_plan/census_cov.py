@@ -22,6 +22,9 @@ Paths are relative to the plan file. The instance map JSON:
                    "replaced_by": "spine / per-partition sync", "reason": "..."}],
      "forward_via": ["<partition / group name regex>", ...],  forwarding partitions (tap trees): a pair is carried
                                                               by a lane chain through them (bottleneck width)
+     "forward_routes": [{"src": "host", "src_bus": "link_rst_n", "dst": "serdes_E", "dst_bus": "rst_n",
+                         "lanes": ["L745", "L746", "L747"]}],  optional exact control-route witnesses;
+                                                             validated lane/slot identity, not an exemption
      "collapse_broadcast": true}                              count one driver bus once per sink partition/group
 
 How the check works:
@@ -246,9 +249,65 @@ def coverage(P, plan_dir, R):
         for (a, b), w in pg.items():
             adj[a][b] = w
 
-        def bottleneck(a, b):
+        # A small control can travel independently beside a wide data route. Such additions require an
+        # explicit, source-bound route witness; aggregate capacity alone must not hide a missing control lane.
+        proven = defaultdict(list)
+        route_keys = set()
+        for ri, route in enumerate(mp.get("forward_routes", [])):
+            prefix = f"census[{k}] forward_routes[{ri}]"
+            if not isinstance(route, dict) or not all(isinstance(route.get(f), str)
+                    for f in ("src", "src_bus", "dst", "dst_bus")):
+                R.err("census", f"{prefix}: malformed source/destination identity")
+                continue
+            key = tuple(route[f] for f in ("src", "src_bus", "dst", "dst_bus"))
+            matches = [r for r in rows if tuple(r[f] for f in ("src", "src_bus", "dst", "dst_bus")) == key]
+            lids = route.get("lanes")
+            if key in route_keys or len(matches) != 1 or not isinstance(lids, list) or len(lids) < 2 or \
+                    not all(isinstance(lid, str) for lid in lids) or len(set(lids)) != len(lids):
+                R.err("census", f"{prefix}: needs one unique census row and at least two distinct ordered lanes")
+                continue
+            route_keys.add(key)
+            row = matches[0]
+            start, finish = where(row["src"]), where(row["dst"])
+            if start not in P.parts or finish not in P.parts or start == finish or row["bits"] <= 0:
+                R.err("census", f"{prefix}: endpoints must map to distinct real partitions with positive width")
+                continue
+            expected_bus = f"{row['src']}_{row['src_bus']}"
+            normalize = lambda bus: re.sub(r"_d[0-9]+$", "", re.sub(r"^[io]_", "", bus))
+            current, valid = start, True
+            for j, lid in enumerate(lids):
+                lane = P.lanes.get(lid)
+                if not lane or not lane.get("ports"):
+                    valid = False
+                    break
+                ports_ = [P.ports.get(pid) for pid in lane["ports"]]
+                if any(not pr or pr.get("width") != row["bits"] for pr in ports_) or \
+                        normalize(ports_[0]["src"]["bus"]) != expected_bus or \
+                        normalize(ports_[-1]["dst"]["bus"]) != expected_bus:
+                    valid = False
+                    break
+                for left, right in zip(ports_, ports_[1:]):
+                    mid = left["dst"]["part"]
+                    in_bus, out_bus = left["dst"]["bus"], right["src"]["bus"]
+                    slot = P.slot(mid, in_bus[:-2]) if in_bus.endswith("_i") else None
+                    if mid != right["src"]["part"] or not is_fwd(g_of.get(mid, mid)) or \
+                            not slot or out_bus != in_bus[:-2] + "_o" or slot.get("width") != row["bits"]:
+                        valid = False
+                        break
+                a_, b_ = ports_[0]["src"]["part"], ports_[-1]["dst"]["part"]
+                if a_ != current or (j and not is_fwd(g_of.get(a_, a_))):
+                    valid = False
+                    break
+                current = b_
+            if not valid or current != finish:
+                R.err("census", f"{prefix}: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route")
+                continue
+            proven[(g_of.get(start, start), g_of.get(finish, finish))].append((row["bits"], lids))
+
+        def bottleneck(a, b, graph=None):
             """widest path a -> b through forwarders only (modified Dijkstra on min-capacity)."""
             import heapq
+            graph = adj if graph is None else graph
             best = {a: float("inf")}
             hq = [(-best[a], a)]
             while hq:
@@ -260,7 +319,7 @@ def coverage(P, plan_dir, R):
                     continue
                 if u != a and not is_fwd(u):
                     continue
-                for v, w in adj[u].items():
+                for v, w in graph.get(u, {}).items():
                     c = min(cap, w)
                     if c > best.get(v, 0):
                         best[v] = c
@@ -269,11 +328,27 @@ def coverage(P, plan_dir, R):
         dropped, forwarded = {}, 0
         for pair, b in asb.items():
             have = pg.get(pair, 0)
-            if have < b and fwd_rx:
-                f = bottleneck(*pair)
+            explicit = sum(w for w, _ in proven.get(pair, []))
+            graph = None
+            if explicit:
+                graph = {u: dict(vs) for u, vs in adj.items()}
+                # Remove witness lanes before measuring the remaining data capacity, so a shared trunk or
+                # the same control route cannot be counted twice.
+                for w, lids in proven[pair]:
+                    for lid in lids:
+                        ln = P.lanes[lid]
+                        a_ = g_of.get(P.ports[ln["ports"][0]]["src"]["part"],
+                                      P.ports[ln["ports"][0]]["src"]["part"])
+                        b_ = g_of.get(P.ports[ln["ports"][-1]]["dst"]["part"],
+                                      P.ports[ln["ports"][-1]]["dst"]["part"])
+                        graph[a_][b_] -= w
+            if have < b - explicit and fwd_rx:
+                f = bottleneck(*pair, graph)
                 if f > have:
-                    forwarded += min(b, f) - have
+                    forwarded += min(b - explicit, f) - have
                     have = max(have, f)
+            forwarded += min(explicit, max(0, b - have))
+            have += explicit
             if have < b:
                 dropped[pair] = b - have
         tot = sum(dropped.values())

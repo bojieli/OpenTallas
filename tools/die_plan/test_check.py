@@ -265,3 +265,49 @@ def test_hard_core_track_offset_and_taps():
         "taps", [dict(name="u_core.ck", kind="core", xy=xy, insertion_ps=250)])
     assert errs(tap([10.0, 10.0]), "clock") == []
     assert any("outside the outline" in m for m in errs(tap([10.0, 9000.0]), "clock"))
+
+def test_census_explicit_control_routes_fail_closed(tmp_path):
+    """A one-bit control can add beside data only with its complete source-bound named route."""
+    from types import SimpleNamespace
+    import census_cov
+
+    def run(mutate=None, forwarders=("pm",)):
+        ports = {
+            "data": dict(src=dict(part="pa", bus="o_pa_data"), dst=dict(part="pb", bus="i_pa_data"), width=8),
+            "c0": dict(src=dict(part="pa", bus="o_pa_c"), dst=dict(part="pm", bus="i_pa_c"), width=1),
+            "c1": dict(src=dict(part="pm", bus="o_pa_c_d1"), dst=dict(part="pb", bus="i_pa_c"), width=1)}
+        P = SimpleNamespace(raw=dict(census=[dict(rows="rows.json", map="map.json")]), types={},
+                            parts={n: {"type": "t"} for n in ("pa", "pm", "pb", "wrong")},
+                            ports=ports, lanes={p: dict(ports=[p]) for p in ports})
+        rows = [dict(src="pa", src_bus=bus, dst="pb", dst_bus=bus, bits=w, kind="data")
+                for bus, w in (("data", 8), ("c", 1))]
+        route = dict(src="pa", src_bus="c", dst="pb", dst_bus="c", lanes=["c0", "c1"])
+        mp = dict(parts={n: n for n in P.parts}, forward_via=list(forwarders), forward_routes=[route])
+        if mutate:
+            mutate(P, mp)
+        (tmp_path / "rows.json").write_text(json.dumps(rows))
+        (tmp_path / "map.json").write_text(json.dumps(mp))
+        R = check.Report()
+        summary = census_cov.coverage(P, tmp_path, R)
+        return summary, R
+
+    summary, R = run()
+    assert summary["dropped_bits"] == 0 and not R.errors()
+    for lid in ("c0", "c1"):
+        _, R = run(lambda p, m: p.lanes.pop(lid))
+        assert R.errors(), lid
+    mutations = [
+        lambda p, m: m["forward_routes"][0].update(lanes=["c0"]),
+        lambda p, m: m["forward_routes"][0].update(src_bus="absent"),
+        lambda p, m: p.ports["c1"]["dst"].update(part="wrong"),
+        lambda p, m: p.ports["c1"]["src"].update(bus="o_other_c"),
+        lambda p, m: p.ports["c1"].update(width=2),
+        lambda p, m: m["forward_routes"].append(dict(m["forward_routes"][0])),
+        lambda p, m: m["forward_routes"].__setitem__(0, "malformed")]
+    for mutate in mutations:
+        _, R = run(mutate)
+        assert R.errors()
+    _, R = run(forwarders=())
+    assert R.errors()
+    summary, R = run(lambda p, m: m.pop("forward_routes"))
+    assert summary["dropped_bits"] == 1 and R.errors()  # the generic single-path rule stays unchanged
