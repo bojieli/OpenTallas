@@ -1,0 +1,611 @@
+................................................................................................................................................2026-10-22T22:59:18-07:00 [other] calibrate first: route requires completed calibration artifacts
+..2026-10-22T22:59:18-07:00 [vm8] calibrate first: route requires completed calibration artifacts
+................................................................................................s.........2026-10-22T22:59:18-07:00 [a] deep release skipped: live process (LIVE pid 7)
+.2026-10-22T22:59:18-07:00 [a] deep release (fail, 1234 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json
+.2026-10-22T22:59:18-07:00 [j0] deep release (fail, 1234 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json
+2026-10-22T22:59:18-07:00 [j1] deep release (fail, 1234 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json
+2026-10-22T22:59:18-07:00 [j2] deep release (fail, 1234 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json
+2026-10-22T22:59:18-07:00 [j3] deep release (fail, 1234 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json
+....................2026-10-22T22:59:19-07:00 [hbglue_cl_8ddc70024] hold ECO waiting for capacity (8 threads / 32 GB): no headroom
+.2026-10-22T22:59:19-07:00 [hbglue_cl_8ddc70024] one-shot ECO overlay recovery queued: /tmp/tmp825dc4lk/cl/eco-overlay-recovery-a2/candidate; original failure and inputs preserved
+..2026-10-22T22:59:19-07:00 [hbglue_cl_8ddc70024] hold-only miss (UNKNOWN +190.49 / FF -70.99, DRC 0): post-route hold ECO launched on /route/5_2_route.odb
+2026-10-22T22:59:19-07:00 [hbglue_cl_8ddc70024] hold ECO MISS: no result (rc=0)
+....../srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_eco_reference.py:83: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpoyt6u9xb/R/routes/L/work/orfs/w18_sta_ss.tcl' mode='w' encoding='UTF-8'>
+  open(t, "w").write(f"read_lef {P}/lef/asap7sc7p5t_28_R_1x_220121a.lef\n"
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_eco_reference.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpoyt6u9xb/R/routes/L/work/orfs/w18_sta_ss.tcl' mode='r' encoding='UTF-8'>
+  txt = open(t).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_eco_reference.py:94: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpoyt6u9xb/R/routes/L/work/orfs/w18_sta_ss.tcl' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(t).read().count("_LVT_"), 1)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....../srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_emergency_probe.py:26: ResourceWarning: unclosed file <_io.TextIOWrapper name='/proc/3033463/comm' mode='r' encoding='UTF-8'>
+  comm = open(f"/proc/{pid}/comm").read().strip()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_emergency_probe.py:28: ResourceWarning: unclosed file <_io.TextIOWrapper name='/proc/3033463/oom_score_adj' mode='r' encoding='UTF-8'>
+  self.assertGreaterEqual(int(open(f"/proc/{pid}/oom_score_adj").read()), 0)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..E...........................................fp_margin_lint: FAIL  util 65.6% (+hold 82.0%), pins 0, max pin density 0 b/um, macros 0, slivers 0, channel worst None
+fp_margin_lint: FAIL util: utilisation 65.6% > 60% (std 26251 + macro 0 um2 in 40000 um2): grow the outline to <= 55-60%
+FLOORPLAN_MARGIN: util: utilisation 65.6% > 60% (std 26251 + macro 0 um2 in 40000 um2): grow the outline to <= 55-60%
+fp_margin_lint: PASS  util 65.6% (+hold 82.0%), pins 0, max pin density 0 b/um, macros 0, slivers 0, channel worst None
+fp_margin_lint: FAIL  util 65.6% (+hold 82.0%), pins 0, max pin density 0 b/um, macros 0, slivers 0, channel worst None
+fp_margin_lint: FAIL util: utilisation 65.6% > 60% (std 26251 + macro 0 um2 in 40000 um2): grow the outline to <= 55-60%
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+GATE: kit/gate_result.json written (exact staged source binding; commit it with the kit)
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+2026-10-22T22:59:20-07:00 [j] git-mirror sync 4b9d4b500450 via upstream in 0s + extract 0s; 0 views / 0.0 GB hard-linked from the host view store
+.2026-10-22T22:59:21-07:00 [j] git-mirror sync failed (RuntimeError: extract rc=1: ): tar sync
+...2026-10-22T22:59:21-07:00 [j] git-mirror /tmp/tmph3l66ua0/hostfs/git-mirror/OpenTallas.git not ready (rc=0): tar sync
+.2026-10-22T22:59:22-07:00 [j] git-mirror sync c66240056ff2 via push 13 objects in 0s + extract 0s; 0 views / 0.0 GB hard-linked from the host view store
+2026-10-22T22:59:22-07:00 [j] git-mirror sync 51732402c16f via push 4 objects in 0s + extract 0s; 0 views / 0.0 GB hard-linked from the host view store
+.2026-10-22T22:59:22-07:00 [j] git-mirror /tmp/tmpoz59dha5/hostfs/missing.git not ready (rc=0): tar sync
+.2026-10-22T22:59:22-07:00 [j] git-mirror sync c66240056ff2 via push 13 objects in 0s + extract 0s (receipt archive + required_files sha256 verified on host)
+.2026-10-22T22:59:23-07:00 [j] git-mirror sync failed (RuntimeError: extract rc=3: GIT_MIRROR_RECEIPT_MISMATCH archive 3de9622c50ee50bf6e45ca2af256d1e69d09aaf0537799fd0dca15136e096e4c): tar sync
+.2026-10-22T22:59:23-07:00 [j] git-mirror sync 4bbd9a4db7b6 via push 13 objects in 0s + extract 0s; 0 views / 0.0 GB hard-linked from the host view store
+.....2026-10-22T22:59:23-07:00 [j] git-mirror sync ffffffffffff via push 3 objects in 0s + extract 0s
+2026-10-22T22:59:23-07:00 [j] git-mirror sync failed (RuntimeError: push rc=1: fatal: the remote end hung up): tar sync
+.2026-10-22T22:59:23-07:00 [q8e] hold ECO MISS: {'tt_ps': -10.45, 'ss_ps': -10.45, 'ff_ps': 8.35, 'drc': 1, 'ss_sensitivity_ps': -341.61, 'cells_added': 2785, 'errors': [], 'chosen': 'least_bad'}
+......................................................................F..............................................................................{
+ "dry": true,
+ "new_record": {
+  "name": "new-linked",
+  "spec": {
+   "name": "new-linked",
+   "block": "actual_block",
+   "source": {
+    "commit": "ffffffffffffffffffffffffffffffffffffffff",
+    "branch": "source"
+   },
+   "stages": {
+    "bench": [
+     {
+      "name": "positive",
+      "cmd": "positive",
+      "expect": "pass"
+     }
+    ],
+    "route": {
+     "cmd": "MUST NEVER RUN",
+     "peak_ram_gb": 32
+    },
+    "collect": {
+     "cmd": "collect {RUN}/routes/old_parent"
+    }
+   },
+   "verdict": {
+    "corner_sta": "{RUN}/routes/old_parent/corner_sta.json"
+   },
+   "hold_eco": {
+    "enabled": true,
+    "allow_fresh_grt": false,
+    "vtswap": false,
+    "combo": false
+   },
+   "auto_react": false,
+   "peak_ram_gb": 64,
+   "mem_cap_gb": 64
+  },
+  "origin": "linked-infrastructure-continuation",
+  "status": "READY",
+  "stage_key": "verdict",
+  "attempt": 4,
+  "retries_used": 0,
+  "benches": {
+   "bench:positive": {
+    "ok": true,
+    "rc": 0,
+    "inherited_from": "old-parent"
+   }
+  },
+  "bench_par": false,
+  "hosts_tried": [
+   "live"
+  ],
+  "host": "live",
+  "run": "/tmp/tmpi8v8gp2f/new-linked",
+  "commit_full": "ffffffffffffffffffffffffffffffffffffffff",
+  "source_synced": true,
+  "freeze_helper_overlay": true,
+  "route_overlay_plan": {
+   "files": [
+    {
+     "path": "tools/closure_loop/helper.py",
+     "sha256": "f6c61e5655d8649d25f1e791c60edf5ace1463ed835dbb2703ef367f4ad4130f"
+    }
+   ]
+  },
+  "pinflop_ref_applied": false,
+  "metrics": {
+   "ss_ps": 82.85,
+   "ff_ps": -15.07,
+   "drc": 0
+  },
+  "events": [],
+  "errors": [],
+  "eco_overlay_recovery": {
+   "guard": "/tmp/tmpi8v8gp2f/new-linked/cl/linked_infra_eco/inputs.json",
+   "out": "/tmp/tmpi8v8gp2f/new-linked/cl/linked_infra_eco/candidate"
+  },
+  "linked_infra_eco": {
+   "parent": {
+    "name": "old-parent",
+    "state_sha256": "7d66ad02ed9394bceb20fb57a9fdbf22eae7d4fa9e48b88baca9d96c75a29246",
+    "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
+   },
+   "manifest": {
+    "schema": "opentallas.closure_loop.infra-eco-continuation.v1",
+    "operation": "lost_hold_eco",
+    "infrastructure_cause": "scheduled_retirement",
+    "parent": {
+     "name": "old-parent",
+     "state_sha256": "7d66ad02ed9394bceb20fb57a9fdbf22eae7d4fa9e48b88baca9d96c75a29246",
+     "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
+    },
+    "physical_disposition": {
+     "kind": "hold_only",
+     "source_structural_required": false,
+     "setup_tt_ps": 82.85,
+     "hold_ff_ps": -15.07,
+     "drc": 0
+    },
+    "interrupted_eco_checkpoint": "none",
+    "source_completeness": {
+     "known_required_source_bytes_missing": []
+    },
+    "runtime": {
+     "host": "live",
+     "run": "/tmp/tmpi8v8gp2f/new-linked",
+     "image": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+     "ram_gb": 64,
+     "library_hashes": {
+      "/OpenROAD-flow-scripts/lib.lib": "2222222222222222222222222222222222222222222222222222222222222222"
+     }
+    },
+    "checkpoint": {
+     "kind": "5_2_route",
+     "route_base": "routes/old_parent/work/orfs/results/asap7/design/base",
+     "eco_odb": "routes/old_parent/work/orfs/results/asap7/design/base/5_2_route.odb",
+     "config": "routes/old_parent/work/orfs/config.mk",
+     "corner_sta": "routes/old_parent/corner_sta.json"
+    },
+    "post_sdc_files": [
+     "src/physical/signoff.sdc"
+    ],
+    "file_hashes": {
+     "routes/old_parent/work/orfs/results/asap7/design/base/5_2_route.odb": "50d87be4582247b1c05f87ab065e3cffcc293af881f0096e9be47abf96e77a42",
+     "routes/old_parent/work/orfs/results/asap7/design/base/6_final.odb": "56cdc49f730a9b2d0786caadba070a158bf9eeb4cf14c8c38befbbb1004002f6",
+     "routes/old_parent/work/orfs/results/asap7/design/base/6_final.spef": "2b8ee72bf53746b6c76a43af86c7b6f21d7c323aa01ed6ddd64dfa93b0aeca82",
+     "routes/old_parent/work/orfs/results/asap7/design/base/6_final.sdc": "ef304a4272171a383c7eb5260ee0f7d7ac3a5ef3d0fd6b529903d3c6b5c755a7",
+     "routes/old_parent/work/orfs/config.mk": "987c5cebae2983cec257e4bd210c8a580ca4b53644666e8d708879070f9991a1",
+     "routes/old_parent/corner_sta.json": "6bdf45d74b0e48461b3862038d06d7e74e9f39a65c217c464794c463359660ac",
+     "src/physical/signoff.sdc": "794b26946f13307e1d486099a9c121b64de70ba25609e2f06600d2b055eb0539",
+     "src/rtl/actual.sv": "2dbe9f150e21fb48f5cef4106915089b410dd23e4657965a5a678e0d8e8d7c48",
+     "cl/helper.py": "f6c61e5655d8649d25f1e791c60edf5ace1463ed835dbb2703ef367f4ad4130f"
+    },
+    "canonical_source_readset": {
+     "schema": "opentallas.canonical-source-readset.v1",
+     "source_commit": "ffffffffffffffffffffffffffffffffffffffff",
+     "frozen_overlay_plan_sha256": "8bcb0f399b48b74bf7380591ae67395243b0cab26afec59e3a3b0c77c161426d",
+     "gate_files": {
+      "physical/signoff.sdc": "794b26946f13307e1d486099a9c121b64de70ba25609e2f06600d2b055eb0539",
+      "rtl/actual.sv": "2dbe9f150e21fb48f5cef4106915089b410dd23e4657965a5a678e0d8e8d7c48"
+     },
+     "frozen_files": {},
+     "transformed_templates": {},
+     "approved_runtime": {
+      "image": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "library_hashes": {
+       "/OpenROAD-flow-scripts/lib.lib": "2222222222222222222222222222222222222222222222222222222222222222"
+      }
+     },
+     "checkpoint": {
+      "kind": "5_2_route",
+      "route_base": "routes/old_parent/work/orfs/results/asap7/design/base",
+      "eco_odb": "routes/old_parent/work/orfs/results/asap7/design/base/5_2_route.odb",
+      "config": "routes/old_parent/work/orfs/config.mk",
+      "corner_sta": "routes/old_parent/corner_sta.json"
+     },
+     "post_sdc_files": [
+      "src/physical/signoff.sdc"
+     ],
+     "immutable_input_hashes": {
+      "routes/old_parent/work/orfs/results/asap7/design/base/5_2_route.odb": "50d87be4582247b1c05f87ab065e3cffcc293af881f0096e9be47abf96e77a42",
+      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.odb": "56cdc49f730a9b2d0786caadba070a158bf9eeb4cf14c8c38befbbb1004002f6",
+      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.spef": "2b8ee72bf53746b6c76a43af86c7b6f21d7c323aa01ed6ddd64dfa93b0aeca82",
+      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.sdc": "ef304a4272171a383c7eb5260ee0f7d7ac3a5ef3d0fd6b529903d3c6b5c755a7",
+      "routes/old_parent/work/orfs/config.mk": "987c5cebae2983cec257e4bd210c8a580ca4b53644666e8d708879070f9991a1"
+     },
+     "corner_sta_original": {
+      "orfs_dir": "/tmp/tmpi8v8gp2f/new-linked/routes/old_parent/work/orfs"
+     }
+    }
+   },
+   "manifest_sha256": "8ad1ba473facb43e18d9c3b129b55906bda9be28ec8161407d2b8eff16964834",
+   "inherited_benches": {
+    "bench:positive": {
+     "ok": true,
+     "rc": 0
+    }
+   },
+   "historical_provenance": {}
+  },
+  "stage_idx": 2
+ }
+}
+2026-10-22T22:59:37-07:00 [new-linked] new linked infrastructure ECO-only continuation of immutable old-parent
+..new-linked
+2026-10-22T22:59:37-07:00 [new-linked] hold-only miss (UNKNOWN +82.85 / FF -15.07, DRC 0): post-route hold ECO launched on /new/route/5_2_route.odb
+.......E..s...............2026-10-22T22:59:56-07:00 [t] routed-insertion IO re-STA: unavailable: route sign-off number missing for an unchanged corner
+.E...........2026-10-22T22:59:57-07:00 [gap] hold-only miss (UNKNOWN +100.30 / FF -18.00, DRC 0): post-route hold ECO launched on /route/5_2_route.odb
+.....2026-10-22T22:59:57-07:00 [job] post-route collect crashed (rc=1): routed state intact at ot-epyc5:/srv/cl/job -> retry ONLY collect there (1/3; no re-route, no host move)
+2026-10-22T22:59:57-07:00 [job] LOST_CLOSED: lost closed result: post-route collect crashed 4x (export child_lint FAIL child_lint FAIL: (i) pin access: 4 signal pins have a same-layer OBS rect closer than the wide-metal spacing (identical on retry: deterministic, not a crash)); routed state preserved at ot-epyc5:/srv/cl/job
+.2026-10-22T22:59:57-07:00 [job] NEEDS_HUMAN: CHILD-LINT: exported view fails
+2026-10-22T22:59:57-07:00 [job] LOST_CLOSED: lost closed result: attempt 1 on ot-epyc5 CLOSED TT +5.00 / FF +3.00; later NEEDS_RTL: TT -1
+.2026-10-22T22:59:57-07:00 [job] re-route: retired 1 ECO record(s) of the replaced route; will re-apply the closed attempt 1's vtswap ECO
+...2026-10-22T22:59:57-07:00 [job] LOST_CLOSED: lost closed result: post-route collect crashed 4x (rc=143); routed state preserved at ot-epyc5:/srv/cl/job
+.2026-10-22T22:59:57-07:00 [job] post-route collect crashed (rc=143): routed state on an unreachable host at ot-epyc5:/srv/cl/job -> retry ONLY collect there (1/3; no re-route, no host move)
+.2026-10-22T22:59:57-07:00 [job] post-route collect crashed (rc=143): routed state intact at ot-epyc5:/srv/cl/job -> retry ONLY collect there (1/3; no re-route, no host move)
+.2026-10-22T22:59:57-07:00 [job] post-route collect crashed (rc=143) and the routed state is GONE from ot-epyc5:/srv/cl/job: re-route with the recorded ECO re-applied before judging
+2026-10-22T22:59:57-07:00 [job] re-route: retired 1 ECO record(s) of the replaced route; will re-apply the closed attempt 1's vtswap ECO
+2026-10-22T22:59:57-07:00 [job] re-applying the VT-swap ECO of closed attempt 1 (129 cells, list /srv/cl/job/cl/reapply_vtswap_a1.txt)
+2026-10-22T22:59:57-07:00 [job] thin TT setup miss (UNKNOWN -60.00 / FF +8.14 / DRC 0): post-route VT-swap setup ECO (RVT->LVT on TT paths, target 10 ps, cap 2 % LVT, FF hold guard, no re-route) on /rb/6_final.odb
+.2026-10-22T22:59:57-07:00 [job] LOST_CLOSED: lost closed result: attempt 1 on ot-epyc5 CLOSED; later NEEDS_RTL: TT -36.2 / FF 8.14 ps / DRC 0
+.2026-10-22T22:59:57-07:00 [job] resume-postroute: resume job (NEEDS_RTL) at verdict on closed attempt 1's routed state ot-epyc5:/srv/cl/job copied to ot-agidock128:/srv/cl/job with its installed vtswap ECO
+..2026-10-22T22:59:57-07:00 [job] resume-postroute: resume job (NEEDS_RTL) at verdict on closed attempt 1's routed state ot-epyc5:/srv/cl/job with its installed vtswap ECO
+2026-10-22T22:59:57-07:00 [job] NEEDS_RTL: TT -1
+.2026-10-22T22:59:57-07:00 [job] route crashed (rc=1); resource-related but no other host fits now -> retry on the same host
+....../srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpk411lu_w/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpr1whcvxo/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp9uf0kqno/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp6hfto3vq/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpstedjb9k/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp62bb6czx/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+............2026-10-22T23:00:00-07:00 [j] MACRO-CLK flag after CTS: 1/10 macro clock pins out of bounds (slew > 120 ps or FF > 30 ps after the register mean): u.u_ep.u_fifo.g_t[2].u_m/clk ff slew 210 ps > 120; ff 61 ps after the register mean > 30
+.................2026-10-22T23:00:00-07:00 [x] MACRO-VIEW: verdict.macros ['ot_nope'] not resolved at the daemon (verdict.macros entry 'ot_nope': no ot_nope/ot_nope.lef in the source tree (give the src-relative view dir, e.g. physical/asap7_memory_macros/ot_nope)); remote helpers re-resolve
+.2026-10-22T23:00:00-07:00 [x] MACRO-VIEW: verdict.macros resolved ot_sram_1r1w_128x256_m1_r2c2 -> physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2
+...........................EE..............2026-10-22T23:00:03-07:00 [far] route bulk released (cancelled; MB before/after 10 5); kept 6_final.*, 5_2_route.odb, logs/reports/json
+.2026-10-22T23:00:03-07:00 [nm] route bulk released (cancelled; MB before/after 10 5); kept 6_final.*, 5_2_route.odb, logs/reports/json
+.2026-10-22T23:00:03-07:00 [x] bulk release refused: near-miss route retained (NEAR_MISS f -5 -5
+RETAIN)
+../srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/fleet/sweep.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphbubbmx9/prot.txt' mode='r' encoding='UTF-8'>
+  prot=[l.strip().rstrip('/') for l in open(pf) if l.strip()]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/fleet/sweep.py:57: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphbubbmx9/closed.txt' mode='r' encoding='UTF-8'>
+  try: CLOSED=set(l.strip() for l in open(os.environ['SWEEP_CLOSED']) if l.strip())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+TOTAL plan 0MB over roots ['/tmp/tmphbubbmx9/root']
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/fleet/sweep.py:68: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphbubbmx9/unit/routes/x/corner_sta.json' mode='r' encoding='UTF-8'>
+  j=json.load(open(os.path.join(dp,f)))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/fleet/sweep.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphbubbmx9/prot.txt' mode='r' encoding='UTF-8'>
+  prot=[l.strip().rstrip('/') for l in open(pf) if l.strip()]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/fleet/sweep.py:57: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphbubbmx9/closed.txt' mode='r' encoding='UTF-8'>
+  try: CLOSED=set(l.strip() for l in open(os.environ['SWEEP_CLOSED']) if l.strip())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+TOTAL plan 0MB over roots ['/tmp/tmphbubbmx9/root']
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/fleet/sweep.py:68: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphbubbmx9/unit/routes/x/corner_sta.json' mode='r' encoding='UTF-8'>
+  j=json.load(open(os.path.join(dp,f)))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+........................EE..............sssE.s.............E.........................................preroute_gate: FAIL: reg2reg ws n/a ps, <0: 0, <+250: 0; macro ws -1859.1 ps, <0: 3000, <+250: 3000; io ws n/a ps, <0: 0, <+250: 0
+PREROUTE_MARGIN: macro WNS -1859.1 ps at 833.333 (route-period -1859.1), 3000 endpoints below -750 (> 50); worst a -> b
+preroute_gate: FAIL: reg2reg ws n/a ps, <0: 0, <+250: 0; macro ws -1859.1 ps, <0: 3000, <+250: 3000; io ws n/a ps, <0: 0, <+250: 0
+PREROUTE_MARGIN: macro WNS -1859.1 ps at 833.333 (route-period -1859.1), 3000 endpoints below -750 (> 50); worst a -> b
+preroute_gate: PASS: reg2reg ws n/a ps, <0: 0, <+250: 0; macro ws -1859.1 ps, <0: 3000, <+250: 3000; io ws n/a ps, <0: 0, <+250: 0
+preroute_gate: error [Errno 2] No such file or directory: '/tmp/tmpd1imzbxr/missing.json'
+2026-10-22T23:00:57-07:00 [race] CANCELLED: cancelled by a human
+.2026-10-22T23:00:57-07:00 [race] CANCELLED: cancelled by a human
+..2026-10-22T23:00:57-07:00 [race] hold-only miss (UNKNOWN +190.49 / FF -70.99, DRC 0): post-route hold ECO launched on /route/5_2_route.odb
+...2026-10-22T23:00:57-07:00 [race] hold ECO MISS: {'ss_ps': -340500.58, 'ff_ps': -59.43, 'drc': 0, 'cells_added': 0, 'errors': []}
+.....2026-10-22T23:00:57-07:00 [race] auto re-queued after loop fix label-sanitise-20261006 (died in calibrate on that signature)
+..2026-10-22T23:00:57-07:00 [race] hold-only miss (UNKNOWN +50.00 / FF +0.00, DRC 0): post-route hold ECO launched on /route/5_2_route.odb
+2026-10-22T23:00:57-07:00 [race] hold-only miss (UNKNOWN +50.00 / FF +0.00, DRC 0): post-route hold ECO launched on /route/5_2_route.odb
+.....2026-10-22T23:00:57-07:00 [race] restored ledger cancellation; remote work preserved
+..........................................s./srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmprvy0lyed/routes/lbl_cal/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmprvy0lyed/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpobbsuk__/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbajn6f_4/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpm275ie8k/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp8vknfho7/routes/lbl/logs/asap7/n/base/3_3_place_gp.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/route_corner_check.py:46: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp8vknfho7/routes/lbl/logs/asap7/n/base/4_1_cts.log' mode='r' encoding='UTF-8'>
+  text = open(f, errors="replace").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+................................................E.............EE....................................E..............................fatal: cannot change to '/home/ubuntu/OpenTallas': No such file or directory
+s..............2026-10-22T23:01:15-07:00 git fetch main failed after 3 tries (rc=128): fatal: cannot change to '/home/ubuntu/OpenTallas': No such file or directory
+2026-10-22T23:01:15-07:00 OVERLAY-DRIFT CHECK vs origin/main ?: 57 file(s) differ (stale = main's copy is shipped; daemon_only = commit to main; in-process imports need a restart): physical/common_flow/native_pg_binding.tcl: no_git; tools/closure_loop/m6_stub_config.py: no_git; tools/closure_loop/eco_recovery.py: no_git; tools/closure_loop/path_summary.py: no_git; tools/closure_loop/macro_views.py: no_git; tools/closure_loop/ck_insertion.py: no_git; tools/closure_loop/hold_eco.sh: no_git; tools/closure_loop/hold_eco.tcl: no_git; tools/closure_loop/hold_eco_corner.tcl: no_git; tools/closure_loop/hold_eco_sdc.py: no_git; tools/closure_loop/hold_eco_window.tcl: no_git; tools/closure_loop/hold_corners_patch.py: no_git; tools/closure_loop/h1_patch.py: no_git; tools/closure_loop/cal_classify.sh: no_git; tools/closure_loop/resume_patch.py: no_git; tools/closure_loop/resume_check.sh: no_git; tools/orfs_hold_mm.py: no_git; tools/orfs_hold_mm.tcl: no_git; tools/closure_loop/tt_resta.sh: no_git; tools/closure_loop/meas_resta.py: no_git; tools/closure_loop/lane_kh_overlay.py: no_git; physical/common_flow/io_ref_routed.sdc: no_git; physical/common_flow/clock_family.tcl: no_git; tools/fp_margin_lint.py: no_git; tools/fp_margin_lint.tcl: no_git; tools/preroute_gate.py: no_git; tools/preroute_gate.tcl: no_git; tools/textbook_lint.py: no_git; tools/closure_loop/tt_overlay.py: no_git; tools/closure_loop/vtswap_eco.sh: no_git; tools/closure_loop/vtswap_eco.tcl: no_git; tools/closure_loop/pinflop_overlay.py: no_git; physical/qwen_die_masters/pinflop_ref.tcl: no_git; tools/w18/corner_sta.py: no_git; tools/closure_loop/route_corner_check.py: no_git; tools/hier_contract/child_lint.py: no_git; tools/hier_contract/abstract_pin_stub.py: no_git; tools/hier_contract/m6_pin_grant.py: no_git; physical/common_flow/grt_macro_top_layer.tcl: no_git; physical/common_flow/m6_pin_access.tcl: no_git; tools/tt_views/view_export.py: no_git; physical/common_flow/grt_macro_top_layer_post.tcl: no_git; physical/common_flow/cg_pushdown.tcl: no_git; physical/common_flow/clk_net_protect.tcl: no_git; physical/common_flow/link_budget_hook.tcl: no_git; physical/common_flow/link_budget_consistent.sdc: no_git; physical/common_flow/nbr_clk_measured_ttb.sdc: no_git; physical/common_flow/macro_sliver_block.tcl: no_git; physical/common_flow/edge_sliver_block.tcl: no_git; physical/common_flow/macro_cts_cluster.tcl: no_git; tools/textbook_lint.py: no_git; tools/fp_margin_lint.py: no_git; tools/ref_tile/pre_route_gate.py: no_git; tools/pin_fit.py: no_git; tools/ref_tile/ref_tile.py: no_git; tools/closure_loop/submit_lint.py: no_git; tools/closure_loop/macro_views.py: no_git
+2026-10-22T23:01:15-07:00 MALFORMED job state /home/ubuntu/.local/state/closure_loop/jobs/df2-drain-a.json: job state requires matching name, nonempty status and object spec; preserved, excluded from scheduling
+2026-10-22T23:01:15-07:00 MALFORMED job state /home/ubuntu/.local/state/closure_loop/jobs/df2-drain-b.json: job state requires matching name, nonempty status and object spec; preserved, excluded from scheduling
+2026-10-22T23:01:15-07:00 MALFORMED job state /home/ubuntu/.local/state/closure_loop/jobs/df2-restart-ship-test.json: job state requires matching name, nonempty status and object spec; preserved, excluded from scheduling
+........................./usr/lib/python3.14/unittest/mock.py:465: ResourceWarning: unclosed file <_io.FileIO name='/tmp/tmphbubbmx9/log' mode='ab' closefd=True>
+  def __init__(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+2026-10-22T23:01:18-07:00 [blk-0123456789-tt] EARLY_FAIL_SETUP: post-cts TT setup WNS -536.7 ps at 833.333 (route-period -600.0 at 770), 9000 failing endpoints, TNS -2000000.0; gate WNS < -400 with > 500 endpoints
+...2026-10-22T23:01:18-07:00 [blk-0123456789-tt] EARLY_FAIL_CONGESTION: global route finished with congestion (GRT-0116): [ERROR GRT-0116] Global routing finished with congestion.
+....................................................................OT_CAL_CTS_ONLY: calibrate run, SKIP_CTS_REPAIR_TIMING=1 (no CTS setup/hold repair)
+..............................visual review: gate re-run since review abc0001, geometry unchanged (36a138419231): receipt stands
+2026-10-22T23:01:22-07:00 [vt] VT-swap ECO waiting for capacity: busy
+..2026-10-22T23:01:22-07:00 [vt] thin TT setup miss (TT -12.53 / FF +18.60 / DRC 0): post-route VT-swap setup ECO (RVT->LVT on TT paths, target 10 ps, cap 2 % LVT, FF hold guard, no re-route) on /rb/6_final.odb
+.2026-10-22T23:01:22-07:00 [vt] thin TT setup miss (TT -12.53 / FF +18.60 / DRC 0): post-route VT-swap setup ECO (RVT->LVT on TT paths, target 10 ps, cap 2 % LVT, FF hold guard, no re-route) on /rb/6_final.odb
+2026-10-22T23:01:22-07:00 [vt] thin TT setup miss (TT -12.53 / FF +18.60 / DRC 0): post-route VT-swap setup ECO (RVT->LVT on TT paths, target 5 ps, cap 2 % LVT, FF hold guard, no re-route) on /rb/6_final.odb
+.2026-10-22T23:01:22-07:00 [vt] thin TT setup miss (TT -12.53 / FF +18.60 / DRC 0): post-route VT-swap setup ECO (RVT->LVT on TT paths, target 10 ps, cap 2 % LVT, FF hold guard, no re-route) on /rb/6_final.odb
+2026-10-22T23:01:22-07:00 [vt] VT-swap ECO MISS: {'tt_ps': 4.36, 'ss_ps': 4.36, 'ff_ps': 18.6, 'drc': 0, 'errors': ['LVT 2.004 % over the 2.0 % cap']}
+2026-10-22T23:01:22-07:00 [vt] thin TT setup miss (TT -12.53 / FF +18.60 / DRC 0): post-route VT-swap setup ECO (RVT->LVT on TT paths, target 5 ps, cap 2 % LVT, FF hold guard, no re-route) on /rb/6_final.odb
+2026-10-22T23:01:22-07:00 [vt] VT-swap ECO MISS: {'tt_ps': 4.36, 'ss_ps': 4.36, 'ff_ps': 18.6, 'drc': 0, 'errors': ['LVT 2.004 % over the 2.0 % cap']}
+..2026-10-22T23:01:22-07:00 [vt] thin TT setup miss (TT -12.53 / FF +18.60 / DRC 0): post-route VT-swap setup ECO (RVT->LVT on TT paths, target 10 ps, cap 2 % LVT, FF hold guard, no re-route) on /rb/6_final.odb
+2026-10-22T23:01:22-07:00 [vt] VT-swap ECO PASS: {'tt_ps': 7.75, 'ss_ps': 7.75, 'ff_ps': 18.6, 'drc': 0, 'errors': [], 'cells_added': 0}
+..2026-10-22T23:01:22-07:00 [vt] verdict TT -12.53 / FF +18.60 / DRC 0 / checks failed [] -> NOT CLOSED
+.
+======================================================================
+ERROR: test_actual_publish_keeps_original_overlay_and_adds_separate_recovery_receipt (test_export_lint_recovery.ExportLintRecovery.test_actual_publish_keeps_original_overlay_and_adds_separate_recovery_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_export_lint_recovery.py", line 142, in test_actual_publish_keeps_original_overlay_and_adds_separate_recovery_receipt
+    C.publish(j, self.j['metrics'])
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/closure_loop.py", line 4783, in publish
+    f"{metrics['drc']}{setup_sensitivity_text(metrics)} {measured_clock_text(metrics)} (source {j['commit_full'][:9]}, {host_cfg(j['host'])['label']} "
+                                                                                                                        ~~~~~~~~^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/closure_loop.py", line 336, in host_cfg
+    return next(h for h in hosts_table() if h["name"] == name)
+StopIteration
+
+======================================================================
+ERROR: test_io_flop_at_pins_openroad (unittest.loader._FailedTest.test_io_flop_at_pins_openroad)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_io_flop_at_pins_openroad
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_io_flop_at_pins_openroad.py", line 5, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+ERROR: test_leaf_inhold_openroad (unittest.loader._FailedTest.test_leaf_inhold_openroad)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_leaf_inhold_openroad
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_leaf_inhold_openroad.py", line 5, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+ERROR: test_mm_link_period (unittest.loader._FailedTest.test_mm_link_period)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_mm_link_period
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_mm_link_period.py", line 6, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+ERROR: test_mm_scene_load_lifecycle (unittest.loader._FailedTest.test_mm_scene_load_lifecycle)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_mm_scene_load_lifecycle
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_mm_scene_load_lifecycle.py", line 5, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+ERROR: test_pg_publication_hooks (unittest.loader._FailedTest.test_pg_publication_hooks)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_pg_publication_hooks
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_pg_publication_hooks.py", line 10, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+ERROR: test_pg_receipt (unittest.loader._FailedTest.test_pg_receipt)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_pg_receipt
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_pg_receipt.py", line 6, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+ERROR: test_pin_track_access (unittest.loader._FailedTest.test_pin_track_access)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_pin_track_access
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_pin_track_access.py", line 8, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+ERROR: test_grt_congestion_is_terminal_not_retried (test_postroute_recovery.CompletedRouteRecovery.test_grt_congestion_is_terminal_not_retried)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_postroute_recovery.py", line 83, in test_grt_congestion_is_terminal_not_retried
+    C.crash(j, {'kind': 'route', 'key': 'route'}, fleet, 'rc=2')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/closure_loop.py", line 5161, in crash
+    finish(j, "EARLY_FAIL_CONGESTION", f"global route finished with congestion (GRT-0116): {err[:200]}",
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           f"EARLY_FAIL_CONGESTION: GRT-0116, not retried (deterministic). Fix the floorplan (util/channels/pins); "
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           f"congestion reports in the route's reports dir.\n{err[:300]}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/closure_loop.py", line 4891, in finish
+    ledger(j, ledger_text)
+    ~~~~~~^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/closure_loop.py", line 4822, in ledger
+    where = f"{host_cfg(j['host'])['label']}:{j['run']}" if j.get("host") else "-"
+               ~~~~~~~~^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/closure_loop.py", line 336, in host_cfg
+    return next(h for h in hosts_table() if h["name"] == name)
+StopIteration
+
+======================================================================
+ERROR: test_submit_side (test_rule_enforcement.GateClock.test_submit_side)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_rule_enforcement.py", line 164, in test_submit_side
+    self.assertEqual(sev(self.kit(td, GOOD), known_sinks=48000), "WARN")   # measured, sinks > 15k: guidance
+                     ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_rule_enforcement.py", line 159, in <lambda>
+    sev = lambda kd, **kw: (lambda g: (PG.check_clock_evidence(g, kd, **kw), g.verdict)[1])(PG.Gate())  # noqa: E731
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_rule_enforcement.py", line 159, in <lambda>
+    sev = lambda kd, **kw: (lambda g: (PG.check_clock_evidence(g, kd, **kw), g.verdict)[1])(PG.Gate())  # noqa: E731
+                                       ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/ref_tile/pre_route_gate.py", line 2623, in check_clock_evidence
+    frozen, _ = HO.capture_plan(DAEMON_TREE, ROOT, pg_strict=strict)
+                ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/helper_overlay.py", line 121, in capture_plan
+    literal = (Path(daemon) / rel).read_bytes()
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 778, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt-claude-closure-daemon-1010/physical/common_flow/cg_pushdown.tcl'
+
+======================================================================
+ERROR: test_s81_norm_capture_size_openroad (unittest.loader._FailedTest.test_s81_norm_capture_size_openroad)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_s81_norm_capture_size_openroad
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_s81_norm_capture_size_openroad.py", line 5, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+ERROR: test_s81_norm_clock_tap_openroad (unittest.loader._FailedTest.test_s81_norm_clock_tap_openroad)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_s81_norm_clock_tap_openroad
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_s81_norm_clock_tap_openroad.py", line 5, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+ERROR: test_sparse_keep (unittest.loader._FailedTest.test_sparse_keep)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_sparse_keep
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_sparse_keep.py", line 10, in <module>
+    import pytest
+ModuleNotFoundError: No module named 'pytest'
+
+
+======================================================================
+FAIL: test_fresh_route_requires_opt_in_and_records_reason (test_hold_eco_macro_pins.MacroPinCoverage.test_fresh_route_requires_opt_in_and_records_reason)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_hold_eco_macro_pins.py", line 129, in test_fresh_route_requires_opt_in_and_records_reason
+                output = self.run_tcl(r'''
+                         ~~~~~~~~~~~~^^^^^
+    set ot_eco_pk 0; set ot_eco_meg 0; set ot_native ""
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<42 lines>...
+    puts PASS
+    ^^^^^^^^^
+    '''.replace("@CHECK@", guide_check).replace("@ROUTE@", route), tmp)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-kv-reset-pair-discover-2248/candidate/tools/closure_loop/test_hold_eco_macro_pins.py", line 117, in run_tcl
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : OT_ECO route guides from the db: 0
+OT_ECO route guides from the db: 1
+OT_ECO route_strategy incremental_original_guides
+OT_ECO route guides from the db: 1
+OT_ECO route_strategy incremental_original_guides
+OT_ECO guide re-route failed (DRT-0218): explicitly requested fresh global route
+OT_ECO route_strategy fresh_global reason rejected_guides explicit_opt_in 1
+can't read "ot_m6_stub": no such variable
+    while executing
+"if {$ot_m6_stub ne ""} { ot_m6_apply remove }"
+    (file "/tmp/tmpjvwrd_vt/test.tcl" line 122)
+
+
+----------------------------------------------------------------------
+Ran 1092 tests in 131.379s
+
+FAILED (failures=1, errors=13, skipped=8)

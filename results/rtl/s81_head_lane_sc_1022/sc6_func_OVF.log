@@ -1,0 +1,6 @@
+HD_LANE_STATS sent=7504/6493 received=6504/6493 mean_latency=29 errors=0 phase1_fault=0 flt=0000/0000
+FAIL hd_lane static overflow not flagged (A flt 0000)
+- rtl/dsrom_sys/s81_head/test/tb_s81hd_lane.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 1.231 s; speed 17.059 us/s
+- Verilator: cpu 1.231 s on 1 threads; allocated 8 MB

@@ -43,34 +43,38 @@ def measure(case, tt_source_receipt=None):
             raise ValueError('selected LP/native TT requires its source-bound embedding output-offset receipt; raw-TT edge 1 is not inherited')
         receipt=Path(tt_source_receipt)
         row=json.loads(receipt.read_text())
-        if row.get('schema')!='opentallas.qwen.tt_emb_source.v1' or row.get('status')!='QUALIFIED_SOURCE_LOCAL_EDGES' or row.get('master')!=tt_master or row.get('calendar_sample_edges')!=1:
-            raise ValueError('TT embedding source receipt identity/sample edge mismatch')
-        root=(case.parents[1]/'src').resolve()
-        def bound_file(field, sha_field):
-            path=(root/row[field]).resolve()
-            if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest()!=row[sha_field]:
-                raise ValueError('TT embedding source receipt hash/path mismatch: '+field)
-            return path
-        rtl=bound_file('rtl','rtl_sha256')
-        if not re.search(r'\bmodule\s+'+re.escape(tt_master)+r'\b',rtl.read_text()):
-            raise ValueError('TT embedding RTL does not define selected master')
-        lp=bound_file('lp_record','lp_record_sha256')
-        record=json.loads(lp.read_text())
-        offsets=record['compiler']['output_port_offset_edges']
-        values=[offsets[p] for p in ('emb_start','emb_token','emb_position','emb_user')]
-        producer=row['producer_instance']
-        producer_offset=record['compiler']['child_offset_edges'][producer]
-        if type(producer_offset)!=int or producer_offset<0 or producer!='u_gi':
-            raise ValueError('TT embedding actual calendar producer offset missing/invalid')
-        if record['audit']['ok'] is not True or any(type(n)!=int or n<0 for n in values) or len(set(values))!=1 or values[0]<producer_offset:
-            raise ValueError('TT embedding LP output offsets are missing/unequal/unqualified')
-        source_to_output=values[0]-producer_offset
-        tt_local=1+source_to_output
-        tt_source=dict(status=row['status'],master=tt_master,calendar_sample_edges=1,output_offset_edges=values[0],
-                       producer_instance=producer,producer_offset_edges=producer_offset,
-                       source_to_output_edges=source_to_output,
-                       receipt_sha256=hashlib.sha256(receipt.read_bytes()).hexdigest(),
-                       rtl_sha256=row['rtl_sha256'],lp_record_sha256=row['lp_record_sha256'])
+        if row.get('schema') == 'opentallas.qwen.tt_source_local.v1':
+            from tt_source_local import source_local_edges
+            tt_local, tt_source = source_local_edges((case.parents[1]/'src').resolve(), tt_master, receipt)
+        else:
+            if row.get('schema')!='opentallas.qwen.tt_emb_source.v1' or row.get('status')!='QUALIFIED_SOURCE_LOCAL_EDGES' or row.get('master')!=tt_master or row.get('calendar_sample_edges')!=1:
+                raise ValueError('TT embedding source receipt identity/sample edge mismatch')
+            root=(case.parents[1]/'src').resolve()
+            def bound_file(field, sha_field):
+                path=(root/row[field]).resolve()
+                if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest()!=row[sha_field]:
+                    raise ValueError('TT embedding source receipt hash/path mismatch: '+field)
+                return path
+            rtl=bound_file('rtl','rtl_sha256')
+            if not re.search(r'\bmodule\s+'+re.escape(tt_master)+r'\b',rtl.read_text()):
+                raise ValueError('TT embedding RTL does not define selected master')
+            lp=bound_file('lp_record','lp_record_sha256')
+            record=json.loads(lp.read_text())
+            offsets=record['compiler']['output_port_offset_edges']
+            values=[offsets[p] for p in ('emb_start','emb_token','emb_position','emb_user')]
+            producer=row['producer_instance']
+            producer_offset=record['compiler']['child_offset_edges'][producer]
+            if type(producer_offset)!=int or producer_offset<0 or producer!='u_gi':
+                raise ValueError('TT embedding actual calendar producer offset missing/invalid')
+            if record['audit']['ok'] is not True or any(type(n)!=int or n<0 for n in values) or len(set(values))!=1 or values[0]<producer_offset:
+                raise ValueError('TT embedding LP output offsets are missing/unequal/unqualified')
+            source_to_output=values[0]-producer_offset
+            tt_local=1+source_to_output
+            tt_source=dict(status=row['status'],master=tt_master,calendar_sample_edges=1,output_offset_edges=values[0],
+                           producer_instance=producer,producer_offset_edges=producer_offset,
+                           source_to_output_edges=source_to_output,
+                           receipt_sha256=hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                           rtl_sha256=row['rtl_sha256'],lp_record_sha256=row['lp_record_sha256'])
     root=(case.parents[1]/'src').resolve()
     selected=[]
     for base in ('qfd_native59_dv_headprep','qfd_sys_face_ovl','qfd_d2d_static_ovl_sf7'):
