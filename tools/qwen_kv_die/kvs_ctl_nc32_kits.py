@@ -134,10 +134,9 @@ def main():
     pins = {f: [n for n, (ff, L, c) in sorted(placed.items(), key=lambda kv: kv[1][2]) if ff == f] for f in 'NSEW'}
     m6 = sorted((n, f, c) for n, (f, L, c) in placed.items() if L == 'M6')
 
-    # 6 SRAMs (52.296 x 39.96): MAIN one row at y 64.8 (centre band); FB two staggered rows (y 21.6 / 108.0) closer to
-    # the centre x so the lprg / wprg cones stay within one reach of their rows
-    xs = dict(m=[259.2, 345.6, 432.0, 518.4, 648.0, 734.4], f=[388.8, 475.2, 561.6, 388.8, 648.0, 648.0])[VAR]
-    ys = dict(m=[64.8] * 6, f=[21.6, 21.6, 21.6, 108.0, 21.6, 108.0])[VAR]
+    # 6 SRAMs (52.296 x 39.96): one row at y 64.8 (centre band), lprg left / wprg right of the centre
+    xs = [259.2, 345.6, 432.0, 518.4, 648.0, 734.4]   # FB keeps MAIN's macros: the variable is the pin pipelining
+    ys = [64.8] * 6                                   # (two rows do not fit 172.8 with >= 20-um face / channel clearance)
     insts = ['*u_lprg*u_rowa_b0', '*u_lprg*u_rowa_b1', '*u_lprg*u_rowb_b0', '*u_lprg*u_rowb_b1', '*u_wprg*u_rows_b0',
              '*u_wprg*u_rows_b1']
     macros = [dict(view=SRAM, count=1, inst=i, at=[x, y], orient='R0') for i, x, y in zip(insts, xs, ys)]
@@ -151,7 +150,7 @@ def main():
            'OT_KV_CTL_C32=2).  Pin plan / M6 pin-only grant = ctl_r1 (KDIE5-TV decision b).  6 ctl_sram_1r1w_64x128_p192 '
            + ('in one centre row; pin registers ON (c32k: every port except the o_hroot member output flops, +1 in / +1 '
               'out edge, the die schedule must charge them)' if VAR == 'm' else
-              'in two staggered rows near the centre; pin registers OFF (die charges 0 face edges, as ctl_r1)')
+              'in one centre row; pin registers OFF (die charges 0 face edges, as ctl_r1)')
            + '.  Schedule deltas of the body: own leave guard +2, boot setup_ready +2, +1 boot-write edge (DSTG).')
     s = dict(name=KIT, top=M, kind='tile', sources=SOURCES, params={}, clock_port='ck', reset_ports=['rst_n', 'por_n'],
              outline={'w': W, 'h': H, 'exact': True}, layer_cap='M5', macros=macros, pins=pins, io_tcl=io,
