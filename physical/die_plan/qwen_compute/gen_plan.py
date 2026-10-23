@@ -1395,6 +1395,47 @@ def declare_clock_taps(P, notes):
         P.types[tn]["clock"]["taps"] = [{k: v for k, v in tap.items() if k in fields} for tap in entry["taps"]]
 
 
+# A0 hard cores (QC-A0 kits qfd_tile_n{k,l}_a0ck): built on PLATFORM tracks (ROM/node/LSL children cannot move to the
+# plan phases), every boundary pin M4 at y = 0.012 mod 0.048.  COORD 10-23 08:36: the core is placed at the 8.64
+# lattice origin + track_offset (0, +0.012) so its pins land on the plan M4 tracks (offset 0.024); MY (east cores)
+# keeps y; partition MX is checked by G0 in every die frame (partition heights are multiples of 0.048).
+A0_TRACK_OFFSET = [0.0, 0.012]
+A0_PINS = {"nk": "cores/a0_nk_pins.json", "nl": "cores/a0_nl_pins.json"}
+# measured core insertion at the boundary pin flops (QC-P3 10-23, a0ck gates post-CTS, placement RC; median/spread):
+# NK @5a8a5c4b3 TT 924 (918..934) FF 742; NL @2019019b1 TT 1047 (1039..1077) FF 839.  The NL quads' NK taps need
+# +123 ps TT / +97 ps FF branch delay (or the NL branch shortened) to hold quad core-to-core skew <= 80 ps.
+A0_INSERTION_PS = {"nk": 924, "nl": 1047}
+
+
+def declare_a0_hard_cores(P):
+    for tn, t in sorted(P.types.items()):
+        cores = [c for c in t["contents"] if c["module"].startswith("qfd_tile_n")]
+        if not cores:
+            continue
+        kinds = set()
+        hcs = []
+        for c in cores:
+            v = "nl" if c["module"].startswith("qfd_tile_nl") else "nk"
+            kinds.add(v)
+            o = "MY" if "orient MY" in c.get("note", "") else "R0"
+            hcs.append(dict(inst=c["inst"], module=f"qfd_tile_{v}_a0c", origin_um=c["origin_um"],
+                            outline_um=c["outline_um"], orient=o, track_offset_um=A0_TRACK_OFFSET,
+                            pins_file=A0_PINS[v],
+                            note=f"A0 {v.upper()} core (kit qfd_tile_{v}_a0ck), platform-track build: placed at "
+                                 f"origin + (0, 0.012)"))
+            for tp in t["clock"].get("taps", []):
+                if tp["name"] == f"{c['inst']}.ck":
+                    tp["insertion_ps"] = A0_INSERTION_PS[v]
+                    tp["budget_owner"] = (f"measured qfd_tile_{v}_a0ck post-CTS TT boundary pin flops "
+                                          f"(QC-P3 10-23; final after GRT/STA)")
+        t["hard_cores"] = hcs
+        if len(kinds) > 1:
+            for tp in t["clock"].get("taps", []):
+                if tp.get("kind") == "core" and tp.get("insertion_ps") == A0_INSERTION_PS["nk"]:
+                    tp["note"] = ("mixed NK/NL quad: this NK tap branch needs +123 ps TT / +97 ps FF vs the NL tap "
+                                  "(measured core insertion) so quad core-to-core skew stays <= 80 ps")
+
+
 def neighbours(P):
     """abutting partitions per partition (G1 star flag > 6) and the linked subset."""
     names = list(P.parts)
@@ -1612,6 +1653,7 @@ def main():
     census_decl = write_census(P, geo, census, record, Path(a.out).parent, su_directed)
     taps = clock_taps(P)
     declare_clock_taps(P, taps)
+    declare_a0_hard_cores(P)
     nbrs = neighbours(P)
     plan = {
         "schema": "opentallas.die_plan.v1",

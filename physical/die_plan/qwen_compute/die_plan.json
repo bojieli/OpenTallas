@@ -400,9 +400,9 @@
        745.836
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 636.7
      },
      {
@@ -413,9 +413,9 @@
        745.836
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 628.0
      },
      {
@@ -426,9 +426,9 @@
        2050.476
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 823.7
      },
      {
@@ -439,9 +439,9 @@
        2050.476
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 815.1
      },
      {
@@ -508,7 +508,85 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "hard_cores": [
+    {
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      77.76
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      77.76
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ]
   },
   "cbf_q01": {
    "module": "qfd_qc_cb_f_q01",
@@ -722,9 +800,9 @@
        737.196
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 653.9
      },
      {
@@ -735,9 +813,9 @@
        737.196
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 645.3
      },
      {
@@ -748,9 +826,9 @@
        2050.476
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 815.1
      },
      {
@@ -761,9 +839,9 @@
        2050.476
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 806.4
      },
      {
@@ -830,7 +908,85 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "hard_cores": [
+    {
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ]
   },
   "cbx_q10": {
    "module": "qfd_qc_cb_x_q10",
@@ -1095,9 +1251,9 @@
        745.836
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 645.3
      },
      {
@@ -1108,9 +1264,9 @@
        745.836
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 636.7
      },
      {
@@ -1121,9 +1277,9 @@
        2050.476
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 832.3
      },
      {
@@ -1134,9 +1290,9 @@
        2050.476
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 823.7
      },
      {
@@ -1203,7 +1359,85 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "hard_cores": [
+    {
+     "inst": "u_t20",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      77.76,
+      77.76
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t30",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      699.84,
+      77.76
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t21",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      77.76,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t31",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      699.84,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ]
   },
   "cbf_q11": {
    "module": "qfd_qc_cb_f_q11",
@@ -1417,10 +1651,11 @@
        737.196
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
-      "from_root_um": 662.6
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
+      "from_root_um": 662.6,
+      "note": "mixed NK/NL quad: this NK tap branch needs +123 ps TT / +97 ps FF vs the NL tap (measured core insertion) so quad core-to-core skew stays <= 80 ps"
      },
      {
       "name": "u_t32.ck",
@@ -1430,10 +1665,11 @@
        737.196
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
-      "from_root_um": 653.9
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
+      "from_root_um": 653.9,
+      "note": "mixed NK/NL quad: this NK tap branch needs +123 ps TT / +97 ps FF vs the NL tap (measured core insertion) so quad core-to-core skew stays <= 80 ps"
      },
      {
       "name": "u_t23.ck",
@@ -1443,10 +1679,11 @@
        2050.476
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
-      "from_root_um": 823.7
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
+      "from_root_um": 823.7,
+      "note": "mixed NK/NL quad: this NK tap branch needs +123 ps TT / +97 ps FF vs the NL tap (measured core insertion) so quad core-to-core skew stays <= 80 ps"
      },
      {
       "name": "u_t33.ck",
@@ -1456,9 +1693,9 @@
        2050.476
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 1047,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nl_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 815.1
      },
      {
@@ -1525,7 +1762,85 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "hard_cores": [
+    {
+     "inst": "u_t22",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      77.76,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t32",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      699.84,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t23",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      77.76,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t33",
+     "module": "qfd_tile_nl_a0c",
+     "origin_um": [
+      699.84,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nl_pins.json",
+     "note": "A0 NL core (kit qfd_tile_nl_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ]
   },
   "cbn_q00": {
    "module": "qfd_qc_cb_n_q00",
@@ -1840,9 +2155,9 @@
        745.836
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 636.7
      },
      {
@@ -1853,9 +2168,9 @@
        745.836
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 628.0
      },
      {
@@ -1866,9 +2181,9 @@
        2050.476
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 823.7
      },
      {
@@ -1879,9 +2194,9 @@
        2050.476
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 815.1
      },
      {
@@ -1948,7 +2263,85 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "hard_cores": [
+    {
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      77.76
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      77.76
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ]
   },
   "cbn_q01": {
    "module": "qfd_qc_cb_n_q01",
@@ -2229,9 +2622,9 @@
        737.196
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 653.9
      },
      {
@@ -2242,9 +2635,9 @@
        737.196
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 645.3
      },
      {
@@ -2255,9 +2648,9 @@
        2050.476
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 815.1
      },
      {
@@ -2268,9 +2661,9 @@
        2050.476
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 806.4
      },
      {
@@ -2337,7 +2730,85 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "hard_cores": [
+    {
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ]
   },
   "cbn_q11": {
    "module": "qfd_qc_cb_n_q11",
@@ -2585,10 +3056,11 @@
        737.196
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
-      "from_root_um": 662.6
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
+      "from_root_um": 662.6,
+      "note": "mixed NK/NL quad: this NK tap branch needs +123 ps TT / +97 ps FF vs the NL tap (measured core insertion) so quad core-to-core skew stays <= 80 ps"
      },
      {
       "name": "u_t32.ck",
@@ -2598,10 +3070,11 @@
        737.196
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
-      "from_root_um": 653.9
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
+      "from_root_um": 653.9,
+      "note": "mixed NK/NL quad: this NK tap branch needs +123 ps TT / +97 ps FF vs the NL tap (measured core insertion) so quad core-to-core skew stays <= 80 ps"
      },
      {
       "name": "u_t23.ck",
@@ -2611,10 +3084,11 @@
        2050.476
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
-      "from_root_um": 823.7
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
+      "from_root_um": 823.7,
+      "note": "mixed NK/NL quad: this NK tap branch needs +123 ps TT / +97 ps FF vs the NL tap (measured core insertion) so quad core-to-core skew stays <= 80 ps"
      },
      {
       "name": "u_t33.ck",
@@ -2624,9 +3098,9 @@
        2050.476
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 1047,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nl_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 815.1
      },
      {
@@ -2693,7 +3167,85 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "hard_cores": [
+    {
+     "inst": "u_t22",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      77.76,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t32",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      699.84,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t23",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      77.76,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t33",
+     "module": "qfd_tile_nl_a0c",
+     "origin_um": [
+      699.84,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nl_pins.json",
+     "note": "A0 NL core (kit qfd_tile_nl_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ]
   },
   "slw_fw_v3": {
    "module": "qfd_qc_slw_fw",
@@ -24352,9 +24904,9 @@
        737.196
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 653.9
      },
      {
@@ -24365,9 +24917,9 @@
        737.196
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 645.3
      },
      {
@@ -24378,9 +24930,9 @@
        2050.476
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 815.1
      },
      {
@@ -24391,9 +24943,9 @@
        2050.476
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 806.4
      },
      {
@@ -24460,7 +25012,85 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "hard_cores": [
+    {
+     "inst": "u_t02",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t12",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      69.12
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t03",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t13",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ]
   },
   "cbf_q00_s2": {
    "module": "qfd_qc_cb_f_q00",
@@ -24835,9 +25465,9 @@
        745.836
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 636.7
      },
      {
@@ -24848,9 +25478,9 @@
        745.836
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 628.0
      },
      {
@@ -24861,9 +25491,9 @@
        2050.476
       ],
       "orient": "R0",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 823.7
      },
      {
@@ -24874,9 +25504,9 @@
        2050.476
       ],
       "orient": "MY",
-      "insertion_ps": 250,
+      "insertion_ps": 924,
       "insertion_tol_ps": 40,
-      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "budget_owner": "measured qfd_tile_nk_a0ck post-CTS TT boundary pin flops (QC-P3 10-23; final after GRT/STA)",
       "from_root_um": 815.1
      },
      {
@@ -24943,7 +25573,85 @@
     ],
     "sync_stages": 2
    },
-   "ft_track_frac": 0.4
+   "ft_track_frac": 0.4,
+   "hard_cores": [
+    {
+     "inst": "u_t00",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      77.76
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t10",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      77.76
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t01",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      86.4,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    },
+    {
+     "inst": "u_t11",
+     "module": "qfd_tile_nk_a0c",
+     "origin_um": [
+      691.2,
+      1382.4
+     ],
+     "outline_um": [
+      457.92,
+      1157.76
+     ],
+     "orient": "MY",
+     "track_offset_um": [
+      0.0,
+      0.012
+     ],
+     "pins_file": "cores/a0_nk_pins.json",
+     "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ]
   }
  },
  "partitions": [
