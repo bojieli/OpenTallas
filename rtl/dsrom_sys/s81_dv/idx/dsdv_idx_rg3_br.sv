@@ -143,6 +143,8 @@ module dsdv_idx_rg3_br #(
             if (wdone_p) act <= 1'b0;
         end
     // job fields (from qo); jn / jb twice (one copy for the derived values, one for the walker)
+    (* keep = "true" *) reg gat_late;
+    always @(posedge ck) if (hen[0]) gat_late <= qoi[512];
     reg        gat; reg [19:0] jb, jbd, jbe; reg [20:0] jn, jnd, jne; reg [9:0] jk; reg [29:0] kb; reg [15:0] t0; reg [3:0] pp;
     reg [2:0]  ik, om; reg [7:0] tg; reg [11:0] hlen;
     (* keep = "true" *) reg [7:0] gatd;             // gather bit copies for the derived values (8 bits a copy)
@@ -974,7 +976,7 @@ module dsdv_idx_rg3_br #(
             gdr <= gd1 && ws == 3'd6 && !hj1[3];
             gc_r <= MUT == 7 || gdr || gfr > ewn;
     end
-    wire        late_n = slot_n && (gat ? ((bcmp[epk[5]] && bwe < ewn) || (!take_n && !gc_r)) : !take_n);
+    wire        late_n = slot_n && (gat_late ? ((bcmp[epk[5]] && bwe < ewn) || (!take_n && !gc_r)) : !take_n);
     // S81-IDXRD-1021: part-0 data enables, one kept copy a lane a buffer (16 data bits + lane valid each), captured from
     // take_n on the same edge as before (was 2 x 8 lanes: 98..128 loads).  No reset: take_n is 0 while the window
     // state is held in reset, and so[275:1] carries no reset.
