@@ -70,12 +70,12 @@ def read_insts(p):
     return die, insts
 
 
-def m8_usage_from_log(text):
-    """GRT final usage table: 'M8  resource demand usage%' -> usage fraction (last table in the log wins)"""
+def m8_usage_from_log(text, layer='M8'):
+    """GRT final usage table: '<layer>  resource demand usage%' -> usage fraction (last table in the log wins)"""
     u = None
     for ln in text.splitlines():
         m = GRT_ROW.match(ln)
-        if m and m.group(1) == 'M8':
+        if m and m.group(1) == layer:
             u = float(m.group(4)) / 100.0
     return u
 
@@ -237,6 +237,13 @@ def generate(a):
     m8 = dict(signal_usage=m8u, strap_coverage_both_nets=round(2 * STRAP_W / cases[0]['strap_pitch_um'], 4) if cases else None)
     m8['total'] = round(m8u + m8['strap_coverage_both_nets'], 4) if (m8u is not None and cases) else None
     m8['verdict'] = ('UNKNOWN (no GRT M8 usage given)' if m8['total'] is None else 'PASS' if m8['total'] <= 1.0 else 'FAIL')
+    # STW-S81c-DIE4 10-22: M9 die signals (--signal-top-layer M9) -> the same capacity check on M9, whose straps the
+    # window cases model too (owner 10-21: M9 stays PG/clock; report an over-subscribed M9, never work around it)
+    m9u = m8_usage_from_log(Path(a.grt_log).read_text(errors='replace'), 'M9') if a.grt_log else None
+    if m9u is not None and cases:
+        m8['m9'] = dict(signal_usage=m9u, strap_coverage_both_nets=m8['strap_coverage_both_nets'],
+                        total=round(m9u + m8['strap_coverage_both_nets'], 4))
+        m8['m9']['verdict'] = 'PASS' if m8['m9']['total'] <= 1.0 else 'FAIL'
     man = dict(schema='opentallas.die_ir_drop.v1', design=a.design, die_um=list(die), instances=len(insts),
                die_peak_w=round(total, 3), density_table=table or {'default': DEFAULT_DENSITY}, limit_mv=a.limit_mv,
                voltage_v=VDD, coverage=a.coverage, windows=cases, m8=m8,
@@ -292,6 +299,9 @@ def record(a):
         elif r['rail_to_rail_mv'] > man['limit_mv']:
             problems.append(f"{c['name']}: IR drop {r['rail_to_rail_mv']} mV > limit {man['limit_mv']} mV at {c['inner_um']}")
         rows.append(r)
+    if (man['m8'].get('m9') or {}).get('verdict') == 'FAIL':
+        problems.append(f"M9 over-subscribed: GRT signal usage {man['m8']['m9']['signal_usage']} + strap coverage "
+                        f"{man['m8']['m9']['strap_coverage_both_nets']} = {man['m8']['m9']['total']} > 1.0")
     if man['m8']['verdict'] == 'FAIL':
         problems.append(f"M8 over-subscribed: GRT signal usage {man['m8']['signal_usage']} + strap coverage "
                         f"{man['m8']['strap_coverage_both_nets']} = {man['m8']['total']} > 1.0")
