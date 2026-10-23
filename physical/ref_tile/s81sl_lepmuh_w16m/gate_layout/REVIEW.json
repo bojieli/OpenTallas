@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "s81sl_lepmuh_w16m",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T23:22:00-07:00",
+ "gate_commit": "1e2085267",
+ "checklist": {
+  "lattice": "20 SRAMs on a regular 2x5 + 1x10 lattice, aligned",
+  "std_cell_band": "continuous std-cell area, density low/green, small hot bins at macro pin edges",
+  "pin_spread": "W/N/E/S faces used, S-face pin move from w15",
+  "clock_entry": "W-face root; TT/FF pin-flop spread 24.0/19.8 ps",
+  "shape": "648x605 um, 18% fill (pin-bound)"
+ },
+ "notes": "placement reg->reg -33.0 (host enable_r, route-recoverable); trial GRT overflow 0, native max 32, 7424 pins accessible; parallel with w15f2 and w16f, first CLOSED binds lep_mu_h",
+ "geometry_sha256": "b73bf53fb0d3c847ca8052fb79f30e9dbea3b7101e6027a467d7186272835caf"
+}
