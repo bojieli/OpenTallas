@@ -93,7 +93,7 @@ SOURCES = {
 # STEWARD-QKd 10-23: GENERATOR re-pinned (was 451274ba...) after the opt-in KDIE5-RTL kv_static_die switches (GRP_R2 / NATIVE32 /
 # CTL_NC32 / POR_LOCK, rv5 archive binding, rope+native32 suffix composition; all default off); GEN_ASSERT strings re-checked
 # at the release-line flags (relm + GRP_R2/NATIVE32/CTL_NC32/C32=2/POR_LOCK) with check_sources: PASS.
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'e463ae4c0fa0e18d91f3eaeb47f6336028e10a1645ffdee9fc9c7991bd1c64a7')
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '72ad6df7340fc4ad476a774d57027b0fa17496738047df6900745889288c3634')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -287,7 +287,7 @@ if __import__('os').environ.get('OT_KV_EMB_N32', '0') == '1' and not (
 if __import__('os').environ.get('OT_KV_CTL_NC32', '0') == '1' and __import__('os').environ.get('OT_KV_GRP_S6C', '0') != '1':
     _NC32_TILES = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv': (
         'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv',
-        '3e24be88a5a79a4559c71f49b579940502903b3cde1a7c925cf8d740765380ab')}
+        '378584666ffb8d4be3a89c078566fe368800169242f778c77efd65655c6b5d5e')}
     if TILES not in _NC32_TILES or __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
         raise ValueError('kv_open_tail_roles: OT_KV_CTL_NC32=1 is pinned for the HROOT_LAND N32/PJ point only: ' + TILES)
     _T0 = TILES
@@ -394,6 +394,37 @@ if __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1':
                                'CTL consumes that service word; S6C removed only the redundant PC-pass faces')
     WHY['odn_h_slice'] = ('o_dn[270:194] of a chain-end s6c group: the H group reads the private i_ctl[193:0] only; '
                           'the generator plans that transport at 194 b (wire rotation tail, no logic)')
+
+
+# STEWARD-QKd 10-23: KDIE5-RTL GRP_R2 point (OT_KV_GRP_R2=1, + NATIVE32 -> the qkd_kvs_grp[_h]_r2c structural copies of
+# the qkd_kvs_grp[_h]_r2 netlists). The registered group keeps the legacy faces: y__tok/y__tep are the x__tok/x__tep pass
+# words two flops later (xe0 -> xe1, no logic), and the chain-end grp_h o_dn is the registered wire rotation of i_ctl.
+# The die gives them no reader exactly as for the legacy groups, so the same DUP / TAIL roles apply to the r2/r2c
+# masters; the roles are proved on the r2 RTL text (pinned) and each r2c copy must name its r2 original top.
+ODN_PEERS = ['qkd_kvs_grp']
+if os.environ.get('OT_KV_GRP_R2', '0') == '1' and os.environ.get('OT_KV_GRP_S6C', '0') != '1':
+    _R2 = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv'
+    _R2C = {'qkd_kvs_grp_r2c': ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2c.sv',
+                                '0424b4fb564a86666fdca41e896a28a278ee8157792ec3a109968340d6e0961b', 'qkd_kvs_grp_r2',
+                                '4478ab4950cde0835336409fe70dd9d1b7965059a7c0232864b7d1a9366afc51'),
+            'qkd_kvs_grp_h_r2c': ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_r2c.sv',
+                                  '20574c692deaccce9644d7b326e47362d2aeaadc296b236f121cfacaef126f64', 'qkd_kvs_grp_h_r2',
+                                  'd57dbd1fe251a7e0b9169ad77e0b7fd7663143fbfe66b159dbb31040b8c1d1ab')}
+    SOURCES[_R2] = '28ea75abe4e8bc1f533cd78f56236af42ffb3974a5110f40aaa978bd5432af1c'
+    _R2_PASS = ['xe0 <= {x__tep, x__tok, x__est[0]};', 'xe1 <= xe0;', 'assign {y__tep, y__tok, y__est__0_1} = xe1;']
+    ASSERT['tok_dup'] = ASSERT['tok_dup'] + [(_R2, 'qkd_kvs_grp_r2', _R2_PASS), (_R2, 'qkd_kvs_grp_h_r2', _R2_PASS)]
+    ASSERT['odn_tail'] = ASSERT['odn_tail'] + [(_R2, 'qkd_kvs_grp_h_r2', [
+        'q0 <= i_ctl;', 'dn_q <= {q0[193:183], q0[270:194], q0[182:0]};', 'assign o_dn = dn_q;'])]
+    for _m, (_rel, _sha, _orig, _jsha) in _R2C.items():
+        SOURCES[_rel] = _sha
+        _jrel = _rel[:-3] + '.json'
+        SOURCES[_jrel] = _jsha
+        if json.loads((ROOT / _jrel).read_text()).get('original_top') != _orig:
+            raise ValueError(f'{_m}: structural copy does not name {_orig}')
+        ROLES[(_m, 'y__tok')] = ('tok_dup', 'DUP')
+        ROLES[(_m, 'y__tep')] = ('tok_dup', 'DUP')
+    ROLES[('qkd_kvs_grp_h_r2c', 'o_dn')] = ('odn_tail', 'TAIL')
+    ODN_PEERS = ['qkd_kvs_grp', 'qkd_kvs_grp_r2c']
 
 
 def sha(p):
@@ -513,7 +544,7 @@ def derive(die_v, root=ROOT, existing=None, pins=None):
         ok, why = True, ''
         if kind == 'TAIL':
             if role == 'odn_tail':
-                ok = all(connected_read(c, 'o_dn') for _, _, c in by_master.get('qkd_kvs_grp', []))
+                ok = all(connected_read(c, 'o_dn') for pm in ODN_PEERS for _, _, c in by_master.get(pm, []))
                 why = 'a non-end group o_dn is open/unread'
             else:
                 prefix = 'kvpc' if role == 'pc_ko_tail' else 'hsl'
