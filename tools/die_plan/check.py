@@ -341,10 +341,14 @@ def check_faces(P, R, face_pins):
 
 
 # ---------------------------------------------------------------------------------------------- lane routes
-def zroute(a, b, face_in):
-    """rectilinear route from a to b inside a partition entered on face_in: Z through the midpoint."""
+def zroute(a, b, face_in, face_out=None):
+    """rectilinear route from a to b inside a partition entered on face_in: an L for a turning slot (out face
+    perpendicular to the in face: along the in face's normal, then along the out face's normal), else a Z through the
+    midpoint (straight-through slot with a jog)."""
     if abs(a[0] - b[0]) < EPS or abs(a[1] - b[1]) < EPS:
         return [a, b]
+    if face_out and (face_in in "EW") != (face_out in "EW"):
+        return [a, (b[0], a[1]), b] if face_in in "EW" else [a, (a[0], b[1]), b]
     if face_in in "EW":
         xm = (a[0] + b[0]) / 2.0
         return [a, (xm, a[1]), (xm, b[1]), b]
@@ -376,7 +380,8 @@ def lane_geometry(P, lid):
         pa, pb = P.port_point(a), P.port_point(b)
         s = P.slot(part, slot) or {}
         fin = P.die_face(part, s.get("in_face", "W"))
-        seg = zroute(pa, pb, fin)
+        fout = P.die_face(part, s.get("out_face", "E"))
+        seg = zroute(pa, pb, fin, fout)
         L = plen(seg)
         k = int(s.get("stations", 1))
         if s.get("regs_um"):

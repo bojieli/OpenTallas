@@ -267,7 +267,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
             x, y, f = pi.get(bit) or po[bit]
             xo, yo, fo = po.get(bit) or pi[bit]
             a, b = inset(x, y, f), inset(xo, yo, fo)
-            seg = check.zroute(a, b, f)
+            seg = check.zroute(a, b, f, fo)
             L = check.plen(seg)
             prev = f"{sn}_i[{bit}]" if bit in pi else f"nd_st_{sn}_{bit}"
             if bit not in pi:

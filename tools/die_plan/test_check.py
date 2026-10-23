@@ -370,3 +370,10 @@ def test_census_explicit_control_routes_fail_closed(tmp_path):
 
     _, R = run(lambda p, m: m.update(groups={"g": ["pa", "pm"]}), forwarders=("g",))
     assert any("witness capacity exceeds planned lanes" in e["msg"] for e in R.errors())
+
+
+def test_zroute_turn_is_L():
+    """COORD 10-23: a turning slot (perpendicular faces) routes as an L, a straight slot with a jog as a Z."""
+    assert check.zroute((0, 10), (50, 100), "W", "N") == [(0, 10), (50, 10), (50, 100)]
+    assert check.zroute((10, 0), (100, 50), "S", "E") == [(10, 0), (10, 50), (100, 50)]
+    assert check.zroute((0, 10), (100, 30), "W", "E") == [(0, 10), (50.0, 10), (50.0, 30), (100, 30)]

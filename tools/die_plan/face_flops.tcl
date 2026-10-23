@@ -5,9 +5,9 @@
 # reached from a signal port through at most 2 buffer/inverter cells is placed FIRM in a band along its face, at the
 # row / column nearest its pin; face_flops_release.tcl (PRE_DETAIL_PLACE) releases them to PLACED for DPL.
 # ft slots (COORD 10-23 R3): station 0 is the in-port face flop; station j (j >= 1) of k sits FIRM at L*j/k along the
-# slot's planned route (G0 lane_geometry: Z through the midpoint, first leg along the in face's normal) or at its
+# slot's planned route (G0 lane_geometry/check.zroute: L for a turning slot, else Z through the midpoint) or at its
 # regs_um site; the out port is NOT face-registered here (the neighbour's station 0 registers it).  Table:
-# ft_stations.txt (slot k in_face [x y ...]).
+# ft_stations.txt (slot k in_face out_face [x y ...]).
 # ORFS sources hooks inside a proc: run at global scope so the helper procs below can use `global`
 uplevel #0 {
 set ff_blk [ord::get_db_block]
@@ -26,7 +26,7 @@ if {[file exists /work/ft_stations.txt]} {
   set fh [open /work/ft_stations.txt r]
   foreach ln [split [read $fh] "\n"] {
     if {$ln eq "" || [string index $ln 0] eq "#"} continue
-    dict set ff_ft [lindex $ln 0] [list [lindex $ln 1] [lindex $ln 2] [lrange $ln 3 end]]
+    dict set ff_ft [lindex $ln 0] [list [lindex $ln 1] [lindex $ln 2] [lindex $ln 3] [lrange $ln 4 end]]
   }
   close $fh
 }
@@ -141,8 +141,13 @@ foreach pass {INPUT OUTPUT} {
   }
 }
 # ---- ft stations j >= 1 (R3)
-proc ff_zroute {ax ay bx by fin} {
+proc ff_zroute {ax ay bx by fin fout} {
   if {abs($ax - $bx) < 1 || abs($ay - $by) < 1} { return [list $ax $ay $bx $by] }
+  # turning slot: L (check.zroute)
+  if {($fin in {E W}) != ($fout in {E W})} {
+    if {$fin in {E W}} { return [list $ax $ay $bx $ay $bx $by] }
+    return [list $ax $ay $ax $by $bx $by]
+  }
   if {$fin in {E W}} { set xm [expr {($ax + $bx) / 2}]; return [list $ax $ay $xm $ay $xm $by $bx $by] }
   set ym [expr {($ay + $by) / 2}]; return [list $ax $ay $ax $ym $bx $ym $bx $by]
 }
@@ -185,7 +190,7 @@ foreach bt [$ff_blk getBTerms] {
   set nm [$bt getName]
   set slot [ff_slot_of $nm _i]
   if {$slot eq ""} continue
-  lassign [dict get $ff_ft $slot] k fin regs
+  lassign [dict get $ff_ft $slot] k fin fout regs
   set onm [string map [list "${slot}_i" "${slot}_o"] $nm]
   set ob [$ff_blk findBTerm $onm]
   set f [ff_from_in [$bt getNet] 0]
@@ -193,7 +198,7 @@ foreach bt [$ff_blk getBTerms] {
   set bb [$bt getBBox]; set ab [$ob getBBox]
   set ax [expr {([$bb xMin] + [$bb xMax]) / 2}]; set ay [expr {([$bb yMin] + [$bb yMax]) / 2}]
   set bx [expr {([$ab xMin] + [$ab xMax]) / 2}]; set by [expr {([$ab yMin] + [$ab yMax]) / 2}]
-  set pts [ff_zroute $ax $ay $bx $by $fin]
+  set pts [ff_zroute $ax $ay $bx $by $fin $fout]
   set L 0
   for {set i 0} {$i + 3 < [llength $pts]} {incr i 2} { set L [expr {$L + abs([lindex $pts $i] - [lindex $pts $i+2]) + abs([lindex $pts $i+1] - [lindex $pts $i+3])}] }
   for {set j 1} {$j < $k} {incr j} {

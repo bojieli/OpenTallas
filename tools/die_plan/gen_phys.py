@@ -275,10 +275,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
     for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
-    ft = ["# slot stations in_face [x y ...]  (GENERATED; type frame um)"]
+    ft = ["# slot stations in_face out_face [x y ...]  (GENERATED; type frame um)"]
     for s_ in t.get("ft_slots", []):
         regs = " ".join(f"{x:g} {y:g}" for x, y in s_.get("regs_um", []))
-        ft.append(f"{s_['name']} {int(s_.get('stations', 1))} {s_.get('in_face', 'W')} {regs}".rstrip())
+        ft.append(f"{s_['name']} {int(s_.get('stations', 1))} {s_.get('in_face', 'W')} {s_.get('out_face', 'E')} "
+                  f"{regs}".rstrip())
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
