@@ -1,0 +1,680 @@
+{
+ "name": "hbme_hcqh_m1",
+ "top": "ot_hbm_hc_qhub_static",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qtree16_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hc_rst_relay_k.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_f32_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_f32_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "bd_v",
+   "bd_ss",
+   "bd_nv",
+   "bd_wa",
+   "bd_xa",
+   "wc_w",
+   "rstb_w",
+   "wf_w",
+   "tgt",
+   "rst_n",
+   "clk_t",
+   "s_i",
+   "xb_v",
+   "xb_beat",
+   "xb_d0",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "hcq_fault",
+   "program_active"
+  ],
+  "N": [
+   "xb_v_n",
+   "xb_beat_n",
+   "xb_d1",
+   "xb_d2",
+   "xb_d3",
+   "wc_n",
+   "rstb_n",
+   "wf_n",
+   "lg_rr",
+   "lg_w_done"
+  ],
+  "E": [
+   "lg_wq",
+   "lg_rq",
+   "result_position",
+   "gather_done",
+   "program_done",
+   "residual_done",
+   "xb_v_e",
+   "xb_beat_e",
+   "xb_d4",
+   "wc_e",
+   "rstb_e",
+   "wf_e"
+  ],
+  "S": [
+   "xb_v_s",
+   "xb_beat_s",
+   "xb_d5",
+   "xb_d6",
+   "xb_d7",
+   "wc_s",
+   "rstb_s",
+   "wf_s",
+   "clk",
+   "d_v",
+   "d_ss",
+   "d_nv",
+   "d_wa",
+   "d_xa",
+   "i_v",
+   "i_kind",
+   "i_slot",
+   "i_lo",
+   "i_w",
+   "i_cnt",
+   "i_word",
+   "ps_v",
+   "ps",
+   "ps_f",
+   "eng_fault",
+   "gathered_mix_v",
+   "gathered_mix_row",
+   "gathered_mix_pos",
+   "gathered_mix_data",
+   "result_v",
+   "result"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "tile",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    259.2,
+    332.64
+   ],
+   "at_exact": true,
+   "orient": "MY",
+   "inst": "u_q.g_qcal.programme.u_program"
+  }
+ ],
+ "outline": {
+  "w": 734.4,
+  "h": 734.4,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.55,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hbm_hc_qhub_static SAFE 1 = ot_hbm_hc_q_static (every pin registered in RTL) + ot_hbm_hc_qcen_static (descriptor/event/beat-control/wfault pin flops, s_i chunk-sum pin register SAFE 1; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_d* leave hc_q's x_wave output register, xb_v*/xb_beat* their own per-face kept copy; a kit flop stage would shift the compiled schedule"
+ },
+ "hard_define": "SYNTHESIS",
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static",
+   "count": 1,
+   "inst": "*g_qt?0?.u_t",
+   "at": [
+    43.2,
+    129.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static",
+   "count": 1,
+   "inst": "*g_qt?1?.u_t",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static",
+   "count": 1,
+   "inst": "*g_qt?2?.u_t",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_hcq_tree16_c1/views/ot_hbm_hc_qtree16_static",
+   "count": 1,
+   "inst": "*g_qt?3?.u_t",
+   "at": [
+    43.2,
+    518.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "inter": [],
+ "job": {
+  "owner": "STEWARD-HBMe/HC",
+  "branch": "claude/hbme-hc-1023",
+  "tag": "m1",
+  "purpose": "STEWARD-HBMe/HC 10-23 connectivity split of the hub on the release die faces: W = qtree16 column centred on s_i (pins facing their W bundle) + b0 beat/cfg pin registers; N/S/E = LAND bank-face beat registers at their bank spans; E = lg_wq/lg_rq pin registers, N-east = lg_rr; centre = hc_q + x_wave register + programme SRAM (MY, rd_out toward hc_q); S = result pin registers + qcen ctrl/ps beside th",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/common_flow/native_pg_binding.tcl",
+   "physical/common_flow/out_pin_driver.tcl",
+   "physical/common_flow/pin_reg_face_fence.tcl",
+   "physical/common_flow/pin_reg_face_fence_after.tcl",
+   "physical/dsrom_window_source/leaf_inhold_release.tcl",
+   "physical/hbm_hc_hub",
+   "physical/hbm_hc_hub/hc_hub_output_land_repair_gpl.tcl",
+   "results/arch/hbm_hc_hub_phase40_1021",
+   "results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz",
+   "results/rtl/hbm_hcq_hub_c11",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qtree16_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_xw_rx_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hc_rst_relay_k.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/run_gather_f32.sh",
+   "rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+   "rtl/hbm_accel/generic/peers/static_hc/run_qhub_land.sh",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv",
+   "rtl/hbm_accel/generic/vm/static/run_ptgt_fan32.sh",
+   "rtl/hdc",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib",
+   "rtl/test/full_sm_service/sram_models.sv",
+   "rtl/test/run_hbm_hc_eng4_ring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "rtl/test/tb_hbm_hc_q_static.sv",
+   "rtl/test/tb_hbm_hc_qhub_land.sv",
+   "rtl/test/tb_hc_gather_f32.sv",
+   "rtl/test/tb_static_program_target_fan32.sv",
+   "tools/hbm_layer_vehicle/hc_safe2_phase40_1021.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/prepare_fp32_fan32_models.py",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py"
+  ],
+  "hold_merge": "TILE-FLOW pilot: diagnostic gate / render only"
+ },
+ "params": {
+  "DRLY": 2,
+  "CHX": 11,
+  "SAFE": 2,
+  "RD_CAPTURE": 39,
+  "GATHER_PHASE": 39,
+  "GATHER_PERIOD": 40,
+  "DONE_LAT": 35,
+  "TARGET_SCAN_BOUNDARY": 1,
+  "LAND": 7,
+  "RLEAF": 1
+ },
+ "structural_change": "STEWARD-HBMe/HC 10-23 connectivity split of the hub on the release die faces: W = qtree16 column centred on s_i (pins facing their W bundle) + b0 beat/cfg pin registers; N/S/E = LAND bank-face beat registers at their bank spans; E = lg_wq/lg_rq pin registers, N-east = lg_rr; centre = hc_q + x_wave register + programme SRAM (MY, rd_out toward hc_q); S = result pin registers + qcen ctrl/ps beside their pins.  RTL = c12b SAFE 2 + LAND 7 (contract change C-QHUB-HC1, named in the plan).",
+ "pin_ranges": {
+  "bd_v": [
+   112.0,
+   112.5
+  ],
+  "bd_ss": [
+   112.5,
+   113.0
+  ],
+  "bd_nv": [
+   113.0,
+   116.5
+  ],
+  "bd_wa": [
+   116.5,
+   121.5
+  ],
+  "bd_xa": [
+   121.5,
+   126.5
+  ],
+  "wc_w": [
+   126.5,
+   133.0
+  ],
+  "rstb_w": [
+   133.0,
+   133.5
+  ],
+  "wf_w": [
+   133.5,
+   134.0
+  ],
+  "tgt": [
+   134.0,
+   138.0
+  ],
+  "rst_n": [
+   140.0,
+   141.0
+  ],
+  "clk_t": [
+   142.0,
+   147.0
+  ],
+  "s_i": [
+   150.0,
+   600.0
+  ],
+  "xb_v": [
+   604.0,
+   604.208
+  ],
+  "xb_beat": [
+   604.208,
+   604.625
+  ],
+  "xb_d0": [
+   604.625,
+   658.0
+  ],
+  "cfg_v": [
+   660.0,
+   660.22
+  ],
+  "cfg_target": [
+   660.22,
+   661.978
+  ],
+  "cfg_addr": [
+   661.978,
+   664.616
+  ],
+  "cfg_data": [
+   664.616,
+   720.889
+  ],
+  "desc_v": [
+   720.889,
+   721.108
+  ],
+  "desc_base": [
+   721.108,
+   723.746
+  ],
+  "desc_limit": [
+   723.746,
+   726.604
+  ],
+  "desc_loops": [
+   726.604,
+   730.121
+  ],
+  "launch_v": [
+   730.121,
+   730.341
+  ],
+  "configured": [
+   730.341,
+   730.56
+  ],
+  "hcq_fault": [
+   730.56,
+   730.78
+  ],
+  "program_active": [
+   730.78,
+   731.0
+  ],
+  "xb_v_n": [
+   40.0,
+   40.31
+  ],
+  "xb_beat_n": [
+   40.31,
+   40.93
+  ],
+  "xb_d1": [
+   40.93,
+   120.323
+  ],
+  "xb_d2": [
+   120.323,
+   199.715
+  ],
+  "xb_d3": [
+   199.715,
+   279.108
+  ],
+  "wc_n": [
+   279.108,
+   283.139
+  ],
+  "rstb_n": [
+   283.139,
+   284.07
+  ],
+  "wf_n": [
+   284.07,
+   285.0
+  ],
+  "lg_rr": [
+   290.0,
+   729.291
+  ],
+  "lg_w_done": [
+   729.291,
+   731.0
+  ],
+  "lg_wq": [
+   3.0,
+   470.0
+  ],
+  "lg_rq": [
+   474.0,
+   506.563
+  ],
+  "result_position": [
+   506.563,
+   507.282
+  ],
+  "gather_done": [
+   507.282,
+   507.521
+  ],
+  "program_done": [
+   507.521,
+   507.761
+  ],
+  "residual_done": [
+   507.761,
+   508.0
+  ],
+  "xb_v_e": [
+   560.0,
+   560.292
+  ],
+  "xb_beat_e": [
+   560.292,
+   560.876
+  ],
+  "xb_d4": [
+   560.876,
+   635.62
+  ],
+  "wc_e": [
+   635.62,
+   639.416
+  ],
+  "rstb_e": [
+   639.416,
+   639.708
+  ],
+  "wf_e": [
+   639.708,
+   640.0
+  ],
+  "xb_v_s": [
+   40.0,
+   40.329
+  ],
+  "xb_beat_s": [
+   40.329,
+   40.987
+  ],
+  "xb_d5": [
+   40.987,
+   125.241
+  ],
+  "xb_d6": [
+   125.241,
+   209.494
+  ],
+  "xb_d7": [
+   209.494,
+   293.747
+  ],
+  "wc_s": [
+   293.747,
+   298.025
+  ],
+  "rstb_s": [
+   298.025,
+   299.013
+  ],
+  "wf_s": [
+   299.013,
+   300.0
+  ],
+  "clk": [
+   330.0,
+   331.0
+  ],
+  "d_v": [
+   340.0,
+   340.599
+  ],
+  "d_ss": [
+   340.599,
+   341.197
+  ],
+  "d_nv": [
+   341.197,
+   345.387
+  ],
+  "d_wa": [
+   345.387,
+   351.373
+  ],
+  "d_xa": [
+   351.373,
+   357.359
+  ],
+  "i_v": [
+   357.359,
+   357.958
+  ],
+  "i_kind": [
+   357.958,
+   358.556
+  ],
+  "i_slot": [
+   358.556,
+   359.754
+  ],
+  "i_lo": [
+   359.754,
+   362.746
+  ],
+  "i_w": [
+   362.746,
+   365.739
+  ],
+  "i_cnt": [
+   365.739,
+   372.923
+  ],
+  "i_word": [
+   372.923,
+   378.908
+  ],
+  "ps_v": [
+   378.908,
+   379.507
+  ],
+  "ps": [
+   379.507,
+   398.662
+  ],
+  "ps_f": [
+   398.662,
+   399.261
+  ],
+  "eng_fault": [
+   399.261,
+   399.859
+  ],
+  "gathered_mix_v": [
+   399.859,
+   400.458
+  ],
+  "gathered_mix_row": [
+   400.458,
+   403.451
+  ],
+  "gathered_mix_pos": [
+   403.451,
+   405.246
+  ],
+  "gathered_mix_data": [
+   405.246,
+   424.401
+  ],
+  "result_v": [
+   424.401,
+   425.0
+  ],
+  "result": [
+   430.0,
+   731.0
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "clock": "clk",
+  "stages": 2,
+  "first_copies": {
+   "rst_n": 2
+  },
+  "copies": {
+   "rst_n": 8
+  }
+ },
+ "io_flop_at_pins": false,
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)u_q\\.(g_rq2r\\.)?u_rst\\.rst_n$|(^|\\.)u_q\\.rr_n$|(^|\\.)u_q\\.rm_n$"
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/common_flow/pin_reg_face_fence_after.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/hbm_hc_hub/hc_hub_output_land_dpl.tcl",
+  "OT_HUB_BAND": "194.4,194.4,540.0,540.0",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_BIN": "30",
+  "OT_SPINE_LEAF_N": "16",
+  "OT_SPINE_SEG": "150",
+  "OT_SPINE_CTS_REST": "0",
+  "OT_SPINE_MACRO_LEAF": "1",
+  "OT_SPINE_PORTS": "clk",
+  "OT_OUT_DRV": "BUFx12f_ASAP7_75t_R",
+  "OT_FENCE_PRE_HOOK": "/src/physical/hbm_hc_hub/hc_hub_output_land_repair_gpl.tcl",
+  "OT_FENCE_STRICT": "0",
+  "OT_FENCE_CLOCKS": "clk,clk_t[0],clk_t[1],clk_t[2],clk_t[3]"
+ },
+ "fill_reason": {
+  "pin_bound": "9.9k face pins on the die-fixed 734.4 hole of the HC bank ring (r18h5); content 10.6k um2 std + 4 x 12.6k qtree16 + 12.3k SRAM; pins re-spread to <= 4.8/um per bundle"
+ },
+ "clock": "hybrid_entries",
+ "clock_ports": [
+  "clk",
+  "clk_t[0]",
+  "clk_t[1]",
+  "clk_t[2]",
+  "clk_t[3]"
+ ],
+ "clock_cts_roots": [
+  "clk"
+ ],
+ "child_lattice_um": 43.2,
+ "reroute_reason": {
+  "kind": "structural",
+  "failed_job": "ref_gate hbm_hcq_hub_c10p40b @c69c24a41 ot-gold1 2026-10-22 FAIL cross_clock (ot_entry_4->ot_entry_0 69 endpoints worst -454.8/-446.6 ps g_qt[3].u_t/y -> g_lvl[5] adder; ot_entry_3->0 -207.5/-191.4; ot_entry_1->0 nv_o[9]->ps_f; ot_entry_0->1 vl[97]->v_i)",
+  "why": "landed crossings: centre-root landing register + hop before any logic on every slice output, per-slice kept v_i copies; bank-face and gathered-mix pin stages"
+ },
+ "description": "STEWARD-HBMe/HC 10-23 connectivity split of the hub on the release die faces: W = qtree16 column centred on s_i (pins facing their W bundle) + b0 beat/cfg pin registers; N/S/E = LAND bank-face beat registers at their bank spans; E = lg_wq/lg_rq pin registers, N-east = lg_rr; centre = hc_q + x_wave register + programme SRAM (MY, rd_out toward hc_q); S = result pin registers + qcen ctrl/ps beside their pins.  RTL = c12b SAFE 2 + LAND 7 (contract change C-QHUB-HC1, named in the plan).",
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_1024x256_m2_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "u_q.g_qcal.programme.u_program": {
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "clk"
+  }
+ },
+ "prior_reroute_reason": [
+  {
+   "kind": "structural_clock",
+   "failed_job": "ref_gate hbm_hcq_hub_c6r af09315af agidock128 20261021-143819: clk TT pin-flop 89.3 ps > 80 (TritonCTS H-tree edge clusters); P40 c7p40 has the same default CTS",
+   "why": "planned equal-depth clock spine for glue root clk (quad regional MAIN / single FB) as C7s/C7sb, whose diagnostic in-flow CTS on the C6r body measured TT 24.5/FF 21.6 (quad) and 43.5/40.2 (single)"
+  },
+  {
+   "kind": "structural",
+   "failed_job": "ref_gate hbm_hcq_hub_c4r 0460a864c native census FAIL one load-control33",
+   "why": "split is_c1 launch accept into independent eight-bit halves (GL16 copies), retains hidden predecode rung, no interface or output edge change"
+  },
+  {
+   "kind": "structural",
+   "failed_job": "C6r f64490c0e actualTT boundary89.3FAIL, FF/GRTNOTRUN; N23 legacy is not this candidate",
+   "why": "Explicit SAFE2 phase39/PERIOD40 source upgrade from C6r: retain native32/SRAM binding fixes and four real hard tree entries;6bit readerphase, original HCP arithmetic unchanged. Separate rootQCHX12 SYS146to147/RAW178to179 source/calendar price; scoped k31npos1 gathered-tail G0+51/tail+83/emit+583 only. Readerpositive/mutant evidence40ec8b3d7; fullnative/rootcalendar/model/physical unqualified, selectedN23 unchanged."
+  }
+ ],
+ "notes": "HBMc/QHUB4 10-22 landed-regions successor of c10p40/b (both FAIL 4 cross_clock: slice y -> centre level-5 adder ot_entry_3/4->ot_entry_0 -207/-455 ps (FB -191/-447), slice nv_o[9] -> ps_f OR -15, centre vl[97] -> slice v_i -60; placement reg->out xb_d0 -3.9 ns, reg->reg gathered_mix_data -736). RTL LAND 7 (ot_hbm_hc_qhub_static / ot_hbm_hc_qcen_static, default 0 = c10 bit for bit): bit0 every slice output (y, nv_o, e_o) lands in a centre-root register with no logic before it, then one registered hop, then the level-5 adders / ps_f OR (+2 subtree edges), and each slice v_i leaves its own kept copy (vl[VD-3] -> 1 flop, 0 edges); bit1 bank-face registers on bd_*, wc_*, xb_v*/xb_beat*/xb_d0..7 split the lg_rr(N) -> x_wave -> 4-face span (bank ring +1 edge, ps +1); bit2 gathered_mix_*/gather_done pin stage splits lg_rr(N) -> 8:1 return mux -> S-face pin (+1 gathered edge). Ports, pins, outline, geometry, clocking unchanged. Edges: ps_v/ps/ps_f +3 (root QCHX 12 -> 15, programme RAW0 +3), bank ring +1, gathered mix +1.",
+ "pre_cts_extra": [
+  "tools/hbm_hc_clock_1021/qhub_spine_single.tcl"
+ ],
+ "outline_reason": "die-fixed: exact 734.4 um hole of the HC bank ring (r18h5); faces re-spread (die notice)",
+ "purpose": "STEWARD-HBMe/HC 10-23 connectivity split of the hub on the release die faces: W = qtree16 column centred on s_i (pins facing their W bundle) + b0 beat/cfg pin registers; N/S/E = LAND bank-face beat registers at their bank spans; E = lg_wq/lg_rq pin registers, N-east = lg_rr; centre = hc_q + x_wave register + programme SRAM (MY, rd_out toward hc_q); S = result pin registers + qcen ctrl/ps beside th",
+ "die_notice": "STEWARD-HBMe/HC 10-23: faces = r18h5 die_qhub.lef bundle faces except lg_rr (+lg_w_done) E -> N x 290-731 (E face 4.7k bits = 6.6/um over the cap; as the c12 die) and cfg_v/cfg_target/desc_v/result_position etc. joined their bundles; every bundle spread <= 4.8/um: {\"W:bd_v\": 2.0, \"W:rst_n\": 1.0, \"W:clk_t\": 0.8, \"W:s_i\": 4.55, \"W:xb_v\": 4.8, \"W:cfg_v\": 4.55, \"N:xb_v_n\": 3.22, \"N:lg_rr\": 4.68, \"E:lg_wq\": 4.81, \"E:lg_rq\": 4.18, \"E:xb_v_e\": 3.42, \"S:xb_v_s\": 3.04, \"S:clk\": 1.0, \"S:d_v\": 1.67, \"S:result\": 2.55}"
+}
