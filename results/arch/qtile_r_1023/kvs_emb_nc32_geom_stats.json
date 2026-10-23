@@ -1,0 +1,59 @@
+{
+ "qkd_kvs_emb": {
+  "outline": [
+   388.8,
+   302.40000000000003
+  ],
+  "area_um2": 117573,
+  "child_um2": 32659.199999999997,
+  "std_est_um2": 2600.0,
+  "fill_of_free": 0.031,
+  "total_fill": 0.3,
+  "pins_per_um": {
+   "S": 1.73,
+   "E": 2.51,
+   "W": 1.98,
+   "N": 0.0
+  },
+  "pin_regs": "recipe 3 every pin incl. rst_n (as e1): +1 per input / output, px_tok/px_tep +2",
+  "layer_cap": "M5"
+ },
+ "qkd_kvs_emb_nc32a": {
+  "outline": [
+   282.96,
+   218.16
+  ],
+  "area_um2": 61731,
+  "child_um2": 32659.199999999997,
+  "std_est_um2": 2600.0,
+  "fill_of_free": 0.089,
+  "total_fill": 0.571,
+  "pins_per_um": {
+   "S": 2.38,
+   "E": 3.47,
+   "W": 2.74,
+   "N": 0.0
+  },
+  "pin_regs": "recipe 3 every pin incl. rst_n (as e1): +1 per input / output, px_tok/px_tep +2",
+  "layer_cap": "M5"
+ },
+ "qkd_kvs_emb_nc32b": {
+  "outline": [
+   326.16,
+   218.16
+  ],
+  "area_um2": 71155,
+  "child_um2": 32659.199999999997,
+  "std_est_um2": 2600.0,
+  "fill_of_free": 0.068,
+  "total_fill": 0.496,
+  "pins_per_um": {
+   "S": 2.07,
+   "E": 3.47,
+   "W": 2.74,
+   "N": 0.0
+  },
+  "pin_regs": "recipe 3 every pin incl. rst_n (as e1): +1 per input / output, px_tok/px_tep +2",
+  "layer_cap": "M5"
+ }
+}
