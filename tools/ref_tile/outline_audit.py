@@ -63,7 +63,8 @@ class Git:
         data = self.p.stdout.read(n)
         self.p.stdout.read(1)
         txt = data.decode(errors="replace")
-        self.cache[key] = txt
+        if n < (1 << 20):            # cache specs / LEFs / reports, not multi-MB netlists
+            self.cache[key] = txt
         return txt
 
     def run(self, *args) -> str:
@@ -297,6 +298,8 @@ def main(argv=None) -> int:
                 r = {"ref": ref, "kit": k, "top": f"ERROR {str(e)[:60]}"}
             if r:
                 rows.append(r)
+            if len(seen) % 100 == 0:
+                print(f"... {len(seen)} kits ({ref})", file=sys.stderr, flush=True)
     if a.out:
         with open(a.out, "w") as f:
             f.write("\t".join(COLS) + "\n")
