@@ -57,6 +57,16 @@ elif [ "${L4:-0}" = 1 ]; then
 elif [ "$MUT" = 0 ]; then FR=rtl/dsrom_sys/s81_dv/frame; else
   [ -f $O/rtl/$MASTER.sv ] || python3 tools/s81_dv/frame_wrap.py emit --mutant $MUT --out-rtl $(realpath $O)/rtl > $O/mutant.log 2>&1 || { echo "MUTANT_EMIT_FAILED"; tail -n 3 $O/mutant.log; exit 3; }
   FR=$(realpath $O)/rtl; fi
+# S81-P8 10-23: BF_LEGACY=1 = the BF16 programme MEASUREMENT build of tools/s81_dv/layer_prog/xs/xs_bench.sh on THIS
+# frame (e.g. FRAME_LP=1 + the vgcs twin): a patched COPY of the BF core in <outdir>/probe issues on its walker
+# availability, + TB_BFTRACE (BFG / BFI / BFPV lines for xs_bf.py measure).  The repository source is untouched.
+if [ "${BF_LEGACY:-0}" = 1 ]; then
+  CORE=rtl/v41rom/ot_v41_bf_front_core_roots.sv; mkdir -p $O/probe
+  sed 's#^    wire issue = (STATIC_PROGRAM != 0) ? prog_issue_u : issue_available;#    wire issue = issue_available;   // XS2 MEASUREMENT PROBE (BF_LEGACY)#' $CORE > $O/probe/ot_v41_bf_front_core_roots.sv
+  [ "$(grep -c 'XS2 MEASUREMENT PROBE' $O/probe/ot_v41_bf_front_core_roots.sv)" = 1 ] || { echo "BF_LEGACY_PATCH_FAILED"; exit 3; }
+  grep -v "^$CORE\$" $FL > $O/probe/frame_bench.f; echo $O/probe/ot_v41_bf_front_core_roots.sv >> $O/probe/frame_bench.f
+  FL=$O/probe/frame_bench.f; VFLAGS="${VFLAGS:-} -DTB_BFTRACE"
+fi
 if [ ! -x $O/obj/Vtb_s81dv_frame ]; then
   /usr/bin/time -v -o $O/time_build.log $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style \
     -Wno-MULTIDRIVEN ${VFLAGS:-} -DFRAME=$DFR -DDSFD_PQ_STATIC_X2 -DDSFD_PQ_HAS_BF_X2 --top-module tb_s81dv_frame -Mdir $O/obj \

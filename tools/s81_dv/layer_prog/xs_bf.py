@@ -36,7 +36,16 @@ run (static programme, no probe) must reproduce it word for word.  Another lane 
 predicted by moving every partial edge by E - E_measured (frame_return_plan.x_shift: every frame event rides the
 landed lanes; the programme is go-relative).
 
-    xs_bf.py measure --log RUN.LOG --vec VECDIR [--out REC.json]   descriptor + emission record of a measurement run
+    xs_bf.py measure --log RUN.LOG --vec VECDIR [--out REC.json] [--frame lp] [--lk E]   descriptor + emission record
+
+FRAME VARIANT (S81-P8 10-23).  The banded landed-parent frame with plan-width seams (plan v4.3, vgcs twin
+col_<M>_l4_lp_rf3r, ot_pl_seam_*) moves the BF pairs' x / go inputs and return links by its landed crossings (the
+frame's landed schedule results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_<M>_schedule.json: e8w.r +6, n15 / n7 /
+n23 +3, root link +3 ...), so the _l4 measurement does NOT carry over (the l4 E5 calendar was +3 / +6 edges early on
+the first word and up to +12 later; S81-P7 seam bench).  The LP frame is measured on its own build
+(tools/s81_dv/frame_bf_measure.sh: frame_bench.sh FRAME_LP=1 BF_LEGACY=1) and keyed col_<M>_lp|E<E>|bseg1024; its
+return calendar is composed on the LP schedule topology.  The compiler takes the LP key when the die frame master is a
+landed-parent wrapper (*_lp) or OT_XS_BF_FRAME=lp (the die of record still binds col_h*_l4); never the _l4 key.
 """
 from __future__ import annotations
 
@@ -187,10 +196,38 @@ def bf_vals(u16_rows, x):
     return vals, [int(v) for v in G.bits(acc)], [int(v) >> 16 for v in G.bits(G.to_bf16(acc))]
 
 
-def shape_key(master, land_e):
+def shape_key(master, land_e, frame=None):
     """every BF phase streams one BSEG x slice (8 units, one sub-block): ONE stream and one element calendar per frame
-    master / lane latency, whatever the rows or the segment index"""
-    return f'{master}|E{land_e}|bseg{BSEG}'
+    master / frame variant (None = _l4, 'lp' = banded LP frame) / lane latency, whatever the rows or the segment index"""
+    return f'{master}{"_" + frame if frame else ""}|E{land_e}|bseg{BSEG}'
+
+
+def frame_variant(die_master):
+    """'lp' for a landed-parent die frame (master *_lp, or OT_XS_BF_FRAME=lp while the die of record binds _l4), else None"""
+    import os
+    v = os.environ.get('OT_XS_BF_FRAME', '').strip() or None
+    if v is None and die_master.endswith('_lp'):
+        v = 'lp'
+    assert v in (None, 'lp', 'l4'), ('OT_XS_BF_FRAME', v)
+    return None if v == 'l4' else v
+
+
+def frame_topology(master, frame=None):
+    """the return topology the BF partials are composed on: the recorded _l4 frame topology, or (frame 'lp') the LP
+    frame's source-pinned landed schedule topology (link edges include its landed crossings; sources hash-checked).
+    The schedule attributes the landed crossings for the q leaves only (its station inputs list no BF pair): a BF leaf
+    whose measured return latency differs carries a MEASURED correction (measure record 'leaf_ret_corr', added to its
+    partial edge before composing): vgcs col_h9 e4w / e4e -3, e8w -6; col_h10 none."""
+    import frame_return_plan as P
+    if frame != 'lp':
+        return P.load_topology(master)
+    import hashlib
+    import lower_xs
+    sch = json.loads(lower_xs.source_frame_schedule(master + '_l4_lp').read_text())
+    for f, sha in sch['source_sha256'].items():
+        assert hashlib.sha256((ROOT / f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
+    assert sch['topology']['master'] == master
+    return sch['topology']
 
 
 def load_meas():
@@ -198,16 +235,21 @@ def load_meas():
     return json.loads(p.read_text()) if p.exists() else {}
 
 
-def meas_for(meas, master, land_e):
+def meas_for(meas, master, land_e, frame=None):
     """the shape's measurement, or the same master measured at another lane latency E' moved by E - E' edges (every
     frame-internal event rides the landed lanes: frame_return_plan.x_shift; the programme is go-relative, unchanged);
     returns (record, 'measured_shape' | 'predicted_lane_shift') or (None, None)"""
-    k = shape_key(master, land_e)
+    k = shape_key(master, land_e, frame)
     if k in meas:
         return meas[k], 'measured_shape'
+    if frame == 'lp':
+        # NOT on the LP frame: measured vgcs col_h9 E2 -> E5 moved every BF partial +5 edges, not E - E' = +3 (the q plan
+        # set at LK 5 is +2 vs frame_return_plan.x_shift too, LDLY 3 and 4): every LP lane latency is measured itself
+        return None, None
+    mk = k.split('|')[0]
     for k2, m in sorted(meas.items()):
         mm, e2 = k2.split('|')[0], int(k2.split('|')[1][1:])
-        if mm == master:
+        if mm == mk:
             d = land_e - e2
             return dict(m, pv={c: [e + d for e in v] for c, v in m['pv'].items()}, shifted_from=k2, shift=d), \
                 'predicted_lane_shift'
@@ -235,7 +277,7 @@ def place_bf(assign_slots, s, n):
     return place
 
 
-def bf_plan(master, bf_pairs, rows_vals, s, n, meas=None, base=None):
+def bf_plan(master, bf_pairs, rows_vals, s, n, meas=None, base=None, frame=None):
     """placement (super row R -> BF pair R), programme descriptors (the shape's measured descriptor with this phase's
     ROM base) and return calendar of a BF phase: segment s of n of every row (no in-frame merge: one segment per row)"""
     import frame_return_plan as P
@@ -248,14 +290,15 @@ def bf_plan(master, bf_pairs, rows_vals, s, n, meas=None, base=None):
     if meas is None:
         rec['calendar'] = 'calendar_unmeasured'
         return rec
-    topo = P.load_topology(master)
+    topo = frame_topology(master, frame)
+    corr = meas.get('leaf_ret_corr') or {}
     lv = {}
     for R in range(nsr):
         p = bf_pairs[R]
         for j in range(2):
             r = 2 * R + j
             if r < nr:
-                lv.setdefault(leaf(p, j), []).append((meas['pv'][leaf(p, j)][0], C._mk((P.OPTAG << 14) | r, s, 0, n),
+                lv.setdefault(leaf(p, j), []).append((meas['pv'][leaf(p, j)][0] + corr.get(leaf(p, j), 0), C._mk((P.OPTAG << 14) | r, s, 0, n),
                                                       rows_vals[r][s], 0))
     rep, ret = P.compose(topo, lv)
     desc = {}
@@ -339,10 +382,48 @@ def cmd_measure(a):
             if 2 * R + j < meta['nrows']}
     edges = {k: [w['edge'] for w in v] for k, v in pv.items() if k in want}
     ok &= set(edges) == want and all(len(v) == 1 for v in edges.values())
-    key = shape_key(meta['master'], meta['land_e'])
+    land_e = meta['land_e'] if a.lk is None else a.lk
+    key = shape_key(meta['master'], land_e, a.frame)
+    # self-check: the probe run's own ret words = the measured partials composed on the frame's return topology
+    import frame_return_plan as P
+    import static_return_calendar as C
+    lv = {}
+    for p, (R, _) in zip(meta['bf']['pairs'], meta['bf']['assign']):
+        for j in (0, 1):
+            r = 2 * R + j
+            if r < meta['nrows'] and leaf(p, j) in edges:
+                lv[leaf(p, j)] = [(edges[leaf(p, j)][0], C._mk((P.OPTAG << 14) | r, meta['seg'], 0, meta['nseg']),
+                                   meta['rows'][str(r)]['vals'][meta['seg']], 0)]
+    # per leaf: the probe run's ret edge of the leaf's row (row tag of the ret word) - its partial edge = the leaf's
+    # measured return latency; a leaf whose LP schedule path differs gets the difference added to its partial edge
+    # (leaf_ret_corr; compose is linear in the leaf edge before its first node), then the composed calendar
+    # (node rule, WIN / RST) must reproduce the run's ret words exactly
+    from static_return_calendar import _f, norm
+    got, ret_lat = [], {}
+    for m_ in re.finditer(r'^RET (\d+) ([0-9a-f]+)$', log, re.M):
+        e_, w_ = int(m_.group(1)), int(m_.group(2), 16)
+        r_ = _f(norm((w_ >> 1) & 0xFFFFFFFF))[0] & 0x3FFF
+        got.append(e_)
+        R_ = r_ // 2
+        p_ = next(p for p, (RR, _) in zip(meta['bf']['pairs'], meta['bf']['assign']) if RR == R_)
+        if leaf(p_, r_ % 2) in edges:
+            ret_lat[leaf(p_, r_ % 2)] = e_ - edges[leaf(p_, r_ % 2)][0]
+    topo0 = frame_topology(meta['master'], a.frame)
+    corr = {}
+    if a.frame == 'lp':
+        corr = {k: v - P.leaf_path(topo0, k)[0] for k, v in ret_lat.items() if v != P.leaf_path(topo0, k)[0]}
+    lvc = {k: [(w[0] + corr.get(k, 0),) + tuple(w[1:]) for w in v] for k, v in lv.items()}
+    rep_, ret = P.compose(topo0, lvc)
+    ret_ok = sorted(w[0] for w in ret) == sorted(got) and P.nfaults(rep_) == 0
+    ok &= ret_ok
     rec = dict(key=key, op=meta['op'], field_phase=meta['field_phase'], die_frame=meta['die_frame'], ok=bool(ok),
+               frame=a.frame or 'l4', land_e=land_e, ret_composed=sorted(w[0] for w in ret), ret_run=sorted(got),
+               ret_self_check=bool(ret_ok), log=str(a.log), ret_lat=ret_lat, leaf_ret_corr=corr,
+               ret_uncorrected=sorted(w[0] for w in P.compose(topo0, lv)[1]),
                desc=desc, fits=fits, pv=edges, pv_all={k: v for k, v in pv.items()},
                lat_issue_to_pv={k: edges[k][0] - fits[k[1:-3]]['last_issue_edge'] for k in edges if k[1:-3] in fits})
+    print('XS_BF_RET_SELF_CHECK', 'OK' if ret_ok else 'FAIL', 'composed', sorted(w[0] for w in ret), 'run', sorted(got),
+          'leaf_ret_corr', corr)
     print('XS_BF_MEASURE', 'OK' if ok else 'FAIL', key, json.dumps({k: (v['issues'], v['descriptor'], v['mismatches'])
                                                                    for k, v in fits.items()}), 'pv', edges)
     if a.out:
@@ -360,6 +441,8 @@ def main(argv=None):
     m.add_argument('--log', required=True)
     m.add_argument('--vec', required=True)
     m.add_argument('--out', default=None)
+    m.add_argument('--frame', choices=('lp',), default=None, help='frame variant measured (default the _l4 frame)')
+    m.add_argument('--lk', type=int, default=None, help='bench lane strap E when it differs from the vector die frame')
     a = ap.parse_args(argv)
     return {'measure': cmd_measure}[a.cmd](a)
 
