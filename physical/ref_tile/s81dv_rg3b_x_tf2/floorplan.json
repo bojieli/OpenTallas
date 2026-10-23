@@ -6,16 +6,16 @@
  "die": [
   0,
   0,
-  496.8,
+  481.68,
   352.08
  ],
  "core": [
   2.16,
   2.16,
-  494.64,
+  479.52,
   349.91999999999996
  ],
- "why": "content: std 3000/0.65 + band 1003 (1719 pin regs) + macros 120633 um2 (8 hard blocks) -> 496.8 x 352.08 (macros-bound, pins <= N 6/S 6/E 6/W 6/um, std fill 4%)",
+ "why": "content: std 3000/0.65 + band 1003 (1719 pin regs) + macros 120633 um2 (8 hard blocks) -> 481.68 x 352.08 (macros-bound, pins <= N 6/S 6/E 6/W 6/um, std fill 4%)",
  "std_area_um2": 3000,
  "layer_contract": {
   "children": {},
@@ -50,11 +50,11 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_m.u_c0.g_land[0].u_h.g_m.u_mem",
    "idx": 0,
-   "x": 66.96,
+   "x": 25.056,
    "y": 23.76,
    "w": 174.744,
    "h": 70.47,
-   "orient": "R0",
+   "orient": "MY",
    "offtrack": 0
   },
   {
@@ -63,11 +63,11 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_m.u_c1.g_land[0].u_h.g_m.u_mem",
    "idx": 0,
-   "x": 66.96,
+   "x": 25.056,
    "y": 94.272,
    "w": 174.744,
    "h": 70.47,
-   "orient": "R0",
+   "orient": "MY",
    "offtrack": 0
   },
   {
@@ -76,11 +76,11 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_m.u_c0.g_land[1].u_h.g_m.u_mem",
    "idx": 0,
-   "x": 66.96,
+   "x": 25.056,
    "y": 164.784,
    "w": 174.744,
    "h": 70.47,
-   "orient": "R0",
+   "orient": "MY",
    "offtrack": 0
   },
   {
@@ -89,11 +89,11 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_m.u_c1.g_land[1].u_h.g_m.u_mem",
    "idx": 0,
-   "x": 66.96,
+   "x": 25.056,
    "y": 235.296,
    "w": 174.744,
    "h": 70.47,
-   "orient": "R0",
+   "orient": "MY",
    "offtrack": 0
   },
   {
@@ -102,7 +102,7 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_m.u_c0.g_land[2].u_h.g_m.u_mem",
    "idx": 0,
-   "x": 295.488,
+   "x": 281.664,
    "y": 23.76,
    "w": 174.744,
    "h": 70.47,
@@ -115,7 +115,7 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_m.u_c1.g_land[2].u_h.g_m.u_mem",
    "idx": 0,
-   "x": 295.488,
+   "x": 281.664,
    "y": 94.272,
    "w": 174.744,
    "h": 70.47,
@@ -128,7 +128,7 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_m.u_c0.g_land[3].u_h.g_m.u_mem",
    "idx": 0,
-   "x": 295.488,
+   "x": 281.664,
    "y": 164.784,
    "w": 174.744,
    "h": 70.47,
@@ -141,7 +141,7 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_m.u_c1.g_land[3].u_h.g_m.u_mem",
    "idx": 0,
-   "x": 295.488,
+   "x": 281.664,
    "y": 235.296,
    "w": 174.744,
    "h": 70.47,
@@ -227,12 +227,12 @@
   "physical/ref_tile/s81dv_rg3b_x_tf2/place.tcl"
  ],
  "tile_plan": {
-  "w": 496.8,
+  "w": 481.68,
   "h": 352.08,
   "bound": "macros",
   "aspect_capped": false,
   "area_core": 125480.0,
-  "fill": 0.041,
+  "fill": 0.044,
   "breakdown": {
    "logic_um2": 3844.2,
    "band_um2": 1002.5,
@@ -243,8 +243,8 @@
    "util": 0.65
   },
   "pin_density": {
-   "N": 2.21,
-   "S": 1.1,
+   "N": 2.28,
+   "S": 1.14,
    "E": 0.0,
    "W": 0.25
   },
@@ -268,14 +268,14 @@
    "N": {
     "face": "N",
     "pins": 1088,
-    "avg": 2.199,
-    "peak": 2.199,
+    "avg": 2.268,
+    "peak": 2.268,
     "layers": [
      "M3",
      "M5"
     ],
     "tracks_per_um": 48.61,
-    "ratio": 0.045,
+    "ratio": 0.047,
     "cap": 6.0,
     "window_max": 6.0,
     "ok": true,
@@ -285,8 +285,8 @@
    "S": {
     "face": "S",
     "pins": 544,
-    "avg": 1.099,
-    "peak": 1.099,
+    "avg": 1.134,
+    "peak": 1.134,
     "layers": [
      "M3",
      "M5"
@@ -318,7 +318,7 @@
    }
   },
   "slot": null,
-  "why": "content: std 3000/0.65 + band 1003 (1719 pin regs) + macros 120633 um2 (8 hard blocks) -> 496.8 x 352.08 (macros-bound, pins <= N 6/S 6/E 6/W 6/um, std fill 4%)",
+  "why": "content: std 3000/0.65 + band 1003 (1719 pin regs) + macros 120633 um2 (8 hard blocks) -> 481.68 x 352.08 (macros-bound, pins <= N 6/S 6/E 6/W 6/um, std fill 4%)",
   "widths_exact": true,
   "macro_plan": {
    "ok": true,
@@ -326,24 +326,27 @@
    "axis": "WE",
    "rows": 4,
    "bbox": [
-    66.96,
+    25.056,
     24.32,
-    470.016,
+    456.624,
     306.272
    ],
    "need": [
-    496.192,
+    480.208,
     350.592
    ],
    "gaps": [
-    53.568
+    82.08
    ],
-   "lead": 42.336,
-   "trail": 22.16,
+   "lead": 0.0,
+   "trail": 0.0,
    "logic_face": null,
-   "over_macro_cols": [],
+   "over_macro_cols": [
+    0,
+    1
+   ],
    "pack_cap": null,
-   "why": "8 macros in 2 N-S columns of <= 4 (abutted) hung from the S face; logic channels 42, 54, 22 um in front of the pin faces"
+   "why": "8 macros in 2 N-S columns of <= 4 (abutted) hung from the S face; logic channels 0, 82, 0 um in front of the pin faces; back-face pins reached over the macros"
   }
  }
 }
