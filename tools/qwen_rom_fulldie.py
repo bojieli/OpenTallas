@@ -946,7 +946,18 @@ def pin_rects(mst, k, wmap):
                 yy = y + i * step
                 out.append((nm, 'M8', (x, yy - hw, x + 0.4 * k, yy + hw)))
             continue
-        _, _, face, layer, centre, pitch = spec
+        face, layer, centre, pitch = spec[2:6]
+        if len(spec) > 6 and spec[6]:
+            # SQC-KDIE5 10-22 (kv_die OT_KV_PINFACE=2): explicit per-bit centres along the face (one layer)
+            if len(spec[6]) < n:
+                raise ValueError(f'{mst.name}.{port}: {n} pins, {len(spec[6])} explicit centres')
+            hw = (MIN_HW.get(layer, 0.012) if MINW_PINS else 0.012) * k
+            depth = 0.192 * (k if k > 1 else 1)
+            for nm, pos in zip(names, spec[6]):
+                r = {'W': (0.0, pos - hw, depth, pos + hw), 'E': (mst.w - depth, pos - hw, mst.w, pos + hw),
+                     'S': (pos - hw, 0.0, pos + hw, depth), 'N': (pos - hw, mst.h - depth, pos + hw, mst.h)}[face]
+                out.append((nm, layer, r))
+            continue
         centre = PIN_CENTRE.get((mst.name, port), centre)
         if '+' in layer:        # HBM R25GQ 10-10 (opt-in): two interleaved layers, every other track on each
             out.extend(_interleaved_face(mst, port, names, face, layer, centre, k))
