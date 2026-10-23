@@ -437,6 +437,58 @@ proc ot_sp_leaf_arrivals {} {
   return $a
 }
 
+# Opt-in regional subtrees behind source RTL buffers. These remain on the
+# propagated parent clock: no new clock, latency constraint, or timing exception.
+# Each row is {exact output ITerm exact master exact input pin source BTerm}.
+proc ot_sp_internal_root {name row} {
+  if {[llength $row] != 4} {error "OT_SPINE_INTERNAL: expected pin/master/input/source"}
+  lassign $row output master input source
+  set block [ord::get_db_block]
+  set it [$block findITerm $output]
+  if {$it eq "NULL" || $it eq "" || [$it getIoType] ne "OUTPUT"} {error "OT_SPINE_INTERNAL: missing output $output"}
+  set source_bt [$block findBTerm $source]
+  if {$source_bt eq "NULL" || $source_bt eq "" || [$source_bt getIoType] ne "INPUT"} {error "OT_SPINE_INTERNAL: missing input clock port $source"}
+  set source_clocks {}
+  foreach c [all_clocks] {foreach p [get_property $c sources] {if {[get_full_name $p] eq $source} {lappend source_clocks $c}}}
+  if {[llength $source_clocks] != 1} {error "OT_SPINE_INTERNAL: source must be one actual clock $source"}
+  set inst [$it getInst]
+  if {[[$inst getMaster] getName] ne $master || ![$inst isPlaced]} {error "OT_SPINE_INTERNAL: wrong master or unplaced $output"}
+  set cell [get_cells -quiet [$inst getName]]
+  set lc [get_lib_cells -quiet -of_objects $cell]
+  set inputs [get_pins -quiet -of_objects $cell -filter "direction == input"]
+  if {[llength $cell] != 1 || [llength $lc] != 1 || ![get_property $lc is_buffer]
+      || [llength $inputs] != 1 || [get_property $inputs lib_pin_name] ne $input} {
+    error "OT_SPINE_INTERNAL: root must be an actual Liberty unary noninverting buffer $output"
+  }
+  set net [$it getNet]
+  if {$net eq "NULL" || [llength [$net getBTerms]]} {error "OT_SPINE_INTERNAL: disconnected or exported output $output"}
+  set drivers {}
+  foreach pin [$net getITerms] {if {[$pin getIoType] eq "OUTPUT"} {lappend drivers $pin}}
+  if {[llength $drivers] != 1 || [lindex $drivers 0] ne $it} {error "OT_SPINE_INTERNAL: ambiguous driver $output"}
+  # Follow only actual Liberty buffers to the declared physical input clock.
+  set walk [get_nets -quiet -of_objects $inputs]; set seen {}
+  while {1} {
+    if {[llength $walk] != 1 || [lsearch -exact $seen $walk] >= 0} {error "OT_SPINE_INTERNAL: disconnected or cyclic source $output"}
+    lappend seen $walk
+    set ports [get_ports -quiet -of_objects $walk]
+    set d [get_pins -quiet -of_objects $walk -filter "direction == output"]
+    if {[llength $ports]} {
+      if {[llength $ports] != 1 || [get_full_name $ports] ne $source || [llength $d]} {error "OT_SPINE_INTERNAL: wrong source for $output"}
+      break
+    }
+    set c [get_cells -quiet -of_objects $d]
+    set l [get_lib_cells -quiet -of_objects $c]
+    set i [get_pins -quiet -of_objects $c -filter "direction == input"]
+    if {[llength $d] != 1 || [llength $c] != 1 || [llength $l] != 1
+        || ![get_property $l is_buffer] || [llength $i] != 1} {error "OT_SPINE_INTERNAL: gated or data source $output"}
+    set walk [get_nets -quiet -of_objects $i]
+  }
+  lassign [$it getAvgXY] ok x y
+  if {!$ok} {error "OT_SPINE_INTERNAL: no physical pin location $output"}
+  puts "OT_SPINE_INTERNAL checked $name $source -> $output ($master)"
+  return [list $net $x $y]
+}
+
 proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
   set ::ot_sp_prefix $prefix
   set ::ot_sp_blk [ord::get_db_block]
@@ -445,6 +497,11 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
   set u $::ot_sp_dbu
   set port $requested_port
   if {$port eq ""} { set port [ot_sp_env OT_SPINE_PORT {ck[0]}] }
+  set internal [expr {[info exists ::ot_sp_internal_roots] && [dict exists $::ot_sp_internal_roots $port]}]
+  if {$internal} {
+    lassign [ot_sp_internal_root $port [dict get $::ot_sp_internal_roots $port]] net0 internal_x internal_y
+    set bt ""
+  } else {
   set bt [$blk findBTerm $port]
   # s81-spwfc 2026-10-13: a [0:0] clock port stays "ck[0]" in a wires-only cluster netlist and becomes "ck" in a
   # flattened leaf; ref_tile passes the base name.  Try the other spelling before giving up (s81sp_capc_cl gate:
@@ -455,18 +512,20 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     if {$bt2 ne "NULL" && $bt2 ne ""} { puts "OT_SPINE port $port not found, using $alt"; set bt $bt2; set port $alt }
   }
   if {$bt eq "NULL" || $bt eq ""} { puts "OT_SPINE skipped: no port $port"; return 0 }
+  }
   if {[ot_pg_strict_enabled]} {
     ot_pg_require_cts_placement_or_empty_context
     # Existing port buffers must also be bound before this source-owned estimator.
     ot_pg_bind_batch_before_protect $::ot_sp_blk [$::ot_sp_blk getInsts]
     ot_pg_assert_all_native $::ot_sp_blk [ot_pg_prepare $::ot_sp_blk]
   }
-  set net0 [$bt getNet]
+  if {!$internal} {set net0 [$bt getNet]}
   # OT_SPINE_THROUGH_ICG=1 (el1011-hbm-smt 2026-10-12): the port clock enters ONE tile clock gate (ICG*, e.g. the SM tile's
   # ot_cg_tile) that clocks everything else.  A spine on the port net would see only the ICG and its few enable flops and
   # leave the whole gated network without a tree; build the spine on the ICG's GCLK net instead, rooted at the ICG output.
   # The port net keeps the ICG + its enable registers (local, beside the clk / cgi pins), so the ENA check stays balanced.
   set ::ot_sp_root_xy ""
+  if {$internal && [ot_sp_env OT_SPINE_THROUGH_ICG 0] eq "1"} {error "OT_SPINE_INTERNAL: ICG traversal unsupported"}
   if {[ot_sp_env OT_SPINE_THROUGH_ICG 0] eq "1"} {
     set icgs {}
     foreach it [$net0 getITerms] {
@@ -635,8 +694,12 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
     }
   }
   if {$nl == 0} { puts "OT_SPINE skipped: $port drives no sinks"; return 0 }
-  set pb [$bt getBBox]
-  set px [expr {([$pb xMin] + [$pb xMax]) / 2}]; set py [expr {([$pb yMin] + [$pb yMax]) / 2}]
+  if {$internal} {
+    set px $internal_x; set py $internal_y
+  } else {
+    set pb [$bt getBBox]
+    set px [expr {([$pb xMin] + [$pb xMax]) / 2}]; set py [expr {([$pb yMin] + [$pb yMax]) / 2}]
+  }
   if {$::ot_sp_root_xy ne ""} { lassign $::ot_sp_root_xy px py }
   if {[ot_sp_env OT_SPINE_SYM 0] eq "1"} {
     set root [ot_sp_sym_build [dict keys $::ot_sp_members] $lins [expr {min(max($px, $::ot_sp_cx0), $::ot_sp_cx1 - $::ot_sp_cw)}] [expr {min(max($py, $::ot_sp_cy0), $::ot_sp_cy1 - $::ot_sp_rh)}]]
@@ -710,6 +773,7 @@ proc ot_clock_spine {{requested_port ""} {prefix clkbuf_sp_}} {
   foreach b $::ot_sp_insts { $b setDoNotTouch 1 }
   foreach n [concat [list $net0] [lmap b $::ot_sp_insts {[$b findITerm $::ot_sp_out] getNet}]] { $n setDoNotTouch 1 }
   ot_sp_check_legal
+  if {$internal} {ot_sp_internal_root $port [dict get $::ot_sp_internal_roots $port]}
   set ::ot_sp_port $port
   puts "OT_SPINE done port $port buffers $::ot_sp_nbuf"
   return 1
@@ -732,6 +796,18 @@ proc ot_clock_spines {} {
   }
   if {[llength [lsort -unique $ports]] != [llength $ports]} {
     error "OT_SPINE_PORTS: duplicate clock port"
+  }
+  if {[info exists ::ot_sp_internal_roots]} {
+    set internal_nets {}
+    dict for {name row} $::ot_sp_internal_roots {
+      if {[lsearch -exact $ports $name] < 0} {error "OT_SPINE_INTERNAL: root $name missing from OT_SPINE_PORTS"}
+      set pos [lsearch -exact $ports $name]
+      set srcpos [lsearch -exact $ports [lindex $row 3]]
+      if {$srcpos < 0 || $srcpos >= $pos} {error "OT_SPINE_INTERNAL: physical source port must be built before $name"}
+      set n [lindex [ot_sp_internal_root $name $row] 0]
+      if {$n in $internal_nets} {error "OT_SPINE_INTERNAL: duplicate physical root $name"}
+      lappend internal_nets $n
+    }
   }
   set index 0
   foreach port $ports {
@@ -777,6 +853,11 @@ proc ot_sp_rest_nets {} {
   set blk [ord::get_db_block]
   set ::ot_sp_spine_nets [list]
   foreach port $::ot_sp_ports {
+    if {[info exists ::ot_sp_internal_roots] && [dict exists $::ot_sp_internal_roots $port]} {
+      set it [$blk findITerm [lindex [dict get $::ot_sp_internal_roots $port] 0]]
+      lappend ::ot_sp_spine_nets [[$it getNet] getName]
+      continue
+    }
     set bt [$blk findBTerm $port]
     if {$bt ne "NULL" && $bt ne ""} { lappend ::ot_sp_spine_nets [[$bt getNet] getName] }
   }

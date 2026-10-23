@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.hbm_dma_load_component_receipt.v3",
+  "source_commit": "1f9eb0eea",
+  "source_hashes": "source_hashes.txt",
+  "unit": "oth-ubuntu-3079428-1792649864",
+  "host": "ot-epyc9",
+  "tool": "Verilator 5.050",
+  "status": "PASS",
+  "local_edges": 5,
+  "initiation_interval": 1,
+  "packets_per_source_bank": 1480,
+  "source_banks": [
+    0,
+    1
+  ],
+  "formats": [
+    "FP32",
+    "BF16",
+    "FP8E4M3",
+    "INT8",
+    "U32",
+    "UE8M0"
+  ],
+  "checks": [
+    "all source-byte and destination-word offsets",
+    "all tail masks",
+    "release-only emits no payload",
+    "released-bank reuse faults",
+    "BF16 causal mutant rejected",
+    "NPC4 raw lockstep1538edges zero mismatches",
+    "NPC2 raw512beats match original",
+    "actual checkpoint384words/48packets/two source windows",
+    "independent raw128packets plus converted1packet overlap without false fault",
+    "Exact fb912 valid schedule differential: eight images, both banks, six formats, opposite-bank fill concurrent with LOAD or raw drain: 384 LOAD packets, 256 raw packets, 901 compared edges",
+    "Malformed same-bank LOAD and raw-start conflicts: sticky fault, zero SRAM reads, zero valid outputs; candidate pcbad 1 versus baseline 0 after fault"
+  ],
+  "qualification_limits": [
+    "Mapped native, exact integrated producer replay and physical successor pending",
+    "Complete token and die transport not qualified"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "base_commit": "d3b64cd692856a35f8b5292c046874699a23d454",
+  "candidate_parser_sha256": "59c5f59464c5448df3ec7c55eaf6938fe7d288a141460615d316317e0261f98c",
+  "candidate_test_sha256": "64d67da6415855230bf922f046ff1cfd2bae3447f9a0a3a1e25fe0e01001b92e",
+  "suite_command": "python3 -m unittest discover -s tools/<closure_loop|ref_tile|hier_contract|tt_views>",
+  "full_source_archive": true
+}

@@ -1,0 +1,53 @@
+Class geometry successor, 2026-10-21
+
+The actual B source GEN classgeom0030 failed on rly_dv_ch_E1_ar_ard_0,
+qfd_landh0_600_EN_104x106: no legal site within strict actual 405um reach;
+last obstacle dvs_E2. B had expanded E0/E1, leaving E1/E2 at129.6um.
+The failed immutable ep6 directory and out.log remain preserved.
+
+Source3403b5c23 adds explicit existing-channel expansion. The single successor
+reserves E1/E2gap259.2um by adding129.6 and translating the replicated array
+west129.6. W services stay fixed; western service clearance consumed129.6.
+Die32983.176x24288.824 stays inside33000um guard, outline area increment0.
+Two independent104x106 class footprints and12.96um row/endcap slots need246.88um
+of channel width. This is a physical reservation; actual GEN still decides legal
+native outline/pin placement. The floorplan transform inserts no explicit pipeline stage. GEN rebuilds real
+relay topology, so final stage counts and token-age deltas remain pending actual
+relay-table derivation and calendar recompilation. Frozen0125 metadata zero
+was a transform-only statement and must not be read as final age equivalence.
+
+classgeom0105 failed at the actual core-feed bump because retaining its old
+17409.6,12096 coordinate overlapped shifted dvs_E0. The next single successor
+classgeom0125 moves the real package bump to17280,12096 (west129.6), retaining
+its86.4um offset to E0. CORE_FEED_XY drives the real clock planner, and source.json
+records this movement. No reach limit, source width or class timing changed.
+
+setup_channels.py and setup_corefeed.py preserve the concrete input recipe.
+classgeom0125 reuses the immutable0105 source via src symlink and uses fresh
+absolute output/log paths, so neither predecessor source nor outputs are mutated.
+Canonical ew595_r16 remains diagnostic: old sysface physical image mask,
+reset-capture calendar HOLD and missing RoPE/OVL successor parents preclude a
+paired release claim. Existing class functional evidence is reused; no new
+unit/audit/proof campaigns were run under the owner directive.
+
+Actual0125 terminal: class packing progressed past the former E1 site and failed
+at rly_dv_ch_E2_ar_ard_0, same104x106 EN master, blocked by dvs_E3. The actual
+E1/E2 remedy therefore cleared that first obstruction, without a405um exception.
+Next single successor0150 adds129.6 to E2/E3 (total259.2), translates replicated
+array west129.6 again and places the actual corefeed at17150.4,12096. E1/E2 stays
+259.2, outline stays32983.176x24288.824, total western clearance consumed259.2.
+The recorded ROOT contract is33x26mm; raw widthheadroom16.824um is disclosed.
+No500um exterior-margin requirement or unrecorded reserved outside area is assumed.
+
+Directional source repair: relay_frame() classified every side-by-side DV bus
+as H (65x106 at600bits), although its corners later emit HV/VH (104x106).
+OT_SPLIT_FWD_CLASS_BEND_RESERVE=1 now reserves max(H,HV,VH) for these paths
+before native site allocation. Both544bit parts retain independent vertical
+slots. Non-EW vertical paths keep their directional reservation, avoiding the
+old globally conservative maximum-frame failure. This is a source placement
+change and remains unqualified until the single next GEN uses it.
+
+The blanket259.2-all-boundary candidate is HOLD: it would reduce the western
+service span to640.776um while existing collective hardware is1563.816um wide.
+Its generated W5x561.6 reservation cannot establish legal service placement.
+The directional reservation is intended to avoid that physical collision.

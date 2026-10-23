@@ -1,0 +1,5 @@
+DIE_PORT_BIND FAIL masters=308 instances=31359 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=4 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=2 top_assigns=0 params_not_in_rtl=0 strap_ports=15 pad_bits=0 spare_out_bits=99221 unresolved_children=0 ambiguous_children=0 variant_children=14
+LANE_LATENCY_AUDIT PASS buses=916 fwd=916 plain=0 groups=43 LX_params=[15, 0, 14] LX_lanes=[15, 0, 14] LS=382 LS_need=382 fails=0
+RECORD_BUNDLE_AUDIT PASS bundles=12 fails=0
+ValueError: core publisher source identity differs: rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv
+HR_CONTRACT PASS fields=25 ctlm=[qfd_tt_ctlm_dv.sv:packed qfd_tt_ctlm_dv_lpf.sv:packed qfd_tt_ctlm_dv_lpf_lp.sv:packed] die_relay_hops=37 die_slices=12 errors=0

@@ -256,6 +256,7 @@ CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own'
 GRP_LOCAL = dict(slg='slg', lcal='lcal', fcal='fcal', phase='phase', drain='drain')
 # superseded die instances (0db) by name prefix
 SUPERSEDED = ('ctrl_', 'cdc_', 'land_', 'wctl_', 'wleaf_', 'kvnc', 'lprg')
+PVFIN_HUB_GAP = float(os.environ.get('OT_KV_PVFIN_HUB_GAP', '30.0'))     # KDIE4-PH: pvfin <-> ahub gap (see PVFIN place)
 # KV-PLAN-FIN 10-17 (OT_KV_PVFIN, default ON with OT_KV_STATIC_DIE): the PV final join as ONE 512-b beat-stream slice
 # qkd_pv_fin_s (die element pvfin, master qkd_pvfin, kit physical/ref_tile/qkd_pv_fin_s), W of the attention hub between
 # the two PV pair strips; it feeds the stream face qkd_attn_result_face_s in kvs_attn (bundle port fin, 534 b).  Plan:
@@ -2582,8 +2583,17 @@ def place(m, K, geo, F):
         # OT_KV_EMB_WEST=2: the row of the HOST root's centre instead (W of the HOST, below the channel): the four stack
         # roots' o_emb returns then end W of the HOST without entering the HOST-top / D2D channel (d17n: ES o_emb stage 72)
         ey_ = (host.y + host.h / 2) if EMB_WEST_MODE == '2' else anchors['kvs_emb'][1]
-        anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - ew_ / 2), ey_)
-        emb_keep = [('emb_west_pocket', host.x - 21.6, host.y + host.h, d2d.x - (host.x - 21.6), d2d.y + d2d.h - host.y - host.h)]
+        # KDIE4-RLY 10-22 (OT_KV_EMB_WEST_GAP_UM, default 0, multiple of 21.6): kvs_emb this much further W, so the pocket
+        # W of the D2D end (its W-face srx / emb_tx / kvi words, the kvnc context leaf, the record / service fork splits and
+        # the S-face words' W approach) holds relay stations instead of one 151-194-um slot
+        eg_ = float(os.environ.get('OT_KV_EMB_WEST_GAP_UM', '0'))
+        if eg_ < 0 or abs(eg_ / 21.6 - round(eg_ / 21.6)) > 1e-6:
+            raise ValueError('OT_KV_EMB_WEST_GAP_UM must be a nonnegative multiple of 21.6 um')
+        anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - eg_ - ew_ / 2), ey_)
+        emb_keep = [('emb_west_pocket', host.x - 21.6 - eg_, host.y + host.h, d2d.x - (host.x - 21.6 - eg_),
+                     d2d.y + d2d.h - host.y - host.h)]
+        if eg_:
+            m['geo']['emb_west_gap_um'] = eg_
         m['geo']['emb_west'] = dict(pocket=list(emb_keep[0][1:]), anchor=list(anchors['kvs_emb']))
     central_keep = []
     if os.environ.get('OT_KV_CTL_CENTRAL', '0') == '1':
@@ -2628,7 +2638,11 @@ def place(m, K, geo, F):
     if PVFIN and ah is not None and 'pvw_0' in by and pv is not None:
         w, h = PVFIN_FRAME
         ys = (by['pvw_0'].y + by['pvw_0'].h + pv.y) / 2
-        x, y = free_spot(m, w, h, (ah.x - w / 2 - 30.0, ys), GX, GY, extra=central_keep)
+        # KDIE4-PH 10-22 (OT_KV_PVFIN_HUB_GAP, default 30 um = unchanged): ks_ahfr (ahub fr -> pvfin fr, 145 b) is a direct
+        # hop across this gap and is where A.hub_fr lands its FR_OFS skew pads (kv_bundle_eq); at 30 um every pad must
+        # find a 108 x 13 spot within reach of ahub.fr among the PV / fork stations W of the hub (ovm: none left after
+        # PVFIN_ALIGN -> 'no legal spot for pad 1/2').  A wider gap gives the pads their own column between the two pins.
+        x, y = free_spot(m, w, h, (ah.x - w / 2 - PVFIN_HUB_GAP, ys), GX, GY, extra=central_keep)
         m['insts'].append(F.Inst('pvfin', 'qkd_pvfin', round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
 

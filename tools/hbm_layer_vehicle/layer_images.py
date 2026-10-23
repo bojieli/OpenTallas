@@ -882,6 +882,7 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None, n
             ref, _ = downstream_reference(fx, r["i"], desc["R"].base)
         res = attempt("sfu_lanes", lambda: SL.lower_sfu_lanes(raw, a.quarter, data=vm_data, place=place, tag=tag,
                                                               timing=timing, rf_local=a.rf_local, layout=in_layout,
+                                                              pretree_profile=getattr(a, "su_pretree_timing", None),
                                                               expected_reduction_word=ref))
     else:
         # every live lane reads all four operand ports (absent roles = A's own-bank address) and the drain samples
@@ -935,6 +936,7 @@ def main():
     ap.add_argument("--su-lower2", action="store_true", help="TOK-FUNC2-HBM-SU opt-in production SU lowerings by "
                     "record profile on every layer (pretree reductions, scalar rsqrt, RF-broadcast B, single-row "
                     "identity lane terms); failed attempts leave the VM placement / written state untouched")
+    ap.add_argument("--su-pretree-profile", type=Path, help="measured selected-source slice/join timing receipt")
     ap.add_argument("--gather-binding", type=Path, help="actual selected indexed-scalar VM port/clock/producer binding")
     ap.add_argument("--rf-local", type=int, default=1, help="selected su_<q><g> RF_LOCAL parameter (contract)")
     ap.add_argument('--rope-candidate', action='store_true', help='explicit unqualified candidate source: local C bank exchange and runtime coefficient staging')
@@ -965,6 +967,10 @@ def main():
     ap.add_argument("--sm-count", type=int, default=4, help="with --sm-lowering: SW SM service groups driven (sm_SW0..)")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
+    if a.su_pretree_profile and not a.su_lower2:
+        ap.error("--su-pretree-profile requires --su-lower2")
+    from hbm_layer_vehicle.native_profile import NativePretreeTiming
+    a.su_pretree_timing = NativePretreeTiming.load(a.su_pretree_profile) if a.su_pretree_profile else None
     if a.rope_candidate and (not a.su_lower2 or a.rope_source is None or a.rope_die is None):
         ap.error('--rope-candidate requires --su-lower2 and actual --rope-source/--rope-die bindings')
     if a.pv_probability_candidate and (not a.su_lower2 or a.fixtures is None or

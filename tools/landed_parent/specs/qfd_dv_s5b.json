@@ -1,0 +1,637 @@
+{
+ "why": "QW-SLICE6 10-19 Q.STA.SLICE.2: hardened one-level slice2 (plan claude/qw-slice5-1019 @961b2dafd), D 8 / E 4; every cross-region reader pin lagged E + 1 (cross-region loops: compiler re-schedule)",
+ "top": "qfd_dv_s5_flat",
+ "top_lp": "qfd_dv_s5b_lp",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_flat.sv"
+ ],
+ "child_sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+  "rtl/qwen_dv/qfd_dv_redstn2_regional.sv",
+  "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+  "rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv"
+ ],
+ "defines": [
+  "OT_S5_HARD"
+ ],
+ "params": {},
+ "out_dir": "rtl/qwen_dv/s5/lp",
+ "record_dir": "results/arch/qw_slice6_1019/lp",
+ "clock_ports": [
+  "ck"
+ ],
+ "clock_pins": [
+  "ck",
+  "clk"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n"
+ ],
+ "D": 8,
+ "E": 4,
+ "share_rings": true,
+ "regions": [
+  {
+   "name": "r_fw",
+   "insts": [
+    "u_fdn"
+   ],
+   "centre": [
+    129.6,
+    648.0
+   ],
+   "why": "dn face strip: pin registers, chain merges, pass-throughs"
+  },
+  {
+   "name": "r_fe",
+   "insts": [
+    "u_fup"
+   ],
+   "centre": [
+    2332.8,
+    648.0
+   ],
+   "why": "up face strip: pin registers, SETID forward, pass-throughs"
+  },
+  {
+   "name": "r_st0",
+   "insts": [
+    "u_r0",
+    "u_btab",
+    "u_frs"
+   ],
+   "centre": [
+    421.2,
+    421.2
+   ],
+   "why": "station region 0: closed stnrgc u_r0 + btab (bt round trip local) + rs_s entry"
+  },
+  {
+   "name": "r_st1",
+   "insts": [
+    "u_r1"
+   ],
+   "centre": [
+    421.2,
+    162.0
+   ],
+   "why": "station region 1: closed stnrgc u_r1"
+  },
+  {
+   "name": "r_st2",
+   "insts": [
+    "u_r2"
+   ],
+   "centre": [
+    637.2,
+    421.2
+   ],
+   "why": "station region 2: closed stnrgc u_r2"
+  },
+  {
+   "name": "r_st3",
+   "insts": [
+    "u_r3"
+   ],
+   "centre": [
+    637.2,
+    162.0
+   ],
+   "why": "station region 3: closed stnrgc u_r3"
+  },
+  {
+   "name": "r_st4",
+   "insts": [
+    "u_r4"
+   ],
+   "centre": [
+    853.2,
+    421.2
+   ],
+   "why": "station region 4: closed stnrgc u_r4"
+  },
+  {
+   "name": "r_st5",
+   "insts": [
+    "u_r5"
+   ],
+   "centre": [
+    853.2,
+    162.0
+   ],
+   "why": "station region 5: closed stnrgc u_r5"
+  },
+  {
+   "name": "r_st6",
+   "insts": [
+    "u_r6"
+   ],
+   "centre": [
+    1069.2,
+    421.2
+   ],
+   "why": "station region 6: closed stnrgc u_r6"
+  },
+  {
+   "name": "r_st7",
+   "insts": [
+    "u_r7"
+   ],
+   "centre": [
+    1069.2,
+    162.0
+   ],
+   "why": "station region 7: closed stnrgc u_r7"
+  },
+  {
+   "name": "r_stm",
+   "insts": [
+    "u_stm",
+    "u_fs"
+   ],
+   "centre": [
+    1620.0,
+    248.4
+   ],
+   "why": "stream + tload STAND-IN, S-face cw_s exit"
+  },
+  {
+   "name": "r_ctl",
+   "insts": [
+    "u_ctl"
+   ],
+   "centre": [
+    1447.2,
+    658.8
+   ],
+   "why": "ctl leaf"
+  },
+  {
+   "name": "r_sc",
+   "insts": [
+    "u_sc"
+   ],
+   "centre": [
+    1836.0,
+    658.8
+   ],
+   "why": "scalar leaf"
+  },
+  {
+   "name": "r_su",
+   "insts": [
+    "u_suvm",
+    "u_red",
+    "u_lrly*",
+    "u_head*",
+    "u_exp*",
+    "u_rcp*",
+    "u_rsq*"
+   ],
+   "centre": [
+    1231.2,
+    1641.6
+   ],
+   "why": "SU block: suvm + red + 8 lrly + 8 lane heads + 24 SFU (RD relays = reach stages; lane_h ML1/RD2)"
+  },
+  {
+   "name": "r_tap",
+   "insts": [
+    "u_tap"
+   ],
+   "centre": [
+    1231.2,
+    2073.6
+   ],
+   "why": "heads fill tap"
+  },
+  {
+   "name": "r_hc0",
+   "insts": [
+    "u_xh0",
+    "u_xl0_*"
+   ],
+   "centre": [
+    502.2,
+    2376.0
+   ],
+   "why": "head column 0: xhead + 8 x leaves"
+  },
+  {
+   "name": "r_hc1",
+   "insts": [
+    "u_xh1",
+    "u_xl1_*",
+    "u_fn"
+   ],
+   "centre": [
+    988.2,
+    2376.0
+   ],
+   "why": "head column 1: xhead + 8 x leaves + N-face rs_n entry"
+  },
+  {
+   "name": "r_hc2",
+   "insts": [
+    "u_xh2",
+    "u_xl2_*"
+   ],
+   "centre": [
+    1474.2,
+    2376.0
+   ],
+   "why": "head column 2: xhead + 8 x leaves"
+  },
+  {
+   "name": "r_hc3",
+   "insts": [
+    "u_xh3",
+    "u_xl3_*"
+   ],
+   "centre": [
+    1960.2,
+    2376.0
+   ],
+   "why": "head column 3: xhead + 8 x leaves"
+  }
+ ],
+ "mut_child": "u_ctl",
+ "bench": {
+  "cycles": 6000,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ },
+ "lag_pins": [
+  {
+   "inst": "u_btab",
+   "pins": [
+    "tw_addr",
+    "tw_data",
+    "tw_kind",
+    "tw_we"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_ctl",
+   "pins": [
+    "chd_q",
+    "cmd_q",
+    "hd_fault",
+    "kv_waddr",
+    "kv_wdata",
+    "kv_we",
+    "l9o_v",
+    "pc_bad",
+    "r_d",
+    "r_idx",
+    "r_last",
+    "r_v",
+    "red_addr",
+    "red_data",
+    "red_we",
+    "sc_busy",
+    "sc_fault",
+    "sc_w1_addr",
+    "sc_w1_data",
+    "sc_w1_we",
+    "stm_fault",
+    "stn_fault",
+    "su_fault",
+    "su_idle",
+    "su_nr",
+    "su_prog",
+    "su_rows",
+    "tld_fault",
+    "tok_idx",
+    "tok_own",
+    "tok_user",
+    "tok_v",
+    "tok_val",
+    "vm_fault",
+    "vm_waddr",
+    "vm_wdata",
+    "vm_we"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_fdn",
+   "pins": [
+    "ag_own",
+    "agu_q",
+    "cc_c",
+    "chu_q",
+    "own_ch",
+    "sc_dn_c",
+    "st_c",
+    "st_dn_c"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_fs",
+   "pins": [
+    "cs0",
+    "cs1",
+    "cs2",
+    "cs3"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_fup",
+   "pins": [
+    "chr_c",
+    "cmd_q",
+    "hr_c",
+    "l9_c",
+    "sc_up_c",
+    "st_up_c",
+    "treq_c"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_r0",
+   "pins": [
+    "cfg_kcm1_p",
+    "cfg_mode_p",
+    "cfg_nwords_p",
+    "cfg_sbase_p",
+    "cfg_v_p",
+    "cfg_wsrc_p",
+    "flt_bank_i",
+    "flt_vld_i",
+    "nb_c_p",
+    "nb_d_p",
+    "rs_n_c_p",
+    "rs_n_hi_p",
+    "rs_n_lo_p"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_r1",
+   "pins": [
+    "bt_q_p",
+    "cfg_kcm1_p",
+    "cfg_mode_p",
+    "cfg_nwords_p",
+    "cfg_sbase_p",
+    "cfg_v_p",
+    "cfg_wsrc_p",
+    "flt_bank_i",
+    "flt_vld_i",
+    "nb_c_p",
+    "nb_d_p",
+    "rs_n_c_p",
+    "rs_n_hi_p",
+    "rs_n_lo_p",
+    "rs_s_c_p",
+    "rs_s_hi_p",
+    "rs_s_lo_p"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_r2",
+   "pins": [
+    "bt_q_p",
+    "cfg_kcm1_p",
+    "cfg_mode_p",
+    "cfg_nwords_p",
+    "cfg_sbase_p",
+    "cfg_v_p",
+    "cfg_wsrc_p",
+    "flt_bank_i",
+    "flt_vld_i",
+    "nb_c_p",
+    "nb_d_p",
+    "rs_n_c_p",
+    "rs_n_hi_p",
+    "rs_n_lo_p",
+    "rs_s_c_p",
+    "rs_s_hi_p",
+    "rs_s_lo_p"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_r3",
+   "pins": [
+    "bt_q_p",
+    "cfg_kcm1_p",
+    "cfg_mode_p",
+    "cfg_nwords_p",
+    "cfg_sbase_p",
+    "cfg_v_p",
+    "cfg_wsrc_p",
+    "flt_bank_i",
+    "flt_vld_i",
+    "nb_c_p",
+    "nb_d_p",
+    "rs_n_c_p",
+    "rs_n_hi_p",
+    "rs_n_lo_p",
+    "rs_s_c_p",
+    "rs_s_hi_p",
+    "rs_s_lo_p"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_r4",
+   "pins": [
+    "bt_q_p",
+    "cfg_kcm1_p",
+    "cfg_mode_p",
+    "cfg_nwords_p",
+    "cfg_sbase_p",
+    "cfg_v_p",
+    "cfg_wsrc_p",
+    "flt_bank_i",
+    "flt_vld_i",
+    "nb_c_p",
+    "nb_d_p",
+    "rs_n_c_p",
+    "rs_n_hi_p",
+    "rs_n_lo_p",
+    "rs_s_c_p",
+    "rs_s_hi_p",
+    "rs_s_lo_p"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_r5",
+   "pins": [
+    "bt_q_p",
+    "cfg_kcm1_p",
+    "cfg_mode_p",
+    "cfg_nwords_p",
+    "cfg_sbase_p",
+    "cfg_v_p",
+    "cfg_wsrc_p",
+    "flt_bank_i",
+    "flt_vld_i",
+    "nb_c_p",
+    "nb_d_p",
+    "rs_n_c_p",
+    "rs_n_hi_p",
+    "rs_n_lo_p",
+    "rs_s_c_p",
+    "rs_s_hi_p",
+    "rs_s_lo_p"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_r6",
+   "pins": [
+    "bt_q_p",
+    "cfg_kcm1_p",
+    "cfg_mode_p",
+    "cfg_nwords_p",
+    "cfg_sbase_p",
+    "cfg_v_p",
+    "cfg_wsrc_p",
+    "flt_bank_i",
+    "flt_vld_i",
+    "nb_c_p",
+    "nb_d_p",
+    "rs_n_c_p",
+    "rs_n_hi_p",
+    "rs_n_lo_p",
+    "rs_s_c_p",
+    "rs_s_hi_p",
+    "rs_s_lo_p"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_r7",
+   "pins": [
+    "bt_q_p",
+    "cfg_kcm1_p",
+    "cfg_mode_p",
+    "cfg_nwords_p",
+    "cfg_sbase_p",
+    "cfg_v_p",
+    "cfg_wsrc_p",
+    "flt_bank_i",
+    "flt_vld_i",
+    "nb_c_p",
+    "nb_d_p",
+    "rs_n_c_p",
+    "rs_n_hi_p",
+    "rs_n_lo_p",
+    "rs_s_c_p",
+    "rs_s_hi_p",
+    "rs_s_lo_p"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_sc",
+   "pins": [
+    "am_idx",
+    "am_u",
+    "am_v",
+    "am_val",
+    "dn_i",
+    "red_addr",
+    "red_data",
+    "red_we",
+    "sc_cfg",
+    "up_i",
+    "vm_wdata0",
+    "vm_we",
+    "vm_win0"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_stm",
+   "pins": [
+    "se_i",
+    "sid",
+    "stm_cfg",
+    "sw_i",
+    "treq_i",
+    "vm_waddr",
+    "vm_wdata",
+    "vm_we"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_suvm",
+   "pins": [
+    "su_cmd",
+    "tw_addr",
+    "tw_data",
+    "tw_kind",
+    "tw_we",
+    "w16_addr",
+    "w16_data",
+    "w16_we",
+    "w1_addr",
+    "w1_data",
+    "w1_we"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_tap",
+   "pins": [
+    "hr_q",
+    "lq_bad",
+    "sid",
+    "xt_a",
+    "xt_bad",
+    "xt_d",
+    "xt_v"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_xh0",
+   "pins": [
+    "a_d",
+    "cid",
+    "fault_i"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_xh1",
+   "pins": [
+    "a_d",
+    "cid",
+    "fault_i"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_xh2",
+   "pins": [
+    "a_d",
+    "cid",
+    "fault_i"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  },
+  {
+   "inst": "u_xh3",
+   "pins": [
+    "a_d",
+    "cid",
+    "fault_i"
+   ],
+   "why": "cross-region reader (slice loops: +E+1 re-schedule)"
+  }
+ ]
+}

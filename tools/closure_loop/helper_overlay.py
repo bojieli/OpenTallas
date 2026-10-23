@@ -192,6 +192,72 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22 batch 9: STW-S81c-TOK5 20:38 + STEWARD-S81c 20:05 GATE_RULE_GUARD asks (collect auto-merge refusals)
+    "127356adf225c23173c42e606c0215e7a041af36": dict(
+        kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),
+        what="S81 gunit lp kit spec generator respec_lp4.py (pin_balance / peak_ram / spec keys of dsdv_gunit_lp kits); kit specs + kit files + the unit's own RTL/benches; no shared gate rule"),
+    "687be27a4d389446033506b2ae9cddf5df7e6db3": dict(
+        kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),
+        what="S81 gunit lp kit spec generator respec_lp4.py (pin_balance / peak_ram / spec keys of dsdv_gunit_lp kits); kit specs + kit files + the unit's own RTL/benches; no shared gate rule"),
+    "3b8b264472a25910b43c69117603bfa0ff0122b2": dict(
+        kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),
+        what="S81 gunit lp kit spec generator respec_lp4.py (pin_balance / peak_ram / spec keys of dsdv_gunit_lp kits); kit specs + kit files + the unit's own RTL/benches; no shared gate rule"),
+    "676085b635759a98630c0df247be24351a29a09a": dict(
+        kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),
+        what="S81 gunit lp kit spec generator respec_lp4.py (pin_balance / peak_ram / spec keys of dsdv_gunit_lp kits); kit specs + kit files + the unit's own RTL/benches; no shared gate rule"),
+    "60db766f669b64af32828cca95aec0cba5d2a618": dict(
+        kind="neutral", paths=('physical/common_flow/macro_pin_flops.tcl',),
+        what="macro_pin_flops.tcl opt-in placement hook (kits with pin_hook_before_flops only): globals -> upvar 1 crash fix; places flops, judges nothing"),
+    "b80342fea3727b0d7f8e779f45b79fa364871551": dict(
+        kind="neutral", paths=('physical/common_flow/macro_pin_flops.tcl', 'physical/common_flow/macro_pin_flops_release.tcl'),
+        what="new opt-in macro-pin flop placement hooks (PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE) used only by s81dv_idxtx* kits listing pin_hook_before_flops; no check, SDC template or netlist change"),
+    # ROOT-MERGE-1022 10-22: s81-reftile-pin-boundary
+    "d3dddf08fb1f43cbcab1aadadfd4925d9f25d3ad": dict(
+        kind="neutral",
+        what="ref_tile _child_insertion: pin-mode multiple_cts_roots child without clock_measurements targets insertion tt.boundary.mean (kit generator spine target; no gate check change; no-op on main specs)"),
+    # ROOT-MERGE-1022 10-22: tokc-sparse-keep2
+    "fd50f64dbbfa30e99b39f83fab582b5ec5d7d01b": dict(
+        kind="neutral",
+        what="sparse_keep.py v2: append-only sparse list edits, refuses before any removal; no gate check"),
+    # ROOT-MERGE-1022 10-22: tokc-sparse-keep (new files only)
+    "cc298a6f04b3bc417d29076a8e70783653af108d": dict(
+        kind="neutral",
+        what="sparse_keep.py new helper: widens a sparse worktree without deleting on-disk kits; no gate check"),
+    # ROOT-MERGE-1022 10-22: claude/sqc-slice16-1022 lineage fbee65bf2 touches only qw2 slice2 kit files under
+    # tools/ref_tile/specs_qw2_slice2_native|tall (plus tools/qwen_dv generators); no shared gate/helper rule changes.
+    "fbee65bf263e7e0275ccd3bf695cb3f21be8b05b": dict(
+        kind="neutral",
+        what="qw2 slice2 kit spec/pin/fence files only (specs_qw2_slice2_*); shared gate unchanged"),
+    # ROOT-MERGE-1022 10-22: claude/sqc-slice16-1022 lineage e3f6a40a7 touches only qw2 slice2 kit files under
+    # tools/ref_tile/specs_qw2_slice2_native|tall (plus tools/qwen_dv generators); no shared gate/helper rule changes.
+    "e3f6a40a762c486fe2316db4a8547962437eb622": dict(
+        kind="neutral",
+        what="qw2 slice2 kit spec/pin/fence files only (specs_qw2_slice2_*); shared gate unchanged"),
+    # ROOT-MERGE-1022 10-22: claude/sqc-slice16-1022 lineage ca722a3b6 touches only qw2 slice2 kit files under
+    # tools/ref_tile/specs_qw2_slice2_native|tall (plus tools/qwen_dv generators); no shared gate/helper rule changes.
+    "ca722a3b69f19d725dabda9eb4e618fcd43a928a": dict(
+        kind="neutral",
+        what="qw2 slice2 kit spec/pin/fence files only (specs_qw2_slice2_*); shared gate unchanged"),
+    # ROOT-MERGE-1022 10-22: claude/sqc-slice16-1022 lineage 1d121e084 touches only qw2 slice2 kit files under
+    # tools/ref_tile/specs_qw2_slice2_native|tall (plus tools/qwen_dv generators); no shared gate/helper rule changes.
+    "1d121e0847501049f73943e7d06836592f496352": dict(
+        kind="neutral",
+        what="qw2 slice2 kit spec/pin/fence files only (specs_qw2_slice2_*); shared gate unchanged"),
+    # ROOT-MERGE-1022 10-22: 497ebf9c7 changes helper_overlay.py only by adding the RULE_COMMITS entry for 522f36523
+    # (plus new seq (B) parent kit files) -> no gate behaviour changes.
+    "497ebf9c7533848ddbc0e797a5bc0df69e0e16a7": dict(
+        kind="neutral",
+        what="helper_overlay: adds the 522f36523 RULE_COMMITS entry only; seq (B) kit files"),
+    # ROOT-MERGE-1022 10-22: claude/s81-seq-b1-1022 lineage ba140fd98 (S81-ELEM2-SEQ) only edits the dsdv_seq_host
+    # kit spec generators under tools/ref_tile/specs_pl_seq; no shared gate or helper rule changes.
+    "ba140fd98883fbc99cae1066757fa98f32be77d4": dict(
+        kind="neutral",
+        what="seq host kit spec generators (mk_dsdv_seq_host_gh/hw) only; shared gate unchanged"),
+    # ROOT-MERGE-1022 10-22: claude/tokc-oomadj-1022 ded87247b (URGENT TOKc-OOM). closure_loop.py only changes the die
+    # job OOM probe/adjust value (-1000 -> -999, -1000 processes left untouched); no gate verdict or route helper changes.
+    "ded87247b93bc390636bc661eaec6ecbdcb198d7": dict(
+        kind="neutral",
+        what="closure_loop die OOM adjust moved to -999 (was minus one thousand); process protection only, no gate check"),
     # STW-S81c-COLLA2 10-22 (STEWARD-S81c decision (A), seq (B) parents): clock_entry_constraints multi_root_children is
     # opt-in through the spec key (absent = byte-identical SDC: 34/34 landed specs on origin/main regenerate identical);
     # it only lifts the one-child-one-root ownership assertion for declared CLOSED children -> no older gate changes.

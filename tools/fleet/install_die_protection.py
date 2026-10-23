@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Minimal in-place upgrade of current fleet helpers; preserve admission arithmetic.
+OOMADJ_999_1022: die protection is -999, never -1000 (memcg OOM livelock at the cap); run install_oomadj_999.py after this.
 Run as root ON host with ot-protect-die alongside this installer. Never stops jobs.
 """
 import hashlib, json, os, shutil, subprocess, sys, time
@@ -30,7 +31,7 @@ def patch_docker(s):
     s=s.replace(anchor,'    --oom-score-adj=*) if [ "${OT_HEAVY_PRIO:-}" != die ]; then out+=("$a"); fi;;\n    --oom-score-adj) if [ "${OT_HEAVY_PRIO:-}" != die ]; then out+=("$a" "${rest[$((j+1))]}"); fi; j=$((j+1));;\n'+anchor)
     anchor='exec "$REAL" "${pre[@]}" "--memory-swap=$lim" "${out[@]}"'
     if s.count(anchor)!=1: raise ValueError('unknown docker exec')
-    return s.replace(anchor,'# '+MARK+': Docker daemon starts outside the caller scope; explicitly inherit die immunity.\nif [ "${OT_HEAVY_PRIO:-}" = die ]; then out=("--oom-score-adj=-1000" "--label=opentallas.priority=die" "${out[@]}"); fi\n'+anchor)
+    return s.replace(anchor,'# '+MARK+': Docker daemon starts outside the caller scope; explicitly inherit die immunity.\nif [ "${OT_HEAVY_PRIO:-}" = die ]; then out=("--oom-score-adj=-999" "--label=opentallas.priority=die" "${out[@]}"); fi\n'+anchor)
 
 def main():
     if os.geteuid()!=0: raise SystemExit('root required')
@@ -51,7 +52,7 @@ def main():
         os.replace(temp,p)
         proof.append(dict(path=str(p),before=hashlib.sha256(before.encode()).hexdigest(),after=hashlib.sha256(after.encode()).hexdigest()))
     service=Path('/etc/systemd/system/ot-die-protection.service')
-    service.write_text('[Unit]\nDescription=Preserve die job OOM immunity\nAfter=docker.service\n[Service]\nType=simple\nExecStart=/usr/local/bin/ot-protect-die --apply --watch\nRestart=on-failure\nRestartSec=5\nOOMScoreAdjust=-1000\n[Install]\nWantedBy=multi-user.target\n')
+    service.write_text('[Unit]\nDescription=Preserve die job OOM immunity\nAfter=docker.service\n[Service]\nType=simple\nExecStart=/usr/local/bin/ot-protect-die --apply --watch\nRestart=on-failure\nRestartSec=5\nOOMScoreAdjust=-999\n[Install]\nWantedBy=multi-user.target\n')
     subprocess.run(['systemctl','daemon-reload'],check=True)
     subprocess.run(['systemctl','enable','--now','ot-die-protection.service'],check=True)
     subprocess.run(['/usr/local/bin/ot-protect-die','--apply'],check=True)

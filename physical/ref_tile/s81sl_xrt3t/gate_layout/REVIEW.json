@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "s81sl_xrt3t",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T20:38:00-07:00",
+ "gate_commit": "664f745b7",
+ "checklist": {
+  "lattice": "n/a no macros",
+  "std_cell_band": "one continuous std-cell area, density green max, central diagonal band",
+  "pin_spread": "all four faces, full-face spread, pin-register rings",
+  "clock_entry": "E-face root, TT/FF spread 52.1/49.6 ps",
+  "shape": "570x395 um, same outline as approved xrt3t_b"
+ },
+ "notes": "Parallel route to approved xrt3t_b ca0019ff1 (only K=24 differs); placement reg->reg -41 same class, route-recoverable; first CLOSED binds u_xr",
+ "geometry_sha256": "aeea377da54cc983512b01c292e11d89b1661e22d0592b0c32887c2824182c91"
+}

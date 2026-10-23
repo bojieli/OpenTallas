@@ -94,7 +94,9 @@ def tolerate_flow_errors(errors: dict, logs_dir) -> dict:
     """An mm repair that runs out of buffer budget (RSZ-0060) inside a recipe's own multi-pass wrapper
     (qwen_die_masters/repair_budget.tcl continues on the grown design) logs one [ERROR] although the stage then
     completes: such a count is zeroed ONLY when every [ERROR line of the stage log is RSZ-0060, their number equals the
-    count, and an "OT_HOLD_MM after repair" line follows the last one.  Anything else stays an error."""
+    count, and an "OT_HOLD_MM after repair" line follows the last one. The spine may also
+    recover DPL-0033 through its ordinary legalization and mandatory clean recheck;
+    each counted error must have that exact ordered recovery. Anything else stays an error."""
     out = dict(errors)
     for key, val in errors.items():
         stage = key.split("__", 1)[0]
@@ -106,6 +108,24 @@ def tolerate_flow_errors(errors: dict, logs_dir) -> dict:
             if f.is_file():
                 lines += f.read_text(errors="replace").splitlines()
         errs = [i for i, ln in enumerate(lines) if ln.startswith("[ERROR")]
+        # check_placement logs DPL-0033 before throwing.  The spine's existing
+        # catch then legalizes and rechecks; OpenROAD retains the first error in
+        # its cumulative metrics even when that mandatory second check is clean.
+        # Recognize only the complete, ordered recovery for every counted error.
+        spine_recovered = bool(errs) and len(errs) == int(val) and stage == "cts"
+        for n, i in enumerate(errs):
+            end = errs[n + 1] if n + 1 < len(errs) else len(lines)
+            tail = lines[i + 1:end]
+            warning = "OT_SPINE WARNING: check_placement failed after spine insertion (DPL-0033); legalising movable cells around the spine"
+            clean = "OT_SPINE legal: check_placement clean after detailed_placement"
+            if (lines[i] != "[ERROR DPL-0033] detailed placement checks failed during check placement."
+                    or warning not in tail or clean not in tail
+                    or tail.index(warning) >= tail.index(clean)):
+                spine_recovered = False
+        if spine_recovered:
+            out[key] = 0
+            print(f"orfs_hold_mm: {key}={val} recovered by mandatory spine legalization and clean placement recheck")
+            continue
         if (errs and len(errs) == int(val) and all("RSZ-0060" in lines[i] for i in errs)
                 and any("OT_HOLD_MM after repair" in ln for ln in lines[errs[-1]:])):
             out[key] = 0

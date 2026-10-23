@@ -12,7 +12,8 @@ module ot_hbm_svc_sm_group_rel_id #(parameter integer LBANKS=4,parameter integer
  // HBM-SMXL 2026-10-19: XSLOT 1 = the descriptor's x-store slot base relocates every command's xaddr (die op_xb from
  // the static programme; issuer + feed headers).  0 (default) = unchanged.
  parameter integer XSLOT=0,parameter integer CTXW=(XSLOT!=0)?53:46,
- parameter integer OPEN_IL=0)(   // HBM-SMXL: open interlock of the producer (feed / cdc OPEN_IL)
+ parameter integer OPEN_IL=0,    // HBM-SMXL: open interlock of the producer (feed / cdc OPEN_IL)
+ parameter integer ATT_MARK=0)(  // HBM-PV-ATTMARK: feed programme word [119] attention mark (default 0 = unchanged)
  // strap identity: id_stack = HBM stack / quadrant (SW0 SE1 NW2 NE3), id_sm = SM index k (PCs 4k..4k+3)
  input wire[1:0]id_stack,input wire[2:0]id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
@@ -45,7 +46,7 @@ module ot_hbm_svc_sm_group_rel_id #(parameter integer LBANKS=4,parameter integer
   .start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),.program_start_v(program_start_v),
   .program_start_base(program_start_base),.program_start_limit(program_start_limit),.program_start_loops(program_start_loops),
   .program_start_ctx(program_start_ctx),.program_done(program_done));
- ot_hbm_svc_sm_feed_programmed_rel_id #(.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL),.XSLOT(XSLOT),.OPEN_IL(OPEN_IL)) feed(
+ ot_hbm_svc_sm_feed_programmed_rel_id #(.LBANKS(LBANKS),.PAW(PAW),.PREL(PREL),.XSLOT(XSLOT),.OPEN_IL(OPEN_IL),.ATT_MARK(ATT_MARK)) feed(
   .id_stack(id_stack),.id_sm(id_sm),
   .stream_clk(stream_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),
   .stream_bank_clk(stream_bank_clk),.hbm_fifo_clk(hbm_fifo_clk),.hbm_pc_clk(hbm_pc_clk),

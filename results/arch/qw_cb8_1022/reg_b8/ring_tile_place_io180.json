@@ -1,0 +1,357 @@
+{
+ "status": "OPTIMAL",
+ "reach_um": 405.0,
+ "io_reach_um": 180.0,
+ "move_um": 432.0,
+ "tile_um": [
+  108.0,
+  43.2
+ ],
+ "lattice_um": 43.2,
+ "mode": "r0+free stations",
+ "hop_constraints": 348,
+ "free_stations": 91,
+ "scope": "ring tiles (r0: own output register) + free stn514/516 on 43.2; all hard hops, writer anchors -> tile in face, tile out face -> reader anchors, soft ring->ring edges <= reach; 21.6 hard/ring-hard, 10.8 ring-ring, 4.32 sites",
+ "wall_time_s": 281.680543145,
+ "objective_um": 13080.96,
+ "reach_excess_um": {},
+ "tiles": {
+  "u_fab.u_land_dn0_rly5": {
+   "at": [
+    43.2,
+    2505.6
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_dn0_xcst1": {
+   "at": [
+    43.2,
+    1166.4
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_dn0_xcst3": {
+   "at": [
+    43.2,
+    4060.8
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_dn1_rly5": {
+   "at": [
+    2246.4,
+    2505.6
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_dn1_xcst1": {
+   "at": [
+    2160.0,
+    1123.2
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_dn1_xcst3": {
+   "at": [
+    2203.2,
+    4104.0
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_ft_1": {
+   "at": [
+    1036.8,
+    4795.2
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_ft_12": {
+   "at": [
+    1123.2,
+    1339.2
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_ft_4": {
+   "at": [
+    1080.0,
+    3628.8
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_ft_8": {
+   "at": [
+    734.4,
+    2289.6
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_leg_1_0b_y": {
+   "at": [
+    1036.8,
+    864.0
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_leg_1_1b_0": {
+   "at": [
+    1123.2,
+    1944.0
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_leg_1_2b_0": {
+   "at": [
+    1209.6,
+    3974.4
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_leg_1_3b_0": {
+   "at": [
+    1080.0,
+    4968.0
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_leg_2_0a_1": {
+   "at": [
+    1080.0,
+    1123.2
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_leg_2_0a_y": {
+   "at": [
+    1296.0,
+    1555.2
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_leg_2_0b_y": {
+   "at": [
+    1166.4,
+    1728.0
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_leg_2_1a_1": {
+   "at": [
+    1080.0,
+    4060.8
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_leg_2_1a_y": {
+   "at": [
+    1123.2,
+    4622.4
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_leg_2_1b_y": {
+   "at": [
+    1123.2,
+    4708.8
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_leg_3_0a_11": {
+   "at": [
+    1036.8,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_leg_3_0b_10": {
+   "at": [
+    1036.8,
+    950.4
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_leg_3_0b_2": {
+   "at": [
+    1036.8,
+    4190.4
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_leg_3_0b_6": {
+   "at": [
+    993.6,
+    2289.6
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_pad_1_0a_0": {
+   "at": [
+    1036.8,
+    432.0
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_pad_1_1a_0": {
+   "at": [
+    1036.8,
+    1684.8
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_pad_1_2a_0": {
+   "at": [
+    1123.2,
+    3499.2
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_pad_1_3a_0": {
+   "at": [
+    1036.8,
+    4881.6
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_pad_3_0a_0": {
+   "at": [
+    1036.8,
+    345.6
+   ],
+   "orient": "MX"
+  },
+  "u_fab.u_land_pad_3_0a_1": {
+   "at": [
+    1036.8,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_pad_3_0a_2": {
+   "at": [
+    1166.4,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_pad_3_0a_3": {
+   "at": [
+    1166.4,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  "u_fab.u_land_rs_0": {
+   "at": [
+    1296.0,
+    604.8
+   ],
+   "orient": "MX"
+  }
+ },
+ "stations_moved": {
+  "u_fab.u_dn0_rly0": [
+   86.4,
+   604.8
+  ],
+  "u_fab.u_dn0_rly1": [
+   43.2,
+   993.6
+  ],
+  "u_fab.u_dn0_rly6": [
+   86.4,
+   3585.6
+  ],
+  "u_fab.u_dn1_rly1": [
+   2289.6,
+   1123.2
+  ],
+  "u_fab.u_dn1_rly4": [
+   2073.6,
+   2332.8
+  ],
+  "u_fab.u_dn1_rly7": [
+   2289.6,
+   4017.6
+  ],
+  "u_fab.u_ft_0": [
+   1080.0,
+   5140.8
+  ],
+  "u_fab.u_ft_15": [
+   1296.0,
+   86.4
+  ],
+  "u_fab.u_leg_1_0a_0": [
+   1080.0,
+   691.2
+  ],
+  "u_fab.u_leg_1_2b_0": [
+   1123.2,
+   3931.2
+  ],
+  "u_fab.u_leg_2_0a_1": [
+   1036.8,
+   1252.8
+  ],
+  "u_fab.u_leg_2_0a_3": [
+   1209.6,
+   1598.4
+  ],
+  "u_fab.u_leg_2_1a_0": [
+   1080.0,
+   3715.2
+  ],
+  "u_fab.u_leg_3_0a_0": [
+   1296.0,
+   1987.2
+  ],
+  "u_fab.u_leg_3_0a_1": [
+   1468.8,
+   2160.0
+  ],
+  "u_fab.u_leg_3_0a_11": [
+   1080.0,
+   777.6
+  ],
+  "u_fab.u_leg_3_0a_15": [
+   1339.2,
+   950.4
+  ],
+  "u_fab.u_leg_3_0a_2": [
+   1425.6,
+   2246.4
+  ],
+  "u_fab.u_leg_3_0a_8": [
+   1252.8,
+   1296.0
+  ],
+  "u_fab.u_leg_3_0b_6": [
+   1036.8,
+   1944.0
+  ],
+  "u_fab.u_leg_3_0b_7": [
+   1123.2,
+   1598.4
+  ],
+  "u_fab.u_leg_3_0b_8": [
+   1166.4,
+   1252.8
+  ],
+  "u_fab.u_leg_3_0b_9": [
+   1036.8,
+   1036.8
+  ],
+  "u_fab.u_rs_0": [
+   1166.4,
+   648.0
+  ],
+  "u_fab.u_rs_1": [
+   1252.8,
+   388.8
+  ],
+  "u_fab.u_rs_2": [
+   1166.4,
+   86.4
+  ]
+ }
+}

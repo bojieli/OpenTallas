@@ -1,0 +1,8 @@
+MISMATCH answer edge=22 ref=1/133f1320130a1306/0 dut=1/113f1120110a1106/1
+MISMATCH answer edge=30 ref=1/133400001307132f/0 dut=1/113400001107112f/1
+MISMATCH answer edge=38 ref=1/b5a70000964d133d/0 dut=1/112000001104113d/1
+MISMATCH answer edge=46 ref=1/1233e6e1121e1201/1 dut=1/103310052c102f25/1
+FAIL errors=485 edges=4028 answers=996
+[8062000] %Fatal: tb_qfd_xs_leaf_fo32.sv:64: Assertion failed in tb_qfd_xs_leaf_fo32: FAIL fo32 leaf
+%Error: rtl/qwen_sys/dvm_20261014/tb_qfd_xs_leaf_fo32.sv:64: Verilog $stop
+Aborting...

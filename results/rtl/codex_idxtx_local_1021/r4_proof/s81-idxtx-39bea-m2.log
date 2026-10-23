@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r4-39bea/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r4-39bea/src
+ot-run: ot-epyc9       admits   509 GB (avail 440, growth 84, headroom 0, waiters 0/0 GB) load 56/128 running 25 disk 2152 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r4-39bea/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r4-39bea/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r4-39bea/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-idxtx-r4-39bea/src
+ot-run: -> ot-epyc9
+ot-heavy: request 64G is charged 32G (class 'run_idx_tree.sh' measured peak 20.9G, n=26+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3615256-1792626701 after 1 s

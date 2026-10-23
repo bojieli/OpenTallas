@@ -88,6 +88,7 @@ module qfd_sys_face #(
     parameter [20*36-1:0] START_ADJ = '0,
     parameter ROM_VIAMAP = "",
     parameter ROM_INSTANCE = "sys_face_cfg",
+    parameter integer ROPE = 0,                // tagged eight-word RoPE row follows the embedding
     parameter integer MU_HEAD = 0              // 1: filler head contexts (tt_native_pos[17:16] != 0) not checked here
 ) (
     input  wire          ck,
@@ -498,7 +499,8 @@ module qfd_sys_face #(
     wire        r_hdr  = rx_payload[511:48] == 464'd0 && rx_payload[31:16] == 16'd0 && r_word == 6'd0;
     // the D2D end presents the compiled kind of the RX slot with the record; port 2 carries only EMB rows and the
     // compute die's own STATUS is TX-only, so the header is told apart from code words by the compiled E slot
-    wire        is_hdr = ev_embw && ea[6];
+    wire        is_hdr = ev_embw && ea[6] && (!ROPE || ea[5:0] == 0);
+    wire        is_rope = ROPE && rx_payload[512];
     always @(posedge ck or negedge rst_emb) begin
         if (!rst_emb) begin
             emb_word_v <= 1'b0; emb_word_scale <= 1'b0; emb_word_index <= 6'd0; emb_word_token <= 18'd0; emb_word_epoch <= 16'd0;
@@ -507,14 +509,17 @@ module qfd_sys_face #(
             emb_word_v <= emb_rx_v;
             if (emb_rx_v !== emb_rx_slot) emb_fault <= 1'b1;
             if (emb_rx_v) begin
-                if (rx_payload[523:512] != 12'd0) emb_fault <= 1'b1;
+                if (rx_payload[523:513] != 11'd0 || (!ROPE && rx_payload[512])) emb_fault <= 1'b1;
                 if (is_hdr) begin
+                    if (is_rope) emb_fault <= 1'b1;
                     if (!r_hdr) emb_fault <= 1'b1;
                     row_v <= 1'b1; row_tok <= r_tok; row_ep <= rx_payload[47:32];
                     emb_word_scale <= 1'b1; emb_word_index <= 6'd0; emb_word_token <= r_tok; emb_word_epoch <= rx_payload[47:32];
                 end else begin
                     if (!row_v || r_tok != row_tok) emb_fault <= 1'b1;
-                    emb_word_scale <= 1'b0; emb_word_index <= (MUT == 2) ? r_word + 6'd1 : r_word;
+                    if (is_rope && r_word >= 8) emb_fault <= 1'b1;
+                    emb_word_scale <= is_rope;
+                    emb_word_index <= is_rope ? r_word + 6'd1 : ((MUT == 2) ? r_word + 6'd1 : r_word);
                     emb_word_token <= r_tok; emb_word_epoch <= row_ep;
                 end
             end

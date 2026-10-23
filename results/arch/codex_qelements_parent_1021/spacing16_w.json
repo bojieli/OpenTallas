@@ -1,0 +1,19 @@
+{
+  "previous_source": "e1db7e217",
+  "failure": "actual btab/station channel10.8um below20um",
+  "change": [
+    {
+      "inst": "u_btab*u_bt",
+      "old_at": [
+        345.6,
+        518.4
+      ],
+      "new_at": [
+        345.6,
+        561.6
+      ]
+    }
+  ],
+  "source_normalization": "e550c8301",
+  "scope": "geometry replacement only; CLOSED view/source unchanged; measured geometry required"
+}

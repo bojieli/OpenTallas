@@ -1,0 +1,5 @@
+FEED_MIN_PASS warm_edges=85510 old_matvec_without_packet_fault=1 corrected_attention_fault=0 packet_mutant_fault=1 first_old=84952
+- tb.sv:18: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 855ns; walltime 0.063 s; speed 13.532 us/s
+- Verilator: cpu 0.063 s on 1 threads; allocated 7 MB

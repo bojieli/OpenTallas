@@ -88,7 +88,7 @@ die case waited ~90 min on the epyc8 DIE CAP):
   memory headroom ((admits - request) / RAM) by the job's GB per thread -- memory-heavy few-thread builds/GRT/STA go to
   idle RAM even on a CPU-busy host, CPU-heavy jobs to idle cores.  Nothing is held.
   DISK ADMISSION replaces the die count cap: a die job needs --disk (default DIE_DISK_GB 60) free scratch under --dir after
-  DIE_DISK_GB per die job already running there (hosts with < 2 TB free); HOST_MAX_DIE is empty.  When every host with
+  each active die scope's declared --disk (legacy unknown: 60 GB; hosts with < 2 TB free); HOST_MAX_DIE is empty.  When every host with
   --dir lacks the scratch, the die job SPILLS (die lanes up to OT_RUN_SPILL_MAX_DIE_GB 400; tile lanes 40).
   INCREMENTAL SPILL: only directories/files the spill host lacks or holds older travel (manifests of both sides).
   Host side (ot-heavy-reconcile v10): growth charged capped at GROWTH_CAP_FRAC (0.10) x RAM.
@@ -130,7 +130,7 @@ HOST_MAX_DIE = {}   # v10 FLEET-PLACE 2026-10-19: the die COUNT cap is gone (ot-
 # ~90 min); replaced by DISK admission (drop_low_disk).  Kept (empty) so v9 clients that re-read it drop their caps.
 DIE_DISK_GB = int(os.environ.get("OT_RUN_DIE_DISK_GB", "60"))   # estimated scratch of one die chain (measured 10-19:
 # die case dirs 0.7 GB at start, die chains 16-40 GB per lane); the default --disk of a die job
-DISK_RESERVE_BELOW_GB = 2000     # hosts with less free scratch than this also reserve DIE_DISK_GB per running die job
+DISK_RESERVE_BELOW_GB = 2000     # below this, also reserve declared scratch for active die scopes
 
 
 def probe(host, d, spill_ok=False):
@@ -258,21 +258,126 @@ def die_running(host):
     return n + daemon_die_jobs(host)
 
 
+# One record per active scope or unstarted launcher, never a second charge for its
+# closure-daemon state. Legacy scopes can carry an owner-verified disk.UNIT file
+# containing their declared lifetime scratch GB; unknown declarations retain 60 GB.
+DIE_DISK_UNITS_SH = r"""# Snapshot launchers first: if one admits during the probe, its PID-derived
+# scope below represents it; an exec transition cannot disappear between lists.
+waiters=$(pgrep -f '^(/(usr/)?bin/)?bash /usr/local/bin/ot-heavy ')
+units=$(systemctl --user list-units --type=scope --state=active --no-legend --plain 'oth-*') || exit 1
+for u in $(printf '%s\n' "$units" | awk '{print $1}'); do
+    cg=$(systemctl --user show -p ControlGroup --value "$u") || exit 1
+    prio=; disk=; dirs=
+    for p in $(head -3 "/sys/fs/cgroup$cg/cgroup.procs" 2>/dev/null); do
+        v=$(readlink "/proc/$p/cwd" 2>/dev/null)
+        [ -z "$v" ] || dirs="$dirs
+DIEDIR $u $v"
+        e=$(tr '\0' '\n' <"/proc/$p/environ" 2>/dev/null)
+        printf '%s\n' "$e" | grep -qx OT_HEAVY_PRIO=die && prio=die
+        v=$(printf '%s\n' "$e" | sed -n 's/^OT_HEAVY_DISK_GB=//p' | head -1)
+        case "$v" in ''|*[!0-9]*) ;; *) disk=$v;; esac
+    done
+    [ "$prio" = die ] || continue
+    if [ -z "$disk" ]; then
+        v=$(cat "/var/tmp/ot-heavy/disk.${u%.scope}" 2>/dev/null)
+        case "$v" in ''|*[!0-9]*) ;; *) disk=$v;; esac
+    fi
+    echo "DIEDISK $u ${disk:-unknown}"
+    printf '%s\n' "$dirs"
+done
+for p in $waiters; do
+    represented=
+    for u in $(printf '%s\n' "$units" | awk '{print $1}'); do
+        # ot-heavy sets UNIT=oth-$(id -un)-$$-$(date +%s). An unstarted
+        # nested waiter may share its PARENT scope; cgroup membership alone
+        # must never erase that waiter's independent scratch commitment.
+        case "$u" in oth-*-$p-*.scope) represented=1; break;; esac
+    done
+    [ -z "$represented" ] || continue
+    e=$(tr '\0' '\n' <"/proc/$p/environ" 2>/dev/null)
+    printf '%s\n' "$e" | grep -qx OT_HEAVY_PRIO=die || continue
+    disk=$(printf '%s\n' "$e" | sed -n 's/^OT_HEAVY_DISK_GB=//p' | head -1)
+    case "$disk" in ''|*[!0-9]*) disk=unknown;; esac
+    echo "DIEDISK waiter-$p $disk"
+    v=$(readlink "/proc/$p/cwd" 2>/dev/null)
+    [ -z "$v" ] || echo "DIEDIR waiter-$p $v"
+done
+echo DIEDISK_DONE
+"""
+
+
+def die_disk_reserved(host):
+    """Declared GB budgeted to active die scopes and queued launchers; None if the probe failed.
+
+    Existing output already reduces df free space. Retain the full declaration as
+    a conservative future-write budget; this does not infer remaining use from du.
+    """
+    try:
+        r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", host, DIE_DISK_UNITS_SH],
+                           capture_output=True, text=True, timeout=40)
+        if r.returncode or "DIEDISK_DONE" not in r.stdout.splitlines():
+            return None
+        units, dirs = {}, {}
+        for line in r.stdout.splitlines():
+            fields = line.split()
+            if fields and fields[0] == "DIEDISK":
+                if len(fields) != 3:
+                    return None
+                unit, value = fields[1:]
+                gb = int(value) if value.isascii() and value.isdigit() else DIE_DISK_GB
+                units[unit] = max(units.get(unit, 0), gb)
+            elif fields and fields[0] == "DIEDIR":
+                parts = line.split(maxsplit=2)
+                if len(parts) == 3:
+                    dirs.setdefault(parts[1], []).append(parts[2])
+        # Daemon jobs can use a standalone docker path outside an ot-heavy scope.
+        # Keep their conservative budget unless a charged scope or queued launcher actually
+        # has a process under that exact job run directory.
+        extra = 0
+        try:
+            names = [f for f in os.listdir(DAEMON_JOBS) if f.endswith(".json") and DIE_RE.search(f[:-5])]
+        except OSError:
+            names = []
+        for name in names:
+            try:
+                with open(os.path.join(DAEMON_JOBS, name)) as state_file:
+                    j = json.load(state_file)
+            except (OSError, ValueError):
+                continue
+            if j.get("host") != host or j.get("status") not in DAEMON_PLACED:
+                continue
+            root = j.get("run")
+            represented = isinstance(root, str) and bool(root) and any(
+                d == root or d.startswith(root.rstrip("/") + "/")
+                for u in units for d in dirs.get(u, []))
+            if not represented:
+                extra += DIE_DISK_GB
+        return sum(units.values()) + extra
+    except (subprocess.SubprocessError, OSError, ValueError):
+        return None
+
+
 def drop_low_disk(ok, die, need, say=None):
-    """v10 DISK ADMISSION (FLEET-PLACE 2026-10-19, replaces the v9 DIE CAP count): a die job goes to (or queues on) a host
-    only when its free scratch under --dir, minus DIE_DISK_GB still owed to every die job already running there (counted
-    only on hosts with < DISK_RESERVE_BELOW_GB free), covers its own need (--disk, default DIE_DISK_GB for die jobs).
-    Other jobs: place() already checks --disk."""
+    """Reserve active die scopes and queued launchers once; unknowns use 60 GB.
+
+    Hosts below DISK_RESERVE_BELOW_GB retain this future-write budget in addition
+    to the new request. If the declaration probe fails, retain the legacy count
+    budget. Other jobs: place() already checks --disk.
+    """
     if not die:
         return ok
     out = dict(ok)
     for h, r in ok.items():
         free = r.get("disk_gb", 0)
-        n = (die_running(h) or 0) if free < DISK_RESERVE_BELOW_GB else 0
-        if free - n * DIE_DISK_GB < need:
+        reserve = 0
+        if free < DISK_RESERVE_BELOW_GB:
+            reserve = die_disk_reserved(h)
+            if reserve is None:
+                reserve = (die_running(h) or 0) * DIE_DISK_GB
+        if free - reserve < need:
             out.pop(h)
             if say:
-                say(f"ot-run: {h} skipped for this die job: DISK {free} GB free - {n} running die job(s) x {DIE_DISK_GB} GB < {need} GB")
+                say(f"ot-run: {h} skipped for this die job: DISK {free} GB free - {reserve} GB running/queued die reservations < {need} GB")
     return out
 
 
@@ -328,6 +433,9 @@ def choose(res, mem, threads=THREADS, die=False):
     ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem)}
     if not ok:
         return None, False
+    if die:     # v16 MEASURED RESERVE (coordinator 10-22): a die job is admitted on MemAvailable - 64 GB (die_admit_gb)
+        ok = {h: (dict(r, admit_gb=max(r.get("admit_gb", r["free_gb"]), r["die_admit_gb"])) if "die_admit_gb" in r else r)
+              for h, r in ok.items()}
     tput = lambda h: HOST_ROLE.get(h) == "throughput"
     nodie = lambda h: HOST_ROLE.get(h) in ("throughput", "smalldisk")
     fits = [h for h in ok if ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem]
@@ -398,8 +506,10 @@ def choose_selftest():
         bad.append("reload")
     # v10 DISK ADMISSION (replaces the die count cap): free scratch - DIE_DISK_GB x running die jobs >= need
     keep_dr = globals()["die_running"]
+    keep_dd = globals()["die_disk_reserved"]
     disk = lambda free, load=0: dict(row(900, load), disk_gb=free)
     try:
+        globals()["die_disk_reserved"] = lambda h: None
         globals()["die_running"] = lambda h: 3
         two = {"ot-epyc5": disk(4000), "ot-epyc8": disk(523)}
         okc = sorted(drop_low_disk(two, True, 60)) == ["ot-epyc5", "ot-epyc8"]          # 523 - 3 x 60 = 343 >= 60
@@ -411,6 +521,7 @@ def choose_selftest():
         okc = okc and sorted(drop_low_disk({"ot-epyc8": disk(50)}, True, 60)) == []
     finally:
         globals()["die_running"] = keep_dr
+        globals()["die_disk_reserved"] = keep_dd
     if not okc:
         print("FAIL disk admission: a die job is placed on a host without scratch (or refused one that has it)")
         bad.append("disk")
@@ -423,6 +534,14 @@ def choose_selftest():
     print(f"ot-run choose selftest: {'FAIL' if bad else 'PASS'} ({len(cases) + 3} cases)")
     sys.stdout.flush()
     return 1 if bad else 0
+
+
+def memory_charge_note(row):
+    """Separate the owner's growth reserve from fresh-start and observed-peak gaps."""
+    terms = row.get("inv_terms")
+    if isinstance(terms, dict) and all(k in terms for k in ("reserve", "fresh", "peak_gap")):
+        return f"reserve {terms['reserve']:g}, fresh {terms['fresh']:g}, peak {terms['peak_gap']:g}"
+    return f"growth {row['growth_gb']}"
 
 
 def status(hosts):
@@ -439,7 +558,7 @@ def status(hosts):
         if not r or r.get("error"):
             out.append(f"{h} unreachable")
             continue
-        out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, growth {r['growth_gb']}) load "
+        out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, {memory_charge_note(r)}) load "
                    f"{load1(r):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
                    + f" run {r['running']}")
     live = {h: r for h, r in res.items() if h not in held and r and not r.get("error") and r.get("ncpu")
@@ -624,11 +743,14 @@ def scratch_place_sh(d, cmd, dry=False):
             + (" dry" if dry else "") + "; } 2>&1 >/dev/null | head -20 >&2; ")
 
 
-def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None):
+def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
     env = os.environ.get("OT_RUN_PRIO_ENV", "") + env
+    if disk is None:
+        disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
+    env += f"OT_HEAVY_DISK_GB={int(disk)} "
     inner = f"{env}/usr/local/bin/ot-heavy --mem {mem} --tag {tag}" + (f" --max-wait {int(max_wait)}" if max_wait else "") \
         + " -- " + " ".join(shlex.quote(x) for x in cmd)
     # Recheck before output placement: never recreate an input directory that
@@ -801,7 +923,7 @@ def main():
                 plan, why, permanent = spill_plan(best, d, cmd, mem, threads, die, disk, held, say)
                 if plan:
                     left = None if max_wait is None else max(1, int(max_wait - (time.time() - t0)))
-                    rc = spill_run(best, *plan, mem, cmd, d, left, say)
+                    rc = spill_run(best, *plan, mem, cmd, d, left, say, disk=disk)
                     if rc is not None:
                         sys.exit(rc)
                 elif first or permanent:
@@ -824,7 +946,7 @@ def main():
                 if plan:
                     say(f"ot-run: LOAD SPILL: {best} would run at {src_r:.2f} x cores; moving to {plan[0]}")
                     left = None if max_wait is None else max(1, int(max_wait - (time.time() - t0)))
-                    rc = spill_run(best, *plan, mem, cmd, d, left, say)
+                    rc = spill_run(best, *plan, mem, cmd, d, left, say, disk=disk)
                     if rc is not None:
                         sys.exit(rc)
                 else:
@@ -836,7 +958,7 @@ def main():
             plan, why, permanent = spill_plan(best, d, cmd, mem, threads, die, disk, held, say)
             if plan:
                 left = None if max_wait is None else max(1, int(max_wait - (time.time() - t0)))
-                rc = spill_run(best, *plan, mem, cmd, d, left, say)
+                rc = spill_run(best, *plan, mem, cmd, d, left, say, disk=disk)
                 if rc is not None:
                     sys.exit(rc)
                 spill = False
@@ -860,7 +982,7 @@ def main():
         # are not pinned, since the host table is re-read and memory may free up on a host that did not qualify before)
         if len(ok) > 1 or (spill and d) or not pinned:
             wait = REQUEUE_S if left is None else min(REQUEUE_S, left)
-        rc, ran = run(best, mem, cmd, d, wait, quiet_notrun=(wait != left))
+        rc, ran = run(best, mem, cmd, d, wait, quiet_notrun=(wait != left), disk=disk)
         if ran or rc != 75 or wait == left:
             sys.exit(rc if ran else (rc or 255))
         print(f"ot-run: REBALANCE: not admitted on {best} within {wait} s; placing again", file=sys.stderr)
@@ -1180,7 +1302,7 @@ def spill_copy_back(src, dst, roots, stamp, say=lambda m: None):
     return False, err
 
 
-def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say):
+def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     """copy the roots src->dst, run there, copy the files the run wrote back to src.  Returns the exit status, or None
     when the copy failed (nothing ran).  v10: the forward copy is marked first, serialised per lane and retried; a
     pending record (~/.local/state/ot-run/spill_pending) survives a killed client, and `ot-run --spill-sweep` copies the
@@ -1210,7 +1332,7 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say):
     def on_start(unit):
         rec["unit"] = unit
         pending_write(rec)
-    rc, ran = run(dst, mem, cmd, d, max_wait, on_start=on_start)
+    rc, ran = run(dst, mem, cmd, d, max_wait, on_start=on_start, disk=disk)
     if not ran and rec["unit"] is None:          # never started: nothing to copy back
         ssh_sh(dst, f"rm -f {stamp}", timeout=60)
         try:
@@ -1314,7 +1436,7 @@ def place(hosts, d, disk, mem, quiet=False):
             note += " (ot-reaper started for this host)"
         if r and not r.get("error"):
             if not quiet:
-                print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, growth {r['growth_gb']}, headroom "
+                print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, {memory_charge_note(r)}, headroom "
                       f"{r['headroom_gb']}, waiters {r['waiting']}/{r['waiting_gb']} GB) load {load1(r):.0f}/{r.get('ncpu', 0)} "
                       f"running {r['running']} disk {r['disk_gb']} GB {note}", file=sys.stderr)
             if not note:

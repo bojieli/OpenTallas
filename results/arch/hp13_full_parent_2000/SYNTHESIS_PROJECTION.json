@@ -1,0 +1,64 @@
+[
+  {
+    "original": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv",
+    "original_sha256": "5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04",
+    "projection": "rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_physical.sv",
+    "projection_sha256": "d2bdb908b7e9874acbabc6b894cf361c80e7b6ea4492594840edd155d68d57a0",
+    "only_removed": [
+      "#(.INSTANCE(\"calendar_m0\")) ",
+      "#(.INSTANCE(\"calendar_m1\")) "
+    ],
+    "remaining_bytes_equal": true,
+    "scope": "Synthesis projection only; fixed Liberty macro has no image metadata parameters. Exact functional source and image annotations remain preserved. All memory instance names, ports, nets and physical assets unchanged.",
+    "actual_liberty_blackbox": {
+      "origin": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+      "sha256": "6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021",
+      "cell": "ot_rom_4096x266_m8",
+      "metadata_tokens_absent": [
+        "INSTANCE",
+        "VIAMAP"
+      ],
+      "pins": [
+        "clk",
+        "ce_in",
+        "addr_in",
+        "rd_out"
+      ],
+      "synthesis_bb": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+      "synthesis_bb_sha256": "c23844e60690a83f36e7fb4fc508e91cb4f3354352299a0b13f7eb90e1b41788",
+      "observed_frontend": "Pinned ORFS image read_liberty before source frontend; gate4 actual canonicalization rejects INSTANCE because this fixed timing/pin blackbox has no such parameter."
+    },
+    "no_hardware_metadata_consumer": "The actual Liberty and synthesis BB contain no INSTANCE/VIAMAP token; pins/timing/shape are fixed in the authentic physical assets. Functional ROM image association is retained in the original source, never used to claim image equivalence."
+  },
+  {
+    "original": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2.sv",
+    "original_sha256": "fc00de4fcc3ddf6c31e1fc8ddcfd9231958812b433b9a46d6af8d43562eef8f0",
+    "projection": "rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2_physical.sv",
+    "projection_sha256": "db0c6665daca13a56a8048483b2ec8c632ba1778f7c7e02593f432451f79c236",
+    "only_removed": [
+      "#(.INSTANCE(\"calendar_m0\")) ",
+      "#(.INSTANCE(\"calendar_m1\")) "
+    ],
+    "remaining_bytes_equal": true,
+    "scope": "Synthesis projection only; fixed Liberty macro has no image metadata parameters. Exact functional source and image annotations remain preserved. All memory instance names, ports, nets and physical assets unchanged.",
+    "actual_liberty_blackbox": {
+      "origin": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+      "sha256": "6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021",
+      "cell": "ot_rom_4096x266_m8",
+      "metadata_tokens_absent": [
+        "INSTANCE",
+        "VIAMAP"
+      ],
+      "pins": [
+        "clk",
+        "ce_in",
+        "addr_in",
+        "rd_out"
+      ],
+      "synthesis_bb": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+      "synthesis_bb_sha256": "c23844e60690a83f36e7fb4fc508e91cb4f3354352299a0b13f7eb90e1b41788",
+      "observed_frontend": "Pinned ORFS image read_liberty before source frontend; gate4 actual canonicalization rejects INSTANCE because this fixed timing/pin blackbox has no such parameter."
+    },
+    "no_hardware_metadata_consumer": "The actual Liberty and synthesis BB contain no INSTANCE/VIAMAP token; pins/timing/shape are fixed in the authentic physical assets. Functional ROM image association is retained in the original source, never used to claim image equivalence."
+  }
+]
