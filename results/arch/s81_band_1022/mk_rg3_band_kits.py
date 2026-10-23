@@ -82,6 +82,10 @@ rb["pin_ranges"] = {"rqo": [237.6, 324.0], "qi": [21.6, 237.6], "si": [21.6, 237
                     "ck": [10.8, 17.28], "sc_i": [21.6, 43.2], "qoi_o": [43.2, 345.6], "soi_o": [43.2, 345.6], "st_o": [43.2, 345.6],
                     "ql_o": [43.2, 345.6], "sx_o": [367.2, 453.6], "xr_i": [367.2, 453.6]}
 specs[rb["name"]] = rb
+# gate 4: io_flop_at_pins off 89 / 84 ps -> rc = both (two pin faces + pin flops with their logic)
+rc = copy.deepcopy(rb); rc["name"] = "s81dv_rg3b_rc"; rc["io_flop_at_pins"] = False
+rc["job"] = job("s81dv_rg3b_rc", r["job"]["purpose"] + " (FB2: W+S pins, SW clock, pin flops with logic)")
+specs[rc["name"]] = rc
 x = common("s81dv_rg3b_x", "dsdv_idx_rg3_bx", "banded idx rg3 MAIN: X band (response lanes, landing SRAMs, key mux)")
 x.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1, "RH": 1},
          outline={"w": 475.2, "h": 432.0, "exact": True},
