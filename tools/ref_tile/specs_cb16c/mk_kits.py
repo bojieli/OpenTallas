@@ -36,7 +36,7 @@ def lint(top, srcs, defs=''):
 
 WIT = 'results/rtl/cb16c_coll_1022'
 # measured per-band source-owned sequential counts of each body netlist (None = the S0 face's counts, first gate reports)
-COUNTS = {}
+COUNTS = {'p': {'codec': 3920, 'phy': 1426, 'cal': 166, 'lcal': 167, 'tx': 1565, 'rx': 1018}}
 
 
 def slice_spec(w):
