@@ -43,7 +43,27 @@ not modified.
 | qkd_astk_er_owner_st_head | qkd_astk_er_owner_st (split_20261014/), owner_0 | prev_v, prev_addr, prev_data, prev_fault | (N=4) | 1 | 1/1 | random prev_* caught |
 | qkd_host_pc_slice_die_head | qkd_host_pc_slice_die (= die masters qkd_hslice and qkd_hslice_dn, same RTL), hsl_*S_31 / hsl_*N_0 | ci, ai, fault_i, ski, sdi, soi, sfi | - | 1 | 1/1 | random chain inputs caught |
 | qkd_static_kv_landing_seg_p | qkd_static_kv_landing_seg (static_kv_20261014/); die master qkd_kvs_grp_h_r2c = mapped copy of qkd_kvs_grp_h_r2 -> qkd_kvs_grp_h.u_slg | cfg_group[2:0] | CFG_GROUP | 4 (die), 0 | 2/2 | 4 vs 5 caught (internal probe group_q*) |
-| qkd_static_kv_pc_path_fan_nc_b_head_p | qkd_static_kv_pc_path_fan_nc_b (static_embedding_20261014/); die master qkd_kvs_pc_h = tile ..._n32_pj[_nc32].sv u_pc | pc[4:0], fi | PC | 0 (die), 17 (MU=1) | 2/2 | 0 vs 1 caught |
+| qkd_static_kv_pc_path_fan_nc_b_head_p | qkd_static_kv_pc_path_fan_nc_b (static_embedding_20261014/); die master qkd_kvs_pc_h = tile ..._n32_pj[_nc32].sv u_pc; u_chain -> qkd_kv_pc_chain_station_b_p #(.PC(PC)) | pc[4:0], fi | PC | 0 (die), 17 (MU=1) | 2/2 | 0 vs 1 caught |
+| qkd_kv_pc_chain_station_b_p | qkd_kv_pc_chain_station_b (static_embedding_20261014/), u_chain of the pc_path; kept pin register spc folds (keep dropped) | pc[4:0] | PC | 0, 5, 17 | 3/3 | 0 vs 1 caught (probe spc) |
+| **qkd_kvs_pc_h_head_p** (tile) | qkd_kvs_pc_h (static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv); u_pc -> qkd_static_kv_pc_path_fan_nc_b_head_p #(.MU(1), .PC(PC)) | pc__pc[4:0], pc__fi | PC | 0 (die), 17 | 2/2 | 0 vs 1 caught (probe u_pc.u_chain.spc) |
+| **qkd_kvs_grp_h_p** (tile) | qkd_kvs_grp_h (same tile file); u_slg -> qkd_static_kv_landing_seg_p #(.CFG_GROUP(CFG_GROUP)) | slg__cfg_group[2:0] | CFG_GROUP | 4 (die), 0 | 2/2 | 4 vs 5 caught (probe u_slg group_q*) |
+| **qkd_kvs_grp_h_r2_p** (tile) | qkd_kvs_grp_h_r2 (static_kv_die_20261017/qkd_kvs_grp_r2.sv, blob of e33504a6f); u_core -> qkd_kvs_grp_h_p #(.CFG_GROUP(CFG_GROUP)) | slg__cfg_group[2:0] | CFG_GROUP | 4 (die), 0 | 2/2 | 4 vs 5 caught (probe u_core.u_slg group_q*) |
+
+Tile variants (KV-P3b-TILE 10-23). As-built sources, from case_kv/gen_source_ports.json @ e33504a6f:
+- **qkd_kvs_pc_h** comes from `qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv`. That file is not on this branch. Its
+  qkd_kvs_pc_h and qkd_kvs_grp_h module texts are byte-identical to the ones in `..._n32_pj.sv`, which is on this branch
+  (same blob as e33504a6f). The generator reads `..._n32_pj.sv`.
+- **qkd_kvs_grp_h_r2c** is the mapped structural copy (kv_grp_safe5.py, 104,854 lines of ASAP7 cells) of
+  qkd_kvs_grp_h_r2 in `qkd_kvs_grp_r2.sv`. That file is taken unchanged from e33504a6f (sha256 28ea75ab...). Its
+  u_core is qkd_kvs_grp_h of `..._n32_pj.sv`.
+- A mapped netlist cannot take a parameter, so the plan form of the die master is the RTL variant qkd_kvs_grp_h_r2_p. A
+  die that adopts it must re-synthesise the group (and redo the r2c bounded-driver copy, if that copy is kept).
+- Transform: the class A and C rules apply at tile ports. In addition, each `children` entry rebinds one instance to
+  its plan variant. The generator adds `#(.PARAM(expr))`, removes the named connections, and asserts that each removed
+  connection was exactly the replaced expression. A head port that was read only by the rebound child keeps no
+  localparam.
+- Lint: `-Wall` of the variant is compared with the original after child-variant names are renamed back to their
+  originals.
 
 Cells:
 - `rtl/lib/ot_dp_id.sv` holds ot_dp_id_src (y = V), ot_dp_id_add (y = a + K mod 2^W) and ot_dp_id_rot (o = a[W-1:0];
@@ -53,14 +73,29 @@ Cells:
 - Their benches are tb_ot_dp_id and tb_ot_dp_efault. Each PASSes and its mutants are caught (add K 2 / rotate the wrong
   way; non-sticky / AGE+3). `-Wall` lint is clean for (W 24), (W 40, K -3), (N 8), (N 3, AGE 6) and (N 1, AGE 0).
 
-Result (Verilator 5.050, 10-23 08:07 PDT): **SUMMARY pass 43 mutants_caught 16 lint_clean 17 fail 0** (41 variant runs + 2 cell benches PASS; 12 variant + 4 cell mutants caught; 12 variant + 5 cell lints clean); full lines in `bench_summary.txt`.
+Result (Verilator 5.050, 10-23 10:15 PDT, KV-P3b-TILE): **SUMMARY pass 52 mutants_caught 20 lint_clean 21 fail 0**
+- PASS: 50 variant runs and 2 cell benches.
+- Mutants caught: 16 variant and 4 cell.
+- Lints clean: 16 variant and 5 cell.
+
+The full lines are in `bench_summary.txt`. The earlier run (10-23 08:07 PDT, 12 variants) was pass 43 / caught 16 /
+lint_clean 17 / fail 0.
 
 Limits:
-- Only the top of the leaf is converted. Hierarchical leaves still pass the parameter or zero into child ports:
-  - pc_path: `.pc(PC)` goes to u_chain / u_pce, and `.fi(fi = 0)` goes to u_pce.
+- Below the rebound children, hierarchical leaves still pass the parameter or zero into child ports:
+  - pc_path: `.pc(PC)` goes to u_pce, and `.fi(fi = 0)` goes to u_pce. u_chain now takes PC as a parameter.
   - landing_seg: `.cfg_group(CFG_GROUP)` goes to the 4 u_pc.
   - slice: ci / ai / fault_i go to the inner qkd_host_pc_slice.
 - In these leaves the constant is a parameter expression inside the flattened partition, not a partition pin.
-- One child flop stays kept: `qkd_kv_pc_chain_station_b.spc <= pc` carries `(* keep *)`, giving 5 constant kept flops in
-  the pc_h partition unless synthesis drops the keep on constant-D flops. A child variant would be the follow-up if the
-  plan's tie census counts it.
+- The kept constant flop `qkd_kv_pc_chain_station_b.spc <= pc` is **gone in the plan form**. u_chain of
+  pc_path_fan_nc_b_head_p (and so of qkd_kvs_pc_h_head_p) is qkd_kv_pc_chain_station_b_p, where spc is `spc <= PC` with
+  the keep dropped. pc_sr in pc_path is likewise unkept.
+- Deeper kept registers of the constant remain, because their children still take it as a port:
+  - grp_h: qkd_static_kv_landing_pc `(* keep *) group_q <= cfg_group` (PRE_REG 0), 4 x 3 flops under u_slg.
+  - pc_h: the controller chain under u_pce (qkd_static_kv_pc_path_nc -> qkd_ctrl_pc_host_static_nc / qkd_ctrl_pc_nc)
+    holds pc strap registers (`pc_q <= pc`; `(* keep *)` pc_q / pc_core_q in qkd_ctrl_pc_host_static_core). Which of
+    these are in the elaborated pc_h hierarchy has not been censused.
+  - The same `children` rebind would remove them. A synthesis census (constant-D flops of the plan tiles) should list
+    them first.
+- Not done here: the die generator (kv_static_die.py) does not bind the `_p` / `_head_p` masters yet, and the
+  qkd_kvs_grp_h_r2c mapped copy is still built from the strapped qkd_kvs_grp_h_r2.
