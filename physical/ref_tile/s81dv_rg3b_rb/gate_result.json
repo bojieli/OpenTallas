@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81dv_rg3b_rb",
  "verdict": "WARN",
- "generated": "2026-10-22T18:11:38-0700",
- "host": "ot-epyc5",
+ "generated": "2026-10-22T19:34:10-0700",
+ "host": "ot-epyc9",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "ac430201a270cb801e6791af5e9878aa0ffc725f",
+  "start_commit": "ad92722019266c9cdc569f17f12fafa62d5d0558",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -26,8 +26,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "596bab61e8a29071726ca8bc1b73792dcdb29284595284b80822977a438afb3e",
-  "manifest_sha256": "5330a8785cfe4e41f93e8169eed1aae0318ad4f227a53c8516815af73635b8ca",
+  "archive_sha256": "07a7e96c4f8c0d777db44172ca911fc240b5ed3a6bd20298c9ce153b4c240b7c",
+  "manifest_sha256": "e9ab9a6196f0d5e123da33daecb10694bfbbf74f71f25ab2e7fd6d71e4f49d22",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json",
@@ -17256,8 +17256,8 @@
    {
     "path": "physical/ref_tile/s81dv_rg3b_rb/job.json",
     "kind": "file",
-    "sha256": "93ccce75c4a854a71c26212e690a370c07b38d0d41c80ce17f2c2c59089147d5",
-    "git_blob": "b079501bf9aacd8b6e2abe34e93b20b58ae383a1",
+    "sha256": "ae9b8ae187257ec3d6909819c2c6c067d8f5d941a8681c2b05b0b3f204a342b8",
+    "git_blob": "d073152e884c26d7eb058bd2672ce6fe4f4a1702",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17376,8 +17376,8 @@
    {
     "path": "physical/ref_tile/s81dv_rg3b_rb/spec.json",
     "kind": "file",
-    "sha256": "038350e8fca9a86c1fe9d752f64534e02a819781165db5c894f1b9fa4304927a",
-    "git_blob": "81021a6a3fd8e2ad6fce70c43f9a3f91914138ed",
+    "sha256": "0ad5740c80cfa3b4d7a27d14ad0dee8f701f9764da94a0f471e7139806a587dc",
+    "git_blob": "9016bf9a43b2065005c429e932cea629105907a0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17768,8 +17768,8 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_band.sv",
     "kind": "file",
-    "sha256": "55c6d871fb2ba6ffe6b74cc06134aef5fb2009b9409435da81062876f4e91ca6",
-    "git_blob": "85da218f8ca84d22a310e4abd509716b1676926c",
+    "sha256": "ab73be3e9b1fe133362dfa872f749b9f72311608aaa59eac3b414c1959927dd7",
+    "git_blob": "c3e0568eda10c02a689824afec91ac48c7053448",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17862,6 +17862,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "rtl/dsrom_sys/s81_dv/idx/test/dsdv_idx_rg3_bx_ref.sv",
+    "kind": "file",
+    "sha256": "1b87a895ce40df6e1df45ae4739a9eeb9553939005f39d418f2a2c06540eae2c",
+    "git_blob": "0914a3f1149cffc51293fd9783b8436509ed2b88",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "rtl/dsrom_sys/s81_dv/idx/test/dsdv_idx_rg3_lsw.sv",
     "kind": "file",
     "sha256": "28627b93469291aa64cd6845b4f7d4b4421b2209319ddae10dd987d095acbae1",
@@ -17918,6 +17926,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh",
+    "kind": "file",
+    "sha256": "808631357680dbde1709223aa7587cbebdacf7d331293f13e6303b3ea8794a1c",
+    "git_blob": "d671ed731eaee71a63508acdac21a8c12b9695b1",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "rtl/dsrom_sys/s81_dv/idx/test/run_vmux_n32.sh",
     "kind": "file",
     "sha256": "ae7ae10a1157a7a2198ca86382ca8cfa12332d4a4e196a05ee3ae9e64f882990",
@@ -17962,6 +17978,14 @@
     "kind": "file",
     "sha256": "30d48aae13a4e685400c15b2b283e3bd0cadc9ddd78fecaa3e11976815ba5050",
     "git_blob": "d593c26e175c5bc57195ac56a3e2152d63ed3bb3",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3_bx_lsw.sv",
+    "kind": "file",
+    "sha256": "321d631cf98f5b2975ceaaeb90741dc16981b7fcac307ddcab9c4869d4085697",
+    "git_blob": "fc5c1c1301abb1f83b7038d903d1c628b4ff7b4c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18744,8 +18768,8 @@
    {
     "path": "rtl/dsrom_sys/s81_dv/unit/test/run_l1f_band_lsw.sh",
     "kind": "file",
-    "sha256": "2d21c2c96c3b3954429d2fec4611b87c7698d67b991154d8133e5a3620b895c0",
-    "git_blob": "2372bbc5315bf0286409e7ae8135138f1349e701",
+    "sha256": "ed80425ae9975c6add92fb1a269bc494f6181123e4b590fca14606a422da849e",
+    "git_blob": "379027676f9a3bb78849fa01b644b68c0571a96e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -126704,14 +126728,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 135529843,
-   "unpacked_bytes": 783183872,
+   "archive_bytes": 135527633,
+   "unpacked_bytes": 783216640,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "78ceae5125b7db6299324f4fa9d393af887de078",
+   "origin_main": "0f9195ed9e25eedc74030450bfc5c11f883815c2",
    "content_sha256": "23dfdb98c09516f55e18dd8809b01af99f868c323754fbfa606c9da81ba95663",
    "files": [
     {
@@ -127119,7 +127143,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 766,
+   "count": 769,
    "paths": [
     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json",
     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
@@ -127196,6 +127220,7 @@
     "rtl/dsrom_sys/s81_dv/idx/lp/dsdv_idx_rg3_bf_lp.sv",
     "rtl/dsrom_sys/s81_dv/idx/lp/dsdv_idx_rg3_bf_lp_bench.sh",
     "rtl/dsrom_sys/s81_dv/idx/lp/tb_dsdv_idx_rg3_bf_lp.sv",
+    "rtl/dsrom_sys/s81_dv/idx/test/dsdv_idx_rg3_bx_ref.sv",
     "rtl/dsrom_sys/s81_dv/idx/test/dsdv_idx_rg3_lsw.sv",
     "rtl/dsrom_sys/s81_dv/idx/test/idxrd2_campaign.sh",
     "rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh",
@@ -127203,12 +127228,14 @@
     "rtl/dsrom_sys/s81_dv/idx/test/run_idx_qf.sh",
     "rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lp.sh",
     "rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lsw.sh",
+    "rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh",
     "rtl/dsrom_sys/s81_dv/idx/test/run_vmux_n32.sh",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_qf.sv",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg.sv",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg2.sv",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg2_fadd.sv",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3.sv",
+    "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3_bx_lsw.sv",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_vmux_n32.sv",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_col.sv",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv",
@@ -127935,7 +127962,7 @@
     "physical/ref_tile/s81dv_rg3b_rb/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
     "physical/ref_tile/s81dv_rg3b_rb/reset_landing.json": "641a4c42019324880cae3e098edf86e902deb93c237825c5f4cd1162216a6b68",
     "physical/ref_tile/s81dv_rg3b_rb/signoff.sdc": "a38607ba5de16c20f43b7239516aba0bd223f0ab14d9b03ab9f5653d9af71278",
-    "physical/ref_tile/s81dv_rg3b_rb/spec.json": "038350e8fca9a86c1fe9d752f64534e02a819781165db5c894f1b9fa4304927a",
+    "physical/ref_tile/s81dv_rg3b_rb/spec.json": "0ad5740c80cfa3b4d7a27d14ad0dee8f701f9764da94a0f471e7139806a587dc",
     "rtl/common/landed_parent/ot_pl_land.sv": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
     "rtl/common/landed_parent/ot_pl_land_field_copies.sv": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
     "rtl/common/landed_parent/ot_pl_land_kept_enable.sv": "025a6b50e3241d1fce3dbc1cebe210fea0d262c06ce3add491d7b7f1dd6194aa",
@@ -127952,7 +127979,7 @@
     "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg.sv": "3f3724c4352eb377cb284230ec834ee0726fbbc6bf2e899c8978c0b1a608fbc5",
     "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv": "bf5ea207f9ec2ee2a69c286466cd1de3092671cb2a8478bd6d2f2c30979f2b82",
     "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv": "027e66dc3d7b41babcce8946d673fb762e5631327aa653078f60a36df1bb9a63",
-    "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_band.sv": "55c6d871fb2ba6ffe6b74cc06134aef5fb2009b9409435da81062876f4e91ca6",
+    "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_band.sv": "ab73be3e9b1fe133362dfa872f749b9f72311608aaa59eac3b414c1959927dd7",
     "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_bf.sv": "c32ccc6da34c8f4599b5e060364c5a692c13a26cb47c653f816e4cffe8dd6b5d",
     "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_br.sv": "8ce6948b047c4603ccdbb15b41a3b60ef565acc3e9367d99b069be72a197c4bc",
     "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_lpw.sv": "34f39960434ba7e0a0a6dd0b56a65466eee44e1f4d6a1e18d280d8c6f924066e",
@@ -127964,6 +127991,7 @@
     "rtl/dsrom_sys/s81_dv/idx/lp/dsdv_idx_rg3_bf_lp.sv": "e42cd66ef3983883ec1cd9dd14beb834b19da60333a3baf5eef0afab0d4d5fbe",
     "rtl/dsrom_sys/s81_dv/idx/lp/dsdv_idx_rg3_bf_lp_bench.sh": "3c6fc8177c5bed9cab102584204accb1cea4a52c880eb6a70ebfb90be8597142",
     "rtl/dsrom_sys/s81_dv/idx/lp/tb_dsdv_idx_rg3_bf_lp.sv": "764a9c37a3e42cbb824d4f94bc7f0855ece46dffe8f2dd8d8c30f8b0cad059a8",
+    "rtl/dsrom_sys/s81_dv/idx/test/dsdv_idx_rg3_bx_ref.sv": "1b87a895ce40df6e1df45ae4739a9eeb9553939005f39d418f2a2c06540eae2c",
     "rtl/dsrom_sys/s81_dv/idx/test/dsdv_idx_rg3_lsw.sv": "28627b93469291aa64cd6845b4f7d4b4421b2209319ddae10dd987d095acbae1",
     "rtl/dsrom_sys/s81_dv/idx/test/idxrd2_campaign.sh": "7023168b4d8af981d780f0b8712239d6817054ab0ff5a1a9a6678c04cf6e0a1f",
     "rtl/dsrom_sys/s81_dv/idx/test/idxrd3_campaign.sh": "05d59d78fe8c6b1bacdd531af754c1ab05788be571b1402e060c3402030504f7",
@@ -127971,12 +127999,14 @@
     "rtl/dsrom_sys/s81_dv/idx/test/run_idx_qf.sh": "8e95c18de21bea717dc85d809b5a52afb5ce8a4a18689ba2e18af07775416e20",
     "rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lp.sh": "7b835b86c152df1b01d7b04965ddae7b62b75aaff397e21b57c99d6c79ac82d9",
     "rtl/dsrom_sys/s81_dv/idx/test/run_rg3_band_lsw.sh": "f5e40bcaf32055269c1e2ff066d6f7f2c378031170c63c8923f59c1d44d4cfac",
+    "rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh": "808631357680dbde1709223aa7587cbebdacf7d331293f13e6303b3ea8794a1c",
     "rtl/dsrom_sys/s81_dv/idx/test/run_vmux_n32.sh": "ae7ae10a1157a7a2198ca86382ca8cfa12332d4a4e196a05ee3ae9e64f882990",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_qf.sv": "0448cd2acf4c076ec9fe645af6f8c380dc76fce2d713e5b24b40dabac8479029",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg.sv": "81dcc12118335a46659f6cc162d9387ce6e605386f82ea9cecb27678488ca70a",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg2.sv": "f9e6b4816092b592caa4f958f9ce95374daaedd3977c8bddf31f5d9a5a93d1db",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg2_fadd.sv": "939f8caa97a7ed666e454752ef01c6008c4302922a237ec56477330d0c89a46f",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3.sv": "30d48aae13a4e685400c15b2b283e3bd0cadc9ddd78fecaa3e11976815ba5050",
+    "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3_bx_lsw.sv": "321d631cf98f5b2975ceaaeb90741dc16981b7fcac307ddcab9c4869d4085697",
     "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_vmux_n32.sv": "763a89c20855dd689e94d91cd697baa34f23d2ddb1f6685201d42c291bcf4213",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_col.sv": "7952b48b35b9a0055492ec1ac36c3f9b0355a2746288773d09d481641bb0bc48",
     "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv": "0c76721fb7233442f213d458edfc294c8a9c8959c6de674c69f3fa0cddb21f08",
@@ -128656,18 +128686,18 @@
     "tools/w18/corner_sta.py": "5c0649785baa7af8af2dcb8effdad69bfea0450ee478453de5f102a6c2e0a212",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
-   "digest": "d1976f18b7e22994a199c25b9f575d5a5524e264aea443f80abe9ed23488c77c"
+   "digest": "90e30f946fc974d4d30b5a3961da96668737d82797c518d9edbdea65776a57a0"
   },
-  "captured": "2026-10-22T18:00:49-0700",
+  "captured": "2026-10-22T19:14:41-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/s81dv_rg3b_rb/signoff.sdc"
   },
-  "remote_script_sha256": "edb4292174649cc5cff6fa2ea404983f46a4af9222c903f5837546cebc06306a",
+  "remote_script_sha256": "84719ccd56d431825f3de7396f98f04b4c20f9f43ab7baa76e64cc88f055a263",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc5",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81dv_rg3b_rb-20261022-180008",
+  "remote_host": "ot-epyc9",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81dv_rg3b_rb-20261022-191357",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -128928,7 +128958,7 @@
   "kind": "parent",
   "skip_incremental_repair": false,
   "rc": "0",
-  "grt_s": 210,
+  "grt_s": 380,
   "layers": [
    {
     "layer": "M1",
