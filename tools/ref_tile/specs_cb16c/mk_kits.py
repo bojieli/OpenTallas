@@ -51,7 +51,7 @@ def slice_spec(w):
         'pin_regs': {'enable': False, 'reason': 'CB16c-COLL: this slice IS one flip-flop per bit between its d and q pins (the face pin '
                      'register moved out of the body); a flow pin register would add a second stage the face calendar does not price'},
         'route': {'pd': 0.45, 'threads': 4, 'peak_ram_gb': 8, 'pin_h': 'M4', 'pin_v': 'M3 M5', 'm5_pg_pitch': 2.7,
-                  'hold_margin_ns': 0.03, 'io_hold_margin_ns': 0.0, 'macro_halo_um': 5.4},
+                  'hold_margin_ns': 0.03, 'io_hold_margin_ns': 0.0, 'macro_halo_um': 5.4, 'pin_balance': {'group_max': 1}},
         'structural_change': (f'CB16c-COLL 10-22: collective face edge register slice {top} ({w} b, one stage d->q, ck N), the regional '
                               'sub-tile of qfd_coll_face_cx: 6 instances per face on their own clock entries (W tx_data / rx_data: '
                               '182 b on cal_ck_t* / rx_rck_r*; E phy_tx / phy_rx: 199 b on codec0p_t* / codec0p_r*), hardened once. '

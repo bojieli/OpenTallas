@@ -56,7 +56,10 @@
   "m5_pg_pitch": 2.7,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.0,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
  },
  "structural_change": "CB16c-COLL 10-22: collective face edge register slice qfd_coll_eslice182 (182 b, one stage d->q, ck N), the regional sub-tile of qfd_coll_face_cx: 6 instances per face on their own clock entries (W tx_data / rx_data: 182 b on cal_ck_t* / rx_rck_r*; E phy_tx / phy_rx: 199 b on codec0p_t* / codec0p_r*), hardened once. Outline = one third of the face bus (145.8 um of pins at the face pin pitch); recipe 4 flop-first, hold_budget die.",
  "job": {
@@ -88,5 +91,7 @@
     "pass_witness": "results/rtl/cb16c_coll_1022/s0_m0.log"
    }
   ]
- }
+ },
+ "children": [],
+ "inter": []
 }
