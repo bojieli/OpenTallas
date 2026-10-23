@@ -1,0 +1,6241 @@
+{
+ "schema": "opentallas.die_feedthrough.ftspec.v1",
+ "die": "hbm",
+ "block": "su_SW3",
+ "master": "ot_hbm_su_static_pgslice_lg__pv12",
+ "variant": "ot_hbm_su_static_pgslice_rgf_lp__ftsw3",
+ "outline": [
+  1797.12,
+  2825.28
+ ],
+ "orient": "R0",
+ "die_bbox": [
+  5671.944,
+  12991.2,
+  1797.12,
+  2825.28
+ ],
+ "members": null,
+ "layer_contract": {
+  "signal_max": "M7",
+  "ft_layers": [
+   "M8",
+   "M9"
+  ],
+  "pg_max": "M7"
+ },
+ "clock": "block",
+ "reach_um": 1000.0,
+ "rep_um": 450.0,
+ "ft_reg": "inout",
+ "ports": [
+  {
+   "name": "ft0_i",
+   "path": 0,
+   "dir": "input",
+   "face": "N",
+   "lo": -0.024,
+   "hi": 274.296,
+   "layer": "M9",
+   "bits": 2057,
+   "die_xy": [
+    5762.92,
+    15816.48
+   ],
+   "legal_shift_um": 46.16
+  },
+  {
+   "name": "ft0_o",
+   "path": 0,
+   "dir": "output",
+   "face": "S",
+   "lo": -0.024,
+   "hi": 274.296,
+   "layer": "M9",
+   "bits": 2057,
+   "die_xy": [
+    5762.92,
+    12991.2
+   ],
+   "legal_shift_um": 46.16
+  },
+  {
+   "name": "ft3_i",
+   "path": 3,
+   "dir": "input",
+   "face": "E",
+   "lo": 588.72,
+   "hi": 663.84,
+   "layer": "M8",
+   "bits": 563,
+   "die_xy": [
+    7469.064,
+    13605.32
+   ],
+   "legal_shift_um": 12.16
+  },
+  {
+   "name": "ft3_o",
+   "path": 3,
+   "dir": "output",
+   "face": "W",
+   "lo": 974.64,
+   "hi": 1049.76,
+   "layer": "M8",
+   "bits": 563,
+   "die_xy": [
+    5671.944,
+    13605.32
+   ],
+   "legal_shift_um": 398.08
+  },
+  {
+   "name": "ft4_i",
+   "path": 4,
+   "dir": "input",
+   "face": "W",
+   "lo": 1239.92,
+   "hi": 1308.64,
+   "layer": "M8",
+   "bits": 515,
+   "die_xy": [
+    5671.944,
+    13870.6
+   ],
+   "legal_shift_um": 394.88
+  },
+  {
+   "name": "ft4_o",
+   "path": 4,
+   "dir": "output",
+   "face": "E",
+   "lo": 861.76,
+   "hi": 930.48,
+   "layer": "M8",
+   "bits": 515,
+   "die_xy": [
+    7469.064,
+    13870.6
+   ],
+   "legal_shift_um": 16.72
+  },
+  {
+   "name": "ft5_i",
+   "path": 5,
+   "dir": "input",
+   "face": "W",
+   "lo": 1379.04,
+   "hi": 1447.76,
+   "layer": "M8",
+   "bits": 515,
+   "die_xy": [
+    5671.944,
+    14008.04
+   ],
+   "legal_shift_um": 396.56
+  },
+  {
+   "name": "ft5_o",
+   "path": 5,
+   "dir": "output",
+   "face": "E",
+   "lo": 1000.88,
+   "hi": 1069.6,
+   "layer": "M8",
+   "bits": 515,
+   "die_xy": [
+    7469.064,
+    14008.04
+   ],
+   "legal_shift_um": 18.4
+  },
+  {
+   "name": "ft9_i",
+   "path": 9,
+   "dir": "input",
+   "face": "W",
+   "lo": 836.0,
+   "hi": 870.4,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    5671.944,
+    13447.12
+   ],
+   "legal_shift_um": 397.28
+  },
+  {
+   "name": "ft9_o",
+   "path": 9,
+   "dir": "output",
+   "face": "E",
+   "lo": 450.08,
+   "hi": 484.48,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    7469.064,
+    13447.12
+   ],
+   "legal_shift_um": 11.36
+  },
+  {
+   "name": "ft15_i",
+   "path": 15,
+   "dir": "input",
+   "face": "W",
+   "lo": 1171.2,
+   "hi": 1239.92,
+   "layer": "M8",
+   "bits": 515,
+   "die_xy": [
+    5671.944,
+    13801.88
+   ],
+   "legal_shift_um": 394.88
+  },
+  {
+   "name": "ft15_o",
+   "path": 15,
+   "dir": "output",
+   "face": "E",
+   "lo": 793.04,
+   "hi": 861.76,
+   "layer": "M8",
+   "bits": 515,
+   "die_xy": [
+    7469.064,
+    13801.88
+   ],
+   "legal_shift_um": 16.72
+  },
+  {
+   "name": "ft16_i",
+   "path": 16,
+   "dir": "input",
+   "face": "W",
+   "lo": 720.08,
+   "hi": 755.68,
+   "layer": "M8",
+   "bits": 267,
+   "die_xy": [
+    5671.944,
+    13327.16
+   ],
+   "legal_shift_um": 401.92
+  },
+  {
+   "name": "ft16_o",
+   "path": 16,
+   "dir": "output",
+   "face": "E",
+   "lo": 334.16,
+   "hi": 369.76,
+   "layer": "M8",
+   "bits": 267,
+   "die_xy": [
+    7469.064,
+    13327.16
+   ],
+   "legal_shift_um": 16.0
+  },
+  {
+   "name": "ft17_i",
+   "path": 17,
+   "dir": "input",
+   "face": "E",
+   "lo": 1551.36,
+   "hi": 1574.32,
+   "layer": "M8",
+   "bits": 172,
+   "die_xy": [
+    7469.064,
+    14864.2
+   ],
+   "legal_shift_um": -310.16
+  },
+  {
+   "name": "ft17_o",
+   "path": 17,
+   "dir": "output",
+   "face": "S",
+   "lo": 1625.176,
+   "hi": 1648.136,
+   "layer": "M9",
+   "bits": 172,
+   "die_xy": [
+    7308.6,
+    12991.2
+   ]
+  },
+  {
+   "name": "ft19_i",
+   "path": 19,
+   "dir": "input",
+   "face": "W",
+   "lo": 2266.32,
+   "hi": 2300.72,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    5671.944,
+    15310.08
+   ],
+   "legal_shift_um": -35.36
+  },
+  {
+   "name": "ft19_o",
+   "path": 19,
+   "dir": "output",
+   "face": "E",
+   "lo": 2111.76,
+   "hi": 2146.16,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    7469.064,
+    15310.08
+   ],
+   "legal_shift_um": -189.92
+  },
+  {
+   "name": "ft20_i",
+   "path": 20,
+   "dir": "input",
+   "face": "W",
+   "lo": 763.6,
+   "hi": 798.0,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    5671.944,
+    13371.92
+   ],
+   "legal_shift_um": 400.08
+  },
+  {
+   "name": "ft20_o",
+   "path": 20,
+   "dir": "output",
+   "face": "E",
+   "lo": 377.68,
+   "hi": 412.08,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    7469.064,
+    13371.92
+   ],
+   "legal_shift_um": 14.16
+  },
+  {
+   "name": "ft21_i",
+   "path": 21,
+   "dir": "input",
+   "face": "E",
+   "lo": 1734.32,
+   "hi": 1771.92,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    7469.064,
+    15067.28
+   ],
+   "legal_shift_um": -322.96
+  },
+  {
+   "name": "ft21_o",
+   "path": 21,
+   "dir": "output",
+   "face": "W",
+   "lo": 2028.48,
+   "hi": 2066.08,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    5671.944,
+    15067.28
+   ],
+   "legal_shift_um": -28.8
+  },
+  {
+   "name": "ft23_i",
+   "path": 23,
+   "dir": "input",
+   "face": "E",
+   "lo": 1696.4,
+   "hi": 1734.0,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    7469.064,
+    15029.68
+   ],
+   "legal_shift_um": -323.28
+  },
+  {
+   "name": "ft23_o",
+   "path": 23,
+   "dir": "output",
+   "face": "W",
+   "lo": 1990.88,
+   "hi": 2028.48,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    5671.944,
+    15029.68
+   ],
+   "legal_shift_um": -28.8
+  },
+  {
+   "name": "ft26_i",
+   "path": 26,
+   "dir": "input",
+   "face": "E",
+   "lo": 296.0,
+   "hi": 334.16,
+   "layer": "M8",
+   "bits": 286,
+   "die_xy": [
+    7469.064,
+    13290.28
+   ],
+   "legal_shift_um": 16.0
+  },
+  {
+   "name": "ft26_o",
+   "path": 26,
+   "dir": "output",
+   "face": "W",
+   "lo": 681.92,
+   "hi": 720.08,
+   "layer": "M8",
+   "bits": 286,
+   "die_xy": [
+    5671.944,
+    13290.28
+   ],
+   "legal_shift_um": 401.92
+  },
+  {
+   "name": "ft27_i",
+   "path": 27,
+   "dir": "input",
+   "face": "E",
+   "lo": 1650.72,
+   "hi": 1688.32,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    7469.064,
+    14969.68
+   ],
+   "legal_shift_um": -308.96
+  },
+  {
+   "name": "ft27_o",
+   "path": 27,
+   "dir": "output",
+   "face": "W",
+   "lo": 1945.52,
+   "hi": 1983.12,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    5671.944,
+    14969.68
+   ],
+   "legal_shift_um": -14.16
+  },
+  {
+   "name": "ft29_i",
+   "path": 29,
+   "dir": "input",
+   "face": "W",
+   "lo": 798.0,
+   "hi": 833.6,
+   "layer": "M8",
+   "bits": 267,
+   "die_xy": [
+    5671.944,
+    13406.92
+   ],
+   "legal_shift_um": 400.08
+  },
+  {
+   "name": "ft29_o",
+   "path": 29,
+   "dir": "output",
+   "face": "E",
+   "lo": 412.08,
+   "hi": 447.68,
+   "layer": "M8",
+   "bits": 267,
+   "die_xy": [
+    7469.064,
+    13406.92
+   ],
+   "legal_shift_um": 14.16
+  },
+  {
+   "name": "ft31_i",
+   "path": 31,
+   "dir": "input",
+   "face": "W",
+   "lo": 2197.52,
+   "hi": 2231.92,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    5671.944,
+    15241.28
+   ],
+   "legal_shift_um": -35.36
+  },
+  {
+   "name": "ft31_o",
+   "path": 31,
+   "dir": "output",
+   "face": "E",
+   "lo": 1952.96,
+   "hi": 1987.36,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    7469.064,
+    15241.28
+   ],
+   "legal_shift_um": -279.92
+  },
+  {
+   "name": "ft32_i",
+   "path": 32,
+   "dir": "input",
+   "face": "W",
+   "lo": 2162.4,
+   "hi": 2196.8,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    5671.944,
+    15206.88
+   ],
+   "legal_shift_um": -36.08
+  },
+  {
+   "name": "ft32_o",
+   "path": 32,
+   "dir": "output",
+   "face": "E",
+   "lo": 1882.16,
+   "hi": 1916.56,
+   "layer": "M8",
+   "bits": 258,
+   "die_xy": [
+    7469.064,
+    15206.88
+   ],
+   "legal_shift_um": -316.32
+  },
+  {
+   "name": "ft36_i",
+   "path": 36,
+   "dir": "input",
+   "face": "E",
+   "lo": 1476.16,
+   "hi": 1513.76,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    7469.064,
+    14762.0
+   ],
+   "legal_shift_um": -275.84
+  },
+  {
+   "name": "ft36_o",
+   "path": 36,
+   "dir": "output",
+   "face": "W",
+   "lo": 1759.12,
+   "hi": 1796.72,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    5671.944,
+    14762.0
+   ],
+   "legal_shift_um": 7.12
+  },
+  {
+   "name": "ft37_i",
+   "path": 37,
+   "dir": "input",
+   "face": "E",
+   "lo": 1438.56,
+   "hi": 1476.16,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    7469.064,
+    14724.4
+   ],
+   "legal_shift_um": -275.84
+  },
+  {
+   "name": "ft37_o",
+   "path": 37,
+   "dir": "output",
+   "face": "W",
+   "lo": 1721.52,
+   "hi": 1759.12,
+   "layer": "M8",
+   "bits": 282,
+   "die_xy": [
+    5671.944,
+    14724.4
+   ],
+   "legal_shift_um": 7.12
+  },
+  {
+   "name": "ft40_i",
+   "path": 40,
+   "dir": "input",
+   "face": "N",
+   "lo": 1748.216,
+   "hi": 1765.976,
+   "layer": "M9",
+   "bits": 133,
+   "die_xy": [
+    7429.04,
+    15816.48
+   ]
+  },
+  {
+   "name": "ft40_o",
+   "path": 40,
+   "dir": "output",
+   "face": "E",
+   "lo": 1916.98,
+   "hi": 1934.74,
+   "layer": "M8",
+   "bits": 133,
+   "die_xy": [
+    7469.064,
+    15214.5
+   ],
+   "legal_shift_um": -297.44
+  },
+  {
+   "name": "ft41_i",
+   "path": 41,
+   "dir": "input",
+   "face": "N",
+   "lo": 1730.456,
+   "hi": 1748.216,
+   "layer": "M9",
+   "bits": 133,
+   "die_xy": [
+    7411.28,
+    15816.48
+   ]
+  },
+  {
+   "name": "ft41_o",
+   "path": 41,
+   "dir": "output",
+   "face": "E",
+   "lo": 1935.16,
+   "hi": 1952.92,
+   "layer": "M8",
+   "bits": 133,
+   "die_xy": [
+    7469.064,
+    15235.4
+   ],
+   "legal_shift_um": -300.16
+  },
+  {
+   "name": "ft43_i",
+   "path": 43,
+   "dir": "input",
+   "face": "S",
+   "lo": 1500.936,
+   "hi": 1522.456,
+   "layer": "M9",
+   "bits": 161,
+   "die_xy": [
+    7183.64,
+    12991.2
+   ]
+  },
+  {
+   "name": "ft43_o",
+   "path": 43,
+   "dir": "output",
+   "face": "E",
+   "lo": 1987.42,
+   "hi": 2008.94,
+   "layer": "M8",
+   "bits": 161,
+   "die_xy": [
+    7469.064,
+    15265.7
+   ],
+   "legal_shift_um": -276.32
+  },
+  {
+   "name": "ft44_i",
+   "path": 44,
+   "dir": "input",
+   "face": "E",
+   "lo": 774.16,
+   "hi": 778.88,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    7469.064,
+    13754.04
+   ],
+   "legal_shift_um": 13.68
+  },
+  {
+   "name": "ft44_o",
+   "path": 44,
+   "dir": "output",
+   "face": "W",
+   "lo": 1157.68,
+   "hi": 1162.4,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    5671.944,
+    13754.04
+   ],
+   "legal_shift_um": 397.2
+  },
+  {
+   "name": "ft45_i",
+   "path": 45,
+   "dir": "input",
+   "face": "E",
+   "lo": 769.44,
+   "hi": 774.16,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    7469.064,
+    13749.32
+   ],
+   "legal_shift_um": 13.68
+  },
+  {
+   "name": "ft45_o",
+   "path": 45,
+   "dir": "output",
+   "face": "W",
+   "lo": 1152.96,
+   "hi": 1157.68,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    5671.944,
+    13749.32
+   ],
+   "legal_shift_um": 397.2
+  },
+  {
+   "name": "ft46_i",
+   "path": 46,
+   "dir": "input",
+   "face": "E",
+   "lo": 584.0,
+   "hi": 588.72,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    7469.064,
+    13565.4
+   ],
+   "legal_shift_um": 12.16
+  },
+  {
+   "name": "ft46_o",
+   "path": 46,
+   "dir": "output",
+   "face": "W",
+   "lo": 969.92,
+   "hi": 974.64,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    5671.944,
+    13565.4
+   ],
+   "legal_shift_um": 398.08
+  },
+  {
+   "name": "ft49_i",
+   "path": 49,
+   "dir": "input",
+   "face": "E",
+   "lo": 447.68,
+   "hi": 450.08,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    7469.064,
+    13409.68
+   ],
+   "legal_shift_um": 30.4
+  },
+  {
+   "name": "ft49_o",
+   "path": 49,
+   "dir": "output",
+   "face": "W",
+   "lo": 833.6,
+   "hi": 836.0,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    5671.944,
+    13409.68
+   ],
+   "legal_shift_um": 416.32
+  },
+  {
+   "name": "ft51_i",
+   "path": 51,
+   "dir": "input",
+   "face": "E",
+   "lo": 788.4,
+   "hi": 790.16,
+   "layer": "M8",
+   "bits": 13,
+   "die_xy": [
+    7469.064,
+    13766.64
+   ],
+   "legal_shift_um": 13.84
+  },
+  {
+   "name": "ft51_o",
+   "path": 51,
+   "dir": "output",
+   "face": "N",
+   "lo": 825.016,
+   "hi": 826.776,
+   "layer": "M9",
+   "bits": 13,
+   "die_xy": [
+    6497.84,
+    15816.48
+   ]
+  },
+  {
+   "name": "ft52_i",
+   "path": 52,
+   "dir": "input",
+   "face": "N",
+   "lo": 488.376,
+   "hi": 490.136,
+   "layer": "M9",
+   "bits": 13,
+   "die_xy": [
+    6160.96,
+    15816.48
+   ],
+   "legal_shift_um": 0.24
+  },
+  {
+   "name": "ft52_o",
+   "path": 52,
+   "dir": "output",
+   "face": "S",
+   "lo": 488.376,
+   "hi": 490.136,
+   "layer": "M9",
+   "bits": 13,
+   "die_xy": [
+    6160.96,
+    12991.2
+   ],
+   "legal_shift_um": 0.24
+  },
+  {
+   "name": "ft54_i",
+   "path": 54,
+   "dir": "input",
+   "face": "E",
+   "lo": 1877.36,
+   "hi": 1879.76,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    7469.064,
+    15186.08
+   ],
+   "legal_shift_um": -316.32
+  },
+  {
+   "name": "ft54_o",
+   "path": 54,
+   "dir": "output",
+   "face": "W",
+   "lo": 2157.6,
+   "hi": 2160.0,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    5671.944,
+    15186.08
+   ],
+   "legal_shift_um": -36.08
+  },
+  {
+   "name": "ft56_i",
+   "path": 56,
+   "dir": "input",
+   "face": "E",
+   "lo": 565.04,
+   "hi": 567.44,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    7469.064,
+    13545.2
+   ],
+   "legal_shift_um": 12.24
+  },
+  {
+   "name": "ft56_o",
+   "path": 56,
+   "dir": "output",
+   "face": "W",
+   "lo": 950.96,
+   "hi": 953.36,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    5671.944,
+    13545.2
+   ],
+   "legal_shift_um": 398.16
+  },
+  {
+   "name": "ft58_i",
+   "path": 58,
+   "dir": "input",
+   "face": "E",
+   "lo": 567.44,
+   "hi": 569.84,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    7469.064,
+    13547.6
+   ],
+   "legal_shift_um": 12.24
+  },
+  {
+   "name": "ft58_o",
+   "path": 58,
+   "dir": "output",
+   "face": "W",
+   "lo": 953.36,
+   "hi": 955.76,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    5671.944,
+    13547.6
+   ],
+   "legal_shift_um": 398.16
+  },
+  {
+   "name": "ft59_i",
+   "path": 59,
+   "dir": "input",
+   "face": "E",
+   "lo": 579.28,
+   "hi": 584.0,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    7469.064,
+    13560.68
+   ],
+   "legal_shift_um": 12.16
+  },
+  {
+   "name": "ft59_o",
+   "path": 59,
+   "dir": "output",
+   "face": "W",
+   "lo": 965.2,
+   "hi": 969.92,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    5671.944,
+    13560.68
+   ],
+   "legal_shift_um": 398.08
+  },
+  {
+   "name": "ft60_i",
+   "path": 60,
+   "dir": "input",
+   "face": "E",
+   "lo": 574.56,
+   "hi": 579.28,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    7469.064,
+    13555.96
+   ],
+   "legal_shift_um": 12.16
+  },
+  {
+   "name": "ft60_o",
+   "path": 60,
+   "dir": "output",
+   "face": "W",
+   "lo": 960.48,
+   "hi": 965.2,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    5671.944,
+    13555.96
+   ],
+   "legal_shift_um": 398.08
+  },
+  {
+   "name": "ft61_i",
+   "path": 61,
+   "dir": "input",
+   "face": "E",
+   "lo": 569.84,
+   "hi": 574.56,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    7469.064,
+    13551.24
+   ],
+   "legal_shift_um": 12.16
+  },
+  {
+   "name": "ft61_o",
+   "path": 61,
+   "dir": "output",
+   "face": "W",
+   "lo": 955.76,
+   "hi": 960.48,
+   "layer": "M8",
+   "bits": 35,
+   "die_xy": [
+    5671.944,
+    13551.24
+   ],
+   "legal_shift_um": 398.08
+  },
+  {
+   "name": "ft66_i",
+   "path": 66,
+   "dir": "input",
+   "face": "E",
+   "lo": 786.0,
+   "hi": 787.2,
+   "layer": "M8",
+   "bits": 9,
+   "die_xy": [
+    7469.064,
+    13765.16
+   ],
+   "legal_shift_um": 12.64
+  },
+  {
+   "name": "ft66_o",
+   "path": 66,
+   "dir": "output",
+   "face": "N",
+   "lo": 826.776,
+   "hi": 827.976,
+   "layer": "M9",
+   "bits": 9,
+   "die_xy": [
+    6499.32,
+    15816.48
+   ]
+  },
+  {
+   "name": "ft67_i",
+   "path": 67,
+   "dir": "input",
+   "face": "E",
+   "lo": 790.2,
+   "hi": 791.4,
+   "layer": "M8",
+   "bits": 9,
+   "die_xy": [
+    7469.064,
+    13766.64
+   ],
+   "legal_shift_um": 15.36
+  },
+  {
+   "name": "ft67_o",
+   "path": 67,
+   "dir": "output",
+   "face": "N",
+   "lo": 827.976,
+   "hi": 829.176,
+   "layer": "M9",
+   "bits": 9,
+   "die_xy": [
+    6500.52,
+    15816.48
+   ]
+  },
+  {
+   "name": "ft68_i",
+   "path": 68,
+   "dir": "input",
+   "face": "E",
+   "lo": 787.2,
+   "hi": 788.4,
+   "layer": "M8",
+   "bits": 9,
+   "die_xy": [
+    7469.064,
+    13765.16
+   ],
+   "legal_shift_um": 13.84
+  },
+  {
+   "name": "ft68_o",
+   "path": 68,
+   "dir": "output",
+   "face": "N",
+   "lo": 829.176,
+   "hi": 830.376,
+   "layer": "M9",
+   "bits": 9,
+   "die_xy": [
+    6501.72,
+    15816.48
+   ]
+  },
+  {
+   "name": "ft69_i",
+   "path": 69,
+   "dir": "input",
+   "face": "E",
+   "lo": 375.28,
+   "hi": 377.68,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    7469.064,
+    13351.68
+   ],
+   "legal_shift_um": 16.0
+  },
+  {
+   "name": "ft69_o",
+   "path": 69,
+   "dir": "output",
+   "face": "W",
+   "lo": 761.2,
+   "hi": 763.6,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    5671.944,
+    13351.68
+   ],
+   "legal_shift_um": 401.92
+  },
+  {
+   "name": "ft70_i",
+   "path": 70,
+   "dir": "input",
+   "face": "E",
+   "lo": 1574.32,
+   "hi": 1575.52,
+   "layer": "M8",
+   "bits": 9,
+   "die_xy": [
+    7469.064,
+    14864.2
+   ],
+   "legal_shift_um": -298.08
+  },
+  {
+   "name": "ft70_o",
+   "path": 70,
+   "dir": "output",
+   "face": "S",
+   "lo": 1648.136,
+   "hi": 1649.336,
+   "layer": "M9",
+   "bits": 9,
+   "die_xy": [
+    7320.68,
+    12991.2
+   ]
+  },
+  {
+   "name": "ft71_i",
+   "path": 71,
+   "dir": "input",
+   "face": "N",
+   "lo": 485.816,
+   "hi": 487.016,
+   "layer": "M9",
+   "bits": 9,
+   "die_xy": [
+    6159.08,
+    15816.48
+   ],
+   "legal_shift_um": -0.72
+  },
+  {
+   "name": "ft71_o",
+   "path": 71,
+   "dir": "output",
+   "face": "S",
+   "lo": 485.816,
+   "hi": 487.016,
+   "layer": "M9",
+   "bits": 9,
+   "die_xy": [
+    6159.08,
+    12991.2
+   ],
+   "legal_shift_um": -0.72
+  },
+  {
+   "name": "ft72_i",
+   "path": 72,
+   "dir": "input",
+   "face": "E",
+   "lo": 767.04,
+   "hi": 768.24,
+   "layer": "M8",
+   "bits": 9,
+   "die_xy": [
+    7469.064,
+    13746.36
+   ],
+   "legal_shift_um": 12.48
+  },
+  {
+   "name": "ft72_o",
+   "path": 72,
+   "dir": "output",
+   "face": "S",
+   "lo": 484.616,
+   "hi": 485.816,
+   "layer": "M9",
+   "bits": 9,
+   "die_xy": [
+    6157.88,
+    12991.2
+   ],
+   "legal_shift_um": -0.72
+  },
+  {
+   "name": "ft73_i",
+   "path": 73,
+   "dir": "input",
+   "face": "E",
+   "lo": 768.24,
+   "hi": 769.44,
+   "layer": "M8",
+   "bits": 9,
+   "die_xy": [
+    7469.064,
+    13746.36
+   ],
+   "legal_shift_um": 13.68
+  },
+  {
+   "name": "ft73_o",
+   "path": 73,
+   "dir": "output",
+   "face": "S",
+   "lo": 490.536,
+   "hi": 491.736,
+   "layer": "M9",
+   "bits": 9,
+   "die_xy": [
+    6162.44,
+    12991.2
+   ],
+   "legal_shift_um": 0.64
+  },
+  {
+   "name": "ft74_i",
+   "path": 74,
+   "dir": "input",
+   "face": "E",
+   "lo": 1868.72,
+   "hi": 1871.12,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    7469.064,
+    15178.16
+   ],
+   "legal_shift_um": -317.04
+  },
+  {
+   "name": "ft74_o",
+   "path": 74,
+   "dir": "output",
+   "face": "W",
+   "lo": 2149.68,
+   "hi": 2152.08,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    5671.944,
+    15178.16
+   ],
+   "legal_shift_um": -36.08
+  },
+  {
+   "name": "ft77_i",
+   "path": 77,
+   "dir": "input",
+   "face": "E",
+   "lo": 1859.68,
+   "hi": 1862.08,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    7469.064,
+    15173.36
+   ],
+   "legal_shift_um": -321.28
+  },
+  {
+   "name": "ft77_o",
+   "path": 77,
+   "dir": "output",
+   "face": "W",
+   "lo": 2144.88,
+   "hi": 2147.28,
+   "layer": "M8",
+   "bits": 18,
+   "die_xy": [
+    5671.944,
+    15173.36
+   ],
+   "legal_shift_um": -36.08
+  },
+  {
+   "name": "ft79_i",
+   "path": 79,
+   "dir": "input",
+   "face": "E",
+   "lo": 1863.84,
+   "hi": 1864.96,
+   "layer": "M8",
+   "bits": 8,
+   "die_xy": [
+    7469.064,
+    15175.2
+   ],
+   "legal_shift_um": -319.6
+  },
+  {
+   "name": "ft79_o",
+   "path": 79,
+   "dir": "output",
+   "face": "S",
+   "lo": 274.296,
+   "hi": 275.416,
+   "layer": "M9",
+   "bits": 8,
+   "die_xy": [
+    5864.4,
+    12991.2
+   ],
+   "legal_shift_um": 82.4
+  },
+  {
+   "name": "ft87_i",
+   "path": 87,
+   "dir": "input",
+   "face": "E",
+   "lo": 1000.06,
+   "hi": 1000.46,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13987.3
+   ],
+   "legal_shift_um": 4.16
+  },
+  {
+   "name": "ft87_o",
+   "path": 87,
+   "dir": "output",
+   "face": "W",
+   "lo": 1378.22,
+   "hi": 1378.62,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13987.3
+   ],
+   "legal_shift_um": 382.32
+  },
+  {
+   "name": "ft88_i",
+   "path": 88,
+   "dir": "input",
+   "face": "E",
+   "lo": 1000.46,
+   "hi": 1000.86,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13987.3
+   ],
+   "legal_shift_um": 4.56
+  },
+  {
+   "name": "ft88_o",
+   "path": 88,
+   "dir": "output",
+   "face": "W",
+   "lo": 1378.62,
+   "hi": 1379.02,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13987.3
+   ],
+   "legal_shift_um": 382.72
+  },
+  {
+   "name": "ft89_i",
+   "path": 89,
+   "dir": "input",
+   "face": "W",
+   "lo": 1377.42,
+   "hi": 1377.82,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13982.9
+   ],
+   "legal_shift_um": 385.92
+  },
+  {
+   "name": "ft89_o",
+   "path": 89,
+   "dir": "output",
+   "face": "E",
+   "lo": 999.26,
+   "hi": 999.66,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13982.9
+   ],
+   "legal_shift_um": 7.76
+  },
+  {
+   "name": "ft90_i",
+   "path": 90,
+   "dir": "input",
+   "face": "N",
+   "lo": 275.416,
+   "hi": 275.736,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    5864.4,
+    15816.48
+   ],
+   "legal_shift_um": 83.12
+  },
+  {
+   "name": "ft90_o",
+   "path": 90,
+   "dir": "output",
+   "face": "E",
+   "lo": 1850.74,
+   "hi": 1851.06,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15169.7
+   ],
+   "legal_shift_um": -327.6
+  },
+  {
+   "name": "ft96_i",
+   "path": 96,
+   "dir": "input",
+   "face": "E",
+   "lo": 1857.0,
+   "hi": 1857.32,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15171.8
+   ],
+   "legal_shift_um": -323.44
+  },
+  {
+   "name": "ft96_o",
+   "path": 96,
+   "dir": "output",
+   "face": "N",
+   "lo": 487.396,
+   "hi": 487.716,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6159.9,
+    15816.48
+   ],
+   "legal_shift_um": -0.4
+  },
+  {
+   "name": "ft97_i",
+   "path": 97,
+   "dir": "input",
+   "face": "E",
+   "lo": 1857.7,
+   "hi": 1858.02,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15172.5
+   ],
+   "legal_shift_um": -323.44
+  },
+  {
+   "name": "ft97_o",
+   "path": 97,
+   "dir": "output",
+   "face": "N",
+   "lo": 487.076,
+   "hi": 487.396,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6159.1,
+    15816.48
+   ],
+   "legal_shift_um": 0.08
+  },
+  {
+   "name": "ft98_i",
+   "path": 98,
+   "dir": "input",
+   "face": "E",
+   "lo": 1858.02,
+   "hi": 1858.34,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15172.5
+   ],
+   "legal_shift_um": -323.12
+  },
+  {
+   "name": "ft98_o",
+   "path": 98,
+   "dir": "output",
+   "face": "N",
+   "lo": 487.716,
+   "hi": 488.036,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6159.9,
+    15816.48
+   ],
+   "legal_shift_um": -0.08
+  },
+  {
+   "name": "ft99_i",
+   "path": 99,
+   "dir": "input",
+   "face": "E",
+   "lo": 1858.34,
+   "hi": 1858.66,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15172.5
+   ],
+   "legal_shift_um": -322.8
+  },
+  {
+   "name": "ft99_o",
+   "path": 99,
+   "dir": "output",
+   "face": "N",
+   "lo": 490.176,
+   "hi": 490.496,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6161.0,
+    15816.48
+   ],
+   "legal_shift_um": 1.28
+  },
+  {
+   "name": "ft100_i",
+   "path": 100,
+   "dir": "input",
+   "face": "E",
+   "lo": 1862.08,
+   "hi": 1862.4,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15173.6
+   ],
+   "legal_shift_um": -320.16
+  },
+  {
+   "name": "ft100_o",
+   "path": 100,
+   "dir": "output",
+   "face": "N",
+   "lo": 488.036,
+   "hi": 488.356,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6159.9,
+    15816.48
+   ],
+   "legal_shift_um": 0.24
+  },
+  {
+   "name": "ft101_i",
+   "path": 101,
+   "dir": "input",
+   "face": "N",
+   "lo": 511.896,
+   "hi": 512.216,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6184.0,
+    15816.48
+   ]
+  },
+  {
+   "name": "ft101_o",
+   "path": 101,
+   "dir": "output",
+   "face": "E",
+   "lo": 1876.7,
+   "hi": 1877.02,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15185.9
+   ],
+   "legal_shift_um": -317.84
+  },
+  {
+   "name": "ft102_i",
+   "path": 102,
+   "dir": "input",
+   "face": "E",
+   "lo": 1734.0,
+   "hi": 1734.32,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15044.4
+   ],
+   "legal_shift_um": -319.04
+  },
+  {
+   "name": "ft102_o",
+   "path": 102,
+   "dir": "output",
+   "face": "S",
+   "lo": 1623.696,
+   "hi": 1624.016,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    7294.2,
+    12991.2
+   ],
+   "legal_shift_um": 1.6
+  },
+  {
+   "name": "ft103_i",
+   "path": 103,
+   "dir": "input",
+   "face": "E",
+   "lo": 1862.4,
+   "hi": 1862.72,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15173.6
+   ],
+   "legal_shift_um": -319.84
+  },
+  {
+   "name": "ft103_o",
+   "path": 103,
+   "dir": "output",
+   "face": "S",
+   "lo": 487.396,
+   "hi": 487.716,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6159.9,
+    12991.2
+   ],
+   "legal_shift_um": -0.4
+  },
+  {
+   "name": "ft104_i",
+   "path": 104,
+   "dir": "input",
+   "face": "E",
+   "lo": 1858.66,
+   "hi": 1858.98,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15172.5
+   ],
+   "legal_shift_um": -322.48
+  },
+  {
+   "name": "ft104_o",
+   "path": 104,
+   "dir": "output",
+   "face": "S",
+   "lo": 487.076,
+   "hi": 487.396,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6159.1,
+    12991.2
+   ],
+   "legal_shift_um": 0.08
+  },
+  {
+   "name": "ft105_i",
+   "path": 105,
+   "dir": "input",
+   "face": "E",
+   "lo": 1858.98,
+   "hi": 1859.3,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15172.5
+   ],
+   "legal_shift_um": -322.16
+  },
+  {
+   "name": "ft105_o",
+   "path": 105,
+   "dir": "output",
+   "face": "S",
+   "lo": 487.716,
+   "hi": 488.036,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6159.9,
+    12991.2
+   ],
+   "legal_shift_um": -0.08
+  },
+  {
+   "name": "ft106_i",
+   "path": 106,
+   "dir": "input",
+   "face": "E",
+   "lo": 1857.32,
+   "hi": 1857.64,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15171.8
+   ],
+   "legal_shift_um": -323.12
+  },
+  {
+   "name": "ft106_o",
+   "path": 106,
+   "dir": "output",
+   "face": "S",
+   "lo": 488.036,
+   "hi": 488.356,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6159.9,
+    12991.2
+   ],
+   "legal_shift_um": 0.24
+  },
+  {
+   "name": "ft107_i",
+   "path": 107,
+   "dir": "input",
+   "face": "E",
+   "lo": 1859.3,
+   "hi": 1859.62,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15172.5
+   ],
+   "legal_shift_um": -321.84
+  },
+  {
+   "name": "ft107_o",
+   "path": 107,
+   "dir": "output",
+   "face": "S",
+   "lo": 490.176,
+   "hi": 490.496,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6161.0,
+    12991.2
+   ],
+   "legal_shift_um": 1.28
+  },
+  {
+   "name": "ft108_i",
+   "path": 108,
+   "dir": "input",
+   "face": "S",
+   "lo": 511.896,
+   "hi": 512.216,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    6184.0,
+    12991.2
+   ]
+  },
+  {
+   "name": "ft108_o",
+   "path": 108,
+   "dir": "output",
+   "face": "E",
+   "lo": 1877.02,
+   "hi": 1877.34,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15185.9
+   ],
+   "legal_shift_um": -317.52
+  },
+  {
+   "name": "ft109_i",
+   "path": 109,
+   "dir": "input",
+   "face": "E",
+   "lo": 8.94,
+   "hi": 9.34,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13089.3
+   ],
+   "legal_shift_um": -88.96
+  },
+  {
+   "name": "ft109_o",
+   "path": 109,
+   "dir": "output",
+   "face": "W",
+   "lo": 140.06,
+   "hi": 140.46,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13089.3
+   ],
+   "legal_shift_um": 42.16
+  },
+  {
+   "name": "ft110_i",
+   "path": 110,
+   "dir": "input",
+   "face": "E",
+   "lo": 8.08,
+   "hi": 8.48,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13089.0
+   ],
+   "legal_shift_um": -89.52
+  },
+  {
+   "name": "ft110_o",
+   "path": 110,
+   "dir": "output",
+   "face": "W",
+   "lo": 139.2,
+   "hi": 139.6,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13089.0
+   ],
+   "legal_shift_um": 41.6
+  },
+  {
+   "name": "ft111_i",
+   "path": 111,
+   "dir": "input",
+   "face": "E",
+   "lo": 9.34,
+   "hi": 9.74,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13089.3
+   ],
+   "legal_shift_um": -88.56
+  },
+  {
+   "name": "ft111_o",
+   "path": 111,
+   "dir": "output",
+   "face": "W",
+   "lo": 140.46,
+   "hi": 140.86,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13089.3
+   ],
+   "legal_shift_um": 42.56
+  },
+  {
+   "name": "ft112_i",
+   "path": 112,
+   "dir": "input",
+   "face": "E",
+   "lo": 8.48,
+   "hi": 8.88,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13089.0
+   ],
+   "legal_shift_um": -89.12
+  },
+  {
+   "name": "ft112_o",
+   "path": 112,
+   "dir": "output",
+   "face": "W",
+   "lo": 139.6,
+   "hi": 140.0,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13089.0
+   ],
+   "legal_shift_um": 42.0
+  },
+  {
+   "name": "ft113_i",
+   "path": 113,
+   "dir": "input",
+   "face": "E",
+   "lo": 1868.4,
+   "hi": 1868.72,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15176.0
+   ],
+   "legal_shift_um": -316.24
+  },
+  {
+   "name": "ft113_o",
+   "path": 113,
+   "dir": "output",
+   "face": "S",
+   "lo": 275.416,
+   "hi": 275.736,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    5864.4,
+    12991.2
+   ],
+   "legal_shift_um": 83.12
+  },
+  {
+   "name": "ft114_i",
+   "path": 114,
+   "dir": "input",
+   "face": "E",
+   "lo": 1867.72,
+   "hi": 1868.04,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15175.8
+   ],
+   "legal_shift_um": -316.72
+  },
+  {
+   "name": "ft114_o",
+   "path": 114,
+   "dir": "output",
+   "face": "S",
+   "lo": 275.736,
+   "hi": 276.056,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    5864.4,
+    12991.2
+   ],
+   "legal_shift_um": 83.44
+  },
+  {
+   "name": "ft115_i",
+   "path": 115,
+   "dir": "input",
+   "face": "E",
+   "lo": 1854.22,
+   "hi": 1854.54,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15170.7
+   ],
+   "legal_shift_um": -325.12
+  },
+  {
+   "name": "ft115_o",
+   "path": 115,
+   "dir": "output",
+   "face": "W",
+   "lo": 2142.14,
+   "hi": 2142.46,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15170.7
+   ],
+   "legal_shift_um": -37.2
+  },
+  {
+   "name": "ft116_i",
+   "path": 116,
+   "dir": "input",
+   "face": "E",
+   "lo": 1853.08,
+   "hi": 1853.4,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15170.2
+   ],
+   "legal_shift_um": -325.76
+  },
+  {
+   "name": "ft116_o",
+   "path": 116,
+   "dir": "output",
+   "face": "W",
+   "lo": 2141.0,
+   "hi": 2141.32,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15170.2
+   ],
+   "legal_shift_um": -37.84
+  },
+  {
+   "name": "ft117_i",
+   "path": 117,
+   "dir": "input",
+   "face": "E",
+   "lo": 1852.4,
+   "hi": 1852.72,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15170.0
+   ],
+   "legal_shift_um": -326.24
+  },
+  {
+   "name": "ft117_o",
+   "path": 117,
+   "dir": "output",
+   "face": "W",
+   "lo": 2140.32,
+   "hi": 2140.64,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15170.0
+   ],
+   "legal_shift_um": -38.32
+  },
+  {
+   "name": "ft118_i",
+   "path": 118,
+   "dir": "input",
+   "face": "W",
+   "lo": 2139.64,
+   "hi": 2139.96,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15169.8
+   ],
+   "legal_shift_um": -38.8
+  },
+  {
+   "name": "ft118_o",
+   "path": 118,
+   "dir": "output",
+   "face": "E",
+   "lo": 1851.72,
+   "hi": 1852.04,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15169.8
+   ],
+   "legal_shift_um": -326.72
+  },
+  {
+   "name": "ft119_i",
+   "path": 119,
+   "dir": "input",
+   "face": "S",
+   "lo": 276.376,
+   "hi": 276.696,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    5886.4,
+    12991.2
+   ],
+   "legal_shift_um": 62.08
+  },
+  {
+   "name": "ft119_o",
+   "path": 119,
+   "dir": "output",
+   "face": "E",
+   "lo": 1688.38,
+   "hi": 1688.7,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -333.36
+  },
+  {
+   "name": "ft120_i",
+   "path": 120,
+   "dir": "input",
+   "face": "S",
+   "lo": 276.056,
+   "hi": 276.376,
+   "layer": "M9",
+   "bits": 2,
+   "die_xy": [
+    5864.4,
+    12991.2
+   ],
+   "legal_shift_um": 83.76
+  },
+  {
+   "name": "ft120_o",
+   "path": 120,
+   "dir": "output",
+   "face": "E",
+   "lo": 1851.06,
+   "hi": 1851.38,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15169.7
+   ],
+   "legal_shift_um": -327.28
+  },
+  {
+   "name": "ft121_i",
+   "path": 121,
+   "dir": "input",
+   "face": "W",
+   "lo": 870.86,
+   "hi": 871.26,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13451.3
+   ],
+   "legal_shift_um": 410.96
+  },
+  {
+   "name": "ft121_o",
+   "path": 121,
+   "dir": "output",
+   "face": "E",
+   "lo": 484.94,
+   "hi": 485.34,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13451.3
+   ],
+   "legal_shift_um": 25.04
+  },
+  {
+   "name": "ft124_i",
+   "path": 124,
+   "dir": "input",
+   "face": "W",
+   "lo": 1983.18,
+   "hi": 1983.5,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -38.56
+  },
+  {
+   "name": "ft124_o",
+   "path": 124,
+   "dir": "output",
+   "face": "E",
+   "lo": 1688.7,
+   "hi": 1689.02,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -333.04
+  },
+  {
+   "name": "ft125_i",
+   "path": 125,
+   "dir": "input",
+   "face": "W",
+   "lo": 1983.5,
+   "hi": 1983.82,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -38.24
+  },
+  {
+   "name": "ft125_o",
+   "path": 125,
+   "dir": "output",
+   "face": "E",
+   "lo": 1689.02,
+   "hi": 1689.34,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -332.72
+  },
+  {
+   "name": "ft126_i",
+   "path": 126,
+   "dir": "input",
+   "face": "W",
+   "lo": 1983.82,
+   "hi": 1984.14,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -37.92
+  },
+  {
+   "name": "ft126_o",
+   "path": 126,
+   "dir": "output",
+   "face": "E",
+   "lo": 1689.34,
+   "hi": 1689.66,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -332.4
+  },
+  {
+   "name": "ft127_i",
+   "path": 127,
+   "dir": "input",
+   "face": "W",
+   "lo": 1984.14,
+   "hi": 1984.46,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -37.6
+  },
+  {
+   "name": "ft127_o",
+   "path": 127,
+   "dir": "output",
+   "face": "E",
+   "lo": 1689.66,
+   "hi": 1689.98,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -332.08
+  },
+  {
+   "name": "ft128_i",
+   "path": 128,
+   "dir": "input",
+   "face": "W",
+   "lo": 1984.46,
+   "hi": 1984.78,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -37.28
+  },
+  {
+   "name": "ft128_o",
+   "path": 128,
+   "dir": "output",
+   "face": "E",
+   "lo": 1689.98,
+   "hi": 1690.3,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -331.76
+  },
+  {
+   "name": "ft129_i",
+   "path": 129,
+   "dir": "input",
+   "face": "W",
+   "lo": 1984.78,
+   "hi": 1985.1,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -36.96
+  },
+  {
+   "name": "ft129_o",
+   "path": 129,
+   "dir": "output",
+   "face": "E",
+   "lo": 1690.3,
+   "hi": 1690.62,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -331.44
+  },
+  {
+   "name": "ft130_i",
+   "path": 130,
+   "dir": "input",
+   "face": "W",
+   "lo": 1377.82,
+   "hi": 1378.22,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13982.9
+   ],
+   "legal_shift_um": 386.32
+  },
+  {
+   "name": "ft130_o",
+   "path": 130,
+   "dir": "output",
+   "face": "E",
+   "lo": 999.66,
+   "hi": 1000.06,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13982.9
+   ],
+   "legal_shift_um": 8.16
+  },
+  {
+   "name": "ft131_i",
+   "path": 131,
+   "dir": "input",
+   "face": "W",
+   "lo": 140.92,
+   "hi": 141.24,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    13095.8
+   ],
+   "legal_shift_um": 36.48
+  },
+  {
+   "name": "ft131_o",
+   "path": 131,
+   "dir": "output",
+   "face": "E",
+   "lo": 9.8,
+   "hi": 10.12,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    13095.8
+   ],
+   "legal_shift_um": -94.64
+  },
+  {
+   "name": "ft132_i",
+   "path": 132,
+   "dir": "input",
+   "face": "W",
+   "lo": 1985.1,
+   "hi": 1985.42,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -36.64
+  },
+  {
+   "name": "ft132_o",
+   "path": 132,
+   "dir": "output",
+   "face": "E",
+   "lo": 1690.62,
+   "hi": 1690.94,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -331.12
+  },
+  {
+   "name": "ft133_i",
+   "path": 133,
+   "dir": "input",
+   "face": "W",
+   "lo": 1985.42,
+   "hi": 1985.74,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -36.32
+  },
+  {
+   "name": "ft133_o",
+   "path": 133,
+   "dir": "output",
+   "face": "E",
+   "lo": 1690.94,
+   "hi": 1691.26,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -330.8
+  },
+  {
+   "name": "ft134_i",
+   "path": 134,
+   "dir": "input",
+   "face": "W",
+   "lo": 1985.74,
+   "hi": 1986.06,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -36.0
+  },
+  {
+   "name": "ft134_o",
+   "path": 134,
+   "dir": "output",
+   "face": "E",
+   "lo": 1691.26,
+   "hi": 1691.58,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -330.48
+  },
+  {
+   "name": "ft135_i",
+   "path": 135,
+   "dir": "input",
+   "face": "W",
+   "lo": 1986.06,
+   "hi": 1986.38,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -35.68
+  },
+  {
+   "name": "ft135_o",
+   "path": 135,
+   "dir": "output",
+   "face": "E",
+   "lo": 1691.58,
+   "hi": 1691.9,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -330.16
+  },
+  {
+   "name": "ft136_i",
+   "path": 136,
+   "dir": "input",
+   "face": "W",
+   "lo": 1986.38,
+   "hi": 1986.7,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -35.36
+  },
+  {
+   "name": "ft136_o",
+   "path": 136,
+   "dir": "output",
+   "face": "E",
+   "lo": 1691.9,
+   "hi": 1692.22,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -329.84
+  },
+  {
+   "name": "ft137_i",
+   "path": 137,
+   "dir": "input",
+   "face": "W",
+   "lo": 1986.7,
+   "hi": 1987.02,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -35.04
+  },
+  {
+   "name": "ft137_o",
+   "path": 137,
+   "dir": "output",
+   "face": "E",
+   "lo": 1692.22,
+   "hi": 1692.54,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -329.52
+  },
+  {
+   "name": "ft138_i",
+   "path": 138,
+   "dir": "input",
+   "face": "W",
+   "lo": 1987.02,
+   "hi": 1987.34,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -34.72
+  },
+  {
+   "name": "ft138_o",
+   "path": 138,
+   "dir": "output",
+   "face": "E",
+   "lo": 1692.54,
+   "hi": 1692.86,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -329.2
+  },
+  {
+   "name": "ft139_i",
+   "path": 139,
+   "dir": "input",
+   "face": "W",
+   "lo": 1987.34,
+   "hi": 1987.66,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -34.4
+  },
+  {
+   "name": "ft139_o",
+   "path": 139,
+   "dir": "output",
+   "face": "E",
+   "lo": 1692.86,
+   "hi": 1693.18,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -328.88
+  },
+  {
+   "name": "ft140_i",
+   "path": 140,
+   "dir": "input",
+   "face": "W",
+   "lo": 1987.66,
+   "hi": 1987.98,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -34.08
+  },
+  {
+   "name": "ft140_o",
+   "path": 140,
+   "dir": "output",
+   "face": "E",
+   "lo": 1693.18,
+   "hi": 1693.5,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -328.56
+  },
+  {
+   "name": "ft141_i",
+   "path": 141,
+   "dir": "input",
+   "face": "W",
+   "lo": 1987.98,
+   "hi": 1988.3,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -33.76
+  },
+  {
+   "name": "ft141_o",
+   "path": 141,
+   "dir": "output",
+   "face": "E",
+   "lo": 1693.5,
+   "hi": 1693.82,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -328.24
+  },
+  {
+   "name": "ft142_i",
+   "path": 142,
+   "dir": "input",
+   "face": "W",
+   "lo": 1988.3,
+   "hi": 1988.62,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -33.44
+  },
+  {
+   "name": "ft142_o",
+   "path": 142,
+   "dir": "output",
+   "face": "E",
+   "lo": 1693.82,
+   "hi": 1694.14,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -327.92
+  },
+  {
+   "name": "ft143_i",
+   "path": 143,
+   "dir": "input",
+   "face": "W",
+   "lo": 1988.62,
+   "hi": 1988.94,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -33.12
+  },
+  {
+   "name": "ft143_o",
+   "path": 143,
+   "dir": "output",
+   "face": "E",
+   "lo": 1694.14,
+   "hi": 1694.46,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -327.6
+  },
+  {
+   "name": "ft144_i",
+   "path": 144,
+   "dir": "input",
+   "face": "W",
+   "lo": 1170.38,
+   "hi": 1170.78,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13771.3
+   ],
+   "legal_shift_um": 390.48
+  },
+  {
+   "name": "ft144_o",
+   "path": 144,
+   "dir": "output",
+   "face": "E",
+   "lo": 792.22,
+   "hi": 792.62,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13771.3
+   ],
+   "legal_shift_um": 12.32
+  },
+  {
+   "name": "ft145_i",
+   "path": 145,
+   "dir": "input",
+   "face": "W",
+   "lo": 1170.78,
+   "hi": 1171.18,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    5671.944,
+    13771.3
+   ],
+   "legal_shift_um": 390.88
+  },
+  {
+   "name": "ft145_o",
+   "path": 145,
+   "dir": "output",
+   "face": "E",
+   "lo": 792.62,
+   "hi": 793.02,
+   "layer": "M8",
+   "bits": 3,
+   "die_xy": [
+    7469.064,
+    13771.3
+   ],
+   "legal_shift_um": 12.72
+  },
+  {
+   "name": "ft147_i",
+   "path": 147,
+   "dir": "input",
+   "face": "W",
+   "lo": 1988.94,
+   "hi": 1989.26,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -32.8
+  },
+  {
+   "name": "ft147_o",
+   "path": 147,
+   "dir": "output",
+   "face": "E",
+   "lo": 1694.46,
+   "hi": 1694.78,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -327.28
+  },
+  {
+   "name": "ft148_i",
+   "path": 148,
+   "dir": "input",
+   "face": "W",
+   "lo": 1989.26,
+   "hi": 1989.58,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -32.48
+  },
+  {
+   "name": "ft148_o",
+   "path": 148,
+   "dir": "output",
+   "face": "E",
+   "lo": 1694.78,
+   "hi": 1695.1,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -326.96
+  },
+  {
+   "name": "ft149_i",
+   "path": 149,
+   "dir": "input",
+   "face": "W",
+   "lo": 1989.58,
+   "hi": 1989.9,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -32.16
+  },
+  {
+   "name": "ft149_o",
+   "path": 149,
+   "dir": "output",
+   "face": "E",
+   "lo": 1695.1,
+   "hi": 1695.42,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -326.64
+  },
+  {
+   "name": "ft150_i",
+   "path": 150,
+   "dir": "input",
+   "face": "W",
+   "lo": 1989.9,
+   "hi": 1990.22,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -31.84
+  },
+  {
+   "name": "ft150_o",
+   "path": 150,
+   "dir": "output",
+   "face": "E",
+   "lo": 1695.42,
+   "hi": 1695.74,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -326.32
+  },
+  {
+   "name": "ft151_i",
+   "path": 151,
+   "dir": "input",
+   "face": "W",
+   "lo": 1990.22,
+   "hi": 1990.54,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -31.52
+  },
+  {
+   "name": "ft151_o",
+   "path": 151,
+   "dir": "output",
+   "face": "E",
+   "lo": 1695.74,
+   "hi": 1696.06,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -326.0
+  },
+  {
+   "name": "ft152_i",
+   "path": 152,
+   "dir": "input",
+   "face": "W",
+   "lo": 1990.54,
+   "hi": 1990.86,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    15013.1
+   ],
+   "legal_shift_um": -31.2
+  },
+  {
+   "name": "ft152_o",
+   "path": 152,
+   "dir": "output",
+   "face": "E",
+   "lo": 1696.06,
+   "hi": 1696.38,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    15013.1
+   ],
+   "legal_shift_um": -325.68
+  },
+  {
+   "name": "ft157_i",
+   "path": 157,
+   "dir": "input",
+   "face": "W",
+   "lo": 1049.78,
+   "hi": 1050.1,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    5671.944,
+    13623.3
+   ],
+   "legal_shift_um": 417.84
+  },
+  {
+   "name": "ft157_o",
+   "path": 157,
+   "dir": "output",
+   "face": "E",
+   "lo": 663.86,
+   "hi": 664.18,
+   "layer": "M8",
+   "bits": 2,
+   "die_xy": [
+    7469.064,
+    13623.3
+   ],
+   "legal_shift_um": 31.92
+  }
+ ],
+ "paths": [
+  {
+   "path": 0,
+   "lane": "L0",
+   "src": "hb_idx__ctl/index_rr",
+   "dst": "hb_idx__op_SW/vm_rr",
+   "in": "ft0_i",
+   "out": "ft0_o",
+   "bits": 2057,
+   "data_bits": 2056,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 2825.3,
+   "rep_sites": 6,
+   "regs_um": [
+    [
+     91.0,
+     2805.3
+    ],
+    [
+     91.0,
+     1876.9
+    ],
+    [
+     91.0,
+     948.4
+    ],
+    [
+     91.0,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 3,
+   "lane": "L44",
+   "src": "hc_SW/lg_wq",
+   "dst": "hc_SW2/c_wq",
+   "in": "ft3_i",
+   "out": "ft3_o",
+   "bits": 563,
+   "data_bits": 562,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     614.1
+    ],
+    [
+     898.6,
+     614.1
+    ],
+    [
+     20.0,
+     614.1
+    ]
+   ],
+   "shared_lanes": [
+    "L133",
+    "L1147",
+    "L1285",
+    "L1407",
+    "L1695"
+   ]
+  },
+  {
+   "path": 4,
+   "lane": "L65",
+   "src": "hc_SW2/c_rr",
+   "dst": "hc_SW/lg_rr",
+   "in": "ft4_i",
+   "out": "ft4_o",
+   "bits": 515,
+   "data_bits": 514,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     879.4
+    ],
+    [
+     898.6,
+     879.4
+    ],
+    [
+     1777.2,
+     879.4
+    ]
+   ]
+  },
+  {
+   "path": 5,
+   "lane": "L83",
+   "src": "hc_SW1/c_rr",
+   "dst": "hc_SW/lg_rr",
+   "in": "ft5_i",
+   "out": "ft5_o",
+   "bits": 515,
+   "data_bits": 514,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     1016.8
+    ],
+    [
+     898.6,
+     1016.8
+    ],
+    [
+     1777.1,
+     1016.8
+    ]
+   ]
+  },
+  {
+   "path": 9,
+   "lane": "L123",
+   "src": "vmb_SW5/rr4",
+   "dst": "hb_idx__ctl/vm_rr",
+   "in": "ft9_i",
+   "out": "ft9_o",
+   "bits": 258,
+   "data_bits": 257,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     455.9
+    ],
+    [
+     898.5,
+     455.9
+    ],
+    [
+     1777.1,
+     455.9
+    ]
+   ]
+  },
+  {
+   "path": 15,
+   "lane": "L185",
+   "src": "hc_SW3/c_rr",
+   "dst": "hc_SW/lg_rr",
+   "in": "ft15_i",
+   "out": "ft15_o",
+   "bits": 515,
+   "data_bits": 514,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     810.7
+    ],
+    [
+     898.5,
+     810.7
+    ],
+    [
+     1777.1,
+     810.7
+    ]
+   ]
+  },
+  {
+   "path": 16,
+   "lane": "L209",
+   "src": "vmb_SW5/pr",
+   "dst": "hb_vms_SW/b5_pr",
+   "in": "ft16_i",
+   "out": "ft16_o",
+   "bits": 267,
+   "data_bits": 266,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     336.0
+    ],
+    [
+     898.5,
+     336.0
+    ],
+    [
+     1777.1,
+     336.0
+    ]
+   ]
+  },
+  {
+   "path": 17,
+   "lane": "L211",
+   "src": "col_idx/prm",
+   "dst": "hb_idx__s_SW/keep_bitmap",
+   "in": "ft17_i",
+   "out": "ft17_o",
+   "bits": 172,
+   "data_bits": 171,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 2033.5,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     1873.0
+    ],
+    [
+     1636.7,
+     1016.7
+    ],
+    [
+     1636.7,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 19,
+   "lane": "L286",
+   "src": "vmb_SW1/rr3",
+   "dst": "hcollrs_SW/vm_rr",
+   "in": "ft19_i",
+   "out": "ft19_o",
+   "bits": 258,
+   "data_bits": 257,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2318.9
+    ],
+    [
+     898.6,
+     2318.9
+    ],
+    [
+     1777.1,
+     2318.9
+    ]
+   ]
+  },
+  {
+   "path": 20,
+   "lane": "L293",
+   "src": "vmb_SW5/rr1",
+   "dst": "hb_dbk_SW/rr",
+   "in": "ft20_i",
+   "out": "ft20_o",
+   "bits": 258,
+   "data_bits": 257,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     380.7
+    ],
+    [
+     898.5,
+     380.7
+    ],
+    [
+     1777.1,
+     380.7
+    ]
+   ]
+  },
+  {
+   "path": 21,
+   "lane": "L360",
+   "src": "hcollks_SW_p2/vm_kq",
+   "dst": "vmb_SW4/kq",
+   "in": "ft21_i",
+   "out": "ft21_o",
+   "bits": 282,
+   "data_bits": 281,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     2076.1
+    ],
+    [
+     898.6,
+     2076.1
+    ],
+    [
+     20.0,
+     2076.1
+    ]
+   ]
+  },
+  {
+   "path": 23,
+   "lane": "L379",
+   "src": "hcollks_SW_p2/vm_kq",
+   "dst": "vmb_SW5/kq",
+   "in": "ft23_i",
+   "out": "ft23_o",
+   "bits": 282,
+   "data_bits": 281,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     2038.5
+    ],
+    [
+     898.6,
+     2038.5
+    ],
+    [
+     20.0,
+     2038.5
+    ]
+   ]
+  },
+  {
+   "path": 26,
+   "lane": "L446",
+   "src": "hb_vms_SW/b7_pq",
+   "dst": "vmb_SW7/pq",
+   "in": "ft26_i",
+   "out": "ft26_o",
+   "bits": 286,
+   "data_bits": 285,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     299.1
+    ],
+    [
+     898.5,
+     299.1
+    ],
+    [
+     20.0,
+     299.1
+    ]
+   ]
+  },
+  {
+   "path": 27,
+   "lane": "L474",
+   "src": "hcollks_SW_p1/vm_kq",
+   "dst": "vmb_SW3/kq",
+   "in": "ft27_i",
+   "out": "ft27_o",
+   "bits": 282,
+   "data_bits": 281,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     1978.5
+    ],
+    [
+     898.5,
+     1978.5
+    ],
+    [
+     20.0,
+     1978.5
+    ]
+   ]
+  },
+  {
+   "path": 29,
+   "lane": "L543",
+   "src": "vmb_SW7/pr",
+   "dst": "hb_vms_SW/b7_pr",
+   "in": "ft29_i",
+   "out": "ft29_o",
+   "bits": 267,
+   "data_bits": 266,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     415.7
+    ],
+    [
+     898.5,
+     415.7
+    ],
+    [
+     1777.1,
+     415.7
+    ]
+   ]
+  },
+  {
+   "path": 31,
+   "lane": "L568",
+   "src": "vmb_SW2/rr3",
+   "dst": "hcollrs_SW/vm_rr",
+   "in": "ft31_i",
+   "out": "ft31_o",
+   "bits": 258,
+   "data_bits": 257,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2250.1
+    ],
+    [
+     898.6,
+     2250.1
+    ],
+    [
+     1777.2,
+     2250.1
+    ]
+   ]
+  },
+  {
+   "path": 32,
+   "lane": "L614",
+   "src": "vmb_SW3/rr3",
+   "dst": "hcollrs_SW/vm_rr",
+   "in": "ft32_i",
+   "out": "ft32_o",
+   "bits": 258,
+   "data_bits": 257,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2215.7
+    ],
+    [
+     898.6,
+     2215.7
+    ],
+    [
+     1777.2,
+     2215.7
+    ]
+   ]
+  },
+  {
+   "path": 36,
+   "lane": "L710",
+   "src": "hcollks_SW_p3/vm_kq",
+   "dst": "vmb_SW6/kq",
+   "in": "ft36_i",
+   "out": "ft36_o",
+   "bits": 282,
+   "data_bits": 281,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     1770.8
+    ],
+    [
+     898.6,
+     1770.8
+    ],
+    [
+     20.0,
+     1770.8
+    ]
+   ]
+  },
+  {
+   "path": 37,
+   "lane": "L732",
+   "src": "hcollks_SW_p3/vm_kq",
+   "dst": "vmb_SW7/kq",
+   "in": "ft37_i",
+   "out": "ft37_o",
+   "bits": 282,
+   "data_bits": 281,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     1733.2
+    ],
+    [
+     898.6,
+     1733.2
+    ],
+    [
+     20.0,
+     1733.2
+    ]
+   ]
+  },
+  {
+   "path": 40,
+   "lane": "L1032",
+   "src": "hb_idx__link/tx",
+   "dst": "cij_SW/idx_tx_h",
+   "in": "ft40_i",
+   "out": "ft40_o",
+   "bits": 133,
+   "data_bits": 132,
+   "side_bits": 1,
+   "stages": 2,
+   "len_um": 642.0,
+   "rep_sites": 1,
+   "regs_um": [
+    [
+     1757.1,
+     2805.3
+    ],
+    [
+     1777.1,
+     2223.3
+    ]
+   ]
+  },
+  {
+   "path": 41,
+   "lane": "L1038",
+   "src": "hb_idx__link/tx",
+   "dst": "cij_SW/idx_tx_h_r1",
+   "in": "ft41_i",
+   "out": "ft41_o",
+   "bits": 133,
+   "data_bits": 132,
+   "side_bits": 1,
+   "stages": 2,
+   "len_um": 638.9,
+   "rep_sites": 1,
+   "regs_um": [
+    [
+     1739.3,
+     2805.3
+    ],
+    [
+     1777.1,
+     2244.2
+    ]
+   ]
+  },
+  {
+   "path": 43,
+   "lane": "L1139",
+   "src": "cic_SW/inj_addr_o",
+   "dst": "cij_SW/inj_addr_r1",
+   "in": "ft43_i",
+   "out": "ft43_o",
+   "bits": 161,
+   "data_bits": 160,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 2559.9,
+   "rep_sites": 3,
+   "regs_um": [
+    [
+     1511.7,
+     20.0
+    ],
+    [
+     1511.7,
+     860.0
+    ],
+    [
+     1511.7,
+     1700.0
+    ],
+    [
+     1777.2,
+     2274.5
+    ]
+   ]
+  },
+  {
+   "path": 44,
+   "lane": "L1400",
+   "src": "sfucore_SW/local_rq",
+   "dst": "sfu_SW2/c_wq",
+   "in": "ft44_i",
+   "out": "ft44_o",
+   "bits": 35,
+   "data_bits": 34,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     762.8
+    ],
+    [
+     898.6,
+     762.8
+    ],
+    [
+     20.0,
+     762.8
+    ]
+   ]
+  },
+  {
+   "path": 45,
+   "lane": "L1404",
+   "src": "sfucore_SW/local_rq",
+   "dst": "sfu_SW2/c_rq",
+   "in": "ft45_i",
+   "out": "ft45_o",
+   "bits": 35,
+   "data_bits": 34,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     758.1
+    ],
+    [
+     898.6,
+     758.1
+    ],
+    [
+     20.0,
+     758.1
+    ]
+   ]
+  },
+  {
+   "path": 46,
+   "lane": "L1425",
+   "src": "sfucore_SW/local_wq",
+   "dst": "sfu_SW2/c_rq",
+   "in": "ft46_i",
+   "out": "ft46_o",
+   "bits": 35,
+   "data_bits": 34,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     574.2
+    ],
+    [
+     898.6,
+     574.2
+    ],
+    [
+     20.0,
+     574.2
+    ]
+   ]
+  },
+  {
+   "path": 49,
+   "lane": "L1576",
+   "src": "hb_idx__ctl/vm_rq",
+   "dst": "vmb_SW5/rq4",
+   "in": "ft49_i",
+   "out": "ft49_o",
+   "bits": 18,
+   "data_bits": 17,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     418.5
+    ],
+    [
+     898.6,
+     418.5
+    ],
+    [
+     20.0,
+     418.5
+    ]
+   ]
+  },
+  {
+   "path": 51,
+   "lane": "L1654",
+   "src": "hb_idx__qctl_NW/nq",
+   "dst": "hb_idx__s_NW/nkeys",
+   "in": "ft51_i",
+   "out": "ft51_o",
+   "bits": 13,
+   "data_bits": 12,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 3021.1,
+   "rep_sites": 6,
+   "regs_um": [
+    [
+     1777.1,
+     775.4
+    ],
+    [
+     825.9,
+     817.9
+    ],
+    [
+     825.9,
+     1811.6
+    ],
+    [
+     825.9,
+     2805.3
+    ]
+   ]
+  },
+  {
+   "path": 52,
+   "lane": "L1689",
+   "src": "hb_idx__qctl_SW/nq",
+   "dst": "hb_idx__s_SW/nkeys",
+   "in": "ft52_i",
+   "out": "ft52_o",
+   "bits": 13,
+   "data_bits": 12,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 2825.3,
+   "rep_sites": 6,
+   "regs_um": [
+    [
+     489.0,
+     2805.2
+    ],
+    [
+     489.0,
+     1876.8
+    ],
+    [
+     489.0,
+     948.4
+    ],
+    [
+     489.0,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 54,
+   "lane": "L1877",
+   "src": "hcollrs_SW/vm_rq",
+   "dst": "vmb_SW1/rq3",
+   "in": "ft54_i",
+   "out": "ft54_o",
+   "bits": 18,
+   "data_bits": 17,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     2194.9
+    ],
+    [
+     898.6,
+     2194.9
+    ],
+    [
+     20.0,
+     2194.9
+    ]
+   ]
+  },
+  {
+   "path": 56,
+   "lane": "L1886",
+   "src": "hb_dbk_SW/rq",
+   "dst": "vmb_SW5/rq1",
+   "in": "ft56_i",
+   "out": "ft56_o",
+   "bits": 18,
+   "data_bits": 17,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     554.0
+    ],
+    [
+     898.6,
+     554.0
+    ],
+    [
+     20.0,
+     554.0
+    ]
+   ]
+  },
+  {
+   "path": 58,
+   "lane": "L1930",
+   "src": "hb_dbk_SW/rq",
+   "dst": "vmb_SW4/rq1",
+   "in": "ft58_i",
+   "out": "ft58_o",
+   "bits": 18,
+   "data_bits": 17,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     556.4
+    ],
+    [
+     898.6,
+     556.4
+    ],
+    [
+     20.0,
+     556.4
+    ]
+   ]
+  },
+  {
+   "path": 59,
+   "lane": "L1968",
+   "src": "sfucore_SW/local_rq",
+   "dst": "sfu_SW3/c_wq",
+   "in": "ft59_i",
+   "out": "ft59_o",
+   "bits": 35,
+   "data_bits": 34,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     569.5
+    ],
+    [
+     898.5,
+     569.5
+    ],
+    [
+     20.0,
+     569.5
+    ]
+   ]
+  },
+  {
+   "path": 60,
+   "lane": "L1979",
+   "src": "sfucore_SW/local_rq",
+   "dst": "sfu_SW3/c_rq",
+   "in": "ft60_i",
+   "out": "ft60_o",
+   "bits": 35,
+   "data_bits": 34,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     564.8
+    ],
+    [
+     898.6,
+     564.8
+    ],
+    [
+     20.0,
+     564.8
+    ]
+   ]
+  },
+  {
+   "path": 61,
+   "lane": "L2044",
+   "src": "sfucore_SW/local_wq",
+   "dst": "sfu_SW3/c_rq",
+   "in": "ft61_i",
+   "out": "ft61_o",
+   "bits": 35,
+   "data_bits": 34,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     560.0
+    ],
+    [
+     898.5,
+     560.0
+    ],
+    [
+     20.0,
+     560.0
+    ]
+   ]
+  },
+  {
+   "path": 66,
+   "lane": "L2203",
+   "src": "hb_idx__qctl_NW/key_index",
+   "dst": "hb_idx__s_NW/beat_index",
+   "in": "ft66_i",
+   "out": "ft66_o",
+   "bits": 9,
+   "data_bits": 8,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 3021.1,
+   "rep_sites": 6,
+   "regs_um": [
+    [
+     1777.1,
+     774.0
+    ],
+    [
+     827.4,
+     817.9
+    ],
+    [
+     827.4,
+     1811.6
+    ],
+    [
+     827.4,
+     2805.2
+    ]
+   ]
+  },
+  {
+   "path": 67,
+   "lane": "L2204",
+   "src": "hb_idx__qctl_NW/nq",
+   "dst": "hb_idx__s_NW/beat_index",
+   "in": "ft67_i",
+   "out": "ft67_o",
+   "bits": 9,
+   "data_bits": 8,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 3018.4,
+   "rep_sites": 6,
+   "regs_um": [
+    [
+     1777.1,
+     775.4
+    ],
+    [
+     828.6,
+     819.7
+    ],
+    [
+     828.6,
+     1812.5
+    ],
+    [
+     828.6,
+     2805.3
+    ]
+   ]
+  },
+  {
+   "path": 68,
+   "lane": "L2205",
+   "src": "hb_idx__qctl_NW/key_index",
+   "dst": "hb_idx__s_NW/nkeys",
+   "in": "ft68_i",
+   "out": "ft68_o",
+   "bits": 9,
+   "data_bits": 8,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 3018.7,
+   "rep_sites": 6,
+   "regs_um": [
+    [
+     1777.1,
+     774.0
+    ],
+    [
+     829.8,
+     819.5
+    ],
+    [
+     829.8,
+     1812.4
+    ],
+    [
+     829.8,
+     2805.2
+    ]
+   ]
+  },
+  {
+   "path": 69,
+   "lane": "L2221",
+   "src": "hcollrs_SW/vm_rq",
+   "dst": "vmb_SW4/rq3",
+   "in": "ft69_i",
+   "out": "ft69_o",
+   "bits": 18,
+   "data_bits": 17,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     360.5
+    ],
+    [
+     898.5,
+     360.5
+    ],
+    [
+     20.0,
+     360.5
+    ]
+   ]
+  },
+  {
+   "path": 70,
+   "lane": "L2256",
+   "src": "col_idx/prm",
+   "dst": "hb_idx__s_SW/rank",
+   "in": "ft70_i",
+   "out": "ft70_o",
+   "bits": 9,
+   "data_bits": 8,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 2021.4,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     1873.0
+    ],
+    [
+     1648.7,
+     1010.7
+    ],
+    [
+     1648.7,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 71,
+   "lane": "L2272",
+   "src": "hb_idx__qctl_SW/nq",
+   "dst": "hb_idx__s_SW/beat_index",
+   "in": "ft71_i",
+   "out": "ft71_o",
+   "bits": 9,
+   "data_bits": 8,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 2825.3,
+   "rep_sites": 6,
+   "regs_um": [
+    [
+     487.1,
+     2805.3
+    ],
+    [
+     487.1,
+     1876.8
+    ],
+    [
+     487.1,
+     948.4
+    ],
+    [
+     487.1,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 72,
+   "lane": "L2273",
+   "src": "hb_idx__qctl_SW/key_index",
+   "dst": "hb_idx__s_SW/beat_index",
+   "in": "ft72_i",
+   "out": "ft72_o",
+   "bits": 9,
+   "data_bits": 8,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 2066.3,
+   "rep_sites": 3,
+   "regs_um": [
+    [
+     1777.1,
+     755.2
+    ],
+    [
+     1101.7,
+     755.2
+    ],
+    [
+     485.9,
+     695.4
+    ],
+    [
+     485.9,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 73,
+   "lane": "L2274",
+   "src": "hb_idx__qctl_SW/key_index",
+   "dst": "hb_idx__s_SW/nkeys",
+   "in": "ft73_i",
+   "out": "ft73_o",
+   "bits": 9,
+   "data_bits": 8,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 2061.8,
+   "rep_sites": 3,
+   "regs_um": [
+    [
+     1777.1,
+     755.2
+    ],
+    [
+     1103.2,
+     755.2
+    ],
+    [
+     490.5,
+     694.0
+    ],
+    [
+     490.5,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 74,
+   "lane": "L2301",
+   "src": "hcollrs_SW/vm_rq",
+   "dst": "vmb_SW5/rq3",
+   "in": "ft74_i",
+   "out": "ft74_o",
+   "bits": 18,
+   "data_bits": 17,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     2187.0
+    ],
+    [
+     898.6,
+     2187.0
+    ],
+    [
+     20.0,
+     2187.0
+    ]
+   ]
+  },
+  {
+   "path": 77,
+   "lane": "L2457",
+   "src": "hcollrs_SW/vm_rq",
+   "dst": "vmb_SW3/rq3",
+   "in": "ft77_i",
+   "out": "ft77_o",
+   "bits": 18,
+   "data_bits": 17,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.1,
+     2182.2
+    ],
+    [
+     898.6,
+     2182.2
+    ],
+    [
+     20.0,
+     2182.2
+    ]
+   ]
+  },
+  {
+   "path": 79,
+   "lane": "L2520",
+   "src": "hb_idx__qctl_SW/query_index",
+   "dst": "hb_idx__op_SW/query_index",
+   "in": "ft79_i",
+   "out": "ft79_o",
+   "bits": 8,
+   "data_bits": 7,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3788.7,
+   "rep_sites": 8,
+   "regs_um": [
+    [
+     1777.2,
+     2184.0
+    ],
+    [
+     840.0,
+     2184.0
+    ],
+    [
+     192.5,
+     1894.3
+    ],
+    [
+     192.5,
+     957.2
+    ],
+    [
+     192.5,
+     20.0
+    ]
+   ],
+   "shared_lanes": [
+    "L7110",
+    "L7111"
+   ]
+  },
+  {
+   "path": 87,
+   "lane": "L6267",
+   "src": "calendar_SW/lg_local_read",
+   "dst": "hc_SW2/local_read",
+   "in": "ft87_i",
+   "out": "ft87_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     996.1
+    ],
+    [
+     898.6,
+     996.1
+    ],
+    [
+     20.0,
+     996.1
+    ]
+   ],
+   "shared_lanes": [
+    "L6270",
+    "L6306",
+    "L6307",
+    "L7240",
+    "L7243",
+    "L7351",
+    "L7352"
+   ]
+  },
+  {
+   "path": 88,
+   "lane": "L6269",
+   "src": "calendar_SW/lg_local_write",
+   "dst": "hc_SW2/local_read",
+   "in": "ft88_i",
+   "out": "ft88_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     996.1
+    ],
+    [
+     898.6,
+     996.1
+    ],
+    [
+     20.0,
+     996.1
+    ]
+   ],
+   "shared_lanes": [
+    "L6271",
+    "L6308",
+    "L6309",
+    "L7241",
+    "L7244",
+    "L7353",
+    "L7354"
+   ]
+  },
+  {
+   "path": 89,
+   "lane": "L6581",
+   "src": "hc_SW2/c_w_done",
+   "dst": "hc_SW/lg_w_done",
+   "in": "ft89_i",
+   "out": "ft89_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     991.7
+    ],
+    [
+     898.6,
+     991.7
+    ],
+    [
+     1777.2,
+     991.7
+    ]
+   ]
+  },
+  {
+   "path": 90,
+   "lane": "L6781",
+   "src": "hb_idx__op_NW/fault",
+   "dst": "hb_idx__qctl_NW/vf",
+   "in": "ft90_i",
+   "out": "ft90_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 2251.4,
+   "rep_sites": 3,
+   "regs_um": [
+    [
+     192.5,
+     2805.3
+    ],
+    [
+     302.9,
+     2178.5
+    ],
+    [
+     1040.0,
+     2178.5
+    ],
+    [
+     1777.2,
+     2178.5
+    ]
+   ]
+  },
+  {
+   "path": 96,
+   "lane": "L6823",
+   "src": "hb_idx__qctl_NW/key_index",
+   "dst": "hb_idx__s_NW/beat_v",
+   "in": "ft96_i",
+   "out": "ft96_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1953.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2180.6
+    ],
+    [
+     820.2,
+     2180.6
+    ],
+    [
+     488.0,
+     2805.3
+    ]
+   ]
+  },
+  {
+   "path": 97,
+   "lane": "L6824",
+   "src": "hb_idx__qctl_NW/key_slot",
+   "dst": "hb_idx__s_NW/beat_index",
+   "in": "ft97_i",
+   "out": "ft97_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1953.9,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2181.3
+    ],
+    [
+     820.2,
+     2181.3
+    ],
+    [
+     487.2,
+     2805.3
+    ]
+   ]
+  },
+  {
+   "path": 98,
+   "lane": "L6825",
+   "src": "hb_idx__qctl_NW/key_slot",
+   "dst": "hb_idx__s_NW/beat_v",
+   "in": "ft98_i",
+   "out": "ft98_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1953.1,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2181.3
+    ],
+    [
+     820.6,
+     2181.3
+    ],
+    [
+     488.0,
+     2805.3
+    ]
+   ]
+  },
+  {
+   "path": 99,
+   "lane": "L6826",
+   "src": "hb_idx__qctl_NW/key_slot",
+   "dst": "hb_idx__s_NW/nkeys",
+   "in": "ft99_i",
+   "out": "ft99_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1952.0,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2181.3
+    ],
+    [
+     821.1,
+     2181.3
+    ],
+    [
+     489.1,
+     2805.3
+    ]
+   ]
+  },
+  {
+   "path": 100,
+   "lane": "L6827",
+   "src": "hb_idx__qctl_NW/nq",
+   "dst": "hb_idx__s_NW/beat_v",
+   "in": "ft100_i",
+   "out": "ft100_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1952.0,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2182.4
+    ],
+    [
+     821.1,
+     2182.4
+    ],
+    [
+     488.0,
+     2805.3
+    ]
+   ]
+  },
+  {
+   "path": 101,
+   "lane": "L6839",
+   "src": "hb_idx__s_NW/fault",
+   "dst": "hb_idx__qctl_NW/scf",
+   "in": "ft101_i",
+   "out": "ft101_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1915.6,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     512.1,
+     2805.3
+    ],
+    [
+     839.3,
+     2194.7
+    ],
+    [
+     1777.2,
+     2194.7
+    ]
+   ]
+  },
+  {
+   "path": 102,
+   "lane": "L6895",
+   "src": "col_idx/prm",
+   "dst": "hb_idx__s_SW/keep_en",
+   "in": "ft102_i",
+   "out": "ft102_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 4,
+   "len_um": 2228.1,
+   "rep_sites": 3,
+   "regs_um": [
+    [
+     1777.2,
+     2053.2
+    ],
+    [
+     1622.3,
+     1478.7
+    ],
+    [
+     1622.3,
+     749.4
+    ],
+    [
+     1622.3,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 103,
+   "lane": "L6929",
+   "src": "hb_idx__qctl_SW/nq",
+   "dst": "hb_idx__s_SW/beat_v",
+   "in": "ft103_i",
+   "out": "ft103_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3491.6,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2182.4
+    ],
+    [
+     914.3,
+     2182.4
+    ],
+    [
+     488.0,
+     1745.8
+    ],
+    [
+     488.0,
+     882.9
+    ],
+    [
+     488.0,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 104,
+   "lane": "L6930",
+   "src": "hb_idx__qctl_SW/key_slot",
+   "dst": "hb_idx__s_SW/beat_index",
+   "in": "ft104_i",
+   "out": "ft104_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3491.3,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2181.3
+    ],
+    [
+     914.3,
+     2181.3
+    ],
+    [
+     487.2,
+     1745.6
+    ],
+    [
+     487.2,
+     882.8
+    ],
+    [
+     487.2,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 105,
+   "lane": "L6931",
+   "src": "hb_idx__qctl_SW/key_slot",
+   "dst": "hb_idx__s_SW/beat_v",
+   "in": "ft105_i",
+   "out": "ft105_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3490.5,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2181.3
+    ],
+    [
+     914.5,
+     2181.3
+    ],
+    [
+     488.0,
+     1745.2
+    ],
+    [
+     488.0,
+     882.6
+    ],
+    [
+     488.0,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 106,
+   "lane": "L6932",
+   "src": "hb_idx__qctl_SW/key_index",
+   "dst": "hb_idx__s_SW/beat_v",
+   "in": "ft106_i",
+   "out": "ft106_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3489.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2180.6
+    ],
+    [
+     914.7,
+     2180.6
+    ],
+    [
+     488.0,
+     1744.9
+    ],
+    [
+     488.0,
+     882.4
+    ],
+    [
+     488.0,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 107,
+   "lane": "L6933",
+   "src": "hb_idx__qctl_SW/key_slot",
+   "dst": "hb_idx__s_SW/nkeys",
+   "in": "ft107_i",
+   "out": "ft107_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3489.4,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1777.2,
+     2181.3
+    ],
+    [
+     914.8,
+     2181.3
+    ],
+    [
+     489.1,
+     1744.7
+    ],
+    [
+     489.1,
+     882.3
+    ],
+    [
+     489.1,
+     20.0
+    ]
+   ]
+  },
+  {
+   "path": 108,
+   "lane": "L6936",
+   "src": "hb_idx__s_SW/fault",
+   "dst": "hb_idx__qctl_SW/scf",
+   "in": "ft108_i",
+   "out": "ft108_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3479.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     512.1,
+     20.0
+    ],
+    [
+     512.1,
+     879.9
+    ],
+    [
+     512.1,
+     1739.9
+    ],
+    [
+     917.2,
+     2194.7
+    ],
+    [
+     1777.2,
+     2194.7
+    ]
+   ]
+  },
+  {
+   "path": 109,
+   "lane": "L7093",
+   "src": "calendar_SW/lg_local_read",
+   "dst": "su_SW2/lg_write",
+   "in": "ft109_i",
+   "out": "ft109_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     98.1
+    ],
+    [
+     898.6,
+     98.1
+    ],
+    [
+     20.0,
+     98.1
+    ]
+   ]
+  },
+  {
+   "path": 110,
+   "lane": "L7094",
+   "src": "calendar_SW/lg_local_read",
+   "dst": "su_SW2/lg_read",
+   "in": "ft110_i",
+   "out": "ft110_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     97.8
+    ],
+    [
+     898.6,
+     97.8
+    ],
+    [
+     20.0,
+     97.8
+    ]
+   ]
+  },
+  {
+   "path": 111,
+   "lane": "L7095",
+   "src": "calendar_SW/lg_local_write",
+   "dst": "su_SW2/lg_write",
+   "in": "ft111_i",
+   "out": "ft111_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     98.1
+    ],
+    [
+     898.6,
+     98.1
+    ],
+    [
+     20.0,
+     98.1
+    ]
+   ]
+  },
+  {
+   "path": 112,
+   "lane": "L7096",
+   "src": "calendar_SW/lg_local_write",
+   "dst": "su_SW2/lg_read",
+   "in": "ft112_i",
+   "out": "ft112_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     97.8
+    ],
+    [
+     898.6,
+     97.8
+    ],
+    [
+     20.0,
+     97.8
+    ]
+   ]
+  },
+  {
+   "path": 113,
+   "lane": "L7104",
+   "src": "hb_idx__qctl_SW/weight_slot",
+   "dst": "hb_idx__op_SW/weight_slot",
+   "in": "ft113_i",
+   "out": "ft113_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3789.5,
+   "rep_sites": 8,
+   "regs_um": [
+    [
+     1777.2,
+     2184.8
+    ],
+    [
+     839.8,
+     2184.8
+    ],
+    [
+     192.5,
+     1894.7
+    ],
+    [
+     192.5,
+     957.4
+    ],
+    [
+     192.5,
+     20.0
+    ]
+   ],
+   "shared_lanes": [
+    "L7105",
+    "L7108"
+   ]
+  },
+  {
+   "path": 114,
+   "lane": "L7106",
+   "src": "hb_idx__qctl_SW/query_slot",
+   "dst": "hb_idx__op_SW/weight_slot",
+   "in": "ft114_i",
+   "out": "ft114_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3789.3,
+   "rep_sites": 8,
+   "regs_um": [
+    [
+     1777.2,
+     2184.6
+    ],
+    [
+     839.8,
+     2184.6
+    ],
+    [
+     192.5,
+     1894.6
+    ],
+    [
+     192.5,
+     957.3
+    ],
+    [
+     192.5,
+     20.0
+    ]
+   ],
+   "shared_lanes": [
+    "L7107",
+    "L7109"
+   ]
+  },
+  {
+   "path": 115,
+   "lane": "L7112",
+   "src": "hb_idx__qctl_SW/query_emit_head",
+   "dst": "hb_idx__q_SW/emit_v",
+   "in": "ft115_i",
+   "out": "ft115_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     2179.5
+    ],
+    [
+     898.6,
+     2179.5
+    ],
+    [
+     20.0,
+     2179.5
+    ]
+   ],
+   "shared_lanes": [
+    "L7114"
+   ]
+  },
+  {
+   "path": 116,
+   "lane": "L7113",
+   "src": "hb_idx__qctl_SW/query_emit",
+   "dst": "hb_idx__q_SW/emit_v",
+   "in": "ft116_i",
+   "out": "ft116_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     2179.0
+    ],
+    [
+     898.6,
+     2179.0
+    ],
+    [
+     20.0,
+     2179.0
+    ]
+   ],
+   "shared_lanes": [
+    "L7117",
+    "L7119"
+   ]
+  },
+  {
+   "path": 117,
+   "lane": "L7115",
+   "src": "hb_idx__qctl_SW/frame_start",
+   "dst": "hb_idx__q_SW/emit_v",
+   "in": "ft117_i",
+   "out": "ft117_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     1777.2,
+     2178.8
+    ],
+    [
+     898.6,
+     2178.8
+    ],
+    [
+     20.0,
+     2178.8
+    ]
+   ],
+   "shared_lanes": [
+    "L7118",
+    "L7120"
+   ]
+  },
+  {
+   "path": 118,
+   "lane": "L7116",
+   "src": "hb_idx__q_SW/fault",
+   "dst": "hb_idx__qctl_SW/qf",
+   "in": "ft118_i",
+   "out": "ft118_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2178.6
+    ],
+    [
+     898.6,
+     2178.6
+    ],
+    [
+     1777.2,
+     2178.6
+    ]
+   ]
+  },
+  {
+   "path": 119,
+   "lane": "L7121",
+   "src": "hb_idx__s_SW/score",
+   "dst": "obs_SW/obs",
+   "in": "ft119_i",
+   "out": "ft119_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3604.6,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     214.5,
+     20.0
+    ],
+    [
+     214.5,
+     911.1
+    ],
+    [
+     214.5,
+     1802.3
+    ],
+    [
+     886.0,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 120,
+   "lane": "L7126",
+   "src": "hb_idx__op_SW/fault",
+   "dst": "hb_idx__qctl_SW/vf",
+   "in": "ft120_i",
+   "out": "ft120_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 5,
+   "len_um": 3783.2,
+   "rep_sites": 8,
+   "regs_um": [
+    [
+     192.5,
+     20.0
+    ],
+    [
+     192.5,
+     955.8
+    ],
+    [
+     192.5,
+     1891.6
+    ],
+    [
+     841.4,
+     2178.5
+    ],
+    [
+     1777.2,
+     2178.5
+    ]
+   ]
+  },
+  {
+   "path": 121,
+   "lane": "L7163",
+   "src": "hc_SW1/c_w_done",
+   "dst": "hc_SW/lg_w_done",
+   "in": "ft121_i",
+   "out": "ft121_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     460.1
+    ],
+    [
+     898.6,
+     460.1
+    ],
+    [
+     1777.2,
+     460.1
+    ]
+   ]
+  },
+  {
+   "path": 124,
+   "lane": "L7654",
+   "src": "vmb_SW0/dq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft124_i",
+   "out": "ft124_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 125,
+   "lane": "L7758",
+   "src": "vmb_SW0/wq_done1",
+   "dst": "obs_SW/obs",
+   "in": "ft125_i",
+   "out": "ft125_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 126,
+   "lane": "L7760",
+   "src": "vmb_SW0/kq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft126_i",
+   "out": "ft126_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 127,
+   "lane": "L7805",
+   "src": "vmb_SW1/dq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft127_i",
+   "out": "ft127_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 128,
+   "lane": "L7844",
+   "src": "vmb_SW1/wq_done1",
+   "dst": "obs_SW/obs",
+   "in": "ft128_i",
+   "out": "ft128_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 129,
+   "lane": "L7846",
+   "src": "vmb_SW1/kq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft129_i",
+   "out": "ft129_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 130,
+   "lane": "L7902",
+   "src": "hc_SW3/c_w_done",
+   "dst": "hc_SW/lg_w_done",
+   "in": "ft130_i",
+   "out": "ft130_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     991.7
+    ],
+    [
+     898.6,
+     991.7
+    ],
+    [
+     1777.2,
+     991.7
+    ]
+   ]
+  },
+  {
+   "path": 131,
+   "lane": "L8293",
+   "src": "vmb_SW4/xq2_done",
+   "dst": "hb_vms_SW/b4_status",
+   "in": "ft131_i",
+   "out": "ft131_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     104.6
+    ],
+    [
+     898.6,
+     104.6
+    ],
+    [
+     1777.2,
+     104.6
+    ]
+   ],
+   "shared_lanes": [
+    "L8294"
+   ]
+  },
+  {
+   "path": 132,
+   "lane": "L8372",
+   "src": "vmb_SW4/dq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft132_i",
+   "out": "ft132_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 133,
+   "lane": "L8509",
+   "src": "vmb_SW4/wq_done1",
+   "dst": "obs_SW/obs",
+   "in": "ft133_i",
+   "out": "ft133_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 134,
+   "lane": "L8514",
+   "src": "vmb_SW4/kq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft134_i",
+   "out": "ft134_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 135,
+   "lane": "L8548",
+   "src": "vmb_SW5/dq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft135_i",
+   "out": "ft135_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 136,
+   "lane": "L8668",
+   "src": "vmb_SW5/wq_done1",
+   "dst": "obs_SW/obs",
+   "in": "ft136_i",
+   "out": "ft136_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 137,
+   "lane": "L8670",
+   "src": "vmb_SW5/kq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft137_i",
+   "out": "ft137_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 138,
+   "lane": "L8776",
+   "src": "vmb_SW2/dq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft138_i",
+   "out": "ft138_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 139,
+   "lane": "L8941",
+   "src": "vmb_SW2/wq_done1",
+   "dst": "obs_SW/obs",
+   "in": "ft139_i",
+   "out": "ft139_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 140,
+   "lane": "L8954",
+   "src": "vmb_SW2/kq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft140_i",
+   "out": "ft140_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 141,
+   "lane": "L9010",
+   "src": "vmb_SW3/dq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft141_i",
+   "out": "ft141_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 142,
+   "lane": "L9212",
+   "src": "vmb_SW3/wq_done1",
+   "dst": "obs_SW/obs",
+   "in": "ft142_i",
+   "out": "ft142_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 143,
+   "lane": "L9226",
+   "src": "vmb_SW3/kq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft143_i",
+   "out": "ft143_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 144,
+   "lane": "L10095",
+   "src": "sfu_SW3/c_w_done",
+   "dst": "sfucore_SW/local_rr",
+   "in": "ft144_i",
+   "out": "ft144_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     780.1
+    ],
+    [
+     898.6,
+     780.1
+    ],
+    [
+     1777.2,
+     780.1
+    ]
+   ],
+   "shared_lanes": [
+    "L10377"
+   ]
+  },
+  {
+   "path": 145,
+   "lane": "L10130",
+   "src": "sfu_SW3/c_rr",
+   "dst": "sfucore_SW/local_w_done",
+   "in": "ft145_i",
+   "out": "ft145_o",
+   "bits": 3,
+   "data_bits": 2,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     780.1
+    ],
+    [
+     898.6,
+     780.1
+    ],
+    [
+     1777.2,
+     780.1
+    ]
+   ]
+  },
+  {
+   "path": 147,
+   "lane": "L10866",
+   "src": "vmb_SW6/dq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft147_i",
+   "out": "ft147_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 148,
+   "lane": "L10989",
+   "src": "vmb_SW6/wq_done1",
+   "dst": "obs_SW/obs",
+   "in": "ft148_i",
+   "out": "ft148_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 149,
+   "lane": "L11007",
+   "src": "vmb_SW6/kq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft149_i",
+   "out": "ft149_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 150,
+   "lane": "L11093",
+   "src": "vmb_SW7/dq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft150_i",
+   "out": "ft150_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 151,
+   "lane": "L11286",
+   "src": "vmb_SW7/wq_done1",
+   "dst": "obs_SW/obs",
+   "in": "ft151_i",
+   "out": "ft151_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 152,
+   "lane": "L11304",
+   "src": "vmb_SW7/kq_done",
+   "dst": "obs_SW/obs",
+   "in": "ft152_i",
+   "out": "ft152_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     2021.9
+    ],
+    [
+     898.6,
+     2021.9
+    ],
+    [
+     1777.2,
+     2021.9
+    ]
+   ]
+  },
+  {
+   "path": 157,
+   "lane": "L14949",
+   "src": "fl_SW3/fault",
+   "dst": "fr_SW/in",
+   "in": "ft157_i",
+   "out": "ft157_o",
+   "bits": 2,
+   "data_bits": 1,
+   "side_bits": 1,
+   "stages": 3,
+   "len_um": 1797.1,
+   "rep_sites": 2,
+   "regs_um": [
+    [
+     20.0,
+     632.1
+    ],
+    [
+     898.6,
+     632.1
+    ],
+    [
+     1777.2,
+     632.1
+    ]
+   ]
+  }
+ ],
+ "ft_bits": 8846,
+ "ft_bit_stages": 28630,
+ "note": "FT-HBM-SU pilot: FT-TOOL plan_v2 ftspec ot_hbm_su_static_pgslice_lg__pv12__ft56164533 of su_SW3 filtered to the gain lanes on the stream die clock (su_ft_spec.py gain_stream); port ranges unchanged (die-frame aligned with the neighbours); stations = ot_hbm_rly (the die relay function) on the ft root ck_ft / reset rs_ft"
+}

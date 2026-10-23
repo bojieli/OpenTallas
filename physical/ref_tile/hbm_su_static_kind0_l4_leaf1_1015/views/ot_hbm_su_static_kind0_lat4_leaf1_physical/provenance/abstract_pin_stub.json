@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hbm_su_static_kind0_lat4_leaf1_physical.lef",
+    "sha256": "3dd539973e9bce3405a4094d707d2233370194851954c89bf61562b0e1ab08f0"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/home/ubuntu/wt/tw-hbm-pglg-1019/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "b8face3a1a84574baea067ee96d597695a051a30254422c9c432c3769c38509a"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/home/ubuntu/wt/tw-hbm-pglg-1019/tools/hier_contract/abstract_pin_stub.py",
+    "/tmp/refin__f7vbyj5/ot_hbm_su_static_kind0_lat4_leaf1_physical/provenance/raw/ot_hbm_su_static_kind0_lat4_leaf1_physical.lef",
+    "/tmp/refin__f7vbyj5/ot_hbm_su_static_kind0_lat4_leaf1_physical/provenance/ot_hbm_su_static_kind0_lat4_leaf1_physical.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 1554 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/tmp/refin__f7vbyj5/ot_hbm_su_static_kind0_lat4_leaf1_physical/provenance/ot_hbm_su_static_kind0_lat4_leaf1_physical.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hbm_su_static_kind0_lat4_leaf1_physical 151.2 x 151.2: PG M5 VDD 28 stripes (96% spread, 100% cov) / VSS 28 stripes (96% spread, 100% cov); strap M6; face pins 1921 blocked-above 0 blocked-same 0; clock clk_stage_0 insertion 216 ps; clock clk_stage_1 insertion 174 ps; clock clk_stage_2 insertion 176 ps; clock clk_stage_3 insertion 159 ps; clock clk_stage_5 insertion 183 ps; clock clk_stage_6 insertion 154 ps; clock clk_stage_7 insertion 134 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hbm_su_static_kind0_lat4_leaf1_physical",
+      "W": 151.2,
+      "H": 151.2,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 28,
+            "dir": "V",
+            "spread": 0.964,
+            "coverage": 1.0,
+            "shapes_on_top": 28
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 28,
+            "dir": "V",
+            "spread": 0.964,
+            "coverage": 1.0,
+            "shapes_on_top": 28
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1921,
+        "blocked_above": 0,
+        "covered_below": 458,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk_stage_0": {
+          "max_ps": 215.72,
+          "min_ps": 157.56
+        },
+        "clk_stage_1": {
+          "max_ps": 174.1,
+          "min_ps": 105.72
+        },
+        "clk_stage_2": {
+          "max_ps": 176.11,
+          "min_ps": 126.58
+        },
+        "clk_stage_3": {
+          "max_ps": 159.49,
+          "min_ps": 115.68
+        },
+        "clk_stage_5": {
+          "max_ps": 182.52,
+          "min_ps": 146.82
+        },
+        "clk_stage_6": {
+          "max_ps": 153.97,
+          "min_ps": 128.25
+        },
+        "clk_stage_7": {
+          "max_ps": 134.1,
+          "min_ps": 110.39
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 1554
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      },
+      "pin_access_violations": 0
+    }
+  },
+  "output": {
+    "path": "ot_hbm_su_static_kind0_lat4_leaf1_physical.lef",
+    "sha256": "fc7c2dcb1093714a2756d7bdaf2b4a6ba870147ae0064ef997c49a5ffc28d0e5"
+  }
+}

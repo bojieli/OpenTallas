@@ -889,9 +889,22 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
     elif rl is not None and spec["kind"] == "cluster":
         if RT.cluster_level(spec) == 2:      # two-level cluster (Q-CLUSTER 2026-10-17): signals M7, PG M8
-            cap, grant, want_pg = "M7", None, "M8"
+            cap, grant, want_pg = ("M9" if spec.get("ft") else "M7"), None, "M8"
+            if spec.get("ft"):      # FT-PLAN corridors: M8/M9 only inside the ft fence (ref_tile.ft_contract)
+                if "FASTROUTE_TCL=" not in env or "POST_IO_PLACEMENT_TCL=" not in env:
+                    g.add("FAIL", "layer", "ft kit routes M2-M9 without its FASTROUTE_TCL fence / ft pin placement",
+                          "re-run ref_tile.py gen")
+                else:
+                    g.add("INFO", "layer", "ft corridors: signals M2-M7 outside the fence, ft nets M8/M9 (ft_audit after GRT)")
         else:
             (cap, grant), want_pg = RT.cluster_signal_cap(spec, RT.contract_slot(spec)), "M7"
+            if spec.get("ft"):  # FT-HBM-SU 10-23: one-level cluster ft corridors (ref_tile.ft_contract), PG stays M7
+                cap = "M9"
+                if "FASTROUTE_TCL=" not in env or "POST_IO_PLACEMENT_TCL=" not in env:
+                    g.add("FAIL", "layer", "ft kit routes M2-M9 without its FASTROUTE_TCL fence / ft pin placement",
+                          "re-run ref_tile.py gen")
+                else:
+                    g.add("INFO", "layer", "ft corridors: signals M2-M7 outside the fence, ft nets M8/M9 (ft_audit after GRT)")
         if rl.group(1) != cap or lc.get("pg_layer") != want_pg:
             g.add("FAIL", "layer", "cluster kit signals/PG differ from its audited layer contract", "re-run ref_tile.py gen")
         if grant:

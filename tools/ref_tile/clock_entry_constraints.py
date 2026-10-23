@@ -275,13 +275,18 @@ def landed_record(spec, root):
         raise ValueError(f'{path}: spec "landed_band": true iff the record is a {BAND_GENERATOR} landed_band record')
     if rec.get("generator") == BAND_GENERATOR:
         return landed_band_record(spec, root, rec, path)
-    if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
+    # FT-S81 10-23 (opt-in "ft"): a feedthrough variant is the base kit module renamed + fenced ft ports/stations
+    # (tools/s81_dv/ft/frame_ft_kit.py check proves the frame text byte-identical), so it keeps the base's lp.py record
+    tops = {spec.get("top")} | ({(spec.get("ft") or {}).get("base_top")} if isinstance(spec.get("ft"), dict) else set())
+    if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") not in tops - {None}:
         raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')
     regions = rec.get("regions")
     if not isinstance(regions, dict) or not regions:
         raise ValueError(f"{path}: no regions")
     ports = [r.get("clock_port") for r in regions.values()]
-    if sorted(ports) != sorted(spec["clock_ports"]) or ports[0] != spec["clock_port"]:
+    # FT-HBM-SU 10-23 (opt-in "ft"): the ft stations' own root (domain "ft") is not a landed region of the base record
+    ftp = set((spec.get("clock_entry_domains") or {}).get("ft", {}).get("ports", [])) if isinstance(spec.get("ft"), dict) else set()
+    if sorted(ports) != sorted(p for p in spec["clock_ports"] if p not in ftp) or ports[0] != spec["clock_port"]:
         raise ValueError(f'{path}: region clock ports {ports} differ from clock_ports (first region = clock_port)')
     D, E = rec.get("D"), rec.get("E")
     if type(D) is not int or type(E) is not int or not 0 < E < D:
@@ -890,10 +895,13 @@ def domains(spec):
                 raise ValueError(f'{spec.get("clock_data_paths")} requires actual stream833.333 / HBM1024 periods')
         if families and ratio != gray_fifo_cdc_constraints.family_ratio(name):
             raise ValueError(f'reviewed_gray_fifos {name} ratio must be the actual family period ratio')
-        if not (divided or asynchronous or families or cdc_async) and ratio not in ([1, 1], [4, 3]):
+        # FT-HBM-SU 10-23: [3, 4] = a stream-clock (833.333 ps) feedthrough domain inside a serial (1111.111 ps) kit,
+        # only for the opt-in "ft" domain of a spec with "ft" (its stations never exchange data with the block)
+        ft_dom = name == 'ft' and isinstance(spec.get('ft'), dict) and ratio == [3, 4]
+        if not (divided or asynchronous or families or cdc_async or ft_dom) and ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
         pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
-        if leaf and (ratio != [1, 1] and not (divided or asynchronous or families or cdc_async or pll and ratio == [4, 3] and name != 'core') or not (asynchronous or families) and len(data.get('ports', [])) != 1):
+        if leaf and (ratio != [1, 1] and not (divided or asynchronous or families or cdc_async or ft_dom or pll and ratio == [4, 3] and name != 'core') or not (asynchronous or families) and len(data.get('ports', [])) != 1):
             raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
                              '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:

@@ -1079,6 +1079,8 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
         if s.get("signal_max_layer") not in (None, "M7"):
             raise SpecError("layer contract (two-level): signals are M2-M7 (M8 PG, M9 die)")
         out.update(pg_layer="M8", rlayers=("M2", "M7"), strap_layer="M9", cluster_level=2)
+        if s.get("ft"):
+            out.update(ft_contract(s))
         return out
     for ch in s["children"]:
         m = read_view_lef(ch["view"])
@@ -1092,6 +1094,13 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
         raise SpecError("layer contract: a cluster's PG layer is M7 (straps over M5/M6 children; M8/M9 die only)")
     cap, grant = cluster_signal_cap(s, slot)
     out.update(pg_layer="M7", rlayers=("M2", cap), strap_layer="M8")
+    if s.get("ft"):
+        # FT-HBM-SU 10-23 (opt-in "ft", one-level cluster): the cluster keeps signals <= its cap and PG M7; only the
+        # ft nets use M8/M9 inside the ft corridors (FASTROUTE_TCL fence + ft_audit), routing therefore runs M2-M9
+        if cap != "M7":
+            raise SpecError(f"spec ft (one-level cluster): signal cap must be M7, got {cap}")
+        out.update(ft_contract(s))
+        return out
     if cap == "M6":
         # Signal restriction is independent of the cluster's PG mesh. Export
         # must prove the actual routed signal/clock wires stop below M7 PG.
@@ -1101,6 +1110,35 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
     if slot and slot.get("pg_layer") and slot["pg_layer"] != out["pg_layer"]:
         raise SpecError(f"layer contract: spec PG {out['pg_layer']} != contract slot PG {slot['pg_layer']}")
     return out
+
+
+FT_KEYS = ("ftspec", "fastroute_tcl", "pins_tcl", "audit_tcl", "base_top", "base_kit")
+
+
+def ft_contract(s: dict) -> dict:
+    """FT-PLAN (owner-approved 2026-10-23, FT-S81): opt-in die feedthrough corridors in a two-level cluster.
+    spec "ft": {ftspec, fastroute_tcl, pins_tcl, audit_tcl} = repo files from tools/die_feedthrough/pushdown.py.
+    The cluster's own signals stay M2-M7 and its PG stays M8 stripes; only the ft nets use M8/M9, inside the spec's
+    corridors.  OpenROAD 26Q3 has no per-net layer range, so routing runs M2-M9 and FASTROUTE_TCL zeroes M8/M9
+    global-routing capacity outside the corridors (region adjustment 1.0); audit_tcl lists any non-ft net on M8/M9.
+    Default contract unchanged when "ft" is absent."""
+    ft = s["ft"]
+    if not isinstance(ft, dict) or sorted(ft) != sorted(FT_KEYS):
+        raise SpecError(f"spec ft: needs exactly {list(FT_KEYS)}")
+    for k in FT_KEYS:
+        if k == "base_top":
+            continue
+        rel = Path(ft[k])
+        if rel.is_absolute() or ".." in rel.parts or not (ROOT / rel).is_file():
+            raise SpecError(f"spec ft.{k}: {ft[k]} must be an existing repo path")
+    spec = json.loads((ROOT / ft["ftspec"]).read_text())
+    if spec.get("schema") != "opentallas.die_feedthrough.ftspec.v1":
+        raise SpecError("spec ft.ftspec: not an opentallas.die_feedthrough.ftspec.v1 file")
+    lays = sorted({p["layer"] for p in spec["ports"]})
+    if any(l not in ("M8", "M9") for l in lays):
+        raise SpecError(f"spec ft: ft pins must be on M8/M9, got {lays}")
+    return dict(rlayers=("M2", "M9"), ft_layers=["M8", "M9"], ft_signal_cap="M7",
+                ft_ports=len(spec["ports"]), ft_paths=len(spec["paths"]))
 
 
 M6_PIN_ACCESS_TCL = "physical/common_flow/m6_pin_access.tcl"
@@ -2209,6 +2247,13 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     if s.get("io_tcl"):
         extra.append(f"--orfs-var IO_CONSTRAINTS=/src/{s['io_tcl']}")
     extra += [f"--orfs-var {k}={v}" for k, v in io_budget_env(s).items()]
+    if s.get("ft"):
+        # FT-PLAN feedthrough corridors (ft_contract): M8/M9 fence for every non-ft net, ft pins placed on M8/M9 after
+        # place_pins (the kit's own ports keep their face regions; the ft ports are re-placed on their corridor tracks)
+        if {"FASTROUTE_TCL", "POST_IO_PLACEMENT_TCL"} & set(s.get("orfs_vars", {})):
+            raise SpecError("spec ft owns FASTROUTE_TCL / POST_IO_PLACEMENT_TCL; drop them from orfs_vars")
+        extra += [f"--orfs-var FASTROUTE_TCL=/src/{s['ft']['fastroute_tcl']}",
+                  f"--orfs-var POST_IO_PLACEMENT_TCL=/src/{s['ft']['pins_tcl']}"]
     # spec "orfs_vars" {NAME: value}: extra ORFS variables the RTL / structure needs; a value that is a repo file path
     # (el1011-hbm-smh POST_TAPCELL hooks) is passed as /src/<path>, anything else verbatim
     for k, v in sorted(s.get("orfs_vars", {}).items()):
