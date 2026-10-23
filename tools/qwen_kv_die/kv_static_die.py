@@ -274,6 +274,27 @@ def frame_engine(f):
     raise ValueError(f'no engine for ECTL frame {f}')
 PC_PITCH = 378.0
 PC_SR13 = os.environ.get('OT_KV_PC_SR13', '0') == '1'
+# KVPC-R 10-23 (OT_KV_PC_R3=a|b; default off: every existing design point is unchanged): bind the COORD-review redesign
+# of the PC tile, kits physical/ref_tile/qkd_kvs_pc_r3a (MAIN, 270.0 x 356.4) / qkd_kvs_pc_r3b (ALT, 302.4 x 356.4)
+# (claude/kvpc-r-1023, tools/qwen_kv_die/kvs_pc_r3_kits.py): same module text (sr13a RTL), same height and pitch, a
+# narrower slot (kit width + the 2.16-um die shave) and the group return word o_grp on the E face (N end, toward the
+# group column) instead of N.  0 cycles (every live PC pin is flop-direct already), so no schedule edge changes.
+# The PC_H tiles (k = 0) keep the sr13 slot until a PC_H r3 kit exists: the column x is the PC's (PHY face aligned).
+PC_R3 = os.environ.get('OT_KV_PC_R3', '0')
+PC_R3_KITS = {'a': ('qkd_kvs_pc_r3a', 270.0, 356.4), 'b': ('qkd_kvs_pc_r3b', 302.4, 356.4)}
+if PC_R3 not in ('0', '') and PC_R3 not in PC_R3_KITS:
+    raise ValueError(f"OT_KV_PC_R3={PC_R3!r}: expected one of 0, {', '.join(sorted(PC_R3_KITS))}")
+PC_R3 = PC_R3 if PC_R3 in PC_R3_KITS else None
+
+
+def pc_slot(kind='pc'):
+    """(w, h) of a PC / PC_H die slot: the hardened body + the 2.16-um die shave (KVPC-R: OT_KV_PC_R3 narrows the PC slot)"""
+    if PC_R3 and kind == 'pc':
+        _k, w, h = PC_R3_KITS[PC_R3]
+        return round(w + 2.16, 4), round(h + 2.16, 4)
+    if PC_SR13 or os.environ.get('OT_KV_PC_SR13_SLOTS', '0') == '1' or PC_R3:
+        return 390.96, 358.56
+    return 270.0, 302.4
 KC_INNER = os.environ.get('OT_KV_KC_INNER', '0') == '1'
 NPC = 32
 CORE_CK = ('ck', 'return_ck')
@@ -2506,11 +2527,10 @@ def place(m, K, geo, F):
     GX, GY = K.GX, K.GY
     up = K.up
     SH = K.SHAVE
-    pcw, pch = 270.0, 302.4
     # SQC-KDIE2 10-22 (OT_KV_PC_SR13=1) / CODEX-K-DIE (OT_KV_PC_SR13_SLOTS=1): PD-AUDIT PC / PC_H tile 388.8 x 356.4 ->
-    # kits_b slot frame (full hardened body + the 2.16 um die shave)
-    if PC_SR13 or os.environ.get('OT_KV_PC_SR13_SLOTS', '0') == '1':
-        pcw, pch = 390.96, 358.56
+    # kits_b slot frame (full hardened body + the 2.16 um die shave); KVPC-R OT_KV_PC_R3: pc_slot()
+    pcw, pch = pc_slot('pc_h')
+    pcw_pc, pch_pc = pc_slot('pc')
     gap = 21.6
     for st in STACKS:
         cx, cy, cw, ch, co, cm = geo[st]['ctrl']
@@ -2525,13 +2545,21 @@ def place(m, K, geo, F):
             yc = cy + PC_PITCH * k + PC_PITCH / 2
             y = up(yc - pch / 2, GY)
             kind = 'pc_h' if k == 0 else 'pc'
-            m['insts'].append(F.Inst(f'kvpc_{st}_{k}', KIND_MASTER[kind], round(x_pc, 4), round(y, 4), pcw - SH,
-                                     pch - SH, 'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
+            w_k, h_k = (pcw, pch) if kind == 'pc_h' else (pcw_pc, pch_pc)
+            # KVPC-R: a narrower PC keeps its PHY (DFI) face on the column's PHY side (W stacks: x_pc; E stacks MY: the
+            # column's E edge)
+            x_k = x_pc if west else round(x_pc + pcw - w_k, 4)
+            m['insts'].append(F.Inst(f'kvpc_{st}_{k}', KIND_MASTER[kind], round(x_k, 4), round(y, 4), w_k - SH,
+                                     h_k - SH, 'R0' if west else 'MY', kind='static', region='strip', domain='hbm'))
         # HOST slice column moves next to the PCs (closes the removed CDC / write-leaf column the PC <-> slice words crossed)
         hs = [by[f'hsl_{st}_{k}'] for k in range(NPC)]
         x_hs = up(x_pc + pcw + gap, GX) if west else up(x_pc - gap - hs[0].w - GX, GX)
-        for h in hs:
+        for k, h in enumerate(hs):
             h.x = round(x_hs, 4)
+            if PC_R3 and k > 0:
+                # KVPC-R: each slice keeps the same gap to its own (narrower) r3 PC; the group column stays where the
+                # wide PC_H row puts it (the freed strip widens the slice <-> group control channel)
+                h.x = round(up(x_pc + pcw_pc + gap, GX) if west else up(x_pc + pcw - pcw_pc - gap - h.w - GX, GX), 4)
         # group tiles: from the slice column to the V port channel
         vps = [by[f'vport_{st}_{k}'] for k in range(4)]
         ects = [by[f'ectl_{st}_{e}'] for e in range(8)]
@@ -2802,8 +2830,10 @@ KIT_FACE = {
 }
 if DOMSPLIT:     # KV-DOMSPLIT: the hck half of a split word sits beside its ck half (same face)
     KIT_FACE['qkd_kvs_pc'].update(i_grp_h='N', o_grp_h='N')
+KIT_FACE['qkd_kvs_pc_h'] = dict(KIT_FACE['qkd_kvs_pc'])   # PC_H keeps the sr13 faces (no r3 PC_H kit yet)
+if PC_R3:        # KVPC-R: the r3 PC kit carries o_grp on its E face (N end)
+    KIT_FACE['qkd_kvs_pc'] = dict(KIT_FACE['qkd_kvs_pc'], o_grp='E')
 KIT_FACE['qkd_kvs_grp_h'] = KIT_FACE['qkd_kvs_grp']
-KIT_FACE['qkd_kvs_pc_h'] = KIT_FACE['qkd_kvs_pc']
 KIT_DEFAULT_FACE = dict(qkd_kvs_grp='W', qkd_kvs_grp_h='W', qkd_kvs_pc='E', qkd_kvs_pc_h='E', qkd_kvs_hroot='W')
 # Selected S6C masters retain their exact source/view names. Their physical
 # contract comes from the actual closed kit, including every bit's position
