@@ -178,5 +178,12 @@
  "slot_change_request": "s81dv_idxrg3nq band column: xmh1u 237.6 x 432.0 -> 237.6 x 330.48 (H -101.52)",
  "pin_hook_after_flops": [
   "physical/common_flow/pin_reg_face_fence.tcl"
- ]
+ ],
+ "unregistered_ok": {
+  "sx_i": "R's S-stage read select: drives the landing SRAM read enable/row through 1-2 gates; the macro's synchronous read port is the capture register (band schedule edge, frozen)",
+  "lw_v": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)",
+  "lw_h1": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)",
+  "lw_a": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)",
+  "lw_d": "landing write {v,h1,a,d}: straight into the SRAM's synchronous write port (the macro input latch is the pin register; bxn registers lw at its own face)"
+ }
 }
